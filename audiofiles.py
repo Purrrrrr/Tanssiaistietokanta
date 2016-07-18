@@ -67,8 +67,8 @@ class AudioFile:
     if self.id is None:
       raise ValueError("Trying to update a file without id. What are you doing boy?")
     self.db.execute(
-        """UPDATA audio SET name = ?, WHERE id = ?""",
-        (self.name,self.in_set, self.ordering, self.remarks, self.overture)
+        """UPDATE audio SET name = ? WHERE id = ?""",
+        (self.name, self.id)
         )
     self._saveInfo()
 
@@ -98,7 +98,7 @@ CREATE TABLE IF NOT EXISTS audio(
   length INTEGER
 );
 CREATE TABLE IF NOT EXISTS audio_info (
-  audio_id INTEGER PRIMARY KEY,
+  audio_id INTEGER,
   key TEXT,
   value TEXT
 );

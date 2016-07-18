@@ -21,7 +21,17 @@ def index():
 
 @route('/<id>', method = 'POST')
 def save(id):
-  return request.json
+  inputData = request.json
+  audioFile = database[int(id)]
+  
+  if "name" in inputData:
+    audioFile.name = inputData["name"]
+  if "info" in inputData:
+    audioFile.info = inputData["info"]
+  audioFile.update()
+
+  return audioFile.toDict()
+  
 
 run(host='localhost', port=8081)
 
