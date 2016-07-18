@@ -9,17 +9,20 @@ if len(argv) != 2:
   exit()
 path = argv[1];
 
-try:
-  database = getAudioDatabase(path)
-except ValueError as e:
-  print(e)
-  exit()
+@route('/reload')
+def reloadDatabase():
+  global database
+  try:
+    database = getAudioDatabase(path)
+  except ValueError as e:
+    print(e)
+    exit()
 
-@route('/')
+@route('/track')
 def index():
   return dict([(id, audioFile.toDict()) for (id, audioFile) in database.items()])
 
-@route('/<id>', method = 'POST')
+@route('/track/<id>', method = 'POST')
 def save(id):
   inputData = request.json
   audioFile = database[int(id)]
@@ -31,7 +34,7 @@ def save(id):
   audioFile.update()
 
   return audioFile.toDict()
-  
 
+reloadDatabase()
 run(host='localhost', port=8081)
 
