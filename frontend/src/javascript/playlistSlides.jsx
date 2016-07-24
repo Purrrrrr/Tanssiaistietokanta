@@ -1,6 +1,7 @@
 import React from "react";
 import css from "sass/slideshow";
 import Fullscreenable from "javascript/widgets/fullscreenable";
+import TrackPropertyEditor from "javascript/widgets/trackPropertyEditor";
 //import _ from "lodash";
 
 const PlaylistSlides = React.createClass({
@@ -37,12 +38,18 @@ const PlaylistSlides = React.createClass({
       this.setState({part: prevPart, track: prevTracks.length});
     }
   },
+  changePart(event) {
+    this.setState({part: event.target.value, track: 0});
+  },
+  changeTrack(track) {
+    this.setState({track});
+  },
   renderPlaylistPart(partIndex) {
     const part = this.props.playlist[partIndex];
     return (<section className={css.slide}>
       <h1>{part.name}</h1>
       <ul>
-      {part.tracks.map((track, index) => <li key={index}>{track.name}</li>)}
+      {part.tracks.map((track, index) => <li onClick={() => this.changeTrack(index+1)} key={index}>{track.name}</li>)}
       </ul>
     </section>);
   },
@@ -51,7 +58,10 @@ const PlaylistSlides = React.createClass({
     const track = part.tracks[trackIndex];
     return (<section className={css.slide}>
       <h1>{track.name}</h1>
-      <p>{track.info.description}</p>
+      <p>
+        <TrackPropertyEditor onSave={this.props.onTrackSave} 
+          track={track} property="info.description" default='Lisää kuvaus' />
+      </p>
     </section>);
   },
   render() {
@@ -60,6 +70,9 @@ const PlaylistSlides = React.createClass({
     const content = track == 0 ? 
       this.renderPlaylistPart(part) : this.renderTrack(part, track-1);
     return (<Fullscreenable><div className={css.slideshow}>
+      <select value={part} onChange={this.changePart}>
+      {this.props.playlist.map((part,i) => <option key={i} value={i}>{part.name}</option>)}
+      </select>
       {content}
     </div></Fullscreenable>);
   }

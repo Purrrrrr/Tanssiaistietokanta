@@ -67,11 +67,11 @@ const PlaylistApp = React.createClass({
         </TabPanel>
         <TabPanel>
           Playlist: {this.renderPlaylistChooser()}
-          <PlaylistCheatSheet playlist={this.state.playlists[this.state.playlist]} />
+          <PlaylistCheatSheet playlist={this.state.playlists[this.state.playlist]} onTrackSave={this.saveTrack}/>
         </TabPanel>
         <TabPanel>
           Playlist: {this.renderPlaylistChooser()}
-          <PlaylistSlides playlist={this.state.playlists[this.state.playlist]} />
+          <PlaylistSlides playlist={this.state.playlists[this.state.playlist]} onTrackSave={this.saveTrack} />
         </TabPanel>
       </Tabs>);
   }

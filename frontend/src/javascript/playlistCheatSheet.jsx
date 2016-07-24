@@ -1,22 +1,18 @@
 import React from "react";
 import css from "sass/cheatsheet";
-import EditableText from "javascript/widgets/editableText";
+import TrackPropertyEditor from "javascript/widgets/trackPropertyEditor";
 import Fullscreenable from "javascript/widgets/fullscreenable";
 import _ from "lodash";
 
 const PlaylistCheatSheet = React.createClass({
   renderTrack(track, index) {
-    const editDescription = (val) => {
-      if (!track.id) return;
-
-      track.info.description = val;
-      this.props.onTrackSave(track);
-    };
-    
     return (<tr key={index}>
       <td>
         <strong>{track.name}</strong>
-        <div><EditableText onSave={editDescription} value={track.info.description || 'Ei kuvausta!'} />&nbsp;</div>
+        <div>
+          <TrackPropertyEditor onSave={this.props.onTrackSave} 
+            track={track} property="info.description" default='Ei kuvausta!' />&nbsp;
+        </div>
       </td>
       <td />
     </tr>);
