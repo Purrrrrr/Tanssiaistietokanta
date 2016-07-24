@@ -37,9 +37,6 @@ class Playlist:
         if len(parts) == 0:
             return None
         return Playlist(parts)
-    
-    def toArray(self):
-        return [dict(part.__dict__) for part in self.parts]
 
 class PlaylistPart:
 

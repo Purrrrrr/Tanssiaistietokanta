@@ -44,9 +44,20 @@ def save(id):
 
   return audioFile.toDict()
 
+def findTrackDict(filename):
+    candidates = list(filter(lambda item: item.fileName == filename ,database.values()))
+    if candidates:
+        return candidates[0].toDict()
+
+    return {id: None, name: filename, filename: filename, info: {}}
+
+def playlistToDict(playlist):
+    return [{"name": part.name, "tracks": list(map(findTrackDict, part.tracks))} for part in playlist.parts]
+
+
 @route('/playlist')
 def index():
-  return dict([(id, playlist.toArray()) for (id, playlist) in playlists.items()])
+  return dict([(id, playlistToDict(playlist)) for (id, playlist) in playlists.items()])
 
 reloadDatabase()
 

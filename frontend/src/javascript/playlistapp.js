@@ -38,6 +38,8 @@ const PlaylistApp = React.createClass({
         [trackData.id]: {$set: trackData}
       });
       this.setState({tracks: newTracks});
+      //It's easier to just fetch the playlists again than update the data
+      this.fetchPlaylists();
     });
   },
   renderPlaylistChooser() {
@@ -62,11 +64,11 @@ const PlaylistApp = React.createClass({
         </TabPanel>
         <TabPanel>
           Playlist: {this.renderPlaylistChooser()}
-          <PlaylistCheatSheet playlist={this.state.playlists[this.state.playlist]} trackData={this.state.tracks} onTrackSave={this.saveTrack} />
+          <PlaylistCheatSheet playlist={this.state.playlists[this.state.playlist]} onTrackSave={this.saveTrack} />
         </TabPanel>
         <TabPanel>
           Playlist: {this.renderPlaylistChooser()}
-          <PlaylistSlides playlist={this.state.playlists[this.state.playlist]} trackData={this.state.tracks} />
+          <PlaylistSlides playlist={this.state.playlists[this.state.playlist]} />
         </TabPanel>
       </Tabs>);
   }

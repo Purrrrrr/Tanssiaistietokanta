@@ -5,11 +5,7 @@ import Fullscreenable from "javascript/widgets/fullscreenable";
 import _ from "lodash";
 
 const PlaylistCheatSheet = React.createClass({
-  renderTrack(trackName, index) {
-    var track = _.find(this.props.trackData, 
-      (candidate) => candidate.fileName == trackName);
-    if (!track) track = {name: "?", info: {}};
-
+  renderTrack(track, index) {
     const editDescription = (val) => {
       if (!track.id) return;
 
