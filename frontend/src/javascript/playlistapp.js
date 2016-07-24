@@ -42,8 +42,11 @@ const PlaylistApp = React.createClass({
       this.fetchPlaylists();
     });
   },
+  choosePlaylist(event) {
+    this.setState({playlist: event.target.value});
+  },
   renderPlaylistChooser() {
-    return (<select value={this.state.playlist}>
+    return (<select value={this.state.playlist} onChange={this.choosePlaylist}>
       {_.map(this.state.playlists, (list, key) => <option key={key} value={key}>{key}</option>)}
     </select>);
   },
@@ -64,7 +67,7 @@ const PlaylistApp = React.createClass({
         </TabPanel>
         <TabPanel>
           Playlist: {this.renderPlaylistChooser()}
-          <PlaylistCheatSheet playlist={this.state.playlists[this.state.playlist]} onTrackSave={this.saveTrack} />
+          <PlaylistCheatSheet playlist={this.state.playlists[this.state.playlist]} />
         </TabPanel>
         <TabPanel>
           Playlist: {this.renderPlaylistChooser()}

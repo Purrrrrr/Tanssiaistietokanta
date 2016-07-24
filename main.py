@@ -49,7 +49,7 @@ def findTrackDict(filename):
     if candidates:
         return candidates[0].toDict()
 
-    return {id: None, name: filename, filename: filename, info: {}}
+    return {"id": None, "name": filename, "filename": filename, "info": {}}
 
 def playlistToDict(playlist):
     return [{"name": part.name, "tracks": list(map(findTrackDict, part.tracks))} for part in playlist.parts]
