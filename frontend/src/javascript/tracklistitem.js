@@ -30,9 +30,17 @@ const TrackListItem = React.createClass({
     if (this.state.editing) {
       editor = <TrackEditor track={this.props.track} onSave={this.onSave} />;
     }
+    const track = this.props.track;
+    const info = track.info;
     return (<div className={css.track}>
         <div onClick={this.toggleEditor}> 
-          <strong>{this.props.track.name}</strong> ({this.props.track.fileName})
+          <strong>{track.name}</strong> ({track.fileName})
+          <div>
+            Alkusoitto: {info.prelude || "?"}&nbsp;
+            Lyhyt kuvaus: {info.description || "?"}&nbsp;
+            Tanssikuvio: {info.formation || "?"}&nbsp;
+            Huomautukset: {info.remarks || "?"}&nbsp;
+          </div>
         </div>
         {editor}
       </div>

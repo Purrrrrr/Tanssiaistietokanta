@@ -52,7 +52,7 @@ const PlaylistApp = React.createClass({
           ?
         </TabPanel>
         <TabPanel>
-          <PlaylistCheatSheet playlist={this.state.playlist} trackData={this.state.tracks}/>
+          <PlaylistCheatSheet playlist={this.state.playlist} trackData={this.state.tracks} onTrackSave={this.saveTrack} />
         </TabPanel>
       </Tabs>);
   }
