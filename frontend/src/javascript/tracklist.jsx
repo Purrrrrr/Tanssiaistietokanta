@@ -33,7 +33,7 @@ const TrackList = React.createClass({
   },
   render() {
     return (<div>
-        Filter tracks: <input size="50" value={this.state.filter} onChange={event => this.setFilter(event.target.value)} />
+        Haku: <input size="50" value={this.state.filter} onChange={event => this.setFilter(event.target.value)} />
         <div className={css.tracklist}>
           {_.map(this.tracks, track => <TrackListItem key={track.id} track={track} onSave={(newTrack) => this.props.onTrackSave(newTrack)} />)}
         </div>

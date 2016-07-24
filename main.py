@@ -2,18 +2,27 @@
 
 from sys import argv
 from audiofiles import getAudioDatabase
+from playlists import Playlist, getPlaylistFiles
 from bottle import route, run, request
+from os.path import basename
 
-if len(argv) != 2:
-  print("Usage: "+argv[0]+" path/to/audio/directory")
+import csv
+
+if len(argv) < 2:
+  print("Usage: "+argv[0]+" path/to/audio/directory [path/to/playlist]")
   exit()
 path = argv[1];
 
+playlistPaths = argv[2:]
+if not playlistPaths:
+    playlistPaths = getPlaylistFiles(path)
+
 @route('/reload')
 def reloadDatabase():
-  global database
+  global database, playlists
   try:
     database = getAudioDatabase(path)
+    playlists = dict([(basename(f), Playlist.getPlaylist(f)) for f in playlistPaths])
   except ValueError as e:
     print(e)
     exit()
@@ -35,6 +44,11 @@ def save(id):
 
   return audioFile.toDict()
 
+@route('/playlist')
+def index():
+  return dict([(id, playlist.toArray()) for (id, playlist) in playlists.items()])
+
 reloadDatabase()
+
 run(host='localhost', port=8081)
 

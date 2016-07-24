@@ -36,7 +36,7 @@ const commonConfig = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: 'KittenBoxer!'
+      title: 'Tracklist'
     })
   ],
   resolve: {
@@ -60,7 +60,7 @@ default:
     commonConfig, 
     devServer({
       //host: process.env.HOST,
-      port: 3000
+      port: 3001
     }),
     styleHandlers.inlineCSS(PATHS.src)
   );

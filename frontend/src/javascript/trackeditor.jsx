@@ -1,5 +1,5 @@
 import React from "react";
-import {noop} from "lodash";
+import {noop, map} from "lodash";
 import update from 'react-addons-update';
 //import css from "sass/trackeditor";
 
@@ -30,15 +30,25 @@ const TrackEditor = React.createClass({
     });
     this.setState({track});
   },
-  save() {
+  save(event) {
+    event.preventDefault();
     this.props.onSave(this.state.track);
   },
   render() {
-    return (<fieldset>
-      <label>Name: </label><input value={this.state.track.name} onChange={this.modifyName} />
-      <label>Remarks: </label><input name="remarks" value={this.state.track.info.remarks || ""} onChange={this.modifyInfo} />
-      <button onClick={this.save}>Save </button>
-    </fieldset>);
+    const infoFields = {
+      prelude: "Alkusoitto",
+      description: "Lyhyt kuvaus",
+      formation: "Kuvio",
+      remarks: "Huomautuksia"
+    };
+
+    return (<form onSubmit={this.save}><fieldset>
+      <div><label>Nimi: </label><input value={this.state.track.name} onChange={this.modifyName} /></div>
+      {map(infoFields, (label, key) => 
+        <div key={key}><label>{label}</label><input name={key} value={this.state.track.info[key] || ""} onChange={this.modifyInfo} /></div>
+      )}
+      <button type="submit">Save </button>
+    </fieldset></form>);
   }
 });
 export default TrackEditor;

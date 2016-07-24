@@ -14,7 +14,6 @@ const TrackListItem = React.createClass({
   },
   getInitialState() {
     return {
-      track: this.props.track,
       editing: false 
     };
   },

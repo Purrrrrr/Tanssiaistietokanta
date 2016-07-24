@@ -27,6 +27,7 @@
     "react-addons-update": "^15.2.1",
     "react-components": "^0.4.0",
     "react-dom": "^15.2.1",
+    "react-tabs": "^0.7.0",
     "sass-loader": "^4.0.0",
     "style-loader": "^0.13.1",
     "underscore": "^1.8.3",

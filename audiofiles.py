@@ -1,13 +1,18 @@
 from os import listdir
 from os.path import isfile, isdir, join, splitext
 import mutagen
-
+import subprocess
 import sqlite3 
+
+def extension(path):
+    return splitext(path)[-1]
+
 def getAudioDatabase(path):
   if not isdir(path):
     raise ValueError("Please supply a directory to scan for audio files")
 
-  files = [f for f in listdir(path) if isfile(join(path, f))]
+  files = [f for f in listdir(path) 
+          if isfile(join(path, f)) and extension(f) not in (".m3u",".sqlite3", ".aup")]
   audioFiles = list(filter(None, [AudioFile.fromFile(path, f) for f in files]))
     
   if len(audioFiles) == 0:
@@ -21,20 +26,35 @@ def getAudioDatabase(path):
 
   return dict([(f.id, f) for f in audioFiles])
 
+def getAudioLength(filePath):
+  data = mutagen.File(filePath)
+  if data:
+    return data.info.length
+  
+  cmd = ['ffprobe',  '-i', filePath, '-show_entries', 'format=duration', '-v', 'quiet', '-of', 'csv=p=0']
+  process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+  stdout, stderr = process.communicate()
+  
+  try:
+    return float(stdout.decode('utf8').strip())
+  except ValueError:
+    print("Not an audio file: "+filePath)
+    return None
+
 class AudioFile:
   @staticmethod
   def fromFile(path, fileName):
     #print(fileName);
-    data = mutagen.File(join(path, fileName))
-    if not data: 
+    length = getAudioLength(join(path, fileName))
+    if not length: 
       return None
-    return AudioFile(fileName, data)
+    return AudioFile(fileName, length)
 
-  def __init__(self, fileName, data):
+  def __init__(self, fileName, length):
     self.id = None
     self.name = splitext(fileName)[0]
     self.fileName = fileName
-    self.length = data.info.length
+    self.length = length
     self.info = {}
   
   def initRow(self, db):
@@ -49,7 +69,7 @@ class AudioFile:
       row = rows[0]
       (self.id, self.fileName, self.name) = row
       self._fetchInfo()
-      print(self)
+      #print(self)
 
   def _fetchInfo(self):
     rows = self.db.execute(
