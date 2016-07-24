@@ -2,8 +2,10 @@ import React from "react";
 import update from 'react-addons-update';
 import TrackList from "javascript/tracklist";
 import PlaylistCheatSheet from "javascript/playlistCheatSheet";
+import PlaylistSlides from "javascript/playlistSlides";
 import {fetchJson, postJson} from "javascript/util/ajax";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import _ from "lodash";
 
 const PlaylistApp = React.createClass({
   getInitialState() {
@@ -27,7 +29,7 @@ const PlaylistApp = React.createClass({
     return fetchJson("/playlist").then(playlists => {
       var key;
       for (key in playlists) break;
-      this.setState({playlists, playlist: playlists[key]});
+      this.setState({playlists, playlist: key});
     });
   },
   saveTrack(newTrack) {
@@ -38,21 +40,33 @@ const PlaylistApp = React.createClass({
       this.setState({tracks: newTracks});
     });
   },
+  renderPlaylistChooser() {
+    return (<select value={this.state.playlist}>
+      {_.map(this.state.playlists, (list, key) => <option key={key} value={key}>{key}</option>)}
+    </select>);
+  },
   render() {
     return (<Tabs selectedIndex={this.state.currentTab} onSelect={currentTab => this.setState({currentTab})}>
         <TabList>
           <Tab>Biisit</Tab>
-          <Tab>Listat</Tab>
+          <Tab>Listan ajastus</Tab>
           <Tab>Lunttilappu</Tab>
+          <Tab>Listadiashow</Tab>
         </TabList>
         <TabPanel>
           <TrackList tracks={this.state.tracks} onTrackSave={this.saveTrack} />
         </TabPanel>
         <TabPanel>
-          ?
+          Playlist: {this.renderPlaylistChooser()}
+          <p>ToDo</p> 
         </TabPanel>
         <TabPanel>
-          <PlaylistCheatSheet playlist={this.state.playlist} trackData={this.state.tracks} onTrackSave={this.saveTrack} />
+          Playlist: {this.renderPlaylistChooser()}
+          <PlaylistCheatSheet playlist={this.state.playlists[this.state.playlist]} trackData={this.state.tracks} onTrackSave={this.saveTrack} />
+        </TabPanel>
+        <TabPanel>
+          Playlist: {this.renderPlaylistChooser()}
+          <PlaylistSlides playlist={this.state.playlists[this.state.playlist]} trackData={this.state.tracks} />
         </TabPanel>
       </Tabs>);
   }
