@@ -1,6 +1,7 @@
 import React from "react";
 import update from 'react-addons-update';
 import TrackList from "javascript/tracklist";
+import PlaylistTimingTool from "javascript/playlistTimingTool";
 import PlaylistCheatSheet from "javascript/playlistCheatSheet";
 import PlaylistSlides from "javascript/playlistSlides";
 import {fetchJson, postJson} from "javascript/util/ajax";
@@ -63,7 +64,7 @@ const PlaylistApp = React.createClass({
         </TabPanel>
         <TabPanel>
           Playlist: {this.renderPlaylistChooser()}
-          <p>ToDo</p> 
+          <PlaylistTimingTool playlist={this.state.playlists[this.state.playlist]} onTrackSave={this.saveTrack}/>
         </TabPanel>
         <TabPanel>
           Playlist: {this.renderPlaylistChooser()}
