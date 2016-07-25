@@ -18,6 +18,8 @@ const PlaylistSlides = React.createClass({
     document.removeEventListener("keydown", this.keyPress, false);
   },
   keyPress(e) {
+    const tag = e.target.tagName;
+    if (tag == "INPUT") return;
     if (e.keyCode == 37) this.previousSlide();
     if (e.keyCode == 39) this.nextSlide();
   },
@@ -56,12 +58,14 @@ const PlaylistSlides = React.createClass({
   renderTrack(partIndex,trackIndex) {
     const part = this.props.playlist[partIndex];
     const track = part.tracks[trackIndex];
+    const teachingSet = track.info.teachingSet ? <p>Opetettu setissä {track.info.teachingSet}</p> : null;
     return (<section className={css.slide}>
       <h1>{track.name}</h1>
       <p>
         <TrackPropertyEditor onSave={this.props.onTrackSave} 
           track={track} property="info.description" default='Lisää kuvaus' />
       </p>
+      {teachingSet}
     </section>);
   },
   render() {

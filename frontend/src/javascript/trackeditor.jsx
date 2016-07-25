@@ -39,7 +39,8 @@ const TrackEditor = React.createClass({
       prelude: "Alkusoitto",
       description: "Lyhyt kuvaus",
       formation: "Kuvio",
-      remarks: "Huomautuksia"
+      remarks: "Huomautuksia",
+      teachingSet: "Opetettu setissä"
     };
 
     return (<form onSubmit={this.save}><fieldset>

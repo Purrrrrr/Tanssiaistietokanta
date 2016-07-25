@@ -40,6 +40,7 @@ const TrackListItem = React.createClass({
             Lyhyt kuvaus: {info.description || "?"}&nbsp;
             Tanssikuvio: {info.formation || "?"}&nbsp;
             Huomautukset: {info.remarks || "?"}&nbsp;
+            Opetettu setissä: {info.teachingSet|| "?"}&nbsp;
           </div>
         </div>
         {editor}
