@@ -7,6 +7,7 @@ import PlaylistSlides from "javascript/playlistSlides";
 import {fetchJson, postJson} from "javascript/util/ajax";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import _ from "lodash";
+import css from "sass/playlistapp";
 
 const PlaylistApp = React.createClass({
   getInitialState() {
@@ -52,7 +53,9 @@ const PlaylistApp = React.createClass({
     </select>);
   },
   render() {
-    return (<Tabs selectedIndex={this.state.currentTab} onSelect={currentTab => this.setState({currentTab})}>
+    return (<div>
+      <div className={css.playlistChooser}> Valitse settilista: {this.renderPlaylistChooser()}</div>
+      <Tabs className={css.playlistapp} selectedIndex={this.state.currentTab} onSelect={currentTab => this.setState({currentTab})}>
         <TabList>
           <Tab>Biisit</Tab>
           <Tab>Listan ajastus</Tab>
@@ -63,18 +66,15 @@ const PlaylistApp = React.createClass({
           <TrackList tracks={this.state.tracks} onTrackSave={this.saveTrack} />
         </TabPanel>
         <TabPanel>
-          Playlist: {this.renderPlaylistChooser()}
           <PlaylistTimingTool playlist={this.state.playlists[this.state.playlist]} onTrackSave={this.saveTrack}/>
         </TabPanel>
         <TabPanel>
-          Playlist: {this.renderPlaylistChooser()}
           <PlaylistCheatSheet playlist={this.state.playlists[this.state.playlist]} onTrackSave={this.saveTrack}/>
         </TabPanel>
         <TabPanel>
-          Playlist: {this.renderPlaylistChooser()}
           <PlaylistSlides playlist={this.state.playlists[this.state.playlist]} onTrackSave={this.saveTrack} />
         </TabPanel>
-      </Tabs>);
+      </Tabs></div>);
   }
 });
 

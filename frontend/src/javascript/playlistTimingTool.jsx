@@ -48,6 +48,12 @@ const PlaylistTimingTool = React.createClass({
   },
   render() {
     return (<div>
+      <div>
+        Biisitauko:&nbsp;
+        <input value={this.state.biisiTauko} onChange={(e) => this.setState({biisiTauko: e.target.value})} />&nbsp;
+        Settitauko: &nbsp;
+        <input value={this.state.settiTauko} onChange={(e) => this.setState({settiTauko: e.target.value})} />
+      </div>
       {this.props.playlist.map(this.renderPart)}
     </div>);
   }
