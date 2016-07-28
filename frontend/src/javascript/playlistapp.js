@@ -6,6 +6,7 @@ import PlaylistCheatSheet from "javascript/playlistCheatSheet";
 import PlaylistPreludes from "javascript/playlistPreludes";
 import PlaylistSlides from "javascript/playlistSlides";
 import {fetchJson, postJson} from "javascript/util/ajax";
+import "whatwg-fetch";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import _ from "lodash";
 import css from "sass/playlistapp";
@@ -35,6 +36,12 @@ const PlaylistApp = React.createClass({
       this.setState({playlists, playlist: key});
     });
   },
+  reload() {
+    return fetch("/reload").then(() => {
+      this.fetchTracks();
+      this.fetchPlaylists();
+    });
+  },
   saveTrack(newTrack) {
     return postJson("/track/"+newTrack.id, newTrack).then(trackData => {
       var newTracks = update(this.state.tracks, {
@@ -55,7 +62,7 @@ const PlaylistApp = React.createClass({
   },
   render() {
     return (<div>
-      <div className={css.playlistChooser}> Valitse settilista: {this.renderPlaylistChooser()}</div>
+      <div className={css.toolbar}><button onClick={this.reload}>Lataa biisitiedot uusiksi</button> | Valitse settilista: {this.renderPlaylistChooser()}</div>
       <Tabs className={css.playlistapp} selectedIndex={this.state.currentTab} onSelect={currentTab => this.setState({currentTab})}>
         <TabList>
           <Tab>Biisit</Tab>
