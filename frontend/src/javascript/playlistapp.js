@@ -24,19 +24,19 @@ const PlaylistApp = React.createClass({
     this.fetchPlaylists();
   },
   fetchTracks() {
-    return fetchJson("/track").then(tracks => {
+    return fetchJson("track").then(tracks => {
       this.setState({tracks});
     });
   },
   fetchPlaylists() {
-    return fetchJson("/playlist").then(playlists => {
+    return fetchJson("playlist").then(playlists => {
       var key;
       for (key in playlists) break;
       this.setState({playlists, playlist: key});
     });
   },
   saveTrack(newTrack) {
-    return postJson("/track/"+newTrack.id, newTrack).then(trackData => {
+    return postJson("track/"+newTrack.id, newTrack).then(trackData => {
       var newTracks = update(this.state.tracks, {
         [trackData.id]: {$set: trackData}
       });
