@@ -3,6 +3,7 @@ import update from 'react-addons-update';
 import TrackList from "javascript/tracklist";
 import PlaylistTimingTool from "javascript/playlistTimingTool";
 import PlaylistCheatSheet from "javascript/playlistCheatSheet";
+import PlaylistPreludes from "javascript/playlistPreludes";
 import PlaylistSlides from "javascript/playlistSlides";
 import {fetchJson, postJson} from "javascript/util/ajax";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
@@ -59,6 +60,7 @@ const PlaylistApp = React.createClass({
         <TabList>
           <Tab>Biisit</Tab>
           <Tab>Listan ajastus</Tab>
+          <Tab>Alkusoitot</Tab>
           <Tab>Lunttilappu</Tab>
           <Tab>Listadiashow</Tab>
         </TabList>
@@ -67,6 +69,9 @@ const PlaylistApp = React.createClass({
         </TabPanel>
         <TabPanel>
           <PlaylistTimingTool playlist={this.state.playlists[this.state.playlist]} onTrackSave={this.saveTrack}/>
+        </TabPanel>
+        <TabPanel>
+          <PlaylistPreludes playlist={this.state.playlists[this.state.playlist]} onTrackSave={this.saveTrack}/>
         </TabPanel>
         <TabPanel>
           <PlaylistCheatSheet playlist={this.state.playlists[this.state.playlist]} onTrackSave={this.saveTrack}/>

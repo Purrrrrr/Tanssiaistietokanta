@@ -1,5 +1,6 @@
 import React from "react";
 import _ from "lodash";
+import css from "sass/infoTables";
 
 function length(secs) {
   if (!secs) return "0:00";
@@ -27,7 +28,7 @@ const PlaylistTimingTool = React.createClass({
     const totalWithPauses = total + 
       (tracks.length - 1) * this.state.biisiTauko*60 +
       this.state.settiTauko*60;
-    return (<table key={name}>
+    return (<table  className={css.infoTable} key={name}>
       <thead>
         <tr>
           <th colSpan="2">{name}</th>
