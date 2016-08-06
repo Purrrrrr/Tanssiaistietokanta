@@ -59,7 +59,12 @@ const PlaylistSlides = React.createClass({
     const part = this.props.playlist[partIndex];
     const tracks = part.tracks;
     const track = tracks[trackIndex];
-    const nextTrackName = trackIndex+1 < tracks.length ? "Seuraava tanssi: " +tracks[trackIndex+1].name : null;
+    const nextTrack = trackIndex+1 < tracks.length ? tracks[trackIndex+1] : null;
+    const nextTrackInfo = nextTrack ? 
+    (<section className={css.nextTrack}>
+      <h1>Tämän jälkeen:{" "+nextTrack.name}</h1>
+      <div>{nextTrack.info.description}</div>
+      </section>) : null;
 
     const teachingSet = track.info.teachingSet ? <p>Opetettu setissä {track.info.teachingSet}</p> : null;
     return (<section className={css.slide}>
@@ -69,7 +74,7 @@ const PlaylistSlides = React.createClass({
           track={track} property="info.description" addText='Lisää kuvaus' />
       </p>
       {teachingSet}
-      <div className={css.nextTrack}>{nextTrackName}</div>
+      {nextTrackInfo}
 
     </section>);
   },
