@@ -20,30 +20,41 @@ const PlaylistApp = React.createClass({
       currentTab: 0
     };
   },
+  componentWillMount(){
+    document.addEventListener("keydown", this.keyPress, false);
+  },
+  componentWillUnmount() {
+    document.removeEventListener("keydown", this.keyPress, false);
+  },
+  keyPress(e) {
+    const tag = e.target.tagName;
+    if (tag == "INPUT") return;
+    if (e.keyCode == 82) this.reload();
+  },
   componentDidMount() {
     this.fetchTracks();
     this.fetchPlaylists();
   },
   fetchTracks() {
-    return fetchJson("/track").then(tracks => {
+    return fetchJson("track").then(tracks => {
       this.setState({tracks});
     });
   },
   fetchPlaylists() {
-    return fetchJson("/playlist").then(playlists => {
+    return fetchJson("playlist").then(playlists => {
       var key;
       for (key in playlists) break;
       this.setState({playlists, playlist: key});
     });
   },
   reload() {
-    return fetch("/reload").then(() => {
+    return fetch("reload").then(() => {
       this.fetchTracks();
       this.fetchPlaylists();
     });
   },
   saveTrack(newTrack) {
-    return postJson("/track/"+newTrack.id, newTrack).then(trackData => {
+    return postJson("track/"+newTrack.id, newTrack).then(trackData => {
       var newTracks = update(this.state.tracks, {
         [trackData.id]: {$set: trackData}
       });
