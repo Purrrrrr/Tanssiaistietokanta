@@ -36,7 +36,7 @@ const commonConfig = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: 'Tracklist'
+      title: 'Ropeconin tanssitietokanta'
     })
   ],
   resolve: {
