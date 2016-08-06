@@ -11,14 +11,14 @@ settilistojen suunnitteluun ja näyttämiseen valkokankaalta.
 
 Ohjelma osaa myös lukea samaisesta hakemistosta m3u-muotoisia soittolistoja, ja
 näyttää niiden perusteella arvion siitä miten kauan soittolistan tanssimiseen
-menee, listan siitä, millaiset alkusoitot iiseillä on, lunttilapun, joka kertoo
+menee, listan siitä, millaiset alkusoitot biiseillä on, lunttilapun, joka kertoo
 listan biiseistä lyhyen kuvauksen, sekä diashown, jossa biisit näytetään
 seteittäin.
 
 ## Tarvittavien riippuvuuksien asentaminen
 
 Tarvitset Python ohjelmointikielen kolmosversion kirjastot, joista joudut
-asentamaan ainakin mutagen, bottle ja sqlite3 moduulit. Fronttia varten
+asentamaan ainakin mutagen-, bottle- ja sqlite3-moduulit. Fronttia varten
 tarvitset uudehkon nodejs-asennuksen.
 
 Frontin tarvittamat riippuvuudet voi asentaa npm:llä `npm install`.
@@ -38,13 +38,16 @@ toisen palvelimen tarjoaamaan näitä tiedostoja sopivilla proxy-asetuksilla.
 
 Sovelluksen tulisi olla melko helppo käyttää. Kaikki muutokset tallentuvat
 tietokantaan automaattisesti. Osaa biisien infoteksteistä voi myös klikata ja
-muokata suoraan varsinaisen biisitietokantatänin ulkopuolella.
+muokata suoraan varsinaisen biisitietokantatäbin ulkopuolella.
+
+Kannattaa muistaa, että Esc-näppäin poistuu kaikista koko ruudun tiloista.
+Diashow:ssa taas voi liikkua nuolinäppäimillä.
 
 ### Soittolistojen luominen
 
 Jos sovellukselle ei anneta parametrina soittolistoja, se hakee automaattisesti
 kaikki m3u-muotoiset soittolistat sille annetusta biisihakemistosta. Sekä
-soittolistat, että biisien tiedot voi ladata uudelleen painamalla "Lataa
+soittolistat, että biisien tiedot voi ladata levyltä uudelleen painamalla "Lataa
 biisitiedot uusiksi" -nappia tai R-näppäintä näppäimistöllä.
 
 Biisilistat ovat aivan tavallisia m3u-soittolistoja, yksi biisitiedoston nimi
@@ -56,3 +59,10 @@ Lisänä normaaliin m3u-formaattiin ovat setit, joita merkataan #-merkillä
 alkavilla soittolistakommenteilla. Näitä voi käyttää niputtamaan soittolistoja
 sovelluksessa setteihin ja useimmat sovelluksen toiminnot käyttävätkin tätä
 hyväkseen.
+
+## Puuttuvia ominaisuuksia
+
+Selkeämpi muokkaus ja rakenne
+Muokkaustoiminnot salasanan takana
+Parempi seuraavan biisin näyttäminen
+Slideshow:hun mahdollisuus lisätä infoslaideja ja taukomusiikin järkevämpi käsittely
