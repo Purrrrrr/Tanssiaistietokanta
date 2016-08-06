@@ -11,8 +11,8 @@ const TrackPropertyEditor = React.createClass({
     this.props.onSave(newTrack);
   },
   render() {
-    const val = _.get(this.props.track, this.props.property, this.props.default);
-    return <EditableText key={this.props.track.id} onSave={this.onSave} value={val} />;
+    const val = _.get(this.props.track, this.props.property);
+    return <EditableText key={this.props.track.id} multiline={this.props.multiline} onSave={this.onSave} value={val} addText={this.props.addText} />;
   }
 });
 

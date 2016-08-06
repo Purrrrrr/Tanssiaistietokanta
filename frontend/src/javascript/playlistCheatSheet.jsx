@@ -10,8 +10,8 @@ const PlaylistCheatSheet = React.createClass({
       <td>
         <strong>{track.name}</strong>
         <div>
-          <TrackPropertyEditor onSave={this.props.onTrackSave} 
-            track={track} property="info.description" default='Ei kuvausta!' />&nbsp;
+          <TrackPropertyEditor multiline onSave={this.props.onTrackSave} 
+            track={track} property="info.description" addText='Lisää kuvaus' />
         </div>
       </td>
       <td />

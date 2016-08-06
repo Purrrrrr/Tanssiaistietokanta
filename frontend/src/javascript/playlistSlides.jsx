@@ -65,8 +65,8 @@ const PlaylistSlides = React.createClass({
     return (<section className={css.slide}>
       <h1>{track.name}</h1>
       <p>
-        <TrackPropertyEditor onSave={this.props.onTrackSave} 
-          track={track} property="info.description" default='Lisää kuvaus' />
+        <TrackPropertyEditor multiline onSave={this.props.onTrackSave} 
+          track={track} property="info.description" addText='Lisää kuvaus' />
       </p>
       {teachingSet}
       <div className={css.nextTrack}>{nextTrackName}</div>

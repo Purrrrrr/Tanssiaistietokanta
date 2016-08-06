@@ -8,8 +8,8 @@ const PlaylistPreludes = React.createClass({
     return (<tr key={index}>
       <td> {track.name} </td>
       <td>
-        <TrackPropertyEditor onSave={this.props.onTrackSave} 
-            track={track} property="info.prelude" default='<Lisää alkusoitto>' />&nbsp;
+        <TrackPropertyEditor multiline onSave={this.props.onTrackSave} 
+            track={track} property="info.prelude" addText='Lisää alkusoitto' />
       </td>
     </tr>);
   },
