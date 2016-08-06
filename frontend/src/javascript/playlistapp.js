@@ -20,6 +20,17 @@ const PlaylistApp = React.createClass({
       currentTab: 0
     };
   },
+  componentWillMount(){
+    document.addEventListener("keydown", this.keyPress, false);
+  },
+  componentWillUnmount() {
+    document.removeEventListener("keydown", this.keyPress, false);
+  },
+  keyPress(e) {
+    const tag = e.target.tagName;
+    if (tag == "INPUT") return;
+    if (e.keyCode == 82) this.reload();
+  },
   componentDidMount() {
     this.fetchTracks();
     this.fetchPlaylists();
@@ -37,7 +48,7 @@ const PlaylistApp = React.createClass({
     });
   },
   reload() {
-    return fetch("/reload").then(() => {
+    return fetch("reload").then(() => {
       this.fetchTracks();
       this.fetchPlaylists();
     });
