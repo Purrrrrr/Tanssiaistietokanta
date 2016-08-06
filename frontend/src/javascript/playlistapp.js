@@ -16,7 +16,7 @@ const PlaylistApp = React.createClass({
     return {
       tracks: {},
       playlists: {},
-      playlist: [],
+      playlist: "",
       currentTab: 0
     };
   },
@@ -33,7 +33,13 @@ const PlaylistApp = React.createClass({
   },
   componentDidMount() {
     this.fetchTracks();
-    this.fetchPlaylists();
+    this.fetchPlaylists().then(() => {
+      const {playlists} = this.state;
+      const keys = _.keys(playlists);
+      if (keys.length) {
+        this.setState({playlist: keys[0]});
+      }
+    });
   },
   fetchTracks() {
     return fetchJson("track").then(tracks => {
@@ -42,9 +48,7 @@ const PlaylistApp = React.createClass({
   },
   fetchPlaylists() {
     return fetchJson("playlist").then(playlists => {
-      var key;
-      for (key in playlists) break;
-      this.setState({playlists, playlist: key});
+      this.setState({playlists});
     });
   },
   reload() {
