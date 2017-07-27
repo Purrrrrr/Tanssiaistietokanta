@@ -5,6 +5,7 @@ import PlaylistTimingTool from "javascript/playlistTimingTool";
 import PlaylistCheatSheet from "javascript/playlistCheatSheet";
 import PlaylistPreludes from "javascript/playlistPreludes";
 import PlaylistSlides from "javascript/playlistSlides";
+import DanceList from "javascript/danceList";
 import {fetchJson, postJson} from "javascript/util/ajax";
 import "whatwg-fetch";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
@@ -84,6 +85,8 @@ const PlaylistApp = React.createClass({
           <Tab>Listan ajastus</Tab>
           <Tab>Alkusoitot</Tab>
           <Tab>Lunttilappu</Tab>
+          <Tab>Minilunttilappu</Tab>
+          <Tab>Tanssilista</Tab>
           <Tab>Listadiashow</Tab>
         </TabList>
         <TabPanel>
@@ -97,6 +100,12 @@ const PlaylistApp = React.createClass({
         </TabPanel>
         <TabPanel>
           <PlaylistCheatSheet playlist={this.state.playlists[this.state.playlist]} onTrackSave={this.saveTrack}/>
+        </TabPanel>
+        <TabPanel>
+          <PlaylistCheatSheet mini={true} playlist={this.state.playlists[this.state.playlist]} onTrackSave={this.saveTrack}/>
+        </TabPanel>
+        <TabPanel>
+          <DanceList playlist={this.state.playlists[this.state.playlist]}/>
         </TabPanel>
         <TabPanel>
           <PlaylistSlides playlist={this.state.playlists[this.state.playlist]} onTrackSave={this.saveTrack} />

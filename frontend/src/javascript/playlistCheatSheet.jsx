@@ -9,10 +9,11 @@ const PlaylistCheatSheet = React.createClass({
     return (<tr key={index}>
       <td>
         <strong>{track.name}</strong>
+        {this.props.mini ? null : 
         <div>
           <TrackPropertyEditor multiline onSave={this.props.onTrackSave} 
             track={track} property="info.description" addText='Lisää kuvaus' />
-        </div>
+        </div>}
       </td>
       <td />
     </tr>);
@@ -20,7 +21,7 @@ const PlaylistCheatSheet = React.createClass({
   renderPart({name, tracks}) {
     const sorted = _.clone(tracks);
     sorted.sort();
-    return (<table key={name}>
+    return (<table className={this.props.mini ? 'mini' : 'normal'} key={name}>
       <thead>
         <tr>
           <th>{name}</th>

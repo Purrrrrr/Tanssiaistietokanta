@@ -31,7 +31,7 @@ const PlaylistTimingTool = React.createClass({
     return (<table  className={css.infoTable} key={name}>
       <thead>
         <tr>
-          <th colSpan="2">{name}</th>
+          <th colSpan="2">{name} ({tracks.length} tanssia)</th>
         </tr>
       </thead>
       <tbody>
