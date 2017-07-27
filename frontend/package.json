@@ -21,7 +21,7 @@
     "eslint-plugin-react": "^5.2.2",
     "extract-text-webpack-plugin": "^1.0.1",
     "html-webpack-plugin": "^2.22.0",
-    "node-sass": "^3.8.0",
+    "node-sass": "^4.5.3",
     "postcss-loader": "^0.9.1",
     "reach": "^1.0.0",
     "react-addons-update": "^15.2.1",
