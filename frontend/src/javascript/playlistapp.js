@@ -87,6 +87,7 @@ const PlaylistApp = React.createClass({
           <Tab>Lunttilappu</Tab>
           <Tab>Minilunttilappu</Tab>
           <Tab>Tanssilista</Tab>
+          <Tab>Tanssilista (vierekkäin)</Tab>
           <Tab>Listadiashow</Tab>
         </TabList>
         <TabPanel>
@@ -106,6 +107,9 @@ const PlaylistApp = React.createClass({
         </TabPanel>
         <TabPanel>
           <DanceList playlist={this.state.playlists[this.state.playlist]}/>
+        </TabPanel>
+        <TabPanel>
+          <DanceList playlist={this.state.playlists[this.state.playlist]} sidebyside={true}/>
         </TabPanel>
         <TabPanel>
           <PlaylistSlides playlist={this.state.playlists[this.state.playlist]} onTrackSave={this.saveTrack} />

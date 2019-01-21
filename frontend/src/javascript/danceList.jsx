@@ -13,7 +13,7 @@ const DanceList = React.createClass({
     </div>);
   },
   render() {
-    return (<Fullscreenable><div className={css.danceList}>
+    return (<Fullscreenable><div className={this.props.sidebyside ? css.sidebysideList : css.danceList}>
       {this.props.playlist.map(this.renderPart)}
     </div></Fullscreenable>);
   }

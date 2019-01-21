@@ -62,7 +62,7 @@ hyväkseen.
 
 ## Puuttuvia ominaisuuksia
 
-Selkeämpi muokkaus ja rakenne
-Muokkaustoiminnot salasanan takana
-Parempi seuraavan biisin näyttäminen
-Slideshow:hun mahdollisuus lisätä infoslaideja ja taukomusiikin järkevämpi käsittely
+* Selkeämpi rakenne
+* Muokkaustoiminnot salasanan takana
+* Parempi seuraavan biisin näyttäminen
+* Slideshow:hun mahdollisuus lisätä infoslaideja ja taukomusiikin järkevämpi käsittely
