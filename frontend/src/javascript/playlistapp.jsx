@@ -1,7 +1,7 @@
 import React from "react";
 import createClass from "create-react-class";
 import TrackList from "./tracklist";
-import PlaylistTimingTool from "./playlistTimingTool";
+import PlaylistEditor from "./playlistEditor";
 import PlaylistCheatSheet from "./playlistCheatSheet";
 import PlaylistPreludes from "./playlistPreludes";
 import PlaylistSlides from "./playlistSlides";
@@ -82,7 +82,7 @@ const PlaylistApp = createClass({
       <Tabs className="playlistapp" selectedIndex={this.state.currentTab} onSelect={currentTab => this.setState({currentTab})}>
         <TabList>
           <Tab>Biisit</Tab>
-          <Tab>Listan ajastus</Tab>
+          <Tab>Listan tiedot</Tab>
           <Tab>Alkusoitot</Tab>
           <Tab>Lunttilappu</Tab>
           <Tab>Minilunttilappu</Tab>
@@ -94,7 +94,7 @@ const PlaylistApp = createClass({
           <TrackList tracks={this.state.tracks} onTrackSave={this.saveTrack} />
         </TabPanel>
         <TabPanel>
-          <PlaylistTimingTool playlist={this.state.playlists[this.state.playlist]} onTrackSave={this.saveTrack}/>
+          <PlaylistEditor playlist={this.state.playlists[this.state.playlist]} onTrackSave={this.saveTrack}/>
         </TabPanel>
         <TabPanel>
           <PlaylistPreludes playlist={this.state.playlists[this.state.playlist]} onTrackSave={this.saveTrack}/>

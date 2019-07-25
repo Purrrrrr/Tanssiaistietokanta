@@ -3,6 +3,10 @@
   table-layout: fixed
   border-collapse: collapse
 
+  td, th
+    padding-left: 3px
+    padding-right: 3px
+
   th
     text-align: left
   td:first-child, th:first-child
@@ -10,3 +14,9 @@
 
   tr:nth-child(even)
     background: bisque
+
+  th
+    background: lightgray
+    border-bottom: 1px solid black
+  tr:first-child th
+    border-top: 1px solid black
