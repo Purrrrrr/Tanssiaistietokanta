@@ -1,17 +1,18 @@
 import React from "react";
-import css from "sass/cheatsheet";
-import TrackPropertyEditor from "javascript/widgets/trackPropertyEditor";
-import Fullscreenable from "javascript/widgets/fullscreenable";
+import createClass from "create-react-class";
+import "./cheatsheet.sass";
+import TrackPropertyEditor from "./widgets/trackPropertyEditor";
+import Fullscreenable from "./widgets/fullscreenable";
 import _ from "lodash";
 
-const PlaylistCheatSheet = React.createClass({
+const PlaylistCheatSheet = createClass({
   renderTrack(track, index) {
     return (<tr key={index}>
       <td>
         <strong>{track.name}</strong>
-        {this.props.mini ? null : 
+        {this.props.mini ? null :
         <div>
-          <TrackPropertyEditor multiline onSave={this.props.onTrackSave} 
+          <TrackPropertyEditor multiline onSave={this.props.onTrackSave}
             track={track} property="info.description" addText='Lisää kuvaus' />
         </div>}
       </td>
@@ -25,7 +26,7 @@ const PlaylistCheatSheet = React.createClass({
       <thead>
         <tr>
           <th>{name}</th>
-          <th className={css.iCanDance}>Osaan tanssin</th>
+          <th className="iCanDance">Osaan tanssin</th>
         </tr>
       </thead>
       <tbody>
@@ -34,7 +35,7 @@ const PlaylistCheatSheet = React.createClass({
     </table>);
   },
   render() {
-    return (<Fullscreenable><div className={css.cheatsheet}>
+    return (<Fullscreenable><div className="cheatsheet">
       <p>Rastita tähän, jos osaat tanssin. Näin ei tanssiaisissa tarvitse miettiä, mikä tanssi on kyseessä.</p>
       {this.props.playlist.map(this.renderPart)}
     </div></Fullscreenable>);

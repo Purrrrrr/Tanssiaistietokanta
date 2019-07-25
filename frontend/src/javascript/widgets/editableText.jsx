@@ -1,14 +1,14 @@
 import React from "react";
-import noop from "lodash";
-import css from "sass/editableText";
+import createClass from "create-react-class";
+import "./editableText.sass";
 
-const EditableText = React.createClass({
+const EditableText = createClass({
   propTypes: {
-    onSave: React.PropTypes.func
+    //onSave: React.PropTypes.func
   },
   getDefaultProps() {
     return {
-      onSave: noop
+      onSave: () => {}
     };
   },
   getInitialState() {
@@ -32,7 +32,7 @@ const EditableText = React.createClass({
   render() {
     if (this.state.editing) {
       const inputProps = {
-        className: css.editableText,
+        className: "editableText",
         ref: input => {if (input) input.focus();},
         value: this.state.inputValue,
         onChange: this.modified,
@@ -41,7 +41,7 @@ const EditableText = React.createClass({
       const input = this.props.multiline ? <textarea {...inputProps} /> : <input {...inputProps} />;
       return <span><form onSubmit={this.save}>{input}</form></span>;
     } else {
-      const val = this.props.value || <span className={css.addEntry}>{this.props.addText || "Muokkaa"}</span>;
+      const val = this.props.value || <span className="addEntry">{this.props.addText || "Muokkaa"}</span>;
       return <span onClick={this.edit}>{val}</span>;
     }
   }

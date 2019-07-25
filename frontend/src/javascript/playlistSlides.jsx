@@ -1,10 +1,10 @@
 import React from "react";
-import css from "sass/slideshow";
-import Fullscreenable from "javascript/widgets/fullscreenable";
-import TrackPropertyEditor from "javascript/widgets/trackPropertyEditor";
-//import _ from "lodash";
+import createClass from "create-react-class";
+import "./slideshow.sass";
+import Fullscreenable from "./widgets/fullscreenable";
+import TrackPropertyEditor from "./widgets/trackPropertyEditor";
 
-const PlaylistSlides = React.createClass({
+const PlaylistSlides = createClass({
   getInitialState() {
     return {
       part: 0,
@@ -48,7 +48,7 @@ const PlaylistSlides = React.createClass({
   },
   renderPlaylistPart(partIndex) {
     const part = this.props.playlist[partIndex];
-    return (<section className={css.slide}>
+    return (<section className="slide">
       <h1>{part.name}</h1>
       <ul>
       {part.tracks.filter(t => t.name != "Taukomusiikkia").map((track, index) => <li onClick={() => this.changeTrack(index+1)} key={index}>{track.name}</li>)}
@@ -60,30 +60,28 @@ const PlaylistSlides = React.createClass({
     const tracks = part.tracks;
     const track = tracks[trackIndex];
     const nextTrack = trackIndex+1 < tracks.length ? tracks[trackIndex+1] : null;
-    const nextTrackInfo = nextTrack ? 
-    (<section className={css.nextTrack}>
-      <h1>Tämän jälkeen:{" "+nextTrack.name}</h1>
-      <div>{nextTrack.info.description}</div>
-      </section>) : null;
 
     const teachingSet = track.info.teachingSet ? <p>Opetettu setissä {track.info.teachingSet}</p> : null;
-    return (<section className={css.slide}>
+    return (<section className="slide">
       <h1>{track.name}</h1>
       <p>
-        <TrackPropertyEditor multiline onSave={this.props.onTrackSave} 
+        <TrackPropertyEditor multiline onSave={this.props.onTrackSave}
           track={track} property="info.description" addText='Lisää kuvaus' />
       </p>
       {teachingSet}
-      {nextTrackInfo}
+      {nextTrack && <section className="nextTrack">
+        <h1>Tämän jälkeen:{" "+nextTrack.name}</h1>
+        <div>{nextTrack.info.description}</div>
+      </section>}
 
     </section>);
   },
   render() {
     const track = this.state.track;
     const part = this.state.part;
-    const content = track == 0 ? 
+    const content = track == 0 ?
       this.renderPlaylistPart(part) : this.renderTrack(part, track-1);
-    return (<Fullscreenable><div className={css.slideshow}>
+    return (<Fullscreenable><div className="slideshow">
       <select value={part} onChange={this.changePart}>
       {this.props.playlist.map((part,i) => <option key={i} value={i}>{part.name}</option>)}
       </select>

@@ -1,9 +1,10 @@
 import React from "react";
-import TrackListItem from "javascript/tracklistitem";
+import createClass from "create-react-class";
+import TrackListItem from "./tracklistitem";
 import _ from "lodash";
-import css from "sass/tracklist";
+import "./tracklist.sass";
 
-const TrackList = React.createClass({
+const TrackList = createClass({
   componentWillMount() {
     this.tracks = _.sortBy(_.toArray(this.props.tracks), track => track.name);
   },
@@ -16,11 +17,11 @@ const TrackList = React.createClass({
     }), track => track.name);
   },
   propTypes: {
-    onTrackSave: React.PropTypes.func
+    //onTrackSave: React.PropTypes.func
   },
   getDefaultProps() {
     return {
-      onTrackSave: _.noop
+      onTrackSave: () => {}
     };
   },
   getInitialState() {
@@ -34,7 +35,7 @@ const TrackList = React.createClass({
   render() {
     return (<div>
         Haku: <input size="50" value={this.state.filter} onChange={event => this.setFilter(event.target.value)} />
-        <div className={css.tracklist}>
+        <div className="tracklist">
           {_.map(this.tracks, track => <TrackListItem key={track.id} track={track} onSave={(newTrack) => this.props.onTrackSave(newTrack)} />)}
         </div>
       </div>

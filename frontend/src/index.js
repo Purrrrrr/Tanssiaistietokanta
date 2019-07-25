@@ -1,9 +1,12 @@
-import PlaylistApp from "javascript/playlistapp";
-import React from "react";
-import ReactDOM from "react-dom";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+import PlaylistApp from "./javascript/playlistapp";
+//import * as serviceWorker from './serviceWorker';
 
-const container = document.createElement('div');
-container.className ="biisitin";
-document.body.appendChild(container);
+ReactDOM.render(<PlaylistApp/>, document.getElementById('root'));
 
-ReactDOM.render(<PlaylistApp/>, container);
+// If you want your app to work offline and load faster, you can change
+// unregister() to register() below. Note this comes with some pitfalls.
+// Learn more about service workers: https://bit.ly/CRA-PWA
+//serviceWorker.unregister();

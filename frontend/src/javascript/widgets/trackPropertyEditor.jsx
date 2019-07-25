@@ -1,8 +1,9 @@
 import React from "react";
-import EditableText from "javascript/widgets/editableText";
+import createClass from "create-react-class";
+import EditableText from "./editableText";
 import _ from "lodash";
 
-const TrackPropertyEditor = React.createClass({
+const TrackPropertyEditor = createClass({
   onSave(val) {
     if (!this.props.track.id) return;
     const newTrack = _.clone(this.props.track);

@@ -1,5 +1,3 @@
-import "whatwg-fetch";
-
 const jsonHeaders = {
   'Accept': 'application/json',
   'Content-Type': 'application/json'

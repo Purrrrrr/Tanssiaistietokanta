@@ -1,6 +1,7 @@
 import React from "react";
+import createClass from "create-react-class";
 import _ from "lodash";
-import css from "sass/infoTables";
+import "./infoTables.sass";
 
 function length(secs) {
   if (!secs) return "0:00";
@@ -10,7 +11,7 @@ function length(secs) {
   return min+":"+(sec < 10 ? "0"+sec : sec);
 }
 
-const PlaylistTimingTool = React.createClass({
+const PlaylistTimingTool = createClass({
   getInitialState() {
     return {
       biisiTauko: 3,
@@ -28,7 +29,7 @@ const PlaylistTimingTool = React.createClass({
     const totalWithPauses = total + 
       (tracks.length - 1) * this.state.biisiTauko*60 +
       this.state.settiTauko*60;
-    return (<table  className={css.infoTable} key={name}>
+    return (<table  className="infoTable" key={name}>
       <thead>
         <tr>
           <th colSpan="2">{name} ({tracks.length} tanssia)</th>

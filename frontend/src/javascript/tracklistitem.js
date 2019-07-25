@@ -1,15 +1,15 @@
 import React from "react";
-import {noop} from "lodash";
-import css from "sass/tracklist";
-import TrackPropertyEditor from "javascript/widgets/trackPropertyEditor";
+import createClass from "create-react-class";
+import "./tracklist.sass";
+import TrackPropertyEditor from "./widgets/trackPropertyEditor";
 
-const TrackListItem = React.createClass({
+const TrackListItem = createClass({
   propTypes: {
-    onSave: React.PropTypes.func
+    //onSave: React.PropTypes.func
   },
   getDefaultProps() {
     return {
-      onSave: noop
+      onSave: () => {}
     };
   },
   onSave(track) {
@@ -19,34 +19,34 @@ const TrackListItem = React.createClass({
   render() {
     const track = this.props.track;
     const editorProps = {
-      multiline: true, 
+      multiline: true,
       addText: "muokkaa",
       onSave: this.props.onSave,
       track
     };
-    return (<div className={css.track}>
-        <div> 
-          <div> 
+    return (<div className="track">
+        <div>
+          <div>
             <strong><TrackPropertyEditor property="name" {...editorProps} multiline={false} /></strong>
             {" "}({track.fileName})
           </div>
-          <div className={css.info}>
+          <div className="info">
             <label>Alkusoitto: </label>
             <TrackPropertyEditor property="info.prelude" {...editorProps} />
           </div>
-          <div className={css.info}>
+          <div className="info">
             <label>Lyhyt kuvaus: </label>
             <TrackPropertyEditor property="info.description" {...editorProps} />
           </div>
-          <div className={css.info}>
+          <div className="info">
             <label>Tanssikuvio:</label>
             <TrackPropertyEditor property="info.formation" {...editorProps} />
           </div>
-          <div className={css.info}>
+          <div className="info">
             <label>Huomautukset:</label>
             <TrackPropertyEditor property="info.remarks" {...editorProps} />
           </div>
-          <div className={css.info}>
+          <div className="info">
             <label>Opetettu setissä:{" "}</label>
             <TrackPropertyEditor property="info.teachingSet" {...editorProps} />
           </div>

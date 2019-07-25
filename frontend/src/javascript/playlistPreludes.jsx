@@ -1,27 +1,19 @@
 import React from "react";
-import TrackPropertyEditor from "javascript/widgets/trackPropertyEditor";
-import Fullscreenable from "javascript/widgets/fullscreenable";
-import css from "sass/infoTables";
+import createClass from "create-react-class";
+import TrackPropertyEditor from "./widgets/trackPropertyEditor";
+import Fullscreenable from "./widgets/fullscreenable";
+import "./infoTables.sass";
 
-const PlaylistPreludes = React.createClass({
-  renderTrack(track, index) {
-    return (<tr key={index}>
-      <td> {track.name} </td>
-      <td>
-        <TrackPropertyEditor multiline onSave={this.props.onTrackSave} 
-            track={track} property="info.prelude" addText='Lisää alkusoitto' />
-      </td>
-    </tr>);
-  },
+const PlaylistPreludes = createClass({
   renderPart({name, tracks}) {
-    return (<table className={css.infoTable} key={name}>
+    return (<table className="infoTable" key={name}>
       <thead>
         <tr>
           <th colSpan="2">{name}</th>
         </tr>
       </thead>
       <tbody>
-        {tracks.map(this.renderTrack)}
+        {tracks.map((track, index) => <Track key={index} track={track} onSave={this.props.onTrackSave} />)}
       </tbody>
     </table>);
   },
@@ -32,5 +24,15 @@ const PlaylistPreludes = React.createClass({
     </Fullscreenable>);
   }
 });
+
+function Track({track, onSave}) {
+  return <tr>
+    <td> {track.name} </td>
+    <td>
+      <TrackPropertyEditor multiline onSave={onSave}
+        track={track} property="info.prelude" addText='Lisää alkusoitto' />
+    </td>
+  </tr>;
+}
 
 export default PlaylistPreludes;

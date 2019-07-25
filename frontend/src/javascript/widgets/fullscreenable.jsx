@@ -1,7 +1,8 @@
 import React from "react";
-import {fullscreen} from "sass/fullscreen";
+import createClass from "create-react-class";
+import "./fullscreen.sass";
 
-const Fullscreenable = React.createClass({
+const Fullscreenable = createClass({
   getInitialState() {
     return {isFullscreen: false};
   },
@@ -22,7 +23,7 @@ const Fullscreenable = React.createClass({
   },
   render() {
     const button = <p><button onClick={this.goFullscreen}>Koko näytön tila</button></p>;
-    return (<div onKeyPress={this.keyPress} className={this.state.isFullscreen ? fullscreen : ''}> 
+    return (<div onKeyPress={this.keyPress} className={this.state.isFullscreen ? 'fullscreen' : ''}>
       {this.state.isFullscreen ? null : button}
       {this.props.children}
     </div>);

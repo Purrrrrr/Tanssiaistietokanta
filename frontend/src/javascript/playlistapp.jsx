@@ -1,18 +1,18 @@
 import React from "react";
-import update from 'react-addons-update';
-import TrackList from "javascript/tracklist";
-import PlaylistTimingTool from "javascript/playlistTimingTool";
-import PlaylistCheatSheet from "javascript/playlistCheatSheet";
-import PlaylistPreludes from "javascript/playlistPreludes";
-import PlaylistSlides from "javascript/playlistSlides";
-import DanceList from "javascript/danceList";
-import {fetchJson, postJson} from "javascript/util/ajax";
-import "whatwg-fetch";
+import createClass from "create-react-class";
+import TrackList from "./tracklist";
+import PlaylistTimingTool from "./playlistTimingTool";
+import PlaylistCheatSheet from "./playlistCheatSheet";
+import PlaylistPreludes from "./playlistPreludes";
+import PlaylistSlides from "./playlistSlides";
+import DanceList from "./danceList";
+import {fetchJson, postJson} from "./util/ajax";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import "react-tabs/style/react-tabs.css";
 import _ from "lodash";
-import css from "sass/playlistapp";
+import "./playlistapp.sass";
 
-const PlaylistApp = React.createClass({
+const PlaylistApp = createClass({
   getInitialState() {
     return {
       tracks: {},
@@ -60,8 +60,8 @@ const PlaylistApp = React.createClass({
   },
   saveTrack(newTrack) {
     return postJson("track/"+newTrack.id, newTrack).then(trackData => {
-      var newTracks = update(this.state.tracks, {
-        [trackData.id]: {$set: trackData}
+      var newTracks = Object.assign({}, this.state.tracks, {
+        [trackData.id]: trackData
       });
       this.setState({tracks: newTracks});
       //It's easier to just fetch the playlists again than update the data
@@ -78,8 +78,8 @@ const PlaylistApp = React.createClass({
   },
   render() {
     return (<div>
-      <div className={css.toolbar}><button onClick={this.reload}>Lataa biisitiedot uusiksi</button> | Valitse settilista: {this.renderPlaylistChooser()}</div>
-      <Tabs className={css.playlistapp} selectedIndex={this.state.currentTab} onSelect={currentTab => this.setState({currentTab})}>
+      <div className="toolbar"><button onClick={this.reload}>Lataa biisitiedot uusiksi</button> | Valitse settilista: {this.renderPlaylistChooser()}</div>
+      <Tabs className="playlistapp" selectedIndex={this.state.currentTab} onSelect={currentTab => this.setState({currentTab})}>
         <TabList>
           <Tab>Biisit</Tab>
           <Tab>Listan ajastus</Tab>
