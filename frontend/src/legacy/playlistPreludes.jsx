@@ -30,7 +30,7 @@ function Track({track, onSave}) {
     <td> {track.name} </td>
     <td>
       <TrackPropertyEditor multiline onSave={onSave}
-        track={track} property="info.prelude" addText='Lisää alkusoitto' />
+        track={track} property="prelude" addText='Lisää alkusoitto' />
     </td>
   </tr>;
 }

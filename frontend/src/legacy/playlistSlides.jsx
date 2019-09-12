@@ -19,9 +19,9 @@ const PlaylistSlides = createClass({
   },
   keyPress(e) {
     const tag = e.target.tagName;
-    if (tag == "INPUT") return;
-    if (e.keyCode == 37) this.previousSlide();
-    if (e.keyCode == 39) this.nextSlide();
+    if (tag === "INPUT") return;
+    if (e.keyCode === 37) this.previousSlide();
+    if (e.keyCode === 39) this.nextSlide();
   },
   nextSlide() {
     const currentPart = this.props.playlist[this.state.part];
@@ -51,7 +51,7 @@ const PlaylistSlides = createClass({
     return (<section className="slide">
       <h1>{part.name}</h1>
       <ul>
-      {part.tracks.filter(t => t.name != "Taukomusiikkia").map((track, index) => <li onClick={() => this.changeTrack(index+1)} key={index}>{track.name}</li>)}
+      {part.tracks.filter(t => t.name !== "Taukomusiikkia").map((track, index) => <li onClick={() => this.changeTrack(index+1)} key={index}>{track.name}</li>)}
       </ul>
     </section>);
   },
@@ -61,17 +61,17 @@ const PlaylistSlides = createClass({
     const track = tracks[trackIndex];
     const nextTrack = trackIndex+1 < tracks.length ? tracks[trackIndex+1] : null;
 
-    const teachingSet = track.info.teachingSet ? <p>Opetettu setissä {track.info.teachingSet}</p> : null;
+    const teachingSet = track.teachingSet ? <p>Opetettu setissä {track.teachingSet}</p> : null;
     return (<section className="slide">
       <h1>{track.name}</h1>
       <p>
         <TrackPropertyEditor multiline onSave={this.props.onTrackSave}
-          track={track} property="info.description" addText='Lisää kuvaus' />
+          track={track} property="description" addText='Lisää kuvaus' />
       </p>
       {teachingSet}
       {nextTrack && <section className="nextTrack">
         <h1>Tämän jälkeen:{" "+nextTrack.name}</h1>
-        <div>{nextTrack.info.description}</div>
+        <div>{nextTrack.description}</div>
       </section>}
 
     </section>);
@@ -79,7 +79,7 @@ const PlaylistSlides = createClass({
   render() {
     const track = this.state.track;
     const part = this.state.part;
-    const content = track == 0 ?
+    const content = track === 0 ?
       this.renderPlaylistPart(part) : this.renderTrack(part, track-1);
     return (<Fullscreenable><div className="slideshow">
       <select value={part} onChange={this.changePart}>

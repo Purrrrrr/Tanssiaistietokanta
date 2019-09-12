@@ -16,7 +16,7 @@ const Fullscreenable = createClass({
     document.removeEventListener("keydown", this.keyPress, false);
   },
   keyPress(e) {
-    if (e.keyCode == 27) this.leaveFullscreen();
+    if (e.keyCode === 27) this.leaveFullscreen();
   },
   leaveFullscreen() {
     this.setState({isFullscreen: false});

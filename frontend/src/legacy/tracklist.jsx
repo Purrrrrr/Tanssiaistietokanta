@@ -12,7 +12,7 @@ const TrackList = createClass({
     const filter = newState.filter;
     this.tracks = _.sortBy(_.filter(newProps.tracks, track => {
       if (filter === "") return true;
-      var f = track.fileName.toLowerCase().indexOf(filter.toLowerCase()) !== -1;
+      var f = track.name.toLowerCase().indexOf(filter.toLowerCase()) !== -1;
       return f;
     }), track => track.name);
   },
@@ -36,7 +36,7 @@ const TrackList = createClass({
     return (<div>
         Haku: <input size="50" value={this.state.filter} onChange={event => this.setFilter(event.target.value)} />
         <div className="tracklist">
-          {_.map(this.tracks, track => <TrackListItem key={track.id} track={track} onSave={(newTrack) => this.props.onTrackSave(newTrack)} />)}
+          {_.map(this.tracks, track => <TrackListItem key={track._id} track={track} onSave={(newTrack) => this.props.onTrackSave(newTrack)} />)}
         </div>
       </div>
     );

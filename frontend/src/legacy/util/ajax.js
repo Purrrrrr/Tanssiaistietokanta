@@ -3,16 +3,16 @@ const jsonHeaders = {
   'Content-Type': 'application/json'
 };
 
-export function getJson(response) {
+function getJson(response) {
   return response.json();
 }
 export function fetchJson(url, options = {}) {
   options.headers = Object.assign(jsonHeaders, options.headers);
   return fetch(url, options).then(getJson);
 }
-export function postJson(url, data) {
+export function putJson(url, data) {
   return fetch(url, {
-    method: 'POST',
+    method: 'PUT',
     headers: jsonHeaders,
     body: JSON.stringify(data)
   }).then(getJson);

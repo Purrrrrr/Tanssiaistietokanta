@@ -28,23 +28,23 @@ const PlaylistTimingTool = createClass({
         onSave, track
       };
       return (<tr key={index}>
-        <td> 
+        <td>
           <TrackPropertyEditor property="name" {...editorProps} />
         </td>
-        <td> 
-          <TrackPropertyEditor property="info.description" {...editorProps} />
+        <td>
+          <TrackPropertyEditor property="description" {...editorProps} />
         </td>
-        <td> 
-          <TrackPropertyEditor property="info.prelude" {...editorProps} />
+        <td>
+          <TrackPropertyEditor property="prelude" {...editorProps} />
         </td>
-        <td> 
-          <TrackPropertyEditor property="info.teachingSet" {...editorProps} />
+        <td>
+          <TrackPropertyEditor property="teachingSet" {...editorProps} />
         </td>
         <td>{length(track.length)}</td>
       </tr>);
     }
     const total = _.sumBy(tracks, track => track.length) || 0;
-    const totalWithPauses = total + 
+    const totalWithPauses = total +
       (tracks.length - 1) * this.state.biisiTauko*60 +
       this.state.settiTauko*60;
     return <React.Fragment key={name}>

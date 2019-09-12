@@ -28,27 +28,27 @@ const TrackListItem = createClass({
         <div>
           <div>
             <strong><TrackPropertyEditor property="name" {...editorProps} multiline={false} /></strong>
-            {" "}({track.fileName})
+            {" "}
           </div>
           <div className="info">
             <label>Alkusoitto: </label>
-            <TrackPropertyEditor property="info.prelude" {...editorProps} />
+            <TrackPropertyEditor property="prelude" {...editorProps} />
           </div>
           <div className="info">
             <label>Lyhyt kuvaus: </label>
-            <TrackPropertyEditor property="info.description" {...editorProps} />
+            <TrackPropertyEditor property="description" {...editorProps} />
           </div>
           <div className="info">
             <label>Tanssikuvio:</label>
-            <TrackPropertyEditor property="info.formation" {...editorProps} />
+            <TrackPropertyEditor property="formation" {...editorProps} />
           </div>
           <div className="info">
             <label>Huomautukset:</label>
-            <TrackPropertyEditor property="info.remarks" {...editorProps} />
+            <TrackPropertyEditor property="remarks" {...editorProps} />
           </div>
           <div className="info">
             <label>Opetettu setissä:{" "}</label>
-            <TrackPropertyEditor property="info.teachingSet" {...editorProps} />
+            <TrackPropertyEditor property="teachingSet" {...editorProps} />
           </div>
         </div>
       </div>

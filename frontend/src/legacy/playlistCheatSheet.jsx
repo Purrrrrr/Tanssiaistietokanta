@@ -13,7 +13,7 @@ const PlaylistCheatSheet = createClass({
         {this.props.mini ? null :
         <div>
           <TrackPropertyEditor multiline onSave={this.props.onTrackSave}
-            track={track} property="info.description" addText='Lisää kuvaus' />
+            track={track} property="description" addText='Lisää kuvaus' />
         </div>}
       </td>
       <td />

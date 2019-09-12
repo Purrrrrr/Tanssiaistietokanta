@@ -6,11 +6,13 @@ import PlaylistCheatSheet from "./playlistCheatSheet";
 import PlaylistPreludes from "./playlistPreludes";
 import PlaylistSlides from "./playlistSlides";
 import DanceList from "./danceList";
-import {fetchJson, postJson} from "./util/ajax";
+import {fetchJson, putJson} from "./util/ajax";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import "react-tabs/style/react-tabs.css";
 import _ from "lodash";
 import "./playlistapp.sass";
+
+import {Breadcrumb} from "../components/Breadcrumbs";
 
 const PlaylistApp = createClass({
   getInitialState() {
@@ -29,8 +31,8 @@ const PlaylistApp = createClass({
   },
   keyPress(e) {
     const tag = e.target.tagName;
-    if (tag == "INPUT") return;
-    if (e.keyCode == 82) this.reload();
+    if (tag === "INPUT") return;
+    if (e.keyCode === 82) this.reload();
   },
   componentDidMount() {
     this.fetchTracks();
@@ -43,29 +45,23 @@ const PlaylistApp = createClass({
     });
   },
   fetchTracks() {
-    return fetchJson("track").then(tracks => {
+    return fetchJson("dances").then(tracks => {
       this.setState({tracks});
     });
   },
   fetchPlaylists() {
-    return fetchJson("playlist").then(playlists => {
-      this.setState({playlists});
+    return fetchJson("events").then(playlists => {
+      //this.setState({playlists});
+      this.setState({playlists: []});
     });
   },
   reload() {
-    return fetch("reload").then(() => {
-      this.fetchTracks();
-      this.fetchPlaylists();
-    });
+    this.fetchTracks();
+    this.fetchPlaylists();
   },
   saveTrack(newTrack) {
-    return postJson("track/"+newTrack.id, newTrack).then(trackData => {
-      var newTracks = Object.assign({}, this.state.tracks, {
-        [trackData.id]: trackData
-      });
-      this.setState({tracks: newTracks});
-      //It's easier to just fetch the playlists again than update the data
-      this.fetchPlaylists();
+    return putJson("dances/"+newTrack._id, newTrack).then(() => {
+      this.reload();
     });
   },
   choosePlaylist(event) {
@@ -78,6 +74,7 @@ const PlaylistApp = createClass({
   },
   render() {
     return (<div>
+      <Breadcrumb text="LegacyTanssittaja" href={this.props.uri} />
       <div className="toolbar"><button onClick={this.reload}>Lataa biisitiedot uusiksi</button> | Valitse settilista: {this.renderPlaylistChooser()}</div>
       <Tabs className="playlistapp" selectedIndex={this.state.currentTab} onSelect={currentTab => this.setState({currentTab})}>
         <TabList>
