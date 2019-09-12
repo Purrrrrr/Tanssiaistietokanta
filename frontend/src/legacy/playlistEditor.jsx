@@ -77,7 +77,7 @@ const PlaylistTimingTool = createClass({
   },
   render() {
     return <div>
-      <div class="toolbar">
+      <div className="toolbar">
         Biisitauko:&nbsp;
         <input type="number" min="0" max="99" 
           value={this.state.biisiTauko} 

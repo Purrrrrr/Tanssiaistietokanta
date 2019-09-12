@@ -52,7 +52,7 @@ const PlaylistApp = createClass({
   fetchPlaylists() {
     return fetchJson("events").then(playlists => {
       //this.setState({playlists});
-      this.setState({playlists: []});
+      this.setState({playlists: {"fake data":[]}});
     });
   },
   reload() {
