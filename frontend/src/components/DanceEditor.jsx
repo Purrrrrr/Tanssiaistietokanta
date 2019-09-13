@@ -18,7 +18,7 @@ export function DanceEditor({dance, onChange, onDelete}) {
           <DancePropertyCells label="Huomautuksia" property="remarks" dance={dance} onChange={onChange} />
         </tr>
         <tr>
-          <DancePropertyCells label="Pituus" property="length" dance={dance} onChange={onChange} type="number" />
+          <DancePropertyCells label="Pituus" property="length" dance={dance} onChange={onChange} component={DanceLengthProperty} />
         </tr>
       </tbody>
     </HTMLTable>
@@ -39,21 +39,21 @@ function DeleteButton({onDelete}) {
   </>;
 }
 
-function DancePropertyCells({label, ...props}) {
+function DancePropertyCells({label, component = DanceProperty, ...props}) {
+  const Component = component;
   return <>
     <th>{label}</th>
     <td>
-      <DanceProperty {...props} />
+      <Component {...props} />
     </td>
   </>;
 }
 
-export function DanceProperty({property, dance, onChange, type = "text"}) {
+export function DanceProperty({property, dance, onChange}) {
   const [text, setText] = useState(dance[property] || "");
   useEffect(() => setText(dance[property] || ""), [dance, property]);
 
-  const onConfirm = (rawValue) => {
-    const value = parseValue(type, rawValue);
+  const onConfirm = (value) => {
     if (value === dance[property]) return;
 
     onChange({
@@ -61,14 +61,56 @@ export function DanceProperty({property, dance, onChange, type = "text"}) {
       [property]: value
     });
   };
-  
 
   return <EditableText value={text} onChange={setText}
     placeholder="<Muokkaa tästä>"
-    onConfirm={onConfirm} type={type} />;
+    onConfirm={onConfirm} />;
 }
 
-function parseValue(type, value) {
-  if (type === "number") return parseFloat(value);
-  return value;
+function DanceLengthProperty({property, dance, onChange}) {
+  const length = dance[property] || 0;
+  const seconds = length%60;
+  const minutes = Math.floor(length/60);
+
+  function setLength(minutes, seconds) {
+    const newLength = seconds+(minutes*60);
+    if (newLength === dance[property]) return;
+
+    onChange({
+      ...dance,
+      [property]: newLength
+    });
+  }
+
+  return <>
+    <EditableTimePart value={minutes}
+      onChange={(newVal) => setLength(newVal, seconds)} />
+    :
+    <EditableTimePart value={seconds}
+      onChange={(newVal) => setLength(minutes, newVal)} />
+  </>
 }
+
+function EditableTimePart({value, onChange}) {
+  const [editing, setEditing] = useState(false);
+  const [text, setText] = useState();
+
+  function onConfirm(newValue) {
+    const parsed = parseFloat(newValue);
+    setEditing(false);
+    //Fall back to old value if the new one is garbage!
+    onChange(isNaN(parsed) ? value : parsed);
+  }
+
+  if (editing) {
+    return <EditableText value={text} onChange={setText} minWidth={40}
+      isEditing onCancel={() => setEditing(false)}
+      onConfirm={onConfirm} type="number"/>
+  } else {
+    return <span onClick={() => {setEditing(true); setText(value.toFixed());}}>
+      {(value < 10 ? "0" : "") + value.toFixed()}
+    </span>;
+  }
+
+}
+
