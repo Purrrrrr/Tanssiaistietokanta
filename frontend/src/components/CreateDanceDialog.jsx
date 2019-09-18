@@ -19,7 +19,7 @@ export function CreateDanceDialog({isOpen, onClose, onCreate}) {
     </div>
     <div className={Classes.DIALOG_FOOTER}>
       <Button text="Peruuta" onClick={onClose} />
-      <Button intent={Intent.PRIMARY} text="Tallenna" 
+      <Button intent={Intent.PRIMARY} text="Tallenna"
         onClick={save} disabled={hasError}/>
     </div>
   </Dialog>;
@@ -44,7 +44,7 @@ function DanceUploader({onUpload}) {
       onUpload(danceData);
     });
   }
-  
+
   return <>
     <FileInput fill text={fileName} buttonText="Valitse" onInputChange={processFileData}/>
   </>;

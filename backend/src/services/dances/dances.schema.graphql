@@ -8,6 +8,20 @@ type Dance {
   remarks: String
 }
 
+input DanceModification {
+  name: String!
+  description: String
+  duration: Int
+  prelude: String
+  formation: String
+  remarks: String
+}
+
+
 type Query {
   dances: [Dance!]!
+}
+
+type Mutation {
+  createDance(dance: DanceModification!): Dance
 }

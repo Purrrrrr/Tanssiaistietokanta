@@ -4,7 +4,7 @@ export function createDance(dance) {
   return postJson('/dances', dance);
 }
 
-export function modifyDance(id, dance) {
+export function modifyDance(id, {_id, ...dance}) {
   return putJson('/dances/'+id, dance);
 }
 

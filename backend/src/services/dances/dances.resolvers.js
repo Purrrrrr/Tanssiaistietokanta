@@ -6,7 +6,10 @@ module.exports = (app) => {
 
   return {
     Query: {
-      dances: () => service.find(commonParams)
+      dances: () => service.find(commonParams),
+    },
+    Mutation: {
+      createDance: (_, {dance}) => service.create(dance, commonParams)
     }
   };
 };
