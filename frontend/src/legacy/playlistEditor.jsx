@@ -4,11 +4,11 @@ import TrackPropertyEditor from "./widgets/trackPropertyEditor";
 import _ from "lodash";
 import "./infoTables.sass";
 
-function length(secs) {
+function duration(secs) {
   if (!secs) return "0:00";
-  const length = Math.round(secs);
-  const sec = length%60;
-  const min = (length-sec)/60;
+  const duration = Math.round(secs);
+  const sec = duration%60;
+  const min = (duration-sec)/60;
   return min+":"+(sec < 10 ? "0"+sec : sec);
 }
 
@@ -40,10 +40,10 @@ const PlaylistTimingTool = createClass({
         <td>
           <TrackPropertyEditor property="teachingSet" {...editorProps} />
         </td>
-        <td>{length(track.length)}</td>
+        <td>{duration(track.duration)}</td>
       </tr>);
     }
-    const total = _.sumBy(tracks, track => track.length) || 0;
+    const total = _.sumBy(tracks, track => track.duration) || 0;
     const totalWithPauses = total +
       (tracks.length - 1) * this.state.biisiTauko*60 +
       this.state.settiTauko*60;
@@ -65,11 +65,11 @@ const PlaylistTimingTool = createClass({
           <tfoot>
             <tr>
               <th colSpan="4">Yhteensä</th>
-              <th>{length(total)}</th>
+              <th>{duration(total)}</th>
             </tr>
             <tr>
               <th colSpan="4">Yhteensä taukoineen</th>
-              <th>{length(totalWithPauses)}</th>
+              <th>{duration(totalWithPauses)}</th>
             </tr>
           </tfoot>
         </table>

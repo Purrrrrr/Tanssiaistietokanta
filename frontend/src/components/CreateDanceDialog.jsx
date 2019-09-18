@@ -39,8 +39,8 @@ function DanceUploader({onUpload}) {
 
     onUpload(danceData);
 
-    readFile(file).then(decodeAudioData).then(audioData => {
-      danceData = {...danceData, length: audioData.duration};
+    readFile(file).then(decodeAudioData).then(({duration}) => {
+      danceData = {...danceData, duration};
       onUpload(danceData);
     });
   }

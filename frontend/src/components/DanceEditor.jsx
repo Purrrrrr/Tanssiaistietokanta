@@ -20,7 +20,7 @@ export function DanceEditor({dance, onChange, onDelete}) {
           <DancePropertyCells label="Huomautuksia" property="remarks" data={dance} onChange={onChange} />
         </tr>
         <tr>
-          <DancePropertyCells label="Pituus" property="length" data={dance} onChange={onChange} component={DanceLengthProperty} />
+          <DancePropertyCells label="Kesto" property="duration" data={dance} onChange={onChange} component={DanceLengthProperty} />
         </tr>
       </tbody>
     </HTMLTable>
