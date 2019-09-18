@@ -13,6 +13,19 @@ module.exports = function (app) {
 
   // Get our initialized service so that we can register hooks
   const service = app.service('dances');
+  service.graphQl = () => ({
+    schema: `
+      type Dance {
+        _id: ID
+        name: String!
+        description: String
+        duration: Int
+        prelude: String
+        formation: String
+        remarks: String
+      }
+    `  
+  });
 
   service.hooks(hooks);
 };

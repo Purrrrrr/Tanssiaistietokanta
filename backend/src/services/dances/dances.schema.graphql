@@ -1,0 +1,13 @@
+type Dance {
+  _id: ID
+  name: String!
+  description: String
+  duration: Int
+  prelude: String
+  formation: String
+  remarks: String
+}
+
+type Query {
+  dances: [Dance!]!
+}
