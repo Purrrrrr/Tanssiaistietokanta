@@ -15,7 +15,7 @@ function MinuteEditor({value, onChange, ...props}) {
   const minutes = Math.floor(value/60);
 
   return <TimePartEditor {...props}
-    value={minutes} onChange={(newValue) => onChange(toSeconds(parseFloat(newValue), seconds))} />
+    value={minutes} onChange={(newValue) => onChange(toSeconds(parseFloat(newValue || "0"), seconds))} />
 }
 
 function SecondsEditor({value, onChange, ...props}) {
@@ -23,25 +23,28 @@ function SecondsEditor({value, onChange, ...props}) {
   const minutes = Math.floor(value/60);
 
   return <TimePartEditor {...props}
-    value={seconds} onChange={(newValue) => onChange(toSeconds(minutes, parseFloat(newValue)))} />
+    value={seconds} onChange={(newValue) => onChange(toSeconds(minutes, parseFloat(newValue || "0")))} />
 }
 
 function toSeconds(minutes, seconds) {
   return Math.max(seconds+(minutes*60), 0);
 }
 
-function TimePartEditor({isEditing, onEdit, value, ...props}) {
-  const {onConfirm} = props;
+function TimePartEditor({isEditing, onEdit, value, onConfirm, ...props}) {
   const span = useRef();
+  const onConfirmRef = useRef();
+  onConfirmRef.current = onConfirm;
+
   useEffect(() => {
     if (isEditing) {
       //Hack around the limitations of EditableText ref support
       const input = span.current.querySelector("input");
       if (input != null) {
-        input.addEventListener("blur", () => onConfirm());
+        //Both confirm and just blurring should trigger this
+        input.addEventListener("blur", () => onConfirmRef.current());
       }
     }
-  }, [isEditing, onConfirm]);
+  }, [isEditing, onConfirmRef]);
 
   return <span ref={span} onClick={onEdit}>
     {isEditing

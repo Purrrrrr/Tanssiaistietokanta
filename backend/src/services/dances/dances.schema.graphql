@@ -1,27 +1,29 @@
+type Query {
+  dances: [Dance!]!
+}
+
 type Dance {
   _id: ID
   name: String!
   description: String
-  duration: Int
+  duration: Float
   prelude: String
   formation: String
   remarks: String
+  deleted: Boolean!
+}
+
+type Mutation {
+  createDance(dance: DanceModification!): Dance!
+  modifyDance(id: ID!, dance: DanceModification!): Dance!
+  deleteDance(id: ID!): Dance!
 }
 
 input DanceModification {
   name: String!
   description: String
-  duration: Int
+  duration: Float
   prelude: String
   formation: String
   remarks: String
-}
-
-
-type Query {
-  dances: [Dance!]!
-}
-
-type Mutation {
-  createDance(dance: DanceModification!): Dance
 }

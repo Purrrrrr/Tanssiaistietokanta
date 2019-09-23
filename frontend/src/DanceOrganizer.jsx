@@ -6,20 +6,29 @@ import Dances from "./pages/Dances";
 import {UserContextProvider} from "./services/users";
 import {BreadcrumbContext} from "./components/Breadcrumbs";
 import Navigation from "./components/Navigation";
+import {apolloClient, ApolloProvider} from "./services/Apollo";
 
 function DanceOrganizer() {
-  return <UserContextProvider>
-    <BreadcrumbContext>
-      <Navigation />
-      <div id="content">
-        <Router>
-          <Home path="/" />
-          <Dances path="dances" />
-          <PlaylistApp path="legacy" />
-        </Router>
-      </div>
-    </BreadcrumbContext>
-  </UserContextProvider>;
+  return <ContextProviders>
+    <Navigation />
+    <div id="content">
+      <Router>
+        <Home path="/" />
+        <Dances path="dances" />
+        <PlaylistApp path="legacy" />
+      </Router>
+    </div>
+  </ContextProviders>;
+}
+
+function ContextProviders({children}) {
+  return <ApolloProvider client={apolloClient}>
+    <UserContextProvider>
+      <BreadcrumbContext>
+        {children}
+      </BreadcrumbContext>
+    </UserContextProvider>
+  </ApolloProvider>;
 }
 
 export default DanceOrganizer;
