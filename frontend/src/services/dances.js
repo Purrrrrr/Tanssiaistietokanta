@@ -1,6 +1,7 @@
 import { gql, useQuery, useMutation } from './Apollo';
+import {sorted} from "../utils/sorted"
 
-const danceFields = '_id, name, description, remarks, duration, prelude, formation deleted';
+const danceFields = '_id, name, description, remarks, duration, prelude, formation, deleted';
 
 const GET_DANCES = gql`
 {
@@ -37,6 +38,19 @@ mutation deleteDance($id: ID!) {
 export function useDances() {
   const result = useQuery(GET_DANCES);
   return [result.data ? result.data.dances : [], result];
+}
+
+export function filterDances(dances, searchString) {
+  return sorted(
+    dances.filter(dance => filterDance(dance, searchString)),
+    (a, b) => a.name.localeCompare(b.name)
+  );
+}
+
+function filterDance(dance, search) {
+  const lSearch = search.toLowerCase();
+  const lName = dance.name.toLowerCase();
+  return !dance.deleted && lName.indexOf(lSearch) !== -1;
 }
 
 export function useCreateDance(args) {

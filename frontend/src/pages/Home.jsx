@@ -1,11 +1,12 @@
-import React from 'react';
+import React, {useState} from 'react';
+import {Card, Button} from "@blueprintjs/core";
+
 import {useEvents, createEvent, deleteEvent} from '../services/events';
 import {AdminOnly} from '../services/users';
-import useForm from 'react-hook-form';
 import {Breadcrumb} from "../components/Breadcrumbs";
+import {EventEditor} from "../components/EventEditor";
 //import {Router} from "@reach/router"
 
-import {Card} from "@blueprintjs/core";
 
 function Home({children, uri}) {
   return <>
@@ -29,14 +30,15 @@ function EventList() {
 }
 
 function CreateEventForm({onSubmit}) {
-  const {register, handleSubmit, reset, errors} = useForm();
+  const [event, setEvent] = useState({
+    program: []
+  });
 
-  return <form onSubmit={handleSubmit((data) => {onSubmit(data); reset();})}>
+  return <>
     <h2>Uusi tapahtuma</h2>
-    Nimi
-    <input type="text" name="name" ref={register({required: true})}/>
-    {errors.name && "Nimi on pakollinen"}
-  </form>;
+    <EventEditor event={event} onChange={setEvent} />
+    <Button text="Luo" onClick={() => onSubmit(event)} />
+  </>;
 }
 
 export default Home;

@@ -2,9 +2,8 @@ import React, {useState} from 'react';
 import {H1, Card, Button, FormGroup, Intent, InputGroup} from "@blueprintjs/core";
 import InfiniteScroll from 'react-infinite-scroller';
 
-import { useDances, useCreateDance, useModifyDance, useDeleteDance } from '../services/dances';
+import { filterDances, useDances, useCreateDance, useModifyDance, useDeleteDance } from '../services/dances';
 
-import {sorted} from "../utils/sorted"
 import {showToast} from "../utils/toaster"
 
 import {CreateDanceDialog} from "../components/CreateDanceDialog"
@@ -18,7 +17,7 @@ function DancesPage() {
   const [createDance] = useCreateDance({onError});
   const [deleteDance] = useDeleteDance({onError});
 
-  const filteredDances = getDances(dances, search);
+  const filteredDances = filterDances(dances, search);
   const onDelete = ({_id}) => deleteDance(_id);
 
   return <>
@@ -34,18 +33,7 @@ function DancesPage() {
   </>;
 }
 
-function getDances(dances, search) {
-  return sorted(
-    dances.filter(dance => filterDance(dance, search)),
-    (a, b) => a.name.localeCompare(b.name)
-  );
-}
 
-function filterDance(dance, search) {
-  const lSearch = search.toLowerCase();
-  const lName = dance.name.toLowerCase();
-  return !dance.deleted && lName.indexOf(lSearch) !== -1;
-}
 
 function DanceList({dances, onChange, onDelete}) {
   const [limit, setLimit] = useState(5);
