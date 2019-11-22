@@ -1,5 +1,6 @@
 type Query {
   events: [Event!]!
+  event(id: ID): Event
 }
 
 type Event {

@@ -5,6 +5,13 @@ export const apolloClient = new ApolloClient({ });
 export { ApolloProvider, useQuery, useMutation } from '@apollo/react-hooks';
 export { gql } from 'apollo-boost';
 
+export function makeFragmentCache(type, query) {
+  return id => apolloClient.readFragment({
+    id: type+":"+id,
+    fragment: query,
+  });
+}
+
 export function makeListQueryHook(query, dataKey) {
   return () => {
     const result = useQuery(query);

@@ -22,6 +22,7 @@ module.exports = (app) => {
     },
     Query: {
       events: () => service.find(commonParams),
+      event: (_, {id}) => service.get(id, commonParams),
     },
     Mutation: {
       createEvent: (_, {event}) => service.create(event, commonParams),
