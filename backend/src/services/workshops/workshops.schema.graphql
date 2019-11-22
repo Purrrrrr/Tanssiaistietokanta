@@ -1,0 +1,21 @@
+type Query {
+  workshops: [Workshop!]!
+}
+
+type Workshop {
+  _id: ID
+  name: String!
+  dances: [Dance!]!
+  deleted: Boolean!
+}
+
+type Mutation {
+  createWorkshop(event: WorkshopInput!): Workshop!
+  modifyWorkshop(id: ID!, event: WorkshopInput!): Workshop!
+  deleteWorkshop(id: ID!): Workshop!
+}
+
+input WorkshopInput {
+  name: String!
+  dances: [ID!]!
+}

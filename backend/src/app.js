@@ -13,6 +13,7 @@ const socketio = require('@feathersjs/socketio');
 
 const middleware = require('./middleware');
 const services = require('./services');
+const graphqlService = require('./services/graphql/graphql.service.js');
 const appHooks = require('./app.hooks');
 const channels = require('./channels');
 
@@ -38,6 +39,9 @@ app.configure(socketio());
 app.configure(middleware);
 // Set up our services (see `services/index.js`)
 app.configure(services);
+// The graphql service needs to be configured last to 
+// see all the other services
+app.configure(graphqlService);
 // Set up event channels (see channels.js)
 app.configure(channels);
 

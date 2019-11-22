@@ -1,9 +1,9 @@
 const dances = require('./dances/dances.service.js');
 const events = require('./events/events.service.js');
-const graphql = require('./graphql/graphql.service.js');
+const workshops = require('./workshops/workshops.service.js');
 // eslint-disable-next-line no-unused-vars
 module.exports = function (app) {
   app.configure(dances);
   app.configure(events);
-  app.configure(graphql);
+  app.configure(workshops);
 };
