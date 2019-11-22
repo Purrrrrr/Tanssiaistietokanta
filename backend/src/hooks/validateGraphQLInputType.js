@@ -9,7 +9,11 @@ module.exports = function (typeName) {
 
     const errors = graphql.validate(context.data, typeName);
     if (errors.length) {
-      throw new Error(errors.join('\n'));
+      context.statusCode = 400;
+      context.result = {
+        className: 'validation-error',
+        errors
+      };
     }
   };
 };
