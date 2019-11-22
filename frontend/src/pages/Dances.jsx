@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
-import {H1, Card, Button, FormGroup, Intent, InputGroup} from "@blueprintjs/core";
+import {H1, Card, Button, FormGroup, InputGroup} from "@blueprintjs/core";
 import InfiniteScroll from 'react-infinite-scroller';
 
 import { filterDances, useDances, useCreateDance, useModifyDance, useDeleteDance } from '../services/dances';
 
-import {showToast} from "../utils/toaster"
+import {showDefaultErrorToast} from "../utils/toaster"
 
 import {CreateDanceDialog} from "../components/CreateDanceDialog"
 import {DanceEditor} from "../components/DanceEditor"
@@ -12,7 +12,7 @@ import {DanceEditor} from "../components/DanceEditor"
 function DancesPage() {
   const [search, setSearch] = useState("");
   const [dances] = useDances();
-  const onError = (e) => showToast({intent: Intent.DANGER, message: `Tietojen tallennus epäonnistui :( Syy: ${e.message}`});
+  const onError = showDefaultErrorToast;
   const [modifyDance] = useModifyDance({onError});
   const [createDance] = useCreateDance({onError});
   const [deleteDance] = useDeleteDance({onError});

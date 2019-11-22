@@ -5,8 +5,8 @@ module.exports = {
     all: [],
     find: [],
     get: [],
-    create: [validateInputType('DanceModification')],
-    update: [validateInputType('DanceModification')],
+    create: [validateInputType('DanceInput')],
+    update: [validateInputType('DanceInput')],
     patch: [],
     remove: []
   },

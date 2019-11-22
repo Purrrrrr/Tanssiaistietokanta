@@ -1,8 +1,39 @@
+type Query {
+  events: [Event!]!
+}
+
 type Event {
   _id: ID
   name: String!
+  program: [ProgramItem!]!
+  deleted: Boolean!
 }
 
-type Query {
-  events: [Event!]!
+type ProgramItem {
+  name: String
+  type: ProgramType!
+  dance: Dance
+}
+
+enum ProgramType {
+  DANCE
+  HEADER
+  TEXT
+}
+
+type Mutation {
+  createEvent(event: EventInput!): Event!
+  modifyEvent(id: ID!, event: EventInput!): Event!
+  deleteEvent(id: ID!): Event!
+}
+
+input EventInput {
+  name: String!
+  program: [ProgramItemInput!]!
+}
+
+input ProgramItemInput {
+  name: String
+  type: ProgramType!
+  danceId: ID
 }

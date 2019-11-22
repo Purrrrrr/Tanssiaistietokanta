@@ -1,10 +1,11 @@
-import { deleteJson, fetchJson, postJson, useAjax } from '../utils/ajax';
-import { gql, useQuery } from './Apollo';
+import { deleteJson } from '../utils/ajax';
+import { gql, makeMutationHook, makeListQueryHook, appendToListQuery } from './Apollo';
 
 const eventFields = `
 _id, name, deleted
 program {
   name
+  type
   dance{
     _id
   }
@@ -16,25 +17,51 @@ const GET_EVENTS = gql`
   events {
     ${eventFields}
   }
-}
-`;
+}`;
+export const useEvents = makeListQueryHook(GET_EVENTS, "events");
 
-export function useEvents() {
-  const result = useQuery(GET_EVENTS);
-  return [result.data ? result.data.events : [], result];
+export const useCreateEvent = makeMutationHook(gql`
+mutation createEvent($event: EventInput!) {
+  createEvent(event: $event) {
+    ${eventFields}
+  }
+}`, {
+  parameterMapper: (event) => ({variables: {event: toEventInput(event)}}),
+  update: (cache, {data}) =>
+    appendToListQuery(cache, GET_EVENTS, data.createEvent)
+});
+
+function toEventInput({name, program}) {
+  return {
+    name,
+    program: program.map(toProgramItemInput)
+  };
 }
 
-export function getEvents() {
-  return fetchJson('/events');
+function toProgramItemInput({name, type, dance}) {
+  return {
+    name, type, danceId: dance ? dance._id : null
+  };
 }
 
-export function getEvent(id) {
-  return fetchJson('/events/'+id);
-}
+export const useModifyEvent = makeMutationHook(gql`
+mutation modifyEvent($id: ID!, $event: EventInput!) {
+  modifyEvent(id: $id, event: $event) {
+    ${eventFields}
+  }
+}`, {
+  parameterMapper: ({_id, __typename, deleted, ...event}) => 
+    ({variables: {id: _id, event} })
+});
 
-export function createEvent(event) {
-  return postJson('/events', event);
-}
+export const useDeleteEvent = makeMutationHook(gql`
+mutation deleteEvent($id: ID!) {
+  deleteEvent(id: $id) {
+    ${eventFields}
+  }
+}`, {
+  parameterMapper: id => ({variables: {id}})
+});
 
 export function deleteEvent(id) {
   return deleteJson('/events/'+id);

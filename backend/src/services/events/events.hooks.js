@@ -1,12 +1,12 @@
-
+const validateInputType = require('../../hooks/validateGraphQLInputType');
 
 module.exports = {
   before: {
     all: [],
     find: [],
     get: [],
-    create: [],
-    update: [],
+    create: [validateInputType('EventInput')],
+    update: [validateInputType('EventInput')],
     patch: [],
     remove: []
   },

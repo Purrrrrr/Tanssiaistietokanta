@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Icon, Classes} from "@blueprintjs/core";
 
 import {TypedAutosuggest} from './Autosuggest';
@@ -23,8 +23,8 @@ export function ProgramTopicChooser({value, onChange}) {
       getSuggestions={value => getSuggestions(dances, value)}
       selected={value}
       setSelected={onChange}
-      textToSelection={(text) => type === "dance" ?
-          {type: "text", name: text} :
+      textToSelection={(text) => type === "DANCE" ?
+          {type: "TEXT", name: text} :
           {type, name: text}
       }
       renderSuggestion={(suggestion) => showSuggestion(suggestion, value)}
@@ -40,9 +40,9 @@ function getSuggestions(dances, search) {
   const foundDances = filterDances(dances, search);
 
   return [
-    {title: t('dance'), items: foundDances.map(dance => ({type: "dance", name: dance.name, dance}))},
-    {title: t('header'), items: [{type: "header", name: search}]},
-    {title: t('text'), items: [{type: "text", name: search}]}
+    {title: t('dance'), items: foundDances.map(dance => ({type: "DANCE", name: dance.name, dance}))},
+    {title: t('header'), items: [{type: "HEADER", name: search}]},
+    {title: t('text'), items: [{type: "TEXT", name: search}]}
   ].filter(s => s.items.length);
 }
 
@@ -69,7 +69,7 @@ function TopicInput({leftIcon, ref, ...props}) {
 }
 
 const topicTypeIcons = {
-  header: 'numbered-list',
-  text: 'font',
-  dance: 'music'
+  HEADER: 'numbered-list',
+  TEXT: 'font',
+  DANCE: 'music'
 }

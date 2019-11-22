@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
 import {Card, Button} from "@blueprintjs/core";
 
-import {useEvents, createEvent, deleteEvent} from '../services/events';
+import {useEvents, useCreateEvent, useDeleteEvent} from '../services/events';
+import {showDefaultErrorToast} from "../utils/toaster"
 import {AdminOnly} from '../services/users';
 import {Breadcrumb} from "../components/Breadcrumbs";
 import {EventEditor} from "../components/EventEditor";
@@ -17,10 +18,14 @@ function Home({children, uri}) {
 
 function EventList() {
   const [events, reload] = useEvents();
-  const onRemove = (event) => deleteEvent(event._id).then(reload);
+  const onError = showDefaultErrorToast;
+  //const [modifyEvent] = useModifyEvent({onError});
+  const [createEvent] = useCreateEvent({onError});
+  const [deleteEvent] = useDeleteEvent({onError});
+  const onRemove = (event) => deleteEvent(event._id);
   return <>
     <h1>Tanssittaja</h1>
-    {events.map(event => 
+    {events.filter(e => !e.deleted).map(event => 
       <Card key={event._id}>{event.name}<button onClick={() => onRemove(event)}>X</button></Card>
     )}
     <AdminOnly>

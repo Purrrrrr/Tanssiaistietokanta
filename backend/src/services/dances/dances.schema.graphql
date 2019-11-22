@@ -14,12 +14,12 @@ type Dance {
 }
 
 type Mutation {
-  createDance(dance: DanceModification!): Dance!
-  modifyDance(id: ID!, dance: DanceModification!): Dance!
+  createDance(dance: DanceInput!): Dance!
+  modifyDance(id: ID!, dance: DanceInput!): Dance!
   deleteDance(id: ID!): Dance!
 }
 
-input DanceModification {
+input DanceInput {
   name: String!
   description: String
   duration: Float
