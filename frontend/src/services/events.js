@@ -48,6 +48,16 @@ mutation createEvent($event: EventInput!) {
     appendToListQuery(cache, GET_EVENTS, data.createEvent)
 });
 
+export const useModifyEvent = makeMutationHook(gql`
+mutation modifyEvent($id: ID!, $event: EventInput!) {
+  modifyEvent(id: $id, event: $event) {
+    ${eventFields}
+  }
+}`, {
+  parameterMapper: ({_id, __typename, deleted, ...event}) => 
+    ({variables: {id: _id, event: toEventInput(event)} })
+});
+
 function toEventInput({name, program}) {
   return {
     name,
@@ -60,16 +70,6 @@ function toProgramItemInput({name, type, dance}) {
     name, type, danceId: dance ? dance._id : null
   };
 }
-
-export const useModifyEvent = makeMutationHook(gql`
-mutation modifyEvent($id: ID!, $event: EventInput!) {
-  modifyEvent(id: $id, event: $event) {
-    ${eventFields}
-  }
-}`, {
-  parameterMapper: ({_id, __typename, deleted, ...event}) => 
-    ({variables: {id: _id, event} })
-});
 
 export const useDeleteEvent = makeMutationHook(gql`
 mutation deleteEvent($id: ID!) {

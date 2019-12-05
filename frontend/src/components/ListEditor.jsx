@@ -1,7 +1,8 @@
 import React from 'react';
 import {SortableContainer, SortableElement} from 'react-sortable-hoc';
 import produce from 'immer'
-import {Card} from "@blueprintjs/core";
+import {guid} from "../utils/guid";
+//import {Card} from "@blueprintjs/core";
 
 export function ListEditor({items, onChange, children}) {
   function onSortEnd({oldIndex, newIndex}) {
@@ -17,7 +18,7 @@ export function ListEditor({items, onChange, children}) {
 }
 
 const SortableItem = SortableElement(({children, ...props}) =>
-  <Card tabIndex={0}>{children(props)}</Card>
+  <div tabIndex={0}>{children(props)}</div>
 );
 
 const SortableList = SortableContainer(({items, onChange, children}) => {
@@ -30,8 +31,17 @@ const SortableList = SortableContainer(({items, onChange, children}) => {
 
   return <div>
     {items.map((value, index) =>
-      <SortableItem key={value.id || index} index={index} item={value} children={children}
+      <SortableItem key={value.id || objectId(value)} index={index} item={value} children={children}
         onChange={(newItem) => setItem(index, newItem)} onRemove={() => removeItem(index)} />
       )}
   </div>;
 });
+
+const objectIdMap = new WeakMap();
+
+function objectId(object){
+  if (!objectIdMap.has(object)) {
+    objectIdMap.set(object,guid());
+  }
+  return objectIdMap.get(object);
+}

@@ -7,6 +7,11 @@ import {showDefaultErrorToast} from "../utils/toaster"
 import {AdminOnly} from '../services/users';
 import {Breadcrumb} from "../components/Breadcrumbs";
 import {EventEditor} from "../components/EventEditor";
+import {makeTranslate} from '../utils/translate';
+
+const t = makeTranslate({
+  newEvent: 'Luo uusi tapahtuma',
+});
 
 export default function CreateEventForm({uri}) {
   const [createEvent] = useCreateEvent({onError: showDefaultErrorToast});
@@ -16,7 +21,7 @@ export default function CreateEventForm({uri}) {
 
   return <AdminOnly>
     <Breadcrumb text="Uusi tapahtuma" href={uri} />
-    <h2>Uusi tapahtuma</h2>
+    <h1>{t('newEvent')}</h1>
     <EventEditor event={event} onChange={setEvent} />
     <Button text="Luo" onClick={() => createEvent(event).then(
       ({data}) => navigate(data.createEvent._id))

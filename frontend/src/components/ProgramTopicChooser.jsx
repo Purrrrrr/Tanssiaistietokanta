@@ -3,20 +3,22 @@ import {Icon, Classes} from "@blueprintjs/core";
 
 import {TypedAutosuggest} from './Autosuggest';
 import {useDances, filterDances} from '../services/dances';
+import {makeTranslate} from '../utils/translate';
 
-const strings = {
-  dance: 'Tanssi',
-  header: 'Otsikko',
-  text: 'Muu tieto'
-}
-const t = k => strings[k];
+import './ProgramTopicChooser.sass';
+
+const t = makeTranslate({
+  DANCE: 'Tanssi',
+  HEADER: 'Otsikko',
+  TEXT: 'Muu tieto'
+});
 
 export function ProgramTopicChooser({value, onChange}) {
   const [dances] = useDances();
-  const type = (value && value.type) || "text";
+  const type = (value && value.type) || "TEXT";
 
-  return <div style={{display: "inline-flex", alignItems: "center"}}>
-    <span style={{marginRight: 5}}>
+  return <div className="programTopicChooser" style={{display: "inline-flex", alignItems: "center"}}>
+    <span className="typeTitle">
       {t(type)}
     </span>
     <TypedAutosuggest
@@ -40,9 +42,9 @@ function getSuggestions(dances, search) {
   const foundDances = filterDances(dances, search);
 
   return [
-    {title: t('dance'), items: foundDances.map(dance => ({type: "DANCE", name: dance.name, dance}))},
-    {title: t('header'), items: [{type: "HEADER", name: search}]},
-    {title: t('text'), items: [{type: "TEXT", name: search}]}
+    {title: t('DANCE'), items: foundDances.map(dance => ({type: "DANCE", name: dance.name, dance}))},
+    {title: t('HEADER'), items: [{type: "HEADER", name: search}]},
+    {title: t('TEXT'), items: [{type: "TEXT", name: search}]}
   ].filter(s => s.items.length);
 }
 
