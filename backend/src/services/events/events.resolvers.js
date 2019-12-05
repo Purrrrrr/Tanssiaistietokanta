@@ -13,9 +13,11 @@ module.exports = (app) => {
       deleted: (obj) => !!obj.deleted,
     },
     ProgramItem: {
-      name: (obj) => {
-        const {name} = obj.danceId ?
-          getDance(obj.danceId) : obj;
+      name: async ({name, danceId}) => {
+        if (danceId) {
+          const dance = await getDance(danceId);
+          return dance.name;
+        }
         return name;
       },
       dance: (obj) => getDance(obj.danceId)
