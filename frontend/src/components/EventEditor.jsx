@@ -2,10 +2,10 @@ import React, {useState} from 'react';
 import produce from 'immer'
 import {Button, Intent} from "@blueprintjs/core";
 
-import {PropertyEditor, required} from "./PropertyEditor";
+import {PropertyEditor, required} from "./widgets/PropertyEditor";
 import {ListEditor} from "./ListEditor";
-import {ProgramTopicChooser} from "./ProgramTopicChooser";
-import {makeTranslate} from '../utils/translate';
+import {ProgramTopicChooser} from "./widgets/ProgramTopicChooser";
+import {makeTranslate} from 'utils/translate';
 
 const t = makeTranslate({
   name: 'Nimi',

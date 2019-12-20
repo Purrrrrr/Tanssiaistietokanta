@@ -2,12 +2,12 @@ import React, {useState} from 'react';
 import {H1, Card, Button, FormGroup, InputGroup} from "@blueprintjs/core";
 import InfiniteScroll from 'react-infinite-scroller';
 
-import { filterDances, useDances, useCreateDance, useModifyDance, useDeleteDance } from '../services/dances';
+import { filterDances, useDances, useCreateDance, useModifyDance, useDeleteDance } from 'services/dances';
 
-import {showDefaultErrorToast} from "../utils/toaster"
+import {showDefaultErrorToast} from "utils/toaster"
 
-import {CreateDanceDialog} from "../components/CreateDanceDialog"
-import {DanceEditor} from "../components/DanceEditor"
+import {CreateDanceDialog} from "components/CreateDanceDialog"
+import {DanceEditor} from "components/DanceEditor"
 
 function DancesPage() {
   const [search, setSearch] = useState("");

@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 import {Button} from "@blueprintjs/core";
-import {UserContext} from '../services/users';
+import {UserContext} from 'services/users';
 
 function LoginForm() {
   const {user, login, logout} = useContext(UserContext);

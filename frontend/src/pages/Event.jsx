@@ -1,10 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import {Button} from "@blueprintjs/core";
-import {useEvent} from '../services/events';
-import {Breadcrumb} from "../components/Breadcrumbs";
-import {EventEditor} from "../components/EventEditor";
-import {useModifyEvent} from '../services/events';
-import {showDefaultErrorToast} from "../utils/toaster"
+import {useEvent} from 'services/events';
+import {Breadcrumb} from "components/Breadcrumbs";
+import {EventEditor} from "components/EventEditor";
+import {useModifyEvent} from 'services/events';
+import {showDefaultErrorToast} from "utils/toaster"
 
 export default function({eventId, uri}) {
   const [originalEvent] = useEvent(eventId);

@@ -2,7 +2,7 @@ import React from 'react';
 import {AnchorButton, Navbar, Alignment} from "@blueprintjs/core";
 import {Breadcrumbs} from "./Breadcrumbs";
 import LoginForm from "./LoginForm";
-import {AdminOnly} from '../services/users';
+import {AdminOnly} from 'services/users';
 import {navigate} from "@reach/router"
 
 function Navigation() {

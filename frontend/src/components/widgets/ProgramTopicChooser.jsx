@@ -2,8 +2,8 @@ import React from 'react';
 import {Icon, Classes} from "@blueprintjs/core";
 
 import {TypedAutosuggest} from './Autosuggest';
-import {useDances, filterDances} from '../services/dances';
-import {makeTranslate} from '../utils/translate';
+import {useDances, filterDances} from 'services/dances';
+import {makeTranslate} from 'utils/translate';
 
 import './ProgramTopicChooser.sass';
 

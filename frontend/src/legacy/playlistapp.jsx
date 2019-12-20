@@ -12,7 +12,7 @@ import "react-tabs/style/react-tabs.css";
 import _ from "lodash";
 import "./playlistapp.sass";
 
-import {Breadcrumb} from "../components/Breadcrumbs";
+import {Breadcrumb} from "components/Breadcrumbs";
 
 const PlaylistApp = createClass({
   getInitialState() {

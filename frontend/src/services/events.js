@@ -1,4 +1,4 @@
-import { deleteJson } from '../utils/ajax';
+import { deleteJson } from 'utils/ajax';
 import { gql, useQuery, makeFragmentCache, makeMutationHook, makeListQueryHook, appendToListQuery } from './Apollo';
 
 const eventFields = `

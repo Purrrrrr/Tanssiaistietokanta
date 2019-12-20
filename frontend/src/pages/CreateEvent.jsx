@@ -2,12 +2,12 @@ import React, {useState} from 'react';
 import {Button} from "@blueprintjs/core";
 import {navigate} from "@reach/router"
 
-import {useCreateEvent} from '../services/events';
-import {showDefaultErrorToast} from "../utils/toaster"
-import {AdminOnly} from '../services/users';
-import {Breadcrumb} from "../components/Breadcrumbs";
-import {EventEditor} from "../components/EventEditor";
-import {makeTranslate} from '../utils/translate';
+import {useCreateEvent} from 'services/events';
+import {showDefaultErrorToast} from "utils/toaster"
+import {AdminOnly} from 'services/users';
+import {Breadcrumb} from "components/Breadcrumbs";
+import {EventEditor} from "components/EventEditor";
+import {makeTranslate} from 'utils/translate';
 
 const t = makeTranslate({
   newEvent: 'Luo uusi tapahtuma',

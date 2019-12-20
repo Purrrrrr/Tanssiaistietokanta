@@ -1,7 +1,7 @@
 import React from 'react';
 import {SortableContainer, SortableElement} from 'react-sortable-hoc';
 import produce from 'immer'
-import {guid} from "../utils/guid";
+import {guid} from "utils/guid";
 //import {Card} from "@blueprintjs/core";
 
 export function ListEditor({items, onChange, children}) {

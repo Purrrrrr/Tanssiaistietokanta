@@ -3,10 +3,10 @@ import {Card} from "@blueprintjs/core";
 
 import CreateEvent from "./CreateEvent";
 import Event from "./Event";
-import {useEvents, useDeleteEvent} from '../services/events';
-import {showDefaultErrorToast} from "../utils/toaster"
-import {Breadcrumb} from "../components/Breadcrumbs";
-import {AdminOnly} from '../services/users';
+import {useEvents, useDeleteEvent} from 'services/events';
+import {showDefaultErrorToast} from "utils/toaster"
+import {Breadcrumb} from "components/Breadcrumbs";
+import {AdminOnly} from 'services/users';
 import {Router, Link} from "@reach/router"
 
 function Events({uri}) {

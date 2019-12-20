@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {H2, Alert, Button, HTMLTable, Intent} from "@blueprintjs/core";
-import {PropertyEditor, required} from "./PropertyEditor";
-import {DanceLengthProperty} from "./DurationField";
+import {PropertyEditor, required} from "./widgets/PropertyEditor";
+import {DanceLengthProperty} from "./widgets/DurationField";
 
 export function DanceEditor({dance, onChange, onDelete}) {
   return <>

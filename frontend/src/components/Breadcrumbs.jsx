@@ -1,7 +1,7 @@
 import React, {createContext, useState, useEffect, useRef, useContext} from 'react';
 import {Breadcrumbs as BlueprintBreadcrumbs, Breadcrumb as BlueprintBreadcrumb} from "@blueprintjs/core";
 import {navigate} from "@reach/router"
-import {sorted} from "../utils/sorted"
+import {sorted} from "utils/sorted"
 
 const RegisterContext = createContext();
 const PathContext = createContext();
