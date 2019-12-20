@@ -50,14 +50,17 @@ const PlaylistApp = createClass({
     });
   },
   fetchPlaylists() {
-    return fetchJson("events").then(playlists => {
-      //this.setState({playlists});
-      this.setState({playlists: {"fake data":[]}});
+    return fetchJson("events").then(events => {
+      const playlists = {};
+      events.forEach(({name, program})=> {
+        playlists[name] = toParts(program, this.state.tracks);
+      });
+      this.setState({playlists});
     });
   },
   reload() {
-    this.fetchTracks();
-    this.fetchPlaylists();
+    this.fetchTracks()
+      .then(() => this.fetchPlaylists());
   },
   saveTrack(newTrack) {
     return putJson("dances/"+newTrack._id, newTrack).then(() => {
@@ -114,5 +117,23 @@ const PlaylistApp = createClass({
       </Tabs></div>);
   }
 });
+
+function toParts(program, dances) {
+  let currentPart = null;
+  const parts = [];
+  program.forEach(item => {
+    if (item.type === 'DANCE') {
+      const [dance] = dances.filter(({_id}) => _id === item.danceId);
+      const danceItem = dance ? {...item, ...dance} : item;
+      currentPart.tracks.push(danceItem);
+    } else {
+      if (currentPart) parts.push(currentPart);
+      currentPart = {name: item.name, tracks: []}
+    }
+  });
+  if (currentPart) parts.push(currentPart);
+
+  return parts;
+}
 
 export default PlaylistApp;
