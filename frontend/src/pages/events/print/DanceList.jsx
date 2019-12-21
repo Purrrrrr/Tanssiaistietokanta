@@ -1,9 +1,15 @@
 import React, {useState} from "react";
-import {Switch} from "@blueprintjs/core";
+import {Switch, Button} from "@blueprintjs/core";
 import {gql, useQuery} from 'services/Apollo';
 import "./DanceList.sass";
 import programToSections from 'utils/programToSections';
 import PrintViewToolbar from 'components/widgets/PrintViewToolbar';
+import {makeTranslate} from 'utils/translate';
+
+const t = makeTranslate({
+  showSideBySide: 'Näytä setit rinnakkain',
+  print: 'Tulosta'
+});
 
 function DanceList({eventId}) {
   const program = useBallProgram(eventId);
@@ -12,9 +18,10 @@ function DanceList({eventId}) {
   
   return program && <div className={"danceList" + colClass}>
     <PrintViewToolbar>
-      <Switch label="Näytä setit rinnakkain" checked={sidebyside} onChange={e => {
+      <Switch inline label={t('showSideBySide')} checked={sidebyside} onChange={e => {
         setSidebyside(e.target.checked);
       }}/>
+      <Button text={t('print')} onClick={() => window.print()} />
     </PrintViewToolbar>
     {program.map(
       ({name, tracks}, key) => {
