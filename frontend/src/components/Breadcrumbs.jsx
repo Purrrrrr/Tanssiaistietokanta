@@ -31,7 +31,7 @@ function remove(array, value) {
 
 export function Breadcrumbs() {
   const paths = useContext(PathContext);
-  return <BlueprintBreadcrumbs items={sortedPaths(paths)} breadcrumbRenderer={BreadcrumbItem} />;
+  return <BlueprintBreadcrumbs id="breadcrumbs" items={sortedPaths(paths)} breadcrumbRenderer={BreadcrumbItem} />;
 }
 
 function BreadcrumbItem(props) {

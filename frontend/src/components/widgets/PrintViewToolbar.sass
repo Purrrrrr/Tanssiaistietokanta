@@ -1,0 +1,39 @@
+.print-view-toolbar
+  position: absolute
+  right: 0
+  top: 0
+  overflow: hidden
+  max-width: 40px
+  //Ensure max-width does not shrink during slide animation
+  transition: max-width 0s 0.5s
+  &:hover
+    transition-delay: 0s
+    max-width: 10000px
+
+  & > .contents, & > .more
+    display: block
+    width: auto
+
+  .more
+    position: absolute
+    right: 0.8em
+    top: 0.8em
+    opacity: 0.6
+  &:hover .more
+      opacity: 0
+
+  .contents
+    opacity: 0
+    transition: opacity 0.3s, transform 0.5s
+    border-left: 1px solid black
+    border-bottom: 1px solid black
+    border-radius: 0 0 0 0.5em
+    padding: 0.8em 0.8em
+    transform: translateX(100%)
+  &:hover .contents
+    opacity: 1
+    transform: none
+
+  @media print
+    display: none
+      

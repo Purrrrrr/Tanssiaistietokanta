@@ -14,7 +14,7 @@ function Events({uri}) {
     <Breadcrumb text="Tapahtumat" href={uri} />
     <Router>
       <EventList path="/" />
-      <Event path=":eventId" />
+      <Event path=":eventId/*" />
       <CreateEvent path="new" />
     </Router>
   </>;

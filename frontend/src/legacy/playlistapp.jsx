@@ -5,14 +5,11 @@ import PlaylistEditor from "./playlistEditor";
 import PlaylistCheatSheet from "./playlistCheatSheet";
 import PlaylistPreludes from "./playlistPreludes";
 import PlaylistSlides from "./playlistSlides";
-import DanceList from "./danceList";
 import {fetchJson, putJson} from "./util/ajax";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import "react-tabs/style/react-tabs.css";
 import _ from "lodash";
 import "./playlistapp.sass";
-
-import {Breadcrumb} from "components/Breadcrumbs";
 
 const PlaylistApp = createClass({
   getInitialState() {
@@ -77,7 +74,6 @@ const PlaylistApp = createClass({
   },
   render() {
     return (<div>
-      <Breadcrumb text="LegacyTanssittaja" href={this.props.uri} />
       <div className="toolbar"><button onClick={this.reload}>Lataa biisitiedot uusiksi</button> | Valitse settilista: {this.renderPlaylistChooser()}</div>
       <Tabs className="playlistapp" selectedIndex={this.state.currentTab} onSelect={currentTab => this.setState({currentTab})}>
         <TabList>
@@ -86,8 +82,6 @@ const PlaylistApp = createClass({
           <Tab>Alkusoitot</Tab>
           <Tab>Lunttilappu</Tab>
           <Tab>Minilunttilappu</Tab>
-          <Tab>Tanssilista</Tab>
-          <Tab>Tanssilista (vierekkäin)</Tab>
           <Tab>Listadiashow</Tab>
         </TabList>
         <TabPanel>
@@ -104,12 +98,6 @@ const PlaylistApp = createClass({
         </TabPanel>
         <TabPanel>
           <PlaylistCheatSheet mini={true} playlist={this.state.playlists[this.state.playlist]} onTrackSave={this.saveTrack}/>
-        </TabPanel>
-        <TabPanel>
-          <DanceList playlist={this.state.playlists[this.state.playlist]}/>
-        </TabPanel>
-        <TabPanel>
-          <DanceList playlist={this.state.playlists[this.state.playlist]} sidebyside={true}/>
         </TabPanel>
         <TabPanel>
           <PlaylistSlides playlist={this.state.playlists[this.state.playlist]} onTrackSave={this.saveTrack} />
