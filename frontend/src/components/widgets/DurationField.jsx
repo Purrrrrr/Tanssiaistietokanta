@@ -46,7 +46,7 @@ function TimePartEditor({isEditing, onEdit, value, onConfirm, ...props}) {
     }
   }, [isEditing, onConfirmRef]);
 
-  return <span ref={span} onClick={onEdit}>
+  return <span ref={span} onClick={onEdit} className="bp3-editable-text" tabIndex="0" onFocus={onEdit}>
     {isEditing
       ? <EditableText {...props} value={value}
         minWidth={40} type="number" isEditing />
