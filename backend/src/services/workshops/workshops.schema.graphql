@@ -5,17 +5,24 @@ type Query {
 type Workshop {
   _id: ID
   name: String!
+  description: String
+  teachers: String
+  ocurrences: [String!]
+  danceIds: [ID!]!
   dances: [Dance!]!
   deleted: Boolean!
 }
 
 type Mutation {
-  createWorkshop(event: WorkshopInput!): Workshop!
-  modifyWorkshop(id: ID!, event: WorkshopInput!): Workshop!
+  createWorkshop(eventId: ID!, workshop: WorkshopInput!): Workshop!
+  modifyWorkshop(id: ID!, workshop: WorkshopInput!): Workshop!
   deleteWorkshop(id: ID!): Workshop!
 }
 
 input WorkshopInput {
   name: String!
-  dances: [ID!]!
+  description: String
+  teachers: String
+  ocurrences: [String!]
+  danceIds: [ID!]!
 }

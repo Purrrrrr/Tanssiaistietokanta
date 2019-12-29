@@ -17,7 +17,7 @@ module.exports = (app) => {
       workshops: () => service.find(commonParams),
     },
     Mutation: {
-      createWorkshop: ({workshop}) => service.create(workshop, commonParams),
+      createWorkshop: (_, {eventId, workshop}) => service.create({eventId, ...workshop}, commonParams),
       modifyWorkshop: (_, {id, workshop}) => service.update(id, workshop, commonParams),
       deleteWorkshop: (_, {id}) => service.remove(id, {}, commonParams)
         .then(workshop => ({...workshop, deleted: true}))

@@ -1,8 +1,14 @@
 module.exports = (app) => {
   const danceService = app.service('dances');
+  const workshopService = app.service('workshops');
+
   function getDance(id) {
     return id ? danceService.get(id) : null;
   }
+  function getWorkshops(eventId) {
+    return workshopService.find({query: {eventId}});
+  }
+
   const service = app.service('events');
   const commonParams = {
     provider: 'graphql'
@@ -11,6 +17,7 @@ module.exports = (app) => {
   return {
     Event: {
       deleted: (obj) => !!obj.deleted,
+      workshops: (obj) => getWorkshops(obj._id),
     },
     ProgramItem: {
       name: async ({name, danceId}) => {

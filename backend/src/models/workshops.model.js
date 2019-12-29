@@ -7,6 +7,7 @@ module.exports = function (app) {
     filename: path.join(dbPath, 'workshops.db'),
     autoload: true
   });
+  Model.ensureIndex({fieldName: 'dances', sparse: true});
 
   return Model;
 };
