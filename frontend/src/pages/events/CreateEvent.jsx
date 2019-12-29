@@ -10,7 +10,9 @@ import {EventEditor} from "components/EventEditor";
 import {makeTranslate} from 'utils/translate';
 
 const t = makeTranslate({
+  newEventBreadcrumb: 'Uusi tapahtuma',
   newEvent: 'Luo uusi tapahtuma',
+  create: 'Luo',
 });
 
 export default function CreateEventForm({uri}) {
@@ -20,10 +22,10 @@ export default function CreateEventForm({uri}) {
   });
 
   return <AdminOnly>
-    <Breadcrumb text="Uusi tapahtuma" href={uri} />
+    <Breadcrumb text={t('newEventBreadcrumb')} href={uri} />
     <h1>{t('newEvent')}</h1>
     <EventEditor event={event} onChange={setEvent} />
-    <Button text="Luo" onClick={() => createEvent(event).then(
+    <Button text={t('create')} onClick={() => createEvent(event).then(
       ({data}) => navigate(data.createEvent._id))
     } />
   </AdminOnly>;

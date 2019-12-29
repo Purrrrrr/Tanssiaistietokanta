@@ -19,8 +19,8 @@ export function useIsAdmin() {
   return user && user.isAdmin;
 }
 
-export function AdminOnly({children}) {
+export function AdminOnly({children, fallback}) {
   const isAdmin = useIsAdmin();
-  return isAdmin && children;
+  return isAdmin ? children : (fallback || false);
 }
 

@@ -23,7 +23,7 @@ export function makeMutationHook(query, {parameterMapper, ...rest}) {
   return args => {
     const [runQuery, data] = useMutation(query, {args, ...rest});
 
-    return [vars => runQuery(parameterMapper(vars)), data];
+    return [(...vars) => runQuery(parameterMapper(...vars)), data];
   };
 }
 

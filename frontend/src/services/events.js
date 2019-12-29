@@ -10,6 +10,9 @@ program {
     _id
   }
 }
+workshops {
+  _id, name
+}
 `;
 
 const GET_EVENT = gql`
