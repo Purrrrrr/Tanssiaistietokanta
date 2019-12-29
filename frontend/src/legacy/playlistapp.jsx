@@ -10,6 +10,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import "react-tabs/style/react-tabs.css";
 import _ from "lodash";
 import "./playlistapp.sass";
+import programToSections from 'utils/programToSections';
 
 const PlaylistApp = createClass({
   getInitialState() {
@@ -107,21 +108,13 @@ const PlaylistApp = createClass({
 });
 
 function toParts(program, dances) {
-  let currentPart = null;
-  const parts = [];
-  program.forEach(item => {
+  return programToSections(program).map(item => {
     if (item.type === 'DANCE') {
       const [dance] = dances.filter(({_id}) => _id === item.danceId);
-      const danceItem = dance ? {...item, ...dance} : item;
-      currentPart.tracks.push(danceItem);
-    } else {
-      if (currentPart) parts.push(currentPart);
-      currentPart = {name: item.name, tracks: []}
+      if (dance) return {...item, ...dance};
     }
+    return item;
   });
-  if (currentPart) parts.push(currentPart);
-
-  return parts;
 }
 
 export default PlaylistApp;
