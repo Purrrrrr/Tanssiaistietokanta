@@ -39,9 +39,8 @@ function ProgramEditor({program, onChange}) {
 
   return <>
     <h2>{t('danceProgram')}</h2>
-    <ListEditor items={program} onChange={onChange}>
-      {ProgramItemEditor}
-    </ListEditor>
+    <ListEditor items={program} onChange={onChange} 
+      component={ProgramItemEditor} />
     {program.length ? null : <p className="bp3-text-muted">{t('programListIsEmpty')}</p>}
     <h3>{t('addEntryTitle')}</h3>
     <ProgramItemEditor key={program.length} item={newItem} onChange={setNewItem} onAdd={addItem}/>
