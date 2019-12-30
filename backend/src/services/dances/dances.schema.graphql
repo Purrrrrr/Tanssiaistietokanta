@@ -11,6 +11,7 @@ type Dance {
   formation: String
   remarks: String
   deleted: Boolean!
+  teachedIn(eventId: ID): [Workshop!]!
 }
 
 type Mutation {

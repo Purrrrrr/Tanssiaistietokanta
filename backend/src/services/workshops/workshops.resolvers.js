@@ -1,4 +1,5 @@
 module.exports = (app) => {
+  const eventService = app.service('events');
   const danceService = app.service('dances');
   function getDance(id) {
     return id ? danceService.get(id) : null;
@@ -11,10 +12,8 @@ module.exports = (app) => {
   return {
     Workshop: {
       deleted: (obj) => !!obj.deleted,
-      dances: (obj) => obj.danceIds.map(getDance)
-    },
-    Query: {
-      workshops: () => service.find(commonParams),
+      dances: (obj) => obj.danceIds.map(getDance),
+      event: (obj) => eventService.get(obj.eventId)
     },
     Mutation: {
       createWorkshop: (_, {eventId, workshop}) => service.create({eventId, ...workshop}, commonParams),
