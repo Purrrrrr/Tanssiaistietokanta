@@ -1,5 +1,5 @@
 import { deleteJson } from 'utils/ajax';
-import { gql, useQuery, makeFragmentCache, makeMutationHook, makeListQueryHook, appendToListQuery } from './Apollo';
+import { gql, useQuery, makeMutationHook, makeListQueryHook, appendToListQuery } from './Apollo';
 
 const eventFields = `
 _id, name, deleted
@@ -21,15 +21,9 @@ query getEvent($id: ID!) {
     ${eventFields}
   }
 }`;
-const getEventFromCache = makeFragmentCache("Event", gql`
-  fragment event on Event {
-    ${eventFields}
-  }
-`);
 export function useEvent(id) {
-  const fragment = getEventFromCache(id);
-  const res = useQuery(GET_EVENT, {variables: {id}, skip: !!fragment});
-  return [fragment || (res.data ? res.data.event : null), res];
+  const res = useQuery(GET_EVENT, {variables: {id}});
+  return [res.data ? res.data.event : null, res];
 }
 
 const GET_EVENTS = gql`

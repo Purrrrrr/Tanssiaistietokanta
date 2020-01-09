@@ -1,11 +1,12 @@
 import React, {useState} from 'react';
-import {AnchorButton, Button} from "@blueprintjs/core";
+import {Button} from "@blueprintjs/core";
 import {Router, Link} from "@reach/router"
 
 import CreateWorkshopForm from './workshops/CreateWorkshop';
 import {useEvent} from 'services/events';
 import {Breadcrumb} from "components/Breadcrumbs";
 import {EventEditor} from "components/EventEditor";
+import {NavigateButton} from "components/widgets/NavigateButton";
 import {useModifyEvent} from 'services/events';
 import {showDefaultErrorToast} from "utils/toaster"
 import {AdminOnly} from 'services/users';
@@ -31,14 +32,18 @@ function EventEditorPage(props) {
     <EventEditor event={event} onChange={setEvent}/>
     <Button text="Tallenna muutokset" onClick={() => modifyEvent(event)} />
     <h2>Työpajat</h2>
-		{event.workshops.map(workshop =>
-			<li>
-				<Link key={workshop._id} to={'workshops/'+workshop._id} >{workshop.name}</Link>
+		{props.event.workshops.map(workshop =>
+			<li key={workshop._id}>
+				<Link to={'workshops/'+workshop._id} >{workshop.name}</Link>
 			</li>
 		)}
-    <AnchorButton href={event._id+"/workshops/create"} text="Uusi työpaja" />
-    <h3>Tulosta</h3>
-    <AnchorButton href={event._id+"/print/ball-dancelist"} target="_blank"
+    <NavigateButton href={"workshops/create"} text="Uusi työpaja" />
+    <h3>Toiminnot</h3>
+    {/* Intentionally use event._id here since target="_blank" makes 
+      use of actual browser links and those have different link mechanics */}
+    <NavigateButton href={event._id+"/print/ball-dancelist"} target="_blank"
       text="Tanssiaisten settilista" />
+    <NavigateButton href={event._id+"/print/ball-dancelist"} target="_blank"
+      text="Tanssiaisten diashow" />
   </AdminOnly>;
 }

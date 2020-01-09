@@ -1,12 +1,11 @@
 import React, {useState} from 'react';
 import {Button, Intent} from "@blueprintjs/core";
-import {navigate} from "@reach/router"
 
-import {useCreateWorkshop} from 'services/workshops';
-import {showDefaultErrorToast} from "utils/toaster"
+import {CREATE_WORKSHOP, toWorkshopInput} from 'services/workshops';
 import {AdminOnly} from 'services/users';
 import {Breadcrumb} from "components/Breadcrumbs";
 import {ListEditor} from "components/ListEditor";
+import {MutateButton} from "components/widgets/MutateButton";
 import {DanceChooser} from "components/widgets/DanceChooser";
 import {PropertyEditor, required} from "components/widgets/PropertyEditor";
 import {makeTranslate} from 'utils/translate';
@@ -21,7 +20,6 @@ const t = makeTranslate({
 });
 
 export default function CreateWorkshopForm({event, uri}) {
-  const [createWorkshop] = useCreateWorkshop({onError: showDefaultErrorToast});
   const [workshop, setWorkshop] = useState({
     dances: []
   });
@@ -33,13 +31,16 @@ export default function CreateWorkshopForm({event, uri}) {
     {t('name')+" "}
     <PropertyEditor property="name" data={workshop} onChange={setWorkshop} validate={required(t('nameRequired'))}/>
     <h2>{t('dances')}</h2>
-		<ListEditor items={workshop.dances} onChange={setDances}
-		  component={DanceListItem} />
-		<div>
-			{t('addDance')+' '}
-			<DanceChooser selected={null} onChange={dance => setDances([...workshop.dances, dance])} key={workshop.dances.length} />
-		</div>
-    <Button text={t('create')} onClick={() => createWorkshop(event._id, workshop).then(() => navigate('../..'))} />
+    <ListEditor items={workshop.dances} onChange={setDances}
+      component={DanceListItem} />
+    <div>
+      {t('addDance')+' '}
+      <DanceChooser selected={null} onChange={dance => setDances([...workshop.dances, dance])} key={workshop.dances.length} />
+    </div>
+    <MutateButton mutation={CREATE_WORKSHOP} successUrl="../.."
+      variables={{eventId: event._id, workshop: toWorkshopInput(workshop)}}
+      refetchQueries={['getEvent']}
+      text={t('create')} />
   </AdminOnly>;
 }
 

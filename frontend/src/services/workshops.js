@@ -1,4 +1,4 @@
-import { gql, useQuery, makeFragmentCache, makeMutationHook, makeListQueryHook, appendToListQuery } from './Apollo';
+import { gql, useQuery, makeFragmentCache, makeMutationHook} from './Apollo';
 
 const workshopFields = `
   _id, name, deleted
@@ -25,25 +25,12 @@ export function useWorkshop(id) {
   return [fragment || (res.data ? res.data.workshop : null), res];
 }
 
-const GET_WORKSHOPS = gql`
-{
-  workshops {
-    ${workshopFields}
-  }
-}`;
-export const useWorkshops = makeListQueryHook(GET_WORKSHOPS, "workshops");
-
-export const useCreateWorkshop = makeMutationHook(gql`
+export const CREATE_WORKSHOP = gql`
 mutation createWorkshop($eventId: ID!, $workshop: WorkshopInput!) {
   createWorkshop(eventId: $eventId, workshop: $workshop) {
     ${workshopFields}
   }
-}`, {
-  parameterMapper: (eventId, workshop) => 
-    ({variables: {eventId, workshop: toWorkshopInput(workshop)}}),
-  update: (cache, {data}) =>
-    appendToListQuery(cache, GET_WORKSHOPS, data.createWorkshop)
-});
+}`;
 
 export const useModifyWorkshop = makeMutationHook(gql`
 mutation modifyWorkshop($id: ID!, $workshop: WorkshopInput!) {
@@ -55,7 +42,7 @@ mutation modifyWorkshop($id: ID!, $workshop: WorkshopInput!) {
     ({variables: {id: _id, workshop: toWorkshopInput(workshop)} })
 });
 
-function toWorkshopInput({name, dances}) {
+export function toWorkshopInput({name, dances}) {
   return {
     name,
     danceIds: dances.map(({_id}) => _id)
