@@ -24,22 +24,23 @@ query BallProgram($eventId: ID!) {
 }`;
 
 export default function BallProgram({eventId}) {
-  const {data} = useQuery(GET_BALL_PROGRAM, {variables: {eventId}});
+  const {data, refetch} = useQuery(GET_BALL_PROGRAM, {variables: {eventId}});
   const [slide, setSlide] = useState(0);
 
   if (!data) return '...';
 
-  return <BallProgramView event={data.event} 
+  return <BallProgramView event={data.event} onRefetch={refetch}
     currentSlide={slide} onChangeSlide={setSlide} />;
 }
 
-function BallProgramView({event, currentSlide, onChangeSlide}) {
+function BallProgramView({event, currentSlide, onChangeSlide, onRefetch}) {
   const program = useMemo(() => getSlides(event), [event]);
   const slide = program[currentSlide];
 
   useOnKeydown({
     ArrowLeft: () => onChangeSlide((s) => Math.max(0, s-1)),
     ArrowRight: () => onChangeSlide((s) => Math.min(s+1, program.length-1)),
+    r: onRefetch
   })
 
   return <div className="slideshow">
