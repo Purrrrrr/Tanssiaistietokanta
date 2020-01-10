@@ -43,7 +43,11 @@ function EventEditorPage(props) {
       use of actual browser links and those have different link mechanics */}
     <NavigateButton href={event._id+"/print/ball-dancelist"} target="_blank"
       text="Tanssiaisten settilista" />
-    <NavigateButton href={event._id+"/print/ball-dancelist"} target="_blank"
+    <NavigateButton href={event._id+"/print/dancemasters-cheatlist"} target="_blank"
+      text="Tanssiaisjuontajan lunttilappu" />
+    <NavigateButton href={event._id+"/print/dance-cheatlist"} target="_blank"
+      text="Osaan tanssin -lunttilappu" />
+    <NavigateButton href={event._id+"/ball-program"} target="_blank"
       text="Tanssiaisten diashow" />
   </AdminOnly>;
 }

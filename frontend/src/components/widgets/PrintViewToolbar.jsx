@@ -5,6 +5,6 @@ import "./PrintViewToolbar.sass";
 export default function({children}) {
   return <div className="print-view-toolbar">
     <span className="contents">{children}</span>
-    <Icon className="more" icon="more" />
+    <Icon className="more" icon="settings" iconSize={20} />
   </div>
 }
