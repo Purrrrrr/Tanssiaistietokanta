@@ -76,6 +76,8 @@ const PlaylistTimingTool = createClass({
       </React.Fragment>;
   },
   render() {
+    if (!this.props.playlist) return null;
+
     return <div>
       <div className="toolbar">
         Biisitauko:&nbsp;

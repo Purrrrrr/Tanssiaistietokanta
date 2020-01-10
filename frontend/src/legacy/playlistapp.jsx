@@ -1,10 +1,7 @@
 import React from "react";
 import createClass from "create-react-class";
-import TrackList from "./tracklist";
 import PlaylistEditor from "./playlistEditor";
-import PlaylistCheatSheet from "./playlistCheatSheet";
 import PlaylistPreludes from "./playlistPreludes";
-import PlaylistSlides from "./playlistSlides";
 import {fetchJson, putJson} from "./util/ajax";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import "react-tabs/style/react-tabs.css";
@@ -78,30 +75,14 @@ const PlaylistApp = createClass({
       <div className="toolbar"><button onClick={this.reload}>Lataa biisitiedot uusiksi</button> | Valitse settilista: {this.renderPlaylistChooser()}</div>
       <Tabs className="playlistapp" selectedIndex={this.state.currentTab} onSelect={currentTab => this.setState({currentTab})}>
         <TabList>
-          <Tab>Biisit</Tab>
           <Tab>Listan tiedot</Tab>
           <Tab>Alkusoitot</Tab>
-          <Tab>Lunttilappu</Tab>
-          <Tab>Minilunttilappu</Tab>
-          <Tab>Listadiashow</Tab>
         </TabList>
-        <TabPanel>
-          <TrackList tracks={this.state.tracks} onTrackSave={this.saveTrack} />
-        </TabPanel>
         <TabPanel>
           <PlaylistEditor playlist={this.state.playlists[this.state.playlist]} onTrackSave={this.saveTrack}/>
         </TabPanel>
         <TabPanel>
           <PlaylistPreludes playlist={this.state.playlists[this.state.playlist]} onTrackSave={this.saveTrack}/>
-        </TabPanel>
-        <TabPanel>
-          <PlaylistCheatSheet playlist={this.state.playlists[this.state.playlist]} onTrackSave={this.saveTrack}/>
-        </TabPanel>
-        <TabPanel>
-          <PlaylistCheatSheet mini={true} playlist={this.state.playlists[this.state.playlist]} onTrackSave={this.saveTrack}/>
-        </TabPanel>
-        <TabPanel>
-          <PlaylistSlides playlist={this.state.playlists[this.state.playlist]} onTrackSave={this.saveTrack} />
         </TabPanel>
       </Tabs></div>);
   }
