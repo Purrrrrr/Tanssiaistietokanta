@@ -1,0 +1,16 @@
+.editableText
+  width: 100%
+
+  .addEntry
+    opacity: 0.2
+    display: inline-block
+    width: 100%
+    &:hover
+      opacity: 0.8 
+    &::before
+      content: '<'
+    &::after
+      content: '>'
+
+textarea.editableText
+  font-size: inherit

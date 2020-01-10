@@ -42,7 +42,7 @@ const EditableText = createClass({
       return <span><form onSubmit={this.save}>{input}</form></span>;
     } else {
       const val = this.props.value || <span className="addEntry">{this.props.addText || "Muokkaa"}</span>;
-      return <span onClick={this.edit}>{val}</span>;
+      return <span className="editableText" onClick={this.edit}>{val}</span>;
     }
   }
 });

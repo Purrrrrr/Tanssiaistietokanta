@@ -17,11 +17,20 @@ type Dance {
 type Mutation {
   createDance(dance: DanceInput!): Dance!
   modifyDance(id: ID!, dance: DanceInput!): Dance!
+  patchDance(id: ID!, dance: DancePatchInput!): Dance!
   deleteDance(id: ID!): Dance!
 }
 
 input DanceInput {
   name: String!
+  description: String
+  duration: Float
+  prelude: String
+  formation: String
+  remarks: String
+}
+input DancePatchInput {
+  name: String
   description: String
   duration: Float
   prelude: String

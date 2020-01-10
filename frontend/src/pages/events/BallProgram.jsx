@@ -2,12 +2,13 @@ import React, {useState, useMemo} from 'react';
 import {gql, useQuery} from "services/Apollo";
 
 import {ProgramTitleSelector} from "components/ProgramTitleSelector";
+import {EditableDanceProperty} from "components/EditableDanceProperty";
 import {useOnKeydown} from "utils/useOnKeydown";
 
 import './BallProgram.sass';
 
 const GET_BALL_PROGRAM = gql`
-query getEvent($eventId: ID!) {
+query BallProgram($eventId: ID!) {
   event(id: $eventId) {
     name
     program {
@@ -15,6 +16,7 @@ query getEvent($eventId: ID!) {
       type
       dance{
         _id
+        description
         teachedIn(eventId: $eventId) { _id, name }
       }
     }
@@ -98,11 +100,13 @@ function HeaderSlide({header, onChangeSlide}) {
 }
 
 function DanceSlide({dance, onChangeSlide}) {
-  const {next, name, description, dance: {teachedIn}} = dance;
+  const {next, name, dance: {teachedIn}} = dance;
 
   return <section className="slide">
     <h1>{name}</h1>
-    <p>{description}</p>
+    <p>
+      <EditableDanceProperty dance={dance.dance} property="description" multiline addText="Lisää kuvaus" />
+    </p>
     {teachedIn.length > 0 && 
       <p>Opetettu setissä {teachedIn.map(w => w.name).join(", ")}</p>
     }

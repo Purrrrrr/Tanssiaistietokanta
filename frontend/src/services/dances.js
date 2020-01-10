@@ -33,6 +33,12 @@ mutation createDance($dance: DanceInput!) {
     appendToListQuery(cache, GET_DANCES, createDance)
 });
 
+export const PATCH_DANCE = gql`
+mutation patchDance($id: ID!, $dance: DancePatchInput!) {
+  patchDance(id: $id, dance: $dance) {
+    ${danceFields}
+  }
+}`;
 
 export const useDeleteDance = makeMutationHook(gql`
 mutation deleteDance($id: ID!) {
