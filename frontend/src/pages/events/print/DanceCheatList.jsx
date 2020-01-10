@@ -14,7 +14,9 @@ const t = makeTranslate({
   miniView: 'Tiivistetty näkymä',
   print: 'Tulosta',
   noDances: 'Ei tansseja',
-  addDescription: 'Lisää kuvaus'
+  addDescription: 'Lisää kuvaus',
+  iCanDanceThis: 'Osaan tanssin',
+  danceName: 'Nimi',
 });
 
 const GET_CHEAT_LIST= gql`
@@ -69,8 +71,8 @@ function WorkshopDances({workshop, mini}) {
       <table>
         <thead>
           <tr>
-            <th>Tanssin nimi</th>
-            <th className="iCanDance">Osaan tanssin</th>
+            <th>{t`danceName`}</th>
+            <th className="iCanDance">{t`iCanDanceThis`}</th>
           </tr>
         </thead>
         <tbody>
