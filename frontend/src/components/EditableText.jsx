@@ -13,7 +13,11 @@ export function EditableText({text, onChange, multiline, addText}) {
       onChange(value);
     };
     const Component = multiline ? TextArea : 'input';
-    return <Component className="editableText" autoFocus growVertically value={value || ""}
+    const props = multiline ? {
+      growVertically: true
+    } : {}
+    return <Component className="editableText" autoFocus 
+      value={value || ""} {...props}
       onChange={(e) => setValue(e.target.value)} onBlur={onBlur} />
   }
   

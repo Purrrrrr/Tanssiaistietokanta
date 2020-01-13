@@ -3,6 +3,7 @@ import {Switch, Button} from "@blueprintjs/core";
 import {gql, useQuery} from "services/Apollo";
 import {EditableDanceProperty} from "components/EditableDanceProperty";
 import PrintViewToolbar from 'components/widgets/PrintViewToolbar';
+import {PrintTable} from 'components/PrintTable';
 import {CenteredContainer} from 'components/CenteredContainer';
 import {makeTranslate} from 'utils/translate';
 
@@ -20,7 +21,7 @@ const t = makeTranslate({
 });
 
 const GET_CHEAT_LIST= gql`
-query BallProgram($eventId: ID!) {
+query DanceCheatList($eventId: ID!) {
   event(id: $eventId) {
     workshops {
       _id
@@ -68,32 +69,24 @@ function WorkshopDances({workshop, mini}) {
     <h1>{name}</h1>
     {dances.length === 0 ?
       <p>{t('noDances')}</p> :
-      <table>
-        <thead>
-          <tr>
-            <th>{t`danceName`}</th>
-            <th className="iCanDance">{t`iCanDanceThis`}</th>
+      <PrintTable headings={[t`danceName`, t`iCanDanceThis`]}>
+        {dances.map(dance => 
+          <tr key={dance._id}>
+            <td>
+              {mini
+                  ? dance.name
+                  : <>
+                  <strong>{dance.name}</strong>
+                  <div>
+                    <EditableDanceProperty dance={dance} property="description" addText={t`addDescription`} />
+                  </div>
+                  </>
+              }
+            </td>
+            <td />
           </tr>
-        </thead>
-        <tbody>
-          {dances.map(dance => 
-            <tr key={dance._id}>
-              <td>
-                {mini
-                    ? dance.name
-                    : <>
-                      <strong>{dance.name}</strong>
-                      <div>
-                        <EditableDanceProperty dance={dance} property="description" addText={t`addDescription`} />
-                      </div>
-                    </>
-                }
-              </td>
-              <td />
-            </tr>
-          )}
-        </tbody>
-      </table>
+        )}
+      </PrintTable>
     }
   </>;
 }

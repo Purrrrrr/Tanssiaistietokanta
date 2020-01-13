@@ -29,16 +29,6 @@ function EventEditorPage(props) {
   
   return <AdminOnly fallback="you need to be admin">
     <h1>{props.event.name}</h1>
-    <EventEditor event={event} onChange={setEvent}/>
-    <Button text="Tallenna muutokset" onClick={() => modifyEvent(event)} />
-    <h2>Työpajat</h2>
-		{props.event.workshops.map(workshop =>
-			<li key={workshop._id}>
-				<Link to={'workshops/'+workshop._id} >{workshop.name}</Link>
-			</li>
-		)}
-    <NavigateButton href={"workshops/create"} text="Uusi työpaja" />
-    <h3>Toiminnot</h3>
     {/* Intentionally use event._id here since target="_blank" makes 
       use of actual browser links and those have different link mechanics */}
     <NavigateButton href={event._id+"/print/ball-dancelist"} target="_blank"
@@ -49,5 +39,14 @@ function EventEditorPage(props) {
       text="Osaan tanssin -lunttilappu" />
     <NavigateButton href={event._id+"/ball-program"} target="_blank"
       text="Tanssiaisten diashow" />
+    <EventEditor event={event} onChange={setEvent}/>
+    <Button text="Tallenna muutokset" onClick={() => modifyEvent(event)} />
+    <h2>Työpajat</h2>
+		{props.event.workshops.map(workshop =>
+			<li key={workshop._id}>
+				<Link to={'workshops/'+workshop._id} >{workshop.name}</Link>
+			</li>
+		)}
+    <NavigateButton href={"workshops/create"} text="Uusi työpaja" />
   </AdminOnly>;
 }

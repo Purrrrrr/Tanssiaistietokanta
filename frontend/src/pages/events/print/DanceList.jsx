@@ -35,7 +35,7 @@ function DanceList({eventId}) {
 }
 
 const GET_EVENT = gql`
-query getEvent($eventId: ID!) {
+query getDanceList($eventId: ID!) {
   event(id: $eventId) {
     program {
       name
