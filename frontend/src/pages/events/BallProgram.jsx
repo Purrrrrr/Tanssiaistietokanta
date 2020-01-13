@@ -54,7 +54,6 @@ function getSlides(event) {
   const eventHeader = {
     type: 'HEADER',
     name: event.name,
-    subItems: [],
     index: 0
   };
   eventHeader.header = eventHeader;
@@ -69,7 +68,8 @@ function getSlides(event) {
       currentItem.subItems = [];
       header = currentItem;
     } else {
-      header.subItems.push(currentItem);
+      //The if is a hack to ensure the first slide only has the event title in it
+      if (header.subItems) header.subItems.push(currentItem);
     }
     slides.push(currentItem);
     previousItem.next = currentItem;
@@ -83,16 +83,15 @@ function SlideView({slide, onChangeSlide}) {
     case 'DANCE':
       return <DanceSlide dance={slide} onChangeSlide={onChangeSlide} />;
     case 'HEADER':
-      return <HeaderSlide header={slide} onChangeSlide={onChangeSlide} />;
     default:
-      return null;
+      return <HeaderSlide header={slide} onChangeSlide={onChangeSlide} />;
   }
 }
 function HeaderSlide({header, onChangeSlide}) {
   return (<section className="slide">
     <h1>{header.name}</h1>
     <ul>
-      {header.subItems
+      {(header.subItems || [])
           .filter(t => t.type !== "INTERVAL_MUSIC")
           .map(({index, name}) => 
             <li onClick={() => onChangeSlide(index)} key={index}>{name}</li>)}
