@@ -43,7 +43,7 @@
     "graphql-tag-pluck": "^0.8.4",
     "graphql-toolkit": "^0.5.13",
     "graphql-tools": "^4.0.5",
-    "helmet": "^3.20.0",
+    "helmet": "^3.21.2",
     "merge-graphql-schemas": "^1.7.0",
     "nedb": "^1.8.0",
     "serve-favicon": "^2.5.0",
@@ -51,7 +51,7 @@
   },
   "devDependencies": {
     "eslint": "^5.16.0",
-    "jest": "^24.8.0",
+    "jest": "^24.9.0",
     "nodemon": "^1.19.1",
     "request": "^2.88.0",
     "request-promise": "^4.2.4"
