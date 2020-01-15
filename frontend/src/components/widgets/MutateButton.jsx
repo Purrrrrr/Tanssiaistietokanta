@@ -1,6 +1,5 @@
 import React, {useCallback} from 'react';
 import {Button, Intent} from "@blueprintjs/core";
-import {showDefaultErrorToast} from "utils/toaster"
 import {NavigateProvider} from "./NavigateProvider"
 import { useMutation } from 'services/Apollo';
 
@@ -14,7 +13,6 @@ export function MutateButton({successUrl, ...props}) {
 
 function MutateButtonImpl({mutation, onSubmit, options = {}, variables, refetchQueries, ...buttonProps}) {
   const [mutate, mutationState] = useMutation(mutation, {
-    onError: showDefaultErrorToast,
     onCompleted: onSubmit,
     ...options
   });

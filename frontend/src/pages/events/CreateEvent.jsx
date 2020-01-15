@@ -3,7 +3,6 @@ import {Button} from "@blueprintjs/core";
 import {navigate} from "@reach/router"
 
 import {useCreateEvent} from 'services/events';
-import {showDefaultErrorToast} from "utils/toaster"
 import {AdminOnly} from 'services/users';
 import {Breadcrumb} from "components/Breadcrumbs";
 import {EventEditor} from "components/EventEditor";
@@ -16,7 +15,7 @@ const t = makeTranslate({
 });
 
 export default function CreateEventForm({uri}) {
-  const [createEvent] = useCreateEvent({onError: showDefaultErrorToast});
+  const [createEvent] = useCreateEvent();
   const [event, setEvent] = useState({
     program: []
   });

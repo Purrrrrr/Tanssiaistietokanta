@@ -4,18 +4,15 @@ import InfiniteScroll from 'react-infinite-scroller';
 
 import { filterDances, useDances, useCreateDance, useModifyDance, useDeleteDance } from 'services/dances';
 
-import {showDefaultErrorToast} from "utils/toaster"
-
 import {CreateDanceDialog} from "components/CreateDanceDialog"
 import {DanceEditor} from "components/DanceEditor"
 
 function DancesPage() {
   const [search, setSearch] = useState("");
   const [dances] = useDances();
-  const onError = showDefaultErrorToast;
-  const [modifyDance] = useModifyDance({onError});
-  const [createDance] = useCreateDance({onError});
-  const [deleteDance] = useDeleteDance({onError});
+  const [modifyDance] = useModifyDance();
+  const [createDance] = useCreateDance();
+  const [deleteDance] = useDeleteDance();
 
   const filteredDances = filterDances(dances, search);
   const onDelete = ({_id}) => deleteDance(_id);
@@ -40,7 +37,7 @@ function DanceList({dances, onChange, onDelete}) {
   const canShowMore = dances.length > limit;
 
   return <InfiniteScroll hasMore={canShowMore} loadMore={() => setLimit(limit + 5)}>
-    {dances.slice(0, limit).map(dance => 
+    {dances.slice(0, limit).map(dance =>
       <Card key={dance._id}>
         <DanceEditor dance={dance} onChange={onChange} onDelete={onDelete} />
       </Card>)}

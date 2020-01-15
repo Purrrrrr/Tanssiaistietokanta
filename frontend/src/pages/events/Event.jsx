@@ -8,7 +8,6 @@ import {Breadcrumb} from "components/Breadcrumbs";
 import {EventEditor} from "components/EventEditor";
 import {NavigateButton} from "components/widgets/NavigateButton";
 import {useModifyEvent} from 'services/events';
-import {showDefaultErrorToast} from "utils/toaster"
 import {AdminOnly} from 'services/users';
 
 export default function({eventId, uri}) {
@@ -25,8 +24,8 @@ export default function({eventId, uri}) {
 
 function EventEditorPage(props) {
   const [event, setEvent] = useState(props.event);
-  const [modifyEvent] = useModifyEvent({onError: showDefaultErrorToast});
-  
+  const [modifyEvent] = useModifyEvent();
+
   return <AdminOnly fallback="you need to be admin">
     <h1>{props.event.name}</h1>
     {/* Intentionally use event._id here since target="_blank" makes 

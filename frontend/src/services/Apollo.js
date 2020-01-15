@@ -1,9 +1,19 @@
+import {useMutation as useMutationOriginal, useQuery} from '@apollo/react-hooks';
 import ApolloClient from 'apollo-boost';
-import {useMutation, useQuery} from '@apollo/react-hooks';
+import {showDefaultErrorToast} from "utils/toaster"
 
-export const apolloClient = new ApolloClient({ });
-export { ApolloProvider, useQuery, useMutation } from '@apollo/react-hooks';
-export { gql } from 'apollo-boost';
+export {ApolloProvider, useQuery} from '@apollo/react-hooks';
+export {gql} from 'apollo-boost';
+export {ApolloClient};
+
+export function useMutation(query, options = {}) {
+  return useMutationOriginal(query, {
+    onError: showDefaultErrorToast,
+    ...options
+  })
+}
+
+export const apolloClient = new ApolloClient({});
 
 export function makeFragmentCache(type, query) {
   return id => apolloClient.readFragment({

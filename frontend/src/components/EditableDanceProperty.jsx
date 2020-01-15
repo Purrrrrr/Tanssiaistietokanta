@@ -2,12 +2,9 @@ import React from 'react';
 import {EditableText} from "components/EditableText";
 import {PATCH_DANCE} from "services/dances";
 import { useMutation } from 'services/Apollo';
-import {showDefaultErrorToast} from "utils/toaster"
 
 export function EditableDanceProperty({dance, property, ...props}) {
-  const [patch, state] = useMutation(PATCH_DANCE, {
-    onError: showDefaultErrorToast
-  })
+  const [patch, state] = useMutation(PATCH_DANCE);
 
   const onChange = (value) => {
     patch({
