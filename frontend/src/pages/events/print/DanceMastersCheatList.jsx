@@ -2,6 +2,7 @@ import React from 'react';
 import {Button} from "@blueprintjs/core";
 import {gql, useQuery} from "services/Apollo";
 import {EditableDanceProperty} from "components/EditableDanceProperty";
+import {LoadingState} from 'components/LoadingState';
 import PrintViewToolbar from 'components/widgets/PrintViewToolbar';
 import {PrintTable} from 'components/PrintTable';
 import {makeTranslate} from 'utils/translate';
@@ -33,8 +34,8 @@ query getDanceMastersCheatList($eventId: ID!) {
 }`;
 
 export default function DanceMastersCheatList({eventId}) {
-  const {data} = useQuery(GET_CHEAT_LIST, {variables: {eventId}});
-  if (!data) return '...';
+  const {data, ...loadingState} = useQuery(GET_CHEAT_LIST, {variables: {eventId}});
+  if (!data) return <LoadingState {...loadingState} />
   
   return <>
     <PrintViewToolbar>

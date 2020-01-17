@@ -1,6 +1,7 @@
 import React, {useState, useMemo} from 'react';
 import {gql, useQuery} from "services/Apollo";
 
+import {LoadingState} from 'components/LoadingState';
 import {ProgramTitleSelector} from "components/ProgramTitleSelector";
 import {EditableDanceProperty} from "components/EditableDanceProperty";
 import {useOnKeydown} from "utils/useOnKeydown";
@@ -25,10 +26,10 @@ query BallProgram($eventId: ID!) {
 }`;
 
 export default function BallProgram({eventId}) {
-  const {data, refetch} = useQuery(GET_BALL_PROGRAM, {variables: {eventId}});
+  const {data, refetch, ...loadingState} = useQuery(GET_BALL_PROGRAM, {variables: {eventId}});
   const [slide, setSlide] = useState(0);
 
-  if (!data) return '...';
+  if (!data) return <LoadingState {...loadingState} refetch={refetch} />
 
   return <BallProgramView event={data.event} onRefetch={refetch}
     currentSlide={slide} onChangeSlide={setSlide} />;

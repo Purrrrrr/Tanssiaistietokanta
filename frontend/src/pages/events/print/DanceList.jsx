@@ -4,6 +4,7 @@ import {gql, useQuery} from 'services/Apollo';
 import "./DanceList.sass";
 import programToSections from 'utils/programToSections';
 import PrintViewToolbar from 'components/widgets/PrintViewToolbar';
+import {LoadingState} from 'components/LoadingState';
 import {makeTranslate} from 'utils/translate';
 
 const t = makeTranslate({
@@ -12,11 +13,13 @@ const t = makeTranslate({
 });
 
 function DanceList({eventId}) {
-  const program = useBallProgram(eventId);
+  const {program, loadingState} = useBallProgram(eventId);
   const [sidebyside, setSidebyside] = useState(false);
   const colClass = (sidebyside ? " three-columns" : "");
-  
-  return program && <div className={"danceList" + colClass}>
+
+  if (!program) return <LoadingState {...loadingState} />
+
+  return <div className={"danceList" + colClass}>
     <PrintViewToolbar>
       <Switch inline label={t('showSideBySide')} checked={sidebyside} onChange={e => {
         setSidebyside(e.target.checked);
@@ -46,8 +49,9 @@ query getDanceList($eventId: ID!) {
 }`;
 
 function useBallProgram(eventId) {
-  const {data} = useQuery(GET_EVENT, {variables: {eventId}});
-  return data ? programToSections(data.event.program) : null;
+  const {data, ...loadingState} = useQuery(GET_EVENT, {variables: {eventId}});
+  const program = data ? programToSections(data.event.program) : null;
+  return {program, loadingState};
 }
 
 export default DanceList;

@@ -4,6 +4,7 @@ import {gql, useQuery} from "services/Apollo";
 import {EditableDanceProperty} from "components/EditableDanceProperty";
 import PrintViewToolbar from 'components/widgets/PrintViewToolbar';
 import {PrintTable} from 'components/PrintTable';
+import {LoadingState} from 'components/LoadingState';
 import {CenteredContainer} from 'components/CenteredContainer';
 import {makeTranslate} from 'utils/translate';
 
@@ -39,8 +40,8 @@ query DanceCheatList($eventId: ID!) {
 export default function DanceCheatList({eventId}) {
   const [mini, setMini] = useState(false);
   const [helpText, setHelptext] = useState(true);
-  const {data} = useQuery(GET_CHEAT_LIST, {variables: {eventId}});
-  if (!data) return '...';
+  const {data, ...loadingState} = useQuery(GET_CHEAT_LIST, {variables: {eventId}});
+  if (!data) return <LoadingState {...loadingState} />
   
   return <>
     <PrintViewToolbar>
