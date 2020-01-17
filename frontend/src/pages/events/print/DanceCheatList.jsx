@@ -23,6 +23,7 @@ const t = makeTranslate({
 const GET_CHEAT_LIST= gql`
 query DanceCheatList($eventId: ID!) {
   event(id: $eventId) {
+    _id
     workshops {
       _id
       name

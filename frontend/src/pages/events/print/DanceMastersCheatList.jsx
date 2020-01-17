@@ -18,6 +18,7 @@ const t = makeTranslate({
 const GET_CHEAT_LIST= gql`
 query getDanceMastersCheatList($eventId: ID!) {
   event(id: $eventId) {
+    _id
     program {
       name
       type

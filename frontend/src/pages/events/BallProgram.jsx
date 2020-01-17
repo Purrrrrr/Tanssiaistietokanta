@@ -10,6 +10,7 @@ import './BallProgram.sass';
 const GET_BALL_PROGRAM = gql`
 query BallProgram($eventId: ID!) {
   event(id: $eventId) {
+    _id
     name
     program {
       name
