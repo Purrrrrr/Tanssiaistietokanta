@@ -35,7 +35,7 @@ export default function EventPage({event}) {
       )}
     </ul>
     <AdminOnly>
-      <NavigateButton intent={Intent.PRIMARY} href={"workshops/create"} text="Uusi työpaja" />
+      <NavigateButton intent={Intent.PRIMARY} href="workshops/create" text="Uusi työpaja" />
     </AdminOnly>
     <NavigateButton href={event._id+"/print/dance-cheatlist"} target="_blank"
       text="Osaan tanssin -lunttilappu" />

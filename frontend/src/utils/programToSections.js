@@ -1,12 +1,15 @@
-export default function(program) {
-  let currentPart = {name: "", tracks: []}
-;
+export default function programToSections(program) {
+  let currentPart = null;
+
   const parts = [];
   program.forEach(item => {
     if (item.type === 'HEADER') {
       if (currentPart) parts.push(currentPart);
-      currentPart = {name: item.name, tracks: []}
+      currentPart = {...item, tracks: []}
     } else {
+      if (!currentPart) {
+        currentPart = {type: 'HEADER', name: "", tracks: [], isIntroHeader: true};
+      }
       currentPart.tracks.push(item);
     }
   });

@@ -35,7 +35,7 @@ export default function CreateWorkshopForm({event, uri}) {
       component={DanceListItem} />
     <div>
       {t`addDance`+' '}
-      <DanceChooser selected={null} onChange={dance => setDances([...workshop.dances, dance])} key={workshop.dances.length} />
+      <DanceChooser value={null} onChange={dance => setDances([...workshop.dances, dance])} key={workshop.dances.length} />
     </div>
     <MutateButton mutation={CREATE_WORKSHOP} successUrl="../.."
       variables={{eventId: event._id, workshop: toWorkshopInput(workshop)}}

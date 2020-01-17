@@ -1,7 +1,7 @@
 import React from 'react';
 import {H2, HTMLTable} from "@blueprintjs/core";
 import {PropertyEditor, required} from "./widgets/PropertyEditor";
-import {DanceLengthProperty} from "./widgets/DurationField";
+import {DurationField} from "./widgets/DurationField";
 import {DeleteButton} from "./widgets/DeleteButton";
 
 export function DanceEditor({dance, onChange, onDelete}) {
@@ -27,7 +27,7 @@ export function DanceEditor({dance, onChange, onDelete}) {
           <DancePropertyCells label="Huomautuksia" property="remarks" data={dance} onChange={onChange} />
         </tr>
         <tr>
-          <DancePropertyCells label="Kesto" property="duration" data={dance} onChange={onChange} component={DanceLengthProperty} />
+          <DancePropertyCells label="Kesto" property="duration" data={dance} onChange={onChange} component={DurationField} />
         </tr>
       </tbody>
     </HTMLTable>

@@ -8,6 +8,8 @@ program {
   type
   dance{
     _id
+    name
+    duration
   }
 }
 workshops {

@@ -1,8 +1,9 @@
 import React, {useRef, useEffect} from 'react';
 import {PropertyEditor} from "./PropertyEditor";
 import {EditableText} from "@blueprintjs/core";
+import {toMinSec, toSeconds, prefixZero} from "utils/duration";
 
-export function DanceLengthProperty(props) {
+export function DurationField(props) {
   return <>
     <PropertyEditor {...props} component={MinuteEditor} defaultValue={0}/>
     :
@@ -11,8 +12,7 @@ export function DanceLengthProperty(props) {
 }
 
 function MinuteEditor({value, onChange, ...props}) {
-  const seconds = value%60;
-  const minutes = Math.floor(value/60);
+  const [minutes, seconds] = toMinSec(value);
 
   return <TimePartEditor {...props}
     value={minutes} onChange={(newValue) => onChange(toSeconds(parseFloat(newValue || "0"), seconds))} />
@@ -24,10 +24,6 @@ function SecondsEditor({value, onChange, ...props}) {
 
   return <TimePartEditor {...props}
     value={seconds} onChange={(newValue) => onChange(toSeconds(minutes, parseFloat(newValue || "0")))} />
-}
-
-function toSeconds(minutes, seconds) {
-  return Math.max(seconds+(minutes*60), 0);
 }
 
 function TimePartEditor({isEditing, onEdit, value, onConfirm, ...props}) {
@@ -50,6 +46,6 @@ function TimePartEditor({isEditing, onEdit, value, onConfirm, ...props}) {
     {isEditing
       ? <EditableText {...props} value={value}
         minWidth={40} type="number" isEditing />
-      : (value < 10 ? "0" : "") + value.toFixed()}
+      : prefixZero(value)}
   </span>;
 }

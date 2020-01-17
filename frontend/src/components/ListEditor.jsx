@@ -11,7 +11,7 @@ import {objectId, setObjectId} from "utils/objectId";
  * onChange: a change handler that receives a changed items list
  * component: A component or function that displays each item. Receives the props item, onChange and onRemove
  */
-export function ListEditor({items, onChange, component}) {
+export function ListEditor({items, onChange, component, element, rowElement}) {
   function onSortEnd({oldIndex, newIndex}) {
     onChange(produce(items, (draft) => {
       const [item] = draft.splice(oldIndex, 1);
@@ -19,12 +19,12 @@ export function ListEditor({items, onChange, component}) {
     }));
   }
 
-  return <SortableList distance={5}
+  return <SortableList distance={5} element={element} rowElement={rowElement}
     items={items} component={component}
     onSortEnd={onSortEnd} onChange={onChange} />;
 }
 
-const SortableList = SortableContainer(({items, onChange, component}) => {
+const SortableList = SortableContainer(({items, onChange, component, element, rowElement}) => {
   function setItem(index, item) {
     onChange(produce(items, (draft) => {
       draft[index] = item;
@@ -35,18 +35,21 @@ const SortableList = SortableContainer(({items, onChange, component}) => {
     onChange(produce(items, (draft) => { draft.splice(index, 1); }));
   }
 
-  return <div>
+  const Wrapper = element ?? "div";
+
+  return <Wrapper>
     {items.map((value, index) =>
-      <SortableItem key={value.id || objectId(value)} index={index} item={value}
-        component={component}
+      <SortableItem key={value.id || objectId(value)} index={index} item={value} itemIndex={index}
+        component={component} element={rowElement}
         onChange={(newItem) => setItem(index, newItem)} onRemove={() => removeItem(index)} />
       )}
-  </div>;
+  </Wrapper>;
 });
 
-const SortableItem = SortableElement(({component, ...props}) => {
+const SortableItem = SortableElement(({component, element, ...props}) => {
   const C = component;
-  return <div tabIndex={0}><C {...props} /></div>;
+  const Wrapper = element ?? "div";
+  return <Wrapper tabIndex={0}><C {...props} /></Wrapper>;
 }
 );
 
