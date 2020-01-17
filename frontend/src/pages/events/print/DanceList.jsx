@@ -21,10 +21,10 @@ function DanceList({eventId}) {
 
   return <div className={"danceList" + colClass}>
     <PrintViewToolbar>
-      <Switch inline label={t('showSideBySide')} checked={sidebyside} onChange={e => {
+      <Switch inline label={t`showSideBySide`} checked={sidebyside} onChange={e => {
         setSidebyside(e.target.checked);
       }}/>
-      <Button text={t('print')} onClick={() => window.print()} />
+      <Button text={t`print`} onClick={() => window.print()} />
     </PrintViewToolbar>
     {program.map(
       ({name, tracks}, key) => {

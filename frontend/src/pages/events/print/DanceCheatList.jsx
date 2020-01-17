@@ -42,16 +42,16 @@ export default function DanceCheatList({eventId}) {
   const [helpText, setHelptext] = useState(true);
   const {data, ...loadingState} = useQuery(GET_CHEAT_LIST, {variables: {eventId}});
   if (!data) return <LoadingState {...loadingState} />
-  
+
   return <>
     <PrintViewToolbar>
-      <Switch inline label={t('miniView')} checked={mini} onChange={e => {
+      <Switch inline label={t`miniView`} checked={mini} onChange={e => {
         setMini(e.target.checked);
       }}/>
-      <Switch inline label={t('showHelpText')} checked={helpText} onChange={e => {
+      <Switch inline label={t`showHelpText`} checked={helpText} onChange={e => {
         setHelptext(e.target.checked);
       }}/>
-      <Button text={t('print')} onClick={() => window.print()} />
+      <Button text={t`print`} onClick={() => window.print()} />
     </PrintViewToolbar>
     <DanceCheatListView workshops={data.event.workshops} mini={mini} helpText={helpText} />
   </>;
@@ -60,7 +60,7 @@ export default function DanceCheatList({eventId}) {
 function DanceCheatListView({workshops, mini, helpText}) {
   return <CenteredContainer className={"dance-cheatsheet" + (mini ? " mini" : '')}>
     {helpText && <p>{t`helpText`}</p>}
-    {workshops.map(workshop => 
+    {workshops.map(workshop =>
       <WorkshopDances key={workshop._id} workshop={workshop} mini={mini} />)}
   </CenteredContainer>;
 }
@@ -70,9 +70,9 @@ function WorkshopDances({workshop, mini}) {
   return <>
     <h1>{name}</h1>
     {dances.length === 0 ?
-      <p>{t('noDances')}</p> :
+      <t.p>noDances</t.p> :
       <PrintTable headings={[t`danceName`, t`iCanDanceThis`]}>
-        {dances.map(dance => 
+        {dances.map(dance =>
           <tr key={dance._id}>
             <td>
               {mini

@@ -36,10 +36,10 @@ query getDanceMastersCheatList($eventId: ID!) {
 export default function DanceMastersCheatList({eventId}) {
   const {data, ...loadingState} = useQuery(GET_CHEAT_LIST, {variables: {eventId}});
   if (!data) return <LoadingState {...loadingState} />
-  
+
   return <>
     <PrintViewToolbar>
-      <Button text={t('print')} onClick={() => window.print()} />
+      <Button text={t`print`} onClick={() => window.print()} />
     </PrintViewToolbar>
     <DanceMastersCheatListView program={data.event.program} />
   </>;
@@ -49,9 +49,9 @@ function DanceMastersCheatListView({program}) {
   return <PrintTable className="dancemasters-cheatlist">
     {program.map((item, i) => {
       switch(item.type) {
-        case 'DANCE': 
+        case 'DANCE':
           return <DanceRow key={i} dance={item.dance} />;
-        case 'HEADER': 
+        case 'HEADER':
           return <tr className="header" key={i}><th colSpan={3}>{item.name}</th></tr>
         default:
           return <tr className="info" key={i}><td colSpan={3}>{item.name}</td></tr>

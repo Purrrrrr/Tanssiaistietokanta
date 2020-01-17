@@ -26,21 +26,21 @@ export default function CreateWorkshopForm({event, uri}) {
 	const setDances = dances => setWorkshop({...workshop, dances});
 
   return <AdminOnly>
-    <Breadcrumb text={t("newWorkshop")} href={uri} />
-    <h1>{t('newWorkshop')}</h1>
-    {t('name')+" "}
-    <PropertyEditor property="name" data={workshop} onChange={setWorkshop} validate={required(t('nameRequired'))}/>
-    <h2>{t('dances')}</h2>
+    <Breadcrumb text={t`newWorkshop`} href={uri} />
+    <t.h1>newWorkshop</t.h1>
+    {t`name`+" "}
+    <PropertyEditor property="name" data={workshop} onChange={setWorkshop} validate={required(t`nameRequired`)}/>
+    <t.h2>dances</t.h2>
     <ListEditor items={workshop.dances} onChange={setDances}
       component={DanceListItem} />
     <div>
-      {t('addDance')+' '}
+      {t`addDance`+' '}
       <DanceChooser selected={null} onChange={dance => setDances([...workshop.dances, dance])} key={workshop.dances.length} />
     </div>
     <MutateButton mutation={CREATE_WORKSHOP} successUrl="../.."
       variables={{eventId: event._id, workshop: toWorkshopInput(workshop)}}
       refetchQueries={['getEvent']}
-      text={t('create')} />
+      text={t`create`} />
   </AdminOnly>;
 }
 

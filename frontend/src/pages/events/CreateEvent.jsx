@@ -21,10 +21,10 @@ export default function CreateEventForm({uri}) {
   });
 
   return <AdminOnly>
-    <Breadcrumb text={t('newEventBreadcrumb')} href={uri} />
-    <h1>{t('newEvent')}</h1>
+    <Breadcrumb text={t`newEventBreadcrumb`} href={uri} />
+    <h1>{t`newEvent`}</h1>
     <EventEditor event={event} onChange={setEvent} />
-    <Button text={t('create')} onClick={() => createEvent(event).then(
+    <Button text={t`create`} onClick={() => createEvent(event).then(
       ({data}) => navigate(data.createEvent._id))
     } />
   </AdminOnly>;

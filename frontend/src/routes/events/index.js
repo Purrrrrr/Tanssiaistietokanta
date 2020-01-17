@@ -9,7 +9,7 @@ import {Breadcrumb} from "components/Breadcrumbs";
 export default function Events({uri}) {
   return <>
     <Breadcrumb text="Tapahtumat" href={uri} />
-    <Router primary={false}>
+    <Router primary={false} component={React.Fragment}>
       <EventList path="/" />
       <CreateEvent path="new" />
       <EventRoutes path=":eventId/*" />
