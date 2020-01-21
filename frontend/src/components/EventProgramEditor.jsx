@@ -9,6 +9,7 @@ import {ProgramPauseDurationEditor} from "components/widgets/ProgramPauseDuratio
 import {ListEditor} from "./ListEditor";
 import {makeTranslate} from 'utils/translate';
 import programToSections from 'utils/programToSections';
+import {scrollToBottom} from 'utils/scrollToBottom';
 
 import './EventProgramEditor.sass';
 
@@ -19,7 +20,7 @@ const t = makeTranslate({
   programListIsEmpty: 'Ei ohjelmaa',
   DANCE: 'Tanssi',
   TEXT: 'Muu ohjelma',
-  removeSection: 'Poista osio',
+  removeSection: 'Poista setti',
   addSection: 'Lisää tanssisetti',
   section: 'Setti',
   addDance: 'Lisää tanssi',
@@ -65,18 +66,19 @@ function ProgramEditor({program, onChange}) {
   }
   function addSection() {
     onChange(flattenSections([...sections, newSection(sections)]));
+    scrollToBottom();
   }
 
   return <DurationHelperContext.Provider value={{pause, setPause, intervalPause, setIntervalPause}}>
     <section className="eventProgramEditor">
       <div style={{textAlign: 'right'}}>
+        <Button text={t`addIntroductoryInfo`} onClick={addInfo} />
         <ProgramPauseDurationEditor {...{pause, setPause, intervalPause, setIntervalPause}} />
       </div>
       <ListEditor items={sections} onChange={newSections => onChange(flattenSections(newSections))}
         rowElement={Card} component={SectionEditor} />
       {sections.length === 0 && <t.p>programIsEmpty</t.p>}
       <div className="addSectionButtons">
-        <Button text={t`addIntroductoryInfo`} onClick={addInfo} />
         <Button text={t`addSection`} onClick={addSection} />
       </div>
     </section>
@@ -162,6 +164,7 @@ function DurationFooter({program}) {
       <t.th colSpan="2">duration</t.th>
       <td colSpan="2">
         <strong><Duration value={durationWithPauses}/></strong>{' ('+t`pausesIncluded`+') '}
+        <br />
         <strong><Duration value={duration}/></strong>{' ('+t`dances`+')'}
       </td>
     </tr>

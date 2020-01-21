@@ -1,22 +1,39 @@
 $borderColor: rgba(16, 22, 26, 0.15)
 
 .eventProgramEditor
-  table.danceSet
-    width: 100%
-    border: 1px solid $borderColor
 
-    tfoot
-      th, td
-        border-top: 1px solid $borderColor
-      td
-        border-left: 1px solid $borderColor
-
-  h2
-    margin-top: 0
-    .delete
-      float: right
-
-  .addSectionButtons, .editSectionButtons
+  .bp3-card
+    padding: 10px 0
     margin: 1em 0
-  .editSectionButtons
-    margin-bottom: 0
+    background: rgba(191, 204, 214, 0.15)
+
+    h2
+      margin: 0 10px 0.3em
+      .delete
+        float: right
+
+    table.danceSet
+      background: white
+      width: 100%
+      border-top: 1px solid $borderColor
+      border-bottom: 1px solid $borderColor
+
+      th:nth-child(4),td:nth-child(4)
+        width: 60px
+
+      tfoot
+        th, td
+          border-top: 1px solid $borderColor
+        td
+          border-left: 1px solid $borderColor
+
+      td
+        vertical-align: middle
+        padding-top: 3px
+        padding-bottom: 3px
+
+    .editSectionButtons
+      margin: 0.3em 10px 0
+
+  .addSectionButtons
+    margin: 1em 0
