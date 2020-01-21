@@ -19,6 +19,6 @@ export default function EventEditorPage({event, uri}) {
     <hr />
     <Button intent={Intent.PRIMARY} text="Tallenna muutokset"
       onClick={() => modifyEvent(currentEvent).then(() => navigate('/events/'+event._id))}  />
-    <NavigateButton href={'/events/'+event._id} text="Peruuta" />
+    <NavigateButton href='..' text="Peruuta" />
   </AdminOnly>;
 }

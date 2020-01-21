@@ -6,11 +6,8 @@ import {NavigateButton} from "components/widgets/NavigateButton";
 import {AdminOnly} from 'services/users';
 
 export default function EventPage({event}) {
-
   return <>
     <h1>{event.name}</h1>
-    {/* Intentionally use event._id here since target="_blank" makes
-      use of actual browser links and those have different link mechanics */}
     <h2>Tanssiaisohjelma</h2>
     <ul>
       {event.program.map((item, index) =>
@@ -20,11 +17,11 @@ export default function EventPage({event}) {
     <AdminOnly>
       <NavigateButton intent={Intent.PRIMARY} href="edit" text="Muokkaa ohjelmaa" />
     </AdminOnly>
-    <NavigateButton href={event._id+"/print/dancemasters-cheatlist"} target="_blank"
+    <NavigateButton href="print/dancemasters-cheatlist" target="_blank"
       text="Tanssiaisjuontajan lunttilappu" />
-    <NavigateButton href={event._id+"/print/ball-dancelist"} target="_blank"
+    <NavigateButton href="print/ball-dancelist" target="_blank"
       text="Tulosta settilista" />
-    <NavigateButton href={event._id+"/ball-program?hideUI"} target="_blank"
+    <NavigateButton href="ball-program?hideUI" target="_blank"
       text="Tanssiaisten diashow" />
     <h2>Työpajat</h2>
     <ul>
@@ -37,7 +34,7 @@ export default function EventPage({event}) {
     <AdminOnly>
       <NavigateButton intent={Intent.PRIMARY} href="workshops/create" text="Uusi työpaja" />
     </AdminOnly>
-    <NavigateButton href={event._id+"/print/dance-cheatlist"} target="_blank"
+    <NavigateButton href="print/dance-cheatlist" target="_blank"
       text="Osaan tanssin -lunttilappu" />
   </>
 }

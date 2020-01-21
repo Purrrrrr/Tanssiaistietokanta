@@ -1,11 +1,25 @@
 import React from 'react';
-import {AnchorButton} from "@blueprintjs/core";
-import {NavigateProvider} from "./NavigateProvider"
+import {Link} from "@reach/router"
+import {Classes} from "@blueprintjs/core"
+import classNames from "classnames";
 
-export function NavigateButton({href, target, ...props}) {
-  if (target) return <AnchorButton href={href} target={target} {...props} />;
+export function NavigateButton({text, disabled, href, intent, className, ...props}) {
+  const classes = classNames(
+    Classes.BUTTON,
+    {[Classes.DISABLED]: disabled},
+    Classes.intentClass(intent),
+    className
+  )
+  const onClick = props.onClick ??
+    (props.target ==='_blank' ? openLinkWithTarget : undefined);
 
-  return <NavigateProvider>
-    {navigate => <AnchorButton href={href} {...props} onClick={(e) => {e.preventDefault(); navigate(href);}} />}
-  </NavigateProvider>
+  return <Link {...props} className={classes} role="button"
+    tabIndex={0} to={href} onClick={onClick}>
+    {text}
+  </Link>;
+}
+
+function openLinkWithTarget(e) {
+  e.preventDefault();
+  window.open(e.target.href);
 }

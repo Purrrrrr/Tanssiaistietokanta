@@ -1,6 +1,6 @@
 import React, {useState, createContext, useContext} from 'react';
 import produce from 'immer'
-import {Card, HTMLTable, Button, Intent} from "@blueprintjs/core";
+import {Classes, Card, HTMLTable, Button, Intent} from "@blueprintjs/core";
 
 import {PropertyEditor, required} from "./widgets/PropertyEditor";
 import {DanceChooser} from "components/widgets/DanceChooser";
@@ -76,7 +76,7 @@ function ProgramEditor({program, onChange}) {
         <ProgramPauseDurationEditor {...{pause, setPause, intervalPause, setIntervalPause}} />
       </div>
       <ListEditor items={sections} onChange={newSections => onChange(flattenSections(newSections))}
-        rowElement={Card} component={SectionEditor} />
+        rowElement={SectionElement} component={SectionEditor} />
       {sections.length === 0 && <t.p>programIsEmpty</t.p>}
       <div className="addSectionButtons">
         <Button text={t`addSection`} onClick={addSection} />
@@ -84,6 +84,8 @@ function ProgramEditor({program, onChange}) {
     </section>
   </DurationHelperContext.Provider>;
 };
+
+const SectionElement = (props) => <Card className="danceset" {...props} />
 
 function newSection(sections) {
   const hasIntroSection = sections.length > 0 && sections[0].isIntroHeader;
@@ -123,7 +125,7 @@ function SectionEditor({item, onChange, onRemove, itemIndex}) {
       <ListEditor items={program} onChange={(tracks) => onChange({...item, tracks})}
         element="tbody" rowElement="tr"
         component={ProgramItemEditor} />
-      {program.length ? null : <tbody><tr><t.td className="bp3-text-muted" colSpan="4">programListIsEmpty</t.td></tr></tbody>}
+      {program.length ? null : <tbody><tr><t.td className={Classes.TEXT_MUTED} colSpan="4">programListIsEmpty</t.td></tr></tbody>}
       <DurationFooter program={program} />
     </HTMLTable>
     {item.isIntroHeader ||

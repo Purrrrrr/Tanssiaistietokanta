@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import classNames from 'classnames';
 import {Switch, Button} from "@blueprintjs/core";
 import {gql, useQuery} from "services/Apollo";
 import {EditableDanceProperty} from "components/EditableDanceProperty";
@@ -58,7 +59,7 @@ export default function DanceCheatList({eventId}) {
 }
 
 function DanceCheatListView({workshops, mini, helpText}) {
-  return <CenteredContainer className={"dance-cheatsheet" + (mini ? " mini" : '')}>
+  return <CenteredContainer className={classNames('dance-cheatsheet', {mini})}>
     {helpText && <p>{t`helpText`}</p>}
     {workshops.map(workshop =>
       <WorkshopDances key={workshop._id} workshop={workshop} mini={mini} />)}

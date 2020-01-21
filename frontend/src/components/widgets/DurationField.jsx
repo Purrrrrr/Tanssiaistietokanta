@@ -1,6 +1,6 @@
 import React, {useRef, useEffect} from 'react';
 import {PropertyEditor} from "./PropertyEditor";
-import {EditableText} from "@blueprintjs/core";
+import {Classes, EditableText} from "@blueprintjs/core";
 import {toMinSec, toSeconds, prefixZero} from "utils/duration";
 
 export function DurationField(props) {
@@ -42,7 +42,7 @@ function TimePartEditor({isEditing, onEdit, value, onConfirm, ...props}) {
     }
   }, [isEditing, onConfirmRef]);
 
-  return <span ref={span} onClick={onEdit} className="bp3-editable-text" tabIndex="0" onFocus={onEdit}>
+  return <span ref={span} onClick={onEdit} className={Classes.EDITABLE_TEXT} tabIndex="0" onFocus={onEdit}>
     {isEditing
       ? <EditableText {...props} value={value}
         minWidth={40} type="number" isEditing />
