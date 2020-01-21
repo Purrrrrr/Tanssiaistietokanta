@@ -10,7 +10,6 @@ function Navigation() {
       <NavButton href="/" text="Tanssitapahtumat" />
       <AdminOnly>
         <NavButton href="/dances" text="Tanssitietokanta" />
-        <NavButton href="/legacy" text="Legacy" />
       </AdminOnly>
     </Navbar.Group>
     <Navbar.Group align={Alignment.RIGHT}>
