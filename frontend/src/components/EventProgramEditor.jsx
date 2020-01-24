@@ -1,12 +1,12 @@
 import React, {useState, createContext, useContext} from 'react';
 import produce from 'immer'
-import {Classes, Card, HTMLTable, Button, Intent} from "@blueprintjs/core";
+import {Classes, Icon, Card, HTMLTable, Button, Intent} from "@blueprintjs/core";
 
 import {PropertyEditor, required} from "./widgets/PropertyEditor";
 import {DanceChooser} from "components/widgets/DanceChooser";
 import {Duration} from "components/widgets/Duration";
 import {ProgramPauseDurationEditor} from "components/widgets/ProgramPauseDurationEditor";
-import {ListEditor} from "./ListEditor";
+import {ListEditor, ListEditorItems, DragHandle} from "./ListEditor";
 import {makeTranslate} from 'utils/translate';
 import programToSections from 'utils/programToSections';
 import {scrollToBottom} from 'utils/scrollToBottom';
@@ -72,14 +72,14 @@ function ProgramEditor({program, onChange}) {
   return <DurationHelperContext.Provider value={{pause, setPause, intervalPause, setIntervalPause}}>
     <section className="eventProgramEditor">
       <div style={{textAlign: 'right'}}>
-        <Button text={t`addIntroductoryInfo`} onClick={addInfo} />
         <ProgramPauseDurationEditor {...{pause, setPause, intervalPause, setIntervalPause}} />
       </div>
       <ListEditor items={sections} onChange={newSections => onChange(flattenSections(newSections))}
-        rowElement={SectionElement} component={SectionEditor} />
+        itemWrapper={SectionElement} component={SectionEditor} />
       {sections.length === 0 && <t.p>programIsEmpty</t.p>}
       <div className="addSectionButtons">
         <Button text={t`addSection`} onClick={addSection} />
+        {sections.length === 0 && <Button text={t`addIntroductoryInfo`} onClick={addInfo} />}
       </div>
     </section>
   </DurationHelperContext.Provider>;
@@ -116,29 +116,35 @@ function SectionEditor({item, onChange, onRemove, itemIndex}) {
           <Button className="delete" intent={Intent.DANGER} text={t`removeSection`} onClick={onRemove} />
       }
     </h2>
-    <HTMLTable condensed bordered striped className="danceSet">
-      <thead>
-        <tr>
-          <t.th>type</t.th><t.th>name</t.th><t.th>duration</t.th><t.th>remove</t.th>
-        </tr>
-      </thead>
-      <ListEditor items={program} onChange={(tracks) => onChange({...item, tracks})}
-        element="tbody" rowElement="tr"
-        component={ProgramItemEditor} />
-      {program.length ? null : <tbody><tr><t.td className={Classes.TEXT_MUTED} colSpan="4">programListIsEmpty</t.td></tr></tbody>}
-      <DurationFooter program={program} />
-    </HTMLTable>
-    {item.isIntroHeader ||
+    <ListEditor items={program} onChange={(tracks) => onChange({...item, tracks})}>
+      <HTMLTable condensed bordered striped className="danceSet">
+        <thead>
+          <tr>
+            <th><Icon icon="move"/></th>
+            <t.th>type</t.th><t.th>name</t.th><t.th>duration</t.th><t.th>remove</t.th>
+          </tr>
+        </thead>
+        <tbody>
+          <ListEditorItems itemWrapper="tr" component={ProgramItemEditor} />
+          {program.length === 0 &&
+              <tr>
+                <t.td className={Classes.TEXT_MUTED} colSpan="4">programListIsEmpty</t.td>
+              </tr>}
+        </tbody>
+        <DurationFooter program={program} />
+      </HTMLTable>
       <div className="editSectionButtons">
-        <Button text={t`addDance`} onClick={() => addItem('DANCE')} />
-        <Button text={t`addInfo`} onClick={() => addItem('TEXT')} />
+        {item.isIntroHeader || <Button text={t`addDance`} onClick={() => addItem('DANCE')} />}
+        <Button text={item.isIntroHeader ? t`addIntroductoryInfo` : t`addInfo`} onClick={() => addItem('TEXT')} />
       </div>
-    }
+      
+    </ListEditor>
   </>;
 }
 
 function ProgramItemEditor({item, onChange, onRemove, onAdd}) {
   return <>
+    <td><DragHandle /></td>
     <td>{t(item.type)}</td>
     <td>
       {item.type === 'DANCE'

@@ -4,7 +4,7 @@ import {Button, Intent} from "@blueprintjs/core";
 import {CREATE_WORKSHOP, toWorkshopInput} from 'services/workshops';
 import {AdminOnly} from 'services/users';
 import {Breadcrumb} from "components/Breadcrumbs";
-import {ListEditor} from "components/ListEditor";
+import {ListEditor, DragHandle} from "components/ListEditor";
 import {MutateButton} from "components/widgets/MutateButton";
 import {DanceChooser} from "components/widgets/DanceChooser";
 import {PropertyEditor, required} from "components/widgets/PropertyEditor";
@@ -45,9 +45,9 @@ export default function CreateWorkshopForm({event, uri}) {
 }
 
 function DanceListItem({item, onChange, onRemove}) {
-	return <>
+  return <>
+    <DragHandle />
 		<DanceChooser value={item} onChange={onChange} />
     <Button intent={Intent.DANGER} text="X" onClick={onRemove} />
 	</>;
-
 }
