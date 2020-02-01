@@ -1,15 +1,24 @@
-import { deleteJson } from 'utils/ajax';
 import { gql, useQuery, makeMutationHook, makeListQueryHook, appendToListQuery } from './Apollo';
 
 const eventFields = `
 _id, name, deleted
 program {
-  name
-  type
-  dance{
-    _id
+  introductions {
     name
     duration
+  }
+  danceSets {
+    name
+    program {
+      __typename
+      ... on NamedProgram {
+        name
+        duration
+      }
+      ... on Dance {
+        _id
+      }
+    }
   }
 }
 workshops {
@@ -31,7 +40,7 @@ export function useEvent(id) {
 const GET_EVENTS = gql`
 {
   events {
-    ${eventFields}
+    _id, name
   }
 }`;
 export const useEvents = makeListQueryHook(GET_EVENTS, "events");
@@ -42,7 +51,7 @@ mutation createEvent($event: EventInput!) {
     ${eventFields}
   }
 }`, {
-  parameterMapper: (event) => ({variables: {event: toEventInput(event)}}),
+  parameterMapper: (event) => ({variables: {event}}),
   update: (cache, {data}) =>
     appendToListQuery(cache, GET_EVENTS, data.createEvent)
 });
@@ -53,22 +62,23 @@ mutation modifyEvent($id: ID!, $event: EventInput!) {
     ${eventFields}
   }
 }`, {
-  parameterMapper: ({_id, __typename, deleted, ...event}) => 
+  parameterMapper: ({_id, __typename, deleted, ...event}) =>
     ({variables: {id: _id, event: toEventInput(event)} })
 });
 
-function toEventInput({name, program}) {
-  return {
-    name,
-    program: program.map(toProgramItemInput)
-  };
+function toEventInput({name}) {
+  return { name };
 }
 
-function toProgramItemInput({name, type, dance}) {
-  return {
-    name, type, danceId: dance ? dance._id : null
-  };
-}
+export const useModifyEventProgram = makeMutationHook(gql`
+mutation modifyEventProgram($id: ID!, $program: ProgramInput!) {
+  modifyEventProgram(id: $id, program: $program) {
+    ${eventFields}
+  }
+}`, {
+  parameterMapper: (eventId, {_id, __typename, ...program}) =>
+    ({variables: {id: eventId, program} })
+});
 
 export const useDeleteEvent = makeMutationHook(gql`
 mutation deleteEvent($id: ID!) {
@@ -78,7 +88,3 @@ mutation deleteEvent($id: ID!) {
 }`, {
   parameterMapper: id => ({variables: {id}})
 });
-
-export function deleteEvent(id) {
-  return deleteJson('/events/'+id);
-}

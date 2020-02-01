@@ -6,36 +6,78 @@ type Query {
 type Event {
   _id: ID
   name: String!
-  program: [ProgramItem!]!
+  program: EventProgram
   workshops: [Workshop!]!
   deleted: Boolean!
 }
 
-type ProgramItem {
-  name: String
-  type: ProgramType!
-  dance: Dance
+type EventProgram {
+  introductions: [OtherProgram!]!
+  danceSets: [DanceSet!]!
 }
 
-enum ProgramType {
-  DANCE
-  HEADER
-  TEXT
+type DanceSet {
+  name: String!
+  program: [EventProgramItem!]!
+  intervalMusicDuration: Float
+}
+
+union EventProgramItem = RequestedDance | Dance | OtherProgram
+
+interface NamedProgram {
+  name: String!
+  duration: Float
+}
+
+type RequestedDance {
+  _: Int
+}
+
+type OtherProgram implements NamedProgram {
+  name: String!
+  description: String
+  duration: Float
 }
 
 type Mutation {
   createEvent(event: EventInput!): Event!
   modifyEvent(id: ID!, event: EventInput!): Event!
+  modifyEventProgram(id: ID!, program: ProgramInput!): Event!
   deleteEvent(id: ID!): Event!
 }
 
 input EventInput {
   name: String!
+}
+
+input ProgramInput {
+  introductions: [OtherProgramInput!]!
+  danceSets: [DanceSetInput!]!
+}
+
+input DanceSetInput {
+  name: String!
   program: [ProgramItemInput!]!
+  intervalMusicDuration: Float
 }
 
 input ProgramItemInput {
-  name: String
+  "The actual type of the item, the other fields are used depending on the value of this field"
   type: ProgramType!
+  "The value to use when type is OTHER_PROGRAM"
+  otherProgram: OtherProgramInput
+  "The id of the dance to use when type is DANCE"
   danceId: ID
+}
+
+enum ProgramType {
+  DANCE
+  OTHER_PROGRAM
+  REQUESTED_DANCE
+}
+
+input OtherProgramInput {
+  name: String!
+  description: String
+  duration: Float
 }

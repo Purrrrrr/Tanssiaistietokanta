@@ -18,9 +18,7 @@ const t = makeTranslate({
 
 export default function CreateEventForm({uri}) {
   const [createEvent] = useCreateEvent();
-  const [event, setEvent] = useState({
-    program: []
-  });
+  const [event, setEvent] = useState({});
 
   return <AdminOnly>
     <Breadcrumb text={t`newEventBreadcrumb`} href={uri} />

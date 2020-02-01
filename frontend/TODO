@@ -1,0 +1,25 @@
+* Ball program view
+* Dance property editor component
+* Cheatsheet print page
+* Reload key for ball program
+* Prelude and info print page
+* Delete button widget
+* Dance list timing tool
+  * Table flag for list editor
+* Ball program refactor
+  Toivetanssit, requested dances
+  Workshop delete button
+  Workshop editor page
+  Do something to these property editors everywhere
+  Dance set list workshop and other info
+    "Suluissa opetussetti: 1=Branlet ja ECD:t, 2=Italialaiset ja solatanssit, B=The lost dances of the bordonians, H=Time
+travel through 4 centuries of dance. Tyhjät rivit ovat toivetansseja"
+    Make these print out nicely
+  Instructions for create dance dialog
+  ------
+  Apollo client 3.0
+  ------
+  Dance instruction database
+    links to tanssiwiki
+    own instructions?
+  Tool to create dance instruction leaflet?

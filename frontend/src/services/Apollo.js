@@ -1,11 +1,12 @@
 import {useMutation as useMutationOriginal, useQuery} from '@apollo/react-hooks';
+import { IntrospectionFragmentMatcher } from 'apollo-cache-inmemory';
+import { InMemoryCache } from 'apollo-cache-inmemory';
 import ApolloClient from 'apollo-boost';
 import {showDefaultErrorToast} from "utils/toaster"
 
 export {ApolloProvider, useQuery} from '@apollo/react-hooks';
 export {gql} from 'apollo-boost';
 export {ApolloClient};
-
 export function useMutation(query, options = {}) {
   return useMutationOriginal(query, {
     onError: showDefaultErrorToast,
@@ -13,7 +14,43 @@ export function useMutation(query, options = {}) {
   })
 }
 
-export const apolloClient = new ApolloClient({});
+const fragmentMatcher = new IntrospectionFragmentMatcher({
+	introspectionQueryResultData: {
+		__schema: {
+			types: [
+				{
+					"kind": "UNION",
+					"name": "EventProgramItem",
+					"possibleTypes": [
+						{
+							"name": "RequestedDance"
+						},
+						{
+							"name": "Dance"
+						},
+						{
+							"name": "OtherProgram"
+						}
+					]
+				},{
+					"kind": "INTERFACE",
+					"name": "NamedProgram",
+					"possibleTypes": [
+						{
+							"name": "Dance"
+						},
+						{
+							"name": "OtherProgram"
+						}
+					]
+				}
+			]
+		}
+	}
+});
+const cache = new InMemoryCache({fragmentMatcher});
+
+export const apolloClient = new ApolloClient({ cache });
 
 export function makeFragmentCache(type, query) {
   return id => apolloClient.readFragment({

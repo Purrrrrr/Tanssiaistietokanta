@@ -1,12 +1,12 @@
-import React, {useState, useMemo} from 'react';
+import './BallProgram.sass';
+
+import React, {useMemo, useState} from 'react';
 import {gql, useQuery} from "services/Apollo";
 
+import {EditableDanceProperty} from "components/EditableDanceProperty";
 import {LoadingState} from 'components/LoadingState';
 import {ProgramTitleSelector} from "components/ProgramTitleSelector";
-import {EditableDanceProperty} from "components/EditableDanceProperty";
 import {useOnKeydown} from "utils/useOnKeydown";
-
-import './BallProgram.sass';
 
 const GET_BALL_PROGRAM = gql`
 query BallProgram($eventId: ID!) {
@@ -14,12 +14,22 @@ query BallProgram($eventId: ID!) {
     _id
     name
     program {
-      name
-      type
-      dance{
-        _id
-        description
-        teachedIn(eventId: $eventId) { _id, name }
+      introductions {
+        name
+      }
+      danceSets {
+        name
+        program {
+          __typename
+          ... on NamedProgram {
+            name
+          }
+          ... on Dance {
+            _id
+            description
+            teachedIn(eventId: $eventId) { _id, name }
+          }
+        }
       }
     }
   }
@@ -46,68 +56,69 @@ function BallProgramView({event, currentSlide, onChangeSlide, onRefetch}) {
   })
 
   return <div className="slideshow">
-    <ProgramTitleSelector value={slide.header.index} onChange={onChangeSlide}
+    <ProgramTitleSelector value={slide.parent.index} onChange={onChangeSlide}
       program={program} />
     <SlideView slide={slide} onChangeSlide={onChangeSlide} />
   </div>;
 }
 
 function getSlides(event) {
-  const eventHeader = {
-    type: 'HEADER',
-    name: event.name,
-    index: 0
-  };
-  eventHeader.header = eventHeader;
+  const eventHeader = selfParent({ __typename: 'Event', name: event.name });
   const slides = [eventHeader];
-  let header = eventHeader;
-  let previousItem = eventHeader;
+  if (!event.program) return slides;
 
-  event.program.forEach((item, index) => {
-    const currentItem = { header, index: index+1, ...item };
-    if (item.type === 'HEADER') {
-      currentItem.header = currentItem;
-      currentItem.subItems = [];
-      header = currentItem;
-    } else {
-      //The if is a hack to ensure the first slide only has the event title in it
-      if (header.subItems) header.subItems.push(currentItem);
-    }
-    slides.push(currentItem);
-    previousItem.next = currentItem;
-    previousItem = currentItem;
+  const {introductions, danceSets} = event.program;
+  for (const introduction of introductions) {
+    slides.push({ ...introduction, parent: eventHeader });
+  }
+  for (const danceSet of danceSets) {
+    const danceSetSlide = selfParent({ ...danceSet });
+    const danceProgram = danceSet.program.map(item => ({ ...item, parent: danceSetSlide}));
+    danceSetSlide.program = danceProgram;
+    slides.push(danceSetSlide);
+    slides.push(...danceProgram);
+  }
+
+  slides.forEach((slide, index) => {
+    slide.index = index
+    slide.next = slides[index+1];
   });
   return slides;
 }
 
+function selfParent(obj) {
+  obj.parent = obj;
+  return obj;
+}
+
 function SlideView({slide, onChangeSlide}) {
-  switch(slide.type) {
-    case 'DANCE':
+  switch(slide.__typename) {
+    case 'Dance':
       return <DanceSlide dance={slide} onChangeSlide={onChangeSlide} />;
-    case 'HEADER':
+    case 'DanceSet':
     default:
       return <HeaderSlide header={slide} onChangeSlide={onChangeSlide} />;
   }
 }
 function HeaderSlide({header, onChangeSlide}) {
   return (<section className="slide">
-    <h1>{header.name}</h1>
+    <h1>{header.name ?? '____________________'}</h1>
     <ul>
-      {(header.subItems || [])
-          .filter(t => t.type !== "INTERVAL_MUSIC")
+      {(header.program || [])
+          .filter(t => t.__typename !== "IntervalMusic")
           .map(({index, name}) => 
-            <li onClick={() => onChangeSlide(index)} key={index}>{name}</li>)}
+            <li onClick={() => onChangeSlide(index)} key={index}>{name ?? '____________________'}</li>)}
     </ul>
   </section>);
 }
 
 function DanceSlide({dance, onChangeSlide}) {
-  const {next, name, dance: {teachedIn}} = dance;
+  const {next, name, ...teachedIn} = dance;
 
   return <section className="slide">
     <h1>{name}</h1>
     <p>
-      <EditableDanceProperty dance={dance.dance} property="description" multiline addText="Lisää kuvaus" />
+      <EditableDanceProperty dance={dance} property="description" multiline addText="Lisää kuvaus" />
     </p>
     {teachedIn.length > 0 && 
       <p>Opetettu setissä {teachedIn.map(w => w.name).join(", ")}</p>

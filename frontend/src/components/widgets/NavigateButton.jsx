@@ -1,9 +1,13 @@
 import React from 'react';
 import {Link} from "@reach/router"
 import {Classes} from "@blueprintjs/core"
+import {useIsAdmin} from 'services/users';
 import classNames from "classnames";
 
-export function NavigateButton({text, disabled, href, intent, className, ...props}) {
+export function NavigateButton({text, adminOnly, disabled, href, intent, className, ...props}) {
+  const isAdmin = useIsAdmin();
+  if (adminOnly && !isAdmin) return null;
+
   const classes = classNames(
     Classes.BUTTON,
     {[Classes.DISABLED]: disabled},

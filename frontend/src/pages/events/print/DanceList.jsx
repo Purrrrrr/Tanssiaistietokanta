@@ -2,14 +2,14 @@ import React, {useState} from "react";
 import {Switch, Button} from "@blueprintjs/core";
 import {gql, useQuery} from 'services/Apollo';
 import "./DanceList.sass";
-import programToSections from 'utils/programToSections';
 import PrintViewToolbar from 'components/widgets/PrintViewToolbar';
 import {LoadingState} from 'components/LoadingState';
 import {makeTranslate} from 'utils/translate';
 
 const t = makeTranslate({
   showSideBySide: 'Näytä setit rinnakkain',
-  print: 'Tulosta'
+  print: 'Tulosta',
+  emptyLinesAreRequestedDances: 'Tyhjät rivit ovat toivetansseja',
 });
 
 function DanceList({eventId}) {
@@ -26,31 +26,42 @@ function DanceList({eventId}) {
       }}/>
       <Button text={t`print`} onClick={() => window.print()} />
     </PrintViewToolbar>
-    {program.map(
-      ({name, tracks}, key) => {
+    {program.danceSets.map(
+      ({name, program}, key) => {
         return <div key={key} className="section">
           <h2>{name}</h2>
-          {tracks.map((track, i) => <p key={i}>{track.name}</p>)}
+          {program.map((track, i) => <p key={i}>{track.name ?? <RequestedDance />}</p>)}
         </div>;
       }
     )}
+    <t.footer className="footer">emptyLinesAreRequestedDances</t.footer>
   </div>;
 }
+
+const RequestedDance = () => '_________________________';
 
 const GET_EVENT = gql`
 query getDanceList($eventId: ID!) {
   event(id: $eventId) {
     _id
     program {
-      name
-      type
+      danceSets {
+        name
+        program {
+          __typename
+          ... on NamedProgram {
+            name
+            duration
+          }
+        }
+      }
     }
   }
 }`;
 
 function useBallProgram(eventId) {
   const {data, ...loadingState} = useQuery(GET_EVENT, {variables: {eventId}});
-  const program = data ? programToSections(data.event.program) : null;
+  const program = data ? data.event.program : null;
   return {program, loadingState};
 }
 

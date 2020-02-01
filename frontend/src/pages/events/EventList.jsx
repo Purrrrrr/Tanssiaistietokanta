@@ -5,7 +5,6 @@ import {NavigateButton} from "components/widgets/NavigateButton";
 
 import {DeleteButton} from "components/widgets/DeleteButton";
 import {useEvents, useDeleteEvent} from 'services/events';
-import {AdminOnly} from 'services/users';
 import {Link} from "@reach/router"
 
 export default function EventList() {
@@ -23,8 +22,6 @@ export default function EventList() {
         />
       </h2>
     )}
-    <AdminOnly>
-      <NavigateButton intent={Intent.PRIMARY} href="new" text="Uusi tapahtuma" />
-    </AdminOnly>
+    <NavigateButton adminOnly intent={Intent.PRIMARY} href="new" text="Uusi tapahtuma" />
   </>
 }

@@ -8,7 +8,6 @@ import {Duration} from "components/widgets/Duration";
 import {ProgramPauseDurationEditor} from "components/widgets/ProgramPauseDurationEditor";
 import {ListEditor, ListEditorItems, DragHandle} from "./ListEditor";
 import {makeTranslate} from 'utils/translate';
-import programToSections from 'utils/programToSections';
 import {scrollToBottom} from 'utils/scrollToBottom';
 
 import './EventProgramEditor.sass';
@@ -16,13 +15,14 @@ import './EventProgramEditor.sass';
 const t = makeTranslate({
   addEntry: 'Lisää',
   addEntryTitle: 'Lisää ohjelmaa',
-  introductionSection: 'Alkutiedotukset',
+  introductoryInformation: 'Alkutiedotukset',
   programListIsEmpty: 'Ei ohjelmaa',
-  DANCE: 'Tanssi',
-  TEXT: 'Muu ohjelma',
-  removeSection: 'Poista setti',
-  addSection: 'Lisää tanssisetti',
-  section: 'Setti',
+  Dance: 'Tanssi',
+  RequestedDance: 'Toivetanssi',
+  OtherProgram: 'Muu ohjelma',
+  removeDanceSet: 'Poista setti',
+  addDanceSet: 'Lisää tanssisetti',
+  danceSet: 'Setti',
   addDance: 'Lisää tanssi',
   addInfo: 'Lisää muuta ohjelmaa',
   addIntroductoryInfo: 'Lisää alkutiedote',
@@ -36,124 +36,135 @@ const t = makeTranslate({
   intervalDuration: 'Taukomusiikki',
   minutes: 'min.',
   remove: 'Poista',
-  programIsEmpty: 'Ei ohjelmaa. Lisää ohjelmaa alla olevista napeista.'
+  danceProgramIsEmpty: 'Ei tanssiohjelmaa.'
 });
-
-export function EventProgramEditor({event, onChange}) {
-  return <ProgramEditor program={event.program || []} onChange={program => onChange({...event, program})} />;
-}
 
 const DurationHelperContext = createContext();
 
-function ProgramEditor({program, onChange}) {
-  const sections = programToSections(program);
+export function EventProgramEditor({program, onChange}) {
+  program = program ?? {};
+  const {danceSets = [], introductions = []} = program;
   const [pause, setPause] = useState(3);
   const [intervalPause, setIntervalPause] = useState(15);
 
-  function addInfo() {
-    const info = {type: 'TEXT'};
-    onChange(flattenSections(produce(sections, draft => {
-      if (draft.length === 0 || draft[0].name !== '') {
-        draft.unshift({
-          type: 'HEADER',
-          isIntroHeader: true,
-          name: '',
-          tracks: [],
-        })
+  function addIntroductoryInfo() {
+    onChange(produce(program, draft => {
+      if (!draft.introductions) {
+        draft.introductions = [];
       }
-      draft[0].tracks.push(info);
-    })));
+      draft.introductions.push({__typename: 'OtherProgram', name: ''});
+    }));
   }
-  function addSection() {
-    onChange(flattenSections([...sections, newSection(sections)]));
+  function addDanceSet() {
+    onChange(produce(program, draft => {
+      if (!draft.danceSets) draft.danceSets = [];
+      draft.danceSets.push(newDanceSet(danceSets));
+    }));
     scrollToBottom();
   }
 
   return <DurationHelperContext.Provider value={{pause, setPause, intervalPause, setIntervalPause}}>
     <section className="eventProgramEditor">
       <div style={{textAlign: 'right'}}>
+        {introductions.length === 0 && <Button text={t`addIntroductoryInfo`} onClick={addIntroductoryInfo} />}
         <ProgramPauseDurationEditor {...{pause, setPause, intervalPause, setIntervalPause}} />
       </div>
-      <ListEditor items={sections} onChange={newSections => onChange(flattenSections(newSections))}
-        itemWrapper={SectionElement} component={SectionEditor} />
-      {sections.length === 0 && <t.p>programIsEmpty</t.p>}
-      <div className="addSectionButtons">
-        <Button text={t`addSection`} onClick={addSection} />
-        {sections.length === 0 && <Button text={t`addIntroductoryInfo`} onClick={addInfo} />}
+
+      { introductions.length > 0 &&
+        <IntroductoryInformation infos={introductions} onChange={introductions => onChange({...program, introductions})} />
+      }
+      <ListEditor items={danceSets} onChange={newSets => onChange({...program, danceSets: newSets})}
+        itemWrapper={DanceSetElement} component={DanceSetEditor} />
+      <div className="addDanceSetButtons">
+        {danceSets.length === 0 && t`danceProgramIsEmpty`}
+        <Button text={t`addDanceSet`} onClick={addDanceSet} />
       </div>
     </section>
   </DurationHelperContext.Provider>;
 };
 
-const SectionElement = (props) => <Card className="danceset" {...props} />
+const DanceSetElement = (props) => <Card className="danceset" {...props} />
 
-function newSection(sections) {
-  const hasIntroSection = sections.length > 0 && sections[0].isIntroHeader;
-  const sectionNumber = sections.length + (hasIntroSection ? 0 : 1);
-  const dances = Array.from({length: 6}, () => ({type: 'DANCE'}));
+function newDanceSet(danceSets) {
+  const danceSetNumber = danceSets.length + 1;
+  const dances = Array.from({length: 6}, () => ({__typename: 'RequestedDance'}));
   return {
-    type: 'HEADER',
-    name: t`section` + " " + sectionNumber,
-    tracks: dances,
+    name: t`danceSet` + " " + danceSetNumber,
+    program: dances,
   }
 }
 
-function SectionEditor({item, onChange, onRemove, itemIndex}) {
-  const program = item.tracks;
-  function addItem(type) {
-    onChange(produce(item, draft => {
-      draft.tracks.push({ type });
-    }));
-  }
+function IntroductoryInformation({infos, onChange}) {
+  return <Card className="danceset">
+    <t.h2>introductoryInformation</t.h2>
+    <ProgramListEditor program={infos} onChange={onChange} isIntroductionsSection />
+  </Card>;
+}
 
+function DanceSetEditor({item, onChange, onRemove, itemIndex}) {
   return <>
     <h2>
-      {item.isIntroHeader ?
-          t`introductionSection` :
-          <PropertyEditor property="name" data={item} onChange={onChange} validate={required('Täytä kenttä')}/>
-      }
-      {item.isIntroHeader ||
-          <Button className="delete" intent={Intent.DANGER} text={t`removeSection`} onClick={onRemove} />
-      }
+      <PropertyEditor property="name" data={item} onChange={onChange} validate={required('Täytä kenttä')}/>
+      <Button className="delete" intent={Intent.DANGER} text={t`removeDanceSet`} onClick={onRemove} />
     </h2>
-    <ListEditor items={program} onChange={(tracks) => onChange({...item, tracks})}>
-      <HTMLTable condensed bordered striped className="danceSet">
-        <thead>
-          <tr>
-            <th><Icon icon="move"/></th>
-            <t.th>type</t.th><t.th>name</t.th><t.th>duration</t.th><t.th>remove</t.th>
-          </tr>
-        </thead>
-        <tbody>
-          <ListEditorItems itemWrapper="tr" component={ProgramItemEditor} />
-          {program.length === 0 &&
-              <tr>
-                <t.td className={Classes.TEXT_MUTED} colSpan="4">programListIsEmpty</t.td>
-              </tr>}
-        </tbody>
-        <DurationFooter program={program} />
-      </HTMLTable>
-      <div className="editSectionButtons">
-        {item.isIntroHeader || <Button text={t`addDance`} onClick={() => addItem('DANCE')} />}
-        <Button text={item.isIntroHeader ? t`addIntroductoryInfo` : t`addInfo`} onClick={() => addItem('TEXT')} />
-      </div>
-      
-    </ListEditor>
+    <ProgramListEditor program={item.program} onChange={(program) => onChange({...item, program})} />
   </>;
 }
 
+function ProgramListEditor({program, onChange, isIntroductionsSection}) {
+  function addItem(__typename) {
+    onChange(produce(program, draft => {
+      draft.push({ __typename });
+    }));
+  }
+
+  return <ListEditor items={program} onChange={onChange}>
+    <HTMLTable condensed bordered striped className="danceSet">
+      {program.length === 0 ||
+          <thead>
+            <tr>
+              <th><Icon icon="move"/></th>
+              <t.th>type</t.th><t.th>name</t.th><t.th>duration</t.th><t.th>remove</t.th>
+            </tr>
+          </thead>}
+      <tbody>
+        <ListEditorItems itemWrapper="tr" component={ProgramItemEditor} />
+        {program.length === 0 &&
+            <tr>
+              <t.td className={Classes.TEXT_MUTED+ " noProgram"} colSpan="5">programListIsEmpty</t.td>
+            </tr>
+        }
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colSpan="3" >
+            {isIntroductionsSection || <Button text={t`addDance`} onClick={() => addItem('Dance')} />}
+            <Button text={isIntroductionsSection ? t`addIntroductoryInfo` : t`addInfo`} onClick={() => addItem('OtherProgram')} />
+          </td>
+          <td colSpan="2">
+            <DanceSetDuration program={program} />
+          </td>
+        </tr>
+      </tfoot>
+    </HTMLTable>
+  </ListEditor>;
+}
+
 function ProgramItemEditor({item, onChange, onRemove, onAdd}) {
+  const {__typename, name, danceId} = item;
+  const isDance = __typename === 'Dance' || __typename === 'RequestedDance';
   return <>
     <td><DragHandle /></td>
-    <td>{t(item.type)}</td>
+    <td>{t(__typename)}</td>
     <td>
-      {item.type === 'DANCE'
-          ? <DanceChooser value={item.dance} onChange={dance => onChange({...item, dance, danceId: dance._id})} />
+      {isDance
+          ? <DanceChooser value={{_id: danceId, name}}
+            onChange={dance=> onChange(dance ? {__typename: 'Dance', ...dance} : {__typename: 'RequestedDance'})} />
           : <PropertyEditor alwaysEdit property="name" data={item} onChange={onChange} validate={required('Täytä kenttä')}/>
       }
     </td>
     <td>
-      {item.type === 'DANCE' && item.dance && <Duration value={item.dance.duration} />}
+      <Duration value={item.duration} />
     </td>
     <td>
       <Button intent={Intent.DANGER} text="X" onClick={onRemove} />
@@ -161,27 +172,14 @@ function ProgramItemEditor({item, onChange, onRemove, onAdd}) {
   </>
 }
 
-function DurationFooter({program}) {
+function DanceSetDuration({program}) {
   const {pause, intervalPause} = useContext(DurationHelperContext);
-  const duration = program.map(({dance}) => dance?.duration ?? 0).reduce((y,x) => x+y, 0);
-  if (duration === 0) return null;
+  const duration = program.map(({duration}) => duration ?? 0).reduce((y,x) => x+y, 0);
   const durationWithPauses = duration + pause*60*program.length + intervalPause*60;
 
-  return <tfoot>
-    <tr>
-      <t.th colSpan="2">duration</t.th>
-      <td colSpan="2">
-        <strong><Duration value={durationWithPauses}/></strong>{' ('+t`pausesIncluded`+') '}
-        <br />
-        <strong><Duration value={duration}/></strong>{' ('+t`dances`+')'}
-      </td>
-    </tr>
-  </tfoot>
-}
-
-function flattenSections(sections) {
-  return sections.flatMap(({tracks, ...section}) => [
-    {...section},
-    ...tracks
-  ]).filter((item) => !item.isIntroHeader)
+  return <>
+    <strong><Duration value={durationWithPauses}/></strong>{' ('+t`pausesIncluded`+') '}
+    <br />
+    <strong><Duration value={duration}/></strong>{' ('+t`dances`+')'}
+  </>;
 }

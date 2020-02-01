@@ -14,6 +14,8 @@ const t = makeTranslate({
   noDances: 'Ei tansseja',
   addDescription: 'Lisää kuvaus',
   addPrelude: 'Lisää alkusoitto',
+  introductions: 'Alkutiedotukset',
+  requestedDance: 'Toivetanssi',
 });
 
 const GET_CHEAT_LIST= gql`
@@ -21,13 +23,24 @@ query getDanceMastersCheatList($eventId: ID!) {
   event(id: $eventId) {
     _id
     program {
-      name
-      type
-      dance{
-        _id
+      introductions {
         name
-        description
-        prelude
+        duration
+      }
+      danceSets {
+        name
+        program {
+          __typename
+          ... on NamedProgram {
+            name
+            duration
+          }
+          ... on Dance {
+            _id
+            description
+            prelude
+          }
+        }
       }
     }
   }
@@ -46,17 +59,31 @@ export default function DanceMastersCheatList({eventId}) {
 }
 
 function DanceMastersCheatListView({program}) {
+  const {introductions, danceSets} = program;
   return <PrintTable className="dancemasters-cheatlist">
-    {program.map((item, i) => {
-      switch(item.type) {
-        case 'DANCE':
-          return <DanceRow key={i} dance={item.dance} />;
-        case 'HEADER':
-          return <tr className="header" key={i}><th colSpan={3}>{item.name}</th></tr>
-        default:
-          return <tr className="info" key={i}><td colSpan={3}>{item.name}</td></tr>
-      }
-    })}
+    {introductions.length > 0 &&
+      <>
+        <HeaderRow>{t`introductions`}</HeaderRow>
+        {introductions.map((item, i) => 
+            <SimpleRow key={i} text={item.name} />
+        )}
+      </>
+    }
+    {danceSets.map(({name, program}, index) =>
+      <React.Fragment key={index}>
+        <HeaderRow>{name}</HeaderRow>
+        {program.map((item, i) => {
+          switch(item.__typename) {
+            case 'Dance':
+              return <DanceRow key={i} dance={item} />;
+            case 'RequestedDance':
+              return <SimpleRow key={i} text={t`requestedDance`} />;
+            default:
+              return <SimpleRow key={i} className="info" text={item.name} />;
+          }
+        })}
+      </React.Fragment>
+    )}
   </PrintTable>;
 }
 
@@ -70,5 +97,12 @@ function DanceRow({dance}) {
       <EditableDanceProperty dance={dance} property="prelude" addText={t`addPrelude`} multiline />
     </td>
   </tr>
+}
 
+function HeaderRow({children}) {
+  return <tr className="header"><th colSpan={3}>{children}</th></tr>
+}
+
+function SimpleRow({className, text}) {
+  return <tr className={className}><td colSpan={3}>{text}</td></tr>
 }
