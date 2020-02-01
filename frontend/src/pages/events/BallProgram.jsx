@@ -56,14 +56,14 @@ function BallProgramView({event, currentSlide, onChangeSlide, onRefetch}) {
   })
 
   return <div className="slideshow">
-    <ProgramTitleSelector value={slide.parent.index} onChange={onChangeSlide}
+    <ProgramTitleSelector value={slide.parent?.index ?? slide.index} onChange={onChangeSlide}
       program={program} />
     <SlideView slide={slide} onChangeSlide={onChangeSlide} />
   </div>;
 }
 
 function getSlides(event) {
-  const eventHeader = selfParent({ __typename: 'Event', name: event.name });
+  const eventHeader = { __typename: 'Event', name: event.name };
   const slides = [eventHeader];
   if (!event.program) return slides;
 
@@ -72,7 +72,7 @@ function getSlides(event) {
     slides.push({ ...introduction, parent: eventHeader });
   }
   for (const danceSet of danceSets) {
-    const danceSetSlide = selfParent({ ...danceSet });
+    const danceSetSlide = { ...danceSet };
     const danceProgram = danceSet.program.map(item => ({ ...item, parent: danceSetSlide}));
     danceSetSlide.program = danceProgram;
     slides.push(danceSetSlide);
@@ -86,34 +86,32 @@ function getSlides(event) {
   return slides;
 }
 
-function selfParent(obj) {
-  obj.parent = obj;
-  return obj;
-}
-
 function SlideView({slide, onChangeSlide}) {
   switch(slide.__typename) {
     case 'Dance':
       return <DanceSlide dance={slide} onChangeSlide={onChangeSlide} />;
     case 'DanceSet':
+    case 'Event':
     default:
       return <HeaderSlide header={slide} onChangeSlide={onChangeSlide} />;
   }
 }
 function HeaderSlide({header, onChangeSlide}) {
   return (<section className="slide">
-    <h1>{header.name ?? '____________________'}</h1>
+    <h1>{header.name ?? RequestedDancePlaceholder}</h1>
     <ul>
       {(header.program || [])
           .filter(t => t.__typename !== "IntervalMusic")
-          .map(({index, name}) => 
-            <li onClick={() => onChangeSlide(index)} key={index}>{name ?? '____________________'}</li>)}
+          .map(({index, name}) =>
+            <li onClick={() => onChangeSlide(index)} key={index}>{name ?? RequestedDancePlaceholder}</li>)}
     </ul>
   </section>);
 }
 
+const RequestedDancePlaceholder = () => '_________________________';
+
 function DanceSlide({dance, onChangeSlide}) {
-  const {next, name, ...teachedIn} = dance;
+  const {next, name, teachedIn} = dance;
 
   return <section className="slide">
     <h1>{name}</h1>

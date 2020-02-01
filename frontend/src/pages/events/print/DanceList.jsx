@@ -1,9 +1,11 @@
-import React, {useState} from "react";
-import {Switch, Button} from "@blueprintjs/core";
-import {gql, useQuery} from 'services/Apollo';
 import "./DanceList.sass";
-import PrintViewToolbar from 'components/widgets/PrintViewToolbar';
+
+import {Button, Switch} from "@blueprintjs/core";
+import React, {useState} from "react";
+import {gql, useQuery} from 'services/Apollo';
+
 import {LoadingState} from 'components/LoadingState';
+import PrintViewToolbar from 'components/widgets/PrintViewToolbar';
 import {makeTranslate} from 'utils/translate';
 
 const t = makeTranslate({
@@ -51,7 +53,6 @@ query getDanceList($eventId: ID!) {
           __typename
           ... on NamedProgram {
             name
-            duration
           }
         }
       }

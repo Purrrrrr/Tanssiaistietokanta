@@ -1,13 +1,14 @@
-import React from 'react';
-import {Button} from "@blueprintjs/core";
+import './DanceMastersCheatList.sass';
+
 import {gql, useQuery} from "services/Apollo";
+
+import {Button} from "@blueprintjs/core";
 import {EditableDanceProperty} from "components/EditableDanceProperty";
 import {LoadingState} from 'components/LoadingState';
-import PrintViewToolbar from 'components/widgets/PrintViewToolbar';
 import {PrintTable} from 'components/PrintTable';
+import PrintViewToolbar from 'components/widgets/PrintViewToolbar';
+import React from 'react';
 import {makeTranslate} from 'utils/translate';
-
-import './DanceMastersCheatList.sass';
 
 const t = makeTranslate({
   print: 'Tulosta',
@@ -25,7 +26,6 @@ query getDanceMastersCheatList($eventId: ID!) {
     program {
       introductions {
         name
-        duration
       }
       danceSets {
         name
@@ -33,7 +33,6 @@ query getDanceMastersCheatList($eventId: ID!) {
           __typename
           ... on NamedProgram {
             name
-            duration
           }
           ... on Dance {
             _id
@@ -69,22 +68,26 @@ function DanceMastersCheatListView({program}) {
         )}
       </>
     }
-    {danceSets.map(({name, program}, index) =>
-      <React.Fragment key={index}>
-        <HeaderRow>{name}</HeaderRow>
-        {program.map((item, i) => {
-          switch(item.__typename) {
-            case 'Dance':
-              return <DanceRow key={i} dance={item} />;
-            case 'RequestedDance':
-              return <SimpleRow key={i} text={t`requestedDance`} />;
-            default:
-              return <SimpleRow key={i} className="info" text={item.name} />;
-          }
-        })}
-      </React.Fragment>
+    {danceSets.map((danceSet, index) =>
+      <DanceSetRows key={index} danceSet={danceSet} />
     )}
   </PrintTable>;
+}
+
+function DanceSetRows({danceSet: {name, program}}) {
+  return <>
+    <HeaderRow>{name}</HeaderRow>
+    {program.map((item, i) => {
+      switch(item.__typename) {
+        case 'Dance':
+          return <DanceRow key={i} dance={item} />;
+        case 'RequestedDance':
+          return <SimpleRow key={i} text={t`requestedDance`} />;
+        default:
+          return <SimpleRow key={i} className="info" text={item.name} />;
+      }
+    })}
+    </>
 }
 
 function DanceRow({dance}) {

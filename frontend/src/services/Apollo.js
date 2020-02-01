@@ -1,7 +1,8 @@
 import {useMutation as useMutationOriginal, useQuery} from '@apollo/react-hooks';
-import { IntrospectionFragmentMatcher } from 'apollo-cache-inmemory';
-import { InMemoryCache } from 'apollo-cache-inmemory';
+
 import ApolloClient from 'apollo-boost';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import { IntrospectionFragmentMatcher } from 'apollo-cache-inmemory';
 import {showDefaultErrorToast} from "utils/toaster"
 
 export {ApolloProvider, useQuery} from '@apollo/react-hooks';
@@ -15,38 +16,38 @@ export function useMutation(query, options = {}) {
 }
 
 const fragmentMatcher = new IntrospectionFragmentMatcher({
-	introspectionQueryResultData: {
-		__schema: {
-			types: [
-				{
-					"kind": "UNION",
-					"name": "EventProgramItem",
-					"possibleTypes": [
-						{
-							"name": "RequestedDance"
-						},
-						{
-							"name": "Dance"
-						},
-						{
-							"name": "OtherProgram"
-						}
-					]
-				},{
-					"kind": "INTERFACE",
-					"name": "NamedProgram",
-					"possibleTypes": [
-						{
-							"name": "Dance"
-						},
-						{
-							"name": "OtherProgram"
-						}
-					]
-				}
-			]
-		}
-	}
+  introspectionQueryResultData: {
+    __schema: {
+      types: [
+        {
+          "kind": "UNION",
+          "name": "EventProgramItem",
+          "possibleTypes": [
+            {
+              "name": "RequestedDance"
+            },
+            {
+              "name": "Dance"
+            },
+            {
+              "name": "OtherProgram"
+            }
+          ]
+        },{
+          "kind": "INTERFACE",
+          "name": "NamedProgram",
+          "possibleTypes": [
+            {
+              "name": "Dance"
+            },
+            {
+              "name": "OtherProgram"
+            }
+          ]
+        }
+      ]
+    }
+  }
 });
 const cache = new InMemoryCache({fragmentMatcher});
 

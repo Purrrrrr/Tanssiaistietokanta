@@ -1,20 +1,20 @@
-import React, {useState} from 'react';
 import {Button, Intent} from "@blueprintjs/core";
-
 import {CREATE_WORKSHOP, toWorkshopInput} from 'services/workshops';
+import {DragHandle, ListEditor} from "components/ListEditor";
+import {PropertyEditor, required} from "components/widgets/PropertyEditor";
+import React, {useState} from 'react';
+
 import {AdminOnly} from 'services/users';
 import {Breadcrumb} from "components/Breadcrumbs";
-import {ListEditor, DragHandle} from "components/ListEditor";
-import {MutateButton} from "components/widgets/MutateButton";
 import {DanceChooser} from "components/widgets/DanceChooser";
-import {PropertyEditor, required} from "components/widgets/PropertyEditor";
+import {MutateButton} from "components/widgets/MutateButton";
 import {makeTranslate} from 'utils/translate';
 
 const t = makeTranslate({
   create: 'Tallenna',
-	dances: 'Tanssit',
-	addDance: 'Lisää tanssi',
-	name: 'Nimi',
+  dances: 'Tanssit',
+  addDance: 'Lisää tanssi',
+  name: 'Nimi',
   nameRequired: 'Täytä nimi',
   newWorkshop: 'Uusi työpaja',
 });
@@ -23,7 +23,7 @@ export default function CreateWorkshopForm({event, uri}) {
   const [workshop, setWorkshop] = useState({
     dances: []
   });
-	const setDances = dances => setWorkshop({...workshop, dances});
+  const setDances = dances => setWorkshop({...workshop, dances});
 
   return <AdminOnly>
     <Breadcrumb text={t`newWorkshop`} href={uri} />
@@ -47,7 +47,7 @@ export default function CreateWorkshopForm({event, uri}) {
 function DanceListItem({item, onChange, onRemove}) {
   return <>
     <DragHandle />
-		<DanceChooser value={item} onChange={onChange} />
+    <DanceChooser value={item} onChange={onChange} />
     <Button intent={Intent.DANGER} text="X" onClick={onRemove} />
-	</>;
+  </>;
 }

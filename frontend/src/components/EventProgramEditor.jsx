@@ -1,16 +1,16 @@
-import React, {useState, createContext, useContext} from 'react';
-import produce from 'immer'
-import {Classes, Icon, Card, HTMLTable, Button, Intent} from "@blueprintjs/core";
+import './EventProgramEditor.sass';
 
+import {Button, Card, Classes, HTMLTable, Icon, Intent} from "@blueprintjs/core";
+import {DragHandle, ListEditor, ListEditorItems} from "./ListEditor";
 import {PropertyEditor, required} from "./widgets/PropertyEditor";
+import React, {createContext, useContext, useState} from 'react';
+
 import {DanceChooser} from "components/widgets/DanceChooser";
 import {Duration} from "components/widgets/Duration";
 import {ProgramPauseDurationEditor} from "components/widgets/ProgramPauseDurationEditor";
-import {ListEditor, ListEditorItems, DragHandle} from "./ListEditor";
 import {makeTranslate} from 'utils/translate';
+import produce from 'immer'
 import {scrollToBottom} from 'utils/scrollToBottom';
-
-import './EventProgramEditor.sass';
 
 const t = makeTranslate({
   addEntry: 'Lisää',
@@ -41,94 +41,94 @@ const t = makeTranslate({
 
 const DurationHelperContext = createContext();
 
-export function EventProgramEditor({program, onChange}) {
-  program = program ?? {};
-  const {danceSets = [], introductions = []} = program;
-  const [pause, setPause] = useState(3);
-  const [intervalPause, setIntervalPause] = useState(15);
+export function EventProgramEditor({program = {}, onChange}) {
+program = program ?? {};
+const {danceSets = [], introductions = []} = program;
+const [pause, setPause] = useState(3);
+const [intervalPause, setIntervalPause] = useState(15);
 
-  function addIntroductoryInfo() {
-    onChange(produce(program, draft => {
-      if (!draft.introductions) {
-        draft.introductions = [];
-      }
-      draft.introductions.push({__typename: 'OtherProgram', name: ''});
-    }));
-  }
-  function addDanceSet() {
-    onChange(produce(program, draft => {
-      if (!draft.danceSets) draft.danceSets = [];
-      draft.danceSets.push(newDanceSet(danceSets));
-    }));
-    scrollToBottom();
-  }
+function addIntroductoryInfo() {
+  onChange(produce(program, draft => {
+    if (!draft.introductions) {
+      draft.introductions = [];
+    }
+    draft.introductions.push({__typename: 'OtherProgram', name: ''});
+  }));
+}
+function addDanceSet() {
+  onChange(produce(program, draft => {
+    if (!draft.danceSets) draft.danceSets = [];
+    draft.danceSets.push(newDanceSet(danceSets));
+  }));
+  scrollToBottom();
+}
 
-  return <DurationHelperContext.Provider value={{pause, setPause, intervalPause, setIntervalPause}}>
-    <section className="eventProgramEditor">
-      <div style={{textAlign: 'right'}}>
-        {introductions.length === 0 && <Button text={t`addIntroductoryInfo`} onClick={addIntroductoryInfo} />}
-        <ProgramPauseDurationEditor {...{pause, setPause, intervalPause, setIntervalPause}} />
-      </div>
+return <DurationHelperContext.Provider value={{pause, setPause, intervalPause, setIntervalPause}}>
+  <section className="eventProgramEditor">
+    <div style={{textAlign: 'right'}}>
+      {introductions.length === 0 && <Button text={t`addIntroductoryInfo`} onClick={addIntroductoryInfo} />}
+      <ProgramPauseDurationEditor {...{pause, setPause, intervalPause, setIntervalPause}} />
+    </div>
 
-      { introductions.length > 0 &&
-        <IntroductoryInformation infos={introductions} onChange={introductions => onChange({...program, introductions})} />
-      }
-      <ListEditor items={danceSets} onChange={newSets => onChange({...program, danceSets: newSets})}
-        itemWrapper={DanceSetElement} component={DanceSetEditor} />
-      <div className="addDanceSetButtons">
-        {danceSets.length === 0 && t`danceProgramIsEmpty`}
-        <Button text={t`addDanceSet`} onClick={addDanceSet} />
-      </div>
-    </section>
-  </DurationHelperContext.Provider>;
+    { introductions.length > 0 &&
+      <IntroductoryInformation infos={introductions} onChange={introductions => onChange({...program, introductions})} />
+    }
+    <ListEditor items={danceSets} onChange={newSets => onChange({...program, danceSets: newSets})}
+      itemWrapper={DanceSetElement} component={DanceSetEditor} />
+    <div className="addDanceSetButtons">
+      {danceSets.length === 0 && t`danceProgramIsEmpty`}
+      <Button text={t`addDanceSet`} onClick={addDanceSet} />
+    </div>
+  </section>
+</DurationHelperContext.Provider>;
 };
 
 const DanceSetElement = (props) => <Card className="danceset" {...props} />
 
 function newDanceSet(danceSets) {
-  const danceSetNumber = danceSets.length + 1;
-  const dances = Array.from({length: 6}, () => ({__typename: 'RequestedDance'}));
-  return {
-    name: t`danceSet` + " " + danceSetNumber,
-    program: dances,
-  }
+const danceSetNumber = danceSets.length + 1;
+const dances = Array.from({length: 6}, () => ({__typename: 'RequestedDance'}));
+return {
+  name: t`danceSet` + " " + danceSetNumber,
+  program: dances,
+}
 }
 
 function IntroductoryInformation({infos, onChange}) {
-  return <Card className="danceset">
-    <t.h2>introductoryInformation</t.h2>
-    <ProgramListEditor program={infos} onChange={onChange} isIntroductionsSection />
-  </Card>;
+return <Card className="danceset">
+  <t.h2>introductoryInformation</t.h2>
+  <ProgramListEditor program={infos} onChange={onChange} isIntroductionsSection />
+</Card>;
 }
 
 function DanceSetEditor({item, onChange, onRemove, itemIndex}) {
-  return <>
-    <h2>
-      <PropertyEditor property="name" data={item} onChange={onChange} validate={required('Täytä kenttä')}/>
-      <Button className="delete" intent={Intent.DANGER} text={t`removeDanceSet`} onClick={onRemove} />
-    </h2>
-    <ProgramListEditor program={item.program} onChange={(program) => onChange({...item, program})} />
-  </>;
+return <>
+  <h2>
+    <PropertyEditor property="name" data={item} onChange={onChange} validate={required('Täytä kenttä')}/>
+    <Button className="delete" intent={Intent.DANGER} text={t`removeDanceSet`} onClick={onRemove} />
+  </h2>
+  <ProgramListEditor program={item.program} onChange={(program) => onChange({...item, program})} />
+</>;
 }
 
 function ProgramListEditor({program, onChange, isIntroductionsSection}) {
-  function addItem(__typename) {
-    onChange(produce(program, draft => {
-      draft.push({ __typename });
-    }));
-  }
+function addItem(__typename) {
+  onChange(produce(program, draft => {
+    draft.push({ __typename });
+  }));
+}
 
-  return <ListEditor items={program} onChange={onChange}>
-    <HTMLTable condensed bordered striped className="danceSet">
-      {program.length === 0 ||
-          <thead>
-            <tr>
-              <th><Icon icon="move"/></th>
-              <t.th>type</t.th><t.th>name</t.th><t.th>duration</t.th><t.th>remove</t.th>
-            </tr>
-          </thead>}
-      <tbody>
-        <ListEditorItems itemWrapper="tr" component={ProgramItemEditor} />
+return <ListEditor items={program} onChange={onChange}>
+  <HTMLTable condensed bordered striped className="danceSet">
+    {program.length === 0 ||
+        <thead>
+          <tr>
+            <th><Icon icon="move"/></th>
+            <t.th>type</t.th><t.th>name</t.th><t.th>duration</t.th><t.th>remove</t.th>
+          </tr>
+        </thead>}
+    <tbody>
+      <ListEditorItems itemWrapper="tr" component={ProgramItemEditor} />
         {program.length === 0 &&
             <tr>
               <t.td className={Classes.TEXT_MUTED+ " noProgram"} colSpan="5">programListIsEmpty</t.td>
@@ -151,14 +151,14 @@ function ProgramListEditor({program, onChange, isIntroductionsSection}) {
 }
 
 function ProgramItemEditor({item, onChange, onRemove, onAdd}) {
-  const {__typename, name, danceId} = item;
+  const {__typename, name, _id} = item;
   const isDance = __typename === 'Dance' || __typename === 'RequestedDance';
   return <>
     <td><DragHandle /></td>
     <td>{t(__typename)}</td>
     <td>
       {isDance
-          ? <DanceChooser value={{_id: danceId, name}}
+          ? <DanceChooser value={{_id, name}}
             onChange={dance=> onChange(dance ? {__typename: 'Dance', ...dance} : {__typename: 'RequestedDance'})} />
           : <PropertyEditor alwaysEdit property="name" data={item} onChange={onChange} validate={required('Täytä kenttä')}/>
       }
