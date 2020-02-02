@@ -1,5 +1,6 @@
+import * as L from 'partial.lenses';
+
 import {createContext, useContext} from 'react';
-import produce from 'immer'
 import {objectId, setObjectId} from "./objectId";
 
 export const ListEditorContext = createContext();
@@ -9,13 +10,11 @@ export function getListEditorContext(items, onChange) {
     onChange([...items, item]);
   }
   function setItem(index, item) {
-    onChange(produce(items, (draft) => {
-      draft[index] = item;
-      setObjectId(item, objectId(items[index]));
-    }));
+    setObjectId(item, objectId(items[index]));
+    onChange(L.set(L.index(index), item, items));
   }
   function removeItem(index) {
-    onChange(produce(items, (draft) => { draft.splice(index, 1); }));
+    onChange(L.remove(L.index(index), items));
   }
   return {items, addItem, removeItem, setItem};
 }

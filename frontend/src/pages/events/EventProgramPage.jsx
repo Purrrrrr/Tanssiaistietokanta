@@ -1,12 +1,15 @@
-import React, {useState} from 'react';
-import {navigate} from "@reach/router"
-import {Button, Intent} from "@blueprintjs/core";
-import {Breadcrumb} from "components/Breadcrumbs";
+import * as L from 'partial.lenses';
 
-import {NavigateButton} from "components/widgets/NavigateButton";
-import {EventProgramEditor} from "components/EventProgramEditor";
-import {useModifyEventProgram} from 'services/events';
+import {Button, Intent} from "@blueprintjs/core";
+import React, {useState} from 'react';
+
 import {AdminOnly} from 'services/users';
+import {Breadcrumb} from "components/Breadcrumbs";
+import {EventProgramEditor} from "components/EventProgramEditor";
+import {NavigateButton} from "components/widgets/NavigateButton";
+import {navigate} from "@reach/router"
+import {removeTypenames} from 'utils/removeTypenames';
+import {useModifyEventProgram} from 'services/events';
 
 export default function EventEditorPage({event, uri}) {
   const [program, setProgram] = useState(event.program);
@@ -24,17 +27,12 @@ export default function EventEditorPage({event, uri}) {
 }
 
 function toProgramInput({introductions = [], danceSets = []}) {
-  return {
-    introductions: introductions.map(({__typename, ...intro}) => intro),
-    danceSets: danceSets.map(toDanceSetInput),
-  }
-}
-
-function toDanceSetInput({__typename, program, ...rest}) {
-  return {
-    program: program.map(toProgramItemInput),
-    ...rest
-  };
+  return removeTypenames({
+    introductions,
+    danceSets: L.modify(
+      [L.elems, 'program', L.elems], toProgramItemInput, danceSets
+    )
+  });
 }
 
 function toProgramItemInput({__typename, _id, ...rest}) {

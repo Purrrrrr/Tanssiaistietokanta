@@ -1,5 +1,7 @@
 import './EventProgramEditor.sass';
 
+import * as L from 'partial.lenses';
+
 import {Button, Card, Classes, HTMLTable, Icon, Intent} from "@blueprintjs/core";
 import {DragHandle, ListEditor, ListEditorItems} from "./ListEditor";
 import {PropertyEditor, required} from "./widgets/PropertyEditor";
@@ -9,7 +11,6 @@ import {DanceChooser} from "components/widgets/DanceChooser";
 import {Duration} from "components/widgets/Duration";
 import {ProgramPauseDurationEditor} from "components/widgets/ProgramPauseDurationEditor";
 import {makeTranslate} from 'utils/translate';
-import produce from 'immer'
 import {scrollToBottom} from 'utils/scrollToBottom';
 
 const t = makeTranslate({
@@ -48,18 +49,14 @@ const [pause, setPause] = useState(3);
 const [intervalPause, setIntervalPause] = useState(15);
 
 function addIntroductoryInfo() {
-  onChange(produce(program, draft => {
-    if (!draft.introductions) {
-      draft.introductions = [];
-    }
-    draft.introductions.push({__typename: 'OtherProgram', name: ''});
-  }));
+  onChange(
+    L.set(['introductions', L.defaults([]), L.appendTo], {__typename: 'OtherProgram', name: ''})
+  );
 }
 function addDanceSet() {
-  onChange(produce(program, draft => {
-    if (!draft.danceSets) draft.danceSets = [];
-    draft.danceSets.push(newDanceSet(danceSets));
-  }));
+  onChange(
+    L.set(['danceSets', L.defaults([]), L.appendTo], newDanceSet(danceSets))
+  );
   scrollToBottom();
 }
 
@@ -112,23 +109,22 @@ return <>
 }
 
 function ProgramListEditor({program, onChange, isIntroductionsSection}) {
-function addItem(__typename) {
-  onChange(produce(program, draft => {
-    draft.push({ __typename });
-  }));
-}
+  function addItem(__typename) {
+    onChange(L.set(L.appendTo, {__typename}, program));
+  }
 
-return <ListEditor items={program} onChange={onChange}>
-  <HTMLTable condensed bordered striped className="danceSet">
-    {program.length === 0 ||
-        <thead>
-          <tr>
-            <th><Icon icon="move"/></th>
-            <t.th>type</t.th><t.th>name</t.th><t.th>duration</t.th><t.th>remove</t.th>
-          </tr>
-        </thead>}
-    <tbody>
-      <ListEditorItems itemWrapper="tr" component={ProgramItemEditor} />
+  return <ListEditor items={program} onChange={onChange}>
+    <HTMLTable condensed bordered striped className="danceSet">
+      {program.length === 0 ||
+          <thead>
+            <tr>
+              <th><Icon icon="move"/></th>
+              <t.th>type</t.th><t.th>name</t.th><t.th>duration</t.th><t.th>remove</t.th>
+            </tr>
+          </thead>
+      }
+      <tbody>
+        <ListEditorItems itemWrapper="tr" component={ProgramItemEditor} />
         {program.length === 0 &&
             <tr>
               <t.td className={Classes.TEXT_MUTED+ " noProgram"} colSpan="5">programListIsEmpty</t.td>

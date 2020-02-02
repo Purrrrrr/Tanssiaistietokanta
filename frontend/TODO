@@ -7,10 +7,10 @@
 * Dance list timing tool
   * Table flag for list editor
 * Ball program refactor
-    partial.lenses for data
-      event hooks in backend
-      EventProgramPage.jsx
-      EventProgramEditor?
+  partial.lenses for data
+    event hooks in backend
+  * EventProgramPage.jsx
+  * EventProgramEditor?
   Toivetanssit, requested dances
   Workshop delete button
   Workshop editor page
