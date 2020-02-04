@@ -1,4 +1,4 @@
-import { gql, useQuery, makeMutationHook, makeListQueryHook, appendToListQuery } from './Apollo';
+import { appendToListQuery, gql, makeListQueryHook, makeMutationHook, useQuery } from './Apollo';
 
 const eventFields = `
 _id, name, deleted
@@ -38,7 +38,7 @@ export function useEvent(id) {
 }
 
 const GET_EVENTS = gql`
-{
+query getEvents {
   events {
     _id, name
   }

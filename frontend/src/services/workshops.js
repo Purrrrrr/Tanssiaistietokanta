@@ -1,4 +1,4 @@
-import { gql, useQuery, makeFragmentCache, makeMutationHook} from './Apollo';
+import { gql, makeFragmentCache, makeMutationHook, useQuery } from './Apollo';
 
 const workshopFields = `
   _id, name, deleted
@@ -48,7 +48,6 @@ export function toWorkshopInput({name, dances}) {
     danceIds: dances.map(({_id}) => _id)
   };
 }
-
 export const useDeleteWorkshop = makeMutationHook(gql`
 mutation deleteWorkshop($id: ID!) {
   deleteWorkshop(id: $id) {

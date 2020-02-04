@@ -1,8 +1,11 @@
 import {Intent} from "@blueprintjs/core";
 import {Link} from "@reach/router"
-import {NavigateButton} from "components/widgets/NavigateButton";
 import React from 'react';
+
+import {NavigateButton} from "components/widgets/NavigateButton";
+import {DeleteButton} from "components/widgets/DeleteButton";
 import {makeTranslate} from 'utils/translate';
+import {useDeleteWorkshop} from "services/workshops";
 
 const t = makeTranslate({
   ballProgram: 'Tanssiaisohjelma',
@@ -24,7 +27,7 @@ export default function EventPage({event}) {
     <t.h2>ballProgram</t.h2>
     <EventProgram program={event.program} />
     <t.h2>workshops</t.h2>
-    <EventWorkshops workshops={event.workshops} />
+    <EventWorkshops workshops={event.workshops} eventId={event._id} />
   </>
 }
 
@@ -53,12 +56,18 @@ function EventProgram({program}) {
   </>;
 }
 
-function EventWorkshops({workshops}) {
+function EventWorkshops({workshops, eventId}) {
+  const [deleteWorkshop] = useDeleteWorkshop({refetchQueries: ['getEvent']});
+
   return <>
     <ul>
       {workshops.map(workshop =>
         <li key={workshop._id}>
           <Link to={'workshops/'+workshop._id} >{workshop.name}</Link>
+          <DeleteButton onDelete={() => deleteWorkshop(workshop._id)}
+            style={{float: "right"}} text="Poista"
+            confirmText={"Haluatko varmasti poistaa työpajan "+workshop.name+"?"}
+          />
         </li>
       )}
     </ul>

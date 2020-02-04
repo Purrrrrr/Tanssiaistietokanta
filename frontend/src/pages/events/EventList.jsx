@@ -1,15 +1,14 @@
-import React from 'react';
-import {Intent} from "@blueprintjs/core";
-
-import {NavigateButton} from "components/widgets/NavigateButton";
+import {useDeleteEvent, useEvents} from 'services/events';
 
 import {DeleteButton} from "components/widgets/DeleteButton";
-import {useEvents, useDeleteEvent} from 'services/events';
+import {Intent} from "@blueprintjs/core";
 import {Link} from "@reach/router"
+import {NavigateButton} from "components/widgets/NavigateButton";
+import React from 'react';
 
 export default function EventList() {
   const [events] = useEvents();
-  const [deleteEvent] = useDeleteEvent();
+  const [deleteEvent] = useDeleteEvent({refetchQueries: ['getEvent', 'getEvents']});
 
   return <>
     <h1>Tanssitapahtumia</h1>

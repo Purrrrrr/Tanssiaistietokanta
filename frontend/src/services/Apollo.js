@@ -68,8 +68,8 @@ export function makeListQueryHook(query, dataKey) {
 }
 
 export function makeMutationHook(query, {parameterMapper, ...rest}) {
-  return args => {
-    const [runQuery, data] = useMutation(query, {args, ...rest});
+  return (args = {}) => {
+    const [runQuery, data] = useMutation(query, {...args, ...rest});
 
     return [(...vars) => runQuery(parameterMapper(...vars)), data];
   };
