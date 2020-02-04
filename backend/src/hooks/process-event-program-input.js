@@ -1,5 +1,6 @@
 // Use this hook to manipulate incoming or outgoing data.
 // For more information on hooks see: http://docs.feathersjs.com/api/hooks.html
+const L = require('partial.lenses');
 
 // eslint-disable-next-line no-unused-vars
 module.exports = function (options = {}) {
@@ -7,11 +8,10 @@ module.exports = function (options = {}) {
     const {data: {program}} = context;
 
     if (program && program.danceSets) {
-      context.data.program.danceSets = 
-        program.danceSets.map(({program, ...danceSet}) => ({
-          ...danceSet,
-          program: program.map(processProgramItem)
-        }));
+      context.data.program = L.modify(
+        ['danceSets', L.elems, 'program', L.elems], processProgramItem,
+        program
+      );
     }
 
     return context;

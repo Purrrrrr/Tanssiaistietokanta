@@ -46,6 +46,8 @@
     "helmet": "^3.21.2",
     "merge-graphql-schemas": "^1.7.0",
     "nedb": "^1.8.0",
+    "partial.lenses": "^14.17.0",
+    "ramda": "^0.27.0",
     "serve-favicon": "^2.5.0",
     "winston": "^3.2.1"
   },

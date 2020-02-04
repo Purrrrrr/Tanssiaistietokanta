@@ -1,5 +1,7 @@
 // Use this hook to manipulate incoming or outgoing data.
 // For more information on hooks see: http://docs.feathersjs.com/api/hooks.html
+const L = require('partial.lenses');
+const R = require('ramda');
 
 // eslint-disable-next-line no-unused-vars
 module.exports = function (options = {}) {
@@ -9,36 +11,19 @@ module.exports = function (options = {}) {
       return id ? await danceService.get(id) : null;
     }
 
-    async function addProgramData({program, ...event}) {
-      if (!program) return event;
-      const {danceSets, ...otherProgram} = program;
-      return {
-        ...event,
-        program: {
-          ...otherProgram,
-          danceSets: await Promise.all(danceSets.map(addDanceSetData))
-        }
-      };
+    async function addProgramData(event) {
+      if (!event.program) return event;
+      return L.modifyAsync(
+        ['program', 'danceSets', L.elems, 'program', L.elems, L.when(R.propEq('__typename', 'Dance'))],
+        addDanceData,
+        event
+      );
     }
 
-    async function addDanceSetData({program, ...danceSet}) {
-      return {
-        program: await Promise.all(program.map(addProgramItemData)),
-        ...danceSet
-      };
-    }
-
-    async function addProgramItemData(item) {
-      const {__typename} = item;
-      switch (__typename) {
-        case 'Dance': {
-          const dance = await getDance(item.danceId);
-          if (!dance) return {__typename: 'RequestedDance'};
-          return {...dance, __typename};
-        }
-        default:
-          return item;
-      }
+    async function addDanceData({danceId}) {
+      const dance = await getDance(danceId);
+      if (!dance) return {__typename: 'RequestedDance'};
+      return {...dance, __typename: 'Dance'};
     }
 
     if (Array.isArray(context.result)) {
