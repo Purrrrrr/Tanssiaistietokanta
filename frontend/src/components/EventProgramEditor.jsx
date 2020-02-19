@@ -15,7 +15,7 @@ import {usePropChange} from 'utils/usePropChange';
 import {bind, useHotkeyHandler} from 'utils/useHotkeyHandler';
 import {useRedirectKeyDownTo} from 'utils/useRedirectKeyDownTo';
 import {navigateAmongSiblings, moveUp, moveDown, blurTo, focusTo, clickInParent} from 'utils/keyboardNavigation';
-import {focusLater} from 'utils/focus';
+import {focusLater, focusSiblingsOrParent} from 'utils/focus';
 
 const t = makeTranslate({
   addEntry: 'Lisää',
@@ -126,14 +126,18 @@ function DanceSetEditor({item, onChange, onRemove, onMoveDown, onMoveUp, itemInd
     moveDown(onMoveDown),
     bind(['a', 'd'], clickInParent('div.danceset', 'button.addDance')),
     bind('i', clickInParent('div.danceset', 'button.addInfo')),
-    bind(['delete', 'backspace'], onRemove)
+    bind(['delete', 'backspace'], removeDanceSet)
   );
+  function removeDanceSet(e) {
+    onRemove();
+    focusSiblingsOrParent(e.target, 'section.eventProgramEditor');
+  }
   const changeProgram = usePropChange('program', onChange);
 
   return <Card className="danceset" {...props} onKeyDown={onKeyDown} >
     <h2>
       <PropertyEditor property="name" data={item} onChange={onChange} validate={required('Täytä kenttä')}/>
-      <Button className="delete" intent={Intent.DANGER} text={t`removeDanceSet`} onClick={onRemove} />
+      <Button className="delete" intent={Intent.DANGER} text={t`removeDanceSet`} onClick={removeDanceSet} />
     </h2>
     <ProgramListEditor program={item.program} onChange={changeProgram} />
   </Card>;
@@ -167,7 +171,7 @@ function ProgramListEditor({program, onChange, isIntroductionsSection}) {
       <tfoot>
         <tr>
           <td colSpan="3" >
-            {isIntroductionsSection || <Button text={t`addDance`} onClick={() => addItem('Dance')} className="addDance" />}
+            {isIntroductionsSection || <Button text={t`addDance`} onClick={() => addItem('RequestedDance')} className="addDance" />}
             <Button text={isIntroductionsSection ? t`addIntroductoryInfo` : t`addInfo`} onClick={() => addItem('OtherProgram')} className="addInfo" />
           </td>
           <td colSpan="2">
@@ -189,8 +193,13 @@ function ProgramItemEditor({item, onChange, onRemove, onAdd, onMoveDown, onMoveU
     moveDown(onMoveDown),
     blurTo('div.danceset'),
     focusTo('input'),
-    bind(['delete', 'backspace'], onRemove)
+    bind(['delete', 'backspace'], removeItem)
   );
+
+  function removeItem(e) {
+    onRemove();
+    focusSiblingsOrParent(e.target, 'div.danceset');
+  }
 
   return <tr {...props} onKeyDown={onKeyDown} >
     <td><DragHandle /></td>
@@ -208,7 +217,7 @@ function ProgramItemEditor({item, onChange, onRemove, onAdd, onMoveDown, onMoveU
       <Duration value={item.duration} />
     </td>
     <td>
-      <Button intent={Intent.DANGER} text="X" onClick={onRemove} className="delete" />
+      <Button intent={Intent.DANGER} text="X" onClick={removeItem} className="delete" />
     </td>
   </tr>;
 }

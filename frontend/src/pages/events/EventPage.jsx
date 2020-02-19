@@ -18,7 +18,10 @@ const t = makeTranslate({
   ballProgramSlideshow: 'Tanssiaisten diashow',
   createWorkshop: 'Uusi työpaja',
   danceCheatlist: 'Osaan tanssin -lunttilappu',
-  requestedDance: 'Toivetanssi',
+  requestedDance: {
+    one: 'Toivetanssi',
+    other: '%(count)s toivetanssia'
+  }
 });
 
 export default function EventPage({event}) {
@@ -43,7 +46,7 @@ function EventProgram({program}) {
     {program.danceSets.map((danceSet, index) =>
       <p key={index} >
         <strong>{danceSet.name}</strong>:{' '}
-        {danceSet.program.map(item => item.name ?? t`requestedDance`).join(', ')}
+        {formatDances(danceSet.program)}
       </p>
     )}
     <NavigateButton adminOnly intent={Intent.PRIMARY} href="program" text={t`editProgram`} />
@@ -55,6 +58,17 @@ function EventProgram({program}) {
       text={t`ballProgramSlideshow`} />
   </>;
 }
+
+function formatDances(program) {
+  const danceNames = program.map(item => item.name).filter(a => a);
+  const requestedDanceCount = program.filter(isRequestedDance).length;
+  if (requestedDanceCount) {
+    danceNames.push(t.pluralize('requestedDance', requestedDanceCount));
+  }
+
+  return danceNames.join(', ');
+}
+const isRequestedDance = i => i.__typename === 'RequestedDance';
 
 function EventWorkshops({workshops, eventId}) {
   const [deleteWorkshop] = useDeleteWorkshop({refetchQueries: ['getEvent']});

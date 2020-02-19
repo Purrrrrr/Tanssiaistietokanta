@@ -1,5 +1,18 @@
 export function focusLater(selector, base = document) {
-  setTimeout(() => focusIfExists(base.querySelector(selector)), 10);
+  setTimeout(() => {
+    const el = selector instanceof Element ? selector
+     : base.querySelector(selector);
+    focusIfExists(el);
+  }, 10);
+}
+
+export function focusSiblingsOrParent(element, parentSelector) {
+    const {previousElementSibling, nextElementSibling} = element;
+    focusIfExists(
+      nextElementSibling ??
+      previousElementSibling ??
+      element.closest(parentSelector)
+    );
 }
 
 export function focusIn(container, selector) {

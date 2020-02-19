@@ -7,6 +7,14 @@ import {EditableDanceProperty} from "components/EditableDanceProperty";
 import {LoadingState} from 'components/LoadingState';
 import {ProgramTitleSelector} from "components/ProgramTitleSelector";
 import {useOnKeydown} from "utils/useOnKeydown";
+import {makeTranslate} from 'utils/translate';
+
+const t = makeTranslate({
+  teachedInSet: 'Opetettu setissä',
+  requestedDance: 'Toivetanssi',
+  addDescription: 'Lisää kuvaus',
+  afterThis: 'Tämän jälkeen',
+});
 
 const GET_BALL_PROGRAM = gql`
 query BallProgram($eventId: ID!) {
@@ -90,6 +98,8 @@ function SlideView({slide, onChangeSlide}) {
   switch(slide.__typename) {
     case 'Dance':
       return <DanceSlide dance={slide} onChangeSlide={onChangeSlide} />;
+    case 'RequestedDance':
+      return <RequestedDanceSlide next={slide.next} onChangeSlide={onChangeSlide} />;
     case 'DanceSet':
     case 'Event':
     default:
@@ -97,15 +107,19 @@ function SlideView({slide, onChangeSlide}) {
   }
 }
 function HeaderSlide({header, onChangeSlide}) {
-  return (<section className="slide">
-    <h1>{header.name ?? RequestedDancePlaceholder}</h1>
+  const {name, program = []} = header;
+  return <Slide title={name}>
     <ul>
-      {(header.program || [])
+      {program
           .filter(t => t.__typename !== "IntervalMusic")
           .map(({index, name}) =>
-            <li onClick={() => onChangeSlide(index)} key={index}>{name ?? RequestedDancePlaceholder}</li>)}
+            <li onClick={() => onChangeSlide(index)} key={index}>
+              {name ?? RequestedDancePlaceholder}
+            </li>
+          )
+      }
     </ul>
-  </section>);
+  </Slide>;
 }
 
 const RequestedDancePlaceholder = () => '_________________________';
@@ -113,25 +127,41 @@ const RequestedDancePlaceholder = () => '_________________________';
 function DanceSlide({dance, onChangeSlide}) {
   const {next, name, teachedIn} = dance;
 
-  return <section className="slide">
-    <h1>{name}</h1>
+  return <Slide title={name}>
     <p>
-      <EditableDanceProperty dance={dance} property="description" multiline addText="Lisää kuvaus" />
+      <EditableDanceProperty dance={dance} property="description" multiline addText={t`addDescription`} />
     </p>
     {teachedIn.length > 0 && 
-      <p>Opetettu setissä {teachedIn.map(w => w.name).join(", ")}</p>
+      <p>{t`teachedInSet`} {teachedIn.map(w => w.name).join(", ")}</p>
     }
     {next && next.type === 'DANCE' &&
         <NextTrackSection next={next}
           onChangeSlide={onChangeSlide} />
     }
 
-  </section>;
+  </Slide>;
 }
 
 function NextTrackSection({next, onChangeSlide}) {
   return <section className="nextTrack" onClick={() => onChangeSlide(next.index)}>
-    <h1>Tämän jälkeen:{" "+next.name}</h1>
+    <h1>{t`afterThis`}:{" "+next.name}</h1>
     <div>{next.description}</div>
   </section>
+}
+
+function RequestedDanceSlide({next, onChangeSlide}) {
+  return <Slide title={t`requestedDance`}>
+    {next && next.type === 'DANCE' &&
+        <NextTrackSection next={next}
+          onChangeSlide={onChangeSlide} />
+    }
+
+  </Slide>;
+}
+
+function Slide({title, children}) {
+  return <section className="slide">
+    <h1>{title}</h1>
+    {children}
+  </section>;
 }
