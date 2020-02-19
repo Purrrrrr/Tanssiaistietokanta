@@ -4,7 +4,7 @@ import {filterDances, useDances} from 'services/dances';
 import { MenuItem } from "@blueprintjs/core";
 import {Suggest} from "@blueprintjs/select";
 
-export function DanceChooser({value, onChange, fill}) {
+export function DanceChooser({value, onChange, fill, onBlur}) {
   const [query, setQuery] = useState(value ? value.name : "");
   const [dances] = useDances();
 
@@ -12,6 +12,7 @@ export function DanceChooser({value, onChange, fill}) {
     inputValueRenderer={dance => dance.name}
     itemRenderer={renderDance}
     itemsEqual="_id"
+    inputProps={{onBlur}}
     itemListPredicate={(query, items) => filterDances(items, query)}
     query={query}
     onChange={setQuery}

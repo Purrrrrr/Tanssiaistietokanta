@@ -19,6 +19,6 @@ export function useOnKeydown(onKeydown, key) {
 }
 
 const inputTags = ['INPUT', 'TEXTAREA', 'SELECT', 'BUTTON'];
-function isInputTag({tagName}) {
+export function isInputTag({tagName}) {
   return inputTags.includes(tagName);
 }
