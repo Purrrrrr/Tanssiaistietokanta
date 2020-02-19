@@ -17,10 +17,15 @@
   @media print
     .section
       page-break-inside: avoid
+    tfoot,thead
+      page-break-inside: avoid
+    tfoot
+      display: table-footer-group
+      td
+        opacity: 0
+    thead
+      display: table-header-group
     footer
       position: fixed
       bottom: 0
       width: 100%
-//@at-root html, body
-//    width: 210mm
-//    height: 297mm

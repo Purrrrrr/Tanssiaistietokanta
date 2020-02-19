@@ -28,19 +28,31 @@ function DanceList({eventId}) {
       }}/>
       <Button text={t`print`} onClick={() => window.print()} />
     </PrintViewToolbar>
-    {program.danceSets.map(
-      ({name, program}, key) => {
-        return <div key={key} className="section">
-          <h2>{name}</h2>
-          {program.map((track, i) => <p key={i}>{track.name ?? <RequestedDance />}</p>)}
-        </div>;
-      }
-    )}
-    <t.footer className="footer">emptyLinesAreRequestedDances</t.footer>
+    <PrintFooterContainer footer={t`emptyLinesAreRequestedDances`}>
+      {program.danceSets.map(
+        ({name, program}, key) => {
+          return <div key={key} className="section">
+            <h2>{name}</h2>
+            {program.map((track, i) => <p key={i}>{track.name ?? <RequestedDance />}</p>)}
+          </div>;
+        }
+      )}
+    </PrintFooterContainer>
   </div>;
 }
 
 const RequestedDance = () => '_________________________';
+
+function PrintFooterContainer({children, footer}) {
+  return <>
+    <table style={{width: '100%'}}>
+      <thead><tr><td></td></tr></thead>
+      <tfoot><tr><td>{footer}</td></tr></tfoot>
+      <tbody><tr><td>{children}</td></tr></tbody>
+    </table>
+    <footer>{footer}</footer>
+  </>;
+}
 
 const GET_EVENT = gql`
 query getDanceList($eventId: ID!) {

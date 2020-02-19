@@ -18,7 +18,7 @@
   Dance set list workshop and other info
     "Suluissa opetussetti: 1=Branlet ja ECD:t, 2=Italialaiset ja solatanssit, B=The lost dances of the bordonians, H=Time
 travel through 4 centuries of dance. Tyhjät rivit ovat toivetansseja"
-    Make these print out nicely
+  * Make these print out nicely. Hopefully done
   Instructions for create dance dialog
   ------
   Apollo client 3.0
