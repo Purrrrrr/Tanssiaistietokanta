@@ -1,7 +1,7 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {SortableContainer, SortableElement, arrayMove} from 'react-sortable-hoc';
 
-import {ListEditorContext, getListEditorContext, useListEditorContext} from './context';
+import {ListEditorContext, useListEditorContextValue, useListEditorContext} from './context';
 import {objectId} from "./objectId";
 
 
@@ -17,7 +17,7 @@ export function ListEditor({items, onChange, children, ...props}) {
   function onSortEnd({oldIndex, newIndex}) {
     onChange(arrayMove(items, oldIndex, newIndex));
   }
-  const context = getListEditorContext(items, onChange);
+  const context = useListEditorContextValue(items, onChange);
 
   return <ListEditorContext.Provider value={context}>
     <SortableList distance={5} onSortEnd={onSortEnd}>
@@ -26,19 +26,38 @@ export function ListEditor({items, onChange, children, ...props}) {
   </ListEditorContext.Provider>;
 }
 
-export function ListEditorItems({itemWrapper, component}) {
-  const {items, setItem, removeItem} = useListEditorContext();
+export function ListEditorItems({itemWrapper = "div", noWrapper, component}) {
+  const {items, actions} = useListEditorContext();
 
   return items.map((item, index) =>
     <SortableItem key={objectId(item)} index={index} item={item}
-    component={component} element={itemWrapper}
-    onChange={(newItem) => setItem(index, newItem)} onRemove={() => removeItem(index)} />
+      itemIndex={index} actions={actions}
+      component={component} wrapper={noWrapper ? null : itemWrapper}
+    />
   );
 }
 
+
+
 const SortableList = SortableContainer("div");
-const SortableItem = SortableElement(({component, element, ...props}) => {
-  const C = component;
-  const Wrapper = element ?? "div";
-  return <Wrapper tabIndex={0}><C {...props} /></Wrapper>;
-});
+const SortableItem = SortableElement(React.memo(
+  ({component, wrapper, actions, itemIndex, ...props}) => {
+    const C = component;
+    const callbacks = useActionCallbacks(actions, itemIndex);
+    if (wrapper) {
+      const Wrapper = wrapper;
+      return <Wrapper tabIndex={0}><C {...callbacks} {...props} /></Wrapper>;
+    } else {
+      return <C tabIndex={0} {...callbacks} {...props} />;
+    }
+  }
+));
+
+function useActionCallbacks(actions, index) {
+  const {moveDown, moveUp, setItem, removeItem} = actions;
+  const onMoveDown = useCallback(() => moveDown(index), [moveDown, index]);
+  const onMoveUp = useCallback(() => moveUp(index), [moveUp, index]);
+  const onChange = useCallback((newItem) => setItem(index, newItem), [setItem, index]);
+  const onRemove = useCallback(() => removeItem(index), [removeItem, index]);
+  return {onMoveDown, onMoveUp, onRemove, onChange};
+}
