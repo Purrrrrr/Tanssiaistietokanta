@@ -114,7 +114,7 @@ function HeaderSlide({header, onChangeSlide}) {
           .filter(t => t.__typename !== "IntervalMusic")
           .map(({index, name}) =>
             <li onClick={() => onChangeSlide(index)} key={index}>
-              {name ?? RequestedDancePlaceholder}
+              {name ?? <RequestedDancePlaceholder />}
             </li>
           )
       }
@@ -131,7 +131,7 @@ function DanceSlide({dance, onChangeSlide}) {
     <p>
       <EditableDanceProperty dance={dance} property="description" multiline addText={t`addDescription`} />
     </p>
-    {teachedIn.length > 0 && 
+    {teachedIn.length > 0 &&
       <p>{t`teachedInSet`} {teachedIn.map(w => w.name).join(", ")}</p>
     }
     {next && next.type === 'DANCE' &&

@@ -1,13 +1,16 @@
 import React from 'react';
 import {H2, HTMLTable} from "@blueprintjs/core";
-import {PropertyEditor, required} from "./widgets/PropertyEditor";
 import {DurationField} from "./widgets/DurationField";
 import {DeleteButton} from "./widgets/DeleteButton";
+import {EditableText} from "libraries/form-inputs";
+import {useOnChangeForPropInValue} from 'utils/useOnChangeForProp';
 
 export function DanceEditor({dance, onChange, onDelete}) {
+  const onChangeFor = useOnChangeForPropInValue(onChange, dance);
+  const {name, description, formation, prelude, remarks, duration} = dance;
   return <>
     <H2>
-      <PropertyEditor property="name" data={dance} onChange={onChange} validate={required('Tanssilla pitää olla nimi')}/>
+      <EditableText value={name} onChange={onChangeFor('name')} required />
       {onDelete &&
           <DeleteButton onDelete={() => onDelete(dance)}
             style={{float: "right"}}
@@ -19,22 +22,22 @@ export function DanceEditor({dance, onChange, onDelete}) {
     <HTMLTable condensed>
       <tbody>
         <tr>
-          <DancePropertyCells label="Lyhyt kuvaus" property="description" data={dance} onChange={onChange} />
-          <DancePropertyCells label="Tanssikuvio" property="formation" data={dance} onChange={onChange} />
+          <DancePropertyCells label="Lyhyt kuvaus" value={description} onChange={onChangeFor('description')} />
+          <DancePropertyCells label="Tanssikuvio" value={formation} onChange={onChangeFor('formation')} />
         </tr>
         <tr>
-          <DancePropertyCells label="Alkusoitto" property="prelude" data={dance} onChange={onChange} />
-          <DancePropertyCells label="Huomautuksia" property="remarks" data={dance} onChange={onChange} />
+          <DancePropertyCells label="Alkusoitto" value={prelude} onChange={onChangeFor('prelude')} />
+          <DancePropertyCells label="Huomautuksia" value={remarks} onChange={onChangeFor('remarks')} />
         </tr>
         <tr>
-          <DancePropertyCells label="Kesto" property="duration" data={dance} onChange={onChange} component={DurationField} />
+          <DancePropertyCells label="Kesto" value={duration} onChange={onChangeFor('duration')} component={DurationField} />
         </tr>
       </tbody>
     </HTMLTable>
   </>;
 }
 
-function DancePropertyCells({label, component = PropertyEditor, ...props}) {
+function DancePropertyCells({label, component = EditableText, ...props}) {
   const Component = component;
   return <>
     <th>{label}</th>

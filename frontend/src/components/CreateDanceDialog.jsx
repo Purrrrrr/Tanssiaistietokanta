@@ -45,9 +45,7 @@ function DanceUploader({onUpload}) {
     });
   }
 
-  return <>
-    <FileInput fill text={fileName} buttonText="Valitse" onInputChange={processFileData}/>
-  </>;
+  return <FileInput fill text={fileName} buttonText="Valitse" onInputChange={processFileData}/>;
 }
 
 function stripExtension(fileName) {

@@ -2,16 +2,17 @@ import './EventProgramEditor.sass';
 
 import * as L from 'partial.lenses';
 
-import {InputGroup, Button, Card, Classes, HTMLTable, Icon, Intent} from "@blueprintjs/core";
+import {Button, Card, Classes, HTMLTable, Icon, Intent} from "@blueprintjs/core";
 import {DragHandle, ListEditor, ListEditorItems} from "./ListEditor";
-import {PropertyEditor, required} from "./widgets/PropertyEditor";
 import React, {createContext, useContext, useMemo, useState, useRef} from 'react';
 
 import {DanceChooser} from "components/widgets/DanceChooser";
 import {Duration} from "components/widgets/Duration";
+import {Validate} from "libraries/form-validation";
+import {ClickToEdit, BasicInput} from "libraries/form-inputs";
 import {ProgramPauseDurationEditor} from "components/widgets/ProgramPauseDurationEditor";
 import {makeTranslate} from 'utils/translate';
-import {usePropChange} from 'utils/usePropChange';
+import {useOnChangeForProp} from 'utils/useOnChangeForProp';
 import {bind, useHotkeyHandler} from 'utils/useHotkeyHandler';
 import {useRedirectKeyDownTo} from 'utils/useRedirectKeyDownTo';
 import {navigateAmongSiblings, moveUp, moveDown, blurTo, focusTo, clickInParent} from 'utils/keyboardNavigation';
@@ -72,9 +73,7 @@ export function EventProgramEditor({program, onChange}) {
   }
 
   const durationContext = useMemo(() => ({pause, setPause, intervalPause, setIntervalPause}), [pause, intervalPause]);
-
-  const onChangeDanceSets = usePropChange('danceSets', onChange);
-  const onChangeIntroductions = usePropChange('introductions', onChange);
+  const onChangeFor = useOnChangeForProp(onChange);
 
   return <DurationHelperContext.Provider value={durationContext}>
     <section className="eventProgramEditor" ref={element} onKeyDown={onKeyDown}>
@@ -82,9 +81,9 @@ export function EventProgramEditor({program, onChange}) {
         {introductions.length === 0 && <Button text={t`addIntroductoryInfo`} onClick={addIntroductoryInfo} className="addIntroductoryInfo" />}
         <ProgramPauseDurationEditor {...{pause, setPause, intervalPause, setIntervalPause}} />
       </div>
-      <ListEditor items={danceSets} onChange={onChangeDanceSets}>
+      <ListEditor items={danceSets} onChange={onChangeFor('danceSets')}>
         { introductions.length > 0 &&
-          <IntroductoryInformation infos={introductions} onChange={onChangeIntroductions} />
+          <IntroductoryInformation infos={introductions} onChange={onChangeFor('introductions')} />
         }
         <ListEditorItems noWrapper component={DanceSetEditor} />
       </ListEditor>
@@ -93,7 +92,7 @@ export function EventProgramEditor({program, onChange}) {
         <Button text={t`addDanceSet`} onClick={addDanceSet} className="addDanceSet" />
       </div>
     </section>
-    </DurationHelperContext.Provider>;
+  </DurationHelperContext.Provider>;
 };
 
 function newDanceSet(danceSets) {
@@ -132,21 +131,22 @@ function DanceSetEditor({item, onChange, onRemove, onMoveDown, onMoveUp, itemInd
     onRemove();
     focusSiblingsOrParent(e.target, 'section.eventProgramEditor');
   }
-  const changeProgram = usePropChange('program', onChange);
+  const onChangeFor = useOnChangeForProp(onChange);
+  const {name, program} = item;
 
   return <Card className="danceset" {...props} onKeyDown={onKeyDown} >
     <h2>
-      <PropertyEditor property="name" data={item} onChange={onChange} validate={required('Täytä kenttä')}/>
+      <ClickToEdit value={name} onChange={onChangeFor('name')} required />
       <Button className="delete" intent={Intent.DANGER} text={t`removeDanceSet`} onClick={removeDanceSet} />
     </h2>
-    <ProgramListEditor program={item.program} onChange={changeProgram} />
+    <ProgramListEditor program={program} onChange={onChangeFor('program')} />
   </Card>;
 };
 
 function ProgramListEditor({program, onChange, isIntroductionsSection}) {
   const table = useRef();
-  function addItem(__typename) {
-    onChange(L.set(L.appendTo, {__typename}, program));
+  function addItem(__typename, other = {}) {
+    onChange(L.set(L.appendTo, {__typename, ...other}, program));
     focusLater('tbody tr:last-child', table.current);
   }
 
@@ -172,7 +172,7 @@ function ProgramListEditor({program, onChange, isIntroductionsSection}) {
         <tr>
           <td colSpan="3" >
             {isIntroductionsSection || <Button text={t`addDance`} onClick={() => addItem('RequestedDance')} className="addDance" />}
-            <Button text={isIntroductionsSection ? t`addIntroductoryInfo` : t`addInfo`} onClick={() => addItem('OtherProgram')} className="addInfo" />
+            <Button text={isIntroductionsSection ? t`addIntroductoryInfo` : t`addInfo`} onClick={() => addItem('OtherProgram', {name: ''})} className="addInfo" />
           </td>
           <td colSpan="2">
             <DanceSetDuration program={program} />
@@ -208,9 +208,11 @@ function ProgramItemEditor({item, onChange, onRemove, onAdd, onMoveDown, onMoveU
       {isDance
           ? <DanceChooser value={{_id, name}} onBlur={onBlur}
             onChange={dance=> onChange(dance ? {__typename: 'Dance', ...dance} : {__typename: 'RequestedDance'})} />
-          : <InputGroup value={name} onBlur={onBlur}
-            onKeyDown={e => e.key === 'Escape' && e.target.blur()}
-            onChange={e => onChange(L.set('name', e.target.value, item))} />
+          : <>
+          <BasicInput value={name} onBlur={onBlur}
+            onChange={val => onChange(L.set('name', val, item))} />
+          <Validate value={name} required />
+          </>
       }
     </td>
     <td>
