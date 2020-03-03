@@ -1,4 +1,4 @@
-import { appendToListQuery, gql, makeListQueryHook, makeMutationHook, useQuery } from './Apollo';
+import { gql, makeListQueryHook, makeMutationHook, useQuery } from './Apollo';
 
 const eventFields = `
 _id, name, deleted
@@ -52,8 +52,6 @@ mutation createEvent($event: EventInput!) {
   }
 }`, {
   parameterMapper: (event) => ({variables: {event}}),
-  update: (cache, {data}) =>
-    appendToListQuery(cache, GET_EVENTS, data.createEvent)
 });
 
 export const useModifyEvent = makeMutationHook(gql`

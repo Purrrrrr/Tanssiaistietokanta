@@ -16,7 +16,7 @@
 * Do something to these property editors everywhere
   Workshop editor page
   Do something to hairy details in mutation query usage
-    Navigation after query
+  * Navigation after query
     Maybe use apollo hook
   Dance set list workshop and other info
     "Suluissa opetussetti: 1=Branlet ja ECD:t, 2=Italialaiset ja solatanssit, B=The lost dances of the bordonians, H=Time

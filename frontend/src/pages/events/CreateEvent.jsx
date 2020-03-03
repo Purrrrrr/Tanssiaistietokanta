@@ -16,7 +16,10 @@ const t = makeTranslate({
 });
 
 export default function CreateEventForm({uri}) {
-  const [createEvent] = useCreateEvent();
+  const [createEvent] = useCreateEvent({
+    onCompleted: (data) => navigate(data.createEvent._id),
+    refetchQueries: ['getEvents']
+  });
   const [event, setEvent] = useState({name: ''});
   const onChangeFor = useOnChangeForProp(setEvent);
   const {name} = event;
@@ -24,9 +27,7 @@ export default function CreateEventForm({uri}) {
   return <AdminOnly>
     <Breadcrumb text={t`newEventBreadcrumb`} href={uri} />
     <h1>{t`newEvent`}</h1>
-    <Form onSubmit={() => createEvent(event).then(
-          ({data}) => navigate(data.createEvent._id))
-        }>
+    <Form onSubmit={() => createEvent(event)}>
       <div>
         {t`name`+" "}
         <Input value={name} onChange={onChangeFor('name')} required />

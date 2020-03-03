@@ -2,6 +2,7 @@ import {Button, Intent} from "@blueprintjs/core";
 import {useCreateWorkshop} from 'services/workshops';
 import {DragHandle, ListEditor} from "components/ListEditor";
 import React, {useState} from 'react';
+import * as L from 'partial.lenses';
 
 import {AdminOnly} from 'services/users';
 import {Breadcrumb} from "components/Breadcrumbs";
@@ -25,15 +26,17 @@ export default function CreateWorkshopForm({event, uri}) {
     name: '',
     dances: []
   });
-  const setDances = dances => setWorkshop({...workshop, dances});
-  const onChangeFor = useOnChangeForProp(setWorkshop);
+  const [createWorkshop] = useCreateWorkshop({
+    onCompleted: (data) => navigate('/events/'+event._id),
+    refetchQueries: ['getEvent']
+  });
   const {name, dances} = workshop;
-  const [createWorkshop] = useCreateWorkshop({refetchQueries: ['getEvent']});
+  const onChangeFor = useOnChangeForProp(setWorkshop);
 
   return <AdminOnly>
     <Breadcrumb text={t`newWorkshop`} href={uri} />
     <t.h1>newWorkshop</t.h1>
-    <Form onSubmit={() => createWorkshop(event._id, workshop).then(ok => ok && navigate('/events/'+event._id))}>
+    <Form onSubmit={() => createWorkshop(event._id, workshop)}>
       {t`name`+" "}
       <Input value={name} onChange={onChangeFor('name')} required />
       <t.h2>dances</t.h2>
@@ -42,7 +45,7 @@ export default function CreateWorkshopForm({event, uri}) {
       <Validate value={dances} type="array" required />
       <div>
         {t`addDance`+' '}
-        <DanceChooser value={null} onChange={dance => setDances([...workshop.dances, dance])} key={workshop.dances.length} />
+        <DanceChooser value={null} onChange={dance => onChangeFor('dances')(L.set(L.appendTo, dance))} key={workshop.dances.length} />
       </div>
       <SubmitButton text={t`create`} />
     </Form>

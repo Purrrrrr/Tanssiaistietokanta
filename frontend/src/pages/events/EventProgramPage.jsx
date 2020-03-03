@@ -11,13 +11,17 @@ import {navigate} from "@reach/router"
 import {removeTypenames} from 'utils/removeTypenames';
 import {useModifyEventProgram} from 'services/events';
 
-export default function EventEditorPage({event, uri}) {
+export default function EventProgramEditorPage({event, uri}) {
   const [program, setProgram] = useState(event.program);
-  const [modifyEventProgram] = useModifyEventProgram();
+  const [modifyEventProgram] = useModifyEventProgram({
+    onCompleted: () => navigate('/events/'+event._id)
+  });
 
   return <AdminOnly fallback="you need to be admin">
     <Breadcrumb text="Tanssiaisohjelma" href={uri} />
-    <Form onSubmit={() => modifyEventProgram(event._id, toProgramInput(program ?? {})).then((ok) => ok && navigate('/events/'+event._id))}>
+    <Form onSubmit={
+      () => modifyEventProgram(event._id, toProgramInput(program ?? {}))}
+    >
       <h1>Muokkaa tanssiaisohjelmaa</h1>
       <EventProgramEditor program={program} onChange={setProgram}/>
       <hr />
