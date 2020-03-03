@@ -1,10 +1,10 @@
 import React from 'react';
 import {Icon, Tag, Intent} from "@blueprintjs/core";
 
-export function ErrorMessage({message}) {
-  return message ?
+export function ErrorMessage({error}) {
+  return error ?
     <Tag intent={Intent.DANGER}>
       <Icon icon="warning-sign"/>
-      {' '}{message}
+      {' '}{error.errors.join(', ')}
     </Tag> : null;
 }

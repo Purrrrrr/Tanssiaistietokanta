@@ -7,8 +7,7 @@ import {AdminOnly} from 'services/users';
 import {Breadcrumb} from "components/Breadcrumbs";
 import {makeTranslate} from 'utils/translate';
 import {useOnChangeForProp} from 'utils/useOnChangeForProp';
-import {Validate, useValidationResult} from "libraries/form-validation";
-import {BasicInput} from "libraries/form-inputs";
+import {Input, useValidationResult} from "libraries/forms";
 
 const t = makeTranslate({
   newEventBreadcrumb: 'Uusi tapahtuma',
@@ -30,8 +29,7 @@ export default function CreateEventForm({uri}) {
     <ValidationContainer>
       <div>
         {t`name`+" "}
-        <BasicInput value={name} onChange={onChangeFor('name')} />
-        <Validate value={name} required />
+        <Input value={name} onChange={onChangeFor('name')} required />
       </div>
     </ValidationContainer>
     <Button intent={Intent.PRIMARY} text={t`create`}

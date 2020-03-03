@@ -9,8 +9,7 @@ import {DanceChooser} from "components/widgets/DanceChooser";
 import {MutateButton} from "components/widgets/MutateButton";
 import {makeTranslate} from 'utils/translate';
 import {useOnChangeForProp} from 'utils/useOnChangeForProp';
-import {Validate, useValidationResult} from "libraries/form-validation";
-import {BasicInput} from "libraries/form-inputs";
+import {Input, Validate, useValidationResult} from "libraries/forms";
 
 const t = makeTranslate({
   create: 'Tallenna',
@@ -36,8 +35,7 @@ export default function CreateWorkshopForm({event, uri}) {
     <t.h1>newWorkshop</t.h1>
     <ValidationContainer>
       {t`name`+" "}
-      <BasicInput value={name} onChange={onChangeFor('name')} />
-      <Validate value={name} required />
+      <Input value={name} onChange={onChangeFor('name')} required />
       <t.h2>dances</t.h2>
       <ListEditor items={dances} onChange={onChangeFor('dances')}
         component={DanceListItem} />

@@ -1,24 +1,24 @@
 import React, {useRef}  from 'react';
-import {ErrorMessage} from "libraries/form-validation";
+import {ErrorMessage} from "./validation";
 import {Classes, Icon, Intent, Button} from "@blueprintjs/core";
-import {useClosableEditor} from "./useClosableEditor";
+import {useClosableEditor} from "./hooks/useClosableEditor";
 import {BasicInput} from "./BasicInput";
 import {BasicTextArea} from "./BasicTextArea";
-import {useOnClickOutside} from "./useOnClickOutside";
+import {useOnClickOutside} from "./hooks/useOnClickOutside";
 
 import "./ClickToEdit.sass";
 
 export function ClickToEdit({
-  value: originalValue, 
+  value: originalValue,
   valueFormatter,
-  onChange: onChangeOriginal, 
+  onChange: onChangeOriginal,
   children, component, componentProps, growVertically,
-  className, 
+  className,
   noEditIcon,
   ...validationSchema
 }) {
   const {
-    isOpen, onOpen, 
+    isOpen, onOpen,
     error, value, onChange,
     onCancel, onConfirm
   } = useClosableEditor(
@@ -29,6 +29,7 @@ export function ClickToEdit({
 
   if (!isOpen) {
     return <span ref={container} onClick={onOpen}
+      tabIndex={0} onFocus={onOpen}
       className={className ?? Classes.EDITABLE_TEXT+" click-to-edit"}>
       {valueFormatter ? valueFormatter(value) : value}
       {' '}
@@ -45,7 +46,7 @@ export function ClickToEdit({
       {component, children, componentProps, growVertically},
       {value, onChange, onCancel, onConfirm}
     )}
-    {error && <ErrorMessage message={error.errors.join(', ')}/>}
+    <ErrorMessage error={error} />
     <Button intent={Intent.SUCCESS} onClick={onConfirm} icon="tick" />
     <Button intent={Intent.DANGER} onClick={onCancel} icon="cross" />
   </span>;

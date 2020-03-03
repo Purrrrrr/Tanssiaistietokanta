@@ -10,6 +10,7 @@
     "apollo-boost": "^0.4.4",
     "classnames": "^2.2.6",
     "counterpart": "^0.18.6",
+    "fast-deep-equal": "^3.1.1",
     "graphql": "^14.5.6",
     "immer": "^5.2.1",
     "key-event-to-string": "^1.2.0",

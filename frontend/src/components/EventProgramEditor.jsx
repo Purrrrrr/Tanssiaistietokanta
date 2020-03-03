@@ -8,8 +8,7 @@ import React, {createContext, useContext, useMemo, useState, useRef} from 'react
 
 import {DanceChooser} from "components/widgets/DanceChooser";
 import {Duration} from "components/widgets/Duration";
-import {Validate} from "libraries/form-validation";
-import {ClickToEdit, BasicInput} from "libraries/form-inputs";
+import {ClickToEdit, Input} from "libraries/forms";
 import {ProgramPauseDurationEditor} from "components/widgets/ProgramPauseDurationEditor";
 import {makeTranslate} from 'utils/translate';
 import {useOnChangeForProp} from 'utils/useOnChangeForProp';
@@ -208,11 +207,8 @@ function ProgramItemEditor({item, onChange, onRemove, onAdd, onMoveDown, onMoveU
       {isDance
           ? <DanceChooser value={{_id, name}} onBlur={onBlur}
             onChange={dance=> onChange(dance ? {__typename: 'Dance', ...dance} : {__typename: 'RequestedDance'})} />
-          : <>
-          <BasicInput value={name} onBlur={onBlur}
+          : <Input value={name} onBlur={onBlur} required
             onChange={val => onChange(L.set('name', val, item))} />
-          <Validate value={name} required />
-          </>
       }
     </td>
     <td>

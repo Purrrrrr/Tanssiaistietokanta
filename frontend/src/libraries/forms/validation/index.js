@@ -1,6 +1,4 @@
-import * as validators from 'yup';
-
-export * from './Validate';
+export {Validate} from './Validate';
+export {useError} from './useError';
 export {ErrorMessage} from './ErrorMessage';
 export {useValidationResult} from './context';
-export {validators};

@@ -2,7 +2,7 @@ import React from 'react';
 import {H2, HTMLTable} from "@blueprintjs/core";
 import {DurationField} from "./widgets/DurationField";
 import {DeleteButton} from "./widgets/DeleteButton";
-import {EditableText} from "libraries/form-inputs";
+import {EditableText} from "libraries/forms";
 import {useOnChangeForPropInValue} from 'utils/useOnChangeForProp';
 
 export function DanceEditor({dance, onChange, onDelete}) {

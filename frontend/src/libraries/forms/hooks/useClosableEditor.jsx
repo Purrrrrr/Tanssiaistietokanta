@@ -1,5 +1,5 @@
 import {useState, useEffect, useCallback} from 'react';
-import {useError} from "libraries/form-validation";
+import {useError} from "../validation";
 
 export function useClosableEditor(originalValue, onChange, validationSchema = {}) {
   const [isOpen, setOpen] = useState(false);

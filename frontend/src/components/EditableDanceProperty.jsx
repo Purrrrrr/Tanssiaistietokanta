@@ -1,7 +1,7 @@
 import React from 'react';
 import {PATCH_DANCE} from "services/dances";
 import { useMutation } from 'services/Apollo';
-import {ClickToEdit} from "libraries/form-inputs";
+import {ClickToEdit} from "libraries/forms";
 
 import './EditableDanceProperty.sass';
 

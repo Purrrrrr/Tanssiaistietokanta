@@ -7,7 +7,7 @@ import {AdminOnly} from 'services/users';
 import {Breadcrumb} from "components/Breadcrumbs";
 import {EventProgramEditor} from "components/EventProgramEditor";
 import {NavigateButton} from "components/widgets/NavigateButton";
-import {useValidationResult} from "libraries/form-validation";
+import {useValidationResult} from "libraries/forms";
 import {navigate} from "@reach/router"
 import {removeTypenames} from 'utils/removeTypenames';
 import {useModifyEventProgram} from 'services/events';
