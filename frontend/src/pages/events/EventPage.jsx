@@ -76,8 +76,9 @@ function EventWorkshops({workshops, eventId}) {
   return <>
     <ul>
       {workshops.map(workshop =>
-        <li key={workshop._id}>
+        <li key={workshop._id} style={{clear: 'right'}}>
           <Link to={'workshops/'+workshop._id} >{workshop.name}</Link>
+          {' '}({workshop.dances.map(d => d.name).join(', ')})
           <DeleteButton onDelete={() => deleteWorkshop(workshop._id)}
             style={{float: "right"}} text="Poista"
             confirmText={"Haluatko varmasti poistaa työpajan "+workshop.name+"?"}

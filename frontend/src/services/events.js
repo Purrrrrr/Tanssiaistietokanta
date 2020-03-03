@@ -23,6 +23,9 @@ program {
 }
 workshops {
   _id, name
+  dances {
+    _id, name
+  }
 }
 `;
 

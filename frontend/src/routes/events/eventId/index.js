@@ -4,6 +4,7 @@ import {Router} from "@reach/router"
 import EventPrintRoutes from "./print";
 
 import CreateWorkshopForm from 'pages/events/workshops/CreateWorkshop';
+import EditWorkshopForm from 'pages/events/workshops/EditWorkshop';
 import BallProgram from "pages/events/BallProgram";
 import EventPage from "pages/events/EventPage";
 import EventProgramPage from "pages/events/EventProgramPage";
@@ -23,6 +24,7 @@ export default function({eventId, uri}) {
       <EventProgramPage path="program" event={event} />
       <BallProgram path="ball-program" />
       <CreateWorkshopForm path="workshops/create" event={event} />
+      <EditWorkshopForm path="workshops/:workshopId" />
       <EventPrintRoutes path="print/*" eventId={eventId} />
     </Router>
   </>;

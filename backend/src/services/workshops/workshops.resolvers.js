@@ -15,9 +15,12 @@ module.exports = (app) => {
       dances: (obj) => obj.danceIds.map(getDance),
       event: (obj) => eventService.get(obj.eventId)
     },
+    Query: {
+      workshop: (_, {id}) => service.get(id, commonParams),
+    },
     Mutation: {
       createWorkshop: (_, {eventId, workshop}) => service.create({eventId, ...workshop}, commonParams),
-      modifyWorkshop: (_, {id, workshop}) => service.update(id, workshop, commonParams),
+      modifyWorkshop: (_, {id, workshop}) => service.patch(id, workshop, commonParams),
       deleteWorkshop: (_, {id}) => service.remove(id, {}, commonParams)
         .then(workshop => ({...workshop, deleted: true}))
     }

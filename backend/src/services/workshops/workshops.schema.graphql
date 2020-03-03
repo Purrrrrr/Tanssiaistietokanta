@@ -1,5 +1,11 @@
+type Query {
+  workshop(id: ID!): Workshop!
+}
+
 type Workshop {
   _id: ID
+  eventId: ID!
+  event: Event!
   name: String!
   description: String
   teachers: String
@@ -7,7 +13,6 @@ type Workshop {
   danceIds: [ID!]!
   dances: [Dance!]!
   deleted: Boolean!
-  event: Event!
 }
 
 type Mutation {

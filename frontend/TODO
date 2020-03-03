@@ -14,7 +14,7 @@
 * Workshop delete button
 * Toivetanssit, requested dances
 * Do something to these property editors everywhere
-  Workshop editor page
+* Workshop editor page
   Do something to hairy details in mutation query usage
   * Navigation after query
     Maybe use apollo hook

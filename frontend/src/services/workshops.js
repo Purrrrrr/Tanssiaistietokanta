@@ -1,7 +1,7 @@
-import { gql, makeFragmentCache, makeMutationHook, useQuery } from './Apollo';
+import { gql, makeMutationHook, useQuery } from './Apollo';
 
 const workshopFields = `
-  _id, name, deleted
+  _id, eventId, name
   dances {
     _id
     name
@@ -14,15 +14,9 @@ query getWorkshop($id: ID!) {
     ${workshopFields}
   }
 }`;
-const getWorkshopFromCache = makeFragmentCache("Workshop", gql`
-  fragment workshop on Workshop {
-    ${workshopFields}
-  }
-`);
 export function useWorkshop(id) {
-  const fragment = getWorkshopFromCache(id);
-  const res = useQuery(GET_WORKSHOP, {variables: {id}, skip: !!fragment});
-  return [fragment || (res.data ? res.data.workshop : null), res];
+  const res = useQuery(GET_WORKSHOP, {variables: {id}});
+  return [res.data ? res.data.workshop : null, res];
 }
 
 export const CREATE_WORKSHOP = gql`
@@ -41,8 +35,8 @@ mutation modifyWorkshop($id: ID!, $workshop: WorkshopInput!) {
     ${workshopFields}
   }
 }`, {
-  parameterMapper: ({_id, __typename, deleted, ...workshop}) => 
-    ({variables: {id: _id, workshop: toWorkshopInput(workshop)} })
+  parameterMapper: (workshop) => 
+    ({variables: {id: workshop._id, workshop: toWorkshopInput(workshop)} })
 });
 
 export function toWorkshopInput({name, dances}) {
