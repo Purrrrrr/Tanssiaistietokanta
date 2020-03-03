@@ -13,8 +13,11 @@
   * EventProgramEditor?
 * Workshop delete button
 * Toivetanssit, requested dances
+* Do something to these property editors everywhere
   Workshop editor page
-  Do something to these property editors everywhere
+  Do something to hairy details in mutation query usage
+    Navigation after query
+    Maybe use apollo hook
   Dance set list workshop and other info
     "Suluissa opetussetti: 1=Branlet ja ECD:t, 2=Italialaiset ja solatanssit, B=The lost dances of the bordonians, H=Time
 travel through 4 centuries of dance. Tyhjät rivit ovat toivetansseja"

@@ -1,15 +1,15 @@
 import {Button, Intent} from "@blueprintjs/core";
-import {CREATE_WORKSHOP, toWorkshopInput} from 'services/workshops';
+import {useCreateWorkshop} from 'services/workshops';
 import {DragHandle, ListEditor} from "components/ListEditor";
 import React, {useState} from 'react';
 
 import {AdminOnly} from 'services/users';
 import {Breadcrumb} from "components/Breadcrumbs";
 import {DanceChooser} from "components/widgets/DanceChooser";
-import {MutateButton} from "components/widgets/MutateButton";
 import {makeTranslate} from 'utils/translate';
 import {useOnChangeForProp} from 'utils/useOnChangeForProp';
-import {Input, Validate, useValidationResult} from "libraries/forms";
+import {navigate} from "@reach/router"
+import {Input, Validate, Form, SubmitButton} from "libraries/forms";
 
 const t = makeTranslate({
   create: 'Tallenna',
@@ -28,12 +28,12 @@ export default function CreateWorkshopForm({event, uri}) {
   const setDances = dances => setWorkshop({...workshop, dances});
   const onChangeFor = useOnChangeForProp(setWorkshop);
   const {name, dances} = workshop;
-  const {hasErrors, ValidationContainer} = useValidationResult();
+  const [createWorkshop] = useCreateWorkshop({refetchQueries: ['getEvent']});
 
   return <AdminOnly>
     <Breadcrumb text={t`newWorkshop`} href={uri} />
     <t.h1>newWorkshop</t.h1>
-    <ValidationContainer>
+    <Form onSubmit={() => createWorkshop(event._id, workshop).then(ok => ok && navigate('/events/'+event._id))}>
       {t`name`+" "}
       <Input value={name} onChange={onChangeFor('name')} required />
       <t.h2>dances</t.h2>
@@ -44,11 +44,8 @@ export default function CreateWorkshopForm({event, uri}) {
         {t`addDance`+' '}
         <DanceChooser value={null} onChange={dance => setDances([...workshop.dances, dance])} key={workshop.dances.length} />
       </div>
-    </ValidationContainer>
-    <MutateButton disabled={hasErrors} mutation={CREATE_WORKSHOP} successUrl="../.."
-      variables={{eventId: event._id, workshop: toWorkshopInput(workshop)}}
-      refetchQueries={['getEvent']}
-      text={t`create`} />
+      <SubmitButton text={t`create`} />
+    </Form>
   </AdminOnly>;
 }
 

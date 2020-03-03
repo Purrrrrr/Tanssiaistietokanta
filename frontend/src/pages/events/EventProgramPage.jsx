@@ -1,13 +1,12 @@
 import * as L from 'partial.lenses';
 
-import {Button, Intent} from "@blueprintjs/core";
 import React, {useState} from 'react';
 
 import {AdminOnly} from 'services/users';
 import {Breadcrumb} from "components/Breadcrumbs";
 import {EventProgramEditor} from "components/EventProgramEditor";
 import {NavigateButton} from "components/widgets/NavigateButton";
-import {useValidationResult} from "libraries/forms";
+import {Form, SubmitButton} from "libraries/forms";
 import {navigate} from "@reach/router"
 import {removeTypenames} from 'utils/removeTypenames';
 import {useModifyEventProgram} from 'services/events';
@@ -15,18 +14,16 @@ import {useModifyEventProgram} from 'services/events';
 export default function EventEditorPage({event, uri}) {
   const [program, setProgram] = useState(event.program);
   const [modifyEventProgram] = useModifyEventProgram();
-  const {hasErrors, ValidationContainer} = useValidationResult();
 
   return <AdminOnly fallback="you need to be admin">
     <Breadcrumb text="Tanssiaisohjelma" href={uri} />
-    <ValidationContainer>
+    <Form onSubmit={() => modifyEventProgram(event._id, toProgramInput(program ?? {})).then((ok) => ok && navigate('/events/'+event._id))}>
       <h1>Muokkaa tanssiaisohjelmaa</h1>
       <EventProgramEditor program={program} onChange={setProgram}/>
       <hr />
-      <Button disabled={hasErrors} intent={Intent.PRIMARY} text="Tallenna muutokset"
-        onClick={() => modifyEventProgram(event._id, toProgramInput(program ?? {})).then((ok) => ok && navigate('/events/'+event._id))}  />
+      <SubmitButton text="Tallenna muutokset" />
       <NavigateButton href='..' text="Peruuta" />
-    </ValidationContainer>
+    </Form>
   </AdminOnly>;
 }
 

@@ -1,6 +1,6 @@
 import React, {createContext, useMemo, useState, useContext, useEffect} from 'react';
 
-export const ErrorContext = createContext();
+export const ErrorCollectionContext = createContext();
 
 export function useValidationResult() {
   const [errorCount, setErrorCount] = useState(0);
@@ -24,7 +24,7 @@ export function useValidationResult() {
 
   const Provider = useMemo(
     () => ({children}) => 
-      <ErrorContext.Provider children={children} value={context} />,
+      <ErrorCollectionContext.Provider children={children} value={context} />,
     [context]
   );
 
@@ -35,7 +35,7 @@ let counter = 0;
 
 export function useUpdateErrorContext(error) {
   const identity = useMemo(() => counter++, []);
-  const context = useContext(ErrorContext);
+  const context = useContext(ErrorCollectionContext);
   useEffect(
     () => {
       if (!context) return;

@@ -31,6 +31,9 @@ mutation createWorkshop($eventId: ID!, $workshop: WorkshopInput!) {
     ${workshopFields}
   }
 }`;
+export const useCreateWorkshop= makeMutationHook(CREATE_WORKSHOP, {
+  parameterMapper: (eventId, workshop) => ({variables: {eventId, workshop: toWorkshopInput(workshop)}})
+});
 
 export const useModifyWorkshop = makeMutationHook(gql`
 mutation modifyWorkshop($id: ID!, $workshop: WorkshopInput!) {
