@@ -12,7 +12,7 @@ export function DanceChooser({value, onChange, fill, onBlur}) {
     inputValueRenderer={dance => dance.name}
     itemRenderer={renderDance}
     itemsEqual="_id"
-    inputProps={{onBlur}}
+    inputProps={{onBlur, onKeyDown: cancelEnter}}
     itemListPredicate={(query, items) => filterDances(items, query)}
     query={query}
     onChange={setQuery}
@@ -22,6 +22,14 @@ export function DanceChooser({value, onChange, fill, onBlur}) {
     popoverProps={{minimal: true}}
     fill={fill}
   />;
+}
+
+function cancelEnter(e) {
+  if (e.key === 'Enter') {
+    //Stop selecting stuff from submiting forms and other stuff
+    e.stopPropagation(); 
+    e.preventDefault();
+  }
 }
 
 function renderDance (dance, { handleClick, modifiers }) {
