@@ -54,7 +54,7 @@ export function ClickToEdit({
 
 function getField({component, children, growVertically, componentProps = {}}, props) {
   if (component) {
-    const C = component; 
+    const C = component;
     return <C {...props} {...componentProps} />;
   } else if (children) {
     return children(props);
