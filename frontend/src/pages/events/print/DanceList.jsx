@@ -11,11 +11,12 @@ import {makeTranslate} from 'utils/translate';
 const t = makeTranslate({
   showSideBySide: 'Näytä setit rinnakkain',
   print: 'Tulosta',
-  emptyLinesAreRequestedDances: 'Tyhjät rivit ovat toivetansseja',
+  emptyLinesAreRequestedDances: 'Tyhjät rivit ovat toivetansseja.',
+  workshopNameIsInParenthesis: "Suluissa opetussetti",
 });
 
 function DanceList({eventId}) {
-  const {program, loadingState} = useBallProgram(eventId);
+  const {program, workshops, loadingState} = useBallProgram(eventId);
   const [sidebyside, setSidebyside] = useState(false);
   const colClass = (sidebyside ? " three-columns" : "");
 
@@ -28,17 +29,39 @@ function DanceList({eventId}) {
       }}/>
       <Button text={t`print`} onClick={() => window.print()} />
     </PrintViewToolbar>
-    <PrintFooterContainer footer={t`emptyLinesAreRequestedDances`}>
+    <PrintFooterContainer footer={<Footer workshops={workshops} />}>
       {program.danceSets.map(
         ({name, program}, key) => {
           return <div key={key} className="section">
             <h2>{name}</h2>
-            {program.map((track, i) => <p key={i}>{track.name ?? <RequestedDance />}</p>)}
+            {program.map((dance, i) => 
+              <Dance key={i} dance={dance} />
+            )}
           </div>;
         }
       )}
     </PrintFooterContainer>
   </div>;
+}
+
+function Footer({workshops}) {
+  if (!workshops.length) return t`emptyLinesAreRequestedDances`;
+  return <>
+    {t`workshopNameIsInParenthesis`}
+    {': '}
+    {workshops.map(({abbreviation, name}) => `${abbreviation}=${name}`).join(', ')}
+    {'. '}
+    {t`emptyLinesAreRequestedDances`}
+  </>
+}
+
+function Dance({dance}) {
+  return <p>
+    {dance.name ?? <RequestedDance />}
+    {dance.teachedIn && dance.teachedIn.length && 
+        " ("+dance.teachedIn.map(workshop => workshop.abbreviation).join(', ')+")"
+    }
+  </p>;
 }
 
 const RequestedDance = () => '_________________________';
@@ -66,16 +89,24 @@ query getDanceList($eventId: ID!) {
           ... on NamedProgram {
             name
           }
+          ... on Dance {
+            teachedIn(eventId: $eventId) {
+              name, abbreviation
+            }
+          }
         }
       }
+    }
+    workshops {
+      name, abbreviation
     }
   }
 }`;
 
 function useBallProgram(eventId) {
   const {data, ...loadingState} = useQuery(GET_EVENT, {variables: {eventId}});
-  const program = data ? data.event.program : null;
-  return {program, loadingState};
+  const {program, workshops} = data ? data.event : {};
+  return {program, workshops, loadingState};
 }
 
 export default DanceList;

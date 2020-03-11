@@ -18,10 +18,11 @@
   Do something to hairy details in mutation query usage
   * Navigation after query
     Maybe use apollo hook
-  Dance set list workshop and other info
-    "Suluissa opetussetti: 1=Branlet ja ECD:t, 2=Italialaiset ja solatanssit, B=The lost dances of the bordonians, H=Time
-travel through 4 centuries of dance. Tyhjät rivit ovat toivetansseja"
+* Dance set list workshop and other info
   * Make these print out nicely. Hopefully done
+  * Make the non print version show footer only once
+    Make workshop name abbreviation unique
+      Add validation for this in the editor
   Instructions for create dance dialog
   ------
   Apollo client 3.0

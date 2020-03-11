@@ -1,7 +1,11 @@
 import { gql, makeMutationHook, useQuery } from './Apollo';
 
 const workshopFields = `
-  _id, eventId, name
+  _id, eventId
+  name
+  abbreviation
+  description
+  teachers
   dances {
     _id
     name
@@ -39,9 +43,9 @@ mutation modifyWorkshop($id: ID!, $workshop: WorkshopInput!) {
     ({variables: {id: workshop._id, workshop: toWorkshopInput(workshop)} })
 });
 
-export function toWorkshopInput({name, dances}) {
+export function toWorkshopInput({name, abbreviation, description, teachers, dances}) {
   return {
-    name,
+    name, abbreviation, description, teachers,
     danceIds: dances.map(({_id}) => _id)
   };
 }

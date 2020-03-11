@@ -22,7 +22,11 @@ program {
   }
 }
 workshops {
-  _id, name
+  _id
+  name
+  abbreviation
+  description
+  teachers
   dances {
     _id, name
   }

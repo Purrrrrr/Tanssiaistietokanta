@@ -1,4 +1,4 @@
-import {Intent} from "@blueprintjs/core";
+import {Card, Intent} from "@blueprintjs/core";
 import {Link} from "@reach/router"
 import React from 'react';
 
@@ -16,6 +16,7 @@ const t = makeTranslate({
   danceMasterCheatList: 'Tanssiaisjuontajan lunttilappu',
   printBallDanceList: 'Tulosta settilista',
   ballProgramSlideshow: 'Tanssiaisten diashow',
+  dances: 'Tanssit',
   createWorkshop: 'Uusi työpaja',
   danceCheatlist: 'Osaan tanssin -lunttilappu',
   requestedDance: {
@@ -71,24 +72,34 @@ function formatDances(program) {
 const isRequestedDance = i => i.__typename === 'RequestedDance';
 
 function EventWorkshops({workshops, eventId}) {
-  const [deleteWorkshop] = useDeleteWorkshop({refetchQueries: ['getEvent']});
-
   return <>
-    <ul>
-      {workshops.map(workshop =>
-        <li key={workshop._id} style={{clear: 'right'}}>
-          <Link to={'workshops/'+workshop._id} >{workshop.name}</Link>
-          {' '}({workshop.dances.map(d => d.name).join(', ')})
-          <DeleteButton onDelete={() => deleteWorkshop(workshop._id)}
-            style={{float: "right"}} text="Poista"
-            confirmText={"Haluatko varmasti poistaa työpajan "+workshop.name+"?"}
-          />
-        </li>
-      )}
-    </ul>
+    {workshops.map(workshop =>
+      <WorkshopLink workshop={workshop} key={workshop._id} />
+    )}
     <NavigateButton adminOnly intent={Intent.PRIMARY} href="workshops/create"
       text={t`createWorkshop`} />
     <NavigateButton href="print/dance-cheatlist" target="_blank"
       text={t`danceCheatlist`} />
   </>;
+}
+
+function WorkshopLink({workshop}) {
+  const [deleteWorkshop] = useDeleteWorkshop({refetchQueries: ['getEvent']});
+  const {_id, abbreviation, name, description, dances} = workshop;
+
+  return <Card style={{clear: 'right'}}>
+    <DeleteButton onDelete={() => deleteWorkshop(_id)}
+      style={{float: "right"}} text="Poista"
+      confirmText={"Haluatko varmasti poistaa työpajan "+name+"?"}
+    />
+    <Link to={'workshops/'+workshop._id} ><h2>
+        {name}
+        {abbreviation &&
+            <> ({abbreviation})</>
+        }
+    </h2></Link>
+    <p>{description}</p>
+    {t`dances` + ': '}
+    {dances.map(d => d.name).join(', ')}
+  </Card>
 }

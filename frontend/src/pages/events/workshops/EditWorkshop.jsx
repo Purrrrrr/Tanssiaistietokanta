@@ -18,15 +18,15 @@ export default function EditWorkshopPage({workshopId, event, uri}) {
 
   return <AdminOnly>
     <Breadcrumb text={workshop ? workshop.name : '...'} href={uri} />
-    {workshop ? 
-        <CreateWorkshopForm workshop={workshop} event={event} /> :
+    {workshop ?
+        <WorkshopForm workshop={workshop} event={event} /> :
         <LoadingState {...loadingState} />
     }
   </AdminOnly>
 }
 
 
-function CreateWorkshopForm({workshop}) {
+function WorkshopForm({workshop}) {
   const [modifiedWorkshop, setWorkshop] = useState(workshop);
   const [modifyWorkshop] = useModifyWorkshop({
     onCompleted: () => navigate('/events/'+workshop.eventId),

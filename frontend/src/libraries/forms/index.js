@@ -1,5 +1,6 @@
 export {BasicInput} from './BasicInput';
 export {Input} from './Input';
+export {TextArea} from './TextArea';
 export {EditableText} from './EditableText';
 export {ClickToEdit} from './ClickToEdit';
 export {Form} from './Form';
