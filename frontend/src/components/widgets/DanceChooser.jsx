@@ -26,8 +26,8 @@ export function DanceChooser({value, onChange, fill, onBlur}) {
 
 function cancelEnter(e) {
   if (e.key === 'Enter') {
-    //Stop selecting stuff from submiting forms and other stuff
-    e.stopPropagation(); 
+    //Stop keyboard selection events from triggering form submits or other actions
+    e.stopPropagation();
     e.preventDefault();
   }
 }

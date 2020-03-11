@@ -1,4 +1,5 @@
 import {focusIn, focusIfExists} from 'utils/focus';
+import {swallowNextKeyup} from 'utils/swallowNextKeyup';
 
 export function blurTo(selector) {
   return {
@@ -14,7 +15,11 @@ export function blurTo(selector) {
 export function focusTo(selector) {
   return {
     keys: ['right', 'l', 'enter'],
-    action: ({target}) => focusIn(target, selector)
+    action: (event) => {
+      //Prevent unwanted keyup actions in the newly focused element
+      swallowNextKeyup(event);
+      focusIn(event.target, selector);
+    }
   };
 }
 
