@@ -27,7 +27,7 @@ export default function CreateWorkshopForm({event, uri}) {
     <Breadcrumb text={t`newWorkshop`} href={uri} />
     <t.h1>newWorkshop</t.h1>
     <Form onSubmit={() => createWorkshop(event._id, workshop)}>
-      <WorkshopEditor workshop={workshop} onChange={setWorkshop} />
+      <WorkshopEditor eventId={event._id} workshop={workshop} onChange={setWorkshop} />
       <SubmitButton text={t`create`} />
     </Form>
   </AdminOnly>;

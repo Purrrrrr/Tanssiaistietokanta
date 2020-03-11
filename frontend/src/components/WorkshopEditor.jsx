@@ -2,6 +2,7 @@ import {FormGroup, Button, Intent} from "@blueprintjs/core";
 import {DragHandle, ListEditor} from "components/ListEditor";
 import React from 'react';
 import * as L from 'partial.lenses';
+import {gql, useQuery} from "services/Apollo";
 
 import {DanceChooser} from "components/widgets/DanceChooser";
 import {makeTranslate} from 'utils/translate';
@@ -15,11 +16,12 @@ const t = makeTranslate({
   required: '(pakollinen)',
   abbreviation: 'Lyhennemerkintä',
   abbreviationHelp: 'Lyhennemerkintä näytetään settilistassa työpajassa opetettujen tanssien kohdalla',
+  abbreviationTaken: 'Lyhenne %(abbreviation)s on jo käytössä toisessa pajassa. Tässä tapahtumassa ovat jo käytössä seuraavat lyhenteet: %(abbreviations)s',
   description: 'Työpajan kuvaus',
   teachers: 'Opettaja(t)',
 });
 
-export function WorkshopEditor({workshop, onChange}) {
+export function WorkshopEditor({eventId, workshop, onChange}) {
   const {abbreviation, name, description, teachers, dances} = workshop;
   const onChangeFor = useOnChangeForProp(onChange);
 
@@ -28,7 +30,9 @@ export function WorkshopEditor({workshop, onChange}) {
       <Input value={name} onChange={onChangeFor('name')} required />
     </FormGroup>
     <FormGroup label={t`abbreviation`} helperText={t`abbreviationHelp`}>
-      <Input value={abbreviation ?? ''} onChange={onChangeFor('abbreviation')} maxLength={3} />
+      <AbbreviationField value={abbreviation ?? ''} onChange={onChangeFor('abbreviation')}
+        workshopId={workshop._id} eventId={eventId}
+      />
     </FormGroup>
     <FormGroup label={t`description`}>
       <TextArea value={description ?? ''} onChange={onChangeFor('description')} />
@@ -45,6 +49,40 @@ export function WorkshopEditor({workshop, onChange}) {
       <DanceChooser value={null} onChange={dance => onChangeFor('dances')(L.set(L.appendTo, dance))} key={dances.length} />
     </div>
     </>
+}
+
+function AbbreviationField({value, onChange, workshopId, eventId}) {
+  const usedWorkshopAbbreviations = useTakenWorkshopAbbreviations(eventId, workshopId);
+
+  return <Input value={value} onChange={onChange}
+    maxLength={3} validate={{notOneOf: usedWorkshopAbbreviations}}
+    errorMessages={{notOneOf: getAbbreviationTakenError}}
+  />
+}
+
+function getAbbreviationTakenError({value, values}) {
+  return t(
+    'abbreviationTaken',
+    {abbreviations: values, abbreviation: value}
+  );
+}
+
+const GET_WORKSHOPS= gql`
+query Workshops($eventId: ID!) {
+  event(id: $eventId) {
+    workshops {
+      _id, abbreviation
+    }
+  }
+}`;
+
+function useTakenWorkshopAbbreviations(eventId, workshopId) {
+  const {data} = useQuery(GET_WORKSHOPS, {variables: {eventId}});
+  if (!data) return [];
+
+  return data.event.workshops
+    .filter(w => w._id !== workshopId)
+    .map(w => w.abbreviation);
 }
 
 function DanceListItem({item, onChange, onRemove}) {

@@ -1,10 +1,10 @@
 import React from 'react';
 import {BasicTextArea} from './BasicTextArea';
-import {Validate} from "./validation";
+import {Validate, stripValidationProps} from "./validation";
 
 export function TextArea(props) {
   return <>
-    <BasicTextArea {...props} />
+    <BasicTextArea {...stripValidationProps(props)} />
     <Validate {...props} />
   </>
 }

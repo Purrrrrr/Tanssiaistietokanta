@@ -36,7 +36,7 @@ function WorkshopForm({workshop}) {
   return <>
     <h1>{workshop.name}</h1>
     <Form onSubmit={() => modifyWorkshop(modifiedWorkshop)}>
-      <WorkshopEditor workshop={modifiedWorkshop} onChange={setWorkshop} />
+      <WorkshopEditor eventId={workshop.eventId} workshop={modifiedWorkshop} onChange={setWorkshop} />
       <SubmitButton text={t`save`} />
     </Form>
   </>;

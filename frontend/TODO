@@ -21,8 +21,8 @@
 * Dance set list workshop and other info
   * Make these print out nicely. Hopefully done
   * Make the non print version show footer only once
-    Make workshop name abbreviation unique
-      Add validation for this in the editor
+  * Make workshop name abbreviation unique
+    * Add validation for this in the editor
   Instructions for create dance dialog
   ------
   Apollo client 3.0

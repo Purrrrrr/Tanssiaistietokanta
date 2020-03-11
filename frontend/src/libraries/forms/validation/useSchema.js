@@ -10,13 +10,19 @@ export function useSchema(schema) {
   );
 }
 
-function normalize({type, required, min, minLength, max, maxLength, pattern}) {
+export function stripValidationProps({validate, errorMessages, ...props}) {
+  return props;
+}
+
+function normalize({type, required, min, minLength, max, maxLength, pattern, errorMessages, validate}) {
   return {
     type: normalizeType(type), required,
     min: min ?? minLength,
     max: max ?? maxLength,
     matches: pattern,
-    email: type === 'email' ? true : undefined
+    email: type === 'email' ? true : undefined,
+    errorMessages: errorMessages ?? {},
+    ...validate
   };
 }
 
@@ -33,18 +39,20 @@ function normalizeType(type) {
   }
 }
 
-function getSchema({type, ...spec}) {
+function getSchema({type, errorMessages, ...spec}) {
   let schema = validators[type]();
   let unvalidated = true;
   for(const [key, val] of Object.entries(spec)) {
     if (val === undefined) continue;
     if (!schema[key]) continue;
     unvalidated = false;
-    if (noArguments[key]) {
-      schema = schema[key]();
-    } else {
-      schema = schema[key](val);
+
+    const args = noArguments[key] ? [] : [val];
+    const message = errorMessages[key];
+    if (message) {
+      args.push(message);
     }
+    schema = schema[key](...args);
   }
   return unvalidated ? null : schema;
 }
