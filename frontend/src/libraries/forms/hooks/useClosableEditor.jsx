@@ -1,7 +1,7 @@
 import {useState, useEffect, useCallback} from 'react';
 import {useError} from "../validation";
 
-export function useClosableEditor(originalValue, onChange, validationSchema = {}) {
+export function useClosableEditor(originalValue, onChange, {validationSchema = {}, onBlur}) {
   const [isOpen, setOpen] = useState(false);
   const [value, setValue] = useState(originalValue);
   useEffect(() => setValue(originalValue), [originalValue]);
@@ -12,11 +12,13 @@ export function useClosableEditor(originalValue, onChange, validationSchema = {}
     if (error) return;
     setOpen(false);
     value === originalValue || onChange(value);
-  }, [setOpen, value, originalValue, onChange, error]);
+    onBlur && onBlur();
+  }, [setOpen, value, originalValue, onChange, error, onBlur]);
   const onCancel = useCallback(() => {
     setOpen(false);
     setValue(originalValue);
-  }, [originalValue, setOpen, setValue]);
+    onBlur && onBlur();
+  }, [originalValue, setOpen, setValue, onBlur]);
 
 
   return {

@@ -2,12 +2,13 @@ import './EventProgramEditor.sass';
 
 import * as L from 'partial.lenses';
 
-import {Button, Card, Classes, HTMLTable, Icon, Intent} from "@blueprintjs/core";
+import {Switch, Button, Card, Classes, HTMLTable, Icon, Intent} from "@blueprintjs/core";
 import {DragHandle, ListEditor, ListEditorItems} from "./ListEditor";
 import React, {createContext, useContext, useMemo, useState, useRef} from 'react';
 
 import {DanceChooser} from "components/widgets/DanceChooser";
 import {Duration} from "components/widgets/Duration";
+import {DurationField} from "components/widgets/DurationField";
 import {ClickToEdit, Input} from "libraries/forms";
 import {ProgramPauseDurationEditor} from "components/widgets/ProgramPauseDurationEditor";
 import {makeTranslate} from 'utils/translate';
@@ -38,18 +39,19 @@ const t = makeTranslate({
   dances: 'tanssit',
   ofWhichDances: ' (taukoineen), josta tanssimusiikin kesto',
   pauseDuration: 'Tanssien välinen tauko',
-  intervalDuration: 'Taukomusiikki',
+  intervalMusic: 'Taukomusiikki',
+  intervalMusicAtEndOfSet: 'Taukomusiikki setin lopussa',
   minutes: 'min.',
   remove: 'Poista',
   danceProgramIsEmpty: 'Ei tanssiohjelmaa.'
 });
 
+const DEFAULT_INTERVAL_MUSIC_DURATION = 15*60;
 const DurationHelperContext = createContext();
 
 export function EventProgramEditor({program, onChange}) {
   const {danceSets = [], introductions = []} = program ?? {};
   const [pause, setPause] = useState(3);
-  const [intervalPause, setIntervalPause] = useState(15);
   const element = useRef();
   useRedirectKeyDownTo(element);
   const onKeyDown = useHotkeyHandler(
@@ -71,14 +73,14 @@ export function EventProgramEditor({program, onChange}) {
     focusLater('.eventProgramEditor .danceset:last-child');
   }
 
-  const durationContext = useMemo(() => ({pause, setPause, intervalPause, setIntervalPause}), [pause, intervalPause]);
+  const durationContext = useMemo(() => ({pause, setPause}), [pause]);
   const onChangeFor = useOnChangeForProp(onChange);
 
   return <DurationHelperContext.Provider value={durationContext}>
     <section className="eventProgramEditor" ref={element} onKeyDown={onKeyDown}>
       <div style={{textAlign: 'right'}}>
         {introductions.length === 0 && <Button text={t`addIntroductoryInfo`} onClick={addIntroductoryInfo} className="addIntroductoryInfo" />}
-        <ProgramPauseDurationEditor {...{pause, setPause, intervalPause, setIntervalPause}} />
+        <ProgramPauseDurationEditor {...{pause, setPause}} />
       </div>
       <ListEditor items={danceSets} onChange={onChangeFor('danceSets')}>
         { introductions.length > 0 &&
@@ -100,6 +102,7 @@ function newDanceSet(danceSets) {
   return {
     name: t`danceSet` + " " + danceSetNumber,
     program: dances,
+    intervalMusicDuration: DEFAULT_INTERVAL_MUSIC_DURATION
   }
 }
 
@@ -131,18 +134,20 @@ function DanceSetEditor({item, onChange, onRemove, onMoveDown, onMoveUp, itemInd
     focusSiblingsOrParent(e.target, 'section.eventProgramEditor');
   }
   const onChangeFor = useOnChangeForProp(onChange);
-  const {name, program} = item;
+  const {name, program, intervalMusicDuration} = item;
 
   return <Card className="danceset" {...props} onKeyDown={onKeyDown} >
     <h2>
       <ClickToEdit value={name} onChange={onChangeFor('name')} required />
       <Button className="delete" intent={Intent.DANGER} text={t`removeDanceSet`} onClick={removeDanceSet} />
     </h2>
-    <ProgramListEditor program={program} onChange={onChangeFor('program')} />
+    <ProgramListEditor program={program} onChange={onChangeFor('program')}
+      intervalMusicDuration={intervalMusicDuration}
+      onSetIntervalMusicDuration={onChangeFor('intervalMusicDuration')}/>
   </Card>;
 };
 
-function ProgramListEditor({program, onChange, isIntroductionsSection}) {
+function ProgramListEditor({program, onChange, intervalMusicDuration, onSetIntervalMusicDuration, isIntroductionsSection}) {
   const table = useRef();
   function addItem(__typename, other = {}) {
     onChange(L.set(L.appendTo, {__typename, ...other}, program));
@@ -166,15 +171,21 @@ function ProgramListEditor({program, onChange, isIntroductionsSection}) {
               <t.td className={Classes.TEXT_MUTED+ " noProgram"} colSpan="5">programListIsEmpty</t.td>
             </tr>
         }
+        {intervalMusicDuration > 0 && 
+            <IntervalMusicEditor intervalMusicDuration={intervalMusicDuration} onSetIntervalMusicDuration={onSetIntervalMusicDuration} />}
       </tbody>
       <tfoot>
         <tr>
           <td colSpan="3" >
             {isIntroductionsSection || <Button text={t`addDance`} onClick={() => addItem('RequestedDance')} className="addDance" />}
             <Button text={isIntroductionsSection ? t`addIntroductoryInfo` : t`addInfo`} onClick={() => addItem('OtherProgram', {name: ''})} className="addInfo" />
+            {" "}
+            {isIntroductionsSection || 
+                <Switch inline label={t`intervalMusicAtEndOfSet`} checked={intervalMusicDuration > 0}
+                  onChange={e => onSetIntervalMusicDuration(e.target.checked ? DEFAULT_INTERVAL_MUSIC_DURATION : 0) }/>}
           </td>
           <td colSpan="2">
-            <DanceSetDuration program={program} />
+            <DanceSetDuration program={program} intervalMusicDuration={intervalMusicDuration} />
           </td>
         </tr>
       </tfoot>
@@ -220,10 +231,40 @@ function ProgramItemEditor({item, onChange, onRemove, onAdd, onMoveDown, onMoveU
   </tr>;
 }
 
-function DanceSetDuration({program}) {
-  const {pause, intervalPause} = useContext(DurationHelperContext);
+function IntervalMusicEditor({intervalMusicDuration, onSetIntervalMusicDuration}) {
+  //const onBlur = e => e.target.closest('tr').focus();
+  const row = useRef();
+  const onKeyDown = useHotkeyHandler(
+    ...navigateAmongSiblings('tr'),
+    blurTo('div.danceset'),
+    focusTo('.click-to-edit'),
+    bind(['delete', 'backspace'], removeItem)
+  );
+
+  function removeItem(e) {
+    onSetIntervalMusicDuration(0);
+    focusSiblingsOrParent(e.target, 'div.danceset');
+  }
+
+  return <tr tabIndex={0} onKeyDown={onKeyDown} ref={row}>
+    <td><Button icon="move" disabled/></td>
+    <td>{t`intervalMusic`}</td>
+    <td />
+    <td>
+      <DurationField value={intervalMusicDuration} 
+        onBlur={() => row.current.focus()}
+        onChange={onSetIntervalMusicDuration}/>
+    </td>
+    <td>
+      <Button intent={Intent.DANGER} text="X" onClick={() => onSetIntervalMusicDuration(0)} className="delete" />
+    </td>
+  </tr>
+}
+
+function DanceSetDuration({program, intervalMusicDuration}) {
+  const {pause} = useContext(DurationHelperContext);
   const duration = program.map(({duration}) => duration ?? 0).reduce((y,x) => x+y, 0);
-  const durationWithPauses = duration + pause*60*program.length + intervalPause*60;
+  const durationWithPauses = duration + pause*60*program.length + intervalMusicDuration;
 
   return <>
     <strong><Duration value={durationWithPauses}/></strong>{' ('+t`pausesIncluded`+') '}

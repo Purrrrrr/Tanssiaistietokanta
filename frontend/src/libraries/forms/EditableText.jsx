@@ -5,7 +5,7 @@ import {useClosableEditor} from "./hooks/useClosableEditor";
 
 export function EditableText({value: maybeValue, onChange, defaultValue = "", ...validationSchema}) {
   const {isOpen, onOpen, error, ...props} = useClosableEditor(
-    maybeValue ?? defaultValue, onChange, validationSchema
+    maybeValue ?? defaultValue, onChange, {validationSchema}
   );
 
   return <>

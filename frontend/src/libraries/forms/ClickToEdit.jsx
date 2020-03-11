@@ -12,6 +12,7 @@ export function ClickToEdit({
   value: originalValue,
   valueFormatter,
   onChange: onChangeOriginal,
+  onBlur,
   children, component, componentProps, growVertically,
   className,
   noEditIcon,
@@ -22,7 +23,7 @@ export function ClickToEdit({
     error, value, onChange,
     onCancel, onConfirm
   } = useClosableEditor(
-    originalValue, onChangeOriginal, validationSchema
+    originalValue, onChangeOriginal, {validationSchema, onBlur}
   );
   const container = useRef();
   useOnClickOutside(container, isOpen ? onConfirm : null);

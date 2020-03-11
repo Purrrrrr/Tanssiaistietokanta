@@ -19,6 +19,7 @@ program {
         _id
       }
     }
+    intervalMusicDuration
   }
 }
 workshops {
