@@ -13,14 +13,17 @@ import {objectId} from "./objectId";
  * children: The list items, by default renders a ListEditorItems component with the supplied props
  */
 
-export function ListEditor({items, onChange, children, ...props}) {
+export function ListEditor({items, onChange, children, className, helperClass, useDragHandle, ...props}) {
   function onSortEnd({oldIndex, newIndex}) {
     onChange(arrayMove(items, oldIndex, newIndex));
   }
   const context = useListEditorContextValue(items, onChange);
 
   return <ListEditorContext.Provider value={context}>
-    <SortableList distance={5} onSortEnd={onSortEnd}>
+    <SortableList distance={5} onSortEnd={onSortEnd} 
+      className={className} helperClass={helperClass}
+      useDragHandle={useDragHandle}
+    >
       {children ?? <ListEditorItems {...props} />}
     </SortableList>
   </ListEditorContext.Provider>;

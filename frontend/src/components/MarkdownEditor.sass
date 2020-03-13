@@ -1,0 +1,27 @@
+.markdown-editor
+  background: white
+  padding: 10px
+  height: auto
+  max-height: 600px
+  overflow: auto
+  max-width: 100%
+  line-height: inherit
+
+.markdown-part
+
+  & + &
+    border-top: 1px solid #ddd
+  .buttons
+    clear: right
+    float: right
+
+  .markdown-part-editor
+    cursor: pointer
+
+    textarea
+      display: block
+      width: 100%
+
+.markdown-editor-helper
+  background: rgba(255, 255, 255, 0.8)
+  z-index: 100000

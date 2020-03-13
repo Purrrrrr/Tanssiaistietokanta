@@ -14,6 +14,7 @@
     "graphql": "^14.5.6",
     "immer": "^5.2.1",
     "key-event-to-string": "^1.2.0",
+    "markdown-to-jsx": "^6.11.0",
     "node-sass": "^4.13.1",
     "partial.lenses": "^14.17.0",
     "react": "^16.12.0",

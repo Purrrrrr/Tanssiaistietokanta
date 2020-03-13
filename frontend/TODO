@@ -23,11 +23,12 @@
   * Make the non print version show footer only once
   * Make workshop name abbreviation unique
     * Add validation for this in the editor
+* Dance instruction database
+    Implement category guessing using "Luokka" -tag
+    Implement formation guessing
+    Implement automatic Lord/Lady word replacement
+    Fix random tags: Luokka (Juggling Partners for example) mp3 (?)
+  Tool to create dance instruction leaflet
   Instructions for create dance dialog
   ------
   Apollo client 3.0
-  ------
-  Dance instruction database
-    links to tanssiwiki
-    own instructions?
-  Tool to create dance instruction leaflet?

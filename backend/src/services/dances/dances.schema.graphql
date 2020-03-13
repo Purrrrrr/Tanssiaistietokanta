@@ -9,6 +9,8 @@ type Dance implements NamedProgram {
   duration: Float
   prelude: String
   formation: String
+  category: String
+  instructions: String
   remarks: String
   deleted: Boolean!
   teachedIn(eventId: ID): [Workshop!]!
@@ -28,6 +30,8 @@ input DanceInput {
   prelude: String
   formation: String
   remarks: String
+  category: String
+  instructions: String
 }
 input DancePatchInput {
   name: String
@@ -36,4 +40,6 @@ input DancePatchInput {
   prelude: String
   formation: String
   remarks: String
+  category: String
+  instructions: String
 }

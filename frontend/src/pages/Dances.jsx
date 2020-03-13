@@ -35,13 +35,20 @@ function DancesPage() {
 function DanceList({dances, onChange, onDelete}) {
   const [limit, setLimit] = useState(5);
   const canShowMore = dances.length > limit;
+  if (!dances.length) return null;
+  const dance = dances[0];
 
+  if (false) {
+    return <Card key={dance._id}>
+      <DanceEditor dance={dance} onChange={onChange} onDelete={onDelete} asko />
+    </Card>;
+  }
   return <InfiniteScroll hasMore={canShowMore} loadMore={() => setLimit(limit + 5)}>
-    {dances.slice(0, limit).map(dance =>
+    {dances.slice(0, limit).map((dance, i) =>
       <Card key={dance._id}>
-        <DanceEditor dance={dance} onChange={onChange} onDelete={onDelete} />
+        <DanceEditor dance={dance} onChange={onChange} onDelete={onDelete}  />
       </Card>)}
-    </InfiniteScroll>
+    </InfiniteScroll>;
 }
 
 function CreateDanceButton({onCreate}) {

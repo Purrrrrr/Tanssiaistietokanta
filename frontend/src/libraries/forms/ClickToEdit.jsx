@@ -9,9 +9,11 @@ import {useOnClickOutside} from "./hooks/useOnClickOutside";
 import "./ClickToEdit.sass";
 
 export function ClickToEdit({
+  element: Element = "span",
   value: originalValue,
   valueFormatter,
   onChange: onChangeOriginal,
+  confirmOnEnter = true,
   onBlur,
   children, component, componentProps, growVertically,
   className,
@@ -29,19 +31,19 @@ export function ClickToEdit({
   useOnClickOutside(container, isOpen ? onConfirm : null);
 
   if (!isOpen) {
-    return <span ref={container} onClick={onOpen}
+    return <Element ref={container} onClick={onOpen}
       tabIndex={0} onFocus={onOpen}
       className={className ?? Classes.EDITABLE_TEXT+" click-to-edit"}>
       {valueFormatter ? valueFormatter(value) : value}
       {' '}
       {noEditIcon || <Icon intent={Intent.PRIMARY} icon="edit" />}
-    </span>;
+    </Element>;
   }
 
-  return <span ref={container} className={className}
+  return <Element ref={container} className={className}
     onKeyDown={e => {
       if (e.key === 'Escape') onCancel();
-      if (e.key === 'Enter') onConfirm();
+      if (e.key === 'Enter' && confirmOnEnter) onConfirm();
     }}>
     {getField(
       {component, children, componentProps, growVertically},
@@ -50,7 +52,7 @@ export function ClickToEdit({
     <ErrorMessage error={error} />
     <Button intent={Intent.SUCCESS} onClick={onConfirm} icon="tick" />
     <Button intent={Intent.DANGER} onClick={onCancel} icon="cross" />
-  </span>;
+  </Element>;
 }
 
 function getField({component, children, growVertically, componentProps = {}}, props) {

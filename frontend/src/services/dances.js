@@ -1,7 +1,7 @@
 import { gql, appendToListQuery, makeMutationHook, makeListQueryHook } from './Apollo';
 import {sorted} from "utils/sorted"
 
-const danceFields = '_id, name, description, remarks, duration, prelude, formation, deleted';
+const danceFields = '_id, name, description, remarks, duration, prelude, formation, category, instructions, deleted';
 
 const GET_DANCES = gql`
 {
