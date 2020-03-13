@@ -29,8 +29,7 @@ export default function CreateEventForm({uri}) {
     <h1>{t`newEvent`}</h1>
     <Form onSubmit={() => createEvent(event)}>
       <div>
-        {t`name`+" "}
-        <Input value={name} onChange={onChangeFor('name')} required />
+        <Input label={t`name`} value={name} onChange={onChangeFor('name')} required />
       </div>
       <SubmitButton text={t`create`} />
     </Form>

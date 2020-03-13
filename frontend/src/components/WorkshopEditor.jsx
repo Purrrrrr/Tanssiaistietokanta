@@ -1,4 +1,4 @@
-import {FormGroup, Button, Intent} from "@blueprintjs/core";
+import {Button, Intent} from "@blueprintjs/core";
 import {DragHandle, ListEditor} from "components/ListEditor";
 import React from 'react';
 import * as L from 'partial.lenses';
@@ -26,20 +26,14 @@ export function WorkshopEditor({eventId, workshop, onChange}) {
   const onChangeFor = useOnChangeForProp(onChange);
 
   return <>
-    <FormGroup label={t`name`} labelInto={t`required`}>
-      <Input value={name} onChange={onChangeFor('name')} required />
-    </FormGroup>
-    <FormGroup label={t`abbreviation`} helperText={t`abbreviationHelp`}>
-      <AbbreviationField value={abbreviation ?? ''} onChange={onChangeFor('abbreviation')}
-        workshopId={workshop._id} eventId={eventId}
-      />
-    </FormGroup>
-    <FormGroup label={t`description`}>
-      <TextArea value={description ?? ''} onChange={onChangeFor('description')} />
-    </FormGroup>
-    <FormGroup label={t`teachers`}>
-      <Input value={teachers ?? ''} onChange={onChangeFor('teachers')} />
-    </FormGroup>
+    <Input value={name} onChange={onChangeFor('name')} required
+      label={t`name`} labelInfo={t`required`} />
+    <AbbreviationField value={abbreviation ?? ''} onChange={onChangeFor('abbreviation')}
+      label={t`abbreviation`} helperText={t`abbreviationHelp`}
+      workshopId={workshop._id} eventId={eventId}
+    />
+    <TextArea value={description ?? ''} onChange={onChangeFor('description')} label={t`description`} />
+    <Input value={teachers ?? ''} onChange={onChangeFor('teachers')} label={t`teachers`} />
     <t.h2>dances</t.h2>
     <ListEditor items={dances} onChange={onChangeFor('dances')}
       component={DanceListItem} />
@@ -51,11 +45,10 @@ export function WorkshopEditor({eventId, workshop, onChange}) {
     </>
 }
 
-function AbbreviationField({value, onChange, workshopId, eventId}) {
+function AbbreviationField({workshopId, eventId, ...props}) {
   const usedWorkshopAbbreviations = useTakenWorkshopAbbreviations(eventId, workshopId);
 
-  return <Input value={value} onChange={onChange}
-    maxLength={3} validate={{notOneOf: usedWorkshopAbbreviations}}
+  return <Input {...props} maxLength={3} validate={{notOneOf: usedWorkshopAbbreviations}}
     errorMessages={{notOneOf: getAbbreviationTakenError}}
   />
 }

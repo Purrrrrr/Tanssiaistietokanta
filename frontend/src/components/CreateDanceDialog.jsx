@@ -1,27 +1,28 @@
 import React, {useState} from 'react';
-import {Dialog, Button, Classes, FileInput, Intent} from "@blueprintjs/core";
+import {Dialog, Button, Classes, FileInput} from "@blueprintjs/core";
+import {Form, SubmitButton} from "libraries/forms";
 import {DanceEditor} from "./DanceEditor"
 
 const EMPTY_DANCE = {name: 'Uusi tanssi'};
 
 export function CreateDanceDialog({isOpen, onClose, onCreate}) {
   const [dance, setDance] = useState(EMPTY_DANCE);
-  const hasError = dance.name.trim() === "";
 
   function save() {
     onCreate(dance).then(() => {setDance(EMPTY_DANCE); onClose(); });
   }
 
   return <Dialog isOpen={isOpen} onClose={onClose} title="Uusi tanssi">
-    <div className={Classes.DIALOG_BODY}>
-      <DanceUploader onUpload={setDance} />
-      <DanceEditor key={dance} dance={dance} onChange={setDance} />
-    </div>
-    <div className={Classes.DIALOG_FOOTER}>
-      <Button text="Peruuta" onClick={onClose} />
-      <Button intent={Intent.PRIMARY} text="Tallenna"
-        onClick={save} disabled={hasError}/>
-    </div>
+    <Form onSubmit={save}>
+      <div className={Classes.DIALOG_BODY}>
+        <DanceUploader onUpload={setDance} />
+        <DanceEditor key={dance} dance={dance} onChange={setDance} />
+      </div>
+      <div className={Classes.DIALOG_FOOTER}>
+        <Button text="Peruuta" onClick={onClose} />
+        <SubmitButton text="Tallenna" />
+      </div>
+    </Form>
   </Dialog>;
 }
 
