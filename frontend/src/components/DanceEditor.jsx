@@ -1,10 +1,11 @@
 import React from 'react';
-import {H2, HTMLTable} from "@blueprintjs/core";
+import {Button, Intent, Dialog, Card, H2, HTMLTable} from "@blueprintjs/core";
 import {DurationField} from "./widgets/DurationField";
 import {DeleteButton} from "./widgets/DeleteButton";
 import {DanceDataImportButton} from "./DanceDataImportDialog";
-import {EditableText} from "libraries/forms";
+import {EditableText, useClosableEditor} from "libraries/forms";
 import {MarkdownEditor} from 'components/MarkdownEditor';
+import Markdown from 'markdown-to-jsx';
 import {useOnChangeForPropInValue} from 'utils/useOnChangeForProp';
 
 export function DanceEditor({dance, onChange, onDelete, asko}) {
@@ -41,7 +42,7 @@ export function DanceEditor({dance, onChange, onDelete, asko}) {
           <DancePropertyCells label="Huomautuksia" value={remarks} onChange={onChangeFor('remarks')} />
         </tr>
         <tr>
-          <DancePropertyCells label="Tanssiohjeet" component={MarkdownEditor} colSpan={2} value={instructions} onChange={onChangeFor('instructions')} />
+          <DancePropertyCells label="Tanssiohjeet" component={MarkdownEdit} colSpan={2} value={instructions} onChange={onChangeFor('instructions')} />
         </tr>
       </tbody>
     </HTMLTable>
@@ -55,5 +56,29 @@ function DancePropertyCells({label, component = EditableText, colSpan = 1, ...pr
     <td colSpan={colSpan*2-1}>
       <Component {...props} />
     </td>
+  </>;
+}
+
+function MarkdownEdit(props) {
+  const {
+    isOpen, onOpen,
+    value, onChange,
+    onCancel, onConfirm
+  } = useClosableEditor(props.value, props.onChange);
+
+  return <>
+    <div onClick={onOpen}>
+      <Card style={{overflow: 'auto', maxHeight: 200}}>
+        <Markdown>{value ?? ""}</Markdown>
+      </Card>
+      <Button text="Muokkaa" onClick={onOpen} />
+    </div>
+    <Dialog isOpen={isOpen} lazy onClose={onCancel} title="Muokkaa ohjetta">
+      <MarkdownEditor value={value} onChange={onChange} />
+      <div style={{textAlign: 'right', padding: "20px 20px 0 0"}}>
+        <Button intent={Intent.PRIMARY} text="Tallenna" onClick={onConfirm} />
+        <Button text="Peruuta" onClick={onCancel} />
+      </div>
+    </Dialog>
   </>;
 }

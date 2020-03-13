@@ -18,9 +18,9 @@ export function EditableDanceProperty({dance, property, addText, multiline}) {
   }
 
   if (state.loading) return '...';
-  return <ClickToEdit className="editableDanceProperty" growVertically={multiline}
-    value={dance[property] ?? ""} onChange={onChange} noEditIcon
+  return <ClickToEdit className="editableDanceProperty"
+    editorComponent={ClickToEdit.MultilineEditor}
+    value={dance[property]} onChange={onChange} editButton={null}
     valueFormatter={value => value || <span className="addEntry">{addText}</span>}
-  >
-  </ClickToEdit>;
+  />;
 }

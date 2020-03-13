@@ -5,7 +5,7 @@ import {ClickToEdit, Input} from 'libraries/forms'
 
 export function DurationField(props) {
   return <ClickToEdit valueFormatter={val => <Duration value={val} />}
-    {...props} component={DurationEditor} />
+    {...props} editorComponent={DurationEditor} />
 }
 
 function DurationEditor({value, onChange}) {

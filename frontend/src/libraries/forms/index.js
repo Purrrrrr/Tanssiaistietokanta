@@ -3,6 +3,7 @@ export {Input} from './Input';
 export {TextArea} from './TextArea';
 export {EditableText} from './EditableText';
 export {ClickToEdit} from './ClickToEdit';
+export {useClosableEditor} from './hooks/useClosableEditor';
 export {Form} from './Form';
 export {SubmitButton} from './SubmitButton';
 export {Validate} from './validation';

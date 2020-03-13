@@ -12,7 +12,9 @@ export function CreateDanceDialog({isOpen, onClose, onCreate}) {
     onCreate(dance).then(() => {setDance(EMPTY_DANCE); onClose(); });
   }
 
-  return <Dialog isOpen={isOpen} onClose={onClose} title="Uusi tanssi">
+  return <Dialog isOpen={isOpen} onClose={onClose} title="Uusi tanssi"
+    style={{minWidth: 600, width: 'auto', maxWidth: '80%'}}
+  >
     <Form onSubmit={save}>
       <div className={Classes.DIALOG_BODY}>
         <DanceUploader onUpload={setDance} />

@@ -9,15 +9,15 @@ import {useOnClickOutside} from "./hooks/useOnClickOutside";
 import "./ClickToEdit.sass";
 
 export function ClickToEdit({
-  element: Element = "span",
   value: originalValue,
-  valueFormatter,
   onChange: onChangeOriginal,
-  confirmOnEnter = true,
   onBlur,
-  children, component, componentProps, growVertically,
+  containerElement: Element = "span",
   className,
-  noEditIcon,
+  valueFormatter,
+  confirmOnEnter = true,
+  editorComponent: Editor = TextEditor,
+  editButton: EditButton = DefaultEditButton,
   ...validationSchema
 }) {
   const {
@@ -33,10 +33,11 @@ export function ClickToEdit({
   if (!isOpen) {
     return <Element ref={container} onClick={onOpen}
       tabIndex={0} onFocus={onOpen}
-      className={className ?? Classes.EDITABLE_TEXT+" click-to-edit"}>
+      className={className ?? Classes.EDITABLE_TEXT+" click-to-edit"}
+    >
       {valueFormatter ? valueFormatter(value) : value}
       {' '}
-      {noEditIcon || <Icon intent={Intent.PRIMARY} icon="edit" />}
+      {EditButton && <EditButton />}
     </Element>;
   }
 
@@ -44,25 +45,25 @@ export function ClickToEdit({
     onKeyDown={e => {
       if (e.key === 'Escape') onCancel();
       if (e.key === 'Enter' && confirmOnEnter) onConfirm();
-    }}>
-    {getField(
-      {component, children, componentProps, growVertically},
-      {value, onChange, onCancel, onConfirm}
-    )}
+    }}
+  >
+    <Editor {...{value, onChange, onCancel, onConfirm}} />
     <ErrorMessage error={error} />
-    <Button intent={Intent.SUCCESS} onClick={onConfirm} icon="tick" />
-    <Button intent={Intent.DANGER} onClick={onCancel} icon="cross" />
+    <Button intent={Intent.SUCCESS} onClick={onConfirm} icon="tick" disabled={!!error} />
+    <Button intent={Intent.DANGER} onClick={onCancel} icon="cross" />;
   </Element>;
 }
 
-function getField({component, children, growVertically, componentProps = {}}, props) {
-  if (component) {
-    const C = component;
-    return <C {...props} {...componentProps} />;
-  } else if (children) {
-    return children(props);
-  } else if (growVertically) {
-    return <BasicTextArea value={props.value} onChange={props.onChange} autoFocus growVertically />;
-  }
-  return <BasicInput value={props.value} onChange={props.onChange} autoFocus />;
+function DefaultEditButton() {
+  return <Icon intent={Intent.PRIMARY} icon="edit" />
 }
+
+function MultilineEditor({value, ...props}) {
+  return <BasicTextArea value={value ?? ''} autoFocus growVertically {...props} />;
+}
+function TextEditor({value, ...props}) {
+  return <BasicInput value={value ?? ''} autoFocus {...props} />;
+}
+
+ClickToEdit.MultilineEditor = MultilineEditor;
+ClickToEdit.TextEditor = TextEditor;

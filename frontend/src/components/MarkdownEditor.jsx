@@ -1,7 +1,7 @@
 import React from 'react';
 import Markdown from 'markdown-to-jsx';
 import {Button, Intent} from "@blueprintjs/core";
-import {ClickToEdit} from 'libraries/forms'
+import {ClickToEdit, useClosableEditor} from 'libraries/forms'
 import {ListEditor, DragHandle} from 'components/ListEditor'
 
 import './MarkdownEditor.sass'
@@ -22,20 +22,32 @@ function toParts(markdown) {
 }
 const headerRegex = /\n((?=#+.+\n)|(?=.+\n=+\n)|(?=.+\n-+\n))/gm;
 
-function PartEditor({onRemove, item, onChange}) {
+function PartEditor({onRemove, item, onChange: setItem}) {
+  const {
+    isOpen, onOpen,
+    value, onChange,
+    onCancel, onConfirm
+  } = useClosableEditor(item, setItem);
+
   return <div className="markdown-part">
     <div className="buttons">
-      <DragHandle minimal />
-      <Button icon="edit" intent={Intent.PRIMARY} minimal
-        onClick={e => window.t = e.target.closest('.markdown-part').children[1].click()} />
-      <Button icon="cross" intent={Intent.DANGER} minimal
-        onClick={onRemove} />
-    </div>
-    <ClickToEdit element="div" className="markdown-part-editor" 
-      noEditIcon valueFormatter={val =>
-          <Markdown>{val}</Markdown>
+      {isOpen 
+          ? <>
+            <Button intent={Intent.SUCCESS} onClick={onConfirm} icon="tick" />
+            <Button intent={Intent.DANGER} onClick={onCancel} icon="cross" />
+          </>
+          : <>
+          <DragHandle minimal />
+          <Button icon="edit" intent={Intent.PRIMARY} minimal onClick={onOpen} />
+          <Button icon="cross" intent={Intent.DANGER} minimal onClick={onRemove} />
+          </>
       }
-      confirmOnEnter={false}
-      growVertically value={item} onChange={onChange} />
+    </div>
+    <div className="markdown-part-editor" onClick={isOpen ? undefined : onOpen}>
+      {isOpen
+          ? <ClickToEdit.MultilineEditor value={value} onChange={onChange} onBlur={onConfirm} />
+          : <Markdown>{value}</Markdown>
+      }
+    </div>
   </div>
 }
