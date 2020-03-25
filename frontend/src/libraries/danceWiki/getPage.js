@@ -9,6 +9,9 @@ export function getWikiPage(title) {
     .then(pages => Object.values(pages)[0])
     .then(page => {
       if (!page.pageid) throw new Error("Page not found");
-      return page.revisions[0]['*'];
+      return {
+        title: page.title,
+        contents: page.revisions[0]['*']
+      };
     });
 }

@@ -1,13 +1,27 @@
 import {getWikiPage} from './getPage';
 import {parseMediawiki, getInternalLinks, stripLinks} from './mediawiki';
 
-export function getCategory(danceName) {
-  return getCategories().then(danceCategories => danceCategories[danceName] ?? []);
+export async function getCategory(danceName, instructions) {
+  const categoriesFromContent = getCategoriesFromContent(instructions);
+  if (categoriesFromContent.length > 0) return categoriesFromContent;
+
+  return await getCategoriesFromDanceIndex()
+    .then(danceCategories => danceCategories[danceName] ?? []);
+}
+
+const categoryTagRegex = /<Luokka:([^>]+)>/g;
+const categoryLinkRegex = /\[Luokka:([^\]]+)\]\(Luokka:.* "wikilink"\)/g;
+
+function getCategoriesFromContent(content) {
+  const categoryTags = content.matchAll(categoryTagRegex);
+  const categoryLinks = content.matchAll(categoryLinkRegex);
+
+  return [...categoryTags, ...categoryLinks].map(match => match[1]);
 }
 
 let categoryCache = null;
 
-function getCategories() {
+function getCategoriesFromDanceIndex() {
   if (categoryCache) return Promise.resolve(categoryCache);
   return getWikiPage('Tanssiohjeet')
     .then(parsePage)
@@ -16,7 +30,7 @@ function getCategories() {
     })
 }
 
-function parsePage(contents) {
+function parsePage({contents}) {
   let cats = [];
   const dances = {};
 
