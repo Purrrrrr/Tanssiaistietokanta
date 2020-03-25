@@ -31,7 +31,7 @@ function PartEditor({onRemove, item, onChange: setItem}) {
 
   return <div className="markdown-part">
     <div className="buttons">
-      {isOpen 
+      {isOpen
           ? <>
             <Button intent={Intent.SUCCESS} onClick={onConfirm} icon="tick" />
             <Button intent={Intent.DANGER} onClick={onCancel} icon="cross" />
@@ -45,9 +45,13 @@ function PartEditor({onRemove, item, onChange: setItem}) {
     </div>
     <div className="markdown-part-editor" onClick={isOpen ? undefined : onOpen}>
       {isOpen
-          ? <ClickToEdit.MultilineEditor value={value} onChange={onChange} onBlur={onConfirm} />
-          : <Markdown>{value}</Markdown>
+        ? <ClickToEdit.MultilineEditor value={value} onChange={onChange} onBlur={onConfirm} />
+        : value ? <Markdown>{value}</Markdown> : <Placeholder />
       }
     </div>
   </div>
+}
+
+function Placeholder() {
+  return <div className="placeholder">&lt;Muokkaa tästä&gt;</div>;
 }

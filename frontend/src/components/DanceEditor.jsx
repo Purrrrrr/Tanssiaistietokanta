@@ -68,9 +68,12 @@ function MarkdownEdit(props) {
 
   return <>
     <div onClick={onOpen}>
-      <Card style={{overflow: 'auto', maxHeight: 200}}>
-        <Markdown>{value ?? ""}</Markdown>
-      </Card>
+      {value
+        ? <Card style={{overflow: 'auto', maxHeight: 200}}>
+          <Markdown>{value}</Markdown>
+        </Card>
+        : <span style={{color: 'gray', marginRight: 10}}>&lt;Ei ohjetta&gt;</span>
+      }
       <Button text="Muokkaa" onClick={onOpen} />
     </div>
     <Dialog isOpen={isOpen} lazy onClose={onCancel} title="Muokkaa ohjetta">
