@@ -1,9 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import {Tag, ProgressBar, FormGroup, Dialog, Button, Intent, Classes} from "@blueprintjs/core";
 import {MarkdownEditor} from 'components/MarkdownEditor';
+import {DanceNameSearch} from 'components/DanceNameSearch';
 import {Form, Input, SubmitButton} from "libraries/forms";
 import {useOnChangeForProp} from 'utils/useOnChangeForProp';
-import {getDanceData} from 'libraries/danceWiki';
+import {getDanceData, searchWikiPages} from 'libraries/danceWiki';
 
 export function DanceDataImportButton({onImport, dance, text, asko, ...props}) {
   const [isOpen, setOpen] = useState(false || asko);
@@ -42,7 +43,7 @@ export function DanceDataImportDialog({dance: originalDance, isOpen, onClose, on
     <Form onSubmit={save}>
       <div className={Classes.DIALOG_BODY}>
         <DataImporter dance={dance} onImport={importDone} />
-        {importedData && 
+        {importedData &&
             <ImportedDataView importedData={importedData} dance={dance} setDance={setDance} />}
       </div>
       <div className={Classes.DIALOG_FOOTER}>
@@ -67,7 +68,7 @@ function DataImporter({dance, onImport}) {
   }
 
   return <FormGroup label="Hae tanssi nimellä" inline>
-    <Input value={search} onChange={setSearch} />
+    <DanceNameSearch value={search} onChange={setSearch} />
     <Button icon="search" intent={Intent.PRIMARY} onClick={importData} disabled={loading}/>
     {loading
         ? <div style={{margin: "10px 0px"}}>Ladataan tietoja...<ProgressBar /></div>

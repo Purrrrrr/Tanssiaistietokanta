@@ -1,7 +1,7 @@
-import {getWikiPage} from './getPage';
-import {parseMediawiki, getInternalLinks, stripLinks} from './mediawiki';
+import {getWikiPage} from './wikiApi';
+import {parseMediawiki, getInternalLinks, stripLinks} from './format/mediawiki';
 
-export async function getCategory(danceName, instructions) {
+export async function getCategories(danceName, instructions) {
   const categoriesFromContent = getCategoriesFromContent(instructions);
   if (categoriesFromContent.length > 0) return categoriesFromContent;
 
