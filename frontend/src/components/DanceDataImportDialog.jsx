@@ -4,7 +4,7 @@ import {MarkdownEditor} from 'components/MarkdownEditor';
 import {DanceNameSearch} from 'components/DanceNameSearch';
 import {Form, Input, SubmitButton} from "libraries/forms";
 import {useOnChangeForProp} from 'utils/useOnChangeForProp';
-import {getDanceData, searchWikiPages} from 'libraries/danceWiki';
+import {getDanceData} from 'libraries/danceWiki';
 
 export function DanceDataImportButton({onImport, dance, text, asko, ...props}) {
   const [isOpen, setOpen] = useState(false || asko);
@@ -28,8 +28,10 @@ export function DanceDataImportDialog({dance: originalDance, isOpen, onClose, on
   useEffect(reset, [originalDance]);
 
   function importDone(data) {
+    if (data.instructions && (!dance.instructions || dance.instructions.trim() === '')) {
+      setDance({...dance, instructions: data.instructions});
+    }
     setImportedData(data);
-    if (data.instructions && !dance.instructions) setDance({...dance, instructions: data.instructions});
   }
   function save() {
     onImport(dance); reset();
@@ -90,13 +92,21 @@ function ImportedDataView({dance, setDance, importedData}) {
         <Suggestions values={importedData.categories} onSuggest={onChangeFor('category')} />
       </RowItem>
     </Row>
-    <p>Tanssiohje</p>
-    <MarkdownEditor value={dance.instructions} onChange={onChangeFor('instructions')} />
+    <Row>
+      <RowItem>
+        <Input label="Tanssikuvio" value={dance.formation ?? ""} onChange={onChangeFor('formation')} />
+      </RowItem>
+      <RowItem>
+        <Suggestions values={importedData.formations} onSuggest={onChangeFor('formation')} />
+      </RowItem>
+    </Row>
+    <InstructionEditor value={dance.instructions} onChange={onChangeFor('instructions')} importedInstructions={importedData.instructions} />
+
   </>;
 }
 
 function Suggestions({values, onSuggest}) {
-  return <FormGroup label="Kategoriaehdotukset wikistä">
+  return <FormGroup label="Ehdotukset wikistä">
       {values.length === 0 && 'Ei ehdotuksia'}
       {values.map(value =>
         <React.Fragment key={value}>
@@ -115,4 +125,37 @@ function Row({children}) {
 }
 function RowItem({children}) {
   return <div style={{margin: '0 5px'}}>{children}</div>;
+}
+
+function InstructionEditor({value, onChange, importedInstructions}) {
+  const [useDiffing, setUseDiffing] = useState(value !== importedInstructions);
+
+  return <>
+    <p>Tanssiohje</p>
+    {useDiffing
+      ? <DiffingInstructionEditor value={value} onChange={onChange} 
+          importedInstructions={importedInstructions}
+          onResolve={(value) => { setUseDiffing(false); onChange(value); }}/>
+      : <MarkdownEditor value={value} onChange={onChange} />
+    }
+  </>;
+
+}
+
+function DiffingInstructionEditor({value, onChange, importedInstructions, onResolve}) {
+  const [imported, setImported] = useState(importedInstructions);
+  useEffect(() => setImported(importedInstructions), [importedInstructions]);
+
+  return <Row>
+    <RowItem>
+      <p>Tietokannassa oleva versio</p>
+      <MarkdownEditor value={value} onChange={onChange} />
+      <Button text="Käytä tätä versiota" onClick={() => onResolve(value)} />
+    </RowItem>
+    <RowItem>
+      <p>Tanssiwikin versio</p>
+      <MarkdownEditor value={imported} onChange={setImported} />
+      <Button text="Käytä tätä versiota" onClick={() => onResolve(imported)} />
+    </RowItem>
+  </Row>;
 }

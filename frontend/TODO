@@ -27,7 +27,11 @@
   * Implement category guessing using "Luokka" -tag
   * Fix random tags: Luokka (Juggling Partners for example)
   * Implement automatic Lord/Lady word replacement
-    Implement formation guessing
+  * Implement formation guessing
+  * Instruction diffing
+    Instructions for tanssiohjeet: leave out formation
+    Character count for dance instructions
+      Maximum?
   Better create dance dialog
     Add steps, including wiki import
     Add instructions?

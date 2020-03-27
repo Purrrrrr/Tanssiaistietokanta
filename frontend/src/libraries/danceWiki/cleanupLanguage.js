@@ -1,3 +1,5 @@
+import {isTitlecase, titleCase} from './utils/titleCase'
+
 const replacements = {
   mies: 'herra',
   miehet: 'herrat',
@@ -71,14 +73,4 @@ export function cleanupLanguage(text) {
     );
   }
   return ret;
-}
-
-function isTitlecase(word) {
-  return word[0].match(uppercase);
-}
-
-const uppercase = /^[A-Z]/
-
-function titleCase(word) {
-  return word[0].toUpperCase() + word.slice(1);
 }

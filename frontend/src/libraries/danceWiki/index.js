@@ -20,7 +20,7 @@ export function getDanceData(name) {
     .then(L.modify('instructions', cleanupLanguage));
 }
 
-const strangeTag = /<[A-Z][^>]+\/?>/g; 
+const strangeTag = /<\/?([A-Z]|mp3)[^>]*\/?>/g; 
 function cleanupStrangeTags(text) {
   return text.replace(strangeTag, "");
 }
