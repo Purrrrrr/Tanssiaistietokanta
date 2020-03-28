@@ -19,6 +19,7 @@ const t = makeTranslate({
   dances: 'Tanssit',
   createWorkshop: 'Uusi työpaja',
   danceCheatlist: 'Osaan tanssin -lunttilappu',
+  danceInstructions: 'Työpajojen tanssiohjeet',
   requestedDance: {
     one: 'Toivetanssi',
     other: '%(count)s toivetanssia'
@@ -80,6 +81,8 @@ function EventWorkshops({workshops, eventId}) {
       text={t`createWorkshop`} />
     <NavigateButton href="print/dance-cheatlist" target="_blank"
       text={t`danceCheatlist`} />
+    <NavigateButton href="print/dance-instructions" target="_blank"
+      text={t`danceInstructions`} />
   </>;
 }
 

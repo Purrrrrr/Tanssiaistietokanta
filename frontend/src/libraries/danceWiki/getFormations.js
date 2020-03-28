@@ -51,7 +51,7 @@ const guesses = {
       regex(wordPrefix('rivi')),
       regex(wordPrefix('rivei'))
     ]
-    //Kolmen henkilön rivissä 
+    //Kolmen henkilön rivissä
     //kolmelle tanssijalle rivissä
   },
   'neljän parin neliö': {
@@ -68,40 +68,40 @@ const guesses = {
     regexes: [
       regex(wordPrefix('sola')),
       regex(word('solissa'))
-    ] 
+    ]
   },
   'bordonialainen solatanssi': {
     regexes: [
-      regex(wordPrefix('bordonial'), wordPrefix('(sola|solissa)')),
-    ] 
+      regex(wordPrefix('bordonial'), '(sola|solissa)'),
+    ]
   },
   'progressiivinen solatanssi': {
     regexes: [
       regex(wordPrefix('progressii'), possibleFillerWord, wordPrefix('(sola|solissa)')),
-    ] 
+    ]
   },
   'kolmen parin jono': {
     regexes: [
       regex(wordPrefix('(kolme|3)'), wordPrefix('pari'), wordPrefix('(pari)?jono')),
-    ] 
+    ]
   },
   'neljän parin jono': {
     regexes: [
       regex(wordPrefix('(neljä|4)'), wordPrefix('pari'), wordPrefix('(pari)?jono')),
-    ] 
+    ]
   },
   'parijono': {
     regexes: [
       regex(wordPrefix('parijon')),
       regex(wordPrefix('pari'), wordPrefix('jono')),
     //neljän parin parijonossa
-    ] 
+    ]
   },
   'paritanssi': {
     regexes: [
       regex(wordPrefix('paritanssi')),
       regex(wordPrefix('yhdelle parille')),
-    ] 
+    ]
   },
 
 /* Muuta:

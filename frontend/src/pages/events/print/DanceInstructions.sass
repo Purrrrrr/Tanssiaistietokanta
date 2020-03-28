@@ -1,0 +1,15 @@
+.dance-instructions
+  button
+    display: none
+
+  &:focus, &:hover
+    button
+      display: inline
+  @media print
+    button
+      display: none !important
+      opacity: 0
+
+@media print
+  .dance-instructions-helptext
+    display: none !important
