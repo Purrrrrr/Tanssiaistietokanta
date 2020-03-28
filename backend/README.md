@@ -17,6 +17,7 @@ Getting up and running is as easy as 1, 2, 3.
     cd path/to/dance-database; npm install
     ```
 
+3. Install [pandoc](https://pandoc.org/installing.html). At least version 1.17 is recommended.
 3. Start your app
 
     ```
