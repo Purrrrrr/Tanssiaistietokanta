@@ -7,7 +7,7 @@ import {EditableText} from "libraries/forms";
 import {EditableMarkdown} from 'components/EditableMarkdown';
 import {useOnChangeForPropInValue} from 'utils/useOnChangeForProp';
 
-export function DanceEditor({dance, onChange, onDelete, asko}) {
+export function DanceEditor({dance, onChange, onDelete}) {
   const onChangeFor = useOnChangeForPropInValue(onChange, dance);
   const {instructions, category, name, description, formation, prelude, remarks, duration} = dance;
   return <>
@@ -21,7 +21,6 @@ export function DanceEditor({dance, onChange, onDelete, asko}) {
           />
       }
       <DanceDataImportButton text="Hae tietoja tanssiwikistä"
-        asko={asko}
         dance={dance}
         onImport={onChange}
         style={{float: "right"}} />

@@ -4,7 +4,7 @@ import {useClosableEditor} from "libraries/forms";
 import {MarkdownEditor} from 'components/MarkdownEditor';
 import Markdown from 'markdown-to-jsx';
 
-export function EditableMarkdown({maxHeight = 200, plain, ...props}) {
+export function EditableMarkdown({maxHeight = 200, plain, overrides, ...props}) {
   const {
     isOpen, onOpen,
     value, onChange,
@@ -15,9 +15,9 @@ export function EditableMarkdown({maxHeight = 200, plain, ...props}) {
     <div onClick={onOpen}>
       {value
         ? (
-          plain ?  <Markdown>{value}</Markdown>
+          plain ?  <Markdown options={{overrides}}>{value}</Markdown>
           : <Card style={{overflow: 'auto', maxHeight}}>
-            <Markdown>{value}</Markdown>
+            <Markdown options={{overrides}}>{value}</Markdown>
           </Card>
         )
         : <span style={{color: 'gray', marginRight: 10}}>&lt;Ei ohjetta&gt;</span>

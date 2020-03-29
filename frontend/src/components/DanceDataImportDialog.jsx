@@ -6,8 +6,8 @@ import {Form, Input, SubmitButton} from "libraries/forms";
 import {useOnChangeForProp} from 'utils/useOnChangeForProp';
 import {getDanceData} from 'libraries/danceWiki';
 
-export function DanceDataImportButton({onImport, dance, text, asko, ...props}) {
-  const [isOpen, setOpen] = useState(false || asko);
+export function DanceDataImportButton({onImport, dance, text, ...props}) {
+  const [isOpen, setOpen] = useState(false);
 
   return <>
     <Button text={text} {...props} onClick={() => setOpen(true)} />

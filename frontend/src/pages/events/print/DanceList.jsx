@@ -34,7 +34,7 @@ function DanceList({eventId}) {
         ({name, program}, key) => {
           return <div key={key} className="section">
             <h2>{name}</h2>
-            {program.map((dance, i) => 
+            {program.map((dance, i) =>
               <Dance key={i} dance={dance} />
             )}
           </div>;
