@@ -16,6 +16,7 @@ import './DanceInstructions.sass';
 const t = makeTranslate({
   fetchDataFromWiki: 'Hae tietoja tanssiwikistä',
   clickInstructionsToEdit: 'Klikkaa ohjetta muokataksesi sitä, voit myös hakea tietoja tanssiwikistä klikkaamalla nappeja, jotka avautuvat kun tuot hiiren tanssin päälle. Kun ohjeet ovat mieleisesi, voit joko tulostaa tämän sivun tai valita ohjetekstit ja kopioida ne haluamaasi tekstinkäsittelyohjelmaan.',
+  defaultStylingDescription: 'Ohjeissa on oletustyyli, jossa ensimmäinen kappale on kursivoitu. Tämän tarkoituksena on eritellä tanssin ja tanssikuvion lyhyt kuvaus lopusta ohjeesta ilman tilaa vievää otsikointia.',
   selectAndCopy: 'Kopioi ohjeet leikepöydälle',
   instructionsCopied: 'Ohjeet kopioitu',
   print: 'Tulosta',
@@ -61,8 +62,9 @@ export default function DanceInstructions({eventId}) {
   }
 
   return <>
-    <PrintViewToolbar>
+    <PrintViewToolbar maxHeight={180}>
       <t.p>clickInstructionsToEdit</t.p>
+      <t.p>defaultStylingDescription</t.p>
       <p>
         <Switch inline label={t`showWorkshops`} checked={showWorkshops} onChange={e => {
           setShowWorkshops(e.target.checked);
