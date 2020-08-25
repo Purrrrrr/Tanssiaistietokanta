@@ -9,5 +9,5 @@ export function convertToMarkdown(content) {
     body: JSON.stringify({
       input: content
     })
-  }).then(res => res.json());
+  }).then(res => res.ok ? res.json() : Promise.reject({message: "Unable to convert wiki format. Contact server administrator"}));
 }

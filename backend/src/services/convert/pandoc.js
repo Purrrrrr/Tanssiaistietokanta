@@ -26,7 +26,7 @@ function pandoc(src, options, pandocPath = 'pandoc') {
       result += data;
     });
     pdSpawn.stdout.on('end', () => {
-      if (error.length > 0) reject(new Error(error));
+      if (error.length > 0 && !result) reject(new Error(error));
       else resolve(result);
     });
     pdSpawn.stderr.on('data', data => {
@@ -34,9 +34,9 @@ function pandoc(src, options, pandocPath = 'pandoc') {
     });
     //pdSpawn.stderr.on('data', onStdOutData);
     //pdSpawn.stderr.on('end', onStdOutEnd);
-    pdSpawn.on('error', (err) => {
+    /*pdSpawn.on('error', (err) => {
       reject(new Error(err+'\n'+error));
-    });
+    }); */
 
     // If src is not a file, assume a string input.
     pdSpawn.stdin.end(src, 'utf-8');
