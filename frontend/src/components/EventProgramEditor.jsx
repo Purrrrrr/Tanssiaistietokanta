@@ -216,7 +216,8 @@ function ProgramItemEditor({item, onChange, onRemove, onAdd, onMoveDown, onMoveU
     <td>{t(__typename)}</td>
     <td>
       {isDance
-          ? <DanceChooser value={{_id, name}} onBlur={onBlur}
+          ? <DanceChooser value={item ? {_id, name} : null} onBlur={onBlur}
+            allowEmpty emptyText={t`RequestedDance`}
             onChange={dance=> onChange(dance ? {__typename: 'Dance', ...dance} : {__typename: 'RequestedDance'})} />
           : <Input value={name} onBlur={onBlur} required
             onChange={val => onChange(L.set('name', val, item))} />
