@@ -71,7 +71,7 @@ function renderDance (dance, { handleClick, modifiers }) {
   return <MenuItem
     active={modifiers.active}
     disabled={modifiers.disabled}
-    key={dance._id}
+    key={dance._id ?? "empty"}
     onClick={handleClick}
     text={dance.name}
     textClassName={(dance.empty && !modifiers.active) ? Classes.TEXT_DISABLED : undefined}

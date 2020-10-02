@@ -3,13 +3,12 @@ import {useError} from "../validation";
 
 interface EditorOptions {
   validationSchema?: object,
-  onBlur?: (event?: any) => any,
 }
 
 export function useClosableEditor(
   originalValue,
   onChange,
-  {validationSchema = {}, onBlur = undefined} : EditorOptions = {}
+  {validationSchema = {} } : EditorOptions = {}
 ) {
   const [isOpen, setOpen] = useState(false);
   const [value, setValue] = useState(originalValue);
@@ -22,14 +21,12 @@ export function useClosableEditor(
     if (error) return;
     setOpen(false);
     value === originalValue || onChange(value);
-    onBlur && onBlur();
-  }, [setOpen, value, originalValue, onChange, error, onBlur]);
+  }, [setOpen, value, originalValue, onChange, error]);
 
   const onCancel = useCallback(() => {
     setOpen(false);
     setValue(originalValue);
-    onBlur && onBlur();
-  }, [originalValue, setOpen, setValue, onBlur]);
+  }, [originalValue, setOpen, setValue]);
 
 
   return {

@@ -196,7 +196,6 @@ function ProgramListEditor({program, onChange, intervalMusicDuration, onSetInter
 function ProgramItemEditor({item, onChange, onRemove, onAdd, onMoveDown, onMoveUp, ...props}) {
   const {__typename, name, _id} = item;
   const isDance = __typename === 'Dance' || __typename === 'RequestedDance';
-  const onBlur = e => e.target.closest('tr').focus();
   const onKeyDown = useHotkeyHandler(
     ...navigateAmongSiblings('tr'),
     moveUp(onMoveUp),
@@ -206,20 +205,36 @@ function ProgramItemEditor({item, onChange, onRemove, onAdd, onMoveDown, onMoveU
     bind(['delete', 'backspace'], removeItem)
   );
 
+  const container = useRef(null);
+  /** Focuses the row when the dance/value editor is blurred but not if something inside the row is already focused
+   * This allows tab navigation to work, but helps users that use the custom nav */
+  function onInputBlurred() {
+    //We need to set a timeout, because the Blueprint Suggest used by Dancechooser handles blurring in a wacky way
+    setTimeout(() => {
+      const nextFocused = document.activeElement;
+      const containerElement = container.current;
+      if (containerElement !== null && nextFocused && containerElement.contains(nextFocused)) {
+        //Focus is still somewhere inside our item
+        return;
+      }
+      containerElement && containerElement.focus();
+    }, 0);
+  }
+
   function removeItem(e) {
     onRemove();
     focusSiblingsOrParent(e.target, 'div.danceset');
   }
 
-  return <tr {...props} onKeyDown={onKeyDown} >
+  return <tr {...props} onKeyDown={onKeyDown} ref={container}>
     <td><DragHandle /></td>
     <td>{t(__typename)}</td>
     <td>
       {isDance
-          ? <DanceChooser value={item ? {_id, name} : null} onBlur={onBlur}
+          ? <DanceChooser value={item ? {_id, name} : null} onBlur={onInputBlurred}
             allowEmpty emptyText={t`RequestedDance`}
             onChange={dance=> onChange(dance ? {__typename: 'Dance', ...dance} : {__typename: 'RequestedDance'})} />
-          : <Input value={name} onBlur={onBlur} required
+          : <Input value={name} onBlur={onInputBlurred} required
             onChange={val => onChange(L.set('name', val, item))} />
       }
     </td>
@@ -233,7 +248,6 @@ function ProgramItemEditor({item, onChange, onRemove, onAdd, onMoveDown, onMoveU
 }
 
 function IntervalMusicEditor({intervalMusicDuration, onSetIntervalMusicDuration}) {
-  //const onBlur = e => e.target.closest('tr').focus();
   const row = useRef();
   const onKeyDown = useHotkeyHandler(
     ...navigateAmongSiblings('tr'),
@@ -246,14 +260,25 @@ function IntervalMusicEditor({intervalMusicDuration, onSetIntervalMusicDuration}
     onSetIntervalMusicDuration(0);
     focusSiblingsOrParent(e.target, 'div.danceset');
   }
+  /** Focuses the row when the duration editor is exited, but not if something inside the row is already focused
+   * This allows tab navigation to work, but helps users that use the custom nav */
+  function onDurationBlurred(e) {
+    const nextFocused = e.relatedTarget;
+    const containerElement = row.current;
+    if (containerElement !== null && nextFocused && containerElement.contains(nextFocused)) {
+      //Focus is still somewhere inside our item
+      return;
+    }
+    containerElement && containerElement.focus();
+  }
 
   return <tr tabIndex={0} onKeyDown={onKeyDown} ref={row}>
     <td><Button icon="move" disabled/></td>
     <td>{t`intervalMusic`}</td>
     <td />
     <td>
-      <DurationField value={intervalMusicDuration} 
-        onBlur={() => row.current.focus()}
+      <DurationField value={intervalMusicDuration}
+        onBlur={onDurationBlurred}
         onChange={onSetIntervalMusicDuration}/>
     </td>
     <td>

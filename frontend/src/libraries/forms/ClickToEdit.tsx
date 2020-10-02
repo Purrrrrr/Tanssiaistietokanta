@@ -46,7 +46,7 @@ export function ClickToEdit({
     error, value, onChange,
     onCancel, onConfirm
   } = useClosableEditor(
-    originalValue, onChangeOriginal, {validationSchema, onBlur}
+    originalValue, onChangeOriginal, {validationSchema}
   );
   const container = useRef<HTMLSpanElement>(null);
 
@@ -71,6 +71,7 @@ export function ClickToEdit({
       return;
     }
     onConfirm(); //Lost focus, exit editor
+    onBlur && onBlur(e);
   }
 
   return <span ref={container} className={className} onBlur={editorBlurred}
