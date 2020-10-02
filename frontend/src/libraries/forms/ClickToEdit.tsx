@@ -4,7 +4,6 @@ import {Classes, Icon, Intent, Button} from "@blueprintjs/core";
 import {useClosableEditor} from "./hooks/useClosableEditor";
 import {BasicInput} from "./BasicInput";
 import {BasicTextArea} from "./BasicTextArea";
-import {useOnClickOutside} from "./hooks/useOnClickOutside";
 
 import "./ClickToEdit.sass";
 
@@ -49,8 +48,7 @@ export function ClickToEdit({
   } = useClosableEditor(
     originalValue, onChangeOriginal, {validationSchema, onBlur}
   );
-  const container = useRef(null);
-  useOnClickOutside(container, isOpen ? onConfirm : null);
+  const container = useRef<HTMLSpanElement>(null);
 
   if (!isOpen) {
     return <span ref={container} onClick={onOpen}
@@ -65,7 +63,17 @@ export function ClickToEdit({
     </span>;
   }
 
-  return <span ref={container} className={className}
+  function editorBlurred(e : React.FocusEvent) {
+    const nextFocused = e.relatedTarget as Node;
+    const containerElement = container.current;
+    if (containerElement !== null && nextFocused && containerElement.contains(nextFocused)) {
+      //Focus is still somewhere inside our editor
+      return;
+    }
+    onConfirm(); //Lost focus, exit editor
+  }
+
+  return <span ref={container} className={className} onBlur={editorBlurred}
     onKeyDown={e => {
       if (e.key === 'Escape') onCancel();
       if (e.key === 'Enter' && confirmOnEnter) onConfirm();
@@ -74,7 +82,7 @@ export function ClickToEdit({
     <Editor {...{value, onChange, onCancel, onConfirm}} />
     <ErrorMessage error={error} />
     <Button intent={Intent.SUCCESS} onClick={onConfirm} icon="tick" disabled={!!error} />
-    <Button intent={Intent.DANGER} onClick={onCancel} icon="cross" />;
+    <Button intent={Intent.DANGER} onClick={onCancel} icon="cross" />
   </span>;
 }
 

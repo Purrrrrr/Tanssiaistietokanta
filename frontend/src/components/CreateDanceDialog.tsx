@@ -8,7 +8,6 @@ const EMPTY_DANCE : Dance = {name: 'Uusi tanssi'};
 
 export function CreateDanceDialog({isOpen, onClose, onCreate}) {
   const [dance, setDance] = useState(EMPTY_DANCE);
-
   function save() {
     onCreate(dance).then(() => {setDance(EMPTY_DANCE); onClose(); });
   }

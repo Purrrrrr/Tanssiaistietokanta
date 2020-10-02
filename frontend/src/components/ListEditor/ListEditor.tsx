@@ -1,7 +1,7 @@
 import React, {useCallback} from 'react';
 import {SortableContainer, SortableElement, arrayMove} from 'react-sortable-hoc';
 
-import {ListEditorContext, ListEditorContextType, createListEditorContextValue, useListEditorContext} from './context';
+import {ListEditorContext, ListEditorContextType, useListEditorContextValue, useListEditorContext} from './context';
 import {objectId} from "./objectId";
 
 
@@ -25,7 +25,7 @@ export function ListEditor({items, onChange, children, className, helperClass, u
   function onSortEnd({oldIndex, newIndex}) {
     onChange(arrayMove(items, oldIndex, newIndex));
   }
-  const context = createListEditorContextValue(items, onChange);
+  const context = useListEditorContextValue(items, onChange);
 
   return <ListEditorContext.Provider value={context}>
     <SortableList distance={5} onSortEnd={onSortEnd}

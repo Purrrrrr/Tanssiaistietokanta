@@ -28,7 +28,7 @@ export const ListEditorContext = createContext<ListEditorContextType>({
 export function useListEditorContext() {
   return useContext(ListEditorContext);
 }
-export function createListEditorContextValue(items, onChange) {
+export function useListEditorContextValue(items, onChange) {
   const itemsRef = useRef();
   itemsRef.current = items;
   const updater = useCallback(mapper => onChange(mapper(itemsRef.current)), [onChange]);
