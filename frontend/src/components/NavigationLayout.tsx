@@ -9,10 +9,10 @@ function NavigationLayout({children}) {
 
   return <BreadcrumbContext>
     <Navigation/>
-    <div id="content">
+    <main id="content">
       <Breadcrumbs/>
       {children}
-    </div>
+    </main>
   </BreadcrumbContext>;
 }
 

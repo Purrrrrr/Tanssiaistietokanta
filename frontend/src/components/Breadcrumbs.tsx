@@ -42,7 +42,9 @@ export const Breadcrumb = React.memo(function(props: {text: string, href: string
 
 export function Breadcrumbs() {
   const paths = useContext(PathContext);
-  return <BlueprintBreadcrumbs items={sortedPaths(paths)} breadcrumbRenderer={BreadcrumbItem} />;
+  return <nav aria-label="Breadcrumbs">
+    <BlueprintBreadcrumbs items={sortedPaths(paths)} breadcrumbRenderer={BreadcrumbItem} />
+  </nav>;
 }
 
 function BreadcrumbItem(props) {

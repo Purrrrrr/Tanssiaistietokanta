@@ -5,17 +5,19 @@ import {AdminOnly} from 'services/users';
 import {navigate} from "@reach/router"
 
 function Navigation() {
-  return <Navbar id="navigation">
-    <Navbar.Group>
-      <NavButton href="/" text="Tanssitapahtumat" />
-      <AdminOnly>
-        <NavButton href="/dances" text="Tanssitietokanta" />
-      </AdminOnly>
-    </Navbar.Group>
-    <Navbar.Group align={Alignment.RIGHT}>
-      <LoginForm />
-    </Navbar.Group>
-  </Navbar>;
+  return <nav>
+    <Navbar id="navigation">
+      <Navbar.Group>
+        <NavButton href="/" text="Tanssitapahtumat" />
+        <AdminOnly>
+          <NavButton href="/dances" text="Tanssitietokanta" />
+        </AdminOnly>
+      </Navbar.Group>
+      <Navbar.Group align={Alignment.RIGHT}>
+        <LoginForm />
+      </Navbar.Group>
+    </Navbar>
+  </nav>;
 }
 
 function NavButton({href, ...props}) {

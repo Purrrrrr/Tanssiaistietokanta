@@ -227,7 +227,7 @@ function ProgramItemEditor({item, onChange, onRemove, onAdd, onMoveDown, onMoveU
   }
 
   return <tr {...props} onKeyDown={onKeyDown} ref={container}>
-    <td><DragHandle /></td>
+    <td><DragHandle tabIndex={-1}/></td>
     <td>{t(__typename)}</td>
     <td>
       {isDance
