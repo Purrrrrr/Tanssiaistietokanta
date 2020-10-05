@@ -1,5 +1,5 @@
 import React from 'react';
-import {Router} from "@reach/router"
+import {Routes, useParams} from 'react-router-dom';
 
 import EventPrintRoutes from "./print";
 
@@ -12,20 +12,21 @@ import {useEvent} from 'services/events';
 import {Breadcrumb} from "components/Breadcrumbs";
 import {LoadingState} from 'components/LoadingState';
 
-export default function({eventId, uri}) {
+export default function() {
+  const {eventId} = useParams();
   const [event, loadingState] = useEvent(eventId);
 
   if (!event) return <LoadingState {...loadingState} />
 
   return <>
-    <Breadcrumb text={event.name} href={uri} />
-    <Router primary={false} component={React.Fragment}>
+    <Breadcrumb text={event.name} />
+    <Routes>
       <EventPage path="/" event={event} />
       <EventProgramPage path="program" event={event} />
       <BallProgram path="ball-program" />
       <CreateWorkshopForm path="workshops/create" event={event} />
       <EditWorkshopForm path="workshops/:workshopId" />
       <EventPrintRoutes path="print/*" eventId={eventId} />
-    </Router>
+    </Routes>
   </>;
 }

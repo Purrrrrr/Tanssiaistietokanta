@@ -7,18 +7,19 @@ import {Breadcrumb} from "components/Breadcrumbs";
 import {EventProgramEditor} from "components/EventProgramEditor";
 import {NavigateButton} from "components/widgets/NavigateButton";
 import {Form, SubmitButton} from "libraries/forms";
-import {navigate} from "@reach/router"
+import {useNavigate} from "react-router-dom"
 import {removeTypenames} from 'utils/removeTypenames';
 import {useModifyEventProgram} from 'services/events';
 
-export default function EventProgramEditorPage({event, uri}) {
+export default function EventProgramEditorPage({event}) {
+  const navigate = useNavigate();
   const [program, setProgram] = useState(event.program);
   const [modifyEventProgram] = useModifyEventProgram({
     onCompleted: () => navigate('/events/'+event._id)
   });
 
   return <AdminOnly fallback="you need to be admin">
-    <Breadcrumb text="Tanssiaisohjelma" href={uri} />
+    <Breadcrumb text="Tanssiaisohjelma" />
     <Form onSubmit={
       () => modifyEventProgram(event._id, toProgramInput(program ?? {}))}
     >

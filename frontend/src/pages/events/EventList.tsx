@@ -2,7 +2,7 @@ import {useDeleteEvent, useEvents} from 'services/events';
 
 import {DeleteButton} from "components/widgets/DeleteButton";
 import {Intent} from "@blueprintjs/core";
-import {Link} from "@reach/router"
+import {Link} from "react-router-dom"
 import {NavigateButton} from "components/widgets/NavigateButton";
 import React from 'react';
 

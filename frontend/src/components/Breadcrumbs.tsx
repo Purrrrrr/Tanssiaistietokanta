@@ -1,6 +1,6 @@
 import React, {createContext, useState, useEffect, useRef, useContext} from 'react';
 import {Breadcrumbs as BlueprintBreadcrumbs, Breadcrumb as BlueprintBreadcrumb} from "@blueprintjs/core";
-import {navigate} from "@reach/router"
+import {useNavigate, useHref} from 'react-router-dom';
 import {sorted} from "utils/sorted"
 
 const RegisterContext = createContext({add: (v) => {}, remove: (v) => {}});
@@ -29,12 +29,14 @@ function remove(array, value) {
   return index === -1 ? array : array.filter(item => item !== value);
 }
 
-export const Breadcrumb = React.memo(function(props: {text: string, href: string}) {
+export const Breadcrumb = React.memo(function({text}: {text: string}) {
+  const href = useHref(".");
+  const route = {text, href};
   const paths = useContext(RegisterContext);
   useEffect(() => {
-    paths.add(props);
-    return () => paths.remove(props);
-  }, [props, paths]);
+    paths.add(route);
+    return () => paths.remove(route);
+  }, [route, paths]);
 
   return null;
 });
@@ -43,11 +45,12 @@ export const Breadcrumb = React.memo(function(props: {text: string, href: string
 export function Breadcrumbs() {
   const paths = useContext(PathContext);
   return <nav aria-label="Breadcrumbs">
-    <BlueprintBreadcrumbs items={sortedPaths(paths)} breadcrumbRenderer={BreadcrumbItem} />
+    <BlueprintBreadcrumbs items={sortedPaths(paths)} breadcrumbRenderer={p => <BreadcrumbItem {...p} />} />
   </nav>;
 }
 
 function BreadcrumbItem(props) {
+  const navigate = useNavigate();
   const onClick = props.onClick
     || ((e) => {navigate(props.href || "/"); e.preventDefault();});
 

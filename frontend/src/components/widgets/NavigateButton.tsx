@@ -1,5 +1,5 @@
 import React from 'react';
-import {Link} from "@reach/router"
+import {Link} from "react-router-dom"
 import {Classes, Intent} from "@blueprintjs/core"
 import {useIsAdmin} from 'services/users';
 import classNames from "classnames";

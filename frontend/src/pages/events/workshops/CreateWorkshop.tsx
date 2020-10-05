@@ -5,7 +5,7 @@ import {AdminOnly} from 'services/users';
 import {Breadcrumb} from "components/Breadcrumbs";
 import {WorkshopEditor} from "components/WorkshopEditor";
 import {makeTranslate} from 'utils/translate';
-import {navigate} from "@reach/router"
+import {useNavigate} from "react-router-dom"
 import {Form, SubmitButton} from "libraries/forms";
 
 const t = makeTranslate({
@@ -13,7 +13,8 @@ const t = makeTranslate({
   newWorkshop: 'Uusi työpaja',
 });
 
-export default function CreateWorkshopForm({event, uri}) {
+export default function CreateWorkshopForm({event}) {
+  const navigate = useNavigate();
   const [workshop, setWorkshop] = useState({
     name: '',
     dances: []
@@ -24,7 +25,7 @@ export default function CreateWorkshopForm({event, uri}) {
   });
 
   return <AdminOnly>
-    <Breadcrumb text={t`newWorkshop`} href={uri} />
+    <Breadcrumb text={t`newWorkshop`} />
     <t.h1>newWorkshop</t.h1>
     <Form onSubmit={() => createWorkshop(event._id, workshop)}>
       <WorkshopEditor eventId={event._id} workshop={workshop} onChange={setWorkshop} />

@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {H1, Card, Button, FormGroup, InputGroup} from "@blueprintjs/core";
 import InfiniteScroll from 'react-infinite-scroller';
-//import {RouteComponentProps} from "@reach/router";
 
 import { filterDances, useDances, useCreateDance, useModifyDance, useDeleteDance } from 'services/dances';
 

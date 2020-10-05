@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {navigate} from "@reach/router"
+import {useNavigate} from "react-router-dom"
 
 import {useCreateEvent} from 'services/events';
 import {AdminOnly} from 'services/users';
@@ -15,7 +15,8 @@ const t = makeTranslate({
   name: 'Nimi',
 });
 
-export default function CreateEventForm({uri}) {
+export default function CreateEventForm() {
+  const navigate = useNavigate();
   const [createEvent] = useCreateEvent({
     onCompleted: (data) => navigate(data.createEvent._id),
     refetchQueries: ['getEvents']
@@ -25,7 +26,7 @@ export default function CreateEventForm({uri}) {
   const {name} = event;
 
   return <AdminOnly>
-    <Breadcrumb text={t`newEventBreadcrumb`} href={uri} />
+    <Breadcrumb text={t`newEventBreadcrumb`} />
     <h1>{t`newEvent`}</h1>
     <Form onSubmit={() => createEvent(event)}>
       <div>

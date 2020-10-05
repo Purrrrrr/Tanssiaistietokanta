@@ -1,23 +1,25 @@
 import {useWorkshop, useModifyWorkshop} from 'services/workshops';
 import React, {useState} from 'react';
+import {useParams} from 'react-router-dom';
 
 import {AdminOnly} from 'services/users';
 import {Breadcrumb} from "components/Breadcrumbs";
 import {WorkshopEditor} from "components/WorkshopEditor";
 import {LoadingState} from 'components/LoadingState';
 import {makeTranslate} from 'utils/translate';
-import {navigate} from "@reach/router"
+import {useNavigate} from "react-router-dom"
 import {Form, SubmitButton} from "libraries/forms";
 
 const t = makeTranslate({
   save: 'Tallenna',
 });
 
-export default function EditWorkshopPage({workshopId, event, uri}) {
+export default function EditWorkshopPage({event}) {
+  const {workshopId} = useParams();
   const [workshop, loadingState] = useWorkshop(workshopId);
 
   return <AdminOnly>
-    <Breadcrumb text={workshop ? workshop.name : '...'} href={uri} />
+    <Breadcrumb text={workshop ? workshop.name : '...'} />
     {workshop ?
         <WorkshopForm workshop={workshop} /> :
         <LoadingState {...loadingState} />
@@ -27,6 +29,7 @@ export default function EditWorkshopPage({workshopId, event, uri}) {
 
 
 function WorkshopForm({workshop}) {
+  const navigate = useNavigate();
   const [modifiedWorkshop, setWorkshop] = useState(workshop);
   const [modifyWorkshop] = useModifyWorkshop({
     onCompleted: () => navigate('/events/'+workshop.eventId),

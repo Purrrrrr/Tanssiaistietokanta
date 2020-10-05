@@ -1,12 +1,12 @@
 import React from 'react';
-import {Router, Redirect} from "@reach/router"
+import {Routes} from 'react-router-dom';
 import Events from "./events";
 import Dances from "pages/Dances";
 
 export default function() {
-  return <Router primary={false} component={React.Fragment}>
+  return <Routes>
     <Events path="events/*" />
     <Dances path="dances" />
-    <Redirect from="/" to="events" noThrow />
-  </Router>;
+  </Routes>;
+  // TODO: <Redirect from="/" to="events" noThrow />
 }
