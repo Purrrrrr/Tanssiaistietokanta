@@ -1,5 +1,5 @@
 import React from 'react';
-import {Routes, useParams} from 'react-router-dom';
+import {Routes, Route, useParams} from 'react-router-dom';
 
 import EventPrintRoutes from "./print";
 
@@ -21,12 +21,12 @@ export default function() {
   return <>
     <Breadcrumb text={event.name} />
     <Routes>
-      <EventPage path="/" event={event} />
-      <EventProgramPage path="program" event={event} />
-      <BallProgram path="ball-program" />
-      <CreateWorkshopForm path="workshops/create" event={event} />
-      <EditWorkshopForm path="workshops/:workshopId" />
-      <EventPrintRoutes path="print/*" eventId={eventId} />
+      <Route path="/" element={<EventPage event={event}/>} />
+      <Route path="program" element={<EventProgramPage event={event}/>} />
+      <Route path="ball-program" element={<BallProgram eventId={eventId}/>} />
+      <Route path="workshops/create" event={event} element={<CreateWorkshopForm event={event}/>} />
+      <Route path="workshops/:workshopId" element={<EditWorkshopForm/>} />
+      <Route path="print/*" element={<EventPrintRoutes />} />
     </Routes>
   </>;
 }

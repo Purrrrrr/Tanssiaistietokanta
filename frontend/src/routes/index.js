@@ -1,12 +1,16 @@
 import React from 'react';
-import {Routes} from 'react-router-dom';
+import {Routes, Route, Navigate} from 'react-router-dom';
 import Events from "./events";
 import Dances from "pages/Dances";
 
 export default function() {
   return <Routes>
-    <Events path="events/*" />
-    <Dances path="dances" />
+    <Route path="events/*" element={<Events />} />
+    <Route path="dances" element={<Dances/>} />
+    <Route path="*" element={<Home/>} />
   </Routes>;
-  // TODO: <Redirect from="/" to="events" noThrow />
+}
+
+function Home() {
+  return <Navigate to="/events" replace={true} />;
 }

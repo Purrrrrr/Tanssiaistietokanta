@@ -1,5 +1,5 @@
 import React from 'react';
-import {Routes} from 'react-router-dom';
+import {Routes, Route} from 'react-router-dom';
 
 import CreateEvent from "pages/events/CreateEvent";
 import EventRoutes from "./eventId";
@@ -10,9 +10,9 @@ export default function Events() {
   return <>
     <Breadcrumb text="Tapahtumat" />
     <Routes>
-      <EventList path="/" />
-      <CreateEvent path="new" />
-      <EventRoutes path=":eventId/*" />
+      <Route path="/" element={<EventList/>} />
+      <Route path="new" element={<CreateEvent/>} />
+      <Route path=":eventId/*" element={<EventRoutes/>} />
     </Routes>
   </>;
 }

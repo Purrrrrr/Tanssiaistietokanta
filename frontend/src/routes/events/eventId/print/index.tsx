@@ -1,5 +1,5 @@
 import React from 'react';
-import {Routes, useParams} from 'react-router-dom';
+import {Routes, Route, useParams} from 'react-router-dom';
 import DanceList from 'pages/events/print/DanceList'
 import DanceCheatList from 'pages/events/print/DanceCheatList'
 import DanceInstructions from "pages/events/print/DanceInstructions";
@@ -8,9 +8,9 @@ import DanceMastersCheatList from 'pages/events/print/DanceMastersCheatList'
 export default function() {
   const {eventId} = useParams();
   return <Routes>
-    <DanceList path="ball-dancelist" eventId={eventId}/>
-    <DanceCheatList path="dance-cheatlist" eventId={eventId}/>
-    <DanceMastersCheatList path="dancemasters-cheatlist" eventId={eventId}/>
-    <DanceInstructions path="dance-instructions" eventId={eventId} />
+    <Route path="ball-dancelist" element={<DanceList eventId={eventId}/>} />
+    <Route path="dance-cheatlist" element={<DanceCheatList eventId={eventId}/>} />
+    <Route path="dancemasters-cheatlist" element={<DanceMastersCheatList eventId={eventId}/>} />
+    <Route path="dance-instructions" element={<DanceInstructions eventId={eventId} />} />
   </Routes>;
 }
