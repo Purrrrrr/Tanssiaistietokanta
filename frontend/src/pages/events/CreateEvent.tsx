@@ -4,6 +4,7 @@ import {useNavigate} from "react-router-dom"
 import {useCreateEvent} from 'services/events';
 import {AdminOnly} from 'services/users';
 import {Breadcrumb} from "components/Breadcrumbs";
+import {PageTitle} from "components/PageTitle";
 import {makeTranslate} from 'utils/translate';
 import {useOnChangeForProp} from 'utils/useOnChangeForProp';
 import {Input, Form, SubmitButton} from "libraries/forms";
@@ -27,7 +28,7 @@ export default function CreateEventForm() {
 
   return <AdminOnly>
     <Breadcrumb text={t`newEventBreadcrumb`} />
-    <h1>{t`newEvent`}</h1>
+    <PageTitle>{t`newEvent`}</PageTitle>
     <Form onSubmit={() => createEvent(event)}>
       <div>
         <Input label={t`name`} value={name} onChange={onChangeFor('name')} required />

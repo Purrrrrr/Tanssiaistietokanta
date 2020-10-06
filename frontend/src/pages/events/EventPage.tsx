@@ -6,6 +6,7 @@ import {NavigateButton} from "components/widgets/NavigateButton";
 import {DeleteButton} from "components/widgets/DeleteButton";
 import {makeTranslate} from 'utils/translate';
 import {useDeleteWorkshop} from "services/workshops";
+import {PageTitle} from "components/PageTitle";
 
 const t = makeTranslate({
   ballProgram: 'Tanssiaisohjelma',
@@ -28,7 +29,7 @@ const t = makeTranslate({
 
 export default function EventPage({event}) {
   return <>
-    <h1>{event.name}</h1>
+    <PageTitle>{event.name}</PageTitle>
     <t.h2>ballProgram</t.h2>
     <EventProgram program={event.program} />
     <t.h2>workshops</t.h2>

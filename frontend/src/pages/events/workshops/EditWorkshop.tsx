@@ -4,6 +4,7 @@ import {useParams} from 'react-router-dom';
 
 import {AdminOnly} from 'services/users';
 import {Breadcrumb} from "components/Breadcrumbs";
+import {PageTitle} from "components/PageTitle";
 import {WorkshopEditor} from "components/WorkshopEditor";
 import {LoadingState} from 'components/LoadingState';
 import {makeTranslate} from 'utils/translate';
@@ -37,7 +38,7 @@ function WorkshopForm({workshop}) {
   });
 
   return <>
-    <h1>{workshop.name}</h1>
+    <PageTitle>{workshop.name}</PageTitle>
     <Form onSubmit={() => modifyWorkshop(modifiedWorkshop)}>
       <WorkshopEditor eventId={workshop.eventId} workshop={modifiedWorkshop} onChange={setWorkshop} />
       <SubmitButton text={t`save`} />

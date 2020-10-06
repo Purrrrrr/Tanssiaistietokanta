@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
-import {H1, Card, Button, FormGroup, InputGroup} from "@blueprintjs/core";
+import {Card, Button, FormGroup, InputGroup} from "@blueprintjs/core";
 import InfiniteScroll from 'react-infinite-scroller';
 import {Breadcrumb} from "components/Breadcrumbs";
+import {PageTitle} from "components/PageTitle";
 
 import { filterDances, useDances, useCreateDance, useModifyDance, useDeleteDance } from 'services/dances';
 
@@ -20,7 +21,7 @@ function DancesPage() {
 
   return <>
     <Breadcrumb text="Tanssit" />
-    <H1>Tanssit</H1>
+    <PageTitle>Tanssit</PageTitle>
     <div style={{display: "flex", alignItems: "flex-start"}}>
       <FormGroup inline label="Hae" >
         <InputGroup leftIcon="search" rightElement={<Button minimal icon="cross" onClick={() => setSearch("")} />}

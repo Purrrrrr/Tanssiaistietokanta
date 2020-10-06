@@ -6,6 +6,7 @@ import {AdminOnly} from 'services/users';
 import {Breadcrumb} from "components/Breadcrumbs";
 import {EventProgramEditor} from "components/EventProgramEditor";
 import {NavigateButton} from "components/widgets/NavigateButton";
+import {PageTitle} from "components/PageTitle";
 import {Form, SubmitButton} from "libraries/forms";
 import {useNavigate} from "react-router-dom"
 import {removeTypenames} from 'utils/removeTypenames';
@@ -23,7 +24,7 @@ export default function EventProgramEditorPage({event}) {
     <Form onSubmit={
       () => modifyEventProgram(event._id, toProgramInput(program ?? {}))}
     >
-      <h1>Muokkaa tanssiaisohjelmaa</h1>
+      <PageTitle>Muokkaa tanssiaisohjelmaa</PageTitle>
       <EventProgramEditor program={program} onChange={setProgram}/>
       <hr />
       <SubmitButton text="Tallenna muutokset" />

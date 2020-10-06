@@ -4,6 +4,7 @@ import {DeleteButton} from "components/widgets/DeleteButton";
 import {Intent} from "@blueprintjs/core";
 import {Link} from "react-router-dom"
 import {NavigateButton} from "components/widgets/NavigateButton";
+import {PageTitle} from "components/PageTitle";
 import {AdminOnly} from 'services/users';
 import React from 'react';
 
@@ -13,7 +14,7 @@ export default function EventList() {
   const [deleteEvent] = useDeleteEvent({refetchQueries: ['getEvent', 'getEvents']});
 
   return <>
-  <h1>Tanssiaistietokanta</h1>
+    <PageTitle>Tanssiaistietokanta</PageTitle>
     <p>Kannassa on tällä hetkellä {events.length} tanssitapahtumaa.</p>
     <AdminOnly>
       <p>Voit muokata tanssitapahtumien tansseja <Link to="/dances">tanssitietokannasta</Link></p>

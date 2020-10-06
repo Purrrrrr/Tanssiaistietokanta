@@ -8,6 +8,7 @@ import {PrintTable} from 'components/PrintTable';
 import {LoadingState} from 'components/LoadingState';
 import {CenteredContainer} from 'components/CenteredContainer';
 import {makeTranslate} from 'utils/translate';
+import {PageTitle} from "components/PageTitle";
 
 import './DanceCheatList.sass';
 
@@ -69,7 +70,7 @@ function DanceCheatListView({workshops, mini, helpText}) {
 function WorkshopDances({workshop, mini}) {
   const {name, dances} = workshop;
   return <>
-    <h1>{name}</h1>
+    <PageTitle>{name}</PageTitle>
     {dances.length === 0 ?
       <t.p>noDances</t.p> :
       <PrintTable headings={[t`danceName`, t`iCanDanceThis`]}>

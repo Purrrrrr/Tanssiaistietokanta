@@ -3,6 +3,7 @@ import React, {useState} from 'react';
 
 import {AdminOnly} from 'services/users';
 import {Breadcrumb} from "components/Breadcrumbs";
+import {PageTitle} from "components/PageTitle";
 import {WorkshopEditor} from "components/WorkshopEditor";
 import {makeTranslate} from 'utils/translate';
 import {useNavigate} from "react-router-dom"
@@ -26,7 +27,7 @@ export default function CreateWorkshopForm({event}) {
 
   return <AdminOnly>
     <Breadcrumb text={t`newWorkshop`} />
-    <t.h1>newWorkshop</t.h1>
+    <PageTitle>{t`newWorkshop`}</PageTitle>
     <Form onSubmit={() => createWorkshop(event._id, workshop)}>
       <WorkshopEditor eventId={event._id} workshop={workshop} onChange={setWorkshop} />
       <SubmitButton text={t`create`} />

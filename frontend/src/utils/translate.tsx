@@ -17,7 +17,7 @@ export function makeTranslate(strings, tags = []) : Translate {
 
   const t = counterpart.translate.bind(counterpart);
   addTagSupport(t, [...commonTags, ...tags]);
-  t.pluralize = (key, count) => t(key, {count});
+  t.pluralize = (key, count: number) => t(key, {count});
   return t;
 }
 
@@ -26,5 +26,5 @@ function addTagSupport(translator, tags) {
     const tagName = name ?? typeof(tag) === 'string' ? tag : tag.DisplayName
     translator[tagName] = ({children, ...props}) => React.createElement(tag, props, translator(children));
   }
-  tags.forEach((tag) => translator.addTagSupport(tag));
+  tags.forEach((tag : string) => translator.addTagSupport(tag));
 }
