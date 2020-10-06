@@ -4,23 +4,30 @@ import {DeleteButton} from "components/widgets/DeleteButton";
 import {Intent} from "@blueprintjs/core";
 import {Link} from "react-router-dom"
 import {NavigateButton} from "components/widgets/NavigateButton";
+import {AdminOnly} from 'services/users';
 import React from 'react';
 
 export default function EventList() {
-  const [events] = useEvents();
+  const [allEvents] = useEvents();
+  const events = allEvents.filter(e => !e.deleted);
   const [deleteEvent] = useDeleteEvent({refetchQueries: ['getEvent', 'getEvents']});
 
   return <>
-    <h1>Tanssitapahtumia</h1>
-    {events.filter(e => !e.deleted).map(event =>
+  <h1>Tanssiaistietokanta</h1>
+    <p>Kannassa on tällä hetkellä {events.length} tanssitapahtumaa.</p>
+    <AdminOnly>
+      <p>Voit muokata tanssitapahtumien tansseja <Link to="/dances">tanssitietokannasta</Link></p>
+    </AdminOnly>
+    <h2>Tanssitapahtumia</h2>
+    {events.map(event =>
       <h2 key={event._id}>
-        <Link to={event._id} >{event.name}</Link>
+        <Link to={"events/"+event._id} >{event.name}</Link>
         <DeleteButton onDelete={() => deleteEvent(event._id)}
           style={{float: "right"}} text="Poista"
           confirmText={"Haluatko varmasti poistaa tapahtuman "+event.name+"?"}
         />
       </h2>
     )}
-    <NavigateButton adminOnly intent={Intent.PRIMARY} href="new" text="Uusi tapahtuma" />
+    <NavigateButton adminOnly intent={Intent.PRIMARY} href="events/new" text="Uusi tapahtuma" />
   </>
 }

@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {H1, Card, Button, FormGroup, InputGroup} from "@blueprintjs/core";
 import InfiniteScroll from 'react-infinite-scroller';
+import {Breadcrumb} from "components/Breadcrumbs";
 
 import { filterDances, useDances, useCreateDance, useModifyDance, useDeleteDance } from 'services/dances';
 
@@ -18,6 +19,7 @@ function DancesPage() {
   const onDelete = ({_id}) => deleteDance(_id);
 
   return <>
+    <Breadcrumb text="Tanssit" />
     <H1>Tanssit</H1>
     <div style={{display: "flex", alignItems: "flex-start"}}>
       <FormGroup inline label="Hae" >

@@ -1,5 +1,5 @@
 import React from 'react';
-import {BreadcrumbContext, Breadcrumbs} from "./Breadcrumbs";
+import {BreadcrumbContext} from "./Breadcrumbs";
 import Navigation from "./Navigation";
 
 function NavigationLayout({children}) {
@@ -10,7 +10,6 @@ function NavigationLayout({children}) {
   return <BreadcrumbContext>
     <Navigation/>
     <main id="content">
-      <Breadcrumbs/>
       {children}
     </main>
   </BreadcrumbContext>;
@@ -23,7 +22,7 @@ function navigationHidden() {
   return (param ?? paramDefault) !== "false";
 }
 
-function getUrlParam(param) {
+function getUrlParam(param : string) {
   const query = window.location.search;
   const params = new URLSearchParams(query.substring(1));
   return params.get(param);

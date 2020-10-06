@@ -24,8 +24,8 @@ export default function() {
       <Route path="/" element={<EventPage event={event}/>} />
       <Route path="program" element={<EventProgramPage event={event}/>} />
       <Route path="ball-program" element={<BallProgram eventId={eventId}/>} />
-      <Route path="workshops/create" event={event} element={<CreateWorkshopForm event={event}/>} />
-      <Route path="workshops/:workshopId" element={<EditWorkshopForm/>} />
+      <Route path="workshops/create" element={<CreateWorkshopForm event={event}/>} />
+      <Route path="workshops/:workshopId" element={<EditWorkshopForm event={event} />} />
       <Route path="print/*" element={<EventPrintRoutes />} />
     </Routes>
   </>;
