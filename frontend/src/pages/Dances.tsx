@@ -1,13 +1,14 @@
 import React, {useState} from 'react';
-import {Card, Button, FormGroup, InputGroup} from "@blueprintjs/core";
+import {Intent, Card, Button, FormGroup, InputGroup} from "@blueprintjs/core";
 import InfiniteScroll from 'react-infinite-scroller';
 import {Breadcrumb} from "components/Breadcrumbs";
 import {PageTitle} from "components/PageTitle";
 
-import { filterDances, useDances, useCreateDance, useModifyDance, useDeleteDance } from 'services/dances';
+import { filterDances, Dance, useDances, useCreateDance, useModifyDance, useDeleteDance } from 'services/dances';
 
-import {CreateDanceDialog} from "components/CreateDanceDialog"
+import {CreateDanceForm} from "components/CreateDanceForm"
 import {DanceEditor} from "components/DanceEditor"
+import {showToast} from 'utils/toaster';
 
 function DancesPage() {
   const [search, setSearch] = useState("");
@@ -18,6 +19,17 @@ function DancesPage() {
 
   const filteredDances = filterDances(dances, search);
   const onDelete = ({_id}) => deleteDance(_id);
+  const [isOpen, setIsOpen] = useState(false);
+
+  async function doCreateDance(dance : Dance) {
+    await createDance(dance);
+    setIsOpen(false);
+    showToast({
+      intent: Intent.PRIMARY,
+      message: `Tanssi ${dance.name} luotu`,
+      action: {text: "Näytä tanssi", onClick: () => setSearch(dance.name)}
+    });
+  }
 
   return <>
     <Breadcrumb text="Tanssit" />
@@ -27,13 +39,15 @@ function DancesPage() {
         <InputGroup leftIcon="search" rightElement={<Button minimal icon="cross" onClick={() => setSearch("")} />}
           value={search} onChange={(e) => setSearch(e.target.value)} />
       </FormGroup>
-      <CreateDanceButton onCreate={createDance} />
+      <Button text="Uusi tanssi" onClick={() => setIsOpen(true)}/>
     </div>
+    {isOpen && <>
+      <Card elevation={1}><CreateDanceForm onCancel={() => setIsOpen(false)} onCreate={doCreateDance} /></Card>
+      <br />
+    </>}
     <DanceList key={search} dances={filteredDances} onChange={modifyDance} onDelete={onDelete} />
   </>;
 }
-
-
 
 function DanceList({dances, onChange, onDelete}) {
   const [limit, setLimit] = useState(5);
@@ -41,19 +55,11 @@ function DanceList({dances, onChange, onDelete}) {
   if (!dances.length) return null;
 
   return <InfiniteScroll hasMore={canShowMore} loadMore={() => setLimit(limit + 5)}>
-    {dances.slice(0, limit).map((dance, i) =>
+    {dances.slice(0, limit).map((dance : Dance) =>
       <Card key={dance._id}>
         <DanceEditor dance={dance} onChange={onChange} onDelete={onDelete}  />
       </Card>)}
     </InfiniteScroll>;
-}
-
-function CreateDanceButton({onCreate}) {
-  const [isOpen, setIsOpen] = useState(false);
-  return <>
-    <Button text="Uusi tanssi" onClick={() => setIsOpen(true)}/>
-    <CreateDanceDialog isOpen={isOpen} onClose={() => setIsOpen(false)} onCreate={onCreate} />
-  </>
 }
 
 

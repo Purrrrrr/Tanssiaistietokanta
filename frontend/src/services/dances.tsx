@@ -3,7 +3,7 @@ import {sorted} from "utils/sorted"
 
 export interface Dance {
   _id?: string
-  name?: string,
+  name: string,
   description?: string,
   remarks?: string,
   duration?: number,
@@ -66,12 +66,12 @@ mutation deleteDance($id: ID!) {
 export function filterDances(dances : Dance[], searchString : string) {
   return sorted<Dance>(
     dances.filter(dance => filterDance(dance, searchString)),
-    (a, b) => (a.name ?? "").localeCompare(b.name ?? "")
+    (a, b) => a.name.localeCompare(b.name)
   );
 }
 
 function filterDance(dance : Dance, search : string) {
   const lSearch = search.toLowerCase();
-  const lName = (dance.name ?? "").toLowerCase();
+  const lName = dance.name.toLowerCase();
   return !dance.deleted && lName.indexOf(lSearch) !== -1;
 }
