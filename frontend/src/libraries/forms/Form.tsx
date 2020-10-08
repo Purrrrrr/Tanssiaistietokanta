@@ -5,7 +5,7 @@ export const FormContext = createContext({
   isValid: true
 });
 
-export function Form({children, onSubmit}) {
+export function Form({children, onSubmit, ...rest}) {
   const {hasErrors, ValidationContainer} = useValidationResult();
   const form = useRef<HTMLFormElement>(null);
   const context = {
@@ -24,7 +24,7 @@ export function Form({children, onSubmit}) {
   
   return <FormContext.Provider value={context}>
     <ValidationContainer>
-      <form onSubmit={submitHandler} ref={form} >{children}</form>
+      <form {...rest} onSubmit={submitHandler} ref={form} >{children}</form>
     </ValidationContainer>
   </FormContext.Provider>;
 }

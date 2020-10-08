@@ -1,14 +1,16 @@
 import React, {useState} from 'react';
-import {Intent, Card, Button, FormGroup, InputGroup} from "@blueprintjs/core";
+import {Intent, Card, Collapse, Button, FormGroup, InputGroup} from "@blueprintjs/core";
 import InfiniteScroll from 'react-infinite-scroller';
 import {Breadcrumb} from "components/Breadcrumbs";
 import {PageTitle} from "components/PageTitle";
 
 import { filterDances, Dance, useDances, useCreateDance, useModifyDance, useDeleteDance } from 'services/dances';
 
-import {CreateDanceForm} from "components/CreateDanceForm"
+import {CreateDanceForm, DanceUploader} from "components/CreateDanceForm"
 import {DanceEditor} from "components/DanceEditor"
 import {showToast} from 'utils/toaster';
+
+const EMPTY_DANCE : Dance = {name: 'Uusi tanssi'};
 
 function DancesPage() {
   const [search, setSearch] = useState("");
@@ -19,11 +21,11 @@ function DancesPage() {
 
   const filteredDances = filterDances(dances, search);
   const onDelete = ({_id}) => deleteDance(_id);
-  const [isOpen, setIsOpen] = useState(false);
+  const [danceToCreate, setDanceToCreate] = useState<Dance | null>(null);
 
   async function doCreateDance(dance : Dance) {
     await createDance(dance);
-    setIsOpen(false);
+    setDanceToCreate(null);
     showToast({
       intent: Intent.PRIMARY,
       message: `Tanssi ${dance.name} luotu`,
@@ -39,12 +41,17 @@ function DancesPage() {
         <InputGroup leftIcon="search" rightElement={<Button minimal icon="cross" onClick={() => setSearch("")} />}
           value={search} onChange={(e) => setSearch(e.target.value)} />
       </FormGroup>
-      <Button text="Uusi tanssi" onClick={() => setIsOpen(true)}/>
+      <Button text="Uusi tanssi" onClick={() => setDanceToCreate(EMPTY_DANCE)}/>
+      <DanceUploader onUpload={setDanceToCreate} />
     </div>
-    {isOpen && <>
-      <Card elevation={1}><CreateDanceForm onCancel={() => setIsOpen(false)} onCreate={doCreateDance} /></Card>
+    <Collapse isOpen={danceToCreate !== null} component={p => <div {...p} aria-live="polite" />}>
+      <Card elevation={1}>
+        <CreateDanceForm initialData={danceToCreate}
+          onCancel={() => setDanceToCreate(null)}
+          onCreate={doCreateDance} />
+      </Card>
       <br />
-    </>}
+    </Collapse>
     <DanceList key={search} dances={filteredDances} onChange={modifyDance} onDelete={onDelete} />
   </>;
 }
