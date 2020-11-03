@@ -1,21 +1,24 @@
 import React from 'react';
-import {Breadcrumbs as BlueprintBreadcrumbs, Breadcrumb as BlueprintBreadcrumb} from "@blueprintjs/core";
-import {useNavigate} from 'react-router-dom';
-import {sortedPaths} from './sortedPaths'
-import {useBreadcrumbPaths} from './context';
+import {Classes} from "@blueprintjs/core";
+import {Link} from 'react-router-dom';
+import {useBreadcrumbPaths, Path} from './context';
 
 export {Breadcrumb, BreadcrumbContext} from './context';
 
 export function Breadcrumbs() {
   const paths = useBreadcrumbPaths();
-  return <BlueprintBreadcrumbs items={sortedPaths(paths)} breadcrumbRenderer={p => <BreadcrumbItem {...p} />} />;
+  //Manually create the breadcrumb element since the Blueprint one is not fully accessible
+  return <ul className={Classes.BREADCRUMBS} aria-label="Breadcrumbs">
+    {paths.map(path => <li key={path.href}><Breadcrumb {...path} /></li>)}
+  </ul>
 }
 
-function BreadcrumbItem(props : React.ComponentProps<typeof BlueprintBreadcrumb>) {
-  const navigate = useNavigate();
-  const onClick = props.onClick
-    || ((e) => {navigate(props.href || "/"); e.preventDefault();});
-
-  return <BlueprintBreadcrumb {...props} onClick={onClick} />;
+function Breadcrumb({href, current, text} : Path) {
+  return <Link {...(current ? currentLinkProps : linkProps)} to={href}>{text}</Link>;
 }
 
+const linkProps = {className: Classes.BREADCRUMB};
+const currentLinkProps = {
+  className: Classes.BREADCRUMB + ' ' + Classes.BREADCRUMB_CURRENT,
+  "aria-current": 'page',
+};
