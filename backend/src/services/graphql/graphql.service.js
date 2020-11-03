@@ -18,6 +18,17 @@ module.exports = function (app) {
 
   // Initialize our service with any options it requires
   app.use('/graphql', createService(schema, resolvers, app));
+  app.use('/graphql-schema', {
+    async find() {
+      return schema;
+    }
+  }, (req, res, next) => {
+    const {data} = res;
+    res.format({
+      'text/plain': () => res.send(data),
+      'text/html': () => res.send('<pre>'+data+'</pre>'),
+    });
+  });
 
   // Get our initialized service so that we can register hooks
   const service = app.service('graphql');
@@ -30,5 +41,5 @@ module.exports = function (app) {
     );
   // */
 
-  service.hooks(hooks); 
+  service.hooks(hooks);
 };
