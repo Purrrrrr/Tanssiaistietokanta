@@ -21,7 +21,7 @@ function Navigation() {
     </Navbar>
   </nav>;
 }
- 
+
 function NavButton({href, ...props}) {
   const navigate = useNavigate();
   return <AnchorButton minimal {...props} href={href}

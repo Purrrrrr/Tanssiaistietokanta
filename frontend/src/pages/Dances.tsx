@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Intent, Card, Collapse, Button, FormGroup, InputGroup} from "@blueprintjs/core";
+import {Intent, Card, Collapse, FormGroup, InputGroup} from "@blueprintjs/core";
 import InfiniteScroll from 'react-infinite-scroller';
 import {Breadcrumb} from "components/Breadcrumbs";
 import {PageTitle} from "components/PageTitle";
@@ -9,6 +9,7 @@ import { filterDances, Dance, useDances, useCreateDance, useModifyDance, useDele
 import {CreateDanceForm, DanceUploader} from "components/CreateDanceForm"
 import {DanceEditor} from "components/DanceEditor"
 import {showToast} from 'utils/toaster';
+import {Button} from "libraries/forms";
 
 const EMPTY_DANCE : Dance = {name: 'Uusi tanssi'};
 
@@ -37,8 +38,8 @@ function DancesPage() {
     <Breadcrumb text="Tanssit" />
     <PageTitle>Tanssit</PageTitle>
     <div style={{display: "flex", alignItems: "flex-start"}}>
-      <FormGroup inline label="Hae" >
-        <InputGroup leftIcon="search" rightElement={<Button minimal icon="cross" onClick={() => setSearch("")} />}
+      <FormGroup inline label="Hae" labelFor="search-dances" >
+        <InputGroup id="search-dances" leftIcon="search" rightElement={<Button aria-label="Tyhjennä haku" minimal icon="cross" onClick={() => setSearch("")} />}
           value={search} onChange={(e) => setSearch(e.target.value)} />
       </FormGroup>
       <Button text="Uusi tanssi" onClick={() => setDanceToCreate(EMPTY_DANCE)}/>

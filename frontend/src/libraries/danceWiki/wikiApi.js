@@ -1,4 +1,4 @@
-const wikiUrl = "http://tanssi.dy.fi";
+const wikiUrl = "https://tanssi.dy.fi";
 
 export function searchWikiPages(searchTerm) {
   if (searchTerm.length < 2) return Promise.resolve([]);

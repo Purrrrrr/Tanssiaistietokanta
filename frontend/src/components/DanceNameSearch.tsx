@@ -16,7 +16,7 @@ export function DanceNameSearch({value, onChange}) {
   )
 
   return <>
-    <Input value={value} onChange={onChange} list="dances" />
+    <Input value={value} onChange={onChange} list="dances" label="Tanssin nimi" labelStyle="hidden" />
     <datalist id="dances">
       {suggestions.map(suggestion => <option value={suggestion} key={suggestion} />)}
     </datalist>

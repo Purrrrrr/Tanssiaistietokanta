@@ -1,7 +1,7 @@
 import React from 'react';
 import Markdown from 'markdown-to-jsx';
-import {Button, Intent} from "@blueprintjs/core";
-import {ClickToEdit, useClosableEditor} from 'libraries/forms'
+import {Intent} from "@blueprintjs/core";
+import {Button, ClickToEdit, useClosableEditor} from 'libraries/forms'
 import {ListEditor, DragHandle} from 'components/ListEditor'
 
 import './MarkdownEditor.sass'

@@ -1,11 +1,20 @@
 import React from 'react';
-import {BasicInput} from './BasicInput';
-import {withFormGroupWrapper} from "./withFormGroupWrapper";
-import {Validate, stripValidationProps, ValidationProps} from "./validation";
+import classNames from 'classnames';
+import { asAccessibleField } from './FormField';
+import {Classes} from "@blueprintjs/core";
 
-export const Input = withFormGroupWrapper<React.ComponentProps<typeof BasicInput> & ValidationProps>(function Input(props) {
-  return <>
-    <BasicInput {...stripValidationProps(props)} />
-    <Validate {...props} />
-  </>
-});
+interface BasicInputProps extends Omit<React.ComponentProps<"input">, "onChange"> {
+  onChange?: (value: string, event: React.ChangeEvent<HTMLInputElement>) => any
+}
+
+export const BasicInput = React.forwardRef<HTMLInputElement, BasicInputProps>(
+  function BasicInput({className, onChange, ...props}, ref) {
+    return <input ref={ref} className={classNames(className, Classes.INPUT)}
+      onKeyDown={e => (e.key === 'Escape' || e.key === 'Enter') && (e.target as HTMLInputElement).blur()}
+      onChange={onChange ? e => onChange(e.target.value, e) : undefined}
+      {...props}
+    />;
+  }
+);
+
+export const Input = asAccessibleField(BasicInput);

@@ -23,7 +23,7 @@ export function withFormGroupWrapper<P extends {id?: string}>(Component: React.C
   }
 }
 
-function useStableId(maybeId, label) {
+function useStableId(maybeId, label ?: string) {
   return useMemo(() => maybeId ?? generateId(label), [maybeId, label]);
 }
 

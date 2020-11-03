@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {Button} from "@blueprintjs/core";
+import {Button} from "libraries/forms";
 import {UserContext} from 'services/users';
 
 function LoginForm() {

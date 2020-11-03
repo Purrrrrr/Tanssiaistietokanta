@@ -2,14 +2,14 @@ import './EventProgramEditor.sass';
 
 import * as L from 'partial.lenses';
 
-import {Switch, Button, Card, Classes, HTMLTable, Icon, Intent} from "@blueprintjs/core";
+import {Card, Classes, HTMLTable, Icon, Intent} from "@blueprintjs/core";
 import {DragHandle, ListEditor, ListEditorItems} from "./ListEditor";
 import React, {createContext, useContext, useMemo, useState, useRef} from 'react';
 
 import {DanceChooser} from "components/widgets/DanceChooser";
 import {Duration} from "components/widgets/Duration";
 import {DurationField} from "components/widgets/DurationField";
-import {ClickToEdit, Input} from "libraries/forms";
+import {Switch, Button, ClickToEdit, Input} from "libraries/forms";
 import {ProgramPauseDurationEditor} from "components/widgets/ProgramPauseDurationEditor";
 import {makeTranslate} from 'utils/translate';
 import {useOnChangeForProp} from 'utils/useOnChangeForProp';

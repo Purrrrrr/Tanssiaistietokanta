@@ -2,8 +2,8 @@ import React, {useRef}  from 'react';
 import {ErrorMessage} from "./validation";
 import {Classes, Icon, Intent, Button} from "@blueprintjs/core";
 import {useClosableEditor} from "./hooks/useClosableEditor";
-import {BasicInput} from "./BasicInput";
-import {BasicTextArea} from "./BasicTextArea";
+import {BasicInput} from "./Input";
+import {BasicTextArea} from "./TextArea";
 
 import "./ClickToEdit.sass";
 

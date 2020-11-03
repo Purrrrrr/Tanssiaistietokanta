@@ -1,4 +1,4 @@
-import {Button, Intent} from "@blueprintjs/core";
+import {Intent} from "@blueprintjs/core";
 import {DragHandle, ListEditor} from "components/ListEditor";
 import React from 'react';
 import * as L from 'partial.lenses';
@@ -7,7 +7,7 @@ import {gql, useQuery} from "services/Apollo";
 import {DanceChooser} from "components/widgets/DanceChooser";
 import {makeTranslate} from 'utils/translate';
 import {useOnChangeForProp} from 'utils/useOnChangeForProp';
-import {Input, TextArea, Validate} from "libraries/forms";
+import {Button, Input, TextArea, Validate} from "libraries/forms";
 
 const t = makeTranslate({
   dances: 'Tanssit',
@@ -37,7 +37,7 @@ export function WorkshopEditor({eventId, workshop, onChange}) {
     <t.h2>dances</t.h2>
     <ListEditor items={dances} onChange={onChangeFor('dances')}
       component={DanceListItem} />
-    <Validate value={dances} type="array" required />
+    <Validate value={dances} type="list" required />
     <div>
       {t`addDance`+' '}
       <DanceChooser value={null} onChange={dance => onChangeFor('dances')(L.set(L.appendTo, dance))} key={dances.length} />
@@ -45,10 +45,10 @@ export function WorkshopEditor({eventId, workshop, onChange}) {
     </>
 }
 
-function AbbreviationField({workshopId, eventId, ...props}) {
+function AbbreviationField({workshopId, label, eventId, ...props}) {
   const usedWorkshopAbbreviations = useTakenWorkshopAbbreviations(eventId, workshopId);
 
-  return <Input {...props} maxLength={3} validate={{notOneOf: usedWorkshopAbbreviations}}
+  return <Input {...props} label={label} maxLength={3} validate={{notOneOf: usedWorkshopAbbreviations}}
     errorMessages={{notOneOf: getAbbreviationTakenError}}
   />
 }

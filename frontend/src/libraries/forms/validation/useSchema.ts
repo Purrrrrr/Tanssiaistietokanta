@@ -2,19 +2,21 @@ import {useMemo} from 'react';
 import {useDeepCompareMemoize} from './utils/useDeepCompareMemoize'
 import validators from './utils/yup';
 
+type Type = 'list' | 'number' | 'text' | 'email';
+
 export interface ValidationProps {
-  type?: any,
-  required?: any,
-  min?: any,
-  minLength?: any,
-  max?: any,
-  maxLength?: any,
+  type?: Type,
+  required?: boolean,
+  min?: number,
+  minLength?: number,
+  max?: number,
+  maxLength?: number,
   pattern?: any,
   errorMessages?: any,
   validate?: any,
 }
 
-export function useSchema(schema) {
+export function useSchema(schema : ValidationProps) {
   const normalizedSchema = useDeepCompareMemoize(normalize(schema));
   return useMemo(
     () => getSchema(normalizedSchema),
@@ -29,7 +31,7 @@ export function stripValidationProps<P>(props : P) : Omit<P, "validate" | "error
   return ret;
 }
 
-function normalize({type, required, min, minLength, max, maxLength, pattern, errorMessages, validate}) {
+function normalize({type, required, min, minLength, max, maxLength, pattern, errorMessages, validate} : ValidationProps) {
   return {
     type: normalizeType(type),
     required,
@@ -42,9 +44,8 @@ function normalize({type, required, min, minLength, max, maxLength, pattern, err
   };
 }
 
-function normalizeType(type) {
+function normalizeType(type ?: Type) {
   switch(type) {
-    case 'array':
     case 'list':
       return 'array';
     case 'number':

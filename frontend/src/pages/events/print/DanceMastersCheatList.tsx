@@ -2,7 +2,7 @@ import './DanceMastersCheatList.sass';
 
 import {gql, useQuery} from "services/Apollo";
 
-import {Button} from "@blueprintjs/core";
+import {Button} from "libraries/forms";
 import {EditableDanceProperty} from "components/EditableDanceProperty";
 import {LoadingState} from 'components/LoadingState';
 import {PrintTable} from 'components/PrintTable';

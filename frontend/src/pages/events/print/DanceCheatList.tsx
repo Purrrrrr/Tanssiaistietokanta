@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import classNames from 'classnames';
-import {Switch, Button} from "@blueprintjs/core";
+import {Switch, Button} from "libraries/forms";
 import {gql, useQuery} from "services/Apollo";
 import {EditableDanceProperty} from "components/EditableDanceProperty";
 import PrintViewToolbar from 'components/widgets/PrintViewToolbar';

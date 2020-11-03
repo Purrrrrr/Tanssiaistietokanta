@@ -1,7 +1,8 @@
 import {ApolloError, ApolloQueryResult} from 'apollo-client';
 
 import React from 'react';
-import {Button, NonIdealState, Spinner, Intent} from "@blueprintjs/core";
+import {Button} from "libraries/forms";
+import {NonIdealState, Spinner, Intent} from "@blueprintjs/core";
 
 interface LoadingStateProps {
   loading?: boolean,

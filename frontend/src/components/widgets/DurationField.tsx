@@ -12,10 +12,10 @@ function DurationEditor({value, onChange}) {
   const [minutes, seconds] = toMinSec(value);
 
   return <>
-    <Input type="number" style={{width: "4em"}} autoFocus
+    <Input label="DUMMY minuutit" type="number" style={{width: "4em"}} autoFocus
       value={minutes} onChange={(newValue) => onChange(toSeconds(parseFloat(newValue || "0"), seconds))} />
     :
-    <Input type="number" style={{width: "4em"}}
+    <Input label="DUMMY sekuntit" type="number" style={{width: "4em"}}
       value={Math.floor(seconds)} onChange={(newValue) => onChange(toSeconds(minutes, parseFloat(newValue || "0")))} />
   </>;
 }

@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react';
-import {Tag, ProgressBar, FormGroup, Dialog, Button, Intent, Classes} from "@blueprintjs/core";
+import {Tag, ProgressBar, FormGroup, Dialog, Intent, Classes} from "@blueprintjs/core";
 import {MarkdownEditor} from 'components/MarkdownEditor';
 import {DanceNameSearch} from 'components/DanceNameSearch';
-import {Form, Input, SubmitButton} from "libraries/forms";
+import {Form, Button, Input, SubmitButton} from "libraries/forms";
 import {useOnChangeForProp} from 'utils/useOnChangeForProp';
 import {getDanceData} from 'libraries/danceWiki';
 

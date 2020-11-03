@@ -1,6 +1,6 @@
 import React from 'react';
-import {Button, Intent, Dialog, Card} from "@blueprintjs/core";
-import {useClosableEditor} from "libraries/forms";
+import {Intent, Dialog, Card} from "@blueprintjs/core";
+import {Button, useClosableEditor} from "libraries/forms";
 import {MarkdownEditor} from 'components/MarkdownEditor';
 import Markdown from 'markdown-to-jsx';
 

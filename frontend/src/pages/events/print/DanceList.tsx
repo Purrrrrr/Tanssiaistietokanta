@@ -1,6 +1,6 @@
 import "./DanceList.sass";
 
-import {Button, Switch} from "@blueprintjs/core";
+import {Button, Switch} from "libraries/forms";
 import React, {useState} from "react";
 import {gql, useQuery} from 'services/Apollo';
 

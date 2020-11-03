@@ -21,10 +21,10 @@ export default function EventProgramEditorPage({event}) {
 
   return <AdminOnly fallback="you need to be admin">
     <Breadcrumb text="Tanssiaisohjelma" />
+    <PageTitle>Muokkaa tanssiaisohjelmaa</PageTitle>
     <Form onSubmit={
       () => modifyEventProgram(event._id, toProgramInput(program ?? {}))}
     >
-      <PageTitle>Muokkaa tanssiaisohjelmaa</PageTitle>
       <EventProgramEditor program={program} onChange={setProgram}/>
       <hr />
       <SubmitButton text="Tallenna muutokset" />

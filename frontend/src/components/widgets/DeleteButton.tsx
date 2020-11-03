@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
-import {Alert, Button, Intent} from "@blueprintjs/core";
+import {Alert, Intent} from "@blueprintjs/core";
+import {Button} from "libraries/forms";
 
 export function DeleteButton({onDelete, style, text, confirmText}) {
   const [showDialog, setShowDialog] = useState(false);

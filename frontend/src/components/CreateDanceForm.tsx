@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
-import {Button} from "@blueprintjs/core";
-import {Form, SubmitButton} from "libraries/forms";
+import {Button, Form, SubmitButton} from "libraries/forms";
 import {DanceEditor} from "./DanceEditor"
 import {Dance} from "services/dances";
 import {uploadDanceFile} from "utils/uploadDanceFile";

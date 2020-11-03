@@ -1,6 +1,6 @@
 import React, {useState, useRef} from 'react';
 import {useModifyDance} from 'services/dances';
-import {Button, Switch} from "@blueprintjs/core";
+import {Button, Switch} from "libraries/forms";
 import {gql, useQuery} from "services/Apollo";
 import {LoadingState} from 'components/LoadingState';
 import {EditableMarkdown} from 'components/EditableMarkdown';
