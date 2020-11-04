@@ -1,7 +1,7 @@
-export function focusLater(selector, base = document) {
+export function focusLater(selector, base ?: HTMLElement | Document | null) {
   setTimeout(() => {
     const el = selector instanceof Element ? selector
-     : base.querySelector(selector);
+     : (base ?? document).querySelector(selector);
     focusIfExists(el);
   }, 10);
 }

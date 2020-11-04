@@ -47,12 +47,14 @@ const t = makeTranslate({
 });
 
 const DEFAULT_INTERVAL_MUSIC_DURATION = 15*60;
-const DurationHelperContext = createContext();
+const DurationHelperContext = createContext({
+  pause: 0, setPause: (p : number) => {}
+});
 
 export function EventProgramEditor({program, onChange}) {
   const {danceSets = [], introductions = []} = program ?? {};
   const [pause, setPause] = useState(3);
-  const element = useRef();
+  const element = useRef<HTMLElement>(null);
   useRedirectKeyDownTo(element);
   const onKeyDown = useHotkeyHandler(
     ...navigateAmongSiblings('div.danceset'),
@@ -112,9 +114,9 @@ function IntroductoryInformation({infos, onChange}) {
     focusTo('tbody tr'),
     bind('i', clickInParent('div.danceset', 'button.addInfo')),
   );
-  return <Card className="danceset" tabIndex="0" onKeyDown={onKeyDown}>
+  return <Card className="danceset" tabIndex={0} onKeyDown={onKeyDown}>
     <t.h2>introductoryInformation</t.h2>
-    <ProgramListEditor program={infos} onChange={onChange} isIntroductionsSection />
+    <ProgramListEditor program={infos} onChange={onChange} isIntroductionsSection intervalMusicDuration={0} onSetIntervalMusicDuration={() => {}}/>
   </Card>;
 }
 
@@ -122,7 +124,7 @@ function DanceSetEditor({item, onChange, onRemove, onMoveDown, onMoveUp, itemInd
   const onKeyDown = useHotkeyHandler(
     ...navigateAmongSiblings('div.danceset'),
     focusTo('tbody tr'),
-    blurTo(),
+    blurTo('body'),
     moveUp(onMoveUp),
     moveDown(onMoveDown),
     bind(['a', 'd'], clickInParent('div.danceset', 'button.addDance')),
@@ -141,14 +143,14 @@ function DanceSetEditor({item, onChange, onRemove, onMoveDown, onMoveUp, itemInd
       <ClickToEdit value={name} onChange={onChangeFor('name')} required />
       <Button className="delete" intent={Intent.DANGER} text={t`removeDanceSet`} onClick={removeDanceSet} />
     </h2>
-    <ProgramListEditor program={program} onChange={onChangeFor('program')}
+    <ProgramListEditor isIntroductionsSection={false} program={program} onChange={onChangeFor('program')}
       intervalMusicDuration={intervalMusicDuration}
       onSetIntervalMusicDuration={onChangeFor('intervalMusicDuration')}/>
   </Card>;
 };
 
 function ProgramListEditor({program, onChange, intervalMusicDuration, onSetIntervalMusicDuration, isIntroductionsSection}) {
-  const table = useRef();
+  const table = useRef<HTMLTableElement>(null);
   function addItem(__typename, other = {}) {
     onChange(L.set(L.appendTo, {__typename, ...other}, program));
     focusLater('tbody tr:last-child', table.current);
@@ -176,15 +178,15 @@ function ProgramListEditor({program, onChange, intervalMusicDuration, onSetInter
       </tbody>
       <tfoot>
         <tr>
-          <td colSpan="3" >
+          <td colSpan={3}>
             {isIntroductionsSection || <Button text={t`addDance`} onClick={() => addItem('RequestedDance')} className="addDance" />}
             <Button text={isIntroductionsSection ? t`addIntroductoryInfo` : t`addInfo`} onClick={() => addItem('OtherProgram', {name: ''})} className="addInfo" />
             {" "}
             {isIntroductionsSection || 
                 <Switch inline label={t`intervalMusicAtEndOfSet`} checked={intervalMusicDuration > 0}
-                  onChange={e => onSetIntervalMusicDuration(e.target.checked ? DEFAULT_INTERVAL_MUSIC_DURATION : 0) }/>}
+                  onChange={e => onSetIntervalMusicDuration((e.target as HTMLInputElement).checked ? DEFAULT_INTERVAL_MUSIC_DURATION : 0) }/>}
           </td>
-          <td colSpan="2">
+          <td colSpan={2}>
             <DanceSetDuration program={program} intervalMusicDuration={intervalMusicDuration} />
           </td>
         </tr>
@@ -205,7 +207,7 @@ function ProgramItemEditor({item, onChange, onRemove, onAdd, onMoveDown, onMoveU
     bind(['delete', 'backspace'], removeItem)
   );
 
-  const container = useRef(null);
+  const container = useRef<HTMLTableRowElement>(null);
   /** Focuses the row when the dance/value editor is blurred but not if something inside the row is already focused
    * This allows tab navigation to work, but helps users that use the custom nav */
   function onInputBlurred() {
@@ -234,7 +236,7 @@ function ProgramItemEditor({item, onChange, onRemove, onAdd, onMoveDown, onMoveU
           ? <DanceChooser value={item ? {_id, name} : null} onBlur={onInputBlurred}
             allowEmpty emptyText={t`RequestedDance`}
             onChange={dance=> onChange(dance ? {__typename: 'Dance', ...dance} : {__typename: 'RequestedDance'})} />
-          : <Input value={name} onBlur={onInputBlurred} required
+          : <Input value={name} onBlur={onInputBlurred} required label="Ohjelman kuvaus" labelStyle="hidden"
             onChange={val => onChange(L.set('name', val, item))} />
       }
     </td>
@@ -248,7 +250,7 @@ function ProgramItemEditor({item, onChange, onRemove, onAdd, onMoveDown, onMoveU
 }
 
 function IntervalMusicEditor({intervalMusicDuration, onSetIntervalMusicDuration}) {
-  const row = useRef();
+  const row = useRef<HTMLTableRowElement>(null);
   const onKeyDown = useHotkeyHandler(
     ...navigateAmongSiblings('tr'),
     blurTo('div.danceset'),

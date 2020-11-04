@@ -12,16 +12,17 @@ import {objectId} from "./objectId";
  * onChange: a change handler that receives a changed items list
  * children: The list items, by default renders a ListEditorItems component with the supplied props
  */
-interface ListEditorProps extends ListEditorItemsProps {
+type ListEditorProps = Omit<ListEditorItemsProps, 'component'> & {
   items: any[],
   onChange: (v: any[]) => any,
-  children?: React.ReactNode,
   className?: string,
   helperClass?: string,
   useDragHandle?: boolean
-}
+} & (
+  {children: React.ReactNode, component?: undefined} | {children?: undefined | null, component: any}
+)
 
-export function ListEditor({items, onChange, children, className, helperClass, useDragHandle, ...props} : ListEditorProps) {
+export function ListEditor({items, children, component, onChange, className, helperClass, useDragHandle, ...props} : ListEditorProps) {
   function onSortEnd({oldIndex, newIndex}) {
     onChange(arrayMove(items, oldIndex, newIndex));
   }
@@ -32,7 +33,7 @@ export function ListEditor({items, onChange, children, className, helperClass, u
       className={className} helperClass={helperClass}
       useDragHandle={useDragHandle}
     >
-      {children ?? <ListEditorItems {...props} />}
+      {children ?? <ListEditorItems component={component} {...props} />}
     </SortableList>
   </ListEditorContext.Provider>;
 }
