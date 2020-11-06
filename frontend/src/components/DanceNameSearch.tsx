@@ -1,19 +1,11 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {Input} from "libraries/forms";
 import {searchWikiPages} from 'libraries/danceWiki';
+import {useDelayedEffect} from 'utils/useDelayedEffect';
 
 export function DanceNameSearch({value, onChange}) {
   const [suggestions, setSuggestions] = useState([]);
-  useEffect(
-    () => {
-      let id : number | null = window.setTimeout(
-        () => { searchWikiPages(value).then(setSuggestions); id = null; },
-        70
-      )
-      return () => { id && window.clearTimeout(id); };
-    },
-    [value]
-  )
+  useDelayedEffect(70, () => searchWikiPages(value).then(setSuggestions), [value]);
 
   return <>
     <Input value={value} onChange={onChange} list="dances" label="Tanssin nimi" labelStyle="hidden" />

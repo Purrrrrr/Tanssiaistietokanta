@@ -13,6 +13,18 @@ export interface Dance {
   instructions?: string,
   deleted?: boolean
 }
+export type WritableDanceProperty = Exclude<keyof Dance, '_id' | 'deleted'>
+
+export const dancePropertyLabels : {[Key in WritableDanceProperty]: string} = {
+  name: "Nimi",
+  description: "Kuvaus",
+  remarks: "Huomautuksia",
+  duration: "Kesto",
+  prelude: "Alkusoitto",
+  formation: "Tanssikuvio",
+  category: "Kategoria",
+  instructions: 'Tanssiohjeet'
+}
 
 const danceFields = '_id, name, description, remarks, duration, prelude, formation, category, instructions, deleted';
 

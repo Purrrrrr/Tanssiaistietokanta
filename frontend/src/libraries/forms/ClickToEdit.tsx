@@ -6,6 +6,7 @@ import {BasicInput} from "./Input";
 import {BasicTextArea} from "./TextArea";
 
 import "./ClickToEdit.sass";
+import { asAccessibleField, FieldProps } from './FormField';
 
 interface ClickToEditProps {
   value: any,
@@ -30,7 +31,7 @@ interface TextEditorProps {
   [x: string] : any
 }
 
-export function ClickToEdit({
+function LabellessClickToEdit({
   value: originalValue,
   onChange: onChangeOriginal,
   onBlur,
@@ -98,5 +99,8 @@ function TextEditor({value, ...props} : TextEditorProps) {
   return <BasicInput value={value ?? ''} autoFocus {...props} />;
 }
 
+export const ClickToEdit = asAccessibleField(LabellessClickToEdit) as React.JSXElementConstructor<FieldProps<ClickToEditProps>> & { MultilineEditor: typeof MultilineEditor, TextEditor : typeof TextEditor};
 ClickToEdit.MultilineEditor = MultilineEditor;
 ClickToEdit.TextEditor = TextEditor;
+
+

@@ -3,13 +3,13 @@ import {Intent, Card, Collapse, FormGroup, InputGroup} from "@blueprintjs/core";
 import InfiniteScroll from 'react-infinite-scroller';
 import {Breadcrumb} from "components/Breadcrumbs";
 import {PageTitle} from "components/PageTitle";
+import {showToast} from 'utils/toaster';
+import {Button} from "libraries/forms";
 
 import { filterDances, Dance, useDances, useCreateDance, useModifyDance, useDeleteDance } from 'services/dances';
 
-import {CreateDanceForm, DanceUploader} from "components/CreateDanceForm"
-import {DanceEditor} from "components/DanceEditor"
-import {showToast} from 'utils/toaster';
-import {Button} from "libraries/forms";
+import {CreateDanceForm, DanceUploader} from "./CreateDanceForm"
+import {DanceListItem} from "./DanceListItem"
 
 const EMPTY_DANCE : Dance = {name: 'Uusi tanssi'};
 
@@ -65,10 +65,9 @@ function DanceList({dances, onChange, onDelete}) {
   return <InfiniteScroll hasMore={canShowMore} loadMore={() => setLimit(limit + 5)}>
     {dances.slice(0, limit).map((dance : Dance) =>
       <Card key={dance._id}>
-        <DanceEditor dance={dance} onChange={onChange} onDelete={onDelete}  />
+        <DanceListItem dance={dance} onChange={onChange} onDelete={onDelete}  />
       </Card>)}
     </InfiniteScroll>;
 }
-
 
 export default DancesPage;

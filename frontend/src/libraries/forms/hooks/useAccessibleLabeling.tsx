@@ -8,6 +8,7 @@ export interface LabelingProps {
   id?: string
   labelInfo?: string
   helperText?: string
+  wrapperClassname?: string
 }
 
 type LabelStyle = 'inline' | 'above' | 'hidden';
@@ -16,12 +17,12 @@ type Label = string;
 export function useAccessibleLabeling(
   {
     id: maybeId,
-    labelStyle, label, labelInfo, helperText,
+    labelStyle, label, labelInfo, helperText, wrapperClassname,
     ...props
   } : LabelingProps & any
 ) {
   const id = useStableId(maybeId, label);
-  const addLabel = getLabelWrapper({labelFor: id, labelStyle, label, labelInfo, helperText});
+  const addLabel = getLabelWrapper({labelFor: id, labelStyle, label, labelInfo, helperText, className: wrapperClassname});
   const fieldProps = {id, ...props};
   if (labelStyle === 'hidden') {
     fieldProps['aria-label'] = label;
@@ -29,7 +30,7 @@ export function useAccessibleLabeling(
   return {addLabel, fieldProps};
 }
 
-type LabelWrapperProps = Omit<LabelingProps, 'id'> & {labelFor: string};
+type LabelWrapperProps = Omit<LabelingProps, 'id'|'wrapperClassname'> & {labelFor: string, className?: string};
 type LabelWrapper = (nodes: JSX.Element) => JSX.Element;
 
 function getLabelWrapper({labelStyle, ...props} : LabelWrapperProps) : LabelWrapper {

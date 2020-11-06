@@ -40,10 +40,12 @@ const t = makeTranslate({
   ofWhichDances: ' (taukoineen), josta tanssimusiikin kesto',
   pauseDuration: 'Tanssien välinen tauko',
   intervalMusic: 'Taukomusiikki',
+  intervalMusicDuration: 'Taukomusiikin kesto',
   intervalMusicAtEndOfSet: 'Taukomusiikki setin lopussa',
   minutes: 'min.',
   remove: 'Poista',
-  danceProgramIsEmpty: 'Ei tanssiohjelmaa.'
+  danceProgramIsEmpty: 'Ei tanssiohjelmaa.',
+  danceSetName: 'Tanssisetin nimi'
 });
 
 const DEFAULT_INTERVAL_MUSIC_DURATION = 15*60;
@@ -140,7 +142,7 @@ function DanceSetEditor({item, onChange, onRemove, onMoveDown, onMoveUp, itemInd
 
   return <Card className="danceset" {...props} onKeyDown={onKeyDown} >
     <h2>
-      <ClickToEdit value={name} onChange={onChangeFor('name')} required />
+      <ClickToEdit labelStyle="hidden" label={t`danceSetName`} value={name} onChange={onChangeFor('name')} required />
       <Button className="delete" intent={Intent.DANGER} text={t`removeDanceSet`} onClick={removeDanceSet} />
     </h2>
     <ProgramListEditor isIntroductionsSection={false} program={program} onChange={onChangeFor('program')}
@@ -279,7 +281,8 @@ function IntervalMusicEditor({intervalMusicDuration, onSetIntervalMusicDuration}
     <td>{t`intervalMusic`}</td>
     <td />
     <td>
-      <DurationField value={intervalMusicDuration}
+      <DurationField label={t`intervalMusicDuration`} labelStyle="hidden"
+        value={intervalMusicDuration}
         onBlur={onDurationBlurred}
         onChange={onSetIntervalMusicDuration}/>
     </td>

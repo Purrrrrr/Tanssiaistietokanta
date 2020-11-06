@@ -1,21 +1,101 @@
-import React from 'react';
-import {toMinSec, toSeconds} from "utils/duration";
-import {Duration} from "components/widgets/Duration";
-import {ClickToEdit, Input} from 'libraries/forms'
+import React, {useState, useEffect} from 'react';
+import {toMinSec, toSeconds, parseDuration, durationToString} from "utils/duration";
+import {Input} from 'libraries/forms/Input'
+import {useDelayedEffect} from 'utils/useDelayedEffect';
 
-export function DurationField(props) {
-  return <ClickToEdit valueFormatter={val => <Duration value={val} />}
-    {...props} editorComponent={DurationEditor} />
+interface DurationState {
+  value?: number
+  text: string
+  event?: React.ChangeEvent
 }
 
-function DurationEditor({value, onChange}) {
-  const [minutes, seconds] = toMinSec(value);
+export function DurationField({value, onChange, ...props} : React.ComponentProps<typeof Input>) {
+  const [params, setParams] = useState<DurationState>({value, text: durationToString(value)});
 
-  return <>
-    <Input label="DUMMY minuutit" type="number" style={{width: "4em"}} autoFocus
-      value={minutes} onChange={(newValue) => onChange(toSeconds(parseFloat(newValue || "0"), seconds))} />
-    :
-    <Input label="DUMMY sekuntit" type="number" style={{width: "4em"}}
-      value={Math.floor(seconds)} onChange={(newValue) => onChange(toSeconds(minutes, parseFloat(newValue || "0")))} />
-  </>;
+  useDelayedEffect(10, () => {
+    const {value, text, event} = params;
+    const newVal = parseDuration(text)
+    if (!event) return;
+    if (newVal === value) { //Text has changed but value hasn't. Reset text!
+      setParams({value, text: durationToString(value)});
+    } else { //Propagate changed value
+      console.log("onChange: "+value+" -> "+newVal);
+      onChange && onChange(newVal, event as React.ChangeEvent<HTMLInputElement>);
+    }
+  }, [params, onChange]);
+  useEffect(() => setParams({text: durationToString(value), value}), [value]);
+
+  return <Input {...props} value={params.text} onChange={(text, event) => setParams({value, text, event})}
+    onClick={onDurationFieldFocus} onKeyDown={onDurationFieldKeyDown} onFocus={onDurationFieldFocus}
+  />;
+}
+
+type SubField = 'minutes' | 'seconds';
+
+function onDurationFieldFocus({target}) {
+  selectArea(target, getCurrentArea(target));
+}
+
+function onDurationFieldKeyDown(event : React.KeyboardEvent<HTMLInputElement>) {
+  const target = event.target as HTMLInputElement;
+  const {key} = event;
+  switch(key) {
+    case 'Escape':
+      target.blur(); break;
+    case 'ArrowLeft':
+      selectArea(target, 'minutes'); break;
+    case 'ArrowRight':
+      selectArea(target, 'seconds'); break;
+    case 'ArrowUp':
+      addToInput(target, event.shiftKey ? 10 : 1); break;
+    case 'ArrowDown':
+      addToInput(target, event.shiftKey ? -10 : -1); break;
+    case 'Tab':
+    case 'Process':
+    case 'Unidentified':
+      return; //Do not override
+    default:
+    if (typeof(key) == 'string' && key.match(/[0-9]|Backspace|Delete/)) {
+      return;
+    }
+  }
+  event.preventDefault();
+}
+
+function addToInput(input : HTMLInputElement, amount : number) {
+  const area = getCurrentArea(input);
+  let [minutes, seconds] = toMinSec(parseDuration(input.value));
+
+  if (area === 'seconds') {
+    seconds += amount;
+  } else {
+    minutes = Math.max(0, minutes+amount);
+  }
+  triggerValueChange(input, durationToString(toSeconds(minutes, seconds)));
+  selectArea(input, area);
+}
+
+/** Changes input value and triggers a value change event that isn't ignored by React */
+function triggerValueChange(input : HTMLInputElement, value : string) {
+  const descriptor = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value") as PropertyDescriptor;
+  (descriptor.set!).call(input, value);
+  input.dispatchEvent(new Event("input", {bubbles: true}));
+}
+
+function selectArea(input : HTMLInputElement, area : SubField) {
+  const colonIndex = input.value.indexOf(":");
+  switch(area) {
+    case 'minutes':
+      input.selectionStart = 0;
+      input.selectionEnd = colonIndex;
+      break;
+    case 'seconds':
+      input.selectionStart = colonIndex+1;
+      input.selectionEnd = input.value.length;
+      break;
+  }
+}
+
+function getCurrentArea(input : HTMLInputElement) : SubField {
+  return (input.selectionStart ?? 0) > input.value.indexOf(":") ? 'seconds' : 'minutes';
 }

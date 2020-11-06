@@ -6,32 +6,25 @@ import Markdown from 'markdown-to-jsx';
 
 interface EditableMarkdownProps {
   label: string,
+  labelStyle?: "inline" | "above"
   maxHeight?: number,
   plain?: boolean,
   overrides?: any,
   value: any,
-  onChange: (any) => any,
+  onChange: (val: any) => any,
 }
 
-export function EditableMarkdown({label, maxHeight = 200, plain, overrides, ...props} : EditableMarkdownProps) {
+export function EditableMarkdown({label, labelStyle, maxHeight = 200, plain, overrides, ...props} : EditableMarkdownProps) {
   const {
     isOpen, onOpen,
     value, onChange,
     onCancel, onConfirm
   } = useClosableEditor(props.value, props.onChange);
 
-  return <FormGroup label={label}>
+  return <FormGroup label={label} inline={labelStyle === 'inline'}>
     <div onClick={onOpen}>
-      {value
-        ? (
-          plain ?  <Markdown options={{overrides}}>{value}</Markdown>
-          : <Card style={{overflow: 'auto', maxHeight}}>
-            <Markdown options={{overrides}}>{value}</Markdown>
-          </Card>
-        )
-        : <span style={{color: 'gray', marginRight: 10}}>&lt;Ei ohjetta&gt;</span>
-      }
-      {plain || <Button text="Muokkaa" onClick={onOpen} />}
+      <MarkdownPreview value={value} maxHeight={maxHeight} plain={plain} overrides={overrides} />
+      {plain || <Button text="Muokkaa tekstiä" onClick={onOpen} />}
     </div>
     <Dialog isOpen={isOpen} lazy onClose={onCancel} title="Muokkaa ohjetta">
       <MarkdownEditor value={value} onChange={onChange} />
@@ -41,4 +34,11 @@ export function EditableMarkdown({label, maxHeight = 200, plain, overrides, ...p
       </div>
     </Dialog>
   </FormGroup>;
+}
+
+function MarkdownPreview({value, overrides, maxHeight, plain}) {
+  const content = value ? <Markdown options={{overrides}}>{value}</Markdown>
+    : <span style={{color: 'gray', marginRight: 10}}>&lt;Ei ohjetta&gt;</span>;
+  if (plain) return content;
+  return <Card style={{overflow: 'auto', maxHeight}}>{content}</Card>
 }

@@ -1,0 +1,24 @@
+.flex
+  display: flex
+
+.flex-column
+  flex-direction: column
+.flex-spaced
+  & > *
+    margin-right: 1em
+    &:last-child
+      margin-right: 0
+  &.flex-column > *
+    margin-bottom: 1em
+    &:last-child
+      margin-bottom: 0
+
+.flex-fill
+  flex: 1 1 auto
+
+.flex-align-items-start
+  align-items: start
+.flex-align-items-end
+  align-items: end
+.flex-align-items-stretch
+  align-items: stretch

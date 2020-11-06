@@ -1,10 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import {Tag, ProgressBar, FormGroup, Dialog, Intent, Classes} from "@blueprintjs/core";
 import {MarkdownEditor} from 'components/MarkdownEditor';
-import {DanceNameSearch} from 'components/DanceNameSearch';
 import {Form, Button, Input, SubmitButton} from "libraries/forms";
-import {useOnChangeForProp} from 'utils/useOnChangeForProp';
 import {getDanceData} from 'libraries/danceWiki';
+import {useOnChangeForProp} from 'utils/useOnChangeForProp';
+import {DanceNameSearch} from './DanceNameSearch';
 
 export function DanceDataImportButton({onImport, dance, text, ...props}) {
   const [isOpen, setOpen] = useState(false);
