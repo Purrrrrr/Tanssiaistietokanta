@@ -1,3 +1,9 @@
-import {Switch as BlueprintSwitch} from "@blueprintjs/core";
+import {Switch as BlueprintSwitch, ISwitchProps} from "@blueprintjs/core";
+import { JSXElementConstructor } from "react";
 
-export const Switch = BlueprintSwitch;
+/* Force labeling of switches! */
+interface SwitchProps extends Omit<ISwitchProps, 'label'> {
+  label: string
+}
+
+export const Switch : React.JSXElementConstructor<SwitchProps> = (BlueprintSwitch as JSXElementConstructor<SwitchProps>);
