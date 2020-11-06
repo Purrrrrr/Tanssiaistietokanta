@@ -1,10 +1,11 @@
 import React from 'react';
-import {Intent, Dialog, Card} from "@blueprintjs/core";
+import {Intent, Dialog, Card, FormGroup} from "@blueprintjs/core";
 import {Button, useClosableEditor} from "libraries/forms";
 import {MarkdownEditor} from 'components/MarkdownEditor';
 import Markdown from 'markdown-to-jsx';
 
 interface EditableMarkdownProps {
+  label: string,
   maxHeight?: number,
   plain?: boolean,
   overrides?: any,
@@ -12,14 +13,14 @@ interface EditableMarkdownProps {
   onChange: (any) => any,
 }
 
-export function EditableMarkdown({maxHeight = 200, plain, overrides, ...props} : EditableMarkdownProps) {
+export function EditableMarkdown({label, maxHeight = 200, plain, overrides, ...props} : EditableMarkdownProps) {
   const {
     isOpen, onOpen,
     value, onChange,
     onCancel, onConfirm
   } = useClosableEditor(props.value, props.onChange);
 
-  return <>
+  return <FormGroup label={label}>
     <div onClick={onOpen}>
       {value
         ? (
@@ -39,5 +40,5 @@ export function EditableMarkdown({maxHeight = 200, plain, overrides, ...props} :
         <Button text="Peruuta" onClick={onCancel} />
       </div>
     </Dialog>
-  </>;
+  </FormGroup>;
 }

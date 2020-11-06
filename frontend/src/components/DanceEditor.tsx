@@ -43,19 +43,16 @@ export function DanceEditor({dance, onChange, onDelete} : DanceEditorProps) {
           <DancePropertyEditor label="Tanssikuvio" value={formation} onChange={onChangeFor('formation')} />
         </tr>
         <tr>
-          <DanceDurationEditor label="Kesto" value={duration} onChange={onChangeFor('duration')} asd={2} />
+          <DanceDurationEditor label="Kesto" value={duration} onChange={onChangeFor('duration')} />
           <DancePropertyEditor label="Huomautuksia" value={remarks} onChange={onChangeFor('remarks')} />
-        </tr>
-        <tr>
-          <DancePropertyMarkdownEditor label="Tanssiohjeet" colSpan={2} value={instructions} onChange={onChangeFor('instructions')} />
         </tr>
       </tbody>
     </HTMLTable>
+    <EditableMarkdown label="Tanssiohjeet" value={instructions} onChange={onChangeFor('instructions')} />
   </>;
 }
 
 const DancePropertyEditor = surroundWithLabelCells(EditableText);
-const DancePropertyMarkdownEditor = surroundWithLabelCells(EditableMarkdown);
 const DanceDurationEditor = surroundWithLabelCells(DurationField);
 
 function surroundWithLabelCells<P>(

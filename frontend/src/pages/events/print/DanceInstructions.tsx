@@ -106,7 +106,7 @@ function Dance({dance, onChange}) {
         onImport={onChange}
       />
     </h2>
-    <EditableMarkdown value={instructions} onChange={onChangeFor('instructions')}
+    <EditableMarkdown label={t`danceInstructions`} value={instructions} onChange={onChangeFor('instructions')}
       overrides={markdownOverrides} plain maxHeight={undefined} />
   </div>
 }
