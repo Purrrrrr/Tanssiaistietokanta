@@ -20,11 +20,6 @@ interface ClickToEditProps {
   [x: string] : any
 }
 
-interface ContainerElementProps<T> extends React.ClassAttributes<T> {
-  onClick: (e: any) => any,
-  onFocus: (e: any) => any,
-}
-
 interface TextEditorProps {
   value: any,
   onChange: (value: string, event: React.ChangeEvent) => any

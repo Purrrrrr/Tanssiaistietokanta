@@ -5,7 +5,7 @@ import DanceCheatList from 'pages/events/print/DanceCheatList'
 import DanceInstructions from "pages/events/print/DanceInstructions";
 import DanceMastersCheatList from 'pages/events/print/DanceMastersCheatList'
 
-export default function() {
+export default function EventPrintRoutes() {
   const {eventId} = useParams();
   return <Routes>
     <Route path="ball-dancelist" element={<DanceList eventId={eventId}/>} />

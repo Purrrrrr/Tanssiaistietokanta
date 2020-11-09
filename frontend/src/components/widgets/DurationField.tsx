@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {toMinSec, toSeconds, parseDuration, durationToString} from "utils/duration";
 import {Input} from 'libraries/forms/Input'
 import {useDelayedEffect} from 'utils/useDelayedEffect';
@@ -12,7 +12,7 @@ interface DurationState {
 export function DurationField({value, onChange, ...props} : React.ComponentProps<typeof Input>) {
   const [params, setParams] = useState<DurationState>({value, text: durationToString(value)});
 
-  useDelayedEffect(10, () => {
+  useDelayedEffect(10, useCallback(() => {
     const {value, text, event} = params;
     const newVal = parseDuration(text)
     if (!event) return;
@@ -22,7 +22,7 @@ export function DurationField({value, onChange, ...props} : React.ComponentProps
       console.log("onChange: "+value+" -> "+newVal);
       onChange && onChange(newVal, event as React.ChangeEvent<HTMLInputElement>);
     }
-  }, [params, onChange]);
+  }, [params, onChange]));
   useEffect(() => setParams({text: durationToString(value), value}), [value]);
 
   return <Input {...props} value={params.text} onChange={(text, event) => setParams({value, text, event})}

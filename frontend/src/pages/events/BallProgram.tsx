@@ -116,7 +116,7 @@ function SlideView({slide, onChangeSlide}) {
 }
 function HeaderSlide({header, onChangeSlide}) {
   const {name, program = []} = header;
-  return <Slide title={name}>
+  return <SimpleSlide title={name}>
     <ul>
       {program
           .filter(t => t.__typename !== "IntervalMusic")
@@ -127,7 +127,7 @@ function HeaderSlide({header, onChangeSlide}) {
           )
       }
     </ul>
-  </Slide>;
+  </SimpleSlide>;
 }
 
 const RequestedDancePlaceholder = () => <>_________________________</>;
@@ -135,7 +135,7 @@ const RequestedDancePlaceholder = () => <>_________________________</>;
 function DanceSlide({dance, onChangeSlide}) {
   const {next, name, teachedIn} = dance;
 
-  return <Slide title={name}>
+  return <SimpleSlide title={name}>
     <p>
       <EditableDanceProperty dance={dance} property="description" multiline addText={t`addDescription`} />
     </p>
@@ -147,7 +147,7 @@ function DanceSlide({dance, onChangeSlide}) {
           onChangeSlide={onChangeSlide} />
     }
 
-  </Slide>;
+  </SimpleSlide>;
 }
 
 function NextTrackSection({next, onChangeSlide}) {
@@ -158,16 +158,16 @@ function NextTrackSection({next, onChangeSlide}) {
 }
 
 function RequestedDanceSlide({next, onChangeSlide}) {
-  return <Slide title={t`requestedDance`}>
+  return <SimpleSlide title={t`requestedDance`}>
     {next && next.type === 'DANCE' &&
         <NextTrackSection next={next}
           onChangeSlide={onChangeSlide} />
     }
 
-  </Slide>;
+  </SimpleSlide>;
 }
 
-function Slide({title, children}) {
+function SimpleSlide({title, children}) {
   return <section className="slide">
     <h1>{title}</h1>
     {children}

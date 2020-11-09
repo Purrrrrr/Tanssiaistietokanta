@@ -1,11 +1,11 @@
-import React, {useState} from 'react';
+import React, {useState,useCallback} from 'react';
 import {DeleteButton} from "components/widgets/DeleteButton";
 import {DanceDataImportButton} from "components/DanceDataImportDialog";
 import {H2} from "@blueprintjs/core";
 import {Dance} from "services/dances";
 import {DanceEditor} from './DanceEditor';
 import { Flex } from 'components/Flex';
-import { useDelayedEffect } from 'utils/useDelayedEffect';
+import { useDelayedEffect} from 'utils/useDelayedEffect';
 
 interface DanceListItemProps {
   dance: Dance,
@@ -15,11 +15,10 @@ interface DanceListItemProps {
 
 export function DanceListItem({dance: danceInDatabase, onChange, onDelete} : DanceListItemProps) {
   const [dance, setDance] = useState(danceInDatabase);
-  useDelayedEffect(500, 
-    () => {
+  useDelayedEffect(500,
+    useCallback(() => {
       if (dance !== danceInDatabase) onChange(dance)
-    },
-    [dance, danceInDatabase]
+    }, [dance, danceInDatabase, onChange])
   );
   return <>
     <Flex alignItems="end">

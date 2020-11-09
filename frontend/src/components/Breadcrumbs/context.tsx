@@ -39,12 +39,12 @@ function remove(array : any[], value : any) {
 
 export const Breadcrumb = React.memo(function({text}: {text: Path['text']}) {
   const href = useHref(".");
-  const route = {text, href};
   const paths = useContext(RegisterContext);
   useEffect(() => {
+    const route = {text, href};
     paths.add(route);
     return () => paths.remove(route);
-  }, [route, paths]);
+  }, [text, href, paths]);
 
   return null;
 });

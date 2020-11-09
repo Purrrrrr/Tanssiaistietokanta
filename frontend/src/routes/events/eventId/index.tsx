@@ -12,7 +12,7 @@ import {useEvent} from 'services/events';
 import {Breadcrumb} from "components/Breadcrumbs";
 import {LoadingState} from 'components/LoadingState';
 
-export default function() {
+export default function EventRoutes() {
   const {eventId} = useParams();
   const [event, loadingState] = useEvent(eventId);
 

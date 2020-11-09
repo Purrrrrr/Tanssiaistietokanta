@@ -6,7 +6,7 @@ import Events from "./events";
 import EventList from "pages/events/EventList";
 import Dances from "pages/Dances";
 
-export default function() {
+export default function MainRoutes() {
   return <>
     <Breadcrumb text={<><Icon icon="home" />Tanssiaistietokanta</>} />
     <Routes>

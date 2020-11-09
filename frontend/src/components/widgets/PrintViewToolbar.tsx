@@ -8,7 +8,7 @@ interface PrintViewToolbarProps {
   maxHeight?: number
 }
 
-export default function({children, icon = "settings", maxHeight} : PrintViewToolbarProps) {
+export default function PrintViewToolbar({children, icon = "settings", maxHeight} : PrintViewToolbarProps) {
   const [isOpen, setOpen] = useState(true);
 
   return <div className={"print-view-toolbar " + (isOpen ? "open" : "closed")}
