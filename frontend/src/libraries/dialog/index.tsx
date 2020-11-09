@@ -2,26 +2,29 @@ import React, {useEffect, useRef, useCallback} from 'react';
 import {IAlertProps, Button, Overlay, Classes} from "@blueprintjs/core";
 import { FocusScope, useFocusManager } from '@react-aria/focus';
 
-interface DialogProps {
+interface DialogProps extends InnerDialogProps {
   isOpen: boolean,
-  onClose?: (e: any) => any
-  title: string
-  style ?: any
-  children: React.ReactNode
-  className?: string
 }
 
-export function Dialog({className, isOpen, onClose, title, style, children} : DialogProps) {
+export function Dialog({isOpen, onClose, ...props} : DialogProps) {
   return <Overlay isOpen={isOpen} lazy onClose={onClose} enforceFocus={false} canOutsideClickClose={true} className={Classes.OVERLAY_SCROLL_CONTAINER} hasBackdrop={true}>
     <div className={Classes.DIALOG_CONTAINER}>
       <FocusScope contain restoreFocus>
-        <InnerDialog title={title} style={style} onClose={onClose} children={children} className={className}/>
+        <InnerDialog {...props} onClose={onClose} />
       </FocusScope>
     </div>
   </Overlay>
 }
 
-function InnerDialog({children, onClose, title, style, className}) {
+interface InnerDialogProps {
+  onClose?: (e: any) => any
+  title: string
+  style ?: any
+  children: React.ReactNode
+  className?: string,
+  showCloseButton ?: boolean
+}
+function InnerDialog({children, onClose, title, style, className, showCloseButton = true} : InnerDialogProps) {
   const closeButton = useRef<HTMLButtonElement>(null);
   const focusManager = useFocusManager();
 
@@ -35,7 +38,7 @@ function InnerDialog({children, onClose, title, style, className}) {
   return <div className={Classes.DIALOG+(className ? " "+className : '')} style={style}>
     <div className={Classes.DIALOG_HEADER}>
       <h1 style={{fontSize: 18}} className={Classes.HEADING}>{title}</h1>
-      <button aria-label="Close" className={Classes.BUTTON+" "+Classes.DIALOG_CLOSE_BUTTON+" "+Classes.MINIMAL} onClick={onClose} ref={closeButton}>❌</button>
+      {showCloseButton && <button aria-label="Close" className={Classes.BUTTON+" "+Classes.DIALOG_CLOSE_BUTTON+" "+Classes.MINIMAL} onClick={onClose} ref={closeButton}>❌</button>}
     </div>
     {children}
   </div>
@@ -45,7 +48,7 @@ export function Alert({isOpen, title, intent, confirmButtonText, cancelButtonTex
   const doCancel = useCallback((e) => {onCancel && onCancel(); onClose && onClose(false, e);}, [onCancel, onClose]);
   const doConfirm = useCallback((e) => {onConfirm && onConfirm(); onClose && onClose(true, e);}, [onConfirm, onClose]);
 
-  return <Dialog isOpen={isOpen} title={title} onClose={doCancel}>
+  return <Dialog isOpen={isOpen} title={title} onClose={doCancel} showCloseButton={false}>
     <div className={Classes.DIALOG_BODY}>
       <div className={Classes.ALERT_CONTENTS}>{children}</div>
     </div>
