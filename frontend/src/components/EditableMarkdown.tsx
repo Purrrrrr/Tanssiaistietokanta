@@ -1,6 +1,7 @@
 import React from 'react';
-import {Intent, Dialog, Card, FormGroup} from "@blueprintjs/core";
+import {Intent, Card, FormGroup} from "@blueprintjs/core";
 import {Button, useClosableEditor} from "libraries/forms";
+import {Dialog} from 'libraries/dialog';
 import {MarkdownEditor} from 'components/MarkdownEditor';
 import Markdown from 'markdown-to-jsx';
 
@@ -26,7 +27,7 @@ export function EditableMarkdown({label, labelStyle, maxHeight = 200, plain, ove
       <MarkdownPreview value={value} maxHeight={maxHeight} plain={plain} overrides={overrides} />
       {plain || <Button text="Muokkaa tekstiä" onClick={onOpen} />}
     </div>
-    <Dialog isOpen={isOpen} lazy onClose={onCancel} title="Muokkaa ohjetta">
+    <Dialog isOpen={isOpen} onClose={onCancel} title="Muokkaa ohjetta">
       <MarkdownEditor value={value} onChange={onChange} />
       <div style={{textAlign: 'right', padding: "20px 20px 0 0"}}>
         <Button intent={Intent.PRIMARY} text="Tallenna" onClick={onConfirm} />

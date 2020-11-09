@@ -1,8 +1,9 @@
 import React, {useState, useEffect} from 'react';
-import {Tag, ProgressBar, FormGroup, Dialog, Intent, Classes} from "@blueprintjs/core";
+import {Tag, ProgressBar, FormGroup, Intent, Classes} from "@blueprintjs/core";
 import {MarkdownEditor} from 'components/MarkdownEditor';
 import {Form, Button, Input, SubmitButton} from "libraries/forms";
 import {getDanceData} from 'libraries/danceWiki';
+import {Dialog} from 'libraries/dialog';
 import {useOnChangeForProp} from 'utils/useOnChangeForProp';
 import {DanceNameSearch} from './DanceNameSearch';
 
@@ -40,7 +41,7 @@ export function DanceDataImportDialog({dance: originalDance, isOpen, onClose, on
     onClose(); reset();
   }
 
-  return <Dialog isOpen={isOpen} onClose={close} title="Hae tanssin tietoja tanssiwikistä" lazy
+  return <Dialog isOpen={isOpen} onClose={close} title="Hae tanssin tietoja tanssiwikistä"
     style={{minWidth: 500, width: 'auto', maxWidth: '80%'}}>
     <Form onSubmit={save}>
       <div className={Classes.DIALOG_BODY}>

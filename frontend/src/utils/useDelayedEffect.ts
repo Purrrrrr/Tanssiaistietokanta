@@ -1,4 +1,4 @@
-import {useEffect, useCallback} from 'react';
+import {useEffect} from 'react';
 
 export function useDelayedEffect(timeout: number, effect: () => any) {
   useEffect(
