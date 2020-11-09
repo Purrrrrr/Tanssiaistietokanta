@@ -38,7 +38,7 @@ export function EditableMarkdown({label, labelStyle, maxHeight = 200, plain, ove
 
 function MarkdownPreview({value, overrides, maxHeight, plain}) {
   const content = value ? <Markdown options={{overrides}}>{value}</Markdown>
-    : <span style={{color: 'gray', marginRight: 10}}>&lt;Ei ohjetta&gt;</span>;
+    : <span style={{color: '#666', marginRight: 10}}>&lt;Ei ohjetta&gt;</span>;
   if (plain) return content;
   return <Card style={{overflow: 'auto', maxHeight}}>{content}</Card>
 }
