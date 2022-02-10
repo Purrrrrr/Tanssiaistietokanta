@@ -17,7 +17,7 @@
     "history": "^5.0.0",
     "key-event-to-string": "^1.2.0",
     "markdown-to-jsx": "^6.11.4",
-    "node-sass": "^4.14.1",
+    "node-sass": "^7.0.0",
     "partial.lenses": "^14.17.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
