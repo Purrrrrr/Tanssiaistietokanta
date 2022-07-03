@@ -15,6 +15,7 @@ $borderColor: rgba(16, 22, 26, 0.15)
     table
       background: white
       width: 100%
+      min-width: 600px
       border-top: 1px solid $borderColor
 
       th:nth-child(1),td:nth-child(1)
@@ -39,6 +40,9 @@ $borderColor: rgba(16, 22, 26, 0.15)
 
       td.noProgram
         padding: 1em
+  @media only screen and (max-width: 600px)
+    .danceset
+      margin: 0 30px
 
   .addDanceSetButtons
     margin: 1em 0
