@@ -58,8 +58,8 @@ function Footer({workshops}) {
 function Dance({dance}) {
   return <p>
     {dance.name ?? <RequestedDance />}
-    {dance.teachedIn && dance.teachedIn.length && 
-        " ("+dance.teachedIn.map(workshop => workshop.abbreviation).join(', ')+")"
+    {dance.teachedIn && dance.teachedIn.length > 0 && 
+        (" ("+dance.teachedIn.map(workshop => workshop.abbreviation).join(', ')+")")
     }
   </p>;
 }
