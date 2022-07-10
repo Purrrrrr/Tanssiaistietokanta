@@ -84,7 +84,7 @@ function LabellessClickToEdit({
 }
 
 function DefaultEditButton() {
-  return <Icon intent={Intent.PRIMARY} icon="edit" />
+  return <Icon className="click-to-edit-button" intent={Intent.PRIMARY} icon="edit" />
 }
 
 function MultilineEditor({value, ...props} : TextEditorProps) {
@@ -94,7 +94,8 @@ function TextEditor({value, ...props} : TextEditorProps) {
   return <BasicInput value={value ?? ''} autoFocus {...props} />;
 }
 
-export const ClickToEdit = asAccessibleField(LabellessClickToEdit) as React.JSXElementConstructor<FieldProps<ClickToEditProps>> & { MultilineEditor: typeof MultilineEditor, TextEditor : typeof TextEditor};
+export const ClickToEdit = asAccessibleField(LabellessClickToEdit) as React.JSXElementConstructor<FieldProps<ClickToEditProps>> & { MultilineEditor: typeof MultilineEditor, TextEditor : typeof TextEditor, DefaultEditButton : typeof DefaultEditButton};
+ClickToEdit.DefaultEditButton = DefaultEditButton;
 ClickToEdit.MultilineEditor = MultilineEditor;
 ClickToEdit.TextEditor = TextEditor;
 

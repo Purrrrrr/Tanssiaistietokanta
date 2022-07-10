@@ -76,7 +76,10 @@ export function SimpleMarkdownEditor(props) {
     <div className="markdown-part-editor" onClick={isOpen ? undefined : onOpen}>
       {isOpen
         ? <ClickToEdit.MultilineEditor value={value} onChange={onChange} onBlur={onConfirm} />
-        : value ? <Markdown>{value}</Markdown> : <Placeholder />
+        : (value
+          ? <><Markdown>{value}</Markdown><ClickToEdit.DefaultEditButton /></>
+          : <Placeholder />
+        )
       }
     </div>
   </div>
