@@ -15,6 +15,9 @@ program {
         name
         duration
       }
+      ... on OtherProgram {
+        description
+      }
       ... on Dance {
         _id
       }

@@ -11,6 +11,7 @@ import {Duration} from "components/widgets/Duration";
 import {DurationField} from "components/widgets/DurationField";
 import {Switch, Button, ClickToEdit, Input} from "libraries/forms";
 import {ProgramPauseDurationEditor} from "components/widgets/ProgramPauseDurationEditor";
+import {EditableMarkdown} from 'components/EditableMarkdown';
 import {makeTranslate} from 'utils/translate';
 import {useOnChangeForProp} from 'utils/useOnChangeForProp';
 import {bind, useHotkeyHandler} from 'utils/useHotkeyHandler';
@@ -234,13 +235,7 @@ function ProgramItemEditor({item, onChange, onRemove, onAdd, onMoveDown, onMoveU
     <td><DragHandle tabIndex={-1}/></td>
     <td>{t(__typename)}</td>
     <td>
-      {isDance
-          ? <DanceChooser value={item ? {_id, name} : null} onBlur={onInputBlurred}
-            allowEmpty emptyText={t`RequestedDance`}
-            onChange={dance=> onChange(dance ? {__typename: 'Dance', ...dance} : {__typename: 'RequestedDance'})} />
-          : <Input value={name} onBlur={onInputBlurred} required label="Ohjelman kuvaus" labelStyle="hidden"
-            onChange={val => onChange(L.set('name', val, item))} />
-      }
+      <ProgramDetailsEditor item={item} onChange={onChange} onInputBlurred={onInputBlurred} />
     </td>
     <td>
       <Duration value={item.duration} />
@@ -249,6 +244,27 @@ function ProgramItemEditor({item, onChange, onRemove, onAdd, onMoveDown, onMoveU
       <Button intent={Intent.DANGER} text="X" onClick={removeItem} className="delete" />
     </td>
   </tr>;
+}
+
+function ProgramDetailsEditor({item, onInputBlurred, onChange}) {
+  const {__typename, name, _id} = item;
+
+  switch(__typename) {
+    case 'Dance':
+    case 'RequestedDance':
+    return <DanceChooser value={item ? {_id, name} : null} onBlur={onInputBlurred}
+      allowEmpty emptyText={t`RequestedDance`}
+      onChange={dance=> onChange(dance ? {__typename: 'Dance', ...dance} : {__typename: 'RequestedDance'})} />
+    case 'OtherProgram':
+      return <>
+        <Input value={name} onBlur={onInputBlurred} required label="Ohjelmanumeron nimi"
+          onChange={val => onChange(L.set('name', val, item))} />
+        <EditableMarkdown simple label="Ohjelman kuvaus" value={item.description ?? ""} onChange={val => onChange(L.set('description', val, item))} />
+      </>
+  }
+
+  return <Input value={name} onBlur={onInputBlurred} required label="Ohjelman kuvaus" labelStyle="hidden"
+    onChange={val => onChange(L.set('name', val, item))} />
 }
 
 function IntervalMusicEditor({intervalMusicDuration, onSetIntervalMusicDuration}) {

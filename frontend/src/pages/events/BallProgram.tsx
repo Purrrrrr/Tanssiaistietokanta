@@ -1,5 +1,6 @@
 import './BallProgram.sass';
 import React, {useMemo, useState, useCallback} from 'react';
+import Markdown from 'markdown-to-jsx';
 import {gql, useQuery} from "services/Apollo";
 import ReactTouchEvents from "react-touch-events";
 
@@ -31,6 +32,9 @@ query BallProgram($eventId: ID!) {
           __typename
           ... on NamedProgram {
             name
+          }
+          ... on OtherProgram {
+            description
           }
           ... on Dance {
             _id
@@ -146,8 +150,9 @@ function SlideView({slide, onChangeSlide}) {
   }
 }
 function HeaderSlide({header, onChangeSlide}) {
-  const {name, program = []} = header;
+  const {name, program = [], description} = header;
   return <SimpleSlide title={name}>
+    {description && <p><Markdown>{description}</Markdown></p>}
     <ul className="headerList">
       {program
           .filter(t => t.__typename !== "IntervalMusic")
