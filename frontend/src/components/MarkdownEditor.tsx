@@ -13,14 +13,12 @@ export function MarkdownEditor({value, onChange}) {
   }
   const addPart = () => setParts([...parts, "#Otsikko\nsisältö"])
 
-  return <>
+  return <div className="markdown-editor bp3-input">
     <ListEditor items={parts} onChange={setParts}  helperClass="markdown-editor-helper"
-    noWrapper useDragHandle className="markdown-editor bp3-input" component={PartEditor} />
+    noWrapper useDragHandle component={PartEditor} />
 
-    <div className="markdown-editor">
-      <Button icon="add" intent={Intent.PRIMARY} minimal onClick={addPart} >Lisää osio</Button>
-    </div>
-  </>;
+    <Button icon="add" intent={Intent.PRIMARY} minimal onClick={addPart} >Lisää uusi osio</Button>
+  </div>;
 }
 
 function toParts(markdown) {
@@ -47,6 +45,31 @@ function PartEditor({onRemove, item, items, onChange: setItem}) {
           <DragHandle />
           <Button icon="edit" intent={Intent.PRIMARY} minimal onClick={onOpen} >Muokkaa osiota</Button>
           <Button icon="cross" intent={Intent.DANGER} minimal onClick={onRemove} >Poista osio</Button>
+          </>
+      }
+    </div>
+    <div className="markdown-part-editor" onClick={isOpen ? undefined : onOpen}>
+      {isOpen
+        ? <ClickToEdit.MultilineEditor value={value} onChange={onChange} onBlur={onConfirm} />
+        : value ? <Markdown>{value}</Markdown> : <Placeholder />
+      }
+    </div>
+  </div>
+}
+
+export function SimpleMarkdownEditor(props) {
+  const {
+    isOpen, onOpen,
+    value, onChange,
+    onCancel, onConfirm
+  } = useClosableEditor(props.value, props.onChange);
+
+  return <div className="markdown-part">
+    <div className="buttons">
+      {isOpen
+          && <>
+            <Button intent={Intent.SUCCESS} onClick={onConfirm} icon="tick" >Tallenna</Button>
+            <Button intent={Intent.DANGER} onClick={onCancel} icon="cross" >Peruuta</Button>
           </>
       }
     </div>

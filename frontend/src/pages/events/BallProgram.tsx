@@ -148,7 +148,7 @@ function SlideView({slide, onChangeSlide}) {
 function HeaderSlide({header, onChangeSlide}) {
   const {name, program = []} = header;
   return <SimpleSlide title={name}>
-    <ul>
+    <ul className="headerList">
       {program
           .filter(t => t.__typename !== "IntervalMusic")
           .map(({index, name}) =>
@@ -168,7 +168,7 @@ function DanceSlide({dance, onChangeSlide}) {
 
   return <SimpleSlide title={name}>
     <p>
-      <EditableDanceProperty dance={dance} property="description" multiline addText={t`addDescription`} />
+      <EditableDanceProperty dance={dance} property="description" type="markdown" addText={t`addDescription`} />
     </p>
     {teachedIn.length > 0 &&
       <p>{t`teachedInSet`} {teachedIn.map(w => w.name).join(", ")}</p>

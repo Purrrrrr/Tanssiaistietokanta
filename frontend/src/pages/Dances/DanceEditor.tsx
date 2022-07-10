@@ -26,7 +26,7 @@ export function DanceEditor({dance, onChange} : DanceEditorProps) {
       <Input labelStyle="inline" label="Huomautuksia" value={remarks ?? ""} onChange={onChangeFor('remarks')}  />
     </div>
     <div className="flex-fill">
-      <TextArea wrapperClassname="description-field" labelStyle="inline" label="Kuvaus" value={description ?? ""} onChange={onChangeFor('description')} growVertically />
+      <EditableMarkdown labelStyle="inline" simple label="Kuvaus" value={description ?? ""} onChange={onChangeFor('description')} />
       <EditableMarkdown labelStyle="inline" maxHeight={150} label="Tanssiohjeet" value={instructions} onChange={onChangeFor('instructions')} />
     </div>
   </Flex>;

@@ -2,6 +2,7 @@ import React from 'react';
 import {PATCH_DANCE, WritableDanceProperty, dancePropertyLabels} from "services/dances";
 import { useMutation } from 'services/Apollo';
 import {ClickToEdit} from "libraries/forms";
+import {SimpleMarkdownEditor} from 'components/MarkdownEditor';
 
 import './EditableDanceProperty.sass';
 
@@ -11,10 +12,10 @@ interface EditableDancePropertyProps {
   dance: any,
   property: ValidProperty,
   addText: string,
-  multiline?: boolean
+  type?: 'multiline' | 'markdown'
 }
 
-export function EditableDanceProperty({dance, property, addText, multiline} : EditableDancePropertyProps) {
+export function EditableDanceProperty({dance, property, addText, ...props} : EditableDancePropertyProps) {
   const [patch, state] = useMutation(PATCH_DANCE);
 
   const onChange = (value) => {
@@ -27,9 +28,17 @@ export function EditableDanceProperty({dance, property, addText, multiline} : Ed
   }
 
   if (state.loading) return <>...</>;
+
+  const editorType = props["type"]
+
+  if (editorType === 'markdown') {
+    return <SimpleMarkdownEditor value={dance[property]} onChange={onChange} />
+  }
+
   return <ClickToEdit label={dancePropertyLabels[property]} labelStyle="hidden" className="editableDanceProperty"
-    editorComponent={multiline ? ClickToEdit.MultilineEditor : ClickToEdit.TextEditor}
+    editorComponent={editorType === 'multiline' ? ClickToEdit.MultilineEditor : ClickToEdit.TextEditor}
     value={dance[property]} onChange={onChange}
     valueFormatter={value => value || <span className="addEntry">{addText}</span>}
   />;
 }
+

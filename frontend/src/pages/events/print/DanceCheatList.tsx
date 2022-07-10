@@ -82,7 +82,7 @@ function WorkshopDances({workshop, mini}) {
                   : <>
                   <strong>{dance.name}</strong>
                   <div>
-                    <EditableDanceProperty dance={dance} property="description" addText={t`addDescription`} />
+                    <EditableDanceProperty dance={dance} property="description" type="markdown" addText={t`addDescription`} />
                   </div>
                   </>
               }
