@@ -11,18 +11,25 @@ export function MarkdownEditor({value, onChange}) {
   function setParts(parts) {
     onChange(parts.join("\n\n"));
   }
+  const addPart = () => setParts([...parts, "#Otsikko\nsisältö"])
 
-  return <ListEditor items={parts} onChange={setParts}  helperClass="markdown-editor-helper"
-    noWrapper useDragHandle className="markdown-editor bp3-input" component={PartEditor} />;
+  return <>
+    <ListEditor items={parts} onChange={setParts}  helperClass="markdown-editor-helper"
+    noWrapper useDragHandle className="markdown-editor bp3-input" component={PartEditor} />
+
+    <div className="markdown-editor">
+      <Button icon="add" intent={Intent.PRIMARY} minimal onClick={addPart} >Lisää osio</Button>
+    </div>
+  </>;
 }
 
 function toParts(markdown) {
   const parts = markdown.split(headerRegex).filter(text => text.trim().length > 0);
-  return parts.length > 0 ? parts : [""];
+  return parts.length > 0 ? parts : [];
 }
 const headerRegex = /\n((?=#+.+\n)|(?=.+\n=+\n)|(?=.+\n-+\n))/gm;
 
-function PartEditor({onRemove, item, onChange: setItem}) {
+function PartEditor({onRemove, item, items, onChange: setItem}) {
   const {
     isOpen, onOpen,
     value, onChange,
@@ -33,13 +40,13 @@ function PartEditor({onRemove, item, onChange: setItem}) {
     <div className="buttons">
       {isOpen
           ? <>
-            <Button intent={Intent.SUCCESS} onClick={onConfirm} icon="tick" />
-            <Button intent={Intent.DANGER} onClick={onCancel} icon="cross" />
+            <Button intent={Intent.SUCCESS} onClick={onConfirm} icon="tick" >Tallenna</Button>
+            <Button intent={Intent.DANGER} onClick={onCancel} icon="cross" >Peruuta</Button>
           </>
           : <>
-          <DragHandle minimal />
-          <Button icon="edit" intent={Intent.PRIMARY} minimal onClick={onOpen} />
-          <Button icon="cross" intent={Intent.DANGER} minimal onClick={onRemove} />
+          <DragHandle />
+          <Button icon="edit" intent={Intent.PRIMARY} minimal onClick={onOpen} >Muokkaa osiota</Button>
+          <Button icon="cross" intent={Intent.DANGER} minimal onClick={onRemove} >Poista osio</Button>
           </>
       }
     </div>
@@ -53,5 +60,5 @@ function PartEditor({onRemove, item, onChange: setItem}) {
 }
 
 function Placeholder() {
-  return <div className="placeholder">&lt;Muokkaa tästä&gt;</div>;
+  return <div className="placeholder">&lt;Tyhjä osio&gt;</div>;
 }
