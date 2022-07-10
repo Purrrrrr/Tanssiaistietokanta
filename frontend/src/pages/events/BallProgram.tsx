@@ -1,7 +1,7 @@
 import './BallProgram.sass';
-
-import React, {useMemo, useState} from 'react';
+import React, {useMemo, useState, useCallback} from 'react';
 import {gql, useQuery} from "services/Apollo";
+import ReactTouchEvents from "react-touch-events";
 
 import {EditableDanceProperty} from "components/EditableDanceProperty";
 import {LoadingState} from 'components/LoadingState';
@@ -57,23 +57,49 @@ function BallProgramView({event, currentSlide, onChangeSlide, onRefetch}) {
   const program = useMemo(() => getSlides(event), [event]);
   const slide = program[currentSlide];
 
+  const changeSlide = useCallback((n) => 
+    onChangeSlide((s) => 
+      Math.max(0, 
+        Math.min(program.length-1, s+n)
+      )
+    )
+  , [onChangeSlide, program.length])
+
   useOnKeydown({
-    ArrowLeft: () => onChangeSlide((s) => Math.max(0, s-1)),
-    ArrowRight: () => onChangeSlide((s) => Math.min(s+1, program.length-1)),
+    ArrowLeft: () => changeSlide(-1),
+    ArrowRight: () => changeSlide(1),
     r: onRefetch
   })
 
-  return <div className="slideshow">
-    <ProgramTitleSelector value={slide.parent?.index ?? slide.index} onChange={onChangeSlide}
-      program={program} />
-    <SlideView slide={slide} onChangeSlide={onChangeSlide} />
-  </div>;
+  const onSwipe = useCallback((e, direction : 'left'|'right') => {
+    switch(direction) {
+      case 'left':
+        changeSlide(1)
+        break
+      case 'right':
+        changeSlide(-1)
+        break
+    }
+  }, [changeSlide])
+
+  return <ReactTouchEvents onSwipe={onSwipe}>
+    <div className="slideshow">
+      <div className="controls">
+        <ProgramTitleSelector value={slide.parent?.index ?? slide.index} onChange={onChangeSlide}
+          program={program} />
+        {slide.subindex && ` ${slide.subindex}/${slide.subtotal} `}
+      </div>
+      <SlideView slide={slide} onChangeSlide={onChangeSlide} />
+    </div>
+  </ReactTouchEvents>;
 }
 
 interface Slide {
   __typename: string,
   name: string,
   index?: number,
+  subindex?: number,
+  subtotal?: number,
   parent?: Slide
   next?: Slide
 }
@@ -88,7 +114,7 @@ function getSlides(event) : Slide[] {
     slides.push({ ...introduction, parent: eventHeader });
   }
   for (const danceSet of danceSets) {
-    const danceSetSlide = { ...danceSet };
+    const danceSetSlide = { ...danceSet, subtotal: danceSet.program.length };
     const danceProgram = danceSet.program.map(item => ({ ...item, parent: danceSetSlide}));
     danceSetSlide.program = danceProgram;
     slides.push(danceSetSlide);
@@ -97,6 +123,11 @@ function getSlides(event) : Slide[] {
 
   slides.forEach((slide, index) => {
     slide.index = index
+    if (slide.parent !== undefined) {
+      slide.subindex = index - slide.parent.index!!
+      slide.subtotal = slide.parent.subtotal
+    }
+
     slide.next = slides[index+1];
   });
   return slides;

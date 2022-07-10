@@ -25,6 +25,7 @@
     "react-router-dom": "^6.0.0-beta.0",
     "react-scripts": "^4.0.0",
     "react-sortable-hoc": "^1.10.1",
+    "react-touch-events": "^3.0.0",
     "yup": "^0.28.1"
   },
   "scripts": {
