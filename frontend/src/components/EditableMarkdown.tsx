@@ -1,17 +1,10 @@
 import React from 'react';
 import {Intent, Card, FormGroup} from "@blueprintjs/core";
 import {Button, useClosableEditor} from "libraries/forms";
-import {Dialog} from 'libraries/dialog';
 import {ClickToEdit} from "libraries/forms";
 import {MarkdownEditor} from 'components/MarkdownEditor';
 import Markdown from 'markdown-to-jsx';
 
-interface InlineEditableMarkdownProps {
-  label: string,
-  labelStyle?: "inline" | "above"
-  value: any,
-  onChange: (val: any) => any,
-}
 interface EditableMarkdownProps {
   label: string,
   labelStyle?: "inline" | "above"
