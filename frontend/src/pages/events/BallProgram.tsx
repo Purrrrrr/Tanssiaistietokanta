@@ -13,6 +13,7 @@ import {makeTranslate} from 'utils/translate';
 const t = makeTranslate({
   teachedInSet: 'Opetettu setissä',
   requestedDance: 'Toivetanssi',
+  intervalMusic: 'Taukomusiikkia',
   addDescription: 'Lisää kuvaus',
   afterThis: 'Tämän jälkeen',
 });
@@ -28,6 +29,7 @@ query BallProgram($eventId: ID!) {
       }
       danceSets {
         name
+        intervalMusicDuration
         program {
           __typename
           ... on NamedProgram {
@@ -123,6 +125,15 @@ function getSlides(event) : Slide[] {
     danceSetSlide.program = danceProgram;
     slides.push(danceSetSlide);
     slides.push(...danceProgram);
+
+    if (danceSet.intervalMusicDuration > 0) {
+      danceSetSlide.subtotal++
+      slides.push({
+        __typename: "OtherProgram",
+        name: t`intervalMusic`,
+        parent: danceSetSlide,
+      });
+    }
   }
 
   slides.forEach((slide, index) => {
@@ -143,6 +154,8 @@ function SlideView({slide, onChangeSlide}) {
       return <DanceSlide dance={slide} onChangeSlide={onChangeSlide} />;
     case 'RequestedDance':
       return <RequestedDanceSlide next={slide.next} onChangeSlide={onChangeSlide} />;
+    case 'OtherProgram':
+      return <OtherProgramSlide program={slide} onChangeSlide={onChangeSlide} />;
     case 'DanceSet':
     case 'Event':
     default:
@@ -151,9 +164,8 @@ function SlideView({slide, onChangeSlide}) {
 }
 function HeaderSlide({header, onChangeSlide}) {
   const {name, program = [], description} = header;
-  return <SimpleSlide title={name}>
-    {description && <p><Markdown>{description}</Markdown></p>}
-    <ul className="headerList">
+  return <SimpleSlide title={name} next={null} onChangeSlide={onChangeSlide} >
+    <ul className="headerList mainContent">
       {program
           .filter(t => t.__typename !== "IntervalMusic")
           .map(({index, name}) =>
@@ -166,46 +178,46 @@ function HeaderSlide({header, onChangeSlide}) {
   </SimpleSlide>;
 }
 
+function OtherProgramSlide({program, onChangeSlide}) {
+  const {name, next, description} = program;
+  return <SimpleSlide title={name} next={next} onChangeSlide={onChangeSlide} >
+    {description && <p className="mainContent"><Markdown>{description}</Markdown></p>}
+  </SimpleSlide>;
+}
+
 const RequestedDancePlaceholder = () => <>_________________________</>;
 
 function DanceSlide({dance, onChangeSlide}) {
   const {next, name, teachedIn} = dance;
 
-  return <SimpleSlide title={name}>
-    <p>
+  return <SimpleSlide title={name} next={next} onChangeSlide={onChangeSlide}>
+    <p className="mainContent">
       <EditableDanceProperty dance={dance} property="description" type="markdown" addText={t`addDescription`} />
     </p>
     {teachedIn.length > 0 &&
       <p>{t`teachedInSet`} {teachedIn.map(w => w.name).join(", ")}</p>
     }
-    {next && next.type === 'DANCE' &&
+  </SimpleSlide>;
+}
+
+function RequestedDanceSlide({next, onChangeSlide}) {
+  return <SimpleSlide title={t`requestedDance`} next={next} onChangeSlide={onChangeSlide}>
+  </SimpleSlide>;
+}
+
+function SimpleSlide({title, next, onChangeSlide, children}) {
+  return <section className="slide">
+    <h1>{title}</h1>
+    {children}
+    {next &&
         <NextTrackSection next={next}
           onChangeSlide={onChangeSlide} />
     }
-
-  </SimpleSlide>;
+  </section>;
 }
 
 function NextTrackSection({next, onChangeSlide}) {
   return <section className="nextTrack" onClick={() => onChangeSlide(next.index)}>
-    <h1>{t`afterThis`}:{" "+next.name}</h1>
-    <div>{next.description}</div>
+    <h1>{t`afterThis`}:{" "}{next.__typename === 'RequestedDance' ? t`requestedDance` : next.name}</h1>
   </section>
-}
-
-function RequestedDanceSlide({next, onChangeSlide}) {
-  return <SimpleSlide title={t`requestedDance`}>
-    {next && next.type === 'DANCE' &&
-        <NextTrackSection next={next}
-          onChangeSlide={onChangeSlide} />
-    }
-
-  </SimpleSlide>;
-}
-
-function SimpleSlide({title, children}) {
-  return <section className="slide">
-    <h1>{title}</h1>
-    {children}
-  </section>;
 }
