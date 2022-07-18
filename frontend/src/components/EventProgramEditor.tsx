@@ -199,8 +199,7 @@ function ProgramListEditor({program, onChange, intervalMusicDuration, onSetInter
 }
 
 function ProgramItemEditor({item, onChange, onRemove, onAdd, onMoveDown, onMoveUp, ...props}) {
-  const {__typename, name, _id} = item;
-  const isDance = __typename === 'Dance' || __typename === 'RequestedDance';
+  const {__typename } = item;
   const onKeyDown = useHotkeyHandler(
     ...navigateAmongSiblings('tr'),
     moveUp(onMoveUp),
