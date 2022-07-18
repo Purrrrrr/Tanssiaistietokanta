@@ -27,15 +27,20 @@ interface InnerDialogProps {
 function InnerDialog({children, onClose, title, style, className, showCloseButton = true} : InnerDialogProps) {
   const closeButton = useRef<HTMLButtonElement>(null);
   const focusManager = useFocusManager();
+  const dialogRef = useRef<HTMLDivElement>()
 
   useEffect(
-    () => {focusManager.focusNext({
-      from: closeButton.current || undefined, wrap: true
-    })},
+    () => {
+      if (!dialogRef.current) return
+      if (dialogRef.current!.contains(document.activeElement)) return
+      focusManager.focusNext({
+        from: closeButton.current || undefined, wrap: true
+      })
+    },
     [focusManager]
   )
 
-  return <div className={Classes.DIALOG+(className ? " "+className : '')} style={style}>
+  return <div ref={dialogRef} className={Classes.DIALOG+(className ? " "+className : '')} style={style}>
     <div className={Classes.DIALOG_HEADER}>
       <h1 style={{fontSize: 18}} className={Classes.HEADING}>{title}</h1>
       {showCloseButton && <button aria-label="Close" className={Classes.BUTTON+" "+Classes.DIALOG_CLOSE_BUTTON+" "+Classes.MINIMAL} onClick={onClose} ref={closeButton}>❌</button>}
