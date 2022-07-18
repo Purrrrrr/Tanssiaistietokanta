@@ -27,7 +27,7 @@ interface InnerDialogProps {
 function InnerDialog({children, onClose, title, style, className, showCloseButton = true} : InnerDialogProps) {
   const closeButton = useRef<HTMLButtonElement>(null);
   const focusManager = useFocusManager();
-  const dialogRef = useRef<HTMLDivElement>()
+  const dialogRef = useRef<HTMLDivElement>(null)
 
   useEffect(
     () => {

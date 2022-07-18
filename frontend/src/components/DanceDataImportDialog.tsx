@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { useMutation } from 'services/Apollo';
-import {PATCH_DANCE} from "services/dances";
+import {PATCH_DANCE, Dance} from "services/dances";
 import {Tag, ProgressBar, FormGroup, Intent, Classes} from "@blueprintjs/core";
 import {MarkdownEditor} from 'components/MarkdownEditor';
 import {Form, Button, Input, SubmitButton} from "libraries/forms";
@@ -9,7 +9,13 @@ import {Dialog} from 'libraries/dialog';
 import {useOnChangeForProp} from 'utils/useOnChangeForProp';
 import {DanceNameSearch} from './DanceNameSearch';
 
-export function DanceDataImportButton({onImport, dance, text, ...props}) {
+interface DanceDataImportButtonProps {
+  onImport?: (dance: Dance) => any,
+  dance: Dance,
+  text: string,
+}
+
+export function DanceDataImportButton({onImport, dance, text, ...props} : DanceDataImportButtonProps) {
   const [isOpen, setOpen] = useState(false);
 
   const [patch] = useMutation(PATCH_DANCE);
