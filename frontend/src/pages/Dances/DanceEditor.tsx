@@ -1,6 +1,6 @@
 import React from 'react';
 import {DurationField} from "components/widgets/DurationField";
-import {Input, TextArea} from "libraries/forms";
+import {Input} from "libraries/forms";
 import {EditableMarkdown} from 'components/EditableMarkdown';
 import {useOnChangeForPropInValue} from 'utils/useOnChangeForProp';
 import {Dance} from "services/dances";
