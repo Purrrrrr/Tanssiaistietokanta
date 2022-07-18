@@ -38,13 +38,8 @@ query DanceInstructions($eventId: ID!) {
         _id
         name
         instructions
-        description
-        remarks
-        duration
-        prelude
         formation
         category
-        deleted
       }
     }
   }
@@ -108,10 +103,7 @@ function Dance({dance, onChange}) {
     <h2>
       {name}
       {' '}
-      <DanceDataImportButton text={t`fetchDataFromWiki`}
-        dance={dance}
-        onImport={onChange}
-      />
+      <DanceDataImportButton text={t`fetchDataFromWiki`} dance={dance} />
     </h2>
     <EditableMarkdown label={t`danceInstructions`} value={instructions} onChange={onChangeFor('instructions')}
       overrides={markdownOverrides} plain maxHeight={undefined} />

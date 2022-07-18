@@ -1,4 +1,6 @@
 import React, {useState, useEffect} from 'react';
+import { useMutation } from 'services/Apollo';
+import {PATCH_DANCE} from "services/dances";
 import {Tag, ProgressBar, FormGroup, Intent, Classes} from "@blueprintjs/core";
 import {MarkdownEditor} from 'components/MarkdownEditor';
 import {Form, Button, Input, SubmitButton} from "libraries/forms";
@@ -10,10 +12,27 @@ import {DanceNameSearch} from './DanceNameSearch';
 export function DanceDataImportButton({onImport, dance, text, ...props}) {
   const [isOpen, setOpen] = useState(false);
 
+  const [patch] = useMutation(PATCH_DANCE);
+  const handleImport = (data ) => {
+    if (onImport) {
+      onImport(data)
+      return
+    }
+    const {category, formation, instructions} = data
+    patch({
+      variables: {
+        id: dance._id,
+        dance: {
+          category, formation, instructions,
+        }, 
+      }
+    })
+  }
+
   return <>
     <Button text={text} {...props} onClick={() => setOpen(true)} />
     <DanceDataImportDialog isOpen={isOpen} onClose={() => setOpen(false)}
-      dance={dance} onImport={(data) => { setOpen(false); onImport(data); }}
+      dance={dance} onImport={(data) => { setOpen(false); handleImport(data); }}
     />
   </>
 }
@@ -45,7 +64,7 @@ export function DanceDataImportDialog({dance: originalDance, isOpen, onClose, on
     style={{minWidth: 500, width: 'auto', maxWidth: '80%'}}>
     <Form onSubmit={save}>
       <div className={Classes.DIALOG_BODY}>
-        <DataImporter dance={dance} onImport={importDone} />
+        <DataImporter danceName={dance.name} onImport={importDone} />
         {importedData &&
             <ImportedDataView importedData={importedData} dance={dance} setDance={setDance} />}
       </div>
@@ -57,8 +76,8 @@ export function DanceDataImportDialog({dance: originalDance, isOpen, onClose, on
   </Dialog>;
 }
 
-function DataImporter({dance, onImport}) {
-  const [search, setSearch] = useState(dance.name);
+function DataImporter({danceName, onImport}) {
+  const [search, setSearch] = useState(danceName);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<{message: string} | null>(null);
 

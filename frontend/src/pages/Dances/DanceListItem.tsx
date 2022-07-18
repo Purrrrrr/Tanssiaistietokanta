@@ -27,10 +27,7 @@ export function DanceListItem({dance: danceInDatabase, onChange, onDelete} : Dan
         text="Poista tanssi"
         confirmText="Haluatko varmasti poistaa tämän tanssin?"
       />
-      <DanceDataImportButton text="Hae tietoja tanssiwikistä"
-        dance={dance}
-        onImport={setDance}
-      />
+      <DanceDataImportButton text="Hae tietoja tanssiwikistä" dance={dance} onImport={setDance} />
     </Flex>
     <DanceEditor dance={dance} onChange={setDance} />
   </>;
