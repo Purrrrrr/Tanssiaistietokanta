@@ -7,7 +7,7 @@ interface DialogProps extends InnerDialogProps {
 }
 
 export function Dialog({isOpen, onClose, ...props} : DialogProps) {
-  return <Overlay isOpen={isOpen} lazy onClose={onClose} enforceFocus={false} canOutsideClickClose={true} className={Classes.OVERLAY_SCROLL_CONTAINER} hasBackdrop={true}>
+  return <Overlay isOpen={isOpen} lazy onClose={onClose} enforceFocus={false} canOutsideClickClose={false} className={Classes.OVERLAY_SCROLL_CONTAINER} hasBackdrop={true}>
     <div className={Classes.DIALOG_CONTAINER}>
       <FocusScope contain restoreFocus>
         <InnerDialog {...props} onClose={onClose} />
