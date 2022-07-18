@@ -38,6 +38,13 @@ query DanceInstructions($eventId: ID!) {
         _id
         name
         instructions
+        description
+        remarks
+        duration
+        prelude
+        formation
+        category
+        deleted
       }
     }
   }
