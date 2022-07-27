@@ -105,7 +105,7 @@ function Dance({dance, onChange}) {
       {' '}
       <DanceDataImportButton text={t`fetchDataFromWiki`} dance={dance} />
     </h2>
-    <EditableMarkdown label={t`danceInstructions`} value={instructions} onChange={onChangeFor('instructions')}
+    <EditableMarkdown label="" value={instructions} onChange={onChangeFor('instructions')}
       overrides={markdownOverrides} plain maxHeight={undefined} />
   </div>
 }
