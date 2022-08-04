@@ -88,7 +88,7 @@ function BallProgramView({event, currentSlide, onChangeSlide, onRefetch}) {
     }
   }, [changeSlide])
 
-  return <ReactTouchEvents onSwipe={onSwipe}>
+  return <ReactTouchEvents onSwipe={onSwipe} disableClick>
     <div className="slideshow">
       <div className="controls">
         <ProgramTitleSelector value={slide.parent?.index ?? slide.index} onChange={onChangeSlide}
