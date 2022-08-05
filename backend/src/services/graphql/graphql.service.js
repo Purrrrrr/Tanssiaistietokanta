@@ -1,5 +1,5 @@
 // Initializes the `graphql` service on path `/graphql`
-const { ApolloServer, gql } = require('apollo-server-express');
+const { ApolloServer } = require('apollo-server-express');
 const { graphql } = require('graphql');
 const schema = require('./graphql.schema');
 const getResolvers = require('./graphql.resolvers');
@@ -9,11 +9,10 @@ const hooks = require('./graphql.hooks');
 const {buildSchema} = require('graphql');
 
 module.exports = function (app) {
-  const typeDefs = gql(schema);
   const resolvers = getResolvers(app);
   const context = () => ({ app });
 
-  const server = new ApolloServer({ typeDefs, resolvers, context});
+  const server = new ApolloServer({ typeDefs: schema, resolvers, context});
   server.applyMiddleware({ app });
 
   // Initialize our service with any options it requires

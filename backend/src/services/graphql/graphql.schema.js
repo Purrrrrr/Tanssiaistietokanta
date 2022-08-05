@@ -1,6 +1,7 @@
-const path = require('path');
-const {fileLoader, mergeTypes } = require('merge-graphql-schemas');
+const { print } = require('graphql');
+const { loadFilesSync } = require('@graphql-tools/load-files')
+const { mergeTypeDefs } = require('@graphql-tools/merge')
 
-const types = fileLoader(path.join(__dirname, '/../**/*.schema.graphql'));
+const types = loadFilesSync(`${__dirname}/../**/*.schema.graphql`);
 
-module.exports = mergeTypes(types);
+module.exports = print(mergeTypeDefs(types));

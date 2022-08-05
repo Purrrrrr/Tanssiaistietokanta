@@ -1,8 +1,7 @@
-const path = require('path');
-const {fileLoader, mergeResolvers} = require('merge-graphql-schemas');
+const { loadFilesSync } = require('@graphql-tools/load-files')
+const { mergeResolvers } = require('@graphql-tools/merge')
 
-const resolvers = fileLoader(path.join(__dirname, '/../**/*.resolvers.js'));
-
+const resolvers = loadFilesSync(`${__dirname}/../**/*.resolvers.js`);
 
 module.exports = function(app) {
   function applyContext(importedResolvers) {
