@@ -24,6 +24,10 @@ Getting up and running is as easy as 1, 2, 3.
     npm start
     ```
 
+## Migrating databases
+
+Run `node create-migration.js migration-name` to create a migration
+
 ## Testing
 
 Simply run `npm test` and all your tests in the `test/` directory will be run.
