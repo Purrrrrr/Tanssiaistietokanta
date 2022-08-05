@@ -1,11 +1,13 @@
 {
   "name": "dance-database",
   "description": "",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "homepage": "",
   "main": "src",
   "keywords": [
-    "feathers"
+    "feathers",
+    "dancing",
+    "Ropecon"
   ],
   "author": {
     "name": "Purr Consuegra",

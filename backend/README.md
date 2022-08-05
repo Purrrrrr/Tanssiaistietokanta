@@ -56,6 +56,6 @@ __0.1.0__
 
 ## License
 
-Copyright (c) 2018
+Copyright Purr Consuegra (c) 2018-2022
 
 Licensed under the [MIT license](LICENSE).
