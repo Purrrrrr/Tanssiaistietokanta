@@ -35,11 +35,15 @@ export default function EventProgramEditorPage({event}) {
 
 function toProgramInput({introductions = [], danceSets = []}) {
   return removeTypenames({
-    introductions,
+    introductions: introductions.map(toIntroductionInput),
     danceSets: L.modify(
       [L.elems, 'program', L.elems], toProgramItemInput, danceSets
     )
   });
+}
+
+function toIntroductionInput({ _id, ...rest}) {
+  return { eventProgramId: _id, eventProgram: rest }
 }
 
 function toProgramItemInput({__typename, _id, ...rest}) {
@@ -51,10 +55,11 @@ function toProgramItemInput({__typename, _id, ...rest}) {
         type: 'DANCE',
         danceId: _id
       };
-    case 'OtherProgram':
+    case 'EventProgram':
       return {
-        type: 'OTHER_PROGRAM',
-        otherProgram: rest
+        type: 'EVENT_PROGRAM',
+        eventProgramId: _id,
+        eventProgram: rest
       };
     default:
       throw new Error('Unexpected program item type '+__typename);

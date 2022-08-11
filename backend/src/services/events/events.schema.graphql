@@ -12,7 +12,7 @@ type Event {
 }
 
 type EventProgram {
-  introductions: [OtherProgram!]!
+  introductions: [EventProgram!]!
   danceSets: [DanceSet!]!
 }
 
@@ -22,18 +22,21 @@ type DanceSet {
   intervalMusicDuration: Float
 }
 
-union EventProgramItem = RequestedDance | Dance | OtherProgram
+union EventProgramItem = RequestedDance | Dance | EventProgram
 
-interface NamedProgram {
+interface ProgramItem {
+  _id: ID
   name: String!
   duration: Float
+  description: String
 }
 
 type RequestedDance {
   _: Int
 }
 
-type OtherProgram implements NamedProgram {
+type EventProgram implements ProgramItem {
+  _id: ID
   name: String!
   description: String
   duration: Float
@@ -51,7 +54,7 @@ input EventInput {
 }
 
 input ProgramInput {
-  introductions: [OtherProgramInput!]!
+  introductions: [IntroductionInput!]!
   danceSets: [DanceSetInput!]!
 }
 
@@ -64,19 +67,27 @@ input DanceSetInput {
 input ProgramItemInput {
   "The actual type of the item, the other fields are used depending on the value of this field"
   type: ProgramType!
-  "The value to use when type is OTHER_PROGRAM"
-  otherProgram: OtherProgramInput
+  "The id of the program to use when type is EVENT_PROGRAM"
+  eventProgramId: ID
+  "The value to use when type is EVENT_PROGRAM"
+  eventProgram: EventProgramInput
   "The id of the dance to use when type is DANCE"
   danceId: ID
 }
 
+input IntroductionInput {
+  eventProgramId: ID
+  "The value to use when modifying event program"
+  eventProgram: EventProgramInput
+}
+
 enum ProgramType {
   DANCE
-  OTHER_PROGRAM
+  EVENT_PROGRAM
   REQUESTED_DANCE
 }
 
-input OtherProgramInput {
+input EventProgramInput {
   name: String!
   description: String
   duration: Float

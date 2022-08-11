@@ -6,11 +6,18 @@ const L = require('partial.lenses');
 module.exports = function (options = {}) {
   return async context => {
     const {data: {program}} = context;
+    const eventProgramService = context.app.service('event-program');
 
     if (program && program.danceSets) {
-      context.data.program = L.modify(
-        ['danceSets', L.elems, 'program', L.elems], processProgramItem,
-        program
+      context.data.program.danceSets = await L.modifyAsync(
+        [L.elems, 'program', L.elems], item => processProgramItem(item, eventProgramService),
+        program.danceSets
+      );
+    }
+    if (program && program.introductions) {
+      context.data.program.introductions = await L.modifyAsync(
+        L.elems, item => processProgramItem({ type: 'EVENT_PROGRAM', ...item }, eventProgramService),
+        program.introductions
       );
     }
 
@@ -18,19 +25,30 @@ module.exports = function (options = {}) {
   };
 };
 
-function processProgramItem({type, danceId, otherProgram}) {
+async function processProgramItem({type, danceId, eventProgramId, eventProgram}, eventProgramService) {
   switch(type) {
     case 'DANCE':
       if (!danceId) return REQUESTED_DANCE;
       return {
         danceId, __typename: 'Dance'
       };
-    case 'OTHER_PROGRAM':
+    case 'EVENT_PROGRAM':
+      const id = await storeProgram(eventProgramId, eventProgram, eventProgramService)
       return {
-        ...otherProgram, __typename: 'OtherProgram'
+        eventProgramId: id, __typename: 'EventProgram'
       };
     case 'REQUESTED_DANCE':
       return REQUESTED_DANCE;
+  }
+}
+
+async function storeProgram(eventProgramId, eventProgram, eventProgramService) {
+  if (eventProgramId) {
+    await eventProgramService.update(eventProgramId, eventProgram)
+    return eventProgramId
+  } else {
+    const { _id } = await eventProgramService.create(eventProgram)
+    return _id
   }
 }
 

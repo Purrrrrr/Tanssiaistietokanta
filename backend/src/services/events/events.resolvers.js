@@ -18,6 +18,9 @@ module.exports = (app) => {
     EventProgramItem: {
       __resolveType: (obj) => obj.__typename,
     },
+    ProgramItem: {
+      __resolveType: (obj) => obj.__typename,
+    },
     Query: {
       events: () => service.find(commonParams),
       event: (_, {id}) => service.get(id, commonParams),

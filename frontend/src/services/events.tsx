@@ -4,6 +4,7 @@ const eventFields = `
 _id, name, deleted
 program {
   introductions {
+    _id
     name
     duration
   }
@@ -11,15 +12,11 @@ program {
     name
     program {
       __typename
-      ... on NamedProgram {
+      ... on ProgramItem {
+        _id
         name
         duration
-      }
-      ... on OtherProgram {
         description
-      }
-      ... on Dance {
-        _id
       }
     }
     intervalMusicDuration

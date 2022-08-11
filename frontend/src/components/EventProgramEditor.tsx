@@ -26,7 +26,7 @@ const t = makeTranslate({
   programListIsEmpty: 'Ei ohjelmaa',
   Dance: 'Tanssi',
   RequestedDance: 'Toivetanssi',
-  OtherProgram: 'Muu ohjelma',
+  EventProgram: 'Muu ohjelma',
   removeDanceSet: 'Poista setti',
   addDanceSet: 'Lisää tanssisetti',
   danceSet: 'Setti',
@@ -67,7 +67,7 @@ export function EventProgramEditor({program, onChange}) {
 
   function addIntroductoryInfo() {
     onChange(
-      L.set(['introductions', L.defaults([]), L.appendTo], {__typename: 'OtherProgram', name: ''})
+      L.set(['introductions', L.defaults([]), L.appendTo], {__typename: 'EventProgram', name: ''})
     );
     focusLater('.eventProgramEditor .danceset:first-child tbody tr:last-child');
   }
@@ -183,7 +183,7 @@ function ProgramListEditor({program, onChange, intervalMusicDuration, onSetInter
         <tr>
           <td colSpan={3}>
             {isIntroductionsSection || <Button text={t`addDance`} onClick={() => addItem('RequestedDance')} className="addDance" />}
-            <Button text={isIntroductionsSection ? t`addIntroductoryInfo` : t`addInfo`} onClick={() => addItem('OtherProgram', {name: ''})} className="addInfo" />
+            <Button text={isIntroductionsSection ? t`addIntroductoryInfo` : t`addInfo`} onClick={() => addItem('EventProgram', {name: ''})} className="addInfo" />
             {" "}
             {isIntroductionsSection || 
                 <Switch inline label={t`intervalMusicAtEndOfSet`} checked={intervalMusicDuration > 0}
@@ -254,7 +254,7 @@ function ProgramDetailsEditor({item, onInputBlurred, onChange}) {
     return <DanceChooser value={item ? {_id, name} : null} onBlur={onInputBlurred}
       allowEmpty emptyText={t`RequestedDance`}
       onChange={dance=> onChange(dance ? {__typename: 'Dance', ...dance} : {__typename: 'RequestedDance'})} />
-    case 'OtherProgram':
+    case 'EventProgram':
       return <>
         <Input value={name} onBlur={onInputBlurred} required label="Ohjelmanumeron nimi"
           onChange={val => onChange(L.set('name', val, item))} />

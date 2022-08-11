@@ -2,7 +2,7 @@ type Query {
   dances: [Dance!]!
 }
 
-type Dance implements NamedProgram {
+type Dance implements ProgramItem {
   _id: ID
   name: String!
   description: String

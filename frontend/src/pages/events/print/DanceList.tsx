@@ -86,7 +86,7 @@ query getDanceList($eventId: ID!) {
         name
         program {
           __typename
-          ... on NamedProgram {
+          ... on ProgramItem {
             name
           }
           ... on Dance {

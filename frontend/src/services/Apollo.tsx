@@ -31,18 +31,18 @@ const fragmentMatcher = new IntrospectionFragmentMatcher({
               "name": "Dance"
             },
             {
-              "name": "OtherProgram"
+              "name": "EventProgram"
             }
           ]
         },{
           "kind": "INTERFACE",
-          "name": "NamedProgram",
+          "name": "ProgramItem",
           "possibleTypes": [
             {
               "name": "Dance"
             },
             {
-              "name": "OtherProgram"
+              "name": "EventProgram"
             }
           ]
         }

@@ -32,15 +32,12 @@ query BallProgram($eventId: ID!) {
         intervalMusicDuration
         program {
           __typename
-          ... on NamedProgram {
+          ... on ProgramItem {
+            _id
             name
-          }
-          ... on OtherProgram {
             description
           }
           ... on Dance {
-            _id
-            description
             teachedIn(eventId: $eventId) { _id, name }
           }
         }
@@ -129,7 +126,7 @@ function getSlides(event) : Slide[] {
     if (danceSet.intervalMusicDuration > 0) {
       danceSetSlide.subtotal++
       slides.push({
-        __typename: "OtherProgram",
+        __typename: "EventProgram",
         name: t`intervalMusic`,
         parent: danceSetSlide,
       });
@@ -154,8 +151,8 @@ function SlideView({slide, onChangeSlide}) {
       return <DanceSlide dance={slide} onChangeSlide={onChangeSlide} />;
     case 'RequestedDance':
       return <RequestedDanceSlide next={slide.next} onChangeSlide={onChangeSlide} />;
-    case 'OtherProgram':
-      return <OtherProgramSlide program={slide} onChangeSlide={onChangeSlide} />;
+    case 'EventProgram':
+      return <EventProgramSlide program={slide} onChangeSlide={onChangeSlide} />;
     case 'DanceSet':
     case 'Event':
     default:
@@ -163,7 +160,7 @@ function SlideView({slide, onChangeSlide}) {
   }
 }
 function HeaderSlide({header, onChangeSlide}) {
-  const {name, program = [], description} = header;
+  const {name, program = [] } = header;
   return <SimpleSlide title={name} next={null} onChangeSlide={onChangeSlide} >
     <ul className="headerList mainContent">
       {program
@@ -178,7 +175,7 @@ function HeaderSlide({header, onChangeSlide}) {
   </SimpleSlide>;
 }
 
-function OtherProgramSlide({program, onChangeSlide}) {
+function EventProgramSlide({program, onChangeSlide}) {
   const {name, next, description} = program;
   return <SimpleSlide title={name} next={next} onChangeSlide={onChangeSlide} >
     {description && <p className="mainContent"><Markdown>{description}</Markdown></p>}
