@@ -24,7 +24,10 @@ export function useAccessibleField<T>(
   const errorId = `${fieldProps.id}-error`;
   if (error) fieldProps['aria-describedby'] = errorId;
 
-  const addValidation = (children : JSX.Element) => error ? <>{children}<ErrorMessage id={errorId} error={error} /></> : children;
+  const addValidation = (children : JSX.Element) => <>
+    {children}
+    <ErrorMessage id={errorId} error={error} />
+  </>
 
   return {
     fieldProps: stripValidationProps(fieldProps),
