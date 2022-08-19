@@ -1,13 +1,9 @@
-import {useMutation as useMutationOriginal, useQuery} from '@apollo/react-hooks';
-import {MutationResult, ExecutionResult} from '@apollo/react-common';
+import { ApolloClient, useMutation as useMutationOriginal, useQuery, InMemoryCache, FetchResult, MutationResult } from "@apollo/client";
+// import {MutationResult, ExecutionResult} from '@apollo/react-common';
 
-import ApolloClient from 'apollo-boost';
-import { InMemoryCache } from 'apollo-cache-inmemory';
-import { IntrospectionFragmentMatcher } from 'apollo-cache-inmemory';
 import {showDefaultErrorToast} from "utils/toaster"
 
-export {ApolloProvider, useQuery} from '@apollo/react-hooks';
-export {gql} from 'apollo-boost';
+export {gql, ApolloProvider, useQuery} from "@apollo/client"
 export {ApolloClient};
 export function useMutation(query, options = {}) {
   return useMutationOriginal(query, {
@@ -16,42 +12,12 @@ export function useMutation(query, options = {}) {
   })
 }
 
-const fragmentMatcher = new IntrospectionFragmentMatcher({
-  introspectionQueryResultData: {
-    __schema: {
-      types: [
-        {
-          "kind": "UNION",
-          "name": "EventProgramItem",
-          "possibleTypes": [
-            {
-              "name": "RequestedDance"
-            },
-            {
-              "name": "Dance"
-            },
-            {
-              "name": "EventProgram"
-            }
-          ]
-        },{
-          "kind": "INTERFACE",
-          "name": "ProgramItem",
-          "possibleTypes": [
-            {
-              "name": "Dance"
-            },
-            {
-              "name": "EventProgram"
-            }
-          ]
-        }
-      ]
-    }
+const cache = new InMemoryCache({
+  possibleTypes: {
+    EventProgramItem: ['RequestedDance', 'Dance', 'EventProgram'],
+    ProgramItem: ['Dance', 'EventProgram'],
   }
 });
-
-const cache = new InMemoryCache({fragmentMatcher});
 const uri = '/api/graphql'
 
 export const apolloClient = new ApolloClient({
@@ -76,7 +42,7 @@ export function makeListQueryHook(query, dataKey) {
 export function makeMutationHook<V extends any[]>(
   query, {parameterMapper, ...rest} : {parameterMapper: (...V) => object, [key : string]: any}
 ) {
-  return (args = {}) : [(...vars: V) => Promise<ExecutionResult<any>>, MutationResult<any>] => {
+  return (args = {}) : [(...vars: V) => Promise<FetchResult>, MutationResult<any>] => {
     const [runQuery, data] = useMutation(query, {...args, ...rest});
 
     return [(...vars : V) => runQuery(parameterMapper(...vars)), data];
