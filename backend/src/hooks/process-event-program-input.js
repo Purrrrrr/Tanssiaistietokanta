@@ -1,6 +1,7 @@
 // Use this hook to manipulate incoming or outgoing data.
 // For more information on hooks see: http://docs.feathersjs.com/api/hooks.html
 const L = require('partial.lenses');
+const evolve = require('../utils/evolveObjAsync');
 
 // eslint-disable-next-line no-unused-vars
 module.exports = function (options = {}) {
@@ -8,18 +9,18 @@ module.exports = function (options = {}) {
     const {data: {program}} = context;
     const eventProgramService = context.app.service('event-program');
 
-    if (program && program.danceSets) {
-      context.data.program.danceSets = await L.modifyAsync(
-        [L.elems, 'program', L.elems], item => processProgramItem(item, eventProgramService),
-        program.danceSets
-      );
-    }
-    if (program && program.introductions) {
-      context.data.program.introductions = await L.modifyAsync(
-        L.elems, item => processProgramItem({ type: 'EVENT_PROGRAM', ...item }, eventProgramService),
-        program.introductions
-      );
-    }
+    context.data = await evolve({
+      program: {
+        danceSets: L.modifyAsync(
+          [L.elems, 'program', L.elems],
+          item => processProgramItem(item, eventProgramService)
+        ),
+        introductions: L.modifyAsync(
+          L.elems,
+          item => processProgramItem({ type: 'EVENT_PROGRAM', ...item }, eventProgramService),
+        )
+      }
+    }, context.data)
 
     return context;
   };
