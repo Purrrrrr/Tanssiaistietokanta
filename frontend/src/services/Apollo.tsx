@@ -50,9 +50,14 @@ const fragmentMatcher = new IntrospectionFragmentMatcher({
     }
   }
 });
-const cache = new InMemoryCache({fragmentMatcher});
 
-export const apolloClient = new ApolloClient({ cache });
+const cache = new InMemoryCache({fragmentMatcher});
+const uri = '/api/graphql'
+
+export const apolloClient = new ApolloClient({
+  uri,
+  cache,
+});
 
 export function makeFragmentCache(type, query) {
   return id => apolloClient.readFragment({

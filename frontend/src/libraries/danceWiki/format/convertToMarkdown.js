@@ -1,4 +1,4 @@
-const conversionUrl = '/convert';
+const conversionUrl = '/api/convert';
 
 export function convertToMarkdown(content) {
   return fetch(conversionUrl, {
