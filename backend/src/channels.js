@@ -5,11 +5,10 @@ module.exports = function(app) {
   }
 
   app.on('connection', connection => {
-    // On a new real-time connection, add it to the anonymous channel
-    app.channel('anonymous').join(connection);
+    app.channel('events').join(connection);
   });
 
-  app.on('login', (authResult, { connection }) => {
+  /*app.on('login', (authResult, { connection }) => {
     // connection can be undefined if there is no
     // real-time connection, e.g. when logging in via REST
     if(connection) {
@@ -34,17 +33,28 @@ module.exports = function(app) {
       // app.channel(`emails/${user.email}`).join(channel);
       // app.channel(`userIds/$(user.id}`).join(channel);
     }
-  });
+  }); */
 
   // eslint-disable-next-line no-unused-vars
-  app.publish((data, hook) => {
+  app.publish((data, context) => {
     // Here you can add event publishers to channels set up in `channels.js`
     // To publish only for a specific event use `app.publish(eventname, () => {})`
 
-    console.log('Publishing all events to all authenticated users. See `channels.js` and https://docs.feathersjs.com/api/channels.html for more information.'); // eslint-disable-line
+    // console.log('Publishing all events to all authenticated users. See `channels.js` and https://docs.feathersjs.com/api/channels.html for more information.'); // eslint-disable-line
 
     // e.g. to publish all service events to all authenticated users use
-    return app.channel('authenticated');
+    //console.log(data)
+    //const { app, service, ...c } = context
+    //console.log(c)
+    const { id, path: serviceName } = context
+
+    console.log(`${serviceName}/${id}`)
+
+    return [
+      app.channel('everything'),
+      app.channel(serviceName),
+      app.channel(`${serviceName}/${id}`),
+    ]
   });
 
   // Here you can also add service specific event publishers
