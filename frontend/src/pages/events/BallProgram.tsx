@@ -1,7 +1,7 @@
 import './BallProgram.sass';
 import React, {useMemo, useState, useCallback} from 'react';
 import Markdown from 'markdown-to-jsx';
-import {gql, useQuery} from "services/Apollo";
+import {backendQueryHook} from "backend";
 import ReactTouchEvents from "react-touch-events";
 
 import {EditableDanceProperty} from "components/EditableDanceProperty";
@@ -18,7 +18,7 @@ const t = makeTranslate({
   afterThis: 'Tämän jälkeen',
 });
 
-const GET_BALL_PROGRAM = gql`
+const useBallProgram = backendQueryHook(`
 query BallProgram($eventId: ID!) {
   event(id: $eventId) {
     _id
@@ -44,10 +44,10 @@ query BallProgram($eventId: ID!) {
       }
     }
   }
-}`;
+}`);
 
 export default function BallProgram({eventId}) {
-  const {data, refetch, ...loadingState} = useQuery(GET_BALL_PROGRAM, {variables: {eventId}});
+  const {data, refetch, ...loadingState} = useBallProgram({eventId});
   const [slide, setSlide] = useState(0);
 
   if (!data) return <LoadingState {...loadingState} refetch={refetch} />

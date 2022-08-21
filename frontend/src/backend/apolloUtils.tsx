@@ -1,35 +1,11 @@
-import { ApolloClient, useMutation as useMutationOriginal, useQuery, InMemoryCache, FetchResult, MutationResult } from "@apollo/client";
-// import {MutationResult, ExecutionResult} from '@apollo/react-common';
-
+import { useMutation as useMutationOriginal, useQuery, FetchResult, MutationResult } from "@apollo/client";
 import {showDefaultErrorToast} from "utils/toaster"
 
-export {gql, ApolloProvider, useQuery} from "@apollo/client"
-export {ApolloClient};
 export function useMutation(query, options = {}) {
   return useMutationOriginal(query, {
     onError: showDefaultErrorToast,
     ...options
   })
-}
-
-const cache = new InMemoryCache({
-  possibleTypes: {
-    EventProgramItem: ['RequestedDance', 'Dance', 'EventProgram'],
-    ProgramItem: ['Dance', 'EventProgram'],
-  }
-});
-const uri = '/api/graphql'
-
-export const apolloClient = new ApolloClient({
-  uri,
-  cache,
-});
-
-export function makeFragmentCache(type, query) {
-  return id => apolloClient.readFragment({
-    id: type+":"+id,
-    fragment: query,
-  });
 }
 
 export function makeListQueryHook(query, dataKey) {
@@ -40,12 +16,22 @@ export function makeListQueryHook(query, dataKey) {
 }
 
 export function makeMutationHook<V extends any[]>(
-  query, {parameterMapper, ...rest} : {parameterMapper: (...V) => object, [key : string]: any}
+  query,
+  {
+    parameterMapper,
+    ...rest
+  } : {
+    parameterMapper: (...V) => object,
+    [key : string]: any
+  }
 ) {
   return (args = {}) : [(...vars: V) => Promise<FetchResult>, MutationResult<any>] => {
     const [runQuery, data] = useMutation(query, {...args, ...rest});
 
-    return [(...vars : V) => runQuery(parameterMapper(...vars)), data];
+    return [
+      (...vars : V) => runQuery(parameterMapper(...vars)),
+      data
+    ];
   };
 }
 

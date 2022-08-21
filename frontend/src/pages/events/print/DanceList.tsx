@@ -2,7 +2,7 @@ import "./DanceList.sass";
 
 import {Button, Switch} from "libraries/forms";
 import React, {useState} from "react";
-import {gql, useQuery} from 'services/Apollo';
+import {backendQueryHook} from 'backend';
 
 import {LoadingState} from 'components/LoadingState';
 import PrintViewToolbar from 'components/widgets/PrintViewToolbar';
@@ -77,7 +77,7 @@ function PrintFooterContainer({children, footer}) {
   </>;
 }
 
-const GET_EVENT = gql`
+const useDanceList = backendQueryHook(`
 query getDanceList($eventId: ID!) {
   event(id: $eventId) {
     _id
@@ -101,10 +101,10 @@ query getDanceList($eventId: ID!) {
       name, abbreviation
     }
   }
-}`;
+}`);
 
 function useBallProgram(eventId) {
-  const {data, ...loadingState} = useQuery(GET_EVENT, {variables: {eventId}});
+  const {data, ...loadingState} = useDanceList({eventId});
   const {program = null, workshops = null} = data ? data.event : {};
   return {program, workshops, loadingState};
 }

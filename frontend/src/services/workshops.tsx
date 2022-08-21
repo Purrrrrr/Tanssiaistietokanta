@@ -1,4 +1,4 @@
-import { gql, makeMutationHook, useQuery } from './Apollo';
+import { gql, makeMutationHook, useQuery } from '../backend';
 
 const workshopFields = `
   _id, eventId
