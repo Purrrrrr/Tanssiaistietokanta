@@ -6,8 +6,9 @@ module.exports = (schemaDoc, resolverDef, app) => {
   const resolvers = {...resolverRest, ...Query, ...Mutation};
 
   return {
-    async find(params) {
-      return await graphql(schema, params.query, resolvers, {app}, params.variables);
+    async find( params ) {
+      const {query: {query, variables}} = params
+      return await graphql(schema, query, resolvers, {app}, variables);
     },
 
     validate(value, typeName) {

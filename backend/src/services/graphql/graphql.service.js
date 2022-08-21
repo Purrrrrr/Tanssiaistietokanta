@@ -33,7 +33,7 @@ module.exports = function (app) {
   const service = app.service('graphql');
 
   /* Example for internal service usage
-  service.find({query: '{dances {_id}}'})
+  service.find({query: {query: '{dances {_id}}'}})
     .then(
       res => logger.warn(JSON.stringify(res)),
       err => logger.warn('???' + JSON.stringify(err.message))
