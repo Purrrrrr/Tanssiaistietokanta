@@ -1,6 +1,5 @@
 import React from 'react';
-import {PATCH_DANCE, WritableDanceProperty, dancePropertyLabels} from "services/dances";
-import { useMutation } from 'services/Apollo';
+import {usePatchDance, WritableDanceProperty, dancePropertyLabels} from "services/dances";
 import {ClickToEdit} from "libraries/forms";
 import {SimpleMarkdownEditor} from 'components/MarkdownEditor';
 
@@ -16,7 +15,7 @@ interface EditableDancePropertyProps {
 }
 
 export function EditableDanceProperty({dance, property, addText, ...props} : EditableDancePropertyProps) {
-  const [patch, state] = useMutation(PATCH_DANCE);
+  const [patch, state] = usePatchDance();
 
   const onChange = (value) => {
     patch({

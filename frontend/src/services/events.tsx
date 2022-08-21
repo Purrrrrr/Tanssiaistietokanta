@@ -1,4 +1,4 @@
-import { gql, makeListQueryHook, makeMutationHook, useQuery } from './Apollo';
+import { gql, makeListQueryHook, makeMutationHook, useQuery } from '../backend';
 
 const eventFields = `
 _id, name, deleted

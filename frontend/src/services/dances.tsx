@@ -1,4 +1,4 @@
-import { gql, appendToListQuery, makeMutationHook, makeListQueryHook } from './Apollo';
+import { gql, appendToListQuery, makeMutationHook, useMutation, makeListQueryHook } from '../backend';
 import {sorted} from "utils/sorted"
 
 export interface Dance {
@@ -58,12 +58,16 @@ mutation createDance($dance: DanceInput!) {
     appendToListQuery(cache, GET_DANCES, createDance)
 });
 
-export const PATCH_DANCE = gql`
+const PATCH_DANCE = gql`
 mutation patchDance($id: ID!, $dance: DancePatchInput!) {
   patchDance(id: $id, dance: $dance) {
     ${danceFields}
   }
 }`;
+
+export function usePatchDance() {
+  return useMutation(PATCH_DANCE)
+}
 
 export const useDeleteDance = makeMutationHook<[string]>(gql`
 mutation deleteDance($id: ID!) {

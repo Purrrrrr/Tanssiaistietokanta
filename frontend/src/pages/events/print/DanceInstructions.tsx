@@ -1,13 +1,12 @@
-import React, {useState, useRef} from 'react';
-import {useModifyDance} from 'services/dances';
+import React, {useState, useRef, useCallback} from 'react';
+import {usePatchDance} from 'services/dances';
 import {Button, Switch} from "libraries/forms";
-import {gql, useQuery} from "services/Apollo";
+import {backendQueryHook} from "backend";
 import {LoadingState} from 'components/LoadingState';
 import {EditableMarkdown} from 'components/EditableMarkdown';
 import {DanceDataImportButton} from "components/DanceDataImportDialog";
 import PrintViewToolbar from 'components/widgets/PrintViewToolbar';
 import {makeTranslate} from 'utils/translate';
-import {useOnChangeForPropInValue} from 'utils/useOnChangeForProp';
 import {selectElement} from 'utils/selectElement';
 import {showToast} from "utils/toaster"
 
@@ -26,7 +25,7 @@ const t = makeTranslate({
   danceInstructions: 'Tanssiohjeet',
 });
 
-const GET_DANCE_INSTRUCTIONS= gql`
+const useDanceInstructions= backendQueryHook(`
 query DanceInstructions($eventId: ID!) {
   event(id: $eventId) {
     _id
@@ -43,11 +42,10 @@ query DanceInstructions($eventId: ID!) {
       }
     }
   }
-}`;
+}`);
 
 export default function DanceInstructions({eventId}) {
-  const {data, refetch, ...loadingState} = useQuery(GET_DANCE_INSTRUCTIONS, {variables: {eventId}});
-  const [modifyDance] = useModifyDance();
+  const {data, refetch, ...loadingState} = useDanceInstructions({eventId});
   const dancesEl = useRef<HTMLElement>(null);
   const [showWorkshops, setShowWorkshops] = useState(true);
 
@@ -84,7 +82,7 @@ export default function DanceInstructions({eventId}) {
       }
       <t.h1>danceInstructions</t.h1>
 
-      {dances.map(dance => <Dance key={dance._id} dance={dance} onChange={modifyDance}/>)}
+      {dances.map(dance => <Dance key={dance._id} dance={dance} />)}
     </section>
     </>
 }
@@ -95,8 +93,15 @@ function getDances(workshops) {
   return dances;
 }
 
-function Dance({dance, onChange}) {
-  const onChangeFor = useOnChangeForPropInValue(onChange, dance);
+function Dance({dance}) {
+  const [patchDance] = usePatchDance();
+  const onChange = useCallback(
+    (instructions) => patchDance({
+      variables: {id: dance._id, dance: { instructions }}
+    }),
+    [dance, patchDance]
+  )
+
   const {name, instructions} = dance;
 
   return <div tabIndex={0} className="dance-instructions-dance">
@@ -105,7 +110,7 @@ function Dance({dance, onChange}) {
       {' '}
       <DanceDataImportButton text={t`fetchDataFromWiki`} dance={dance} />
     </h2>
-    <EditableMarkdown label="" value={instructions} onChange={onChangeFor('instructions')}
+    <EditableMarkdown label="" value={instructions} onChange={onChange}
       overrides={markdownOverrides} plain maxHeight={undefined} />
   </div>
 }

@@ -5,10 +5,10 @@ import AppRoutes from "./routes";
 import NavigationLayout from "components/NavigationLayout";
 import {UserContextProvider} from "services/users";
 import {ToastContainer} from "utils/toaster";
-import {apolloClient, ApolloProvider} from "services/Apollo";
+import {BackendProvider} from "backend";
 
 function DanceOrganizer() {
-  return <ApolloProvider client={apolloClient}>
+  return <BackendProvider>
     <UserContextProvider>
       <BrowserRouter>
         <ToastContainer />
@@ -17,7 +17,7 @@ function DanceOrganizer() {
         </NavigationLayout>
       </BrowserRouter>
     </UserContextProvider>
-  </ApolloProvider>;
+  </BackendProvider>;
 }
 
 export default DanceOrganizer;

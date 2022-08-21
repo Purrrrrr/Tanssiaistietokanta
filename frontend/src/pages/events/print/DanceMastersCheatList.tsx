@@ -1,6 +1,6 @@
 import './DanceMastersCheatList.sass';
 
-import {gql, useQuery} from "services/Apollo";
+import {backendQueryHook} from "backend";
 
 import {Button} from "libraries/forms";
 import {EditableDanceProperty} from "components/EditableDanceProperty";
@@ -19,7 +19,7 @@ const t = makeTranslate({
   requestedDance: 'Toivetanssi',
 });
 
-const GET_CHEAT_LIST= gql`
+const useCheatList = backendQueryHook(`
 query getDanceMastersCheatList($eventId: ID!) {
   event(id: $eventId) {
     _id
@@ -43,10 +43,10 @@ query getDanceMastersCheatList($eventId: ID!) {
       }
     }
   }
-}`;
+}`);
 
 export default function DanceMastersCheatList({eventId}) {
-  const {data, ...loadingState} = useQuery(GET_CHEAT_LIST, {variables: {eventId}});
+  const {data, ...loadingState} = useCheatList({eventId});
   if (!data) return <LoadingState {...loadingState} />
 
   return <>

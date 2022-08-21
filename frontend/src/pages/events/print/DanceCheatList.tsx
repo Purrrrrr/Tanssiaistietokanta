@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import classNames from 'classnames';
 import {Switch, Button} from "libraries/forms";
-import {gql, useQuery} from "services/Apollo";
+import {backendQueryHook} from "backend";
 import {EditableDanceProperty} from "components/EditableDanceProperty";
 import PrintViewToolbar from 'components/widgets/PrintViewToolbar';
 import {PrintTable} from 'components/PrintTable';
@@ -23,7 +23,7 @@ const t = makeTranslate({
   danceName: 'Nimi',
 });
 
-const GET_CHEAT_LIST= gql`
+const useCheatList = backendQueryHook(`
 query DanceCheatList($eventId: ID!) {
   event(id: $eventId) {
     _id
@@ -37,12 +37,12 @@ query DanceCheatList($eventId: ID!) {
       }
     }
   }
-}`;
+}`);
 
 export default function DanceCheatList({eventId}) {
   const [mini, setMini] = useState(false);
   const [helpText, setHelptext] = useState(true);
-  const {data, ...loadingState} = useQuery(GET_CHEAT_LIST, {variables: {eventId}});
+  const {data, ...loadingState} = useCheatList({eventId});
   if (!data) return <LoadingState {...loadingState} />
 
   return <>

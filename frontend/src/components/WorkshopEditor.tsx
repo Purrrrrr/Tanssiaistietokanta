@@ -2,7 +2,7 @@ import {Intent} from "@blueprintjs/core";
 import {DragHandle, ListEditor} from "components/ListEditor";
 import React from 'react';
 import * as L from 'partial.lenses';
-import {gql, useQuery} from "services/Apollo";
+import {backendQueryHook} from "backend";
 
 import {DanceChooser} from "components/widgets/DanceChooser";
 import {makeTranslate} from 'utils/translate';
@@ -60,17 +60,17 @@ function getAbbreviationTakenError({value, values}) {
   );
 }
 
-const GET_WORKSHOPS= gql`
+const useWorkshops = backendQueryHook(`
 query Workshops($eventId: ID!) {
   event(id: $eventId) {
     workshops {
       _id, abbreviation
     }
   }
-}`;
+}`);
 
 function useTakenWorkshopAbbreviations(eventId, workshopId) {
-  const {data} = useQuery(GET_WORKSHOPS, {variables: {eventId}});
+  const {data} = useWorkshops({eventId});
   if (!data) return [];
 
   return data.event.workshops
