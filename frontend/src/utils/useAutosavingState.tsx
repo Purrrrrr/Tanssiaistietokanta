@@ -22,21 +22,22 @@ export default function useAutosavingState<T>(
   onPatch : (saved : Partial<T>) => T,
 ) : [T, (saved : T) => any, SyncStore<T>]{
   const [reducerState, dispatch] = useReducer<Reducer<SyncStore<T>, SyncAction>, T>(reducer, serverState, getInitialState)
-  const { state, modifications } = reducerState
+  const { state, modifications, conflicts } = reducerState
 
   useEffect(() => {
     dispatch({ type: 'EXTERNAL_MODIFICATION', payload: serverState })
   }, [serverState])
 
   useEffect(() => {
-    if (state === 'CONFLICT') return
+    if (state === 'IN_SYNC') return
 
     const id = setTimeout(() => {
-      onPatch(modifications)
+      const patch = getPatch(modifications, conflicts)
+      onPatch(patch)
     }, 500)
 
     return () => clearTimeout(id)
-  }, [state, modifications, onPatch])
+  }, [state, modifications, conflicts, onPatch])
 
   const onModified = useCallback((modifications) => {
     dispatch({ type: 'LOCAL_MODIFICATION', payload: modifications})
@@ -62,8 +63,6 @@ function getInitialState<T>(serverState: T) : SyncStore<T> {
 
 function reducer<T>(reducerState : SyncStore<T>, action : SyncAction) : SyncStore<T> {
   const { modifications, serverState } = reducerState
-  if (reducerState.state !== 'IN_SYNC') console.log(reducerState)
-  console.log(action.type)
   switch (action.type) {
     case 'LOCAL_MODIFICATION':
       return merge(
@@ -108,8 +107,6 @@ function merge<T>(serverState : T, newServerState : T, modifications : Partial<T
     const modifiedLocally = !deepEquals(originalValue, localValue)
     const conflict = !deepEquals(serverValue, localValue)
 
-    // console.log({ key, modifiedLocally, modifiedOnServer })
-
     if (modifiedLocally) {
       newModifications[key] = localValue
       hasModifications = true
@@ -131,4 +128,12 @@ function merge<T>(serverState : T, newServerState : T, modifications : Partial<T
     modifications: newModifications,
     conflicts,
   }
+}
+
+function getPatch<T>(modifications : Partial<T>, conflicts : (keyof T)[] | null) : Partial<T> {
+  if (conflicts === null) return modifications
+
+  const patch = { ...modifications }
+  conflicts.forEach(key => delete patch[key])
+  return patch
 }
