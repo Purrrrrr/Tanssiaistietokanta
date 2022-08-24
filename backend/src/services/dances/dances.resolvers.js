@@ -1,9 +1,6 @@
 module.exports = (app) => {
   const service = app.service('dances');
   const workshopService = app.service('workshops');
-  const commonParams = {
-    provider: 'graphql'
-  };
 
   return {
     Dance: {
@@ -15,13 +12,13 @@ module.exports = (app) => {
       })
     },
     Query: {
-      dances: () => service.find(commonParams),
+      dances: (_, __, params) => service.find(params),
     },
     Mutation: {
-      createDance: (_, {dance}) => service.create(dance, commonParams),
-      modifyDance: (_, {id, dance}) => service.update(id, dance, commonParams),
-      patchDance: (_, {id, dance}) => service.patch(id, dance, commonParams),
-      deleteDance: (_, {id}) => service.remove(id, {}, commonParams)
+      createDance: (_, {dance}, params) => service.create(dance, params),
+      modifyDance: (_, {id, dance}, params) => service.update(id, dance, params),
+      patchDance: (_, {id, dance}, params) => service.patch(id, dance, params),
+      deleteDance: (_, {id}, params) => service.remove(id, {}, params)
         .then(dance => ({...dance, deleted: true}))
     }
   };

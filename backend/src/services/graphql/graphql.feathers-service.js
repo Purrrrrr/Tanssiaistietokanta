@@ -1,14 +1,13 @@
-const {graphql, buildSchema, isValidJSValue} = require('graphql');
+const {buildSchema, isValidJSValue} = require('graphql');
 
-module.exports = (schemaDoc, resolverDef, app) => {
+module.exports = (schemaDoc, resolverDef, server) => {
   const schema = buildSchema(schemaDoc);
-  const {Query = {}, Mutation = {}, resolverRest} = resolverDef;
-  const resolvers = {...resolverRest, ...Query, ...Mutation};
 
   return {
     async find( params ) {
-      const {query: {query, variables}} = params
-      return await graphql(schema, query, resolvers, {app}, variables);
+      const {query, ...context} = params;
+      const {data, errors} = await server.executeOperation(query, { context });
+      return {data, errors};
     },
 
     validate(value, typeName) {

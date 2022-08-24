@@ -6,9 +6,6 @@ module.exports = (app) => {
   }
 
   const service = app.service('events');
-  const commonParams = {
-    provider: 'graphql'
-  };
 
   return {
     Event: {
@@ -22,14 +19,14 @@ module.exports = (app) => {
       __resolveType: (obj) => obj.__typename,
     },
     Query: {
-      events: () => service.find(commonParams),
-      event: (_, {id}) => service.get(id, commonParams),
+      events: (_, __, params) => service.find(params),
+      event: (_, {id}, params) => service.get(id, params),
     },
     Mutation: {
-      createEvent: (_, {event}) => service.create(event, commonParams),
-      modifyEvent: (_, {id, event}) => service.update(id, event, commonParams),
-      modifyEventProgram: (_, {id, program}) => service.patch(id, {program}, commonParams),
-      deleteEvent: (_, {id}) => service.remove(id, {}, commonParams)
+      createEvent: (_, {event}, params) => service.create(event, params),
+      modifyEvent: (_, {id, event}, params) => service.update(id, event, params),
+      modifyEventProgram: (_, {id, program}, params) => service.patch(id, {program}, params),
+      deleteEvent: (_, {id}, params) => service.remove(id, {}, params)
         .then(event => ({...event, deleted: true}))
     }
   };
