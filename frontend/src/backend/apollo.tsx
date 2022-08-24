@@ -1,4 +1,5 @@
-import { ApolloClient, InMemoryCache } from "@apollo/client";
+import { ApolloClient, ApolloLink, InMemoryCache, Observable } from "@apollo/client";
+import {runGraphQlQuery} from './feathers';
 
 export {gql, ApolloProvider, useQuery} from "@apollo/client"
 export {ApolloClient};
@@ -9,9 +10,24 @@ const cache = new InMemoryCache({
     ProgramItem: ['Dance', 'EventProgram'],
   }
 });
-const uri = '/api/graphql'
+
+const socketLink = new ApolloLink((operation) => {
+  const {query, variables} = operation
+  return observableFromPromise(
+    runGraphQlQuery({query, variables})
+  )
+})
+
+function observableFromPromise<T>(promise : Promise<T>) : Observable<T> {
+  return new Observable(observer => {
+    async function run() {
+      observer.next(await promise);
+    }
+    run().then(() => observer.complete(), e => observer.error(e));
+  });
+}
 
 export const apolloClient = new ApolloClient({
-  uri,
+  link: socketLink,
   cache,
 });
