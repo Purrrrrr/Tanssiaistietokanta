@@ -39,22 +39,25 @@ module.exports = function(app) {
   app.publish((data, context) => {
     // Here you can add event publishers to channels set up in `channels.js`
     // To publish only for a specific event use `app.publish(eventname, () => {})`
+    const { id, path: serviceName, params: { connection } } = context;
 
-    // console.log('Publishing all events to all authenticated users. See `channels.js` and https://docs.feathersjs.com/api/channels.html for more information.'); // eslint-disable-line
-
-    // e.g. to publish all service events to all authenticated users use
-    //console.log(data)
-    //const { app, service, ...c } = context
-    //console.log(c)
-    const { id, path: serviceName } = context
-
-    console.log(`${serviceName}/${id}`)
-
-    return [
+    const channels = [
       app.channel('everything'),
       app.channel(serviceName),
-      app.channel(`${serviceName}/${id}`),
-    ]
+    ];
+    if (id) {
+      channels.push(
+        app.channel(`${serviceName}/${id}`),
+      );
+    }
+    
+    if (!connection) return channels;
+    
+    return channels.map(channel =>
+      channel.filter(conn => {
+        return conn !== connection;
+      })
+    );
   });
 
   // Here you can also add service specific event publishers

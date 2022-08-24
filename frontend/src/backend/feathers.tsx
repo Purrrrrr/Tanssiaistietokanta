@@ -1,3 +1,4 @@
+import {FetchResult} from "@apollo/client";
 import io from 'socket.io-client';
 import feathers from '@feathersjs/client';
 
@@ -13,6 +14,6 @@ window.feathers = app
 
 const graphQLService = app.service('graphql')
 
-export async function runGraphQlQuery({query, variables}) {
+export async function runGraphQlQuery({query, variables}) : Promise<FetchResult<any, any, any>> {
   return await graphQLService.find({query: {query, variables}})
 }
