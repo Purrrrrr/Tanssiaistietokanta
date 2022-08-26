@@ -3,13 +3,9 @@ import {EventEmitter} from 'events'
 import {getOrComputeDefault} from 'utils/map'
 import feathers from './feathers'
 import {ensureChannelIsOpen, closeChannelIfUnsused} from './channels'
-import {gql, getApolloCache, DocumentNode} from './apollo'
-
-export type ID = string
-export type ServiceName = 'dances' | 'events' | 'workshops'
-export interface Entity {
-  _id: ID
-}
+import {gql, DocumentNode} from './apollo'
+import {updateEntityFragment, markDeleted} from './apolloCache'
+import {ServiceName, ID, Entity} from './types'
 
 const serviceTypeNameMap : {
   [key in ServiceName]: string
@@ -74,56 +70,33 @@ function unSubscribeToService<T extends Entity>(serviceName : ServiceName, chann
 }
 
 const serviceEventEmitters : Map<ServiceName, EventEmitter> = new Map()
-const deletedIds = new Set()
 
 function getServiceEventEmitter(
   serviceName: ServiceName
 ) : EventEmitter {
   return getOrComputeDefault(serviceEventEmitters, serviceName, () => {
     const service = feathers.service(serviceName)
-    const cache = getApolloCache()
     const emitter = new EventEmitter()
     const typeName = serviceTypeNameMap[serviceName]
+    const entityFragment = serviceUpdateFragmentMap[serviceName]
+    if (!entityFragment) {
+      console.error("Missing update fragment for service "+serviceName)
+    }
 
     service.on('created', (data: any) => emitter.emit('created', data, 'backend'))
     service.on('removed', (data: any) => emitter.emit('removed', data, 'backend'))
     service.on('updated', (data: any) => emitter.emit('updated', data, 'backend'))
     service.on('patched', (data: any) => emitter.emit('updated', data, 'backend'))
 
-    emitter.on('removed', data => {
-      deletedIds.add(data._id)
+    emitter.on('removed', markDeleted)
+    emitter.on('updated', function updateCache(data, source) {
+      if (source !== 'backend' || entityFragment === undefined) {
+        return
+      }
+      updateEntityFragment(typeName, entityFragment, data)
     })
-
-    function updateCache(data, source) {
-      if (source !== 'backend') {
-        return
-      }
-      const id = data._id
-      const fragment = serviceUpdateFragmentMap[serviceName]
-      if (!id) {
-        console.error("Missing id in updated value", data)
-        return
-      }
-      if (!fragment) {
-        console.error("Missing update fragment for service "+serviceName)
-        return
-      }
-      console.log(`writing ${typeName}:${id}`)
-      cache.writeFragment({
-        id: `${typeName}:${id}`,
-        fragment,
-        data,
-      })
-    }
-    emitter.on('updated', updateCache)
     
     return emitter;
   })
 }
 
-export function isDeletedEntity(entity : Entity) {
-  return deletedIds.has(entity._id)
-}
-export function isExistingEntity(entity : Entity) {
-  return !isDeletedEntity(entity)
-}
