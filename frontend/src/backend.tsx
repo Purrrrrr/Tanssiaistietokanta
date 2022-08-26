@@ -5,7 +5,6 @@ import { makeMutationHook, getSingleValue } from './backend/apolloUtils'
 import { appendToListQuery, filterRemovedFromListQuery } from './backend/apolloCache'
 import { EventName, emitServiceEvent, useServiceListEvents } from './backend/serviceEvents'
 
-export { useQuery, gql } from './backend/apollo'
 export { setupServiceUpdateFragment } from './backend/serviceEvents'
 
 export const BackendProvider = ({children}) => <ApolloProvider client={apolloClient} children={children} />
