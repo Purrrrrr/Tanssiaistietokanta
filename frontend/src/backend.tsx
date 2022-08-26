@@ -3,7 +3,7 @@ import { ServiceName } from './backend/types'
 import { apolloClient, ApolloProvider, useQuery, gql } from './backend/apollo'
 import { makeMutationHook, getSingleValue } from './backend/apolloUtils'
 import { appendToListQuery, filterRemovedFromListQuery } from './backend/apolloCache'
-import { emitServiceEvent, useServiceListEvents } from './backend/serviceEvents'
+import { EventName, emitServiceEvent, useServiceListEvents } from './backend/serviceEvents'
 
 export { useQuery, gql } from './backend/apollo'
 export { setupServiceUpdateFragment } from './backend/serviceEvents'
@@ -31,37 +31,48 @@ export function entityListQueryHook(service : ServiceName, query) {
 }
 
 export function entityCreateHook(service : ServiceName, query : string, options = {}) {
-  return makeMutationHook(query, {
+  return serviceMutateHook(service, query, {
     ...options,
-    onCompleted: (data) => {
-      const value = getSingleValue(data)
-      emitServiceEvent(service, 'created', value)
-      // @ts-ignore
-      if (options.onCompleted) options.onCompleted(data)
-    },
+    fireEvent: 'created',
   })
 }
 
 export function entityUpdateHook(service : ServiceName, query : string, options = {}) {
-  return makeMutationHook(query, {
+  return serviceMutateHook(service, query, {
     ...options,
-    onCompleted: (data) => {
-      const value = getSingleValue(data)
-      emitServiceEvent(service, 'updated', value)
-      // @ts-ignore
-      if (options.onCompleted) options.onCompleted(data)
-    },
+    fireEvent: 'updated',
   })
 }
 
 export function entityDeleteHook(service : ServiceName, query : string, options = {}) {
+  return serviceMutateHook(service, query, {
+    ...options,
+    fireEvent: 'removed',
+  })
+}
+
+interface MutateHookOptions {
+  fireEvent ?: EventName
+  onCompleted ?: Function
+}
+
+function serviceMutateHook(
+  service : ServiceName,
+  query : string, 
+  {
+    fireEvent = undefined,
+    onCompleted = undefined,
+    ...options
+  } : MutateHookOptions = {}
+) {
   return makeMutationHook(query, {
     ...options,
     onCompleted: (data) => {
-      const value = getSingleValue(data)
-      emitServiceEvent(service, 'removed', value)
-      // @ts-ignore
-      if (options.onCompleted) options.onCompleted(data)
+      if (fireEvent) {
+        const value = getSingleValue(data)
+        emitServiceEvent(service, fireEvent, value)
+      }
+      if (onCompleted) onCompleted(data)
     },
   })
 }

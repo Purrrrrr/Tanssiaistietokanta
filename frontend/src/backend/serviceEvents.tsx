@@ -18,9 +18,8 @@ const serviceUpdateFragmentMap : {
   [key in ServiceName]?: DocumentNode
 } = {}
 
+export type EventName = 'created' | 'removed' | 'updated'
 export type Callback<T extends Entity> = (data: T) => any
-
-type EventName = 'created' | 'removed' | 'updated'
 export type EntityListCallbacks<T extends Entity> = Required<Callbacks<T>>
 export type EntityCallbacks<T extends Entity> = Omit<EntityListCallbacks<T>,'created'>
 type Callbacks<T extends Entity> = {
