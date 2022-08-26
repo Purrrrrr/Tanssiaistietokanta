@@ -1,5 +1,13 @@
-import { gql, appendToListQuery, makeMutationHook, useMutation, makeListQueryHook } from '../backend';
+import { setupServiceUpdateFragment, entityListQueryHook, entityCreateHook, entityDeleteHook, entityUpdateHook } from '../backend';
 import {sorted} from "utils/sorted"
+
+const danceFields = '_id, name, description, remarks, duration, prelude, formation, category, instructions';
+setupServiceUpdateFragment(
+  "dances",
+  `fragment DanceFragment on Dance {
+    ${danceFields}
+  }`
+);
 
 export interface Dance {
   _id?: string
@@ -11,9 +19,8 @@ export interface Dance {
   formation?: string,
   category?: string,
   instructions?: string,
-  deleted?: boolean
 }
-export type WritableDanceProperty = Exclude<keyof Dance, '_id' | 'deleted'>
+export type WritableDanceProperty = Exclude<keyof Dance, '_id'>
 
 export const dancePropertyLabels : {[Key in WritableDanceProperty]: string} = {
   name: "Nimi",
@@ -26,50 +33,43 @@ export const dancePropertyLabels : {[Key in WritableDanceProperty]: string} = {
   instructions: 'Tanssiohjeet'
 }
 
-const danceFields = '_id, name, description, remarks, duration, prelude, formation, category, instructions, deleted';
-
-const GET_DANCES = gql`
+export const useDances = entityListQueryHook("dances", `
 {
   dances {
     ${danceFields}
   }
-}`;
-export const useDances = makeListQueryHook(GET_DANCES, "dances");
+}`);
 
-export const useModifyDance = makeMutationHook(gql`
+export const useModifyDance = entityUpdateHook('dances', `
 mutation modifyDance($id: ID!, $dance: DanceInput!) {
   modifyDance(id: $id, dance: $dance) {
     ${danceFields}
   }
 }`, {
-  parameterMapper: ({_id, __typename, deleted, ...dance}) => 
+  parameterMapper: ({_id, __typename, ...dance}) => 
     ({variables: {id: _id, dance} })
 });
 
 
-export const useCreateDance = makeMutationHook(gql`
+export const useCreateDance = entityCreateHook('dances', `
 mutation createDance($dance: DanceInput!) {
   createDance(dance: $dance) {
     ${danceFields}
   }
 }`, {
   parameterMapper: (dance) => ({variables: {dance}}),
-  update: (cache, {data: {createDance}}) =>
-    appendToListQuery(cache, GET_DANCES, createDance)
 });
 
-const PATCH_DANCE = gql`
+export const usePatchDance = entityUpdateHook('dances', `
 mutation patchDance($id: ID!, $dance: DancePatchInput!) {
   patchDance(id: $id, dance: $dance) {
     ${danceFields}
   }
-}`;
+}`, {
+  parameterMapper: ({_id: id, ...dance}) => ({variables: {id, dance}}),
+});
 
-export function usePatchDance() {
-  return useMutation(PATCH_DANCE)
-}
-
-export const useDeleteDance = makeMutationHook<[string]>(gql`
+export const useDeleteDance = entityDeleteHook('dances', `
 mutation deleteDance($id: ID!) {
   deleteDance(id: $id) {
     ${danceFields}
@@ -89,5 +89,5 @@ export function filterDances(dances : Dance[], searchString : string) {
 function filterDance(dance : Dance, search : string) {
   const lSearch = search.toLowerCase();
   const lName = dance.name.toLowerCase();
-  return !dance.deleted && lName.indexOf(lSearch) !== -1;
+  return lName.indexOf(lSearch) !== -1;
 }

@@ -19,7 +19,7 @@ interface SyncAction {
 
 export default function useAutosavingState<T>(
   serverState : T,
-  onPatch : (saved : Partial<T>) => T,
+  onPatch : (saved : Partial<T>) => void,
 ) : [T, (saved : T) => any, SyncStore<T>]{
   const [reducerState, dispatch] = useReducer<Reducer<SyncStore<T>, SyncAction>, T>(reducer, serverState, getInitialState)
   const { state, modifications, conflicts } = reducerState
@@ -108,11 +108,15 @@ function merge<T>(serverState : T, newServerState : T, modifications : Partial<T
     const conflict = !deepEquals(serverValue, localValue)
 
     if (modifiedLocally) {
-      newModifications[key] = localValue
-      hasModifications = true
-      if (modifiedOnServer && conflict) {
-        conflicts.push(key)
-        hasConflicts = true
+      if (modifiedOnServer) {
+        if (conflict) {
+          newModifications[key] = localValue
+          conflicts.push(key)
+          hasConflicts = true
+        }
+      } else {
+        newModifications[key] = localValue
+        hasModifications = true
       }
     }
   }

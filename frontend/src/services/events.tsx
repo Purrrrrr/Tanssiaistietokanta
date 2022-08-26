@@ -53,7 +53,7 @@ query getEvents {
 }`;
 export const useEvents = makeListQueryHook(GET_EVENTS, "events");
 
-export const useCreateEvent = makeMutationHook(gql`
+export const useCreateEvent = makeMutationHook(`
 mutation createEvent($event: EventInput!) {
   createEvent(event: $event) {
     ${eventFields}
@@ -68,7 +68,7 @@ export interface ModifyEventInput {
   [key: string]: any
 }
 
-export const useModifyEvent = makeMutationHook<[ModifyEventInput]>(gql`
+export const useModifyEvent = makeMutationHook<[ModifyEventInput]>(`
 mutation modifyEvent($id: ID!, $event: EventInput!) {
   modifyEvent(id: $id, event: $event) {
     ${eventFields}
@@ -82,7 +82,7 @@ function toEventInput({name}) {
   return { name };
 }
 
-export const useModifyEventProgram = makeMutationHook(gql`
+export const useModifyEventProgram = makeMutationHook(`
 mutation modifyEventProgram($id: ID!, $program: ProgramInput!) {
   modifyEventProgram(id: $id, program: $program) {
     ${eventFields}
@@ -92,7 +92,7 @@ mutation modifyEventProgram($id: ID!, $program: ProgramInput!) {
     ({variables: {id: eventId, program} })
 });
 
-export const useDeleteEvent = makeMutationHook(gql`
+export const useDeleteEvent = makeMutationHook(`
 mutation deleteEvent($id: ID!) {
   deleteEvent(id: $id) {
     ${eventFields}
