@@ -23,14 +23,9 @@ export function DanceDataImportButton({onImport, dance, text, ...props} : DanceD
       onImport(data)
       return
     }
-    const {category, formation, instructions} = data
+    const {_id, category, formation, instructions} = data
     patch({
-      variables: {
-        id: dance._id,
-        dance: {
-          category, formation, instructions,
-        }, 
-      }
+      _id, category, formation, instructions,
     })
   }
 

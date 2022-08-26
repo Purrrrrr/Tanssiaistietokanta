@@ -1,4 +1,5 @@
 import feathers from './feathers'
+import {getOrComputeDefault} from 'utils/map'
 
 const listenersByChannel = new Map()
 
@@ -18,11 +19,7 @@ export function closeChannelIfUnsused(channel : string, listenerId : any) {
 }
 
 function getListeners(channel : string) : Set<any> {
-  if (!listenersByChannel.has(channel)) {
-    const listenerSet = new Set()
-    listenersByChannel.set(channel, listenerSet)
-  }
-  return listenersByChannel.get(channel)
+  return getOrComputeDefault(listenersByChannel, channel, () => new Set())
 }
 
 const channelService = feathers.service('channel-connections')

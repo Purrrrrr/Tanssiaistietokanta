@@ -1,26 +1,29 @@
-import React, {useState,useCallback} from 'react';
+import React, {useCallback} from 'react';
 import {DeleteButton} from "components/widgets/DeleteButton";
 import {DanceDataImportButton} from "components/DanceDataImportDialog";
 import {H2} from "@blueprintjs/core";
 import {Dance} from "services/dances";
 import {DanceEditor} from './DanceEditor';
 import { Flex } from 'components/Flex';
-import { useDelayedEffect} from 'utils/useDelayedEffect';
+import useAutosavingState from 'utils/useAutosavingState';
+import SyncStatus from 'components/SyncStatus';
 
 interface DanceListItemProps {
   dance: Dance,
-  onChange: (changed: Dance) => any,
+  onChange: (changed: Partial<Dance>) => any,
   onDelete?: any,
 }
 
 export function DanceListItem({dance: danceInDatabase, onChange, onDelete} : DanceListItemProps) {
-  const [dance, setDance] = useState(danceInDatabase);
-  useDelayedEffect(500,
-    useCallback(() => {
-      if (dance !== danceInDatabase) onChange(dance)
-    }, [dance, danceInDatabase, onChange])
-  );
+  const patchDance = useCallback(
+    (patches : Partial<Dance>) => {
+      onChange({_id: danceInDatabase._id, ...patches})
+    },
+    [onChange, danceInDatabase._id]
+  )
+  const [dance, setDance, {state}] = useAutosavingState<Dance>(danceInDatabase, patchDance)
   return <>
+    <SyncStatus state={state} />
     <Flex alignItems="end">
       <H2 className="flex-fill">{dance.name}</H2>
       <DeleteButton onDelete={() => onDelete(dance)}

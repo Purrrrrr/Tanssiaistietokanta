@@ -19,10 +19,8 @@ export function EditableDanceProperty({dance, property, addText, ...props} : Edi
 
   const onChange = (value) => {
     patch({
-      variables: {
-        id: dance._id,
-        dance: {[property]: value}
-      }
+      _id: dance._id,
+      [property]: value,
     })
   }
 

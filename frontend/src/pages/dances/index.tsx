@@ -6,7 +6,7 @@ import {PageTitle} from "components/PageTitle";
 import {showToast} from 'utils/toaster';
 import {Button} from "libraries/forms";
 
-import { filterDances, Dance, useDances, useCreateDance, useModifyDance, useDeleteDance } from 'services/dances';
+import { filterDances, Dance, useDances, useCreateDance, usePatchDance, useDeleteDance } from 'services/dances';
 
 import {CreateDanceForm, DanceUploader} from "./CreateDanceForm"
 import {DanceListItem} from "./DanceListItem"
@@ -16,7 +16,7 @@ const EMPTY_DANCE : Dance = {name: 'Uusi tanssi'};
 function DancesPage() {
   const [search, setSearch] = useState("");
   const [dances] = useDances();
-  const [modifyDance] = useModifyDance();
+  const [modifyDance] = usePatchDance();
   const [createDance] = useCreateDance();
   const [deleteDance] = useDeleteDance();
 

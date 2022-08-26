@@ -3,6 +3,7 @@ import {runGraphQlQuery} from './feathers';
 
 export {gql, ApolloProvider, useQuery} from "@apollo/client"
 export {ApolloClient};
+export type {DocumentNode} from "@apollo/client"
 
 const cache = new InMemoryCache({
   possibleTypes: {
@@ -31,3 +32,7 @@ export const apolloClient = new ApolloClient({
   link: socketLink,
   cache,
 });
+
+export function getApolloCache() {
+  return apolloClient.cache
+}

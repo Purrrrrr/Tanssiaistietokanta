@@ -97,7 +97,8 @@ function Dance({dance}) {
   const [patchDance] = usePatchDance();
   const onChange = useCallback(
     (instructions) => patchDance({
-      variables: {id: dance._id, dance: { instructions }}
+      _id: dance._id,
+      instructions,
     }),
     [dance, patchDance]
   )

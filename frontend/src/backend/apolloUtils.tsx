@@ -1,9 +1,9 @@
-import { useMutation as useMutationOriginal, useQuery, FetchResult, MutationResult } from "@apollo/client";
+import { gql, useMutation as useMutationOriginal, useQuery, FetchResult, MutationResult } from "@apollo/client";
 import {showDefaultErrorToast} from "utils/toaster"
 
 export function useMutation(query, options = {}) {
   return useMutationOriginal(query, {
-    onError: showDefaultErrorToast,
+    onError: err => { console.log(err); showDefaultErrorToast(err);},
     ...options
   })
 }
@@ -18,15 +18,27 @@ export function makeListQueryHook(query, dataKey) {
 export function makeMutationHook<V extends any[]>(
   query,
   {
-    parameterMapper,
+    onCompleted,
+    parameterMapper = (args) => args,
     ...rest
   } : {
-    parameterMapper: (...V) => object,
+    onCompleted ?: (a : any) => any,
+    parameterMapper?: (...V) => object,
     [key : string]: any
   }
 ) {
-  return (args = {}) : [(...vars: V) => Promise<FetchResult>, MutationResult<any>] => {
-    const [runQuery, data] = useMutation(query, {...args, ...rest});
+  const compiledQuery = gql(query)
+
+  return (args : { onCompleted ?: Function } & any = {}) : [(...vars: V) => Promise<FetchResult>, MutationResult<any>] => {
+    const options = {
+      ...args,
+      ...rest,
+      onCompleted: (data) => {
+        if (onCompleted) onCompleted(data)
+        if (args.onCompleted) args.onCompleted(data)
+      }
+    }
+    const [runQuery, data] = useMutation(compiledQuery, options);
 
     return [
       (...vars : V) => runQuery(parameterMapper(...vars)),
@@ -36,7 +48,7 @@ export function makeMutationHook<V extends any[]>(
 }
 
 export function appendToListQuery(cache, query, newValue) {
-  updateQuery(cache, query, data => {
+  cache.updateQuery({query}, data => {
     for (const key in data) {
       return {
         [key]: [...data[key], newValue]
@@ -45,10 +57,16 @@ export function appendToListQuery(cache, query, newValue) {
   });
 }
 
-export function updateQuery(cache, query, updater) {
-  const data = cache.readQuery({query});
-  cache.writeQuery({
-    query,
-    data: updater(data)
-  });
+export function getSingleValue(obj) {
+  return obj[getSingleKey(obj)]
+}
+
+export function getSingleKey(obj) {
+  const keys = Object.keys(obj)
+  if (keys.length !== 1) {
+    const keysStr = keys.join(',')
+    throw new Error(`Expected object to have one key, found ${keysStr}`)
+  }
+  
+  return keys[0]
 }
