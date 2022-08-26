@@ -1,19 +1,4 @@
-import { gql, useMutation as useMutationOriginal, useQuery, FetchResult, MutationResult } from "@apollo/client";
-import {showDefaultErrorToast} from "utils/toaster"
-
-export function useMutation(query, options = {}) {
-  return useMutationOriginal(query, {
-    onError: err => { console.log(err); showDefaultErrorToast(err);},
-    ...options
-  })
-}
-
-export function makeListQueryHook(query, dataKey) {
-  return () => {
-    const result = useQuery(query);
-    return [result.data ? result.data[dataKey] : [], result];
-  }
-}
+import { gql, useMutation, FetchResult, MutationResult } from "./apollo";
 
 export function makeMutationHook<V extends any[]>(
   query,
@@ -45,16 +30,6 @@ export function makeMutationHook<V extends any[]>(
       data
     ];
   };
-}
-
-export function appendToListQuery(cache, query, newValue) {
-  cache.updateQuery({query}, data => {
-    for (const key in data) {
-      return {
-        [key]: [...data[key], newValue]
-      }
-    }
-  });
 }
 
 export function getSingleValue(obj) {

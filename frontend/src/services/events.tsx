@@ -1,4 +1,4 @@
-import { gql, makeListQueryHook, makeMutationHook, useQuery } from '../backend';
+import { setupServiceUpdateFragment, backendQueryHook, entityListQueryHook, entityCreateHook, entityDeleteHook, entityUpdateHook } from '../backend';
 
 const eventFields = `
 _id, name, deleted
@@ -34,26 +34,32 @@ workshops {
 }
 `;
 
-const GET_EVENT = gql`
+setupServiceUpdateFragment(
+  "events",
+  `fragment EventFragment on Event {
+    ${eventFields}
+  }`
+);
+
+const useEventInternal = backendQueryHook(`
 query getEvent($id: ID!) {
   event(id: $id) {
     ${eventFields}
   }
-}`;
+}`);
 export function useEvent(id) {
-  const res = useQuery(GET_EVENT, {variables: {id}});
+  const res = useEventInternal({id});
   return [res.data ? res.data.event : null, res];
 }
 
-const GET_EVENTS = gql`
+export const useEvents = entityListQueryHook('events', `
 query getEvents {
   events {
     _id, name
   }
-}`;
-export const useEvents = makeListQueryHook(GET_EVENTS, "events");
+}`);
 
-export const useCreateEvent = makeMutationHook(`
+export const useCreateEvent = entityCreateHook('events', `
 mutation createEvent($event: EventInput!) {
   createEvent(event: $event) {
     ${eventFields}
@@ -68,7 +74,7 @@ export interface ModifyEventInput {
   [key: string]: any
 }
 
-export const useModifyEvent = makeMutationHook<[ModifyEventInput]>(`
+export const useModifyEvent = entityUpdateHook('events', `
 mutation modifyEvent($id: ID!, $event: EventInput!) {
   modifyEvent(id: $id, event: $event) {
     ${eventFields}
@@ -82,7 +88,7 @@ function toEventInput({name}) {
   return { name };
 }
 
-export const useModifyEventProgram = makeMutationHook(`
+export const useModifyEventProgram = entityUpdateHook('events', `
 mutation modifyEventProgram($id: ID!, $program: ProgramInput!) {
   modifyEventProgram(id: $id, program: $program) {
     ${eventFields}
@@ -92,7 +98,7 @@ mutation modifyEventProgram($id: ID!, $program: ProgramInput!) {
     ({variables: {id: eventId, program} })
 });
 
-export const useDeleteEvent = makeMutationHook(`
+export const useDeleteEvent = entityDeleteHook('events', `
 mutation deleteEvent($id: ID!) {
   deleteEvent(id: $id) {
     ${eventFields}
