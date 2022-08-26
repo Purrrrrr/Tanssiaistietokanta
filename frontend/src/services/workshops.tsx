@@ -1,4 +1,4 @@
-import { gql, useQuery, setupServiceUpdateFragment, entityCreateHook, entityDeleteHook, entityUpdateHook } from '../backend';
+import { backendQueryHook, setupServiceUpdateFragment, entityCreateHook, entityDeleteHook, entityUpdateHook } from '../backend';
 
 const workshopFields = `
   _id, eventId
@@ -18,14 +18,14 @@ setupServiceUpdateFragment(
   }`
 );
 
-const GET_WORKSHOP = gql`
+const useWorkshopInternal = backendQueryHook(`
 query getWorkshop($id: ID!) {
   workshop(id: $id) {
     ${workshopFields}
   }
-}`;
+}`);
 export function useWorkshop(id) {
-  const res = useQuery(GET_WORKSHOP, {variables: {id}});
+  const res = useWorkshopInternal({variables: {id}});
   return [res.data ? res.data.workshop : null, res];
 }
 
