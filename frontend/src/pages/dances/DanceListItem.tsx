@@ -21,7 +21,7 @@ export function DanceListItem({dance: danceInDatabase, onChange, onDelete} : Dan
     },
     [onChange, danceInDatabase._id]
   )
-  const [dance, setDance, {state}] = useAutosavingState<Dance>(danceInDatabase, patchDance)
+  const [dance, setDance, resolveConflict, {state}] = useAutosavingState<Dance>(danceInDatabase, patchDance)
   return <>
     <SyncStatus state={state} />
     <Flex alignItems="end">
