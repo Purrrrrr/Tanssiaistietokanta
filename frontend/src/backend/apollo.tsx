@@ -10,6 +10,19 @@ const cache = new InMemoryCache({
   possibleTypes: {
     EventProgramItem: ['RequestedDance', 'Dance', 'EventProgram'],
     ProgramItem: ['Dance', 'EventProgram'],
+  },
+  typePolicies: {
+    Query: {
+      fields: {
+        // We always accept the incoming data to the cache since it's not paginated or filtered
+        dances: {
+          merge: (_, incoming) => incoming
+        },
+        events: {
+          merge: (_, incoming) => incoming
+        },
+      }
+    }
   }
 });
 
