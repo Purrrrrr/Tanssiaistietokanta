@@ -8,7 +8,6 @@ module.exports = (app) => {
 
   return {
     Workshop: {
-      deleted: (obj) => !!obj.deleted,
       dances: (obj) => obj.danceIds.map(getDance),
       event: (obj) => eventService.get(obj.eventId)
     },
@@ -19,7 +18,6 @@ module.exports = (app) => {
       createWorkshop: (_, {eventId, workshop}, params) => service.create({eventId, ...workshop}, params),
       modifyWorkshop: (_, {id, workshop}, params) => service.patch(id, workshop, params),
       deleteWorkshop: (_, {id}, params) => service.remove(id, {}, params)
-        .then(workshop => ({...workshop, deleted: true}))
     }
   };
 };

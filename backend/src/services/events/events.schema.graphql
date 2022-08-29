@@ -8,7 +8,6 @@ type Event {
   name: String!
   program: EventProgram
   workshops: [Workshop!]!
-  deleted: Boolean!
 }
 
 type EventProgram {
