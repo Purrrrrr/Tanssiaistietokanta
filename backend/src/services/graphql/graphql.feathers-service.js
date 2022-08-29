@@ -1,4 +1,4 @@
-const {buildSchema, isValidJSValue} = require('graphql');
+const {buildSchema, coerceInputValue, inspect} = require('graphql');
 
 module.exports = (schemaDoc, resolverDef, server) => {
   const schema = buildSchema(schemaDoc);
@@ -10,8 +10,29 @@ module.exports = (schemaDoc, resolverDef, server) => {
       return {data, errors};
     },
 
+    getSchema() {
+      return schema;
+    },
+    getType(typeName) {
+      return schema.getType(typeName);
+    },
+
     validate(value, typeName) {
-      return isValidJSValue(value, schema.getType(typeName));
+      const type = schema.getType(typeName);
+      const errors = [];
+
+      function onError(path, invalidValue, error) {
+        let errorPrefix = 'Invalid value ' + JSON.stringify(invalidValue);
+
+        if (path.length > 0) {
+          errorPrefix += ' at \'value.'.concat(path.join('.'), '\'');
+        }
+
+        errors.push(errorPrefix + ': ' + error.message);
+      }
+      coerceInputValue(value, type, onError);
+      return errors;
     }
+
   };
 };
