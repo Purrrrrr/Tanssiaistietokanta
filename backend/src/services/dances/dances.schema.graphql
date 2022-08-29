@@ -12,7 +12,6 @@ type Dance implements ProgramItem {
   category: String
   instructions: String
   remarks: String
-  deleted: Boolean!
   teachedIn(eventId: ID): [Workshop!]!
 }
 

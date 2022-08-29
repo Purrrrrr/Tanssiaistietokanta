@@ -1,7 +1,7 @@
 import { setupServiceUpdateFragment, backendQueryHook, entityListQueryHook, entityCreateHook, entityDeleteHook, entityUpdateHook } from '../backend';
 
 const eventFields = `
-_id, name, deleted
+_id, name 
 program {
   introductions {
     _id
@@ -80,7 +80,7 @@ mutation modifyEvent($id: ID!, $event: EventInput!) {
     ${eventFields}
   }
 }`, {
-  parameterMapper: ({_id, __typename, deleted, ...event} : ModifyEventInput) =>
+  parameterMapper: ({_id, __typename, ...event} : ModifyEventInput) =>
     ({variables: {id: _id, event: toEventInput(event)} })
 });
 

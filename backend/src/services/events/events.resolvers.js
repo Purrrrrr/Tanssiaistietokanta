@@ -9,7 +9,6 @@ module.exports = (app) => {
 
   return {
     Event: {
-      deleted: (obj) => !!obj.deleted,
       workshops: (obj) => getWorkshops(obj._id),
     },
     EventProgramItem: {
@@ -27,7 +26,6 @@ module.exports = (app) => {
       modifyEvent: (_, {id, event}, params) => service.update(id, event, params),
       modifyEventProgram: (_, {id, program}, params) => service.patch(id, {program}, params),
       deleteEvent: (_, {id}, params) => service.remove(id, {}, params)
-        .then(event => ({...event, deleted: true}))
     }
   };
 };

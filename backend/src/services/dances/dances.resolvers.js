@@ -4,7 +4,6 @@ module.exports = (app) => {
 
   return {
     Dance: {
-      deleted: (obj) => !!obj.deleted,
       teachedIn: (obj, {eventId}) => workshopService.find({
         query: eventId ?
           {danceIds: obj._id, eventId} :
@@ -18,8 +17,7 @@ module.exports = (app) => {
       createDance: (_, {dance}, params) => service.create(dance, params),
       modifyDance: (_, {id, dance}, params) => service.update(id, dance, params),
       patchDance: (_, {id, dance}, params) => service.patch(id, dance, params),
-      deleteDance: (_, {id}, params) => service.remove(id, {}, params)
-        .then(dance => ({...dance, deleted: true}))
+      deleteDance: (_, {id}, params) => service.remove(id, {}, params),
     }
   };
 };

@@ -10,8 +10,7 @@ import {AdminOnly} from 'services/users';
 import React from 'react';
 
 export default function EventList() {
-  const [allEvents] = useEvents();
-  const events = allEvents.filter(e => !e.deleted);
+  const [events] = useEvents();
   const [deleteEvent] = useDeleteEvent({refetchQueries: ['getEvent', 'getEvents']});
 
   return <>

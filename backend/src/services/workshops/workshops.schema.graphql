@@ -13,7 +13,6 @@ type Workshop {
   ocurrences: [String!]
   danceIds: [ID!]!
   dances: [Dance!]!
-  deleted: Boolean!
 }
 
 type Mutation {
