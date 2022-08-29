@@ -6,7 +6,6 @@ const evolve = require('../utils/evolveObjAsync');
 // eslint-disable-next-line no-unused-vars
 module.exports = function (options = {}) {
   return async context => {
-    const {data: {program}} = context;
     const eventProgramService = context.app.service('event-program');
 
     context.data = await evolve({
@@ -20,7 +19,7 @@ module.exports = function (options = {}) {
           item => processProgramItem({ type: 'EVENT_PROGRAM', ...item }, eventProgramService),
         )
       }
-    }, context.data)
+    }, context.data);
 
     return context;
   };

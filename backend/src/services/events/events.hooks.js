@@ -1,4 +1,5 @@
 const validateInputType = require('../../hooks/validateGraphQLInputType');
+const provideDefaultValues = require('../../hooks/provideDefaultValues');
 const preventPatchOps = require('../../hooks/prevent-patch-ops');
 
 const loadEventProgram = require('../../hooks/load-event-program');
@@ -10,7 +11,7 @@ module.exports = {
     all: [],
     find: [],
     get: [],
-    create: [validateInputType('EventInput'), processEventProgramInput()],
+    create: [validateInputType('EventInput'), provideDefaultValues('EventInput', {program: null, workshops: []}), processEventProgramInput()],
     update: [validateInputType('EventInput'), processEventProgramInput()],
     patch: [preventPatchOps({keys: 'program'}), processEventProgramInput()],
     remove: []

@@ -10,6 +10,10 @@ module.exports = (schemaDoc, resolverDef, server) => {
       return {data, errors};
     },
 
+    getType(typeName) {
+      return schema.getType(typeName);
+    },
+
     validate(value, typeName) {
       return isValidJSValue(value, schema.getType(typeName));
     }

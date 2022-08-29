@@ -1,11 +1,12 @@
 const validateInputType = require('../../hooks/validateGraphQLInputType');
+const provideDefaultValues = require('../../hooks/provideDefaultValues');
 
 module.exports = {
   before: {
     all: [],
     find: [],
     get: [],
-    create: [validateInputType('WorkshopInput')],
+    create: [validateInputType('WorkshopInput'), provideDefaultValues('WorkshopInput')],
     update: [validateInputType('WorkshopInput')],
     patch: [],
     remove: []
