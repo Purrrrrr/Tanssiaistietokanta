@@ -2,7 +2,7 @@ import {Reducer, useEffect, useCallback, useReducer} from 'react';
 import deepEquals from 'fast-deep-equal'
 
 export type SyncState = 'IN_SYNC' | 'MODIFIED_LOCALLY' | 'CONFLICT'
-type SyncEvent = 'LOCAL_MODIFICATION' | 'EXTERNAL_MODIFICATION' | 'CONFLICT_RESOLVED'
+type SyncEvent = 'LOCAL_MODIFICATION' | 'PATCH_SENT' | 'EXTERNAL_MODIFICATION' | 'CONFLICT_RESOLVED'
 
 export interface SyncStore<T extends Object> {
   state: SyncState
@@ -40,8 +40,9 @@ export default function useAutosavingState<T>(
 
     const id = setTimeout(() => {
       const patch = getPatch(modifications, conflicts)
+      dispatch({ type: 'PATCH_SENT', payload: patch})
       onPatch(patch)
-    }, 500)
+    }, 50)
 
     return () => clearTimeout(id)
   }, [state, modifications, conflicts, onPatch])
@@ -80,6 +81,11 @@ function reducer<T>(reducerState : SyncStore<T>, action : SyncAction) : SyncStor
         serverState,
         { ...modifications, ...action.payload }
       )
+    case 'PATCH_SENT':
+      return {
+        ...reducerState,
+        serverState: { ...serverState, ...action.payload },
+      }
     case 'CONFLICT_RESOLVED':
       return resolveConflicts(reducerState, action.payload)
     case 'EXTERNAL_MODIFICATION':
