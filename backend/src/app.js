@@ -16,42 +16,51 @@ const graphqlService = require('./services/graphql/graphql.service.js');
 const appHooks = require('./app.hooks');
 const channels = require('./channels');
 
-const app = express(feathers());
+const { migrateDb }= require('./umzug');
 
-// Load app configuration
-app.configure(configuration());
-// Enable security, CORS, compression, favicon and body parsing
-app.use(helmet());
-app.use(cors());
-app.use(compress());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(favicon(path.join(app.get('public'), 'favicon.ico')));
-// Host the public folder
-app.use('/', express.static(app.get('public')));
+async function getApp() {
+  const app = express(feathers());
+  app.configureAsync = async function configureAsync(fn) {
+    await fn.call(this, this);
 
-// Set up Plugins and providers
-app.configure(express.rest());
-app.configure(socketio());
+    return this;
+  };
+  // Load app configuration
+  app.configure(configuration());
+  // Enable security, CORS, compression, favicon and body parsing
+  app.use(helmet());
+  app.use(cors());
+  app.use(compress());
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
+  app.use(favicon(path.join(app.get('public'), 'favicon.ico')));
+  // Host the public folder
+  app.use('/', express.static(app.get('public')));
 
-// Configure other middleware (see `middleware/index.js`)
-app.configure(middleware);
-// Set up our services (see `services/index.js`)
-app.configure(services);
-// The graphql service needs to be configured last to 
-// see all the other services
-app.configure(graphqlService);
-// Set up event channels (see channels.js)
-app.configure(channels);
+  // Set up Plugins and providers
+  app.configure(express.rest());
+  app.configure(socketio());
 
-// Configure a middleware for 404s and the error handler
-const notFound = express.notFound();
-app.use(function (req, res, next) {
-  const isGraphQl = req.url.startsWith('/graphql');
-  return isGraphQl ? next() : notFound(req, res, next);
-});
-app.use(express.errorHandler({ logger }));
+  // Configure other middleware (see `middleware/index.js`)
+  app.configure(middleware);
+  // Set up our services (see `services/index.js`)
+  app.configure(services);
+  // The graphql service needs to be configured last to 
+  // see all the other services
+  await app.configureAsync(graphqlService);
+  // Set up event channels (see channels.js)
+  app.configure(channels);
 
-app.hooks(appHooks);
+  // Configure a middleware for 404s and the error handler
+  const notFound = express.notFound();
+  app.use(notFound);
+  app.use(express.errorHandler({ logger }));
 
-module.exports = app;
+  app.hooks(appHooks);
+
+  await app.configureAsync(migrateDb);
+
+  return app;
+}
+
+module.exports = getApp;
