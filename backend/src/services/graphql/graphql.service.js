@@ -17,7 +17,7 @@ module.exports = function (app) {
   });
 
   const server = new ApolloServer({ typeDefs: schema, resolvers, context});
-  server.applyMiddleware({ app });
+  server.start().then(() => server.applyMiddleware({ app }));
 
   // Initialize our service with any options it requires
   app.use('/graphql', createService(schema, resolvers, server));

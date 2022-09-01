@@ -1,4 +1,4 @@
-const {buildSchema, coerceInputValue, inspect} = require('graphql');
+const {buildSchema, coerceInputValue } = require('graphql');
 
 module.exports = (schemaDoc, resolverDef, server) => {
   const schema = buildSchema(schemaDoc);
