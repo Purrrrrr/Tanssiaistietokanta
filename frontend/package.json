@@ -19,6 +19,7 @@
     "http-proxy-middleware": "^2.0.6",
     "key-event-to-string": "^1.2.0",
     "markdown-to-jsx": "^6.11.4",
+    "node-diff3": "3.1.2",
     "partial.lenses": "^14.17.0",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",

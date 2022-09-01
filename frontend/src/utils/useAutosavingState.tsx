@@ -1,14 +1,18 @@
 import {Reducer, useEffect, useCallback, useReducer} from 'react';
-import deepEquals from 'fast-deep-equal'
+import mergeValues, {SuperPartial, SyncState} from './mergeValues'
 
-export type SyncState = 'IN_SYNC' | 'MODIFIED_LOCALLY' | 'CONFLICT'
+export type { SyncState, SuperPartial } from './mergeValues';
+
 type SyncEvent = 'LOCAL_MODIFICATION' | 'PATCH_SENT' | 'EXTERNAL_MODIFICATION' | 'CONFLICT_RESOLVED'
+
+// @ts-ignore
+window.m = mergeValues
 
 export interface SyncStore<T extends Object> {
   state: SyncState
   serverState: T
-  modifications: Partial<T>
-  conflicts: null | (keyof T)[]
+  modifications: SuperPartial<T>
+  conflicts: null | (string)[]
   conflictOrigin: null | T
 }
 
@@ -25,7 +29,7 @@ export type ConflictResolutions<T extends Object> = {
 
 export default function useAutosavingState<T>(
   serverState : T,
-  onPatch : (saved : Partial<T>) => void,
+  onPatch : (saved : SuperPartial<T>) => void,
 ) : [T, (saved : T) => any, (resolutions: ConflictResolutions<T>) => any, SyncStore<T>]
 {
   const [reducerState, dispatch] = useReducer<Reducer<SyncStore<T>, SyncAction>, T>(reducer, serverState, getInitialState)
@@ -97,50 +101,22 @@ function reducer<T>(reducerState : SyncStore<T>, action : SyncAction) : SyncStor
   }
 }
 
-function merge<T>(serverState : T, newServerState : T, modifications : Partial<T>) : SyncStore<T> {
-  const conflicts : any[] = []
-  const newModifications = {}
+function merge<T>(serverState : T, newServerState : T, modifications : SuperPartial<T>) : SyncStore<T> {
+  const { state, pendingModifications, conflicts } = mergeValues({
+    key: '',
+    serverValue: newServerState,
+    originalValue: serverState,
+    localValue: modifications,
+  });
 
-  let hasConflicts = false
-  let hasModifications = false
-
-  for (const key of Object.keys(newServerState)) {
-    const modified = key in modifications
-
-    if (!modified) continue
-    
-    const originalValue = serverState[key]
-    const localValue = modifications[key]
-    const serverValue = newServerState[key]
-
-    const modifiedOnServer = !deepEquals(originalValue, serverValue)
-    const modifiedLocally = !deepEquals(originalValue, localValue)
-    const conflict = !deepEquals(serverValue, localValue)
-
-    if (modifiedLocally) {
-      if (modifiedOnServer) {
-        if (conflict) {
-          newModifications[key] = localValue
-          conflicts.push(key)
-          hasConflicts = true
-        }
-      } else {
-        newModifications[key] = localValue
-        hasModifications = true
-      }
-    }
-  }
-
-  let state : SyncState = 'IN_SYNC'
-  if (hasConflicts) state = 'CONFLICT'
-  else if (hasModifications) state = 'MODIFIED_LOCALLY'
+  const hasConflicts = state === 'CONFLICT'
 
   return { 
     state,
     serverState: newServerState,
     conflictOrigin: hasConflicts ? serverState : null,
-    modifications: newModifications,
-    conflicts,
+    modifications: pendingModifications,
+    conflicts: hasConflicts ? conflicts : null,
   }
 }
 
@@ -154,6 +130,7 @@ function resolveConflicts<T extends Object>(
   const [solvedConflicts, remainingConflicts] = partition(conflicts!, key => key in resolutions)
   const newConflictOrigin : T = {...conflictOrigin!}
 
+  /*
   for (const key of solvedConflicts) {
     const resolution = resolutions[key]
     if (resolution === USE_BACKEND_VALUE) {
@@ -163,7 +140,7 @@ function resolveConflicts<T extends Object>(
     } else {
       newModifications[key] = resolution as T[typeof key]
     }
-  }
+  }*/
 
   const hasConflicts = remainingConflicts.length > 0
   const hasModifications = Object.keys(newModifications).length > 0
@@ -194,10 +171,11 @@ function partition<T>(
   return [passing, failing]
 }
 
-function getPatch<T>(modifications : Partial<T>, conflicts : (keyof T)[] | null) : Partial<T> {
+function getPatch<T>(modifications : SuperPartial<T>, conflicts : string[] | null) : SuperPartial<T> {
   if (conflicts === null) return modifications
-
-  const patch = { ...modifications }
-  conflicts.forEach(key => delete patch[key])
-  return patch
+  
+  //TODO: fix this
+  //const patch = { ...modifications }
+  //conflicts.forEach(key => delete patch[key])
+  return {} //patch
 }
