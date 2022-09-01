@@ -45,7 +45,11 @@ app.configure(graphqlService);
 app.configure(channels);
 
 // Configure a middleware for 404s and the error handler
-app.use(express.notFound());
+const notFound = express.notFound();
+app.use(function (req, res, next) {
+  const isGraphQl = req.url.startsWith('/graphql');
+  return isGraphQl ? next() : notFound(req, res, next);
+});
 app.use(express.errorHandler({ logger }));
 
 app.hooks(appHooks);

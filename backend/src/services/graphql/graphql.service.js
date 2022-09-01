@@ -5,7 +5,7 @@ const getResolvers = require('./graphql.resolvers');
 const createService = require('./graphql.feathers-service');
 const hooks = require('./graphql.hooks');
 
-module.exports = function (app) {
+module.exports = async function (app) {
   const resolvers = getResolvers(app);
   const context = ({
     req = {headers: {}},
@@ -17,7 +17,8 @@ module.exports = function (app) {
   });
 
   const server = new ApolloServer({ typeDefs: schema, resolvers, context});
-  server.start().then(() => server.applyMiddleware({ app }));
+  await server.start();
+  server.applyMiddleware({ app });
 
   // Initialize our service with any options it requires
   app.use('/graphql', createService(schema, resolvers, server));
