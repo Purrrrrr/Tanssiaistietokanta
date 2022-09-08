@@ -45,6 +45,7 @@ export default function useAutosavingState<T>(
     const id = setTimeout(() => {
       const patch = getPatch(modifications, conflicts)
       dispatch({ type: 'PATCH_SENT', payload: patch})
+// @ts-ignore
       onPatch(patch)
     }, 50)
 
@@ -93,6 +94,7 @@ function reducer<T>(reducerState : SyncStore<T>, action : SyncAction) : SyncStor
     case 'CONFLICT_RESOLVED':
       return resolveConflicts(reducerState, action.payload)
     case 'EXTERNAL_MODIFICATION':
+// @ts-ignore
       return merge(
         reducerState.conflictOrigin ?? serverState,
         action.payload,
@@ -101,7 +103,7 @@ function reducer<T>(reducerState : SyncStore<T>, action : SyncAction) : SyncStor
   }
 }
 
-function merge<T>(serverState : T, newServerState : T, modifications : SuperPartial<T>) : SyncStore<T> {
+function merge<T>(serverState : T, newServerState : T, modifications : T) : SyncStore<T> {
   const { state, pendingModifications, conflicts } = mergeValues({
     key: '',
     serverValue: newServerState,
@@ -171,7 +173,7 @@ function partition<T>(
   return [passing, failing]
 }
 
-function getPatch<T>(modifications : SuperPartial<T>, conflicts : string[] | null) : SuperPartial<T> {
+function getPatch<T>(modifications : T, conflicts : string[] | null) : SuperPartial<T> {
   if (conflicts === null) return modifications
   
   //TODO: fix this

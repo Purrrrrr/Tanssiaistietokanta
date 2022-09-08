@@ -8,7 +8,7 @@ export interface Change<T> extends PartialChange {
 interface PartialChange {
   id: any,
   status: ChangeType,
-  moveAmount?: number,
+  moveAmount: number, //Amount of spaces the item has moved without taking into account additions and removals
   from: number,
   to: number,
 }
@@ -21,8 +21,8 @@ interface Move {
 }
 
 export function getArrayChanges<T>(original: T[], changed: T[]): Change<T>[] {
-  const originalIds = original.map(getPossibleId)
-  const changedIds = changed.map(getPossibleId)
+  const originalIds = mapToIds(original)
+  const changedIds = mapToIds(changed)
 
   const originalIndexesById = new Map(
     originalIds.map((id, index) => [id, index])
@@ -31,7 +31,7 @@ export function getArrayChanges<T>(original: T[], changed: T[]): Change<T>[] {
     changedIds.map((id, index) => [id, index])
   )
   const statuses = new Map<any,PartialChange>(
-    originalIds.map((id, index) => [id, {status: 'UNCHANGED', id, from: index, to: index}])
+    originalIds.map((id, index) => [id, {status: 'UNCHANGED', id, from: index, to: index, moveAmount: 0}])
   )
 
   const originalIdsWithoutRemoved = originalIds.filter((id, index) => {
@@ -42,6 +42,7 @@ export function getArrayChanges<T>(original: T[], changed: T[]): Change<T>[] {
         status: 'REMOVED',
         from: index,
         to: -Infinity,
+        moveAmount: -Infinity,
       })
     }
     return exists
@@ -54,6 +55,7 @@ export function getArrayChanges<T>(original: T[], changed: T[]): Change<T>[] {
         status: 'ADDED',
         from: Infinity,
         to: index,
+        moveAmount: Infinity,
       })
     }
     return exists
@@ -94,6 +96,18 @@ export function getArrayChanges<T>(original: T[], changed: T[]): Change<T>[] {
   return changes
 }
 
+export function mapToIds(items: any[]): any[] {
+  const ids = new Set()
+  return items.map(item => {
+    let id = getPossibleId(item)
+    if (ids.has(id)) {
+      id = { id }
+    }
+    ids.add(id)
+    return id
+  })
+}
+
 function getPossibleId(item: any): any {
   if (typeof item !== 'object') return item
   if ('_id' in item) {
@@ -108,29 +122,28 @@ function getPossibleId(item: any): any {
 function minimizeMoveSet<T>(changes: Change<T>[]) {
   const moves : Move[] = changes.filter(({status}) => status === 'MOVED') as Move[]
   const compensated = new Set()
-  while(true) {
-    const greatestMoves = moves
-      .filter(state => !compensated.has(state.id) && state.moveAmount !== 0)
-      .map((state, index) => ({index, ...state}))
-      .sort((a,b) => Math.abs(b.moveAmount) - Math.abs(a.moveAmount))
-    if (greatestMoves.length === 0) break;
+  const greatestMoves = moves
+    .filter(state => !compensated.has(state.id) && state.moveAmount !== 0)
+    .map((state, index) => ({index, ...state}))
+    .sort((a,b) => Math.abs(b.moveAmount) - Math.abs(a.moveAmount))
+  for(const move of greatestMoves) {
+    //console.log(move)
+    const {moveAmount, id, from, to} = move
+    if (moveAmount === -1 || moveAmount === 1) break;
 
-    let {moveAmount, id, from, to} = greatestMoves[0]
-
-    const affected = moves
+    const affected = changes
       .filter(movedItem => !compensated.has(movedItem.id))
+      .filter(movedItem => Number.isFinite(movedItem.moveAmount))
       .filter(movedItem => (moveAmount > 0)
         ? (movedItem.from > from && movedItem.to < to)
         : (movedItem.from < from && movedItem.to > to)
     ).slice(0, Math.abs(moveAmount))
+    //console.log(affected.map(a => a.id))
     
     const sign = moveAmount > 0 ? 1 : -1
-    affected.forEach(move => move.moveAmount += sign)
+    affected.forEach(move => move.moveAmount! += sign)
     compensated.add(id)
   }
-  changes
-    .filter(change => change.status === 'MOVED' && change.moveAmount === 0)
-    .forEach(change => { change.status ='UNCHANGED'; delete change.moveAmount; })
 }
 
 // @ts-ignore
