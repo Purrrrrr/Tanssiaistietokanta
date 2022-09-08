@@ -1,8 +1,9 @@
 import {getArrayChanges, mapToIds, Change} from './arrayDiff'
-import {MergeData, MergeResult} from './mergeValues'
+import {MergeData, MergeResult, MergeFunction} from './types'
 
 export function mergeArrays<T>(
-  data: MergeData<T[]>
+  data: MergeData<T[]>,
+  merge: MergeFunction,
 ) : MergeResult<T[]> {
   const serverDiff = getArrayChanges(data.original, data.server)
   const localDiff = getArrayChanges(data.original, data.local)

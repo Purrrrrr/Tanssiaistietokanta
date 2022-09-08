@@ -1,9 +1,14 @@
 import {Reducer, useEffect, useCallback, useReducer} from 'react';
-import mergeValues, {SuperPartial, SyncState} from './mergeValues'
+import mergeValues from './mergeValues'
+import {SyncState} from './types'
 
-export type { SyncState, SuperPartial } from './mergeValues';
+export type { SyncState } from './types';
 
 type SyncEvent = 'LOCAL_MODIFICATION' | 'PATCH_SENT' | 'EXTERNAL_MODIFICATION' | 'CONFLICT_RESOLVED'
+export type SuperPartial<T> = {
+  [k in (keyof T)]?: SuperPartial<T[k]>
+} | undefined
+
 
 // @ts-ignore
 window.m = mergeValues
