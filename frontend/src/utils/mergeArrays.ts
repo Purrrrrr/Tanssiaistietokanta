@@ -4,10 +4,10 @@ import {MergeData, MergeResult} from './mergeValues'
 export function mergeArrays<T>(
   data: MergeData<T[]>
 ) : MergeResult<T[]> {
-  const serverDiff = getArrayChanges(data.originalValue, data.serverValue)
-  const localDiff = getArrayChanges(data.originalValue, data.localValue)
+  const serverDiff = getArrayChanges(data.original, data.server)
+  const localDiff = getArrayChanges(data.original, data.local)
 
-  let { conflicts, pendingModifications } = mergeDeletes(data.originalValue, serverDiff, localDiff);
+  let { conflicts, pendingModifications } = mergeDeletes(data.original, serverDiff, localDiff);
   ({ conflicts, pendingModifications } = mergeMoves(pendingModifications, serverDiff, localDiff, conflicts))
 
   const additionIndexes = new Set<number>()
@@ -38,7 +38,7 @@ export function mergeArrays<T>(
 // @ts-ignore
 window.mergeArrays = mergeArrays
 
-function mergeDeletes<T>(originalValue: T[], serverDiff: Change<T>[], localDiff: Change<T>[]) : { pendingModifications: T[], conflicts: Set<number> } {
+function mergeDeletes<T>(original: T[], serverDiff: Change<T>[], localDiff: Change<T>[]) : { pendingModifications: T[], conflicts: Set<number> } {
   const serverChanges = new Map(
     serverDiff
       .filter(change => change.status !== 'ADDED')
@@ -52,7 +52,7 @@ function mergeDeletes<T>(originalValue: T[], serverDiff: Change<T>[], localDiff:
 
   const deletedKeys = new Set()
   const conflictedKeys = new Set<number>()
-  originalValue.forEach((value, index) => {
+  original.forEach((value, index) => {
     const serverStatus = serverChanges.get(index)!.status
     const localStatus = localChanges.get(index)!.status
     const removedOnServer = serverStatus === 'REMOVED'
@@ -75,20 +75,20 @@ function mergeDeletes<T>(originalValue: T[], serverDiff: Change<T>[], localDiff:
   })
 
   return {
-    pendingModifications: originalValue.filter((_, index) => !deletedKeys.has(index)),
+    pendingModifications: original.filter((_, index) => !deletedKeys.has(index)),
     conflicts: conflictedKeys,
   }
 }
 
-function mergeMoves<T>(originalValue: T[], serverDiff: Change<T>[], localDiff: Change<T>[], conflicts: Set<number>) : { pendingModifications: T[], conflicts: Set<number> } {
+function mergeMoves<T>(original: T[], serverDiff: Change<T>[], localDiff: Change<T>[], conflicts: Set<number>) : { pendingModifications: T[], conflicts: Set<number> } {
   if (conflicts.size > 0) {
     return {
-      pendingModifications: originalValue,
+      pendingModifications: original,
       conflicts,
     }
   }
 
-  const originalIds = mapToIds(originalValue)
+  const originalIds = mapToIds(original)
   const serverChangesById = new Map(
     serverDiff.map(change => [change.id, change])
   )
@@ -122,7 +122,7 @@ function mergeMoves<T>(originalValue: T[], serverDiff: Change<T>[], localDiff: C
   
   const moved = originalIds
     .map((id, index) => {
-      const value = originalValue[index]
+      const value = original[index]
       if (moves.has(id)) {
         const move = moves.get(id)!
         const half = move > 0 ? 0.5 : -0.5

@@ -11,9 +11,9 @@ export interface MergeResult<T> {
 
 export interface MergeData<T> {
   key: string,
-  serverValue: T,
-  originalValue: T,
-  localValue: T
+  server: T,
+  original: T,
+  local: T
 }
 
 export type SuperPartial<T> = {
@@ -24,11 +24,11 @@ export default function merge<T>(data : MergeData<T>) : MergeResult<T> {
   if (isArrayMerge(data)) {
     return mergeArrays(data) as unknown as MergeResult<T>
   }
-  if (typeof data.originalValue === 'object' && data.originalValue !== null) {
+  if (typeof data.original === 'object' && data.original !== null) {
     return mergeObjects(data)
   }
 
-  const {localValue, key} = data
+  const {local, key} = data
   const state = getMergeState(data)
 
   const result = {
@@ -37,7 +37,7 @@ export default function merge<T>(data : MergeData<T>) : MergeResult<T> {
   }
   if (state === 'MODIFIED_LOCALLY') {
     return {
-      pendingModifications: localValue,
+      pendingModifications: local,
       ...result,
     }
   }
@@ -51,30 +51,30 @@ export default function merge<T>(data : MergeData<T>) : MergeResult<T> {
 
   return {
     state: 'CONFLICT',
-    pendingModifications: localValue,
+    pendingModifications: local,
     conflicts: [key],
   }
 }
 
 function isArrayMerge(data : MergeData<any>) : data is MergeData<any[]> {
-  return Array.isArray(data.originalValue)
+  return Array.isArray(data.original)
 }
 
 function isStringMerge(data : MergeData<any>) : data is MergeData<string> {
-  return typeof data.originalValue === 'string'
+  return typeof data.original === 'string'
 }
 
 function getMergeState<T>(
-  {serverValue, originalValue, localValue} : MergeData<T>
+  {server, original, local} : MergeData<T>
 ) : SyncState {
 
-  const modifiedLocally = localValue !== undefined && !deepEquals(originalValue, localValue)
+  const modifiedLocally = local !== undefined && !deepEquals(original, local)
   if (!modifiedLocally) {
     return 'IN_SYNC'
   }
 
-  const modifiedOnServer = !deepEquals(originalValue, serverValue)
-  const conflict = !deepEquals(serverValue, localValue)
+  const modifiedOnServer = !deepEquals(original, server)
+  const conflict = !deepEquals(server, local)
 
   if (!modifiedOnServer) { //& modified locally
     return 'MODIFIED_LOCALLY'
@@ -124,9 +124,9 @@ function mergeObjects<T extends Object>(
   }
 }
 function mergeConflictingStrings(
-  {serverValue, originalValue, localValue, key} : MergeData<string>
+  {server, original, local, key} : MergeData<string>
 ) : MergeResult<string> {
-  const { conflict, result } = merge3(serverValue, originalValue, localValue, {stringSeparator: "\n"})
+  const { conflict, result } = merge3(server, original, local, {stringSeparator: "\n"})
   
   if (!conflict) {
     return {
@@ -138,7 +138,7 @@ function mergeConflictingStrings(
 
   return {
     state: 'CONFLICT',
-    pendingModifications: localValue,
+    pendingModifications: local,
     conflicts: [key],
   }
 }
@@ -153,18 +153,18 @@ function mapMergeData<T,X>(
   keyMapper: (key: string) => string = key => key
 ) : MergeData<X> {
   return {
-    serverValue: mapper(data.serverValue),
-    originalValue: mapper(data.originalValue),
-    localValue: mapper(data?.localValue),
+    server: mapper(data.server),
+    original: mapper(data.original),
+    local: mapper(data?.local),
     key: keyMapper(data.key),
   }
 }
 
 function getAllKeys<T>(data: MergeData<T>): (keyof T)[] {
   return Array.from(new Set([
-    ...Object.keys(data.serverValue),
-    ...Object.keys(data.originalValue),
-    ...Object.keys(data.localValue ?? {}),
+    ...Object.keys(data.server),
+    ...Object.keys(data.original),
+    ...Object.keys(data.local ?? {}),
   ])) as (keyof T)[]
 
 }

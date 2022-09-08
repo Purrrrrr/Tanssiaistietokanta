@@ -106,9 +106,9 @@ function reducer<T>(reducerState : SyncStore<T>, action : SyncAction) : SyncStor
 function merge<T>(serverState : T, newServerState : T, modifications : T) : SyncStore<T> {
   const { state, pendingModifications, conflicts } = mergeValues({
     key: '',
-    serverValue: newServerState,
-    originalValue: serverState,
-    localValue: modifications,
+    server: newServerState,
+    original: serverState,
+    local: modifications,
   });
 
   const hasConflicts = state === 'CONFLICT'
