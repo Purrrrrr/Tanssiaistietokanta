@@ -2,20 +2,16 @@ import deepEquals from 'fast-deep-equal'
 
 export type ChangeType = 'ADDED' | 'REMOVED' | 'MODIFIED' | 'MOVED' | 'MOVED_AND_MODIFIED' | 'UNCHANGED'
 export interface Change<T> extends PartialChange {
-  originalVersion: T
-  changedVersion?: T
+  originalValue: T
+  changedValue?: T
+}
+interface Move extends PartialChange {
+  status: 'MOVED'
 }
 interface PartialChange {
   id: any,
   status: ChangeType,
   moveAmount: number, //Amount of spaces the item has moved without taking into account additions and removals
-  from: number,
-  to: number,
-}
-interface Move {
-  id: any,
-  status: 'MOVED'
-  moveAmount: number,
   from: number,
   to: number,
 }
@@ -79,7 +75,7 @@ export function getArrayChanges<T>(original: T[], changed: T[]): Change<T>[] {
   }
 
   const changes : Change<T>[]= Array.from(statuses.values())
-    .map(change => ({...change, originalVersion: change.status !== 'ADDED' ? original[change.from] : changed[change.to]}))
+    .map(change => ({...change, originalValue: change.status !== 'ADDED' ? original[change.from] : changed[change.to]}))
     .sort((a,b) => (a.to) - (b.to))
 
   minimizeMoveSet(changes)
@@ -87,10 +83,10 @@ export function getArrayChanges<T>(original: T[], changed: T[]): Change<T>[] {
   //Detect and mark modifications in content
   changes
     .filter(change => change.status === 'MOVED' || change.status === 'UNCHANGED')
-    .filter(change => !deepEquals(change.originalVersion, changed[change.to]))
+    .filter(change => !deepEquals(change.originalValue, changed[change.to]))
     .forEach(change => { 
       change.status = change.status === 'UNCHANGED' ? 'MODIFIED' : 'MOVED_AND_MODIFIED'
-      change.changedVersion = changed[change.to]
+      change.changedValue = changed[change.to]
     })
 
   return changes
