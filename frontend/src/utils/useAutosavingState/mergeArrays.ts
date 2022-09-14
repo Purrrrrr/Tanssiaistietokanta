@@ -1,5 +1,11 @@
-import {getArrayChanges, mapToIds, Change} from './arrayDiff'
-import {MergeData, MergeResult, MergeFunction} from './types'
+import {getArrayChanges, Change} from './arrayDiff'
+import { mapToIds, areEqualWithoutId } from './idUtils'
+import {MergeData, MergeResult, MergeFunction, SyncState} from './types'
+
+type ArrayMergeResult<T> = {
+  hasModifications: boolean
+  pendingModifications: T[]
+}
 
 export function mergeArrays<T>(
   data: MergeData<T[]>,
@@ -8,51 +14,91 @@ export function mergeArrays<T>(
   const serverDiff = getArrayChanges(data.original, data.server)
   const localDiff = getArrayChanges(data.original, data.local)
 
-  let { conflicts, pendingModifications } = mergeDeletes(data.original, serverDiff, localDiff);
-  ({ conflicts, pendingModifications } = mergeMoves(pendingModifications, serverDiff, localDiff, conflicts))
+  const modifyResult = mergeModifications(data.original, serverDiff, localDiff, merge)
+  let { state } = modifyResult
 
-  const additionIndexes = new Set<number>()
-  localDiff
-    .filter(change => change.status === 'ADDED')
-    .forEach(change => {
-      const toIndex = change.to + countInSet(conflicts, key => key <= change.to)
-      pendingModifications.splice(toIndex, 0, change.originalValue)
-      additionIndexes.add(toIndex)
-    })
+  const indexConflicts = new Set<number>()
+  const deleteResult = mergeDeletes(modifyResult.pendingModifications, serverDiff, localDiff, indexConflicts)
+  const moveResult = mergeMoves(deleteResult.pendingModifications, serverDiff, localDiff, indexConflicts)
+  const addResult = mergeAdditions(moveResult.pendingModifications, serverDiff, localDiff, indexConflicts)
 
-  //TODO: handle two similar adds as one
-  serverDiff
-    .filter(change => change.status === 'ADDED')
-    .forEach(change => {
-      const toIndex = change.to
-        + countInSet(conflicts, key => key <= change.to)
-        + countInSet(additionIndexes, key => key <= change.to)
-      pendingModifications.splice(toIndex, 0, change.originalValue)
-    })
+  if (indexConflicts.size > 0) state = 'CONFLICT'
+  if (state === 'IN_SYNC' && (deleteResult.hasModifications || moveResult.hasModifications || addResult.hasModifications)) {
+    state = 'MODIFIED_LOCALLY'
+  }
+
+  const conflicts = indexConflicts.size > 0
+    ? ["", ...modifyResult.conflicts]
+    : modifyResult.conflicts
 
   return {
-    state: conflicts.size > 0 ? 'CONFLICT' : 'IN_SYNC', //TODO: THIS IS SPART... WRONG
-    pendingModifications: pendingModifications,
-    conflicts: Array.from(conflicts).map(key => data.key+"/"+key),
+    state,
+    pendingModifications: addResult.pendingModifications,
+    conflicts,
   }
 }
 // @ts-ignore
 window.mergeArrays = mergeArrays
 
-function mergeDeletes<T>(original: T[], serverDiff: Change<T>[], localDiff: Change<T>[]) : { pendingModifications: T[], conflicts: Set<number> } {
+function mergeModifications <T>(original: T[], serverDiff: Change<T>[], localDiff: Change<T>[], merge : MergeFunction) : MergeResult<T[]> {
+  const modifiedIndexesById = new Map<any,number>()
+  const pendingModifications = [...original]
+  const conflicts : string[] = []
+
+  localDiff
+    .filter(change => ['MODIFIED', 'MOVED_AND_MODIFIED'].includes(change.status))
+    .forEach(change => {
+      pendingModifications[change.from] = change.changedValue!
+      modifiedIndexesById.set(change.id, change.from)
+    })
+  serverDiff
+    .filter(change => ['MODIFIED', 'MOVED_AND_MODIFIED'].includes(change.status))
+    .forEach(change => {
+      const server = change.changedValue!
+      if (modifiedIndexesById.has(change.id)) {
+        const originalItem = original[change.from]
+        const local = pendingModifications[change.from]
+        const result = merge({ original: originalItem, local, server, key: String(change.from) })
+
+        switch(result.state) {
+          case 'IN_SYNC':
+            modifiedIndexesById.delete(change.id)
+            break
+          case 'MODIFIED_LOCALLY':
+            pendingModifications[change.from] = result.pendingModifications
+            break
+          case 'CONFLICT':
+            conflicts.push(...result.conflicts)
+        }
+      } else {
+        pendingModifications[change.from] = change.changedValue!
+      }
+    })
+
+  let state : SyncState = modifiedIndexesById.size > 0 ? 'MODIFIED_LOCALLY' : 'IN_SYNC'
+  if (conflicts.length > 0) state = 'CONFLICT'
+
+  return {
+    state,
+    pendingModifications: pendingModifications,
+    conflicts,
+  }
+}
+
+function mergeDeletes<T>(original: T[], serverDiff: Change<T>[], localDiff: Change<T>[], conflicts: Set<number>) : ArrayMergeResult<T> {
   const serverChanges = new Map(
     serverDiff
       .filter(change => change.status !== 'ADDED')
       .map(change => [change.from, change])
   )
   const localChanges = new Map(
-     localDiff 
+     localDiff
       .filter(change => change.status !== 'ADDED')
       .map(change => [change.from, change])
   )
 
   const deletedKeys = new Set()
-  const conflictedKeys = new Set<number>()
+  let hasModifications = false
   original.forEach((value, index) => {
     const serverStatus = serverChanges.get(index)!.status
     const localStatus = localChanges.get(index)!.status
@@ -60,32 +106,35 @@ function mergeDeletes<T>(original: T[], serverDiff: Change<T>[], localDiff: Chan
     const removedOnLocal = localStatus === 'REMOVED'
 
     if (!removedOnServer && !removedOnLocal) return
+
     if (removedOnServer) {
       if (removedOnLocal || localStatus === 'UNCHANGED') {
         deletedKeys.add(index)
-        return
+      } else {
+        conflicts.add(index)
       }
-    }
-    //Removed on local
-    if(serverStatus === 'UNCHANGED') {
-      deletedKeys.add(index)
       return
     }
 
-    conflictedKeys.add(index)
+    //Removed on local
+    hasModifications = true
+    deletedKeys.add(index)
+    if(serverStatus !== 'UNCHANGED') {
+      conflicts.add(index)
+    }
   })
 
   return {
     pendingModifications: original.filter((_, index) => !deletedKeys.has(index)),
-    conflicts: conflictedKeys,
+    hasModifications,
   }
 }
 
-function mergeMoves<T>(original: T[], serverDiff: Change<T>[], localDiff: Change<T>[], conflicts: Set<number>) : { pendingModifications: T[], conflicts: Set<number> } {
+function mergeMoves<T>(original: T[], serverDiff: Change<T>[], localDiff: Change<T>[], conflicts: Set<number>) : ArrayMergeResult<T> {
   if (conflicts.size > 0) {
     return {
       pendingModifications: original,
-      conflicts,
+      hasModifications: false,
     }
   }
 
@@ -97,30 +146,32 @@ function mergeMoves<T>(original: T[], serverDiff: Change<T>[], localDiff: Change
     localDiff.map(change => [change.id, change])
   )
 
-  const conflictedKeys = new Set<number>()
   const moves = new Map<any,number>()
+  let hasModifications = false
   originalIds.forEach((id, index) => {
-    const serverChange = serverChangesById.get(id)
     const localChange = localChangesById.get(id)!
+    if (localChange.status === 'ADDED') return
+    const serverChange = serverChangesById.get(id)!
 
-    if (serverChange !== undefined && isMove(serverChange)) {
-      if(localChange.moveAmount === 0) {
+    if (isMove(serverChange)) {
+      if(localChange.moveAmount === 0 || localChange.moveAmount === serverChange.moveAmount) {
         moves.set(id, serverChange.moveAmount)
+        return
       } else {
-        conflictedKeys.add(index)
+        conflicts.add(index)
       }
     }
     if (isMove(localChange)) {
-      if(serverChange === undefined || serverChange.moveAmount === 0) {
-        moves.set(id, localChange.moveAmount)
-      } else {
-        conflictedKeys.add(index)
+      hasModifications = true
+      if(serverChange.moveAmount !== 0) {
+        conflicts.add(index)
       }
+
+      //We move anyway for it to show in pendingModifications
+      moves.set(id, localChange.moveAmount)
     }
   })
 
-  console.log(moves)
-  
   const moved = originalIds
     .map((id, index) => {
       const value = original[index]
@@ -133,12 +184,10 @@ function mergeMoves<T>(original: T[], serverDiff: Change<T>[], localDiff: Change
     })
     .sort((a,b) => a.index - b.index)
     .map(i => i.value)
-  console.log(moved)
-  console.log(conflictedKeys)
 
   return {
     pendingModifications: moved,
-    conflicts: conflictedKeys,
+    hasModifications,
   }
 }
 
@@ -146,10 +195,51 @@ function isMove(change: Change<any>): boolean {
   return (change.status === 'MOVED' || change.status === 'MOVED_AND_MODIFIED') && change.moveAmount !== 0
 }
 
-function countInSet<T>(set: Set<T>, filter: (i: T) => boolean) : number {
+function mergeAdditions<T>(original: T[], serverDiff: Change<T>[], localDiff: Change<T>[], indexConflicts: Set<number>) : ArrayMergeResult<T> {
+  const pendingModifications = [...original]
+
+  const localAdditionsByIndex = new Map<number, any>()
+  localDiff
+    .filter(change => change.status === 'ADDED')
+    .forEach(change => {
+      const toIndex = change.to + countIn(indexConflicts, key => key <= change.to)
+      pendingModifications.splice(toIndex, 0, change.originalValue)
+      localAdditionsByIndex.set(toIndex, change.originalValue)
+    })
+
+  const localRemoves = new Set(
+    localDiff
+      .filter(change => change.status === 'REMOVED')
+      .map(change => change.from)
+  )
+
+  serverDiff
+    .filter(change => change.status === 'ADDED')
+    .forEach(change => {
+      const toIndex = change.to
+        + countIn(indexConflicts, key => key <= change.to)
+        - countIn(localRemoves, key => key <= change.to)
+        + countIn(localAdditionsByIndex, (_,key) => key <= change.to)
+
+      if (localAdditionsByIndex.has(toIndex-1) &&
+        areEqualWithoutId(change.originalValue, localAdditionsByIndex.get(toIndex-1))) {
+        //Identical additions on both sides!
+        localAdditionsByIndex.delete(toIndex-1)
+        return
+      }
+      pendingModifications.splice(toIndex, 0, change.originalValue)
+    })
+
+  return {
+    pendingModifications,
+    hasModifications: localAdditionsByIndex.size > 0,
+  }
+}
+
+function countIn<T,K>(collection: Set<T> | Map<K,T>, filter: (i: T, index: K) => boolean) : number {
   let count = 0
-  set.forEach(item => {
-    if(filter(item)) count++
+  collection.forEach((item, index) => {
+    if(filter(item, index)) count++
   })
   return count
 }

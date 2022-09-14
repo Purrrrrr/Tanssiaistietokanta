@@ -1,15 +1,15 @@
 import {getArrayChanges} from './arrayDiff'
 
 describe('getArrayChanges', () => {
-  
+
   test('no changes', () => {
     const changes = getArrayChanges([1,2,3], [1,2,3])
 
-    changes.forEach((change, index) => 
+    changes.forEach((change, index) =>
       expect(change).toMatchObject({id: index+1, status: 'UNCHANGED'})
     )
   })
-  
+
   test('simple removals', () => {
     const changes = getArrayChanges([1,2,3,4,5], [1,3,5])
 
@@ -20,7 +20,7 @@ describe('getArrayChanges', () => {
       4: 'REMOVED',
       5: 'UNCHANGED'
     }
-    changes.forEach((change) => 
+    changes.forEach((change) =>
       expect(change).toMatchObject({status: statuses[change.id]})
     )
   })
@@ -29,7 +29,7 @@ describe('getArrayChanges', () => {
     const changes = getArrayChanges([1,2,3], [1,4,2,3,5])
 
     const statuses = {1: 'UNCHANGED', 2: 'UNCHANGED', 3: 'UNCHANGED', 4: 'ADDED', 5: 'ADDED'}
-    changes.forEach((change) => 
+    changes.forEach((change) =>
       expect(change).toMatchObject({status: statuses[change.id]})
     )
   })
@@ -113,7 +113,7 @@ describe('getArrayChanges', () => {
 
   test('many changes at once 2', () => {
     const changes = getArrayChanges(
-      [{id: 1}, 11, 22, 33, 2, 3, 4, 5, 6, 7, 8], 
+      [{id: 1}, 11, 22, 33, 2, 3, 4, 5, 6, 7, 8],
       [0, 1, {id: 7}, 2, 8, 66, 4, 5, 6, 11, 22, 33]
     )
 
@@ -137,7 +137,7 @@ describe('getArrayChanges', () => {
 
   function expectChangesToMatch(changes, expectedChanges) {
     expect(changes).toEqual(
-      changes.map(({id}) => 
+      changes.map(({id}) =>
         expect.objectContaining({id, ...expectedChanges[id]})
       )
     )

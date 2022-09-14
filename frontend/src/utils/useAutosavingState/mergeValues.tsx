@@ -46,7 +46,7 @@ function isStringMerge(data : MergeData<any>) : data is MergeData<string> {
 function getMergeState<T>(
   {server, original, local} : MergeData<T>
 ) : SyncState {
-  const modifiedLocally = local !== undefined && !deepEquals(original, local)
+  const modifiedLocally = !deepEquals(original, local)
   if (!modifiedLocally) {
     return 'IN_SYNC'
   }

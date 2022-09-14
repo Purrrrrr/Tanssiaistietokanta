@@ -69,7 +69,7 @@ export default function useAutosavingState<T>(
     ...modifications,
   }
 
-  return [formState, onModified, onConflictResolved, reducerState] 
+  return [formState, onModified, onConflictResolved, reducerState]
 }
 
 function getInitialState<T>(serverState: T) : SyncStore<T> {
@@ -118,7 +118,7 @@ function merge<T>(serverState : T, newServerState : T, modifications : T) : Sync
 
   const hasConflicts = state === 'CONFLICT'
 
-  return { 
+  return {
     state,
     serverState: newServerState,
     conflictOrigin: hasConflicts ? serverState : null,
@@ -180,7 +180,7 @@ function partition<T>(
 
 function getPatch<T>(modifications : T, conflicts : string[] | null) : SuperPartial<T> {
   if (conflicts === null) return modifications
-  
+
   //TODO: fix this
   //const patch = { ...modifications }
   //conflicts.forEach(key => delete patch[key])

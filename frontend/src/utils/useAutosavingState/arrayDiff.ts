@@ -1,4 +1,5 @@
 import deepEquals from 'fast-deep-equal'
+import { mapToIds } from './idUtils'
 
 export type ChangeType = 'ADDED' | 'REMOVED' | 'MODIFIED' | 'MOVED' | 'MOVED_AND_MODIFIED' | 'UNCHANGED'
 export interface Change<T> extends PartialChange {
@@ -90,29 +91,6 @@ export function getArrayChanges<T>(original: T[], changed: T[]): Change<T>[] {
     })
 
   return changes
-}
-
-export function mapToIds(items: any[]): any[] {
-  const ids = new Set()
-  return items.map(item => {
-    let id = getPossibleId(item)
-    if (ids.has(id)) {
-      id = { id }
-    }
-    ids.add(id)
-    return id
-  })
-}
-
-function getPossibleId(item: any): any {
-  if (typeof item !== 'object') return item
-  if ('_id' in item) {
-    return item._id
-  }
-  if ('id' in item) {
-    return item.id
-  }
-  return item
 }
 
 function minimizeMoveSet<T>(changes: Change<T>[]) {
