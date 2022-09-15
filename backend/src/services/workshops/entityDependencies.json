@@ -1,0 +1,12 @@
+[
+  {
+    "type": "childOf",
+    "service": "events",
+    "path": "eventId"
+  },
+  {
+    "type": "uses",
+    "service": "dances",
+    "path": "danceIds"
+  }
+]

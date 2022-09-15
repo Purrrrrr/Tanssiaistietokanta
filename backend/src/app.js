@@ -12,7 +12,8 @@ const socketio = require('@feathersjs/socketio');
 
 const middleware = require('./middleware');
 const services = require('./services');
-const graphqlService = require('./services/graphql/graphql.service.js');
+const graphqlService = require('./services/graphql/graphql.service');
+const dependencyGraph = require('./dependencyGraph');
 const appHooks = require('./app.hooks');
 const channels = require('./channels');
 
@@ -52,13 +53,14 @@ async function getApp() {
   app.configure(channels);
 
   // Configure a middleware for 404s and the error handler
-  const notFound = express.notFound();
-  app.use(notFound);
+  app.use(express.notFound());
   app.use(express.errorHandler({ logger }));
 
   app.hooks(appHooks);
 
   await app.configureAsync(migrateDb);
+
+  app.configure(dependencyGraph.init);
 
   return app;
 }
