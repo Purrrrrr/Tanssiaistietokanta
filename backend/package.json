@@ -48,6 +48,7 @@
     "graphql": "^15.8.0",
     "graphql-tools": "^5.0.0",
     "helmet": "^3.21.2",
+    "jsonata": "^1.8.6",
     "partial.lenses": "^14.17.0",
     "ramda": "^0.27.0",
     "serve-favicon": "^2.5.0",

@@ -1,0 +1,18 @@
+[
+  {
+    "type": "uses",
+    "service": "dances",
+    "path": "program.danceSets.program[__typename='Dance']._id"
+  },
+  {
+    "type": "uses",
+    "service": "event-program",
+    "path": "program.danceSets.program[__typename='EventProgram']._id"
+  },
+  {
+    "type": "uses",
+    "service": "event-program",
+    "path": "program.introductions[__typename='EventProgram']._id"
+  }
+
+]

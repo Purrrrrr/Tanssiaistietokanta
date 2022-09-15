@@ -12,7 +12,8 @@ const socketio = require('@feathersjs/socketio');
 
 const middleware = require('./middleware');
 const services = require('./services');
-const graphqlService = require('./services/graphql/graphql.service.js');
+const graphqlService = require('./services/graphql/graphql.service');
+const dependencyGraph = require('./dependencyGraph');
 const appHooks = require('./app.hooks');
 const channels = require('./channels');
 
@@ -49,5 +50,7 @@ app.use(express.notFound());
 app.use(express.errorHandler({ logger }));
 
 app.hooks(appHooks);
+
+app.configure(dependencyGraph.init);
 
 module.exports = app;
