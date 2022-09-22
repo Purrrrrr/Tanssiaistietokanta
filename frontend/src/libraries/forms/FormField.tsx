@@ -10,7 +10,7 @@ export type FieldProps<T> = ValidationProps & LabelingProps & T & {
 export function asAccessibleField<T>(Component : React.JSXElementConstructor<T>) {
   return (props : FieldProps<T>) => {
     const {fieldProps, wrapField} = useAccessibleField(props);
-    return wrapField(<Component {...fieldProps as T} />);
+    return wrapField(<Component {...fieldProps as T & JSX.IntrinsicAttributes} />);
   }
 }
 
