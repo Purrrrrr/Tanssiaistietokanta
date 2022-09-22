@@ -11,7 +11,7 @@ const wordBoundary = (() => {
 })()
 
 export function mergeConflictingStrings(
-  {server, original, local, key} : MergeData<string>
+  {server, original, local} : MergeData<string>
 ) : MergeResult<string> {
   const { conflict, result } = merge3(server, original, local, {stringSeparator: wordBoundary})
   
@@ -26,6 +26,6 @@ export function mergeConflictingStrings(
   return {
     state: 'CONFLICT',
     pendingModifications: local,
-    conflicts: [key],
+    conflicts: [[]],
   }
 }

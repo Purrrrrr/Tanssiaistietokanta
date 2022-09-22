@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState } from 'react';
-import useAutosavingState, {SuperPartial}  from 'utils/useAutosavingState';
+import useAutosavingState, {makePartial} from 'utils/useAutosavingState';
 import SyncStatus from 'components/SyncStatus';
 
 const obj = {
@@ -28,7 +28,7 @@ export function SampleEditor() {
 
 interface EditorProps<T extends RO> {
   serverState: T 
-  onPatch: (item: SuperPartial<T>) => any,
+  onPatch: (item: Partial<T>) => any,
   fields: FieldDef<T>[],
 }
 
@@ -47,7 +47,7 @@ function Editor<T extends RO>({
   onPatch,
   fields,
 } : EditorProps<T>) {
-  const [item, setItem, resolveConflict, s] = useAutosavingState(serverState, onPatch)
+  const [item, setItem, resolveConflict, s] = useAutosavingState<T, Partial<T>>(serverState, onPatch, makePartial)
 
   return <section>
     <h1>Editor</h1>

@@ -119,6 +119,3 @@ function minimizeMoveSet<T>(changes: Change<T>[]) {
     compensated.add(id)
   }
 }
-
-// @ts-ignore
-window.getArrayChanges = getArrayChanges

@@ -1,6 +1,7 @@
 import {getArrayChanges, Change} from './arrayDiff'
 import { mapToIds, areEqualWithoutId } from './idUtils'
-import {MergeData, MergeResult, MergeFunction, SyncState} from './types'
+import {MergeData, MergeResult, MergeFunction, SyncState, Path} from './types'
+import {emptyPath, subIndexPath} from './pathUtil'
 
 type ArrayMergeResult<T> = {
   hasModifications: boolean
@@ -27,8 +28,8 @@ export function mergeArrays<T>(
     state = 'MODIFIED_LOCALLY'
   }
 
-  const conflicts = indexConflicts.size > 0
-    ? ["", ...modifyResult.conflicts]
+  const conflicts : Path<T[]>[] = indexConflicts.size > 0
+    ? [emptyPath<T[]>()]
     : modifyResult.conflicts
 
   return {
@@ -37,13 +38,11 @@ export function mergeArrays<T>(
     conflicts,
   }
 }
-// @ts-ignore
-window.mergeArrays = mergeArrays
 
 function mergeModifications <T>(original: T[], serverDiff: Change<T>[], localDiff: Change<T>[], merge : MergeFunction) : MergeResult<T[]> {
   const modifiedIndexesById = new Map<any,number>()
   const pendingModifications = [...original]
-  const conflicts : string[] = []
+  const conflicts : Path<T[]>[] = []
 
   localDiff
     .filter(change => ['MODIFIED', 'MOVED_AND_MODIFIED'].includes(change.status))
@@ -58,7 +57,7 @@ function mergeModifications <T>(original: T[], serverDiff: Change<T>[], localDif
       if (modifiedIndexesById.has(change.id)) {
         const originalItem = original[change.from]
         const local = pendingModifications[change.from]
-        const result = merge({ original: originalItem, local, server, key: String(change.from) })
+        const result = merge({ original: originalItem, local, server })
 
         switch(result.state) {
           case 'IN_SYNC':
@@ -68,7 +67,9 @@ function mergeModifications <T>(original: T[], serverDiff: Change<T>[], localDif
             pendingModifications[change.from] = result.pendingModifications
             break
           case 'CONFLICT':
-            conflicts.push(...result.conflicts)
+            const subConflicts : Path<T[]>[] = result.conflicts
+              .map(conflict => subIndexPath(change.from, conflict))
+            conflicts.push(...subConflicts)
         }
       } else {
         pendingModifications[change.from] = change.changedValue!

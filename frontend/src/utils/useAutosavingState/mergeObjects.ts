@@ -1,10 +1,11 @@
-import {SyncState, MergeData, MergeFunction, MergeResult} from './types'
+import {SyncState, MergeData, MergeFunction, MergeResult, Path} from './types'
+import {subPath} from './pathUtil'
 
-export function mergeObjects<T extends Object>(
+export function mergeObjects<T extends object>(
   data : MergeData<T>,
   merge: MergeFunction,
 ) : MergeResult<T> {
-  const conflicts : any[] = []
+  const conflicts : Path<T>[] = []
   const pendingModifications : T = { ...data.original }
 
   let hasConflicts = false
@@ -12,12 +13,14 @@ export function mergeObjects<T extends Object>(
 
   const keys = getAllKeys(data)
   for (const key of keys) {
-    const dataInKey = indexMergeData(data, key as keyof T)
+    const dataInKey = indexMergeData(data, key)
     const subResult = merge(dataInKey)
 
     switch (subResult.state) {
       case 'CONFLICT':
-        conflicts.push(...subResult.conflicts)
+        const subConflicts : Path<T>[] = subResult.conflicts
+          .map(conflict => subPath(key, conflict))
+        conflicts.push(...subConflicts)
         pendingModifications[key] = subResult.pendingModifications
         hasConflicts = true
         break
@@ -25,6 +28,8 @@ export function mergeObjects<T extends Object>(
         pendingModifications[key] = subResult.pendingModifications
         hasModifications = true
         break
+      case 'IN_SYNC':
+        pendingModifications[key] = data.server[key]
     }
   }
 
@@ -40,26 +45,21 @@ export function mergeObjects<T extends Object>(
 }
 
 function indexMergeData<T>(data : MergeData<T>, key: keyof T) : MergeData<T[typeof key]> {
-  return mapMergeData(data, value => value[key], originalKey => originalKey+"/"+key)
-}
-
-function mapMergeData<T,X>(
-  data : MergeData<T>,
-  mapper: (t: T) => X,
-  keyMapper: (key: string) => string = key => key
-) : MergeData<X> {
   return {
-    server: mapper(data.server),
-    original: mapper(data.original),
-    local: mapper(data.local),
-    key: keyMapper(data.key),
+    server: get(data.server, key),
+    original: get(data.original, key),
+    local: get(data.local, key),
   }
+}
+function get(o, k) {
+  return o !== undefined ? o[k] : undefined
 }
 
 function getAllKeys<T>(data: MergeData<T>): (keyof T)[] {
   return Array.from(new Set([
-    ...Object.keys(data.server),
-    ...Object.keys(data.original),
-    ...Object.keys(data.local),
+    ...[data.server, data.original, data.local]
+      .map(value => Object.keys(value ?? {}))
+      .flat()
+      .filter(key => typeof key !== 'symbol')
   ])) as (keyof T)[]
 }

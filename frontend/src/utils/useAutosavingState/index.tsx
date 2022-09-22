@@ -1,23 +1,18 @@
 import {Reducer, useEffect, useCallback, useReducer} from 'react';
 import mergeValues from './mergeValues'
-import {SyncState} from './types'
+import {PatchStrategy} from './patchStrategies'
+import {SyncState, Path } from './types'
 
+export * from './patchStrategies'
 export type { SyncState } from './types';
 
 type SyncEvent = 'LOCAL_MODIFICATION' | 'PATCH_SENT' | 'EXTERNAL_MODIFICATION' | 'CONFLICT_RESOLVED'
-export type SuperPartial<T> = {
-  [k in (keyof T)]?: SuperPartial<T[k]>
-} | undefined
 
-
-// @ts-ignore
-window.m = mergeValues
-
-export interface SyncStore<T extends Object> {
+export interface SyncStore<T> {
   state: SyncState
   serverState: T
-  modifications: SuperPartial<T>
-  conflicts: null | (string)[]
+  modifications: T
+  conflicts: Path<T>[]
   conflictOrigin: null | T
 }
 
@@ -28,17 +23,23 @@ interface SyncAction {
 
 export const USE_BACKEND_VALUE = Symbol("useBackendValue")
 export const USE_LOCAL_VALUE = Symbol("useLocalValue")
-export type ConflictResolutions<T extends Object> = {
+export type ConflictResolutions<T> = {
   [key in (keyof T)] ?: T[key] | typeof USE_LOCAL_VALUE | typeof USE_BACKEND_VALUE
 }
 
-export default function useAutosavingState<T>(
+export default function useAutosavingState<T, Patch>(
   serverState : T,
-  onPatch : (saved : SuperPartial<T>) => void,
-) : [T, (saved : T) => any, (resolutions: ConflictResolutions<T>) => any, SyncStore<T>]
+  onPatch : (patch : Patch) => void,
+  patchStrategy: PatchStrategy<T,Patch>
+) : [
+  T,
+  (saved : T) => any,
+  (resolutions: ConflictResolutions<T>) => any,
+  SyncStore<T>
+]
 {
   const [reducerState, dispatch] = useReducer<Reducer<SyncStore<T>, SyncAction>, T>(reducer, serverState, getInitialState)
-  const { state, modifications, conflicts } = reducerState
+  const { serverState: originalData, state, modifications, conflicts } = reducerState
 
   useEffect(() => {
     dispatch({ type: 'EXTERNAL_MODIFICATION', payload: serverState })
@@ -48,14 +49,16 @@ export default function useAutosavingState<T>(
     if (state === 'IN_SYNC') return
 
     const id = setTimeout(() => {
-      const patch = getPatch(modifications, conflicts)
-      dispatch({ type: 'PATCH_SENT', payload: patch})
-// @ts-ignore
-      onPatch(patch)
+      const patchData = patchStrategy(originalData, modifications, conflicts)
+      if (patchData.hasModifications) {
+        console.log('Saving', patchData.patch)
+        dispatch({ type: 'PATCH_SENT', payload: patchData.patch})
+        onPatch(patchData.patch)
+      }
     }, 50)
 
     return () => clearTimeout(id)
-  }, [state, modifications, conflicts, onPatch])
+  }, [state, modifications, conflicts, onPatch, originalData, patchStrategy])
 
   const onModified = useCallback((modifications) => {
     dispatch({ type: 'LOCAL_MODIFICATION', payload: modifications})
@@ -76,8 +79,8 @@ function getInitialState<T>(serverState: T) : SyncStore<T> {
   return {
     state: 'IN_SYNC',
     serverState,
-    modifications: {},
-    conflicts: null,
+    modifications: serverState,
+    conflicts: [],
     conflictOrigin: null,
   }
 }
@@ -97,9 +100,8 @@ function reducer<T>(reducerState : SyncStore<T>, action : SyncAction) : SyncStor
         serverState: { ...serverState, ...action.payload },
       }
     case 'CONFLICT_RESOLVED':
-      return resolveConflicts(reducerState, action.payload)
+      return reducerState //TODO: create proper algorithm
     case 'EXTERNAL_MODIFICATION':
-// @ts-ignore
       return merge(
         reducerState.conflictOrigin ?? serverState,
         action.payload,
@@ -110,7 +112,6 @@ function reducer<T>(reducerState : SyncStore<T>, action : SyncAction) : SyncStor
 
 function merge<T>(serverState : T, newServerState : T, modifications : T) : SyncStore<T> {
   const { state, pendingModifications, conflicts } = mergeValues({
-    key: '',
     server: newServerState,
     original: serverState,
     local: modifications,
@@ -123,45 +124,7 @@ function merge<T>(serverState : T, newServerState : T, modifications : T) : Sync
     serverState: newServerState,
     conflictOrigin: hasConflicts ? serverState : null,
     modifications: pendingModifications,
-    conflicts: hasConflicts ? conflicts : null,
-  }
-}
-
-function resolveConflicts<T extends Object>(
-  storeState: SyncStore<T>,
-  resolutions: ConflictResolutions<T>
-) : SyncStore<T> {
-  const { conflicts, modifications, conflictOrigin } = storeState;
-
-  const newModifications = {...modifications}
-  const [solvedConflicts, remainingConflicts] = partition(conflicts!, key => key in resolutions)
-  const newConflictOrigin : T = {...conflictOrigin!}
-
-  /*
-  for (const key of solvedConflicts) {
-    const resolution = resolutions[key]
-    if (resolution === USE_BACKEND_VALUE) {
-      delete newModifications[key]
-    } else if (resolution === USE_LOCAL_VALUE) {
-      newConflictOrigin[key] = modifications[key]! ?? conflictOrigin![key]
-    } else {
-      newModifications[key] = resolution as T[typeof key]
-    }
-  }*/
-
-  const hasConflicts = remainingConflicts.length > 0
-  const hasModifications = Object.keys(newModifications).length > 0
-
-  let state : SyncState = 'IN_SYNC'
-  if (hasConflicts) state = 'CONFLICT'
-  else if (hasModifications) state = 'MODIFIED_LOCALLY'
-
-  return {
-    ...storeState,
-    state,
-    conflicts: hasConflicts ? remainingConflicts : null,
-    conflictOrigin: hasConflicts ? newConflictOrigin : null,
-    modifications: newModifications,
+    conflicts: conflicts
   }
 }
 
@@ -176,13 +139,4 @@ function partition<T>(
   }
 
   return [passing, failing]
-}
-
-function getPatch<T>(modifications : T, conflicts : string[] | null) : SuperPartial<T> {
-  if (conflicts === null) return modifications
-
-  //TODO: fix this
-  //const patch = { ...modifications }
-  //conflicts.forEach(key => delete patch[key])
-  return {} //patch
 }

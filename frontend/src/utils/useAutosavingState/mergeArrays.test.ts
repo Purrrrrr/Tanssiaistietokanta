@@ -9,7 +9,6 @@ describe('mergeArrays', () => {
       original: [1,2,3,4,5],
       server: [1,2,3,4,5],
       local: [1,2,3,4,5],
-      key: ''
     }, merge)).toEqual({
       state: 'IN_SYNC',
       pendingModifications: [1,2,3,4,5],
@@ -23,7 +22,6 @@ describe('mergeArrays', () => {
         original: [1,2,3,4,5],
         server: [1,2,3,4,5],
         local: [1,2,3,4,5,6],
-        key: ''
       }, merge)).toEqual({
         state: 'MODIFIED_LOCALLY',
         pendingModifications: [1,2,3,4,5,6],
@@ -35,7 +33,6 @@ describe('mergeArrays', () => {
         original: [1,2,3,4,5],
         server: [1,2,3,4,5,6],
         local: [1,2,3,4,5],
-        key: ''
       }, merge)).toEqual({
         state: 'IN_SYNC',
         pendingModifications: [1,2,3,4,5,6],
@@ -47,7 +44,6 @@ describe('mergeArrays', () => {
         original: [1,2,3,4,5],
         server: [8,7,1,2,3,4,5],
         local: [1,2,3,4,5,6],
-        key: ''
       }, merge)).toEqual({
         state: 'MODIFIED_LOCALLY',
         pendingModifications: [8,7,1,2,3,4,5,6],
@@ -59,7 +55,6 @@ describe('mergeArrays', () => {
         original: [1,2,3,4,5],
         server: [1,2,3,4,5,6],
         local: [1,2,3,4,5,6],
-        key: ''
       }, merge)).toEqual({
         state: 'IN_SYNC',
         pendingModifications: [1,2,3,4,5,6],
@@ -74,7 +69,6 @@ describe('mergeArrays', () => {
         original: [1,2,3,4,5],
         server: [1,2,3,4,5],
         local: [1,2,4,5],
-        key: ''
       }, merge)).toEqual({
         state: 'MODIFIED_LOCALLY',
         pendingModifications: [1,2,4,5],
@@ -86,7 +80,6 @@ describe('mergeArrays', () => {
         original: [1,2,3,4,5],
         server: [1,2,4,5],
         local: [1,2,3,4,5],
-        key: ''
       }, merge)).toEqual({
         state: 'IN_SYNC',
         pendingModifications: [1,2,4,5],
@@ -98,11 +91,12 @@ describe('mergeArrays', () => {
         original: [1,2,{id: 3, value: 'b'},4,5],
         server: [1,2,4,5],
         local: [1,2,{id: 3, value: 'a'},4,5],
-        key: ''
       }, merge)).toEqual({
         state: 'CONFLICT',
         pendingModifications: [1,2,{id: 3, value: 'a'},4,5],
-        conflicts: [""],
+        conflicts: [
+          [],
+        ],
       })
     })
     test('complex removals', () => {
@@ -110,7 +104,6 @@ describe('mergeArrays', () => {
         original: [1,2,3,4,5],
         server: [1,2,4,5],
         local: [2,3,4],
-        key: ''
       }, merge)).toEqual({
         state: 'MODIFIED_LOCALLY',
         pendingModifications: [2,4],
@@ -124,7 +117,6 @@ describe('mergeArrays', () => {
       original: [1,2,3,4,5],
       server: [6,1,2,4,5,8],
       local: [1,2,3,4,7],
-      key: ''
     }, merge)).toEqual({
       state: 'MODIFIED_LOCALLY',
       pendingModifications: [6,1,2,4,7,8],
@@ -138,7 +130,6 @@ describe('mergeArrays', () => {
         original: [1,2,3,4,5],
         server: [1,2,3,4,5],
         local: [1,5,2,3,4],
-        key: ''
       }, merge)).toEqual({
         state: 'MODIFIED_LOCALLY',
         pendingModifications: [1,5,2,3,4],
@@ -150,7 +141,6 @@ describe('mergeArrays', () => {
         original: [1,2,3,4,5],
         server: [1,5,2,3,4],
         local: [1,2,3,4,5],
-        key: ''
       }, merge)).toEqual({
         state: 'IN_SYNC',
         pendingModifications: [1,5,2,3,4],
@@ -162,7 +152,6 @@ describe('mergeArrays', () => {
         original: [1,2,3],
         server: [1,3,2],
         local: [1,2,3],
-        key: ''
       }, merge)).toEqual({
         state: 'IN_SYNC',
         pendingModifications: [1,3,2],
@@ -174,7 +163,6 @@ describe('mergeArrays', () => {
         original: [1,2,3,4],
         server: [4,2,3,1],
         local: [1,2,3,4],
-        key: ''
       }, merge)).toEqual({
         state: 'IN_SYNC',
         pendingModifications: [4,2,3,1],
@@ -187,7 +175,6 @@ describe('mergeArrays', () => {
         original: [1,2,3,4,5],
         server: [1,5,2,3,4],
         local: [1,5,2,3,4],
-        key: ''
       }, merge)).toEqual({
         state: 'IN_SYNC',
         pendingModifications: [1,5,2,3,4],
@@ -200,7 +187,6 @@ describe('mergeArrays', () => {
         original: [1,2,3,4,5],
         server: [1,5,2,3,4],
         local: [1,2,4,3,5],
-        key: ''
       }, merge)).toEqual({
         state: 'MODIFIED_LOCALLY',
         pendingModifications: [1,5,2,4,3],
@@ -215,7 +201,6 @@ describe('mergeArrays', () => {
         original: [1,2,3,4,{id: 5, value: 5}],
         server: [1,2,3,4,{id: 5, value: 5}],
         local: [1,2,3,4,{id: 5, value: 8}],
-        key: ''
       }, merge)).toEqual({
         state: 'MODIFIED_LOCALLY',
         pendingModifications: [1,2,3,4,{id: 5, value: 8}],
@@ -227,7 +212,6 @@ describe('mergeArrays', () => {
         original: [1,2,3,4,{id: 5, value: 5}],
         server: [1,2,3,4,{id: 5, value: 8}],
         local: [1,2,3,4,{id: 5, value: 5}],
-        key: ''
       }, merge)).toEqual({
         state: 'IN_SYNC',
         pendingModifications: [1,2,3,4,{id: 5, value: 8}],
@@ -239,7 +223,6 @@ describe('mergeArrays', () => {
         original: [1,2,3,4,{id: 5, value: 5}],
         server: [1,2,3,4,{id: 5, value: 8}],
         local: [1,2,3,4,{id: 5, value: 8}],
-        key: ''
       }, merge)).toEqual({
         state: 'IN_SYNC',
         pendingModifications: [1,2,3,4,{id: 5, value: 8}],
@@ -252,7 +235,6 @@ describe('mergeArrays', () => {
         original: [1,2,3,4,{id: 5, value: 5}],
         server: [1,2,{id: 5, value: 8},3,4],
         local: [1,2,3,4,{id: 5, value: 5}],
-        key: ''
       }, merge)).toEqual({
         state: 'IN_SYNC',
         pendingModifications: [1,2,{id: 5, value: 8},3,4],
@@ -265,7 +247,6 @@ describe('mergeArrays', () => {
         original: [1,2,3,4,{id: 5, value: 5}],
         server: [1,2,3,4,{id: 5, value: 5}],
         local: [1,2,{id: 5, value: 8},3,4],
-        key: ''
       }, merge)).toEqual({
         state: 'MODIFIED_LOCALLY',
         pendingModifications: [1,2,{id: 5, value: 8},3,4],
@@ -278,7 +259,6 @@ describe('mergeArrays', () => {
         original: [1,2,3,4,{id: 5, value: 5}],
         server: [1,2,{id: 5, value: 5},3,4],
         local: [1,2,{id: 5, value: 8},3,4],
-        key: ''
       }, merge)).toEqual({
         state: 'MODIFIED_LOCALLY',
         pendingModifications: [1,2,{id: 5, value: 8},3,4],
@@ -292,11 +272,12 @@ describe('mergeArrays', () => {
       original: [1,2,3,4,5],
       server: [1,4,5,6],
       local: [1,{id: 2},{id: 3},4],
-      key: ''
     }, merge)).toEqual({
       state: 'CONFLICT',
       pendingModifications: [1,{id: 2},{id: 3},4, 6],
-      conflicts: [""],
+      conflicts: [
+        [],
+      ],
     })
   })
 
@@ -305,11 +286,12 @@ describe('mergeArrays', () => {
       original: [1,2,3,4],
       server: [6,1,4,2,3,55,66],
       local: [5,1,2,3],
-      key: ''
     }, merge)).toEqual({
       state: 'CONFLICT',
       pendingModifications: [5,6,1,2,3,55,66],
-      conflicts: [""],
+      conflicts: [
+        [],
+      ],
     })
   })
 
@@ -318,11 +300,12 @@ describe('mergeArrays', () => {
       original: [1,2,3],
       server: [6,1,3,2,55,66],
       local: [5,1,3],
-      key: ''
     }, merge)).toEqual({
       state: 'CONFLICT',
       pendingModifications: [5,6,1,3,55,66],
-      conflicts: [""],
+      conflicts: [
+        [],
+      ],
     })
   })
 
@@ -331,7 +314,6 @@ describe('mergeArrays', () => {
       original: [4,5, 11, 22, 33],
       server: [4,5,6,7,8,9, 11, 22, 33],
       local: [4,10, 11, 22, 33],
-      key: ''
     }, merge)).toEqual({
       state: 'MODIFIED_LOCALLY',
       pendingModifications: [4, 10, 6, 7, 8, 9, 11, 22, 33],

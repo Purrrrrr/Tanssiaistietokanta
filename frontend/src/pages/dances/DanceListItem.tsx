@@ -5,7 +5,7 @@ import {H2} from "@blueprintjs/core";
 import {Dance} from "services/dances";
 import {DanceEditor} from './DanceEditor';
 import { Flex } from 'components/Flex';
-import useAutosavingState, {SuperPartial} from 'utils/useAutosavingState';
+import useAutosavingState, {makePartial} from 'utils/useAutosavingState';
 import SyncStatus from 'components/SyncStatus';
 
 interface DanceListItemProps {
@@ -16,12 +16,12 @@ interface DanceListItemProps {
 
 export function DanceListItem({dance: danceInDatabase, onChange, onDelete} : DanceListItemProps) {
   const patchDance = useCallback(
-    (patches : SuperPartial<Dance>) => {
+    (patches : Partial<Dance>) => {
       onChange({_id: danceInDatabase._id, ...patches})
     },
     [onChange, danceInDatabase._id]
   )
-  const [dance, setDance, resolveConflict, {state}] = useAutosavingState<Dance>(danceInDatabase, patchDance)
+  const [dance, setDance, resolveConflict, {state}] = useAutosavingState<Dance,Partial<Dance>>(danceInDatabase, patchDance, makePartial)
   return <>
     <SyncStatus state={state} />
     <Flex alignItems="end">
