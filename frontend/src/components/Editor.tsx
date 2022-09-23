@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import useAutosavingState, {makePartial} from 'utils/useAutosavingState';
 import SyncStatus from 'components/SyncStatus';
 
@@ -9,10 +9,9 @@ const obj = {
 }
 
 export function SampleEditor() {
-  const [state, setState, time] = useMonkey(obj)
+  const [state, setState] = useState(obj)
 
   return <div>
-    <p>{time} seconds to mutation</p>
     <p>{JSON.stringify(state)}</p>
     <Editor
       serverState={state}
@@ -82,49 +81,4 @@ function Field<T extends RO>({field, item, setItem} : FieldProps<T>) {
       onChange={(e) => setItem({...item, [field.name]: e.target.value})}
     />
   </p>
-}
-
-function useMonkey(obj) {
-  const [item, setItem] = useState(obj)
-  const time = useRef(0)
-
-  useEffect(() => {
-    const timeout = setInterval(() => {
-      if (time.current <= 0) {
-        time.current = Math.ceil(Math.random()*5)
-        setItem(monkeyAround)
-      } else {
-        time.current--
-        setItem(a => ({ ...a}))
-      }
-    }, 1000)    
-
-    return () => clearInterval(timeout)
-  }, [obj, time])
-
-  return [item, setItem, time.current]
-}
-
-function monkeyAround(item) {
-  // const keys = Object.keys(item)
-  const randomKey = 'name'
-  let value = item[randomKey]
-  switch(typeof value) {
-    case 'number':
-      value = Math.floor(Math.random()*100)
-      break
-    case 'string':
-      value = pickRandom(['happy', 'naughty', 'wonderful'])+" "+pickRandom(['fish', 'cat', 'dog'])
-      break
-  }
-
-
-  return {
-    ...item,
-    [randomKey]: value,
-  }
-}
-
-function pickRandom(arr) {
-  return arr[Math.floor(arr.length*Math.random())]
 }
