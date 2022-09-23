@@ -6,9 +6,17 @@ import {SyncState, Path } from './types'
 export * from './patchStrategies'
 export type { SyncState } from './types';
 
+export type UseAutosavingStateReturn<T> = [
+  T,
+  (saved : T) => any,
+  SyncStore<T> & {
+    resolveConflict: (resolutions: ConflictResolutions<T>) => any,
+  }
+]
+
 type SyncEvent = 'LOCAL_MODIFICATION' | 'PATCH_SENT' | 'EXTERNAL_MODIFICATION' | 'CONFLICT_RESOLVED'
 
-export interface SyncStore<T> {
+interface SyncStore<T> {
   state: SyncState
   serverState: T
   modifications: T
@@ -31,12 +39,7 @@ export default function useAutosavingState<T, Patch>(
   serverState : T,
   onPatch : (patch : Patch) => void,
   patchStrategy: PatchStrategy<T,Patch>
-) : [
-  T,
-  (saved : T) => any,
-  (resolutions: ConflictResolutions<T>) => any,
-  SyncStore<T>
-]
+) : UseAutosavingStateReturn<T>
 {
   const [reducerState, dispatch] = useReducer<Reducer<SyncStore<T>, SyncAction>, T>(reducer, serverState, getInitialState)
   const { serverState: originalData, state, modifications, conflicts } = reducerState
@@ -63,16 +66,18 @@ export default function useAutosavingState<T, Patch>(
   const onModified = useCallback((modifications) => {
     dispatch({ type: 'LOCAL_MODIFICATION', payload: modifications})
   }, [])
-  const onConflictResolved = useCallback((resolutions) => {
+  const resolveConflict = useCallback((resolutions) => {
     dispatch({ type: 'CONFLICT_RESOLVED', payload: resolutions})
   }, [])
 
-  const formState = {
-    ...serverState,
-    ...modifications,
-  }
-
-  return [formState, onModified, onConflictResolved, reducerState]
+  return [
+    modifications,
+    onModified,
+    {
+      ...reducerState,
+      resolveConflict,
+    }
+  ]
 }
 
 function getInitialState<T>(serverState: T) : SyncStore<T> {

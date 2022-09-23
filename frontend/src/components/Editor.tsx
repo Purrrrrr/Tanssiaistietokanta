@@ -46,7 +46,7 @@ function Editor<T extends RO>({
   onPatch,
   fields,
 } : EditorProps<T>) {
-  const [item, setItem, resolveConflict, s] = useAutosavingState<T, Partial<T>>(serverState, onPatch, makePartial)
+  const [item, setItem, s] = useAutosavingState<T, Partial<T>>(serverState, onPatch, makePartial)
 
   return <section>
     <h1>Editor</h1>
