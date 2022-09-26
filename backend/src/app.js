@@ -59,8 +59,7 @@ async function getApp() {
   app.hooks(appHooks);
 
   await app.configureAsync(migrateDb);
-
-  app.configure(dependencyGraph.init);
+  await app.configureAsync(dependencyGraph.init);
 
   return app;
 }

@@ -2,7 +2,6 @@ const {
   updateDependencies,
   registerDependencies,
   clearDependencies,
-  getItemDependencies,
 } = require('./utils/dependencies');
 const {
   loadDependencyTypes
@@ -12,7 +11,7 @@ const {
 const serviceDependencyRelations = {};
 const serviceReverseDependencyRelations = {};
 
-function init(app) {
+async function init(app) {
   for (const [serviceName, service] of Object.entries(app.services)) {
     serviceDependencyRelations[serviceName] = [];
     serviceReverseDependencyRelations[serviceName] = [];
@@ -32,8 +31,7 @@ function init(app) {
     });
   }
 
-
-  loadInitialDependencies(app);
+  await loadInitialDependencies(app);
 }
 
 
