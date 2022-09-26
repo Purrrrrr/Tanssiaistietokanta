@@ -17,7 +17,7 @@ module.exports = (app) => {
     Mutation: {
       createWorkshop: (_, {eventId, workshop}, params) => service.create({eventId, ...workshop}, params),
       modifyWorkshop: (_, {id, workshop}, params) => service.patch(id, workshop, params),
-      deleteWorkshop: (_, {id}, params) => service.remove(id, {}, params)
+      deleteWorkshop: (_, {id}, params) => service.remove(id, params)
     }
   };
 };

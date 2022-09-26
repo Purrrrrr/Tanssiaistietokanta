@@ -36,6 +36,12 @@ const socketLink = new ApolloLink((operation) => {
 function observableFromPromise<T>(promise : Promise<T>) : Observable<T> {
   return new Observable(observer => {
     async function run() {
+      const result = await promise
+      if ((result as any).errors) {
+        const error = (result as any).errors[0]
+        observer.error(error)
+        console.error(error)
+      }
       observer.next(await promise);
     }
     run().then(() => observer.complete(), e => observer.error(e));
@@ -49,7 +55,7 @@ export const apolloClient = new ApolloClient({
 
 export function useMutation(query, options = {}) {
   return useMutationOriginal(query, {
-    onError: err => { console.log(err); showDefaultErrorToast(err);},
+    onError: err => { showDefaultErrorToast(err);},
     ...options
   })
 }

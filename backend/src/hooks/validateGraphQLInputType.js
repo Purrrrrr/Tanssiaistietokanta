@@ -11,7 +11,7 @@ module.exports = function (typeName) {
     if (errors.length) {
       context.statusCode = 400;
       context.result = {
-        className: 'validation-error',
+        errorCode: 'validation-error',
         errors
       };
     }

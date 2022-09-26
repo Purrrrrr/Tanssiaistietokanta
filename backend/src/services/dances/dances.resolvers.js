@@ -17,7 +17,7 @@ module.exports = (app) => {
       createDance: (_, {dance}, params) => service.create(dance, params),
       modifyDance: (_, {id, dance}, params) => service.update(id, dance, params),
       patchDance: (_, {id, dance}, params) => service.patch(id, dance, params),
-      deleteDance: (_, {id}, params) => service.remove(id, {}, params),
+      deleteDance: (_, {id}, params) => service.remove(id, params),
     }
   };
 };

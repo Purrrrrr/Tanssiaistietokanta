@@ -25,7 +25,7 @@ module.exports = (app) => {
       createEvent: (_, {event}, params) => service.create(event, params),
       modifyEvent: (_, {id, event}, params) => service.update(id, event, params),
       modifyEventProgram: (_, {id, program}, params) => service.patch(id, {program}, params),
-      deleteEvent: (_, {id}, params) => service.remove(id, {}, params)
+      deleteEvent: (_, {id}, params) => service.remove(id, params)
     }
   };
 };
