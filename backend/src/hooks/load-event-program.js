@@ -17,7 +17,7 @@ module.exports = function (options = {}) {
           getProgramItemData,
         ),
       }
-    })
+    });
 
     async function getProgramItemData(item) {
       switch(item.__typename) {
@@ -26,7 +26,7 @@ module.exports = function (options = {}) {
         case 'EventProgram':
           return await addEventProgramData(item);
         default:
-          return item
+          return item;
       }
     }
 
@@ -40,8 +40,8 @@ module.exports = function (options = {}) {
       return id ? await danceService.get(id) : null;
     }
 
-    async function addEventProgramData({eventProgramId}) {
-      const program = await eventProgramService.get(eventProgramId);
+    async function addEventProgramData(item) {
+      const program = await eventProgramService.get(item.eventProgramId);
       if (!program) return item;
       return {...program, __typename: 'EventProgram'};
     }
