@@ -2,6 +2,8 @@
 const createService = require('feathers-nedb');
 const createModel = require('../../models/dances.model');
 const hooks = require('./dances.hooks');
+const {defaultChannels, withoutCurrentConnection} = require('../../utils/defaultChannels');
+const {getDependenciesFor} = require('../../utils/dependencies');
 
 module.exports = function (app) {
   const Model = createModel(app);
@@ -13,18 +15,20 @@ module.exports = function (app) {
 
   // Get our initialized service so that we can register hooks
   const service = app.service('dances');
-  service.graphQl = () => ({
-    schema: `
-      type Dance {
-        _id: ID
-        name: String!
-        description: String
-        duration: Int
-        prelude: String
-        formation: String
-        remarks: String
-      }
-    `  
+
+  service.publish((data,context) => {
+    const eventIds = getDependenciesFor('dances', data, 'usedBy', 'events');
+    const workshopIds = getDependenciesFor('dances', data, 'usedBy', 'workshops');
+
+    const channels = [
+      ...eventIds.map(id => app.channel(`events/${id}/dances`)),
+      ...workshopIds.map(id => app.channel(`workshops/${id}/dances`)),
+    ];
+
+    return [
+      ...withoutCurrentConnection(channels, context),
+      ...defaultChannels(data, context)
+    ];
   });
 
   service.hooks(hooks);

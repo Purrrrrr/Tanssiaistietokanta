@@ -1,3 +1,4 @@
+const R = require('ramda');
 const serviceItemDependencies = new Map();
 
 /* Types of depencies
@@ -42,8 +43,8 @@ function registerDependencies(sourceService, item, relations) {
 }
 
 function registerDepedency({sourceId, targetId, relation}) {
-  const sourceNode = getItemDependencies(relation.sourceService, sourceId);
-  const targetNode = getItemDependencies(relation.service, targetId);
+  const sourceNode = getItemDependencyNode(relation.sourceService, sourceId);
+  const targetNode = getItemDependencyNode(relation.service, targetId);
 
   const sourceRelationIds = getOrComputeDefault(sourceNode.dependencies, relation, () => new Set());
   const targetRelationIds = getOrComputeDefault(targetNode.reverseDependencies, relation, () => new Set());
@@ -63,30 +64,36 @@ function clearDependencies(service, item) {
     return;
   }
   const id = item._id;
-  const deps = getItemDependencies(service, id);
+  const deps = getItemDependencyNode(service, id);
   for (const [relation, targetIds] of deps.dependencies.entries()) {
     for (const targetId of targetIds) {
-      const targetDeps = getItemDependencies(relation.service, targetId);
+      const targetDeps = getItemDependencyNode(relation.service, targetId);
       targetDeps.reverseDependencies.get(relation).delete(id);
     }
   }
   deps.dependencies = new Map();
 }
 
-function getItemDependencies(service, id) {
-  const deps = getOrComputeDefault(serviceItemDependencies, service, () => new Map());
-  return getOrComputeDefault(deps, id, () => ({
-    dependencies: new Map(),
-    reverseDependencies: new Map(),
-  }));
-}
-
 function isUsedBySomething(service, id) {
-  return getLinks(service, id, 'usedBy').size > 0;
+  return getDependencyLinks(service, id, 'usedBy').size > 0;
 }
 
-function getLinks(service, id, linkType) {
-  const {dependencies, reverseDependencies} = getItemDependencies(service, id);
+function getDependenciesFor(service, item, linkType, otherService) {
+  if (Array.isArray(item)) {
+    if (!linkType) throw new Error('Missing link type');
+    if (!otherService) throw new Error('Missing other service');
+    return R.uniq(
+      item.map(({_id})=> 
+        Array.from(getDependencyLinks(service, _id, linkType, otherService))
+      ).flat()
+    );
+  }
+  const id = item._id;
+  return Array.from(getDependencyLinks(service, id, linkType, otherService));
+}
+
+function getDependencyLinks(service, id, linkType, otherService) {
+  const {dependencies, reverseDependencies} = getItemDependencyNode(service, id);
   const links = {
     usedBy: new Map(),
     uses: new Map(),
@@ -96,19 +103,32 @@ function getLinks(service, id, linkType) {
 
   for (const [relation, ids] of dependencies.entries()) {
     if (linkType && relation.type !== linkType) continue;
+    if (otherService && relation.service !== otherService) continue;
 
     const idSet = getOrComputeDefault(links[relation.type], relation.service, () => new Set());
     ids.forEach(id => idSet.add(id));
   }
   for (const [relation, ids] of reverseDependencies.entries()) {
     if (linkType && relation.type !== dependencyTypePairs[linkType]) continue;
+    if (otherService && relation.sourceService !== otherService) continue;
 
     const idSet = getOrComputeDefault(links[dependencyTypePairs[relation.type]], relation.sourceService, () => new Set());
     ids.forEach(id => idSet.add(id));
   }
 
+  if (linkType && otherService) {
+    return links[linkType].get(otherService) || new Set();
+  }
   if (linkType) return links[linkType];
   return links;
+}
+
+function getItemDependencyNode(service, id) {
+  const deps = getOrComputeDefault(serviceItemDependencies, service, () => new Map());
+  return getOrComputeDefault(deps, id, () => ({
+    dependencies: new Map(),
+    reverseDependencies: new Map(),
+  }));
 }
 
 function getOrComputeDefault(map, key, getDefault) {
@@ -124,7 +144,6 @@ module.exports = {
   updateDependencies,
   registerDependencies,
   clearDependencies,
-  getItemDependencies,
   isUsedBySomething,
-  serviceItemDependencies,
+  getDependenciesFor,
 };

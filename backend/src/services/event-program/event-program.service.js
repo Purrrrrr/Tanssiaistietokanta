@@ -2,6 +2,8 @@
 const { EventProgram } = require('./event-program.class');
 const createModel = require('../../models/event-program.model');
 const hooks = require('./event-program.hooks');
+const {defaultChannels, withoutCurrentConnection} = require('../../utils/defaultChannels');
+const {getDependenciesFor} = require('../../utils/dependencies');
 
 module.exports = function (app) {
   const options = {
@@ -14,6 +16,19 @@ module.exports = function (app) {
 
   // Get our initialized service so that we can register hooks
   const service = app.service('event-program');
+
+  service.publish((data,context) => {
+    const eventIds = getDependenciesFor('event-program', data, 'usedBy', 'events');
+
+    const channels = [
+      ...eventIds.map(id => app.channel(`events/${id}/dances`)),
+    ];
+
+    return [
+      ...withoutCurrentConnection(channels, context),
+      ...defaultChannels(data, context)
+    ];
+  });
 
   service.hooks(hooks);
 };
