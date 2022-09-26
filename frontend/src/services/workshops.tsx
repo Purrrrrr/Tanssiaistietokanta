@@ -25,7 +25,7 @@ query getWorkshop($id: ID!) {
   }
 }`);
 export function useWorkshop(id) {
-  const res = useWorkshopInternal({variables: {id}});
+  const res = useWorkshopInternal({id});
   return [res.data ? res.data.workshop : null, res];
 }
 
