@@ -1,5 +1,6 @@
 // Application hooks that run for every service
 const log = require('./hooks/log');
+const preventRemovingOfUsedItems = require('./hooks/prevent-removing-of-used-items');
 
 module.exports = {
   before: {
@@ -9,7 +10,7 @@ module.exports = {
     create: [],
     update: [],
     patch: [],
-    remove: []
+    remove: [preventRemovingOfUsedItems()]
   },
 
   after: {
