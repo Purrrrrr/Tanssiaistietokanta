@@ -32,7 +32,6 @@ function init(app) {
     });
   }
 
-  // console.log(serviceDependencyRelations);
 
   loadInitialDependencies(app);
 }
@@ -45,7 +44,6 @@ async function loadInitialDependencies(app) {
     const items = await service.find({});
     items.forEach(item => registerDependencies(serviceName, item, relations));
   }
-  // console.dir(serviceItemDependencies, { depth: null});
 }
 
 

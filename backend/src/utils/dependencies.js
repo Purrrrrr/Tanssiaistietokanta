@@ -55,9 +55,6 @@ function registerDepedency({sourceId, targetId, relation}) {
 function updateDependencies(serviceName, item, relations) {
   clearDependencies(serviceName, item);
   registerDependencies(serviceName, item, relations);
-  console.log(serviceName, item._id);
-  console.log(isUsedBySomething(serviceName, item._id));
-  console.log(getLinks(serviceName, item._id));
 }
 
 function clearDependencies(service, item) {
