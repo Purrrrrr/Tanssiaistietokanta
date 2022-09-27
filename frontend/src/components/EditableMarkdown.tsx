@@ -1,8 +1,7 @@
 import React from 'react';
 import {Intent, Card, FormGroup} from "@blueprintjs/core";
 import {Button, useClosableEditor} from "libraries/forms";
-import {ClickToEdit} from "libraries/forms";
-import {MarkdownEditor} from 'components/MarkdownEditor';
+import {SimpleMarkdownEditor} from 'components/MarkdownEditor';
 import Markdown from 'markdown-to-jsx';
 
 interface EditableMarkdownProps {
@@ -13,10 +12,9 @@ interface EditableMarkdownProps {
   overrides?: any,
   value: any,
   onChange: (val: any) => any,
-  simple?: boolean,
 }
 
-export function EditableMarkdown({label, labelStyle, maxHeight = 200, plain, overrides, simple, ...props} : EditableMarkdownProps) {
+export function EditableMarkdown({label, labelStyle, maxHeight = 200, plain, overrides, ...props} : EditableMarkdownProps) {
   const {
     isOpen, onOpen,
     value, onChange,
@@ -30,10 +28,7 @@ export function EditableMarkdown({label, labelStyle, maxHeight = 200, plain, ove
         {plain || <Button text="Muokkaa tekstiä" onClick={onOpen} />}
       </div>
       : <>
-        {simple 
-          ? <div className="markdown-editor bp3-input"><ClickToEdit.MultilineEditor value={value} onChange={onChange} /></div>
-          : <MarkdownEditor value={value} onChange={onChange} />
-        }
+        <SimpleMarkdownEditor value={value} onChange={onChange} />
         <div style={{textAlign: 'right', padding: "20px 20px 0 0"}}>
           <Button intent={Intent.PRIMARY} text="Tallenna" onClick={onConfirm} />
           <Button text="Peruuta" onClick={onCancel} />

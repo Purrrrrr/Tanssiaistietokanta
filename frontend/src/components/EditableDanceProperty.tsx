@@ -1,7 +1,7 @@
 import React from 'react';
 import {usePatchDance, WritableDanceProperty, dancePropertyLabels} from "services/dances";
 import {ClickToEdit} from "libraries/forms";
-import {SimpleMarkdownEditor} from 'components/MarkdownEditor';
+import {EditableMarkdown} from 'components/EditableMarkdown';
 
 import './EditableDanceProperty.sass';
 
@@ -29,7 +29,7 @@ export function EditableDanceProperty({dance, property, addText, ...props} : Edi
   const editorType = props["type"]
 
   if (editorType === 'markdown') {
-    return <SimpleMarkdownEditor value={dance[property]} onChange={onChange} />
+    return <EditableMarkdown plain label="" value={dance[property]} onChange={onChange} />
   }
 
   return <ClickToEdit label={dancePropertyLabels[property]} labelStyle="hidden" className="editableDanceProperty"

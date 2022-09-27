@@ -11,7 +11,7 @@ import {Duration} from "components/widgets/Duration";
 import {DurationField} from "components/widgets/DurationField";
 import {Switch, Button, ClickToEdit, Input} from "libraries/forms";
 import {ProgramPauseDurationEditor} from "components/widgets/ProgramPauseDurationEditor";
-import {EditableMarkdown} from 'components/EditableMarkdown';
+import {MarkdownEditor} from 'components/MarkdownEditor';
 import {makeTranslate} from 'utils/translate';
 import {useOnChangeForProp} from 'utils/useOnChangeForProp';
 import {bind, useHotkeyHandler} from 'utils/useHotkeyHandler';
@@ -258,7 +258,7 @@ function ProgramDetailsEditor({item, onInputBlurred, onChange}) {
       return <>
         <Input value={name} onBlur={onInputBlurred} required label="Ohjelmanumeron nimi"
           onChange={val => onChange(L.set('name', val, item))} />
-        <EditableMarkdown simple label="Ohjelman kuvaus" value={item.description ?? ""} onChange={val => onChange(L.set('description', val, item))} />
+        <MarkdownEditor label="Ohjelman kuvaus" value={item.description ?? ""} onChange={val => onChange(L.set('description', val, item))} />
       </>
   }
 

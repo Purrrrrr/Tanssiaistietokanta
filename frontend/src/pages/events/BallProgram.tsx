@@ -178,7 +178,7 @@ function HeaderSlide({header, onChangeSlide}) {
 function EventProgramSlide({program, onChangeSlide}) {
   const {name, next, description} = program;
   return <SimpleSlide title={name} next={next} onChangeSlide={onChangeSlide} >
-    {description && <p className="mainContent"><Markdown>{description}</Markdown></p>}
+    {description && <div className="mainContent"><Markdown>{description}</Markdown></div>}
   </SimpleSlide>;
 }
 

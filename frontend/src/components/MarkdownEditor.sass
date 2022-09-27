@@ -1,35 +1,21 @@
-.markdown-editor
-  background: white
-  padding: 10px
-  height: auto
-  max-height: 600px
-  overflow: auto
-  max-width: 100%
-  line-height: inherit
-
-.markdown-part
-
-  & + &
-    border-top: 1px solid #ddd
-  .buttons
-    clear: right
-    float: right
-
-  .markdown-part-editor
-    cursor: pointer
-
-    textarea
-      display: block
-      width: 100%
-
-  .placeholder
-    color: #666
-    line-height: 30px
-    padding-left: 10px
-
-    &:hover
-      color: inherit
-
-.markdown-editor-helper
-  background: rgba(255, 255, 255, 0.8)
-  z-index: 100000
+.md-editor
+  width: 100%
+  &:not(:focus-within)
+    .w-md-editor-toolbar, .w-md-editor-bar
+      display: none
+  .w-md-editor-show-live
+    overflow: hidden
+    .w-md-editor-input
+      position: relative
+      z-index: 1
+      transform: all 0.5s
+    .w-md-editor-preview
+      transform: left 0.5s, width 0.5s
+  &:not(:focus-within)
+    .w-md-editor-show-live
+      .w-md-editor-input
+        opacity: 0
+        width: 100%
+      .w-md-editor-preview
+        left: -3px
+        width: 100%
