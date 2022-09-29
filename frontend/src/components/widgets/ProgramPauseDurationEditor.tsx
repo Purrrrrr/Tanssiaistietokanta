@@ -1,5 +1,5 @@
 import React from 'react';
-import {NumericInput} from "@blueprintjs/core";
+import {NumericInput} from "libraries/ui";
 
 import {makeTranslate} from 'utils/translate';
 

@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {Button} from "libraries/forms";
+import {Button} from "libraries/ui";
 import {UserContext} from 'services/users';
 
 function LoginForm() {

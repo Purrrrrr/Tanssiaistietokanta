@@ -1,6 +1,7 @@
 import React, {useRef}  from 'react';
 import {ErrorMessage} from "./validation";
-import {Classes, Icon, Intent, Button} from "@blueprintjs/core";
+import {Classes} from "@blueprintjs/core";
+import {Icon, Button} from "libraries/ui";
 import {useClosableEditor} from "./hooks/useClosableEditor";
 import {BasicInput} from "./Input";
 import {BasicTextArea} from "./TextArea";
@@ -78,13 +79,13 @@ function LabellessClickToEdit({
   >
     <Editor {...{value, onChange, onCancel, onConfirm}} />
     <ErrorMessage error={error} />
-    <Button intent={Intent.SUCCESS} onClick={onConfirm} icon="tick" disabled={!!error} />
-    <Button intent={Intent.DANGER} onClick={onCancel} icon="cross" />
+    <Button intent="success" onClick={onConfirm} icon="tick" disabled={!!error} />
+    <Button intent="danger" onClick={onCancel} icon="cross" />
   </span>;
 }
 
 function DefaultEditButton() {
-  return <Icon className="click-to-edit-button" intent={Intent.PRIMARY} icon="edit" />
+  return <Icon className="click-to-edit-button" intent="primary" icon="edit" />
 }
 
 function MultilineEditor({value, ...props} : TextEditorProps) {

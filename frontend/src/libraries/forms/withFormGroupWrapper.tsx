@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react';
-import {FormGroup} from "@blueprintjs/core";
+import {FormGroup} from "libraries/ui";
 
 export interface FormGroupWrappedProps {
   id?: string

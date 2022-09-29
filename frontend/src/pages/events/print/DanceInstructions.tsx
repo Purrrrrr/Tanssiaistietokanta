@@ -1,6 +1,7 @@
 import React, {useState, useRef, useCallback} from 'react';
 import {usePatchDance} from 'services/dances';
-import {Button, Switch} from "libraries/forms";
+import {Button} from "libraries/ui";
+import {Switch} from "libraries/forms";
 import {backendQueryHook} from "backend";
 import {LoadingState} from 'components/LoadingState';
 import {EditableMarkdown} from 'components/EditableMarkdown';
@@ -112,7 +113,7 @@ function Dance({dance}) {
       <DanceDataImportButton text={t`fetchDataFromWiki`} dance={dance} />
     </h2>
     <EditableMarkdown label="" value={instructions} onChange={onChange}
-      overrides={markdownOverrides} plain maxHeight={undefined} />
+      overrides={markdownOverrides} maxHeight={undefined} />
   </div>
 }
 

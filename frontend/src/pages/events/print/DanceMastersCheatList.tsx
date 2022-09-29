@@ -2,7 +2,7 @@ import './DanceMastersCheatList.sass';
 
 import {backendQueryHook} from "backend";
 
-import {Button} from "libraries/forms";
+import {Button} from "libraries/ui";
 import {EditableDanceProperty} from "components/EditableDanceProperty";
 import {LoadingState} from 'components/LoadingState';
 import {PrintTable} from 'components/PrintTable';

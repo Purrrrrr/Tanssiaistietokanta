@@ -2,14 +2,15 @@ import './EventProgramEditor.sass';
 
 import * as L from 'partial.lenses';
 
-import {Card, Classes, HTMLTable, Icon, Intent} from "@blueprintjs/core";
+import {Icon, Card, Button, HTMLTable} from "libraries/ui";
+import {Classes} from "@blueprintjs/core";
 import {DragHandle, ListEditor, ListEditorItems} from "./ListEditor";
 import React, {createContext, useContext, useMemo, useState, useRef} from 'react';
 
 import {DanceChooser} from "components/widgets/DanceChooser";
 import {Duration} from "components/widgets/Duration";
 import {DurationField} from "components/widgets/DurationField";
-import {Switch, Button, ClickToEdit, Input} from "libraries/forms";
+import {Switch, ClickToEdit, Input} from "libraries/forms";
 import {ProgramPauseDurationEditor} from "components/widgets/ProgramPauseDurationEditor";
 import {MarkdownEditor} from 'components/MarkdownEditor';
 import {makeTranslate} from 'utils/translate';
@@ -144,7 +145,7 @@ function DanceSetEditor({item, onChange, onRemove, onMoveDown, onMoveUp, itemInd
   return <Card className="danceset" {...props} onKeyDown={onKeyDown} >
     <h2>
       <ClickToEdit labelStyle="hidden" label={t`danceSetName`} value={name} onChange={onChangeFor('name')} required />
-      <Button className="delete" intent={Intent.DANGER} text={t`removeDanceSet`} onClick={removeDanceSet} />
+      <Button className="delete" intent="danger" text={t`removeDanceSet`} onClick={removeDanceSet} />
     </h2>
     <ProgramListEditor isIntroductionsSection={false} program={program} onChange={onChangeFor('program')}
       intervalMusicDuration={intervalMusicDuration}
@@ -240,7 +241,7 @@ function ProgramItemEditor({item, onChange, onRemove, onAdd, onMoveDown, onMoveU
       <Duration value={item.duration} />
     </td>
     <td>
-      <Button intent={Intent.DANGER} text="X" onClick={removeItem} className="delete" />
+      <Button intent="danger" text="X" onClick={removeItem} className="delete" />
     </td>
   </tr>;
 }
@@ -302,7 +303,7 @@ function IntervalMusicEditor({intervalMusicDuration, onSetIntervalMusicDuration}
         onChange={onSetIntervalMusicDuration}/>
     </td>
     <td>
-      <Button intent={Intent.DANGER} text="X" onClick={() => onSetIntervalMusicDuration(0)} className="delete" />
+      <Button intent="danger" text="X" onClick={() => onSetIntervalMusicDuration(0)} className="delete" />
     </td>
   </tr>
 }

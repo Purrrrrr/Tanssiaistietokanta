@@ -1,5 +1,5 @@
 import React from 'react';
-import {FormGroup} from "@blueprintjs/core";
+import {FormGroup} from "libraries/ui";
 import {useStableId} from './useStableId';
 
 export interface LabelingProps {

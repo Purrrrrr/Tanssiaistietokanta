@@ -1,10 +1,9 @@
 import React, {useState} from 'react';
-import {Intent, Card, Collapse, FormGroup, InputGroup} from "@blueprintjs/core";
+import {Collapse, Card, Button, FormGroup, SearchBar} from "libraries/ui";
 import InfiniteScroll from 'react-infinite-scroller';
 import {Breadcrumb} from "components/Breadcrumbs";
 import {PageTitle} from "components/PageTitle";
 import {showToast} from 'utils/toaster';
-import {Button} from "libraries/forms";
 
 import { filterDances, Dance, useDances, useCreateDance, usePatchDance, useDeleteDance } from 'services/dances';
 
@@ -28,7 +27,7 @@ function DancesPage() {
     await createDance(dance);
     setDanceToCreate(null);
     showToast({
-      intent: Intent.PRIMARY,
+      intent: 'primary',
       message: `Tanssi ${dance.name} luotu`,
       action: {text: "Näytä tanssi", onClick: () => setSearch(dance.name)}
     });
@@ -39,8 +38,7 @@ function DancesPage() {
     <PageTitle>Tanssit</PageTitle>
     <div style={{display: "flex", alignItems: "flex-start"}}>
       <FormGroup inline label="Hae" labelFor="search-dances" >
-        <InputGroup id="search-dances" leftIcon="search" rightElement={<Button aria-label="Tyhjennä haku" minimal icon="cross" onClick={() => setSearch("")} />}
-          value={search} onChange={(e) => setSearch(e.target.value)} />
+        <SearchBar id="search-dances" value={search} onChange={setSearch} />
       </FormGroup>
       <Button text="Uusi tanssi" onClick={() => setDanceToCreate(EMPTY_DANCE)}/>
       <DanceUploader onUpload={setDanceToCreate} />

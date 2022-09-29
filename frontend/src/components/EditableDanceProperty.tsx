@@ -29,7 +29,7 @@ export function EditableDanceProperty({dance, property, addText, ...props} : Edi
   const editorType = props["type"]
 
   if (editorType === 'markdown') {
-    return <EditableMarkdown plain label="" value={dance[property]} onChange={onChange} />
+    return <EditableMarkdown label="" value={dance[property]} onChange={onChange} />
   }
 
   return <ClickToEdit label={dancePropertyLabels[property]} labelStyle="hidden" className="editableDanceProperty"

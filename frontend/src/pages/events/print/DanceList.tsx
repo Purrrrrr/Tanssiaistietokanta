@@ -1,6 +1,7 @@
 import "./DanceList.sass";
 
-import {Button, Switch} from "libraries/forms";
+import {Button} from "libraries/ui";
+import {Switch} from "libraries/forms";
 import React, {useState} from "react";
 import {backendQueryHook} from 'backend';
 

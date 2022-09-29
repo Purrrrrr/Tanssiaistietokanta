@@ -1,5 +1,6 @@
 import React, {useEffect, useRef, useCallback} from 'react';
-import {IAlertProps, Button, Overlay, Classes} from "@blueprintjs/core";
+import {Button} from "libraries/ui";
+import {IAlertProps, Overlay, Classes} from "@blueprintjs/core";
 import { FocusScope, useFocusManager } from '@react-aria/focus';
 
 interface DialogProps extends InnerDialogProps {
@@ -47,6 +48,15 @@ function InnerDialog({children, onClose, title, style, className, showCloseButto
     </div>
     {children}
   </div>
+}
+
+Dialog.Body = function DialogBody({className, ...props}: React.HTMLAttributes<HTMLDivElement>) {
+  const cls = `${className ?? ''} ${Classes.DIALOG_BODY}`;
+  return <div className={cls} {...props} />
+}
+Dialog.Footer = function DialogBody({className, ...props}: React.HTMLAttributes<HTMLDivElement>) {
+  const cls = `${className ?? ''} ${Classes.DIALOG_FOOTER}`;
+  return <div className={cls} {...props} />
 }
 
 export function Alert({isOpen, title, intent, confirmButtonText, cancelButtonText, children, onCancel, onConfirm, onClose} : IAlertProps & {children: React.ReactNode, title: string}) {

@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import classNames from 'classnames';
-import {Switch, Button} from "libraries/forms";
+import {Button} from "libraries/ui";
+import {Switch} from "libraries/forms";
 import {backendQueryHook} from "backend";
 import {EditableDanceProperty} from "components/EditableDanceProperty";
 import PrintViewToolbar from 'components/widgets/PrintViewToolbar';

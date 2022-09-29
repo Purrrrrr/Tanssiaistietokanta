@@ -1,7 +1,7 @@
 import React, {useCallback} from 'react';
 import {DeleteButton} from "components/widgets/DeleteButton";
 import {DanceDataImportButton} from "components/DanceDataImportDialog";
-import {H2} from "@blueprintjs/core";
+import {H2} from "libraries/ui";
 import {Dance} from "services/dances";
 import {DanceEditor} from './DanceEditor';
 import { Flex } from 'components/Flex';

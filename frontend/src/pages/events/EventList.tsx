@@ -1,7 +1,6 @@
 import {useDeleteEvent, useEvents} from 'services/events';
 
 import {DeleteButton} from "components/widgets/DeleteButton";
-import {Intent} from "@blueprintjs/core";
 import {Link} from "react-router-dom"
 import {NavigateButton} from "components/widgets/NavigateButton";
 import {PageTitle} from "components/PageTitle";
@@ -30,6 +29,6 @@ export default function EventList() {
         />
       </h2>
     )}
-    <NavigateButton adminOnly intent={Intent.PRIMARY} href="events/new" text="Uusi tapahtuma" />
+    <NavigateButton adminOnly intent="primary" href="events/new" text="Uusi tapahtuma" />
   </>
 }

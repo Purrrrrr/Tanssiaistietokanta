@@ -1,4 +1,3 @@
-import {Intent} from "@blueprintjs/core";
 import {DragHandle, ListEditor} from "components/ListEditor";
 import React from 'react';
 import * as L from 'partial.lenses';
@@ -7,7 +6,8 @@ import {backendQueryHook} from "backend";
 import {DanceChooser} from "components/widgets/DanceChooser";
 import {makeTranslate} from 'utils/translate';
 import {useOnChangeForProp} from 'utils/useOnChangeForProp';
-import {Button, Input, TextArea, Validate} from "libraries/forms";
+import {Button} from "libraries/ui";
+import {Input, TextArea, Validate} from "libraries/forms";
 
 const t = makeTranslate({
   dances: 'Tanssit',
@@ -82,6 +82,6 @@ function DanceListItem({item, onChange, onRemove}) {
   return <>
     <DragHandle />
     <DanceChooser value={item} onChange={onChange} />
-    <Button intent={Intent.DANGER} text="X" onClick={onRemove} />
+    <Button intent="danger" text="X" onClick={onRemove} />
   </>;
 }

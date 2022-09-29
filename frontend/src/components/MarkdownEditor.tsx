@@ -1,5 +1,5 @@
 import React from 'react';
-import {FormGroup} from "@blueprintjs/core";
+import {FormGroup} from "libraries/ui";
 import MDEditor from '@uiw/react-md-editor';
 import rehypeSanitize from "rehype-sanitize";
 

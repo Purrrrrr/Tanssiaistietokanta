@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import {usePatchDance, Dance} from "services/dances";
-import {Tag, ProgressBar, FormGroup, Intent, Classes} from "@blueprintjs/core";
 import {MarkdownEditor} from 'components/MarkdownEditor';
-import {Form, Button, Input, SubmitButton} from "libraries/forms";
+import {Button, FormGroup, Tag, ProgressBar} from "libraries/ui";
+import {Form, Input, SubmitButton} from "libraries/forms";
 import {getDanceData} from 'libraries/danceWiki';
 import {Dialog} from 'libraries/dialog';
 import {useOnChangeForProp} from 'utils/useOnChangeForProp';
@@ -63,15 +63,15 @@ export function DanceDataImportDialog({dance: originalDance, isOpen, onClose, on
   return <Dialog isOpen={isOpen} onClose={close} title="Hae tanssin tietoja tanssiwikistä"
     style={{minWidth: 500, width: 'auto', maxWidth: '80%'}}>
     <Form onSubmit={save}>
-      <div className={Classes.DIALOG_BODY}>
+      <Dialog.Body>
         <DataImporter danceName={dance.name} onImport={importDone} />
         {importedData &&
             <ImportedDataView importedData={importedData} dance={dance} setDance={setDance} />}
-      </div>
-      <div className={Classes.DIALOG_FOOTER}>
+      </Dialog.Body>
+      <Dialog.Footer>
         <Button text="Peruuta" onClick={close} />
         <SubmitButton text="Tallenna" disabled={!importedData}/>
-      </div>
+      </Dialog.Footer>
     </Form>
   </Dialog>;
 }
@@ -91,7 +91,7 @@ function DataImporter({danceName, onImport}) {
 
   return <FormGroup label="Hae tanssi nimellä" inline>
     <DanceNameSearch value={search} onChange={setSearch} />
-    <Button icon="search" intent={Intent.PRIMARY} onClick={importData} disabled={loading}/>
+    <Button icon="search" intent="primary" onClick={importData} disabled={loading}/>
     {loading
         ? <div style={{margin: "10px 0px"}}>Ladataan tietoja...<ProgressBar /></div>
         : <p>Hae tietoja hakunapilla, jotta voit liittää niitä tietokantaan</p>}
@@ -130,7 +130,7 @@ function Suggestions({values, onSuggest}) {
       {values.length === 0 && 'Ei ehdotuksia'}
       {values.map(value =>
         <React.Fragment key={value}>
-          <Tag large interactive intent={Intent.SUCCESS} 
+          <Tag large interactive intent="success"
             onClick={() => onSuggest(value)}>
             {value}
           </Tag>
@@ -153,7 +153,7 @@ function InstructionEditor({value, onChange, importedInstructions}) {
   return <>
     <p>Tanssiohje</p>
     {useDiffing
-      ? <DiffingInstructionEditor value={value} onChange={onChange} 
+      ? <DiffingInstructionEditor value={value} onChange={onChange}
           importedInstructions={importedInstructions}
           onResolve={(value) => { setUseDiffing(false); onChange(value); }}/>
       : <MarkdownEditor value={value} onChange={onChange} />

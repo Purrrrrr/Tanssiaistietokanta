@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
-import {Intent} from "@blueprintjs/core";
 import {Alert} from "libraries/dialog";
-import {Button} from "libraries/forms";
+import {Button} from "libraries/ui";
 
 interface DeleteButtonProps {
   style?: any
@@ -13,10 +12,10 @@ interface DeleteButtonProps {
 export function DeleteButton({onDelete, style, text, confirmText} : DeleteButtonProps) {
   const [showDialog, setShowDialog] = useState(false);
   return <>
-    <Button style={style} icon="trash" text={text} intent={Intent.DANGER} onClick={() => setShowDialog(true)}/>
+    <Button style={style} icon="trash" text={text} intent="danger" onClick={() => setShowDialog(true)}/>
     <Alert title={text} isOpen={showDialog} onClose={() => setShowDialog(false)}
       onConfirm={onDelete}
-      intent={Intent.DANGER}
+      intent="danger"
       cancelButtonText="Peruuta"
       confirmButtonText="Poista">
       {confirmText}

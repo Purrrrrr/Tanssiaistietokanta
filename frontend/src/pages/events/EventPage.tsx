@@ -1,4 +1,4 @@
-import {Card, Intent} from "@blueprintjs/core";
+import {Card} from "libraries/ui";
 import {Link} from "react-router-dom"
 import React from 'react';
 
@@ -41,7 +41,7 @@ function EventProgram({program}) {
   if (!program || program.danceSets.length === 0) {
     return <>
       <t.p>noProgram</t.p>
-      <NavigateButton adminOnly intent={Intent.PRIMARY} href="program" text={t`addProgram`} />
+      <NavigateButton adminOnly intent="primary" href="program" text={t`addProgram`} />
     </>;
   }
 
@@ -52,7 +52,7 @@ function EventProgram({program}) {
         {formatDances(danceSet.program)}
       </p>
     )}
-    <NavigateButton adminOnly intent={Intent.PRIMARY} href="program" text={t`editProgram`} />
+    <NavigateButton adminOnly intent="primary" href="program" text={t`editProgram`} />
     <NavigateButton href="print/dancemasters-cheatlist" target="_blank"
       text={t`danceMasterCheatList`} />
     <NavigateButton href="print/ball-dancelist" target="_blank"
@@ -78,7 +78,7 @@ function EventWorkshops({workshops, eventId}) {
     {workshops.map(workshop =>
       <WorkshopLink workshop={workshop} key={workshop._id} />
     )}
-    <NavigateButton adminOnly intent={Intent.PRIMARY} href="workshops/create"
+    <NavigateButton adminOnly intent="primary" href="workshops/create"
       text={t`createWorkshop`} />
     <NavigateButton href="print/dance-cheatlist" target="_blank"
       text={t`danceCheatlist`} />

@@ -1,8 +1,7 @@
 import {ApolloError, ApolloQueryResult} from '@apollo/client';
 
 import React from 'react';
-import {Button} from "libraries/forms";
-import {NonIdealState, Spinner, Intent} from "@blueprintjs/core";
+import {NonIdealState, Spinner, Button} from "libraries/ui";
 
 interface LoadingStateProps {
   loading?: boolean,
@@ -18,7 +17,7 @@ export function LoadingState({loading, error, refetch} : LoadingStateProps) {
     return <NonIdealState icon="error" 
       title="Tietojen lataaminen epäonnistui"
       description={error.message} 
-      action={<Button text="Yritä uudelleen" onClick={() => refetch()} intent={Intent.PRIMARY} />}
+      action={<Button text="Yritä uudelleen" onClick={() => refetch()} intent="primary" />}
     />;
   }
   return null;

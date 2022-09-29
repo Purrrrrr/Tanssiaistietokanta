@@ -1,4 +1,4 @@
-export {Button, SubmitButton} from './Button';
+export {SubmitButton} from './SubmitButton';
 export {Switch} from './Switch';
 export {Input} from './Input';
 export {TextArea} from './TextArea';
