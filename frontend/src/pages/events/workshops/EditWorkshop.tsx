@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 import {useParams} from 'react-router-dom';
 
 import {AdminOnly} from 'services/users';
-import {Breadcrumb} from "components/Breadcrumbs";
+import {Breadcrumb} from "libraries/ui";
 import {PageTitle} from "components/PageTitle";
 import {WorkshopEditor} from "components/WorkshopEditor";
 import {LoadingState} from 'components/LoadingState';

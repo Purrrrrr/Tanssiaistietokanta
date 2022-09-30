@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
-import {Collapse, Card, Button, FormGroup, SearchBar} from "libraries/ui";
+import {Breadcrumb, Collapse, Card, Button, FormGroup, SearchBar} from "libraries/ui";
 import InfiniteScroll from 'react-infinite-scroller';
-import {Breadcrumb} from "components/Breadcrumbs";
 import {PageTitle} from "components/PageTitle";
 import {showToast} from 'utils/toaster';
 

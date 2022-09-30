@@ -9,8 +9,9 @@ import {
 } from "@blueprintjs/core";
 
 import './ui.css';
+export { Breadcrumbs, Breadcrumb, BreadcrumbContext } from "./Breadcrumbs"
 
-export { Collapse, Tag, ProgressBar, HTMLTable, NumericInput, NonIdealState, Spinner, H2 } from "@blueprintjs/core"
+export { AnchorButton, Navbar, Collapse, Tag, ProgressBar, HTMLTable, NumericInput, NonIdealState, Spinner, H2 } from "@blueprintjs/core"
 
 type HTMLDivProps = React.HTMLAttributes<HTMLDivElement>;
 export type Intent = 'none' | 'primary' | 'success' | 'warning' | 'danger';

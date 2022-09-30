@@ -2,7 +2,7 @@ import {useCreateWorkshop} from 'services/workshops';
 import React, {useState} from 'react';
 
 import {AdminOnly} from 'services/users';
-import {Breadcrumb} from "components/Breadcrumbs";
+import {Breadcrumb} from "libraries/ui";
 import {PageTitle} from "components/PageTitle";
 import {WorkshopEditor} from "components/WorkshopEditor";
 import {makeTranslate} from 'utils/translate';

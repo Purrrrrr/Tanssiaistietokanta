@@ -3,7 +3,7 @@ import {useNavigate} from "react-router-dom"
 
 import {useCreateEvent} from 'services/events';
 import {AdminOnly} from 'services/users';
-import {Breadcrumb} from "components/Breadcrumbs";
+import {Breadcrumb} from "libraries/ui";
 import {PageTitle} from "components/PageTitle";
 import {makeTranslate} from 'utils/translate';
 import {useOnChangeForProp} from 'utils/useOnChangeForProp';

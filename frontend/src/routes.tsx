@@ -1,7 +1,6 @@
 import React from 'react';
 import {Routes, Route, useParams} from 'react-router-dom';
-import {Breadcrumb} from "components/Breadcrumbs";
-import {Icon} from "libraries/ui";
+import {Icon, Breadcrumb} from "libraries/ui";
 import {useEvent} from 'services/events';
 import {LoadingState} from 'components/LoadingState';
 

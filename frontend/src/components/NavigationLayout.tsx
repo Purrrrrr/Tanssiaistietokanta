@@ -1,5 +1,5 @@
 import React from 'react';
-import {BreadcrumbContext} from "./Breadcrumbs";
+import {BreadcrumbContext} from "libraries/ui";
 import Navigation from "./Navigation";
 
 import './NavigationLayout.sass';

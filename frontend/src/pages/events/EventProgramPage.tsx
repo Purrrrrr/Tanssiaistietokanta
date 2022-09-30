@@ -3,7 +3,7 @@ import * as L from 'partial.lenses';
 import React, {useState} from 'react';
 
 import {AdminOnly} from 'services/users';
-import {Breadcrumb} from "components/Breadcrumbs";
+import {Breadcrumb} from "libraries/ui";
 import {EventProgramEditor} from "components/EventProgramEditor";
 import {NavigateButton} from "components/widgets/NavigateButton";
 import {PageTitle} from "components/PageTitle";

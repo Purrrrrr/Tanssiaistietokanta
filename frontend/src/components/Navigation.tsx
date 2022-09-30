@@ -1,7 +1,6 @@
 import React from 'react';
-import {AnchorButton, Navbar, Alignment} from "@blueprintjs/core";
+import {AnchorButton, Navbar, Breadcrumbs } from "libraries/ui";
 import LoginForm from "./LoginForm";
-import {Breadcrumbs} from "./Breadcrumbs";
 import {AdminOnly} from 'services/users';
 import { useNavigate } from 'react-router-dom';
 
@@ -11,7 +10,7 @@ function Navigation() {
       <Navbar.Group>
         <Breadcrumbs/>
       </Navbar.Group>
-      <Navbar.Group align={Alignment.RIGHT}>
+      <Navbar.Group align="right">
         <AdminOnly>
           <NavButton href="/dances" text="Tanssitietokanta" />
           <Navbar.Divider />
@@ -25,7 +24,8 @@ function Navigation() {
 function NavButton({href, ...props}) {
   const navigate = useNavigate();
   return <AnchorButton minimal {...props} href={href}
-  onClick={(e) => {e.preventDefault(); navigate(href);}} />;
+    onClick={(e) => {e.preventDefault(); navigate(href);}}
+  />;
 }
 
 export default Navigation;
