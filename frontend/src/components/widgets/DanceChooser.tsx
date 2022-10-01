@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
 import {filterDances, useDances} from 'services/dances';
 import {Dance} from 'services/dances';
+import {CssClass} from "libraries/ui";
 
-import {MenuItem, Classes} from "@blueprintjs/core";
+import {MenuItem} from "@blueprintjs/core";
 import {Suggest} from "@blueprintjs/select";
 
 interface DanceChooserProps {
@@ -58,7 +59,7 @@ function cancelEnter(e) {
   }
 }
 
-function emptyDancePlaceholder(text) {
+function emptyDancePlaceholder(text?: string) {
   return {name: text ?? "-", empty: true};
 }
 
@@ -74,7 +75,7 @@ function renderDance (dance, { handleClick, modifiers }) {
     key={dance._id ?? "empty"}
     onClick={handleClick}
     text={dance.name}
-    textClassName={(dance.empty && !modifiers.active) ? Classes.TEXT_DISABLED : undefined}
+    textClassName={(dance.empty && !modifiers.active) ? CssClass.textDisabled : undefined}
   />;
 };
 

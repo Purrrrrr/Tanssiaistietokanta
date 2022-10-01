@@ -2,7 +2,7 @@ import {useCreateWorkshop} from 'services/workshops';
 import React, {useState} from 'react';
 
 import {AdminOnly} from 'services/users';
-import {Breadcrumb} from "libraries/ui";
+import {Breadcrumb, CssClass} from "libraries/ui";
 import {PageTitle} from "components/PageTitle";
 import {WorkshopEditor} from "components/WorkshopEditor";
 import {makeTranslate} from 'utils/translate';
@@ -28,7 +28,7 @@ export default function CreateWorkshopForm({event}) {
   return <AdminOnly>
     <Breadcrumb text={t`newWorkshop`} />
     <PageTitle>{t`newWorkshop`}</PageTitle>
-    <Form onSubmit={() => createWorkshop(event._id, workshop)}>
+    <Form className={CssClass.limitedWidth} onSubmit={() => createWorkshop(event._id, workshop)}>
       <WorkshopEditor eventId={event._id} workshop={workshop} onChange={setWorkshop} />
       <SubmitButton text={t`create`} />
     </Form>

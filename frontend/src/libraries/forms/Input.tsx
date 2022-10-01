@@ -9,8 +9,8 @@ interface BasicInputProps extends Omit<React.ComponentProps<"input">, "onChange"
 }
 
 export const BasicInput = React.forwardRef<HTMLInputElement, BasicInputProps>(
-  function BasicInput({className, onChange, fill, ...props}, ref) {
-    return <input ref={ref} className={classNames(className, Classes.INPUT, fill && Classes.FILL)}
+  function BasicInput({className, onChange, ...props}, ref) {
+    return <input ref={ref} className={classNames(className, Classes.INPUT, Classes.FILL)}
       onKeyDown={e => (e.key === 'Escape' || e.key === 'Enter') && (e.target as HTMLInputElement).blur()}
       onChange={onChange ? e => onChange(e.target.value, e) : undefined}
       {...props}

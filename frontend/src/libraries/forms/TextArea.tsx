@@ -10,6 +10,7 @@ interface BasicTextAreaProps extends Omit<React.ComponentProps<typeof BlueprintT
 export const BasicTextArea = React.forwardRef<BlueprintTextArea, BasicTextAreaProps>(
   function BasicTextArea({onChange, ...props}, ref) {
     return <BlueprintTextArea ref={ref} 
+      fill
       onKeyDown={e => (e.key === 'Escape') && (e.target as HTMLTextAreaElement).blur()}
       onChange={e => onChange && onChange(e.target.value, e)}
       {...props}

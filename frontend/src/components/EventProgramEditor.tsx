@@ -2,8 +2,7 @@ import './EventProgramEditor.sass';
 
 import * as L from 'partial.lenses';
 
-import {Icon, Card, Button, HTMLTable} from "libraries/ui";
-import {Classes} from "@blueprintjs/core";
+import {Icon, Card, Button, HTMLTable, CssClass} from "libraries/ui";
 import {DragHandle, ListEditor, ListEditorItems} from "./ListEditor";
 import React, {createContext, useContext, useMemo, useState, useRef} from 'react';
 
@@ -174,7 +173,7 @@ function ProgramListEditor({program, onChange, intervalMusicDuration, onSetInter
         <ListEditorItems noWrapper component={ProgramItemEditor} />
         {program.length === 0 &&
             <tr>
-              <t.td className={Classes.TEXT_MUTED+ " noProgram"} colSpan="5">programListIsEmpty</t.td>
+              <t.td className={CssClass.textMuted+ " noProgram"} colSpan="5">programListIsEmpty</t.td>
             </tr>
         }
         {intervalMusicDuration > 0 && 

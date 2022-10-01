@@ -6,12 +6,18 @@ import {
   IconName as BlueprintIconName,
   FormGroup as BlueprintFormGroup,
   InputGroup as BlueprintInputGroup,
+  Classes,
 } from "@blueprintjs/core";
 
 import './ui.css';
 export { Breadcrumbs, Breadcrumb, BreadcrumbContext } from "./Breadcrumbs"
 
 export { AnchorButton, Navbar, Collapse, Tag, ProgressBar, HTMLTable, NumericInput, NonIdealState, Spinner, H2 } from "@blueprintjs/core"
+export const CssClass = {
+  limitedWidth: 'limited-width',
+  textMuted: Classes.TEXT_MUTED,
+  textDisabled: Classes.TEXT_DISABLED,
+}
 
 type HTMLDivProps = React.HTMLAttributes<HTMLDivElement>;
 export type Intent = 'none' | 'primary' | 'success' | 'warning' | 'danger';

@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 import {useParams} from 'react-router-dom';
 
 import {AdminOnly} from 'services/users';
-import {Breadcrumb} from "libraries/ui";
+import {Breadcrumb, CssClass} from "libraries/ui";
 import {PageTitle} from "components/PageTitle";
 import {WorkshopEditor} from "components/WorkshopEditor";
 import {LoadingState} from 'components/LoadingState';
@@ -40,7 +40,7 @@ function WorkshopForm({workshop}) {
 
   return <>
     <PageTitle>{workshop.name}</PageTitle>
-    <Form onSubmit={() => modifyWorkshop(modifiedWorkshop)}>
+    <Form className={CssClass.limitedWidth} onSubmit={() => modifyWorkshop(modifiedWorkshop)}>
       <WorkshopEditor eventId={workshop.eventId} workshop={modifiedWorkshop} onChange={setWorkshop} />
       <SubmitButton text={t`save`} />
     </Form>
