@@ -39,7 +39,7 @@ export function ListEditor({items, children, component, onChange, className, hel
 }
 
 interface ListEditorItemsProps {
-  itemWrapper?: string,
+  itemWrapper?: string | React.JSXElementConstructor<any>,
   noWrapper?: boolean,
   component: any,
 }
@@ -49,7 +49,7 @@ export function ListEditorItems({itemWrapper = "div", noWrapper, component} : Li
 
   return <>
     {items.map((item, index) =>
-      <SortableItem key={objectId(item)} index={index} item={item}
+      <SortableItem key={objectId(item)} index={index} item={item} items={items}
         itemIndex={index} actions={actions}
         component={component} wrapper={noWrapper ? null : itemWrapper}
       />
@@ -60,6 +60,7 @@ export function ListEditorItems({itemWrapper = "div", noWrapper, component} : Li
 interface SortableItemProps {
   component?: any,
   wrapper?: any,
+  items: any[],
   item: any,
   itemIndex: number,
   actions: ListEditorContextType["actions"]

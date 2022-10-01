@@ -3,15 +3,17 @@ import React from 'react';
 import * as L from 'partial.lenses';
 import {backendQueryHook} from "backend";
 
+import {Flex} from "components/Flex";
 import {DanceChooser} from "components/widgets/DanceChooser";
 import {makeTranslate} from 'utils/translate';
 import {useOnChangeForProp} from 'utils/useOnChangeForProp';
-import {Button} from "libraries/ui";
-import {Input, TextArea, Validate} from "libraries/forms";
+import {Button, CssClass, FormGroup} from "libraries/ui";
+import {Input, TextArea} from "libraries/forms";
 
 const t = makeTranslate({
   dances: 'Tanssit',
-  addDance: 'Lisää tanssi',
+  addDance: 'Lisää tanssi: ',
+  noDances: 'Työpajan tanssilista on tyhjä.',
   name: 'Nimi',
   required: '(pakollinen)',
   abbreviation: 'Lyhennemerkintä',
@@ -36,13 +38,13 @@ export function WorkshopEditor({eventId, workshop, onChange}) {
     <Input value={teachers ?? ''} onChange={onChangeFor('teachers')} label={t`teachers`} />
     <t.h2>dances</t.h2>
     <ListEditor items={dances} onChange={onChangeFor('dances')}
+      itemWrapper={Flex}
       component={DanceListItem} />
-    <Validate value={dances} type="list" required />
-    <div>
-      {t`addDance`+' '}
-      <DanceChooser value={null} onChange={dance => onChangeFor('dances')(L.set(L.appendTo, dance))} key={dances.length} />
-    </div>
-    </>
+    {dances.length === 0 && <t.p className={CssClass.textMuted}>noDances</t.p>}
+    <FormGroup label={t`addDance`} inlineFill style={{marginTop: 6}}>
+      <DanceChooser excludeFromSearch={dances} value={null} onChange={dance => onChangeFor('dances')(L.set(L.appendTo, dance))} key={dances.length} />
+    </FormGroup>
+  </>
 }
 
 function AbbreviationField({workshopId, label, eventId, ...props}) {
@@ -78,10 +80,10 @@ function useTakenWorkshopAbbreviations(eventId, workshopId) {
     .map(w => w.abbreviation);
 }
 
-function DanceListItem({item, onChange, onRemove}) {
+function DanceListItem({items, item, onChange, onRemove}) {
   return <>
+    <DanceChooser excludeFromSearch={items} value={item} onChange={onChange} />
     <DragHandle />
-    <DanceChooser value={item} onChange={onChange} />
     <Button intent="danger" text="X" onClick={onRemove} />
   </>;
 }

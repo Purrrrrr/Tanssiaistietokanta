@@ -5,6 +5,7 @@ import {
   Icon as BlueprintIcon,
   IconName as BlueprintIconName,
   FormGroup as BlueprintFormGroup,
+  IFormGroupProps,
   InputGroup as BlueprintInputGroup,
   Classes,
 } from "@blueprintjs/core";
@@ -45,7 +46,18 @@ export function Card(props : CardProps) {
 
 type ButtonProps = React.ComponentProps<typeof Button>;
 export const Button = BlueprintButton;
-export const FormGroup = BlueprintFormGroup;
+
+interface FormGroupProps extends IFormGroupProps {
+  inlineFill?: boolean
+  children?: React.ReactNode
+}
+
+export function FormGroup({ className, inlineFill, ...props} : FormGroupProps) {
+  const inlineProps = inlineFill
+    ? { inline: true, className: 'formgroup-inline-fill'}
+    : {}
+  return <BlueprintFormGroup {...props} {...inlineProps} />
+}
 
 interface SearchInputProps {
   id?: string

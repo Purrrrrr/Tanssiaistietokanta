@@ -2,16 +2,18 @@ import React, {useState} from 'react';
 import {filterDances, useDances} from 'services/dances';
 import {Dance} from 'services/dances';
 import {CssClass} from "libraries/ui";
+import {makeTranslate} from 'utils/translate';
 
 import {MenuItem} from "@blueprintjs/core";
 import {Suggest} from "@blueprintjs/select";
 
 interface DanceChooserProps {
   value: Dance | null,
+  excludeFromSearch?: Dance[],
   onChange: (dance: Dance | null) => any,
   emptyText?: string,
   allowEmpty?: boolean,
-  fill?: boolean,
+  placeholder?: string,
   onBlur?: (e: React.FocusEvent) => any,
 }
 
@@ -20,16 +22,24 @@ interface EmptyDancePlaceholder {
   name: string,
   empty: true
 }
+const t = makeTranslate({
+  searchDance: 'Etsi tanssia...',
+});
 
-export function DanceChooser({value, onChange, allowEmpty = false, emptyText, fill, onBlur} : DanceChooserProps) {
+export function DanceChooser({value, onChange, excludeFromSearch, allowEmpty = false, emptyText, onBlur, placeholder} : DanceChooserProps) {
   const [query, setQuery] = useState(value ? value.name : "");
   const [dances] = useDances();
 
-  return <Suggest<Dance|EmptyDancePlaceholder> items={dances}
+  const items = excludeFromSearch
+    ? dances.filter((dance: Dance) => dance === value || !excludeFromSearch.some(excluded => excluded._id === dance._id))
+    : dances
+
+  return <Suggest<Dance|EmptyDancePlaceholder>
+    items={items}
     inputValueRenderer={dance => dance.name ?? ""}
     itemRenderer={renderDance}
     itemsEqual="_id"
-    inputProps={{onBlur, onKeyDown: cancelEnter}}
+    inputProps={{onBlur, placeholder: placeholder ?? t`searchDance`, onKeyDown: cancelEnter}}
     itemListPredicate={(query, items) => {
       const dances = filterDances(items, query);
       return allowEmpty && query.trim() === '' ? [emptyDancePlaceholder(emptyText), ...dances] : dances;
@@ -47,7 +57,7 @@ export function DanceChooser({value, onChange, allowEmpty = false, emptyText, fi
       }
     }}
     popoverProps={{minimal: true}}
-    fill={fill}
+    fill
   />;
 }
 
