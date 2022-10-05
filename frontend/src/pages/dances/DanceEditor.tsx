@@ -16,8 +16,8 @@ interface DanceEditorProps {
 export function DanceEditor({dance, onChange} : DanceEditorProps) {
   const onChangeFor = useOnChangeForPropInValue(onChange, dance);
   const {instructions, category, name, description, formation, prelude, remarks, duration} = dance;
-  return <Flex spaced className="danceEditor">
-    <div>
+  return <Flex spaced wrap className="danceEditor">
+    <div style={{flexGrow: 1, flexBasis: 300}}>
       <Input label="Nimi" value={name ?? ""} onChange={onChangeFor('name')}  />
       <Input label="Kategoria" value={category ?? ""} onChange={onChangeFor('category')}  />
       <DurationField label="Kesto" value={duration} onChange={onChangeFor('duration')} />
@@ -25,7 +25,7 @@ export function DanceEditor({dance, onChange} : DanceEditorProps) {
       <Input label="Tanssikuvio" value={formation ?? ""} onChange={onChangeFor('formation')}  />
       <Input label="Huomautuksia" value={remarks ?? ""} onChange={onChangeFor('remarks')}  />
     </div>
-    <div className="flex-fill">
+    <div style={{flexGrow: 2, flexBasis: 500}}>
       <MarkdownEditor label="Kuvaus" value={description ?? ""} onChange={onChangeFor('description')} />
       <MarkdownEditor label="Tanssiohjeet" value={instructions} onChange={onChangeFor('instructions')} />
     </div>
