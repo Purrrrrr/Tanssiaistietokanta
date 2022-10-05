@@ -25,7 +25,13 @@ $borderColor: rgba(16, 22, 26, 0.15)
         vertical-align: middle
         text-align: center
       th:nth-child(5),td:nth-child(5)
-        width: 60px
+        width: 23ch
+      td:nth-child(5)
+        white-space: nowrap
+        padding: 2px
+
+        div
+          display: inline-block
 
       tfoot
         th, td
@@ -34,7 +40,8 @@ $borderColor: rgba(16, 22, 26, 0.15)
           border-left: 1px solid $borderColor
 
       td
-        vertical-align: middle
+        vertical-align: top
+        line-height: 28px
         padding-top: 3px
         padding-bottom: 3px
 

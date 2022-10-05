@@ -9,11 +9,14 @@ import {
   InputGroup as BlueprintInputGroup,
   Classes,
 } from "@blueprintjs/core";
+import {
+  Select2
+} from "@blueprintjs/select";
 
 import './ui.css';
 export { Breadcrumbs, Breadcrumb, BreadcrumbContext } from "./Breadcrumbs"
 
-export { AnchorButton, Navbar, Collapse, Tag, ProgressBar, HTMLTable, NumericInput, NonIdealState, Spinner, H2 } from "@blueprintjs/core"
+export { MenuItem, AnchorButton, Navbar, Collapse, Tag, ProgressBar, HTMLTable, NumericInput, NonIdealState, Spinner, H2 } from "@blueprintjs/core"
 export const CssClass = {
   limitedWidth: 'limited-width',
   textMuted: Classes.TEXT_MUTED,
@@ -75,3 +78,5 @@ export function SearchBar({id, onChange, value} : SearchInputProps) {
   />
 
 }
+
+export const Select = Select2

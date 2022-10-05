@@ -17,12 +17,13 @@ type ListEditorProps = Omit<ListEditorItemsProps, 'component'> & {
   onChange: (v: any[]) => any,
   className?: string,
   helperClass?: string,
-  useDragHandle?: boolean
+  useDragHandle?: boolean,
+  itemProps?: {}
 } & (
   {children: React.ReactNode, component?: undefined} | {children?: undefined | null, component: any}
 )
 
-export function ListEditor({items, children, component, onChange, className, helperClass, useDragHandle, ...props} : ListEditorProps) {
+export function ListEditor({items, children, component, onChange, className, helperClass, useDragHandle, itemProps, ...props} : ListEditorProps) {
   function onSortEnd({oldIndex, newIndex}) {
     onChange(arrayMove(items, oldIndex, newIndex));
   }
@@ -33,7 +34,7 @@ export function ListEditor({items, children, component, onChange, className, hel
       className={className} helperClass={helperClass}
       useDragHandle={useDragHandle}
     >
-      {children ?? <ListEditorItems component={component} {...props} />}
+      {children ?? <ListEditorItems component={component} {...props} itemProps={itemProps} />}
     </SortableList>
   </ListEditorContext.Provider>;
 }
@@ -42,9 +43,10 @@ interface ListEditorItemsProps {
   itemWrapper?: string | React.JSXElementConstructor<any>,
   noWrapper?: boolean,
   component: any,
+  itemProps?: {}
 }
 
-export function ListEditorItems({itemWrapper = "div", noWrapper, component} : ListEditorItemsProps) {
+export function ListEditorItems({itemWrapper = "div", noWrapper, component, itemProps} : ListEditorItemsProps) {
   const {items, actions} = useListEditorContext();
 
   return <>
@@ -52,6 +54,7 @@ export function ListEditorItems({itemWrapper = "div", noWrapper, component} : Li
       <SortableItem key={objectId(item)} index={index} item={item} items={items}
         itemIndex={index} actions={actions}
         component={component} wrapper={noWrapper ? null : itemWrapper}
+        {...itemProps}
       />
     )}
   </>;
