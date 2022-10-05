@@ -1,0 +1,35 @@
+.sync_status
+  display: inline-flex
+  position: relative
+  font-size: initial
+  font-weight: initial
+  line-height: initial
+
+  &:before
+    position: absolute
+    display: block
+    content: ' '
+    top: -15px
+    bottom: -15px
+    left: -15px
+    right: -15px
+
+  .text
+    display: inline-block
+    padding-left: 0.5ch
+    overflow: hidden
+    max-width: 0
+    transition: max-width 0.5s ease
+  &.status-changed, &:hover
+    .text
+      max-width: 20ch
+  &:hover .text
+    transition-duration: 0.5s
+
+  @media (prefers-reduced-motion)
+    .text
+      transition-duration: 0s
+
+.sync_status.block
+  display: flex
+  margin: 0 0.5ch
