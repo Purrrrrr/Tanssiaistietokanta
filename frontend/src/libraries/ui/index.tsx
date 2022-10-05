@@ -47,7 +47,6 @@ export function Card(props : CardProps) {
   return <BlueprintCard {...props} />
 }
 
-type ButtonProps = React.ComponentProps<typeof Button>;
 export const Button = BlueprintButton;
 
 interface FormGroupProps extends IFormGroupProps {
