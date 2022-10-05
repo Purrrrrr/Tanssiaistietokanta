@@ -20,6 +20,10 @@ export function MarkdownEditor({label, labelStyle, ...props} : MDEditorProps) {
 
 export function SimpleMarkdownEditor({value, ...props}) {
   return <MDEditor
+    commandsFilter={cmd =>
+      //TODO: make the buttons accessible with the keyboard WITHOUT making navigation horrible
+      ({...cmd, buttonProps: {...cmd.buttonProps, tabIndex: -1}})
+    }
     defaultTabEnable={true}
     previewOptions={{
       rehypePlugins: [[rehypeSanitize]],
