@@ -16,7 +16,7 @@ interface DanceEditorProps {
 export function DanceEditor({dance, onChange} : DanceEditorProps) {
   const onChangeFor = useOnChangeForPropInValue(onChange, dance);
   const {instructions, category, name, description, formation, prelude, remarks, duration} = dance;
-  return <Flex addSpacing className="danceEditor">
+  return <Flex spaced className="danceEditor">
     <div>
       <Input label="Nimi" value={name ?? ""} onChange={onChangeFor('name')}  />
       <Input label="Kategoria" value={category ?? ""} onChange={onChangeFor('category')}  />

@@ -23,14 +23,18 @@ export function DanceListItem({dance: danceInDatabase, onChange, onDelete} : Dan
   )
   const [dance, setDance, {state}] = useAutosavingState<Dance,Partial<Dance>>(danceInDatabase, patchDance, makePartial)
   return <>
-    <SyncStatus state={state} />
-    <Flex alignItems="end">
-      <H2 className="flex-fill">{dance.name}</H2>
-      <DeleteButton onDelete={() => onDelete(dance)}
-        text="Poista tanssi"
-        confirmText="Haluatko varmasti poistaa tämän tanssin?"
-      />
-      <DanceDataImportButton text="Hae tietoja tanssiwikistä" dance={dance} onImport={setDance} />
+    <Flex alignItems="center">
+      <H2 className="flex-fill">
+        {dance.name}
+        <SyncStatus style={{marginLeft: '1ch', top: '3px'}} className="flex-fill" state={state} />
+      </H2>
+      <div>
+        <DeleteButton onDelete={() => onDelete(dance)}
+          text="Poista tanssi"
+          confirmText="Haluatko varmasti poistaa tämän tanssin?"
+        />
+        <DanceDataImportButton text="Hae tietoja tanssiwikistä" dance={dance} onImport={setDance} />
+      </div>
     </Flex>
     <DanceEditor dance={dance} onChange={setDance} />
   </>;
