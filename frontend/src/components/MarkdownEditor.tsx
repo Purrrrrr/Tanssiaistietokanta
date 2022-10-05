@@ -18,12 +18,13 @@ export function MarkdownEditor({label, labelStyle, ...props} : MDEditorProps) {
   </FormGroup>
 }
 
-export function SimpleMarkdownEditor(props) {
+export function SimpleMarkdownEditor({value, ...props}) {
   return <MDEditor
     defaultTabEnable={true}
     previewOptions={{
       rehypePlugins: [[rehypeSanitize]],
     }}
+    value={value ?? ""}
     {...props}
   />
 }
