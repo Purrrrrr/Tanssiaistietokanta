@@ -26,7 +26,7 @@ module.exports = function (app) {
 
     return [
       ...withoutCurrentConnection(channels, context),
-      ...defaultChannels(data, context)
+      ...defaultChannels(app, context)
     ];
   });
 

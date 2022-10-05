@@ -1,3 +1,5 @@
+const {defaultChannels} = require('./utils/defaultChannels');
+
 module.exports = function(app) {
   if(typeof app.channel !== 'function') {
     // If no real-time functionality has been configured just return
@@ -39,25 +41,7 @@ module.exports = function(app) {
   app.publish((data, context) => {
     // Here you can add event publishers to channels set up in `channels.js`
     // To publish only for a specific event use `app.publish(eventname, () => {})`
-    const { id, path: serviceName, params: { connection } } = context;
-
-    const channels = [
-      app.channel('everything'),
-      app.channel(serviceName),
-    ];
-    if (id) {
-      channels.push(
-        app.channel(`${serviceName}/${id}`),
-      );
-    }
-    
-    if (!connection) return channels;
-    
-    return channels.map(channel =>
-      channel.filter(conn => {
-        return conn !== connection;
-      })
-    );
+    return defaultChannels(app, context);
   });
 
   // Here you can also add service specific event publishers
