@@ -2,7 +2,7 @@ import {FetchResult} from "@apollo/client";
 import io from 'socket.io-client';
 import feathers from '@feathersjs/client';
 
-const socket = io('http://localhost:8082/');
+export const socket = io('http://localhost:8082/');
 const app = (feathers as unknown as Function)();
 
 app.configure(feathers.socketio(socket));
