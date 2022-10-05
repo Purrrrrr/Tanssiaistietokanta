@@ -6,6 +6,8 @@ import createDebug from 'utils/debug'
 
 const debug = createDebug('useAutoSavingState')
 
+const AUTOSAVE_DELAY = 50;
+
 export * from './patchStrategies'
 export type { SyncState } from './types';
 
@@ -55,13 +57,14 @@ export default function useAutosavingState<T, Patch>(
     if (state === 'IN_SYNC') return
 
     const id = setTimeout(() => {
-      const patchData = patchStrategy(originalData, modifications, conflicts)
+      //const patchData = patchStrategy(originalData, modifications, conflicts)
+      const patchData = patchStrategy(originalData, modifications, [])
       if (patchData.hasModifications) {
         debug('Saving', patchData.patch)
         dispatch({ type: 'PATCH_SENT', payload: patchData.patch})
         onPatch(patchData.patch)
       }
-    }, 50)
+    }, AUTOSAVE_DELAY)
 
     return () => clearTimeout(id)
   }, [state, modifications, conflicts, onPatch, originalData, patchStrategy])
@@ -78,6 +81,7 @@ export default function useAutosavingState<T, Patch>(
     onModified,
     {
       ...reducerState,
+      state: state === 'CONFLICT' ? 'MODIFIED_LOCALLY' : state,
       resolveConflict,
     }
   ]
@@ -134,17 +138,4 @@ function merge<T>(serverState : T, newServerState : T, modifications : T) : Sync
     modifications: pendingModifications,
     conflicts: conflicts
   }
-}
-
-function partition<T>(
-  array : T[], condition : (i:T) => boolean
-) : [T[], T[]] {
-  const passing : T[] = []
-  const failing : T[] = []
-
-  for (const item of array) {
-    (condition(item) ? passing : failing).push(item)
-  }
-
-  return [passing, failing]
 }
