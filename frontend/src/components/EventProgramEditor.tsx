@@ -1,6 +1,7 @@
 import './EventProgramEditor.sass';
 
 import * as L from 'partial.lenses';
+import {arrayMoveImmutable} from 'array-move';
 
 import {Icon, Card, Button, HTMLTable, CssClass, Select, MenuItem} from "libraries/ui";
 import {DragHandle, ListEditor, ListEditorItems} from "./ListEditor";
@@ -13,6 +14,7 @@ import {Switch, ClickToEdit, Input} from "libraries/forms";
 import {ProgramPauseDurationEditor} from "components/widgets/ProgramPauseDurationEditor";
 import {MarkdownEditor} from 'components/MarkdownEditor';
 import {makeTranslate} from 'utils/translate';
+import {objectId} from 'components/ListEditor/objectId';
 import {useOnChangeForProp} from 'utils/useOnChangeForProp';
 import {bind, useHotkeyHandler} from 'utils/useHotkeyHandler';
 import {useRedirectKeyDownTo} from 'utils/useRedirectKeyDownTo';
@@ -22,6 +24,9 @@ import {focusLater, focusSiblingsOrParent} from 'utils/focus';
 const t = makeTranslate({
   actions: 'Toiminnot',
   moveToSet: 'Siirrä settiin',
+  moveDanceSet: 'Siirrä',
+  afterSet: 'Setin "%(name)s" jälkeen',
+  beforeSet: 'Ennen settiä "%(name)s"',
   addEntry: 'Lisää',
   addEntryTitle: 'Lisää ohjelmaa',
   introductoryInformation: 'Alkutiedotukset',
@@ -79,6 +84,14 @@ export function EventProgramEditor({program, onChange}) {
     );
     focusLater('.eventProgramEditor .danceset:last-child');
   }
+  function onMoveDanceSet(danceset, index) {
+    onChange(
+      L.modify(
+        'danceSets',
+        sets => arrayMoveImmutable(sets, sets.indexOf(danceset), index),
+      )
+    )
+  }
   function onMoveItemToSet(item, section) {
     const removeItem = L.set(
       [L.seq('introductions', ['danceSets', L.elems, 'program']), L.elems, L.when(i => i === item)],
@@ -104,12 +117,21 @@ export function EventProgramEditor({program, onChange}) {
         {introductions.length === 0 && <Button text={t`addIntroductoryInfo`} onClick={addIntroductoryInfo} className="addIntroductoryInfo" />}
         <ProgramPauseDurationEditor {...{pause, setPause}} />
       </div>
-      <ListEditor items={danceSets} onChange={onChangeFor('danceSets')}>
-        { introductions.length > 0 &&
-          <IntroductoryInformation danceSets={danceSets} infos={introductions} onChange={onChangeFor('introductions')} onMoveItemToSet={onMoveItemToSet} />
-        }
-        <ListEditorItems noWrapper component={DanceSetEditor} itemProps={{danceSets, onMoveItemToSet}} />
-      </ListEditor>
+      { introductions.length > 0 &&
+      <IntroductoryInformation danceSets={danceSets} infos={introductions} onChange={onChangeFor('introductions')} onMoveItemToSet={onMoveItemToSet} />
+      }
+      {danceSets.map((danceSet, index : number) =>
+        <DanceSetEditor
+          key={objectId(danceSet)}
+          item={danceSet}
+          itemIndex={index}
+          danceSets={danceSets}
+          onMoveDanceSet={onMoveDanceSet}
+          onMoveItemToSet={onMoveItemToSet}
+          onChange={onChangeFor(['danceSets', index])}
+          onRemove={() => onChange(L.set(['danceSets', index], undefined))}
+        />
+      )}
       <div className="addDanceSetButtons">
         {danceSets.length === 0 && t`danceProgramIsEmpty`}
         <Button text={t`addDanceSet`} onClick={addDanceSet} className="addDanceSet" />
@@ -140,13 +162,13 @@ function IntroductoryInformation({infos, onChange, danceSets, onMoveItemToSet}) 
   </Card>;
 }
 
-function DanceSetEditor({item, danceSets, onMoveItemToSet, onChange, onRemove, onMoveDown, onMoveUp, itemIndex, ...props}) {
+function DanceSetEditor({item, danceSets, onMoveDanceSet, onMoveItemToSet, onChange, onRemove, itemIndex, ...props}) {
   const onKeyDown = useHotkeyHandler(
     ...navigateAmongSiblings('div.danceset'),
     focusTo('tbody tr'),
     blurTo('body'),
-    moveUp(onMoveUp),
-    moveDown(onMoveDown),
+    moveUp(() => itemIndex > 0 && onMoveDanceSet(item, itemIndex - 1)),
+    moveDown(() => onMoveDanceSet(item, itemIndex + 1)),
     bind(['a', 'd'], clickInParent('div.danceset', 'button.addDance')),
     bind('i', clickInParent('div.danceset', 'button.addInfo')),
     bind(['delete', 'backspace'], removeDanceSet)
@@ -158,9 +180,13 @@ function DanceSetEditor({item, danceSets, onMoveItemToSet, onChange, onRemove, o
   const onChangeFor = useOnChangeForProp(onChange);
   const {name, program, intervalMusicDuration} = item;
 
-  return <Card className="danceset" {...props} onKeyDown={onKeyDown} >
+  return <Card className="danceset" tabIndex={0} {...props} onKeyDown={onKeyDown} >
     <h2>
       <ClickToEdit labelStyle="hidden" label={t`danceSetName`} value={name} onChange={onChangeFor('name')} required />
+      <MoveDanceSetSelector
+        currentSet={item}
+        danceSets={danceSets}
+        onSelect={({index})=> onMoveDanceSet(item, index)} />
       <Button className="delete" intent="danger" text={t`removeDanceSet`} onClick={removeDanceSet} />
     </h2>
     <ProgramListEditor isIntroductionsSection={false} program={program} onChange={onChangeFor('program')}
@@ -217,7 +243,7 @@ function ProgramListEditor({program, danceSets, onMoveItemToSet, onChange, inter
   </ListEditor>;
 }
 
-function ProgramItemEditor({item, isIntroductionsSection, danceSets, onMoveItemToSet, onChange, onRemove, onAdd, onMoveDown, onMoveUp, ...props}) {
+function ProgramItemEditor({item, items, isIntroductionsSection, danceSets, onMoveItemToSet, onChange, onRemove, onAdd, onMoveDown, onMoveUp, ...props}) {
   const {__typename } = item;
   const onKeyDown = useHotkeyHandler(
     ...navigateAmongSiblings('tr'),
@@ -249,6 +275,8 @@ function ProgramItemEditor({item, isIntroductionsSection, danceSets, onMoveItemT
     focusSiblingsOrParent(e.target, 'div.danceset');
   }
 
+  const canMoveToIntroductions = !isIntroductionsSection && __typename === 'EventProgram'
+
   return <tr onKeyDown={onKeyDown} ref={container} tabIndex={0}>
     <td><DragHandle tabIndex={-1}/></td>
     <td>{t(__typename)}</td>
@@ -259,7 +287,10 @@ function ProgramItemEditor({item, isIntroductionsSection, danceSets, onMoveItemT
       <Duration value={item.duration} />
     </td>
     <td>
-      <SectionMoveSelector showIntroSection={!isIntroductionsSection && __typename === 'EventProgram'} sections={danceSets} onSelect={section => onMoveItemToSet(item, section)} placeholder={t`moveToSet`} />
+      <MoveItemToSectionSelector
+        showIntroSection={canMoveToIntroductions}
+        sections={danceSets.filter(d => d.program !== items)}
+        onSelect={section => onMoveItemToSet(item, section)} />
       <Button intent="danger" text={t`remove`} onClick={removeItem} className="delete" />
     </td>
   </tr>;
@@ -339,18 +370,46 @@ function DanceSetDuration({program, intervalMusicDuration}) {
   </>;
 }
 
-const StringSelect = Select.ofType<{name: string}>();
+const SectionSelect = Select.ofType<{name: string}>();
 
-function SectionMoveSelector({showIntroSection, sections, onSelect, placeholder}) {
+function MoveDanceSetSelector({danceSets, currentSet, onSelect}) {
+  if (danceSets.length < 2) return null
+
+  const currentIndex = danceSets.indexOf(currentSet)
+  const items = danceSets.map((d, index) => ({
+    name: index < currentIndex
+      ? t('beforeSet', {name: d.name})
+      : t('afterSet', {name: d.name})
+,
+    index
+  })).filter(({index}) => index !== currentIndex)
+  return <Selector
+    className="move-danceset-selector"
+    items={items}
+    itemRenderer={(section) => section.name}
+    onSelect={onSelect}
+    placeholder={t`moveDanceSet`}
+  />
+}
+
+function MoveItemToSectionSelector({showIntroSection, sections, onSelect}) {
   const introSection = {name: t`introductoryInformation`, isIntroductionsSection: true}
-  return <StringSelect
+  return <Selector
     items={showIntroSection ? [introSection, ...sections] : sections}
-    itemRenderer={(section, {handleClick, index, modifiers: {active}}) => <MenuItem key={index} roleStructure="listoption" text={section.name} onClick={handleClick} active={active} />}
+    itemRenderer={(section) => section.name}
+    onSelect={onSelect}
+    placeholder={t`moveToSet`}
+  />
+}
+
+function Selector({items, itemRenderer, onSelect, placeholder, className = undefined as string | undefined}) {
+  return <SectionSelect
+    filterable={false}
+    className={className}
+    items={items}
+    itemRenderer={(item, {handleClick, index, modifiers: {active}}) => <MenuItem key={index} roleStructure="listoption" text={itemRenderer(item)} onClick={handleClick} active={active} />}
     onItemSelect={onSelect}
   >
-    <Button onFocus={e => {
-      //console.log(document.activeElement);
-      //(e.target.parentNode as HTMLElement).click()
-    }} text={placeholder} rightIcon="double-caret-vertical" />
-  </StringSelect>
+    <Button text={placeholder} rightIcon="double-caret-vertical" />
+  </SectionSelect>
 }
