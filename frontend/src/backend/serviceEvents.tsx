@@ -6,6 +6,9 @@ import {ensureChannelIsOpen, closeChannelIfUnsused} from './channels'
 import {gql, DocumentNode} from './apollo'
 import {updateEntityFragment, markDeleted} from './apolloCache'
 import {ServiceName, ID, Entity} from './types'
+import createDebug from 'utils/debug'
+
+const debug = createDebug('serviceEvents')
 
 const serviceTypeNameMap : {
   [key in ServiceName]: string
@@ -49,7 +52,7 @@ function useServiceEvents<T extends Entity>(service : ServiceName, channel : str
 }
 
 function subscribeToService<T extends Entity>(serviceName : ServiceName, channel: string, callbacks : Callbacks<T>) {
-  console.log(`subscribe service ${serviceName}`)
+  debug(`subscribe service ${serviceName}`)
   ensureChannelIsOpen(channel, callbacks)
 
   const service = getServiceEventEmitter(serviceName)
@@ -58,7 +61,7 @@ function subscribeToService<T extends Entity>(serviceName : ServiceName, channel
   }
 }
 function unSubscribeToService<T extends Entity>(serviceName : ServiceName, channel: string, callbacks : Callbacks<T>) {
-  console.log(`unsubscribe service ${serviceName}`)
+  debug(`unsubscribe service ${serviceName}`)
 
   const service = getServiceEventEmitter(serviceName)
   for (const eventName of Object.keys(callbacks)) {
@@ -79,8 +82,12 @@ function getServiceEventEmitter(
     const typeName = serviceTypeNameMap[serviceName]
     const entityFragment = serviceUpdateFragmentMap[serviceName]
     if (!entityFragment) {
-      console.error("Missing update fragment for service "+serviceName)
+      throw new Error("Missing update fragment for service "+serviceName)
     }
+    service.on('created', (data: any) => debug('received created', data))
+    service.on('removed', (data: any) => debug('received removed', data))
+    service.on('updated', (data: any) => debug('received updated', data))
+    service.on('patched', (data: any) => debug('received patched', data))
 
     service.on('created', (data: any) => emitter.emit('created', data, 'backend'))
     service.on('removed', (data: any) => emitter.emit('removed', data, 'backend'))

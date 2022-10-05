@@ -101,7 +101,6 @@ function minimizeMoveSet<T>(changes: Change<T>[]) {
     .map((state, index) => ({index, ...state}))
     .sort((a,b) => Math.abs(b.moveAmount) - Math.abs(a.moveAmount))
   for(const move of greatestMoves) {
-    //console.log(move)
     const {moveAmount, id, from, to} = move
     if (moveAmount === -1 || moveAmount === 1) break;
 
@@ -112,7 +111,6 @@ function minimizeMoveSet<T>(changes: Change<T>[]) {
         ? (movedItem.from > from && movedItem.to < to)
         : (movedItem.from < from && movedItem.to > to)
     ).slice(0, Math.abs(moveAmount))
-    //console.log(affected.map(a => a.id))
     
     const sign = moveAmount > 0 ? 1 : -1
     affected.forEach(move => move.moveAmount! += sign)

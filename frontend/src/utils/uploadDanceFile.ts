@@ -22,7 +22,6 @@ function requestUserFile(types?: string) : Promise<File> {
     if (types) input.accept = types;
     input.addEventListener("change", (e : Event)  => {
       const files = (e.target as HTMLInputElement).files;
-      console.log(files);
       
       if (!files || !files[0]) {
         reject();

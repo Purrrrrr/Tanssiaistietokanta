@@ -19,7 +19,6 @@ export function DurationField({value, onChange, ...props} : React.ComponentProps
     if (newVal === value) { //Text has changed but value hasn't. Reset text!
       setParams({value, text: durationToString(value)});
     } else { //Propagate changed value
-      console.log("onChange: "+value+" -> "+newVal);
       onChange && onChange(newVal, event as React.ChangeEvent<HTMLInputElement>);
     }
   }, [params, onChange]));

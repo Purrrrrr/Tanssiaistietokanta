@@ -2,6 +2,9 @@ import {Reducer, useEffect, useCallback, useReducer} from 'react';
 import mergeValues from './mergeValues'
 import {PatchStrategy} from './patchStrategies'
 import {SyncState, Path } from './types'
+import createDebug from 'utils/debug'
+
+const debug = createDebug('useAutoSavingState')
 
 export * from './patchStrategies'
 export type { SyncState } from './types';
@@ -54,7 +57,7 @@ export default function useAutosavingState<T, Patch>(
     const id = setTimeout(() => {
       const patchData = patchStrategy(originalData, modifications, conflicts)
       if (patchData.hasModifications) {
-        console.log('Saving', patchData.patch)
+        debug('Saving', patchData.patch)
         dispatch({ type: 'PATCH_SENT', payload: patchData.patch})
         onPatch(patchData.patch)
       }

@@ -17,7 +17,6 @@ const t = makeTranslate({
 
 export default function EditWorkshopPage({event}) {
   const {workshopId} = useParams();
-  console.log(workshopId);
   const [workshop, loadingState] = useWorkshop(workshopId);
 
   return <AdminOnly>
