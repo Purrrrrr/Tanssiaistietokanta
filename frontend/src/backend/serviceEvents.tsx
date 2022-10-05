@@ -79,6 +79,7 @@ function getServiceEventEmitter(
   return getOrComputeDefault(serviceEventEmitters, serviceName, () => {
     const service = feathers.service(serviceName)
     const emitter = new EventEmitter()
+    emitter.setMaxListeners(40)
     const typeName = serviceTypeNameMap[serviceName]
     const entityFragment = serviceUpdateFragmentMap[serviceName]
     if (!entityFragment) {
