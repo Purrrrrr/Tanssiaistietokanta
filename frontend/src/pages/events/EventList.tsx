@@ -4,7 +4,6 @@ import {DeleteButton} from "components/widgets/DeleteButton";
 import {Link} from "react-router-dom"
 import {NavigateButton} from "components/widgets/NavigateButton";
 import {PageTitle} from "components/PageTitle";
-import {SampleEditor} from "components/Editor";
 import {AdminOnly} from 'services/users';
 import React from 'react';
 
@@ -14,7 +13,6 @@ export default function EventList() {
 
   return <>
     <PageTitle>Tanssiaistietokanta</PageTitle>
-    <SampleEditor />
     <p>Kannassa on tällä hetkellä {events.length} tanssitapahtumaa.</p>
     <AdminOnly>
       <p>Voit muokata tanssitapahtumien tansseja <Link to="/dances">tanssitietokannasta</Link></p>
