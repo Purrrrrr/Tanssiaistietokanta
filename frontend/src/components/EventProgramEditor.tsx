@@ -204,7 +204,7 @@ function ProgramListEditor({program, danceSets, onMoveItemToSet, onChange, inter
     focusLater('tbody tr:last-child', table.current);
   }
 
-  return <ListEditor items={program} onChange={onChange}>
+  return <ListEditor items={program} onChange={onChange} useDragHandle>
     <HTMLTable condensed bordered striped className="danceSet" elementRef={table}>
       {program.length === 0 ||
           <thead>
