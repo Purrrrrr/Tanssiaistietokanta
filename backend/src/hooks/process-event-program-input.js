@@ -33,7 +33,7 @@ async function processProgramItem({type, danceId, eventProgramId, eventProgram},
         danceId, __typename: 'Dance'
       };
     case 'EVENT_PROGRAM':
-      const id = await storeProgram(eventProgramId, eventProgram, eventProgramService)
+      const id = await storeProgram(eventProgramId, eventProgram, eventProgramService);
       return {
         eventProgramId: id, __typename: 'EventProgram'
       };
@@ -44,11 +44,11 @@ async function processProgramItem({type, danceId, eventProgramId, eventProgram},
 
 async function storeProgram(eventProgramId, eventProgram, eventProgramService) {
   if (eventProgramId) {
-    await eventProgramService.update(eventProgramId, eventProgram)
-    return eventProgramId
+    await eventProgramService.update(eventProgramId, eventProgram);
+    return eventProgramId;
   } else {
-    const { _id } = await eventProgramService.create(eventProgram)
-    return _id
+    const { _id } = await eventProgramService.create(eventProgram);
+    return _id;
   }
 }
 
