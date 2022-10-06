@@ -2,6 +2,7 @@ import './EventProgramEditor.sass';
 
 import * as L from 'partial.lenses';
 import {arrayMoveImmutable} from 'array-move';
+import {guid} from "utils/guid";
 
 import {Icon, Card, Button, HTMLTable, CssClass, Select, MenuItem} from "libraries/ui";
 import {DragHandle, ListEditor, ListEditorItems} from "./ListEditor";
@@ -14,7 +15,6 @@ import {Switch, ClickToEdit, Input} from "libraries/forms";
 import {ProgramPauseDurationEditor} from "components/widgets/ProgramPauseDurationEditor";
 import {MarkdownEditor} from 'components/MarkdownEditor';
 import {makeTranslate} from 'utils/translate';
-import {objectId} from 'components/ListEditor/objectId';
 import {useOnChangeForProp} from 'utils/useOnChangeForProp';
 import {bind, useHotkeyHandler} from 'utils/useHotkeyHandler';
 import {useRedirectKeyDownTo} from 'utils/useRedirectKeyDownTo';
@@ -122,7 +122,7 @@ export function EventProgramEditor({program, onChange}) {
       }
       {danceSets.map((danceSet, index : number) =>
         <DanceSetEditor
-          key={objectId(danceSet)}
+          key={danceSet._id}
           item={danceSet}
           itemIndex={index}
           danceSets={danceSets}
@@ -144,6 +144,7 @@ function newDanceSet(danceSets) {
   const danceSetNumber = danceSets.length + 1;
   const dances = Array.from({length: 6}, () => ({__typename: 'RequestedDance'}));
   return {
+    _id: guid(),
     name: t`danceSet` + " " + danceSetNumber,
     program: dances,
     intervalMusicDuration: DEFAULT_INTERVAL_MUSIC_DURATION

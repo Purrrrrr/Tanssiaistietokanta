@@ -7,8 +7,10 @@ program {
     _id
     name
     duration
+    description
   }
   danceSets {
+    _id
     name
     program {
       __typename

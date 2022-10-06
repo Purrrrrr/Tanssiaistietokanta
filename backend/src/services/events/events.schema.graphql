@@ -16,6 +16,7 @@ type EventProgram {
 }
 
 type DanceSet {
+  _id: ID
   name: String!
   program: [EventProgramItem!]!
   intervalMusicDuration: Float
@@ -58,6 +59,7 @@ input ProgramInput {
 }
 
 input DanceSetInput {
+  _id: ID
   name: String!
   program: [ProgramItemInput!]!
   intervalMusicDuration: Float
