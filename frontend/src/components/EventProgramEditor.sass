@@ -10,11 +10,11 @@ $borderColor: rgba(16, 22, 26, 0.15)
     h2
       margin: 0 10px 0.3em
       display: flex
-      .delete
+      button:first-of-type
+        margin-left: auto
 
     .move-danceset-selector
       display: inline-block
-      margin-left: auto
 
     table
       background: white
@@ -49,6 +49,12 @@ tr.eventProgramItem
 
     div
       display: inline-block
+
+  .bp4-form-group
+    margin-bottom: 5px
+    &:last-child
+      margin-bottom: 0
+
 
 body > tr.eventProgramItem
   background: lightblue
@@ -97,8 +103,6 @@ body > tr.eventProgramItem
     display: flex
     td
       flex: 1 1 auto
-    td:nth-child(2)
-      white-space: nowrap
     br
       display: none
 

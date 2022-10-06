@@ -9,6 +9,7 @@ type MDEditorProps = {
   label?: string
   labelStyle?: 'inline'
   value: any,
+  height?: number,
   onChange: (v: any) => any,
 }
 

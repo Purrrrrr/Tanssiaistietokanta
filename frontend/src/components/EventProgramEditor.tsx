@@ -53,7 +53,8 @@ const t = makeTranslate({
   minutes: 'min.',
   remove: 'Poista',
   danceProgramIsEmpty: 'Ei tanssiohjelmaa.',
-  danceSetName: 'Tanssisetin nimi'
+  danceSetName: 'Tanssisetin nimi',
+  newProgramItem: 'Uusi ohjelmanumero',
 });
 
 const DEFAULT_INTERVAL_MUSIC_DURATION = 15*60;
@@ -152,14 +153,23 @@ function newDanceSet(danceSets) {
 }
 
 function IntroductoryInformation({infos, onChange, danceSets, onMoveItemToSet}) {
+  const table = useRef<HTMLTableElement>(null);
+  function addItem(__typename, other = {}) {
+    onChange(L.set(L.appendTo, {__typename, ...other}, infos));
+    console.log(table.current)
+    focusLater('tbody tr:last-child', table.current);
+  }
   const onKeyDown = useHotkeyHandler(
     ...navigateAmongSiblings('div.danceset'),
     focusTo('tbody tr'),
     bind('i', clickInParent('div.danceset', 'button.addInfo')),
   );
   return <Card className="danceset" tabIndex={0} onKeyDown={onKeyDown}>
-    <t.h2>introductoryInformation</t.h2>
-    <ProgramListEditor danceSets={danceSets} onMoveItemToSet={onMoveItemToSet} program={infos} onChange={onChange} isIntroductionsSection intervalMusicDuration={0} onSetIntervalMusicDuration={() => {}}/>
+    <h2>
+      <t.span>introductoryInformation</t.span>
+      <Button text={t`addIntroductoryInfo`} onClick={() => addItem('EventProgram', {name: t`newProgramItem`})} />
+    </h2>
+    <ProgramListEditor tableRef={table} danceSets={danceSets} onMoveItemToSet={onMoveItemToSet} program={infos} onChange={onChange} isIntroductionsSection intervalMusicDuration={0} onSetIntervalMusicDuration={() => {}}/>
   </Card>;
 }
 
@@ -178,19 +188,27 @@ function DanceSetEditor({item, danceSets, onMoveDanceSet, onMoveItemToSet, onCha
     onRemove();
     focusSiblingsOrParent(e.target, 'section.eventProgramEditor');
   }
+  const table = useRef<HTMLTableElement>(null);
+  function addItem(__typename, other = {}) {
+    onChange(L.set(['program', L.appendTo], {__typename, ...other}, item));
+    focusLater('tbody tr:last-child', table.current);
+  }
+
   const onChangeFor = useOnChangeForProp(onChange);
   const {name, program, intervalMusicDuration} = item;
 
   return <Card className="danceset" tabIndex={0} {...props} onKeyDown={onKeyDown} >
     <h2>
       <ClickToEdit labelStyle="hidden" label={t`danceSetName`} value={name} onChange={onChangeFor('name')} required />
+      <Button text={t`addDance`} onClick={() => addItem('RequestedDance')} className="addDance" />
+      <Button text={t`addInfo`} onClick={() => addItem('EventProgram', {name: t`newProgramItem`})} className="addInfo" />
       <MoveDanceSetSelector
         currentSet={item}
         danceSets={danceSets}
         onSelect={({index})=> onMoveDanceSet(item, index)} />
       <Button className="delete" intent="danger" text={t`removeDanceSet`} onClick={removeDanceSet} />
     </h2>
-    <ProgramListEditor isIntroductionsSection={false} program={program} onChange={onChangeFor('program')}
+    <ProgramListEditor tableRef={table} isIntroductionsSection={false} program={program} onChange={onChangeFor('program')}
       danceSets={danceSets}
       onMoveItemToSet={onMoveItemToSet}
       intervalMusicDuration={intervalMusicDuration}
@@ -198,15 +216,9 @@ function DanceSetEditor({item, danceSets, onMoveDanceSet, onMoveItemToSet, onCha
   </Card>;
 };
 
-function ProgramListEditor({program, danceSets, onMoveItemToSet, onChange, intervalMusicDuration, onSetIntervalMusicDuration, isIntroductionsSection}) {
-  const table = useRef<HTMLTableElement>(null);
-  function addItem(__typename, other = {}) {
-    onChange(L.set(L.appendTo, {__typename, ...other}, program));
-    focusLater('tbody tr:last-child', table.current);
-  }
-
+function ProgramListEditor({program, danceSets, tableRef, onMoveItemToSet, onChange, intervalMusicDuration, onSetIntervalMusicDuration, isIntroductionsSection}) {
   return <ListEditor items={program} onChange={onChange} useDragHandle>
-    <HTMLTable condensed bordered striped className="danceSet" elementRef={table}>
+    <HTMLTable condensed bordered striped className="danceSet" elementRef={tableRef}>
       {program.length === 0 ||
           <thead>
             <tr className="eventProgramHeader" >
@@ -226,18 +238,14 @@ function ProgramListEditor({program, danceSets, onMoveItemToSet, onChange, inter
       </tbody>
       <tfoot>
         <tr className="eventProgramFooter">
+          {isIntroductionsSection ||
           <td colSpan={2}>
-            {isIntroductionsSection ||
-                <Switch inline label={t`intervalMusicAtEndOfSet`} checked={intervalMusicDuration > 0}
-                  onChange={e => onSetIntervalMusicDuration((e.target as HTMLInputElement).checked ? DEFAULT_INTERVAL_MUSIC_DURATION : 0) }/>}
+            <Switch inline label={t`intervalMusicAtEndOfSet`} checked={intervalMusicDuration > 0}
+              onChange={e => onSetIntervalMusicDuration((e.target as HTMLInputElement).checked ? DEFAULT_INTERVAL_MUSIC_DURATION : 0) }/>
           </td>
-          <td>
+          }
+          <td colSpan={isIntroductionsSection ? 4 : 2}>
             <DanceSetDuration program={program} intervalMusicDuration={intervalMusicDuration} />
-          </td>
-          <td>
-            {isIntroductionsSection || <Button text={t`addDance`} onClick={() => addItem('RequestedDance')} className="addDance" />}
-            <Button text={isIntroductionsSection ? t`addIntroductoryInfo` : t`addInfo`} onClick={() => addItem('EventProgram', {name: ''})} className="addInfo" />
-            {" "}
           </td>
         </tr>
       </tfoot>
@@ -311,7 +319,7 @@ function ProgramDetailsEditor({item, onInputBlurred, onChange}) {
       return <>
         <Input value={name} onBlur={onInputBlurred} required label="Ohjelmanumeron nimi"
           onChange={val => onChange(L.set('name', val, item))} />
-        <MarkdownEditor label="Ohjelman kuvaus" value={item.description ?? ""} onChange={val => onChange(L.set('description', val, item))} />
+        <MarkdownEditor label="Ohjelman kuvaus" value={item.description ?? ""} onChange={val => onChange(L.set('description', val, item))} height={150} />
       </>
   }
 
