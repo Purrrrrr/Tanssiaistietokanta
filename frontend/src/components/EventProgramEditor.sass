@@ -22,21 +22,6 @@ $borderColor: rgba(16, 22, 26, 0.15)
       min-width: 600px
       border-top: 1px solid $borderColor
 
-      th:nth-child(1),td:nth-child(1)
-        width: 30px
-        padding: 0
-      thead th:nth-child(1)
-        vertical-align: middle
-        text-align: center
-      th:nth-child(5),td:nth-child(5)
-        width: 23ch
-      td:nth-child(5)
-        white-space: nowrap
-        padding: 2px
-
-        div
-          display: inline-block
-
       tfoot
         th, td
           border-top: 1px solid $borderColor
@@ -51,9 +36,69 @@ $borderColor: rgba(16, 22, 26, 0.15)
 
       td.noProgram
         padding: 1em
-  @media only screen and (max-width: 600px)
-    .danceset
-      margin: 0 30px
-
   .addDanceSetButtons
     margin: 1em 0
+
+tr.eventProgramItem
+  th:nth-child(4),td:nth-child(4)
+    width: 27ch
+  td:nth-child(4)
+    white-space: nowrap
+    padding: 2px
+    text-align: right
+
+    div
+      display: inline-block
+
+body > tr.eventProgramItem
+  background: lightblue
+
+@media only screen and (max-width: 800px)
+  .eventProgramEditor
+    table
+      display: block
+
+      tbody, thead
+        display: block
+
+  tr.eventProgramFooter, tr.eventProgramItem
+    box-shadow: inset 1px 1px 0 0 rgba(17, 20, 24, 0.15)
+
+    td,th
+      border: none
+      border-left: none
+      box-shadow: none !important
+
+  tr.eventProgramItem
+    display: grid
+    grid-template: "type duration actions" min-content "editor editor editor" auto / 1fr 1fr min-content
+
+    :nth-child(1)
+      grid-area: type
+    :nth-child(2)
+      grid-area: editor
+    :nth-child(3)
+      grid-area: duration
+    :nth-child(4)
+      grid-area: actions
+
+    th:nth-child(2)
+      display: none
+    
+    td
+      padding-top: 4px
+    td:nth-child(1)
+      padding-left: 10px
+    td:nth-child(2)
+      padding: 0 10px 10px 10px
+    td:last-child
+      padding-right: 10px
+  tr.eventProgramFooter
+    display: flex
+    td
+      flex: 1 1 auto
+    td:nth-child(2)
+      white-space: nowrap
+    br
+      display: none
+

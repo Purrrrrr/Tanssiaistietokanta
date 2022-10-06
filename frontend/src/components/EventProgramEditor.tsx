@@ -209,8 +209,7 @@ function ProgramListEditor({program, danceSets, onMoveItemToSet, onChange, inter
     <HTMLTable condensed bordered striped className="danceSet" elementRef={table}>
       {program.length === 0 ||
           <thead>
-            <tr>
-              <th><Icon icon="move"/></th>
+            <tr className="eventProgramHeader" >
               <t.th>type</t.th><t.th>name</t.th><t.th>duration</t.th><t.th>actions</t.th>
             </tr>
           </thead>
@@ -226,17 +225,19 @@ function ProgramListEditor({program, danceSets, onMoveItemToSet, onChange, inter
             <IntervalMusicEditor intervalMusicDuration={intervalMusicDuration} onSetIntervalMusicDuration={onSetIntervalMusicDuration} />}
       </tbody>
       <tfoot>
-        <tr>
-          <td colSpan={3}>
-            {isIntroductionsSection || <Button text={t`addDance`} onClick={() => addItem('RequestedDance')} className="addDance" />}
-            <Button text={isIntroductionsSection ? t`addIntroductoryInfo` : t`addInfo`} onClick={() => addItem('EventProgram', {name: ''})} className="addInfo" />
-            {" "}
+        <tr className="eventProgramFooter">
+          <td colSpan={2}>
             {isIntroductionsSection ||
                 <Switch inline label={t`intervalMusicAtEndOfSet`} checked={intervalMusicDuration > 0}
                   onChange={e => onSetIntervalMusicDuration((e.target as HTMLInputElement).checked ? DEFAULT_INTERVAL_MUSIC_DURATION : 0) }/>}
           </td>
-          <td colSpan={2}>
+          <td>
             <DanceSetDuration program={program} intervalMusicDuration={intervalMusicDuration} />
+          </td>
+          <td>
+            {isIntroductionsSection || <Button text={t`addDance`} onClick={() => addItem('RequestedDance')} className="addDance" />}
+            <Button text={isIntroductionsSection ? t`addIntroductoryInfo` : t`addInfo`} onClick={() => addItem('EventProgram', {name: ''})} className="addInfo" />
+            {" "}
           </td>
         </tr>
       </tfoot>
@@ -278,8 +279,7 @@ function ProgramItemEditor({item, items, isIntroductionsSection, danceSets, onMo
 
   const canMoveToIntroductions = !isIntroductionsSection && __typename === 'EventProgram'
 
-  return <tr onKeyDown={onKeyDown} ref={container} tabIndex={0}>
-    <td><DragHandle tabIndex={-1}/></td>
+  return <tr className="eventProgramItem" onKeyDown={onKeyDown} ref={container} tabIndex={0}>
     <td>{t(__typename)}</td>
     <td>
       <ProgramDetailsEditor item={item} onChange={onChange} onInputBlurred={onInputBlurred} />
@@ -288,6 +288,7 @@ function ProgramItemEditor({item, items, isIntroductionsSection, danceSets, onMo
       <Duration value={item.duration} />
     </td>
     <td>
+      <DragHandle tabIndex={-1}/>
       <MoveItemToSectionSelector
         showIntroSection={canMoveToIntroductions}
         sections={danceSets.filter(d => d.program !== items)}
@@ -343,8 +344,7 @@ function IntervalMusicEditor({intervalMusicDuration, onSetIntervalMusicDuration}
     containerElement && containerElement.focus();
   }
 
-  return <tr tabIndex={0} onKeyDown={onKeyDown} ref={row}>
-    <td><Button icon="move" disabled/></td>
+  return <tr className="eventProgramItem" tabIndex={0} onKeyDown={onKeyDown} ref={row}>
     <td>{t`intervalMusic`}</td>
     <td />
     <td>
