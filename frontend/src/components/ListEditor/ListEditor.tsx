@@ -1,5 +1,6 @@
 import React, {useCallback} from 'react';
-import {SortableContainer, SortableElement, arrayMove} from 'react-sortable-hoc';
+import {SortableContainer, SortableElement} from 'react-sortable-hoc';
+import {arrayMoveImmutable} from 'array-move';
 
 import {ListEditorContext, ListEditorContextType, useListEditorContextValue, useListEditorContext} from './context';
 import {objectId} from "./objectId";
@@ -25,7 +26,7 @@ type ListEditorProps = Omit<ListEditorItemsProps, 'component'> & {
 
 export function ListEditor({items, children, component, onChange, className, helperClass, useDragHandle, itemProps, ...props} : ListEditorProps) {
   function onSortEnd({oldIndex, newIndex}) {
-    onChange(arrayMove(items, oldIndex, newIndex));
+    onChange(arrayMoveImmutable(items, oldIndex, newIndex));
   }
   const context = useListEditorContextValue(items, onChange);
 
