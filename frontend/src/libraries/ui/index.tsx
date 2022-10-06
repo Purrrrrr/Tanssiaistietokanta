@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from "classnames";
 import {
   Button as BlueprintButton,
   Card as BlueprintCard,
@@ -56,8 +57,8 @@ interface FormGroupProps extends IFormGroupProps {
 
 export function FormGroup({ className, inlineFill, ...props} : FormGroupProps) {
   const inlineProps = inlineFill
-    ? { inline: true, className: 'formgroup-inline-fill'}
-    : {}
+    ? { inline: true, className: classNames('formgroup-inline-fill', className) }
+    : { className }
   return <BlueprintFormGroup {...props} {...inlineProps} />
 }
 
