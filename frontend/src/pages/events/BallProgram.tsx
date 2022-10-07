@@ -40,6 +40,9 @@ query BallProgram($eventId: ID!) {
           ... on Dance {
             teachedIn(eventId: $eventId) { _id, name }
           }
+          ... on EventProgram {
+            showInLists
+          }
         }
       }
     }

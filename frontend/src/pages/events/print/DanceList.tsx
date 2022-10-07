@@ -97,6 +97,9 @@ query getDanceList($eventId: ID!) {
               name, abbreviation
             }
           }
+          ... on EventProgram {
+            showInLists
+          }
         }
       }
     }
