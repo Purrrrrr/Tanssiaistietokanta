@@ -10,6 +10,13 @@ $borderColor: rgba(16, 22, 26, 0.15)
     h2
       margin: 0 10px 0.3em
       display: flex
+      flex-wrap: wrap
+      justify-content: end
+
+      @media only screen and (max-width: 350px)
+        & > span
+          flex-basis: 100%
+
       button:first-of-type
         margin-left: auto
 
@@ -19,7 +26,6 @@ $borderColor: rgba(16, 22, 26, 0.15)
     table
       background: white
       width: 100%
-      min-width: 600px
       border-top: 1px solid $borderColor
 
       tfoot
