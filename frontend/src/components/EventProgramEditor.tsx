@@ -75,7 +75,7 @@ export function EventProgramEditor({program, onChange}) {
 
   function addIntroductoryInfo() {
     onChange(
-      L.set(['introductions', L.defaults([]), L.appendTo], {__typename: 'EventProgram', name: ''})
+      L.set(['introductions', L.defaults([]), L.appendTo], {__typename: 'EventProgram', name: t`newProgramItem`})
     );
     focusLater('.eventProgramEditor .danceset:first-child tbody tr:last-child');
   }
