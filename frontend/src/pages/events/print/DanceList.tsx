@@ -35,8 +35,10 @@ function DanceList({eventId}) {
         ({name, program}, key) => {
           return <div key={key} className="section">
             <h2>{name}</h2>
-            {program.map((dance, i) =>
-              <Dance key={i} dance={dance} />
+            {program
+              .filter(item => item.__typename !== 'EventProgram' || item.showInLists)
+              .map((item, i) =>
+              <ProgramItem key={i} item={item} />
             )}
           </div>;
         }
@@ -56,11 +58,11 @@ function Footer({workshops}) {
   </>
 }
 
-function Dance({dance}) {
+function ProgramItem({item}) {
   return <p>
-    {dance.name ?? <RequestedDance />}
-    {dance.teachedIn && dance.teachedIn.length > 0 && 
-        (" ("+dance.teachedIn.map(workshop => workshop.abbreviation).join(', ')+")")
+    {item.name ?? <RequestedDance />}
+    {item.teachedIn && item.teachedIn.length > 0 && 
+        (" ("+item.teachedIn.map(workshop => workshop.abbreviation).join(', ')+")")
     }
   </p>;
 }

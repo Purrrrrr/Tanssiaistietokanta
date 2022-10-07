@@ -8,6 +8,7 @@ program {
     name
     duration
     description
+    showInLists
   }
   danceSets {
     _id
@@ -19,6 +20,9 @@ program {
         name
         duration
         description
+      }
+      ... on EventProgram {
+        showInLists
       }
     }
     intervalMusicDuration

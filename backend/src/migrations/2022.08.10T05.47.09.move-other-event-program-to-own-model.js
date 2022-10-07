@@ -7,9 +7,9 @@ exports.up = async params => {
   const {
     events: eventsDb,
     ['event-program']: eventProgramDb
-  } = params.context.models
+  } = params.context.models;
 
-  const events = await eventsDb.findAsync()
+  const events = await eventsDb.findAsync();
 
   for (const event of events) {
     if (!event.program || event.program.length == 0) continue;
@@ -28,14 +28,14 @@ exports.up = async params => {
         }
       },
       event
-    )
+    );
 
-    await eventsDb.updateAsync({ _id: event._id}, newEvent)
+    await eventsDb.updateAsync({ _id: event._id}, newEvent);
   }
 
   async function modEventProgram(item) {
-    const eventProgramId  = await storeEventProgram(item, eventProgramDb)
-    return { eventProgramId, __typename: 'EventProgram' }
+    const eventProgramId  = await storeEventProgram(item, eventProgramDb);
+    return { eventProgramId, __typename: 'EventProgram' };
   }
 
 };

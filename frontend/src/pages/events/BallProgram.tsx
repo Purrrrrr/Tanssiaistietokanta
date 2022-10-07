@@ -164,7 +164,7 @@ function HeaderSlide({header, onChangeSlide}) {
   return <SimpleSlide title={name} next={null} onChangeSlide={onChangeSlide} >
     <ul className="headerList mainContent">
       {program
-          .filter(t => t.__typename !== "IntervalMusic")
+          .filter(t => t.__typename !== "EventProgram" || t.showInLists)
           .map(({index, name}) =>
             <li onClick={() => onChangeSlide(index)} key={index}>
               {name ?? <RequestedDancePlaceholder />}

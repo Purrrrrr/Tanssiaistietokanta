@@ -4,7 +4,7 @@ import * as L from 'partial.lenses';
 import {arrayMoveImmutable} from 'array-move';
 import {guid} from "utils/guid";
 
-import {Icon, Card, Button, HTMLTable, CssClass, Select, MenuItem} from "libraries/ui";
+import {Card, Button, HTMLTable, CssClass, Select, MenuItem} from "libraries/ui";
 import {DragHandle, ListEditor, ListEditorItems} from "./ListEditor";
 import React, {createContext, useContext, useMemo, useState, useRef} from 'react';
 
@@ -34,6 +34,8 @@ const t = makeTranslate({
   Dance: 'Tanssi',
   RequestedDance: 'Toivetanssi',
   EventProgram: 'Muu ohjelma',
+  eventProgramDescription: 'Ohjelman kuvaus',
+  showInLists: 'Näytä ohjelma tanssilistoissa',
   removeDanceSet: 'Poista setti',
   addDanceSet: 'Lisää tanssisetti',
   danceSet: 'Setti',
@@ -75,7 +77,7 @@ export function EventProgramEditor({program, onChange}) {
 
   function addIntroductoryInfo() {
     onChange(
-      L.set(['introductions', L.defaults([]), L.appendTo], {__typename: 'EventProgram', name: t`newProgramItem`})
+      L.set(['introductions', L.defaults([]), L.appendTo], newEventProgramItem())
     );
     focusLater('.eventProgramEditor .danceset:first-child tbody tr:last-child');
   }
@@ -152,11 +154,14 @@ function newDanceSet(danceSets) {
   }
 }
 
+function newEventProgramItem() {
+  return {__typename: 'EventProgram', name: t`newProgramItem`, showInLists: false}
+}
+
 function IntroductoryInformation({infos, onChange, danceSets, onMoveItemToSet}) {
   const table = useRef<HTMLTableElement>(null);
-  function addItem(__typename, other = {}) {
-    onChange(L.set(L.appendTo, {__typename, ...other}, infos));
-    console.log(table.current)
+  function addItem() {
+    onChange(L.set(L.appendTo, newEventProgramItem(), infos));
     focusLater('tbody tr:last-child', table.current);
   }
   const onKeyDown = useHotkeyHandler(
@@ -167,7 +172,7 @@ function IntroductoryInformation({infos, onChange, danceSets, onMoveItemToSet}) 
   return <Card className="danceset" tabIndex={0} onKeyDown={onKeyDown}>
     <h2>
       <t.span>introductoryInformation</t.span>
-      <Button text={t`addIntroductoryInfo`} onClick={() => addItem('EventProgram', {name: t`newProgramItem`})} />
+      <Button text={t`addIntroductoryInfo`} onClick={() => addItem()} />
     </h2>
     <ProgramListEditor tableRef={table} danceSets={danceSets} onMoveItemToSet={onMoveItemToSet} program={infos} onChange={onChange} isIntroductionsSection intervalMusicDuration={0} onSetIntervalMusicDuration={() => {}}/>
   </Card>;
@@ -189,8 +194,8 @@ function DanceSetEditor({item, danceSets, onMoveDanceSet, onMoveItemToSet, onCha
     focusSiblingsOrParent(e.target, 'section.eventProgramEditor');
   }
   const table = useRef<HTMLTableElement>(null);
-  function addItem(__typename, other = {}) {
-    onChange(L.set(['program', L.appendTo], {__typename, ...other}, item));
+  function addItem(itemToAdd) {
+    onChange(L.set(['program', L.appendTo], itemToAdd, item));
     focusLater('tbody tr:last-child', table.current);
   }
 
@@ -200,8 +205,8 @@ function DanceSetEditor({item, danceSets, onMoveDanceSet, onMoveItemToSet, onCha
   return <Card className="danceset" tabIndex={0} {...props} onKeyDown={onKeyDown} >
     <h2>
       <ClickToEdit labelStyle="hidden" label={t`danceSetName`} value={name} onChange={onChangeFor('name')} required />
-      <Button text={t`addDance`} onClick={() => addItem('RequestedDance')} className="addDance" />
-      <Button text={t`addInfo`} onClick={() => addItem('EventProgram', {name: t`newProgramItem`})} className="addInfo" />
+      <Button text={t`addDance`} onClick={() => addItem({__typename: 'RequestedDance'})} className="addDance" />
+      <Button text={t`addInfo`} onClick={() => addItem(newEventProgramItem())} className="addInfo" />
       <MoveDanceSetSelector
         currentSet={item}
         danceSets={danceSets}
@@ -319,7 +324,8 @@ function ProgramDetailsEditor({item, onInputBlurred, onChange}) {
       return <>
         <Input value={name} onBlur={onInputBlurred} required label="Ohjelmanumeron nimi"
           onChange={val => onChange(L.set('name', val, item))} />
-        <MarkdownEditor label="Ohjelman kuvaus" value={item.description ?? ""} onChange={val => onChange(L.set('description', val, item))} height={150} />
+        <MarkdownEditor label={t`eventProgramDescription`} value={item.description ?? ""} onChange={val => onChange(L.set('description', val, item))} height={150} />
+        <Switch inline label={t`showInLists`} checked={item.showInLists} onChange={e => onChange(L.set('showInLists', (e.target as HTMLInputElement).checked, item))} />
       </>
   }
 

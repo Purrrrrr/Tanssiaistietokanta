@@ -63,7 +63,10 @@ function EventProgram({program}) {
 }
 
 function formatDances(program) {
-  const danceNames = program.map(item => item.name).filter(a => a);
+  const danceNames = program
+    .filter(item => item.__typename !== 'EventProgram' || item.showInLists)
+    .map(item => item.name)
+    .filter(a => a);
   const requestedDanceCount = program.filter(isRequestedDance).length;
   if (requestedDanceCount) {
     danceNames.push(t.pluralize('requestedDance', requestedDanceCount));
