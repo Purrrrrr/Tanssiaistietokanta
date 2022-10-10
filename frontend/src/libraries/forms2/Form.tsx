@@ -10,6 +10,7 @@ interface FormProps<T> extends
   Partial<FormMetadataContextType>
 {
   conflicts?: FormValueContextType<T>["conflicts"] 
+  inline?: boolean
   onSubmit: (t: T) => unknown
 }
 
@@ -21,6 +22,7 @@ export function Form<T>({
   onSubmit,
   readOnly = false,
   labelStyle = defaultLabelStyle,
+  inline = false,
   ...rest
 } : FormProps<T>) {
   const {hasErrors, ValidationContainer} = useValidationResult();
@@ -36,7 +38,7 @@ export function Form<T>({
     [onSubmit]
   )
   const valueContext = useMemo(() => ({value, onChange, conflicts, formIsValid: !hasErrors}), [value, onChange, conflicts, hasErrors])
-  const metadataContext = useMemo(() => ({readOnly, labelStyle}), [readOnly, labelStyle])
+  const metadataContext = useMemo(() => ({readOnly, labelStyle, inline}), [readOnly, labelStyle, inline])
 
   return <FormValueContext.Provider value={valueContext as unknown as FormValueContextType<unknown>}>
     <FormMetadataContext.Provider value={metadataContext}>
