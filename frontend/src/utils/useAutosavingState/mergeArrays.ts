@@ -3,7 +3,7 @@ import { mapToIds, areEqualWithoutId } from './idUtils'
 import {MergeData, MergeResult, MergeFunction, SyncState, Path} from './types'
 import {emptyPath, subIndexPath} from './pathUtil'
 
-type ArrayMergeResult<T> = {
+interface ArrayMergeResult<T> {
   hasModifications: boolean
   pendingModifications: T[]
 }

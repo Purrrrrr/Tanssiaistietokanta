@@ -8,11 +8,11 @@ import './MarkdownEditor.sass'
 
 MdEditor.unuse(Plugins.Image)
 
-type MarkdownEditorProps = {
+interface MarkdownEditorProps {
   label?: string
   labelStyle?: 'inline'
-  value: any,
-  onChange: (v: string) => any,
+  value: any
+  onChange: (v: string) => any
 }
 
 export function MarkdownEditor({label, labelStyle, ...props} : MarkdownEditorProps) {
