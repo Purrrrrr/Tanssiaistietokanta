@@ -54,6 +54,7 @@ const t = makeTranslate({
   intervalMusicDuration: 'Taukomusiikin kesto',
   intervalMusicAtEndOfSet: 'Taukomusiikki setin lopussa',
   minutes: 'min.',
+  style: 'Tyyli',
   remove: 'Poista',
   danceProgramIsEmpty: 'Ei tanssiohjelmaa.',
   danceSetName: 'Tanssisetin nimi',
@@ -310,7 +311,7 @@ function ProgramItemEditor({item, items, isIntroductionsSection, danceSets, onMo
         showIntroSection={canMoveToIntroductions}
         sections={danceSets.filter(d => d.program !== items)}
         onSelect={section => onMoveItemToSet(item, section)} />
-      <Button intent="danger" icon="cross" onClick={removeItem} className="delete" />
+      <Button title={t`remove`} intent="danger" icon="cross" onClick={removeItem} className="delete" />
     </td>
   </tr>;
 }
@@ -372,7 +373,7 @@ function IntervalMusicEditor({intervalMusicDuration, onSetIntervalMusicDuration}
         onChange={onSetIntervalMusicDuration}/>
     </td>
     <td>
-      <Button intent="danger" text={t`remove`} onClick={() => onSetIntervalMusicDuration(0)} className="delete" />
+      <Button title={t`remove`} intent="danger" icon="cross" onClick={() => onSetIntervalMusicDuration(0)} className="delete" />
     </td>
   </tr>
 }
@@ -433,7 +434,7 @@ function SlideStyleSelector({value, onSelect}) {
     }
     onItemSelect={onSelect}
   >
-    <Button text={<SlideStyleBox value={style} />} rightIcon="double-caret-vertical" />
+    <Button icon={<SlideStyleBox value={style} />} text={t`style`} rightIcon="double-caret-vertical" />
   </StyleSelect>
 }
 
