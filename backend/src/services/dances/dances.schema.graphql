@@ -26,6 +26,7 @@ type Dance implements DanceProps {
   instructions: String
   remarks: String
   teachedIn(eventId: ID): [Workshop!]!
+  slideStyleId: ID
 }
 
 type Mutation {

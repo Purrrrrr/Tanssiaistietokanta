@@ -98,6 +98,7 @@ input IntroductionInput {
   eventProgramId: ID
   "The value to use when modifying event program"
   eventProgram: EventProgramInput
+  slideStyleId: ID
 }
 
 enum ProgramType {

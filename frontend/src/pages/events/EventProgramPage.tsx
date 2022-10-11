@@ -42,24 +42,26 @@ function toProgramInput({introductions = [], danceSets = []}) {
   });
 }
 
-function toIntroductionInput({ _id, ...rest}) {
-  return { eventProgramId: _id, eventProgram: rest }
+function toIntroductionInput({ _id, slideStyleId, ...rest}) {
+  return { eventProgramId: _id, eventProgram: rest, slideStyleId }
 }
 
-function toProgramItemInput({__typename, _id, ...rest}) {
+function toProgramItemInput({__typename, _id, slideStyleId, ...rest}) {
   switch(__typename) {
     case 'DanceProgram':
     case 'RequestedDance':
-      if (!_id) return {type: 'REQUESTED_DANCE'};
+      if (!_id) return {type: 'REQUESTED_DANCE', slideStyleId};
       return {
         type: 'DANCE',
-        danceId: _id
+        danceId: _id,
+        slideStyleId,
       };
     case 'EventProgram':
       return {
         type: 'EVENT_PROGRAM',
         eventProgramId: _id,
-        eventProgram: rest
+        eventProgram: rest,
+        slideStyleId,
       };
     default:
       throw new Error('Unexpected program item type '+__typename);

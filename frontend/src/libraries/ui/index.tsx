@@ -31,6 +31,7 @@ export type IconName = BlueprintIconName
 interface IconProps {
   className?: string
   icon: IconName
+  color?: string
   iconSize?: number
   intent?: Intent
   onClick?: React.MouseEventHandler<HTMLElement>

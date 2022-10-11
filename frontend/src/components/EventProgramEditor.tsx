@@ -3,8 +3,9 @@ import './EventProgramEditor.sass';
 import * as L from 'partial.lenses';
 import {arrayMoveImmutable} from 'array-move';
 import {guid} from "utils/guid";
+import {useEventSlideStyles} from "services/events";
 
-import {Card, Button, HTMLTable, CssClass, Select, MenuItem} from "libraries/ui";
+import {Card, Button, HTMLTable, Icon, CssClass, Select, MenuItem} from "libraries/ui";
 import {DragHandle, ListEditor, ListEditorItems} from "./ListEditor";
 import React, {createContext, useContext, useMemo, useState, useRef} from 'react';
 
@@ -302,11 +303,14 @@ function ProgramItemEditor({item, items, isIntroductionsSection, danceSets, onMo
     </td>
     <td>
       <DragHandle tabIndex={-1}/>
+      <SlideStyleSelector
+        value={item.slideStyleId}
+        onSelect={style => {console.log(style); onChange(L.set('slideStyleId', style.id))}} />
       <MoveItemToSectionSelector
         showIntroSection={canMoveToIntroductions}
         sections={danceSets.filter(d => d.program !== items)}
         onSelect={section => onMoveItemToSet(item, section)} />
-      <Button intent="danger" text={t`remove`} onClick={removeItem} className="delete" />
+      <Button intent="danger" icon="cross" onClick={removeItem} className="delete" />
     </td>
   </tr>;
 }
@@ -386,6 +390,7 @@ function DanceSetDuration({program, intervalMusicDuration}) {
 }
 
 const SectionSelect = Select.ofType<{name: string}>();
+const StyleSelect = Select.ofType<{name: string, id: string | null, color: string, background: string}>();
 
 function MoveDanceSetSelector({danceSets, currentSet, onSelect}) {
   if (danceSets.length < 2) return null
@@ -415,6 +420,27 @@ function MoveItemToSectionSelector({showIntroSection, sections, onSelect}) {
     onSelect={onSelect}
     placeholder={t`moveToSet`}
   />
+}
+
+function SlideStyleSelector({value, onSelect}) {
+  const styles = useEventSlideStyles()
+  const style = styles.find(s => s.id === value) ?? styles.find(s => s.id === null)!
+  return <StyleSelect
+    filterable={false}
+    items={styles}
+    itemRenderer={(item, {handleClick, index, modifiers: {active}}) => 
+      <MenuItem key={item.id} roleStructure="listoption" icon={<SlideStyleBox value={item} />} text={item.name} onClick={handleClick} active={active} selected={item.id === value} />
+    }
+    onItemSelect={onSelect}
+  >
+    <Button text={<SlideStyleBox value={style} />} rightIcon="double-caret-vertical" />
+  </StyleSelect>
+}
+
+function SlideStyleBox({value: {background, color}}) {
+  return <span style={{height: 20, width: 20, lineHeight: "16px", textAlign: 'center', border: `1px solid ${color}`, display: 'inline-block', background }}>
+    <Icon icon="style" iconSize={12} color={color} />
+  </span>
 }
 
 function Selector({items, itemRenderer, onSelect, placeholder, className = undefined as string | undefined}) {

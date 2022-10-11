@@ -9,6 +9,7 @@ program {
     duration
     description
     showInLists
+    slideStyleId
   }
   danceSets {
     _id
@@ -48,6 +49,13 @@ setupServiceUpdateFragment(
     ${eventFields}
   }`
 );
+
+export function useEventSlideStyles() {
+  return [
+    {id: null, name: 'Oletustyyli', background: '#fff', color: '#000'},
+    {id: 'dark', name: 'Tumma', background: '#000', color: '#fff'},
+  ]
+}
 
 const useEventInternal = backendQueryHook(`
 query getEvent($id: ID!) {

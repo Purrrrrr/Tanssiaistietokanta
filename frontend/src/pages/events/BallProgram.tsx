@@ -1,5 +1,6 @@
 import './BallProgram.sass';
 import React, {useMemo, useState, useCallback} from 'react';
+import classnames from 'classnames';
 import Markdown from 'markdown-to-jsx';
 import {backendQueryHook} from "backend";
 import ReactTouchEvents from "react-touch-events";
@@ -95,7 +96,7 @@ function BallProgramView({event, currentSlide, onChangeSlide, onRefetch}) {
   }, [changeSlide])
 
   return <ReactTouchEvents onSwipe={onSwipe} disableClick>
-    <div className="slideshow">
+    <div className={classnames("slideshow", slide.slideStyleId && `slide-style-${slide.slideStyleId}`)}>
       <div className="controls">
         <ProgramTitleSelector value={slide.parent?.index ?? slide.index} onChange={onChangeSlide}
           program={program} />
@@ -107,11 +108,12 @@ function BallProgramView({event, currentSlide, onChangeSlide, onRefetch}) {
 }
 
 interface Slide {
-  __typename: string,
-  name: string,
-  index?: number,
-  subindex?: number,
-  subtotal?: number,
+  __typename: string
+  slideStyleId?: string
+  name: string
+  index?: number
+  subindex?: number
+  subtotal?: number
   parent?: Slide
   next?: Slide
 }
@@ -120,6 +122,7 @@ function getSlides(event) : Slide[] {
   const eventHeader = { __typename: 'Event', name: event.name };
   const slides : Slide[] = [eventHeader];
   if (!event.program) return slides;
+  const defaultStyleId = event.program.slideStyleId;
 
   const {introductions, danceSets} = event.program;
   for (const introduction of introductions) {
@@ -148,6 +151,9 @@ function getSlides(event) : Slide[] {
       slide.subindex = index - slide.parent.index!!
       slide.subtotal = slide.parent.subtotal
     }
+    if (!slide.slideStyleId) {
+      slide.slideStyleId = defaultStyleId
+    }
 
     slide.next = slides[index+1];
   });
@@ -169,7 +175,7 @@ function SlideView({slide, onChangeSlide}) {
   }
 }
 function HeaderSlide({header, onChangeSlide}) {
-  const {name, program = [] } = header;
+  const {name, program = []} = header;
   return <SimpleSlide title={name} next={null} onChangeSlide={onChangeSlide} >
     <ul className="slide-main-content slide-header-list">
       {program
