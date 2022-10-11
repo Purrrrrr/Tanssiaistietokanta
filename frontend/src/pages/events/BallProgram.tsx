@@ -24,8 +24,10 @@ query BallProgram($eventId: ID!) {
     _id
     name
     program {
+      slideStyleId
       introductions {
         name
+        slideStyleId
       }
       danceSets {
         name
@@ -36,8 +38,12 @@ query BallProgram($eventId: ID!) {
             _id
             name
             description
+            slideStyleId
           }
-          ... on Dance {
+          ... on RequestedDance {
+            slideStyleId
+          }
+          ... on DanceProgram {
             teachedIn(eventId: $eventId) { _id, name }
           }
           ... on EventProgram {

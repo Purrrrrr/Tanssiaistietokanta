@@ -31,7 +31,7 @@ const t = makeTranslate({
   addEntryTitle: 'Lisää ohjelmaa',
   introductoryInformation: 'Alkutiedotukset',
   programListIsEmpty: 'Ei ohjelmaa',
-  Dance: 'Tanssi',
+  DanceProgram: 'Tanssi',
   RequestedDance: 'Toivetanssi',
   EventProgram: 'Muu ohjelma',
   eventProgramDescription: 'Ohjelman kuvaus',
@@ -315,11 +315,11 @@ function ProgramDetailsEditor({item, onInputBlurred, onChange}) {
   const {__typename, name, _id} = item;
 
   switch(__typename) {
-    case 'Dance':
+    case 'DanceProgram':
     case 'RequestedDance':
     return <DanceChooser value={item ? {_id, name} : null} onBlur={onInputBlurred}
       allowEmpty emptyText={t`RequestedDance`}
-      onChange={dance=> onChange(dance ? {__typename: 'Dance', ...dance} : {__typename: 'RequestedDance'})} />
+      onChange={dance=> onChange(dance ? {__typename: 'DanceProgram', ...dance} : {__typename: 'RequestedDance'})} />
     case 'EventProgram':
       return <>
         <Input value={name} onBlur={onInputBlurred} required label="Ohjelmanumeron nimi"

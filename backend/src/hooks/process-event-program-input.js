@@ -25,20 +25,20 @@ module.exports = function (options = {}) {
   };
 };
 
-async function processProgramItem({type, danceId, eventProgramId, eventProgram}, eventProgramService) {
+async function processProgramItem({type, danceId, eventProgramId, eventProgram, slideStyleId}, eventProgramService) {
   switch(type) {
     case 'DANCE':
       if (!danceId) return REQUESTED_DANCE;
       return {
-        danceId, __typename: 'Dance'
+        danceId, slideStyleId, __typename: 'Dance'
       };
     case 'EVENT_PROGRAM':
       const id = await storeProgram(eventProgramId, eventProgram, eventProgramService);
       return {
-        eventProgramId: id, __typename: 'EventProgram'
+        eventProgramId: id, slideStyleId, __typename: 'EventProgram'
       };
     case 'REQUESTED_DANCE':
-      return REQUESTED_DANCE;
+      return { slideStyleId, ...REQUESTED_DANCE };
   }
 }
 

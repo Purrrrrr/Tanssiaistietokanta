@@ -48,7 +48,7 @@ function toIntroductionInput({ _id, ...rest}) {
 
 function toProgramItemInput({__typename, _id, ...rest}) {
   switch(__typename) {
-    case 'Dance':
+    case 'DanceProgram':
     case 'RequestedDance':
       if (!_id) return {type: 'REQUESTED_DANCE'};
       return {

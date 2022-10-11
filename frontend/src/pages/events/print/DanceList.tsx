@@ -92,7 +92,7 @@ query getDanceList($eventId: ID!) {
           ... on ProgramItem {
             name
           }
-          ... on Dance {
+          ... on DanceProgram {
             teachedIn(eventId: $eventId) {
               name, abbreviation
             }

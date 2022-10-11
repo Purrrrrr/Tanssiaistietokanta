@@ -20,6 +20,7 @@ program {
         name
         duration
         description
+        slideStyleId
       }
       ... on EventProgram {
         showInLists
@@ -27,6 +28,7 @@ program {
     }
     intervalMusicDuration
   }
+  slideStyleId
 }
 workshops {
   _id

@@ -31,13 +31,13 @@ query getDanceMastersCheatList($eventId: ID!) {
         name
         program {
           __typename
+          ... on DanceProgram {
+            description
+            prelude
+          }
           ... on ProgramItem {
             _id
             name
-          }
-          ... on Dance {
-            description
-            prelude
           }
         }
       }

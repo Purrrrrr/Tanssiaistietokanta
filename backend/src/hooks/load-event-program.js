@@ -30,10 +30,10 @@ module.exports = function (options = {}) {
       }
     }
 
-    async function addDanceData({danceId}) {
+    async function addDanceData({danceId, slideStyleId}) {
       const dance = await getDance(danceId);
-      if (!dance) return {__typename: 'RequestedDance'};
-      return {...dance, __typename: 'Dance'};
+      if (!dance) return {__typename: 'RequestedDance', slideStyleId};
+      return {...dance, __typename: 'DanceProgram', slideStyleId};
     }
 
     async function getDance(id) {
@@ -41,9 +41,10 @@ module.exports = function (options = {}) {
     }
 
     async function addEventProgramData(item) {
-      const program = await eventProgramService.get(item.eventProgramId);
+      const {slideStyleId, eventProgramId} = item;
+      const program = await eventProgramService.get(eventProgramId);
       if (!program) return item;
-      return {...program, __typename: 'EventProgram'};
+      return {...program, __typename: 'EventProgram', slideStyleId};
     }
 
     if (Array.isArray(context.result)) {

@@ -17,6 +17,12 @@ module.exports = (app) => {
     ProgramItem: {
       __resolveType: (obj) => obj.__typename,
     },
+    DanceProgram: {
+      __resolveType: (obj) => obj.__typename,
+    },
+    RequestedDance: {
+      __resolveType: (obj) => obj.__typename,
+    },
     Query: {
       events: (_, __, params) => service.find(params),
       event: (_, {id}, params) => service.get(id, params),

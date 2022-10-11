@@ -13,6 +13,7 @@ type Event {
 type EventProgram {
   introductions: [EventProgram!]!
   danceSets: [DanceSet!]!
+  slideStyleId: ID
 }
 
 type DanceSet {
@@ -22,17 +23,32 @@ type DanceSet {
   intervalMusicDuration: Float
 }
 
-union EventProgramItem = RequestedDance | Dance | EventProgram
+union EventProgramItem = RequestedDance | DanceProgram | EventProgram
 
 interface ProgramItem {
   _id: ID
   name: String!
   duration: Float
   description: String
+  slideStyleId: ID
 }
 
 type RequestedDance {
-  _: Int
+  slideStyleId: ID
+}
+
+type DanceProgram implements ProgramItem & DanceProps {
+  _id: ID
+  name: String!
+  description: String
+  duration: Float
+  prelude: String
+  formation: String
+  category: String
+  instructions: String
+  remarks: String
+  teachedIn(eventId: ID): [Workshop!]!
+  slideStyleId: ID
 }
 
 type EventProgram implements ProgramItem {
@@ -75,6 +91,7 @@ input ProgramItemInput {
   eventProgram: EventProgramInput
   "The id of the dance to use when type is DANCE"
   danceId: ID
+  slideStyleId: ID
 }
 
 input IntroductionInput {
