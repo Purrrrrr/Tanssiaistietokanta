@@ -165,7 +165,7 @@ function SlideView({slide, onChangeSlide}) {
 function HeaderSlide({header, onChangeSlide}) {
   const {name, program = [] } = header;
   return <SimpleSlide title={name} next={null} onChangeSlide={onChangeSlide} >
-    <ul className="headerList mainContent">
+    <ul className="slide-main-content slide-header-list">
       {program
           .filter(t => t.__typename !== "EventProgram" || t.showInLists)
           .map(({index, name}) =>
@@ -181,7 +181,7 @@ function HeaderSlide({header, onChangeSlide}) {
 function EventProgramSlide({program, onChangeSlide}) {
   const {name, next, description} = program;
   return <SimpleSlide title={name} next={next} onChangeSlide={onChangeSlide} >
-    {description && <div className="mainContent"><Markdown>{description}</Markdown></div>}
+    {description && <section className="slide-main-content"><Markdown>{description}</Markdown></section>}
   </SimpleSlide>;
 }
 
@@ -191,9 +191,9 @@ function DanceSlide({dance, onChangeSlide}) {
   const {next, name, teachedIn} = dance;
 
   return <SimpleSlide title={name} next={next} onChangeSlide={onChangeSlide}>
-    <p className="mainContent">
+    <section className="slide-main-content slide-dance-description">
       <EditableDanceProperty dance={dance} property="description" type="markdown" addText={t`addDescription`} />
-    </p>
+    </section>
     {teachedIn.length > 0 &&
       <p>{t`teachedInSet`} {teachedIn.map(w => w.name).join(", ")}</p>
     }
@@ -207,7 +207,7 @@ function RequestedDanceSlide({next, onChangeSlide}) {
 
 function SimpleSlide({title, next, onChangeSlide, children}) {
   return <section className="slide">
-    <h1>{title}</h1>
+    <h1 className="slide-title">{title}</h1>
     {children}
     {next &&
         <NextTrackSection next={next}
@@ -217,7 +217,7 @@ function SimpleSlide({title, next, onChangeSlide, children}) {
 }
 
 function NextTrackSection({next, onChangeSlide}) {
-  return <section className="nextTrack" onClick={() => onChangeSlide(next.index)}>
+  return <section className="slide-next-track" onClick={() => onChangeSlide(next.index)}>
     <h1>{t`afterThis`}:{" "}{next.__typename === 'RequestedDance' ? t`requestedDance` : next.name}</h1>
   </section>
 }
