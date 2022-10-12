@@ -24,6 +24,7 @@ export function SlideStyleSelector({
   })
   const style = styles.find(s => s.id === value) ?? styles.find(s => s.default === true)!
   return <StyleSelect
+    key={value}
     // @ts-ignore
     initialActiveItem={style}
     filterable={false}
