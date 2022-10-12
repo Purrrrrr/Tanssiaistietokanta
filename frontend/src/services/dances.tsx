@@ -1,4 +1,4 @@
-import { setupServiceUpdateFragment, entityListQueryHook, entityCreateHook, entityDeleteHook, entityUpdateHook } from '../backend';
+import { setupServiceUpdateFragment, gql, updateEntityFragment, entityListQueryHook, entityCreateHook, entityDeleteHook, entityUpdateHook } from '../backend';
 import {sorted} from "utils/sorted"
 
 const danceFields = '_id, name, description, remarks, duration, prelude, formation, category, instructions';
@@ -40,12 +40,17 @@ export const useDances = entityListQueryHook("dances", `
   }
 }`);
 
+const danceProgramFragment = gql`fragment DanceFragment on DanceProgram {
+  ${danceFields}
+  slideStyleId: ID
+}`
 export const useModifyDance = entityUpdateHook('dances', `
 mutation modifyDance($id: ID!, $dance: DanceInput!) {
   modifyDance(id: $id, dance: $dance) {
     ${danceFields}
   }
 }`, {
+  onCompleted: (data) => updateEntityFragment('DanceProgram', danceProgramFragment, data.modifyDance),
   parameterMapper: ({_id, __typename, ...dance}) => 
     ({variables: {id: _id, dance} })
 });
@@ -66,6 +71,7 @@ mutation patchDance($id: ID!, $dance: DancePatchInput!) {
     ${danceFields}
   }
 }`, {
+  onCompleted: (data) => updateEntityFragment('DanceProgram', danceProgramFragment, data.patchDance),
   parameterMapper: ({_id: id, ...dance}) => ({variables: {id, dance}}),
 });
 

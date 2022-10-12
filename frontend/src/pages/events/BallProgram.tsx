@@ -162,7 +162,7 @@ function getSlides(event) : Slide[] {
 
 function SlideView({slide, onChangeSlide}) {
   switch(slide.__typename) {
-    case 'Dance':
+    case 'DanceProgram':
       return <DanceSlide dance={slide} onChangeSlide={onChangeSlide} />;
     case 'RequestedDance':
       return <RequestedDanceSlide next={slide.next} onChangeSlide={onChangeSlide} />;

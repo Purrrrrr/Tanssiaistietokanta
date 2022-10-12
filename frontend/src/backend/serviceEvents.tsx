@@ -97,9 +97,11 @@ function getServiceEventEmitter(
 
     emitter.on('removed', markDeleted)
     emitter.on('updated', function updateCache(data, source) {
+      debug('updated', serviceName, source, data)
       if (source !== 'backend' || entityFragment === undefined) {
         return
       }
+      debug('updating entity fragment')
       updateEntityFragment(typeName, entityFragment, data)
     })
     

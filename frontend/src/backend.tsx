@@ -6,6 +6,8 @@ import { appendToListQuery, filterRemovedFromListQuery } from './backend/apolloC
 import { EventName, emitServiceEvent, useServiceListEvents } from './backend/serviceEvents'
 
 export { setupServiceUpdateFragment } from './backend/serviceEvents'
+export { updateEntityFragment } from './backend/apolloCache'
+export { gql } from './backend/apollo'
 
 export const BackendProvider = ({children}) => <ApolloProvider client={apolloClient} children={children} />
 
