@@ -329,7 +329,7 @@ function ProgramDetailsEditor({item, onInputBlurred, onChange}) {
       return <>
         <Input value={name} onBlur={onInputBlurred} required label="Ohjelmanumeron nimi"
           onChange={val => onChange(L.set('name', val, item))} />
-        <MarkdownEditor label={t`eventProgramDescription`} value={item.description ?? ""} onChange={val => onChange(L.set('description', val, item))} height={150} />
+        <MarkdownEditor label={t`eventProgramDescription`} value={item.description ?? ""} onChange={val => onChange(L.set('description', val, item))} />
         <Switch inline label={t`showInLists`} checked={item.showInLists} onChange={e => onChange(L.set('showInLists', (e.target as HTMLInputElement).checked, item))} />
       </>
   }
