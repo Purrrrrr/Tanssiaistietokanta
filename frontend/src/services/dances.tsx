@@ -1,4 +1,5 @@
 import { setupServiceUpdateFragment, gql, updateEntityFragment, entityListQueryHook, entityCreateHook, entityDeleteHook, entityUpdateHook } from '../backend';
+import { Dance } from 'types/Dance'
 import {sorted} from "utils/sorted"
 
 const danceFields = '_id, name, description, remarks, duration, prelude, formation, category, instructions';
@@ -9,17 +10,7 @@ setupServiceUpdateFragment(
   }`
 );
 
-export interface Dance {
-  _id?: string
-  name: string,
-  description?: string,
-  remarks?: string,
-  duration?: number,
-  prelude?: string,
-  formation?: string,
-  category?: string,
-  instructions?: string,
-}
+export type { Dance }
 export type WritableDanceProperty = Exclude<keyof Dance, '_id'>
 
 export const dancePropertyLabels : {[Key in WritableDanceProperty]: string} = {

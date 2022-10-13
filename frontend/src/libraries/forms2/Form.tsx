@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useCallback } from 'react';
+import React, { useMemo, useRef } from 'react';
 import { FormValueContext, FormValueContextType, FormMetadataContext, FormMetadataContextType } from './formContext'
 import {useValidationResult} from '../forms/validation';
 
@@ -11,7 +11,7 @@ interface FormProps<T> extends
 {
   conflicts?: FormValueContextType<T>["conflicts"] 
   inline?: boolean
-  onSubmit: (t: T) => unknown
+  onSubmit: (t: T, e: React.FormEvent) => unknown
 }
 
 export function Form<T>({
@@ -28,15 +28,12 @@ export function Form<T>({
   const {hasErrors, ValidationContainer} = useValidationResult();
   const form = useRef<HTMLFormElement>(null);
 
-  const submitHandler = useCallback(
-    (e) => {
-      //Sometimes forms from dialogs end up propagating into our form and we should not submit then
-      if (e.target !== form.current) return;
-      e.preventDefault();
-      onSubmit(e);
-    },
-    [onSubmit]
-  )
+  const submitHandler = (e) => {
+    //Sometimes forms from dialogs end up propagating into our form and we should not submit then
+    if (e.target !== form.current) return;
+    e.preventDefault();
+    onSubmit(value, e);
+  }
   const valueContext = useMemo(() => ({value, onChange, conflicts, formIsValid: !hasErrors}), [value, onChange, conflicts, hasErrors])
   const metadataContext = useMemo(() => ({readOnly, labelStyle, inline}), [readOnly, labelStyle, inline])
 
@@ -48,5 +45,3 @@ export function Form<T>({
     </FormMetadataContext.Provider>
   </FormValueContext.Provider>
 }
-
-const f = <Form value={{}} onChange={() => {}} onSubmit={() => {}} />

@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import classNames from 'classnames';
 import {Button} from "libraries/ui";
-import {Switch} from "libraries/forms";
+import {Switch} from "libraries/forms2";
 import {backendQueryHook} from "backend";
 import {EditableDanceProperty} from "components/EditableDanceProperty";
 import PrintViewToolbar from 'components/widgets/PrintViewToolbar';
@@ -48,12 +48,8 @@ export default function DanceCheatList({eventId}) {
 
   return <>
     <PrintViewToolbar>
-      <Switch inline label={t`miniView`} checked={mini} onChange={e => {
-        setMini((e.target as HTMLInputElement).checked);
-      }}/>
-      <Switch inline label={t`showHelpText`} checked={helpText} onChange={e => {
-        setHelptext((e.target as HTMLInputElement).checked);
-      }}/>
+      <Switch id="miniView" inline label={t`miniView`} value={mini} onChange={setMini}/>
+      <Switch id="helpText" inline label={t`showHelpText`} value={helpText} onChange={setHelptext}/>
       <Button text={t`print`} onClick={() => window.print()} />
     </PrintViewToolbar>
     <DanceCheatListView workshops={data.event.workshops} mini={mini} helpText={helpText} />

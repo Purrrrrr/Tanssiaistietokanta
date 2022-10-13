@@ -1,7 +1,7 @@
 import "./DanceList.sass";
 
 import {Button} from "libraries/ui";
-import {Switch} from "libraries/forms";
+import {Switch} from "libraries/forms2";
 import React, {useState} from "react";
 import {backendQueryHook} from 'backend';
 
@@ -25,9 +25,7 @@ function DanceList({eventId}) {
 
   return <div className={"danceList" + colClass}>
     <PrintViewToolbar>
-      <Switch inline label={t`showSideBySide`} checked={sidebyside} onChange={e => {
-        setSidebyside((e.target as HTMLInputElement).checked);
-      }}/>
+      <Switch id="showSideBySide" inline label={t`showSideBySide`} value={sidebyside} onChange={setSidebyside}/>
       <Button text={t`print`} onClick={() => window.print()} />
     </PrintViewToolbar>
     <PrintFooterContainer footer={<Footer workshops={workshops} />}>

@@ -1,14 +1,15 @@
 import {DragHandle, ListEditor} from "components/ListEditor";
-import React from 'react';
+import React, {useState} from 'react';
 import * as L from 'partial.lenses';
 import {backendQueryHook} from "backend";
+import {Workshop} from "types/Workshop";
 
 import {Flex} from "components/Flex";
 import {DanceChooser} from "components/widgets/DanceChooser";
 import {makeTranslate} from 'utils/translate';
 import {useOnChangeForProp} from 'utils/useOnChangeForProp';
 import {Button, CssClass, FormGroup} from "libraries/ui";
-import {Input, TextArea} from "libraries/forms";
+import {Form, SubmitButton, fieldFor, Input, TextArea} from "libraries/forms2";
 
 const t = makeTranslate({
   dances: 'Tanssit',
@@ -23,19 +24,22 @@ const t = makeTranslate({
   teachers: 'Opettaja(t)',
 });
 
-export function WorkshopEditor({eventId, workshop, onChange}) {
-  const {abbreviation, name, description, teachers, dances} = workshop;
-  const onChangeFor = useOnChangeForProp(onChange);
+const Field = fieldFor<Workshop>()
 
-  return <>
-    <Input value={name} onChange={onChangeFor('name')} required
-      label={t`name`} labelInfo={t`required`} />
-    <AbbreviationField value={abbreviation ?? ''} onChange={onChangeFor('abbreviation')}
-      label={t`abbreviation`} helperText={t`abbreviationHelp`}
-      workshopId={workshop._id} eventId={eventId}
+export function WorkshopEditor({eventId, workshop, onSubmit, submitText}) {
+  const [modifiedWorkshop, setWorkshop] = useState(workshop);
+  const {dances} = modifiedWorkshop;
+  const onChangeFor = useOnChangeForProp(setWorkshop);
+
+  return <Form className={CssClass.limitedWidth} value={modifiedWorkshop} onChange={setWorkshop} onSubmit={onSubmit}>
+    <Field path={["name"]} required component={Input} label={t`name`} labelInfo={t`required`} />
+    <AbbreviationField path={["abbreviation"]} 
+      label={t`abbreviation`}
+      workshopId={workshop._id}
+      eventId={eventId}
     />
-    <TextArea value={description ?? ''} onChange={onChangeFor('description')} label={t`description`} />
-    <Input value={teachers ?? ''} onChange={onChangeFor('teachers')} label={t`teachers`} />
+    <Field path={['description']} component={TextArea} label={t`description`} />
+    <Field path={["teachers"]} component={Input} label={t`teachers`}/>
     <t.h2>dances</t.h2>
     <ListEditor items={dances} onChange={onChangeFor('dances')}
       itemWrapper={Flex}
@@ -44,13 +48,20 @@ export function WorkshopEditor({eventId, workshop, onChange}) {
     <FormGroup label={t`addDance`} inlineFill style={{marginTop: 6}}>
       <DanceChooser excludeFromSearch={dances} value={null} onChange={dance => onChangeFor('dances')(L.set(L.appendTo, dance))} key={dances.length} />
     </FormGroup>
-  </>
+    <SubmitButton text={submitText} />
+  </Form>
 }
 
-function AbbreviationField({workshopId, label, eventId, ...props}) {
+function AbbreviationField({workshopId, label, eventId, path}) {
   const usedWorkshopAbbreviations = useTakenWorkshopAbbreviations(eventId, workshopId);
 
-  return <Input {...props} label={label} maxLength={3} validate={{notOneOf: usedWorkshopAbbreviations}}
+  return <Field
+    path={path}
+    component={Input}
+    label={label}
+    helperText={t`abbreviationHelp`}
+    maxLength={3}
+    validate={{notOneOf: usedWorkshopAbbreviations, nullable: true}}
     errorMessages={{notOneOf: getAbbreviationTakenError}}
   />
 }

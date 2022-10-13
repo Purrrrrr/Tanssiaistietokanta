@@ -6,8 +6,7 @@ import {AdminOnly} from 'services/users';
 import {Breadcrumb} from "libraries/ui";
 import {PageTitle} from "components/PageTitle";
 import {makeTranslate} from 'utils/translate';
-import {useOnChangeForProp} from 'utils/useOnChangeForProp';
-import {Input, Form, SubmitButton} from "libraries/forms";
+import {Input, fieldFor, Form, SubmitButton} from "libraries/forms2";
 
 const t = makeTranslate({
   newEventBreadcrumb: 'Uusi tapahtuma',
@@ -16,6 +15,8 @@ const t = makeTranslate({
   name: 'Nimi',
 });
 
+const Field = fieldFor<{name: string}>()
+
 export default function CreateEventForm() {
   const navigate = useNavigate();
   const [createEvent] = useCreateEvent({
@@ -23,15 +24,13 @@ export default function CreateEventForm() {
     refetchQueries: ['getEvents']
   });
   const [event, setEvent] = useState({name: ''});
-  const onChangeFor = useOnChangeForProp(setEvent);
-  const {name} = event;
 
   return <AdminOnly>
     <Breadcrumb text={t`newEventBreadcrumb`} />
     <PageTitle>{t`newEvent`}</PageTitle>
-    <Form onSubmit={() => createEvent(event)}>
+    <Form value={event} onChange={setEvent} onSubmit={() => createEvent(event)}>
       <div>
-        <Input label={t`name`} value={name} onChange={onChangeFor('name')} required />
+        <Field label={t`name`} path={['name']} component={Input} required />
       </div>
       <SubmitButton text={t`create`} />
     </Form>

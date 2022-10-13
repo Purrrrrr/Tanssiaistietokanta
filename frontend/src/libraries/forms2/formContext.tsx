@@ -1,6 +1,6 @@
 import React, { useContext, useCallback } from 'react';
 import * as L from 'partial.lenses';
-import {Path, PropertyAtPath} from './types'
+import {LabelStyle, Path, PropertyAtPath} from './types'
 
 export interface FormValueContextType<T> {
   value: T
@@ -13,7 +13,6 @@ export interface FormMetadataContextType {
   inline: boolean
   labelStyle: LabelStyle
 }
-export type LabelStyle = 'inline' | 'above' | 'hidden';
 
 export const FormValueContext = React.createContext<FormValueContextType<unknown>|null>(null)
 export const FormMetadataContext = React.createContext<FormMetadataContextType|null>(null)

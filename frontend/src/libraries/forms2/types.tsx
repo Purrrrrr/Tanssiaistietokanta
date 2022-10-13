@@ -1,3 +1,26 @@
+import React from 'react';
+
+export interface FieldComponentProps<T, EventElement = HTMLElement> {
+  value: T | undefined
+  onChange: (t: T, e: React.ChangeEvent<EventElement>) => unknown
+  hasConflict?: boolean
+  readOnly?: boolean
+  id: string
+  "aria-describedby"?: string
+  "aria-label"?: string
+}
+
+export type LabelStyle = 'inline' | 'above' | 'hidden';
+
+export type PartialWhen<Cond extends boolean, T> = Cond extends true ? Partial<T> : T
+export type NoRequiredProperties<T extends object> = RequiredProperties<T> extends never ? true : false
+
+type RequiredProperties<T extends object> = Exclude<{
+  [K in keyof T]: T extends Record<K, T[K]>
+  ? K
+  : never
+}[keyof T], undefined>
+
 //export type Path<T> = Key[]
 export type Path<Target,DepthCounter extends number = 3> = [] |
   DepthCounter extends never

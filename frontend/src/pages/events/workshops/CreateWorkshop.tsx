@@ -1,13 +1,12 @@
 import {useCreateWorkshop} from 'services/workshops';
-import React, {useState} from 'react';
+import React from 'react';
 
 import {AdminOnly} from 'services/users';
-import {Breadcrumb, CssClass} from "libraries/ui";
+import {Breadcrumb} from "libraries/ui";
 import {PageTitle} from "components/PageTitle";
 import {WorkshopEditor} from "components/WorkshopEditor";
 import {makeTranslate} from 'utils/translate';
 import {useNavigate} from "react-router-dom"
-import {Form, SubmitButton} from "libraries/forms";
 
 const t = makeTranslate({
   create: 'Tallenna',
@@ -16,21 +15,18 @@ const t = makeTranslate({
 
 export default function CreateWorkshopForm({event}) {
   const navigate = useNavigate();
-  const [workshop, setWorkshop] = useState({
+  const workshop = {
     name: '',
     dances: []
-  });
+  };
   const [createWorkshop] = useCreateWorkshop({
-    onCompleted: (data) => navigate('/events/'+event._id),
+    onCompleted: () => navigate('/events/'+event._id),
     refetchQueries: ['getEvent']
   });
 
   return <AdminOnly>
     <Breadcrumb text={t`newWorkshop`} />
     <PageTitle>{t`newWorkshop`}</PageTitle>
-    <Form className={CssClass.limitedWidth} onSubmit={() => createWorkshop(event._id, workshop)}>
-      <WorkshopEditor eventId={event._id} workshop={workshop} onChange={setWorkshop} />
-      <SubmitButton text={t`create`} />
-    </Form>
+    <WorkshopEditor eventId={event._id} workshop={workshop} onSubmit={(workshop) => createWorkshop(event._id, workshop)} submitText={t`create`} />
   </AdminOnly>;
 }

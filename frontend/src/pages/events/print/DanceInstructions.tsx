@@ -1,7 +1,7 @@
 import React, {useState, useRef, useCallback} from 'react';
 import {usePatchDance} from 'services/dances';
 import {Button} from "libraries/ui";
-import {Switch} from "libraries/forms";
+import {Switch} from "libraries/forms2";
 import {backendQueryHook} from "backend";
 import {LoadingState} from 'components/LoadingState';
 import {EditableMarkdown} from 'components/EditableMarkdown';
@@ -67,9 +67,7 @@ export default function DanceInstructions({eventId}) {
       <t.p>clickInstructionsToEdit</t.p>
       <t.p>defaultStylingDescription</t.p>
       <p>
-        <Switch inline label={t`showWorkshops`} checked={showWorkshops} onChange={e => {
-          setShowWorkshops((e.target as HTMLInputElement).checked);
-        }}/>
+        <Switch id="showWorkshops" inline label={t`showWorkshops`} value={showWorkshops} onChange={setShowWorkshops}/>
         <Button text={t`selectAndCopy`} onClick={selectAndCopy}/>
         <Button text={t`print`} onClick={() => window.print()} />
       </p>
