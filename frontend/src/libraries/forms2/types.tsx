@@ -23,7 +23,7 @@ type RequiredProperties<T extends object> = Exclude<{
 
 //export type Path<T> = Key[]
 export type Path<Target,DepthCounter extends number = 5> = keyof Target | ArrayPath<Target, DepthCounter>
-type ArrayPath<Target,DepthCounter extends number = 5> = [] |
+export type ArrayPath<Target,DepthCounter extends number = 5> = [] |
   (DepthCounter extends never
     ? []
     : Target extends (infer U)[]

@@ -1,11 +1,11 @@
 import React, { useContext, useCallback } from 'react';
 import * as L from 'partial.lenses';
-import {LabelStyle, Path, PropertyAtPath} from './types'
+import {LabelStyle, Path, ArrayPath, PropertyAtPath} from './types'
 
 export interface FormValueContextType<T> {
   value: T
   onChange: (t: T) => unknown
-  conflicts: Path<T>[]
+  conflicts: ArrayPath<T>[]
   formIsValid: boolean
 }
 export interface FormMetadataContextType {
@@ -46,7 +46,7 @@ function useContextAtPath<T, P extends Path<T>, SubT extends PropertyAtPath<T, P
   return {
     value: L.get(path, ctx.value),
     onChange,
-    conflicts: conflictsAtPath(ctx.conflicts, path),
+    conflicts: conflictsAtPath(ctx.conflicts, Array.isArray(path) ? path : [path]),
     formIsValid: ctx.formIsValid,
   }
 

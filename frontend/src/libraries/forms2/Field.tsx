@@ -1,6 +1,6 @@
 import React from 'react';
 import {FormGroup} from 'libraries/ui';
-import {FieldComponentProps, LabelStyle, Path, PropertyAtPath, PartialWhen, NoRequiredProperties} from './types'
+import {FieldComponentProps, LabelStyle, ArrayPath, Path, PropertyAtPath, PartialWhen, NoRequiredProperties} from './types'
 import {useError, ErrorMessage, ValidationProps} from "../forms/validation";
 import { useFormValueAt, useFormMetadata } from './formContext'
 
@@ -49,7 +49,7 @@ export function fieldFor<T>() {
         id={id}
         value={value}
         onChange={onChange} 
-        hasConflict={conflicts.includes([] as Path<V>)}
+        hasConflict={conflicts.includes([] as ArrayPath<V>)}
         readOnly={readOnly}
         {...ariaProps}
       />

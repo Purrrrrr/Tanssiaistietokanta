@@ -83,7 +83,7 @@ function useTakenWorkshopAbbreviations(eventId, workshopId) {
   if (!data) return [];
 
   return data.event.workshops
-    .filter(w => w._id !== workshopId)
+    .filter(w => w._id !== workshopId && w.abbreviation)
     .map(w => w.abbreviation);
 }
 
