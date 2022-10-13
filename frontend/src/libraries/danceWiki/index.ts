@@ -7,7 +7,13 @@ import * as L from 'partial.lenses';
 
 export {searchWikiPages};
 
-export function getDanceData(name) {
+export interface ImportedDanceData {
+  categories: string[]
+  formations: string[]
+  instructions: string
+}
+
+export function getDanceData(name: string) : Promise<ImportedDanceData> {
   return getWikiPage(name)
     .then(L.modifyAsync('contents', convertToMarkdown))
     .then(async ({title, contents: instructions}) => {
@@ -21,6 +27,6 @@ export function getDanceData(name) {
 }
 
 const strangeTag = /<\/?([A-Z]|mp3)[^>]*\/?>/g; 
-function cleanupStrangeTags(text) {
+function cleanupStrangeTags(text: string) {
   return text.replace(strangeTag, "");
 }

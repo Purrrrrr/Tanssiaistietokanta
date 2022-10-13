@@ -1,4 +1,5 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo, useRef, useCallback } from 'react';
+import * as L from 'partial.lenses';
 import { FormValueContext, FormValueContextType, FormMetadataContext, FormMetadataContextType } from './formContext'
 import {useValidationResult} from '../forms/validation';
 
@@ -6,7 +7,7 @@ const defaultLabelStyle = 'above'
 
 interface FormProps<T> extends 
   Omit<React.ComponentPropsWithoutRef<"form">, "onSubmit" | "onChange">,
-  Omit<FormValueContextType<T>, "conflicts" | "formIsValid">,
+  Omit<FormValueContextType<T>, "conflicts" | "formIsValid" | "onChangePath">,
   Partial<FormMetadataContextType>
 {
   conflicts?: FormValueContextType<T>["conflicts"] 
@@ -28,13 +29,27 @@ export function Form<T>({
   const {hasErrors, ValidationContainer} = useValidationResult();
   const form = useRef<HTMLFormElement>(null);
 
-  const submitHandler = (e) => {
+  const submitHandler = (e: React.FormEvent) => {
     //Sometimes forms from dialogs end up propagating into our form and we should not submit then
     if (e.target !== form.current) return;
     e.preventDefault();
     onSubmit && onSubmit(value, e);
   }
-  const valueContext = useMemo(() => ({value, onChange, conflicts, formIsValid: !hasErrors}), [value, onChange, conflicts, hasErrors])
+
+  const valueContext = useMemo(() => {
+    const onChangePath = (path, newValue) => onChange(
+      typeof newValue  === 'function'
+        ? L.modify(path, newValue, value)
+        : L.set(path, newValue, value)
+    )
+    return {
+      value,
+      onChange: (value) => onChangePath([], value),
+      onChangePath,
+      conflicts,
+      formIsValid: !hasErrors
+    }
+  }, [value, onChange, conflicts, hasErrors])
   const metadataContext = useMemo(() => ({readOnly, labelStyle, inline}), [readOnly, labelStyle, inline])
 
   return <FormValueContext.Provider value={valueContext as unknown as FormValueContextType<unknown>}>

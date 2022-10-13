@@ -1,11 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import {usePatchDance, Dance} from "services/dances";
-import {MarkdownEditor} from 'components/MarkdownEditor';
+import {SimpleMarkdownEditor} from 'components/MarkdownEditor';
 import {Button, FormGroup, Tag, ProgressBar} from "libraries/ui";
-import {Form, Input, SubmitButton} from "libraries/forms";
-import {getDanceData} from 'libraries/danceWiki';
+import {Form, fieldFor, inputFor, SubmitButton, useFormValue} from "libraries/forms2";
+import {getDanceData, ImportedDanceData} from 'libraries/danceWiki';
 import {Dialog} from 'libraries/dialog';
-import {useOnChangeForProp} from 'utils/useOnChangeForProp';
 import {DanceNameSearch} from './DanceNameSearch';
 
 interface DanceDataImportButtonProps {
@@ -14,11 +13,18 @@ interface DanceDataImportButtonProps {
   text: string,
 }
 
+interface ImporterState extends Dance {
+  importedData?: ImportedDanceData
+}
+
+const Input = inputFor<ImporterState>()
+const Field = fieldFor<ImporterState>()
+
 export function DanceDataImportButton({onImport, dance, text, ...props} : DanceDataImportButtonProps) {
   const [isOpen, setOpen] = useState(false);
 
   const [patch] = usePatchDance();
-  const handleImport = (data ) => {
+  const handleImport = ({ importedData, ...data} : ImporterState) => {
     if (onImport) {
       onImport(data)
       return
@@ -32,26 +38,27 @@ export function DanceDataImportButton({onImport, dance, text, ...props} : DanceD
   return <>
     <Button text={text} {...props} onClick={() => setOpen(true)} />
     <DanceDataImportDialog isOpen={isOpen} onClose={() => setOpen(false)}
-      dance={dance} onImport={(data) => { setOpen(false); handleImport(data); }}
+      dance={dance} onImport={(data: ImporterState) => { setOpen(false); handleImport(data); }}
     />
   </>
 }
 
 export function DanceDataImportDialog({dance: originalDance, isOpen, onClose, onImport}) {
-  const [importedData, setImportedData] = useState(null);
-  const [dance, setDance] = useState(originalDance);
+  const [dance, setDance] = useState<ImporterState>(originalDance);
+  const [importNr, setImportNr] = useState(0);
 
   function reset() {
     setDance(originalDance);
-    setImportedData(null);
   }
   useEffect(reset, [originalDance]);
 
-  function importDone(data) {
-    if (data.instructions && (!dance.instructions || dance.instructions.trim() === '')) {
-      setDance({...dance, instructions: data.instructions});
+  function importDone(importedData) {
+    if (importedData.instructions && (!dance.instructions || dance.instructions.trim() === '')) {
+      setDance({...dance, instructions: importedData.instructions, importedData});
+    } else {
+      setDance({...dance, importedData});
     }
-    setImportedData(data);
+    setImportNr(importNr+1)
   }
   function save() {
     onImport(dance); reset();
@@ -62,15 +69,14 @@ export function DanceDataImportDialog({dance: originalDance, isOpen, onClose, on
 
   return <Dialog isOpen={isOpen} onClose={close} title="Hae tanssin tietoja tanssiwikistä"
     style={{minWidth: 500, width: 'auto', maxWidth: '80%'}}>
-    <Form onSubmit={save}>
+    <Form value={dance} onChange={setDance} onSubmit={save}>
       <Dialog.Body>
         <DataImporter danceName={dance.name} onImport={importDone} />
-        {importedData &&
-            <ImportedDataView importedData={importedData} dance={dance} setDance={setDance} />}
+        {dance.importedData && <ImportedDataView key={importNr} />}
       </Dialog.Body>
       <Dialog.Footer>
         <Button text="Peruuta" onClick={close} />
-        <SubmitButton text="Tallenna" disabled={!importedData}/>
+        <SubmitButton text="Tallenna" disabled={!dance.importedData}/>
       </Dialog.Footer>
     </Form>
   </Dialog>;
@@ -99,28 +105,27 @@ function DataImporter({danceName, onImport}) {
   </FormGroup>;
 }
 
-function ImportedDataView({dance, setDance, importedData}) {
-  const onChangeFor = useOnChangeForProp(setDance);
-  //const [instructions, setInstructions] = useState(importedData.instructions ?? '');
-
+function ImportedDataView() {
+  const { value: dance, onChangePath } = useFormValue<ImporterState>()
+  const {categories, formations} = dance.importedData!
   return <>
     <Row>
       <RowItem>
-        <Input label="Kategoria" value={dance.category ?? ""} onChange={onChangeFor('category')} />
+        <Input label="Kategoria" path="category" />
       </RowItem>
       <RowItem>
-        <Suggestions values={importedData.categories} onSuggest={onChangeFor('category')} />
+        <Suggestions values={categories} onSuggest={(val: string) => onChangePath('category', val)} />
       </RowItem>
     </Row>
     <Row>
       <RowItem>
-        <Input label="Tanssikuvio" value={dance.formation ?? ""} onChange={onChangeFor('formation')} />
+        <Input label="Tanssikuvio" path="formation" />
       </RowItem>
       <RowItem>
-        <Suggestions values={importedData.formations} onSuggest={onChangeFor('formation')} />
+        <Suggestions values={formations} onSuggest={(val: string) => onChangePath('formation', val)} />
       </RowItem>
     </Row>
-    <InstructionEditor value={dance.instructions} onChange={onChangeFor('instructions')} importedInstructions={importedData.instructions} />
+    <InstructionEditor />
 
   </>;
 }
@@ -147,35 +152,27 @@ function RowItem({children}) {
   return <div style={{margin: '0 5px'}}>{children}</div>;
 }
 
-function InstructionEditor({value, onChange, importedInstructions}) {
-  const [useDiffing, setUseDiffing] = useState(value !== importedInstructions);
+function InstructionEditor() {
+  const { value, onChangePath } = useFormValue<ImporterState>()
+  const [hasConflict, setHasConflict] = useState(value.instructions !== value.importedData?.instructions);
 
+  if (!hasConflict) {
+    return <Field path="instructions" component={SimpleMarkdownEditor} label="Tanssiohje"/>
+  }
+
+  const onResolve= (value: string) => { setHasConflict(false); onChangePath("instructions", value); }
   return <>
     <p>Tanssiohje</p>
-    {useDiffing
-      ? <DiffingInstructionEditor value={value} onChange={onChange}
-          importedInstructions={importedInstructions}
-          onResolve={(value) => { setUseDiffing(false); onChange(value); }}/>
-      : <MarkdownEditor id="instructions" value={value} onChange={onChange} />
-    }
+    <Row>
+      <RowItem>
+        <Field path="instructions" component={SimpleMarkdownEditor} label="Tietokannassa oleva versio"/>
+        <Button text="Käytä tätä versiota" onClick={() => onResolve(value.instructions ?? "")} />
+      </RowItem>
+      <RowItem>
+        <Field path={["importedData", "instructions"]} component={SimpleMarkdownEditor} label="Tanssiwikin versio"/>
+        <Button text="Käytä tätä versiota" onClick={() => onResolve(value.importedData!.instructions)} />
+      </RowItem>
+    </Row>;
   </>;
 
-}
-
-function DiffingInstructionEditor({value, onChange, importedInstructions, onResolve}) {
-  const [imported, setImported] = useState(importedInstructions);
-  useEffect(() => setImported(importedInstructions), [importedInstructions]);
-
-  return <Row>
-    <RowItem>
-      <p>Tietokannassa oleva versio</p>
-      <MarkdownEditor id="instructions" value={value} onChange={onChange} />
-      <Button text="Käytä tätä versiota" onClick={() => onResolve(value)} />
-    </RowItem>
-    <RowItem>
-      <p>Tanssiwikin versio</p>
-      <MarkdownEditor id="importedInstructions" value={imported} onChange={setImported} />
-      <Button text="Käytä tätä versiota" onClick={() => onResolve(imported)} />
-    </RowItem>
-  </Row>;
 }

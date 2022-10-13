@@ -5,6 +5,7 @@ import {LabelStyle, Path, ArrayPath, PropertyAtPath} from './types'
 export interface FormValueContextType<T> {
   value: T
   onChange: (t: T) => unknown
+  onChangePath: <P extends Path<T>, SubT extends PropertyAtPath<T, P>>(p: P, t: SubT) => unknown
   conflicts: ArrayPath<T>[]
   formIsValid: boolean
 }
@@ -37,19 +38,27 @@ function useContextAtPath<T, P extends Path<T>, SubT extends PropertyAtPath<T, P
   ctx: FormValueContextType<T>,
   path: Path<T>
 ) : FormValueContextType<SubT> {
-  const { value, onChange: originalOnChange } = ctx
-  const onChange = useCallback(changeArg => {
-    if (typeof(changeArg) === 'function') originalOnChange(L.modify(path, changeArg))
-    else originalOnChange(L.set(path, changeArg, value));
-  }, [originalOnChange, value, path])
+  const { value, onChangePath: originalOnChangePath } = ctx
+  const onChange = useCallback(val => {
+    originalOnChangePath(path, val)
+  }, [originalOnChangePath, path])
+  const onChangePath = useCallback((subPath, val) => {
+    const fullPath = [...toArrayPath(path), ...toArrayPath(subPath)] as Path<T>
+    originalOnChangePath(fullPath, val)
+  }, [originalOnChangePath, path])
 
   return {
-    value: L.get(path, ctx.value),
+    value: L.get(path, value),
     onChange,
+    onChangePath,
     conflicts: conflictsAtPath(ctx.conflicts, Array.isArray(path) ? path : [path]),
     formIsValid: ctx.formIsValid,
   }
 
+}
+
+function toArrayPath<T>(path : Path<T>) : ArrayPath<T> {
+  return Array.isArray(path) ? path : [path] as ArrayPath<T>
 }
 
 function conflictsAtPath(conflicts, path) {

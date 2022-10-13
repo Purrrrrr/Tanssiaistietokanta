@@ -41,14 +41,16 @@ export function inputFor<T>() {
   }
 }
 
-export interface InputProps extends FieldComponentProps<string, HTMLInputElement>, AdditionalPropsFrom<ComponentProps<"input">> {}
+export interface InputProps extends FieldComponentProps<string, HTMLInputElement>, AdditionalPropsFrom<ComponentProps<"input">> {
+  inline?: boolean
+}
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  function Input({value, className, onChange, hasConflict, ...props}, ref) {
+  function Input({value, className, onChange, inline, hasConflict, ...props}, ref) {
     return <input
       ref={ref}
       value={value ?? ""}
-      className={classNames(className, Classes.INPUT, Classes.FILL, hasConflict && Classes.INTENT_DANGER)}
+      className={classNames(className, Classes.INPUT, inline || Classes.FILL, hasConflict && Classes.INTENT_DANGER)}
       onKeyDown={e => (e.key === 'Escape' || e.key === 'Enter') && (e.target as HTMLInputElement).blur()}
       onChange={e => onChange(e.target.value, e)}
       {...props}
@@ -72,9 +74,11 @@ export const TextArea = React.forwardRef<BlueprintTextArea, TextAreaProps>(
   }
 );
 
-const F = fieldFor<{name: string, b: boolean, a: {b: boolean}, u?: string}>()
-const S = switchFor<{name: string, b: boolean, a: {b: boolean, n: number}}>()
-export const f = <F path={['name']} component={Input} label="aa" />
+interface V {name: string, b: boolean, a: {b: boolean}, u?: string}
+const F = fieldFor<V>()
+const I = inputFor<V>()
+const S = switchFor<V>()
+export const f = <I path={['name']} label="aa" />
 export const f2 = <S path={['a', 'b']} label="aa" />
 export const f3 = <F path={['name']} component={TextArea} label="aa" componentProps={{growVertically: true}} />
 export const f4 = <F path={['u']} component={Input} label="aa" />
