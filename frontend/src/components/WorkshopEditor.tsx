@@ -32,14 +32,10 @@ export function WorkshopEditor({eventId, workshop, onSubmit, submitText}) {
   const onChangeFor = useOnChangeForProp(setWorkshop);
 
   return <Form className={CssClass.limitedWidth} value={modifiedWorkshop} onChange={setWorkshop} onSubmit={onSubmit}>
-    <Field path={["name"]} required component={Input} label={t`name`} labelInfo={t`required`} />
-    <AbbreviationField path={["abbreviation"]} 
-      label={t`abbreviation`}
-      workshopId={workshop._id}
-      eventId={eventId}
-    />
-    <Field path={['description']} component={TextArea} label={t`description`} />
-    <Field path={["teachers"]} component={Input} label={t`teachers`}/>
+    <Field path="name" required component={Input} label={t`name`} labelInfo={t`required`} />
+    <AbbreviationField path="abbreviation" label={t`abbreviation`} workshopId={workshop._id} eventId={eventId} />
+    <Field path="description" component={TextArea} label={t`description`} />
+    <Field path="teachers" component={Input} label={t`teachers`}/>
     <t.h2>dances</t.h2>
     <ListEditor items={dances} onChange={onChangeFor('dances')}
       itemWrapper={Flex}

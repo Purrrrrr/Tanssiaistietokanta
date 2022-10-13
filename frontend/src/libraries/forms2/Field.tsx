@@ -36,7 +36,7 @@ export function fieldFor<T>() {
     const { value, onChange, conflicts } = useFormValueAt<T, P, V>(path)
     const { readOnly, labelStyle: labelStyleFromCtx, inline: inlineFromCtx } = useFormMetadata()
     const error = useError(value, rest);
-    const id = path.join(".")
+    const id = Array.isArray(path) ? path.join(".") : String(path)
     const errorId = `${id}-error`;
 
     const ariaProps = labelStyle === 'hidden'

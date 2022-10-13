@@ -30,7 +30,7 @@ export default function CreateEventForm() {
     <PageTitle>{t`newEvent`}</PageTitle>
     <Form value={event} onChange={setEvent} onSubmit={() => createEvent(event)}>
       <div>
-        <Field label={t`name`} path={['name']} component={Input} required />
+        <Field label={t`name`} path="name" component={Input} required />
       </div>
       <SubmitButton text={t`create`} />
     </Form>
