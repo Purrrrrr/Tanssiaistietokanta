@@ -156,7 +156,7 @@ function InstructionEditor({value, onChange, importedInstructions}) {
       ? <DiffingInstructionEditor value={value} onChange={onChange}
           importedInstructions={importedInstructions}
           onResolve={(value) => { setUseDiffing(false); onChange(value); }}/>
-      : <MarkdownEditor value={value} onChange={onChange} />
+      : <MarkdownEditor id="instructions" value={value} onChange={onChange} />
     }
   </>;
 
@@ -169,12 +169,12 @@ function DiffingInstructionEditor({value, onChange, importedInstructions, onReso
   return <Row>
     <RowItem>
       <p>Tietokannassa oleva versio</p>
-      <MarkdownEditor value={value} onChange={onChange} />
+      <MarkdownEditor id="instructions" value={value} onChange={onChange} />
       <Button text="Käytä tätä versiota" onClick={() => onResolve(value)} />
     </RowItem>
     <RowItem>
       <p>Tanssiwikin versio</p>
-      <MarkdownEditor value={imported} onChange={setImported} />
+      <MarkdownEditor id="importedInstructions" value={imported} onChange={setImported} />
       <Button text="Käytä tätä versiota" onClick={() => onResolve(imported)} />
     </RowItem>
   </Row>;

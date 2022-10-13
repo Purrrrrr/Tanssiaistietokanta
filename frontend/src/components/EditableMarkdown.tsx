@@ -5,6 +5,7 @@ import {SimpleMarkdownEditor} from 'components/MarkdownEditor';
 import Markdown from 'markdown-to-jsx';
 
 interface EditableMarkdownProps {
+  id: string,
   label: string,
   labelStyle?: "inline" | "above"
   maxHeight?: number,
@@ -13,7 +14,7 @@ interface EditableMarkdownProps {
   onChange: (val: any) => any,
 }
 
-export function EditableMarkdown({label, labelStyle, maxHeight = 200, overrides, ...props} : EditableMarkdownProps) {
+export function EditableMarkdown({id, label, labelStyle, maxHeight = 200, overrides, ...props} : EditableMarkdownProps) {
   const {
     isOpen, onOpen,
     value, onChange,
@@ -26,7 +27,7 @@ export function EditableMarkdown({label, labelStyle, maxHeight = 200, overrides,
         <MarkdownPreview value={value} maxHeight={maxHeight} overrides={overrides} />
       </div>
       : <>
-        <SimpleMarkdownEditor value={value} onChange={onChange} />
+        <SimpleMarkdownEditor id={id} value={value} onChange={onChange} />
         <div style={{textAlign: 'right', padding: "20px 20px 0 0"}}>
           <Button intent="primary" text="Tallenna" onClick={onConfirm} />
           <Button text="Peruuta" onClick={onCancel} />

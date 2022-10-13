@@ -11,7 +11,7 @@ interface FormProps<T> extends
 {
   conflicts?: FormValueContextType<T>["conflicts"] 
   inline?: boolean
-  onSubmit: (t: T, e: React.FormEvent) => unknown
+  onSubmit?: (t: T, e: React.FormEvent) => unknown
 }
 
 export function Form<T>({
@@ -32,7 +32,7 @@ export function Form<T>({
     //Sometimes forms from dialogs end up propagating into our form and we should not submit then
     if (e.target !== form.current) return;
     e.preventDefault();
-    onSubmit(value, e);
+    onSubmit && onSubmit(value, e);
   }
   const valueContext = useMemo(() => ({value, onChange, conflicts, formIsValid: !hasErrors}), [value, onChange, conflicts, hasErrors])
   const metadataContext = useMemo(() => ({readOnly, labelStyle, inline}), [readOnly, labelStyle, inline])

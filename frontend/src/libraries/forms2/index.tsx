@@ -5,6 +5,7 @@ import {useFormValue} from "./formContext";
 export * from './Field'
 export * from './Form'
 export * from './fieldComponents'
+export type { FieldComponentProps } from './types'
 export {Validate} from '../forms/validation';
 
 type SubmitButtonProps = React.ComponentProps<typeof Button>;

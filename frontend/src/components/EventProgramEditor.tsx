@@ -349,7 +349,7 @@ function ProgramDetailsEditor({item, onInputBlurred, onChange}) {
       return <>
         <Input value={name} onBlur={onInputBlurred} required label="Ohjelmanumeron nimi"
           onChange={val => onChange(L.set('name', val, item))} />
-        <MarkdownEditor label={t`eventProgramDescription`} value={item.description ?? ""} onChange={val => onChange(L.set('description', val, item))} />
+        <MarkdownEditor id="dummyTODO" label={t`eventProgramDescription`} value={item.description ?? ""} onChange={val => onChange(L.set('description', val, item))} />
         <Switch inline label={t`showInLists`} checked={item.showInLists} onChange={e => onChange(L.set('showInLists', (e.target as HTMLInputElement).checked, item))} />
       </>
   }
@@ -383,11 +383,12 @@ function IntervalMusicEditor({intervalMusicDuration, onSetIntervalMusicDuration}
     containerElement && containerElement.focus();
   }
 
+  // TODO: <DurationField id="intervalMusicDuration" label={t`intervalMusicDuration`} labelStyle="hidden"
   return <tr className="eventProgramItem" tabIndex={0} onKeyDown={onKeyDown} ref={row}>
     <td>{t`intervalMusic`}</td>
     <td />
     <td>
-      <DurationField label={t`intervalMusicDuration`} labelStyle="hidden"
+      <DurationField id="intervalMusicDuration"
         value={intervalMusicDuration}
         onBlur={onDurationBlurred}
         onChange={onSetIntervalMusicDuration}/>

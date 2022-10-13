@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import {toMinSec, toSeconds, parseDuration, durationToString} from "utils/duration";
-import {Input} from 'libraries/forms/Input'
+import {Input, InputProps, FieldComponentProps} from 'libraries/forms2'
 import {useDelayedEffect} from 'utils/useDelayedEffect';
 
 interface DurationState {
@@ -9,8 +9,8 @@ interface DurationState {
   event?: React.ChangeEvent
 }
 
-export function DurationField({value, onChange, ...props} : React.ComponentProps<typeof Input>) {
-  const [params, setParams] = useState<DurationState>({value, text: durationToString(value)});
+export function DurationField({value, onChange, readOnly, ...props} : FieldComponentProps<number, HTMLInputElement> & Omit<InputProps, "ref">) {
+  const [params, setParams] = useState<DurationState>({value, text: durationToString(value ?? 0)});
 
   useDelayedEffect(10, useCallback(() => {
     const {value, text, event} = params;
@@ -22,10 +22,16 @@ export function DurationField({value, onChange, ...props} : React.ComponentProps
       onChange && onChange(newVal, event as React.ChangeEvent<HTMLInputElement>);
     }
   }, [params, onChange]));
-  useEffect(() => setParams({text: durationToString(value), value}), [value]);
+  useEffect(() => setParams({text: durationToString(value ?? 0), value}), [value]);
 
-  return <Input {...props} value={params.text} onChange={(text, event) => setParams({value, text, event})}
-    onClick={onDurationFieldFocus} onKeyDown={onDurationFieldKeyDown} onFocus={onDurationFieldFocus}
+  return <Input
+    {...props}
+    value={params.text}
+    readOnly={readOnly}
+    onChange={(text, event) => setParams({value, text, event})}
+    onClick={readOnly ? undefined : onDurationFieldFocus}
+    onKeyDown={readOnly ? undefined : onDurationFieldKeyDown}
+    onFocus={readOnly ? undefined : onDurationFieldFocus}
   />;
 }
 

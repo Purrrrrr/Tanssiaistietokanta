@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {DanceDataImportButton} from "components/DanceDataImportDialog";
 import {Button, H2} from "libraries/ui";
-import {Form, SubmitButton} from "libraries/forms";
+import {SubmitButton} from "libraries/forms2";
 import {DanceEditor} from "./DanceEditor"
 import {Dance} from "services/dances";
 import {uploadDanceFile} from "utils/uploadDanceFile";
@@ -18,13 +18,14 @@ export function CreateDanceForm({onCreate, onCancel, initialData}) {
         onImport={setDance}
       />
     </Flex>
-    <Form onSubmit={() => onCreate(dance)}>
-      <DanceEditor dance={dance} onChange={setDance} />
-      <div>
-        <Button text="Peruuta" onClick={onCancel} />
-        <SubmitButton text="Tallenna" />
-      </div>
-    </Form>
+    <DanceEditor dance={dance} onChange={setDance} onSubmit={() => onCreate(dance)}
+      bottomToolbar={
+        <div>
+          <Button text="Peruuta" onClick={onCancel} />
+          <SubmitButton text="Tallenna" />
+        </div>
+      }
+    />
   </section>
 }
 

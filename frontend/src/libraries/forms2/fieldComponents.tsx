@@ -32,7 +32,16 @@ export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
   }
 )
 
-interface InputProps extends FieldComponentProps<string, HTMLInputElement>, AdditionalPropsFrom<ComponentProps<"input">> {}
+export function inputFor<T>() {
+  const Field = fieldFor<T>()
+  return function InputField<L extends string, P extends PropertyAtPath<T,P> extends string | undefined ?  Path<T> : never, V extends PropertyAtPath<T,P> & (string | undefined) >(
+    props : Omit<FieldProps<L, P, V, typeof Input, {}>, "component">
+  ) {
+    return <Field {...props} component={Input} />
+  }
+}
+
+export interface InputProps extends FieldComponentProps<string, HTMLInputElement>, AdditionalPropsFrom<ComponentProps<"input">> {}
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
   function Input({value, className, onChange, hasConflict, ...props}, ref) {

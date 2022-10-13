@@ -110,7 +110,7 @@ function Dance({dance}) {
       {' '}
       <DanceDataImportButton text={t`fetchDataFromWiki`} dance={dance} />
     </h2>
-    <EditableMarkdown label="" value={instructions} onChange={onChange}
+    <EditableMarkdown id={"instructions-"+dance._id} label="" value={instructions} onChange={onChange}
       overrides={markdownOverrides} maxHeight={undefined} />
   </div>
 }

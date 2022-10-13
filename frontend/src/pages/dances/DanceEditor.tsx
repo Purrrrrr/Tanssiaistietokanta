@@ -1,33 +1,38 @@
 import React from 'react';
 import {DurationField} from "components/widgets/DurationField";
-import {Input} from "libraries/forms";
-import {MarkdownEditor} from 'components/MarkdownEditor';
-import {useOnChangeForPropInValue} from 'utils/useOnChangeForProp';
-import {Dance} from "services/dances";
+import {Form, inputFor, fieldFor} from "libraries/forms2";
+import {SimpleMarkdownEditor} from 'components/MarkdownEditor';
+import {Dance} from "types/Dance";
 import {Flex} from 'components/Flex';
 
 import './DanceEditor.sass'
 
 interface DanceEditorProps {
   dance: Dance,
-  onChange: (changed: Dance) => any,
+  onChange: (changed: Dance) => any
+  onSubmit?: (d: Dance) => any
+  bottomToolbar?: React.ReactNode
 }
 
-export function DanceEditor({dance, onChange} : DanceEditorProps) {
-  const onChangeFor = useOnChangeForPropInValue(onChange, dance);
-  const {instructions, category, name, description, formation, prelude, remarks, duration} = dance;
-  return <Flex spaced wrap className="danceEditor">
-    <div style={{flexGrow: 1, flexBasis: 300}}>
-      <Input label="Nimi" value={name ?? ""} onChange={onChangeFor('name')}  />
-      <Input label="Kategoria" value={category ?? ""} onChange={onChangeFor('category')}  />
-      <DurationField label="Kesto" value={duration} onChange={onChangeFor('duration')} />
-      <Input label="Alkusoitto" value={prelude ?? ""} onChange={onChangeFor('prelude')}  />
-      <Input label="Tanssikuvio" value={formation ?? ""} onChange={onChangeFor('formation')}  />
-      <Input label="Huomautuksia" value={remarks ?? ""} onChange={onChangeFor('remarks')}  />
-    </div>
-    <div style={{flexGrow: 2, flexBasis: 500}}>
-      <MarkdownEditor label="Kuvaus" value={description ?? ""} onChange={onChangeFor('description')} />
-      <MarkdownEditor label="Tanssiohjeet" value={instructions} onChange={onChangeFor('instructions')} />
-    </div>
-  </Flex>;
+const Input = inputFor<Dance>()
+const Field = fieldFor<Dance>()
+
+export function DanceEditor({dance, onChange, onSubmit, bottomToolbar} : DanceEditorProps) {
+  return <Form value={dance} onChange={onChange} onSubmit={onSubmit}>
+    <Flex spaced wrap className="danceEditor">
+      <div style={{flexGrow: 1, flexBasis: 300}}>
+        <Input label="Nimi" path="name" />
+        <Input label="Kategoria" path="category" />
+        <Field label="Kesto" path="duration" component={DurationField} />
+        <Input label="Alkusoitto" path="prelude" />
+        <Input label="Tanssikuvio" path="formation" />
+        <Input label="Huomautuksia" path="remarks" />
+      </div>
+      <div style={{flexGrow: 2, flexBasis: 500}}>
+        <Field label="Kuvaus" path="description" component={SimpleMarkdownEditor} />
+        <Field label="Tanssiohjeet" path="instructions" component={SimpleMarkdownEditor} />
+      </div>
+    </Flex>
+    {bottomToolbar}
+  </Form>;
 }
