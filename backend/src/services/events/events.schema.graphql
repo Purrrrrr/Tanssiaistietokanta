@@ -6,11 +6,11 @@ type Query {
 type Event {
   _id: ID
   name: String!
-  program: EventProgram
+  program: EventProgramSettings
   workshops: [Workshop!]!
 }
 
-type EventProgram {
+type EventProgramSettings {
   introductions: [EventProgram!]!
   danceSets: [DanceSet!]!
   slideStyleId: ID
@@ -57,6 +57,7 @@ type EventProgram implements ProgramItem {
   description: String
   duration: Float
   showInLists: Boolean!
+  slideStyleId: ID
 }
 
 type Mutation {
@@ -73,6 +74,7 @@ input EventInput {
 input ProgramInput {
   introductions: [IntroductionInput!]!
   danceSets: [DanceSetInput!]!
+  slideStyleId: ID
 }
 
 input DanceSetInput {
