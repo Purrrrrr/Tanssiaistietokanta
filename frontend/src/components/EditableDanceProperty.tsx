@@ -15,7 +15,7 @@ interface EditableDancePropertyProps {
 }
 
 export function EditableDanceProperty({dance, property, addText, ...props} : EditableDancePropertyProps) {
-  const [patch, state] = usePatchDance();
+  const [patch] = usePatchDance();
 
   const onChange = (value) => {
     patch({
@@ -24,7 +24,7 @@ export function EditableDanceProperty({dance, property, addText, ...props} : Edi
     })
   }
 
-  if (state.loading) return <>...</>;
+  if (!dance?._id) return <>...</>;
 
   const editorType = props["type"]
 
