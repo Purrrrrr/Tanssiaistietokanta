@@ -88,10 +88,10 @@ function DefaultEditButton() {
   return <Icon className="click-to-edit-button" intent="primary" icon="edit" />
 }
 
-function MultilineEditor({value, ...props} : TextEditorProps) {
+function MultilineEditor({value, onConfirm, onCancel, ...props} : TextEditorProps) {
   return <BasicTextArea value={value ?? ''} autoFocus growVertically {...props} />;
 }
-function TextEditor({value, ...props} : TextEditorProps) {
+function TextEditor({value, onConfirm, onCancel, ...props} : TextEditorProps) {
   return <BasicInput value={value ?? ''} autoFocus {...props} />;
 }
 

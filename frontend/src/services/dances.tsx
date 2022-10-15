@@ -41,7 +41,7 @@ mutation modifyDance($id: ID!, $dance: DanceInput!) {
     ${danceFields}
   }
 }`, {
-  onCompleted: (data) => updateEntityFragment('DanceProgram', danceProgramFragment, data.modifyDance),
+  onCompleted: (data) => updateEntityFragment('DanceProgram', danceProgramFragment, {...data.modifyDance, '__typename': 'DanceProgram'}),
   parameterMapper: ({_id, __typename, ...dance}) => 
     ({variables: {id: _id, dance} })
 });
@@ -62,7 +62,7 @@ mutation patchDance($id: ID!, $dance: DancePatchInput!) {
     ${danceFields}
   }
 }`, {
-  onCompleted: (data) => updateEntityFragment('DanceProgram', danceProgramFragment, data.patchDance),
+  onCompleted: (data) => updateEntityFragment('DanceProgram', danceProgramFragment, {...data.patchDance, '__typename': 'DanceProgram'}),
   parameterMapper: ({_id: id, ...dance}) => ({variables: {id, dance}}),
 });
 

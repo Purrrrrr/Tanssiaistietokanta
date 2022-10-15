@@ -79,7 +79,7 @@ function DanceSetRows({danceSet: {name, program}}) {
     <HeaderRow>{name}</HeaderRow>
     {program.map((item, i) => {
       switch(item.__typename) {
-        case 'Dance':
+        case 'DanceProgram':
           return <DanceRow key={i} dance={item} />;
         case 'RequestedDance':
           return <SimpleRow key={i} text={t`requestedDance`} />;
