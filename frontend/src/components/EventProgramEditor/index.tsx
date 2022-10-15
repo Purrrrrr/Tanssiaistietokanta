@@ -5,8 +5,8 @@ import {arrayMoveImmutable} from 'array-move';
 import {EventProgramSettings} from "./types";
 
 import {Card, Button, HTMLTable, CssClass, Select, MenuItem} from "libraries/ui";
-import {ClickToEdit, Switch, Input} from "libraries/forms";
-import {formFor, Switch as PlainSwitch, SubmitButton} from "libraries/forms2";
+import {Switch, Input} from "libraries/forms";
+import {formFor, ClickToEdit, Switch as PlainSwitch, SubmitButton} from "libraries/forms2";
 
 import {DragHandle, ListEditor, ListEditorItems} from "components/ListEditor";
 import {DanceChooser} from "components/widgets/DanceChooser";
@@ -26,6 +26,7 @@ import {focusLater, focusSiblingsOrParent} from 'utils/focus';
 import './EventProgramEditor.sass';
 
 const {
+  Field,
   Form, 
   useValueAt,
   useOnChangeFor,
@@ -206,12 +207,9 @@ function DanceSetEditor({index}) {
     focusLater('tbody tr:last-child', table.current);
   }
 
-  const {name} = item;
-  const onChangeName = useOnChangeFor(['danceSets', index, 'name'])
-
   return <Card className="danceset" tabIndex={0} onKeyDown={onKeyDown} >
     <h2>
-      <ClickToEdit labelStyle="hidden" label={t`danceSetName`} value={name} onChange={onChangeName} required />
+      <Field labelStyle="hidden" label={t`danceSetName`} path={['danceSets', index, 'name']} component={ClickToEdit} />
       <Button text={t`addDance`} onClick={() => addItem({__typename: 'RequestedDance'})} className="addDance" />
       <Button text={t`addInfo`} onClick={() => addItem(newEventProgramItem())} className="addInfo" />
       <MoveDanceSetSelector

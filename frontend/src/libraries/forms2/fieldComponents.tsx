@@ -1,4 +1,5 @@
-import React, {ComponentProps} from 'react';
+import React, {useRef, useState, ComponentProps} from 'react';
+import {Icon} from "../ui";
 import {Classes, Switch as BlueprintSwitch, TextArea as BlueprintTextArea, TextAreaProps as BlueprintTextAreaProps} from "@blueprintjs/core";
 import classNames from 'classnames';
 import {Field, FieldProps} from "./Field";
@@ -55,6 +56,35 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     />;
   }
 );
+
+export interface ClickToEditProps extends FieldComponentProps<string, HTMLInputElement>, AdditionalPropsFrom<ComponentProps<"input">> {
+  valueFormatter?: (value: string) => React.ReactNode
+  inline?: boolean
+}
+export function ClickToEdit({value, valueFormatter, onBlur, className, onChange, inline, hasConflict, ...props} : ClickToEditProps) {
+  const inputRef = useRef<HTMLInputElement>(null)
+  const [isOpen, setOpen] = useState(false)
+  function open() { 
+    setOpen(true);
+    setTimeout(() => inputRef.current?.focus?.(), 10)
+  }
+  const Container = inline ? 'span' : 'div'
+
+  return <Container tabIndex={isOpen ? undefined : 0} onClick={open} onFocus={open} className={classNames(className, isOpen || Classes.EDITABLE_TEXT)}>
+    {isOpen || (valueFormatter ? valueFormatter(value ?? "") : value)}
+    {isOpen || <Icon intent="primary" icon="edit" />}
+    <Input
+      style={isOpen ? {} : {display: 'none'}}
+      {...props}
+      value={value}
+      onChange={onChange}
+      inline={inline}
+      hasConflict={hasConflict}
+      ref={inputRef}
+      onBlur={(e) => { setOpen(false); onBlur && onBlur(e)}}
+    />
+  </Container>
+}
 
 interface TextAreaProps extends FieldComponentProps<string, HTMLTextAreaElement>, Pick<BlueprintTextAreaProps, "growVertically"> { }
 
