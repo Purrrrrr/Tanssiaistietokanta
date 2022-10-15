@@ -71,30 +71,3 @@ export const TextArea = React.forwardRef<BlueprintTextArea, TextAreaProps>(
     />;
   }
 );
-
-/*
-interface V {name: string, b: boolean, a: {b: boolean}, u?: string}
-const F = fieldFor<V>()
-const I = inputFor<V>()
-const S = switchFor<V>()
-export const f = <I path={['name']} label="aa" />
-export const f2 = <S path={['a', 'b']} label="aa" />
-export const f3 = <F path={['name']} component={TextArea} label="aa" componentProps={{growVertically: true}} />
-export const f4 = <F path={['u']} component={Input} label="aa" />
-export const f5 = <F path={['b']} component={Switch} label="aa" componentProps={{label: "a"}} />
-
-interface Foo {
-  b: Bar[]
-  p: {
-    b: Bar[]
-  }[]
-}
-interface Bar {
-  name: string
-}
-type P = ['b', number] | ['p', number, 'b', number]
-const p : P = ['b', 1]
-
-consc F2 = fieldFor<Foo>()
-let ff = <F2 path={[...p, 'name' as const]} label="aa" component={Input} />
-*/

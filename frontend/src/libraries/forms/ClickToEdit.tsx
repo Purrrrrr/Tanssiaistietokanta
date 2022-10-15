@@ -1,10 +1,9 @@
 import React, {useRef}  from 'react';
-import {ErrorMessage} from "./validation";
+import {ErrorMessage} from "../forms2/validation";
 import {Classes} from "@blueprintjs/core";
 import {Icon, Button} from "libraries/ui";
 import {useClosableEditor} from "./hooks/useClosableEditor";
 import {BasicInput} from "./Input";
-import {BasicTextArea} from "./TextArea";
 
 import "./ClickToEdit.sass";
 import { asAccessibleField, FieldProps } from './FormField';
@@ -87,17 +86,12 @@ function LabellessClickToEdit({
 function DefaultEditButton() {
   return <Icon className="click-to-edit-button" intent="primary" icon="edit" />
 }
-
-function MultilineEditor({value, onConfirm, onCancel, ...props} : TextEditorProps) {
-  return <BasicTextArea value={value ?? ''} autoFocus growVertically {...props} />;
-}
 function TextEditor({value, onConfirm, onCancel, ...props} : TextEditorProps) {
   return <BasicInput value={value ?? ''} autoFocus {...props} />;
 }
 
-export const ClickToEdit = asAccessibleField(LabellessClickToEdit) as React.JSXElementConstructor<FieldProps<ClickToEditProps>> & { MultilineEditor: typeof MultilineEditor, TextEditor : typeof TextEditor, DefaultEditButton : typeof DefaultEditButton};
+export const ClickToEdit = asAccessibleField(LabellessClickToEdit) as React.JSXElementConstructor<FieldProps<ClickToEditProps>> & { TextEditor : typeof TextEditor, DefaultEditButton : typeof DefaultEditButton};
 ClickToEdit.DefaultEditButton = DefaultEditButton;
-ClickToEdit.MultilineEditor = MultilineEditor;
 ClickToEdit.TextEditor = TextEditor;
 
 

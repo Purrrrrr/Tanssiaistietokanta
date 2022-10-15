@@ -97,7 +97,7 @@ function DanceRow({dance}) {
       <EditableDanceProperty dance={dance} property="description" addText={t`addDescription`} type="markdown" />
     </td>
     <td>
-      <EditableDanceProperty dance={dance} property="prelude" addText={t`addPrelude`} type="multiline" />
+      <EditableDanceProperty dance={dance} property="prelude" addText={t`addPrelude`} />
     </td>
   </tr>
 }

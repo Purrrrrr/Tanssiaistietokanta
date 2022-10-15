@@ -33,7 +33,7 @@ export function EditableDanceProperty({dance, property, addText, ...props} : Edi
   }
 
   return <ClickToEdit label={dancePropertyLabels[property]} labelStyle="hidden" className="editableDanceProperty"
-    editorComponent={editorType === 'multiline' ? ClickToEdit.MultilineEditor : ClickToEdit.TextEditor}
+    editorComponent={ClickToEdit.TextEditor}
     value={dance[property]} onChange={onChange}
     valueFormatter={value => value || <span className="addEntry">{addText}</span>}
   />;

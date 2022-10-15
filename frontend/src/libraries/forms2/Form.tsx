@@ -1,7 +1,7 @@
 import React, { useMemo, useRef } from 'react';
 import * as L from 'partial.lenses';
 import { FormValueContext, FormValueContextType, FormMetadataContext, FormMetadataContextType } from './formContext'
-import {useValidationResult} from '../forms/validation';
+import {useValidationResult} from './validation';
 
 const defaultLabelStyle = 'above'
 

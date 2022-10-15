@@ -1,5 +1,5 @@
 import {useState, useEffect, useCallback} from 'react';
-import {useError} from "../validation";
+import {useError} from "../../forms2/validation";
 
 interface EditorOptions {
   validationSchema?: object,

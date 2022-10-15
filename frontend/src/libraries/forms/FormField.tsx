@@ -1,5 +1,5 @@
 import React from 'react';
-import {useError, ErrorMessage, stripValidationProps, ValidationProps} from "./validation";
+import {useError, ErrorMessage, stripValidationProps, ValidationProps} from "../forms2/validation";
 import { useAccessibleLabeling, LabelingProps } from './hooks/useAccessibleLabeling';
 
 export type FieldProps<T> = ValidationProps & LabelingProps & T & {

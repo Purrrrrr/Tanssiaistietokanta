@@ -10,7 +10,7 @@ import {useValueAt, useOnChangeFor} from './formContext'
 
 export * from './fieldComponents'
 export type { FieldComponentProps } from './types'
-export {Validate} from '../forms/validation';
+export {Validate} from './validation';
 
 type SubmitButtonProps = React.ComponentProps<typeof Button>;
 
