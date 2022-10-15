@@ -2,13 +2,15 @@ import React from 'react';
 import {FormGroup} from 'libraries/ui';
 import {FieldComponentProps, LabelStyle, ArrayPath, Path, PropertyAtPath, PartialWhen, NoRequiredProperties} from './types'
 import {useError, ErrorMessage, ValidationProps} from "../forms/validation";
-import { useFormValueAt, useFormMetadata } from './formContext'
+import { useFormValueContextAt, useFormMetadata } from './formContext'
 
-export type FieldProps<Label extends string, ValuePath, Value, Component extends React.ElementType, AdditionalProps> = 
+export type FieldProps<Label, ValuePath, Value, Component extends React.ElementType, AdditionalProps> = 
   {
     path: ValuePath
     inline?: boolean
-    label: Label extends '' ? never : Label
+    label: Label extends string
+      ? Label extends '' ? never : Label
+      : never
     labelInfo?: string
     helperText?: string
     labelStyle?: LabelStyle
@@ -19,43 +21,41 @@ export type FieldProps<Label extends string, ValuePath, Value, Component extends
 
 type MaybeComponentProps<Props extends object> = PartialWhen<NoRequiredProperties<Props>, { componentProps: Props }>
 
-export function fieldFor<T>() {
-  return function Field<L extends string, P extends Path<T>, V extends PropertyAtPath<T,P>, C extends React.ElementType, AP>(
-    {
-      label,
-      labelInfo,
-      helperText,
-      labelStyle,
-      path, 
-      inline,
-      component: Component,
-      componentProps,
-      ...rest
-    }: FieldProps<L, P, V, C, AP>
-  ) {
-    const { value, onChange, conflicts } = useFormValueAt<T, P, V>(path)
-    const { readOnly, labelStyle: labelStyleFromCtx, inline: inlineFromCtx } = useFormMetadata()
-    const error = useError(value, rest);
-    const id = Array.isArray(path) ? path.join(".") : String(path)
-    const errorId = `${id}-error`;
+export function Field<T, L, P extends Path<T>, V extends PropertyAtPath<T,P>, C extends React.ElementType, AP>(
+  {
+    label,
+    labelInfo,
+    helperText,
+    labelStyle,
+    path, 
+    inline,
+    component: Component,
+    componentProps,
+    ...rest
+  }: FieldProps<L, P, V, C, AP>
+) {
+  const { value, onChange, conflicts } = useFormValueContextAt<T, P, V>(path)
+  const { readOnly, labelStyle: labelStyleFromCtx, inline: inlineFromCtx } = useFormMetadata()
+  const error = useError(value, rest);
+  const id = Array.isArray(path) ? path.join(".") : String(path)
+  const errorId = `${id}-error`;
 
-    const ariaProps = labelStyle === 'hidden'
-      ? {"aria-describedby": errorId, "aria-label": labelInfo ? `${label} ${labelInfo}` : label}
-      : {"aria-describedby": errorId}
+  const ariaProps = labelStyle === 'hidden'
+    ? {"aria-describedby": errorId, "aria-label": labelInfo ? `${label} ${labelInfo}` : label}
+    : {"aria-describedby": errorId}
 
-    return <FormWrapper label={label} labelInfo={labelInfo} helperText={helperText} labelStyle={labelStyle ?? labelStyleFromCtx} inline={inline ?? inlineFromCtx} id={id}>
-      <Component
-        {...componentProps as any}
-        id={id}
-        value={value}
-        onChange={onChange} 
-        hasConflict={conflicts.includes([] as ArrayPath<V>)}
-        readOnly={readOnly}
-        {...ariaProps}
-      />
-      <ErrorMessage id={errorId} error={error} />
-    </FormWrapper>
-  }
+  return <FormWrapper label={label} labelInfo={labelInfo} helperText={helperText} labelStyle={labelStyle ?? labelStyleFromCtx} inline={inline ?? inlineFromCtx} id={id}>
+    <Component
+      {...componentProps as any}
+      id={id}
+      value={value}
+      onChange={onChange} 
+      hasConflict={conflicts.includes([] as ArrayPath<V>)}
+      readOnly={readOnly}
+      {...ariaProps}
+    />
+    <ErrorMessage id={errorId} error={error} />
+  </FormWrapper>
 }
 
 function FormWrapper({id, labelStyle, inline, label, labelInfo, helperText, children}) {
@@ -78,3 +78,4 @@ function FormWrapper({id, labelStyle, inline, label, labelInfo, helperText, chil
     {children}
   </FormGroup>
 }
+

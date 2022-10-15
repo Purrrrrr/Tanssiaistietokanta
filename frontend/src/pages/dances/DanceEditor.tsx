@@ -1,6 +1,6 @@
 import React from 'react';
 import {DurationField} from "components/widgets/DurationField";
-import {Form, inputFor, fieldFor} from "libraries/forms2";
+import {formFor} from "libraries/forms2";
 import {SimpleMarkdownEditor} from 'components/MarkdownEditor';
 import {Dance} from "types/Dance";
 import {Flex} from 'components/Flex';
@@ -14,8 +14,11 @@ interface DanceEditorProps {
   bottomToolbar?: React.ReactNode
 }
 
-const Input = inputFor<Dance>()
-const Field = fieldFor<Dance>()
+const {
+  Form,
+  Field,
+  Input,
+} = formFor<Dance>()
 
 export function DanceEditor({dance, onChange, onSubmit, bottomToolbar} : DanceEditorProps) {
   return <Form value={dance} onChange={onChange} onSubmit={onSubmit}>

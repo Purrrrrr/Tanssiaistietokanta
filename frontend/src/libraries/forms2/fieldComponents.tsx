@@ -1,21 +1,21 @@
 import React, {ComponentProps} from 'react';
 import {Classes, Switch as BlueprintSwitch, TextArea as BlueprintTextArea, TextAreaProps as BlueprintTextAreaProps} from "@blueprintjs/core";
 import classNames from 'classnames';
-import {fieldFor, FieldProps} from "./Field";
-import {FieldComponentProps, Path, PropertyAtPath} from './types'
+import {Field, FieldProps} from "./Field";
+import {FieldComponentProps, TypedPath, PropertyAtPath} from './types'
 
 type AdditionalPropsFrom<Props> = Omit<Props, keyof FieldComponentProps<any>>
 
-export function switchFor<T>() {
-  const Field = fieldFor<T>()
-  return function SwitchField<L extends string, P extends PropertyAtPath<T,P> extends boolean ?  Path<T> : never, V extends PropertyAtPath<T,P> & boolean>(
-    {label, inline, ...props} : Omit<FieldProps<L, P, V, typeof Switch, {label: string, inline?: boolean}>, "componentProps" | "component" | "labelStyle">
-  ) {
-    return <Field {...props} label={label} labelStyle="hidden" component={Switch as any} componentProps={{label, inline}} />
-  }
+export type SwitchFieldProps<L, P, V> = Omit<FieldProps<L, P, V, typeof Switch, {label: string, inline?: boolean}>, "componentProps" | "component" | "labelStyle">
+
+export function SwitchField<T, L, P extends TypedPath<T,P, boolean>, V extends PropertyAtPath<T,P> & boolean>(
+  {label, inline, ...props} : SwitchFieldProps<L, P, V>
+) {
+  return <Field<T,L,P,V, typeof Switch, ExtraSwitchProps> {...props} label={label} labelStyle="hidden" component={Switch as any} componentProps={{label, inline}} />
 }
 
-interface SwitchProps extends FieldComponentProps<boolean, HTMLInputElement> {
+interface SwitchProps extends FieldComponentProps<boolean, HTMLInputElement>, ExtraSwitchProps { }
+interface ExtraSwitchProps {
   label: string
   inline?: boolean
 }
@@ -32,13 +32,11 @@ export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
   }
 )
 
-export function inputFor<T>() {
-  const Field = fieldFor<T>()
-  return function InputField<L extends string, P extends PropertyAtPath<T,P> extends string | undefined ?  Path<T> : never, V extends PropertyAtPath<T,P> & (string | undefined) >(
-    props : Omit<FieldProps<L, P, V, typeof Input, {}>, "component">
-  ) {
-    return <Field {...props} component={Input} />
-  }
+export type InputFieldProps<L, P, V>  = Omit<FieldProps<L, P, V, typeof Input, {}>, "component">
+export function InputField<T, L, P extends TypedPath<T,P, string | undefined>, V extends PropertyAtPath<T,P> & string >(
+  props : InputFieldProps<L, P, V> 
+) {
+  return <Field<T,L,P,V,typeof Input, AdditionalPropsFrom<ComponentProps<"input">>> {...props} component={Input as any} />
 }
 
 export interface InputProps extends FieldComponentProps<string, HTMLInputElement>, AdditionalPropsFrom<ComponentProps<"input">> {
@@ -74,6 +72,7 @@ export const TextArea = React.forwardRef<BlueprintTextArea, TextAreaProps>(
   }
 );
 
+/*
 interface V {name: string, b: boolean, a: {b: boolean}, u?: string}
 const F = fieldFor<V>()
 const I = inputFor<V>()
@@ -83,3 +82,19 @@ export const f2 = <S path={['a', 'b']} label="aa" />
 export const f3 = <F path={['name']} component={TextArea} label="aa" componentProps={{growVertically: true}} />
 export const f4 = <F path={['u']} component={Input} label="aa" />
 export const f5 = <F path={['b']} component={Switch} label="aa" componentProps={{label: "a"}} />
+
+interface Foo {
+  b: Bar[]
+  p: {
+    b: Bar[]
+  }[]
+}
+interface Bar {
+  name: string
+}
+type P = ['b', number] | ['p', number, 'b', number]
+const p : P = ['b', 1]
+
+consc F2 = fieldFor<Foo>()
+let ff = <F2 path={[...p, 'name' as const]} label="aa" component={Input} />
+*/

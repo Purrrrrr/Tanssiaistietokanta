@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {usePatchDance, Dance} from "services/dances";
 import {SimpleMarkdownEditor} from 'components/MarkdownEditor';
 import {Button, FormGroup, Tag, ProgressBar} from "libraries/ui";
-import {Form, fieldFor, inputFor, SubmitButton, useFormValue} from "libraries/forms2";
+import {formFor, SubmitButton} from "libraries/forms2";
 import {getDanceData, ImportedDanceData} from 'libraries/danceWiki';
 import {Dialog} from 'libraries/dialog';
 import {DanceNameSearch} from './DanceNameSearch';
@@ -17,8 +17,13 @@ interface ImporterState extends Dance {
   importedData?: ImportedDanceData
 }
 
-const Input = inputFor<ImporterState>()
-const Field = fieldFor<ImporterState>()
+const {
+  Form, 
+  Field,
+  Input,
+  useValueAt,
+  useOnChangeFor,
+} = formFor<ImporterState>()
 
 export function DanceDataImportButton({onImport, dance, text, ...props} : DanceDataImportButtonProps) {
   const [isOpen, setOpen] = useState(false);
@@ -106,15 +111,14 @@ function DataImporter({danceName, onImport}) {
 }
 
 function ImportedDataView() {
-  const { value: dance, onChangePath } = useFormValue<ImporterState>()
-  const {categories, formations} = dance.importedData!
+  const {categories, formations} = useValueAt("importedData")!
   return <>
     <Row>
       <RowItem>
         <Input label="Kategoria" path="category" />
       </RowItem>
       <RowItem>
-        <Suggestions values={categories} onSuggest={(val: string) => onChangePath('category', val)} />
+        <Suggestions values={categories} onSuggest={useOnChangeFor('category')} />
       </RowItem>
     </Row>
     <Row>
@@ -122,7 +126,7 @@ function ImportedDataView() {
         <Input label="Tanssikuvio" path="formation" />
       </RowItem>
       <RowItem>
-        <Suggestions values={formations} onSuggest={(val: string) => onChangePath('formation', val)} />
+        <Suggestions values={formations} onSuggest={useOnChangeFor('formation')} />
       </RowItem>
     </Row>
     <InstructionEditor />
@@ -153,14 +157,15 @@ function RowItem({children}) {
 }
 
 function InstructionEditor() {
-  const { value, onChangePath } = useFormValue<ImporterState>()
+  const value = useValueAt([])
+  const setInstructions = useOnChangeFor("instructions")
   const [hasConflict, setHasConflict] = useState(value.instructions !== value.importedData?.instructions);
 
   if (!hasConflict) {
     return <Field path="instructions" component={SimpleMarkdownEditor} label="Tanssiohje"/>
   }
 
-  const onResolve= (value: string) => { setHasConflict(false); onChangePath("instructions", value); }
+  const onResolve= (value: string) => { setHasConflict(false); setInstructions(value); }
   return <>
     <p>Tanssiohje</p>
     <Row>

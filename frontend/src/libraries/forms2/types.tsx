@@ -1,5 +1,7 @@
 import React from 'react';
 
+export type NewValue<T> = T | ((t: T) => T)
+
 export interface FieldComponentProps<T, EventElement = HTMLElement> {
   value: T | undefined
   onChange: (t: T, e: React.ChangeEvent<EventElement>) => unknown
@@ -22,6 +24,7 @@ type RequiredProperties<T extends object> = Exclude<{
 }[keyof T], undefined>
 
 //export type Path<T> = Key[]
+export type TypedPath<T, P extends Path<T>, Type> = PropertyAtPath<T,P> extends Type ? Path<T> : never
 export type Path<Target,DepthCounter extends number = 5> = keyof Target | ArrayPath<Target, DepthCounter>
 export type ArrayPath<Target,DepthCounter extends number = 5> = [] |
   (DepthCounter extends never

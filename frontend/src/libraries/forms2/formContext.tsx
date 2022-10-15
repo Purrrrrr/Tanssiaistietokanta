@@ -1,11 +1,11 @@
 import React, { useContext, useCallback } from 'react';
 import * as L from 'partial.lenses';
-import {LabelStyle, Path, ArrayPath, PropertyAtPath} from './types'
+import {NewValue, LabelStyle, Path, ArrayPath, PropertyAtPath} from './types'
 
 export interface FormValueContextType<T> {
   value: T
-  onChange: (t: T) => unknown
-  onChangePath: <P extends Path<T>, SubT extends PropertyAtPath<T, P>>(p: P, t: SubT) => unknown
+  onChange: (t: NewValue<T>) => unknown
+  onChangePath: <P extends Path<T>, SubT extends PropertyAtPath<T, P>>(p: P, t: NewValue<SubT>) => unknown
   conflicts: ArrayPath<T>[]
   formIsValid: boolean
 }
@@ -24,11 +24,22 @@ export function useFormMetadata() {
   return ctx
 }
 
-export function useFormValueAt<T, P extends Path<T>, SubT extends PropertyAtPath<T, P>>(path : P) : FormValueContextType<SubT> {
-  const ctx = useFormValue<T>()
+export function useValueAt<T, P extends Path<T>, SubT extends PropertyAtPath<T, P>>(path : P) : SubT {
+  return L.get(path, useFormValueContext<T>().value)
+}
+export function useOnChangeFor<T, P extends Path<T>, SubT extends PropertyAtPath<T, P>>(path : P) : (v: NewValue<SubT>) => unknown {
+  const { onChangePath } = useFormValueContext<T>()
+  return useCallback(
+    val => onChangePath(path, val),
+    [onChangePath, path]
+  )
+}
+
+export function useFormValueContextAt<T, P extends Path<T>, SubT extends PropertyAtPath<T, P>>(path : P) : FormValueContextType<SubT> {
+  const ctx = useFormValueContext<T>()
   return useContextAtPath(ctx, path)
 }
-export function useFormValue<T>() : FormValueContextType<T> {
+export function useFormValueContext<T>() : FormValueContextType<T> {
   const ctx = useContext(FormValueContext) as FormValueContextType<T>
   if (ctx === null) throw new Error('No form value context');
   return ctx

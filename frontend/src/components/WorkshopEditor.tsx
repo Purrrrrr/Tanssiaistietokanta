@@ -9,7 +9,7 @@ import {DanceChooser} from "components/widgets/DanceChooser";
 import {makeTranslate} from 'utils/translate';
 import {useOnChangeForProp} from 'utils/useOnChangeForProp';
 import {Button, CssClass, FormGroup} from "libraries/ui";
-import {Form, SubmitButton, fieldFor, Input, TextArea} from "libraries/forms2";
+import {formFor, SubmitButton, Input, TextArea} from "libraries/forms2";
 
 const t = makeTranslate({
   dances: 'Tanssit',
@@ -24,7 +24,10 @@ const t = makeTranslate({
   teachers: 'Opettaja(t)',
 });
 
-const Field = fieldFor<Workshop>()
+const {
+  Form, 
+  Field,
+} = formFor<Workshop>()
 
 export function WorkshopEditor({eventId, workshop, onSubmit, submitText}) {
   const [modifiedWorkshop, setWorkshop] = useState(workshop);

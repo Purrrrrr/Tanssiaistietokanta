@@ -6,7 +6,7 @@ import {AdminOnly} from 'services/users';
 import {Breadcrumb} from "libraries/ui";
 import {PageTitle} from "components/PageTitle";
 import {makeTranslate} from 'utils/translate';
-import {Input, fieldFor, Form, SubmitButton} from "libraries/forms2";
+import {formFor, SubmitButton} from "libraries/forms2";
 
 const t = makeTranslate({
   newEventBreadcrumb: 'Uusi tapahtuma',
@@ -15,7 +15,10 @@ const t = makeTranslate({
   name: 'Nimi',
 });
 
-const Field = fieldFor<{name: string}>()
+const {
+  Form,
+  Input,
+} = formFor<{name: string}>()
 
 export default function CreateEventForm() {
   const navigate = useNavigate();
@@ -30,7 +33,7 @@ export default function CreateEventForm() {
     <PageTitle>{t`newEvent`}</PageTitle>
     <Form value={event} onChange={setEvent} onSubmit={() => createEvent(event)}>
       <div>
-        <Field label={t`name`} path="name" component={Input} required />
+        <Input label={t`name`} path="name" required />
       </div>
       <SubmitButton text={t`create`} />
     </Form>

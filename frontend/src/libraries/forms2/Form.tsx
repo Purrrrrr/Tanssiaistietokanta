@@ -5,7 +5,7 @@ import {useValidationResult} from '../forms/validation';
 
 const defaultLabelStyle = 'above'
 
-interface FormProps<T> extends 
+export interface FormProps<T> extends 
   Omit<React.ComponentPropsWithoutRef<"form">, "onSubmit" | "onChange">,
   Omit<FormValueContextType<T>, "conflicts" | "formIsValid" | "onChangePath">,
   Partial<FormMetadataContextType>
