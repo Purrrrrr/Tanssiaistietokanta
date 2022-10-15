@@ -1,20 +1,19 @@
 import * as L from 'partial.lenses';
 
-import React, {useState} from 'react';
+import React from 'react';
+
+import {EventProgramSettings, DanceSet, EventProgram, EventProgramItem} from "components/EventProgramEditor/types";
 
 import {AdminOnly} from 'services/users';
 import {Breadcrumb} from "libraries/ui";
 import {EventProgramEditor} from "components/EventProgramEditor";
-import {NavigateButton} from "components/widgets/NavigateButton";
 import {PageTitle} from "components/PageTitle";
-import {Form, SubmitButton} from "libraries/forms";
 import {useNavigate} from "react-router-dom"
 import {removeTypenames} from 'utils/removeTypenames';
 import {useModifyEventProgram} from 'services/events';
 
 export default function EventProgramEditorPage({event}) {
   const navigate = useNavigate();
-  const [program, setProgram] = useState(event.program);
   const [modifyEventProgram] = useModifyEventProgram({
     onCompleted: () => navigate('/events/'+event._id)
   });
@@ -22,31 +21,38 @@ export default function EventProgramEditorPage({event}) {
   return <AdminOnly fallback="you need to be admin">
     <Breadcrumb text="Tanssiaisohjelma" />
     <PageTitle>Muokkaa tanssiaisohjelmaa</PageTitle>
-    <Form onSubmit={
-      () => modifyEventProgram(event._id, toProgramInput(program ?? {}))}
-    >
-      <EventProgramEditor program={program} onChange={setProgram}/>
-      <hr />
-      <SubmitButton text="Tallenna muutokset" />
-      <NavigateButton href='..' text="Peruuta" />
-    </Form>
+    <EventProgramEditor
+      program={toEventProgramSettings(event.program ?? { introductions: [], danceSets: [], slideStyleId: null})}
+      onSubmit={(program) => modifyEventProgram(event._id, toProgramInput(program))}
+    />
   </AdminOnly>;
 }
 
-function toProgramInput({introductions = [], danceSets = []}) {
+function toEventProgramSettings(
+  {introductions, danceSets, slideStyleId} : {introductions: EventProgram[], danceSets: DanceSet[], slideStyleId: string | null},
+): EventProgramSettings {
+  return {
+    introductions: { program: introductions, isIntroductionsSection: true, intervalMusicDuration: 0 },
+    danceSets: (danceSets).map(set => ({...set, isIntroductionsSection: false})),
+    slideStyleId
+  } 
+}
+
+function toProgramInput({introductions, danceSets, slideStyleId} : EventProgramSettings) {
   return removeTypenames({
-    introductions: introductions.map(toIntroductionInput),
+    introductions: introductions.program.map(toIntroductionInput),
     danceSets: L.modify(
       [L.elems, 'program', L.elems], toProgramItemInput, danceSets
-    )
+    ).map(({isIntroductionsSection, ...d}) => d),
+    slideStyleId,
   });
 }
 
-function toIntroductionInput({ _id, slideStyleId, ...rest}) {
+function toIntroductionInput({ _id, slideStyleId, ...rest}: EventProgram) {
   return { eventProgramId: _id, eventProgram: rest, slideStyleId }
 }
 
-function toProgramItemInput({__typename, _id, slideStyleId, ...rest}) {
+function toProgramItemInput({__typename, _id, slideStyleId, ...rest} : EventProgramItem) {
   switch(__typename) {
     case 'DanceProgram':
     case 'RequestedDance':

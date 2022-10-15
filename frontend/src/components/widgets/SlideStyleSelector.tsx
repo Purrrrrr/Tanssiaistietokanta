@@ -6,11 +6,11 @@ import {Button, Icon, Select, MenuItem} from "libraries/ui";
 const StyleSelect = Select.ofType<SlideStyle>();
 
 interface SlideStyleSelectorProps {
-  value: string
+  value: string | null
   onSelect: (style: SlideStyle) => any
   text: string
   inheritsStyles?: boolean
-  inheritedStyleId?: string
+  inheritedStyleId?: string | null
   inheritedStyleName?: string
 }
 

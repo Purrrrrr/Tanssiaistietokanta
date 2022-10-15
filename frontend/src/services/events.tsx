@@ -78,7 +78,7 @@ const customStyles = [
 
 interface UseEventSlideStylesOptions {
   useStyleInheritance?: boolean
-  inheritedStyleId?: string
+  inheritedStyleId?: string | null
   inheritedStyleName?: string
 }
 
