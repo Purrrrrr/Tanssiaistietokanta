@@ -4,9 +4,9 @@ import {arrayMoveImmutable} from 'array-move';
 
 import {EventProgramSettings} from "./types";
 
-import {Card, Button, HTMLTable, CssClass, Select, MenuItem} from "libraries/ui";
+import {Card, HTMLTable, CssClass, Select, MenuItem} from "libraries/ui";
 import {Switch, Input} from "libraries/forms";
-import {formFor, ClickToEdit, Switch as PlainSwitch, SubmitButton} from "libraries/forms2";
+import {formFor, ClickToEdit, Switch as PlainSwitch, SubmitButton, ActionButton as Button, asFormControl} from "libraries/forms2";
 
 import {DragHandle, ListEditor, ListEditorItems} from "components/ListEditor";
 import {DanceChooser} from "components/widgets/DanceChooser";
@@ -209,7 +209,7 @@ function DanceSetEditor({index}) {
 
   return <Card className="danceset" tabIndex={0} onKeyDown={onKeyDown} >
     <h2>
-      <Field labelStyle="hidden" label={t`danceSetName`} path={['danceSets', index, 'name']} component={ClickToEdit} />
+      <Field labelStyle="hidden" label={t`danceSetName`} path={['danceSets', index, 'name']} inline component={ClickToEdit} />
       <Button text={t`addDance`} onClick={() => addItem({__typename: 'RequestedDance'})} className="addDance" />
       <Button text={t`addInfo`} onClick={() => addItem(newEventProgramItem())} className="addInfo" />
       <MoveDanceSetSelector
@@ -422,7 +422,7 @@ function DanceSetDuration({ program, intervalMusicDuration}) {
   </>;
 }
 
-const SectionSelect = Select.ofType<{name: string}>();
+const SectionSelect = asFormControl(Select.ofType<{name: string}>());
 
 function MoveDanceSetSelector({currentSet, onSelect}) {
   const danceSets = useValueAt("danceSets")

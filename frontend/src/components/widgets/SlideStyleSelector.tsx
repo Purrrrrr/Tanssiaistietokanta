@@ -2,8 +2,9 @@ import React  from 'react';
 import {useEventSlideStyles, SlideStyle} from "services/events";
 
 import {Button, Icon, Select, MenuItem} from "libraries/ui";
+import {asFormControl} from "libraries/forms2";
 
-const StyleSelect = Select.ofType<SlideStyle>();
+const StyleSelect = asFormControl(Select.ofType<SlideStyle>());
 
 interface SlideStyleSelectorProps {
   value: string | null

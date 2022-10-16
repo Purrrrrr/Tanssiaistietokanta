@@ -4,6 +4,7 @@ import {Classes, Switch as BlueprintSwitch, TextArea as BlueprintTextArea, TextA
 import classNames from 'classnames';
 import {Field, FieldProps} from "./Field";
 import {FieldComponentProps, TypedPath, PropertyAtPath} from './types'
+import {ClosableEditor} from './ClosableEditor'
 
 type AdditionalPropsFrom<Props> = Omit<Props, keyof FieldComponentProps<any>>
 
@@ -61,18 +62,23 @@ export interface ClickToEditProps extends FieldComponentProps<string, HTMLInputE
   valueFormatter?: (value: string) => React.ReactNode
   inline?: boolean
 }
-export function ClickToEdit({value, valueFormatter, onBlur, className, onChange, inline, hasConflict, ...props} : ClickToEditProps) {
+export function ClickToEdit({value, readOnly, valueFormatter, onBlur, className, onChange, inline, hasConflict, ...props} : ClickToEditProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   const [isOpen, setOpen] = useState(false)
-  function open() { 
-    setOpen(true);
-    setTimeout(() => inputRef.current?.focus?.(), 10)
-  }
-  const Container = inline ? 'span' : 'div'
 
-  return <Container tabIndex={isOpen ? undefined : 0} onClick={open} onFocus={open} className={classNames(className, isOpen || Classes.EDITABLE_TEXT)}>
-    {isOpen || (valueFormatter ? valueFormatter(value ?? "") : value)}
-    {isOpen || <Icon intent="primary" icon="edit" />}
+  return <ClosableEditor
+    open={isOpen}
+    onOpen={() => {
+      setOpen(true);
+      setTimeout(() => inputRef.current?.focus?.(), 10) 
+    }}
+    className={className}
+    inline={inline}
+    readOnly={readOnly}
+    aria-describedby={props['aria-describedby']} 
+    aria-label={props['aria-label']} 
+    closedValue={valueFormatter ? valueFormatter(value ?? "") : value}
+  >
     <Input
       style={isOpen ? {} : {display: 'none'}}
       {...props}
@@ -81,9 +87,9 @@ export function ClickToEdit({value, valueFormatter, onBlur, className, onChange,
       inline={inline}
       hasConflict={hasConflict}
       ref={inputRef}
-      onBlur={(e) => { setOpen(false); onBlur && onBlur(e)}}
+      onBlur={(e) => { console.log(e); setOpen(false); onBlur && onBlur(e)}}
     />
-  </Container>
+  </ClosableEditor>
 }
 
 interface TextAreaProps extends FieldComponentProps<string, HTMLTextAreaElement>, Pick<BlueprintTextAreaProps, "growVertically"> { }

@@ -1,23 +1,35 @@
 import React from 'react';
 import {Button} from "libraries/ui";
-import {useFormValueContext} from "./formContext";
+import {useFormValueContext, useFormMetadata, useValueAt, useOnChangeFor} from './formContext'
 import {TypedPath, Path, PropertyAtPath, NewValue} from './types'
-
 import {Field, FieldProps} from './Field'
 import {Form, FormProps} from './Form'
 import {InputField, InputFieldProps, SwitchField, SwitchFieldProps} from './fieldComponents'
-import {useValueAt, useOnChangeFor} from './formContext'
 
 export * from './fieldComponents'
 export type { FieldComponentProps } from './types'
 export {Validate} from './validation';
 
-type SubmitButtonProps = React.ComponentProps<typeof Button>;
+type ButtonProps = React.ComponentProps<typeof Button>;
 
-export function SubmitButton({disabled, ...props} : SubmitButtonProps) {
+export function SubmitButton({disabled, ...props} : ButtonProps) {
   const {formIsValid} = useFormValueContext();
-  return <Button type="submit" intent="primary" 
+  const {readOnly} = useFormMetadata();
+  if (readOnly) return null
+  return <ActionButton type="submit" intent="primary" 
     disabled={!formIsValid || disabled} {...props} />;
+}
+export function ActionButton(props : ButtonProps) {
+  return <FormControl><Button {...props} /></FormControl>;
+}
+export function FormControl({children}) {
+  const {readOnly} = useFormMetadata();
+  if (readOnly) return null
+  
+  return children
+}
+export function asFormControl<T>(Component: React.ComponentType<T>) {
+  return (props: T) => <FormControl><Component {...props as any} /></FormControl>
 }
 
 interface FormFor<T> {
