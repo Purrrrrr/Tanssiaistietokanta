@@ -7,8 +7,9 @@ const defaultLabelStyle = 'above'
 
 export interface FormProps<T> extends 
   Omit<React.ComponentPropsWithoutRef<"form">, "onSubmit" | "onChange">,
-  Omit<FormValueContextType<T>, "conflicts" | "formIsValid" | "onChangePath">,
-  Partial<FormMetadataContextType>
+  Omit<FormValueContextType<T>, "conflicts" | "formIsValid">,
+  Omit<Partial<FormMetadataContextType<T>>, "onChange">,
+  Pick<FormMetadataContextType<T>, "onChange">
 {
   conflicts?: FormValueContextType<T>["conflicts"] 
   inline?: boolean
@@ -28,6 +29,8 @@ export function Form<T>({
 } : FormProps<T>) {
   const {hasErrors, ValidationContainer} = useValidationResult();
   const form = useRef<HTMLFormElement>(null);
+  const valueRef = useRef<T>();
+  valueRef.current = value
 
   const submitHandler = (e: React.FormEvent) => {
     //Sometimes forms from dialogs end up propagating into our form and we should not submit then
@@ -37,20 +40,29 @@ export function Form<T>({
   }
 
   const valueContext = useMemo(() => {
-    const onChangePath = (path, newValue) => onChange(
-      typeof newValue  === 'function'
-        ? L.modify(path, newValue, value)
-        : L.set(path, newValue, value)
-    )
     return {
       value,
-      onChange: (value) => onChangePath([], value),
-      onChangePath,
       conflicts,
       formIsValid: !hasErrors
     }
-  }, [value, onChange, conflicts, hasErrors])
-  const metadataContext = useMemo(() => ({readOnly, labelStyle, inline}), [readOnly, labelStyle, inline])
+  }, [value, conflicts, hasErrors])
+  const metadataContext = useMemo(
+    () => {
+      const onChangePath = (path, newValue) => {
+        const val = valueRef.current!
+        valueRef.current = typeof newValue  === 'function'
+        ? L.modify(path, newValue, val)
+        : L.set(path, newValue, val)
+
+        onChange(valueRef.current!)
+      }
+      return {
+        readOnly, labelStyle, inline,
+        onChange: (value) => onChangePath([], value),
+        onChangePath,
+      }
+    }, [readOnly, labelStyle, inline, onChange]
+  )
 
   return <FormValueContext.Provider value={valueContext as unknown as FormValueContextType<unknown>}>
     <FormMetadataContext.Provider value={metadataContext}>

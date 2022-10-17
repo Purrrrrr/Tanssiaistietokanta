@@ -4,22 +4,22 @@ import {NewValue, LabelStyle, Path, ArrayPath, PropertyAtPath} from './types'
 
 export interface FormValueContextType<T> {
   value: T
-  onChange: (t: NewValue<T>) => unknown
-  onChangePath: <P extends Path<T>, SubT extends PropertyAtPath<T, P>>(p: P, t: NewValue<SubT>) => unknown
   conflicts: ArrayPath<T>[]
   formIsValid: boolean
 }
-export interface FormMetadataContextType {
+export interface FormMetadataContextType<T> {
+  onChange: (t: NewValue<T>) => unknown
+  onChangePath: <P extends Path<T>, SubT extends PropertyAtPath<T, P>>(p: P, t: NewValue<SubT>) => unknown
   readOnly: boolean
   inline: boolean
   labelStyle: LabelStyle
 }
 
 export const FormValueContext = React.createContext<FormValueContextType<unknown>|null>(null)
-export const FormMetadataContext = React.createContext<FormMetadataContextType|null>(null)
+export const FormMetadataContext = React.createContext<FormMetadataContextType<unknown>|null>(null)
 
-export function useFormMetadata() {
-  const ctx = useContext(FormMetadataContext)
+export function useFormMetadata<T>() {
+  const ctx = useContext(FormMetadataContext) as FormMetadataContextType<T>
   if (ctx === null) throw new Error('No form metadata context');
   return ctx
 }
@@ -28,10 +28,12 @@ export function useValueAt<T, P extends Path<T>, SubT extends PropertyAtPath<T, 
   return L.get(path, useFormValueContext<T>().value)
 }
 export function useOnChangeFor<T, P extends Path<T>, SubT extends PropertyAtPath<T, P>>(path : P) : (v: NewValue<SubT>) => unknown {
-  const { onChangePath } = useFormValueContext<T>()
+  const { onChangePath } = useFormMetadata<T>()
+  const pathDep = Array.isArray(path) ? path.join("--") : String(path)
   return useCallback(
     val => onChangePath(path, val),
-    [onChangePath, path]
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+    [onChangePath, pathDep]
   )
 }
 
@@ -49,19 +51,8 @@ function useContextAtPath<T, P extends Path<T>, SubT extends PropertyAtPath<T, P
   ctx: FormValueContextType<T>,
   path: Path<T>
 ) : FormValueContextType<SubT> {
-  const { value, onChangePath: originalOnChangePath } = ctx
-  const onChange = useCallback(val => {
-    originalOnChangePath(path, val)
-  }, [originalOnChangePath, path])
-  const onChangePath = useCallback((subPath, val) => {
-    const fullPath = [...toArrayPath(path), ...toArrayPath(subPath)] as Path<T>
-    originalOnChangePath(fullPath, val)
-  }, [originalOnChangePath, path])
-
   return {
-    value: L.get(path, value),
-    onChange,
-    onChangePath,
+    value: L.get(path, ctx.value),
     conflicts: conflictsAtPath(ctx.conflicts, Array.isArray(path) ? path : [path]),
     formIsValid: ctx.formIsValid,
   }
