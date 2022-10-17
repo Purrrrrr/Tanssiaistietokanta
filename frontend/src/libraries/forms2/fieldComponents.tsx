@@ -1,5 +1,4 @@
 import React, {useRef, useState, ComponentProps} from 'react';
-import {Icon} from "../ui";
 import {Classes, Switch as BlueprintSwitch, TextArea as BlueprintTextArea, TextAreaProps as BlueprintTextAreaProps} from "@blueprintjs/core";
 import classNames from 'classnames';
 import {Field, FieldProps} from "./Field";

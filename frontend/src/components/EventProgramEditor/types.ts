@@ -31,7 +31,7 @@ export interface DanceProgram extends ProgramItem, Omit<Dance, "_id"> {
 }
 export interface RequestedDance {
   __typename: 'RequestedDance'
-  _id: never
+  _id?: never
   slideStyleId?: string
 }
 

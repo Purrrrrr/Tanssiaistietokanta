@@ -77,9 +77,9 @@ const SortableItem = SortableElement<SortableItemProps>(React.memo(
     const callbacks = useActionCallbacks(actions, itemIndex);
     if (wrapper) {
       const Wrapper = wrapper;
-      return <Wrapper tabIndex={0}><C {...callbacks} {...props} /></Wrapper>;
+      return <Wrapper tabIndex={0}><C {...callbacks} itemIndex={itemIndex} {...props} /></Wrapper>;
     } else {
-      return <C tabIndex={0} {...callbacks} {...props} />;
+      return <C tabIndex={0} {...callbacks} itemIndex={itemIndex} {...props} />;
     }
   }
 ));

@@ -10,7 +10,8 @@ import {Suggest} from "@blueprintjs/select";
 interface DanceChooserProps {
   value: Dance | null,
   excludeFromSearch?: Dance[],
-  onChange: (dance: Dance | null) => any,
+  onChange: (dance: Dance | null, e: React.ChangeEvent<HTMLElement>) => any,
+  readOnly?: boolean
   emptyText?: string,
   allowEmpty?: boolean,
   placeholder?: string,
@@ -26,7 +27,7 @@ const t = makeTranslate({
   searchDance: 'Etsi tanssia...',
 });
 
-export function DanceChooser({value, onChange, excludeFromSearch, allowEmpty = false, emptyText, onBlur, placeholder} : DanceChooserProps) {
+export function DanceChooser({value, onChange, excludeFromSearch, allowEmpty = false, emptyText, onBlur, placeholder, readOnly, ...props} : DanceChooserProps) {
   const [query, setQuery] = useState(value ? value.name : "");
   const [dances] = useDances();
 
@@ -39,7 +40,7 @@ export function DanceChooser({value, onChange, excludeFromSearch, allowEmpty = f
     inputValueRenderer={dance => dance.name ?? ""}
     itemRenderer={renderDance}
     itemsEqual="_id"
-    inputProps={{onBlur, placeholder: placeholder ?? t`searchDance`, onKeyDown: cancelEnter}}
+    inputProps={{onBlur, placeholder: placeholder ?? t`searchDance`, onKeyDown: cancelEnter, ...props}}
     itemListPredicate={(query, items) => {
       const dances = filterDances(items, query);
       return allowEmpty && query.trim() === '' ? [emptyDancePlaceholder(emptyText), ...dances] : dances;
@@ -47,15 +48,16 @@ export function DanceChooser({value, onChange, excludeFromSearch, allowEmpty = f
     query={query}
     onQueryChange={setQuery}
     selectedItem={value}
-    onItemSelect={item => {
+    onItemSelect={(item, e) => {
       if (isPlaceholder(item)) {
-        onChange(null);
+        onChange(null, e as React.ChangeEvent<HTMLElement>);
         setQuery("");
       } else {
-        onChange(item)
+        onChange(item, e as React.ChangeEvent<HTMLElement>)
         setQuery(item.name ?? "")
       }
     }}
+    disabled={readOnly}
     popoverProps={{minimal: true}}
     fill
   />;

@@ -2,11 +2,11 @@ import React, {createContext, useContext, useMemo, useState, useRef} from 'react
 import * as L from 'partial.lenses';
 import {arrayMoveImmutable} from 'array-move';
 
-import {EventProgramSettings} from "./types";
+import {Dance} from "types/Dance";
+import {EventProgramSettings, EventProgramItem, DanceProgram, RequestedDance} from "./types";
 
 import {Card, HTMLTable, CssClass, Select, MenuItem} from "libraries/ui";
-import {Switch, Input} from "libraries/forms";
-import {formFor, ClickToEdit, Switch as PlainSwitch, SubmitButton, ActionButton as Button, asFormControl} from "libraries/forms2";
+import {formFor, ClickToEdit, Switch as PlainSwitch, SubmitButton, ActionButton as Button, asFormControl, FieldComponentProps} from "libraries/forms2";
 
 import {DragHandle, ListEditor, ListEditorItems} from "components/ListEditor";
 import {DanceChooser} from "components/widgets/DanceChooser";
@@ -26,7 +26,9 @@ import {focusLater, focusSiblingsOrParent} from 'utils/focus';
 import './EventProgramEditor.sass';
 
 const {
+  Input,
   Field,
+  Switch,
   Form, 
   useValueAt,
   useOnChangeFor,
@@ -45,6 +47,7 @@ const t = makeTranslate({
   DanceProgram: 'Tanssi',
   RequestedDance: 'Toivetanssi',
   EventProgram: 'Muu ohjelma',
+  eventProgramName: 'Ohjelman nimi',
   eventProgramDescription: 'Ohjelman kuvaus',
   showInLists: 'Näytä ohjelma tanssilistoissa',
   removeDanceSet: 'Poista setti',
@@ -222,6 +225,8 @@ function DanceSetEditor({index}) {
 };
 
 type ProgramSectionPath = ['introductions'] | ['danceSets', number]
+type ProgramItemPath = [...ProgramSectionPath, 'program', number]
+type DanceProgramPath = ['danceSets', number, 'program', number]
 
 function ProgramListEditor({path, tableRef}) {
   const { program, isIntroductionsSection, intervalMusicDuration } = useValueAt(path as ProgramSectionPath)
@@ -238,7 +243,7 @@ function ProgramListEditor({path, tableRef}) {
           </thead>
       }
       <tbody>
-        <ListEditorItems noWrapper component={ProgramItemEditor} itemProps={{isIntroductionsSection}} />
+        <ListEditorItems noWrapper component={ProgramItemEditor} itemProps={{path, isIntroductionsSection}} />
         {program.length === 0 &&
             <tr>
               <t.td className={CssClass.textMuted+ " noProgram"} colSpan="5">programListIsEmpty</t.td>
@@ -264,7 +269,8 @@ function ProgramListEditor({path, tableRef}) {
   </ListEditor>;
 }
 
-function ProgramItemEditor({item, items, isIntroductionsSection, onChange, onRemove, onAdd, onMoveDown, onMoveUp, ...props}) {
+function ProgramItemEditor({path, itemIndex, item, items, isIntroductionsSection, onChange, onRemove, onAdd, onMoveDown, onMoveUp, ...props}) {
+  const itemPath = [...path, 'program', itemIndex] as ProgramItemPath
   const defaultSlideStyleId = useValueAt("slideStyleId")
   const danceSets = useValueAt("danceSets")
   const onChangeProgram = useOnChangeFor([])
@@ -325,7 +331,7 @@ function ProgramItemEditor({item, items, isIntroductionsSection, onChange, onRem
   return <tr className="eventProgramItem" onKeyDown={onKeyDown} ref={container} tabIndex={0}>
     <td>{t(__typename)}</td>
     <td>
-      <ProgramDetailsEditor item={item} onChange={onChange} onInputBlurred={onInputBlurred} />
+      <ProgramDetailsEditor path={itemPath} item={item} onInputBlurred={onInputBlurred} />
     </td>
     <td>
       <Duration value={item.duration} />
@@ -348,25 +354,38 @@ function ProgramItemEditor({item, items, isIntroductionsSection, onChange, onRem
   </tr>;
 }
 
-function ProgramDetailsEditor({item, onInputBlurred, onChange}) {
-  const {__typename, name, _id} = item;
+function ProgramDetailsEditor({path, item, onInputBlurred}) {
+  const {__typename } = item;
 
   switch(__typename) {
     case 'DanceProgram':
     case 'RequestedDance':
-    return <DanceChooser value={item ? {_id, name} : null} onBlur={onInputBlurred}
-      allowEmpty emptyText={t`RequestedDance`}
-      onChange={dance=> onChange(dance ? {...dance, __typename: 'DanceProgram'} : {__typename: 'RequestedDance'})} />
+    return <Field label={t`DanceProgram`} labelStyle="hidden" path={path as DanceProgramPath} component={DanceProgramChooser} componentProps={{onBlur:onInputBlurred}}/>
     case 'EventProgram':
       return <>
-        <Input value={name} onBlur={onInputBlurred} required label="Ohjelmanumeron nimi"
-          onChange={val => onChange(L.set('name', val, item))} />
-        <MarkdownEditor id="dummyTODO" label={t`eventProgramDescription`} value={item.description ?? ""} onChange={val => onChange(L.set('description', val, item))} />
-        <Switch inline label={t`showInLists`} checked={item.showInLists} onChange={e => onChange(L.set('showInLists', (e.target as HTMLInputElement).checked, item))} />
+        <Input label={t`eventProgramName`} path={[...path as ProgramItemPath, 'name']} componentProps={{onBlur:onInputBlurred}} required />
+        <Field label={t`eventProgramDescription`} path={[...path as ProgramItemPath, 'description']} component={MarkdownEditor} />
+        <Switch label={t`showInLists`} path={[...path as ProgramItemPath, 'showInLists']} inline />
       </>
   }
 
   throw new Error('Unknown typename '+__typename)
+}
+
+function DanceProgramChooser({value, onChange, onBlur, ...props} : FieldComponentProps<EventProgramItem, HTMLElement> & {onBlur: (e: React.FocusEvent) => unknown}) {
+  return <DanceChooser
+    value={value?._id ? value as Dance : null}
+    onChange={(dance, e) => onChange(
+      dance
+        ? {...dance, __typename: 'DanceProgram'} as DanceProgram
+        : {__typename: 'RequestedDance'} as RequestedDance,
+      e
+    )}
+    allowEmpty
+    emptyText={t`RequestedDance`}
+    onBlur={onBlur}
+    {...props}
+  />
 }
 
 function IntervalMusicEditor({intervalMusicDuration, onSetIntervalMusicDuration}) {
