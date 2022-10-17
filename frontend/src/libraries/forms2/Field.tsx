@@ -37,8 +37,8 @@ export function Field<T, L, P extends Path<T>, V extends PropertyAtPath<T,P>, C 
   const { value, onChange, conflicts } = useFormValueContextAt<T, P, V>(path)
   const { readOnly, labelStyle: labelStyleFromCtx, inline: inlineFromCtx } = useFormMetadata()
   const error = useError(value, rest);
-  const id = Array.isArray(path) ? path.join(".") : String(path)
-  const errorId = `${id}-error`;
+  const id = Array.isArray(path) ? path.join("--") : String(path)
+  const errorId = `${id}--error`;
 
   const ariaProps = labelStyle === 'hidden'
     ? {"aria-describedby": errorId, "aria-label": labelInfo ? `${label} ${labelInfo}` : label}

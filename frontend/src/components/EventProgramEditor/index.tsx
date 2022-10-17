@@ -6,7 +6,7 @@ import {Dance} from "types/Dance";
 import {EventProgramSettings, EventProgramItem, DanceProgram, RequestedDance} from "./types";
 
 import {Card, HTMLTable, CssClass, Select, MenuItem} from "libraries/ui";
-import {formFor, ClickToEdit, Switch as PlainSwitch, SubmitButton, ActionButton as Button, asFormControl, FieldComponentProps} from "libraries/forms2";
+import {formFor, ClickToEdit, Switch as PlainSwitch, SubmitButton, ActionButton as Button, asFormControl, FieldComponentProps, MarkdownEditor} from "libraries/forms2";
 
 import {DragHandle, ListEditor, ListEditorItems} from "components/ListEditor";
 import {DanceChooser} from "components/widgets/DanceChooser";
@@ -15,7 +15,6 @@ import {DurationField} from "components/widgets/DurationField";
 import {ProgramPauseDurationEditor} from "components/widgets/ProgramPauseDurationEditor";
 import {NavigateButton} from "components/widgets/NavigateButton";
 import {SlideStyleSelector} from "components/widgets/SlideStyleSelector";
-import {MarkdownEditor} from 'components/MarkdownEditor';
 import {makeTranslate} from 'utils/translate';
 import {bind, useHotkeyHandler} from 'utils/useHotkeyHandler';
 import {useRedirectKeyDownTo} from 'utils/useRedirectKeyDownTo';
@@ -372,7 +371,8 @@ function ProgramDetailsEditor({path, item, onInputBlurred}) {
   throw new Error('Unknown typename '+__typename)
 }
 
-function DanceProgramChooser({value, onChange, onBlur, ...props} : FieldComponentProps<EventProgramItem, HTMLElement> & {onBlur: (e: React.FocusEvent) => unknown}) {
+//TODO: move hasConflict handling somewhere saner
+function DanceProgramChooser({value, onChange, hasConflict, onBlur, ...props} : FieldComponentProps<EventProgramItem, HTMLElement> & {onBlur: (e: React.FocusEvent) => unknown}) {
   return <DanceChooser
     value={value?._id ? value as Dance : null}
     onChange={(dance, e) => onChange(

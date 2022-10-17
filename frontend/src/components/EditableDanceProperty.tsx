@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useMemo, useCallback} from 'react';
+import {Dance} from 'types/Dance';
+import useAutosavingState, {makePartial} from 'utils/useAutosavingState';
 import {usePatchDance, WritableDanceProperty, dancePropertyLabels} from "services/dances";
-import {ClickToEdit} from "libraries/forms2";
-import {EditableMarkdown} from 'components/EditableMarkdown';
+import {ClickToEdit, ClickToEditMarkdown} from "libraries/forms2";
 
 import './EditableDanceProperty.sass';
 
@@ -14,26 +15,34 @@ interface EditableDancePropertyProps {
   type?: 'multiline' | 'markdown'
 }
 
-export function EditableDanceProperty({dance, property, addText, ...props} : EditableDancePropertyProps) {
-  const [patch] = usePatchDance();
+export function EditableDanceProperty({dance: danceInDatabase, property, addText, ...props} : EditableDancePropertyProps) {
+  const [patchDance] = usePatchDance();
+  const patch = useCallback(
+    (dance) => patchDance({ _id: danceInDatabase._id, ...dance, }),
+    [danceInDatabase._id, patchDance]
+  )
+  const partialDance = useMemo(() => ({[property]: danceInDatabase[property]}), [property, danceInDatabase])
+  const [dance, setDance] = useAutosavingState<Partial<Dance>,Partial<Dance>>(partialDance, patch, makePartial)
 
   const onChange = (value) => {
-    patch({
-      _id: dance._id,
+    setDance({
+      ...dance,
       [property]: value,
     })
   }
+  const label = dancePropertyLabels[property]
 
-  if (!dance?._id) return <>...</>;
+  if (!danceInDatabase?._id) return <>...</>;
 
   const editorType = props["type"]
 
   if (editorType === 'markdown') {
-    return <EditableMarkdown id={property} label="" value={dance[property]} onChange={onChange} />
+    return <ClickToEditMarkdown id={property} value={dance[property]} onChange={onChange} aria-label={label} />
   }
 
   return <ClickToEdit id={property} className="editableDanceProperty"
     value={dance[property]} onChange={onChange}
+    aria-label={label}
     valueFormatter={value => value || <span className="addEntry">{addText}</span>}
   />;
 }

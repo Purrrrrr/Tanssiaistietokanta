@@ -1,8 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {usePatchDance, Dance} from "services/dances";
-import {SimpleMarkdownEditor} from 'components/MarkdownEditor';
 import {Button, FormGroup, Tag, ProgressBar} from "libraries/ui";
-import {formFor, SubmitButton} from "libraries/forms2";
+import {formFor, SubmitButton, MarkdownEditor} from "libraries/forms2";
 import {getDanceData, ImportedDanceData} from 'libraries/danceWiki';
 import {Dialog} from 'libraries/dialog';
 import {DanceNameSearch} from './DanceNameSearch';
@@ -162,7 +161,7 @@ function InstructionEditor() {
   const [hasConflict, setHasConflict] = useState(value.instructions !== value.importedData?.instructions);
 
   if (!hasConflict) {
-    return <Field path="instructions" component={SimpleMarkdownEditor} label="Tanssiohje"/>
+    return <Field path="instructions" component={MarkdownEditor} label="Tanssiohje"/>
   }
 
   const onResolve= (value: string) => { setHasConflict(false); setInstructions(value); }
@@ -170,11 +169,11 @@ function InstructionEditor() {
     <p>Tanssiohje</p>
     <Row>
       <RowItem>
-        <Field path="instructions" component={SimpleMarkdownEditor} label="Tietokannassa oleva versio"/>
+        <Field path="instructions" component={MarkdownEditor} label="Tietokannassa oleva versio"/>
         <Button text="Käytä tätä versiota" onClick={() => onResolve(value.instructions ?? "")} />
       </RowItem>
       <RowItem>
-        <Field path={["importedData", "instructions"]} component={SimpleMarkdownEditor} label="Tanssiwikin versio"/>
+        <Field path={["importedData", "instructions"]} component={MarkdownEditor} label="Tanssiwikin versio"/>
         <Button text="Käytä tätä versiota" onClick={() => onResolve(value.importedData!.instructions)} />
       </RowItem>
     </Row>;

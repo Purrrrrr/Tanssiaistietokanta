@@ -2,7 +2,7 @@ import { setupServiceUpdateFragment, gql, updateEntityFragment, entityListQueryH
 import { Dance } from 'types/Dance'
 import {sorted} from "utils/sorted"
 
-const danceFields = '_id, name, description, remarks, duration, prelude, formation, category, instructions';
+const danceFields = '_id, name, description, remarks, duration, prelude, formation, category, instructions, slideStyleId';
 setupServiceUpdateFragment(
   "dances",
   `fragment DanceFragment on Dance {

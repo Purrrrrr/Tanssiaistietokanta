@@ -1,15 +1,17 @@
 import React, {useState, useRef, useCallback} from 'react';
+import {Dance} from 'types/Dance';
 import {usePatchDance} from 'services/dances';
 import {Button} from "libraries/ui";
-import {Switch} from "libraries/forms2";
+import {Switch, ClickToEditMarkdown} from "libraries/forms2";
+import useAutosavingState, {makePartial} from 'utils/useAutosavingState';
 import {backendQueryHook} from "backend";
 import {LoadingState} from 'components/LoadingState';
-import {EditableMarkdown} from 'components/EditableMarkdown';
 import {DanceDataImportButton} from "components/DanceDataImportDialog";
 import PrintViewToolbar from 'components/widgets/PrintViewToolbar';
 import {makeTranslate} from 'utils/translate';
 import {selectElement} from 'utils/selectElement';
 import {showToast} from "utils/toaster"
+import {uniq} from "utils/uniq"
 
 import './DanceInstructions.sass';
 
@@ -81,26 +83,27 @@ export default function DanceInstructions({eventId}) {
       }
       <t.h1>danceInstructions</t.h1>
 
-      {dances.map(dance => <Dance key={dance._id} dance={dance} />)}
+      {dances.map(dance => <InstructionsForDance key={dance._id} dance={dance} />)}
     </section>
     </>
 }
 
 function getDances(workshops) {
-  const dances = workshops.flatMap(w => w.dances);
+  const dances = uniq(workshops.flatMap(w => w.dances)) as Dance[];
   dances.sort((a,b) => a.name.localeCompare(b.name));
   return dances;
 }
 
-function Dance({dance}) {
+function InstructionsForDance({dance: danceInDatabase}) {
   const [patchDance] = usePatchDance();
   const onChange = useCallback(
-    (instructions) => patchDance({
-      _id: dance._id,
-      instructions,
+    (dance) => patchDance({
+      _id: danceInDatabase._id,
+      ...dance,
     }),
-    [dance, patchDance]
+    [danceInDatabase, patchDance]
   )
+  const [dance, setDance] = useAutosavingState<Dance,Partial<Dance>>(danceInDatabase, onChange, makePartial)
 
   const {name, instructions} = dance;
 
@@ -110,8 +113,7 @@ function Dance({dance}) {
       {' '}
       <DanceDataImportButton text={t`fetchDataFromWiki`} dance={dance} />
     </h2>
-    <EditableMarkdown id={"instructions-"+dance._id} label="" value={instructions} onChange={onChange}
-      overrides={markdownOverrides} maxHeight={undefined} />
+    <ClickToEditMarkdown id={"instructions-"+dance._id} value={instructions} onChange={(instructions) => setDance({...dance, instructions})} markdownOverrides={markdownOverrides} />
   </div>
 }
 
