@@ -3,7 +3,7 @@ import * as L from 'partial.lenses';
 import {arrayMoveImmutable} from 'array-move';
 
 import {Dance} from "types/Dance";
-import {EventProgramSettings, EventProgramItem, DanceProgram, RequestedDance} from "./types";
+import {EventProgramSettings, DanceSet, EventProgramItem, EventProgram, DanceProgram, RequestedDance} from "./types";
 
 import {Card, HTMLTable, CssClass, Select, MenuItem} from "libraries/ui";
 import {formFor, ClickToEdit, Switch as PlainSwitch, SubmitButton, ActionButton as Button, asFormControl, FieldComponentProps, MarkdownEditor} from "libraries/forms2";
@@ -31,6 +31,8 @@ const {
   Form, 
   useValueAt,
   useOnChangeFor,
+  useRemoveFromList,
+  useAppendToList,
 } = formFor<EventProgramSettings>()
 
 const t = makeTranslate({
@@ -126,36 +128,37 @@ export function EventProgramEditor({program: eventProgram, onSubmit}: EventProgr
 };
 
 function AddIntroductionButton() {
-  const onChangeIntroductions = useOnChangeFor(["introductions", "program"])
+  const addIntroduction = useAppendToList(["introductions", "program"])
   function addIntroductoryInfo() {
-    onChangeIntroductions(L.set(L.appendTo, newEventProgramItem()));
+    addIntroduction(newEventProgramItem);
     focusLater('.eventProgramEditor .danceset:first-child tbody tr:last-child');
   }
   return <Button text={t`addIntroductoryInfo`} onClick={addIntroductoryInfo} className="addIntroductoryInfo" />
 }
 
+function newEventProgramItem(): EventProgram {
+  return {__typename: 'EventProgram', _id: undefined, name: t`newProgramItem`, showInLists: false}
+}
+
 function AddDanceSetButton() {
-  const onChangeDancesets = useOnChangeFor("danceSets")
+  const onAddDanceSet = useAppendToList("danceSets")
   function addDanceSet() {
-    onChangeDancesets(danceSets => L.set(L.appendTo, newDanceSet(danceSets), danceSets))
+    onAddDanceSet(newDanceSet)
     focusLater('.eventProgramEditor .danceset:last-child');
   }
   return <Button text={t`addDanceSet`} onClick={addDanceSet} className="addDanceSet" />
 }
 
-function newDanceSet(danceSets) {
+function newDanceSet(danceSets: DanceSet[]): DanceSet {
   const danceSetNumber = danceSets.length + 1;
-  const dances = Array.from({length: 6}, () => ({__typename: 'RequestedDance'}));
+  const dances = Array.from({length: 6}, () => ({__typename: 'RequestedDance'} as RequestedDance));
   return {
     _id: guid(),
+    isIntroductionsSection: false,
     name: t`danceSet` + " " + danceSetNumber,
     program: dances,
     intervalMusicDuration: DEFAULT_INTERVAL_MUSIC_DURATION
   }
-}
-
-function newEventProgramItem() {
-  return {__typename: 'EventProgram', name: t`newProgramItem`, showInLists: false}
 }
 
 function IntroductoryInformation() {
@@ -179,16 +182,24 @@ function IntroductoryInformation() {
 }
 
 function DanceSetEditor({index}) {
+  const table = useRef<HTMLTableElement>(null);
+
   const item = useValueAt(["danceSets", index])
   const onChangeDancesets = useOnChangeFor("danceSets")
   function onMoveDanceSet(danceset, index) {
     onChangeDancesets(sets => arrayMoveImmutable(sets, sets.indexOf(danceset), index))
   }
-  function onRemove() {
-    onChangeDancesets(L.set(index, undefined))
+  const onRemove = useRemoveFromList("danceSets", index)
+  function removeDanceSet(e) {
+    onRemove();
+    focusSiblingsOrParent(e.target, 'section.eventProgramEditor');
+  }
+  const onAddItem = useAppendToList(["danceSets", index, "program"])
+  function addItem(itemToAdd: EventProgramItem) {
+    onAddItem(itemToAdd);
+    focusLater('tbody tr:last-child', table.current);
   }
 
-  const onChange = useOnChangeFor(['danceSets', index])
   const onKeyDown = useHotkeyHandler(
     ...navigateAmongSiblings('div.danceset'),
     focusTo('tbody tr'),
@@ -199,15 +210,6 @@ function DanceSetEditor({index}) {
     bind('i', clickInParent('div.danceset', 'button.addInfo')),
     bind(['delete', 'backspace'], removeDanceSet)
   );
-  function removeDanceSet(e) {
-    onRemove();
-    focusSiblingsOrParent(e.target, 'section.eventProgramEditor');
-  }
-  const table = useRef<HTMLTableElement>(null);
-  function addItem(itemToAdd) {
-    onChange(L.set(['program', L.appendTo], itemToAdd, item));
-    focusLater('tbody tr:last-child', table.current);
-  }
 
   return <Card className="danceset" tabIndex={0} onKeyDown={onKeyDown} >
     <h2>
@@ -330,7 +332,7 @@ function ProgramItemEditor({path, itemIndex, item, items, isIntroductionsSection
   return <tr className="eventProgramItem" onKeyDown={onKeyDown} ref={container} tabIndex={0}>
     <td>{t(__typename)}</td>
     <td>
-      <ProgramDetailsEditor path={itemPath} item={item} onInputBlurred={onInputBlurred} />
+      <ProgramDetailsEditor path={itemPath} onInputBlurred={onInputBlurred} />
     </td>
     <td>
       <Duration value={item.duration} />
@@ -353,8 +355,8 @@ function ProgramItemEditor({path, itemIndex, item, items, isIntroductionsSection
   </tr>;
 }
 
-function ProgramDetailsEditor({path, item, onInputBlurred}) {
-  const {__typename } = item;
+function ProgramDetailsEditor({path, onInputBlurred}) {
+  const {__typename } = useValueAt(path);
 
   switch(__typename) {
     case 'DanceProgram':

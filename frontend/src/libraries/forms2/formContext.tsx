@@ -68,7 +68,7 @@ function useContextAtPath<T, P extends Path<T>, SubT extends PropertyAtPath<T, P
 
 }
 
-function toArrayPath<T>(path : Path<T>) : ArrayPath<T> {
+export function toArrayPath<T>(path : Path<T>) : ArrayPath<T> {
   return Array.isArray(path) ? path : [path] as ArrayPath<T>
 }
 

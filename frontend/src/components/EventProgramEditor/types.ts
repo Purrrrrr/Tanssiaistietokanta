@@ -26,7 +26,7 @@ export interface DanceSet extends Section {
 
 export type EventProgramItem = DanceProgram | EventProgram | RequestedDance
 
-export interface DanceProgram extends ProgramItem, Omit<Dance, "_id"> {
+export interface DanceProgram extends ProgramItem, Dance {
   __typename: 'DanceProgram'
 }
 export interface RequestedDance {
@@ -41,7 +41,7 @@ export interface EventProgram extends ProgramItem {
 }
 
 export interface ProgramItem {
-  _id: string
+  _id?: string
   name: string
   description?: string
   duration?: number

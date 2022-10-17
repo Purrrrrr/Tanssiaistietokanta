@@ -1,5 +1,6 @@
-import React from 'react';
-import {useValueAt, useOnChangeFor} from './formContext'
+import React, {useCallback} from 'react';
+import * as L from 'partial.lenses';
+import {useValueAt, useOnChangeFor, toArrayPath} from './formContext'
 import {TypedPath, Path, PropertyAtPath, NewValue} from './types'
 import {Field, FieldProps} from './Field'
 import {Form, FormProps} from './Form'
@@ -19,6 +20,8 @@ interface FormFor<T> {
   Input: <L, P extends TypedPath<T,P,string | undefined>, V extends PropertyAtPath<T,P> & (string | undefined)>(props: InputFieldProps<L,P,V>) => React.ReactElement
   useValueAt: <P extends Path<T>, SubT extends PropertyAtPath<T,P>>(path: P) => SubT
   useOnChangeFor: <P extends Path<T>, SubT extends PropertyAtPath<T,P>>(path: P) => (v: NewValue<SubT>) => unknown
+  useAppendToList: <P extends TypedPath<T, P, any[]>, SubT extends PropertyAtPath<T,P> & any[]>(path: P) => (v: SubT[number] | ((v: SubT) => SubT[number])) => unknown
+  useRemoveFromList: <P extends TypedPath<T, P, any[]>>(path: P, index: number) => () => unknown
 }
 
 export function formFor<T>(): FormFor<T> {
@@ -29,5 +32,21 @@ export function formFor<T>(): FormFor<T> {
     Input: InputField,
     useValueAt,
     useOnChangeFor,
+    useAppendToList: <P extends Path<T>>(path: P) => {
+      const onChange = useOnChangeFor<T, P, PropertyAtPath<T,P>>(path)
+      return useCallback((item) => {
+        onChange(items =>
+          L.set(
+            L.append,
+            typeof(item) === 'function' ? (item as Function)(items) : item,
+            items,
+          )
+        )
+      }, [onChange])
+    },
+    useRemoveFromList: <P extends Path<T>>(path: P, index: number) => {
+      const onChange = useOnChangeFor<T, P, PropertyAtPath<T,P>>(path)
+      return useCallback((item) => onChange(L.set(index, undefined)), [onChange, index])
+    }
   } as FormFor<T>
 }
