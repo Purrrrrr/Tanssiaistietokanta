@@ -11,7 +11,7 @@ type Event {
 }
 
 type EventProgramSettings {
-  introductions: [EventProgram!]!
+  introductions: [EventProgramRow!]!
   danceSets: [DanceSet!]!
   slideStyleId: ID
 }
@@ -19,36 +19,26 @@ type EventProgramSettings {
 type DanceSet {
   _id: ID
   name: String!
-  program: [EventProgramItem!]!
+  program: [EventProgramRow!]!
   intervalMusicDuration: Float
 }
 
-union EventProgramItem = RequestedDance | DanceProgram | EventProgram
+type EventProgramRow {
+  _id: ID
+  slideStyleId: ID
+  item: EventProgramItem!
+}
+union EventProgramItem = RequestedDance | Dance | EventProgram
 
 interface ProgramItem {
   _id: ID
   name: String!
   duration: Float
   description: String
-  slideStyleId: ID
 }
 
 type RequestedDance {
-  slideStyleId: ID
-}
-
-type DanceProgram implements ProgramItem & DanceProps {
-  _id: ID
-  name: String!
-  description: String
-  duration: Float
-  prelude: String
-  formation: String
-  category: String
-  instructions: String
-  remarks: String
-  teachedIn(eventId: ID): [Workshop!]!
-  slideStyleId: ID
+  _: Int
 }
 
 type EventProgram implements ProgramItem {
@@ -85,6 +75,8 @@ input DanceSetInput {
 }
 
 input ProgramItemInput {
+  "Row id"
+  _id: ID
   "The actual type of the item, the other fields are used depending on the value of this field"
   type: ProgramType!
   "The id of the program to use when type is EVENT_PROGRAM"

@@ -2,7 +2,7 @@ import * as L from 'partial.lenses';
 
 import React from 'react';
 
-import {EventProgramSettings, DanceSet, EventProgram, EventProgramItem} from "components/EventProgramEditor/types";
+import {EventProgramSettings, DanceSet, EventProgramRow} from "components/EventProgramEditor/types";
 
 import {AdminOnly} from 'services/users';
 import {Breadcrumb} from "libraries/ui";
@@ -29,7 +29,7 @@ export default function EventProgramEditorPage({event}) {
 }
 
 function toEventProgramSettings(
-  {introductions, danceSets, slideStyleId} : {introductions: EventProgram[], danceSets: DanceSet[], slideStyleId: string | null},
+  {introductions, danceSets, slideStyleId} : {introductions: EventProgramRow[], danceSets: DanceSet[], slideStyleId: string | null},
 ): EventProgramSettings {
   return {
     introductions: { program: introductions, isIntroductionsSection: true, intervalMusicDuration: 0 },
@@ -48,24 +48,26 @@ function toProgramInput({introductions, danceSets, slideStyleId} : EventProgramS
   });
 }
 
-function toIntroductionInput({ _id, slideStyleId, ...rest}: EventProgram) {
-  return { eventProgramId: _id, eventProgram: rest, slideStyleId }
+function toIntroductionInput({ _id, item: { _id: eventProgramId, ...rest}, slideStyleId}: EventProgramRow) {
+  return { _id, eventProgramId, eventProgram: rest, slideStyleId }
 }
 
-function toProgramItemInput({__typename, _id, slideStyleId, ...rest} : EventProgramItem) {
+function toProgramItemInput({_id, slideStyleId, item: {__typename, _id: itemId, ...rest}} : EventProgramRow) {
   switch(__typename) {
-    case 'DanceProgram':
+    case 'Dance':
     case 'RequestedDance':
-      if (!_id) return {type: 'REQUESTED_DANCE', slideStyleId};
+      if (!itemId) return {type: 'REQUESTED_DANCE', slideStyleId, _id};
       return {
+        _id,
         type: 'DANCE',
-        danceId: _id,
+        danceId: itemId,
         slideStyleId,
       };
     case 'EventProgram':
       return {
+        _id,
         type: 'EVENT_PROGRAM',
-        eventProgramId: _id,
+        eventProgramId: itemId,
         eventProgram: rest,
         slideStyleId,
       };

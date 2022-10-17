@@ -64,8 +64,8 @@ function EventProgram({program}) {
 
 function formatDances(program) {
   const danceNames = program
-    .filter(item => item.__typename !== 'EventProgram' || item.showInLists)
-    .map(item => item.name)
+    .filter(({item}) => item.__typename !== 'EventProgram' || item.showInLists)
+    .map(row => row.item.name)
     .filter(a => a);
   const requestedDanceCount = program.filter(isRequestedDance).length;
   if (requestedDanceCount) {
@@ -74,7 +74,7 @@ function formatDances(program) {
 
   return danceNames.join(', ');
 }
-const isRequestedDance = i => i.__typename === 'RequestedDance';
+const isRequestedDance = row => row.item.__typename === 'RequestedDance';
 
 function EventWorkshops({workshops, eventId}) {
   return <>

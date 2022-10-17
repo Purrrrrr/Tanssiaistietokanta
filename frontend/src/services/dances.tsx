@@ -1,4 +1,4 @@
-import { setupServiceUpdateFragment, gql, updateEntityFragment, entityListQueryHook, entityCreateHook, entityDeleteHook, entityUpdateHook } from '../backend';
+import { setupServiceUpdateFragment, entityListQueryHook, entityCreateHook, entityDeleteHook, entityUpdateHook } from '../backend';
 import { Dance } from 'types/Dance'
 import {sorted} from "utils/sorted"
 
@@ -11,7 +11,7 @@ setupServiceUpdateFragment(
 );
 
 export type { Dance }
-export type WritableDanceProperty = Exclude<keyof Dance, '_id'>
+export type WritableDanceProperty = Exclude<keyof Dance, '_id' | '__typename'>
 
 export const dancePropertyLabels : {[Key in WritableDanceProperty]: string} = {
   name: "Nimi",
@@ -31,17 +31,12 @@ export const useDances = entityListQueryHook("dances", `
   }
 }`);
 
-const danceProgramFragment = gql`fragment DanceFragment on DanceProgram {
-  ${danceFields}
-  slideStyleId: ID
-}`
 export const useModifyDance = entityUpdateHook('dances', `
 mutation modifyDance($id: ID!, $dance: DanceInput!) {
   modifyDance(id: $id, dance: $dance) {
     ${danceFields}
   }
 }`, {
-  onCompleted: (data) => updateEntityFragment('DanceProgram', danceProgramFragment, {...data.modifyDance, '__typename': 'DanceProgram'}),
   parameterMapper: ({_id, __typename, ...dance}) => 
     ({variables: {id: _id, dance} })
 });
@@ -62,7 +57,6 @@ mutation patchDance($id: ID!, $dance: DancePatchInput!) {
     ${danceFields}
   }
 }`, {
-  onCompleted: (data) => updateEntityFragment('DanceProgram', danceProgramFragment, {...data.patchDance, '__typename': 'DanceProgram'}),
   parameterMapper: ({_id: id, ...dance}) => ({variables: {id, dance}}),
 });
 

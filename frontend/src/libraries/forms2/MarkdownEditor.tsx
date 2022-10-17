@@ -13,11 +13,11 @@ interface MarkdownEditorProps extends FieldComponentProps<string, HTMLTextAreaEl
   markdownOverrides?: {}
 }
 
-export function MarkdownEditor({value, onChange, hasConflict, markdownOverrides, ...props} : MarkdownEditorProps) {
+export const MarkdownEditor = React.memo(function MarkdownEditor({value, onChange, hasConflict, markdownOverrides, ...props} : MarkdownEditorProps) {
   return <MdEditor
     renderHTML={(text : string) => <Markdown options={{overrides: markdownOverrides}}>{text}</Markdown>}
     value={value ?? ""}
     onChange={({text}, e) => onChange(text, e!)}
     {...props}
   />
-}
+})

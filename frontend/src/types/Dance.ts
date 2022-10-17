@@ -1,4 +1,5 @@
 export interface Dance {
+  __typename?: 'Dance'
   _id?: string
   name: string
   description?: string

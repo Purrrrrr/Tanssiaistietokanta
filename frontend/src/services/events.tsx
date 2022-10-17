@@ -5,27 +5,38 @@ _id, name
 program {
   introductions {
     _id
-    name
-    duration
-    description
-    showInLists
-    slideStyleId
-  }
-  danceSets {
-    _id
-    name
-    program {
+    item {
       __typename
       ... on ProgramItem {
         _id
         name
         duration
         description
-        slideStyleId
       }
       ... on EventProgram {
         showInLists
       }
+    }
+    slideStyleId
+  }
+  danceSets {
+    _id
+    name
+    program {
+      _id
+      item {
+        __typename
+        ... on ProgramItem {
+          _id
+          name
+          duration
+          description
+        }
+        ... on EventProgram {
+          showInLists
+        }
+      }
+      slideStyleId
     }
     intervalMusicDuration
   }

@@ -3,7 +3,7 @@ import * as L from 'partial.lenses';
 import {arrayMoveImmutable} from 'array-move';
 
 import {Dance} from "types/Dance";
-import {EventProgramSettings, DanceSet, EventProgramItem, EventProgram, DanceProgram, RequestedDance} from "./types";
+import {EventProgramSettings, DanceSet, EventProgramRow, EventProgramItem, RequestedDance} from "./types";
 
 import {Card, HTMLTable, CssClass, Select, MenuItem} from "libraries/ui";
 import {formFor, ClickToEdit, Switch as PlainSwitch, SubmitButton, ActionButton as Button, asFormControl, FieldComponentProps, MarkdownEditor} from "libraries/forms2";
@@ -45,7 +45,7 @@ const t = makeTranslate({
   addEntryTitle: 'Lisää ohjelmaa',
   introductoryInformation: 'Alkutiedotukset',
   programListIsEmpty: 'Ei ohjelmaa',
-  DanceProgram: 'Tanssi',
+  Dance: 'Tanssi',
   RequestedDance: 'Toivetanssi',
   EventProgram: 'Muu ohjelma',
   eventProgramName: 'Ohjelman nimi',
@@ -136,8 +136,11 @@ function AddIntroductionButton() {
   return <Button text={t`addIntroductoryInfo`} onClick={addIntroductoryInfo} className="addIntroductoryInfo" />
 }
 
-function newEventProgramItem(): EventProgram {
-  return {__typename: 'EventProgram', _id: undefined, name: t`newProgramItem`, showInLists: false}
+function newEventProgramItem(): EventProgramRow {
+  return {
+    item: {__typename: 'EventProgram', _id: undefined, name: t`newProgramItem`, showInLists: false},
+    _id: guid(),
+  }
 }
 
 function AddDanceSetButton() {
@@ -151,7 +154,7 @@ function AddDanceSetButton() {
 
 function newDanceSet(danceSets: DanceSet[]): DanceSet {
   const danceSetNumber = danceSets.length + 1;
-  const dances = Array.from({length: 6}, () => ({__typename: 'RequestedDance'} as RequestedDance));
+  const dances = Array.from({length: 6}, () => ({item: {__typename: 'RequestedDance'}, _id: guid()} as EventProgramRow));
   return {
     _id: guid(),
     isIntroductionsSection: false,
@@ -195,7 +198,7 @@ function DanceSetEditor({index}) {
     focusSiblingsOrParent(e.target, 'section.eventProgramEditor');
   }
   const onAddItem = useAppendToList(["danceSets", index, "program"])
-  function addItem(itemToAdd: EventProgramItem) {
+  function addItem(itemToAdd: EventProgramRow) {
     onAddItem(itemToAdd);
     focusLater('tbody tr:last-child', table.current);
   }
@@ -214,7 +217,7 @@ function DanceSetEditor({index}) {
   return <Card className="danceset" tabIndex={0} onKeyDown={onKeyDown} >
     <h2>
       <Field labelStyle="hidden" label={t`danceSetName`} path={['danceSets', index, 'name']} inline component={ClickToEdit} />
-      <Button text={t`addDance`} onClick={() => addItem({__typename: 'RequestedDance'})} className="addDance" />
+      <Button text={t`addDance`} onClick={() => addItem({item: {__typename: 'RequestedDance'}, _id: guid()})} className="addDance" />
       <Button text={t`addInfo`} onClick={() => addItem(newEventProgramItem())} className="addInfo" />
       <MoveDanceSetSelector
         currentSet={item}
@@ -270,11 +273,11 @@ function ProgramListEditor({path, tableRef}) {
   </ListEditor>;
 }
 
-function ProgramItemEditor({path, itemIndex, item, items, isIntroductionsSection, onChange, onRemove, onAdd, onMoveDown, onMoveUp}) {
+function ProgramItemEditor({path, itemIndex, item, onChange, onRemove, onMoveDown, onMoveUp}) {
   const itemPath = [...path, 'program', itemIndex] as ProgramItemPath
   const defaultSlideStyleId = useValueAt("slideStyleId")
 
-  const {__typename } = item;
+  const {__typename } = item.item;
   const onKeyDown = useHotkeyHandler(
     ...navigateAmongSiblings('tr'),
     moveUp(onMoveUp),
@@ -328,17 +331,17 @@ function ProgramItemEditor({path, itemIndex, item, items, isIntroductionsSection
 }
 
 function ProgramDetailsEditor({path, onInputBlurred}) {
-  const {__typename } = useValueAt(path);
+  const {__typename } = useValueAt(path).item;
 
   switch(__typename) {
-    case 'DanceProgram':
+    case 'Dance':
     case 'RequestedDance':
-    return <Field label={t`DanceProgram`} labelStyle="hidden" path={path as DanceProgramPath} component={DanceProgramChooser} componentProps={{onBlur:onInputBlurred}}/>
+    return <Field label={t`Dance`} labelStyle="hidden" path={[...path as DanceProgramPath, 'item' as const]} component={DanceProgramChooser} componentProps={{onBlur:onInputBlurred}}/>
     case 'EventProgram':
       return <>
-        <Input label={t`eventProgramName`} path={[...path as ProgramItemPath, 'name']} componentProps={{onBlur:onInputBlurred}} required />
-        <Field label={t`eventProgramDescription`} path={[...path as ProgramItemPath, 'description']} component={MarkdownEditor} />
-        <Switch label={t`showInLists`} path={[...path as ProgramItemPath, 'showInLists']} inline />
+        <Input label={t`eventProgramName`} path={[...path as ProgramItemPath, 'item', 'name']} componentProps={{onBlur:onInputBlurred}} required />
+        <Field label={t`eventProgramDescription`} path={[...path as ProgramItemPath, 'item', 'description']} component={MarkdownEditor} />
+        <Switch label={t`showInLists`} path={[...path as ProgramItemPath, 'item', 'showInLists']} inline />
       </>
   }
 
@@ -346,12 +349,12 @@ function ProgramDetailsEditor({path, onInputBlurred}) {
 }
 
 //TODO: move hasConflict handling somewhere saner
-function DanceProgramChooser({value, onChange, hasConflict, onBlur, ...props} : FieldComponentProps<EventProgramItem, HTMLElement> & {onBlur: (e: React.FocusEvent) => unknown}) {
+const DanceProgramChooser = React.memo(function DanceProgramChooser({value, onChange, hasConflict, onBlur, ...props} : FieldComponentProps<EventProgramItem, HTMLElement> & {onBlur: (e: React.FocusEvent) => unknown}) {
   return <DanceChooser
     value={value?._id ? value as Dance : null}
     onChange={(dance, e) => onChange(
       dance
-        ? {...dance, __typename: 'DanceProgram'} as DanceProgram
+        ? {...dance, __typename: 'Dance'} as Dance
         : {__typename: 'RequestedDance'} as RequestedDance,
       e
     )}
@@ -360,7 +363,7 @@ function DanceProgramChooser({value, onChange, hasConflict, onBlur, ...props} : 
     onBlur={onBlur}
     {...props}
   />
-}
+})
 
 function IntervalMusicEditor({intervalMusicDuration, onSetIntervalMusicDuration}) {
   const row = useRef<HTMLTableRowElement>(null);
@@ -443,7 +446,7 @@ function MoveItemToSectionSelector({itemPath} : { itemPath: ProgramItemPath}) {
   const item = useValueAt(itemPath)
   const onChangeProgram = useOnChangeFor([])
 
-  const canMoveToIntroductions = currentSectionType === 'danceSets' && item.__typename === 'EventProgram'
+  const canMoveToIntroductions = currentSectionType === 'danceSets' && item.item.__typename === 'EventProgram'
   const introSection = {name: t`introductoryInformation`, isIntroductionsSection: true, index: 0}
   const sections = useValueAt("danceSets")
     .map(({name}, index) => ({name, index}))

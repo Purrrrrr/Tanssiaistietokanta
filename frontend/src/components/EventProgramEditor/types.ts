@@ -8,31 +8,32 @@ export interface EventProgramSettings {
 
 export interface Section {
   isIntroductionsSection: boolean
-  program: EventProgramItem[] | EventProgram[]
+  program: EventProgramRow[]
 }
 
 export interface IntroSection extends Section {
   isIntroductionsSection: true
-  program: EventProgram[]
+  program: EventProgramRow[]
   intervalMusicDuration: 0
 }
 export interface DanceSet extends Section {
   isIntroductionsSection: false
   _id: string
   name: string
-  program: EventProgramItem[]
+  program: EventProgramRow[]
   intervalMusicDuration: number
 }
 
-export type EventProgramItem = DanceProgram | EventProgram | RequestedDance
-
-export interface DanceProgram extends ProgramItem, Dance {
-  __typename: 'DanceProgram'
+export type EventProgramRow = {
+  _id: string
+  item: EventProgramItem
+  slideStyleId?: string
 }
+export type EventProgramItem = Dance | EventProgram | RequestedDance
+
 export interface RequestedDance {
   __typename: 'RequestedDance'
   _id?: never
-  slideStyleId?: string
 }
 
 export interface EventProgram extends ProgramItem {
@@ -45,5 +46,4 @@ export interface ProgramItem {
   name: string
   description?: string
   duration?: number
-  slideStyleId?: string
 }

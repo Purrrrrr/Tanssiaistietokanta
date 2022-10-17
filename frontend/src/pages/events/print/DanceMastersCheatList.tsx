@@ -25,19 +25,25 @@ query getDanceMastersCheatList($eventId: ID!) {
     _id
     program {
       introductions {
-        name
+        item {
+          ... on ProgramItem {
+            name
+          }
+        }
       }
       danceSets {
         name
         program {
-          __typename
-          ... on DanceProgram {
-            description
-            prelude
-          }
-          ... on ProgramItem {
-            _id
-            name
+          item {
+            __typename
+            ... on Dance {
+              description
+              prelude
+            }
+            ... on ProgramItem {
+              _id
+              name
+            }
           }
         }
       }
@@ -63,8 +69,8 @@ function DanceMastersCheatListView({program}) {
     {introductions.length > 0 &&
       <>
         <HeaderRow>{t`introductions`}</HeaderRow>
-        {introductions.map((item, i) => 
-            <SimpleRow key={i} text={item.name} />
+        {introductions.map((row, i) => 
+            <SimpleRow key={i} text={row.item.name} />
         )}
       </>
     }
@@ -77,9 +83,9 @@ function DanceMastersCheatListView({program}) {
 function DanceSetRows({danceSet: {name, program}}) {
   return <>
     <HeaderRow>{name}</HeaderRow>
-    {program.map((item, i) => {
+    {program.map(({item}, i) => {
       switch(item.__typename) {
-        case 'DanceProgram':
+        case 'Dance':
           return <DanceRow key={i} dance={item} />;
         case 'RequestedDance':
           return <SimpleRow key={i} text={t`requestedDance`} />;

@@ -20,7 +20,7 @@ interface FormFor<T> {
   Input: <L, P extends TypedPath<T,P,string | undefined>, V extends PropertyAtPath<T,P> & (string | undefined)>(props: InputFieldProps<L,P,V>) => React.ReactElement
   useValueAt: <P extends Path<T>, SubT extends PropertyAtPath<T,P>>(path: P) => SubT
   useOnChangeFor: <P extends Path<T>, SubT extends PropertyAtPath<T,P>>(path: P) => (v: NewValue<SubT>) => unknown
-  useAppendToList: <P extends TypedPath<T, P, any[]>, SubT extends PropertyAtPath<T,P> & any[]>(path: P) => (v: SubT[number] | ((v: SubT) => SubT[number])) => unknown
+  useAppendToList: <P extends TypedPath<T, P, any[]>, SubT extends PropertyAtPath<T,P> & unknown[]>(path: P) => (v: SubT[number] | ((v: SubT) => SubT[number])) => unknown
   useRemoveFromList: <P extends TypedPath<T, P, any[]>>(path: P, index: number) => () => unknown
 }
 

@@ -14,9 +14,6 @@ module.exports = (app) => {
     Dance: {
       teachedIn: findTeachedIn,
     },
-    DanceProgram: {
-      teachedIn: findTeachedIn,
-    },
     Query: {
       dances: (_, __, params) => service.find(params),
     },

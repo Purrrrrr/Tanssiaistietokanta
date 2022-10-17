@@ -27,28 +27,31 @@ query BallProgram($eventId: ID!) {
     program {
       slideStyleId
       introductions {
-        name
+        item {
+          ... on ProgramItem {
+            name
+          }
+        }
         slideStyleId
       }
       danceSets {
         name
         intervalMusicDuration
         program {
-          __typename
-          ... on ProgramItem {
-            _id
-            name
-            description
-            slideStyleId
-          }
-          ... on RequestedDance {
-            slideStyleId
-          }
-          ... on DanceProgram {
-            teachedIn(eventId: $eventId) { _id, name }
-          }
-          ... on EventProgram {
-            showInLists
+          slideStyleId
+          item {
+            __typename
+            ... on ProgramItem {
+              _id
+              name
+              description
+            }
+            ... on Dance {
+              teachedIn(eventId: $eventId) { _id, name }
+            }
+            ... on EventProgram {
+              showInLists
+            }
           }
         }
       }
@@ -125,12 +128,12 @@ function getSlides(event) : Slide[] {
   const defaultStyleId = event.program.slideStyleId;
 
   const {introductions, danceSets} = event.program;
-  for (const introduction of introductions) {
-    slides.push({ ...introduction, parent: eventHeader });
+  for (const {item, slideStyleId} of introductions) {
+    slides.push({ ...item,  slideStyleId, parent: eventHeader });
   }
   for (const danceSet of danceSets) {
     const danceSetSlide = { ...danceSet, subtotal: danceSet.program.length };
-    const danceProgram = danceSet.program.map(item => ({ ...item, parent: danceSetSlide}));
+    const danceProgram = danceSet.program.map(({item, slideStyleId}) => ({ ...item, slideStyleId, parent: danceSetSlide}));
     danceSetSlide.program = danceProgram;
     slides.push(danceSetSlide);
     slides.push(...danceProgram);
@@ -162,7 +165,7 @@ function getSlides(event) : Slide[] {
 
 function SlideView({slide, onChangeSlide}) {
   switch(slide.__typename) {
-    case 'DanceProgram':
+    case 'Dance':
       return <DanceSlide dance={slide} onChangeSlide={onChangeSlide} />;
     case 'RequestedDance':
       return <RequestedDanceSlide next={slide.next} onChangeSlide={onChangeSlide} />;

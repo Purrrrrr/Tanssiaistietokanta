@@ -2,20 +2,7 @@ type Query {
   dances: [Dance!]!
 }
 
-interface DanceProps {
-  _id: ID
-  name: String!
-  description: String
-  duration: Float
-  prelude: String
-  formation: String
-  category: String
-  instructions: String
-  remarks: String
-  teachedIn(eventId: ID): [Workshop!]!
-}
-
-type Dance implements DanceProps {
+type Dance implements ProgramItem {
   _id: ID
   name: String!
   description: String

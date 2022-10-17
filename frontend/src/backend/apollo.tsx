@@ -8,8 +8,8 @@ export type {DocumentNode, FetchResult, MutationResult} from "@apollo/client"
 
 const cache = new InMemoryCache({
   possibleTypes: {
-    EventProgramItem: ['RequestedDance', 'DanceProgram', 'EventProgram'],
-    ProgramItem: ['DanceProgram', 'EventProgram'],
+    EventProgramItem: ['RequestedDance', 'Dance', 'EventProgram'],
+    ProgramItem: ['Dance', 'EventProgram'],
   },
   typePolicies: {
     Query: {

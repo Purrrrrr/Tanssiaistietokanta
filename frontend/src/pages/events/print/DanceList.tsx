@@ -28,12 +28,13 @@ function DanceList({eventId}) {
       <Switch id="showSideBySide" inline label={t`showSideBySide`} value={sidebyside} onChange={setSidebyside}/>
       <Button text={t`print`} onClick={() => window.print()} />
     </PrintViewToolbar>
-    <PrintFooterContainer footer={<Footer workshops={workshops} />}>
+    <PrintFooterContainer footer={<Footer workshops={workshops.filter(w => w.abbreviation)} />}>
       {program.danceSets.map(
         ({name, program}, key) => {
           return <div key={key} className="section">
             <h2>{name}</h2>
             {program
+              .map(row => row.item)
               .filter(item => item.__typename !== 'EventProgram' || item.showInLists)
               .map((item, i) =>
               <ProgramItem key={i} item={item} />
@@ -57,10 +58,13 @@ function Footer({workshops}) {
 }
 
 function ProgramItem({item}) {
+  const teachedIn = (item.teachedIn ?? [])
+    .map(workshop => workshop.abbreviation)
+    .filter(a => a)
+    .join(', ')
   return <p>
     {item.name ?? <RequestedDance />}
-    {item.teachedIn && item.teachedIn.length > 0 && 
-        (" ("+item.teachedIn.map(workshop => workshop.abbreviation).join(', ')+")")
+    {teachedIn && (" ("+teachedIn+")")
     }
   </p>;
 }
@@ -86,17 +90,19 @@ query getDanceList($eventId: ID!) {
       danceSets {
         name
         program {
-          __typename
-          ... on ProgramItem {
-            name
-          }
-          ... on DanceProgram {
-            teachedIn(eventId: $eventId) {
-              name, abbreviation
+          item {
+            __typename
+            ... on ProgramItem {
+              name
             }
-          }
-          ... on EventProgram {
-            showInLists
+            ... on Dance {
+              teachedIn(eventId: $eventId) {
+                name, abbreviation
+              }
+            }
+            ... on EventProgram {
+              showInLists
+            }
           }
         }
       }
