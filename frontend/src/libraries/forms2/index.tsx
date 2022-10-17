@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react';
 import * as L from 'partial.lenses';
-import {useValueAt, useOnChangeFor, toArrayPath} from './formContext'
+import {useValueAt, useOnChangeFor} from './formContext'
 import {TypedPath, Path, PropertyAtPath, NewValue} from './types'
 import {Field, FieldProps} from './Field'
 import {Form, FormProps} from './Form'

@@ -19,7 +19,7 @@ export interface IntroSection extends Section {
 export interface DanceSet extends Section {
   isIntroductionsSection: false
   _id: string
-  name: String
+  name: string
   program: EventProgramItem[]
   intervalMusicDuration: number
 }

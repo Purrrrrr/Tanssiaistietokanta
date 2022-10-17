@@ -270,11 +270,9 @@ function ProgramListEditor({path, tableRef}) {
   </ListEditor>;
 }
 
-function ProgramItemEditor({path, itemIndex, item, items, isIntroductionsSection, onChange, onRemove, onAdd, onMoveDown, onMoveUp, ...props}) {
+function ProgramItemEditor({path, itemIndex, item, items, isIntroductionsSection, onChange, onRemove, onAdd, onMoveDown, onMoveUp}) {
   const itemPath = [...path, 'program', itemIndex] as ProgramItemPath
   const defaultSlideStyleId = useValueAt("slideStyleId")
-  const danceSets = useValueAt("danceSets")
-  const onChangeProgram = useOnChangeFor([])
 
   const {__typename } = item;
   const onKeyDown = useHotkeyHandler(
@@ -286,26 +284,6 @@ function ProgramItemEditor({path, itemIndex, item, items, isIntroductionsSection
     bind(['delete', 'backspace'], removeItem)
   );
 
-  function onMoveItemToSet(item, section) {
-    onChangeProgram((program: EventProgramSettings) => {
-      const index = program.danceSets.indexOf(section)
-
-      const removeItem = L.set(
-        [L.seq('introductions', ['danceSets', L.elems]), 'program', L.elems, L.when(i => i === item)],
-        undefined,
-      )
-      const addItem = L.set(
-        [
-          section.isIntroductionsSection
-          ? ['introductions', 'program', L.appendTo]
-          : ['danceSets', index, 'program', L.appendTo]
-        ],
-        item,
-      )
-      return addItem(removeItem(program)) as EventProgramSettings
-    })
-  }
-
   const container = useRef<HTMLTableRowElement>(null);
   /** Focuses the row when the dance/value editor is blurred but not if something inside the row is already focused
    * This allows tab navigation to work, but helps users that use the custom nav */
@@ -313,12 +291,11 @@ function ProgramItemEditor({path, itemIndex, item, items, isIntroductionsSection
     //We need to set a timeout, because the Blueprint Suggest used by Dancechooser handles blurring in a wacky way
     setTimeout(() => {
       const nextFocused = document.activeElement;
-      const containerElement = container.current;
-      if (containerElement !== null && nextFocused && containerElement.contains(nextFocused)) {
+      if (nextFocused && container.current?.contains(nextFocused)) {
         //Focus is still somewhere inside our item
         return;
       }
-      containerElement && containerElement.focus();
+      container.current?.focus();
     }, 0);
   }
 
@@ -326,8 +303,6 @@ function ProgramItemEditor({path, itemIndex, item, items, isIntroductionsSection
     onRemove();
     focusSiblingsOrParent(e.target, 'div.danceset');
   }
-
-  const canMoveToIntroductions = !isIntroductionsSection && __typename === 'EventProgram'
 
   return <tr className="eventProgramItem" onKeyDown={onKeyDown} ref={container} tabIndex={0}>
     <td>{t(__typename)}</td>
@@ -346,10 +321,7 @@ function ProgramItemEditor({path, itemIndex, item, items, isIntroductionsSection
         inheritedStyleId={defaultSlideStyleId}
         inheritedStyleName={t`eventDefaultStyle`}
         onSelect={style => onChange(L.set('slideStyleId', style.id))} />
-      <MoveItemToSectionSelector
-        showIntroSection={canMoveToIntroductions}
-        sections={danceSets.filter(d => d.program !== items)}
-        onSelect={section => onMoveItemToSet(item, section)} />
+      <MoveItemToSectionSelector itemPath={itemPath} />
       <Button title={t`remove`} intent="danger" icon="cross" onClick={removeItem} className="delete" />
     </td>
   </tr>;
@@ -443,7 +415,7 @@ function DanceSetDuration({ program, intervalMusicDuration}) {
   </>;
 }
 
-const SectionSelect = asFormControl(Select.ofType<{name: string}>());
+const SectionSelect = asFormControl(Select.ofType<{name: string, index: number, isIntroductionsSection?: boolean}>());
 
 function MoveDanceSetSelector({currentSet, onSelect}) {
   const danceSets = useValueAt("danceSets")
@@ -466,17 +438,44 @@ function MoveDanceSetSelector({currentSet, onSelect}) {
   />
 }
 
-function MoveItemToSectionSelector({showIntroSection, sections, onSelect}) {
-  const introSection = {name: t`introductoryInformation`, isIntroductionsSection: true}
+function MoveItemToSectionSelector({itemPath} : { itemPath: ProgramItemPath}) {
+  const currentSectionType = itemPath[0]
+  const item = useValueAt(itemPath)
+  const onChangeProgram = useOnChangeFor([])
+
+  const canMoveToIntroductions = currentSectionType === 'danceSets' && item.__typename === 'EventProgram'
+  const introSection = {name: t`introductoryInformation`, isIntroductionsSection: true, index: 0}
+  const sections = useValueAt("danceSets")
+    .map(({name}, index) => ({name, index}))
+    .filter(({index}) => currentSectionType !== 'danceSets' || index !== itemPath[1])
+
   return <Selector
-    items={showIntroSection ? [introSection, ...sections] : sections}
+    items={canMoveToIntroductions ? [introSection, ...sections] : sections}
     itemRenderer={(section) => section.name}
-    onSelect={onSelect}
+    onSelect={(section) => {
+      onChangeProgram((program: EventProgramSettings) => {
+        const removeItem = L.set(itemPath, undefined)
+        const addItem = L.set(
+          [
+            section.isIntroductionsSection
+              ? ['introductions', 'program', L.appendTo]
+              : ['danceSets', section.index, 'program', L.appendTo]
+          ],
+          item,
+        )
+        return addItem(removeItem(program)) as EventProgramSettings
+      })
+    }}
     placeholder={t`moveToSet`}
   />
 }
 
-function Selector({items, itemRenderer, onSelect, placeholder, className = undefined as string | undefined}) {
+interface SelectorProps extends Pick<React.ComponentProps<typeof SectionSelect>, "items" | "className"> {
+  itemRenderer: (item: Parameters<React.ComponentProps<typeof SectionSelect>["itemRenderer"]>[0]) => string
+  onSelect: React.ComponentProps<typeof SectionSelect>["onItemSelect"]
+  placeholder: string
+}
+function Selector({items, itemRenderer, onSelect, placeholder, className = undefined as string | undefined} : SelectorProps) {
   return <SectionSelect
     filterable={false}
     className={className}
