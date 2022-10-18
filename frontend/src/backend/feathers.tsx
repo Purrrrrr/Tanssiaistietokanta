@@ -14,8 +14,6 @@ app.configure(feathers.socketio(socket))
 app.configure(feathers.authentication())
 
 export default app
-// @ts-ignore
-window.feathers = app
 
 const graphQLService = app.service('graphql')
 

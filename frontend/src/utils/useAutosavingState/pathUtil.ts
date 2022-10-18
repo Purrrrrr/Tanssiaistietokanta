@@ -4,10 +4,7 @@ export function emptyPath<T>(): Path<T> {
   return [] as Path<T>
 }
 export function subPath<T extends object, K extends keyof T>(key : K, path : Path<T[K]>) : Path<T> {
-  // @ts-ignore */
-  return [
-    key, ...path
-  ] as unknown as Path<T>
+  return [ key, ...path ] as Path<T>
 }
 export function subIndexPath<T>(index : number, path : Path<T>) : Path<T[]> {
   return [
