@@ -11,3 +11,8 @@ body {
   width: 1200px;
   margin: 0 auto;
 }
+
+@font-face {
+  font-family: "Dancing Script";
+  src: url("../public/fonts/DancingScript.ttf") format("truetype");
+}
