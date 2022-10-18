@@ -1,7 +1,7 @@
-import React from 'react';
-import {FormGroup} from 'libraries/ui';
+import React from 'react'
+import {FormGroup} from 'libraries/ui'
 import {FieldComponentProps, LabelStyle, Path, PropertyAtPath, PartialWhen, NoRequiredProperties} from './types'
-import {useError, ErrorMessage, ValidationProps} from "./validation";
+import {useError, ErrorMessage, ValidationProps} from './validation'
 import { useValueAt, useHasConflictsAt, useFormMetadata, useOnChangeFor } from './formContext'
 
 export type FieldProps<Label, ValuePath, Value, Component extends React.ElementType, AdditionalProps> = 
@@ -21,7 +21,7 @@ export type FieldProps<Label, ValuePath, Value, Component extends React.ElementT
 
 type MaybeComponentProps<Props extends object> = PartialWhen<NoRequiredProperties<Props>, { componentProps: Props }>
 
-export function Field<T, L, P extends Path<T>, V extends PropertyAtPath<T,P>, C extends React.ElementType, AP>(
+export function Field<T, L, P extends Path<T>, V extends PropertyAtPath<T, P>, C extends React.ElementType, AP>(
   {
     label,
     labelInfo,
@@ -38,13 +38,13 @@ export function Field<T, L, P extends Path<T>, V extends PropertyAtPath<T,P>, C 
   const value = useValueAt<T, P, V>(path)
   const { readOnly, labelStyle: labelStyleFromCtx, inline: inlineFromCtx } = useFormMetadata()
   const onChange = useOnChangeFor<T, P, V>(path)
-  const error = useError(value, rest);
-  const id = Array.isArray(path) ? path.join("--") : String(path)
-  const errorId = `${id}--error`;
+  const error = useError(value, rest)
+  const id = Array.isArray(path) ? path.join('--') : String(path)
+  const errorId = `${id}--error`
 
   const ariaProps = labelStyle === 'hidden'
-    ? {"aria-describedby": errorId, "aria-label": labelInfo ? `${label} ${labelInfo}` : label}
-    : {"aria-describedby": errorId}
+    ? {'aria-describedby': errorId, 'aria-label': labelInfo ? `${label} ${labelInfo}` : label}
+    : {'aria-describedby': errorId}
 
   return <FormWrapper label={label} labelInfo={labelInfo} helperText={helperText} labelStyle={labelStyle ?? labelStyleFromCtx} inline={inline ?? inlineFromCtx} id={id}>
     <Component

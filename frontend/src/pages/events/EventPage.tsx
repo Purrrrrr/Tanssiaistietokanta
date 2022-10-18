@@ -1,12 +1,12 @@
-import {Card} from "libraries/ui";
-import {Link} from "react-router-dom"
-import React from 'react';
+import {Card} from 'libraries/ui'
+import {Link} from 'react-router-dom'
+import React from 'react'
 
-import {NavigateButton} from "components/widgets/NavigateButton";
-import {DeleteButton} from "components/widgets/DeleteButton";
-import {makeTranslate} from 'utils/translate';
-import {useDeleteWorkshop} from "services/workshops";
-import {PageTitle} from "components/PageTitle";
+import {NavigateButton} from 'components/widgets/NavigateButton'
+import {DeleteButton} from 'components/widgets/DeleteButton'
+import {makeTranslate} from 'utils/translate'
+import {useDeleteWorkshop} from 'services/workshops'
+import {PageTitle} from 'components/PageTitle'
 
 const t = makeTranslate({
   ballProgram: 'Tanssiaisohjelma',
@@ -25,7 +25,7 @@ const t = makeTranslate({
     one: 'Toivetanssi',
     other: '%(count)s toivetanssia'
   }
-});
+})
 
 export default function EventPage({event}) {
   return <>
@@ -42,7 +42,7 @@ function EventProgram({program}) {
     return <>
       <t.p>noProgram</t.p>
       <NavigateButton adminOnly intent="primary" href="program" text={t`addProgram`} />
-    </>;
+    </>
   }
 
   return <>
@@ -59,22 +59,22 @@ function EventProgram({program}) {
       text={t`printBallDanceList`} />
     <NavigateButton href="ball-program?hideUI" target="_blank"
       text={t`ballProgramSlideshow`} />
-  </>;
+  </>
 }
 
 function formatDances(program) {
   const danceNames = program
     .filter(({item}) => item.__typename !== 'EventProgram' || item.showInLists)
     .map(row => row.item.name)
-    .filter(a => a);
-  const requestedDanceCount = program.filter(isRequestedDance).length;
+    .filter(a => a)
+  const requestedDanceCount = program.filter(isRequestedDance).length
   if (requestedDanceCount) {
-    danceNames.push(t.pluralize('requestedDance', requestedDanceCount));
+    danceNames.push(t.pluralize('requestedDance', requestedDanceCount))
   }
 
-  return danceNames.join(', ');
+  return danceNames.join(', ')
 }
-const isRequestedDance = row => row.item.__typename === 'RequestedDance';
+const isRequestedDance = row => row.item.__typename === 'RequestedDance'
 
 function EventWorkshops({workshops, eventId}) {
   return <>
@@ -87,23 +87,23 @@ function EventWorkshops({workshops, eventId}) {
       text={t`danceCheatlist`} />
     <NavigateButton href="print/dance-instructions" target="_blank"
       text={t`danceInstructions`} />
-  </>;
+  </>
 }
 
 function WorkshopLink({workshop}) {
-  const [deleteWorkshop] = useDeleteWorkshop({refetchQueries: ['getEvent']});
-  const {_id, abbreviation, name, description, dances} = workshop;
+  const [deleteWorkshop] = useDeleteWorkshop({refetchQueries: ['getEvent']})
+  const {_id, abbreviation, name, description, dances} = workshop
 
   return <Card style={{clear: 'right'}}>
     <DeleteButton onDelete={() => deleteWorkshop(_id)}
-      style={{float: "right"}} text="Poista"
-      confirmText={"Haluatko varmasti poistaa työpajan "+name+"?"}
+      style={{float: 'right'}} text="Poista"
+      confirmText={'Haluatko varmasti poistaa työpajan '+name+'?'}
     />
     <Link to={'workshops/'+workshop._id} ><h2>
-        {name}
-        {abbreviation &&
+      {name}
+      {abbreviation &&
             <> ({abbreviation})</>
-        }
+      }
     </h2></Link>
     <p>{description}</p>
     {t`dances` + ': '}

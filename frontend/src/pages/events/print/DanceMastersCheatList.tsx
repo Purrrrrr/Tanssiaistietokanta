@@ -1,14 +1,14 @@
-import './DanceMastersCheatList.sass';
+import './DanceMastersCheatList.sass'
 
-import {backendQueryHook} from "backend";
+import {backendQueryHook} from 'backend'
 
-import {Button} from "libraries/ui";
-import {EditableDanceProperty} from "components/EditableDanceProperty";
-import {LoadingState} from 'components/LoadingState';
-import {PrintTable} from 'components/PrintTable';
-import PrintViewToolbar from 'components/widgets/PrintViewToolbar';
-import React from 'react';
-import {makeTranslate} from 'utils/translate';
+import {Button} from 'libraries/ui'
+import {EditableDanceProperty} from 'components/EditableDanceProperty'
+import {LoadingState} from 'components/LoadingState'
+import {PrintTable} from 'components/PrintTable'
+import PrintViewToolbar from 'components/widgets/PrintViewToolbar'
+import React from 'react'
+import {makeTranslate} from 'utils/translate'
 
 const t = makeTranslate({
   print: 'Tulosta',
@@ -17,7 +17,7 @@ const t = makeTranslate({
   addPrelude: 'Lisää alkusoitto',
   introductions: 'Alkutiedotukset',
   requestedDance: 'Toivetanssi',
-});
+})
 
 const useCheatList = backendQueryHook(`
 query getDanceMastersCheatList($eventId: ID!) {
@@ -49,10 +49,10 @@ query getDanceMastersCheatList($eventId: ID!) {
       }
     }
   }
-}`);
+}`)
 
 export default function DanceMastersCheatList({eventId}) {
-  const {data, ...loadingState} = useCheatList({eventId});
+  const {data, ...loadingState} = useCheatList({eventId})
   if (!data) return <LoadingState {...loadingState} />
 
   return <>
@@ -60,24 +60,24 @@ export default function DanceMastersCheatList({eventId}) {
       <Button text={t`print`} onClick={() => window.print()} />
     </PrintViewToolbar>
     <DanceMastersCheatListView program={data.event.program} />
-  </>;
+  </>
 }
 
 function DanceMastersCheatListView({program}) {
-  const {introductions, danceSets} = program;
+  const {introductions, danceSets} = program
   return <PrintTable className="dancemasters-cheatlist">
     {introductions.length > 0 &&
       <>
         <HeaderRow>{t`introductions`}</HeaderRow>
         {introductions.map((row, i) => 
-            <SimpleRow key={i} text={row.item.name} />
+          <SimpleRow key={i} text={row.item.name} />
         )}
       </>
     }
     {danceSets.map((danceSet, index) =>
       <DanceSetRows key={index} danceSet={danceSet} />
     )}
-  </PrintTable>;
+  </PrintTable>
 }
 
 function DanceSetRows({danceSet: {name, program}}) {
@@ -86,14 +86,14 @@ function DanceSetRows({danceSet: {name, program}}) {
     {program.map(({item}, i) => {
       switch(item.__typename) {
         case 'Dance':
-          return <DanceRow key={i} dance={item} />;
+          return <DanceRow key={i} dance={item} />
         case 'RequestedDance':
-          return <SimpleRow key={i} text={t`requestedDance`} />;
+          return <SimpleRow key={i} text={t`requestedDance`} />
         default:
-          return <SimpleRow key={i} className="info" text={item.name} />;
+          return <SimpleRow key={i} className="info" text={item.name} />
       }
     })}
-    </>
+  </>
 }
 
 function DanceRow({dance}) {

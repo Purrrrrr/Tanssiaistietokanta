@@ -18,7 +18,7 @@ exports.ChannelConnections = class ChannelConnections {
     
     const channels = this._getChannels()
     return Object.entries(channels)
-      .filter(([name, channel]) => channel.connections.includes(connection))
+      .filter(([, channel]) => channel.connections.includes(connection))
       .map(([name]) => name)
   }
 
@@ -27,7 +27,7 @@ exports.ChannelConnections = class ChannelConnections {
     
     this.app.channel(name).join(connection)
 
-    return this.find({connection});
+    return this.find({connection})
   }
 
   async remove (id, { connection }) {
@@ -35,6 +35,6 @@ exports.ChannelConnections = class ChannelConnections {
     
     this.app.channel(id).leave(connection)
 
-    return this.find({connection});
+    return this.find({connection})
   }
-};
+}

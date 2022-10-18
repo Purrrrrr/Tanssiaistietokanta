@@ -1,4 +1,5 @@
-const { createProxyMiddleware } = require('http-proxy-middleware');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { createProxyMiddleware } = require('http-proxy-middleware')
 
 module.exports = function(app) {
   app.use(
@@ -8,5 +9,5 @@ module.exports = function(app) {
       pathRewrite: {'^/api' : ''},
       changeOrigin: true,
     })
-  );
-};
+  )
+}

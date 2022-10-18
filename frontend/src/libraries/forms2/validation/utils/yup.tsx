@@ -1,5 +1,5 @@
-import * as yup from 'yup';
-export default yup;
+import * as yup from 'yup'
+export default yup
 
 /* eslint-disable no-template-curly-in-string */
 yup.setLocale({
@@ -8,7 +8,7 @@ yup.setLocale({
     required: ({value}) => {
       return Array.isArray(value)
         ? 'Kentän täytyy sisältää ainakin yksi arvo'
-        : 'Täytä kenttä';
+        : 'Täytä kenttä'
     },
   },
   string: {
@@ -19,5 +19,5 @@ yup.setLocale({
     min: 'Pitää olla ainakin ${min}',
     max: 'Saa olla korkeintaan ${max}',
   },
-});
+})
 /* eslint-enable no-template-curly-in-string */

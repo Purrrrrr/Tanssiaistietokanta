@@ -1,8 +1,8 @@
-import React from 'react';
-import {DurationField} from "components/widgets/DurationField";
-import {formFor, MarkdownEditor} from "libraries/forms2";
-import {Dance} from "types/Dance";
-import {Flex} from 'components/Flex';
+import React from 'react'
+import {DurationField} from 'components/widgets/DurationField'
+import {formFor, MarkdownEditor} from 'libraries/forms2'
+import {Dance} from 'types/Dance'
+import {Flex} from 'components/Flex'
 
 import './DanceEditor.sass'
 
@@ -36,5 +36,5 @@ export function DanceEditor({dance, onChange, onSubmit, bottomToolbar} : DanceEd
       </div>
     </Flex>
     {bottomToolbar}
-  </Form>;
+  </Form>
 }

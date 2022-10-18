@@ -1,5 +1,5 @@
-const validateInputType = require('../../hooks/validateGraphQLInputType');
-const provideDefaultValues = require('../../hooks/provideDefaultValues');
+const validateInputType = require('../../hooks/validateGraphQLInputType')
+const provideDefaultValues = require('../../hooks/provideDefaultValues')
 
 module.exports = {
   before: {
@@ -31,4 +31,4 @@ module.exports = {
     patch: [],
     remove: []
   }
-};
+}

@@ -1,4 +1,4 @@
-const conversionUrl = '/api/convert';
+const conversionUrl = '/api/convert'
 
 export function convertToMarkdown(content) {
   return fetch(conversionUrl, {
@@ -9,5 +9,5 @@ export function convertToMarkdown(content) {
     body: JSON.stringify({
       input: content
     })
-  }).then(res => res.ok ? res.json() : Promise.reject({message: "Unable to convert wiki format. Contact server administrator"}));
+  }).then(res => res.ok ? res.json() : Promise.reject({message: 'Unable to convert wiki format. Contact server administrator'}))
 }

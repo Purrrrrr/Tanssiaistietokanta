@@ -18,12 +18,14 @@ export function mergeObjects<T extends object>(
 
     switch (subResult.state) {
       case 'CONFLICT':
+      {
         const subConflicts : Path<T>[] = subResult.conflicts
           .map(conflict => subPath(key, conflict))
         conflicts.push(...subConflicts)
         pendingModifications[key] = subResult.pendingModifications
         hasConflicts = true
         break
+      }
       case 'MODIFIED_LOCALLY':
         pendingModifications[key] = subResult.pendingModifications
         hasModifications = true

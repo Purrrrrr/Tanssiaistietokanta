@@ -1,4 +1,4 @@
-import React  from 'react';
+import React  from 'react'
 import { ServiceName } from './backend/types'
 import { apolloClient, ApolloProvider, useQuery, gql } from './backend/apollo'
 import { makeMutationHook, getSingleValue } from './backend/apolloUtils'
@@ -15,19 +15,19 @@ export function entityListQueryHook(service : ServiceName, query) {
   const compiledQuery = gql(query)
   const callbacks = {
     created: (data) => appendToListQuery(compiledQuery, data),
-    updated: () => { },
+    updated: () => { /* do nothing */ },
     removed: () => filterRemovedFromListQuery(compiledQuery),
   }
 
   return () => {
     useServiceListEvents(service, callbacks)
 
-    const result = useQuery(compiledQuery);
+    const result = useQuery(compiledQuery)
     const data = result.data ? getSingleValue(result.data) : []
 
     return [
       data, result
-    ];
+    ]
   }
 }
 
@@ -78,12 +78,8 @@ function serviceMutateHook(
   })
 }
 
-interface QueryOptions {
-}
-
 export function backendQueryHook(
   query : string,
-  options : QueryOptions = {},
 ) {
   const compiledQuery = gql(query)
   return (variables = {}, options = {}) => useQuery(compiledQuery, { variables, ...options })

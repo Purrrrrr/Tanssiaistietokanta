@@ -1,5 +1,5 @@
-import { modify } from 'partial.lenses';
-import {apolloClient, DocumentNode} from './apollo';
+import { modify } from 'partial.lenses'
+import {apolloClient, DocumentNode} from './apollo'
 import {getSingleKey} from './apolloUtils'
 import {Entity} from './types'
 import createDebug from 'utils/debug'
@@ -17,14 +17,14 @@ export function appendToListQuery(query : DocumentNode, newValue : Entity) {
     debug(key)
     debug(data)
     return modify(key, list => [...list, newValue], data)
-  });
+  })
 }
 
 export function filterRemovedFromListQuery(query : DocumentNode) {
   getApolloCache().updateQuery({query}, data => {
     const key = getSingleKey(data)
     return modify(key, list => list.filter(isExistingEntity), data)
-  });
+  })
 }
 
 export function updateEntityFragment(typeName : string, fragment : DocumentNode, data : Entity) {

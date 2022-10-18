@@ -1,15 +1,15 @@
-import {useDeleteEvent, useEvents} from 'services/events';
+import {useDeleteEvent, useEvents} from 'services/events'
 
-import {DeleteButton} from "components/widgets/DeleteButton";
-import {Link} from "react-router-dom"
-import {NavigateButton} from "components/widgets/NavigateButton";
-import {PageTitle} from "components/PageTitle";
-import {AdminOnly} from 'services/users';
-import React from 'react';
+import {DeleteButton} from 'components/widgets/DeleteButton'
+import {Link} from 'react-router-dom'
+import {NavigateButton} from 'components/widgets/NavigateButton'
+import {PageTitle} from 'components/PageTitle'
+import {AdminOnly} from 'services/users'
+import React from 'react'
 
 export default function EventList() {
-  const [events] = useEvents();
-  const [deleteEvent] = useDeleteEvent({refetchQueries: ['getEvent', 'getEvents']});
+  const [events] = useEvents()
+  const [deleteEvent] = useDeleteEvent({refetchQueries: ['getEvent', 'getEvents']})
 
   return <>
     <PageTitle>Tanssiaistietokanta</PageTitle>
@@ -20,10 +20,10 @@ export default function EventList() {
     <h2>Tanssitapahtumia</h2>
     {events.map(event =>
       <h2 key={event._id}>
-        <Link to={"events/"+event._id} >{event.name}</Link>
+        <Link to={'events/'+event._id} >{event.name}</Link>
         <DeleteButton onDelete={() => deleteEvent(event._id)}
-          style={{float: "right"}} text="Poista"
-          confirmText={"Haluatko varmasti poistaa tapahtuman "+event.name+"?"}
+          style={{float: 'right'}} text="Poista"
+          confirmText={'Haluatko varmasti poistaa tapahtuman '+event.name+'?'}
         />
       </h2>
     )}

@@ -1,12 +1,12 @@
-import React, {useCallback} from 'react';
-import {DeleteButton} from "components/widgets/DeleteButton";
-import {DanceDataImportButton} from "components/DanceDataImportDialog";
-import {H2} from "libraries/ui";
-import {Dance} from "services/dances";
-import {DanceEditor} from './DanceEditor';
-import { Flex } from 'components/Flex';
-import useAutosavingState, {makePartial} from 'utils/useAutosavingState';
-import SyncStatus from 'components/SyncStatus';
+import React, {useCallback} from 'react'
+import {DeleteButton} from 'components/widgets/DeleteButton'
+import {DanceDataImportButton} from 'components/DanceDataImportDialog'
+import {H2} from 'libraries/ui'
+import {Dance} from 'services/dances'
+import {DanceEditor} from './DanceEditor'
+import { Flex } from 'components/Flex'
+import useAutosavingState, {makePartial} from 'utils/useAutosavingState'
+import SyncStatus from 'components/SyncStatus'
 
 interface DanceListItemProps {
   dance: Dance,
@@ -21,7 +21,7 @@ export function DanceListItem({dance: danceInDatabase, onChange, onDelete} : Dan
     },
     [onChange, danceInDatabase._id]
   )
-  const [dance, setDance, {state}] = useAutosavingState<Dance,Partial<Dance>>(danceInDatabase, patchDance, makePartial)
+  const [dance, setDance, {state}] = useAutosavingState<Dance, Partial<Dance>>(danceInDatabase, patchDance, makePartial)
   return <>
     <Flex alignItems="center">
       <H2 className="flex-fill">
@@ -37,5 +37,5 @@ export function DanceListItem({dance: danceInDatabase, onChange, onDelete} : Dan
       </div>
     </Flex>
     <DanceEditor dance={dance} onChange={setDance} />
-  </>;
+  </>
 }

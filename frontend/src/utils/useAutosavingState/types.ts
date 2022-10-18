@@ -16,7 +16,7 @@ export type Key = string | number | symbol
 export type MergeFunction = <T>(data: MergeData<T>) => MergeResult<T>
 
 //export type Path<T> = Key[]
-export type Path<Target,DepthCounter extends number = 3> = [] |
+export type Path<Target, DepthCounter extends number = 3> = [] |
   DepthCounter extends never
     ? []
     : Target extends (infer U)[]
@@ -28,7 +28,7 @@ export type Path<Target,DepthCounter extends number = 3> = [] |
         }[keyof Target])
         : []
 
-export type PropertyAtPath<Target extends unknown, Path extends readonly unknown[]> =
+export type PropertyAtPath<Target, Path extends readonly unknown[]> =
   // Base recursive case, no more paths to traverse
   Path extends []
     // Return target
@@ -49,7 +49,7 @@ export type JoinedPath<A> = Joined<Path<A>>
 type Joined<Path extends readonly unknown[]> =
   // Base recursive case, no more paths to traverse
   Path extends []
-    ? ""
+    ? ''
     // Here we have 1 path to access
     : Path extends [infer TargetPath extends string|number]
       ? TargetPath

@@ -1,28 +1,28 @@
-import React, {createContext, useContext, useMemo, useState, useRef} from 'react';
-import * as L from 'partial.lenses';
-import {arrayMoveImmutable} from 'array-move';
+import React, {createContext, useContext, useMemo, useState, useRef} from 'react'
+import * as L from 'partial.lenses'
+import {arrayMoveImmutable} from 'array-move'
 
-import {Dance} from "types/Dance";
-import {EventProgramSettings, DanceSet, EventProgramRow, EventProgramItem, RequestedDance} from "./types";
+import {Dance} from 'types/Dance'
+import {EventProgramSettings, DanceSet, EventProgramRow, EventProgramItem, RequestedDance} from './types'
 
-import {Card, HTMLTable, CssClass, Select, MenuItem} from "libraries/ui";
-import {formFor, ClickToEdit, Switch as PlainSwitch, SubmitButton, ActionButton as Button, asFormControl, FieldComponentProps, MarkdownEditor, useMemoizedPath} from "libraries/forms2";
+import {Card, HTMLTable, CssClass, Select, MenuItem} from 'libraries/ui'
+import {formFor, ClickToEdit, Switch as PlainSwitch, SubmitButton, ActionButton as Button, asFormControl, FieldComponentProps, MarkdownEditor, useMemoizedPath} from 'libraries/forms2'
 
-import {DragHandle, ListEditor, ListEditorItems} from "components/ListEditor";
-import {DanceChooser} from "components/widgets/DanceChooser";
-import {Duration} from "components/widgets/Duration";
-import {DurationField} from "components/widgets/DurationField";
-import {ProgramPauseDurationEditor} from "components/widgets/ProgramPauseDurationEditor";
-import {NavigateButton} from "components/widgets/NavigateButton";
-import {SlideStyleSelector} from "components/widgets/SlideStyleSelector";
-import {makeTranslate} from 'utils/translate';
-import {bind, useHotkeyHandler} from 'utils/useHotkeyHandler';
-import {useRedirectKeyDownTo} from 'utils/useRedirectKeyDownTo';
-import {navigateAmongSiblings, moveUp, moveDown, blurTo, focusTo, clickInParent} from 'utils/keyboardNavigation';
-import {guid} from "utils/guid";
-import {focusLater, focusSiblingsOrParent} from 'utils/focus';
+import {DragHandle, ListEditor, ListEditorItems} from 'components/ListEditor'
+import {DanceChooser} from 'components/widgets/DanceChooser'
+import {Duration} from 'components/widgets/Duration'
+import {DurationField} from 'components/widgets/DurationField'
+import {ProgramPauseDurationEditor} from 'components/widgets/ProgramPauseDurationEditor'
+import {NavigateButton} from 'components/widgets/NavigateButton'
+import {SlideStyleSelector} from 'components/widgets/SlideStyleSelector'
+import {makeTranslate} from 'utils/translate'
+import {bind, useHotkeyHandler} from 'utils/useHotkeyHandler'
+import {useRedirectKeyDownTo} from 'utils/useRedirectKeyDownTo'
+import {navigateAmongSiblings, moveUp, moveDown, blurTo, focusTo, clickInParent} from 'utils/keyboardNavigation'
+import {guid} from 'utils/guid'
+import {focusLater, focusSiblingsOrParent} from 'utils/focus'
 
-import './EventProgramEditor.sass';
+import './EventProgramEditor.sass'
 
 const {
   Input,
@@ -74,12 +74,12 @@ const t = makeTranslate({
   danceProgramIsEmpty: 'Ei tanssiohjelmaa.',
   danceSetName: 'Tanssisetin nimi',
   newProgramItem: 'Uusi ohjelmanumero',
-});
+})
 
-const DEFAULT_INTERVAL_MUSIC_DURATION = 15*60;
+const DEFAULT_INTERVAL_MUSIC_DURATION = 15*60
 const DurationHelperContext = createContext({
-  pause: 0, setPause: (() => {}) as (pause: number) => any,
-});
+  pause: 0, setPause: (() => {/* dummy */}) as (pause: number) => any,
+})
 
 interface EventProgramEditorProps {
   program: EventProgramSettings 
@@ -87,18 +87,18 @@ interface EventProgramEditorProps {
 }
 
 export function EventProgramEditor({program: eventProgram, onSubmit}: EventProgramEditorProps) {
-  const [program, onChange] = useState(eventProgram);
-  const {slideStyleId, danceSets, introductions} = program;
-  const [pause, setPause] = useState(3);
-  const element = useRef<HTMLElement>(null);
-  useRedirectKeyDownTo(element);
+  const [program, onChange] = useState(eventProgram)
+  const {slideStyleId, danceSets, introductions} = program
+  const [pause, setPause] = useState(3)
+  const element = useRef<HTMLElement>(null)
+  useRedirectKeyDownTo(element)
   const onKeyDown = useHotkeyHandler(
     ...navigateAmongSiblings('div.danceset'),
     //bind(['a', 's'], addDanceSet),
     //bind('i', addIntroductoryInfo),
-  );
+  )
 
-  const durationContext = useMemo(() => ({pause, setPause}), [pause]);
+  const durationContext = useMemo(() => ({pause, setPause}), [pause])
 
   return <Form value={program} onChange={onChange} onSubmit={onSubmit}>
     <DurationHelperContext.Provider value={durationContext}>
@@ -124,14 +124,14 @@ export function EventProgramEditor({program: eventProgram, onSubmit}: EventProgr
     <hr />
     <SubmitButton text="Tallenna muutokset" />
     <NavigateButton href='..' text="Peruuta" />
-  </Form>;
-};
+  </Form>
+}
 
 function AddIntroductionButton() {
-  const addIntroduction = useAppendToList(["introductions", "program"])
+  const addIntroduction = useAppendToList(['introductions', 'program'])
   function addIntroductoryInfo() {
-    addIntroduction(newEventProgramItem);
-    focusLater('.eventProgramEditor .danceset:first-child tbody tr:last-child');
+    addIntroduction(newEventProgramItem)
+    focusLater('.eventProgramEditor .danceset:first-child tbody tr:last-child')
   }
   return <Button text={t`addIntroductoryInfo`} onClick={addIntroductoryInfo} className="addIntroductoryInfo" />
 }
@@ -144,35 +144,35 @@ function newEventProgramItem(): EventProgramRow {
 }
 
 function AddDanceSetButton() {
-  const onAddDanceSet = useAppendToList("danceSets")
+  const onAddDanceSet = useAppendToList('danceSets')
   function addDanceSet() {
     onAddDanceSet(newDanceSet)
-    focusLater('.eventProgramEditor .danceset:last-child');
+    focusLater('.eventProgramEditor .danceset:last-child')
   }
   return <Button text={t`addDanceSet`} onClick={addDanceSet} className="addDanceSet" />
 }
 
 function newDanceSet(danceSets: DanceSet[]): DanceSet {
-  const danceSetNumber = danceSets.length + 1;
-  const dances = Array.from({length: 6}, () => ({item: {__typename: 'RequestedDance'}, _id: guid()} as EventProgramRow));
+  const danceSetNumber = danceSets.length + 1
+  const dances = Array.from({length: 6}, () => ({item: {__typename: 'RequestedDance'}, _id: guid()} as EventProgramRow))
   return {
     _id: guid(),
     isIntroductionsSection: false,
-    name: t`danceSet` + " " + danceSetNumber,
+    name: t`danceSet` + ' ' + danceSetNumber,
     program: dances,
     intervalMusicDuration: DEFAULT_INTERVAL_MUSIC_DURATION
   }
 }
 
-const introductionsPath = ["introductions"]
+const introductionsPath = ['introductions']
 function IntroductoryInformation() {
-  const infos = useValueAt(["introductions", "program"])
-  const table = useRef<HTMLTableElement>(null);
+  const infos = useValueAt(['introductions', 'program'])
+  const table = useRef<HTMLTableElement>(null)
   const onKeyDown = useHotkeyHandler(
     ...navigateAmongSiblings('div.danceset'),
     focusTo('tbody tr'),
     bind('i', clickInParent('div.danceset', 'button.addInfo')),
-  );
+  )
 
   if (infos.length === 0) return null
 
@@ -182,26 +182,26 @@ function IntroductoryInformation() {
       <AddIntroductionButton />
     </h2>
     <ProgramListEditor path={introductionsPath} tableRef={table} />
-  </Card>;
+  </Card>
 }
 
 const DanceSetEditor = React.memo(function DanceSetEditor({index} : {index: number}) {
-  const table = useRef<HTMLTableElement>(null);
+  const table = useRef<HTMLTableElement>(null)
 
-  const item = useValueAt(["danceSets", index])
-  const onChangeDancesets = useOnChangeFor("danceSets")
+  const item = useValueAt(['danceSets', index])
+  const onChangeDancesets = useOnChangeFor('danceSets')
   function onMoveDanceSet(danceset, index) {
     onChangeDancesets(sets => arrayMoveImmutable(sets, sets.indexOf(danceset), index))
   }
-  const onRemove = useRemoveFromList("danceSets", index)
+  const onRemove = useRemoveFromList('danceSets', index)
   function removeDanceSet(e) {
-    onRemove();
-    focusSiblingsOrParent(e.target, 'section.eventProgramEditor');
+    onRemove()
+    focusSiblingsOrParent(e.target, 'section.eventProgramEditor')
   }
-  const onAddItem = useAppendToList(["danceSets", index, "program"])
+  const onAddItem = useAppendToList(['danceSets', index, 'program'])
   function addItem(itemToAdd: EventProgramRow) {
-    onAddItem(itemToAdd);
-    focusLater('tbody tr:last-child', table.current);
+    onAddItem(itemToAdd)
+    focusLater('tbody tr:last-child', table.current)
   }
 
   const onKeyDown = useHotkeyHandler(
@@ -213,7 +213,7 @@ const DanceSetEditor = React.memo(function DanceSetEditor({index} : {index: numb
     bind(['a', 'd'], clickInParent('div.danceset', 'button.addDance')),
     bind('i', clickInParent('div.danceset', 'button.addInfo')),
     bind(['delete', 'backspace'], removeDanceSet)
-  );
+  )
 
   return <Card className="danceset" tabIndex={0} onKeyDown={onKeyDown} >
     <h2>
@@ -225,9 +225,9 @@ const DanceSetEditor = React.memo(function DanceSetEditor({index} : {index: numb
         onSelect={({index})=> onMoveDanceSet(item, index)} />
       <Button className="delete" intent="danger" text={t`removeDanceSet`} onClick={removeDanceSet} />
     </h2>
-    <ProgramListEditor tableRef={table} path={useMemoizedPath(["danceSets", index])} />
-  </Card>;
-});
+    <ProgramListEditor tableRef={table} path={useMemoizedPath(['danceSets', index])} />
+  </Card>
+})
 
 type ProgramSectionPath = ['introductions'] | ['danceSets', number]
 type ProgramItemPath = [...ProgramSectionPath, 'program', number]
@@ -251,7 +251,7 @@ function ProgramListEditor({path, tableRef}) {
         <ListEditorItems noWrapper component={ProgramItemEditor} itemProps={{path, isIntroductionsSection}} />
         {program.length === 0 &&
             <tr>
-              <t.td className={CssClass.textMuted+ " noProgram"} colSpan="5">programListIsEmpty</t.td>
+              <t.td className={CssClass.textMuted+ ' noProgram'} colSpan="5">programListIsEmpty</t.td>
             </tr>
         }
         {intervalMusicDuration > 0 &&
@@ -271,7 +271,7 @@ function ProgramListEditor({path, tableRef}) {
         </tr>
       </tfoot>
     </HTMLTable>
-  </ListEditor>;
+  </ListEditor>
 }
 
 interface ProgramItemEditorProps {
@@ -286,9 +286,9 @@ interface ProgramItemEditorProps {
 
 const ProgramItemEditor = React.memo(function ProgramItemEditor({path, itemIndex, item, onChange, onRemove, onMoveDown, onMoveUp} : ProgramItemEditorProps) {
   const itemPath = [...path, 'program', itemIndex] as ProgramItemPath
-  const defaultSlideStyleId = useValueAt("slideStyleId")
+  const defaultSlideStyleId = useValueAt('slideStyleId')
 
-  const {__typename } = item.item;
+  const {__typename } = item.item
   const onKeyDown = useHotkeyHandler(
     ...navigateAmongSiblings('tr'),
     moveUp(onMoveUp),
@@ -296,26 +296,26 @@ const ProgramItemEditor = React.memo(function ProgramItemEditor({path, itemIndex
     blurTo('div.danceset'),
     focusTo('input'),
     bind(['delete', 'backspace'], removeItem)
-  );
+  )
 
-  const container = useRef<HTMLTableRowElement>(null);
+  const container = useRef<HTMLTableRowElement>(null)
   /** Focuses the row when the dance/value editor is blurred but not if something inside the row is already focused
    * This allows tab navigation to work, but helps users that use the custom nav */
   function onInputBlurred() {
     //We need to set a timeout, because the Blueprint Suggest used by Dancechooser handles blurring in a wacky way
     setTimeout(() => {
-      const nextFocused = document.activeElement;
+      const nextFocused = document.activeElement
       if (nextFocused && container.current?.contains(nextFocused)) {
         //Focus is still somewhere inside our item
-        return;
+        return
       }
-      container.current?.focus();
-    }, 0);
+      container.current?.focus()
+    }, 0)
   }
 
   function removeItem(e) {
-    onRemove();
-    focusSiblingsOrParent(e.target, 'div.danceset');
+    onRemove()
+    focusSiblingsOrParent(e.target, 'div.danceset')
   }
 
   return <tr className="eventProgramItem" onKeyDown={onKeyDown} ref={container} tabIndex={0}>
@@ -338,8 +338,8 @@ const ProgramItemEditor = React.memo(function ProgramItemEditor({path, itemIndex
       <MoveItemToSectionSelector itemPath={itemPath} />
       <Button title={t`remove`} intent="danger" icon="cross" onClick={removeItem} className="delete" />
     </td>
-  </tr>;
-});
+  </tr>
+})
 
 function ProgramDetailsEditor({path, onInputBlurred}) {
   const __typename = useValueAt([...path as ProgramItemPath, 'item', '__typename'])
@@ -349,7 +349,7 @@ function ProgramDetailsEditor({path, onInputBlurred}) {
   switch(__typename) {
     case 'Dance':
     case 'RequestedDance':
-    return <Field label={t`Dance`} labelStyle="hidden" path={[...path as DanceProgramPath, 'item' as const]} component={DanceProgramChooser} componentProps={{onBlur:onInputBlurred}}/>
+      return <Field label={t`Dance`} labelStyle="hidden" path={[...path as DanceProgramPath, 'item' as const]} component={DanceProgramChooser} componentProps={{onBlur:onInputBlurred}}/>
     case 'EventProgram':
       return <>
         <Input label={t`eventProgramName`} path={[...path as ProgramItemPath, 'item', 'name']} componentProps={{onBlur:onInputBlurred}} required />
@@ -379,28 +379,28 @@ const DanceProgramChooser = React.memo(function DanceProgramChooser({value, onCh
 })
 
 function IntervalMusicEditor({intervalMusicDuration, onSetIntervalMusicDuration}) {
-  const row = useRef<HTMLTableRowElement>(null);
+  const row = useRef<HTMLTableRowElement>(null)
   const onKeyDown = useHotkeyHandler(
     ...navigateAmongSiblings('tr'),
     blurTo('div.danceset'),
     focusTo('.click-to-edit'),
     bind(['delete', 'backspace'], removeItem)
-  );
+  )
 
   function removeItem(e) {
-    onSetIntervalMusicDuration(0);
-    focusSiblingsOrParent(e.target, 'div.danceset');
+    onSetIntervalMusicDuration(0)
+    focusSiblingsOrParent(e.target, 'div.danceset')
   }
   /** Focuses the row when the duration editor is exited, but not if something inside the row is already focused
    * This allows tab navigation to work, but helps users that use the custom nav */
   function onDurationBlurred(e) {
-    const nextFocused = e.relatedTarget;
-    const containerElement = row.current;
+    const nextFocused = e.relatedTarget
+    const containerElement = row.current
     if (containerElement !== null && nextFocused && containerElement.contains(nextFocused)) {
       //Focus is still somewhere inside our item
-      return;
+      return
     }
-    containerElement && containerElement.focus();
+    containerElement && containerElement.focus()
   }
 
   // TODO: <DurationField id="intervalMusicDuration" label={t`intervalMusicDuration`} labelStyle="hidden"
@@ -420,21 +420,21 @@ function IntervalMusicEditor({intervalMusicDuration, onSetIntervalMusicDuration}
 }
 
 function DanceSetDuration({ program, intervalMusicDuration}) {
-  const {pause} = useContext(DurationHelperContext);
-  const duration = program.map(({duration}) => duration ?? 0).reduce((y,x) => x+y, 0);
-  const durationWithPauses = duration + pause*60*program.length + intervalMusicDuration;
+  const {pause} = useContext(DurationHelperContext)
+  const duration = program.map(({duration}) => duration ?? 0).reduce((y, x) => x+y, 0)
+  const durationWithPauses = duration + pause*60*program.length + intervalMusicDuration
 
   return <>
     <strong><Duration value={durationWithPauses}/></strong>{' ('+t`pausesIncluded`+') '}
     <br />
     <strong><Duration value={duration}/></strong>{' ('+t`dances`+')'}
-  </>;
+  </>
 }
 
-const SectionSelect = asFormControl(Select.ofType<{name: string, index: number, isIntroductionsSection?: boolean}>());
+const SectionSelect = asFormControl(Select.ofType<{name: string, index: number, isIntroductionsSection?: boolean}>())
 
 function MoveDanceSetSelector({currentSet, onSelect}) {
-  const danceSets = useValueAt("danceSets")
+  const danceSets = useValueAt('danceSets')
   if (danceSets.length < 2) return null
 
   const currentIndex = danceSets.indexOf(currentSet)
@@ -442,7 +442,7 @@ function MoveDanceSetSelector({currentSet, onSelect}) {
     name: index < currentIndex
       ? t('beforeSet', {name: d.name})
       : t('afterSet', {name: d.name})
-,
+    ,
     index
   })).filter(({index}) => index !== currentIndex)
   return <Selector
@@ -461,7 +461,7 @@ function MoveItemToSectionSelector({itemPath} : { itemPath: ProgramItemPath}) {
 
   const canMoveToIntroductions = currentSectionType === 'danceSets' && row?.item?.__typename === 'EventProgram'
   const introSection = {name: t`introductoryInformation`, isIntroductionsSection: true, index: 0}
-  const sections = useValueAt("danceSets")
+  const sections = useValueAt('danceSets')
     .map(({name}, index) => ({name, index}))
     .filter(({index}) => currentSectionType !== 'danceSets' || index !== itemPath[1])
 
@@ -489,9 +489,9 @@ function MoveItemToSectionSelector({itemPath} : { itemPath: ProgramItemPath}) {
   />
 }
 
-interface SelectorProps extends Pick<React.ComponentProps<typeof SectionSelect>, "items" | "className"> {
-  itemRenderer: (item: Parameters<React.ComponentProps<typeof SectionSelect>["itemRenderer"]>[0]) => string
-  onSelect: React.ComponentProps<typeof SectionSelect>["onItemSelect"]
+interface SelectorProps extends Pick<React.ComponentProps<typeof SectionSelect>, 'items' | 'className'> {
+  itemRenderer: (item: Parameters<React.ComponentProps<typeof SectionSelect>['itemRenderer']>[0]) => string
+  onSelect: React.ComponentProps<typeof SectionSelect>['onItemSelect']
   placeholder: string
 }
 function Selector({items, itemRenderer, onSelect, placeholder, className = undefined as string | undefined} : SelectorProps) {

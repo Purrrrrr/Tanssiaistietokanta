@@ -1,4 +1,4 @@
-import * as L from 'partial.lenses';
+import * as L from 'partial.lenses'
 
 const everyObject= L.lazy(rec =>
   L.cond(
@@ -6,4 +6,4 @@ const everyObject= L.lazy(rec =>
     [a => typeof(a) === 'object' && a !== null, L.seq([L.children, rec], [])], 
   )
 )
-export const removeTypenames = L.remove([everyObject, '__typename']);
+export const removeTypenames = L.remove([everyObject, '__typename'])

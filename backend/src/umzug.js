@@ -1,5 +1,5 @@
 const { Umzug, JSONStorage } = require('umzug')
-const path = require('path');
+const path = require('path')
 
 module.exports = {
   migrateDb: async (app) => {
@@ -15,7 +15,7 @@ module.exports = {
     getUmzug(null).create({
       name,
       folder: path.join(__dirname, '/migrations'),
-      skipVerify: true,
+      skipVerify: true
     })
   }
 }
@@ -25,14 +25,14 @@ function getUmzug(context) {
     migrations: { glob: path.join(__dirname, '/migrations/*.js') },
     context,
     storage: new JSONStorage({ path: path.join(__dirname, '../data/executed-migrations.json') }),
-    logger: console,
+    logger: console
   })
 }
 
 function getModels(app) {
   return Object.fromEntries(
     Object.entries(app.services)
-      .map(([k,service]) => ([k,service?.getModel?.()]))
-      .filter(([_, model]) => model)
+      .map(([k, service]) => ([k, service?.getModel?.()]))
+      .filter(([, model]) => model)
   )
 }

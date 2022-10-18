@@ -1,4 +1,4 @@
-import { gql, useMutation, FetchResult, MutationResult } from "./apollo";
+import { gql, useMutation, FetchResult, MutationResult } from './apollo'
 
 export function makeMutationHook<V extends any[]>(
   query,
@@ -23,13 +23,13 @@ export function makeMutationHook<V extends any[]>(
         if (args.onCompleted) args.onCompleted(data)
       }
     }
-    const [runQuery, data] = useMutation(compiledQuery, options);
+    const [runQuery, data] = useMutation(compiledQuery, options)
 
     return [
       (...vars : V) => runQuery(parameterMapper(...vars)),
       data
-    ];
-  };
+    ]
+  }
 }
 
 export function getSingleValue(obj) {

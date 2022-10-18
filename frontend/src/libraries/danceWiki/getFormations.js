@@ -4,35 +4,35 @@ export function getFormations(instructions) {
   //The formation is usually found in the first two parts of the instructions
   //The rest often contains words that are not the true formation
   //but match our guesses
-  const firstParts = toParts(instructions).slice(0, 2).join(" ");
+  const firstParts = toParts(instructions).slice(0, 2).join(' ')
 
-  const formations = [];
+  const formations = []
   for (const [guess, {regexes}]  of Object.entries(guesses)) {
     for (const regex of regexes) {
-      const match = firstParts.match(regex);
+      const match = firstParts.match(regex)
       if (match) {
-        formations.push({guess, length: match[0].length});
+        formations.push({guess, length: match[0].length})
       }
     }
   }
-  formations.sort((a,b) => b.length - a.length); //Longest match first
+  formations.sort((a, b) => b.length - a.length) //Longest match first
 
   return unique(
     formations.map(f => titleCase(f.guess))
-  );
+  )
 }
 
 function toParts(markdown) {
-  const parts = markdown.split(headerRegex).filter(text => text.trim().length > 0);
-  return parts.length > 0 ? parts : [""];
+  const parts = markdown.split(headerRegex).filter(text => text.trim().length > 0)
+  return parts.length > 0 ? parts : ['']
 }
-const headerRegex = /\n((?=#+.+\n)|(?=.+\n=+\n)|(?=.+\n-+\n))/gm;
+const headerRegex = /\n((?=#+.+\n)|(?=.+\n=+\n)|(?=.+\n-+\n))/gm
 
 function unique(words) {
-  return [...new Set(words)];
+  return [...new Set(words)]
 }
 
-const possibleFillerWord = '[^ ]*';
+const possibleFillerWord = '[^ ]*'
 const guesses = {
   'piiri': {
     regexes: [
@@ -111,6 +111,6 @@ const guesses = {
 */
 }
 
-function word(word) {return `\\b${word}\\b`; }
-function wordPrefix(word) {return `\\b${word}[^ ]*\\b`; }
-function regex(...words) { return new RegExp(words.join(" *"), "ig"); }
+function word(word) {return `\\b${word}\\b` }
+function wordPrefix(word) {return `\\b${word}[^ ]*\\b` }
+function regex(...words) { return new RegExp(words.join(' *'), 'ig') }

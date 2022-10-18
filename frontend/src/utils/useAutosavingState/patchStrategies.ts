@@ -2,7 +2,7 @@ import {Path, Key} from './types'
 import deepEquals from 'fast-deep-equal'
 
 export type PatchResult<Patch> = {hasModifications: false} | {patch: Patch, hasModifications: true}
-export type PatchStrategy<T,Patch> = (original: T, modifications: T, conflicts: Path<T>[]) => PatchResult<Patch> 
+export type PatchStrategy<T, Patch> = (original: T, modifications: T, conflicts: Path<T>[]) => PatchResult<Patch> 
 
 export function noPatch<T>(original : T, modifications : T, conflicts: Key[][]): PatchResult<T>  {
   const partial = makePartial<T>(original, modifications, conflicts)

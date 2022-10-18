@@ -1,4 +1,4 @@
-import { backendQueryHook, setupServiceUpdateFragment, entityCreateHook, entityDeleteHook, entityUpdateHook } from '../backend';
+import { backendQueryHook, setupServiceUpdateFragment, entityCreateHook, entityDeleteHook, entityUpdateHook } from '../backend'
 
 const workshopFields = `
   _id, eventId
@@ -10,23 +10,23 @@ const workshopFields = `
     _id
     name
   }
-`;
+`
 setupServiceUpdateFragment(
-  "workshops",
+  'workshops',
   `fragment WorkshopFragment on Workshop {
     ${workshopFields}
   }`
-);
+)
 
 const useWorkshopInternal = backendQueryHook(`
 query getWorkshop($id: ID!) {
   workshop(id: $id) {
     ${workshopFields}
   }
-}`);
+}`)
 export function useWorkshop(id) {
-  const res = useWorkshopInternal({id});
-  return [res.data ? res.data.workshop : null, res];
+  const res = useWorkshopInternal({id})
+  return [res.data ? res.data.workshop : null, res]
 }
 
 export const useCreateWorkshop = entityCreateHook('workshops', `
@@ -36,7 +36,7 @@ mutation createWorkshop($eventId: ID!, $workshop: WorkshopInput!) {
   }
 }`, {
   parameterMapper: (eventId, workshop) => ({variables: {eventId, workshop: toWorkshopInput(workshop)}})
-});
+})
 
 export const useModifyWorkshop = entityUpdateHook('workshops', `
 mutation modifyWorkshop($id: ID!, $workshop: WorkshopInput!) {
@@ -46,13 +46,13 @@ mutation modifyWorkshop($id: ID!, $workshop: WorkshopInput!) {
 }`, {
   parameterMapper: (workshop) => 
     ({variables: {id: workshop._id, workshop: toWorkshopInput(workshop)} })
-});
+})
 
 export function toWorkshopInput({name, abbreviation, description, teachers, dances}) {
   return {
     name, abbreviation, description, teachers,
     danceIds: dances.map(({_id}) => _id)
-  };
+  }
 }
 export const useDeleteWorkshop = entityDeleteHook('workshops', `
 mutation deleteWorkshop($id: ID!) {
@@ -61,4 +61,4 @@ mutation deleteWorkshop($id: ID!) {
   }
 }`, {
   parameterMapper: id => ({variables: {id}})
-});
+})

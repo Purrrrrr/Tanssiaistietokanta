@@ -1,10 +1,10 @@
-const validateInputType = require('../../hooks/validateGraphQLInputType');
-const provideDefaultValues = require('../../hooks/provideDefaultValues');
-const preventPatchOps = require('../../hooks/prevent-patch-ops');
+const validateInputType = require('../../hooks/validateGraphQLInputType')
+const provideDefaultValues = require('../../hooks/provideDefaultValues')
+const preventPatchOps = require('../../hooks/prevent-patch-ops')
 
-const loadEventProgram = require('../../hooks/load-event-program');
+const loadEventProgram = require('../../hooks/load-event-program')
 
-const processEventProgramInput = require('../../hooks/process-event-program-input');
+const processEventProgramInput = require('../../hooks/process-event-program-input')
 
 module.exports = {
   before: {
@@ -36,4 +36,4 @@ module.exports = {
     patch: [],
     remove: []
   }
-};
+}

@@ -1,15 +1,15 @@
-import './BallProgram.sass';
-import React, {useMemo, useState, useCallback} from 'react';
-import classnames from 'classnames';
-import Markdown from 'markdown-to-jsx';
-import {backendQueryHook} from "backend";
-import ReactTouchEvents from "react-touch-events";
+import './BallProgram.sass'
+import React, {useMemo, useState, useCallback} from 'react'
+import classnames from 'classnames'
+import Markdown from 'markdown-to-jsx'
+import {backendQueryHook} from 'backend'
+import ReactTouchEvents from 'react-touch-events'
 
-import {EditableDanceProperty} from "components/EditableDanceProperty";
-import {LoadingState} from 'components/LoadingState';
-import {ProgramTitleSelector} from "components/ProgramTitleSelector";
-import {useOnKeydown} from "utils/useOnKeydown";
-import {makeTranslate} from 'utils/translate';
+import {EditableDanceProperty} from 'components/EditableDanceProperty'
+import {LoadingState} from 'components/LoadingState'
+import {ProgramTitleSelector} from 'components/ProgramTitleSelector'
+import {useOnKeydown} from 'utils/useOnKeydown'
+import {makeTranslate} from 'utils/translate'
 
 const t = makeTranslate({
   teachedInSet: 'Opetettu setissä',
@@ -17,7 +17,7 @@ const t = makeTranslate({
   intervalMusic: 'Taukomusiikkia',
   addDescription: 'Lisää kuvaus',
   afterThis: 'Tämän jälkeen',
-});
+})
 
 const useBallProgram = backendQueryHook(`
 query BallProgram($eventId: ID!) {
@@ -57,21 +57,21 @@ query BallProgram($eventId: ID!) {
       }
     }
   }
-}`);
+}`)
 
 export default function BallProgram({eventId}) {
-  const {data, refetch, ...loadingState} = useBallProgram({eventId});
-  const [slide, setSlide] = useState(0);
+  const {data, refetch, ...loadingState} = useBallProgram({eventId})
+  const [slide, setSlide] = useState(0)
 
   if (!data) return <LoadingState {...loadingState} refetch={refetch} />
 
   return <BallProgramView event={data.event} onRefetch={refetch}
-    currentSlide={slide} onChangeSlide={setSlide} />;
+    currentSlide={slide} onChangeSlide={setSlide} />
 }
 
 function BallProgramView({event, currentSlide, onChangeSlide, onRefetch}) {
-  const program = useMemo(() => getSlides(event), [event]);
-  const slide = program[currentSlide];
+  const program = useMemo(() => getSlides(event), [event])
+  const slide = program[currentSlide]
 
   const changeSlide = useCallback((n) => 
     onChangeSlide((s) => 
@@ -99,7 +99,7 @@ function BallProgramView({event, currentSlide, onChangeSlide, onRefetch}) {
   }, [changeSlide])
 
   return <ReactTouchEvents onSwipe={onSwipe} disableClick>
-    <div className={classnames("slideshow", slide.slideStyleId && `slide-style-${slide.slideStyleId}`)}>
+    <div className={classnames('slideshow', slide.slideStyleId && `slide-style-${slide.slideStyleId}`)}>
       <div className="controls">
         <ProgramTitleSelector value={slide.parent?.index ?? slide.index} onChange={onChangeSlide}
           program={program} />
@@ -107,7 +107,7 @@ function BallProgramView({event, currentSlide, onChangeSlide, onRefetch}) {
       </div>
       <SlideView slide={slide} onChangeSlide={onChangeSlide} />
     </div>
-  </ReactTouchEvents>;
+  </ReactTouchEvents>
 }
 
 interface Slide {
@@ -122,102 +122,102 @@ interface Slide {
 }
 
 function getSlides(event) : Slide[] {
-  const eventHeader = { __typename: 'Event', name: event.name };
-  const slides : Slide[] = [eventHeader];
-  if (!event.program) return slides;
-  const defaultStyleId = event.program.slideStyleId;
+  const eventHeader = { __typename: 'Event', name: event.name }
+  const slides : Slide[] = [eventHeader]
+  if (!event.program) return slides
+  const defaultStyleId = event.program.slideStyleId
 
-  const {introductions, danceSets} = event.program;
+  const {introductions, danceSets} = event.program
   for (const {item, slideStyleId} of introductions) {
-    slides.push({ ...item,  slideStyleId, parent: eventHeader });
+    slides.push({ ...item,  slideStyleId, parent: eventHeader })
   }
   for (const danceSet of danceSets) {
-    const danceSetSlide = { ...danceSet, subtotal: danceSet.program.length };
-    const danceProgram = danceSet.program.map(({item, slideStyleId}) => ({ ...item, slideStyleId, parent: danceSetSlide}));
-    danceSetSlide.program = danceProgram;
-    slides.push(danceSetSlide);
-    slides.push(...danceProgram);
+    const danceSetSlide = { ...danceSet, subtotal: danceSet.program.length }
+    const danceProgram = danceSet.program.map(({item, slideStyleId}) => ({ ...item, slideStyleId, parent: danceSetSlide}))
+    danceSetSlide.program = danceProgram
+    slides.push(danceSetSlide)
+    slides.push(...danceProgram)
 
     if (danceSet.intervalMusicDuration > 0) {
       danceSetSlide.subtotal++
       slides.push({
-        __typename: "EventProgram",
+        __typename: 'EventProgram',
         name: t`intervalMusic`,
         parent: danceSetSlide,
-      });
+      })
     }
   }
 
   slides.forEach((slide, index) => {
     slide.index = index
     if (slide.parent !== undefined) {
-      slide.subindex = index - slide.parent.index!!
+      slide.subindex = index - slide.parent.index!
       slide.subtotal = slide.parent.subtotal
     }
     if (!slide.slideStyleId) {
       slide.slideStyleId = defaultStyleId
     }
 
-    slide.next = slides[index+1];
-  });
-  return slides;
+    slide.next = slides[index+1]
+  })
+  return slides
 }
 
 function SlideView({slide, onChangeSlide}) {
   switch(slide.__typename) {
     case 'Dance':
-      return <DanceSlide dance={slide} onChangeSlide={onChangeSlide} />;
+      return <DanceSlide dance={slide} onChangeSlide={onChangeSlide} />
     case 'RequestedDance':
-      return <RequestedDanceSlide next={slide.next} onChangeSlide={onChangeSlide} />;
+      return <RequestedDanceSlide next={slide.next} onChangeSlide={onChangeSlide} />
     case 'EventProgram':
-      return <EventProgramSlide program={slide} onChangeSlide={onChangeSlide} />;
+      return <EventProgramSlide program={slide} onChangeSlide={onChangeSlide} />
     case 'DanceSet':
     case 'Event':
     default:
-      return <HeaderSlide header={slide} onChangeSlide={onChangeSlide} />;
+      return <HeaderSlide header={slide} onChangeSlide={onChangeSlide} />
   }
 }
 function HeaderSlide({header, onChangeSlide}) {
-  const {name, program = []} = header;
+  const {name, program = []} = header
   return <SimpleSlide title={name} next={null} onChangeSlide={onChangeSlide} >
     <ul className="slide-main-content slide-header-list">
       {program
-          .filter(t => t.__typename !== "EventProgram" || t.showInLists)
-          .map(({index, name}) =>
-            <li onClick={() => onChangeSlide(index)} key={index}>
-              {name ?? <RequestedDancePlaceholder />}
-            </li>
-          )
+        .filter(t => t.__typename !== 'EventProgram' || t.showInLists)
+        .map(({index, name}) =>
+          <li onClick={() => onChangeSlide(index)} key={index}>
+            {name ?? <RequestedDancePlaceholder />}
+          </li>
+        )
       }
     </ul>
-  </SimpleSlide>;
+  </SimpleSlide>
 }
 
 function EventProgramSlide({program, onChangeSlide}) {
-  const {name, next, description} = program;
+  const {name, next, description} = program
   return <SimpleSlide title={name} next={next} onChangeSlide={onChangeSlide} >
     {description && <section className="slide-main-content"><Markdown>{description}</Markdown></section>}
-  </SimpleSlide>;
+  </SimpleSlide>
 }
 
-const RequestedDancePlaceholder = () => <>_________________________</>;
+const RequestedDancePlaceholder = () => <>_________________________</>
 
 function DanceSlide({dance, onChangeSlide}) {
-  const {next, name, teachedIn} = dance;
+  const {next, name, teachedIn} = dance
 
   return <SimpleSlide title={name} next={next} onChangeSlide={onChangeSlide}>
     <section className="slide-main-content slide-dance-description">
       <EditableDanceProperty dance={dance} property="description" type="markdown" addText={t`addDescription`} />
     </section>
     {teachedIn.length > 0 &&
-      <section className="slide-teached-in">{t`teachedInSet`} {teachedIn.map(w => w.name).join(", ")}</section>
+      <section className="slide-teached-in">{t`teachedInSet`} {teachedIn.map(w => w.name).join(', ')}</section>
     }
-  </SimpleSlide>;
+  </SimpleSlide>
 }
 
 function RequestedDanceSlide({next, onChangeSlide}) {
   return <SimpleSlide title={t`requestedDance`} next={next} onChangeSlide={onChangeSlide}>
-  </SimpleSlide>;
+  </SimpleSlide>
 }
 
 function SimpleSlide({title, next, onChangeSlide, children}) {
@@ -228,11 +228,11 @@ function SimpleSlide({title, next, onChangeSlide, children}) {
         <NextTrackSection next={next}
           onChangeSlide={onChangeSlide} />
     }
-  </section>;
+  </section>
 }
 
 function NextTrackSection({next, onChangeSlide}) {
   return <section className="slide-next-track" onClick={() => onChangeSlide(next.index)}>
-    <h1>{t`afterThis`}:{" "}{next.__typename === 'RequestedDance' ? t`requestedDance` : next.name}</h1>
+    <h1>{t`afterThis`}:{' '}{next.__typename === 'RequestedDance' ? t`requestedDance` : next.name}</h1>
   </section>
 }

@@ -65,12 +65,12 @@ const replacements = {
 }
 
 export function cleanupLanguage(text) {
-  let ret = text;
+  let ret = text
   for(const [replace, replacement] of Object.entries(replacements)) {
     ret = ret.replace(
-      new RegExp("\\b"+replace+"\\b", "ig"),
+      new RegExp('\\b'+replace+'\\b', 'ig'),
       word => isTitlecase(word) ? titleCase(replacement) : replacement
-    );
+    )
   }
-  return ret;
+  return ret
 }

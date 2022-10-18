@@ -3,7 +3,7 @@ import {Path} from './types'
 export function emptyPath<T>(): Path<T> {
   return [] as Path<T>
 }
-export function subPath<T extends object,K extends keyof T>(key : K, path : Path<T[K]>) : Path<T> {
+export function subPath<T extends object, K extends keyof T>(key : K, path : Path<T[K]>) : Path<T> {
   // @ts-ignore */
   return [
     key, ...path

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 export type NewValue<T> = T | ((t: T) => T)
 
@@ -9,8 +9,8 @@ export interface FieldComponentProps<T, EventElement = HTMLElement> {
   hasConflict?: boolean
   readOnly?: boolean
   id: string
-  "aria-describedby"?: string
-  "aria-label"?: string
+  'aria-describedby'?: string
+  'aria-label'?: string
 }
 
 export type LabelStyle = 'inline' | 'above' | 'hidden';
@@ -25,9 +25,9 @@ type RequiredProperties<T extends object> = Exclude<{
 }[keyof T], undefined>
 
 //export type Path<T> = Key[]
-export type TypedPath<T, P extends Path<T>, Type> = PropertyAtPath<T,P> extends Type ? Path<T> : never
-export type Path<Target,DepthCounter extends number = 5> = keyof Target | ArrayPath<Target, DepthCounter>
-export type ArrayPath<Target,DepthCounter extends number = 5> = [] |
+export type TypedPath<T, P extends Path<T>, Type> = PropertyAtPath<T, P> extends Type ? Path<T> : never
+export type Path<Target, DepthCounter extends number = 5> = keyof Target | ArrayPath<Target, DepthCounter>
+export type ArrayPath<Target, DepthCounter extends number = 5> = [] |
   (DepthCounter extends never
     ? []
     : Target extends (infer U)[]
@@ -39,7 +39,7 @@ export type ArrayPath<Target,DepthCounter extends number = 5> = [] |
         }[keyof Target])
         : [])
 
-export type PropertyAtPath<Target extends unknown, Path extends readonly unknown[] | keyof Target> =
+export type PropertyAtPath<Target, Path extends readonly unknown[] | keyof Target> =
   Path extends keyof Target
     ? Target[Path]
     // Base recursive case, no more paths to traverse

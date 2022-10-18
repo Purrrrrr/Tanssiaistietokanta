@@ -1,14 +1,14 @@
-import React, {useState} from 'react';
-import {DanceDataImportButton} from "components/DanceDataImportDialog";
-import {Button, H2} from "libraries/ui";
-import {SubmitButton} from "libraries/forms2";
-import {DanceEditor} from "./DanceEditor"
-import {Dance} from "services/dances";
-import {uploadDanceFile} from "utils/uploadDanceFile";
-import { Flex } from 'components/Flex';
+import React, {useState} from 'react'
+import {DanceDataImportButton} from 'components/DanceDataImportDialog'
+import {Button, H2} from 'libraries/ui'
+import {SubmitButton} from 'libraries/forms2'
+import {DanceEditor} from './DanceEditor'
+import {Dance} from 'services/dances'
+import {uploadDanceFile} from 'utils/uploadDanceFile'
+import { Flex } from 'components/Flex'
 
 export function CreateDanceForm({onCreate, onCancel, initialData}) {
-  const [dance, setDance] = useState(initialData ?? {name: ''});
+  const [dance, setDance] = useState(initialData ?? {name: ''})
 
   return <section>
     <Flex alignItems="end">
@@ -31,9 +31,9 @@ export function CreateDanceForm({onCreate, onCancel, initialData}) {
 
 export function DanceUploader({onUpload} : {onUpload: (d: Dance) => any}) {
   async function chooseFile() {
-    const dance = await uploadDanceFile();
-    if (dance) onUpload(dance);
+    const dance = await uploadDanceFile()
+    if (dance) onUpload(dance)
   }
 
-  return <Button text="Tuo tanssi tiedostosta" onClick={chooseFile}/>;
+  return <Button text="Tuo tanssi tiedostosta" onClick={chooseFile}/>
 }

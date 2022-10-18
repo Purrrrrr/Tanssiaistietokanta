@@ -1,6 +1,6 @@
 // Application hooks that run for every service
-const log = require('./hooks/log');
-const preventRemovingOfUsedItems = require('./hooks/prevent-removing-of-used-items');
+const log = require('./hooks/log')
+const preventRemovingOfUsedItems = require('./hooks/prevent-removing-of-used-items')
 
 module.exports = {
   before: {
@@ -32,4 +32,4 @@ module.exports = {
     patch: [],
     remove: []
   }
-};
+}

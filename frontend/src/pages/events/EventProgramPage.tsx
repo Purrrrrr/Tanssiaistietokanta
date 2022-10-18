@@ -1,22 +1,22 @@
-import * as L from 'partial.lenses';
+import * as L from 'partial.lenses'
 
-import React from 'react';
+import React from 'react'
 
-import {EventProgramSettings, DanceSet, EventProgramRow} from "components/EventProgramEditor/types";
+import {EventProgramSettings, DanceSet, EventProgramRow} from 'components/EventProgramEditor/types'
 
-import {AdminOnly} from 'services/users';
-import {Breadcrumb} from "libraries/ui";
-import {EventProgramEditor} from "components/EventProgramEditor";
-import {PageTitle} from "components/PageTitle";
-import {useNavigate} from "react-router-dom"
-import {removeTypenames} from 'utils/removeTypenames';
-import {useModifyEventProgram} from 'services/events';
+import {AdminOnly} from 'services/users'
+import {Breadcrumb} from 'libraries/ui'
+import {EventProgramEditor} from 'components/EventProgramEditor'
+import {PageTitle} from 'components/PageTitle'
+import {useNavigate} from 'react-router-dom'
+import {removeTypenames} from 'utils/removeTypenames'
+import {useModifyEventProgram} from 'services/events'
 
 export default function EventProgramEditorPage({event}) {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const [modifyEventProgram] = useModifyEventProgram({
     onCompleted: () => navigate('/events/'+event._id)
-  });
+  })
 
   return <AdminOnly fallback="you need to be admin">
     <Breadcrumb text="Tanssiaisohjelma" />
@@ -25,7 +25,7 @@ export default function EventProgramEditorPage({event}) {
       program={toEventProgramSettings(event.program ?? { introductions: [], danceSets: [], slideStyleId: null})}
       onSubmit={(program) => modifyEventProgram(event._id, toProgramInput(program))}
     />
-  </AdminOnly>;
+  </AdminOnly>
 }
 
 function toEventProgramSettings(
@@ -45,7 +45,7 @@ function toProgramInput({introductions, danceSets, slideStyleId} : EventProgramS
       [L.elems, 'program', L.elems], toProgramItemInput, danceSets
     ).map(({isIntroductionsSection, ...d}) => d),
     slideStyleId,
-  });
+  })
 }
 
 function toIntroductionInput({ _id, item: { _id: eventProgramId, ...rest}, slideStyleId}: EventProgramRow) {
@@ -56,13 +56,13 @@ function toProgramItemInput({_id, slideStyleId, item: {__typename, _id: itemId, 
   switch(__typename) {
     case 'Dance':
     case 'RequestedDance':
-      if (!itemId) return {type: 'REQUESTED_DANCE', slideStyleId, _id};
+      if (!itemId) return {type: 'REQUESTED_DANCE', slideStyleId, _id}
       return {
         _id,
         type: 'DANCE',
         danceId: itemId,
         slideStyleId,
-      };
+      }
     case 'EventProgram':
       return {
         _id,
@@ -70,8 +70,8 @@ function toProgramItemInput({_id, slideStyleId, item: {__typename, _id: itemId, 
         eventProgramId: itemId,
         eventProgram: rest,
         slideStyleId,
-      };
+      }
     default:
-      throw new Error('Unexpected program item type '+__typename);
+      throw new Error('Unexpected program item type '+__typename)
   }
 }

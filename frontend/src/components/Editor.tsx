@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import useAutosavingState, {makePartial} from 'utils/useAutosavingState';
-import SyncStatus from 'components/SyncStatus';
+import React, { useState } from 'react'
+import useAutosavingState, {makePartial} from 'utils/useAutosavingState'
+import SyncStatus from 'components/SyncStatus'
 
 const obj = {
   amount: 1,
@@ -55,12 +55,12 @@ function Editor<T extends RO>({
       <SyncStatus state={s.state} />
     </p>
     {fields.map(field =>
-    <Field
-      key={field.name as string}
-      field={field}
-      item={item}
-      setItem={setItem}
-    />)}
+      <Field
+        key={field.name as string}
+        field={field}
+        item={item}
+        setItem={setItem}
+      />)}
   </section>
 
 }

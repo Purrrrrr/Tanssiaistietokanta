@@ -1,5 +1,5 @@
-export function getOrComputeDefault<K,V>(
-  map : Map<K,V>,
+export function getOrComputeDefault<K, V>(
+  map : Map<K, V>,
   key : K,
   getDefault: (key : K) => V,
 ) : V {

@@ -1,17 +1,17 @@
-import React, {useState} from 'react';
-import classNames from 'classnames';
-import {Button} from "libraries/ui";
-import {Switch} from "libraries/forms2";
-import {backendQueryHook} from "backend";
-import {EditableDanceProperty} from "components/EditableDanceProperty";
-import PrintViewToolbar from 'components/widgets/PrintViewToolbar';
-import {PrintTable} from 'components/PrintTable';
-import {LoadingState} from 'components/LoadingState';
-import {CenteredContainer} from 'components/CenteredContainer';
-import {makeTranslate} from 'utils/translate';
-import {PageTitle} from "components/PageTitle";
+import React, {useState} from 'react'
+import classNames from 'classnames'
+import {Button} from 'libraries/ui'
+import {Switch} from 'libraries/forms2'
+import {backendQueryHook} from 'backend'
+import {EditableDanceProperty} from 'components/EditableDanceProperty'
+import PrintViewToolbar from 'components/widgets/PrintViewToolbar'
+import {PrintTable} from 'components/PrintTable'
+import {LoadingState} from 'components/LoadingState'
+import {CenteredContainer} from 'components/CenteredContainer'
+import {makeTranslate} from 'utils/translate'
+import {PageTitle} from 'components/PageTitle'
 
-import './DanceCheatList.sass';
+import './DanceCheatList.sass'
 
 const t = makeTranslate({
   helpText: 'Rastita tähän, jos osaat tanssin. Näin ei tanssiaisissa tarvitse miettiä, mikä tanssi on kyseessä.',
@@ -22,7 +22,7 @@ const t = makeTranslate({
   addDescription: 'Lisää kuvaus',
   iCanDanceThis: 'Osaan tanssin',
   danceName: 'Nimi',
-});
+})
 
 const useCheatList = backendQueryHook(`
 query DanceCheatList($eventId: ID!) {
@@ -38,12 +38,12 @@ query DanceCheatList($eventId: ID!) {
       }
     }
   }
-}`);
+}`)
 
 export default function DanceCheatList({eventId}) {
-  const [mini, setMini] = useState(false);
-  const [helpText, setHelptext] = useState(true);
-  const {data, ...loadingState} = useCheatList({eventId});
+  const [mini, setMini] = useState(false)
+  const [helpText, setHelptext] = useState(true)
+  const {data, ...loadingState} = useCheatList({eventId})
   if (!data) return <LoadingState {...loadingState} />
 
   return <>
@@ -53,7 +53,7 @@ export default function DanceCheatList({eventId}) {
       <Button text={t`print`} onClick={() => window.print()} />
     </PrintViewToolbar>
     <DanceCheatListView workshops={data.event.workshops} mini={mini} helpText={helpText} />
-  </>;
+  </>
 }
 
 function DanceCheatListView({workshops, mini, helpText}) {
@@ -61,11 +61,11 @@ function DanceCheatListView({workshops, mini, helpText}) {
     {helpText && <p>{t`helpText`}</p>}
     {workshops.map(workshop =>
       <WorkshopDances key={workshop._id} workshop={workshop} mini={mini} />)}
-  </CenteredContainer>;
+  </CenteredContainer>
 }
 
 function WorkshopDances({workshop, mini}) {
-  const {name, dances} = workshop;
+  const {name, dances} = workshop
   return <>
     <PageTitle>{name}</PageTitle>
     {dances.length === 0 ?
@@ -75,13 +75,13 @@ function WorkshopDances({workshop, mini}) {
           <tr key={dance._id}>
             <td>
               {mini
-                  ? dance.name
-                  : <>
+                ? dance.name
+                : <>
                   <strong>{dance.name}</strong>
                   <div>
                     <EditableDanceProperty dance={dance} property="description" type="markdown" addText={t`addDescription`} />
                   </div>
-                  </>
+                </>
               }
             </td>
             <td />
@@ -89,5 +89,5 @@ function WorkshopDances({workshop, mini}) {
         )}
       </PrintTable>
     }
-  </>;
+  </>
 }

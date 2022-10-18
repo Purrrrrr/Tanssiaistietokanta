@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
-import {Alert} from "libraries/dialog";
-import {Button} from "libraries/ui";
+import React, {useState} from 'react'
+import {Alert} from 'libraries/dialog'
+import {Button} from 'libraries/ui'
 
 interface DeleteButtonProps {
   style?: any
@@ -10,7 +10,7 @@ interface DeleteButtonProps {
 }
 
 export function DeleteButton({onDelete, style, text, confirmText} : DeleteButtonProps) {
-  const [showDialog, setShowDialog] = useState(false);
+  const [showDialog, setShowDialog] = useState(false)
   return <>
     <Button style={style} icon="trash" text={text} intent="danger" onClick={() => setShowDialog(true)}/>
     <Alert title={text} isOpen={showDialog} onClose={() => setShowDialog(false)}
@@ -20,5 +20,5 @@ export function DeleteButton({onDelete, style, text, confirmText} : DeleteButton
       confirmButtonText="Poista">
       {confirmText}
     </Alert>
-  </>;
+  </>
 }

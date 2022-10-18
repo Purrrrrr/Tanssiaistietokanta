@@ -1,8 +1,8 @@
-import React from 'react';
-import {AnchorButton, Navbar, Breadcrumbs } from "libraries/ui";
-import LoginForm from "./LoginForm";
-import {AdminOnly} from 'services/users';
-import { useNavigate } from 'react-router-dom';
+import React from 'react'
+import {AnchorButton, Navbar, Breadcrumbs } from 'libraries/ui'
+import LoginForm from './LoginForm'
+import {AdminOnly} from 'services/users'
+import { useNavigate } from 'react-router-dom'
 
 function Navigation() {
   return <nav>
@@ -18,14 +18,14 @@ function Navigation() {
         <LoginForm />
       </Navbar.Group>
     </Navbar>
-  </nav>;
+  </nav>
 }
 
 function NavButton({href, ...props}) {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   return <AnchorButton minimal {...props} href={href}
-    onClick={(e) => {e.preventDefault(); navigate(href);}}
-  />;
+    onClick={(e) => {e.preventDefault(); navigate(href)}}
+  />
 }
 
-export default Navigation;
+export default Navigation

@@ -1,5 +1,5 @@
-import React from 'react';
-import classNames from "classnames";
+import React from 'react'
+import classNames from 'classnames'
 import {
   Button as BlueprintButton,
   Card as BlueprintCard,
@@ -9,15 +9,13 @@ import {
   FormGroupProps as BlueprintFormGroupProps,
   InputGroup as BlueprintInputGroup,
   Classes,
-} from "@blueprintjs/core";
-import {
-  Select2
-} from "@blueprintjs/select";
+} from '@blueprintjs/core'
+import { Select2 } from '@blueprintjs/select'
 
-import './ui.css';
-export { Breadcrumbs, Breadcrumb, BreadcrumbContext } from "./Breadcrumbs"
+import './ui.css'
+export { Breadcrumbs, Breadcrumb, BreadcrumbContext } from './Breadcrumbs'
 
-export { MenuItem, AnchorButton, Navbar, Collapse, Tag, ProgressBar, HTMLTable, NumericInput, NonIdealState, Spinner, H2 } from "@blueprintjs/core"
+export { MenuItem, AnchorButton, Navbar, Collapse, Tag, ProgressBar, HTMLTable, NumericInput, NonIdealState, Spinner, H2 } from '@blueprintjs/core'
 export const CssClass = {
   limitedWidth: 'limited-width',
   textMuted: Classes.TEXT_MUTED,
@@ -49,7 +47,7 @@ export function Card(props : CardProps) {
   return <BlueprintCard {...props} />
 }
 
-export const Button = BlueprintButton;
+export const Button = BlueprintButton
 
 export interface FormGroupProps extends BlueprintFormGroupProps {
   inlineFill?: boolean
@@ -73,7 +71,7 @@ export function SearchBar({id, onChange, value} : SearchInputProps) {
   return <BlueprintInputGroup
     id="search-dances"
     leftIcon="search"
-    rightElement={<Button aria-label="Tyhjennä haku" minimal icon="cross" onClick={() => onChange("")} />}
+    rightElement={<Button aria-label="Tyhjennä haku" minimal icon="cross" onClick={() => onChange('')} />}
     value={value}
     onChange={(e) => onChange(e.target.value)}
   />

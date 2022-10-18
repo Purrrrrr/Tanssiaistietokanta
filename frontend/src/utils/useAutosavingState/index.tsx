@@ -1,4 +1,4 @@
-import {Reducer, useEffect, useCallback, useReducer} from 'react';
+import {Reducer, useEffect, useCallback, useReducer} from 'react'
 import mergeValues from './mergeValues'
 import {PatchStrategy} from './patchStrategies'
 import {SyncState, Path } from './types'
@@ -6,10 +6,10 @@ import createDebug from 'utils/debug'
 
 const debug = createDebug('useAutoSavingState')
 
-const AUTOSAVE_DELAY = 50;
+const AUTOSAVE_DELAY = 50
 
 export * from './patchStrategies'
-export type { SyncState } from './types';
+export type { SyncState } from './types'
 
 export type UseAutosavingStateReturn<T> = [
   T,
@@ -34,8 +34,8 @@ interface SyncAction {
   payload: any
 }
 
-export const USE_BACKEND_VALUE = Symbol("useBackendValue")
-export const USE_LOCAL_VALUE = Symbol("useLocalValue")
+export const USE_BACKEND_VALUE = Symbol('useBackendValue')
+export const USE_LOCAL_VALUE = Symbol('useLocalValue')
 export type ConflictResolutions<T> = {
   [key in (keyof T)] ?: T[key] | typeof USE_LOCAL_VALUE | typeof USE_BACKEND_VALUE
 }
@@ -43,7 +43,7 @@ export type ConflictResolutions<T> = {
 export default function useAutosavingState<T, Patch>(
   serverState : T,
   onPatch : (patch : Patch) => void,
-  patchStrategy: PatchStrategy<T,Patch>
+  patchStrategy: PatchStrategy<T, Patch>
 ) : UseAutosavingStateReturn<T>
 {
   const [reducerState, dispatch] = useReducer<Reducer<SyncStore<T>, SyncAction>, T>(reducer, serverState, getInitialState)
@@ -127,7 +127,7 @@ function merge<T>(serverState : T, newServerState : T, modifications : T) : Sync
     server: newServerState,
     original: serverState,
     local: modifications,
-  });
+  })
 
   const hasConflicts = state === 'CONFLICT'
 

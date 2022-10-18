@@ -45,7 +45,38 @@
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": [
+      "react-app",
+      "eslint:recommended",
+      "plugin:@typescript-eslint/recommended"
+    ],
+    "rules": {
+      "@typescript-eslint/no-explicit-any": 0,
+      "@typescript-eslint/no-non-null-assertion": 0,
+      "@typescript-eslint/ban-ts-comment": 0,
+      "@typescript-eslint/ban-types": 0,
+      "comma-dangle": ["error", "only-multiline"],
+      "comma-spacing": 1,
+      "indent": [
+        "error",
+        2,
+        {
+          "SwitchCase": 1
+        }
+      ],
+      "linebreak-style": [
+        "error",
+        "unix"
+      ],
+      "quotes": [
+        "error",
+        "single"
+      ],
+      "semi": [
+        "error",
+        "never"
+      ]
+    }
   },
   "browserslist": {
     "production": [

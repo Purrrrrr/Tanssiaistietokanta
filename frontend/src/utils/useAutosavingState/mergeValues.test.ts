@@ -104,12 +104,12 @@ describe('merge', () => {
 
   test('recursive conflicts 3', () => {
     expect(merge({
-      original: {a: 1, b: [1,2,3]},
-      server: {a: 1, b: [2,3,1]},
-      local: {a: 1, b: [2,3]},
+      original: {a: 1, b: [1, 2, 3]},
+      server: {a: 1, b: [2, 3, 1]},
+      local: {a: 1, b: [2, 3]},
     })).toEqual({
       state: 'CONFLICT',
-      pendingModifications: {a: 1, b: [2,3]},
+      pendingModifications: {a: 1, b: [2, 3]},
       conflicts: [
         ['b'],
       ],
@@ -118,12 +118,12 @@ describe('merge', () => {
 
   test('recursive conflicts 5', () => {
     expect(merge({
-      original: {a: 1, b: [1,2,{id: 0, a: 1, b: 2}]},
-      server: {a: 1, b: [2,{id: 0, a: 2, b: 2}]},
-      local: {a: 1, b: [2,{id: 0, a: 0, b: 2}]},
+      original: {a: 1, b: [1, 2, {id: 0, a: 1, b: 2}]},
+      server: {a: 1, b: [2, {id: 0, a: 2, b: 2}]},
+      local: {a: 1, b: [2, {id: 0, a: 0, b: 2}]},
     })).toEqual({
       state: 'CONFLICT',
-      pendingModifications: {a: 1, b: [2,{id: 0, a: 0, b: 2}]},
+      pendingModifications: {a: 1, b: [2, {id: 0, a: 0, b: 2}]},
       conflicts: [
         ['b', 2, 'a'],
       ],

@@ -1,6 +1,6 @@
-import React, {useState} from "react";
-import {Icon, IconName} from "libraries/ui";
-import "./PrintViewToolbar.sass";
+import React, {useState} from 'react'
+import {Icon, IconName} from 'libraries/ui'
+import './PrintViewToolbar.sass'
 
 interface PrintViewToolbarProps {
   children: React.ReactNode,
@@ -8,10 +8,10 @@ interface PrintViewToolbarProps {
   maxHeight?: number
 }
 
-export default function PrintViewToolbar({children, icon = "settings", maxHeight} : PrintViewToolbarProps) {
-  const [isOpen, setOpen] = useState(true);
+export default function PrintViewToolbar({children, icon = 'settings', maxHeight} : PrintViewToolbarProps) {
+  const [isOpen, setOpen] = useState(true)
 
-  return <div className={"print-view-toolbar " + (isOpen ? "open" : "closed")}
+  return <div className={'print-view-toolbar ' + (isOpen ? 'open' : 'closed')}
     style={isOpen && maxHeight ? {maxHeight} : undefined}
   >
     <Icon className="more" icon={icon} iconSize={20}

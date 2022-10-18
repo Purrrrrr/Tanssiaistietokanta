@@ -24,13 +24,13 @@ const serviceUpdateFragmentMap : {
 export type EventName = 'created' | 'removed' | 'updated'
 export type Callback<T extends Entity> = (data: T) => any
 export type EntityListCallbacks<T extends Entity> = Required<Callbacks<T>>
-export type EntityCallbacks<T extends Entity> = Omit<EntityListCallbacks<T>,'created'>
+export type EntityCallbacks<T extends Entity> = Omit<EntityListCallbacks<T>, 'created'>
 type Callbacks<T extends Entity> = {
   [property in EventName]?: Callback<T>
 }
 
 export function setupServiceUpdateFragment(service: ServiceName, fragment: string) {
-  serviceUpdateFragmentMap[service] = gql(fragment);
+  serviceUpdateFragmentMap[service] = gql(fragment)
 }
 
 export function emitServiceEvent(service: ServiceName, eventName: EventName, data: any) {
@@ -83,7 +83,7 @@ function getServiceEventEmitter(
     const typeName = serviceTypeNameMap[serviceName]
     const entityFragment = serviceUpdateFragmentMap[serviceName]
     if (!entityFragment) {
-      throw new Error("Missing update fragment for service "+serviceName)
+      throw new Error('Missing update fragment for service '+serviceName)
     }
     service.on('created', (data: any) => debug('received created', data))
     service.on('removed', (data: any) => debug('received removed', data))
@@ -105,7 +105,7 @@ function getServiceEventEmitter(
       updateEntityFragment(typeName, entityFragment, data)
     })
     
-    return emitter;
+    return emitter
   })
 }
 

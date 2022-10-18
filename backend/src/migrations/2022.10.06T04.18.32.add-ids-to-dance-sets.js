@@ -1,27 +1,27 @@
-const L = require('partial.lenses');
-const guid = require('../utils/guid');
+const L = require('partial.lenses')
+const guid = require('../utils/guid')
 
 /** @type {import('umzug').MigrationFn<any>} */
 exports.up = async params => {
   const {
-    events: eventsDb,
-  } = params.context.models;
+    events: eventsDb
+  } = params.context.models
 
-  const events = await eventsDb.findAsync();
+  const events = await eventsDb.findAsync()
 
   for (const event of events) {
-    if (!event.program || event.program.length == 0) continue;
+    if (!event.program || event.program.length == 0) continue
 
     const newEvent = L.modify(
       ['program', 'danceSets', L.elems, '_id'],
       guid,
-      event,
-    );
+      event
+    )
 
-    await eventsDb.updateAsync({ _id: event._id}, newEvent);
+    await eventsDb.updateAsync({ _id: event._id}, newEvent)
   }
 
-};
+}
 
 /** @type {import('umzug').MigrationFn<any>} */
-exports.down = async () => {};
+exports.down = async () => {}

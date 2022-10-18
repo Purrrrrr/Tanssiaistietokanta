@@ -1,10 +1,10 @@
-import React  from 'react';
-import {useEventSlideStyles, SlideStyle} from "services/events";
+import React  from 'react'
+import {useEventSlideStyles, SlideStyle} from 'services/events'
 
-import {Button, Icon, Select, MenuItem} from "libraries/ui";
-import {asFormControl} from "libraries/forms2";
+import {Button, Icon, Select, MenuItem} from 'libraries/ui'
+import {asFormControl} from 'libraries/forms2'
 
-const StyleSelect = asFormControl(Select.ofType<SlideStyle>());
+const StyleSelect = asFormControl(Select.ofType<SlideStyle>())
 
 interface SlideStyleSelectorProps {
   value: string | null
@@ -40,7 +40,7 @@ export function SlideStyleSelector({
 }
 
 function SlideStyleBox({value: {background, color}}) {
-  return <span style={{height: 20, width: 20, lineHeight: "16px", textAlign: 'center', border: `1px solid ${color}`, display: 'inline-block', background }}>
+  return <span style={{height: 20, width: 20, lineHeight: '16px', textAlign: 'center', border: `1px solid ${color}`, display: 'inline-block', background }}>
     <Icon icon="style" iconSize={12} color={color} />
   </span>
 }

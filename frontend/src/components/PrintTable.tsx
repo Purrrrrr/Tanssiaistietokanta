@@ -1,5 +1,5 @@
-import React from 'react';
-import classNames from 'classnames';
+import React from 'react'
+import classNames from 'classnames'
 
 import './PrintTable.sass'
 
@@ -19,5 +19,5 @@ export function PrintTable({children, headings, className} : PrintTableProps) {
     <tbody>
       {children}
     </tbody>
-    </table>;
+  </table>
 }

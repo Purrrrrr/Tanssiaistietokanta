@@ -1,15 +1,15 @@
-import React, { useMemo, useRef, useEffect } from 'react';
-import * as L from 'partial.lenses';
+import React, { useMemo, useRef, useEffect } from 'react'
+import * as L from 'partial.lenses'
 import { ArrayPath } from './types'
 import { FormValidityContext, FormMetadataContext, FormMetadataContextType } from './formContext'
-import {useValidationResult} from './validation';
+import {useValidationResult} from './validation'
 
 const defaultLabelStyle = 'above'
 
 export interface FormProps<T> extends 
-  Omit<React.ComponentPropsWithoutRef<"form">, "onSubmit" | "onChange">,
-  Omit<Partial<FormMetadataContextType<T>>, "onChange">,
-  Pick<FormMetadataContextType<T>, "onChange">
+  Omit<React.ComponentPropsWithoutRef<'form'>, 'onSubmit' | 'onChange'>,
+  Omit<Partial<FormMetadataContextType<T>>, 'onChange'>,
+  Pick<FormMetadataContextType<T>, 'onChange'>
 {
   value: T
   conflicts?: ArrayPath<T>[]
@@ -28,12 +28,12 @@ export function Form<T>({
   inline = false,
   ...rest
 } : FormProps<T>) {
-  const {hasErrors, ValidationContainer} = useValidationResult();
-  const form = useRef<HTMLFormElement>(null);
-  const listeners = useMemo(() => new Set<Function>(), []);
-  const valueRef = useRef<T>();
+  const {hasErrors, ValidationContainer} = useValidationResult()
+  const form = useRef<HTMLFormElement>(null)
+  const listeners = useMemo(() => new Set<Function>(), [])
+  const valueRef = useRef<T>()
   valueRef.current = value
-  const conflictsRef = useRef<ArrayPath<T>>();
+  const conflictsRef = useRef<ArrayPath<T>>()
   conflictsRef.current = conflicts as any
 
   const metadataContext = useMemo(
@@ -41,8 +41,8 @@ export function Form<T>({
       const onChangePath = (path, newValue) => {
         const val = valueRef.current!
         valueRef.current = typeof newValue  === 'function'
-        ? L.modify(path, newValue, val)
-        : L.set(path, newValue, val)
+          ? L.modify(path, newValue, val)
+          : L.set(path, newValue, val)
 
         onChange(valueRef.current!)
       }
@@ -64,9 +64,9 @@ export function Form<T>({
 
   const submitHandler = (e: React.FormEvent) => {
     //Sometimes forms from dialogs end up propagating into our form and we should not submit then
-    if (e.target !== form.current) return;
-    e.preventDefault();
-    onSubmit && onSubmit(value, e);
+    if (e.target !== form.current) return
+    e.preventDefault()
+    onSubmit && onSubmit(value, e)
   }
 
   return <FormMetadataContext.Provider value={metadataContext as FormMetadataContextType<unknown>}>

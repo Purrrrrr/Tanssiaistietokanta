@@ -27,7 +27,7 @@ export function getArrayChanges<T>(original: T[], changed: T[]): Change<T>[] {
   const changedIndexesById = new Map(
     changedIds.map((id, index) => [id, index])
   )
-  const statuses = new Map<any,PartialChange>(
+  const statuses = new Map<any, PartialChange>(
     originalIds.map((id, index) => [id, {status: 'UNCHANGED', id, from: index, to: index, moveAmount: 0}])
   )
 
@@ -77,7 +77,7 @@ export function getArrayChanges<T>(original: T[], changed: T[]): Change<T>[] {
 
   const changes : Change<T>[]= Array.from(statuses.values())
     .map(change => ({...change, originalValue: change.status !== 'ADDED' ? original[change.from] : changed[change.to]}))
-    .sort((a,b) => (a.to) - (b.to))
+    .sort((a, b) => (a.to) - (b.to))
 
   minimizeMoveSet(changes)
 
@@ -99,10 +99,10 @@ function minimizeMoveSet<T>(changes: Change<T>[]) {
   const greatestMoves = moves
     .filter(state => !compensated.has(state.id) && state.moveAmount !== 0)
     .map((state, index) => ({index, ...state}))
-    .sort((a,b) => Math.abs(b.moveAmount) - Math.abs(a.moveAmount))
+    .sort((a, b) => Math.abs(b.moveAmount) - Math.abs(a.moveAmount))
   for(const move of greatestMoves) {
     const {moveAmount, id, from, to} = move
-    if (moveAmount === -1 || moveAmount === 1) break;
+    if (moveAmount === -1 || moveAmount === 1) break
 
     const affected = changes
       .filter(movedItem => !compensated.has(movedItem.id))
@@ -110,7 +110,7 @@ function minimizeMoveSet<T>(changes: Change<T>[]) {
       .filter(movedItem => (moveAmount > 0)
         ? (movedItem.from > from && movedItem.to < to)
         : (movedItem.from < from && movedItem.to > to)
-    ).slice(0, Math.abs(moveAmount))
+      ).slice(0, Math.abs(moveAmount))
     
     const sign = moveAmount > 0 ? 1 : -1
     affected.forEach(move => move.moveAmount! += sign)

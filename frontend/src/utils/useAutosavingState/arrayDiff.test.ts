@@ -3,7 +3,7 @@ import {getArrayChanges} from './arrayDiff'
 describe('getArrayChanges', () => {
 
   test('no changes', () => {
-    const changes = getArrayChanges([1,2,3], [1,2,3])
+    const changes = getArrayChanges([1, 2, 3], [1, 2, 3])
 
     changes.forEach((change, index) =>
       expect(change).toMatchObject({id: index+1, status: 'UNCHANGED'})
@@ -11,7 +11,7 @@ describe('getArrayChanges', () => {
   })
 
   test('simple removals', () => {
-    const changes = getArrayChanges([1,2,3,4,5], [1,3,5])
+    const changes = getArrayChanges([1, 2, 3, 4, 5], [1, 3, 5])
 
     const statuses = {
       1: 'UNCHANGED',
@@ -26,7 +26,7 @@ describe('getArrayChanges', () => {
   })
 
   test('simple adding', () => {
-    const changes = getArrayChanges([1,2,3], [1,4,2,3,5])
+    const changes = getArrayChanges([1, 2, 3], [1, 4, 2, 3, 5])
 
     const statuses = {1: 'UNCHANGED', 2: 'UNCHANGED', 3: 'UNCHANGED', 4: 'ADDED', 5: 'ADDED'}
     changes.forEach((change) =>
@@ -35,7 +35,7 @@ describe('getArrayChanges', () => {
   })
 
   test('adding and removing', () => {
-    const changes = getArrayChanges([1,2,3,4,5], [6,1,3,5,8])
+    const changes = getArrayChanges([1, 2, 3, 4, 5], [6, 1, 3, 5, 8])
 
     const expectedChanges = {
       1: { status: 'UNCHANGED'},
@@ -46,11 +46,11 @@ describe('getArrayChanges', () => {
       6: { status: 'ADDED', to: 0},
       8: { status: 'ADDED', to: 4},
     }
-    expectChangesToMatch(changes,expectedChanges)
+    expectChangesToMatch(changes, expectedChanges)
   })
 
   test('moving', () => {
-    const changes = getArrayChanges([1,2,3,4,5], [5,1,3,4,2])
+    const changes = getArrayChanges([1, 2, 3, 4, 5], [5, 1, 3, 4, 2])
 
     const expectedChanges = {
       1: { status: 'MOVED', moveAmount: 0},
@@ -59,11 +59,11 @@ describe('getArrayChanges', () => {
       4: { status: 'UNCHANGED', moveAmount: 0},
       5: { status: 'MOVED', from: 4, to: 0, moveAmount: -4},
     }
-    expectChangesToMatch(changes,expectedChanges)
+    expectChangesToMatch(changes, expectedChanges)
   })
 
   test('swapping two values next to each other', () => {
-    const changes = getArrayChanges([1,2,3,4,5], [1,3,2,4,5])
+    const changes = getArrayChanges([1, 2, 3, 4, 5], [1, 3, 2, 4, 5])
 
     const expectedChanges = {
       1: { status: 'UNCHANGED'},
@@ -72,11 +72,11 @@ describe('getArrayChanges', () => {
       4: { status: 'UNCHANGED'},
       5: { status: 'UNCHANGED'},
     }
-    expectChangesToMatch(changes,expectedChanges)
+    expectChangesToMatch(changes, expectedChanges)
   })
 
   test('swapping two values far from each other', () => {
-    const changes = getArrayChanges([1,2,3,4,5], [5,2,3,4,1])
+    const changes = getArrayChanges([1, 2, 3, 4, 5], [5, 2, 3, 4, 1])
 
     const expectedChanges = {
       1: { status: 'MOVED', from: 0, to: 4, moveAmount: 3},
@@ -85,13 +85,13 @@ describe('getArrayChanges', () => {
       4: { status: 'UNCHANGED'},
       5: { status: 'MOVED', from: 4, to: 0, moveAmount: -4},
     }
-    expectChangesToMatch(changes,expectedChanges)
+    expectChangesToMatch(changes, expectedChanges)
   })
 
   test('many changes at once', () => {
     const changes = getArrayChanges(
-      [{id: 1},11,22,33,2,3,4,5,6,7],
-      [0, 1, {id: 6}, 2, 7, 66, 3, 4, 5,11,22,33]
+      [{id: 1}, 11, 22, 33, 2, 3, 4, 5, 6, 7],
+      [0, 1, {id: 6}, 2, 7, 66, 3, 4, 5, 11, 22, 33]
     )
 
     const expectedChanges = {
@@ -108,7 +108,7 @@ describe('getArrayChanges', () => {
       33: { status: 'MOVED', from: 3, to: 11, moveAmount: 4},
       66: { status: 'ADDED'},
     }
-    expectChangesToMatch(changes,expectedChanges)
+    expectChangesToMatch(changes, expectedChanges)
   })
 
   test('many changes at once 2', () => {
@@ -132,7 +132,7 @@ describe('getArrayChanges', () => {
       33: { status: 'MOVED', from: 3, to: 11, moveAmount: 4},
       66: { status: 'ADDED'},
     }
-    expectChangesToMatch(changes,expectedChanges)
+    expectChangesToMatch(changes, expectedChanges)
   })
 
   function expectChangesToMatch(changes, expectedChanges) {

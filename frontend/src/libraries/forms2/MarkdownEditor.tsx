@@ -1,9 +1,9 @@
-import React from 'react';
-import MdEditor, { Plugins }  from 'react-markdown-editor-lite';
-import Markdown from 'markdown-to-jsx';
+import React from 'react'
+import MdEditor, { Plugins }  from 'react-markdown-editor-lite'
+import Markdown from 'markdown-to-jsx'
 import {FieldComponentProps} from 'libraries/forms2'
 
-import 'react-markdown-editor-lite/lib/index.css';
+import 'react-markdown-editor-lite/lib/index.css'
 
 MdEditor.unuse(Plugins.Image)
 
@@ -16,7 +16,7 @@ interface MarkdownEditorProps extends FieldComponentProps<string, HTMLTextAreaEl
 export const MarkdownEditor = React.memo(function MarkdownEditor({value, onChange, hasConflict, markdownOverrides, ...props} : MarkdownEditorProps) {
   return <MdEditor
     renderHTML={(text : string) => <Markdown options={{overrides: markdownOverrides}}>{text}</Markdown>}
-    value={value ?? ""}
+    value={value ?? ''}
     onChange={({text}, e) => onChange(text, e!)}
     {...props}
   />

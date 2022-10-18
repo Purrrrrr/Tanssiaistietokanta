@@ -5,7 +5,7 @@ import createDebug from 'utils/debug'
 const debug = createDebug('channels')
 
 let socketConnected = false
-socket.on("connect", () => {
+socket.on('connect', () => {
   if (!socketConnected) {
     debug('socket connected, enabling channels')
     listenersByChannel.forEach((listeners, channel) => {
@@ -13,11 +13,11 @@ socket.on("connect", () => {
     })
   }
   socketConnected = true
-});
-socket.on("disconnect", () => {
+})
+socket.on('disconnect', () => {
   debug('socket disconnected')
   socketConnected = false
-});
+})
 
 const listenersByChannel = new Map<string, Set<unknown>>()
 

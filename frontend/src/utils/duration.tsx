@@ -1,19 +1,19 @@
 export function toMinSec(value : number) {
-  const seconds = value%60;
-  const minutes = Math.floor(value/60);
-  return [minutes, seconds];
+  const seconds = value%60
+  const minutes = Math.floor(value/60)
+  return [minutes, seconds]
 }
 
 export function toSeconds(minutes : number, seconds : number) {
-  return Math.max(seconds+(minutes*60), 0);
+  return Math.max(seconds+(minutes*60), 0)
 }
 
-export const prefixZero = (value: number) => (value < 10 ? "0" : "") + value.toFixed()
+export const prefixZero = (value: number) => (value < 10 ? '0' : '') + value.toFixed()
 
 export function durationToString(value : number | undefined) {
-  if (!value || value < 0) return '0:00';
-  const [minutes, seconds] = toMinSec(value);
-  return minutes+":"+prefixZero(seconds);
+  if (!value || value < 0) return '0:00'
+  const [minutes, seconds] = toMinSec(value)
+  return minutes+':'+prefixZero(seconds)
 }
 
 export function parseDuration(duration : string) {
@@ -22,8 +22,8 @@ export function parseDuration(duration : string) {
     .split(/:+/)
     .map(parseFloat)
     .map(f => Number.isFinite(f) ? f : 0)
-    .map((f,index) => (index === 0 ? f : Math.min(f,59)));
+    .map((f, index) => (index === 0 ? f : Math.min(f, 59)))
   
-  if (!numbers.length) return 0;
-  return numbers.reduce((accumulator, value) => accumulator*60+value);
+  if (!numbers.length) return 0
+  return numbers.reduce((accumulator, value) => accumulator*60+value)
 }

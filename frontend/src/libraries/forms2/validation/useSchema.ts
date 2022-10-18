@@ -1,6 +1,6 @@
-import {useMemo} from 'react';
+import {useMemo} from 'react'
 import {useDeepCompareMemoize} from './utils/useDeepCompareMemoize'
-import validators from './utils/yup';
+import validators from './utils/yup'
 
 type Type = 'list' | 'number' | 'text' | 'email';
 
@@ -17,18 +17,18 @@ export interface ValidationProps {
 }
 
 export function useSchema(schema : ValidationProps) {
-  const normalizedSchema = useDeepCompareMemoize(normalize(schema));
+  const normalizedSchema = useDeepCompareMemoize(normalize(schema))
   return useMemo(
     () => getSchema(normalizedSchema),
     [normalizedSchema]
-  );
+  )
 }
 
-export function stripValidationProps<P>(props : P) : Omit<P, "validate" | "errorMessages"> {
+export function stripValidationProps<P>(props : P) : Omit<P, 'validate' | 'errorMessages'> {
   const ret = {...props}
-  if ("validate" in ret) delete ret["validate"];
-  if ("errorMessages" in ret) delete ret["errorMessages"];
-  return ret;
+  if ('validate' in ret) delete ret['validate']
+  if ('errorMessages' in ret) delete ret['errorMessages']
+  return ret
 }
 
 function normalize({type, required, min, minLength, max, maxLength, pattern, errorMessages, validate} : ValidationProps) {
@@ -41,40 +41,40 @@ function normalize({type, required, min, minLength, max, maxLength, pattern, err
     email: type === 'email' ? true : undefined,
     errorMessages: errorMessages ?? {},
     ...validate
-  };
+  }
 }
 
 function normalizeType(type ?: Type) {
   switch(type) {
     case 'list':
-      return 'array';
+      return 'array'
     case 'number':
-      return 'number';
+      return 'number'
     case 'text':
     default:
-      return 'string';
+      return 'string'
   }
 }
 
 function getSchema({type, errorMessages, ...spec}) {
-  let schema = validators[type]();
-  let unvalidated = true;
+  let schema = validators[type]()
+  let unvalidated = true
   for(const [key, val] of Object.entries(spec)) {
-    if (val === undefined) continue;
-    if (!schema[key]) continue;
-    unvalidated = false;
+    if (val === undefined) continue
+    if (!schema[key]) continue
+    unvalidated = false
 
-    const args = noArguments[key] ? [] : [val];
-    const message = errorMessages[key];
+    const args = noArguments[key] ? [] : [val]
+    const message = errorMessages[key]
     if (message) {
-      args.push(message);
+      args.push(message)
     }
-    schema = schema[key](...args);
+    schema = schema[key](...args)
   }
-  return unvalidated ? null : schema;
+  return unvalidated ? null : schema
 }
 
 const noArguments = {
   required: true,
   email: true
-};
+}

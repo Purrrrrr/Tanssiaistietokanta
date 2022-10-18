@@ -1,4 +1,4 @@
-import {useRef} from 'react';
+import {useRef} from 'react'
 import deepEquals from 'fast-deep-equal'
 
 export function useDeepCompareMemoize<V>(value : V) : V {

@@ -40,7 +40,7 @@ export function mergeArrays<T>(
 }
 
 function mergeModifications <T>(original: T[], serverDiff: Change<T>[], localDiff: Change<T>[], merge : MergeFunction) : MergeResult<T[]> {
-  const modifiedIndexesById = new Map<any,number>()
+  const modifiedIndexesById = new Map<any, number>()
   const pendingModifications = [...original]
   const conflicts : Path<T[]>[] = []
 
@@ -67,9 +67,11 @@ function mergeModifications <T>(original: T[], serverDiff: Change<T>[], localDif
             pendingModifications[change.from] = result.pendingModifications
             break
           case 'CONFLICT':
+          {
             const subConflicts : Path<T[]>[] = result.conflicts
               .map(conflict => subIndexPath(change.from, conflict))
             conflicts.push(...subConflicts)
+          }
         }
       } else {
         pendingModifications[change.from] = change.changedValue!
@@ -93,7 +95,7 @@ function mergeDeletes<T>(original: T[], serverDiff: Change<T>[], localDiff: Chan
       .map(change => [change.from, change])
   )
   const localChanges = new Map(
-     localDiff
+    localDiff
       .filter(change => change.status !== 'ADDED')
       .map(change => [change.from, change])
   )
@@ -147,7 +149,7 @@ function mergeMoves<T>(original: T[], serverDiff: Change<T>[], localDiff: Change
     localDiff.map(change => [change.id, change])
   )
 
-  const moves = new Map<any,number>()
+  const moves = new Map<any, number>()
   let hasModifications = false
   originalIds.forEach((id, index) => {
     const localChange = localChangesById.get(id)!
@@ -183,7 +185,7 @@ function mergeMoves<T>(original: T[], serverDiff: Change<T>[], localDiff: Change
       }
       return {index, id, value}
     })
-    .sort((a,b) => a.index - b.index)
+    .sort((a, b) => a.index - b.index)
     .map(i => i.value)
 
   return {
@@ -220,7 +222,7 @@ function mergeAdditions<T>(original: T[], serverDiff: Change<T>[], localDiff: Ch
       const toIndex = change.to
         + countIn(indexConflicts, key => key <= change.to)
         - countIn(localRemoves, key => key <= change.to)
-        + countIn(localAdditionsByIndex, (_,key) => key <= change.to)
+        + countIn(localAdditionsByIndex, (_, key) => key <= change.to)
 
       if (localAdditionsByIndex.has(toIndex-1) &&
         areEqualWithoutId(change.originalValue, localAdditionsByIndex.get(toIndex-1))) {
@@ -237,7 +239,7 @@ function mergeAdditions<T>(original: T[], serverDiff: Change<T>[], localDiff: Ch
   }
 }
 
-function countIn<T,K>(collection: Set<T> | Map<K,T>, filter: (i: T, index: K) => boolean) : number {
+function countIn<T, K>(collection: Set<T> | Map<K, T>, filter: (i: T, index: K) => boolean) : number {
   let count = 0
   collection.forEach((item, index) => {
     if(filter(item, index)) count++

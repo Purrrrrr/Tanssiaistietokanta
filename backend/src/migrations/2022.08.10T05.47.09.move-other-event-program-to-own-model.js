@@ -1,18 +1,18 @@
-const L = require('partial.lenses');
-const R = require('ramda');
-const evolve = require('../utils/evolveObjAsync');
+const L = require('partial.lenses')
+const R = require('ramda')
+const evolve = require('../utils/evolveObjAsync')
 
 /** @type {import('umzug').MigrationFn<any>} */
 exports.up = async params => {
   const {
     events: eventsDb,
     ['event-program']: eventProgramDb
-  } = params.context.models;
+  } = params.context.models
 
-  const events = await eventsDb.findAsync();
+  const events = await eventsDb.findAsync()
 
   for (const event of events) {
-    if (!event.program || event.program.length == 0) continue;
+    if (!event.program || event.program.length == 0) continue
 
     const newEvent = await evolve(
       {
@@ -23,22 +23,22 @@ exports.up = async params => {
               L.elems, 'program', L.elems,
               L.when(R.propEq('__typename', 'OtherProgram'))
             ],
-            modEventProgram,
-          ),
+            modEventProgram
+          )
         }
       },
       event
-    );
+    )
 
-    await eventsDb.updateAsync({ _id: event._id}, newEvent);
+    await eventsDb.updateAsync({ _id: event._id}, newEvent)
   }
 
   async function modEventProgram(item) {
-    const eventProgramId  = await storeEventProgram(item, eventProgramDb);
-    return { eventProgramId, __typename: 'EventProgram' };
+    const eventProgramId  = await storeEventProgram(item, eventProgramDb)
+    return { eventProgramId, __typename: 'EventProgram' }
   }
 
-};
+}
 
 async function storeEventProgram(eventProgram, eventProgramDb) {
   const { name, description, duration } = eventProgram
@@ -48,4 +48,4 @@ async function storeEventProgram(eventProgram, eventProgramDb) {
 }
 
 /** @type {import('umzug').MigrationFn<any>} */
-exports.down = async params => {};
+exports.down = async () => {}

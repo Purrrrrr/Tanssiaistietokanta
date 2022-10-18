@@ -1,10 +1,10 @@
-import React, {useState, useEffect} from 'react';
-import {usePatchDance, Dance} from "services/dances";
-import {Button, FormGroup, Tag, ProgressBar} from "libraries/ui";
-import {formFor, SubmitButton, MarkdownEditor} from "libraries/forms2";
-import {getDanceData, ImportedDanceData} from 'libraries/danceWiki';
-import {Dialog} from 'libraries/dialog';
-import {DanceNameSearch} from './DanceNameSearch';
+import React, {useState, useEffect} from 'react'
+import {usePatchDance, Dance} from 'services/dances'
+import {Button, FormGroup, Tag, ProgressBar} from 'libraries/ui'
+import {formFor, SubmitButton, MarkdownEditor} from 'libraries/forms2'
+import {getDanceData, ImportedDanceData} from 'libraries/danceWiki'
+import {Dialog} from 'libraries/dialog'
+import {DanceNameSearch} from './DanceNameSearch'
 
 interface DanceDataImportButtonProps {
   onImport?: (dance: Dance) => any,
@@ -25,9 +25,9 @@ const {
 } = formFor<ImporterState>()
 
 export function DanceDataImportButton({onImport, dance, text, ...props} : DanceDataImportButtonProps) {
-  const [isOpen, setOpen] = useState(false);
+  const [isOpen, setOpen] = useState(false)
 
-  const [patch] = usePatchDance();
+  const [patch] = usePatchDance()
   const handleImport = ({ importedData, ...data} : ImporterState) => {
     if (onImport) {
       onImport(data)
@@ -42,33 +42,33 @@ export function DanceDataImportButton({onImport, dance, text, ...props} : DanceD
   return <>
     <Button text={text} {...props} onClick={() => setOpen(true)} />
     <DanceDataImportDialog isOpen={isOpen} onClose={() => setOpen(false)}
-      dance={dance} onImport={(data: ImporterState) => { setOpen(false); handleImport(data); }}
+      dance={dance} onImport={(data: ImporterState) => { setOpen(false); handleImport(data) }}
     />
   </>
 }
 
 export function DanceDataImportDialog({dance: originalDance, isOpen, onClose, onImport}) {
-  const [dance, setDance] = useState<ImporterState>(originalDance);
-  const [importNr, setImportNr] = useState(0);
+  const [dance, setDance] = useState<ImporterState>(originalDance)
+  const [importNr, setImportNr] = useState(0)
 
   function reset() {
-    setDance(originalDance);
+    setDance(originalDance)
   }
-  useEffect(reset, [originalDance]);
+  useEffect(reset, [originalDance])
 
   function importDone(importedData) {
     if (importedData.instructions && (!dance.instructions || dance.instructions.trim() === '')) {
-      setDance({...dance, instructions: importedData.instructions, importedData});
+      setDance({...dance, instructions: importedData.instructions, importedData})
     } else {
-      setDance({...dance, importedData});
+      setDance({...dance, importedData})
     }
     setImportNr(importNr+1)
   }
   function save() {
-    onImport(dance); reset();
+    onImport(dance); reset()
   }
   function close() {
-    onClose(); reset();
+    onClose(); reset()
   }
 
   return <Dialog isOpen={isOpen} onClose={close} title="Hae tanssin tietoja tanssiwikistä"
@@ -83,34 +83,34 @@ export function DanceDataImportDialog({dance: originalDance, isOpen, onClose, on
         <SubmitButton text="Tallenna" disabled={!dance.importedData}/>
       </Dialog.Footer>
     </Form>
-  </Dialog>;
+  </Dialog>
 }
 
 function DataImporter({danceName, onImport}) {
-  const [search, setSearch] = useState(danceName);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<{message: string} | null>(null);
+  const [search, setSearch] = useState(danceName)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<{message: string} | null>(null)
 
   function importData() {
-    setLoading(true);
+    setLoading(true)
     getDanceData(search)
       .then(onImport)
       .catch(setError)
-      .finally(() => setLoading(false));
+      .finally(() => setLoading(false))
   }
 
   return <FormGroup label="Hae tanssi nimellä" inline>
     <DanceNameSearch value={search} onChange={setSearch} />
     <Button icon="search" intent="primary" onClick={importData} disabled={loading}/>
     {loading
-        ? <div style={{margin: "10px 0px"}}>Ladataan tietoja...<ProgressBar /></div>
-        : <p>Hae tietoja hakunapilla, jotta voit liittää niitä tietokantaan</p>}
+      ? <div style={{margin: '10px 0px'}}>Ladataan tietoja...<ProgressBar /></div>
+      : <p>Hae tietoja hakunapilla, jotta voit liittää niitä tietokantaan</p>}
     {error && <p>{error.message}</p>}
-  </FormGroup>;
+  </FormGroup>
 }
 
 function ImportedDataView() {
-  const {categories, formations} = useValueAt("importedData")!
+  const {categories, formations} = useValueAt('importedData')!
   return <>
     <Row>
       <RowItem>
@@ -130,53 +130,53 @@ function ImportedDataView() {
     </Row>
     <InstructionEditor />
 
-  </>;
+  </>
 }
 
 function Suggestions({values, onSuggest}) {
   return <FormGroup label="Ehdotukset wikistä">
-      {values.length === 0 && 'Ei ehdotuksia'}
-      {values.map(value =>
-        <React.Fragment key={value}>
-          <Tag large interactive intent="success"
-            onClick={() => onSuggest(value)}>
-            {value}
-          </Tag>
-          {' '}
-        </React.Fragment>
-      )}
-  </FormGroup>;
+    {values.length === 0 && 'Ei ehdotuksia'}
+    {values.map(value =>
+      <React.Fragment key={value}>
+        <Tag large interactive intent="success"
+          onClick={() => onSuggest(value)}>
+          {value}
+        </Tag>
+        {' '}
+      </React.Fragment>
+    )}
+  </FormGroup>
 }
 
 function Row({children}) {
-  return <div style={{display: 'flex'}}>{children}</div>;
+  return <div style={{display: 'flex'}}>{children}</div>
 }
 function RowItem({children}) {
-  return <div style={{margin: '0 5px'}}>{children}</div>;
+  return <div style={{margin: '0 5px'}}>{children}</div>
 }
 
 function InstructionEditor() {
   const value = useValueAt([])
-  const setInstructions = useOnChangeFor("instructions")
-  const [hasConflict, setHasConflict] = useState(value.instructions !== value.importedData?.instructions);
+  const setInstructions = useOnChangeFor('instructions')
+  const [hasConflict, setHasConflict] = useState(value.instructions !== value.importedData?.instructions)
 
   if (!hasConflict) {
     return <Field path="instructions" component={MarkdownEditor} label="Tanssiohje"/>
   }
 
-  const onResolve= (value: string) => { setHasConflict(false); setInstructions(value); }
+  const onResolve= (value: string) => { setHasConflict(false); setInstructions(value) }
   return <>
     <p>Tanssiohje</p>
     <Row>
       <RowItem>
         <Field path="instructions" component={MarkdownEditor} label="Tietokannassa oleva versio"/>
-        <Button text="Käytä tätä versiota" onClick={() => onResolve(value.instructions ?? "")} />
+        <Button text="Käytä tätä versiota" onClick={() => onResolve(value.instructions ?? '')} />
       </RowItem>
       <RowItem>
-        <Field path={["importedData", "instructions"]} component={MarkdownEditor} label="Tanssiwikin versio"/>
+        <Field path={['importedData', 'instructions']} component={MarkdownEditor} label="Tanssiwikin versio"/>
         <Button text="Käytä tätä versiota" onClick={() => onResolve(value.importedData!.instructions)} />
       </RowItem>
     </Row>;
-  </>;
+  </>
 
 }

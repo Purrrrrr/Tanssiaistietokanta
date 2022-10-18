@@ -1,5 +1,5 @@
-import React, { useMemo, useState, useEffect, useContext, useCallback } from 'react';
-import * as L from 'partial.lenses';
+import React, { useMemo, useState, useEffect, useContext, useCallback } from 'react'
+import * as L from 'partial.lenses'
 import {NewValue, LabelStyle, Path, ArrayPath, PropertyAtPath} from './types'
 
 export const FormValidityContext = React.createContext<boolean>(true)
@@ -21,33 +21,33 @@ export const FormMetadataContext = React.createContext<FormMetadataContextType<u
 
 export function useFormMetadata<T>() {
   const ctx = useContext(FormMetadataContext) as FormMetadataContextType<T>
-  if (ctx === null) throw new Error('No form metadata context');
+  if (ctx === null) throw new Error('No form metadata context')
   return ctx
 }
 
 export function useValueAt<T, P extends Path<T>, SubT extends PropertyAtPath<T, P>>(path : P) : SubT {
   const stablePath = useMemoizedPath(path)
-  const getValue = useCallback((ctx) => L.get(stablePath, ctx.getValue()), [stablePath]);
+  const getValue = useCallback((ctx) => L.get(stablePath, ctx.getValue()), [stablePath])
   return useFormValueSubscription(getValue)
 }
 export function useHasConflictsAt<T, P extends Path<T>>(path : P): boolean {
   const stablePath = useMemoizedPath(path)
   const getValue = useCallback((ctx) => 
     hasConflictsAtPath(ctx.getConflicts(), stablePath),
-    [stablePath]
-  );
+  [stablePath]
+  )
   return useFormValueSubscription(getValue)
 }
 export function useFormValueSubscription<T, V>(getValue: ((ctx: FormMetadataContextType<T>) => V)): V {
   const ctx = useContext(FormMetadataContext) as FormMetadataContextType<T>
-  const [state, setState] = useState(() => getValue(ctx));
+  const [state, setState] = useState(() => getValue(ctx))
   
   useEffect(() => {
     const callback = () => setState(getValue(ctx))
-    const unsubscribe = ctx.subscribeToChanges(callback);
-    callback();
-    return unsubscribe;
-  }, [ctx, getValue]);
+    const unsubscribe = ctx.subscribeToChanges(callback)
+    callback()
+    return unsubscribe
+  }, [ctx, getValue])
   return state
 }
 
@@ -73,5 +73,5 @@ export function useMemoizedPath<T>(path: T): T {
 }
 
 function getStringPath<P extends Path<unknown>>(path: P): string{
-  return Array.isArray(path) ? path.join("--") : String(path)
+  return Array.isArray(path) ? path.join('--') : String(path)
 }

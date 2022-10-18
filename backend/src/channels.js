@@ -1,14 +1,14 @@
-const {defaultChannels} = require('./utils/defaultChannels');
+const {defaultChannels} = require('./utils/defaultChannels')
 
 module.exports = function(app) {
   if(typeof app.channel !== 'function') {
     // If no real-time functionality has been configured just return
-    return;
+    return
   }
 
   app.on('connection', connection => {
-    app.channel('events').join(connection);
-  });
+    app.channel('events').join(connection)
+  })
 
   /*app.on('login', (authResult, { connection }) => {
     // connection can be undefined if there is no
@@ -41,8 +41,8 @@ module.exports = function(app) {
   app.publish((data, context) => {
     // Here you can add event publishers to channels set up in `channels.js`
     // To publish only for a specific event use `app.publish(eventname, () => {})`
-    return defaultChannels(app, context);
-  });
+    return defaultChannels(app, context)
+  })
 
   // Here you can also add service specific event publishers
   // e.g. the publish the `users` service `created` event to the `admins` channel
@@ -55,4 +55,4 @@ module.exports = function(app) {
   //     app.channel(`emails/${data.recipientEmail}`)
   //   ];
   // });
-};
+}

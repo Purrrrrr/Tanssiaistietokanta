@@ -1,6 +1,6 @@
 module.exports = function getFromData(data, mapper) {
   if (Array.isArray(data)) {
-    return data.map(mapper);
+    return data.map(mapper)
   }
-  return [mapper(data)];
-};
+  return [mapper(data)]
+}

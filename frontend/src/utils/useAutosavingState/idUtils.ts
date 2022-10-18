@@ -24,7 +24,7 @@ function getPossibleId(item: any): any {
 }
 
 export function areEqualWithoutId(a: any, b: any) : boolean {
-  if (isPlainValue(a) || isPlainValue(b)) return deepEquals(a,b)
+  if (isPlainValue(a) || isPlainValue(b)) return deepEquals(a, b)
 
   //Both are objects
   for (const key of Object.keys(a)) {

@@ -1,10 +1,10 @@
-import { ApolloClient, ApolloLink, InMemoryCache, Observable, useMutation as useMutationOriginal } from "@apollo/client";
-import {runGraphQlQuery} from './feathers';
-import {showDefaultErrorToast} from "utils/toaster"
+import { ApolloClient, ApolloLink, InMemoryCache, Observable, useMutation as useMutationOriginal } from '@apollo/client'
+import {runGraphQlQuery} from './feathers'
+import {showDefaultErrorToast} from 'utils/toaster'
 
-export {gql, ApolloProvider, useQuery} from "@apollo/client"
-export {ApolloClient};
-export type {DocumentNode, FetchResult, MutationResult} from "@apollo/client"
+export {gql, ApolloProvider, useQuery} from '@apollo/client'
+export {ApolloClient}
+export type {DocumentNode, FetchResult, MutationResult} from '@apollo/client'
 
 const cache = new InMemoryCache({
   possibleTypes: {
@@ -24,7 +24,7 @@ const cache = new InMemoryCache({
       }
     }
   }
-});
+})
 
 const socketLink = new ApolloLink((operation) => {
   const {query, variables} = operation
@@ -42,20 +42,20 @@ function observableFromPromise<T>(promise : Promise<T>) : Observable<T> {
         observer.error(error)
         console.error(error)
       }
-      observer.next(await promise);
+      observer.next(await promise)
     }
-    run().then(() => observer.complete(), e => observer.error(e));
-  });
+    run().then(() => observer.complete(), e => observer.error(e))
+  })
 }
 
 export const apolloClient = new ApolloClient({
   link: socketLink,
   cache,
-});
+})
 
 export function useMutation(query, options = {}) {
   return useMutationOriginal(query, {
-    onError: err => { showDefaultErrorToast(err);},
+    onError: err => { showDefaultErrorToast(err)},
     ...options
   })
 }

@@ -1,4 +1,4 @@
-import { setupServiceUpdateFragment, backendQueryHook, entityListQueryHook, entityCreateHook, entityDeleteHook, entityUpdateHook } from '../backend';
+import { setupServiceUpdateFragment, backendQueryHook, entityListQueryHook, entityCreateHook, entityDeleteHook, entityUpdateHook } from '../backend'
 
 const eventFields = `
 _id, name 
@@ -52,10 +52,10 @@ workshops {
     _id, name
   }
 }
-`;
+`
 
 setupServiceUpdateFragment(
-  "events",
+  'events',
   `fragment EventFragment on Event {
     ${eventFields}
   }`
@@ -67,9 +67,9 @@ export interface SlideStyle {
   id: string | null
   color: string
   background: string
-};
+}
 
-const defaultStyle =  {id: null, name: 'Valkoinen', background: '#fff', color: '#000', default: true};
+const defaultStyle =  {id: null, name: 'Valkoinen', background: '#fff', color: '#000', default: true}
 const customStyles = [
   { id: 'dark', name: 'Tumma', background: '#000', color: '#fff' },
   { id: 'flower-title1', name: 'Kukka iso 1', background: '#F681BD', color: '#000' },
@@ -85,7 +85,7 @@ const customStyles = [
   { id: 'flower-frame5', name: 'Kukka reunus 5', background: '#FE6BBA', color: '#000' },
   { id: 'flower-frame6', name: 'Kukka reunus 6', background: '#F02735', color: '#000' },
   { id: 'flower-frame7', name: 'Kukka reunus 7', background: '#DC91CB', color: '#000' },
-];
+]
 
 interface UseEventSlideStylesOptions {
   useStyleInheritance?: boolean
@@ -105,7 +105,7 @@ export function useEventSlideStyles({
       : inheritedStyle.name
 
     return [
-      { ...inheritedStyle, name, id: null, },
+      { ...inheritedStyle, name, id: null },
       {...defaultStyle, id: 'default'},
       ...customStyles
     ]
@@ -121,10 +121,10 @@ query getEvent($id: ID!) {
   event(id: $id) {
     ${eventFields}
   }
-}`);
+}`)
 export function useEvent(id) {
-  const res = useEventInternal({id});
-  return [res.data ? res.data.event : null, res];
+  const res = useEventInternal({id})
+  return [res.data ? res.data.event : null, res]
 }
 
 export const useEvents = entityListQueryHook('events', `
@@ -132,7 +132,7 @@ query getEvents {
   events {
     _id, name
   }
-}`);
+}`)
 
 export const useCreateEvent = entityCreateHook('events', `
 mutation createEvent($event: EventInput!) {
@@ -141,7 +141,7 @@ mutation createEvent($event: EventInput!) {
   }
 }`, {
   parameterMapper: (event) => ({variables: {event}}),
-});
+})
 
 export interface ModifyEventInput {
   _id?: string,
@@ -157,10 +157,10 @@ mutation modifyEvent($id: ID!, $event: EventInput!) {
 }`, {
   parameterMapper: ({_id, __typename, ...event} : ModifyEventInput) =>
     ({variables: {id: _id, event: toEventInput(event)} })
-});
+})
 
 function toEventInput({name}) {
-  return { name };
+  return { name }
 }
 
 export const useModifyEventProgram = entityUpdateHook('events', `
@@ -171,7 +171,7 @@ mutation modifyEventProgram($id: ID!, $program: ProgramInput!) {
 }`, {
   parameterMapper: (eventId, {_id, __typename, ...program}) =>
     ({variables: {id: eventId, program} })
-});
+})
 
 export const useDeleteEvent = entityDeleteHook('events', `
 mutation deleteEvent($id: ID!) {
@@ -180,4 +180,4 @@ mutation deleteEvent($id: ID!) {
   }
 }`, {
   parameterMapper: id => ({variables: {id}})
-});
+})

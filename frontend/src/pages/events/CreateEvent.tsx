@@ -1,19 +1,19 @@
-import React, {useState} from 'react';
-import {useNavigate} from "react-router-dom"
+import React, {useState} from 'react'
+import {useNavigate} from 'react-router-dom'
 
-import {useCreateEvent} from 'services/events';
-import {AdminOnly} from 'services/users';
-import {Breadcrumb} from "libraries/ui";
-import {PageTitle} from "components/PageTitle";
-import {makeTranslate} from 'utils/translate';
-import {formFor, SubmitButton} from "libraries/forms2";
+import {useCreateEvent} from 'services/events'
+import {AdminOnly} from 'services/users'
+import {Breadcrumb} from 'libraries/ui'
+import {PageTitle} from 'components/PageTitle'
+import {makeTranslate} from 'utils/translate'
+import {formFor, SubmitButton} from 'libraries/forms2'
 
 const t = makeTranslate({
   newEventBreadcrumb: 'Uusi tapahtuma',
   newEvent: 'Luo uusi tapahtuma',
   create: 'Luo',
   name: 'Nimi',
-});
+})
 
 const {
   Form,
@@ -21,12 +21,12 @@ const {
 } = formFor<{name: string}>()
 
 export default function CreateEventForm() {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const [createEvent] = useCreateEvent({
     onCompleted: (data) => navigate('../'+data.createEvent._id),
     refetchQueries: ['getEvents']
-  });
-  const [event, setEvent] = useState({name: ''});
+  })
+  const [event, setEvent] = useState({name: ''})
 
   return <AdminOnly>
     <Breadcrumb text={t`newEventBreadcrumb`} />
@@ -37,5 +37,5 @@ export default function CreateEventForm() {
       </div>
       <SubmitButton text={t`create`} />
     </Form>
-  </AdminOnly>;
+  </AdminOnly>
 }

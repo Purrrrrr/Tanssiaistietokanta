@@ -1,19 +1,19 @@
-import React, {useState, useRef, useCallback} from 'react';
-import {Dance} from 'types/Dance';
-import {usePatchDance} from 'services/dances';
-import {Button} from "libraries/ui";
-import {Switch, ClickToEditMarkdown} from "libraries/forms2";
-import useAutosavingState, {makePartial} from 'utils/useAutosavingState';
-import {backendQueryHook} from "backend";
-import {LoadingState} from 'components/LoadingState';
-import {DanceDataImportButton} from "components/DanceDataImportDialog";
-import PrintViewToolbar from 'components/widgets/PrintViewToolbar';
-import {makeTranslate} from 'utils/translate';
-import {selectElement} from 'utils/selectElement';
-import {showToast} from "utils/toaster"
-import {uniq} from "utils/uniq"
+import React, {useState, useRef, useCallback} from 'react'
+import {Dance} from 'types/Dance'
+import {usePatchDance} from 'services/dances'
+import {Button} from 'libraries/ui'
+import {Switch, ClickToEditMarkdown} from 'libraries/forms2'
+import useAutosavingState, {makePartial} from 'utils/useAutosavingState'
+import {backendQueryHook} from 'backend'
+import {LoadingState} from 'components/LoadingState'
+import {DanceDataImportButton} from 'components/DanceDataImportDialog'
+import PrintViewToolbar from 'components/widgets/PrintViewToolbar'
+import {makeTranslate} from 'utils/translate'
+import {selectElement} from 'utils/selectElement'
+import {showToast} from 'utils/toaster'
+import {uniq} from 'utils/uniq'
 
-import './DanceInstructions.sass';
+import './DanceInstructions.sass'
 
 const t = makeTranslate({
   fetchDataFromWiki: 'Hae tietoja tanssiwikistä',
@@ -26,7 +26,7 @@ const t = makeTranslate({
   workshops: 'Työpajat',
   dances: 'Tanssit',
   danceInstructions: 'Tanssiohjeet',
-});
+})
 
 const useDanceInstructions= backendQueryHook(`
 query DanceInstructions($eventId: ID!) {
@@ -45,23 +45,23 @@ query DanceInstructions($eventId: ID!) {
       }
     }
   }
-}`);
+}`)
 
 export default function DanceInstructions({eventId}) {
-  const {data, refetch, ...loadingState} = useDanceInstructions({eventId});
-  const dancesEl = useRef<HTMLElement>(null);
-  const [showWorkshops, setShowWorkshops] = useState(true);
+  const {data, refetch, ...loadingState} = useDanceInstructions({eventId})
+  const dancesEl = useRef<HTMLElement>(null)
+  const [showWorkshops, setShowWorkshops] = useState(true)
 
-  if (!data) return <LoadingState {...loadingState} refetch={refetch} />;
+  if (!data) return <LoadingState {...loadingState} refetch={refetch} />
 
   const {workshops} = data.event
-  const dances = getDances(workshops);
+  const dances = getDances(workshops)
 
   function selectAndCopy() {
-    selectElement(dancesEl.current);
-    document.execCommand("copy");
+    selectElement(dancesEl.current)
+    document.execCommand('copy')
     showToast({message: t`instructionsCopied`})
-    window.getSelection()?.removeAllRanges();
+    window.getSelection()?.removeAllRanges()
   }
 
   return <>
@@ -77,25 +77,25 @@ export default function DanceInstructions({eventId}) {
     <section className="dance-instructions" ref={dancesEl}>
       {showWorkshops && 
         <>
-        <t.h1>workshops</t.h1>
-        {workshops.map(workshop => <Workshop key={workshop._id} workshop={workshop} />)}
+          <t.h1>workshops</t.h1>
+          {workshops.map(workshop => <Workshop key={workshop._id} workshop={workshop} />)}
         </>
       }
       <t.h1>danceInstructions</t.h1>
 
       {dances.map(dance => <InstructionsForDance key={dance._id} dance={dance} />)}
     </section>
-    </>
+  </>
 }
 
 function getDances(workshops) {
-  const dances = uniq(workshops.flatMap(w => w.dances)) as Dance[];
-  dances.sort((a,b) => a.name.localeCompare(b.name));
-  return dances;
+  const dances = uniq(workshops.flatMap(w => w.dances)) as Dance[]
+  dances.sort((a, b) => a.name.localeCompare(b.name))
+  return dances
 }
 
 function InstructionsForDance({dance: danceInDatabase}) {
-  const [patchDance] = usePatchDance();
+  const [patchDance] = usePatchDance()
   const onChange = useCallback(
     (dance) => patchDance({
       _id: danceInDatabase._id,
@@ -103,9 +103,9 @@ function InstructionsForDance({dance: danceInDatabase}) {
     }),
     [danceInDatabase, patchDance]
   )
-  const [dance, setDance] = useAutosavingState<Dance,Partial<Dance>>(danceInDatabase, onChange, makePartial)
+  const [dance, setDance] = useAutosavingState<Dance, Partial<Dance>>(danceInDatabase, onChange, makePartial)
 
-  const {name, instructions} = dance;
+  const {name, instructions} = dance
 
   return <div tabIndex={0} className="dance-instructions-dance">
     <h2>
@@ -113,7 +113,7 @@ function InstructionsForDance({dance: danceInDatabase}) {
       {' '}
       <DanceDataImportButton text={t`fetchDataFromWiki`} dance={dance} />
     </h2>
-    <ClickToEditMarkdown id={"instructions-"+dance._id} value={instructions} onChange={(instructions) => setDance({...dance, instructions})} markdownOverrides={markdownOverrides} />
+    <ClickToEditMarkdown id={'instructions-'+dance._id} value={instructions} onChange={(instructions) => setDance({...dance, instructions})} markdownOverrides={markdownOverrides} />
   </div>
 }
 
@@ -124,16 +124,16 @@ const markdownOverrides = {
   h4: { component: 'h5'},
   h5: { component: 'h6'},
   a: { component: 'span' }
-};
+}
 
 function Workshop({workshop}) {
-  const {name, description, dances} = workshop;
+  const {name, description, dances} = workshop
 
   return <div className="workshop">
     <h2>
       {name}
     </h2>
     <p className="description">{description}</p>
-    <p>{t`dances`}: {dances.map(d => d.name).join(", ")}</p>
+    <p>{t`dances`}: {dances.map(d => d.name).join(', ')}</p>
   </div>
 }

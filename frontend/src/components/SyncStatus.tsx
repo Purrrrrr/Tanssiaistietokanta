@@ -1,7 +1,7 @@
-import React, {useRef, useState, useEffect} from 'react';
-import classNames from 'classnames';
-import {Icon, IconName, Intent} from "libraries/ui";
-import {SyncState} from 'utils/useAutosavingState';
+import React, {useRef, useState, useEffect} from 'react'
+import classNames from 'classnames'
+import {Icon, IconName, Intent} from 'libraries/ui'
+import {SyncState} from 'utils/useAutosavingState'
 
 import './SyncStatus.sass'
 

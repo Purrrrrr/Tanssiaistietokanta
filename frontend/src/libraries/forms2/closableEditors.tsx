@@ -1,12 +1,12 @@
-import React, {useRef, useState, ComponentProps} from 'react';
-import {Icon} from "../ui";
-import {Classes} from "@blueprintjs/core";
-import classNames from 'classnames';
-import {AdditionalPropsFrom, FieldComponentProps} from './types';
-import {Input} from './fieldComponents';
-import {MarkdownEditor} from './MarkdownEditor';
+import React, {useRef, useState, ComponentProps} from 'react'
+import {Icon} from '../ui'
+import {Classes} from '@blueprintjs/core'
+import classNames from 'classnames'
+import {AdditionalPropsFrom, FieldComponentProps} from './types'
+import {Input} from './fieldComponents'
+import {MarkdownEditor} from './MarkdownEditor'
 
-export interface ClickToEditProps extends FieldComponentProps<string, HTMLInputElement>, AdditionalPropsFrom<ComponentProps<"input">> {
+export interface ClickToEditProps extends FieldComponentProps<string, HTMLInputElement>, AdditionalPropsFrom<ComponentProps<'input'>> {
   valueFormatter?: (value: string) => React.ReactNode
   inline?: boolean
 }
@@ -17,7 +17,7 @@ export function ClickToEdit({value, readOnly, valueFormatter, className, onChang
     readOnly={readOnly}
     aria-describedby={props['aria-describedby']} 
     aria-label={props['aria-label']} 
-    closedValue={valueFormatter ? valueFormatter(value ?? "") : value}
+    closedValue={valueFormatter ? valueFormatter(value ?? '') : value}
   >
     <Input {...props} value={value} onChange={onChange} inline={inline} hasConflict={hasConflict} />
   </ClosableEditor>
@@ -36,7 +36,7 @@ export function ClickToEditMarkdown({value, readOnly, valueFormatter, className,
     readOnly={readOnly}
     aria-describedby={props['aria-describedby']} 
     aria-label={props['aria-label']} 
-    closedValue={valueFormatter ? valueFormatter(value ?? "") : value}
+    closedValue={valueFormatter ? valueFormatter(value ?? '') : value}
   >
     <MarkdownEditor {...props} value={value} onChange={onChange} />
   </ClosableEditor>
@@ -49,8 +49,8 @@ interface ClosableEditorProps {
   inline?: boolean
   className?: string
   children: React.ReactNode
-  "aria-describedby"?: string
-  "aria-label"?: string
+  'aria-describedby'?: string
+  'aria-label'?: string
 }
 
 function ClosableEditor({closedValue, readOnly, inline, children, className, showIcon = true, ...props} : ClosableEditorProps) {
@@ -59,12 +59,12 @@ function ClosableEditor({closedValue, readOnly, inline, children, className, sho
   const container = useRef<HTMLElement>(null)
   function openEditor() { 
     if (readOnly) return
-    setOpen(true);
+    setOpen(true)
     setTimeout(() => (container.current?.querySelector('input, textarea') as HTMLElement)?.focus?.(), 10) 
   }
   function maybeCloseEditor(e: React.FocusEvent<HTMLElement>) {
     const isInsideContainer = e.target !== container.current
-    if (isInsideContainer) setOpen(false);
+    if (isInsideContainer) setOpen(false)
   }
   const Container = inline ? 'span' : 'div'
   const canOpen = !open && !readOnly

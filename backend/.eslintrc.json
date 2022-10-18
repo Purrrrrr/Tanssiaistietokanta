@@ -1,14 +1,17 @@
 {
+  "root": true,
   "env": {
     "es6": true,
     "node": true,
     "jest": true
   },
   "parserOptions": {
-    "ecmaVersion": 2018
+    "ecmaVersion": 2020
   },
   "extends": "eslint:recommended",
   "rules": {
+    "comma-dangle": ["error", "never"],
+    "comma-spacing": 1,
     "indent": [
       "error",
       2,
@@ -26,7 +29,7 @@
     ],
     "semi": [
       "error",
-      "always"
+      "never"
     ]
   }
 }

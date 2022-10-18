@@ -1,6 +1,6 @@
-import React from 'react';
+import React from 'react'
 
-import './CenteredContainer.sass';
+import './CenteredContainer.sass'
 
 /** A container that is horizontally centered and that also
  * streches its contents to fill it horizontally */

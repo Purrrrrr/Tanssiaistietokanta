@@ -1,9 +1,9 @@
-import React, {useCallback} from 'react';
-import {SortableContainer, SortableElement} from 'react-sortable-hoc';
-import {arrayMoveImmutable} from 'array-move';
+import React, {useCallback} from 'react'
+import {SortableContainer, SortableElement} from 'react-sortable-hoc'
+import {arrayMoveImmutable} from 'array-move'
 
-import {ListEditorContext, ListEditorContextType, useListEditorContextValue, useListEditorContext} from './context';
-import {objectId} from "./objectId";
+import {ListEditorContext, ListEditorContextType, useListEditorContextValue, useListEditorContext} from './context'
+import {objectId} from './objectId'
 
 
 /** Create a drag and drop list from items with the specified component
@@ -26,9 +26,9 @@ type ListEditorProps = Omit<ListEditorItemsProps, 'component'> & {
 
 export function ListEditor({items, children, component, onChange, className, helperClass, useDragHandle, itemProps, ...props} : ListEditorProps) {
   function onSortEnd({oldIndex, newIndex}) {
-    onChange(arrayMoveImmutable(items, oldIndex, newIndex));
+    onChange(arrayMoveImmutable(items, oldIndex, newIndex))
   }
-  const context = useListEditorContextValue(items, onChange);
+  const context = useListEditorContextValue(items, onChange)
 
   return <ListEditorContext.Provider value={context}>
     <SortableList distance={5} onSortEnd={onSortEnd}
@@ -37,7 +37,7 @@ export function ListEditor({items, children, component, onChange, className, hel
     >
       {children ?? <ListEditorItems component={component} {...props} itemProps={itemProps} />}
     </SortableList>
-  </ListEditorContext.Provider>;
+  </ListEditorContext.Provider>
 }
 
 interface ListEditorItemsProps {
@@ -47,8 +47,8 @@ interface ListEditorItemsProps {
   itemProps?: {}
 }
 
-export function ListEditorItems({itemWrapper = "div", noWrapper, component, itemProps} : ListEditorItemsProps) {
-  const {items, actions} = useListEditorContext();
+export function ListEditorItems({itemWrapper = 'div', noWrapper, component, itemProps} : ListEditorItemsProps) {
+  const {items, actions} = useListEditorContext()
 
   return <>
     {items.map((item, index) =>
@@ -58,7 +58,7 @@ export function ListEditorItems({itemWrapper = "div", noWrapper, component, item
         {...itemProps}
       />
     )}
-  </>;
+  </>
 }
 
 interface SortableItemProps {
@@ -66,28 +66,28 @@ interface SortableItemProps {
   wrapper?: any,
   item: any,
   itemIndex: number,
-  actions: ListEditorContextType["actions"]
+  actions: ListEditorContextType['actions']
 }
 
-const SortableList = SortableContainer(props => <div {...props} />);
+const SortableList = SortableContainer(props => <div {...props} />)
 const SortableItem = SortableElement<SortableItemProps>(React.memo(
   ({component, wrapper, actions, itemIndex, ...props}) => {
-    const C = component;
-    const callbacks = useActionCallbacks(actions, itemIndex);
+    const C = component
+    const callbacks = useActionCallbacks(actions, itemIndex)
     if (wrapper) {
-      const Wrapper = wrapper;
-      return <Wrapper tabIndex={0}><C {...callbacks} itemIndex={itemIndex} {...props} /></Wrapper>;
+      const Wrapper = wrapper
+      return <Wrapper tabIndex={0}><C {...callbacks} itemIndex={itemIndex} {...props} /></Wrapper>
     } else {
-      return <C tabIndex={0} {...callbacks} itemIndex={itemIndex} {...props} />;
+      return <C tabIndex={0} {...callbacks} itemIndex={itemIndex} {...props} />
     }
   }
-));
+))
 
 function useActionCallbacks(actions, index) {
-  const {moveDown, moveUp, setItem, removeItem} = actions;
-  const onMoveDown = useCallback(() => moveDown(index), [moveDown, index]);
-  const onMoveUp = useCallback(() => moveUp(index), [moveUp, index]);
-  const onChange = useCallback((newItem) => setItem(index, newItem), [setItem, index]);
-  const onRemove = useCallback(() => removeItem(index), [removeItem, index]);
-  return {onMoveDown, onMoveUp, onRemove, onChange};
+  const {moveDown, moveUp, setItem, removeItem} = actions
+  const onMoveDown = useCallback(() => moveDown(index), [moveDown, index])
+  const onMoveUp = useCallback(() => moveUp(index), [moveUp, index])
+  const onChange = useCallback((newItem) => setItem(index, newItem), [setItem, index])
+  const onRemove = useCallback(() => removeItem(index), [removeItem, index])
+  return {onMoveDown, onMoveUp, onRemove, onChange}
 }

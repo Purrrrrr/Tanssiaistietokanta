@@ -1,29 +1,29 @@
 
 async function evolveObjAsync(transformations, object) {
-  if (object === null) return object;
-  if (typeof object !== 'object') return object;
+  if (object === null) return object
+  if (typeof object !== 'object') return object
 
-  const result = object instanceof Array ? [] : {};
+  const result = object instanceof Array ? [] : {}
   
   for (const [key, value] of Object.entries(object)) {
     if (key in transformations) {
-      result[key] = await getModifiedValue(transformations[key], value);
+      result[key] = await getModifiedValue(transformations[key], value)
     } else {
-      result[key] = object[key];
+      result[key] = object[key]
     }
   }
 
-  return result;
+  return result
 }
 
 async function getModifiedValue(transformation, value) {
   switch (typeof transformation) {
     case 'function':
-      return await transformation(value);
+      return await transformation(value)
     case 'object':
-      return await evolveObjAsync(transformation, value);
+      return await evolveObjAsync(transformation, value)
     default:
-      return transformation;
+      return transformation
   }
 }
 

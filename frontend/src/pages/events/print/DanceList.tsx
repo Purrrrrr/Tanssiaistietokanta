@@ -1,29 +1,29 @@
-import "./DanceList.sass";
+import './DanceList.sass'
 
-import {Button} from "libraries/ui";
-import {Switch} from "libraries/forms2";
-import React, {useState} from "react";
-import {backendQueryHook} from 'backend';
+import {Button} from 'libraries/ui'
+import {Switch} from 'libraries/forms2'
+import React, {useState} from 'react'
+import {backendQueryHook} from 'backend'
 
-import {LoadingState} from 'components/LoadingState';
-import PrintViewToolbar from 'components/widgets/PrintViewToolbar';
-import {makeTranslate} from 'utils/translate';
+import {LoadingState} from 'components/LoadingState'
+import PrintViewToolbar from 'components/widgets/PrintViewToolbar'
+import {makeTranslate} from 'utils/translate'
 
 const t = makeTranslate({
   showSideBySide: 'Näytä setit rinnakkain',
   print: 'Tulosta',
   emptyLinesAreRequestedDances: 'Tyhjät rivit ovat toivetansseja.',
-  workshopNameIsInParenthesis: "Suluissa opetussetti",
-});
+  workshopNameIsInParenthesis: 'Suluissa opetussetti',
+})
 
 function DanceList({eventId}) {
-  const {program, workshops, loadingState} = useBallProgram(eventId);
-  const [sidebyside, setSidebyside] = useState(false);
-  const colClass = (sidebyside ? " three-columns" : "");
+  const {program, workshops, loadingState} = useBallProgram(eventId)
+  const [sidebyside, setSidebyside] = useState(false)
+  const colClass = (sidebyside ? ' three-columns' : '')
 
   if (!program) return <LoadingState {...loadingState} />
 
-  return <div className={"danceList" + colClass}>
+  return <div className={'danceList' + colClass}>
     <PrintViewToolbar>
       <Switch id="showSideBySide" inline label={t`showSideBySide`} value={sidebyside} onChange={setSidebyside}/>
       <Button text={t`print`} onClick={() => window.print()} />
@@ -37,17 +37,17 @@ function DanceList({eventId}) {
               .map(row => row.item)
               .filter(item => item.__typename !== 'EventProgram' || item.showInLists)
               .map((item, i) =>
-              <ProgramItem key={i} item={item} />
-            )}
-          </div>;
+                <ProgramItem key={i} item={item} />
+              )}
+          </div>
         }
       )}
     </PrintFooterContainer>
-  </div>;
+  </div>
 }
 
 function Footer({workshops}) {
-  if (!workshops.length) return <>{t`emptyLinesAreRequestedDances`}</>;
+  if (!workshops.length) return <>{t`emptyLinesAreRequestedDances`}</>
   return <>
     {t`workshopNameIsInParenthesis`}
     {': '}
@@ -64,12 +64,12 @@ function ProgramItem({item}) {
     .join(', ')
   return <p>
     {item.name ?? <RequestedDance />}
-    {teachedIn && (" ("+teachedIn+")")
+    {teachedIn && (' ('+teachedIn+')')
     }
-  </p>;
+  </p>
 }
 
-const RequestedDance = () => <>_________________________</>;
+const RequestedDance = () => <>_________________________</>
 
 function PrintFooterContainer({children, footer}) {
   return <>
@@ -79,7 +79,7 @@ function PrintFooterContainer({children, footer}) {
       <tbody><tr><td>{children}</td></tr></tbody>
     </table>
     <footer>{footer}</footer>
-  </>;
+  </>
 }
 
 const useDanceList = backendQueryHook(`
@@ -111,12 +111,12 @@ query getDanceList($eventId: ID!) {
       name, abbreviation
     }
   }
-}`);
+}`)
 
 function useBallProgram(eventId) {
-  const {data, ...loadingState} = useDanceList({eventId});
-  const {program = null, workshops = null} = data ? data.event : {};
-  return {program, workshops, loadingState};
+  const {data, ...loadingState} = useDanceList({eventId})
+  const {program = null, workshops = null} = data ? data.event : {}
+  return {program, workshops, loadingState}
 }
 
-export default DanceList;
+export default DanceList

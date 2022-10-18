@@ -1,15 +1,15 @@
-import {DragHandle, ListEditor} from "components/ListEditor";
-import React, {useState} from 'react';
-import * as L from 'partial.lenses';
-import {backendQueryHook} from "backend";
-import {Workshop} from "types/Workshop";
+import {DragHandle, ListEditor} from 'components/ListEditor'
+import React, {useState} from 'react'
+import * as L from 'partial.lenses'
+import {backendQueryHook} from 'backend'
+import {Workshop} from 'types/Workshop'
 
-import {Flex} from "components/Flex";
-import {DanceChooser} from "components/widgets/DanceChooser";
-import {makeTranslate} from 'utils/translate';
-import {useOnChangeForProp} from 'utils/useOnChangeForProp';
-import {Button, CssClass, FormGroup} from "libraries/ui";
-import {formFor, SubmitButton, Input, TextArea} from "libraries/forms2";
+import {Flex} from 'components/Flex'
+import {DanceChooser} from 'components/widgets/DanceChooser'
+import {makeTranslate} from 'utils/translate'
+import {useOnChangeForProp} from 'utils/useOnChangeForProp'
+import {Button, CssClass, FormGroup} from 'libraries/ui'
+import {formFor, SubmitButton, Input, TextArea} from 'libraries/forms2'
 
 const t = makeTranslate({
   dances: 'Tanssit',
@@ -22,7 +22,7 @@ const t = makeTranslate({
   abbreviationTaken: 'Lyhenne %(abbreviation)s on jo käytössä toisessa pajassa. Tässä tapahtumassa ovat jo käytössä seuraavat lyhenteet: %(abbreviations)s',
   description: 'Työpajan kuvaus',
   teachers: 'Opettaja(t)',
-});
+})
 
 const {
   Form, 
@@ -31,9 +31,9 @@ const {
 } = formFor<Workshop>()
 
 export function WorkshopEditor({eventId, workshop, onSubmit, submitText}) {
-  const [modifiedWorkshop, setWorkshop] = useState(workshop);
-  const {dances} = modifiedWorkshop;
-  const onChangeFor = useOnChangeForProp(setWorkshop);
+  const [modifiedWorkshop, setWorkshop] = useState(workshop)
+  const {dances} = modifiedWorkshop
+  const onChangeFor = useOnChangeForProp(setWorkshop)
 
   return <Form className={CssClass.limitedWidth} value={modifiedWorkshop} onChange={setWorkshop} onSubmit={onSubmit}>
     <Field path="name" required component={Input} label={t`name`} labelInfo={t`required`} />
@@ -53,7 +53,7 @@ export function WorkshopEditor({eventId, workshop, onSubmit, submitText}) {
 }
 
 function AbbreviationField({workshopId, label, eventId, path}) {
-  const usedWorkshopAbbreviations = useTakenWorkshopAbbreviations(eventId, workshopId);
+  const usedWorkshopAbbreviations = useTakenWorkshopAbbreviations(eventId, workshopId)
 
   return <Field
     path={path}
@@ -70,7 +70,7 @@ function getAbbreviationTakenError({value, values}) {
   return t(
     'abbreviationTaken',
     {abbreviations: values, abbreviation: value}
-  );
+  )
 }
 
 const useWorkshops = backendQueryHook(`
@@ -80,22 +80,22 @@ query Workshops($eventId: ID!) {
       _id, abbreviation
     }
   }
-}`);
+}`)
 
 function useTakenWorkshopAbbreviations(eventId, workshopId) {
-  const {data} = useWorkshops({eventId});
-  if (!data) return [];
+  const {data} = useWorkshops({eventId})
+  if (!data) return []
 
   return data.event.workshops
     .filter(w => w._id !== workshopId && w.abbreviation)
-    .map(w => w.abbreviation);
+    .map(w => w.abbreviation)
 }
 
 function DanceListItem({item, onChange, onRemove}) {
-  const items = useValueAt("dances")
+  const items = useValueAt('dances')
   return <>
     <DanceChooser excludeFromSearch={items} value={item} onChange={onChange} />
     <DragHandle />
     <Button intent="danger" text="X" onClick={onRemove} />
-  </>;
+  </>
 }
