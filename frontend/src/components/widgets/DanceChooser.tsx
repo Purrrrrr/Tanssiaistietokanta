@@ -18,7 +18,7 @@ interface DanceChooserProps {
   onBlur?: (e: React.FocusEvent) => any,
 }
 
-interface EmptyDancePlaceholder {
+interface EmptyDancePlaceholder extends Dance {
   _id: undefined,
   name: string,
   empty: true
@@ -71,8 +71,8 @@ function cancelEnter(e) {
   }
 }
 
-function emptyDancePlaceholder(text?: string) {
-  return {name: text ?? '-', empty: true}
+function emptyDancePlaceholder(text?: string): EmptyDancePlaceholder {
+  return {__typename: 'Dance', _id: undefined, name: text ?? '-', empty: true}
 }
 
 function isPlaceholder(object: any): object is EmptyDancePlaceholder {

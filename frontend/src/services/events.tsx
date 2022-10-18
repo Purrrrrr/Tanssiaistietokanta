@@ -69,7 +69,7 @@ export interface SlideStyle {
   background: string
 }
 
-const defaultStyle =  {id: null, name: 'Valkoinen', background: '#fff', color: '#000', default: true}
+export const defaultSlideStyle =  {id: null, name: 'Valkoinen', background: '#fff', color: '#000', default: true}
 const customStyles = [
   { id: 'dark', name: 'Tumma', background: '#000', color: '#fff' },
   { id: 'flower-title1', name: 'Kukka iso 1', background: '#F681BD', color: '#000' },
@@ -99,19 +99,19 @@ export function useEventSlideStyles({
   inheritedStyleName,
 } : UseEventSlideStylesOptions) : SlideStyle[] {
   if (useStyleInheritance) {
-    const inheritedStyle = customStyles.find(s => s.id === inheritedStyleId) ?? defaultStyle
+    const inheritedStyle = customStyles.find(s => s.id === inheritedStyleId) ?? defaultSlideStyle
     const name = inheritedStyleName
       ? `${inheritedStyleName} (${inheritedStyle.name})`
       : inheritedStyle.name
 
     return [
       { ...inheritedStyle, name, id: null },
-      {...defaultStyle, id: 'default'},
+      {...defaultSlideStyle, id: 'default'},
       ...customStyles
     ]
   }
   return [
-    defaultStyle,
+    defaultSlideStyle,
     ...customStyles
   ]
 }

@@ -8,5 +8,5 @@ export function getOrComputeDefault<K, V>(
     map.set(key, value)
     return value
   }
-  return map.get(key)!
+  return map.get(key) as V
 }

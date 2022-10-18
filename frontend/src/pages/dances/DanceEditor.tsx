@@ -8,7 +8,7 @@ import './DanceEditor.sass'
 
 interface DanceEditorProps {
   dance: Dance,
-  onChange: (changed: Dance) => any
+  onChange: (changed: Dance) => unknown
   onSubmit?: (d: Dance) => any
   bottomToolbar?: React.ReactNode
 }

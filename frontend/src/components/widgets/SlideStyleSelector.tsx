@@ -1,5 +1,5 @@
 import React  from 'react'
-import {useEventSlideStyles, SlideStyle} from 'services/events'
+import {useEventSlideStyles, defaultSlideStyle, SlideStyle} from 'services/events'
 
 import {Button, Icon, Select, MenuItem} from 'libraries/ui'
 import {asFormControl} from 'libraries/forms2'
@@ -23,13 +23,13 @@ export function SlideStyleSelector({
     inheritedStyleId,
     inheritedStyleName,
   })
-  const style = styles.find(s => s.id === value) ?? styles.find(s => s.default === true)!
+  const style = styles.find(s => s.id === value) ?? defaultSlideStyle
   return <StyleSelect
     key={value}
     {...{initialActiveItem: style}} /* initialActiveItem is not included in Select prop type but works */
     filterable={false}
     items={styles}
-    itemRenderer={(item, {handleClick, index, modifiers: {active}}) => 
+    itemRenderer={(item, {handleClick, index, modifiers: {active}}) =>
       <MenuItem key={item.id} roleStructure="listoption" icon={<SlideStyleBox value={item} />} text={item.name} onClick={handleClick} active={active} />
     }
     onItemSelect={onSelect}

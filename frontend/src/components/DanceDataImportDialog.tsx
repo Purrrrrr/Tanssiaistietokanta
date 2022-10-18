@@ -110,7 +110,9 @@ function DataImporter({danceName, onImport}) {
 }
 
 function ImportedDataView() {
-  const {categories, formations} = useValueAt('importedData')!
+  const importedData = useValueAt('importedData')
+  if (importedData === undefined) throw new Error('Unexpected null in importedData')
+  const {categories, formations} = importedData
   return <>
     <Row>
       <RowItem>
@@ -174,7 +176,7 @@ function InstructionEditor() {
       </RowItem>
       <RowItem>
         <Field path={['importedData', 'instructions']} component={MarkdownEditor} label="Tanssiwikin versio"/>
-        <Button text="Käytä tätä versiota" onClick={() => onResolve(value.importedData!.instructions)} />
+        <Button text="Käytä tätä versiota" onClick={() => onResolve(value.importedData?.instructions ?? '')} />
       </RowItem>
     </Row>;
   </>

@@ -82,8 +82,8 @@ function addToInput(input : HTMLInputElement, amount : number) {
 
 /** Changes input value and triggers a value change event that isn't ignored by React */
 function triggerValueChange(input : HTMLInputElement, value : string) {
-  const descriptor = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value') as PropertyDescriptor;
-  (descriptor.set!).call(input, value)
+  const descriptor = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value') as PropertyDescriptor
+  descriptor.set?.call(input, value)
   input.dispatchEvent(new Event('input', {bubbles: true}))
 }
 

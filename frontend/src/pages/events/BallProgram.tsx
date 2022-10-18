@@ -151,7 +151,8 @@ function getSlides(event) : Slide[] {
   slides.forEach((slide, index) => {
     slide.index = index
     if (slide.parent !== undefined) {
-      slide.subindex = index - slide.parent.index!
+      if (slide.parent.index === undefined) throw new Error('No index in parent slide??')
+      slide.subindex = index - slide.parent.index
       slide.subtotal = slide.parent.subtotal
     }
     if (!slide.slideStyleId) {

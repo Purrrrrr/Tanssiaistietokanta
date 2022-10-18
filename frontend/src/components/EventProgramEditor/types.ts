@@ -29,7 +29,11 @@ export type EventProgramRow = {
   item: EventProgramItem
   slideStyleId?: string
 }
-export type EventProgramItem = Dance | EventProgram | RequestedDance
+export type EventProgramItem = DanceProgram | EventProgram | RequestedDance
+
+export interface DanceProgram extends Dance {
+  __typename: 'Dance'
+}
 
 export interface RequestedDance {
   __typename: 'RequestedDance'

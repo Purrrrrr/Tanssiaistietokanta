@@ -3,7 +3,7 @@ import * as L from 'partial.lenses'
 import {arrayMoveImmutable} from 'array-move'
 
 import {Dance} from 'types/Dance'
-import {EventProgramSettings, DanceSet, EventProgramRow, EventProgramItem, RequestedDance} from './types'
+import {EventProgramSettings, DanceSet, DanceProgram, EventProgramRow, EventProgramItem, RequestedDance} from './types'
 
 import {Card, HTMLTable, CssClass, Select, MenuItem} from 'libraries/ui'
 import {formFor, ClickToEdit, Switch as PlainSwitch, SubmitButton, ActionButton as Button, asFormControl, FieldComponentProps, MarkdownEditor, useMemoizedPath} from 'libraries/forms2'
@@ -319,7 +319,7 @@ const ProgramItemEditor = React.memo(function ProgramItemEditor({path, itemIndex
   }
 
   return <tr className="eventProgramItem" onKeyDown={onKeyDown} ref={container} tabIndex={0}>
-    <td>{t(__typename!)}</td>
+    <td>{t(__typename)}</td>
     <td>
       <ProgramDetailsEditor path={itemPath} onInputBlurred={onInputBlurred} />
     </td>
@@ -357,8 +357,6 @@ function ProgramDetailsEditor({path, onInputBlurred}) {
         <Switch label={t`showInLists`} path={[...path as ProgramItemPath, 'item', 'showInLists']} inline />
       </>
   }
-
-  throw new Error('Unknown typename '+__typename)
 }
 
 //TODO: move hasConflict handling somewhere saner
@@ -367,7 +365,7 @@ const DanceProgramChooser = React.memo(function DanceProgramChooser({value, onCh
     value={value?._id ? value as Dance : null}
     onChange={(dance, e) => onChange(
       dance
-        ? {...dance, __typename: 'Dance'} as Dance
+        ? {...dance, __typename: 'Dance'} as DanceProgram
         : {__typename: 'RequestedDance'} as RequestedDance,
       e
     )}

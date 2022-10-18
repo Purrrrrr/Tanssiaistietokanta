@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useCallback} from 'react'
 import {Button} from 'libraries/ui'
-import {IAlertProps, Overlay, Classes} from '@blueprintjs/core'
+import {AlertProps, Overlay, Classes} from '@blueprintjs/core'
 import { FocusScope, useFocusManager } from '@react-aria/focus'
 
 interface DialogProps extends InnerDialogProps {
@@ -32,8 +32,8 @@ function InnerDialog({children, onClose, title, style, className, showCloseButto
 
   useEffect(
     () => {
-      if (!dialogRef.current) return
-      if (dialogRef.current!.contains(document.activeElement)) return
+      if (dialogRef.current === null) return
+      if (dialogRef.current.contains(document.activeElement)) return
       focusManager.focusNext({
         from: closeButton.current || undefined, wrap: true
       })
@@ -59,7 +59,7 @@ Dialog.Footer = function DialogBody({className, ...props}: React.HTMLAttributes<
   return <div className={cls} {...props} />
 }
 
-export function Alert({isOpen, title, intent, confirmButtonText, cancelButtonText, children, onCancel, onConfirm, onClose} : IAlertProps & {children: React.ReactNode, title: string}) {
+export function Alert({isOpen, title, intent, confirmButtonText, cancelButtonText, children, onCancel, onConfirm, onClose} : AlertProps & {children: React.ReactNode, title: string}) {
   const doCancel = useCallback((e) => {onCancel && onCancel(); onClose && onClose(false, e)}, [onCancel, onClose])
   const doConfirm = useCallback((e) => {onConfirm && onConfirm(); onClose && onClose(true, e)}, [onConfirm, onClose])
 
