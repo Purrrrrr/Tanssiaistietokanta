@@ -1,17 +1,18 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo, useRef, useEffect } from 'react';
 import * as L from 'partial.lenses';
-import { FormValueContext, FormValueContextType, FormMetadataContext, FormMetadataContextType } from './formContext'
+import { ArrayPath } from './types'
+import { FormValidityContext, FormMetadataContext, FormMetadataContextType } from './formContext'
 import {useValidationResult} from './validation';
 
 const defaultLabelStyle = 'above'
 
 export interface FormProps<T> extends 
   Omit<React.ComponentPropsWithoutRef<"form">, "onSubmit" | "onChange">,
-  Omit<FormValueContextType<T>, "conflicts" | "formIsValid">,
   Omit<Partial<FormMetadataContextType<T>>, "onChange">,
   Pick<FormMetadataContextType<T>, "onChange">
 {
-  conflicts?: FormValueContextType<T>["conflicts"] 
+  value: T
+  conflicts?: ArrayPath<T>[]
   inline?: boolean
   onSubmit?: (t: T, e: React.FormEvent) => unknown
 }
@@ -29,23 +30,12 @@ export function Form<T>({
 } : FormProps<T>) {
   const {hasErrors, ValidationContainer} = useValidationResult();
   const form = useRef<HTMLFormElement>(null);
+  const listeners = useMemo(() => new Set<Function>(), []);
   const valueRef = useRef<T>();
   valueRef.current = value
+  const conflictsRef = useRef<ArrayPath<T>>();
+  conflictsRef.current = conflicts as any
 
-  const submitHandler = (e: React.FormEvent) => {
-    //Sometimes forms from dialogs end up propagating into our form and we should not submit then
-    if (e.target !== form.current) return;
-    e.preventDefault();
-    onSubmit && onSubmit(value, e);
-  }
-
-  const valueContext = useMemo(() => {
-    return {
-      value,
-      conflicts,
-      formIsValid: !hasErrors
-    }
-  }, [value, conflicts, hasErrors])
   const metadataContext = useMemo(
     () => {
       const onChangePath = (path, newValue) => {
@@ -57,18 +47,33 @@ export function Form<T>({
         onChange(valueRef.current!)
       }
       return {
+        getValue: () => valueRef.current,
+        getConflicts: () => conflictsRef.current ?? [],
+        subscribeToChanges: (listener: Function) => {
+          listeners.add(listener)
+          return () => listeners.delete(listener)
+        },
         readOnly, labelStyle, inline,
         onChange: (value) => onChangePath([], value),
         onChangePath,
       }
-    }, [readOnly, labelStyle, inline, onChange]
+    }, [readOnly, labelStyle, inline, onChange, listeners]
   )
 
-  return <FormValueContext.Provider value={valueContext as unknown as FormValueContextType<unknown>}>
-    <FormMetadataContext.Provider value={metadataContext}>
+  useEffect(() => listeners.forEach(l => l()), [listeners, value])
+
+  const submitHandler = (e: React.FormEvent) => {
+    //Sometimes forms from dialogs end up propagating into our form and we should not submit then
+    if (e.target !== form.current) return;
+    e.preventDefault();
+    onSubmit && onSubmit(value, e);
+  }
+
+  return <FormMetadataContext.Provider value={metadataContext as FormMetadataContextType<unknown>}>
+    <FormValidityContext.Provider value={!hasErrors}>
       <ValidationContainer>
         <form {...rest} onSubmit={submitHandler} ref={form}>{children}</form>
       </ValidationContainer>
-    </FormMetadataContext.Provider>
-  </FormValueContext.Provider>
+    </FormValidityContext.Provider>
+  </FormMetadataContext.Provider>
 }

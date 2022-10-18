@@ -1,21 +1,22 @@
-import React, { useContext, useCallback } from 'react';
+import React, { useMemo, useState, useEffect, useContext, useCallback } from 'react';
 import * as L from 'partial.lenses';
 import {NewValue, LabelStyle, Path, ArrayPath, PropertyAtPath} from './types'
 
-export interface FormValueContextType<T> {
-  value: T
-  conflicts: ArrayPath<T>[]
-  formIsValid: boolean
+export const FormValidityContext = React.createContext<boolean>(true)
+export function useFormIsValid(): boolean {
+  return useContext(FormValidityContext)
 }
+
 export interface FormMetadataContextType<T> {
+  getValue: () => T
+  getConflicts: () => ArrayPath<T>[]
+  subscribeToChanges: (f: Function) => (() => void)
   onChange: (t: NewValue<T>) => unknown
   onChangePath: <P extends Path<T>, SubT extends PropertyAtPath<T, P>>(p: P, t: NewValue<SubT>) => unknown
   readOnly: boolean
   inline: boolean
   labelStyle: LabelStyle
 }
-
-export const FormValueContext = React.createContext<FormValueContextType<unknown>|null>(null)
 export const FormMetadataContext = React.createContext<FormMetadataContextType<unknown>|null>(null)
 
 export function useFormMetadata<T>() {
@@ -25,46 +26,52 @@ export function useFormMetadata<T>() {
 }
 
 export function useValueAt<T, P extends Path<T>, SubT extends PropertyAtPath<T, P>>(path : P) : SubT {
-  return L.get(path, useFormValueContext<T>().value)
+  const stablePath = useMemoizedPath(path)
+  const getValue = useCallback((ctx) => L.get(stablePath, ctx.getValue()), [stablePath]);
+  return useFormValueSubscription(getValue)
 }
+export function useHasConflictsAt<T, P extends Path<T>>(path : P): boolean {
+  const stablePath = useMemoizedPath(path)
+  const getValue = useCallback((ctx) => 
+    hasConflictsAtPath(ctx.getConflicts(), stablePath),
+    [stablePath]
+  );
+  return useFormValueSubscription(getValue)
+}
+export function useFormValueSubscription<T, V>(getValue: ((ctx: FormMetadataContextType<T>) => V)): V {
+  const ctx = useContext(FormMetadataContext) as FormMetadataContextType<T>
+  const [state, setState] = useState(() => getValue(ctx));
+  
+  useEffect(() => {
+    const callback = () => setState(getValue(ctx))
+    const unsubscribe = ctx.subscribeToChanges(callback);
+    callback();
+    return unsubscribe;
+  }, [ctx, getValue]);
+  return state
+}
+
 export function useOnChangeFor<T, P extends Path<T>, SubT extends PropertyAtPath<T, P>>(path : P) : (v: NewValue<SubT>) => unknown {
   const { onChangePath } = useFormMetadata<T>()
-  const pathDep = Array.isArray(path) ? path.join("--") : String(path)
+  const stablePath = useMemoizedPath(path)
   return useCallback(
-    val => onChangePath(path, val),
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-    [onChangePath, pathDep]
+    val => onChangePath(stablePath, val),
+    [onChangePath, stablePath]
   )
 }
 
-export function useFormValueContextAt<T, P extends Path<T>, SubT extends PropertyAtPath<T, P>>(path : P) : FormValueContextType<SubT> {
-  const ctx = useFormValueContext<T>()
-  return useContextAtPath(ctx, path)
-}
-export function useFormValueContext<T>() : FormValueContextType<T> {
-  const ctx = useContext(FormValueContext) as FormValueContextType<T>
-  if (ctx === null) throw new Error('No form value context');
-  return ctx
-}
-
-function useContextAtPath<T, P extends Path<T>, SubT extends PropertyAtPath<T, P>>(
-  ctx: FormValueContextType<T>,
-  path: Path<T>
-) : FormValueContextType<SubT> {
-  return {
-    value: L.get(path, ctx.value),
-    conflicts: conflictsAtPath(ctx.conflicts, Array.isArray(path) ? path : [path]),
-    formIsValid: ctx.formIsValid,
-  }
-
-}
-
-export function toArrayPath<T>(path : Path<T>) : ArrayPath<T> {
-  return Array.isArray(path) ? path : [path] as ArrayPath<T>
-}
-
-function conflictsAtPath(conflicts, path) {
+function hasConflictsAtPath(conflicts, path) {
+  const arrayPath = (Array.isArray(path) ? path : [path])
   return conflicts
-    .filter((conflict )=> conflict.length >= path.length && path.every((key, i) => conflict[i] === key))
-    .map(conflict => conflict.slice(path.length))
+    .some((conflict )=> conflict.length === arrayPath.length && arrayPath.every((key, i) => conflict[i] === key))
+}
+
+export function useMemoizedPath<T>(path: T): T {
+  const pathDep = getStringPath(path as any)
+  //eslint-disable-next-line react-hooks/exhaustive-deps
+  return useMemo(() => path, [pathDep])
+}
+
+function getStringPath<P extends Path<unknown>>(path: P): string{
+  return Array.isArray(path) ? path.join("--") : String(path)
 }

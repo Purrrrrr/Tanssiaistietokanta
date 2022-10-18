@@ -10,6 +10,7 @@ export * from './fieldComponents'
 export * from './formControls'
 export * from './MarkdownEditor'
 export * from './closableEditors'
+export {useMemoizedPath} from './formContext'
 export type { FieldComponentProps } from './types'
 export {Validate} from './validation';
 

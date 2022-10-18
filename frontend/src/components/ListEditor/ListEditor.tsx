@@ -52,7 +52,7 @@ export function ListEditorItems({itemWrapper = "div", noWrapper, component, item
 
   return <>
     {items.map((item, index) =>
-      <SortableItem key={objectId(item)} index={index} item={item} items={items}
+      <SortableItem key={objectId(item)} index={index} item={item}
         itemIndex={index} actions={actions}
         component={component} wrapper={noWrapper ? null : itemWrapper}
         {...itemProps}
@@ -64,7 +64,6 @@ export function ListEditorItems({itemWrapper = "div", noWrapper, component, item
 interface SortableItemProps {
   component?: any,
   wrapper?: any,
-  items: any[],
   item: any,
   itemIndex: number,
   actions: ListEditorContextType["actions"]

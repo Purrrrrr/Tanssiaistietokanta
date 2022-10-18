@@ -33,6 +33,7 @@ export type EventProgramItem = Dance | EventProgram | RequestedDance
 
 export interface RequestedDance {
   __typename: 'RequestedDance'
+  duration?: never
   _id?: never
 }
 

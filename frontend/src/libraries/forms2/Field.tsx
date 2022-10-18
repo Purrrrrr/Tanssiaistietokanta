@@ -1,8 +1,8 @@
 import React from 'react';
 import {FormGroup} from 'libraries/ui';
-import {FieldComponentProps, LabelStyle, ArrayPath, Path, PropertyAtPath, PartialWhen, NoRequiredProperties} from './types'
+import {FieldComponentProps, LabelStyle, Path, PropertyAtPath, PartialWhen, NoRequiredProperties} from './types'
 import {useError, ErrorMessage, ValidationProps} from "./validation";
-import { useFormValueContextAt, useFormMetadata, useOnChangeFor } from './formContext'
+import { useValueAt, useHasConflictsAt, useFormMetadata, useOnChangeFor } from './formContext'
 
 export type FieldProps<Label, ValuePath, Value, Component extends React.ElementType, AdditionalProps> = 
   {
@@ -34,7 +34,8 @@ export function Field<T, L, P extends Path<T>, V extends PropertyAtPath<T,P>, C 
     ...rest
   }: FieldProps<L, P, V, C, AP>
 ) {
-  const { value, conflicts } = useFormValueContextAt<T, P, V>(path)
+  const hasConflict = useHasConflictsAt<T, P>(path)
+  const value = useValueAt<T, P, V>(path)
   const { readOnly, labelStyle: labelStyleFromCtx, inline: inlineFromCtx } = useFormMetadata()
   const onChange = useOnChangeFor<T, P, V>(path)
   const error = useError(value, rest);
@@ -51,7 +52,7 @@ export function Field<T, L, P extends Path<T>, V extends PropertyAtPath<T,P>, C 
       id={id}
       value={value}
       onChange={onChange} 
-      hasConflict={conflicts.includes([] as ArrayPath<V>)}
+      hasConflict={hasConflict}
       readOnly={readOnly}
       {...ariaProps}
     />

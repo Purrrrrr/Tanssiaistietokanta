@@ -1,3 +1,5 @@
+import { Dance } from './Dance'
+
 export interface Workshop {
   _id: string
   eventId: string
@@ -5,5 +7,5 @@ export interface Workshop {
   abbreviation?: string
   description?: string
   teachers?: string
-  dances: {}[]
+  dances: Dance[]
 }

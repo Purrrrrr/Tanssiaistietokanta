@@ -6,7 +6,7 @@ import {Dance} from "types/Dance";
 import {EventProgramSettings, DanceSet, EventProgramRow, EventProgramItem, RequestedDance} from "./types";
 
 import {Card, HTMLTable, CssClass, Select, MenuItem} from "libraries/ui";
-import {formFor, ClickToEdit, Switch as PlainSwitch, SubmitButton, ActionButton as Button, asFormControl, FieldComponentProps, MarkdownEditor} from "libraries/forms2";
+import {formFor, ClickToEdit, Switch as PlainSwitch, SubmitButton, ActionButton as Button, asFormControl, FieldComponentProps, MarkdownEditor, useMemoizedPath} from "libraries/forms2";
 
 import {DragHandle, ListEditor, ListEditorItems} from "components/ListEditor";
 import {DanceChooser} from "components/widgets/DanceChooser";
@@ -164,6 +164,7 @@ function newDanceSet(danceSets: DanceSet[]): DanceSet {
   }
 }
 
+const introductionsPath = ["introductions"]
 function IntroductoryInformation() {
   const infos = useValueAt(["introductions", "program"])
   const table = useRef<HTMLTableElement>(null);
@@ -180,11 +181,11 @@ function IntroductoryInformation() {
       <t.span>introductoryInformation</t.span>
       <AddIntroductionButton />
     </h2>
-    <ProgramListEditor path={["introductions"]} tableRef={table} />
+    <ProgramListEditor path={introductionsPath} tableRef={table} />
   </Card>;
 }
 
-function DanceSetEditor({index}) {
+const DanceSetEditor = React.memo(function DanceSetEditor({index} : {index: number}) {
   const table = useRef<HTMLTableElement>(null);
 
   const item = useValueAt(["danceSets", index])
@@ -224,9 +225,9 @@ function DanceSetEditor({index}) {
         onSelect={({index})=> onMoveDanceSet(item, index)} />
       <Button className="delete" intent="danger" text={t`removeDanceSet`} onClick={removeDanceSet} />
     </h2>
-    <ProgramListEditor tableRef={table} path={["danceSets", index]} />
+    <ProgramListEditor tableRef={table} path={useMemoizedPath(["danceSets", index])} />
   </Card>;
-};
+});
 
 type ProgramSectionPath = ['introductions'] | ['danceSets', number]
 type ProgramItemPath = [...ProgramSectionPath, 'program', number]
@@ -273,7 +274,17 @@ function ProgramListEditor({path, tableRef}) {
   </ListEditor>;
 }
 
-function ProgramItemEditor({path, itemIndex, item, onChange, onRemove, onMoveDown, onMoveUp}) {
+interface ProgramItemEditorProps {
+  item: EventProgramRow
+  path: ProgramSectionPath
+  itemIndex: number
+  onChange: (val: (v: unknown) => unknown) => unknown
+  onRemove: () => unknown
+  onMoveUp: () => unknown
+  onMoveDown: () => unknown
+}
+
+const ProgramItemEditor = React.memo(function ProgramItemEditor({path, itemIndex, item, onChange, onRemove, onMoveDown, onMoveUp} : ProgramItemEditorProps) {
   const itemPath = [...path, 'program', itemIndex] as ProgramItemPath
   const defaultSlideStyleId = useValueAt("slideStyleId")
 
@@ -308,18 +319,18 @@ function ProgramItemEditor({path, itemIndex, item, onChange, onRemove, onMoveDow
   }
 
   return <tr className="eventProgramItem" onKeyDown={onKeyDown} ref={container} tabIndex={0}>
-    <td>{t(__typename)}</td>
+    <td>{t(__typename!)}</td>
     <td>
       <ProgramDetailsEditor path={itemPath} onInputBlurred={onInputBlurred} />
     </td>
     <td>
-      <Duration value={item.duration} />
+      <Duration value={item.item.duration} />
     </td>
     <td>
       <DragHandle tabIndex={-1}/>
       <SlideStyleSelector
         text={t`style`}
-        value={item.slideStyleId}
+        value={item.slideStyleId ?? null}
         inheritsStyles
         inheritedStyleId={defaultSlideStyleId}
         inheritedStyleName={t`eventDefaultStyle`}
@@ -328,10 +339,12 @@ function ProgramItemEditor({path, itemIndex, item, onChange, onRemove, onMoveDow
       <Button title={t`remove`} intent="danger" icon="cross" onClick={removeItem} className="delete" />
     </td>
   </tr>;
-}
+});
 
 function ProgramDetailsEditor({path, onInputBlurred}) {
-  const {__typename } = useValueAt(path).item;
+  const __typename = useValueAt([...path as ProgramItemPath, 'item', '__typename'])
+  //If something is deleted useValueAt may return undefined
+  if (__typename === undefined) return null
 
   switch(__typename) {
     case 'Dance':
@@ -443,14 +456,17 @@ function MoveDanceSetSelector({currentSet, onSelect}) {
 
 function MoveItemToSectionSelector({itemPath} : { itemPath: ProgramItemPath}) {
   const currentSectionType = itemPath[0]
-  const item = useValueAt(itemPath)
+  const row = useValueAt(itemPath)
   const onChangeProgram = useOnChangeFor([])
 
-  const canMoveToIntroductions = currentSectionType === 'danceSets' && item.item.__typename === 'EventProgram'
+  const canMoveToIntroductions = currentSectionType === 'danceSets' && row?.item?.__typename === 'EventProgram'
   const introSection = {name: t`introductoryInformation`, isIntroductionsSection: true, index: 0}
   const sections = useValueAt("danceSets")
     .map(({name}, index) => ({name, index}))
     .filter(({index}) => currentSectionType !== 'danceSets' || index !== itemPath[1])
+
+  //If something is deleted useValueAt may return undefined
+  if (row === undefined) return null
 
   return <Selector
     items={canMoveToIntroductions ? [introSection, ...sections] : sections}
@@ -464,7 +480,7 @@ function MoveItemToSectionSelector({itemPath} : { itemPath: ProgramItemPath}) {
               ? ['introductions', 'program', L.appendTo]
               : ['danceSets', section.index, 'program', L.appendTo]
           ],
-          item,
+          row,
         )
         return addItem(removeItem(program)) as EventProgramSettings
       })

@@ -10,7 +10,7 @@ export function toSeconds(minutes : number, seconds : number) {
 
 export const prefixZero = (value: number) => (value < 10 ? "0" : "") + value.toFixed()
 
-export function durationToString(value : number) {
+export function durationToString(value : number | undefined) {
   if (!value || value < 0) return '0:00';
   const [minutes, seconds] = toMinSec(value);
   return minutes+":"+prefixZero(seconds);

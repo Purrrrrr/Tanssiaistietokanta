@@ -27,6 +27,7 @@ const t = makeTranslate({
 const {
   Form, 
   Field,
+  useValueAt,
 } = formFor<Workshop>()
 
 export function WorkshopEditor({eventId, workshop, onSubmit, submitText}) {
@@ -90,7 +91,8 @@ function useTakenWorkshopAbbreviations(eventId, workshopId) {
     .map(w => w.abbreviation);
 }
 
-function DanceListItem({items, item, onChange, onRemove}) {
+function DanceListItem({item, onChange, onRemove}) {
+  const items = useValueAt("dances")
   return <>
     <DanceChooser excludeFromSearch={items} value={item} onChange={onChange} />
     <DragHandle />

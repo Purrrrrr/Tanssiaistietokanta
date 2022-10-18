@@ -1,11 +1,11 @@
 import React from 'react';
 import {Button} from "libraries/ui";
-import {useFormValueContext, useFormMetadata} from './formContext'
+import {useFormIsValid, useFormMetadata} from './formContext'
 
 type ButtonProps = React.ComponentProps<typeof Button>;
 
 export function SubmitButton({disabled, ...props} : ButtonProps) {
-  const {formIsValid} = useFormValueContext();
+  const formIsValid = useFormIsValid();
   const {readOnly} = useFormMetadata();
   if (readOnly) return null
   return <ActionButton type="submit" intent="primary" 
