@@ -85,7 +85,7 @@ export function getArrayChanges<T>(original: T[], changed: T[]): Change<T>[] {
   changes
     .filter(change => change.status === 'MOVED' || change.status === 'UNCHANGED')
     .filter(change => !deepEquals(change.originalValue, changed[change.to]))
-    .forEach(change => { 
+    .forEach(change => {
       change.status = change.status === 'UNCHANGED' ? 'MODIFIED' : 'MOVED_AND_MODIFIED'
       change.changedValue = changed[change.to]
     })
@@ -111,7 +111,7 @@ function minimizeMoveSet<T>(changes: Change<T>[]) {
         ? (movedItem.from > from && movedItem.to < to)
         : (movedItem.from < from && movedItem.to > to)
       ).slice(0, Math.abs(moveAmount))
-    
+
     const sign = moveAmount > 0 ? 1 : -1
     affected.forEach(move => move.moveAmount! += sign)
     compensated.add(id)

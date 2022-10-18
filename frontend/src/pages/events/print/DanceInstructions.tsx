@@ -75,7 +75,7 @@ export default function DanceInstructions({eventId}) {
       </p>
     </PrintViewToolbar>
     <section className="dance-instructions" ref={dancesEl}>
-      {showWorkshops && 
+      {showWorkshops &&
         <>
           <t.h1>workshops</t.h1>
           {workshops.map(workshop => <Workshop key={workshop._id} workshop={workshop} />)}

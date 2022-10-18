@@ -46,7 +46,7 @@ async function getApp() {
   app.configure(middleware)
   // Set up our services (see `services/index.js`)
   app.configure(services)
-  // The graphql service needs to be configured last to 
+  // The graphql service needs to be configured last to
   // see all the other services
   await app.configureAsync(graphqlService)
   // Set up event channels (see channels.js)

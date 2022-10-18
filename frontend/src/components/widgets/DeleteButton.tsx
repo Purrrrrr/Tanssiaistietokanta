@@ -4,7 +4,7 @@ import {Button} from 'libraries/ui'
 
 interface DeleteButtonProps {
   style?: any
-  text: string 
+  text: string
   onDelete: () => any
   confirmText: string
 }

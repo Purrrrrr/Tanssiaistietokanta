@@ -69,7 +69,7 @@ function DanceMastersCheatListView({program}) {
     {introductions.length > 0 &&
       <>
         <HeaderRow>{t`introductions`}</HeaderRow>
-        {introductions.map((row, i) => 
+        {introductions.map((row, i) =>
           <SimpleRow key={i} text={row.item.name} />
         )}
       </>

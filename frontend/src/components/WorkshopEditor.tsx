@@ -25,7 +25,7 @@ const t = makeTranslate({
 })
 
 const {
-  Form, 
+  Form,
   Field,
   useValueAt,
 } = formFor<Workshop>()

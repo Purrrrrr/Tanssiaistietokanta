@@ -48,7 +48,7 @@ function useServiceEvents<T extends Entity>(service : ServiceName, channel : str
   useEffect(() => {
     subscribeToService(service, channel, callbacks)
     return () => unSubscribeToService(service, channel, callbacks)
-  }, [service, channel, callbacks]) 
+  }, [service, channel, callbacks])
 }
 
 function subscribeToService<T extends Entity>(serviceName : ServiceName, channel: string, callbacks : Callbacks<T>) {
@@ -104,7 +104,7 @@ function getServiceEventEmitter(
       debug('updating entity fragment')
       updateEntityFragment(typeName, entityFragment, data)
     })
-    
+
     return emitter
   })
 }

@@ -15,7 +15,7 @@ exports.ChannelConnections = class ChannelConnections {
 
   async find ({ connection }) {
     if (!connection) return []
-    
+
     const channels = this._getChannels()
     return Object.entries(channels)
       .filter(([, channel]) => channel.connections.includes(connection))
@@ -24,7 +24,7 @@ exports.ChannelConnections = class ChannelConnections {
 
   async create ({name}, { connection }) {
     if (!connection) return []
-    
+
     this.app.channel(name).join(connection)
 
     return this.find({connection})
@@ -32,7 +32,7 @@ exports.ChannelConnections = class ChannelConnections {
 
   async remove (id, { connection }) {
     if (!connection) return []
-    
+
     this.app.channel(id).leave(connection)
 
     return this.find({connection})

@@ -2,14 +2,14 @@ import {Path, Key} from './types'
 import deepEquals from 'fast-deep-equal'
 
 export type PatchResult<Patch> = {hasModifications: false} | {patch: Patch, hasModifications: true}
-export type PatchStrategy<T, Patch> = (original: T, modifications: T, conflicts: Path<T>[]) => PatchResult<Patch> 
+export type PatchStrategy<T, Patch> = (original: T, modifications: T, conflicts: Path<T>[]) => PatchResult<Patch>
 
 export function noPatch<T>(original : T, modifications : T, conflicts: Key[][]): PatchResult<T>  {
   const partial = makePartial<T>(original, modifications, conflicts)
   if (!partial.hasModifications) return partial
-  
+
   return {
-    hasModifications: true, 
+    hasModifications: true,
     patch: {
       ...original,
       ...partial.patch
@@ -32,7 +32,7 @@ export function makePartial<T>(original : T, modifications : T, conflicts: Key[]
     if (path.length === 0) return {hasModifications: false}
     conflicKeys.add(path[0] as keyof T)
   }
-  
+
   const partial : Partial<T> = {}
   let hasModifications = false
   for (const key in modifications) {
@@ -45,7 +45,7 @@ export function makePartial<T>(original : T, modifications : T, conflicts: Key[]
 
   return hasModifications
     ? {
-      hasModifications, 
+      hasModifications,
       patch: partial,
     } : {hasModifications}
 }

@@ -23,7 +23,7 @@ export function parseDuration(duration : string) {
     .map(parseFloat)
     .map(f => Number.isFinite(f) ? f : 0)
     .map((f, index) => (index === 0 ? f : Math.min(f, 59)))
-  
+
   if (!numbers.length) return 0
   return numbers.reduce((accumulator, value) => accumulator*60+value)
 }

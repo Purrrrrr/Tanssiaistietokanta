@@ -60,7 +60,7 @@ const replacements = {
   man: 'lord',
   'man\'s': 'lord\'s',
   men: 'lord',
-  'men\'s': 'lords\'', 
+  'men\'s': 'lords\'',
   */
 }
 

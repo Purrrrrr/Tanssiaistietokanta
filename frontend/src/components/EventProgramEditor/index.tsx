@@ -28,7 +28,7 @@ const {
   Input,
   Field,
   Switch,
-  Form, 
+  Form,
   useValueAt,
   useOnChangeFor,
   useRemoveFromList,
@@ -82,7 +82,7 @@ const DurationHelperContext = createContext({
 })
 
 interface EventProgramEditorProps {
-  program: EventProgramSettings 
+  program: EventProgramSettings
   onSubmit: (p: EventProgramSettings) => unknown
 }
 

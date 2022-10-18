@@ -10,6 +10,7 @@
   },
   "extends": "eslint:recommended",
   "rules": {
+    "no-trailing-spaces": ["error"],
     "comma-dangle": ["error", "never"],
     "comma-spacing": 1,
     "indent": [

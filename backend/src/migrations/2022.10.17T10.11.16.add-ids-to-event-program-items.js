@@ -12,7 +12,7 @@ exports.up = async params => {
 
   for (const event of events) {
     if (!event.program || event.program.length == 0) continue
-    
+
     const newEvent = R.evolve({
       program: {
         introductions: L.modify([L.elems, '_id'], guid),

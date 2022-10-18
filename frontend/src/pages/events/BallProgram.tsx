@@ -73,9 +73,9 @@ function BallProgramView({event, currentSlide, onChangeSlide, onRefetch}) {
   const program = useMemo(() => getSlides(event), [event])
   const slide = program[currentSlide]
 
-  const changeSlide = useCallback((n) => 
-    onChangeSlide((s) => 
-      Math.max(0, 
+  const changeSlide = useCallback((n) =>
+    onChangeSlide((s) =>
+      Math.max(0,
         Math.min(program.length-1, s+n)
       )
     )

@@ -12,7 +12,7 @@ function parseParagraph(paragraph) {
       content
     }
   }
-  
+
   return {
     type: 'other',
     content: paragraph,
@@ -29,7 +29,7 @@ export function stripLinks(text) {
   return text.replace(INTERNAL_LINK_REGEX, (_, linkText) => {
     return linkText
   }).replace(EXTERNAL_LINK_REGEX, (_, link, linkText) => {
-    return linkText || link 
+    return linkText || link
   })
 }
 

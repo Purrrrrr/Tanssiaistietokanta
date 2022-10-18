@@ -3,11 +3,11 @@ const {isNonNullType, isListType} = require('graphql')
 module.exports = function (typeName = null, defaults = {}) {
   return context => {
     const defaultValues = getDefaultValues(context.app, typeName, defaults)
-    
+
     function addDefaultValues(value) {
-      return {...defaultValues, ...value} 
+      return {...defaultValues, ...value}
     }
-    
+
     const {data} = context
     context.data = Array.isArray(data) ? data.map(addDefaultValues) : addDefaultValues(data)
   }
@@ -18,7 +18,7 @@ function getDefaultValues(app, typeName, defaults) {
 
   const graphql = app.service('graphql')
   const type = graphql.getType(typeName)
-  
+
   return {
     ...defaults,
     ...getDefaultValuesFromType(type)

@@ -47,6 +47,6 @@ export function getSingleKey(obj) {
     const keysStr = keys.join(',')
     throw new Error(`Expected object to have one key, found ${keysStr}`)
   }
-  
+
   return keys[0]
 }

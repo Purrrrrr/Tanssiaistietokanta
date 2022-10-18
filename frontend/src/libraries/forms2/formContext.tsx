@@ -32,7 +32,7 @@ export function useValueAt<T, P extends Path<T>, SubT extends PropertyAtPath<T, 
 }
 export function useHasConflictsAt<T, P extends Path<T>>(path : P): boolean {
   const stablePath = useMemoizedPath(path)
-  const getValue = useCallback((ctx) => 
+  const getValue = useCallback((ctx) =>
     hasConflictsAtPath(ctx.getConflicts(), stablePath),
   [stablePath]
   )
@@ -41,7 +41,7 @@ export function useHasConflictsAt<T, P extends Path<T>>(path : P): boolean {
 export function useFormValueSubscription<T, V>(getValue: ((ctx: FormMetadataContextType<T>) => V)): V {
   const ctx = useContext(FormMetadataContext) as FormMetadataContextType<T>
   const [state, setState] = useState(() => getValue(ctx))
-  
+
   useEffect(() => {
     const callback = () => setState(getValue(ctx))
     const unsubscribe = ctx.subscribeToChanges(callback)

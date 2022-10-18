@@ -14,7 +14,7 @@ export function mergeConflictingStrings(
   {server, original, local} : MergeData<string>
 ) : MergeResult<string> {
   const { conflict, result } = merge3(server, original, local, {stringSeparator: wordBoundary})
-  
+
   if (!conflict) {
     return {
       state: 'MODIFIED_LOCALLY',

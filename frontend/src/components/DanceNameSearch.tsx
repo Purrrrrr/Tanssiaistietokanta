@@ -5,7 +5,7 @@ import {useDelayedEffect} from 'utils/useDelayedEffect'
 
 export function DanceNameSearch({value, onChange}) {
   const [suggestions, setSuggestions] = useState([])
-  useDelayedEffect(70, 
+  useDelayedEffect(70,
     useCallback(
       () => searchWikiPages(value).then(setSuggestions), [value]
     )

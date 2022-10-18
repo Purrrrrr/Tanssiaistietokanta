@@ -14,9 +14,9 @@ export function LoadingState({loading, error, refetch} : LoadingStateProps) {
     return <Spinner size={100} /> //<NonIdealState icon={<Spinner />} />;
   }
   if (error) {
-    return <NonIdealState icon="error" 
+    return <NonIdealState icon="error"
       title="Tietojen lataaminen epäonnistui"
-      description={error.message} 
+      description={error.message}
       action={<Button text="Yritä uudelleen" onClick={() => refetch()} intent="primary" />}
     />
   }

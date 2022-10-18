@@ -10,7 +10,7 @@ function defaultChannels(app, context) {
       app.channel(`${serviceName}/${id}`)
     )
   }
-  
+
   return withoutCurrentConnection(channels, context)
 }
 

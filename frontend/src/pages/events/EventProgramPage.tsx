@@ -35,7 +35,7 @@ function toEventProgramSettings(
     introductions: { program: introductions, isIntroductionsSection: true, intervalMusicDuration: 0 },
     danceSets: (danceSets).map(set => ({...set, isIntroductionsSection: false})),
     slideStyleId
-  } 
+  }
 }
 
 function toProgramInput({introductions, danceSets, slideStyleId} : EventProgramSettings) {

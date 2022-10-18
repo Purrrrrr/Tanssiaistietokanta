@@ -7,7 +7,7 @@ export async function uploadDanceFile() {
   const dance : Dance = {
     name: stripExtension(file.name)
   }
-  
+
   try {
     Object.assign(dance, await decodeAudioData(file))
   } catch(_) { /* Nothing to do */ }
@@ -22,7 +22,7 @@ function requestUserFile(types?: string) : Promise<File> {
     if (types) input.accept = types
     input.addEventListener('change', (e : Event)  => {
       const files = (e.target as HTMLInputElement).files
-      
+
       if (!files || !files[0]) {
         reject()
       } else {

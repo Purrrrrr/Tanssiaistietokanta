@@ -4,7 +4,7 @@ async function evolveObjAsync(transformations, object) {
   if (typeof object !== 'object') return object
 
   const result = object instanceof Array ? [] : {}
-  
+
   for (const [key, value] of Object.entries(object)) {
     if (key in transformations) {
       result[key] = await getModifiedValue(transformations[key], value)

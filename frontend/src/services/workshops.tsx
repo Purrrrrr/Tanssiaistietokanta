@@ -44,7 +44,7 @@ mutation modifyWorkshop($id: ID!, $workshop: WorkshopInput!) {
     ${workshopFields}
   }
 }`, {
-  parameterMapper: (workshop) => 
+  parameterMapper: (workshop) =>
     ({variables: {id: workshop._id, workshop: toWorkshopInput(workshop)} })
 })
 

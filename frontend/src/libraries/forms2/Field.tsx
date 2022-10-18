@@ -4,7 +4,7 @@ import {FieldComponentProps, LabelStyle, Path, PropertyAtPath, PartialWhen, NoRe
 import {useError, ErrorMessage, ValidationProps} from './validation'
 import { useValueAt, useHasConflictsAt, useFormMetadata, useOnChangeFor } from './formContext'
 
-export type FieldProps<Label, ValuePath, Value, Component extends React.ElementType, AdditionalProps> = 
+export type FieldProps<Label, ValuePath, Value, Component extends React.ElementType, AdditionalProps> =
   {
     path: ValuePath
     inline?: boolean
@@ -27,7 +27,7 @@ export function Field<T, L, P extends Path<T>, V extends PropertyAtPath<T, P>, C
     labelInfo,
     helperText,
     labelStyle,
-    path, 
+    path,
     inline,
     component: Component,
     componentProps,
@@ -51,7 +51,7 @@ export function Field<T, L, P extends Path<T>, V extends PropertyAtPath<T, P>, C
       {...componentProps as any}
       id={id}
       value={value}
-      onChange={onChange} 
+      onChange={onChange}
       hasConflict={hasConflict}
       readOnly={readOnly}
       {...ariaProps}

@@ -30,7 +30,7 @@ function registerDependencies(sourceService, item, relations) {
     (relation) => {
       const {getLinkedIds} = relation
       const ids = getLinkedIds(item)
-      
+
       ids.forEach(id => {
         registerDepedency({
           sourceId: item._id,
@@ -52,7 +52,7 @@ function registerDepedency({sourceId, targetId, relation}) {
   sourceRelationIds.add(targetId)
   targetRelationIds.add(sourceId)
 }
-    
+
 function updateDependencies(serviceName, item, relations) {
   clearDependencies(serviceName, item)
   registerDependencies(serviceName, item, relations)
@@ -83,7 +83,7 @@ function getDependenciesFor(service, item, linkType, otherService) {
     if (!linkType) throw new Error('Missing link type')
     if (!otherService) throw new Error('Missing other service')
     return R.uniq(
-      item.map(({_id})=> 
+      item.map(({_id})=>
         Array.from(getDependencyLinks(service, _id, linkType, otherService))
       ).flat()
     )

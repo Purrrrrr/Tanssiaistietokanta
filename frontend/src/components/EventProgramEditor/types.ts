@@ -1,7 +1,7 @@
 import {Dance} from 'types/Dance'
 
 export interface EventProgramSettings {
-  introductions: IntroSection 
+  introductions: IntroSection
   danceSets: DanceSet[]
   slideStyleId: string | null
 }

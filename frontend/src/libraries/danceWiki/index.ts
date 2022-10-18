@@ -19,14 +19,14 @@ export function getDanceData(name: string) : Promise<ImportedDanceData> {
     .then(async ({title, contents: instructions}) => {
       const categories = await getCategories(title, instructions)
       const formations = getFormations(instructions)
-    
+
       return ({categories, formations, instructions})
     })
     .then(L.modify('instructions', cleanupStrangeTags))
     .then(L.modify('instructions', cleanupLanguage))
 }
 
-const strangeTag = /<\/?([A-Z]|mp3)[^>]*\/?>/g 
+const strangeTag = /<\/?([A-Z]|mp3)[^>]*\/?>/g
 function cleanupStrangeTags(text: string) {
   return text.replace(strangeTag, '')
 }

@@ -26,7 +26,7 @@ export function SampleEditor() {
 }
 
 interface EditorProps<T extends RO> {
-  serverState: T 
+  serverState: T
   onPatch: (item: Partial<T>) => any,
   fields: FieldDef<T>[],
 }

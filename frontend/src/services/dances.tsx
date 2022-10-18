@@ -37,7 +37,7 @@ mutation modifyDance($id: ID!, $dance: DanceInput!) {
     ${danceFields}
   }
 }`, {
-  parameterMapper: ({_id, __typename, ...dance}) => 
+  parameterMapper: ({_id, __typename, ...dance}) =>
     ({variables: {id: _id, dance} })
 })
 

@@ -59,7 +59,7 @@ interface MutateHookOptions<T> {
 
 function serviceMutateHook<T = unknown>(
   service : ServiceName,
-  query : string, 
+  query : string,
   {
     fireEvent = undefined,
     onCompleted = undefined,

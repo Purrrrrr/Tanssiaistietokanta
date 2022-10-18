@@ -8,7 +8,7 @@ export function SubmitButton({disabled, ...props} : ButtonProps) {
   const formIsValid = useFormIsValid()
   const {readOnly} = useFormMetadata()
   if (readOnly) return null
-  return <ActionButton type="submit" intent="primary" 
+  return <ActionButton type="submit" intent="primary"
     disabled={!formIsValid || disabled} {...props} />
 }
 export function ActionButton(props : ButtonProps) {
@@ -17,7 +17,7 @@ export function ActionButton(props : ButtonProps) {
 export function FormControl({children}) {
   const {readOnly} = useFormMetadata()
   if (readOnly) return null
-  
+
   return children
 }
 export function asFormControl<T>(Component: React.ComponentType<T>) {

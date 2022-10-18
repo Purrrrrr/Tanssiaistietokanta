@@ -15,8 +15,8 @@ export function ClickToEdit({value, readOnly, valueFormatter, className, onChang
     className={className}
     inline={inline}
     readOnly={readOnly}
-    aria-describedby={props['aria-describedby']} 
-    aria-label={props['aria-label']} 
+    aria-describedby={props['aria-describedby']}
+    aria-label={props['aria-label']}
     closedValue={valueFormatter ? valueFormatter(value ?? '') : value}
   >
     <Input {...props} value={value} onChange={onChange} inline={inline} hasConflict={hasConflict} />
@@ -34,8 +34,8 @@ export function ClickToEditMarkdown({value, readOnly, valueFormatter, className,
     className={className}
     inline={inline}
     readOnly={readOnly}
-    aria-describedby={props['aria-describedby']} 
-    aria-label={props['aria-label']} 
+    aria-describedby={props['aria-describedby']}
+    aria-label={props['aria-label']}
     closedValue={valueFormatter ? valueFormatter(value ?? '') : value}
   >
     <MarkdownEditor {...props} value={value} onChange={onChange} />
@@ -57,10 +57,10 @@ function ClosableEditor({closedValue, readOnly, inline, children, className, sho
   const [open, setOpen] = useState(false)
 
   const container = useRef<HTMLElement>(null)
-  function openEditor() { 
+  function openEditor() {
     if (readOnly) return
     setOpen(true)
-    setTimeout(() => (container.current?.querySelector('input, textarea') as HTMLElement)?.focus?.(), 10) 
+    setTimeout(() => (container.current?.querySelector('input, textarea') as HTMLElement)?.focus?.(), 10)
   }
   function maybeCloseEditor(e: React.FocusEvent<HTMLElement>) {
     const isInsideContainer = e.target !== container.current
@@ -76,8 +76,8 @@ function ClosableEditor({closedValue, readOnly, inline, children, className, sho
     onFocus={openEditor}
     onBlur={maybeCloseEditor}
     className={classNames(className, canOpen && Classes.EDITABLE_TEXT)}
-    aria-describedby={canOpen ? undefined : props['aria-describedby']} 
-    aria-label={canOpen ? undefined : props['aria-label']} 
+    aria-describedby={canOpen ? undefined : props['aria-describedby']}
+    aria-label={canOpen ? undefined : props['aria-label']}
   >
     {open || closedValue}
     {canOpen && showIcon && <Icon intent="primary" icon="edit" />}
