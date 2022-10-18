@@ -1,5 +1,6 @@
 import React from 'react'
 
+export type ChangeListener = () => unknown
 export type NewValue<T> = T | ((t: T) => T)
 
 export type AdditionalPropsFrom<Props> = Omit<Props, keyof FieldComponentProps<any>>

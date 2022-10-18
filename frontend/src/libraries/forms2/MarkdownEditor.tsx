@@ -10,7 +10,7 @@ MdEditor.unuse(Plugins.Image)
 interface MarkdownEditorProps extends FieldComponentProps<string, HTMLTextAreaElement> {
   style?: React.CSSProperties
   onBlur?: (e: React.FocusEvent<HTMLTextAreaElement>) => void
-  markdownOverrides?: {}
+  markdownOverrides?: Record<string, unknown>
 }
 
 export const MarkdownEditor = React.memo(function MarkdownEditor({value, onChange, hasConflict, markdownOverrides, ...props} : MarkdownEditorProps) {

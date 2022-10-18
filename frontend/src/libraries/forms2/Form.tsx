@@ -1,6 +1,6 @@
 import React, { useMemo, useRef, useEffect } from 'react'
 import * as L from 'partial.lenses'
-import { ArrayPath } from './types'
+import { ChangeListener, ArrayPath } from './types'
 import { FormValidityContext, FormMetadataContext, FormMetadataContextType } from './formContext'
 import {useValidationResult} from './validation'
 
@@ -30,7 +30,7 @@ export function Form<T>({
 } : FormProps<T>) {
   const {hasErrors, ValidationContainer} = useValidationResult()
   const form = useRef<HTMLFormElement>(null)
-  const listeners = useMemo(() => new Set<Function>(), [])
+  const listeners = useMemo(() => new Set<ChangeListener>(), [])
   const valueRef = useRef<T>()
   valueRef.current = value
   const conflictsRef = useRef<ArrayPath<T>>()
@@ -49,7 +49,7 @@ export function Form<T>({
       return {
         getValue: () => valueRef.current,
         getConflicts: () => conflictsRef.current ?? [],
-        subscribeToChanges: (listener: Function) => {
+        subscribeToChanges: (listener: ChangeListener) => {
           listeners.add(listener)
           return () => listeners.delete(listener)
         },

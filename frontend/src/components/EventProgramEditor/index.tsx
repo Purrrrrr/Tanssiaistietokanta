@@ -248,7 +248,7 @@ function ProgramListEditor({path, tableRef}) {
           </thead>
       }
       <tbody>
-        <ListEditorItems noWrapper component={ProgramItemEditor} itemProps={{path, isIntroductionsSection}} />
+        <ListEditorItems noWrapper component={ProgramItemEditor} itemProps={{path}} />
         {program.length === 0 &&
             <tr>
               <t.td className={CssClass.textMuted+ ' noProgram'} colSpan="5">programListIsEmpty</t.td>

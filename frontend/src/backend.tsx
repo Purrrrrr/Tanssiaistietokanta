@@ -52,19 +52,19 @@ export function entityDeleteHook(service : ServiceName, query : string, options 
   })
 }
 
-interface MutateHookOptions {
+interface MutateHookOptions<T> {
   fireEvent ?: EventName
-  onCompleted ?: Function
+  onCompleted ?: (d: {data?: T}) => unknown
 }
 
-function serviceMutateHook(
+function serviceMutateHook<T = unknown>(
   service : ServiceName,
   query : string, 
   {
     fireEvent = undefined,
     onCompleted = undefined,
     ...options
-  } : MutateHookOptions = {}
+  } : MutateHookOptions<T> = {}
 ) {
   return makeMutationHook(query, {
     ...options,

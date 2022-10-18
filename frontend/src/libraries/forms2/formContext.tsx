@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect, useContext, useCallback } from 'react'
 import * as L from 'partial.lenses'
-import {NewValue, LabelStyle, Path, ArrayPath, PropertyAtPath} from './types'
+import {ChangeListener, NewValue, LabelStyle, Path, ArrayPath, PropertyAtPath} from './types'
 
 export const FormValidityContext = React.createContext<boolean>(true)
 export function useFormIsValid(): boolean {
@@ -10,7 +10,7 @@ export function useFormIsValid(): boolean {
 export interface FormMetadataContextType<T> {
   getValue: () => T
   getConflicts: () => ArrayPath<T>[]
-  subscribeToChanges: (f: Function) => (() => void)
+  subscribeToChanges: (f: ChangeListener) => (() => void)
   onChange: (t: NewValue<T>) => unknown
   onChangePath: <P extends Path<T>, SubT extends PropertyAtPath<T, P>>(p: P, t: NewValue<SubT>) => unknown
   readOnly: boolean

@@ -32,7 +32,7 @@ export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
   }
 )
 
-export type InputFieldProps<L, P, V>  = Omit<FieldProps<L, P, V, typeof Input, {}>, 'component'>
+export type InputFieldProps<L, P, V>  = Omit<FieldProps<L, P, V, typeof Input, unknown>, 'component'>
 export function InputField<T, L, P extends TypedPath<T, P, string | undefined>, V extends PropertyAtPath<T, P> & string >(
   props : InputFieldProps<L, P, V> 
 ) {

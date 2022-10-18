@@ -19,7 +19,7 @@ type ListEditorProps = Omit<ListEditorItemsProps, 'component'> & {
   className?: string,
   helperClass?: string,
   useDragHandle?: boolean,
-  itemProps?: {}
+  itemProps?: Record<string, unknown>
 } & (
   {children: React.ReactNode, component?: undefined} | {children?: undefined | null, component: any}
 )
@@ -44,7 +44,7 @@ interface ListEditorItemsProps {
   itemWrapper?: string | React.JSXElementConstructor<any>,
   noWrapper?: boolean,
   component: any,
-  itemProps?: {}
+  itemProps?: Record<string, unknown>
 }
 
 export function ListEditorItems({itemWrapper = 'div', noWrapper, component, itemProps} : ListEditorItemsProps) {

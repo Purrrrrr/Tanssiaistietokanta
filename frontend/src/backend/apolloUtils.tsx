@@ -1,5 +1,10 @@
 import { gql, useMutation, FetchResult, MutationResult } from './apollo'
 
+interface MutationQueryArgs {
+  onCompleted ?: (data: unknown) => unknown
+  refetchQueries?: string[]
+}
+
 export function makeMutationHook<V extends any[]>(
   query,
   {
@@ -14,7 +19,7 @@ export function makeMutationHook<V extends any[]>(
 ) {
   const compiledQuery = gql(query)
 
-  return (args : { onCompleted ?: Function } & any = {}) : [(...vars: V) => Promise<FetchResult>, MutationResult<any>] => {
+  return (args : MutationQueryArgs = {}) : [(...vars: V) => Promise<FetchResult>, MutationResult<any>] => {
     const options = {
       ...args,
       ...rest,

@@ -39,7 +39,7 @@ export function formFor<T>(): FormFor<T> {
         onChange(items =>
           L.set(
             L.append,
-            typeof(item) === 'function' ? (item as Function)(items) : item,
+            typeof(item) === 'function' ? (item as ((t: PropertyAtPath<T, P>) => unknown))(items) : item,
             items,
           )
         )

@@ -27,7 +27,7 @@ export interface ClickToEditMarkdownProps extends FieldComponentProps<string, HT
   className?: string
   valueFormatter?: (value: string) => React.ReactNode
   inline?: boolean
-  markdownOverrides?: {}
+  markdownOverrides?: Record<string, unknown>
 }
 export function ClickToEditMarkdown({value, readOnly, valueFormatter, className, onChange, inline, hasConflict, ...props} : ClickToEditMarkdownProps) {
   return <ClosableEditor
