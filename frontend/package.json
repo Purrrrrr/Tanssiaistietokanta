@@ -54,8 +54,13 @@
       "@typescript-eslint/no-explicit-any": 0,
       "@typescript-eslint/no-non-null-assertion": 1,
       "@typescript-eslint/ban-ts-comment": 1,
-      "no-trailing-spaces": ["error"],
-      "comma-dangle": ["error", "only-multiline"],
+      "no-trailing-spaces": [
+        "error"
+      ],
+      "comma-dangle": [
+        "error",
+        "only-multiline"
+      ],
       "comma-spacing": 1,
       "indent": [
         "error",
