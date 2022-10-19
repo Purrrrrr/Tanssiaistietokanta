@@ -30,7 +30,16 @@
         font-size: 300%
         margin: 0
 
-    .slide-dance-description
+    .requested-dance-placeholder
+      border-bottom: 0.05em solid
+      span
+        opacity: 0.2
+        &:before
+          content: '('
+        &:after
+          content: ')'
+
+    .slide-program-description
       font-size: 275%
       text-align: left
       display: inline-block

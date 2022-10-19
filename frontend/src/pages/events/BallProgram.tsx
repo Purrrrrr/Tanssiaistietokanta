@@ -7,6 +7,7 @@ import ReactTouchEvents from 'react-touch-events'
 
 import {EditableDanceProperty} from 'components/EditableDanceProperty'
 import {LoadingState} from 'components/LoadingState'
+import {AutosizedSection} from 'components/AutosizedSection'
 import {ProgramTitleSelector} from 'components/ProgramTitleSelector'
 import {useOnKeydown} from 'utils/useOnKeydown'
 import {makeTranslate} from 'utils/translate'
@@ -181,37 +182,41 @@ function SlideView({slide, onChangeSlide}) {
 function HeaderSlide({header, onChangeSlide}) {
   const {name, program = []} = header
   return <SimpleSlide title={name} next={null} onChangeSlide={onChangeSlide} >
-    <ul className="slide-main-content slide-header-list">
-      {program
-        .filter(t => t.__typename !== 'EventProgram' || t.showInLists)
-        .map(({index, name}) =>
-          <li onClick={() => onChangeSlide(index)} key={index}>
-            {name ?? <RequestedDancePlaceholder />}
-          </li>
-        )
-      }
-    </ul>
+    <AutosizedSection className="slide-main-content">
+      <ul className="slide-header-list">
+        {program
+          .filter(t => t.__typename !== 'EventProgram' || t.showInLists)
+          .map(({index, name}) =>
+            <li onClick={() => onChangeSlide(index)} key={index}>
+              {name ?? <RequestedDancePlaceholder />}
+            </li>
+          )
+        }
+      </ul>
+    </AutosizedSection>
   </SimpleSlide>
 }
 
 function EventProgramSlide({program, onChangeSlide}) {
   const {name, next, description} = program
   return <SimpleSlide title={name} next={next} onChangeSlide={onChangeSlide} >
-    {description && <section className="slide-main-content"><Markdown>{description}</Markdown></section>}
+    {description && <AutosizedSection className="slide-main-content slide-program-description">
+      <Markdown>{description}</Markdown>
+    </AutosizedSection>}
   </SimpleSlide>
 }
 
-const RequestedDancePlaceholder = () => <>_________________________</>
+const RequestedDancePlaceholder = () => <span className="requested-dance-placeholder"><t.span>requestedDance</t.span></span>
 
 function DanceSlide({dance, onChangeSlide}) {
   const {next, name, teachedIn} = dance
 
   return <SimpleSlide title={name} next={next} onChangeSlide={onChangeSlide}>
-    <section className="slide-main-content slide-dance-description">
+    <AutosizedSection className="slide-main-content slide-program-description">
       <EditableDanceProperty dance={dance} property="description" type="markdown" addText={t`addDescription`} />
-    </section>
+    </AutosizedSection>
     {teachedIn.length > 0 &&
-      <section className="slide-teached-in">{t`teachedInSet`} {teachedIn.map(w => w.name).join(', ')}</section>
+      <AutosizedSection className="slide-teached-in">{t`teachedInSet`} {teachedIn.map(w => w.name).join(', ')}</AutosizedSection>
     }
   </SimpleSlide>
 }
