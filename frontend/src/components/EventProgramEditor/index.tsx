@@ -6,7 +6,7 @@ import {Dance} from 'types/Dance'
 import {EventProgramSettings, DanceSet, DanceProgram, EventProgramRow, EventProgramItem, RequestedDance} from './types'
 
 import {Card, HTMLTable, CssClass, Select, MenuItem} from 'libraries/ui'
-import {formFor, ClickToEdit, Switch as PlainSwitch, SubmitButton, ActionButton as Button, asFormControl, FieldComponentProps, MarkdownEditor, useMemoizedPath} from 'libraries/forms2'
+import {formFor, ClickToEdit, Switch as PlainSwitch, SubmitButton, ActionButton as Button, asFormControl, FieldComponentProps, MarkdownEditor} from 'libraries/forms2'
 
 import {DragHandle, ListEditor, ListEditorItems} from 'components/ListEditor'
 import {DanceChooser} from 'components/widgets/DanceChooser'
@@ -33,6 +33,7 @@ const {
   useOnChangeFor,
   useRemoveFromList,
   useAppendToList,
+  useMemoizedPath,
 } = formFor<EventProgramSettings>()
 
 const t = makeTranslate({

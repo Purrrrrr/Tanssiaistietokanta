@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react'
 import * as L from 'partial.lenses'
-import {useValueAt, useOnChangeFor} from './formContext'
+import {useValueAt, useOnChangeFor, useMemoizedPath} from './formContext'
 import {TypedPath, Path, PropertyAtPath, NewValue} from './types'
 import {Field, FieldProps} from './Field'
 import {Form, FormProps} from './Form'
@@ -10,7 +10,6 @@ export * from './fieldComponents'
 export * from './formControls'
 export * from './MarkdownEditor'
 export * from './closableEditors'
-export {useMemoizedPath} from './formContext'
 export type { FieldComponentProps } from './types'
 export {Validate} from './validation'
 
@@ -23,6 +22,7 @@ interface FormFor<T> {
   useOnChangeFor: <P extends Path<T>, SubT extends PropertyAtPath<T, P>>(path: P) => (v: NewValue<SubT>) => unknown
   useAppendToList: <P extends TypedPath<T, P, any[]>, SubT extends PropertyAtPath<T, P> & unknown[]>(path: P) => (v: SubT[number] | ((v: SubT) => SubT[number])) => unknown
   useRemoveFromList: <P extends TypedPath<T, P, any[]>>(path: P, index: number) => () => unknown
+  useMemoizedPath: <P extends Path<T>>(path: P) => P
 }
 
 export function formFor<T>(): FormFor<T> {
@@ -48,6 +48,7 @@ export function formFor<T>(): FormFor<T> {
     useRemoveFromList: <P extends Path<T>>(path: P, index: number) => {
       const onChange = useOnChangeFor<T, P, PropertyAtPath<T, P>>(path)
       return useCallback((item) => onChange(L.set(index, undefined)), [onChange, index])
-    }
+    },
+    useMemoizedPath,
   } as FormFor<T>
 }
