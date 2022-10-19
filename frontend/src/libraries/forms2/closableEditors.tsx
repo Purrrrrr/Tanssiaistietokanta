@@ -1,10 +1,13 @@
 import React, {useRef, useState, ComponentProps} from 'react'
+import Markdown from 'markdown-to-jsx'
 import {Icon} from '../ui'
 import {Classes} from '@blueprintjs/core'
 import classNames from 'classnames'
 import {AdditionalPropsFrom, FieldComponentProps} from './types'
 import {Input} from './fieldComponents'
 import {MarkdownEditor} from './MarkdownEditor'
+
+import './ClosableEditor.sass'
 
 export interface ClickToEditProps extends FieldComponentProps<string, HTMLInputElement>, AdditionalPropsFrom<ComponentProps<'input'>> {
   valueFormatter?: (value: string) => React.ReactNode
@@ -25,18 +28,17 @@ export function ClickToEdit({value, readOnly, valueFormatter, className, onChang
 
 export interface ClickToEditMarkdownProps extends FieldComponentProps<string, HTMLTextAreaElement>, AdditionalPropsFrom<ComponentProps<typeof MarkdownEditor>> {
   className?: string
-  valueFormatter?: (value: string) => React.ReactNode
   inline?: boolean
   markdownOverrides?: Record<string, unknown>
 }
-export function ClickToEditMarkdown({value, readOnly, valueFormatter, className, onChange, inline, hasConflict, ...props} : ClickToEditMarkdownProps) {
+export function ClickToEditMarkdown({value, readOnly, className, onChange, inline, hasConflict, ...props} : ClickToEditMarkdownProps) {
   return <ClosableEditor
     className={className}
     inline={inline}
     readOnly={readOnly}
     aria-describedby={props['aria-describedby']}
     aria-label={props['aria-label']}
-    closedValue={valueFormatter ? valueFormatter(value ?? '') : value}
+    closedValue={<Markdown>{value}</Markdown>}
   >
     <MarkdownEditor {...props} value={value} onChange={onChange} />
   </ClosableEditor>
@@ -75,12 +77,12 @@ function ClosableEditor({closedValue, readOnly, inline, children, className, sho
     onClick={openEditor}
     onFocus={openEditor}
     onBlur={maybeCloseEditor}
-    className={classNames(className, canOpen && Classes.EDITABLE_TEXT)}
+    className={classNames(className, canOpen && Classes.EDITABLE_TEXT, 'closable-editor')}
     aria-describedby={canOpen ? undefined : props['aria-describedby']}
     aria-label={canOpen ? undefined : props['aria-label']}
   >
     {open || closedValue}
-    {canOpen && showIcon && <Icon intent="primary" icon="edit" />}
+    {canOpen && showIcon && <Icon intent="primary" className="closable-editor-edit-icon" icon="edit" />}
     {open && children}
   </Container>
 }

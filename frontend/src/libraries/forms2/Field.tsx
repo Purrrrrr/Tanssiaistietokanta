@@ -52,6 +52,7 @@ export function Field<T, L, P extends Path<T>, V extends PropertyAtPath<T, P>, C
       id={id}
       value={value}
       onChange={onChange}
+      inline={inline}
       hasConflict={hasConflict}
       readOnly={readOnly}
       {...ariaProps}

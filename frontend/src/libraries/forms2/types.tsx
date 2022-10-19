@@ -7,6 +7,7 @@ export type AdditionalPropsFrom<Props> = Omit<Props, keyof FieldComponentProps<a
 export interface FieldComponentProps<T, EventElement = HTMLElement> {
   value: T | undefined
   onChange: (t: T, e: React.ChangeEvent<EventElement>) => unknown
+  inline?: boolean
   hasConflict?: boolean
   readOnly?: boolean
   id: string

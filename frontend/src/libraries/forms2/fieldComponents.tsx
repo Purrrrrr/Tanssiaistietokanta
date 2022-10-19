@@ -9,15 +9,14 @@ type AdditionalPropsFrom<Props> = Omit<Props, keyof FieldComponentProps<any>>
 export type SwitchFieldProps<L, P, V> = Omit<FieldProps<L, P, V, typeof Switch, {label: string, inline?: boolean}>, 'componentProps' | 'component' | 'labelStyle'>
 
 export function SwitchField<T, L, P extends TypedPath<T, P, boolean>, V extends PropertyAtPath<T, P> & boolean>(
-  {label, inline, ...props} : SwitchFieldProps<L, P, V>
+  {label, ...props} : SwitchFieldProps<L, P, V>
 ) {
-  return <Field<T, L, P, V, typeof Switch, ExtraSwitchProps> {...props} label={label} labelStyle="hidden" component={Switch as any} componentProps={{label, inline}} />
+  return <Field<T, L, P, V, typeof Switch, ExtraSwitchProps> {...props} label={label} labelStyle="hidden" component={Switch as any} componentProps={{label}} />
 }
 
 interface SwitchProps extends FieldComponentProps<boolean, HTMLInputElement>, ExtraSwitchProps { }
 interface ExtraSwitchProps {
   label: string
-  inline?: boolean
 }
 
 export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
@@ -57,7 +56,7 @@ export function Input({value, className, onChange, inline, hasConflict, inputRef
 interface TextAreaProps extends FieldComponentProps<string, HTMLTextAreaElement>, Pick<BlueprintTextAreaProps, 'growVertically'> {
   inputRef?: React.Ref<HTMLTextAreaElement>
 }
-export function TextArea({value, onChange, hasConflict, inputRef, ...props} : TextAreaProps) {
+export function TextArea({value, onChange, hasConflict, inline, inputRef, ...props} : TextAreaProps) {
   return <BlueprintTextArea
     inputRef={inputRef}
     value={value ?? ''}

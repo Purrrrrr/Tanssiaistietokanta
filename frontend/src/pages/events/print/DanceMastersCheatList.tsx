@@ -100,10 +100,10 @@ function DanceRow({dance}) {
   return <tr>
     <td>{dance.name}</td>
     <td>
-      <EditableDanceProperty dance={dance} property="description" addText={t`addDescription`} type="markdown" />
+      <EditableDanceProperty dance={dance} property="description" addText={t`addDescription`} type="markdown" inline />
     </td>
     <td>
-      <EditableDanceProperty dance={dance} property="prelude" addText={t`addPrelude`} />
+      <EditableDanceProperty dance={dance} property="prelude" addText={t`addPrelude`} inline />
     </td>
   </tr>
 }

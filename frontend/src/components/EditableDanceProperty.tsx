@@ -9,13 +9,14 @@ import './EditableDanceProperty.sass'
 type ValidProperty = Exclude<WritableDanceProperty, 'duration' | 'instructions'>
 
 interface EditableDancePropertyProps {
-  dance: any,
-  property: ValidProperty,
-  addText: string,
+  dance: any
+  property: ValidProperty
+  addText: string
+  inline?: boolean
   type?: 'multiline' | 'markdown'
 }
 
-export function EditableDanceProperty({dance: danceInDatabase, property, addText, ...props} : EditableDancePropertyProps) {
+export function EditableDanceProperty({dance: danceInDatabase, inline, property, addText, ...props} : EditableDancePropertyProps) {
   const [patchDance] = usePatchDance()
   const patch = useCallback(
     (dance) => patchDance({ _id: danceInDatabase._id, ...dance }),
@@ -37,10 +38,11 @@ export function EditableDanceProperty({dance: danceInDatabase, property, addText
   const editorType = props['type']
 
   if (editorType === 'markdown') {
-    return <ClickToEditMarkdown id={property} value={dance[property]} onChange={onChange} aria-label={label} />
+    return <ClickToEditMarkdown id={property} value={dance[property]} onChange={onChange} aria-label={label} inline={inline} />
   }
 
   return <ClickToEdit id={property} className="editableDanceProperty"
+    inline={inline}
     value={dance[property]} onChange={onChange}
     aria-label={label}
     valueFormatter={value => value || <span className="addEntry">{addText}</span>}
