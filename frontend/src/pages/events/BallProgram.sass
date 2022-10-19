@@ -4,6 +4,9 @@
     position: absolute
     right: 10px
     top: 10px
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif
+    font-weight: normal
+    color: black
 
   .slide
     text-align: center
@@ -13,7 +16,7 @@
     flex-direction: column
     justify-content: space-between
     align-items: center
-    
+
     .slide-title
       font-size: 400%
 
@@ -47,7 +50,7 @@
     .markdown-part-editor
       .click-to-edit-button
         visibility: hidden
-      &:hover 
+      &:hover
         border: 1px solid #ddd
         .click-to-edit-button
           visibility: visible
@@ -55,3 +58,95 @@
 .slide-style-dark
   background: black
   color: white
+
+// Flower background styles
+
+@mixin flower
+  background: #fbf5e6
+  color: #58370e
+  background-size: 100% 100%
+  background-position: center
+  font-family: 'Dancing Script', 'Brush Script MT', cursive
+  font-weight: 100
+  .slide-title
+    font-size: 500% !important
+  .slide-main-content
+    font-size: 200%
+
+.slide-style-flower-title1
+  @include flower
+  background-image: url('../../../public/backgrounds/flower/flower-title1.jpg')
+  .slide-next-track
+    align-self: end
+
+.slide-style-flower-title2
+  @include flower
+  background-image: url('../../../public/backgrounds/flower/flower-title2.jpg')
+  .slide-next-track
+    align-self: end
+
+.slide-style-flower-title3
+  @include flower
+  background-image: url('../../../public/backgrounds/flower/flower-title3.jpg')
+  .slide
+    padding-left: 50%
+    padding-right: 5%
+
+.slide-style-flower-title4
+  @include flower
+  background-image: url('../../../public/backgrounds/flower/flower-title4.jpg')
+  .slide
+    padding-left: 40%
+    padding-right: 5%
+
+.slide-style-flower-title5
+  @include flower
+  background-image: url('../../../public/backgrounds/flower/flower-title5.jpg')
+  .slide-next-track
+    align-self: end
+
+.slide-style-flower-title6
+  @include flower
+  background-image: url('../../../public/backgrounds/flower/flower-title6.jpg')
+  .slide
+    padding-left: 30%
+
+.slide-style-flower-frame1
+  @include flower
+  background-image: url('../../../public/backgrounds/flower/flower-frame1.jpg')
+  .slide
+    padding-bottom: 10%
+
+.slide-style-flower-frame2
+  @include flower
+  background-image: url('../../../public/backgrounds/flower/flower-frame2.jpg')
+  .slide
+    padding-bottom: 10%
+
+.slide-style-flower-frame3
+  @include flower
+  background-image: url('../../../public/backgrounds/flower/flower-frame3.jpg')
+  .slide
+    padding-bottom: 10%
+
+.slide-style-flower-frame4
+  @include flower
+  background-image: url('../../../public/backgrounds/flower/flower-frame4.jpg')
+  .slide
+    padding-bottom: 15%
+
+.slide-style-flower-frame5
+  @include flower
+  background-image: url('../../../public/backgrounds/flower/flower-frame5.jpg')
+  .slide
+    padding-bottom: 13%
+
+.slide-style-flower-frame6
+  @include flower
+  background-image: url('../../../public/backgrounds/flower/flower-frame6.jpg')
+  .slide
+    padding-bottom: 17%
+
+.slide-style-flower-frame7
+  @include flower
+  background-image: url('../../../public/backgrounds/flower/flower-frame7.jpg')
