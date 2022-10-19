@@ -207,7 +207,7 @@ function DanceSlide({dance, onChangeSlide}) {
       <EditableDanceProperty dance={dance} property="description" type="markdown" addText={t`addDescription`} />
     </section>
     {teachedIn.length > 0 &&
-      <p>{t`teachedInSet`} {teachedIn.map(w => w.name).join(", ")}</p>
+      <section className="slide-teached-in">{t`teachedInSet`} {teachedIn.map(w => w.name).join(", ")}</section>
     }
   </SimpleSlide>;
 }
