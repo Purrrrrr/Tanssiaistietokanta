@@ -39,12 +39,12 @@ export function Form<T>({
   const metadataContext = useMemo(
     () => {
       const onChangePath = (path, newValue) => {
-        const val = valueRef.current!
+        const val = valueRef.current
         valueRef.current = typeof newValue  === 'function'
           ? L.modify(path, newValue, val)
           : L.set(path, newValue, val)
 
-        onChange(valueRef.current!)
+        onChange(valueRef.current as T)
       }
       return {
         getValue: () => valueRef.current,

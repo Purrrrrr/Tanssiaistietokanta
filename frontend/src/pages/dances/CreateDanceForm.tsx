@@ -29,7 +29,7 @@ export function CreateDanceForm({onCreate, onCancel, initialData}) {
   </section>
 }
 
-export function DanceUploader({onUpload} : {onUpload: (d: Dance) => any}) {
+export function DanceUploader({onUpload} : {onUpload: (d: Dance) => unknown}) {
   async function chooseFile() {
     const dance = await uploadDanceFile()
     if (dance) onUpload(dance)

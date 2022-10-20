@@ -40,7 +40,7 @@ export function mergeArrays<T>(
 }
 
 function mergeModifications <T>(original: T[], serverDiff: Change<T>[], localDiff: Change<T>[], merge : MergeFunction) : MergeResult<T[]> {
-  const modifiedIndexesById = new Map<any, number>()
+  const modifiedIndexesById = new Map<unknown, number>()
   const pendingModifications = [...original]
   const conflicts : Path<T[]>[] = []
 
@@ -149,12 +149,13 @@ function mergeMoves<T>(original: T[], serverDiff: Change<T>[], localDiff: Change
     localDiff.map(change => [change.id, change])
   )
 
-  const moves = new Map<any, number>()
+  const moves = new Map<unknown, number>()
   let hasModifications = false
   originalIds.forEach((id, index) => {
-    const localChange = localChangesById.get(id)!
-    if (localChange.status === 'ADDED') return
-    const serverChange = serverChangesById.get(id)!
+    const localChange = localChangesById.get(id)
+    if (localChange?.status === 'ADDED') return
+    const serverChange = serverChangesById.get(id)
+    if (localChange === undefined || serverChange === undefined) throw new Error('This should not happen')
 
     if (isMove(serverChange)) {
       if(localChange.moveAmount === 0 || localChange.moveAmount === serverChange.moveAmount) {
@@ -179,7 +180,8 @@ function mergeMoves<T>(original: T[], serverDiff: Change<T>[], localDiff: Change
     .map((id, index) => {
       const value = original[index]
       if (moves.has(id)) {
-        const move = moves.get(id)!
+        const move = moves.get(id)
+        if (move === undefined) throw new Error('This should not happen')
         const half = move > 0 ? 0.5 : -0.5
         return {index: index+move+half, id, value}
       }
@@ -194,14 +196,14 @@ function mergeMoves<T>(original: T[], serverDiff: Change<T>[], localDiff: Change
   }
 }
 
-function isMove(change: Change<any>): boolean {
+function isMove(change: Change<unknown>): boolean {
   return (change.status === 'MOVED' || change.status === 'MOVED_AND_MODIFIED') && change.moveAmount !== 0
 }
 
 function mergeAdditions<T>(original: T[], serverDiff: Change<T>[], localDiff: Change<T>[], indexConflicts: Set<number>) : ArrayMergeResult<T> {
   const pendingModifications = [...original]
 
-  const localAdditionsByIndex = new Map<number, any>()
+  const localAdditionsByIndex = new Map<number, unknown>()
   localDiff
     .filter(change => change.status === 'ADDED')
     .forEach(change => {

@@ -51,9 +51,9 @@
       "plugin:@typescript-eslint/recommended"
     ],
     "rules": {
-      "@typescript-eslint/no-explicit-any": 0,
+      "@typescript-eslint/no-explicit-any": 1,
       "@typescript-eslint/no-non-null-assertion": 1,
-      "@typescript-eslint/ban-ts-comment": 1,
+      "@typescript-eslint/ban-ts-comment": "error",
       "no-trailing-spaces": [
         "error"
       ],

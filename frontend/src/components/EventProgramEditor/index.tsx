@@ -79,7 +79,7 @@ const t = makeTranslate({
 
 const DEFAULT_INTERVAL_MUSIC_DURATION = 15*60
 const DurationHelperContext = createContext({
-  pause: 0, setPause: (() => {/* dummy */}) as (pause: number) => any,
+  pause: 0, setPause: (() => {/* dummy */}) as (pause: number) => unknown,
 })
 
 interface EventProgramEditorProps {

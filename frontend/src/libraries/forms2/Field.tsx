@@ -2,7 +2,7 @@ import React from 'react'
 import {FormGroup} from 'libraries/ui'
 import {FieldComponentProps, LabelStyle, Path, PropertyAtPath, PartialWhen, NoRequiredProperties} from './types'
 import {useError, ErrorMessage, ValidationProps} from './validation'
-import { useFieldAt, useFormMetadata } from './formContext'
+import { useFieldAt } from './formContext'
 
 export type FieldProps<Label, ValuePath, Value, Component extends React.ElementType, AdditionalProps> =
   {

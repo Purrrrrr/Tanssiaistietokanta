@@ -1,6 +1,6 @@
 import {useEffect} from 'react'
 
-export function useDelayedEffect(timeout: number, effect: () => any) {
+export function useDelayedEffect(timeout: number, effect: () => unknown) {
   useEffect(
     () => {
       let id : number | null = window.setTimeout(

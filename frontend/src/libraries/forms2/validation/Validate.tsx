@@ -5,7 +5,7 @@ import {ValidationProps} from './useSchema'
 import {ErrorMessage} from './ErrorMessage'
 
 interface ValidateProps extends ValidationProps {
-  value?: any
+  value?: unknown
 }
 
 export const Validate = function Validate({value, ...schemaDef} : ValidateProps) {

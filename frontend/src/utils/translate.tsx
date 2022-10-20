@@ -6,7 +6,7 @@ type Translate = {
   (key: string | TemplateStringsArray, options?: object): Translation,
   pluralize: (key: string, count: number) => Translation
 } & {
-  [key : string]: (props: {children: string, [prop: string] : any}) => JSX.Element
+  [key : string]: (props: {children: string, [prop: string] : unknown}) => JSX.Element
 }
 
 const commonTags = 'p,div,span,h1,h2,h3,h4,h5,h6,td,th,footer'.split(',')

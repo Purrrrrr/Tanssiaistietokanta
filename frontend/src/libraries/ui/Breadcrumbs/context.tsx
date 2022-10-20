@@ -27,12 +27,12 @@ export function BreadcrumbContext({children}) {
   </RegisterContext.Provider>
 }
 
-function add(array : any[], value : any) {
+function add(array: Path[], value: Path) {
   const index = array.indexOf(value)
   return index === -1 ? [...array, value] : array
 }
 
-function remove(array : any[], value : any) {
+function remove(array: Path[], value: Path) {
   const index = array.indexOf(value)
   return index === -1 ? array : array.filter(item => item !== value)
 }
@@ -52,8 +52,10 @@ export const Breadcrumb = React.memo(function({text}: {text: Path['text']}) {
 export function useBreadcrumbPaths() {
   const paths = sortedPaths(useContext(PathContext))
   if (paths.length > 0) {
-    const last = paths.pop()!
-    paths.push({...last, current: true})
+    return [
+      ...paths.slice(0, paths.length - 1),
+      { ...paths[paths.length - 1], current: true } as Path,
+    ]
   }
   return paths
 }

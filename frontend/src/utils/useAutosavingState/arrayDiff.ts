@@ -10,7 +10,7 @@ interface Move extends PartialChange {
   status: 'MOVED'
 }
 interface PartialChange {
-  id: any,
+  id: unknown,
   status: ChangeType,
   moveAmount: number, //Amount of spaces the item has moved without taking into account additions and removals
   from: number,
@@ -27,7 +27,7 @@ export function getArrayChanges<T>(original: T[], changed: T[]): Change<T>[] {
   const changedIndexesById = new Map(
     changedIds.map((id, index) => [id, index])
   )
-  const statuses = new Map<any, PartialChange>(
+  const statuses = new Map<unknown, PartialChange>(
     originalIds.map((id, index) => [id, {status: 'UNCHANGED', id, from: index, to: index, moveAmount: 0}])
   )
 

@@ -21,7 +21,7 @@ describe('getArrayChanges', () => {
       5: 'UNCHANGED'
     }
     changes.forEach((change) =>
-      expect(change).toMatchObject({status: statuses[change.id]})
+      expect(change).toMatchObject({status: statuses[change.id as number]})
     )
   })
 
@@ -30,7 +30,7 @@ describe('getArrayChanges', () => {
 
     const statuses = {1: 'UNCHANGED', 2: 'UNCHANGED', 3: 'UNCHANGED', 4: 'ADDED', 5: 'ADDED'}
     changes.forEach((change) =>
-      expect(change).toMatchObject({status: statuses[change.id]})
+      expect(change).toMatchObject({status: statuses[change.id as number]})
     )
   })
 

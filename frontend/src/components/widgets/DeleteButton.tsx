@@ -3,9 +3,9 @@ import {Alert} from 'libraries/dialog'
 import {Button} from 'libraries/ui'
 
 interface DeleteButtonProps {
-  style?: any
+  style?: React.CSSProperties
   text: string
-  onDelete: () => any
+  onDelete: () => unknown
   confirmText: string
 }
 

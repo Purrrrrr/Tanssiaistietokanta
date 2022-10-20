@@ -13,9 +13,9 @@ export type { SyncState } from './types'
 
 export type UseAutosavingStateReturn<T> = [
   T,
-  (saved : T) => any,
+  (saved : T) => unknown,
   SyncStore<T> & {
-    resolveConflict: (resolutions: ConflictResolutions<T>) => any,
+    resolveConflict: (resolutions: ConflictResolutions<T>) => unknown,
   }
 ]
 

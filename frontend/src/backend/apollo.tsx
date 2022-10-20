@@ -37,8 +37,8 @@ function observableFromPromise<T>(promise : Promise<T>) : Observable<T> {
   return new Observable(observer => {
     async function run() {
       const result = await promise
-      if ((result as any).errors) {
-        const error = (result as any).errors[0]
+      if ('errors' in result) {
+        const error = (result as {errors: unknown[]}).errors[0]
         observer.error(error)
         console.error(error)
       }

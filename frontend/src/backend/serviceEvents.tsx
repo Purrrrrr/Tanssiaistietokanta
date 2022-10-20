@@ -22,7 +22,7 @@ const serviceUpdateFragmentMap : {
 } = {}
 
 export type EventName = 'created' | 'removed' | 'updated'
-export type Callback<T extends Entity> = (data: T) => any
+export type Callback<T extends Entity> = (data: T) => unknown
 export type EntityListCallbacks<T extends Entity> = Required<Callbacks<T>>
 export type EntityCallbacks<T extends Entity> = Omit<EntityListCallbacks<T>, 'created'>
 type Callbacks<T extends Entity> = {
@@ -33,7 +33,7 @@ export function setupServiceUpdateFragment(service: ServiceName, fragment: strin
   serviceUpdateFragmentMap[service] = gql(fragment)
 }
 
-export function emitServiceEvent(service: ServiceName, eventName: EventName, data: any) {
+export function emitServiceEvent(service: ServiceName, eventName: EventName, data: unknown) {
   getServiceEventEmitter(service).emit(eventName, data, 'frontend')
 }
 
@@ -85,15 +85,15 @@ function getServiceEventEmitter(
     if (!entityFragment) {
       throw new Error('Missing update fragment for service '+serviceName)
     }
-    service.on('created', (data: any) => debug('received created', data))
-    service.on('removed', (data: any) => debug('received removed', data))
-    service.on('updated', (data: any) => debug('received updated', data))
-    service.on('patched', (data: any) => debug('received patched', data))
+    service.on('created', (data: unknown) => debug('received created', data))
+    service.on('removed', (data: unknown) => debug('received removed', data))
+    service.on('updated', (data: unknown) => debug('received updated', data))
+    service.on('patched', (data: unknown) => debug('received patched', data))
 
-    service.on('created', (data: any) => emitter.emit('created', data, 'backend'))
-    service.on('removed', (data: any) => emitter.emit('removed', data, 'backend'))
-    service.on('updated', (data: any) => emitter.emit('updated', data, 'backend'))
-    service.on('patched', (data: any) => emitter.emit('updated', data, 'backend'))
+    service.on('created', (data: unknown) => emitter.emit('created', data, 'backend'))
+    service.on('removed', (data: unknown) => emitter.emit('removed', data, 'backend'))
+    service.on('updated', (data: unknown) => emitter.emit('updated', data, 'backend'))
+    service.on('patched', (data: unknown) => emitter.emit('updated', data, 'backend'))
 
     emitter.on('removed', markDeleted)
     emitter.on('updated', function updateCache(data, source) {

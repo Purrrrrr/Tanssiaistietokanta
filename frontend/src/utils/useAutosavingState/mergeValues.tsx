@@ -40,23 +40,23 @@ export default function merge<T>(data : MergeData<T>) : MergeResult<T> {
   }
 }
 
-function nonNullData(data : MergeData<any>) : boolean {
+function nonNullData(data : MergeData<unknown>) : boolean {
   return data.original != null && data.server != null && data.local != null
 }
 
-function isArrayMerge(data : MergeData<any>) : data is MergeData<any[]> {
+function isArrayMerge(data : MergeData<unknown>) : data is MergeData<unknown[]> {
   return Array.isArray(data.original)
     && Array.isArray(data.server)
     && Array.isArray(data.local)
 }
 
-function isObjectMerge(data : MergeData<any>) : data is MergeData<object> {
+function isObjectMerge(data : MergeData<unknown>) : data is MergeData<object> {
   return typeof data.original === 'object' && !Array.isArray(data.original)
     && typeof data.server === 'object' && !Array.isArray(data.server)
     && typeof data.local === 'object' && !Array.isArray(data.local)
 }
 
-function isStringMerge(data : MergeData<any>) : data is MergeData<string> {
+function isStringMerge(data : MergeData<unknown>) : data is MergeData<string> {
   return typeof data.original === 'string'
     && typeof data.server === 'string'
     && typeof data.local === 'string'

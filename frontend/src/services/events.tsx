@@ -148,7 +148,7 @@ mutation createEvent($event: EventInput!) {
 export interface ModifyEventInput {
   _id?: string,
   name: string,
-  [key: string]: any
+  [key: string]: unknown
 }
 
 export const useModifyEvent = entityUpdateHook('events', `

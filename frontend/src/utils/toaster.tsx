@@ -2,16 +2,16 @@ import React from 'react'
 import {Toaster, IToaster, IToastProps } from '@blueprintjs/core'
 
 /** Singleton toaster instance.  */
-let toaster : IToaster
+let toaster : IToaster | null
 
 export function ToastContainer() {
   return <section aria-live="assertive">
-    <Toaster usePortal={false} ref={t => toaster = t!}/>
+    <Toaster usePortal={false} ref={t => toaster = t}/>
   </section>
 }
 
 export function showToast(args : IToastProps) {
-  return toaster.show(args)
+  return toaster ? toaster.show(args) : console.error('Cannot show toast: ', args.message)
 }
 
 export function showDefaultErrorToast(e : {message: string}) {

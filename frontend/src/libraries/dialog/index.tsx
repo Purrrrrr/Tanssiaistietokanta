@@ -18,9 +18,9 @@ export function Dialog({isOpen, onClose, ...props} : DialogProps) {
 }
 
 interface InnerDialogProps {
-  onClose?: (e: any) => any
+  onClose?: (e: React.SyntheticEvent) => unknown
   title: string
-  style ?: any
+  style ?: React.CSSProperties
   children: React.ReactNode
   className?: string,
   showCloseButton ?: boolean

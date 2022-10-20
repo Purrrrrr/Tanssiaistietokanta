@@ -9,7 +9,7 @@ import './EditableDanceProperty.sass'
 type ValidProperty = Exclude<WritableDanceProperty, 'duration' | 'instructions'>
 
 interface EditableDancePropertyProps {
-  dance: any
+  dance: Dance
   property: ValidProperty
   addText: string
   inline?: boolean

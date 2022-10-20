@@ -14,8 +14,8 @@ import {objectId} from './objectId'
  * children: The list items, by default renders a ListEditorItems component with the supplied props
  */
 type ListEditorProps = Omit<ListEditorItemsProps, 'component'> & {
-  items: any[],
-  onChange: (v: any[]) => any,
+  items: unknown[],
+  onChange: (v: any) => unknown,
   className?: string,
   helperClass?: string,
   useDragHandle?: boolean,
@@ -41,9 +41,9 @@ export function ListEditor({items, children, component, onChange, className, hel
 }
 
 interface ListEditorItemsProps {
-  itemWrapper?: string | React.JSXElementConstructor<any>,
+  itemWrapper?: string | React.JSXElementConstructor<{children: React.ReactElement, tabIndex: number} & JSX.IntrinsicAttributes>
   noWrapper?: boolean,
-  component: any,
+  component: unknown,
   itemProps?: Record<string, unknown>
 }
 
@@ -54,7 +54,7 @@ export function ListEditorItems({itemWrapper = 'div', noWrapper, component, item
     {items.map((item, index) =>
       <SortableItem key={objectId(item)} index={index} item={item}
         itemIndex={index} actions={actions}
-        component={component} wrapper={noWrapper ? null : itemWrapper}
+        component={component} wrapper={noWrapper ? undefined : itemWrapper}
         {...itemProps}
       />
     )}
@@ -62,10 +62,10 @@ export function ListEditorItems({itemWrapper = 'div', noWrapper, component, item
 }
 
 interface SortableItemProps {
-  component?: any,
-  wrapper?: any,
-  item: any,
-  itemIndex: number,
+  component?: any
+  wrapper?: string | React.JSXElementConstructor<{children: React.ReactElement, tabIndex: number} & JSX.IntrinsicAttributes>
+  item: unknown
+  itemIndex: number
   actions: ListEditorContextType['actions']
 }
 

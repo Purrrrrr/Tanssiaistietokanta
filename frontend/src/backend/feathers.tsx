@@ -21,7 +21,7 @@ export default app
 
 const graphQLService = app.service('graphql')
 
-export async function runGraphQlQuery({query, variables}) : Promise<FetchResult<any, any, any>> {
+export async function runGraphQlQuery({query, variables}) : Promise<FetchResult<Record<string, unknown>, Record<string, unknown>, Record<string, unknown>>> {
   debug('GraphQL query: %s\nVariables: %O', print(query), variables)
   const result = await graphQLService.find({query: {query, variables}})
   if (debug.enabled) {

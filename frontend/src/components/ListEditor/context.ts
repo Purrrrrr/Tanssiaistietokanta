@@ -4,13 +4,13 @@ import {createContext, useContext, useMemo, useCallback, useRef} from 'react'
 import {objectId, setObjectId} from './objectId'
 
 export interface ListEditorContextType {
-  items: any[],
+  items: unknown[],
   actions: {
-    addItem: (v: any) => any,
-    removeItem: (i: number) => any,
-    setItem: (i: number, v: any) => any,
-    moveUp: (i: number) => any,
-    moveDown: (i: number) => any,
+    addItem: (v: unknown) => unknown,
+    removeItem: (i: number) => unknown,
+    setItem: (i: number, v: unknown) => unknown,
+    moveUp: (i: number) => unknown,
+    moveDown: (i: number) => unknown,
   }
 }
 

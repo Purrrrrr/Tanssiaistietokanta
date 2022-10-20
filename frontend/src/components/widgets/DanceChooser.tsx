@@ -10,12 +10,12 @@ import {Suggest} from '@blueprintjs/select'
 interface DanceChooserProps {
   value: Dance | null,
   excludeFromSearch?: Dance[],
-  onChange: (dance: Dance | null, e: React.ChangeEvent<HTMLElement>) => any,
+  onChange: (dance: Dance | null, e: React.ChangeEvent<HTMLElement>) => unknown,
   readOnly?: boolean
   emptyText?: string,
   allowEmpty?: boolean,
   placeholder?: string,
-  onBlur?: (e: React.FocusEvent) => any,
+  onBlur?: (e: React.FocusEvent) => unknown,
 }
 
 interface EmptyDancePlaceholder extends Dance {
@@ -75,8 +75,8 @@ function emptyDancePlaceholder(text?: string): EmptyDancePlaceholder {
   return {__typename: 'Dance', _id: undefined, name: text ?? '-', empty: true}
 }
 
-function isPlaceholder(object: any): object is EmptyDancePlaceholder {
-  return object.empty
+function isPlaceholder(object: Dance | EmptyDancePlaceholder): object is EmptyDancePlaceholder {
+  return 'empty' in object
 }
 
 

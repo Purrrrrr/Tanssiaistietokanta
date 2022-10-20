@@ -17,7 +17,7 @@ export const MarkdownEditor = React.memo(function MarkdownEditor({value, onChang
   return <MdEditor
     renderHTML={(text : string) => <Markdown options={{overrides: markdownOverrides}}>{text}</Markdown>}
     value={value ?? ''}
-    onChange={({text}, e) => onChange(text, e!)}
+    onChange={({text}, e) => onChange(text, e)}
     {...props}
   />
 })

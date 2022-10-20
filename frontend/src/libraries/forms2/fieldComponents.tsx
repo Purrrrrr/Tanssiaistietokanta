@@ -4,7 +4,7 @@ import classNames from 'classnames'
 import {Field, FieldProps} from './Field'
 import {FieldComponentProps, TypedPath, PropertyAtPath} from './types'
 
-type AdditionalPropsFrom<Props> = Omit<Props, keyof FieldComponentProps<any>>
+type AdditionalPropsFrom<Props> = Omit<Props, keyof FieldComponentProps<unknown>>
 
 export type SwitchFieldProps<L, P, V> = Omit<FieldProps<L, P, V, typeof Switch, {label: string, inline?: boolean}>, 'componentProps' | 'component' | 'labelStyle'>
 

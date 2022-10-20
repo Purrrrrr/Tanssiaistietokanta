@@ -3,10 +3,10 @@ import React from 'react'
 export type ChangeListener = () => unknown
 export type NewValue<T> = T | ((t: T) => T)
 
-export type AdditionalPropsFrom<Props> = Omit<Props, keyof FieldComponentProps<any>>
+export type AdditionalPropsFrom<Props> = Omit<Props, keyof FieldComponentProps<unknown>>
 export interface FieldComponentProps<T, EventElement = HTMLElement> {
   value: T | undefined
-  onChange: (t: T, e: React.ChangeEvent<EventElement>) => unknown
+  onChange: (t: T, e?: React.ChangeEvent<EventElement>) => unknown
   inline?: boolean
   hasConflict?: boolean
   readOnly?: boolean

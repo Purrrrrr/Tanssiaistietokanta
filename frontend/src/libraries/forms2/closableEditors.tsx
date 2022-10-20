@@ -58,7 +58,7 @@ interface ClosableEditorProps {
 function ClosableEditor({closedValue, readOnly, inline, children, className, showIcon = true, ...props} : ClosableEditorProps) {
   const [open, setOpen] = useState(false)
 
-  const container = useRef<HTMLElement>(null)
+  const container = useRef<HTMLDivElement>(null)
   function openEditor() {
     if (readOnly) return
     setOpen(true)
@@ -72,7 +72,7 @@ function ClosableEditor({closedValue, readOnly, inline, children, className, sho
   const canOpen = !open && !readOnly
 
   return <Container
-    ref={container as any}
+    ref={container}
     tabIndex={canOpen ? 0 : undefined}
     onClick={openEditor}
     onFocus={openEditor}

@@ -6,7 +6,7 @@ import {Selector} from 'libraries/forms2'
 
 interface SlideStyleSelectorProps {
   value: string | null
-  onSelect: (style: SlideStyle) => any
+  onSelect: (style: SlideStyle) => unknown
   text: string
   inheritsStyles?: boolean
   inheritedStyleId?: string | null

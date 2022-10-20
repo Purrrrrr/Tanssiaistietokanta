@@ -21,14 +21,14 @@ socket.on('disconnect', () => {
 
 const listenersByChannel = new Map<string, Set<unknown>>()
 
-export function ensureChannelIsOpen(channel : string, listenerId : any) {
+export function ensureChannelIsOpen(channel : string, listenerId: unknown) {
   const listeners = getListeners(channel)
   if (socketConnected && listeners.size === 0 ) {
     openChannel(channel)
   }
   listeners.add(listenerId)
 }
-export function closeChannelIfUnsused(channel : string, listenerId : any) {
+export function closeChannelIfUnsused(channel : string, listenerId: unknown) {
   const listeners = getListeners(channel)
   listeners.delete(listenerId)
   if (socketConnected && listeners.size === 0) {

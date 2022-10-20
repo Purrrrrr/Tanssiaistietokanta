@@ -7,7 +7,7 @@ import {Dialog} from 'libraries/dialog'
 import {DanceNameSearch} from './DanceNameSearch'
 
 interface DanceDataImportButtonProps {
-  onImport?: (dance: Dance) => any,
+  onImport?: (dance: Dance) => unknown,
   dance: Dance,
   text: string,
 }

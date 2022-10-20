@@ -9,9 +9,9 @@ import useAutosavingState, {makePartial} from 'utils/useAutosavingState'
 import SyncStatus from 'components/SyncStatus'
 
 interface DanceListItemProps {
-  dance: Dance,
-  onChange: (changed: Partial<Dance>) => any,
-  onDelete?: any,
+  dance: Dance
+  onChange: (changed: Partial<Dance>) => unknown
+  onDelete?: (dance: Dance) => unknown
 }
 
 export function DanceListItem({dance: danceInDatabase, onChange, onDelete} : DanceListItemProps) {
@@ -29,7 +29,7 @@ export function DanceListItem({dance: danceInDatabase, onChange, onDelete} : Dan
         <SyncStatus style={{marginLeft: '1ch', top: '3px'}} className="flex-fill" state={state} />
       </H2>
       <div>
-        <DeleteButton onDelete={() => onDelete(dance)}
+        <DeleteButton onDelete={() => onDelete && onDelete(dance)}
           text="Poista tanssi"
           confirmText="Haluatko varmasti poistaa tämän tanssin?"
         />

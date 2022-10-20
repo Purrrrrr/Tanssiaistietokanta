@@ -11,9 +11,9 @@ export interface ValidationProps {
   minLength?: number,
   max?: number,
   maxLength?: number,
-  pattern?: any,
-  errorMessages?: any,
-  validate?: any,
+  pattern?: string,
+  errorMessages?: Record<string, string | ((argument: {value: unknown, values: unknown}) => string)>,
+  validate?: Record<string, unknown>,
 }
 
 export function useSchema(schema : ValidationProps) {

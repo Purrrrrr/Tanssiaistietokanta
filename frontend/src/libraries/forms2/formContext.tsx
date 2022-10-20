@@ -99,7 +99,7 @@ function hasConflictsAtPath(conflicts, path) {
 }
 
 export function useMemoizedPath<T>(path: T): T {
-  const pathDep = getStringPath(path as any)
+  const pathDep = getStringPath(path as Path<unknown>)
   //eslint-disable-next-line react-hooks/exhaustive-deps
   return useMemo(() => path, [pathDep])
 }

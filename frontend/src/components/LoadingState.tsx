@@ -6,7 +6,7 @@ import {NonIdealState, Spinner, Button} from 'libraries/ui'
 interface LoadingStateProps {
   loading?: boolean,
   error?: ApolloError,
-  refetch: (variables?: any | undefined) => Promise<ApolloQueryResult<any>>
+  refetch: (variables?: Record<string, unknown> | undefined) => Promise<ApolloQueryResult<Record<string, unknown>>>
 }
 
 export function LoadingState({loading, error, refetch} : LoadingStateProps) {

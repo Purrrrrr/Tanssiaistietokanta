@@ -65,7 +65,7 @@ interface SearchInputProps {
   id?: string
   value: string
   placeholder?: string
-  onChange: (value: string) => any
+  onChange: (value: string) => unknown
 }
 
 export function SearchBar({id, onChange, value, placeholder} : SearchInputProps) {

@@ -1,6 +1,6 @@
 import deepEquals from 'fast-deep-equal'
 
-export function mapToIds(items: any[]): any[] {
+export function mapToIds(items: unknown[]): unknown[] {
   const ids = new Set()
   return items.map(item => {
     let id = getPossibleId(item)
@@ -12,7 +12,7 @@ export function mapToIds(items: any[]): any[] {
   })
 }
 
-function getPossibleId(item: any): any {
+function getPossibleId(item: any): unknown {
   if (isPlainValue(item)) return item
   if ('_id' in item) {
     return item._id
@@ -39,6 +39,6 @@ export function areEqualWithoutId(a: any, b: any) : boolean {
   return true
 }
 
-function isPlainValue(item: any): boolean {
+function isPlainValue(item: unknown): boolean {
   return typeof item !== 'object' || item === null || item === undefined || Array.isArray(item)
 }

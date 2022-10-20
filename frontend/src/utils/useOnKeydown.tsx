@@ -1,6 +1,6 @@
 import {useEffect} from 'react'
 
-type KeyDownHandler = (e: KeyboardEvent) => any
+type KeyDownHandler = (e: KeyboardEvent) => unknown
 type KeyDownHandlerParam = KeyDownHandler | {[key: string]: KeyDownHandler}
 
 export function useOnKeydown(onKeydown : KeyDownHandlerParam, key?: string) {

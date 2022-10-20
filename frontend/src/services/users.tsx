@@ -34,8 +34,8 @@ export function useIsAdmin() {
 }
 
 //TODO: better type
-export function AdminOnly({children, fallback} : {children: any, fallback?: any}) {
+export function AdminOnly({children, fallback} : {children: React.ReactNode, fallback?: React.ReactNode}) {
   const isAdmin = useIsAdmin()
-  return isAdmin ? children : (fallback ?? false)
+  return <>{isAdmin ? children : (fallback ?? false)}</>
 }
 
