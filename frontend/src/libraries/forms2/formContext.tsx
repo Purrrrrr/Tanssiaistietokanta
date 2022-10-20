@@ -25,19 +25,51 @@ export function useFormMetadata<T>() {
   return ctx
 }
 
+interface FieldData<T> extends Pick<FormMetadataContextType<T>, 'readOnly' | 'inline' | 'labelStyle'> {
+  value: T
+  hasConflict: boolean
+  onChange: (v: NewValue<T>) => unknown
+}
+
 export function useValueAt<T, P extends Path<T>, SubT extends PropertyAtPath<T, P>>(path : P) : SubT {
   const stablePath = useMemoizedPath(path)
   const getValue = useCallback((ctx) => L.get(stablePath, ctx.getValue()), [stablePath])
   return useFormValueSubscription(getValue)
 }
-export function useHasConflictsAt<T, P extends Path<T>>(path : P): boolean {
+export function useFieldAt<T, P extends Path<T>, SubT extends PropertyAtPath<T, P>>(path : P) : FieldData<SubT> {
+  const propagateOnChange = useOnChangeFor<T, P, SubT>(path)
+
   const stablePath = useMemoizedPath(path)
-  const getValue = useCallback((ctx) =>
-    hasConflictsAtPath(ctx.getConflicts(), stablePath),
-  [stablePath]
-  )
-  return useFormValueSubscription(getValue)
+  const ctx = useContext(FormMetadataContext) as FormMetadataContextType<T>
+  const [value, setValue] = useState(() => L.get(stablePath, ctx.getValue()))
+  const [hasConflict, setHasConflict] = useState(() => hasConflictsAtPath(ctx.getConflicts(), stablePath))
+
+  useEffect(() => {
+    const callback = () => {
+      setValue(L.get(stablePath, ctx.getValue()))
+      setHasConflict(hasConflictsAtPath(ctx.getConflicts(), stablePath))
+    }
+    const unsubscribe = ctx.subscribeToChanges(callback)
+    callback()
+    return unsubscribe
+  }, [ctx, stablePath, setValue])
+
+  const onChange = useCallback((v) => {
+    setValue(v)
+    propagateOnChange(v)
+  }, [propagateOnChange])
+
+  const {inline, labelStyle, readOnly} = ctx
+  return {
+    inline,
+    labelStyle,
+    readOnly,
+    value,
+    onChange,
+    hasConflict
+  }
 }
+
 export function useFormValueSubscription<T, V>(getValue: ((ctx: FormMetadataContextType<T>) => V)): V {
   const ctx = useContext(FormMetadataContext) as FormMetadataContextType<T>
   const [state, setState] = useState(() => getValue(ctx))
