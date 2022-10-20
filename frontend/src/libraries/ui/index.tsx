@@ -10,11 +10,11 @@ import {
   InputGroup as BlueprintInputGroup,
   Classes,
 } from '@blueprintjs/core'
-import { Select2 } from '@blueprintjs/select'
 
 import './ui.css'
 export { Breadcrumbs, Breadcrumb, BreadcrumbContext } from './Breadcrumbs'
 
+export type { ButtonProps } from '@blueprintjs/core'
 export { MenuItem, AnchorButton, Navbar, Collapse, Tag, ProgressBar, HTMLTable, NumericInput, NonIdealState, Spinner, H2 } from '@blueprintjs/core'
 export const CssClass = {
   limitedWidth: 'limited-width',
@@ -64,18 +64,18 @@ export function FormGroup({ className, inlineFill, ...props} : FormGroupProps) {
 interface SearchInputProps {
   id?: string
   value: string
+  placeholder?: string
   onChange: (value: string) => any
 }
 
-export function SearchBar({id, onChange, value} : SearchInputProps) {
+export function SearchBar({id, onChange, value, placeholder} : SearchInputProps) {
   return <BlueprintInputGroup
-    id="search-dances"
+    id={id}
     leftIcon="search"
     rightElement={<Button aria-label="Tyhjennä haku" minimal icon="cross" onClick={() => onChange('')} />}
     value={value}
     onChange={(e) => onChange(e.target.value)}
+    placeholder={placeholder}
   />
 
 }
-
-export const Select = Select2

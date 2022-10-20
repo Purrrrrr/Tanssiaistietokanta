@@ -1,10 +1,8 @@
 import React  from 'react'
 import {useEventSlideStyles, defaultSlideStyle, SlideStyle} from 'services/events'
 
-import {Button, Icon, Select, MenuItem} from 'libraries/ui'
-import {asFormControl} from 'libraries/forms2'
-
-const StyleSelect = asFormControl(Select.ofType<SlideStyle>())
+import {Icon, MenuItem} from 'libraries/ui'
+import {Selector} from 'libraries/forms2'
 
 interface SlideStyleSelectorProps {
   value: string | null
@@ -24,22 +22,23 @@ export function SlideStyleSelector({
     inheritedStyleName,
   })
   const style = styles.find(s => s.id === value) ?? defaultSlideStyle
-  return <StyleSelect
-    key={value}
-    {...{initialActiveItem: style}} /* initialActiveItem is not included in Select prop type but works */
-    filterable={false}
+  return <Selector<SlideStyle>
+    selectedItem={style}
+    filterable
     items={styles}
-    itemRenderer={(item, {handleClick, index, modifiers: {active}}) =>
-      <MenuItem key={item.id} roleStructure="listoption" icon={<SlideStyleBox value={item} />} text={item.name} onClick={handleClick} active={active} />
+    getItemText={item => <><SlideStyleBox value={item} size={50} aspectRatio={16/9} /> {item.name}</>}
+    itemPredicate={(search, item) => item.name.toLowerCase().includes(search.toLowerCase())}
+    itemRenderer={(text, item, {handleClick, index, modifiers: {active}}) =>
+      <MenuItem key={item.id} roleStructure="listoption" text={text} onClick={handleClick} active={active} />
     }
-    onItemSelect={onSelect}
-  >
-    <Button icon={<SlideStyleBox value={style} />} text={text} rightIcon="double-caret-vertical" />
-  </StyleSelect>
+    onSelect={onSelect}
+    text={text}
+    buttonProps={{icon: <SlideStyleBox value={style} />}}
+  />
 }
 
-function SlideStyleBox({value: {background, color}}) {
-  return <span style={{height: 20, width: 20, lineHeight: '16px', textAlign: 'center', border: `1px solid ${color}`, display: 'inline-block', background }}>
+function SlideStyleBox({value: {styleName, color}, size = 20, aspectRatio = 1}) {
+  return <span style={{height: size, width: size*aspectRatio, lineHeight: `${size - 4}px`, textAlign: 'center', border: `1px solid ${color}`, display: 'inline-block' }} className={`slide-style-${styleName}`}>
     <Icon icon="style" iconSize={12} color={color} />
   </span>
 }

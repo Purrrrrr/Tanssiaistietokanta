@@ -5,8 +5,8 @@ import {arrayMoveImmutable} from 'array-move'
 import {Dance} from 'types/Dance'
 import {EventProgramSettings, DanceSet, DanceProgram, EventProgramRow, EventProgramItem, RequestedDance} from './types'
 
-import {Card, HTMLTable, CssClass, Select, MenuItem} from 'libraries/ui'
-import {formFor, ClickToEdit, Switch as PlainSwitch, SubmitButton, ActionButton as Button, asFormControl, FieldComponentProps, MarkdownEditor} from 'libraries/forms2'
+import {Card, HTMLTable, CssClass} from 'libraries/ui'
+import {formFor, ClickToEdit, Switch as PlainSwitch, SubmitButton, ActionButton as Button, FieldComponentProps, MarkdownEditor, MenuButton, SelectorMenu, Selector} from 'libraries/forms2'
 
 import {DragHandle, ListEditor, ListEditorItems} from 'components/ListEditor'
 import {DanceChooser} from 'components/widgets/DanceChooser'
@@ -430,8 +430,6 @@ function DanceSetDuration({ program, intervalMusicDuration}) {
   </>
 }
 
-const SectionSelect = asFormControl(Select.ofType<{name: string, index: number, isIntroductionsSection?: boolean}>())
-
 function MoveDanceSetSelector({currentSet, onSelect}) {
   const danceSets = useValueAt('danceSets')
   if (danceSets.length < 2) return null
@@ -444,22 +442,43 @@ function MoveDanceSetSelector({currentSet, onSelect}) {
     ,
     index
   })).filter(({index}) => index !== currentIndex)
-  return <Selector
-    className="move-danceset-selector"
+  return <Selector<{name: string, index: number}>
     items={items}
-    itemRenderer={(section) => section.name}
+    getItemText={(section) => section.name}
     onSelect={onSelect}
-    placeholder={t`moveDanceSet`}
+    text={t`moveDanceSet`}
   />
 }
 
 function MoveItemToSectionSelector({itemPath} : { itemPath: ProgramItemPath}) {
+  const [open, setOpen] = useState(false)
+  return <MenuButton
+    menu={
+      <MoveItemToSectionMenu
+        itemPath={itemPath}
+        onSelected={() => setOpen(false)}
+      />
+    }
+    text={t`moveToSet`}
+    open={open}
+    onSetOpen={setOpen}
+  />
+}
+
+interface SectionSelection {
+  name: string
+  index: number
+  isIntroductionsSection?: boolean
+}
+function MoveItemToSectionMenu(
+  {itemPath, onSelected} : { itemPath: ProgramItemPath, onSelected: () => void }
+) {
   const currentSectionType = itemPath[0]
   const row = useValueAt(itemPath)
   const onChangeProgram = useOnChangeFor([])
 
   const canMoveToIntroductions = currentSectionType === 'danceSets' && row?.item?.__typename === 'EventProgram'
-  const introSection = {name: t`introductoryInformation`, isIntroductionsSection: true, index: 0}
+  const introSection : SectionSelection = {name: t`introductoryInformation`, isIntroductionsSection: true, index: 0}
   const sections = useValueAt('danceSets')
     .map(({name}, index) => ({name, index}))
     .filter(({index}) => currentSectionType !== 'danceSets' || index !== itemPath[1])
@@ -467,10 +486,13 @@ function MoveItemToSectionSelector({itemPath} : { itemPath: ProgramItemPath}) {
   //If something is deleted useValueAt may return undefined
   if (row === undefined) return null
 
-  return <Selector
+  return <SelectorMenu<SectionSelection>
     items={canMoveToIntroductions ? [introSection, ...sections] : sections}
-    itemRenderer={(section) => section.name}
+    getItemText={item => item?.name ?? ''}
+    filterable
+    itemPredicate={(search, item) => item.name.toLowerCase().includes(search.toLowerCase())}
     onSelect={(section) => {
+      onSelected()
       onChangeProgram((program: EventProgramSettings) => {
         const removeItem = L.set(itemPath, undefined)
         const addItem = L.set(
@@ -484,23 +506,5 @@ function MoveItemToSectionSelector({itemPath} : { itemPath: ProgramItemPath}) {
         return addItem(removeItem(program)) as EventProgramSettings
       })
     }}
-    placeholder={t`moveToSet`}
   />
-}
-
-interface SelectorProps extends Pick<React.ComponentProps<typeof SectionSelect>, 'items' | 'className'> {
-  itemRenderer: (item: Parameters<React.ComponentProps<typeof SectionSelect>['itemRenderer']>[0]) => string
-  onSelect: React.ComponentProps<typeof SectionSelect>['onItemSelect']
-  placeholder: string
-}
-function Selector({items, itemRenderer, onSelect, placeholder, className = undefined as string | undefined} : SelectorProps) {
-  return <SectionSelect
-    filterable={false}
-    className={className}
-    items={items}
-    itemRenderer={(item, {handleClick, index, modifiers: {active}}) => <MenuItem key={index} roleStructure="listoption" text={itemRenderer(item)} onClick={handleClick} active={active} />}
-    onItemSelect={onSelect}
-  >
-    <Button text={placeholder} rightIcon="double-caret-vertical" />
-  </SectionSelect>
 }
