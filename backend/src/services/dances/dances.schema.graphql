@@ -3,7 +3,7 @@ type Query {
 }
 
 type Dance implements ProgramItem {
-  _id: ID
+  _id: ID!
   name: String!
   description: String
   duration: Float

@@ -3,7 +3,7 @@ type Query {
 }
 
 type Workshop {
-  _id: ID
+  _id: ID!
   eventId: ID!
   event: Event!
   name: String!

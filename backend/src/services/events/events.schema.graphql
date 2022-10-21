@@ -4,7 +4,7 @@ type Query {
 }
 
 type Event {
-  _id: ID
+  _id: ID!
   name: String!
   program: EventProgramSettings
   workshops: [Workshop!]!
@@ -17,21 +17,21 @@ type EventProgramSettings {
 }
 
 type DanceSet {
-  _id: ID
+  _id: ID!
   name: String!
   program: [EventProgramRow!]!
-  intervalMusicDuration: Float
+  intervalMusicDuration: Float!
 }
 
 type EventProgramRow {
-  _id: ID
+  _id: ID!
   slideStyleId: ID
   item: EventProgramItem!
 }
 union EventProgramItem = RequestedDance | Dance | EventProgram
 
 interface ProgramItem {
-  _id: ID
+  _id: ID!
   name: String!
   duration: Float
   description: String
@@ -42,7 +42,7 @@ type RequestedDance {
 }
 
 type EventProgram implements ProgramItem {
-  _id: ID
+  _id: ID!
   name: String!
   description: String
   duration: Float
@@ -68,15 +68,15 @@ input ProgramInput {
 }
 
 input DanceSetInput {
-  _id: ID
+  _id: ID!
   name: String!
   program: [ProgramItemInput!]!
-  intervalMusicDuration: Float
+  intervalMusicDuration: Float!
 }
 
 input ProgramItemInput {
   "Row id"
-  _id: ID
+  _id: ID!
   "The actual type of the item, the other fields are used depending on the value of this field"
   type: ProgramType!
   "The id of the program to use when type is EVENT_PROGRAM"
@@ -89,6 +89,8 @@ input ProgramItemInput {
 }
 
 input IntroductionInput {
+  "Row id"
+  _id: ID!
   eventProgramId: ID
   "The value to use when modifying event program"
   eventProgram: EventProgramInput
