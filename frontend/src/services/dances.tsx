@@ -1,4 +1,4 @@
-import { setupServiceUpdateFragment, entityListQueryHook, entityCreateHook, entityDeleteHook, entityUpdateHook } from '../backend'
+import { setupServiceUpdateFragment, entityListQueryHook, graphql, entityCreateHook, entityDeleteHook, entityUpdateHook } from '../backend'
 import { Dance } from 'types/Dance'
 import {sorted} from 'utils/sorted'
 
@@ -24,12 +24,12 @@ export const dancePropertyLabels : {[Key in WritableDanceProperty]: string} = {
   instructions: 'Tanssiohjeet'
 }
 
-export const useDances = entityListQueryHook('dances', `
-{
+export const useDances = entityListQueryHook('dances', graphql(`
+query getDances {
   dances {
-    ${danceFields}
+    _id, name, description, remarks, duration, prelude, formation, category, instructions, slideStyleId
   }
-}`)
+}`))
 
 export const useModifyDance = entityUpdateHook('dances', `
 mutation modifyDance($id: ID!, $dance: DanceInput!) {

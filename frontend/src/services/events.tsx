@@ -179,12 +179,12 @@ export function useEvent(id) {
   return [res?.data?.event, res] as const
 }
 
-export const useEvents = entityListQueryHook('events', `
+export const useEvents = entityListQueryHook('events', graphql(`
 query getEvents {
   events {
     _id, name
   }
-}`)
+}`))
 
 export const useCreateEvent = entityCreateHook('events', `
 mutation createEvent($event: EventInput!) {

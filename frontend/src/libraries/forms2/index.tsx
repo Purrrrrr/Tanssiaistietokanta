@@ -18,7 +18,7 @@ interface FormFor<T> {
   Form: React.JSXElementConstructor<FormProps<T>>
   Field: <L, P extends Path<T>, V extends PropertyAtPath<T, P>, C extends React.ElementType, AP>(props: FieldProps<L, P, V, C, AP>) => React.ReactElement
   Switch: <L, P extends TypedPath<T, P, boolean>, V extends PropertyAtPath<T, P> & boolean>(props: SwitchFieldProps<L, P, V>) => React.ReactElement
-  Input: <L, P extends TypedPath<T, P, string | undefined>, V extends PropertyAtPath<T, P> & (string | undefined)>(props: InputFieldProps<L, P, V>) => React.ReactElement
+  Input: <L, P extends TypedPath<T, P, string | undefined | null>, V extends PropertyAtPath<T, P> & (string | undefined | null)>(props: InputFieldProps<L, P, V>) => React.ReactElement
   useValueAt: <P extends Path<T>, SubT extends PropertyAtPath<T, P>>(path: P) => SubT
   useOnChangeFor: <P extends Path<T>, SubT extends PropertyAtPath<T, P>>(path: P) => (v: NewValue<SubT>) => unknown
   useAppendToList: <P extends TypedPath<T, P, unknown[]>, SubT extends PropertyAtPath<T, P> & unknown[]>(path: P) => (v: SubT[number] | ((v: SubT) => SubT[number])) => unknown

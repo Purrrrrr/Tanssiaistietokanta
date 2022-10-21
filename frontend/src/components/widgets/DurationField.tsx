@@ -4,12 +4,13 @@ import {Input, InputProps, FieldComponentProps} from 'libraries/forms2'
 import {useDelayedEffect} from 'utils/useDelayedEffect'
 
 interface DurationState {
-  value?: number
+  value: number
   text: string
   event?: React.ChangeEvent
 }
 
-export function DurationField({value, onChange, readOnly, ...props} : FieldComponentProps<number, HTMLInputElement> & Omit<InputProps, 'ref'>) {
+export function DurationField({value: maybeValue, onChange, readOnly, ...props} : FieldComponentProps<number, HTMLInputElement> & Omit<InputProps, 'ref'>) {
+  const value = maybeValue ?? 0
   const [params, setParams] = useState<DurationState>({value, text: durationToString(value ?? 0)})
 
   useDelayedEffect(10, useCallback(() => {

@@ -5,7 +5,7 @@ export type NewValue<T> = T | ((t: T) => T)
 
 export type AdditionalPropsFrom<Props> = Omit<Props, keyof FieldComponentProps<unknown>>
 export interface FieldComponentProps<T, EventElement = HTMLElement> {
-  value: T | undefined
+  value: T | undefined | null
   onChange: (t: T, e?: React.ChangeEvent<EventElement>) => unknown
   inline?: boolean
   hasConflict?: boolean

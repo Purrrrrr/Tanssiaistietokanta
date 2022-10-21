@@ -13,8 +13,14 @@ export { graphql } from 'types/gql'
 
 export const BackendProvider = ({children}) => <ApolloProvider client={apolloClient} children={children} />
 
-export function entityListQueryHook(service : ServiceName, query) {
-  const compiledQuery = gql(query)
+type ValueOf<P> = P[keyof P]
+
+export function entityListQueryHook<T extends {[k in number]: unknown}, V>(
+  service : ServiceName, compiledQuery: TypedDocumentNode<T, V>
+): () => [
+  ValueOf<Omit<Exclude<QueryResult<T, V>['data'], undefined>, '__typename'>>,
+  QueryResult<T, V>
+] {
   const callbacks = {
     created: (data) => appendToListQuery(compiledQuery, data),
     updated: () => { /* do nothing */ },
@@ -24,7 +30,7 @@ export function entityListQueryHook(service : ServiceName, query) {
   return () => {
     useServiceListEvents(service, callbacks)
 
-    const result = useQuery(compiledQuery)
+    const result = useQuery<T, V>(compiledQuery)
     const data = result.data ? getSingleValue(result.data) : []
 
     return [

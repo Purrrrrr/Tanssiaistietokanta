@@ -23,7 +23,7 @@ export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
   function Switch({ value, onChange, readOnly, hasConflict, ...props }, ref) {
     return <BlueprintSwitch
       inputRef={ref}
-      checked={value}
+      checked={value ?? false}
       onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(e.target.checked, e)}
       disabled={readOnly}
       {...props}
@@ -32,7 +32,7 @@ export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
 )
 
 export type InputFieldProps<L, P, V>  = Omit<FieldProps<L, P, V, typeof Input, unknown>, 'component'>
-export function InputField<T, L, P extends TypedPath<T, P, string | undefined>, V extends PropertyAtPath<T, P> & string >(
+export function InputField<T, L, P extends TypedPath<T, P, string | undefined | null>, V extends PropertyAtPath<T, P> & string >(
   props : InputFieldProps<L, P, V>
 ) {
   return <Field<T, L, P, V, typeof Input, AdditionalPropsFrom<ComponentProps<'input'>>> {...props} component={Input as any} />
