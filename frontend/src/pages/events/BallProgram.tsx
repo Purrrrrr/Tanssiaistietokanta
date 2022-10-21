@@ -2,7 +2,7 @@ import './BallProgram.sass'
 import React, {useMemo, useState, useCallback} from 'react'
 import classnames from 'classnames'
 import Markdown from 'markdown-to-jsx'
-import {backendQueryHook} from 'backend'
+import {backendQueryHook, graphql} from 'backend'
 import ReactTouchEvents from 'react-touch-events'
 
 import {EditableDanceProperty} from 'components/EditableDanceProperty'
@@ -20,7 +20,7 @@ const t = makeTranslate({
   afterThis: 'Tämän jälkeen',
 })
 
-const useBallProgram = backendQueryHook(`
+const useBallProgram = backendQueryHook(graphql(`
 query BallProgram($eventId: ID!) {
   event(id: $eventId) {
     _id
@@ -58,7 +58,7 @@ query BallProgram($eventId: ID!) {
       }
     }
   }
-}`)
+}`))
 
 export default function BallProgram({eventId}) {
   const {data, refetch, ...loadingState} = useBallProgram({eventId})

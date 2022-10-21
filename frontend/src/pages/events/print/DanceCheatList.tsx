@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import classNames from 'classnames'
 import {Button} from 'libraries/ui'
 import {Switch} from 'libraries/forms2'
-import {backendQueryHook} from 'backend'
+import {backendQueryHook, graphql} from 'backend'
 import {EditableDanceProperty} from 'components/EditableDanceProperty'
 import PrintViewToolbar from 'components/widgets/PrintViewToolbar'
 import {PrintTable} from 'components/PrintTable'
@@ -24,7 +24,7 @@ const t = makeTranslate({
   danceName: 'Nimi',
 })
 
-const useCheatList = backendQueryHook(`
+const useCheatList = backendQueryHook(graphql(`
 query DanceCheatList($eventId: ID!) {
   event(id: $eventId) {
     _id
@@ -38,13 +38,13 @@ query DanceCheatList($eventId: ID!) {
       }
     }
   }
-}`)
+}`))
 
 export default function DanceCheatList({eventId}) {
   const [mini, setMini] = useState(false)
   const [helpText, setHelptext] = useState(true)
   const {data, ...loadingState} = useCheatList({eventId})
-  if (!data) return <LoadingState {...loadingState} />
+  if (!data?.event) return <LoadingState {...loadingState} />
 
   return <>
     <PrintViewToolbar>

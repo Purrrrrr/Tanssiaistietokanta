@@ -4,10 +4,12 @@ import { apolloClient, ApolloProvider, useQuery, gql } from './backend/apollo'
 import { makeMutationHook, getSingleValue } from './backend/apolloUtils'
 import { appendToListQuery, filterRemovedFromListQuery } from './backend/apolloCache'
 import { EventName, emitServiceEvent, useServiceListEvents } from './backend/serviceEvents'
+import { TypedDocumentNode } from '@graphql-typed-document-node/core'
+import { QueryHookOptions, QueryResult } from '@apollo/client'
 
 export { setupServiceUpdateFragment } from './backend/serviceEvents'
 export { updateEntityFragment } from './backend/apolloCache'
-export { gql } from './backend/apollo'
+export { graphql } from 'types/gql'
 
 export const BackendProvider = ({children}) => <ApolloProvider client={apolloClient} children={children} />
 
@@ -78,9 +80,10 @@ function serviceMutateHook<T = unknown>(
   })
 }
 
-export function backendQueryHook(
-  query : string,
-) {
-  const compiledQuery = gql(query)
-  return (variables = {}, options = {}) => useQuery(compiledQuery, { variables, ...options })
+export function backendQueryHook<T, V>(
+  query: TypedDocumentNode<T, V>
+): ((v: V, o?: QueryHookOptions<T, V>) => QueryResult<T, V>) {
+  return (variables: V, options: QueryHookOptions<T, V> = {}) => {
+    return useQuery<T, V>(query, { variables, ...options })
+  }
 }

@@ -1,6 +1,6 @@
 import './DanceMastersCheatList.sass'
 
-import {backendQueryHook} from 'backend'
+import {backendQueryHook, graphql} from 'backend'
 
 import {Button} from 'libraries/ui'
 import {EditableDanceProperty} from 'components/EditableDanceProperty'
@@ -19,7 +19,7 @@ const t = makeTranslate({
   requestedDance: 'Toivetanssi',
 })
 
-const useCheatList = backendQueryHook(`
+const useCheatList = backendQueryHook(graphql(`
 query getDanceMastersCheatList($eventId: ID!) {
   event(id: $eventId) {
     _id
@@ -49,11 +49,11 @@ query getDanceMastersCheatList($eventId: ID!) {
       }
     }
   }
-}`)
+}`))
 
 export default function DanceMastersCheatList({eventId}) {
   const {data, ...loadingState} = useCheatList({eventId})
-  if (!data) return <LoadingState {...loadingState} />
+  if (!data?.event) return <LoadingState {...loadingState} />
 
   return <>
     <PrintViewToolbar>

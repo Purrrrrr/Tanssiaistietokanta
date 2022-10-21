@@ -4,7 +4,7 @@ import {usePatchDance} from 'services/dances'
 import {Button} from 'libraries/ui'
 import {Switch, ClickToEditMarkdown} from 'libraries/forms2'
 import useAutosavingState, {makePartial} from 'utils/useAutosavingState'
-import {backendQueryHook} from 'backend'
+import {backendQueryHook, graphql} from 'backend'
 import {LoadingState} from 'components/LoadingState'
 import {DanceDataImportButton} from 'components/DanceDataImportDialog'
 import PrintViewToolbar from 'components/widgets/PrintViewToolbar'
@@ -28,7 +28,7 @@ const t = makeTranslate({
   danceInstructions: 'Tanssiohjeet',
 })
 
-const useDanceInstructions= backendQueryHook(`
+const useDanceInstructions= backendQueryHook(graphql(`
 query DanceInstructions($eventId: ID!) {
   event(id: $eventId) {
     _id
@@ -45,14 +45,14 @@ query DanceInstructions($eventId: ID!) {
       }
     }
   }
-}`)
+}`))
 
 export default function DanceInstructions({eventId}) {
   const {data, refetch, ...loadingState} = useDanceInstructions({eventId})
   const dancesEl = useRef<HTMLElement>(null)
   const [showWorkshops, setShowWorkshops] = useState(true)
 
-  if (!data) return <LoadingState {...loadingState} refetch={refetch} />
+  if (!data?.event) return <LoadingState {...loadingState} refetch={refetch} />
 
   const {workshops} = data.event
   const dances = getDances(workshops)

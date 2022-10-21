@@ -3,7 +3,7 @@ import './DanceList.sass'
 import {Button} from 'libraries/ui'
 import {Switch} from 'libraries/forms2'
 import React, {useState} from 'react'
-import {backendQueryHook} from 'backend'
+import {backendQueryHook, graphql} from 'backend'
 
 import {LoadingState} from 'components/LoadingState'
 import PrintViewToolbar from 'components/widgets/PrintViewToolbar'
@@ -82,7 +82,7 @@ function PrintFooterContainer({children, footer}) {
   </>
 }
 
-const useDanceList = backendQueryHook(`
+const useDanceList = backendQueryHook(graphql(`
 query getDanceList($eventId: ID!) {
   event(id: $eventId) {
     _id
@@ -111,11 +111,11 @@ query getDanceList($eventId: ID!) {
       name, abbreviation
     }
   }
-}`)
+}`))
 
-function useBallProgram(eventId) {
+function useBallProgram(eventId: string) {
   const {data, ...loadingState} = useDanceList({eventId})
-  const {program = null, workshops = null} = data ? data.event : {}
+  const {program = null, workshops = []} = data?.event ?? {}
   return {program, workshops, loadingState}
 }
 

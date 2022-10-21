@@ -1,4 +1,4 @@
-import { setupServiceUpdateFragment, backendQueryHook, entityListQueryHook, entityCreateHook, entityDeleteHook, entityUpdateHook } from '../backend'
+import { setupServiceUpdateFragment, backendQueryHook, graphql, entityListQueryHook, entityCreateHook, entityDeleteHook, entityUpdateHook } from '../backend'
 
 const eventFields = `
 _id, name 
@@ -118,15 +118,65 @@ export function useEventSlideStyles({
   ]
 }
 
-const useEventInternal = backendQueryHook(`
+const useEventInternal = backendQueryHook(graphql(`
 query getEvent($id: ID!) {
   event(id: $id) {
-    ${eventFields}
+    _id, name 
+    program {
+      introductions {
+        _id
+        item {
+          __typename
+          ... on ProgramItem {
+            _id
+            name
+            duration
+            description
+          }
+          ... on EventProgram {
+            showInLists
+          }
+        }
+        slideStyleId
+      }
+      danceSets {
+        _id
+        name
+        program {
+          _id
+          item {
+            __typename
+            ... on ProgramItem {
+              _id
+              name
+              duration
+              description
+            }
+            ... on EventProgram {
+              showInLists
+            }
+          }
+          slideStyleId
+        }
+        intervalMusicDuration
+      }
+      slideStyleId
+    }
+    workshops {
+      _id
+      name
+      abbreviation
+      description
+      teachers
+      dances {
+        _id, name
+      }
+    }
   }
-}`)
+}`))
 export function useEvent(id) {
   const res = useEventInternal({id})
-  return [res.data ? res.data.event : null, res]
+  return [res?.data?.event, res] as const
 }
 
 export const useEvents = entityListQueryHook('events', `

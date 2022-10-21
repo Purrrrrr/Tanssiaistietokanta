@@ -1,4 +1,4 @@
-import { backendQueryHook, setupServiceUpdateFragment, entityCreateHook, entityDeleteHook, entityUpdateHook } from '../backend'
+import { backendQueryHook, graphql, setupServiceUpdateFragment, entityCreateHook, entityDeleteHook, entityUpdateHook } from '../backend'
 
 const workshopFields = `
   _id, eventId
@@ -18,15 +18,23 @@ setupServiceUpdateFragment(
   }`
 )
 
-const useWorkshopInternal = backendQueryHook(`
+const useWorkshopInternal = backendQueryHook(graphql(`
 query getWorkshop($id: ID!) {
   workshop(id: $id) {
-    ${workshopFields}
+    _id, eventId
+    name
+    abbreviation
+    description
+    teachers
+    dances {
+      _id
+      name
+    }
   }
-}`)
+}`))
 export function useWorkshop(id) {
   const res = useWorkshopInternal({id})
-  return [res.data ? res.data.workshop : null, res]
+  return [res?.data?.workshop, res] as const
 }
 
 export const useCreateWorkshop = entityCreateHook('workshops', `

@@ -1,7 +1,7 @@
 import {DragHandle, ListEditor} from 'components/ListEditor'
 import React, {useState} from 'react'
 import * as L from 'partial.lenses'
-import {backendQueryHook} from 'backend'
+import {backendQueryHook, graphql} from 'backend'
 import {Workshop} from 'types/Workshop'
 
 import {Flex} from 'components/Flex'
@@ -73,18 +73,18 @@ function getAbbreviationTakenError({value, values}) {
   )
 }
 
-const useWorkshops = backendQueryHook(`
+const useWorkshops = backendQueryHook(graphql(`
 query Workshops($eventId: ID!) {
   event(id: $eventId) {
     workshops {
       _id, abbreviation
     }
   }
-}`)
+}`))
 
 function useTakenWorkshopAbbreviations(eventId, workshopId) {
   const {data} = useWorkshops({eventId})
-  if (!data) return []
+  if (!data?.event) return []
 
   return data.event.workshops
     .filter(w => w._id !== workshopId && w.abbreviation)
