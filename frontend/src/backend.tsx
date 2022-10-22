@@ -30,7 +30,7 @@ export function entityListQueryHook<T extends {[k in number]: Entity[]}, V>(
     //TODO: type this
     useServiceListEvents(service, callbacks)
 
-    const result = useQuery<T, V>(compiledQuery)
+    const result = useQuery<T, V>(compiledQuery, { fetchPolicy: 'network-only' })
     const empty = [] as ValueOf<T>
     const data = result.data !== undefined
       ? getSingleValue(result.data)
@@ -129,6 +129,6 @@ export function backendQueryHook<T, V>(
   query: TypedDocumentNode<T, V>
 ): ((v: V, o?: QueryHookOptions<T, V>) => QueryResult<T, V>) {
   return (variables: V, options: QueryHookOptions<T, V> = {}) => {
-    return useQuery<T, V>(query, { variables, ...options })
+    return useQuery<T, V>(query, { variables, fetchPolicy: 'network-only', ...options })
   }
 }

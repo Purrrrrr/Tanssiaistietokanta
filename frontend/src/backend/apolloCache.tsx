@@ -11,7 +11,7 @@ export function getApolloCache() {
 }
 
 export function appendToListQuery(query : DocumentNode, newValue : Entity) {
-  debug(newValue)
+  debug('appending to query', newValue)
   getApolloCache().updateQuery({query}, data => {
     const key = getSingleKey(data)
     debug(key)
