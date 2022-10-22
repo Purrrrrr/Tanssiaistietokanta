@@ -1,5 +1,5 @@
 import React, {useState, useRef, useCallback} from 'react'
-import {Dance} from 'types'
+import {Dance, Event} from 'types'
 import {usePatchDance} from 'services/dances'
 import {Button} from 'libraries/ui'
 import {Switch, ClickToEditMarkdown} from 'libraries/forms2'
@@ -88,13 +88,13 @@ export default function DanceInstructions({eventId}) {
   </>
 }
 
-function getDances(workshops) {
-  const dances = uniq(workshops.flatMap(w => w.dances)) as (Dance & {_id: string})[] //TODO fix typing
+function getDances(workshops: Event['workshops']) {
+  const dances = uniq(workshops.flatMap(w => w.dances))
   dances.sort((a, b) => a.name.localeCompare(b.name))
   return dances
 }
 
-function InstructionsForDance({dance: danceInDatabase} : {dance: Dance & {_id: string}}) { //TODO fix typing
+function InstructionsForDance({dance: danceInDatabase} : {dance: Dance}) {
   const [patchDance] = usePatchDance()
   const onChange = useCallback(
     (dance) => patchDance({

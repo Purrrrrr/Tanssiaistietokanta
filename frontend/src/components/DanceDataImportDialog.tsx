@@ -35,7 +35,6 @@ export function DanceDataImportButton({onImport, dance, text, ...props} : DanceD
       return
     }
     const {_id, category, formation, instructions} = data
-    if (!_id) throw new Error('?') //TODO fix type
     patch({
       id: _id,
       dance: { category, formation, instructions },
