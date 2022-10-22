@@ -2,7 +2,7 @@ import React, {createContext, useContext, useMemo, useState, useRef} from 'react
 import * as L from 'partial.lenses'
 import {arrayMoveImmutable} from 'array-move'
 
-import {Dance} from 'types/Dance'
+import {Dance} from 'types'
 import {EventProgramSettings, DanceSet, DanceProgram, EventProgramRow, EventProgramItem, RequestedDance} from './types'
 
 import {Card, HTMLTable, CssClass} from 'libraries/ui'

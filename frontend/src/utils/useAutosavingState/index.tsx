@@ -13,7 +13,7 @@ export type { SyncState } from './types'
 
 export type UseAutosavingStateReturn<T> = [
   T,
-  (saved : T) => unknown,
+  (saved: T | ((t: T) => T)) => unknown,
   SyncStore<T> & {
     resolveConflict: (resolutions: ConflictResolutions<T>) => unknown,
   }
@@ -101,11 +101,16 @@ function reducer<T>(reducerState : SyncStore<T>, action : SyncAction) : SyncStor
   const { modifications, serverState } = reducerState
   switch (action.type) {
     case 'LOCAL_MODIFICATION':
+    {
+      const changes = typeof action.payload == 'function'
+        ? action.payload(modifications)
+        : action.payload
       return merge(
         reducerState.conflictOrigin ?? serverState,
         serverState,
-        { ...modifications, ...action.payload }
+        { ...modifications, ...changes}
       )
+    }
     case 'PATCH_SENT':
       return {
         ...reducerState,

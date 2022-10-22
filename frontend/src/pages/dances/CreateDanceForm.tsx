@@ -3,7 +3,7 @@ import {DanceDataImportButton} from 'components/DanceDataImportDialog'
 import {Button, H2} from 'libraries/ui'
 import {SubmitButton} from 'libraries/forms2'
 import {DanceEditor} from './DanceEditor'
-import {Dance} from 'services/dances'
+import {DanceInput} from 'types'
 import {uploadDanceFile} from 'utils/uploadDanceFile'
 import { Flex } from 'components/Flex'
 
@@ -29,7 +29,7 @@ export function CreateDanceForm({onCreate, onCancel, initialData}) {
   </section>
 }
 
-export function DanceUploader({onUpload} : {onUpload: (d: Dance) => unknown}) {
+export function DanceUploader({onUpload} : {onUpload: (d: DanceInput) => unknown}) {
   async function chooseFile() {
     const dance = await uploadDanceFile()
     if (dance) onUpload(dance)

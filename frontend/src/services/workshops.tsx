@@ -1,6 +1,4 @@
 import { backendQueryHook, graphql, setupServiceUpdateFragment, entityCreateHook, entityDeleteHook, entityUpdateHook } from '../backend'
-import { GetWorkshopQuery } from 'types/gql/graphql'
-export type { WorkshopInput } from 'types/gql/graphql'
 
 setupServiceUpdateFragment(
   'workshops',
@@ -35,8 +33,6 @@ export function useWorkshop(id: string) {
   const res = useWorkshopInternal({id})
   return [res?.data?.workshop, res] as const
 }
-
-export type Workshop = GetWorkshopQuery['workshop']
 
 export const useCreateWorkshop = entityCreateHook('workshops', graphql(`
 mutation createWorkshop($eventId: ID!, $workshop: WorkshopInput!) {

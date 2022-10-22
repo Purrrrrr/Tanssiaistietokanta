@@ -2,6 +2,7 @@ import * as L from 'partial.lenses'
 
 import React from 'react'
 
+import {Event} from 'types'
 import {EventProgramSettings, EventProgramRow} from 'components/EventProgramEditor/types'
 
 import {AdminOnly} from 'services/users'
@@ -10,7 +11,7 @@ import {EventProgramEditor} from 'components/EventProgramEditor'
 import {PageTitle} from 'components/PageTitle'
 import {useNavigate} from 'react-router-dom'
 import {removeTypenames} from 'utils/removeTypenames'
-import {useModifyEventProgram, Event} from 'services/events'
+import {useModifyEventProgram} from 'services/events'
 
 export default function EventProgramEditorPage({event}: {event: Event}) {
   const navigate = useNavigate()

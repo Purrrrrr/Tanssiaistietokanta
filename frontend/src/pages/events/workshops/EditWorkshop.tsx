@@ -1,4 +1,5 @@
-import {useWorkshop, useModifyWorkshop, Workshop} from 'services/workshops'
+import {useWorkshop, useModifyWorkshop } from 'services/workshops'
+import {Workshop} from 'types'
 import React  from 'react'
 import {useParams} from 'react-router-dom'
 

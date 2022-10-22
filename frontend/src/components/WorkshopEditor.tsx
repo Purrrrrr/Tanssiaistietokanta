@@ -2,7 +2,7 @@ import {DragHandle, ListEditor} from 'components/ListEditor'
 import React, {useState} from 'react'
 import * as L from 'partial.lenses'
 import {backendQueryHook, graphql} from 'backend'
-import {Workshop as WorkshopWithEventId, WorkshopInput} from 'services/workshops'
+import {Workshop as WorkshopWithEventId, WorkshopInput} from 'types'
 
 import {Flex} from 'components/Flex'
 import {DanceChooser} from 'components/widgets/DanceChooser'

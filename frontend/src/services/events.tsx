@@ -1,5 +1,4 @@
 import { setupServiceUpdateFragment, backendQueryHook, graphql, entityListQueryHook, entityCreateHook, entityDeleteHook, entityUpdateHook } from '../backend'
-import { GetEventQuery } from 'types/gql/graphql'
 
 setupServiceUpdateFragment(
   'events',
@@ -175,8 +174,6 @@ export function useEvent(id) {
   const res = useEventInternal({id})
   return [res?.data?.event, res] as const
 }
-
-export type Event = NonNullable<GetEventQuery['event']>
 
 export const useEvents = entityListQueryHook('events', graphql(`
 query getEvents {

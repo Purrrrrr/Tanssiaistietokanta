@@ -1,4 +1,4 @@
-import {Dance} from 'types/Dance'
+import {Dance} from 'types'
 
 export interface EventProgramSettings {
   introductions: IntroSection

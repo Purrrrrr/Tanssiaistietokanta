@@ -1,5 +1,5 @@
 import { setupServiceUpdateFragment, entityListQueryHook, graphql, entityCreateHook, entityDeleteHook, entityUpdateHook } from '../backend'
-import { Dance } from 'types/Dance'
+import { Dance } from 'types'
 import {sorted} from 'utils/sorted'
 
 setupServiceUpdateFragment(
@@ -9,8 +9,7 @@ setupServiceUpdateFragment(
   }`
 )
 
-export type { Dance }
-export type WritableDanceProperty = Exclude<keyof Dance, '_id' | '__typename'>
+export type WritableDanceProperty = Exclude<keyof Dance, '_id' | '__typename' | 'teachedIn'>
 
 export const dancePropertyLabels : {[Key in WritableDanceProperty]: string} = {
   name: 'Nimi',
@@ -20,7 +19,8 @@ export const dancePropertyLabels : {[Key in WritableDanceProperty]: string} = {
   prelude: 'Alkusoitto',
   formation: 'Tanssikuvio',
   category: 'Kategoria',
-  instructions: 'Tanssiohjeet'
+  instructions: 'Tanssiohjeet',
+  slideStyleId: 'Tanssiaisten diatyyli',
 }
 
 export const useDances = entityListQueryHook('dances', graphql(`
@@ -52,14 +52,14 @@ mutation deleteDance($id: ID!) {
 }`))
 
 
-export function filterDances(dances : Dance[], searchString : string) {
+export function filterDances(dances : Dance[], searchString: string) {
   return sorted<Dance>(
     dances.filter(dance => filterDance(dance, searchString)),
     (a, b) => a.name.localeCompare(b.name)
   )
 }
 
-function filterDance(dance : Dance, search : string) {
+function filterDance(dance: Dance, search : string) {
   const lSearch = search.toLowerCase()
   const lName = dance.name.toLowerCase()
   return lName.indexOf(lSearch) !== -1

@@ -1,5 +1,5 @@
 import React, {useState, useRef, useCallback} from 'react'
-import {Dance} from 'types/Dance'
+import {Dance} from 'types'
 import {usePatchDance} from 'services/dances'
 import {Button} from 'libraries/ui'
 import {Switch, ClickToEditMarkdown} from 'libraries/forms2'

@@ -1,14 +1,14 @@
 import React from 'react'
-import {DurationField} from 'components/widgets/DurationField'
 import {formFor, MarkdownEditor} from 'libraries/forms2'
-import {Dance} from 'types/Dance'
+import {Dance} from 'types'
 import {Flex} from 'components/Flex'
+import {DurationField} from 'components/widgets/DurationField'
 
 import './DanceEditor.sass'
 
 interface DanceEditorProps {
   dance: Dance,
-  onChange: (changed: Dance) => unknown
+  onChange: (changed: Dance | ((d: Dance) => Dance)) => unknown
   onSubmit?: (d: Dance) => unknown
   bottomToolbar?: React.ReactNode
 }

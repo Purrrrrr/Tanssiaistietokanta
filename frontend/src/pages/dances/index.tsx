@@ -4,23 +4,21 @@ import InfiniteScroll from 'react-infinite-scroller'
 import {PageTitle} from 'components/PageTitle'
 import {showToast} from 'utils/toaster'
 
-import { filterDances, Dance, useDances, useCreateDance, usePatchDance, useDeleteDance } from 'services/dances'
+import { filterDances, useDances, useCreateDance, usePatchDance, useDeleteDance } from 'services/dances'
+import { Dance, DanceInput } from 'types'
 
 import {CreateDanceForm, DanceUploader} from './CreateDanceForm'
 import {DanceListItem} from './DanceListItem'
 
-const EMPTY_DANCE : Dance = {name: 'Uusi tanssi'}
+const EMPTY_DANCE : DanceInput = {name: 'Uusi tanssi'}
 
 function DancesPage() {
   const [search, setSearch] = useState('')
   const [dances] = useDances()
-  const [modifyDance] = usePatchDance()
   const [createDance] = useCreateDance()
-  const [deleteDance] = useDeleteDance()
 
   const filteredDances = filterDances(dances, search)
-  const onDelete = ({_id}) => deleteDance(_id)
-  const [danceToCreate, setDanceToCreate] = useState<Dance | null>(null)
+  const [danceToCreate, setDanceToCreate] = useState<DanceInput | null>(null)
 
   async function doCreateDance(dance : Dance) {
     await createDance({dance})
@@ -50,11 +48,13 @@ function DancesPage() {
       </Card>
       <br />
     </Collapse>
-    <DanceList key={search} dances={filteredDances} onChange={modifyDance} onDelete={onDelete} />
+    <DanceList key={search} dances={filteredDances} />
   </>
 }
 
-function DanceList({dances, onChange, onDelete}) {
+function DanceList({dances}) {
+  const [modifyDance] = usePatchDance()
+  const [deleteDance] = useDeleteDance()
   const [limit, setLimit] = useState(5)
   const canShowMore = dances.length > limit
   if (!dances.length) return null
@@ -62,7 +62,7 @@ function DanceList({dances, onChange, onDelete}) {
   return <InfiniteScroll hasMore={canShowMore} loadMore={() => setLimit(limit + 5)}>
     {dances.slice(0, limit).map((dance : Dance) =>
       <Card key={dance._id}>
-        <DanceListItem dance={dance} onChange={onChange} onDelete={onDelete}  />
+        <DanceListItem dance={dance} onChange={modifyDance} onDelete={deleteDance}  />
       </Card>)}
   </InfiniteScroll>
 }

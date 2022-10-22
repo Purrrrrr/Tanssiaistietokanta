@@ -1,5 +1,5 @@
 import React, {useMemo, useCallback} from 'react'
-import {Dance} from 'types/Dance'
+import {Dance} from 'types'
 import useAutosavingState, {makePartial} from 'utils/useAutosavingState'
 import {usePatchDance, WritableDanceProperty, dancePropertyLabels} from 'services/dances'
 import {ClickToEdit, ClickToEditMarkdown} from 'libraries/forms2'

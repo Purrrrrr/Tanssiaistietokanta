@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import {filterDances, useDances} from 'services/dances'
-import {Dance} from 'services/dances'
+import {Dance} from 'types'
 import {CssClass} from 'libraries/ui'
 import {makeTranslate} from 'utils/translate'
 
@@ -19,7 +19,7 @@ interface DanceChooserProps {
 }
 
 interface EmptyDancePlaceholder extends Dance {
-  _id: undefined,
+  _id: '',
   name: string,
   empty: true
 }
@@ -72,7 +72,7 @@ function cancelEnter(e) {
 }
 
 function emptyDancePlaceholder(text?: string): EmptyDancePlaceholder {
-  return {__typename: 'Dance', _id: undefined, name: text ?? '-', empty: true}
+  return {__typename: 'Dance', _id: '', name: text ?? '-', empty: true}
 }
 
 function isPlaceholder(object: Dance | EmptyDancePlaceholder): object is EmptyDancePlaceholder {

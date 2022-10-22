@@ -1,10 +1,10 @@
-import {Dance} from 'services/dances'
+import {DanceInput} from 'types'
 
-export async function uploadDanceFile() {
+export async function uploadDanceFile(): Promise<DanceInput | undefined> {
   const file = await requestUserFile()
   if (!file) return
 
-  const dance : Dance = {
+  const dance : DanceInput = {
     name: stripExtension(file.name)
   }
 
