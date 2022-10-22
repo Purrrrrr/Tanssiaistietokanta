@@ -17,6 +17,8 @@ export function showToast(args : IToastProps) {
 export function showDefaultErrorToast(e : {message: string}) {
   showToast({
     intent: 'danger',
-    message: `Tietojen tallennus epäonnistui :( Syy: ${e.message}`
+    message: `Tietojen tallennus epäonnistui :( Syy: ${e.message}`,
+    isCloseButtonShown: true,
+    timeout: 30000,
   })
 }

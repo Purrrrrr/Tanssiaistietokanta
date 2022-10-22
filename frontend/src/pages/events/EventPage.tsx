@@ -95,7 +95,7 @@ function WorkshopLink({workshop}) {
   const {_id, abbreviation, name, description, dances} = workshop
 
   return <Card style={{clear: 'right'}}>
-    <DeleteButton onDelete={() => deleteWorkshop(_id)}
+    <DeleteButton onDelete={() => deleteWorkshop({id: _id})}
       style={{float: 'right'}} text="Poista"
       confirmText={'Haluatko varmasti poistaa työpajan '+name+'?'}
     />

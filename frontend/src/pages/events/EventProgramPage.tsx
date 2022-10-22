@@ -2,7 +2,7 @@ import * as L from 'partial.lenses'
 
 import React from 'react'
 
-import {EventProgramSettings, DanceSet, EventProgramRow} from 'components/EventProgramEditor/types'
+import {EventProgramSettings, EventProgramRow} from 'components/EventProgramEditor/types'
 
 import {AdminOnly} from 'services/users'
 import {Breadcrumb} from 'libraries/ui'
@@ -10,9 +10,9 @@ import {EventProgramEditor} from 'components/EventProgramEditor'
 import {PageTitle} from 'components/PageTitle'
 import {useNavigate} from 'react-router-dom'
 import {removeTypenames} from 'utils/removeTypenames'
-import {useModifyEventProgram} from 'services/events'
+import {useModifyEventProgram, Event} from 'services/events'
 
-export default function EventProgramEditorPage({event}) {
+export default function EventProgramEditorPage({event}: {event: Event}) {
   const navigate = useNavigate()
   const [modifyEventProgram] = useModifyEventProgram({
     onCompleted: () => navigate('/events/'+event._id)
@@ -22,18 +22,21 @@ export default function EventProgramEditorPage({event}) {
     <Breadcrumb text="Tanssiaisohjelma" />
     <PageTitle>Muokkaa tanssiaisohjelmaa</PageTitle>
     <EventProgramEditor
-      program={toEventProgramSettings(event.program ?? { introductions: [], danceSets: [], slideStyleId: null})}
-      onSubmit={(program) => modifyEventProgram(event._id, toProgramInput(program))}
+      program={toEventProgramSettings(event.program)}
+      onSubmit={(program) => modifyEventProgram({id: event._id, program: toProgramInput(program)})}
     />
   </AdminOnly>
 }
 
 function toEventProgramSettings(
-  {introductions, danceSets, slideStyleId} : {introductions: EventProgramRow[], danceSets: DanceSet[], slideStyleId: string | null},
+  program : Event['program'],
 ): EventProgramSettings {
+  const {introductions = [], danceSets = [], slideStyleId = null} = program ?? {}
   return {
     introductions: { program: introductions, isIntroductionsSection: true, intervalMusicDuration: 0 },
-    danceSets: (danceSets).map(set => ({...set, isIntroductionsSection: false})),
+    danceSets: (danceSets).map(set => (
+      {...set, isIntroductionsSection: false}
+    )),
     slideStyleId
   }
 }

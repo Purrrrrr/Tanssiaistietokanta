@@ -2,11 +2,10 @@ import { setupServiceUpdateFragment, entityListQueryHook, graphql, entityCreateH
 import { Dance } from 'types/Dance'
 import {sorted} from 'utils/sorted'
 
-const danceFields = '_id, name, description, remarks, duration, prelude, formation, category, instructions, slideStyleId'
 setupServiceUpdateFragment(
   'dances',
   `fragment DanceFragment on Dance {
-    ${danceFields}
+    _id, name, description, remarks, duration, prelude, formation, category, instructions, slideStyleId
   }`
 )
 
@@ -31,43 +30,26 @@ query getDances {
   }
 }`))
 
-export const useModifyDance = entityUpdateHook('dances', `
-mutation modifyDance($id: ID!, $dance: DanceInput!) {
-  modifyDance(id: $id, dance: $dance) {
-    ${danceFields}
-  }
-}`, {
-  parameterMapper: ({_id, __typename, ...dance}) =>
-    ({variables: {id: _id, dance} })
-})
-
-
-export const useCreateDance = entityCreateHook('dances', `
+export const useCreateDance = entityCreateHook('dances', graphql(`
 mutation createDance($dance: DanceInput!) {
   createDance(dance: $dance) {
-    ${danceFields}
+    _id, name, description, remarks, duration, prelude, formation, category, instructions, slideStyleId
   }
-}`, {
-  parameterMapper: (dance) => ({variables: {dance}}),
-})
+}`))
 
-export const usePatchDance = entityUpdateHook('dances', `
+export const usePatchDance = entityUpdateHook('dances', graphql(`
 mutation patchDance($id: ID!, $dance: DancePatchInput!) {
   patchDance(id: $id, dance: $dance) {
-    ${danceFields}
+    _id, name, description, remarks, duration, prelude, formation, category, instructions, slideStyleId
   }
-}`, {
-  parameterMapper: ({_id: id, ...dance}) => ({variables: {id, dance}}),
-})
+}`))
 
-export const useDeleteDance = entityDeleteHook('dances', `
+export const useDeleteDance = entityDeleteHook('dances', graphql(`
 mutation deleteDance($id: ID!) {
   deleteDance(id: $id) {
-    ${danceFields}
+    _id, name, description, remarks, duration, prelude, formation, category, instructions, slideStyleId
   }
-}`, {
-  parameterMapper: id => ({variables: {id}})
-})
+}`))
 
 
 export function filterDances(dances : Dance[], searchString : string) {

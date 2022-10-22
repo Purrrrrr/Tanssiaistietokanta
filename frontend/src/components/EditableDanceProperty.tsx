@@ -9,7 +9,7 @@ import './EditableDanceProperty.sass'
 type ValidProperty = Exclude<WritableDanceProperty, 'duration' | 'instructions'>
 
 interface EditableDancePropertyProps {
-  dance: Dance
+  dance: Dance & { _id: string } //TODO fix typing
   property: ValidProperty
   addText: string
   inline?: boolean
@@ -19,7 +19,7 @@ interface EditableDancePropertyProps {
 export function EditableDanceProperty({dance: danceInDatabase, inline, property, addText, ...props} : EditableDancePropertyProps) {
   const [patchDance] = usePatchDance()
   const patch = useCallback(
-    (dance) => patchDance({ _id: danceInDatabase._id, ...dance }),
+    (dance) => patchDance({ id: danceInDatabase._id, dance }),
     [danceInDatabase._id, patchDance]
   )
   const partialDance = useMemo(() => ({[property]: danceInDatabase[property]}), [property, danceInDatabase])

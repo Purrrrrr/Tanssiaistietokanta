@@ -16,6 +16,7 @@ const t = makeTranslate({
 export default function CreateWorkshopForm({event}) {
   const navigate = useNavigate()
   const workshop = {
+    _id: '',
     name: '',
     dances: []
   }
@@ -27,6 +28,11 @@ export default function CreateWorkshopForm({event}) {
   return <AdminOnly>
     <Breadcrumb text={t`newWorkshop`} />
     <PageTitle>{t`newWorkshop`}</PageTitle>
-    <WorkshopEditor eventId={event._id} workshop={workshop} onSubmit={(workshop) => createWorkshop(event._id, workshop)} submitText={t`create`} />
+    <WorkshopEditor
+      eventId={event._id}
+      workshop={workshop}
+      onSubmit={(workshop) => createWorkshop({eventId: event._id, workshop})}
+      submitText={t`create`}
+    />
   </AdminOnly>
 }

@@ -2,7 +2,7 @@ import {DragHandle, ListEditor} from 'components/ListEditor'
 import React, {useState} from 'react'
 import * as L from 'partial.lenses'
 import {backendQueryHook, graphql} from 'backend'
-import {Workshop} from 'types/Workshop'
+import {Workshop as WorkshopWithEventId, WorkshopInput} from 'services/workshops'
 
 import {Flex} from 'components/Flex'
 import {DanceChooser} from 'components/widgets/DanceChooser'
@@ -24,18 +24,35 @@ const t = makeTranslate({
   teachers: 'Opettaja(t)',
 })
 
+type Workshop = Omit<WorkshopWithEventId, 'eventId'>
+
 const {
   Form,
   Field,
   useValueAt,
 } = formFor<Workshop>()
 
-export function WorkshopEditor({eventId, workshop, onSubmit, submitText}) {
+interface WorkshopEditorProps {
+  eventId: string
+  workshop: Workshop
+  onSubmit: (w: WorkshopInput) => unknown
+  submitText: string
+}
+
+export function WorkshopEditor({eventId, workshop, onSubmit, submitText}: WorkshopEditorProps) {
   const [modifiedWorkshop, setWorkshop] = useState(workshop)
   const {dances} = modifiedWorkshop
   const onChangeFor = useOnChangeForProp(setWorkshop)
 
-  return <Form className={CssClass.limitedWidth} value={modifiedWorkshop} onChange={setWorkshop} onSubmit={onSubmit}>
+  const submitHandler = ({dances, name, abbreviation, description, teachers}: Workshop) => onSubmit({
+    name,
+    abbreviation,
+    description,
+    teachers,
+    danceIds: dances.map(d => d._id)
+  })
+
+  return <Form className={CssClass.limitedWidth} value={modifiedWorkshop} onChange={setWorkshop} onSubmit={submitHandler}>
     <Field path="name" required component={Input} label={t`name`} labelInfo={t`required`} />
     <AbbreviationField path="abbreviation" label={t`abbreviation`} workshopId={workshop._id} eventId={eventId} />
     <Field path="description" component={TextArea} label={t`description`} />
@@ -74,7 +91,7 @@ function getAbbreviationTakenError({value, values}) {
 }
 
 const useWorkshops = backendQueryHook(graphql(`
-query Workshops($eventId: ID!) {
+query GetEventWorkshopAbbreviations($eventId: ID!) {
   event(id: $eventId) {
     workshops {
       _id, abbreviation

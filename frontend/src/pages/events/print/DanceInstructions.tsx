@@ -89,17 +89,17 @@ export default function DanceInstructions({eventId}) {
 }
 
 function getDances(workshops) {
-  const dances = uniq(workshops.flatMap(w => w.dances)) as Dance[]
+  const dances = uniq(workshops.flatMap(w => w.dances)) as (Dance & {_id: string})[] //TODO fix typing
   dances.sort((a, b) => a.name.localeCompare(b.name))
   return dances
 }
 
-function InstructionsForDance({dance: danceInDatabase}) {
+function InstructionsForDance({dance: danceInDatabase} : {dance: Dance & {_id: string}}) { //TODO fix typing
   const [patchDance] = usePatchDance()
   const onChange = useCallback(
     (dance) => patchDance({
-      _id: danceInDatabase._id,
-      ...dance,
+      id: danceInDatabase._id,
+      dance,
     }),
     [danceInDatabase, patchDance]
   )

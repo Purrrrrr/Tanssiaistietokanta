@@ -23,7 +23,7 @@ function DancesPage() {
   const [danceToCreate, setDanceToCreate] = useState<Dance | null>(null)
 
   async function doCreateDance(dance : Dance) {
-    await createDance(dance)
+    await createDance({dance})
     setDanceToCreate(null)
     showToast({
       intent: 'primary',

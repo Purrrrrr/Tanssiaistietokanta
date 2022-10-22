@@ -1,4 +1,4 @@
-import {useWorkshop, useModifyWorkshop} from 'services/workshops'
+import {useWorkshop, useModifyWorkshop, Workshop} from 'services/workshops'
 import React  from 'react'
 import {useParams} from 'react-router-dom'
 
@@ -28,7 +28,7 @@ export default function EditWorkshopPage({event}) {
 }
 
 
-function WorkshopForm({workshop}) {
+function WorkshopForm({workshop}: {workshop: Workshop}) {
   const navigate = useNavigate()
   const [modifyWorkshop] = useModifyWorkshop({
     onCompleted: () => navigate('/events/'+workshop.eventId),
@@ -37,6 +37,6 @@ function WorkshopForm({workshop}) {
 
   return <>
     <PageTitle>{workshop.name}</PageTitle>
-    <WorkshopEditor eventId={workshop.eventId} workshop={workshop} onSubmit={modifyWorkshop} submitText={t`save`} />
+    <WorkshopEditor eventId={workshop.eventId} workshop={workshop} onSubmit={(data) => modifyWorkshop({id: workshop._id, workshop: data})} submitText={t`save`} />
   </>
 }

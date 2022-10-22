@@ -1,8 +1,7 @@
-import { ApolloClient, ApolloLink, InMemoryCache, Observable, useMutation as useMutationOriginal } from '@apollo/client'
+import { ApolloClient, ApolloLink, InMemoryCache, Observable} from '@apollo/client'
 import {runGraphQlQuery} from './feathers'
-import {showDefaultErrorToast} from 'utils/toaster'
 
-export {gql, ApolloProvider, useQuery} from '@apollo/client'
+export {gql, ApolloProvider, useQuery, useMutation} from '@apollo/client'
 export {ApolloClient}
 export type {DocumentNode, FetchResult, MutationResult} from '@apollo/client'
 
@@ -52,10 +51,3 @@ export const apolloClient = new ApolloClient({
   link: socketLink,
   cache,
 })
-
-export function useMutation(query, options = {}) {
-  return useMutationOriginal(query, {
-    onError: err => { showDefaultErrorToast(err)},
-    ...options
-  })
-}

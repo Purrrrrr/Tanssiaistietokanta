@@ -38,7 +38,7 @@ export function ClickToEditMarkdown({value, readOnly, className, onChange, inlin
     readOnly={readOnly}
     aria-describedby={props['aria-describedby']}
     aria-label={props['aria-label']}
-    closedValue={<Markdown>{value}</Markdown>}
+    closedValue={<Markdown>{value ?? ''}</Markdown>}
   >
     <MarkdownEditor {...props} value={value} onChange={onChange} />
   </ClosableEditor>

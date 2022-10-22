@@ -27,7 +27,7 @@ export interface DanceSet extends Section {
 export type EventProgramRow = {
   _id: string
   item: EventProgramItem
-  slideStyleId?: string
+  slideStyleId?: string | null
 }
 export type EventProgramItem = DanceProgram | EventProgram | RequestedDance
 
@@ -49,6 +49,6 @@ export interface EventProgram extends ProgramItem {
 export interface ProgramItem {
   _id?: string
   name: string
-  description?: string
-  duration?: number
+  description?: string | null
+  duration?: number | null
 }

@@ -21,7 +21,7 @@ export default function EventList() {
     {events.map(event =>
       <h2 key={event._id}>
         <Link to={'events/'+event._id} >{event.name}</Link>
-        <DeleteButton onDelete={() => deleteEvent(event._id)}
+        <DeleteButton onDelete={() => deleteEvent({id: event._id})}
           style={{float: 'right'}} text="Poista"
           confirmText={'Haluatko varmasti poistaa tapahtuman '+event.name+'?'}
         />

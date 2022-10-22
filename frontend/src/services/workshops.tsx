@@ -1,20 +1,19 @@
 import { backendQueryHook, graphql, setupServiceUpdateFragment, entityCreateHook, entityDeleteHook, entityUpdateHook } from '../backend'
+import { GetWorkshopQuery } from 'types/gql/graphql'
+export type { WorkshopInput } from 'types/gql/graphql'
 
-const workshopFields = `
-  _id, eventId
-  name
-  abbreviation
-  description
-  teachers
-  dances {
-    _id
-    name
-  }
-`
 setupServiceUpdateFragment(
   'workshops',
   `fragment WorkshopFragment on Workshop {
-    ${workshopFields}
+    _id, eventId
+    name
+    abbreviation
+    description
+    teachers
+    dances {
+      _id
+      name
+    }
   }`
 )
 
@@ -32,41 +31,54 @@ query getWorkshop($id: ID!) {
     }
   }
 }`))
-export function useWorkshop(id) {
+export function useWorkshop(id: string) {
   const res = useWorkshopInternal({id})
   return [res?.data?.workshop, res] as const
 }
 
-export const useCreateWorkshop = entityCreateHook('workshops', `
+export type Workshop = GetWorkshopQuery['workshop']
+
+export const useCreateWorkshop = entityCreateHook('workshops', graphql(`
 mutation createWorkshop($eventId: ID!, $workshop: WorkshopInput!) {
   createWorkshop(eventId: $eventId, workshop: $workshop) {
-    ${workshopFields}
+    _id, eventId
+    name
+    abbreviation
+    description
+    teachers
+    dances {
+      _id
+      name
+    }
   }
-}`, {
-  parameterMapper: (eventId, workshop) => ({variables: {eventId, workshop: toWorkshopInput(workshop)}})
-})
+}`))
 
-export const useModifyWorkshop = entityUpdateHook('workshops', `
+export const useModifyWorkshop = entityUpdateHook('workshops', graphql(`
 mutation modifyWorkshop($id: ID!, $workshop: WorkshopInput!) {
   modifyWorkshop(id: $id, workshop: $workshop) {
-    ${workshopFields}
+    _id, eventId
+    name
+    abbreviation
+    description
+    teachers
+    dances {
+      _id
+      name
+    }
   }
-}`, {
-  parameterMapper: (workshop) =>
-    ({variables: {id: workshop._id, workshop: toWorkshopInput(workshop)} })
-})
+}`))
 
-export function toWorkshopInput({name, abbreviation, description, teachers, dances}) {
-  return {
-    name, abbreviation, description, teachers,
-    danceIds: dances.map(({_id}) => _id)
-  }
-}
-export const useDeleteWorkshop = entityDeleteHook('workshops', `
+export const useDeleteWorkshop = entityDeleteHook('workshops', graphql(`
 mutation deleteWorkshop($id: ID!) {
   deleteWorkshop(id: $id) {
-    ${workshopFields}
+    _id, eventId
+    name
+    abbreviation
+    description
+    teachers
+    dances {
+      _id
+      name
+    }
   }
-}`, {
-  parameterMapper: id => ({variables: {id}})
-})
+}`))

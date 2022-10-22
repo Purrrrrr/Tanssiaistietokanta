@@ -23,7 +23,7 @@ const {
 export default function CreateEventForm() {
   const navigate = useNavigate()
   const [createEvent] = useCreateEvent({
-    onCompleted: (data) => navigate('../'+(data as {createEvent: {_id: string}}).createEvent._id),
+    onCompleted: (data) => navigate('../'+data.createEvent._id),
     refetchQueries: ['getEvents']
   })
   const [event, setEvent] = useState({name: ''})
@@ -31,7 +31,7 @@ export default function CreateEventForm() {
   return <AdminOnly>
     <Breadcrumb text={t`newEventBreadcrumb`} />
     <PageTitle>{t`newEvent`}</PageTitle>
-    <Form value={event} onChange={setEvent} onSubmit={() => createEvent(event)}>
+    <Form value={event} onChange={setEvent} onSubmit={() => createEvent({event})}>
       <div>
         <Input label={t`name`} path="name" required />
       </div>

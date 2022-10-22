@@ -1,63 +1,60 @@
 import { setupServiceUpdateFragment, backendQueryHook, graphql, entityListQueryHook, entityCreateHook, entityDeleteHook, entityUpdateHook } from '../backend'
-
-const eventFields = `
-_id, name 
-program {
-  introductions {
-    _id
-    item {
-      __typename
-      ... on ProgramItem {
-        _id
-        name
-        duration
-        description
-      }
-      ... on EventProgram {
-        showInLists
-      }
-    }
-    slideStyleId
-  }
-  danceSets {
-    _id
-    name
-    program {
-      _id
-      item {
-        __typename
-        ... on ProgramItem {
-          _id
-          name
-          duration
-          description
-        }
-        ... on EventProgram {
-          showInLists
-        }
-      }
-      slideStyleId
-    }
-    intervalMusicDuration
-  }
-  slideStyleId
-}
-workshops {
-  _id
-  name
-  abbreviation
-  description
-  teachers
-  dances {
-    _id, name
-  }
-}
-`
+import { GetEventQuery } from 'types/gql/graphql'
 
 setupServiceUpdateFragment(
   'events',
   `fragment EventFragment on Event {
-    ${eventFields}
+    _id, name 
+    program {
+      introductions {
+        _id
+        item {
+          __typename
+          ... on ProgramItem {
+            _id
+            name
+            duration
+            description
+          }
+          ... on EventProgram {
+            showInLists
+          }
+        }
+        slideStyleId
+      }
+      danceSets {
+        _id
+        name
+        program {
+          _id
+          item {
+            __typename
+            ... on ProgramItem {
+              _id
+              name
+              duration
+              description
+            }
+            ... on EventProgram {
+              showInLists
+            }
+          }
+          slideStyleId
+        }
+        intervalMusicDuration
+      }
+      slideStyleId
+    }
+    workshops {
+      _id
+      name
+      abbreviation
+      description
+      teachers
+      dances {
+        _id, name
+      }
+    }
   }`
 )
 
@@ -179,6 +176,8 @@ export function useEvent(id) {
   return [res?.data?.event, res] as const
 }
 
+export type Event = NonNullable<GetEventQuery['event']>
+
 export const useEvents = entityListQueryHook('events', graphql(`
 query getEvents {
   events {
@@ -186,50 +185,80 @@ query getEvents {
   }
 }`))
 
-export const useCreateEvent = entityCreateHook('events', `
+export const useCreateEvent = entityCreateHook('events', graphql(`
 mutation createEvent($event: EventInput!) {
   createEvent(event: $event) {
-    ${eventFields}
+    _id, name 
   }
-}`, {
-  parameterMapper: (event) => ({variables: {event}}),
-})
+}`))
 
-export interface ModifyEventInput {
-  _id?: string,
-  name: string,
-  [key: string]: unknown
-}
-
-export const useModifyEvent = entityUpdateHook('events', `
+export const useModifyEvent = entityUpdateHook('events', graphql(`
 mutation modifyEvent($id: ID!, $event: EventInput!) {
   modifyEvent(id: $id, event: $event) {
-    ${eventFields}
+    _id, name 
   }
-}`, {
-  parameterMapper: ({_id, __typename, ...event} : ModifyEventInput) =>
-    ({variables: {id: _id, event: toEventInput(event)} })
-})
+}`))
 
-function toEventInput({name}) {
-  return { name }
-}
-
-export const useModifyEventProgram = entityUpdateHook('events', `
+export const useModifyEventProgram = entityUpdateHook('events', graphql(`
 mutation modifyEventProgram($id: ID!, $program: ProgramInput!) {
   modifyEventProgram(id: $id, program: $program) {
-    ${eventFields}
+    _id, name 
+    program {
+      introductions {
+        _id
+        item {
+          __typename
+          ... on ProgramItem {
+            _id
+            name
+            duration
+            description
+          }
+          ... on EventProgram {
+            showInLists
+          }
+        }
+        slideStyleId
+      }
+      danceSets {
+        _id
+        name
+        program {
+          _id
+          item {
+            __typename
+            ... on ProgramItem {
+              _id
+              name
+              duration
+              description
+            }
+            ... on EventProgram {
+              showInLists
+            }
+          }
+          slideStyleId
+        }
+        intervalMusicDuration
+      }
+      slideStyleId
+    }
+    workshops {
+      _id
+      name
+      abbreviation
+      description
+      teachers
+      dances {
+        _id, name
+      }
+    }
   }
-}`, {
-  parameterMapper: (eventId, {_id, __typename, ...program}) =>
-    ({variables: {id: eventId, program} })
-})
+}`))
 
-export const useDeleteEvent = entityDeleteHook('events', `
+export const useDeleteEvent = entityDeleteHook('events', graphql(`
 mutation deleteEvent($id: ID!) {
   deleteEvent(id: $id) {
-    ${eventFields}
+    _id, name 
   }
-}`, {
-  parameterMapper: id => ({variables: {id}})
-})
+}`))
