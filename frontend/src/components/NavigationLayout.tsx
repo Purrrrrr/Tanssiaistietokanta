@@ -18,7 +18,7 @@ function NavigationLayout({children}) {
       <main id="main-content">
         {children}
       </main>
-      <footer>Tanssitietokanta v. 2022-10-23 <a href="https://raw.githubusercontent.com/Purrrrrr/Tanssiaistietokanta/main/frontend/LICENSE">&copy; Tanssitietokannan tekijät</a></footer>
+      <footer>Tanssitietokanta v. {process.env.REACT_APP_BUILD_TIME ?? 'DEV'}-{process.env.REACT_APP_COMMIT_REV ?? 'HEAD'} <a href="https://raw.githubusercontent.com/Purrrrrr/Tanssiaistietokanta/main/frontend/LICENSE">&copy; Tanssitietokannan tekijät</a></footer>
     </div>
   </BreadcrumbContext>
 }
