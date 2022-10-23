@@ -1,12 +1,13 @@
-import {useCreateWorkshop} from 'services/workshops'
 import React from 'react'
+import {useNavigate} from 'react-router-dom'
 
 import {AdminOnly} from 'services/users'
+import {useCreateWorkshop} from 'services/workshops'
+
 import {Breadcrumb} from 'libraries/ui'
 import {PageTitle} from 'components/PageTitle'
 import {WorkshopEditor} from 'components/WorkshopEditor'
 import {makeTranslate} from 'utils/translate'
-import {useNavigate} from 'react-router-dom'
 
 const t = makeTranslate({
   create: 'Tallenna',

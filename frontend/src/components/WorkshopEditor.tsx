@@ -1,15 +1,17 @@
-import {DragHandle, ListEditor} from 'components/ListEditor'
 import React, {useState} from 'react'
 import * as L from 'partial.lenses'
-import {backendQueryHook, graphql} from 'backend'
-import {Workshop as WorkshopWithEventId, WorkshopInput} from 'types'
 
+import {backendQueryHook, graphql} from 'backend'
+
+import {formFor, Input, SubmitButton, TextArea} from 'libraries/forms2'
+import {Button, CssClass, FormGroup} from 'libraries/ui'
 import {Flex} from 'components/Flex'
+import {DragHandle, ListEditor} from 'components/ListEditor'
 import {DanceChooser} from 'components/widgets/DanceChooser'
 import {makeTranslate} from 'utils/translate'
 import {useOnChangeForProp} from 'utils/useOnChangeForProp'
-import {Button, CssClass, FormGroup} from 'libraries/ui'
-import {formFor, SubmitButton, Input, TextArea} from 'libraries/forms2'
+
+import {Workshop as WorkshopWithEventId, WorkshopInput} from 'types'
 
 const t = makeTranslate({
   dances: 'Tanssit',

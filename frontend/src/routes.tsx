@@ -1,21 +1,22 @@
 import React from 'react'
-import {Routes, Route, useParams} from 'react-router-dom'
-import {Icon, Breadcrumb} from 'libraries/ui'
-import {useEvent} from 'services/events'
-import {LoadingState} from 'components/LoadingState'
+import {Route, Routes, useParams} from 'react-router-dom'
 
+import {useEvent} from 'services/events'
+
+import {Breadcrumb, Icon} from 'libraries/ui'
+import {LoadingState} from 'components/LoadingState'
 import Dances from 'pages/dances'
-import EventList from 'pages/events/EventList'
-import CreateEvent from 'pages/events/CreateEvent'
-import CreateWorkshopForm from 'pages/events/workshops/CreateWorkshop'
-import EditWorkshopForm from 'pages/events/workshops/EditWorkshop'
 import BallProgram from 'pages/events/BallProgram'
+import CreateEvent from 'pages/events/CreateEvent'
+import EventList from 'pages/events/EventList'
 import EventPage from 'pages/events/EventPage'
 import EventProgramPage from 'pages/events/EventProgramPage'
-import DanceList from 'pages/events/print/DanceList'
 import DanceCheatList from 'pages/events/print/DanceCheatList'
 import DanceInstructions from 'pages/events/print/DanceInstructions'
+import DanceList from 'pages/events/print/DanceList'
 import DanceMastersCheatList from 'pages/events/print/DanceMastersCheatList'
+import CreateWorkshopForm from 'pages/events/workshops/CreateWorkshop'
+import EditWorkshopForm from 'pages/events/workshops/EditWorkshop'
 
 export default function MainRoutes() {
   return <>

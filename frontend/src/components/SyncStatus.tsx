@@ -1,5 +1,6 @@
-import React, {useRef, useState, useEffect} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import classNames from 'classnames'
+
 import {Icon, IconName, Intent} from 'libraries/ui'
 import {SyncState} from 'utils/useAutosavingState'
 

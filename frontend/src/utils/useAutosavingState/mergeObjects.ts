@@ -1,4 +1,5 @@
-import {SyncState, MergeData, MergeFunction, MergeResult, Path} from './types'
+import {MergeData, MergeFunction, MergeResult, Path, SyncState} from './types'
+
 import {subPath} from './pathUtil'
 
 export function mergeObjects<T extends object>(

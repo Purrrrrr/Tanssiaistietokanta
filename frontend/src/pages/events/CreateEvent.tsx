@@ -3,10 +3,11 @@ import {useNavigate} from 'react-router-dom'
 
 import {useCreateEvent} from 'services/events'
 import {AdminOnly} from 'services/users'
+
+import {formFor, SubmitButton} from 'libraries/forms2'
 import {Breadcrumb} from 'libraries/ui'
 import {PageTitle} from 'components/PageTitle'
 import {makeTranslate} from 'utils/translate'
-import {formFor, SubmitButton} from 'libraries/forms2'
 
 const t = makeTranslate({
   newEventBreadcrumb: 'Uusi tapahtuma',

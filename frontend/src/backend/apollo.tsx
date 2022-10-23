@@ -1,7 +1,8 @@
 import { ApolloClient, ApolloLink, InMemoryCache, Observable} from '@apollo/client'
+
 import {runGraphQlQuery} from './feathers'
 
-export {gql, ApolloProvider, useQuery, useMutation} from '@apollo/client'
+export {ApolloProvider, gql, useMutation, useQuery} from '@apollo/client'
 export {ApolloClient}
 export type {DocumentNode, FetchResult, MutationResult} from '@apollo/client'
 

@@ -1,5 +1,5 @@
+import {getInternalLinks, parseMediawiki, stripLinks} from './format/mediawiki'
 import {getWikiPage} from './wikiApi'
-import {parseMediawiki, getInternalLinks, stripLinks} from './format/mediawiki'
 
 export async function getCategories(danceName, instructions) {
   const categoriesFromContent = getCategoriesFromContent(instructions)

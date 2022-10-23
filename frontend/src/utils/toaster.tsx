@@ -1,5 +1,5 @@
 import React from 'react'
-import {Toaster, IToaster, IToastProps } from '@blueprintjs/core'
+import {IToaster, IToastProps, Toaster } from '@blueprintjs/core'
 
 /** Singleton toaster instance.  */
 let toaster : IToaster | null

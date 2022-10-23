@@ -1,13 +1,14 @@
-import './DanceList.sass'
-
-import {Button} from 'libraries/ui'
-import {Switch} from 'libraries/forms2'
 import React, {useState} from 'react'
+
 import {backendQueryHook, graphql} from 'backend'
 
+import {Switch} from 'libraries/forms2'
+import {Button} from 'libraries/ui'
 import {LoadingState} from 'components/LoadingState'
 import PrintViewToolbar from 'components/widgets/PrintViewToolbar'
 import {makeTranslate} from 'utils/translate'
+
+import './DanceList.sass'
 
 const t = makeTranslate({
   showSideBySide: 'Näytä setit rinnakkain',

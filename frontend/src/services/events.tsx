@@ -1,4 +1,4 @@
-import { setupServiceUpdateFragment, backendQueryHook, graphql, entityListQueryHook, entityCreateHook, entityDeleteHook, entityUpdateHook } from '../backend'
+import { backendQueryHook, entityCreateHook, entityDeleteHook, entityListQueryHook, entityUpdateHook, graphql, setupServiceUpdateFragment } from '../backend'
 
 setupServiceUpdateFragment(
   'events',

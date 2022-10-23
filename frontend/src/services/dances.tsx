@@ -1,6 +1,8 @@
-import { setupServiceUpdateFragment, entityListQueryHook, graphql, entityCreateHook, entityDeleteHook, entityUpdateHook } from '../backend'
-import { Dance } from 'types'
 import {sorted} from 'utils/sorted'
+
+import { Dance } from 'types'
+
+import { entityCreateHook, entityDeleteHook, entityListQueryHook, entityUpdateHook, graphql, setupServiceUpdateFragment } from '../backend'
 
 setupServiceUpdateFragment(
   'dances',

@@ -1,4 +1,5 @@
 import {sorted} from 'utils/sorted'
+
 import {Path} from './context'
 
 export function sortedPaths(paths : Path[]) : Path[] {

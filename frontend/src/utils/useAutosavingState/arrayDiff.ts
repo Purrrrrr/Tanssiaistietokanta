@@ -1,4 +1,5 @@
 import deepEquals from 'fast-deep-equal'
+
 import { mapToIds } from './idUtils'
 
 export type ChangeType = 'ADDED' | 'REMOVED' | 'MODIFIED' | 'MOVED' | 'MOVED_AND_MODIFIED' | 'UNCHANGED'

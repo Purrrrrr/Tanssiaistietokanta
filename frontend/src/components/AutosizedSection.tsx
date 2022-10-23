@@ -1,4 +1,4 @@
-import React, {useRef, useState, useEffect, useLayoutEffect} from 'react'
+import React, {useEffect, useLayoutEffect, useRef, useState} from 'react'
 
 export function AutosizedSection({children, ...props}) {
   const container = useRef<HTMLElement>(null)

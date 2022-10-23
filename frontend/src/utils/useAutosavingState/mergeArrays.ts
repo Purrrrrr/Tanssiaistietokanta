@@ -1,6 +1,7 @@
-import {getArrayChanges, Change} from './arrayDiff'
-import { mapToIds, areEqualWithoutId } from './idUtils'
-import {MergeData, MergeResult, MergeFunction, SyncState, Path} from './types'
+import {MergeData, MergeFunction, MergeResult, Path, SyncState} from './types'
+
+import {Change, getArrayChanges} from './arrayDiff'
+import { areEqualWithoutId, mapToIds } from './idUtils'
 import {emptyPath, subIndexPath} from './pathUtil'
 
 interface ArrayMergeResult<T> {

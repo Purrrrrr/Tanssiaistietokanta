@@ -1,4 +1,4 @@
-import './DanceMastersCheatList.sass'
+import React from 'react'
 
 import {backendQueryHook, graphql} from 'backend'
 
@@ -7,8 +7,9 @@ import {EditableDanceProperty} from 'components/EditableDanceProperty'
 import {LoadingState} from 'components/LoadingState'
 import {PrintTable} from 'components/PrintTable'
 import PrintViewToolbar from 'components/widgets/PrintViewToolbar'
-import React from 'react'
 import {makeTranslate} from 'utils/translate'
+
+import './DanceMastersCheatList.sass'
 
 const t = makeTranslate({
   print: 'Tulosta',

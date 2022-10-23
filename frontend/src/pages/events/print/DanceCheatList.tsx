@@ -1,15 +1,17 @@
 import React, {useState} from 'react'
 import classNames from 'classnames'
-import {Button} from 'libraries/ui'
-import {Switch} from 'libraries/forms2'
+
 import {backendQueryHook, graphql} from 'backend'
-import {EditableDanceProperty} from 'components/EditableDanceProperty'
-import PrintViewToolbar from 'components/widgets/PrintViewToolbar'
-import {PrintTable} from 'components/PrintTable'
-import {LoadingState} from 'components/LoadingState'
+
+import {Switch} from 'libraries/forms2'
+import {Button} from 'libraries/ui'
 import {CenteredContainer} from 'components/CenteredContainer'
-import {makeTranslate} from 'utils/translate'
+import {EditableDanceProperty} from 'components/EditableDanceProperty'
+import {LoadingState} from 'components/LoadingState'
 import {PageTitle} from 'components/PageTitle'
+import {PrintTable} from 'components/PrintTable'
+import PrintViewToolbar from 'components/widgets/PrintViewToolbar'
+import {makeTranslate} from 'utils/translate'
 
 import './DanceCheatList.sass'
 

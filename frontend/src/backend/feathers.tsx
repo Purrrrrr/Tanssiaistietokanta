@@ -1,7 +1,8 @@
 import {FetchResult} from '@apollo/client'
+import feathers from '@feathersjs/client'
 import {print} from 'graphql'
 import io from 'socket.io-client'
-import feathers from '@feathersjs/client'
+
 import createDebug from 'utils/debug'
 
 const debug = createDebug('graphql')

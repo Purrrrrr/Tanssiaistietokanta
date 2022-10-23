@@ -1,12 +1,15 @@
 import React, {useCallback} from 'react'
-import {DeleteButton} from 'components/widgets/DeleteButton'
-import {DanceDataImportButton} from 'components/DanceDataImportDialog'
+
 import {H2} from 'libraries/ui'
-import {Dance, DancePatchInput} from 'types'
-import {DanceEditor} from './DanceEditor'
+import {DanceDataImportButton} from 'components/DanceDataImportDialog'
 import { Flex } from 'components/Flex'
-import useAutosavingState, {makePartial} from 'utils/useAutosavingState'
 import SyncStatus from 'components/SyncStatus'
+import {DeleteButton} from 'components/widgets/DeleteButton'
+import useAutosavingState, {makePartial} from 'utils/useAutosavingState'
+
+import {Dance, DancePatchInput} from 'types'
+
+import {DanceEditor} from './DanceEditor'
 
 interface DanceListItemProps {
   dance: Dance

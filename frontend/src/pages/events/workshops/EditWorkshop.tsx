@@ -1,15 +1,16 @@
-import {useWorkshop, useModifyWorkshop } from 'services/workshops'
-import {Workshop} from 'types'
 import React  from 'react'
-import {useParams} from 'react-router-dom'
+import {useNavigate, useParams} from 'react-router-dom'
 
 import {AdminOnly} from 'services/users'
+import {useModifyWorkshop, useWorkshop } from 'services/workshops'
+
 import {Breadcrumb} from 'libraries/ui'
+import {LoadingState} from 'components/LoadingState'
 import {PageTitle} from 'components/PageTitle'
 import {WorkshopEditor} from 'components/WorkshopEditor'
-import {LoadingState} from 'components/LoadingState'
 import {makeTranslate} from 'utils/translate'
-import {useNavigate} from 'react-router-dom'
+
+import {Workshop} from 'types'
 
 const t = makeTranslate({
   save: 'Tallenna',

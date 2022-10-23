@@ -2,7 +2,7 @@ import React, {useCallback} from 'react'
 import {SortableContainer, SortableElement} from 'react-sortable-hoc'
 import {arrayMoveImmutable} from 'array-move'
 
-import {ListEditorContext, ListEditorContextType, useListEditorContextValue, useListEditorContext} from './context'
+import {ListEditorContext, ListEditorContextType, useListEditorContext, useListEditorContextValue} from './context'
 import {objectId} from './objectId'
 
 

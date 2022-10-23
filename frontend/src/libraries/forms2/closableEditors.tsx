@@ -1,9 +1,11 @@
-import React, {useRef, useState, ComponentProps} from 'react'
-import Markdown from 'markdown-to-jsx'
-import {Icon} from '../ui'
+import React, {ComponentProps, useRef, useState} from 'react'
 import {Classes} from '@blueprintjs/core'
 import classNames from 'classnames'
+import Markdown from 'markdown-to-jsx'
+
 import {AdditionalPropsFrom, FieldComponentProps} from './types'
+
+import {Icon} from '../ui'
 import {Input} from './fieldComponents'
 import {MarkdownEditor} from './MarkdownEditor'
 

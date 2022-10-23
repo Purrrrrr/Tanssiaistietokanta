@@ -1,5 +1,6 @@
-import {mergeArrays} from './mergeArrays'
 import {MergeFunction} from './types'
+
+import {mergeArrays} from './mergeArrays'
 
 describe('mergeArrays', () => {
   const merge : MergeFunction = (data) => ({ state: 'IN_SYNC', conflicts: [], pendingModifications: data.local })

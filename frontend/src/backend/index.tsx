@@ -1,15 +1,18 @@
 import React  from 'react'
-import { ServiceName, Entity } from './backend/types'
-import { useMutation, FetchResult, MutationResult, apolloClient, ApolloProvider, useQuery } from './backend/apollo'
-import { getSingleValue, ValueOf } from './backend/apolloUtils'
-import { appendToListQuery, filterRemovedFromListQuery } from './backend/apolloCache'
-import { EventName, emitServiceEvent, useServiceListEvents } from './backend/serviceEvents'
-import { TypedDocumentNode } from '@graphql-typed-document-node/core'
 import { QueryHookOptions, QueryResult } from '@apollo/client'
+import { TypedDocumentNode } from '@graphql-typed-document-node/core'
+
 import {showDefaultErrorToast} from 'utils/toaster'
 
-export { setupServiceUpdateFragment } from './backend/serviceEvents'
-export { updateEntityFragment } from './backend/apolloCache'
+import { Entity, ServiceName } from './types'
+
+import { apolloClient, ApolloProvider, FetchResult, MutationResult, useMutation, useQuery } from './apollo'
+import { appendToListQuery, filterRemovedFromListQuery } from './apolloCache'
+import { getSingleValue, ValueOf } from './apolloUtils'
+import { emitServiceEvent, EventName, useServiceListEvents } from './serviceEvents'
+
+export { updateEntityFragment } from './apolloCache'
+export { setupServiceUpdateFragment } from './serviceEvents'
 export { graphql } from 'types/gql'
 
 export const BackendProvider = ({children}) => <ApolloProvider client={apolloClient} children={children} />

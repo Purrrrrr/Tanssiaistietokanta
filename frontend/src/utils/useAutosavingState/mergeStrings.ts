@@ -1,4 +1,5 @@
 import {merge as merge3} from 'node-diff3'
+
 import {MergeData, MergeResult} from './types'
 
 const wordBoundary = (() => {

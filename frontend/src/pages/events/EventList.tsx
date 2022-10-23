@@ -1,11 +1,12 @@
-import {useDeleteEvent, useEvents} from 'services/events'
-
-import {DeleteButton} from 'components/widgets/DeleteButton'
-import {Link} from 'react-router-dom'
-import {NavigateButton} from 'components/widgets/NavigateButton'
-import {PageTitle} from 'components/PageTitle'
-import {AdminOnly} from 'services/users'
 import React from 'react'
+import {Link} from 'react-router-dom'
+
+import {useDeleteEvent, useEvents} from 'services/events'
+import {AdminOnly} from 'services/users'
+
+import {PageTitle} from 'components/PageTitle'
+import {DeleteButton} from 'components/widgets/DeleteButton'
+import {NavigateButton} from 'components/widgets/NavigateButton'
 
 export default function EventList() {
   const [events] = useEvents()

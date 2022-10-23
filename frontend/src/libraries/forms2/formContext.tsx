@@ -1,6 +1,7 @@
-import React, { useMemo, useState, useEffect, useContext, useCallback } from 'react'
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import * as L from 'partial.lenses'
-import {ChangeListener, NewValue, LabelStyle, Path, ArrayPath, PropertyAtPath} from './types'
+
+import {ArrayPath, ChangeListener, LabelStyle, NewValue, Path, PropertyAtPath} from './types'
 
 export const FormValidityContext = React.createContext<boolean>(true)
 export function useFormIsValid(): boolean {

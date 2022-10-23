@@ -1,7 +1,7 @@
+import React from 'react'
 import {ApolloError, ApolloQueryResult} from '@apollo/client'
 
-import React from 'react'
-import {NonIdealState, Spinner, Button} from 'libraries/ui'
+import {Button, NonIdealState, Spinner} from 'libraries/ui'
 
 interface LoadingStateProps {
   loading?: boolean,

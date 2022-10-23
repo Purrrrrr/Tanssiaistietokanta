@@ -1,7 +1,8 @@
 import React, {useState} from 'react'
-import { MenuItem, Button, ButtonProps, SearchBar } from 'libraries/ui'
-import { QueryList, QueryListProps, ItemRenderer as BPItemRenderer} from '@blueprintjs/select'
 import { Popover2 } from '@blueprintjs/popover2'
+import { ItemRenderer as BPItemRenderer, QueryList, QueryListProps} from '@blueprintjs/select'
+
+import { Button, ButtonProps, MenuItem, SearchBar } from 'libraries/ui'
 
 interface SelectorProps<T> extends SelectorMenuProps<T> {
   text: string

@@ -1,8 +1,11 @@
 import { modify } from 'partial.lenses'
+
+import createDebug from 'utils/debug'
+
+import {Entity} from './types'
+
 import {apolloClient, DocumentNode} from './apollo'
 import {getSingleKey} from './apolloUtils'
-import {Entity} from './types'
-import createDebug from 'utils/debug'
 
 const debug = createDebug('apolloCache')
 

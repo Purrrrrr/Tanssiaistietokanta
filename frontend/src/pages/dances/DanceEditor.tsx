@@ -1,8 +1,10 @@
 import React from 'react'
+
 import {formFor, MarkdownEditor} from 'libraries/forms2'
-import {Dance} from 'types'
 import {Flex} from 'components/Flex'
 import {DurationField} from 'components/widgets/DurationField'
+
+import {Dance} from 'types'
 
 import './DanceEditor.sass'
 

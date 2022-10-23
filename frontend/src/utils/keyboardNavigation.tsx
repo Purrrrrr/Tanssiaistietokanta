@@ -1,5 +1,5 @@
-import {focusIn, focusIfExists} from 'utils/focus'
 import {ensureIsVisible} from 'utils/ensureIsVisible'
+import {focusIfExists, focusIn} from 'utils/focus'
 import {swallowNextKeyup} from 'utils/swallowNextKeyup'
 
 export function blurTo(selector) {

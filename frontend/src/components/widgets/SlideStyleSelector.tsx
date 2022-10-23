@@ -1,8 +1,9 @@
 import React  from 'react'
-import {useEventSlideStyles, defaultSlideStyle, SlideStyle} from 'services/events'
 
-import {Icon, MenuItem} from 'libraries/ui'
+import {defaultSlideStyle, SlideStyle, useEventSlideStyles} from 'services/events'
+
 import {Selector} from 'libraries/forms2'
+import {Icon, MenuItem} from 'libraries/ui'
 
 interface SlideStyleSelectorProps {
   value: string | null

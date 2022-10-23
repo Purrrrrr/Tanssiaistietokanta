@@ -1,4 +1,4 @@
-import { backendQueryHook, graphql, setupServiceUpdateFragment, entityCreateHook, entityDeleteHook, entityUpdateHook } from '../backend'
+import { backendQueryHook, entityCreateHook, entityDeleteHook, entityUpdateHook, graphql, setupServiceUpdateFragment } from '../backend'
 
 setupServiceUpdateFragment(
   'workshops',

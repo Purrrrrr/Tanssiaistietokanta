@@ -1,8 +1,11 @@
-import {Reducer, useEffect, useCallback, useReducer} from 'react'
+import {Reducer, useCallback, useEffect, useReducer} from 'react'
+
+import createDebug from 'utils/debug'
+
+import {Path, SyncState } from './types'
+
 import mergeValues from './mergeValues'
 import {PatchStrategy} from './patchStrategies'
-import {SyncState, Path } from './types'
-import createDebug from 'utils/debug'
 
 const debug = createDebug('useAutoSavingState')
 

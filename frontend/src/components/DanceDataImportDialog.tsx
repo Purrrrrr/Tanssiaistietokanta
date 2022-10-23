@@ -1,10 +1,14 @@
-import React, {useState, useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
+
 import {usePatchDance} from 'services/dances'
-import {Dance} from 'types'
-import {Button, FormGroup, Tag, ProgressBar} from 'libraries/ui'
-import {formFor, SubmitButton, MarkdownEditor} from 'libraries/forms2'
+
 import {getDanceData, ImportedDanceData} from 'libraries/danceWiki'
 import {Dialog} from 'libraries/dialog'
+import {formFor, MarkdownEditor, SubmitButton} from 'libraries/forms2'
+import {Button, FormGroup, ProgressBar, Tag} from 'libraries/ui'
+
+import {Dance} from 'types'
+
 import {DanceNameSearch} from './DanceNameSearch'
 
 interface DanceDataImportButtonProps {

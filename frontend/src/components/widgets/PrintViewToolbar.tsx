@@ -1,5 +1,7 @@
 import React, {useState} from 'react'
+
 import {Icon, IconName} from 'libraries/ui'
+
 import './PrintViewToolbar.sass'
 
 interface PrintViewToolbarProps {

@@ -1,7 +1,8 @@
-import React, {useEffect, useRef, useCallback} from 'react'
-import {Button} from 'libraries/ui'
-import {AlertProps, Overlay, Classes} from '@blueprintjs/core'
 import { FocusScope, useFocusManager } from '@react-aria/focus'
+import React, {useCallback, useEffect, useRef} from 'react'
+import {AlertProps, Classes, Overlay} from '@blueprintjs/core'
+
+import {Button} from 'libraries/ui'
 
 interface DialogProps extends InnerDialogProps {
   isOpen: boolean,

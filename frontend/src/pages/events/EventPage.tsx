@@ -1,12 +1,13 @@
-import {Card} from 'libraries/ui'
-import {Link} from 'react-router-dom'
 import React from 'react'
+import {Link} from 'react-router-dom'
 
-import {NavigateButton} from 'components/widgets/NavigateButton'
-import {DeleteButton} from 'components/widgets/DeleteButton'
-import {makeTranslate} from 'utils/translate'
 import {useDeleteWorkshop} from 'services/workshops'
+
+import {Card} from 'libraries/ui'
 import {PageTitle} from 'components/PageTitle'
+import {DeleteButton} from 'components/widgets/DeleteButton'
+import {NavigateButton} from 'components/widgets/NavigateButton'
+import {makeTranslate} from 'utils/translate'
 
 const t = makeTranslate({
   ballProgram: 'Tanssiaisohjelma',

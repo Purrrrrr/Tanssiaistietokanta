@@ -1,4 +1,4 @@
-import {useMemo, useRef, useCallback} from 'react'
+import {useCallback, useMemo, useRef} from 'react'
 import * as L from 'partial.lenses'
 
 export function useOnChangeForPropInValue(onChange, value) {

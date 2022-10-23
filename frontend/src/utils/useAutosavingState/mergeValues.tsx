@@ -1,8 +1,10 @@
 import deepEquals from 'fast-deep-equal'
+
+import {MergeData, MergeResult, SyncState} from './types'
+
 import {mergeArrays} from './mergeArrays'
 import {mergeObjects} from './mergeObjects'
 import {mergeConflictingStrings} from './mergeStrings'
-import {SyncState, MergeData, MergeResult} from './types'
 import {emptyPath} from './pathUtil'
 
 export default function merge<T>(data : MergeData<T>) : MergeResult<T> {

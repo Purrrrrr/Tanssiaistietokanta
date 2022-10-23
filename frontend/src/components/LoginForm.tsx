@@ -1,6 +1,8 @@
 import React, {useContext} from 'react'
-import {Button} from 'libraries/ui'
+
 import {UserContext} from 'services/users'
+
+import {Button} from 'libraries/ui'
 
 function LoginForm() {
   const {user, login, logout} = useContext(UserContext)

@@ -1,8 +1,9 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
 import {Classes, Intent} from '@blueprintjs/core'
-import {useIsAdmin} from 'services/users'
 import classNames from 'classnames'
+
+import {useIsAdmin} from 'services/users'
 
 interface NavigateButtonProps extends Omit<React.ComponentProps<typeof Link>, 'to'> {
   text: string,

@@ -1,11 +1,14 @@
 import React, {useState} from 'react'
-import {DanceDataImportButton} from 'components/DanceDataImportDialog'
-import {Button, H2} from 'libraries/ui'
+
 import {SubmitButton} from 'libraries/forms2'
-import {DanceEditor} from './DanceEditor'
-import {DanceInput} from 'types'
-import {uploadDanceFile} from 'utils/uploadDanceFile'
+import {Button, H2} from 'libraries/ui'
+import {DanceDataImportButton} from 'components/DanceDataImportDialog'
 import { Flex } from 'components/Flex'
+import {uploadDanceFile} from 'utils/uploadDanceFile'
+
+import {DanceInput} from 'types'
+
+import {DanceEditor} from './DanceEditor'
 
 export function CreateDanceForm({onCreate, onCancel, initialData}) {
   const [dance, setDance] = useState(initialData ?? {name: ''})

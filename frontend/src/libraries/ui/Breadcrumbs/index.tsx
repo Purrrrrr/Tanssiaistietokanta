@@ -1,7 +1,8 @@
 import React from 'react'
-import {Classes} from '@blueprintjs/core'
 import {Link} from 'react-router-dom'
-import {useBreadcrumbPaths, Path} from './context'
+import {Classes} from '@blueprintjs/core'
+
+import {Path, useBreadcrumbPaths} from './context'
 
 export {Breadcrumb, BreadcrumbContext} from './context'
 

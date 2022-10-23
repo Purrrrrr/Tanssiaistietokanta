@@ -1,6 +1,7 @@
-import feathers, {socket} from './feathers'
-import {getOrComputeDefault} from 'utils/map'
 import createDebug from 'utils/debug'
+import {getOrComputeDefault} from 'utils/map'
+
+import feathers, {socket} from './feathers'
 
 const debug = createDebug('channels')
 

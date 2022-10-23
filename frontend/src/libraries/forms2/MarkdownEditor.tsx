@@ -1,9 +1,9 @@
+import 'react-markdown-editor-lite/lib/index.css'
 import React from 'react'
 import MdEditor, { Plugins }  from 'react-markdown-editor-lite'
 import Markdown from 'markdown-to-jsx'
-import {FieldComponentProps} from 'libraries/forms2'
 
-import 'react-markdown-editor-lite/lib/index.css'
+import {FieldComponentProps} from 'libraries/forms2'
 
 MdEditor.unuse(Plugins.Image)
 

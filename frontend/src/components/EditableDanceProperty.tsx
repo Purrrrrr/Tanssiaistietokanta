@@ -1,8 +1,11 @@
-import React, {useMemo, useCallback} from 'react'
-import {Dance} from 'types'
-import useAutosavingState, {makePartial} from 'utils/useAutosavingState'
-import {usePatchDance, WritableDanceProperty, dancePropertyLabels} from 'services/dances'
+import React, {useCallback, useMemo} from 'react'
+
+import {dancePropertyLabels, usePatchDance, WritableDanceProperty} from 'services/dances'
+
 import {ClickToEdit, ClickToEditMarkdown} from 'libraries/forms2'
+import useAutosavingState, {makePartial} from 'utils/useAutosavingState'
+
+import {Dance} from 'types'
 
 import './EditableDanceProperty.sass'
 

@@ -1,6 +1,6 @@
 import React from 'react'
-import {NumericInput} from 'libraries/ui'
 
+import {NumericInput} from 'libraries/ui'
 import {makeTranslate} from 'utils/translate'
 
 const t = makeTranslate({

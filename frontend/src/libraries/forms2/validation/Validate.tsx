@@ -1,8 +1,8 @@
 import React from 'react'
 
+import {ErrorMessage} from './ErrorMessage'
 import {useError} from './useError'
 import {ValidationProps} from './useSchema'
-import {ErrorMessage} from './ErrorMessage'
 
 interface ValidateProps extends ValidationProps {
   value?: unknown

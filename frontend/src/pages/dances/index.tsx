@@ -1,10 +1,12 @@
 import React, {useState} from 'react'
-import {Breadcrumb, Collapse, Card, Button, FormGroup, SearchBar} from 'libraries/ui'
 import InfiniteScroll from 'react-infinite-scroller'
+
+import { filterDances, useCreateDance, useDances, useDeleteDance, usePatchDance } from 'services/dances'
+
+import {Breadcrumb, Button, Card, Collapse, FormGroup, SearchBar} from 'libraries/ui'
 import {PageTitle} from 'components/PageTitle'
 import {showToast} from 'utils/toaster'
 
-import { filterDances, useDances, useCreateDance, usePatchDance, useDeleteDance } from 'services/dances'
 import { Dance, DanceInput } from 'types'
 
 import {CreateDanceForm, DanceUploader} from './CreateDanceForm'

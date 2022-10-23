@@ -1,4 +1,5 @@
 import * as yup from 'yup'
+
 export default yup
 
 /* eslint-disable no-template-curly-in-string */

@@ -1,26 +1,25 @@
-import React, {createContext, useContext, useMemo, useState, useRef} from 'react'
-import * as L from 'partial.lenses'
+import React, {createContext, useContext, useMemo, useRef, useState} from 'react'
 import {arrayMoveImmutable} from 'array-move'
+import * as L from 'partial.lenses'
 
-import {Dance} from 'types'
-import {EventProgramSettings, DanceSet, DanceProgram, EventProgramRow, EventProgramItem, RequestedDance} from './types'
-
-import {Card, HTMLTable, CssClass} from 'libraries/ui'
-import {formFor, ClickToEdit, Switch as PlainSwitch, SubmitButton, ActionButton as Button, FieldComponentProps, MarkdownEditor, MenuButton, SelectorMenu, Selector} from 'libraries/forms2'
-
+import {ActionButton as Button, ClickToEdit, FieldComponentProps, formFor, MarkdownEditor, MenuButton, Selector, SelectorMenu, SubmitButton, Switch as PlainSwitch} from 'libraries/forms2'
+import {Card, CssClass, HTMLTable} from 'libraries/ui'
 import {DragHandle, ListEditor, ListEditorItems} from 'components/ListEditor'
 import {DanceChooser} from 'components/widgets/DanceChooser'
 import {Duration} from 'components/widgets/Duration'
 import {DurationField} from 'components/widgets/DurationField'
-import {ProgramPauseDurationEditor} from 'components/widgets/ProgramPauseDurationEditor'
 import {NavigateButton} from 'components/widgets/NavigateButton'
+import {ProgramPauseDurationEditor} from 'components/widgets/ProgramPauseDurationEditor'
 import {SlideStyleSelector} from 'components/widgets/SlideStyleSelector'
+import {focusLater, focusSiblingsOrParent} from 'utils/focus'
+import {guid} from 'utils/guid'
+import {blurTo, clickInParent, focusTo, moveDown, moveUp, navigateAmongSiblings} from 'utils/keyboardNavigation'
 import {makeTranslate} from 'utils/translate'
 import {bind, useHotkeyHandler} from 'utils/useHotkeyHandler'
 import {useRedirectKeyDownTo} from 'utils/useRedirectKeyDownTo'
-import {navigateAmongSiblings, moveUp, moveDown, blurTo, focusTo, clickInParent} from 'utils/keyboardNavigation'
-import {guid} from 'utils/guid'
-import {focusLater, focusSiblingsOrParent} from 'utils/focus'
+
+import {DanceProgram, DanceSet, EventProgramItem, EventProgramRow, EventProgramSettings, RequestedDance} from './types'
+import {Dance} from 'types'
 
 import './EventProgramEditor.sass'
 

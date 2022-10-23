@@ -1,9 +1,10 @@
-import {getWikiPage, searchWikiPages} from './wikiApi'
+import * as L from 'partial.lenses'
+
+import {cleanupLanguage} from './cleanupLanguage'
+import {convertToMarkdown} from './format/convertToMarkdown'
 import {getCategories} from './getCategories'
 import {getFormations} from './getFormations'
-import {convertToMarkdown} from './format/convertToMarkdown'
-import {cleanupLanguage} from './cleanupLanguage'
-import * as L from 'partial.lenses'
+import {getWikiPage, searchWikiPages} from './wikiApi'
 
 export {searchWikiPages}
 

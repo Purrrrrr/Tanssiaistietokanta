@@ -1,6 +1,7 @@
-import {isInputTag} from './useOnKeydown'
-import getEvent2string from 'key-event-to-string'
 import {useCallback, useMemo} from 'react'
+import getEvent2string from 'key-event-to-string'
+
+import {isInputTag} from './useOnKeydown'
 
 const event2string = getEvent2string({joinWith: '+'})
 

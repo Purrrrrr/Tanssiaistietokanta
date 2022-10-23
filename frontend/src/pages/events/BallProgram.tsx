@@ -1,16 +1,18 @@
-import './BallProgram.sass'
-import React, {useMemo, useState, useCallback} from 'react'
+import React, {useCallback, useMemo, useState} from 'react'
+import ReactTouchEvents from 'react-touch-events'
 import classnames from 'classnames'
 import Markdown from 'markdown-to-jsx'
-import {backendQueryHook, graphql} from 'backend'
-import ReactTouchEvents from 'react-touch-events'
 
+import {backendQueryHook, graphql} from 'backend'
+
+import {AutosizedSection} from 'components/AutosizedSection'
 import {EditableDanceProperty} from 'components/EditableDanceProperty'
 import {LoadingState} from 'components/LoadingState'
-import {AutosizedSection} from 'components/AutosizedSection'
 import {ProgramTitleSelector} from 'components/ProgramTitleSelector'
-import {useOnKeydown} from 'utils/useOnKeydown'
 import {makeTranslate} from 'utils/translate'
+import {useOnKeydown} from 'utils/useOnKeydown'
+
+import './BallProgram.sass'
 
 const t = makeTranslate({
   teachedInSet: 'Opetettu setissä',

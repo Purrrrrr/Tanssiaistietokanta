@@ -1,12 +1,15 @@
 import {useEffect } from 'react'
 import {EventEmitter} from 'events'
-import {getOrComputeDefault} from 'utils/map'
-import feathers from './feathers'
-import {ensureChannelIsOpen, closeChannelIfUnsused} from './channels'
-import {gql, DocumentNode} from './apollo'
-import {updateEntityFragment, markDeleted} from './apolloCache'
-import {ServiceName, ID, Entity} from './types'
+
 import createDebug from 'utils/debug'
+import {getOrComputeDefault} from 'utils/map'
+
+import {Entity, ID, ServiceName} from './types'
+
+import {DocumentNode, gql} from './apollo'
+import {markDeleted, updateEntityFragment} from './apolloCache'
+import {closeChannelIfUnsused, ensureChannelIsOpen} from './channels'
+import feathers from './feathers'
 
 const debug = createDebug('serviceEvents')
 

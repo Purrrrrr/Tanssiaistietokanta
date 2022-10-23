@@ -1,5 +1,6 @@
-import {Path, Key} from './types'
 import deepEquals from 'fast-deep-equal'
+
+import {Key, Path} from './types'
 
 export type PatchResult<Patch> = {hasModifications: false} | {patch: Patch, hasModifications: true}
 export type PatchStrategy<T, Patch> = (original: T, modifications: T, conflicts: Path<T>[]) => PatchResult<Patch>

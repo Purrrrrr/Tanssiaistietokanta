@@ -1,17 +1,20 @@
-import React, {useState, useRef, useCallback} from 'react'
-import {Dance, Event} from 'types'
-import {usePatchDance} from 'services/dances'
-import {Button} from 'libraries/ui'
-import {Switch, ClickToEditMarkdown} from 'libraries/forms2'
-import useAutosavingState, {makePartial} from 'utils/useAutosavingState'
+import React, {useCallback, useRef, useState} from 'react'
+
 import {backendQueryHook, graphql} from 'backend'
-import {LoadingState} from 'components/LoadingState'
+import {usePatchDance} from 'services/dances'
+
+import {ClickToEditMarkdown, Switch} from 'libraries/forms2'
+import {Button} from 'libraries/ui'
 import {DanceDataImportButton} from 'components/DanceDataImportDialog'
+import {LoadingState} from 'components/LoadingState'
 import PrintViewToolbar from 'components/widgets/PrintViewToolbar'
-import {makeTranslate} from 'utils/translate'
 import {selectElement} from 'utils/selectElement'
 import {showToast} from 'utils/toaster'
+import {makeTranslate} from 'utils/translate'
 import {uniq} from 'utils/uniq'
+import useAutosavingState, {makePartial} from 'utils/useAutosavingState'
+
+import {Dance, Event} from 'types'
 
 import './DanceInstructions.sass'
 
