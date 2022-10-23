@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import {MenuItem} from '@blueprintjs/core'
 import {Suggest} from '@blueprintjs/select'
 
-import {filterDances, useDances} from 'services/dances'
+import {filterDances, useCreateDance, useDances} from 'services/dances'
 
 import {CssClass} from 'libraries/ui'
 import {makeTranslate} from 'utils/translate'
@@ -22,9 +22,12 @@ interface DanceChooserProps {
 
 interface EmptyDancePlaceholder extends Dance {
   _id: '',
-  name: string,
   empty: true
 }
+interface NewDancePlaceholder extends Dance {
+  _id: 'new',
+}
+
 const t = makeTranslate({
   searchDance: 'Etsi tanssia...',
 })
@@ -32,6 +35,7 @@ const t = makeTranslate({
 export function DanceChooser({value, onChange, excludeFromSearch, allowEmpty = false, emptyText, onBlur, placeholder, readOnly, ...props} : DanceChooserProps) {
   const [query, setQuery] = useState(value ? value.name : '')
   const [dances] = useDances()
+  const [createDance] = useCreateDance()
 
   const items = excludeFromSearch
     ? dances.filter((dance: Dance) => dance === value || !excludeFromSearch.some(excluded => excluded._id === dance._id))
@@ -47,11 +51,21 @@ export function DanceChooser({value, onChange, excludeFromSearch, allowEmpty = f
       const dances = filterDances(items, query)
       return allowEmpty && query.trim() === '' ? [emptyDancePlaceholder(emptyText), ...dances] : dances
     }}
+    createNewItemFromQuery={newDancePlaceholder}
+    createNewItemRenderer={renderCreateItem}
     query={query}
     onQueryChange={setQuery}
     selectedItem={value}
     onItemSelect={(item, e) => {
-      if (isPlaceholder(item)) {
+      if (isNewDance(item)) {
+        createDance({dance: {name: item.name}}).then(response => {
+          if (!response?.data) {
+            return
+          }
+          onChange(response.data.createDance as Dance, e as React.ChangeEvent<HTMLElement>)
+          setQuery(item.name ?? '')
+        })
+      } else if (isPlaceholder(item)) {
         onChange(null, e as React.ChangeEvent<HTMLElement>)
         setQuery('')
       } else {
@@ -81,6 +95,14 @@ function isPlaceholder(object: Dance | EmptyDancePlaceholder): object is EmptyDa
   return 'empty' in object
 }
 
+function newDancePlaceholder(text: string): NewDancePlaceholder {
+  return {__typename: 'Dance', _id: 'new', name: text}
+}
+
+function isNewDance(object: Dance | EmptyDancePlaceholder | NewDancePlaceholder): object is NewDancePlaceholder {
+  return object._id === 'new'
+}
+
 
 function renderDance (dance, { handleClick, modifiers }) {
   return <MenuItem
@@ -90,6 +112,14 @@ function renderDance (dance, { handleClick, modifiers }) {
     onClick={handleClick}
     text={dance.name}
     textClassName={(dance.empty && !modifiers.active) ? CssClass.textDisabled : undefined}
+  />
+}
+
+function renderCreateItem(queryString,  active, handleClick) {
+  return <MenuItem
+    active={active}
+    onClick={handleClick}
+    text={'Luo uusi tanssi: '+queryString}
   />
 }
 
