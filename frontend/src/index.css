@@ -6,10 +6,29 @@ body {
     sans-serif;
 }
 
+#layout {
+  min-height: 100vh;
+  display: grid;
+  grid-template: "header header header" min-content
+    ". main ." 1fr
+    "footer footer footer" min-content
+    / auto min(95%, 1200px) auto
+}
+#layout > nav {
+  grid-area: header;
+}
+
 #main-content {
+  grid-area: main;
   max-width: 95%;
   width: 1200px;
   margin: 0 auto;
+}
+#layout > footer {
+  grid-area: footer;
+  text-align: right;
+  padding: 4px;
+  color: gray;
 }
 
 @font-face {

@@ -13,10 +13,13 @@ function NavigationLayout({children}) {
 
   return <BreadcrumbContext>
     <SkipToMainContent />
-    <Navigation/>
-    <main id="main-content">
-      {children}
-    </main>
+    <div id="layout">
+      <Navigation/>
+      <main id="main-content">
+        {children}
+      </main>
+      <footer>Tanssitietokanta v. 2022-10-23 <a href="https://raw.githubusercontent.com/Purrrrrr/Tanssiaistietokanta/main/frontend/LICENSE">&copy; Tanssitietokannan tekijät</a></footer>
+    </div>
   </BreadcrumbContext>
 }
 
