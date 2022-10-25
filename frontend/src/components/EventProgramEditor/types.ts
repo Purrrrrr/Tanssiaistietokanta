@@ -7,20 +7,15 @@ export interface EventProgramSettings {
 }
 
 export interface Section {
-  isIntroductionsSection: boolean
   program: EventProgramRow[]
 }
 
 export interface IntroSection extends Section {
-  isIntroductionsSection: true
-  program: EventProgramRow[]
   intervalMusicDuration: 0
 }
 export interface DanceSet extends Section {
-  isIntroductionsSection: false
   _id: string
   name: string
-  program: EventProgramRow[]
   intervalMusicDuration: number
 }
 

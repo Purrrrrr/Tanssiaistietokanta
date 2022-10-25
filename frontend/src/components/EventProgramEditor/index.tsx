@@ -157,7 +157,6 @@ function newDanceSet(danceSets: DanceSet[]): DanceSet {
   const dances = Array.from({length: 6}, () => ({item: {__typename: 'RequestedDance'}, _id: guid()} as EventProgramRow))
   return {
     _id: guid(),
-    isIntroductionsSection: false,
     name: t`danceSet` + ' ' + danceSetNumber,
     program: dances,
     intervalMusicDuration: DEFAULT_INTERVAL_MUSIC_DURATION
@@ -234,7 +233,8 @@ type ProgramItemPath = [...ProgramSectionPath, 'program', number]
 type DanceProgramPath = ['danceSets', number, 'program', number]
 
 function ProgramListEditor({path, tableRef}) {
-  const { program, isIntroductionsSection, intervalMusicDuration } = useValueAt(path as ProgramSectionPath)
+  const { program, intervalMusicDuration } = useValueAt(path as ProgramSectionPath)
+  const isIntroductionsSection = path[0] === 'introductions'
   const onChange = useOnChangeFor([...path as ProgramSectionPath, 'program'])
   const onSetIntervalMusicDuration = useOnChangeFor([...path as ProgramSectionPath, 'intervalMusicDuration'])
 

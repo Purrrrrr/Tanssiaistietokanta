@@ -34,10 +34,8 @@ function toEventProgramSettings(
 ): EventProgramSettings {
   const {introductions = [], danceSets = [], slideStyleId = null} = program ?? {}
   return {
-    introductions: { program: introductions, isIntroductionsSection: true, intervalMusicDuration: 0 },
-    danceSets: (danceSets).map(set => (
-      {...set, isIntroductionsSection: false}
-    )),
+    introductions: { program: introductions, intervalMusicDuration: 0 },
+    danceSets,
     slideStyleId
   }
 }
