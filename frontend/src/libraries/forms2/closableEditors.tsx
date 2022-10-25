@@ -35,7 +35,7 @@ export interface ClickToEditMarkdownProps extends FieldComponentProps<string, HT
 }
 export function ClickToEditMarkdown({value, readOnly, className, onChange, inline, hasConflict, ...props} : ClickToEditMarkdownProps) {
   return <ClosableEditor
-    className={className}
+    className={classNames(className, 'closable-editor-markdown')}
     inline={inline}
     readOnly={readOnly}
     aria-describedby={props['aria-describedby']}

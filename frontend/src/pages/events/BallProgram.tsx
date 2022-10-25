@@ -5,7 +5,7 @@ import Markdown from 'markdown-to-jsx'
 
 import {backendQueryHook, graphql} from 'backend'
 
-import {AutosizedSection} from 'components/AutosizedSection'
+import {AutosizedSection} from 'libraries/ui'
 import {EditableDanceProperty} from 'components/EditableDanceProperty'
 import {LoadingState} from 'components/LoadingState'
 import {ProgramTitleSelector} from 'components/ProgramTitleSelector'
@@ -203,7 +203,7 @@ function EventProgramSlide({program, onChangeSlide}) {
   const {name, next, description} = program
   return <SimpleSlide title={name} next={next} onChangeSlide={onChangeSlide} >
     {description && <AutosizedSection className="slide-main-content slide-program-description">
-      <Markdown>{description}</Markdown>
+      <Markdown className="slide-program-description-content">{description}</Markdown>
     </AutosizedSection>}
   </SimpleSlide>
 }
