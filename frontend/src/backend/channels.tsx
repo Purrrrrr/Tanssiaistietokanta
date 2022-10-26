@@ -45,9 +45,11 @@ const channelService = feathers.service('channel-connections')
 
 async function openChannel(channel : string) {
   debug(`enable channel ${channel}`)
-  await channelService.create({name: channel})
+  const result = await channelService.create({name: channel})
+  debug('current channels: ', result)
 }
 async function closeChannel(channel : string) {
   debug(`disable channel ${channel}`)
-  await channelService.remove(channel)
+  const result = await channelService.remove(channel)
+  debug('current channels: ', result)
 }
