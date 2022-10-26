@@ -1,5 +1,5 @@
 import React  from 'react'
-import { QueryHookOptions, QueryResult } from '@apollo/client'
+import { MutationHookOptions, QueryHookOptions, QueryResult } from '@apollo/client'
 import { TypedDocumentNode } from '@graphql-typed-document-node/core'
 
 import {showDefaultErrorToast} from 'utils/toaster'
@@ -48,73 +48,49 @@ export function entityListQueryHook<T extends {[k in number]: Entity[]}, V>(
 export function entityCreateHook<T, V>(
   service: ServiceName, query: TypedDocumentNode<T, V>, options = {}
 ) {
-  return serviceMutateHook<T, V>(service, query, {
+  return makeMutationHook<T, V>(query, {
     ...options,
-    fireEvent: 'created',
+    fireEvent: [service, 'created'],
   })
 }
 
 export function entityUpdateHook<T, V>(
   service: ServiceName, query: TypedDocumentNode<T, V>, options = {}
 ) {
-  return serviceMutateHook<T, V>(service, query, {
+  return makeMutationHook<T, V>(query, {
     ...options,
-    fireEvent: 'updated',
+    fireEvent: [service, 'updated'],
   })
 }
 
 export function entityDeleteHook<T, V>(
   service: ServiceName, query: TypedDocumentNode<T, V>, options = {}
 ) {
-  return serviceMutateHook<T, V>(service, query, {
+  return makeMutationHook<T, V>(query, {
     ...options,
-    fireEvent: 'removed',
+    fireEvent: [service, 'removed'],
   })
 }
 
-interface MutateHookOptions<T> {
-  fireEvent ?: EventName
-  onCompleted ?: (d: {data?: T}) => unknown
-}
-
-function serviceMutateHook<T, V>(
-  service: ServiceName,
-  query: TypedDocumentNode<T, V>,
-  {
-    fireEvent = undefined,
-    onCompleted = undefined,
-    ...options
-  }: MutateHookOptions<T>
-) {
-  return makeMutationHook(query, {
-    ...options,
-    onCompleted: (data) => {
-      if (fireEvent) {
-        const value = getSingleValue(data)
-        emitServiceEvent(service, fireEvent, value)
-      }
-      if (onCompleted) onCompleted(data)
-    },
-  })
-}
-
-interface MutationQueryArgs<T> {
-  onCompleted ?: (data: T) => unknown
-  refetchQueries?: string[]
+interface MutateHookOptions<T, V> extends MutationHookOptions<T, V> {
+  fireEvent?: [ServiceName, EventName]
 }
 
 export function makeMutationHook<T, V>(
   query: TypedDocumentNode<T, V>,
-  options?: {
-    onCompleted?: (a: Record<string, unknown>) => unknown,
-  }
-): (args?: MutationQueryArgs<T>) => [(vars: V) => Promise<FetchResult<T>>, MutationResult<T>] {
-  const { onCompleted } = options ?? {}
+  options?: MutateHookOptions<T, V>
+): (args?: MutationHookOptions<T, V>) => [(vars: V) => Promise<FetchResult<T>>, MutationResult<T>] {
+  const { onCompleted, fireEvent } = options ?? {}
   return (args = {}) => {
-    const options = {
+    const options : MutationHookOptions<T, V> = {
       onError: err => { showDefaultErrorToast(err)},
       ...args,
       onCompleted: (data) => {
+        if (fireEvent) {
+          const [service, eventName] = fireEvent
+          const value = getSingleValue(data as object)
+          emitServiceEvent(service, eventName, value)
+        }
         if (onCompleted) onCompleted(data)
         if (args.onCompleted) args.onCompleted(data)
       }
