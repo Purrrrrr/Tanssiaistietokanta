@@ -12,7 +12,7 @@ import { getSingleValue, ValueOf } from './apolloUtils'
 import { emitServiceEvent, EventName, useServiceListEvents } from './serviceEvents'
 
 export { updateEntityFragment } from './apolloCache'
-export { setupServiceUpdateFragment } from './serviceEvents'
+export { setupServiceUpdateFragment, useServiceEvents } from './serviceEvents'
 export { graphql } from 'types/gql'
 
 export const BackendProvider = ({children}) => <ApolloProvider client={apolloClient} children={children} />
@@ -78,7 +78,7 @@ interface MutateHookOptions<T, V> extends MutationHookOptions<T, V> {
 
 export function makeMutationHook<T, V>(
   query: TypedDocumentNode<T, V>,
-  options?: MutateHookOptions<T, V>
+  options?: MutateHookOptions<T, V>,
 ): (args?: MutationHookOptions<T, V>) => [(vars: V) => Promise<FetchResult<T>>, MutationResult<T>] {
   const { onCompleted, fireEvent } = options ?? {}
   return (args = {}) => {
@@ -105,9 +105,12 @@ export function makeMutationHook<T, V>(
 }
 
 export function backendQueryHook<T, V>(
-  query: TypedDocumentNode<T, V>
+  query: TypedDocumentNode<T, V>,
+  additionalCode?: (res: QueryResult<T, V>) => unknown,
 ): ((v: V, o?: QueryHookOptions<T, V>) => QueryResult<T, V>) {
   return (variables: V, options: QueryHookOptions<T, V> = {}) => {
-    return useQuery<T, V>(query, { variables, fetchPolicy: 'cache-and-network', ...options })
+    const queryResult = useQuery<T, V>(query, { variables, fetchPolicy: 'cache-and-network', ...options })
+    if (additionalCode) additionalCode(queryResult)
+    return queryResult
   }
 }

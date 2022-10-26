@@ -47,7 +47,7 @@ export function useEntityEvents<T extends Entity>(service : ServiceName, id: ID,
   return useServiceEvents(service, `${service}/${id}`, callbacks)
 }
 
-function useServiceEvents<T extends Entity>(service : ServiceName, channel : string, callbacks : Callbacks<T>) {
+export function useServiceEvents<T extends Entity>(service : ServiceName, channel : string, callbacks : Callbacks<T>) {
   useEffect(() => {
     subscribeToService(service, channel, callbacks)
     return () => unSubscribeToService(service, channel, callbacks)
