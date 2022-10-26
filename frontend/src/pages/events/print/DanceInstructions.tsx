@@ -2,6 +2,7 @@ import React, {useCallback, useRef, useState} from 'react'
 
 import {backendQueryHook, graphql} from 'backend'
 import {usePatchDance} from 'services/dances'
+import {useCallbackOnEventChanges} from 'services/events'
 
 import {ClickToEditMarkdown, Switch} from 'libraries/forms2'
 import {Button} from 'libraries/ui'
@@ -48,7 +49,10 @@ query DanceInstructions($eventId: ID!) {
       }
     }
   }
-}`))
+}`), ({refetch, variables}) => {
+  if (variables === undefined) throw new Error('Unknown event id')
+  useCallbackOnEventChanges(variables.eventId, refetch)
+})
 
 export default function DanceInstructions({eventId}) {
   const {data, refetch, ...loadingState} = useDanceInstructions({eventId})

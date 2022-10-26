@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 import classNames from 'classnames'
 
 import {backendQueryHook, graphql} from 'backend'
+import {useCallbackOnEventChanges} from 'services/events'
 
 import {Switch} from 'libraries/forms2'
 import {Button} from 'libraries/ui'
@@ -40,7 +41,10 @@ query DanceCheatList($eventId: ID!) {
       }
     }
   }
-}`))
+}`), ({refetch, variables}) => {
+  if (variables === undefined) throw new Error('Unknown event id')
+  useCallbackOnEventChanges(variables.eventId, refetch)
+})
 
 export default function DanceCheatList({eventId}) {
   const [mini, setMini] = useState(false)

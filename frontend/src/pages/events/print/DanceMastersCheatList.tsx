@@ -1,6 +1,7 @@
 import React from 'react'
 
 import {backendQueryHook, graphql} from 'backend'
+import {useCallbackOnEventChanges} from 'services/events'
 
 import {Button} from 'libraries/ui'
 import {EditableDanceProperty} from 'components/EditableDanceProperty'
@@ -50,7 +51,10 @@ query getDanceMastersCheatList($eventId: ID!) {
       }
     }
   }
-}`))
+}`), ({refetch, variables}) => {
+  if (variables === undefined) throw new Error('Unknown event id')
+  useCallbackOnEventChanges(variables.eventId, refetch)
+})
 
 export default function DanceMastersCheatList({eventId}) {
   const {data, ...loadingState} = useCheatList({eventId})

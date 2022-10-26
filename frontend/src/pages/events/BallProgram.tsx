@@ -3,7 +3,8 @@ import ReactTouchEvents from 'react-touch-events'
 import classnames from 'classnames'
 import Markdown from 'markdown-to-jsx'
 
-import {backendQueryHook, graphql, useServiceEvents} from 'backend'
+import {backendQueryHook, graphql} from 'backend'
+import {useCallbackOnEventChanges} from 'services/events'
 
 import {AutosizedSection} from 'libraries/ui'
 import {EditableDanceProperty} from 'components/EditableDanceProperty'
@@ -62,21 +63,7 @@ query BallProgram($eventId: ID!) {
   }
 }`), ({refetch, variables}) => {
   if (variables === undefined) throw new Error('Unknown event id')
-  const id = variables.eventId
-  const callbacks = useMemo(() => {
-    const updateFn = () => {
-      console.log('Refetching ball program')
-      refetch()
-    }
-    return {
-      created: updateFn,
-      updated: updateFn,
-      removed: updateFn,
-    }
-  }, [refetch])
-  useServiceEvents('events', `events/${id}`, callbacks)
-  useServiceEvents('workshops', `events/${id}/workshops`, callbacks)
-  useServiceEvents('dances', `events/${id}/dances`, callbacks)
+  useCallbackOnEventChanges(variables.eventId, refetch)
 })
 
 export default function BallProgram({eventId}) {

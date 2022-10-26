@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 
 import {backendQueryHook, graphql} from 'backend'
+import {useCallbackOnEventChanges} from 'services/events'
 
 import {Switch} from 'libraries/forms2'
 import {Button} from 'libraries/ui'
@@ -112,7 +113,10 @@ query getDanceList($eventId: ID!) {
       name, abbreviation
     }
   }
-}`))
+}`), ({refetch, variables}) => {
+  if (variables === undefined) throw new Error('Unknown event id')
+  useCallbackOnEventChanges(variables.eventId, refetch)
+})
 
 function useBallProgram(eventId: string) {
   const {data, ...loadingState} = useDanceList({eventId})

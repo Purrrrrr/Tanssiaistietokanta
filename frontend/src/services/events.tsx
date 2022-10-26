@@ -1,4 +1,6 @@
-import { backendQueryHook, entityCreateHook, entityDeleteHook, entityListQueryHook, entityUpdateHook, graphql, setupServiceUpdateFragment } from '../backend'
+import {useMemo} from 'react'
+
+import { backendQueryHook, entityCreateHook, entityDeleteHook, entityListQueryHook, entityUpdateHook, graphql, setupServiceUpdateFragment, useServiceEvents } from '../backend'
 
 setupServiceUpdateFragment(
   'events',
@@ -259,3 +261,20 @@ mutation deleteEvent($id: ID!) {
     _id, name 
   }
 }`))
+
+export function useCallbackOnEventChanges(eventId, callback) {
+  const callbacks = useMemo(() => {
+    const updateFn = () => {
+      console.log('Event has changed, running callback')
+      callback()
+    }
+    return {
+      created: updateFn,
+      updated: updateFn,
+      removed: updateFn,
+    }
+  }, [callback])
+  useServiceEvents('events', `events/${eventId}`, callbacks)
+  useServiceEvents('workshops', `events/${eventId}/workshops`, callbacks)
+  useServiceEvents('dances', `events/${eventId}/dances`, callbacks)
+}
