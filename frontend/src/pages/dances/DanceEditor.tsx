@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {formFor, MarkdownEditor} from 'libraries/forms2'
+import {formFor, MarkdownEditor} from 'libraries/forms'
 import {Flex} from 'components/Flex'
 import {DurationField} from 'components/widgets/DurationField'
 

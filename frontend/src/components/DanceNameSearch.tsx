@@ -1,7 +1,7 @@
 import React, {useCallback, useState} from 'react'
 
 import {searchWikiPages} from 'libraries/danceWiki'
-import {Input} from 'libraries/forms2'
+import {Input} from 'libraries/forms'
 import {useDelayedEffect} from 'utils/useDelayedEffect'
 
 export function DanceNameSearch({value, onChange}) {

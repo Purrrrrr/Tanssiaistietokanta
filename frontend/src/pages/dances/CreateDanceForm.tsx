@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 
-import {SubmitButton} from 'libraries/forms2'
+import {SubmitButton} from 'libraries/forms'
 import {Button, H2} from 'libraries/ui'
 import {DanceDataImportButton} from 'components/DanceDataImportDialog'
 import { Flex } from 'components/Flex'

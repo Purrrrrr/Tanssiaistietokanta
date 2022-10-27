@@ -4,7 +4,7 @@ import {backendQueryHook, graphql} from 'backend'
 import {usePatchDance} from 'services/dances'
 import {useCallbackOnEventChanges} from 'services/events'
 
-import {ClickToEditMarkdown, makePartial, Switch, useAutosavingState} from 'libraries/forms2'
+import {ClickToEditMarkdown, makePartial, Switch, useAutosavingState} from 'libraries/forms'
 import {Button} from 'libraries/ui'
 import {DanceDataImportButton} from 'components/DanceDataImportDialog'
 import {LoadingState} from 'components/LoadingState'

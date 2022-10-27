@@ -2,7 +2,7 @@ import React, {createContext, useContext, useMemo, useRef, useState} from 'react
 import {arrayMoveImmutable} from 'array-move'
 import * as L from 'partial.lenses'
 
-import {ActionButton as Button, ClickToEdit, FieldComponentProps, formFor, MarkdownEditor, MenuButton, Selector, SelectorMenu, SubmitButton, Switch as PlainSwitch} from 'libraries/forms2'
+import {ActionButton as Button, ClickToEdit, FieldComponentProps, formFor, MarkdownEditor, MenuButton, Selector, SelectorMenu, SubmitButton, Switch as PlainSwitch} from 'libraries/forms'
 import {Card, CssClass, HTMLTable} from 'libraries/ui'
 import {DragHandle, ListEditor, ListEditorItems} from 'components/ListEditor'
 import {DanceChooser} from 'components/widgets/DanceChooser'

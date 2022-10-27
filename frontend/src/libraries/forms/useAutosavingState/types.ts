@@ -1,4 +1,4 @@
-import { ArrayPath as Path, PropertyAtPath } from 'libraries/forms2/types'
+import { ArrayPath as Path, PropertyAtPath } from '../types'
 
 export type { Path, PropertyAtPath }
 

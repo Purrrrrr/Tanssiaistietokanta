@@ -3,7 +3,7 @@ import * as L from 'partial.lenses'
 
 import {backendQueryHook, graphql} from 'backend'
 
-import {formFor, Input, SubmitButton, TextArea} from 'libraries/forms2'
+import {formFor, Input, SubmitButton, TextArea} from 'libraries/forms'
 import {Button, CssClass, FormGroup} from 'libraries/ui'
 import {Flex} from 'components/Flex'
 import {DragHandle, ListEditor} from 'components/ListEditor'

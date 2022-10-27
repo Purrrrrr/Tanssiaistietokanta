@@ -2,7 +2,7 @@ import React, {useCallback, useMemo} from 'react'
 
 import {dancePropertyLabels, usePatchDance, WritableDanceProperty} from 'services/dances'
 
-import {ClickToEdit, ClickToEditMarkdown, makePartial, useAutosavingState} from 'libraries/forms2'
+import {ClickToEdit, ClickToEditMarkdown, makePartial, useAutosavingState} from 'libraries/forms'
 
 import {Dance} from 'types'
 

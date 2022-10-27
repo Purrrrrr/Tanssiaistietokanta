@@ -4,7 +4,7 @@ import classNames from 'classnames'
 import {backendQueryHook, graphql} from 'backend'
 import {useCallbackOnEventChanges} from 'services/events'
 
-import {Switch} from 'libraries/forms2'
+import {Switch} from 'libraries/forms'
 import {Button} from 'libraries/ui'
 import {CenteredContainer} from 'components/CenteredContainer'
 import {EditableDanceProperty} from 'components/EditableDanceProperty'

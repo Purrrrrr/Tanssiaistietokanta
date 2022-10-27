@@ -4,7 +4,7 @@ import {usePatchDance} from 'services/dances'
 
 import {getDanceData, ImportedDanceData} from 'libraries/danceWiki'
 import {Dialog} from 'libraries/dialog'
-import {formFor, MarkdownEditor, SubmitButton} from 'libraries/forms2'
+import {formFor, MarkdownEditor, SubmitButton} from 'libraries/forms'
 import {Button, FormGroup, ProgressBar, Tag} from 'libraries/ui'
 
 import {Dance} from 'types'

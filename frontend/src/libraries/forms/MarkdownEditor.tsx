@@ -3,7 +3,7 @@ import React from 'react'
 import MdEditor, { Plugins }  from 'react-markdown-editor-lite'
 import Markdown from 'markdown-to-jsx'
 
-import {FieldComponentProps} from 'libraries/forms2'
+import {FieldComponentProps} from 'libraries/forms'
 
 MdEditor.unuse(Plugins.Image)
 

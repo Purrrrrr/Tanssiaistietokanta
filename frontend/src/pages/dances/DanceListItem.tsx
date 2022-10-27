@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react'
 
-import {makePartial, SyncStatus, useAutosavingState} from 'libraries/forms2'
+import {makePartial, SyncStatus, useAutosavingState} from 'libraries/forms'
 import {H2} from 'libraries/ui'
 import {DanceDataImportButton} from 'components/DanceDataImportDialog'
 import {Flex} from 'components/Flex'

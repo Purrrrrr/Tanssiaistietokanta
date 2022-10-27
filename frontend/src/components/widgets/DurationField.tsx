@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react'
 
-import {FieldComponentProps, Input, InputProps} from 'libraries/forms2'
+import {FieldComponentProps, Input, InputProps} from 'libraries/forms'
 import {durationToString, parseDuration, toMinSec, toSeconds} from 'utils/duration'
 import {useDelayedEffect} from 'utils/useDelayedEffect'
 
