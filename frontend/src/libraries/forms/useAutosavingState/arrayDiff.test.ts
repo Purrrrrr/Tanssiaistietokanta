@@ -1,3 +1,5 @@
+import {MergeableListItem} from './types'
+
 import {getArrayChanges} from './arrayDiff'
 
 describe('getArrayChanges', () => {
@@ -89,9 +91,9 @@ describe('getArrayChanges', () => {
   })
 
   test('many changes at once', () => {
-    const changes = getArrayChanges(
-      [{id: 1}, 11, 22, 33, 2, 3, 4, 5, 6, 7],
-      [0, 1, {id: 6}, 2, 7, 66, 3, 4, 5, 11, 22, 33]
+    const changes = getArrayChanges<MergeableListItem>(
+      [{_id: 1}, 11, 22, 33, 2, 3, 4, 5, 6, 7],
+      [0, 1, {_id: 6}, 2, 7, 66, 3, 4, 5, 11, 22, 33]
     )
 
     const expectedChanges = {
@@ -112,9 +114,9 @@ describe('getArrayChanges', () => {
   })
 
   test('many changes at once 2', () => {
-    const changes = getArrayChanges(
-      [{id: 1}, 11, 22, 33, 2, 3, 4, 5, 6, 7, 8],
-      [0, 1, {id: 7}, 2, 8, 66, 4, 5, 6, 11, 22, 33]
+    const changes = getArrayChanges<MergeableListItem>(
+      [{_id: 1}, 11, 22, 33, 2, 3, 4, 5, 6, 7, 8],
+      [0, 1, {_id: 7}, 2, 8, 66, 4, 5, 6, 11, 22, 33]
     )
 
     const expectedChanges = {

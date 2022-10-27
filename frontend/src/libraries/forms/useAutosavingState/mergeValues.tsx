@@ -1,13 +1,13 @@
 import deepEquals from 'fast-deep-equal'
 
-import {MergeData, MergeResult, SyncState} from './types'
+import {Entity, Mergeable, MergeData, MergeResult, SyncState} from './types'
 
 import {mergeArrays} from './mergeArrays'
 import {mergeObjects} from './mergeObjects'
 import {mergeConflictingStrings} from './mergeStrings'
 import {emptyPath} from './pathUtil'
 
-export default function merge<T>(data : MergeData<T>) : MergeResult<T> {
+export default function merge<T extends Mergeable>(data : MergeData<T>) : MergeResult<T> {
   if (nonNullData(data)) {
     if (isArrayMerge(data)) {
       return mergeArrays(data, merge) as unknown as MergeResult<T>
@@ -42,29 +42,29 @@ export default function merge<T>(data : MergeData<T>) : MergeResult<T> {
   }
 }
 
-function nonNullData(data : MergeData<unknown>) : boolean {
+function nonNullData(data : MergeData<Mergeable>) : boolean {
   return data.original != null && data.server != null && data.local != null
 }
 
-function isArrayMerge(data : MergeData<unknown>) : data is MergeData<unknown[]> {
+function isArrayMerge(data : MergeData<Mergeable>) : data is MergeData<Entity[]> {
   return Array.isArray(data.original)
     && Array.isArray(data.server)
     && Array.isArray(data.local)
 }
 
-function isObjectMerge(data : MergeData<unknown>) : data is MergeData<object> {
+function isObjectMerge(data : MergeData<Mergeable>) : data is MergeData<Entity> {
   return typeof data.original === 'object' && !Array.isArray(data.original)
     && typeof data.server === 'object' && !Array.isArray(data.server)
     && typeof data.local === 'object' && !Array.isArray(data.local)
 }
 
-function isStringMerge(data : MergeData<unknown>) : data is MergeData<string> {
+function isStringMerge(data : MergeData<Mergeable>) : data is MergeData<string> {
   return typeof data.original === 'string'
     && typeof data.server === 'string'
     && typeof data.local === 'string'
 }
 
-function getMergeState<T>(
+function getMergeState<T extends Mergeable>(
   {server, original, local} : MergeData<T>
 ) : SyncState {
   const modifiedLocally = !deepEquals(original, local)

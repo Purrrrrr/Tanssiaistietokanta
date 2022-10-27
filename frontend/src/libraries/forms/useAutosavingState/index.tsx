@@ -2,8 +2,9 @@ import {Reducer, useCallback, useEffect, useReducer} from 'react'
 
 import createDebug from 'utils/debug'
 
-import {Path, SyncState } from './types'
+import {MergeableObject, SyncState} from './types'
 
+import {ArrayPath} from '../types'
 import mergeValues from './mergeValues'
 import {PatchStrategy} from './patchStrategies'
 
@@ -14,7 +15,7 @@ const AUTOSAVE_DELAY = 50
 export * as patchStrategy from './patchStrategies'
 export type { SyncState } from './types'
 
-export type UseAutosavingStateReturn<T> = [
+export type UseAutosavingStateReturn<T extends MergeableObject> = [
   T,
   (saved: T | ((t: T) => T)) => unknown,
   SyncStore<T> & {
@@ -28,7 +29,7 @@ interface SyncStore<T> {
   state: SyncState
   serverState: T
   modifications: T
-  conflicts: Path<T>[]
+  conflicts: ArrayPath<T>[]
   conflictOrigin: null | T
 }
 
@@ -39,11 +40,11 @@ interface SyncAction {
 
 export const USE_BACKEND_VALUE = Symbol('useBackendValue')
 export const USE_LOCAL_VALUE = Symbol('useLocalValue')
-export type ConflictResolutions<T> = {
+export type ConflictResolutions<T extends MergeableObject> = {
   [key in (keyof T)] ?: T[key] | typeof USE_LOCAL_VALUE | typeof USE_BACKEND_VALUE
 }
 
-export function useAutosavingState<T, Patch>(
+export function useAutosavingState<T extends MergeableObject, Patch>(
   serverState : T,
   onPatch : (patch : Patch) => void,
   patchStrategy: PatchStrategy<T, Patch>
@@ -90,7 +91,7 @@ export function useAutosavingState<T, Patch>(
   ]
 }
 
-function getInitialState<T>(serverState: T) : SyncStore<T> {
+function getInitialState<T extends MergeableObject>(serverState: T) : SyncStore<T> {
   return {
     state: 'IN_SYNC',
     serverState,
@@ -100,7 +101,7 @@ function getInitialState<T>(serverState: T) : SyncStore<T> {
   }
 }
 
-function reducer<T>(reducerState : SyncStore<T>, action : SyncAction) : SyncStore<T> {
+function reducer<T extends MergeableObject>(reducerState : SyncStore<T>, action : SyncAction) : SyncStore<T> {
   const { modifications, serverState } = reducerState
   switch (action.type) {
     case 'LOCAL_MODIFICATION':
@@ -130,7 +131,7 @@ function reducer<T>(reducerState : SyncStore<T>, action : SyncAction) : SyncStor
   }
 }
 
-function merge<T>(serverState : T, newServerState : T, modifications : T) : SyncStore<T> {
+function merge<T extends MergeableObject>(serverState : T, newServerState : T, modifications : T) : SyncStore<T> {
   const { state, pendingModifications, conflicts } = mergeValues({
     server: newServerState,
     original: serverState,

@@ -1,12 +1,13 @@
-import {MergeData, MergeFunction, MergeResult, Path, SyncState} from './types'
+import {MergeableObject, MergeData, MergeFunction, MergeResult, SyncState} from './types'
 
+import {ArrayPath} from '../types'
 import {subPath} from './pathUtil'
 
-export function mergeObjects<T extends object>(
+export function mergeObjects<T extends MergeableObject>(
   data : MergeData<T>,
   merge: MergeFunction,
 ) : MergeResult<T> {
-  const conflicts : Path<T>[] = []
+  const conflicts : ArrayPath<T>[] = []
   const pendingModifications : T = { ...data.original }
 
   let hasConflicts = false
@@ -20,7 +21,7 @@ export function mergeObjects<T extends object>(
     switch (subResult.state) {
       case 'CONFLICT':
       {
-        const subConflicts : Path<T>[] = subResult.conflicts
+        const subConflicts : ArrayPath<T>[] = subResult.conflicts
           .map(conflict => subPath(key, conflict))
         conflicts.push(...subConflicts)
         pendingModifications[key] = subResult.pendingModifications
@@ -47,7 +48,7 @@ export function mergeObjects<T extends object>(
   }
 }
 
-function indexMergeData<T>(data : MergeData<T>, key: keyof T) : MergeData<T[typeof key]> {
+function indexMergeData<T extends MergeableObject>(data : MergeData<T>, key: keyof T) : MergeData<T[typeof key]> {
   return {
     server: get(data.server, key),
     original: get(data.original, key),
@@ -58,7 +59,7 @@ function get(o, k) {
   return o !== undefined ? o[k] : undefined
 }
 
-function getAllKeys<T>(data: MergeData<T>): (keyof T)[] {
+function getAllKeys<T extends MergeableObject>(data: MergeData<T>): (keyof T)[] {
   return Array.from(new Set([
     ...[data.server, data.original, data.local]
       .map(value => Object.keys(value ?? {}))

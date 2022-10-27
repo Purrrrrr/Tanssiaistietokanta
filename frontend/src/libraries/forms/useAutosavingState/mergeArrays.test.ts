@@ -1,4 +1,4 @@
-import {MergeFunction} from './types'
+import {MergeableListItem, MergeFunction} from './types'
 
 import {mergeArrays} from './mergeArrays'
 
@@ -89,12 +89,12 @@ describe('mergeArrays', () => {
     })
     test('removal of modified value', () => {
       expect(mergeArrays({
-        original: [1, 2, {id: 3, value: 'b'}, 4, 5],
+        original: [1, 2, {_id: 3, value: 'b'}, 4, 5],
         server: [1, 2, 4, 5],
-        local: [1, 2, {id: 3, value: 'a'}, 4, 5],
+        local: [1, 2, {_id: 3, value: 'a'}, 4, 5],
       }, merge)).toEqual({
         state: 'CONFLICT',
-        pendingModifications: [1, 2, {id: 3, value: 'a'}, 4, 5],
+        pendingModifications: [1, 2, {_id: 3, value: 'a'}, 4, 5],
         conflicts: [
           [],
         ],
@@ -199,83 +199,83 @@ describe('mergeArrays', () => {
   describe('modifying items', () => {
     test('modifying locally', () => {
       expect(mergeArrays({
-        original: [1, 2, 3, 4, {id: 5, value: 5}],
-        server: [1, 2, 3, 4, {id: 5, value: 5}],
-        local: [1, 2, 3, 4, {id: 5, value: 8}],
+        original: [1, 2, 3, 4, {_id: 5, value: 5}],
+        server: [1, 2, 3, 4, {_id: 5, value: 5}],
+        local: [1, 2, 3, 4, {_id: 5, value: 8}],
       }, merge)).toEqual({
         state: 'MODIFIED_LOCALLY',
-        pendingModifications: [1, 2, 3, 4, {id: 5, value: 8}],
+        pendingModifications: [1, 2, 3, 4, {_id: 5, value: 8}],
         conflicts: [],
       })
     })
     test('modifying on server', () => {
       expect(mergeArrays({
-        original: [1, 2, 3, 4, {id: 5, value: 5}],
-        server: [1, 2, 3, 4, {id: 5, value: 8}],
-        local: [1, 2, 3, 4, {id: 5, value: 5}],
+        original: [1, 2, 3, 4, {_id: 5, value: 5}],
+        server: [1, 2, 3, 4, {_id: 5, value: 8}],
+        local: [1, 2, 3, 4, {_id: 5, value: 5}],
       }, merge)).toEqual({
         state: 'IN_SYNC',
-        pendingModifications: [1, 2, 3, 4, {id: 5, value: 8}],
+        pendingModifications: [1, 2, 3, 4, {_id: 5, value: 8}],
         conflicts: [],
       })
     })
     test('modifying on both', () => {
       expect(mergeArrays({
-        original: [1, 2, 3, 4, {id: 5, value: 5}],
-        server: [1, 2, 3, 4, {id: 5, value: 8}],
-        local: [1, 2, 3, 4, {id: 5, value: 8}],
+        original: [1, 2, 3, 4, {_id: 5, value: 5}],
+        server: [1, 2, 3, 4, {_id: 5, value: 8}],
+        local: [1, 2, 3, 4, {_id: 5, value: 8}],
       }, merge)).toEqual({
         state: 'IN_SYNC',
-        pendingModifications: [1, 2, 3, 4, {id: 5, value: 8}],
+        pendingModifications: [1, 2, 3, 4, {_id: 5, value: 8}],
         conflicts: [],
       })
     })
 
     test('modifying and moving on server', () => {
       expect(mergeArrays({
-        original: [1, 2, 3, 4, {id: 5, value: 5}],
-        server: [1, 2, {id: 5, value: 8}, 3, 4],
-        local: [1, 2, 3, 4, {id: 5, value: 5}],
+        original: [1, 2, 3, 4, {_id: 5, value: 5}],
+        server: [1, 2, {_id: 5, value: 8}, 3, 4],
+        local: [1, 2, 3, 4, {_id: 5, value: 5}],
       }, merge)).toEqual({
         state: 'IN_SYNC',
-        pendingModifications: [1, 2, {id: 5, value: 8}, 3, 4],
+        pendingModifications: [1, 2, {_id: 5, value: 8}, 3, 4],
         conflicts: [],
       })
     })
 
     test('modifying and moving locally', () => {
       expect(mergeArrays({
-        original: [1, 2, 3, 4, {id: 5, value: 5}],
-        server: [1, 2, 3, 4, {id: 5, value: 5}],
-        local: [1, 2, {id: 5, value: 8}, 3, 4],
+        original: [1, 2, 3, 4, {_id: 5, value: 5}],
+        server: [1, 2, 3, 4, {_id: 5, value: 5}],
+        local: [1, 2, {_id: 5, value: 8}, 3, 4],
       }, merge)).toEqual({
         state: 'MODIFIED_LOCALLY',
-        pendingModifications: [1, 2, {id: 5, value: 8}, 3, 4],
+        pendingModifications: [1, 2, {_id: 5, value: 8}, 3, 4],
         conflicts: [],
       })
     })
 
     test('modifying and moving on both', () => {
       expect(mergeArrays({
-        original: [1, 2, 3, 4, {id: 5, value: 5}],
-        server: [1, 2, {id: 5, value: 5}, 3, 4],
-        local: [1, 2, {id: 5, value: 8}, 3, 4],
+        original: [1, 2, 3, 4, {_id: 5, value: 5}],
+        server: [1, 2, {_id: 5, value: 5}, 3, 4],
+        local: [1, 2, {_id: 5, value: 8}, 3, 4],
       }, merge)).toEqual({
         state: 'MODIFIED_LOCALLY',
-        pendingModifications: [1, 2, {id: 5, value: 8}, 3, 4],
+        pendingModifications: [1, 2, {_id: 5, value: 8}, 3, 4],
         conflicts: [],
       })
     })
   })
 
   test('tough cases #1', () => {
-    expect(mergeArrays({
+    expect(mergeArrays<MergeableListItem>({
       original: [1, 2, 3, 4, 5],
       server: [1, 4, 5, 6],
-      local: [1, {id: 2}, {id: 3}, 4],
+      local: [1, {_id: 2}, {_id: 3}, 4],
     }, merge)).toEqual({
       state: 'CONFLICT',
-      pendingModifications: [1, {id: 2}, {id: 3}, 4, 6],
+      pendingModifications: [1, {_id: 2}, {_id: 3}, 4, 6],
       conflicts: [
         [],
       ],

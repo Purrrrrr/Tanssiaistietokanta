@@ -1,5 +1,7 @@
 import deepEquals from 'fast-deep-equal'
 
+import { MergeableListItem } from './types'
+
 import { mapToIds } from './idUtils'
 
 export type ChangeType = 'ADDED' | 'REMOVED' | 'MODIFIED' | 'MOVED' | 'MOVED_AND_MODIFIED' | 'UNCHANGED'
@@ -18,7 +20,7 @@ interface PartialChange {
   to: number,
 }
 
-export function getArrayChanges<T>(original: T[], changed: T[]): Change<T>[] {
+export function getArrayChanges<T extends MergeableListItem>(original: T[], changed: T[]): Change<T>[] {
   const originalIds = mapToIds(original)
   const changedIds = mapToIds(changed)
 

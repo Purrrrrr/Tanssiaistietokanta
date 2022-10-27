@@ -1,5 +1,6 @@
-import {MergeData, MergeFunction, MergeResult, Path, SyncState} from './types'
+import {MergeableListItem, MergeData, MergeFunction, MergeResult, SyncState} from './types'
 
+import {ArrayPath} from '../types'
 import {Change, getArrayChanges} from './arrayDiff'
 import { areEqualWithoutId, mapToIds } from './idUtils'
 import {emptyPath, subIndexPath} from './pathUtil'
@@ -9,7 +10,7 @@ interface ArrayMergeResult<T> {
   pendingModifications: T[]
 }
 
-export function mergeArrays<T>(
+export function mergeArrays<T extends MergeableListItem>(
   data: MergeData<T[]>,
   merge: MergeFunction,
 ) : MergeResult<T[]> {
@@ -29,7 +30,7 @@ export function mergeArrays<T>(
     state = 'MODIFIED_LOCALLY'
   }
 
-  const conflicts : Path<T[]>[] = indexConflicts.size > 0
+  const conflicts : ArrayPath<T[]>[] = indexConflicts.size > 0
     ? [emptyPath<T[]>()]
     : modifyResult.conflicts
 
@@ -40,10 +41,10 @@ export function mergeArrays<T>(
   }
 }
 
-function mergeModifications <T>(original: T[], serverDiff: Change<T>[], localDiff: Change<T>[], merge : MergeFunction) : MergeResult<T[]> {
+function mergeModifications<T extends MergeableListItem>(original: T[], serverDiff: Change<T>[], localDiff: Change<T>[], merge : MergeFunction) : MergeResult<T[]> {
   const modifiedIndexesById = new Map<unknown, number>()
   const pendingModifications = [...original]
-  const conflicts : Path<T[]>[] = []
+  const conflicts : ArrayPath<T[]>[] = []
 
   localDiff
     .filter(change => ['MODIFIED', 'MOVED_AND_MODIFIED'].includes(change.status))
@@ -69,7 +70,7 @@ function mergeModifications <T>(original: T[], serverDiff: Change<T>[], localDif
             break
           case 'CONFLICT':
           {
-            const subConflicts : Path<T[]>[] = result.conflicts
+            const subConflicts : ArrayPath<T[]>[] = result.conflicts
               .map(conflict => subIndexPath(change.from, conflict))
             conflicts.push(...subConflicts)
           }
@@ -134,7 +135,7 @@ function mergeDeletes<T>(original: T[], serverDiff: Change<T>[], localDiff: Chan
   }
 }
 
-function mergeMoves<T>(original: T[], serverDiff: Change<T>[], localDiff: Change<T>[], conflicts: Set<number>) : ArrayMergeResult<T> {
+function mergeMoves<T extends MergeableListItem>(original: T[], serverDiff: Change<T>[], localDiff: Change<T>[], conflicts: Set<number>) : ArrayMergeResult<T> {
   if (conflicts.size > 0) {
     return {
       pendingModifications: original,
@@ -201,10 +202,10 @@ function isMove(change: Change<unknown>): boolean {
   return (change.status === 'MOVED' || change.status === 'MOVED_AND_MODIFIED') && change.moveAmount !== 0
 }
 
-function mergeAdditions<T>(original: T[], serverDiff: Change<T>[], localDiff: Change<T>[], indexConflicts: Set<number>) : ArrayMergeResult<T> {
+function mergeAdditions<T extends MergeableListItem>(original: T[], serverDiff: Change<T>[], localDiff: Change<T>[], indexConflicts: Set<number>) : ArrayMergeResult<T> {
   const pendingModifications = [...original]
 
-  const localAdditionsByIndex = new Map<number, unknown>()
+  const localAdditionsByIndex = new Map<number, MergeableListItem>()
   localDiff
     .filter(change => change.status === 'ADDED')
     .forEach(change => {
