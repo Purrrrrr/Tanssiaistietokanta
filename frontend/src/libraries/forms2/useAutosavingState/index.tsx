@@ -43,7 +43,7 @@ export type ConflictResolutions<T> = {
   [key in (keyof T)] ?: T[key] | typeof USE_LOCAL_VALUE | typeof USE_BACKEND_VALUE
 }
 
-export default function useAutosavingState<T, Patch>(
+export function useAutosavingState<T, Patch>(
   serverState : T,
   onPatch : (patch : Patch) => void,
   patchStrategy: PatchStrategy<T, Patch>

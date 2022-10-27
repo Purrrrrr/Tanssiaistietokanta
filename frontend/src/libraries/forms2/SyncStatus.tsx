@@ -2,7 +2,8 @@ import React, {useEffect, useRef, useState} from 'react'
 import classNames from 'classnames'
 
 import {Icon, IconName, Intent} from 'libraries/ui'
-import {SyncState} from 'utils/useAutosavingState'
+
+import {SyncState} from './useAutosavingState'
 
 import './SyncStatus.sass'
 
@@ -22,7 +23,7 @@ const texts : Record<SyncState, string> = {
   CONFLICT: 'Synkronointivirhe',
 }
 
-export default function SyncStatus({state, block, className, style} : { state : SyncState, block?: boolean, className?: string, style?: React.CSSProperties }) {
+export function SyncStatus({state, block, className, style} : { state : SyncState, block?: boolean, className?: string, style?: React.CSSProperties }) {
   const previousState = useRef<SyncState | null>(null)
   const [changed, setChanged] = useState(false)
   useEffect(() => {

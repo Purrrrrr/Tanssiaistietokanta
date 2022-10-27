@@ -13,7 +13,9 @@ export * from './fieldComponents'
 export * from './formControls'
 export * from './MarkdownEditor'
 export * from './Selector'
+export * from './SyncStatus'
 export type { FieldComponentProps } from './types'
+export * from './useAutosavingState'
 export {Validate} from './validation'
 
 interface FormFor<T> {

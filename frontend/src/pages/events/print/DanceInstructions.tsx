@@ -4,7 +4,7 @@ import {backendQueryHook, graphql} from 'backend'
 import {usePatchDance} from 'services/dances'
 import {useCallbackOnEventChanges} from 'services/events'
 
-import {ClickToEditMarkdown, Switch} from 'libraries/forms2'
+import {ClickToEditMarkdown, makePartial, Switch, useAutosavingState} from 'libraries/forms2'
 import {Button} from 'libraries/ui'
 import {DanceDataImportButton} from 'components/DanceDataImportDialog'
 import {LoadingState} from 'components/LoadingState'
@@ -13,7 +13,6 @@ import {selectElement} from 'utils/selectElement'
 import {showToast} from 'utils/toaster'
 import {makeTranslate} from 'utils/translate'
 import {uniq} from 'utils/uniq'
-import useAutosavingState, {makePartial} from 'utils/useAutosavingState'
 
 import {Dance, Event} from 'types'
 

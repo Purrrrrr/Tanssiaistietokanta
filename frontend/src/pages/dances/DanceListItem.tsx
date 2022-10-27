@@ -1,11 +1,10 @@
 import React, {useCallback} from 'react'
 
+import {makePartial, SyncStatus, useAutosavingState} from 'libraries/forms2'
 import {H2} from 'libraries/ui'
 import {DanceDataImportButton} from 'components/DanceDataImportDialog'
-import { Flex } from 'components/Flex'
-import SyncStatus from 'components/SyncStatus'
+import {Flex} from 'components/Flex'
 import {DeleteButton} from 'components/widgets/DeleteButton'
-import useAutosavingState, {makePartial} from 'utils/useAutosavingState'
 
 import {Dance, DancePatchInput} from 'types'
 
