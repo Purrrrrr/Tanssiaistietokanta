@@ -35,8 +35,8 @@ export function Form<T>({
   const listeners = useMemo(() => new Set<ChangeListener>(), [])
   const valueRef = useRef<T>()
   valueRef.current = value
-  const conflictsRef = useRef<ArrayPath<T>>()
-  conflictsRef.current = conflicts as any
+  const conflictsRef = useRef<ArrayPath<T>[]>()
+  conflictsRef.current = conflicts
 
   const metadataContext = useMemo(
     () => {
