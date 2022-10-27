@@ -38,6 +38,7 @@
     "yup": "^0.28.1"
   },
   "scripts": {
+    "lint": "eslint --fix src",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "prestart": "npm run codegen",
     "start": "react-scripts start",
