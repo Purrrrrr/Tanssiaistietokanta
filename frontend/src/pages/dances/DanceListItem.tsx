@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react'
 
-import {makePartial, SyncStatus, useAutosavingState} from 'libraries/forms'
+import {patchStrategy, SyncStatus, useAutosavingState} from 'libraries/forms'
 import {H2} from 'libraries/ui'
 import {DanceDataImportButton} from 'components/DanceDataImportDialog'
 import {Flex} from 'components/Flex'
@@ -23,7 +23,7 @@ export function DanceListItem({dance: danceInDatabase, onChange, onDelete} : Dan
     },
     [onChange, danceInDatabase._id]
   )
-  const [dance, setDance, {state}] = useAutosavingState<Dance, Partial<Dance>>(danceInDatabase, patchDance, makePartial)
+  const [dance, setDance, {state}] = useAutosavingState<Dance, Partial<Dance>>(danceInDatabase, patchDance, patchStrategy.partial)
   return <>
     <Flex alignItems="center">
       <H2 className="flex-fill">

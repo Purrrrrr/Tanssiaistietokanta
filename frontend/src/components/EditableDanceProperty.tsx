@@ -2,7 +2,7 @@ import React, {useCallback, useMemo} from 'react'
 
 import {dancePropertyLabels, usePatchDance, WritableDanceProperty} from 'services/dances'
 
-import {ClickToEdit, ClickToEditMarkdown, makePartial, useAutosavingState} from 'libraries/forms'
+import {ClickToEdit, ClickToEditMarkdown, patchStrategy, useAutosavingState} from 'libraries/forms'
 
 import {Dance} from 'types'
 
@@ -25,7 +25,7 @@ export function EditableDanceProperty({dance: danceInDatabase, inline, property,
     [danceInDatabase._id, patchDance]
   )
   const partialDance = useMemo(() => ({[property]: danceInDatabase[property]}), [property, danceInDatabase])
-  const [dance, setDance] = useAutosavingState<Partial<Dance>, Partial<Dance>>(partialDance, patch, makePartial)
+  const [dance, setDance] = useAutosavingState<Partial<Dance>, Partial<Dance>>(partialDance, patch, patchStrategy.partial)
 
   const onChange = (value) => {
     setDance({

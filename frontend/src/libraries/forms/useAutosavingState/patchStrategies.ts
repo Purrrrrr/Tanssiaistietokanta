@@ -1,19 +1,21 @@
 import deepEquals from 'fast-deep-equal'
 
-import {Key, Path} from './types'
+import {ArrayPath} from '../types'
 
 export type PatchResult<Patch> = {hasModifications: false} | {patch: Patch, hasModifications: true}
-export type PatchStrategy<T, Patch> = (original: T, modifications: T, conflicts: Path<T>[]) => PatchResult<Patch>
+export type PatchStrategy<T, Patch> = (original: T, modifications: T, conflicts: ArrayPath<T>[]) => PatchResult<Patch>
+
+type Key = string | number | symbol
 
 export function noPatch<T>(original : T, modifications : T, conflicts: Key[][]): PatchResult<T>  {
-  const partial = makePartial<T>(original, modifications, conflicts)
-  if (!partial.hasModifications) return partial
+  const partialPatch = partial<T>(original, modifications, conflicts)
+  if (!partialPatch.hasModifications) return partialPatch
 
   return {
     hasModifications: true,
     patch: {
       ...original,
-      ...partial.patch
+      ...partialPatch.patch
     }
   }
 }
@@ -27,7 +29,7 @@ interface ArrayPatch {
 */
 
 //Typing conflicts as Path[] makes typescript crash, dunno why
-export function makePartial<T>(original : T, modifications : T, conflicts: Key[][]): PatchResult<Partial<T>>  {
+export function partial<T>(original : T, modifications : T, conflicts: Key[][]): PatchResult<Partial<T>>  {
   const conflicKeys : Set<keyof T> = new Set()
   for (const path of conflicts) {
     if (path.length === 0) return {hasModifications: false}
