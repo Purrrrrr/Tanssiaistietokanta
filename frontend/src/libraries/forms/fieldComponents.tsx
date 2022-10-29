@@ -8,12 +8,14 @@ import {Field, FieldProps} from './Field'
 
 type AdditionalPropsFrom<Props> = Omit<Props, keyof FieldComponentProps<unknown>>
 
-export type SwitchFieldProps<L, P, V> = Omit<FieldProps<L, P, V, typeof Switch, {label: string, inline?: boolean}>, 'componentProps' | 'component' | 'labelStyle'>
+export type SwitchFieldProps<P, V> = Omit<FieldProps<P, V, typeof Switch, {label: string, inline?: boolean}>, 'componentProps' | 'component' | 'labelStyle'>
 
-export function SwitchField<T, L, P extends TypedPath<T, P, boolean>, V extends PropertyAtPath<T, P> & boolean>(
-  {label, ...props} : SwitchFieldProps<L, P, V>
+export function SwitchField<T, P extends TypedPath<boolean, T>, V extends PropertyAtPath<T, P> & boolean>(
+  {label, ...props} : SwitchFieldProps<P, V>
 ) {
-  return <Field<T, L, P, V, typeof Switch, ExtraSwitchProps> {...props} label={label} labelStyle="hidden" component={Switch as any} componentProps={{label}} />
+  // eslint-disable-next-line
+  // @ts-ignore
+  return <Field<T, P, V, typeof Switch, ExtraSwitchProps> {...props} label={label} labelStyle="hidden" component={Switch as any} componentProps={{label}} />
 }
 
 interface SwitchProps extends FieldComponentProps<boolean, HTMLInputElement>, ExtraSwitchProps { }
@@ -33,11 +35,13 @@ export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
   }
 )
 
-export type InputFieldProps<L, P, V>  = Omit<FieldProps<L, P, V, typeof Input, unknown>, 'component'>
-export function InputField<T, L, P extends TypedPath<T, P, string | undefined | null>, V extends PropertyAtPath<T, P> & string >(
-  props : InputFieldProps<L, P, V>
+export type InputFieldProps<P, V>  = Omit<FieldProps<P, V, typeof Input, unknown>, 'component'>
+export function InputField<T, P extends TypedPath<string, T>, V extends PropertyAtPath<T, P> & string >(
+  props : InputFieldProps<P, V>
 ) {
-  return <Field<T, L, P, V, typeof Input, AdditionalPropsFrom<ComponentProps<'input'>>> {...props} component={Input as any} />
+  // eslint-disable-next-line
+  // @ts-ignore
+  return <Field<T, P, V, typeof Input, AdditionalPropsFrom<ComponentProps<'input'>>> {...props} component={Input as any} />
 }
 
 export interface InputProps extends FieldComponentProps<string, HTMLInputElement>, AdditionalPropsFrom<ComponentProps<'input'>> {

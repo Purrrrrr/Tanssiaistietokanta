@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import * as L from 'partial.lenses'
 
 import {ArrayPath, ChangeListener, LabelStyle, NewValue, Path, PropertyAtPath} from './types'
@@ -19,6 +19,42 @@ export interface FormMetadataContextType<T> {
   labelStyle: LabelStyle
 }
 export const FormMetadataContext = React.createContext<FormMetadataContextType<unknown>|null>(null)
+
+export function useCreateFormMetadataContext<T>({value, onChange, labelStyle, inline, readOnly, conflicts}): FormMetadataContextType<T> {
+  const listeners = useMemo(() => new Set<ChangeListener>(), [])
+  const valueRef = useRef<T>()
+  valueRef.current = value
+  const conflictsRef = useRef<ArrayPath<T>[]>()
+  conflictsRef.current = conflicts
+
+  const metadataContext = useMemo(
+    () => {
+      const onChangePath = (path, newValue) => {
+        const val = valueRef.current
+        valueRef.current = typeof newValue  === 'function'
+          ? L.modify(toArrayPath(path), newValue, val)
+          : L.set(toArrayPath(path), newValue, val)
+
+        onChange(valueRef.current as T)
+      }
+      return {
+        getValue: () => valueRef.current,
+        getConflicts: () => conflictsRef.current ?? [],
+        subscribeToChanges: (listener: ChangeListener) => {
+          listeners.add(listener)
+          return () => listeners.delete(listener)
+        },
+        readOnly, labelStyle, inline,
+        onChange: (value) => onChangePath([], value),
+        onChangePath,
+      }
+    }, [readOnly, labelStyle, inline, onChange, listeners]
+  )
+
+  useEffect(() => listeners.forEach(l => l()), [listeners, value])
+
+  return metadataContext as FormMetadataContextType<T>
+}
 
 export function useFormMetadata<T>() {
   const ctx = useContext(FormMetadataContext) as FormMetadataContextType<T>
@@ -94,7 +130,7 @@ export function useOnChangeFor<T, P extends Path<T>, SubT extends PropertyAtPath
 }
 
 function hasConflictsAtPath(conflicts, path) {
-  const arrayPath = (Array.isArray(path) ? path : [path])
+  const arrayPath = toArrayPath(path)
   return conflicts
     .some((conflict )=> conflict.length === arrayPath.length && arrayPath.every((key, i) => conflict[i] === key))
 }
@@ -105,6 +141,11 @@ export function useMemoizedPath<T>(path: T): T {
   return useMemo(() => path, [pathDep])
 }
 
+function toArrayPath<T>(p: Path<T>): ArrayPath<T> {
+  if (Array.isArray(p)) return p
+  return String(p).split('.') as ArrayPath<T>
+}
+
 function getStringPath<P extends Path<unknown>>(path: P): string{
-  return Array.isArray(path) ? path.join('--') : String(path)
+  return Array.isArray(path) ? path.join('.') : String(path)
 }

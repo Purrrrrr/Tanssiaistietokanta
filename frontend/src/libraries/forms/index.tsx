@@ -20,13 +20,13 @@ export {Validate} from './validation'
 
 interface FormFor<T> {
   Form: React.JSXElementConstructor<FormProps<T>>
-  Field: <L, P extends Path<T>, V extends PropertyAtPath<T, P>, C extends React.ElementType, AP>(props: FieldProps<L, P, V, C, AP>) => React.ReactElement
-  Switch: <L, P extends TypedPath<T, P, boolean>, V extends PropertyAtPath<T, P> & boolean>(props: SwitchFieldProps<L, P, V>) => React.ReactElement
-  Input: <L, P extends TypedPath<T, P, string | undefined | null>, V extends PropertyAtPath<T, P> & (string | undefined | null)>(props: InputFieldProps<L, P, V>) => React.ReactElement
-  useValueAt: <P extends Path<T>, SubT extends PropertyAtPath<T, P>>(path: P) => SubT
+  Field: <P extends Path<T>, V extends PropertyAtPath<T, P>, C extends React.ElementType, AP>(props: FieldProps<P, V, C, AP>) => React.ReactElement
+  Switch: <P extends TypedPath<boolean, T>, V extends PropertyAtPath<T, P> & boolean>(props: SwitchFieldProps<P, V>) => React.ReactElement
+  Input: <P extends TypedPath<string, T>, V extends PropertyAtPath<T, P> & (string | undefined | null)>(props: InputFieldProps<P, V>) => React.ReactElement
+  useValueAt: <P extends Path<T>>(path: P) => PropertyAtPath<T, P>
   useOnChangeFor: <P extends Path<T>, SubT extends PropertyAtPath<T, P>>(path: P) => (v: NewValue<SubT>) => unknown
-  useAppendToList: <P extends TypedPath<T, P, unknown[]>, SubT extends PropertyAtPath<T, P> & unknown[]>(path: P) => (v: SubT[number] | ((v: SubT) => SubT[number])) => unknown
-  useRemoveFromList: <P extends TypedPath<T, P, unknown[]>>(path: P, index: number) => () => unknown
+  useAppendToList: <P extends TypedPath<any[], T>, SubT extends PropertyAtPath<T, P> & any[]>(path: P) => (v: SubT[number] | ((v: SubT) => SubT[number])) => unknown
+  useRemoveFromList: <P extends TypedPath<any[], T>>(path: P, index: number) => () => unknown
   useMemoizedPath: <P extends Path<T>>(path: P) => P
 }
 

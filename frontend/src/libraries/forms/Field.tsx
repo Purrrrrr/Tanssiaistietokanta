@@ -7,13 +7,11 @@ import {FieldComponentProps, LabelStyle, NoRequiredProperties, PartialWhen, Path
 import { useFieldAt } from './formContext'
 import {ErrorMessage, useError, ValidationProps} from './validation'
 
-export type FieldProps<Label, ValuePath, Value, Component extends React.ElementType, AdditionalProps> =
+export type FieldProps<ValuePath, Value, Component extends React.ElementType, AdditionalProps> =
   {
     path: ValuePath
     inline?: boolean
-    label: Label extends string
-      ? Label extends '' ? never : Label
-      : never
+    label: string
     labelInfo?: string
     helperText?: string
     labelStyle?: LabelStyle
@@ -24,7 +22,7 @@ export type FieldProps<Label, ValuePath, Value, Component extends React.ElementT
 
 type MaybeComponentProps<Props extends object> = PartialWhen<NoRequiredProperties<Props>, { componentProps: Props }>
 
-export function Field<T, L, P extends Path<T>, V extends PropertyAtPath<T, P>, C extends React.ElementType, AP>(
+export function Field<T, P extends Path<T>, V extends PropertyAtPath<T, P>, C extends React.ElementType, AP>(
   {
     label,
     labelInfo,
@@ -35,7 +33,7 @@ export function Field<T, L, P extends Path<T>, V extends PropertyAtPath<T, P>, C
     component: Component,
     componentProps,
     ...rest
-  }: FieldProps<L, P, V, C, AP>
+  }: FieldProps<P, V, C, AP>
 ) {
   const {
     value,

@@ -26,38 +26,63 @@ type RequiredProperties<T extends object> = Exclude<{
   : never
 }[keyof T], undefined>
 
-//export type Path<T> = Key[]
-export type TypedPath<T, P extends Path<T>, Type> = PropertyAtPath<T, P> extends Type ? Path<T> : never
-export type Path<Target, DepthCounter extends number = 5> = keyof Target | ArrayPath<Target, DepthCounter>
-export type ArrayPath<Target, DepthCounter extends number = 5> = [] |
-  (DepthCounter extends never
-    ? []
-    : Target extends (infer U)[]
-      ? [number, ...ArrayPath<U, Decrement[DepthCounter]>]
-      : Target extends object
-        ? ({ [K in keyof Target]-?: K extends string | number ?
-          [K, ...ArrayPath<Target[K], Decrement[DepthCounter]>]
-          : []
-        }[keyof Target])
-        : [])
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export type Path<Target, Depth extends number = 10> = TypedPath<any, Target, Depth>
+export type ArrayPath<Target, Depth extends number = 10> = TypedArrayPath<any, Target, Depth>
+export type StringPath<Target, Depth extends number = 10> = TypedStringPath<any, Target, Depth>
+/* eslint-enable @typescript-eslint/no-explicit-any */
+export type TypedPath<Type, Target, Depth extends number = 10> = TypedArrayPath<Type, Target, Depth> | TypedStringPath<Type, Target, Depth>
+export type TypedStringPath<Type, Target, Depth extends number = 10> = Joined<TypedArrayPath<Type, Target, Depth>>
 
-export type PropertyAtPath<Target, Path extends readonly unknown[] | keyof Target> =
-  Path extends keyof Target
+// Array paths pointing to those things in type Target that are of type Type or null | undefined
+export type TypedArrayPath<Type, Target, Depth extends number = 5> =
+  Depth extends never ? never :
+  (([Type, Target] extends [Target | null | undefined, Type | null | undefined] ? [] : never)
+    | (Target extends (infer U)[]
+      ? [number, ...TypedArrayPath<Type, U, Decrement[Depth]>]
+      : (Target extends object
+          ? Required<{
+            [K in (keyof Target)]: [K, ...TypedArrayPath<Type, Target[K], Decrement[Depth]>]
+          }>[keyof Target]
+          : never)
+    )
+  )
+
+export type PropertyAtPath<Target, Path extends readonly unknown[] | string | number> =
+  Path extends string
+  ? PropertyAtStringPath<Target, Path>
+  : Path extends keyof Target
     ? Target[Path]
-    // Base recursive case, no more paths to traverse
-    : Path extends []
-      // Return target
-      ? Target
-      // Here we have 1 or more paths to access
-      : Path extends [infer TargetPath, ...infer RemainingPaths]
-        // Check Target can be accessed via this path
-        ? TargetPath extends keyof Target
-          // Recurse and grab paths
-          ? PropertyAtPath<Target[TargetPath], RemainingPaths>
-          // Target path is not keyof Target
-          : never
-        // Paths could not be destructured
-        : never;
+    : Path extends unknown[] ? PropertyAtArrayPath<Target, Path> : never
+
+export type PropertyAtStringPath<Target, Path extends string> =
+  // Base recursive case, no more paths to traverse
+  Path extends ''
+    // Return target
+    ? Target
+    : Path extends `${infer F}.${infer R}`
+      ? PropertyAtStringPath<Idx<Target, F>, R>
+      : Idx<Target, Path>
+
+export type Idx<T, K extends string> =
+  null extends T
+  ? Idx<Exclude<T, null>, K> | null
+  : undefined extends T
+    ? Idx<Exclude<T, undefined>, K> | undefined
+    : K extends keyof T
+      ? T[K]
+      : K extends `${number}` ? number extends keyof T ? T[number] : never : never;
+
+export type PropertyAtArrayPath<Target, Path extends readonly unknown[]> =
+  Path extends []
+    ? Target
+    : Path extends [infer TargetPath, ...infer RemainingPaths]
+      ? TargetPath extends keyof Target
+        ? PropertyAtArrayPath<Target[TargetPath], RemainingPaths>
+        // Target path is not keyof Target
+        : never
+      // Paths could not be destructured
+      : never;
 
 type Decrement = [never, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
     11, 12, 13, 14, 15, 16, 17, 18, 19, 20, ...0[]]
