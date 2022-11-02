@@ -1,8 +1,7 @@
 import React, {createContext, useContext, useMemo, useRef, useState} from 'react'
-import {arrayMoveImmutable} from 'array-move'
 import * as L from 'partial.lenses'
 
-import {ActionButton as Button, ClickToEdit, DragHandle, FieldComponentProps, formFor, ListEditor, ListEditorItems, MarkdownEditor, MenuButton, Selector, SelectorMenu, SubmitButton, Switch as PlainSwitch} from 'libraries/forms'
+import {ActionButton as Button, ClickToEdit, DragHandle, FieldComponentProps, formFor, ListEditor, ListEditorItems, MarkdownEditor, MenuButton, Selector, SelectorMenu, SubmitButton, Switch as PlainSwitch, TypedPath} from 'libraries/forms'
 import {Card, CssClass, HTMLTable} from 'libraries/ui'
 import {DanceChooser} from 'components/widgets/DanceChooser'
 import {Duration} from 'components/widgets/Duration'
@@ -31,6 +30,7 @@ const {
   useOnChangeFor,
   useRemoveFromList,
   useAppendToList,
+  useMoveItemInList,
   useMemoizedPath,
 } = formFor<EventProgramSettings>()
 
@@ -187,10 +187,7 @@ const DanceSetEditor = React.memo(function DanceSetEditor({index} : {index: numb
   const table = useRef<HTMLTableElement>(null)
 
   const item = useValueAt(['danceSets', index])
-  const onChangeDancesets = useOnChangeFor('danceSets')
-  function onMoveDanceSet(danceset, index) {
-    onChangeDancesets(sets => arrayMoveImmutable(sets, sets.indexOf(danceset), index))
-  }
+  const {moveDown: onMoveDown, moveUp: onMoveUp, moveTo} = useMoveItemInList('danceSets', index)
   const onRemove = useRemoveFromList('danceSets', index)
   function removeDanceSet(e) {
     onRemove()
@@ -206,8 +203,8 @@ const DanceSetEditor = React.memo(function DanceSetEditor({index} : {index: numb
     ...navigateAmongSiblings('div.danceset'),
     focusTo('tbody tr'),
     blurTo('body'),
-    moveUp(() => index > 0 && onMoveDanceSet(item, index - 1)),
-    moveDown(() => onMoveDanceSet(item, index + 1)),
+    moveUp(onMoveUp),
+    moveDown(onMoveDown),
     bind(['a', 'd'], clickInParent('div.danceset', 'button.addDance')),
     bind('i', clickInParent('div.danceset', 'button.addInfo')),
     bind(['delete', 'backspace'], removeDanceSet)
@@ -220,7 +217,7 @@ const DanceSetEditor = React.memo(function DanceSetEditor({index} : {index: numb
       <Button text={t`addInfo`} onClick={() => addItem(newEventProgramItem())} className="addInfo" />
       <MoveDanceSetSelector
         currentSet={item}
-        onSelect={({index})=> onMoveDanceSet(item, index)} />
+        onSelect={({index})=> moveTo(index)} />
       <Button className="delete" intent="danger" text={t`removeDanceSet`} onClick={removeDanceSet} />
     </h2>
     <ProgramListEditor tableRef={table} path={useMemoizedPath(['danceSets', index])} />
@@ -234,10 +231,10 @@ type DanceProgramPath = ['danceSets', number, 'program', number]
 function ProgramListEditor({path, tableRef}) {
   const { program, intervalMusicDuration } = useValueAt(path as ProgramSectionPath)
   const isIntroductionsSection = path[0] === 'introductions'
-  const onChange = useOnChangeFor([...path as ProgramSectionPath, 'program'])
   const onSetIntervalMusicDuration = useOnChangeFor([...path as ProgramSectionPath, 'intervalMusicDuration'])
+  const programPath = [...path as ProgramSectionPath, 'program'] as TypedPath<EventProgramRow[], EventProgramSettings>
 
-  return <ListEditor items={program} onChange={onChange} useDragHandle>
+  return <ListEditor path={programPath}>
     <HTMLTable condensed bordered striped className="danceSet" elementRef={tableRef}>
       {program.length === 0 ||
           <thead>
@@ -247,7 +244,7 @@ function ProgramListEditor({path, tableRef}) {
           </thead>
       }
       <tbody>
-        <ListEditorItems noWrapper component={ProgramItemEditor} itemProps={{path}} />
+        <ListEditorItems path={programPath} component={ProgramItemEditor} />
         {program.length === 0 &&
             <tr>
               <t.td className={CssClass.textMuted+ ' noProgram'} colSpan="5">programListIsEmpty</t.td>
@@ -275,7 +272,7 @@ function ProgramListEditor({path, tableRef}) {
 
 interface ProgramItemEditorProps {
   item: EventProgramRow
-  path: ProgramSectionPath
+  path: [...ProgramSectionPath, 'program']
   itemIndex: number
   onChange: (val: (v: unknown) => unknown) => unknown
   onRemove: () => unknown
@@ -283,9 +280,12 @@ interface ProgramItemEditorProps {
   onMoveDown: () => unknown
 }
 
-const ProgramItemEditor = React.memo(function ProgramItemEditor({path, itemIndex, item, onChange, onRemove, onMoveDown, onMoveUp} : ProgramItemEditorProps) {
-  const itemPath = [...path, 'program', itemIndex] as ProgramItemPath
+const ProgramItemEditor = React.memo(function ProgramItemEditor({path, itemIndex} : ProgramItemEditorProps) {
+  const itemPath = [...path, itemIndex] as ProgramItemPath
+  const item = useValueAt(itemPath)
   const defaultSlideStyleId = useValueAt('slideStyleId')
+  const onChangeStyle = useOnChangeFor([...itemPath, 'slideStyleId'])
+  const {moveDown: onMoveDown, moveUp: onMoveUp} = useMoveItemInList(path, itemIndex)
 
   const {__typename } = item.item
   const onKeyDown = useHotkeyHandler(
@@ -312,6 +312,7 @@ const ProgramItemEditor = React.memo(function ProgramItemEditor({path, itemIndex
     }, 0)
   }
 
+  const onRemove = useRemoveFromList(path, itemIndex)
   function removeItem(e) {
     onRemove()
     focusSiblingsOrParent(e.target, 'div.danceset')
@@ -333,7 +334,7 @@ const ProgramItemEditor = React.memo(function ProgramItemEditor({path, itemIndex
         inheritsStyles
         inheritedStyleId={defaultSlideStyleId}
         inheritedStyleName={t`eventDefaultStyle`}
-        onSelect={style => onChange(L.set('slideStyleId', style.id))} />
+        onSelect={style => onChangeStyle(style.id)} />
       <MoveItemToSectionSelector itemPath={itemPath} />
       <Button title={t`remove`} intent="danger" icon="cross" onClick={removeItem} className="delete" />
     </td>

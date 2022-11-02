@@ -31,6 +31,7 @@ const {
   Form,
   Field,
   useValueAt,
+  useRemoveFromList,
 } = formFor<Workshop>()
 
 interface WorkshopEditorProps {
@@ -59,9 +60,7 @@ export function WorkshopEditor({eventId, workshop, onSubmit, submitText}: Worksh
     <Field path="description" component={TextArea} label={t`description`} />
     <Field path="teachers" component={Input} label={t`teachers`}/>
     <t.h2>dances</t.h2>
-    <ListEditor items={dances} onChange={onChangeFor('dances')}
-      itemWrapper={Flex}
-      component={DanceListItem} />
+    <ListEditor path="dances" component={DanceListItem} />
     {dances.length === 0 && <t.p className={CssClass.textMuted}>noDances</t.p>}
     <FormGroup label={t`addDance`} inlineFill style={{marginTop: 6}}>
       <DanceChooser excludeFromSearch={dances} value={null} onChange={dance => onChangeFor('dances')(L.set(L.appendTo, dance))} key={dances.length} />
@@ -109,11 +108,12 @@ function useTakenWorkshopAbbreviations(eventId, workshopId) {
     .map(w => w.abbreviation)
 }
 
-function DanceListItem({item, onChange, onRemove}) {
-  const items = useValueAt('dances')
-  return <>
-    <DanceChooser excludeFromSearch={items} value={item} onChange={onChange} />
+function DanceListItem({itemIndex, tabIndex}) {
+  const excludeFromSearch = useValueAt('dances')
+  const onRemove = useRemoveFromList('dances', itemIndex)
+  return <Flex tabIndex={tabIndex}>
+    <Field label={t`Dance`} labelStyle="hidden" path={['dances', itemIndex]} component={DanceChooser} componentProps={{excludeFromSearch}} />
     <DragHandle />
     <Button intent="danger" text="X" onClick={onRemove} />
-  </>
+  </Flex>
 }

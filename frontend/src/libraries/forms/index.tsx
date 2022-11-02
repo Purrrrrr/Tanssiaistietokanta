@@ -1,4 +1,5 @@
-import React, {useCallback} from 'react'
+import React, {useCallback, useMemo} from 'react'
+import {arrayMoveImmutable} from 'array-move'
 import * as L from 'partial.lenses'
 
 import {NewValue, Path, PropertyAtPath, TypedPath} from './types'
@@ -15,7 +16,7 @@ export * from './ListEditor'
 export * from './MarkdownEditor'
 export * from './Selector'
 export * from './SyncStatus'
-export type { FieldComponentProps } from './types'
+export type { FieldComponentProps, Path, TypedPath } from './types'
 export * from './useAutosavingState'
 export {Validate} from './validation'
 
@@ -28,6 +29,11 @@ interface FormFor<T> {
   useOnChangeFor: <P extends Path<T>, SubT extends PropertyAtPath<T, P>>(path: P) => (v: NewValue<SubT>) => unknown
   useAppendToList: <P extends TypedPath<any[], T>, SubT extends PropertyAtPath<T, P> & any[]>(path: P) => (v: SubT[number] | ((v: SubT) => SubT[number])) => unknown
   useRemoveFromList: <P extends TypedPath<any[], T>>(path: P, index: number) => () => unknown
+  useMoveItemInList: <P extends TypedPath<any[], T>>(path: P, index: number) => {
+    moveTo: (newIndex: number) => unknown
+    moveUp: () => unknown
+    moveDown: () => unknown
+  }
   useMemoizedPath: <P extends Path<T>>(path: P) => P
 }
 
@@ -54,6 +60,14 @@ export function formFor<T>(): FormFor<T> {
     useRemoveFromList: <P extends Path<T>>(path: P, index: number) => {
       const onChange = useOnChangeFor<T, P, PropertyAtPath<T, P>>(path)
       return useCallback((item) => onChange(L.set(index, undefined)), [onChange, index])
+    },
+    useMoveItemInList: <P extends Path<T>>(path: P, index: number) => {
+      const onChange = useOnChangeFor<T, P, PropertyAtPath<T, P>>(path)
+      return useMemo(() => ({
+        moveTo: (newIndex: number) => onChange(list => arrayMoveImmutable(list as unknown[], index, newIndex) as PropertyAtPath<T, P>),
+        moveUp: () => { if (index > 0) onChange(list => arrayMoveImmutable(list as unknown[], index, index - 1) as PropertyAtPath<T, P>) },
+        moveDown: () => onChange(list => arrayMoveImmutable(list as unknown[], index, index + 1) as PropertyAtPath<T, P>),
+      }), [onChange, index])
     },
     useMemoizedPath,
   } as FormFor<T>
