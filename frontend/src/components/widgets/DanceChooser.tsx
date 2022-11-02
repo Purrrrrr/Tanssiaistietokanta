@@ -14,6 +14,7 @@ interface DanceChooserProps {
   excludeFromSearch?: Dance[],
   onChange: (dance: Dance | null, e: React.ChangeEvent<HTMLElement>) => unknown,
   readOnly?: boolean
+  hasConflict?: boolean
   emptyText?: string,
   allowEmpty?: boolean,
   placeholder?: string,
@@ -32,7 +33,7 @@ const t = makeTranslate({
   searchDance: 'Etsi tanssia...',
 })
 
-export function DanceChooser({value, onChange, excludeFromSearch, allowEmpty = false, emptyText, onBlur, placeholder, readOnly, ...props} : DanceChooserProps) {
+export function DanceChooser({hasConflict, value, onChange, excludeFromSearch, allowEmpty = false, emptyText, onBlur, placeholder, readOnly, ...props} : DanceChooserProps) {
   const [query, setQuery] = useState(value ? value.name : '')
   const [dances] = useDances()
   const [createDance] = useCreateDance()
@@ -46,7 +47,7 @@ export function DanceChooser({value, onChange, excludeFromSearch, allowEmpty = f
     inputValueRenderer={dance => dance.name ?? ''}
     itemRenderer={renderDance}
     itemsEqual="_id"
-    inputProps={{onBlur, placeholder: placeholder ?? t`searchDance`, onKeyDown: cancelEnter, ...props}}
+    inputProps={{onBlur, placeholder: placeholder ?? t`searchDance`, onKeyDown: cancelEnter, intent: hasConflict ? 'danger' : undefined, ...props}}
     itemListPredicate={(query, items) => {
       const dances = filterDances(items, query)
       return allowEmpty && query.trim() === '' ? [emptyDancePlaceholder(emptyText), ...dances] : dances

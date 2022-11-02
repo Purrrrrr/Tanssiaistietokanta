@@ -359,8 +359,7 @@ function ProgramDetailsEditor({path, onInputBlurred}) {
   }
 }
 
-//TODO: move hasConflict handling somewhere saner
-const DanceProgramChooser = React.memo(function DanceProgramChooser({value, onChange, hasConflict, onBlur, ...props} : FieldComponentProps<EventProgramItem, HTMLElement> & {onBlur: (e: React.FocusEvent) => unknown}) {
+const DanceProgramChooser = React.memo(function DanceProgramChooser({value, onChange, onBlur, ...props} : FieldComponentProps<EventProgramItem, HTMLElement> & {onBlur: (e: React.FocusEvent) => unknown}) {
   return <DanceChooser
     value={value?._id ? value as Dance : null}
     onChange={(dance, e) => onChange(
