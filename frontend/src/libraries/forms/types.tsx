@@ -27,15 +27,15 @@ type RequiredProperties<T extends object> = Exclude<{
 }[keyof T], undefined>
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export type Path<Target, Depth extends number = 10> = TypedPath<any, Target, Depth>
-export type ArrayPath<Target, Depth extends number = 10> = TypedArrayPath<any, Target, Depth>
-export type StringPath<Target, Depth extends number = 10> = TypedStringPath<any, Target, Depth>
+export type Path<Target, Depth extends number = 8> = TypedPath<any, Target, Depth>
+export type ArrayPath<Target, Depth extends number = 8> = TypedArrayPath<any, Target, Depth>
+export type StringPath<Target, Depth extends number = 8> = TypedStringPath<any, Target, Depth>
 /* eslint-enable @typescript-eslint/no-explicit-any */
-export type TypedPath<Type, Target, Depth extends number = 10> = TypedArrayPath<Type, Target, Depth> | TypedStringPath<Type, Target, Depth>
-export type TypedStringPath<Type, Target, Depth extends number = 10> = Joined<TypedArrayPath<Type, Target, Depth>>
+export type TypedPath<Type, Target, Depth extends number = 8> = TypedArrayPath<Type, Target, Depth> | TypedStringPath<Type, Target, Depth>
+export type TypedStringPath<Type, Target, Depth extends number = 8> = Joined<TypedArrayPath<Type, Target, Depth>>
 
 // Array paths pointing to those things in type Target that are of type Type or null | undefined
-export type TypedArrayPath<Type, Target, Depth extends number = 5> =
+export type TypedArrayPath<Type, Target, Depth extends number = 8> =
   Depth extends never ? never :
   (([Type, Target] extends [Target | null | undefined, Type | null | undefined] ? [] : never)
     | (Target extends (infer U)[]
