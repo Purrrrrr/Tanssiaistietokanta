@@ -112,7 +112,7 @@ function DanceListItem({itemIndex, tabIndex}) {
   const excludeFromSearch = useValueAt('dances')
   const onRemove = useRemoveFromList('dances', itemIndex)
   return <Flex tabIndex={tabIndex}>
-    <Field label={t`Dance`} labelStyle="hidden" path={['dances', itemIndex]} component={DanceChooser} componentProps={{excludeFromSearch}} />
+    <Field label={t`Dance`} labelStyle="hidden" path={`dances.${itemIndex}`} component={DanceChooser} componentProps={{excludeFromSearch}} />
     <DragHandle />
     <Button intent="danger" text="X" onClick={onRemove} />
   </Flex>

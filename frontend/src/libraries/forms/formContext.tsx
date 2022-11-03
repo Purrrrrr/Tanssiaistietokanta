@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useMemo, useRef } from 'react'
 import * as L from 'partial.lenses'
 
-import {ArrayPath, ChangeListener, LabelStyle, NewValue, Path, PropertyAtPath} from './types'
+import {ArrayPath, ChangeListener, LabelStyle, NewValue, PropertyAtPath, StringPath, toArrayPath} from './types'
 
 export const FormValidityContext = React.createContext<boolean>(true)
 export function useFormIsValid(): boolean {
@@ -9,10 +9,10 @@ export function useFormIsValid(): boolean {
 }
 
 export interface FormMetadataContextType<T> {
-  getValue: () => T
+  getValueAt: <P extends StringPath<T>, SubT extends PropertyAtPath<T, P>>(path: P) => SubT
   getConflicts: () => ArrayPath<T>[]
   subscribeToChanges: (f: ChangeListener) => (() => void)
-  onChangePath: <P extends Path<T>, SubT extends PropertyAtPath<T, P>>(p: P, t: NewValue<SubT>) => unknown
+  onChangePath: <P extends StringPath<T>, SubT extends PropertyAtPath<T, P>>(p: P, t: NewValue<SubT>) => unknown
   readOnly: boolean
   inline: boolean
   labelStyle: LabelStyle
@@ -37,7 +37,7 @@ export function useCreateFormMetadataContext<T>({value, onChange, labelStyle, in
         onChange(valueRef.current as T)
       }
       return {
-        getValue: () => valueRef.current,
+        getValueAt: (path) => L.get(toArrayPath(path), valueRef.current),
         getConflicts: () => conflictsRef.current ?? [],
         subscribeToChanges: (listener: ChangeListener) => {
           listeners.add(listener)
@@ -59,9 +59,3 @@ export function useFormMetadata<T>() {
   if (ctx === null) throw new Error('No form metadata context')
   return ctx
 }
-
-export function toArrayPath<T>(p: Path<T>): ArrayPath<T> {
-  if (Array.isArray(p)) return p
-  return String(p).split('.') as ArrayPath<T>
-}
-

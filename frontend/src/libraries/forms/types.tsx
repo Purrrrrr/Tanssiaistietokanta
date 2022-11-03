@@ -27,11 +27,9 @@ type RequiredProperties<T extends object> = Exclude<{
 }[keyof T], undefined>
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export type Path<Target, Depth extends number = 8> = TypedPath<any, Target, Depth>
 export type ArrayPath<Target, Depth extends number = 8> = TypedArrayPath<any, Target, Depth>
 export type StringPath<Target, Depth extends number = 8> = TypedStringPath<any, Target, Depth>
 /* eslint-enable @typescript-eslint/no-explicit-any */
-export type TypedPath<Type, Target, Depth extends number = 8> = TypedArrayPath<Type, Target, Depth> | TypedStringPath<Type, Target, Depth>
 export type TypedStringPath<Type, Target, Depth extends number = 8> = Joined<TypedArrayPath<Type, Target, Depth>>
 
 // Array paths pointing to those things in type Target that are of type Type or null | undefined
@@ -102,3 +100,11 @@ type Joined<Path extends readonly unknown[]> =
         ? `${TargetPath}.${Joined<RemainingPaths>}`
         // Paths could not be destructured
         : never;
+
+const numberRegex = /^(:?[1-9][0-9]*)|0$/
+export function toArrayPath<T>(p: StringPath<T>): ArrayPath<T> {
+  if (p === '') return []
+  return String(p)
+    .split('.')
+    .map(segment => segment.match(numberRegex) ? parseInt(segment, 10) : segment) as ArrayPath<T>
+}

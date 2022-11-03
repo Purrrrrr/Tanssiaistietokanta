@@ -2,7 +2,7 @@ import React, {ComponentProps} from 'react'
 import {Classes, Switch as BlueprintSwitch, TextArea as BlueprintTextArea, TextAreaProps as BlueprintTextAreaProps} from '@blueprintjs/core'
 import classNames from 'classnames'
 
-import {FieldComponentProps, PropertyAtPath, TypedPath} from './types'
+import {FieldComponentProps, PropertyAtPath, TypedStringPath} from './types'
 
 import {Field, FieldProps} from './Field'
 
@@ -10,7 +10,7 @@ type AdditionalPropsFrom<Props> = Omit<Props, keyof FieldComponentProps<unknown>
 
 export type SwitchFieldProps<P, V> = Omit<FieldProps<P, V, typeof Switch, {label: string, inline?: boolean}>, 'componentProps' | 'component' | 'labelStyle'>
 
-export function SwitchField<T, P extends TypedPath<boolean, T>, V extends PropertyAtPath<T, P> & boolean>(
+export function SwitchField<T, P extends TypedStringPath<boolean, T>, V extends PropertyAtPath<T, P> & boolean>(
   {label, ...props} : SwitchFieldProps<P, V>
 ) {
   // eslint-disable-next-line
@@ -36,7 +36,7 @@ export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
 )
 
 export type InputFieldProps<P, V>  = Omit<FieldProps<P, V, typeof Input, unknown>, 'component'>
-export function InputField<T, P extends TypedPath<string, T>, V extends PropertyAtPath<T, P> & string >(
+export function InputField<T, P extends TypedStringPath<string, T>, V extends PropertyAtPath<T, P> & string >(
   props : InputFieldProps<P, V>
 ) {
   // eslint-disable-next-line

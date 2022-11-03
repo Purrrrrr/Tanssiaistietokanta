@@ -164,7 +164,7 @@ function RowItem({children}) {
 }
 
 function InstructionEditor() {
-  const value = useValueAt([])
+  const value = useValueAt('')
   const setInstructions = useOnChangeFor('instructions')
   const [hasConflict, setHasConflict] = useState(value.instructions !== value.importedData?.instructions)
 
@@ -181,7 +181,7 @@ function InstructionEditor() {
         <Button text="Käytä tätä versiota" onClick={() => onResolve(value.instructions ?? '')} />
       </RowItem>
       <RowItem>
-        <Field path={['importedData', 'instructions']} component={MarkdownEditor} label="Tanssiwikin versio"/>
+        <Field path="importedData.instructions" component={MarkdownEditor} label="Tanssiwikin versio"/>
         <Button text="Käytä tätä versiota" onClick={() => onResolve(value.importedData?.instructions ?? '')} />
       </RowItem>
     </Row>;

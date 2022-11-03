@@ -3,7 +3,7 @@ import {SortableContainer, SortableElement} from 'react-sortable-hoc'
 import {arrayMoveImmutable} from 'array-move'
 
 import {useOnChangeFor, useValueAt} from '../hooks'
-import {Path, TypedPath} from '../types'
+import {StringPath, TypedStringPath} from '../types'
 
 /** Create a drag and drop list from items with the specified component
  *
@@ -13,13 +13,13 @@ import {Path, TypedPath} from '../types'
  * children: The list items, by default renders a ListEditorItems component with the supplied props
  */
 type ListEditorProps = Omit<ListEditorItemsProps, 'component'> & {
-  path: TypedPath<any[], any>
+  path: TypedStringPath<any[], any>
 } & (
   {children: React.ReactNode, component?: undefined} | {children?: undefined | null, component: any}
 )
 
 export function ListEditor({path, children, component} : ListEditorProps) {
-  const onChange = useOnChangeFor(path as Path<unknown>)
+  const onChange = useOnChangeFor(path as StringPath<unknown>)
   function onSortEnd({oldIndex, newIndex}) {
     onChange(items => arrayMoveImmutable(items, oldIndex, newIndex))
   }
@@ -30,12 +30,12 @@ export function ListEditor({path, children, component} : ListEditorProps) {
 }
 
 interface ListEditorItemsProps {
-  path: TypedPath<any[], any>
+  path: TypedStringPath<any[], any>
   component: unknown,
 }
 
 export function ListEditorItems({path, component} : ListEditorItemsProps) {
-  const items = useValueAt(path as Path<unknown>) as unknown[]
+  const items = useValueAt(path as StringPath<unknown>) as unknown[]
   return <>
     {items.map((item, index) =>
       <SortableItem
@@ -61,7 +61,7 @@ export function objectId(value: unknown, i: number): string | number {
 }
 
 interface SortableItemProps {
-  path: Path<any>
+  path: StringPath<any>
   component?: any
   itemIndex: number
 }

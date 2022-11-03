@@ -2,28 +2,27 @@ import {useCallback, useEffect, useMemo, useState} from 'react'
 import {arrayMoveImmutable} from 'array-move'
 import * as L from 'partial.lenses'
 
-import {NewValue, Path, PropertyAtPath, TypedPath} from './types'
+import {NewValue, PropertyAtPath, StringPath, toArrayPath, TypedStringPath} from './types'
 
-import {FormMetadataContextType, toArrayPath, useFormMetadata} from './formContext'
+import {FormMetadataContextType, useFormMetadata} from './formContext'
 
 export interface FormHooksFor<T> {
-  useValueAt: <P extends Path<T>>(path: P) => PropertyAtPath<T, P>
-  useOnChangeFor: <P extends Path<T>, SubT extends PropertyAtPath<T, P>>(path: P) => (v: NewValue<SubT>) => unknown
-  useAppendToList: <P extends TypedPath<any[], T>, SubT extends PropertyAtPath<T, P> & any[]>(path: P) => (v: SubT[number] | ((v: SubT) => SubT[number])) => unknown
-  useRemoveFromList: <P extends TypedPath<any[], T>>(path: P, index: number) => () => unknown
-  useMoveItemInList: <P extends TypedPath<any[], T>>(path: P, index: number) => {
+  useValueAt: <P extends StringPath<T>>(path: P) => PropertyAtPath<T, P>
+  useOnChangeFor: <P extends StringPath<T>, SubT extends PropertyAtPath<T, P>>(path: P) => (v: NewValue<SubT>) => unknown
+  useAppendToList: <P extends TypedStringPath<any[], T>, SubT extends PropertyAtPath<T, P> & any[]>(path: P) => (v: SubT[number] | ((v: SubT) => SubT[number])) => unknown
+  useRemoveFromList: <P extends TypedStringPath<any[], T>>(path: P, index: number) => () => unknown
+  useMoveItemInList: <P extends TypedStringPath<any[], T>>(path: P, index: number) => {
     moveTo: (newIndex: number) => unknown
     moveUp: () => unknown
     moveDown: () => unknown
   }
-  useMemoizedPath: <P extends Path<T>>(path: P) => P
 }
 
 export function formHooksFor<T>(): FormHooksFor<T> {
   return {
     useValueAt,
     useOnChangeFor,
-    useAppendToList: <P extends Path<T>>(path: P) => {
+    useAppendToList: <P extends StringPath<T>>(path: P) => {
       const onChange = useOnChangeFor<T, P, PropertyAtPath<T, P>>(path)
       return useCallback((item) => {
         onChange(items =>
@@ -35,11 +34,11 @@ export function formHooksFor<T>(): FormHooksFor<T> {
         )
       }, [onChange])
     },
-    useRemoveFromList: <P extends Path<T>>(path: P, index: number) => {
+    useRemoveFromList: <P extends StringPath<T>>(path: P, index: number) => {
       const onChange = useOnChangeFor<T, P, PropertyAtPath<T, P>>(path)
       return useCallback((item) => onChange(L.set(index, undefined)), [onChange, index])
     },
-    useMoveItemInList: <P extends Path<T>>(path: P, index: number) => {
+    useMoveItemInList: <P extends StringPath<T>>(path: P, index: number) => {
       const onChange = useOnChangeFor<T, P, PropertyAtPath<T, P>>(path)
       return useMemo(() => ({
         moveTo: (newIndex: number) => onChange(list => arrayMoveImmutable(list as unknown[], index, newIndex) as PropertyAtPath<T, P>),
@@ -47,13 +46,11 @@ export function formHooksFor<T>(): FormHooksFor<T> {
         moveDown: () => onChange(list => arrayMoveImmutable(list as unknown[], index, index + 1) as PropertyAtPath<T, P>),
       }), [onChange, index])
     },
-    useMemoizedPath,
   } as FormHooksFor<T>
 }
 
-export function useValueAt<T, P extends Path<T>, SubT extends PropertyAtPath<T, P>>(path : P) : SubT {
-  const stablePath = useMemoizedPath(path)
-  const getValue = useCallback((ctx) => L.get(stablePath, ctx.getValue()), [stablePath])
+export function useValueAt<T, P extends StringPath<T>, SubT extends PropertyAtPath<T, P>>(path : P) : SubT {
+  const getValue = useCallback((ctx) => ctx.getValueAt(path), [path])
   return useFormValueSubscription(getValue)
 }
 
@@ -70,23 +67,12 @@ export function useFormValueSubscription<T, V>(getValue: ((ctx: FormMetadataCont
   return state
 }
 
-export function useOnChangeFor<T, P extends Path<T>, SubT extends PropertyAtPath<T, P>>(path : P) : (v: NewValue<SubT>) => unknown {
+export function useOnChangeFor<T, P extends StringPath<T>, SubT extends PropertyAtPath<T, P>>(path : P) : (v: NewValue<SubT>) => unknown {
   const { onChangePath } = useFormMetadata<T>()
-  const stablePath = useMemoizedPath(path)
   return useCallback(
-    val => onChangePath(stablePath, val),
-    [onChangePath, stablePath]
+    val => onChangePath(path, val),
+    [onChangePath, path]
   )
-}
-
-function useMemoizedPath<T>(path: T): T {
-  const pathDep = getStringPath(path as Path<unknown>)
-  //eslint-disable-next-line react-hooks/exhaustive-deps
-  return useMemo(() => path, [pathDep])
-}
-
-function getStringPath<P extends Path<unknown>>(path: P): string{
-  return Array.isArray(path) ? path.join('.') : String(path)
 }
 
 interface FieldData<T> extends Pick<FormMetadataContextType<T>, 'readOnly' | 'inline' | 'labelStyle'> {
@@ -95,23 +81,22 @@ interface FieldData<T> extends Pick<FormMetadataContextType<T>, 'readOnly' | 'in
   onChange: (v: NewValue<T>) => unknown
 }
 
-export function useFieldAt<T, P extends Path<T>, SubT extends PropertyAtPath<T, P>>(path : P) : FieldData<SubT> {
+export function useFieldAt<T, P extends StringPath<T>, SubT extends PropertyAtPath<T, P>>(path : P) : FieldData<SubT> {
   const propagateOnChange = useOnChangeFor<T, P, SubT>(path)
 
-  const stablePath = useMemoizedPath(path)
   const ctx = useFormMetadata<T>()
-  const [value, setValue] = useState(() => L.get(stablePath, ctx.getValue()))
-  const [hasConflict, setHasConflict] = useState(() => hasConflictsAtPath(ctx.getConflicts(), stablePath))
+  const [value, setValue] = useState(() => ctx.getValueAt<P, SubT>(path))
+  const [hasConflict, setHasConflict] = useState(() => hasConflictsAtPath(ctx.getConflicts(), path))
 
   useEffect(() => {
     const callback = () => {
-      setValue(L.get(stablePath, ctx.getValue()))
-      setHasConflict(hasConflictsAtPath(ctx.getConflicts(), stablePath))
+      setValue(ctx.getValueAt<P, SubT>(path))
+      setHasConflict(hasConflictsAtPath(ctx.getConflicts(), path))
     }
     const unsubscribe = ctx.subscribeToChanges(callback)
     callback()
     return unsubscribe
-  }, [ctx, stablePath, setValue])
+  }, [ctx, path, setValue])
 
   const onChange = useCallback((v) => {
     setValue(v)

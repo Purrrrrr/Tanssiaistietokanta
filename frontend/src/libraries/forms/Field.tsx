@@ -2,7 +2,7 @@ import React from 'react'
 
 import {FormGroup} from 'libraries/ui'
 
-import {FieldComponentProps, LabelStyle, NoRequiredProperties, PartialWhen, Path, PropertyAtPath} from './types'
+import {FieldComponentProps, LabelStyle, NoRequiredProperties, PartialWhen, PropertyAtPath, StringPath} from './types'
 
 import { useFieldAt } from './hooks'
 import {ErrorMessage, useError, ValidationProps} from './validation'
@@ -22,7 +22,7 @@ export type FieldProps<ValuePath, Value, Component extends React.ElementType, Ad
 
 type MaybeComponentProps<Props extends object> = PartialWhen<NoRequiredProperties<Props>, { componentProps: Props }>
 
-export function Field<T, P extends Path<T>, V extends PropertyAtPath<T, P>, C extends React.ElementType, AP>(
+export function Field<T, P extends StringPath<T>, V extends PropertyAtPath<T, P>, C extends React.ElementType, AP>(
   {
     label,
     labelInfo,
