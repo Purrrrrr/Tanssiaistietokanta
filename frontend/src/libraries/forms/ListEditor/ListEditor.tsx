@@ -2,7 +2,7 @@ import React from 'react'
 import {SortableContainer, SortableElement} from 'react-sortable-hoc'
 import {arrayMoveImmutable} from 'array-move'
 
-import {useOnChangeFor, useValueAt} from '../formContext'
+import {useOnChangeFor, useValueAt} from '../hooks'
 import {Path, TypedPath} from '../types'
 
 /** Create a drag and drop list from items with the specified component

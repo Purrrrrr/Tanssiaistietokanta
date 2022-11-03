@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 
-import { ArrayPath } from './types'
+import { ArrayPath, NewValue } from './types'
 
 import { FormMetadataContext, FormMetadataContextType, FormValidityContext, useCreateFormMetadataContext} from './formContext'
 import {useValidationResult} from './validation'
@@ -9,10 +9,10 @@ const defaultLabelStyle = 'above'
 
 export interface FormProps<T> extends
   Omit<React.ComponentPropsWithoutRef<'form'>, 'onSubmit' | 'onChange'>,
-  Omit<Partial<FormMetadataContextType<T>>, 'onChange'>,
-  Pick<FormMetadataContextType<T>, 'onChange'>
+  Omit<Partial<FormMetadataContextType<T>>, 'onChange'>
 {
   value: T
+  onChange: (t: NewValue<T>) => unknown
   conflicts?: ArrayPath<T>[]
   inline?: boolean
   onSubmit?: (t: T, e: React.FormEvent) => unknown
