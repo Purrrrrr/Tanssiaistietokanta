@@ -3,10 +3,10 @@ import {Classes} from '@blueprintjs/core'
 import classNames from 'classnames'
 import Markdown from 'markdown-to-jsx'
 
-import {AdditionalPropsFrom, FieldComponentProps} from './types'
+import {Icon} from 'libraries/ui'
 
-import {Icon} from '../ui'
-import {Input} from './fieldComponents'
+import {AdditionalPropsFrom, FieldComponentProps} from '../types'
+import {Input} from './basicComponents'
 import {MarkdownEditor} from './MarkdownEditor'
 
 import './ClosableEditor.sass'

@@ -2,9 +2,8 @@ import React, {ComponentProps} from 'react'
 import {Classes, Switch as BlueprintSwitch, TextArea as BlueprintTextArea, TextAreaProps as BlueprintTextAreaProps} from '@blueprintjs/core'
 import classNames from 'classnames'
 
-import {FieldComponentProps, PropertyAtPath, TypedStringPath} from './types'
-
-import {Field, FieldProps} from './Field'
+import {Field, FieldProps} from '../Field'
+import {FieldComponentProps, PropertyAtPath, TypedStringPath} from '../types'
 
 type AdditionalPropsFrom<Props> = Omit<Props, keyof FieldComponentProps<unknown>>
 
