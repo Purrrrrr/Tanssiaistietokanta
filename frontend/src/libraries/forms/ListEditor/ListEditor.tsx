@@ -12,29 +12,27 @@ import {StringPath, TypedStringPath} from '../types'
  * onChange: a change handler that receives a changed items list
  * children: The list items, by default renders a ListEditorItems component with the supplied props
  */
-type ListEditorProps = Omit<ListEditorItemsProps, 'component'> & {
-  path: TypedStringPath<any[], any>
-} & (
+export type ListEditorProps<T> = Omit<ListEditorItemsProps<T>, 'component'> & (
   {children: React.ReactNode, component?: undefined} | {children?: undefined | null, component: any}
 )
 
-export function ListEditor({path, children, component} : ListEditorProps) {
+export function ListEditor<T>({path, children, component} : ListEditorProps<T>) {
   const onChange = useOnChangeFor(path as StringPath<unknown>)
   function onSortEnd({oldIndex, newIndex}) {
     onChange(items => arrayMoveImmutable(items, oldIndex, newIndex))
   }
 
   return <SortableList distance={5} onSortEnd={onSortEnd} useDragHandle>
-    {children ?? <ListEditorItems path={path} component={component} />}
+    {children ?? <ListEditorItems<T> path={path} component={component} />}
   </SortableList>
 }
 
-interface ListEditorItemsProps {
-  path: TypedStringPath<any[], any>
+export interface ListEditorItemsProps<T> {
+  path: TypedStringPath<any[], T>
   component: unknown,
 }
 
-export function ListEditorItems({path, component} : ListEditorItemsProps) {
+export function ListEditorItems<T>({path, component} : ListEditorItemsProps<T>) {
   const items = useValueAt(path as StringPath<unknown>) as unknown[]
   return <>
     {items.map((item, index) =>

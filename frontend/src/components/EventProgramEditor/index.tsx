@@ -1,7 +1,7 @@
 import React, {createContext, useContext, useMemo, useRef, useState} from 'react'
 import * as L from 'partial.lenses'
 
-import {ActionButton as Button, ClickToEdit, DragHandle, FieldComponentProps, formFor, ListEditor, ListEditorItems, MarkdownEditor, MenuButton, Selector, SelectorMenu, SubmitButton, Switch as PlainSwitch, toArrayPath, TypedStringPath} from 'libraries/forms'
+import {ActionButton as Button, ClickToEdit, FieldComponentProps, formFor, MarkdownEditor, MenuButton, Selector, SelectorMenu, SubmitButton, Switch as PlainSwitch, toArrayPath} from 'libraries/forms'
 import {Card, CssClass, HTMLTable} from 'libraries/ui'
 import {DanceChooser} from 'components/widgets/DanceChooser'
 import {Duration} from 'components/widgets/Duration'
@@ -26,6 +26,9 @@ const {
   Field,
   Switch,
   Form,
+  ListEditor,
+  ListEditorItems,
+  DragHandle,
   useValueAt,
   useOnChangeFor,
   useRemoveFromList,
@@ -226,11 +229,11 @@ type ProgramSectionPath = 'introductions' | `danceSets.${number}`
 type ProgramItemPath = `${ProgramSectionPath}.program.${number}`
 type DanceProgramPath = `danceSets.${number}.program.${number}`
 
-function ProgramListEditor({path, tableRef}: {path: ProgramSectionPath, tableRef: any}) {
+function ProgramListEditor({path, tableRef}: {path: ProgramSectionPath, tableRef: React.RefObject<HTMLTableElement>}) {
   const { program, intervalMusicDuration } = useValueAt(path)
   const isIntroductionsSection = path.startsWith('introductions')
   const onSetIntervalMusicDuration = useOnChangeFor(`${path}.intervalMusicDuration`)
-  const programPath = `${path}.program` as TypedStringPath<EventProgramRow[], EventProgramSettings>
+  const programPath = `${path}.program` as const
 
   return <ListEditor path={programPath}>
     <HTMLTable condensed bordered striped className="danceSet" elementRef={tableRef}>

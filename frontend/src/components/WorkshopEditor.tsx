@@ -3,7 +3,7 @@ import * as L from 'partial.lenses'
 
 import {backendQueryHook, graphql} from 'backend'
 
-import {DragHandle, formFor, Input, ListEditor, SubmitButton, TextArea} from 'libraries/forms'
+import {formFor, Input, SubmitButton, TextArea} from 'libraries/forms'
 import {Button, CssClass, FormGroup} from 'libraries/ui'
 import {Flex} from 'components/Flex'
 import {DanceChooser} from 'components/widgets/DanceChooser'
@@ -30,6 +30,8 @@ type Workshop = Omit<WorkshopWithEventId, 'eventId'>
 const {
   Form,
   Field,
+  DragHandle,
+  ListEditor,
   useValueAt,
   useRemoveFromList,
 } = formFor<Workshop>()
