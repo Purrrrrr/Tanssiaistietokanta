@@ -34,10 +34,7 @@ export function formHooksFor<T>(): FormHooksFor<T> {
         )
       }, [onChange])
     },
-    useRemoveFromList: <P extends StringPath<T>>(path: P, index: number) => {
-      const onChange = useOnChangeFor<T, P, PropertyAtPath<T, P>>(path)
-      return useCallback((item) => onChange(L.set(index, undefined)), [onChange, index])
-    },
+    useRemoveFromList,
     useMoveItemInList: <P extends StringPath<T>>(path: P, index: number) => {
       const onChange = useOnChangeFor<T, P, PropertyAtPath<T, P>>(path)
       return useMemo(() => ({
@@ -52,6 +49,12 @@ export function formHooksFor<T>(): FormHooksFor<T> {
 export function useValueAt<T, P extends StringPath<T>, SubT extends PropertyAtPath<T, P>>(path : P) : SubT {
   const getValue = useCallback((ctx) => ctx.getValueAt(path), [path])
   return useFormValueSubscription(getValue)
+}
+
+
+export function useRemoveFromList<T, P extends StringPath<T>>(path: P, index: number) {
+  const onChange = useOnChangeFor<T, P, PropertyAtPath<T, P>>(path)
+  return useCallback(() => onChange(L.set(index, undefined)), [onChange, index])
 }
 
 export function useFormValueSubscription<T, V>(getValue: ((ctx: FormMetadataContextType<T>) => V)): V {

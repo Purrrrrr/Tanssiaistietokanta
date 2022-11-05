@@ -64,6 +64,9 @@ export function moveDown(callback) {
 export function clickInParent(parentSelector, selector) {
   return event => clickIn(event.target.closest(parentSelector), selector)
 }
+export function clickInElement(selector) {
+  return event => clickIn(event.target, selector)
+}
 
 function clickIn(container, selector) {
   const el = container.querySelector(selector)

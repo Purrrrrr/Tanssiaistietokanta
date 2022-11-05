@@ -5,6 +5,7 @@ import {PropertyAtPath, StringPath, TypedStringPath} from './types'
 import {Field, FieldProps} from './Field'
 import {InputField, InputFieldProps, SwitchField, SwitchFieldProps} from './fieldComponents/basicComponents'
 import {Form, FormProps} from './Form'
+import {RemoveItemButton, RemoveItemButtonProps} from './formControls'
 import {FormHooksFor, formHooksFor} from './hooks'
 import {DragHandle, ListEditor, ListEditorItems, ListEditorItemsProps, ListEditorProps} from './ListEditor'
 
@@ -12,10 +13,9 @@ export * from './fieldComponents/basicComponents'
 export * from './fieldComponents/closableEditors'
 export * from './fieldComponents/MarkdownEditor'
 export * from './fieldComponents/Selector'
-export * from './formControls'
-export * from './ListEditor'
+export {ActionButton, asFormControl, FormControl, SubmitButton} from './formControls'
 export * from './SyncStatus'
-export type { FieldComponentProps, TypedStringPath } from './types'
+export type { FieldComponentProps } from './types'
 export { toArrayPath } from './types'
 export * from './useAutosavingState'
 export {Validate} from './validation'
@@ -28,6 +28,7 @@ interface FormFor<T> extends FormHooksFor<T> {
   ListEditor: (props: ListEditorProps<T>) => React.ReactElement
   ListEditorItems: (props: ListEditorItemsProps<T>) => React.ReactElement
   DragHandle: typeof DragHandle
+  RemoveItemButton: (props: RemoveItemButtonProps<T>) => React.ReactElement
 }
 
 export function formFor<T>(): FormFor<T> {
@@ -36,6 +37,7 @@ export function formFor<T>(): FormFor<T> {
     Field,
     Switch: SwitchField,
     Input: InputField,
+    RemoveItemButton,
     ListEditor,
     ListEditorItems,
     DragHandle,
