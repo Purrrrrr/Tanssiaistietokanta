@@ -1,3 +1,5 @@
+const {ValidationError} = require('apollo-server-express')
+
 module.exports = function (typeName) {
   return context => {
     if (context.params.provider === 'graphql') {
@@ -10,10 +12,9 @@ module.exports = function (typeName) {
     const errors = graphql.validate(context.data, typeName)
     if (errors.length) {
       context.statusCode = 400
-      context.result = {
-        errorCode: 'validation-error',
-        errors
-      }
+      throw new ValidationError(errors.join('\n'), {
+        errorCode: 'validation-error'
+      })
     }
   }
 }
