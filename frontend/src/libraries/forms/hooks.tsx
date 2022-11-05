@@ -2,16 +2,16 @@ import {useCallback, useEffect, useMemo, useState} from 'react'
 import {arrayMoveImmutable} from 'array-move'
 import * as L from 'partial.lenses'
 
-import {NewValue, PropertyAtPath, StringPath, toArrayPath, TypedStringPath} from './types'
+import {NewValue, PropertyAtPath, StringPath, StringPathToList, toArrayPath} from './types'
 
 import {FormMetadataContextType, useFormMetadata} from './formContext'
 
 export interface FormHooksFor<T> {
   useValueAt: <P extends StringPath<T>>(path: P) => PropertyAtPath<T, P>
   useOnChangeFor: <P extends StringPath<T>, SubT extends PropertyAtPath<T, P>>(path: P) => (v: NewValue<SubT>) => unknown
-  useAppendToList: <P extends TypedStringPath<any[], T>, SubT extends PropertyAtPath<T, P> & any[]>(path: P) => (v: SubT[number] | ((v: SubT) => SubT[number])) => unknown
-  useRemoveFromList: <P extends TypedStringPath<any[], T>>(path: P, index: number) => () => unknown
-  useMoveItemInList: <P extends TypedStringPath<any[], T>>(path: P, index: number) => {
+  useAppendToList: <P extends StringPathToList<T>, SubT extends PropertyAtPath<T, P> & unknown[]>(path: P) => (v: SubT[number] | ((v: SubT) => SubT[number])) => unknown
+  useRemoveFromList: <P extends StringPathToList<T>>(path: P, index: number) => () => unknown
+  useMoveItemInList: <P extends StringPathToList<T>>(path: P, index: number) => {
     moveTo: (newIndex: number) => unknown
     moveUp: () => unknown
     moveDown: () => unknown

@@ -29,6 +29,7 @@ type RequiredProperties<T extends object> = Exclude<{
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export type ArrayPath<Target, Depth extends number = 8> = TypedArrayPath<any, Target, Depth>
 export type StringPath<Target, Depth extends number = 8> = TypedStringPath<any, Target, Depth>
+export type StringPathToList<Target, Depth extends number = 8> = TypedStringPath<any[], Target, Depth>
 /* eslint-enable @typescript-eslint/no-explicit-any */
 export type TypedStringPath<Type, Target, Depth extends number = 8> = Joined<TypedArrayPath<Type, Target, Depth>>
 

@@ -3,7 +3,7 @@ import {SortableContainer, SortableElement} from 'react-sortable-hoc'
 import {arrayMoveImmutable} from 'array-move'
 
 import {useOnChangeFor, useValueAt} from '../hooks'
-import {StringPath, TypedStringPath} from '../types'
+import {StringPath, StringPathToList} from '../types'
 
 /** Create a drag and drop list from items with the specified component
  *
@@ -28,7 +28,7 @@ export function ListEditor<T>({path, children, component} : ListEditorProps<T>) 
 }
 
 export interface ListEditorItemsProps<T> {
-  path: TypedStringPath<any[], T>
+  path: StringPathToList<T>
   component: unknown,
 }
 
@@ -39,7 +39,7 @@ export function ListEditorItems<T>({path, component} : ListEditorItemsProps<T>) 
       <SortableItem
         key={objectId(item, index)}
         index={index}
-        path={path}
+        path={path as StringPath<unknown>}
         itemIndex={index}
         component={component}
       />
@@ -59,7 +59,7 @@ export function objectId(value: unknown, i: number): string | number {
 }
 
 interface SortableItemProps {
-  path: StringPath<any>
+  path: StringPath<unknown>
   component?: any
   itemIndex: number
 }
