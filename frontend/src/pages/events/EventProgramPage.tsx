@@ -42,37 +42,35 @@ function toEventProgramSettings(
 
 function toProgramInput({introductions, danceSets, slideStyleId} : EventProgramSettings) {
   return removeTypenames({
-    introductions: introductions.program.map(toIntroductionInput),
+    introductions: introductions.program.map(toProgramItemInput),
     danceSets: L.modify(
       [L.elems, 'program', L.elems], toProgramItemInput, danceSets
-    ).map(({isIntroductionsSection, ...d}) => d),
+    ),
     slideStyleId,
   })
 }
 
-function toIntroductionInput({ _id, item: { _id: eventProgramId, ...rest}, slideStyleId}: EventProgramRow) {
-  return { _id, eventProgramId, eventProgram: rest, slideStyleId }
-}
-
-function toProgramItemInput({_id, slideStyleId, item: {__typename, _id: itemId, ...rest}} : EventProgramRow) {
+function toProgramItemInput({_id, slideStyleId, item: {__typename, ...item}} : EventProgramRow) {
+  const commonProps = {_id, slideStyleId, type: __typename}
   switch(__typename) {
     case 'Dance':
-    case 'RequestedDance':
-      if (!itemId) return {type: 'REQUESTED_DANCE', slideStyleId, _id}
       return {
-        _id,
-        type: 'DANCE',
-        danceId: itemId,
-        slideStyleId,
+        ...commonProps,
+        dance: { danceId: item._id}
+      }
+    case 'RequestedDance':
+      return {
+        ...commonProps,
+        requestedDance: {}
       }
     case 'EventProgram':
+    {
+      const {_id: eventProgramId, ...eventProgram} = item
       return {
-        _id,
-        type: 'EVENT_PROGRAM',
-        eventProgramId: itemId,
-        eventProgram: rest,
-        slideStyleId,
+        ...commonProps,
+        eventProgram: { eventProgramId, eventProgram }
       }
+    }
     default:
       throw new Error('Unexpected program item type '+__typename)
   }

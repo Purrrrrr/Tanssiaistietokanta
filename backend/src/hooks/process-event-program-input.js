@@ -25,22 +25,35 @@ module.exports = function (options = {}) {
   }
 }
 
-async function processProgramItem({_id, type, danceId, eventProgramId, eventProgram, slideStyleId}, eventProgramService) {
+async function processProgramItem(item, eventProgramService) {
+  const {_id, type, slideStyleId, ...rest} = item
+  const commonProps = {
+    _id, __typename: type, slideStyleId
+  }
   switch(type) {
-    case 'DANCE':
-    case 'REQUESTED_DANCE':
-      if (!danceId) return { _id, slideStyleId, ...REQUESTED_DANCE }
-      return {
-        _id, danceId, slideStyleId, __typename: 'Dance'
-      }
-    case 'EVENT_PROGRAM':
+    case 'Dance':
+    case 'RequestedDance':
     {
+      const {danceId} = getParameters(rest, type)
+      const __typename = danceId ? type : 'RequestedDance'
+      return {
+        ...commonProps, danceId, __typename
+      }
+    }
+    case 'EventProgram':
+    {
+      const {eventProgramId, eventProgram} = getParameters(rest, type)
       const id = await storeProgram(eventProgramId, eventProgram, eventProgramService)
       return {
-        _id, eventProgramId: id, slideStyleId, __typename: 'EventProgram'
+        ...commonProps, eventProgramId: id
       }
     }
   }
+}
+
+function getParameters(input, type) {
+  const prop = type[0].toLowerCase() + type.slice(1)
+  return input[prop]
 }
 
 async function storeProgram(eventProgramId, eventProgram, eventProgramService) {
@@ -51,8 +64,4 @@ async function storeProgram(eventProgramId, eventProgram, eventProgramService) {
     const { _id } = await eventProgramService.create(eventProgram)
     return _id
   }
-}
-
-const REQUESTED_DANCE = {
-  __typename: 'RequestedDance'
 }

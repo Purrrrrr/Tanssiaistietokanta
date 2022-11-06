@@ -54,11 +54,13 @@ type Mutation {
   createEvent(event: EventInput!): Event!
   modifyEvent(id: ID!, event: EventInput!): Event!
   modifyEventProgram(id: ID!, program: ProgramInput!): Event!
+  patchEventProgram(id: ID!, program: PatchProgramInput!): Event!
   deleteEvent(id: ID!): Event!
 }
 
 input EventInput {
   name: String!
+  program: ProgramInput
 }
 
 input ProgramInput {
@@ -77,30 +79,20 @@ input DanceSetInput {
 input ProgramItemInput {
   "Row id"
   _id: ID!
-  "The actual type of the item, the other fields are used depending on the value of this field"
-  type: ProgramType!
-  "The id of the program to use when type is EVENT_PROGRAM"
-  eventProgramId: ID
-  "The value to use when type is EVENT_PROGRAM"
-  eventProgram: EventProgramInput
-  "The id of the dance to use when type is DANCE"
-  danceId: ID
   slideStyleId: ID
+  "The actual type of the item, the rest of the fields are used depending on the value of this field"
+  type: ProgramType!
+  dance: DanceProgramItemInput
+  requestedDance: DanceProgramItemInput
+  eventProgram: EventProgramItemInput
 }
 
 input IntroductionInput {
   "Row id"
   _id: ID!
-  eventProgramId: ID
-  "The value to use when modifying event program"
-  eventProgram: EventProgramInput
+  type: IntroductionProgramType!
+  eventProgram: EventProgramItemInput
   slideStyleId: ID
-}
-
-enum ProgramType {
-  DANCE
-  EVENT_PROGRAM
-  REQUESTED_DANCE
 }
 
 input EventProgramInput {
@@ -108,4 +100,38 @@ input EventProgramInput {
   description: String
   duration: Float
   showInLists: Boolean!
+}
+
+enum IntroductionProgramType {
+  EventProgram
+}
+enum ProgramType {
+  Dance
+  EventProgram
+  RequestedDance
+}
+
+input EventProgramItemInput {
+  "The id of the program to use when type is EVENT_PROGRAM"
+  eventProgramId: ID
+  "The value to use when type is EVENT_PROGRAM"
+  eventProgram: EventProgramInput
+}
+
+input DanceProgramItemInput {
+  "The id of the dance to use when type is DANCE"
+  danceId: ID
+}
+
+input PatchEventInput {
+  name: String
+  program: PatchProgramInput
+}
+
+scalar JSONPatch
+
+input PatchProgramInput {
+  introductions: JSONPatch
+  danceSets: JSONPatch
+  slideStyleId: ID
 }

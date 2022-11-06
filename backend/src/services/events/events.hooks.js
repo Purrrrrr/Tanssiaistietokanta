@@ -1,8 +1,7 @@
 const validateInputType = require('../../hooks/validateGraphQLInputType')
 const provideDefaultValues = require('../../hooks/provideDefaultValues')
-const preventPatchOps = require('../../hooks/prevent-patch-ops')
 
-
+const mergeEventPatch = require('../../hooks/merge-event-patch')
 const processEventProgramInput = require('../../hooks/process-event-program-input')
 
 module.exports = {
@@ -12,7 +11,7 @@ module.exports = {
     get: [],
     create: [validateInputType('EventInput'), provideDefaultValues('EventInput', {program: null, workshops: []}), processEventProgramInput()],
     update: [validateInputType('EventInput'), processEventProgramInput()],
-    patch: [preventPatchOps({keys: 'program'}), processEventProgramInput()],
+    patch: [validateInputType('PatchEventInput'), mergeEventPatch(), validateInputType('EventInput'), processEventProgramInput()],
     remove: []
   },
 
