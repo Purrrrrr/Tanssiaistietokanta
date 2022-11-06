@@ -31,6 +31,8 @@ interface NewDancePlaceholder extends Dance {
 
 const t = makeTranslate({
   searchDance: 'Etsi tanssia...',
+  emptyDancePlaceholder: 'Tansseja ei löytynyt',
+  createDance: 'Luo uusi tanssi',
 })
 
 export function DanceChooser({hasConflict, value, onChange, excludeFromSearch, allowEmpty = false, emptyText, onBlur, placeholder, readOnly, ...props} : DanceChooserProps) {
@@ -39,21 +41,28 @@ export function DanceChooser({hasConflict, value, onChange, excludeFromSearch, a
   const [createDance] = useCreateDance()
 
   const items = excludeFromSearch
-    ? dances.filter((dance: Dance) => dance === value || !excludeFromSearch.some(excluded => excluded._id === dance._id))
+    ? dances.filter((dance: Dance) => dance._id === value?._id || !excludeFromSearch.some(excluded => excluded._id === dance._id))
     : dances
 
-  return <Suggest<Dance|EmptyDancePlaceholder>
+  const showCreateDance = query.trim().length > 0
+    && !dances.some(dance => danceNameEquals(dance, query))
+
+  return <Suggest<(Dance)|EmptyDancePlaceholder>
     items={items}
     inputValueRenderer={dance => dance.name ?? ''}
+    itemDisabled={dance => {
+      if (isPlaceholder(dance)) return !allowEmpty
+      return false
+    }}
     itemRenderer={renderDance}
     itemsEqual="_id"
     inputProps={{onBlur, placeholder: placeholder ?? t`searchDance`, onKeyDown: cancelEnter, intent: hasConflict ? 'danger' : undefined, ...props}}
     itemListPredicate={(query, items) => {
       const dances = filterDances(items, query)
-      return allowEmpty && query.trim() === '' ? [emptyDancePlaceholder(emptyText), ...dances] : dances
+      return dances.length > 0 || showCreateDance ? dances : [emptyDancePlaceholder(emptyText)]
     }}
     createNewItemFromQuery={newDancePlaceholder}
-    createNewItemRenderer={renderCreateItem}
+    createNewItemRenderer={showCreateDance ? renderCreateItem : undefined}
     query={query}
     onQueryChange={setQuery}
     selectedItem={value}
@@ -88,8 +97,12 @@ function cancelEnter(e) {
   }
 }
 
-function emptyDancePlaceholder(text?: string): EmptyDancePlaceholder {
-  return {__typename: 'Dance', _id: '', name: text ?? '-', empty: true}
+function danceNameEquals(a: Dance, name: string) {
+  return a.name.trim().toLowerCase() === name.trim().toLowerCase()
+}
+
+function emptyDancePlaceholder(text: string | undefined): EmptyDancePlaceholder {
+  return {__typename: 'Dance', _id: '', name: text ?? t`emptyDancePlaceholder`, empty: true}
 }
 
 function isPlaceholder(object: Dance | EmptyDancePlaceholder): object is EmptyDancePlaceholder {
@@ -104,7 +117,6 @@ function isNewDance(object: Dance | EmptyDancePlaceholder | NewDancePlaceholder)
   return object._id === 'new'
 }
 
-
 function renderDance (dance, { handleClick, modifiers }) {
   return <MenuItem
     active={modifiers.active}
@@ -116,11 +128,11 @@ function renderDance (dance, { handleClick, modifiers }) {
   />
 }
 
-function renderCreateItem(queryString,  active, handleClick) {
+function renderCreateItem(queryString: string, active: boolean, handleClick) {
   return <MenuItem
     active={active}
     onClick={handleClick}
-    text={'Luo uusi tanssi: '+queryString}
+    text={t`createDance` + ': ' + queryString}
   />
 }
 

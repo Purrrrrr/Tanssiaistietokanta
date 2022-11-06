@@ -62,7 +62,7 @@ export function filterDances(dances : Dance[], searchString: string) {
 }
 
 function filterDance(dance: Dance, search : string) {
-  const lSearch = search.toLowerCase()
-  const lName = dance.name.toLowerCase()
+  const lSearch = search.trim().toLowerCase()
+  const lName = dance.name.trim().toLowerCase()
   return lName.indexOf(lSearch) !== -1
 }
