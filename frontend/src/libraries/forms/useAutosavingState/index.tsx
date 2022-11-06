@@ -28,6 +28,7 @@ type SyncEvent = 'LOCAL_MODIFICATION' | 'PATCH_SENT' | 'EXTERNAL_MODIFICATION' |
 interface SyncStore<T> {
   state: SyncState
   serverState: T
+  serverStateTime: number
   modifications: T
   conflicts: ArrayPath<T>[]
   conflictOrigin: null | T
@@ -38,6 +39,8 @@ interface SyncAction {
   payload: any
 }
 
+const DISABLE_CONFLICT_OVERRIDE_DELAY = 1000 * 60 * 5 //Disable saving and overwriting conflicts after five minutes
+
 export const USE_BACKEND_VALUE = Symbol('useBackendValue')
 export const USE_LOCAL_VALUE = Symbol('useLocalValue')
 export type ConflictResolutions<T extends MergeableObject> = {
@@ -47,11 +50,12 @@ export type ConflictResolutions<T extends MergeableObject> = {
 export function useAutosavingState<T extends MergeableObject, Patch>(
   serverState : T,
   onPatch : (patch : Patch) => void,
-  patchStrategy: PatchStrategy<T, Patch>
+  patchStrategy: PatchStrategy<T, Patch>,
+  refreshData?: () => unknown,
 ) : UseAutosavingStateReturn<T>
 {
   const [reducerState, dispatch] = useReducer<Reducer<SyncStore<T>, SyncAction>, T>(reducer, serverState, getInitialState)
-  const { serverState: originalData, state, modifications, conflicts } = reducerState
+  const { serverState: originalData, serverStateTime, state, modifications, conflicts } = reducerState
 
   useEffect(() => {
     dispatch({ type: 'EXTERNAL_MODIFICATION', payload: serverState })
@@ -61,6 +65,11 @@ export function useAutosavingState<T extends MergeableObject, Patch>(
     if (state === 'IN_SYNC') return
 
     const id = setTimeout(() => {
+      if (conflicts.length > 0 && now() - serverStateTime > DISABLE_CONFLICT_OVERRIDE_DELAY) {
+        debug('Not saving conflict data on top of stale data')
+        refreshData && refreshData()
+        return
+      }
       //const patchData = patchStrategy(originalData, modifications, conflicts)
       const patchData = patchStrategy(originalData, modifications, [])
       if (patchData.hasModifications) {
@@ -71,7 +80,7 @@ export function useAutosavingState<T extends MergeableObject, Patch>(
     }, AUTOSAVE_DELAY)
 
     return () => clearTimeout(id)
-  }, [state, modifications, conflicts, onPatch, originalData, patchStrategy])
+  }, [state, modifications, conflicts, onPatch, originalData, serverStateTime, patchStrategy, refreshData])
 
   const onModified = useCallback((modifications) => {
     dispatch({ type: 'LOCAL_MODIFICATION', payload: modifications})
@@ -95,10 +104,15 @@ function getInitialState<T extends MergeableObject>(serverState: T) : SyncStore<
   return {
     state: 'IN_SYNC',
     serverState,
+    serverStateTime: now(),
     modifications: serverState,
     conflicts: [],
     conflictOrigin: null,
   }
+}
+
+function now(): number {
+  return +new Date()
 }
 
 function reducer<T extends MergeableObject>(reducerState : SyncStore<T>, action : SyncAction) : SyncStore<T> {
@@ -112,7 +126,8 @@ function reducer<T extends MergeableObject>(reducerState : SyncStore<T>, action 
       return merge(
         reducerState.conflictOrigin ?? serverState,
         serverState,
-        { ...modifications, ...changes}
+        { ...modifications, ...changes},
+        reducerState.serverStateTime,
       )
     }
     case 'PATCH_SENT':
@@ -126,12 +141,13 @@ function reducer<T extends MergeableObject>(reducerState : SyncStore<T>, action 
       return merge(
         reducerState.conflictOrigin ?? serverState,
         action.payload,
-        modifications
+        modifications,
+        now(),
       )
   }
 }
 
-function merge<T extends MergeableObject>(serverState : T, newServerState : T, modifications : T) : SyncStore<T> {
+function merge<T extends MergeableObject>(serverState : T, newServerState : T, modifications : T, serverStateTime: number) : SyncStore<T> {
   const { state, pendingModifications, conflicts } = mergeValues({
     server: newServerState,
     original: serverState,
@@ -143,6 +159,7 @@ function merge<T extends MergeableObject>(serverState : T, newServerState : T, m
   return {
     state,
     serverState: newServerState,
+    serverStateTime,
     conflictOrigin: hasConflicts ? serverState : null,
     modifications: pendingModifications,
     conflicts: conflicts
