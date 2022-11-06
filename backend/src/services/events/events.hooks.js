@@ -2,7 +2,6 @@ const validateInputType = require('../../hooks/validateGraphQLInputType')
 const provideDefaultValues = require('../../hooks/provideDefaultValues')
 const preventPatchOps = require('../../hooks/prevent-patch-ops')
 
-const loadEventProgram = require('../../hooks/load-event-program')
 
 const processEventProgramInput = require('../../hooks/process-event-program-input')
 
@@ -18,7 +17,7 @@ module.exports = {
   },
 
   after: {
-    all: [loadEventProgram()],
+    all: [],
     find: [],
     get: [],
     create: [],
