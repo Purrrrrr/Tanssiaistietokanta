@@ -3,7 +3,6 @@ const L = require('partial.lenses')
 module.exports = (app) => {
   const workshopService = app.service('workshops')
   const danceService = app.service('dances')
-  const eventProgramService = app.service('event-program')
 
   function getWorkshops(eventId) {
     return workshopService.find({query: {eventId}})
@@ -15,13 +14,11 @@ module.exports = (app) => {
     Event: {
       workshops: (obj) => getWorkshops(obj._id)
     },
-    EventProgramSettings: {
-      introductions: obj => L.modifyAsync(L.elems, addEventProgramData, obj.introductions),
-      danceSets: obj => L.modifyAsync(
-        [L.elems, 'program', L.elems],
-        getProgramItemData,
-        obj.danceSets
-      )
+    DanceSet: {
+      program: obj => L.modifyAsync(L.elems, getProgramItemData, obj.program),
+    },
+    Introductions: {
+      program: obj => L.modifyAsync(L.elems, getProgramItemData, obj.program),
     },
     EventProgramItem: {
       __resolveType: (obj) => obj.__typename
@@ -45,7 +42,7 @@ module.exports = (app) => {
   }
 
   async function getProgramItemData(item) {
-    switch(item.__typename) {
+    switch(item.type) {
       case 'Dance':
       case 'RequestedDance':
         return await addDanceData(item)
@@ -56,17 +53,17 @@ module.exports = (app) => {
     }
   }
 
-  async function addDanceData({danceId, __typename, ...rest}) {
-    const dance = await getDance(danceId) ?? {__typename: 'RequestedDance'}
-    return {item: {...dance, __typename}, ...rest}
+  async function addDanceData({dance: danceId, ...rest}) {
+    const dance = await getDance(danceId) ?? {}
+    const __typename = dance._id ? 'Dance' : 'RequestedDance'
+    return {item: {__typename, ...dance}, ...rest}
   }
 
   async function getDance(id) {
     return id ? await danceService.get(id) : null
   }
 
-  async function addEventProgramData({eventProgramId, __typename, ...rest}) {
-    const program = await eventProgramService.get(eventProgramId)
-    return {item: {...program, __typename}, ...rest}
+  async function addEventProgramData({eventProgram, type: __typename, ...rest}) {
+    return {item: {...eventProgram, __typename}, ...rest}
   }
 }

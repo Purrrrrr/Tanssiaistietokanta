@@ -3,16 +3,5 @@
     "type": "uses",
     "service": "dances",
     "path": "program.danceSets.program[__typename='Dance'].danceId"
-  },
-  {
-    "type": "uses",
-    "service": "event-program",
-    "path": "program.danceSets.program[__typename='EventProgram'].eventProgramId"
-  },
-  {
-    "type": "uses",
-    "service": "event-program",
-    "path": "program.introductions.item[__typename='EventProgram'].eventProgramId"
   }
-
 ]

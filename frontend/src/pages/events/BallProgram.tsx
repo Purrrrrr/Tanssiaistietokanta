@@ -23,6 +23,8 @@ const t = makeTranslate({
   afterThis: 'Tämän jälkeen',
 })
 
+type Event = NonNullable<NonNullable<ReturnType<typeof useBallProgram>['data']>['event']>
+
 const useBallProgram = backendQueryHook(graphql(`
 query BallProgram($eventId: ID!) {
   event(id: $eventId) {
@@ -31,14 +33,20 @@ query BallProgram($eventId: ID!) {
     program {
       slideStyleId
       introductions {
-        item {
-          ... on ProgramItem {
-            name
+        programTitle
+        programTitleSlideStyleId
+        program {
+          item {
+            __typename
+            ... on ProgramItem {
+              name
+            }
           }
+          slideStyleId
         }
-        slideStyleId
       }
       danceSets {
+        __typename
         name
         intervalMusicDuration
         program {
@@ -46,11 +54,11 @@ query BallProgram($eventId: ID!) {
           item {
             __typename
             ... on ProgramItem {
-              _id
               name
               description
             }
             ... on Dance {
+              _id
               teachedIn(eventId: $eventId) { _id, name }
             }
             ... on EventProgram {
@@ -119,28 +127,31 @@ function BallProgramView({event, currentSlide, onChangeSlide, onRefetch}) {
 
 interface Slide {
   __typename: string
-  slideStyleId?: string
+  slideStyleId?: string | null
   name: string
   index?: number
   subindex?: number
   subtotal?: number
+  program?: Slide[]
   parent?: Slide
   next?: Slide
 }
 
-function getSlides(event) : Slide[] {
-  const eventHeader = { __typename: 'Event', name: event.name }
+function getSlides(event: Event) : Slide[] {
+  const {introductions, danceSets} = event.program
+
+  const eventHeader : Slide = { __typename: 'Event', name: introductions.programTitle ?? event.name, slideStyleId: introductions.programTitleSlideStyleId }
+
   const slides : Slide[] = [eventHeader]
   if (!event.program) return slides
   const defaultStyleId = event.program.slideStyleId
 
-  const {introductions, danceSets} = event.program
-  for (const {item, slideStyleId} of introductions) {
-    slides.push({ ...item,  slideStyleId, parent: eventHeader })
+  for (const {item, slideStyleId} of introductions.program) {
+    slides.push({ name: '', ...item, slideStyleId, parent: eventHeader })
   }
   for (const danceSet of danceSets) {
-    const danceSetSlide = { ...danceSet, subtotal: danceSet.program.length }
-    const danceProgram = danceSet.program.map(({item, slideStyleId}) => ({ ...item, slideStyleId, parent: danceSetSlide}))
+    const danceSetSlide = { ...danceSet, program: [] as Slide[], subtotal: danceSet.program.length }
+    const danceProgram = danceSet.program.map(({item, slideStyleId}) => ({ name: '', ...item, slideStyleId, parent: danceSetSlide}))
     danceSetSlide.program = danceProgram
     slides.push(danceSetSlide)
     slides.push(...danceProgram)

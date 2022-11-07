@@ -6,7 +6,7 @@ import {Selector} from 'libraries/forms'
 import {Icon, MenuItem} from 'libraries/ui'
 
 interface SlideStyleSelectorProps {
-  value: string | null
+  value: string | null | undefined
   onSelect: (style: SlideStyle) => unknown
   text: string
   inheritsStyles?: boolean

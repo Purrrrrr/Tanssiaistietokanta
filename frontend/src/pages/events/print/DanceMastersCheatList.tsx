@@ -27,9 +27,11 @@ query getDanceMastersCheatList($eventId: ID!) {
     _id
     program {
       introductions {
-        item {
-          ... on ProgramItem {
-            name
+        program {
+          item {
+            ... on ProgramItem {
+              name
+            }
           }
         }
       }
@@ -39,11 +41,11 @@ query getDanceMastersCheatList($eventId: ID!) {
           item {
             __typename
             ... on Dance {
+              _id
               description
               prelude
             }
             ... on ProgramItem {
-              _id
               name
             }
           }
@@ -71,10 +73,10 @@ export default function DanceMastersCheatList({eventId}) {
 function DanceMastersCheatListView({program}) {
   const {introductions, danceSets} = program
   return <PrintTable className="dancemasters-cheatlist">
-    {introductions.length > 0 &&
+    {introductions.program.length > 0 &&
       <>
         <HeaderRow>{t`introductions`}</HeaderRow>
-        {introductions.map((row, i) =>
+        {introductions.program.map((row, i) =>
           <SimpleRow key={i} text={row.item.name} />
         )}
       </>

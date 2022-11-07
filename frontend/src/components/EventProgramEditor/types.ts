@@ -3,7 +3,7 @@ import {Dance} from 'types'
 export interface EventProgramSettings {
   introductions: IntroSection
   danceSets: DanceSet[]
-  slideStyleId: string | null
+  slideStyleId?: string | null
 }
 
 export interface Section {

@@ -6,14 +6,20 @@ type Query {
 type Event {
   _id: ID!
   name: String!
-  program: EventProgramSettings
+  program: EventProgramSettings!
   workshops: [Workshop!]!
 }
 
 type EventProgramSettings {
-  introductions: [EventProgramRow!]!
+  introductions: Introductions!
   danceSets: [DanceSet!]!
   slideStyleId: ID
+}
+
+type Introductions {
+  programTitle: String
+  programTitleSlideStyleId: ID
+  program: [EventProgramRow!]!
 }
 
 type DanceSet {
@@ -31,7 +37,6 @@ type EventProgramRow {
 union EventProgramItem = RequestedDance | Dance | EventProgram
 
 interface ProgramItem {
-  _id: ID!
   name: String!
   duration: Float
   description: String
@@ -42,7 +47,6 @@ type RequestedDance {
 }
 
 type EventProgram implements ProgramItem {
-  _id: ID!
   name: String!
   description: String
   duration: Float
@@ -64,15 +68,32 @@ input EventInput {
 }
 
 input ProgramInput {
-  introductions: [IntroductionInput!]!
+  introductions: IntroductionsInput!
   danceSets: [DanceSetInput!]!
   slideStyleId: ID
+  "The pause between two program items in seconds"
+  pauseBetweenDances: Float!
+}
+
+input IntroductionsInput {
+  programTitle: String
+  programTitleSlideStyleId: ID
+  program: [IntroductionInput!]!
+}
+
+input IntroductionInput {
+  "Row id"
+  _id: ID!
+  slideStyleId: ID
+  type: IntroductionProgramType!
+  eventProgram: EventProgramInput
 }
 
 input DanceSetInput {
   _id: ID!
   name: String!
   program: [ProgramItemInput!]!
+  "interval music duration in seconds"
   intervalMusicDuration: Float!
 }
 
@@ -82,17 +103,8 @@ input ProgramItemInput {
   slideStyleId: ID
   "The actual type of the item, the rest of the fields are used depending on the value of this field"
   type: ProgramType!
-  dance: DanceProgramItemInput
-  requestedDance: DanceProgramItemInput
-  eventProgram: EventProgramItemInput
-}
-
-input IntroductionInput {
-  "Row id"
-  _id: ID!
-  type: IntroductionProgramType!
-  eventProgram: EventProgramItemInput
-  slideStyleId: ID
+  dance: ID
+  eventProgram: EventProgramInput
 }
 
 input EventProgramInput {
@@ -109,18 +121,6 @@ enum ProgramType {
   Dance
   EventProgram
   RequestedDance
-}
-
-input EventProgramItemInput {
-  "The id of the program to use when type is EVENT_PROGRAM"
-  eventProgramId: ID
-  "The value to use when type is EVENT_PROGRAM"
-  eventProgram: EventProgramInput
-}
-
-input DanceProgramItemInput {
-  "The id of the dance to use when type is DANCE"
-  danceId: ID
 }
 
 input PatchEventInput {

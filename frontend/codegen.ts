@@ -7,7 +7,10 @@ const config: CodegenConfig = {
   generates: {
     'src/types/gql/': {
       preset: 'client',
-      plugins: []
+      plugins: [],
+      config: {
+        nonOptionalTypename: false,
+      },
     }
   }
 }

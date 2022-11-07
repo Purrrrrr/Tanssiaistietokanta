@@ -8,20 +8,24 @@ setupServiceUpdateFragment(
     _id, name 
     program {
       introductions {
-        _id
-        item {
-          __typename
-          ... on ProgramItem {
-            _id
-            name
-            duration
-            description
+        program {
+          _id
+          item {
+            __typename
+            ... on ProgramItem {
+              name
+              duration
+              description
+            }
+            ... on Dance {
+              _id
+            }
+            ... on EventProgram {
+              showInLists
+            }
           }
-          ... on EventProgram {
-            showInLists
-          }
+          slideStyleId
         }
-        slideStyleId
       }
       danceSets {
         _id
@@ -31,10 +35,12 @@ setupServiceUpdateFragment(
           item {
             __typename
             ... on ProgramItem {
-              _id
               name
               duration
               description
+            }
+            ... on Dance {
+              _id
             }
             ... on EventProgram {
               showInLists
@@ -122,20 +128,24 @@ query getEvent($id: ID!) {
     _id, name 
     program {
       introductions {
-        _id
-        item {
-          __typename
-          ... on ProgramItem {
-            _id
-            name
-            duration
-            description
+        program {
+          _id
+          item {
+            __typename
+            ... on ProgramItem {
+              name
+              duration
+              description
+            }
+            ... on Dance {
+              _id
+            }
+            ... on EventProgram {
+              showInLists
+            }
           }
-          ... on EventProgram {
-            showInLists
-          }
+          slideStyleId
         }
-        slideStyleId
       }
       danceSets {
         _id
@@ -145,10 +155,12 @@ query getEvent($id: ID!) {
           item {
             __typename
             ... on ProgramItem {
-              _id
               name
               duration
               description
+            }
+            ... on Dance {
+              _id
             }
             ... on EventProgram {
               showInLists
@@ -204,20 +216,24 @@ mutation modifyEventProgram($id: ID!, $program: ProgramInput!) {
     _id, name 
     program {
       introductions {
-        _id
-        item {
-          __typename
-          ... on ProgramItem {
-            _id
-            name
-            duration
-            description
+        program {
+          _id
+          item {
+            __typename
+            ... on ProgramItem {
+              name
+              duration
+              description
+            }
+            ... on Dance {
+              _id
+            }
+            ... on EventProgram {
+              showInLists
+            }
           }
-          ... on EventProgram {
-            showInLists
-          }
+          slideStyleId
         }
-        slideStyleId
       }
       danceSets {
         _id
@@ -227,10 +243,12 @@ mutation modifyEventProgram($id: ID!, $program: ProgramInput!) {
           item {
             __typename
             ... on ProgramItem {
-              _id
               name
               duration
               description
+            }
+            ... on Dance {
+              _id
             }
             ... on EventProgram {
               showInLists

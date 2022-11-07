@@ -32,21 +32,24 @@ export default function EventProgramEditorPage({event}: {event: Event}) {
 function toEventProgramSettings(
   program : Event['program'],
 ): EventProgramSettings {
-  const {introductions = [], danceSets = [], slideStyleId = null} = program ?? {}
+  const {introductions, ...rest} = program
   return {
-    introductions: { program: introductions, intervalMusicDuration: 0 },
-    danceSets,
-    slideStyleId
+    introductions: { ...introductions, intervalMusicDuration: 0},
+    ...rest
   }
 }
 
-function toProgramInput({introductions, danceSets, slideStyleId} : EventProgramSettings) {
+function toProgramInput({introductions: {program: introProgram, intervalMusicDuration, ...introductions}, danceSets, ...rest} : EventProgramSettings) {
   return removeTypenames({
-    introductions: introductions.program.map(toProgramItemInput),
+    introductions: {
+      program: introProgram.map(toProgramItemInput),
+      ...introductions,
+    },
     danceSets: L.modify(
       [L.elems, 'program', L.elems], toProgramItemInput, danceSets
     ),
-    slideStyleId,
+    ...rest,
+    pauseBetweenDances: 60*3
   })
 }
 
@@ -56,21 +59,15 @@ function toProgramItemInput({_id, slideStyleId, item: {__typename, ...item}} : E
     case 'Dance':
       return {
         ...commonProps,
-        dance: { danceId: item._id}
+        dance: item._id
       }
     case 'RequestedDance':
-      return {
-        ...commonProps,
-        requestedDance: {}
-      }
+      return commonProps
     case 'EventProgram':
-    {
-      const {_id: eventProgramId, ...eventProgram} = item
       return {
         ...commonProps,
-        eventProgram: { eventProgramId, eventProgram }
+        eventProgram: item,
       }
-    }
     default:
       throw new Error('Unexpected program item type '+__typename)
   }
