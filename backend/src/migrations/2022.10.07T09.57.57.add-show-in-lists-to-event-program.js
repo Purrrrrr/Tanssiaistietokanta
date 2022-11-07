@@ -1,10 +1,8 @@
 /** @type {import('umzug').MigrationFn<any>} */
 exports.up = async params => {
-  const {
-    ['event-program']: eventsProgramDb
-  } = params.context.models
+  const eventsProgramDb = params.context.getModel('event-program')
 
-  const eventProgramItems = await eventsProgramDb.findAsync()
+  const eventProgramItems = await eventsProgramDb.find()
 
   for (const item of eventProgramItems) {
     await eventsProgramDb.updateAsync({ _id: item._id}, {...item, showInLists: true})

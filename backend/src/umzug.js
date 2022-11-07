@@ -1,11 +1,21 @@
 const { Umzug, JSONStorage } = require('umzug')
 const path = require('path')
+const NeDB = require('@seald-io/nedb')
+const createService = require('feathers-nedb')
 
 module.exports = {
   migrateDb: async (app) => {
+    const models = getModels(app)
+    const dbPath = app.get('nedb')
     const context = {
-      app,
-      models: getModels(app)
+      getModel: (name) => {
+        if (name in models) return models[name]
+        const Model = new NeDB({
+          filename: path.join(dbPath, name+'.db'),
+          autoload: true
+        })
+        return createService({ Model })
+      },
     }
     const umzug = getUmzug(context)
 

@@ -4,10 +4,8 @@ const evolve = require('../utils/evolveObjAsync')
 
 /** @type {import('umzug').MigrationFn<any>} */
 exports.up = async params => {
-  const {
-    events: eventsDb,
-    ['event-program']: eventProgramDb
-  } = params.context.models
+  const eventsDb = params.context.getModel('events')
+  const eventProgramDb = params.context.getModel('event-program')
 
   const events = await eventsDb.findAsync()
 

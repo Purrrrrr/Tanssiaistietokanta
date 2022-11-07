@@ -4,9 +4,7 @@ const guid = require('../utils/guid')
 
 /** @type {import('umzug').MigrationFn<any>} */
 exports.up = async params => {
-  const {
-    events: eventsDb
-  } = params.context.models
+  const eventsDb = params.context.getModel('events')
 
   const events = await eventsDb.findAsync()
 
