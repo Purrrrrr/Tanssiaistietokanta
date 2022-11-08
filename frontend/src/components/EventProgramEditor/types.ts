@@ -1,22 +1,19 @@
-import {Dance} from 'types'
+import {Dance, Event} from 'types'
 
-export interface EventProgramSettings {
+type Program = Event['program']
+type ODanceSet = Program['danceSets'][number]
+type Introductions = Program['introductions']
+
+export interface EventProgramSettings extends Program {
   introductions: IntroSection
   danceSets: DanceSet[]
-  slideStyleId?: string | null
 }
 
-export interface Section {
-  program: EventProgramRow[]
-}
-
-export interface IntroSection extends Section {
+export interface IntroSection extends Introductions {
   intervalMusicDuration: 0
 }
-export interface DanceSet extends Section {
-  _id: string
-  name: string
-  intervalMusicDuration: number
+export interface DanceSet extends ODanceSet {
+  program: EventProgramRow[]
 }
 
 export type EventProgramRow = {

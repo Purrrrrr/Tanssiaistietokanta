@@ -51,6 +51,7 @@ setupServiceUpdateFragment(
         intervalMusicDuration
       }
       slideStyleId
+      pauseBetweenDances
     }
     workshops {
       _id
@@ -171,6 +172,7 @@ query getEvent($id: ID!) {
         intervalMusicDuration
       }
       slideStyleId
+      pauseBetweenDances
     }
     workshops {
       _id

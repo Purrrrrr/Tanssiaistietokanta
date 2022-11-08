@@ -1,8 +1,11 @@
 import React, {useCallback, useEffect, useState} from 'react'
+import classNames from 'classnames'
 
 import {FieldComponentProps, Input, InputProps} from 'libraries/forms'
 import {durationToString, parseDuration, toMinSec, toSeconds} from 'utils/duration'
 import {useDelayedEffect} from 'utils/useDelayedEffect'
+
+import './DurationField.css'
 
 interface DurationState {
   value: number
@@ -10,7 +13,7 @@ interface DurationState {
   event?: React.ChangeEvent
 }
 
-export function DurationField({value: maybeValue, onChange, readOnly, ...props} : FieldComponentProps<number, HTMLInputElement> & Omit<InputProps, 'ref'>) {
+export function DurationField({value: maybeValue, onChange, readOnly, className, ...props} : FieldComponentProps<number, HTMLInputElement> & Omit<InputProps, 'ref'>) {
   const value = maybeValue ?? 0
   const [params, setParams] = useState<DurationState>({value, text: durationToString(value ?? 0)})
 
@@ -28,6 +31,9 @@ export function DurationField({value: maybeValue, onChange, readOnly, ...props} 
 
   return <Input
     {...props}
+    className={classNames(className, 'duration-field')}
+    size={1}
+    style={{minWidth: `${params.text.length}ch`}}
     value={params.text}
     readOnly={readOnly}
     onChange={(text, event) => setParams({value, text, event})}

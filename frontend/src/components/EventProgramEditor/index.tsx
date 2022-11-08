@@ -1,4 +1,4 @@
-import React, {createContext, useContext, useMemo, useRef, useState} from 'react'
+import React, {useRef, useState} from 'react'
 import * as L from 'partial.lenses'
 
 import {ActionButton as Button, ClickToEdit, FieldComponentProps, formFor, MarkdownEditor, MenuButton, Selector, SelectorMenu, SubmitButton, Switch as PlainSwitch, toArrayPath} from 'libraries/forms'
@@ -7,7 +7,6 @@ import {DanceChooser} from 'components/widgets/DanceChooser'
 import {Duration} from 'components/widgets/Duration'
 import {DurationField} from 'components/widgets/DurationField'
 import {NavigateButton} from 'components/widgets/NavigateButton'
-import {ProgramPauseDurationEditor} from 'components/widgets/ProgramPauseDurationEditor'
 import {SlideStyleSelector} from 'components/widgets/SlideStyleSelector'
 import {focusLater, focusSiblingsOrParent} from 'utils/focus'
 import {guid} from 'utils/guid'
@@ -78,9 +77,6 @@ const t = makeTranslate({
 })
 
 const DEFAULT_INTERVAL_MUSIC_DURATION = 15*60
-const DurationHelperContext = createContext({
-  pause: 0, setPause: (() => {/* dummy */}) as (pause: number) => unknown,
-})
 
 interface EventProgramEditorProps {
   program: EventProgramSettings
@@ -90,7 +86,6 @@ interface EventProgramEditorProps {
 export function EventProgramEditor({program: eventProgram, onSubmit}: EventProgramEditorProps) {
   const [program, onChange] = useState(eventProgram)
   const {slideStyleId, danceSets, introductions} = program
-  const [pause, setPause] = useState(3)
   const element = useRef<HTMLElement>(null)
   useRedirectKeyDownTo(element)
   const onKeyDown = useHotkeyHandler(
@@ -99,29 +94,25 @@ export function EventProgramEditor({program: eventProgram, onSubmit}: EventProgr
     //bind('i', addIntroductoryInfo),
   )
 
-  const durationContext = useMemo(() => ({pause, setPause}), [pause])
-
   return <Form value={program} onChange={onChange} onSubmit={onSubmit}>
-    <DurationHelperContext.Provider value={durationContext}>
-      <section className="eventProgramEditor" ref={element} onKeyDown={onKeyDown}>
-        <div className="main-toolbar">
-          {introductions.program.length === 0 && <AddIntroductionButton />}
-          <ProgramPauseDurationEditor {...{pause, setPause}} />
-          <SlideStyleSelector
-            text={t`style`}
-            value={slideStyleId}
-            onSelect={style => onChange(L.set('slideStyleId', style.id))} />
-        </div>
-        <IntroductoryInformation />
-        {danceSets.map((danceSet, index : number) =>
-          <DanceSetEditor key={danceSet._id} index={index} />
-        )}
-        <div className="addDanceSetButtons">
-          {danceSets.length === 0 && t`danceProgramIsEmpty`}
-          <AddDanceSetButton />
-        </div>
-      </section>
-    </DurationHelperContext.Provider>
+    <section className="eventProgramEditor" ref={element} onKeyDown={onKeyDown}>
+      <div className="main-toolbar">
+        {introductions.program.length === 0 && <AddIntroductionButton />}
+        <Field label={t`pauseDuration`} inline path="pauseBetweenDances" component={DurationField} />
+        <SlideStyleSelector
+          text={t`style`}
+          value={slideStyleId}
+          onSelect={style => onChange(L.set('slideStyleId', style.id))} />
+      </div>
+      <IntroductoryInformation />
+      {danceSets.map((danceSet, index : number) =>
+        <DanceSetEditor key={danceSet._id} index={index} />
+      )}
+      <div className="addDanceSetButtons">
+        {danceSets.length === 0 && t`danceProgramIsEmpty`}
+        <AddDanceSetButton />
+      </div>
+    </section>
     <hr />
     <SubmitButton text="Tallenna muutokset" />
     <NavigateButton href='..' text="Peruuta" />
@@ -249,8 +240,7 @@ function ProgramListEditor({path, tableRef}: {path: ProgramSectionPath, tableRef
               <t.td className={CssClass.textMuted+ ' noProgram'} colSpan="5">programListIsEmpty</t.td>
             </tr>
         }
-        {intervalMusicDuration > 0 &&
-            <IntervalMusicEditor intervalMusicDuration={intervalMusicDuration} onSetIntervalMusicDuration={onSetIntervalMusicDuration} />}
+        {intervalMusicDuration > 0 && <IntervalMusicEditor path={`${path}.intervalMusicDuration`} />}
       </tbody>
       <tfoot>
         <tr className="eventProgramFooter">
@@ -323,7 +313,7 @@ const ProgramItemEditor = React.memo(function ProgramItemEditor({path, itemIndex
       <ProgramDetailsEditor path={itemPath} onInputBlurred={onInputBlurred} />
     </td>
     <td>
-      <Duration value={item.item.duration} />
+      <Duration value={__typename !== 'RequestedDance' ? item.item.duration : 0} />
     </td>
     <td>
       <DragHandle tabIndex={-1}/>
@@ -374,7 +364,8 @@ const DanceProgramChooser = React.memo(function DanceProgramChooser({value, onCh
   />
 })
 
-function IntervalMusicEditor({intervalMusicDuration, onSetIntervalMusicDuration}) {
+function IntervalMusicEditor({path}: {path: `${ProgramSectionPath}.intervalMusicDuration`}) {
+  const onSetIntervalMusicDuration = useOnChangeFor(path)
   const row = useRef<HTMLTableRowElement>(null)
   const onKeyDown = useHotkeyHandler(
     ...navigateAmongSiblings('tr'),
@@ -399,15 +390,11 @@ function IntervalMusicEditor({intervalMusicDuration, onSetIntervalMusicDuration}
     containerElement && containerElement.focus()
   }
 
-  // TODO: <DurationField id="intervalMusicDuration" label={t`intervalMusicDuration`} labelStyle="hidden"
   return <tr className="eventProgramItem" tabIndex={0} onKeyDown={onKeyDown} ref={row}>
     <td>{t`intervalMusic`}</td>
     <td />
     <td>
-      <DurationField id="intervalMusicDuration"
-        value={intervalMusicDuration}
-        onBlur={onDurationBlurred}
-        onChange={onSetIntervalMusicDuration}/>
+      <Field label={t`intervalMusicDuration`} labelStyle="hidden" path={path} component={DurationField} componentProps={{onBlur: onDurationBlurred}}/>
     </td>
     <td>
       <Button title={t`remove`} intent="danger" icon="cross" onClick={() => onSetIntervalMusicDuration(0)} className="delete" />
@@ -416,9 +403,9 @@ function IntervalMusicEditor({intervalMusicDuration, onSetIntervalMusicDuration}
 }
 
 function DanceSetDuration({ program, intervalMusicDuration}) {
-  const {pause} = useContext(DurationHelperContext)
-  const duration = program.map(({duration}) => duration ?? 0).reduce((y, x) => x+y, 0)
-  const durationWithPauses = duration + pause*60*program.length + intervalMusicDuration
+  const pause = useValueAt('pauseBetweenDances')
+  const duration = program.map(({item}) => item.duration ?? 0).reduce((y, x) => x+y, 0)
+  const durationWithPauses = duration + pause*program.length + intervalMusicDuration
 
   return <>
     <strong><Duration value={durationWithPauses}/></strong>{' ('+t`pausesIncluded`+') '}

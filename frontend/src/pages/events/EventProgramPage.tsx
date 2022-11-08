@@ -49,7 +49,6 @@ function toProgramInput({introductions: {program: introProgram, intervalMusicDur
       [L.elems, 'program', L.elems], toProgramItemInput, danceSets
     ),
     ...rest,
-    pauseBetweenDances: 60*3
   })
 }
 
