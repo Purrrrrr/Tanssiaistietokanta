@@ -4,7 +4,7 @@ import * as L from 'partial.lenses'
 import {backendQueryHook, graphql} from 'backend'
 
 import {formFor, Input, SubmitButton, TextArea} from 'libraries/forms'
-import {Button, CssClass, FormGroup} from 'libraries/ui'
+import {CssClass, FormGroup} from 'libraries/ui'
 import {Flex} from 'components/Flex'
 import {DanceChooser} from 'components/widgets/DanceChooser'
 import {makeTranslate} from 'utils/translate'
@@ -64,7 +64,7 @@ export function WorkshopEditor({eventId, workshop, onSubmit, submitText}: Worksh
     <t.h2>dances</t.h2>
     <ListEditor path="dances" component={DanceListItem} />
     {dances.length === 0 && <t.p className={CssClass.textMuted}>noDances</t.p>}
-    <FormGroup label={t`addDance`} inlineFill style={{marginTop: 6}}>
+    <FormGroup label={t`addDance`} labelStyle="beside" style={{marginTop: 6}}>
       <DanceChooser excludeFromSearch={dances} value={null} onChange={dance => onChangeFor('dances')(L.set(L.appendTo, dance))} key={dances.length} />
     </FormGroup>
     <SubmitButton text={submitText} />

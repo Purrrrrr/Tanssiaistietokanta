@@ -75,14 +75,8 @@ function FormWrapper({id, labelStyle, inline, label, labelInfo, helperText, chil
     labelFor: id,
     labelInfo,
     helperText,
-    inline: false,
-    inlineFill: false,
   }
-  if (labelStyle === 'inline') {
-    if (inline) props.inline = true
-    else props.inlineFill = true
-  }
-  return <FormGroup {...props} label={label} >
+  return <FormGroup labelStyle={labelStyle} inline={inline} {...props} label={label} >
     {children}
   </FormGroup>
 }

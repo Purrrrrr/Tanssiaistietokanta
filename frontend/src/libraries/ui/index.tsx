@@ -18,6 +18,9 @@ export { Breadcrumb, BreadcrumbContext, Breadcrumbs } from './Breadcrumbs'
 export type { ButtonProps } from '@blueprintjs/core'
 export { AnchorButton, Collapse, H2, HTMLTable, MenuItem, Navbar, NonIdealState, NumericInput, ProgressBar, Spinner, Tag } from '@blueprintjs/core'
 export const CssClass = {
+  formGroupInline: 'formgroup-inline',
+  formGroupInlineFill: 'formgroup-inline-fill',
+  inlineFill: 'limited-width',
   limitedWidth: 'limited-width',
   textMuted: Classes.TEXT_MUTED,
   textDisabled: Classes.TEXT_DISABLED,
@@ -50,15 +53,18 @@ export function Card(props : CardProps) {
 
 export const Button = BlueprintButton
 
-export interface FormGroupProps extends BlueprintFormGroupProps {
-  inlineFill?: boolean
+export interface FormGroupProps extends Omit<BlueprintFormGroupProps, 'inline'> {
+  inline?: boolean
+  labelStyle?: 'above' | 'beside'
   children?: React.ReactNode
 }
 
-export function FormGroup({ className, inlineFill, ...props} : FormGroupProps) {
-  const inlineProps = inlineFill
-    ? { inline: true, className: classNames('formgroup-inline-fill', className) }
-    : { className }
+export function FormGroup({ className, inline, labelStyle: maybeLabelStyle, ...props} : FormGroupProps) {
+  const labelStyle = maybeLabelStyle ?? (inline ? 'beside' : 'above')
+  const inlineLabel = labelStyle === 'beside'
+  const inlineProps = inline
+    ? { inline: true, className: classNames(CssClass.formGroupInline, className) }
+    : { inline: inlineLabel, className: classNames(inlineLabel && CssClass.formGroupInlineFill, className) }
   return <BlueprintFormGroup {...props} {...inlineProps} />
 }
 

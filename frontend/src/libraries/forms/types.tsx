@@ -15,7 +15,7 @@ export interface FieldComponentProps<T, EventElement = HTMLElement> {
   'aria-label'?: string
 }
 
-export type LabelStyle = 'inline' | 'above' | 'hidden';
+export type LabelStyle = 'beside' | 'above' | 'hidden';
 
 export type PartialWhen<Cond extends boolean, T> = Cond extends true ? Partial<T> : T
 export type NoRequiredProperties<T extends object> = RequiredProperties<T> extends never ? true : false
