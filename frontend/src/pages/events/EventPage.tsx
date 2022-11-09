@@ -49,7 +49,7 @@ function EventProgram({program}) {
   return <>
     {program.danceSets.map((danceSet, index) =>
       <p key={index} >
-        <strong>{danceSet.name}</strong>:{' '}
+        <strong>{danceSet.title}</strong>:{' '}
         {formatDances(danceSet.program)}
       </p>
     )}

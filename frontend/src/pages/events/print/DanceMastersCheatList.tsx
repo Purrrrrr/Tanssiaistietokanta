@@ -27,6 +27,7 @@ query getDanceMastersCheatList($eventId: ID!) {
     _id
     program {
       introductions {
+        title
         program {
           item {
             ... on ProgramItem {
@@ -36,7 +37,7 @@ query getDanceMastersCheatList($eventId: ID!) {
         }
       }
       danceSets {
-        name
+        title
         program {
           item {
             __typename
@@ -87,9 +88,9 @@ function DanceMastersCheatListView({program}) {
   </PrintTable>
 }
 
-function DanceSetRows({danceSet: {name, program}}) {
+function DanceSetRows({danceSet: {title, program}}) {
   return <>
-    <HeaderRow>{name}</HeaderRow>
+    <HeaderRow>{title}</HeaderRow>
     {program.map(({item}, i) => {
       switch(item.__typename) {
         case 'Dance':

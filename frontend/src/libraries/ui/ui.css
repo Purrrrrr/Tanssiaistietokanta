@@ -9,6 +9,7 @@
 
 .formgroup-inline {
   display: inline-flex;
+  margin-bottom: 0
 }
 .formgroup-inline-fill > div {
   flex: 1 1 auto;

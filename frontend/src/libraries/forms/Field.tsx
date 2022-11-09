@@ -44,7 +44,7 @@ export function Field<T, P extends StringPath<T>, V extends PropertyAtPath<T, P>
     inline: inlineFromCtx,
   } = useFieldAt<T, P, V>(path)
   const error = useError(value, rest)
-  const id = Array.isArray(path) ? path.join('--') : String(path)
+  const id = String(path).replace(/\./g, '--')
   const errorId = `${id}--error`
 
   const ariaProps = labelStyle === 'hidden'
@@ -67,8 +67,12 @@ export function Field<T, P extends StringPath<T>, V extends PropertyAtPath<T, P>
 }
 
 function FormWrapper({id, labelStyle, inline, label, labelInfo, helperText, children}) {
+  const formGroupId = `${id}--formgroup`
+
   if (labelStyle === 'hidden') {
-    return inline ? <span>{children}{helperText}</span> : <div>{children}{helperText}</div>
+    return inline
+      ? <span id={formGroupId}>{children}{helperText}</span>
+      : <div id={formGroupId}>{children}{helperText}</div>
   }
 
   const props = {
@@ -76,7 +80,7 @@ function FormWrapper({id, labelStyle, inline, label, labelInfo, helperText, chil
     labelInfo,
     helperText,
   }
-  return <FormGroup labelStyle={labelStyle} inline={inline} {...props} label={label} >
+  return <FormGroup id={formGroupId} labelStyle={labelStyle} inline={inline} {...props} label={label} >
     {children}
   </FormGroup>
 }

@@ -8,6 +8,8 @@ setupServiceUpdateFragment(
     _id, name 
     program {
       introductions {
+        title
+        titleSlideStyleId
         program {
           _id
           item {
@@ -29,7 +31,8 @@ setupServiceUpdateFragment(
       }
       danceSets {
         _id
-        name
+        title
+        titleSlideStyleId
         program {
           _id
           item {
@@ -129,6 +132,8 @@ query getEvent($id: ID!) {
     _id, name 
     program {
       introductions {
+        title
+        titleSlideStyleId
         program {
           _id
           item {
@@ -150,7 +155,8 @@ query getEvent($id: ID!) {
       }
       danceSets {
         _id
-        name
+        title
+        titleSlideStyleId
         program {
           _id
           item {
@@ -218,6 +224,8 @@ mutation modifyEventProgram($id: ID!, $program: ProgramInput!) {
     _id, name 
     program {
       introductions {
+        title
+        titleSlideStyleId
         program {
           _id
           item {
@@ -239,7 +247,8 @@ mutation modifyEventProgram($id: ID!, $program: ProgramInput!) {
       }
       danceSets {
         _id
-        name
+        title
+        titleSlideStyleId
         program {
           _id
           item {

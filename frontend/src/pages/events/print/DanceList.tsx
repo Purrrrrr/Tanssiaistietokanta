@@ -32,9 +32,9 @@ function DanceList({eventId}) {
     </PrintViewToolbar>
     <PrintFooterContainer footer={<Footer workshops={workshops.filter(w => w.abbreviation)} />}>
       {program.danceSets.map(
-        ({name, program}, key) => {
+        ({title, program}, key) => {
           return <div key={key} className="section">
-            <h2>{name}</h2>
+            <h2>{title}</h2>
             {program
               .map(row => row.item)
               .filter(item => item.__typename !== 'EventProgram' || item.showInLists)
@@ -90,7 +90,7 @@ query getDanceList($eventId: ID!) {
     _id
     program {
       danceSets {
-        name
+        title
         program {
           item {
             __typename

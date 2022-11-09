@@ -18,14 +18,15 @@ type EventProgramSettings {
 }
 
 type Introductions {
-  programTitle: String
-  programTitleSlideStyleId: ID
+  title: String
+  titleSlideStyleId: ID
   program: [EventProgramRow!]!
 }
 
 type DanceSet {
   _id: ID!
-  name: String!
+  title: String!
+  titleSlideStyleId: ID
   program: [EventProgramRow!]!
   intervalMusicDuration: Float!
 }
@@ -77,8 +78,8 @@ input ProgramInput {
 }
 
 input IntroductionsInput {
-  programTitle: String
-  programTitleSlideStyleId: ID
+  title: String
+  titleSlideStyleId: ID
   program: [IntroductionInput!]!
 }
 
@@ -92,7 +93,8 @@ input IntroductionInput {
 
 input DanceSetInput {
   _id: ID!
-  name: String!
+  title: String!
+  titleSlideStyleId: ID
   program: [ProgramItemInput!]!
   "interval music duration in seconds"
   intervalMusicDuration: Float!

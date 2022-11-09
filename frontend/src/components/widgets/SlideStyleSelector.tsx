@@ -7,7 +7,7 @@ import {Icon, MenuItem} from 'libraries/ui'
 
 interface SlideStyleSelectorProps {
   value: string | null | undefined
-  onSelect: (style: SlideStyle) => unknown
+  onChange: (style: string | null) => unknown
   text: string
   inheritsStyles?: boolean
   inheritedStyleId?: string | null
@@ -15,14 +15,14 @@ interface SlideStyleSelectorProps {
 }
 
 export function SlideStyleSelector({
-  value, onSelect, text, inheritsStyles = false, inheritedStyleId = undefined, inheritedStyleName = undefined
+  value, onChange, text, inheritsStyles = false, inheritedStyleId = undefined, inheritedStyleName = undefined
 } : SlideStyleSelectorProps) {
   const styles = useEventSlideStyles({
     useStyleInheritance: inheritsStyles,
     inheritedStyleId,
     inheritedStyleName,
   })
-  const style = styles.find(s => s.id === value) ?? defaultSlideStyle
+  const style = styles.find(s => s.id === (value ?? null)) ?? defaultSlideStyle
   return <Selector<SlideStyle>
     selectedItem={style}
     filterable
@@ -32,7 +32,7 @@ export function SlideStyleSelector({
     itemRenderer={(text, item, {handleClick, index, modifiers: {active}}) =>
       <MenuItem key={item.id} roleStructure="listoption" text={text} onClick={handleClick} active={active} />
     }
-    onSelect={onSelect}
+    onSelect={(style) => onChange(style.id)}
     text={text}
     buttonProps={{icon: <SlideStyleBox value={style} />}}
   />

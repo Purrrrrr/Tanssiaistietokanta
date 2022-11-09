@@ -33,8 +33,8 @@ query BallProgram($eventId: ID!) {
     program {
       slideStyleId
       introductions {
-        programTitle
-        programTitleSlideStyleId
+        title
+        titleSlideStyleId
         program {
           item {
             __typename
@@ -47,7 +47,8 @@ query BallProgram($eventId: ID!) {
       }
       danceSets {
         __typename
-        name
+        title
+        titleSlideStyleId
         intervalMusicDuration
         program {
           slideStyleId
@@ -140,7 +141,7 @@ interface Slide {
 function getSlides(event: Event) : Slide[] {
   const {introductions, danceSets} = event.program
 
-  const eventHeader : Slide = { __typename: 'Event', name: introductions.programTitle ?? event.name, slideStyleId: introductions.programTitleSlideStyleId }
+  const eventHeader : Slide = { __typename: 'Event', name: introductions.title ?? event.name, slideStyleId: introductions.titleSlideStyleId }
 
   const slides : Slide[] = [eventHeader]
   if (!event.program) return slides
@@ -149,8 +150,8 @@ function getSlides(event: Event) : Slide[] {
   for (const {item, slideStyleId} of introductions.program) {
     slides.push({ name: '', ...item, slideStyleId, parent: eventHeader })
   }
-  for (const danceSet of danceSets) {
-    const danceSetSlide = { ...danceSet, program: [] as Slide[], subtotal: danceSet.program.length }
+  for (const {title: name, ...danceSet} of danceSets) {
+    const danceSetSlide = { ...danceSet, name, program: [] as Slide[], subtotal: danceSet.program.length }
     const danceProgram = danceSet.program.map(({item, slideStyleId}) => ({ name: '', ...item, slideStyleId, parent: danceSetSlide}))
     danceSetSlide.program = danceProgram
     slides.push(danceSetSlide)

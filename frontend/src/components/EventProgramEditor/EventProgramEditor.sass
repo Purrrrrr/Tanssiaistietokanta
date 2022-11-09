@@ -3,25 +3,29 @@ $borderColor: rgba(16, 22, 26, 0.15)
 .eventProgramEditor
   
   .main-toolbar
-    text-align: right
+    display: flex
+    flex-wrap: wrap
+
+    #introductions--titleSlideStyleId--formgroup
+      margin-right: auto
+
   .danceset
     padding: 10px 0 0 0
     margin: 1em 0
     background: rgba(191, 204, 214, 0.15)
 
-    h2
+    .sectionTitleRow
       margin: 0 10px 0.3em
-      display: flex
       flex-wrap: wrap
       justify-content: flex-end
-      & > span
+      & > h2
+        margin: 0
         flex-grow: 1
 
       @media only screen and (max-width: 350px)
-        & > span
+        & > h2
           flex-basis: 100%
-
-      button:first-of-type
+      :not(h2):first-of-type
         margin-left: auto
 
     table
