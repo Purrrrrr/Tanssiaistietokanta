@@ -1,7 +1,7 @@
 import React, {useRef, useState} from 'react'
 import * as L from 'partial.lenses'
 
-import {ActionButton as Button, ClickToEdit, FieldComponentProps, formFor, MarkdownEditor, MenuButton, Selector, SelectorMenu, SubmitButton, Switch as PlainSwitch, toArrayPath, TypedStringPath} from 'libraries/forms'
+import {ActionButton as Button, ClickToEdit, FieldComponentProps, formFor, MarkdownEditor, MenuButton, Selector, SelectorMenu, SubmitButton, toArrayPath, TypedStringPath} from 'libraries/forms'
 import {Card, CssClass, HTMLTable} from 'libraries/ui'
 import {Flex} from 'components/Flex'
 import {DanceChooser} from 'components/widgets/DanceChooser'
@@ -25,6 +25,7 @@ const {
   Input,
   Field,
   Switch,
+  switchFor,
   Form,
   ListEditor,
   ListEditorItems,
@@ -228,7 +229,6 @@ type DanceProgramPath = `danceSets.${number}.program.${number}`
 function ProgramListEditor({path, tableRef}: {path: ProgramSectionPath, tableRef: React.RefObject<HTMLTableElement>}) {
   const { program, intervalMusicDuration } = useValueAt(path)
   const isIntroductionsSection = path.startsWith('introductions')
-  const onSetIntervalMusicDuration = useOnChangeFor(`${path}.intervalMusicDuration`)
   const programPath = `${path}.program` as const
 
   return <ListEditor path={programPath}>
@@ -253,8 +253,7 @@ function ProgramListEditor({path, tableRef}: {path: ProgramSectionPath, tableRef
         <tr className="eventProgramFooter">
           {isIntroductionsSection ||
           <td colSpan={2}>
-            <PlainSwitch id="intervalMusicAtEndOfSet" inline label={t`intervalMusicAtEndOfSet`} value={intervalMusicDuration > 0}
-              onChange={checked => onSetIntervalMusicDuration(checked ? DEFAULT_INTERVAL_MUSIC_DURATION : 0) }/>
+            <IntervalMusicSwitch inline label={t`intervalMusicAtEndOfSet`} path={`${path}.intervalMusicDuration` as `danceSets.${number}.intervalMusicDuration`} />
           </td>
           }
           <td colSpan={isIntroductionsSection ? 4 : 2}>
@@ -265,6 +264,11 @@ function ProgramListEditor({path, tableRef}: {path: ProgramSectionPath, tableRef
     </HTMLTable>
   </ListEditor>
 }
+
+const IntervalMusicSwitch = switchFor<number>({
+  isChecked: num => (num ?? 0) > 0,
+  toValue: checked => checked ? DEFAULT_INTERVAL_MUSIC_DURATION : 0,
+})
 
 interface ProgramItemEditorProps {
   item: EventProgramRow

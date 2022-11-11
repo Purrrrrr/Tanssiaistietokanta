@@ -3,7 +3,7 @@ import React  from 'react'
 import {PropertyAtPath, StringPath} from './types'
 
 import {Field, UntypedFieldProps} from './Field'
-import {InputField, InputFieldProps, SwitchField, SwitchFieldProps} from './fieldComponents/basicComponents'
+import {InputField, InputFieldProps, SwitchField, SwitchFieldForValueProps, SwitchFieldProps, switchFor, SwitchForProps} from './fieldComponents/basicComponents'
 import {Form, FormProps} from './Form'
 import {RemoveItemButton, RemoveItemButtonProps} from './formControls'
 import {FormHooksFor, formHooksFor} from './hooks'
@@ -24,6 +24,7 @@ interface FormFor<T> extends FormHooksFor<T> {
   Form: React.JSXElementConstructor<FormProps<T>>
   Field: <P extends StringPath<T>, V extends PropertyAtPath<T, P>, C extends React.ElementType, AP>(props: UntypedFieldProps<P, V, C, AP>) => React.ReactElement
   Switch: (props: SwitchFieldProps<T>) => React.ReactElement
+  switchFor: <V>(props: SwitchForProps<V>) => (props: SwitchFieldForValueProps<T, V>) => React.ReactElement
   Input: (props: InputFieldProps<T>) => React.ReactElement
   ListEditor: (props: ListEditorProps<T>) => React.ReactElement
   ListEditorItems: (props: ListEditorItemsProps<T>) => React.ReactElement
@@ -36,6 +37,7 @@ export function formFor<T>(): FormFor<T> {
     Form,
     Field: Field,
     Switch: SwitchField,
+    switchFor,
     Input: InputField,
     RemoveItemButton,
     ListEditor,

@@ -2,14 +2,41 @@ import React, {ComponentProps} from 'react'
 import {Classes, Switch as BlueprintSwitch, TextArea as BlueprintTextArea, TextAreaProps as BlueprintTextAreaProps} from '@blueprintjs/core'
 import classNames from 'classnames'
 
-import {Field, FieldDataHookProps} from '../Field'
+import {Field, FieldDataHookProps, useFieldData} from '../Field'
+import { FieldContainer } from '../FieldContainer'
+import { useFieldValueProps } from '../hooks'
 import {FieldComponentProps, TypedStringPath} from '../types'
 
 interface BaseFieldProps<T, V> extends FieldDataHookProps {
   path: TypedStringPath<V, T>
 }
-
 type AdditionalPropsFrom<Props> = Omit<Props, keyof FieldComponentProps<unknown>>
+
+export interface SwitchForProps<V> {
+  isChecked: (v: V | null | undefined) => boolean
+  toValue: (b: boolean) => V
+}
+export type SwitchFieldForValueProps<T, V> = Omit<BaseFieldProps<T, V>, 'labelStyle'>
+export function switchFor<T, V>({isChecked, toValue}: SwitchForProps<V>) {
+  return function SwitchFieldForValue({path, ...rest}: SwitchFieldForValueProps<T, V>) {
+    const { value, onChange, ...dataProps }= useFieldValueProps<T, V>(path)
+    const { fieldProps, containerProps } = useFieldData(path, value, rest)
+
+    const onChangeMapped = (bool: boolean) => onChange(toValue(bool))
+
+    const allProps = {
+      value: isChecked(value),
+      onChange: onChangeMapped,
+      label: containerProps.label,
+      ...fieldProps,
+      ...dataProps
+    } as SwitchProps
+
+    return <FieldContainer {...containerProps} labelStyle="hidden">
+      <Switch {...allProps}  />
+    </FieldContainer>
+  }
+}
 
 export type SwitchFieldProps<T> = Omit<BaseFieldProps<T, boolean>, 'labelStyle'>
 export function SwitchField<T>({label, ...props} : SwitchFieldProps<T>) {
