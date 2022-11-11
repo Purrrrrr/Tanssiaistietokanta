@@ -49,20 +49,21 @@ export function useFieldData<Value>(
 ) : FieldData {
 
   const ctx = useFormMetadata<unknown>()
-  const {inline, labelStyle, readOnly} = ctx
+  const inline = maybeInline ?? ctx.inline
+  const labelStyle = maybeLabelStyle ?? ctx.labelStyle
 
   const id = String(path).replace(/\./g, '--')
   const errorId = `${id}--error`
   const error = useError(value, rest)
 
-  const ariaProps = (maybeLabelStyle ?? labelStyle) === 'hidden'
+  const ariaProps = (labelStyle) === 'hidden'
     ? {'aria-label': labelInfo ? `${label} ${labelInfo}` : label}
     : {}
   return {
     fieldProps: {
       id,
       inline: maybeInline ?? inline,
-      readOnly,
+      readOnly: ctx.readOnly,
       'aria-describedby': errorId,
       ...ariaProps
     },
