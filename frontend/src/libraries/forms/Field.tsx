@@ -1,13 +1,13 @@
 import React  from 'react'
 
-import {FieldComponentDisplayProps, FieldComponentPropsWithoutEvent, NoRequiredProperties, PartialWhen, PropertyAtPath, StringPath } from './types'
+import {FieldComponentDisplayProps, FieldComponentPropsWithoutEvent, NoRequiredProperties, PartialWhen, TypedStringPath } from './types'
 
 import { FieldContainer, FieldContainerProps, UserGivenFieldContainerProps } from './FieldContainer'
 import { useFormMetadata } from './formContext'
 import { useFieldValueProps } from './hooks'
 import {useError, ValidationProps} from './validation'
 
-export type FieldProps<ValuePath, Value, Component extends React.ElementType, AdditionalProps> =
+export type UntypedFieldProps<ValuePath, Value, Component extends React.ElementType, AdditionalProps> =
   {
     path: ValuePath
     component: Component & React.JSXElementConstructor<FieldComponentPropsWithoutEvent<Value> & AdditionalProps>
@@ -17,18 +17,25 @@ export type FieldProps<ValuePath, Value, Component extends React.ElementType, Ad
 
 type MaybeComponentProps<Props extends object> = PartialWhen<NoRequiredProperties<Props>, { componentProps: Props }>
 
-export function Field<T, P extends StringPath<T>, V extends PropertyAtPath<T, P>, C extends React.ElementType, AP>(
-  { path, component: Component, componentProps, ...rest }: FieldProps<P, V, C, AP>
+export type FieldProps<T, V, P extends FieldComponentPropsWithoutEvent<V>> = {
+  path: TypedStringPath<V, T>
+  component: React.JSXElementConstructor<P>
+} & FieldDataHookProps & MaybeComponentProps<Omit<P, keyof FieldComponentPropsWithoutEvent<V>>>
+
+export function Field<T, V, P extends FieldComponentPropsWithoutEvent<V>>(
+  { path, component: Component, componentProps, ...rest }: FieldProps<T, V, P>
 ) {
-  const dataProps = useFieldValueProps<T, P, V>(path)
+  const dataProps = useFieldValueProps<T, V>(path)
   const { fieldProps, containerProps } = useFieldData(path, dataProps.value, rest)
 
-  return <FieldContainer {...containerProps}>
-    <Component {...componentProps as any} {...fieldProps} {...dataProps} />
-  </FieldContainer>
+  const allProps = {
+    ...componentProps, ...fieldProps, ...dataProps
+  } as P
+
+  return <FieldContainer {...containerProps}><Component {...allProps}  /></FieldContainer>
 }
 
-interface FieldDataHookProps extends UserGivenFieldContainerProps, ValidationProps {}
+export interface FieldDataHookProps extends UserGivenFieldContainerProps, ValidationProps {}
 
 interface FieldData {
   fieldProps: FieldComponentDisplayProps

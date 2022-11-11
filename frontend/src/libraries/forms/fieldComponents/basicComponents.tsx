@@ -2,26 +2,30 @@ import React, {ComponentProps} from 'react'
 import {Classes, Switch as BlueprintSwitch, TextArea as BlueprintTextArea, TextAreaProps as BlueprintTextAreaProps} from '@blueprintjs/core'
 import classNames from 'classnames'
 
-import {Field, FieldProps} from '../Field'
-import {FieldComponentProps, PropertyAtPath, TypedStringPath} from '../types'
+import {Field, FieldDataHookProps} from '../Field'
+import {FieldComponentProps, TypedStringPath} from '../types'
+
+interface BaseFieldProps<T, V> extends FieldDataHookProps {
+  path: TypedStringPath<V, T>
+}
 
 type AdditionalPropsFrom<Props> = Omit<Props, keyof FieldComponentProps<unknown>>
 
-export type SwitchFieldProps<P, V> = Omit<FieldProps<P, V, typeof Switch, {label: string, inline?: boolean}>, 'componentProps' | 'component' | 'labelStyle'>
-
-export function SwitchField<T, P extends TypedStringPath<boolean, T>, V extends PropertyAtPath<T, P> & boolean>(
-  {label, ...props} : SwitchFieldProps<P, V>
-) {
-  // eslint-disable-next-line
-  // @ts-ignore
-  return <Field<T, P, V, typeof Switch, ExtraSwitchProps> {...props} label={label} labelStyle="hidden" component={Switch as any} componentProps={{label}} />
+export type SwitchFieldProps<T> = Omit<BaseFieldProps<T, boolean>, 'labelStyle'>
+export function SwitchField<T>({label, ...props} : SwitchFieldProps<T>) {
+  return <Field<T, boolean, SwitchProps> {...props} label={label} labelStyle="hidden" component={Switch} componentProps={{label}} />
 }
 
-interface SwitchProps extends FieldComponentProps<boolean, HTMLInputElement>, ExtraSwitchProps { }
-interface ExtraSwitchProps {
+export interface InputFieldProps<T> extends BaseFieldProps<T, string> {
+  componentProps?: AdditionalPropsFrom<InputProps>
+}
+export function InputField<T>(props : InputFieldProps<T>) {
+  return <Field<T, string, InputProps> {...props} component={Input} />
+}
+
+interface SwitchProps extends FieldComponentProps<boolean, HTMLInputElement> {
   label: string
 }
-
 export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
   function Switch({ value, onChange, readOnly, hasConflict, ...props }, ref) {
     return <BlueprintSwitch
@@ -34,17 +38,7 @@ export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
   }
 )
 
-export type InputFieldProps<P, V>  = Omit<FieldProps<P, V, typeof Input, unknown>, 'component'>
-export function InputField<T, P extends TypedStringPath<string, T>, V extends PropertyAtPath<T, P> & string >(
-  props : InputFieldProps<P, V>
-) {
-  // eslint-disable-next-line
-  // @ts-ignore
-  return <Field<T, P, V, typeof Input, AdditionalPropsFrom<ComponentProps<'input'>>> {...props} component={Input as any} />
-}
-
 export interface InputProps extends FieldComponentProps<string, HTMLInputElement>, AdditionalPropsFrom<ComponentProps<'input'>> {
-  inline?: boolean
   inputRef?: React.Ref<HTMLInputElement>
 }
 export function Input({value, className, onChange, inline, hasConflict, inputRef, ...props} : InputProps) {

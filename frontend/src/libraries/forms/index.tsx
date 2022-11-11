@@ -1,8 +1,8 @@
 import React  from 'react'
 
-import {PropertyAtPath, StringPath, TypedStringPath} from './types'
+import {PropertyAtPath, StringPath} from './types'
 
-import {Field, FieldProps} from './Field'
+import {Field, UntypedFieldProps} from './Field'
 import {InputField, InputFieldProps, SwitchField, SwitchFieldProps} from './fieldComponents/basicComponents'
 import {Form, FormProps} from './Form'
 import {RemoveItemButton, RemoveItemButtonProps} from './formControls'
@@ -22,9 +22,9 @@ export {Validate} from './validation'
 
 interface FormFor<T> extends FormHooksFor<T> {
   Form: React.JSXElementConstructor<FormProps<T>>
-  Field: <P extends StringPath<T>, V extends PropertyAtPath<T, P>, C extends React.ElementType, AP>(props: FieldProps<P, V, C, AP>) => React.ReactElement
-  Switch: <P extends TypedStringPath<boolean, T>, V extends PropertyAtPath<T, P> & boolean>(props: SwitchFieldProps<P, V>) => React.ReactElement
-  Input: <P extends TypedStringPath<string, T>, V extends PropertyAtPath<T, P> & (string | undefined | null)>(props: InputFieldProps<P, V>) => React.ReactElement
+  Field: <P extends StringPath<T>, V extends PropertyAtPath<T, P>, C extends React.ElementType, AP>(props: UntypedFieldProps<P, V, C, AP>) => React.ReactElement
+  Switch: (props: SwitchFieldProps<T>) => React.ReactElement
+  Input: (props: InputFieldProps<T>) => React.ReactElement
   ListEditor: (props: ListEditorProps<T>) => React.ReactElement
   ListEditorItems: (props: ListEditorItemsProps<T>) => React.ReactElement
   DragHandle: typeof DragHandle
@@ -34,7 +34,7 @@ interface FormFor<T> extends FormHooksFor<T> {
 export function formFor<T>(): FormFor<T> {
   return {
     Form,
-    Field,
+    Field: Field,
     Switch: SwitchField,
     Input: InputField,
     RemoveItemButton,

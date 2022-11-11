@@ -3,7 +3,7 @@ import {SortableContainer, SortableElement} from 'react-sortable-hoc'
 import {arrayMoveImmutable} from 'array-move'
 
 import {useOnChangeFor, useValueAt} from '../hooks'
-import {StringPath, StringPathToList} from '../types'
+import {AnyList, StringPath, StringPathToList} from '../types'
 
 /** Create a drag and drop list from items with the specified component
  *
@@ -17,7 +17,7 @@ export type ListEditorProps<T> = Omit<ListEditorItemsProps<T>, 'component'> & (
 )
 
 export function ListEditor<T>({path, children, component} : ListEditorProps<T>) {
-  const onChange = useOnChangeFor(path as StringPath<unknown>)
+  const onChange = useOnChangeFor<T, AnyList>(path)
   function onSortEnd({oldIndex, newIndex}) {
     onChange(items => arrayMoveImmutable(items, oldIndex, newIndex))
   }
@@ -33,7 +33,7 @@ export interface ListEditorItemsProps<T> {
 }
 
 export function ListEditorItems<T>({path, component} : ListEditorItemsProps<T>) {
-  const items = useValueAt(path as StringPath<unknown>) as unknown[]
+  const items = useValueAt<T, AnyList>(path)
   return <>
     {items.map((item, index) =>
       <SortableItem

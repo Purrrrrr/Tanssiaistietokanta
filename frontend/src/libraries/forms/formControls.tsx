@@ -2,7 +2,7 @@ import React from 'react'
 
 import {Button} from 'libraries/ui'
 
-import {StringPath, StringPathToList} from './types'
+import {StringPathToList} from './types'
 
 import {useFormIsValid, useFormMetadata} from './formContext'
 import {useRemoveFromList} from './hooks'
@@ -23,7 +23,7 @@ export interface RemoveItemButtonProps<T> extends ButtonProps {
 }
 
 export function RemoveItemButton<T>({path, index, onClick, ...props}: RemoveItemButtonProps<T>) {
-  const onRemove = useRemoveFromList(path as StringPath<unknown>, index)
+  const onRemove = useRemoveFromList<T>(path, index)
   return <ActionButton onClick={(e) => { onRemove(); if (onClick) onClick(e) } } intent="danger" {...props} />
 }
 
