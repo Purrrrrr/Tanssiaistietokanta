@@ -2,7 +2,7 @@ import {useCallback, useEffect, useMemo, useState} from 'react'
 import {arrayMoveImmutable} from 'array-move'
 import * as L from 'partial.lenses'
 
-import {NewValue, PropertyAtPath, StringPath, StringPathToList, toArrayPath} from './types'
+import {FieldDataProps, NewValue, PropertyAtPath, StringPath, StringPathToList, toArrayPath} from './types'
 
 import {FormMetadataContextType, useFormMetadata} from './formContext'
 
@@ -47,27 +47,58 @@ export function formHooksFor<T>(): FormHooksFor<T> {
 }
 
 export function useValueAt<T, P extends StringPath<T>, SubT extends PropertyAtPath<T, P>>(path : P) : SubT {
-  const getValue = useCallback((ctx) => ctx.getValueAt(path), [path])
-  return useFormValueSubscription(getValue)
+  const ctx = useFormMetadata<T>()
+  const [state, setState] = useState<SubT>(() => ctx.getValueAt(path))
+  useFormValueSubscription(ctx, useCallback(
+    () => setState(ctx.getValueAt<P, SubT>(path)),
+    [ctx, path]
+  ))
+  return state
 }
 
+export function useFieldValueProps<T, P extends StringPath<T>, SubT extends PropertyAtPath<T, P>>(
+  path : P
+): FieldDataProps<SubT>
+{
+  const ctx = useFormMetadata<T>()
+  const [value, setValue] = useState(() => ctx.getValueAt<P, SubT>(path))
+  const [hasConflict, setHasConflict] = useState(() => hasConflictsAtPath(ctx.getConflicts(), path))
+
+  useFormValueSubscription(ctx, useCallback(
+    () => {
+      setValue(ctx.getValueAt<P, SubT>(path))
+      setHasConflict(hasConflictsAtPath(ctx.getConflicts(), path))
+    },
+    [ctx, path]
+  ))
+
+  const propagateOnChange = useOnChangeFor<T, P, SubT>(path)
+  const onChange = useCallback((v) => {
+    setValue(v)
+    propagateOnChange(v)
+  }, [propagateOnChange])
+
+  return { value, onChange, hasConflict }
+}
+
+function hasConflictsAtPath(conflicts, path) {
+  const arrayPath = toArrayPath(path)
+  return conflicts
+    .some((conflict )=> conflict.length === arrayPath.length && arrayPath.every((key, i) => conflict[i] === key))
+}
 
 export function useRemoveFromList<T, P extends StringPath<T>>(path: P, index: number) {
   const onChange = useOnChangeFor<T, P, PropertyAtPath<T, P>>(path)
   return useCallback(() => onChange(L.set(index, undefined)), [onChange, index])
 }
 
-export function useFormValueSubscription<T, V>(getValue: ((ctx: FormMetadataContextType<T>) => V)): V {
-  const ctx = useFormMetadata<T>()
-  const [state, setState] = useState(() => getValue(ctx))
-
+export function useFormValueSubscription<T>(ctx: FormMetadataContextType<T>, callback: () => unknown) {
   useEffect(() => {
-    const callback = () => setState(getValue(ctx))
     const unsubscribe = ctx.subscribeToChanges(callback)
     callback()
     return unsubscribe
-  }, [ctx, getValue])
-  return state
+  }, [ctx, callback])
+  return ctx
 }
 
 export function useOnChangeFor<T, P extends StringPath<T>, SubT extends PropertyAtPath<T, P>>(path : P) : (v: NewValue<SubT>) => unknown {
@@ -78,48 +109,4 @@ export function useOnChangeFor<T, P extends StringPath<T>, SubT extends Property
   )
 }
 
-interface FieldData<T> extends Pick<FormMetadataContextType<T>, 'readOnly' | 'inline' | 'labelStyle'> {
-  value: T
-  hasConflict: boolean
-  onChange: (v: NewValue<T>) => unknown
-}
-
-export function useFieldAt<T, P extends StringPath<T>, SubT extends PropertyAtPath<T, P>>(path : P) : FieldData<SubT> {
-  const propagateOnChange = useOnChangeFor<T, P, SubT>(path)
-
-  const ctx = useFormMetadata<T>()
-  const [value, setValue] = useState(() => ctx.getValueAt<P, SubT>(path))
-  const [hasConflict, setHasConflict] = useState(() => hasConflictsAtPath(ctx.getConflicts(), path))
-
-  useEffect(() => {
-    const callback = () => {
-      setValue(ctx.getValueAt<P, SubT>(path))
-      setHasConflict(hasConflictsAtPath(ctx.getConflicts(), path))
-    }
-    const unsubscribe = ctx.subscribeToChanges(callback)
-    callback()
-    return unsubscribe
-  }, [ctx, path, setValue])
-
-  const onChange = useCallback((v) => {
-    setValue(v)
-    propagateOnChange(v)
-  }, [propagateOnChange])
-
-  const {inline, labelStyle, readOnly} = ctx
-  return {
-    inline,
-    labelStyle,
-    readOnly,
-    value,
-    onChange,
-    hasConflict
-  }
-}
-
-function hasConflictsAtPath(conflicts, path) {
-  const arrayPath = toArrayPath(path)
-  return conflicts
-    .some((conflict )=> conflict.length === arrayPath.length && arrayPath.every((key, i) => conflict[i] === key))
-}
 

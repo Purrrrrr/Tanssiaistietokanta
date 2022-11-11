@@ -1,87 +1,72 @@
-import React from 'react'
+import React  from 'react'
 
-import {FormGroup} from 'libraries/ui'
+import {FieldComponentDisplayProps, FieldComponentPropsWithoutEvent, NoRequiredProperties, PartialWhen, PropertyAtPath, StringPath } from './types'
 
-import {FieldComponentProps, LabelStyle, NoRequiredProperties, PartialWhen, PropertyAtPath, StringPath} from './types'
-
-import { useFieldAt } from './hooks'
-import {ErrorMessage, useError, ValidationProps} from './validation'
+import { FieldContainer, FieldContainerProps, UserGivenFieldContainerProps } from './FieldContainer'
+import { useFormMetadata } from './formContext'
+import { useFieldValueProps } from './hooks'
+import {useError, ValidationProps} from './validation'
 
 export type FieldProps<ValuePath, Value, Component extends React.ElementType, AdditionalProps> =
   {
     path: ValuePath
-    inline?: boolean
-    label: string
-    labelInfo?: string
-    helperText?: string
-    labelStyle?: LabelStyle
-    component: Component & React.JSXElementConstructor<FieldComponentProps<Value> & AdditionalProps>
+    component: Component & React.JSXElementConstructor<FieldComponentPropsWithoutEvent<Value> & AdditionalProps>
   }
-  & ValidationProps
-  & MaybeComponentProps<Omit<React.ComponentPropsWithoutRef<Component>, keyof FieldComponentProps<Value>>>
+  & FieldDataHookProps
+  & MaybeComponentProps<Omit<React.ComponentPropsWithoutRef<Component>, keyof FieldComponentPropsWithoutEvent<Value>>>
 
 type MaybeComponentProps<Props extends object> = PartialWhen<NoRequiredProperties<Props>, { componentProps: Props }>
 
 export function Field<T, P extends StringPath<T>, V extends PropertyAtPath<T, P>, C extends React.ElementType, AP>(
-  {
-    label,
-    labelInfo,
-    helperText,
-    labelStyle,
-    path,
-    inline,
-    component: Component,
-    componentProps,
-    ...rest
-  }: FieldProps<P, V, C, AP>
+  { path, component: Component, componentProps, ...rest }: FieldProps<P, V, C, AP>
 ) {
-  const {
-    value,
-    hasConflict,
-    onChange,
-    readOnly,
-    labelStyle: labelStyleFromCtx,
-    inline: inlineFromCtx,
-  } = useFieldAt<T, P, V>(path)
-  const error = useError(value, rest)
+  const dataProps = useFieldValueProps<T, P, V>(path)
+  const { fieldProps, containerProps } = useFieldData(path, dataProps.value, rest)
+
+  return <FieldContainer {...containerProps}>
+    <Component {...componentProps as any} {...fieldProps} {...dataProps} />
+  </FieldContainer>
+}
+
+interface FieldDataHookProps extends UserGivenFieldContainerProps, ValidationProps {}
+
+interface FieldData {
+  fieldProps: FieldComponentDisplayProps
+  containerProps: FieldContainerProps
+}
+
+export function useFieldData<Value>(
+  path: string | number,
+  value: Value,
+  {label, labelInfo, helperText, inline: maybeInline, labelStyle: maybeLabelStyle, ...rest}: FieldDataHookProps
+) : FieldData {
+
+  const ctx = useFormMetadata<unknown>()
+  const {inline, labelStyle, readOnly} = ctx
+
   const id = String(path).replace(/\./g, '--')
   const errorId = `${id}--error`
+  const error = useError(value, rest)
 
-  const ariaProps = labelStyle === 'hidden'
-    ? {'aria-describedby': errorId, 'aria-label': labelInfo ? `${label} ${labelInfo}` : label}
-    : {'aria-describedby': errorId}
-
-  return <FormWrapper label={label} labelInfo={labelInfo} helperText={helperText} labelStyle={labelStyle ?? labelStyleFromCtx} inline={inline ?? inlineFromCtx} id={id}>
-    <Component
-      {...componentProps as any}
-      id={id}
-      value={value}
-      onChange={onChange}
-      inline={inline}
-      hasConflict={hasConflict}
-      readOnly={readOnly}
-      {...ariaProps}
-    />
-    <ErrorMessage id={errorId} error={error} />
-  </FormWrapper>
-}
-
-function FormWrapper({id, labelStyle, inline, label, labelInfo, helperText, children}) {
-  const formGroupId = `${id}--formgroup`
-
-  if (labelStyle === 'hidden') {
-    return inline
-      ? <span id={formGroupId}>{children}{helperText}</span>
-      : <div id={formGroupId}>{children}{helperText}</div>
+  const ariaProps = (maybeLabelStyle ?? labelStyle) === 'hidden'
+    ? {'aria-label': labelInfo ? `${label} ${labelInfo}` : label}
+    : {}
+  return {
+    fieldProps: {
+      id,
+      inline: maybeInline ?? inline,
+      readOnly,
+      'aria-describedby': errorId,
+      ...ariaProps
+    },
+    containerProps: {
+      id,
+      errorId,
+      error,
+      label,
+      labelInfo,
+      labelStyle,
+      inline: maybeInline ?? inline,
+    }
   }
-
-  const props = {
-    labelFor: id,
-    labelInfo,
-    helperText,
-  }
-  return <FormGroup id={formGroupId} labelStyle={labelStyle} inline={inline} {...props} label={label} >
-    {children}
-  </FormGroup>
 }
-

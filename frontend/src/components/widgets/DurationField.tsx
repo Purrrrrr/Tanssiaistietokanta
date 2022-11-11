@@ -13,7 +13,9 @@ interface DurationState {
   event?: React.ChangeEvent
 }
 
-export function DurationField({value: maybeValue, onChange, readOnly, className, ...props} : FieldComponentProps<number, HTMLInputElement> & Omit<InputProps, 'ref'>) {
+interface DurationFieldProps extends FieldComponentProps<number, HTMLInputElement>, Omit<InputProps, 'ref' | 'onChange' | 'value'>{ }
+
+export function DurationField({value: maybeValue, onChange, readOnly, className, ...props} : DurationFieldProps) {
   const value = maybeValue ?? 0
   const [params, setParams] = useState<DurationState>({value, text: durationToString(value ?? 0)})
 
