@@ -1,10 +1,8 @@
 import React, {useRef, useState} from 'react'
-import * as L from 'partial.lenses'
 
-import {ActionButton as Button, ClickToEdit, FieldComponentProps, formFor, MarkdownEditor, MenuButton, Selector, SelectorMenu, SubmitButton, toArrayPath, TypedStringPath} from 'libraries/forms'
+import {ActionButton as Button, ClickToEdit, formFor, MarkdownEditor, SubmitButton} from 'libraries/forms'
 import {Card, CssClass, HTMLTable} from 'libraries/ui'
 import {Flex} from 'components/Flex'
-import {DanceChooser} from 'components/widgets/DanceChooser'
 import {Duration} from 'components/widgets/Duration'
 import {DurationField} from 'components/widgets/DurationField'
 import {NavigateButton} from 'components/widgets/NavigateButton'
@@ -12,12 +10,13 @@ import {SlideStyleSelector} from 'components/widgets/SlideStyleSelector'
 import {focusLater, focusSiblingsOrParent} from 'utils/focus'
 import {guid} from 'utils/guid'
 import {blurTo, clickInElement, clickInParent, focusTo, moveDown, moveUp, navigateAmongSiblings} from 'utils/keyboardNavigation'
-import {makeTranslate} from 'utils/translate'
 import {bind, useHotkeyHandler} from 'utils/useHotkeyHandler'
 import {useRedirectKeyDownTo} from 'utils/useRedirectKeyDownTo'
 
-import {DanceProgram, DanceSet, EventProgramItem, EventProgramRow, EventProgramSettings, RequestedDance} from './types'
-import {Dance} from 'types'
+import {DanceProgramPath, DanceSet, EventProgramRow, EventProgramSettings, ProgramItemPath, ProgramSectionPath} from './types'
+
+import {DanceProgramChooser, InheritedSlideStyleSelector, MoveDanceSetSelector, MoveItemToSectionSelector} from './selectors'
+import t from './translations'
 
 import './EventProgramEditor.sass'
 
@@ -37,48 +36,6 @@ const {
   useMoveItemInList,
 } = formFor<EventProgramSettings>()
 
-const t = makeTranslate({
-  actions: 'Toiminnot',
-  moveToSet: 'Siirrä settiin',
-  moveDanceSet: 'Siirrä',
-  afterSet: 'Setin "%(name)s" jälkeen',
-  beforeSet: 'Ennen settiä "%(name)s"',
-  addEntry: 'Lisää',
-  addEntryTitle: 'Lisää ohjelmaa',
-  introductoryInformation: 'Alkutiedotukset',
-  programListIsEmpty: 'Ei ohjelmaa',
-  Dance: 'Tanssi',
-  RequestedDance: 'Toivetanssi',
-  EventProgram: 'Muu ohjelma',
-  eventProgramName: 'Ohjelman nimi',
-  eventProgramDescription: 'Ohjelman kuvaus',
-  showInLists: 'Näytä ohjelma tanssilistoissa',
-  removeDanceSet: 'Poista setti',
-  addDanceSet: 'Lisää tanssisetti',
-  danceSet: 'Setti',
-  addDance: 'Lisää tanssi',
-  addInfo: 'Lisää muuta ohjelmaa',
-  addIntroductoryInfo: 'Lisää alkutiedote',
-  type: 'Tyyppi',
-  name: 'Nimi',
-  duration: 'Kesto',
-  pausesIncluded: 'taukoineen',
-  dances: 'tanssit',
-  ofWhichDances: ' (taukoineen), josta tanssimusiikin kesto',
-  pauseDuration: 'Tanssien välinen tauko',
-  intervalMusic: 'Taukomusiikki',
-  intervalMusicDuration: 'Taukomusiikin kesto',
-  intervalMusicAtEndOfSet: 'Taukomusiikki setin lopussa',
-  minutes: 'min.',
-  style: 'Tyyli',
-  titleStyle: 'Otsikon tyyli',
-  eventDefaultStyle: 'Ohjelman oletustyyli',
-  remove: 'Poista',
-  danceProgramIsEmpty: 'Ei tanssiohjelmaa.',
-  danceSetName: 'Tanssisetin nimi',
-  newProgramItem: 'Uusi ohjelmanumero',
-  programTitle: 'Tanssiaisohjelman otsikko',
-})
 
 const DEFAULT_INTERVAL_MUSIC_DURATION = 15*60
 
@@ -101,11 +58,11 @@ export function EventProgramEditor({program: eventProgram, onSubmit}: EventProgr
   return <Form value={program} onChange={onChange} onSubmit={onSubmit}>
     <section className="eventProgramEditor" ref={element} onKeyDown={onKeyDown}>
       <div className="main-toolbar">
-        <Input labelStyle="above" label={t`programTitle`} path="introductions.title" inline />
-        <InheritedSlideStyleSelector path="introductions.titleSlideStyleId" text={t`titleStyle`} />
-        <Field label={t`pauseDuration`} inline path="pauseBetweenDances" component={DurationField} />
+        <Input labelStyle="above" label={t`fields.programTitle`} path="introductions.title" inline />
+        <InheritedSlideStyleSelector path="introductions.titleSlideStyleId" text={t`fields.titleStyle`} />
+        <Field label={t`fields.pauseDuration`} inline path="pauseBetweenDances" component={DurationField} />
         {introductions.program.length === 0 && <AddIntroductionButton />}
-        <Field label="" inline path="slideStyleId" component={SlideStyleSelector} componentProps={{text: t`eventDefaultStyle`}} />
+        <Field label="" inline path="slideStyleId" component={SlideStyleSelector} componentProps={{text: t`fields.eventDefaultStyle`}} />
       </div>
       <IntroductoryInformation />
       {danceSets.map((danceSet, index : number) =>
@@ -117,8 +74,8 @@ export function EventProgramEditor({program: eventProgram, onSubmit}: EventProgr
       </div>
     </section>
     <hr />
-    <SubmitButton text="Tallenna muutokset" />
-    <NavigateButton href='..' text="Peruuta" />
+    <SubmitButton text={t`buttons.save`} />
+    <NavigateButton href='..' text={t`buttons.cancel`} />
   </Form>
 }
 
@@ -128,12 +85,12 @@ function AddIntroductionButton() {
     addIntroduction(newEventProgramItem)
     focusLater('.eventProgramEditor .danceset:first-child tbody tr:last-child')
   }
-  return <Button text={t`addIntroductoryInfo`} onClick={addIntroductoryInfo} className="addIntroductoryInfo" />
+  return <Button text={t`buttons.addIntroductoryInfo`} onClick={addIntroductoryInfo} className="addIntroductoryInfo" />
 }
 
 function newEventProgramItem(): EventProgramRow {
   return {
-    item: {__typename: 'EventProgram', _id: undefined, name: t`newProgramItem`, showInLists: false},
+    item: {__typename: 'EventProgram', _id: undefined, name: t`placeholderNames.newProgramItem`, showInLists: false},
     _id: guid(),
   }
 }
@@ -144,7 +101,7 @@ function AddDanceSetButton() {
     onAddDanceSet(newDanceSet)
     focusLater('.eventProgramEditor .danceset:last-child')
   }
-  return <Button text={t`addDanceSet`} onClick={addDanceSet} className="addDanceSet" />
+  return <Button text={t`buttons.addDanceSet`} onClick={addDanceSet} className="addDanceSet" />
 }
 
 function newDanceSet(danceSets: DanceSet[]): DanceSet {
@@ -152,7 +109,7 @@ function newDanceSet(danceSets: DanceSet[]): DanceSet {
   const dances = Array.from({length: 6}, () => ({item: {__typename: 'RequestedDance'}, _id: guid()} as EventProgramRow))
   return {
     _id: guid(),
-    title: t`danceSet` + ' ' + danceSetNumber,
+    title: t('placeholderNames.danceSet', {number: danceSetNumber}),
     program: dances,
     intervalMusicDuration: DEFAULT_INTERVAL_MUSIC_DURATION
   }
@@ -172,7 +129,7 @@ function IntroductoryInformation() {
   return <Card className="danceset" tabIndex={0} onKeyDown={onKeyDown}>
     <Flex className="sectionTitleRow">
       <h2>
-        <t.span>introductoryInformation</t.span>
+        <t.span>titles.introductoryInformation</t.span>
       </h2>
       <AddIntroductionButton />
     </Flex>
@@ -208,23 +165,19 @@ const DanceSetEditor = React.memo(function DanceSetEditor({index} : {index: numb
   return <Card className="danceset" tabIndex={0} onKeyDown={onKeyDown} >
     <Flex className="sectionTitleRow">
       <h2>
-        <Field labelStyle="hidden" label={t`danceSetName`} path={`danceSets.${index}.title`} inline component={ClickToEdit} />
+        <Field labelStyle="hidden" label={t`fields.danceSetName`} path={`danceSets.${index}.title`} inline component={ClickToEdit} />
       </h2>
-      <Button text={t`addDance`} onClick={() => addItem({item: {__typename: 'RequestedDance'}, _id: guid()})} className="addDance" />
-      <Button text={t`addInfo`} onClick={() => addItem(newEventProgramItem())} className="addInfo" />
-      <InheritedSlideStyleSelector path={`danceSets.${index}.titleSlideStyleId`} text={t`titleStyle`} />
+      <Button text={t`buttons.addDance`} onClick={() => addItem({item: {__typename: 'RequestedDance'}, _id: guid()})} className="addDance" />
+      <Button text={t`buttons.addInfo`} onClick={() => addItem(newEventProgramItem())} className="addInfo" />
+      <InheritedSlideStyleSelector path={`danceSets.${index}.titleSlideStyleId`} text={t`fields.titleStyle`} />
       <MoveDanceSetSelector
         currentSet={item}
         onSelect={({index})=> moveTo(index)} />
-      <RemoveItemButton path="danceSets" index={index} className="delete" text={t`removeDanceSet`} onClick={removeDanceSet} />
+      <RemoveItemButton path="danceSets" index={index} className="delete" text={t`buttons.removeDanceSet`} onClick={removeDanceSet} />
     </Flex>
     <ProgramListEditor tableRef={table} path={`danceSets.${index}`} />
   </Card>
 })
-
-type ProgramSectionPath = 'introductions' | `danceSets.${number}`
-type ProgramItemPath = `${ProgramSectionPath}.program.${number}`
-type DanceProgramPath = `danceSets.${number}.program.${number}`
 
 function ProgramListEditor({path, tableRef}: {path: ProgramSectionPath, tableRef: React.RefObject<HTMLTableElement>}) {
   const { program, intervalMusicDuration } = useValueAt(path)
@@ -236,7 +189,7 @@ function ProgramListEditor({path, tableRef}: {path: ProgramSectionPath, tableRef
       {program.length === 0 ||
           <thead>
             <tr>
-              <t.th>type</t.th><t.th>name</t.th><t.th>duration</t.th><t.th>actions</t.th>
+              <t.th>columnTitles.type</t.th><t.th>columnTitles.name</t.th><t.th>columnTitles.duration</t.th><t.th>columnTitles.actions</t.th>
             </tr>
           </thead>
       }
@@ -253,7 +206,7 @@ function ProgramListEditor({path, tableRef}: {path: ProgramSectionPath, tableRef
         <tr className="eventProgramFooter">
           {isIntroductionsSection ||
           <td colSpan={2}>
-            <IntervalMusicSwitch inline label={t`intervalMusicAtEndOfSet`} path={`${path}.intervalMusicDuration` as `danceSets.${number}.intervalMusicDuration`} />
+            <IntervalMusicSwitch inline label={t`fields.intervalMusicAtEndOfSet`} path={`${path}.intervalMusicDuration` as `danceSets.${number}.intervalMusicDuration`} />
           </td>
           }
           <td colSpan={isIntroductionsSection ? 4 : 2}>
@@ -317,7 +270,7 @@ const ProgramItemEditor = React.memo(function ProgramItemEditor({path, itemIndex
   const {__typename } = item.item
 
   return <tr className="eventProgramItem" onKeyDown={onKeyDown} ref={container} tabIndex={0}>
-    <td>{t(__typename)}</td>
+    <td>{t(`programTypes.${__typename}`)}</td>
     <td>
       <ProgramDetailsEditor path={itemPath} onInputBlurred={onInputBlurred} />
     </td>
@@ -326,7 +279,7 @@ const ProgramItemEditor = React.memo(function ProgramItemEditor({path, itemIndex
     </td>
     <td>
       <DragHandle tabIndex={-1}/>
-      <InheritedSlideStyleSelector path={`${itemPath}.slideStyleId`} text={t`style`} />
+      <InheritedSlideStyleSelector path={`${itemPath}.slideStyleId`} text={t`fields.style`} />
       <MoveItemToSectionSelector itemPath={itemPath} />
       <RemoveItemButton path={path} index={itemIndex} title={t`remove`} icon="cross" onClick={removeItem} className="deleteItem" />
     </td>
@@ -344,28 +297,12 @@ function ProgramDetailsEditor({path, onInputBlurred}: {path: ProgramItemPath, on
       return <Field label={t`Dance`} labelStyle="hidden" path={`${path as DanceProgramPath}.item`} component={DanceProgramChooser} componentProps={{onBlur:onInputBlurred}}/>
     case 'EventProgram':
       return <>
-        <Input label={t`eventProgramName`} path={`${path}.item.name`} componentProps={{onBlur:onInputBlurred}} required />
-        <Field label={t`eventProgramDescription`} path={`${path}.item.description`} component={MarkdownEditor} />
-        <Switch label={t`showInLists`} path={`${path}.item.showInLists`} inline />
+        <Input label={t`fields.eventProgram.name`} path={`${path}.item.name`} componentProps={{onBlur:onInputBlurred}} required />
+        <Field label={t`fields.eventProgram.description`} path={`${path}.item.description`} component={MarkdownEditor} />
+        <Switch label={t`fields.eventProgram.showInLists`} path={`${path}.item.showInLists`} inline />
       </>
   }
 }
-
-const DanceProgramChooser = React.memo(function DanceProgramChooser({value, onChange, onBlur, ...props} : FieldComponentProps<EventProgramItem, HTMLElement> & {onBlur: (e: React.FocusEvent) => unknown}) {
-  return <DanceChooser
-    value={value?._id ? value as Dance : null}
-    onChange={(dance, e) => onChange(
-      dance
-        ? {...dance, __typename: 'Dance'} as DanceProgram
-        : {__typename: 'RequestedDance'} as RequestedDance,
-      e
-    )}
-    allowEmpty
-    emptyText={t`RequestedDance`}
-    onBlur={onBlur}
-    {...props}
-  />
-})
 
 function IntervalMusicEditor({path}: {path: `${ProgramSectionPath}.intervalMusicDuration`}) {
   const onSetIntervalMusicDuration = useOnChangeFor(path)
@@ -394,13 +331,13 @@ function IntervalMusicEditor({path}: {path: `${ProgramSectionPath}.intervalMusic
   }
 
   return <tr className="eventProgramItem" tabIndex={0} onKeyDown={onKeyDown} ref={row}>
-    <td>{t`intervalMusic`}</td>
+    <td>{t`programTypes.intervalMusic`}</td>
     <td />
     <td>
-      <Field label={t`intervalMusicDuration`} labelStyle="hidden" path={path} component={DurationField} componentProps={{onBlur: onDurationBlurred}}/>
+      <Field label={t`fields.intervalMusicDuration`} labelStyle="hidden" path={path} component={DurationField} componentProps={{onBlur: onDurationBlurred}}/>
     </td>
     <td>
-      <Button title={t`remove`} intent="danger" icon="cross" onClick={() => onSetIntervalMusicDuration(0)} className="delete" />
+      <Button title={t`buttons.remove`} intent="danger" icon="cross" onClick={() => onSetIntervalMusicDuration(0)} className="delete" />
     </td>
   </tr>
 }
@@ -411,100 +348,8 @@ function DanceSetDuration({ program, intervalMusicDuration}) {
   const durationWithPauses = duration + pause*program.length + intervalMusicDuration
 
   return <>
-    <strong><Duration value={durationWithPauses}/></strong>{' ('+t`pausesIncluded`+') '}
+    <strong><Duration value={durationWithPauses}/></strong>{' '+t`duration.pausesIncluded`}
     <br />
-    <strong><Duration value={duration}/></strong>{' ('+t`dances`+')'}
+    <strong><Duration value={duration}/></strong>{' '+t`duration.dances`}
   </>
-}
-
-function MoveDanceSetSelector({currentSet, onSelect}) {
-  const danceSets = useValueAt('danceSets')
-  if (danceSets.length < 2) return null
-
-  const currentIndex = danceSets.indexOf(currentSet)
-  const items = danceSets.map((d, index) => ({
-    name: index < currentIndex
-      ? t('beforeSet', {name: d.title})
-      : t('afterSet', {name: d.title})
-    ,
-    index
-  })).filter(({index}) => index !== currentIndex)
-  return <Selector<{name: string, index: number}>
-    items={items}
-    getItemText={(section) => section.name}
-    onSelect={onSelect}
-    text={t`moveDanceSet`}
-  />
-}
-
-function MoveItemToSectionSelector({itemPath} : { itemPath: ProgramItemPath}) {
-  const [open, setOpen] = useState(false)
-  return <MenuButton
-    menu={
-      <MoveItemToSectionMenu
-        itemPath={itemPath}
-        onSelected={() => setOpen(false)}
-      />
-    }
-    text={t`moveToSet`}
-    open={open}
-    onSetOpen={setOpen}
-  />
-}
-
-interface SectionSelection {
-  name: string
-  index: number
-  isIntroductionsSection?: boolean
-}
-function MoveItemToSectionMenu(
-  {itemPath, onSelected} : { itemPath: ProgramItemPath, onSelected: () => void }
-) {
-  const [currentSectionType, maybeDanceSetIndex] = toArrayPath<EventProgramSettings>(itemPath)
-  const row = useValueAt(itemPath)
-  const onChangeProgram = useOnChangeFor('')
-
-  const canMoveToIntroductions = currentSectionType === 'danceSets' && row?.item?.__typename === 'EventProgram'
-  const introSection : SectionSelection = {name: t`introductoryInformation`, isIntroductionsSection: true, index: 0}
-  const sections = useValueAt('danceSets')
-    .map(({title}, index) => ({name: title, index}))
-    .filter(({index}) => currentSectionType !== 'danceSets' || index !== maybeDanceSetIndex)
-
-  //If something is deleted useValueAt may return undefined
-  if (row === undefined) return null
-
-  return <SelectorMenu<SectionSelection>
-    items={canMoveToIntroductions ? [introSection, ...sections] : sections}
-    getItemText={item => item?.name ?? ''}
-    filterable
-    itemPredicate={(search, item) => item.name.toLowerCase().includes(search.toLowerCase())}
-    onSelect={(section) => {
-      onSelected()
-      onChangeProgram((program: EventProgramSettings) => {
-        const removeItem = L.set(toArrayPath<EventProgramSettings>(itemPath), undefined)
-        const addItem = L.set(
-          [
-            section.isIntroductionsSection
-              ? ['introductions', 'program', L.appendTo]
-              : ['danceSets', section.index, 'program', L.appendTo]
-          ],
-          row,
-        )
-        return addItem(removeItem(program)) as EventProgramSettings
-      })
-    }}
-  />
-}
-
-function InheritedSlideStyleSelector({path, text}: {path: TypedStringPath<string, EventProgramSettings>, text: string}) {
-  const defaultSlideStyleId = useValueAt('slideStyleId')
-
-  return <Field
-    label=""
-    labelStyle="hidden"
-    inline
-    path={path}
-    component={SlideStyleSelector}
-    componentProps={{text, inheritsStyles: true, inheritedStyleId: defaultSlideStyleId, inheritedStyleName: t`eventDefaultStyle`}}
-  />
 }

@@ -1,5 +1,9 @@
 import {Dance, Event} from 'types'
 
+export type ProgramSectionPath = 'introductions' | `danceSets.${number}`
+export type ProgramItemPath = `${ProgramSectionPath}.program.${number}`
+export type DanceProgramPath = `danceSets.${number}.program.${number}`
+
 type Program = Event['program']
 type ODanceSet = Program['danceSets'][number]
 type Introductions = Program['introductions']
