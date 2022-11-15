@@ -53,8 +53,8 @@ export function Card(props : CardProps) {
 
 export const Button = BlueprintButton
 
-export interface FormGroupProps extends Omit<BlueprintFormGroupProps, 'inline'> {
-  id?: string
+export interface FormGroupProps extends Omit<BlueprintFormGroupProps, 'inline'>, React.ComponentPropsWithoutRef<'div'> {
+  elementRef?: React.Ref<HTMLDivElement>
   inline?: boolean
   labelStyle?: 'above' | 'beside'
   children?: React.ReactNode
@@ -62,18 +62,25 @@ export interface FormGroupProps extends Omit<BlueprintFormGroupProps, 'inline'> 
 
 const FormGroupInstance = new BlueprintFormGroup({})
 
-export function FormGroup({ id, className, inline, labelStyle: maybeLabelStyle, ...props} : FormGroupProps) {
+export function FormGroup({ elementRef, className, inline, labelStyle: maybeLabelStyle, ...props} : FormGroupProps) {
   const labelStyle = maybeLabelStyle ?? (inline ? 'beside' : 'above')
   const inlineLabel = labelStyle === 'beside'
   const inlineProps = inline
     ? { inline: true, className: classNames(CssClass.formGroupInline, className) }
     : { inline: inlineLabel, className: classNames(inlineLabel && CssClass.formGroupInlineFill, className) }
 
+  const {
+    intent, children, disabled, contentClassName, helperText, label, labelFor, labelInfo, style, subLabel,
+    ...rest
+  } = props
   //@ts-expect-error Props is readonly, but we override it here
-  FormGroupInstance.props = {...props, ...inlineProps}
+  FormGroupInstance.props = {
+    intent, children, disabled, contentClassName, helperText, label, labelFor, labelInfo, style, subLabel,
+    ...inlineProps
+  }
   const element = FormGroupInstance.render()
 
-  return React.cloneElement(element, {id}) //<BlueprintFormGroup {...props} {...inlineProps} />
+  return React.cloneElement(element, {...rest, ref: elementRef}) //<BlueprintFormGroup {...props} {...inlineProps} />
 }
 
 interface SearchInputProps {
