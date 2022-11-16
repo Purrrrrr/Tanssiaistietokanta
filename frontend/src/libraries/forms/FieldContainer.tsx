@@ -2,26 +2,17 @@ import React from 'react'
 
 import {FormGroup} from 'libraries/ui'
 
-import { LabelStyle } from './types'
+import { LabelStyle, LabelTexts } from './types'
 
 import {Error, ErrorMessage} from './validation'
 
 
-export interface UserGivenFieldContainerProps extends Partial<ExternalFieldContainerProps> {
-  label: string
-}
-
-export interface FieldContainerProps extends ExternalFieldContainerProps, InternalFieldContainerProps {
+export interface FieldContainerProps extends LabelTexts, InternalFieldContainerProps {
+  inline: boolean
+  labelStyle: LabelStyle
   children?: React.ReactNode
 }
 
-export interface ExternalFieldContainerProps {
-  helperText?: string
-  inline: boolean
-  label: string
-  labelInfo?: string
-  labelStyle: LabelStyle
-}
 interface InternalFieldContainerProps {
   id: string
   error: Error | null
@@ -33,6 +24,9 @@ export function FieldContainer(props: FieldContainerProps) {
   const formGroupId = `${id}--formgroup`
 
   const errorMsg = <ErrorMessage id={errorId} error={error} />
+  if (labelStyle === 'hidden-nowrapper') {
+    return <React.Fragment>{children}{errorMsg}</React.Fragment>
+  }
   if (labelStyle === 'hidden') {
     return inline
       ? <span id={formGroupId}>{children}{errorMsg}{helperText}</span>

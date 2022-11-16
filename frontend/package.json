@@ -7,6 +7,7 @@
     "@blueprintjs/core": "4.11.3",
     "@blueprintjs/icons": "4.7.0",
     "@blueprintjs/select": "4.7.0",
+    "@dnd-kit/sortable": "7.0.1",
     "@feathersjs/client": "^4.5.15",
     "@react-aria/focus": "^3.2.3",
     "@types/cypress-axe": "^0.8.0",
@@ -30,7 +31,6 @@
     "react-router": "^6.0.0-beta.0",
     "react-router-dom": "^6.0.0-beta.0",
     "react-scripts": "5.0.1",
-    "react-sortable-hoc": "^1.10.1",
     "react-touch-events": "^3.0.0",
     "socket.io-client": "^2.5.0",
     "util": "^0.12.4",
@@ -54,23 +54,47 @@
       "eslint:recommended",
       "plugin:@typescript-eslint/recommended"
     ],
-    "plugins": ["simple-import-sort", "import"],
+    "plugins": [
+      "simple-import-sort",
+      "import"
+    ],
     "rules": {
       "@typescript-eslint/no-explicit-any": 1,
       "@typescript-eslint/no-non-null-assertion": 1,
       "@typescript-eslint/ban-ts-comment": "error",
-      "simple-import-sort/imports": ["error", {
-        "groups": [
-          ["^node:"],
-          ["react", "^@?\\w"],
-          ["^(backend|services)(/.*|$)"],
-          ["^(libraries)(/.*|$)", "^(components|pages|utils)(/.*|$)"],
-          ["^((./)?types)(/.*|$)"],
-          ["^"],
-          ["^\\."],
-          ["^\\u0000"]
-        ]
-      }],
+      "simple-import-sort/imports": [
+        "error",
+        {
+          "groups": [
+            [
+              "^node:"
+            ],
+            [
+              "react",
+              "^@?\\w"
+            ],
+            [
+              "^(backend|services)(/.*|$)"
+            ],
+            [
+              "^(libraries)(/.*|$)",
+              "^(components|pages|utils)(/.*|$)"
+            ],
+            [
+              "^((./)?types)(/.*|$)"
+            ],
+            [
+              "^"
+            ],
+            [
+              "^\\."
+            ],
+            [
+              "^\\u0000"
+            ]
+          ]
+        }
+      ],
       "simple-import-sort/exports": "error",
       "import/first": "error",
       "import/newline-after-import": "error",

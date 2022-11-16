@@ -2,21 +2,16 @@ import React, {ComponentProps} from 'react'
 import {Classes, Switch as BlueprintSwitch, TextArea as BlueprintTextArea, TextAreaProps as BlueprintTextAreaProps} from '@blueprintjs/core'
 import classNames from 'classnames'
 
-import {Field, FieldDataHookProps, useFieldData} from '../Field'
+import {Field, useFieldData} from '../Field'
 import { FieldContainer } from '../FieldContainer'
 import { useFieldValueProps } from '../hooks'
-import {FieldComponentProps, TypedStringPath} from '../types'
-
-interface BaseFieldProps<T, V> extends FieldDataHookProps {
-  path: TypedStringPath<V, T>
-}
-type AdditionalPropsFrom<Props> = Omit<Props, keyof FieldComponentProps<unknown>>
+import {ExtendedFieldComponentProps, FieldComponentProps, FieldPropsWithoutComponent} from '../types'
 
 export interface SwitchForProps<V> {
   isChecked: (v: V | null | undefined) => boolean
   toValue: (b: boolean) => V
 }
-export type SwitchFieldForValueProps<T, V> = Omit<BaseFieldProps<T, V>, 'labelStyle'>
+export type SwitchFieldForValueProps<T, V> = Omit<FieldPropsWithoutComponent<T, V>, 'labelStyle'>
 export function switchFor<T, V>({isChecked, toValue}: SwitchForProps<V>) {
   return function SwitchFieldForValue({path, ...rest}: SwitchFieldForValueProps<T, V>) {
     const { value, onChange, ...dataProps }= useFieldValueProps<T, V>(path)
@@ -38,13 +33,13 @@ export function switchFor<T, V>({isChecked, toValue}: SwitchForProps<V>) {
   }
 }
 
-export type SwitchFieldProps<T> = Omit<BaseFieldProps<T, boolean>, 'labelStyle'>
+export type SwitchFieldProps<T> = Omit<FieldPropsWithoutComponent<T, boolean>, 'labelStyle'>
 export function SwitchField<T>({label, ...props} : SwitchFieldProps<T>) {
   return <Field<T, boolean, SwitchProps> {...props} label={label} labelStyle="hidden" component={Switch} componentProps={{label}} />
 }
 
-export interface InputFieldProps<T> extends BaseFieldProps<T, string> {
-  componentProps?: AdditionalPropsFrom<InputProps>
+export interface InputFieldProps<T> extends FieldPropsWithoutComponent<T, string> {
+  componentProps?: Omit<InputProps, keyof FieldComponentProps<T>>
 }
 export function InputField<T>(props : InputFieldProps<T>) {
   return <Field<T, string, InputProps> {...props} component={Input} />
@@ -65,7 +60,7 @@ export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
   }
 )
 
-export interface InputProps extends FieldComponentProps<string, HTMLInputElement>, AdditionalPropsFrom<ComponentProps<'input'>> {
+export interface InputProps extends ExtendedFieldComponentProps<string, HTMLInputElement, ComponentProps<'input'>> {
   inputRef?: React.Ref<HTMLInputElement>
 }
 export function Input({value, className, onChange, inline, hasConflict, inputRef, ...props} : InputProps) {

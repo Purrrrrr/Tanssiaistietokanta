@@ -30,8 +30,7 @@ type Workshop = Omit<WorkshopWithEventId, 'eventId'>
 const {
   Form,
   Field,
-  DragHandle,
-  ListEditor,
+  ListField,
   RemoveItemButton,
   useValueAt,
 } = formFor<Workshop>()
@@ -62,7 +61,7 @@ export function WorkshopEditor({eventId, workshop, onSubmit, submitText}: Worksh
     <Field path="description" component={TextArea} label={t`description`} />
     <Field path="teachers" component={Input} label={t`teachers`}/>
     <t.h2>dances</t.h2>
-    <ListEditor path="dances" component={DanceListItem} />
+    <ListField label={t`dances`} path="dances" component={DanceListItem} />
     {dances.length === 0 && <t.p className={CssClass.textMuted}>noDances</t.p>}
     <FormGroup label={t`addDance`} labelStyle="beside" style={{marginTop: 6}}>
       <DanceChooser excludeFromSearch={dances} value={null} onChange={dance => onChangeFor('dances')(L.set(L.appendTo, dance))} key={dances.length} />
@@ -110,11 +109,11 @@ function useTakenWorkshopAbbreviations(eventId, workshopId) {
     .map(w => w.abbreviation)
 }
 
-function DanceListItem({itemIndex, tabIndex}) {
+function DanceListItem({itemIndex, path, dragHandle}) {
   const excludeFromSearch = useValueAt('dances')
-  return <Flex tabIndex={tabIndex}>
+  return <Flex>
     <Field label={t`Dance`} labelStyle="hidden" path={`dances.${itemIndex}`} component={DanceChooser} componentProps={{excludeFromSearch}} />
-    <DragHandle />
+    {dragHandle}
     <RemoveItemButton path="dances" index={itemIndex} text="X" />
   </Flex>
 }

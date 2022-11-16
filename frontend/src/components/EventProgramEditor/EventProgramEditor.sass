@@ -38,6 +38,23 @@ $borderColor: rgba(16, 22, 26, 0.15)
           border-top: 1px solid $borderColor
         td
           border-left: 1px solid $borderColor
+      
+
+      tr
+        th:nth-child(4),td:nth-child(4)
+          width: 36ch
+        td:nth-child(4)
+          white-space: nowrap
+          padding: 2px
+          text-align: right
+
+          div
+            display: inline-block
+
+  .bp4-form-group
+    margin-bottom: 5px
+    &:last-child
+      margin-bottom: 0
 
       td
         vertical-align: top
@@ -50,25 +67,6 @@ $borderColor: rgba(16, 22, 26, 0.15)
   .addDanceSetButtons
     margin: 1em 0
 
-tr.eventProgramItem
-  th:nth-child(4),td:nth-child(4)
-    width: 36ch
-  td:nth-child(4)
-    white-space: nowrap
-    padding: 2px
-    text-align: right
-
-    div
-      display: inline-block
-
-  .bp4-form-group
-    margin-bottom: 5px
-    &:last-child
-      margin-bottom: 0
-
-
-body > tr.eventProgramItem
-  background: lightblue
 
 @media only screen and (max-width: 800px)
   .eventProgramEditor

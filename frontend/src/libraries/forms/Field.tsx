@@ -1,8 +1,8 @@
 import React  from 'react'
 
-import {FieldComponentDisplayProps, FieldComponentPropsWithoutEvent, NoRequiredProperties, PartialWhen, TypedStringPath } from './types'
+import {FieldComponentDisplayProps, FieldComponentPropsWithoutEvent, NoRequiredProperties, PartialWhen, TypedStringPath, UserGivenFieldContainerProps } from './types'
 
-import { FieldContainer, FieldContainerProps, UserGivenFieldContainerProps } from './FieldContainer'
+import { FieldContainer, FieldContainerProps } from './FieldContainer'
 import { useFormMetadata } from './formContext'
 import { useFieldValueProps } from './hooks'
 import {useError, ValidationProps} from './validation'
@@ -35,7 +35,7 @@ export function Field<T, V, P extends FieldComponentPropsWithoutEvent<V>>(
   return <FieldContainer {...containerProps}><Component {...allProps}  /></FieldContainer>
 }
 
-export interface FieldDataHookProps extends UserGivenFieldContainerProps, ValidationProps {}
+interface FieldDataHookProps extends UserGivenFieldContainerProps, ValidationProps {}
 
 interface FieldData {
   fieldProps: FieldComponentDisplayProps
@@ -56,7 +56,7 @@ export function useFieldData<Value>(
   const errorId = `${id}--error`
   const error = useError(value, rest)
 
-  const ariaProps = (labelStyle) === 'hidden'
+  const ariaProps = labelStyle === 'hidden' || labelStyle === 'hidden-nowrapper'
     ? {'aria-label': labelInfo ? `${label} ${labelInfo}` : label}
     : {}
   return {

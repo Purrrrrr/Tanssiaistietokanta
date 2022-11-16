@@ -5,13 +5,13 @@ import Markdown from 'markdown-to-jsx'
 
 import {Icon} from 'libraries/ui'
 
-import {AdditionalPropsFrom, FieldComponentProps} from '../types'
+import {ExtendedFieldComponentProps} from '../types'
 import {Input} from './basicComponents'
 import {MarkdownEditor} from './MarkdownEditor'
 
 import './ClosableEditor.sass'
 
-export interface ClickToEditProps extends FieldComponentProps<string, HTMLInputElement>, AdditionalPropsFrom<ComponentProps<'input'>> {
+export interface ClickToEditProps extends ExtendedFieldComponentProps<string, HTMLInputElement, ComponentProps<'input'>> {
   valueFormatter?: (value: string) => React.ReactNode
   inline?: boolean
 }
@@ -28,7 +28,7 @@ export function ClickToEdit({value, readOnly, valueFormatter, className, onChang
   </ClosableEditor>
 }
 
-export interface ClickToEditMarkdownProps extends FieldComponentProps<string, HTMLTextAreaElement>, AdditionalPropsFrom<ComponentProps<typeof MarkdownEditor>> {
+export interface ClickToEditMarkdownProps extends ExtendedFieldComponentProps<string, HTMLTextAreaElement, ComponentProps<typeof MarkdownEditor>> {
   className?: string
   inline?: boolean
   markdownOverrides?: Record<string, unknown>

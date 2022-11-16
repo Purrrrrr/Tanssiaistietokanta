@@ -38,7 +38,7 @@ export function DurationField({value: maybeValue, onChange, readOnly, className,
     style={{minWidth: `${params.text.length}ch`}}
     value={params.text}
     readOnly={readOnly}
-    onChange={(text, event) => setParams({value, text, event})}
+    onChange={(text, event) => setParams({value, text: typeof(text) === 'function' ? text(params.text) : text, event})}
     onClick={readOnly ? undefined : onDurationFieldFocus}
     onKeyDown={readOnly ? undefined : onDurationFieldKeyDown}
     onFocus={readOnly ? undefined : onDurationFieldFocus}

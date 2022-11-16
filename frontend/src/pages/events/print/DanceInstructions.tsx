@@ -119,7 +119,15 @@ function InstructionsForDance({dance: danceInDatabase} : {dance: Dance}) {
       {' '}
       <DanceDataImportButton text={t`fetchDataFromWiki`} dance={dance} />
     </h2>
-    <ClickToEditMarkdown id={'instructions-'+dance._id} value={instructions} onChange={(instructions) => setDance({...dance, instructions})} markdownOverrides={markdownOverrides} />
+    <ClickToEditMarkdown
+      id={'instructions-'+dance._id}
+      value={instructions}
+      onChange={(instructions) => typeof instructions === 'function'
+        ? setDance(dance => ({...dance, instructions: instructions(dance.instructions ?? '')}))
+        : setDance({...dance, instructions})
+      }
+      markdownOverrides={markdownOverrides}
+    />
   </div>
 }
 

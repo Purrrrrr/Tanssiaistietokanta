@@ -22,9 +22,7 @@ const {
   Switch,
   switchFor,
   Form,
-  ListEditor,
-  ListEditorItems,
-  DragHandle,
+  ListField,
   RemoveItemButton,
   useValueAt,
   useOnChangeFor,
@@ -144,38 +142,36 @@ function ProgramListEditor({path}: {path: ProgramSectionPath}) {
   const isIntroductionsSection = path.startsWith('introductions')
   const programPath = `${path}.program` as const
 
-  return <ListEditor path={programPath}>
-    <HTMLTable condensed bordered striped className="danceSet">
-      {program.length === 0 ||
-          <thead>
-            <tr>
-              <t.th>columnTitles.type</t.th><t.th>columnTitles.name</t.th><t.th>columnTitles.duration</t.th><t.th>columnTitles.actions</t.th>
-            </tr>
-          </thead>
+  return <HTMLTable condensed bordered striped className="danceSet">
+    {program.length === 0 ||
+        <thead>
+          <tr>
+            <t.th>columnTitles.type</t.th><t.th>columnTitles.name</t.th><t.th>columnTitles.duration</t.th><t.th>columnTitles.actions</t.th>
+          </tr>
+        </thead>
+    }
+    <tbody>
+      <ListField labelStyle="hidden-nowrapper" label="" isTable path={programPath} component={ProgramItemEditor} />
+      {program.length === 0 &&
+          <tr>
+            <t.td className={CssClass.textMuted+ ' noProgram'} colSpan="5">programListIsEmpty</t.td>
+          </tr>
       }
-      <tbody>
-        <ListEditorItems path={programPath} component={ProgramItemEditor} />
-        {program.length === 0 &&
-            <tr>
-              <t.td className={CssClass.textMuted+ ' noProgram'} colSpan="5">programListIsEmpty</t.td>
-            </tr>
+      {intervalMusicDuration > 0 && <IntervalMusicEditor path={`${path}.intervalMusicDuration`} />}
+    </tbody>
+    <tfoot>
+      <tr className="eventProgramFooter">
+        {isIntroductionsSection ||
+        <td colSpan={2}>
+          <IntervalMusicSwitch inline label={t`fields.intervalMusicAtEndOfSet`} path={`${path}.intervalMusicDuration` as `danceSets.${number}.intervalMusicDuration`} />
+        </td>
         }
-        {intervalMusicDuration > 0 && <IntervalMusicEditor path={`${path}.intervalMusicDuration`} />}
-      </tbody>
-      <tfoot>
-        <tr className="eventProgramFooter">
-          {isIntroductionsSection ||
-          <td colSpan={2}>
-            <IntervalMusicSwitch inline label={t`fields.intervalMusicAtEndOfSet`} path={`${path}.intervalMusicDuration` as `danceSets.${number}.intervalMusicDuration`} />
-          </td>
-          }
-          <td colSpan={isIntroductionsSection ? 4 : 2}>
-            <DanceSetDuration program={program} intervalMusicDuration={intervalMusicDuration} />
-          </td>
-        </tr>
-      </tfoot>
-    </HTMLTable>
-  </ListEditor>
+        <td colSpan={isIntroductionsSection ? 4 : 2}>
+          <DanceSetDuration program={program} intervalMusicDuration={intervalMusicDuration} />
+        </td>
+      </tr>
+    </tfoot>
+  </HTMLTable>
 }
 
 const IntervalMusicSwitch = switchFor<number>({
@@ -184,23 +180,19 @@ const IntervalMusicSwitch = switchFor<number>({
 })
 
 interface ProgramItemEditorProps {
-  item: EventProgramRow
+  dragHandle: React.ReactNode
   path: `${ProgramSectionPath}.program`
   itemIndex: number
-  onChange: (val: (v: unknown) => unknown) => unknown
-  onRemove: () => unknown
-  onMoveUp: () => unknown
-  onMoveDown: () => unknown
 }
 
-const ProgramItemEditor = React.memo(function ProgramItemEditor({path, itemIndex} : ProgramItemEditorProps) {
+const ProgramItemEditor = React.memo(function ProgramItemEditor({dragHandle, path, itemIndex} : ProgramItemEditorProps) {
   const itemPath = `${path}.${itemIndex}` as ProgramItemPath
   const item = useValueAt(itemPath)
 
   if (!item) return null
   const {__typename } = item.item
 
-  return <tr className="eventProgramItem">
+  return <React.Fragment>
     <td>{t(`programTypes.${__typename}`)}</td>
     <td>
       <ProgramDetailsEditor path={itemPath} />
@@ -209,12 +201,12 @@ const ProgramItemEditor = React.memo(function ProgramItemEditor({path, itemIndex
       <Duration value={__typename !== 'RequestedDance' ? item.item.duration : 0} />
     </td>
     <td>
-      <DragHandle tabIndex={-1}/>
+      {dragHandle}
       <InheritedSlideStyleSelector path={`${itemPath}.slideStyleId`} text={t`fields.style`} />
       <MoveItemToSectionSelector itemPath={itemPath} />
       <RemoveItemButton path={path} index={itemIndex} title={t`remove`} icon="cross" className="deleteItem" />
     </td>
-  </tr>
+  </React.Fragment>
 })
 
 function ProgramDetailsEditor({path}: {path: ProgramItemPath}) {
