@@ -234,7 +234,7 @@ function IntervalMusicEditor({path}: {path: `${ProgramSectionPath}.intervalMusic
     <td>{t`programTypes.intervalMusic`}</td>
     <td />
     <td>
-      <Field label={t`fields.intervalMusicDuration`} labelStyle="hidden" path={path} component={DurationField} />
+      <Field label={t`fields.intervalMusicDuration`} inline labelStyle="hidden" path={path} component={DurationField} />
     </td>
     <td>
       <Button title={t`buttons.remove`} intent="danger" icon="cross" onClick={() => onSetIntervalMusicDuration(0)} className="delete" />
