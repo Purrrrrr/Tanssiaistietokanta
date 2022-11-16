@@ -16,12 +16,12 @@ import {
 } from '@dnd-kit/sortable'
 import {CSS} from '@dnd-kit/utilities'
 
-import {asFormControl} from 'libraries/forms'
-import {Button} from 'libraries/ui'
+import {Icon} from 'libraries/ui'
 
 import {FieldComponentProps, FieldPropsWithoutComponent, TypedStringPath} from './types'
 
 import {Field} from './Field'
+import {FormControl} from './formControls'
 
 export interface Entity {
   _id: string | number
@@ -97,6 +97,7 @@ export function SortableItem({id, path, itemIndex, component: Component, isTable
     attributes: { tabIndex, ...attributes},
     listeners,
     setNodeRef,
+    setActivatorNodeRef,
     transform,
     transition,
   } = useSortable({id})
@@ -115,7 +116,10 @@ export function SortableItem({id, path, itemIndex, component: Component, isTable
   }
 
   const Wrapper = isTable ? 'tr' : 'div'
-  const dragHandle = useMemo(() => <DragHandle {...listeners} />, [listeners])
+  const dragHandle = useMemo(
+    () => <FormControl><button type="button" className="bp4-button" ref={setActivatorNodeRef} {...listeners}><Icon icon="move" /></button></FormControl>,
+    [listeners, setActivatorNodeRef]
+  )
 
   return (
     <Wrapper ref={setNodeRef} style={style} {...attributes}>
@@ -123,5 +127,3 @@ export function SortableItem({id, path, itemIndex, component: Component, isTable
     </Wrapper>
   )
 }
-
-export const DragHandle = asFormControl((props) => <Button type="button" icon="move" {...props} />)
