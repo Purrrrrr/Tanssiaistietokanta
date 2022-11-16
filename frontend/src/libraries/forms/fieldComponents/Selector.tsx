@@ -2,7 +2,9 @@ import React, {useState} from 'react'
 import { Popover2 } from '@blueprintjs/popover2'
 import { ItemRenderer as BPItemRenderer, QueryList, QueryListProps} from '@blueprintjs/select'
 
-import { Button, ButtonProps, MenuItem, SearchBar } from 'libraries/ui'
+import { ButtonProps, MenuItem, SearchBar } from 'libraries/ui'
+
+import { ActionButton } from '../formControls'
 
 interface SelectorProps<T> extends SelectorMenuProps<T> {
   text: string
@@ -45,7 +47,7 @@ export function MenuButton({text, buttonProps, menu, open, onSetOpen} : MenuButt
     shouldReturnFocusOnClose
     content={menu}
     renderTarget={({ isOpen, ref, ...targetProps }) => (
-      <Button elementRef={ref} text={text} rightIcon="double-caret-vertical" {...buttonProps} {...targetProps} />
+      <ActionButton elementRef={ref} text={text} rightIcon="double-caret-vertical" {...buttonProps} {...targetProps} />
     )}
     onOpened={onSelectOpen}
     isOpen={open}
