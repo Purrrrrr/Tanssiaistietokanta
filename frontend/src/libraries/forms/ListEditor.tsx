@@ -21,7 +21,6 @@ import {Icon} from 'libraries/ui'
 import {FieldComponentProps, FieldPropsWithoutComponent, TypedStringPath} from './types'
 
 import {Field} from './Field'
-import {FormControl} from './formControls'
 
 export interface Entity {
   _id: string | number
@@ -46,12 +45,12 @@ interface ListEditorProps<T, V extends Entity> extends FieldComponentProps<V[]> 
 }
 
 type ListItemComponent<T, V> = React.ComponentType<{
-  path: TypedStringPath<V, T>
+  path: TypedStringPath<V[], T>
   itemIndex: number
   dragHandle: React.ReactNode
 }>
 
-export function ListEditor<T, V extends Entity>({value, onChange, path, component, hasConflict, inline, readOnly, isTable}: ListEditorProps<T, V>) {
+export function ListEditor<T, V extends Entity>({value, onChange, path, component: Component, hasConflict, inline, readOnly, isTable}: ListEditorProps<T, V>) {
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -59,6 +58,15 @@ export function ListEditor<T, V extends Entity>({value, onChange, path, componen
     })
   )
   const items = value ?? []
+
+  if (readOnly) {
+    const Wrapper = isTable ? 'tr' : 'div'
+    return <React.Fragment>
+      {items.map((item, index) =>
+        <Wrapper key={item._id}><Component path={path} itemIndex={index} dragHandle={null}/></Wrapper>
+      )}
+    </React.Fragment>
+  }
 
   return (
     <DndContext
@@ -71,7 +79,7 @@ export function ListEditor<T, V extends Entity>({value, onChange, path, componen
         strategy={verticalListSortingStrategy}
       >
         {items.map((item, index) => {
-          return <SortableItem key={item._id} id={item._id} path={path} itemIndex={index} component={component} isTable={isTable} />
+          return <SortableItem<T, V> key={item._id} id={item._id} path={path} itemIndex={index} component={Component} isTable={isTable} />
         })}
       </SortableContext>
     </DndContext>
@@ -91,7 +99,15 @@ export function ListEditor<T, V extends Entity>({value, onChange, path, componen
   }
 }
 
-export function SortableItem({id, path, itemIndex, component: Component, isTable}) {
+interface ListItemProps<T, V> {
+  id: string | number
+  isTable?: boolean
+  component: ListItemComponent<T, V>
+  path: TypedStringPath<V[], T>
+  itemIndex: number
+}
+
+export function SortableItem<T, V>({id, path, itemIndex, component: Component, isTable}: ListItemProps<T, V>) {
   const {
     isDragging,
     attributes: { tabIndex, ...attributes},
@@ -117,7 +133,7 @@ export function SortableItem({id, path, itemIndex, component: Component, isTable
 
   const Wrapper = isTable ? 'tr' : 'div'
   const dragHandle = useMemo(
-    () => <FormControl><button type="button" className="bp4-button" ref={setActivatorNodeRef} {...listeners}><Icon icon="move" /></button></FormControl>,
+    () => <button type="button" className="bp4-button" ref={setActivatorNodeRef} {...listeners}><Icon icon="move" /></button>,
     [listeners, setActivatorNodeRef]
   )
 
