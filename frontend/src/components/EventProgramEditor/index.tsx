@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react'
+import React, {useState} from 'react'
 
 import {ActionButton as Button, ClickToEdit, formFor, MarkdownEditor, SubmitButton} from 'libraries/forms'
 import {Card, CssClass, HTMLTable} from 'libraries/ui'
@@ -7,11 +7,7 @@ import {Duration} from 'components/widgets/Duration'
 import {DurationField} from 'components/widgets/DurationField'
 import {NavigateButton} from 'components/widgets/NavigateButton'
 import {SlideStyleSelector} from 'components/widgets/SlideStyleSelector'
-import {focusLater, focusSiblingsOrParent} from 'utils/focus'
 import {guid} from 'utils/guid'
-import {blurTo, clickInElement, clickInParent, focusTo, moveDown, moveUp, navigateAmongSiblings} from 'utils/keyboardNavigation'
-import {bind, useHotkeyHandler} from 'utils/useHotkeyHandler'
-import {useRedirectKeyDownTo} from 'utils/useRedirectKeyDownTo'
 
 import {DanceProgramPath, DanceSet, EventProgramRow, EventProgramSettings, ProgramItemPath, ProgramSectionPath} from './types'
 
@@ -47,16 +43,9 @@ interface EventProgramEditorProps {
 export function EventProgramEditor({program: eventProgram, onSubmit}: EventProgramEditorProps) {
   const [program, onChange] = useState(eventProgram)
   const {danceSets, introductions} = program
-  const element = useRef<HTMLElement>(null)
-  useRedirectKeyDownTo(element)
-  const onKeyDown = useHotkeyHandler(
-    ...navigateAmongSiblings('div.danceset'),
-    //bind(['a', 's'], addDanceSet),
-    //bind('i', addIntroductoryInfo),
-  )
 
   return <Form value={program} onChange={onChange} onSubmit={onSubmit}>
-    <section className="eventProgramEditor" ref={element} onKeyDown={onKeyDown}>
+    <section className="eventProgramEditor">
       <div className="main-toolbar">
         <Input labelStyle="above" label={t`fields.programTitle`} path="introductions.title" inline />
         <InheritedSlideStyleSelector path="introductions.titleSlideStyleId" text={t`fields.titleStyle`} />
@@ -83,7 +72,6 @@ function AddIntroductionButton() {
   const addIntroduction = useAppendToList('introductions.program')
   function addIntroductoryInfo() {
     addIntroduction(newEventProgramItem)
-    focusLater('.eventProgramEditor .danceset:first-child tbody tr:last-child')
   }
   return <Button text={t`buttons.addIntroductoryInfo`} onClick={addIntroductoryInfo} className="addIntroductoryInfo" />
 }
@@ -99,7 +87,6 @@ function AddDanceSetButton() {
   const onAddDanceSet = useAppendToList('danceSets')
   function addDanceSet() {
     onAddDanceSet(newDanceSet)
-    focusLater('.eventProgramEditor .danceset:last-child')
   }
   return <Button text={t`buttons.addDanceSet`} onClick={addDanceSet} className="addDanceSet" />
 }
@@ -117,75 +104,48 @@ function newDanceSet(danceSets: DanceSet[]): DanceSet {
 
 function IntroductoryInformation() {
   const infos = useValueAt('introductions.program')
-  const table = useRef<HTMLTableElement>(null)
-  const onKeyDown = useHotkeyHandler(
-    ...navigateAmongSiblings('div.danceset'),
-    focusTo('tbody tr'),
-    bind('i', clickInParent('div.danceset', 'button.addInfo')),
-  )
-
   if (infos.length === 0) return null
 
-  return <Card className="danceset" tabIndex={0} onKeyDown={onKeyDown}>
+  return <Card className="danceset">
     <Flex className="sectionTitleRow">
       <h2>
         <t.span>titles.introductoryInformation</t.span>
       </h2>
       <AddIntroductionButton />
     </Flex>
-    <ProgramListEditor path="introductions" tableRef={table} />
+    <ProgramListEditor path="introductions" />
   </Card>
 }
 
 const DanceSetEditor = React.memo(function DanceSetEditor({index} : {index: number}) {
-  const table = useRef<HTMLTableElement>(null)
-
   const item = useValueAt(`danceSets.${index}`)
-  const {moveDown: onMoveDown, moveUp: onMoveUp, moveTo} = useMoveItemInList('danceSets', index)
-  function removeDanceSet(e) {
-    focusSiblingsOrParent(e.target, 'section.eventProgramEditor')
-  }
+  const {moveTo} = useMoveItemInList('danceSets', index)
   const onAddItem = useAppendToList(`danceSets.${index}.program`)
-  function addItem(itemToAdd: EventProgramRow) {
-    onAddItem(itemToAdd)
-    focusLater('tbody tr:last-child', table.current)
-  }
 
-  const onKeyDown = useHotkeyHandler(
-    ...navigateAmongSiblings('div.danceset'),
-    focusTo('tbody tr'),
-    blurTo('body'),
-    moveUp(onMoveUp),
-    moveDown(onMoveDown),
-    bind(['a', 'd'], clickInParent('div.danceset', 'button.addDance')),
-    bind('i', clickInParent('div.danceset', 'button.addInfo')),
-    bind(['delete', 'backspace'], clickInElement('.delete'))
-  )
-
-  return <Card className="danceset" tabIndex={0} onKeyDown={onKeyDown} >
+  return <Card className="danceset">
     <Flex className="sectionTitleRow">
       <h2>
         <Field labelStyle="hidden" label={t`fields.danceSetName`} path={`danceSets.${index}.title`} inline component={ClickToEdit} />
       </h2>
-      <Button text={t`buttons.addDance`} onClick={() => addItem({item: {__typename: 'RequestedDance'}, _id: guid()})} className="addDance" />
-      <Button text={t`buttons.addInfo`} onClick={() => addItem(newEventProgramItem())} className="addInfo" />
+      <Button text={t`buttons.addDance`} onClick={() => onAddItem({item: {__typename: 'RequestedDance'}, _id: guid()})} className="addDance" />
+      <Button text={t`buttons.addInfo`} onClick={() => onAddItem(newEventProgramItem())} className="addInfo" />
       <InheritedSlideStyleSelector path={`danceSets.${index}.titleSlideStyleId`} text={t`fields.titleStyle`} />
       <MoveDanceSetSelector
         currentSet={item}
         onSelect={({index})=> moveTo(index)} />
-      <RemoveItemButton path="danceSets" index={index} className="delete" text={t`buttons.removeDanceSet`} onClick={removeDanceSet} />
+      <RemoveItemButton path="danceSets" index={index} className="delete" text={t`buttons.removeDanceSet`} />
     </Flex>
-    <ProgramListEditor tableRef={table} path={`danceSets.${index}`} />
+    <ProgramListEditor path={`danceSets.${index}`} />
   </Card>
 })
 
-function ProgramListEditor({path, tableRef}: {path: ProgramSectionPath, tableRef: React.RefObject<HTMLTableElement>}) {
+function ProgramListEditor({path}: {path: ProgramSectionPath}) {
   const { program, intervalMusicDuration } = useValueAt(path)
   const isIntroductionsSection = path.startsWith('introductions')
   const programPath = `${path}.program` as const
 
   return <ListEditor path={programPath}>
-    <HTMLTable condensed bordered striped className="danceSet" elementRef={tableRef}>
+    <HTMLTable condensed bordered striped className="danceSet">
       {program.length === 0 ||
           <thead>
             <tr>
@@ -236,43 +196,14 @@ interface ProgramItemEditorProps {
 const ProgramItemEditor = React.memo(function ProgramItemEditor({path, itemIndex} : ProgramItemEditorProps) {
   const itemPath = `${path}.${itemIndex}` as ProgramItemPath
   const item = useValueAt(itemPath)
-  const {moveDown: onMoveDown, moveUp: onMoveUp} = useMoveItemInList(path, itemIndex)
-
-  const onKeyDown = useHotkeyHandler(
-    ...navigateAmongSiblings('tr'),
-    moveUp(onMoveUp),
-    moveDown(onMoveDown),
-    blurTo('div.danceset'),
-    focusTo('input'),
-    bind(['delete', 'backspace'], clickInElement('.deleteItem'))
-  )
-
-  const container = useRef<HTMLTableRowElement>(null)
-  /** Focuses the row when the dance/value editor is blurred but not if something inside the row is already focused
-   * This allows tab navigation to work, but helps users that use the custom nav */
-  function onInputBlurred() {
-    //We need to set a timeout, because the Blueprint Suggest used by Dancechooser handles blurring in a wacky way
-    setTimeout(() => {
-      const nextFocused = document.activeElement
-      if (nextFocused && container.current?.contains(nextFocused)) {
-        //Focus is still somewhere inside our item
-        return
-      }
-      container.current?.focus()
-    }, 0)
-  }
-
-  function removeItem(e) {
-    focusSiblingsOrParent(e.target, 'div.danceset')
-  }
 
   if (!item) return null
   const {__typename } = item.item
 
-  return <tr className="eventProgramItem" onKeyDown={onKeyDown} ref={container} tabIndex={0}>
+  return <tr className="eventProgramItem">
     <td>{t(`programTypes.${__typename}`)}</td>
     <td>
-      <ProgramDetailsEditor path={itemPath} onInputBlurred={onInputBlurred} />
+      <ProgramDetailsEditor path={itemPath} />
     </td>
     <td>
       <Duration value={__typename !== 'RequestedDance' ? item.item.duration : 0} />
@@ -281,12 +212,12 @@ const ProgramItemEditor = React.memo(function ProgramItemEditor({path, itemIndex
       <DragHandle tabIndex={-1}/>
       <InheritedSlideStyleSelector path={`${itemPath}.slideStyleId`} text={t`fields.style`} />
       <MoveItemToSectionSelector itemPath={itemPath} />
-      <RemoveItemButton path={path} index={itemIndex} title={t`remove`} icon="cross" onClick={removeItem} className="deleteItem" />
+      <RemoveItemButton path={path} index={itemIndex} title={t`remove`} icon="cross" className="deleteItem" />
     </td>
   </tr>
 })
 
-function ProgramDetailsEditor({path, onInputBlurred}: {path: ProgramItemPath, onInputBlurred: () => unknown}) {
+function ProgramDetailsEditor({path}: {path: ProgramItemPath}) {
   const __typename = useValueAt(`${path}.item.__typename`)
   //If something is deleted useValueAt may return undefined
   if (__typename === undefined) return null
@@ -294,10 +225,10 @@ function ProgramDetailsEditor({path, onInputBlurred}: {path: ProgramItemPath, on
   switch(__typename) {
     case 'Dance':
     case 'RequestedDance':
-      return <Field label={t`Dance`} labelStyle="hidden" path={`${path as DanceProgramPath}.item`} component={DanceProgramChooser} componentProps={{onBlur:onInputBlurred}}/>
+      return <Field label={t`Dance`} labelStyle="hidden" path={`${path as DanceProgramPath}.item`} component={DanceProgramChooser} />
     case 'EventProgram':
       return <>
-        <Input label={t`fields.eventProgram.name`} path={`${path}.item.name`} componentProps={{onBlur:onInputBlurred}} required />
+        <Input label={t`fields.eventProgram.name`} path={`${path}.item.name`} required />
         <Field label={t`fields.eventProgram.description`} path={`${path}.item.description`} component={MarkdownEditor} />
         <Switch label={t`fields.eventProgram.showInLists`} path={`${path}.item.showInLists`} inline />
       </>
@@ -306,35 +237,12 @@ function ProgramDetailsEditor({path, onInputBlurred}: {path: ProgramItemPath, on
 
 function IntervalMusicEditor({path}: {path: `${ProgramSectionPath}.intervalMusicDuration`}) {
   const onSetIntervalMusicDuration = useOnChangeFor(path)
-  const row = useRef<HTMLTableRowElement>(null)
-  const onKeyDown = useHotkeyHandler(
-    ...navigateAmongSiblings('tr'),
-    blurTo('div.danceset'),
-    focusTo('.click-to-edit'),
-    bind(['delete', 'backspace'], removeItem)
-  )
 
-  function removeItem(e) {
-    onSetIntervalMusicDuration(0)
-    focusSiblingsOrParent(e.target, 'div.danceset')
-  }
-  /** Focuses the row when the duration editor is exited, but not if something inside the row is already focused
-   * This allows tab navigation to work, but helps users that use the custom nav */
-  function onDurationBlurred(e) {
-    const nextFocused = e.relatedTarget
-    const containerElement = row.current
-    if (containerElement !== null && nextFocused && containerElement.contains(nextFocused)) {
-      //Focus is still somewhere inside our item
-      return
-    }
-    containerElement && containerElement.focus()
-  }
-
-  return <tr className="eventProgramItem" tabIndex={0} onKeyDown={onKeyDown} ref={row}>
+  return <tr className="eventProgramItem">
     <td>{t`programTypes.intervalMusic`}</td>
     <td />
     <td>
-      <Field label={t`fields.intervalMusicDuration`} labelStyle="hidden" path={path} component={DurationField} componentProps={{onBlur: onDurationBlurred}}/>
+      <Field label={t`fields.intervalMusicDuration`} labelStyle="hidden" path={path} component={DurationField} />
     </td>
     <td>
       <Button title={t`buttons.remove`} intent="danger" icon="cross" onClick={() => onSetIntervalMusicDuration(0)} className="delete" />

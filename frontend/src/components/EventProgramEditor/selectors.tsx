@@ -16,7 +16,7 @@ const {
   useOnChangeFor,
 } = formFor<EventProgramSettings>()
 
-export const DanceProgramChooser = React.memo(function DanceProgramChooser({value, onChange, onBlur, ...props} : FieldComponentProps<EventProgramItem, HTMLElement> & {onBlur: (e: React.FocusEvent) => unknown}) {
+export const DanceProgramChooser = React.memo(function DanceProgramChooser({value, onChange, ...props} : FieldComponentProps<EventProgramItem, HTMLElement>) {
   return <DanceChooser
     value={value?._id ? value as Dance : null}
     onChange={(dance, e) => onChange(
@@ -27,7 +27,6 @@ export const DanceProgramChooser = React.memo(function DanceProgramChooser({valu
     )}
     allowEmpty
     emptyText={t`RequestedDance`}
-    onBlur={onBlur}
     {...props}
   />
 })
