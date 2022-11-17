@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react'
+import React, {useCallback, useMemo} from 'react'
 import {
   closestCenter,
   DndContext,
@@ -53,11 +53,23 @@ type ListItemComponent<T, V> = React.ComponentType<{
 export function ListEditor<T, V extends Entity>({value, onChange, path, component: Component, hasConflict, inline, readOnly, isTable}: ListEditorProps<T, V>) {
   const sensors = useSensors(
     useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
+    useSensor(KeyboardSensor, useMemo(() => ({
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }), []))
   )
   const items = value ?? []
+  const handleDragEnd = useCallback(function handleDragEnd(event) {
+    const {active, over} = event
+
+    if (active.id !== over.id) {
+      onChange((items) => {
+        const oldIndex = items.findIndex(i => i._id === active.id)
+        const newIndex = items.findIndex(i => i._id === over.id)
+
+        return arrayMove(items, oldIndex, newIndex)
+      })
+    }
+  }, [onChange])
 
   if (readOnly) {
     const Wrapper = isTable ? 'tr' : 'div'
@@ -85,18 +97,6 @@ export function ListEditor<T, V extends Entity>({value, onChange, path, componen
     </DndContext>
   )
 
-  function handleDragEnd(event) {
-    const {active, over} = event
-
-    if (active.id !== over.id) {
-      onChange((items) => {
-        const oldIndex = items.findIndex(i => i._id === active.id)
-        const newIndex = items.findIndex(i => i._id === over.id)
-
-        return arrayMove(items, oldIndex, newIndex)
-      })
-    }
-  }
 }
 
 interface ListItemProps<T, V> {
