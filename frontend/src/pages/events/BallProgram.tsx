@@ -50,6 +50,7 @@ query BallProgram($eventId: ID!) {
         title
         titleSlideStyleId
         intervalMusicDuration
+        intervalMusicSlideStyleId
         program {
           slideStyleId
           item {
@@ -117,7 +118,7 @@ function BallProgramView({event, currentSlide, onChangeSlide, onRefetch}) {
   return <ReactTouchEvents onSwipe={onSwipe} disableClick>
     <div className={classnames('slideshow', slide.slideStyleId && `slide-style-${slide.slideStyleId}`)}>
       <div className="controls">
-        <ProgramTitleSelector value={slide.parent?.index ?? slide.index} onChange={onChangeSlide}
+        <ProgramTitleSelector value={slide.parent?.index ?? slide.index ?? 0} onChange={onChangeSlide}
           program={program} />
         {slide.subindex && ` ${slide.subindex}/${slide.subtotal} `}
       </div>
@@ -163,6 +164,7 @@ function getSlides(event: Event) : Slide[] {
         __typename: 'EventProgram',
         name: t`intervalMusic`,
         parent: danceSetSlide,
+        slideStyleId: danceSet.intervalMusicSlideStyleId,
       })
     }
   }

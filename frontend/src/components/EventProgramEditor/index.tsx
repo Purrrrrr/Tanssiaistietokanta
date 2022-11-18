@@ -9,7 +9,7 @@ import {NavigateButton} from 'components/widgets/NavigateButton'
 import {SlideStyleSelector} from 'components/widgets/SlideStyleSelector'
 import {guid} from 'utils/guid'
 
-import {DanceProgramPath, DanceSet, EventProgramRow, EventProgramSettings, ProgramItemPath, ProgramSectionPath} from './types'
+import {DanceProgramPath, DanceSet, DanceSetPath, EventProgramRow, EventProgramSettings, ProgramItemPath, ProgramSectionPath} from './types'
 
 import {DanceProgramChooser, InheritedSlideStyleSelector, MoveDanceSetSelector, MoveItemToSectionSelector} from './selectors'
 import t from './translations'
@@ -157,7 +157,7 @@ function ProgramListEditor({path}: {path: ProgramSectionPath}) {
             <t.td className={CssClass.textMuted+ ' noProgram'} colSpan="5">programListIsEmpty</t.td>
           </tr>
       }
-      {intervalMusicDuration > 0 && <IntervalMusicEditor path={`${path}.intervalMusicDuration`} />}
+      {!isIntroductionsSection && intervalMusicDuration > 0 && <IntervalMusicEditor danceSetPath={path as DanceSetPath} />}
     </tbody>
     <tfoot>
       <tr className="eventProgramFooter">
@@ -227,16 +227,18 @@ function ProgramDetailsEditor({path}: {path: ProgramItemPath}) {
   }
 }
 
-function IntervalMusicEditor({path}: {path: `${ProgramSectionPath}.intervalMusicDuration`}) {
-  const onSetIntervalMusicDuration = useOnChangeFor(path)
+function IntervalMusicEditor({danceSetPath}: {danceSetPath: DanceSetPath}) {
+  const durationPath = `${danceSetPath}.intervalMusicDuration` as const
+  const onSetIntervalMusicDuration = useOnChangeFor(durationPath)
 
   return <tr className="eventProgramItem">
     <td>{t`programTypes.intervalMusic`}</td>
     <td />
     <td>
-      <Field label={t`fields.intervalMusicDuration`} inline labelStyle="hidden" path={path} component={DurationField} />
+      <Field label={t`fields.intervalMusicDuration`} inline labelStyle="hidden" path={durationPath} component={DurationField} />
     </td>
     <td>
+      <InheritedSlideStyleSelector path={`${danceSetPath}.intervalMusicSlideStyleId`} text={t`fields.style`} />
       <Button title={t`buttons.remove`} intent="danger" icon="cross" onClick={() => onSetIntervalMusicDuration(0)} className="delete" />
     </td>
   </tr>

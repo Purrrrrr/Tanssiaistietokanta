@@ -29,6 +29,7 @@ type DanceSet {
   titleSlideStyleId: ID
   program: [EventProgramRow!]!
   intervalMusicDuration: Float!
+  intervalMusicSlideStyleId: ID
 }
 
 type EventProgramRow {
@@ -98,6 +99,7 @@ input DanceSetInput {
   program: [ProgramItemInput!]!
   "interval music duration in seconds"
   intervalMusicDuration: Float!
+  intervalMusicSlideStyleId: ID
 }
 
 input ProgramItemInput {

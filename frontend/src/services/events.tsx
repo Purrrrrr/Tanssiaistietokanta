@@ -52,6 +52,7 @@ setupServiceUpdateFragment(
           slideStyleId
         }
         intervalMusicDuration
+        intervalMusicSlideStyleId
       }
       slideStyleId
       pauseBetweenDances
@@ -176,6 +177,7 @@ query getEvent($id: ID!) {
           slideStyleId
         }
         intervalMusicDuration
+        intervalMusicSlideStyleId
       }
       slideStyleId
       pauseBetweenDances
@@ -268,8 +270,10 @@ mutation modifyEventProgram($id: ID!, $program: ProgramInput!) {
           slideStyleId
         }
         intervalMusicDuration
+        intervalMusicSlideStyleId
       }
       slideStyleId
+      pauseBetweenDances
     }
     workshops {
       _id
