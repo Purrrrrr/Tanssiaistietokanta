@@ -105,22 +105,14 @@ function BallProgramView({event, currentSlide, onChangeSlide, onRefetch}) {
   })
 
   const onSwipe = useCallback((e, direction : 'left'|'right') => {
-    switch(direction) {
-      case 'left':
-        changeSlide(1)
-        break
-      case 'right':
-        changeSlide(-1)
-        break
-    }
+    changeSlide(direction === 'left' ? 1 : -1)
   }, [changeSlide])
 
   return <ReactTouchEvents onSwipe={onSwipe} disableClick>
     <div className={classnames('slideshow', slide.slideStyleId && `slide-style-${slide.slideStyleId}`)}>
       <div className="controls">
-        <ProgramTitleSelector value={slide.parent?.index ?? slide.index ?? 0} onChange={onChangeSlide}
+        <ProgramTitleSelector value={slide.index ?? 0} onChange={onChangeSlide}
           program={program} />
-        {slide.subindex && ` ${slide.subindex}/${slide.subtotal} `}
       </div>
       <SlideView slide={slide} onChangeSlide={onChangeSlide} />
     </div>
@@ -132,8 +124,6 @@ interface Slide {
   slideStyleId?: string | null
   name: string
   index?: number
-  subindex?: number
-  subtotal?: number
   program?: Slide[]
   parent?: Slide
   next?: Slide
@@ -152,14 +142,13 @@ function getSlides(event: Event) : Slide[] {
     slides.push({ name: '', ...item, slideStyleId, parent: eventHeader })
   }
   for (const {title: name, ...danceSet} of danceSets) {
-    const danceSetSlide = { ...danceSet, name, program: [] as Slide[], subtotal: danceSet.program.length }
+    const danceSetSlide = { ...danceSet, name, program: [] as Slide[] }
     const danceProgram = danceSet.program.map(({item, slideStyleId}) => ({ name: '', ...item, slideStyleId, parent: danceSetSlide}))
     danceSetSlide.program = danceProgram
     slides.push(danceSetSlide)
     slides.push(...danceProgram)
 
     if (danceSet.intervalMusicDuration > 0) {
-      danceSetSlide.subtotal++
       slides.push({
         __typename: 'EventProgram',
         name: t`intervalMusic`,
@@ -171,11 +160,6 @@ function getSlides(event: Event) : Slide[] {
 
   slides.forEach((slide, index) => {
     slide.index = index
-    if (slide.parent !== undefined) {
-      if (slide.parent.index === undefined) throw new Error('No index in parent slide??')
-      slide.subindex = index - slide.parent.index
-      slide.subtotal = slide.parent.subtotal
-    }
     if (!slide.slideStyleId) {
       slide.slideStyleId = defaultStyleId
     }
