@@ -22,10 +22,10 @@ export default function MainRoutes() {
   return <>
     <Breadcrumb text={<><Icon icon="home" />Tanssiaistietokanta</>} />
     <Routes>
+      <Route index element={<EventList/>} />
       <Route path="events/new" element={<CreateEvent/>} />
       <Route path="events/:eventId/*" element={<EventRoutes/>} />
       <Route path="dances" element={<Dances/>} />
-      <Route path="/" element={<EventList/>} />
     </Routes>
   </>
 }
@@ -39,11 +39,11 @@ function EventRoutes() {
   return <>
     <Breadcrumb text={event.name} />
     <Routes>
-      <Route path="/" element={<EventPage event={event}/>} />
+      <Route index element={<EventPage event={event}/>} />
       <Route path="program" element={<EventProgramPage event={event}/>} />
       <Route path="ball-program" element={<BallProgram eventId={eventId}/>} />
       <Route path="workshops/create" element={<CreateWorkshopForm event={event}/>} />
-      <Route path="workshops/:workshopId" element={<EditWorkshopForm event={event} />} />
+      <Route path="workshops/:workshopId" element={<EditWorkshopForm />} />
       <Route path="print/*" element={<EventPrintRoutes />} />
     </Routes>
   </>

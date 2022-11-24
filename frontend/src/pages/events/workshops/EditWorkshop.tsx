@@ -16,9 +16,9 @@ const t = makeTranslate({
   save: 'Tallenna',
 })
 
-export default function EditWorkshopPage({event}) {
-  const {workshopId} = useParams()
-  const [workshop, loadingState] = useWorkshop(workshopId)
+export default function EditWorkshopPage() {
+  const {workshopId} = useParams<'workshopId'>()
+  const [workshop, loadingState] = useWorkshop(workshopId ?? '')
 
   return <AdminOnly>
     <Breadcrumb text={workshop ? workshop.name : '...'} />
