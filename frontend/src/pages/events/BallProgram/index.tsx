@@ -1,102 +1,37 @@
-import React, {useCallback, useMemo, useState} from 'react'
+import React, {useCallback, useState} from 'react'
 import ReactTouchEvents from 'react-touch-events'
 import classnames from 'classnames'
 import Markdown from 'markdown-to-jsx'
 
-import {backendQueryHook, graphql} from 'backend'
-import {useCallbackOnEventChanges} from 'services/events'
-
 import {AutosizedSection} from 'libraries/ui'
 import {EditableDanceProperty} from 'components/EditableDanceProperty'
 import {LoadingState} from 'components/LoadingState'
-import {ProgramTitleSelector} from 'components/ProgramTitleSelector'
-import {makeTranslate} from 'utils/translate'
 import {useOnKeydown} from 'utils/useOnKeydown'
+
+import {ProgramTitleSelector} from './ProgramTitleSelector'
+import {t} from './strings'
+import {useBallProgramSlides} from './useBallProgram'
 
 import './BallProgram.sass'
 
-const t = makeTranslate({
-  teachedInSet: 'Opetettu setissä',
-  requestedDance: 'Toivetanssi',
-  intervalMusic: 'Taukomusiikkia',
-  addDescription: 'Lisää kuvaus',
-  afterThis: 'Tämän jälkeen',
-})
-
-type Event = NonNullable<NonNullable<ReturnType<typeof useBallProgram>['data']>['event']>
-
-const useBallProgram = backendQueryHook(graphql(`
-query BallProgram($eventId: ID!) {
-  event(id: $eventId) {
-    _id
-    name
-    program {
-      slideStyleId
-      introductions {
-        title
-        titleSlideStyleId
-        program {
-          item {
-            __typename
-            ... on ProgramItem {
-              name
-            }
-          }
-          slideStyleId
-        }
-      }
-      danceSets {
-        __typename
-        title
-        titleSlideStyleId
-        intervalMusicDuration
-        intervalMusicSlideStyleId
-        program {
-          slideStyleId
-          item {
-            __typename
-            ... on ProgramItem {
-              name
-              description
-            }
-            ... on Dance {
-              _id
-              teachedIn(eventId: $eventId) { _id, name }
-            }
-            ... on EventProgram {
-              showInLists
-            }
-          }
-        }
-      }
-    }
-  }
-}`), ({refetch, variables}) => {
-  if (variables === undefined) throw new Error('Unknown event id')
-  useCallbackOnEventChanges(variables.eventId, refetch)
-})
-
 export default function BallProgram({eventId}) {
-  const {data, refetch, ...loadingState} = useBallProgram({eventId})
-  const [slide, setSlide] = useState(0)
+  const [slides, {refetch, ...loadingState}] = useBallProgramSlides(eventId)
+  if (!slides) return <LoadingState {...loadingState} refetch={refetch} />
 
-  if (!data) return <LoadingState {...loadingState} refetch={refetch} />
-
-  return <BallProgramView event={data.event} onRefetch={refetch}
-    currentSlide={slide} onChangeSlide={setSlide} />
+  return <BallProgramView slides={slides} onRefetch={refetch} />
 }
 
-function BallProgramView({event, currentSlide, onChangeSlide, onRefetch}) {
-  const program = useMemo(() => getSlides(event), [event])
-  const slide = program[currentSlide]
+function BallProgramView({slides, onRefetch}) {
+  const [currentSlide, onChangeSlide] = useState(0)
+  const slide = slides[currentSlide]
 
   const changeSlide = useCallback((n) =>
     onChangeSlide((s) =>
       Math.max(0,
-        Math.min(program.length-1, s+n)
+        Math.min(slides.length-1, s+n)
       )
     )
-  , [onChangeSlide, program.length])
+  , [onChangeSlide, slides.length])
 
   useOnKeydown({
     ArrowLeft: () => changeSlide(-1),
@@ -112,61 +47,11 @@ function BallProgramView({event, currentSlide, onChangeSlide, onRefetch}) {
     <div className={classnames('slideshow', slide.slideStyleId && `slide-style-${slide.slideStyleId}`)}>
       <div className="controls">
         <ProgramTitleSelector value={slide.index ?? 0} onChange={onChangeSlide}
-          program={program} />
+          program={slides} />
       </div>
       <SlideView slide={slide} onChangeSlide={onChangeSlide} />
     </div>
   </ReactTouchEvents>
-}
-
-interface Slide {
-  __typename: string
-  slideStyleId?: string | null
-  name: string
-  index?: number
-  program?: Slide[]
-  parent?: Slide
-  next?: Slide
-}
-
-function getSlides(event: Event) : Slide[] {
-  const {introductions, danceSets} = event.program
-
-  const eventHeader : Slide = { __typename: 'Event', name: introductions.title ?? event.name, slideStyleId: introductions.titleSlideStyleId }
-
-  const slides : Slide[] = [eventHeader]
-  if (!event.program) return slides
-  const defaultStyleId = event.program.slideStyleId
-
-  for (const {item, slideStyleId} of introductions.program) {
-    slides.push({ name: '', ...item, slideStyleId, parent: eventHeader })
-  }
-  for (const {title: name, ...danceSet} of danceSets) {
-    const danceSetSlide = { ...danceSet, name, program: [] as Slide[] }
-    const danceProgram = danceSet.program.map(({item, slideStyleId}) => ({ name: '', ...item, slideStyleId, parent: danceSetSlide}))
-    danceSetSlide.program = danceProgram
-    slides.push(danceSetSlide)
-    slides.push(...danceProgram)
-
-    if (danceSet.intervalMusicDuration > 0) {
-      slides.push({
-        __typename: 'EventProgram',
-        name: t`intervalMusic`,
-        parent: danceSetSlide,
-        slideStyleId: danceSet.intervalMusicSlideStyleId,
-      })
-    }
-  }
-
-  slides.forEach((slide, index) => {
-    slide.index = index
-    if (!slide.slideStyleId) {
-      slide.slideStyleId = defaultStyleId
-    }
-
-    slide.next = slides[index+1]
-  })
-  return slides
 }
 
 function SlideView({slide, onChangeSlide}) {

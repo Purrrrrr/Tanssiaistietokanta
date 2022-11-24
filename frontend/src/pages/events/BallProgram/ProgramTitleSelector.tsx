@@ -1,10 +1,9 @@
 import React from 'react'
 
+import { Slide } from './useBallProgram'
+
 interface ProgramTitleSelectorProps {
-  program: {
-    __typename: string
-    name: string
-  }[]
+  program: Slide[]
   value: number
   onChange: (value: number) => unknown
 }
