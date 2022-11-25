@@ -146,9 +146,9 @@ function toDanceSetSlides({title: name, ...danceSet}: DanceSet): SlideContent[] 
 function toProgramSlide({_id, item, slideStyleId}: ProgramRow): SlideContent {
   return {
     name: '',
-    _id,
     showInLists: true,
     ...item,
+    _id,
     slideStyleId,
   }
 }

@@ -41,7 +41,7 @@ function EventRoutes() {
     <Routes>
       <Route index element={<EventPage event={event}/>} />
       <Route path="program" element={<EventProgramPage event={event}/>} />
-      <Route path="ball-program" element={<BallProgram eventId={eventId}/>} />
+      <Route path="ball-program/*" element={<BallProgram eventId={eventId}/>} />
       <Route path="workshops/create" element={<CreateWorkshopForm event={event}/>} />
       <Route path="workshops/:workshopId" element={<EditWorkshopForm />} />
       <Route path="print/*" element={<EventPrintRoutes />} />

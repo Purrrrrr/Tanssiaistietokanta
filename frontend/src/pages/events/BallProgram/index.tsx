@@ -1,4 +1,5 @@
-import React, {useCallback, useState} from 'react'
+import React, {useCallback} from 'react'
+import {useNavigate, useParams} from 'react-router-dom'
 import ReactTouchEvents from 'react-touch-events'
 import classnames from 'classnames'
 import Markdown from 'markdown-to-jsx'
@@ -10,73 +11,68 @@ import {useOnKeydown} from 'utils/useOnKeydown'
 
 import {ProgramTitleSelector} from './ProgramTitleSelector'
 import {t} from './strings'
-import {useBallProgramSlides} from './useBallProgram'
+import {Slide, startSlideId, useBallProgramSlides} from './useBallProgram'
 
 import './BallProgram.sass'
 
 export default function BallProgram({eventId}) {
   const [slides, {refetch, ...loadingState}] = useBallProgramSlides(eventId)
+
   if (!slides) return <LoadingState {...loadingState} refetch={refetch} />
 
   return <BallProgramView slides={slides} onRefetch={refetch} />
 }
 
-function BallProgramView({slides, onRefetch}) {
-  const [currentSlide, onChangeSlide] = useState(0)
-  const slide = slides[currentSlide]
-
-  const changeSlide = useCallback((n) =>
-    onChangeSlide((s) =>
-      Math.max(0,
-        Math.min(slides.length-1, s+n)
-      )
-    )
-  , [onChangeSlide, slides.length])
+function BallProgramView({slides, onRefetch}: {slides: Slide[], onRefetch: () => unknown}) {
+  const {'*': currentSlideId = startSlideId} = useParams()
+  const changeSlideId = useNavigate()
+  const slide = slides.find(s => s._id === currentSlideId) ?? slides[0]
 
   useOnKeydown({
-    ArrowLeft: () => changeSlide(-1),
-    ArrowRight: () => changeSlide(1),
+    ArrowLeft: () => changeSlideId(slide.previous?._id ?? slide._id),
+    ArrowRight: () => changeSlideId(slide.next?._id ?? slide._id),
     r: onRefetch
   })
 
-  const onSwipe = useCallback((e, direction : 'left'|'right') => {
-    changeSlide(direction === 'left' ? 1 : -1)
-  }, [changeSlide])
+  const onSwipe = useCallback((_, direction : 'left'|'right') => {
+    changeSlideId(((direction === 'left' ? slide.next : slide.previous) ?? slide)._id)
+  }, [slide, changeSlideId])
 
   return <ReactTouchEvents onSwipe={onSwipe} disableClick>
     <div className={classnames('slideshow', slide.slideStyleId && `slide-style-${slide.slideStyleId}`)}>
       <div className="controls">
-        <ProgramTitleSelector value={slide.index ?? 0} onChange={onChangeSlide}
+        <ProgramTitleSelector value={slide._id} onChange={changeSlideId}
           program={slides} />
       </div>
-      <SlideView slide={slide} onChangeSlide={onChangeSlide} />
+      <SlideView slide={slide} />
     </div>
   </ReactTouchEvents>
 }
 
-function SlideView({slide, onChangeSlide}) {
+function SlideView({slide}) {
   switch(slide.__typename) {
     case 'Dance':
-      return <DanceSlide dance={slide} onChangeSlide={onChangeSlide} />
+      return <DanceSlide dance={slide} />
     case 'RequestedDance':
-      return <RequestedDanceSlide next={slide.next} onChangeSlide={onChangeSlide} />
+      return <RequestedDanceSlide next={slide.next} />
     case 'EventProgram':
-      return <EventProgramSlide program={slide} onChangeSlide={onChangeSlide} />
+      return <EventProgramSlide program={slide} />
     case 'DanceSet':
     case 'Event':
     default:
-      return <HeaderSlide header={slide} onChangeSlide={onChangeSlide} />
+      return <HeaderSlide header={slide} />
   }
 }
-function HeaderSlide({header, onChangeSlide}) {
+function HeaderSlide({header}) {
+  const changeSlideId = useNavigate()
   const {name, program = []} = header
-  return <SimpleSlide title={name} next={null} onChangeSlide={onChangeSlide} >
+  return <SimpleSlide title={name} next={null} >
     <AutosizedSection className="slide-main-content">
       <ul className="slide-header-list">
         {program
           .filter(t => t.__typename !== 'EventProgram' || t.showInLists)
-          .map(({index, name}) =>
-            <li onClick={() => onChangeSlide(index)} key={index}>
+          .map(({_id, name}) =>
+            <li onClick={() => changeSlideId(_id)} key={_id}>
               {name ?? <RequestedDancePlaceholder />}
             </li>
           )
@@ -86,9 +82,9 @@ function HeaderSlide({header, onChangeSlide}) {
   </SimpleSlide>
 }
 
-function EventProgramSlide({program, onChangeSlide}) {
+function EventProgramSlide({program}) {
   const {name, next, description} = program
-  return <SimpleSlide title={name} next={next} onChangeSlide={onChangeSlide} >
+  return <SimpleSlide title={name} next={next} >
     {description && <AutosizedSection className="slide-main-content slide-program-description">
       <Markdown className="slide-program-description-content">{description}</Markdown>
     </AutosizedSection>}
@@ -97,10 +93,10 @@ function EventProgramSlide({program, onChangeSlide}) {
 
 const RequestedDancePlaceholder = () => <span className="requested-dance-placeholder"><t.span>requestedDance</t.span></span>
 
-function DanceSlide({dance, onChangeSlide}) {
+function DanceSlide({dance}) {
   const {next, name, teachedIn} = dance
 
-  return <SimpleSlide title={name} next={next} onChangeSlide={onChangeSlide}>
+  return <SimpleSlide title={name} next={next}>
     <AutosizedSection className="slide-main-content slide-program-description">
       <EditableDanceProperty dance={dance} property="description" type="markdown" addText={t`addDescription`} />
     </AutosizedSection>
@@ -110,24 +106,24 @@ function DanceSlide({dance, onChangeSlide}) {
   </SimpleSlide>
 }
 
-function RequestedDanceSlide({next, onChangeSlide}) {
-  return <SimpleSlide title={t`requestedDance`} next={next} onChangeSlide={onChangeSlide}>
+function RequestedDanceSlide({next}) {
+  return <SimpleSlide title={t`requestedDance`} next={next}>
   </SimpleSlide>
 }
 
-function SimpleSlide({title, next, onChangeSlide, children}) {
+function SimpleSlide({title, next, children}) {
   return <section className="slide">
     <h1 className="slide-title">{title}</h1>
     {children}
     {next &&
-        <NextTrackSection next={next}
-          onChangeSlide={onChangeSlide} />
+        <NextTrackSection next={next} />
     }
   </section>
 }
 
-function NextTrackSection({next, onChangeSlide}) {
-  return <section className="slide-next-track" onClick={() => onChangeSlide(next.index)}>
+function NextTrackSection({next}) {
+  const changeSlideId = useNavigate()
+  return <section className="slide-next-track" onClick={() => changeSlideId(next._id)}>
     <h1>{t`afterThis`}:{' '}{next.__typename === 'RequestedDance' ? t`requestedDance` : next.name}</h1>
   </section>
 }
