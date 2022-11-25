@@ -49,23 +49,27 @@ function BallProgramView({slides, onRefetch}: {slides: Slide[], onRefetch: () =>
   </ReactTouchEvents>
 }
 
-function SlideView({slide}) {
+interface SlideProps {
+  slide: Slide
+}
+
+function SlideView({slide}: SlideProps) {
   switch(slide.__typename) {
     case 'Dance':
-      return <DanceSlide dance={slide} />
+      return <DanceSlide slide={slide} />
     case 'RequestedDance':
       return <RequestedDanceSlide next={slide.next} />
     case 'EventProgram':
-      return <EventProgramSlide program={slide} />
+      return <EventProgramSlide slide={slide} />
     case 'DanceSet':
     case 'Event':
     default:
-      return <HeaderSlide header={slide} />
+      return <HeaderSlide slide={slide} />
   }
 }
-function HeaderSlide({header}) {
+function HeaderSlide({slide}: SlideProps) {
   const changeSlideId = useNavigate()
-  const {name, program = []} = header
+  const {name, program = []} = slide
   return <SimpleSlide title={name} next={null} >
     <AutosizedSection className="slide-main-content">
       <ul className="slide-header-list">
@@ -82,8 +86,11 @@ function HeaderSlide({header}) {
   </SimpleSlide>
 }
 
-function EventProgramSlide({program}) {
-  const {name, next, description} = program
+function EventProgramSlide({slide}: SlideProps) {
+  const {name, next, item} = slide
+  if (item?.__typename !== 'EventProgram') return null
+  const {description} = item
+
   return <SimpleSlide title={name} next={next} >
     {description && <AutosizedSection className="slide-main-content slide-program-description">
       <Markdown className="slide-program-description-content">{description}</Markdown>
@@ -93,12 +100,14 @@ function EventProgramSlide({program}) {
 
 const RequestedDancePlaceholder = () => <span className="requested-dance-placeholder"><t.span>requestedDance</t.span></span>
 
-function DanceSlide({dance}) {
-  const {next, name, teachedIn} = dance
+function DanceSlide({slide}: SlideProps) {
+  const {next, name, item} = slide
+  if (item?.__typename !== 'Dance') return null
+  const {teachedIn} = item
 
   return <SimpleSlide title={name} next={next}>
     <AutosizedSection className="slide-main-content slide-program-description">
-      <EditableDanceProperty dance={dance} property="description" type="markdown" addText={t`addDescription`} />
+      <EditableDanceProperty dance={item} property="description" type="markdown" addText={t`addDescription`} />
     </AutosizedSection>
     {teachedIn.length > 0 &&
       <AutosizedSection className="slide-teached-in">{t`teachedInSet`} {teachedIn.map(w => w.name).join(', ')}</AutosizedSection>
@@ -115,15 +124,13 @@ function SimpleSlide({title, next, children}) {
   return <section className="slide">
     <h1 className="slide-title">{title}</h1>
     {children}
-    {next &&
-        <NextTrackSection next={next} />
-    }
+    {next && <NextTrackSection next={next} />}
   </section>
 }
 
 function NextTrackSection({next}) {
   const changeSlideId = useNavigate()
   return <section className="slide-next-track" onClick={() => changeSlideId(next._id)}>
-    <h1>{t`afterThis`}:{' '}{next.__typename === 'RequestedDance' ? t`requestedDance` : next.name}</h1>
+    <h1>{t`afterThis`}:{' '}{next.name}</h1>
   </section>
 }

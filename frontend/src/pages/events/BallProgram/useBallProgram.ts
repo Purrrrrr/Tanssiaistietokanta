@@ -14,6 +14,27 @@ export type DanceSet = EventProgram['danceSets'][number]
 export type IntroProgramRow = EventProgram['introductions']['program']
 export type DanceProgramRow = DanceSet['program']
 export type ProgramRow = (EventProgram['introductions'] | DanceSet)['program'][number]
+export type ProgramRowItem = ProgramRow['item']
+
+export interface Slide extends SlideContent {
+  index: number
+  previous: SlideRef | null
+  next: SlideRef | null
+}
+export interface SlideContent {
+  __typename: string
+  _id: string
+  slideStyleId?: string | null
+  name: string
+  item?: ProgramRowItem
+  program?: SlideContent[]
+  showInLists: boolean
+}
+
+interface SlideRef {
+  _id: string
+  name: string
+}
 
 export function useBallProgramSlides(eventId) : [Slide[] | null, Omit<BallProgramData, 'data'> ]{
   const {data, ...rest} = useBallProgram({eventId})
@@ -42,6 +63,14 @@ query BallProgram($eventId: ID!) {
             __typename
             ... on ProgramItem {
               name
+              description
+            }
+            ... on Dance {
+              _id
+              teachedIn(eventId: $eventId) { _id, name }
+            }
+            ... on EventProgram {
+              showInLists
             }
           }
         }
@@ -78,25 +107,6 @@ query BallProgram($eventId: ID!) {
   if (variables === undefined) throw new Error('Unknown event id')
   useCallbackOnEventChanges(variables.eventId, refetch)
 })
-
-export interface Slide extends SlideContent {
-  index: number
-  previous: SlideRef | null
-  next: SlideRef | null
-}
-export interface SlideContent {
-  __typename: string
-  _id: string
-  slideStyleId?: string | null
-  name: string
-  program?: SlideContent[]
-  showInLists: boolean
-}
-
-interface SlideRef {
-  _id: string
-  name: string
-}
 
 export function getSlides(event: Event) : Slide[] {
   const {
@@ -145,9 +155,10 @@ function toDanceSetSlides({title: name, ...danceSet}: DanceSet): SlideContent[] 
 
 function toProgramSlide({_id, item, slideStyleId}: ProgramRow): SlideContent {
   return {
-    name: '',
-    showInLists: true,
-    ...item,
+    __typename: item.__typename,
+    name: item.__typename === 'RequestedDance' ? t`requestedDance` : item.name,
+    showInLists: 'showInLists' in item ? item.showInLists : true,
+    item,
     _id,
     slideStyleId,
   }
