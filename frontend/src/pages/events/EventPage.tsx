@@ -58,7 +58,7 @@ function EventProgram({program}) {
       text={t`danceMasterCheatList`} />
     <NavigateButton href="print/ball-dancelist" target="_blank"
       text={t`printBallDanceList`} />
-    <NavigateButton href="ball-program?hideUI" target="_blank"
+    <NavigateButton href="ball-program" target="_blank"
       text={t`ballProgramSlideshow`} />
   </>
 }

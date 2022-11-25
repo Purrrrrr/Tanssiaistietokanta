@@ -24,16 +24,8 @@ function NavigationLayout({children}) {
 }
 
 function navigationHidden() {
-  const param = getUrlParam('hideUI')
-  const isPrintPage = window.location.pathname.includes('/print/')
-  const paramDefault = isPrintPage ? 'true' : 'false'
-  return (param ?? paramDefault) !== 'false'
-}
-
-function getUrlParam(param : string) {
-  const query = window.location.search
-  const params = new URLSearchParams(query.substring(1))
-  return params.get(param)
+  const isPrintPage = window.location.pathname.match(/\/(ball-program|print)\//)
+  return isPrintPage
 }
 
 function SkipToMainContent() {
