@@ -25,7 +25,7 @@ export function useSchema(schema : ValidationProps) {
   )
 }
 
-export function stripValidationProps<P>(props : P) : Omit<P, 'validate' | 'errorMessages'> {
+export function stripValidationProps<P extends object>(props : P) : Omit<P, 'validate' | 'errorMessages'> {
   const ret = {...props}
   if ('validate' in ret) delete ret['validate']
   if ('errorMessages' in ret) delete ret['errorMessages']
