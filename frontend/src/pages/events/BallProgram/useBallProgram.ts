@@ -5,16 +5,16 @@ import {useCallbackOnEventChanges} from 'services/events'
 
 import {t} from './strings'
 
-import './BallProgram.sass'
-
 type BallProgramData = ReturnType<typeof useBallProgram>
 export type Event = NonNullable<NonNullable<BallProgramData['data']>['event']>
-export type EventProgram = NonNullable<Event['program']>
-export type DanceSet = EventProgram['danceSets'][number]
-export type IntroProgramRow = EventProgram['introductions']['program']
+export type ProgramSettings = NonNullable<Event['program']>
+export type DanceSet = ProgramSettings['danceSets'][number]
+export type IntroProgramRow = ProgramSettings['introductions']['program']
 export type DanceProgramRow = DanceSet['program']
-export type ProgramRow = (EventProgram['introductions'] | DanceSet)['program'][number]
+export type ProgramRow = (ProgramSettings['introductions'] | DanceSet)['program'][number]
 export type ProgramRowItem = ProgramRow['item']
+export type Dance = Extract<ProgramRowItem, {__typename: 'Dance'}>
+export type EventProgram = Extract<ProgramRowItem, {__typename: 'EventProgram'}>
 
 export interface Slide extends SlideContent {
   index: number
@@ -26,7 +26,9 @@ export interface SlideContent {
   _id: string
   slideStyleId?: string | null
   name: string
+  isHeader: boolean
   item?: ProgramRowItem
+  parent: SlideRef | null
   program?: SlideContent[]
   showInLists: boolean
 }
@@ -115,13 +117,12 @@ export function getSlides(event: Event) : Slide[] {
     slideStyleId: defaultStyleId = null
   } = event.program
 
-  const eventHeader : SlideContent = {
+  const eventHeader : SlideContent = headerSlide({
     __typename: 'Event',
     _id: startSlideId,
     name: introductions.title ?? event.name,
     slideStyleId: introductions.titleSlideStyleId,
-    showInLists: true,
-  }
+  })
 
   const slides : SlideContent[] = [
     eventHeader,
@@ -142,39 +143,59 @@ function toDanceSetSlides({title: name, ...danceSet}: DanceSet): SlideContent[] 
     ...danceSet.program.map(toProgramSlide),
     ...intervalMusicSlide(danceSet),
   ]
-  return [
-    {
-      ...danceSet,
-      name,
-      program,
-      showInLists: true,
-    },
-    ...program,
-  ]
+  const danceSetSlide = headerSlide({
+    ...danceSet,
+    name,
+    program,
+  })
+  program.forEach(item => {
+    item.program = program
+    item.parent = danceSetSlide
+  })
+
+  return [danceSetSlide, ...program]
 }
 
 function toProgramSlide({_id, item, slideStyleId}: ProgramRow): SlideContent {
-  return {
+  return programSlide({
     __typename: item.__typename,
     name: item.__typename === 'RequestedDance' ? t`requestedDance` : item.name,
     showInLists: 'showInLists' in item ? item.showInLists : true,
     item,
     _id,
     slideStyleId,
-  }
+  })
 }
 
 function intervalMusicSlide(danceSet): SlideContent[] {
   if (danceSet.intervalMusicDuration > 0) {
-    return [{
+    return [programSlide({
       __typename: 'EventProgram',
       _id: danceSet._id + '-intervalMusic',
       name: t`intervalMusic`,
-      showInLists: false,
       slideStyleId: danceSet.intervalMusicSlideStyleId,
-    }]
+      showInLists: false,
+    })]
   }
   return []
+}
+
+function programSlide(props: Omit<SlideContent, 'parent' | 'isHeader'>): SlideContent {
+  return {
+    ...props,
+    parent: null,
+    isHeader: false,
+  }
+}
+function headerSlide(
+  props: Omit<SlideContent, 'showInLists' | 'isHeader' | 'parent'>
+): SlideContent {
+  return {
+    ...props,
+    showInLists: true,
+    isHeader: true,
+    parent: null,
+  }
 }
 
 function addNavigation(slides: SlideContent[]): Slide[] {

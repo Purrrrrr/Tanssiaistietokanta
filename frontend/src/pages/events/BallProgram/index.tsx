@@ -11,9 +11,9 @@ import {useOnKeydown} from 'utils/useOnKeydown'
 
 import {ProgramTitleSelector} from './ProgramTitleSelector'
 import {t} from './strings'
-import {Slide, startSlideId, useBallProgramSlides} from './useBallProgram'
+import {Dance, EventProgram, Slide, SlideContent, startSlideId, useBallProgramSlides} from './useBallProgram'
 
-import './BallProgram.sass'
+import './BallProgram.scss'
 
 export default function BallProgram({eventId}) {
   const [slides, {refetch, ...loadingState}] = useBallProgramSlides(eventId)
@@ -54,83 +54,86 @@ interface SlideProps {
 }
 
 function SlideView({slide}: SlideProps) {
-  switch(slide.__typename) {
-    case 'Dance':
-      return <DanceSlide slide={slide} />
-    case 'RequestedDance':
-      return <RequestedDanceSlide next={slide.next} />
-    case 'EventProgram':
-      return <EventProgramSlide slide={slide} />
-    case 'DanceSet':
-    case 'Event':
-    default:
-      return <HeaderSlide slide={slide} />
-  }
-}
-function HeaderSlide({slide}: SlideProps) {
-  const changeSlideId = useNavigate()
-  const {name, program = []} = slide
-  return <SimpleSlide title={name} next={null} >
-    <AutosizedSection className="slide-main-content">
-      <ul className="slide-header-list">
-        {program
-          .filter(t => t.__typename !== 'EventProgram' || t.showInLists)
-          .map(({_id, name}) =>
-            <li onClick={() => changeSlideId(_id)} key={_id}>
-              {name ?? <RequestedDancePlaceholder />}
-            </li>
-          )
-        }
-      </ul>
-    </AutosizedSection>
-  </SimpleSlide>
-}
-
-function EventProgramSlide({slide}: SlideProps) {
-  const {name, next, item} = slide
-  if (item?.__typename !== 'EventProgram') return null
-  const {description} = item
-
-  return <SimpleSlide title={name} next={next} >
-    {description && <AutosizedSection className="slide-main-content slide-program-description">
-      <Markdown className="slide-program-description-content">{description}</Markdown>
-    </AutosizedSection>}
-  </SimpleSlide>
-}
-
-const RequestedDancePlaceholder = () => <span className="requested-dance-placeholder"><t.span>requestedDance</t.span></span>
-
-function DanceSlide({slide}: SlideProps) {
-  const {next, name, item} = slide
-  if (item?.__typename !== 'Dance') return null
-  const {teachedIn} = item
-
-  return <SimpleSlide title={name} next={next}>
-    <AutosizedSection className="slide-main-content slide-program-description">
-      <EditableDanceProperty dance={item} property="description" type="markdown" addText={t`addDescription`} />
-    </AutosizedSection>
-    {teachedIn.length > 0 &&
-      <AutosizedSection className="slide-teached-in">{t`teachedInSet`} {teachedIn.map(w => w.name).join(', ')}</AutosizedSection>
-    }
-  </SimpleSlide>
-}
-
-function RequestedDanceSlide({next}) {
-  return <SimpleSlide title={t`requestedDance`} next={next}>
-  </SimpleSlide>
-}
-
-function SimpleSlide({title, next, children}) {
+  const {isHeader, name, next, program = [], parent} = slide
   return <section className="slide">
-    <h1 className="slide-title">{title}</h1>
-    {children}
-    {next && <NextTrackSection next={next} />}
+    <h1 className="slide-title">{name}</h1>
+    <section className="slide-main-content">
+      <SlideContentView slide={slide} />
+    </section>
+    {!isHeader && next && <NextTrackSection next={next} />}
+    {!isHeader && program &&
+      <AutosizedSection className="slide-navigation">
+        <h2>{parent?.name}</h2>
+        <ProgramList program={program} />
+      </AutosizedSection>
+    }
   </section>
 }
 
 function NextTrackSection({next}) {
   const changeSlideId = useNavigate()
+
   return <section className="slide-next-track" onClick={() => changeSlideId(next._id)}>
     <h1>{t`afterThis`}:{' '}{next.name}</h1>
   </section>
+}
+
+function SlideContentView({slide}: SlideProps) {
+  switch(slide.__typename) {
+    case 'Event':
+      return null
+    case 'DanceSet':
+      return <AutosizedSection>
+        <ProgramList program={slide.program ?? []} />
+      </AutosizedSection>
+  }
+  switch(slide.item?.__typename) {
+    case 'Dance':
+      return <DanceDescription dance={slide.item} />
+    case 'RequestedDance':
+      return null
+    case 'EventProgram':
+      return <EventProgramDescription program={slide.item} />
+    default:
+      return null
+  }
+}
+
+function ProgramList({program}: {program: SlideContent[]}) {
+  const changeSlideId = useNavigate()
+  return <ul className="slide-program-list">
+    {program
+      .filter(t => t.__typename !== 'EventProgram' || t.showInLists)
+      .map(({__typename, _id, name}) =>
+        <li onClick={() => changeSlideId(_id)} key={_id}>
+          {__typename === 'RequestedDance' ? <RequestedDancePlaceholder /> : name}
+        </li>
+      )
+    }
+  </ul>
+}
+
+const RequestedDancePlaceholder = () => <span className="requested-dance-placeholder"><t.span>requestedDance</t.span></span>
+
+function EventProgramDescription({program}: {program: EventProgram}) {
+  const {description} = program
+
+  return <>
+    {description && <AutosizedSection className="slide-program-description">
+      <Markdown className="slide-program-description-content">{description}</Markdown>
+    </AutosizedSection>}
+  </>
+}
+
+function DanceDescription({dance}: {dance: Dance}) {
+  const {teachedIn} = dance
+
+  return <>
+    <AutosizedSection className="slide-program-description">
+      <EditableDanceProperty dance={dance} property="description" type="markdown" addText={t`addDescription`} />
+    </AutosizedSection>
+    {teachedIn.length > 0 &&
+      <AutosizedSection className="slide-teached-in">{t`teachedInSet`} {teachedIn.map(w => w.name).join(', ')}</AutosizedSection>
+    }
+  </>
 }

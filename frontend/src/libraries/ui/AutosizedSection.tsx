@@ -5,7 +5,7 @@ import './AutosizedSection.sass'
 
 type ResizeEntry = Parameters<ResizeSensor2Props['onResize']>[0][number]
 
-export function AutosizedSection({children, className, ...props}) {
+export function AutosizedSection({children, className = '', ...props}) {
   const container = useRef<HTMLElement>(null)
   const [size, setSize] = useState(1)
 
