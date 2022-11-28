@@ -149,6 +149,7 @@ function toDanceSetSlides({title: name, ...danceSet}: DanceSet): SlideContent[] 
     program,
   })
   program.forEach(item => {
+    if (item.__typename === 'IntervalMusic') return
     item.program = program
     item.parent = danceSetSlide
   })
@@ -170,7 +171,7 @@ function toProgramSlide({_id, item, slideStyleId}: ProgramRow): SlideContent {
 function intervalMusicSlide(danceSet): SlideContent[] {
   if (danceSet.intervalMusicDuration > 0) {
     return [programSlide({
-      __typename: 'EventProgram',
+      __typename: 'IntervalMusic',
       _id: danceSet._id + '-intervalMusic',
       name: t`intervalMusic`,
       slideStyleId: danceSet.intervalMusicSlideStyleId,

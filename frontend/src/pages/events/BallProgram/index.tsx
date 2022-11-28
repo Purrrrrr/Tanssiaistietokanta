@@ -54,7 +54,7 @@ interface SlideProps {
 }
 
 function SlideView({slide}: SlideProps) {
-  const {isHeader, name, next, program = [], parent} = slide
+  const {isHeader, name, next, program, parent} = slide
   return <section className="slide">
     <h1 className="slide-title">{name}</h1>
     <section className="slide-main-content">
@@ -64,7 +64,7 @@ function SlideView({slide}: SlideProps) {
     {!isHeader && program &&
       <AutosizedSection className="slide-navigation">
         <h2>{parent?.name}</h2>
-        <ProgramList program={program} />
+        <ProgramList program={program} currentSlide={slide} />
       </AutosizedSection>
     }
   </section>
@@ -81,6 +81,7 @@ function NextTrackSection({next}) {
 function SlideContentView({slide}: SlideProps) {
   switch(slide.__typename) {
     case 'Event':
+    case 'IntervalMusic':
       return null
     case 'DanceSet':
       return <AutosizedSection>
@@ -99,13 +100,13 @@ function SlideContentView({slide}: SlideProps) {
   }
 }
 
-function ProgramList({program}: {program: SlideContent[]}) {
+function ProgramList({program, currentSlide}: {program: SlideContent[], currentSlide?: Slide}) {
   const changeSlideId = useNavigate()
   return <ul className="slide-program-list">
     {program
-      .filter(t => t.__typename !== 'EventProgram' || t.showInLists)
+      .filter(t => t.showInLists)
       .map(({__typename, _id, name}) =>
-        <li onClick={() => changeSlideId(_id)} key={_id}>
+        <li className={_id === currentSlide?._id ? 'current' : ''} onClick={() => changeSlideId(_id)} key={_id}>
           {__typename === 'RequestedDance' ? <RequestedDancePlaceholder /> : name}
         </li>
       )
