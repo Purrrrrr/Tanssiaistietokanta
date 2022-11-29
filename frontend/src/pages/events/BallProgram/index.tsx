@@ -62,10 +62,12 @@ function SlideView({slide}: SlideProps) {
     </section>
     {!isHeader && next && <NextTrackSection next={next} />}
     {!isHeader && program &&
-      <AutosizedSection className="slide-navigation">
-        <h2>{parent?.name}</h2>
-        <ProgramList program={program} currentSlide={slide} />
-      </AutosizedSection>
+      <>
+        <h2 className="slide-navigation-title">{parent?.name}</h2>
+        <AutosizedSection className="slide-navigation">
+          <ProgramList program={program} currentSlide={slide} />
+        </AutosizedSection>
+      </>
     }
   </section>
 }
@@ -74,7 +76,7 @@ function NextTrackSection({next}) {
   const changeSlideId = useNavigate()
 
   return <section className="slide-next-track" onClick={() => changeSlideId(next._id)}>
-    <h1>{t`afterThis`}:{' '}{next.name}</h1>
+    {t`afterThis`}:{' '}{next.name}
   </section>
 }
 

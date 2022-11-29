@@ -31,7 +31,4 @@ body {
   color: gray;
 }
 
-@font-face {
-  font-family: "Dancing Script";
-  src: url("../public/fonts/DancingScript.ttf") format("truetype");
-}
+@import url('https://fonts.googleapis.com/css2?family=Charm&family=Tangerine&display=swap');
