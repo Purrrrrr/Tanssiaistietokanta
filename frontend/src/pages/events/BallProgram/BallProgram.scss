@@ -44,6 +44,7 @@
     .slide-title {
       grid-column: 1;
       margin: 0;
+      padding-bottom: 0.5em;
     }
     .slide-main-content {
       grid-column: 1;
@@ -59,16 +60,18 @@
     }
     .slide-next-track {
       grid-column: 1;
+      padding-top: 0.5em;
       border-top: 1px solid black;
       text-align: center;
       font-weight: bold;
-      margin: 0.5em 0 0;
+      margin: 0.5em 1.5em 0;
     }
     .slide-navigation-title {
       grid-column: 2;
       grid-row: 1/2;
       border-left: 1px solid black;
       margin: 0;
+      padding-bottom: 0.5em;
     }
     .slide-navigation {
       grid-column: 2;
@@ -159,12 +162,12 @@
     .slide-teached-in,
     .slide-next-track {
       font-size: 100%;
-      background: rgba(251,245,230,0.6);
+      background: rgba(251,245,230,0.7);
       border-radius: 1em;
       padding: 0.3em 0.3em;
     }
     .slide-navigation .slide-program-list {
-      font-size: 100%;
+      font-size: 90%;
     }
     .slide-next-track {
       justify-self: center;
