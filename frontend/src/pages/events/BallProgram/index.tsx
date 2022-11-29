@@ -41,7 +41,7 @@ function BallProgramView({slides, onRefetch}: {slides: Slide[], onRefetch: () =>
   return <ReactTouchEvents onSwipe={onSwipe} disableClick>
     <div className={classnames('slideshow', slide.slideStyleId && `slide-style-${slide.slideStyleId}`)}>
       <div className="controls">
-        <ProgramTitleSelector value={slide._id} onChange={changeSlideId}
+        <ProgramTitleSelector value={slide?.parent?._id ?? slide._id} onChange={changeSlideId}
           program={slides} />
       </div>
       <SlideView slide={slide} />

@@ -24,7 +24,15 @@
     font-weight: normal;
     color: black;
     select {
+      padding: 4px;
+      border: 1px solid transparent;
+      text-align: right;
       background: transparent;
+
+      &:focus, &:hover {
+        border-color: rgba(0,0,0,0.4);
+        background: rgba(255,255,255,0.4);
+      }
     }
   }
 
