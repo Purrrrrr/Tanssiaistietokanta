@@ -24,7 +24,7 @@ function NavigationLayout({children}) {
 }
 
 function navigationHidden() {
-  const isPrintPage = window.location.pathname.match(/\/(ball-program|print)\//)
+  const isPrintPage = window.location.pathname.match(/\/(ball-program|print)(\/|$)/)
   return isPrintPage
 }
 
