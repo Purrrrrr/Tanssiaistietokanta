@@ -138,8 +138,12 @@ const DanceSetEditor = React.memo(function DanceSetEditor({index} : {index: numb
 })
 
 function ProgramListEditor({path}: {path: ProgramSectionPath}) {
-  const { program, intervalMusicDuration } = useValueAt(path)
+  const programRow = useValueAt(path)
+  const { program } = programRow
   const isIntroductionsSection = path.startsWith('introductions')
+  const intervalMusicDuration = isIntroductionsSection
+    ? 0
+    : (programRow as DanceSet).intervalMusicDuration
   const programPath = `${path}.program` as const
 
   return <HTMLTable condensed bordered striped className="danceSet">
@@ -157,7 +161,7 @@ function ProgramListEditor({path}: {path: ProgramSectionPath}) {
             <t.td className={CssClass.textMuted+ ' noProgram'} colSpan="5">programListIsEmpty</t.td>
           </tr>
       }
-      {!isIntroductionsSection && intervalMusicDuration > 0 && <IntervalMusicEditor danceSetPath={path as DanceSetPath} />}
+      {intervalMusicDuration > 0 && <IntervalMusicEditor danceSetPath={path as DanceSetPath} />}
     </tbody>
     <tfoot>
       <tr className="eventProgramFooter">

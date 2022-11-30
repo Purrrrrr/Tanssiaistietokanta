@@ -35,17 +35,16 @@ function toEventProgramSettings(
 ): EventProgramSettings {
   const {introductions, ...rest} = program
   return {
-    introductions: { ...introductions, title: introductions.title ?? eventName, intervalMusicDuration: 0},
+    introductions: { ...introductions, title: introductions.title ?? eventName},
     ...rest
   }
 }
 
-function toProgramInput({introductions: {program: introProgram, intervalMusicDuration, ...introductions}, danceSets, ...rest} : EventProgramSettings) {
+function toProgramInput({introductions, danceSets, ...rest} : EventProgramSettings) {
   return removeTypenames({
-    introductions: {
-      program: introProgram.map(toProgramItemInput),
-      ...introductions,
-    },
+    introductions: L.modify(
+      ['program', L.elems], toProgramItemInput, introductions
+    ),
     danceSets: L.modify(
       [L.elems, 'program', L.elems], toProgramItemInput, danceSets
     ),

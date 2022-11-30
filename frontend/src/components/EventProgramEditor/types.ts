@@ -14,9 +14,7 @@ export interface EventProgramSettings extends Program {
   danceSets: DanceSet[]
 }
 
-export interface IntroSection extends Introductions {
-  intervalMusicDuration: 0
-}
+export type IntroSection = Introductions
 export interface DanceSet extends ODanceSet {
   program: EventProgramRow[]
 }
