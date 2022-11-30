@@ -9,29 +9,25 @@ import {NavigateButton} from 'components/widgets/NavigateButton'
 import {SlideStyleSelector} from 'components/widgets/SlideStyleSelector'
 import {guid} from 'utils/guid'
 
-import {DanceProgramPath, DanceSet, DanceSetPath, EventProgramRow, EventProgramSettings, ProgramItemPath, ProgramSectionPath} from './types'
+import {DanceProgramPath, DanceSet, DanceSetPath, EventProgramSettings, ProgramItemPath, ProgramSectionPath} from './types'
 
+import {AddDanceSetButton, AddIntroductionButton, IntervalMusicSwitch, newEventProgramItem} from './controls'
+import {
+  Field,
+  Form,
+  Input,
+  ListField,
+  RemoveItemButton,
+  Switch,
+  useAppendToList,
+  useMoveItemInList,
+  useOnChangeFor,
+  useValueAt,
+} from './form'
 import {DanceProgramChooser, InheritedSlideStyleSelector, MoveDanceSetSelector, MoveItemToSectionSelector} from './selectors'
 import t from './translations'
 
 import './EventProgramEditor.sass'
-
-const {
-  Input,
-  Field,
-  Switch,
-  switchFor,
-  Form,
-  ListField,
-  RemoveItemButton,
-  useValueAt,
-  useOnChangeFor,
-  useAppendToList,
-  useMoveItemInList,
-} = formFor<EventProgramSettings>()
-
-
-const DEFAULT_INTERVAL_MUSIC_DURATION = 15*60
 
 interface EventProgramEditorProps {
   program: EventProgramSettings
@@ -64,40 +60,6 @@ export function EventProgramEditor({program: eventProgram, onSubmit}: EventProgr
     <SubmitButton text={t`buttons.save`} />
     <NavigateButton href='..' text={t`buttons.cancel`} />
   </Form>
-}
-
-function AddIntroductionButton() {
-  const addIntroduction = useAppendToList('introductions.program')
-  function addIntroductoryInfo() {
-    addIntroduction(newEventProgramItem)
-  }
-  return <Button text={t`buttons.addIntroductoryInfo`} onClick={addIntroductoryInfo} className="addIntroductoryInfo" />
-}
-
-function newEventProgramItem(): EventProgramRow {
-  return {
-    item: {__typename: 'EventProgram', _id: undefined, name: t`placeholderNames.newProgramItem`, showInLists: false},
-    _id: guid(),
-  }
-}
-
-function AddDanceSetButton() {
-  const onAddDanceSet = useAppendToList('danceSets')
-  function addDanceSet() {
-    onAddDanceSet(newDanceSet)
-  }
-  return <Button text={t`buttons.addDanceSet`} onClick={addDanceSet} className="addDanceSet" />
-}
-
-function newDanceSet(danceSets: DanceSet[]): DanceSet {
-  const danceSetNumber = danceSets.length + 1
-  const dances = Array.from({length: 6}, () => ({item: {__typename: 'RequestedDance'}, _id: guid()} as EventProgramRow))
-  return {
-    _id: guid(),
-    title: t('placeholderNames.danceSet', {number: danceSetNumber}),
-    program: dances,
-    intervalMusicDuration: DEFAULT_INTERVAL_MUSIC_DURATION
-  }
 }
 
 function IntroductoryInformation() {
@@ -177,11 +139,6 @@ function ProgramListEditor({path}: {path: ProgramSectionPath}) {
     </tfoot>
   </HTMLTable>
 }
-
-const IntervalMusicSwitch = switchFor<number>({
-  isChecked: num => (num ?? 0) > 0,
-  toValue: checked => checked ? DEFAULT_INTERVAL_MUSIC_DURATION : 0,
-})
 
 interface ProgramItemEditorProps {
   dragHandle: React.ReactNode
