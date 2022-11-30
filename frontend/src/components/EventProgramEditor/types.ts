@@ -10,11 +10,10 @@ type ODanceSet = Program['danceSets'][number]
 type Introductions = Program['introductions']
 
 export interface EventProgramSettings extends Program {
-  introductions: IntroSection
+  introductions: Introductions
   danceSets: DanceSet[]
 }
 
-export type IntroSection = Introductions
 export interface DanceSet extends ODanceSet {
   program: EventProgramRow[]
 }

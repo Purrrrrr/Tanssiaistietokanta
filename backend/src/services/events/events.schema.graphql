@@ -18,7 +18,7 @@ type EventProgramSettings {
 }
 
 type Introductions {
-  title: String
+  title: String!
   titleSlideStyleId: ID
   program: [EventProgramRow!]!
 }
@@ -79,7 +79,7 @@ input ProgramInput {
 }
 
 input IntroductionsInput {
-  title: String
+  title: String!
   titleSlideStyleId: ID
   program: [IntroductionInput!]!
 }

@@ -12,7 +12,12 @@ module.exports = (app) => {
 
   return {
     Event: {
-      workshops: (obj) => getWorkshops(obj._id)
+      workshops: (obj) => getWorkshops(obj._id),
+      program: (event) => {
+        const { program } = event
+        if (!program.introductions.title) return L.set(['introductions', 'title'], event.title, program)
+        return program
+      },
     },
     DanceSet: {
       program: obj => L.modifyAsync(L.elems, getProgramItemData, obj.program),

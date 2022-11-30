@@ -23,21 +23,10 @@ export default function EventProgramEditorPage({event}: {event: Event}) {
     <Breadcrumb text="Tanssiaisohjelma" />
     <PageTitle>Muokkaa tanssiaisohjelmaa</PageTitle>
     <EventProgramEditor
-      program={toEventProgramSettings(event.name, event.program)}
+      program={event.program}
       onSubmit={(program) => modifyEventProgram({id: event._id, program: toProgramInput(program)})}
     />
   </AdminOnly>
-}
-
-function toEventProgramSettings(
-  eventName,
-  program : Event['program'],
-): EventProgramSettings {
-  const {introductions, ...rest} = program
-  return {
-    introductions: { ...introductions, title: introductions.title ?? eventName},
-    ...rest
-  }
 }
 
 function toProgramInput({introductions, danceSets, ...rest} : EventProgramSettings) {
