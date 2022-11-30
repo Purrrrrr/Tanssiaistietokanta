@@ -15,7 +15,6 @@ const t = makeTranslate({
   editProgram: 'Muokkaa ohjelmaa',
   addProgram: 'Luo ohjelma',
   workshops: 'Työpajat',
-  danceMasterCheatList: 'Tanssiaisjuontajan lunttilappu',
   printBallDanceList: 'Tulosta settilista',
   ballProgramSlideshow: 'Tanssiaisten diashow',
   dances: 'Tanssit',
@@ -54,8 +53,6 @@ function EventProgram({program}) {
       </p>
     )}
     <NavigateButton adminOnly intent="primary" href="program" text={t`editProgram`} />
-    <NavigateButton href="print/dancemasters-cheatlist" target="_blank"
-      text={t`danceMasterCheatList`} />
     <NavigateButton href="print/ball-dancelist" target="_blank"
       text={t`printBallDanceList`} />
     <NavigateButton href="ball-program" target="_blank"
