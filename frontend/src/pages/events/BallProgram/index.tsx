@@ -54,8 +54,8 @@ interface SlideProps {
 }
 
 function SlideView({slide}: SlideProps) {
-  const {isHeader, name, next, program, parent} = slide
-  return <section className="slide">
+  const {isHeader, __typename, name, next, program, parent} = slide
+  return <section className={'slide slide-type-'+__typename}>
     <h1 className="slide-title">{name}</h1>
     <section className="slide-main-content">
       <SlideContentView slide={slide} />

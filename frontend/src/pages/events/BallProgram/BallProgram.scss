@@ -12,6 +12,9 @@
       font-size: 0.8em;
     }
   }
+  .slide-type-Event .slide-title {
+    font-size: 2.4em;
+  }
 }
 
 .slideshow {
@@ -144,8 +147,8 @@
   background: black;
   color: white;
 }
-// Flower background styles
 
+// Flower background styles
 @mixin flower {
   background: #fbf5e6;
   color: #58370e;
@@ -183,7 +186,9 @@
       border-top: none;
     }
   }
-
+  .slide-type-Event .slide-title {
+    font-size: 3.4em;
+  }
 }
 
 $image-dir: '../../../../public/';
