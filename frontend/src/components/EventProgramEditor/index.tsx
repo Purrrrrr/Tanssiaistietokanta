@@ -165,7 +165,7 @@ const ProgramItemEditor = React.memo(function ProgramItemEditor({dragHandle, pat
       {dragHandle}
       <InheritedSlideStyleSelector path={`${itemPath}.slideStyleId`} text={t`fields.style`} />
       <MoveItemToSectionSelector itemPath={itemPath} />
-      <RemoveItemButton path={path} index={itemIndex} title={t`remove`} icon="cross" className="deleteItem" />
+      <RemoveItemButton path={path} index={itemIndex} title={t`buttons.remove`} icon="cross" className="deleteItem" />
     </td>
   </React.Fragment>
 })
