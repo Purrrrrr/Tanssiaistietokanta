@@ -13,5 +13,4 @@ export const {
   useValueAt,
   useOnChangeFor,
   useAppendToList,
-  useMoveItemInList,
 } = formFor<EventProgramSettings>()

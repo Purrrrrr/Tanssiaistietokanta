@@ -27,7 +27,7 @@ export function switchFor<T, V>({isChecked, toValue}: SwitchForProps<V>) {
       ...dataProps
     } as SwitchProps
 
-    return <FieldContainer {...containerProps} labelStyle="hidden">
+    return <FieldContainer {...containerProps} labelStyle="hidden-nowrapper">
       <Switch {...allProps}  />
     </FieldContainer>
   }
@@ -35,7 +35,7 @@ export function switchFor<T, V>({isChecked, toValue}: SwitchForProps<V>) {
 
 export type SwitchFieldProps<T> = Omit<FieldPropsWithoutComponent<T, boolean>, 'labelStyle'>
 export function SwitchField<T>({label, ...props} : SwitchFieldProps<T>) {
-  return <Field<T, boolean, SwitchProps> {...props} label={label} labelStyle="hidden" component={Switch} componentProps={{label}} />
+  return <Field<T, boolean, SwitchProps> {...props} label={label} labelStyle="hidden-nowrapper" component={Switch} componentProps={{label}} />
 }
 
 export interface InputFieldProps<T> extends FieldPropsWithoutComponent<T, string> {

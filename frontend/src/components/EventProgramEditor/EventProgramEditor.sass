@@ -25,10 +25,10 @@ $borderColor: rgba(16, 22, 26, 0.15)
       @media only screen and (max-width: 350px)
         & > h2
           flex-basis: 100%
-      :not(h2):first-of-type
+      & > :not(h2):first-of-type
         margin-left: auto
 
-    table
+    table.programList
       background: white
       width: 100%
       border-top: 1px solid $borderColor
@@ -38,18 +38,33 @@ $borderColor: rgba(16, 22, 26, 0.15)
           border-top: 1px solid $borderColor
         td
           border-left: 1px solid $borderColor
+
+        .bp4-switch
+          margin-left: 1em
       
 
       tr
+        td:nth-child(2), td:nth-child(4)
+          padding: 0
+        th:nth-child(1),td:nth-child(1)
+          white-space: nowrap
+        th:nth-child(1),td:nth-child(1),
+        th:nth-child(3),td:nth-child(3),
         th:nth-child(4),td:nth-child(4)
-          width: 36ch
+          width: 1%
         td:nth-child(4)
           white-space: nowrap
-          padding: 2px
           text-align: right
 
           div
             display: inline-block
+      tr.intervalMusicDuration
+        td:nth-child(3)
+          padding: 0
+
+  .eventProgramItemEditor
+    :first-child
+      flex-grow: 1
 
   .bp4-form-group
     margin-bottom: 5px
@@ -68,6 +83,11 @@ $borderColor: rgba(16, 22, 26, 0.15)
     margin: 1em 0
 
 
+.eventProgramItemPopover
+  min-width: min(600px, 80vw)
+  padding: 1em
+
+/*
 @media only screen and (max-width: 800px)
   .eventProgramEditor
     table
@@ -84,34 +104,35 @@ $borderColor: rgba(16, 22, 26, 0.15)
       border-left: none
       box-shadow: none !important
 
-  tr.eventProgramItem
-    display: grid
-    grid-template: "type duration actions" min-content "editor editor editor" auto / 1fr 1fr min-content
+  table.programList
+    tr
+      display: grid
+      grid-template: "type duration actions" min-content "editor editor editor" auto / 1fr 1fr min-content
 
-    :nth-child(1)
-      grid-area: type
-    :nth-child(2)
-      grid-area: editor
-    :nth-child(3)
-      grid-area: duration
-    :nth-child(4)
-      grid-area: actions
+      :nth-child(1)
+        grid-area: type
+      :nth-child(2)
+        grid-area: editor
+      :nth-child(3)
+        grid-area: duration
+      :nth-child(4)
+        grid-area: actions
 
-    th:nth-child(2)
-      display: none
-    
-    td
-      padding-top: 4px
-    td:nth-child(1)
-      padding-left: 10px
-    td:nth-child(2)
-      padding: 0 10px 10px 10px
-    td:last-child
-      padding-right: 10px
-  tr.eventProgramFooter
-    display: flex
-    td
-      flex: 1 1 auto
-    br
-      display: none
-
+      th:nth-child(2)
+        display: none
+      
+      td
+        padding-top: 4px
+      td:nth-child(1)
+        padding-left: 10px
+      td:nth-child(2)
+        padding: 0 10px 10px 10px
+      td:last-child
+        padding-right: 10px
+    tr.eventProgramFooter
+      display: flex
+      td
+        flex: 1 1 auto
+      br
+        display: none
+        */ 

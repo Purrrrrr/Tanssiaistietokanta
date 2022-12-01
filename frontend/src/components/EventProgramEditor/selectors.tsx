@@ -31,26 +31,6 @@ export const DanceProgramChooser = React.memo(function DanceProgramChooser({valu
   />
 })
 
-export function MoveDanceSetSelector({currentSet, onSelect}) {
-  const danceSets = useValueAt('danceSets')
-  if (danceSets.length < 2) return null
-
-  const currentIndex = danceSets.indexOf(currentSet)
-  const items = danceSets.map((d, index) => ({
-    name: index < currentIndex
-      ? t('fields.moveDanceSet.beforeSet', {name: d.title})
-      : t('fields.moveDanceSet.afterSet', {name: d.title})
-    ,
-    index
-  })).filter(({index}) => index !== currentIndex)
-  return <Selector<{name: string, index: number}>
-    items={items}
-    getItemText={(section) => section.name}
-    onSelect={onSelect}
-    text={t`fields.moveDanceSet.moveDanceSet`}
-  />
-}
-
 export function MoveItemToSectionSelector({itemPath} : { itemPath: ProgramItemPath}) {
   const [open, setOpen] = useState(false)
   return <MenuButton
@@ -79,7 +59,7 @@ function MoveItemToSectionMenu(
   const onChangeProgram = useOnChangeFor('')
 
   const canMoveToIntroductions = currentSectionType === 'danceSets' && row?.item?.__typename === 'EventProgram'
-  const introSection : SectionSelection = {name: t`introductoryInformation`, isIntroductionsSection: true, index: 0}
+  const introSection : SectionSelection = {name: t`titles.introductoryInformation`, isIntroductionsSection: true, index: 0}
   const sections = useValueAt('danceSets')
     .map(({title}, index) => ({name: title, index}))
     .filter(({index}) => currentSectionType !== 'danceSets' || index !== maybeDanceSetIndex)

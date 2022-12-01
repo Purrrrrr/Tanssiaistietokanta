@@ -7,11 +7,6 @@ export default makeTranslate({
       description: 'Ohjelman kuvaus',
       showInLists: 'Näytä ohjelma tanssilistoissa',
     },
-    moveDanceSet: {
-      moveDanceSet: 'Siirrä',
-      afterSet: 'Setin "%(name)s" jälkeen',
-      beforeSet: 'Ennen settiä "%(name)s"',
-    },
     danceSetName: 'Tanssisetin nimi',
     eventDefaultStyle: 'Ohjelman oletustyyli',
     intervalMusicAtEndOfSet: 'Taukomusiikki setin lopussa',
@@ -30,6 +25,7 @@ export default makeTranslate({
     cancel: 'Peruuta',
     removeDanceSet: 'Poista setti',
     remove: 'Poista',
+    editProgram: 'Ohjelman tiedot',
     save: 'Tallenna muutokset',
   },
   columnTitles: {
