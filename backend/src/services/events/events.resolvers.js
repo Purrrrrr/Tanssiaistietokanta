@@ -15,7 +15,7 @@ module.exports = (app) => {
       workshops: (obj) => getWorkshops(obj._id),
       program: (event) => {
         const { program } = event
-        if (!program.introductions.title) return L.set(['introductions', 'title'], event.title, program)
+        if (!program.introductions.title) return L.set(['introductions', 'title'], event.name, program)
         return program
       },
     },
