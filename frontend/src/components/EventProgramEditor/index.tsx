@@ -1,6 +1,6 @@
-import React, {useState} from 'react'
+import React, {useRef, useState} from 'react'
 
-import {ActionButton as Button, ClickToEdit, formFor, MarkdownEditor, MenuButton, SubmitButton} from 'libraries/forms'
+import {ActionButton as Button, ClickToEdit, MarkdownEditor, MenuButton, SubmitButton} from 'libraries/forms'
 import {Card, CssClass, HTMLTable} from 'libraries/ui'
 import {Flex} from 'components/Flex'
 import {Duration} from 'components/widgets/Duration'
@@ -96,44 +96,48 @@ function ProgramListEditor({path}: {path: ProgramSectionPath}) {
     : (programRow as DanceSet).intervalMusicDuration
   const programPath = `${path}.program` as const
   const onAddItem = useAppendToList(programPath)
+  const accessibilityContainer = useRef<HTMLDivElement>(null)
 
-  return <HTMLTable condensed bordered striped className="programList">
-    {program.length === 0 ||
-        <thead>
-          <tr>
-            <t.th>columnTitles.type</t.th><t.th>columnTitles.name</t.th><t.th>columnTitles.duration</t.th><t.th>columnTitles.actions</t.th>
-          </tr>
-        </thead>
-    }
-    <tbody>
-      <ListField labelStyle="hidden-nowrapper" label="" isTable path={programPath} component={ProgramItemEditor} />
-      {program.length === 0 &&
-          <tr>
-            <t.td className={CssClass.textMuted+ ' noProgram'} colSpan="5">programListIsEmpty</t.td>
-          </tr>
+  return <>
+    <div ref={accessibilityContainer} />
+    <HTMLTable condensed bordered striped className="programList">
+      {program.length === 0 ||
+          <thead>
+            <tr>
+              <t.th>columnTitles.type</t.th><t.th>columnTitles.name</t.th><t.th>columnTitles.duration</t.th><t.th>columnTitles.actions</t.th>
+            </tr>
+          </thead>
       }
-      {intervalMusicDuration > 0 && <IntervalMusicEditor danceSetPath={path as DanceSetPath} />}
-    </tbody>
-    <tfoot>
-      <tr className="eventProgramFooter">
-        <td colSpan={2}>
-          {isIntroductionsSection ||
-            <Button text={t`buttons.addDance`} onClick={() => onAddItem({item: {__typename: 'RequestedDance'}, _id: guid()})} className="addDance" />
-          }
-          {isIntroductionsSection
-            ? <AddIntroductionButton />
-            : <Button text={t`buttons.addInfo`} onClick={() => onAddItem(newEventProgramItem())} className="addInfo" />
-          }
-          {isIntroductionsSection ||
-            <IntervalMusicSwitch inline label={t`fields.intervalMusicAtEndOfSet`} path={`${path}.intervalMusicDuration` as `danceSets.${number}.intervalMusicDuration`} />
-          }
-        </td>
-        <td colSpan={2}>
-          <DanceSetDuration program={program} intervalMusicDuration={intervalMusicDuration} />
-        </td>
-      </tr>
-    </tfoot>
-  </HTMLTable>
+      <tbody>
+        <ListField labelStyle="hidden-nowrapper" label="" isTable path={programPath} component={ProgramItemEditor} accessibilityContainer={accessibilityContainer.current ?? undefined} />
+        {program.length === 0 &&
+            <tr>
+              <t.td className={CssClass.textMuted+ ' noProgram'} colSpan="5">programListIsEmpty</t.td>
+            </tr>
+        }
+        {intervalMusicDuration > 0 && <IntervalMusicEditor danceSetPath={path as DanceSetPath} />}
+      </tbody>
+      <tfoot>
+        <tr className="eventProgramFooter">
+          <td colSpan={2}>
+            {isIntroductionsSection ||
+              <Button text={t`buttons.addDance`} onClick={() => onAddItem({item: {__typename: 'RequestedDance'}, _id: guid()})} className="addDance" />
+            }
+            {isIntroductionsSection
+              ? <AddIntroductionButton />
+              : <Button text={t`buttons.addInfo`} onClick={() => onAddItem(newEventProgramItem())} className="addInfo" />
+            }
+            {isIntroductionsSection ||
+              <IntervalMusicSwitch inline label={t`fields.intervalMusicAtEndOfSet`} path={`${path}.intervalMusicDuration` as `danceSets.${number}.intervalMusicDuration`} />
+            }
+          </td>
+          <td colSpan={2}>
+            <DanceSetDuration program={program} intervalMusicDuration={intervalMusicDuration} />
+          </td>
+        </tr>
+      </tfoot>
+    </HTMLTable>
+  </>
 }
 
 interface ProgramItemEditorProps {

@@ -32,14 +32,16 @@ export interface UntypedListFieldProps<T, ValuePath, V extends Entity> extends O
 
 export interface ListFieldProps<T, V extends Entity> extends FieldPropsWithoutComponent<T, V[]> {
   isTable?: boolean
+  accessibilityContainer?: Element | undefined
   component: ListItemComponent<T, V>
 }
-export function ListField<T, V extends Entity>({component, isTable, ...props} : ListFieldProps<T, V>) {
-  return <Field<T, V[], ListEditorProps<T, V>> {...props} component={ListEditor} componentProps={{path: props.path, component, isTable}} />
+export function ListField<T, V extends Entity>({accessibilityContainer, component, isTable, ...props} : ListFieldProps<T, V>) {
+  return <Field<T, V[], ListEditorProps<T, V>> {...props} component={ListEditor} componentProps={{path: props.path, accessibilityContainer, component, isTable}} />
 }
 
 interface ListEditorProps<T, V extends Entity> extends FieldComponentProps<V[]> {
   isTable?: boolean
+  accessibilityContainer?: Element | undefined
   path: TypedStringPath<V[], T>
   component: ListItemComponent<T, V>
 }
@@ -50,7 +52,7 @@ type ListItemComponent<T, V> = React.ComponentType<{
   dragHandle: React.ReactNode
 }>
 
-export function ListEditor<T, V extends Entity>({value, onChange, path, component: Component, hasConflict, inline, readOnly, isTable}: ListEditorProps<T, V>) {
+export function ListEditor<T, V extends Entity>({value, onChange, path, component: Component, hasConflict, inline, readOnly, isTable, accessibilityContainer}: ListEditorProps<T, V>) {
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, useMemo(() => ({
@@ -82,6 +84,7 @@ export function ListEditor<T, V extends Entity>({value, onChange, path, componen
 
   return (
     <DndContext
+      accessibility={{container: accessibilityContainer}}
       sensors={sensors}
       collisionDetection={closestCenter}
       onDragEnd={handleDragEnd}
