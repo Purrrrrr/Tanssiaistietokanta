@@ -133,7 +133,7 @@ export function SortableItem<T, V>({id, path, itemIndex, component: Component, i
 
   const Wrapper = isTable ? 'tr' : 'div'
   const dragHandle = useMemo(
-    () => <button type="button" className="bp4-button" ref={setActivatorNodeRef} {...listeners}><Icon icon="move" /></button>,
+    () => <button type="button" className="bp4-button" ref={setActivatorNodeRef} style={{touchAction: 'none'}} {...listeners}><Icon icon="move" /></button>,
     [listeners, setActivatorNodeRef]
   )
 
