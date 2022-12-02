@@ -1,7 +1,7 @@
 import React, {useRef, useState} from 'react'
 
 import {ActionButton as Button, ClickToEdit, MarkdownEditor, MenuButton, SubmitButton} from 'libraries/forms'
-import {Card, CssClass, HTMLTable, Icon, IconName} from 'libraries/ui'
+import {Card, CssClass, HTMLTable} from 'libraries/ui'
 import {Flex} from 'components/Flex'
 import {Duration} from 'components/widgets/Duration'
 import {DurationField} from 'components/widgets/DurationField'
@@ -9,9 +9,9 @@ import {NavigateButton} from 'components/widgets/NavigateButton'
 import {SlideStyleSelector} from 'components/widgets/SlideStyleSelector'
 import {guid} from 'utils/guid'
 
-import {DanceProgramPath, DanceSet, DanceSetPath, EventProgramItem, EventProgramSettings, ProgramItemPath, ProgramSectionPath} from './types'
+import {DanceProgramPath, DanceSet, DanceSetPath, EventProgramSettings, ProgramItemPath, ProgramSectionPath} from './types'
 
-import {AddDanceSetButton, AddIntroductionButton, IntervalMusicSwitch, newEventProgramItem} from './controls'
+import {AddDanceSetButton, AddIntroductionButton, IntervalMusicSwitch, newEventProgramItem, ProgramTypeIcon} from './controls'
 import {
   Field,
   Form,
@@ -120,19 +120,28 @@ function ProgramListEditor({path}: {path: ProgramSectionPath}) {
       </tbody>
       <tfoot>
         <tr className="eventProgramFooter">
-          <td colSpan={2}>
+          <td colSpan={2} className="add-spacing">
             {isIntroductionsSection ||
-              <Button text={t`buttons.addDance`} onClick={() => onAddItem({item: {__typename: 'RequestedDance'}, _id: guid()})} className="addDance" />
+              <Button
+                text={t`buttons.addDance`}
+                rightIcon={<ProgramTypeIcon type="Dance" />}
+                onClick={() => onAddItem({item: {__typename: 'RequestedDance'}, _id: guid()})}
+                className="addDance" />
             }
             {isIntroductionsSection
               ? <AddIntroductionButton />
-              : <Button text={t`buttons.addInfo`} onClick={() => onAddItem(newEventProgramItem())} className="addInfo" />
+              : <Button
+                text={t`buttons.addInfo`}
+                rightIcon={<ProgramTypeIcon type="EventProgram" />}
+                onClick={() => onAddItem(newEventProgramItem())}
+                className="addInfo"
+              />
             }
             {isIntroductionsSection ||
               <IntervalMusicSwitch inline label={t`fields.intervalMusicAtEndOfSet`} path={`${path}.intervalMusicDuration` as `danceSets.${number}.intervalMusicDuration`} />
             }
           </td>
-          <td colSpan={2}>
+          <td colSpan={2} className="add-spacing">
             <DanceSetDuration program={program} intervalMusicDuration={intervalMusicDuration} />
           </td>
         </tr>
@@ -163,7 +172,7 @@ const ProgramItemEditor = React.memo(function ProgramItemEditor({dragHandle, pat
         <ProgramDetailsEditor path={itemPath} />
       </Flex>
     </td>
-    <td>
+    <td className="add-spacing">
       <Duration value={__typename !== 'RequestedDance' ? item.item.duration : 0} />
     </td>
     <td>
@@ -174,19 +183,6 @@ const ProgramItemEditor = React.memo(function ProgramItemEditor({dragHandle, pat
     </td>
   </React.Fragment>
 })
-
-type ProgramType = EventProgramItem['__typename'] | 'IntervalMusic'
-
-function ProgramTypeIcon({type}: {type: ProgramType}) {
-  const icons: Record<ProgramType, IconName> = {
-    Dance: 'music',
-    RequestedDance: 'music',
-    EventProgram: 'info-sign',
-    IntervalMusic: 'time',
-  }
-
-  return <Icon className={`programType programType-${type}`} icon={icons[type]} title={t(`programTypes.${type}`)} />
-}
 
 function ProgramDetailsEditor({path}: {path: ProgramItemPath}) {
   const __typename = useValueAt(`${path}.item.__typename`)

@@ -5,9 +5,31 @@ $borderColor: rgba(16, 22, 26, 0.15)
   .main-toolbar
     display: flex
     flex-wrap: wrap
+    align-items: start
+
+    .bp4-form-group
+      margin-bottom: 5px
 
     #introductions--titleSlideStyleId--formgroup
       margin-right: auto
+
+  .programType
+    display: inline-flex
+    align-items: center
+    justify-content: center
+
+    &.programType-Dance
+      color: #cd6266
+    &.programType-RequestedDance
+      color: gray
+    &.programType-EventProgram
+      color: #4d92c2
+    &.programType-IntervalMusic
+      color: #c2a222
+
+  td > .programType
+      width: 28px
+      height: 28px
 
   .danceset
     padding: 10px 0 0 0
@@ -41,32 +63,21 @@ $borderColor: rgba(16, 22, 26, 0.15)
 
         .bp4-switch
           margin-left: 1em
-      
-      .programType
-        display: inline-flex
-        align-items: center
-        justify-content: center
-        width: 28px
-        height: 28px
 
-        &.programType-Dance
-          color: #cd6266
-        &.programType-RequestedDance
-          color: gray
-        &.programType-EventProgram
-          color: #4d92c2
-        &.programType-IntervalMusic
-          color: #c2a222
+      td.noProgram
+        padding: 1em
+
+      td
+        padding: 0
+      td.add-spacing
+        padding: 6px
 
       tr:not(.eventProgramFooter)
-        td:not(:nth-child(3))
-          padding: 0
         th:not(:nth-child(2)),td:not(:nth-child(2))
           width: 1%
         td:nth-child(4)
           white-space: nowrap
           text-align: right
-
           div
             display: inline-block
       tr.intervalMusicDuration
@@ -78,19 +89,6 @@ $borderColor: rgba(16, 22, 26, 0.15)
   .eventProgramItemEditor > :nth-child(1)
       flex-grow: 1
 
-  .bp4-form-group
-    margin-bottom: 5px
-    &:last-child
-      margin-bottom: 0
-
-      td
-        vertical-align: top
-        line-height: 28px
-        padding-top: 3px
-        padding-bottom: 3px
-
-      td.noProgram
-        padding: 1em
   .addDanceSetButtons
     margin: 1em 0
 
@@ -98,53 +96,3 @@ $borderColor: rgba(16, 22, 26, 0.15)
 .eventProgramItemPopover
   min-width: min(600px, 80vw)
   padding: 1em
-
-/*
-@media only screen and (max-width: 800px)
-  .eventProgramEditor
-    table
-      display: block
-
-      tbody, thead
-        display: block
-
-  tr.eventProgramFooter, tr.eventProgramItem
-    box-shadow: inset 1px 1px 0 0 rgba(17, 20, 24, 0.15)
-
-    td,th
-      border: none
-      border-left: none
-      box-shadow: none !important
-
-  table.programList
-    tr
-      display: grid
-      grid-template: "type duration actions" min-content "editor editor editor" auto / 1fr 1fr min-content
-
-      :nth-child(1)
-        grid-area: type
-      :nth-child(2)
-        grid-area: editor
-      :nth-child(3)
-        grid-area: duration
-      :nth-child(4)
-        grid-area: actions
-
-      th:nth-child(2)
-        display: none
-      
-      td
-        padding-top: 4px
-      td:nth-child(1)
-        padding-left: 10px
-      td:nth-child(2)
-        padding: 0 10px 10px 10px
-      td:last-child
-        padding-right: 10px
-    tr.eventProgramFooter
-      display: flex
-      td
-        flex: 1 1 auto
-      br
-        display: none
-        */ 

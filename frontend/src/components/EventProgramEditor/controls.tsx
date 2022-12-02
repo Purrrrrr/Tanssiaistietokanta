@@ -1,9 +1,10 @@
 import React from 'react'
 
 import {ActionButton as Button} from 'libraries/forms'
+import {Icon, IconName} from 'libraries/ui'
 import {guid} from 'utils/guid'
 
-import {DanceSet, EventProgramRow} from './types'
+import {DanceSet, EventProgramItem, EventProgramRow} from './types'
 
 import { switchFor, useAppendToList } from './form'
 import t from './translations'
@@ -15,7 +16,12 @@ export function AddIntroductionButton() {
   function addIntroductoryInfo() {
     addIntroduction(newEventProgramItem)
   }
-  return <Button text={t`buttons.addIntroductoryInfo`} onClick={addIntroductoryInfo} className="addIntroductoryInfo" />
+  return <Button
+    text={t`buttons.addIntroductoryInfo`}
+    rightIcon={<ProgramTypeIcon type="EventProgram" />}
+    onClick={addIntroductoryInfo}
+    className="addIntroductoryInfo"
+  />
 }
 
 export function newEventProgramItem(): EventProgramRow {
@@ -30,7 +36,11 @@ export function AddDanceSetButton() {
   function addDanceSet() {
     onAddDanceSet(newDanceSet)
   }
-  return <Button text={t`buttons.addDanceSet`} onClick={addDanceSet} className="addDanceSet" />
+  return <Button
+    text={t`buttons.addDanceSet`}
+    rightIcon={<ProgramTypeIcon type="Dance" />}
+    onClick={addDanceSet} className="addDanceSet"
+  />
 }
 
 function newDanceSet(danceSets: DanceSet[]): DanceSet {
@@ -48,3 +58,16 @@ export const IntervalMusicSwitch = switchFor<number>({
   isChecked: num => (num ?? 0) > 0,
   toValue: checked => checked ? DEFAULT_INTERVAL_MUSIC_DURATION : 0,
 })
+
+type ProgramType = EventProgramItem['__typename'] | 'IntervalMusic'
+
+export function ProgramTypeIcon({type}: {type: ProgramType}) {
+  const icons: Record<ProgramType, IconName> = {
+    Dance: 'music',
+    RequestedDance: 'music',
+    EventProgram: 'info-sign',
+    IntervalMusic: 'time',
+  }
+
+  return <Icon className={`programType programType-${type}`} icon={icons[type]} title={t(`programTypes.${type}`)} />
+}
