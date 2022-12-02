@@ -42,15 +42,26 @@ $borderColor: rgba(16, 22, 26, 0.15)
         .bp4-switch
           margin-left: 1em
       
+      .programType
+        display: inline-flex
+        align-items: center
+        justify-content: center
+        width: 28px
+        height: 28px
 
-      tr
-        td:nth-child(2), td:nth-child(4)
+        &.programType-Dance
+          color: #cd6266
+        &.programType-RequestedDance
+          color: gray
+        &.programType-EventProgram
+          color: #4d92c2
+        &.programType-IntervalMusic
+          color: #c2a222
+
+      tr:not(.eventProgramFooter)
+        td:not(:nth-child(3))
           padding: 0
-        th:nth-child(1),td:nth-child(1)
-          white-space: nowrap
-        th:nth-child(1),td:nth-child(1),
-        th:nth-child(3),td:nth-child(3),
-        th:nth-child(4),td:nth-child(4)
+        th:not(:nth-child(2)),td:not(:nth-child(2))
           width: 1%
         td:nth-child(4)
           white-space: nowrap
@@ -59,11 +70,12 @@ $borderColor: rgba(16, 22, 26, 0.15)
           div
             display: inline-block
       tr.intervalMusicDuration
+        td:nth-child(2)
+          padding: 6px
         td:nth-child(3)
           padding: 0
 
-  .eventProgramItemEditor
-    :first-child
+  .eventProgramItemEditor > :nth-child(1)
       flex-grow: 1
 
   .bp4-form-group

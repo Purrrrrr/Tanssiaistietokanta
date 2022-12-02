@@ -32,6 +32,7 @@ export type IconName = BlueprintIconName
 
 interface IconProps {
   className?: string
+  title?: string
   icon: IconName
   color?: string
   iconSize?: number

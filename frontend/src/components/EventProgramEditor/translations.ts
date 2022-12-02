@@ -29,7 +29,6 @@ export default makeTranslate({
     save: 'Tallenna muutokset',
   },
   columnTitles: {
-    type: 'Tyyppi',
     name: 'Nimi',
     actions: 'Toiminnot',
     duration: 'Kesto',
@@ -45,7 +44,7 @@ export default makeTranslate({
     Dance: 'Tanssi',
     RequestedDance: 'Toivetanssi',
     EventProgram: 'Muu ohjelma',
-    intervalMusic: 'Taukomusiikki',
+    IntervalMusic: 'Taukomusiikki',
   },
   duration: {
     pausesIncluded: '(taukoineen)',

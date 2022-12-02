@@ -1,7 +1,7 @@
 import React, {useRef, useState} from 'react'
 
 import {ActionButton as Button, ClickToEdit, MarkdownEditor, MenuButton, SubmitButton} from 'libraries/forms'
-import {Card, CssClass, HTMLTable} from 'libraries/ui'
+import {Card, CssClass, HTMLTable, Icon, IconName} from 'libraries/ui'
 import {Flex} from 'components/Flex'
 import {Duration} from 'components/widgets/Duration'
 import {DurationField} from 'components/widgets/DurationField'
@@ -9,7 +9,7 @@ import {NavigateButton} from 'components/widgets/NavigateButton'
 import {SlideStyleSelector} from 'components/widgets/SlideStyleSelector'
 import {guid} from 'utils/guid'
 
-import {DanceProgramPath, DanceSet, DanceSetPath, EventProgramSettings, ProgramItemPath, ProgramSectionPath} from './types'
+import {DanceProgramPath, DanceSet, DanceSetPath, EventProgramItem, EventProgramSettings, ProgramItemPath, ProgramSectionPath} from './types'
 
 import {AddDanceSetButton, AddIntroductionButton, IntervalMusicSwitch, newEventProgramItem} from './controls'
 import {
@@ -100,11 +100,12 @@ function ProgramListEditor({path}: {path: ProgramSectionPath}) {
 
   return <>
     <div ref={accessibilityContainer} />
-    <HTMLTable condensed bordered striped className="programList">
+    <HTMLTable condensed bordered className="programList">
       {program.length === 0 ||
           <thead>
             <tr>
-              <t.th>columnTitles.type</t.th><t.th>columnTitles.name</t.th><t.th>columnTitles.duration</t.th><t.th>columnTitles.actions</t.th>
+              <th/>
+              <t.th>columnTitles.name</t.th><t.th>columnTitles.duration</t.th><t.th>columnTitles.actions</t.th>
             </tr>
           </thead>
       }
@@ -154,9 +155,13 @@ const ProgramItemEditor = React.memo(function ProgramItemEditor({dragHandle, pat
   const {__typename } = item.item
 
   return <React.Fragment>
-    <td>{t(`programTypes.${__typename}`)}</td>
     <td>
-      <ProgramDetailsEditor path={itemPath} />
+      <ProgramTypeIcon type={__typename} />
+    </td>
+    <td>
+      <Flex className="eventProgramItemEditor">
+        <ProgramDetailsEditor path={itemPath} />
+      </Flex>
     </td>
     <td>
       <Duration value={__typename !== 'RequestedDance' ? item.item.duration : 0} />
@@ -169,6 +174,19 @@ const ProgramItemEditor = React.memo(function ProgramItemEditor({dragHandle, pat
     </td>
   </React.Fragment>
 })
+
+type ProgramType = EventProgramItem['__typename'] | 'IntervalMusic'
+
+function ProgramTypeIcon({type}: {type: ProgramType}) {
+  const icons: Record<ProgramType, IconName> = {
+    Dance: 'music',
+    RequestedDance: 'music',
+    EventProgram: 'info-sign',
+    IntervalMusic: 'time',
+  }
+
+  return <Icon className={`programType programType-${type}`} icon={icons[type]} title={t(`programTypes.${type}`)} />
+}
 
 function ProgramDetailsEditor({path}: {path: ProgramItemPath}) {
   const __typename = useValueAt(`${path}.item.__typename`)
@@ -207,9 +225,9 @@ function IntervalMusicEditor({danceSetPath}: {danceSetPath: DanceSetPath}) {
   const durationPath = `${danceSetPath}.intervalMusicDuration` as const
   const onSetIntervalMusicDuration = useOnChangeFor(durationPath)
 
-  return <tr className="eventProgramItem intervalMusicDuration">
-    <td>{t`programTypes.intervalMusic`}</td>
-    <td />
+  return <tr className="eventProgramItemEditor intervalMusicDuration">
+    <td><ProgramTypeIcon type="IntervalMusic" /></td>
+    <td>{t`programTypes.IntervalMusic`}</td>
     <td>
       <Field label={t`fields.intervalMusicDuration`} inline labelStyle="hidden" path={durationPath} component={DurationField} />
     </td>
