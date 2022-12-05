@@ -39,7 +39,8 @@ export function AddDanceSetButton() {
   return <Button
     text={t`buttons.addDanceSet`}
     rightIcon={<ProgramTypeIcon type="Dance" />}
-    onClick={addDanceSet} className="addDanceSet"
+    onClick={addDanceSet}
+    className="addDanceSet"
   />
 }
 
