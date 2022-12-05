@@ -6,6 +6,8 @@ import { ButtonProps, MenuItem, SearchBar } from 'libraries/ui'
 
 import { ActionButton } from '../formControls'
 
+import  './Selector.scss'
+
 interface SelectorProps<T> extends SelectorMenuProps<T> {
   text: string
   buttonProps?: Omit<ButtonProps, 'text'>
@@ -56,6 +58,17 @@ export function MenuButton({text, buttonProps, menu, open, onSetOpen} : MenuButt
 }
 
 function onSelectOpen(e: HTMLElement) {
+  e.scrollIntoView({behavior: 'smooth', block: 'nearest', inline: 'nearest'})
+
+  const menu = e.querySelector('.bp4-menu') as HTMLElement | null
+  const selected = e.querySelector('[aria-selected="true"]') as HTMLElement | null
+
+  if (menu && selected) {
+    if (selected.offsetTop + selected.offsetHeight > menu.offsetHeight) {
+      menu.scrollTop = selected.offsetTop
+    }
+  }
+
   const itemList = e.querySelector('.selector-item-list > input, .selector-item-list') as HTMLElement
   const input = itemList?.querySelector?.('input');
   (input ?? itemList)?.focus()
