@@ -1,0 +1,12 @@
+.workshopEditor {
+  .sync_status {
+    float: right;
+  }
+  & > .flex {
+    clear: right;
+  }
+
+  .danceItem > :first-child {
+    flex-grow: 1;
+  }
+}

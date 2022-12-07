@@ -11,6 +11,8 @@ import {makeTranslate} from 'utils/translate'
 
 import {Workshop} from 'types'
 
+import './WorkshopEditor.scss'
+
 const t = makeTranslate({
   dances: 'Tanssit',
   addDance: 'Lisää tanssi: ',
@@ -58,16 +60,21 @@ export function WorkshopEditor({workshop: workshopInDatabase}: WorkshopEditorPro
 
   const {eventId, dances} = workshop
 
-  return <Form className={CssClass.limitedWidth} value={workshop} onChange={setWorkshop}>
+  return <Form className="workshopEditor" value={workshop} onChange={setWorkshop}>
     <SyncStatus state={state} />
-    <Field path="name" required component={Input} label={t`name`} labelInfo={t`required`} />
-    <AbbreviationField path="abbreviation" label={t`abbreviation`} workshopId={workshop._id} eventId={eventId} />
-    <Field path="description" component={TextArea} label={t`description`} />
-    <Field path="teachers" component={Input} label={t`teachers`}/>
-    <t.h2>dances</t.h2>
-    <ListField label={t`dances`} path="dances" component={DanceListItem} />
-    {dances.length === 0 && <t.p className={CssClass.textMuted}>noDances</t.p>}
-    <AddDanceChooser />
+    <Flex spaced wrap>
+      <div style={{flexGrow: 1, flexBasis: 300, maxWidth: '50ch'}}>
+        <Field path="name" required component={Input} label={t`name`} labelInfo={t`required`} />
+        <AbbreviationField path="abbreviation" label={t`abbreviation`} workshopId={workshop._id} eventId={eventId} />
+        <Field path="description" component={TextArea} label={t`description`} />
+        <Field path="teachers" component={Input} label={t`teachers`}/>
+      </div>
+      <div style={{flexGrow: 1, flexBasis: 300}}>
+        <ListField label={t`dances`} path="dances" component={DanceListItem} />
+        {dances.length === 0 && <t.p className={CssClass.textMuted}>noDances</t.p>}
+        <AddDanceChooser />
+      </div>
+    </Flex>
   </Form>
 }
 
@@ -112,7 +119,7 @@ function useTakenWorkshopAbbreviations(eventId, workshopId) {
 
 function DanceListItem({itemIndex, path, dragHandle}) {
   const excludeFromSearch = useValueAt('dances')
-  return <Flex>
+  return <Flex className="danceItem">
     <Field label={t`Dance`} labelStyle="hidden" path={`dances.${itemIndex}`} component={DanceChooser} componentProps={{excludeFromSearch}} />
     {dragHandle}
     <RemoveItemButton path="dances" index={itemIndex} text="X" />
