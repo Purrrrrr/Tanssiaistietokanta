@@ -14,7 +14,6 @@ import EventProgramPage from 'pages/events/EventProgramPage'
 import DanceCheatList from 'pages/events/print/DanceCheatList'
 import DanceInstructions from 'pages/events/print/DanceInstructions'
 import DanceList from 'pages/events/print/DanceList'
-import EditWorkshopForm from 'pages/events/workshops/EditWorkshop'
 
 export default function MainRoutes() {
   return <>
@@ -40,7 +39,6 @@ function EventRoutes() {
       <Route index element={<EventPage event={event}/>} />
       <Route path="program" element={<EventProgramPage event={event}/>} />
       <Route path="ball-program/*" element={<BallProgram eventId={eventId}/>} />
-      <Route path="workshops/:workshopId" element={<EditWorkshopForm />} />
       <Route path="print/*" element={<EventPrintRoutes />} />
     </Routes>
   </>

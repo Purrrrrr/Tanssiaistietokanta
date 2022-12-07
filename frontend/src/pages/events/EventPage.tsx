@@ -1,13 +1,13 @@
-import React from 'react'
-import {Link} from 'react-router-dom'
+import React, {useState} from 'react'
 
 import {AdminOnly} from 'services/users'
 import {useCreateWorkshop, useDeleteWorkshop} from 'services/workshops'
 
-import {Button, Card} from 'libraries/ui'
+import {Button, Card, Collapse} from 'libraries/ui'
 import {PageTitle} from 'components/PageTitle'
 import {DeleteButton} from 'components/widgets/DeleteButton'
 import {NavigateButton} from 'components/widgets/NavigateButton'
+import {WorkshopEditor} from 'components/WorkshopEditor'
 import {makeTranslate} from 'utils/translate'
 
 const t = makeTranslate({
@@ -79,7 +79,7 @@ const isRequestedDance = row => row.item.__typename === 'RequestedDance'
 function EventWorkshops({workshops, eventId}) {
   return <>
     {workshops.map(workshop =>
-      <WorkshopLink workshop={workshop} key={workshop._id} />
+      <WorkshopCard workshop={workshop} key={workshop._id} />
     )}
     <CreateWorkshopButton eventId={eventId} />
     <NavigateButton href="print/dance-cheatlist" target="_blank"
@@ -101,7 +101,8 @@ function CreateWorkshopButton({eventId}) {
   </AdminOnly>
 }
 
-function WorkshopLink({workshop}) {
+function WorkshopCard({workshop}) {
+  const [showEditor, setShowEditor] = useState(false)
   const [deleteWorkshop] = useDeleteWorkshop({refetchQueries: ['getEvent']})
   const {_id, abbreviation, name, description, dances} = workshop
 
@@ -110,14 +111,24 @@ function WorkshopLink({workshop}) {
       style={{float: 'right'}} text="Poista"
       confirmText={'Haluatko varmasti poistaa työpajan '+name+'?'}
     />
-    <Link to={'workshops/'+workshop._id} ><h2>
+    <Button
+      onClick={() => setShowEditor(!showEditor)}
+      intent="primary"
+      style={{float: 'right'}} text="Muokkaa"
+    />
+    <h2>
       {name}
       {abbreviation &&
             <> ({abbreviation})</>
       }
-    </h2></Link>
-    <p>{description}</p>
-    {t`dances` + ': '}
-    {dances.map(d => d.name).join(', ')}
+    </h2>
+    {showEditor || <>
+      <p>{description}</p>
+      {t`dances` + ': '}
+      {dances.map(d => d.name).join(', ')}
+    </>}
+    <Collapse isOpen={showEditor}>
+      <WorkshopEditor workshop={workshop} />
+    </Collapse>
   </Card>
 }
