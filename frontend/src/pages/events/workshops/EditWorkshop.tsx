@@ -1,20 +1,15 @@
 import React  from 'react'
-import {useNavigate, useParams} from 'react-router-dom'
+import {useParams} from 'react-router-dom'
 
 import {AdminOnly} from 'services/users'
-import {useModifyWorkshop, useWorkshop } from 'services/workshops'
+import {useWorkshop } from 'services/workshops'
 
 import {Breadcrumb} from 'libraries/ui'
 import {LoadingState} from 'components/LoadingState'
 import {PageTitle} from 'components/PageTitle'
 import {WorkshopEditor} from 'components/WorkshopEditor'
-import {makeTranslate} from 'utils/translate'
 
 import {Workshop} from 'types'
-
-const t = makeTranslate({
-  save: 'Tallenna',
-})
 
 export default function EditWorkshopPage() {
   const {workshopId} = useParams<'workshopId'>()
@@ -31,14 +26,8 @@ export default function EditWorkshopPage() {
 
 
 function WorkshopForm({workshop}: {workshop: Workshop}) {
-  const navigate = useNavigate()
-  const [modifyWorkshop] = useModifyWorkshop({
-    onCompleted: () => navigate('/events/'+workshop.eventId),
-    refetchQueries: ['getEvent']
-  })
-
   return <>
     <PageTitle>{workshop.name}</PageTitle>
-    <WorkshopEditor workshop={workshop} onSubmit={(data) => modifyWorkshop({id: workshop._id, workshop: data})} submitText={t`save`} />
+    <WorkshopEditor workshop={workshop} />
   </>
 }

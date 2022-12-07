@@ -1,16 +1,17 @@
-import React, {useState} from 'react'
+import React from 'react'
 import * as L from 'partial.lenses'
 
 import {backendQueryHook, graphql} from 'backend'
+import {useModifyWorkshop} from 'services/workshops'
 
-import {formFor, Input, SubmitButton, TextArea} from 'libraries/forms'
+import {formFor, Input, patchStrategy, SyncStatus, TextArea, useAutosavingState} from 'libraries/forms'
 import {CssClass, FormGroup} from 'libraries/ui'
 import {Flex} from 'components/Flex'
 import {DanceChooser} from 'components/widgets/DanceChooser'
 import {makeTranslate} from 'utils/translate'
 import {useOnChangeForProp} from 'utils/useOnChangeForProp'
 
-import {Workshop, WorkshopInput} from 'types'
+import {Workshop} from 'types'
 
 const t = makeTranslate({
   dances: 'Tanssit',
@@ -35,25 +36,32 @@ const {
 
 interface WorkshopEditorProps {
   workshop: Workshop
-  onSubmit: (w: WorkshopInput) => unknown
-  submitText: string
 }
 
-export function WorkshopEditor({workshop, onSubmit, submitText}: WorkshopEditorProps) {
-  const {eventId} = workshop
-  const [modifiedWorkshop, setWorkshop] = useState(workshop)
-  const {dances} = modifiedWorkshop
+export function WorkshopEditor({workshop: workshopInDatabase}: WorkshopEditorProps) {
+  const [modifyWorkshop] = useModifyWorkshop({
+    refetchQueries: ['getEvent']
+  })
+  const saveWorkshop = (data: Workshop) => {
+    const {dances, name, abbreviation, description, teachers} = data
+    modifyWorkshop({
+      id: workshop._id,
+      workshop: {
+        name,
+        abbreviation,
+        description,
+        teachers,
+        danceIds: dances.map(d => d._id)
+      }
+    })
+  }
+  const [workshop, setWorkshop, {state}] = useAutosavingState<Workshop, Workshop>(workshopInDatabase, saveWorkshop, patchStrategy.noPatch)
+
+  const {eventId, dances} = workshop
   const onChangeFor = useOnChangeForProp(setWorkshop)
 
-  const submitHandler = ({dances, name, abbreviation, description, teachers}: Workshop) => onSubmit({
-    name,
-    abbreviation,
-    description,
-    teachers,
-    danceIds: dances.map(d => d._id)
-  })
-
-  return <Form className={CssClass.limitedWidth} value={modifiedWorkshop} onChange={setWorkshop} onSubmit={submitHandler}>
+  return <Form className={CssClass.limitedWidth} value={workshop} onChange={setWorkshop}>
+    <SyncStatus state={state} />
     <Field path="name" required component={Input} label={t`name`} labelInfo={t`required`} />
     <AbbreviationField path="abbreviation" label={t`abbreviation`} workshopId={workshop._id} eventId={eventId} />
     <Field path="description" component={TextArea} label={t`description`} />
@@ -64,7 +72,6 @@ export function WorkshopEditor({workshop, onSubmit, submitText}: WorkshopEditorP
     <FormGroup label={t`addDance`} labelStyle="beside" style={{marginTop: 6}}>
       <DanceChooser excludeFromSearch={dances} value={null} onChange={dance => onChangeFor('dances')(L.set(L.appendTo, dance))} key={dances.length} />
     </FormGroup>
-    <SubmitButton text={submitText} />
   </Form>
 }
 
