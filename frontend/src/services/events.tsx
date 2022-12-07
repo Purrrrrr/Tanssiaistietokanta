@@ -193,7 +193,10 @@ query getEvent($id: ID!) {
       }
     }
   }
-}`))
+}`), ({refetch, variables}) => {
+  if (variables === undefined) throw new Error('Unknown event id')
+  useCallbackOnEventChanges(variables.id, refetch)
+})
 export function useEvent(id) {
   const res = useEventInternal({id})
   return [res?.data?.event, res] as const
