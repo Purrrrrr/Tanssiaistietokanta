@@ -1,5 +1,4 @@
 import React from 'react'
-import * as L from 'partial.lenses'
 
 import {backendQueryHook, graphql} from 'backend'
 import {useModifyWorkshop} from 'services/workshops'
@@ -9,7 +8,6 @@ import {CssClass, FormGroup} from 'libraries/ui'
 import {Flex} from 'components/Flex'
 import {DanceChooser} from 'components/widgets/DanceChooser'
 import {makeTranslate} from 'utils/translate'
-import {useOnChangeForProp} from 'utils/useOnChangeForProp'
 
 import {Workshop} from 'types'
 
@@ -32,6 +30,7 @@ const {
   ListField,
   RemoveItemButton,
   useValueAt,
+  useAppendToList,
 } = formFor<Workshop>()
 
 interface WorkshopEditorProps {
@@ -58,7 +57,6 @@ export function WorkshopEditor({workshop: workshopInDatabase}: WorkshopEditorPro
   const [workshop, setWorkshop, {state}] = useAutosavingState<Workshop, Workshop>(workshopInDatabase, saveWorkshop, patchStrategy.noPatch)
 
   const {eventId, dances} = workshop
-  const onChangeFor = useOnChangeForProp(setWorkshop)
 
   return <Form className={CssClass.limitedWidth} value={workshop} onChange={setWorkshop}>
     <SyncStatus state={state} />
@@ -69,9 +67,7 @@ export function WorkshopEditor({workshop: workshopInDatabase}: WorkshopEditorPro
     <t.h2>dances</t.h2>
     <ListField label={t`dances`} path="dances" component={DanceListItem} />
     {dances.length === 0 && <t.p className={CssClass.textMuted}>noDances</t.p>}
-    <FormGroup label={t`addDance`} labelStyle="beside" style={{marginTop: 6}}>
-      <DanceChooser excludeFromSearch={dances} value={null} onChange={dance => onChangeFor('dances')(L.set(L.appendTo, dance))} key={dances.length} />
-    </FormGroup>
+    <AddDanceChooser />
   </Form>
 }
 
@@ -121,4 +117,13 @@ function DanceListItem({itemIndex, path, dragHandle}) {
     {dragHandle}
     <RemoveItemButton path="dances" index={itemIndex} text="X" />
   </Flex>
+}
+
+function AddDanceChooser() {
+  const dances = useValueAt('dances')
+  const onAddDance = useAppendToList('dances')
+
+  return <FormGroup label={t`addDance`} labelStyle="beside" style={{marginTop: 6}}>
+    <DanceChooser excludeFromSearch={dances} value={null} onChange={dance => dance && onAddDance(dance)} key={dances.length} />
+  </FormGroup>
 }
