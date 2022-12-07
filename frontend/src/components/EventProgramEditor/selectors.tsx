@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import * as L from 'partial.lenses'
 
-import {FieldComponentProps, formFor, MenuButton, Selector, SelectorMenu, toArrayPath, TypedStringPath} from 'libraries/forms'
+import {FieldComponentProps, formFor, MenuButton, SelectorMenu, toArrayPath, TypedStringPath} from 'libraries/forms'
 import {DanceChooser} from 'components/widgets/DanceChooser'
 import {SlideStyleSelector} from 'components/widgets/SlideStyleSelector'
 
