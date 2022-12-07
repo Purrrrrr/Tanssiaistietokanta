@@ -10,7 +10,7 @@ import {DanceChooser} from 'components/widgets/DanceChooser'
 import {makeTranslate} from 'utils/translate'
 import {useOnChangeForProp} from 'utils/useOnChangeForProp'
 
-import {Workshop as WorkshopWithEventId, WorkshopInput} from 'types'
+import {Workshop, WorkshopInput} from 'types'
 
 const t = makeTranslate({
   dances: 'Tanssit',
@@ -25,8 +25,6 @@ const t = makeTranslate({
   teachers: 'Opettaja(t)',
 })
 
-type Workshop = Omit<WorkshopWithEventId, 'eventId'>
-
 const {
   Form,
   Field,
@@ -36,13 +34,13 @@ const {
 } = formFor<Workshop>()
 
 interface WorkshopEditorProps {
-  eventId: string
   workshop: Workshop
   onSubmit: (w: WorkshopInput) => unknown
   submitText: string
 }
 
-export function WorkshopEditor({eventId, workshop, onSubmit, submitText}: WorkshopEditorProps) {
+export function WorkshopEditor({workshop, onSubmit, submitText}: WorkshopEditorProps) {
+  const {eventId} = workshop
   const [modifiedWorkshop, setWorkshop] = useState(workshop)
   const {dances} = modifiedWorkshop
   const onChangeFor = useOnChangeForProp(setWorkshop)

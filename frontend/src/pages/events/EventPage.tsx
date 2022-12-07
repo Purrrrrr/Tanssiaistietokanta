@@ -1,9 +1,10 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
 
-import {useDeleteWorkshop} from 'services/workshops'
+import {AdminOnly} from 'services/users'
+import {useCreateWorkshop, useDeleteWorkshop} from 'services/workshops'
 
-import {Card} from 'libraries/ui'
+import {Button, Card} from 'libraries/ui'
 import {PageTitle} from 'components/PageTitle'
 import {DeleteButton} from 'components/widgets/DeleteButton'
 import {NavigateButton} from 'components/widgets/NavigateButton'
@@ -19,6 +20,7 @@ const t = makeTranslate({
   ballProgramSlideshow: 'Tanssiaisten diashow',
   dances: 'Tanssit',
   createWorkshop: 'Uusi työpaja',
+  newWorkshop: 'Uusi työpaja',
   danceCheatlist: 'Osaan tanssin -lunttilappu',
   danceInstructions: 'Työpajojen tanssiohjeet',
   requestedDance: {
@@ -79,13 +81,24 @@ function EventWorkshops({workshops, eventId}) {
     {workshops.map(workshop =>
       <WorkshopLink workshop={workshop} key={workshop._id} />
     )}
-    <NavigateButton adminOnly intent="primary" href="workshops/create"
-      text={t`createWorkshop`} />
+    <CreateWorkshopButton eventId={eventId} />
     <NavigateButton href="print/dance-cheatlist" target="_blank"
       text={t`danceCheatlist`} />
     <NavigateButton href="print/dance-instructions" target="_blank"
       text={t`danceInstructions`} />
   </>
+}
+
+function CreateWorkshopButton({eventId}) {
+  const [createWorkshop] = useCreateWorkshop()
+
+  return <AdminOnly>
+    <Button
+      onClick={() => createWorkshop({eventId: eventId, workshop: {name: t`newWorkshop`, danceIds: []}})}
+      intent="primary"
+      text={t`createWorkshop`}
+    />
+  </AdminOnly>
 }
 
 function WorkshopLink({workshop}) {
