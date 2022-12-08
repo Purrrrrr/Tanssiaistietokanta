@@ -11,7 +11,7 @@ import {uploadDanceFile} from 'utils/uploadDanceFile'
 
 import { Dance, DanceInput } from 'types'
 
-import {DanceListItem} from './DanceListItem'
+import {DanceEditor} from './DanceEditor'
 
 const EMPTY_DANCE : DanceInput = {name: 'Uusi tanssi'}
 
@@ -66,7 +66,7 @@ function DanceList({dances}) {
   return <InfiniteScroll hasMore={canShowMore} loadMore={() => setLimit(limit + 5)}>
     {dances.slice(0, limit).map((dance : Dance) =>
       <Card key={dance._id}>
-        <DanceListItem dance={dance} showLink />
+        <DanceEditor dance={dance} showLink />
       </Card>)}
   </InfiniteScroll>
 }
