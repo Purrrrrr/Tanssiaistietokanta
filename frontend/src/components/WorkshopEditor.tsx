@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {useModifyWorkshop} from 'services/workshops'
+import {usePatchWorkshop} from 'services/workshops'
 
 import {formFor, Input, patchStrategy, SyncStatus, TextArea, useAutosavingState} from 'libraries/forms'
 import {CssClass, FormGroup} from 'libraries/ui'
@@ -42,10 +42,10 @@ interface WorkshopEditorProps {
 }
 
 export function WorkshopEditor({workshop: workshopInDatabase, reservedAbbreviations}: WorkshopEditorProps) {
-  const [modifyWorkshop] = useModifyWorkshop({
+  const [modifyWorkshop] = usePatchWorkshop({
     refetchQueries: ['getEvent']
   })
-  const saveWorkshop = (data: Workshop) => {
+  const saveWorkshop = (data: Partial<Workshop>) => {
     const {dances, name, abbreviation, description, teachers} = data
     modifyWorkshop({
       id: workshopId,
@@ -54,11 +54,11 @@ export function WorkshopEditor({workshop: workshopInDatabase, reservedAbbreviati
         abbreviation,
         description,
         teachers,
-        danceIds: dances.map(d => d._id)
+        danceIds: dances ? dances.map(d => d._id) : undefined
       }
     })
   }
-  const {formProps, state} = useAutosavingState<Workshop, Workshop>(workshopInDatabase, saveWorkshop, patchStrategy.noPatch)
+  const {formProps, state} = useAutosavingState<Workshop, Partial<Workshop>>(workshopInDatabase, saveWorkshop, patchStrategy.partial)
 
   const {_id: workshopId, dances} = formProps.value
 

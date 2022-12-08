@@ -8,7 +8,7 @@ module.exports = {
     get: [],
     create: [validateInputType('WorkshopInput'), provideDefaultValues('WorkshopInput')],
     update: [validateInputType('WorkshopInput')],
-    patch: [],
+    patch: [validateInputType('WorkshopPatchInput')],
     remove: []
   },
 

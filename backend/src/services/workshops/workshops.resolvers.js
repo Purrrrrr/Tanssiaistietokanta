@@ -8,7 +8,7 @@ module.exports = (app) => {
 
   return {
     Workshop: {
-      dances: (obj) => obj.danceIds.map(getDance),
+      dances: (obj) => obj.danceIds?.map(getDance) ?? [],
       event: (obj) => eventService.get(obj.eventId)
     },
     Query: {
@@ -16,7 +16,8 @@ module.exports = (app) => {
     },
     Mutation: {
       createWorkshop: (_, {eventId, workshop}, params) => service.create({eventId, ...workshop}, params),
-      modifyWorkshop: (_, {id, workshop}, params) => service.patch(id, workshop, params),
+      modifyWorkshop: (_, {id, workshop}, params) => service.update(id, workshop, params),
+      patchWorkshop: (_, {id, workshop}, params) => service.patch(id, workshop, params),
       deleteWorkshop: (_, {id}, params) => service.remove(id, params)
     }
   }

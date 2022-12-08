@@ -1,4 +1,4 @@
-import { backendQueryHook, entityCreateHook, entityDeleteHook, entityUpdateHook, graphql, setupServiceUpdateFragment } from '../backend'
+import { entityCreateHook, entityDeleteHook, entityUpdateHook, graphql, setupServiceUpdateFragment } from '../backend'
 
 setupServiceUpdateFragment(
   'workshops',
@@ -15,25 +15,6 @@ setupServiceUpdateFragment(
   }`
 )
 
-const useWorkshopInternal = backendQueryHook(graphql(`
-query getWorkshop($id: ID!) {
-  workshop(id: $id) {
-    _id, eventId
-    name
-    abbreviation
-    description
-    teachers
-    dances {
-      _id
-      name
-    }
-  }
-}`))
-export function useWorkshop(id: string) {
-  const res = useWorkshopInternal({id})
-  return [res?.data?.workshop, res] as const
-}
-
 export const useCreateWorkshop = entityCreateHook('workshops', graphql(`
 mutation createWorkshop($eventId: ID!, $workshop: WorkshopInput!) {
   createWorkshop(eventId: $eventId, workshop: $workshop) {
@@ -49,9 +30,9 @@ mutation createWorkshop($eventId: ID!, $workshop: WorkshopInput!) {
   }
 }`))
 
-export const useModifyWorkshop = entityUpdateHook('workshops', graphql(`
-mutation modifyWorkshop($id: ID!, $workshop: WorkshopInput!) {
-  modifyWorkshop(id: $id, workshop: $workshop) {
+export const usePatchWorkshop = entityUpdateHook('workshops', graphql(`
+mutation patchWorkshop($id: ID!, $workshop: WorkshopPatchInput!) {
+  patchWorkshop(id: $id, workshop: $workshop) {
     _id, eventId
     name
     abbreviation

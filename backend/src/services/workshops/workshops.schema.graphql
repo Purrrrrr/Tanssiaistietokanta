@@ -18,6 +18,7 @@ type Workshop {
 type Mutation {
   createWorkshop(eventId: ID!, workshop: WorkshopInput!): Workshop!
   modifyWorkshop(id: ID!, workshop: WorkshopInput!): Workshop!
+  patchWorkshop(id: ID!, workshop: WorkshopPatchInput!): Workshop!
   deleteWorkshop(id: ID!): Workshop!
 }
 
@@ -28,4 +29,13 @@ input WorkshopInput {
   teachers: String
   ocurrences: [String!]
   danceIds: [ID!]!
+}
+
+input WorkshopPatchInput {
+  name: String
+  abbreviation: String
+  description: String
+  teachers: String
+  ocurrences: [String!]
+  danceIds: [ID!]
 }
