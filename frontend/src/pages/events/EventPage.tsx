@@ -10,6 +10,10 @@ import {NavigateButton} from 'components/widgets/NavigateButton'
 import {WorkshopEditor} from 'components/WorkshopEditor'
 import {makeTranslate} from 'utils/translate'
 
+import {Event, EventProgram as EventProgramType} from 'types'
+
+type Workshop = Event['workshops'][0]
+
 const t = makeTranslate({
   ballProgram: 'Tanssiaisohjelma',
   noProgram: 'Ei ohjelmaa',
@@ -19,6 +23,8 @@ const t = makeTranslate({
   printBallDanceList: 'Tulosta settilista',
   ballProgramSlideshow: 'Tanssiaisten diashow',
   dances: 'Tanssit',
+  openWorkshopEditor: 'Muokkaa',
+  closeWorkshopEditor: 'Sulje muokkaus',
   createWorkshop: 'Uusi työpaja',
   newWorkshop: 'Uusi työpaja',
   danceCheatlist: 'Osaan tanssin -lunttilappu',
@@ -29,7 +35,7 @@ const t = makeTranslate({
   }
 })
 
-export default function EventPage({event}) {
+export default function EventPage({event}: {event: Event}) {
   return <>
     <PageTitle>{event.name}</PageTitle>
     <t.h2>ballProgram</t.h2>
@@ -39,7 +45,7 @@ export default function EventPage({event}) {
   </>
 }
 
-function EventProgram({program}) {
+function EventProgram({program}: {program: EventProgramType}) {
   if (!program || program.danceSets.length === 0) {
     return <>
       <t.p>noProgram</t.p>
@@ -76,10 +82,14 @@ function formatDances(program) {
 }
 const isRequestedDance = row => row.item.__typename === 'RequestedDance'
 
-function EventWorkshops({workshops, eventId}) {
+function EventWorkshops({workshops, eventId}: {workshops: Workshop[], eventId: string}) {
   return <>
     {workshops.map(workshop =>
-      <WorkshopCard workshop={workshop} key={workshop._id} />
+      <WorkshopCard
+        workshop={workshop}
+        key={workshop._id}
+        reservedAbbreviations={workshops.filter(w => w._id !== workshop._id).map(w => w.abbreviation).filter(a => a) as string[]}
+      />
     )}
     <CreateWorkshopButton eventId={eventId} />
     <NavigateButton href="print/dance-cheatlist" target="_blank"
@@ -101,7 +111,7 @@ function CreateWorkshopButton({eventId}) {
   </AdminOnly>
 }
 
-function WorkshopCard({workshop}) {
+function WorkshopCard({workshop, reservedAbbreviations}: {workshop: Workshop, reservedAbbreviations: string[]}) {
   const [showEditor, setShowEditor] = useState(false)
   const [deleteWorkshop] = useDeleteWorkshop({refetchQueries: ['getEvent']})
   const {_id, abbreviation, name, description, dances} = workshop
@@ -113,8 +123,7 @@ function WorkshopCard({workshop}) {
     />
     <Button
       onClick={() => setShowEditor(!showEditor)}
-      intent="primary"
-      style={{float: 'right'}} text="Muokkaa"
+      style={{float: 'right'}} text={showEditor ? t`closeWorkshopEditor` : t`openWorkshopEditor`}
     />
     <h2>
       {name}
@@ -128,7 +137,7 @@ function WorkshopCard({workshop}) {
       {dances.map(d => d.name).join(', ')}
     </>}
     <Collapse isOpen={showEditor}>
-      <WorkshopEditor workshop={workshop} />
+      <WorkshopEditor workshop={workshop} reservedAbbreviations={reservedAbbreviations} />
     </Collapse>
   </Card>
 }

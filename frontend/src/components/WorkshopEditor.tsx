@@ -1,6 +1,5 @@
 import React from 'react'
 
-import {backendQueryHook, graphql} from 'backend'
 import {useModifyWorkshop} from 'services/workshops'
 
 import {formFor, Input, patchStrategy, SyncStatus, TextArea, useAutosavingState} from 'libraries/forms'
@@ -9,9 +8,11 @@ import {Flex} from 'components/Flex'
 import {DanceChooser} from 'components/widgets/DanceChooser'
 import {makeTranslate} from 'utils/translate'
 
-import {Workshop} from 'types'
+import {Event} from 'types'
 
 import './WorkshopEditor.scss'
+
+type Workshop = Event['workshops'][0]
 
 const t = makeTranslate({
   dances: 'Tanssit',
@@ -37,9 +38,10 @@ const {
 
 interface WorkshopEditorProps {
   workshop: Workshop
+  reservedAbbreviations: string[]
 }
 
-export function WorkshopEditor({workshop: workshopInDatabase}: WorkshopEditorProps) {
+export function WorkshopEditor({workshop: workshopInDatabase, reservedAbbreviations}: WorkshopEditorProps) {
   const [modifyWorkshop] = useModifyWorkshop({
     refetchQueries: ['getEvent']
   })
@@ -58,14 +60,14 @@ export function WorkshopEditor({workshop: workshopInDatabase}: WorkshopEditorPro
   }
   const {formProps, state} = useAutosavingState<Workshop, Workshop>(workshopInDatabase, saveWorkshop, patchStrategy.noPatch)
 
-  const {_id: workshopId, eventId, dances} = formProps.value
+  const {_id: workshopId, dances} = formProps.value
 
   return <Form className="workshopEditor" {...formProps}>
     <SyncStatus state={state} />
     <Flex spaced wrap>
       <div style={{flexGrow: 1, flexBasis: 300, maxWidth: '50ch'}}>
         <Field path="name" required component={Input} label={t`name`} labelInfo={t`required`} />
-        <AbbreviationField path="abbreviation" label={t`abbreviation`} workshopId={workshopId} eventId={eventId} />
+        <AbbreviationField path="abbreviation" label={t`abbreviation`} reservedAbbreviations={reservedAbbreviations} />
         <Field path="description" component={TextArea} label={t`description`} />
         <Field path="teachers" component={Input} label={t`teachers`}/>
       </div>
@@ -78,16 +80,14 @@ export function WorkshopEditor({workshop: workshopInDatabase}: WorkshopEditorPro
   </Form>
 }
 
-function AbbreviationField({workshopId, label, eventId, path}) {
-  const usedWorkshopAbbreviations = useTakenWorkshopAbbreviations(eventId, workshopId)
-
+function AbbreviationField({label, path, reservedAbbreviations}) {
   return <Field
     path={path}
     component={Input}
     label={label}
     helperText={t`abbreviationHelp`}
     maxLength={3}
-    validate={{notOneOf: usedWorkshopAbbreviations, nullable: true}}
+    validate={{notOneOf: reservedAbbreviations, nullable: true}}
     errorMessages={{notOneOf: getAbbreviationTakenError}}
   />
 }
@@ -97,24 +97,6 @@ function getAbbreviationTakenError({value, values}) {
     'abbreviationTaken',
     {abbreviations: values, abbreviation: value}
   )
-}
-
-const useWorkshops = backendQueryHook(graphql(`
-query GetEventWorkshopAbbreviations($eventId: ID!) {
-  event(id: $eventId) {
-    workshops {
-      _id, abbreviation
-    }
-  }
-}`))
-
-function useTakenWorkshopAbbreviations(eventId, workshopId) {
-  const {data} = useWorkshops({eventId})
-  if (!data?.event) return []
-
-  return data.event.workshops
-    .filter(w => w._id !== workshopId && w.abbreviation)
-    .map(w => w.abbreviation)
 }
 
 function DanceListItem({itemIndex, path, dragHandle}) {
