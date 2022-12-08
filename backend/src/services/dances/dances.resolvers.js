@@ -12,16 +12,17 @@ module.exports = (app) => {
 
   return {
     Dance: {
-      teachedIn: findTeachedIn
+      teachedIn: findTeachedIn,
     },
     Query: {
-      dances: (_, __, params) => service.find(params)
+      dance: (_, {id}, params) => service.get(id, params),
+      dances: (_, __, params) => service.find(params),
     },
     Mutation: {
       createDance: (_, {dance}, params) => service.create(dance, params),
       modifyDance: (_, {id, dance}, params) => service.update(id, dance, params),
       patchDance: (_, {id, dance}, params) => service.patch(id, dance, params),
-      deleteDance: (_, {id}, params) => service.remove(id, params)
+      deleteDance: (_, {id}, params) => service.remove(id, params),
     }
   }
 }

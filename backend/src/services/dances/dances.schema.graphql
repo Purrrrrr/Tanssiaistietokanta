@@ -1,4 +1,5 @@
 type Query {
+  dance(id: ID!): Dance!
   dances: [Dance!]!
 }
 

@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react'
 
-export function PageTitle({children} : {children: string}) {
+export function PageTitle({children, noRender} : {children: string, noRender?: boolean}) {
   useEffect(
     () => {
       setPageSubtitle(children)
@@ -8,7 +8,7 @@ export function PageTitle({children} : {children: string}) {
     [children]
   )
 
-  return <h1>{children}</h1>
+  return noRender ? null : <h1>{children}</h1>
 }
 
 function setPageSubtitle(title : string) {

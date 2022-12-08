@@ -1,8 +1,10 @@
+import {useMemo} from 'react'
+
 import {sorted} from 'utils/sorted'
 
 import { Dance } from 'types'
 
-import { entityCreateHook, entityDeleteHook, entityListQueryHook, entityUpdateHook, graphql, setupServiceUpdateFragment } from '../backend'
+import { backendQueryHook, entityCreateHook, entityDeleteHook, entityListQueryHook, entityUpdateHook, graphql, setupServiceUpdateFragment, useServiceEvents } from '../backend'
 
 setupServiceUpdateFragment(
   'dances',
@@ -31,6 +33,30 @@ query getDances {
     _id, name, description, remarks, duration, prelude, formation, category, instructions, slideStyleId
   }
 }`))
+
+export const useDance = backendQueryHook(graphql(`
+query getDance($id: ID!) {
+  dance(id: $id) {
+    _id, name, description, remarks, duration, prelude, formation, category, instructions, slideStyleId
+  }
+}`), ({refetch, variables}) => {
+  if (variables === undefined) throw new Error('Unknown dance id')
+  useCallbackOnDanceChanges(variables.id, refetch)
+})
+export function useCallbackOnDanceChanges(danceId, callback) {
+  const callbacks = useMemo(() => {
+    const updateFn = () => {
+      console.log('Dance has changed, running callback')
+      callback()
+    }
+    return {
+      created: updateFn,
+      updated: updateFn,
+      removed: updateFn,
+    }
+  }, [callback])
+  useServiceEvents('dances', `dances/${danceId}`, callbacks)
+}
 
 export const useCreateDance = entityCreateHook('dances', graphql(`
 mutation createDance($dance: DanceInput!) {

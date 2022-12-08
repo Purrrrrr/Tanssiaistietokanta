@@ -6,6 +6,7 @@ import {useEvent} from 'services/events'
 import {Breadcrumb, Icon} from 'libraries/ui'
 import {LoadingState} from 'components/LoadingState'
 import Dances from 'pages/dances'
+import Dance from 'pages/dances/Dance'
 import BallProgram from 'pages/events/BallProgram'
 import CreateEvent from 'pages/events/CreateEvent'
 import EventList from 'pages/events/EventList'
@@ -22,7 +23,17 @@ export default function MainRoutes() {
       <Route index element={<EventList/>} />
       <Route path="events/new" element={<CreateEvent/>} />
       <Route path="events/:eventId/*" element={<EventRoutes/>} />
-      <Route path="dances" element={<Dances/>} />
+      <Route path="dances/*" element={<DanceRoutes/>} />
+    </Routes>
+  </>
+}
+
+function DanceRoutes() {
+  return <>
+    <Breadcrumb text="Tanssit" />
+    <Routes>
+      <Route index element={<Dances/>} />
+      <Route path=":danceId" element={<Dance/>} />
     </Routes>
   </>
 }

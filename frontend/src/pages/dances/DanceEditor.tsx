@@ -11,8 +11,6 @@ import './DanceEditor.sass'
 interface DanceEditorProps {
   dance: Dance,
   onChange: OnChangeHandler<Dance>
-  onSubmit?: (d: Dance) => unknown
-  bottomToolbar?: React.ReactNode
 }
 
 const {
@@ -21,8 +19,8 @@ const {
   Input,
 } = formFor<Dance>()
 
-export function DanceEditor({dance, onChange, onSubmit, bottomToolbar} : DanceEditorProps) {
-  return <Form value={dance} onChange={onChange} onSubmit={onSubmit}>
+export function DanceEditor({dance, onChange} : DanceEditorProps) {
+  return <Form value={dance} onChange={onChange}>
     <Flex spaced wrap className="danceEditor">
       <div style={{flexGrow: 1, flexBasis: 300}}>
         <Input label="Nimi" path="name" />
@@ -37,6 +35,5 @@ export function DanceEditor({dance, onChange, onSubmit, bottomToolbar} : DanceEd
         <Field label="Tanssiohjeet" path="instructions" component={MarkdownEditor} />
       </div>
     </Flex>
-    {bottomToolbar}
   </Form>
 }
