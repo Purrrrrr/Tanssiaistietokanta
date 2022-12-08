@@ -2,6 +2,7 @@ import React from 'react'
 
 export type ChangeListener = () => unknown
 export type NewValue<T> = T | ((t: T) => T)
+export type OnChangeHandler<T> = (t: NewValue<T>) => unknown
 
 export type ExtendedFieldComponentProps<T, EventElement, Props> =
   FieldComponentProps<T, EventElement>
@@ -14,7 +15,7 @@ export interface FieldComponentPropsWithoutEvent<T> extends FieldComponentDispla
 
 export interface FieldDataProps<T> {
   value: T | undefined | null
-  onChange: (t: NewValue<T>) => unknown
+  onChange: OnChangeHandler<T>
   hasConflict?: boolean
 }
 export interface FieldComponentDisplayProps {

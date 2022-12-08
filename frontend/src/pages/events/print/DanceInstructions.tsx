@@ -109,7 +109,7 @@ function InstructionsForDance({dance: danceInDatabase} : {dance: Dance}) {
     }),
     [danceInDatabase, patchDance]
   )
-  const [dance, setDance] = useAutosavingState<Dance, Partial<Dance>>(danceInDatabase, onChange, patchStrategy.partial)
+  const {value: dance, onChange: setDance} = useAutosavingState<Dance, Partial<Dance>>(danceInDatabase, onChange, patchStrategy.partial)
 
   const {name, instructions} = dance
 

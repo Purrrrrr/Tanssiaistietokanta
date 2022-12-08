@@ -23,7 +23,7 @@ export function DanceListItem({dance: danceInDatabase, onChange, onDelete} : Dan
     },
     [onChange, danceInDatabase._id]
   )
-  const [dance, setDance, {state}] = useAutosavingState<Dance, Partial<Dance>>(danceInDatabase, patchDance, patchStrategy.partial)
+  const {value: dance, onChange: setDance, state} = useAutosavingState<Dance, Partial<Dance>>(danceInDatabase, patchDance, patchStrategy.partial)
   return <>
     <Flex alignItems="center">
       <H2 className="flex-fill">

@@ -46,7 +46,7 @@ export function WorkshopEditor({workshop: workshopInDatabase}: WorkshopEditorPro
   const saveWorkshop = (data: Workshop) => {
     const {dances, name, abbreviation, description, teachers} = data
     modifyWorkshop({
-      id: workshop._id,
+      id: workshopId,
       workshop: {
         name,
         abbreviation,
@@ -56,16 +56,16 @@ export function WorkshopEditor({workshop: workshopInDatabase}: WorkshopEditorPro
       }
     })
   }
-  const [workshop, setWorkshop, {state}] = useAutosavingState<Workshop, Workshop>(workshopInDatabase, saveWorkshop, patchStrategy.noPatch)
+  const {formProps, state} = useAutosavingState<Workshop, Workshop>(workshopInDatabase, saveWorkshop, patchStrategy.noPatch)
 
-  const {eventId, dances} = workshop
+  const {_id: workshopId, eventId, dances} = formProps.value
 
-  return <Form className="workshopEditor" value={workshop} onChange={setWorkshop}>
+  return <Form className="workshopEditor" {...formProps}>
     <SyncStatus state={state} />
     <Flex spaced wrap>
       <div style={{flexGrow: 1, flexBasis: 300, maxWidth: '50ch'}}>
         <Field path="name" required component={Input} label={t`name`} labelInfo={t`required`} />
-        <AbbreviationField path="abbreviation" label={t`abbreviation`} workshopId={workshop._id} eventId={eventId} />
+        <AbbreviationField path="abbreviation" label={t`abbreviation`} workshopId={workshopId} eventId={eventId} />
         <Field path="description" component={TextArea} label={t`description`} />
         <Field path="teachers" component={Input} label={t`teachers`}/>
       </div>

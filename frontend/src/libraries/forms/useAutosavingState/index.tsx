@@ -4,7 +4,8 @@ import createDebug from 'utils/debug'
 
 import {MergeableObject, SyncState} from './types'
 
-import {ArrayPath} from '../types'
+import {FormProps} from '../Form'
+import {ArrayPath, OnChangeHandler} from '../types'
 import mergeValues from './mergeValues'
 import {PatchStrategy} from './patchStrategies'
 
@@ -15,13 +16,15 @@ const AUTOSAVE_DELAY = 50
 export * as patchStrategy from './patchStrategies'
 export type { SyncState } from './types'
 
-export type UseAutosavingStateReturn<T extends MergeableObject> = [
-  T,
-  (saved: T | ((t: T) => T)) => unknown,
-  SyncStore<T> & {
-    resolveConflict: (resolutions: ConflictResolutions<T>) => unknown,
-  }
-]
+export type UseAutosavingStateReturn<T extends MergeableObject> = {
+  value: T
+  onChange: OnChangeHandler<T>
+  formProps: AutosavingFormProps<T>
+  state: SyncState
+  resolveConflict: (resolutions: ConflictResolutions<T>) => unknown
+}
+
+type AutosavingFormProps<T> = Pick<FormProps<T>, 'value' | 'onChange' | 'conflicts'>
 
 type SyncEvent = 'LOCAL_MODIFICATION' | 'PATCH_SENT' | 'EXTERNAL_MODIFICATION' | 'CONFLICT_RESOLVED'
 
@@ -89,15 +92,17 @@ export function useAutosavingState<T extends MergeableObject, Patch>(
     dispatch({ type: 'CONFLICT_RESOLVED', payload: resolutions})
   }, [])
 
-  return [
-    modifications,
-    onModified,
-    {
-      ...reducerState,
-      state: state === 'CONFLICT' ? 'MODIFIED_LOCALLY' : state,
-      resolveConflict,
-    }
-  ]
+  return {
+    formProps: {
+      value: modifications,
+      onChange: onModified,
+      conflicts,
+    },
+    value: modifications,
+    onChange: onModified,
+    state: state === 'CONFLICT' ? 'MODIFIED_LOCALLY' : state,
+    resolveConflict,
+  }
 }
 
 function getInitialState<T extends MergeableObject>(serverState: T) : SyncStore<T> {

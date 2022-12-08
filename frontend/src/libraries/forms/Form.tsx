@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 
-import { ArrayPath, NewValue } from './types'
+import { ArrayPath, OnChangeHandler } from './types'
 
 import { FormMetadataContext, FormMetadataContextType, FormValidityContext, useCreateFormMetadataContext} from './formContext'
 import {useValidationResult} from './validation'
@@ -12,7 +12,7 @@ export interface FormProps<T> extends
   Omit<Partial<FormMetadataContextType<T>>, 'onChange'>
 {
   value: T
-  onChange: (t: NewValue<T>) => unknown
+  onChange: OnChangeHandler<T>
   conflicts?: ArrayPath<T>[]
   inline?: boolean
   onSubmit?: (t: T, e: React.FormEvent) => unknown

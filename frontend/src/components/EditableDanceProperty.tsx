@@ -25,7 +25,7 @@ export function EditableDanceProperty({dance: danceInDatabase, inline, property,
     [danceInDatabase._id, patchDance]
   )
   const partialDance = useMemo(() => ({[property]: danceInDatabase[property]}), [property, danceInDatabase])
-  const [dance, setDance] = useAutosavingState<Partial<Dance>, Partial<Dance>>(partialDance, patch, patchStrategy.partial)
+  const {value: dance, onChange: setDance} = useAutosavingState<Partial<Dance>, Partial<Dance>>(partialDance, patch, patchStrategy.partial)
 
   const onChange = (value) => {
     setDance({
