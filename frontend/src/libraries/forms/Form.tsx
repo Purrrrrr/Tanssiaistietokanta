@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 
 import { ArrayPath, OnChangeHandler } from './types'
 
@@ -15,6 +15,7 @@ export interface FormProps<T> extends
   onChange: OnChangeHandler<T>
   conflicts?: ArrayPath<T>[]
   inline?: boolean
+  onValidityChange?: (validity: {hasErrors: boolean}) => unknown
   onSubmit?: (t: T, e: React.FormEvent) => unknown
 }
 
@@ -24,6 +25,7 @@ export function Form<T>({
   conflicts = [],
   onChange,
   onSubmit,
+  onValidityChange,
   readOnly = false,
   labelStyle = defaultLabelStyle,
   inline = false,
@@ -31,6 +33,10 @@ export function Form<T>({
 } : FormProps<T>) {
   const {hasErrors, ValidationContainer} = useValidationResult()
   const form = useRef<HTMLFormElement>(null)
+
+  useEffect(() => {
+    if (onValidityChange) onValidityChange({hasErrors})
+  }, [onValidityChange, hasErrors])
 
   const submitHandler = (e: React.FormEvent) => {
     //Sometimes forms from dialogs end up propagating into our form and we should not submit then

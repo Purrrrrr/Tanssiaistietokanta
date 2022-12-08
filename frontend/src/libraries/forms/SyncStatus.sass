@@ -18,11 +18,12 @@
     display: inline-block
     padding-left: 0.5ch
     overflow: hidden
+    white-space: nowrap
     max-width: 0
     transition: max-width 0.5s ease
-  &.status-changed, &:hover
+  &.status-changed, &.always-show-status, &:hover
     .text
-      max-width: 20ch
+      max-width: 35ch
   &:hover .text
     transition-duration: 0.5s
 

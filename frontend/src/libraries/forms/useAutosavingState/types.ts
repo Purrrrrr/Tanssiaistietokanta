@@ -12,7 +12,7 @@ export type MergeableScalar  = undefined | null | string | number
 export type MergeableListItem = Entity | ID
 export type Mergeable = MergeableScalar | MergeableObject | MergeableListItem[]
 
-export type SyncState = 'IN_SYNC' | 'MODIFIED_LOCALLY' | 'CONFLICT'
+export type SyncState = 'IN_SYNC' | 'MODIFIED_LOCALLY' | 'CONFLICT' | 'INVALID'
 export interface MergeResult<T extends Mergeable> {
   state: SyncState
   pendingModifications: T

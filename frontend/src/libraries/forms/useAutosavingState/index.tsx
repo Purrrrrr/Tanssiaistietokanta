@@ -1,4 +1,4 @@
-import {Reducer, useCallback, useEffect, useReducer} from 'react'
+import {Reducer, useCallback, useEffect, useReducer, useState} from 'react'
 
 import createDebug from 'utils/debug'
 
@@ -21,10 +21,10 @@ export type UseAutosavingStateReturn<T extends MergeableObject> = {
   onChange: OnChangeHandler<T>
   formProps: AutosavingFormProps<T>
   state: SyncState
-  resolveConflict: (resolutions: ConflictResolutions<T>) => unknown
+  resolveConflict: (resolutions: ConflictResolutions<T>) => unknown,
 }
 
-type AutosavingFormProps<T> = Pick<FormProps<T>, 'value' | 'onChange' | 'conflicts'>
+type AutosavingFormProps<T> = Pick<Required<FormProps<T>>, 'value' | 'onChange' | 'conflicts' | 'onValidityChange'>
 
 type SyncEvent = 'LOCAL_MODIFICATION' | 'PATCH_SENT' | 'EXTERNAL_MODIFICATION' | 'CONFLICT_RESOLVED'
 
@@ -57,6 +57,7 @@ export function useAutosavingState<T extends MergeableObject, Patch>(
   refreshData?: () => unknown,
 ) : UseAutosavingStateReturn<T>
 {
+  const [hasErrors, setHasErrors] = useState(false)
   const [reducerState, dispatch] = useReducer<Reducer<SyncStore<T>, SyncAction>, T>(reducer, serverState, getInitialState)
   const { serverState: originalData, serverStateTime, state, modifications, conflicts } = reducerState
 
@@ -68,6 +69,7 @@ export function useAutosavingState<T extends MergeableObject, Patch>(
     if (state === 'IN_SYNC') return
 
     const id = setTimeout(() => {
+      if (hasErrors) return
       if (conflicts.length > 0 && now() - serverStateTime > DISABLE_CONFLICT_OVERRIDE_DELAY) {
         debug('Not saving conflict data on top of stale data')
         refreshData && refreshData()
@@ -83,7 +85,7 @@ export function useAutosavingState<T extends MergeableObject, Patch>(
     }, AUTOSAVE_DELAY)
 
     return () => clearTimeout(id)
-  }, [state, modifications, conflicts, onPatch, originalData, serverStateTime, patchStrategy, refreshData])
+  }, [state, modifications, conflicts, onPatch, originalData, serverStateTime, patchStrategy, refreshData, hasErrors])
 
   const onModified = useCallback((modifications) => {
     dispatch({ type: 'LOCAL_MODIFICATION', payload: modifications})
@@ -92,15 +94,23 @@ export function useAutosavingState<T extends MergeableObject, Patch>(
     dispatch({ type: 'CONFLICT_RESOLVED', payload: resolutions})
   }, [])
 
+  const onValidityChange = useCallback(
+    ({hasErrors}) => setHasErrors(hasErrors),
+    []
+  )
+
   return {
     formProps: {
       value: modifications,
       onChange: onModified,
       conflicts,
+      onValidityChange,
     },
     value: modifications,
     onChange: onModified,
-    state: state === 'CONFLICT' ? 'MODIFIED_LOCALLY' : state,
+    state: hasErrors
+      ? 'INVALID'
+      : state === 'CONFLICT' ? 'MODIFIED_LOCALLY' : state,
     resolveConflict,
   }
 }

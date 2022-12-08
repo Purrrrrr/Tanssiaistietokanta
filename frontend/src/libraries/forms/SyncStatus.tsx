@@ -11,16 +11,25 @@ const icons : Record<SyncState, IconName> = {
   IN_SYNC: 'saved',
   MODIFIED_LOCALLY: 'refresh',
   CONFLICT: 'outdated',
+  INVALID: 'error',
 }
 const iconIntents : Record<SyncState, Intent> = {
   IN_SYNC: 'success',
   MODIFIED_LOCALLY: 'primary',
   CONFLICT: 'warning',
+  INVALID: 'danger',
 }
 const texts : Record<SyncState, string> = {
   IN_SYNC: 'Tallennettu',
   MODIFIED_LOCALLY: 'Tallennetaan...',
   CONFLICT: 'Synkronointivirhe',
+  INVALID: 'Tiedoissa virheitä, tallennus pysäytetty',
+}
+const autoHideText: Record<SyncState, boolean> = {
+  IN_SYNC: true,
+  MODIFIED_LOCALLY: true,
+  CONFLICT: false,
+  INVALID: false,
 }
 
 export function SyncStatus({state, block, className, style} : { state : SyncState, block?: boolean, className?: string, style?: React.CSSProperties }) {
@@ -40,7 +49,7 @@ export function SyncStatus({state, block, className, style} : { state : SyncStat
 
   return <span
     style={style}
-    className={classNames(className, 'sync_status', state.toLowerCase(), {'status-changed': changed, block})}
+    className={classNames(className, 'sync_status', state.toLowerCase(), {'status-changed': changed, 'always-show-status': !autoHideText[state], block})}
   >
     <Icon icon={icons[state]} intent={iconIntents[state]} />
     <span className="text">{texts[state]}</span>
