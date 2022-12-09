@@ -4,10 +4,10 @@ import {Link, useNavigate, useParams} from 'react-router-dom'
 import { useDance } from 'services/dances'
 
 import {Breadcrumb, Icon} from 'libraries/ui'
+import {DanceEditor} from 'components/DanceEditor'
 import {LoadingState} from 'components/LoadingState'
 import {PageTitle} from 'components/PageTitle'
 
-import {DanceEditor} from './DanceEditor'
 
 export default function DancePage() {
   const navigate = useNavigate()

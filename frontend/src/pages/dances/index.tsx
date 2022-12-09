@@ -5,13 +5,12 @@ import {useNavigate} from 'react-router-dom'
 import { filterDances, useCreateDance, useDances } from 'services/dances'
 
 import {Button, Card, FormGroup, SearchBar} from 'libraries/ui'
+import {DanceEditor} from 'components/DanceEditor'
 import {PageTitle} from 'components/PageTitle'
 import {showToast} from 'utils/toaster'
 import {uploadDanceFile} from 'utils/uploadDanceFile'
 
 import { Dance, DanceInput } from 'types'
-
-import {DanceEditor} from './DanceEditor'
 
 const EMPTY_DANCE : DanceInput = {name: 'Uusi tanssi'}
 
