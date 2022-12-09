@@ -18,6 +18,7 @@ const {
 
 export const DanceProgramChooser = React.memo(function DanceProgramChooser({value, onChange, ...props} : FieldComponentProps<EventProgramItem, HTMLElement>) {
   return <DanceChooser
+    key={value?._id}
     value={value?._id ? value as Dance : null}
     onChange={(dance, e) => onChange(
       dance

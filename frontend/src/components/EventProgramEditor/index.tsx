@@ -1,8 +1,12 @@
 import React, {useRef, useState} from 'react'
 
+import { useDance } from 'services/dances'
+
 import {ActionButton as Button, ClickToEdit, MarkdownEditor, MenuButton, SubmitButton} from 'libraries/forms'
 import {Card, CssClass, HTMLTable} from 'libraries/ui'
+import {DanceEditor} from 'components/DanceEditor'
 import {Flex} from 'components/Flex'
+import {LoadingState} from 'components/LoadingState'
 import {Duration} from 'components/widgets/Duration'
 import {DurationField} from 'components/widgets/DurationField'
 import {NavigateButton} from 'components/widgets/NavigateButton'
@@ -192,10 +196,40 @@ function ProgramDetailsEditor({path}: {path: ProgramItemPath}) {
   switch(__typename) {
     case 'Dance':
     case 'RequestedDance':
-      return <Field label={t`Dance`} labelStyle="hidden" path={`${path as DanceProgramPath}.item`} component={DanceProgramChooser} />
+      return <DanceItemEditor path={path as DanceProgramPath} />
     case 'EventProgram':
       return <EventProgramItemEditor path={path} />
   }
+}
+
+function DanceItemEditor({path}: {path: DanceProgramPath}) {
+  const id = useValueAt(`${path}.item._id`)
+  const setItem = useOnChangeFor(`${path}.item`)
+  const [open, setOpen] = useState(false)
+  return <Flex className="eventProgramItemEditor">
+    <Field label={t`Dance`} labelStyle="hidden" path={`${path as DanceProgramPath}.item`} component={DanceProgramChooser} />
+    {id &&
+      <MenuButton
+        menu={
+          <div className="danceEditorPopover">
+            <DanceLoadingEditor danceId={id} onDeleteDance={() => {setItem({__typename: 'RequestedDance'}); setOpen(false)}} />
+          </div>
+        }
+        text={t`buttons.editDance`}
+        buttonProps={{rightIcon: 'caret-down'}}
+        open={open}
+        onSetOpen={setOpen}
+      />
+    }
+  </Flex>
+}
+
+function DanceLoadingEditor({danceId, onDeleteDance}: {danceId: string, onDeleteDance: () => unknown}) {
+  const result = useDance({id: danceId})
+  if (!result.data?.dance) return <LoadingState {...result} />
+
+  const {dance} = result.data
+  return <DanceEditor dance={dance} onDelete={onDeleteDance}  />
 }
 
 function EventProgramItemEditor({path}: {path: ProgramItemPath}) {

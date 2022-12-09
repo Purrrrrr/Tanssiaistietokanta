@@ -26,6 +26,7 @@ export default makeTranslate({
     removeDanceSet: 'Poista setti',
     remove: 'Poista',
     editProgram: 'Ohjelman tiedot',
+    editDance: 'Tanssin tiedot',
     save: 'Tallenna muutokset',
   },
   columnTitles: {
