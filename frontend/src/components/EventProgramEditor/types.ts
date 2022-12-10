@@ -7,10 +7,8 @@ export type DanceProgramPath = `${DanceSetPath}.program.${number}`
 
 type Program = Event['program']
 type ODanceSet = Program['danceSets'][number]
-type Introductions = Program['introductions']
 
-export interface EventProgramSettings extends Program {
-  introductions: Introductions
+export type EventProgramSettings = Program & {
   danceSets: DanceSet[]
 }
 

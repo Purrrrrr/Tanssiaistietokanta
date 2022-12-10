@@ -8,7 +8,7 @@ export interface Entity {
   _id: ID
   [key: string]: Mergeable
 }
-export type MergeableScalar  = undefined | null | string | number
+export type MergeableScalar  = undefined | null | string | number | boolean
 export type MergeableListItem = Entity | ID
 export type Mergeable = MergeableScalar | MergeableObject | MergeableListItem[]
 

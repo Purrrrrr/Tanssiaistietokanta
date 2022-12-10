@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {MenuItem} from '@blueprintjs/core'
 import {Suggest} from '@blueprintjs/select'
 
@@ -39,6 +39,10 @@ export function DanceChooser({hasConflict, value, onChange, excludeFromSearch, a
   const [query, setQuery] = useState(value ? value.name : '')
   const [dances] = useDances()
   const [createDance] = useCreateDance()
+
+  useEffect(() => {
+    setQuery(value?.name ?? '')
+  }, [value?.name])
 
   const items = excludeFromSearch
     ? dances.filter((dance: Dance) => dance._id === value?._id || !excludeFromSearch.some(excluded => excluded._id === dance._id))

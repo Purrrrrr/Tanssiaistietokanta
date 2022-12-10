@@ -1,19 +1,21 @@
 import React, {useRef, useState} from 'react'
+import * as L from 'partial.lenses'
 
 import { useDance } from 'services/dances'
+import {useModifyEventProgram} from 'services/events'
 
-import {ActionButton as Button, ClickToEdit, MarkdownEditor, MenuButton, SubmitButton} from 'libraries/forms'
+import {ActionButton as Button, ClickToEdit, MarkdownEditor, MenuButton, patchStrategy, SyncStatus, useAutosavingState} from 'libraries/forms'
 import {Card, CssClass, HTMLTable} from 'libraries/ui'
 import {DanceEditor} from 'components/DanceEditor'
 import {Flex} from 'components/Flex'
 import {LoadingState} from 'components/LoadingState'
 import {Duration} from 'components/widgets/Duration'
 import {DurationField} from 'components/widgets/DurationField'
-import {NavigateButton} from 'components/widgets/NavigateButton'
 import {SlideStyleSelector} from 'components/widgets/SlideStyleSelector'
 import {guid} from 'utils/guid'
+import {removeTypenames} from 'utils/removeTypenames'
 
-import {DanceProgramPath, DanceSet, DanceSetPath, EventProgramSettings, ProgramItemPath, ProgramSectionPath} from './types'
+import {DanceProgramPath, DanceSet, DanceSetPath, EventProgramRow, EventProgramSettings, ProgramItemPath, ProgramSectionPath} from './types'
 
 import {AddDanceSetButton, AddIntroductionButton, IntervalMusicSwitch, newEventProgramItem, ProgramTypeIcon} from './controls'
 import {
@@ -33,18 +35,24 @@ import t from './translations'
 import './EventProgramEditor.sass'
 
 interface EventProgramEditorProps {
+  eventId: string
   program: EventProgramSettings
-  onSubmit: (p: EventProgramSettings) => unknown
 }
 
-export function EventProgramEditor({program: eventProgram, onSubmit}: EventProgramEditorProps) {
-  const [program, onChange] = useState(eventProgram)
-  const {danceSets, introductions} = program
+export function EventProgramEditor({eventId, program: eventProgram}: EventProgramEditorProps) {
+  const [modifyEventProgram] = useModifyEventProgram()
+  const saveProgram = (data) => {
+    modifyEventProgram({id: eventId, program: toProgramInput(data)})
+  }
 
-  return <Form value={program} onChange={onChange} onSubmit={onSubmit}>
+  const {formProps, state} = useAutosavingState<EventProgramSettings, EventProgramSettings>(eventProgram, saveProgram, patchStrategy.noPatch)
+  const {danceSets, introductions} = formProps.value
+
+  return <Form {...formProps}>
     <section className="eventProgramEditor">
       <div className="main-toolbar">
         <Input labelStyle="above" label={t`fields.programTitle`} path="introductions.title" inline />
+        <SyncStatus style={{marginLeft: '1ch', top: '3px'}} className="flex-fill" state={state} />
         <InheritedSlideStyleSelector path="introductions.titleSlideStyleId" text={t`fields.titleStyle`} />
         <Field label={t`fields.pauseDuration`} inline path="pauseBetweenDances" component={DurationField} />
         {introductions.program.length === 0 && <AddIntroductionButton />}
@@ -57,10 +65,39 @@ export function EventProgramEditor({program: eventProgram, onSubmit}: EventProgr
         <AddDanceSetButton />
       </div>
     </section>
-    <hr />
-    <SubmitButton text={t`buttons.save`} />
-    <NavigateButton href='..' text={t`buttons.cancel`} />
   </Form>
+}
+
+function toProgramInput({introductions, danceSets, ...rest} : EventProgramSettings) {
+  return removeTypenames({
+    introductions: L.modify(
+      ['program', L.elems], toProgramItemInput, introductions
+    ),
+    danceSets: L.modify(
+      [L.elems, 'program', L.elems], toProgramItemInput, danceSets
+    ),
+    ...rest,
+  })
+}
+
+function toProgramItemInput({_id, slideStyleId, item: {__typename, ...item}} : EventProgramRow) {
+  const commonProps = {_id, slideStyleId, type: __typename}
+  switch(__typename) {
+    case 'Dance':
+      return {
+        ...commonProps,
+        dance: item._id
+      }
+    case 'RequestedDance':
+      return commonProps
+    case 'EventProgram':
+      return {
+        ...commonProps,
+        eventProgram: item,
+      }
+    default:
+      throw new Error('Unexpected program item type '+__typename)
+  }
 }
 
 function IntroductoryInformation() {
