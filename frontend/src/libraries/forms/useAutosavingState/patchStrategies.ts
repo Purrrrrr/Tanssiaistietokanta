@@ -2,21 +2,22 @@ import deepEquals from 'fast-deep-equal'
 
 import {ArrayPath} from '../types'
 
-export type PatchResult<Patch> = {hasModifications: false} | {patch: Patch, hasModifications: true}
-export type PatchStrategy<T, Patch> = (original: T, modifications: T, conflicts: ArrayPath<T>[]) => PatchResult<Patch>
+export type PatchResult<T, Patch> =
+  {hasModifications: false}
+  |
+  {patch: Patch, hasModifications: true, newServerState: T}
+export type PatchStrategy<T, Patch> = (original: T, modifications: T, conflicts: ArrayPath<T>[]) => PatchResult<T, Patch>
 
 type Key = string | number | symbol
 
-export function noPatch<T>(original : T, modifications : T, conflicts: Key[][]): PatchResult<T>  {
+export function noPatch<T>(original : T, modifications : T, conflicts: Key[][]): PatchResult<T, T>  {
   const partialPatch = partial<T>(original, modifications, conflicts)
   if (!partialPatch.hasModifications) return partialPatch
 
   return {
     hasModifications: true,
-    patch: {
-      ...original,
-      ...partialPatch.patch
-    }
+    patch: partialPatch.newServerState,
+    newServerState: partialPatch.newServerState,
   }
 }
 
@@ -29,7 +30,7 @@ interface ArrayPatch {
 */
 
 //Typing conflicts as Path[] makes typescript crash, dunno why
-export function partial<T>(original : T, modifications : T, conflicts: Key[][]): PatchResult<Partial<T>>  {
+export function partial<T>(original : T, modifications : T, conflicts: Key[][]): PatchResult<T, Partial<T>>  {
   const conflicKeys : Set<keyof T> = new Set()
   for (const path of conflicts) {
     if (path.length === 0) return {hasModifications: false}
@@ -46,9 +47,16 @@ export function partial<T>(original : T, modifications : T, conflicts: Key[][]):
     hasModifications = true
   }
 
-  return hasModifications
-    ? {
-      hasModifications,
-      patch: partial,
-    } : {hasModifications}
+  if (!hasModifications) return { hasModifications }
+
+  const newServerState = {
+    ...original,
+    ...partial
+  }
+
+  return {
+    hasModifications,
+    patch: partial,
+    newServerState,
+  }
 }

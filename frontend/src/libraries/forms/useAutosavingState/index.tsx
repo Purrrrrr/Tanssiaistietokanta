@@ -79,7 +79,7 @@ export function useAutosavingState<T extends MergeableObject, Patch>(
       const patchData = patchStrategy(originalData, modifications, [])
       if (patchData.hasModifications) {
         debug('Saving', patchData.patch)
-        dispatch({ type: 'PATCH_SENT', payload: patchData.patch})
+        dispatch({ type: 'PATCH_SENT', payload: patchData.newServerState})
         onPatch(patchData.patch)
       }
     }, AUTOSAVE_DELAY)
