@@ -30,6 +30,7 @@
     "react-router-dom": "6.3.0",
     "react-scripts": "5.0.1",
     "react-touch-events": "^3.0.0",
+    "rfc6902": "5.0.1",
     "socket.io-client": "^2.5.0",
     "util": "^0.12.4",
     "yup": "^0.28.1"

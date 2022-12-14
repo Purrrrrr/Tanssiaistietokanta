@@ -223,9 +223,9 @@ mutation modifyEvent($id: ID!, $event: EventInput!) {
   }
 }`))
 
-export const useModifyEventProgram = entityUpdateHook('events', graphql(`
-mutation modifyEventProgram($id: ID!, $program: ProgramInput!) {
-  modifyEventProgram(id: $id, program: $program) {
+export const usePatchEventProgram = entityUpdateHook('events', graphql(`
+mutation patchEventProgram($id: ID!, $program: JSONPatch!) {
+  patchEventProgram(id: $id, program: $program) {
     _id, name
     program {
       introductions {

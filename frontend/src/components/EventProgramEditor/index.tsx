@@ -1,10 +1,9 @@
 import React, {useRef, useState} from 'react'
-import * as L from 'partial.lenses'
 
 import { useDance } from 'services/dances'
-import {useModifyEventProgram} from 'services/events'
+import {usePatchEventProgram} from 'services/events'
 
-import {ActionButton as Button, ClickToEdit, MarkdownEditor, MenuButton, patchStrategy, SyncStatus, useAutosavingState} from 'libraries/forms'
+import {ActionButton as Button, ClickToEdit, MarkdownEditor, MenuButton, SyncStatus, useAutosavingState} from 'libraries/forms'
 import {Card, CssClass, HTMLTable} from 'libraries/ui'
 import {DanceEditor} from 'components/DanceEditor'
 import {Flex} from 'components/Flex'
@@ -13,9 +12,8 @@ import {Duration} from 'components/widgets/Duration'
 import {DurationField} from 'components/widgets/DurationField'
 import {SlideStyleSelector} from 'components/widgets/SlideStyleSelector'
 import {guid} from 'utils/guid'
-import {removeTypenames} from 'utils/removeTypenames'
 
-import {DanceProgramPath, DanceSet, DanceSetPath, EventProgramRow, EventProgramSettings, ProgramItemPath, ProgramSectionPath} from './types'
+import {DanceProgramPath, DanceSet, DanceSetPath, EventProgramSettings, ProgramItemPath, ProgramSectionPath} from './types'
 
 import {AddDanceSetButton, AddIntroductionButton, IntervalMusicSwitch, newEventProgramItem, ProgramTypeIcon} from './controls'
 import {
@@ -29,6 +27,7 @@ import {
   useOnChangeFor,
   useValueAt,
 } from './form'
+import {JSONPatch, patch} from './patchStrategy'
 import {DanceProgramChooser, InheritedSlideStyleSelector, MoveItemToSectionSelector} from './selectors'
 import t from './translations'
 
@@ -40,12 +39,13 @@ interface EventProgramEditorProps {
 }
 
 export function EventProgramEditor({eventId, program: eventProgram}: EventProgramEditorProps) {
-  const [modifyEventProgram] = useModifyEventProgram()
-  const saveProgram = (data) => {
-    modifyEventProgram({id: eventId, program: toProgramInput(data)})
+  const [patchEventProgram] = usePatchEventProgram()
+  const saveProgram = (program) => {
+    console.log(program)
+    patchEventProgram({id: eventId, program})
   }
 
-  const {formProps, state} = useAutosavingState<EventProgramSettings, EventProgramSettings>(eventProgram, saveProgram, patchStrategy.noPatch)
+  const {formProps, state} = useAutosavingState<EventProgramSettings, JSONPatch>(eventProgram, saveProgram, patch)
   const {danceSets, introductions} = formProps.value
 
   return <Form {...formProps}>
@@ -66,38 +66,6 @@ export function EventProgramEditor({eventId, program: eventProgram}: EventProgra
       </div>
     </section>
   </Form>
-}
-
-function toProgramInput({introductions, danceSets, ...rest} : EventProgramSettings) {
-  return removeTypenames({
-    introductions: L.modify(
-      ['program', L.elems], toProgramItemInput, introductions
-    ),
-    danceSets: L.modify(
-      [L.elems, 'program', L.elems], toProgramItemInput, danceSets
-    ),
-    ...rest,
-  })
-}
-
-function toProgramItemInput({_id, slideStyleId, item: {__typename, ...item}} : EventProgramRow) {
-  const commonProps = {_id, slideStyleId, type: __typename}
-  switch(__typename) {
-    case 'Dance':
-      return {
-        ...commonProps,
-        dance: item._id
-      }
-    case 'RequestedDance':
-      return commonProps
-    case 'EventProgram':
-      return {
-        ...commonProps,
-        eventProgram: item,
-      }
-    default:
-      throw new Error('Unexpected program item type '+__typename)
-  }
 }
 
 function IntroductoryInformation() {

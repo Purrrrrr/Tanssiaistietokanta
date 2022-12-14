@@ -13,6 +13,7 @@ const debug = createDebug('useAutoSavingState')
 
 const AUTOSAVE_DELAY = 50
 
+export type { PatchStrategy } from './patchStrategies'
 export * as patchStrategy from './patchStrategies'
 export type { SyncState } from './types'
 
