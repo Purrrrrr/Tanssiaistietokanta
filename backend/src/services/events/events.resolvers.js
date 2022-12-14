@@ -42,6 +42,9 @@ module.exports = (app) => {
         const event = await service.get(id)
         return service.update(id, { ...event, program}, params)
       },
+      patchEventProgram: async (_, {id, program}, params) => {
+        return service.patch(id, { program }, params)
+      },
       deleteEvent: (_, {id}, params) => service.remove(id, params)
     }
   }

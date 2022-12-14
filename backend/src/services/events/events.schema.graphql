@@ -61,7 +61,7 @@ type Mutation {
   createEvent(event: EventInput!): Event!
   modifyEvent(id: ID!, event: EventInput!): Event!
   modifyEventProgram(id: ID!, program: ProgramInput!): Event!
-  patchEventProgram(id: ID!, program: PatchProgramInput!): Event!
+  patchEventProgram(id: ID!, program: JSONPatch!): Event!
   deleteEvent(id: ID!): Event!
 }
 
@@ -130,13 +130,7 @@ enum ProgramType {
 
 input PatchEventInput {
   name: String
-  program: PatchProgramInput
+  program: JSONPatch
 }
 
 scalar JSONPatch
-
-input PatchProgramInput {
-  introductions: JSONPatch
-  danceSets: JSONPatch
-  slideStyleId: ID
-}
