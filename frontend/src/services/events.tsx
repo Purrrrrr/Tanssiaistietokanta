@@ -5,7 +5,7 @@ import { backendQueryHook, entityCreateHook, entityDeleteHook, entityListQueryHo
 setupServiceUpdateFragment(
   'events',
   `fragment EventFragment on Event {
-    _id, name 
+    _id, name
     program {
       introductions {
         title
@@ -130,7 +130,7 @@ export function useEventSlideStyles({
 const useEventInternal = backendQueryHook(graphql(`
 query getEvent($id: ID!) {
   event(id: $id) {
-    _id, name 
+    _id, name
     program {
       introductions {
         title
@@ -212,21 +212,21 @@ query getEvents {
 export const useCreateEvent = entityCreateHook('events', graphql(`
 mutation createEvent($event: EventInput!) {
   createEvent(event: $event) {
-    _id, name 
+    _id, name
   }
 }`))
 
 export const useModifyEvent = entityUpdateHook('events', graphql(`
 mutation modifyEvent($id: ID!, $event: EventInput!) {
   modifyEvent(id: $id, event: $event) {
-    _id, name 
+    _id, name
   }
 }`))
 
 export const useModifyEventProgram = entityUpdateHook('events', graphql(`
 mutation modifyEventProgram($id: ID!, $program: ProgramInput!) {
   modifyEventProgram(id: $id, program: $program) {
-    _id, name 
+    _id, name
     program {
       introductions {
         title
@@ -294,7 +294,7 @@ mutation modifyEventProgram($id: ID!, $program: ProgramInput!) {
 export const useDeleteEvent = entityDeleteHook('events', graphql(`
 mutation deleteEvent($id: ID!) {
   deleteEvent(id: $id) {
-    _id, name 
+    _id, name
   }
 }`))
 
