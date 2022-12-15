@@ -7,7 +7,7 @@ import { mapToIds } from './idUtils'
 export type ChangeType = 'ADDED' | 'REMOVED' | 'MODIFIED' | 'MOVED' | 'MOVED_AND_MODIFIED' | 'UNCHANGED'
 export interface Change<T> extends PartialChange {
   originalValue: T
-  changedValue?: T
+  changedValue: T
 }
 interface Move extends PartialChange {
   status: 'MOVED'
@@ -79,7 +79,12 @@ export function getArrayChanges<T extends MergeableListItem>(original: T[], chan
   }
 
   const changes : Change<T>[]= Array.from(statuses.values())
-    .map(change => ({...change, originalValue: change.status !== 'ADDED' ? original[change.from] : changed[change.to]}))
+    .map(change => {
+      const originalValue = change.status !== 'ADDED'
+        ? original[change.from]
+        : changed[change.to]
+      return { ...change, originalValue, changedValue: originalValue }
+    })
     .sort((a, b) => (a.to) - (b.to))
 
   minimizeMoveSet(changes)

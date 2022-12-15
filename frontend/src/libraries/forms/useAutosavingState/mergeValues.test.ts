@@ -11,6 +11,7 @@ describe('merge', () => {
       state: 'IN_SYNC',
       pendingModifications: {a: 1, b: 1},
       conflicts: [],
+      patch: [],
     })
   })
 
@@ -23,6 +24,9 @@ describe('merge', () => {
       state: 'MODIFIED_LOCALLY',
       pendingModifications: 2,
       conflicts: [],
+      patch: [
+        {op: 'replace', path: '', value: 2}
+      ],
     })
   })
 
@@ -35,6 +39,7 @@ describe('merge', () => {
       state: 'IN_SYNC',
       pendingModifications: 2,
       conflicts: [],
+      patch: [],
     })
   })
 
@@ -47,6 +52,9 @@ describe('merge', () => {
       state: 'MODIFIED_LOCALLY',
       pendingModifications: {value: 2},
       conflicts: [],
+      patch: [
+        {op: 'replace', path: '/value', value: 2}
+      ],
     })
   })
 
@@ -59,6 +67,7 @@ describe('merge', () => {
       state: 'IN_SYNC',
       pendingModifications: {value: 2},
       conflicts: [],
+      patch: [],
     })
   })
 
@@ -71,6 +80,9 @@ describe('merge', () => {
       state: 'MODIFIED_LOCALLY',
       pendingModifications: {a: 1, b: {value: 3}},
       conflicts: [],
+      patch: [
+        {op: 'replace', path: '/b/value', value: 3}
+      ],
     })
   })
 
@@ -85,6 +97,7 @@ describe('merge', () => {
       conflicts: [
         ['b', 'value'],
       ],
+      patch: [],
     })
   })
 
@@ -99,6 +112,7 @@ describe('merge', () => {
       conflicts: [
         ['b'],
       ],
+      patch: [],
     })
   })
 
@@ -113,6 +127,7 @@ describe('merge', () => {
       conflicts: [
         ['b'],
       ],
+      patch: [],
     })
   })
 
@@ -127,6 +142,7 @@ describe('merge', () => {
       conflicts: [
         ['b', 2, 'a'],
       ],
+      patch: [],
     })
   })
 })

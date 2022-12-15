@@ -17,9 +17,13 @@ export function mergeConflictingStrings(
   const { conflict, result } = merge3(server, original, local, {stringSeparator: wordBoundary})
 
   if (!conflict) {
+    const value = result.join()
     return {
       state: 'MODIFIED_LOCALLY',
-      pendingModifications: result.join(),
+      pendingModifications: value,
+      patch: [
+        { op: 'replace', value, path: '' },
+      ],
       conflicts: [],
     }
   }
@@ -27,6 +31,7 @@ export function mergeConflictingStrings(
   return {
     state: 'CONFLICT',
     pendingModifications: local,
+    patch: [],
     conflicts: [[]],
   }
 }

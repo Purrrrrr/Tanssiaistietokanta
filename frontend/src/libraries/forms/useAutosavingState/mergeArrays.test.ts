@@ -1,9 +1,11 @@
+import {applyPatch} from 'rfc6902'
+
 import {MergeableListItem, MergeFunction} from './types'
 
 import {mergeArrays} from './mergeArrays'
 
 describe('mergeArrays', () => {
-  const merge : MergeFunction = (data) => ({ state: 'IN_SYNC', conflicts: [], pendingModifications: data.local })
+  const merge : MergeFunction = (data) => ({ state: 'IN_SYNC', conflicts: [], pendingModifications: data.local, patch: [] })
 
   test('no changes', () => {
     expect(mergeArrays({
@@ -14,6 +16,7 @@ describe('mergeArrays', () => {
       state: 'IN_SYNC',
       pendingModifications: [1, 2, 3, 4, 5],
       conflicts: [],
+      patch: [],
     })
   })
 
@@ -27,6 +30,9 @@ describe('mergeArrays', () => {
         state: 'MODIFIED_LOCALLY',
         pendingModifications: [1, 2, 3, 4, 5, 6],
         conflicts: [],
+        patch: [
+          {op: 'add', path: '/5', value: 6}
+        ],
       })
     })
     test('simple additions on server', () => {
@@ -38,6 +44,7 @@ describe('mergeArrays', () => {
         state: 'IN_SYNC',
         pendingModifications: [1, 2, 3, 4, 5, 6],
         conflicts: [],
+        patch: [],
       })
     })
     test('complex additions', () => {
@@ -49,6 +56,9 @@ describe('mergeArrays', () => {
         state: 'MODIFIED_LOCALLY',
         pendingModifications: [8, 7, 1, 2, 3, 4, 5, 6],
         conflicts: [],
+        patch: [
+          {op: 'add', path: '/7', value: 6},
+        ],
       })
     })
     test('identical additions', () => {
@@ -60,6 +70,7 @@ describe('mergeArrays', () => {
         state: 'IN_SYNC',
         pendingModifications: [1, 2, 3, 4, 5, 6],
         conflicts: [],
+        patch: [],
       })
     })
   })
@@ -74,6 +85,10 @@ describe('mergeArrays', () => {
         state: 'MODIFIED_LOCALLY',
         pendingModifications: [1, 2, 4, 5],
         conflicts: [],
+        patch: [
+          {op: 'test', path: '/2', value: 3},
+          {op: 'remove', path: '/2'},
+        ],
       })
     })
     test('simple removals on server', () => {
@@ -85,6 +100,7 @@ describe('mergeArrays', () => {
         state: 'IN_SYNC',
         pendingModifications: [1, 2, 4, 5],
         conflicts: [],
+        patch: [],
       })
     })
     test('removal of modified value', () => {
@@ -98,6 +114,7 @@ describe('mergeArrays', () => {
         conflicts: [
           [],
         ],
+        patch: [],
       })
     })
     test('complex removals', () => {
@@ -109,6 +126,12 @@ describe('mergeArrays', () => {
         state: 'MODIFIED_LOCALLY',
         pendingModifications: [2, 4],
         conflicts: [],
+        patch: [
+          {op: 'test', path: '/0', value: 1},
+          {op: 'remove', path: '/0'},
+          {op: 'test', path: '/2', value: 5},
+          {op: 'remove', path: '/2'},
+        ],
       })
     })
   })
@@ -122,6 +145,11 @@ describe('mergeArrays', () => {
       state: 'MODIFIED_LOCALLY',
       pendingModifications: [6, 1, 2, 4, 7, 8],
       conflicts: [],
+      patch: [
+        {op: 'test', path: '/4', value: 5},
+        {op: 'remove', path: '/4'},
+        {op: 'add', path: '/4', value: 7},
+      ],
     })
   })
 
@@ -135,6 +163,10 @@ describe('mergeArrays', () => {
         state: 'MODIFIED_LOCALLY',
         pendingModifications: [1, 5, 2, 3, 4],
         conflicts: [],
+        patch: [
+          {op: 'test', path: '/4', value: 5},
+          {op: 'move', from: '/4', path: '/1'},
+        ],
       })
     })
     test('moving on server', () => {
@@ -146,9 +178,42 @@ describe('mergeArrays', () => {
         state: 'IN_SYNC',
         pendingModifications: [1, 5, 2, 3, 4],
         conflicts: [],
+        patch: [],
       })
     })
-    test('swapping next to each other', () => {
+    test('swapping next to each other locally', () => {
+      expect(mergeArrays({
+        original: [1, 2, 3],
+        server: [1, 2, 3],
+        local: [1, 3, 2],
+      }, merge)).toEqual({
+        state: 'MODIFIED_LOCALLY',
+        pendingModifications: [1, 3, 2],
+        conflicts: [],
+        patch: [
+          {op: 'test', path: '/1', value: 2},
+          {op: 'move', from: '/1', path: '/2'},
+        ],
+      })
+    })
+    test('swapping far from each other locally', () => {
+      expect(mergeArrays({
+        original: [1, 2, 3, 4],
+        server: [1, 2, 3, 4],
+        local: [4, 2, 3, 1],
+      }, merge)).toEqual({
+        state: 'MODIFIED_LOCALLY',
+        pendingModifications: [4, 2, 3, 1],
+        conflicts: [],
+        patch: [
+          {op: 'test', path: '/0', value: 1},
+          {op: 'move', from: '/0', path: '/2'},
+          {op: 'test', path: '/3', value: 4},
+          {op: 'move', from: '/3', path: '/0'},
+        ],
+      })
+    })
+    test('swapping next to each other on server', () => {
       expect(mergeArrays({
         original: [1, 2, 3],
         server: [1, 3, 2],
@@ -157,9 +222,10 @@ describe('mergeArrays', () => {
         state: 'IN_SYNC',
         pendingModifications: [1, 3, 2],
         conflicts: [],
+        patch: [],
       })
     })
-    test('swapping far from each other', () => {
+    test('swapping far from each other on server', () => {
       expect(mergeArrays({
         original: [1, 2, 3, 4],
         server: [4, 2, 3, 1],
@@ -168,6 +234,7 @@ describe('mergeArrays', () => {
         state: 'IN_SYNC',
         pendingModifications: [4, 2, 3, 1],
         conflicts: [],
+        patch: [],
       })
     })
 
@@ -180,6 +247,7 @@ describe('mergeArrays', () => {
         state: 'IN_SYNC',
         pendingModifications: [1, 5, 2, 3, 4],
         conflicts: [],
+        patch: [],
       })
     })
 
@@ -192,6 +260,10 @@ describe('mergeArrays', () => {
         state: 'MODIFIED_LOCALLY',
         pendingModifications: [1, 5, 2, 4, 3],
         conflicts: [],
+        patch: [
+          {op: 'test', path: '/3', value: 3},
+          {op: 'move', from: '/3', path: '/4'},
+        ],
       })
     })
   })
@@ -206,6 +278,10 @@ describe('mergeArrays', () => {
         state: 'MODIFIED_LOCALLY',
         pendingModifications: [1, 2, 3, 4, {_id: 5, value: 8}],
         conflicts: [],
+        patch: [
+          {op: 'test', path: '/4/_id', value: 5},
+          {op: 'replace', path: '/4/value', value: 8},
+        ],
       })
     })
     test('modifying on server', () => {
@@ -217,6 +293,7 @@ describe('mergeArrays', () => {
         state: 'IN_SYNC',
         pendingModifications: [1, 2, 3, 4, {_id: 5, value: 8}],
         conflicts: [],
+        patch: [],
       })
     })
     test('modifying on both', () => {
@@ -228,6 +305,7 @@ describe('mergeArrays', () => {
         state: 'IN_SYNC',
         pendingModifications: [1, 2, 3, 4, {_id: 5, value: 8}],
         conflicts: [],
+        patch: [],
       })
     })
 
@@ -240,6 +318,7 @@ describe('mergeArrays', () => {
         state: 'IN_SYNC',
         pendingModifications: [1, 2, {_id: 5, value: 8}, 3, 4],
         conflicts: [],
+        patch: [],
       })
     })
 
@@ -252,6 +331,12 @@ describe('mergeArrays', () => {
         state: 'MODIFIED_LOCALLY',
         pendingModifications: [1, 2, {_id: 5, value: 8}, 3, 4],
         conflicts: [],
+        patch: [
+          {op: 'test', path: '/4/_id', value: 5},
+          {op: 'replace', path: '/4/value', value: 8},
+          {op: 'test', path: '/4/_id', value: 5},
+          {op: 'move', path: '/2', from: '/4'},
+        ],
       })
     })
 
@@ -264,6 +349,10 @@ describe('mergeArrays', () => {
         state: 'MODIFIED_LOCALLY',
         pendingModifications: [1, 2, {_id: 5, value: 8}, 3, 4],
         conflicts: [],
+        patch: [
+          {op: 'test', path: '/2/_id', value: 5},
+          {op: 'replace', path: '/2/value', value: 8},
+        ],
       })
     })
   })
@@ -279,6 +368,10 @@ describe('mergeArrays', () => {
       conflicts: [
         [],
       ],
+      patch: [
+        {op: 'test', path: '/2', value: 5},
+        {op: 'remove', path: '/2'},
+      ]
     })
   })
 
@@ -293,6 +386,9 @@ describe('mergeArrays', () => {
       conflicts: [
         [],
       ],
+      patch: [
+        {op: 'add', path: '/0', value: 5},
+      ]
     })
   })
 
@@ -307,6 +403,9 @@ describe('mergeArrays', () => {
       conflicts: [
         [],
       ],
+      patch: [
+        {op: 'add', path: '/0', value: 5},
+      ]
     })
   })
 
@@ -319,6 +418,152 @@ describe('mergeArrays', () => {
       state: 'MODIFIED_LOCALLY',
       pendingModifications: [4, 10, 6, 7, 8, 9, 11, 22, 33],
       conflicts: [],
+      patch: [
+        {op: 'test', path: '/1', value: 5},
+        {op: 'remove', path: '/1'},
+        {op: 'add', path: '/1', value: 10},
+      ],
+    })
+  })
+
+  test('tough cases 6', () => {
+    expect(mergeArrays({
+      original: [1, 2, 3, 4],
+      server: [1, 9, 2, 8, 3, 7, 4, 6],
+      local: [1, 11, 2, 3, 4],
+    }, merge)).toEqual({
+      state: 'MODIFIED_LOCALLY',
+      pendingModifications: [1, 11, 9, 2, 8, 3, 7, 4, 6],
+      conflicts: [],
+      patch: [
+        {op: 'add', path: '/1', value: 11},
+      ],
+    })
+  })
+  test('tough cases 6B', () => {
+    expect(mergeArrays({
+      original: [1, 2, 3, 4],
+      server: [1, 9,  2, 8, 3, 7, 4, 6],
+      local:  [1, 11, 2, 3, 4, 10],
+    }, merge)).toEqual({
+      state: 'MODIFIED_LOCALLY',
+      pendingModifications: [1, 11, 9, 2, 8, 3, 7, 4, 6, 10],
+      conflicts: [],
+      patch: [
+        {op: 'add', path: '/1', value: 11}, {op: 'add', path: '/9', value: 10},
+      ],
+    })
+  })
+  test('tough cases 6Bb', () => {
+    expect(mergeArrays({
+      original: [3, 4],
+      server: [8, 3, 7, 4, 6],
+      local:  [3, 4, 10],
+    }, merge)).toEqual({
+      state: 'MODIFIED_LOCALLY',
+      pendingModifications: [8, 3, 7, 4, 10, 6],
+      conflicts: [],
+      patch: [
+        {op: 'add', path: '/4', value: 10},
+      ],
+    })
+  })
+  test('tough cases 6C', () => {
+    expect(mergeArrays({
+      original: [1, 2, 3, 4],
+      server: [1, 9, 2, 8, 3, 7, 4, 6],
+      local: [1, 11, 2, 3, 12, 4, 10],
+    }, merge)).toEqual({
+      state: 'MODIFIED_LOCALLY',
+      pendingModifications: [1, 11, 9, 2, 8, 3, 7, 12, 4, 6, 10],
+      conflicts: [],
+      patch: [
+        {op: 'add', path: '/1', value: 11},
+        {op: 'add', path: '/7', value: 12},
+        {op: 'add', path: '/10', value: 10},
+      ],
+    })
+  })
+
+  describe('random tests patch', () => {
+    const seed = 0
+    function mulberry32(a: number) {
+      return function() {
+        let t = a += 0x6D2B79F5
+        /* eslint-disable */
+        t = Math.imul(t ^ t >>> 15, t | 1)
+        t ^= t + Math.imul(t ^ t >>> 7, t | 61)
+        return ((t ^ t >>> 14) >>> 0) / 4294967296
+        /* eslint-enable */
+      }
+    }
+    const random = mulberry32(seed)
+
+
+    let i = 10
+    const randomIndex = (arr: unknown[]) => Math.floor(random()*arr.length)
+    const addRandom = (arr: unknown[]) => arr.splice(randomIndex(arr), 0, ++i)
+    const removeRandom = (arr: unknown[]) => arr.splice(randomIndex(arr), 1)
+    const moveRandom = (arr: unknown[]) => {
+      const from = randomIndex(arr)
+      const [val] = arr.splice(from, 1)
+      arr.splice(randomIndex(arr), 0, val)
+    }
+    const repeatIn = (arr: unknown[], num: number, action: (arr: unknown[]) => unknown) => {
+      for(let i = 0; i < num; i++) action(arr)
+    }
+
+    function testPatching(original, modified) {
+      const {pendingModifications, patch }= mergeArrays({original, server: original, local: modified}, merge)
+
+      const patched = [...original]
+      const patchRes = applyPatch(patched, patch as any)
+      try {
+        expect(pendingModifications).toEqual(patched)
+      } catch(e) {
+        console.log({
+          original,
+          pendingModifications,
+          patch,
+          patched,
+          patchRes,
+        })
+        throw(e)
+      }
+    }
+
+    test('random adding', () => {
+      const original = [1, 2, 4, 5, 6, 7, 8, 9, 10]
+      const added = [...original]
+      repeatIn(added, Math.random()*20, addRandom)
+
+      testPatching(original, added)
+    })
+
+    test('random removals', () => {
+      const original = [1, 2, 4, 5, 6, 7, 8, 9, 10]
+      const added = [...original]
+      repeatIn(added, Math.random()*5, removeRandom)
+
+      testPatching(original, added)
+    })
+
+    test('random moving', () => {
+      const original = [1, 2, 4, 5, 6, 7, 8, 9, 10]
+      const added = [...original]
+      repeatIn(added, Math.random()*5, moveRandom)
+
+      testPatching(original, added)
+    })
+
+    test('random everything', () => {
+      const original = [1, 2, 4, 5, 6, 7, 8, 9, 10]
+      const added = [...original]
+      repeatIn(added, Math.random()*20, addRandom)
+      repeatIn(added, Math.random()*5, removeRandom)
+      repeatIn(added, Math.random()*5, moveRandom)
+
+      testPatching(original, added)
     })
   })
 })

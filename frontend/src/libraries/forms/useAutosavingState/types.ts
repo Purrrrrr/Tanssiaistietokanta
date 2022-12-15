@@ -17,6 +17,14 @@ export interface MergeResult<T extends Mergeable> {
   state: SyncState
   pendingModifications: T
   conflicts: ArrayPath<T>[]
+  patch: Operation[]
+}
+
+export interface Operation {
+  op: 'add' | 'remove' | 'replace' | 'move' | 'copy' | 'test'
+  from?: string
+  path: string
+  value?: Mergeable
 }
 
 export interface MergeData<T extends Mergeable> {
