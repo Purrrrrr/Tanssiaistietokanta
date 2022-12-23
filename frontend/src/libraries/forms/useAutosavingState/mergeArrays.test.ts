@@ -1,12 +1,11 @@
 import {applyPatch} from 'rfc6902'
 
-import {MergeableListItem, MergeFunction} from './types'
+import {MergeableListItem} from './types'
 
 import {mergeArrays} from './mergeArrays'
+import merge from './mergeValues'
 
 describe('mergeArrays', () => {
-  const merge : MergeFunction = (data) => ({ state: 'IN_SYNC', conflicts: [], pendingModifications: data.local, patch: [] })
-
   test('no changes', () => {
     expect(mergeArrays({
       original: [1, 2, 3, 4, 5],
