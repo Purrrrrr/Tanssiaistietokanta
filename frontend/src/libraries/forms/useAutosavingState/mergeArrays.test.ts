@@ -484,8 +484,13 @@ describe('mergeArrays', () => {
     })
   })
 
-  describe('random tests patch', () => {
-    const seed = 0
+  describe.each([
+    [0],
+    [1],
+    [2],
+    [3],
+    [4],
+  ])('random tests patch (seed = %i)', (seed) => {
     function mulberry32(a: number) {
       return function() {
         let t = a += 0x6D2B79F5
@@ -496,7 +501,11 @@ describe('mergeArrays', () => {
         /* eslint-enable */
       }
     }
-    const random = mulberry32(seed)
+
+    let random
+    beforeEach(() => {
+      random = mulberry32(seed)
+    })
 
 
     let i = 10
@@ -534,7 +543,7 @@ describe('mergeArrays', () => {
     test('random adding', () => {
       const original = [1, 2, 4, 5, 6, 7, 8, 9, 10]
       const added = [...original]
-      repeatIn(added, Math.random()*20, addRandom)
+      repeatIn(added, random()*20, addRandom)
 
       testPatching(original, added)
     })
@@ -542,7 +551,7 @@ describe('mergeArrays', () => {
     test('random removals', () => {
       const original = [1, 2, 4, 5, 6, 7, 8, 9, 10]
       const added = [...original]
-      repeatIn(added, Math.random()*5, removeRandom)
+      repeatIn(added, random()*5, removeRandom)
 
       testPatching(original, added)
     })
@@ -550,7 +559,7 @@ describe('mergeArrays', () => {
     test('random moving', () => {
       const original = [1, 2, 4, 5, 6, 7, 8, 9, 10]
       const added = [...original]
-      repeatIn(added, Math.random()*5, moveRandom)
+      repeatIn(added, random()*5, moveRandom)
 
       testPatching(original, added)
     })
@@ -558,9 +567,9 @@ describe('mergeArrays', () => {
     test('random everything', () => {
       const original = [1, 2, 4, 5, 6, 7, 8, 9, 10]
       const added = [...original]
-      repeatIn(added, Math.random()*20, addRandom)
-      repeatIn(added, Math.random()*5, removeRandom)
-      repeatIn(added, Math.random()*5, moveRandom)
+      repeatIn(added, random()*20, addRandom)
+      repeatIn(added, random()*5, removeRandom)
+      repeatIn(added, random()*5, moveRandom)
 
       testPatching(original, added)
     })
