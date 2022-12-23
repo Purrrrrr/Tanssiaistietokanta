@@ -1,5 +1,3 @@
-import {createPatch} from 'rfc6902'
-
 import {MergeableListItem, MergeData, MergeFunction, MergeResult, Operation, SyncState} from './types'
 
 import {ArrayPath} from '../types'
@@ -64,13 +62,15 @@ function mergeModifications<T extends MergeableListItem>(original: T[], serverDi
     .filter(change => ['MODIFIED', 'MOVED_AND_MODIFIED'].includes(change.status))
     .forEach(change => {
       const local = change.changedValue
+      const original = change.originalValue
       pendingModifications[change.from] = local
       modifiedIndexesById.set(change.id, change.from)
       const serverPos = serverPositionsById.get(change.id)
       if (serverPos !== undefined) {
+        const result = merge({ original, local, server: original})
         patchesById.set(change.id, [
           testOriginalItem(serverPos, local),
-          ...scopePatch(String(serverPos), createPatch(change.originalValue, local))
+          ...scopePatch(String(serverPos), result.patch)
         ])
       }
     })
