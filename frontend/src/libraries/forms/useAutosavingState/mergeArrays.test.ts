@@ -534,7 +534,7 @@ describe('mergeArrays', () => {
           pendingModifications,
           patch,
           patched,
-          patchRes,
+          patchRes: patchRes.map(res => res?.message),
         })
         throw(e)
       }
