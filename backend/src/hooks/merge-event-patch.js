@@ -8,11 +8,8 @@ module.exports = function () {
       const {program} = context.data
       const eventService = context.app.service('events')
       const eventInDB = await eventService.get(context.id)
-      console.dir(program, {depth: 999})
 
       context.data.program = patch(eventInDB.program, program)
-
-      console.dir(context.data.program, {depth: 999})
     }
   }
 
