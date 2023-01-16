@@ -72,6 +72,18 @@ describe('mergeArrays', () => {
         patch: [],
       })
     })
+    test('complex identical additions', () => {
+      expect(mergeArrays({
+        original: [1, 2, 3, 4, 5],
+        server: [1, 2, 3, 4, 5, {_id: 6, data: 6}],
+        local: [1, 2, 3, 4, 5, {_id: 7, data: 6}],
+      }, merge)).toEqual({
+        state: 'IN_SYNC',
+        pendingModifications: [1, 2, 3, 4, 5, {_id: 6, data: 6}],
+        conflicts: [],
+        patch: [],
+      })
+    })
   })
 
   describe('removing from lists', () => {
