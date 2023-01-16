@@ -208,6 +208,12 @@ function mergeMoves<T extends MergeableListItem>(original: T[], serverDiff: Chan
     serverDiff.map(change => [change.id, change.to])
   )
 
+  const localRemoves = new Set(
+    localDiff
+      .filter(change => change.status === 'REMOVED')
+      .map(change => change.from)
+  )
+
   const moves = new Map<unknown, number>()
   const addedPositionsById = new Map<unknown, number>()
   const removedPositionsById = new Map<unknown, number>()
@@ -235,7 +241,10 @@ function mergeMoves<T extends MergeableListItem>(original: T[], serverDiff: Chan
         if (localChange.moveAmount !== -1) {
           const serverPos = serverPositionsById.get(localChange.id)
           if (serverPos !== undefined) {
-            const from = serverPos + countIn(addedPositionsById, pos => pos <= serverPos) - countIn(removedPositionsById, pos => pos <= serverPos)
+            const from = serverPos
+              + countIn(addedPositionsById, pos => pos <= serverPos)
+              - countIn(removedPositionsById, pos => pos <= serverPos)
+              - countIn(localRemoves, key => key <= serverPos)
             const to = from + localChange.moveAmount
             patch.push(
               testOriginalItem(serverPos, localChange.originalValue),
