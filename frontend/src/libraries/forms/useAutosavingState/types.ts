@@ -27,7 +27,7 @@ export interface Operation {
   value?: Mergeable
 }
 
-export interface MergeData<T extends Mergeable> {
+export interface MergeData<T> {
   server: T,
   original: T,
   local: T,
