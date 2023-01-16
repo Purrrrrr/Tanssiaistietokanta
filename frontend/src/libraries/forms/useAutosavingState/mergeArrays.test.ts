@@ -529,13 +529,15 @@ describe('mergeArrays', () => {
       try {
         expect(pendingModifications).toEqual(patched)
       } catch(e) {
-        console.log({
+        console.dir({
           original,
+          modified,
           pendingModifications,
-          patch,
+          patch: patch.map((line, index) =>
+            [line, patchRes[index]?.message ?? 'OK']
+          ),
           patched,
-          patchRes: patchRes.map(res => res?.message),
-        })
+        }, {depth: 5})
         throw(e)
       }
     }
