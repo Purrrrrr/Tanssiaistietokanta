@@ -9,11 +9,10 @@ export interface Entity {
   [key: string]: Mergeable
 }
 export type MergeableScalar  = undefined | null | string | number | boolean
-export type MergeableListItem = Entity | ID
-export type Mergeable = MergeableScalar | MergeableObject | MergeableListItem[]
+export type Mergeable = MergeableScalar | MergeableObject | Entity[]
 
 export type SyncState = 'IN_SYNC' | 'MODIFIED_LOCALLY' | 'CONFLICT' | 'INVALID'
-export interface MergeResult<T extends Mergeable> {
+export interface MergeResult<T> {
   state: SyncState
   pendingModifications: T
   conflicts: ArrayPath<T>[]
@@ -31,6 +30,14 @@ export interface MergeData<T> {
   server: T,
   original: T,
   local: T,
+}
+
+export function mapMergeData<T, R>(data: MergeData<T>, mapper: (t: T) => R): MergeData<R> {
+  return {
+    local: mapper(data.local),
+    server: mapper(data.server),
+    original: mapper(data.original),
+  }
 }
 
 export type MergeFunction = <T extends Mergeable>(data: MergeData<T>) => MergeResult<T>

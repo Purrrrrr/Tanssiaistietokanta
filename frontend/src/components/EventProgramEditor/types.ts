@@ -12,7 +12,7 @@ export type EventProgramSettings = Program & {
   danceSets: DanceSet[]
 }
 
-export interface DanceSet extends ODanceSet {
+export type DanceSet = ODanceSet & {
   program: EventProgramRow[]
 }
 
@@ -23,22 +23,22 @@ export type EventProgramRow = {
 }
 export type EventProgramItem = DanceProgram | EventProgram | RequestedDance
 
-export interface DanceProgram extends Dance {
+export type DanceProgram = Dance & {
   __typename: 'Dance'
 }
 
-export interface RequestedDance {
+export type RequestedDance = {
   __typename: 'RequestedDance'
   duration?: never
   _id?: never
 }
 
-export interface EventProgram extends ProgramItem {
+export type EventProgram = ProgramItem & {
   __typename: 'EventProgram'
   showInLists: boolean
 }
 
-export interface ProgramItem {
+export type ProgramItem = {
   _id?: string
   name: string
   description?: string | null

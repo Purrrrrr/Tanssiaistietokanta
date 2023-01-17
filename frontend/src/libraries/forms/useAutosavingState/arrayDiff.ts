@@ -1,6 +1,6 @@
 import deepEquals from 'fast-deep-equal'
 
-import { MergeableListItem } from './types'
+import { Entity } from './types'
 
 import { mapToIds } from './idUtils'
 
@@ -20,7 +20,7 @@ interface PartialChange {
   to: number,
 }
 
-export function getArrayChanges<T extends MergeableListItem>(original: T[], changed: T[]): Change<T>[] {
+export function getArrayChanges<T extends Entity>(original: T[], changed: T[]): Change<T>[] {
   const originalIds = mapToIds(original)
   const changedIds = mapToIds(changed)
 

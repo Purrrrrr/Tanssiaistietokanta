@@ -1,6 +1,6 @@
 // import deepEquals from 'fast-deep-equal'
 
-import {ID, MergeableListItem, MergeData, MergeFunction } from './types'
+import {Entity, ID, mapMergeData, MergeData, MergeFunction } from './types'
 
 import {Graph, makeGraph} from './Graph'
 import { mapToIds } from './idUtils'
@@ -29,7 +29,7 @@ interface Node {
 }
 
 /** Merge deletes and modifications */
-export function GTSort<T extends MergeableListItem>(
+export function GTSort<T extends Entity>(
   data: MergeData<T[]>,
   merge: MergeFunction,
 ): void {
@@ -164,14 +164,6 @@ function lastAddedNodesAfter(node: ID, data: MergeData<AnalyzedList>): Set<ID> {
     if (candidate.isAdded) addedNodes.add(candidate.id)
   })
   return addedNodes
-}
-
-function mapMergeData<T, R>(data: MergeData<T>, mapper: (t: T) => R): MergeData<R> {
-  return {
-    local: mapper(data.local),
-    server: mapper(data.server),
-    original: mapper(data.original),
-  }
 }
 
 function getCommonPredecessor(node, data: MergeData<AnalyzedList>) {
