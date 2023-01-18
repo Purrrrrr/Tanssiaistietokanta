@@ -5,10 +5,16 @@ import {Entity, ID, mapMergeData, MergeData, MergeFunction, MergeResult, SyncSta
 
 import {Graph, makeGraph} from './Graph'
 import { mapToIds } from './idUtils'
+import merge from './mergeValues'
 
 // eslint-disable-next-line
 /* @ts-ignore */
-window.m = GTSort
+window.m = function(t) {
+  return mergeArrays(
+    mapMergeData(t, (l: string[]) => l.map(i => ({_id: i, value: i}))),
+    merge
+  )
+}
 const log = (...arr) => { /*empty */} //log.bind(console)
 
 interface AnalyzedList {
@@ -328,8 +334,6 @@ function topologicalSort(graph: Graph<ID>, data: MergeData<AnalyzedList>) {
     marked.add(firstNode(nodes, data.server))
   })
 
-  //marked.add(firstLocal)
-  //marked.add(firstServer)
   const successors = new Set<ID>()
   const merged = [] as ID[]
 
