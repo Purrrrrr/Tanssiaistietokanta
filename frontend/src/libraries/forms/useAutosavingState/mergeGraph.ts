@@ -117,7 +117,7 @@ export function mergeArrays<T extends Entity>(
   //
   const r = GTSort(
     mapMergeData(data, ({ids}) =>
-      ids.filter(hasId).map(id => ({id, isAdded: data.original.has(id)}))
+      ids.filter(hasId).map(id => ({id, isAdded: !data.original.has(id)}))
     )
   )
 
@@ -229,7 +229,7 @@ function addEdges(mergedGraph: Graph<ID>, original: AnalyzedList, version1: Anal
 
   const debug = [fromNode.id]
   while(fromNode.next) {
-    const from = fromNode.id
+    const {id: from, isAdded} = fromNode
     const to = fromNode.next.id
     fromNode = fromNode.next
 
@@ -240,7 +240,8 @@ function addEdges(mergedGraph: Graph<ID>, original: AnalyzedList, version1: Anal
       debug.push(` | ${to}`)
       continue
     }
-    if (fromNode.isAdded && lastInOriginal !== null) {
+
+    if (isAdded && lastInOriginal !== null) {
       const v2HasTransitivePath = version2.hasPathBetween(lastInOriginal, to)
       const originalHasTransitivePath = original.hasPathBetween(lastInOriginal, to)
       log({from, to, lastInOriginal, originalHasTransitivePath, v2HasTransitivePath})
@@ -248,7 +249,7 @@ function addEdges(mergedGraph: Graph<ID>, original: AnalyzedList, version1: Anal
         debug.push(` | ${to}`)
         continue
       }
-    } else {
+    } else if (!isAdded){
       lastInOriginal = from
     }
 
