@@ -180,7 +180,7 @@ describe('mergeArrays', () => {
       local: [1, 2, 3, 4, 7],
     })).toMatchObject(mergeResult({
       state: 'MODIFIED_LOCALLY',
-      pendingModifications: [6, 1, 2, 4, 7, 8],
+      pendingModifications: [6, 1, 2, 4, 8, 7],
       conflicts: [],
       patch: [
         {op: 'test', path: '/4', value: 5},
@@ -418,11 +418,9 @@ describe('mergeArrays', () => {
       server: [6, 1, 4, 2, 3, 55, 66],
       local: [5, 1, 2, 3],
     })).toMatchObject(mergeResult({
-      state: 'CONFLICT',
-      pendingModifications: [5, 6, 1, 2, 3, 55, 66],
-      conflicts: [
-        [],
-      ],
+      state: 'MODIFIED_LOCALLY',
+      pendingModifications: [6, 5, 1, 2, 3, 55, 66],
+      conflicts: [],
       patch: [
         {op: 'add', path: '/0', value: 5},
       ]
@@ -435,8 +433,8 @@ describe('mergeArrays', () => {
       server: [6, 1, 3, 2, 55, 66],
       local: [5, 1, 3],
     })).toMatchObject(mergeResult({
-      state: 'CONFLICT',
-      pendingModifications: [5, 6, 1, 3, 55, 66],
+      state: 'MODIFIED_LOCALLY',
+      pendingModifications: [6, 5, 1, 3, 55, 66],
       conflicts: [
         [],
       ],
@@ -453,7 +451,7 @@ describe('mergeArrays', () => {
       local: [4, 10, 11, 22, 33],
     })).toMatchObject(mergeResult({
       state: 'MODIFIED_LOCALLY',
-      pendingModifications: [4, 10, 6, 7, 8, 9, 11, 22, 33],
+      pendingModifications: [4, 6, 7, 8, 9, 10, 11, 22, 33],
       conflicts: [],
       patch: [
         {op: 'test', path: '/1', value: 5},
@@ -470,7 +468,7 @@ describe('mergeArrays', () => {
       local: [1, 11, 2, 3, 4],
     })).toMatchObject(mergeResult({
       state: 'MODIFIED_LOCALLY',
-      pendingModifications: [1, 11, 9, 2, 8, 3, 7, 4, 6],
+      pendingModifications: [1, 9, 11, 2, 8, 3, 7, 4, 6],
       conflicts: [],
       patch: [
         {op: 'add', path: '/1', value: 11},
@@ -484,7 +482,7 @@ describe('mergeArrays', () => {
       local:  [1, 11, 2, 3, 4, 10],
     })).toMatchObject(mergeResult({
       state: 'MODIFIED_LOCALLY',
-      pendingModifications: [1, 11, 9, 2, 8, 3, 7, 4, 10, 6],
+      pendingModifications: [1, 9, 11, 2, 8, 3, 7, 4, 6, 10],
       conflicts: [],
       patch: [
         {op: 'add', path: '/1', value: 11}, {op: 'add', path: '/9', value: 10},
@@ -498,7 +496,7 @@ describe('mergeArrays', () => {
       local:  [3, 4, 10],
     })).toMatchObject(mergeResult({
       state: 'MODIFIED_LOCALLY',
-      pendingModifications: [8, 3, 7, 4, 10, 6],
+      pendingModifications: [8, 3, 7, 4, 6, 10],
       conflicts: [],
       patch: [
         {op: 'add', path: '/4', value: 10},
@@ -512,12 +510,87 @@ describe('mergeArrays', () => {
       local: [1, 11, 2, 3, 12, 4, 10],
     })).toMatchObject(mergeResult({
       state: 'MODIFIED_LOCALLY',
-      pendingModifications: [1, 11, 9, 2, 8, 3, 12, 7, 4, 10, 6],
+      pendingModifications: [1, 9, 11, 2, 8, 3, 7, 12, 4, 6, 10],
       conflicts: [],
       patch: [
         {op: 'add', path: '/1', value: 11},
         {op: 'add', path: '/7', value: 12},
         {op: 'add', path: '/10', value: 10},
+      ],
+    }))
+  })
+
+  test('tough cases 7', () => {
+    expect(doMerge({
+      original: 'TKQNFBP',
+      server: 'KQTNJPFS',
+      local: 'TKMNJPFX',
+    })).toMatchObject(mergeResult({
+      state: 'CONFLICT',
+      pendingModifications: 'K??NJPFSX',
+      conflicts: [],
+      patch: [
+
+      ],
+    }))
+  })
+
+  test('tough cases 8', () => {
+    expect(doMerge({
+      original: 'ABC',
+      server: 'BAC',
+      local: 'ACB',
+    })).toMatchObject(mergeResult({
+      state: 'CONFLICT',
+      pendingModifications: 'ACB',
+      conflicts: [],
+      patch: [
+
+      ],
+    }))
+  })
+
+  test('tough cases 8B', () => {
+    expect(doMerge({
+      original: 'ABCxabc',
+      server: 'acbxBAC',
+      local: 'ACBxbac',
+    })).toMatchObject(mergeResult({
+      state: 'CONFLICT',
+      pendingModifications: 'acbxBAC',
+      conflicts: [],
+      patch: [
+
+      ],
+    }))
+  })
+
+  test('tough cases 9', () => {
+    expect(doMerge({
+      original: 'ABCDEF',
+      server: 'ACDEFB',
+      local: 'ABDECF',
+    })).toMatchObject(mergeResult({
+      state: 'MODIFIED_LOCALLY',
+      pendingModifications: 'ADECFB',
+      conflicts: [],
+      patch: [
+
+      ],
+    }))
+  })
+
+  test('tough cases 9B', () => {
+    expect(doMerge({
+      original: 'ABCDEF',
+      server: 'ACXDEFB',
+      local: 'AYBDECF',
+    })).toMatchObject(mergeResult({
+      state: 'MODIFIED_LOCALLY',
+      pendingModifications: 'AYDECXFB',
+      conflicts: [],
+      patch: [
+
       ],
     }))
   })
