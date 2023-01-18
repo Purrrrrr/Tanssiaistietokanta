@@ -3,6 +3,7 @@ import deepEquals from 'fast-deep-equal'
 
 import {Entity, ID, mapMergeData, MergeData, MergeFunction, MergeResult, SyncState } from './types'
 
+import { getTopNodes } from './comparisons'
 import {Graph, makeGraph} from './Graph'
 import { mapToIds } from './idUtils'
 import merge from './mergeValues'
@@ -339,6 +340,7 @@ function topologicalSort(graph: Graph<ID>, data: MergeData<AnalyzedList>) {
 
   function selectNode(component: Set<ID>): ID {
     const candidates = Array.from(component).filter(node => marked.has(node))
+    //console.log('!! '+candidates.join(', '))
 
     const inSuccessors = [] as ID[]
     const rest = [] as ID[]
@@ -348,12 +350,12 @@ function topologicalSort(graph: Graph<ID>, data: MergeData<AnalyzedList>) {
 
     if (inSuccessors.length > 0) {
       if (inSuccessors.length > 1) {
-        log('!! multiple successors '+inSuccessors.join(', '))
+        console.log('!! multiple successors '+inSuccessors.join(', '))
       }
       return inSuccessors[0]
     }
     if (rest.length > 1) {
-      log('!! multiple rest '+rest.join(', '))
+      console.log('!! multiple rest '+rest.join(', '))
     }
 
     return rest.pop()! //[0]
@@ -361,18 +363,38 @@ function topologicalSort(graph: Graph<ID>, data: MergeData<AnalyzedList>) {
   const setToString = com => `{ ${Array.from(com).map(String).join(', ')} }`
   log(graph.toDot(String))
 
-  let i = 0
-  while(!graph.isEmpty() && i < 100) {
+  while(!graph.isEmpty()) {
     const sourceComponents = new Set(components.sourceNodes())
-    const c = Array.from(sourceComponents)
-    if (c.length > 1) {
-      log(`Many choices ${c.map(setToString).join(', ')}`)
+    const topComponents = getTopNodes(sourceComponents, [
+      c => {
+        //The higher numbers go first
+        if (c.size > 1) return 1 //Complex group, probably not added
+        const id = firstItem(c)
+
+        if (data.original.has(id)) return 1 //Not added
+        if (data.local.has(id)) return 2 //Added to local
+        if (data.server.has(id)) return 3 //Added to server
+        throw new Error('??')
+      }
+    ])
+
+    //console.log(`Choices ${Array.from(sourceComponents).map(setToString).join(', ')}`)
+    if (topComponents.length > 1) {
+      console.log(`Many choices ${topComponents.map(setToString).join(', ')}`)
+      topComponents.forEach(comp => {
+        comp.forEach(n => {
+          console.log(
+            n,
+            data.server.has(n) && data.server.toNode(n),
+            data.local.has(n) && data.local.toNode(n))
+        })
+      })
     }
 
-    const component = c[0]
+    const component = topComponents[0]
     const selected : ID[] = []
 
-    while(component.size > 0 && i < 100) {
+    while(component.size > 0) {
       const node = selectNode(component)
       selected.push(node)
       const edges = graph.outgoingEdges(node)
@@ -387,8 +409,6 @@ function topologicalSort(graph: Graph<ID>, data: MergeData<AnalyzedList>) {
       component.delete(node)
       graph.removeNode(node)
       //log(graph.toDot(String))
-
-      i++
     }
 
     log('Selected: '+selected.join(', '))
@@ -410,4 +430,9 @@ function firstNode(nodes: ID[], list: AnalyzedList): ID {
           : previousFirst
       }
     )
+}
+
+
+function firstItem<T>(set: Set<T>): T {
+  return Array.from(set)[0]
 }
