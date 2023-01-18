@@ -11,8 +11,6 @@ export interface Graph<T> {
   toDot(nodeToStr: (node: T) => string): string
 }
 
-const log = () => { /*empty */} //console.log.bind(console)
-
 export function makeGraph<T>(nodeIterable: Iterable<T>): Graph<T> {
   const nodes = new Set(nodeIterable)
   const nodeList = Array.from(nodes)

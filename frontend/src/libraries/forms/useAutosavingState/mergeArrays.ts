@@ -14,7 +14,7 @@ interface ArrayMergeResult<T> {
   patch: Operation[]
 }
 
-const log = () => { /*empty */} //console.log.bind(console)
+const log = (...ar) => { /*empty */} //console.log.bind(console)
 
 export function mergeArrays<T extends Entity>(
   data: MergeData<T[]>,
