@@ -1,6 +1,7 @@
 // import deepEquals from 'fast-deep-equal'
+import deepEquals from 'fast-deep-equal'
 
-import {Entity, ID, mapMergeData, MergeData, MergeFunction } from './types'
+import {Entity, ID, mapMergeData, MergeData, MergeFunction, MergeResult, SyncState } from './types'
 
 import {Graph, makeGraph} from './Graph'
 import { mapToIds } from './idUtils'
@@ -8,6 +9,7 @@ import { mapToIds } from './idUtils'
 // eslint-disable-next-line
 /* @ts-ignore */
 window.m = GTSort
+const log = (...arr) => { /*empty */} //log.bind(console)
 
 interface AnalyzedList {
   ids: ID[]
@@ -28,29 +30,131 @@ interface Node {
   previous: Node | null
 }
 
-/** Merge deletes and modifications */
-export function GTSort<T extends Entity>(
-  data: MergeData<T[]>,
+export function mergeArrays<T extends Entity>(
+  mergeData: MergeData<T[]>,
   merge: MergeFunction,
-): void {
-  const ids = mapMergeData(data, mapToIds)
-  const idSets = mapMergeData(ids, list => new Set(list))
+) : MergeResult<T[]> {
+  const data = mapMergeData(mergeData, values => {
+    const ids = mapToIds(values)
+    const idToData = new Map(
+      ids.map((id, index) =>
+        [
+          id,
+          {
+            value: values[index],
+            index,
+          }
+        ]
+      )
+    )
+    return {
+      ids,
+      has: idToData.has.bind(idToData),
+      getData: idToData.get.bind(idToData),
+      getValue: (id) => idToData.get(id)?.value,
+    }
+  })
 
-  const allExistingIds = new Set([
-    ...ids.local.filter(id => idSets.server.has(id) || !idSets.original.has(id)),
-    ...ids.server.filter(id => idSets.local.has(id) || !idSets.original.has(id)),
+  const addedIds = new Set([
+    ...data.local.ids.filter(id => !data.original.has(id)),
+    ...data.server.ids.filter(id => !data.original.has(id)),
   ])
+  const allExistingIds = new Set([
+    ...data.local.ids.filter(id => data.server.has(id) || !data.original.has(id)),
+    ...data.server.ids.filter(id => data.local.has(id) || !data.original.has(id)),
+  ])
+  const hasId = allExistingIds.has.bind(allExistingIds)
 
-  const analyzedIds = mapMergeData(ids, list => {
-    const idToIndex = new Map(list.map((id, index) => [id, index]))
-    const ids = list.filter(id => allExistingIds.has(id))
+  const mergedValues = new Map<ID, T>()
+  const modifiedIds = new Set<ID>()
+  const conflictingIds = new Set<ID>()
+
+  data.local.ids.forEach(id => {
+    const server = data.server.getValue(id)
+    const original = data.original.getValue(id)
+    const local = data.local.getValue(id)
+
+    if (!local) return
+    if (!server || !original) {
+      mergedValues.set(id, local)
+      return
+    }
+
+    const result = merge<T>({ original, local, server})
+    switch(result.state) {
+      case 'MODIFIED_LOCALLY':
+        modifiedIds.add(id)
+        mergedValues.set(id, result.pendingModifications)
+        break
+      case 'IN_SYNC':
+        mergedValues.set(id, result.pendingModifications)
+        break
+      case 'CONFLICT':
+        conflictingIds.add(id)
+        mergedValues.set(id, result.pendingModifications)
+        break
+    }
+  })
+
+  data.server.ids.forEach(id => {
+    if (data.original.has(id)) return
+    const server = data.server.getValue(id)
+    if (!server) return //Should not happen
+
+    //Added on server
+    mergedValues.set(id, server)
+  })
+
+  // TODO: do something to entries that are both modified and deleted?
+  // TODO: compute duplicate additions
+  //
+  const r = GTSort(
+    mapMergeData(data, ({ids}) =>
+      ids.filter(hasId).map(id => ({id, isAdded: data.original.has(id)}))
+    )
+  )
+
+
+  /*
+  GTSort handles:
+    concurrent moving
+    deleting
+  We need to handle:
+    modification
+
+  Conflicts:
+    modificatio+delete?
+   */
+
+  const hasStructuralChanges = !deepEquals(r, data.server.ids)
+  const isModified = hasStructuralChanges || modifiedIds.size  > 0
+  let state : SyncState = isModified ? 'MODIFIED_LOCALLY' : 'IN_SYNC'
+  if (conflictingIds.size > 0) state = 'CONFLICT'
+
+  return {
+    state,
+    pendingModifications: r.map(id => {
+      const val = mergedValues.get(id)
+      if (!val) throw new Error('Unknown merged id '+id)
+      return val
+    }),
+    conflicts: [],
+    patch: [],
+  }
+}
+
+/** Merge deletes and modifications */
+export function GTSort(mergeIds: MergeData<{id: ID, isAdded: boolean}[]>) {
+  const analyzedIds = mapMergeData(mergeIds, idData=> {
+    const ids = idData.map(({id}) => id)
+    const idToIndex = new Map(ids.map((id, index) => [id, index]))
     const at = (i: number) => ids[i]
-    const nodes : Node[] = ids.map((id, index) => ({
+    const nodes : Node[] = idData.map(({id, isAdded}, index) => ({
       id,
       index,
       previous: null,
       next: null,
-      isAdded: !idSets.original.has(id),
+      isAdded,
       toString: () => id,
     }))
     const nodeAt = (i: number) => nodes[i]
@@ -78,39 +182,37 @@ export function GTSort<T extends Entity>(
     }
   })
 
-  const mergedGraph = makeGraph(allExistingIds)
+  const mergedGraph = makeGraph([...analyzedIds.local.ids, ...analyzedIds.server.ids])
 
   addEdges(mergedGraph, analyzedIds.original, analyzedIds.server, analyzedIds.local)
-  console.log('-------------')
+  log('-------------')
   addEdges(mergedGraph, analyzedIds.original, analyzedIds.local, analyzedIds.server)
 
   const noPredecessors = mergedGraph.sourceNodes()
   const noSuccessors = mergedGraph.sinkNodes()
 
-  console.log('-------------')
+  log('-------------')
   noSuccessors.forEach(node => {
     const commonSuccessor = getCommonSuccessor(node, analyzedIds)
     if (commonSuccessor) {
-      console.log(`${node} -> ${commonSuccessor}`)
+      log(`${node} -> ${commonSuccessor}`)
       mergedGraph.addEdge(node, commonSuccessor)
     }
   })
   noPredecessors.forEach(node => {
     const commonPredecessor = getCommonPredecessor(node, analyzedIds)
     if (commonPredecessor) {
-      console.log(`${commonPredecessor} -> ${node}`)
+      log(`${commonPredecessor} -> ${node}`)
       mergedGraph.addEdge(commonPredecessor, node)
 
       lastAddedNodesAfter(commonPredecessor, analyzedIds).forEach(lastAdded => {
-        console.log(`${lastAdded} -> ${node}`)
+        log(`${lastAdded} -> ${node}`)
         mergedGraph.addEdge(lastAdded, node)
       })
     }
   })
 
-  // eslint-disable-next-line
-  /* @ts-ignore */
-  window.ret = mergedGraph; window.blaa = () => topologicalSort(mergedGraph, analyzedIds)
+  return topologicalSort(mergedGraph, analyzedIds)
 }
 
 
@@ -134,7 +236,7 @@ function addEdges(mergedGraph: Graph<ID>, original: AnalyzedList, version1: Anal
     if (fromNode.isAdded && lastInOriginal !== null) {
       const v2HasTransitivePath = version2.hasPathBetween(lastInOriginal, to)
       const originalHasTransitivePath = original.hasPathBetween(lastInOriginal, to)
-      console.log({from, to, lastInOriginal, originalHasTransitivePath, v2HasTransitivePath})
+      log({from, to, lastInOriginal, originalHasTransitivePath, v2HasTransitivePath})
       if (originalHasTransitivePath && !v2HasTransitivePath) {
         debug.push(` | ${to}`)
         continue
@@ -146,7 +248,7 @@ function addEdges(mergedGraph: Graph<ID>, original: AnalyzedList, version1: Anal
     debug.push(` -> ${to}`)
     mergedGraph.addEdge(from, to)
   }
-  console.log(debug.join(''))
+  log(debug.join(''))
 }
 
 function lastAddedNodesAfter(node: ID, data: MergeData<AnalyzedList>): Set<ID> {
@@ -169,7 +271,7 @@ function lastAddedNodesAfter(node: ID, data: MergeData<AnalyzedList>): Set<ID> {
 function getCommonPredecessor(node, data: MergeData<AnalyzedList>) {
   let localIndex = (data.local.indexOf(node) ?? Infinity) - 1
   let serverIndex = (data.server.indexOf(node) ?? Infinity) - 1
-  //console.log({localIndex, serverIndex})
+  //log({localIndex, serverIndex})
   if (localIndex === Infinity || serverIndex === Infinity) return null
 
   const visitedLocal = new Set()
@@ -194,7 +296,7 @@ function getCommonPredecessor(node, data: MergeData<AnalyzedList>) {
 function getCommonSuccessor(node, data: MergeData<AnalyzedList>) {
   let localIndex = (data.local.indexOf(node) ?? Infinity) + 1
   let serverIndex = (data.server.indexOf(node) ?? Infinity) + 1
-  //console.log({localIndex, serverIndex})
+  //log({localIndex, serverIndex})
   if (localIndex === Infinity || serverIndex === Infinity) return null
 
   const visitedLocal = new Set()
@@ -242,25 +344,25 @@ function topologicalSort(graph: Graph<ID>, data: MergeData<AnalyzedList>) {
 
     if (inSuccessors.length > 0) {
       if (inSuccessors.length > 1) {
-        console.log('!! multiple successors '+inSuccessors.join(', '))
+        log('!! multiple successors '+inSuccessors.join(', '))
       }
       return inSuccessors[0]
     }
     if (rest.length > 1) {
-      console.log('!! multiple rest '+rest.join(', '))
+      log('!! multiple rest '+rest.join(', '))
     }
 
     return rest.pop()! //[0]
   }
   const setToString = com => `{ ${Array.from(com).map(String).join(', ')} }`
-  console.log(graph.toDot(String))
+  log(graph.toDot(String))
 
   let i = 0
   while(!graph.isEmpty() && i < 100) {
     const sourceComponents = new Set(components.sourceNodes())
     const c = Array.from(sourceComponents)
     if (c.length > 1) {
-      console.log(`Many choices ${c.map(setToString).join(', ')}`)
+      log(`Many choices ${c.map(setToString).join(', ')}`)
     }
 
     const component = c[0]
@@ -280,15 +382,15 @@ function topologicalSort(graph: Graph<ID>, data: MergeData<AnalyzedList>) {
       merged.push(node)
       component.delete(node)
       graph.removeNode(node)
-      //console.log(graph.toDot(String))
+      //log(graph.toDot(String))
 
       i++
     }
 
-    console.log('Selected: '+selected.join(', '))
+    log('Selected: '+selected.join(', '))
     components.removeNode(component)
     sourceComponents.delete(component)
-    //console.log(components.toDot(setToString))
+    //log(components.toDot(setToString))
   }
 
   return merged

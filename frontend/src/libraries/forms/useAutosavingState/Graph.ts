@@ -11,15 +11,17 @@ export interface Graph<T> {
   toDot(nodeToStr: (node: T) => string): string
 }
 
+const log = () => { /*empty */} //console.log.bind(console)
+
 export function makeGraph<T>(nodeIterable: Iterable<T>): Graph<T> {
-  const nodeList = Array.from(nodeIterable)
+  const nodes = new Set(nodeIterable)
+  const nodeList = Array.from(nodes)
   const incoming = new Map<T, Set<T>>(
     nodeList.map(node => [node, new Set()])
   )
   const outgoing = new Map<T, Set<T>>(
     nodeList.map(node => [node, new Set()])
   )
-  const nodes = new Set(nodeList)
 
   function incomingEdges(node: T) {
     const edges = incoming.get(node)

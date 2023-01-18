@@ -14,6 +14,8 @@ interface ArrayMergeResult<T> {
   patch: Operation[]
 }
 
+const log = () => { /*empty */} //console.log.bind(console)
+
 export function mergeArrays<T extends Entity>(
   data: MergeData<T[]>,
   merge: MergeFunction,
@@ -220,6 +222,8 @@ function mergeMoves<T extends Entity>(original: T[], serverDiff: Change<T>[], lo
   const addedPositionsById = new Map<unknown, number>()
   const removedPositionsById = new Map<unknown, number>()
 
+  log(original)
+
   let hasModifications = false
   originalIds.forEach((id, index) => {
     const localChange = localChangesById.get(id)
@@ -248,6 +252,15 @@ function mergeMoves<T extends Entity>(original: T[], serverDiff: Change<T>[], lo
               - countIn(removedPositionsById, pos => pos <= serverPos)
               - countIn(localRemoves, key => key <= serverPos)
             const to = from + localChange.moveAmount
+
+            log({
+              val: localChange.originalValue,
+              to,
+              from,
+              removes: -countIn(removedPositionsById, pos => pos <= serverPos),
+              adds: countIn(addedPositionsById, pos => pos <= serverPos),
+            })
+
             patch.push(
               testOriginalItem(serverPos, localChange.originalValue),
               {op: 'move', from: `/${from}`, path: `/${to}`}
