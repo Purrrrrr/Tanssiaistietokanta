@@ -394,7 +394,7 @@ describe('mergeArrays', () => {
     })
   })
 
-  test('tough cases #1', () => {
+  test('tough cases 1', () => {
     expect(doMerge({
       original: [1, 2, 3, 4, 5],
       server: [1, 4, 5, 6],
@@ -526,8 +526,8 @@ describe('mergeArrays', () => {
       server: 'KQTNJPFS',
       local: 'TKMNJPFX',
     })).toMatchObject(mergeResult({
-      state: 'CONFLICT',
-      pendingModifications: 'K??NJPFSX',
+      state: 'MODIFIED_LOCALLY',
+      pendingModifications: 'KMTNJPFSX',
       conflicts: [],
       patch: [
 

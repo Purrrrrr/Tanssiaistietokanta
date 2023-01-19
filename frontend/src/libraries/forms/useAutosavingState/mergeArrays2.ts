@@ -94,7 +94,7 @@ export function mergeArrays<T extends Entity>(
   // TODO: do something to entries that are both modified and deleted?
   // TODO: compute duplicate additions
   //
-  const r = GTSort(
+  const {localVersion, serverVersion} = GTSort(
     mapMergeData(data, ({ids}) =>
       ids.filter(hasId).map(id => ({id, isAdded: !data.original.has(id)}))
     )
@@ -112,14 +112,15 @@ export function mergeArrays<T extends Entity>(
     modificatio+delete?
    */
 
-  const hasStructuralChanges = !deepEquals(r, data.server.ids)
+  const hasStructuralChanges = !deepEquals(localVersion, data.server.ids)
+  const hasStructuralConflict = !deepEquals(localVersion, serverVersion)
   const isModified = hasStructuralChanges || modifiedIds.size  > 0
   let state : SyncState = isModified ? 'MODIFIED_LOCALLY' : 'IN_SYNC'
-  if (conflictingIds.size > 0) state = 'CONFLICT'
+  if (conflictingIds.size > 0 || hasStructuralConflict) state = 'CONFLICT'
 
   return {
     state,
-    pendingModifications: r.map(id => {
+    pendingModifications: localVersion.map(id => {
       const val = mergedValues.get(id)
       if (!val) throw new Error('Unknown merged id '+id)
       return val

@@ -93,7 +93,12 @@ export function GTSort(mergeIds: MergeData<{id: ID, isAdded: boolean}[]>) {
     }
   })
 
-  return topologicalSort(mergedGraph, analyzedIds)
+  const serverVersion = topologicalSort(mergedGraph.clone(), analyzedIds, 'server')
+  const localVersion = topologicalSort(mergedGraph, analyzedIds, 'local')
+
+  return {
+    serverVersion, localVersion
+  }
 }
 
 
@@ -194,11 +199,12 @@ function getCommonSuccessor(node, data: MergeData<AnalyzedList>) {
   return null
 }
 
-function topologicalSort(graph: Graph<ID>, data: MergeData<AnalyzedList>) {
+function topologicalSort(graph: Graph<ID>, data: MergeData<AnalyzedList>, preferVersion: 'server' | 'local') {
   const components = graph.connectedComponents()
   const marked = new Set<ID>()
   const successors = new Set<ID>()
   const merged = [] as ID[]
+  const preferredVersion = data[preferVersion]
 
   components.nodes().forEach((component: Set<ID>) => {
     marked.add(firstNode(component, data.local))
@@ -213,7 +219,6 @@ function topologicalSort(graph: Graph<ID>, data: MergeData<AnalyzedList>) {
       candidates,
       id => successors.has(id),
       id => {
-        const preferredVersion = data.local
         const indexOfCandidate = preferredVersion.indexOf(id) ?? Infinity
         //Prefer candidates that are first in the list
         console.log(id, -indexOfCandidate)

@@ -9,6 +9,7 @@ export interface Graph<T> {
   sinkNodes(): readonly T[]
   connectedComponents(): Graph<Set<T>>
   toDot(nodeToStr: (node: T) => string): string
+  clone: () => Graph<T>
 }
 
 export function makeGraph<T>(nodeIterable: Iterable<T>): Graph<T> {
@@ -118,6 +119,14 @@ export function makeGraph<T>(nodeIterable: Iterable<T>): Graph<T> {
         .map(([from, to])=> `${nodeToStr(from)} -> ${nodeToStr(to)}`)
         .join('; ')
       return `digraph { ${edges} }`
-    }
+    },
+    clone: () => {
+      const graph = makeGraph(nodes)
+      outgoing
+        .forEach((outgoingEdges, source) =>
+          outgoingEdges.forEach(target => graph.addEdge(source, target))
+        )
+      return graph
+    },
   }
 }
