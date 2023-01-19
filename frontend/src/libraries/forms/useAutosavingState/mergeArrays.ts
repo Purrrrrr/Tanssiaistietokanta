@@ -6,7 +6,7 @@ import { areEqualWithoutId, mapToIds } from './idUtils'
 import {scopePatch} from './patch'
 import {emptyPath, subIndexPath} from './pathUtil'
 
-import './mergeGraph'
+import './mergeArrays2'
 
 interface ArrayMergeResult<T> {
   hasModifications: boolean

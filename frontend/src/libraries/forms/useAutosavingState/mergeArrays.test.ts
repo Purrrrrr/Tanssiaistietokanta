@@ -2,7 +2,7 @@ import {applyPatch} from 'rfc6902'
 
 import {Entity, mapMergeData, MergeData, MergeResult} from './types'
 
-import {mergeArrays} from './mergeGraph'
+import {mergeArrays} from './mergeArrays2'
 import merge from './mergeValues'
 
 type DummyEntity= Entity | number
