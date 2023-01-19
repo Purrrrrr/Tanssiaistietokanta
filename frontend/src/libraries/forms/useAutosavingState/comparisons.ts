@@ -1,7 +1,7 @@
 type Comparable = string | number | boolean
 type Mapper<T> = (t: T) => Comparable
 
-export function getTopNodes<T>(nodes: Set<T> | T[], comparedFeatures: [Mapper<T>, ...Mapper<T>[]]): T[] {
+export function getTopNodes<T>(nodes: Set<T> | T[], ...comparedFeatures: [Mapper<T>, ...Mapper<T>[]]): T[] {
   let top : T[] = []
   let currentValues: Comparable[] = []
 

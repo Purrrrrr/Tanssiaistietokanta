@@ -259,21 +259,17 @@ function addEdges(mergedGraph: Graph<ID>, original: AnalyzedList, version1: Anal
   log(debug.join(''))
 }
 
-function lastAddedNodesAfter(node: ID, data: MergeData<AnalyzedList>): Set<ID> {
-  const addedNodes = new Set<ID>();
-
-  ([
-    data.local.toNode(node),
-    data.server.toNode(node),
-  ]).forEach(n => {
-    let candidate = n
-    while(candidate?.next) {
-      if (!candidate.next.isAdded) break
-      candidate = candidate.next
-    }
-    if (candidate.isAdded) addedNodes.add(candidate.id)
-  })
-  return addedNodes
+function lastAddedNodesAfter(id: ID, data: MergeData<AnalyzedList>): ID[] {
+  return [data.local, data.server]
+    .map(versionData => {
+      let candidate = versionData.toNode(id)
+      while(candidate?.next?.isAdded) {
+        candidate = candidate.next
+      }
+      return candidate
+    })
+    .filter(n => n.isAdded)
+    .map(n => n.id)
 }
 
 function getCommonPredecessor(node, data: MergeData<AnalyzedList>) {
@@ -329,44 +325,43 @@ function getCommonSuccessor(node, data: MergeData<AnalyzedList>) {
 function topologicalSort(graph: Graph<ID>, data: MergeData<AnalyzedList>) {
   const components = graph.connectedComponents()
   const marked = new Set<ID>()
-
-  components.nodes().forEach((component: Set<ID>) => {
-    const nodes = Array.from(component)
-    marked.add(firstNode(nodes, data.local))
-    marked.add(firstNode(nodes, data.server))
-  })
-
   const successors = new Set<ID>()
   const merged = [] as ID[]
+
+  components.nodes().forEach((component: Set<ID>) => {
+    marked.add(firstNode(component, data.local))
+    marked.add(firstNode(component, data.server))
+  })
 
   function selectNode(component: Set<ID>): ID {
     const candidates = Array.from(component).filter(node => marked.has(node))
     //console.log('!! '+candidates.join(', '))
 
-    const inSuccessors = [] as ID[]
-    const rest = [] as ID[]
-    for (const node of candidates) {
-      (successors.has(node) ? inSuccessors : rest).push(node)
-    }
-
-    if (inSuccessors.length > 0) {
-      if (inSuccessors.length > 1) {
-        console.log('!! multiple successors '+inSuccessors.join(', '))
+    const top = getTopNodes(
+      candidates,
+      id => successors.has(id),
+      id => {
+        const preferredVersion = data.local
+        const indexOfCandidate = preferredVersion.indexOf(id) ?? Infinity
+        //Prefer candidates that are first in the list
+        console.log(id, -indexOfCandidate)
+        return -indexOfCandidate
       }
-      return inSuccessors[0]
-    }
-    if (rest.length > 1) {
-      console.log('!! multiple rest '+rest.join(', '))
+    )
+    if (top.length > 1) {
+      console.log('!! multiple nodes '+top.join(', '))
+    } else {
+      log('!! one '+top[0])
     }
 
-    return rest.pop()! //[0]
+    return top.pop()! //[0]
   }
   const setToString = com => `{ ${Array.from(com).map(String).join(', ')} }`
   log(graph.toDot(String))
 
   while(!graph.isEmpty()) {
     const sourceComponents = new Set(components.sourceNodes())
-    const topComponents = getTopNodes(sourceComponents, [
+    const topComponents = getTopNodes(sourceComponents,
       c => {
         //The higher numbers go first
         if (c.size > 1) return 1 //Complex group, probably not added
@@ -377,7 +372,7 @@ function topologicalSort(graph: Graph<ID>, data: MergeData<AnalyzedList>) {
         if (data.server.has(id)) return 3 //Added to server
         throw new Error('??')
       }
-    ])
+    )
 
     //console.log(`Choices ${Array.from(sourceComponents).map(setToString).join(', ')}`)
     if (topComponents.length > 1) {
@@ -421,16 +416,8 @@ function topologicalSort(graph: Graph<ID>, data: MergeData<AnalyzedList>) {
   return merged
 }
 
-function firstNode(nodes: ID[], list: AnalyzedList): ID {
-  const getIndex = (node) => list.indexOf(node) ?? Infinity
-  return nodes
-    .reduce(
-      (previousFirst, current) => {
-        return getIndex(current) < getIndex(previousFirst)
-          ? current
-          : previousFirst
-      }
-    )
+function firstNode(nodes: Set<ID>, list: AnalyzedList): ID {
+  return getTopNodes(nodes, id => -(list.indexOf(id) ?? Infinity))[0]
 }
 
 

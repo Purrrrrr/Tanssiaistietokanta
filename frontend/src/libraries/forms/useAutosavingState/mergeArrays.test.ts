@@ -557,7 +557,7 @@ describe('mergeArrays', () => {
       local: 'ACBxbac',
     })).toMatchObject(mergeResult({
       state: 'CONFLICT',
-      pendingModifications: 'acbxBAC',
+      pendingModifications: 'bacxACB',
       conflicts: [],
       patch: [
 
@@ -588,6 +588,21 @@ describe('mergeArrays', () => {
     })).toMatchObject(mergeResult({
       state: 'MODIFIED_LOCALLY',
       pendingModifications: 'AYDECXFB',
+      conflicts: [],
+      patch: [
+
+      ],
+    }))
+  })
+
+  test('tough cases 9B', () => {
+    expect(doMerge({
+      original: 'ABCDEF',
+      server: 'ACXZDEFB',
+      local: 'AYWBDECF',
+    })).toMatchObject(mergeResult({
+      state: 'MODIFIED_LOCALLY',
+      pendingModifications: 'AYWDECXZFB',
       conflicts: [],
       patch: [
 
