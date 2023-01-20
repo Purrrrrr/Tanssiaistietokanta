@@ -49,7 +49,6 @@ export function mergeArrays<T extends Entity>(
     ...data.local.ids.filter(id => data.server.has(id) || !data.original.has(id)),
     ...data.server.ids.filter(id => data.local.has(id) || !data.original.has(id)),
   ])
-  const hasId = allExistingIds.has.bind(allExistingIds)
 
   const mergedValues = new Map<ID, T>()
   const modifiedIds = new Set<ID>()
@@ -62,6 +61,9 @@ export function mergeArrays<T extends Entity>(
 
     if (!local) return
     if (!server || !original) {
+      if (original && !deepEquals(original, local)) {
+        conflictingIds.add(id)
+      }
       mergedValues.set(id, local)
       return
     }
@@ -94,9 +96,16 @@ export function mergeArrays<T extends Entity>(
   // TODO: do something to entries that are both modified and deleted?
   // TODO: compute duplicate additions
   //
+  const shouldExist = allExistingIds.has.bind(allExistingIds)
   const {localVersion, serverVersion} = GTSort(
     mapMergeData(data, ({ids}) =>
-      ids.filter(hasId).map(id => ({id, isAdded: !data.original.has(id)}))
+      ids
+        .filter(id => allExistingIds.has(id) || conflictingIds.has(id))
+        .map(id => ({
+          id,
+          removedInOtherVersion: !allExistingIds.has(id),
+          isAdded: !data.original.has(id),
+        }))
     )
   )
 
@@ -109,7 +118,7 @@ export function mergeArrays<T extends Entity>(
     modification
 
   Conflicts:
-    modificatio+delete?
+    modification+delete?
    */
 
   const hasStructuralChanges = !deepEquals(localVersion, data.server.ids)

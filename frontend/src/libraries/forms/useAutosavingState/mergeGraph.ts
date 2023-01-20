@@ -1,11 +1,15 @@
-import deepEquals from 'fast-deep-equal'
-
 import {ID, mapMergeData, MergeData } from './types'
 
 import { getTopNodes } from './comparisons'
 import {Graph, makeGraph} from './Graph'
 
 const log = (...arr) => { /*empty */} //log.bind(console)
+
+type InputData = MergeData<{
+  id: ID,
+  removedInOtherVersion: boolean
+  isAdded: boolean
+}[]>
 
 interface AnalyzedList {
   ids: ID[]
@@ -21,23 +25,25 @@ interface AnalyzedList {
 interface Node {
   id: ID
   isAdded: boolean
+  removedInOtherVersion: boolean
   index: number
   next: Node | null
   previous: Node | null
 }
 
 /** Merge deletes and modifications */
-export function GTSort(mergeIds: MergeData<{id: ID, isAdded: boolean}[]>) {
+export function GTSort(mergeIds: InputData) {
   const analyzedIds = mapMergeData(mergeIds, idData=> {
     const ids = idData.map(({id}) => id)
     const idToIndex = new Map(ids.map((id, index) => [id, index]))
     const at = (i: number) => ids[i]
-    const nodes : Node[] = idData.map(({id, isAdded}, index) => ({
+    const nodes : Node[] = idData.map(({id, isAdded, removedInOtherVersion}, index) => ({
       id,
       index,
       previous: null,
       next: null,
       isAdded,
+      removedInOtherVersion,
       toString: () => id,
     }))
     const nodeAt = (i: number) => nodes[i]
@@ -92,9 +98,12 @@ export function GTSort(mergeIds: MergeData<{id: ID, isAdded: boolean}[]>) {
       })
     }
   })
-
+  log(mergedGraph.toDot(String))
   const serverVersion = topologicalSort(mergedGraph.clone(), analyzedIds, 'server')
   const localVersion = topologicalSort(mergedGraph, analyzedIds, 'local')
+
+  log(serverVersion)
+  log(localVersion)
 
   return {
     serverVersion, localVersion
@@ -108,14 +117,14 @@ function addEdges(mergedGraph: Graph<ID>, original: AnalyzedList, version1: Anal
 
   const debug = [fromNode.id]
   while(fromNode.next) {
-    const {id: from, isAdded} = fromNode
-    const to = fromNode.next.id
+    const {id: from, isAdded, removedInOtherVersion} = fromNode
+    const {id: to, removedInOtherVersion: removedInOtherVersion2} = fromNode.next
     fromNode = fromNode.next
 
     const originalHasPath = original.hasPathBetween(from, to)
     const v2HasPath = version2.hasPathBetween(from, to)
 
-    if (originalHasPath && !v2HasPath) {
+    if (originalHasPath && !v2HasPath && !removedInOtherVersion && !removedInOtherVersion2) {
       debug.push(` | ${to}`)
       continue
     }
@@ -205,6 +214,7 @@ function topologicalSort(graph: Graph<ID>, data: MergeData<AnalyzedList>, prefer
   const successors = new Set<ID>()
   const merged = [] as ID[]
   const preferredVersion = data[preferVersion]
+  const otherVersion = data[preferVersion === 'server' ? 'local' : 'server']
 
   components.nodes().forEach((component: Set<ID>) => {
     marked.add(firstNode(component, data.local))
@@ -221,7 +231,7 @@ function topologicalSort(graph: Graph<ID>, data: MergeData<AnalyzedList>, prefer
       id => {
         const indexOfCandidate = preferredVersion.indexOf(id) ?? Infinity
         //Prefer candidates that are first in the list
-        console.log(id, -indexOfCandidate)
+        log(id, -indexOfCandidate)
         return -indexOfCandidate
       }
     )
@@ -254,14 +264,14 @@ function topologicalSort(graph: Graph<ID>, data: MergeData<AnalyzedList>, prefer
     //console.log(`Choices ${Array.from(sourceComponents).map(setToString).join(', ')}`)
     if (topComponents.length > 1) {
       console.log(`Many choices ${topComponents.map(setToString).join(', ')}`)
-      topComponents.forEach(comp => {
+      /*topComponents.forEach(comp => {
         comp.forEach(n => {
           console.log(
             n,
             data.server.has(n) && data.server.toNode(n),
             data.local.has(n) && data.local.toNode(n))
         })
-      })
+      })*/
     }
 
     const component = topComponents[0]
@@ -278,7 +288,9 @@ function topologicalSort(graph: Graph<ID>, data: MergeData<AnalyzedList>, prefer
         }
       })
 
-      merged.push(node)
+      if (preferredVersion.has(node) || !otherVersion.toNode(node).removedInOtherVersion) {
+        merged.push(node)
+      }
       component.delete(node)
       graph.removeNode(node)
       //log(graph.toDot(String))
