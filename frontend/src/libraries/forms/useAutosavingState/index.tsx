@@ -163,11 +163,11 @@ function reducer<T extends MergeableObject>(reducerState : SyncStore<T>, action 
   }
 }
 
-function merge<T extends MergeableObject>(serverState : T, newServerState : T, modifications : T, serverStateTime: number) : SyncStore<T> {
-  const { state, pendingModifications, conflicts } = mergeValues({
+function merge<T extends MergeableObject>(serverState : T, newServerState : T, newModifications : T, serverStateTime: number) : SyncStore<T> {
+  const { state, modifications, conflicts } = mergeValues({
     server: newServerState,
     original: serverState,
-    local: modifications,
+    local: newModifications,
   })
 
   const hasConflicts = state === 'CONFLICT'
@@ -177,7 +177,7 @@ function merge<T extends MergeableObject>(serverState : T, newServerState : T, m
     serverState: newServerState,
     serverStateTime,
     conflictOrigin: hasConflicts ? serverState : null,
-    modifications: pendingModifications,
+    modifications,
     conflicts: conflicts
   }
 }

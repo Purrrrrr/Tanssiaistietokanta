@@ -14,9 +14,13 @@ export type Mergeable = MergeableScalar | MergeableObject | Entity[]
 export type SyncState = 'IN_SYNC' | 'MODIFIED_LOCALLY' | 'CONFLICT' | 'INVALID'
 export interface MergeResult<T> {
   state: SyncState
-  pendingModifications: T
   conflicts: ArrayPath<T>[]
   patch: Operation[]
+
+  nonConflictingModifications: T //The version that can be sent to the server without breaking stuff because of conflicts
+  modifications: T //Local version, including conflicts
+  //modifiedPaths?: ArrayPath<T>[]
+  //conflictingPaths?: ArrayPath<T>[]
 }
 
 export interface Operation {

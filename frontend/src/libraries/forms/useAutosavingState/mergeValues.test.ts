@@ -9,7 +9,8 @@ describe('merge', () => {
       local: {a: 1, b: 1},
     })).toEqual({
       state: 'IN_SYNC',
-      pendingModifications: {a: 1, b: 1},
+      modifications: {a: 1, b: 1},
+      nonConflictingModifications: {a: 1, b: 1},
       conflicts: [],
       patch: [],
     })
@@ -22,7 +23,8 @@ describe('merge', () => {
       local: 2,
     })).toEqual({
       state: 'MODIFIED_LOCALLY',
-      pendingModifications: 2,
+      modifications: 2,
+      nonConflictingModifications: 2,
       conflicts: [],
       patch: [
         {op: 'replace', path: '', value: 2}
@@ -37,7 +39,8 @@ describe('merge', () => {
       local: 1,
     })).toEqual({
       state: 'IN_SYNC',
-      pendingModifications: 2,
+      modifications: 2,
+      nonConflictingModifications: 2,
       conflicts: [],
       patch: [],
     })
@@ -50,7 +53,8 @@ describe('merge', () => {
       local: {value: 2},
     })).toEqual({
       state: 'MODIFIED_LOCALLY',
-      pendingModifications: {value: 2},
+      modifications: {value: 2},
+      nonConflictingModifications: {value: 2},
       conflicts: [],
       patch: [
         {op: 'replace', path: '/value', value: 2}
@@ -65,7 +69,8 @@ describe('merge', () => {
       local: {value: 1},
     })).toEqual({
       state: 'IN_SYNC',
-      pendingModifications: {value: 2},
+      modifications: {value: 2},
+      nonConflictingModifications: {value: 2},
       conflicts: [],
       patch: [],
     })
@@ -78,7 +83,8 @@ describe('merge', () => {
       local: {a: 1, b: {value: 3}},
     })).toEqual({
       state: 'MODIFIED_LOCALLY',
-      pendingModifications: {a: 1, b: {value: 3}},
+      modifications: {a: 1, b: {value: 3}},
+      nonConflictingModifications: {a: 1, b: {value: 3}},
       conflicts: [],
       patch: [
         {op: 'replace', path: '/b/value', value: 3}
@@ -93,7 +99,8 @@ describe('merge', () => {
       local: {a: 1, b: {value: 3}},
     })).toEqual({
       state: 'CONFLICT',
-      pendingModifications: {a: 1, b: {value: 3}},
+      modifications: {a: 1, b: {value: 3}},
+      nonConflictingModifications: {a: 1, b: {value: 2}},
       conflicts: [
         ['b', 'value'],
       ],
@@ -108,7 +115,8 @@ describe('merge', () => {
       local: {a: 1, b: {value: 3, val: 2, obj: {a: 1}}},
     })).toEqual({
       state: 'CONFLICT',
-      pendingModifications: {a: 1, b: {value: 3, val: 2, obj: {a: 1}}},
+      modifications: {a: 1, b: {value: 3, val: 2, obj: {a: 1}}},
+      nonConflictingModifications: {a: 1, b: undefined},
       conflicts: [
         ['b'],
       ],
@@ -116,17 +124,16 @@ describe('merge', () => {
     })
   })
 
-  test('recursive conflicts 3', () => {
+  test('recursive non-conflicts 3', () => {
     expect(merge({
       original: {a: 1, b: [{_id: 1}, {_id: 2}, {_id: 3}]},
       server: {a: 1, b: [{_id: 2}, {_id: 3}, {_id: 1}]},
       local: {a: 1, b: [{_id: 2}, {_id: 3}]},
     })).toEqual({
-      state: 'CONFLICT',
-      pendingModifications: {a: 1, b: [{_id: 2}, {_id: 3}]},
-      conflicts: [
-        ['b'],
-      ],
+      state: 'MODIFIED_LOCALLY',
+      modifications: {a: 1, b: [{_id: 2}, {_id: 3}]},
+      nonConflictingModifications: {a: 1, b: [{_id: 2}, {_id: 3}]},
+      conflicts: [],
       patch: [],
     })
   })
@@ -138,9 +145,10 @@ describe('merge', () => {
       local: {a: 1, b: [{_id: 2}, {_id: 0, a: 0, b: 2}]},
     })).toEqual({
       state: 'CONFLICT',
-      pendingModifications: {a: 1, b: [{_id: 2}, {_id: 0, a: 0, b: 2}]},
+      modifications: {a: 1, b: [{_id: 2}, {_id: 0, a: 0, b: 2}]},
+      nonConflictingModifications: {a: 1, b: [{_id: 2}, {_id: 0, a: 2, b: 2}]},
       conflicts: [
-        ['b', 2, 'a'],
+        ['b', 1, 'a'],
       ],
       patch: [],
     })

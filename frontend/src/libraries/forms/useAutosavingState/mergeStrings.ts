@@ -20,18 +20,24 @@ export function mergeConflictingStrings(
     const value = result.join()
     return {
       state: 'MODIFIED_LOCALLY',
-      pendingModifications: value,
+      modifications: value,
+      nonConflictingModifications: value,
       patch: [
         { op: 'replace', value, path: '' },
       ],
+      //modifiedPaths: [[]],
+      //conflictingPaths: [[]],
       conflicts: [],
     }
   }
 
   return {
     state: 'CONFLICT',
-    pendingModifications: local,
+    modifications: local,
+    nonConflictingModifications: server,
     patch: [],
+    //modifiedPaths: [[]],
+    //conflictingPaths: [[]],
     conflicts: [[]],
   }
 }

@@ -9,7 +9,8 @@ export function mergeObjects<T extends MergeableObject>(
   merge: MergeFunction,
 ) : MergeResult<T> {
   const conflicts : ArrayPath<T>[] = []
-  const pendingModifications : T = { ...data.original }
+  const modifications : T = { ...data.original }
+  const nonConflictingModifications: T = { ...data.original }
 
   let hasConflicts = false
   let hasModifications = false
@@ -26,19 +27,22 @@ export function mergeObjects<T extends MergeableObject>(
         const subConflicts : ArrayPath<T>[] = subResult.conflicts
           .map(conflict => subPath(key, conflict))
         conflicts.push(...subConflicts)
-        pendingModifications[key] = subResult.pendingModifications
+        modifications[key] = subResult.modifications
+        nonConflictingModifications[key] = subResult.nonConflictingModifications
         hasConflicts = true
         break
       }
       case 'MODIFIED_LOCALLY':
-        pendingModifications[key] = subResult.pendingModifications
+        modifications[key] = subResult.modifications
+        nonConflictingModifications[key] = subResult.nonConflictingModifications
         patch.push(
           ...scopePatch(String(key), subResult.patch)
         )
         hasModifications = true
         break
       case 'IN_SYNC':
-        pendingModifications[key] = data.server[key]
+        modifications[key] = data.server[key]
+        nonConflictingModifications[key] = data.server[key]
     }
   }
 
@@ -48,7 +52,8 @@ export function mergeObjects<T extends MergeableObject>(
 
   return {
     state,
-    pendingModifications,
+    modifications,
+    nonConflictingModifications,
     conflicts,
     patch,
   }

@@ -2,7 +2,7 @@ import deepEquals from 'fast-deep-equal'
 
 import {Entity, Mergeable, MergeData, MergeResult, Operation, SyncState} from './types'
 
-import {mergeArrays} from './mergeArrays'
+import {mergeArrays} from './mergeArrays2'
 import {mergeObjects} from './mergeObjects'
 import {mergeConflictingStrings} from './mergeStrings'
 import {emptyPath} from './pathUtil'
@@ -26,9 +26,12 @@ export default function merge<T extends Mergeable>(data : MergeData<T>) : MergeR
     : [
       { op: 'replace', value: local, path: '' },
     ]
+  const modifications = inSync ? data.server : local
+
   const result = {
     state,
-    pendingModifications: inSync ? data.server :  local,
+    modifications,
+    nonConflictingModifications: modifications,
     patch,
     conflicts: [],
   }
@@ -42,7 +45,8 @@ export default function merge<T extends Mergeable>(data : MergeData<T>) : MergeR
 
   return {
     state: 'CONFLICT',
-    pendingModifications: local,
+    modifications: local,
+    nonConflictingModifications: data.server,
     patch: [],
     conflicts: [
       emptyPath(),

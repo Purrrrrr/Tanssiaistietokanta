@@ -27,7 +27,7 @@ export function mergeArrays<T extends Entity>(
   let { state } = modifyResult
 
   const indexConflicts = new Set<number>()
-  const deleteResult = mergeDeletes(modifyResult.pendingModifications, serverDiff, localDiff, indexConflicts)
+  const deleteResult = mergeDeletes(modifyResult.modifications, serverDiff, localDiff, indexConflicts)
   const moveResult = mergeMoves(deleteResult.pendingModifications, serverDiff, localDiff, indexConflicts)
   const addResult = mergeAdditions(moveResult.pendingModifications, serverDiff, localDiff, indexConflicts)
 
@@ -42,7 +42,8 @@ export function mergeArrays<T extends Entity>(
 
   return {
     state,
-    pendingModifications: addResult.pendingModifications,
+    modifications: addResult.pendingModifications,
+    nonConflictingModifications: addResult.pendingModifications,
     patch: [
       ...modifyResult.patch,
       ...deleteResult.patch,
@@ -93,7 +94,7 @@ function mergeModifications<T extends Entity>(original: T[], serverDiff: Change<
             patchesById.delete(change.id)
             break
           case 'MODIFIED_LOCALLY':
-            pendingModifications[change.from] = result.pendingModifications
+            pendingModifications[change.from] = result.modifications
             patchesById.set(change.id, [
               testOriginalItem(change.from, server),
               ...scopePatch(String(change.to), result.patch)
@@ -122,7 +123,8 @@ function mergeModifications<T extends Entity>(original: T[], serverDiff: Change<
 
   return {
     state,
-    pendingModifications: pendingModifications,
+    modifications: pendingModifications,
+    nonConflictingModifications: pendingModifications,
     patch,
     conflicts,
   }

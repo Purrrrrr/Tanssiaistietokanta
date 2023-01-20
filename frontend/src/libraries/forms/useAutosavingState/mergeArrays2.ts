@@ -3,9 +3,11 @@ import deepEquals from 'fast-deep-equal'
 
 import {Entity, ID, mapMergeData, MergeData, MergeFunction, MergeResult, SyncState } from './types'
 
+import {ArrayPath} from '../types'
 import { mapToIds } from './idUtils'
 import {GTSort} from './mergeGraph'
 import merge from './mergeValues'
+import {emptyPath, subIndexPath} from './pathUtil'
 
 // eslint-disable-next-line
 /* @ts-ignore */
@@ -50,7 +52,9 @@ export function mergeArrays<T extends Entity>(
     ...data.server.ids.filter(id => data.local.has(id) || !data.original.has(id)),
   ])
 
+  const conflicts : ArrayPath<T[]>[] = []
   const mergedValues = new Map<ID, T>()
+  const nonConflictingMergedValues = new Map<ID, T>()
   const modifiedIds = new Set<ID>()
   const conflictingIds = new Set<ID>()
 
@@ -65,6 +69,7 @@ export function mergeArrays<T extends Entity>(
         conflictingIds.add(id)
       }
       mergedValues.set(id, local)
+      nonConflictingMergedValues.set(id, local)
       return
     }
 
@@ -72,14 +77,20 @@ export function mergeArrays<T extends Entity>(
     switch(result.state) {
       case 'MODIFIED_LOCALLY':
         modifiedIds.add(id)
-        mergedValues.set(id, result.pendingModifications)
+        mergedValues.set(id, result.modifications)
+        nonConflictingMergedValues.set(id, result.modifications)
         break
       case 'IN_SYNC':
-        mergedValues.set(id, result.pendingModifications)
+        mergedValues.set(id, result.modifications)
+        nonConflictingMergedValues.set(id, result.modifications)
         break
       case 'CONFLICT':
+        const subConflicts : ArrayPath<T[]>[] = result.conflicts
+          .map(conflict => subIndexPath(data.server.getData(id)!.index, conflict))
+        conflicts.push(...subConflicts)
         conflictingIds.add(id)
-        mergedValues.set(id, result.pendingModifications)
+        mergedValues.set(id, result.modifications)
+        nonConflictingMergedValues.set(id, result.nonConflictingModifications)
         break
     }
   })
@@ -91,6 +102,7 @@ export function mergeArrays<T extends Entity>(
 
     //Added on server
     mergedValues.set(id, server)
+    nonConflictingMergedValues.set(id, server)
   })
 
   // TODO: do something to entries that are both modified and deleted?
@@ -127,14 +139,18 @@ export function mergeArrays<T extends Entity>(
   let state : SyncState = isModified ? 'MODIFIED_LOCALLY' : 'IN_SYNC'
   if (conflictingIds.size > 0 || hasStructuralConflict) state = 'CONFLICT'
 
+  if (hasStructuralConflict) conflicts.push(emptyPath<T[]>())
+
+  function getFromMap(map: Map<ID, T>, id: ID): T{
+    const val = map.get(id)
+    if (!val) throw new Error('Unknown merged id '+id)
+    return val
+  }
   return {
     state,
-    pendingModifications: localVersion.map(id => {
-      const val = mergedValues.get(id)
-      if (!val) throw new Error('Unknown merged id '+id)
-      return val
-    }),
-    conflicts: [],
+    modifications: localVersion.map(id => getFromMap(mergedValues, id)),
+    nonConflictingModifications: serverVersion.map(id => getFromMap(nonConflictingMergedValues, id)),
+    conflicts,
     patch: [],
   }
 }
