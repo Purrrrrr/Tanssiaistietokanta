@@ -4,7 +4,7 @@ import deepEquals from 'fast-deep-equal'
 import {Entity, ID, mapMergeData, MergeData, MergeFunction, MergeResult, SyncState } from './types'
 
 import {ArrayPath} from '../types'
-import { mapToIds } from './idUtils'
+import { areEqualWithoutId, mapToIds } from './idUtils'
 import {GTSort} from './mergeGraph'
 import merge from './mergeValues'
 import {emptyPath, subIndexPath} from './pathUtil'
@@ -39,14 +39,10 @@ export function mergeArrays<T extends Entity>(
       ids,
       has: idToData.has.bind(idToData),
       getData: idToData.get.bind(idToData),
-      getValue: (id) => idToData.get(id)?.value,
+      getValue: (id: ID) => idToData.get(id)?.value,
     }
   })
 
-  const addedIds = new Set([
-    ...data.local.ids.filter(id => !data.original.has(id)),
-    ...data.server.ids.filter(id => !data.original.has(id)),
-  ])
   const allExistingIds = new Set([
     ...data.local.ids.filter(id => data.server.has(id) || !data.original.has(id)),
     ...data.server.ids.filter(id => data.local.has(id) || !data.original.has(id)),
@@ -59,12 +55,12 @@ export function mergeArrays<T extends Entity>(
   const conflictingIds = new Set<ID>()
 
   data.local.ids.forEach(id => {
-    const server = data.server.getValue(id)
+    const serverData = data.server.getData(id)
     const original = data.original.getValue(id)
     const local = data.local.getValue(id)
 
     if (!local) return
-    if (!server || !original) {
+    if (!serverData || !original) {
       if (original && !deepEquals(original, local)) {
         conflictingIds.add(id)
       }
@@ -72,6 +68,7 @@ export function mergeArrays<T extends Entity>(
       nonConflictingMergedValues.set(id, local)
       return
     }
+    const server = serverData.value
 
     const result = merge<T>({ original, local, server})
     switch(result.state) {
@@ -85,30 +82,37 @@ export function mergeArrays<T extends Entity>(
         nonConflictingMergedValues.set(id, result.modifications)
         break
       case 'CONFLICT':
+      {
         const subConflicts : ArrayPath<T[]>[] = result.conflicts
-          .map(conflict => subIndexPath(data.server.getData(id)!.index, conflict))
+          .map(conflict => subIndexPath(serverData.index, conflict))
         conflicts.push(...subConflicts)
         conflictingIds.add(id)
         mergedValues.set(id, result.modifications)
         nonConflictingMergedValues.set(id, result.nonConflictingModifications)
         break
+      }
     }
   })
 
-  data.server.ids.forEach(id => {
+  data.server.ids.forEach((id, index) => {
     if (data.original.has(id)) return
     const server = data.server.getValue(id)
     if (!server) return //Should not happen
 
-    //Added on server
+    //Values is added on server. Compute and check if a matching addition has been made locally. Count matching additions by position from the end
+
+    const indexFromEnd = data.server.ids.length - index
+    const matchingLocalIndex = data.local.ids.length - indexFromEnd
+    const matchingLocalId = data.local.ids[matchingLocalIndex]
+    const hasDuplicateAddition = !data.original.has(matchingLocalId) && areEqualWithoutId(server, mergeData.local[matchingLocalIndex])
+
+    if (hasDuplicateAddition) {
+      data.local.ids[matchingLocalIndex] = id
+    }
     mergedValues.set(id, server)
     nonConflictingMergedValues.set(id, server)
   })
 
-  // TODO: do something to entries that are both modified and deleted?
-  // TODO: compute duplicate additions
-  //
-  const shouldExist = allExistingIds.has.bind(allExistingIds)
   const {localVersion, serverVersion} = GTSort(
     mapMergeData(data, ({ids}) =>
       ids

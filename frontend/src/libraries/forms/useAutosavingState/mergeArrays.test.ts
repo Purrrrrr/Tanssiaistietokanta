@@ -100,7 +100,7 @@ describe('mergeArrays', () => {
         ],
       }))
     })
-    test('identical additions', () => {
+    test('identical additions on end', () => {
       expect(doMerge({
         original: [1, 2, 3, 4, 5],
         server: [1, 2, 3, 4, 5, {_id: 6, data: 6}],
