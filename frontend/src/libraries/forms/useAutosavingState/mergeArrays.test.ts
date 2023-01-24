@@ -21,10 +21,11 @@ function doMerge(mergeData: MergeData<DummyEntityList>): MergeResult<Entity[]> {
   )
 }
 
-function mergeResult({patch, conflicts, ...res}: Omit<MergeResult<DummyEntityList>, 'nonConflictingModifications'>): Partial<MergeResult<Entity[]>> {
+function mergeResult({patch, conflicts, ...res}: MergeResult<DummyEntityList>): Partial<MergeResult<Entity[]>> {
   return {
     ...res,
     modifications: toEntityList(res.modifications),
+    nonConflictingModifications: toEntityList(res.nonConflictingModifications),
     //modifications: toEntityList(res.modifications),
     //nonConflictingModifications: toEntityList(res.nonConflictingModifications),
     /*patch: res.patch.map(line => {
@@ -54,6 +55,7 @@ describe('mergeArrays', () => {
     })).toMatchObject(mergeResult({
       state: 'IN_SYNC',
       modifications: [1, 2, 3, 4, 5],
+      nonConflictingModifications: [1, 2, 3, 4, 5],
       conflicts: [],
       patch: [],
     }))
@@ -68,6 +70,7 @@ describe('mergeArrays', () => {
       })).toMatchObject(mergeResult({
         state: 'MODIFIED_LOCALLY',
         modifications: [1, 2, 3, 4, 5, 6],
+        nonConflictingModifications: [1, 2, 3, 4, 5, 6],
         conflicts: [],
         patch: [
           {op: 'add', path: '/5', value: 6}
@@ -82,6 +85,7 @@ describe('mergeArrays', () => {
       })).toMatchObject(mergeResult({
         state: 'IN_SYNC',
         modifications: [1, 2, 3, 4, 5, 6],
+        nonConflictingModifications: [1, 2, 3, 4, 5, 6],
         conflicts: [],
         patch: [],
       }))
@@ -94,6 +98,7 @@ describe('mergeArrays', () => {
       })).toMatchObject(mergeResult({
         state: 'MODIFIED_LOCALLY',
         modifications: [8, 7, 1, 2, 3, 4, 5, 6],
+        nonConflictingModifications: [8, 7, 1, 2, 3, 4, 5, 6],
         conflicts: [],
         patch: [
           {op: 'add', path: '/7', value: 6},
@@ -108,6 +113,7 @@ describe('mergeArrays', () => {
       })).toMatchObject(mergeResult({
         state: 'IN_SYNC',
         modifications: [1, 2, 3, 4, 5, {_id: 6, data: 6}],
+        nonConflictingModifications: [1, 2, 3, 4, 5, {_id: 6, data: 6}],
         conflicts: [],
         patch: [],
       }))
@@ -123,6 +129,7 @@ describe('mergeArrays', () => {
       })).toMatchObject(mergeResult({
         state: 'MODIFIED_LOCALLY',
         modifications: [1, 2, 4, 5],
+        nonConflictingModifications: [1, 2, 4, 5],
         conflicts: [],
         patch: [
           {op: 'test', path: '/2', value: 3},
@@ -138,6 +145,7 @@ describe('mergeArrays', () => {
       })).toMatchObject(mergeResult({
         state: 'IN_SYNC',
         modifications: [1, 2, 4, 5],
+        nonConflictingModifications: [1, 2, 4, 5],
         conflicts: [],
         patch: [],
       }))
@@ -150,6 +158,7 @@ describe('mergeArrays', () => {
       })).toMatchObject(mergeResult({
         state: 'CONFLICT',
         modifications: [1, 2, {_id: 3, value: 'a'}, 4, 5],
+        nonConflictingModifications: [1, 2, 4, 5],
         conflicts: [
           [],
         ],
@@ -164,6 +173,7 @@ describe('mergeArrays', () => {
       })).toMatchObject(mergeResult({
         state: 'MODIFIED_LOCALLY',
         modifications: [2, 4],
+        nonConflictingModifications: [2, 4],
         conflicts: [],
         patch: [
           {op: 'test', path: '/0', value: 1},
@@ -183,6 +193,7 @@ describe('mergeArrays', () => {
     })).toMatchObject(mergeResult({
       state: 'MODIFIED_LOCALLY',
       modifications: [6, 1, 2, 4, 8, 7],
+      nonConflictingModifications: [6, 1, 2, 4, 8, 7],
       conflicts: [],
       patch: [
         {op: 'test', path: '/4', value: 5},
@@ -201,6 +212,7 @@ describe('mergeArrays', () => {
       })).toMatchObject(mergeResult({
         state: 'MODIFIED_LOCALLY',
         modifications: [1, 5, 2, 3, 4],
+        nonConflictingModifications: [1, 5, 2, 3, 4],
         conflicts: [],
         patch: [
           {op: 'test', path: '/4', value: 5},
@@ -216,6 +228,7 @@ describe('mergeArrays', () => {
       })).toMatchObject(mergeResult({
         state: 'IN_SYNC',
         modifications: [1, 5, 2, 3, 4],
+        nonConflictingModifications: [1, 5, 2, 3, 4],
         conflicts: [],
         patch: [],
       }))
@@ -228,6 +241,7 @@ describe('mergeArrays', () => {
       })).toMatchObject(mergeResult({
         state: 'MODIFIED_LOCALLY',
         modifications: [1, 3, 2],
+        nonConflictingModifications: [1, 3, 2],
         conflicts: [],
         patch: [
           {op: 'test', path: '/1', value: 2},
@@ -243,6 +257,7 @@ describe('mergeArrays', () => {
       })).toMatchObject(mergeResult({
         state: 'MODIFIED_LOCALLY',
         modifications: [4, 2, 3, 1],
+        nonConflictingModifications: [4, 2, 3, 1],
         conflicts: [],
         patch: [
           {op: 'test', path: '/0', value: 1},
@@ -260,6 +275,7 @@ describe('mergeArrays', () => {
       })).toMatchObject(mergeResult({
         state: 'IN_SYNC',
         modifications: [1, 3, 2],
+        nonConflictingModifications: [1, 3, 2],
         conflicts: [],
         patch: [],
       }))
@@ -272,6 +288,7 @@ describe('mergeArrays', () => {
       })).toMatchObject(mergeResult({
         state: 'IN_SYNC',
         modifications: [4, 2, 3, 1],
+        nonConflictingModifications: [4, 2, 3, 1],
         conflicts: [],
         patch: [],
       }))
@@ -285,6 +302,7 @@ describe('mergeArrays', () => {
       })).toMatchObject(mergeResult({
         state: 'IN_SYNC',
         modifications: [1, 5, 2, 3, 4],
+        nonConflictingModifications: [1, 5, 2, 3, 4],
         conflicts: [],
         patch: [],
       }))
@@ -298,6 +316,7 @@ describe('mergeArrays', () => {
       })).toMatchObject(mergeResult({
         state: 'MODIFIED_LOCALLY',
         modifications: [1, 5, 2, 4, 3],
+        nonConflictingModifications: [1, 5, 2, 4, 3],
         conflicts: [],
         patch: [
           {op: 'test', path: '/3', value: 3},
@@ -316,6 +335,7 @@ describe('mergeArrays', () => {
       })).toMatchObject(mergeResult({
         state: 'MODIFIED_LOCALLY',
         modifications: [1, 2, 3, 4, {_id: 5, value: 8}],
+        nonConflictingModifications: [1, 2, 3, 4, {_id: 5, value: 8}],
         conflicts: [],
         patch: [
           {op: 'test', path: '/4/_id', value: 5},
@@ -331,6 +351,7 @@ describe('mergeArrays', () => {
       })).toMatchObject(mergeResult({
         state: 'IN_SYNC',
         modifications: [1, 2, 3, 4, {_id: 5, value: 8}],
+        nonConflictingModifications: [1, 2, 3, 4, {_id: 5, value: 8}],
         conflicts: [],
         patch: [],
       }))
@@ -343,6 +364,7 @@ describe('mergeArrays', () => {
       })).toMatchObject(mergeResult({
         state: 'IN_SYNC',
         modifications: [1, 2, 3, 4, {_id: 5, value: 8}],
+        nonConflictingModifications: [1, 2, 3, 4, {_id: 5, value: 8}],
         conflicts: [],
         patch: [],
       }))
@@ -356,6 +378,7 @@ describe('mergeArrays', () => {
       })).toMatchObject(mergeResult({
         state: 'IN_SYNC',
         modifications: [1, 2, {_id: 5, value: 8}, 3, 4],
+        nonConflictingModifications: [1, 2, {_id: 5, value: 8}, 3, 4],
         conflicts: [],
         patch: [],
       }))
@@ -369,6 +392,7 @@ describe('mergeArrays', () => {
       })).toMatchObject(mergeResult({
         state: 'MODIFIED_LOCALLY',
         modifications: [1, 2, {_id: 5, value: 8}, 3, 4],
+        nonConflictingModifications: [1, 2, {_id: 5, value: 8}, 3, 4],
         conflicts: [],
         patch: [
           {op: 'test', path: '/4/_id', value: 5},
@@ -387,6 +411,7 @@ describe('mergeArrays', () => {
       })).toMatchObject(mergeResult({
         state: 'MODIFIED_LOCALLY',
         modifications: [1, 2, {_id: 5, value: 8}, 3, 4],
+        nonConflictingModifications: [1, 2, {_id: 5, value: 8}, 3, 4],
         conflicts: [],
         patch: [
           {op: 'test', path: '/2/_id', value: 5},
@@ -404,6 +429,7 @@ describe('mergeArrays', () => {
     })).toMatchObject(mergeResult({
       state: 'CONFLICT',
       modifications: [1, {_id: 2}, {_id: 3}, 4, 6],
+      nonConflictingModifications: [1, 4, 6],
       conflicts: [
         [],
       ],
@@ -422,6 +448,7 @@ describe('mergeArrays', () => {
     })).toMatchObject(mergeResult({
       state: 'MODIFIED_LOCALLY',
       modifications: [6, 5, 1, 2, 3, 55, 66],
+      nonConflictingModifications: [6, 5, 1, 2, 3, 55, 66],
       conflicts: [],
       patch: [
         {op: 'add', path: '/0', value: 5},
@@ -437,6 +464,7 @@ describe('mergeArrays', () => {
     })).toMatchObject(mergeResult({
       state: 'MODIFIED_LOCALLY',
       modifications: [6, 5, 1, 3, 55, 66],
+      nonConflictingModifications: [6, 5, 1, 3, 55, 66],
       conflicts: [
         [],
       ],
@@ -454,6 +482,7 @@ describe('mergeArrays', () => {
     })).toMatchObject(mergeResult({
       state: 'MODIFIED_LOCALLY',
       modifications: [4, 6, 7, 8, 9, 10, 11, 22, 33],
+      nonConflictingModifications: [4, 6, 7, 8, 9, 10, 11, 22, 33],
       conflicts: [],
       patch: [
         {op: 'test', path: '/1', value: 5},
@@ -471,6 +500,7 @@ describe('mergeArrays', () => {
     })).toMatchObject(mergeResult({
       state: 'MODIFIED_LOCALLY',
       modifications: [1, 9, 11, 2, 8, 3, 7, 4, 6],
+      nonConflictingModifications: [1, 9, 11, 2, 8, 3, 7, 4, 6],
       conflicts: [],
       patch: [
         {op: 'add', path: '/1', value: 11},
@@ -485,6 +515,7 @@ describe('mergeArrays', () => {
     })).toMatchObject(mergeResult({
       state: 'MODIFIED_LOCALLY',
       modifications: [1, 9, 11, 2, 8, 3, 7, 4, 6, 10],
+      nonConflictingModifications: [1, 9, 11, 2, 8, 3, 7, 4, 6, 10],
       conflicts: [],
       patch: [
         {op: 'add', path: '/1', value: 11}, {op: 'add', path: '/9', value: 10},
@@ -499,6 +530,7 @@ describe('mergeArrays', () => {
     })).toMatchObject(mergeResult({
       state: 'MODIFIED_LOCALLY',
       modifications: [8, 3, 7, 4, 6, 10],
+      nonConflictingModifications: [8, 3, 7, 4, 6, 10],
       conflicts: [],
       patch: [
         {op: 'add', path: '/4', value: 10},
@@ -513,6 +545,7 @@ describe('mergeArrays', () => {
     })).toMatchObject(mergeResult({
       state: 'MODIFIED_LOCALLY',
       modifications: [1, 9, 11, 2, 8, 3, 7, 12, 4, 6, 10],
+      nonConflictingModifications: [1, 9, 11, 2, 8, 3, 7, 12, 4, 6, 10],
       conflicts: [],
       patch: [
         {op: 'add', path: '/1', value: 11},
@@ -530,6 +563,7 @@ describe('mergeArrays', () => {
     })).toMatchObject(mergeResult({
       state: 'MODIFIED_LOCALLY',
       modifications: 'KMTNJPFSX',
+      nonConflictingModifications: 'KMTNJPFSX',
       conflicts: [],
       patch: [
 
@@ -545,6 +579,7 @@ describe('mergeArrays', () => {
     })).toMatchObject(mergeResult({
       state: 'CONFLICT',
       modifications: 'ACB',
+      nonConflictingModifications: 'BAC',
       conflicts: [],
       patch: [
 
@@ -560,6 +595,7 @@ describe('mergeArrays', () => {
     })).toMatchObject(mergeResult({
       state: 'CONFLICT',
       modifications: 'bacxACB',
+      nonConflictingModifications: 'acbxBAC',
       conflicts: [],
       patch: [
 
@@ -575,6 +611,7 @@ describe('mergeArrays', () => {
     })).toMatchObject(mergeResult({
       state: 'MODIFIED_LOCALLY',
       modifications: 'ADECFB',
+      nonConflictingModifications: 'ADECFB',
       conflicts: [],
       patch: [
 
@@ -590,6 +627,7 @@ describe('mergeArrays', () => {
     })).toMatchObject(mergeResult({
       state: 'MODIFIED_LOCALLY',
       modifications: 'AYDECXFB',
+      nonConflictingModifications: 'AYDECXFB',
       conflicts: [],
       patch: [
 
@@ -605,6 +643,7 @@ describe('mergeArrays', () => {
     })).toMatchObject(mergeResult({
       state: 'MODIFIED_LOCALLY',
       modifications: 'AYWDECXZFB',
+      nonConflictingModifications: 'AYWDECXZFB',
       conflicts: [],
       patch: [
 
