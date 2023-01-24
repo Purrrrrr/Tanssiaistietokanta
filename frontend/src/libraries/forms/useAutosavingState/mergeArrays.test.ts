@@ -324,6 +324,21 @@ describe('mergeArrays', () => {
         ],
       }))
     })
+
+    test('complex moves', () => {
+      expect(doMerge({
+        original: '1234567890',
+        server: '412567890',
+        local: '245167890',
+      })).toMatchObject(mergeResult({
+        state: 'CONFLICT',
+        modifications: '245167890',
+        nonConflictingModifications: '425167890',
+        conflicts: [],
+        patch: [
+        ],
+      }))
+    })
   })
 
   describe('modifying items', () => {
@@ -657,7 +672,7 @@ describe('mergeArrays', () => {
     [2],
     [3],
     [4],
-  ])('random tests patch (seed = %i)', (seed) => {
+  ])('random tests (seed = %i)', (seed) => {
     function mulberry32(a: number) {
       return function() {
         let t = a += 0x6D2B79F5
@@ -688,60 +703,54 @@ describe('mergeArrays', () => {
       for(let i = 0; i < num; i++) action(arr)
     }
 
-    function testPatching(original: Entity[], modified: Entity[]) {
-      const {modifications, patch } = mergeArrays({original, server: original, local: modified}, merge)
-
-      const patched = [...original]
-      const patchRes = applyPatch(patched, patch as any)
-      try {
-        //expect(modifications).toEqual(patched)
-        //Does not make sense any more. Patching not working right now
-      } catch(e) {
-        console.dir({
-          original,
-          modified,
-          modifications,
-          patch: patch.map((line, index) =>
-            [line, patchRes[index]?.message ?? 'OK']
-          ),
-          patched,
-        }, {depth: 5})
-        throw(e)
-      }
+    function testStability(original: Entity[], v1: Entity[], v2: Entity[]) {
+      mergeArrays({original, server: v2, local: v1}, merge)
     }
 
     test('random adding', () => {
       const original = [1, 2, 4, 5, 6, 7, 8, 9, 10].map(toEntity)
-      const added = [...original]
-      repeatIn(added, random()*20, addRandom)
+      const version = [...original]
+      repeatIn(version, random()*20, addRandom)
+      const version2 = [...original]
+      repeatIn(version2, random()*20, addRandom)
 
-      testPatching(original, added)
+
+      testStability(original, version, version2)
     })
 
     test('random removals', () => {
       const original = [1, 2, 4, 5, 6, 7, 8, 9, 10].map(toEntity)
-      const added = [...original]
-      repeatIn(added, random()*5, removeRandom)
+      const version = [...original]
+      repeatIn(version, random()*8, removeRandom)
+      const version2 = [...original]
+      repeatIn(version2, random()*8, removeRandom)
 
-      testPatching(original, added)
+      testStability(original, version, version2)
     })
 
     test('random moving', () => {
       const original = [1, 2, 4, 5, 6, 7, 8, 9, 10].map(toEntity)
-      const added = [...original]
-      repeatIn(added, random()*5, moveRandom)
+      const version = [...original]
+      repeatIn(version, random()*8, moveRandom)
+      const version2 = [...original]
+      repeatIn(version2, random()*8, moveRandom)
+      //console.log({original, version, version2})
 
-      testPatching(original, added)
+      testStability(original, version, version2)
     })
 
     test('random everything', () => {
       const original = [1, 2, 4, 5, 6, 7, 8, 9, 10].map(toEntity)
-      const added = [...original]
-      repeatIn(added, random()*20, addRandom)
-      repeatIn(added, random()*5, removeRandom)
-      repeatIn(added, random()*5, moveRandom)
+      const version = [...original]
+      repeatIn(version, random()*20, addRandom)
+      repeatIn(version, random()*8, removeRandom)
+      repeatIn(version, random()*8, moveRandom)
+      const version2 = [...original]
+      repeatIn(version2, random()*20, addRandom)
+      repeatIn(version2, random()*8, removeRandom)
+      repeatIn(version2, random()*8, moveRandom)
 
-      testPatching(original, added)
+      testStability(original, version, version2)
     })
   })
 })

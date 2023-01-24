@@ -71,9 +71,9 @@ export function makeGraph<T>(nodeIterable: Iterable<T>): Graph<T> {
         outgoingEdges(node).forEach(outgoing => {
           if (!component.has(outgoing)) {
             const root = roots.get(outgoing)
-            if (!root) return
+            if (root === undefined) return
             const otherComponent = components.get(root)
-            if (!otherComponent) return
+            if (otherComponent === undefined) return
             graph.addEdge(component, otherComponent)
           }
         })

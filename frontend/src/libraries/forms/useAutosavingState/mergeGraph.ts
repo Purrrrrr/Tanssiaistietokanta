@@ -3,7 +3,8 @@ import {ID, mapMergeData, MergeData } from './types'
 import { getTopNodes } from './comparisons'
 import {Graph, makeGraph} from './Graph'
 
-const log = (...arr) => { /*empty */} //log.bind(console)
+const doLog = 0
+const log = (...arr) => doLog && console.log(...arr)
 
 type InputData = MergeData<{
   id: ID,
@@ -233,45 +234,55 @@ function topologicalSort(graph: Graph<ID>, data: MergeData<AnalyzedList>, prefer
         //Prefer candidates that are first in the list
         log(id, -indexOfCandidate)
         return -indexOfCandidate
+      },
+      id => {
+        const indexOfCandidate = otherVersion.indexOf(id) ?? Infinity
+        //Prefer candidates that are first in the list
+        log(id, -indexOfCandidate)
+        return -indexOfCandidate
       }
     )
     if (top.length > 1) {
       console.log('!! multiple nodes '+top.join(', '))
+      throw new Error('Can\'t decide next node. This should not happen')
     } else {
-      log('!! one '+top[0])
+      //log('!! one '+top[0])
     }
 
-    return top.pop()! //[0]
+    return top[0]
   }
   const setToString = com => `{ ${Array.from(com).map(String).join(', ')} }`
-  log(graph.toDot(String))
+
+  function getRank(c: Set<ID>): number {
+    //The higher numbers go first
+    if (c.size > 1) return 1 //Complex group, probably not added
+    const id = firstItem(c)
+
+    if (data.original.has(id)) return 1 //Not added
+    if (data.local.has(id)) return 2 //Added to local
+    if (data.server.has(id)) return 3 //Added to server
+    throw new Error('??')
+  }
+  function getStartIndexInPreferred(c: Set<ID>): number {
+    const node = selectNode(c)
+    return -(preferredVersion.indexOf(node) ?? Infinity)
+  }
 
   while(!graph.isEmpty()) {
     const sourceComponents = new Set(components.sourceNodes())
-    const topComponents = getTopNodes(sourceComponents,
-      c => {
-        //The higher numbers go first
-        if (c.size > 1) return 1 //Complex group, probably not added
-        const id = firstItem(c)
 
-        if (data.original.has(id)) return 1 //Not added
-        if (data.local.has(id)) return 2 //Added to local
-        if (data.server.has(id)) return 3 //Added to server
-        throw new Error('??')
-      }
+    const topComponents = getTopNodes(sourceComponents,
+      getRank,
+      getStartIndexInPreferred,
     )
 
     //console.log(`Choices ${Array.from(sourceComponents).map(setToString).join(', ')}`)
     if (topComponents.length > 1) {
       console.log(`Many choices ${topComponents.map(setToString).join(', ')}`)
-      /*topComponents.forEach(comp => {
-        comp.forEach(n => {
-          console.log(
-            n,
-            data.server.has(n) && data.server.toNode(n),
-            data.local.has(n) && data.local.toNode(n))
-        })
-      })*/
+      topComponents.forEach(comp => {
+        log(setToString(comp), getRank(comp))
+      })
+      throw new Error('Can\'t decide next node. This should not happen')
     }
 
     const component = topComponents[0]
