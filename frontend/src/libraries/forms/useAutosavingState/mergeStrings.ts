@@ -28,6 +28,10 @@ export function mergeConflictingStrings(
       //modifiedPaths: [[]],
       //conflictingPaths: [[]],
       conflicts: [],
+      changes: {
+        type: 'scalar',
+        changedValue: value,
+      }
     }
   }
 
@@ -39,5 +43,10 @@ export function mergeConflictingStrings(
     //modifiedPaths: [[]],
     //conflictingPaths: [[]],
     conflicts: [[]],
+    changes: {
+      type: 'scalar',
+      changedValue: server,
+      conflictingLocalValue: local,
+    }
   }
 }

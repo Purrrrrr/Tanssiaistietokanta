@@ -1,7 +1,7 @@
 // import deepEquals from 'fast-deep-equal'
 import deepEquals from 'fast-deep-equal'
 
-import {Entity, ID, mapMergeData, MergeData, MergeFunction, MergeResult, SyncState } from './types'
+import {ArrayChangeSet, Entity, ID, mapMergeData, MergeData, MergeFunction, MergeResult, SyncState } from './types'
 
 import {ArrayPath} from '../types'
 import { areEqualWithoutId, mapToIds } from './idUtils'
@@ -125,18 +125,6 @@ export function mergeArrays<T extends Entity>(
     )
   )
 
-
-  /*
-  GTSort handles:
-    concurrent moving
-    deleting
-  We need to handle:
-    modification
-
-  Conflicts:
-    modification+delete?
-   */
-
   const hasStructuralChanges = !deepEquals(localVersion, data.server.ids)
   const hasStructuralConflict = !deepEquals(localVersion, serverVersion)
   const isModified = hasStructuralChanges || modifiedIds.size  > 0
@@ -156,5 +144,8 @@ export function mergeArrays<T extends Entity>(
     nonConflictingModifications: serverVersion.map(id => getFromMap(nonConflictingMergedValues, id)),
     conflicts,
     patch: [],
+    changes: state === 'IN_SYNC' ? null : {
+      type: 'array'
+    } as ArrayChangeSet<T>,
   }
 }

@@ -51,6 +51,7 @@ export function mergeArrays<T extends Entity>(
       ...addResult.patch,
     ],
     conflicts,
+    changes: null,
   }
 }
 
@@ -127,6 +128,7 @@ function mergeModifications<T extends Entity>(original: T[], serverDiff: Change<
     nonConflictingModifications: pendingModifications,
     patch,
     conflicts,
+    changes: null,
   }
 }
 

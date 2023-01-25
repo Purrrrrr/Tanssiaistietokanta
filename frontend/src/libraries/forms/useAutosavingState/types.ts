@@ -19,8 +19,34 @@ export interface MergeResult<T> {
 
   nonConflictingModifications: T //The version that can be sent to the server without breaking stuff because of conflicts
   modifications: T //Local version, including conflicts
-  //modifiedPaths?: ArrayPath<T>[]
-  //conflictingPaths?: ArrayPath<T>[]
+  changes: ChangeSet<T> | null
+}
+
+export type ChangeSet<T> = T extends (infer B)[]
+  ? ArrayChangeSet<B>
+  : T extends object
+    ? ObjectChangeSet<T>
+    : PlainChangeSet<T>
+
+export interface PlainChangeSet<T> {
+  type: 'scalar'
+  changedValue: T
+  conflictingLocalValue?: T
+}
+export interface ObjectChangeSet<T> {
+  type: 'object'
+  changes: { [K in (keyof T)]?: ChangeSet<T[K]> }
+  //conflicts: { [K in (keyof T)]: ChangeSet<T[K]> }
+}
+export interface ArrayChangeSet<T> {
+  type: 'array'
+  //changes: Map<number, ChangeSet<T>>
+  //conflicts: Map<number, ChangeSet<T>>
+  //additions: Map<number, Entity>
+  //removals: Set<number>
+  //removalConflicts: Set<number>
+  //moves: Map<number, number>
+  //moveConflicts: Map<number, number>
 }
 
 export interface Operation {

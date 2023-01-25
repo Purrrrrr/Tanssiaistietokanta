@@ -13,6 +13,7 @@ describe('merge', () => {
       nonConflictingModifications: {a: 1, b: 1},
       conflicts: [],
       patch: [],
+      changes: null,
     })
   })
 
@@ -29,6 +30,10 @@ describe('merge', () => {
       patch: [
         {op: 'replace', path: '', value: 2}
       ],
+      changes: {
+        type: 'scalar',
+        changedValue: 2,
+      },
     })
   })
 
@@ -43,6 +48,7 @@ describe('merge', () => {
       nonConflictingModifications: 2,
       conflicts: [],
       patch: [],
+      changes: null,
     })
   })
 
@@ -59,6 +65,15 @@ describe('merge', () => {
       patch: [
         {op: 'replace', path: '/value', value: 2}
       ],
+      changes: {
+        type: 'object',
+        changes: {
+          value: {
+            type: 'scalar',
+            changedValue: 2,
+          },
+        },
+      }
     })
   })
 
@@ -73,6 +88,7 @@ describe('merge', () => {
       nonConflictingModifications: {value: 2},
       conflicts: [],
       patch: [],
+      changes: null,
     })
   })
 
@@ -89,6 +105,20 @@ describe('merge', () => {
       patch: [
         {op: 'replace', path: '/b/value', value: 3}
       ],
+      changes: {
+        type: 'object',
+        changes: {
+          b: {
+            type: 'object',
+            changes: {
+              value: {
+                type: 'scalar',
+                changedValue: 3,
+              },
+            },
+          },
+        },
+      }
     })
   })
 
@@ -105,6 +135,21 @@ describe('merge', () => {
         ['b', 'value'],
       ],
       patch: [],
+      changes: {
+        type: 'object',
+        changes: {
+          b: {
+            type: 'object',
+            changes: {
+              value: {
+                type: 'scalar',
+                changedValue: 2,
+                conflictingLocalValue: 3,
+              },
+            },
+          },
+        },
+      }
     })
   })
 
@@ -121,6 +166,16 @@ describe('merge', () => {
         ['b'],
       ],
       patch: [],
+      changes: {
+        type: 'object',
+        changes: {
+          b: {
+            type: 'scalar',
+            changeValue: undefined,
+            conflictingLocalValue: {value: 3, val: 2, obj: {a: 1}},
+          },
+        },
+      }
     })
   })
 
@@ -135,6 +190,14 @@ describe('merge', () => {
       nonConflictingModifications: {a: 1, b: [{_id: 2}, {_id: 3}]},
       conflicts: [],
       patch: [],
+      changes: {
+        type: 'object',
+        changes: {
+          b: {
+            type: 'array',
+          },
+        },
+      }
     })
   })
 
@@ -151,6 +214,14 @@ describe('merge', () => {
         ['b', 1, 'a'],
       ],
       patch: [],
+      changes: {
+        type: 'object',
+        changes: {
+          b: {
+            type: 'array'
+          }
+        },
+      }
     })
   })
 })

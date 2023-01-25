@@ -21,11 +21,17 @@ function doMerge(mergeData: MergeData<DummyEntityList>): MergeResult<Entity[]> {
   )
 }
 
+function mapChangeSet(changes) {
+  if (changes === null) return null
+  return changes
+}
+
 function mergeResult({patch, conflicts, ...res}: MergeResult<DummyEntityList>): Partial<MergeResult<Entity[]>> {
   return {
     ...res,
     modifications: toEntityList(res.modifications),
     nonConflictingModifications: toEntityList(res.nonConflictingModifications),
+    changes: mapChangeSet(res.changes),
     //modifications: toEntityList(res.modifications),
     //nonConflictingModifications: toEntityList(res.nonConflictingModifications),
     /*patch: res.patch.map(line => {
@@ -58,6 +64,7 @@ describe('mergeArrays', () => {
       nonConflictingModifications: [1, 2, 3, 4, 5],
       conflicts: [],
       patch: [],
+      changes: null,
     }))
   })
 
@@ -75,6 +82,9 @@ describe('mergeArrays', () => {
         patch: [
           {op: 'add', path: '/5', value: 6}
         ],
+        changes: {
+          type: 'array',
+        },
       }))
     })
     test('simple additions on server', () => {
@@ -88,6 +98,7 @@ describe('mergeArrays', () => {
         nonConflictingModifications: [1, 2, 3, 4, 5, 6],
         conflicts: [],
         patch: [],
+        changes: null,
       }))
     })
     test('complex additions', () => {
@@ -103,6 +114,9 @@ describe('mergeArrays', () => {
         patch: [
           {op: 'add', path: '/7', value: 6},
         ],
+        changes: {
+          type: 'array',
+        },
       }))
     })
     test('identical additions on end', () => {
@@ -116,6 +130,7 @@ describe('mergeArrays', () => {
         nonConflictingModifications: [1, 2, 3, 4, 5, {_id: 6, data: 6}],
         conflicts: [],
         patch: [],
+        changes: null,
       }))
     })
   })
@@ -135,6 +150,9 @@ describe('mergeArrays', () => {
           {op: 'test', path: '/2', value: 3},
           {op: 'remove', path: '/2'},
         ],
+        changes: {
+          type: 'array',
+        },
       }))
     })
     test('simple removals on server', () => {
@@ -148,6 +166,7 @@ describe('mergeArrays', () => {
         nonConflictingModifications: [1, 2, 4, 5],
         conflicts: [],
         patch: [],
+        changes: null,
       }))
     })
     test('removal of modified value', () => {
@@ -163,6 +182,9 @@ describe('mergeArrays', () => {
           [],
         ],
         patch: [],
+        changes: {
+          type: 'array',
+        },
       }))
     })
     test('complex removals', () => {
@@ -181,6 +203,9 @@ describe('mergeArrays', () => {
           {op: 'test', path: '/2', value: 5},
           {op: 'remove', path: '/2'},
         ],
+        changes: {
+          type: 'array',
+        },
       }))
     })
   })
@@ -200,6 +225,9 @@ describe('mergeArrays', () => {
         {op: 'remove', path: '/4'},
         {op: 'add', path: '/4', value: 7},
       ],
+      changes: {
+        type: 'array',
+      },
     }))
   })
 
@@ -218,6 +246,9 @@ describe('mergeArrays', () => {
           {op: 'test', path: '/4', value: 5},
           {op: 'move', from: '/4', path: '/1'},
         ],
+        changes: {
+          type: 'array',
+        },
       }))
     })
     test('moving on server', () => {
@@ -231,6 +262,7 @@ describe('mergeArrays', () => {
         nonConflictingModifications: [1, 5, 2, 3, 4],
         conflicts: [],
         patch: [],
+        changes: null,
       }))
     })
     test('swapping next to each other locally', () => {
@@ -247,6 +279,9 @@ describe('mergeArrays', () => {
           {op: 'test', path: '/1', value: 2},
           {op: 'move', from: '/1', path: '/2'},
         ],
+        changes: {
+          type: 'array',
+        },
       }))
     })
     test('swapping far from each other locally', () => {
@@ -265,6 +300,9 @@ describe('mergeArrays', () => {
           {op: 'test', path: '/3', value: 4},
           {op: 'move', from: '/3', path: '/0'},
         ],
+        changes: {
+          type: 'array',
+        },
       }))
     })
     test('swapping next to each other on server', () => {
@@ -278,6 +316,7 @@ describe('mergeArrays', () => {
         nonConflictingModifications: [1, 3, 2],
         conflicts: [],
         patch: [],
+        changes: null,
       }))
     })
     test('swapping far from each other on server', () => {
@@ -291,6 +330,7 @@ describe('mergeArrays', () => {
         nonConflictingModifications: [4, 2, 3, 1],
         conflicts: [],
         patch: [],
+        changes: null,
       }))
     })
 
@@ -305,6 +345,7 @@ describe('mergeArrays', () => {
         nonConflictingModifications: [1, 5, 2, 3, 4],
         conflicts: [],
         patch: [],
+        changes: null,
       }))
     })
 
@@ -322,6 +363,9 @@ describe('mergeArrays', () => {
           {op: 'test', path: '/3', value: 3},
           {op: 'move', from: '/3', path: '/4'},
         ],
+        changes: {
+          type: 'array',
+        },
       }))
     })
 
@@ -337,6 +381,9 @@ describe('mergeArrays', () => {
         conflicts: [],
         patch: [
         ],
+        changes: {
+          type: 'array',
+        },
       }))
     })
   })
@@ -356,6 +403,9 @@ describe('mergeArrays', () => {
           {op: 'test', path: '/4/_id', value: 5},
           {op: 'replace', path: '/4/value', value: 8},
         ],
+        changes: {
+          type: 'array',
+        },
       }))
     })
     test('modifying on server', () => {
@@ -369,6 +419,7 @@ describe('mergeArrays', () => {
         nonConflictingModifications: [1, 2, 3, 4, {_id: 5, value: 8}],
         conflicts: [],
         patch: [],
+        changes: null,
       }))
     })
     test('modifying on both', () => {
@@ -382,6 +433,7 @@ describe('mergeArrays', () => {
         nonConflictingModifications: [1, 2, 3, 4, {_id: 5, value: 8}],
         conflicts: [],
         patch: [],
+        changes: null,
       }))
     })
 
@@ -396,6 +448,7 @@ describe('mergeArrays', () => {
         nonConflictingModifications: [1, 2, {_id: 5, value: 8}, 3, 4],
         conflicts: [],
         patch: [],
+        changes: null,
       }))
     })
 
@@ -415,6 +468,9 @@ describe('mergeArrays', () => {
           {op: 'test', path: '/4/_id', value: 5},
           {op: 'move', path: '/2', from: '/4'},
         ],
+        changes: {
+          type: 'array',
+        },
       }))
     })
 
@@ -432,6 +488,9 @@ describe('mergeArrays', () => {
           {op: 'test', path: '/2/_id', value: 5},
           {op: 'replace', path: '/2/value', value: 8},
         ],
+        changes: {
+          type: 'array',
+        },
       }))
     })
   })
@@ -451,7 +510,10 @@ describe('mergeArrays', () => {
       patch: [
         {op: 'test', path: '/2', value: 5},
         {op: 'remove', path: '/2'},
-      ]
+      ],
+      changes: {
+        type: 'array',
+      },
     }))
   })
 
@@ -467,7 +529,10 @@ describe('mergeArrays', () => {
       conflicts: [],
       patch: [
         {op: 'add', path: '/0', value: 5},
-      ]
+      ],
+      changes: {
+        type: 'array',
+      },
     }))
   })
 
@@ -485,7 +550,10 @@ describe('mergeArrays', () => {
       ],
       patch: [
         {op: 'add', path: '/0', value: 5},
-      ]
+      ],
+      changes: {
+        type: 'array',
+      },
     }))
   })
 
@@ -504,6 +572,9 @@ describe('mergeArrays', () => {
         {op: 'remove', path: '/1'},
         {op: 'add', path: '/1', value: 10},
       ],
+      changes: {
+        type: 'array',
+      },
     }))
   })
 
@@ -520,6 +591,9 @@ describe('mergeArrays', () => {
       patch: [
         {op: 'add', path: '/1', value: 11},
       ],
+      changes: {
+        type: 'array',
+      },
     }))
   })
   test('tough cases 6B', () => {
@@ -535,6 +609,9 @@ describe('mergeArrays', () => {
       patch: [
         {op: 'add', path: '/1', value: 11}, {op: 'add', path: '/9', value: 10},
       ],
+      changes: {
+        type: 'array',
+      },
     }))
   })
   test('tough cases 6Bb', () => {
@@ -550,6 +627,9 @@ describe('mergeArrays', () => {
       patch: [
         {op: 'add', path: '/4', value: 10},
       ],
+      changes: {
+        type: 'array',
+      },
     }))
   })
   test('tough cases 6C', () => {
@@ -567,6 +647,9 @@ describe('mergeArrays', () => {
         {op: 'add', path: '/7', value: 12},
         {op: 'add', path: '/10', value: 10},
       ],
+      changes: {
+        type: 'array',
+      },
     }))
   })
 
@@ -583,6 +666,9 @@ describe('mergeArrays', () => {
       patch: [
 
       ],
+      changes: {
+        type: 'array',
+      },
     }))
   })
 
@@ -599,6 +685,9 @@ describe('mergeArrays', () => {
       patch: [
 
       ],
+      changes: {
+        type: 'array',
+      },
     }))
   })
 
@@ -615,6 +704,9 @@ describe('mergeArrays', () => {
       patch: [
 
       ],
+      changes: {
+        type: 'array',
+      },
     }))
   })
 
@@ -631,6 +723,9 @@ describe('mergeArrays', () => {
       patch: [
 
       ],
+      changes: {
+        type: 'array',
+      },
     }))
   })
 
@@ -647,10 +742,13 @@ describe('mergeArrays', () => {
       patch: [
 
       ],
+      changes: {
+        type: 'array',
+      },
     }))
   })
 
-  test('tough cases 9B', () => {
+  test('tough cases 9C', () => {
     expect(doMerge({
       original: 'ABCDEF',
       server: 'ACXZDEFB',
@@ -663,6 +761,9 @@ describe('mergeArrays', () => {
       patch: [
 
       ],
+      changes: {
+        type: 'array',
+      },
     }))
   })
 
@@ -672,7 +773,7 @@ describe('mergeArrays', () => {
     [2],
     [3],
     [4],
-  ])('random tests (seed = %i)', (seed) => {
+  ])('random stability tests (seed = %i)', (seed) => {
     function mulberry32(a: number) {
       return function() {
         let t = a += 0x6D2B79F5
