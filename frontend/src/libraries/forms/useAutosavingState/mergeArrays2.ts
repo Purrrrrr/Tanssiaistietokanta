@@ -1,7 +1,7 @@
 // import deepEquals from 'fast-deep-equal'
 import deepEquals from 'fast-deep-equal'
 
-import {ArrayChangeSet, Entity, ID, mapMergeData, MergeData, MergeFunction, MergeResult, SyncState } from './types'
+import {ChangeSet, Entity, ID, mapMergeData, MergeData, MergeFunction, MergeResult, SyncState } from './types'
 
 import {ArrayPath} from '../types'
 import { areEqualWithoutId, mapToIds } from './idUtils'
@@ -53,6 +53,7 @@ export function mergeArrays<T extends Entity>(
   const nonConflictingMergedValues = new Map<ID, T>()
   const modifiedIds = new Set<ID>()
   const conflictingIds = new Set<ID>()
+  const itemModifications = new Map<ID, ChangeSet<T>>()
 
   data.local.ids.forEach(id => {
     const serverData = data.server.getData(id)
@@ -71,6 +72,7 @@ export function mergeArrays<T extends Entity>(
     const server = serverData.value
 
     const result = merge<T>({ original, local, server})
+    if (result.changes !== null) itemModifications.set(id, result.changes)
     switch(result.state) {
       case 'MODIFIED_LOCALLY':
         modifiedIds.add(id)
@@ -145,7 +147,8 @@ export function mergeArrays<T extends Entity>(
     conflicts,
     patch: [],
     changes: state === 'IN_SYNC' ? null : {
-      type: 'array'
-    } as ArrayChangeSet<T>,
+      type: 'array',
+      itemModifications,
+    },
   }
 }

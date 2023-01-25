@@ -35,11 +35,12 @@ export interface PlainChangeSet<T> {
 }
 export interface ObjectChangeSet<T> {
   type: 'object'
+  // If there are conflicts, they are inside the changes OR this changeset becomes a scalar changeset
   changes: { [K in (keyof T)]?: ChangeSet<T[K]> }
-  //conflicts: { [K in (keyof T)]: ChangeSet<T[K]> }
 }
 export interface ArrayChangeSet<T> {
   type: 'array'
+  itemModifications: Map<ID, ChangeSet<T>>
   //changes: Map<number, ChangeSet<T>>
   //conflicts: Map<number, ChangeSet<T>>
   //additions: Map<number, Entity>

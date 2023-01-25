@@ -195,6 +195,7 @@ describe('merge', () => {
         changes: {
           b: {
             type: 'array',
+            itemModifications: new Map(),
           },
         },
       }
@@ -218,7 +219,19 @@ describe('merge', () => {
         type: 'object',
         changes: {
           b: {
-            type: 'array'
+            type: 'array',
+            itemModifications: new Map([
+              [0, {
+                type: 'object',
+                changes: {
+                  a: {
+                    type: 'scalar',
+                    changedValue: 2,
+                    conflictingLocalValue: 0,
+                  }
+                },
+              }]
+            ]),
           }
         },
       }

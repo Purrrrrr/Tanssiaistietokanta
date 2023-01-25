@@ -1,5 +1,3 @@
-import {applyPatch} from 'rfc6902'
-
 import {Entity, mapMergeData, MergeData, MergeResult} from './types'
 
 import {mergeArrays} from './mergeArrays2'
@@ -84,6 +82,7 @@ describe('mergeArrays', () => {
         ],
         changes: {
           type: 'array',
+          itemModifications: new Map([]),
         },
       }))
     })
@@ -116,6 +115,7 @@ describe('mergeArrays', () => {
         ],
         changes: {
           type: 'array',
+          itemModifications: new Map([]),
         },
       }))
     })
@@ -152,6 +152,7 @@ describe('mergeArrays', () => {
         ],
         changes: {
           type: 'array',
+          itemModifications: new Map([]),
         },
       }))
     })
@@ -184,6 +185,7 @@ describe('mergeArrays', () => {
         patch: [],
         changes: {
           type: 'array',
+          itemModifications: new Map([]),
         },
       }))
     })
@@ -205,6 +207,7 @@ describe('mergeArrays', () => {
         ],
         changes: {
           type: 'array',
+          itemModifications: new Map([]),
         },
       }))
     })
@@ -227,6 +230,7 @@ describe('mergeArrays', () => {
       ],
       changes: {
         type: 'array',
+        itemModifications: new Map([]),
       },
     }))
   })
@@ -248,6 +252,7 @@ describe('mergeArrays', () => {
         ],
         changes: {
           type: 'array',
+          itemModifications: new Map([]),
         },
       }))
     })
@@ -281,6 +286,7 @@ describe('mergeArrays', () => {
         ],
         changes: {
           type: 'array',
+          itemModifications: new Map([]),
         },
       }))
     })
@@ -302,6 +308,7 @@ describe('mergeArrays', () => {
         ],
         changes: {
           type: 'array',
+          itemModifications: new Map([]),
         },
       }))
     })
@@ -365,6 +372,7 @@ describe('mergeArrays', () => {
         ],
         changes: {
           type: 'array',
+          itemModifications: new Map([]),
         },
       }))
     })
@@ -383,6 +391,7 @@ describe('mergeArrays', () => {
         ],
         changes: {
           type: 'array',
+          itemModifications: new Map([]),
         },
       }))
     })
@@ -405,6 +414,17 @@ describe('mergeArrays', () => {
         ],
         changes: {
           type: 'array',
+          itemModifications: new Map([
+            [5, {
+              type: 'object',
+              changes: {
+                value: {
+                  type: 'scalar',
+                  changedValue: 8,
+                },
+              },
+            }]
+          ]),
         },
       }))
     })
@@ -470,6 +490,17 @@ describe('mergeArrays', () => {
         ],
         changes: {
           type: 'array',
+          itemModifications: new Map([
+            [5, {
+              type: 'object',
+              changes: {
+                value: {
+                  type: 'scalar',
+                  changedValue: 8,
+                },
+              },
+            }]
+          ]),
         },
       }))
     })
@@ -490,6 +521,17 @@ describe('mergeArrays', () => {
         ],
         changes: {
           type: 'array',
+          itemModifications: new Map([
+            [5, {
+              type: 'object',
+              changes: {
+                value: {
+                  type: 'scalar',
+                  changedValue: 8,
+                },
+              },
+            }]
+          ]),
         },
       }))
     })
@@ -513,6 +555,7 @@ describe('mergeArrays', () => {
       ],
       changes: {
         type: 'array',
+        itemModifications: new Map([]),
       },
     }))
   })
@@ -532,6 +575,7 @@ describe('mergeArrays', () => {
       ],
       changes: {
         type: 'array',
+        itemModifications: new Map([]),
       },
     }))
   })
@@ -553,6 +597,7 @@ describe('mergeArrays', () => {
       ],
       changes: {
         type: 'array',
+        itemModifications: new Map([]),
       },
     }))
   })
@@ -574,6 +619,7 @@ describe('mergeArrays', () => {
       ],
       changes: {
         type: 'array',
+        itemModifications: new Map([]),
       },
     }))
   })
@@ -593,6 +639,7 @@ describe('mergeArrays', () => {
       ],
       changes: {
         type: 'array',
+        itemModifications: new Map([]),
       },
     }))
   })
@@ -611,6 +658,7 @@ describe('mergeArrays', () => {
       ],
       changes: {
         type: 'array',
+        itemModifications: new Map([]),
       },
     }))
   })
@@ -629,6 +677,7 @@ describe('mergeArrays', () => {
       ],
       changes: {
         type: 'array',
+        itemModifications: new Map([]),
       },
     }))
   })
@@ -649,6 +698,7 @@ describe('mergeArrays', () => {
       ],
       changes: {
         type: 'array',
+        itemModifications: new Map([]),
       },
     }))
   })
@@ -668,6 +718,7 @@ describe('mergeArrays', () => {
       ],
       changes: {
         type: 'array',
+        itemModifications: new Map([]),
       },
     }))
   })
@@ -687,6 +738,7 @@ describe('mergeArrays', () => {
       ],
       changes: {
         type: 'array',
+        itemModifications: new Map([]),
       },
     }))
   })
@@ -706,6 +758,7 @@ describe('mergeArrays', () => {
       ],
       changes: {
         type: 'array',
+        itemModifications: new Map([]),
       },
     }))
   })
@@ -725,6 +778,7 @@ describe('mergeArrays', () => {
       ],
       changes: {
         type: 'array',
+        itemModifications: new Map([]),
       },
     }))
   })
@@ -744,6 +798,7 @@ describe('mergeArrays', () => {
       ],
       changes: {
         type: 'array',
+        itemModifications: new Map([]),
       },
     }))
   })
@@ -763,6 +818,7 @@ describe('mergeArrays', () => {
       ],
       changes: {
         type: 'array',
+        itemModifications: new Map([]),
       },
     }))
   })
