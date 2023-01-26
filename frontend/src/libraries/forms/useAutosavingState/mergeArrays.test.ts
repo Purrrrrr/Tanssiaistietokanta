@@ -1,4 +1,4 @@
-import {Entity, mapMergeData, MergeData, MergeResult} from './types'
+import {Entity, mapMergeData, MergeData, MergeResult, objectChange, scalarChange} from './types'
 
 import {mergeArrays} from './mergeArrays2'
 import merge from './mergeValues'
@@ -415,15 +415,9 @@ describe('mergeArrays', () => {
         changes: {
           type: 'array',
           itemModifications: new Map([
-            [5, {
-              type: 'object',
-              changes: {
-                value: {
-                  type: 'scalar',
-                  changedValue: 8,
-                },
-              },
-            }]
+            [5, objectChange({
+              value: scalarChange(8),
+            })]
           ]),
         },
       }))
@@ -491,15 +485,9 @@ describe('mergeArrays', () => {
         changes: {
           type: 'array',
           itemModifications: new Map([
-            [5, {
-              type: 'object',
-              changes: {
-                value: {
-                  type: 'scalar',
-                  changedValue: 8,
-                },
-              },
-            }]
+            [5, objectChange({
+              value: scalarChange(8),
+            })]
           ]),
         },
       }))
@@ -522,15 +510,9 @@ describe('mergeArrays', () => {
         changes: {
           type: 'array',
           itemModifications: new Map([
-            [5, {
-              type: 'object',
-              changes: {
-                value: {
-                  type: 'scalar',
-                  changedValue: 8,
-                },
-              },
-            }]
+            [5, objectChange({
+              value: scalarChange(8),
+            })]
           ]),
         },
       }))

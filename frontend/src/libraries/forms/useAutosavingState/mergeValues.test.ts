@@ -1,3 +1,5 @@
+import {ArrayChangeSet, conflictingScalarChange, objectChange, scalarChange} from './types'
+
 import merge from './mergeValues'
 
 describe('merge', () => {
@@ -30,10 +32,7 @@ describe('merge', () => {
       patch: [
         {op: 'replace', path: '', value: 2}
       ],
-      changes: {
-        type: 'scalar',
-        changedValue: 2,
-      },
+      changes: scalarChange(2),
     })
   })
 
@@ -65,15 +64,9 @@ describe('merge', () => {
       patch: [
         {op: 'replace', path: '/value', value: 2}
       ],
-      changes: {
-        type: 'object',
-        changes: {
-          value: {
-            type: 'scalar',
-            changedValue: 2,
-          },
-        },
-      }
+      changes: objectChange({
+        value: scalarChange(2),
+      })
     })
   })
 
@@ -105,20 +98,11 @@ describe('merge', () => {
       patch: [
         {op: 'replace', path: '/b/value', value: 3}
       ],
-      changes: {
-        type: 'object',
-        changes: {
-          b: {
-            type: 'object',
-            changes: {
-              value: {
-                type: 'scalar',
-                changedValue: 3,
-              },
-            },
-          },
-        },
-      }
+      changes: objectChange({
+        b: objectChange({
+          value: scalarChange(3),
+        }),
+      }),
     })
   })
 
@@ -135,21 +119,11 @@ describe('merge', () => {
         ['b', 'value'],
       ],
       patch: [],
-      changes: {
-        type: 'object',
-        changes: {
-          b: {
-            type: 'object',
-            changes: {
-              value: {
-                type: 'scalar',
-                changedValue: 2,
-                conflictingLocalValue: 3,
-              },
-            },
-          },
-        },
-      }
+      changes: objectChange({
+        b: objectChange({
+          value: conflictingScalarChange({local: 3, server: 2}),
+        }),
+      }),
     })
   })
 
@@ -166,16 +140,12 @@ describe('merge', () => {
         ['b'],
       ],
       patch: [],
-      changes: {
-        type: 'object',
-        changes: {
-          b: {
-            type: 'scalar',
-            changeValue: undefined,
-            conflictingLocalValue: {value: 3, val: 2, obj: {a: 1}},
-          },
-        },
-      }
+      changes: objectChange({
+        b: conflictingScalarChange({
+          server: undefined,
+          local: {value: 3, val: 2, obj: {a: 1}}
+        }) as any,
+      }),
     })
   })
 
@@ -190,15 +160,12 @@ describe('merge', () => {
       nonConflictingModifications: {a: 1, b: [{_id: 2}, {_id: 3}]},
       conflicts: [],
       patch: [],
-      changes: {
-        type: 'object',
-        changes: {
-          b: {
-            type: 'array',
-            itemModifications: new Map(),
-          },
+      changes: objectChange<any>({
+        b: {
+          type: 'array',
+          itemModifications: new Map(),
         },
-      }
+      }),
     })
   })
 
@@ -215,26 +182,16 @@ describe('merge', () => {
         ['b', 1, 'a'],
       ],
       patch: [],
-      changes: {
-        type: 'object',
-        changes: {
-          b: {
-            type: 'array',
-            itemModifications: new Map([
-              [0, {
-                type: 'object',
-                changes: {
-                  a: {
-                    type: 'scalar',
-                    changedValue: 2,
-                    conflictingLocalValue: 0,
-                  }
-                },
-              }]
-            ]),
-          }
-        },
-      }
+      changes: objectChange<any>({
+        b: {
+          type: 'array',
+          itemModifications: new Map([
+            [0, objectChange({
+              a: conflictingScalarChange({local: 0, server: 2})
+            })]
+          ]),
+        } as ArrayChangeSet<any>,
+      }),
     })
   })
 })

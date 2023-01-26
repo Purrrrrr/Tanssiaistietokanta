@@ -33,10 +33,20 @@ export interface PlainChangeSet<T> {
   changedValue: T
   conflictingLocalValue?: T
 }
+export function scalarChange<T>(changedValue: T): PlainChangeSet<T> {
+  return { type: 'scalar', changedValue }
+}
+export function conflictingScalarChange<T>({local, server}: {local: T, server: T}): PlainChangeSet<T> {
+  return { type: 'scalar', changedValue: server, conflictingLocalValue: local }
+}
+
 export interface ObjectChangeSet<T> {
   type: 'object'
   // If there are conflicts, they are inside the changes OR this changeset becomes a scalar changeset
   changes: { [K in (keyof T)]?: ChangeSet<T[K]> }
+}
+export function objectChange<T>(changes: ObjectChangeSet<T>['changes']): ObjectChangeSet<T> {
+  return { type: 'object', changes }
 }
 export interface ArrayChangeSet<T> {
   type: 'array'

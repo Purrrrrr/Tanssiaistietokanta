@@ -1,6 +1,6 @@
 import deepEquals from 'fast-deep-equal'
 
-import {ChangeSet, Entity, Mergeable, MergeData, MergeResult, Operation, SyncState} from './types'
+import {ChangeSet, conflictingScalarChange, Entity, Mergeable, MergeData, MergeResult, Operation, scalarChange, SyncState} from './types'
 
 import {mergeArrays} from './mergeArrays2'
 import {mergeObjects} from './mergeObjects'
@@ -34,10 +34,9 @@ export default function merge<T extends Mergeable>(data : MergeData<T>) : MergeR
     nonConflictingModifications: modifications,
     patch,
     conflicts: [],
-    changes: inSync ? null : {
-      type: 'scalar',
-      changedValue: modifications,
-    } as ChangeSet<T>
+    changes: inSync
+      ? null
+      : scalarChange(modifications) as ChangeSet<T>
   }
   if (state !== 'CONFLICT') {
     return result
@@ -55,11 +54,7 @@ export default function merge<T extends Mergeable>(data : MergeData<T>) : MergeR
     conflicts: [
       emptyPath(),
     ],
-    changes: {
-      type: 'scalar',
-      changedValue: data.server,
-      conflictingLocalValue: local,
-    } as ChangeSet<T>
+    changes: conflictingScalarChange({server: data.server, local}) as ChangeSet<T>
   }
 }
 

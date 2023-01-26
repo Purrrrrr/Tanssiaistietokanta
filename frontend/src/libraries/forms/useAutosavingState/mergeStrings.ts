@@ -1,6 +1,6 @@
 import {merge as merge3} from 'node-diff3'
 
-import {MergeData, MergeResult} from './types'
+import {conflictingScalarChange, MergeData, MergeResult, scalarChange} from './types'
 
 const wordBoundary = (() => {
   try {
@@ -28,10 +28,7 @@ export function mergeConflictingStrings(
       //modifiedPaths: [[]],
       //conflictingPaths: [[]],
       conflicts: [],
-      changes: {
-        type: 'scalar',
-        changedValue: value,
-      }
+      changes: scalarChange(value)
     }
   }
 
@@ -43,10 +40,6 @@ export function mergeConflictingStrings(
     //modifiedPaths: [[]],
     //conflictingPaths: [[]],
     conflicts: [[]],
-    changes: {
-      type: 'scalar',
-      changedValue: server,
-      conflictingLocalValue: local,
-    }
+    changes: conflictingScalarChange({server, local})
   }
 }
