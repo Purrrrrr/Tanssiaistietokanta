@@ -1,6 +1,10 @@
-import {ArrayChangeSet, conflictingScalarChange, objectChange, scalarChange} from './types'
+import {arrayChange, conflictingScalarChange, objectChange, scalarChange} from './types'
 
 import merge from './mergeValues'
+
+function map<K, V>(...arr: [K, V][]): Map<K, V> {
+  return new Map(arr)
+}
 
 describe('merge', () => {
 
@@ -140,11 +144,11 @@ describe('merge', () => {
         ['b'],
       ],
       patch: [],
-      changes: objectChange({
+      changes: objectChange<any>({
         b: conflictingScalarChange({
           server: undefined,
           local: {value: 3, val: 2, obj: {a: 1}}
-        }) as any,
+        }),
       }),
     })
   })
@@ -161,15 +165,15 @@ describe('merge', () => {
       conflicts: [],
       patch: [],
       changes: objectChange<any>({
-        b: {
-          type: 'array',
-          itemModifications: new Map(),
-        },
+        b: arrayChange(
+          map(),
+          [2, 3],
+        ),
       }),
     })
   })
 
-  test('recursive conflicts 5', () => {
+  test('recursive conflicts 4', () => {
     expect(merge({
       original: {a: 1, b: [{_id: 1}, {_id: 2}, {_id: 0, a: 1, b: 2}]},
       server: {a: 1, b: [{_id: 2}, {_id: 0, a: 2, b: 2}]},
@@ -183,14 +187,14 @@ describe('merge', () => {
       ],
       patch: [],
       changes: objectChange<any>({
-        b: {
-          type: 'array',
-          itemModifications: new Map([
+        b: arrayChange(
+          map(
             [0, objectChange({
               a: conflictingScalarChange({local: 0, server: 2})
             })]
-          ]),
-        } as ArrayChangeSet<any>,
+          ),
+          [2, 0],
+        )
       }),
     })
   })

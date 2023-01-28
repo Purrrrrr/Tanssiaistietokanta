@@ -51,13 +51,26 @@ export function objectChange<T>(changes: ObjectChangeSet<T>['changes']): ObjectC
 export interface ArrayChangeSet<T> {
   type: 'array'
   itemModifications: Map<ID, ChangeSet<T>>
-  //changes: Map<number, ChangeSet<T>>
-  //conflicts: Map<number, ChangeSet<T>>
-  //additions: Map<number, Entity>
-  //removals: Set<number>
-  //removalConflicts: Set<number>
-  //moves: Map<number, number>
-  //moveConflicts: Map<number, number>
+  addedItems: Map<ID, T> //Where and what stuff has been added locally
+  modifiedStructure?: ID[]
+  conflictingLocalStructure?: ID[]
+}
+export function arrayChange<T>(changes: Map<ID, ChangeSet<T>>, modifiedStructure?: ID[], added?: Map<ID, T>): ArrayChangeSet<T> {
+  return {
+    type: 'array',
+    itemModifications: changes,
+    addedItems: added ?? new Map(),
+    modifiedStructure,
+  }
+}
+export function conflictingArrayChange<T>(changes: Map<ID, ChangeSet<T>>, structure: {local: ID[], server: ID[]}, added?: Map<ID, T>): ArrayChangeSet<T> {
+  return {
+    type: 'array',
+    itemModifications: changes,
+    addedItems: added ?? new Map(),
+    modifiedStructure: structure.server,
+    conflictingLocalStructure: structure.local,
+  }
 }
 
 export interface Operation {
