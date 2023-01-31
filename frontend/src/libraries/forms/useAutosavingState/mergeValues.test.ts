@@ -1,10 +1,7 @@
 import {arrayChange, conflictingScalarChange, objectChange, scalarChange} from './types'
 
 import merge from './mergeValues'
-
-function map<K, V>(...arr: [K, V][]): Map<K, V> {
-  return new Map(arr)
-}
+import {map} from './testUtils'
 
 describe('merge', () => {
 

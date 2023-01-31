@@ -2,11 +2,11 @@ import {arrayChange, ArrayChangeSet, conflictingArrayChange, Entity, ID, mapMerg
 
 import {mergeArrays} from './mergeArrays2'
 import merge from './mergeValues'
+import {changedVersion, map, randomGeneratorWithSeed, toEntity} from './testUtils'
 
 type DummyEntity= Entity | number
 type DummyEntityList = DummyEntity[] | string
 
-const toEntity = (item: Entity | number | string) => typeof item !== 'object' ? {_id: item, value: item} : item
 function toEntityList(data: DummyEntityList): Entity[] {
   if (typeof data === 'string') return data.split('').map(toEntity)
 
@@ -19,18 +19,10 @@ function doMerge(mergeData: MergeData<DummyEntityList>): MergeResult<Entity[]> {
   )
 }
 
-function map<K, V>(...arr: [K, V][]): Map<K, V> {
-  return new Map(arr)
-}
 function added(...arr: ID[]): Map<ID, Entity> {
   return new Map<ID, Entity>(
     arr.map(id => [id, toEntity(id)]),
   )
-}
-
-function mapChangeSet(changes) {
-  if (changes === null) return null
-  return changes
 }
 
 function mergeResult({patch, conflicts, ...res}: {changes: null | ArrayChangeSet<Entity>} & Omit<MergeResult<DummyEntityList>, 'changes'>): Partial<MergeResult<Entity[]>> {
@@ -38,23 +30,6 @@ function mergeResult({patch, conflicts, ...res}: {changes: null | ArrayChangeSet
     ...res,
     modifications: toEntityList(res.modifications),
     nonConflictingModifications: toEntityList(res.nonConflictingModifications),
-    //modifications: toEntityList(res.modifications),
-    //nonConflictingModifications: toEntityList(res.nonConflictingModifications),
-    /*patch: res.patch.map(line => {
-      if ('value' in line && !line.path.endsWith('/value')) {
-        if (line.op === 'test') {
-          return {
-            ...line,
-            path: line.path.endsWith('/_id') ? line.path : line.path+'/_id'
-          }
-        }
-        return {
-          ...line,
-          value: toEntity(line.value as DummyEntity)
-        }
-      }
-      return line
-    }),*/
   }
 }
 
@@ -846,35 +821,10 @@ describe('mergeArrays', () => {
     [3],
     [4],
   ])('random stability tests (seed = %i)', (seed) => {
-    function mulberry32(a: number) {
-      return function() {
-        let t = a += 0x6D2B79F5
-        /* eslint-disable */
-        t = Math.imul(t ^ t >>> 15, t | 1)
-        t ^= t + Math.imul(t ^ t >>> 7, t | 61)
-        return ((t ^ t >>> 14) >>> 0) / 4294967296
-        /* eslint-enable */
-      }
-    }
-
     let random
     beforeEach(() => {
-      random = mulberry32(seed)
+      random = randomGeneratorWithSeed(seed)
     })
-
-
-    let i = 10
-    const randomIndex = (arr: unknown[]) => Math.floor(random()*arr.length)
-    const addRandom = (arr: unknown[]) => arr.splice(randomIndex(arr), 0, toEntity(++i))
-    const removeRandom = (arr: unknown[]) => arr.splice(randomIndex(arr), 1)
-    const moveRandom = (arr: unknown[]) => {
-      const from = randomIndex(arr)
-      const [val] = arr.splice(from, 1)
-      arr.splice(randomIndex(arr), 0, val)
-    }
-    const repeatIn = (arr: unknown[], num: number, action: (arr: unknown[]) => unknown) => {
-      for(let i = 0; i < num; i++) action(arr)
-    }
 
     function testStability(original: Entity[], v1: Entity[], v2: Entity[]) {
       mergeArrays({original, server: v2, local: v1}, merge)
@@ -882,31 +832,24 @@ describe('mergeArrays', () => {
 
     test('random adding', () => {
       const original = [1, 2, 4, 5, 6, 7, 8, 9, 10].map(toEntity)
-      const version = [...original]
-      repeatIn(version, random()*20, addRandom)
-      const version2 = [...original]
-      repeatIn(version2, random()*20, addRandom)
-
+      const version = changedVersion(original, random, { add: random()*20 })
+      const version2 = changedVersion(original, random, { add: random()*20 })
 
       testStability(original, version, version2)
     })
 
     test('random removals', () => {
       const original = [1, 2, 4, 5, 6, 7, 8, 9, 10].map(toEntity)
-      const version = [...original]
-      repeatIn(version, random()*8, removeRandom)
-      const version2 = [...original]
-      repeatIn(version2, random()*8, removeRandom)
+      const version = changedVersion(original, random, { remove: random()*8 })
+      const version2 = changedVersion(original, random, { remove: random()*8 })
 
       testStability(original, version, version2)
     })
 
     test('random moving', () => {
       const original = [1, 2, 4, 5, 6, 7, 8, 9, 10].map(toEntity)
-      const version = [...original]
-      repeatIn(version, random()*8, moveRandom)
-      const version2 = [...original]
-      repeatIn(version2, random()*8, moveRandom)
+      const version = changedVersion(original, random, { move: random()*8 })
+      const version2 = changedVersion(original, random, { move: random()*8 })
       //console.log({original, version, version2})
 
       testStability(original, version, version2)
@@ -914,14 +857,16 @@ describe('mergeArrays', () => {
 
     test('random everything', () => {
       const original = [1, 2, 4, 5, 6, 7, 8, 9, 10].map(toEntity)
-      const version = [...original]
-      repeatIn(version, random()*20, addRandom)
-      repeatIn(version, random()*8, removeRandom)
-      repeatIn(version, random()*8, moveRandom)
-      const version2 = [...original]
-      repeatIn(version2, random()*20, addRandom)
-      repeatIn(version2, random()*8, removeRandom)
-      repeatIn(version2, random()*8, moveRandom)
+      const version = changedVersion(original, random, {
+        add: random()*20,
+        remove: random()*8,
+        move: random()*8,
+      })
+      const version2 = changedVersion(original, random, {
+        add: random()*20,
+        remove: random()*8,
+        move: random()*8,
+      })
 
       testStability(original, version, version2)
     })
