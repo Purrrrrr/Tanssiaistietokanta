@@ -6,7 +6,7 @@ export function mapToIds(items: Entity[]): ID[] {
   return items.map(getId)
 }
 
-function getId(item: Entity): ID {
+export function getId(item: Entity): ID {
   if ('_id' in item) {
     return item._id
   }
