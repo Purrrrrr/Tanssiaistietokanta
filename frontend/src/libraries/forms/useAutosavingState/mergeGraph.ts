@@ -4,7 +4,14 @@ import { getTopNodes } from './comparisons'
 import {Graph, makeGraph} from './Graph'
 
 const doLog = 0
-const log = (...arr) => doLog && console.log(...arr)
+const logs : unknown[][] = []
+const log = (...arr) => {
+  if (doLog) console.log(...arr)
+  else logs.push(arr)
+}
+function ohNo() {
+  logs.forEach(args => console.log(...args))
+}
 
 type InputData = MergeData<{
   id: ID,
@@ -34,6 +41,7 @@ interface Node {
 
 /** Merge deletes and modifications */
 export function GTSort(mergeIds: InputData) {
+  logs.length = 0
   const analyzedIds = mapMergeData(mergeIds, idData=> {
     const ids = idData.map(({id}) => id)
     const idToIndex = new Map(ids.map((id, index) => [id, index]))
@@ -133,7 +141,7 @@ function addEdges(mergedGraph: Graph<ID>, original: AnalyzedList, version1: Anal
     if (isAdded && lastInOriginal !== null) {
       const v2HasTransitivePath = version2.hasPathBetween(lastInOriginal, to)
       const originalHasTransitivePath = original.hasPathBetween(lastInOriginal, to)
-      log({from, to, lastInOriginal, originalHasTransitivePath, v2HasTransitivePath})
+      //log({from, to, lastInOriginal, originalHasTransitivePath, v2HasTransitivePath})
       if (originalHasTransitivePath && !v2HasTransitivePath) {
         debug.push(` | ${to}`)
         continue
@@ -232,18 +240,19 @@ function topologicalSort(graph: Graph<ID>, data: MergeData<AnalyzedList>, prefer
       id => {
         const indexOfCandidate = preferredVersion.indexOf(id) ?? Infinity
         //Prefer candidates that are first in the list
-        log(id, -indexOfCandidate)
+        //log(id, -indexOfCandidate)
         return -indexOfCandidate
       },
       id => {
         const indexOfCandidate = otherVersion.indexOf(id) ?? Infinity
         //Prefer candidates that are first in the list
-        log(id, -indexOfCandidate)
+        //log(id, -indexOfCandidate)
         return -indexOfCandidate
       }
     )
     if (top.length > 1) {
       console.log('!! multiple nodes '+top.join(', '))
+      ohNo()
       throw new Error('Can\'t decide next node. This should not happen')
     } else {
       //log('!! one '+top[0])
@@ -267,6 +276,10 @@ function topologicalSort(graph: Graph<ID>, data: MergeData<AnalyzedList>, prefer
     const node = selectNode(c)
     return -(preferredVersion.indexOf(node) ?? Infinity)
   }
+  function getStartIndexInOther(c: Set<ID>): number {
+    const node = selectNode(c)
+    return -(otherVersion.indexOf(node) ?? Infinity)
+  }
 
   while(!graph.isEmpty()) {
     const sourceComponents = new Set(components.sourceNodes())
@@ -274,14 +287,16 @@ function topologicalSort(graph: Graph<ID>, data: MergeData<AnalyzedList>, prefer
     const topComponents = getTopNodes(sourceComponents,
       getRank,
       getStartIndexInPreferred,
+      getStartIndexInOther,
     )
 
     //console.log(`Choices ${Array.from(sourceComponents).map(setToString).join(', ')}`)
     if (topComponents.length > 1) {
       console.log(`Many choices ${topComponents.map(setToString).join(', ')}`)
       topComponents.forEach(comp => {
-        log(setToString(comp), getRank(comp))
+        log(setToString(comp), getRank(comp), getStartIndexInPreferred(comp))
       })
+      ohNo()
       throw new Error('Can\'t decide next node. This should not happen')
     }
 
@@ -307,7 +322,7 @@ function topologicalSort(graph: Graph<ID>, data: MergeData<AnalyzedList>, prefer
       //log(graph.toDot(String))
     }
 
-    log('Selected: '+selected.join(', '))
+    //log('Selected: '+selected.join(', '))
     components.removeNode(component)
     sourceComponents.delete(component)
     //log(components.toDot(setToString))
