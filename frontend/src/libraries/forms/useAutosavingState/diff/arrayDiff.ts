@@ -24,19 +24,21 @@ export function arrayDiff<T extends Entity>(pathBase: string, original: T[], cha
     changes.modifiedStructure.map((id, index) => [id, index])
   )
 
-  let originalIndex = -1
+  let originalIndex = 0
+  let modifiedIndex = 0
   const movedItemOriginalIndexes = new Map<ID, number>()
-  for(let index = 0; index < changes.modifiedStructure.length; ) {
+  for(let index = 0; index < changes.modifiedStructure.length || originalIndex < original.length; ) {
     const id = changes.modifiedStructure[index]
     const originalId = ids[originalIndex]
 
     if (changes.addedItems.has(id)) { //Add
       patch.push({
         op: 'add',
-        path: `${pathBase}/${originalIndex}`,
+        path: `${pathBase}/${modifiedIndex}`,
         value: changes.addedItems.get(id)
       })
       index++
+      modifiedIndex++
       continue
     }
     const originalMovedTo = modifiedIndexes.get(originalId)
@@ -45,7 +47,7 @@ export function arrayDiff<T extends Entity>(pathBase: string, original: T[], cha
       testId(originalIndex, id)
       patch.push({
         op: 'remove',
-        path: `${pathBase}/${originalIndex}`,
+        path: `${pathBase}/${modifiedIndex}`,
       })
       originalIndex++
       continue
@@ -53,6 +55,7 @@ export function arrayDiff<T extends Entity>(pathBase: string, original: T[], cha
 
     if (originalId === id) {
       originalIndex++
+      modifiedIndex++
       index++
       continue
     }

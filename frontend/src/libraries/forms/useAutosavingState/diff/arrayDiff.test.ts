@@ -19,9 +19,8 @@ describe('arrayDiff', () => {
     expect(res).toEqual([])
   })
 
-  describe.skip.each([
+  describe.each([
     [0],
-    /*
     [1],
     [2],
     [3],
@@ -58,8 +57,22 @@ describe('arrayDiff', () => {
     }
 
     test('random adding', () => {
-      const original = [1, 2, 4, 5, 6, 7, 8, 9, 10].map(toEntity)
+      const original = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(toEntity)
       const version = changedVersion(original, random, { add: random()*20 })
+
+      testPatch(original, version)
+    })
+
+    test('random removing', () => {
+      const original = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(toEntity)
+      const version = changedVersion(original, random, { remove: random()*5 })
+
+      testPatch(original, version)
+    })
+
+    test('random adding and removing', () => {
+      const original = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(toEntity)
+      const version = changedVersion(original, random, { add: random()*20, remove: random()*5 })
 
       testPatch(original, version)
     })
