@@ -3,12 +3,12 @@ import {applyPatch} from 'rfc6902'
 import { getId, mapToIds } from '../idUtils'
 import { changedVersion, map, randomGeneratorWithSeed, toEntity} from '../testUtils'
 import {arrayChange, ArrayChangeSet, Entity} from '../types'
-import {arrayDiff} from './arrayDiff'
+import {arrayPatch} from './arrayPatch'
 
-describe('arrayDiff', () => {
+describe('arrayPatch', () => {
 
   it('produces empty patch with equal inputs', () => {
-    const res = arrayDiff(
+    const res = arrayPatch(
       '',
       [1, 2, 3, 4, 5, 6].map(toEntity),
       arrayChange(
@@ -97,7 +97,7 @@ describe('arrayDiff', () => {
 function testPatch(original: Entity[], version: Entity[]) {
   const changeSet = toArrayChangeSet(original, version)
 
-  const patch = arrayDiff('', original, changeSet)
+  const patch = arrayPatch('', original, changeSet)
 
   const patched = [...original]
   const patchRes = applyPatch(patched, patch as any)

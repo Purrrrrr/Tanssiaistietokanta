@@ -5,7 +5,7 @@ import {ArrayChangeSet, Entity, ID, Operation} from '../types'
 
 const log = (...args: unknown[]) => { /* empty */ }
 
-export function arrayDiff<T extends Entity>(pathBase: string, original: T[], changes: ArrayChangeSet<T>): Operation[] {
+export function arrayPatch<T extends Entity>(pathBase: string, original: T[], changes: ArrayChangeSet<T>): Operation[] {
   const patch : Operation[] = []
   const originalIds = mapToIds(original)
   const modifiedIds = changes.modifiedStructure
