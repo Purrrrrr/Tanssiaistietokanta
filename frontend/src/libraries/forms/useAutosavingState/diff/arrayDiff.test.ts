@@ -27,21 +27,17 @@ describe('arrayDiff', () => {
   })
 
   it('produces move patch for move up', () => {
-    const patch = testPatch(
+    testPatch(
       [1, 2, 3, 4].map(toEntity),
       [2, 3, 1, 4].map(toEntity)
     )
-
-    console.log(patch)
   })
 
   it('produces move patch for swap', () => {
-    const patch = testPatch(
+    testPatch(
       [1, 2, 3, 4].map(toEntity),
       [3, 2, 1, 4].map(toEntity)
     )
-
-    console.log(patch)
   })
 
   describe.each([
@@ -87,6 +83,13 @@ describe('arrayDiff', () => {
 
       if (seed === 0) testPatch(original, version)
     })
+
+    test('random adding, removing and moving', () => {
+      const original = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(toEntity)
+      const version = changedVersion(original, random, { add: random()*20, remove: random()*5, move: random()*9 })
+
+      testPatch(original, version)
+    })
   })
 
 })
@@ -99,6 +102,7 @@ function testPatch(original: Entity[], version: Entity[]) {
   const patched = [...original]
   const patchRes = applyPatch(patched, patch as any)
   try {
+    expect(version.map(i => i._id)).toEqual(patched.map(i => i._id))
     expect(version).toEqual(patched)
   } catch(e) {
     console.dir({

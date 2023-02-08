@@ -1,16 +1,24 @@
+import {applyPatch} from 'rfc6902'
+
 import { mapToIds } from '../idUtils'
 import {ArrayChangeSet, Entity, ID, Operation} from '../types'
 
+const log = (...args: unknown[]) => { /* empty */ }
+
 export function arrayDiff<T extends Entity>(pathBase: string, original: T[], changes: ArrayChangeSet<T>): Operation[] {
   const patch : Operation[] = []
-  const ids = mapToIds(original)
+  const originalIds = mapToIds(original)
+  const modifiedIds = changes.modifiedStructure
   const originalIndexes = new Map(
-    ids.map((id, index) => [id, index])
+    originalIds.map((id, index) => [id, index])
   )
 
-  const testedIds = new Set<ID>()
   function testId(index, id) {
-    testedIds.add(id)
+    patch.push({
+      op: 'test',
+      path: `${pathBase}/${index}/_id`,
+      value: id,
+    })
   }
 
   changes.itemModifications.forEach((subChange, id) => {
@@ -18,111 +26,106 @@ export function arrayDiff<T extends Entity>(pathBase: string, original: T[], cha
     //Do stuff for changes
   })
 
-  if (!changes.modifiedStructure) return patch
+  if (!modifiedIds) return patch
 
   const modifiedIndexes = new Map(
-    changes.modifiedStructure.map((id, index) => [id, index])
+    modifiedIds.map((id, index) => [id, index])
   )
 
-  let index = 0
-  let originalIndex = 0
-  let modifiedIndex = 0
-  let i = 0
-  const movedIntoPlace = new Set<ID>()
-  const movedItemOriginalIndexes = new Map<ID, number>()
-  while(index < changes.modifiedStructure.length || originalIndex < original.length) {
-    i++
-    if (i > 80) throw new Error('!')
-    const id = changes.modifiedStructure[index]
-    const originalId = ids[originalIndex]
+  let indexInModified = 0
+  let indexInOriginal = 0
+  let canaryLevel = 0
+  let addRemove = 0
 
-    console.log('Original to process ' + ids.slice(originalIndex).filter(id => !movedIntoPlace.has(id)).join(', '))
-    console.log('Modified to process ' + changes.modifiedStructure.slice(index).join(', '))
+  const movedIntoPlaceFrom = new Map<ID, number>()
+
+  const patched = [...originalIds]
+  const logging = false
+
+  while(indexInModified < modifiedIds.length || indexInOriginal < original.length) {
+
+    canaryLevel++
+    if (canaryLevel > 80) throw new Error('!')
+
+    const id = modifiedIds[indexInModified]
+    const originalId = originalIds[indexInOriginal]
+
+    if (logging) {
+      const a = originalIds.slice(0, indexInOriginal).join(', ') + ' | '
+      const b = modifiedIds.slice(0, indexInModified).join(', ') + ' | '
+      log('Original to process ' +a + originalIds.slice(indexInOriginal).map(id => movedIntoPlaceFrom.has(id) ? '!'+id : id).join(', ')
+        +'\nModified to process ' +b + modifiedIds.slice(indexInModified).join(', ')
+        + '\nPatched ' + patched.map(i => (i as any)._id ?? i).join(', '))
+    }
 
     if (changes.addedItems.has(id)) { //Add
       patch.push({
         op: 'add',
-        path: `${pathBase}/${modifiedIndex}`,
+        path: `${pathBase}/${indexInModified}`,
         value: changes.addedItems.get(id)
       })
-      index++
-      modifiedIndex++
+      if (logging) applyPatch(patched, [patch.at(-1)] as any)
+      indexInModified++
+      addRemove++
       continue
     }
     const originalMovedTo = modifiedIndexes.get(originalId)
 
     if (originalMovedTo === undefined) { //Remove
-      testId(originalIndex, id)
+      testId(indexInOriginal, id)
       patch.push({
         op: 'remove',
-        path: `${pathBase}/${modifiedIndex}`,
+        path: `${pathBase}/${indexInModified}`,
       })
-      originalIndex++
+      if (logging) applyPatch(patched, [patch.at(-1)] as any)
+      indexInOriginal++
+      addRemove--
       continue
     }
 
     if (originalId === id) {
-      originalIndex++
-      modifiedIndex++
-      index++
+      indexInOriginal++
+      indexInModified++
       continue
     }
 
-    if (movedIntoPlace.has(originalId)) {
-      console.log('has '+originalId)
-      movedIntoPlace.delete(originalId)
-      originalIndex++
+    if (movedIntoPlaceFrom.has(originalId)) {
+      log('has '+originalId)
+      movedIntoPlaceFrom.delete(id)
+      indexInOriginal++
       continue
     }
 
     const modifiedMovedFrom = originalIndexes.get(id)
     if (modifiedMovedFrom === undefined) throw new Error('Should not happen')
 
+    const movedIntoBefore = count(movedIntoPlaceFrom.values(), i => i > modifiedMovedFrom)
+    const from = modifiedMovedFrom
+      + movedIntoBefore
+      + addRemove
+
+    log({id, addRemove, modifiedMovedFrom, count: movedIntoBefore}, movedIntoPlaceFrom)
+
     //A moved item
-    const originalMoveAmount = originalMovedTo-originalIndex
-    const newMoveAmount = originalIndex-modifiedMovedFrom
-
-    console.log({originalIndex, originalId, originalMoveAmount, index, id, newMoveAmount})
-
-    if (newMoveAmount < 0 ) {
-      patch.push({
-        op: 'move',
-        from: `${pathBase}/${modifiedMovedFrom+movedIntoPlace.size}`,
-        path: `${pathBase}/${index}`,
-      })
-      movedIntoPlace.add(id)
-      modifiedIndex++
-      index++
-      continue
-    }
-    /*
-    if (originalMoveAmount > 0) { //Original has moved further away into the list
-      //Note it
-      movedItemOriginalIndexes.set(originalId, modifiedIndex)
-
-      if (newMoveAmount < -1) {
-        movedIntoPlace.add(id)
-        patch.push({
-          op: 'move',
-          from: `${pathBase}/${modifiedIndex}`,
-          path: `${pathBase}/${index}`,
-        })
-        originalIndex++
-        index++
-        continue
-      } else {
-        originalIndex++
-        index++
-        continue
-      }
-    } else {
-      
-    } */
-
-    originalIndex++
-    modifiedIndex++
-    index++
+    testId(from, id)
+    patch.push({
+      op: 'move',
+      from: `${pathBase}/${from}`,
+      path: `${pathBase}/${indexInModified}`,
+    })
+    if (logging) applyPatch(patched, [patch.at(-1)] as any)
+    log([patch.at(-1)])
+    movedIntoPlaceFrom.set(id, modifiedMovedFrom)
+    indexInModified++
   }
 
   return patch
+}
+
+function count<T>(i: Iterable<T>, pred: (i: T) => boolean): number {
+  let result = 0
+  for(const item of i) {
+    if (pred(item)) result++
+  }
+  return result
 }
