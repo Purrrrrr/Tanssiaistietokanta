@@ -1,13 +1,10 @@
-// import deepEquals from 'fast-deep-equal'
 import deepEquals from 'fast-deep-equal'
 
 import {arrayChange, ChangeSet, conflictingArrayChange, Entity, ID, mapMergeData, MergeData, MergeFunction, MergeResult, SyncState } from './types'
 
-import {ArrayPath} from '../types'
 import { areEqualWithoutId, mapToIds } from './idUtils'
 import {GTSort} from './mergeGraph'
 import merge from './mergeValues'
-import {emptyPath, subIndexPath} from './pathUtil'
 
 // eslint-disable-next-line
 /* @ts-ignore */
@@ -48,7 +45,6 @@ export function mergeArrays<T extends Entity>(
     ...data.server.ids.filter(id => data.local.has(id) || !data.original.has(id)),
   ])
 
-  const conflicts : ArrayPath<T[]>[] = []
   const mergedValues = new Map<ID, T>()
   const nonConflictingMergedValues = new Map<ID, T>()
   const modifiedIds = new Set<ID>()
@@ -87,9 +83,6 @@ export function mergeArrays<T extends Entity>(
         break
       case 'CONFLICT':
       {
-        const subConflicts : ArrayPath<T[]>[] = result.conflicts
-          .map(conflict => subIndexPath(serverData.index, conflict))
-        conflicts.push(...subConflicts)
         conflictingIds.add(id)
         mergedValues.set(id, result.modifications)
         nonConflictingMergedValues.set(id, result.nonConflictingModifications)
@@ -136,8 +129,6 @@ export function mergeArrays<T extends Entity>(
   let state : SyncState = isModified ? 'MODIFIED_LOCALLY' : 'IN_SYNC'
   if (conflictingIds.size > 0 || hasStructuralConflict) state = 'CONFLICT'
 
-  if (hasStructuralConflict) conflicts.push(emptyPath<T[]>())
-
   //console.log({hasStructuralChanges, hasStructuralConflict, localVersion, serverVersion})
 
   let changes : ChangeSet<T[]> | null = null
@@ -176,7 +167,6 @@ export function mergeArrays<T extends Entity>(
     state,
     modifications: localVersion.map(id => getFromMap(mergedValues, id)),
     nonConflictingModifications: serverVersion.map(id => getFromMap(nonConflictingMergedValues, id)),
-    conflicts,
     patch: [],
     changes,
   }

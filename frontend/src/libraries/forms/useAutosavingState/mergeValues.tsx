@@ -5,7 +5,6 @@ import {ChangeSet, conflictingScalarChange, Entity, Mergeable, MergeData, MergeR
 import {mergeArrays} from './mergeArrays2'
 import {mergeObjects} from './mergeObjects'
 import {mergeConflictingStrings} from './mergeStrings'
-import {emptyPath} from './pathUtil'
 
 export default function merge<T extends Mergeable>(data : MergeData<T>) : MergeResult<T> {
   if (nonNullData(data)) {
@@ -33,7 +32,6 @@ export default function merge<T extends Mergeable>(data : MergeData<T>) : MergeR
     modifications,
     nonConflictingModifications: modifications,
     patch,
-    conflicts: [],
     changes: inSync
       ? null
       : scalarChange(modifications) as ChangeSet<T>
@@ -51,9 +49,6 @@ export default function merge<T extends Mergeable>(data : MergeData<T>) : MergeR
     modifications: local,
     nonConflictingModifications: data.server,
     patch: [],
-    conflicts: [
-      emptyPath(),
-    ],
     changes: conflictingScalarChange({server: data.server, local}) as ChangeSet<T>
   }
 }

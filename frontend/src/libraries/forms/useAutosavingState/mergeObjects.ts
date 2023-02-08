@@ -1,14 +1,10 @@
 import {ChangeSet, MergeableObject, MergeData, MergeFunction, MergeResult, ObjectChangeSet, Operation, SyncState} from './types'
 
-import {ArrayPath} from '../types'
 import {scopePatch} from './patch'
-import {subPath} from './pathUtil'
-
 export function mergeObjects<T extends MergeableObject>(
   data : MergeData<T>,
   merge: MergeFunction,
 ) : MergeResult<T> {
-  const conflicts : ArrayPath<T>[] = []
   const modifications : T = { ...data.original }
   const nonConflictingModifications: T = { ...data.original }
 
@@ -26,9 +22,6 @@ export function mergeObjects<T extends MergeableObject>(
     switch (subResult.state) {
       case 'CONFLICT':
       {
-        const subConflicts : ArrayPath<T>[] = subResult.conflicts
-          .map(conflict => subPath(key, conflict))
-        conflicts.push(...subConflicts)
         modifications[key] = subResult.modifications
         nonConflictingModifications[key] = subResult.nonConflictingModifications
         hasConflicts = true
@@ -56,7 +49,6 @@ export function mergeObjects<T extends MergeableObject>(
     state,
     modifications,
     nonConflictingModifications,
-    conflicts,
     patch,
     changes: state === 'IN_SYNC' ? null : {
       type: 'object',

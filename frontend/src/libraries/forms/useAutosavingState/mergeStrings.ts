@@ -25,9 +25,6 @@ export function mergeConflictingStrings(
       patch: [
         { op: 'replace', value, path: '' },
       ],
-      //modifiedPaths: [[]],
-      //conflictingPaths: [[]],
-      conflicts: [],
       changes: scalarChange(value)
     }
   }
@@ -37,9 +34,6 @@ export function mergeConflictingStrings(
     modifications: local,
     nonConflictingModifications: server,
     patch: [],
-    //modifiedPaths: [[]],
-    //conflictingPaths: [[]],
-    conflicts: [[]],
     changes: conflictingScalarChange({server, local})
   }
 }

@@ -36,10 +36,6 @@ export function mergeArrays<T extends Entity>(
     state = 'MODIFIED_LOCALLY'
   }
 
-  const conflicts : ArrayPath<T[]>[] = indexConflicts.size > 0
-    ? [emptyPath<T[]>()]
-    : modifyResult.conflicts
-
   return {
     state,
     modifications: addResult.pendingModifications,
@@ -50,7 +46,6 @@ export function mergeArrays<T extends Entity>(
       ...moveResult.patch,
       ...addResult.patch,
     ],
-    conflicts,
     changes: null,
   }
 }
@@ -98,13 +93,12 @@ function mergeModifications<T extends Entity>(original: T[], serverDiff: Change<
             pendingModifications[change.from] = result.modifications
             patchesById.set(change.id, [
               testOriginalItem(change.from, server),
-              ...scopePatch(String(change.to), result.patch)
+              //...scopePatch(String(change.to), result.patch)
             ])
             break
           case 'CONFLICT':
           {
-            const subConflicts : ArrayPath<T[]>[] = result.conflicts
-              .map(conflict => subIndexPath(change.from, conflict))
+            const subConflicts : ArrayPath<T[]>[] = []
             conflicts.push(...subConflicts)
             patchesById.delete(change.id)
           }
@@ -127,7 +121,6 @@ function mergeModifications<T extends Entity>(original: T[], serverDiff: Change<
     modifications: pendingModifications,
     nonConflictingModifications: pendingModifications,
     patch,
-    conflicts,
     changes: null,
   }
 }

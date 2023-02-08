@@ -1,5 +1,3 @@
-import {ArrayPath} from '../types'
-
 export type ID = string | number
 export interface MergeableObject {
   [key: string]: Mergeable
@@ -14,7 +12,6 @@ export type Mergeable = MergeableScalar | MergeableObject | Entity[]
 export type SyncState = 'IN_SYNC' | 'MODIFIED_LOCALLY' | 'CONFLICT' | 'INVALID'
 export interface MergeResult<T> {
   state: SyncState
-  conflicts: ArrayPath<T>[]
   patch: Operation[]
 
   nonConflictingModifications: T //The version that can be sent to the server without breaking stuff because of conflicts

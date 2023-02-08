@@ -5,7 +5,7 @@ import createDebug from 'utils/debug'
 import {MergeableObject, SyncState} from './types'
 
 import {FormProps} from '../Form'
-import {ArrayPath, OnChangeHandler} from '../types'
+import {OnChangeHandler} from '../types'
 import mergeValues from './mergeValues'
 import {PatchStrategy} from './patchStrategies'
 
@@ -25,7 +25,7 @@ export type UseAutosavingStateReturn<T extends MergeableObject> = {
   resolveConflict: (resolutions: ConflictResolutions<T>) => unknown,
 }
 
-type AutosavingFormProps<T> = Pick<Required<FormProps<T>>, 'value' | 'onChange' | 'conflicts' | 'onValidityChange'>
+type AutosavingFormProps<T> = Pick<Required<FormProps<T>>, 'value' | 'onChange' | 'onValidityChange'>
 
 type SyncEvent = 'LOCAL_MODIFICATION' | 'PATCH_SENT' | 'EXTERNAL_MODIFICATION' | 'CONFLICT_RESOLVED'
 
@@ -34,7 +34,6 @@ interface SyncStore<T> {
   serverState: T
   serverStateTime: number
   modifications: T
-  conflicts: ArrayPath<T>[]
   conflictOrigin: null | T
 }
 
@@ -60,7 +59,7 @@ export function useAutosavingState<T extends MergeableObject, Patch>(
 {
   const [hasErrors, setHasErrors] = useState(false)
   const [reducerState, dispatch] = useReducer<Reducer<SyncStore<T>, SyncAction>, T>(reducer, serverState, getInitialState)
-  const { serverState: originalData, serverStateTime, state, modifications, conflicts } = reducerState
+  const { serverState: originalData, serverStateTime, state, modifications } = reducerState
 
   useEffect(() => {
     dispatch({ type: 'EXTERNAL_MODIFICATION', payload: serverState })
@@ -71,7 +70,7 @@ export function useAutosavingState<T extends MergeableObject, Patch>(
 
     const id = setTimeout(() => {
       if (hasErrors) return
-      if (conflicts.length > 0 && now() - serverStateTime > DISABLE_CONFLICT_OVERRIDE_DELAY) {
+      if (state === 'CONFLICT' && now() - serverStateTime > DISABLE_CONFLICT_OVERRIDE_DELAY) {
         debug('Not saving conflict data on top of stale data')
         refreshData && refreshData()
         return
@@ -86,7 +85,7 @@ export function useAutosavingState<T extends MergeableObject, Patch>(
     }, AUTOSAVE_DELAY)
 
     return () => clearTimeout(id)
-  }, [state, modifications, conflicts, onPatch, originalData, serverStateTime, patchStrategy, refreshData, hasErrors])
+  }, [state, modifications, onPatch, originalData, serverStateTime, patchStrategy, refreshData, hasErrors])
 
   const onModified = useCallback((modifications) => {
     dispatch({ type: 'LOCAL_MODIFICATION', payload: modifications})
@@ -104,7 +103,6 @@ export function useAutosavingState<T extends MergeableObject, Patch>(
     formProps: {
       value: modifications,
       onChange: onModified,
-      conflicts,
       onValidityChange,
     },
     value: modifications,
@@ -122,7 +120,6 @@ function getInitialState<T extends MergeableObject>(serverState: T) : SyncStore<
     serverState,
     serverStateTime: now(),
     modifications: serverState,
-    conflicts: [],
     conflictOrigin: null,
   }
 }
@@ -164,7 +161,7 @@ function reducer<T extends MergeableObject>(reducerState : SyncStore<T>, action 
 }
 
 function merge<T extends MergeableObject>(serverState : T, newServerState : T, newModifications : T, serverStateTime: number) : SyncStore<T> {
-  const { state, modifications, conflicts } = mergeValues({
+  const { state, modifications } = mergeValues({
     server: newServerState,
     original: serverState,
     local: newModifications,
@@ -178,6 +175,5 @@ function merge<T extends MergeableObject>(serverState : T, newServerState : T, n
     serverStateTime,
     conflictOrigin: hasConflicts ? serverState : null,
     modifications,
-    conflicts: conflicts
   }
 }

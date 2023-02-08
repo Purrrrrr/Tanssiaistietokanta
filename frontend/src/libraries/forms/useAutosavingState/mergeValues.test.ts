@@ -14,7 +14,6 @@ describe('merge', () => {
       state: 'IN_SYNC',
       modifications: {a: 1, b: 1},
       nonConflictingModifications: {a: 1, b: 1},
-      conflicts: [],
       patch: [],
       changes: null,
     })
@@ -29,7 +28,6 @@ describe('merge', () => {
       state: 'MODIFIED_LOCALLY',
       modifications: 2,
       nonConflictingModifications: 2,
-      conflicts: [],
       patch: [
         {op: 'replace', path: '', value: 2}
       ],
@@ -46,7 +44,6 @@ describe('merge', () => {
       state: 'IN_SYNC',
       modifications: 2,
       nonConflictingModifications: 2,
-      conflicts: [],
       patch: [],
       changes: null,
     })
@@ -61,7 +58,6 @@ describe('merge', () => {
       state: 'MODIFIED_LOCALLY',
       modifications: {value: 2},
       nonConflictingModifications: {value: 2},
-      conflicts: [],
       patch: [
         {op: 'replace', path: '/value', value: 2}
       ],
@@ -80,7 +76,6 @@ describe('merge', () => {
       state: 'IN_SYNC',
       modifications: {value: 2},
       nonConflictingModifications: {value: 2},
-      conflicts: [],
       patch: [],
       changes: null,
     })
@@ -95,7 +90,6 @@ describe('merge', () => {
       state: 'MODIFIED_LOCALLY',
       modifications: {a: 1, b: {value: 3}},
       nonConflictingModifications: {a: 1, b: {value: 3}},
-      conflicts: [],
       patch: [
         {op: 'replace', path: '/b/value', value: 3}
       ],
@@ -116,9 +110,6 @@ describe('merge', () => {
       state: 'CONFLICT',
       modifications: {a: 1, b: {value: 3}},
       nonConflictingModifications: {a: 1, b: {value: 2}},
-      conflicts: [
-        ['b', 'value'],
-      ],
       patch: [],
       changes: objectChange({
         b: objectChange({
@@ -137,9 +128,6 @@ describe('merge', () => {
       state: 'CONFLICT',
       modifications: {a: 1, b: {value: 3, val: 2, obj: {a: 1}}},
       nonConflictingModifications: {a: 1, b: undefined},
-      conflicts: [
-        ['b'],
-      ],
       patch: [],
       changes: objectChange<any>({
         b: conflictingScalarChange({
@@ -159,7 +147,6 @@ describe('merge', () => {
       state: 'MODIFIED_LOCALLY',
       modifications: {a: 1, b: [{_id: 2}, {_id: 3}]},
       nonConflictingModifications: {a: 1, b: [{_id: 2}, {_id: 3}]},
-      conflicts: [],
       patch: [],
       changes: objectChange<any>({
         b: arrayChange(
@@ -180,9 +167,6 @@ describe('merge', () => {
       state: 'CONFLICT',
       modifications: {a: 1, b: [{_id: 2}, {_id: 0, a: 0, b: 2}]},
       nonConflictingModifications: {a: 1, b: [{_id: 2}, {_id: 0, a: 2, b: 2}]},
-      conflicts: [
-        ['b', 1, 'a'],
-      ],
       patch: [],
       changes: objectChange<any>({
         b: arrayChange(
