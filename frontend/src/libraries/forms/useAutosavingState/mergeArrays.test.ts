@@ -65,6 +65,7 @@ describe('mergeArrays', () => {
         ],
         changes: arrayChange(
           map(),
+          [1, 2, 3, 4, 5],
           [1, 2, 3, 4, 5, 6],
           added(6),
         ),
@@ -99,6 +100,7 @@ describe('mergeArrays', () => {
         ],
         changes: arrayChange(
           map(),
+          [1, 2, 3, 4, 5],
           [8, 7, 1, 2, 3, 4, 5, 6],
           added(6),
         ),
@@ -137,6 +139,7 @@ describe('mergeArrays', () => {
         ],
         changes: arrayChange(
           map(),
+          [1, 2, 3, 4, 5],
           [1, 2, 4, 5]
         ),
       }))
@@ -170,7 +173,7 @@ describe('mergeArrays', () => {
         patch: [],
         changes: conflictingArrayChange(
           map(),
-          {local: [1, 2, 3, 4, 5], server: [1, 2, 4, 5]}
+          {original: [1, 2, 3, 4, 5], local: [1, 2, 3, 4, 5], server: [1, 2, 4, 5]}
         ),
       }))
     })
@@ -192,6 +195,7 @@ describe('mergeArrays', () => {
         ],
         changes: arrayChange(
           map(),
+          [1, 2, 3, 4, 5],
           [2, 4],
         ),
       }))
@@ -215,6 +219,7 @@ describe('mergeArrays', () => {
       ],
       changes: arrayChange(
         map(),
+        [1, 2, 3, 4, 5],
         [6, 1, 2, 4, 8, 7],
         added(7)
       ),
@@ -238,6 +243,7 @@ describe('mergeArrays', () => {
         ],
         changes: arrayChange(
           map(),
+          [1, 2, 3, 4, 5],
           [1, 5, 2, 3, 4],
         ),
       }))
@@ -272,6 +278,7 @@ describe('mergeArrays', () => {
         ],
         changes: arrayChange(
           map(),
+          [1, 2, 3],
           [1, 3, 2],
         ),
       }))
@@ -294,6 +301,7 @@ describe('mergeArrays', () => {
         ],
         changes: arrayChange(
           map(),
+          [1, 2, 3, 4],
           [4, 2, 3, 1],
         ),
       }))
@@ -358,6 +366,7 @@ describe('mergeArrays', () => {
         ],
         changes: arrayChange(
           map(),
+          [1, 2, 3, 4, 5],
           [1, 5, 2, 4, 3],
         ),
       }))
@@ -377,7 +386,11 @@ describe('mergeArrays', () => {
         ],
         changes: conflictingArrayChange(
           map(),
-          { server: '425167890'.split(''), local: '245167890'.split('') }
+          {
+            original: '1234567890'.split(''),
+            server: '425167890'.split(''),
+            local: '245167890'.split(''),
+          }
         ),
       }))
     })
@@ -404,6 +417,7 @@ describe('mergeArrays', () => {
               value: scalarChange(8),
             })]
           ),
+          [1, 2, 3, 4, 5],
           [1, 2, 3, 4, 5],
         ),
       }))
@@ -474,6 +488,7 @@ describe('mergeArrays', () => {
               value: scalarChange(8),
             })]
           ),
+          [1, 2, 3, 4, 5],
           [1, 2, 5, 3, 4],
         ),
       }))
@@ -499,6 +514,7 @@ describe('mergeArrays', () => {
               value: scalarChange(8),
             })]
           ),
+          [1, 2, 3, 4, 5],
           [1, 2, 5, 3, 4],
         ),
       }))
@@ -524,6 +540,7 @@ describe('mergeArrays', () => {
       changes: conflictingArrayChange(
         map(),
         {
+          original: [1, 2, 3, 4, 5],
           server: [1, 4, 6],
           local: [1, 2, 3, 4, 6],
         }
@@ -546,6 +563,7 @@ describe('mergeArrays', () => {
       ],
       changes: arrayChange(
         map(),
+        [1, 2, 3, 4],
         [6, 5, 1, 2, 3, 55, 66],
         added(5)
       ),
@@ -569,6 +587,7 @@ describe('mergeArrays', () => {
       ],
       changes: arrayChange(
         map(),
+        [1, 2, 3],
         [6, 5, 1, 3, 55, 66],
         added(5),
       ),
@@ -592,6 +611,7 @@ describe('mergeArrays', () => {
       ],
       changes: arrayChange(
         map(),
+        [4, 5, 11, 22, 33],
         [4, 6, 7, 8, 9, 10, 11, 22, 33],
         added(10)
       ),
@@ -613,6 +633,7 @@ describe('mergeArrays', () => {
       ],
       changes: arrayChange(
         map(),
+        [1, 2, 3, 4],
         [1, 9, 11, 2, 8, 3, 7, 4, 6],
         added(11)
       ),
@@ -633,6 +654,7 @@ describe('mergeArrays', () => {
       ],
       changes: arrayChange(
         map(),
+        [1, 2, 3, 4],
         [1, 9, 11, 2, 8, 3, 7, 4, 6, 10],
         added(10, 11)
       ),
@@ -653,6 +675,7 @@ describe('mergeArrays', () => {
       ],
       changes: arrayChange(
         map(),
+        [3, 4],
         [8, 3, 7, 4, 6, 10],
         added(10)
       ),
@@ -675,6 +698,7 @@ describe('mergeArrays', () => {
       ],
       changes: arrayChange(
         map(),
+        [1, 2, 3, 4],
         [1, 9, 11, 2, 8, 3, 7, 12, 4, 6, 10],
         added(11, 12, 10)
       ),
@@ -696,6 +720,7 @@ describe('mergeArrays', () => {
       ],
       changes: arrayChange(
         map(),
+        'TKQNFBP'.split(''),
         'KMTNJPFSX'.split(''),
         added('M', 'X')
       ),
@@ -718,6 +743,7 @@ describe('mergeArrays', () => {
       changes: conflictingArrayChange(
         map(),
         {
+          original: 'ABC'.split(''),
           local: 'ACB'.split(''),
           server: 'BAC'.split(''),
         }
@@ -741,6 +767,7 @@ describe('mergeArrays', () => {
       changes: conflictingArrayChange(
         map(),
         {
+          original: 'ABCxabc'.split(''),
           local: 'bacxACB'.split(''),
           server: 'acbxBAC'.split(''),
         }
@@ -763,6 +790,7 @@ describe('mergeArrays', () => {
       ],
       changes: arrayChange(
         map(),
+        'ABCDEF'.split(''),
         'ADECFB'.split(''),
       ),
     }))
@@ -783,6 +811,7 @@ describe('mergeArrays', () => {
       ],
       changes: arrayChange(
         map(),
+        'ABCDEF'.split(''),
         'AYDECXFB'.split(''),
         added(
           'Y'
@@ -806,6 +835,7 @@ describe('mergeArrays', () => {
       ],
       changes: arrayChange(
         map(),
+        'ABCDEF'.split(''),
         'AYWDECXZFB'.split(''),
         added(
           ...'YW'.split('')

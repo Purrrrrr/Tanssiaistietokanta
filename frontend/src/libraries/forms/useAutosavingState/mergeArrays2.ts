@@ -144,18 +144,24 @@ export function mergeArrays<T extends Entity>(
   if (hasStructuralConflict) {
     changes = conflictingArrayChange(
       itemModifications,
-      {server: serverVersion, local: localVersion},
+      {
+        original: data.original.ids,
+        server: serverVersion,
+        local: localVersion
+      },
       additions,
     )
   } else if (hasStructuralChanges) {
     changes = arrayChange(
       itemModifications,
+      data.original.ids,
       serverVersion,
       additions,
     )
   } else if (state !== 'IN_SYNC') {
     changes = arrayChange(
       itemModifications,
+      data.original.ids,
       serverVersion,
       additions,
     )

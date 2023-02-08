@@ -10,9 +10,10 @@ describe('arrayPatch', () => {
   it('produces empty patch with equal inputs', () => {
     const res = arrayPatch(
       '',
-      [1, 2, 3, 4, 5, 6].map(toEntity),
-      arrayChange(
-        map()
+      arrayChange<Entity>(
+        map(),
+        [1, 2, 3, 4, 5, 6],
+        [1, 2, 3, 4, 5, 6]
       )
     )
 
@@ -97,7 +98,7 @@ describe('arrayPatch', () => {
 function testPatch(original: Entity[], version: Entity[]) {
   const changeSet = toArrayChangeSet(original, version)
 
-  const patch = arrayPatch('', original, changeSet)
+  const patch = arrayPatch('', changeSet)
 
   const patched = [...original]
   const patchRes = applyPatch(patched, patch as any)
@@ -126,6 +127,7 @@ function toArrayChangeSet(original: Entity[], version: Entity[]): ArrayChangeSet
     .filter(([id]) => !originalIds.has(id))
   return arrayChange(
     map(),
+    mapToIds(original),
     mapToIds(version),
     map(...addedVersions)
   )

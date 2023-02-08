@@ -164,6 +164,7 @@ describe('merge', () => {
       changes: objectChange<any>({
         b: arrayChange(
           map(),
+          [1, 2, 3],
           [2, 3],
         ),
       }),
@@ -190,6 +191,7 @@ describe('merge', () => {
               a: conflictingScalarChange({local: 0, server: 2})
             })]
           ),
+          [1, 2, 0],
           [2, 0],
         )
       }),
