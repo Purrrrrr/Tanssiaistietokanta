@@ -40,12 +40,6 @@ export function mergeArrays<T extends Entity>(
     state,
     modifications: addResult.pendingModifications,
     nonConflictingModifications: addResult.pendingModifications,
-    patch: [
-      ...modifyResult.patch,
-      ...deleteResult.patch,
-      ...moveResult.patch,
-      ...addResult.patch,
-    ],
     changes: null,
   }
 }
@@ -71,7 +65,7 @@ function mergeModifications<T extends Entity>(original: T[], serverDiff: Change<
         const result = merge({ original, local, server: original})
         patchesById.set(change.id, [
           testOriginalItem(serverPos, local),
-          ...scopePatch(String(serverPos), result.patch)
+          //...scopePatch(String(serverPos), result.patch)
         ])
       }
     })
@@ -120,7 +114,6 @@ function mergeModifications<T extends Entity>(original: T[], serverDiff: Change<
     state,
     modifications: pendingModifications,
     nonConflictingModifications: pendingModifications,
-    patch,
     changes: null,
   }
 }

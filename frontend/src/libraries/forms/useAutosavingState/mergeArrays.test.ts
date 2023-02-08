@@ -25,7 +25,7 @@ function added(...arr: ID[]): Map<ID, Entity> {
   )
 }
 
-function mergeResult({patch, ...res}: {changes: null | ArrayChangeSet<Entity>} & Omit<MergeResult<DummyEntityList>, 'changes'>): Partial<MergeResult<Entity[]>> {
+function mergeResult(res: {changes: null | ArrayChangeSet<Entity>} & Omit<MergeResult<DummyEntityList>, 'changes'>): Partial<MergeResult<Entity[]>> {
   return {
     ...res,
     modifications: toEntityList(res.modifications),
@@ -43,7 +43,6 @@ describe('mergeArrays', () => {
       state: 'IN_SYNC',
       modifications: [1, 2, 3, 4, 5],
       nonConflictingModifications: [1, 2, 3, 4, 5],
-      patch: [],
       changes: null,
     }))
   })
@@ -58,9 +57,6 @@ describe('mergeArrays', () => {
         state: 'MODIFIED_LOCALLY',
         modifications: [1, 2, 3, 4, 5, 6],
         nonConflictingModifications: [1, 2, 3, 4, 5, 6],
-        patch: [
-          {op: 'add', path: '/5', value: 6}
-        ],
         changes: arrayChange(
           map(),
           [1, 2, 3, 4, 5],
@@ -78,7 +74,6 @@ describe('mergeArrays', () => {
         state: 'IN_SYNC',
         modifications: [1, 2, 3, 4, 5, 6],
         nonConflictingModifications: [1, 2, 3, 4, 5, 6],
-        patch: [],
         changes: null,
       }))
     })
@@ -91,9 +86,6 @@ describe('mergeArrays', () => {
         state: 'MODIFIED_LOCALLY',
         modifications: [8, 7, 1, 2, 3, 4, 5, 6],
         nonConflictingModifications: [8, 7, 1, 2, 3, 4, 5, 6],
-        patch: [
-          {op: 'add', path: '/7', value: 6},
-        ],
         changes: arrayChange(
           map(),
           [1, 2, 3, 4, 5],
@@ -111,7 +103,6 @@ describe('mergeArrays', () => {
         state: 'IN_SYNC',
         modifications: [1, 2, 3, 4, 5, {_id: 6, data: 6}],
         nonConflictingModifications: [1, 2, 3, 4, 5, {_id: 6, data: 6}],
-        patch: [],
         changes: null,
       }))
     })
@@ -127,10 +118,6 @@ describe('mergeArrays', () => {
         state: 'MODIFIED_LOCALLY',
         modifications: [1, 2, 4, 5],
         nonConflictingModifications: [1, 2, 4, 5],
-        patch: [
-          {op: 'test', path: '/2', value: 3},
-          {op: 'remove', path: '/2'},
-        ],
         changes: arrayChange(
           map(),
           [1, 2, 3, 4, 5],
@@ -147,7 +134,6 @@ describe('mergeArrays', () => {
         state: 'IN_SYNC',
         modifications: [1, 2, 4, 5],
         nonConflictingModifications: [1, 2, 4, 5],
-        patch: [],
         changes: null,
       }))
     })
@@ -160,7 +146,6 @@ describe('mergeArrays', () => {
         state: 'CONFLICT',
         modifications: [1, 2, {_id: 3, value: 'a'}, 4, 5],
         nonConflictingModifications: [1, 2, 4, 5],
-        patch: [],
         changes: conflictingArrayChange(
           map(),
           {original: [1, 2, 3, 4, 5], local: [1, 2, 3, 4, 5], server: [1, 2, 4, 5]}
@@ -176,12 +161,6 @@ describe('mergeArrays', () => {
         state: 'MODIFIED_LOCALLY',
         modifications: [2, 4],
         nonConflictingModifications: [2, 4],
-        patch: [
-          {op: 'test', path: '/0', value: 1},
-          {op: 'remove', path: '/0'},
-          {op: 'test', path: '/2', value: 5},
-          {op: 'remove', path: '/2'},
-        ],
         changes: arrayChange(
           map(),
           [1, 2, 3, 4, 5],
@@ -200,11 +179,6 @@ describe('mergeArrays', () => {
       state: 'MODIFIED_LOCALLY',
       modifications: [6, 1, 2, 4, 8, 7],
       nonConflictingModifications: [6, 1, 2, 4, 8, 7],
-      patch: [
-        {op: 'test', path: '/4', value: 5},
-        {op: 'remove', path: '/4'},
-        {op: 'add', path: '/4', value: 7},
-      ],
       changes: arrayChange(
         map(),
         [1, 2, 3, 4, 5],
@@ -224,10 +198,6 @@ describe('mergeArrays', () => {
         state: 'MODIFIED_LOCALLY',
         modifications: [1, 5, 2, 3, 4],
         nonConflictingModifications: [1, 5, 2, 3, 4],
-        patch: [
-          {op: 'test', path: '/4', value: 5},
-          {op: 'move', from: '/4', path: '/1'},
-        ],
         changes: arrayChange(
           map(),
           [1, 2, 3, 4, 5],
@@ -244,7 +214,6 @@ describe('mergeArrays', () => {
         state: 'IN_SYNC',
         modifications: [1, 5, 2, 3, 4],
         nonConflictingModifications: [1, 5, 2, 3, 4],
-        patch: [],
         changes: null,
       }))
     })
@@ -257,10 +226,6 @@ describe('mergeArrays', () => {
         state: 'MODIFIED_LOCALLY',
         modifications: [1, 3, 2],
         nonConflictingModifications: [1, 3, 2],
-        patch: [
-          {op: 'test', path: '/1', value: 2},
-          {op: 'move', from: '/1', path: '/2'},
-        ],
         changes: arrayChange(
           map(),
           [1, 2, 3],
@@ -277,12 +242,6 @@ describe('mergeArrays', () => {
         state: 'MODIFIED_LOCALLY',
         modifications: [4, 2, 3, 1],
         nonConflictingModifications: [4, 2, 3, 1],
-        patch: [
-          {op: 'test', path: '/0', value: 1},
-          {op: 'move', from: '/0', path: '/2'},
-          {op: 'test', path: '/3', value: 4},
-          {op: 'move', from: '/3', path: '/0'},
-        ],
         changes: arrayChange(
           map(),
           [1, 2, 3, 4],
@@ -299,7 +258,6 @@ describe('mergeArrays', () => {
         state: 'IN_SYNC',
         modifications: [1, 3, 2],
         nonConflictingModifications: [1, 3, 2],
-        patch: [],
         changes: null,
       }))
     })
@@ -312,7 +270,6 @@ describe('mergeArrays', () => {
         state: 'IN_SYNC',
         modifications: [4, 2, 3, 1],
         nonConflictingModifications: [4, 2, 3, 1],
-        patch: [],
         changes: null,
       }))
     })
@@ -326,7 +283,6 @@ describe('mergeArrays', () => {
         state: 'IN_SYNC',
         modifications: [1, 5, 2, 3, 4],
         nonConflictingModifications: [1, 5, 2, 3, 4],
-        patch: [],
         changes: null,
       }))
     })
@@ -340,10 +296,6 @@ describe('mergeArrays', () => {
         state: 'MODIFIED_LOCALLY',
         modifications: [1, 5, 2, 4, 3],
         nonConflictingModifications: [1, 5, 2, 4, 3],
-        patch: [
-          {op: 'test', path: '/3', value: 3},
-          {op: 'move', from: '/3', path: '/4'},
-        ],
         changes: arrayChange(
           map(),
           [1, 2, 3, 4, 5],
@@ -361,8 +313,6 @@ describe('mergeArrays', () => {
         state: 'CONFLICT',
         modifications: '245167890',
         nonConflictingModifications: '425167890',
-        patch: [
-        ],
         changes: conflictingArrayChange(
           map(),
           {
@@ -385,10 +335,6 @@ describe('mergeArrays', () => {
         state: 'MODIFIED_LOCALLY',
         modifications: [1, 2, 3, 4, {_id: 5, value: 8}],
         nonConflictingModifications: [1, 2, 3, 4, {_id: 5, value: 8}],
-        patch: [
-          {op: 'test', path: '/4/_id', value: 5},
-          {op: 'replace', path: '/4/value', value: 8},
-        ],
         changes: arrayChange<any>(
           map(
             [5, objectChange({
@@ -409,7 +355,6 @@ describe('mergeArrays', () => {
         state: 'IN_SYNC',
         modifications: [1, 2, 3, 4, {_id: 5, value: 8}],
         nonConflictingModifications: [1, 2, 3, 4, {_id: 5, value: 8}],
-        patch: [],
         changes: null,
       }))
     })
@@ -422,7 +367,6 @@ describe('mergeArrays', () => {
         state: 'IN_SYNC',
         modifications: [1, 2, 3, 4, {_id: 5, value: 8}],
         nonConflictingModifications: [1, 2, 3, 4, {_id: 5, value: 8}],
-        patch: [],
         changes: null,
       }))
     })
@@ -436,7 +380,6 @@ describe('mergeArrays', () => {
         state: 'IN_SYNC',
         modifications: [1, 2, {_id: 5, value: 8}, 3, 4],
         nonConflictingModifications: [1, 2, {_id: 5, value: 8}, 3, 4],
-        patch: [],
         changes: null,
       }))
     })
@@ -450,12 +393,6 @@ describe('mergeArrays', () => {
         state: 'MODIFIED_LOCALLY',
         modifications: [1, 2, {_id: 5, value: 8}, 3, 4],
         nonConflictingModifications: [1, 2, {_id: 5, value: 8}, 3, 4],
-        patch: [
-          {op: 'test', path: '/4/_id', value: 5},
-          {op: 'replace', path: '/4/value', value: 8},
-          {op: 'test', path: '/4/_id', value: 5},
-          {op: 'move', path: '/2', from: '/4'},
-        ],
         changes: arrayChange<any>(
           map(
             [5, objectChange({
@@ -477,10 +414,6 @@ describe('mergeArrays', () => {
         state: 'MODIFIED_LOCALLY',
         modifications: [1, 2, {_id: 5, value: 8}, 3, 4],
         nonConflictingModifications: [1, 2, {_id: 5, value: 8}, 3, 4],
-        patch: [
-          {op: 'test', path: '/2/_id', value: 5},
-          {op: 'replace', path: '/2/value', value: 8},
-        ],
         changes: arrayChange<any>(
           map(
             [5, objectChange({
@@ -503,10 +436,6 @@ describe('mergeArrays', () => {
       state: 'CONFLICT',
       modifications: [1, {_id: 2}, {_id: 3}, 4, 6],
       nonConflictingModifications: [1, 4, 6],
-      patch: [
-        {op: 'test', path: '/2', value: 5},
-        {op: 'remove', path: '/2'},
-      ],
       changes: conflictingArrayChange(
         map(),
         {
@@ -527,9 +456,6 @@ describe('mergeArrays', () => {
       state: 'MODIFIED_LOCALLY',
       modifications: [6, 5, 1, 2, 3, 55, 66],
       nonConflictingModifications: [6, 5, 1, 2, 3, 55, 66],
-      patch: [
-        {op: 'add', path: '/0', value: 5},
-      ],
       changes: arrayChange(
         map(),
         [1, 2, 3, 4],
@@ -548,9 +474,6 @@ describe('mergeArrays', () => {
       state: 'MODIFIED_LOCALLY',
       modifications: [6, 5, 1, 3, 55, 66],
       nonConflictingModifications: [6, 5, 1, 3, 55, 66],
-      patch: [
-        {op: 'add', path: '/0', value: 5},
-      ],
       changes: arrayChange(
         map(),
         [1, 2, 3],
@@ -569,11 +492,6 @@ describe('mergeArrays', () => {
       state: 'MODIFIED_LOCALLY',
       modifications: [4, 6, 7, 8, 9, 10, 11, 22, 33],
       nonConflictingModifications: [4, 6, 7, 8, 9, 10, 11, 22, 33],
-      patch: [
-        {op: 'test', path: '/1', value: 5},
-        {op: 'remove', path: '/1'},
-        {op: 'add', path: '/1', value: 10},
-      ],
       changes: arrayChange(
         map(),
         [4, 5, 11, 22, 33],
@@ -592,9 +510,6 @@ describe('mergeArrays', () => {
       state: 'MODIFIED_LOCALLY',
       modifications: [1, 9, 11, 2, 8, 3, 7, 4, 6],
       nonConflictingModifications: [1, 9, 11, 2, 8, 3, 7, 4, 6],
-      patch: [
-        {op: 'add', path: '/1', value: 11},
-      ],
       changes: arrayChange(
         map(),
         [1, 2, 3, 4],
@@ -612,9 +527,6 @@ describe('mergeArrays', () => {
       state: 'MODIFIED_LOCALLY',
       modifications: [1, 9, 11, 2, 8, 3, 7, 4, 6, 10],
       nonConflictingModifications: [1, 9, 11, 2, 8, 3, 7, 4, 6, 10],
-      patch: [
-        {op: 'add', path: '/1', value: 11}, {op: 'add', path: '/9', value: 10},
-      ],
       changes: arrayChange(
         map(),
         [1, 2, 3, 4],
@@ -632,9 +544,6 @@ describe('mergeArrays', () => {
       state: 'MODIFIED_LOCALLY',
       modifications: [8, 3, 7, 4, 6, 10],
       nonConflictingModifications: [8, 3, 7, 4, 6, 10],
-      patch: [
-        {op: 'add', path: '/4', value: 10},
-      ],
       changes: arrayChange(
         map(),
         [3, 4],
@@ -652,11 +561,6 @@ describe('mergeArrays', () => {
       state: 'MODIFIED_LOCALLY',
       modifications: [1, 9, 11, 2, 8, 3, 7, 12, 4, 6, 10],
       nonConflictingModifications: [1, 9, 11, 2, 8, 3, 7, 12, 4, 6, 10],
-      patch: [
-        {op: 'add', path: '/1', value: 11},
-        {op: 'add', path: '/7', value: 12},
-        {op: 'add', path: '/10', value: 10},
-      ],
       changes: arrayChange(
         map(),
         [1, 2, 3, 4],
@@ -675,9 +579,6 @@ describe('mergeArrays', () => {
       state: 'MODIFIED_LOCALLY',
       modifications: 'KMTNJPFSX',
       nonConflictingModifications: 'KMTNJPFSX',
-      patch: [
-
-      ],
       changes: arrayChange(
         map(),
         'TKQNFBP'.split(''),
@@ -696,9 +597,6 @@ describe('mergeArrays', () => {
       state: 'CONFLICT',
       modifications: 'ACB',
       nonConflictingModifications: 'BAC',
-      patch: [
-
-      ],
       changes: conflictingArrayChange(
         map(),
         {
@@ -719,9 +617,6 @@ describe('mergeArrays', () => {
       state: 'CONFLICT',
       modifications: 'bacxACB',
       nonConflictingModifications: 'acbxBAC',
-      patch: [
-
-      ],
       changes: conflictingArrayChange(
         map(),
         {
@@ -742,9 +637,6 @@ describe('mergeArrays', () => {
       state: 'MODIFIED_LOCALLY',
       modifications: 'ADECFB',
       nonConflictingModifications: 'ADECFB',
-      patch: [
-
-      ],
       changes: arrayChange(
         map(),
         'ABCDEF'.split(''),
@@ -762,9 +654,6 @@ describe('mergeArrays', () => {
       state: 'MODIFIED_LOCALLY',
       modifications: 'AYDECXFB',
       nonConflictingModifications: 'AYDECXFB',
-      patch: [
-
-      ],
       changes: arrayChange(
         map(),
         'ABCDEF'.split(''),
@@ -785,9 +674,6 @@ describe('mergeArrays', () => {
       state: 'MODIFIED_LOCALLY',
       modifications: 'AYWDECXZFB',
       nonConflictingModifications: 'AYWDECXZFB',
-      patch: [
-
-      ],
       changes: arrayChange(
         map(),
         'ABCDEF'.split(''),

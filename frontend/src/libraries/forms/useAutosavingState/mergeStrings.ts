@@ -22,9 +22,6 @@ export function mergeConflictingStrings(
       state: 'MODIFIED_LOCALLY',
       modifications: value,
       nonConflictingModifications: value,
-      patch: [
-        { op: 'replace', value, path: '' },
-      ],
       changes: scalarChange(value)
     }
   }
@@ -33,7 +30,6 @@ export function mergeConflictingStrings(
     state: 'CONFLICT',
     modifications: local,
     nonConflictingModifications: server,
-    patch: [],
     changes: conflictingScalarChange({server, local})
   }
 }

@@ -167,7 +167,6 @@ export function mergeArrays<T extends Entity>(
     state,
     modifications: localVersion.map(id => getFromMap(mergedValues, id)),
     nonConflictingModifications: serverVersion.map(id => getFromMap(nonConflictingMergedValues, id)),
-    patch: [],
     changes,
   }
 }
