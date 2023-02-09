@@ -71,13 +71,6 @@ export function conflictingArrayChange<T>(changes: Map<ID, ChangeSet<T>>, struct
   }
 }
 
-export interface Operation {
-  op: 'add' | 'remove' | 'replace' | 'move' | 'copy' | 'test'
-  from?: string
-  path: string
-  value?: Mergeable
-}
-
 export interface MergeData<T> {
   server: T,
   original: T,
