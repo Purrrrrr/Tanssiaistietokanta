@@ -1,10 +1,11 @@
 import {applyPatch} from 'rfc6902'
 
-import {ArrayChangeSet, Entity, ID, Operation} from '../types'
+import {ArrayChangeSet, ID } from '../types'
+import {Operation} from './jsonPatch'
 
 const log = (...args: unknown[]) => { /* empty */ }
 
-export function arrayPatch<T extends Entity>(pathBase: string, changes: ArrayChangeSet<T>): Operation[] {
+export function arrayPatch<T>(changes: ArrayChangeSet<T>, pathBase = ''): Operation[] {
   const patch : Operation[] = []
   const originalIds = changes.originalStructure
   const modifiedIds = changes.modifiedStructure
@@ -33,7 +34,6 @@ export function arrayPatch<T extends Entity>(pathBase: string, changes: ArrayCha
 
   let indexInModified = 0
   let indexInOriginal = 0
-  let canaryLevel = 0
   let addRemove = 0
 
   const movedIntoPlaceFrom = new Map<ID, number>()
@@ -42,10 +42,6 @@ export function arrayPatch<T extends Entity>(pathBase: string, changes: ArrayCha
   const logging = false
 
   while(indexInModified < modifiedIds.length || indexInOriginal < originalIds.length) {
-
-    canaryLevel++
-    if (canaryLevel > 80) throw new Error('!')
-
     const id = modifiedIds[indexInModified]
     const originalId = originalIds[indexInOriginal]
 

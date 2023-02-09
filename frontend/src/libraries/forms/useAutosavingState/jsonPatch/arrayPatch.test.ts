@@ -9,7 +9,6 @@ describe('arrayPatch', () => {
 
   it('produces empty patch with equal inputs', () => {
     const res = arrayPatch(
-      '',
       arrayChange<Entity>(
         map(),
         [1, 2, 3, 4, 5, 6],
@@ -98,7 +97,7 @@ describe('arrayPatch', () => {
 function testPatch(original: Entity[], version: Entity[]) {
   const changeSet = toArrayChangeSet(original, version)
 
-  const patch = arrayPatch('', changeSet)
+  const patch = arrayPatch(changeSet)
 
   const patched = [...original]
   const patchRes = applyPatch(patched, patch as any)
