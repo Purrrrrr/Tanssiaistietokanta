@@ -2,7 +2,7 @@ import {Reducer, useCallback, useEffect, useReducer, useState} from 'react'
 
 import createDebug from 'utils/debug'
 
-import {MergeableObject, SyncState} from './types'
+import {ChangeSet, MergeableObject, SyncState} from './types'
 
 import {FormProps} from '../Form'
 import {OnChangeHandler} from '../types'
@@ -35,11 +35,12 @@ interface SyncStore<T> {
   serverStateTime: number
   modifications: T
   conflictOrigin: null | T
+  changes: ChangeSet<T> | null
 }
 
 interface SyncAction {
   type: SyncEvent
-  payload: any
+  payload?: any
 }
 
 const DISABLE_CONFLICT_OVERRIDE_DELAY = 1000 * 60 * 5 //Disable saving and overwriting conflicts after five minutes
@@ -59,7 +60,7 @@ export function useAutosavingState<T extends MergeableObject, Patch>(
 {
   const [hasErrors, setHasErrors] = useState(false)
   const [reducerState, dispatch] = useReducer<Reducer<SyncStore<T>, SyncAction>, T>(reducer, serverState, getInitialState)
-  const { serverState: originalData, serverStateTime, state, modifications } = reducerState
+  const { serverState: originalData, serverStateTime, state, changes, modifications } = reducerState
 
   useEffect(() => {
     dispatch({ type: 'EXTERNAL_MODIFICATION', payload: serverState })
@@ -75,17 +76,17 @@ export function useAutosavingState<T extends MergeableObject, Patch>(
         refreshData && refreshData()
         return
       }
-      //const patchData = patchStrategy(originalData, modifications, conflicts)
-      const patchData = patchStrategy(originalData, modifications, [])
-      if (patchData.hasModifications) {
-        debug('Saving', patchData.patch)
-        dispatch({ type: 'PATCH_SENT', payload: patchData.newServerState})
-        onPatch(patchData.patch)
+      if (changes !== null) {
+        const patch= patchStrategy(originalData, modifications, changes)
+
+        debug('Saving', patch)
+        dispatch({ type: 'PATCH_SENT' })
+        //onPatch(patch)
       }
     }, AUTOSAVE_DELAY)
 
     return () => clearTimeout(id)
-  }, [state, modifications, onPatch, originalData, serverStateTime, patchStrategy, refreshData, hasErrors])
+  }, [state, modifications, onPatch, originalData, serverStateTime, patchStrategy, changes, refreshData, hasErrors])
 
   const onModified = useCallback((modifications) => {
     dispatch({ type: 'LOCAL_MODIFICATION', payload: modifications})
@@ -121,6 +122,7 @@ function getInitialState<T extends MergeableObject>(serverState: T) : SyncStore<
     serverStateTime: now(),
     modifications: serverState,
     conflictOrigin: null,
+    changes: null,
   }
 }
 
@@ -146,7 +148,8 @@ function reducer<T extends MergeableObject>(reducerState : SyncStore<T>, action 
     case 'PATCH_SENT':
       return {
         ...reducerState,
-        serverState: { ...serverState, ...action.payload },
+        serverState: reducerState.modifications,
+        changes: null,
       }
     case 'CONFLICT_RESOLVED':
       return reducerState //TODO: create proper algorithm
@@ -161,7 +164,7 @@ function reducer<T extends MergeableObject>(reducerState : SyncStore<T>, action 
 }
 
 function merge<T extends MergeableObject>(serverState : T, newServerState : T, newModifications : T, serverStateTime: number) : SyncStore<T> {
-  const { state, modifications } = mergeValues({
+  const { state, modifications, changes } = mergeValues({
     server: newServerState,
     original: serverState,
     local: newModifications,
@@ -175,5 +178,6 @@ function merge<T extends MergeableObject>(serverState : T, newServerState : T, n
     serverStateTime,
     conflictOrigin: hasConflicts ? serverState : null,
     modifications,
+    changes,
   }
 }
