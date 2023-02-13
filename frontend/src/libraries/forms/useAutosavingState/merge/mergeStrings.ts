@@ -1,6 +1,6 @@
 import {merge as merge3} from 'node-diff3'
 
-import {conflictingScalarChange, MergeData, MergeResult, scalarChange} from './types'
+import {conflictingScalarChange, MergeData, MergeResult, scalarChange} from '../types'
 
 const wordBoundary = (() => {
   try {

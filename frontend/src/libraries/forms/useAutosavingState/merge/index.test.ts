@@ -1,7 +1,6 @@
-import {arrayChange, conflictingScalarChange, objectChange, removedKey, removedOnLocalWithServerModification, removedOnServerWithLocalModification, scalarChange} from './types'
-
-import merge from './mergeValues'
-import {map} from './testUtils'
+import {map} from '../testUtils'
+import {arrayChange, conflictingScalarChange, objectChange, removedKey, removedOnLocalWithServerModification, removedOnServerWithLocalModification, scalarChange} from '../types'
+import merge from './index'
 
 describe('merge', () => {
 

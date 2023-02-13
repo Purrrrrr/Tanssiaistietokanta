@@ -1,19 +1,8 @@
 import deepEquals from 'fast-deep-equal'
 
-import {arrayChange, ChangeSet, conflictingArrayChange, Entity, ID, mapMergeData, MergeData, MergeFunction, MergeResult, SyncState } from './types'
-
-import { areEqualWithoutId, mapToIds } from './idUtils'
-import {GTSort} from './mergeGraph'
-import merge from './mergeValues'
-
-// eslint-disable-next-line
-/* @ts-ignore */
-window.m = function(t) {
-  return mergeArrays(
-    mapMergeData(t, (l: string[]) => l.map(i => ({_id: i, value: i}))),
-    merge
-  )
-}
+import { areEqualWithoutId, mapToIds } from '../idUtils'
+import {arrayChange, ChangeSet, conflictingArrayChange, Entity, ID, mapMergeData, MergeData, MergeFunction, MergeResult, SyncState } from '../types'
+import {GTSort} from './GTSort'
 
 export function mergeArrays<T extends Entity>(
   mergeData: MergeData<T[]>,

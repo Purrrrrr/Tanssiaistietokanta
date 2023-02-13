@@ -1,8 +1,7 @@
 import deepEquals from 'fast-deep-equal'
 
-import {ChangeSet, conflictingScalarChange, Entity, Mergeable, MergeableAs, MergeableObject, MergeData, MergeResult, scalarChange, SyncState} from './types'
-
-import {mergeArrays} from './mergeArrays2'
+import {ChangeSet, conflictingScalarChange, Entity, Mergeable, MergeableAs, MergeableObject, MergeData, MergeResult, scalarChange, SyncState} from '../types'
+import {mergeArrays} from './mergeArrays'
 import {mergeObjects} from './mergeObjects'
 import {mergeConflictingStrings} from './mergeStrings'
 

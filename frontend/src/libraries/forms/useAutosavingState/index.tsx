@@ -6,7 +6,7 @@ import {MergeableObject, SyncState} from './types'
 
 import {FormProps} from '../Form'
 import {OnChangeHandler} from '../types'
-import mergeValues from './mergeValues'
+import mergeValues from './merge'
 import {PatchStrategy} from './patchStrategies'
 
 const debug = createDebug('useAutoSavingState')

@@ -1,5 +1,4 @@
-import {ID, mapMergeData, MergeData } from './types'
-
+import {ID, mapMergeData, MergeData } from '../../types'
 import { getTopNodes } from './comparisons'
 import {Graph, makeGraph} from './Graph'
 

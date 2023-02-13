@@ -1,7 +1,7 @@
 import {applyPatch} from 'rfc6902'
 
 import { mapToIds } from '../idUtils'
-import merge from '../mergeValues'
+import merge from '../merge'
 import { changedVersion, map, randomGeneratorWithSeed, toEntity} from '../testUtils'
 import {arrayChange, ArrayChangeSet, Entity} from '../types'
 import {arrayPatch} from './arrayPatch'

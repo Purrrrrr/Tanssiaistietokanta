@@ -1,4 +1,4 @@
-import {ChangeSet, mapMergeData, MergeableObject, MergeData, MergeFunction, MergeResult, ObjectKeyChanges, ObjectKeyRemovals, removedKey, removedOnLocalWithServerModification, removedOnServerWithLocalModification, SyncState} from './types'
+import {ChangeSet, mapMergeData, MergeableObject, MergeData, MergeFunction, MergeResult, ObjectKeyChanges, ObjectKeyRemovals, removedKey, removedOnLocalWithServerModification, removedOnServerWithLocalModification, SyncState} from '../types'
 
 export function mergeObjects<T extends MergeableObject>(
   data : MergeData<T>,

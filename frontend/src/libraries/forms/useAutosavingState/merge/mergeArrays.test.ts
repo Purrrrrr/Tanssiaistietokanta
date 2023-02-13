@@ -1,8 +1,7 @@
-import {arrayChange, ArrayChangeSet, conflictingArrayChange, Entity, ID, mapMergeData, MergeData, MergeResult, objectChange, scalarChange} from './types'
-
-import {mergeArrays} from './mergeArrays2'
-import merge from './mergeValues'
-import {changedVersion, map, randomGeneratorWithSeed, toEntity} from './testUtils'
+import {changedVersion, map, randomGeneratorWithSeed, toEntity} from '../testUtils'
+import {arrayChange, ArrayChangeSet, conflictingArrayChange, Entity, ID, mapMergeData, MergeData, MergeResult, objectChange, scalarChange} from '../types'
+import merge from './index'
+import {mergeArrays} from './mergeArrays'
 
 type DummyEntity= Entity | number
 type DummyEntityList = DummyEntity[] | string
