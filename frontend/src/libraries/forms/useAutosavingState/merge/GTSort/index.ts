@@ -2,15 +2,7 @@ import {ID, mapMergeData, MergeData } from '../../types'
 import { getTopNodes } from './comparisons'
 import {Graph, makeGraph} from './Graph'
 
-const doLog = 0
-const logs : unknown[][] = []
-const log = (...arr) => {
-  if (doLog) console.log(...arr)
-  else logs.push(arr)
-}
-function ohNo() {
-  logs.forEach(args => console.log(...args))
-}
+const log : (...a: unknown[]) => void = () => { /* */ }
 
 type InputData = MergeData<{
   id: ID,
@@ -40,7 +32,6 @@ interface Node {
 
 /** Merge deletes and modifications */
 export function GTSort(mergeIds: InputData) {
-  logs.length = 0
   const analyzedIds = mapMergeData(mergeIds, idData=> {
     const ids = idData.map(({id}) => id)
     const idToIndex = new Map(ids.map((id, index) => [id, index]))
@@ -251,7 +242,6 @@ function topologicalSort(graph: Graph<ID>, data: MergeData<AnalyzedList>, prefer
     )
     if (top.length > 1) {
       console.log('!! multiple nodes '+top.join(', '))
-      ohNo()
       throw new Error('Can\'t decide next node. This should not happen')
     } else {
       //log('!! one '+top[0])
@@ -295,7 +285,6 @@ function topologicalSort(graph: Graph<ID>, data: MergeData<AnalyzedList>, prefer
       topComponents.forEach(comp => {
         log(setToString(comp), getRank(comp), getStartIndexInPreferred(comp))
       })
-      ohNo()
       throw new Error('Can\'t decide next node. This should not happen')
     }
 

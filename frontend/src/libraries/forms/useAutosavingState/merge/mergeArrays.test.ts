@@ -720,7 +720,6 @@ describe('mergeArrays', () => {
       const original = [1, 2, 4, 5, 6, 7, 8, 9, 10].map(toEntity)
       const version = changedVersion(original, random, { move: random()*8 })
       const version2 = changedVersion(original, random, { move: random()*8 })
-      //console.log({original, version, version2})
 
       testStability(original, version, version2)
     })

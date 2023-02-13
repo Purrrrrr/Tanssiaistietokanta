@@ -107,8 +107,6 @@ describe('arrayPatch', () => {
       const original = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(toComplexEntity)
       const version = changedVersion(original, random, { add: random()*20, remove: random()*5, move: random()*9, addKeys: random()*30, removeKeys: random()*30, modifyValues: random()*30 })
 
-      //console.log(version)
-
       testPatch(original, version)
     })
   })
@@ -122,8 +120,6 @@ function testPatch(original: Entity[], version: Entity[]) {
 
   const patched = [...original]
   const patchRes = applyPatch(patched, patch as any)
-  //console.log(version)
-  //console.log(patched)
   try {
     expect(version.map(i => i._id)).toEqual(patched.map(i => i._id))
     expect(version).toEqual(patched)

@@ -118,8 +118,6 @@ export function mergeArrays<T extends Entity>(
   let state : SyncState = isModified ? 'MODIFIED_LOCALLY' : 'IN_SYNC'
   if (conflictingIds.size > 0 || hasStructuralConflict) state = 'CONFLICT'
 
-  //console.log({hasStructuralChanges, hasStructuralConflict, localVersion, serverVersion})
-
   let changes : ChangeSet<T[]> | null = null
   if (hasStructuralConflict) {
     changes = conflictingArrayChange(
