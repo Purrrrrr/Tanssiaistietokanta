@@ -1,4 +1,4 @@
-import {arrayChange, conflictingScalarChange, objectChange, scalarChange} from './types'
+import {arrayChange, conflictingScalarChange, objectChange, removedKey, removedOnLocalWithServerModification, removedOnServerWithLocalModification, scalarChange} from './types'
 
 import merge from './mergeValues'
 import {map} from './testUtils'
@@ -143,26 +143,111 @@ describe('merge', () => {
     })
   })
 
-  test('recursive conflicts 4', () => {
+  test('different added objects', () => {
     expect(merge({
-      original: {a: 1, b: [{_id: 1}, {_id: 2}, {_id: 0, a: 1, b: 2}]},
-      server: {a: 1, b: [{_id: 2}, {_id: 0, a: 2, b: 2}]},
-      local: {a: 1, b: [{_id: 2}, {_id: 0, a: 0, b: 2}]},
+      original: undefined,
+      server: {a: 1, b: 2},
+      local: {a: 1, c: 3},
+    })).toEqual({
+      state: 'MODIFIED_LOCALLY',
+      modifications: {a: 1, b: 2, c: 3},
+      nonConflictingModifications: {a: 1, b: 2, c: 3},
+      changes: objectChange<any>(
+        {},
+        {
+          c: 3
+        },
+      ),
+    })
+  })
+
+  test('add keys to object', () => {
+    expect(merge({
+      original: {a: 1},
+      server: {a: 1, b: 2},
+      local: {a: 1, c: 3},
+    })).toEqual({
+      state: 'MODIFIED_LOCALLY',
+      modifications: {a: 1, b: 2, c: 3},
+      nonConflictingModifications: {a: 1, b: 2, c: 3},
+      changes: objectChange<any>(
+        {},
+        {
+          c: 3
+        },
+      ),
+    })
+  })
+
+  test('remove keys from object', () => {
+    expect(merge({
+      original: {a: 1, b: 2},
+      server: {a: 1, b: 2},
+      local: {a: 1},
+    })).toEqual({
+      state: 'MODIFIED_LOCALLY',
+      modifications: {a: 1},
+      nonConflictingModifications: {a: 1},
+      changes: objectChange<any>(
+        {},
+        {},
+        {
+          b: removedKey(),
+        }
+      ),
+    })
+  })
+
+  test('conflicting locally removed key in object', () => {
+    expect(merge({
+      original: {a: 1, b: 2},
+      server: {a: 1, b: 3},
+      local: {a: 1},
     })).toEqual({
       state: 'CONFLICT',
-      modifications: {a: 1, b: [{_id: 2}, {_id: 0, a: 0, b: 2}]},
-      nonConflictingModifications: {a: 1, b: [{_id: 2}, {_id: 0, a: 2, b: 2}]},
-      changes: objectChange<any>({
-        b: arrayChange(
-          map(
-            [0, objectChange({
-              a: conflictingScalarChange({local: 0, server: 2})
-            })]
-          ),
-          [1, 2, 0],
-          [2, 0],
-        )
-      }),
+      modifications: {a: 1},
+      nonConflictingModifications: {a: 1, b: 3},
+      changes: objectChange<any>(
+        {},
+        {},
+        {
+          b: removedOnLocalWithServerModification(3),
+        }
+      ),
+    })
+  })
+
+  test('conflicting remotely removed key in object', () => {
+    expect(merge({
+      original: {a: 1, b: 2},
+      server: {a: 1},
+      local: {a: 1, b: 3},
+    })).toEqual({
+      state: 'CONFLICT',
+      modifications: {a: 1, b: 3},
+      nonConflictingModifications: {a: 1},
+      changes: objectChange<any>(
+        {},
+        {},
+        {
+          b: removedOnServerWithLocalModification(3),
+        }
+      ),
+    })
+  })
+
+  test('local object changes', () => {
+    expect(merge({
+      original: {value: 1},
+      server: {value: 1},
+      local: {value: 2},
+    })).toEqual({
+      state: 'MODIFIED_LOCALLY',
+      modifications: {value: 2},
+      nonConflictingModifications: {value: 2},
+      changes: objectChange({
+        value: scalarChange(2),
+      })
     })
   })
 })

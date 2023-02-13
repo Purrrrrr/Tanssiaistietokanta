@@ -1,11 +1,10 @@
 import {applyPatch} from 'rfc6902'
 
-import {ArrayChangeSet, ID } from '../types'
-import {Operation} from './jsonPatch'
+import {ArrayChangeSet, ID, Operation, PatchGenerator} from './types'
 
 const log = (...args: unknown[]) => { /* empty */ }
 
-export function arrayPatch<T>(changes: ArrayChangeSet<T>, pathBase = ''): Operation[] {
+export function arrayPatch<T>(changes: ArrayChangeSet<T>, toJSONPatch: PatchGenerator, pathBase = ''): Operation[] {
   const patch : Operation[] = []
   const originalIds = changes.originalStructure
   const modifiedIds = changes.modifiedStructure
@@ -22,8 +21,12 @@ export function arrayPatch<T>(changes: ArrayChangeSet<T>, pathBase = ''): Operat
   }
 
   changes.itemModifications.forEach((subChange, id) => {
-    testId(originalIndexes.get(id), id)
-    //Do stuff for changes
+    const index = originalIndexes.get(id)
+    if (index === undefined) throw new Error('should not happen')
+    testId(index, id)
+    patch.push(
+      ...toJSONPatch(subChange, `${pathBase}/${index}`)
+    )
   })
 
   if (!modifiedIds) return patch

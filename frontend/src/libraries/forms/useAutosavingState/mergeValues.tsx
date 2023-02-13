@@ -1,6 +1,6 @@
 import deepEquals from 'fast-deep-equal'
 
-import {ChangeSet, conflictingScalarChange, Entity, Mergeable, MergeData, MergeResult, scalarChange, SyncState} from './types'
+import {ChangeSet, conflictingScalarChange, Entity, Mergeable, MergeableAs, MergeableObject, MergeData, MergeResult, scalarChange, SyncState} from './types'
 
 import {mergeArrays} from './mergeArrays2'
 import {mergeObjects} from './mergeObjects'
@@ -8,11 +8,11 @@ import {mergeConflictingStrings} from './mergeStrings'
 
 export default function merge<T extends Mergeable>(data : MergeData<T>) : MergeResult<T> {
   if (nonNullData(data)) {
-    if (isArrayMerge(data)) {
-      return mergeArrays(data, merge) as unknown as MergeResult<T>
+    if (isMergeableAsArray(data)) {
+      return mergeArrays(asCompleteMergeData<Entity[]>(data, []), merge) as unknown as MergeResult<T>
     }
-    if (isObjectMerge(data)) {
-      return mergeObjects(data, merge) as unknown as MergeResult<T>
+    if (isMergeableAsObjects(data)) {
+      return mergeObjects(asCompleteMergeData<MergeableObject>(data, {}), merge) as unknown as MergeResult<T>
     }
   }
 
@@ -33,8 +33,8 @@ export default function merge<T extends Mergeable>(data : MergeData<T>) : MergeR
     return result
   }
 
-  if (isStringMerge(data)) {
-    return mergeConflictingStrings(data) as unknown as MergeResult<T>
+  if (isMergeableAsStrings(data)) {
+    return mergeConflictingStrings(asCompleteMergeData<string>(data, '')) as unknown as MergeResult<T>
   }
 
   return {
@@ -46,25 +46,40 @@ export default function merge<T extends Mergeable>(data : MergeData<T>) : MergeR
 }
 
 function nonNullData(data : MergeData<Mergeable>) : boolean {
-  return data.original != null && data.server != null && data.local != null
+  return /* data.original != null && */ data.server != null && data.local != null
 }
 
-function isArrayMerge(data : MergeData<Mergeable>) : data is MergeData<Entity[]> {
-  return Array.isArray(data.original)
-    && Array.isArray(data.server)
-    && Array.isArray(data.local)
+function isMergeableAsArray(data : MergeData<Mergeable>) : data is MergeableAs<Entity[]> {
+  return isMergeableAs(Array.isArray, data)
 }
 
-function isObjectMerge(data : MergeData<Mergeable>) : data is MergeData<Entity> {
-  return typeof data.original === 'object' && !Array.isArray(data.original)
-    && typeof data.server === 'object' && !Array.isArray(data.server)
-    && typeof data.local === 'object' && !Array.isArray(data.local)
+function isMergeableAsObjects(data : MergeData<Mergeable>) : data is MergeableAs<Entity> {
+  return isMergeableAs(value => typeof value === 'object' && !Array.isArray(value), data)
 }
 
-function isStringMerge(data : MergeData<Mergeable>) : data is MergeData<string> {
-  return typeof data.original === 'string'
-    && typeof data.server === 'string'
-    && typeof data.local === 'string'
+function isMergeableAsStrings(data : MergeData<Mergeable>) : data is MergeableAs<string> {
+  return isMergeableAs(value => typeof value === 'string', data)
+}
+
+function isMergeableAs(predicate: (v: unknown) => boolean, data: MergeData<Mergeable>): boolean {
+  return (predicate(data.original) || isNullish(data.original))
+    && predicate(data.server)
+    && predicate(data.local)
+}
+
+function isNullish(value: unknown): boolean {
+  return value === null || value === undefined
+}
+
+function asCompleteMergeData<T>(partialData: MergeableAs<T>, defaultValue: T): MergeData<T> {
+  if (partialData.original !== null && partialData.original !== undefined) {
+    return partialData as MergeData<T>
+  }
+
+  return {
+    ...partialData,
+    original: partialData.original ?? defaultValue
+  }
 }
 
 function getMergeState<T extends Mergeable>(

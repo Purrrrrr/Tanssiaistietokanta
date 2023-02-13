@@ -17,32 +17,71 @@ export interface MergeResult<T> {
   changes: ChangeSet<T> | null
 }
 
+// A change set type describing what has changed between the current server version and the local version.
 export type ChangeSet<T> = T extends (infer B)[]
   ? ArrayChangeSet<B>
   : T extends object
     ? ObjectChangeSet<T>
-    : PlainChangeSet<T>
+    : ScalarChangeSet<T>
 
-export interface PlainChangeSet<T> {
+export interface ScalarChangeSet<T> {
   type: 'scalar'
   changedValue: T
   conflictingLocalValue?: T
 }
-export function scalarChange<T>(changedValue: T): PlainChangeSet<T> {
+export function scalarChange<T>(changedValue: T): ScalarChangeSet<T> {
   return { type: 'scalar', changedValue }
 }
-export function conflictingScalarChange<T>({local, server}: {local: T, server: T}): PlainChangeSet<T> {
+export function conflictingScalarChange<T>({local, server}: {local: T, server: T}): ScalarChangeSet<T> {
   return { type: 'scalar', changedValue: server, conflictingLocalValue: local }
 }
 
 export interface ObjectChangeSet<T> {
   type: 'object'
   // If there are conflicts, they are inside the changes OR this changeset becomes a scalar changeset
-  changes: { [K in (keyof T)]?: ChangeSet<T[K]> }
+  changes: ObjectKeyChanges<T>
+  // Stuff added on the local version. Conflicts go to changes
+  additions?: Partial<T>
+  // Keys removed in any of the versions. If they have been modified on the other version, a change is added to changes
+  removed?: ObjectKeyRemovals<T>
 }
-export function objectChange<T>(changes: ObjectChangeSet<T>['changes']): ObjectChangeSet<T> {
-  return { type: 'object', changes }
+export type ObjectKeyChanges<T> = { [K in (keyof T)]?: ChangeSet<T[K]> }
+export type ObjectKeyRemovals<T> = { [K in (keyof T)]?: RemovedKey<T[K]> }
+export interface RemovedKey<T> {
+  hasConflict: boolean
+  remainingServerValue?: T
+  remainingLocalValue?: T
 }
+
+export function objectChange<T>(
+  changes: ObjectKeyChanges<T>,
+  additions?: Partial<T>,
+  removedKeys?: ObjectKeyRemovals<T>,
+): ObjectChangeSet<T> {
+  return {
+    type: 'object',
+    changes,
+    additions: additions ?? {},
+    removed: removedKeys ?? {},
+  }
+}
+
+export function removedKey<T>(): RemovedKey<T> {
+  return { hasConflict: false }
+}
+export function removedOnServerWithLocalModification<T>(localValue: T): RemovedKey<T> {
+  return {
+    hasConflict: true,
+    remainingLocalValue: localValue,
+  }
+}
+export function removedOnLocalWithServerModification<T>(serverValue: T): RemovedKey<T> {
+  return {
+    hasConflict: true,
+    remainingServerValue: serverValue,
+  }
+}
+
 export interface ArrayChangeSet<T> {
   type: 'array'
   itemModifications: Map<ID, ChangeSet<T>>
@@ -74,6 +113,12 @@ export function conflictingArrayChange<T>(changes: Map<ID, ChangeSet<T>>, struct
 export interface MergeData<T> {
   server: T,
   original: T,
+  local: T,
+}
+
+export interface MergeableAs<T> {
+  server: T,
+  original: T | undefined | null,
   local: T,
 }
 
