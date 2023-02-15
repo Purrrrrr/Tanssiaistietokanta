@@ -18,11 +18,10 @@ export interface MergeResult<T> {
 }
 
 // A change set type describing what has changed between the current server version and the local version.
-export type ChangeSet<T> = T extends (infer B)[]
-  ? ArrayChangeSet<B>
-  : T extends object
-    ? ObjectChangeSet<T>
-    : ScalarChangeSet<T>
+export type ChangeSet<T> =
+  (T extends (infer B)[] ? ArrayChangeSet<B> : never)
+  | ObjectChangeSet<T>
+  | ScalarChangeSet<T>
 
 export interface ScalarChangeSet<T> {
   type: 'scalar'

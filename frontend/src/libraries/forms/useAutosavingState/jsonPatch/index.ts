@@ -2,6 +2,8 @@ import {ChangeSet, ObjectKeyRemovals, Operation, RemovedKey} from './types'
 
 import {arrayPatch} from './arrayPatch'
 
+export type {Operation} from './types'
+
 export function toJSONPatch<T>(changes: ChangeSet<T>, pathBase = ''): Operation[] {
   switch (changes.type) {
     case 'array':
@@ -11,6 +13,7 @@ export function toJSONPatch<T>(changes: ChangeSet<T>, pathBase = ''): Operation[
       const modifications = Object.keys(changes.changes)
         .flatMap((key) => {
           const subChanges = changes.changes[key]
+          if (subChanges === undefined) return []
           return toJSONPatch(subChanges, `${pathBase}/${escapePathToken(key)}`)
         })
       return [

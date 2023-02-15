@@ -139,7 +139,8 @@ function testPatch(original: Entity[], version: Entity[]) {
 }
 
 function toArrayChangeSet(original: Entity[], version: Entity[]): ArrayChangeSet<Entity> {
-  return merge({original, local: version, server: original}).changes ?? arrayChange(
+  const mergeResult = merge({original, local: version, server: original}).changes as ArrayChangeSet<Entity>
+  return mergeResult ?? arrayChange(
     map(),
     mapToIds(original),
     mapToIds(version),

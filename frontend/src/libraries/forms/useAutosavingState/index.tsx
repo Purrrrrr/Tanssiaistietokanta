@@ -81,7 +81,7 @@ export function useAutosavingState<T extends MergeableObject, Patch>(
 
         debug('Saving', patch)
         dispatch({ type: 'PATCH_SENT' })
-        //onPatch(patch)
+        onPatch(patch)
       }
     }, AUTOSAVE_DELAY)
 

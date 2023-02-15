@@ -41,7 +41,6 @@ interface EventProgramEditorProps {
 export function EventProgramEditor({eventId, program: eventProgram}: EventProgramEditorProps) {
   const [patchEventProgram] = usePatchEventProgram()
   const saveProgram = (program) => {
-    console.log(program)
     patchEventProgram({id: eventId, program})
   }
 

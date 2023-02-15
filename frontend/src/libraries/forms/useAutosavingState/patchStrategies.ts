@@ -1,5 +1,7 @@
 import {ChangeSet, ObjectChangeSet} from './types'
 
+import {Operation, toJSONPatch} from './jsonPatch'
+
 export type PatchStrategy<T, Patch> = (original: T, modifications: T, changes: ChangeSet<T>) => Patch
 
 export function noPatch<T>(_: T, modifications: T): T  {
@@ -19,4 +21,8 @@ export function partial<T>(original: T, modifications: T, changes: ChangeSet<T>)
   }
 
   return partial
+}
+
+export function jsonPatch<T>(original: T, modifications: T, changes: ChangeSet<T>): Operation[]  {
+  return toJSONPatch(changes)
 }

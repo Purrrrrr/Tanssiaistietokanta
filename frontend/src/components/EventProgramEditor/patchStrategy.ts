@@ -1,15 +1,21 @@
 import * as L from 'partial.lenses'
-import {createPatch} from 'rfc6902'
 
-import {PatchStrategy} from 'libraries/forms'
+import {PatchStrategy, patchStrategy} from 'libraries/forms'
+import merge from 'libraries/forms/useAutosavingState/merge'
 import {removeTypenames} from 'utils/removeTypenames'
 
 import {EventProgramRow, EventProgramSettings} from './types'
 
 export type JSONPatch = unknown[]
 
-export const patch : PatchStrategy<EventProgramSettings, JSONPatch> = function patch(original, modifications) {
-  return createPatch(toProgramInput(original), toProgramInput(modifications)) as JSONPatch
+export const patch : PatchStrategy<EventProgramSettings, JSONPatch> = function patch(original, modified) {
+  const originalAsInput = toProgramInput(original)
+  const modifiedAsInput = toProgramInput(modified)
+  const { changes } = merge({original: originalAsInput, local: modifiedAsInput, server: originalAsInput})
+
+  if (changes === null) return []
+
+  return patchStrategy.jsonPatch(originalAsInput, modifiedAsInput, changes)
 }
 
 function toProgramInput({introductions, danceSets, ...rest} : EventProgramSettings) {
