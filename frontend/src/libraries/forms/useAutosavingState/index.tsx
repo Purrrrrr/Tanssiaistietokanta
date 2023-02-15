@@ -77,6 +77,7 @@ export function useAutosavingState<T extends MergeableObject, Patch>(
         return
       }
       if (changes !== null) {
+        debug('Patching...')
         const patch= patchStrategy(originalData, modifications, changes)
 
         debug('Saving', patch)

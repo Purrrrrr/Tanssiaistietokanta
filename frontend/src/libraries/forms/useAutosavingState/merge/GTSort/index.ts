@@ -111,6 +111,7 @@ export function GTSort(mergeIds: InputData) {
 
 
 function addEdges(mergedGraph: Graph<ID>, original: AnalyzedList, version1: AnalyzedList, version2: AnalyzedList) {
+  if (version1.length === 0) return
   let fromNode = version1.nodes[0]
   let lastInOriginal : ID | null = null
 
