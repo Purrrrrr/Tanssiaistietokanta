@@ -5,13 +5,15 @@ import io from 'socket.io-client'
 
 import createDebug from 'utils/debug'
 
+import devConfig from '../devConfig.json'
+
 const debug = createDebug('graphql')
 
 const isProd = process.env.NODE_ENV === 'production'
 
 export const socket = isProd
   ? io('/', {path: '/api/socket.io'})
-  : io('http://localhost:8082/')
+  : io(devConfig.backendUrl)
 // eslint-disable-next-line @typescript-eslint/ban-types
 const app = (feathers as unknown as Function)()
 
