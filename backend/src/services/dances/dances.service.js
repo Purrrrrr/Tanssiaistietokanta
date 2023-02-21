@@ -1,5 +1,5 @@
 // Initializes the `dances` service on path `/dances`
-const createService = require('feathers-nedb')
+const createService = require('../../utils/versioningNedbService')
 const createModel = require('../../models/dances.model')
 const hooks = require('./dances.hooks')
 const {defaultChannels, withoutCurrentConnection} = require('../../utils/defaultChannels')

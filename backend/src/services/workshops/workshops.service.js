@@ -1,5 +1,5 @@
 // Initializes the `workshops` service on path `/workshops`
-const createService = require('feathers-nedb')
+const createService = require('../../utils/versioningNedbService')
 const R = require('ramda')
 const createModel = require('../../models/workshops.model')
 const hooks = require('./workshops.hooks')

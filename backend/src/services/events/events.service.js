@@ -1,5 +1,5 @@
 // Initializes the `events` service on path `/events`
-const createService = require('feathers-nedb')
+const createService = require('../../utils/versioningNedbService')
 const createModel = require('../../models/events.model')
 const hooks = require('./events.hooks')
 
