@@ -2,8 +2,85 @@ const createNedbService = require('feathers-nedb')
 const NeDB = require('@seald-io/nedb')
 const {omit} = require('lodash')
 
+/* Two databases:
+ * Latest:
+ *
+ * in memory
+ * data straight with _version and _basedOn
+ *
+ * Versions:
+ *
+ * {
+ *   _id //version id
+ *   _recordId //Common id for different versions
+ *   _version //version number
+ *   _basedOn //previous version, used for undo
+ * }
+ */
 module.exports = function(options) {
   const currentService = createNedbService(options)
+  const versionService = getVersionService(options)
+
+  return {
+    getModel: () => currentService.getModel(),
+    getVersionModel: () => versionService.getModel(),
+    find: (params) => currentService.find(params),
+    get: (id, params) => currentService.get(id, params),
+    create: async (data, params) => {
+      const res = await currentService.create(
+        map(data, addFirstVersionInfo),
+        params,
+      )
+
+      return createVersionData(res, params)
+    },
+    update: async (id, data, {query, ...params}) => {
+      const res = await updateAndVersionRecords(id, query, (_id, versionData)=> {
+        const patch = { ...data, ...versionData }
+        return currentService.update(_id, patch, params)
+      })
+
+      return createVersionData(res, params)
+    },
+    patch: async (id, data, {query, ...params}) => {
+      const cleanedData = cleanUpdate(data)
+
+      const res = await updateAndVersionRecords(id, query, (_id, versionData)=> {
+        const patch = { ...cleanedData, ...versionData }
+        return currentService.patch(_id, patch, params)
+      })
+
+      return createVersionData(res, params)
+    },
+    remove: (id, params) => {
+      return currentService.remove(id, params)
+    },
+  }
+
+  async function updateAndVersionRecords(id, query, func) {
+    const existingData = await currentService._findOrGet(id, {query})
+
+    return runForAll(existingData, record =>
+      func(record._id, {
+        _basedOn: record._version,
+        _version: (record._version ?? 0) + 1,
+      })
+    )
+  }
+
+  async function createVersionData(res, params) {
+    await runForAll(res, ({_id, ...record}) =>
+      versionService.create({...record, _recordId: _id}, params)
+    )
+    return res
+  }
+}
+
+function addFirstVersionInfo(record) {
+  return {...record, _basedOn: null, _version: 1}
+}
+
+function getVersionService(options) {
   const {filename} = options.Model
   const versionDBFilename = filename.replace(/.db$/, '-versions.db')
   const versionDb = new NeDB({
@@ -11,74 +88,7 @@ module.exports = function(options) {
     autoload: true,
   })
   versionDb.ensureIndex({fieldName: ['_recordId', '_version']})
-  const versionService = createNedbService({Model: versionDb})
-
-
-  /* Two databases:
-   * Latest:
-   *
-   * in memory
-   * data straight
-   *
-   * Versions:
-   *
-   * file
-   * {
-   *   _id //version id
- *     _recordId //Common id for different versions
- *     _version //version number
- *     _basedOn //previous version, used for undo
-   * }
-   */
-
-  return {
-    getModel: () => currentService.getModel(),
-    getVersionModel: () => versionDb,
-    find: (params) => currentService.find(params),
-    get: (id, params) => currentService.get(id, params),
-    create: async (data, params) => {
-      const version = map(data, record => ({...record, _basedOn: null, _version: 1}))
-      const res = await currentService.create(version, params)
-
-      await createVersionData(res, params)
-      return res
-    },
-    update: async (id, data, params) => {
-      const existingData = await findEntitiesToUpdate(id, params)
-      const res = await runForAll(existingData, record => {
-        const patch = { ...data, _basedOn: record._version, _version: (record._version ?? 0) + 1 }
-        return currentService.update(id, patch, params)
-      })
-
-      await createVersionData(res, params)
-      return res
-    },
-    patch: async (id, data, params) => {
-      const { query, ...otherParams } = params
-      const existingData = await findEntitiesToUpdate(id, params)
-      const versionedData = cleanUpdate(data)
-      const res = await runForAll(existingData, record => {
-        const patch = { ...versionedData, $set: { ...versionedData.$set, _basedOn: record._version } }
-        return currentService.patch(record._id, patch, otherParams)
-      })
-
-      await createVersionData(res, params)
-      return res
-    },
-    remove: (id, params) => {
-      return currentService.remove(id, params)
-    },
-  }
-
-  function findEntitiesToUpdate(id, params) {
-    return currentService._findOrGet(id, params)
-  }
-
-  function createVersionData(res, params) {
-    return runForAll(res, ({_id, ...record}) =>
-      versionService.create({...record, _recordId: _id}, params)
-    )
-  }
+  return createNedbService({Model: versionDb})
 }
 
 function map(data, func) {
@@ -96,12 +106,9 @@ function runForAll(data, func) {
 function cleanUpdate(update) {
   const patch = {
     $set: {},
-    $inc: { _version: 1 },
   }
   for(const key of Object.keys(update)) {
-    if (key === '$inc') {
-      patch.$inc = { ...update.$inc, ...patch.$inc }
-    } else if (key[0] === '$') {
+    if (key[0] === '$') {
       patch[key] = omit(update[key], '_version')
     } else {
       patch.$set[key] = update[key]
