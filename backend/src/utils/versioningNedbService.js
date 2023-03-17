@@ -29,12 +29,12 @@ module.exports = function(options) {
     create: async (data, params) => {
       const res = await currentService.create(addTimestamps(data, now()), params)
 
-      return queueVersionSave(res)
+      return queueVersionSave(res, params)
     },
     update: async (id, data, params) => {
       const res = await currentService.update(id, addTimestamps(data), params)
 
-      return queueVersionSave(res)
+      return queueVersionSave(res, params)
     },
     patch: async (id, data, params) => {
       const res = await currentService.patch(id, addTimestamps(data), params)
@@ -46,10 +46,13 @@ module.exports = function(options) {
     },
   }
 
-  async function queueVersionSave(res) {
-    runForAll(res, ({_id, ...record}) =>
+  async function queueVersionSave(res, params) {
+    runForAll(res, ({_id, ...record}) => {
       getDebouncedSaveVersion(_id)({...record, _recordId: _id})
-    )
+      if (params.saveAsVersion) {
+        getDebouncedSaveVersion(_id).flush()
+      }
+    })
     return res
   }
 
