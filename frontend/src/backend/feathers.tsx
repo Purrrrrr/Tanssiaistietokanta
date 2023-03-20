@@ -5,7 +5,7 @@ import io from 'socket.io-client'
 
 import createDebug from 'utils/debug'
 
-import devConfig from '../devConfig.json'
+import devConfig from '../devConfig'
 
 const debug = createDebug('graphql')
 

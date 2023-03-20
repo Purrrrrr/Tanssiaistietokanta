@@ -1,6 +1,6 @@
 import type { CodegenConfig } from '@graphql-codegen/cli'
 
-import devConfig from './src/devConfig.json'
+import devConfig from './src/devConfig'
 
 const config: CodegenConfig = {
   overwrite: true,

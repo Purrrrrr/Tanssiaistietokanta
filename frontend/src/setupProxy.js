@@ -1,13 +1,13 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { createProxyMiddleware } = require('http-proxy-middleware')
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const devConfig = require('./devConfig.json')
+const backendConfig = require('./backendConfig.json')
 
 module.exports = function(app) {
   app.use(
     '/api',
     createProxyMiddleware({
-      target: devConfig.backendUrl,
+      target: `http://${backendConfig.host}:${backendConfig.port}`,
       pathRewrite: {'^/api' : ''},
       changeOrigin: true,
     })
