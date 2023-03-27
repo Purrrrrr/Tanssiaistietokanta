@@ -124,6 +124,7 @@ function testPatch(original: Entity[], version: Entity[]) {
   try {
     expect(version.map(i => i._id)).toEqual(patched.map(i => i._id))
     expect(version).toEqual(patched)
+    expect(patchRes.filter(err => err !== null)).toEqual([])
   } catch(e) {
     console.dir({
       original,
