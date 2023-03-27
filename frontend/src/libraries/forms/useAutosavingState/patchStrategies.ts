@@ -12,6 +12,7 @@ export function partial<T>(original: T, modifications: T, changes: ChangeSet<T>)
   if (changes.type !== 'object') return modifications
   const objChange = changes as ObjectChangeSet<T>
 
+  //TODO: conflict handling: do not overwrite conflicting server modifications when conflict system is ready
   const partial : Partial<T> = {}
   for (const key in objChange.changes) {
     partial[key] = modifications[key]
@@ -24,5 +25,6 @@ export function partial<T>(original: T, modifications: T, changes: ChangeSet<T>)
 }
 
 export function jsonPatch<T>(original: T, modifications: T, changes: ChangeSet<T>): Operation[]  {
-  return toJSONPatch(changes)
+  //TODO: conflict handling: do not overwrite conflicting server modifications when conflict system is ready
+  return toJSONPatch(changes, 'LOCAL')
 }

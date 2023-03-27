@@ -1,30 +1,34 @@
-import {ChangeSet, ObjectKeyRemovals, Operation, RemovedKey} from './types'
+import {ChangeSet, ObjectKeyRemovals, Operation, Preference, RemovedKey} from './types'
 
 import {arrayPatch} from './arrayPatch'
 
 export type {Operation} from './types'
 
-export function toJSONPatch<T>(changes: ChangeSet<T>, pathBase = ''): Operation[] {
+export function toJSONPatch<T>(changes: ChangeSet<T>, preferVersion: Preference, pathBase = ''): Operation[] {
   switch (changes.type) {
     case 'array':
-      return arrayPatch(changes, toJSONPatch, pathBase)
+      return arrayPatch(changes, toJSONPatch, preferVersion, pathBase)
     case 'object':
     {
       const modifications = Object.keys(changes.changes)
         .flatMap((key) => {
           const subChanges = changes.changes[key]
           if (subChanges === undefined) return []
-          return toJSONPatch(subChanges, `${pathBase}/${escapePathToken(key)}`)
+          return toJSONPatch(subChanges, preferVersion, `${pathBase}/${escapePathToken(key)}`)
         })
       return [
         ...getAdditions(changes.additions, pathBase),
-        ...getRemovals(changes.removed, pathBase),
+        ...getRemovals(changes.removed, preferVersion, pathBase),
         ...modifications
       ]
     }
     case 'scalar':
       return [
-        { op: 'replace', value: changes.changedValue, path: pathBase },
+        {
+          op: 'replace',
+          value: ('conflictingLocalValue' in changes && preferVersion === 'LOCAL') ? changes.conflictingLocalValue : changes.changedValue,
+          path: pathBase
+        },
       ]
   }
 }
@@ -39,13 +43,17 @@ export function getAdditions<T>(additions: Partial<T> | undefined, pathBase: str
     })
 }
 
-export function getRemovals<T>(removed: ObjectKeyRemovals<T> | undefined, pathBase: string): Operation[] {
+export function getRemovals<T>(removed: ObjectKeyRemovals<T> | undefined, preferVersion: Preference, pathBase: string): Operation[] {
   if (removed === undefined) return []
   return Object.keys(removed)
     .filter((key) => {
       const change = removed[key as keyof T]
       if (change === undefined) return false
-      if (change.hasConflict && 'remainingServerValue' in (change as RemovedKey<unknown>)) return false
+      if (change.hasConflict) {
+        const removedKey = (change as RemovedKey<unknown>)
+        if (preferVersion === 'SERVER' && 'remainingServerValue' in removedKey) return false
+        if (preferVersion === 'LOCAL' && 'remainingLocalValue' in removedKey) return false
+      }
       return true
     })
     .map((key) => {

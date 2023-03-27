@@ -9,4 +9,6 @@ export interface Operation {
   value?: unknown
 }
 
-export type PatchGenerator = <T>(changes: ChangeSet<T>, pathBase?: string) => Operation[]
+export type Preference = 'SERVER' | 'LOCAL'
+
+export type PatchGenerator = <T>(changes: ChangeSet<T>, preferVersion: Preference, pathBase?: string) => Operation[]

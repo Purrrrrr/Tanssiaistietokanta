@@ -1,9 +1,11 @@
-import {ArrayChangeSet, ID, Operation, PatchGenerator} from './types'
+import {ArrayChangeSet, ID, Operation, PatchGenerator, Preference} from './types'
 
-export function arrayPatch<T>(changes: ArrayChangeSet<T>, toJSONPatch: PatchGenerator, pathBase = ''): Operation[] {
+export function arrayPatch<T>(changes: ArrayChangeSet<T>, toJSONPatch: PatchGenerator, preferVersion: Preference, pathBase = ''): Operation[] {
   const patch : Operation[] = []
   const originalIds = changes.originalStructure
-  const modifiedIds = changes.modifiedStructure
+  const modifiedIds = ('conflictingLocalStructure' in changes && preferVersion === 'LOCAL')
+    ? changes.conflictingLocalStructure
+    : changes.modifiedStructure
   const originalIndexes = new Map(
     originalIds.map((id, index) => [id, index])
   )
@@ -21,7 +23,7 @@ export function arrayPatch<T>(changes: ArrayChangeSet<T>, toJSONPatch: PatchGene
     if (index === undefined) throw new Error('should not happen')
     testId(index, id)
     patch.push(
-      ...toJSONPatch(subChange, `${pathBase}/${index}`)
+      ...toJSONPatch(subChange, preferVersion, `${pathBase}/${index}`)
     )
   })
 

@@ -17,6 +17,7 @@ describe('arrayPatch', () => {
         [1, 2, 3, 4, 5, 6]
       ),
       toJSONPatch,
+      'LOCAL',
     )
 
     expect(res).toEqual([])
@@ -116,7 +117,7 @@ describe('arrayPatch', () => {
 function testPatch(original: Entity[], version: Entity[]) {
   const changeSet = toArrayChangeSet(original, version)
 
-  const patch = arrayPatch(changeSet, toJSONPatch)
+  const patch = arrayPatch(changeSet, toJSONPatch, 'LOCAL')
 
   const patched = [...original]
   const patchRes = applyPatch(patched, patch as any)
