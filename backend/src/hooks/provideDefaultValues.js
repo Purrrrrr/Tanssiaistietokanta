@@ -29,6 +29,7 @@ function getDefaultValuesFromType(type) {
   return Object.fromEntries(
     Object.values(type.getFields())
       .map(field => [field.name, getDefaultValue(field)])
+      .filter(([, val]) => val !== null)
   )
 }
 
