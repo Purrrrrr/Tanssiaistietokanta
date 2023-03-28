@@ -56,11 +56,13 @@ export function arrayPatch<T>(changes: ArrayChangeSet<T>, toJSONPatch: PatchGene
     const originalMovedTo = modifiedIndexes.get(originalId)
 
     if (originalMovedTo === undefined) { //Remove
-      testId(indexInModified, originalId)
-      patch.push({
-        op: 'remove',
-        path: `${pathBase}/${indexInModified}`,
-      })
+      if (!changes.removedOnServer.has(originalId)) {
+        testId(indexInModified, originalId)
+        patch.push({
+          op: 'remove',
+          path: `${pathBase}/${indexInModified}`,
+        })
+      }
       indexInOriginal++
       addRemove--
       continue

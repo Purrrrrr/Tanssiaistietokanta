@@ -23,6 +23,22 @@ describe('arrayPatch', () => {
     expect(res).toEqual([])
   })
 
+  it('produces empty patch if item is removed on both server and local', () => {
+    const res = arrayPatch(
+      arrayChange<Entity>(
+        map(),
+        [1, 2, 3, 4, 5, 6],
+        [1, 2, 4, 5, 6],
+        map(),
+        new Set([3]),
+      ),
+      toJSONPatch,
+      'LOCAL',
+    )
+
+    expect(res).toEqual([])
+  })
+
   it('produces move patch for move down', () => {
     testPatch(
       [1, 2, 3, 4].map(toEntity),

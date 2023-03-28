@@ -85,24 +85,27 @@ export interface ArrayChangeSet<T> {
   type: 'array'
   itemModifications: Map<ID, ChangeSet<T>>
   addedItems: Map<ID, T> //Where and what stuff has been added locally
+  removedOnServer: Set<ID> //Items that are removed on server. No need to issua patch for those
   originalStructure: ID[]
   modifiedStructure?: ID[]
   conflictingLocalStructure?: ID[]
 }
-export function arrayChange<T>(changes: Map<ID, ChangeSet<T>>, originalStructure: ID[], modifiedStructure?: ID[], added?: Map<ID, T>): ArrayChangeSet<T> {
+export function arrayChange<T>(changes: Map<ID, ChangeSet<T>>, originalStructure: ID[], modifiedStructure?: ID[], added?: Map<ID, T>, removedOnServer: Set<ID> = new Set()): ArrayChangeSet<T> {
   return {
     type: 'array',
     itemModifications: changes,
     addedItems: added ?? new Map(),
+    removedOnServer,
     originalStructure,
     modifiedStructure,
   }
 }
-export function conflictingArrayChange<T>(changes: Map<ID, ChangeSet<T>>, structure: {original: ID[], local: ID[], server: ID[]}, added?: Map<ID, T>): ArrayChangeSet<T> {
+export function conflictingArrayChange<T>(changes: Map<ID, ChangeSet<T>>, structure: {original: ID[], local: ID[], server: ID[]}, added?: Map<ID, T>, removedOnServer: Set<ID> = new Set()): ArrayChangeSet<T> {
   return {
     type: 'array',
     itemModifications: changes,
     addedItems: added ?? new Map(),
+    removedOnServer,
     originalStructure: structure.original,
     modifiedStructure: structure.server,
     conflictingLocalStructure: structure.local,
