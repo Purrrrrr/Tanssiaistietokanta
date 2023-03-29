@@ -52,7 +52,7 @@ type ListItemComponent<T, V> = React.ComponentType<{
   dragHandle: React.ReactNode
 }>
 
-export function ListEditor<T, V extends Entity>({value, onChange, path, component: Component, hasConflict, inline, readOnly, isTable, accessibilityContainer}: ListEditorProps<T, V>) {
+export function ListEditor<T, V extends Entity>({value, onChange, path, component: Component, inline, readOnly, isTable, accessibilityContainer}: ListEditorProps<T, V>) {
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, useMemo(() => ({

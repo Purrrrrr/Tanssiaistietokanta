@@ -27,12 +27,22 @@ export function Field<T, V, P extends FieldComponentPropsWithoutEvent<V>>(
 ) {
   const dataProps = useFieldValueProps<T, V>(path)
   const { fieldProps, containerProps } = useFieldData(path, dataProps.value, rest)
+  const ctx = useFormMetadata<T>()
+  const conflict = ctx.getConflictAt<V>(path)
 
   const allProps = {
     ...componentProps, ...fieldProps, ...dataProps
   } as P
 
-  return <FieldContainer {...containerProps}><Component {...allProps}  /></FieldContainer>
+  const conflictData = conflict?.type === 'scalar'
+    ? {
+      localValue: <Component {...allProps} />,
+      serverValue: <Component {...allProps} readOnly value={conflict.server} />,
+      onResolve(version) { ctx.onResolveConflict(path, version) }
+    }
+    : undefined
+
+  return <FieldContainer {...containerProps} conflictData={conflictData}><Component {...allProps}  /></FieldContainer>
 }
 
 interface FieldDataHookProps extends UserGivenFieldContainerProps, ValidationProps {}
@@ -75,6 +85,6 @@ export function useFieldData<Value>(
       labelInfo,
       labelStyle,
       inline: maybeInline ?? inline,
-    }
+    },
   }
 }

@@ -15,7 +15,7 @@ export interface ClickToEditProps extends ExtendedFieldComponentProps<string, HT
   valueFormatter?: (value: string) => React.ReactNode
   inline?: boolean
 }
-export function ClickToEdit({value, readOnly, valueFormatter, className, onChange, inline, hasConflict, ...props} : ClickToEditProps) {
+export function ClickToEdit({value, readOnly, valueFormatter, className, onChange, inline, ...props} : ClickToEditProps) {
   return <ClosableEditor
     className={className}
     inline={inline}
@@ -24,7 +24,7 @@ export function ClickToEdit({value, readOnly, valueFormatter, className, onChang
     aria-label={props['aria-label']}
     closedValue={valueFormatter ? valueFormatter(value ?? '') : value}
   >
-    <Input {...props} value={value} onChange={onChange} inline={inline} hasConflict={hasConflict} />
+    <Input {...props} value={value} onChange={onChange} inline={inline} />
   </ClosableEditor>
 }
 
@@ -33,7 +33,7 @@ export interface ClickToEditMarkdownProps extends ExtendedFieldComponentProps<st
   inline?: boolean
   markdownOverrides?: Record<string, unknown>
 }
-export function ClickToEditMarkdown({value, readOnly, className, onChange, inline, hasConflict, ...props} : ClickToEditMarkdownProps) {
+export function ClickToEditMarkdown({value, readOnly, className, onChange, inline, ...props} : ClickToEditMarkdownProps) {
   return <ClosableEditor
     className={classNames(className, 'closable-editor-markdown')}
     inline={inline}

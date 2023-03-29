@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 
-import { ArrayPath, OnChangeHandler } from './types'
+import { ConflictMap, FormStrings, OnChangeHandler } from './types'
 
 import { FormMetadataContext, FormMetadataContextType, FormValidityContext, useCreateFormMetadataContext} from './formContext'
 import {useValidationResult} from './validation'
@@ -13,22 +13,27 @@ export interface FormProps<T> extends
 {
   value: T
   onChange: OnChangeHandler<T>
-  conflicts?: ArrayPath<T>[]
+  conflicts?: ConflictMap<T>
   inline?: boolean
   onValidityChange?: (validity: {hasErrors: boolean}) => unknown
   onSubmit?: (t: T, e: React.FormEvent) => unknown
+  strings?: Partial<FormStrings>
 }
+
+const noOp = () => { /* no op */ }
 
 export function Form<T>({
   children,
   value,
-  conflicts = [],
+  conflicts,
   onChange,
+  onResolveConflict = noOp,
   onSubmit,
   onValidityChange,
   readOnly = false,
   labelStyle = defaultLabelStyle,
   inline = false,
+  strings,
   ...rest
 } : FormProps<T>) {
   const {hasErrors, ValidationContainer} = useValidationResult()
@@ -45,7 +50,7 @@ export function Form<T>({
     onSubmit && onSubmit(value, e)
   }
 
-  const metadataContext = useCreateFormMetadataContext({value, onChange, labelStyle, inline, readOnly, conflicts})
+  const metadataContext = useCreateFormMetadataContext({value, onChange, labelStyle, inline, readOnly, conflicts, strings, onResolveConflict})
 
   return <FormMetadataContext.Provider value={metadataContext}>
     <FormValidityContext.Provider value={!hasErrors}>

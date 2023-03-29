@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useMemo, useRef } from 'react'
 import * as L from 'partial.lenses'
 
-import {ArrayPath, ChangeListener, LabelStyle, NewValue, toArrayPath, TypedStringPath} from './types'
+import {ChangeListener, Conflict, ConflictMap, formStringDefaults, FormStrings, LabelStyle, NewValue, toArrayPath, TypedStringPath, Version} from './types'
 
 export const FormValidityContext = React.createContext<boolean>(true)
 export function useFormIsValid(): boolean {
@@ -10,7 +10,9 @@ export function useFormIsValid(): boolean {
 
 export interface FormMetadataContextType<T> {
   getValueAt: <V>(path: TypedStringPath<V, T>) => V
-  getConflicts: () => ArrayPath<T>[]
+  getConflictAt: <V>(path: TypedStringPath<V, T>) => Conflict<T> | null
+  onResolveConflict: <V>(path: TypedStringPath<V, T>, version: Version) => void
+  getStrings: () => Partial<FormStrings> | undefined
   subscribeToChanges: (f: ChangeListener) => (() => void)
   onChangePath: <V>(p: TypedStringPath<V, T>, t: NewValue<V>) => unknown
   readOnly: boolean
@@ -19,12 +21,14 @@ export interface FormMetadataContextType<T> {
 }
 export const FormMetadataContext = React.createContext<FormMetadataContextType<unknown>|null>(null)
 
-export function useCreateFormMetadataContext<T>({value, onChange, labelStyle, inline, readOnly, conflicts}): FormMetadataContextType<T> {
+export function useCreateFormMetadataContext<T>({value, onChange, labelStyle, inline, readOnly, conflicts, strings, onResolveConflict}): FormMetadataContextType<T> {
   const listeners = useMemo(() => new Set<ChangeListener>(), [])
   const valueRef = useRef<T>()
   valueRef.current = value
-  const conflictsRef = useRef<ArrayPath<T>[]>()
+  const conflictsRef = useRef<ConflictMap<T>>()
   conflictsRef.current = conflicts
+  const stringsRef = useRef<FormStrings>()
+  stringsRef.current = strings
 
   const metadataContext = useMemo(
     () => {
@@ -38,15 +42,17 @@ export function useCreateFormMetadataContext<T>({value, onChange, labelStyle, in
       }
       return {
         getValueAt: (path) => L.get(toArrayPath(path), valueRef.current),
-        getConflicts: () => conflictsRef.current ?? [],
+        getConflictAt: (path) => conflictsRef.current?.get?.(path),
+        getStrings: () => stringsRef.current,
         subscribeToChanges: (listener: ChangeListener) => {
           listeners.add(listener)
           return () => listeners.delete(listener)
         },
         readOnly, labelStyle, inline,
         onChangePath,
+        onResolveConflict,
       }
-    }, [readOnly, labelStyle, inline, onChange, listeners]
+    }, [readOnly, labelStyle, inline, onChange, listeners, onResolveConflict]
   )
 
   useEffect(() => listeners.forEach(l => l()), [listeners, value])
@@ -58,4 +64,11 @@ export function useFormMetadata<T>() {
   const ctx = useContext(FormMetadataContext) as FormMetadataContextType<T>
   if (ctx === null) throw new Error('No form metadata context')
   return ctx
+}
+
+export function useFormStrings(): FormStrings {
+  return {
+    ...formStringDefaults,
+    ...useFormMetadata().getStrings()
+  }
 }

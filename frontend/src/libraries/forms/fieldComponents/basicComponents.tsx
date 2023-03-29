@@ -14,7 +14,7 @@ export interface SwitchForProps<V> {
 export type SwitchFieldForValueProps<T, V> = Omit<FieldPropsWithoutComponent<T, V>, 'labelStyle'>
 export function switchFor<T, V>({isChecked, toValue}: SwitchForProps<V>) {
   return function SwitchFieldForValue({path, ...rest}: SwitchFieldForValueProps<T, V>) {
-    const { value, onChange, ...dataProps }= useFieldValueProps<T, V>(path)
+    const { value, onChange, ...dataProps } = useFieldValueProps<T, V>(path)
     const { fieldProps, containerProps } = useFieldData(path, value, rest)
 
     const onChangeMapped = (bool: boolean) => onChange(toValue(bool))
@@ -49,7 +49,7 @@ interface SwitchProps extends FieldComponentProps<boolean, HTMLInputElement> {
   label: string
 }
 export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
-  function Switch({ value, onChange, readOnly, hasConflict, ...props }, ref) {
+  function Switch({ value, onChange, readOnly, ...props }, ref) {
     return <BlueprintSwitch
       inputRef={ref}
       checked={value ?? false}
@@ -63,11 +63,11 @@ export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
 export interface InputProps extends ExtendedFieldComponentProps<string, HTMLInputElement, ComponentProps<'input'>> {
   inputRef?: React.Ref<HTMLInputElement>
 }
-export function Input({value, className, onChange, inline, hasConflict, inputRef, ...props} : InputProps) {
+export function Input({value, className, onChange, inline, inputRef, ...props} : InputProps) {
   return <input
     ref={inputRef}
     value={value ?? ''}
-    className={classNames(className, Classes.INPUT, inline || Classes.FILL, hasConflict && Classes.INTENT_DANGER)}
+    className={classNames(className, Classes.INPUT, inline || Classes.FILL)}
     onKeyDown={e => (e.key === 'Escape' || e.key === 'Enter') && (e.target as HTMLInputElement).blur()}
     onChange={e => onChange(e.target.value, e)}
     {...props}
@@ -77,12 +77,11 @@ export function Input({value, className, onChange, inline, hasConflict, inputRef
 interface TextAreaProps extends FieldComponentProps<string, HTMLTextAreaElement>, Pick<BlueprintTextAreaProps, 'growVertically'> {
   inputRef?: React.Ref<HTMLTextAreaElement>
 }
-export function TextArea({value, onChange, hasConflict, inline, inputRef, ...props} : TextAreaProps) {
+export function TextArea({value, onChange, inline, inputRef, ...props} : TextAreaProps) {
   return <BlueprintTextArea
     inputRef={inputRef}
     value={value ?? ''}
     fill
-    intent={hasConflict ? 'danger' : undefined}
     onKeyDown={e => (e.key === 'Escape') && (e.target as HTMLTextAreaElement).blur()}
     onChange={e => onChange && onChange(e.target.value, e)}
     {...props}

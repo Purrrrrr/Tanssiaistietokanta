@@ -2,7 +2,7 @@ import {useCallback, useEffect, useMemo, useState} from 'react'
 import {arrayMoveImmutable} from 'array-move'
 import * as L from 'partial.lenses'
 
-import {AnyList, FieldDataProps, NewValue, PropertyAtPath, StringPath, StringPathToList, toArrayPath, TypedStringPath} from './types'
+import {AnyList, FieldDataProps, NewValue, PropertyAtPath, StringPath, StringPathToList, TypedStringPath} from './types'
 
 import {FormMetadataContextType, useFormMetadata} from './formContext'
 
@@ -62,12 +62,10 @@ export function useFieldValueProps<T, V>(
 {
   const ctx = useFormMetadata<T>()
   const [value, setValue] = useState(() => ctx.getValueAt<V>(path))
-  const [hasConflict, setHasConflict] = useState(() => hasConflictsAtPath(ctx.getConflicts(), path))
 
   useFormValueSubscription(ctx, useCallback(
     () => {
       setValue(ctx.getValueAt<V>(path))
-      setHasConflict(hasConflictsAtPath(ctx.getConflicts(), path))
     },
     [ctx, path]
   ))
@@ -77,13 +75,7 @@ export function useFieldValueProps<T, V>(
     ctx.onChangePath<V>(path, v)
   }, [ctx, path])
 
-  return { value, onChange, hasConflict }
-}
-
-function hasConflictsAtPath(conflicts, path) {
-  const arrayPath = toArrayPath(path)
-  return conflicts
-    .some((conflict )=> conflict.length === arrayPath.length && arrayPath.every((key, i) => conflict[i] === key))
+  return { value, onChange }
 }
 
 export function useRemoveFromList<T>(path: StringPathToList<T>, index: number) {

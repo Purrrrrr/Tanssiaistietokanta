@@ -16,7 +16,6 @@ export interface FieldComponentPropsWithoutEvent<T> extends FieldComponentDispla
 export interface FieldDataProps<T> {
   value: T | undefined | null
   onChange: OnChangeHandler<T>
-  hasConflict?: boolean
 }
 export interface FieldComponentDisplayProps {
   inline?: boolean
@@ -24,4 +23,19 @@ export interface FieldComponentDisplayProps {
   id: string
   'aria-describedby'?: string
   'aria-label'?: string
+}
+
+export const Deleted = Symbol('deleted value')
+
+export type ConflictMap<T> = Map<string, Conflict<unknown>>
+export type Conflict<T> = ScalarConflict<T> | ArrayConflict<T>
+
+export interface ScalarConflict<T> {
+  type: 'scalar'
+  local: T | typeof Deleted
+  server: T | typeof Deleted
+}
+
+export interface ArrayConflict<T> {
+  type: 'array'
 }
