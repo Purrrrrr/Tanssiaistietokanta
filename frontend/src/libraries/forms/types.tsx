@@ -21,3 +21,18 @@ export const formStringDefaults = {
 }
 
 export type Version = 'SERVER' | 'LOCAL'
+
+export const Deleted = Symbol('deleted value')
+
+export type ConflictMap<T> = Map<string, Conflict<unknown>>
+export type Conflict<T> = ScalarConflict<T> | ArrayConflict<T>
+
+export interface ScalarConflict<T> {
+  type: 'scalar'
+  local: T | typeof Deleted
+  server: T | typeof Deleted
+}
+
+export interface ArrayConflict<T> {
+  type: 'array'
+}

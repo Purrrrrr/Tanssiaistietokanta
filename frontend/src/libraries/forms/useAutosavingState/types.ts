@@ -1,3 +1,7 @@
+import { Conflict, ConflictMap } from '../types'
+
+export { Deleted } from '../types'
+
 export type ID = string | number
 export interface MergeableObject {
   [key: string]: Mergeable
@@ -15,6 +19,32 @@ export interface MergeResult<T> {
   nonConflictingModifications: T //The version that can be sent to the server without breaking stuff because of conflicts
   modifications: T //Local version, including conflicts
   changes: ChangeSet<T> | null
+  conflicts: ConflictPath[]
+}
+
+export interface ConflictPath {
+  path: string[]
+  conflict: Conflict<unknown>
+}
+
+export function scalarConflict({local, server}, path : string[] = []): ConflictPath {
+  return {
+    path,
+    conflict: { type: 'scalar', local, server }
+  }
+}
+
+export function scopeConflicts(path: string | number | symbol, conflicts: ConflictPath[]) {
+  for(const c of conflicts) {
+    c.path.push(String(path))
+  }
+  return conflicts
+}
+
+export function toConflictMap(conflicts: ConflictPath[]): ConflictMap<unknown> {
+  return new Map(
+    conflicts.map(c => [c.path.reverse().join('.'), c.conflict])
+  )
 }
 
 // A change set type describing what has changed between the current server version and the local version.

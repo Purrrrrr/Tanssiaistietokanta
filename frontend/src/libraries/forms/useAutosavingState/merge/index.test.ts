@@ -1,5 +1,5 @@
 import {map} from '../testUtils'
-import {arrayChange, conflictingScalarChange, objectChange, removedKey, removedOnLocalWithServerModification, removedOnServerWithLocalModification, scalarChange} from '../types'
+import {arrayChange, conflictingScalarChange, Deleted, objectChange, removedKey, removedOnLocalWithServerModification, removedOnServerWithLocalModification, scalarChange, scalarConflict} from '../types'
 import merge from './index'
 
 describe('merge', () => {
@@ -14,6 +14,7 @@ describe('merge', () => {
       modifications: {a: 1, b: 1},
       nonConflictingModifications: {a: 1, b: 1},
       changes: null,
+      conflicts: [],
     })
   })
 
@@ -27,6 +28,7 @@ describe('merge', () => {
       modifications: 2,
       nonConflictingModifications: 2,
       changes: scalarChange(2),
+      conflicts: [],
     })
   })
 
@@ -40,6 +42,7 @@ describe('merge', () => {
       modifications: 2,
       nonConflictingModifications: 2,
       changes: null,
+      conflicts: [],
     })
   })
 
@@ -54,7 +57,8 @@ describe('merge', () => {
       nonConflictingModifications: {value: 2},
       changes: objectChange({
         value: scalarChange(2),
-      })
+      }),
+      conflicts: [],
     })
   })
 
@@ -68,6 +72,7 @@ describe('merge', () => {
       modifications: {value: 2},
       nonConflictingModifications: {value: 2},
       changes: null,
+      conflicts: [],
     })
   })
 
@@ -85,6 +90,7 @@ describe('merge', () => {
           value: scalarChange(3),
         }),
       }),
+      conflicts: [],
     })
   })
 
@@ -102,6 +108,9 @@ describe('merge', () => {
           value: conflictingScalarChange({local: 3, server: 2}),
         }),
       }),
+      conflicts: [
+        scalarConflict({local: 3, server: 2}, ['value', 'b'])
+      ],
     })
   })
 
@@ -120,6 +129,9 @@ describe('merge', () => {
           local: {value: 3, val: 2, obj: {a: 1}}
         }),
       }),
+      conflicts: [
+        scalarConflict({local: {value: 3, val: 2, obj: {a: 1}}, server: undefined}, ['b'])
+      ],
     })
   })
 
@@ -139,6 +151,7 @@ describe('merge', () => {
           [2, 3],
         ),
       }),
+      conflicts: [],
     })
   })
 
@@ -157,6 +170,7 @@ describe('merge', () => {
           c: 3
         },
       ),
+      conflicts: [],
     })
   })
 
@@ -175,6 +189,7 @@ describe('merge', () => {
           c: 3
         },
       ),
+      conflicts: [],
     })
   })
 
@@ -194,6 +209,7 @@ describe('merge', () => {
           b: removedKey(),
         }
       ),
+      conflicts: [],
     })
   })
 
@@ -213,6 +229,9 @@ describe('merge', () => {
           b: removedOnLocalWithServerModification(3),
         }
       ),
+      conflicts: [
+        scalarConflict({local: Deleted, server: 3}, ['b'])
+      ],
     })
   })
 
@@ -232,6 +251,9 @@ describe('merge', () => {
           b: removedOnServerWithLocalModification(3),
         }
       ),
+      conflicts: [
+        scalarConflict({local: 3, server: Deleted}, ['b'])
+      ],
     })
   })
 
@@ -246,7 +268,8 @@ describe('merge', () => {
       nonConflictingModifications: {value: 2},
       changes: objectChange({
         value: scalarChange(2),
-      })
+      }),
+      conflicts: [],
     })
   })
 })

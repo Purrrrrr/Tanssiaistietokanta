@@ -1,5 +1,5 @@
 import {changedVersion, map, randomGeneratorWithSeed, toEntity} from '../testUtils'
-import {arrayChange, ArrayChangeSet, conflictingArrayChange, Entity, ID, mapMergeData, MergeData, MergeResult, objectChange, scalarChange} from '../types'
+import {arrayChange, ArrayChangeSet, conflictingArrayChange, conflictingScalarChange, Entity, ID, mapMergeData, MergeData, MergeResult, objectChange, scalarChange, scalarConflict} from '../types'
 import merge from './index'
 import {mergeArrays} from './mergeArrays'
 
@@ -43,6 +43,57 @@ describe('mergeArrays', () => {
       modifications: [1, 2, 3, 4, 5],
       nonConflictingModifications: [1, 2, 3, 4, 5],
       changes: null,
+      conflicts: [],
+    }))
+  })
+
+  test('conflicts in item', () => {
+    expect(doMerge({
+      original: [1, 2, 3, 4, 5],
+      server: [1, 2, {_id: 3, value: 5}, 4, 5],
+      local: [1, 2, {_id: 3, value: 1}, 4, 5],
+    })).toMatchObject(mergeResult({
+      state: 'CONFLICT',
+      modifications: [1, 2, {_id: 3, value: 1}, 4, 5],
+      nonConflictingModifications: [1, 2, {_id: 3, value: 5}, 4, 5],
+      changes: arrayChange<any>(
+        map([3, objectChange({
+          value: conflictingScalarChange({local: 1, server: 5}),
+        })]),
+        [1, 2, 3, 4, 5],
+        [1, 2, 3, 4, 5],
+      ),
+      conflicts: [
+        scalarConflict(
+          {local: 1, server: 5},
+          ['value', '2'],
+        )
+      ],
+    }))
+  })
+
+  test('conflicts in moved item', () => {
+    expect(doMerge({
+      original: [1, 2, 3, 4, 5],
+      server: [1, 2, 4, {_id: 3, value: 5}, 5],
+      local: [1, 2, {_id: 3, value: 1}, 4, 5],
+    })).toMatchObject(mergeResult({
+      state: 'CONFLICT',
+      modifications: [1, 2, 4, {_id: 3, value: 1}, 5],
+      nonConflictingModifications: [1, 2, 4, {_id: 3, value: 5}, 5],
+      changes: arrayChange<any>(
+        map([3, objectChange({
+          value: conflictingScalarChange({local: 1, server: 5}),
+        })]),
+        [1, 2, 3, 4, 5],
+        [1, 2, 4, 3, 5],
+      ),
+      conflicts: [
+        scalarConflict(
+          {local: 1, server: 5},
+          ['value', '3'],
+        )
+      ],
     }))
   })
 
@@ -62,6 +113,7 @@ describe('mergeArrays', () => {
           [1, 2, 3, 4, 5, 6],
           added(6),
         ),
+        conflicts: [],
       }))
     })
     test('simple additions on server', () => {
@@ -74,6 +126,7 @@ describe('mergeArrays', () => {
         modifications: [1, 2, 3, 4, 5, 6],
         nonConflictingModifications: [1, 2, 3, 4, 5, 6],
         changes: null,
+        conflicts: [],
       }))
     })
     test('complex additions', () => {
@@ -91,6 +144,7 @@ describe('mergeArrays', () => {
           [8, 7, 1, 2, 3, 4, 5, 6],
           added(6),
         ),
+        conflicts: [],
       }))
     })
     test('identical additions on end', () => {
@@ -103,6 +157,7 @@ describe('mergeArrays', () => {
         modifications: [1, 2, 3, 4, 5, {_id: 6, data: 6}],
         nonConflictingModifications: [1, 2, 3, 4, 5, {_id: 6, data: 6}],
         changes: null,
+        conflicts: [],
       }))
     })
   })
@@ -122,6 +177,7 @@ describe('mergeArrays', () => {
           [1, 2, 3, 4, 5],
           [1, 2, 4, 5]
         ),
+        conflicts: [],
       }))
     })
     test('simple removals on server', () => {
@@ -134,6 +190,7 @@ describe('mergeArrays', () => {
         modifications: [1, 2, 4, 5],
         nonConflictingModifications: [1, 2, 4, 5],
         changes: null,
+        conflicts: [],
       }))
     })
     test('removal of modified value', () => {
@@ -149,6 +206,7 @@ describe('mergeArrays', () => {
           map(),
           {original: [1, 2, 3, 4, 5], local: [1, 2, 3, 4, 5], server: [1, 2, 4, 5]}
         ),
+        conflicts: [],
       }))
     })
     test('complex removals', () => {
@@ -165,6 +223,7 @@ describe('mergeArrays', () => {
           [1, 2, 3, 4, 5],
           [2, 4],
         ),
+        conflicts: [],
       }))
     })
   })
@@ -184,6 +243,7 @@ describe('mergeArrays', () => {
         [6, 1, 2, 4, 8, 7],
         added(7)
       ),
+      conflicts: [],
     }))
   })
 
@@ -202,6 +262,7 @@ describe('mergeArrays', () => {
           [1, 2, 3, 4, 5],
           [1, 5, 2, 3, 4],
         ),
+        conflicts: [],
       }))
     })
     test('moving on server', () => {
@@ -214,6 +275,7 @@ describe('mergeArrays', () => {
         modifications: [1, 5, 2, 3, 4],
         nonConflictingModifications: [1, 5, 2, 3, 4],
         changes: null,
+        conflicts: [],
       }))
     })
     test('swapping next to each other locally', () => {
@@ -230,6 +292,7 @@ describe('mergeArrays', () => {
           [1, 2, 3],
           [1, 3, 2],
         ),
+        conflicts: [],
       }))
     })
     test('swapping far from each other locally', () => {
@@ -246,6 +309,7 @@ describe('mergeArrays', () => {
           [1, 2, 3, 4],
           [4, 2, 3, 1],
         ),
+        conflicts: [],
       }))
     })
     test('swapping next to each other on server', () => {
@@ -258,6 +322,7 @@ describe('mergeArrays', () => {
         modifications: [1, 3, 2],
         nonConflictingModifications: [1, 3, 2],
         changes: null,
+        conflicts: [],
       }))
     })
     test('swapping far from each other on server', () => {
@@ -270,6 +335,7 @@ describe('mergeArrays', () => {
         modifications: [4, 2, 3, 1],
         nonConflictingModifications: [4, 2, 3, 1],
         changes: null,
+        conflicts: [],
       }))
     })
 
@@ -283,6 +349,7 @@ describe('mergeArrays', () => {
         modifications: [1, 5, 2, 3, 4],
         nonConflictingModifications: [1, 5, 2, 3, 4],
         changes: null,
+        conflicts: [],
       }))
     })
 
@@ -300,6 +367,7 @@ describe('mergeArrays', () => {
           [1, 2, 3, 4, 5],
           [1, 5, 2, 4, 3],
         ),
+        conflicts: [],
       }))
     })
 
@@ -320,6 +388,7 @@ describe('mergeArrays', () => {
             local: '245167890'.split(''),
           }
         ),
+        conflicts: [],
       }))
     })
   })
@@ -343,6 +412,7 @@ describe('mergeArrays', () => {
           [1, 2, 3, 4, 5],
           [1, 2, 3, 4, 5],
         ),
+        conflicts: [],
       }))
     })
     test('modifying on server', () => {
@@ -355,6 +425,7 @@ describe('mergeArrays', () => {
         modifications: [1, 2, 3, 4, {_id: 5, value: 8}],
         nonConflictingModifications: [1, 2, 3, 4, {_id: 5, value: 8}],
         changes: null,
+        conflicts: [],
       }))
     })
     test('modifying on both', () => {
@@ -367,6 +438,7 @@ describe('mergeArrays', () => {
         modifications: [1, 2, 3, 4, {_id: 5, value: 8}],
         nonConflictingModifications: [1, 2, 3, 4, {_id: 5, value: 8}],
         changes: null,
+        conflicts: [],
       }))
     })
 
@@ -380,6 +452,7 @@ describe('mergeArrays', () => {
         modifications: [1, 2, {_id: 5, value: 8}, 3, 4],
         nonConflictingModifications: [1, 2, {_id: 5, value: 8}, 3, 4],
         changes: null,
+        conflicts: [],
       }))
     })
 
@@ -401,6 +474,7 @@ describe('mergeArrays', () => {
           [1, 2, 3, 4, 5],
           [1, 2, 5, 3, 4],
         ),
+        conflicts: [],
       }))
     })
 
@@ -422,6 +496,7 @@ describe('mergeArrays', () => {
           [1, 2, 3, 4, 5],
           [1, 2, 5, 3, 4],
         ),
+        conflicts: [],
       }))
     })
   })
@@ -443,6 +518,7 @@ describe('mergeArrays', () => {
           local: [1, 2, 3, 4, 6],
         }
       ),
+      conflicts: [],
     }))
   })
 
@@ -461,6 +537,7 @@ describe('mergeArrays', () => {
         [6, 5, 1, 2, 3, 55, 66],
         added(5)
       ),
+      conflicts: [],
     }))
   })
 
@@ -479,6 +556,7 @@ describe('mergeArrays', () => {
         [6, 5, 1, 3, 55, 66],
         added(5),
       ),
+      conflicts: [],
     }))
   })
 
@@ -497,6 +575,7 @@ describe('mergeArrays', () => {
         [4, 6, 7, 8, 9, 10, 11, 22, 33],
         added(10)
       ),
+      conflicts: [],
     }))
   })
 
@@ -515,6 +594,7 @@ describe('mergeArrays', () => {
         [1, 9, 11, 2, 8, 3, 7, 4, 6],
         added(11)
       ),
+      conflicts: [],
     }))
   })
   test('tough cases 6B', () => {
@@ -532,6 +612,7 @@ describe('mergeArrays', () => {
         [1, 9, 11, 2, 8, 3, 7, 4, 6, 10],
         added(10, 11)
       ),
+      conflicts: [],
     }))
   })
   test('tough cases 6Bb', () => {
@@ -549,6 +630,7 @@ describe('mergeArrays', () => {
         [8, 3, 7, 4, 6, 10],
         added(10)
       ),
+      conflicts: [],
     }))
   })
   test('tough cases 6C', () => {
@@ -566,6 +648,7 @@ describe('mergeArrays', () => {
         [1, 9, 11, 2, 8, 3, 7, 12, 4, 6, 10],
         added(11, 12, 10)
       ),
+      conflicts: [],
     }))
   })
 
@@ -584,6 +667,7 @@ describe('mergeArrays', () => {
         'KMTNJPFSX'.split(''),
         added('M', 'X')
       ),
+      conflicts: [],
     }))
   })
 
@@ -604,6 +688,7 @@ describe('mergeArrays', () => {
           server: 'BAC'.split(''),
         }
       ),
+      conflicts: [],
     }))
   })
 
@@ -624,6 +709,7 @@ describe('mergeArrays', () => {
           server: 'acbxBAC'.split(''),
         }
       ),
+      conflicts: [],
     }))
   })
 
@@ -641,6 +727,7 @@ describe('mergeArrays', () => {
         'ABCDEF'.split(''),
         'ADECFB'.split(''),
       ),
+      conflicts: [],
     }))
   })
 
@@ -661,6 +748,7 @@ describe('mergeArrays', () => {
           'Y'
         )
       ),
+      conflicts: [],
     }))
   })
 
@@ -681,6 +769,7 @@ describe('mergeArrays', () => {
           ...'YW'.split('')
         ),
       ),
+      conflicts: [],
     }))
   })
 

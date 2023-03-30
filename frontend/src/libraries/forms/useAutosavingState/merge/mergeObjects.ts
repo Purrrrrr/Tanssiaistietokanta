@@ -1,4 +1,4 @@
-import {ChangeSet, mapMergeData, MergeableObject, MergeData, MergeFunction, MergeResult, ObjectKeyChanges, ObjectKeyRemovals, removedKey, removedOnLocalWithServerModification, removedOnServerWithLocalModification, SyncState} from '../types'
+import {ChangeSet, ConflictPath, Deleted, mapMergeData, MergeableObject, MergeData, MergeFunction, MergeResult, ObjectKeyChanges, ObjectKeyRemovals, removedKey, removedOnLocalWithServerModification, removedOnServerWithLocalModification, scalarConflict, scopeConflicts, SyncState} from '../types'
 
 export function mergeObjects<T extends MergeableObject>(
   data : MergeData<T>,
@@ -14,6 +14,7 @@ export function mergeObjects<T extends MergeableObject>(
   const changeMap : ObjectKeyChanges<T> = {}
   const additions : Partial<T> = {}
   const removedMap : ObjectKeyRemovals<T> = {}
+  const conflicts : ConflictPath[] = []
   for (const key of keys) {
     const dataInKey = indexMergeData(data, key)
     const subResult = merge(dataInKey)
@@ -41,6 +42,16 @@ export function mergeObjects<T extends MergeableObject>(
       {
         if (existsIn.local) modifications[key] = subResult.modifications
         if (existsIn.server) nonConflictingModifications[key] = subResult.nonConflictingModifications
+        if (existsIn.local && existsIn.server) {
+          conflicts.push(...scopeConflicts(key, subResult.conflicts))
+        } else {
+          conflicts.push(scalarConflict(
+            {
+              local: existsIn.local ? dataInKey.local : Deleted,
+              server: existsIn.server ? dataInKey.server : Deleted,
+            }, [String(key)]
+          ))
+        }
         hasConflicts = true
         break
       }
@@ -70,7 +81,8 @@ export function mergeObjects<T extends MergeableObject>(
       changes: changeMap,
       additions,
       removed: removedMap,
-    } as ChangeSet<T>
+    } as ChangeSet<T>,
+    conflicts,
   }
 }
 
