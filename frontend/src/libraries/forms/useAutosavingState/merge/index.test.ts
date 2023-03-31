@@ -1,5 +1,4 @@
-import {map} from '../testUtils'
-import {arrayChange, conflictingScalarChange, Deleted, objectChange, removedKey, removedOnLocalWithServerModification, removedOnServerWithLocalModification, scalarChange, scalarConflict} from '../types'
+import {Deleted, scalarConflict} from '../types'
 import merge from './index'
 
 describe('merge', () => {
@@ -13,7 +12,6 @@ describe('merge', () => {
       state: 'IN_SYNC',
       modifications: {a: 1, b: 1},
       nonConflictingModifications: {a: 1, b: 1},
-      changes: null,
       conflicts: [],
     })
   })
@@ -27,7 +25,6 @@ describe('merge', () => {
       state: 'MODIFIED_LOCALLY',
       modifications: 2,
       nonConflictingModifications: 2,
-      changes: scalarChange(2),
       conflicts: [],
     })
   })
@@ -41,7 +38,6 @@ describe('merge', () => {
       state: 'IN_SYNC',
       modifications: 2,
       nonConflictingModifications: 2,
-      changes: null,
       conflicts: [],
     })
   })
@@ -55,9 +51,6 @@ describe('merge', () => {
       state: 'MODIFIED_LOCALLY',
       modifications: {value: 2},
       nonConflictingModifications: {value: 2},
-      changes: objectChange({
-        value: scalarChange(2),
-      }),
       conflicts: [],
     })
   })
@@ -71,7 +64,6 @@ describe('merge', () => {
       state: 'IN_SYNC',
       modifications: {value: 2},
       nonConflictingModifications: {value: 2},
-      changes: null,
       conflicts: [],
     })
   })
@@ -85,11 +77,6 @@ describe('merge', () => {
       state: 'MODIFIED_LOCALLY',
       modifications: {a: 1, b: {value: 3}},
       nonConflictingModifications: {a: 1, b: {value: 3}},
-      changes: objectChange({
-        b: objectChange({
-          value: scalarChange(3),
-        }),
-      }),
       conflicts: [],
     })
   })
@@ -103,11 +90,6 @@ describe('merge', () => {
       state: 'CONFLICT',
       modifications: {a: 1, b: {value: 3}},
       nonConflictingModifications: {a: 1, b: {value: 2}},
-      changes: objectChange({
-        b: objectChange({
-          value: conflictingScalarChange({local: 3, server: 2}),
-        }),
-      }),
       conflicts: [
         scalarConflict({local: 3, server: 2}, ['value', 'b'])
       ],
@@ -123,12 +105,6 @@ describe('merge', () => {
       state: 'CONFLICT',
       modifications: {a: 1, b: {value: 3, val: 2, obj: {a: 1}}},
       nonConflictingModifications: {a: 1, b: undefined},
-      changes: objectChange<any>({
-        b: conflictingScalarChange({
-          server: undefined,
-          local: {value: 3, val: 2, obj: {a: 1}}
-        }),
-      }),
       conflicts: [
         scalarConflict({local: {value: 3, val: 2, obj: {a: 1}}, server: undefined}, ['b'])
       ],
@@ -144,13 +120,6 @@ describe('merge', () => {
       state: 'MODIFIED_LOCALLY',
       modifications: {a: 1, b: [{_id: 2}, {_id: 3}]},
       nonConflictingModifications: {a: 1, b: [{_id: 2}, {_id: 3}]},
-      changes: objectChange<any>({
-        b: arrayChange(
-          map(),
-          [1, 2, 3],
-          [2, 3],
-        ),
-      }),
       conflicts: [],
     })
   })
@@ -164,12 +133,6 @@ describe('merge', () => {
       state: 'MODIFIED_LOCALLY',
       modifications: {a: 1, b: 2, c: 3},
       nonConflictingModifications: {a: 1, b: 2, c: 3},
-      changes: objectChange<any>(
-        {},
-        {
-          c: 3
-        },
-      ),
       conflicts: [],
     })
   })
@@ -183,12 +146,6 @@ describe('merge', () => {
       state: 'MODIFIED_LOCALLY',
       modifications: {a: 1, b: 2, c: 3},
       nonConflictingModifications: {a: 1, b: 2, c: 3},
-      changes: objectChange<any>(
-        {},
-        {
-          c: 3
-        },
-      ),
       conflicts: [],
     })
   })
@@ -202,13 +159,6 @@ describe('merge', () => {
       state: 'MODIFIED_LOCALLY',
       modifications: {a: 1},
       nonConflictingModifications: {a: 1},
-      changes: objectChange<any>(
-        {},
-        {},
-        {
-          b: removedKey(),
-        }
-      ),
       conflicts: [],
     })
   })
@@ -222,13 +172,6 @@ describe('merge', () => {
       state: 'CONFLICT',
       modifications: {a: 1},
       nonConflictingModifications: {a: 1, b: 3},
-      changes: objectChange<any>(
-        {},
-        {},
-        {
-          b: removedOnLocalWithServerModification(3),
-        }
-      ),
       conflicts: [
         scalarConflict({local: Deleted, server: 3}, ['b'])
       ],
@@ -244,13 +187,6 @@ describe('merge', () => {
       state: 'CONFLICT',
       modifications: {a: 1, b: 3},
       nonConflictingModifications: {a: 1},
-      changes: objectChange<any>(
-        {},
-        {},
-        {
-          b: removedOnServerWithLocalModification(3),
-        }
-      ),
       conflicts: [
         scalarConflict({local: 3, server: Deleted}, ['b'])
       ],
@@ -266,9 +202,6 @@ describe('merge', () => {
       state: 'MODIFIED_LOCALLY',
       modifications: {value: 2},
       nonConflictingModifications: {value: 2},
-      changes: objectChange({
-        value: scalarChange(2),
-      }),
       conflicts: [],
     })
   })

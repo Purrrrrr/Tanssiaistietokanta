@@ -1,7 +1,7 @@
 import deepEquals from 'fast-deep-equal'
 
 import { areEqualWithoutId, mapToIds } from '../idUtils'
-import {arrayChange, ChangeSet, conflictingArrayChange, ConflictPath, Entity, ID, mapMergeData, MergeData, MergeFunction, MergeResult, scopeConflicts, SyncState } from '../types'
+import {ConflictPath, Entity, ID, mapMergeData, MergeData, MergeFunction, MergeResult, scopeConflicts, SyncState } from '../types'
 import {GTSort} from './GTSort'
 
 export function mergeArrays<T extends Entity>(
@@ -39,8 +39,6 @@ export function mergeArrays<T extends Entity>(
   const modifiedIds = new Set<ID>()
   const conflictingIds = new Set<ID>()
   const changeConflictsById: Map<ID, ConflictPath[]> = new Map()
-  const additions = new Map<ID, T>()
-  const itemModifications = new Map<ID, ChangeSet<T>>()
 
   data.local.ids.forEach(id => {
     const serverData = data.server.getData(id)
@@ -52,7 +50,6 @@ export function mergeArrays<T extends Entity>(
       if (original && !deepEquals(original, local)) {
         conflictingIds.add(id)
       }
-      if (!original) additions.set(id, local)
       mergedValues.set(id, local)
       nonConflictingMergedValues.set(id, local)
       return
@@ -60,7 +57,6 @@ export function mergeArrays<T extends Entity>(
     const server = serverData.value
 
     const result = merge<T>({ original, local, server})
-    if (result.changes !== null) itemModifications.set(id, result.changes)
     switch(result.state) {
       case 'MODIFIED_LOCALLY':
         modifiedIds.add(id)
@@ -95,7 +91,6 @@ export function mergeArrays<T extends Entity>(
     const hasDuplicateAddition = !data.original.has(matchingLocalId) && areEqualWithoutId(server, mergeData.local[matchingLocalIndex])
 
     if (hasDuplicateAddition) {
-      additions.delete(data.local.ids[matchingLocalIndex])
       data.local.ids[matchingLocalIndex] = id
     }
     mergedValues.set(id, server)
@@ -124,33 +119,6 @@ export function mergeArrays<T extends Entity>(
   let state : SyncState = isModified ? 'MODIFIED_LOCALLY' : 'IN_SYNC'
   if (conflictingIds.size > 0 || hasStructuralConflict) state = 'CONFLICT'
 
-  let changes : ChangeSet<T[]> | null = null
-  if (hasStructuralConflict) {
-    changes = conflictingArrayChange(
-      itemModifications,
-      {
-        original: data.original.ids,
-        server: serverVersion,
-        local: localVersion
-      },
-      additions,
-    )
-  } else if (hasStructuralChanges) {
-    changes = arrayChange(
-      itemModifications,
-      data.original.ids,
-      serverVersion,
-      additions,
-    )
-  } else if (state !== 'IN_SYNC') {
-    changes = arrayChange(
-      itemModifications,
-      data.original.ids,
-      serverVersion,
-      additions,
-    )
-  }
-
   function getFromMap(map: Map<ID, T>, id: ID): T{
     const val = map.get(id)
     if (!val) throw new Error('Unknown merged id '+id)
@@ -160,7 +128,6 @@ export function mergeArrays<T extends Entity>(
     state,
     modifications: localVersion.map(id => getFromMap(mergedValues, id)),
     nonConflictingModifications: serverVersion.map(id => getFromMap(nonConflictingMergedValues, id)),
-    changes,
     conflicts,
   }
 }

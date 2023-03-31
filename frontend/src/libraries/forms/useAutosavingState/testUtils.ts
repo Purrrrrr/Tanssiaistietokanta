@@ -1,8 +1,5 @@
 import {Entity} from './types'
 
-export function map<K, V>(...arr: (readonly [K, V])[]): Map<K, V> {
-  return new Map(arr)
-}
 export const toEntity = (item: Entity | number | string) => typeof item !== 'object' ? {_id: item, value: item} : item
 
 //mulberry32

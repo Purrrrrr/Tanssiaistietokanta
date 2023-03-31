@@ -1,30 +1,32 @@
-import {ChangeSet, ObjectChangeSet} from './types'
+import deepEquals from 'fast-deep-equal'
 
 import {Operation, toJSONPatch} from './jsonPatch'
 
-export type PatchStrategy<T, Patch> = (original: T, modifications: T, changes: ChangeSet<T>) => Patch
+export type PatchStrategy<T, Patch> = (original: T, modifications: T) => Patch | undefined
 
 export function noPatch<T>(_: T, modifications: T): T  {
   return modifications
 }
 
-export function partial<T>(original: T, modifications: T, changes: ChangeSet<T>): Partial<T>  {
-  if (changes.type !== 'object') return modifications
-  const objChange = changes as ObjectChangeSet<T>
+export function partial<T>(original: T, modifications: T): Partial<T> | undefined  {
+  if (typeof modifications !== 'object' || modifications === null) return modifications
+
+  let modified = false
 
   //TODO: conflict handling: do not overwrite conflicting server modifications when conflict system is ready
   const partial : Partial<T> = {}
-  for (const key in objChange.changes) {
-    partial[key] = modifications[key]
-  }
-  for (const key in objChange.additions) {
-    partial[key] = modifications[key]
+  for (const key in Object.keys(modifications)) {
+    if (!deepEquals(original[key], modifications[key])) {
+      partial[key] = modifications[key]
+      modified = true
+    }
   }
 
-  return partial
+  return modified ? partial : undefined
 }
 
-export function jsonPatch<T>(original: T, modifications: T): Operation[]  {
+export function jsonPatch<T>(original: T, modifications: T): Operation[] | undefined {
   //TODO: conflict handling: do not overwrite conflicting server modifications when conflict system is ready
-  return toJSONPatch(original, modifications)
+  const patch = toJSONPatch(original, modifications)
+  return patch.length > 0 ? patch : undefined
 }

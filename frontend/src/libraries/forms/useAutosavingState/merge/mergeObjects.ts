@@ -1,4 +1,4 @@
-import {ChangeSet, ConflictPath, Deleted, mapMergeData, MergeableObject, MergeData, MergeFunction, MergeResult, ObjectKeyChanges, ObjectKeyRemovals, removedKey, removedOnLocalWithServerModification, removedOnServerWithLocalModification, scalarConflict, scopeConflicts, SyncState} from '../types'
+import {ConflictPath, Deleted, mapMergeData, MergeableObject, MergeData, MergeFunction, MergeResult, scalarConflict, scopeConflicts, SyncState} from '../types'
 
 export function mergeObjects<T extends MergeableObject>(
   data : MergeData<T>,
@@ -11,31 +11,11 @@ export function mergeObjects<T extends MergeableObject>(
   let hasModifications = false
 
   const keys = getAllKeys(data)
-  const changeMap : ObjectKeyChanges<T> = {}
-  const additions : Partial<T> = {}
-  const removedMap : ObjectKeyRemovals<T> = {}
   const conflicts : ConflictPath[] = []
   for (const key of keys) {
     const dataInKey = indexMergeData(data, key)
     const subResult = merge(dataInKey)
     const existsIn = mapMergeData(data, obj => key in obj)
-
-    const addedInLocal = existsIn.local && !existsIn.server && !existsIn.original
-    const removed = (!existsIn.local || !existsIn.server) && existsIn.original
-
-    if (addedInLocal) {
-      additions[key] = dataInKey.local
-    } else if (removed) {
-      if (subResult.state === 'CONFLICT') {
-        removedMap[key] = existsIn.local
-          ? removedOnServerWithLocalModification(dataInKey.local)
-          : removedOnLocalWithServerModification(dataInKey.server)
-      } else {
-        removedMap[key] = removedKey()
-      }
-    } else if (subResult.changes !== null) {
-      changeMap[key] = subResult.changes
-    }
 
     switch (subResult.state) {
       case 'CONFLICT':
@@ -76,12 +56,6 @@ export function mergeObjects<T extends MergeableObject>(
     state,
     modifications: modifications as T,
     nonConflictingModifications: nonConflictingModifications as T,
-    changes: state === 'IN_SYNC' ? null : {
-      type: 'object',
-      changes: changeMap,
-      additions,
-      removed: removedMap,
-    } as ChangeSet<T>,
     conflicts,
   }
 }
