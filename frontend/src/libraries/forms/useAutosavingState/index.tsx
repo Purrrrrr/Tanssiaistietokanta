@@ -90,9 +90,7 @@ export function useAutosavingState<T extends MergeableObject, Patch>(
     },
     value: modifications,
     onChange: onModified,
-    state: hasErrors
-      ? 'INVALID'
-      : state === 'CONFLICT' ? 'MODIFIED_LOCALLY' : state,
+    state: hasErrors ? 'INVALID' : state,
   }
 }
 
