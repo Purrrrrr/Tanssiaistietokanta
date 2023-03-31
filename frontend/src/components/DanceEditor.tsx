@@ -4,9 +4,8 @@ import {Link} from 'react-router-dom'
 import { useDeleteDance, usePatchDance } from 'services/dances'
 
 import {formFor, MarkdownEditor, patchStrategy, SyncStatus, useAutosavingState} from 'libraries/forms'
-import {H2, Icon} from 'libraries/ui'
+import {Flex, H2, Icon} from 'libraries/ui'
 import {DanceDataImportButton} from 'components/DanceDataImportDialog'
-import {Flex} from 'components/Flex'
 import {DeleteButton} from 'components/widgets/DeleteButton'
 import {DurationField} from 'components/widgets/DurationField'
 

@@ -15,6 +15,7 @@ import './ui.css'
 
 export * from './AutosizedSection'
 export { Breadcrumb, BreadcrumbContext, Breadcrumbs } from './Breadcrumbs'
+export * from './Flex'
 export type { ButtonProps } from '@blueprintjs/core'
 export { AnchorButton, Collapse, H2, HTMLTable, MenuItem, Navbar, NonIdealState, NumericInput, ProgressBar, Spinner, Tag } from '@blueprintjs/core'
 export const CssClass = {

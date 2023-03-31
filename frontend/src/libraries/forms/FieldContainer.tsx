@@ -1,10 +1,9 @@
 import React from 'react'
 
-import {Button, FormGroup} from 'libraries/ui'
+import {Button, Flex, FormGroup} from 'libraries/ui'
 
 import { LabelStyle, LabelTexts, Version } from './types'
 
-import {Flex} from '../../components/Flex'
 import {MenuButton} from './fieldComponents/Selector'
 import {useFormStrings} from './formContext'
 import {Error, ErrorMessage} from './validation'

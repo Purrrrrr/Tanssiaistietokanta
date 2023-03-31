@@ -3,8 +3,7 @@ import React from 'react'
 import {usePatchWorkshop} from 'services/workshops'
 
 import {formFor, Input, patchStrategy, SyncStatus, TextArea, useAutosavingState} from 'libraries/forms'
-import {CssClass, FormGroup} from 'libraries/ui'
-import {Flex} from 'components/Flex'
+import {CssClass, Flex, FormGroup} from 'libraries/ui'
 import {DanceChooser} from 'components/widgets/DanceChooser'
 import {makeTranslate} from 'utils/translate'
 
