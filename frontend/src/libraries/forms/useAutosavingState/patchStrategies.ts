@@ -16,7 +16,6 @@ export function partial<T>(original: T, modifications: T): Partial<T> | undefine
 
   let modified = false
 
-  //TODO: conflict handling: do not overwrite conflicting server modifications when conflict system is ready
   const partial : Partial<T> = {}
   for (const key of Object.keys(modifications)) {
     if (!deepEquals(original[key], modifications[key])) {
@@ -29,7 +28,6 @@ export function partial<T>(original: T, modifications: T): Partial<T> | undefine
 }
 
 export function jsonPatch<T>(original: T, modifications: T): Operation[] | undefined {
-  //TODO: conflict handling: do not overwrite conflicting server modifications when conflict system is ready
   const patch = toJSONPatch(original, modifications)
   return patch.length > 0 ? patch : undefined
 }

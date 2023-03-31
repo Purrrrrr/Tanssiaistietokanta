@@ -1,13 +1,13 @@
-import {Reducer, useCallback, useEffect, useReducer, useState} from 'react'
+import {useCallback, useEffect, useState} from 'react'
 
 import createDebug from 'utils/debug'
 
-import {MergeableObject, SyncState} from './types'
+import {MergeableObject, SyncState, toConflictMap} from './types'
 
 import {FormProps} from '../Form'
 import {OnChangeHandler} from '../types'
-import mergeValues from './merge'
 import {PatchStrategy} from './patchStrategies'
+import {useAutosavingStateReducer} from './reducer'
 
 const debug = createDebug('useAutoSavingState')
 
@@ -22,33 +22,14 @@ export type UseAutosavingStateReturn<T extends MergeableObject> = {
   onChange: OnChangeHandler<T>
   formProps: AutosavingFormProps<T>
   state: SyncState
-  resolveConflict: (resolutions: ConflictResolutions<T>) => unknown,
 }
 
-type AutosavingFormProps<T> = Pick<Required<FormProps<T>>, 'value' | 'onChange' | 'onValidityChange'>
-
-type SyncEvent = 'LOCAL_MODIFICATION' | 'PATCH_SENT' | 'EXTERNAL_MODIFICATION' | 'CONFLICT_RESOLVED'
-
-interface SyncStore<T> {
-  state: SyncState
-  serverState: T
-  serverStateTime: number
-  modifications: T
-  conflictOrigin: null | T
-}
-
-interface SyncAction {
-  type: SyncEvent
-  payload?: any
-}
+type AutosavingFormProps<T> = Pick<Required<FormProps<T>>, 'value' | 'onChange' | 'onValidityChange' | 'conflicts'>
 
 const DISABLE_CONFLICT_OVERRIDE_DELAY = 1000 * 60 * 5 //Disable saving and overwriting conflicts after five minutes
 
 export const USE_BACKEND_VALUE = Symbol('useBackendValue')
 export const USE_LOCAL_VALUE = Symbol('useLocalValue')
-export type ConflictResolutions<T extends MergeableObject> = {
-  [key in (keyof T)] ?: T[key] | typeof USE_LOCAL_VALUE | typeof USE_BACKEND_VALUE
-}
 
 export function useAutosavingState<T extends MergeableObject, Patch>(
   serverState : T,
@@ -58,12 +39,13 @@ export function useAutosavingState<T extends MergeableObject, Patch>(
 ) : UseAutosavingStateReturn<T>
 {
   const [hasErrors, setHasErrors] = useState(false)
-  const [reducerState, dispatch] = useReducer<Reducer<SyncStore<T>, SyncAction>, T>(reducer, serverState, getInitialState)
-  const { serverState: originalData, serverStateTime, state, modifications } = reducerState
+  const [reducerState, dispatch] = useAutosavingStateReducer<T>(serverState)
+  const { serverState: originalData, serverStateTime, mergeResult } = reducerState
+  const { state, modifications, nonConflictingModifications, conflicts } = mergeResult
 
   useEffect(() => {
-    dispatch({ type: 'EXTERNAL_MODIFICATION', payload: serverState })
-  }, [serverState])
+    dispatch({ type: 'EXTERNAL_MODIFICATION', serverState })
+  }, [serverState, dispatch])
 
   useEffect(() => {
     if (state === 'IN_SYNC') return
@@ -76,10 +58,8 @@ export function useAutosavingState<T extends MergeableObject, Patch>(
         return
       }
 
-      const patch = patchStrategy(originalData, modifications)
+      const patch = patchStrategy(originalData, nonConflictingModifications)
       if (patch !== undefined) {
-        console.log(patch)
-
         debug('Saving', patch)
         dispatch({ type: 'PATCH_SENT' })
         onPatch(patch)
@@ -87,14 +67,14 @@ export function useAutosavingState<T extends MergeableObject, Patch>(
     }, AUTOSAVE_DELAY)
 
     return () => clearTimeout(id)
-  }, [state, modifications, onPatch, originalData, serverStateTime, patchStrategy, refreshData, hasErrors])
+  }, [state, nonConflictingModifications, onPatch, originalData, serverStateTime, patchStrategy, refreshData, hasErrors, dispatch])
 
   const onModified = useCallback((modifications) => {
-    dispatch({ type: 'LOCAL_MODIFICATION', payload: modifications})
-  }, [])
-  const resolveConflict = useCallback((resolutions) => {
+    dispatch({ type: 'LOCAL_MODIFICATION', modifications})
+  }, [dispatch])
+  /*const resolveConflict = useCallback((resolutions) => {
     dispatch({ type: 'CONFLICT_RESOLVED', payload: resolutions})
-  }, [])
+  }, [dispatch])*/
 
   const onValidityChange = useCallback(
     ({hasErrors}) => setHasErrors(hasErrors),
@@ -106,76 +86,16 @@ export function useAutosavingState<T extends MergeableObject, Patch>(
       value: modifications,
       onChange: onModified,
       onValidityChange,
+      conflicts: toConflictMap(conflicts),
     },
     value: modifications,
     onChange: onModified,
     state: hasErrors
       ? 'INVALID'
       : state === 'CONFLICT' ? 'MODIFIED_LOCALLY' : state,
-    resolveConflict,
-  }
-}
-
-function getInitialState<T extends MergeableObject>(serverState: T) : SyncStore<T> {
-  return {
-    state: 'IN_SYNC',
-    serverState,
-    serverStateTime: now(),
-    modifications: serverState,
-    conflictOrigin: null,
   }
 }
 
 function now(): number {
   return +new Date()
-}
-
-function reducer<T extends MergeableObject>(reducerState : SyncStore<T>, action : SyncAction) : SyncStore<T> {
-  const { modifications, serverState } = reducerState
-  switch (action.type) {
-    case 'LOCAL_MODIFICATION':
-    {
-      const changes = typeof action.payload == 'function'
-        ? action.payload(modifications)
-        : action.payload
-      return merge(
-        reducerState.conflictOrigin ?? serverState,
-        serverState,
-        { ...modifications, ...changes},
-        reducerState.serverStateTime,
-      )
-    }
-    case 'PATCH_SENT':
-      return {
-        ...reducerState,
-        serverState: reducerState.modifications,
-      }
-    case 'CONFLICT_RESOLVED':
-      return reducerState //TODO: create proper algorithm
-    case 'EXTERNAL_MODIFICATION':
-      return merge(
-        reducerState.conflictOrigin ?? serverState,
-        action.payload,
-        modifications,
-        now(),
-      )
-  }
-}
-
-function merge<T extends MergeableObject>(serverState : T, newServerState : T, newModifications : T, serverStateTime: number) : SyncStore<T> {
-  const { state, modifications } = mergeValues({
-    server: newServerState,
-    original: serverState,
-    local: newModifications,
-  })
-
-  const hasConflicts = state === 'CONFLICT'
-
-  return {
-    state,
-    serverState: newServerState,
-    serverStateTime,
-    conflictOrigin: hasConflicts ? serverState : null,
-    modifications,
-  }
 }
