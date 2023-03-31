@@ -5,7 +5,7 @@ import createDebug from 'utils/debug'
 import {MergeableObject, SyncState, toConflictMap} from './types'
 
 import {FormProps} from '../Form'
-import {OnChangeHandler} from '../types'
+import {OnChangeHandler, StringPath, TypedStringPath, Version} from '../types'
 import {PatchStrategy} from './patchStrategies'
 import {useAutosavingStateReducer} from './reducer'
 
@@ -24,7 +24,7 @@ export type UseAutosavingStateReturn<T extends MergeableObject> = {
   state: SyncState
 }
 
-type AutosavingFormProps<T> = Pick<Required<FormProps<T>>, 'value' | 'onChange' | 'onValidityChange' | 'conflicts'>
+type AutosavingFormProps<T> = Pick<Required<FormProps<T>>, 'value' | 'onChange' | 'onValidityChange' | 'conflicts' | 'onResolveConflict'>
 
 const DISABLE_CONFLICT_OVERRIDE_DELAY = 1000 * 60 * 5 //Disable saving and overwriting conflicts after five minutes
 
@@ -72,9 +72,9 @@ export function useAutosavingState<T extends MergeableObject, Patch>(
   const onModified = useCallback((modifications) => {
     dispatch({ type: 'LOCAL_MODIFICATION', modifications})
   }, [dispatch])
-  /*const resolveConflict = useCallback((resolutions) => {
-    dispatch({ type: 'CONFLICT_RESOLVED', payload: resolutions})
-  }, [dispatch])*/
+  const onResolveConflict = useCallback(function <V>(path: TypedStringPath<V, T>, version: Version) {
+    dispatch({ type: 'CONFLICT_RESOLVED', path: path as StringPath<T>, version })
+  }, [dispatch])
 
   const onValidityChange = useCallback(
     ({hasErrors}) => setHasErrors(hasErrors),
@@ -86,6 +86,7 @@ export function useAutosavingState<T extends MergeableObject, Patch>(
       value: modifications,
       onChange: onModified,
       onValidityChange,
+      onResolveConflict,
       conflicts: toConflictMap(conflicts),
     },
     value: modifications,
