@@ -53,7 +53,11 @@ describe('mergeArrays', () => {
         scalarConflict(
           {local: 1, server: 5},
           ['value', '2'],
-        )
+        ),
+        scalarConflict(
+          {local: {_id: 3, value: 1}, server: {_id: 3, value: 5}},
+          ['2'],
+        ),
       ],
     }))
   })
@@ -71,7 +75,11 @@ describe('mergeArrays', () => {
         scalarConflict(
           {local: 1, server: 5},
           ['value', '3'],
-        )
+        ),
+        scalarConflict(
+          {local: {_id: 3, value: 1}, server: {_id: 3, value: 5}},
+          ['3'],
+        ),
       ],
     }))
   })

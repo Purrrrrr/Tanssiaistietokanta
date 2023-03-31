@@ -91,7 +91,9 @@ describe('merge', () => {
       modifications: {a: 1, b: {value: 3}},
       nonConflictingModifications: {a: 1, b: {value: 2}},
       conflicts: [
-        scalarConflict({local: 3, server: 2}, ['value', 'b'])
+        scalarConflict({local: 3, server: 2}, ['value', 'b']),
+        scalarConflict({local: {value: 3}, server: {value: 2}}, ['b']),
+        scalarConflict({local: {a: 1, b: {value: 3}}, server: {a: 1, b: {value: 2}}}, []),
       ],
     })
   })
@@ -106,7 +108,8 @@ describe('merge', () => {
       modifications: {a: 1, b: {value: 3, val: 2, obj: {a: 1}}},
       nonConflictingModifications: {a: 1, b: undefined},
       conflicts: [
-        scalarConflict({local: {value: 3, val: 2, obj: {a: 1}}, server: undefined}, ['b'])
+        scalarConflict({local: {value: 3, val: 2, obj: {a: 1}}, server: undefined}, ['b']),
+        scalarConflict({local: {a: 1, b: {value: 3, val: 2, obj: {a: 1}}}, server: {a: 1, b: undefined}}, []),
       ],
     })
   })
@@ -173,7 +176,8 @@ describe('merge', () => {
       modifications: {a: 1},
       nonConflictingModifications: {a: 1, b: 3},
       conflicts: [
-        scalarConflict({local: Deleted, server: 3}, ['b'])
+        scalarConflict({local: Deleted, server: 3}, ['b']),
+        scalarConflict({local: {a: 1}, server: {a: 1, b: 3}}, []),
       ],
     })
   })
@@ -188,7 +192,8 @@ describe('merge', () => {
       modifications: {a: 1, b: 3},
       nonConflictingModifications: {a: 1},
       conflicts: [
-        scalarConflict({local: 3, server: Deleted}, ['b'])
+        scalarConflict({local: 3, server: Deleted}, ['b']),
+        scalarConflict({local: {a: 1, b: 3}, server: {a: 1}}, []),
       ],
     })
   })

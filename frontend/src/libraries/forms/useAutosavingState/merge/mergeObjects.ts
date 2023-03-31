@@ -49,8 +49,11 @@ export function mergeObjects<T extends MergeableObject>(
   }
 
   let state : SyncState = 'IN_SYNC'
-  if (hasConflicts) state = 'CONFLICT'
-  else if (hasModifications) state = 'MODIFIED_LOCALLY'
+  if (hasConflicts) {
+    state = 'CONFLICT'
+    //Hack: propagate conflicts to outer objects so that fields that edit whole objects can detect them easily
+    conflicts.push(scalarConflict({local: data.local, server: data.server}))
+  } else if (hasModifications) state = 'MODIFIED_LOCALLY'
 
   return {
     state,
