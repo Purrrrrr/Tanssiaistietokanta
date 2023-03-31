@@ -9,13 +9,16 @@ export function noPatch<T>(_: T, modifications: T): T  {
 }
 
 export function partial<T>(original: T, modifications: T): Partial<T> | undefined  {
-  if (typeof modifications !== 'object' || modifications === null) return modifications
+  if (typeof modifications !== 'object' || modifications === null) {
+    if (modifications === original) return undefined
+    return modifications
+  }
 
   let modified = false
 
   //TODO: conflict handling: do not overwrite conflicting server modifications when conflict system is ready
   const partial : Partial<T> = {}
-  for (const key in Object.keys(modifications)) {
+  for (const key of Object.keys(modifications)) {
     if (!deepEquals(original[key], modifications[key])) {
       partial[key] = modifications[key]
       modified = true
