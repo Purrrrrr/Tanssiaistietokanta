@@ -1,14 +1,19 @@
-import {ArrayChangeSet, ID, Operation, PatchGenerator, Preference} from './types'
+import { ID, Operation, PatchGenerator } from './types'
 
-export function arrayPatch<T>(changes: ArrayChangeSet<T>, toJSONPatch: PatchGenerator, preferVersion: Preference, pathBase = ''): Operation[] {
+import {mapToIds} from '../idUtils'
+import {Entity} from '../types'
+
+export function arrayPatch<T extends Entity>(original: T[], changed: T[], toJSONPatch: PatchGenerator, pathBase = ''): Operation[] {
   const patch : Operation[] = []
-  const originalIds = changes.originalStructure
-  const modifiedIds = ('conflictingLocalStructure' in changes && preferVersion === 'LOCAL')
-    ? changes.conflictingLocalStructure
-    : changes.modifiedStructure
-  const originalIndexes = new Map(
+  const originalIds = mapToIds(original)
+  const modifiedIds = mapToIds(changed)
+  const originalIndexesById = new Map(
     originalIds.map((id, index) => [id, index])
   )
+  const modifiedIndexesById = new Map(
+    modifiedIds.map((id, index) => [id, index])
+  )
+  const commonIds = new Set([...originalIds, ...modifiedIds])
 
   function testId(index, id) {
     patch.push({
@@ -18,20 +23,17 @@ export function arrayPatch<T>(changes: ArrayChangeSet<T>, toJSONPatch: PatchGene
     })
   }
 
-  changes.itemModifications.forEach((subChange, id) => {
-    const index = originalIndexes.get(id)
-    if (index === undefined) throw new Error('should not happen')
-    testId(index, id)
-    patch.push(
-      ...toJSONPatch(subChange, preferVersion, `${pathBase}/${index}`)
-    )
+  commonIds.forEach(id => {
+    const originalIndex = originalIndexesById.get(id)
+    const modifiedIndex = modifiedIndexesById.get(id)
+    if (originalIndex === undefined || modifiedIndex === undefined) return
+
+    const subPatch = toJSONPatch(original[originalIndex], changed[modifiedIndex], `${pathBase}/${originalIndex}`)
+    if (subPatch.length > 0) {
+      testId(originalIndex, id)
+      patch.push(...subPatch)
+    }
   })
-
-  if (!modifiedIds) return patch
-
-  const modifiedIndexes = new Map(
-    modifiedIds.map((id, index) => [id, index])
-  )
 
   let indexInModified = 0
   let indexInOriginal = 0
@@ -39,30 +41,32 @@ export function arrayPatch<T>(changes: ArrayChangeSet<T>, toJSONPatch: PatchGene
 
   const movedIntoPlaceFrom = new Map<ID, number>()
 
+  let i = 0
   while(indexInModified < modifiedIds.length || indexInOriginal < originalIds.length) {
+    i++
+    if (i > 99) return patch //throw new Error('baaa')
     const id = modifiedIds[indexInModified]
     const originalId = originalIds[indexInOriginal]
 
-    if (changes.addedItems.has(id)) { //Add
+    if (id && !originalIndexesById.has(id)) { //Add
       patch.push({
         op: 'add',
         path: `${pathBase}/${indexInModified}`,
-        value: changes.addedItems.get(id)
+        value: changed[indexInModified],
       })
       indexInModified++
       addRemove++
       continue
     }
-    const originalMovedTo = modifiedIndexes.get(originalId)
+
+    const originalMovedTo = modifiedIndexesById.get(originalId)
 
     if (originalMovedTo === undefined) { //Remove
-      if (!changes.removedOnServer.has(originalId)) {
-        testId(indexInModified, originalId)
-        patch.push({
-          op: 'remove',
-          path: `${pathBase}/${indexInModified}`,
-        })
-      }
+      testId(indexInModified, originalId)
+      patch.push({
+        op: 'remove',
+        path: `${pathBase}/${indexInModified}`,
+      })
       indexInOriginal++
       addRemove--
       continue
@@ -80,7 +84,7 @@ export function arrayPatch<T>(changes: ArrayChangeSet<T>, toJSONPatch: PatchGene
       continue
     }
 
-    const modifiedMovedFrom = originalIndexes.get(id)
+    const modifiedMovedFrom = originalIndexesById.get(id)
     if (modifiedMovedFrom === undefined) throw new Error('Should not happen')
 
     const movedIntoBefore = count(movedIntoPlaceFrom.values(), i => i > modifiedMovedFrom)

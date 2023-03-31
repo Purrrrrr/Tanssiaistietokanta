@@ -1,9 +1,7 @@
 import {applyPatch} from 'rfc6902'
 
-import { mapToIds } from '../idUtils'
-import merge from '../merge'
-import { changedVersion, map, randomGeneratorWithSeed, toEntity} from '../testUtils'
-import {arrayChange, ArrayChangeSet, Entity} from '../types'
+import { changedVersion, randomGeneratorWithSeed, toEntity} from '../testUtils'
+import {Entity} from '../types'
 import {arrayPatch} from './arrayPatch'
 import {toJSONPatch} from './index'
 
@@ -11,29 +9,9 @@ describe('arrayPatch', () => {
 
   it('produces empty patch with equal inputs', () => {
     const res = arrayPatch(
-      arrayChange<Entity>(
-        map(),
-        [1, 2, 3, 4, 5, 6],
-        [1, 2, 3, 4, 5, 6]
-      ),
+      [1, 2, 3, 4, 5, 6].map(toEntity),
+      [1, 2, 3, 4, 5, 6].map(toEntity),
       toJSONPatch,
-      'LOCAL',
-    )
-
-    expect(res).toEqual([])
-  })
-
-  it('produces empty patch if item is removed on both server and local', () => {
-    const res = arrayPatch(
-      arrayChange<Entity>(
-        map(),
-        [1, 2, 3, 4, 5, 6],
-        [1, 2, 4, 5, 6],
-        map(),
-        new Set([3]),
-      ),
-      toJSONPatch,
-      'LOCAL',
     )
 
     expect(res).toEqual([])
@@ -131,9 +109,7 @@ describe('arrayPatch', () => {
 })
 
 function testPatch(original: Entity[], version: Entity[]) {
-  const changeSet = toArrayChangeSet(original, version)
-
-  const patch = arrayPatch(changeSet, toJSONPatch, 'LOCAL')
+  const patch = arrayPatch(original, version, toJSONPatch)
 
   const patched = [...original]
   const patchRes = applyPatch(patched, patch as any)
@@ -145,7 +121,6 @@ function testPatch(original: Entity[], version: Entity[]) {
     console.dir({
       original,
       version,
-      changeSet,
       patch: patch.map((line, index) =>
         [line, patchRes[index]?.message ?? 'OK']
       ),
@@ -154,13 +129,4 @@ function testPatch(original: Entity[], version: Entity[]) {
     throw(e)
   }
   return patch
-}
-
-function toArrayChangeSet(original: Entity[], version: Entity[]): ArrayChangeSet<Entity> {
-  const mergeResult = merge({original, local: version, server: original}).changes as ArrayChangeSet<Entity>
-  return mergeResult ?? arrayChange(
-    map(),
-    mapToIds(original),
-    mapToIds(version),
-  )
 }

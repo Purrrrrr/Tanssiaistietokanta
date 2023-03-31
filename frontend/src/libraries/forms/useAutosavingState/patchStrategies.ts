@@ -24,7 +24,7 @@ export function partial<T>(original: T, modifications: T, changes: ChangeSet<T>)
   return partial
 }
 
-export function jsonPatch<T>(original: T, modifications: T, changes: ChangeSet<T>): Operation[]  {
+export function jsonPatch<T>(original: T, modifications: T): Operation[]  {
   //TODO: conflict handling: do not overwrite conflicting server modifications when conflict system is ready
-  return toJSONPatch(changes, 'LOCAL')
+  return toJSONPatch(original, modifications)
 }
