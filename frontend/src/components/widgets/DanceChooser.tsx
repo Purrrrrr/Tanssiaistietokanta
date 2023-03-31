@@ -63,7 +63,7 @@ export function DanceChooser({hasConflict, value, onChange, excludeFromSearch, a
     inputProps={{onBlur, placeholder: placeholder ?? t`searchDance`, onKeyDown: cancelEnter, intent: hasConflict ? 'danger' : undefined, ...props}}
     itemListPredicate={(query, items) => {
       const dances = filterDances(items, query)
-      return dances.length > 0 || showCreateDance ? dances : [emptyDancePlaceholder(emptyText)]
+      return [...dances, emptyDancePlaceholder(emptyText)]
     }}
     createNewItemFromQuery={newDancePlaceholder}
     createNewItemRenderer={showCreateDance ? renderCreateItem : undefined}

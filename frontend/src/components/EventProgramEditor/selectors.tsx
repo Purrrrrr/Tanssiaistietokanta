@@ -27,7 +27,7 @@ export const DanceProgramChooser = React.memo(function DanceProgramChooser({valu
       e
     )}
     allowEmpty
-    emptyText={t`RequestedDance`}
+    emptyText={t`programTypes.RequestedDance`}
     {...props}
   />
 })
