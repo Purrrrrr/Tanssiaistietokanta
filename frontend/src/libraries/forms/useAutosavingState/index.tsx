@@ -2,7 +2,7 @@ import {useCallback, useEffect, useState} from 'react'
 
 import createDebug from 'utils/debug'
 
-import {MergeableObject, SyncState, toConflictMap} from './types'
+import {MergeableObject, SyncState} from './types'
 
 import {FormProps} from '../Form'
 import {OnChangeHandler, StringPath, TypedStringPath, Version} from '../types'
@@ -87,7 +87,7 @@ export function useAutosavingState<T extends MergeableObject, Patch>(
       onChange: onModified,
       onValidityChange,
       onResolveConflict,
-      conflicts: toConflictMap(conflicts),
+      conflicts,
     },
     value: modifications,
     onChange: onModified,

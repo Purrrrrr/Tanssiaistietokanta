@@ -1,9 +1,9 @@
-import {Conflict, Deleted, mapMergeData, MergeableObject, MergeData, MergeFunction, MergeResult, scalarConflict, scopeConflicts, SyncState} from '../types'
+import {Conflict, Deleted, mapMergeData, MergeableObject, MergeData, MergeFunction, PartialMergeResult, scalarConflict, scopeConflicts, SyncState} from '../types'
 
 export function mergeObjects<T extends MergeableObject>(
   data : MergeData<T>,
   merge: MergeFunction,
-) : MergeResult<T> {
+) : PartialMergeResult<T> {
   const modifications : Partial<T> = {}
   const nonConflictingModifications: Partial<T> = {}
 

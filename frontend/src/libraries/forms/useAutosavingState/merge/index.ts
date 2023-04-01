@@ -1,17 +1,17 @@
 import deepEquals from 'fast-deep-equal'
 
-import {Entity, Mergeable, MergeableAs, MergeableObject, MergeData, MergeResult, scalarConflict, SyncState} from '../types'
+import {Entity, Mergeable, MergeableAs, MergeableObject, MergeData, PartialMergeResult, scalarConflict, SyncState} from '../types'
 import {mergeArrays} from './mergeArrays'
 import {mergeObjects} from './mergeObjects'
 import {mergeConflictingStrings} from './mergeStrings'
 
-export default function merge<T extends Mergeable>(data : MergeData<T>) : MergeResult<T> {
+export default function merge<T extends Mergeable>(data : MergeData<T>) : PartialMergeResult<T> {
   if (nonNullData(data)) {
     if (isMergeableAsArray(data)) {
-      return mergeArrays(asCompleteMergeData<Entity[]>(data, []), merge) as unknown as MergeResult<T>
+      return mergeArrays(asCompleteMergeData<Entity[]>(data, []), merge) as unknown as PartialMergeResult<T>
     }
     if (isMergeableAsObjects(data)) {
-      return mergeObjects(asCompleteMergeData<MergeableObject>(data, {}), merge) as unknown as MergeResult<T>
+      return mergeObjects(asCompleteMergeData<MergeableObject>(data, {}), merge) as unknown as PartialMergeResult<T>
     }
   }
 
@@ -31,7 +31,7 @@ export default function merge<T extends Mergeable>(data : MergeData<T>) : MergeR
   }
 
   if (isMergeableAsStrings(data)) {
-    return mergeConflictingStrings(asCompleteMergeData<string>(data, '')) as unknown as MergeResult<T>
+    return mergeConflictingStrings(asCompleteMergeData<string>(data, '')) as unknown as PartialMergeResult<T>
   }
 
   return {

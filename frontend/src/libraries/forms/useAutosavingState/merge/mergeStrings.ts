@@ -1,6 +1,6 @@
 import {merge as merge3} from 'node-diff3'
 
-import {MergeData, MergeResult, scalarConflict} from '../types'
+import {MergeData, PartialMergeResult, scalarConflict} from '../types'
 
 const wordBoundary = (() => {
   try {
@@ -13,7 +13,7 @@ const wordBoundary = (() => {
 
 export function mergeConflictingStrings(
   data : MergeData<string>
-) : MergeResult<string> {
+) : PartialMergeResult<string> {
   const {server, original, local} = data
   const { conflict, result } = merge3(server, original, local, {stringSeparator: wordBoundary})
 

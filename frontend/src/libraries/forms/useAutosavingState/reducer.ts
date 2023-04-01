@@ -1,9 +1,9 @@
 import {Reducer, useReducer} from 'react'
 import * as L from 'partial.lenses'
 
-import {MergeableObject, MergeData, MergeResult} from './types'
+import {MergeableObject, MergeData, MergeResult, toFinalMergeResult} from './types'
 
-import {StringPath, toArrayPath, Version} from '../types'
+import {StringPath, Version} from '../types'
 import mergeValues from './merge'
 
 export type SyncEvent = 'LOCAL_MODIFICATION' | 'PATCH_SENT' | 'EXTERNAL_MODIFICATION' | 'CONFLICT_RESOLVED'
@@ -83,14 +83,16 @@ function reducer<T extends MergeableObject>(reducerState : SyncStore<T>, action 
   }
 }
 function resolveConflict<T extends MergeableObject>(reducerState: SyncStore<T>, path: StringPath<T>, version: Version) : SyncStore<T> {
-  const { mergeResult: { modifications }, serverState } = reducerState
-  const lens = toArrayPath(path)
+  const { mergeResult: { modifications, conflicts }, serverState } = reducerState
+  const conflict = conflicts.get(String(path))
+  if (!conflict) return reducerState
+
   switch (version) {
     case 'LOCAL':
     {
       const {mergeResult: { state, ...mergeResult }, ...merged} = merge(
         {
-          server: L.set(lens, L.get(lens, modifications), serverState),
+          server: L.set(conflict.serverPath, conflict.local, serverState),
           original: reducerState.conflictOrigin ?? serverState,
           local: modifications,
         },
@@ -110,7 +112,7 @@ function resolveConflict<T extends MergeableObject>(reducerState: SyncStore<T>, 
         {
           server: serverState,
           original: reducerState.conflictOrigin ?? serverState,
-          local: L.set(lens, L.get(lens, serverState), modifications),
+          local: L.set(conflict.localPath, conflict.server, modifications),
         },
         reducerState.serverStateTime,
       )
@@ -118,11 +120,8 @@ function resolveConflict<T extends MergeableObject>(reducerState: SyncStore<T>, 
 }
 
 function merge<T extends MergeableObject>(mergeData: MergeData<T>, serverStateTime: number) : SyncStore<T> {
-  const mergeResult = mergeValues(mergeData)
-
+  const mergeResult = toFinalMergeResult(mergeValues(mergeData))
   const hasConflicts = mergeResult.state === 'CONFLICT'
-
-  console.log({mergeData, mergeResult})
 
   return {
     serverState: mergeData.server,

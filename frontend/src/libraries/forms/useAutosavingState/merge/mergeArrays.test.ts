@@ -1,5 +1,5 @@
 import {changedVersion, randomGeneratorWithSeed, toEntity} from '../testUtils'
-import {Entity, mapMergeData, MergeData, MergeResult, scalarConflict} from '../types'
+import {Entity, mapMergeData, MergeData, PartialMergeResult, scalarConflict} from '../types'
 import merge from './index'
 import {mergeArrays} from './mergeArrays'
 
@@ -11,14 +11,14 @@ function toEntityList(data: DummyEntityList): Entity[] {
 
   return data.map(toEntity)
 }
-function doMerge(mergeData: MergeData<DummyEntityList>): MergeResult<Entity[]> {
+function doMerge(mergeData: MergeData<DummyEntityList>): PartialMergeResult<Entity[]> {
   return mergeArrays(
     mapMergeData(mergeData, toEntityList),
     merge,
   )
 }
 
-function mergeResult(res: Omit<MergeResult<DummyEntityList>, 'changes'>): Partial<MergeResult<Entity[]>> {
+function mergeResult(res: Omit<PartialMergeResult<DummyEntityList>, 'changes'>): Partial<PartialMergeResult<Entity[]>> {
   return {
     ...res,
     modifications: toEntityList(res.modifications),

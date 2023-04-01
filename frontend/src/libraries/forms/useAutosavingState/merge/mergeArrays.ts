@@ -1,13 +1,13 @@
 import deepEquals from 'fast-deep-equal'
 
 import { areEqualWithoutId, mapToIds } from '../idUtils'
-import {Conflict, Entity, ID, mapMergeData, MergeData, MergeFunction, MergeResult, scopeConflicts, SyncState } from '../types'
+import {Conflict, Entity, ID, mapMergeData, MergeData, MergeFunction, PartialMergeResult, scopeConflicts, SyncState } from '../types'
 import {GTSort} from './GTSort'
 
 export function mergeArrays<T extends Entity>(
   mergeData: MergeData<T[]>,
   merge: MergeFunction,
-) : MergeResult<T[]> {
+) : PartialMergeResult<T[]> {
   const data = mapMergeData(mergeData, values => {
     const ids = mapToIds(values)
     const idToData = new Map(

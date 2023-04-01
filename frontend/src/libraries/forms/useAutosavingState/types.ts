@@ -15,11 +15,15 @@ export type MergeableScalar  = undefined | null | string | number | boolean
 export type Mergeable = MergeableScalar | MergeableObject | Entity[]
 
 export type SyncState = 'IN_SYNC' | 'MODIFIED_LOCALLY' | 'CONFLICT' | 'INVALID'
-export interface MergeResult<T> {
+export interface PartialMergeResult<T> {
   state: SyncState
   nonConflictingModifications: T //The version that can be sent to the server without breaking stuff because of conflicts
   modifications: T //Local version, including conflicts
   conflicts: Conflict<unknown>[]
+}
+
+export interface MergeResult<T> extends Omit<PartialMergeResult<T>, 'conflicts'> {
+  conflicts: ConflictMap<T>
 }
 
 export function scalarConflict(data: MergeData<unknown>, path : Path | {server: Path, local: Path} = []): Conflict<unknown>{
@@ -46,7 +50,14 @@ export function scopeConflicts<T>(
   return conflicts
 }
 
-export function toConflictMap(conflicts: Conflict<unknown>[]): ConflictMap<unknown> {
+export function toFinalMergeResult<T>(result: PartialMergeResult<T>): MergeResult<T> {
+  return {
+    ...result,
+    conflicts: toConflictMap(result.conflicts),
+  }
+}
+
+function toConflictMap(conflicts: Conflict<unknown>[]): ConflictMap<unknown> {
   conflicts.forEach(c => {
     c.localPath.reverse()
     c.serverPath.reverse()
@@ -76,4 +87,4 @@ export function mapMergeData<T, R>(data: MergeData<T>, mapper: (t: T) => R): Mer
   }
 }
 
-export type MergeFunction = <T extends Mergeable>(data: MergeData<T>) => MergeResult<T>
+export type MergeFunction = <T extends Mergeable>(data: MergeData<T>) => PartialMergeResult<T>
