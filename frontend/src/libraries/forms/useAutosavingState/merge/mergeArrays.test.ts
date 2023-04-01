@@ -51,12 +51,12 @@ describe('mergeArrays', () => {
       nonConflictingModifications: [1, 2, {_id: 3, value: 5}, 4, 5],
       conflicts: [
         scalarConflict(
-          {local: 1, server: 5},
-          ['value', '2'],
+          {local: 1, server: 5, original: 3},
+          ['value', 2],
         ),
         scalarConflict(
-          {local: {_id: 3, value: 1}, server: {_id: 3, value: 5}},
-          ['2'],
+          {local: {_id: 3, value: 1}, server: {_id: 3, value: 5}, original: {_id: 3, value: 3}},
+          [2],
         ),
       ],
     }))
@@ -73,12 +73,34 @@ describe('mergeArrays', () => {
       nonConflictingModifications: [1, 2, 4, {_id: 3, value: 5}, 5],
       conflicts: [
         scalarConflict(
-          {local: 1, server: 5},
-          ['value', '3'],
+          {local: 1, server: 5, original: 3},
+          ['value', 3]
         ),
         scalarConflict(
-          {local: {_id: 3, value: 1}, server: {_id: 3, value: 5}},
-          ['3'],
+          {local: {_id: 3, value: 1}, server: {_id: 3, value: 5}, original: {_id: 3, value: 3}},
+          [3]
+        ),
+      ],
+    }))
+  })
+
+  test('conflicts in moved item #2', () => {
+    expect(doMerge({
+      original: [1, 2, 3, 4, 5],
+      server: [1, 2, 4, {_id: 3, value: 5}, 5],
+      local: [1, {_id: 3, value: 1}, 2, 4, 5],
+    })).toMatchObject(mergeResult({
+      state: 'CONFLICT',
+      modifications: [1, {_id: 3, value: 1}, 2, 4, 5],
+      nonConflictingModifications: [1, 2, 4, {_id: 3, value: 5}, 5],
+      conflicts: [
+        scalarConflict(
+          {local: 1, server: 5, original: 3},
+          {server: ['value', 3], local: ['value', 1]}
+        ),
+        scalarConflict(
+          {local: {_id: 3, value: 1}, server: {_id: 3, value: 5}, original: {_id: 3, value: 3}},
+          {server: [3], local: [1]}
         ),
       ],
     }))

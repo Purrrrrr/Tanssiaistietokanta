@@ -1,5 +1,6 @@
-import { Conflict, ConflictMap } from '../types'
+import { Conflict, ConflictMap, Path, PathComponent } from '../types'
 
+export type { Conflict } from '../types'
 export { Deleted } from '../types'
 
 export type ID = string | number
@@ -18,31 +19,40 @@ export interface MergeResult<T> {
   state: SyncState
   nonConflictingModifications: T //The version that can be sent to the server without breaking stuff because of conflicts
   modifications: T //Local version, including conflicts
-  conflicts: ConflictPath[]
+  conflicts: Conflict<unknown>[]
 }
 
-export interface ConflictPath {
-  path: string[]
-  conflict: Conflict<unknown>
-}
-
-export function scalarConflict({local, server}, path : string[] = []): ConflictPath {
+export function scalarConflict(data: MergeData<unknown>, path : Path | {server: Path, local: Path} = []): Conflict<unknown>{
+  if (Array.isArray(path)) {
+    return scalarConflict(data, {server: path, local: path.slice()})
+  }
   return {
-    path,
-    conflict: { type: 'scalar', local, server }
+    type: 'scalar',
+    localPath: path.local,
+    serverPath: path.server, //Copy the array since we may modify it
+    ...data,
   }
 }
 
-export function scopeConflicts(path: string | number | symbol, conflicts: ConflictPath[]) {
+export function scopeConflicts<T>(
+  path: PathComponent | { server: PathComponent, local: PathComponent },
+  conflicts: Conflict<T>[]
+): Conflict<T>[] {
+  if (typeof path !== 'object') return scopeConflicts({server: path, local: path}, conflicts)
   for(const c of conflicts) {
-    c.path.push(String(path))
+    c.localPath.push(path.local)
+    c.serverPath.push(path.server)
   }
   return conflicts
 }
 
-export function toConflictMap(conflicts: ConflictPath[]): ConflictMap<unknown> {
+export function toConflictMap(conflicts: Conflict<unknown>[]): ConflictMap<unknown> {
+  conflicts.forEach(c => {
+    c.localPath.reverse()
+    c.serverPath.reverse()
+  })
   return new Map(
-    conflicts.map(c => [c.path.reverse().join('.'), c.conflict])
+    conflicts.map(c => [c.localPath.join('.'), c])
   )
 }
 

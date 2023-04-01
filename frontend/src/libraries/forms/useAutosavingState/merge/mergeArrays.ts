@@ -1,7 +1,7 @@
 import deepEquals from 'fast-deep-equal'
 
 import { areEqualWithoutId, mapToIds } from '../idUtils'
-import {ConflictPath, Entity, ID, mapMergeData, MergeData, MergeFunction, MergeResult, scopeConflicts, SyncState } from '../types'
+import {Conflict, Entity, ID, mapMergeData, MergeData, MergeFunction, MergeResult, scopeConflicts, SyncState } from '../types'
 import {GTSort} from './GTSort'
 
 export function mergeArrays<T extends Entity>(
@@ -38,7 +38,7 @@ export function mergeArrays<T extends Entity>(
   const nonConflictingMergedValues = new Map<ID, T>()
   const modifiedIds = new Set<ID>()
   const conflictingIds = new Set<ID>()
-  const changeConflictsById: Map<ID, ConflictPath[]> = new Map()
+  const changeConflictsById: Map<ID, Conflict<unknown>[]> = new Map()
 
   data.local.ids.forEach(id => {
     const serverData = data.server.getData(id)
@@ -110,7 +110,13 @@ export function mergeArrays<T extends Entity>(
   )
   const conflicts = Array.from(changeConflictsById.entries())
     .flatMap(([id, subConflicts]) =>
-      scopeConflicts(localVersion.indexOf(id), subConflicts)
+      scopeConflicts(
+        {
+          local: localVersion.indexOf(id),
+          server: serverVersion.indexOf(id),
+        },
+        subConflicts
+      )
     )
 
   const hasStructuralChanges = !deepEquals(localVersion, data.server.ids)

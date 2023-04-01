@@ -1,4 +1,4 @@
-import {ConflictPath, Deleted, mapMergeData, MergeableObject, MergeData, MergeFunction, MergeResult, scalarConflict, scopeConflicts, SyncState} from '../types'
+import {Conflict, Deleted, mapMergeData, MergeableObject, MergeData, MergeFunction, MergeResult, scalarConflict, scopeConflicts, SyncState} from '../types'
 
 export function mergeObjects<T extends MergeableObject>(
   data : MergeData<T>,
@@ -11,7 +11,7 @@ export function mergeObjects<T extends MergeableObject>(
   let hasModifications = false
 
   const keys = getAllKeys(data)
-  const conflicts : ConflictPath[] = []
+  const conflicts : Conflict<unknown>[] = []
   for (const key of keys) {
     const dataInKey = indexMergeData(data, key)
     const subResult = merge(dataInKey)
@@ -29,6 +29,7 @@ export function mergeObjects<T extends MergeableObject>(
             {
               local: existsIn.local ? dataInKey.local : Deleted,
               server: existsIn.server ? dataInKey.server : Deleted,
+              original: dataInKey.original,
             }, [String(key)]
           ))
         }
@@ -52,7 +53,7 @@ export function mergeObjects<T extends MergeableObject>(
   if (hasConflicts) {
     state = 'CONFLICT'
     //Hack: propagate conflicts to outer objects so that fields that edit whole objects can detect them easily
-    conflicts.push(scalarConflict({local: data.local, server: data.server}))
+    conflicts.push(scalarConflict(data))
   } else if (hasModifications) state = 'MODIFIED_LOCALLY'
 
   return {

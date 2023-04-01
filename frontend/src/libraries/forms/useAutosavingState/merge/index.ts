@@ -39,7 +39,7 @@ export default function merge<T extends Mergeable>(data : MergeData<T>) : MergeR
     modifications: local,
     nonConflictingModifications: server,
     conflicts: [
-      scalarConflict({local, server})
+      scalarConflict(data)
     ],
   }
 }

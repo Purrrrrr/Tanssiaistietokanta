@@ -29,10 +29,16 @@ export type Conflict<T> = ScalarConflict<T> | ArrayConflict<T>
 
 export interface ScalarConflict<T> {
   type: 'scalar'
+  localPath: Path
+  serverPath: Path
   local: T | typeof Deleted
   server: T | typeof Deleted
+  original: T | typeof Deleted
 }
 
-export interface ArrayConflict<T> {
+export interface ArrayConflict<T> extends Omit<ScalarConflict<T>, 'type'> {
   type: 'array'
 }
+
+export type Path = PathComponent[]
+export type PathComponent = string | number | symbol
