@@ -41,17 +41,17 @@ export function useAutosavingState<T extends MergeableObject, Patch>(
   const [hasErrors, setHasErrors] = useState(false)
   const [reducerState, dispatch] = useAutosavingStateReducer<T>(serverState)
   const { serverState: originalData, serverStateTime, mergeResult } = reducerState
-  const { state, modifications, nonConflictingModifications, conflicts } = mergeResult
+  const { state: mergeState, modifications, nonConflictingModifications, conflicts } = mergeResult
+  const state = hasErrors ? 'INVALID' : mergeState
 
   useEffect(() => {
     dispatch({ type: 'EXTERNAL_MODIFICATION', serverState })
   }, [serverState, dispatch])
 
   useEffect(() => {
-    if (state === 'IN_SYNC') return
+    if (state === 'IN_SYNC' || state === 'INVALID') return
 
     const id = setTimeout(() => {
-      if (hasErrors) return
       if (state === 'CONFLICT' && now() - serverStateTime > DISABLE_CONFLICT_OVERRIDE_DELAY) {
         debug('Not saving conflict data on top of stale data')
         refreshData && refreshData()
@@ -67,7 +67,7 @@ export function useAutosavingState<T extends MergeableObject, Patch>(
     }, AUTOSAVE_DELAY)
 
     return () => clearTimeout(id)
-  }, [state, nonConflictingModifications, onPatch, originalData, serverStateTime, patchStrategy, refreshData, hasErrors, dispatch])
+  }, [state, nonConflictingModifications, onPatch, originalData, serverStateTime, patchStrategy, refreshData, dispatch])
 
   const onModified = useCallback((modifications) => {
     dispatch({ type: 'LOCAL_MODIFICATION', modifications})
@@ -91,7 +91,7 @@ export function useAutosavingState<T extends MergeableObject, Patch>(
     },
     value: modifications,
     onChange: onModified,
-    state: hasErrors ? 'INVALID' : state,
+    state,
   }
 }
 
