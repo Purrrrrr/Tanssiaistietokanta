@@ -1,5 +1,5 @@
 import {changedVersion, randomGeneratorWithSeed, toEntity} from '../testUtils'
-import {Entity, mapMergeData, MergeData, PartialMergeResult, scalarConflict} from '../types'
+import {Deleted, Entity, mapMergeData, MergeData, PartialMergeResult, removedArrayItemConflict, scalarConflict} from '../types'
 import merge from './index'
 import {mergeArrays} from './mergeArrays'
 
@@ -182,7 +182,7 @@ describe('mergeArrays', () => {
         conflicts: [],
       }))
     })
-    test('removal of modified value', () => {
+    test('removal of modified value (modified locally)', () => {
       expect(doMerge({
         original: [1, 2, {_id: 3, value: 'b'}, 4, 5],
         server: [1, 2, 4, 5],
@@ -191,7 +191,29 @@ describe('mergeArrays', () => {
         state: 'CONFLICT',
         modifications: [1, 2, {_id: 3, value: 'a'}, 4, 5],
         nonConflictingModifications: [1, 2, 4, 5],
-        conflicts: [],
+        conflicts: [
+          removedArrayItemConflict(
+            {original: {_id: 3, value: 'b'}, local: {_id: 3, value: 'a'}, server: Deleted},
+            2,
+          )
+        ],
+      }))
+    })
+    test('removal of modified value (modified on server)', () => {
+      expect(doMerge({
+        original: [1, 2, {_id: 3, value: 'b'}, 4, 5],
+        server: [1, 2, {_id: 3, value: 'a'}, 4, 5],
+        local: [1, 2, 4, 5],
+      })).toMatchObject(mergeResult({
+        state: 'CONFLICT',
+        modifications: [1, 2, 4, 5],
+        nonConflictingModifications: [1, 2, {_id: 3, value: 'a'}, 4, 5],
+        conflicts: [
+          removedArrayItemConflict(
+            {original: {_id: 3, value: 'b'}, local: Deleted, server: {_id: 3, value: 'a'}},
+            2,
+          )
+        ],
       }))
     })
     test('complex removals', () => {
@@ -422,7 +444,16 @@ describe('mergeArrays', () => {
       state: 'CONFLICT',
       modifications: [1, {_id: 2}, {_id: 3}, 4, 6],
       nonConflictingModifications: [1, 4, 6],
-      conflicts: [],
+      conflicts: [
+        removedArrayItemConflict(
+          {original: {_id: 2, value: 2}, local: {_id: 2}, server: Deleted},
+          1,
+        ),
+        removedArrayItemConflict(
+          {original: {_id: 3, value: 3}, local: {_id: 3}, server: Deleted},
+          2,
+        ),
+      ],
     }))
   })
 

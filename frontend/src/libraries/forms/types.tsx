@@ -25,7 +25,7 @@ export type Version = 'SERVER' | 'LOCAL'
 export const Deleted = Symbol('deleted value')
 
 export type ConflictMap<T> = Map<string, Conflict<unknown>>
-export type Conflict<T> = ScalarConflict<T> | ArrayConflict<T>
+export type Conflict<T> = ScalarConflict<T> | RemovedArrayItemConflict<T> | ArrayConflict<T>
 
 export interface ScalarConflict<T> {
   type: 'scalar'
@@ -34,6 +34,11 @@ export interface ScalarConflict<T> {
   local: T | typeof Deleted
   server: T | typeof Deleted
   original: T | typeof Deleted
+}
+
+export interface RemovedArrayItemConflict<T> extends Omit<ScalarConflict<T>, 'type'> {
+  type: 'removedArrayItem'
+  index: number
 }
 
 export interface ArrayConflict<T> extends Omit<ScalarConflict<T>, 'type'> {

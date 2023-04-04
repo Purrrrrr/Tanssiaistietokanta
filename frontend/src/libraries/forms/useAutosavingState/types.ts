@@ -26,15 +26,35 @@ export interface MergeResult<T> extends Omit<PartialMergeResult<T>, 'conflicts'>
   conflicts: ConflictMap<T>
 }
 
-export function scalarConflict(data: MergeData<unknown>, path : Path | {server: Path, local: Path} = []): Conflict<unknown>{
-  if (Array.isArray(path)) {
-    return scalarConflict(data, {server: path, local: path.slice()})
-  }
+export function scalarConflict(data: MergeData<unknown>, path: PathParam = []): Conflict<unknown>{
   return {
     type: 'scalar',
-    localPath: path.local,
-    serverPath: path.server, //Copy the array since we may modify it
     ...data,
+    ...conflictPath(path),
+  }
+}
+
+export function removedArrayItemConflict(data: MergeData<unknown>, index: number, path: PathParam = []): Conflict<unknown>{
+  return {
+    type: 'removedArrayItem',
+    index,
+    ...data,
+    ...conflictPath(path),
+  }
+}
+
+type PathParam = Path | {server: Path, local: Path}
+export function conflictPath(path: PathParam = []) {
+  if (Array.isArray(path)) {
+    return {
+      //Copy the other array since we usually modify it
+      serverPath: path,
+      localPath: path.slice()
+    }
+  }
+  return {
+    localPath: path.local,
+    serverPath: path.server,
   }
 }
 
@@ -63,7 +83,15 @@ function toConflictMap(conflicts: Conflict<unknown>[]): ConflictMap<unknown> {
     c.serverPath.reverse()
   })
   return new Map(
-    conflicts.map(c => [c.localPath.join('.'), c])
+    conflicts.map(c => {
+      const path = c.localPath.join('.')
+      return [
+        c.type === 'removedArrayItem'
+          ? `${path}.Deleted-${c.index}`
+          : path,
+        c,
+      ]
+    })
   )
 }
 
