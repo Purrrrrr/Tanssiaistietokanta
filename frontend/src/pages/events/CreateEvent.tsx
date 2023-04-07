@@ -24,7 +24,7 @@ const {
 export default function CreateEventForm() {
   const navigate = useNavigate()
   const [createEvent] = useCreateEvent({
-    onCompleted: (data) => navigate('../'+data.createEvent._id),
+    onCompleted: (data) => navigate('/events/'+data.createEvent._id),
     refetchQueries: ['getEvents']
   })
   const [event, setEvent] = useState({name: ''})
