@@ -42,13 +42,14 @@ function getInitialState<T extends MergeableObject>(serverState: T) : SyncStore<
       state: 'IN_SYNC',
       modifications: serverState,
       nonConflictingModifications: serverState,
-      conflicts: [],
+      conflicts: new Map(),
     }
   }
 }
 
 function reducer<T extends MergeableObject>(reducerState : SyncStore<T>, action : SyncAction<T>) : SyncStore<T> {
   const { mergeResult: { modifications, nonConflictingModifications }, serverState } = reducerState
+  console.log(action.type)
   switch (action.type) {
     case 'LOCAL_MODIFICATION':
     {
@@ -122,6 +123,8 @@ function resolveConflict<T extends MergeableObject>(reducerState: SyncStore<T>, 
 function merge<T extends MergeableObject>(mergeData: MergeData<T>, serverStateTime: number) : SyncStore<T> {
   const mergeResult = toFinalMergeResult(mergeValues(mergeData))
   const hasConflicts = mergeResult.state === 'CONFLICT'
+
+  console.log({mergeData, mergeResult})
 
   return {
     serverState: mergeData.server,
