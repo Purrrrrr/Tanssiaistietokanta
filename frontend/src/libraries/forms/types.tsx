@@ -1,3 +1,5 @@
+import React from 'react'
+
 export * from './types/field'
 export * from './types/fieldComponent'
 export * from './types/path'
@@ -47,3 +49,9 @@ export interface ArrayConflict<T> extends Omit<ScalarConflict<T>, 'type'> {
 
 export type Path = PathComponent[]
 export type PathComponent = string | number | symbol
+
+export interface ConflictData {
+  localValue: React.ReactNode
+  serverValue: React.ReactNode
+  onResolve(version: Version) : void
+}

@@ -26,7 +26,7 @@ interface FormFor<T> extends FormHooksFor<T> {
   Switch: (props: SwitchFieldProps<T>) => React.ReactElement
   switchFor: <V>(props: SwitchForProps<V>) => (props: SwitchFieldForValueProps<T, V>) => React.ReactElement
   Input: (props: InputFieldProps<T>) => React.ReactElement
-  ListField: <P extends StringPath<T>, V extends PropertyAtPath<T, P> & Entity>(props: UntypedListFieldProps<T, P, V>) => React.ReactElement
+  ListField: <P extends StringPath<T>, V extends PropertyAtPath<T, P> & Entity[]>(props: UntypedListFieldProps<T, P, V[number]>) => React.ReactElement
   RemoveItemButton: (props: RemoveItemButtonProps<T>) => React.ReactElement
 }
 

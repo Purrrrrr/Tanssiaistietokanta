@@ -34,9 +34,10 @@ export interface ListFieldProps<T, V extends Entity> extends FieldPropsWithoutCo
   isTable?: boolean
   accessibilityContainer?: Element | undefined
   component: ListItemComponent<T, V>
+  renderConflictItem: (item: V) => string
 }
-export function ListField<T, V extends Entity>({accessibilityContainer, component, isTable, ...props} : ListFieldProps<T, V>) {
-  return <Field<T, V[], ListEditorProps<T, V>> {...props} component={ListEditor} componentProps={{path: props.path, accessibilityContainer, component, isTable}} />
+export function ListField<T, V extends Entity>({accessibilityContainer, component, isTable,  renderConflictItem, ...props} : ListFieldProps<T, V>) {
+  return <Field<T, V[], ListEditorProps<T, V>> {...props} component={ListEditor} renderConflictItem={renderConflictItem} componentProps={{path: props.path, accessibilityContainer, component, isTable}} />
 }
 
 interface ListEditorProps<T, V extends Entity> extends FieldComponentProps<V[]> {

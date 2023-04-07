@@ -1,6 +1,6 @@
 import React  from 'react'
 
-import {FieldComponentDisplayProps, FieldComponentPropsWithoutEvent, NoRequiredProperties, PartialWhen, TypedStringPath, UserGivenFieldContainerProps } from './types'
+import { ConflictData, FieldComponentDisplayProps, FieldComponentPropsWithoutEvent, NoRequiredProperties, PartialWhen, TypedStringPath, UserGivenFieldContainerProps } from './types'
 
 import { FieldContainer, FieldContainerProps } from './FieldContainer'
 import { useFormMetadata } from './formContext'
@@ -11,6 +11,7 @@ export type UntypedFieldProps<ValuePath, Value, Component extends React.ElementT
   {
     path: ValuePath
     component: Component & React.JSXElementConstructor<FieldComponentPropsWithoutEvent<Value> & AdditionalProps>
+    renderConflictItem?: Value extends (infer I)[] ? (item: I) => (string | React.ReactNode) : never
   }
   & FieldDataHookProps
   & MaybeComponentProps<Omit<React.ComponentPropsWithoutRef<Component>, keyof FieldComponentPropsWithoutEvent<Value>>>
@@ -20,10 +21,11 @@ type MaybeComponentProps<Props extends object> = PartialWhen<NoRequiredPropertie
 export type FieldProps<T, V, P extends FieldComponentPropsWithoutEvent<V>> = {
   path: TypedStringPath<V, T>
   component: React.JSXElementConstructor<P>
+  renderConflictItem?: V extends (infer I)[] ? (item: I) => string : never
 } & FieldDataHookProps & MaybeComponentProps<Omit<P, keyof FieldComponentPropsWithoutEvent<V>>>
 
 export function Field<T, V, P extends FieldComponentPropsWithoutEvent<V>>(
-  { path, component: Component, componentProps, ...rest }: FieldProps<T, V, P>
+  { path, component: Component, componentProps, renderConflictItem, ...rest }: FieldProps<T, V, P>
 ) {
   const dataProps = useFieldValueProps<T, V>(path)
   const { fieldProps, containerProps } = useFieldData(path, dataProps.value, rest)
@@ -34,13 +36,23 @@ export function Field<T, V, P extends FieldComponentPropsWithoutEvent<V>>(
     ...componentProps, ...fieldProps, ...dataProps
   } as P
 
-  const conflictData = conflict?.type === 'scalar'
-    ? {
-      localValue: <Component {...allProps} />,
-      serverValue: <Component {...allProps} readOnly value={conflict.server} />,
-      onResolve(version) { ctx.onResolveConflict(path, version) }
-    }
-    : undefined
+  let conflictData : ConflictData | undefined
+  switch (conflict?.type) {
+    case 'scalar':
+      conflictData = {
+        localValue: <Component {...allProps} />,
+        serverValue: <Component {...allProps} readOnly value={conflict.server} />,
+        onResolve(version) { ctx.onResolveConflict(path, version) }
+      }
+      break
+    case 'array':
+      conflictData = {
+        localValue: <ConflictListValue list={conflict.local as any} renderItem={renderConflictItem}/>,
+        serverValue: <ConflictListValue list={conflict.server as any} renderItem={renderConflictItem}/>,
+        onResolve(version) { ctx.onResolveConflict(path, version) }
+      }
+      break
+  }
 
   return <FieldContainer {...containerProps} conflictData={conflictData}><Component {...allProps}  /></FieldContainer>
 }
@@ -87,4 +99,12 @@ export function useFieldData<Value>(
       inline: maybeInline ?? inline,
     },
   }
+}
+
+function ConflictListValue<T>(
+  { list, renderItem = String }: { list: T[], renderItem?: (item: T) => string }
+) {
+  return <ul>
+    {list.map((item) => <li key={(item as {_id?: string | number })?._id ?? renderItem(item)}>{renderItem(item)}</li>)}
+  </ul>
 }

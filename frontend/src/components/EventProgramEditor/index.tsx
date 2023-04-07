@@ -12,7 +12,7 @@ import {DurationField} from 'components/widgets/DurationField'
 import {SlideStyleSelector} from 'components/widgets/SlideStyleSelector'
 import {guid} from 'utils/guid'
 
-import {DanceProgramPath, DanceSet, DanceSetPath, EventProgramSettings, ProgramItemPath, ProgramSectionPath} from './types'
+import {DanceProgramPath, DanceSet, DanceSetPath, EventProgramRow, EventProgramSettings, ProgramItemPath, ProgramSectionPath} from './types'
 
 import {AddDanceSetButton, AddIntroductionButton, IntervalMusicSwitch, newEventProgramItem, ProgramTypeIcon} from './controls'
 import {
@@ -57,7 +57,7 @@ export function EventProgramEditor({eventId, program: eventProgram}: EventProgra
         <Field label="" inline path="slideStyleId" component={SlideStyleSelector} componentProps={{text: t`fields.eventDefaultStyle`}} />
       </div>
       <IntroductoryInformation />
-      <ListField labelStyle="hidden-nowrapper" label="" path="danceSets" component={DanceSetEditor} />
+      <ListField labelStyle="hidden-nowrapper" label="" path="danceSets" component={DanceSetEditor} renderConflictItem={renderDanceSetValue} />
       <div className="addDanceSetButtons">
         {danceSets.length === 0 && t`danceProgramIsEmpty`}
         <AddDanceSetButton />
@@ -117,7 +117,7 @@ function ProgramListEditor({path}: {path: ProgramSectionPath}) {
           </thead>
       }
       <tbody>
-        <ListField labelStyle="hidden-nowrapper" label="" isTable path={programPath} component={ProgramItemEditor} accessibilityContainer={accessibilityContainer.current ?? undefined} />
+        <ListField labelStyle="hidden-nowrapper" label="" isTable path={programPath} component={ProgramItemEditor} renderConflictItem={programItemToString} accessibilityContainer={accessibilityContainer.current ?? undefined} />
         {program.length === 0 &&
             <tr>
               <t.td className={CssClass.textMuted+ ' noProgram'} colSpan="5">programListIsEmpty</t.td>
@@ -190,6 +190,17 @@ const ProgramItemEditor = React.memo(function ProgramItemEditor({dragHandle, pat
     </td>
   </React.Fragment>
 })
+
+
+function renderDanceSetValue(item: DanceSet) {
+  const program = item.program.map(programItemToString).join(', ')
+  return `${item.title} (${program})`
+}
+
+function programItemToString(item: EventProgramRow) {
+  if (item.item.__typename === 'RequestedDance') return t`programTypes.RequestedDance`
+  return item.item.name
+}
 
 function ProgramDetailsEditor({path}: {path: ProgramItemPath}) {
   const __typename = useValueAt(`${path}.item.__typename`)

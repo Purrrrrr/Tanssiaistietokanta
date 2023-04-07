@@ -43,6 +43,14 @@ export function removedArrayItemConflict(data: MergeData<unknown>, index: number
   }
 }
 
+export function arrayConflict(data: MergeData<unknown>, path: PathParam = []): Conflict<unknown>{
+  return {
+    type: 'array',
+    ...data,
+    ...conflictPath(path),
+  }
+}
+
 type PathParam = Path | {server: Path, local: Path}
 export function conflictPath(path: PathParam = []) {
   if (Array.isArray(path)) {

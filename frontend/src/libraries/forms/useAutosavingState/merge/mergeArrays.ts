@@ -1,7 +1,7 @@
 import deepEquals from 'fast-deep-equal'
 
 import { areEqualWithoutId, mapToIds } from '../idUtils'
-import {Conflict, Deleted, Entity, ID, mapMergeData, MergeData, MergeFunction, PartialMergeResult, removedArrayItemConflict, scopeConflicts, SyncState } from '../types'
+import {arrayConflict, Conflict, Deleted, Entity, ID, mapMergeData, MergeData, MergeFunction, PartialMergeResult, removedArrayItemConflict, scopeConflicts, SyncState } from '../types'
 import {GTSort} from './GTSort'
 
 export function mergeArrays<T extends Entity>(
@@ -115,6 +115,10 @@ export function mergeArrays<T extends Entity>(
         }))
     )
   )
+
+  const hasStructuralChanges = !deepEquals(localVersion, data.server.ids)
+  const hasStructuralConflict = !deepEquals(localVersion, serverVersion)
+  const isModified = hasStructuralChanges || modifiedIds.size  > 0
   const conflicts = [
     ...Array.from(changeConflictsById.entries())
       .flatMap(([id, conflicts]) =>
@@ -132,14 +136,14 @@ export function mergeArrays<T extends Entity>(
           mergeData,
           mergeData.local !== Deleted ? localVersion.indexOf(id) : serverVersion.indexOf(id)
         )
-      )
+      ),
   ]
+  if (hasStructuralConflict) {
+    conflicts.push(arrayConflict(mergeData))
+  }
 
-  const hasStructuralChanges = !deepEquals(localVersion, data.server.ids)
-  const hasStructuralConflict = !deepEquals(localVersion, serverVersion)
-  const isModified = hasStructuralChanges || modifiedIds.size  > 0
   let state : SyncState = isModified ? 'MODIFIED_LOCALLY' : 'IN_SYNC'
-  if (conflicts.length > 0 || hasStructuralConflict) state = 'CONFLICT'
+  if (conflicts.length > 0) state = 'CONFLICT'
 
   function getFromMap(map: Map<ID, T>, id: ID): T{
     const val = map.get(id)
