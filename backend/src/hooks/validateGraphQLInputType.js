@@ -2,7 +2,8 @@ const {ValidationError} = require('apollo-server-express')
 
 module.exports = function (typeName) {
   return context => {
-    if (context.params.provider === 'graphql') {
+    const { provider } = context.params
+    if (provider === 'graphql' || provider === 'migration') {
       //Should already be valid. Skip
       return
     }

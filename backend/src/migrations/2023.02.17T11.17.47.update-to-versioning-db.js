@@ -5,7 +5,7 @@ exports.up = async params => {
 
   await Promise.all(services.map(
     async service => Promise.all(
-      (await service.find({})).map(record => service.patch(record._id, {}, {saveAsVersion: true}))
+      (await service.find({})).map(record => service.patch(record._id, {}, {saveAsVersion: true, provider: 'migration'}))
     )
   ))
   /* databases.forEach(db =>

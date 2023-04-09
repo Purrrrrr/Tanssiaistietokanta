@@ -9,7 +9,7 @@ module.exports = {
     all: [],
     find: [],
     get: [],
-    create: [validateInputType('EventInput'), provideDefaultValues('EventInput', {program: { introductions: { title: '', program: [] }, danceSets: [], pauseBetweenDances: DEFAULT_PAUSE_BETWEEN_DANCES }, workshops: []})],
+    create: [validateInputType('EventInput'), provideDefaultValues('EventInput', {program: { pauseBetweenDances: DEFAULT_PAUSE_BETWEEN_DANCES }})],
     update: [validateInputType('EventInput')],
     patch: [validateInputType('PatchEventInput'), mergeEventPatch(), validateInputType('EventInput')],
     remove: []
@@ -17,8 +17,8 @@ module.exports = {
 
   after: {
     all: [],
-    find: [],
-    get: [],
+    find: [provideDefaultValues('Event')],
+    get: [provideDefaultValues('Event')],
     create: [],
     update: [],
     patch: [],
