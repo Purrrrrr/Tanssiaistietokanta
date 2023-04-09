@@ -95,15 +95,16 @@ const DanceSetEditor = React.memo(function DanceSetEditor({itemIndex, dragHandle
 })
 
 function ProgramListEditor({path}: {path: ProgramSectionPath}) {
+  const programPath = `${path}.program` as const
+  const onAddItem = useAppendToList(programPath)
+  const accessibilityContainer = useRef<HTMLDivElement>(null)
   const programRow = useValueAt(path)
+  if (!programRow) return null
   const { program } = programRow
   const isIntroductionsSection = path.startsWith('introductions')
   const intervalMusicDuration = isIntroductionsSection
     ? 0
     : (programRow as DanceSet).intervalMusicDuration
-  const programPath = `${path}.program` as const
-  const onAddItem = useAppendToList(programPath)
-  const accessibilityContainer = useRef<HTMLDivElement>(null)
 
   return <>
     <div ref={accessibilityContainer} />

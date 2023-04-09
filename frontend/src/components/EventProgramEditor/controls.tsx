@@ -51,7 +51,9 @@ function newDanceSet(danceSets: DanceSet[]): DanceSet {
     _id: guid(),
     title: t('placeholderNames.danceSet', {number: danceSetNumber}),
     program: dances,
-    intervalMusicDuration: DEFAULT_INTERVAL_MUSIC_DURATION
+    intervalMusicDuration: DEFAULT_INTERVAL_MUSIC_DURATION,
+    titleSlideStyleId: null,
+    intervalMusicSlideStyleId: null,
   }
 }
 
