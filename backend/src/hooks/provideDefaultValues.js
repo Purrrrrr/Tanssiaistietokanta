@@ -42,7 +42,7 @@ function getDefaultObjectValue(type, existingValue) {
     ...Object.fromEntries(
       Object.values(type.getFields())
         .filter(field => !isUnionType(getBaseType(field.type)))
-        .map(field => [field.name, getDefaultValue(field, existingValue[field.name], field.name)])
+        .map(field => [field.name, getDefaultValue(field, existingValue?.[field.name], field.name)])
     )
   }
 
