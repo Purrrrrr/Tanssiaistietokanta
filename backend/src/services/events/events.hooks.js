@@ -17,8 +17,8 @@ module.exports = {
 
   after: {
     all: [],
-    find: [provideDefaultValues('Event')],
-    get: [provideDefaultValues('Event')],
+    find: [],
+    get: [],
     create: [],
     update: [],
     patch: [],

@@ -51,17 +51,17 @@ function getDefaultObjectValue(type, existingValue) {
 function getDefaultValue(field, existingValue) {
   const {type, defaultValue} = field
 
-  const baseType = getBaseType(type)
-  if (isListType(baseType)) {
+  if (!isNonNullType(type)) return null
+  if (isListType(type)) {
     return (existingValue ?? []).map(item =>
-      getDefaultValue({type: baseType.ofType}, item)
+      getDefaultValue({type: type.ofType}, item)
     )
   }
-  if (isObjectType(baseType)) {
-    return getDefaultObjectValue(baseType, existingValue)
+  if (isObjectType(type)) {
+    return getDefaultObjectValue(type, existingValue)
   }
   let def
-  switch(baseType.toString()) {
+  switch(type.toString()) {
     case 'String':
       def = ''
       break
@@ -70,7 +70,7 @@ function getDefaultValue(field, existingValue) {
       def = 0
       break
   }
-  return existingValue ?? defaultValue ?? baseType.defaultValue ?? def ?? null
+  return existingValue ?? defaultValue ?? type.defaultValue ?? def ?? null
 }
 
 function getBaseType(type) {

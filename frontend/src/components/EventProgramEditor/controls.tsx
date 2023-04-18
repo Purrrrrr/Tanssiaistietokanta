@@ -50,7 +50,7 @@ export function AddDanceSetButton() {
 
 function newDanceSet(danceSets: DanceSet[]): DanceSet {
   const danceSetNumber = danceSets.length + 1
-  const dances = Array.from({length: 6}, () => ({item: {__typename: 'RequestedDance'}, _id: guid()} as EventProgramRow))
+  const dances = Array.from({length: 6}, () => ({item: {__typename: 'RequestedDance'}, _id: guid(), slideStyleId: null} as EventProgramRow))
   return {
     _id: guid(),
     title: t('placeholderNames.danceSet', {number: danceSetNumber}),

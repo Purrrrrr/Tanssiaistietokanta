@@ -15,7 +15,7 @@ exports.up = async params => {
           name: null,
           description: null,
           duration: intervalMusicDuration,
-          slideStyleId: intervalMusicSlideStyleId,
+          slideStyleId: intervalMusicSlideStyleId ?? null,
         } : null,
       })
     ),
