@@ -1,11 +1,23 @@
 /** @type {import('umzug').MigrationFn<any>} */
 exports.up = async params => {
-  const services = ['events', 'dances', 'workshops']
-    .map(params.context.getService)
+  const models = ['events', 'dances', 'workshops']
+    .map(name => ({
+      model: params.context.getModel(name),
+      versionModel: params.context.getVersionModel(name),
+    }))
 
-  await Promise.all(services.map(
-    async service => Promise.all(
-      (await service.find({})).map(record => service.patch(record._id, {}, {saveAsVersion: true, provider: 'migration'}))
+  const now = () => new Date().toISOString()
+
+  await Promise.all(models.map(
+    async ({model, versionModel}) => Promise.all(
+      (await model.findAsync({})).map(({ _id, ...record }) =>
+        versionModel.insertAsync({
+          _updatedAt: now(),
+          _createdAt: now(),
+          ...record,
+          _recordId: _id
+        })
+      )
     )
   ))
   /* databases.forEach(db =>
