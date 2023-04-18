@@ -15,6 +15,7 @@ type EventProgramSettings {
   danceSets: [DanceSet!]!
   slideStyleId: ID
   pauseBetweenDances: Float!
+  defaultIntervalMusic: IntervalMusic!
 }
 
 type Introductions {
@@ -28,8 +29,7 @@ type DanceSet {
   title: String!
   titleSlideStyleId: ID
   program: [EventProgramRow!]!
-  intervalMusicDuration: Float!
-  intervalMusicSlideStyleId: ID
+  intervalMusic: IntervalMusic
 }
 
 type EventProgramRow {
@@ -54,6 +54,13 @@ type EventProgram implements ProgramItem {
   description: String
   duration: Float
   showInLists: Boolean!
+  slideStyleId: ID
+}
+
+type IntervalMusic {
+  name: String
+  description: String
+  duration: Float!
   slideStyleId: ID
 }
 
@@ -97,9 +104,7 @@ input DanceSetInput {
   title: String!
   titleSlideStyleId: ID
   program: [ProgramItemInput!]!
-  "interval music duration in seconds"
-  intervalMusicDuration: Float!
-  intervalMusicSlideStyleId: ID
+  intervalMusic: IntervalMusicInput
 }
 
 input ProgramItemInput {
@@ -117,6 +122,13 @@ input EventProgramInput {
   description: String
   duration: Float
   showInLists: Boolean!
+}
+
+input IntervalMusicInput {
+  name: String
+  description: String
+  duration: Float!
+  slideStyleId: ID
 }
 
 enum IntroductionProgramType {

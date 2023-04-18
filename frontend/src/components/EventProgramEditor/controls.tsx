@@ -4,12 +4,16 @@ import {ActionButton as Button} from 'libraries/forms'
 import {Icon, IconName} from 'libraries/ui'
 import {guid} from 'utils/guid'
 
-import {DanceSet, EventProgramItem, EventProgramRow} from './types'
+import {DanceSet, EventProgramItem, EventProgramRow, IntervalMusic} from './types'
 
 import { switchFor, useAppendToList } from './form'
 import t from './translations'
 
 const DEFAULT_INTERVAL_MUSIC_DURATION = 15*60
+const DEFAULT_INTERVAL_MUSIC: IntervalMusic = {
+  duration: DEFAULT_INTERVAL_MUSIC_DURATION,
+  slideStyleId: null,
+}
 
 export function AddIntroductionButton() {
   const addIntroduction = useAppendToList('introductions.program')
@@ -51,15 +55,14 @@ function newDanceSet(danceSets: DanceSet[]): DanceSet {
     _id: guid(),
     title: t('placeholderNames.danceSet', {number: danceSetNumber}),
     program: dances,
-    intervalMusicDuration: DEFAULT_INTERVAL_MUSIC_DURATION,
     titleSlideStyleId: null,
-    intervalMusicSlideStyleId: null,
+    intervalMusic: null,
   }
 }
 
-export const IntervalMusicSwitch = switchFor<number>({
-  isChecked: num => (num ?? 0) > 0,
-  toValue: checked => checked ? DEFAULT_INTERVAL_MUSIC_DURATION : 0,
+export const IntervalMusicSwitch = switchFor<IntervalMusic>({
+  isChecked: intervalMusic => (intervalMusic?.duration ?? 0) > 0,
+  toValue: checked => checked ? DEFAULT_INTERVAL_MUSIC : null,
 })
 
 type ProgramType = EventProgramItem['__typename'] | 'IntervalMusic'

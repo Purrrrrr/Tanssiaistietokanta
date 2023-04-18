@@ -82,8 +82,10 @@ query BallProgram($eventId: ID!) {
         _id
         title
         titleSlideStyleId
-        intervalMusicDuration
-        intervalMusicSlideStyleId
+        intervalMusic {
+          duration
+          slideStyleId
+        }
         program {
           _id
           slideStyleId
@@ -169,12 +171,12 @@ function toProgramSlide({_id, item, slideStyleId}: ProgramRow): SlideContent {
 }
 
 function intervalMusicSlide(danceSet): SlideContent[] {
-  if (danceSet.intervalMusicDuration > 0) {
+  if ((danceSet.intervalMusic?.duration ?? 0) > 0) {
     return [programSlide({
       __typename: 'IntervalMusic',
       _id: danceSet._id + '-intervalMusic',
       name: t`intervalMusic`,
-      slideStyleId: danceSet.intervalMusicSlideStyleId,
+      slideStyleId: danceSet.intervalMusic.slideStyleId,
       showInLists: false,
     })]
   }
