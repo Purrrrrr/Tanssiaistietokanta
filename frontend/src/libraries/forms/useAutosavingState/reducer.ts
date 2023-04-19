@@ -1,12 +1,16 @@
 import {Reducer, useReducer} from 'react'
 import * as L from 'partial.lenses'
 
+import createDebug from 'utils/debug'
+
 import {MergeableObject, MergeData, MergeResult, toFinalMergeResult} from './types'
 
 import {StringPath, Version} from '../types'
 import mergeValues from './merge'
 
 export type SyncEvent = 'LOCAL_MODIFICATION' | 'PATCH_SENT' | 'EXTERNAL_MODIFICATION' | 'CONFLICT_RESOLVED'
+
+const debug = createDebug('useAutoSavingState')
 
 export interface SyncStore<T> {
   serverState: T
@@ -49,7 +53,7 @@ function getInitialState<T extends MergeableObject>(serverState: T) : SyncStore<
 
 function reducer<T extends MergeableObject>(reducerState : SyncStore<T>, action : SyncAction<T>) : SyncStore<T> {
   const { mergeResult: { modifications, nonConflictingModifications }, serverState } = reducerState
-  console.log(action.type)
+  debug(action.type)
   switch (action.type) {
     case 'LOCAL_MODIFICATION':
     {
@@ -124,7 +128,7 @@ function merge<T extends MergeableObject>(mergeData: MergeData<T>, serverStateTi
   const mergeResult = toFinalMergeResult(mergeValues(mergeData))
   const hasConflicts = mergeResult.state === 'CONFLICT'
 
-  console.log({mergeData, mergeResult})
+  debug({mergeData, mergeResult})
 
   return {
     serverState: mergeData.server,

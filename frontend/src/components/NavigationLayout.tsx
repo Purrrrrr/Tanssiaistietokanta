@@ -2,6 +2,7 @@ import React from 'react'
 
 import {BreadcrumbContext} from 'libraries/ui'
 
+import DebugManager from './DebugManager'
 import Navigation from './Navigation'
 
 import './NavigationLayout.sass'
@@ -18,7 +19,11 @@ function NavigationLayout({children}) {
       <main id="main-content">
         {children}
       </main>
-      <footer>Tanssitietokanta v. {process.env.REACT_APP_BUILD_TIME ?? 'DEV'}-{process.env.REACT_APP_COMMIT_REV ?? 'HEAD'} <a href="https://raw.githubusercontent.com/Purrrrrr/Tanssiaistietokanta/main/frontend/LICENSE">&copy; Tanssitietokannan tekijät</a></footer>
+      <footer>
+        Tanssitietokanta v. {process.env.REACT_APP_BUILD_TIME ?? 'DEV'}-{process.env.REACT_APP_COMMIT_REV ?? 'HEAD'}
+        <a href="https://raw.githubusercontent.com/Purrrrrr/Tanssiaistietokanta/main/frontend/LICENSE">&copy; Tanssitietokannan tekijät</a>
+        {process.env.NODE_ENV === 'development' &&  <DebugManager />}
+      </footer>
     </div>
   </BreadcrumbContext>
 }
