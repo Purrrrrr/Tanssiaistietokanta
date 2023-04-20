@@ -12,8 +12,8 @@ export function useError(value, schemaDef : ValidationProps) {
       schema.validate(value)
         .then(() => setError(null)).catch(setError)
     },
-    [value, schema, setError]
+    [value, schema]
   )
   useUpdateErrorContext(error)
-  return error
+  return schema ? error : null
 }
