@@ -83,8 +83,6 @@ function NextTrackSection({next}) {
 function SlideContentView({slide}: SlideProps) {
   switch(slide.__typename) {
     case 'Event':
-    case 'IntervalMusic':
-      return null
     case 'DanceSet':
       return <AutosizedSection>
         <ProgramList program={slide.program ?? []} />
@@ -96,6 +94,7 @@ function SlideContentView({slide}: SlideProps) {
     case 'RequestedDance':
       return null
     case 'EventProgram':
+    case 'IntervalMusic':
       return <EventProgramDescription program={slide.item} />
     default:
       return null
@@ -118,7 +117,7 @@ function ProgramList({program, currentSlide}: {program: SlideContent[], currentS
 
 const RequestedDancePlaceholder = () => <span className="requested-dance-placeholder"><t.span>requestedDance</t.span></span>
 
-function EventProgramDescription({program}: {program: EventProgram}) {
+function EventProgramDescription({program}: {program: EventProgram | {description: string}}) {
   const {description} = program
 
   return <>

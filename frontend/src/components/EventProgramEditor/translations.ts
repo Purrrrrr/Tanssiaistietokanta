@@ -7,6 +7,11 @@ export default makeTranslate({
       description: 'Ohjelman kuvaus',
       showInLists: 'Näytä ohjelma tanssilistoissa',
     },
+    intervalMusic: {
+      useDefaultTexts: 'Käytä oletusotsikkoa ja kuvausta',
+      name: 'Otsikko diashowssa',
+      description: 'Tarkempi kuvaus',
+    },
     danceSetName: 'Tanssisetin nimi',
     eventDefaultStyle: 'Ohjelman oletustyyli',
     intervalMusicAtEndOfSet: 'Taukomusiikki setin lopussa',
@@ -26,6 +31,7 @@ export default makeTranslate({
     removeDanceSet: 'Poista setti',
     remove: 'Poista',
     editProgram: 'Ohjelman tiedot',
+    editIntervalMusic: 'Taukomusiikin kuvaus',
     editDance: 'Tanssin tiedot',
     save: 'Tallenna muutokset',
   },
@@ -36,6 +42,8 @@ export default makeTranslate({
   },
   titles: {
     introductoryInformation: 'Alkutiedotukset',
+    customIntervalMusicTexts: 'Mukautetut kuvaukset',
+    defaultIntervalMusicTexts: 'Taukomusiikin oletuskuvaukset',
   },
   placeholderNames: {
     newProgramItem: 'Uusi ohjelmanumero',

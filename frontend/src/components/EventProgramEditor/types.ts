@@ -4,6 +4,7 @@ export type ProgramSectionPath = 'introductions' | DanceSetPath
 export type ProgramItemPath = `${ProgramSectionPath}.program.${number}`
 export type DanceSetPath = `danceSets.${number}`
 export type DanceProgramPath = `${DanceSetPath}.program.${number}`
+export type IntervalMusicPath = `${DanceSetPath}.intervalMusic`
 
 type Program = Event['program']
 type ODanceSet = Program['danceSets'][number]

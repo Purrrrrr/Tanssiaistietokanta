@@ -9,7 +9,7 @@ import {ExtendedFieldComponentProps, FieldComponentProps, FieldPropsWithoutCompo
 
 export interface SwitchForProps<V> {
   isChecked: (v: V | null | undefined) => boolean
-  toValue: (b: boolean) => V
+  toValue: (b: boolean, v: V | null | undefined) => V
 }
 export type SwitchFieldForValueProps<T, V> = Omit<FieldPropsWithoutComponent<T, V>, 'labelStyle'>
 export function switchFor<T, V>({isChecked, toValue}: SwitchForProps<V>) {
@@ -17,7 +17,7 @@ export function switchFor<T, V>({isChecked, toValue}: SwitchForProps<V>) {
     const { value, onChange, ...dataProps } = useFieldValueProps<T, V>(path)
     const { fieldProps, containerProps } = useFieldData(path, value, rest)
 
-    const onChangeMapped = (bool: boolean) => onChange(toValue(bool))
+    const onChangeMapped = (bool: boolean) => onChange(toValue(bool, value))
 
     const allProps = {
       value: isChecked(value),

@@ -15,7 +15,12 @@ type EventProgramSettings {
   danceSets: [DanceSet!]!
   slideStyleId: ID
   pauseBetweenDances: Float!
-  defaultIntervalMusic: IntervalMusic!
+  defaultIntervalMusic: DefaultIntervalMusic!
+}
+
+type DefaultIntervalMusic {
+  name: String
+  description: String
 }
 
 type Introductions {
@@ -83,6 +88,12 @@ input ProgramInput {
   slideStyleId: ID
   "The pause between two program items in seconds"
   pauseBetweenDances: Float!
+  defaultIntervalMusic: DefaultIntervalMusicInput!
+}
+
+input DefaultIntervalMusicInput {
+  name: String
+  description: String
 }
 
 input IntroductionsInput {

@@ -12,9 +12,9 @@ import {DurationField} from 'components/widgets/DurationField'
 import {SlideStyleSelector} from 'components/widgets/SlideStyleSelector'
 import {guid} from 'utils/guid'
 
-import {DanceProgramPath, DanceSet, DanceSetPath, EventProgramRow, EventProgramSettings, ProgramItemPath, ProgramSectionPath} from './types'
+import {DanceProgramPath, DanceSet, DanceSetPath, EventProgramRow, EventProgramSettings, IntervalMusicPath, ProgramItemPath, ProgramSectionPath} from './types'
 
-import {AddDanceSetButton, AddIntroductionButton, IntervalMusicSwitch, newEventProgramItem, ProgramTypeIcon} from './controls'
+import {AddDanceSetButton, AddIntroductionButton, IntervalMusicDefaultTextsSwitch, IntervalMusicSwitch, newEventProgramItem, ProgramTypeIcon} from './controls'
 import {
   Field,
   Form,
@@ -267,12 +267,18 @@ function EventProgramItemEditor({path}: {path: ProgramItemPath}) {
 }
 
 function IntervalMusicEditor({danceSetPath}: {danceSetPath: DanceSetPath}) {
+  const intervalMusicPath = `${danceSetPath}.intervalMusic` as const
   const durationPath = `${danceSetPath}.intervalMusic.duration` as const
-  const onSetIntervalMusic = useOnChangeFor(`${danceSetPath}.intervalMusic`)
+  const onSetIntervalMusic = useOnChangeFor(intervalMusicPath)
 
   return <tr className="eventProgramItemEditor intervalMusicDuration">
     <td><ProgramTypeIcon type="IntervalMusic" /></td>
-    <td>{t`programTypes.IntervalMusic`}</td>
+    <td>
+      <Flex className="eventProgramItemEditor">
+        <div>{t`programTypes.IntervalMusic`}</div>
+        <IntervalMusicDetailsEditor path={intervalMusicPath} />
+      </Flex>
+    </td>
     <td>
       <Field label={t`fields.intervalMusicDuration`} inline labelStyle="hidden" path={durationPath} component={DurationField} />
     </td>
@@ -281,6 +287,37 @@ function IntervalMusicEditor({danceSetPath}: {danceSetPath: DanceSetPath}) {
       <Button title={t`buttons.remove`} intent="danger" icon="cross" onClick={() => onSetIntervalMusic(null)} className="delete" />
     </td>
   </tr>
+}
+
+function IntervalMusicDetailsEditor({path}: {path: IntervalMusicPath}) {
+  const [open, setOpen] = useState(false)
+  const intervalMusic = useValueAt(path)
+  const hasCustomTexts = typeof intervalMusic?.name === 'string'
+  return <Flex className="eventProgramItemEditor">
+    <MenuButton
+      menu={
+        <div className="eventProgramItemPopover">
+          <IntervalMusicDefaultTextsSwitch label={t`fields.intervalMusic.useDefaultTexts`} path={path} />
+          {hasCustomTexts
+            ? <>
+              <t.h2>titles.customIntervalMusicTexts</t.h2>
+              <Input label={t`fields.intervalMusic.name`} path={`${path}.name`} required />
+              <Field label={t`fields.intervalMusic.description`} path={`${path}.description`} component={MarkdownEditor} />
+            </>
+            : <>
+              <t.h2>titles.defaultIntervalMusicTexts</t.h2>
+              <Input label={t`fields.intervalMusic.name`} path='defaultIntervalMusic.name' componentProps={{placeholder:t`programTypes.IntervalMusic`}} />
+              <Field label={t`fields.intervalMusic.description`} path="defaultIntervalMusic.description" component={MarkdownEditor} />
+            </>
+          }
+        </div>
+      }
+      text={t`buttons.editIntervalMusic`}
+      buttonProps={{rightIcon: 'caret-down'}}
+      open={open}
+      onSetOpen={setOpen}
+    />
+  </Flex>
 }
 
 function DanceSetDuration({ program, intervalMusicDuration}) {

@@ -7,6 +7,10 @@ setupServiceUpdateFragment(
   `fragment EventFragment on Event {
     _id, name
     program {
+      defaultIntervalMusic {
+        name
+        description
+      }
       introductions {
         title
         titleSlideStyleId
@@ -52,6 +56,8 @@ setupServiceUpdateFragment(
           slideStyleId
         }
         intervalMusic {
+          name
+          description
           duration
           slideStyleId
         }
@@ -134,6 +140,10 @@ query getEvent($id: ID!) {
   event(id: $id) {
     _id, name
     program {
+      defaultIntervalMusic {
+        name
+        description
+      }
       introductions {
         title
         titleSlideStyleId
@@ -179,6 +189,8 @@ query getEvent($id: ID!) {
           slideStyleId
         }
         intervalMusic {
+          name
+          description
           duration
           slideStyleId
         }
@@ -232,6 +244,10 @@ mutation patchEventProgram($id: ID!, $program: JSONPatch!) {
   patchEventProgram(id: $id, program: $program) {
     _id, name
     program {
+      defaultIntervalMusic {
+        name
+        description
+      }
       introductions {
         title
         titleSlideStyleId
@@ -277,6 +293,8 @@ mutation patchEventProgram($id: ID!, $program: JSONPatch!) {
           slideStyleId
         }
         intervalMusic {
+          name
+          description
           duration
           slideStyleId
         }

@@ -11,6 +11,8 @@ import t from './translations'
 
 const DEFAULT_INTERVAL_MUSIC_DURATION = 15*60
 const DEFAULT_INTERVAL_MUSIC: IntervalMusic = {
+  name: null,
+  description: null,
   duration: DEFAULT_INTERVAL_MUSIC_DURATION,
   slideStyleId: null,
 }
@@ -63,6 +65,17 @@ function newDanceSet(danceSets: DanceSet[]): DanceSet {
 export const IntervalMusicSwitch = switchFor<IntervalMusic>({
   isChecked: intervalMusic => (intervalMusic?.duration ?? 0) > 0,
   toValue: checked => checked ? DEFAULT_INTERVAL_MUSIC : null,
+})
+
+export const IntervalMusicDefaultTextsSwitch = switchFor<IntervalMusic>({
+  isChecked: intervalMusic => (intervalMusic?.name ?? null) === null,
+  toValue: (checked, intervalMusic) => {
+    const defaults = intervalMusic ?? DEFAULT_INTERVAL_MUSIC
+    console.log(defaults)
+    return checked
+      ? { ...defaults, name: null, description: null }
+      : { ...defaults, name: '', description: ' '}
+  }
 })
 
 type ProgramType = EventProgramItem['__typename'] | 'IntervalMusic'
