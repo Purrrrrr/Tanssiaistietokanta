@@ -1,4 +1,5 @@
 import React from 'react'
+import QRCode from 'react-qr-code'
 import {
   Button as BlueprintButton,
   Card as BlueprintCard,
@@ -10,6 +11,7 @@ import {
   InputGroup as BlueprintInputGroup,
 } from '@blueprintjs/core'
 import classNames from 'classnames'
+import MarkdownToJsx from 'markdown-to-jsx'
 
 import './ui.css'
 
@@ -101,5 +103,19 @@ export function SearchBar({id, onChange, value, placeholder} : SearchInputProps)
     onChange={(e) => onChange(e.target.value)}
     placeholder={placeholder}
   />
-
 }
+
+export function Markdown({options, ...props}: React.ComponentPropsWithoutRef<MarkdownToJsx>) {
+  return <MarkdownToJsx
+    {...props}
+    options={options
+      ? { ...options, overrides: { ...markdownComponents, ...options.overrides } }
+      : Markdown.defaultOptions
+    }
+  />
+}
+
+const markdownComponents = {
+  QR: QRCode,
+}
+Markdown.defaultOptions = { overrides: markdownComponents }

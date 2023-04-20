@@ -1,9 +1,8 @@
 import React, {ComponentProps, useRef, useState} from 'react'
 import {Classes} from '@blueprintjs/core'
 import classNames from 'classnames'
-import Markdown from 'markdown-to-jsx'
 
-import {Icon} from 'libraries/ui'
+import {Icon, Markdown} from 'libraries/ui'
 
 import {ExtendedFieldComponentProps} from '../types'
 import {Input} from './basicComponents'
