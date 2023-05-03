@@ -36,16 +36,15 @@ const dependencyTypePairs : Record<RelationType, RelationType> = {
   parentOf: 'childOf'
 }
 
-export function registerDependencies(sourceService: ServiceName, item: Entity, relations: EntityDependency[]) {
+export async function registerDependencies(sourceService: ServiceName, item: Entity, relations: EntityDependency[]) {
   if (Array.isArray(item)) {
     item.forEach(i => registerDependencies(sourceService, i, relations))
     return
   }
   relations.forEach(
-    (relation) => {
+    async (relation) => {
       const {getLinkedIds} = relation
-      const ids = getLinkedIds(item)
-
+      const ids = await getLinkedIds(item)
       ids.forEach(id => {
         registerDepedency({
           sourceId: item._id,

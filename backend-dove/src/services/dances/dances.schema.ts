@@ -5,22 +5,21 @@ import type { Static, TSchema } from '@feathersjs/typebox'
 
 import type { HookContext } from '../../declarations'
 import { dataValidator, queryValidator } from '../../validators'
-
-const Nullable = <T extends TSchema>(schema: T) => Type.Union([schema, Type.Null()])
+import { castAfterValidating } from '../../utils/cast-after-validating'
 
 // Main data model schema
 export const dancesSchema = Type.Object(
   {
     _id: Type.String(),
     name: Type.String(),
-    description: Nullable(Type.String()),
-    duration: Nullable(Type.Number()),
-    prelude: Nullable(Type.String()),
-    formation: Nullable(Type.String()),
-    category: Nullable(Type.String()),
-    instructions: Nullable(Type.String()),
-    remarks: Nullable(Type.String()),
-    slideStyleId: Nullable(Type.String()),
+    description: Type.String(),
+    duration: Type.Number(),
+    prelude: Type.String(),
+    formation: Type.String(),
+    category: Type.String(),
+    instructions: Type.String(),
+    remarks: Type.String(),
+    slideStyleId: Type.Union([Type.Null(), Type.String()]),
   },
   { $id: 'Dances', additionalProperties: false }
 )
@@ -31,11 +30,17 @@ export const dancesResolver = resolve<Dances, HookContext>({})
 export const dancesExternalResolver = resolve<Dances, HookContext>({})
 
 // Schema for creating new entries
-export const dancesDataSchema = Type.Omit(dancesSchema, ['_id'], {
-  $id: 'DancesData'
-})
+export const dancesPartialDataSchema = Type.Intersect(
+  [
+    Type.Pick(dancesSchema, ['name']),
+    Type.Partial(Type.Omit(dancesSchema, ['_id', 'name'])),
+  ], {
+    $id: 'DancesData'
+  },
+)
+export const dancesDataSchema = Type.Omit(dancesSchema, ['_id'])
 export type DancesData = Static<typeof dancesDataSchema>
-export const dancesDataValidator = getValidator(dancesDataSchema, dataValidator)
+export const dancesDataValidator = castAfterValidating(dancesDataSchema, getValidator(dancesPartialDataSchema, dataValidator))
 export const dancesDataResolver = resolve<Dances, HookContext>({})
 
 // Schema for updating existing entries

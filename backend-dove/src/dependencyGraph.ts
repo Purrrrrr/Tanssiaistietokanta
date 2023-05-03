@@ -34,7 +34,7 @@ export default async function init(app: Application) {
 async function loadInitialDependencies(app: Application) {
   for (const [serviceName, relations] of Object.entries(serviceDependencyRelations)) {
     if (relations.length === 0) continue
-    const service = app.service(serviceName as ServiceName)
+    const service = app.service(serviceName as ServiceName) as ServiceTypes[keyof ServiceTypes]
     const items = await service.find({})
     items.forEach(item => registerDependencies(serviceName, item, relations))
   }
