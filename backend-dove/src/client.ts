@@ -27,7 +27,7 @@ export interface ServiceTypes {}
 export type ClientApplication = Application<ServiceTypes, Configuration>
 
 /**
- * Returns a typed client for the backend-2real app.
+ * Returns a typed client for the tanssitietokanta app.
  *
  * @param connection The REST or Socket.io Feathers client connection
  * @param authenticationOptions Additional settings for the authentication client
