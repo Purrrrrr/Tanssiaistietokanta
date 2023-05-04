@@ -6,12 +6,13 @@ import type { Static, TProperties } from '@feathersjs/typebox'
 import type { HookContext } from '../../declarations'
 import { dataValidator, queryValidator } from '../../validators'
 import { castAfterValidating } from '../../utils/cast-after-validating'
+import { SlideStyleId, Id, Name, NullableString } from '../../utils/common-types'
 
 // Main data model schema
 export const eventsSchema = Type.Object(
   {
-    _id: Type.String(),
-    name: Type.String(),
+    _id: Id(),
+    name: Name(),
     program: ClosedObject({
       introductions: Introductions(),
       danceSets: Type.Array(DanceSet()),
@@ -75,8 +76,6 @@ function ClosedObject(o: TProperties) {
     o, { additionalProperties: false }
   )
 }
-function NullableString() { return Type.Union([Type.Null(), Type.String()]) }
-function SlideStyleId() { return Type.Union([Type.Null(), Type.String()]) }
 
 export type Events = Static<typeof eventsSchema>
 export const eventsValidator = getValidator(eventsSchema, dataValidator)

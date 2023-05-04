@@ -4,6 +4,14 @@ import type { TransportConnection, Application } from '@feathersjs/feathers'
 import authenticationClient from '@feathersjs/authentication-client'
 import type { AuthenticationClientOptions } from '@feathersjs/authentication-client'
 
+import { workshopsClient } from './services/workshops/workshops.shared'
+export type {
+  Workshops,
+  WorkshopsData,
+  WorkshopsQuery,
+  WorkshopsPatch
+} from './services/workshops/workshops.shared'
+
 import { eventsClient } from './services/events/events.shared'
 export type { Events, EventsData, EventsQuery, EventsPatch } from './services/events/events.shared'
 
@@ -38,5 +46,6 @@ export const createClient = <Configuration = any>(
 
   client.configure(dancesClient)
   client.configure(eventsClient)
+  client.configure(workshopsClient)
   return client
 }

@@ -6,12 +6,13 @@ import type { Static, TSchema } from '@feathersjs/typebox'
 import type { HookContext } from '../../declarations'
 import { dataValidator, queryValidator } from '../../validators'
 import { castAfterValidating } from '../../utils/cast-after-validating'
+import { SlideStyleId, Id, Name } from '../../utils/common-types'
 
 // Main data model schema
 export const dancesSchema = Type.Object(
   {
-    _id: Type.String(),
-    name: Type.String(),
+    _id: Id(),
+    name: Name(),
     description: Type.String(),
     duration: Type.Number(),
     prelude: Type.String(),
@@ -19,7 +20,7 @@ export const dancesSchema = Type.Object(
     category: Type.String(),
     instructions: Type.String(),
     remarks: Type.String(),
-    slideStyleId: Type.Union([Type.Null(), Type.String()]),
+    slideStyleId: SlideStyleId(),
   },
   { $id: 'Dances', additionalProperties: false }
 )
