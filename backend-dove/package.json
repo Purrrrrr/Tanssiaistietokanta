@@ -35,6 +35,7 @@
   ],
   "main": "lib/client",
   "scripts": {
+    "create-migration": "ts-node src/create-migration.ts",
     "dev": "nodemon -x ts-node src/index.ts",
     "compile": "shx rm -rf lib/ && tsc",
     "start": "node lib/",
@@ -65,7 +66,9 @@
     "koa": "^2.14.2",
     "koa-bodyparser": "^4.4.0",
     "lodash": "^4.17.21",
+    "partial.lenses": "^14.17.0",
     "ramda": "^0.29.0",
+    "umzug": "^3.2.1",
     "winston": "^3.8.2"
   },
   "devDependencies": {

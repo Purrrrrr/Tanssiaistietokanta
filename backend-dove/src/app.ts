@@ -9,6 +9,7 @@ import type { Application } from './declarations'
 import { logError } from './hooks/log-error'
 import { services } from './services/index'
 import initDependencyGraph from './dependencyGraph'
+import { migrateDb } from './umzug'
 import { channels } from './channels'
 
 const app: Application = koa(feathers())
@@ -48,6 +49,7 @@ app.hooks({
 app.hooks({
   setup: [
     async (context: HookContext<Application>, next: NextFunction) => {
+      await migrateDb(context.app)
       await initDependencyGraph(context.app)
       await next()
     }
