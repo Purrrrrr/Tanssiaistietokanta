@@ -1,3 +1,4 @@
+import { convert } from './convert/convert'
 import { workshops } from './workshops/workshops'
 import { events } from './events/events'
 import { dances } from './dances/dances'
@@ -5,6 +6,7 @@ import { dances } from './dances/dances'
 import type { Application } from '../declarations'
 
 export const services = (app: Application) => {
+  app.configure(convert)
   app.configure(workshops)
   app.configure(events)
   app.configure(dances)

@@ -36,6 +36,8 @@ async function loadInitialDependencies(app: Application) {
     if (relations.length === 0) continue
     const service = app.service(serviceName as ServiceName) as ServiceTypes[keyof ServiceTypes]
     const items = await service.find({})
+
+    if (!Array.isArray(items)) continue
     items.forEach(item => registerDependencies(serviceName, item, relations))
   }
 }

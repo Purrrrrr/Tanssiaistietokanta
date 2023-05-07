@@ -4,6 +4,9 @@ import type { TransportConnection, Application } from '@feathersjs/feathers'
 import authenticationClient from '@feathersjs/authentication-client'
 import type { AuthenticationClientOptions } from '@feathersjs/authentication-client'
 
+import { convertClient } from './services/convert/convert.shared'
+export type { Convert, ConvertData, ConvertQuery } from './services/convert/convert.shared'
+
 import { workshopsClient } from './services/workshops/workshops.shared'
 export type {
   Workshops,
@@ -47,5 +50,6 @@ export const createClient = <Configuration = any>(
   client.configure(dancesClient)
   client.configure(eventsClient)
   client.configure(workshopsClient)
+  client.configure(convertClient)
   return client
 }
