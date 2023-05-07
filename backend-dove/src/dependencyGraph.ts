@@ -38,6 +38,9 @@ async function loadInitialDependencies(app: Application) {
     const items = await service.find({})
 
     if (!Array.isArray(items)) continue
-    items.forEach(item => registerDependencies(serviceName, item, relations))
+    items.forEach(item => {
+      if (typeof item !== 'object') return
+      registerDependencies(serviceName, item, relations)
+    })
   }
 }

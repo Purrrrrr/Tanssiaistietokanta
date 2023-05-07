@@ -4,6 +4,13 @@ import type { TransportConnection, Application } from '@feathersjs/feathers'
 import authenticationClient from '@feathersjs/authentication-client'
 import type { AuthenticationClientOptions } from '@feathersjs/authentication-client'
 
+import { channelConnectionsClient } from './services/channel-connections/channel-connections.shared'
+export type {
+  ChannelConnections,
+  ChannelConnectionsData,
+  ChannelConnectionsQuery,
+} from './services/channel-connections/channel-connections.shared'
+
 import { convertClient } from './services/convert/convert.shared'
 export type { Convert, ConvertData, ConvertQuery } from './services/convert/convert.shared'
 
@@ -51,5 +58,6 @@ export const createClient = <Configuration = any>(
   client.configure(eventsClient)
   client.configure(workshopsClient)
   client.configure(convertClient)
+  client.configure(channelConnectionsClient)
   return client
 }
