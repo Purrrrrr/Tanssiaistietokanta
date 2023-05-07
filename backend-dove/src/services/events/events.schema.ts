@@ -8,6 +8,8 @@ import { dataValidator, queryValidator } from '../../validators'
 import { castAfterValidating } from '../../utils/cast-after-validating'
 import { SlideStyleId, Id, Name, NullableString } from '../../utils/common-types'
 
+const DEFAULT_PAUSE_BETWEEN_DANCES = 3*60
+
 // Main data model schema
 export const eventsSchema = Type.Object(
   {
@@ -17,7 +19,7 @@ export const eventsSchema = Type.Object(
       introductions: Introductions(),
       danceSets: Type.Array(DanceSet()),
       slideStyleId: SlideStyleId(),
-      pauseBetweenDances: Type.Number(),
+      pauseBetweenDances: Type.Number({ default: DEFAULT_PAUSE_BETWEEN_DANCES }),
       defaultIntervalMusic: ClosedObject({
         name: NullableString(),
         description: NullableString(),
