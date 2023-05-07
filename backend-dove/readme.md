@@ -16,6 +16,8 @@ This project uses [Feathers](http://feathersjs.com). An open source framework fo
     npm install
     ```
 
+   You also need to install [pandoc](https://pandoc.org/installing.html). At least version 1.17 is recommended.
+
 3. Start your app
 
     ```
@@ -37,6 +39,18 @@ $ npx feathers help                           # Show all commands
 $ npx feathers generate service               # Generate a new Service
 ```
 
+## Migrating databases
+
+The app runs its NeDB migrations automatically upon startup.
+
+To create a migration run `npm run create-migration migration-name`
+
 ## Help
 
 For more information on all the things you can do with Feathers visit [docs.feathersjs.com](http://docs.feathersjs.com).
+
+## License
+
+Copyright (c) 2018
+Copyright Purr Consuegra (c) 2018-2022
+
