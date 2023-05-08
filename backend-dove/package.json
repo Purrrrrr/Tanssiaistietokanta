@@ -45,7 +45,7 @@
     "bundle:client": "npm run compile && npm pack --pack-destination ./public"
   },
   "dependencies": {
-    "@apollo/server": "^4.7.0",
+    "@apollo/server": "^4.7.1",
     "@as-integrations/koa": "^0.3.0",
     "@feathersjs/adapter-commons": "^5.0.4",
     "@feathersjs/authentication": "^5.0.4",

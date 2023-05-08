@@ -1,3 +1,4 @@
+import { graphql } from './graphql/graphql'
 import { channelConnections } from './channel-connections/channel-connections'
 import { convert } from './convert/convert'
 import { workshops } from './workshops/workshops'
@@ -7,6 +8,7 @@ import { dances } from './dances/dances'
 import type { Application } from '../declarations'
 
 export const services = (app: Application) => {
+  app.configure(graphql)
   app.configure(channelConnections)
   app.configure(convert)
   app.configure(workshops)

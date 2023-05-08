@@ -4,11 +4,14 @@ import type { TransportConnection, Application } from '@feathersjs/feathers'
 import authenticationClient from '@feathersjs/authentication-client'
 import type { AuthenticationClientOptions } from '@feathersjs/authentication-client'
 
+import { graphqlClient } from './services/graphql/graphql.shared'
+export type { Graphql, GraphqlData, GraphqlQuery, GraphqlPatch } from './services/graphql/graphql.shared'
+
 import { channelConnectionsClient } from './services/channel-connections/channel-connections.shared'
 export type {
   ChannelConnections,
   ChannelConnectionsData,
-  ChannelConnectionsQuery,
+  ChannelConnectionsQuery
 } from './services/channel-connections/channel-connections.shared'
 
 import { convertClient } from './services/convert/convert.shared'
@@ -59,5 +62,6 @@ export const createClient = <Configuration = any>(
   client.configure(workshopsClient)
   client.configure(convertClient)
   client.configure(channelConnectionsClient)
+  client.configure(graphqlClient)
   return client
 }

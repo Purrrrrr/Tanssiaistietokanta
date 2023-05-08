@@ -8,6 +8,7 @@ import { configurationValidator } from './configuration'
 import type { Application } from './declarations'
 import { logError } from './hooks/log-error'
 import { services } from './services/index'
+import { graphqlServiceMiddleware } from './services/graphql/graphql.class'
 import initDependencyGraph from './dependencyGraph'
 import { migrateDb } from './umzug'
 import { channels } from './channels'
@@ -23,6 +24,7 @@ app.use(serveStatic(app.get('public')))
 app.use(errorHandler())
 app.use(parseAuthentication())
 app.use(bodyParser())
+app.use(graphqlServiceMiddleware)
 
 // Configure services and transports
 app.configure(rest())
