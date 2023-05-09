@@ -18,7 +18,11 @@ export class WorkshopsService<ServiceParams extends WorkshopsParams = WorkshopsP
   extends VersioningNeDBService<Workshops, WorkshopsData, ServiceParams, WorkshopsPatch>
 {
   constructor(public options: WorkshopsServiceOptions) {
-    super({ ...options, dbname: 'workshops'})
+    super({
+      ...options,
+      dbname: 'workshops',
+      indexes: [{fieldName: 'dances', sparse: true}],
+    })
   }
 }
 

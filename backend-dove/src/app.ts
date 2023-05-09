@@ -10,6 +10,7 @@ import { logError } from './hooks/log-error'
 import { services } from './services/index'
 import { graphqlServiceMiddleware } from './services/graphql/graphql.class'
 import initDependencyGraph from './dependencyGraph'
+import {preventRemovingOfUsedItems} from './hooks/prevent-removing-of-used-items'
 import { migrateDb } from './umzug'
 import { channels } from './channels'
 
@@ -43,7 +44,9 @@ app.hooks({
   around: {
     all: [logError]
   },
-  before: {},
+  before: {
+    remove: [preventRemovingOfUsedItems],
+  },
   after: {},
   error: {}
 })
