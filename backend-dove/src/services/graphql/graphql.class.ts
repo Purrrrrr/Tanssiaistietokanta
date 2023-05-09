@@ -4,6 +4,8 @@ import { Middleware } from '@feathersjs/koa'
 import { ApolloServer } from "@apollo/server";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import { koaMiddleware } from "@as-integrations/koa";
+import schema from "./graphql.schema";
+import getResolvers from "./graphql.resolvers";
 
 import type { Application } from '../../declarations'
 
@@ -16,6 +18,8 @@ export type { Graphql, GraphqlData, GraphqlPatch, GraphqlQuery }
 
 export interface GraphqlServiceOptions {
   app: Application
+  schema: string
+  getResolvers: any
   path: string
 }
 
@@ -36,10 +40,15 @@ export class GraphqlService<ServiceParams extends GraphqlParams = GraphqlParams>
   private innerApolloMiddlewarePromise : ResolvablePromise<Middleware<any>>
   private apolloServerPromise: ResolvablePromise<ApolloServer>
   private resolveApolloServer: (server: ApolloServer) => void = () => {}
+  private schema: string
+  private getResolvers: any
 
   constructor(public options: GraphqlServiceOptions) {
+    this.schema = options.schema
+    this.getResolvers = options.getResolvers
+    const pathRegex = new RegExp(`^${options.path}(/.*')?$`)
     this.apolloMiddleware = async (ctx, next) => {
-      if (ctx.request.url.startsWith(options.path)) {
+      if (pathRegex.test(ctx.request.url)) {
         const innerApolloMiddleware = await this.innerApolloMiddlewarePromise
         await innerApolloMiddleware(ctx, next)
         return
@@ -72,22 +81,18 @@ export class GraphqlService<ServiceParams extends GraphqlParams = GraphqlParams>
   }
 
   async setup(app: Application, path: string): Promise<void> {
-    // The GraphQL schema
-    const typeDefs = `#graphql
-  type Query {
-    hello: String
-  }
-`;
-
-    // A map of functions which return data for the schema.
-    const resolvers = {
-      Query: {
-        hello: () => "world",
-      },
-    };
+    const resolvers = getResolvers(app)
+    const context = ({
+      req = {headers: {}},
+      context = {}
+    }) => ({
+      headers: req.headers,
+      ...context,
+      provider: 'graphql'
+    })
     // Set up Apollo Server
     const server = new ApolloServer({
-      typeDefs,
+      typeDefs: this.schema,
       resolvers,
       plugins: [ApolloServerPluginDrainHttpServer({ httpServer: app.server })],
     });
@@ -109,6 +114,6 @@ function makePromise<T>(): ResolvablePromise<T> {
   return promise
 }
 
-export const getOptions = (app: Application, path: string) => {
-  return { app, path }
+export const getOptions = (app: Application, path: string, schema: string, getResolvers: any) => {
+  return { app, path, schema, getResolvers }
 }

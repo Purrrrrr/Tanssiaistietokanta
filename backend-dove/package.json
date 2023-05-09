@@ -58,6 +58,8 @@
     "@feathersjs/socketio": "^5.0.4",
     "@feathersjs/transport-commons": "^5.0.4",
     "@feathersjs/typebox": "^5.0.4",
+    "@graphql-tools/load-files": "^6.6.1",
+    "@graphql-tools/merge": "^8.4.1",
     "@koa/cors": "^4.0.0",
     "@seald-io/nedb": "^4.0.1",
     "feathers-nedb": "^6.0.0",

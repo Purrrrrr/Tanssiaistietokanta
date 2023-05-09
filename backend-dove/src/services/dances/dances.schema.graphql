@@ -1,0 +1,46 @@
+type Query {
+  dance(id: ID!): Dance!
+  dances: [Dance!]!
+}
+
+type Dance implements ProgramItem {
+  _id: ID!
+  name: String!
+  description: String
+  duration: Float
+  prelude: String
+  formation: String
+  category: String
+  instructions: String
+  remarks: String
+  teachedIn(eventId: ID): [Workshop!]!
+  slideStyleId: ID
+}
+
+type Mutation {
+  createDance(dance: DanceInput!): Dance!
+  modifyDance(id: ID!, dance: DanceInput!): Dance!
+  patchDance(id: ID!, dance: DancePatchInput!): Dance!
+  deleteDance(id: ID!): Dance!
+}
+
+input DanceInput {
+  name: String!
+  description: String
+  duration: Float
+  prelude: String
+  formation: String
+  remarks: String
+  category: String
+  instructions: String
+}
+input DancePatchInput {
+  name: String
+  description: String
+  duration: Float
+  prelude: String
+  formation: String
+  remarks: String
+  category: String
+  instructions: String
+}
