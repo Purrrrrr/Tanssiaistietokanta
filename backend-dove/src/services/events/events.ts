@@ -1,6 +1,7 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/service.html
 
 import { hooks as schemaHooks } from '@feathersjs/schema'
+import { omit } from 'ramda'
 
 import {
   eventsDataValidator,
@@ -16,9 +17,13 @@ import {
 import type { Application } from '../../declarations'
 import { EventsService, getOptions } from './events.class'
 import { eventsPath, eventsMethods } from './events.shared'
+import { mergeJsonPatch, SupportsJsonPatch } from '../../hooks/merge-json-patch'
 
 export * from './events.class'
 export * from './events.schema'
+
+import type { NullableId, ServiceInterface } from '@feathersjs/feathers'
+import { applyPatch, Operation } from 'fast-json-patch'
 
 // A configure function that registers the service and its hooks via `app.configure`
 export const events = (app: Application) => {
@@ -36,7 +41,7 @@ export const events = (app: Application) => {
       all: [schemaHooks.resolveExternal(eventsExternalResolver), schemaHooks.resolveResult(eventsResolver)]
     },
     before: {
-      all: [schemaHooks.validateQuery(eventsQueryValidator), schemaHooks.resolveQuery(eventsQueryResolver)],
+      all: [mergeJsonPatch(omit(['_id', '_createdAt', '_updatedAt'])), schemaHooks.validateQuery(eventsQueryValidator), schemaHooks.resolveQuery(eventsQueryResolver)],
       find: [],
       get: [],
       create: [schemaHooks.validateData(eventsDataValidator), schemaHooks.resolveData(eventsDataResolver)],
@@ -55,6 +60,6 @@ export const events = (app: Application) => {
 // Add this service to the service type index
 declare module '../../declarations' {
   interface ServiceTypes {
-    [eventsPath]: EventsService
+    [eventsPath]: SupportsJsonPatch<EventsService>
   }
 }

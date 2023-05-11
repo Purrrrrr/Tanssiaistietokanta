@@ -52,7 +52,7 @@ export default class VersioningNeDBService<Result extends {_id: Id }, Data, Serv
   }
 
   async get(id: Id, _params?: ServiceParams): Promise<Result> {
-    return this.currentService.find(id, this.fixParams(_params))
+    return this.currentService.get(id, this.fixParams(_params))
   }
 
   async create(data: Data, params?: ServiceParams): Promise<Result>
