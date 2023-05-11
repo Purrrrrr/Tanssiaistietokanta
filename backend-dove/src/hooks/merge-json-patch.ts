@@ -5,7 +5,6 @@ import { applyPatch, Operation } from 'fast-json-patch'
 
 export const mergeJsonPatch = (cleanup?: (data: unknown) => unknown) => {
   return async (context: HookContext) => {
-    console.log(`Running hook merge-json-patch on ${context.path}.${context.method}`)
     const {method, data, params, service, id} = context
     if (method !== 'patch') return
 

@@ -6,7 +6,7 @@ import type { Static, TProperties } from '@feathersjs/typebox'
 import type { HookContext } from '../../declarations'
 import { dataValidator, queryValidator } from '../../validators'
 import { castAfterValidating } from '../../utils/cast-after-validating'
-import { SlideStyleId, Id, Name, NullableString } from '../../utils/common-types'
+import { SlideStyleId, Id, Name, NullableString, Nullable } from '../../utils/common-types'
 
 const DEFAULT_PAUSE_BETWEEN_DANCES = 3*60
 
@@ -44,7 +44,7 @@ function Introductions() {
 function DanceSet() {
   return  ClosedObject({
     _id: Type.String(),
-    slideStyleId: SlideStyleId(),
+    title: Type.String(),
     titleSlideStyleId: SlideStyleId(),
     program: Type.Array(ClosedObject({
       _id: Type.String(),
@@ -55,14 +55,14 @@ function DanceSet() {
         Type.Literal('EventProgram'),
       ]),
       dance: Type.Optional(Type.String()),
-      eventProgram: EventProgram(),
+      eventProgram: Type.Optional(EventProgram()),
     })),
-    intervalMusic: ClosedObject({
+    intervalMusic: Nullable(ClosedObject({
       name: Type.String(),
       description: Type.String(),
       duration: Type.Number(),
       slideStyleId: SlideStyleId(),
-    })
+    }))
   })
 }
 function EventProgram() {

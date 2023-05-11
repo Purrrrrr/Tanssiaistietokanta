@@ -43,7 +43,8 @@ module.exports = (app) => {
         return service.update(id, { ...event, program}, params)
       },
       patchEventProgram: async (_, {id, program}, params) => {
-        return service.patch(id, { program }, params)
+        data = program.map(({path, ...rest}) => ({...rest, path: '/program'+path}))
+        return service.patch(id, data, { ...params, jsonPatch: true })
       },
       deleteEvent: (_, {id}, params) => service.remove(id, params)
     }
