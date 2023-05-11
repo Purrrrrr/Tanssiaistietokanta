@@ -1,5 +1,6 @@
 import {FetchResult} from '@apollo/client'
 import feathers from '@feathersjs/client'
+import socketio from '@feathersjs/socketio-client'
 import {print} from 'graphql'
 import io from 'socket.io-client'
 
@@ -17,8 +18,8 @@ export const socket = isProd
 // eslint-disable-next-line @typescript-eslint/ban-types
 const app = (feathers as unknown as Function)()
 
-app.configure(feathers.socketio(socket))
-app.configure(feathers.authentication())
+app.configure(socketio(socket))
+//app.configure(feathers.authentication())
 
 export default app
 

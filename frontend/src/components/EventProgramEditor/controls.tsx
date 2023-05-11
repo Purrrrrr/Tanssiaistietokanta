@@ -32,7 +32,15 @@ export function AddIntroductionButton() {
 
 export function newEventProgramItem(): EventProgramRow {
   return {
-    item: {__typename: 'EventProgram', _id: undefined, name: t`placeholderNames.newProgramItem`, showInLists: false},
+    item: {
+      __typename: 'EventProgram',
+      _id: undefined,
+      name: t`placeholderNames.newProgramItem`,
+      description: '',
+      duration: 0,
+      showInLists: false
+    },
+    slideStyleId: null,
     _id: guid(),
   }
 }

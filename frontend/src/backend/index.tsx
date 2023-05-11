@@ -83,7 +83,7 @@ export function makeMutationHook<T, V>(
   const { onCompleted, fireEvent } = options ?? {}
   return (args = {}) => {
     const options : MutationHookOptions<T, V> = {
-      onError: err => { showDefaultErrorToast(err)},
+      onError: err => { showDefaultErrorToast(err) },
       ...args,
       onCompleted: (data) => {
         if (fireEvent) {
