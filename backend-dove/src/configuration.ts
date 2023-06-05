@@ -12,6 +12,8 @@ export const configurationSchema = Type.Intersect([
   })
 ])
 
-export type ApplicationConfiguration = Static<typeof configurationSchema>
+export type ApplicationConfiguration = Static<typeof configurationSchema> & {
+  importExtension: string
+}
 
 export const configurationValidator = getValidator(configurationSchema, dataValidator)

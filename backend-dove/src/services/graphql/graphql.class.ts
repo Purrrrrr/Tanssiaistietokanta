@@ -4,8 +4,9 @@ import { Middleware } from '@feathersjs/koa'
 import { ApolloServer } from "@apollo/server";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import { koaMiddleware } from "@as-integrations/koa";
-import schema from "./graphql.schema";
-import getResolvers from "./graphql.resolvers";
+// import schema from "./graphql.schema";
+import { loadFilesSync } from '@graphql-tools/load-files'
+import { mergeResolvers } from '@graphql-tools/merge'
 
 import type { Application } from '../../declarations'
 
@@ -19,7 +20,6 @@ export type { Graphql, GraphqlData, GraphqlPatch, GraphqlQuery }
 export interface GraphqlServiceOptions {
   app: Application
   schema: string
-  getResolvers: any
   path: string
 }
 
@@ -41,11 +41,9 @@ export class GraphqlService<ServiceParams extends GraphqlParams = GraphqlParams>
   private apolloServerPromise: ResolvablePromise<ApolloServer>
   private resolveApolloServer: (server: ApolloServer) => void = () => {}
   private schema: string
-  private getResolvers: any
 
   constructor(public options: GraphqlServiceOptions) {
     this.schema = options.schema
-    this.getResolvers = options.getResolvers
     const pathRegex = new RegExp(`^${options.path}(/.*')?$`)
     this.apolloMiddleware = async (ctx, next) => {
       if (pathRegex.test(ctx.request.url)) {
@@ -81,7 +79,7 @@ export class GraphqlService<ServiceParams extends GraphqlParams = GraphqlParams>
   }
 
   async setup(app: Application, path: string): Promise<void> {
-    const resolvers = getResolvers(app)
+    const resolvers = this.getResolvers(app)
     const context = ({
       req = {headers: {}},
       context = {}
@@ -99,6 +97,19 @@ export class GraphqlService<ServiceParams extends GraphqlParams = GraphqlParams>
     await server.start();
     this.resolveApolloServer(server)
   }
+
+  getResolvers(app: any) {
+    const extension = app.get('importExtension')
+    const resolvers = loadFilesSync(`${__dirname}/../**/*.resolvers.${extension}`)
+    function applyContext(importedResolvers: any) {
+      if (typeof(importedResolvers) === 'function') {
+        return importedResolvers(app)
+      }
+      return importedResolvers
+    }
+
+    return mergeResolvers(resolvers.map(applyContext))
+  }
 }
 
 interface ResolvablePromise<T> extends Promise<T> {
@@ -114,6 +125,6 @@ function makePromise<T>(): ResolvablePromise<T> {
   return promise
 }
 
-export const getOptions = (app: Application, path: string, schema: string, getResolvers: any) => {
-  return { app, path, schema, getResolvers }
+export const getOptions = (app: Application, path: string, schema: string) => {
+  return { app, path, schema }
 }

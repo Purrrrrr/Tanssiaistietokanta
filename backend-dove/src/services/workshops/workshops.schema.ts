@@ -52,13 +52,13 @@ export const workshopsPatchValidator = getValidator(workshopsPatchSchema, dataVa
 export const workshopsPatchResolver = resolve<Workshops, HookContext>({})
 
 // Schema for allowed query properties
-export const workshopsQueryProperties = workshopsSchema
+export const workshopsQueryProperties = Type.Omit(workshopsSchema, ['danceIds'])
 export const workshopsQuerySchema = Type.Intersect(
   [
     querySyntax(workshopsQueryProperties),
     // Add additional query properties here
     Type.Object({
-      danceIds: Id(),
+      danceIds: Type.Optional(Id()),
     }, { additionalProperties: false })
   ],
   { additionalProperties: false }

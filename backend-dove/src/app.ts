@@ -18,6 +18,7 @@ const app: Application = koa(feathers())
 
 // Load our app configuration (see config/ folder)
 app.configure(configuration(configurationValidator))
+app.set('importExtension', __filename.split('.').at(-1) ?? '.js')
 
 // Set up Koa middleware
 app.use(cors())
