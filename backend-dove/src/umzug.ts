@@ -5,7 +5,8 @@ import type { Application } from './declarations'
 
 export async function migrateDb(app: Application) {
   const context = getContext(app)
-  const umzug = getUmzug(context)
+  const extension = app.get('importExtension')
+  const umzug = getUmzug(context, extension)
 
   await umzug.up()
 }
@@ -18,9 +19,9 @@ export function createMigration(name: string) {
   })
 }
 
-function getUmzug<Ctx extends object>(context: Ctx) {
+function getUmzug<Ctx extends object>(context: Ctx, extension: string = 'ts') {
   return new Umzug<Ctx>({
-    migrations: { glob: ['./migrations/*.ts', { cwd: __dirname}] },
+    migrations: { glob: [`./migrations/*.${extension}`, { cwd: __dirname}] },
     context,
     storage: new JSONStorage({ path: path.join(__dirname, '../data/executed-migrations.json') }),
     logger: console
