@@ -20,10 +20,22 @@ export function createMigration(name: string) {
 }
 
 function getUmzug<Ctx extends object>(context: Ctx, extension: string = 'ts') {
+  const rawStorage = new JSONStorage({ path: path.join(__dirname, '../data/executed-migrations.json') })
+  const replaceExtension = (name: string) => name.replace(/\.ts$/, '.js')
   return new Umzug<Ctx>({
     migrations: { glob: [`./migrations/*.${extension}`, { cwd: __dirname}] },
     context,
-    storage: new JSONStorage({ path: path.join(__dirname, '../data/executed-migrations.json') }),
+    storage: {
+      logMigration({ name }: { name: string }): Promise<void> {
+        return rawStorage.logMigration({name: replaceExtension(name)})
+      },
+      unlogMigration({ name }: { name: string }): Promise<void> {
+        return rawStorage.unlogMigration({name: replaceExtension(name)})
+      },
+      async executed(): Promise<string[]> {
+        return (await rawStorage.executed()).map(name => name.replace(/\.js$/, `.${extension}`))
+      }
+    },
     logger: console
   })
 }
