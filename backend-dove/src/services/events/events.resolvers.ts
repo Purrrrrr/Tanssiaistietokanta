@@ -45,7 +45,13 @@ export default (app: Application) => {
         return service.update(id, { ...event, program}, params)
       },
       patchEventProgram: async (_: any, {id, program}: any, params: EventsParams | undefined) => {
-        const data = program.map(({path, ...rest}: any) => ({...rest, path: '/program'+path}))
+        const data = program.map(({path, ...rest}: any) => { 
+          const line = {...rest, path: '/program'+path}
+          if ('from' in line) {
+            line.from = '/program'+line.from
+          }
+          return line
+        })
         return service.patch(id, data, { ...params, jsonPatch: true })
       },
       deleteEvent: (_: any, {id}: any, params: EventsParams | undefined) => service.remove(id, params)
