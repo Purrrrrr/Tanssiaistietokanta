@@ -7,6 +7,7 @@ import { koaMiddleware } from "@as-integrations/koa";
 // import schema from "./graphql.schema";
 import { loadFilesSync } from '@graphql-tools/load-files'
 import { mergeResolvers } from '@graphql-tools/merge'
+import { logger } from '../../logger'
 
 import type { Application } from '../../declarations'
 
@@ -67,8 +68,12 @@ export class GraphqlService<ServiceParams extends GraphqlParams = GraphqlParams>
     if (!_params) throw new Error('Params needed')
     const {query, ...contextValue} = _params
     const server = await this.apolloServerPromise
-    const { body }= await server.executeOperation(query, { contextValue })
+    const res = await server.executeOperation(query, { contextValue })
+    const { body } = res
     if (body.kind === 'single') {
+      if (body.singleResult.errors) {
+        body.singleResult.errors.forEach(logger.error.bind(logger))
+      }
       return body.singleResult
     }
     throw new Error('Can\'t handle result body of type '+body.kind)
@@ -88,10 +93,12 @@ export class GraphqlService<ServiceParams extends GraphqlParams = GraphqlParams>
       ...context,
       provider: 'graphql'
     })
+
     // Set up Apollo Server
     const server = new ApolloServer({
       typeDefs: this.schema,
       resolvers,
+      logger,
       plugins: [ApolloServerPluginDrainHttpServer({ httpServer: app.server })],
     });
     await server.start();
