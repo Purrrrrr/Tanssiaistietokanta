@@ -58,8 +58,8 @@ function DanceSet() {
       eventProgram: Type.Optional(EventProgram()),
     })),
     intervalMusic: Nullable(ClosedObject({
-      name: Type.String(),
-      description: Type.String(),
+      name: Nullable(Type.String()),
+      description: Nullable(Type.String()),
       duration: Type.Number(),
       slideStyleId: SlideStyleId(),
     }))

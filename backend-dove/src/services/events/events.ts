@@ -22,9 +22,6 @@ import { mergeJsonPatch, SupportsJsonPatch } from '../../hooks/merge-json-patch'
 export * from './events.class'
 export * from './events.schema'
 
-import type { NullableId, ServiceInterface } from '@feathersjs/feathers'
-import { applyPatch, Operation } from 'fast-json-patch'
-
 // A configure function that registers the service and its hooks via `app.configure`
 export const events = (app: Application) => {
   // Register our service on the Feathers application
