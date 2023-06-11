@@ -16,7 +16,7 @@ export const socket = isProd
   ? io('/', {path: '/api/socket.io'})
   : io(devConfig.backendUrl)
 // eslint-disable-next-line @typescript-eslint/ban-types
-const app = (feathers as unknown as Function)()
+const app = feathers()
 
 app.configure(socketio(socket))
 //app.configure(feathers.authentication())
