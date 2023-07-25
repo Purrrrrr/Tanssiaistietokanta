@@ -28,9 +28,9 @@ export function DanceEditor({dance, onDelete, showLink, titleComponent: Title = 
   const [deleteDance] = useDeleteDance()
   const [modifyDance] = usePatchDance()
   const patchDance = useCallback(
-    (patches : Partial<Dance>) => {
+    (patches : Partial<Dance>) =>
       modifyDance({id: dance._id, dance: patches})
-    },
+    ,
     [modifyDance, dance._id]
   )
   const handleDelete = () => {

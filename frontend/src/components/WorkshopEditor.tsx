@@ -46,7 +46,7 @@ export function WorkshopEditor({workshop: workshopInDatabase, reservedAbbreviati
   })
   const saveWorkshop = (data: Partial<Workshop>) => {
     const {dances, name, abbreviation, description, teachers} = data
-    modifyWorkshop({
+    return modifyWorkshop({
       id: workshopId,
       workshop: {
         name,

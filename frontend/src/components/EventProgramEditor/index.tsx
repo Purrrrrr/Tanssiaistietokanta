@@ -39,9 +39,7 @@ interface EventProgramEditorProps {
 
 export function EventProgramEditor({eventId, program: eventProgram}: EventProgramEditorProps) {
   const [patchEventProgram] = usePatchEventProgram()
-  const saveProgram = (program) => {
-    patchEventProgram({id: eventId, program})
-  }
+  const saveProgram = (program) => patchEventProgram({id: eventId, program})
 
   const {formProps, state} = useAutosavingState<EventProgramSettings, JSONPatch>(eventProgram, saveProgram, patch)
   const {danceSets, introductions} = formProps.value

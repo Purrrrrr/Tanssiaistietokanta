@@ -8,11 +8,12 @@ import {MergeableObject, MergeData, MergeResult, toFinalMergeResult} from './typ
 import {StringPath, Version} from '../types'
 import mergeValues from './merge'
 
-export type SyncEvent = 'LOCAL_MODIFICATION' | 'PATCH_SENT' | 'EXTERNAL_MODIFICATION' | 'CONFLICT_RESOLVED'
+export type SyncEvent = 'LOCAL_MODIFICATION' | 'PATCH_SENT' | 'PATCH_RESOLVED' | 'EXTERNAL_MODIFICATION' | 'CONFLICT_RESOLVED'
 
 const debug = createDebug('useAutoSavingState')
 
 export interface SyncStore<T> {
+  patchPending: boolean
   serverState: T
   serverStateTime: number
   conflictOrigin: null | T
@@ -24,6 +25,8 @@ export type SyncAction<T> = {
   serverState: T
 } | {
   type: 'PATCH_SENT'
+} | {
+  type: 'PATCH_RESOLVED'
 } | {
   type: 'LOCAL_MODIFICATION'
   modifications: T | ((t: T) => T)
@@ -39,6 +42,7 @@ export function useAutosavingStateReducer<T extends MergeableObject>(serverState
 
 function getInitialState<T extends MergeableObject>(serverState: T) : SyncStore<T> {
   return {
+    patchPending: false,
     serverState,
     serverStateTime: now(),
     conflictOrigin: null,
@@ -67,12 +71,19 @@ function reducer<T extends MergeableObject>(reducerState : SyncStore<T>, action 
           local: changes,
         },
         reducerState.serverStateTime,
+        reducerState.patchPending,
       )
     }
     case 'PATCH_SENT':
       return {
         ...reducerState,
         serverState: nonConflictingModifications,
+        patchPending: true,
+      }
+    case 'PATCH_RESOLVED':
+      return {
+        ...reducerState,
+        patchPending: false,
       }
     case 'CONFLICT_RESOLVED':
       return resolveConflict(reducerState, action.path, action.version)
@@ -84,6 +95,7 @@ function reducer<T extends MergeableObject>(reducerState : SyncStore<T>, action 
           local: modifications,
         },
         now(),
+        reducerState.patchPending,
       )
   }
 }
@@ -102,6 +114,7 @@ function resolveConflict<T extends MergeableObject>(reducerState: SyncStore<T>, 
           local: modifications,
         },
         reducerState.serverStateTime,
+        reducerState.patchPending,
       )
       return {
         ...merged,
@@ -120,17 +133,19 @@ function resolveConflict<T extends MergeableObject>(reducerState: SyncStore<T>, 
           local: L.set(conflict.localPath, conflict.server, modifications),
         },
         reducerState.serverStateTime,
+        reducerState.patchPending,
       )
   }
 }
 
-function merge<T extends MergeableObject>(mergeData: MergeData<T>, serverStateTime: number) : SyncStore<T> {
+function merge<T extends MergeableObject>(mergeData: MergeData<T>, serverStateTime: number, patchPending: boolean) : SyncStore<T> {
   const mergeResult = toFinalMergeResult(mergeValues(mergeData))
   const hasConflicts = mergeResult.state === 'CONFLICT'
 
   debug({mergeData, mergeResult})
 
   return {
+    patchPending,
     serverState: mergeData.server,
     serverStateTime,
     mergeResult,

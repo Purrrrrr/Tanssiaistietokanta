@@ -33,14 +33,14 @@ export const USE_LOCAL_VALUE = Symbol('useLocalValue')
 
 export function useAutosavingState<T extends MergeableObject, Patch>(
   serverState : T,
-  onPatch : (patch : Patch) => void,
+  onPatch : (patch : Patch) => Promise<unknown>,
   patchStrategy: PatchStrategy<T, Patch>,
   refreshData?: () => unknown,
 ) : UseAutosavingStateReturn<T>
 {
   const [hasErrors, setHasErrors] = useState(false)
   const [reducerState, dispatch] = useAutosavingStateReducer<T>(serverState)
-  const { serverState: originalData, serverStateTime, mergeResult } = reducerState
+  const { serverState: originalData, serverStateTime, mergeResult, patchPending } = reducerState
   const { state: mergeState, modifications, nonConflictingModifications, conflicts } = mergeResult
   const state = hasErrors ? 'INVALID' : mergeState
 
@@ -50,6 +50,7 @@ export function useAutosavingState<T extends MergeableObject, Patch>(
 
   useEffect(() => {
     if (state === 'IN_SYNC' || state === 'INVALID') return
+    if (patchPending) return
 
     const id = setTimeout(() => {
       if (state === 'CONFLICT' && now() - serverStateTime > DISABLE_CONFLICT_OVERRIDE_DELAY) {
@@ -63,11 +64,13 @@ export function useAutosavingState<T extends MergeableObject, Patch>(
         debug('Saving', patch)
         dispatch({ type: 'PATCH_SENT' })
         onPatch(patch)
+          .then(() => dispatch({ type: 'PATCH_RESOLVED' }))
+          .catch(() => dispatch({ type: 'PATCH_RESOLVED' }))
       }
     }, AUTOSAVE_DELAY)
 
     return () => clearTimeout(id)
-  }, [state, nonConflictingModifications, onPatch, originalData, serverStateTime, patchStrategy, refreshData, dispatch])
+  }, [state, nonConflictingModifications, onPatch, originalData, serverStateTime, patchStrategy, refreshData, dispatch, patchPending])
 
   const onModified = useCallback((modifications) => {
     dispatch({ type: 'LOCAL_MODIFICATION', modifications})
