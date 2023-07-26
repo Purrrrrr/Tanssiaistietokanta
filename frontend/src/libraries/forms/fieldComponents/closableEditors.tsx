@@ -4,7 +4,9 @@ import classNames from 'classnames'
 
 import {Icon, Markdown} from 'libraries/ui'
 
+import {SyncStatus} from '../SyncStatus'
 import {ExtendedFieldComponentProps} from '../types'
+import {SyncState} from '../useAutosavingState'
 import {Input} from './basicComponents'
 import {MarkdownEditor} from './MarkdownEditor'
 
@@ -13,8 +15,9 @@ import './ClosableEditor.sass'
 export interface ClickToEditProps extends ExtendedFieldComponentProps<string, HTMLInputElement, ComponentProps<'input'>> {
   valueFormatter?: (value: string) => React.ReactNode
   inline?: boolean
+  syncState?: SyncState
 }
-export function ClickToEdit({value, readOnly, valueFormatter, className, onChange, inline, ...props} : ClickToEditProps) {
+export function ClickToEdit({value, readOnly, valueFormatter, className, onChange, inline, syncState, ...props} : ClickToEditProps) {
   return <ClosableEditor
     className={className}
     inline={inline}
@@ -23,6 +26,7 @@ export function ClickToEdit({value, readOnly, valueFormatter, className, onChang
     aria-label={props['aria-label']}
     closedValue={valueFormatter ? valueFormatter(value ?? '') : value}
   >
+    {syncState && <SyncStatus state={syncState} />}
     <Input {...props} value={value} onChange={onChange} inline={inline} />
   </ClosableEditor>
 }
@@ -31,8 +35,9 @@ export interface ClickToEditMarkdownProps extends ExtendedFieldComponentProps<st
   className?: string
   inline?: boolean
   markdownOverrides?: Record<string, unknown>
+  syncState?: SyncState
 }
-export function ClickToEditMarkdown({value, readOnly, className, onChange, inline, ...props} : ClickToEditMarkdownProps) {
+export function ClickToEditMarkdown({value, readOnly, className, onChange, inline, syncState, ...props} : ClickToEditMarkdownProps) {
   return <ClosableEditor
     className={classNames(className, 'closable-editor-markdown')}
     inline={inline}
@@ -41,6 +46,7 @@ export function ClickToEditMarkdown({value, readOnly, className, onChange, inlin
     aria-label={props['aria-label']}
     closedValue={<Markdown>{value ?? ''}</Markdown>}
   >
+    {syncState && <SyncStatus state={syncState} />}
     <MarkdownEditor {...props} value={value} onChange={onChange} />
   </ClosableEditor>
 }

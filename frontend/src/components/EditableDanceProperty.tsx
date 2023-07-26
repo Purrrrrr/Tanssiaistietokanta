@@ -25,7 +25,7 @@ export function EditableDanceProperty({dance: danceInDatabase, inline, property,
     [danceInDatabase._id, patchDance]
   )
   const partialDance = useMemo(() => ({[property]: danceInDatabase[property]}), [property, danceInDatabase])
-  const {value: dance, onChange: setDance} = useAutosavingState<Partial<Dance>, Partial<Dance>>(partialDance, patch, patchStrategy.partial)
+  const {value: dance, onChange: setDance, state} = useAutosavingState<Partial<Dance>, Partial<Dance>>(partialDance, patch, patchStrategy.partial)
 
   const onChange = (value) => {
     setDance({
@@ -40,12 +40,22 @@ export function EditableDanceProperty({dance: danceInDatabase, inline, property,
   const editorType = props['type']
 
   if (editorType === 'markdown') {
-    return <ClickToEditMarkdown id={property} value={dance[property]} onChange={onChange} aria-label={label} inline={inline} />
+    return <ClickToEditMarkdown
+      id={property}
+      syncState={state}
+      value={dance[property]}
+      onChange={onChange}
+      aria-label={label}
+      inline={inline} />
   }
 
-  return <ClickToEdit id={property} className="editableDanceProperty"
+  return <ClickToEdit
+    id={property}
+    className="editableDanceProperty"
+    syncState={state}
     inline={inline}
-    value={dance[property]} onChange={onChange}
+    value={dance[property]}
+    onChange={onChange}
     aria-label={label}
     valueFormatter={value => value || <span className="addEntry">{addText}</span>}
   />
