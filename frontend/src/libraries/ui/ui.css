@@ -26,3 +26,21 @@
     -moz-outline-radius:6px;
   }
 }
+
+.global-loading-spinner {
+  z-index: 100;
+  position: fixed;
+  inset: 0;
+  background: rgba(128, 128, 128, 0.3);
+  display: grid;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out 0.3s;
+  pointer-events: none;
+}
+.global-loading-spinner.loading{
+  opacity: 1;
+  pointer-events: auto;
+}
+.global-loading-spinner > * {
+  place-self: center;
+}

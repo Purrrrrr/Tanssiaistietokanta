@@ -9,6 +9,7 @@ import {
   Icon as BlueprintIcon,
   IconName as BlueprintIconName,
   InputGroup as BlueprintInputGroup,
+  Spinner,
 } from '@blueprintjs/core'
 import classNames from 'classnames'
 import MarkdownToJsx from 'markdown-to-jsx'
@@ -32,6 +33,11 @@ export const CssClass = {
 type HTMLDivProps = React.HTMLAttributes<HTMLDivElement>;
 export type Intent = 'none' | 'primary' | 'success' | 'warning' | 'danger';
 export type IconName = BlueprintIconName
+
+export function GlobalSpinner({loading}) {
+  const className = classNames('global-loading-spinner', {loading})
+  return <div className={className}><Spinner size={100}/></div>
+}
 
 interface IconProps {
   className?: string

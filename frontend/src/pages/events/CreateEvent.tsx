@@ -6,6 +6,7 @@ import {AdminOnly} from 'services/users'
 
 import {formFor, SubmitButton} from 'libraries/forms'
 import {Breadcrumb} from 'libraries/ui'
+import {useGlobalLoadingAnimation} from 'components/LoadingState'
 import {PageTitle} from 'components/PageTitle'
 import {makeTranslate} from 'utils/translate'
 
@@ -23,6 +24,7 @@ const {
 
 export default function CreateEventForm() {
   const navigate = useNavigate()
+  const addLoadingAnimation = useGlobalLoadingAnimation()
   const [createEvent] = useCreateEvent({
     onCompleted: (data) => navigate('/events/'+data.createEvent._id),
     refetchQueries: ['getEvents']
@@ -32,7 +34,7 @@ export default function CreateEventForm() {
   return <AdminOnly>
     <Breadcrumb text={t`newEventBreadcrumb`} />
     <PageTitle>{t`newEvent`}</PageTitle>
-    <Form value={event} onChange={setEvent} onSubmit={() => createEvent({event})}>
+    <Form value={event} onChange={setEvent} onSubmit={() => addLoadingAnimation(createEvent({event}))}>
       <div>
         <Input label={t`name`} path="name" required />
       </div>

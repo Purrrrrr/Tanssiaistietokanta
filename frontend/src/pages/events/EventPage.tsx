@@ -4,6 +4,7 @@ import {AdminOnly} from 'services/users'
 import {useCreateWorkshop, useDeleteWorkshop} from 'services/workshops'
 
 import {Button, Card, Collapse} from 'libraries/ui'
+import {useGlobalLoadingAnimation} from 'components/LoadingState'
 import {PageTitle} from 'components/PageTitle'
 import {DeleteButton} from 'components/widgets/DeleteButton'
 import {NavigateButton} from 'components/widgets/NavigateButton'
@@ -100,11 +101,12 @@ function EventWorkshops({workshops, eventId}: {workshops: Workshop[], eventId: s
 }
 
 function CreateWorkshopButton({eventId}) {
+  const addLoadingAnimation = useGlobalLoadingAnimation()
   const [createWorkshop] = useCreateWorkshop()
 
   return <AdminOnly>
     <Button
-      onClick={() => createWorkshop({eventId: eventId, workshop: {name: t`newWorkshop`, danceIds: []}})}
+      onClick={() => addLoadingAnimation(createWorkshop({eventId: eventId, workshop: {name: t`newWorkshop`, danceIds: []}}))}
       intent="primary"
       text={t`createWorkshop`}
     />
@@ -112,12 +114,13 @@ function CreateWorkshopButton({eventId}) {
 }
 
 function WorkshopCard({workshop, reservedAbbreviations}: {workshop: Workshop, reservedAbbreviations: string[]}) {
+  const addLoadingAnimation = useGlobalLoadingAnimation()
   const [showEditor, setShowEditor] = useState(false)
   const [deleteWorkshop] = useDeleteWorkshop({refetchQueries: ['getEvent']})
   const {_id, abbreviation, name, description, dances} = workshop
 
   return <Card style={{clear: 'right'}}>
-    <DeleteButton onDelete={() => deleteWorkshop({id: _id})}
+    <DeleteButton onDelete={() => addLoadingAnimation(deleteWorkshop({id: _id}))}
       style={{float: 'right'}} text="Poista"
       confirmText={'Haluatko varmasti poistaa työpajan '+name+'?'}
     />

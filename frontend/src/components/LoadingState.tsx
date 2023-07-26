@@ -1,7 +1,34 @@
-import React from 'react'
+import React, {createContext, useCallback, useContext, useState} from 'react'
 import {ApolloError, ApolloQueryResult} from '@apollo/client'
 
-import {Button, NonIdealState, Spinner} from 'libraries/ui'
+import {Button, GlobalSpinner, NonIdealState, Spinner} from 'libraries/ui'
+
+export const StartLoadingContext = createContext<<T>(promise: Promise<T>) => Promise<T>>(p => p)
+
+export function GlobalLoadingiState({children}) {
+  const [loading, setLoading] = useState(false)
+  const startLoading = useCallback(
+    (promise) => {
+      setLoading(true)
+      promise
+        .then(() => setLoading(false))
+        .catch(() => setLoading(false))
+      return promise
+    },
+    []
+  )
+
+  return <>
+    <StartLoadingContext.Provider value={startLoading}>
+      {children}
+    </StartLoadingContext.Provider>
+    <GlobalSpinner loading={loading}/>
+  </>
+}
+
+export function useGlobalLoadingAnimation() {
+  return useContext(StartLoadingContext)
+}
 
 interface LoadingStateProps {
   loading?: boolean,

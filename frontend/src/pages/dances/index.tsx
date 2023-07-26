@@ -6,6 +6,7 @@ import { filterDances, useCreateDance, useDances } from 'services/dances'
 
 import {Button, Card, FormGroup, SearchBar} from 'libraries/ui'
 import {DanceEditor} from 'components/DanceEditor'
+import {useGlobalLoadingAnimation} from 'components/LoadingState'
 import {PageTitle} from 'components/PageTitle'
 import {showToast} from 'utils/toaster'
 import {uploadDanceFile} from 'utils/uploadDanceFile'
@@ -19,11 +20,12 @@ function DancesPage() {
   const [search, setSearch] = useState('')
   const [dances] = useDances()
   const [createDance] = useCreateDance()
+  const addLoadingAnimation = useGlobalLoadingAnimation()
 
   const filteredDances = filterDances(dances, search)
 
   async function doCreateDance(dance : DanceInput) {
-    const result = await createDance({dance})
+    const result = await addLoadingAnimation(createDance({dance}))
     const id = result.data?.createDance?._id
 
     if (id) {

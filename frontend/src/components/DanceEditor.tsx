@@ -6,6 +6,7 @@ import { useDeleteDance, usePatchDance } from 'services/dances'
 import {formFor, MarkdownEditor, patchStrategy, SyncStatus, useAutosavingState} from 'libraries/forms'
 import {Flex, H2, Icon} from 'libraries/ui'
 import {DanceDataImportButton} from 'components/DanceDataImportDialog'
+import {useGlobalLoadingAnimation} from 'components/LoadingState'
 import {DeleteButton} from 'components/widgets/DeleteButton'
 import {DurationField} from 'components/widgets/DurationField'
 
@@ -25,6 +26,7 @@ const {
 } = formFor<Dance>()
 
 export function DanceEditor({dance, onDelete, showLink, titleComponent: Title = H2} : DanceListItemProps) {
+  const addLoadingAnimation = useGlobalLoadingAnimation()
   const [deleteDance] = useDeleteDance()
   const [modifyDance] = usePatchDance()
   const patchDance = useCallback(
@@ -34,7 +36,7 @@ export function DanceEditor({dance, onDelete, showLink, titleComponent: Title = 
     [modifyDance, dance._id]
   )
   const handleDelete = () => {
-    deleteDance({id: dance._id})
+    addLoadingAnimation(deleteDance({id: dance._id}))
     onDelete && onDelete()
   }
 
