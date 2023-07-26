@@ -2,7 +2,7 @@ import 'react-markdown-editor-lite/lib/index.css'
 import React from 'react'
 import MdEditor, { PluginComponent, Plugins }  from 'react-markdown-editor-lite'
 
-import {Markdown} from 'libraries/ui'
+import {AnchorButton, Markdown} from 'libraries/ui'
 
 import {FieldComponentProps} from '../types'
 
@@ -26,8 +26,28 @@ class QRCode extends PluginComponent<object> {
   }
 }
 
+class HelpLink extends PluginComponent<object> {
+  // Define plugin name here, must be unique
+  static pluginName = 'helplink'
+  // Define which place to be render, default is left, you can also use 'right'
+  static align = 'right'
+
+  render() {
+    return (
+      <AnchorButton
+        intent="primary"
+        small
+        target="_blank"
+        href="https://github.com/akx/markdown-cheatsheet-fi/blob/master/Markdown-Ohje.md"
+      >
+       Ohjeita
+      </AnchorButton>
+    )
+  }
+}
 
 MdEditor.use(QRCode, {})
+MdEditor.use(HelpLink, {})
 MdEditor.unuse(Plugins.Image)
 
 interface MarkdownEditorProps extends FieldComponentProps<string, HTMLTextAreaElement> {
