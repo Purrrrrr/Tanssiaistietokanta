@@ -131,7 +131,7 @@ function ProgramListEditor({path}: {path: ProgramSectionPath}) {
               <Button
                 text={t`buttons.addDance`}
                 rightIcon={<ProgramTypeIcon type="Dance" />}
-                onClick={() => onAddItem({item: {__typename: 'RequestedDance'}, _id: guid()})}
+                onClick={() => onAddItem({item: {__typename: 'RequestedDance'}, slideStyleId: null, _id: guid()})}
                 className="addDance" />
             }
             {isIntroductionsSection
