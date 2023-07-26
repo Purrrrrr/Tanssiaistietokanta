@@ -43,7 +43,8 @@ query getDance($id: ID!) {
   if (variables === undefined) throw new Error('Unknown dance id')
   useCallbackOnDanceChanges(variables.id, refetch)
 })
-export function useCallbackOnDanceChanges(danceId, callback) {
+
+function useCallbackOnDanceChanges(danceId, callback) {
   const callbacks = useMemo(() => {
     const updateFn = () => {
       console.log('Dance has changed, running callback')
