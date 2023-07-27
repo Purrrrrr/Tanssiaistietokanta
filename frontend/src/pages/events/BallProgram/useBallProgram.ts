@@ -159,9 +159,9 @@ function toDanceSetSlides({title: name, ...danceSet}: DanceSet, defaultIntervalM
     program,
   })
   program.forEach(item => {
+    item.parent = danceSetSlide
     if (item.__typename === 'IntervalMusic') return
     item.program = program
-    item.parent = danceSetSlide
   })
 
   return [danceSetSlide, ...program]
