@@ -129,6 +129,9 @@
       ul {
         display: inline-block;
       }
+      ul, ol {
+        margin-left: 50px;
+      }
     }
     .slide-program-description-content {
       padding: 1px;
