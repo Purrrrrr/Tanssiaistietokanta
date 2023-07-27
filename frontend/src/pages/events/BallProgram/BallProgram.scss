@@ -132,6 +132,9 @@
       ul, ol {
         padding-left: 60px;
       }
+      tr + tr, td + td {
+        padding-left: 0.5em;
+      }
     }
     .slide-program-description-content {
       padding: 1px;
