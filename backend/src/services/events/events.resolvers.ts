@@ -7,7 +7,7 @@ export default (app: Application) => {
   const danceService = app.service('dances')
 
   function getWorkshops(eventId: string) {
-    return workshopService.find({query: {eventId}})
+    return workshopService.find({query: {eventId, $sort: { name: 1 }}})
   }
 
   const service = app.service('events')
