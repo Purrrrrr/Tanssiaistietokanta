@@ -40,6 +40,7 @@ export default (app: Application) => {
     Mutation: {
       createEvent: (_: any, {event}: any, params: EventsParams | undefined) => service.create(event, params),
       modifyEvent: (_: any, {id, event}: any, params: EventsParams | undefined) => service.update(id, event, params),
+      patchEvent: (_: any, {id, event}: any, params: EventsParams | undefined) => service.patch(id, event, params),
       modifyEventProgram: async (_: any, {id, program}: any, params: EventsParams | undefined) => {
         const event = await service.get(id)
         return service.update(id, { ...event, program}, params)

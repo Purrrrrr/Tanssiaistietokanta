@@ -72,6 +72,7 @@ type IntervalMusic {
 type Mutation {
   createEvent(event: EventInput!): Event!
   modifyEvent(id: ID!, event: EventInput!): Event!
+  patchEvent(id: ID!, event: EventPatchInput!): Event!
   modifyEventProgram(id: ID!, program: ProgramInput!): Event!
   patchEventProgram(id: ID!, program: JSONPatch!): Event!
   deleteEvent(id: ID!): Event!
@@ -80,6 +81,10 @@ type Mutation {
 input EventInput {
   name: String!
   program: ProgramInput
+}
+
+input EventPatchInput {
+  name: String
 }
 
 input ProgramInput {

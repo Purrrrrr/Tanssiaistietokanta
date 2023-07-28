@@ -1,8 +1,10 @@
-import React, {useState} from 'react'
+import React, {useCallback, useState} from 'react'
 
+import {usePatchEvent} from 'services/events'
 import {AdminOnly} from 'services/users'
 import {useCreateWorkshop, useDeleteWorkshop} from 'services/workshops'
 
+import {ClickToEdit, patchStrategy, useAutosavingState} from 'libraries/forms'
 import {Button, Card, Collapse} from 'libraries/ui'
 import {useGlobalLoadingAnimation} from 'components/LoadingState'
 import {PageTitle} from 'components/PageTitle'
@@ -18,6 +20,7 @@ type Workshop = Event['workshops'][0]
 const t = makeTranslate({
   ballProgram: 'Tanssiaisohjelma',
   noProgram: 'Ei ohjelmaa',
+  eventName: 'Tapahtuman nimi',
   editProgram: 'Muokkaa ohjelmaa',
   addProgram: 'Luo ohjelma',
   workshops: 'Työpajat',
@@ -37,8 +40,33 @@ const t = makeTranslate({
 })
 
 export default function EventPage({event}: {event: Event}) {
+  const [patchEvent] = usePatchEvent()
+  const patch = useCallback(
+    (eventPatch: Partial<Event>) => patchEvent({ id: event._id, event: eventPatch}),
+    [event._id, patchEvent]
+  )
+  const {value: {name: eventName}, onChange: setEvent, state} = useAutosavingState<Event, Partial<Event>>(event, patch, patchStrategy.partial)
+  const onChange = (value) => {
+    setEvent({
+      ...event,
+      name: value,
+    })
+  }
+
   return <>
-    <PageTitle>{event.name}</PageTitle>
+    <PageTitle noRender>
+      {event.name}
+    </PageTitle>
+    <h1>
+      <ClickToEdit
+        id="eventName"
+        inline
+        syncState={state}
+        value={eventName}
+        onChange={onChange}
+        aria-label={t`eventName`}
+      />
+    </h1>
     <t.h2>ballProgram</t.h2>
     <EventProgram program={event.program} />
     <t.h2>workshops</t.h2>
