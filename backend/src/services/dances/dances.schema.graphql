@@ -15,6 +15,7 @@ type Dance implements ProgramItem {
   remarks: String
   teachedIn(eventId: ID): [Workshop!]!
   slideStyleId: ID
+  events: [Event!]!
 }
 
 type Mutation {

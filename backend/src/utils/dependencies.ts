@@ -112,9 +112,9 @@ export function getDependenciesFor(service: ServiceName, item: Entity | Entity[]
   return Array.from(getDependencyLinks(service, id, linkType, otherService))
 }
 
-function getDependencyLinks(service: ServiceName, id: Id, linkType: RelationType): Map<ServiceName, Set<Id>>
-function getDependencyLinks(service: ServiceName, id: Id, linkType: RelationType, otherService: ServiceName): Set<Id>
-function getDependencyLinks(service: ServiceName, id: Id, linkType: RelationType, otherService?: ServiceName) {
+export function getDependencyLinks(service: ServiceName, id: Id, linkType: RelationType): Map<ServiceName, Set<Id>>
+export function getDependencyLinks(service: ServiceName, id: Id, linkType: RelationType, otherService: ServiceName): Set<Id>
+export function getDependencyLinks(service: ServiceName, id: Id, linkType: RelationType, otherService?: ServiceName) {
   const {dependencies, reverseDependencies} = getItemDependencyNode(service, id)
   const links = new Map<ServiceName, Set<Id>>()
 
