@@ -10,10 +10,10 @@ import {useGlobalLoadingAnimation} from 'components/LoadingState'
 import {DeleteButton} from 'components/widgets/DeleteButton'
 import {DurationField} from 'components/widgets/DurationField'
 
-import {Dance} from 'types'
+import {Dance, DanceWithEvents} from 'types'
 
 interface DanceListItemProps {
-  dance: Dance
+  dance: DanceWithEvents
   onDelete?: () => unknown
   showLink?: boolean
   titleComponent?: React.JSXElementConstructor<{className: string, children: React.ReactNode}> | 'h1'
@@ -30,7 +30,7 @@ export function DanceEditor({dance, onDelete, showLink, titleComponent: Title = 
   const [deleteDance] = useDeleteDance()
   const [modifyDance] = usePatchDance()
   const patchDance = useCallback(
-    (patches : Partial<Dance>) =>
+    (patches : Partial<DanceWithEvents>) =>
       modifyDance({id: dance._id, dance: patches})
     ,
     [modifyDance, dance._id]
@@ -50,6 +50,7 @@ export function DanceEditor({dance, onDelete, showLink, titleComponent: Title = 
       {showLink && <Link to={dance._id}><Icon icon="link"/>Linkki tähän tanssiin</Link>}
       <div>
         <DeleteButton onDelete={handleDelete}
+          disabled={dance.events.length > 0}
           text="Poista tanssi"
           confirmText="Haluatko varmasti poistaa tämän tanssin?"
         />
