@@ -2,6 +2,6 @@
   {
     "type": "uses",
     "service": "dances",
-    "path": "program.danceSets.program[__typename='Dance'].danceId"
+    "path": "program.danceSets.program[type='Dance'].dance"
   }
 ]
