@@ -78,7 +78,7 @@ export default (app: Application) => {
   }
 
   async function getDance(id: string) {
-    return id ? await danceService.get(id) : null
+    return id ? await danceService.get(id).catch(() => null) : null
   }
 
   async function addEventProgramData({eventProgram, type: __typename, ...rest}: any) {
