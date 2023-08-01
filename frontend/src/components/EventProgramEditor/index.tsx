@@ -242,7 +242,7 @@ function DanceLoadingEditor({danceId, onDeleteDance}: {danceId: string, onDelete
   if (!result.data?.dance) return <LoadingState {...result} />
 
   const {dance} = result.data
-  return <DanceEditor dance={dance} onDelete={onDeleteDance}  />
+  return <DanceEditor dance={dance} onDelete={onDeleteDance} showLink />
 }
 
 function EventProgramItemEditor({path}: {path: ProgramItemPath}) {

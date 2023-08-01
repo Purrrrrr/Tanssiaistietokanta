@@ -48,7 +48,7 @@ export function DanceEditor({dance, onDelete, showLink, titleComponent: Title = 
         {dance.name}
         <SyncStatus style={{marginLeft: '1ch', top: '3px'}} className="flex-fill" state={state} />
       </Title>
-      {showLink && <Link to={dance._id}><Icon icon="link"/>Linkki tähän tanssiin</Link>}
+      {showLink && <Link to={`/dances/${dance._id}`}><Icon icon="link"/>Linkki tähän tanssiin</Link>}
       <DanceIsUsedIn events={dance.events} />
       <div>
         <DeleteButton onDelete={handleDelete}
