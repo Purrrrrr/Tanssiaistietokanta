@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import { Popover2 } from '@blueprintjs/popover2'
 import { ItemRenderer as BPItemRenderer, QueryList, QueryListProps} from '@blueprintjs/select'
 
-import { ButtonProps, MenuItem, SearchBar } from 'libraries/ui'
+import { Button, ButtonProps, MenuItem, SearchBar } from 'libraries/ui'
 
 import { ActionButton } from '../formControls'
 
@@ -37,11 +37,13 @@ export function Selector<T>({text, buttonProps, items, itemPredicate, selectedIt
 interface MenuButtonProps{
   open?: boolean
   onSetOpen?: (open: boolean) => unknown
+  alwaysEnabled?: boolean
   text: string
   menu: JSX.Element
   buttonProps?: Omit<ButtonProps, 'text'>
 }
-export function MenuButton({text, buttonProps, menu, open, onSetOpen} : MenuButtonProps) {
+export function MenuButton({alwaysEnabled, text, buttonProps, menu, open, onSetOpen} : MenuButtonProps) {
+  const ButtonComp = alwaysEnabled ? Button : ActionButton
   return <Popover2
     interactionKind="click"
     placement="bottom"
@@ -49,7 +51,7 @@ export function MenuButton({text, buttonProps, menu, open, onSetOpen} : MenuButt
     shouldReturnFocusOnClose
     content={menu}
     renderTarget={({ isOpen, ref, ...targetProps }) => (
-      <ActionButton elementRef={ref} text={text} rightIcon="double-caret-vertical" {...buttonProps} {...targetProps} />
+      <ButtonComp elementRef={ref} text={text} rightIcon="double-caret-vertical" {...buttonProps} {...targetProps} />
     )}
     onOpened={onSelectOpen}
     isOpen={open}
