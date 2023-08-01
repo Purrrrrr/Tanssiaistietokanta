@@ -1,10 +1,9 @@
 import React, {useEffect, useState} from 'react'
-import {MenuItem} from '@blueprintjs/core'
 import {Suggest} from '@blueprintjs/select'
 
 import {filterDances, useCreateDance, useDances} from 'services/dances'
 
-import {CssClass} from 'libraries/ui'
+import {CssClass, MenuItem} from 'libraries/ui'
 import {makeTranslate} from 'utils/translate'
 
 import {Dance} from 'types'
