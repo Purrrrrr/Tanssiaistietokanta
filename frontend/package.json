@@ -141,6 +141,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/preset-typescript": "7.21",
     "@graphql-codegen/cli": "2.13.7",
     "@graphql-codegen/client-preset": "1.1.0",
     "@types/jest": "29.0.0",
