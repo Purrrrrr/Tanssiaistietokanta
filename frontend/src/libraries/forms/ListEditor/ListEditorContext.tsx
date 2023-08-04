@@ -23,7 +23,6 @@ import {ListEditorItemData} from './types'
 const HasListEditorContext = createContext<boolean>(false)
 
 interface ListEditorMove {
-  over: Over
   overPath: string | number
   active: Active
   activeId: string | number
@@ -79,7 +78,6 @@ export function ListEditorContextInner({accessibilityContainer, children}: ListE
       if (activeData.type && overData.acceptsTypes?.includes?.(activeData?.type)) {
         //console.log('move '+overData.path)
         setMove({
-          over,
           overPath: overData.path,
           active,
           activePath: activeData.path,

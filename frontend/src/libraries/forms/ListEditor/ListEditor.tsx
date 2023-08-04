@@ -40,12 +40,12 @@ export function ListEditor<T, V extends Entity>({
     </React.Fragment>
   }
 
-  const itemDom = <ListEditorItems
+  const itemDom = <ListEditorItems<T,V>
     items={items}
     itemType={itemType}
     acceptsTypes={acceptsTypes}
     path={path}
-    onChange={onChange}
+    onChangePath={onChange}
     component={Component}
     isTable={isTable}
   />
@@ -65,7 +65,10 @@ export function ListEditor<T, V extends Entity>({
   )
 }
 
-function ListEditorItems<T,V>({items, itemType, acceptsTypes, path, onChange, component, isTable}) {
+interface ListEditorItemsProps<T,V> extends Omit<SortableItemProps<T, V>, 'id' | 'itemIndex'> {
+  items: V[]
+}
+function ListEditorItems<T,V extends Entity>({items, itemType, acceptsTypes, path, onChangePath, component, isTable}: ListEditorItemsProps<T,V>) {
   const move = useContext(ListEditorMoveContext)
   const filteredItems = move
     ? items.filter(item => item._id !== move.activeId)
@@ -73,7 +76,7 @@ function ListEditorItems<T,V>({items, itemType, acceptsTypes, path, onChange, co
 
   const ids = filteredItems.map(item => item._id)
   const wrappers = filteredItems.map((item, index) => {
-    return <SortableItem<T, V> key={item._id} id={item._id} type={itemType} acceptsTypes={acceptsTypes} path={path} onChangePath={onChange} itemIndex={index} component={component} isTable={isTable} />
+    return <SortableItem<T, V> key={item._id} id={item._id} itemType={itemType} acceptsTypes={acceptsTypes} path={path} onChangePath={onChangePath} itemIndex={index} component={component} isTable={isTable} />
   })
 
   if (move && move.overPath === path) {
@@ -82,7 +85,7 @@ function ListEditorItems<T,V>({items, itemType, acceptsTypes, path, onChange, co
     wrappers.push(<SortableItem<any, any>
       key={activeId}
       id={activeId}
-      type={data.current!.type}
+      itemType={data.current!.type}
       acceptsTypes={data.current!.acceptsTypes}
       path={activePath}
       onChangePath={data.current!.onChange}
@@ -99,7 +102,7 @@ function ListEditorItems<T,V>({items, itemType, acceptsTypes, path, onChange, co
 
 interface SortableItemProps<T, V> {
   acceptsTypes?: string[]
-  type?: string
+  itemType?: string
   id: string | number
   isTable?: boolean
   component: ListItemComponent<T, V>
@@ -108,7 +111,7 @@ interface SortableItemProps<T, V> {
   itemIndex: number
 }
 
-export function SortableItem<T, V>({type, acceptsTypes, id, path, onChangePath, itemIndex, component: Component, isTable}: SortableItemProps<T, V>) {
+export function SortableItem<T, V>({itemType, acceptsTypes, id, path, onChangePath, itemIndex, component: Component, isTable}: SortableItemProps<T, V>) {
   const {
     isDragging,
     attributes: { tabIndex, ...attributes},
@@ -120,7 +123,7 @@ export function SortableItem<T, V>({type, acceptsTypes, id, path, onChangePath, 
   } = useSortable({
     id,
     data: {
-      type,
+      type: itemType,
       acceptsTypes,
       path,
       onChangePath: onChangePath as OnChangeHandler<unknown>,
