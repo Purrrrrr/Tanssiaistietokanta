@@ -36,11 +36,11 @@ export const ListEditorMoveContext = createContext<ListEditorMove | null>(null)
 
 export interface ListEditorContextProps {
   accessibilityContainer?: Element | undefined
-  children: React.ReactElement
+  children: JSX.Element | JSX.Element[]
 }
 export function ListEditorContext({accessibilityContainer, children}: ListEditorContextProps) {
   const hasExistingContext = useContext(HasListEditorContext)
-  if (hasExistingContext) return children
+  if (hasExistingContext) return <>{children}</>
 
   return (
     <ListEditorContextInner accessibilityContainer={accessibilityContainer}>

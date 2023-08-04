@@ -1,9 +1,9 @@
-import React, {useMemo, useRef, useState} from 'react'
+import React, {useCallback, useMemo, useRef, useState} from 'react'
 
 import { useDance } from 'services/dances'
 import {usePatchEventProgram} from 'services/events'
 
-import {ActionButton as Button, ClickToEdit, MarkdownEditor, MenuButton, SyncStatus, useAutosavingState} from 'libraries/forms'
+import {ActionButton as Button, ClickToEdit, ListEditorContext, MarkdownEditor, MenuButton, SyncStatus, useAutosavingState} from 'libraries/forms'
 import {Card, CssClass, Flex, HTMLTable} from 'libraries/ui'
 import {DanceEditor} from 'components/DanceEditor'
 import {LoadingState} from 'components/LoadingState'
@@ -54,8 +54,10 @@ export function EventProgramEditor({eventId, program: eventProgram}: EventProgra
         {introductions.program.length === 0 && <AddIntroductionButton />}
         <Field label="" inline path="slideStyleId" component={SlideStyleSelector} componentProps={{text: t`fields.eventDefaultStyle`}} />
       </div>
-      <IntroductoryInformation />
-      <ListField labelStyle="hidden-nowrapper" label="" path="danceSets" component={DanceSetEditor} renderConflictItem={renderDanceSetValue} />
+      <ListEditorContext>
+        <IntroductoryInformation />
+        <ListField labelStyle="hidden-nowrapper" label="" path="danceSets" component={DanceSetEditor} renderConflictItem={renderDanceSetValue} />
+      </ListEditorContext>
       <div className="addDanceSetButtons">
         {danceSets.length === 0 && t`danceProgramIsEmpty`}
         <AddDanceSetButton />
@@ -98,10 +100,11 @@ function ProgramListEditor({path}: {path: ProgramSectionPath}) {
   const onAddItem = useAppendToList(programPath)
   const accessibilityContainer = useRef<HTMLDivElement>(null)
   const programRow = useValueAt(path)
-  const accepts = useMemo(() => ['eventProgram'], [])
+  const getType = useCallback((item: EventProgramRow) => item.item.__typename, [])
+  const isIntroductionsSection = path.startsWith('introductions')
+  const accepts = useMemo(() => isIntroductionsSection ? ['EventProgram'] : ['Dance', 'RequestedDance', 'EventProgram'], [isIntroductionsSection])
   if (!programRow) return null
   const { program } = programRow
-  const isIntroductionsSection = path.startsWith('introductions')
   const intervalMusicDuration = isIntroductionsSection
     ? 0
     : (programRow as DanceSet).intervalMusic?.duration ?? 0
@@ -118,7 +121,7 @@ function ProgramListEditor({path}: {path: ProgramSectionPath}) {
           </thead>
       }
       <tbody>
-        <ListField labelStyle="hidden-nowrapper" label="" itemType="eventProgram" acceptsTypes={accepts} droppableElement={tableRef.current} isTable path={programPath} component={ProgramItemEditor} renderConflictItem={programItemToString} accessibilityContainer={accessibilityContainer.current ?? undefined} />
+        <ListField labelStyle="hidden-nowrapper" label="" itemType={getType} acceptsTypes={accepts} droppableElement={tableRef.current} isTable path={programPath} component={ProgramItemEditor} renderConflictItem={programItemToString} accessibilityContainer={accessibilityContainer.current ?? undefined} />
         {program.length === 0 &&
             <tr>
               <t.td className={CssClass.textMuted+ ' noProgram'} colSpan="5">programListIsEmpty</t.td>

@@ -17,7 +17,7 @@ import {FieldComponentProps, OnChangeHandler, TypedStringPath} from '../types'
 import {ListEditorContext, ListEditorMoveContext} from './ListEditorContext'
 
 export interface ListEditorProps<T, V extends Entity> extends FieldComponentProps<V[]> {
-  itemType?: string
+  itemType?: string | ((value: V) => string)
   droppableElement?: HTMLElement | null
   acceptsTypes?: string[]
   isTable?: boolean
@@ -65,7 +65,8 @@ export function ListEditor<T, V extends Entity>({
   )
 }
 
-interface ListEditorItemsProps<T, V> extends Omit<SortableItemProps<T, V>, 'id' | 'itemIndex'> {
+interface ListEditorItemsProps<T, V> extends Omit<SortableItemProps<T, V>, 'id' | 'itemIndex' | 'itemType'> {
+  itemType?: string | ((value: V) => string)
   items: V[]
 }
 function ListEditorItems<T, V extends Entity>({items, itemType, acceptsTypes, path, onChangePath, component, isTable}: ListEditorItemsProps<T, V>) {
@@ -76,7 +77,8 @@ function ListEditorItems<T, V extends Entity>({items, itemType, acceptsTypes, pa
 
   const ids = filteredItems.map(item => item._id)
   const wrappers = filteredItems.map((item, index) => {
-    return <SortableItem<T, V> key={item._id} id={item._id} itemType={itemType} acceptsTypes={acceptsTypes} path={path} onChangePath={onChangePath} itemIndex={index} component={component} isTable={isTable} />
+    const type = typeof itemType === 'function' ? itemType(item) : itemType
+    return <SortableItem<T, V> key={item._id} id={item._id} itemType={type} acceptsTypes={acceptsTypes} path={path} onChangePath={onChangePath} itemIndex={index} component={component} isTable={isTable} />
   })
 
   if (move && move.overPath === path) {
