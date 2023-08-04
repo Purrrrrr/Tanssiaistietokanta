@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react'
+import React, {useMemo, useRef, useState} from 'react'
 
 import { useDance } from 'services/dances'
 import {usePatchEventProgram} from 'services/events'
@@ -93,10 +93,12 @@ const DanceSetEditor = React.memo(function DanceSetEditor({itemIndex, dragHandle
 })
 
 function ProgramListEditor({path}: {path: ProgramSectionPath}) {
+  const tableRef = useRef(null)
   const programPath = `${path}.program` as const
   const onAddItem = useAppendToList(programPath)
   const accessibilityContainer = useRef<HTMLDivElement>(null)
   const programRow = useValueAt(path)
+  const accepts = useMemo(() => ['eventProgram'], [])
   if (!programRow) return null
   const { program } = programRow
   const isIntroductionsSection = path.startsWith('introductions')
@@ -106,7 +108,7 @@ function ProgramListEditor({path}: {path: ProgramSectionPath}) {
 
   return <>
     <div ref={accessibilityContainer} />
-    <HTMLTable condensed bordered className="programList">
+    <HTMLTable elementRef={tableRef} condensed bordered className="programList">
       {program.length === 0 ||
           <thead>
             <tr>
@@ -116,7 +118,7 @@ function ProgramListEditor({path}: {path: ProgramSectionPath}) {
           </thead>
       }
       <tbody>
-        <ListField labelStyle="hidden-nowrapper" label="" isTable path={programPath} component={ProgramItemEditor} renderConflictItem={programItemToString} accessibilityContainer={accessibilityContainer.current ?? undefined} />
+        <ListField labelStyle="hidden-nowrapper" label="" itemType="eventProgram" acceptsTypes={accepts} droppableElement={tableRef.current} isTable path={programPath} component={ProgramItemEditor} renderConflictItem={programItemToString} accessibilityContainer={accessibilityContainer.current ?? undefined} />
         {program.length === 0 &&
             <tr>
               <t.td className={CssClass.textMuted+ ' noProgram'} colSpan="5">programListIsEmpty</t.td>
