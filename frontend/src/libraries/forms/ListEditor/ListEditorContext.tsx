@@ -17,13 +17,18 @@ import {
   arrayMove,
   sortableKeyboardCoordinates,
 } from '@dnd-kit/sortable'
+import * as L from 'partial.lenses'
 
 import {ListEditorItemData} from './types'
+
+import {useOnChangeFor} from '../hooks'
+import {toArrayPath} from '../types'
 
 const HasListEditorContext = createContext<boolean>(false)
 
 interface ListEditorMove {
   overPath: string | number
+  overData: ListEditorItemData
   activeId: string | number
   activeData: ListEditorItemData
 }
@@ -47,6 +52,7 @@ export function ListEditorContext({accessibilityContainer, children}: ListEditor
 }
 
 export function ListEditorContextInner({accessibilityContainer, children}: ListEditorContextProps) {
+  const onChange = useOnChangeFor('')
   const [move, setMove] = useState<ListEditorMove | null>(null)
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -78,12 +84,40 @@ export function ListEditorContextInner({accessibilityContainer, children}: ListE
         //console.log('move '+overData.path)
         setMove({
           overPath: overData.path,
+          overData,
           activeId: active.id,
           activeData,
         })
       }
     },
     [move]
+  )
+  const handleDragEnd = useCallback(
+    function handleDragEnd(event: DragEndEvent) {
+      setMove(null)
+      const {active, over} = event
+
+      if (over === null) return
+      if (active.id === over.id) return
+      const activeData = getData(active)
+      const overData = getData(over)
+      if (activeData !== undefined && overData !== undefined) {
+        if (activeData.path === overData.path) {
+          activeData.onChangePath((items: unknown[]) => arrayMove(items, activeData.itemIndex, overData.itemIndex))
+        } else if (move) {
+          onChange(formValue => {
+            const movePath = [...toArrayPath(activeData.path as any), activeData.itemIndex]
+            const moved = L.get(movePath, formValue)
+            return L.set(
+              [...toArrayPath(move.overData.path as any), L.slice(overData.itemIndex, 0)],
+              [moved],
+              L.remove(movePath, formValue)
+            )
+          })
+        }
+      }
+    },
+    [move, onChange]
   )
 
   return (
@@ -92,7 +126,7 @@ export function ListEditorContextInner({accessibilityContainer, children}: ListE
       sensors={sensors}
       collisionDetection={collisionDetectionStrategy}
       onDragOver={onDragOver}
-      onDragEnd={e => {handleDragEnd(e); setMove(null)}}
+      onDragEnd={handleDragEnd}
       onDragCancel={() => setMove(null)}
     >
       <ListEditorMoveContext.Provider value={move}>
@@ -120,22 +154,6 @@ const collisionDetectionStrategy: CollisionDetection = (args) => {
       }
     ),
   })
-}
-
-function handleDragEnd(event: DragEndEvent) {
-  const {active, over} = event
-
-  if (over === null) return
-  if (active.id !== over.id) {
-    const activeData = getData(active)
-    const overData = getData(over)
-    if (activeData !== undefined && overData !== undefined) {
-      if (activeData.path === overData.path) {
-        activeData.onChangePath((items: unknown[]) => arrayMove(items, activeData.itemIndex, overData.itemIndex))
-        return
-      }
-    }
-  }
 }
 
 function getData(item: Active | Over | DroppableContainer | undefined | null): ListEditorItemData | undefined {
