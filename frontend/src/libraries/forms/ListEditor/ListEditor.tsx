@@ -40,7 +40,7 @@ export function ListEditor<T, V extends Entity>({
     </React.Fragment>
   }
 
-  const itemDom = <ListEditorItems<T,V>
+  const itemDom = <ListEditorItems<T, V>
     items={items}
     itemType={itemType}
     acceptsTypes={acceptsTypes}
@@ -65,10 +65,10 @@ export function ListEditor<T, V extends Entity>({
   )
 }
 
-interface ListEditorItemsProps<T,V> extends Omit<SortableItemProps<T, V>, 'id' | 'itemIndex'> {
+interface ListEditorItemsProps<T, V> extends Omit<SortableItemProps<T, V>, 'id' | 'itemIndex'> {
   items: V[]
 }
-function ListEditorItems<T,V extends Entity>({items, itemType, acceptsTypes, path, onChangePath, component, isTable}: ListEditorItemsProps<T,V>) {
+function ListEditorItems<T, V extends Entity>({items, itemType, acceptsTypes, path, onChangePath, component, isTable}: ListEditorItemsProps<T, V>) {
   const move = useContext(ListEditorMoveContext)
   const filteredItems = move
     ? items.filter(item => item._id !== move.activeId)
@@ -80,17 +80,17 @@ function ListEditorItems<T,V extends Entity>({items, itemType, acceptsTypes, pat
   })
 
   if (move && move.overPath === path) {
-    const { activeId, activePath, active: {data} } = move
+    const { activeId, activeData } = move
     ids.push(activeId)
-    wrappers.push(<SortableItem<any, any>
+    wrappers.push(<SortableItem
       key={activeId}
       id={activeId}
-      itemType={data.current!.type}
-      acceptsTypes={data.current!.acceptsTypes}
-      path={activePath}
-      onChangePath={data.current!.onChange}
-      itemIndex={data.current!.itemIndex}
-      component={data.current!.component}
+      itemType={activeData.type}
+      acceptsTypes={activeData.acceptsTypes}
+      path={activeData.path}
+      onChangePath={activeData.onChangePath as OnChangeHandler<any>}
+      itemIndex={activeData.itemIndex}
+      component={activeData.component as ListItemComponent<any, any>}
       isTable={isTable}
     />)
   }

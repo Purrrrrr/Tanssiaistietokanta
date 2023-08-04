@@ -24,9 +24,8 @@ const HasListEditorContext = createContext<boolean>(false)
 
 interface ListEditorMove {
   overPath: string | number
-  active: Active
   activeId: string | number
-  activePath: string | number
+  activeData: ListEditorItemData
 }
 export const ListEditorMoveContext = createContext<ListEditorMove | null>(null)
 
@@ -55,7 +54,7 @@ export function ListEditorContextInner({accessibilityContainer, children}: ListE
       coordinateGetter: sortableKeyboardCoordinates,
     }), []))
   )
-  console.log(`move ${move?.activePath} -> ${move?.overPath}`)
+  // console.log(`move ${move?.activeData.path} -> ${move?.overPath}`)
 
   const onDragOver = useCallback(
     ({over, active}: DragOverEvent) => {
@@ -65,13 +64,13 @@ export function ListEditorContextInner({accessibilityContainer, children}: ListE
       if (!activeData || !over || !overData) return
       //console.log(overData.path+'  '+overData.itemIndex)
       if (over.id === active.id) {
-        console.log('over itself?')
+        // console.log('over itself?')
         return
       }
       if (activeData.path === overData.path) {
         if (move) {
-          console.log(activeData)
           setMove(null)
+          // console.log(activeData)
         }
         return
       }
@@ -79,9 +78,8 @@ export function ListEditorContextInner({accessibilityContainer, children}: ListE
         //console.log('move '+overData.path)
         setMove({
           overPath: overData.path,
-          active,
-          activePath: activeData.path,
           activeId: active.id,
+          activeData,
         })
       }
     },
