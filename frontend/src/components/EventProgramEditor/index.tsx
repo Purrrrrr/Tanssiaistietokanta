@@ -27,7 +27,7 @@ import {
   useValueAt,
 } from './form'
 import {JSONPatch, patch} from './patchStrategy'
-import {DanceProgramChooser, InheritedSlideStyleSelector, MoveItemToSectionSelector} from './selectors'
+import {DanceProgramChooser, InheritedSlideStyleSelector} from './selectors'
 import t from './translations'
 
 import './EventProgramEditor.sass'
@@ -189,7 +189,6 @@ const ProgramItemEditor = React.memo(function ProgramItemEditor({dragHandle, pat
     <td>
       {dragHandle}
       <InheritedSlideStyleSelector path={`${itemPath}.slideStyleId`} text={t`fields.style`} />
-      <MoveItemToSectionSelector itemPath={itemPath} />
       <RemoveItemButton path={path} index={itemIndex} title={t`buttons.remove`} icon="cross" className="deleteItem" />
     </td>
   </React.Fragment>
