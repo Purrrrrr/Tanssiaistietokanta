@@ -3,7 +3,7 @@ import {Route, Routes, useParams} from 'react-router-dom'
 
 import {useEvent} from 'services/events'
 
-import {Breadcrumb, Icon} from 'libraries/ui'
+import {Breadcrumb} from 'libraries/ui'
 import {LoadingState} from 'components/LoadingState'
 import Dances from 'pages/dances'
 import Dance from 'pages/dances/Dance'
@@ -18,7 +18,7 @@ import DanceList from 'pages/events/print/DanceList'
 
 export default function MainRoutes() {
   return <>
-    <Breadcrumb text={<><Icon icon="home" />Tanssiaistietokanta</>} />
+    <Breadcrumb text={<><img src="/fan32.png" />{' '}Tanssiaistietokanta</>} />
     <Routes>
       <Route index element={<EventList/>} />
       <Route path="events/new" element={<CreateEvent/>} />
