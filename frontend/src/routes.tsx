@@ -18,7 +18,7 @@ import DanceList from 'pages/events/print/DanceList'
 
 export default function MainRoutes() {
   return <>
-    <Breadcrumb text={<><img src="/fan32.png" />{' '}Tanssiaistietokanta</>} />
+    <Breadcrumb text={<><img src="/fan32.png" alt=""/>{' '}Tanssiaistietokanta</>} />
     <Routes>
       <Route index element={<EventList/>} />
       <Route path="events/new" element={<CreateEvent/>} />
