@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { Popover2 } from '@blueprintjs/popover2'
+import { Popover } from '@blueprintjs/core'
 import { ItemRenderer as BPItemRenderer, QueryList, QueryListProps} from '@blueprintjs/select'
 
 import { Button, ButtonProps, MenuItem, SearchBar } from 'libraries/ui'
@@ -44,25 +44,24 @@ interface MenuButtonProps{
 }
 export function MenuButton({alwaysEnabled, text, buttonProps, menu, open, onSetOpen} : MenuButtonProps) {
   const ButtonComp = alwaysEnabled ? Button : ActionButton
-  return <Popover2
+  return <Popover
     interactionKind="click"
     placement="bottom"
     lazy
     shouldReturnFocusOnClose
     content={menu}
-    renderTarget={({ isOpen, ref, ...targetProps }) => (
-      <ButtonComp elementRef={ref} text={text} rightIcon="double-caret-vertical" {...buttonProps} {...targetProps} />
-    )}
     onOpened={onSelectOpen}
     isOpen={open}
     onInteraction={onSetOpen}
-  />
+  >
+    <ButtonComp text={text} rightIcon="double-caret-vertical" {...buttonProps} />
+  </Popover>
 }
 
 function onSelectOpen(e: HTMLElement) {
   e.scrollIntoView({behavior: 'smooth', block: 'nearest', inline: 'nearest'})
 
-  const menu = e.querySelector('.bp4-menu') as HTMLElement | null
+  const menu = e.querySelector('.bp5-menu') as HTMLElement | null
   const selected = e.querySelector('[aria-selected="true"]') as HTMLElement | null
 
   if (menu && selected) {

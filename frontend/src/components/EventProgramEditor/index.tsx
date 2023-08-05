@@ -106,7 +106,7 @@ function ProgramListEditor({path}: {path: ProgramSectionPath}) {
 
   return <>
     <div ref={accessibilityContainer} />
-    <HTMLTable condensed bordered className="programList">
+    <HTMLTable compact bordered className="programList">
       {program.length === 0 ||
           <thead>
             <tr>

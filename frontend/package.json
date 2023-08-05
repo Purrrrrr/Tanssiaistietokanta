@@ -4,9 +4,9 @@
   "private": true,
   "dependencies": {
     "@apollo/client": "^3.6.9",
-    "@blueprintjs/core": "4.11.3",
-    "@blueprintjs/icons": "4.7.0",
-    "@blueprintjs/select": "4.7.0",
+    "@blueprintjs/core": "^5.2.0",
+    "@blueprintjs/icons": "^5.1.5",
+    "@blueprintjs/select": "^5.0.8",
     "@dnd-kit/sortable": "^7.0.2",
     "@feathersjs/client": "^5.0.5",
     "@feathersjs/socketio-client": "^5.0.5",
