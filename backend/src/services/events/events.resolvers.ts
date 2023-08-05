@@ -34,7 +34,7 @@ export default (app: Application) => {
       __resolveType: (obj: { __typename: any }) => obj.__typename
     },
     Query: {
-      events: (_: any, __: any, params: EventsParams | undefined) => service.find({...params, query: { $sort: {  name: 1} } }),
+      events: (_: any, __: any, params: EventsParams | undefined) => service.find({...params, query: { $sort: { beginDate: -1, name: 1} } }),
       event: (_: any, {id}: any, params: EventsParams | undefined) => service.get(id, params)
     },
     Mutation: {
