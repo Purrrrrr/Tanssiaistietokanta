@@ -17,13 +17,13 @@ export type WritableDanceProperty = Exclude<keyof Dance, '_id' | '__typename' | 
 
 export const dancePropertyLabels : {[Key in WritableDanceProperty]: string} = {
   name: 'Nimi',
-  description: 'Kuvaus',
+  description: 'Kuvaus ja lyhyt ohje',
   remarks: 'Huomautuksia',
   duration: 'Kesto',
   prelude: 'Alkusoitto',
   formation: 'Tanssikuvio',
   category: 'Kategoria',
-  instructions: 'Tanssiohjeet',
+  instructions: 'Pidemmät tanssiohjeet printtiin',
   slideStyleId: 'Tanssiaisten diatyyli',
 }
 
