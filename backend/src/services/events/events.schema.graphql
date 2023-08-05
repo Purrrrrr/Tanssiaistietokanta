@@ -6,6 +6,8 @@ type Query {
 type Event {
   _id: ID!
   name: String!
+  beginDate: String!
+  endDate: String!
   program: EventProgramSettings!
   workshops: [Workshop!]!
 }
@@ -80,11 +82,15 @@ type Mutation {
 
 input EventInput {
   name: String!
+  beginDate: String!
+  endDate: String!
   program: ProgramInput
 }
 
 input EventPatchInput {
   name: String
+  beginDate: String
+  endDate: String
 }
 
 input ProgramInput {

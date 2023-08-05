@@ -5,7 +5,7 @@ import { backendQueryHook, entityCreateHook, entityDeleteHook, entityListQueryHo
 setupServiceUpdateFragment(
   'events',
   `fragment EventFragment on Event {
-    _id, name
+    _id, name, beginDate, endDate,
     program {
       defaultIntervalMusic {
         name
@@ -138,7 +138,7 @@ export function useEventSlideStyles({
 const useEventInternal = backendQueryHook(graphql(`
 query getEvent($id: ID!) {
   event(id: $id) {
-    _id, name
+    _id, name, beginDate, endDate,
     program {
       defaultIntervalMusic {
         name
@@ -228,21 +228,21 @@ query getEvents {
 export const useCreateEvent = entityCreateHook('events', graphql(`
 mutation createEvent($event: EventInput!) {
   createEvent(event: $event) {
-    _id, name
+    _id, name, beginDate, endDate
   }
 }`))
 
 export const usePatchEvent = entityUpdateHook('events', graphql(`
 mutation patchEvent($id: ID!, $event: EventPatchInput!) {
   patchEvent(id: $id, event: $event) {
-    _id, name
+    _id, name, beginDate, endDate
   }
 }`))
 
 export const usePatchEventProgram = entityUpdateHook('events', graphql(`
 mutation patchEventProgram($id: ID!, $program: JSONPatch!) {
   patchEventProgram(id: $id, program: $program) {
-    _id, name
+    _id, name, beginDate, endDate,
     program {
       defaultIntervalMusic {
         name

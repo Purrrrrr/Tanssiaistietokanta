@@ -20,3 +20,17 @@ export function Nullable(t: TSchema) {
 export function NullableString() {
   return Type.Union([Type.Null(), Type.String()])
 }
+
+export function Date() {
+  return Type.String({
+    format: 'date',
+    default: '0000-01-01',
+  })
+}
+
+export function DateTime() {
+  return Type.String({
+    format: 'date-time',
+    default: '0000-01-01T00:00:00',
+  })
+}

@@ -15,12 +15,14 @@ const t = makeTranslate({
   newEvent: 'Luo uusi tapahtuma',
   create: 'Luo',
   name: 'Nimi',
+  beginDate: 'Tapahtuman alkaa',
+  endDate: 'Tapahtuma loppuu',
 })
 
 const {
   Form,
   Input,
-} = formFor<{name: string}>()
+} = formFor<{name: string, beginDate: string, endDate: string}>()
 
 export default function CreateEventForm() {
   const navigate = useNavigate()
@@ -29,7 +31,7 @@ export default function CreateEventForm() {
     onCompleted: (data) => navigate('/events/'+data.createEvent._id),
     refetchQueries: ['getEvents']
   })
-  const [event, setEvent] = useState({name: ''})
+  const [event, setEvent] = useState({name: '', beginDate: '', endDate: ''})
 
   return <AdminOnly>
     <Breadcrumb text={t`newEventBreadcrumb`} />
@@ -37,6 +39,8 @@ export default function CreateEventForm() {
     <Form value={event} onChange={setEvent} onSubmit={() => addLoadingAnimation(createEvent({event}))}>
       <div>
         <Input label={t`name`} path="name" required />
+        <Input label={t`beginDate`} path="beginDate" required />
+        <Input label={t`endDate`} path="endDate" required />
       </div>
       <SubmitButton text={t`create`} />
     </Form>
