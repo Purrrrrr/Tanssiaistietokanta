@@ -4,7 +4,7 @@ import {useNavigate} from 'react-router-dom'
 import {useCreateEvent} from 'services/events'
 import {AdminOnly} from 'services/users'
 
-import {formFor, SubmitButton} from 'libraries/forms'
+import {DateRangeField, formFor, SubmitButton} from 'libraries/forms'
 import {Breadcrumb} from 'libraries/ui'
 import {useGlobalLoadingAnimation} from 'components/LoadingState'
 import {PageTitle} from 'components/PageTitle'
@@ -15,14 +15,21 @@ const t = makeTranslate({
   newEvent: 'Luo uusi tapahtuma',
   create: 'Luo',
   name: 'Nimi',
-  beginDate: 'Tapahtuman alkaa',
-  endDate: 'Tapahtuma loppuu',
+  eventDate: 'Tapahtuman kesto',
+  beginDate: 'Alku',
+  endDate: 'Loppu',
 })
+
+interface EventForm {
+  name: string
+  beginDate: string
+  endDate: string
+}
 
 const {
   Form,
   Input,
-} = formFor<{name: string, beginDate: string, endDate: string}>()
+} = formFor<EventForm>()
 
 export default function CreateEventForm() {
   const navigate = useNavigate()
@@ -39,8 +46,15 @@ export default function CreateEventForm() {
     <Form value={event} onChange={setEvent} onSubmit={() => addLoadingAnimation(createEvent({event}))}>
       <div>
         <Input label={t`name`} path="name" required />
-        <Input label={t`beginDate`} path="beginDate" required />
-        <Input label={t`endDate`} path="endDate" required />
+        <DateRangeField<EventForm>
+          id="eventDate"
+          label={t`eventDate`}
+          beginLabel={t`beginDate`}
+          beginPath="beginDate"
+          endLabel={t`endDate`}
+          endPath="endDate"
+          required
+        />
       </div>
       <SubmitButton text={t`create`} />
     </Form>
