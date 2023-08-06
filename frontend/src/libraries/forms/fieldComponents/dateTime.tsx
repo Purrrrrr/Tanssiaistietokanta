@@ -32,13 +32,12 @@ export function DateFieldInput({value, onChange, inline, readOnly, id, showTime,
     inputProps={{
       id,
     }}
-    defaultValue="2000-01-01"
     minDate={toDate(minDate) ?? defaultMin}
     maxDate={toDate(maxDate) ?? defaultMax}
     timePrecision={showTime ? 'minute' : undefined}
     formatDate={date => format(date, valueFormat) }
     parseDate={date => parse(date, valueFormat, referenceDate)}
-    value={value || '2000-01-01'}
+    value={value || null}
     canClearSelection={false}
     onChange={value => onChange(value ?? '')}
     {...props}
@@ -48,6 +47,7 @@ export function DateFieldInput({value, onChange, inline, readOnly, id, showTime,
 export interface DateRangeFieldProps<T> extends Omit<FieldPropsWithoutComponent<T, string>, 'path'> {
   id: string
   showTime?: boolean
+  allowSingleDayRange?: boolean
   minDate?: string | Date | undefined
   maxDate?: string | Date | undefined
   beginPath: FieldPropsWithoutComponent<T, string>['path']
@@ -62,7 +62,7 @@ export function DateRangeField<T>(
     beginPath, beginLabel,
     endPath, endLabel,
     label, labelStyle, labelInfo, inline, helperText,
-    showTime, minDate, maxDate,
+    allowSingleDayRange, showTime, minDate, maxDate,
     ...rest
   }: DateRangeFieldProps<T>
 ) {
@@ -110,6 +110,8 @@ export function DateRangeField<T>(
 
   return <DateRangeInput
     disabled={beginFieldProps.readOnly || endFieldProps.readOnly}
+    allowSingleDayRange={allowSingleDayRange}
+    shortcuts={false}
     startInputProps={{
       ...beginFieldProps
     }}
