@@ -32,7 +32,10 @@ const autoHideText: Record<SyncState, boolean> = {
   INVALID: false,
 }
 
-export function SyncStatus({state, block, className, style} : { state : SyncState, block?: boolean, className?: string, style?: React.CSSProperties }) {
+export function SyncStatus(
+  {state, block, className, style, floatRight: right}:
+  {state : SyncState, block?: boolean, className?: string, style?: React.CSSProperties, floatRight?: boolean }
+) {
   const previousState = useRef<SyncState | null>(null)
   const [changed, setChanged] = useState(false)
   useEffect(() => {
@@ -46,11 +49,12 @@ export function SyncStatus({state, block, className, style} : { state : SyncStat
     }, 1000)
     return () => clearTimeout(id)
   }, [state])
+  const fullClassName = classNames(
+    className, 'sync_status', state.toLowerCase(),
+    {'status-changed': changed, 'always-show-status': !autoHideText[state], block, right}
+  )
 
-  return <span
-    style={style}
-    className={classNames(className, 'sync_status', state.toLowerCase(), {'status-changed': changed, 'always-show-status': !autoHideText[state], block})}
-  >
+  return <span style={style} className={fullClassName}>
     <Icon icon={icons[state]} intent={iconIntents[state]} />
     <span className="text">{texts[state]}</span>
   </span>
