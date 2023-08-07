@@ -1,4 +1,5 @@
 import React from 'react'
+import { LocaleUtils } from 'react-day-picker'
 import {DateInput, DateRangeInput} from '@blueprintjs/datetime'
 import { format, parse } from 'date-fns'
 
@@ -30,6 +31,7 @@ export interface DateFieldInputProps extends FieldComponentProps<string, HTMLInp
 export function DateFieldInput({value, onChange, inline, readOnly, id, showTime, minDate, maxDate, ...props} : DateFieldInputProps) {
   const valueFormat = showTime ? dateTimeFormat : dateFormat
   return <DateInput
+    {...commonProps}
     disabled={readOnly}
     inputProps={{
       id,
@@ -113,6 +115,7 @@ export function DateRangeField<T>(
   )
 
   return <DateRangeInput
+    {...commonProps}
     disabled={beginFieldProps.readOnly || endFieldProps.readOnly}
     allowSingleDayRange={allowSingleDayRange}
     shortcuts={false}
@@ -154,4 +157,61 @@ function toISOString(value: Date | null, showTime?: boolean): string {
   return showTime
     ? format(value, 'yyyy-MM-dd\'T\'HH:mm:ss')
     : format(value, 'yyyy-MM-dd')
+}
+
+const MONTHS = [
+  'tammikuu',
+  'helmikuu',
+  'maaliskuu',
+  'huhtikuu',
+  'toukokuu',
+  'kesäkuu',
+  'heinäkuu',
+  'elokuu',
+  'syyskuu',
+  'lokakuu',
+  'marraskuu',
+  'joulukuu',
+] as [string, string, string, string, string, string, string, string, string, string, string, string]
+const WEEKDAYS_SHORT = [
+  'ma',
+  'ti',
+  'ke',
+  'to',
+  'pe',
+  'la',
+  'su',
+]
+
+function formatMonthTitle(d) {
+  return `${MONTHS[d.getMonth()]} ${d.getFullYear()}`
+}
+
+function formatWeekdayShort(i) {
+  return WEEKDAYS_SHORT[i]
+}
+
+function formatWeekdayLong(i) {
+  return WEEKDAYS_SHORT[i]
+}
+
+function getFirstDayOfWeek() {
+  return 0
+}
+
+const localeUtils = {
+  ...LocaleUtils,
+  //formatDay,
+  formatMonthTitle,
+  formatWeekdayShort,
+  formatWeekdayLong,
+  getFirstDayOfWeek,
+  getMonths: () => { return MONTHS },
+}
+
+const commonProps = {
+  localeUtils,
+  invalidDateMessage: 'Epäkelpo päivämäärä',
+  outOfRangeMessage: 'Sallitun alueen ulkopuolella',
+  overlappingDatesMessage: 'Päällekkäinen päivämäärä',
 }
