@@ -12,6 +12,7 @@ import {
   Spinner,
 } from '@blueprintjs/core'
 import classNames from 'classnames'
+import { format } from 'date-fns'
 import MarkdownToJsx from 'markdown-to-jsx'
 
 import './ui.css'
@@ -20,8 +21,7 @@ export * from './AutosizedSection'
 export { Breadcrumb, BreadcrumbContext, Breadcrumbs } from './Breadcrumbs'
 export * from './Flex'
 export type { ButtonProps, MenuItemProps } from '@blueprintjs/core'
-export { AnchorButton, Collapse, H2, HTMLTable, Menu, MenuItem, Navbar, NonIdealState, NumericInput, ProgressBar, Spinner, Tag } from '@blueprintjs/core'
-export { Tooltip2 as Tooltip } from '@blueprintjs/popover2'
+export { AnchorButton, Collapse, H2, HTMLTable, Menu, MenuItem, Navbar, NonIdealState, NumericInput, ProgressBar, Spinner, Tag, Tooltip } from '@blueprintjs/core'
 export const CssClass = {
   formGroupInline: 'formgroup-inline',
   formGroupInlineFill: 'formgroup-inline-fill',
@@ -126,3 +126,13 @@ const markdownComponents = {
   QR: QRCode,
 }
 Markdown.defaultOptions = { overrides: markdownComponents }
+
+export const dateFormat = 'dd.MM.yyyy'
+export const dateTimeFormat = 'dd.MM.yyyy HH:mm'
+
+export function formatDate(date: Date) {
+  return format(date, dateFormat)
+}
+export function formatDateTime(date: Date) {
+  return format(date, dateTimeFormat)
+}

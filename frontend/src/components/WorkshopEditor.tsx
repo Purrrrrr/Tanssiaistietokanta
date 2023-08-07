@@ -62,7 +62,7 @@ export function WorkshopEditor({workshop: workshopInDatabase, reservedAbbreviati
   const {_id: workshopId, dances} = formProps.value
 
   return <Form className="workshopEditor" {...formProps}>
-    <SyncStatus state={state} />
+    <SyncStatus state={state} floatRight/>
     <Flex spaced wrap>
       <div style={{flexGrow: 1, flexBasis: 300, maxWidth: '50ch'}}>
         <Field path="name" required component={Input} label={t`name`} labelInfo={t`required`} />

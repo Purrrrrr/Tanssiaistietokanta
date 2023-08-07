@@ -7,10 +7,10 @@ export default function DebugManager() {
   const [visible, setVisible] = useState(false)
 
   return <>
-    <button className="bp4-button bp4-minimal bp4-small" onClick={() => setVisible(!visible)}>⚙</button>
-    <fieldset style={{display: visible ? 'flex' : 'none', flexDirection: 'column', alignItems: 'start', position: 'fixed', bottom: 30, right: 30}}>
+    <button className="bp5-button bp5-minimal bp5-small" onClick={() => setVisible(!visible)}>⚙</button>
+    <fieldset style={{display: visible ? 'flex' : 'none', flexDirection: 'column', alignItems: 'start', position: 'fixed', bottom: 30, right: 30, background: '#fff'}}>
       <legend>Debug namespaces</legend>
-      <button style={{position: 'absolute', top: 0, right: 5}} className="bp4-button bp4-minimal bp4-small" onClick={() => setVisible(false)}>x</button>
+      <button style={{position: 'absolute', top: 0, right: 5}} className="bp5-button bp5-minimal bp5-small" onClick={() => setVisible(false)}>x</button>
       {state.map(([namespace, enabled]) =>
         <label key={namespace}>
           <input

@@ -11,6 +11,7 @@ import {Entity, ListField, UntypedListFieldProps} from './ListEditor'
 
 export * from './fieldComponents/basicComponents'
 export * from './fieldComponents/closableEditors'
+export * from './fieldComponents/dateTime'
 export * from './fieldComponents/MarkdownEditor'
 export * from './fieldComponents/Selector'
 export {ActionButton, asFormControl, FormControl, SubmitButton} from './formControls'

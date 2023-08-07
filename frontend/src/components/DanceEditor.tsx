@@ -70,8 +70,8 @@ export function DanceEditor({dance, onDelete, showLink, titleComponent: Title = 
           <Input label="Huomautuksia" path="remarks" />
         </div>
         <div style={{flexGrow: 2, flexBasis: 500}}>
-          <Field label="Kuvaus" path="description" component={MarkdownEditor} />
-          <Field label="Tanssiohjeet" path="instructions" component={MarkdownEditor} />
+          <Field label="Kuvaus ja lyhyt ohje" path="description" component={MarkdownEditor} />
+          <Field label="Pidemmät tanssiohjeet printtiin" path="instructions" component={MarkdownEditor} />
         </div>
       </Flex>
     </Form>

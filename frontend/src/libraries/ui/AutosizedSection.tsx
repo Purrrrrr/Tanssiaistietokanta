@@ -1,9 +1,9 @@
 import React, {useRef, useState} from 'react'
-import { ResizeSensor2, ResizeSensor2Props } from '@blueprintjs/popover2'
+import { ResizeSensor, ResizeSensorProps } from '@blueprintjs/core'
 
 import './AutosizedSection.sass'
 
-type ResizeEntry = Parameters<ResizeSensor2Props['onResize']>[0][number]
+type ResizeEntry = Parameters<ResizeSensorProps['onResize']>[0][number]
 
 export function AutosizedSection({children, className = '', ...props}) {
   const container = useRef<HTMLElement>(null)
@@ -26,8 +26,8 @@ export function AutosizedSection({children, className = '', ...props}) {
   }
 
   return <section className={'autosized-section '+ className} ref={container} {...props}>
-    <ResizeSensor2 onResize={onResize}>
+    <ResizeSensor onResize={onResize}>
       <div className="autosized-section-inner" style={{transform: `scale(${size})`}}>{children}</div>
-    </ResizeSensor2>
+    </ResizeSensor>
   </section>
 }

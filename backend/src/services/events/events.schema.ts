@@ -6,7 +6,7 @@ import type { Static, TProperties } from '@feathersjs/typebox'
 import type { HookContext } from '../../declarations'
 import { dataValidator, queryValidator } from '../../validators'
 import { castAfterValidating } from '../../utils/cast-after-validating'
-import { SlideStyleId, Id, Name, NullableString, Nullable } from '../../utils/common-types'
+import { SlideStyleId, Id, Name, Date, NullableString, Nullable } from '../../utils/common-types'
 
 const DEFAULT_PAUSE_BETWEEN_DANCES = 3*60
 
@@ -15,6 +15,8 @@ export const eventsSchema = Type.Object(
   {
     _id: Id(),
     name: Name(),
+    beginDate: Date(),
+    endDate: Date(),
     program: ClosedObject({
       introductions: Introductions(),
       danceSets: Type.Array(DanceSet()),
@@ -88,8 +90,8 @@ export const eventsExternalResolver = resolve<Events, HookContext>({})
 // Schema for creating new entries
 export const eventsPartialDataSchema = Type.Intersect(
   [
-    Type.Pick(eventsSchema, ['name']),
-    Type.Partial(Type.Omit(eventsSchema, ['_id', 'name'])),
+    Type.Pick(eventsSchema, ['name', 'beginDate', 'endDate']),
+    Type.Partial(Type.Omit(eventsSchema, ['_id', 'name', 'beginDate', 'endDate'])),
   ], {
     $id: 'PartialEventsData'
   })

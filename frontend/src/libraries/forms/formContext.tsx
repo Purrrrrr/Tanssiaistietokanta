@@ -10,7 +10,7 @@ export function useFormIsValid(): boolean {
 
 export interface FormMetadataContextType<T> {
   getValueAt: <V>(path: TypedStringPath<V, T>) => V
-  getConflictAt: <V>(path: TypedStringPath<V, T>) => Conflict<T> | null
+  getConflictAt: <V>(path: TypedStringPath<V, T>) => Conflict<V> | null
   onResolveConflict: <V>(path: TypedStringPath<V, T>, version: Version) => void
   getStrings: () => Partial<FormStrings> | undefined
   subscribeToChanges: (f: ChangeListener) => (() => void)

@@ -9,7 +9,7 @@ export {Breadcrumb, BreadcrumbContext} from './context'
 export function Breadcrumbs() {
   const paths = useBreadcrumbPaths()
   //Manually create the breadcrumb element since the Blueprint one is not fully accessible
-  return <ul className={Classes.BREADCRUMBS} aria-label="Breadcrumbs">
+  return <ul id="breadcrumbs" className={Classes.BREADCRUMBS} aria-label="Breadcrumbs">
     {paths.map(path => <li key={path.href}><Breadcrumb {...path} /></li>)}
   </ul>
 }

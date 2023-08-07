@@ -1,6 +1,6 @@
 import React  from 'react'
 
-import { ConflictData, FieldComponentDisplayProps, FieldComponentPropsWithoutEvent, NoRequiredProperties, PartialWhen, TypedStringPath, UserGivenFieldContainerProps } from './types'
+import { Conflict, ConflictData, Deleted, FieldComponentDisplayProps, FieldComponentPropsWithoutEvent, NoRequiredProperties, PartialWhen, TypedStringPath, UserGivenFieldContainerProps } from './types'
 
 import { FieldContainer, FieldContainerProps } from './FieldContainer'
 import { useFormMetadata } from './formContext'
@@ -29,30 +29,23 @@ export function Field<T, V, P extends FieldComponentPropsWithoutEvent<V>>(
 ) {
   const dataProps = useFieldValueProps<T, V>(path)
   const { fieldProps, containerProps } = useFieldData(path, dataProps.value, rest)
-  const ctx = useFormMetadata<T>()
-  const conflict = ctx.getConflictAt<V>(path)
-
   const allProps = {
     ...componentProps, ...fieldProps, ...dataProps
   } as P
 
-  let conflictData : ConflictData | undefined
-  switch (conflict?.type) {
-    case 'scalar':
-      conflictData = {
-        localValue: <Component {...allProps} />,
-        serverValue: <Component {...allProps} readOnly value={conflict.server} />,
-        onResolve(version) { ctx.onResolveConflict(path, version) }
-      }
-      break
-    case 'array':
-      conflictData = {
-        localValue: <ConflictListValue list={conflict.local as any} renderItem={renderConflictItem}/>,
-        serverValue: <ConflictListValue list={conflict.server as any} renderItem={renderConflictItem}/>,
-        onResolve(version) { ctx.onResolveConflict(path, version) }
-      }
-      break
-  }
+  const conflictData = useFieldConflictData<T, V>(path, (conflict, type) => {
+    const value = conflict[type]
+    if (value === Deleted) return <div>DELETED</div>
+    switch (conflict?.type) {
+      case 'scalar':
+        return type === 'local'
+          ? <Component {...allProps} />
+          : <Component {...allProps} readOnly value={conflict.server} />
+      case 'array':
+        return <ConflictListValue list={value as unknown[]} renderItem={renderConflictItem}/>
+    }
+    return null
+  })
 
   return <FieldContainer {...containerProps} conflictData={conflictData}><Component {...allProps}  /></FieldContainer>
 }
@@ -84,7 +77,7 @@ export function useFieldData<Value>(
   return {
     fieldProps: {
       id,
-      inline: maybeInline ?? inline,
+      inline,
       readOnly: ctx.readOnly,
       'aria-describedby': errorId,
       ...ariaProps
@@ -96,8 +89,22 @@ export function useFieldData<Value>(
       label,
       labelInfo,
       labelStyle,
-      inline: maybeInline ?? inline,
+      inline,
     },
+  }
+}
+
+export function useFieldConflictData<T, V>(path: TypedStringPath<V, T>, renderItem: (c: Conflict<V>, t: 'local' | 'server') => React.ReactNode): ConflictData | undefined {
+  const ctx = useFormMetadata<T>()
+  const conflict = ctx.getConflictAt<V>(path)
+
+  if (conflict === null || conflict === undefined) return undefined
+  const localValue = renderItem(conflict, 'local')
+  if (!localValue) return undefined
+  return {
+    localValue,
+    serverValue: renderItem(conflict, 'server'),
+    onResolve(version) { ctx.onResolveConflict(path, version) }
   }
 }
 

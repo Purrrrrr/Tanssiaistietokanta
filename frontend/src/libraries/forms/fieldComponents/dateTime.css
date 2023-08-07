@@ -1,0 +1,9 @@
+.dateRangeInputContainer-block,
+.dateRangeInputContainer-block .bp5-form-group,
+.dateRangeInputContainer-block .bp5-form-content {
+  width: 100%;
+}
+.dateRangeInputContainer > .bp5-form-group > .bp5-form-content {
+  display: flex;
+  gap: 10px;
+}

@@ -15,8 +15,8 @@ export type Convert = Static<typeof convertSchema>
 // Schema for creating new entries
 export const convertDataSchema = Type.Object({
   input: Type.String(),
-  inputFormat: Type.String(),
-  outputFormat: Type.String(),
+  inputFormat: Type.Optional(Type.String()),
+  outputFormat: Type.Optional(Type.String()),
 }, {
   $id: 'ConvertData'
 })

@@ -4,7 +4,7 @@ import {useNavigate} from 'react-router-dom'
 import {useCreateEvent} from 'services/events'
 import {AdminOnly} from 'services/users'
 
-import {formFor, SubmitButton} from 'libraries/forms'
+import {DateRangeField, formFor, SubmitButton} from 'libraries/forms'
 import {Breadcrumb} from 'libraries/ui'
 import {useGlobalLoadingAnimation} from 'components/LoadingState'
 import {PageTitle} from 'components/PageTitle'
@@ -15,12 +15,21 @@ const t = makeTranslate({
   newEvent: 'Luo uusi tapahtuma',
   create: 'Luo',
   name: 'Nimi',
+  eventDate: 'Tapahtuman ajankohta',
+  beginDate: 'Alkaa',
+  endDate: 'Loppuu',
 })
+
+interface EventForm {
+  name: string
+  beginDate: string
+  endDate: string
+}
 
 const {
   Form,
   Input,
-} = formFor<{name: string}>()
+} = formFor<EventForm>()
 
 export default function CreateEventForm() {
   const navigate = useNavigate()
@@ -29,7 +38,7 @@ export default function CreateEventForm() {
     onCompleted: (data) => navigate('/events/'+data.createEvent._id),
     refetchQueries: ['getEvents']
   })
-  const [event, setEvent] = useState({name: ''})
+  const [event, setEvent] = useState({name: '', beginDate: '', endDate: ''})
 
   return <AdminOnly>
     <Breadcrumb text={t`newEventBreadcrumb`} />
@@ -37,6 +46,15 @@ export default function CreateEventForm() {
     <Form value={event} onChange={setEvent} onSubmit={() => addLoadingAnimation(createEvent({event}))}>
       <div>
         <Input label={t`name`} path="name" required />
+        <DateRangeField<EventForm>
+          id="eventDate"
+          label={t`eventDate`}
+          beginLabel={t`beginDate`}
+          beginPath="beginDate"
+          endLabel={t`endDate`}
+          endPath="endDate"
+          required
+        />
       </div>
       <SubmitButton text={t`create`} />
     </Form>
