@@ -152,6 +152,6 @@ function toDate(value: string | null | Date | undefined): Date | undefined | nul
 function toISOString(value: Date | null, showTime?: boolean): string {
   if (value === null) return ''
   return showTime
-    ? value.toISOString()
-    : value.toISOString().slice(0, 10)
+    ? format(value, 'yyyy-MM-dd\'T\'HH:mm:ss')
+    : format(value, 'yyyy-MM-dd')
 }
