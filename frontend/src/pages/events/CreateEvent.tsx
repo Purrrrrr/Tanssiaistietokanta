@@ -48,7 +48,6 @@ export default function CreateEventForm() {
         <Input label={t`name`} path="name" required />
         <DateRangeField<EventForm>
           id="eventDate"
-          allowSingleDayRange
           label={t`eventDate`}
           beginLabel={t`beginDate`}
           beginPath="beginDate"

@@ -64,7 +64,7 @@ export function DateRangeField<T>(
     beginPath, beginLabel,
     endPath, endLabel,
     label, labelStyle, labelInfo, inline, helperText,
-    allowSingleDayRange, showTime, minDate, maxDate,
+    allowSingleDayRange = true, showTime, minDate, maxDate,
     ...rest
   }: DateRangeFieldProps<T>
 ) {
