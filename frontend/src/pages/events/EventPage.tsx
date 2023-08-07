@@ -4,8 +4,8 @@ import {usePatchEvent} from 'services/events'
 import {AdminOnly} from 'services/users'
 import {useCreateWorkshop, useDeleteWorkshop} from 'services/workshops'
 
-import {ClickToEdit, patchStrategy, useAutosavingState} from 'libraries/forms'
-import {Button, Card, Collapse} from 'libraries/ui'
+import {DateRangeField, formFor, patchStrategy, SyncStatus, useAutosavingState} from 'libraries/forms'
+import {Button, Card, Collapse, formatDate, Icon} from 'libraries/ui'
 import {useGlobalLoadingAnimation} from 'components/LoadingState'
 import {PageTitle} from 'components/PageTitle'
 import {DeleteButton} from 'components/widgets/DeleteButton'
@@ -20,6 +20,7 @@ type Workshop = Event['workshops'][0]
 const t = makeTranslate({
   ballProgram: 'Tanssiaisohjelma',
   noProgram: 'Ei ohjelmaa',
+  eventDetails: 'Tapahtuman tiedot',
   eventName: 'Tapahtuman nimi',
   editProgram: 'Muokkaa ohjelmaa',
   addProgram: 'Luo ohjelma',
@@ -27,8 +28,9 @@ const t = makeTranslate({
   printBallDanceList: 'Tulosta settilista',
   ballProgramSlideshow: 'Tanssiaisten diashow',
   dances: 'Tanssit',
-  openWorkshopEditor: 'Muokkaa',
-  closeWorkshopEditor: 'Sulje muokkaus',
+  openBasicDetailsEditor: 'Muokkaa tapahtuman tietoja',
+  openEditor: 'Muokkaa',
+  closeEditor: 'Sulje muokkaus',
   createWorkshop: 'Uusi työpaja',
   newWorkshop: 'Uusi työpaja',
   danceCheatlist: 'Osaan tanssin -lunttilappu',
@@ -36,42 +38,71 @@ const t = makeTranslate({
   requestedDance: {
     one: 'Toivetanssi',
     other: '%(count)s toivetanssia'
-  }
+  },
+  eventDate: 'Tapahtuman ajankohta',
+  beginDate: 'Alkaa',
+  endDate: 'Loppuu',
 })
 
-export default function EventPage({event}: {event: Event}) {
-  const [patchEvent] = usePatchEvent()
-  const patch = useCallback(
-    (eventPatch: Partial<Event>) => patchEvent({ id: event._id, event: eventPatch}),
-    [event._id, patchEvent]
-  )
-  const {value: {name: eventName}, onChange: setEvent, state} = useAutosavingState<Event, Partial<Event>>(event, patch, patchStrategy.partial)
-  const onChange = (value) => {
-    setEvent({
-      ...event,
-      name: value,
-    })
-  }
+const {
+  Input,
+  Form
+} = formFor<Event>()
 
+export default function EventPage({event}: {event: Event}) {
   return <>
-    <PageTitle noRender>
+    <PageTitle>
       {event.name}
     </PageTitle>
-    <h1>
-      <ClickToEdit
-        id="eventName"
-        inline
-        syncState={state}
-        value={eventName}
-        onChange={onChange}
-        aria-label={t`eventName`}
-      />
-    </h1>
+    <EventDetails event={event} />
     <t.h2>ballProgram</t.h2>
     <EventProgram program={event.program} />
     <t.h2>workshops</t.h2>
     <EventWorkshops workshops={event.workshops} eventId={event._id} />
   </>
+}
+
+function EventDetails({event}: {event: Event}) {
+  const [showEditor, setShowEditor] = useState(false)
+  return <>
+    <p>
+      {t`eventDate`}: {formatDate(new Date(event.beginDate))} - {formatDate(new Date(event.endDate))}
+    </p>
+    <p>
+      <Button
+        onClick={() => setShowEditor(!showEditor)}
+        text={showEditor ? t`closeEditor` : t`openBasicDetailsEditor`}
+      />
+    </p>
+    <Collapse isOpen={showEditor}>
+      <EventDetailsForm event={event} />
+    </Collapse>
+  </>
+}
+
+function EventDetailsForm({event}: {event: Event}) {
+  const [patchEvent] = usePatchEvent()
+  const patch = useCallback(
+    (eventPatch: Partial<Event>) => patchEvent({ id: event._id, event: eventPatch}),
+    [event._id, patchEvent]
+  )
+  const {state, formProps} = useAutosavingState<Event, Partial<Event>>(event, patch, patchStrategy.partial)
+
+  return <Form {...formProps}>
+    <Card>
+      <SyncStatus state={state} floatRight/>
+      <Input label={t`eventName`} path="name" />
+      <DateRangeField<Event>
+        id="eventDate"
+        label={t`eventDate`}
+        beginLabel={t`beginDate`}
+        beginPath="beginDate"
+        endLabel={t`endDate`}
+        endPath="endDate"
+        required
+      />
+    </Card>
+  </Form>
 }
 
 function EventProgram({program}: {program: EventProgramType}) {
@@ -83,17 +114,21 @@ function EventProgram({program}: {program: EventProgramType}) {
   }
 
   return <>
-    {program.danceSets.map((danceSet, index) =>
-      <p key={index} >
-        <strong>{danceSet.title}</strong>:{' '}
-        {formatDances(danceSet.program)}
-      </p>
-    )}
-    <NavigateButton adminOnly intent="primary" href="program" text={t`editProgram`} />
-    <NavigateButton href="print/ball-dancelist" target="_blank"
-      text={t`printBallDanceList`} />
-    <NavigateButton href="ball-program" target="_blank"
-      text={t`ballProgramSlideshow`} />
+    <Card>
+      {program.danceSets.map((danceSet, index) =>
+        <p key={index} >
+          <strong>{danceSet.title}</strong>:{' '}
+          {formatDances(danceSet.program)}
+        </p>
+      )}
+    </Card>
+    <p>
+      <NavigateButton adminOnly intent="primary" href="program" text={t`editProgram`} />
+      <NavigateButton href="print/ball-dancelist" target="_blank"
+        text={t`printBallDanceList`} />
+      <NavigateButton href="ball-program" target="_blank"
+        text={t`ballProgramSlideshow`} />
+    </p>
   </>
 }
 
@@ -113,18 +148,22 @@ const isRequestedDance = row => row.item.__typename === 'RequestedDance'
 
 function EventWorkshops({workshops, eventId}: {workshops: Workshop[], eventId: string}) {
   return <>
-    {workshops.map(workshop =>
-      <WorkshopCard
-        workshop={workshop}
-        key={workshop._id}
-        reservedAbbreviations={workshops.filter(w => w._id !== workshop._id).map(w => w.abbreviation).filter(a => a) as string[]}
-      />
-    )}
-    <CreateWorkshopButton eventId={eventId} />
-    <NavigateButton href="print/dance-cheatlist" target="_blank"
-      text={t`danceCheatlist`} />
-    <NavigateButton href="print/dance-instructions" target="_blank"
-      text={t`danceInstructions`} />
+    <>
+      {workshops.map(workshop =>
+        <WorkshopCard
+          workshop={workshop}
+          key={workshop._id}
+          reservedAbbreviations={workshops.filter(w => w._id !== workshop._id).map(w => w.abbreviation).filter(a => a) as string[]}
+        />
+      )}
+    </>
+    <p>
+      <CreateWorkshopButton eventId={eventId} />
+      <NavigateButton href="print/dance-cheatlist" target="_blank"
+        text={t`danceCheatlist`} />
+      <NavigateButton href="print/dance-instructions" target="_blank"
+        text={t`danceInstructions`} />
+    </p>
   </>
 }
 
@@ -154,7 +193,7 @@ function WorkshopCard({workshop, reservedAbbreviations}: {workshop: Workshop, re
     />
     <Button
       onClick={() => setShowEditor(!showEditor)}
-      style={{float: 'right'}} text={showEditor ? t`closeWorkshopEditor` : t`openWorkshopEditor`}
+      style={{float: 'right'}} text={showEditor ? t`closeEditor` : t`openEditor`}
     />
     <h2>
       {name}

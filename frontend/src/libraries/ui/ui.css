@@ -43,3 +43,7 @@
 .global-loading-spinner > * {
   place-self: center;
 }
+
+.bp5-card + p {
+  margin-top: 10px;
+}

@@ -15,9 +15,9 @@ const t = makeTranslate({
   newEvent: 'Luo uusi tapahtuma',
   create: 'Luo',
   name: 'Nimi',
-  eventDate: 'Tapahtuman kesto',
-  beginDate: 'Alku',
-  endDate: 'Loppu',
+  eventDate: 'Tapahtuman ajankohta',
+  beginDate: 'Alkaa',
+  endDate: 'Loppuu',
 })
 
 interface EventForm {
