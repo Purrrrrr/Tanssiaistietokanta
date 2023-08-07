@@ -77,7 +77,7 @@ export function useFieldData<Value>(
   return {
     fieldProps: {
       id,
-      inline: maybeInline ?? inline,
+      inline,
       readOnly: ctx.readOnly,
       'aria-describedby': errorId,
       ...ariaProps
@@ -89,7 +89,7 @@ export function useFieldData<Value>(
       label,
       labelInfo,
       labelStyle,
-      inline: maybeInline ?? inline,
+      inline,
     },
   }
 }

@@ -2,13 +2,15 @@ import React from 'react'
 import {DateInput, DateRangeInput} from '@blueprintjs/datetime'
 import { format, parse } from 'date-fns'
 
+import {dateFormat, dateTimeFormat} from 'libraries/ui'
+
 import {Field, useFieldConflictData, useFieldData} from '../Field'
 import {FieldContainer} from '../FieldContainer'
 import { useFieldValueProps } from '../hooks'
 import {Conflict, Deleted, FieldComponentProps, FieldPropsWithoutComponent} from '../types'
 
-const dateFormat = 'dd.MM.yyyy'
-const dateTimeFormat = 'dd.MM.yyyy HH:mm'
+import './dateTime.css'
+
 const referenceDate = new Date('2000-01-01T00:00:00.000')
 
 const defaultMax = new Date('2100-01-01')
@@ -71,9 +73,12 @@ export function DateRangeField<T>(
   const beginDataProps = useFieldValueProps<T, string>(beginPath)
   const endDataProps = useFieldValueProps<T, string>(endPath)
   const { containerProps } = useFieldData(id, null, {label, labelStyle, labelInfo, inline, helperText})
-  const subLabelStyle = containerProps.labelStyle.startsWith('hidden') ? 'hidden' : 'beside'
-  const { fieldProps: beginFieldProps, containerProps: beginContainerProps } = useFieldData(beginPath, beginDataProps.value, {label: beginLabel, labelStyle: subLabelStyle, inline: true, ...rest })
-  const { fieldProps: endFieldProps, containerProps: endContainerProps } = useFieldData(endPath, endDataProps.value, {label: endLabel, labelStyle: subLabelStyle, inline: true, ...rest })
+  console.log(inline)
+  const subLabelStyle = containerProps.labelStyle.startsWith('hidden') || inline ?
+    'hidden' :
+    containerProps.labelStyle === 'beside' ? 'above' : 'beside'
+  const { fieldProps: beginFieldProps, containerProps: beginContainerProps } = useFieldData(beginPath, beginDataProps.value, {label: beginLabel, labelStyle: subLabelStyle, inline, ...rest })
+  const { fieldProps: endFieldProps, containerProps: endContainerProps } = useFieldData(endPath, endDataProps.value, {label: endLabel, labelStyle: subLabelStyle, inline, ...rest })
 
   const renderConflictItem = (onChangeLocal) => (conflict: Conflict<string>, type: 'server' | 'local') => {
     const value = conflict[type]
@@ -94,7 +99,7 @@ export function DateRangeField<T>(
   //Complete hack to allow adding all the labels to the DOM correctly
   const containerComponent = React.forwardRef<HTMLDivElement, any>(
     ({children, ...props}, ref) => {
-      return <div ref={ref} {...props}>
+      return <div ref={ref} {...props} className={`dateRangeInputContainer ${containerProps.inline ? 'dateRangeInputContainer-inline' : 'dateRangeInputContainer-block'} ${props.className}`}>
         <FieldContainer {...containerProps}>
           <FieldContainer {...beginContainerProps} conflictData={beginConflictData}>
             {children?.[0]}
@@ -113,10 +118,12 @@ export function DateRangeField<T>(
     allowSingleDayRange={allowSingleDayRange}
     shortcuts={false}
     startInputProps={{
-      ...beginFieldProps
+      ...beginFieldProps,
+      className: 'bp5-fill',
     }}
     endInputProps={{
-      ...endFieldProps
+      ...endFieldProps,
+      className: 'bp5-fill',
     }}
     popoverProps={{
       targetTagName: containerComponent as any
