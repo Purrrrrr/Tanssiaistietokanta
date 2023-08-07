@@ -73,7 +73,6 @@ export function DateRangeField<T>(
   const beginDataProps = useFieldValueProps<T, string>(beginPath)
   const endDataProps = useFieldValueProps<T, string>(endPath)
   const { containerProps } = useFieldData(id, null, {label, labelStyle, labelInfo, inline, helperText})
-  console.log(inline)
   const subLabelStyle = containerProps.labelStyle.startsWith('hidden') || inline ?
     'hidden' :
     containerProps.labelStyle === 'beside' ? 'above' : 'beside'
