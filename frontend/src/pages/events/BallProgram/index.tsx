@@ -19,7 +19,9 @@ export default function BallProgram({eventId}) {
 
   if (!slides) return <LoadingState {...loadingState} refetch={refetch} />
 
-  return <BallProgramView slides={slides} onRefetch={refetch} />
+  return <div className="slide-backdrop full">
+    <BallProgramView slides={slides} onRefetch={refetch} />
+  </div>
 }
 
 function BallProgramView({slides, onRefetch}: {slides: Slide[], onRefetch: () => unknown}) {
@@ -38,7 +40,7 @@ function BallProgramView({slides, onRefetch}: {slides: Slide[], onRefetch: () =>
   }, [slide, changeSlideId])
 
   return <ReactTouchEvents onSwipe={onSwipe} disableClick>
-    <div className={classnames('slideshow', slide.slideStyleId && `slide-style-${slide.slideStyleId}`)}>
+    <div className={classnames('slide-container', slide.slideStyleId && `slide-style-${slide.slideStyleId}`)}>
       <div className="controls">
         <ProgramTitleSelector value={slide?.parent?._id ?? slide._id} onChange={changeSlideId}
           program={slides} />
