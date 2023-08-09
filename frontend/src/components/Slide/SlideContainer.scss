@@ -1,0 +1,33 @@
+.slide-backdrop {
+  container: backdrop / size;
+  overflow: hidden;
+  position: relative;
+  
+  &.preview {
+    aspect-ratio: 16/9;
+    border: 1px solid #000;
+  }
+  &.full {
+    width: 100%;
+    height: 100vh;
+  }
+
+  .slide-container {
+    container: slide /size;
+    position: relative;
+
+    height: 100cqh;
+    width: calc(16/9 * 100cqh);
+    margin: 0 auto;
+
+    @container backdrop (max-aspect-ratio: 16/9) {
+      width: 100cqw;
+      height: calc(9/16 * 100cqw);
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    @container backdrop (min-aspect-ratio: 16/9) {
+    }
+  }
+}
