@@ -5,6 +5,7 @@ import {BreadcrumbContext} from 'libraries/ui'
 import DebugManager from './DebugManager'
 import {GlobalLoadingiState}  from './LoadingState'
 import Navigation from './Navigation'
+import {SupportedBrowserChecker} from './SupportedBrowserWarning'
 
 import './NavigationLayout.sass'
 
@@ -12,6 +13,7 @@ function NavigationLayout({children}) {
   if (navigationHidden()) {
     return <BreadcrumbContext>
       <GlobalLoadingiState>
+        <SupportedBrowserChecker />
         {children}
       </GlobalLoadingiState>
     </BreadcrumbContext>
@@ -19,6 +21,7 @@ function NavigationLayout({children}) {
 
   return <BreadcrumbContext>
     <GlobalLoadingiState>
+      <SupportedBrowserChecker />
       <SkipToMainContent />
       <div id="layout">
         <Navigation/>
