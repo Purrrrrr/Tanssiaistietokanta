@@ -40,7 +40,7 @@
     .slide-navigation {
       font-size: 90%;
     }
-    .slide-next-track {
+    .slide-next-slide {
       justify-self: center;
       padding: 0.1em 0.3em;
       border-top: none;
@@ -55,14 +55,14 @@ $image-dir: '../../../public/';
 
 .slide-style-flower-title1 {
   @include flower('flower-title1.jpg');
-  .slide-next-track {
+  .slide-next-slide {
     align-self: end;
   }
 }
 
 .slide-style-flower-title2 {
   @include flower('flower-title2.jpg');
-  .slide-next-track {
+  .slide-next-slide {
     align-self: end;
   }
 }
@@ -85,7 +85,7 @@ $image-dir: '../../../public/';
 
 .slide-style-flower-title5 {
   @include flower('flower-title5.jpg');
-  .slide-next-track {
+  .slide-next-slide {
     align-self: end;
   }
 }

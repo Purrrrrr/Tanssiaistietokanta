@@ -38,7 +38,7 @@ export function Slide({title, type, children, temp, footer, next, navigation}: S
         <div className="slide-content-area">{children}</div>
       </AutosizedSection>
       {footer &&
-        <AutosizedSection className="slide-teached-in">
+        <AutosizedSection className="slide-program-footer">
           <div className="slide-content-area">{footer}</div>
         </AutosizedSection>
       }
@@ -50,7 +50,7 @@ export function Slide({title, type, children, temp, footer, next, navigation}: S
 }
 
 function NextSlide({next}: {next: SlideLink}) {
-  return <section className="slide-next-track">
+  return <section className="slide-next-slide">
     <LinkToSlide {...next} className="slide-content-area" />
   </section>
 }
