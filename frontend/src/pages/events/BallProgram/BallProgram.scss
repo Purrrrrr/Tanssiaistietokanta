@@ -1,27 +1,56 @@
 .ball-program-container {
   display: flex;
   height: 100dvh;
-
+  
   @media (orientation: landscape) {
     flex-direction: row-reverse;
-    .editor {
-      flex: 1 1 250px;
-    }
-    .slide-backdrop {
-      flex: 3;
-    }
   }
   @media (orientation: portrait) {
     flex-direction: column;
-    .slide-backdrop {
-      flex: 0 56.25vw;
-    }
+  }
+  & > * {
+    transition: flex 0.3s ease, padding 0.3s ease;
+  }
+  &:not(.is-editing) {
     .editor {
+      flex: 0 0 0;
+      padding-inline: 0;
+    }
+    .slide-backdrop {
       flex: 1;
     }
+
+  }
+  &.is-editing {
+    @media (orientation: landscape) {
+      .editor {
+        flex: 1 1 150px;
+      }
+      .slide-backdrop {
+        flex: 3;
+      }
+    }
+    @media (orientation: portrait) {
+      .slide-backdrop {
+        flex: 0 56.25vw;
+      }
+      .editor {
+        flex: 1;
+      }
+    }
+
   }
   .editor {
     overflow: auto;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0px 0px 5px rgba(0,0,0, 0.5);
+
+    .close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
   }
 
 }

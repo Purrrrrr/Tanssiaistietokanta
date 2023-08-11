@@ -1,6 +1,7 @@
 import React, {useCallback, useState} from 'react'
 import {useNavigate, useParams} from 'react-router-dom'
 import ReactTouchEvents from 'react-touch-events'
+import classNames from 'classnames'
 
 import {Button, Card, Markdown} from 'libraries/ui'
 import {EditableDanceProperty} from 'components/EditableDanceProperty'
@@ -20,23 +21,20 @@ export default function BallProgram({eventId}) {
 
   if (!slides) return <LoadingState {...loadingState} refetch={refetch} />
 
-  const view = <BallProgramView slides={slides} onRefetch={refetch} isEditing={isEditing} onEdit={() => setEditing(e => !e)}/>
-  if (!isEditing) return view
-
-  return <div className="ball-program-container">
-    {view}
-    <div className="editor">
-      <h2>GREAT EDITOR</h2>
-      <input />
-    </div>
+  return <div className={classNames('ball-program-container', {'is-editing': isEditing})}>
+    <BallProgramView slides={slides} onRefetch={refetch} isEditing={isEditing} onToggleEditing={() => setEditing(e => !e)}/>
+    <Card className="editor">
+      <Button className="close" minimal icon="cross" onClick={() => setEditing(false)}/>
+      <h2>Great editor</h2>
+    </Card>
   </div>
 }
 
 function BallProgramView(
-  {slides, onRefetch, isEditing, onEdit}: {
+  {slides, onRefetch, isEditing, onToggleEditing}: {
     slides: SlideContent[]
     onRefetch: () => unknown
-    onEdit: () => unknown
+    onToggleEditing: () => unknown
     isEditing: boolean
   }
 ) {
@@ -53,17 +51,18 @@ function BallProgramView(
   useOnKeydown({
     ArrowLeft: () => onSwipe(null, 'left'),
     ArrowRight: () => onSwipe(null, 'right'),
-    r: onRefetch
+    r: onRefetch,
+    e: onToggleEditing,
   })
 
   const {parentId, slideContent, ...slide} = slides[slideIndex]
 
   return <ReactTouchEvents onSwipe={onSwipe} disableClick>
-    <SlideContainer fullscreen={!isEditing} color="#000">
+    <SlideContainer fullscreen={!isEditing}>
       <div className="controls">
         <ProgramTitleSelector value={parentId ?? slide.id} onChange={changeSlideId}
           program={slides} />
-        <Button minimal icon="cog" onClick={onEdit}/>
+        <Button minimal icon="edit" onClick={onToggleEditing}/>
       </div>
       <Slide {...slide}>
         <SlideContentView slideContent={slideContent} />
