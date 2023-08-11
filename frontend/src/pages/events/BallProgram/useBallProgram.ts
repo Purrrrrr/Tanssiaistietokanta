@@ -106,11 +106,13 @@ function toProgramSlide({_id: id, item, slideStyleId}: ProgramRow): SlideContent
     case 'RequestedDance':
       return {
         id, slideStyleId,
+        type: 'RequestedDance',
         title: t`requestedDance`,
       }
     case 'Dance':
       return {
         id, slideStyleId,
+        type: 'Dance',
         title: item.name,
         footer: item.teachedIn ? `${t`teachedInSet`} ${item.teachedIn.map(w => w.name).join(', ')}` : undefined,
         slideContent: {
@@ -121,6 +123,7 @@ function toProgramSlide({_id: id, item, slideStyleId}: ProgramRow): SlideContent
     case 'EventProgram':
       return {
         id, slideStyleId,
+        type: 'EventProgram',
         title: item.name,
         slideContent: {
           type: 'text',

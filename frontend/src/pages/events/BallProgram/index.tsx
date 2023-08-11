@@ -10,6 +10,7 @@ import {Slide, SlideContainer, SlideNavigationList} from 'components/Slide'
 import {useOnKeydown} from 'utils/useOnKeydown'
 
 import {ProgramTitleSelector} from './ProgramTitleSelector'
+import {SlideEditor} from './SlideEditor'
 import {t} from './strings'
 import {SlideContent, startSlideId, useBallProgramSlides} from './useBallProgram'
 
@@ -18,14 +19,18 @@ import './BallProgram.scss'
 export default function BallProgram({eventId}) {
   const [slides, {refetch, ...loadingState}] = useBallProgramSlides(eventId)
   const [isEditing, setEditing] = useState(true)
+  const {'*': currentSlideId = startSlideId} = useParams()
 
   if (!slides) return <LoadingState {...loadingState} refetch={refetch} />
+
+  const slideIndex = (i => i >= 0 ? i : 0)(slides.findIndex(s => s.id === currentSlideId))
+  const slide = slides[slideIndex]
 
   return <div className={classNames('ball-program-container', {'is-editing': isEditing})}>
     <BallProgramView slides={slides} onRefetch={refetch} isEditing={isEditing} onToggleEditing={() => setEditing(e => !e)}/>
     <Card className="editor">
       <Button className="close" minimal icon="cross" onClick={() => setEditing(false)}/>
-      <h2>Great editor</h2>
+      <SlideEditor slide={slide} />
     </Card>
   </div>
 }
@@ -78,7 +83,7 @@ function SlideContentView({slideContent}: Pick<SlideContent, 'slideContent'>) {
     case 'text':
       return <Markdown className="slide-program-description-content">{slideContent.value}</Markdown>
     case 'dance':
-      return <EditableDanceProperty dance={slideContent.value} property="description" type="markdown" addText={t`addDescription`} />
+      return <Markdown className="slide-program-description-content">{slideContent.value.description}</Markdown>
   }
   return null
 }

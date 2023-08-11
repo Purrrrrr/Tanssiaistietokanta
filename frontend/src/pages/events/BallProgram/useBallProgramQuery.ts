@@ -27,6 +27,10 @@ query BallProgram($eventId: ID!) {
             ... on Dance {
               _id
               teachedIn(eventId: $eventId) { _id, name }
+              events {
+                _id
+                name
+              }
             }
             ... on EventProgram {
               showInLists
@@ -57,6 +61,10 @@ query BallProgram($eventId: ID!) {
             ... on Dance {
               _id
               teachedIn(eventId: $eventId) { _id, name }
+              events {
+                _id
+                name
+              }
             }
             ... on EventProgram {
               showInLists
