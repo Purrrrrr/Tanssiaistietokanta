@@ -1,13 +1,47 @@
+.ball-program-container {
+  display: flex;
+  height: 100dvh;
+
+  @media (orientation: landscape) {
+    flex-direction: row-reverse;
+    .editor {
+      flex: 1 1 250px;
+    }
+    .slide-backdrop {
+      flex: 3;
+    }
+  }
+  @media (orientation: portrait) {
+    flex-direction: column;
+    .slide-backdrop {
+      flex: 0 56.25vw;
+    }
+    .editor {
+      flex: 1;
+    }
+  }
+  .editor {
+    overflow: auto;
+  }
+
+}
+
 .slide-container {
   .controls {
     position: absolute;
-    right: 10px;
-    top: 10px;
+    right: 0.5cqw;
+    top: 0.5cqw;
+    height: 4cqh;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
     font-weight: normal;
     color: black;
+    & > * {
+      vertical-align: top;
+    }
     select {
-      padding: 4px;
+      height: 100%;
+      font-size: 2cqh;
+      padding: 0.3cqh;
       border: 1px solid transparent;
       text-align: right;
       background: transparent;
@@ -15,6 +49,14 @@
       &:focus, &:hover {
         border-color: rgba(0,0,0,0.4);
         background: rgba(255,255,255,0.4);
+      }
+    }
+    .bp5-button {
+      padding: 0;
+      height: 100%;
+      min-height: 0;
+      svg {
+        height: 100%;
       }
     }
   }
