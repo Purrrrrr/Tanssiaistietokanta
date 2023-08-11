@@ -82,7 +82,7 @@ export function SlideNavigationList({items, currentItem}: Pick<SlideNavigation, 
   if (!items.length) return null
 
   return <ul className={classnames('slide-content-area slide-navigation-list', {'has-current': currentItem !== undefined})}>
-    {items.filter(item => item.hidden !== true).map((item) =>
+    {items.filter(item => item.hidden !== true || item.id === currentItem).map((item) =>
       <li key={item.id} className={item.id === currentItem ? 'current' : undefined}>
         <LinkToSlide {...item} />
       </li>
