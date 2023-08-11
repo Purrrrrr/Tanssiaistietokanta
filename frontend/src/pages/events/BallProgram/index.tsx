@@ -5,12 +5,12 @@ import ReactTouchEvents from 'react-touch-events'
 import {Markdown} from 'libraries/ui'
 import {EditableDanceProperty} from 'components/EditableDanceProperty'
 import {LoadingState} from 'components/LoadingState'
-import {Slide as Slide2, SlideContainer, SlideNavigationList} from 'components/Slide'
+import {Slide, SlideContainer, SlideNavigationList} from 'components/Slide'
 import {useOnKeydown} from 'utils/useOnKeydown'
 
 import {ProgramTitleSelector} from './ProgramTitleSelector'
 import {t} from './strings'
-import {Slide, startSlideId, useBallProgramSlides} from './useBallProgram'
+import {SlideContent, startSlideId, useBallProgramSlides} from './useBallProgram'
 
 import './BallProgram.scss'
 
@@ -19,55 +19,49 @@ export default function BallProgram({eventId}) {
 
   if (!slides) return <LoadingState {...loadingState} refetch={refetch} />
 
-  return <div className="slide-backdrop full">
-    <BallProgramView slides={slides} onRefetch={refetch} />
-  </div>
+  return <BallProgramView slides={slides} onRefetch={refetch} />
 }
 
-function BallProgramView({slides, onRefetch}: {slides: Slide[], onRefetch: () => unknown}) {
+function BallProgramView({slides, onRefetch}: {slides: SlideContent[], onRefetch: () => unknown}) {
   const {'*': currentSlideId = startSlideId} = useParams()
   const changeSlideId = useNavigate()
-  const slide = slides.find(s => s.id === currentSlideId) ?? slides[0]
+  const slideIndex = (i => i >= 0 ? i : 0)(slides.findIndex(s => s.id === currentSlideId))
+
+  const onSwipe = useCallback((_, direction : 'left'|'right') => {
+    const index = slideIndex + (direction === 'left' ? -1 : 1)
+    const nextSlide = slides[Math.min(Math.max(index, 0), slides.length-1)]
+    changeSlideId(nextSlide.id)
+  }, [slides, slideIndex, changeSlideId])
 
   useOnKeydown({
-    ArrowLeft: () => changeSlideId(slide.previousId ?? slide.id),
-    ArrowRight: () => changeSlideId(slide.nextId ?? slide.id),
+    ArrowLeft: () => onSwipe(null, 'left'),
+    ArrowRight: () => onSwipe(null, 'right'),
     r: onRefetch
   })
 
-  const onSwipe = useCallback((_, direction : 'left'|'right') => {
-    changeSlideId(((direction === 'left' ? slide.nextId : slide.previousId) ?? slide.id))
-  }, [slide, changeSlideId])
+  const {parentId, slideContent, ...slide} = slides[slideIndex]
 
   return <ReactTouchEvents onSwipe={onSwipe} disableClick>
     <SlideContainer fullscreen color="#000">
       <div className="controls">
-        <ProgramTitleSelector value={slide.parentId ?? slide.id} onChange={changeSlideId}
+        <ProgramTitleSelector value={parentId ?? slide.id} onChange={changeSlideId}
           program={slides} />
       </div>
-      <SlideView slide={slide} />
+      <Slide {...slide}>
+        <SlideContentView slideContent={slideContent} />
+      </Slide>
     </SlideContainer>
   </ReactTouchEvents>
 }
 
-interface SlideProps {
-  slide: Slide
-}
-
-function SlideView({slide}: SlideProps) {
-  return <Slide2 {...slide.slide} slideStyleId={slide.slideStyleId} >
-    <SlideContentView slide={slide} />
-  </Slide2>
-}
-
-function SlideContentView({slide}: SlideProps) {
-  switch (slide.slideContent?.type) {
+function SlideContentView({slideContent}: Pick<SlideContent, 'slideContent'>) {
+  switch (slideContent?.type) {
     case 'navigation':
-      return <SlideNavigationList items={slide.slideContent.value} />
+      return <SlideNavigationList items={slideContent.value} />
     case 'text':
-      return <Markdown className="slide-program-description-content">{slide.slideContent.value}</Markdown>
+      return <Markdown className="slide-program-description-content">{slideContent.value}</Markdown>
     case 'dance':
-      return <EditableDanceProperty dance={slide.slideContent.value} property="description" type="markdown" addText={t`addDescription`} />
+      return <EditableDanceProperty dance={slideContent.value} property="description" type="markdown" addText={t`addDescription`} />
   }
   return null
 }

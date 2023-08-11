@@ -10,20 +10,11 @@ type Event = NonNullable<NonNullable<BallProgramData['data']>['event']>
 type ProgramSettings = NonNullable<Event['program']>
 type DanceSet = ProgramSettings['danceSets'][number]
 type ProgramRow = (ProgramSettings['introductions'] | DanceSet)['program'][number]
-type ProgramRowItem = ProgramRow['item']
-type Dance = Extract<ProgramRowItem, {__typename: 'Dance'}>
+type Dance = Extract<ProgramRow['item'], {__typename: 'Dance'}>
 type IntervalMusic = ProgramSettings['defaultIntervalMusic']
 
-export interface Slide extends SlideContent {
-  previousId: string | null
-  nextId: string | null
-}
-export interface SlideContent {
-  id: string
+export interface SlideContent extends SlideProps {
   parentId?: string
-  slideStyleId?: string | null
-
-  slide: SlideProps
   slideContent?: {
     type: 'text'
     value: string
@@ -36,7 +27,7 @@ export interface SlideContent {
   }
 }
 
-export function useBallProgramSlides(eventId) : [Slide[] | null, Omit<BallProgramData, 'data'> ]{
+export function useBallProgramSlides(eventId: string) : [SlideContent[] | null, Omit<BallProgramData, 'data'> ]{
   const {data, ...rest} = useBallProgramQuery({eventId})
 
   const program = useMemo(() => data?.event ? getSlides(data.event) : null, [data])
@@ -46,8 +37,7 @@ export function useBallProgramSlides(eventId) : [Slide[] | null, Omit<BallProgra
 
 export const startSlideId = ''
 
-
-export function getSlides(event: Event) : Slide[] {
+export function getSlides(event: Event) : SlideContent[] {
   const {
     introductions,
     danceSets,
@@ -57,12 +47,9 @@ export function getSlides(event: Event) : Slide[] {
 
   const eventHeader : SlideContent = {
     id: startSlideId,
+    title: introductions.title ?? event.name,
     slideStyleId: introductions.titleSlideStyleId,
-    slide: {
-      id: startSlideId,
-      title: introductions.title ?? event.name,
-      type: 'Event',
-    }
+    type: 'Event',
   }
 
   const slides : SlideContent[] = [
@@ -97,18 +84,15 @@ function toDanceSetSlides(danceSet: DanceSet, defaultIntervalMusic: IntervalMusi
   ]
   program.forEach(item => {
     item.parentId = danceSet._id
-    item.slide.navigation = navigation
+    item.navigation = navigation
   })
 
   return [
     {
       id,
+      title,
       slideStyleId: danceSet.titleSlideStyleId,
-      slide: {
-        id,
-        title,
-        type: 'DanceSet',
-      },
+      type: 'DanceSet',
       slideContent: {
         type: 'navigation',
         value: navigation.items,
@@ -123,19 +107,13 @@ function toProgramSlide({_id: id, item, slideStyleId}: ProgramRow): SlideContent
     case 'RequestedDance':
       return {
         id, slideStyleId,
-        slide: {
-          id,
-          title: t`requestedDance`,
-        }
+        title: t`requestedDance`,
       }
     case 'Dance':
       return {
         id, slideStyleId,
-        slide: {
-          id,
-          title: item.name,
-          footer: item.teachedIn ? `${t`teachedInSet`} ${item.teachedIn.map(w => w.name).join(', ')}` : undefined,
-        },
+        title: item.name,
+        footer: item.teachedIn ? `${t`teachedInSet`} ${item.teachedIn.map(w => w.name).join(', ')}` : undefined,
         slideContent: {
           type: 'dance',
           value: item,
@@ -144,10 +122,7 @@ function toProgramSlide({_id: id, item, slideStyleId}: ProgramRow): SlideContent
     case 'EventProgram':
       return {
         id, slideStyleId,
-        slide: {
-          id,
-          title: item.name,
-        },
+        title: item.name,
         slideContent: {
           type: 'text',
           value: item.description ?? '',
@@ -164,10 +139,7 @@ function intervalMusicSlide(danceSet: DanceSet, defaultIntervalMusic: IntervalMu
   return [{
     id,
     slideStyleId: intervalMusic.slideStyleId,
-    slide: {
-      id,
-      title: (intervalMusic.name ?? defaultIntervalMusic.name) || t`intervalMusic`,
-    },
+    title: (intervalMusic.name ?? defaultIntervalMusic.name) || t`intervalMusic`,
     slideContent: {
       type: 'text',
       value: intervalMusic.description ?? defaultIntervalMusic.description ?? '',
@@ -175,20 +147,14 @@ function intervalMusicSlide(danceSet: DanceSet, defaultIntervalMusic: IntervalMu
   }]
 }
 
-function addNavigation(slides: SlideContent[]): Slide[] {
+function addNavigation(slides: SlideContent[]): SlideContent[] {
   const getSlide = (i: number) => {
     if (i >= slides.length || i < 0) return undefined
-    const {slide: {title}, id} = slides[i]
-    return { id, title }
+    return slides[i]
   }
 
   return slides.map((slide, index) => ({
     ...slide,
-    previousId: getSlide(index-1)?.id ?? null,
-    nextId: getSlide(index+1)?.id ?? null,
-    slide: {
-      ...slide.slide,
-      next: slide.slide.navigation ? getSlide(index+1) : undefined,
-    }
+    next: slide.navigation ? getSlide(index+1) : undefined,
   }))
 }
