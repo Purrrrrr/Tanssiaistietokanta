@@ -88,11 +88,16 @@
   .slide-program-description {
     text-align: left;
     display: inline-block;
+    p {
+      margin-bottom: 1cqh;
+    }
     ul {
       display: inline-block;
+      margin-top: 0.5em;
+      margin-bottom: 0.5em;
     }
     ul:not(.slide-navigation-list), ol {
-      padding-left: 60px;
+      padding-left: 3cqw;
     }
     tr + tr, td + td {
       padding-left: 0.5em;
