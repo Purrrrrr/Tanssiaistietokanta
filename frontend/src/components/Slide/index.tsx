@@ -37,10 +37,10 @@ export interface SlideLink {
   isPlaceholder?: boolean
 }
 
-export function Slide({id, title, type, children, footer, next, navigation, slideStyleId = 'default'}: SlideProps) {
+export function Slide({id, title, type, children, footer, next, navigation, slideStyleId}: SlideProps) {
   const className = classnames(
     'slide',
-    `slide-style-${slideStyleId}`,
+    `slide-style-${slideStyleId ?? 'default'}`,
     type && 'slide-type-'+type,
   )
   return <section className={className}>

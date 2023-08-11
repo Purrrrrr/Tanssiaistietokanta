@@ -18,7 +18,7 @@ import './BallProgram.scss'
 
 export default function BallProgram({eventId}) {
   const [slides, {refetch, ...loadingState}] = useBallProgramSlides(eventId)
-  const [isEditing, setEditing] = useState(true)
+  const [isEditing, setEditing] = useState(false)
   const {'*': currentSlideId = startSlideId} = useParams()
 
   if (!slides) return <LoadingState {...loadingState} refetch={refetch} />
@@ -83,7 +83,7 @@ function SlideContentView({slideContent}: Pick<SlideContent, 'slideContent'>) {
     case 'text':
       return <Markdown className="slide-program-description-content">{slideContent.value}</Markdown>
     case 'dance':
-      return <Markdown className="slide-program-description-content">{slideContent.value.description}</Markdown>
+      return <Markdown className="slide-program-description-content">{slideContent.value.description ?? ''}</Markdown>
   }
   return null
 }

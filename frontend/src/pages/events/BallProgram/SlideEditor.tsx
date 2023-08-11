@@ -12,5 +12,8 @@ export function SlideEditor({slide}: SlideEditorProps) {
     {slide.slideContent?.type === 'dance' &&
       <DanceEditor dance={slide.slideContent.value} />
     }
+    {slide.slideContent?.type !== 'dance' &&
+      <p>No editor yet, sorry!</p>
+    }
   </div>
 }
