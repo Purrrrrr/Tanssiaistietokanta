@@ -58,12 +58,11 @@ export function getSlides(event: Event) : SlideContent[] {
     ...danceSets.flatMap(danceSet => toDanceSetSlides(danceSet, defaultIntervalMusic)),
   ]
 
-  slides.forEach((slide) => {
-    if (!slide.slideStyleId) {
-      slide.slideStyleId = defaultStyleId
-    }
-  })
-  return addNavigation(slides)
+  return slides.map((slide, index) => ({
+    ...slide,
+    slideStyleId: slide.slideStyleId ?? defaultStyleId,
+    next: slide.navigation ? slides[index+1] : undefined,
+  }))
 }
 
 function toDanceSetSlides(danceSet: DanceSet, defaultIntervalMusic: IntervalMusic): SlideContent[] {
@@ -145,16 +144,4 @@ function intervalMusicSlide(danceSet: DanceSet, defaultIntervalMusic: IntervalMu
       value: intervalMusic.description ?? defaultIntervalMusic.description ?? '',
     }
   }]
-}
-
-function addNavigation(slides: SlideContent[]): SlideContent[] {
-  const getSlide = (i: number) => {
-    if (i >= slides.length || i < 0) return undefined
-    return slides[i]
-  }
-
-  return slides.map((slide, index) => ({
-    ...slide,
-    next: slide.navigation ? getSlide(index+1) : undefined,
-  }))
 }
