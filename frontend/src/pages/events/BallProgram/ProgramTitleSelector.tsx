@@ -10,8 +10,8 @@ interface ProgramTitleSelectorProps {
 
 export function ProgramTitleSelector({program, value, onChange}: ProgramTitleSelectorProps) {
   return <select value={value} onChange={(e) => onChange(e.target.value)}>
-    {program.filter(isHeader).map((part, i) => <option key={i} value={part._id}>{part.name}</option>)}
+    {program.filter(isHeader).map((part, i) => <option key={i} value={part.id}>{part.slide.title}</option>)}
   </select>
 }
 
-const isHeader = ({__typename}) => ['DanceSet', 'Event'].includes(__typename)
+const isHeader = ({slide}) => ['DanceSet', 'Event'].includes(slide.type)

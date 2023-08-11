@@ -1,46 +1,43 @@
 import {useMemo} from 'react'
 
-import {backendQueryHook, graphql} from 'backend'
-import {useCallbackOnEventChanges} from 'services/events'
+import {SlideNavigation, SlideProps} from 'components/Slide'
 
 import {t} from './strings'
+import {useBallProgramQuery} from './useBallProgramQuery'
 
-type BallProgramData = ReturnType<typeof useBallProgram>
-export type Event = NonNullable<NonNullable<BallProgramData['data']>['event']>
-export type ProgramSettings = NonNullable<Event['program']>
-export type DanceSet = ProgramSettings['danceSets'][number]
-export type IntroProgramRow = ProgramSettings['introductions']['program']
-export type DanceProgramRow = DanceSet['program']
-export type ProgramRow = (ProgramSettings['introductions'] | DanceSet)['program'][number]
-export type ProgramRowItem = ProgramRow['item']
-export type Dance = Extract<ProgramRowItem, {__typename: 'Dance'}>
-export type EventProgram = Extract<ProgramRowItem, {__typename: 'EventProgram'}>
+type BallProgramData = ReturnType<typeof useBallProgramQuery>
+type Event = NonNullable<NonNullable<BallProgramData['data']>['event']>
+type ProgramSettings = NonNullable<Event['program']>
+type DanceSet = ProgramSettings['danceSets'][number]
+type ProgramRow = (ProgramSettings['introductions'] | DanceSet)['program'][number]
+type ProgramRowItem = ProgramRow['item']
+type Dance = Extract<ProgramRowItem, {__typename: 'Dance'}>
 type IntervalMusic = ProgramSettings['defaultIntervalMusic']
 
 export interface Slide extends SlideContent {
-  index: number
-  previous: SlideRef | null
-  next: SlideRef | null
+  previousId: string | null
+  nextId: string | null
 }
 export interface SlideContent {
-  __typename: string
-  _id: string
+  id: string
+  parentId?: string
   slideStyleId?: string | null
-  name: string
-  isHeader: boolean
-  item?: ProgramRowItem | { __typename: 'IntervalMusic', description: string }
-  parent: SlideRef | null
-  program?: SlideContent[]
-  showInLists: boolean
-}
 
-interface SlideRef {
-  _id: string
-  name: string
+  slide: SlideProps
+  slideContent?: {
+    type: 'text'
+    value: string
+  } | {
+    type: 'navigation'
+    value: SlideNavigation['items']
+  } | {
+    type: 'dance'
+    value: Dance
+  }
 }
 
 export function useBallProgramSlides(eventId) : [Slide[] | null, Omit<BallProgramData, 'data'> ]{
-  const {data, ...rest} = useBallProgram({eventId})
+  const {data, ...rest} = useBallProgramQuery({eventId})
 
   const program = useMemo(() => data?.event ? getSlides(data.event) : null, [data])
 
@@ -49,75 +46,6 @@ export function useBallProgramSlides(eventId) : [Slide[] | null, Omit<BallProgra
 
 export const startSlideId = ''
 
-export const useBallProgram = backendQueryHook(graphql(`
-query BallProgram($eventId: ID!) {
-  event(id: $eventId) {
-    _id
-    name
-    program {
-      slideStyleId
-      defaultIntervalMusic {
-        name
-        description
-      }
-      introductions {
-        title
-        titleSlideStyleId
-        program {
-          _id
-          slideStyleId
-          item {
-            __typename
-            ... on ProgramItem {
-              name
-              description
-            }
-            ... on Dance {
-              _id
-              teachedIn(eventId: $eventId) { _id, name }
-            }
-            ... on EventProgram {
-              showInLists
-            }
-          }
-        }
-      }
-      danceSets {
-        __typename
-        _id
-        title
-        titleSlideStyleId
-        intervalMusic {
-          name
-          description
-          duration
-          slideStyleId
-        }
-        program {
-          _id
-          slideStyleId
-          item {
-            __typename
-            ... on ProgramItem {
-              name
-              description
-            }
-            ... on Dance {
-              _id
-              teachedIn(eventId: $eventId) { _id, name }
-            }
-            ... on EventProgram {
-              showInLists
-            }
-          }
-        }
-      }
-    }
-  }
-}`), ({refetch, variables}) => {
-  if (variables === undefined) throw new Error('Unknown event id')
-  useCallbackOnEventChanges(variables.eventId, refetch)
-})
 
 export function getSlides(event: Event) : Slide[] {
   const {
@@ -127,12 +55,15 @@ export function getSlides(event: Event) : Slide[] {
     defaultIntervalMusic,
   } = event.program
 
-  const eventHeader : SlideContent = headerSlide({
-    __typename: 'Event',
-    _id: startSlideId,
-    name: introductions.title ?? event.name,
+  const eventHeader : SlideContent = {
+    id: startSlideId,
     slideStyleId: introductions.titleSlideStyleId,
-  })
+    slide: {
+      id: startSlideId,
+      title: introductions.title ?? event.name,
+      type: 'Event',
+    }
+  }
 
   const slides : SlideContent[] = [
     eventHeader,
@@ -140,7 +71,7 @@ export function getSlides(event: Event) : Slide[] {
     ...danceSets.flatMap(danceSet => toDanceSetSlides(danceSet, defaultIntervalMusic)),
   ]
 
-  slides.forEach((slide, index) => {
+  slides.forEach((slide) => {
     if (!slide.slideStyleId) {
       slide.slideStyleId = defaultStyleId
     }
@@ -148,83 +79,116 @@ export function getSlides(event: Event) : Slide[] {
   return addNavigation(slides)
 }
 
-function toDanceSetSlides({title: name, ...danceSet}: DanceSet, defaultIntervalMusic: IntervalMusic): SlideContent[] {
+function toDanceSetSlides(danceSet: DanceSet, defaultIntervalMusic: IntervalMusic): SlideContent[] {
+  const {_id: id, title} = danceSet
+  const navigation : SlideNavigation = {
+    title,
+    items: danceSet.program
+      .map(item => ({
+        id: item._id,
+        title: item.item.__typename === 'RequestedDance' ? t`requestedDance` : item.item.name,
+        hidden: 'showInLists' in item.item ? !item.item.showInLists : false,
+        isPlaceholder: item.item.__typename === 'RequestedDance',
+      }))
+  }
   const program = [
     ...danceSet.program.map(toProgramSlide),
     ...intervalMusicSlide(danceSet, defaultIntervalMusic),
   ]
-  const danceSetSlide = headerSlide({
-    ...danceSet,
-    name,
-    program,
-  })
   program.forEach(item => {
-    item.parent = danceSetSlide
-    if (item.__typename === 'IntervalMusic') return
-    item.program = program
+    item.parentId = danceSet._id
+    item.slide.navigation = navigation
   })
 
-  return [danceSetSlide, ...program]
+  return [
+    {
+      id,
+      slideStyleId: danceSet.titleSlideStyleId,
+      slide: {
+        id,
+        title,
+        type: 'DanceSet',
+      },
+      slideContent: {
+        type: 'navigation',
+        value: navigation.items,
+      }
+    },
+    ...program
+  ]
 }
 
-function toProgramSlide({_id, item, slideStyleId}: ProgramRow): SlideContent {
-  return programSlide({
-    __typename: item.__typename,
-    name: item.__typename === 'RequestedDance' ? t`requestedDance` : item.name,
-    showInLists: 'showInLists' in item ? item.showInLists : true,
-    item,
-    _id,
-    slideStyleId,
-  })
+function toProgramSlide({_id: id, item, slideStyleId}: ProgramRow): SlideContent {
+  switch (item.__typename) {
+    case 'RequestedDance':
+      return {
+        id, slideStyleId,
+        slide: {
+          id,
+          title: t`requestedDance`,
+        }
+      }
+    case 'Dance':
+      return {
+        id, slideStyleId,
+        slide: {
+          id,
+          title: item.name,
+          footer: item.teachedIn ? `${t`teachedInSet`} ${item.teachedIn.map(w => w.name).join(', ')}` : undefined,
+        },
+        slideContent: {
+          type: 'dance',
+          value: item,
+        }
+      }
+    case 'EventProgram':
+      return {
+        id, slideStyleId,
+        slide: {
+          id,
+          title: item.name,
+        },
+        slideContent: {
+          type: 'text',
+          value: item.description ?? '',
+        }
+      }
+  }
 }
 
-function intervalMusicSlide(danceSet, defaultIntervalMusic: IntervalMusic): SlideContent[] {
+function intervalMusicSlide(danceSet: DanceSet, defaultIntervalMusic: IntervalMusic): SlideContent[] {
   const {intervalMusic} = danceSet
-  if ((intervalMusic?.duration ?? 0) > 0) {
-    const description = intervalMusic?.description ?? defaultIntervalMusic.description ?? ''
-    return [programSlide({
-      __typename: 'IntervalMusic',
-      _id: danceSet._id + '-intervalMusic',
-      name: (intervalMusic?.name ?? defaultIntervalMusic?.name) || t`intervalMusic`,
-      item: { __typename: 'IntervalMusic', description },
-      slideStyleId: intervalMusic.slideStyleId,
-      showInLists: false,
-    })]
-  }
-  return []
-}
+  if (!intervalMusic || !intervalMusic.duration) return []
 
-function programSlide(props: Omit<SlideContent, 'parent' | 'isHeader'>): SlideContent {
-  return {
-    ...props,
-    parent: null,
-    isHeader: false,
-  }
-}
-function headerSlide(
-  props: Omit<SlideContent, 'showInLists' | 'isHeader' | 'parent'>
-): SlideContent {
-  return {
-    ...props,
-    showInLists: true,
-    isHeader: true,
-    parent: null,
-  }
+  const id = danceSet._id + '-intervalMusic'
+  return [{
+    id,
+    slideStyleId: intervalMusic.slideStyleId,
+    slide: {
+      id,
+      title: (intervalMusic.name ?? defaultIntervalMusic.name) || t`intervalMusic`,
+    },
+    slideContent: {
+      type: 'text',
+      value: intervalMusic.description ?? defaultIntervalMusic.description ?? '',
+    }
+  }]
 }
 
 function addNavigation(slides: SlideContent[]): Slide[] {
-  const getSlide = (i) => {
-    if (i >= slides.length || i < 0) return null
-    const {name, _id} = slides[i]
-    return {
-      _id, name
-    }
+  const getSlide = (i: number) => {
+    if (i >= slides.length || i < 0) return undefined
+    const {slide: {title}, id} = slides[i]
+    return { id, title }
   }
 
   return slides.map((slide, index) => ({
     ...slide,
-    index,
-    previous: getSlide(index-1),
-    next: getSlide(index+1)
+    previousId: getSlide(index-1)?.id ?? null,
+    nextId: getSlide(index+1)?.id ?? null,
+    slide: {
+      ...slide.slide,
+      next: slide.slide.navigation ? getSlide(index+1) : undefined,
+    }
   }))
 }

@@ -114,17 +114,18 @@
   }
 
   .slide-navigation-list {
-    ul, li {
+    text-align: center;
+    &, li {
       margin: 0;
       padding: 0;
     }
     li {
       list-style: none;
     }
-    a.current {
+    li.current {
       font-weight: bold;
     }
-    a:not(.current) {
+    &.has-current li:not(.current) {
       opacity: 0.8;
       scale: 0.8;
     }
