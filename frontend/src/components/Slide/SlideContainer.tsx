@@ -8,17 +8,15 @@ export interface SlideContainerProps {
   color?: React.CSSProperties['background']
   size?: number
   fullscreen?: boolean
-  slideStyleId?: string | null | undefined
 }
 
-export function SlideContainer({children, color, size, fullscreen, slideStyleId = 'default'}: SlideContainerProps) {
+export function SlideContainer({children, color, size, fullscreen}: SlideContainerProps) {
   const className =classnames(
     'slide-backdrop',
     {
       full: fullscreen,
       preview: !fullscreen && size,
     },
-    slideStyleId && `slide-style-${slideStyleId}`
   )
   const style = {
     background: color,

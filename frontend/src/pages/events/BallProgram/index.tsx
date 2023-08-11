@@ -40,7 +40,7 @@ function BallProgramView({slides, onRefetch}: {slides: Slide[], onRefetch: () =>
   }, [slide, changeSlideId])
 
   return <ReactTouchEvents onSwipe={onSwipe} disableClick>
-    <SlideContainer fullscreen slideStyleId={slide.slideStyleId} color="#000">
+    <SlideContainer fullscreen color="#000">
       <div className="controls">
         <ProgramTitleSelector value={slide.parentId ?? slide.id} onChange={changeSlideId}
           program={slides} />
@@ -55,7 +55,7 @@ interface SlideProps {
 }
 
 function SlideView({slide}: SlideProps) {
-  return <Slide2 {...slide.slide} >
+  return <Slide2 {...slide.slide} slideStyleId={slide.slideStyleId} >
     <SlideContentView slide={slide} />
   </Slide2>
 }

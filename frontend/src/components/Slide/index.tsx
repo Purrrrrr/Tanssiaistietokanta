@@ -22,6 +22,7 @@ export interface SlideProps {
   footer?:  string
   next?: SlideLink
   navigation?: SlideNavigation
+  slideStyleId?: string | null | undefined
 }
 
 export interface SlideNavigation {
@@ -36,8 +37,13 @@ export interface SlideLink {
   isPlaceholder?: boolean
 }
 
-export function Slide({id, title, type, children, footer, next, navigation}: SlideProps) {
-  return <section className={classnames('slide', type && 'slide-type-'+type)}>
+export function Slide({id, title, type, children, footer, next, navigation, slideStyleId = 'default'}: SlideProps) {
+  const className = classnames(
+    'slide',
+    `slide-style-${slideStyleId}`,
+    type && 'slide-type-'+type,
+  )
+  return <section className={className}>
     <h1 className="slide-title">{title}</h1>
     <section className="slide-main-content">
       <AutosizedSection className="slide-program-description">

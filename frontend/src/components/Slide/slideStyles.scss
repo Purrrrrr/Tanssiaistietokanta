@@ -1,52 +1,46 @@
 .slide-style-default {
-  .slide-container {
-    background: white;
-    color: black;
-  }
+  background: white;
+  color: black;
 }
 .slide-style-dark {
-  .slide-container {
-    background: black;
-    color: white;
-  }
+  background: black;
+  color: white;
 }
 
 // Flower background styles
 @mixin flower($image-name) {
+  font-family: 'Charm', cursive;
+  font-weight: 100;
+  background-size: 100% 100%;
+  background-position: center;
+  background-color: #fbf5e6;
+  background-image: url($image-dir + 'backgrounds/flower/' + $image-name);
   color: #58370e;
-  .slide {
-    font-family: 'Charm', cursive;
-    font-weight: 100;
-    background-size: 100% 100%;
-    background-position: center;
-    background-color: #fbf5e6;
-    background-image: url($image-dir + 'backgrounds/flower/' + $image-name);
-    .slide-title,
-    .slide-navigation-title {
-      font-family: 'Tangerine', cursive;
-    }
-    .slide-title {
-      font-size: 2.2em;
-    }
-    .slide-content-area {
-      font-size: 100%;
-      background: rgba(251,245,230,0.7);
-      border-radius: 1em;
-      padding: 0.3em 0.3em;
-    }
-    .slide-navigation-title {
-      font-size: 2.1em;
-    }
-    .slide-navigation {
-      font-size: 90%;
-    }
-    .slide-next-slide {
-      justify-self: center;
-      padding: 0.1em 0.3em;
-      border-top: none;
-    }
+  .slide-title,
+  .slide-navigation-title {
+    font-family: 'Tangerine', cursive;
   }
-  .slide-type-Event .slide-title {
+  .slide-title {
+    font-size: 2.2em;
+  }
+  .slide-content-area {
+    font-size: 100%;
+    background: rgba(251,245,230,0.7);
+    border-radius: 1em;
+    padding: 0.3em 0.3em;
+  }
+  .slide-navigation-title {
+    font-size: 2.1em;
+  }
+  .slide-navigation {
+    font-size: 90%;
+  }
+  .slide-next-slide {
+    justify-self: center;
+    padding: 0.1em 0.3em;
+    border-top: none;
+  }
+  &.slide-type-Event .slide-title {
     font-size: 3.4em;
   }
 }
