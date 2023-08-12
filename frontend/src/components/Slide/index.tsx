@@ -64,7 +64,7 @@ function NextSlide({next}: {next: SlideLink}) {
   return <section className="slide-next-slide">
     <div className="slide-content-area">
       {t`afterThis`}:{' '}
-      <LinkToSlide {...next} className="slide-content-area" />
+      <LinkToSlide {...next} />
     </div>
   </section>
 }
