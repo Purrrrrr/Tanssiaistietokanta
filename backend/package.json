@@ -37,7 +37,7 @@
   "scripts": {
     "create-migration": "ts-node src/create-migration.ts",
     "dev": "nodemon -x ts-node src/index.ts",
-    "compile": "shx rm -rf lib/ && copyfiles -u 1 src/**/*.graphql lib && tsc",
+    "compile": "shx rm -rf lib/ && copyfiles -u 1 src/**/*.graphql lib && copyfiles -u 1 src/**/*.json lib && tsc",
     "start": "node lib/",
     "prettier": "npx prettier \"**/*.ts\" --write",
     "mocha": "cross-env NODE_ENV=test mocha test/ --require ts-node/register --recursive --extension .ts --exit",
