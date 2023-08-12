@@ -5,4 +5,5 @@ export const t = makeTranslate({
   requestedDance: 'Toivetanssi',
   intervalMusic: 'Taukomusiikkia',
   addDescription: 'Lisää kuvaus',
+  linkToCompleteDance: 'Avaa tanssi tanssitietokannassa'
 })
