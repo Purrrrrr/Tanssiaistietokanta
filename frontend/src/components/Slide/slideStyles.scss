@@ -14,7 +14,7 @@
   background-size: 100% 100%;
   background-position: center;
   background-color: #fbf5e6;
-  background-image: url($image-dir + 'backgrounds/flower/' + $image-name);
+  background-image: url('./backgrounds/' + $image-name);
   color: #58370e;
   .slide-title,
   .slide-navigation-title {
@@ -44,8 +44,6 @@
     font-size: 3.4em;
   }
 }
-
-$image-dir: '../../../public/';
 
 .slide-style-flower-title1 {
   @include flower('flower-title1.jpg');
