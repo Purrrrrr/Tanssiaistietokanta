@@ -13,41 +13,33 @@ import {LinkMenuItem} from 'components/widgets/LinkMenuItem'
 
 import {Dance, DanceWithEvents} from 'types'
 
-interface DanceListItemProps {
+interface DanceEditorProps extends Pick<DanceEditorContainerProps, 'dance' | 'titleComponent'> {
   dance: DanceWithEvents
   onDelete?: () => unknown
   showLink?: boolean
-  titleComponent?: React.JSXElementConstructor<{className: string, children: React.ReactNode}> | 'h1'
+  showDelete?: boolean
 }
 
 const {
   Form,
   Field,
   Input,
+  useValueAt,
+  useOnChangeFor,
 } = formFor<Dance>()
 
-export function DanceEditor({dance, onDelete, showLink, titleComponent: Title = H2} : DanceListItemProps) {
+export function DanceEditor({dance, onDelete, showLink, titleComponent} : DanceEditorProps) {
   const addLoadingAnimation = useGlobalLoadingAnimation()
   const [deleteDance] = useDeleteDance()
-  const [modifyDance] = usePatchDance()
-  const patchDance = useCallback(
-    (patches : Partial<DanceWithEvents>) =>
-      modifyDance({id: dance._id, dance: patches})
-    ,
-    [modifyDance, dance._id]
-  )
   const handleDelete = () => {
     addLoadingAnimation(deleteDance({id: dance._id}))
     onDelete && onDelete()
   }
 
-  const {formProps, state} = useAutosavingState<Dance, Partial<Dance>>(dance, patchDance, patchStrategy.partial)
-  return <>
-    <Flex spaced alignItems="center">
-      <Title className="flex-fill">
-        {dance.name}
-        <SyncStatus style={{marginLeft: '1ch', top: '3px'}} className="flex-fill" state={state} />
-      </Title>
+  return <DanceEditorContainer
+    dance={dance}
+    titleComponent={titleComponent}
+    toolbar={<>
       {showLink && <Link to={`/dances/${dance._id}`}><Icon icon="link"/>Linkki tähän tanssiin</Link>}
       <DanceIsUsedIn events={dance.events} />
       <div>
@@ -56,26 +48,54 @@ export function DanceEditor({dance, onDelete, showLink, titleComponent: Title = 
           text="Poista tanssi"
           confirmText="Haluatko varmasti poistaa tämän tanssin?"
         />
-        <DanceDataImportButton text="Hae tietoja tanssiwikistä" dance={formProps.value} onImport={formProps.onChange} />
+        <DanceDataImporter />
+      </div>
+    </>}
+  >
+    <Flex spaced wrap className="danceEditor">
+      <div style={{flexGrow: 1, flexBasis: 300}}>
+        <Input label="Nimi" path="name" />
+        <Input label="Kategoria" path="category" />
+        <Field label="Kesto" path="duration" component={DurationField} />
+        <Input label="Alkusoitto" path="prelude" />
+        <Input label="Tanssikuvio" path="formation" />
+        <Input label="Huomautuksia" path="remarks" />
+      </div>
+      <div style={{flexGrow: 2, flexBasis: 500}}>
+        <Field label="Kuvaus ja lyhyt ohje" path="description" component={MarkdownEditor} />
+        <Field label="Pidemmät tanssiohjeet printtiin" path="instructions" component={MarkdownEditor} />
       </div>
     </Flex>
-    <Form {...formProps}>
-      <Flex spaced wrap className="danceEditor">
-        <div style={{flexGrow: 1, flexBasis: 300}}>
-          <Input label="Nimi" path="name" />
-          <Input label="Kategoria" path="category" />
-          <Field label="Kesto" path="duration" component={DurationField} />
-          <Input label="Alkusoitto" path="prelude" />
-          <Input label="Tanssikuvio" path="formation" />
-          <Input label="Huomautuksia" path="remarks" />
-        </div>
-        <div style={{flexGrow: 2, flexBasis: 500}}>
-          <Field label="Kuvaus ja lyhyt ohje" path="description" component={MarkdownEditor} />
-          <Field label="Pidemmät tanssiohjeet printtiin" path="instructions" component={MarkdownEditor} />
-        </div>
-      </Flex>
-    </Form>
-  </>
+  </DanceEditorContainer>
+}
+
+interface DanceEditorContainerProps {
+  dance: Dance
+  toolbar?: React.ReactNode
+  children: React.ReactNode
+  titleComponent?: React.JSXElementConstructor<{className: string, children: React.ReactNode}> | 'h1'
+}
+
+export function DanceEditorContainer({dance, children, toolbar, titleComponent: Title = H2} : DanceEditorContainerProps) {
+  const [modifyDance] = usePatchDance()
+  const patchDance = useCallback(
+    (patches : Partial<DanceWithEvents>) =>
+      modifyDance({id: dance._id, dance: patches})
+    ,
+    [modifyDance, dance._id]
+  )
+
+  const {formProps, state} = useAutosavingState<Dance, Partial<Dance>>(dance, patchDance, patchStrategy.partial)
+  return <Form {...formProps}>
+    <Flex spaced alignItems="center">
+      <Title className="flex-fill">
+        {dance.name}
+        <SyncStatus style={{marginLeft: '1ch', top: '3px'}} className="flex-fill" state={state} />
+      </Title>
+      {toolbar}
+    </Flex>
+    {children}
+  </Form>
 }
 
 
@@ -100,4 +120,10 @@ function DanceIsUsedIn({events}: Pick<DanceWithEvents, 'events'>) {
       buttonProps={{minimal: true, rightIcon: 'caret-down'}}
     />
   </div>
+}
+
+function DanceDataImporter() {
+  const dance = useValueAt('')
+  const onChange = useOnChangeFor('')
+  return <DanceDataImportButton text="Hae tietoja tanssiwikistä" dance={dance} onImport={onChange} />
 }

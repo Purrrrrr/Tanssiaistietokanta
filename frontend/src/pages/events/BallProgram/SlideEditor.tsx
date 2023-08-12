@@ -1,6 +1,9 @@
 import React from 'react'
 
-import {DanceEditor} from 'components/DanceEditor'
+import {formFor, MarkdownEditor} from 'libraries/forms'
+import {DanceEditorContainer} from 'components/DanceEditor'
+
+import {Dance} from 'types'
 
 import {SlideContent} from './useBallProgram'
 
@@ -16,4 +19,16 @@ export function SlideEditor({slide}: SlideEditorProps) {
       <p>No editor yet, sorry!</p>
     }
   </div>
+}
+
+const {
+  Field,
+  Input,
+} = formFor<Dance>()
+function DanceEditor({dance}: {dance: Dance}) {
+  return <DanceEditorContainer dance={dance}>
+    <Input label="Nimi" path="name" />
+    <Field label="Kuvaus ja lyhyt ohje" path="description" component={MarkdownEditor} componentProps={{noPreview: true}}/>
+  </DanceEditorContainer>
+
 }

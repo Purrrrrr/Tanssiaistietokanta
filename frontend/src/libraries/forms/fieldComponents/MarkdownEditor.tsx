@@ -54,13 +54,16 @@ interface MarkdownEditorProps extends FieldComponentProps<string, HTMLTextAreaEl
   style?: React.CSSProperties
   onBlur?: (e: React.FocusEvent<HTMLTextAreaElement>) => void
   markdownOverrides?: Record<string, unknown>
+  noPreview?: boolean
 }
 
-export const MarkdownEditor = React.memo(function MarkdownEditor({value, onChange, inline, markdownOverrides, ...props} : MarkdownEditorProps) {
+export const MarkdownEditor = React.memo(function MarkdownEditor({value, onChange, inline, markdownOverrides, noPreview, ...props} : MarkdownEditorProps) {
   return <MdEditor
     renderHTML={(text : string) => <Markdown options={{overrides: markdownOverrides}}>{text}</Markdown>}
     value={value ?? ''}
     onChange={({text}, e) => onChange(text, e)}
     {...props}
+    view={noPreview ? {menu: true, md: true, html: false} : undefined}
+    canView={noPreview ? {menu: true, md: true, html: false, both: false, fullScreen: true, hideMenu: true} : undefined}
   />
 })
