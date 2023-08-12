@@ -4,14 +4,12 @@ import ReactTouchEvents from 'react-touch-events'
 import classNames from 'classnames'
 
 import {Button, Card, Markdown} from 'libraries/ui'
-import {EditableDanceProperty} from 'components/EditableDanceProperty'
 import {LoadingState} from 'components/LoadingState'
 import {Slide, SlideContainer, SlideNavigationList} from 'components/Slide'
 import {useOnKeydown} from 'utils/useOnKeydown'
 
 import {ProgramTitleSelector} from './ProgramTitleSelector'
 import {SlideEditor} from './SlideEditor'
-import {t} from './strings'
 import {SlideContent, startSlideId, useBallProgramSlides} from './useBallProgram'
 
 import './BallProgram.scss'
