@@ -38,24 +38,12 @@ export function useBallProgramSlides(eventId: string) : [SlideContent[] | null, 
 export const startSlideId = ''
 
 export function getSlides(event: Event) : SlideContent[] {
-  const {
-    introductions,
-    danceSets,
-    slideStyleId: defaultStyleId = null,
-    defaultIntervalMusic,
-  } = event.program
-
-  const eventHeader : SlideContent = {
-    id: startSlideId,
-    title: introductions.title ?? event.name,
-    slideStyleId: introductions.titleSlideStyleId,
-    type: 'Event',
-  }
+  const { introductions, slideStyleId: defaultStyleId = null } = event.program
 
   const slides : SlideContent[] = [
-    eventHeader,
-    ...introductions.program.map(toProgramSlide),
-    ...danceSets.flatMap(danceSet => toDanceSetSlides(danceSet, defaultIntervalMusic)),
+    eventHeaderSlide(event),
+    ...introductions.program.map(item => toProgramSlide(startSlideId, item)),
+    ...danceSetSlides(event),
   ]
 
   return slides.map((slide, index) => ({
@@ -65,9 +53,39 @@ export function getSlides(event: Event) : SlideContent[] {
   }))
 }
 
-function toDanceSetSlides(danceSet: DanceSet, defaultIntervalMusic: IntervalMusic): SlideContent[] {
-  const {_id: id, title} = danceSet
-  const navigation : SlideNavigation = {
+function eventHeaderSlide(event: Event): SlideContent {
+  const { introductions } = event.program
+
+  return {
+    id: startSlideId,
+    title: introductions.title ?? event.name,
+    slideStyleId: introductions.titleSlideStyleId,
+    type: 'Event',
+  }
+}
+
+function danceSetSlides(event: Event): SlideContent[] {
+  const { danceSets, defaultIntervalMusic } = event.program
+
+  let previousIntervalMusic : SlideContent | undefined
+
+  return danceSets.flatMap(danceSet => {
+    const navigation = danceSetNavigation(danceSet)
+    if (previousIntervalMusic) previousIntervalMusic.navigation = navigation
+
+    const titleSlide = danceSetTitleSlide(danceSet, navigation)
+    const danceSlides = danceSet.program.map(item => toProgramSlide(danceSet._id, item, navigation))
+    const intervalMusic = intervalMusicSlide(danceSet, defaultIntervalMusic)
+
+    return intervalMusic
+      ? [titleSlide, ...danceSlides, previousIntervalMusic = intervalMusic]
+      : [titleSlide, ...danceSlides]
+  })
+}
+
+function danceSetNavigation(danceSet: DanceSet): SlideNavigation {
+  const {title} = danceSet
+  return {
     title,
     items: danceSet.program
       .map(item => ({
@@ -77,42 +95,35 @@ function toDanceSetSlides(danceSet: DanceSet, defaultIntervalMusic: IntervalMusi
         isPlaceholder: item.item.__typename === 'RequestedDance',
       }))
   }
-  const program = [
-    ...danceSet.program.map(toProgramSlide),
-    ...intervalMusicSlide(danceSet, defaultIntervalMusic),
-  ]
-  program.forEach(item => {
-    item.parentId = danceSet._id
-    item.navigation = navigation
-  })
-
-  return [
-    {
-      id,
-      title,
-      slideStyleId: danceSet.titleSlideStyleId,
-      type: 'DanceSet',
-      slideContent: {
-        type: 'navigation',
-        value: navigation.items,
-      }
-    },
-    ...program
-  ]
 }
 
-function toProgramSlide({_id: id, item, slideStyleId}: ProgramRow): SlideContent {
+function danceSetTitleSlide(danceSet: DanceSet, navigation: SlideNavigation): SlideContent {
+  const {_id: id, title} = danceSet
+
+  return {
+    id,
+    title,
+    slideStyleId: danceSet.titleSlideStyleId,
+    type: 'DanceSet',
+    slideContent: {
+      type: 'navigation',
+      value: navigation.items,
+    }
+  }
+}
+
+function toProgramSlide(parentId: string, {_id: id, item, slideStyleId}: ProgramRow, navigation?: SlideNavigation): SlideContent {
+  const common = { id, slideStyleId, navigation, parentId, type: item.__typename }
   switch (item.__typename) {
     case 'RequestedDance':
       return {
-        id, slideStyleId,
+        ...common,
         type: 'RequestedDance',
         title: t`requestedDance`,
       }
     case 'Dance':
       return {
-        id, slideStyleId,
-        type: 'Dance',
+        ...common,
         title: item.name,
         footer: item.teachedIn ? `${t`teachedInSet`} ${item.teachedIn.map(w => w.name).join(', ')}` : undefined,
         slideContent: {
@@ -122,8 +133,7 @@ function toProgramSlide({_id: id, item, slideStyleId}: ProgramRow): SlideContent
       }
     case 'EventProgram':
       return {
-        id, slideStyleId,
-        type: 'EventProgram',
+        ...common,
         title: item.name,
         slideContent: {
           type: 'text',
@@ -133,18 +143,19 @@ function toProgramSlide({_id: id, item, slideStyleId}: ProgramRow): SlideContent
   }
 }
 
-function intervalMusicSlide(danceSet: DanceSet, defaultIntervalMusic: IntervalMusic): SlideContent[] {
+function intervalMusicSlide(danceSet: DanceSet, defaultIntervalMusic: IntervalMusic): SlideContent | undefined {
   const {intervalMusic} = danceSet
-  if (!intervalMusic || !intervalMusic.duration) return []
+  if (!intervalMusic || !intervalMusic.duration) return undefined
 
   const id = danceSet._id + '-intervalMusic'
-  return [{
+  return {
     id,
+    parentId: danceSet._id,
     slideStyleId: intervalMusic.slideStyleId,
     title: (intervalMusic.name ?? defaultIntervalMusic.name) || t`intervalMusic`,
     slideContent: {
       type: 'text',
       value: intervalMusic.description ?? defaultIntervalMusic.description ?? '',
     }
-  }]
+  }
 }
