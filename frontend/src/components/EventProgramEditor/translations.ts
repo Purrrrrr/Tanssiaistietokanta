@@ -55,6 +55,7 @@ export default makeTranslate({
     EventProgram: 'Muu ohjelma',
     IntervalMusic: 'Taukomusiikki',
   },
+  dance: 'Tanssi',
   duration: {
     pausesIncluded: '(taukoineen)',
     dances: '(tanssit)',

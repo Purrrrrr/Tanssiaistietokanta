@@ -1,9 +1,8 @@
 import React, {useCallback, useMemo, useRef, useState} from 'react'
 
 import { useDance } from 'services/dances'
-import {usePatchEventProgram} from 'services/events'
 
-import {ActionButton as Button, ClickToEdit, ListEditorContext, MarkdownEditor, MenuButton, SyncStatus, useAutosavingState} from 'libraries/forms'
+import {ActionButton as Button, ClickToEdit, ListEditorContext, MarkdownEditor, MenuButton, SyncStatus} from 'libraries/forms'
 import {Card, CssClass, Flex, HTMLTable} from 'libraries/ui'
 import {DanceEditor} from 'components/DanceEditor'
 import {LoadingState} from 'components/LoadingState'
@@ -23,10 +22,10 @@ import {
   RemoveItemButton,
   Switch,
   useAppendToList,
+  useEventProgramEditorForm,
   useOnChangeFor,
   useValueAt,
 } from './form'
-import {JSONPatch, patch} from './patchStrategy'
 import {DanceProgramChooser, InheritedSlideStyleSelector} from './selectors'
 import t from './translations'
 
@@ -38,10 +37,7 @@ interface EventProgramEditorProps {
 }
 
 export function EventProgramEditor({eventId, program: eventProgram}: EventProgramEditorProps) {
-  const [patchEventProgram] = usePatchEventProgram()
-  const saveProgram = (program) => patchEventProgram({id: eventId, program})
-
-  const {formProps, state} = useAutosavingState<EventProgramSettings, JSONPatch>(eventProgram, saveProgram, patch)
+  const {formProps, state} = useEventProgramEditorForm(eventId, eventProgram)
   const {danceSets, introductions} = formProps.value
 
   return <Form {...formProps}>
@@ -224,7 +220,7 @@ function DanceItemEditor({path}: {path: DanceProgramPath}) {
   const setItem = useOnChangeFor(`${path}.item`)
   const [open, setOpen] = useState(false)
   return <Flex className="eventProgramItemEditor">
-    <Field label={t`Dance`} labelStyle="hidden" path={`${path as DanceProgramPath}.item`} component={DanceProgramChooser} />
+    <Field label={t`dance`} labelStyle="hidden" path={`${path as DanceProgramPath}.item`} component={DanceProgramChooser} />
     {id &&
       <MenuButton
         menu={
@@ -293,25 +289,11 @@ function IntervalMusicEditor({danceSetPath}: {danceSetPath: DanceSetPath}) {
 
 function IntervalMusicDetailsEditor({path}: {path: IntervalMusicPath}) {
   const [open, setOpen] = useState(false)
-  const intervalMusic = useValueAt(path)
-  const hasCustomTexts = typeof intervalMusic?.name === 'string'
   return <Flex className="eventProgramItemEditor">
     <MenuButton
       menu={
         <div className="eventProgramItemPopover">
-          <IntervalMusicDefaultTextsSwitch label={t`fields.intervalMusic.useDefaultTexts`} path={path} />
-          {hasCustomTexts
-            ? <>
-              <t.h2>titles.customIntervalMusicTexts</t.h2>
-              <Input label={t`fields.intervalMusic.name`} path={`${path}.name`} required />
-              <Field label={t`fields.intervalMusic.description`} path={`${path}.description`} component={MarkdownEditor} />
-            </>
-            : <>
-              <t.h2>titles.defaultIntervalMusicTexts</t.h2>
-              <Input label={t`fields.intervalMusic.name`} path='defaultIntervalMusic.name' componentProps={{placeholder:t`programTypes.IntervalMusic`}} />
-              <Field label={t`fields.intervalMusic.description`} path="defaultIntervalMusic.description" component={MarkdownEditor} />
-            </>
-          }
+          <IntervalMusicDetailsEditor path={path} />
         </div>
       }
       text={t`buttons.editIntervalMusic`}
@@ -320,6 +302,26 @@ function IntervalMusicDetailsEditor({path}: {path: IntervalMusicPath}) {
       onSetOpen={setOpen}
     />
   </Flex>
+}
+
+export function IntervalMusicDescriptionEditor({path}: {path: IntervalMusicPath}) {
+  const intervalMusic = useValueAt(path)
+  const hasCustomTexts = typeof intervalMusic?.name === 'string'
+  return <>
+    <IntervalMusicDefaultTextsSwitch label={t`fields.intervalMusic.useDefaultTexts`} path={path} />
+    {hasCustomTexts
+      ? <>
+        <t.h2>titles.customIntervalMusicTexts</t.h2>
+        <Input label={t`fields.intervalMusic.name`} path={`${path}.name`} required />
+        <Field label={t`fields.intervalMusic.description`} path={`${path}.description`} component={MarkdownEditor} />
+      </>
+      : <>
+        <t.h2>titles.defaultIntervalMusicTexts</t.h2>
+        <Input label={t`fields.intervalMusic.name`} path='defaultIntervalMusic.name' componentProps={{placeholder:t`programTypes.IntervalMusic`}} />
+        <Field label={t`fields.intervalMusic.description`} path="defaultIntervalMusic.description" component={MarkdownEditor} />
+      </>
+    }
+  </>
 }
 
 function DanceSetDuration({ program, intervalMusicDuration}) {

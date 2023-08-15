@@ -8,6 +8,7 @@ query BallProgram($eventId: ID!) {
     name
     program {
       slideStyleId
+      pauseBetweenDances
       defaultIntervalMusic {
         name
         description

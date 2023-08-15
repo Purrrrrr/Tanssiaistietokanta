@@ -3,7 +3,7 @@ import {useNavigate, useParams} from 'react-router-dom'
 import ReactTouchEvents from 'react-touch-events'
 import classNames from 'classnames'
 
-import {Button, Card, Markdown} from 'libraries/ui'
+import {Button, Markdown} from 'libraries/ui'
 import {LoadingState} from 'components/LoadingState'
 import {Slide, SlideContainer, SlideNavigationList} from 'components/Slide'
 import {useOnKeydown} from 'utils/useOnKeydown'
@@ -15,21 +15,21 @@ import {SlideContent, startSlideId, useBallProgramSlides} from './useBallProgram
 import './BallProgram.scss'
 
 export default function BallProgram({eventId}) {
-  const [slides, {refetch, ...loadingState}] = useBallProgramSlides(eventId)
+  const [slides, {event, refetch, ...loadingState}] = useBallProgramSlides(eventId)
   const [isEditing, setEditing] = useState(false)
   const {'*': currentSlideId = startSlideId} = useParams()
 
-  if (!slides) return <LoadingState {...loadingState} refetch={refetch} />
+  if (!slides || !event) return <LoadingState {...loadingState} refetch={refetch} />
 
   const slideIndex = (i => i >= 0 ? i : 0)(slides.findIndex(s => s.id === currentSlideId))
   const slide = slides[slideIndex]
 
   return <div className={classNames('ball-program-container', {'is-editing': isEditing})}>
     <BallProgramView slides={slides} onRefetch={refetch} isEditing={isEditing} onToggleEditing={() => setEditing(e => !e)}/>
-    <Card className="editor">
+    <div className="editor">
       <Button className="close" minimal icon="cross" onClick={() => setEditing(false)}/>
-      <SlideEditor slide={slide} />
-    </Card>
+      <SlideEditor slide={slide} eventId={eventId} eventProgram={event?.program} />
+    </div>
   </div>
 }
 

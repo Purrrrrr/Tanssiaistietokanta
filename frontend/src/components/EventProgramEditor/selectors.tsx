@@ -91,13 +91,20 @@ function MoveItemToSectionMenu(
   />
 }
 
-export function InheritedSlideStyleSelector({path, text}: {path: TypedStringPath<string, EventProgramSettings>, text: string}) {
+export function InheritedSlideStyleSelector(
+  {path, text, showLabel}:
+  {
+    path: TypedStringPath<string, EventProgramSettings>
+    text: string
+    showLabel?: boolean
+  }
+) {
   const defaultSlideStyleId = useValueAt('slideStyleId')
 
   return <Field
-    label=""
-    labelStyle="hidden"
-    inline
+    label={text}
+    labelStyle={showLabel ? undefined : 'hidden'}
+    inline={showLabel ? undefined : true}
     path={path}
     component={SlideStyleSelector}
     componentProps={{text, inheritsStyles: true, inheritedStyleId: defaultSlideStyleId, inheritedStyleName: t`fields.eventDefaultStyle`}}

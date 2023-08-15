@@ -7,6 +7,8 @@ setupServiceUpdateFragment(
   `fragment EventFragment on Event {
     _id, name, beginDate, endDate,
     program {
+      slideStyleId
+      pauseBetweenDances
       defaultIntervalMusic {
         name
         description
@@ -16,6 +18,7 @@ setupServiceUpdateFragment(
         titleSlideStyleId
         program {
           _id
+          slideStyleId
           item {
             __typename
             ... on ProgramItem {
@@ -30,7 +33,6 @@ setupServiceUpdateFragment(
               showInLists
             }
           }
-          slideStyleId
         }
       }
       danceSets {
@@ -62,8 +64,6 @@ setupServiceUpdateFragment(
           slideStyleId
         }
       }
-      slideStyleId
-      pauseBetweenDances
     }
     workshops {
       _id
@@ -140,6 +140,8 @@ query getEvent($id: ID!) {
   event(id: $id) {
     _id, name, beginDate, endDate,
     program {
+      slideStyleId
+      pauseBetweenDances
       defaultIntervalMusic {
         name
         description
@@ -149,6 +151,7 @@ query getEvent($id: ID!) {
         titleSlideStyleId
         program {
           _id
+          slideStyleId
           item {
             __typename
             ... on ProgramItem {
@@ -163,7 +166,6 @@ query getEvent($id: ID!) {
               showInLists
             }
           }
-          slideStyleId
         }
       }
       danceSets {
@@ -195,8 +197,6 @@ query getEvent($id: ID!) {
           slideStyleId
         }
       }
-      slideStyleId
-      pauseBetweenDances
     }
     workshops {
       _id
@@ -244,6 +244,8 @@ mutation patchEventProgram($id: ID!, $program: JSONPatch!) {
   patchEventProgram(id: $id, program: $program) {
     _id, name, beginDate, endDate,
     program {
+      slideStyleId
+      pauseBetweenDances
       defaultIntervalMusic {
         name
         description
@@ -253,6 +255,7 @@ mutation patchEventProgram($id: ID!, $program: JSONPatch!) {
         titleSlideStyleId
         program {
           _id
+          slideStyleId
           item {
             __typename
             ... on ProgramItem {
@@ -267,7 +270,6 @@ mutation patchEventProgram($id: ID!, $program: JSONPatch!) {
               showInLists
             }
           }
-          slideStyleId
         }
       }
       danceSets {
@@ -299,8 +301,6 @@ mutation patchEventProgram($id: ID!, $program: JSONPatch!) {
           slideStyleId
         }
       }
-      slideStyleId
-      pauseBetweenDances
     }
     workshops {
       _id
