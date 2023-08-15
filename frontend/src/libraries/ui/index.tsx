@@ -123,7 +123,7 @@ export function Markdown({options, ...props}: React.ComponentPropsWithoutRef<Mar
 }
 
 const markdownComponents = {
-  QR: QRCode,
+  QR: ({size, value, ...props}) => <QRCode {...props} value={value} size={parseInt(size, 10)} />,
 }
 Markdown.defaultOptions = { overrides: markdownComponents }
 
