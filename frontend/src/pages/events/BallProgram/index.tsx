@@ -1,6 +1,6 @@
 import React, {useCallback, useState} from 'react'
 import {useNavigate, useParams} from 'react-router-dom'
-import ReactTouchEvents from 'react-touch-events'
+import {useSwipeable} from 'react-swipeable'
 import classNames from 'classnames'
 
 import {Button, Markdown} from 'libraries/ui'
@@ -45,22 +45,28 @@ function BallProgramView(
   const changeSlideId = useNavigate()
   const slideIndex = (i => i >= 0 ? i : 0)(slides.findIndex(s => s.id === currentSlideId))
 
-  const onSwipe = useCallback((_: unknown, direction : 'left'|'right') => {
-    const index = slideIndex + (direction === 'left' ? -1 : 1)
+  const changeSlide = useCallback((indexDelta: number) => {
+    const index = slideIndex + indexDelta
     const nextSlide = slides[Math.min(Math.max(index, 0), slides.length-1)]
     changeSlideId(nextSlide.id)
   }, [slides, slideIndex, changeSlideId])
 
   useOnKeydown({
-    ArrowLeft: () => onSwipe(null, 'left'),
-    ArrowRight: () => onSwipe(null, 'right'),
+    ArrowLeft: () => changeSlide(-1),
+    ArrowRight: () => changeSlide(1),
     r: onRefetch,
     e: onToggleEditing,
   })
 
+  const handlers = useSwipeable({
+    onSwipedLeft: () => changeSlide(1),
+    onSwipedRight: () => changeSlide(-1),
+    onSwipedUp: () => changeSlideId(parentId ?? slide.id),
+  })
+
   const {parentId, slideContent, ...slide} = slides[slideIndex]
 
-  return <ReactTouchEvents onSwipe={onSwipe} disableClick>
+  return <div {...handlers}>
     <SlideContainer fullscreen={!isEditing}>
       <div className="controls">
         <ProgramTitleSelector value={parentId ?? slide.id} onChange={changeSlideId}
@@ -71,7 +77,7 @@ function BallProgramView(
         <SlideContentView slideContent={slideContent} />
       </Slide>
     </SlideContainer>
-  </ReactTouchEvents>
+  </div>
 }
 
 function SlideContentView({slideContent}: Pick<SlideContent, 'slideContent'>) {

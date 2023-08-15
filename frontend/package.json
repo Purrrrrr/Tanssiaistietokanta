@@ -32,7 +32,7 @@
     "react-qr-code": "^2.0.11",
     "react-router-dom": "6.3.0",
     "react-scripts": "5.0.1",
-    "react-touch-events": "^3.0.0",
+    "react-swipeable": "^7.0.1",
     "rfc6902": "5.0.1",
     "socket.io-client": "^4.6.1",
     "util": "^0.12.4",
