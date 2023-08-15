@@ -82,7 +82,7 @@ function SlideContentEditor({editorData}: Pick<SlideContent, 'editorData'>) {
     case 'IntervalMusic':
       return <SectionCard>
         <H2>{bt`intervalMusicTitle`}</H2>
-        <IntervalMusicDescriptionEditor path={`${path}.intervalMusic`} />
+        <IntervalMusicDescriptionEditor path={`${path}.intervalMusic`} noPreview />
       </SectionCard>
     case 'ProgramItem':
       return <ProgramItemEditor editorData={editorData} />

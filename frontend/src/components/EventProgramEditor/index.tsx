@@ -304,7 +304,7 @@ function IntervalMusicDetailsEditor({path}: {path: IntervalMusicPath}) {
   </Flex>
 }
 
-export function IntervalMusicDescriptionEditor({path}: {path: IntervalMusicPath}) {
+export function IntervalMusicDescriptionEditor({path, noPreview}: {path: IntervalMusicPath, noPreview?: boolean}) {
   const intervalMusic = useValueAt(path)
   const hasCustomTexts = typeof intervalMusic?.name === 'string'
   return <>
@@ -313,12 +313,12 @@ export function IntervalMusicDescriptionEditor({path}: {path: IntervalMusicPath}
       ? <>
         <t.h2>titles.customIntervalMusicTexts</t.h2>
         <Input label={t`fields.intervalMusic.name`} path={`${path}.name`} required />
-        <Field label={t`fields.intervalMusic.description`} path={`${path}.description`} component={MarkdownEditor} />
+        <Field label={t`fields.intervalMusic.description`} path={`${path}.description`} component={MarkdownEditor} componentProps={{noPreview}} />
       </>
       : <>
         <t.h2>titles.defaultIntervalMusicTexts</t.h2>
         <Input label={t`fields.intervalMusic.name`} path='defaultIntervalMusic.name' componentProps={{placeholder:t`programTypes.IntervalMusic`}} />
-        <Field label={t`fields.intervalMusic.description`} path="defaultIntervalMusic.description" component={MarkdownEditor} />
+        <Field label={t`fields.intervalMusic.description`} path="defaultIntervalMusic.description" component={MarkdownEditor} componentProps={{noPreview}} />
       </>
     }
   </>
