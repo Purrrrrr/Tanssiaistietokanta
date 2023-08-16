@@ -27,7 +27,7 @@ export function AutosizedSection({children, className = '', ...props}) {
 
   return <section className={'autosized-section '+ className} ref={container} {...props}>
     <ResizeSensor onResize={onResize}>
-      <div className="autosized-section-inner" style={{transform: `scale(${size})`}}>{children}</div>
+      <div className="autosized-section-inner" style={{scale: `${size}`}}>{children}</div>
     </ResizeSensor>
   </section>
 }

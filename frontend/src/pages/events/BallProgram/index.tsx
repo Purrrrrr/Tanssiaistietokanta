@@ -66,18 +66,16 @@ function BallProgramView(
 
   const {parentId, slideContent, ...slide} = slides[slideIndex]
 
-  return <div {...handlers}>
-    <SlideContainer fullscreen={!isEditing}>
-      <div className="controls">
-        <ProgramTitleSelector value={parentId ?? slide.id} onChange={changeSlideId}
-          program={slides} />
-        <Button minimal icon="edit" onClick={onToggleEditing}/>
-      </div>
-      <Slide {...slide}>
-        <SlideContentView slideContent={slideContent} />
-      </Slide>
-    </SlideContainer>
-  </div>
+  return <SlideContainer fullscreen={!isEditing} {...handlers}>
+    <div className="controls">
+      <ProgramTitleSelector value={parentId ?? slide.id} onChange={changeSlideId}
+        program={slides} />
+      <Button minimal icon="edit" onClick={onToggleEditing}/>
+    </div>
+    <Slide {...slide}>
+      <SlideContentView slideContent={slideContent} />
+    </Slide>
+  </SlideContainer>
 }
 
 function SlideContentView({slideContent}: Pick<SlideContent, 'slideContent'>) {
