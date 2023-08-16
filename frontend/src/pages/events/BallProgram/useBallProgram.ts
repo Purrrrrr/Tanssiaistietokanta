@@ -1,7 +1,7 @@
 import {useMemo} from 'react'
 
 import { DanceSetPath, ProgramItemPath } from 'components/EventProgramEditor/types'
-import {SlideNavigation, SlideProps} from 'components/Slide'
+import {SlideLink, SlideNavigation, SlideProps} from 'components/Slide'
 
 import {t} from './strings'
 import {useBallProgramQuery} from './useBallProgramQuery'
@@ -15,7 +15,7 @@ type Dance = Extract<ProgramRow['item'], {__typename: 'Dance'}>
 type IntervalMusic = ProgramSettings['defaultIntervalMusic']
 
 export interface SlideContent extends SlideProps {
-  parentId?: string
+  parent?: SlideLink
   editorData: EditorData
   slideContent?: {
     type: 'text'
@@ -55,9 +55,10 @@ export const startSlideId = ''
 export function getSlides(event: Event) : SlideContent[] {
   const { introductions, slideStyleId: defaultStyleId = null } = event.program
 
+  const header = eventHeaderSlide(event)
   const slides : SlideContent[] = [
-    eventHeaderSlide(event),
-    ...introductions.program.map((item, index) => toProgramSlide(startSlideId, item, `introductions.program.${index}`)),
+    header,
+    ...introductions.program.map((item, index) => toProgramSlide({_id: startSlideId, title: header.title}, item, `introductions.program.${index}`)),
     ...danceSetSlides(event),
   ]
 
@@ -94,7 +95,7 @@ function danceSetSlides(event: Event): SlideContent[] {
 
     const titleSlide = danceSetTitleSlide(danceSet, navigation, setIndex)
     const danceSlides = danceSet.program.map((item, itemIndex) =>
-      toProgramSlide(danceSet._id, item, `danceSets.${setIndex}.program.${itemIndex}`, navigation))
+      toProgramSlide(danceSet, item, `danceSets.${setIndex}.program.${itemIndex}`, navigation))
     const intervalMusic = intervalMusicSlide(danceSet, defaultIntervalMusic, setIndex)
 
     return intervalMusic
@@ -136,9 +137,10 @@ function danceSetTitleSlide(danceSet: DanceSet, navigation: SlideNavigation, ind
   }
 }
 
-function toProgramSlide(parentId: string, {_id: id, item, slideStyleId}: ProgramRow, path: ProgramItemPath, navigation?: SlideNavigation): SlideContent {
+function toProgramSlide(parent: {_id: string, title: string}, {_id: id, item, slideStyleId}: ProgramRow, path: ProgramItemPath, navigation?: SlideNavigation): SlideContent {
   const common = {
-    id, slideStyleId, navigation, parentId, type: item.__typename,
+    id, slideStyleId, navigation, type: item.__typename,
+    parent: {id: parent._id, title: parent.title},
     editorData: { type: 'ProgramItem' as const, path },
   }
   switch (item.__typename) {
@@ -177,7 +179,7 @@ function intervalMusicSlide(danceSet: DanceSet, defaultIntervalMusic: IntervalMu
   const id = danceSet._id + '-intervalMusic'
   return {
     id,
-    parentId: danceSet._id,
+    parent: {id: danceSet._id, title: danceSet.title},
     slideStyleId: intervalMusic.slideStyleId,
     title: (intervalMusic.name ?? defaultIntervalMusic.name) || t`intervalMusic`,
     editorData: {

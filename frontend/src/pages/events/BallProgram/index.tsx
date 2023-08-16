@@ -61,14 +61,14 @@ function BallProgramView(
   const handlers = useSwipeable({
     onSwipedLeft: () => changeSlide(1),
     onSwipedRight: () => changeSlide(-1),
-    onSwipedUp: () => changeSlideId(parentId ?? slide.id),
+    onSwipedUp: () => changeSlideId(parent?.id ?? slide.id),
   })
 
-  const {parentId, slideContent, ...slide} = slides[slideIndex]
+  const {parent, slideContent, ...slide} = slides[slideIndex]
 
   return <SlideContainer fullscreen={!isEditing} {...handlers}>
     <div className="controls">
-      <ProgramTitleSelector value={parentId ?? slide.id} onChange={changeSlideId}
+      <ProgramTitleSelector value={parent?.id ?? slide.id} onChange={changeSlideId}
         program={slides} />
       <Button minimal icon="edit" onClick={onToggleEditing}/>
     </div>

@@ -43,6 +43,9 @@ export function SlideEditor({slide, eventId, eventProgram}: SlideEditorProps) {
     <Form {...formProps}>
       <SectionCard>
         <H2>{bt`slideProperties`} <SyncStatus state={state} /></H2>
+        {slide.parent &&
+          <p><Link to={slide.parent.id}><Icon icon="link"/>{' '}{slide.parent.title}</Link></p>
+        }
         <SlideStyleEditor editorData={slide.editorData} />
 
         {isDance && <Field label={t`dance`} path={`${slide.editorData.path}.item` as any} component={DanceProgramChooser} />}
