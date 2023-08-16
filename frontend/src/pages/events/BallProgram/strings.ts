@@ -9,4 +9,5 @@ export const t = makeTranslate({
   currentItemAlwaysShownInLists: 'Huomaathan, että ollessaan tämänhetkinen dia näkyy tämä ohjelma settilistassa riippumatta näkyvyysasetuksesta.',
   intervalMusicTitle: 'Taukomusiikki',
   infoTitle: 'Ohjelmanumero',
+  danceSetTitle: 'Tanssisetti',
 })

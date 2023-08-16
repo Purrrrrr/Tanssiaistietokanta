@@ -92,7 +92,7 @@ export function SlideNavigationList({items, currentItem}: Pick<SlideNavigation, 
   </ul>
 }
 
-function LinkToSlide({title, id, isPlaceholder, className}: SlideLink & {className?: string}) {
+export function LinkToSlide({title, id, isPlaceholder, className}: SlideLink & {className?: string}) {
   const classNames = classnames(className, {placeholder: isPlaceholder})
   return <Link className={classNames} to={id}>{title}</Link>
 }

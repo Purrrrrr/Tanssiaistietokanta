@@ -24,6 +24,7 @@ query BallProgram($eventId: ID!) {
             ... on ProgramItem {
               name
               description
+              duration
             }
             ... on Dance {
               _id
@@ -54,6 +55,7 @@ query BallProgram($eventId: ID!) {
             ... on ProgramItem {
               name
               description
+              duration
             }
             ... on Dance {
               _id

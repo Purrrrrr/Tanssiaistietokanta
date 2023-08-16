@@ -196,7 +196,7 @@ function renderDanceSetValue(item: DanceSet) {
   return `${item.title} (${program})`
 }
 
-function programItemToString(item: EventProgramRow) {
+export function programItemToString(item: EventProgramRow) {
   if (item.item.__typename === 'RequestedDance') return t`programTypes.RequestedDance`
   return item.item.name
 }
