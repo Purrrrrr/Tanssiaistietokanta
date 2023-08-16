@@ -9,7 +9,7 @@ export function useError(value, schemaDef : ValidationProps) {
   useEffect(
     () => {
       if (!schema) {
-        if (error !== null) setError(null)
+        setError(null)
         return
       }
       schema.validate(value)
