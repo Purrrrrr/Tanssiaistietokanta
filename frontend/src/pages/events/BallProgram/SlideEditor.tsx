@@ -5,19 +5,20 @@ import {formFor, MarkdownEditor, SyncStatus} from 'libraries/forms'
 import {Callout, Flex, H2, Icon, SectionCard} from 'libraries/ui'
 import {DanceEditorContainer} from 'components/DanceEditor'
 import {IntervalMusicDescriptionEditor, programItemToString} from 'components/EventProgramEditor'
-import { ProgramTypeIcon } from 'components/EventProgramEditor/controls'
 import {
+  DanceProgramChooser,
   EventProgramSettings,
   Field,
   Form,
+  InheritedSlideStyleSelector,
   Input,
   ListField,
+  ProgramTypeIcon,
   RemoveItemButton,
   Switch,
   useEventProgramEditorForm,
   useValueAt,
-} from 'components/EventProgramEditor/form'
-import { DanceProgramChooser, InheritedSlideStyleSelector } from 'components/EventProgramEditor/selectors'
+} from 'components/EventProgramEditor/components'
 import t from 'components/EventProgramEditor/translations'
 import { ProgramItemPath, ProgramSectionPath } from 'components/EventProgramEditor/types'
 import { LinkToSlide } from 'components/Slide'

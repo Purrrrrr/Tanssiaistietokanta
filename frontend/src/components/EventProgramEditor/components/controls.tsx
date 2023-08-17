@@ -4,10 +4,9 @@ import {ActionButton as Button} from 'libraries/forms'
 import {Icon, IconName} from 'libraries/ui'
 import {guid} from 'utils/guid'
 
-import {DanceSet, EventProgramItem, EventProgramRow, IntervalMusic} from './types'
-
+import t from '../translations'
+import {DanceSet, EventProgramItem, EventProgramRow, IntervalMusic} from '../types'
 import { switchFor, useAppendToList } from './form'
-import t from './translations'
 
 const DEFAULT_INTERVAL_MUSIC_DURATION = 15*60
 const DEFAULT_INTERVAL_MUSIC: IntervalMusic = {

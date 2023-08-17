@@ -3,7 +3,7 @@ import * as L from 'partial.lenses'
 import {PatchStrategy, patchStrategy} from 'libraries/forms'
 import {removeTypenames} from 'utils/removeTypenames'
 
-import {EventProgramRow, EventProgramSettings} from './types'
+import {EventProgramRow, EventProgramSettings} from '../types'
 
 export type JSONPatch = unknown[]
 

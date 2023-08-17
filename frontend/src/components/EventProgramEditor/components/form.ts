@@ -2,8 +2,7 @@ import {usePatchEventProgram} from 'services/events'
 
 import {formFor, useAutosavingState} from 'libraries/forms'
 
-import {EventProgramSettings} from './types'
-
+import {EventProgramSettings} from '../types'
 import {JSONPatch, patch} from './patchStrategy'
 
 export const {
@@ -19,7 +18,7 @@ export const {
   useAppendToList,
 } = formFor<EventProgramSettings>()
 
-export type {EventProgramSettings} from './types'
+export type {EventProgramSettings} from '../types'
 
 export function useEventProgramEditorForm(eventId: string, eventProgram: EventProgramSettings) {
   const [patchEventProgram] = usePatchEventProgram()

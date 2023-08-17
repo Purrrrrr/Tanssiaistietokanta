@@ -5,10 +5,10 @@ import {FieldComponentProps, formFor, MenuButton, SelectorMenu, toArrayPath, Typ
 import {DanceChooser} from 'components/widgets/DanceChooser'
 import {SlideStyleSelector} from 'components/widgets/SlideStyleSelector'
 
-import {DanceProgram, EventProgramItem, EventProgramSettings, ProgramItemPath, RequestedDance} from './types'
 import {Dance} from 'types'
 
-import t from './translations'
+import t from '../translations'
+import {DanceProgram, EventProgramItem, EventProgramSettings, ProgramItemPath, RequestedDance} from '../types'
 
 const {
   Field,

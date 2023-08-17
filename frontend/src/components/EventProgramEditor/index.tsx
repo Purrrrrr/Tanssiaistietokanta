@@ -13,20 +13,26 @@ import {guid} from 'utils/guid'
 
 import {DanceProgramPath, DanceSet, DanceSetPath, EventProgramRow, EventProgramSettings, IntervalMusicPath, ProgramItemPath, ProgramSectionPath} from './types'
 
-import {AddDanceSetButton, AddIntroductionButton, IntervalMusicDefaultTextsSwitch, IntervalMusicSwitch, newEventProgramItem, ProgramTypeIcon} from './controls'
 import {
+  AddDanceSetButton,
+  AddIntroductionButton,
+  DanceProgramChooser,
   Field,
   Form,
+  InheritedSlideStyleSelector,
   Input,
+  IntervalMusicDefaultTextsSwitch,
+  IntervalMusicSwitch,
   ListField,
+  newEventProgramItem,
+  ProgramTypeIcon,
   RemoveItemButton,
   Switch,
   useAppendToList,
   useEventProgramEditorForm,
   useOnChangeFor,
   useValueAt,
-} from './form'
-import {DanceProgramChooser, InheritedSlideStyleSelector} from './selectors'
+} from './components'
 import t from './translations'
 
 import './EventProgramEditor.sass'
