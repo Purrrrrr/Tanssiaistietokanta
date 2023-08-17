@@ -72,8 +72,8 @@ export default function DanceInstructions({eventId}) {
 
   return <>
     <PrintViewToolbar maxHeight={180}>
-      <t.p>clickInstructionsToEdit</t.p>
-      <t.p>defaultStylingDescription</t.p>
+      <p>{t`clickInstructionsToEdit`}</p>
+      <p>{t`defaultStylingDescription`}</p>
       <p>
         <Switch id="showWorkshops" inline label={t`showWorkshops`} value={showWorkshops} onChange={setShowWorkshops}/>
         <Button text={t`selectAndCopy`} onClick={selectAndCopy}/>
@@ -83,11 +83,11 @@ export default function DanceInstructions({eventId}) {
     <section className="dance-instructions" ref={dancesEl}>
       {showWorkshops &&
         <>
-          <t.h1>workshops</t.h1>
+          <h1>{t`workshops`}</h1>
           {workshops.map(workshop => <Workshop key={workshop._id} workshop={workshop} />)}
         </>
       }
-      <t.h1>danceInstructions</t.h1>
+      <h1>{t`danceInstructions`}</h1>
 
       {dances.map(dance => <InstructionsForDance key={dance._id} dance={dance} />)}
     </section>

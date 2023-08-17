@@ -55,9 +55,9 @@ export default function EventPage({event}: {event: Event}) {
       {event.name}
     </PageTitle>
     <EventDetails event={event} />
-    <t.h2>ballProgram</t.h2>
+    <h2>{t`ballProgram`}</h2>
     <EventProgram program={event.program} />
-    <t.h2>workshops</t.h2>
+    <h2>{t`workshops`}</h2>
     <EventWorkshops workshops={event.workshops} eventId={event._id} />
   </>
 }
@@ -108,7 +108,7 @@ function EventDetailsForm({event}: {event: Event}) {
 function EventProgram({program}: {program: EventProgramType}) {
   if (!program || program.danceSets.length === 0) {
     return <>
-      <t.p>noProgram</t.p>
+      <p>{t`noProgram`}</p>
       <NavigateButton adminOnly intent="primary" href="program" text={t`addProgram`} />
     </>
   }

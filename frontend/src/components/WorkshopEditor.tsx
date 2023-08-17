@@ -72,7 +72,7 @@ export function WorkshopEditor({workshop: workshopInDatabase, reservedAbbreviati
       </div>
       <div style={{flexGrow: 1, flexBasis: 300}}>
         <ListField label={t`dances`} path="dances" component={DanceListItem} renderConflictItem={item => item.name} />
-        {dances.length === 0 && <t.p className={CssClass.textMuted}>noDances</t.p>}
+        {dances.length === 0 && <p className={CssClass.textMuted}>{t`noDances`}</p>}
         <AddDanceChooser />
       </div>
     </Flex>

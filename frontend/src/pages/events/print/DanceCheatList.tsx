@@ -75,7 +75,7 @@ function WorkshopDances({workshop, mini}) {
   return <>
     <PageTitle>{name}</PageTitle>
     {dances.length === 0 ?
-      <t.p>noDances</t.p> :
+      <p>{t`noDances`}</p> :
       <PrintTable headings={[t`danceName`, t`iCanDanceThis`]}>
         {dances.map(dance =>
           <tr key={dance._id}>

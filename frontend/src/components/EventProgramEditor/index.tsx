@@ -75,7 +75,7 @@ function IntroductoryInformation() {
   return <Card className="danceset">
     <Flex className="sectionTitleRow">
       <h2>
-        <t.span>titles.introductoryInformation</t.span>
+        <span>{t`titles.introductoryInformation`}</span>
       </h2>
     </Flex>
     <ProgramListEditor path="introductions" />
@@ -118,7 +118,7 @@ function ProgramListEditor({path}: {path: ProgramSectionPath}) {
           <thead>
             <tr>
               <th/>
-              <t.th>columnTitles.name</t.th><t.th>columnTitles.duration</t.th><t.th>columnTitles.actions</t.th>
+              <th>{t`columnTitles.name`}</th><th>{t`columnTitles.duration`}</th><th>{t`columnTitles.actions`}</th>
             </tr>
           </thead>
       }
@@ -126,7 +126,7 @@ function ProgramListEditor({path}: {path: ProgramSectionPath}) {
         <ListField labelStyle="hidden-nowrapper" label="" itemType={getType} acceptsTypes={accepts} droppableElement={tableRef.current} isTable path={programPath} component={ProgramItemEditor} renderConflictItem={programItemToString} accessibilityContainer={accessibilityContainer.current ?? undefined} />
         {program.length === 0 &&
             <tr>
-              <t.td className={CssClass.textMuted+ ' noProgram'} colSpan="5">programListIsEmpty</t.td>
+              <td className={CssClass.textMuted+ ' noProgram'} colSpan={5}>{t`programListIsEmpty`}</td>
             </tr>
         }
         {intervalMusicDuration > 0 && <IntervalMusicEditor danceSetPath={path as DanceSetPath} />}
@@ -317,12 +317,12 @@ export function IntervalMusicDescriptionEditor({path, noPreview}: {path: Interva
     <IntervalMusicDefaultTextsSwitch label={t`fields.intervalMusic.useDefaultTexts`} path={path} />
     {hasCustomTexts
       ? <>
-        <t.h2>titles.customIntervalMusicTexts</t.h2>
+        <h2>{t`titles.customIntervalMusicTexts`}</h2>
         <Input label={t`fields.intervalMusic.name`} path={`${path}.name`} required />
         <Field label={t`fields.intervalMusic.description`} path={`${path}.description`} component={MarkdownEditor} componentProps={{noPreview}} />
       </>
       : <>
-        <t.h2>titles.defaultIntervalMusicTexts</t.h2>
+        <h2>{t`titles.defaultIntervalMusicTexts`}</h2>
         <Input label={t`fields.intervalMusic.name`} path='defaultIntervalMusic.name' componentProps={{placeholder:t`programTypes.IntervalMusic`}} />
         <Field label={t`fields.intervalMusic.description`} path="defaultIntervalMusic.description" component={MarkdownEditor} componentProps={{noPreview}} />
       </>
