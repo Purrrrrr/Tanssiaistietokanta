@@ -111,7 +111,7 @@ function danceSetNavigation(danceSet: DanceSet): SlideNavigation {
     items: danceSet.program
       .map(item => ({
         id: item._id,
-        title: item.item.__typename === 'RequestedDance' ? t`requestedDance` : item.item.name,
+        title: item.item.__typename === 'RequestedDance' ? t('requestedDance') : item.item.name,
         hidden: 'showInLists' in item.item ? !item.item.showInLists : false,
         isPlaceholder: item.item.__typename === 'RequestedDance',
       }))
@@ -148,13 +148,13 @@ function toProgramSlide(parent: {_id: string, title: string}, {_id: id, item, sl
       return {
         ...common,
         type: 'RequestedDance',
-        title: t`requestedDance`,
+        title: t('requestedDance'),
       }
     case 'Dance':
       return {
         ...common,
         title: item.name,
-        footer: item.teachedIn ? `${t`teachedInSet`} ${item.teachedIn.map(w => w.name).join(', ')}` : undefined,
+        footer: item.teachedIn ? `${t('teachedInSet')} ${item.teachedIn.map(w => w.name).join(', ')}` : undefined,
         slideContent: {
           type: 'dance',
           value: item,
@@ -181,7 +181,7 @@ function intervalMusicSlide(danceSet: DanceSet, defaultIntervalMusic: IntervalMu
     id,
     parent: {id: danceSet._id, title: danceSet.title},
     slideStyleId: intervalMusic.slideStyleId,
-    title: (intervalMusic.name ?? defaultIntervalMusic.name) || t`intervalMusic`,
+    title: (intervalMusic.name ?? defaultIntervalMusic.name) || t('intervalMusic'),
     editorData: {
       type: 'IntervalMusic',
       path: `danceSets.${setIndex}`,

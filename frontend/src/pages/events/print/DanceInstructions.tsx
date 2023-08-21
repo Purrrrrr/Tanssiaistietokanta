@@ -66,28 +66,28 @@ export default function DanceInstructions({eventId}) {
   function selectAndCopy() {
     selectElement(dancesEl.current)
     document.execCommand('copy')
-    showToast({message: t`instructionsCopied`})
+    showToast({message: t('instructionsCopied')})
     window.getSelection()?.removeAllRanges()
   }
 
   return <>
     <PrintViewToolbar maxHeight={180}>
-      <p>{t`clickInstructionsToEdit`}</p>
-      <p>{t`defaultStylingDescription`}</p>
+      <p>{t('clickInstructionsToEdit')}</p>
+      <p>{t('defaultStylingDescription')}</p>
       <p>
-        <Switch id="showWorkshops" inline label={t`showWorkshops`} value={showWorkshops} onChange={setShowWorkshops}/>
-        <Button text={t`selectAndCopy`} onClick={selectAndCopy}/>
-        <Button text={t`print`} onClick={() => window.print()} />
+        <Switch id="showWorkshops" inline label={t('showWorkshops')} value={showWorkshops} onChange={setShowWorkshops}/>
+        <Button text={t('selectAndCopy')} onClick={selectAndCopy}/>
+        <Button text={t('print')} onClick={() => window.print()} />
       </p>
     </PrintViewToolbar>
     <section className="dance-instructions" ref={dancesEl}>
       {showWorkshops &&
         <>
-          <h1>{t`workshops`}</h1>
+          <h1>{t('workshops')}</h1>
           {workshops.map(workshop => <Workshop key={workshop._id} workshop={workshop} />)}
         </>
       }
-      <h1>{t`danceInstructions`}</h1>
+      <h1>{t('danceInstructions')}</h1>
 
       {dances.map(dance => <InstructionsForDance key={dance._id} dance={dance} />)}
     </section>
@@ -117,7 +117,7 @@ function InstructionsForDance({dance: danceInDatabase} : {dance: Dance}) {
     <h2>
       {name}
       {' '}
-      <DanceDataImportButton text={t`fetchDataFromWiki`} dance={dance} />
+      <DanceDataImportButton text={t('fetchDataFromWiki')} dance={dance} />
     </h2>
     <ClickToEditMarkdown
       id={'instructions-'+dance._id}
@@ -148,6 +148,6 @@ function Workshop({workshop}) {
       {name}
     </h2>
     <p className="description">{description}</p>
-    <p>{t`dances`}: {dances.map(d => d.name).join(', ')}</p>
+    <p>{t('dances')}: {dances.map(d => d.name).join(', ')}</p>
   </div>
 }

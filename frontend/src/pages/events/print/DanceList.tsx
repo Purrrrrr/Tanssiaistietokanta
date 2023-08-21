@@ -27,8 +27,8 @@ function DanceList({eventId}) {
 
   return <div className={'danceList' + colClass}>
     <PrintViewToolbar>
-      <Switch id="showSideBySide" inline label={t`showSideBySide`} value={sidebyside} onChange={setSidebyside}/>
-      <Button text={t`print`} onClick={() => window.print()} />
+      <Switch id="showSideBySide" inline label={t('showSideBySide')} value={sidebyside} onChange={setSidebyside}/>
+      <Button text={t('print')} onClick={() => window.print()} />
     </PrintViewToolbar>
     <PrintFooterContainer footer={<Footer workshops={workshops.filter(w => w.abbreviation)} />}>
       {program.danceSets.map(
@@ -49,13 +49,13 @@ function DanceList({eventId}) {
 }
 
 function Footer({workshops}) {
-  if (!workshops.length) return <>{t`emptyLinesAreRequestedDances`}</>
+  if (!workshops.length) return <>{t('emptyLinesAreRequestedDances')}</>
   return <>
-    {t`workshopNameIsInParenthesis`}
+    {t('workshopNameIsInParenthesis')}
     {': '}
     {workshops.map(({abbreviation, name}) => `${abbreviation}=${name}`).join(', ')}
     {'. '}
-    {t`emptyLinesAreRequestedDances`}
+    {t('emptyLinesAreRequestedDances')}
   </>
 }
 

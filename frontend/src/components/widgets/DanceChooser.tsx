@@ -59,7 +59,7 @@ export function DanceChooser({hasConflict, value, onChange, excludeFromSearch, a
     }}
     itemRenderer={renderDance}
     itemsEqual="_id"
-    inputProps={{onBlur, placeholder: placeholder ?? t`searchDance`, onKeyDown: cancelEnter, intent: hasConflict ? 'danger' : undefined, ...props}}
+    inputProps={{onBlur, placeholder: placeholder ?? t('searchDance'), onKeyDown: cancelEnter, intent: hasConflict ? 'danger' : undefined, ...props}}
     itemListPredicate={(query, items) => {
       const dances = filterDances(items, query)
       return [...dances, emptyDancePlaceholder(emptyText)]
@@ -105,7 +105,7 @@ function danceNameEquals(a: Dance, name: string) {
 }
 
 function emptyDancePlaceholder(text: string | undefined): EmptyDancePlaceholder {
-  return {__typename: 'Dance', _id: '', name: text ?? t`emptyDancePlaceholder`, empty: true}
+  return {__typename: 'Dance', _id: '', name: text ?? t('emptyDancePlaceholder'), empty: true}
 }
 
 function isPlaceholder(object: Dance | EmptyDancePlaceholder): object is EmptyDancePlaceholder {
@@ -135,7 +135,7 @@ function renderCreateItem(queryString: string, active: boolean, handleClick) {
   return <MenuItem
     active={active}
     onClick={handleClick}
-    text={t`createDance` + ': ' + queryString}
+    text={t('createDance') + ': ' + queryString}
   />
 }
 

@@ -27,7 +27,7 @@ export const DanceProgramChooser = React.memo(function DanceProgramChooser({valu
       e
     )}
     allowEmpty
-    emptyText={t`programTypes.RequestedDance`}
+    emptyText={t('programTypes.RequestedDance')}
     {...props}
   />
 })
@@ -41,7 +41,7 @@ export function MoveItemToSectionSelector({itemPath} : { itemPath: ProgramItemPa
         onSelected={() => setOpen(false)}
       />
     }
-    text={t`fields.moveItemToSection`}
+    text={t('fields.moveItemToSection')}
     open={open}
     onSetOpen={setOpen}
   />
@@ -60,7 +60,7 @@ function MoveItemToSectionMenu(
   const onChangeProgram = useOnChangeFor('')
 
   const canMoveToIntroductions = currentSectionType === 'danceSets' && row?.item?.__typename === 'EventProgram'
-  const introSection : SectionSelection = {name: t`titles.introductoryInformation`, isIntroductionsSection: true, index: 0}
+  const introSection : SectionSelection = {name: t('titles.introductoryInformation'), isIntroductionsSection: true, index: 0}
   const sections = useValueAt('danceSets')
     .map(({title}, index) => ({name: title, index}))
     .filter(({index}) => currentSectionType !== 'danceSets' || index !== maybeDanceSetIndex)
@@ -107,6 +107,6 @@ export function InheritedSlideStyleSelector(
     inline={showLabel ? undefined : true}
     path={path}
     component={SlideStyleSelector}
-    componentProps={{text, inheritsStyles: true, inheritedStyleId: defaultSlideStyleId, inheritedStyleName: t`fields.eventDefaultStyle`}}
+    componentProps={{text, inheritsStyles: true, inheritedStyleId: defaultSlideStyleId, inheritedStyleName: t('fields.eventDefaultStyle')}}
   />
 }

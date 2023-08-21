@@ -25,17 +25,17 @@ export function SupportedBrowserChecker() {
 export function SupportedBrowserWarning() {
   const [showDialog, setShowDialog] = useState(true)
 
-  return <Alert title={t`unsupportedBrowser`} isOpen={showDialog} onClose={() => setShowDialog(false)}
+  return <Alert title={t('unsupportedBrowser')} isOpen={showDialog} onClose={() => setShowDialog(false)}
     onConfirm={() => {
       setShowDialog(false)
       window.open('https://www.mozilla.org/firefox/browsers/', '__blank')
     }}
     intent="primary"
-    cancelButtonText={t`continueAnyWay`}
-    confirmButtonText={t`downloadBetterBrowser`}>
-    <p>{t`siteMayNotWork`}</p>
+    cancelButtonText={t('continueAnyWay')}
+    confirmButtonText={t('downloadBetterBrowser')}>
+    <p>{t('siteMayNotWork')}</p>
     <p>
-      {t`possibleSupportedBrowsers`}
+      {t('possibleSupportedBrowsers')}
     </p>
     <ul>
       {Object.entries(browsersLinks).map(([name, url]) => <li key={name}><a href={url}>{name}</a></li>)}

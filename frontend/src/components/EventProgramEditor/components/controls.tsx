@@ -22,7 +22,7 @@ export function AddIntroductionButton() {
     addIntroduction(newEventProgramItem)
   }
   return <Button
-    text={t`buttons.addIntroductoryInfo`}
+    text={t('buttons.addIntroductoryInfo')}
     rightIcon={<ProgramTypeIcon type="EventProgram" />}
     onClick={addIntroductoryInfo}
     className="addIntroductoryInfo"
@@ -34,7 +34,7 @@ export function newEventProgramItem(): EventProgramRow {
     item: {
       __typename: 'EventProgram',
       _id: undefined,
-      name: t`placeholderNames.newProgramItem`,
+      name: t('placeholderNames.newProgramItem'),
       description: '',
       duration: 0,
       showInLists: false
@@ -50,7 +50,7 @@ export function AddDanceSetButton() {
     onAddDanceSet(newDanceSet)
   }
   return <Button
-    text={t`buttons.addDanceSet`}
+    text={t('buttons.addDanceSet')}
     rightIcon={<ProgramTypeIcon type="Dance" />}
     onClick={addDanceSet}
     className="addDanceSet"

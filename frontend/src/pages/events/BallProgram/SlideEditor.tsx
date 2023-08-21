@@ -43,13 +43,13 @@ export function SlideEditor({slide, eventId, eventProgram}: SlideEditorProps) {
   return <div>
     <Form {...formProps}>
       <SectionCard>
-        <H2>{bt`slideProperties`} <SyncStatus state={state} /></H2>
+        <H2>{bt('slideProperties')} <SyncStatus state={state} /></H2>
         {slide.parent &&
           <p><Link to={slide.parent.id}><Icon icon="link"/>{' '}{slide.parent.title}</Link></p>
         }
         <SlideStyleEditor editorData={slide.editorData} />
 
-        {isDance && <Field label={t`dance`} path={`${slide.editorData.path}.item` as any} component={DanceProgramChooser} />}
+        {isDance && <Field label={t('dance')} path={`${slide.editorData.path}.item` as any} component={DanceProgramChooser} />}
       </SectionCard>
       <SlideContentEditor editorData={slide.editorData} slideContent={slide.slideContent} />
     </Form>
@@ -61,18 +61,18 @@ function SlideStyleEditor({editorData}: Pick<SlideContent, 'editorData'>) {
   switch (type) {
     case 'Event':
       return <>
-        <Field label={t`fields.eventDefaultStyle`} path="slideStyleId" component={SlideStyleSelector} componentProps={{text: t`fields.eventDefaultStyle`}} />
-        <InheritedSlideStyleSelector showLabel path="introductions.titleSlideStyleId" text={t`fields.titleStyle`} />
+        <Field label={t('fields.eventDefaultStyle')} path="slideStyleId" component={SlideStyleSelector} componentProps={{text: t('fields.eventDefaultStyle')}} />
+        <InheritedSlideStyleSelector showLabel path="introductions.titleSlideStyleId" text={t('fields.titleStyle')} />
       </>
     case 'DanceSet':
-      return <InheritedSlideStyleSelector showLabel path={`${path}.titleSlideStyleId`} text={t`fields.titleStyle`} />
+      return <InheritedSlideStyleSelector showLabel path={`${path}.titleSlideStyleId`} text={t('fields.titleStyle')} />
     case 'IntervalMusic':
       return <>
-        <InheritedSlideStyleSelector showLabel path={`${path}.intervalMusic.slideStyleId`} text={t`fields.style`} />
+        <InheritedSlideStyleSelector showLabel path={`${path}.intervalMusic.slideStyleId`} text={t('fields.style')} />
       </>
     case 'ProgramItem':
       return <>
-        <InheritedSlideStyleSelector showLabel path={`${path}.slideStyleId`} text={t`fields.style`} />
+        <InheritedSlideStyleSelector showLabel path={`${path}.slideStyleId`} text={t('fields.style')} />
       </>
   }
 }
@@ -84,13 +84,13 @@ function SlideContentEditor({editorData, slideContent}: Pick<SlideContent, 'edit
       return null
     case 'DanceSet':
       return <SectionCard>
-        <H2>{bt`danceSetTitle`}</H2>
-        <Input label={t`fields.danceSetName`} path={`${path}.title`} />
+        <H2>{bt('danceSetTitle')}</H2>
+        <Input label={t('fields.danceSetName')} path={`${path}.title`} />
         <ListField label="" path={`${path}.program`} component={ProgramItem} renderConflictItem={programItemToString} />
       </SectionCard>
     case 'IntervalMusic':
       return <SectionCard>
-        <H2>{bt`intervalMusicTitle`}</H2>
+        <H2>{bt('intervalMusicTitle')}</H2>
         <IntervalMusicDescriptionEditor path={`${path}.intervalMusic`} noPreview />
       </SectionCard>
     case 'ProgramItem':
@@ -119,7 +119,7 @@ const ProgramItem = React.memo(function ProgramEditor({dragHandle, path, itemInd
     <div><Duration value={__typename === 'RequestedDance' ? 0 : item.item.duration} /></div>
     <div>
       {dragHandle}
-      <RemoveItemButton path={path} index={itemIndex} title={t`buttons.remove`} icon="cross" className="deleteItem" />
+      <RemoveItemButton path={path} index={itemIndex} title={t('buttons.remove')} icon="cross" className="deleteItem" />
     </div>
   </Flex>
 })
@@ -138,11 +138,11 @@ function ProgramItemEditor({editorData, slideContent}: {editorData: ProgramItemD
       return null
     case 'EventProgram':
       return <SectionCard>
-        <H2>{bt`infoTitle`}</H2>
-        <Input label={t`fields.eventProgram.name`} path={`${path}.item.name`} required />
-        <Field label={t`fields.eventProgram.description`} path={`${path}.item.description`} component={MarkdownEditor} componentProps={{noPreview: true}} />
-        <Switch label={t`fields.eventProgram.showInLists`} path={`${path}.item.showInLists`} inline />
-        <Callout>{bt`currentItemAlwaysShownInLists`}</Callout>
+        <H2>{bt('infoTitle')}</H2>
+        <Input label={t('fields.eventProgram.name')} path={`${path}.item.name`} required />
+        <Field label={t('fields.eventProgram.description')} path={`${path}.item.description`} component={MarkdownEditor} componentProps={{noPreview: true}} />
+        <Switch label={t('fields.eventProgram.showInLists')} path={`${path}.item.showInLists`} inline />
+        <Callout>{bt('currentItemAlwaysShownInLists')}</Callout>
       </SectionCard>
   }
 
@@ -156,7 +156,7 @@ function DanceEditor({dance}: {dance: Dance}) {
   return <DanceEditorContainer dance={dance}>
     <DanceInput label="Nimi" path="name" />
     <DanceField label="Kuvaus ja lyhyt ohje" path="description" component={MarkdownEditor} componentProps={{noPreview: true}}/>
-    <Link target="_blank" to={`/dances/${dance._id}`}><Icon icon="link"/>{bt`linkToCompleteDance`}</Link>
+    <Link target="_blank" to={`/dances/${dance._id}`}><Icon icon="link"/>{bt('linkToCompleteDance')}</Link>
   </DanceEditorContainer>
 
 }

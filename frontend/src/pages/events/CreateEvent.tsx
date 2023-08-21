@@ -41,22 +41,22 @@ export default function CreateEventForm() {
   const [event, setEvent] = useState({name: '', beginDate: '', endDate: ''})
 
   return <AdminOnly>
-    <Breadcrumb text={t`newEventBreadcrumb`} />
-    <PageTitle>{t`newEvent`}</PageTitle>
+    <Breadcrumb text={t('newEventBreadcrumb')} />
+    <PageTitle>{t('newEvent')}</PageTitle>
     <Form value={event} onChange={setEvent} onSubmit={() => addLoadingAnimation(createEvent({event}))}>
       <div>
-        <Input label={t`name`} path="name" required />
+        <Input label={t('name')} path="name" required />
         <DateRangeField<EventForm>
           id="eventDate"
-          label={t`eventDate`}
-          beginLabel={t`beginDate`}
+          label={t('eventDate')}
+          beginLabel={t('beginDate')}
           beginPath="beginDate"
-          endLabel={t`endDate`}
+          endLabel={t('endDate')}
           endPath="endDate"
           required
         />
       </div>
-      <SubmitButton text={t`create`} />
+      <SubmitButton text={t('create')} />
     </Form>
   </AdminOnly>
 }

@@ -63,7 +63,7 @@ export function Slide({id, title, type, children, footer, next, navigation, slid
 function NextSlide({next}: {next: SlideLink}) {
   return <section className="slide-next-slide">
     <div className="slide-content-area">
-      {t`afterThis`}:{' '}
+      {t('afterThis')}:{' '}
       <LinkToSlide {...next} />
     </div>
   </section>

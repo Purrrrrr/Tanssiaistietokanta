@@ -65,14 +65,14 @@ export function WorkshopEditor({workshop: workshopInDatabase, reservedAbbreviati
     <SyncStatus state={state} floatRight/>
     <Flex spaced wrap>
       <div style={{flexGrow: 1, flexBasis: 300, maxWidth: '50ch'}}>
-        <Field path="name" required component={Input} label={t`name`} labelInfo={t`required`} />
-        <AbbreviationField path="abbreviation" label={t`abbreviation`} reservedAbbreviations={reservedAbbreviations} />
-        <Field path="description" component={TextArea} label={t`description`} />
-        <Field path="teachers" component={Input} label={t`teachers`}/>
+        <Field path="name" required component={Input} label={t('name')} labelInfo={t('required')} />
+        <AbbreviationField path="abbreviation" label={t('abbreviation')} reservedAbbreviations={reservedAbbreviations} />
+        <Field path="description" component={TextArea} label={t('description')} />
+        <Field path="teachers" component={Input} label={t('teachers')}/>
       </div>
       <div style={{flexGrow: 1, flexBasis: 300}}>
-        <ListField label={t`dances`} path="dances" component={DanceListItem} renderConflictItem={item => item.name} />
-        {dances.length === 0 && <p className={CssClass.textMuted}>{t`noDances`}</p>}
+        <ListField label={t('dances')} path="dances" component={DanceListItem} renderConflictItem={item => item.name} />
+        {dances.length === 0 && <p className={CssClass.textMuted}>{t('noDances')}</p>}
         <AddDanceChooser />
       </div>
     </Flex>
@@ -84,7 +84,7 @@ function AbbreviationField({label, path, reservedAbbreviations}) {
     path={path}
     component={Input}
     label={label}
-    helperText={t`abbreviationHelp`}
+    helperText={t('abbreviationHelp')}
     maxLength={3}
     validate={{notOneOf: reservedAbbreviations, nullable: true}}
     errorMessages={{notOneOf: getAbbreviationTakenError}}
@@ -101,7 +101,7 @@ function getAbbreviationTakenError({value, values}) {
 function DanceListItem({itemIndex, path, dragHandle}) {
   const excludeFromSearch = useValueAt('dances')
   return <Flex className="danceItem">
-    <Field label={t`Dance`} labelStyle="hidden" path={`dances.${itemIndex}`} component={DanceChooser} componentProps={{excludeFromSearch}} />
+    <Field label={t('Dance')} labelStyle="hidden" path={`dances.${itemIndex}`} component={DanceChooser} componentProps={{excludeFromSearch}} />
     {dragHandle}
     <RemoveItemButton path="dances" index={itemIndex} text="X" />
   </Flex>
@@ -111,7 +111,7 @@ function AddDanceChooser() {
   const dances = useValueAt('dances')
   const onAddDance = useAppendToList('dances')
 
-  return <FormGroup label={t`addDance`} labelStyle="beside" style={{marginTop: 6}}>
+  return <FormGroup label={t('addDance')} labelStyle="beside" style={{marginTop: 6}}>
     <DanceChooser excludeFromSearch={dances} value={null} onChange={dance => dance && onAddDance(dance)} key={dances.length} />
   </FormGroup>
 }

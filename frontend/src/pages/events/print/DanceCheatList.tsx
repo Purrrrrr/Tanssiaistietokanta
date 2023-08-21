@@ -54,9 +54,9 @@ export default function DanceCheatList({eventId}) {
 
   return <>
     <PrintViewToolbar>
-      <Switch id="miniView" inline label={t`miniView`} value={mini} onChange={setMini}/>
-      <Switch id="helpText" inline label={t`showHelpText`} value={helpText} onChange={setHelptext}/>
-      <Button text={t`print`} onClick={() => window.print()} />
+      <Switch id="miniView" inline label={t('miniView')} value={mini} onChange={setMini}/>
+      <Switch id="helpText" inline label={t('showHelpText')} value={helpText} onChange={setHelptext}/>
+      <Button text={t('print')} onClick={() => window.print()} />
     </PrintViewToolbar>
     <DanceCheatListView workshops={data.event.workshops} mini={mini} helpText={helpText} />
   </>
@@ -64,7 +64,7 @@ export default function DanceCheatList({eventId}) {
 
 function DanceCheatListView({workshops, mini, helpText}) {
   return <CenteredContainer className={classNames('dance-cheatsheet', {mini})}>
-    {helpText && <p>{t`helpText`}</p>}
+    {helpText && <p>{t('helpText')}</p>}
     {workshops.map(workshop =>
       <WorkshopDances key={workshop._id} workshop={workshop} mini={mini} />)}
   </CenteredContainer>
@@ -75,8 +75,8 @@ function WorkshopDances({workshop, mini}) {
   return <>
     <PageTitle>{name}</PageTitle>
     {dances.length === 0 ?
-      <p>{t`noDances`}</p> :
-      <PrintTable headings={[t`danceName`, t`iCanDanceThis`]}>
+      <p>{t('noDances')}</p> :
+      <PrintTable headings={[t('danceName'), t('iCanDanceThis')]}>
         {dances.map(dance =>
           <tr key={dance._id}>
             <td>
@@ -85,7 +85,7 @@ function WorkshopDances({workshop, mini}) {
                 : <>
                   <strong>{dance.name}</strong>
                   <div>
-                    <EditableDanceProperty dance={dance} property="description" type="markdown" addText={t`addDescription`} />
+                    <EditableDanceProperty dance={dance} property="description" type="markdown" addText={t('addDescription')} />
                   </div>
                 </>
               }

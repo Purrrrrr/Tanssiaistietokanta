@@ -49,19 +49,19 @@ export function EventProgramEditor({eventId, program: eventProgram}: EventProgra
   return <Form {...formProps}>
     <section className="eventProgramEditor">
       <div className="main-toolbar">
-        <Input labelStyle="above" label={t`fields.programTitle`} path="introductions.title" inline />
+        <Input labelStyle="above" label={t('fields.programTitle')} path="introductions.title" inline />
         <SyncStatus style={{marginLeft: '1ch', top: '3px'}} className="flex-fill" state={state} />
-        <InheritedSlideStyleSelector path="introductions.titleSlideStyleId" text={t`fields.titleStyle`} />
-        <Field label={t`fields.pauseDuration`} inline path="pauseBetweenDances" component={DurationField} />
+        <InheritedSlideStyleSelector path="introductions.titleSlideStyleId" text={t('fields.titleStyle')} />
+        <Field label={t('fields.pauseDuration')} inline path="pauseBetweenDances" component={DurationField} />
         {introductions.program.length === 0 && <AddIntroductionButton />}
-        <Field label="" inline path="slideStyleId" component={SlideStyleSelector} componentProps={{text: t`fields.eventDefaultStyle`}} />
+        <Field label="" inline path="slideStyleId" component={SlideStyleSelector} componentProps={{text: t('fields.eventDefaultStyle')}} />
       </div>
       <ListEditorContext>
         <IntroductoryInformation />
         <ListField labelStyle="hidden-nowrapper" label="" path="danceSets" component={DanceSetEditor} renderConflictItem={renderDanceSetValue} />
       </ListEditorContext>
       <div className="addDanceSetButtons">
-        {danceSets.length === 0 && t`danceProgramIsEmpty`}
+        {danceSets.length === 0 && t('danceProgramIsEmpty')}
         <AddDanceSetButton />
       </div>
     </section>
@@ -75,7 +75,7 @@ function IntroductoryInformation() {
   return <Card className="danceset">
     <Flex className="sectionTitleRow">
       <h2>
-        <span>{t`titles.introductoryInformation`}</span>
+        <span>{t('titles.introductoryInformation')}</span>
       </h2>
     </Flex>
     <ProgramListEditor path="introductions" />
@@ -86,11 +86,11 @@ const DanceSetEditor = React.memo(function DanceSetEditor({itemIndex, dragHandle
   return <Card className="danceset">
     <Flex className="sectionTitleRow">
       <h2>
-        <Field labelStyle="hidden" label={t`fields.danceSetName`} path={`danceSets.${itemIndex}.title`} inline component={ClickToEdit} />
+        <Field labelStyle="hidden" label={t('fields.danceSetName')} path={`danceSets.${itemIndex}.title`} inline component={ClickToEdit} />
       </h2>
-      <InheritedSlideStyleSelector path={`danceSets.${itemIndex}.titleSlideStyleId`} text={t`fields.titleStyle`} />
+      <InheritedSlideStyleSelector path={`danceSets.${itemIndex}.titleSlideStyleId`} text={t('fields.titleStyle')} />
       {dragHandle}
-      <RemoveItemButton path="danceSets" index={itemIndex} className="delete" text={t`buttons.removeDanceSet`} />
+      <RemoveItemButton path="danceSets" index={itemIndex} className="delete" text={t('buttons.removeDanceSet')} />
     </Flex>
     <ProgramListEditor path={`danceSets.${itemIndex}`} />
   </Card>
@@ -118,7 +118,7 @@ function ProgramListEditor({path}: {path: ProgramSectionPath}) {
           <thead>
             <tr>
               <th/>
-              <th>{t`columnTitles.name`}</th><th>{t`columnTitles.duration`}</th><th>{t`columnTitles.actions`}</th>
+              <th>{t('columnTitles.name')}</th><th>{t('columnTitles.duration')}</th><th>{t('columnTitles.actions')}</th>
             </tr>
           </thead>
       }
@@ -126,7 +126,7 @@ function ProgramListEditor({path}: {path: ProgramSectionPath}) {
         <ListField labelStyle="hidden-nowrapper" label="" itemType={getType} acceptsTypes={accepts} droppableElement={tableRef.current} isTable path={programPath} component={ProgramItemEditor} renderConflictItem={programItemToString} accessibilityContainer={accessibilityContainer.current ?? undefined} />
         {program.length === 0 &&
             <tr>
-              <td className={CssClass.textMuted+ ' noProgram'} colSpan={5}>{t`programListIsEmpty`}</td>
+              <td className={CssClass.textMuted+ ' noProgram'} colSpan={5}>{t('programListIsEmpty')}</td>
             </tr>
         }
         {intervalMusicDuration > 0 && <IntervalMusicEditor danceSetPath={path as DanceSetPath} />}
@@ -136,7 +136,7 @@ function ProgramListEditor({path}: {path: ProgramSectionPath}) {
           <td colSpan={2} className="add-spacing">
             {isIntroductionsSection ||
               <Button
-                text={t`buttons.addDance`}
+                text={t('buttons.addDance')}
                 rightIcon={<ProgramTypeIcon type="Dance" />}
                 onClick={() => onAddItem({item: {__typename: 'RequestedDance'}, slideStyleId: null, _id: guid()})}
                 className="addDance" />
@@ -144,14 +144,14 @@ function ProgramListEditor({path}: {path: ProgramSectionPath}) {
             {isIntroductionsSection
               ? <AddIntroductionButton />
               : <Button
-                text={t`buttons.addInfo`}
+                text={t('buttons.addInfo')}
                 rightIcon={<ProgramTypeIcon type="EventProgram" />}
                 onClick={() => onAddItem(newEventProgramItem())}
                 className="addInfo"
               />
             }
             {isIntroductionsSection ||
-              <IntervalMusicSwitch inline label={t`fields.intervalMusicAtEndOfSet`} path={`${path}.intervalMusic` as `danceSets.${number}.intervalMusic`} />
+              <IntervalMusicSwitch inline label={t('fields.intervalMusicAtEndOfSet')} path={`${path}.intervalMusic` as `danceSets.${number}.intervalMusic`} />
             }
           </td>
           <td colSpan={2} className="add-spacing">
@@ -190,8 +190,8 @@ const ProgramItemEditor = React.memo(function ProgramItemEditor({dragHandle, pat
     </td>
     <td>
       {dragHandle}
-      <InheritedSlideStyleSelector path={`${itemPath}.slideStyleId`} text={t`fields.style`} />
-      <RemoveItemButton path={path} index={itemIndex} title={t`buttons.remove`} icon="cross" className="deleteItem" />
+      <InheritedSlideStyleSelector path={`${itemPath}.slideStyleId`} text={t('fields.style')} />
+      <RemoveItemButton path={path} index={itemIndex} title={t('buttons.remove')} icon="cross" className="deleteItem" />
     </td>
   </React.Fragment>
 })
@@ -203,7 +203,7 @@ function renderDanceSetValue(item: DanceSet) {
 }
 
 export function programItemToString(item: EventProgramRow) {
-  if (item.item.__typename === 'RequestedDance') return t`programTypes.RequestedDance`
+  if (item.item.__typename === 'RequestedDance') return t('programTypes.RequestedDance')
   return item.item.name
 }
 
@@ -226,7 +226,7 @@ function DanceItemEditor({path}: {path: DanceProgramPath}) {
   const setItem = useOnChangeFor(`${path}.item`)
   const [open, setOpen] = useState(false)
   return <Flex className="eventProgramItemEditor">
-    <Field label={t`dance`} labelStyle="hidden" path={`${path as DanceProgramPath}.item`} component={DanceProgramChooser} />
+    <Field label={t('dance')} labelStyle="hidden" path={`${path as DanceProgramPath}.item`} component={DanceProgramChooser} />
     {id &&
       <MenuButton
         menu={
@@ -234,7 +234,7 @@ function DanceItemEditor({path}: {path: DanceProgramPath}) {
             <DanceLoadingEditor danceId={id} onDeleteDance={() => {setItem({__typename: 'RequestedDance'}); setOpen(false)}} />
           </div>
         }
-        text={t`buttons.editDance`}
+        text={t('buttons.editDance')}
         buttonProps={{rightIcon: 'caret-down'}}
         open={open}
         onSetOpen={setOpen}
@@ -254,15 +254,15 @@ function DanceLoadingEditor({danceId, onDeleteDance}: {danceId: string, onDelete
 function EventProgramItemEditor({path}: {path: ProgramItemPath}) {
   const [open, setOpen] = useState(false)
   return <Flex className="eventProgramItemEditor">
-    <Input label={t`fields.eventProgram.name`} labelStyle="hidden" path={`${path}.item.name`} required />
+    <Input label={t('fields.eventProgram.name')} labelStyle="hidden" path={`${path}.item.name`} required />
     <MenuButton
       menu={
         <div className="eventProgramItemPopover">
-          <Field label={t`fields.eventProgram.description`} path={`${path}.item.description`} component={MarkdownEditor} />
-          <Switch label={t`fields.eventProgram.showInLists`} path={`${path}.item.showInLists`} inline />
+          <Field label={t('fields.eventProgram.description')} path={`${path}.item.description`} component={MarkdownEditor} />
+          <Switch label={t('fields.eventProgram.showInLists')} path={`${path}.item.showInLists`} inline />
         </div>
       }
-      text={t`buttons.editProgram`}
+      text={t('buttons.editProgram')}
       buttonProps={{rightIcon: 'caret-down'}}
       open={open}
       onSetOpen={setOpen}
@@ -279,16 +279,16 @@ function IntervalMusicEditor({danceSetPath}: {danceSetPath: DanceSetPath}) {
     <td><ProgramTypeIcon type="IntervalMusic" /></td>
     <td>
       <Flex className="eventProgramItemEditor">
-        <div>{t`programTypes.IntervalMusic`}</div>
+        <div>{t('programTypes.IntervalMusic')}</div>
         <IntervalMusicDetailsEditor path={intervalMusicPath} />
       </Flex>
     </td>
     <td>
-      <Field label={t`fields.intervalMusicDuration`} inline labelStyle="hidden" path={durationPath} component={DurationField} />
+      <Field label={t('fields.intervalMusicDuration')} inline labelStyle="hidden" path={durationPath} component={DurationField} />
     </td>
     <td>
-      <InheritedSlideStyleSelector path={`${danceSetPath}.intervalMusic.slideStyleId`} text={t`fields.style`} />
-      <Button title={t`buttons.remove`} intent="danger" icon="cross" onClick={() => onSetIntervalMusic(null)} className="delete" />
+      <InheritedSlideStyleSelector path={`${danceSetPath}.intervalMusic.slideStyleId`} text={t('fields.style')} />
+      <Button title={t('buttons.remove')} intent="danger" icon="cross" onClick={() => onSetIntervalMusic(null)} className="delete" />
     </td>
   </tr>
 }
@@ -302,7 +302,7 @@ function IntervalMusicDetailsEditor({path}: {path: IntervalMusicPath}) {
           <IntervalMusicDetailsEditor path={path} />
         </div>
       }
-      text={t`buttons.editIntervalMusic`}
+      text={t('buttons.editIntervalMusic')}
       buttonProps={{rightIcon: 'caret-down'}}
       open={open}
       onSetOpen={setOpen}
@@ -314,17 +314,17 @@ export function IntervalMusicDescriptionEditor({path, noPreview}: {path: Interva
   const intervalMusic = useValueAt(path)
   const hasCustomTexts = typeof intervalMusic?.name === 'string'
   return <>
-    <IntervalMusicDefaultTextsSwitch label={t`fields.intervalMusic.useDefaultTexts`} path={path} />
+    <IntervalMusicDefaultTextsSwitch label={t('fields.intervalMusic.useDefaultTexts')} path={path} />
     {hasCustomTexts
       ? <>
-        <h2>{t`titles.customIntervalMusicTexts`}</h2>
-        <Input label={t`fields.intervalMusic.name`} path={`${path}.name`} required />
-        <Field label={t`fields.intervalMusic.description`} path={`${path}.description`} component={MarkdownEditor} componentProps={{noPreview}} />
+        <h2>{t('titles.customIntervalMusicTexts')}</h2>
+        <Input label={t('fields.intervalMusic.name')} path={`${path}.name`} required />
+        <Field label={t('fields.intervalMusic.description')} path={`${path}.description`} component={MarkdownEditor} componentProps={{noPreview}} />
       </>
       : <>
-        <h2>{t`titles.defaultIntervalMusicTexts`}</h2>
-        <Input label={t`fields.intervalMusic.name`} path='defaultIntervalMusic.name' componentProps={{placeholder:t`programTypes.IntervalMusic`}} />
-        <Field label={t`fields.intervalMusic.description`} path="defaultIntervalMusic.description" component={MarkdownEditor} componentProps={{noPreview}} />
+        <h2>{t('titles.defaultIntervalMusicTexts')}</h2>
+        <Input label={t('fields.intervalMusic.name')} path='defaultIntervalMusic.name' componentProps={{placeholder:t('programTypes.IntervalMusic')}} />
+        <Field label={t('fields.intervalMusic.description')} path="defaultIntervalMusic.description" component={MarkdownEditor} componentProps={{noPreview}} />
       </>
     }
   </>
@@ -336,8 +336,8 @@ function DanceSetDuration({ program, intervalMusicDuration}) {
   const durationWithPauses = duration + pause*program.length + intervalMusicDuration
 
   return <>
-    <strong><Duration value={durationWithPauses}/></strong>{' '+t`duration.pausesIncluded`}
+    <strong><Duration value={durationWithPauses}/></strong>{' '+t('duration.pausesIncluded')}
     <br />
-    <strong><Duration value={duration}/></strong>{' '+t`duration.dances`}
+    <strong><Duration value={duration}/></strong>{' '+t('duration.dances')}
   </>
 }
