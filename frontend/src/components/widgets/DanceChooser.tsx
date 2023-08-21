@@ -4,7 +4,7 @@ import {Suggest} from '@blueprintjs/select'
 import {filterDances, useCreateDance, useDances} from 'services/dances'
 
 import {CssClass, MenuItem} from 'libraries/ui'
-import {makeTranslate} from 'utils/translate'
+import {useT} from 'i18n'
 
 import {Dance} from 'types'
 
@@ -28,13 +28,8 @@ interface NewDancePlaceholder extends Dance {
   _id: 'new',
 }
 
-const t = makeTranslate({
-  searchDance: 'Etsi tanssia...',
-  emptyDancePlaceholder: 'Tansseja ei löytynyt',
-  createDance: 'Luo uusi tanssi',
-})
-
 export function DanceChooser({hasConflict, value, onChange, excludeFromSearch, allowEmpty = false, emptyText, onBlur, placeholder, readOnly, ...props} : DanceChooserProps) {
+  const t = useT('components.danceChooser')
   const [query, setQuery] = useState(value ? value.name : '')
   const [dances] = useDances()
   const [createDance] = useCreateDance()
@@ -90,6 +85,18 @@ export function DanceChooser({hasConflict, value, onChange, excludeFromSearch, a
     popoverProps={{minimal: true}}
     fill
   />
+
+  function emptyDancePlaceholder(text: string | undefined): EmptyDancePlaceholder {
+    return {__typename: 'Dance', _id: '', name: text ?? t('emptyDancePlaceholder'), empty: true}
+  }
+
+  function renderCreateItem(queryString: string, active: boolean, handleClick) {
+    return <MenuItem
+      active={active}
+      onClick={handleClick}
+      text={t('createDance') + ': ' + queryString}
+    />
+  }
 }
 
 function cancelEnter(e) {
@@ -104,9 +111,6 @@ function danceNameEquals(a: Dance, name: string) {
   return a.name.trim().toLowerCase() === name.trim().toLowerCase()
 }
 
-function emptyDancePlaceholder(text: string | undefined): EmptyDancePlaceholder {
-  return {__typename: 'Dance', _id: '', name: text ?? t('emptyDancePlaceholder'), empty: true}
-}
 
 function isPlaceholder(object: Dance | EmptyDancePlaceholder): object is EmptyDancePlaceholder {
   return 'empty' in object
@@ -130,12 +134,3 @@ function renderDance (dance, { handleClick, modifiers }) {
     textClassName={(dance.empty && !modifiers.active) ? CssClass.textDisabled : undefined}
   />
 }
-
-function renderCreateItem(queryString: string, active: boolean, handleClick) {
-  return <MenuItem
-    active={active}
-    onClick={handleClick}
-    text={t('createDance') + ': ' + queryString}
-  />
-}
-

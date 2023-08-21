@@ -1,15 +1,7 @@
 import React, {useState} from 'react'
 
 import {Alert} from 'libraries/dialog'
-import {makeTranslate} from 'utils/translate'
-
-const t = makeTranslate({
-  unsupportedBrowser: 'Selaimesi ei ole tuettu',
-  continueAnyWay: 'Jatka sivustolle',
-  downloadBetterBrowser: 'Lataa uusin Firefox',
-  siteMayNotWork: 'Selaimesi ei tue kaikkia tämän sivuston käyttämiä ominaisuuksia. Jos jatkat, sivusto ei välttämättä toimi tarkoituksenmukaisesti.',
-  possibleSupportedBrowsers: 'Tanssitietokanta on kehitetty ja testattu enimmäkseen Firefoxilla, mutta se tukee ainakin seuraavien selaimien uusimpia versioita:'
-})
+import {useT} from 'i18n'
 
 const browsersLinks = {
   Firefox: 'https://www.mozilla.org/firefox/browsers/',
@@ -23,6 +15,7 @@ export function SupportedBrowserChecker() {
 
 }
 export function SupportedBrowserWarning() {
+  const t = useT('components.supportedBrowserWarning')
   const [showDialog, setShowDialog] = useState(true)
 
   return <Alert title={t('unsupportedBrowser')} isOpen={showDialog} onClose={() => setShowDialog(false)}

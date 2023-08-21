@@ -1,5 +1,4 @@
 import React, {useCallback, useState} from 'react'
-import {useT} from 'i18n'
 
 import {usePatchEvent} from 'services/events'
 import {AdminOnly} from 'services/users'
@@ -12,6 +11,7 @@ import {PageTitle} from 'components/PageTitle'
 import {DeleteButton} from 'components/widgets/DeleteButton'
 import {NavigateButton} from 'components/widgets/NavigateButton'
 import {WorkshopEditor} from 'components/WorkshopEditor'
+import {useT} from 'i18n'
 
 import {Event, EventProgram as EventProgramType} from 'types'
 
@@ -23,7 +23,7 @@ const {
 } = formFor<Event>()
 
 export default function EventPage({event}: {event: Event}) {
-  const t = useT('pages.eventPage')
+  const t = useT('pages.events.eventPage')
   return <>
     <PageTitle>
       {event.name}
@@ -38,7 +38,7 @@ export default function EventPage({event}: {event: Event}) {
 
 function EventDetails({event}: {event: Event}) {
   const [showEditor, setShowEditor] = useState(false)
-  const t = useT('pages.eventPage')
+  const t = useT('pages.events.eventPage')
   return <>
     <p>
       {t('eventDate')}: {formatDate(new Date(event.beginDate))} - {formatDate(new Date(event.endDate))}
@@ -56,7 +56,7 @@ function EventDetails({event}: {event: Event}) {
 }
 
 function EventDetailsForm({event}: {event: Event}) {
-  const t = useT('pages.eventPage')
+  const t = useT('pages.events.eventPage')
   const [patchEvent] = usePatchEvent()
   const patch = useCallback(
     (eventPatch: Partial<Event>) => patchEvent({ id: event._id, event: eventPatch}),
@@ -82,7 +82,7 @@ function EventDetailsForm({event}: {event: Event}) {
 }
 
 function EventProgram({program}: {program: EventProgramType}) {
-  const t = useT('pages.eventPage')
+  const t = useT('pages.events.eventPage')
   if (!program || program.danceSets.length === 0) {
     return <>
       <p>{t('noProgram')}</p>
@@ -125,7 +125,7 @@ function EventProgram({program}: {program: EventProgramType}) {
 const isRequestedDance = row => row.item.__typename === 'RequestedDance'
 
 function EventWorkshops({workshops, eventId}: {workshops: Workshop[], eventId: string}) {
-  const t = useT('pages.eventPage')
+  const t = useT('pages.events.eventPage')
   return <>
     <>
       {workshops.map(workshop =>
@@ -147,7 +147,7 @@ function EventWorkshops({workshops, eventId}: {workshops: Workshop[], eventId: s
 }
 
 function CreateWorkshopButton({eventId}) {
-  const t = useT('pages.eventPage')
+  const t = useT('pages.events.eventPage')
   const addLoadingAnimation = useGlobalLoadingAnimation()
   const [createWorkshop] = useCreateWorkshop()
 
@@ -161,7 +161,7 @@ function CreateWorkshopButton({eventId}) {
 }
 
 function WorkshopCard({workshop, reservedAbbreviations}: {workshop: Workshop, reservedAbbreviations: string[]}) {
-  const t = useT('pages.eventPage')
+  const t = useT('pages.events.eventPage')
   const addLoadingAnimation = useGlobalLoadingAnimation()
   const [showEditor, setShowEditor] = useState(false)
   const [deleteWorkshop] = useDeleteWorkshop({refetchQueries: ['getEvent']})

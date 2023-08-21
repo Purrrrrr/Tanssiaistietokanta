@@ -7,18 +7,12 @@ import {Switch} from 'libraries/forms'
 import {Button} from 'libraries/ui'
 import {LoadingState} from 'components/LoadingState'
 import PrintViewToolbar from 'components/widgets/PrintViewToolbar'
-import {makeTranslate} from 'utils/translate'
+import {useT} from 'i18n'
 
 import './DanceList.sass'
 
-const t = makeTranslate({
-  showSideBySide: 'Näytä setit rinnakkain',
-  print: 'Tulosta',
-  emptyLinesAreRequestedDances: 'Tyhjät rivit ovat toivetansseja.',
-  workshopNameIsInParenthesis: 'Suluissa opetussetti',
-})
-
 function DanceList({eventId}) {
+  const t = useT('pages.events.danceList')
   const {program, workshops, loadingState} = useBallProgram(eventId)
   const [sidebyside, setSidebyside] = useState(false)
   const colClass = (sidebyside ? ' three-columns' : '')
@@ -49,6 +43,7 @@ function DanceList({eventId}) {
 }
 
 function Footer({workshops}) {
+  const t = useT('pages.events.danceList')
   if (!workshops.length) return <>{t('emptyLinesAreRequestedDances')}</>
   return <>
     {t('workshopNameIsInParenthesis')}

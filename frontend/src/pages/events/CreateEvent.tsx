@@ -8,17 +8,7 @@ import {DateRangeField, formFor, SubmitButton} from 'libraries/forms'
 import {Breadcrumb} from 'libraries/ui'
 import {useGlobalLoadingAnimation} from 'components/LoadingState'
 import {PageTitle} from 'components/PageTitle'
-import {makeTranslate} from 'utils/translate'
-
-const t = makeTranslate({
-  newEventBreadcrumb: 'Uusi tapahtuma',
-  newEvent: 'Luo uusi tapahtuma',
-  create: 'Luo',
-  name: 'Nimi',
-  eventDate: 'Tapahtuman ajankohta',
-  beginDate: 'Alkaa',
-  endDate: 'Loppuu',
-})
+import {useT} from 'i18n'
 
 interface EventForm {
   name: string
@@ -32,6 +22,7 @@ const {
 } = formFor<EventForm>()
 
 export default function CreateEventForm() {
+  const t = useT('pages.events.createEvent')
   const navigate = useNavigate()
   const addLoadingAnimation = useGlobalLoadingAnimation()
   const [createEvent] = useCreateEvent({

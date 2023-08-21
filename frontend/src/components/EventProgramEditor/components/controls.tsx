@@ -2,9 +2,9 @@ import React from 'react'
 
 import {ActionButton as Button} from 'libraries/forms'
 import {Icon, IconName} from 'libraries/ui'
+import {Translator, useT} from 'i18n'
 import {guid} from 'utils/guid'
 
-import t from '../translations'
 import {DanceSet, EventProgramItem, EventProgramRow, IntervalMusic} from '../types'
 import { switchFor, useAppendToList } from './form'
 
@@ -16,10 +16,13 @@ const DEFAULT_INTERVAL_MUSIC: IntervalMusic = {
   slideStyleId: null,
 }
 
+type T = Translator<'components.eventProgramEditor'>
+
 export function AddIntroductionButton() {
+  const t = useT('components.eventProgramEditor')
   const addIntroduction = useAppendToList('introductions.program')
   function addIntroductoryInfo() {
-    addIntroduction(newEventProgramItem)
+    addIntroduction(() => newEventProgramItem(t))
   }
   return <Button
     text={t('buttons.addIntroductoryInfo')}
@@ -29,7 +32,7 @@ export function AddIntroductionButton() {
   />
 }
 
-export function newEventProgramItem(): EventProgramRow {
+export function newEventProgramItem(t: T): EventProgramRow {
   return {
     item: {
       __typename: 'EventProgram',
@@ -45,9 +48,10 @@ export function newEventProgramItem(): EventProgramRow {
 }
 
 export function AddDanceSetButton() {
+  const t = useT('components.eventProgramEditor')
   const onAddDanceSet = useAppendToList('danceSets')
   function addDanceSet() {
-    onAddDanceSet(newDanceSet)
+    onAddDanceSet((danceSets) => newDanceSet(danceSets, t))
   }
   return <Button
     text={t('buttons.addDanceSet')}
@@ -57,7 +61,7 @@ export function AddDanceSetButton() {
   />
 }
 
-function newDanceSet(danceSets: DanceSet[]): DanceSet {
+function newDanceSet(danceSets: DanceSet[], t: T): DanceSet {
   const danceSetNumber = danceSets.length + 1
   const dances = Array.from({length: 6}, () => ({item: {__typename: 'RequestedDance'}, _id: guid(), slideStyleId: null} as EventProgramRow))
   return {
@@ -88,6 +92,7 @@ export const IntervalMusicDefaultTextsSwitch = switchFor<IntervalMusic>({
 type ProgramType = EventProgramItem['__typename'] | 'IntervalMusic'
 
 export function ProgramTypeIcon({type}: {type: ProgramType}) {
+  const t = useT('components.eventProgramEditor')
   const icons: Record<ProgramType, IconName> = {
     Dance: 'music',
     RequestedDance: 'music',

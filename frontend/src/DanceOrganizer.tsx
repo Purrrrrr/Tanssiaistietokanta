@@ -1,11 +1,11 @@
 import React from 'react'
 import { BrowserRouter} from 'react-router-dom'
-import {TranslationContext, translations} from 'i18n'
 
 import {BackendProvider} from 'backend'
 import {UserContextProvider} from 'services/users'
 
 import NavigationLayout from 'components/NavigationLayout'
+import {TranslationContext, translations} from 'i18n'
 import {ToastContainer} from 'utils/toaster'
 
 import AppRoutes from './routes'

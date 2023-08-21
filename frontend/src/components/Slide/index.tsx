@@ -3,16 +3,12 @@ import {Link} from 'react-router-dom'
 import classnames from 'classnames'
 
 import { AutosizedSection } from 'libraries/ui'
-import {makeTranslate} from 'utils/translate'
+import {useT} from 'i18n'
 
 import './Slide.scss'
 import './slideStyles.scss'
 
 export * from './SlideContainer'
-
-export const t = makeTranslate({
-  afterThis: 'Tämän jälkeen',
-})
 
 export interface SlideProps {
   id: string
@@ -61,6 +57,7 @@ export function Slide({id, title, type, children, footer, next, navigation, slid
 }
 
 function NextSlide({next}: {next: SlideLink}) {
+  const t = useT('components.slide')
   return <section className="slide-next-slide">
     <div className="slide-content-area">
       {t('afterThis')}:{' '}

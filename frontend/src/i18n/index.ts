@@ -34,10 +34,11 @@ type KeyForPath<Path extends string, T> = Path extends ''
       ? KeyForPath<Rest, T[Prefix]>
       : never
 
+export type Translator<P extends Prefix = ''> = (key: PrefixedKey<P>, params?: TParams) => string
 
 export function useT<P extends Prefix>(
   ...prefixes: (P | '')[]
-): (key: PrefixedKey<P>, params?: TParams) => string
+): Translator<P>
 {
   const context = useBareT()
   if (prefixes.length === 0) return context.T

@@ -5,26 +5,13 @@ import {usePatchWorkshop} from 'services/workshops'
 import {formFor, Input, patchStrategy, SyncStatus, TextArea, useAutosavingState} from 'libraries/forms'
 import {CssClass, Flex, FormGroup} from 'libraries/ui'
 import {DanceChooser} from 'components/widgets/DanceChooser'
-import {makeTranslate} from 'utils/translate'
+import {useT} from 'i18n'
 
 import {Event} from 'types'
 
 import './WorkshopEditor.scss'
 
 type Workshop = Event['workshops'][0]
-
-const t = makeTranslate({
-  dances: 'Tanssit',
-  addDance: 'Lisää tanssi: ',
-  noDances: 'Työpajan tanssilista on tyhjä.',
-  name: 'Nimi',
-  required: '(pakollinen)',
-  abbreviation: 'Lyhennemerkintä',
-  abbreviationHelp: 'Lyhennemerkintä näytetään settilistassa työpajassa opetettujen tanssien kohdalla',
-  abbreviationTaken: 'Lyhenne %(abbreviation)s on jo käytössä toisessa pajassa. Tässä tapahtumassa ovat jo käytössä seuraavat lyhenteet: %(abbreviations)s',
-  description: 'Työpajan kuvaus',
-  teachers: 'Opettaja(t)',
-})
 
 const {
   Form,
@@ -41,6 +28,7 @@ interface WorkshopEditorProps {
 }
 
 export function WorkshopEditor({workshop: workshopInDatabase, reservedAbbreviations}: WorkshopEditorProps) {
+  const t = useT('components.workshopEditor')
   const [modifyWorkshop] = usePatchWorkshop({
     refetchQueries: ['getEvent']
   })
@@ -80,6 +68,7 @@ export function WorkshopEditor({workshop: workshopInDatabase, reservedAbbreviati
 }
 
 function AbbreviationField({label, path, reservedAbbreviations}) {
+  const t = useT('components.workshopEditor')
   return <Field
     path={path}
     component={Input}
@@ -89,25 +78,27 @@ function AbbreviationField({label, path, reservedAbbreviations}) {
     validate={{notOneOf: reservedAbbreviations, nullable: true}}
     errorMessages={{notOneOf: getAbbreviationTakenError}}
   />
+
+  function getAbbreviationTakenError({value, values}) {
+    return t(
+      'abbreviationTaken',
+      {abbreviations: values, abbreviation: value}
+    )
+  }
 }
 
-function getAbbreviationTakenError({value, values}) {
-  return t(
-    'abbreviationTaken',
-    {abbreviations: values, abbreviation: value}
-  )
-}
-
-function DanceListItem({itemIndex, path, dragHandle}) {
+function DanceListItem({itemIndex, dragHandle}) {
+  const t = useT('components.workshopEditor')
   const excludeFromSearch = useValueAt('dances')
   return <Flex className="danceItem">
-    <Field label={t('Dance')} labelStyle="hidden" path={`dances.${itemIndex}`} component={DanceChooser} componentProps={{excludeFromSearch}} />
+    <Field label={t('dances')} labelStyle="hidden" path={`dances.${itemIndex}`} component={DanceChooser} componentProps={{excludeFromSearch}} />
     {dragHandle}
     <RemoveItemButton path="dances" index={itemIndex} text="X" />
   </Flex>
 }
 
 function AddDanceChooser() {
+  const t = useT('components.workshopEditor')
   const dances = useValueAt('dances')
   const onAddDance = useAppendToList('dances')
 

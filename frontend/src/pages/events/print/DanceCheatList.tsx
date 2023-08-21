@@ -12,20 +12,9 @@ import {LoadingState} from 'components/LoadingState'
 import {PageTitle} from 'components/PageTitle'
 import {PrintTable} from 'components/PrintTable'
 import PrintViewToolbar from 'components/widgets/PrintViewToolbar'
-import {makeTranslate} from 'utils/translate'
+import {useT} from 'i18n'
 
 import './DanceCheatList.sass'
-
-const t = makeTranslate({
-  helpText: 'Rastita tähän, jos osaat tanssin. Näin ei tanssiaisissa tarvitse miettiä, mikä tanssi on kyseessä.',
-  showHelpText: 'Näytä ohjeteksti',
-  miniView: 'Tiivistetty näkymä',
-  print: 'Tulosta',
-  noDances: 'Ei tansseja',
-  addDescription: 'Lisää kuvaus',
-  iCanDanceThis: 'Osaan tanssin',
-  danceName: 'Nimi',
-})
 
 const useCheatList = backendQueryHook(graphql(`
 query DanceCheatList($eventId: ID!) {
@@ -47,6 +36,7 @@ query DanceCheatList($eventId: ID!) {
 })
 
 export default function DanceCheatList({eventId}) {
+  const t = useT('pages.events.danceCheatlist')
   const [mini, setMini] = useState(false)
   const [helpText, setHelptext] = useState(true)
   const {data, ...loadingState} = useCheatList({eventId})
@@ -63,6 +53,7 @@ export default function DanceCheatList({eventId}) {
 }
 
 function DanceCheatListView({workshops, mini, helpText}) {
+  const t = useT('pages.events.danceCheatlist')
   return <CenteredContainer className={classNames('dance-cheatsheet', {mini})}>
     {helpText && <p>{t('helpText')}</p>}
     {workshops.map(workshop =>
@@ -71,6 +62,7 @@ function DanceCheatListView({workshops, mini, helpText}) {
 }
 
 function WorkshopDances({workshop, mini}) {
+  const t = useT('pages.events.danceCheatlist')
   const {name, dances} = workshop
   return <>
     <PageTitle>{name}</PageTitle>

@@ -9,27 +9,14 @@ import {Button} from 'libraries/ui'
 import {DanceDataImportButton} from 'components/DanceDataImportDialog'
 import {LoadingState} from 'components/LoadingState'
 import PrintViewToolbar from 'components/widgets/PrintViewToolbar'
+import {useT} from 'i18n'
 import {selectElement} from 'utils/selectElement'
 import {showToast} from 'utils/toaster'
-import {makeTranslate} from 'utils/translate'
 import {uniq} from 'utils/uniq'
 
 import {Dance, Event} from 'types'
 
 import './DanceInstructions.sass'
-
-const t = makeTranslate({
-  fetchDataFromWiki: 'Hae tietoja tanssiwikistä',
-  clickInstructionsToEdit: 'Klikkaa ohjetta muokataksesi sitä, voit myös hakea tietoja tanssiwikistä klikkaamalla nappeja, jotka avautuvat kun tuot hiiren tanssin päälle. Kun ohjeet ovat mieleisesi, voit joko tulostaa tämän sivun tai valita ohjetekstit ja kopioida ne haluamaasi tekstinkäsittelyohjelmaan.',
-  defaultStylingDescription: 'Ohjeissa on oletustyyli, jossa ensimmäinen kappale on kursivoitu. Tämän tarkoituksena on eritellä tanssin ja tanssikuvion lyhyt kuvaus lopusta ohjeesta ilman tilaa vievää otsikointia.',
-  selectAndCopy: 'Kopioi ohjeet leikepöydälle',
-  instructionsCopied: 'Ohjeet kopioitu',
-  print: 'Tulosta',
-  showWorkshops: 'Näytä työpajojen kuvaukset',
-  workshops: 'Työpajat',
-  dances: 'Tanssit',
-  danceInstructions: 'Tanssiohjeet',
-})
 
 const useDanceInstructions= backendQueryHook(graphql(`
 query DanceInstructions($eventId: ID!) {
@@ -54,6 +41,7 @@ query DanceInstructions($eventId: ID!) {
 })
 
 export default function DanceInstructions({eventId}) {
+  const t = useT('pages.events.danceInstructions')
   const {data, refetch, ...loadingState} = useDanceInstructions({eventId})
   const dancesEl = useRef<HTMLElement>(null)
   const [showWorkshops, setShowWorkshops] = useState(true)
@@ -101,6 +89,7 @@ function getDances(workshops: Event['workshops']) {
 }
 
 function InstructionsForDance({dance: danceInDatabase} : {dance: Dance}) {
+  const t = useT('pages.events.danceInstructions')
   const [patchDance] = usePatchDance()
   const onChange = useCallback(
     (dance) => patchDance({
@@ -141,6 +130,7 @@ const markdownOverrides = {
 }
 
 function Workshop({workshop}) {
+  const t = useT('pages.events.danceInstructions')
   const {name, description, dances} = workshop
 
   return <div className="workshop">

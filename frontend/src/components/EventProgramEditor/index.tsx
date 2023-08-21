@@ -9,6 +9,7 @@ import {LoadingState} from 'components/LoadingState'
 import {Duration} from 'components/widgets/Duration'
 import {DurationField} from 'components/widgets/DurationField'
 import {SlideStyleSelector} from 'components/widgets/SlideStyleSelector'
+import {Translator, useT} from 'i18n'
 import {guid} from 'utils/guid'
 
 import {DanceProgramPath, DanceSet, DanceSetPath, EventProgramRow, EventProgramSettings, IntervalMusicPath, ProgramItemPath, ProgramSectionPath} from './types'
@@ -33,9 +34,10 @@ import {
   useOnChangeFor,
   useValueAt,
 } from './components'
-import t from './translations'
 
 import './EventProgramEditor.sass'
+
+type T = Translator<'components.eventProgramEditor'>
 
 interface EventProgramEditorProps {
   eventId: string
@@ -43,6 +45,7 @@ interface EventProgramEditorProps {
 }
 
 export function EventProgramEditor({eventId, program: eventProgram}: EventProgramEditorProps) {
+  const t = useT('components.eventProgramEditor')
   const {formProps, state} = useEventProgramEditorForm(eventId, eventProgram)
   const {danceSets, introductions} = formProps.value
 
@@ -58,7 +61,7 @@ export function EventProgramEditor({eventId, program: eventProgram}: EventProgra
       </div>
       <ListEditorContext>
         <IntroductoryInformation />
-        <ListField labelStyle="hidden-nowrapper" label="" path="danceSets" component={DanceSetEditor} renderConflictItem={renderDanceSetValue} />
+        <ListField labelStyle="hidden-nowrapper" label="" path="danceSets" component={DanceSetEditor} renderConflictItem={item => renderDanceSetValue(item, t)} />
       </ListEditorContext>
       <div className="addDanceSetButtons">
         {danceSets.length === 0 && t('danceProgramIsEmpty')}
@@ -69,6 +72,7 @@ export function EventProgramEditor({eventId, program: eventProgram}: EventProgra
 }
 
 function IntroductoryInformation() {
+  const t = useT('components.eventProgramEditor')
   const infos = useValueAt('introductions.program')
   if (infos.length === 0) return null
 
@@ -83,6 +87,7 @@ function IntroductoryInformation() {
 }
 
 const DanceSetEditor = React.memo(function DanceSetEditor({itemIndex, dragHandle} : {itemIndex: number, dragHandle: React.ReactNode}) {
+  const t = useT('components.eventProgramEditor')
   return <Card className="danceset">
     <Flex className="sectionTitleRow">
       <h2>
@@ -97,6 +102,7 @@ const DanceSetEditor = React.memo(function DanceSetEditor({itemIndex, dragHandle
 })
 
 function ProgramListEditor({path}: {path: ProgramSectionPath}) {
+  const t = useT('components.eventProgramEditor')
   const tableRef = useRef(null)
   const programPath = `${path}.program` as const
   const onAddItem = useAppendToList(programPath)
@@ -123,7 +129,7 @@ function ProgramListEditor({path}: {path: ProgramSectionPath}) {
           </thead>
       }
       <tbody>
-        <ListField labelStyle="hidden-nowrapper" label="" itemType={getType} acceptsTypes={accepts} droppableElement={tableRef.current} isTable path={programPath} component={ProgramItemEditor} renderConflictItem={programItemToString} accessibilityContainer={accessibilityContainer.current ?? undefined} />
+        <ListField labelStyle="hidden-nowrapper" label="" itemType={getType} acceptsTypes={accepts} droppableElement={tableRef.current} isTable path={programPath} component={ProgramItemEditor} renderConflictItem={item => programItemToString(item, t)} accessibilityContainer={accessibilityContainer.current ?? undefined} />
         {program.length === 0 &&
             <tr>
               <td className={CssClass.textMuted+ ' noProgram'} colSpan={5}>{t('programListIsEmpty')}</td>
@@ -146,7 +152,7 @@ function ProgramListEditor({path}: {path: ProgramSectionPath}) {
               : <Button
                 text={t('buttons.addInfo')}
                 rightIcon={<ProgramTypeIcon type="EventProgram" />}
-                onClick={() => onAddItem(newEventProgramItem())}
+                onClick={() => onAddItem(newEventProgramItem(t))}
                 className="addInfo"
               />
             }
@@ -170,6 +176,7 @@ interface ProgramItemEditorProps {
 }
 
 const ProgramItemEditor = React.memo(function ProgramItemEditor({dragHandle, path, itemIndex} : ProgramItemEditorProps) {
+  const t = useT('components.eventProgramEditor')
   const itemPath = `${path}.${itemIndex}` as ProgramItemPath
   const item = useValueAt(itemPath)
 
@@ -197,12 +204,12 @@ const ProgramItemEditor = React.memo(function ProgramItemEditor({dragHandle, pat
 })
 
 
-function renderDanceSetValue(item: DanceSet) {
-  const program = item.program.map(programItemToString).join(', ')
+function renderDanceSetValue(item: DanceSet, t: T) {
+  const program = item.program.map(i => programItemToString(i, t)).join(', ')
   return `${item.title} (${program})`
 }
 
-export function programItemToString(item: EventProgramRow) {
+export function programItemToString(item: EventProgramRow, t: T) {
   if (item.item.__typename === 'RequestedDance') return t('programTypes.RequestedDance')
   return item.item.name
 }
@@ -222,6 +229,7 @@ function ProgramDetailsEditor({path}: {path: ProgramItemPath}) {
 }
 
 function DanceItemEditor({path}: {path: DanceProgramPath}) {
+  const t = useT('components.eventProgramEditor')
   const id = useValueAt(`${path}.item._id`)
   const setItem = useOnChangeFor(`${path}.item`)
   const [open, setOpen] = useState(false)
@@ -252,6 +260,7 @@ function DanceLoadingEditor({danceId, onDeleteDance}: {danceId: string, onDelete
 }
 
 function EventProgramItemEditor({path}: {path: ProgramItemPath}) {
+  const t = useT('components.eventProgramEditor')
   const [open, setOpen] = useState(false)
   return <Flex className="eventProgramItemEditor">
     <Input label={t('fields.eventProgram.name')} labelStyle="hidden" path={`${path}.item.name`} required />
@@ -271,6 +280,7 @@ function EventProgramItemEditor({path}: {path: ProgramItemPath}) {
 }
 
 function IntervalMusicEditor({danceSetPath}: {danceSetPath: DanceSetPath}) {
+  const t = useT('components.eventProgramEditor')
   const intervalMusicPath = `${danceSetPath}.intervalMusic` as const
   const durationPath = `${danceSetPath}.intervalMusic.duration` as const
   const onSetIntervalMusic = useOnChangeFor(intervalMusicPath)
@@ -294,6 +304,7 @@ function IntervalMusicEditor({danceSetPath}: {danceSetPath: DanceSetPath}) {
 }
 
 function IntervalMusicDetailsEditor({path}: {path: IntervalMusicPath}) {
+  const t = useT('components.eventProgramEditor')
   const [open, setOpen] = useState(false)
   return <Flex className="eventProgramItemEditor">
     <MenuButton
@@ -311,6 +322,7 @@ function IntervalMusicDetailsEditor({path}: {path: IntervalMusicPath}) {
 }
 
 export function IntervalMusicDescriptionEditor({path, noPreview}: {path: IntervalMusicPath, noPreview?: boolean}) {
+  const t = useT('components.eventProgramEditor')
   const intervalMusic = useValueAt(path)
   const hasCustomTexts = typeof intervalMusic?.name === 'string'
   return <>
@@ -331,6 +343,7 @@ export function IntervalMusicDescriptionEditor({path, noPreview}: {path: Interva
 }
 
 function DanceSetDuration({ program, intervalMusicDuration}) {
+  const t = useT('components.eventProgramEditor')
   const pause = useValueAt('pauseBetweenDances')
   const duration = program.map(({item}) => item.duration ?? 0).reduce((y, x) => x+y, 0)
   const durationWithPauses = duration + pause*program.length + intervalMusicDuration

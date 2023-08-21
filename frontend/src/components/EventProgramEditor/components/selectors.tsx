@@ -4,10 +4,10 @@ import * as L from 'partial.lenses'
 import {FieldComponentProps, formFor, MenuButton, SelectorMenu, toArrayPath, TypedStringPath} from 'libraries/forms'
 import {DanceChooser} from 'components/widgets/DanceChooser'
 import {SlideStyleSelector} from 'components/widgets/SlideStyleSelector'
+import {useT} from 'i18n'
 
 import {Dance} from 'types'
 
-import t from '../translations'
 import {DanceProgram, EventProgramItem, EventProgramSettings, ProgramItemPath, RequestedDance} from '../types'
 
 const {
@@ -17,6 +17,7 @@ const {
 } = formFor<EventProgramSettings>()
 
 export const DanceProgramChooser = React.memo(function DanceProgramChooser({value, onChange, ...props} : FieldComponentProps<EventProgramItem, HTMLElement>) {
+  const t = useT('components.eventProgramEditor')
   return <DanceChooser
     key={value?._id}
     value={value?._id ? value as Dance : null}
@@ -33,6 +34,7 @@ export const DanceProgramChooser = React.memo(function DanceProgramChooser({valu
 })
 
 export function MoveItemToSectionSelector({itemPath} : { itemPath: ProgramItemPath}) {
+  const t = useT('components.eventProgramEditor')
   const [open, setOpen] = useState(false)
   return <MenuButton
     menu={
@@ -55,6 +57,7 @@ interface SectionSelection {
 function MoveItemToSectionMenu(
   {itemPath, onSelected} : { itemPath: ProgramItemPath, onSelected: () => void }
 ) {
+  const t = useT('components.eventProgramEditor')
   const [currentSectionType, maybeDanceSetIndex] = toArrayPath<EventProgramSettings>(itemPath)
   const row = useValueAt(itemPath)
   const onChangeProgram = useOnChangeFor('')
@@ -99,6 +102,7 @@ export function InheritedSlideStyleSelector(
     showLabel?: boolean
   }
 ) {
+  const t = useT('components.eventProgramEditor')
   const defaultSlideStyleId = useValueAt('slideStyleId')
 
   return <Field
