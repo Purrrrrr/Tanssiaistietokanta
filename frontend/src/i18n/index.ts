@@ -4,9 +4,17 @@ import { fi } from './fi'
 
 export { Talkr as TranslationContext } from 'talkr'
 
-export const translations = {fi}
+export const translations = {
+  fi: fi satisfies NoEmptyTranslations<typeof fi>
+}
 
 type Translations = typeof fi
+
+type NoEmptyTranslations<T> = T extends object
+  ? {[K in keyof T]: NoEmptyTranslations<T[K]>}
+  : T extends ''
+    ? never
+    : T
 
 type Prefix = PrefixPath<Translations>
 type PrefixedKey<P extends string> = KeyForPath<P, Translations>
@@ -21,21 +29,28 @@ type PrefixPath<T> = (T extends object
 type KeyForPath<Path extends string, T> = Path extends ''
   ? Autocomplete<T>
   : Path extends keyof T
-    ? `${Path}${KeyPrefix<Autocomplete<T[Path]>>}`
+    ? Autocomplete<T[Path]>
     : Path extends `${infer Prefix extends Exclude<keyof T, symbol>}.${infer Rest}`
-      ? `${Prefix}${KeyPrefix<KeyForPath<Rest, T[Prefix]>>}` extends infer D ? Extract<D, string> : never
+      ? KeyForPath<Rest, T[Prefix]>
       : never
 
 
 export function useT<P extends Prefix>(
-  prefix: P | '' = ''
+  ...prefixes: (P | '')[]
 ): (key: PrefixedKey<P>, params?: TParams) => string
 {
   const context = useBareT()
-  if (prefix === '') return context.T
+  if (prefixes.length === 0) return context.T
   const { locale, languages, defaultLanguage } = context
 
-  return (key, params) => tr({ locale, languages, defaultLanguage }, prefix + '.' + key, params)
+  return (key, params) => {
+    for (const pref of prefixes) {
+      const fullKey = pref === '' ? key : `${pref}.${key}`
+      const translation = tr({ locale, languages, defaultLanguage }, fullKey, params)
+      if (translation !== '') return translation
+    }
+    return ''
+  }
 }
 
 export const useLocalization : () => Pick<ReturnType<typeof useBareT>, 'locale' | 'setLocale'> = useBareT
