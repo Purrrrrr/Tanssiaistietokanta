@@ -1,4 +1,6 @@
-import { Autocomplete, TParams, tr, useT as useBareT } from 'talkr'
+import { TParams, tr, useT as useBareT } from 'talkr'
+
+import { KeyForPath, NoEmptyTranslations, PrefixPath } from './types'
 
 import { fi } from './fi'
 
@@ -9,30 +11,8 @@ export const translations = {
 }
 
 type Translations = typeof fi
-
-type NoEmptyTranslations<T> = T extends object
-  ? {[K in keyof T]: NoEmptyTranslations<T[K]>}
-  : T extends ''
-    ? never
-    : T
-
 type Prefix = PrefixPath<Translations>
 type PrefixedKey<P extends string> = KeyForPath<P, Translations>
-
-type KeyPrefix<T extends string> = T extends '' ? '' : `.${T}`
-type PrefixPath<T> = (T extends object
-  ? ('' | {
-    [K in Exclude<keyof T, symbol>]: `${K}${KeyPrefix<PrefixPath<T[K]>>}`
-  }[Exclude<keyof T, symbol>])
-  : ''
-) extends infer D ? Extract<D, string> : never
-type KeyForPath<Path extends string, T> = Path extends ''
-  ? Autocomplete<T>
-  : Path extends keyof T
-    ? Autocomplete<T[Path]>
-    : Path extends `${infer Prefix extends Exclude<keyof T, symbol>}.${infer Rest}`
-      ? KeyForPath<Rest, T[Prefix]>
-      : never
 
 export type Translator<P extends Prefix = ''> = (key: PrefixedKey<P>, params?: TParams) => string
 
