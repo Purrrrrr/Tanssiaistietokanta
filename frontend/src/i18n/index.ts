@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { TParams, tr, useT as useBareT } from 'talkr'
 
 import { KeyForPath, NoEmptyTranslations, PrefixPath } from './types'
@@ -21,17 +22,21 @@ export function useT<P extends Prefix>(
 ): Translator<P>
 {
   const context = useBareT()
-  if (prefixes.length === 0) return context.T
-  const { locale, languages, defaultLanguage } = context
 
-  return (key, params) => {
-    for (const pref of prefixes) {
-      const fullKey = pref === '' ? key : `${pref}.${key}`
-      const translation = tr({ locale, languages, defaultLanguage }, fullKey, params)
-      if (translation !== '') return translation
+  return useMemo(() => {
+    if (prefixes.length === 0) return context.T
+    const { locale, languages, defaultLanguage } = context
+
+    return (key, params) => {
+      for (const pref of prefixes) {
+        const fullKey = pref === '' ? key : `${pref}.${key}`
+        const translation = tr({ locale, languages, defaultLanguage }, fullKey, params)
+        if (translation !== '') return translation
+      }
+      return ''
     }
-    return ''
-  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [context.locale, ...prefixes])
 }
 
 export const useLocalization : () => Pick<ReturnType<typeof useBareT>, 'locale' | 'setLocale'> = useBareT
