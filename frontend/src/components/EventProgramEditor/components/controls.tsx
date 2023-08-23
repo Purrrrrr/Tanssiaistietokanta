@@ -2,7 +2,7 @@ import React from 'react'
 
 import {ActionButton as Button} from 'libraries/forms'
 import {Icon, IconName} from 'libraries/ui'
-import {Translator, useT} from 'i18n'
+import {useT} from 'i18n'
 import {guid} from 'utils/guid'
 
 import {DanceSet, EventProgramItem, EventProgramRow, IntervalMusic} from '../types'
@@ -16,13 +16,12 @@ const DEFAULT_INTERVAL_MUSIC: IntervalMusic = {
   slideStyleId: null,
 }
 
-type T = Translator<'components.eventProgramEditor'>
-
 export function AddIntroductionButton() {
   const t = useT('components.eventProgramEditor')
   const addIntroduction = useAppendToList('introductions.program')
+  const newProgramItem = useCreateNewEventProgramItem()
   function addIntroductoryInfo() {
-    addIntroduction(() => newEventProgramItem(t))
+    addIntroduction(newProgramItem)
   }
   return <Button
     text={t('buttons.addIntroductoryInfo')}
@@ -32,8 +31,9 @@ export function AddIntroductionButton() {
   />
 }
 
-export function newEventProgramItem(t: T): EventProgramRow {
-  return {
+export function useCreateNewEventProgramItem(): () => EventProgramRow {
+  const t = useT('components.eventProgramEditor')
+  return () => ({
     item: {
       __typename: 'EventProgram',
       _id: undefined,
@@ -44,14 +44,15 @@ export function newEventProgramItem(t: T): EventProgramRow {
     },
     slideStyleId: null,
     _id: guid(),
-  }
+  })
 }
 
 export function AddDanceSetButton() {
   const t = useT('components.eventProgramEditor')
   const onAddDanceSet = useAppendToList('danceSets')
+  const newDanceSet = useCreateNewDanceSet()
   function addDanceSet() {
-    onAddDanceSet((danceSets) => newDanceSet(danceSets, t))
+    onAddDanceSet(newDanceSet)
   }
   return <Button
     text={t('buttons.addDanceSet')}
@@ -61,15 +62,18 @@ export function AddDanceSetButton() {
   />
 }
 
-function newDanceSet(danceSets: DanceSet[], t: T): DanceSet {
-  const danceSetNumber = danceSets.length + 1
-  const dances = Array.from({length: 6}, () => ({item: {__typename: 'RequestedDance'}, _id: guid(), slideStyleId: null} as EventProgramRow))
-  return {
-    _id: guid(),
-    title: t('placeholderNames.danceSet', {number: danceSetNumber}),
-    program: dances,
-    titleSlideStyleId: null,
-    intervalMusic: null,
+function useCreateNewDanceSet(): (danceSets: DanceSet[]) => DanceSet {
+  const t = useT('components.eventProgramEditor')
+  return (danceSets: DanceSet[]) => {
+    const danceSetNumber = danceSets.length + 1
+    const dances = Array.from({length: 6}, () => ({item: {__typename: 'RequestedDance'}, _id: guid(), slideStyleId: null} as EventProgramRow))
+    return {
+      _id: guid(),
+      title: t('placeholderNames.danceSet', {number: danceSetNumber}),
+      program: dances,
+      titleSlideStyleId: null,
+      intervalMusic: null,
+    }
   }
 }
 

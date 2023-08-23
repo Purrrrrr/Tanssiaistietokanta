@@ -2,6 +2,7 @@ import React, {createContext, useCallback, useContext, useState} from 'react'
 import {ApolloError, ApolloQueryResult} from '@apollo/client'
 
 import {Button, GlobalSpinner, NonIdealState, Spinner} from 'libraries/ui'
+import {useT} from 'i18n'
 
 export const StartLoadingContext = createContext<<T>(promise: Promise<T>) => Promise<T>>(p => p)
 
@@ -37,14 +38,15 @@ interface LoadingStateProps {
 }
 
 export function LoadingState({loading, error, refetch} : LoadingStateProps) {
+  const t = useT('components.loadingState')
   if (loading) {
     return <Spinner size={100} /> //<NonIdealState icon={<Spinner />} />;
   }
   if (error) {
     return <NonIdealState icon="error"
-      title="Tietojen lataaminen epäonnistui"
+      title={t('errorMessage')}
       description={error.message}
-      action={<Button text="Yritä uudelleen" onClick={() => refetch()} intent="primary" />}
+      action={<Button text={t('tryAgain')} onClick={() => refetch()} intent="primary" />}
     />
   }
   return null

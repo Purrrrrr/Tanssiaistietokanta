@@ -15,18 +15,6 @@ setupServiceUpdateFragment(
 
 export type WritableDanceProperty = Exclude<keyof Dance, '_id' | '__typename' | 'teachedIn'>
 
-export const dancePropertyLabels : {[Key in WritableDanceProperty]: string} = {
-  name: 'Nimi',
-  description: 'Kuvaus ja lyhyt ohje',
-  remarks: 'Huomautuksia',
-  duration: 'Kesto',
-  prelude: 'Alkusoitto',
-  formation: 'Tanssikuvio',
-  category: 'Kategoria',
-  instructions: 'Pidemmät tanssiohjeet printtiin',
-  slideStyleId: 'Tanssiaisten diatyyli',
-}
-
 export const useDances = entityListQueryHook('dances', graphql(`
 query getDances {
   dances {

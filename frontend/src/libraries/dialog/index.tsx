@@ -4,7 +4,7 @@ import {AlertProps, Classes, Overlay} from '@blueprintjs/core'
 
 import {Button} from 'libraries/ui'
 
-interface DialogProps extends InnerDialogProps {
+type DialogProps = InnerDialogProps & {
   isOpen: boolean,
 }
 
@@ -18,15 +18,22 @@ export function Dialog({isOpen, onClose, ...props} : DialogProps) {
   </Overlay>
 }
 
-interface InnerDialogProps {
+type InnerDialogProps = {
   onClose?: (e: React.SyntheticEvent) => unknown
   title: string
   style ?: React.CSSProperties
   children: React.ReactNode
   className?: string,
-  showCloseButton ?: boolean
-}
-function InnerDialog({children, onClose, title, style, className, showCloseButton = true} : InnerDialogProps) {
+} & (
+  {
+    showCloseButton?: true
+    closeButtonLabel: string
+  } | {
+    showCloseButton: false
+    closeButtonLabel?: string
+  }
+)
+function InnerDialog({children, onClose, title, style, className, showCloseButton = true, closeButtonLabel} : InnerDialogProps) {
   const closeButton = useRef<HTMLButtonElement>(null)
   const focusManager = useFocusManager()
   const dialogRef = useRef<HTMLDivElement>(null)
@@ -45,7 +52,7 @@ function InnerDialog({children, onClose, title, style, className, showCloseButto
   return <div ref={dialogRef} className={Classes.DIALOG+(className ? ' '+className : '')} style={style}>
     <div className={Classes.DIALOG_HEADER}>
       <h1 style={{fontSize: 18}} className={Classes.HEADING}>{title}</h1>
-      {showCloseButton && <button aria-label="Close" className={Classes.BUTTON+' '+Classes.DIALOG_CLOSE_BUTTON+' '+Classes.MINIMAL} onClick={onClose} ref={closeButton}>❌</button>}
+      {showCloseButton && <button aria-label={closeButtonLabel} className={Classes.BUTTON+' '+Classes.DIALOG_CLOSE_BUTTON+' '+Classes.MINIMAL} onClick={onClose} ref={closeButton}>❌</button>}
     </div>
     {children}
   </div>

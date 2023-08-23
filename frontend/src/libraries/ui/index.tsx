@@ -98,14 +98,15 @@ interface SearchInputProps {
   id?: string
   value: string
   placeholder?: string
+  emptySearchText: string,
   onChange: (value: string) => unknown
 }
 
-export function SearchBar({id, onChange, value, placeholder} : SearchInputProps) {
+export function SearchBar({id, onChange, value, placeholder, emptySearchText} : SearchInputProps) {
   return <BlueprintInputGroup
     id={id}
     leftIcon="search"
-    rightElement={<Button aria-label="Tyhjennä haku" minimal icon="cross" onClick={() => onChange('')} />}
+    rightElement={<Button aria-label={emptySearchText} minimal icon="cross" onClick={() => onChange('')} />}
     value={value}
     onChange={(e) => onChange(e.target.value)}
     placeholder={placeholder}

@@ -89,7 +89,6 @@ function getDances(workshops: Event['workshops']) {
 }
 
 function InstructionsForDance({dance: danceInDatabase} : {dance: Dance}) {
-  const t = useT('pages.events.danceInstructions')
   const [patchDance] = usePatchDance()
   const onChange = useCallback(
     (dance) => patchDance({
@@ -106,7 +105,7 @@ function InstructionsForDance({dance: danceInDatabase} : {dance: Dance}) {
     <h2>
       {name}
       {' '}
-      <DanceDataImportButton text={t('fetchDataFromWiki')} dance={dance} />
+      <DanceDataImportButton dance={dance} />
     </h2>
     <ClickToEditMarkdown
       id={'instructions-'+dance._id}

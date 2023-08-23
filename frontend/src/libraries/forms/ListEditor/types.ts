@@ -7,8 +7,10 @@ export interface Entity {
 export type ListItemComponent<T, V> = React.ComponentType<{
   path: TypedStringPath<V[], T>
   itemIndex: number
-  dragHandle: React.ReactNode
+  dragHandle: DragHandle
 }>
+
+export type DragHandle = (text: string) => React.ReactNode
 
 export interface ListEditorDroppableData {
   acceptsTypes?: string[]

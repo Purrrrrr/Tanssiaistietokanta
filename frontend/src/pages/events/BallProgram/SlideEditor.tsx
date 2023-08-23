@@ -1,7 +1,7 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
 
-import {formFor, MarkdownEditor, SyncStatus} from 'libraries/forms'
+import {DragHandle, formFor, MarkdownEditor, SyncStatus} from 'libraries/forms'
 import {Callout, Flex, H2, Icon, SectionCard} from 'libraries/ui'
 import {DanceEditorContainer} from 'components/DanceEditor'
 import {IntervalMusicDescriptionEditor, programItemToString} from 'components/EventProgramEditor'
@@ -23,7 +23,7 @@ import { ProgramItemPath, ProgramSectionPath } from 'components/EventProgramEdit
 import { LinkToSlide } from 'components/Slide'
 import { Duration } from 'components/widgets/Duration'
 import { SlideStyleSelector } from 'components/widgets/SlideStyleSelector'
-import { useT } from 'i18n'
+import { useT, useTranslation } from 'i18n'
 
 import {Dance} from 'types'
 
@@ -101,13 +101,14 @@ function SlideContentEditor({editorData, slideContent}: Pick<SlideContent, 'edit
 }
 
 interface ProgramItemProps {
-  dragHandle: React.ReactNode
+  dragHandle: DragHandle
   path: `${ProgramSectionPath}.program`
   itemIndex: number
 }
 
 const ProgramItem = React.memo(function ProgramEditor({dragHandle, path, itemIndex} : ProgramItemProps) {
   const t = useT('pages.events.ballProgram', 'components.eventProgramEditor')
+  const moveText = useTranslation('common.move')
   const itemPath = `${path}.${itemIndex}` as ProgramItemPath
   const item = useValueAt(itemPath)
 
@@ -121,7 +122,7 @@ const ProgramItem = React.memo(function ProgramEditor({dragHandle, path, itemInd
     </div>
     <div><Duration value={__typename === 'RequestedDance' ? 0 : item.item.duration} /></div>
     <div>
-      {dragHandle}
+      {dragHandle(moveText)}
       <RemoveItemButton path={path} index={itemIndex} title={t('buttons.remove')} icon="cross" className="deleteItem" />
     </div>
   </Flex>
@@ -157,11 +158,10 @@ const {
   Input: DanceInput,
 } = formFor<Dance>()
 function DanceEditor({dance}: {dance: Dance}) {
-  const t = useT('pages.events.ballProgram', 'components.eventProgramEditor')
+  const t = useT('domain.dance')
   return <DanceEditorContainer dance={dance}>
-    <DanceInput label="Nimi" path="name" />
-    <DanceField label="Kuvaus ja lyhyt ohje" path="description" component={MarkdownEditor} componentProps={{noPreview: true}}/>
-    <Link target="_blank" to={`/dances/${dance._id}`}><Icon icon="link"/>{t('linkToCompleteDance')}</Link>
+    <DanceInput label={t('name')} path="name" />
+    <DanceField label={t('description')} path="description" component={MarkdownEditor} componentProps={{noPreview: true}}/>
+    <Link target="_blank" to={`/dances/${dance._id}`}><Icon icon="link"/>{useTranslation('pages.events.ballProgram.linkToCompleteDance')}</Link>
   </DanceEditorContainer>
-
 }

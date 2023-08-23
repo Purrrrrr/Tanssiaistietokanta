@@ -6,6 +6,7 @@ import {getDanceData, ImportedDanceData} from 'libraries/danceWiki'
 import {Dialog} from 'libraries/dialog'
 import {formFor, MarkdownEditor, SubmitButton} from 'libraries/forms'
 import {Button, FormGroup, ProgressBar, Tag} from 'libraries/ui'
+import { useT, useTranslation } from 'i18n'
 
 import {Dance} from 'types'
 
@@ -14,7 +15,6 @@ import {DanceNameSearch} from './DanceNameSearch'
 interface DanceDataImportButtonProps {
   onImport?: (dance: Dance) => unknown,
   dance: Dance,
-  text: string,
 }
 
 interface ImporterState extends Dance {
@@ -29,9 +29,9 @@ const {
   useOnChangeFor,
 } = formFor<ImporterState>()
 
-export function DanceDataImportButton({onImport, dance, text, ...props} : DanceDataImportButtonProps) {
+export function DanceDataImportButton({onImport, dance, ...props} : DanceDataImportButtonProps) {
   const [isOpen, setOpen] = useState(false)
-
+  const text = useTranslation('components.danceDataImportButton.fetchInfoFromWiki')
   const [patch] = usePatchDance()
   const handleImport = ({ importedData, ...data} : ImporterState) => {
     if (onImport) {
@@ -77,7 +77,8 @@ export function DanceDataImportDialog({dance: originalDance, isOpen, onClose, on
     onClose(); reset()
   }
 
-  return <Dialog isOpen={isOpen} onClose={close} title="Hae tanssin tietoja tanssiwikistä"
+  return <Dialog isOpen={isOpen} onClose={close} title={useTranslation('components.danceDataImportButton.dialogTitle')}
+    closeButtonLabel={useTranslation('common.close')}
     style={{minWidth: 500, width: 'auto', maxWidth: '80%'}}>
     <Form value={dance} onChange={setDance} onSubmit={save}>
       <Dialog.Body>
@@ -85,14 +86,15 @@ export function DanceDataImportDialog({dance: originalDance, isOpen, onClose, on
         {dance.importedData && <ImportedDataView key={importNr} />}
       </Dialog.Body>
       <Dialog.Footer>
-        <Button text="Peruuta" onClick={close} />
-        <SubmitButton text="Tallenna" disabled={!dance.importedData}/>
+        <Button text={useTranslation('common.cancel')} onClick={close} />
+        <SubmitButton text={useTranslation('common.save')} disabled={!dance.importedData}/>
       </Dialog.Footer>
     </Form>
   </Dialog>
 }
 
 function DataImporter({danceName, onImport}) {
+  const t = useT('components.danceDataImportButton')
   const [search, setSearch] = useState(danceName)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<{message: string} | null>(null)
@@ -105,24 +107,25 @@ function DataImporter({danceName, onImport}) {
       .finally(() => setLoading(false))
   }
 
-  return <FormGroup label="Hae tanssi nimellä" inline>
+  return <FormGroup label={t('searchDanceByName')} inline>
     <DanceNameSearch value={search} onChange={setSearch} />
     <Button icon="search" intent="primary" onClick={importData} disabled={loading}/>
     {loading
-      ? <div style={{margin: '10px 0px'}}>Ladataan tietoja...<ProgressBar /></div>
-      : <p>Hae tietoja hakunapilla, jotta voit liittää niitä tietokantaan</p>}
+      ? <div style={{margin: '10px 0px'}}>{t('loadingData')}<ProgressBar /></div>
+      : <p>{t('searchHelp')}</p>}
     {error && <p>{error.message}</p>}
   </FormGroup>
 }
 
 function ImportedDataView() {
   const importedData = useValueAt('importedData')
+  const label = useT('domain.dance')
   if (importedData === undefined) throw new Error('Unexpected null in importedData')
   const {categories, formations} = importedData
   return <>
     <Row>
       <RowItem>
-        <Input label="Kategoria" path="category" />
+        <Input label={label('category')} path="category" />
       </RowItem>
       <RowItem>
         <Suggestions values={categories} onSuggest={useOnChangeFor('category')} />
@@ -130,20 +133,20 @@ function ImportedDataView() {
     </Row>
     <Row>
       <RowItem>
-        <Input label="Tanssikuvio" path="formation" />
+        <Input label={label('formation')} path="formation" />
       </RowItem>
       <RowItem>
         <Suggestions values={formations} onSuggest={useOnChangeFor('formation')} />
       </RowItem>
     </Row>
     <InstructionEditor />
-
   </>
 }
 
 function Suggestions({values, onSuggest}) {
-  return <FormGroup label="Ehdotukset wikistä">
-    {values.length === 0 && 'Ei ehdotuksia'}
+  const t = useT('components.danceDataImportButton')
+  return <FormGroup label={t('suggestionsFromWiki')}>
+    {values.length === 0 && t('noSuggestions')}
     {values.map(value =>
       <React.Fragment key={value}>
         <Tag large interactive intent="success"
@@ -167,22 +170,24 @@ function InstructionEditor() {
   const value = useValueAt('')
   const setInstructions = useOnChangeFor('instructions')
   const [hasConflict, setHasConflict] = useState(value.instructions !== value.importedData?.instructions)
+  const label = useTranslation('domain.dance.instructions')
+  const t = useT('components.danceDataImportButton')
 
   if (!hasConflict) {
-    return <Field path="instructions" component={MarkdownEditor} label="Tanssiohje"/>
+    return <Field path="instructions" component={MarkdownEditor} label={label}/>
   }
 
   const onResolve= (value: string) => { setHasConflict(false); setInstructions(value) }
   return <>
-    <p>Tanssiohje</p>
+    <p>{label}</p>
     <Row>
       <RowItem>
-        <Field path="instructions" component={MarkdownEditor} label="Tietokannassa oleva versio"/>
-        <Button text="Käytä tätä versiota" onClick={() => onResolve(value.instructions ?? '')} />
+        <Field path="instructions" component={MarkdownEditor} label={t('danceDbVersion')} />
+        <Button text={t('useThisVersion')} onClick={() => onResolve(value.instructions ?? '')} />
       </RowItem>
       <RowItem>
-        <Field path="importedData.instructions" component={MarkdownEditor} label="Tanssiwikin versio"/>
-        <Button text="Käytä tätä versiota" onClick={() => onResolve(value.importedData?.instructions ?? '')} />
+        <Field path="importedData.instructions" component={MarkdownEditor} label={t('wikiVersion')} />
+        <Button text={t('useThisVersion')} onClick={() => onResolve(value.importedData?.instructions ?? '')} />
       </RowItem>
     </Row>;
   </>

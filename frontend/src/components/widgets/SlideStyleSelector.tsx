@@ -4,6 +4,7 @@ import {defaultSlideStyle, SlideStyle, useEventSlideStyles} from 'services/event
 
 import {Selector} from 'libraries/forms'
 import {Icon, MenuItem} from 'libraries/ui'
+import {useT} from 'i18n'
 
 interface SlideStyleSelectorProps {
   value: string | null | undefined
@@ -17,6 +18,7 @@ interface SlideStyleSelectorProps {
 export function SlideStyleSelector({
   value, onChange, text, inheritsStyles = false, inheritedStyleId = undefined, inheritedStyleName = undefined
 } : SlideStyleSelectorProps) {
+  const t = useT('common')
   const styles = useEventSlideStyles({
     useStyleInheritance: inheritsStyles,
     inheritedStyleId,
@@ -26,6 +28,8 @@ export function SlideStyleSelector({
   return <Selector<SlideStyle>
     selectedItem={style}
     filterable
+    emptySearchText={t('emptySearch')}
+    searchPlaceholder={t('search')}
     items={styles}
     getItemText={item => <><SlideStyleBox value={item} size={50} aspectRatio={16/9} /> {item.name}</>}
     itemPredicate={(search, item) => item.name.toLowerCase().includes(search.toLowerCase())}

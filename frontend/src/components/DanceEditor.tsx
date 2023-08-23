@@ -10,6 +10,7 @@ import {useGlobalLoadingAnimation} from 'components/LoadingState'
 import {DeleteButton} from 'components/widgets/DeleteButton'
 import {DurationField} from 'components/widgets/DurationField'
 import {LinkMenuItem} from 'components/widgets/LinkMenuItem'
+import { useT, useTranslation } from 'i18n'
 
 import {Dance, DanceWithEvents} from 'types'
 
@@ -29,6 +30,8 @@ const {
 } = formFor<Dance>()
 
 export function DanceEditor({dance, onDelete, showLink, titleComponent} : DanceEditorProps) {
+  const label = useT('domain.dance')
+  const t = useT('components.danceEditor')
   const addLoadingAnimation = useGlobalLoadingAnimation()
   const [deleteDance] = useDeleteDance()
   const handleDelete = () => {
@@ -40,13 +43,13 @@ export function DanceEditor({dance, onDelete, showLink, titleComponent} : DanceE
     dance={dance}
     titleComponent={titleComponent}
     toolbar={<>
-      {showLink && <Link to={`/dances/${dance._id}`}><Icon icon="link"/>Linkki tähän tanssiin</Link>}
+      {showLink && <Link to={`/dances/${dance._id}`}><Icon icon="link"/>{t('linkToThisDance')}</Link>}
       <DanceIsUsedIn events={dance.events} />
       <div>
         <DeleteButton onDelete={handleDelete}
           disabled={dance.events.length > 0}
-          text="Poista tanssi"
-          confirmText="Haluatko varmasti poistaa tämän tanssin?"
+          text={t('deleteDance')}
+          confirmText={t('deleteConfirmation')}
         />
         <DanceDataImporter />
       </div>
@@ -54,16 +57,16 @@ export function DanceEditor({dance, onDelete, showLink, titleComponent} : DanceE
   >
     <Flex spaced wrap className="danceEditor">
       <div style={{flexGrow: 1, flexBasis: 300}}>
-        <Input label="Nimi" path="name" />
-        <Input label="Kategoria" path="category" />
-        <Field label="Kesto" path="duration" component={DurationField} />
-        <Input label="Alkusoitto" path="prelude" />
-        <Input label="Tanssikuvio" path="formation" />
-        <Input label="Huomautuksia" path="remarks" />
+        <Input label={label('name')} path="name" />
+        <Input label={label('category')} path="category" />
+        <Field label={label('duration')} path="duration" component={DurationField} />
+        <Input label={label('prelude')} path="prelude" />
+        <Input label={label('formation')} path="formation" />
+        <Input label={label('remarks')} path="remarks" />
       </div>
       <div style={{flexGrow: 2, flexBasis: 500}}>
-        <Field label="Kuvaus ja lyhyt ohje" path="description" component={MarkdownEditor} />
-        <Field label="Pidemmät tanssiohjeet printtiin" path="instructions" component={MarkdownEditor} />
+        <Field label={label('description')} path="description" component={MarkdownEditor} />
+        <Field label={label('instructions')} path="instructions" component={MarkdownEditor} />
       </div>
     </Flex>
   </DanceEditorContainer>
@@ -101,6 +104,7 @@ export function DanceEditorContainer({dance, children, toolbar, titleComponent: 
 
 function DanceIsUsedIn({events}: Pick<DanceWithEvents, 'events'>) {
   const navigate = useNavigate()
+  const t = useT('components.danceEditor')
   if (events.length === 0) return null
 
   const menu = <SelectorMenu
@@ -116,7 +120,7 @@ function DanceIsUsedIn({events}: Pick<DanceWithEvents, 'events'>) {
     <MenuButton
       alwaysEnabled
       menu={menu}
-      text={`Käytössä ${events.length} tapahtumassa`}
+      text={t('danceUsedInEvents', {count: events.length})}
       buttonProps={{minimal: true, rightIcon: 'caret-down'}}
     />
   </div>
@@ -125,5 +129,5 @@ function DanceIsUsedIn({events}: Pick<DanceWithEvents, 'events'>) {
 function DanceDataImporter() {
   const dance = useValueAt('')
   const onChange = useOnChangeFor('')
-  return <DanceDataImportButton text="Hae tietoja tanssiwikistä" dance={dance} onImport={onChange} />
+  return <DanceDataImportButton dance={dance} onImport={onChange} />
 }

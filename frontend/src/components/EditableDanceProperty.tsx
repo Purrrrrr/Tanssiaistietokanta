@@ -1,8 +1,9 @@
 import React, {useCallback, useMemo} from 'react'
 
-import {dancePropertyLabels, usePatchDance, WritableDanceProperty} from 'services/dances'
+import {usePatchDance, WritableDanceProperty} from 'services/dances'
 
 import {ClickToEdit, ClickToEditMarkdown, patchStrategy, useAutosavingState} from 'libraries/forms'
+import { useTranslation } from 'i18n'
 
 import {Dance} from 'types'
 
@@ -33,7 +34,7 @@ export function EditableDanceProperty({dance: danceInDatabase, inline, property,
       [property]: value,
     })
   }
-  const label = dancePropertyLabels[property]
+  const label = useTranslation(`domain.dance.${property}`)
 
   if (!danceInDatabase?._id) return <>...</>
 

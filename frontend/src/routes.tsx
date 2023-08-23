@@ -5,6 +5,7 @@ import {useEvent} from 'services/events'
 
 import {Breadcrumb} from 'libraries/ui'
 import {LoadingState} from 'components/LoadingState'
+import {T, useTranslation} from 'i18n'
 import Dances from 'pages/dances'
 import Dance from 'pages/dances/Dance'
 import BallProgram from 'pages/events/BallProgram'
@@ -18,7 +19,7 @@ import DanceList from 'pages/events/print/DanceList'
 
 export default function MainRoutes() {
   return <>
-    <Breadcrumb text={<><img src="/fan32.png" alt=""/>{' '}Tanssiaistietokanta</>} />
+    <Breadcrumb text={<><img src="/fan32.png" alt=""/>{' '}<T msg="app.title"/></>} />
     <Routes>
       <Route index element={<EventList/>} />
       <Route path="events/new" element={<CreateEvent/>} />
@@ -30,7 +31,7 @@ export default function MainRoutes() {
 
 function DanceRoutes() {
   return <>
-    <Breadcrumb text="Tanssit" />
+    <Breadcrumb text={useTranslation('breadcrumbs.dances')} />
     <Routes>
       <Route index element={<Dances/>} />
       <Route path=":danceId" element={<Dance/>} />

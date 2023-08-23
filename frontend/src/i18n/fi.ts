@@ -1,12 +1,73 @@
 export const fi = {
+  app: {
+    title: 'Tanssiaistietokanta',
+    copyright: 'Tanssitietokannan tekijät',
+    licenceLink: 'https://raw.githubusercontent.com/Purrrrrr/Tanssiaistietokanta/main/frontend/LICENSE',
+  },
+  navigation: {
+    dances: 'Tanssitietokanta',
+    breadcrumbs: 'Murupolku',
+    moveToContent: 'Siirry pääsisältöön',
+  },
+  breadcrumbs: {
+    app: 'Tanssiaistietokanta',
+    dances: 'Tanssit',
+    eventProgram: 'Tanssiaisohjelma',
+  },
+  domain: {
+    dance: {
+      name: 'Nimi',
+      description: 'Kuvaus ja lyhyt ohje',
+      remarks: 'Huomautuksia',
+      duration: 'Kesto',
+      prelude: 'Alkusoitto',
+      formation: 'Tanssikuvio',
+      category: 'Kategoria',
+      instructions: 'Pidemmät tanssiohjeet printtiin',
+      slideStyleId: 'Tanssiaisten diatyyli',
+    }
+  },
   components: {
     slide: {
       afterThis: 'Tämän jälkeen',
+    },
+    loginForm: {
+      login: 'Kirjaudu sisään',
+      logout: 'Kirjaudu ulos',
+    },
+    deleteButton: {
+      cancel: 'Peruuta',
+      delete: 'Poista',
+    },
+    loadingState: {
+      errorMessage: 'Tietojen lataaminen epäonnistui',
+      tryAgain: 'Yritä uudelleen',
     },
     danceChooser: {
       searchDance: 'Etsi tanssia...',
       emptyDancePlaceholder: 'Tansseja ei löytynyt',
       createDance: 'Luo uusi tanssi',
+    },
+    danceEditor: {
+      linkToThisDance: 'Linkki tähän tanssiin',
+      deleteDance: 'Poista tanssi',
+      deleteConfirmation: 'Haluatko varmasti poistaa tämän tanssin?',
+      danceUsedInEvents: {
+        one: 'Käytössä yhdessä tapahtumassa',
+        many: 'Käytössä __count__ tapahtumassa',
+      },
+    },
+    danceDataImportButton: {
+      fetchInfoFromWiki: 'Hae tietoja tanssiwikistä',
+      dialogTitle: 'Hae tanssin tietoja tanssiwikistä',
+      searchDanceByName: 'Hae tanssi nimellä',
+      loadingData: 'Ladataan tietoja...',
+      searchHelp: 'Hae tietoja hakunapilla, jotta voit liittää niitä tietokantaan',
+      suggestionsFromWiki: 'Ehdotukset wikistä',
+      noSuggestions: 'Ei ehdotuksia',
+      wikiVersion: 'Tanssiwikin versio',
+      danceDbVersion: 'Tietokannassa oleva versio',
+      useThisVersion: 'Käytä tätä versiota'
     },
     workshopEditor: {
       dances: 'Tanssit',
@@ -93,6 +154,19 @@ export const fi = {
   },
   pages: {
     events: {
+      eventList: {
+        pageTitle: 'Tanssiaistietokanta',
+        weHaveXEvents: {
+          zero: 'Kannassa ei ole tällä hetkellä yhtäkään tanssitapahtumaa.',
+          one: 'Kannassa on tällä hetkellä yksi tanssitapahtuma.',
+          many: 'Kannassa on tällä hetkellä __count__ tanssitapahtumaa.',
+        },
+        youcanEditDancesIn: 'Voit muokata tanssitapahtumien tansseja',
+        danceDatabaseLinkName: 'tanssitietokannasta',
+        danceEvents: 'tanssitapahtumia',
+        eventDeleteConfirmation: 'Haluatko varmasti poistaa tapahtuman __eventName__?',
+        createEvent: 'Uusi tapahtuma',
+      },
       createEvent: {
         newEventBreadcrumb: 'Uusi tapahtuma',
         newEvent: 'Luo uusi tapahtuma',
@@ -128,6 +202,11 @@ export const fi = {
         beginDate: 'Alkaa',
         endDate: 'Loppuu',
       },
+      eventProgramPage: {
+        pageTitle: 'Muokkaa tanssiaisohjelmaa',
+        backToEvent: 'Takaisin tapahtuman tietoihin',
+        loginRequired: 'Sinun täytyy olla kirjautunut käyttääksesi tätä sivua',
+      },
       danceCheatlist: {
         helpText: 'Rastita tähän, jos osaat tanssin. Näin ei tanssiaisissa tarvitse miettiä, mikä tanssi on kyseessä.',
         showHelpText: 'Näytä ohjeteksti',
@@ -145,7 +224,6 @@ export const fi = {
         workshopNameIsInParenthesis: 'Suluissa opetussetti',
       },
       danceInstructions: {
-        fetchDataFromWiki: 'Hae tietoja tanssiwikistä',
         clickInstructionsToEdit: 'Klikkaa ohjetta muokataksesi sitä, voit myös hakea tietoja tanssiwikistä klikkaamalla nappeja, jotka avautuvat kun tuot hiiren tanssin päälle. Kun ohjeet ovat mieleisesi, voit joko tulostaa tämän sivun tai valita ohjetekstit ja kopioida ne haluamaasi tekstinkäsittelyohjelmaan.',
         defaultStylingDescription: 'Ohjeissa on oletustyyli, jossa ensimmäinen kappale on kursivoitu. Tämän tarkoituksena on eritellä tanssin ja tanssikuvion lyhyt kuvaus lopusta ohjeesta ilman tilaa vievää otsikointia.',
         selectAndCopy: 'Kopioi ohjeet leikepöydälle',
@@ -167,7 +245,28 @@ export const fi = {
         infoTitle: 'Ohjelmanumero',
         danceSetTitle: 'Tanssisetti',
       },
-
     },
+    dances: {
+      danceList: {
+        pageTitle: 'Tanssit',
+        untitledDance: 'Nimetön tanssi #__number__',
+        createDance: 'Uusi tanssi',
+        danceCreated: 'Tanssi __name__ luotu',
+        uploadDance: 'Tuo tanssi tiedostosta',
+      },
+      dancePage: {
+        backToDanceList: 'Takaisin tanssilistaan',
+      },
+    },
+  },
+  common: {
+    emptySearch: 'Tyhjennä haku',
+    search: 'Hae...',
+    delete: 'Poista',
+    close: 'Sulje',
+    cancel: 'Peruuta',
+    save: 'Tallenna',
+    move: 'Siirrä',
+    operationFailed: 'Tietojen tallennus epäonnistui :('
   },
 } as const

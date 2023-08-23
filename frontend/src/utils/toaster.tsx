@@ -14,10 +14,10 @@ export function showToast(args : ToastProps) {
   return toaster ? toaster.show(args) : console.error('Cannot show toast: ', args.message)
 }
 
-export function showDefaultErrorToast(e : {message: string}) {
+export function showErrorToast(failMsg, e: {message: string}) {
   showToast({
     intent: 'danger',
-    message: `Tietojen tallennus epäonnistui :( Syy: ${e.message}`,
+    message: `${failMsg} ${e.message}`,
     isCloseButtonShown: true,
     timeout: 30000,
   })

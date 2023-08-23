@@ -2,7 +2,8 @@ import React  from 'react'
 import { MutationHookOptions, QueryHookOptions, QueryResult } from '@apollo/client'
 import { TypedDocumentNode } from '@graphql-typed-document-node/core'
 
-import {showDefaultErrorToast} from 'utils/toaster'
+import { useTranslation } from 'i18n'
+import {showErrorToast} from 'utils/toaster'
 
 import { Entity, ServiceName } from './types'
 
@@ -82,8 +83,9 @@ export function makeMutationHook<T, V>(
 ): (args?: MutationHookOptions<T, V>) => [(vars: V) => Promise<FetchResult<T>>, MutationResult<T>] {
   const { onCompleted, fireEvent } = options ?? {}
   return (args = {}) => {
+    const operationFailed = useTranslation('common.operationFailed')
     const options : MutationHookOptions<T, V> = {
-      onError: err => { showDefaultErrorToast(err) },
+      onError: err => { showErrorToast(operationFailed, err) },
       ...args,
       onCompleted: (data) => {
         if (fireEvent) {

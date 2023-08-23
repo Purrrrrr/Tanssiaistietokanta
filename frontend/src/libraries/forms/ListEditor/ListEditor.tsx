@@ -1,4 +1,4 @@
-import React, {useContext, useMemo} from 'react'
+import React, {useCallback, useContext} from 'react'
 import {
   useDroppable
 } from '@dnd-kit/core'
@@ -35,7 +35,7 @@ export function ListEditor<T, V extends Entity>({
     const Wrapper = isTable ? 'tr' : 'div'
     return <React.Fragment>
       {items.map((item, index) =>
-        <Wrapper key={item._id}><Component path={path} itemIndex={index} dragHandle={null}/></Wrapper>
+        <Wrapper key={item._id}><Component path={path} itemIndex={index} dragHandle={() => null}/></Wrapper>
       )}
     </React.Fragment>
   }
@@ -148,8 +148,8 @@ export function SortableItem<T, V>({itemType, acceptsTypes, id, path, onChangePa
   }
 
   const Wrapper = isTable ? 'tr' : 'div'
-  const dragHandle = useMemo(
-    () => <button type="button" className="bp5-button" ref={setActivatorNodeRef} style={{touchAction: 'none'}} {...listeners}><Icon icon="move" /></button>,
+  const dragHandle = useCallback(
+    (text) => <button type="button" aria-label={text} className="bp5-button" ref={setActivatorNodeRef} style={{touchAction: 'none'}} {...listeners}><Icon icon="move" /></button>,
     [listeners, setActivatorNodeRef]
   )
 

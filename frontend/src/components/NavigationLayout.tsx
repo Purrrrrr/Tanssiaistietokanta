@@ -1,6 +1,7 @@
 import React from 'react'
 
 import {BreadcrumbContext} from 'libraries/ui'
+import {T, useTranslation} from 'i18n'
 
 import DebugManager from './DebugManager'
 import {GlobalLoadingiState}  from './LoadingState'
@@ -29,8 +30,8 @@ function NavigationLayout({children}) {
           {children}
         </main>
         <footer>
-          Tanssitietokanta v. {process.env.REACT_APP_BUILD_TIME ?? 'DEV'}-{process.env.REACT_APP_COMMIT_REV ?? 'HEAD'}
-          <a href="https://raw.githubusercontent.com/Purrrrrr/Tanssiaistietokanta/main/frontend/LICENSE">&copy; Tanssitietokannan tekijät</a>
+          <T msg="app.title" /> v. {process.env.REACT_APP_BUILD_TIME ?? 'DEV'}-{process.env.REACT_APP_COMMIT_REV ?? 'HEAD'}
+          <LicenceLink />
           {process.env.NODE_ENV === 'development' &&  <DebugManager />}
         </footer>
       </div>
@@ -44,7 +45,11 @@ function navigationHidden() {
 }
 
 function SkipToMainContent() {
-  return <a id="skip-to-main-content" href="#main-content">Siirry pääsisältöön</a>
+  return <a id="skip-to-main-content" href="#main-content"><T msg="navigation.moveToContent" /></a>
+}
+
+function LicenceLink() {
+  return <a href={useTranslation('app.licenceLink')}>&copy; <T msg="app.copyright" /></a>
 }
 
 export default NavigationLayout

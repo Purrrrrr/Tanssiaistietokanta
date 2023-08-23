@@ -4,18 +4,18 @@ import {useNavigate} from 'react-router-dom'
 
 import { filterDances, useCreateDance, useDances } from 'services/dances'
 
-import {Button, Card, FormGroup, SearchBar} from 'libraries/ui'
+import {Button, Card, SearchBar} from 'libraries/ui'
 import {DanceEditor} from 'components/DanceEditor'
 import {useGlobalLoadingAnimation} from 'components/LoadingState'
 import {PageTitle} from 'components/PageTitle'
+import {useT, useTranslation} from 'i18n'
 import {showToast} from 'utils/toaster'
 import {uploadDanceFile} from 'utils/uploadDanceFile'
 
 import { DanceInput, DanceWithEvents } from 'types'
 
-const EMPTY_DANCE : DanceInput = {name: 'Uusi tanssi'}
-
 function DancesPage() {
+  const t = useT('pages.dances.danceList')
   const navigate = useNavigate()
   const [search, setSearch] = useState('')
   const [dances] = useDances()
@@ -32,31 +32,32 @@ function DancesPage() {
       navigate(id)
       showToast({
         intent: 'primary',
-        message: `Tanssi ${dance.name} luotu`,
+        message: t('danceCreated', {name: dance.name}),
       })
     }
   }
 
   return <>
-    <PageTitle>Tanssit</PageTitle>
-    <div style={{display: 'flex', alignItems: 'flex-start'}}>
-      <FormGroup inline label="Hae" labelFor="search-dances" >
-        <SearchBar id="search-dances" value={search} onChange={setSearch} />
-      </FormGroup>
-      <Button text="Uusi tanssi" onClick={() => doCreateDance(EMPTY_DANCE)}/>
+    <PageTitle>{t('pageTitle')}</PageTitle>
+    <div style={{marginBottom: 10, display: 'flex', alignItems: 'flex-start'}}>
+      <SearchBar id="search-dances" value={search} onChange={setSearch} placeholder={useTranslation('common.search')} emptySearchText={useTranslation('common.emptySearch')}/>
+      <Button text={t('createDance')} onClick={() => doCreateDance(emptyDance(t('untitledDance', {number: dances.length+1})))}/>
       <DanceUploader onUpload={(dance) => doCreateDance(dance)} />
     </div>
     <DanceList key={search} dances={filteredDances} />
   </>
 }
 
+function emptyDance(name: string): DanceInput {
+  return {name}
+}
 function DanceUploader({onUpload} : {onUpload: (d: DanceInput) => unknown}) {
   async function chooseFile() {
     const dance = await uploadDanceFile()
     if (dance) onUpload(dance)
   }
 
-  return <Button text="Tuo tanssi tiedostosta" onClick={chooseFile}/>
+  return <Button text={useTranslation('pages.dances.danceList.uploadDance')} onClick={chooseFile}/>
 }
 
 function DanceList({dances}) {

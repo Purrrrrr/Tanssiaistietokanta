@@ -4,18 +4,20 @@ import { useNavigate } from 'react-router-dom'
 import {AdminOnly} from 'services/users'
 
 import {AnchorButton, Breadcrumbs, Navbar } from 'libraries/ui'
+import {useTranslation} from 'i18n'
 
 import LoginForm from './LoginForm'
+
 
 function Navigation() {
   return <nav>
     <Navbar id="navigation">
       <Navbar.Group>
-        <Breadcrumbs/>
+        <Breadcrumbs label={useTranslation('navigation.breadcrumbs')}/>
       </Navbar.Group>
       <Navbar.Group align="right">
         <AdminOnly>
-          <NavButton href="/dances" text="Tanssitietokanta" />
+          <NavButton href="/dances" text={useTranslation('navigation.dances')} />
           <Navbar.Divider />
         </AdminOnly>
         <LoginForm />
@@ -27,7 +29,7 @@ function Navigation() {
 function NavButton({href, ...props}) {
   const navigate = useNavigate()
   return <AnchorButton minimal {...props} href={href}
-    onClick={(e) => {e.preventDefault(); navigate(href)}}
+    onClick={(e: React.MouseEvent) => {e.preventDefault(); navigate(href)}}
   />
 }
 

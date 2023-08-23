@@ -17,8 +17,8 @@ type PrefixedKey<P extends string> = KeyForPath<P, Translations>
 
 export type Translator<P extends Prefix = ''> = (key: PrefixedKey<P>, params?: TParams) => string
 
-export function useT<P extends Prefix>(
-  ...prefixes: (P | '')[]
+export function useT<P extends Prefix | ''>(
+  ...prefixes: P[]
 ): Translator<P>
 {
   const context = useBareT()
@@ -37,6 +37,13 @@ export function useT<P extends Prefix>(
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [context.locale, ...prefixes])
+}
+
+export function T({msg} : {msg: PrefixedKey<''>}): JSX.Element {
+  return useTranslation(msg) as unknown as JSX.Element
+}
+export function useTranslation(key: PrefixedKey<''>): string {
+  return useBareT().T(key)
 }
 
 export const useLocalization : () => Pick<ReturnType<typeof useBareT>, 'locale' | 'setLocale'> = useBareT

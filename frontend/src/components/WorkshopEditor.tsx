@@ -2,10 +2,10 @@ import React from 'react'
 
 import {usePatchWorkshop} from 'services/workshops'
 
-import {formFor, Input, patchStrategy, SyncStatus, TextArea, useAutosavingState} from 'libraries/forms'
+import {DragHandle, formFor, Input, patchStrategy, SyncStatus, TextArea, useAutosavingState} from 'libraries/forms'
 import {CssClass, Flex, FormGroup} from 'libraries/ui'
 import {DanceChooser} from 'components/widgets/DanceChooser'
-import {useT} from 'i18n'
+import {useT, useTranslation} from 'i18n'
 
 import {Event} from 'types'
 
@@ -87,12 +87,14 @@ function AbbreviationField({label, path, reservedAbbreviations}) {
   }
 }
 
-function DanceListItem({itemIndex, dragHandle}) {
+function DanceListItem(
+  {itemIndex, dragHandle}: {itemIndex: number, dragHandle: DragHandle}
+) {
   const t = useT('components.workshopEditor')
   const excludeFromSearch = useValueAt('dances')
   return <Flex className="danceItem">
     <Field label={t('dances')} labelStyle="hidden" path={`dances.${itemIndex}`} component={DanceChooser} componentProps={{excludeFromSearch}} />
-    {dragHandle}
+    {dragHandle(useTranslation('common.move'))}
     <RemoveItemButton path="dances" index={itemIndex} text="X" />
   </Flex>
 }

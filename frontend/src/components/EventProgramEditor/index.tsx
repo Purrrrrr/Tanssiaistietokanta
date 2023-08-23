@@ -2,14 +2,14 @@ import React, {useCallback, useMemo, useRef, useState} from 'react'
 
 import { useDance } from 'services/dances'
 
-import {ActionButton as Button, ClickToEdit, ListEditorContext, MarkdownEditor, MenuButton, SyncStatus} from 'libraries/forms'
+import {ActionButton as Button, ClickToEdit, DragHandle, ListEditorContext, MarkdownEditor, MenuButton, SyncStatus} from 'libraries/forms'
 import {Card, CssClass, Flex, HTMLTable} from 'libraries/ui'
 import {DanceEditor} from 'components/DanceEditor'
 import {LoadingState} from 'components/LoadingState'
 import {Duration} from 'components/widgets/Duration'
 import {DurationField} from 'components/widgets/DurationField'
 import {SlideStyleSelector} from 'components/widgets/SlideStyleSelector'
-import {Translator, useT} from 'i18n'
+import {Translator, useT, useTranslation} from 'i18n'
 import {guid} from 'utils/guid'
 
 import {DanceProgramPath, DanceSet, DanceSetPath, EventProgramRow, EventProgramSettings, IntervalMusicPath, ProgramItemPath, ProgramSectionPath} from './types'
@@ -25,11 +25,11 @@ import {
   IntervalMusicDefaultTextsSwitch,
   IntervalMusicSwitch,
   ListField,
-  newEventProgramItem,
   ProgramTypeIcon,
   RemoveItemButton,
   Switch,
   useAppendToList,
+  useCreateNewEventProgramItem,
   useEventProgramEditorForm,
   useOnChangeFor,
   useValueAt,
@@ -86,7 +86,7 @@ function IntroductoryInformation() {
   </Card>
 }
 
-const DanceSetEditor = React.memo(function DanceSetEditor({itemIndex, dragHandle} : {itemIndex: number, dragHandle: React.ReactNode}) {
+const DanceSetEditor = React.memo(function DanceSetEditor({itemIndex, dragHandle} : {itemIndex: number, dragHandle: DragHandle}) {
   const t = useT('components.eventProgramEditor')
   return <Card className="danceset">
     <Flex className="sectionTitleRow">
@@ -94,7 +94,7 @@ const DanceSetEditor = React.memo(function DanceSetEditor({itemIndex, dragHandle
         <Field labelStyle="hidden" label={t('fields.danceSetName')} path={`danceSets.${itemIndex}.title`} inline component={ClickToEdit} />
       </h2>
       <InheritedSlideStyleSelector path={`danceSets.${itemIndex}.titleSlideStyleId`} text={t('fields.titleStyle')} />
-      {dragHandle}
+      {dragHandle(useTranslation('common.move'))}
       <RemoveItemButton path="danceSets" index={itemIndex} className="delete" text={t('buttons.removeDanceSet')} />
     </Flex>
     <ProgramListEditor path={`danceSets.${itemIndex}`} />
@@ -111,6 +111,7 @@ function ProgramListEditor({path}: {path: ProgramSectionPath}) {
   const getType = useCallback((item: EventProgramRow) => item.item.__typename, [])
   const isIntroductionsSection = path.startsWith('introductions')
   const accepts = useMemo(() => isIntroductionsSection ? ['EventProgram'] : ['Dance', 'RequestedDance', 'EventProgram'], [isIntroductionsSection])
+  const newEventProgramItem = useCreateNewEventProgramItem()
   if (!programRow) return null
   const { program } = programRow
   const intervalMusicDuration = isIntroductionsSection
@@ -152,7 +153,7 @@ function ProgramListEditor({path}: {path: ProgramSectionPath}) {
               : <Button
                 text={t('buttons.addInfo')}
                 rightIcon={<ProgramTypeIcon type="EventProgram" />}
-                onClick={() => onAddItem(newEventProgramItem(t))}
+                onClick={() => onAddItem(newEventProgramItem)}
                 className="addInfo"
               />
             }
@@ -170,13 +171,14 @@ function ProgramListEditor({path}: {path: ProgramSectionPath}) {
 }
 
 interface ProgramItemEditorProps {
-  dragHandle: React.ReactNode
+  dragHandle: DragHandle
   path: `${ProgramSectionPath}.program`
   itemIndex: number
 }
 
 const ProgramItemEditor = React.memo(function ProgramItemEditor({dragHandle, path, itemIndex} : ProgramItemEditorProps) {
   const t = useT('components.eventProgramEditor')
+  const moveText = useTranslation('common.move')
   const itemPath = `${path}.${itemIndex}` as ProgramItemPath
   const item = useValueAt(itemPath)
 
@@ -196,7 +198,7 @@ const ProgramItemEditor = React.memo(function ProgramItemEditor({dragHandle, pat
       <Duration value={__typename !== 'RequestedDance' ? item.item.duration : 0} />
     </td>
     <td>
-      {dragHandle}
+      {dragHandle(moveText)}
       <InheritedSlideStyleSelector path={`${itemPath}.slideStyleId`} text={t('fields.style')} />
       <RemoveItemButton path={path} index={itemIndex} title={t('buttons.remove')} icon="cross" className="deleteItem" />
     </td>
@@ -342,7 +344,7 @@ export function IntervalMusicDescriptionEditor({path, noPreview}: {path: Interva
   </>
 }
 
-function DanceSetDuration({ program, intervalMusicDuration}) {
+function DanceSetDuration({ program, intervalMusicDuration}: { program: EventProgramRow[], intervalMusicDuration: number}) {
   const t = useT('components.eventProgramEditor')
   const pause = useValueAt('pauseBetweenDances')
   const duration = program.map(({item}) => item.duration ?? 0).reduce((y, x) => x+y, 0)
