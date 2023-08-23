@@ -1,6 +1,6 @@
 import React  from 'react'
 
-import {defaultSlideStyle, SlideStyle, useEventSlideStyles} from 'services/events'
+import {SlideStyle, useEventSlideStyles} from 'services/events'
 
 import {Selector} from 'libraries/forms'
 import {Icon, MenuItem} from 'libraries/ui'
@@ -19,12 +19,12 @@ export function SlideStyleSelector({
   value, onChange, text, inheritsStyles = false, inheritedStyleId = undefined, inheritedStyleName = undefined
 } : SlideStyleSelectorProps) {
   const t = useT('common')
-  const styles = useEventSlideStyles({
+  const {styles, defaultStyle} = useEventSlideStyles({
     useStyleInheritance: inheritsStyles,
     inheritedStyleId,
     inheritedStyleName,
   })
-  const style = styles.find(s => s.id === (value ?? null)) ?? defaultSlideStyle
+  const style = styles.find(s => s.id === (value ?? null)) ?? defaultStyle
   return <Selector<SlideStyle>
     selectedItem={style}
     filterable

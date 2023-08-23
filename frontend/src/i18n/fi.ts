@@ -25,7 +25,13 @@ export const fi = {
       category: 'Kategoria',
       instructions: 'Pidemmät tanssiohjeet printtiin',
       slideStyleId: 'Tanssiaisten diatyyli',
-    }
+    },
+    slideStyles: {
+      default: 'Valkoinen',
+      dark: 'Tumma',
+      flowerBig: 'Kukka iso __number__',
+      flowerFramed: 'Kukka reunus __number__',
+    },
   },
   components: {
     slide: {
