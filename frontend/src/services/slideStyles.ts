@@ -5,7 +5,6 @@ export interface SlideStyle {
   name: string
   styleName: string
   color: string
-  background: string
 }
 
 interface UseEventSlideStylesOptions {
@@ -45,21 +44,21 @@ export function useEventSlideStyles(
 function useSlideStyles() {
   const t = useT('domain.slideStyles')
   const styles: SlideStyle[] = [
-    {styleName: 'default', name: t('default'), background: '#fff', color: '#000'},
-    { styleName: 'dark', name: t('dark'), background: '#000', color: '#fff' },
-    { styleName: 'flower-title1', name: t('flowerBig', {number: 1}), background: '#F681BD', color: '#000' },
-    { styleName: 'flower-title2', name: t('flowerBig', {number: 2}), background: '#C31C6D', color: '#000' },
-    { styleName: 'flower-title3', name: t('flowerBig', {number: 3}), background: '#DF2300', color: '#000' },
-    { styleName: 'flower-title4', name: t('flowerBig', {number: 4}), background: '#DC3D5F', color: '#000' },
-    { styleName: 'flower-title5', name: t('flowerBig', {number: 5}), background: '#F37ECF', color: '#000' },
-    { styleName: 'flower-title6', name: t('flowerBig', {number: 6}), background: '#DC4B8E', color: '#000' },
-    { styleName: 'flower-frame1', name: t('flowerFramed', {number: 1}), background: '#B980A0', color: '#000' },
-    { styleName: 'flower-frame2', name: t('flowerFramed', {number: 2}), background: '#DC918C', color: '#000' },
-    { styleName: 'flower-frame3', name: t('flowerFramed', {number: 3}), background: '#97278D', color: '#000' },
-    { styleName: 'flower-frame4', name: t('flowerFramed', {number: 4}), background: '#FEC900', color: '#000' },
-    { styleName: 'flower-frame5', name: t('flowerFramed', {number: 5}), background: '#FE6BBA', color: '#000' },
-    { styleName: 'flower-frame6', name: t('flowerFramed', {number: 6}), background: '#F02735', color: '#000' },
-    { styleName: 'flower-frame7', name: t('flowerFramed', {number: 7}), background: '#DC91CB', color: '#000' },
+    {styleName: 'default', name: t('default'), color: '#000'},
+    { styleName: 'dark', name: t('dark'), color: '#fff' },
+    { styleName: 'flower-title1', name: t('flowerBig', {number: 1}), color: '#000' },
+    { styleName: 'flower-title2', name: t('flowerBig', {number: 2}), color: '#000' },
+    { styleName: 'flower-title3', name: t('flowerBig', {number: 3}), color: '#000' },
+    { styleName: 'flower-title4', name: t('flowerBig', {number: 4}), color: '#000' },
+    { styleName: 'flower-title5', name: t('flowerBig', {number: 5}), color: '#000' },
+    { styleName: 'flower-title6', name: t('flowerBig', {number: 6}), color: '#000' },
+    { styleName: 'flower-frame1', name: t('flowerFramed', {number: 1}), color: '#000' },
+    { styleName: 'flower-frame2', name: t('flowerFramed', {number: 2}), color: '#000' },
+    { styleName: 'flower-frame3', name: t('flowerFramed', {number: 3}), color: '#000' },
+    { styleName: 'flower-frame4', name: t('flowerFramed', {number: 4}), color: '#000' },
+    { styleName: 'flower-frame5', name: t('flowerFramed', {number: 5}), color: '#000' },
+    { styleName: 'flower-frame6', name: t('flowerFramed', {number: 6}), color: '#000' },
+    { styleName: 'flower-frame7', name: t('flowerFramed', {number: 7}), color: '#000' },
   ].map(style => ({...style, id: style.styleName}))
 
   return {defaultStyle: styles[0], styles}
