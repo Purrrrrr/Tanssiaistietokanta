@@ -35,7 +35,7 @@
     "socket.io-client": "^4.6.1",
     "talkr": "^3.4.0",
     "util": "^0.12.4",
-    "yup": "^0.28.1"
+    "yup": "^1.2.0"
   },
   "scripts": {
     "lint": "eslint --fix src",

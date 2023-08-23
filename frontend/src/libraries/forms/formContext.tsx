@@ -1,7 +1,9 @@
 import React, { useContext, useEffect, useMemo, useRef } from 'react'
 import * as L from 'partial.lenses'
 
-import {ChangeListener, Conflict, ConflictMap, formStringDefaults, FormStrings, LabelStyle, NewValue, toArrayPath, TypedStringPath, Version} from './types'
+import {ChangeListener, Conflict, ConflictMap, LabelStyle, NewValue, toArrayPath, TypedStringPath, Version} from './types'
+
+import {formStringDefaults, FormStrings} from './strings'
 
 export const FormValidityContext = React.createContext<boolean>(true)
 export function useFormIsValid(): boolean {
@@ -12,7 +14,7 @@ export interface FormMetadataContextType<T> {
   getValueAt: <V>(path: TypedStringPath<V, T>) => V
   getConflictAt: <V>(path: TypedStringPath<V, T>) => Conflict<V> | null
   onResolveConflict: <V>(path: TypedStringPath<V, T>, version: Version) => void
-  getStrings: () => Partial<FormStrings> | undefined
+  getStrings: () => FormStrings
   subscribeToChanges: (f: ChangeListener) => (() => void)
   onChangePath: <V>(p: TypedStringPath<V, T>, t: NewValue<V>) => unknown
   readOnly: boolean
@@ -28,7 +30,7 @@ export function useCreateFormMetadataContext<T>({value, onChange, labelStyle, in
   const conflictsRef = useRef<ConflictMap<T>>()
   conflictsRef.current = conflicts
   const stringsRef = useRef<FormStrings>()
-  stringsRef.current = strings
+  stringsRef.current = strings ?? formStringDefaults
 
   const metadataContext = useMemo(
     () => {
@@ -67,8 +69,5 @@ export function useFormMetadata<T>() {
 }
 
 export function useFormStrings(): FormStrings {
-  return {
-    ...formStringDefaults,
-    ...useFormMetadata().getStrings()
-  }
+  return useFormMetadata().getStrings()
 }

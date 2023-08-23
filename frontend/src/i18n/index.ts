@@ -5,6 +5,7 @@ import { KeyForPath, NoEmptyTranslations, PrefixPath } from './types'
 
 import { fi } from './fi'
 
+export * from './dateTime'
 export { Talkr as TranslationContext } from 'talkr'
 
 export const translations = {

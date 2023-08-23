@@ -3,6 +3,7 @@ import classNames from 'classnames'
 
 import {Icon, IconName, Intent} from 'libraries/ui'
 
+import { useFormStrings } from './formContext'
 import {SyncState} from './useAutosavingState'
 
 import './SyncStatus.sass'
@@ -19,12 +20,6 @@ const iconIntents : Record<SyncState, Intent> = {
   CONFLICT: 'warning',
   INVALID: 'danger',
 }
-const texts : Record<SyncState, string> = {
-  IN_SYNC: 'Tallennettu',
-  MODIFIED_LOCALLY: 'Tallennetaan...',
-  CONFLICT: 'Synkronointivirhe',
-  INVALID: 'Tiedoissa virheitä, tallennus pysäytetty',
-}
 const autoHideText: Record<SyncState, boolean> = {
   IN_SYNC: true,
   MODIFIED_LOCALLY: true,
@@ -38,6 +33,7 @@ export function SyncStatus(
 ) {
   const previousState = useRef<SyncState | null>(null)
   const [changed, setChanged] = useState(false)
+  const texts = useFormStrings().syncState
   useEffect(() => {
     if (previousState.current !== state && previousState.current !== null) {
       setChanged(true)

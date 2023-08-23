@@ -1,81 +1,45 @@
 import {useMemo} from 'react'
+import {array, number, Schema, string} from 'yup'
 
-import {useDeepCompareMemoize} from './utils/useDeepCompareMemoize'
-import validators from './utils/yup'
+import { useFormStrings } from '../formContext'
 
-type Type = 'list' | 'number' | 'text' | 'email';
+type Type = 'list' | 'number' | 'text' | 'email'
 
 export interface ValidationProps {
   type?: Type,
   required?: boolean,
-  min?: number,
-  minLength?: number,
-  max?: number,
-  maxLength?: number,
-  pattern?: string,
-  errorMessages?: Record<string, string | ((argument: {value: unknown, values: unknown}) => string)>,
-  validate?: Record<string, unknown>,
+  schema?: Schema
 }
 
-export function useSchema(schema : ValidationProps) {
-  const normalizedSchema = useDeepCompareMemoize(normalize(schema))
+export function useSchema(schemaDef: ValidationProps) {
+  const { type, required, schema } = schemaDef
+  const messages = useFormStrings().validation
   return useMemo(
-    () => getSchema(normalizedSchema),
-    [normalizedSchema]
+    () => {
+      if (schema) return schema
+      if (!type && !required) return null
+
+      return required
+        ? baseValidator(type).required(value => Array.isArray(value)
+          ? messages.requiredList
+          : messages.required
+        )
+        : baseValidator(type).nullable()
+    },
+    [type, required, schema, messages.required, messages.requiredList]
   )
 }
 
-export function stripValidationProps<P extends object>(props : P) : Omit<P, 'validate' | 'errorMessages'> {
-  const ret = {...props}
-  if ('validate' in ret) delete ret['validate']
-  if ('errorMessages' in ret) delete ret['errorMessages']
-  return ret
-}
-
-function normalize({type, required, min, minLength, max, maxLength, pattern, errorMessages, validate} : ValidationProps) {
-  return {
-    type: normalizeType(type),
-    required,
-    min: min ?? minLength,
-    max: max ?? maxLength,
-    matches: pattern,
-    email: type === 'email' ? true : undefined,
-    errorMessages: errorMessages ?? {},
-    ...validate
-  }
-}
-
-function normalizeType(type ?: Type) {
+function baseValidator(type?: Type) {
   switch(type) {
     case 'list':
-      return 'array'
+      return array()
     case 'number':
-      return 'number'
+      return number()
+    case 'email':
+      return string().email()
     case 'text':
     default:
-      return 'string'
+      return string()
   }
-}
-
-function getSchema({type, errorMessages, ...spec}) {
-  let schema = validators[type]()
-  let unvalidated = true
-  for(const [key, val] of Object.entries(spec)) {
-    if (val === undefined) continue
-    if (!schema[key]) continue
-    unvalidated = false
-
-    const args = noArguments[key] ? [] : [val]
-    const message = errorMessages[key]
-    if (message) {
-      args.push(message)
-    }
-    schema = schema[key](...args)
-  }
-  return unvalidated ? null : schema
-}
-
-const noArguments = {
-  required: true,
-  email: true
 }

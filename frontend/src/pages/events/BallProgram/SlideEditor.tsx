@@ -108,7 +108,6 @@ interface ProgramItemProps {
 
 const ProgramItem = React.memo(function ProgramEditor({dragHandle, path, itemIndex} : ProgramItemProps) {
   const t = useT('pages.events.ballProgram', 'components.eventProgramEditor')
-  const moveText = useTranslation('common.move')
   const itemPath = `${path}.${itemIndex}` as ProgramItemPath
   const item = useValueAt(itemPath)
 
@@ -122,7 +121,7 @@ const ProgramItem = React.memo(function ProgramEditor({dragHandle, path, itemInd
     </div>
     <div><Duration value={__typename === 'RequestedDance' ? 0 : item.item.duration} /></div>
     <div>
-      {dragHandle(moveText)}
+      {dragHandle}
       <RemoveItemButton path={path} index={itemIndex} title={t('buttons.remove')} icon="cross" className="deleteItem" />
     </div>
   </Flex>

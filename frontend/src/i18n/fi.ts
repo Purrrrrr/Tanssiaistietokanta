@@ -14,6 +14,19 @@ export const fi = {
     dances: 'Tanssit',
     eventProgram: 'Tanssiaisohjelma',
   },
+  validationMessage: {
+    default: 'Tarkista arvo',
+    required: 'Täytä kenttä',
+    requiredList: 'Kentän täytyy sisältää ainakin yksi arvo',
+    /* eslint-disable no-template-curly-in-string */
+    minLength: 'Syötä ainakin ${min} merkkiä',
+    maxLength: 'Syötä korkeintaan ${max} merkkiä',
+    min: 'Pitää olla ainakin ${min}',
+    max: 'Saa olla korkeintaan ${max}',
+    /* eslint-enable no-template-curly-in-string */
+  },
+  dateFormat: 'dd.MM.yyyy',
+  dateTimeFormat: 'dd.MM.yyyy HH:mm',
   domain: {
     dance: {
       name: 'Nimi',

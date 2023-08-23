@@ -10,7 +10,7 @@ import {useGlobalLoadingAnimation} from 'components/LoadingState'
 import {DeleteButton} from 'components/widgets/DeleteButton'
 import {DurationField} from 'components/widgets/DurationField'
 import {LinkMenuItem} from 'components/widgets/LinkMenuItem'
-import { useT, useTranslation } from 'i18n'
+import { useT } from 'i18n'
 
 import {Dance, DanceWithEvents} from 'types'
 

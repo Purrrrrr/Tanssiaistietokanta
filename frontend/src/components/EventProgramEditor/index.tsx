@@ -9,7 +9,7 @@ import {LoadingState} from 'components/LoadingState'
 import {Duration} from 'components/widgets/Duration'
 import {DurationField} from 'components/widgets/DurationField'
 import {SlideStyleSelector} from 'components/widgets/SlideStyleSelector'
-import {Translator, useT, useTranslation} from 'i18n'
+import {Translator, useT} from 'i18n'
 import {guid} from 'utils/guid'
 
 import {DanceProgramPath, DanceSet, DanceSetPath, EventProgramRow, EventProgramSettings, IntervalMusicPath, ProgramItemPath, ProgramSectionPath} from './types'
@@ -94,7 +94,7 @@ const DanceSetEditor = React.memo(function DanceSetEditor({itemIndex, dragHandle
         <Field labelStyle="hidden" label={t('fields.danceSetName')} path={`danceSets.${itemIndex}.title`} inline component={ClickToEdit} />
       </h2>
       <InheritedSlideStyleSelector path={`danceSets.${itemIndex}.titleSlideStyleId`} text={t('fields.titleStyle')} />
-      {dragHandle(useTranslation('common.move'))}
+      {dragHandle}
       <RemoveItemButton path="danceSets" index={itemIndex} className="delete" text={t('buttons.removeDanceSet')} />
     </Flex>
     <ProgramListEditor path={`danceSets.${itemIndex}`} />
@@ -178,7 +178,6 @@ interface ProgramItemEditorProps {
 
 const ProgramItemEditor = React.memo(function ProgramItemEditor({dragHandle, path, itemIndex} : ProgramItemEditorProps) {
   const t = useT('components.eventProgramEditor')
-  const moveText = useTranslation('common.move')
   const itemPath = `${path}.${itemIndex}` as ProgramItemPath
   const item = useValueAt(itemPath)
 
@@ -198,7 +197,7 @@ const ProgramItemEditor = React.memo(function ProgramItemEditor({dragHandle, pat
       <Duration value={__typename !== 'RequestedDance' ? item.item.duration : 0} />
     </td>
     <td>
-      {dragHandle(moveText)}
+      {dragHandle}
       <InheritedSlideStyleSelector path={`${itemPath}.slideStyleId`} text={t('fields.style')} />
       <RemoveItemButton path={path} index={itemIndex} title={t('buttons.remove')} icon="cross" className="deleteItem" />
     </td>

@@ -1,4 +1,5 @@
-import React from 'react'
+import React, {useMemo} from 'react'
+import {string} from 'yup'
 
 import {usePatchWorkshop} from 'services/workshops'
 
@@ -69,22 +70,32 @@ export function WorkshopEditor({workshop: workshopInDatabase, reservedAbbreviati
 
 function AbbreviationField({label, path, reservedAbbreviations}) {
   const t = useT('components.workshopEditor')
+  const maxLenErrorMsg = useTranslation('validationMessage.maxLength')
+  const schema = useMemo(
+    () => {
+      return string()
+        .notOneOf(reservedAbbreviations, getAbbreviationTakenError)
+        .nullable()
+        .max(3, maxLenErrorMsg)
+
+      function getAbbreviationTakenError({value, values}) {
+        return t(
+          'abbreviationTaken',
+          {abbreviations: values, abbreviation: value}
+        )
+      }
+    }
+    ,
+    [reservedAbbreviations, maxLenErrorMsg, t]
+  )
+
   return <Field
     path={path}
     component={Input}
     label={label}
+    schema={schema}
     helperText={t('abbreviationHelp')}
-    maxLength={3}
-    validate={{notOneOf: reservedAbbreviations, nullable: true}}
-    errorMessages={{notOneOf: getAbbreviationTakenError}}
   />
-
-  function getAbbreviationTakenError({value, values}) {
-    return t(
-      'abbreviationTaken',
-      {abbreviations: values, abbreviation: value}
-    )
-  }
 }
 
 function DanceListItem(
@@ -94,7 +105,7 @@ function DanceListItem(
   const excludeFromSearch = useValueAt('dances')
   return <Flex className="danceItem">
     <Field label={t('dances')} labelStyle="hidden" path={`dances.${itemIndex}`} component={DanceChooser} componentProps={{excludeFromSearch}} />
-    {dragHandle(useTranslation('common.move'))}
+    {dragHandle}
     <RemoveItemButton path="dances" index={itemIndex} text="X" />
   </Flex>
 }

@@ -1,4 +1,4 @@
-import React, {useCallback, useContext} from 'react'
+import React, {useContext, useMemo} from 'react'
 import {
   useDroppable
 } from '@dnd-kit/core'
@@ -13,6 +13,7 @@ import {Icon} from 'libraries/ui'
 
 import {Entity, ListEditorDroppableData, ListEditorItemData, ListItemComponent} from './types'
 
+import { useFormStrings } from '../formContext'
 import {FieldComponentProps, OnChangeHandler, TypedStringPath} from '../types'
 import {ListEditorContext, ListEditorMoveContext} from './ListEditorContext'
 
@@ -35,7 +36,7 @@ export function ListEditor<T, V extends Entity>({
     const Wrapper = isTable ? 'tr' : 'div'
     return <React.Fragment>
       {items.map((item, index) =>
-        <Wrapper key={item._id}><Component path={path} itemIndex={index} dragHandle={() => null}/></Wrapper>
+        <Wrapper key={item._id}><Component path={path} itemIndex={index} dragHandle={null}/></Wrapper>
       )}
     </React.Fragment>
   }
@@ -133,6 +134,7 @@ export function SortableItem<T, V>({itemType, acceptsTypes, id, path, onChangePa
       component: Component as ListItemComponent<unknown, unknown>,
     } satisfies ListEditorItemData,
   })
+  const {moveItem} = useFormStrings()
 
   const scale = isDragging ? 1.01 : 1
 
@@ -148,8 +150,8 @@ export function SortableItem<T, V>({itemType, acceptsTypes, id, path, onChangePa
   }
 
   const Wrapper = isTable ? 'tr' : 'div'
-  const dragHandle = useCallback(
-    (text) => <button type="button" aria-label={text} className="bp5-button" ref={setActivatorNodeRef} style={{touchAction: 'none'}} {...listeners}><Icon icon="move" /></button>,
+  const dragHandle = useMemo(
+    () => <button type="button" aria-label={moveItem} className="bp5-button" ref={setActivatorNodeRef} style={{touchAction: 'none'}} {...listeners}><Icon icon="move" /></button>,
     [listeners, setActivatorNodeRef]
   )
 

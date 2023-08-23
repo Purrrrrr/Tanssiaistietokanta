@@ -3,14 +3,16 @@ import { LocaleUtils } from 'react-day-picker'
 import {DateInput, DateRangeInput} from '@blueprintjs/datetime'
 import { format, parse } from 'date-fns'
 
-import {dateFormat, dateTimeFormat} from 'libraries/ui'
-
 import {Field, useFieldConflictData, useFieldData} from '../Field'
 import {FieldContainer} from '../FieldContainer'
+import { useFormStrings } from '../formContext'
 import { useFieldValueProps } from '../hooks'
 import {Conflict, Deleted, FieldComponentProps, FieldPropsWithoutComponent} from '../types'
 
 import './dateTime.css'
+
+export const dateFormat = 'dd.MM.yyyy'
+export const dateTimeFormat = 'dd.MM.yyyy HH:mm'
 
 const referenceDate = new Date('2000-01-01T00:00:00.000')
 
@@ -29,9 +31,8 @@ export interface DateFieldInputProps extends FieldComponentProps<string, HTMLInp
   maxDate?: string | Date | undefined
 }
 export function DateFieldInput({value, onChange, inline, readOnly, id, showTime, minDate, maxDate, ...props} : DateFieldInputProps) {
-  const valueFormat = showTime ? dateTimeFormat : dateFormat
   return <DateInput
-    {...commonProps}
+    {...useCommonProps(showTime)}
     disabled={readOnly}
     inputProps={{
       id,
@@ -39,8 +40,6 @@ export function DateFieldInput({value, onChange, inline, readOnly, id, showTime,
     minDate={toDate(minDate) ?? defaultMin}
     maxDate={toDate(maxDate) ?? defaultMax}
     timePrecision={showTime ? 'minute' : undefined}
-    formatDate={date => format(date, valueFormat) }
-    parseDate={date => parse(date, valueFormat, referenceDate)}
     value={value || null}
     canClearSelection={false}
     onChange={value => onChange(value ?? '')}
@@ -70,8 +69,6 @@ export function DateRangeField<T>(
     ...rest
   }: DateRangeFieldProps<T>
 ) {
-  const valueFormat = showTime ? dateTimeFormat : dateFormat
-
   const beginDataProps = useFieldValueProps<T, string>(beginPath)
   const endDataProps = useFieldValueProps<T, string>(endPath)
   const { containerProps } = useFieldData(id, null, {label, labelStyle, labelInfo, inline, helperText})
@@ -115,7 +112,7 @@ export function DateRangeField<T>(
   )
 
   return <DateRangeInput
-    {...commonProps}
+    {...useCommonProps(showTime)}
     disabled={beginFieldProps.readOnly || endFieldProps.readOnly}
     allowSingleDayRange={allowSingleDayRange}
     shortcuts={false}
@@ -133,8 +130,6 @@ export function DateRangeField<T>(
     minDate={toDate(minDate) ?? defaultMin}
     maxDate={toDate(maxDate) ?? defaultMax}
     timePrecision={showTime ? 'minute' : undefined}
-    formatDate={date => format(date, valueFormat) }
-    parseDate={date => parse(date, valueFormat, referenceDate)}
     value={[toDate(beginDataProps.value) ?? null, toDate(endDataProps.value) ?? null]}
     onChange={([start, end]) => {
       beginDataProps.onChange(toISOString(start, showTime))
@@ -159,59 +154,33 @@ function toISOString(value: Date | null, showTime?: boolean): string {
     : format(value, 'yyyy-MM-dd')
 }
 
-const MONTHS = [
-  'tammikuu',
-  'helmikuu',
-  'maaliskuu',
-  'huhtikuu',
-  'toukokuu',
-  'kesäkuu',
-  'heinäkuu',
-  'elokuu',
-  'syyskuu',
-  'lokakuu',
-  'marraskuu',
-  'joulukuu',
-] as [string, string, string, string, string, string, string, string, string, string, string, string]
-const WEEKDAYS_SHORT = [
-  'ma',
-  'ti',
-  'ke',
-  'to',
-  'pe',
-  'la',
-  'su',
-]
+function useCommonProps(showTime?: boolean) {
+  const strings = useFormStrings().dateTime
+  const firstDayOfWeek = strings.shortWeekdays.indexOf(strings.firstDayOfWeek)
+  const {months, shortWeekdays, invalidDateMessage, outOfRangeMessage, overlappingDatesMessage} = strings
+  const valueFormat = showTime ? strings.dateTimeFormat : strings.dateFormat
 
-function formatMonthTitle(d) {
-  return `${MONTHS[d.getMonth()]} ${d.getFullYear()}`
-}
+  function formatMonthTitle(d: Date) {
+    return `${months[d.getMonth()]} ${d.getFullYear()}`
+  }
 
-function formatWeekdayShort(i) {
-  return WEEKDAYS_SHORT[i]
-}
+  function formatWeekday(i: number) {
+    return shortWeekdays[i]
+  }
 
-function formatWeekdayLong(i) {
-  return WEEKDAYS_SHORT[i]
-}
-
-function getFirstDayOfWeek() {
-  return 0
-}
-
-const localeUtils = {
-  ...LocaleUtils,
-  //formatDay,
-  formatMonthTitle,
-  formatWeekdayShort,
-  formatWeekdayLong,
-  getFirstDayOfWeek,
-  getMonths: () => { return MONTHS },
-}
-
-const commonProps = {
-  localeUtils,
-  invalidDateMessage: 'Epäkelpo päivämäärä',
-  outOfRangeMessage: 'Sallitun alueen ulkopuolella',
-  overlappingDatesMessage: 'Päällekkäinen päivämäärä',
+  return {
+    localeUtils: {
+      ...LocaleUtils,
+      formatMonthTitle,
+      formatWeekdayShort: formatWeekday,
+      formatWeekdayLong: formatWeekday,
+      getFirstDayOfWeek: () => firstDayOfWeek,
+      getMonths: () => months as [string, string, string, string, string, string, string, string, string, string, string, string,],
+    },
+    invalidDateMessage,
+    outOfRangeMessage,
+    overlappingDatesMessage,
+    formatDate: date => format(date, valueFormat),
+    parseDate: date => parse(date, valueFormat, referenceDate),
+  }
 }

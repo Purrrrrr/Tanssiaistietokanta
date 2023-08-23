@@ -1,8 +1,9 @@
 import React, { useEffect, useRef } from 'react'
 
-import { ConflictMap, FormStrings, OnChangeHandler } from './types'
+import { ConflictMap, OnChangeHandler } from './types'
 
 import { FormMetadataContext, FormMetadataContextType, FormValidityContext, useCreateFormMetadataContext} from './formContext'
+import { FormStrings } from './strings'
 import {useValidationResult} from './validation'
 
 const defaultLabelStyle = 'above'

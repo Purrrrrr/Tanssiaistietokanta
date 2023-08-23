@@ -5,13 +5,13 @@ import {AdminOnly} from 'services/users'
 import {useCreateWorkshop, useDeleteWorkshop} from 'services/workshops'
 
 import {DateRangeField, formFor, patchStrategy, SyncStatus, useAutosavingState} from 'libraries/forms'
-import {Button, Card, Collapse, formatDate} from 'libraries/ui'
+import {Button, Card, Collapse} from 'libraries/ui'
 import {useGlobalLoadingAnimation} from 'components/LoadingState'
 import {PageTitle} from 'components/PageTitle'
 import {DeleteButton} from 'components/widgets/DeleteButton'
 import {NavigateButton} from 'components/widgets/NavigateButton'
 import {WorkshopEditor} from 'components/WorkshopEditor'
-import {useT} from 'i18n'
+import {useFormatDate, useT} from 'i18n'
 
 import {Event, EventProgram as EventProgramType} from 'types'
 
@@ -39,6 +39,7 @@ export default function EventPage({event}: {event: Event}) {
 function EventDetails({event}: {event: Event}) {
   const [showEditor, setShowEditor] = useState(false)
   const t = useT('pages.events.eventPage')
+  const formatDate = useFormatDate()
   return <>
     <p>
       {t('eventDate')}: {formatDate(new Date(event.beginDate))} - {formatDate(new Date(event.endDate))}

@@ -10,7 +10,7 @@ export type ListItemComponent<T, V> = React.ComponentType<{
   dragHandle: DragHandle
 }>
 
-export type DragHandle = (text: string) => React.ReactNode
+export type DragHandle = React.ReactNode
 
 export interface ListEditorDroppableData {
   acceptsTypes?: string[]

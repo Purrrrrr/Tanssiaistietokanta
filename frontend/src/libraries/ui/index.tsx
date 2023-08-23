@@ -12,7 +12,6 @@ import {
   Spinner,
 } from '@blueprintjs/core'
 import classNames from 'classnames'
-import { format } from 'date-fns'
 import MarkdownToJsx from 'markdown-to-jsx'
 
 import './ui.css'
@@ -127,13 +126,3 @@ const markdownComponents = {
   QR: ({size, value, ...props}) => <QRCode {...props} value={value} size={parseInt(size, 10)} />,
 }
 Markdown.defaultOptions = { overrides: markdownComponents }
-
-export const dateFormat = 'dd.MM.yyyy'
-export const dateTimeFormat = 'dd.MM.yyyy HH:mm'
-
-export function formatDate(date: Date) {
-  return format(date, dateFormat)
-}
-export function formatDateTime(date: Date) {
-  return format(date, dateTimeFormat)
-}
