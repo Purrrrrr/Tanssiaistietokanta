@@ -91,9 +91,9 @@ function ListEditorItems<T, V extends Entity>({items, itemType, acceptsTypes, pa
       itemType={activeData.type}
       acceptsTypes={activeData.acceptsTypes}
       path={activeData.path}
-      onChangePath={activeData.onChangePath as OnChangeHandler<any>}
+      onChangePath={activeData.onChangePath as OnChangeHandler<V[]>}
       itemIndex={activeData.itemIndex}
-      component={activeData.component as ListItemComponent<any, any>}
+      component={activeData.component as ListItemComponent<any, V>}
       isTable={isTable}
     />)
   }
@@ -152,7 +152,7 @@ export function SortableItem<T, V>({itemType, acceptsTypes, id, path, onChangePa
   const Wrapper = isTable ? 'tr' : 'div'
   const dragHandle = useMemo(
     () => <button type="button" aria-label={moveItem} className="bp5-button" ref={setActivatorNodeRef} style={{touchAction: 'none'}} {...listeners}><Icon icon="move" /></button>,
-    [listeners, setActivatorNodeRef]
+    [listeners, setActivatorNodeRef, moveItem]
   )
 
   return (

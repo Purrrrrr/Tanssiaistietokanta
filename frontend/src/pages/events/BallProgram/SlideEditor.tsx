@@ -39,7 +39,6 @@ export function SlideEditor({slide, eventId, eventProgram}: SlideEditorProps) {
   const {formProps, state} = useEventProgramEditorForm(eventId, eventProgram)
   const isDance = slide.slideContent?.type === 'dance'
 
-
   return <div>
     <Form {...formProps}>
       <SectionCard>
@@ -49,7 +48,8 @@ export function SlideEditor({slide, eventId, eventProgram}: SlideEditorProps) {
         }
         <SlideStyleEditor editorData={slide.editorData} />
 
-        {isDance && <Field label={t('dance')} path={`${slide.editorData.path}.item` as any} component={DanceProgramChooser} />}
+        {isDance && slide.editorData.type === 'ProgramItem' &&
+          <Field label={t('dance')} path={`${slide.editorData.path}.item`} component={DanceProgramChooser} />}
       </SectionCard>
       <SlideContentEditor editorData={slide.editorData} slideContent={slide.slideContent} />
     </Form>

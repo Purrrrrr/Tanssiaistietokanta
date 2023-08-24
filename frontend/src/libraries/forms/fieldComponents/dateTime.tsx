@@ -95,6 +95,7 @@ export function DateRangeField<T>(
   const endConflictData = useFieldConflictData<T, string>(endPath, renderConflictItem(endDataProps.onChange))
 
   //Complete hack to allow adding all the labels to the DOM correctly
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const containerComponent = React.forwardRef<HTMLDivElement, any>(
     ({children, ...props}, ref) => {
       return <div ref={ref} {...props} className={`dateRangeInputContainer ${containerProps.inline ? 'dateRangeInputContainer-inline' : 'dateRangeInputContainer-block'} ${props.className}`}>
@@ -125,6 +126,7 @@ export function DateRangeField<T>(
       className: 'bp5-fill',
     }}
     popoverProps={{
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       targetTagName: containerComponent as any
     }}
     minDate={toDate(minDate) ?? defaultMin}
