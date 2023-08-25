@@ -3,9 +3,7 @@
   "port": 8082,
   "public": "./public/",
   "origins": [
-    "https://tanssit.purr.dy.fi",
-    "http://localhost:8080",
-    "http://localhost:3000"
+    "https://tanssit.purr.dy.fi"
   ],
   "paginate": {
     "default": 10,

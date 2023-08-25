@@ -27,16 +27,25 @@ app.use(errorHandler())
 app.use(parseAuthentication())
 app.use(bodyParser())
 app.use(graphqlServiceMiddleware)
+console.log(allowLocalhostOnDev(app.get('origins')))
 
 // Configure services and transports
 app.configure(rest())
 app.configure(
   socketio({
     cors: {
-      origin: app.get('origins')
+      origin: allowLocalhostOnDev(app.get('origins'))
     }
   })
 )
+function allowLocalhostOnDev(origins: string[] | undefined) {
+  if (process.env.CORS_ALLOW_LOCALHOST !== 'true') return origins
+  const localhost = /^http:\/\/localhost:[0-9]{2,4}$/
+  return origins ? [
+    ...origins,
+    localhost
+  ] : localhost
+}
 app.configure(channels)
 app.configure(services)
 
