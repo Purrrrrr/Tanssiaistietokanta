@@ -288,4 +288,4 @@ export const fi = {
     move: 'Siirrä',
     operationFailed: 'Tietojen tallennus epäonnistui :('
   },
-} as const
+}

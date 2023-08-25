@@ -1,10 +1,4 @@
-import { Autocomplete } from 'talkr'
-
-export type NoEmptyTranslations<T> = T extends object
-  ? {[K in keyof T]: NoEmptyTranslations<T[K]>}
-  : T extends ''
-    ? never
-    : T
+import { Autocomplete, TParams } from 'talkr'
 
 export type PrefixPath<T> = (T extends object
   ? ('' | {
@@ -21,3 +15,5 @@ export type KeyForPath<Path extends string, T> = Path extends ''
     : Path extends `${infer Prefix extends Exclude<keyof T, symbol>}.${infer Rest}`
       ? KeyForPath<Rest, T[Prefix]>
       : never
+
+export type Translator<T, P extends '' | PrefixPath<T> = ''> = (key: KeyForPath<P, T>, params?: TParams) => string
