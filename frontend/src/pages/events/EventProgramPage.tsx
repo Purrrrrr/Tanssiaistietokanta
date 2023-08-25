@@ -6,14 +6,14 @@ import {AdminOnly} from 'services/users'
 import {Breadcrumb, Icon} from 'libraries/ui'
 import {EventProgramEditor} from 'components/EventProgramEditor'
 import {PageTitle} from 'components/PageTitle'
-import {useT} from 'i18n'
+import {useT, useTranslation} from 'i18n'
 
 import {Event} from 'types'
 
 export default function EventProgramEditorPage({event}: {event: Event}) {
-  const t = useT('pages.events.eventProgramPage', '')
+  const t = useT('pages.events.eventProgramPage')
   return <AdminOnly fallback={t('loginRequired')}>
-    <Breadcrumb text={t('breadcrumbs.eventProgram')} />
+    <Breadcrumb text={useTranslation('breadcrumbs.eventProgram')} />
     <p style={{margin: '10px 0'}}>
       <Link to=".."><Icon icon="arrow-left"/>{t('backToEvent')}</Link>
     </p>

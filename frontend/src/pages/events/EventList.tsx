@@ -7,10 +7,11 @@ import {AdminOnly} from 'services/users'
 import {PageTitle} from 'components/PageTitle'
 import {DeleteButton} from 'components/widgets/DeleteButton'
 import {NavigateButton} from 'components/widgets/NavigateButton'
-import { useT } from 'i18n'
+import { useT, useTranslation } from 'i18n'
 
 export default function EventList() {
-  const t = useT('pages.events.eventList', 'common')
+  const t = useT('pages.events.eventList')
+  const deleteText = useTranslation('common.delete')
   const [events] = useEvents()
   const [deleteEvent] = useDeleteEvent({refetchQueries: ['getEvent', 'getEvents']})
 
@@ -25,7 +26,7 @@ export default function EventList() {
       <h2 key={event._id}>
         <Link to={'events/'+event._id} >{event.name}</Link>
         <DeleteButton onDelete={() => deleteEvent({id: event._id})}
-          style={{float: 'right'}} text={t('delete')}
+          style={{float: 'right'}} text={deleteText}
           confirmText={t('eventDeleteConfirmation', {eventName: event.name})}
         />
       </h2>

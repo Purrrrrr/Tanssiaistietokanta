@@ -57,7 +57,7 @@ interface SectionSelection {
 function MoveItemToSectionMenu(
   {itemPath, onSelected} : { itemPath: ProgramItemPath, onSelected: () => void }
 ) {
-  const t = useT('components.eventProgramEditor', 'common')
+  const t = useT('components.eventProgramEditor')
   const [currentSectionType, maybeDanceSetIndex] = toArrayPath<EventProgramSettings>(itemPath)
   const row = useValueAt(itemPath)
   const onChangeProgram = useOnChangeFor('')
@@ -67,6 +67,7 @@ function MoveItemToSectionMenu(
   const sections = useValueAt('danceSets')
     .map(({title}, index) => ({name: title, index}))
     .filter(({index}) => currentSectionType !== 'danceSets' || index !== maybeDanceSetIndex)
+  const commonT = useT('common')
 
   //If something is deleted useValueAt may return undefined
   if (row === undefined) return null
@@ -75,8 +76,8 @@ function MoveItemToSectionMenu(
     items={canMoveToIntroductions ? [introSection, ...sections] : sections}
     getItemText={item => item?.name ?? ''}
     filterable
-    emptySearchText={t('emptySearch')}
-    searchPlaceholder={t('search')}
+    emptySearchText={commonT('emptySearch')}
+    searchPlaceholder={commonT('search')}
     itemPredicate={(search, item) => item.name.toLowerCase().includes(search.toLowerCase())}
     onSelect={(section) => {
       onSelected()

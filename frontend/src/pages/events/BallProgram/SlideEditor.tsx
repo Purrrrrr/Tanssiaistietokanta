@@ -23,7 +23,7 @@ import { ProgramItemPath, ProgramSectionPath } from 'components/EventProgramEdit
 import { LinkToSlide } from 'components/Slide'
 import { Duration } from 'components/widgets/Duration'
 import { SlideStyleSelector } from 'components/widgets/SlideStyleSelector'
-import { useT, useTranslation } from 'i18n'
+import { T, useT, useTranslation } from 'i18n'
 
 import {Dance} from 'types'
 
@@ -35,14 +35,14 @@ interface SlideEditorProps {
   eventProgram: EventProgramSettings
 }
 export function SlideEditor({slide, eventId, eventProgram}: SlideEditorProps) {
-  const t = useT('pages.events.ballProgram', 'components.eventProgramEditor')
+  const t = useT('components.eventProgramEditor')
   const {formProps, state} = useEventProgramEditorForm(eventId, eventProgram)
   const isDance = slide.slideContent?.type === 'dance'
 
   return <div>
     <Form {...formProps}>
       <SectionCard>
-        <H2>{t('slideProperties')} <SyncStatus state={state} /></H2>
+        <H2><T msg={'pages.events.ballProgram.slideProperties'}/> <SyncStatus state={state} /></H2>
         {slide.parent &&
           <p><Link to={slide.parent.id}><Icon icon="link"/>{' '}{slide.parent.title}</Link></p>
         }
@@ -57,7 +57,7 @@ export function SlideEditor({slide, eventId, eventProgram}: SlideEditorProps) {
 }
 
 function SlideStyleEditor({editorData}: Pick<SlideContent, 'editorData'>) {
-  const t = useT('pages.events.ballProgram', 'components.eventProgramEditor')
+  const t = useT('components.eventProgramEditor')
   const {type, path} = editorData
   switch (type) {
     case 'Event':
@@ -79,20 +79,20 @@ function SlideStyleEditor({editorData}: Pick<SlideContent, 'editorData'>) {
 }
 
 function SlideContentEditor({editorData, slideContent}: Pick<SlideContent, 'editorData' | 'slideContent'>) {
-  const t = useT('pages.events.ballProgram', 'components.eventProgramEditor')
+  const t = useT('components.eventProgramEditor')
   const {type, path} = editorData
   switch (type) {
     case 'Event':
       return null
     case 'DanceSet':
       return <SectionCard>
-        <H2>{t('danceSetTitle')}</H2>
+        <H2><T msg={'pages.events.ballProgram.danceSetTitle'}/></H2>
         <Input label={t('fields.danceSetName')} path={`${path}.title`} />
         <ListField label="" path={`${path}.program`} component={ProgramItem} renderConflictItem={item => programItemToString(item, t)} />
       </SectionCard>
     case 'IntervalMusic':
       return <SectionCard>
-        <H2>{t('intervalMusicTitle')}</H2>
+        <H2><T msg={'pages.events.ballProgram.intervalMusicTitle'}/></H2>
         <IntervalMusicDescriptionEditor path={`${path}.intervalMusic`} noPreview />
       </SectionCard>
     case 'ProgramItem':
@@ -107,7 +107,7 @@ interface ProgramItemProps {
 }
 
 const ProgramItem = React.memo(function ProgramEditor({dragHandle, path, itemIndex} : ProgramItemProps) {
-  const t = useT('pages.events.ballProgram', 'components.eventProgramEditor')
+  const t = useT('components.eventProgramEditor')
   const itemPath = `${path}.${itemIndex}` as ProgramItemPath
   const item = useValueAt(itemPath)
 
@@ -128,7 +128,7 @@ const ProgramItem = React.memo(function ProgramEditor({dragHandle, path, itemInd
 })
 
 function ProgramItemEditor({editorData, slideContent}: {editorData: ProgramItemData, slideContent: SlideContent['slideContent']}) {
-  const t = useT('pages.events.ballProgram', 'components.eventProgramEditor')
+  const t = useT('components.eventProgramEditor')
   const __typename = useValueAt(`${editorData.path}.item.__typename`)
   const {path} = editorData
 
@@ -142,11 +142,11 @@ function ProgramItemEditor({editorData, slideContent}: {editorData: ProgramItemD
       return null
     case 'EventProgram':
       return <SectionCard>
-        <H2>{t('infoTitle')}</H2>
+        <H2><T msg={'pages.events.ballProgram.infoTitle'}/></H2>
         <Input label={t('fields.eventProgram.name')} path={`${path}.item.name`} required />
         <Field label={t('fields.eventProgram.description')} path={`${path}.item.description`} component={MarkdownEditor} componentProps={{noPreview: true}} />
         <Switch label={t('fields.eventProgram.showInLists')} path={`${path}.item.showInLists`} inline />
-        <Callout>{t('currentItemAlwaysShownInLists')}</Callout>
+        <Callout><T msg={'pages.events.ballProgram.currentItemAlwaysShownInLists'}/></Callout>
       </SectionCard>
   }
 
