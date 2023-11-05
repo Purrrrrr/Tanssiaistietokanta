@@ -1,13 +1,16 @@
-import React, {createContext, useCallback, useContext, useState} from 'react'
+import React, {createContext, useCallback, useContext, useEffect, useState} from 'react'
 import {ApolloError, ApolloQueryResult} from '@apollo/client'
+
+import {socket} from 'backend/feathers'
 
 import {Button, GlobalSpinner, NonIdealState, Spinner} from 'libraries/ui'
 import {useT} from 'i18n'
 
 export const StartLoadingContext = createContext<<T>(promise: Promise<T>) => Promise<T>>(p => p)
 
-export function GlobalLoadingiState({children}) {
+export function GlobalLoadingState({children}) {
   const [loading, setLoading] = useState(false)
+  const [connected, setConnected] = useState(socket.connected)
   const startLoading = useCallback(
     (promise) => {
       setLoading(true)
@@ -19,11 +22,20 @@ export function GlobalLoadingiState({children}) {
     []
   )
 
+  useEffect(() => {
+    socket.on('connect', () => {
+      setConnected(true)
+    })
+    socket.on('disconnect', () => {
+      setConnected(false)
+    })
+  }, [])
+
   return <>
     <StartLoadingContext.Provider value={startLoading}>
       {children}
     </StartLoadingContext.Provider>
-    <GlobalSpinner loading={loading}/>
+    <GlobalSpinner loading={loading || !connected}/>
   </>
 }
 

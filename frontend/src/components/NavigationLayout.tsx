@@ -4,7 +4,7 @@ import {BreadcrumbContext} from 'libraries/ui'
 import {T, useTranslation} from 'i18n'
 
 import DebugManager from './DebugManager'
-import {GlobalLoadingiState}  from './LoadingState'
+import {GlobalLoadingState}  from './LoadingState'
 import Navigation from './Navigation'
 import {SupportedBrowserChecker} from './SupportedBrowserWarning'
 
@@ -13,15 +13,15 @@ import './NavigationLayout.sass'
 function NavigationLayout({children}) {
   if (navigationHidden()) {
     return <BreadcrumbContext>
-      <GlobalLoadingiState>
+      <GlobalLoadingState>
         <SupportedBrowserChecker />
         {children}
-      </GlobalLoadingiState>
+      </GlobalLoadingState>
     </BreadcrumbContext>
   }
 
   return <BreadcrumbContext>
-    <GlobalLoadingiState>
+    <GlobalLoadingState>
       <SupportedBrowserChecker />
       <SkipToMainContent />
       <div id="layout">
@@ -35,7 +35,7 @@ function NavigationLayout({children}) {
           {process.env.NODE_ENV === 'development' &&  <DebugManager />}
         </footer>
       </div>
-    </GlobalLoadingiState>
+    </GlobalLoadingState>
   </BreadcrumbContext>
 }
 
