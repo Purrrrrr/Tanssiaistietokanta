@@ -318,7 +318,7 @@ function IntervalMusicDetailsEditor({path}: {path: IntervalMusicPath}) {
     <MenuButton
       menu={
         <div className="eventProgramItemPopover">
-          <IntervalMusicDetailsEditor path={path} />
+          <IntervalMusicDescriptionEditor path={path} />
         </div>
       }
       text={t('buttons.editIntervalMusic')}
