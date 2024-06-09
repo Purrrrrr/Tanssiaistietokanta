@@ -1,16 +1,20 @@
 import React from 'react'
-import {Link, useNavigate, useParams} from 'react-router-dom'
+import {useNavigate, useParams} from 'react-router-dom'
 
 import { useDance } from 'services/dances'
 
-import {Breadcrumb, Icon} from 'libraries/ui'
+import {Breadcrumb} from 'libraries/ui'
 import {DanceEditor} from 'components/DanceEditor'
 import {LoadingState} from 'components/LoadingState'
 import {PageTitle} from 'components/PageTitle'
+import {BackLink} from 'components/widgets/BackLink'
 import { useT } from 'i18n'
 
+interface DancePageProps {
+  parentType?: 'eventProgram' | 'dances'
+}
 
-export default function DancePage() {
+export default function DancePage({parentType = 'dances'} : DancePageProps) {
   const navigate = useNavigate()
   const {danceId} = useParams()
   const result = useDance({id: danceId ?? ''})
@@ -23,9 +27,7 @@ export default function DancePage() {
   return <>
     <Breadcrumb text={dance.name} />
     <PageTitle noRender>{dance.name}</PageTitle>
-    <p style={{margin: '10px 0'}}>
-      <Link to=".."><Icon icon="arrow-left"/>{t('backToDanceList')}</Link>
-    </p>
+    <BackLink>{t(parentType === 'dances' ? 'backToDanceList' : 'backToEventProgram')}</BackLink>
     <DanceEditor titleComponent={'h1'} dance={dance} onDelete={() => { navigate('..')}}  />
   </>
 }

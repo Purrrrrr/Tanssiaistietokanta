@@ -6,7 +6,7 @@ import classNames from 'classnames'
 import {useIsAdmin} from 'services/users'
 
 interface NavigateButtonProps extends Omit<React.ComponentProps<typeof Link>, 'to'> {
-  text: string,
+  text: string | React.ReactElement | React.ReactElement[],
   adminOnly?: boolean,
   disabled?: boolean,
   href: string,

@@ -275,6 +275,7 @@ export const fi = {
       },
       dancePage: {
         backToDanceList: 'Takaisin tanssilistaan',
+        backToEventProgram: 'Takaisin ohjelman tietoihin',
       },
     },
   },

@@ -8,6 +8,7 @@ import {DanceEditor} from 'components/DanceEditor'
 import {LoadingState} from 'components/LoadingState'
 import {Duration} from 'components/widgets/Duration'
 import {DurationField} from 'components/widgets/DurationField'
+// import {NavigateButton} from 'components/widgets/NavigateButton'
 import {SlideStyleSelector} from 'components/widgets/SlideStyleSelector'
 import {Translator, useT} from 'i18n'
 import {guid} from 'utils/guid'
@@ -236,6 +237,12 @@ function DanceItemEditor({path}: {path: DanceProgramPath}) {
   const [open, setOpen] = useState(false)
   return <Flex className="eventProgramItemEditor">
     <Field label={t('dance')} labelStyle="hidden" path={`${path as DanceProgramPath}.item`} component={DanceProgramChooser} />
+    {/* id &&
+      <NavigateButton
+        href={id}
+        text={<Icon icon="edit" title={t('buttons.editDance')} />}
+      />
+    */}
     {id &&
       <MenuButton
         menu={

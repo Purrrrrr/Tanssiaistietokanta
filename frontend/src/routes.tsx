@@ -2,6 +2,7 @@ import React from 'react'
 import {Route, Routes, useParams} from 'react-router-dom'
 
 import {useEvent} from 'services/events'
+import {AdminOnly} from 'services/users'
 
 import {Breadcrumb} from 'libraries/ui'
 import {LoadingState} from 'components/LoadingState'
@@ -49,11 +50,21 @@ function EventRoutes() {
     <Breadcrumb text={event.name} />
     <Routes>
       <Route index element={<EventPage event={event}/>} />
-      <Route path="program" element={<EventProgramPage event={event}/>} />
+      <Route path="program/*" element={<EventProgramRoutes event={event}/>} />
       <Route path="ball-program/*" element={<BallProgram eventId={eventId}/>} />
       <Route path="print/*" element={<EventPrintRoutes />} />
     </Routes>
   </>
+}
+
+function EventProgramRoutes({event}) {
+  return <AdminOnly fallback={useTranslation('pages.events.eventProgramPage.loginRequired')}>
+    <Breadcrumb text={useTranslation('breadcrumbs.eventProgram')} />
+    <Routes>
+      <Route index element={<EventProgramPage event={event}/>} />
+      <Route path=":danceId" element={<Dance parentType='eventProgram'/>} />
+    </Routes>
+  </AdminOnly>
 }
 
 function EventPrintRoutes() {
