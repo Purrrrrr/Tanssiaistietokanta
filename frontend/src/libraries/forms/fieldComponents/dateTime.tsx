@@ -1,6 +1,5 @@
 import React from 'react'
-import { LocaleUtils } from 'react-day-picker'
-import {DateInput, DateRangeInput} from '@blueprintjs/datetime'
+import {DateInput3, DateRangeInput3} from '@blueprintjs/datetime2'
 import { format, parse } from 'date-fns'
 
 import {Field, useFieldConflictData, useFieldData} from '../Field'
@@ -31,7 +30,7 @@ export interface DateFieldInputProps extends FieldComponentProps<string, HTMLInp
   maxDate?: string | Date | undefined
 }
 export function DateFieldInput({value, onChange, inline, readOnly, id, showTime, minDate, maxDate, ...props} : DateFieldInputProps) {
-  return <DateInput
+  return <DateInput3
     {...useCommonProps(showTime)}
     disabled={readOnly}
     inputProps={{
@@ -112,7 +111,7 @@ export function DateRangeField<T>(
     }
   )
 
-  return <DateRangeInput
+  return <DateRangeInput3
     {...useCommonProps(showTime)}
     disabled={beginFieldProps.readOnly || endFieldProps.readOnly}
     allowSingleDayRange={allowSingleDayRange}
@@ -158,30 +157,11 @@ function toISOString(value: Date | null, showTime?: boolean): string {
 
 function useCommonProps(showTime?: boolean) {
   const strings = useFormStrings().dateTime
-  const firstDayOfWeek = strings.shortWeekdays.indexOf(strings.firstDayOfWeek)
-  const {months, shortWeekdays, invalidDateMessage, outOfRangeMessage, overlappingDatesMessage} = strings
   const valueFormat = showTime ? strings.dateTimeFormat : strings.dateFormat
 
-  function formatMonthTitle(d: Date) {
-    return `${months[d.getMonth()]} ${d.getFullYear()}`
-  }
-
-  function formatWeekday(i: number) {
-    return shortWeekdays[i]
-  }
 
   return {
-    localeUtils: {
-      ...LocaleUtils,
-      formatMonthTitle,
-      formatWeekdayShort: formatWeekday,
-      formatWeekdayLong: formatWeekday,
-      getFirstDayOfWeek: () => firstDayOfWeek,
-      getMonths: () => months as [string, string, string, string, string, string, string, string, string, string, string, string,],
-    },
-    invalidDateMessage,
-    outOfRangeMessage,
-    overlappingDatesMessage,
+    locale: 'fi',
     formatDate: date => format(date, valueFormat),
     parseDate: date => parse(date, valueFormat, referenceDate),
   }

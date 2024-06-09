@@ -7,7 +7,8 @@ import { FieldContainer } from '../FieldContainer'
 import { useFieldValueProps } from '../hooks'
 import {ExtendedFieldComponentProps, FieldComponentProps, FieldPropsWithoutComponent} from '../types'
 
-import '@blueprintjs/datetime/lib/css/blueprint-datetime.css'
+import '@blueprintjs/datetime2/lib/css/blueprint-datetime2.css'
+// import '@blueprintjs/datetime/lib/css/blueprint-datetime.css' //TODO!
 
 export interface SwitchForProps<V> {
   isChecked: (v: V | null | undefined) => boolean

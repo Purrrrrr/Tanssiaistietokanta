@@ -42,7 +42,7 @@ function InnerDialog({children, onClose, title, style, className, showCloseButto
     () => {
       if (dialogRef.current === null) return
       if (dialogRef.current.contains(document.activeElement)) return
-      focusManager.focusNext({
+      focusManager?.focusNext?.({
         from: closeButton.current || undefined, wrap: true
       })
     },

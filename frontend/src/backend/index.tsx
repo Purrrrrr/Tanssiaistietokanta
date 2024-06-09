@@ -1,5 +1,5 @@
 import React  from 'react'
-import { MutationHookOptions, QueryHookOptions, QueryResult } from '@apollo/client'
+import { MutationHookOptions, OperationVariables, QueryHookOptions, QueryResult } from '@apollo/client'
 import { TypedDocumentNode } from '@graphql-typed-document-node/core'
 
 import { useTranslation } from 'i18n'
@@ -18,7 +18,7 @@ export { graphql } from 'types/gql'
 
 export const BackendProvider = ({children}) => <ApolloProvider client={apolloClient} children={children} />
 
-export function entityListQueryHook<T extends {[k in number]: Entity[]}, V>(
+export function entityListQueryHook<T extends {[k in number]: Entity[]}, V extends OperationVariables>(
   service : ServiceName, compiledQuery: TypedDocumentNode<T, V>
 ): () => [
   ValueOf<T>,
@@ -106,7 +106,7 @@ export function makeMutationHook<T, V>(
   }
 }
 
-export function backendQueryHook<T, V>(
+export function backendQueryHook<T, V extends OperationVariables>(
   query: TypedDocumentNode<T, V>,
   additionalCode?: (res: QueryResult<T, V>) => unknown,
 ): ((v: V, o?: QueryHookOptions<T, V>) => QueryResult<T, V>) {

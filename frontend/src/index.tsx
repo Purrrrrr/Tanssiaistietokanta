@@ -1,8 +1,9 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import {createRoot} from 'react-dom/client'
 
 import DanceOrganizer from './DanceOrganizer'
 
 import './index.css'
 
-ReactDOM.render(<DanceOrganizer/>, document.getElementById('root'))
+const root = createRoot(document.getElementById('root'))
+root.render(<DanceOrganizer/>)
