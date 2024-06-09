@@ -46,3 +46,28 @@
 .bp5-card + p {
   margin-top: 10px;
 }
+
+.bp5-navbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  min-height: 50px;
+  height: auto;
+}
+.bp5-navbar-group {
+  min-height: 50px;
+  height: auto;
+}
+.bp5-navbar-group.bp5-align-left, .bp5-navbar-group.bp5-align-right {
+  float: none;
+}
+
+.bp5-breadcrumbs {
+  min-height: 40px;
+  height: auto;
+  margin-bottom: 10px;
+}
+.bp5-breadcrumbs > li {
+  height: 30px;
+  margin-top: 10px;
+}
