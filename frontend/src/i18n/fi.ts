@@ -5,7 +5,7 @@ export const fi = {
     licenceLink: 'https://raw.githubusercontent.com/Purrrrrr/Tanssiaistietokanta/main/frontend/LICENSE',
   },
   navigation: {
-    dances: 'Tanssitietokanta',
+    dances: 'Tanssit',
     breadcrumbs: 'Murupolku',
     moveToContent: 'Siirry pääsisältöön',
   },
