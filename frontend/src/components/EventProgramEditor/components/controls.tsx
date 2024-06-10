@@ -1,5 +1,3 @@
-import React from 'react'
-
 import {ActionButton as Button} from 'libraries/forms'
 import {Icon, IconName} from 'libraries/ui'
 import {useT} from 'i18n'

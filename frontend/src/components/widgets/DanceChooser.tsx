@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import {Suggest} from '@blueprintjs/select'
 
 import {filterDances, useCreateDance, useDances} from 'services/dances'

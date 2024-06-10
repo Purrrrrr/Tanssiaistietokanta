@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react'
+import {useCallback, useEffect, useState} from 'react'
 import classNames from 'classnames'
 
 import {FieldComponentProps, Input, InputProps} from 'libraries/forms'

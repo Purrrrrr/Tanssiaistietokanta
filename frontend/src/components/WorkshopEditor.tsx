@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react'
+import {useMemo} from 'react'
 import {string} from 'yup'
 
 import {usePatchWorkshop} from 'services/workshops'

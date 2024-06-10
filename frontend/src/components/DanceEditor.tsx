@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import {useCallback} from 'react'
 import {Link, useNavigate} from 'react-router-dom'
 
 import { useDeleteDance, usePatchDance } from 'services/dances'

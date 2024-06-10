@@ -1,4 +1,3 @@
-import React from 'react'
 import {Route, Routes, useParams} from 'react-router-dom'
 
 import {useEvent} from 'services/events'

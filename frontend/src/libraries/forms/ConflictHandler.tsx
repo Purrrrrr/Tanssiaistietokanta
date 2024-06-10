@@ -1,5 +1,3 @@
-import React from 'react'
-
 import {Button, Flex} from 'libraries/ui'
 
 import { ConflictData } from './types'

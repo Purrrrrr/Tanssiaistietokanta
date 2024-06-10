@@ -1,5 +1,3 @@
-import React from 'react'
-
 import {BreadcrumbContext} from 'libraries/ui'
 import {T, useTranslation} from 'i18n'
 

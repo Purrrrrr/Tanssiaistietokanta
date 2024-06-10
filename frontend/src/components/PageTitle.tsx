@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import {useEffect} from 'react'
 
 export function PageTitle({children, noRender} : {children: string, noRender?: boolean}) {
   useEffect(

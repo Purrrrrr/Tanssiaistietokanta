@@ -1,5 +1,3 @@
-import React from 'react'
-
 import './CenteredContainer.sass'
 
 /** A container that is horizontally centered and that also

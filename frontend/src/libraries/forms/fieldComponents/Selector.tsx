@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import {useState} from 'react'
 import { Popover } from '@blueprintjs/core'
 import { ItemRenderer as BPItemRenderer, QueryList, QueryListProps} from '@blueprintjs/select'
 

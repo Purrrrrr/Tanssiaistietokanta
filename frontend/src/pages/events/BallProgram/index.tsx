@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react'
+import {useCallback, useState} from 'react'
 import {useNavigate, useParams} from 'react-router-dom'
 import {useSwipeable} from 'react-swipeable'
 import classNames from 'classnames'

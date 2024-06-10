@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { SlideContent } from './useBallProgram'
 
 interface ProgramTitleSelectorProps {

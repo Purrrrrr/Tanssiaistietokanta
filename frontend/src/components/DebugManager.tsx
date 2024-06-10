@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import {useState} from 'react'
 
 import {enableNamespaces, getKnownNamespaces} from 'utils/debug'
 

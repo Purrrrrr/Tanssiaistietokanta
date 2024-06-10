@@ -1,4 +1,4 @@
-import React, {useCallback, useRef, useState} from 'react'
+import {useCallback, useRef, useState} from 'react'
 
 import {backendQueryHook, graphql} from 'backend'
 import {usePatchDance} from 'services/dances'

@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react'
+import {useCallback, useState} from 'react'
 
 import {searchWikiPages} from 'libraries/danceWiki'
 import {Input} from 'libraries/forms'

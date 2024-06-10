@@ -1,4 +1,3 @@
-import React  from 'react'
 import {useLinkClickHandler} from 'react-router-dom'
 
 import {MenuItem, MenuItemProps} from 'libraries/ui'

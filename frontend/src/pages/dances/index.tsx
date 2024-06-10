@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import {useState} from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
 import {useNavigate} from 'react-router-dom'
 

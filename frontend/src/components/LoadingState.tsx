@@ -1,4 +1,4 @@
-import React, {createContext, useCallback, useContext, useEffect, useState} from 'react'
+import {createContext, useCallback, useContext, useEffect, useState} from 'react'
 import {ApolloError, ApolloQueryResult} from '@apollo/client'
 
 import {socket} from 'backend/feathers'

@@ -1,5 +1,3 @@
-import React  from 'react'
-
 import {Entity, ListItemComponent} from './types'
 
 import {Field} from '../Field'

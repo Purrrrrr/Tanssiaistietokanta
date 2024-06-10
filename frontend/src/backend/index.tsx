@@ -1,4 +1,3 @@
-import React  from 'react'
 import { MutationHookOptions, OperationVariables, QueryHookOptions, QueryResult } from '@apollo/client'
 import { TypedDocumentNode } from '@graphql-typed-document-node/core'
 

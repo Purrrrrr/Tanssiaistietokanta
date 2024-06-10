@@ -1,5 +1,3 @@
-import React  from 'react'
-
 import {SlideStyle, useEventSlideStyles} from 'services/events'
 
 import {Selector} from 'libraries/forms'
