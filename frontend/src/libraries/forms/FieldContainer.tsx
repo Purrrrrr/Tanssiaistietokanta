@@ -5,7 +5,8 @@ import {FormGroup} from 'libraries/ui'
 import { LabelStyle, LabelTexts, Version } from './types'
 
 import {ConflictHandler} from './ConflictHandler'
-import {Error, ErrorMessage} from './validation'
+import type {Error} from './validation'
+import {ErrorMessage} from './validation'
 
 
 export interface FieldContainerProps extends LabelTexts, InternalFieldContainerProps {
