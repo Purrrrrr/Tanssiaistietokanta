@@ -6,11 +6,12 @@ import {ActionButton as Button, ClickToEdit, DragHandle, ListEditorContext, Mark
 import {Card, CssClass, Flex, HTMLTable} from 'libraries/ui'
 import {DanceEditor} from 'components/DanceEditor'
 import {LoadingState} from 'components/LoadingState'
+import {BackLink} from 'components/widgets/BackLink'
 import {Duration} from 'components/widgets/Duration'
 import {DurationField} from 'components/widgets/DurationField'
 // import {NavigateButton} from 'components/widgets/NavigateButton'
 import {SlideStyleSelector} from 'components/widgets/SlideStyleSelector'
-import {Translator, useT} from 'i18n'
+import {Translator, useT, useTranslation} from 'i18n'
 import {guid} from 'utils/guid'
 
 import {DanceProgramPath, DanceSet, DanceSetPath, EventProgramRow, EventProgramSettings, IntervalMusicPath, ProgramItemPath, ProgramSectionPath} from './types'
@@ -51,10 +52,14 @@ export function EventProgramEditor({eventId, program: eventProgram}: EventProgra
   const {danceSets, introductions} = formProps.value
 
   return <Form {...formProps}>
+    <BackLink to="../..">{useTranslation('pages.events.eventProgramPage.backToEvent')}</BackLink>
+    <h1>
+      {useTranslation('pages.events.eventProgramPage.pageTitle')}
+      <SyncStatus style={{marginLeft: '1ch', top: '3px'}} className="flex-fill" state={state} />
+    </h1>
     <section className="eventProgramEditor">
       <div className="main-toolbar">
         <Input labelStyle="above" label={t('fields.programTitle')} path="introductions.title" inline />
-        <SyncStatus style={{marginLeft: '1ch', top: '3px'}} className="flex-fill" state={state} />
         <InheritedSlideStyleSelector path="introductions.titleSlideStyleId" text={t('fields.titleStyle')} />
         <Field label={t('fields.pauseDuration')} inline path="pauseBetweenDances" component={DurationField} />
         {introductions.program.length === 0 && <AddIntroductionButton />}

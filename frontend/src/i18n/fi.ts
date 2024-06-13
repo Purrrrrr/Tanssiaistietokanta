@@ -118,7 +118,7 @@ export const fi = {
         intervalMusicDuration: 'Taukomusiikin kesto',
         moveItemToSection: 'Siirrä settiin',
         pauseDuration: 'Tanssien välinen tauko',
-        programTitle: 'Tanssiaisohjelman otsikko',
+        programTitle: 'Ohjelman otsikko',
         style: 'Tyyli',
         titleStyle: 'Otsikon tyyli',
       },
@@ -222,7 +222,7 @@ export const fi = {
         endDate: 'Loppuu',
       },
       eventProgramPage: {
-        pageTitle: 'Muokkaa tanssiaisohjelmaa',
+        pageTitle: 'Tanssiaisohjelma',
         backToEvent: 'Takaisin tapahtuman tietoihin',
         loginRequired: 'Sinun täytyy olla kirjautunut käyttääksesi tätä sivua',
       },
