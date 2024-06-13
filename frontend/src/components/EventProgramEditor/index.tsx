@@ -293,13 +293,10 @@ function IntervalMusicEditor({danceSetPath}: {danceSetPath: DanceSetPath}) {
   const durationPath = `${danceSetPath}.intervalMusic.duration` as const
   const onSetIntervalMusic = useOnChangeFor(intervalMusicPath)
 
-  return <tr className="eventProgramItemEditor intervalMusicDuration">
+  return <tr className="intervalMusicDuration">
     <td><ProgramTypeIcon type="IntervalMusic" /></td>
     <td>
-      <Flex className="eventProgramItemEditor">
-        <div>{t('programTypes.IntervalMusic')}</div>
-        <IntervalMusicDetailsEditor path={intervalMusicPath} />
-      </Flex>
+      <IntervalMusicDetailsEditor path={intervalMusicPath} />
     </td>
     <td>
       <Field label={t('fields.intervalMusicDuration')} inline labelStyle="hidden" path={durationPath} component={DurationField} />
@@ -315,6 +312,7 @@ function IntervalMusicDetailsEditor({path}: {path: IntervalMusicPath}) {
   const t = useT('components.eventProgramEditor')
   const [open, setOpen] = useState(false)
   return <Flex className="eventProgramItemEditor">
+    <div>{t('programTypes.IntervalMusic')}</div>
     <MenuButton
       menu={
         <div className="eventProgramItemPopover">
