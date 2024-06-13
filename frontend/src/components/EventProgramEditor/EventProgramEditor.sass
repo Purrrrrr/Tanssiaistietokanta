@@ -13,11 +13,8 @@ $borderColor: rgba(16, 22, 26, 0.15)
     #introductions--titleSlideStyleId--formgroup
       margin-right: auto
 
-  td > .programType
-      width: 28px
-      height: 28px
-
   .danceset
+    min-width: fit-content
     padding: 10px 0 0 0
     margin: 1em 0
     background: rgba(191, 204, 214, 0.15)
@@ -87,6 +84,8 @@ $borderColor: rgba(16, 22, 26, 0.15)
   padding: 1em
 
 .programType
+  width: 28px
+  height: 28px
   display: inline-flex
   align-items: center
   justify-content: center
@@ -100,3 +99,6 @@ $borderColor: rgba(16, 22, 26, 0.15)
   &.programType-IntervalMusic
     color: #c2a222
 
+button .programType
+  width: auto
+  height: auto
