@@ -1,9 +1,8 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { createProxyMiddleware } = require('http-proxy-middleware')
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const backendConfig = require('./backendConfig.json')
+import { createProxyMiddleware } from 'http-proxy-middleware'
 
-module.exports = function(app) {
+import backendConfig from './backendConfig.json'
+
+export default function(app) {
   app.use(
     '/api',
     createProxyMiddleware({

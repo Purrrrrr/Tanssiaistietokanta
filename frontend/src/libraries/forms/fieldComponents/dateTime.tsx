@@ -29,7 +29,7 @@ export interface DateFieldInputProps extends FieldComponentProps<string, HTMLInp
   minDate?: string | Date | undefined
   maxDate?: string | Date | undefined
 }
-export function DateFieldInput({value, onChange, inline, readOnly, id, showTime, minDate, maxDate, ...props} : DateFieldInputProps) {
+export function DateFieldInput({value, onChange, inline: _ignored, readOnly, id, showTime, minDate, maxDate, ...props} : DateFieldInputProps) {
   return <DateInput3
     {...useCommonProps(showTime)}
     disabled={readOnly}

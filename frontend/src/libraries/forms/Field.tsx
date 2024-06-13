@@ -60,7 +60,7 @@ interface FieldData {
 export function useFieldData<Value>(
   path: string | number,
   value: Value,
-  {label, labelInfo, helperText, inline: maybeInline, labelStyle: maybeLabelStyle, ...rest}: FieldDataHookProps
+  {label, labelInfo, helperText: _ignored, inline: maybeInline, labelStyle: maybeLabelStyle, ...rest}: FieldDataHookProps
 ) : FieldData {
 
   const ctx = useFormMetadata<unknown>()

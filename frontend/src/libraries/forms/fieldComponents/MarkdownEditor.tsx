@@ -68,7 +68,7 @@ interface MarkdownEditorProps extends FieldComponentProps<string, HTMLTextAreaEl
   noPreview?: boolean
 }
 
-export const MarkdownEditor = React.memo(function MarkdownEditor({value, onChange, inline, markdownOverrides, noPreview, ...props} : MarkdownEditorProps) {
+export const MarkdownEditor = React.memo(function MarkdownEditor({value, onChange, inline: _ignored, markdownOverrides, noPreview, ...props} : MarkdownEditorProps) {
   const strings = useFormStrings().markdownEditor
   return <MdEditor
     config={{strings}}

@@ -28,7 +28,7 @@ export interface ListEditorProps<T, V extends Entity> extends FieldComponentProp
 }
 
 export function ListEditor<T, V extends Entity>({
-  value, onChange, path, itemType, acceptsTypes, droppableElement, component: Component, inline, readOnly, isTable, accessibilityContainer
+  value, onChange, path, itemType, acceptsTypes, droppableElement, component: Component, inline: _ignored, readOnly, isTable, accessibilityContainer
 }: ListEditorProps<T, V>) {
   const items = value ?? []
 
@@ -117,7 +117,7 @@ interface SortableItemProps<T, V> {
 export function SortableItem<T, V>({itemType, acceptsTypes, id, path, onChangePath, itemIndex, component: Component, isTable}: SortableItemProps<T, V>) {
   const {
     isDragging,
-    attributes: { tabIndex, ...attributes},
+    attributes: { tabIndex: _ignored, ...attributes},
     listeners,
     setNodeRef,
     setActivatorNodeRef,

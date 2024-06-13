@@ -31,7 +31,7 @@ export function SlideStyleSelector({
     items={styles}
     getItemText={item => <><SlideStyleBox value={item} size={50} aspectRatio={16/9} /> {item.name}</>}
     itemPredicate={(search, item) => item.name.toLowerCase().includes(search.toLowerCase())}
-    itemRenderer={(text, item, {handleClick, index, modifiers: {active}}) =>
+    itemRenderer={(text, item, {handleClick, modifiers: {active}}) =>
       <MenuItem key={item.id} roleStructure="listoption" text={text} onClick={handleClick} active={active} />
     }
     onSelect={(style) => onChange(style.id)}

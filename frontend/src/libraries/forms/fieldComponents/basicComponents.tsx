@@ -8,7 +8,6 @@ import { useFieldValueProps } from '../hooks'
 import {ExtendedFieldComponentProps, FieldComponentProps, FieldPropsWithoutComponent} from '../types'
 
 import '@blueprintjs/datetime2/lib/css/blueprint-datetime2.css'
-// import '@blueprintjs/datetime/lib/css/blueprint-datetime.css' //TODO!
 
 export interface SwitchForProps<V> {
   isChecked: (v: V | null | undefined) => boolean
@@ -80,7 +79,7 @@ export function Input({value, className, onChange, inline, inputRef, ...props} :
 interface TextAreaProps extends FieldComponentProps<string, HTMLTextAreaElement>, Pick<BlueprintTextAreaProps, 'growVertically'> {
   inputRef?: React.Ref<HTMLTextAreaElement>
 }
-export function TextArea({value, onChange, inline, inputRef, ...props} : TextAreaProps) {
+export function TextArea({value, onChange, inline: _ignored, inputRef, ...props} : TextAreaProps) {
   return <BlueprintTextArea
     inputRef={inputRef}
     value={value ?? ''}

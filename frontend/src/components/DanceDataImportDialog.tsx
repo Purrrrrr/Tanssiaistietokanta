@@ -33,7 +33,7 @@ export function DanceDataImportButton({onImport, dance, ...props} : DanceDataImp
   const [isOpen, setOpen] = useState(false)
   const text = useTranslation('components.danceDataImportButton.fetchInfoFromWiki')
   const [patch] = usePatchDance()
-  const handleImport = ({ importedData, ...data} : ImporterState) => {
+  const handleImport = ({ importedData: _ignore, ...data} : ImporterState) => {
     if (onImport) {
       onImport(data)
       return

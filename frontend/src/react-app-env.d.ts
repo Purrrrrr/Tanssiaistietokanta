@@ -1,8 +1,9 @@
 /// <reference types="vite/client" />
 
 /// <reference types="node" />
-/// <reference types="react" />
 /// <reference types="react-dom" />
+
+import 'React'
 
 declare module '*.avif' {
 	const src: string
