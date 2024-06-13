@@ -69,7 +69,8 @@ $borderColor: rgba(16, 22, 26, 0.15)
         td:nth-child(3)
           padding: 0
   
-  .foo
+  .programListContainer
+    min-width: 550px
     display: flex
     align-items: start
     background: white
@@ -80,7 +81,7 @@ $borderColor: rgba(16, 22, 26, 0.15)
     
 
     .programList
-      flex: 1 1
+      flex: 1 1 fit-content
       
     .programDetails
       flex: 0 1 0
@@ -91,7 +92,7 @@ $borderColor: rgba(16, 22, 26, 0.15)
         width: calc(100cqw - 140px)
         padding: 10px
 
-    &.foo-open
+    &.programListContainer-open
       .programList
         flex: 0 1 140px
 

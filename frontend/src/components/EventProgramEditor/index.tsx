@@ -118,8 +118,8 @@ function ProgramListEditor({path}: {path: ProgramSectionPath}) {
   const isIntroductionsSection = path.startsWith('introductions')
   const accepts = useMemo(() => isIntroductionsSection ? ['EventProgram'] : ['Dance', 'RequestedDance', 'EventProgram'], [isIntroductionsSection])
   const newEventProgramItem = useCreateNewEventProgramItem()
-  const [foo, setFoo] = useState<null | ProgramItemPath>(null)
-  const Row = useCallback((props) => <ProgramItemEditor {...props} onEdit={setFoo} />, [])
+  const [selectedItem, setSelectedItem] = useState<null | ProgramItemPath>(null)
+  const Row = useCallback((props) => <ProgramItemEditor {...props} onEdit={setSelectedItem} />, [])
   const closeStr = useTranslation('common.close')
 
   if (!programRow) return null
@@ -130,7 +130,7 @@ function ProgramListEditor({path}: {path: ProgramSectionPath}) {
 
   return <>
     <div ref={accessibilityContainer} />
-    <div className={`foo foo-${foo ? 'open' : 'closed'}`}>
+    <div className={`programListContainer programListContainer-${selectedItem ? 'open' : 'closed'}`}>
       <HTMLTable ref={tableRef} compact bordered className="programList">
         {program.length === 0 ||
             <thead>
@@ -180,8 +180,8 @@ function ProgramListEditor({path}: {path: ProgramSectionPath}) {
       </HTMLTable>
       <div className='programDetails'>
         <div className="contents">
-          <Button onClick={() => setFoo(null)} text={closeStr} />
-          {foo && <ProgramDetailsEditor2 path={foo} />}
+          <Button onClick={() => setSelectedItem(null)} text={closeStr} />
+          {selectedItem && <ProgramDetailsEditor2 path={selectedItem} />}
         </div>
       </div>
     </div>
