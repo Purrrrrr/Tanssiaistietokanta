@@ -27,9 +27,9 @@ import {
   IntervalMusicDefaultTextsSwitch,
   IntervalMusicSwitch,
   ListField,
+  ProgramDetailsEditor2,
   ProgramTypeIcon,
   RemoveItemButton,
-  Switch,
   useAppendToList,
   useCreateNewEventProgramItem,
   useEventProgramEditorForm,
@@ -118,6 +118,10 @@ function ProgramListEditor({path}: {path: ProgramSectionPath}) {
   const isIntroductionsSection = path.startsWith('introductions')
   const accepts = useMemo(() => isIntroductionsSection ? ['EventProgram'] : ['Dance', 'RequestedDance', 'EventProgram'], [isIntroductionsSection])
   const newEventProgramItem = useCreateNewEventProgramItem()
+  const [foo, setFoo] = useState<null | ProgramItemPath>(null)
+  const Row = useCallback((props) => <ProgramItemEditor {...props} onEdit={setFoo} />, [])
+  const closeStr = useTranslation('common.close')
+
   if (!programRow) return null
   const { program } = programRow
   const intervalMusicDuration = isIntroductionsSection
@@ -126,63 +130,72 @@ function ProgramListEditor({path}: {path: ProgramSectionPath}) {
 
   return <>
     <div ref={accessibilityContainer} />
-    <HTMLTable ref={tableRef} compact bordered className="programList">
-      {program.length === 0 ||
-          <thead>
-            <tr>
-              <th/>
-              <th>{t('columnTitles.name')}</th><th>{t('columnTitles.duration')}</th><th>{t('columnTitles.actions')}</th>
-            </tr>
-          </thead>
-      }
-      <tbody>
-        <ListField labelStyle="hidden-nowrapper" label="" itemType={getType} acceptsTypes={accepts} droppableElement={tableRef.current} isTable path={programPath} component={ProgramItemEditor} renderConflictItem={item => programItemToString(item, t)} accessibilityContainer={accessibilityContainer.current ?? undefined} />
-        {program.length === 0 &&
-            <tr>
-              <td className={CssClass.textMuted+ ' noProgram'} colSpan={5}>{t('programListIsEmpty')}</td>
-            </tr>
+    <div className={`foo foo-${foo ? 'open' : 'closed'}`}>
+      <HTMLTable ref={tableRef} compact bordered className="programList">
+        {program.length === 0 ||
+            <thead>
+              <tr>
+                <th/>
+                <th>{t('columnTitles.name')}</th><th>{t('columnTitles.duration')}</th><th>{t('columnTitles.actions')}</th>
+              </tr>
+            </thead>
         }
-        {intervalMusicDuration > 0 && <IntervalMusicEditor danceSetPath={path as DanceSetPath} />}
-      </tbody>
-      <tfoot>
-        <tr className="eventProgramFooter">
-          <td colSpan={2} className="add-spacing">
-            {isIntroductionsSection ||
-              <Button
-                text={t('buttons.addDance')}
-                rightIcon={<ProgramTypeIcon type="Dance" />}
-                onClick={() => onAddItem({item: {__typename: 'RequestedDance'}, slideStyleId: null, _id: guid()})}
-                className="addDance" />
-            }
-            {isIntroductionsSection
-              ? <AddIntroductionButton />
-              : <Button
-                text={t('buttons.addInfo')}
-                rightIcon={<ProgramTypeIcon type="EventProgram" />}
-                onClick={() => onAddItem(newEventProgramItem)}
-                className="addInfo"
-              />
-            }
-            {isIntroductionsSection ||
-              <IntervalMusicSwitch inline label={t('fields.intervalMusicAtEndOfSet')} path={`${path}.intervalMusic` as `danceSets.${number}.intervalMusic`} />
-            }
-          </td>
-          <td colSpan={2} className="add-spacing">
-            <DanceSetDuration program={program} intervalMusicDuration={intervalMusicDuration} />
-          </td>
-        </tr>
-      </tfoot>
-    </HTMLTable>
+        <tbody>
+          <ListField labelStyle="hidden-nowrapper" label="" itemType={getType} acceptsTypes={accepts} droppableElement={tableRef.current} isTable path={programPath} component={Row} renderConflictItem={item => programItemToString(item, t)} accessibilityContainer={accessibilityContainer.current ?? undefined} />
+          {program.length === 0 &&
+              <tr>
+                <td className={CssClass.textMuted+ ' noProgram'} colSpan={5}>{t('programListIsEmpty')}</td>
+              </tr>
+          }
+          {intervalMusicDuration > 0 && <IntervalMusicEditor danceSetPath={path as DanceSetPath} />}
+        </tbody>
+        <tfoot>
+          <tr className="eventProgramFooter">
+            <td colSpan={2} className="add-spacing">
+              {isIntroductionsSection ||
+                <Button
+                  text={t('buttons.addDance')}
+                  rightIcon={<ProgramTypeIcon type="Dance" />}
+                  onClick={() => onAddItem({item: {__typename: 'RequestedDance'}, slideStyleId: null, _id: guid()})}
+                  className="addDance" />
+              }
+              {isIntroductionsSection
+                ? <AddIntroductionButton />
+                : <Button
+                  text={t('buttons.addInfo')}
+                  rightIcon={<ProgramTypeIcon type="EventProgram" />}
+                  onClick={() => onAddItem(newEventProgramItem)}
+                  className="addInfo"
+                />
+              }
+              {isIntroductionsSection ||
+                <IntervalMusicSwitch inline label={t('fields.intervalMusicAtEndOfSet')} path={`${path}.intervalMusic` as `danceSets.${number}.intervalMusic`} />
+              }
+            </td>
+            <td colSpan={2} className="add-spacing">
+              <DanceSetDuration program={program} intervalMusicDuration={intervalMusicDuration} />
+            </td>
+          </tr>
+        </tfoot>
+      </HTMLTable>
+      <div className='programDetails'>
+        <div className="contents">
+          <Button onClick={() => setFoo(null)} text={closeStr} />
+          {foo && <ProgramDetailsEditor2 path={foo} />}
+        </div>
+      </div>
+    </div>
   </>
 }
 
 interface ProgramItemEditorProps {
   dragHandle: DragHandle
   path: `${ProgramSectionPath}.program`
-  itemIndex: number
+  itemIndex: number,
+  onEdit: (p: ProgramItemPath) => unknown,
 }
 
-const ProgramItemEditor = React.memo(function ProgramItemEditor({dragHandle, path, itemIndex} : ProgramItemEditorProps) {
+const ProgramItemEditor = React.memo(function ProgramItemEditor({dragHandle, path, itemIndex, onEdit} : ProgramItemEditorProps) {
   const t = useT('components.eventProgramEditor')
   const itemPath = `${path}.${itemIndex}` as ProgramItemPath
   const item = useValueAt(itemPath)
@@ -203,6 +216,7 @@ const ProgramItemEditor = React.memo(function ProgramItemEditor({dragHandle, pat
       <Duration value={__typename !== 'RequestedDance' ? item.item.duration : 0} />
     </td>
     <td>
+      <Button icon="edit" title={t('buttons.editProgram')} onClick={() => onEdit(itemPath)} />
       {dragHandle}
       <InheritedSlideStyleSelector path={`${itemPath}.slideStyleId`} text={t('fields.style')} />
       <RemoveItemButton path={path} index={itemIndex} title={t('buttons.remove')} icon="cross" className="deleteItem" />
@@ -237,59 +251,12 @@ function ProgramDetailsEditor({path}: {path: ProgramItemPath}) {
 
 function DanceItemEditor({path}: {path: DanceProgramPath}) {
   const t = useT('components.eventProgramEditor')
-  const id = useValueAt(`${path}.item._id`)
-  const setItem = useOnChangeFor(`${path}.item`)
-  const [open, setOpen] = useState(false)
-  return <Flex className="eventProgramItemEditor">
-    <Field label={t('dance')} labelStyle="hidden" path={`${path as DanceProgramPath}.item`} component={DanceProgramChooser} />
-    {/* id &&
-      <NavigateButton
-        href={id}
-        text={<Icon icon="edit" title={t('buttons.editDance')} />}
-      />
-    */}
-    {id &&
-      <MenuButton
-        menu={
-          <div className="danceEditorPopover">
-            <DanceLoadingEditor danceId={id} onDeleteDance={() => {setItem({__typename: 'RequestedDance'}); setOpen(false)}} />
-          </div>
-        }
-        text={t('buttons.editDance')}
-        buttonProps={{rightIcon: 'caret-down'}}
-        open={open}
-        onSetOpen={setOpen}
-      />
-    }
-  </Flex>
-}
-
-function DanceLoadingEditor({danceId, onDeleteDance}: {danceId: string, onDeleteDance: () => unknown}) {
-  const result = useDance({id: danceId})
-  if (!result.data?.dance) return <LoadingState {...result} />
-
-  const {dance} = result.data
-  return <DanceEditor dance={dance} onDelete={onDeleteDance} showLink />
+  return <Field label={t('dance')} labelStyle="hidden" path={`${path as DanceProgramPath}.item`} component={DanceProgramChooser} />
 }
 
 function EventProgramItemEditor({path}: {path: ProgramItemPath}) {
   const t = useT('components.eventProgramEditor')
-  const [open, setOpen] = useState(false)
-  return <Flex className="eventProgramItemEditor">
-    <Input label={t('fields.eventProgram.name')} labelStyle="hidden" path={`${path}.item.name`} required />
-    <MenuButton
-      menu={
-        <div className="eventProgramItemPopover">
-          <Field label={t('fields.eventProgram.description')} path={`${path}.item.description`} component={MarkdownEditor} />
-          <Switch label={t('fields.eventProgram.showInLists')} path={`${path}.item.showInLists`} inline />
-        </div>
-      }
-      text={t('buttons.editProgram')}
-      buttonProps={{rightIcon: 'caret-down'}}
-      open={open}
-      onSetOpen={setOpen}
-    />
-  </Flex>
+  return <Input label={t('fields.eventProgram.name')} labelStyle="hidden" path={`${path}.item.name`} required />
 }
 
 function IntervalMusicEditor({danceSetPath}: {danceSetPath: DanceSetPath}) {

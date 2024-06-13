@@ -68,9 +68,45 @@ $borderColor: rgba(16, 22, 26, 0.15)
           padding: 6px
         td:nth-child(3)
           padding: 0
+  
+  .foo
+    display: flex
+    align-items: start
+    background: white
+    container-type: inline-size
+
+    & > *
+      transition: flex 0.3s ease 10ms
+    
+
+    .programList
+      flex: 1 1
+      
+    .programDetails
+      flex: 0 1 0
+      overflow: hidden
+
+      .contents
+        border-left: 1px solid $borderColor
+        width: calc(100cqw - 140px)
+        padding: 10px
+
+    &.foo-open
+      .programList
+        flex: 0 1 140px
+
+        tfoot, thead, td, button
+          display: none
+
+        td:first-child, td:nth-child(2)
+          display: table-cell
+
+      .programDetails
+        flex: 1 0
+
 
   .eventProgramItemEditor > :nth-child(1)
-      flex-grow: 1
+    flex-grow: 1
 
   .addDanceSetButtons
     margin: 1em 0
