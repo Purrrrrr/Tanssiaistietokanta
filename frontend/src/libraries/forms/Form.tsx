@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 
-import { ConflictMap, OnChangeHandler } from './types'
+import { ConflictMap, OnFormChangeHandler } from './types'
 
 import { FormMetadataContext, FormMetadataContextType, FormValidityContext, useCreateFormMetadataContext} from './formContext'
 import { FormStrings } from './strings'
@@ -13,7 +13,7 @@ export interface FormProps<T> extends
   Pick<Partial<FormMetadataContextType<T>>, 'readOnly' | 'inline' | 'labelStyle' | 'onResolveConflict'>
 {
   value: T
-  onChange: OnChangeHandler<T>
+  onChange: OnFormChangeHandler<T>
   conflicts?: ConflictMap<T>
   onValidityChange?: (validity: {hasErrors: boolean}) => unknown
   onSubmit?: (t: T, e: React.FormEvent) => unknown

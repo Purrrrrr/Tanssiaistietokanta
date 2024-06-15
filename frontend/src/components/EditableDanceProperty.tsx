@@ -32,7 +32,7 @@ export function EditableDanceProperty({dance: danceInDatabase, inline, property,
     setDance({
       ...dance,
       [property]: value,
-    })
+    }, property)
   }
   const label = useTranslation(`domain.dance.${property}`)
 

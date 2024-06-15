@@ -5,7 +5,7 @@ import createDebug from 'utils/debug'
 import {MergeableObject, SyncState} from './types'
 
 import {FormProps} from '../Form'
-import {OnChangeHandler, StringPath, TypedStringPath, Version} from '../types'
+import {OnFormChangeHandler, StringPath, TypedStringPath, Version} from '../types'
 import {PatchStrategy} from './patchStrategies'
 import {useAutosavingStateReducer} from './reducer'
 
@@ -19,7 +19,7 @@ export type { SyncState } from './types'
 
 export type UseAutosavingStateReturn<T extends MergeableObject> = {
   value: T
-  onChange: OnChangeHandler<T>
+  onChange: OnFormChangeHandler<T>
   formProps: AutosavingFormProps<T>
   state: SyncState
 }

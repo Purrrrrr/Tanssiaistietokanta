@@ -1,4 +1,4 @@
-import React from 'react'
+import type {ChangeEvent} from 'react'
 
 export type ChangeListener = () => unknown
 export type NewValue<T> = T | ((t: T) => T)
@@ -9,7 +9,7 @@ export type ExtendedFieldComponentProps<T, EventElement, Props> =
   & Omit<Props, keyof FieldComponentProps<T, EventElement>>
 
 export interface FieldComponentProps<T, EventElement = HTMLElement> extends FieldComponentPropsWithoutEvent<T> {
-  onChange: (t: NewValue<T>, e?: React.ChangeEvent<EventElement>) => unknown
+  onChange: (t: NewValue<T>, event?: ChangeEvent<EventElement>) => unknown
 }
 export interface FieldComponentPropsWithoutEvent<T> extends FieldComponentDisplayProps, FieldDataProps<T> { }
 

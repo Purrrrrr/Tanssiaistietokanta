@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useMemo, useRef } from 'react'
 import * as L from 'partial.lenses'
 
-import {ChangeListener, Conflict, ConflictMap, LabelStyle, NewValue, OnChangeHandler, toArrayPath, TypedStringPath, Version} from './types'
+import {ChangeListener, Conflict, ConflictMap, LabelStyle, NewValue, OnFormChangeHandler, toArrayPath, TypedStringPath, Version} from './types'
 
 import {formStringDefaults, FormStrings} from './strings'
 
@@ -28,7 +28,7 @@ export interface useCreateFormMetadataContextArgs<T> extends
   Pick<Partial<FormMetadataContextType<T>>, 'readOnly' | 'inline' | 'labelStyle' | 'onResolveConflict'>
 {
   value: T
-  onChange: OnChangeHandler<T>
+  onChange: OnFormChangeHandler<T>
   conflicts?: ConflictMap<T>
   strings?: FormStrings
 }
@@ -52,7 +52,7 @@ export function useCreateFormMetadataContext<T>(
           ? L.modify(toArrayPath(path), newValue, val)
           : L.set(toArrayPath(path), newValue, val)
 
-        onChange(valueRef.current as T)
+        onChange(valueRef.current as T, path)
       }
       return {
         getValueAt: (path) => L.get(toArrayPath(path), valueRef.current),

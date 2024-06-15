@@ -111,8 +111,8 @@ function InstructionsForDance({dance: danceInDatabase} : {dance: Dance}) {
       id={'instructions-'+dance._id}
       value={instructions}
       onChange={(instructions) => typeof instructions === 'function'
-        ? setDance(dance => ({...dance, instructions: instructions(dance.instructions ?? '')}))
-        : setDance({...dance, instructions})
+        ? setDance(dance => ({...dance, instructions: instructions(dance.instructions ?? '')}), 'instructions')
+        : setDance({...dance, instructions}, 'instructions')
       }
       markdownOverrides={markdownOverrides}
     />

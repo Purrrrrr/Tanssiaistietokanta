@@ -1,8 +1,13 @@
 import React from 'react'
 
+import type {NewValue} from './types/fieldComponent'
+import type {StringPath} from './types/path'
+
 export * from './types/field'
 export * from './types/fieldComponent'
 export * from './types/path'
+
+export type OnFormChangeHandler<T> = (t: NewValue<T>, path: StringPath<T>) => unknown
 
 export type PartialWhen<Cond extends boolean, T> = Cond extends true ? Partial<T> : T
 export type NoRequiredProperties<T extends object> = RequiredProperties<T> extends never ? true : false
