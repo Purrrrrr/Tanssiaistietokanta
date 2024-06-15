@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useMemo, useRef } from 'react'
 import * as L from 'partial.lenses'
 
-import {ChangeListener, Conflict, ConflictMap, LabelStyle, NewValue, toArrayPath, TypedStringPath, Version} from './types'
+import {ChangeListener, Conflict, ConflictMap, LabelStyle, NewValue, OnChangeHandler, toArrayPath, TypedStringPath, Version} from './types'
 
 import {formStringDefaults, FormStrings} from './strings'
 
@@ -23,7 +23,19 @@ export interface FormMetadataContextType<T> {
 }
 export const FormMetadataContext = React.createContext<FormMetadataContextType<unknown>|null>(null)
 
-export function useCreateFormMetadataContext<T>({value, onChange, labelStyle, inline, readOnly, conflicts, strings, onResolveConflict}): FormMetadataContextType<T> {
+
+export interface useCreateFormMetadataContextArgs<T> extends
+  Pick<Partial<FormMetadataContextType<T>>, 'readOnly' | 'inline' | 'labelStyle' | 'onResolveConflict'>
+{
+  value: T
+  onChange: OnChangeHandler<T>
+  conflicts?: ConflictMap<T>
+  strings?: FormStrings
+}
+
+export function useCreateFormMetadataContext<T>(
+  {value, onChange, labelStyle, inline, readOnly, conflicts, strings, onResolveConflict}: useCreateFormMetadataContextArgs<T>
+): FormMetadataContextType<T> {
   const listeners = useMemo(() => new Set<ChangeListener>(), [])
   const valueRef = useRef<T>()
   valueRef.current = value

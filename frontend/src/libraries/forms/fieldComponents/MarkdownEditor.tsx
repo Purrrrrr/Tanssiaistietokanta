@@ -17,7 +17,7 @@ class QRCode extends PluginComponent<object> {
   static contextType = FormMetadataContext
 
   render() {
-    const texts = (this.context?.getStrings?.() as FormStrings | undefined)?.markdownEditor ?? {
+    const texts = pluginToStrings(this) ?? {
       insertQRCode: '',
     }
     return (
@@ -40,7 +40,7 @@ class HelpLink extends PluginComponent<object> {
   static contextType = FormMetadataContext
 
   render() {
-    const texts = (this.context?.getStrings?.() as FormStrings | undefined)?.markdownEditor ?? {
+    const texts = pluginToStrings(this) ?? {
       helpUrl: '',
       help: '',
     }
@@ -55,6 +55,10 @@ class HelpLink extends PluginComponent<object> {
       </AnchorButton>
     )
   }
+}
+
+function pluginToStrings(plugin): FormStrings['markdownEditor'] | undefined {
+  return plugin.context?.getStrings?.()?.markdownEditor
 }
 
 MdEditor.use(QRCode, {})

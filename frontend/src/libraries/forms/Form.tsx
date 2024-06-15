@@ -10,15 +10,14 @@ const defaultLabelStyle = 'above'
 
 export interface FormProps<T> extends
   Omit<React.ComponentPropsWithoutRef<'form'>, 'onSubmit' | 'onChange'>,
-  Omit<Partial<FormMetadataContextType<T>>, 'onChange'>
+  Pick<Partial<FormMetadataContextType<T>>, 'readOnly' | 'inline' | 'labelStyle' | 'onResolveConflict'>
 {
   value: T
   onChange: OnChangeHandler<T>
   conflicts?: ConflictMap<T>
-  inline?: boolean
   onValidityChange?: (validity: {hasErrors: boolean}) => unknown
   onSubmit?: (t: T, e: React.FormEvent) => unknown
-  strings?: Partial<FormStrings>
+  strings?: FormStrings
 }
 
 const noOp = () => { /* no op */ }
@@ -53,7 +52,7 @@ export function Form<T>({
 
   const metadataContext = useCreateFormMetadataContext({value, onChange, labelStyle, inline, readOnly, conflicts, strings, onResolveConflict})
 
-  return <FormMetadataContext.Provider value={metadataContext}>
+  return <FormMetadataContext.Provider value={metadataContext as FormMetadataContextType<unknown>}>
     <FormValidityContext.Provider value={!hasErrors}>
       <ValidationContainer>
         <form {...rest} onSubmit={submitHandler} ref={form}>{children}</form>
