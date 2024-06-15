@@ -3,6 +3,7 @@ import { resolve } from 'node:path'
 
 import react from '@vitejs/plugin-react'
 import { defineConfig, loadEnv, Plugin } from 'vite'
+import checker from 'vite-plugin-checker'
 import tsconfigPaths from 'vite-tsconfig-paths'
 
 import setupProxy from './src/setupProxy'
@@ -22,6 +23,9 @@ export default defineConfig(({ mode }) => {
       importPrefixPlugin(),
       htmlPlugin(mode),
       setupProxyPlugin(),
+      checker({
+        typescript: true,
+      }),
     ],
   }
 })
