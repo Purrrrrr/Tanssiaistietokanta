@@ -52,7 +52,7 @@ export function EventProgramEditor({eventId, program: eventProgram}: EventProgra
   const {danceSets, introductions} = formProps.value
 
   return <Form {...formProps}>
-    <BackLink to="../..">{useTranslation('pages.events.eventProgramPage.backToEvent')}</BackLink>
+    <BackLink to="..">{useTranslation('pages.events.eventProgramPage.backToEvent')}</BackLink>
     <h1>
       {useTranslation('pages.events.eventProgramPage.pageTitle')}
       <SyncStatus style={{marginLeft: '1ch', top: '3px'}} className="flex-fill" state={state} />
