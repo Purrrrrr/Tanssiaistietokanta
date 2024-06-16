@@ -1,9 +1,9 @@
 import {changedVersion, randomGeneratorWithSeed, toEntity} from '../testUtils'
-import {Deleted, Entity, mapMergeData, MergeData, PartialMergeResult, removedArrayItemConflict, scalarConflict} from '../types'
+import {arrayConflict, Deleted, Entity, mapMergeData, MergeData, PartialMergeResult, removedArrayItemConflict, scalarConflict} from '../types'
 import merge from './index'
 import {mergeArrays} from './mergeArrays'
 
-type DummyEntity= Entity | number
+type DummyEntity = Entity | number
 type DummyEntityList = DummyEntity[] | string
 
 function toEntityList(data: DummyEntityList): Entity[] {
@@ -102,6 +102,11 @@ describe('mergeArrays', () => {
           {local: {_id: 3, value: 1}, server: {_id: 3, value: 5}, original: {_id: 3, value: 3}},
           {server: [3], local: [1]}
         ),
+        arrayConflict({
+          original: toEntityList([1, 2, 3, 4, 5]),
+          server: toEntityList([1, 2, 4, {_id: 3, value: 5}, 5]),
+          local: toEntityList([1, {_id: 3, value: 1}, 2, 4, 5]),
+        })
       ],
     }))
   })
@@ -195,7 +200,12 @@ describe('mergeArrays', () => {
           removedArrayItemConflict(
             {original: {_id: 3, value: 'b'}, local: {_id: 3, value: 'a'}, server: Deleted},
             2,
-          )
+          ),
+          arrayConflict({
+            original: toEntityList([1, 2, {_id: 3, value: 'b'}, 4, 5]),
+            server: toEntityList([1, 2, 4, 5]),
+            local: toEntityList([1, 2, {_id: 3, value: 'a'}, 4, 5]),
+          })
         ],
       }))
     })
@@ -212,7 +222,12 @@ describe('mergeArrays', () => {
           removedArrayItemConflict(
             {original: {_id: 3, value: 'b'}, local: Deleted, server: {_id: 3, value: 'a'}},
             2,
-          )
+          ),
+          arrayConflict({
+            original: toEntityList([1, 2, {_id: 3, value: 'b'}, 4, 5]),
+            server: toEntityList([1, 2, {_id: 3, value: 'a'}, 4, 5]),
+            local: toEntityList([1, 2, 4, 5]),
+          })
         ],
       }))
     })
@@ -352,7 +367,13 @@ describe('mergeArrays', () => {
         state: 'CONFLICT',
         modifications: '245167890',
         nonConflictingModifications: '425167890',
-        conflicts: [],
+        conflicts: [
+          arrayConflict({
+            original: toEntityList('1234567890'),
+            server: toEntityList('412567890'),
+            local: toEntityList('245167890'),
+          })
+        ],
       }))
     })
   })
@@ -453,6 +474,11 @@ describe('mergeArrays', () => {
           {original: {_id: 3, value: 3}, local: {_id: 3}, server: Deleted},
           2,
         ),
+        arrayConflict({
+          original: toEntityList([1, 2, 3, 4, 5]),
+          server: toEntityList([1, 4, 5, 6]),
+          local: toEntityList([1, {_id: 2}, {_id: 3}, 4]),
+        }),
       ],
     }))
   })
@@ -567,7 +593,13 @@ describe('mergeArrays', () => {
       state: 'CONFLICT',
       modifications: 'ACB',
       nonConflictingModifications: 'BAC',
-      conflicts: [],
+      conflicts: [
+        arrayConflict({
+          original: toEntityList('ABC'),
+          server: toEntityList('BAC'),
+          local: toEntityList('ACB'),
+        })
+      ],
     }))
   })
 
@@ -580,7 +612,13 @@ describe('mergeArrays', () => {
       state: 'CONFLICT',
       modifications: 'bacxACB',
       nonConflictingModifications: 'acbxBAC',
-      conflicts: [],
+      conflicts: [
+        arrayConflict({
+          original: toEntityList('ABCxabc'),
+          server: toEntityList('acbxBAC'),
+          local: toEntityList('ACBxbac'),
+        })
+      ],
     }))
   })
 
