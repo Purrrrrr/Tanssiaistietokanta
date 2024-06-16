@@ -44,7 +44,7 @@
     "prebuild": "npm run codegen",
     "build": "REACT_APP_BUILD_TIME=$(date -I) REACT_APP_COMMIT_REV=$(git show-ref --hash=6 HEAD) vite build",
     "pretest": "npm run codegen",
-    "test": "jest",
+    "test": "jest --watchAll",
     "codegen": "graphql-codegen --config codegen.ts",
     "dev": "vite"
   },
