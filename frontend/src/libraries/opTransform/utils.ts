@@ -1,3 +1,5 @@
+import deepEquals from 'fast-deep-equal'
+
 import { Value } from './types'
 
 export function ensureProperIndexes(listOrMaxLen: unknown[] | string | number, ...indexes: number[]): void {
@@ -6,6 +8,10 @@ export function ensureProperIndexes(listOrMaxLen: unknown[] | string | number, .
   if (outOfBounds !== undefined) {
     throw new Error(`Index out of bounds ${outOfBounds}. Array/string length is ${len}`)
   }
+}
+
+export function ensureEquality(a: Value, b: Value): void  {
+  if (!deepEquals(a, b)) throw new Error('Document mismatch ')
 }
 
 export function ensureArray(value: Value, callback: (value: Array<Value>) => Value): Value {

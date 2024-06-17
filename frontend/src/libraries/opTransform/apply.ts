@@ -2,7 +2,7 @@ import deepEquals from 'fast-deep-equal'
 
 import { Operation, Value } from './types'
 
-import { ensureArray, ensureProperIndexes, ensureString, strSplice } from './utils'
+import { ensureArray, ensureEquality, ensureProperIndexes, ensureString, strSplice } from './utils'
 
 export function apply(op: Operation, value: Value): Value {
   switch (op.type) {
@@ -34,9 +34,12 @@ export function apply(op: Operation, value: Value): Value {
       })
     case 'Remove':
       return ensureArray(value, list => {
-        ensureProperIndexes(list, op.index, op.index + op.values.length - 1)
+        const {index, values} = op
+        ensureProperIndexes(list, index, index + values.length - 1)
+        ensureEquality(values, list.slice(index, index + values.length))
+
         //Todo: check that removed values match
-        return list.toSpliced(op.index, op.values.length)
+        return list.toSpliced(index, values.length)
       })
     case 'Move':
       return ensureArray(value, list => {
@@ -45,7 +48,7 @@ export function apply(op: Operation, value: Value): Value {
         return list.toSpliced(from, length).toSpliced(to, 0, ...list.slice(from, from + length))
       })
     case 'Replace':
-      if (!deepEquals(op.from, value)) throw new Error('Document mismatch')
+      ensureEquality(op.from, value ?? null)
 
       return op.to
     case 'StringModification':

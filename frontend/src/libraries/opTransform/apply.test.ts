@@ -1,4 +1,4 @@
-import { add, apply as applyOp, listApply, move, NO_OP, remove, replace, stringModification } from './types'
+import { add, apply as applyOp, composite, listApply, move, NO_OP, remove, replace, stringModification } from './types'
 
 import { apply } from './apply'
 
@@ -6,6 +6,27 @@ import './testUtils'
 
 describe('apply', () => {
   describe('Composite', () => {
+    it.each([
+      [
+        composite([
+          applyOp({b: replace(null, 3)}),
+          applyOp({a: replace(1, 2)})
+        ]),
+        {a: 1}, {a: 2, b: 3}
+      ],
+      [
+        composite([
+          replace('foo', 'quz'),
+          composite([
+            stringModification({index: 0, add: 'boobar'}),
+            stringModification({index: 2, remove: 'oba'}),
+          ]),
+        ]),
+        'foo', 'borquz'
+      ],
+    ])('Except %s to modify %s to %s', (op, doc, result) => {
+      expect(apply(op, doc)).toStrictEqual(result)
+    })
   })
   describe('Apply', () => {
     it.each([
@@ -74,10 +95,18 @@ describe('apply', () => {
     })
 
     it.each([
+      //Indexes out of bounds
       [remove(2, [3, 4]), [1, 2, 3]],
       [remove(-1, [0, 1]), [1, 2, 3]],
     ])('Except %s to crash on %s', (op, doc) => {
       expect(() => apply(op, doc)).toThrow()
+    })
+
+    it.each([
+      [remove(1, [3]), [1, 2, 3]],
+      [remove(0, [0, 1]), [1, 2, 3]],
+    ])('Except %s to crash on %s', (op, doc) => {
+      expect(() => apply(op, doc)).toThrow('Document mismatch')
     })
   })
   describe('Move', () => {
