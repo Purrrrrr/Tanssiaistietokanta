@@ -18,8 +18,8 @@ describe('apply', () => {
         composite([
           replace('foo', 'quz'),
           composite([
-            stringModification({index: 0, add: 'boobar'}),
-            stringModification({index: 2, remove: 'oba'}),
+            stringModification(0, {add: 'boobar'}),
+            stringModification(2, {remove: 'oba'}),
           ]),
         ]),
         'foo', 'borquz'
@@ -35,7 +35,7 @@ describe('apply', () => {
         {a: 1}, {a: 2}
       ],
       [
-        applyOp({ a: replace(1, 2), b: stringModification({index: 0, add: 'pre'}) }),
+        applyOp({ a: replace(1, 2), b: stringModification(0, {add: 'pre'}) }),
         {a: 1, b: 'asdf'}, {a: 2, b: 'preasdf'}
       ],
     ])('Except %s to modify %s to %s', (op, doc, result) => {
@@ -151,31 +151,31 @@ describe('apply', () => {
       false,
     ])('should throw when given a non string: %s', (doc) => {
       expect(
-        () => apply(stringModification({index: 0, add: 'Fuu'}), doc)
+        () => apply(stringModification(0, {add: 'Fuu'}), doc)
       ).toThrow()
     })
 
     it('should insert to front', () => {
       expect(
-        apply(stringModification({index: 0, add: 'Fuu'}), 'Bar')
+        apply(stringModification(0, {add: 'Fuu'}), 'Bar')
       ).toBe('FuuBar')
     })
 
     it('should remove', () => {
       expect(
-        apply(stringModification({index: 1, remove: 'ar'}), 'Bar')
+        apply(stringModification(1, {remove: 'ar'}), 'Bar')
       ).toBe('B')
     })
 
     it('should replace', () => {
       expect(
-        apply(stringModification({index: 1, remove: 'ar', add: 'arbapapa'}), 'Bar')
+        apply(stringModification(1, {remove: 'ar', add: 'arbapapa'}), 'Bar')
       ).toBe('Barbapapa')
     })
 
     it('should check removed string for correctness', () => {
       expect(
-        () => apply(stringModification({index: 1, remove: 'arg', add: 'arbapapa'}), 'Bar')
+        () => apply(stringModification(1, {remove: 'arg', add: 'arbapapa'}), 'Bar')
       ).toThrow('String removal mismatch')
     })
   })

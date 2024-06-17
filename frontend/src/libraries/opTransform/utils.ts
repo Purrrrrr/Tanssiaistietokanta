@@ -26,6 +26,14 @@ export function ensureString(value: Value, callback: (value: string) => Value): 
   return callback(value)
 }
 
-export function strSplice(str: string, {index, remove, add}: {index: number, remove: string, add: string}) {
-  return str.slice(0, index) + add + str.slice(index + remove.length)
+export function splice(val: string, {index, remove, add}: {index: number, remove: string, add: string}): string
+export function splice(val: Value[], {index, remove, add}: {index: number, remove: Value[], add: Value[]}): Value[]
+export function splice<T extends string | Value[]>(val: T, {index, remove, add}: {index: number, remove: T, add: T}): string | Value[] {
+  ensureProperIndexes(val, index)
+  if (remove) ensureProperIndexes(val, index + remove.length - 1)
+
+  if (typeof val === 'string') {
+    return val.slice(0, index) + add + val.slice(index + remove.length)
+  }
+  return val.toSpliced(index, remove.length, ...add)
 }

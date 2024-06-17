@@ -1,3 +1,5 @@
+import deepEquals from 'fast-deep-equal'
+
 export type Operation = Composite | ObjectOp | NoOp | ListOp | Replace | StringModification
 export type ObjectOp = Apply
 export type ListOp = ListApply | Add | Remove | Move
@@ -100,7 +102,7 @@ export interface Move {
 }
 
 export function move(from: number, to: number, length: number = 1): Operation {
-  if (length === 0 || from === to) return NO_OP
+  if (length <= 0 || from === to) return NO_OP
 
   return op('Move', {from, to, length})
 }
@@ -114,7 +116,8 @@ export interface Replace {
 }
 
 export function replace(from: Value, to: Value): Operation {
-  if (from === to) return NO_OP
+  if (deepEquals(from, to)) return NO_OP
+
   return op('Replace', {from, to})
 }
 
@@ -126,11 +129,22 @@ export interface StringModification {
   add: string
 }
 
-export function stringModification({index, remove = '', add = ''}: {index: number, remove?: string, add?: string}): Operation {
+export function stringAdd(index: number, add: ''): NoOp
+export function stringAdd(index: number, add: string): StringModification
+export function stringAdd(index: number, add: string): Operation {
+  return stringModification(index, {add})
+}
+export function stringDel(index: number, remove: ''): NoOp
+export function stringDel(index: number, remove: string): StringModification
+export function stringDel(index: number, remove: string): Operation {
+  return stringModification(index, {remove})
+}
+
+export function stringModification(index: number, {remove = '', add = ''}: {remove?: string, add?: string}): StringModification | NoOp {
   //Modifications are empty or they add and delete the same string
   if (remove === add) return NO_OP
 
-  return op('StringModification', {index, remove, add})
+  return op('StringModification', {index, remove, add}) as StringModification
 }
 
 function op<T extends Exclude<Operation, NoOp>>(type: T['type'], op: Omit<T, 'type'>): T{

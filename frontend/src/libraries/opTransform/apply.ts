@@ -2,7 +2,7 @@ import deepEquals from 'fast-deep-equal'
 
 import { Operation, Value } from './types'
 
-import { ensureArray, ensureEquality, ensureProperIndexes, ensureString, strSplice } from './utils'
+import { ensureArray, ensureEquality, ensureProperIndexes, ensureString, splice } from './utils'
 
 export function apply(op: Operation, value: Value): Value {
   switch (op.type) {
@@ -56,7 +56,7 @@ export function apply(op: Operation, value: Value): Value {
         const {remove, index} = op
         if (str.slice(index, index+remove.length) !== remove) throw new Error('String removal mismatch')
 
-        return strSplice(str, op)
+        return splice(str, op)
       })
   }
 }

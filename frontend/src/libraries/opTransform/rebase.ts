@@ -3,7 +3,6 @@ import {
   Apply,
   Composite,
   composite,
-  isListOp,
   isStructuralOp,
   ListApply,
   Move,
@@ -12,23 +11,26 @@ import {
   Operation,
   Remove,
   Replace,
-  stringModification,
+  replace,
   StringModification,
+  stringModification,
 } from './types'
-import { strSplice } from './utils'
 
-export function rebase({op, base}: {op: Operation, base: Operation}): Operation {
+import { apply } from './apply'
+import { splice } from './utils'
+
+export function rebaseOnto(base: Operation, op: Operation): Operation {
   if (op.type === 'NoOp') {
     return op
   }
   if (base.type === 'Composite') {
-    return base.ops.reduce((newOp, baseOp) => rebase({op: newOp, base: baseOp}), op)
+    return base.ops.reduce((newOp, baseOp) => rebaseOnto(baseOp, newOp), op)
   }
   if (op.type === 'Composite') {
     const [first, ...rest] = op.ops
-    const rebasedFirst = rebase({base, op: first})
-    const rebasedOnto = rebase({base: first, op: base})
-    const rebasedRest = rebase({base: rebasedOnto, op: composite(rest)})
+    const rebasedFirst = rebaseOnto(base, first)
+    const rebasedOnto = rebaseOnto(first, base)
+    const rebasedRest = rebaseOnto(rebasedOnto, composite(rest))
 
     switch (rebasedRest.type) {
       case 'NoOp': return rebasedFirst
@@ -38,65 +40,65 @@ export function rebase({op, base}: {op: Operation, base: Operation}): Operation 
   }
   switch (base.type) {
     case 'Apply':
-      return rebaseOntoApply({op, base})
+      return rebaseOntoApply(base, op)
     case 'ListApply':
-      return rebaseOntoListApply({op, base})
+      return rebaseOntoListApply(base, op)
     case 'NoOp':
       return op
     case 'Add':
-      return rebaseOntoAdd({op, base})
+      return rebaseOntoAdd(base, op)
     case 'Remove':
-      return rebaseOntoRemove({op, base})
+      return rebaseOntoRemove(base, op)
     case 'Move':
-      return rebaseOntoMove({op, base})
+      return rebaseOntoMove(base, op)
     case 'Replace':
-      return rebaseOntoReplace({op, base})
+      return rebaseOntoReplace(base, op)
+    case 'ListSplice':
+      return rebaseOntoStringModification(base, op)
     case 'StringModification':
-      return rebaseOntoStringModification({op, base})
+      return rebaseOntoStringModification(base, op)
   }
 }
 
 type OperationToRebase = Exclude<Operation, NoOp | Composite>
 
-function rebaseOntoApply({op, base}: {op: OperationToRebase, base: Apply}): Operation {
+function rebaseOntoApply(base: Apply, op: OperationToRebase): Operation {
   return NO_OP
 }
 
-function rebaseOntoListApply({op, base}: {op: OperationToRebase, base: ListApply}): Operation {
+function rebaseOntoListApply(base: ListApply, op: OperationToRebase): Operation {
   return NO_OP
 }
 
-function rebaseOntoAdd({op, base}: {op: OperationToRebase, base: Add}): Operation {
+function rebaseOntoAdd(base: Add, op: OperationToRebase): Operation {
   return NO_OP
 }
 
-function rebaseOntoRemove({op, base}: {op: OperationToRebase, base: Remove}): Operation {
+function rebaseOntoRemove(base: Remove, op: OperationToRebase): Operation {
   return NO_OP
 }
 
-function rebaseOntoMove({op, base}: {op: OperationToRebase, base: Move}): Operation {
+function rebaseOntoMove(base: Move, op: OperationToRebase): Operation {
   return NO_OP
 }
 
-function rebaseOntoReplace({op, base}: {op: OperationToRebase, base: Replace}): Operation {
+function rebaseOntoReplace(base: Replace, op: OperationToRebase): Operation {
   return NO_OP
 }
 
-function rebaseOntoStringModification({op, base}: {op: OperationToRebase, base: StringModification}): Operation {
+function rebaseOntoStringModification(base: StringModification, op: OperationToRebase): Operation {
   if (isStructuralOp(op)) {
     //Type mismatch: the other op would have failed
     return NO_OP
   }
   if (op.type === 'Replace') {
-    // StringModification only makes sense after the original string
-    return NO_OP
-
+    return replace(apply(base, op.from), op.to)
   }
 
-  return rebaseStringOps({op, base})
+  return rebaseSliceOps(base, op)
 }
 
-function rebaseStringOps({base, op}: {op: StringModification, base: StringModification}): Operation {
+function rebaseSliceOps(base: StringModification, op: StringModification): StringModification | NoOp {
   const baseDeletes = base.remove.length
   const baseInserts = base.add.length
   const baseIndex = base.index
@@ -105,43 +107,71 @@ function rebaseStringOps({base, op}: {op: StringModification, base: StringModifi
   const { index, add, remove } = op
   const end = index + remove.length
 
-  if (end <= baseIndex) return op
+  if (end <= baseIndex) {
+    //    BASE
+    // OP
+    return op
+  }
   if (baseEnd <= index) {
-    return stringModification({
-      index: index + baseInserts - baseDeletes,
-      add, remove,
-    })
+    // BASE
+    //      OP
+    return stringModification(
+      index + baseInserts - baseDeletes,
+      { add, remove }
+    )
   }
   // The edits overlap somehow: index < baseEnd && baseIndex < end
-  // This means that one of them has a delete, since inserts cannot overlap
+  // This means that at least one of them has a delete, since inserts cannot overlap
 
   if (baseDeletes) {
-    // const insert = stringModification({index: baseIndex, add: base.add})
+    if (end <= baseEnd) {
+      if (index > baseIndex) {
+        // -BASE-
+        //   OP
+        //Everything op does happens in a deleted slice
+        return NO_OP
+      }
 
-    //Either op is an insert or otherwise so small that it's fully inside the deletions of the base op
-    if (baseIndex <= index && end <= baseEnd) {
-      return NO_OP
+      //   -BASE-
+      // -OP--
+      return stringModification(index, {add, remove: remove.slice(0, index - baseIndex)})
+    }
+    // baseEnd < end
+    if (index < baseIndex) {
+      //   BASE
+      // ---OP---
+      //op completely deletes the text that base had modified:
+      const baseIndexInsideOp = baseIndex - index
+      console.log({index, baseIndex, baseIndexInsideOp, remove: base.remove, add: base.add})
+      return stringModification(
+        index,
+        {
+          add,
+          remove: splice(remove, {index: baseIndexInsideOp, remove: base.remove, add: base.add})
+        }
+      )
     }
 
-    //op completely deletes the text that base had modified:
-    if (index < baseIndex && baseEnd < end) {
-      const baseIndexInsideOp = index - baseIndex
-      return stringModification({
-        index, add,
-        remove: strSplice(remove, {index: baseIndexInsideOp, remove: base.remove, add: base.add})
-      })
-    }
-
-    //index === end, so baseIndex < index < baseEnd
-    //op is fully inside the deletions of base
-    return NO_OP
+    // baseIndex <= index && baseEnd < end && index <= end && index > baseEnd
+    // ----BASE
+    //    OP------
+    return stringModification(
+      baseIndex + baseInserts,
+      {
+        add: add.slice(baseIndex - index),
+        remove: remove.slice(baseIndex - index)
+      }
+    )
   }
 
   //Base only inserts text and op deletes (and maybe inserts) some: baseIndex == baseEnd && index < baseIndex < end
   //Base is fully inside op. Just enlarge op
   const baseIndexInsideOp = baseIndex - index
-  return stringModification({
-    index, add,
-    remove: strSplice(remove, {index: baseIndexInsideOp, remove: '', add: base.add})
-  })
+  return stringModification(
+    index,
+    {
+      add,
+      remove: splice(remove, {index: baseIndexInsideOp, remove: '', add: base.add})
+    },
+  )
 }
