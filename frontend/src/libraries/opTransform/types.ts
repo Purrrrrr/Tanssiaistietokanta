@@ -106,21 +106,21 @@ export function stringModification(index: number, {remove = '', add = ''}: {remo
   //Modifications are empty or they add and delete the same string
   if (remove === add) return NO_OP
 
-  return op('StringModification', {index, remove, add}) as StringModification
+  return op<StringModification>('StringModification', {index, remove, add})
 }
 
 /* List Ops */
 
-export function add(beforeIndex: number, values: Value[]): Operation {
+export function add(beforeIndex: number, values: Value[]): ListSplice | NoOp {
   if (values.length === 0) return NO_OP
 
-  return op('ListSplice', {index: beforeIndex, add: values, remove: []})
+  return op<ListSplice>('ListSplice', {index: beforeIndex, add: values, remove: []})
 }
 
-export function remove(index: number, values: Value[]): Operation {
+export function remove(index: number, values: Value[]): ListSplice | NoOp {
   if (values.length === 0) return NO_OP
 
-  return op('ListSplice', {index, remove: values, add: []})
+  return op<ListSplice>('ListSplice', {index, remove: values, add: []})
 }
 
 export interface Move {

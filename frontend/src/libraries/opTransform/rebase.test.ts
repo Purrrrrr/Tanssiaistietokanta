@@ -43,7 +43,7 @@ describe.only('rebase', () => {
     })
 
     const [ins, del, strMod] = [stringAdd, stringDel, stringModification]
-    it.only.each([
+    it.each([
       //result,       op,            base
       //    BASE
       // OP
