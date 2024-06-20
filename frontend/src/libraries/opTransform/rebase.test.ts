@@ -65,11 +65,11 @@ describe.only('rebase', () => {
       [ins(0, '???'), strMod(0, {remove: 'Bar', add: '???'}), del(0, 'Bare')],
       // BASE
       //  OP-
-      [NO_OP, strMod(1, {remove: 'are', add: '???'}), del(0, 'Bare')],
+      [ins(0, '???'), strMod(1, {remove: 'are', add: '???'}), del(0, 'Bare')],
       // -BASE-
       //   OP
       [NO_OP, del(1, 'o'), del(0, 'Foo')],
-      [NO_OP, strMod(1, {remove: 'o', add: 'whatever'}), del(0, 'Foo')],
+      [ins(0, 'whatever'), strMod(1, {remove: 'o', add: 'whatever'}), del(0, 'Foo')],
       //   -BASE-
       // -OP--
       [del(1, 'o'), del(1, 'oo'), del(2, 'oBar')],

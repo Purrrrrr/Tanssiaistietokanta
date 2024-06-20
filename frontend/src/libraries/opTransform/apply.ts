@@ -27,20 +27,6 @@ export function apply(op: Operation, value: Value): Value {
       })
     case 'NoOp':
       return value
-    case 'Add':
-      return ensureArray(value, list => {
-        ensureProperIndexes(list.length + 1, op.beforeIndex)
-        return list.toSpliced(op.beforeIndex, 0, ...op.values)
-      })
-    case 'Remove':
-      return ensureArray(value, list => {
-        const {index, values} = op
-        ensureProperIndexes(list, index, index + values.length - 1)
-        ensureEquality(values, list.slice(index, index + values.length))
-
-        //Todo: check that removed values match
-        return list.toSpliced(index, values.length)
-      })
     case 'Move':
       return ensureArray(value, list => {
         const {to, from, length} = op
@@ -51,6 +37,13 @@ export function apply(op: Operation, value: Value): Value {
       ensureEquality(op.from, value ?? null)
 
       return op.to
+    case 'ListSplice':
+      return ensureArray(value, list => {
+        const {remove, index} = op
+        if (!deepEquals(list.slice(index, index+remove.length), remove)) throw new Error('List removal mismatch')
+
+        return splice(list, op)
+      })
     case 'StringModification':
       return ensureString(value, str => {
         const {remove, index} = op

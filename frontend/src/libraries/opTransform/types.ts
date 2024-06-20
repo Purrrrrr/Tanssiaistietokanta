@@ -2,7 +2,7 @@ import deepEquals from 'fast-deep-equal'
 
 export type Operation = Composite | ObjectOp | NoOp | ListOp | Replace | StringModification
 export type ObjectOp = Apply
-export type ListOp = ListApply | Add | Remove | Move
+export type ListOp = ListApply | ListSplice | Move
 
 export type Value = null | string | number | boolean | JSONObject | Array<Value>;
 export interface JSONObject {
@@ -68,30 +68,59 @@ export interface NoOp {
 
 export const NO_OP: NoOp = {type: 'NoOp'}
 
-/* List Ops */
+/* Splices for lists and strings */
 
-export interface Add {
-  type: 'Add'
-  beforeIndex: number
-  values: Value[]
+export interface ListSplice extends Splice<Value[]>{
+  type: 'ListSplice'
 }
+
+export interface Splice<T> {
+  index: number
+  remove: T
+  add: T
+}
+export function listSplice(index: number, {remove = [], add = []}: {remove?: Value[], add?: Value[]}): ListSplice | NoOp {
+  //Modifications are empty or they add and delete the same string
+  if (deepEquals(remove, add)) return NO_OP
+
+  return op('ListSplice', {index, remove, add}) as ListSplice
+}
+
+//Generic string operation that can either add or remove or replace text
+export interface StringModification extends Splice<string> {
+  type: 'StringModification'
+}
+
+export function stringAdd(index: number, add: ''): NoOp
+export function stringAdd(index: number, add: string): StringModification
+export function stringAdd(index: number, add: string): Operation {
+  return stringModification(index, {add})
+}
+export function stringDel(index: number, remove: ''): NoOp
+export function stringDel(index: number, remove: string): StringModification
+export function stringDel(index: number, remove: string): Operation {
+  return stringModification(index, {remove})
+}
+
+export function stringModification(index: number, {remove = '', add = ''}: {remove?: string, add?: string}): StringModification | NoOp {
+  //Modifications are empty or they add and delete the same string
+  if (remove === add) return NO_OP
+
+  return op('StringModification', {index, remove, add}) as StringModification
+}
+
+/* List Ops */
 
 export function add(beforeIndex: number, values: Value[]): Operation {
   if (values.length === 0) return NO_OP
 
-  return op('Add', {beforeIndex, values})
-}
-
-export interface Remove {
-  type: 'Remove'
-  index: number
-  values: Value[]
+  return op('ListSplice', {index: beforeIndex, add: values, remove: []})
 }
 
 export function remove(index: number, values: Value[]): Operation {
   if (values.length === 0) return NO_OP
 
-  return op('Remove', {index, values})
+  return op('ListSplice', {index, remove: values, add: []})
 }
 
 export interface Move {
@@ -121,32 +150,6 @@ export function replace(from: Value, to: Value): Operation {
   return op('Replace', {from, to})
 }
 
-//Generic string operation that can either add or remove or replace text
-export interface StringModification {
-  type: 'StringModification'
-  index: number
-  remove: string
-  add: string
-}
-
-export function stringAdd(index: number, add: ''): NoOp
-export function stringAdd(index: number, add: string): StringModification
-export function stringAdd(index: number, add: string): Operation {
-  return stringModification(index, {add})
-}
-export function stringDel(index: number, remove: ''): NoOp
-export function stringDel(index: number, remove: string): StringModification
-export function stringDel(index: number, remove: string): Operation {
-  return stringModification(index, {remove})
-}
-
-export function stringModification(index: number, {remove = '', add = ''}: {remove?: string, add?: string}): StringModification | NoOp {
-  //Modifications are empty or they add and delete the same string
-  if (remove === add) return NO_OP
-
-  return op('StringModification', {index, remove, add}) as StringModification
-}
-
 function op<T extends Exclude<Operation, NoOp>>(type: T['type'], op: Omit<T, 'type'>): T{
   return { type, ...op, ...opExtra } as unknown as T
 }
@@ -157,11 +160,13 @@ function op<T extends Exclude<Operation, NoOp>>(type: T['type'], op: Omit<T, 'ty
 export function isStructuralOp(op: Operation): op is ListOp | ObjectOp {
   return op.type === 'Apply' || isListOp(op)
 }
+export function isObjectOp(op: Operation): op is ObjectOp {
+  return op.type === 'Apply'
+}
 export function isListOp(op: Operation): op is ListOp {
   switch (op.type) {
     case 'ListApply':
-    case 'Add':
-    case 'Remove':
+    case 'ListSplice':
     case 'Move':
       return true
   }

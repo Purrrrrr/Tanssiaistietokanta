@@ -106,7 +106,7 @@ describe('apply', () => {
       [remove(1, [3]), [1, 2, 3]],
       [remove(0, [0, 1]), [1, 2, 3]],
     ])('Except %s to crash on %s', (op, doc) => {
-      expect(() => apply(op, doc)).toThrow('Document mismatch')
+      expect(() => apply(op, doc)).toThrow('List removal mismatch')
     })
   })
   describe('Move', () => {
