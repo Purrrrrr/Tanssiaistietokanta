@@ -6,9 +6,11 @@ import {
   isListOp,
   isObjectOp,
   isScalarOp,
+  isStringOp,
   isStructuralOp,
   ListApply,
   listApply,
+  ListOp,
   ListSplice,
   listSplice,
   Move,
@@ -20,6 +22,7 @@ import {
   opError,
   Replace,
   replace,
+  stringAdd,
   StringModification,
   stringModification,
 } from './types'
@@ -141,11 +144,47 @@ function rebaseOntoMove(base: Move, op: OperationToRebase): Operation {
 }
 
 function rebaseOntoReplace(base: Replace, op: OperationToRebase): Operation {
-  return NO_OP
+  const { to } = base
+  if (Array.isArray(to)) {
+    if (!isListOp(op)) {
+      return opError('Type mismatch')
+    }
+    const remove = Array.isArray(base.from) ? base.from : new Array(maxIndex(op) + 1)
+
+    return rebaseOnto(listSplice(0, {remove, add: to}), op)
+  } else if (typeof to === 'object' && to !== null) {
+    if (!isObjectOp(op)) {
+      return opError('Type mismatch')
+    }
+    const from = base.from ?? {}
+    const baseOps = Object.fromEntries(
+      Object.keys(op.ops).map(key => ([key, replace(from[key], to[key])]))
+    )
+    return rebaseOnto(applyOp(baseOps), op)
+  } else if (typeof to === 'string'){
+    if (!isStringOp(op)) {
+      return opError('Type mismatch')
+    }
+
+    return stringAdd(to.length, op.add)
+  }
+  //We have no ops for numbers, booleans or nulls yet (except for replace, that is handled elsewhere)
+  return opError('Type mismatch')
+}
+
+function maxIndex(op: ListOp): number {
+  switch (op.type) {
+    case 'ListApply':
+      return Math.max(...op.ops.keys())
+    case 'ListSplice':
+      return op.index + op.remove.length
+    case 'Move':
+      return Math.max(op.from, op.to) + op.length
+  }
 }
 
 function rebaseOntoListSplice(base: ListSplice, op: OperationToRebase): Operation {
-  if (isScalarOp(op) || isObjectOp(op)) {
+  if (!isListOp(op)) {
     //Type mismatch: the other op would have failed
     return opError('Type mismatch')
   }

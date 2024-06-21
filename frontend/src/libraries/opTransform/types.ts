@@ -3,6 +3,7 @@ import deepEquals from 'fast-deep-equal'
 export type Operation = Composite | ObjectOp | NoOp | ListOp | Replace | StringModification | OpError
 export type ObjectOp = Apply
 export type ListOp = ListApply | ListSplice | Move
+export type ScalarOp = StringModification
 
 export type Value = null | string | number | boolean | JSONObject | Array<Value>;
 export interface JSONObject {
@@ -181,8 +182,11 @@ export function isListOp(op: Operation): op is ListOp {
   return false
 }
 
+export function isStringOp(op: Operation): op is StringModification {
+  return op.type === 'StringModification'
+}
 
-export function isScalarOp(op: Operation): op is StringModification {
+export function isScalarOp(op: Operation): op is ScalarOp {
   return op.type === 'StringModification'
 }
 
