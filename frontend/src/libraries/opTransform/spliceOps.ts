@@ -1,4 +1,5 @@
 import {
+  add,
   ListSplice,
   remove,
   Splice,
@@ -7,7 +8,12 @@ import {
 
 import { splice } from './utils'
 
-export function indexAfterSpliceOp(index: number, op: Splice<Value[] | string>): number | null {
+export function indexAfterSpliceOp(index: number, op: Splice<Value[] | string>): number {
+  const indexOp = add(index, [0]) as ListSplice
+  return rebaseSpliceOps(op, indexOp, []).index
+}
+
+export function elementIndexAfterSpliceOp(index: number, op: Splice<Value[] | string>): number | null {
   const indexOp = remove(index, [0]) as ListSplice
   const {index: newIndex, remove: remainingRemove} = rebaseSpliceOps(op, indexOp, [])
 

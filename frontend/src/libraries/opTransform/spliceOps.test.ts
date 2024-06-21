@@ -1,10 +1,43 @@
 import {  Splice, stringAdd, stringDel, StringModification, stringModification } from './types'
 
-import { indexAfterSpliceOp, rebaseSpliceOps } from './spliceOps'
+import { elementIndexAfterSpliceOp, indexAfterSpliceOp, rebaseSpliceOps } from './spliceOps'
 
 const [ins, del, strMod] = [stringAdd, stringDel, stringModification]
 
 describe('indexAfterSpliceOp', () => {
+  it.each([
+    //OP removes index
+    [0, del(0, 'foo'), 0],
+    [1, del(0, 'foo'), 0],
+    [2, del(0, 'foo'), 0],
+    // Op is before index
+    [3, del(0, 'foo'), 0],
+    [4, del(0, 'foo'), 1],
+    [0, ins(0, 'foo'), 0],
+    [1, ins(0, 'foo'), 4],
+    [5, strMod(0, {remove: '12345', add: '123'}), 3],
+    [3, strMod(0, {remove: '123', add: '12345'}), 5],
+    //Again plus one
+    [1, del(1, 'foo'), 1],
+    [2, del(1, 'foo'), 1],
+    [3, del(1, 'foo'), 1],
+    [4, del(1, 'foo'), 1],
+    [5, del(1, 'foo'), 2],
+    [6, strMod(1, {remove: '12345', add: '123'}), 4],
+    [4, strMod(1, {remove: '123', add: '12345'}), 6],
+    // Op is after index
+    [2, ins(4, 'foo'), 2],
+    [2, del(4, 'foo'), 2],
+    [2, del(3, 'foo'), 2],
+    [2, del(2, 'foo'), 2],
+    [0, strMod(1, {remove: '12345', add: '123'}), 0],
+    [0, strMod(1, {remove: '123', add: '12345'}), 0],
+  ])('Index %i after %s is %i', (index, op, result) => {
+    expect(indexAfterSpliceOp(index, op as StringModification)).toBe(result)
+  })
+})
+
+describe('elementIndexAfterSpliceOp', () => {
   it.each([
     //OP removes index
     [0, del(0, 'foo'), null],
@@ -32,8 +65,8 @@ describe('indexAfterSpliceOp', () => {
     [2, del(2, 'foo'), null],
     [0, strMod(1, {remove: '12345', add: '123'}), 0],
     [0, strMod(1, {remove: '123', add: '12345'}), 0],
-  ])('Index %i after %s is %i', (index, op, result) => {
-    expect(indexAfterSpliceOp(index, op as StringModification)).toBe(result)
+  ])('Index of element at %i after %s is %i', (index, op, result) => {
+    expect(elementIndexAfterSpliceOp(index, op as StringModification)).toBe(result)
   })
 })
 

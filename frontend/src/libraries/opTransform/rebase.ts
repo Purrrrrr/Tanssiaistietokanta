@@ -6,9 +6,11 @@ import {
   isScalarOp,
   isStructuralOp,
   ListApply,
+  listApply,
   ListSplice,
   listSplice,
   Move,
+  move,
   NO_OP,
   NoOp,
   Operation,
@@ -19,7 +21,7 @@ import {
 } from './types'
 
 import { apply } from './apply'
-import { indexAfterSpliceOp, rebaseSpliceOps } from './spliceOps'
+import { elementIndexAfterSpliceOp, indexAfterSpliceOp, rebaseSpliceOps } from './spliceOps'
 
 export function rebaseOnto(base: Operation, op: Operation): Operation {
   if (op.type === 'NoOp') {
@@ -52,7 +54,7 @@ export function rebaseOnto(base: Operation, op: Operation): Operation {
     case 'Replace':
       return rebaseOntoReplace(base, op)
     case 'ListSplice':
-      return NO_OP //rebaseOntoStringModification(base, op)
+      return rebaseOntoListSplice(base, op)
     case 'StringModification':
       return rebaseOntoStringModification(base, op)
   }
@@ -82,10 +84,27 @@ function rebaseOntoListSplice(base: ListSplice, op: OperationToRebase): Operatio
     return NO_OP
   }
   switch (op.type) {
-    case 'ListApply':
-      return NO_OP //TODO
-    case 'Move':
-      return NO_OP //TODO
+    case 'ListApply': {
+      const ops = new Map<number, Operation>()
+      Array.from(op.ops.entries())
+        .forEach(([index, op]) => {
+          const newIndex = elementIndexAfterSpliceOp(index, base)
+          if (newIndex !== null) {
+            ops.set(newIndex, op)
+          }
+        })
+      return listApply(ops)
+    }
+    case 'Move': {
+      const from = elementIndexAfterSpliceOp(op.from, base)
+      if (!from) return NO_OP
+      const to = indexAfterSpliceOp(op.from, base)
+
+      //TODO: larger move support
+      if (op.length !== 1) throw new Error('should not happen')
+
+      return move(from, to)
+    }
   }
   if (op.type === 'Replace') {
     return replace(apply(base, op.from), op.to)

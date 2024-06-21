@@ -127,7 +127,7 @@ export interface Move {
   type: 'Move'
   from: number
   to: number
-  length: number //Default is 1
+  length: 1 //Maybe support larger moves later
 }
 
 export function move(from: number, to: number, length: number = 1): Operation {
