@@ -1,4 +1,4 @@
-import { add, apply as applyOp, composite, listApply, move, NO_OP, NoOp, remove, replace, stringAdd, stringDel, StringModification, stringModification } from './types'
+import { add, apply as applyOp, composite, listApply, move, NO_OP, NoOp, opError, remove, replace, stringAdd, stringDel, StringModification, stringModification } from './types'
 
 import { rebaseOnto } from './rebase'
 
@@ -24,10 +24,10 @@ describe.only('rebase', () => {
       add(0, [1]),
       remove(0, [1]),
       applyOp({a: replace(1, 2)})
-    ])('should return NoOp when not rebased upon another string op', (base) => {
+    ])('should return OpError when not rebased upon another string op', (base) => {
       expect(
         rebaseOnto(base, stringModification(0, {add: 'Fuu'}))
-      ).toBe(NO_OP)
+      ).toStrictEqual(opError('Type mismatch'))
     })
 
     it('should rebase replacements to include modified string', () => {

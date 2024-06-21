@@ -1,6 +1,6 @@
 import deepEquals from 'fast-deep-equal'
 
-export type Operation = Composite | ObjectOp | NoOp | ListOp | Replace | StringModification
+export type Operation = Composite | ObjectOp | NoOp | ListOp | Replace | StringModification | OpError
 export type ObjectOp = Apply
 export type ListOp = ListApply | ListSplice | Move
 
@@ -17,6 +17,12 @@ export type ValueType = 'string' | 'number' | 'boolean' | 'array' | 'object'
 let opExtra = {}
 export const setOpExtra = (extra) => { opExtra = extra }
 
+export interface OpError {
+  type: 'OpError'
+}
+export const opError = (msg?: string) => op('OpError', {})
+
+
 /* Composition ops */
 
 // A list of operations meant to be taken as an atomic step
@@ -26,6 +32,7 @@ export interface Composite {
 }
 
 export function composite(unfilteredOps: Operation[]): Operation {
+  if (unfilteredOps.some(isOpError)) return opError()
   const ops = unfilteredOps.filter(o => o.type !== 'NoOp')
   if (ops.length === 0) return NO_OP
   if (ops.length === 1) return ops[0]
@@ -38,6 +45,7 @@ export interface Apply {
   ops: Record<string, Operation>
 }
 export function apply(ops: Record<string, Operation>): Operation {
+  if (Object.values(ops).some(isOpError)) return opError()
   const entries = Array.from(Object.entries(ops)).filter(([_, op]) => !isNoOp(op))
   if (entries.length === 0) return NO_OP
 
@@ -180,4 +188,8 @@ export function isScalarOp(op: Operation): op is StringModification {
 
 export function isNoOp(op: Operation): op is NoOp{
   return op.type === 'NoOp'
+}
+
+export function isOpError(op: Operation): op is OpError{
+  return op.type === 'OpError'
 }

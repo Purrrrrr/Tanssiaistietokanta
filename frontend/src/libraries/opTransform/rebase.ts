@@ -1,7 +1,9 @@
 import {
   Apply,
+  apply as applyOp,
   Composite,
   composite,
+  isListOp,
   isObjectOp,
   isScalarOp,
   isStructuralOp,
@@ -14,6 +16,8 @@ import {
   NO_OP,
   NoOp,
   Operation,
+  OpError,
+  opError,
   Replace,
   replace,
   StringModification,
@@ -24,7 +28,7 @@ import { apply } from './apply'
 import { elementIndexAfterSpliceOp, indexAfterSpliceOp, rebaseSpliceOps } from './spliceOps'
 
 export function rebaseOnto(base: Operation, op: Operation): Operation {
-  if (op.type === 'NoOp') {
+  if (op.type === 'NoOp' || op.type === 'OpError') {
     return op
   }
   if (base.type === 'Composite') {
@@ -42,7 +46,12 @@ export function rebaseOnto(base: Operation, op: Operation): Operation {
       default: return composite([rebasedFirst, rebasedRest])
     }
   }
+  if (op.type === 'Replace') {
+    return replace(apply(base, op.from), op.to)
+  }
   switch (base.type) {
+    case 'OpError':
+      return opError('Operation happens after error')
     case 'Apply':
       return rebaseOntoApply(base, op)
     case 'ListApply':
@@ -60,18 +69,75 @@ export function rebaseOnto(base: Operation, op: Operation): Operation {
   }
 }
 
-type OperationToRebase = Exclude<Operation, NoOp | Composite>
+type OperationToRebase = Exclude<Operation, NoOp | Composite | Replace | OpError>
 
 function rebaseOntoApply(base: Apply, op: OperationToRebase): Operation {
-  return NO_OP
+  if (isScalarOp(op) || isListOp(op)) {
+    //Type mismatch: the other op would have failed
+    return opError('Type mismatch')
+  }
+  // op is Apply
+  const ops = Object.fromEntries(
+    Object.entries(op.ops)
+      .map(([key, subOp]) => {
+        const newOp = key in base.ops
+          ? rebaseOnto(base.ops[key], subOp)
+          : subOp
+        return [key, newOp]
+      })
+  )
+  return applyOp(ops)
 }
 
 function rebaseOntoListApply(base: ListApply, op: OperationToRebase): Operation {
-  return NO_OP
+  if (isScalarOp(op) || isObjectOp(op)) {
+    //Type mismatch: the other op would have failed
+    return opError('Type mismatch')
+  }
+
+  switch (op.type) {
+    case 'Move':
+      return op
+    case 'ListApply': {
+      const ops = new Map(op.ops)
+      Array.from(op.ops.entries())
+        .forEach(([index, subOp]) => {
+          const baseOp = base.ops.get(index)
+          if (baseOp) {
+            const newOp = rebaseOnto(baseOp, subOp)
+            ops.set(index, newOp)
+          }
+        })
+      return listApply(ops)
+    }
+    case 'ListSplice': {
+      const { remove, add, index } = op
+      if (remove.length === 0) return op
+
+      const newRemove = remove.map((val, remIndex) => {
+        const baseOp = base.ops.get(index + remIndex)
+        return baseOp ? apply(baseOp, val) : val
+      })
+      return listSplice(index, {add, remove: newRemove})
+    }
+  }
 }
 
 function rebaseOntoMove(base: Move, op: OperationToRebase): Operation {
-  return NO_OP
+  if (isScalarOp(op) || isObjectOp(op)) {
+    //Type mismatch: the other op would have failed
+    return opError('Type mismatch')
+  }
+  switch (op.type) {
+    case 'Move':
+      return NO_OP
+    case 'ListApply': {
+      return NO_OP
+    }
+    case 'ListSplice': {
+      return NO_OP
+    }
+  }
 }
 
 function rebaseOntoReplace(base: Replace, op: OperationToRebase): Operation {
@@ -81,7 +147,7 @@ function rebaseOntoReplace(base: Replace, op: OperationToRebase): Operation {
 function rebaseOntoListSplice(base: ListSplice, op: OperationToRebase): Operation {
   if (isScalarOp(op) || isObjectOp(op)) {
     //Type mismatch: the other op would have failed
-    return NO_OP
+    return opError('Type mismatch')
   }
   switch (op.type) {
     case 'ListApply': {
@@ -106,9 +172,6 @@ function rebaseOntoListSplice(base: ListSplice, op: OperationToRebase): Operatio
       return move(from, to)
     }
   }
-  if (op.type === 'Replace') {
-    return replace(apply(base, op.from), op.to)
-  }
 
   const mods = rebaseSpliceOps(base, op, [])
   return listSplice(mods.index ?? op.index, { add: op.add, remove: mods.remove ?? op.remove })
@@ -117,10 +180,7 @@ function rebaseOntoListSplice(base: ListSplice, op: OperationToRebase): Operatio
 function rebaseOntoStringModification(base: StringModification, op: OperationToRebase): Operation {
   if (isStructuralOp(op)) {
     //Type mismatch: the other op would have failed
-    return NO_OP
-  }
-  if (op.type === 'Replace') {
-    return replace(apply(base, op.from), op.to)
+    return opError('Type mismatch')
   }
 
   const mods = rebaseSpliceOps(base, op, '')

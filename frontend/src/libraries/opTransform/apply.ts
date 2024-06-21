@@ -51,5 +51,7 @@ export function apply(op: Operation, value: Value): Value {
 
         return splice(str, op)
       })
+    case 'OpError':
+      throw new Error()
   }
 }
