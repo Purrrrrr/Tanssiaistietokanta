@@ -42,12 +42,12 @@ export function replace(from: Value, to: Value): Operation {
 /*------------------*/
 
 
-export function apply(ops: Record<string, Operation>): Operation {
+export function applyProps(ops: Record<string, Operation>): Operation {
   if (Object.values(ops).some(isOpError)) return opError()
   const entries = Array.from(Object.entries(ops)).filter(([_, op]) => !isNoOp(op))
   if (entries.length === 0) return NO_OP
 
-  return op(opTypes.Apply, {ops: Object.fromEntries(entries)})
+  return op(opTypes.ApplyProps, {ops: Object.fromEntries(entries)})
 }
 
 /*------------------*/
@@ -56,16 +56,16 @@ export function apply(ops: Record<string, Operation>): Operation {
 
 type IndexOperation = [number, Operation]
 
-export function listApply(ops: Map<number, Operation>): Operation
-export function listApply(...ops: IndexOperation[]): Operation
-export function listApply(ops: Map<number, Operation> | IndexOperation, ...additionalOps: IndexOperation[]): Operation {
+export function applyIndexes(ops: Map<number, Operation>): Operation
+export function applyIndexes(...ops: IndexOperation[]): Operation
+export function applyIndexes(ops: Map<number, Operation> | IndexOperation, ...additionalOps: IndexOperation[]): Operation {
   const entries = Array.isArray(ops) ? [ops, ...additionalOps] : Array.from(ops.entries())
   const filteredEntries = entries.filter(([_, op]) => !isNoOp(op))
   const filteredOps = new Map(filteredEntries)
   if (filteredOps.size === 0) return NO_OP
   if (filteredEntries.length !== filteredOps.size) throw new Error('Duplicate ops detected')
 
-  return op(opTypes.ListApply, {ops: filteredOps})
+  return op(opTypes.ApplyIndexes, {ops: filteredOps})
 }
 
 export function listSplice(index: number, {remove = [], add = []}: {remove?: Value[], add?: Value[]}): ListSplice | NoOp {
@@ -129,25 +129,27 @@ function op<T extends Exclude<Operation, NoOp>>(type: T['type'], op: Omit<T, 'ty
   return { type, ...op, ...opExtra } as unknown as T
 }
 
-export const ops = {
+export const listOps = {
+  apply: applyIndexes,
+  insert: add,
+  remove,
+  move,
+  splice: listSplice,
+}
+
+export const stringOps = {
+  insert: stringAdd,
+  remove: stringDel,
+  splice: stringModification,
+}
+export const Op = {
   NO_OP,
   error: opError,
   composite,
   replace,
-  object: {
-    apply,
-  },
-  list: {
-    insert: add,
-    remove,
-    move,
-    splice: listSplice,
-  },
-  string: {
-    insert: stringAdd,
-    remove: stringDel,
-    splice: stringModification,
-  }
+  applyProps,
+  list: listOps,
+  string: stringOps,
 }
 
-export default ops
+export default Op

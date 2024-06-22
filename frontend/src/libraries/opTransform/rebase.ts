@@ -9,22 +9,19 @@ import {
 
 import { apply } from './apply'
 import {
-  apply as applyOp,
+  applyProps,
   composite,
-  listApply,
-  listSplice,
-  move,
+  listOps,
   NO_OP,
   opError,
   replace,
-  stringAdd,
-  stringModification,
+  stringOps,
 } from './ops'
 import { elementIndexAfterSpliceOp, indexAfterSpliceOp, rebaseSpliceOps } from './spliceOps'
 import type {
-  Apply,
+  ApplyIndexes,
+  ApplyProps,
   Composite,
-  ListApply,
   ListOp,
   ListSplice,
   Move,
@@ -61,9 +58,9 @@ export function rebaseOnto(base: Operation, op: Operation): Operation {
     return replace(apply(base, op.from), op.to)
   }
   switch (base.type) {
-    case opTypes.Apply:
+    case opTypes.ApplyProps:
       return rebaseOntoApply(base, op)
-    case opTypes.ListApply:
+    case opTypes.ApplyIndexes:
       return rebaseOntoListApply(base, op)
     case opTypes.NoOp:
       return op
@@ -80,7 +77,7 @@ export function rebaseOnto(base: Operation, op: Operation): Operation {
 
 type OperationToRebase = Exclude<Operation, NoOp | Composite | Replace | OpError>
 
-function rebaseOntoApply(base: Apply, op: OperationToRebase): Operation {
+function rebaseOntoApply(base: ApplyProps, op: OperationToRebase): Operation {
   if (isScalarOp(op) || isListOp(op)) {
     //Type mismatch: the other op would have failed
     return opError('Type mismatch')
@@ -95,10 +92,10 @@ function rebaseOntoApply(base: Apply, op: OperationToRebase): Operation {
         return [key, newOp]
       })
   )
-  return applyOp(ops)
+  return applyProps(ops)
 }
 
-function rebaseOntoListApply(base: ListApply, op: OperationToRebase): Operation {
+function rebaseOntoListApply(base: ApplyIndexes, op: OperationToRebase): Operation {
   if (isScalarOp(op) || isObjectOp(op)) {
     //Type mismatch: the other op would have failed
     return opError('Type mismatch')
@@ -107,7 +104,7 @@ function rebaseOntoListApply(base: ListApply, op: OperationToRebase): Operation 
   switch (op.type) {
     case opTypes.Move:
       return op
-    case opTypes.ListApply: {
+    case opTypes.ApplyIndexes: {
       const ops = new Map(op.ops)
       Array.from(op.ops.entries())
         .forEach(([index, subOp]) => {
@@ -117,7 +114,7 @@ function rebaseOntoListApply(base: ListApply, op: OperationToRebase): Operation 
             ops.set(index, newOp)
           }
         })
-      return listApply(ops)
+      return listOps.apply(ops)
     }
     case opTypes.ListSplice: {
       const { remove, add, index } = op
@@ -127,7 +124,7 @@ function rebaseOntoListApply(base: ListApply, op: OperationToRebase): Operation 
         const baseOp = base.ops.get(index + remIndex)
         return baseOp ? apply(baseOp, val) : val
       })
-      return listSplice(index, {add, remove: newRemove})
+      return listOps.splice(index, {add, remove: newRemove})
     }
   }
 }
@@ -140,7 +137,7 @@ function rebaseOntoMove(base: Move, op: OperationToRebase): Operation {
   switch (op.type) {
     case opTypes.Move:
       return NO_OP
-    case opTypes.ListApply: {
+    case opTypes.ApplyIndexes: {
       return NO_OP
     }
     case opTypes.ListSplice: {
@@ -157,7 +154,7 @@ function rebaseOntoReplace(base: Replace, op: OperationToRebase): Operation {
     }
     const remove = Array.isArray(base.from) ? base.from : new Array(maxIndex(op) + 1)
 
-    return rebaseOnto(listSplice(0, {remove, add: to}), op)
+    return rebaseOnto(listOps.splice(0, {remove, add: to}), op)
   } else if (typeof to === 'object' && to !== null) {
     if (!isObjectOp(op)) {
       return opError('Type mismatch')
@@ -166,13 +163,13 @@ function rebaseOntoReplace(base: Replace, op: OperationToRebase): Operation {
     const baseOps = Object.fromEntries(
       Object.keys(op.ops).map(key => ([key, replace(from[key], to[key])]))
     )
-    return rebaseOnto(applyOp(baseOps), op)
+    return rebaseOnto(applyProps(baseOps), op)
   } else if (typeof to === 'string'){
     if (!isStringOp(op)) {
       return opError('Type mismatch')
     }
 
-    return stringAdd(to.length, op.add)
+    return stringOps.insert(to.length, op.add)
   }
   //We have no ops for numbers, booleans or nulls yet (except for replace, that is handled elsewhere)
   return opError('Type mismatch')
@@ -180,7 +177,7 @@ function rebaseOntoReplace(base: Replace, op: OperationToRebase): Operation {
 
 function maxIndex(op: ListOp): number {
   switch (op.type) {
-    case opTypes.ListApply:
+    case opTypes.ApplyIndexes:
       return Math.max(...op.ops.keys())
     case opTypes.ListSplice:
       return op.index + op.remove.length
@@ -195,7 +192,7 @@ function rebaseOntoListSplice(base: ListSplice, op: OperationToRebase): Operatio
     return opError('Type mismatch')
   }
   switch (op.type) {
-    case opTypes.ListApply: {
+    case opTypes.ApplyIndexes: {
       const ops = new Map<number, Operation>()
       Array.from(op.ops.entries())
         .forEach(([index, op]) => {
@@ -204,7 +201,7 @@ function rebaseOntoListSplice(base: ListSplice, op: OperationToRebase): Operatio
             ops.set(newIndex, op)
           }
         })
-      return listApply(ops)
+      return listOps.apply(ops)
     }
     case opTypes.Move: {
       const from = elementIndexAfterSpliceOp(op.from, base)
@@ -214,12 +211,12 @@ function rebaseOntoListSplice(base: ListSplice, op: OperationToRebase): Operatio
       //TODO: larger move support
       if (op.length !== 1) throw new Error('should not happen')
 
-      return move(from, to)
+      return listOps.move(from, to)
     }
   }
 
   const mods = rebaseSpliceOps(base, op, [])
-  return listSplice(mods.index ?? op.index, { add: op.add, remove: mods.remove ?? op.remove })
+  return listOps.splice(mods.index ?? op.index, { add: op.add, remove: mods.remove ?? op.remove })
 }
 
 function rebaseOntoStringModification(base: StringModification, op: OperationToRebase): Operation {
@@ -229,5 +226,5 @@ function rebaseOntoStringModification(base: StringModification, op: OperationToR
   }
 
   const mods = rebaseSpliceOps(base, op, '')
-  return stringModification(mods.index ?? op.index, { add: op.add, remove: mods.remove ?? op.remove })
+  return stringOps.splice(mods.index ?? op.index, { add: op.add, remove: mods.remove ?? op.remove })
 }

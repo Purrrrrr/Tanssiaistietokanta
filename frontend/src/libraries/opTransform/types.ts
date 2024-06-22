@@ -14,9 +14,9 @@ export interface Splice<T> {
 type OpType = Operation['type']
 export const opTypes = {
   Composite: 'Composite',
-  Apply: 'Apply',
+  ApplyProps: 'ApplyProps',
   NoOp: 'NoOp',
-  ListApply: 'ListApply',
+  ApplyIndexes: 'ApplyIndexes',
   ListSplice: 'ListSplice',
   Move: 'Move',
   Replace: 'Replace',
@@ -50,9 +50,9 @@ export interface Replace {
 /*    Object ops    */
 /*------------------*/
 
-export type ObjectOp = Apply
-export interface Apply {
-  type: 'Apply'
+export type ObjectOp = ApplyProps
+export interface ApplyProps {
+  type: 'ApplyProps'
   ops: Record<string, Operation>
 }
 
@@ -60,10 +60,10 @@ export interface Apply {
 /*     List ops    */
 /*------------------*/
 
-export type ListOp = ListApply | ListSplice | Move
+export type ListOp = ApplyIndexes | ListSplice | Move
 
-export interface ListApply {
-  type: 'ListApply'
+export interface ApplyIndexes {
+  type: 'ApplyIndexes'
   ops: Map<number, Operation>
 }
 export interface ListSplice extends Splice<Value[]>{
@@ -93,33 +93,33 @@ export interface StringModification extends Splice<string> {
 
 
 export function isStructuralOp(op: Operation): op is ListOp | ObjectOp {
-  return op.type === 'Apply' || isListOp(op)
+  return op.type === opTypes.ApplyProps || isListOp(op)
 }
 export function isObjectOp(op: Operation): op is ObjectOp {
-  return op.type === 'Apply'
+  return op.type === opTypes.ApplyProps
 }
 export function isListOp(op: Operation): op is ListOp {
   switch (op.type) {
-    case 'ListApply':
-    case 'ListSplice':
-    case 'Move':
+    case opTypes.ApplyIndexes:
+    case opTypes.ListSplice:
+    case opTypes.Move:
       return true
   }
   return false
 }
 
 export function isStringOp(op: Operation): op is StringModification {
-  return op.type === 'StringModification'
+  return op.type === opTypes.StringModification
 }
 
 export function isScalarOp(op: Operation): op is ScalarOp {
-  return op.type === 'StringModification'
+  return op.type === opTypes.StringModification
 }
 
 export function isNoOp(op: Operation): op is NoOp{
-  return op.type === 'NoOp'
+  return op.type === opTypes.NoOp
 }
 
 export function isOpError(op: Operation): op is OpError{
-  return op.type === 'OpError'
+  return op.type === opTypes.OpError
 }

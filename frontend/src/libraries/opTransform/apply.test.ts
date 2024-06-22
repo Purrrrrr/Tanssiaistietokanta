@@ -1,5 +1,5 @@
 import { apply } from './apply'
-import { add, apply as applyOp, composite, listApply, move, NO_OP, remove, replace, stringModification } from './ops'
+import { add, applyIndexes, applyProps, composite, move, NO_OP, remove, replace, stringModification } from './ops'
 
 import './testUtils'
 
@@ -8,8 +8,8 @@ describe('apply', () => {
     it.each([
       [
         composite([
-          applyOp({b: replace(null, 3)}),
-          applyOp({a: replace(1, 2)})
+          applyProps({b: replace(null, 3)}),
+          applyProps({a: replace(1, 2)})
         ]),
         {a: 1}, {a: 2, b: 3}
       ],
@@ -27,27 +27,27 @@ describe('apply', () => {
       expect(apply(op, doc)).toStrictEqual(result)
     })
   })
-  describe('Apply', () => {
+  describe('ApplyProps', () => {
     it.each([
       [
-        applyOp({ a: replace(1, 2) }),
+        applyProps({ a: replace(1, 2) }),
         {a: 1}, {a: 2}
       ],
       [
-        applyOp({ a: replace(1, 2), b: stringModification(0, {add: 'pre'}) }),
+        applyProps({ a: replace(1, 2), b: stringModification(0, {add: 'pre'}) }),
         {a: 1, b: 'asdf'}, {a: 2, b: 'preasdf'}
       ],
     ])('Except %s to modify %s to %s', (op, doc, result) => {
       expect(apply(op, doc)).toStrictEqual(result)
     })
   })
-  describe('ListApply', () => {
+  describe('ApplyIndexes', () => {
     it.each([
       [
-        listApply([0, replace(0, 1)]), [0], [1]
+        applyIndexes([0, replace(0, 1)]), [0], [1]
       ],
       [
-        listApply([0, replace(0, 1)], [2, replace(2, 3)]), [0, 1, 2], [1, 1, 3]
+        applyIndexes([0, replace(0, 1)], [2, replace(2, 3)]), [0, 1, 2], [1, 1, 3]
       ],
     ])('Except %s to modify %s to %s', (op, doc, result) => {
       expect(apply(op, doc)).toStrictEqual(result)

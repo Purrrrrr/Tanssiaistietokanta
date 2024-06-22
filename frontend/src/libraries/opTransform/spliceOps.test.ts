@@ -1,8 +1,8 @@
-import {  stringAdd, stringDel, stringModification } from './ops'
+import {  stringOps } from './ops'
 import { elementIndexAfterSpliceOp, indexAfterSpliceOp, rebaseSpliceOps } from './spliceOps'
 import type {  Splice, StringModification } from './types'
 
-const [ins, del, strMod] = [stringAdd, stringDel, stringModification]
+const { insert: ins, remove: del, splice: strMod } = stringOps
 
 describe('indexAfterSpliceOp', () => {
   it.each([

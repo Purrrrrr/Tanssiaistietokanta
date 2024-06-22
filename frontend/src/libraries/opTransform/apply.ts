@@ -8,7 +8,7 @@ export function apply(op: Operation, value: Value): Value {
   switch (op.type) {
     case opTypes.Composite:
       return op.ops.reduce((val, subOp) => apply(subOp, val), value)
-    case opTypes.Apply: {
+    case opTypes.ApplyProps: {
       if (typeof value !== 'object' || value === null) {
         throw new Error('Value is not an object')
       }
@@ -18,7 +18,7 @@ export function apply(op: Operation, value: Value): Value {
       }
       return newObj
     }
-    case opTypes.ListApply:
+    case opTypes.ApplyIndexes:
       return ensureArray(value, list => {
         return list.map((val, index) => {
           const subOp = op.ops.get(index)

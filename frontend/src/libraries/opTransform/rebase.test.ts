@@ -7,18 +7,16 @@ import {
 import { apply } from './apply'
 import {
   add,
-  apply as applyOp,
+  applyIndexes,
+  applyProps,
   composite,
-  listApply,
   listSplice,
   move,
   NO_OP,
   opError,
   remove,
   replace,
-  stringAdd,
-  stringDel,
-  stringModification
+  stringOps,
 } from './ops'
 import { rebaseOnto } from './rebase'
 
@@ -30,8 +28,8 @@ const exampleOps = [
   { op: remove(0, [1]), doc: [1] },
   { op: remove(1, [2]), doc: [1, 2] },
   { op: listSplice(1, {add: [4], remove: [2, 3]}), doc: [1, 2, 3] },
-  { op: applyOp({a: replace(1, 2)}), doc: {a: 1} },
-  { op: listApply([1, replace(1, 2)]), doc: [0, 1] },
+  { op: applyProps({a: replace(1, 2)}), doc: {a: 1} },
+  { op: applyIndexes([1, replace(1, 2)]), doc: [0, 1] },
   { op: opError('some error'), doc: 0 },
   { op: NO_OP, doc: 0 },
   { op: replace(0, 1), doc: 0 },
@@ -66,38 +64,40 @@ describe('rebase', () => {
       add(0, [1]),
       remove(0, [1]),
       move(0, 1, 2),
-      applyOp({a: replace(1, 2)}),
-      listApply([1, replace(1, 2)]),
-      stringModification(0, {add: 'Fuu'}),
+      applyProps({a: replace(1, 2)}),
+      applyIndexes([1, replace(1, 2)]),
+      stringOps.splice(0, {add: 'Fuu'}),
     ])('does not modify %s', (op) => {
       expect(rebaseOnto(NO_OP, op)).toStrictEqual(op)
     })
   })
 
+
+
   describe('onto StringModifications', () => {
     it.each([
       add(0, [1]),
       remove(0, [1]),
-      applyOp({a: replace(1, 2)})
+      applyProps({a: replace(1, 2)})
     ])('should return OpError when not rebased upon another string op', (base) => {
       expect(
-        rebaseOnto(base, stringModification(0, {add: 'Fuu'}))
+        rebaseOnto(base, stringOps.splice(0, {add: 'Fuu'}))
       ).toStrictEqual(opError('Type mismatch'))
     })
 
     it('should rebase replacements to include modified string', () => {
       expect(
-        rebaseOnto(stringModification(0, {add: 'Fuu'}), replace('Bar', 'Quz'))
+        rebaseOnto(stringOps.splice(0, {add: 'Fuu'}), replace('Bar', 'Quz'))
       ).toStrictEqual(replace('FuuBar', 'Quz'))
     })
 
     it('should crash when rebasing a non string replacement', () => {
       expect(
-        () => rebaseOnto(stringModification(0, {add: 'Fuu'}), replace(null, 'Quz'))
+        () => rebaseOnto(stringOps.splice(0, {add: 'Fuu'}), replace(null, 'Quz'))
       ).toThrow()
     })
 
-    const [ins, del, strMod] = [stringAdd, stringDel, stringModification]
+    const [ins, del, strMod] = [stringOps.insert, stringOps.remove, stringOps.splice]
     it.each([
       //result,       op,            base
       //    BASE

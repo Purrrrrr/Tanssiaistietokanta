@@ -5,18 +5,17 @@ import {
 } from './types'
 
 import {
-  add,
-  remove,
+  listOps as list,
 } from './ops'
 import { splice } from './utils'
 
 export function indexAfterSpliceOp(index: number, op: Splice<Value[] | string>): number {
-  const indexOp = add(index, [0]) as ListSplice
+  const indexOp = list.insert(index, [0]) as ListSplice
   return rebaseSpliceOps(op, indexOp, []).index
 }
 
 export function elementIndexAfterSpliceOp(index: number, op: Splice<Value[] | string>): number | null {
-  const indexOp = remove(index, [0]) as ListSplice
+  const indexOp = list.remove(index, [0]) as ListSplice
   const {index: newIndex, remove: remainingRemove} = rebaseSpliceOps(op, indexOp, [])
 
   if (remainingRemove?.length === 0) return null
