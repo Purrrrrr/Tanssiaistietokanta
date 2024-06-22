@@ -55,7 +55,11 @@ export function rebaseOnto(base: Operation, op: Operation): Operation {
     }
   }
   if (op.type === opTypes.Replace) {
-    return replace(apply(base, op.from), op.to)
+    try {
+      return replace(apply(base, op.from), op.to)
+    } catch (e) {
+      return opError(e instanceof Error ? e.message : undefined)
+    }
   }
   switch (base.type) {
     case opTypes.ApplyProps:

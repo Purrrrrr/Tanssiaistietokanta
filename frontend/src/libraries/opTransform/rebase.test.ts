@@ -10,9 +10,11 @@ import {
   applyIndexes,
   applyProps,
   composite,
+  listOps,
   listSplice,
   move,
   NO_OP,
+  Op,
   opError,
   remove,
   replace,
@@ -22,14 +24,28 @@ import { rebaseOnto } from './rebase'
 
 import './testUtils'
 
-const exampleOps = [
+const exampleListOps = [
   { op: add(0, [1]), doc: [] },
   { op: add(1, [1]), doc: [0] },
   { op: remove(0, [1]), doc: [1] },
   { op: remove(1, [2]), doc: [1, 2] },
   { op: listSplice(1, {add: [4], remove: [2, 3]}), doc: [1, 2, 3] },
-  { op: applyProps({a: replace(1, 2)}), doc: {a: 1} },
   { op: applyIndexes([1, replace(1, 2)]), doc: [0, 1] },
+]
+const exampleObjectOps = [
+  { op: applyProps({a: replace(1, 2)}), doc: {a: 1} },
+  { op: applyProps({a: stringOps.splice(1, {remove: 'sdf', add: 'bcd'})}), doc: {a: 'asdf'} },
+]
+const exampleStringOps = [
+  { op: stringOps.insert(0, 'fuu'), doc: '' },
+  { op: stringOps.remove(0, 'fuu'), doc: 'fuu' },
+  { op: stringOps.splice(0, {remove: 'fuu', add: 'bar'}), doc: 'fuu' },
+]
+
+const exampleOps = [
+  ...exampleListOps,
+  ...exampleObjectOps,
+  ...exampleStringOps,
   { op: opError('some error'), doc: 0 },
   { op: NO_OP, doc: 0 },
   { op: replace(0, 1), doc: 0 },
@@ -72,14 +88,83 @@ describe('rebase', () => {
     })
   })
 
+  describe('onto Composite', () => {
+    it('??', () => {
+      expect(1).toBe(1)
+    })
+  })
 
+  describe('Composite onto', () => {
+    it('??', () => {
+      expect(1).toBe(1)
+    })
+  })
+
+  describe('onto ApplyProps', () => {
+    it.each([
+      ...exampleListOps,
+      ...exampleStringOps,
+    ])('should return OpError when not rebased upon another object op', ({op}) => {
+      expect(
+        rebaseOnto(Op.applyProps({a: replace(0, 1)}), op)
+      ).toStrictEqual(opError('Type mismatch'))
+    })
+
+    it('??', () => {
+      expect(1).toBe(1)
+    })
+  })
+
+  describe('onto ApplyIndexes', () => {
+    it.each([
+      ...exampleObjectOps,
+      ...exampleStringOps,
+    ])('should return OpError when not rebased upon another list op', ({op}) => {
+      expect(
+        rebaseOnto(listOps.apply([0, replace(0, 1)], [1, replace(1, 2)]), op)
+      ).toStrictEqual(opError('Type mismatch'))
+    })
+
+    it('??', () => {
+      expect(1).toBe(1)
+    })
+  })
+
+  describe('onto ListSplice', () => {
+    it.each([
+      ...exampleObjectOps,
+      ...exampleStringOps,
+    ])('should return OpError when not rebased upon another list op', ({op}) => {
+      expect(
+        rebaseOnto(listOps.splice(0, {add: [0, 1, 2], remove: [1, 2]}), op)
+      ).toStrictEqual(opError('Type mismatch'))
+    })
+
+    it('??', () => {
+      expect(1).toBe(1)
+    })
+  })
+
+  describe('onto Move', () => {
+    it.each([
+      ...exampleObjectOps,
+      ...exampleStringOps,
+    ])('should return OpError when not rebased upon another list op', ({op}) => {
+      expect(
+        rebaseOnto(listOps.move(0, 1), op)
+      ).toStrictEqual(opError('Type mismatch'))
+    })
+
+    it('??', () => {
+      expect(1).toBe(1)
+    })
+  })
 
   describe('onto StringModifications', () => {
     it.each([
-      add(0, [1]),
-      remove(0, [1]),
-      applyProps({a: replace(1, 2)})
-    ])('should return OpError when not rebased upon another string op', (base) => {
+      ...exampleListOps,
+      ...exampleObjectOps,
+    ])('should return OpError when not rebased upon another string op', ({op: base}) => {
       expect(
         rebaseOnto(base, stringOps.splice(0, {add: 'Fuu'}))
       ).toStrictEqual(opError('Type mismatch'))
@@ -91,10 +176,9 @@ describe('rebase', () => {
       ).toStrictEqual(replace('FuuBar', 'Quz'))
     })
 
-    it('should crash when rebasing a non string replacement', () => {
-      expect(
-        () => rebaseOnto(stringOps.splice(0, {add: 'Fuu'}), replace(null, 'Quz'))
-      ).toThrow()
+    it('should return an error op when rebasing a non string replacement', () => {
+      expect(rebaseOnto(stringOps.splice(0, {add: 'Fuu'}), replace(null, 'Quz')))
+        .toStrictEqual(Op.error('Value is not a string'))
     })
 
     const [ins, del, strMod] = [stringOps.insert, stringOps.remove, stringOps.splice]
