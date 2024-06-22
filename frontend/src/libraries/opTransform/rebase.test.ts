@@ -1,10 +1,56 @@
-import { add, apply as applyOp, composite, listApply, move, NO_OP, NoOp, opError, remove, replace, stringAdd, stringDel, StringModification, stringModification } from './types'
+import { inspect } from 'util'
 
+import {
+  add,
+  apply as applyOp,
+  composite,
+  listApply,
+  listSplice,
+  move,
+  NO_OP,
+  NoOp,
+  opError,
+  remove,
+  replace,
+  stringAdd,
+  stringDel,
+  StringModification,
+  stringModification
+} from './types'
+
+import { apply } from './apply'
 import { rebaseOnto } from './rebase'
 
 import './testUtils'
 
-describe.only('rebase', () => {
+const exampleOps = [
+  { op: add(0, [1]), doc: [] },
+  { op: add(1, [1]), doc: [0] },
+  { op: remove(0, [1]), doc: [1] },
+  { op: remove(1, [2]), doc: [1, 2] },
+  { op: listSplice(1, {add: [4], remove: [2, 3]}), doc: [1, 2, 3] },
+  { op: applyOp({a: replace(1, 2)}), doc: {a: 1} },
+  { op: listApply([1, replace(1, 2)]), doc: [0, 1] },
+  { op: opError('some error'), doc: 0 },
+  { op: NO_OP, doc: 0 },
+  { op: replace(0, 1), doc: 0 },
+].map(op => ({...op, opDescr: inspect(op.op)}))
+
+describe('rebase', () => {
+
+  it.each(exampleOps)('replace op onto $opDescr produces the same op with a modified from', ({op: base, doc}) => {
+    const op = replace(doc, 2)
+    expect(rebaseOnto(base, op)).toStrictEqual(replace(apply(base, doc), 2))
+  })
+
+  it.each(exampleOps)('NoOp onto $opDescr produces NoOp', ({op: base}) => {
+    expect(rebaseOnto(base, NO_OP)).toStrictEqual(NO_OP)
+  })
+
+  it.each(exampleOps)('OpError onto $opDescr produces the same OpError', ({op: base}) => {
+    const error = opError('err')
+    expect(rebaseOnto(base, error)).toStrictEqual(error)
+  })
 
   describe('onto NoOp', () => {
     it.each([
