@@ -1,5 +1,6 @@
 import { inspect } from 'util'
 
+import { apply } from './apply'
 import {
   add,
   apply as applyOp,
@@ -8,18 +9,18 @@ import {
   listSplice,
   move,
   NO_OP,
-  NoOp,
   opError,
   remove,
   replace,
   stringAdd,
   stringDel,
-  StringModification,
   stringModification
-} from './types'
-
-import { apply } from './apply'
+} from './ops'
 import { rebaseOnto } from './rebase'
+import type {
+  NoOp,
+  StringModification,
+} from './types'
 
 import './testUtils'
 

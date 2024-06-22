@@ -1,11 +1,13 @@
 import {
-  add,
   ListSplice,
-  remove,
   Splice,
   Value,
 } from './types'
 
+import {
+  add,
+  remove,
+} from './ops'
 import { splice } from './utils'
 
 export function indexAfterSpliceOp(index: number, op: Splice<Value[] | string>): number {

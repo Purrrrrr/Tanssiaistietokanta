@@ -1,6 +1,6 @@
-import {  Splice, stringAdd, stringDel, StringModification, stringModification } from './types'
-
+import {  stringAdd, stringDel, stringModification } from './ops'
 import { elementIndexAfterSpliceOp, indexAfterSpliceOp, rebaseSpliceOps } from './spliceOps'
+import type {  Splice, StringModification } from './types'
 
 const [ins, del, strMod] = [stringAdd, stringDel, stringModification]
 

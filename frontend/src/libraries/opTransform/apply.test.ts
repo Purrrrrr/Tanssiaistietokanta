@@ -1,6 +1,5 @@
-import { add, apply as applyOp, composite, listApply, move, NO_OP, remove, replace, stringModification } from './types'
-
 import { apply } from './apply'
+import { add, apply as applyOp, composite, listApply, move, NO_OP, remove, replace, stringModification } from './ops'
 
 import './testUtils'
 

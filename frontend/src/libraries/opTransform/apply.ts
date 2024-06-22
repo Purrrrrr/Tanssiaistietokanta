@@ -1,14 +1,14 @@
 import deepEquals from 'fast-deep-equal'
 
-import { Operation, Value } from './types'
+import { Operation, opTypes, Value } from './types'
 
 import { ensureArray, ensureEquality, ensureProperIndexes, ensureString, splice } from './utils'
 
 export function apply(op: Operation, value: Value): Value {
   switch (op.type) {
-    case 'Composite':
+    case opTypes.Composite:
       return op.ops.reduce((val, subOp) => apply(subOp, val), value)
-    case 'Apply': {
+    case opTypes.Apply: {
       if (typeof value !== 'object' || value === null) {
         throw new Error('Value is not an object')
       }
@@ -18,40 +18,40 @@ export function apply(op: Operation, value: Value): Value {
       }
       return newObj
     }
-    case 'ListApply':
+    case opTypes.ListApply:
       return ensureArray(value, list => {
         return list.map((val, index) => {
           const subOp = op.ops.get(index)
           return subOp ? apply(subOp, val) : val
         })
       })
-    case 'NoOp':
+    case opTypes.NoOp:
       return value
-    case 'Move':
+    case opTypes.Move:
       return ensureArray(value, list => {
         const {to, from, length} = op
         ensureProperIndexes(list, from, from + length - 1, to, to + length - 1)
         return list.toSpliced(from, length).toSpliced(to, 0, ...list.slice(from, from + length))
       })
-    case 'Replace':
+    case opTypes.Replace:
       ensureEquality(op.from, value ?? null)
 
       return op.to
-    case 'ListSplice':
+    case opTypes.ListSplice:
       return ensureArray(value, list => {
         const {remove, index} = op
         if (!deepEquals(list.slice(index, index+remove.length), remove)) throw new Error('List removal mismatch')
 
         return splice(list, op)
       })
-    case 'StringModification':
+    case opTypes.StringModification:
       return ensureString(value, str => {
         const {remove, index} = op
         if (str.slice(index, index+remove.length) !== remove) throw new Error('String removal mismatch')
 
         return splice(str, op)
       })
-    case 'OpError':
+    case opTypes.OpError:
       throw new Error()
   }
 }
