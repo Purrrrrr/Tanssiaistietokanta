@@ -39,6 +39,9 @@ export function rebaseOnto(base: Operation, op: Operation): Operation {
   if (op.type === opTypes.NoOp || op.type === opTypes.OpError) {
     return op
   }
+  if (base.type === opTypes.OpError) {
+    return opError('Operation happens after error')
+  }
   if (base.type === opTypes.Composite) {
     return base.ops.reduce((newOp, baseOp) => rebaseOnto(baseOp, newOp), op)
   }
@@ -58,8 +61,6 @@ export function rebaseOnto(base: Operation, op: Operation): Operation {
     return replace(apply(base, op.from), op.to)
   }
   switch (base.type) {
-    case opTypes.OpError:
-      return opError('Operation happens after error')
     case opTypes.Apply:
       return rebaseOntoApply(base, op)
     case opTypes.ListApply:

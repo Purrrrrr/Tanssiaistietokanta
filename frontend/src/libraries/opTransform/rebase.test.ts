@@ -1,5 +1,9 @@
 import { inspect } from 'util'
 
+import {
+  opTypes,
+} from './types'
+
 import { apply } from './apply'
 import {
   add,
@@ -17,10 +21,6 @@ import {
   stringModification
 } from './ops'
 import { rebaseOnto } from './rebase'
-import type {
-  NoOp,
-  StringModification,
-} from './types'
 
 import './testUtils'
 
@@ -39,9 +39,17 @@ const exampleOps = [
 
 describe('rebase', () => {
 
-  it.each(exampleOps)('replace op onto $opDescr produces the same op with a modified from', ({op: base, doc}) => {
-    const op = replace(doc, 2)
-    expect(rebaseOnto(base, op)).toStrictEqual(replace(apply(base, doc), 2))
+  describe('replace op', () => {
+    it.each(
+      exampleOps.filter(({op}) => op.type !== opTypes.OpError)
+    )('onto $opDescr produces the same op with a modified from', ({op: base, doc}) => {
+      const op = replace(doc, 2)
+      expect(rebaseOnto(base, op)).toStrictEqual(replace(apply(base, doc), 2))
+    })
+    it('onto error produces another error', () => {
+      const op = replace(1, 2)
+      expect(rebaseOnto(opError('any error'), op)).toStrictEqual(opError('Operation happens after error'))
+    })
   })
 
   it.each(exampleOps)('NoOp onto $opDescr produces NoOp', ({op: base}) => {
