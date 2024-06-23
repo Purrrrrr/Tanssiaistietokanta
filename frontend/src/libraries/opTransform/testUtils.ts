@@ -18,6 +18,9 @@ setOpExtra({
       if (add.length === 0) return `Delete(${index}, ${inspect(remove)})`
       return `ListSplice(${index}, add: ${inspect(add)}, remove: ${inspect(remove)})`
     }
+    if (op.type === 'Move') {
+      return `Move(${op.from} -> ${op.to})`
+    }
     const {type, ...obj} = op
 
     const objStr = Object.keys(obj)

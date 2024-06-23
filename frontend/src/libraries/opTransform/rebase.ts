@@ -138,11 +138,31 @@ function rebaseOntoMove(base: Move, op: OperationToRebase): Operation {
     //Type mismatch: the other op would have failed
     return opError('Type mismatch')
   }
+  const {from, to} = base
+  const moveDown = to < from
+  //Coordinates of area where stuff moves
+  const [start, end] = moveDown ? [to, from] : [from, to]
+
+  function newElementIndex(index: number): number {
+    if (index < start || index > end) return index
+    if (index === from) return to
+    return index + (moveDown ? 1 : -1)
+  }
+  function newIndex(index: number): number {
+    if (index < start || index >= end) return index
+    if (index === from) return from
+    return index + (moveDown ? 1 : -1)
+  }
+
   switch (op.type) {
     case opTypes.Move:
-      return NO_OP
+      return listOps.move(newElementIndex(op.from), newIndex(op.to))
     case opTypes.ApplyIndexes: {
-      return NO_OP
+      const ops = new Map(
+        Array.from(op.ops.entries())
+          .map(([index, subOp]) => [newElementIndex(index), subOp])
+      )
+      return listOps.apply(ops)
     }
     case opTypes.ListSplice: {
       return NO_OP

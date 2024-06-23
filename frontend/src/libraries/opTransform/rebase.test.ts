@@ -125,8 +125,11 @@ describe('rebase', () => {
       ).toStrictEqual(opError('Type mismatch'))
     })
 
-    it('??', () => {
-      expect(1).toBe(1)
+    it.each([
+      [applyIndexes([0, replace(1, 2)], [1, replace(1, 2)]), applyIndexes([0, replace(0, 2)], [1, replace(1, 2)]), applyIndexes([0, replace(0, 1)])],
+      // TODO: more examples
+    ])('should produce %s when rebasing %s onto %s', (result, op, base) => {
+      expect(rebaseOnto(base, op)).toStrictEqual(result)
     })
   })
 
@@ -155,8 +158,99 @@ describe('rebase', () => {
       ).toStrictEqual(opError('Type mismatch'))
     })
 
-    it('??', () => {
-      expect(1).toBe(1)
+    it.each([
+      //result,       op,            base
+      //rebase onto move 'down' (down = later in the lsit)
+      [move(0, 1),    move(0, 1),    move(1, 3)],
+      [move(0, 1),    move(0, 2),    move(1, 3)],
+      [move(0, 3),    move(0, 3),    move(1, 3)],
+      [move(0, 4),    move(0, 4),    move(1, 3)],
+
+      [move(3, 0),    move(1, 0),    move(1, 3)],
+      [move(3, 1),    move(1, 2),    move(1, 3)],
+      [move(3, 3),    move(1, 3),    move(1, 3)],
+      [move(3, 4),    move(1, 4),    move(1, 3)],
+
+      [move(1, 0),    move(2, 0),    move(1, 3)],
+      [move(1, 1),    move(2, 1),    move(1, 3)],
+      [move(1, 3),    move(2, 3),    move(1, 3)],
+      [move(1, 4),    move(2, 4),    move(1, 3)],
+
+      [move(2, 0),    move(3, 0),    move(1, 3)],
+      [move(2, 1),    move(3, 1),    move(1, 3)],
+      [move(2, 1),    move(3, 2),    move(1, 3)],
+      [move(2, 4),    move(3, 4),    move(1, 3)],
+
+      [move(4, 0),    move(4, 0),    move(1, 3)],
+      [move(4, 1),    move(4, 1),    move(1, 3)],
+      [move(4, 1),    move(4, 2),    move(1, 3)],
+      [move(4, 3),    move(4, 3),    move(1, 3)],
+      //rebase onto move 'up'
+      [move(0, 2),    move(0, 1),    move(3, 1)],
+      [move(0, 3),    move(0, 2),    move(3, 1)],
+      [move(0, 3),    move(0, 3),    move(3, 1)],
+      [move(0, 4),    move(0, 4),    move(3, 1)],
+
+      [move(2, 0),    move(1, 0),    move(3, 1)],
+      [move(2, 3),    move(1, 2),    move(3, 1)],
+      [move(2, 3),    move(1, 3),    move(3, 1)],
+      [move(2, 4),    move(1, 4),    move(3, 1)],
+
+      [move(3, 0),    move(2, 0),    move(3, 1)],
+      [move(3, 2),    move(2, 1),    move(3, 1)],
+      [move(3, 3),    move(2, 3),    move(3, 1)],
+      [move(3, 4),    move(2, 4),    move(3, 1)],
+
+      [move(1, 0),    move(3, 0),    move(3, 1)],
+      [move(1, 2),    move(3, 1),    move(3, 1)],
+      [move(1, 3),    move(3, 2),    move(3, 1)],
+      [move(1, 4),    move(3, 4),    move(3, 1)],
+
+      [move(4, 0),    move(4, 0),    move(3, 1)],
+      [move(4, 2),    move(4, 1),    move(3, 1)],
+      [move(4, 3),    move(4, 2),    move(3, 1)],
+      [move(4, 3),    move(4, 3),    move(3, 1)],
+
+      [move(0, 4),    move(0, 3),    move(5, 2)],
+      [move(3, 7),    move(2, 7),    move(5, 2)],
+      [move(6, 7),    move(6, 7),    move(5, 2)],
+
+      [
+        applyIndexes(
+          [0, replace(0, 1)],
+          [1, replace(33, 1)],
+          [2, replace(11, 1)],
+          [3, replace(22, 1)],
+          [4, replace(44, 1)],
+        ),
+        applyIndexes(
+          [0, replace(0, 1)],
+          [1, replace(11, 1)],
+          [2, replace(22, 1)],
+          [3, replace(33, 1)],
+          [4, replace(44, 1)],
+        ),
+        move(3, 1)
+      ],
+      [
+        applyIndexes(
+          [0, replace(0, 1)],
+          [1, replace(22, 1)],
+          [2, replace(33, 1)],
+          [3, replace(11, 1)],
+          [4, replace(44, 1)],
+        ),
+        applyIndexes(
+          [0, replace(0, 1)],
+          [1, replace(11, 1)],
+          [2, replace(22, 1)],
+          [3, replace(33, 1)],
+          [4, replace(44, 1)],
+        ),
+        move(1, 3)
+      ],
+    ])('should produce %s when rebasing %s onto %s', (result, op, base) => {
+      expect(rebaseOnto(base, op)).toStrictEqual(result)
     })
   })
 
