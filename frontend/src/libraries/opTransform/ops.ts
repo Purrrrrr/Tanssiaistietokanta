@@ -7,9 +7,15 @@ import {
 } from './types'
 
 import type {
+  ApplyIndexes,
+  ApplyProps,
+  Composite,
   ListSplice,
+  Move,
   NoOp,
   Operation,
+  OpError,
+  Replace,
   StringModification,
   Value,
 } from './types'
@@ -20,7 +26,7 @@ import type {
 
 export const NO_OP: NoOp = {type: opTypes.NoOp}
 
-export const opError = (msg?: string) => op(opTypes.OpError, {msg})
+export const opError = (msg?: string) => op<OpError>(opTypes.OpError, {msg})
 
 export function composite(unfilteredOps: Operation[]): Operation {
   if (unfilteredOps.some(isOpError)) return opError()
@@ -28,13 +34,13 @@ export function composite(unfilteredOps: Operation[]): Operation {
   if (ops.length === 0) return NO_OP
   if (ops.length === 1) return ops[0]
 
-  return op(opTypes.Composite, {ops})
+  return op<Composite>(opTypes.Composite, {ops})
 }
 
 export function replace(from: Value, to: Value): Operation {
   if (deepEquals(from, to)) return NO_OP
 
-  return op(opTypes.Replace, {from, to})
+  return op<Replace>(opTypes.Replace, {from, to})
 }
 
 /*------------------*/
@@ -47,7 +53,7 @@ export function applyProps(ops: Record<string, Operation>): Operation {
   const entries = Array.from(Object.entries(ops)).filter(([_, op]) => !isNoOp(op))
   if (entries.length === 0) return NO_OP
 
-  return op(opTypes.ApplyProps, {ops: Object.fromEntries(entries)})
+  return op<ApplyProps>(opTypes.ApplyProps, {ops: Object.fromEntries(entries)})
 }
 
 /*------------------*/
@@ -65,20 +71,20 @@ export function applyIndexes(ops: Map<number, Operation> | IndexOperation, ...ad
   if (filteredOps.size === 0) return NO_OP
   if (filteredEntries.length !== filteredOps.size) throw new Error('Duplicate ops detected')
 
-  return op(opTypes.ApplyIndexes, {ops: filteredOps})
+  return op<ApplyIndexes>(opTypes.ApplyIndexes, {ops: filteredOps})
 }
 
 export function listSplice(index: number, {remove = [], add = []}: {remove?: Value[], add?: Value[]}): ListSplice | NoOp {
   //Modifications are empty or they add and delete the same string
   if (deepEquals(remove, add)) return NO_OP
 
-  return op(opTypes.ListSplice, {index, remove, add}) as ListSplice
+  return op<ListSplice>(opTypes.ListSplice, {index, remove, add}) as ListSplice
 }
 
-export function move(from: number, to: number, length: number = 1): Operation {
+export function move(from: number, to: number, length: 1 = 1): Operation {
   if (length <= 0 || from === to) return NO_OP
 
-  return op(opTypes.Move, {from, to, length})
+  return op<Move>(opTypes.Move, {from, to, length})
 }
 
 
