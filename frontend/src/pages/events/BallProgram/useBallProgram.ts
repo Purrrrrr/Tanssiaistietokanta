@@ -157,7 +157,7 @@ function toProgramSlide(parent: {_id: string, title: string}, {_id: id, item, sl
       return {
         ...common,
         title: item.name,
-        footer: item.teachedIn ? `${t('teachedInSet')} ${item.teachedIn.map(w => w.name).join(', ')}` : undefined,
+        footer: item.teachedIn.length ? `${t('teachedInSet')} ${item.teachedIn.map(w => w.name).join(', ')}` : undefined,
         slideContent: {
           type: 'dance',
           value: item,
