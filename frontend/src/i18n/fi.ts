@@ -35,6 +35,8 @@ export const fi = {
       duration: 'Kesto',
       prelude: 'Alkusoitto',
       formation: 'Tanssikuvio',
+      source: 'Lähde',
+      sourceInfo: '(esim. Playford, 1709)',
       category: 'Kategoria',
       instructions: 'Pidemmät tanssiohjeet printtiin',
       slideStyleId: 'Tanssiaisten diatyyli',

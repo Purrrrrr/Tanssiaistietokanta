@@ -62,6 +62,7 @@ export function DanceEditor({dance, onDelete, showLink, titleComponent} : DanceE
         <Field label={label('duration')} path="duration" component={DurationField} />
         <Input label={label('prelude')} path="prelude" />
         <Input label={label('formation')} path="formation" />
+        <Input label={label('source')} labelInfo={label('sourceInfo')} path="source" />
         <Input label={label('remarks')} path="remarks" />
       </div>
       <div style={{flexGrow: 2, flexBasis: 500}}>

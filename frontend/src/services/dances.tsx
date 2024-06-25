@@ -18,7 +18,7 @@ export type WritableDanceProperty = Exclude<keyof Dance, '_id' | '__typename' | 
 export const useDances = entityListQueryHook('dances', graphql(`
 query getDances {
   dances {
-    _id, name, description, remarks, duration, prelude, formation, category, instructions, slideStyleId
+    _id, name, description, remarks, duration, prelude, formation, source, category, instructions, slideStyleId
     events {
       _id
       name
@@ -29,7 +29,7 @@ query getDances {
 export const useDance = backendQueryHook(graphql(`
 query getDance($id: ID!) {
   dance(id: $id) {
-    _id, name, description, remarks, duration, prelude, formation, category, instructions, slideStyleId
+    _id, name, description, remarks, duration, prelude, formation, source, category, instructions, slideStyleId
     events {
       _id
       name
@@ -58,7 +58,7 @@ function useCallbackOnDanceChanges(danceId, callback) {
 export const useCreateDance = entityCreateHook('dances', graphql(`
 mutation createDance($dance: DanceInput!) {
   createDance(dance: $dance) {
-    _id, name, description, remarks, duration, prelude, formation, category, instructions, slideStyleId
+    _id, name, description, remarks, duration, prelude, formation, source, category, instructions, slideStyleId
     events {
       _id
       name
@@ -69,7 +69,7 @@ mutation createDance($dance: DanceInput!) {
 export const usePatchDance = entityUpdateHook('dances', graphql(`
 mutation patchDance($id: ID!, $dance: DancePatchInput!) {
   patchDance(id: $id, dance: $dance) {
-    _id, name, description, remarks, duration, prelude, formation, category, instructions, slideStyleId
+    _id, name, description, remarks, duration, prelude, formation, source, category, instructions, slideStyleId
     events {
       _id
       name
@@ -80,7 +80,7 @@ mutation patchDance($id: ID!, $dance: DancePatchInput!) {
 export const useDeleteDance = entityDeleteHook('dances', graphql(`
 mutation deleteDance($id: ID!) {
   deleteDance(id: $id) {
-    _id, name, description, remarks, duration, prelude, formation, category, instructions, slideStyleId
+    _id, name, description, remarks, duration, prelude, formation, source, category, instructions, slideStyleId
     events {
       _id
       name

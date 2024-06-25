@@ -17,6 +17,7 @@ export const dancesSchema = Type.Object(
     duration: Type.Number(),
     prelude: Type.String(),
     formation: Type.String(),
+    source: Type.String(),
     category: Type.String(),
     instructions: Type.String(),
     remarks: Type.String(),
