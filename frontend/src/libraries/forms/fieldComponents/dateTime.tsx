@@ -1,6 +1,7 @@
 import React from 'react'
 import {DateInput3, DateRangeInput3} from '@blueprintjs/datetime2'
 import { format, parse } from 'date-fns'
+import fi from 'date-fns/locale/fi'
 
 import {Field, useFieldConflictData, useFieldData} from '../Field'
 import {FieldContainer} from '../FieldContainer'
@@ -161,7 +162,7 @@ function useCommonProps(showTime?: boolean) {
 
 
   return {
-    locale: 'fi',
+    locale: fi,
     formatDate: date => format(date, valueFormat),
     parseDate: date => parse(date, valueFormat, referenceDate),
   }
