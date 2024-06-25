@@ -43,6 +43,7 @@ export function FieldContainer(props: FieldContainerProps) {
       ? <span id={formGroupId}>{conflictComponent}{children}{errorMsg}{helperText}</span>
       : <div id={formGroupId}>{conflictComponent}{children}{errorMsg}{helperText}</div>
   }
+  const helperTextId = `${id}--helperText`
 
   return <FormGroup
     id={formGroupId}
@@ -50,7 +51,7 @@ export function FieldContainer(props: FieldContainerProps) {
     inline={inline}
     labelFor={id}
     labelInfo={labelInfo}
-    helperText={helperText}
+    helperText={<span id={helperTextId}>{helperText}</span>}
     label={label}
     subLabel={conflictComponent}
     intent={conflictData ? 'danger' : undefined}

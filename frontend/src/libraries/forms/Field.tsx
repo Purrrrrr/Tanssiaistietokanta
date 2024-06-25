@@ -1,4 +1,5 @@
 import React  from 'react'
+import classNames from 'classnames'
 
 import { Conflict, ConflictData, Deleted, FieldComponentDisplayProps, FieldComponentPropsWithoutEvent, NoRequiredProperties, PartialWhen, TypedStringPath, UserGivenFieldContainerProps } from './types'
 
@@ -60,7 +61,7 @@ interface FieldData {
 export function useFieldData<Value>(
   path: string | number,
   value: Value,
-  {label, labelInfo, helperText: _ignored, inline: maybeInline, labelStyle: maybeLabelStyle, ...rest}: FieldDataHookProps
+  {label, labelInfo, helperText, inline: maybeInline, labelStyle: maybeLabelStyle, ...rest}: FieldDataHookProps
 ) : FieldData {
 
   const ctx = useFormMetadata<unknown>()
@@ -71,6 +72,7 @@ export function useFieldData<Value>(
   const errorId = `${id}--error`
   const error = useError(value, rest)
 
+  const helperTextId = `${id}--helperText`
   const ariaProps = labelStyle === 'hidden' || labelStyle === 'hidden-nowrapper'
     ? {'aria-label': labelInfo ? `${label} ${labelInfo}` : label}
     : {}
@@ -79,7 +81,7 @@ export function useFieldData<Value>(
       id,
       inline,
       readOnly: ctx.readOnly,
-      'aria-describedby': errorId,
+      'aria-describedby': classNames(errorId, {[helperTextId]: helperText}),
       ...ariaProps
     },
     containerProps: {
@@ -88,6 +90,7 @@ export function useFieldData<Value>(
       error,
       label,
       labelInfo,
+      helperText,
       labelStyle,
       inline,
     },
