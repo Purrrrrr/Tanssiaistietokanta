@@ -161,6 +161,7 @@ function DanceEditor({dance}: {dance: Dance}) {
   return <DanceEditorContainer dance={dance}>
     <DanceInput label={t('name')} path="name" />
     <DanceField label={t('description')} path="description" component={MarkdownEditor} componentProps={{noPreview: true}}/>
+    <DanceInput label={t('source')} labelInfo={t('sourceInfo')} path="source" />
     <Link target="_blank" to={`/dances/${dance._id}`}><Icon icon="link"/>{useTranslation('pages.events.ballProgram.linkToCompleteDance')}</Link>
   </DanceEditorContainer>
 }

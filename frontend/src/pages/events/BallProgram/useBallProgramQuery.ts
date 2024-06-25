@@ -28,6 +28,7 @@ query BallProgram($eventId: ID!) {
             }
             ... on Dance {
               _id
+              source
               teachedIn(eventId: $eventId) { _id, name }
             }
             ... on EventProgram {
@@ -59,6 +60,7 @@ query BallProgram($eventId: ID!) {
             }
             ... on Dance {
               _id
+              source
               teachedIn(eventId: $eventId) { _id, name }
             }
             ... on EventProgram {
