@@ -6,6 +6,7 @@ import { defineConfig, loadEnv, Plugin } from 'vite'
 import checker from 'vite-plugin-checker'
 import tsconfigPaths from 'vite-tsconfig-paths'
 
+import backendConfig from './src/backendConfig.json'
 import setupProxy from './src/setupProxy'
 
 // https://vitejs.dev/config/
@@ -27,6 +28,25 @@ export default defineConfig(({ mode }) => {
         typescript: true,
       }),
     ],
+    preview: {
+      proxy: {
+        '/api': {
+          target: `http://${backendConfig.host}:${backendConfig.port}`,
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api/, ''),
+        },
+      }
+    },
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: (id) => {
+            if (id.includes('blueprintjs')) return undefined
+            if (id.includes('node_modules')) return 'vendor'
+          }
+        }
+      }
+    }
   }
 })
 
