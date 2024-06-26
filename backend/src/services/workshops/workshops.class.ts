@@ -21,7 +21,6 @@ export class WorkshopsService<ServiceParams extends WorkshopsParams = WorkshopsP
     super({
       ...options,
       dbname: 'workshops',
-      indexes: [{fieldName: 'dances', sparse: true}],
     })
   }
 }

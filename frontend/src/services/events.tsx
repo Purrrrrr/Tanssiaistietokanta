@@ -76,8 +76,11 @@ setupServiceUpdateFragment(
       abbreviation
       description
       teachers
-      dances {
-        _id, name
+      instances {
+        _id
+        dances {
+          _id, name
+        }
       }
     }
   }`
@@ -152,8 +155,11 @@ query getEvent($id: ID!) {
       abbreviation
       description
       teachers
-      dances {
-        _id, name
+      instances {
+        _id
+        dances {
+          _id, name
+        }
       }
     }
   }
@@ -256,8 +262,11 @@ mutation patchEventProgram($id: ID!, $program: JSONPatch!) {
       abbreviation
       description
       teachers
-      dances {
-        _id, name
+      instances {
+        _id
+        dances {
+          _id, name
+        }
       }
     }
   }

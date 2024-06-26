@@ -3,10 +3,11 @@ import {string} from 'yup'
 
 import {usePatchWorkshop} from 'services/workshops'
 
-import {DragHandle, formFor, Input, patchStrategy, SyncStatus, TextArea, useAutosavingState} from 'libraries/forms'
+import {DragHandle, formFor, Input, patchStrategy, SyncStatus, TextArea, useAutosavingState, UseAutosavingStateReturn} from 'libraries/forms'
 import {CssClass, Flex, FormGroup} from 'libraries/ui'
 import {DanceChooser} from 'components/widgets/DanceChooser'
 import {useT, useTranslation} from 'i18n'
+import { guid } from 'utils/guid'
 
 import {Event} from 'types'
 
@@ -34,7 +35,8 @@ export function WorkshopEditor({workshop: workshopInDatabase, reservedAbbreviati
     refetchQueries: ['getEvent']
   })
   const saveWorkshop = (data: Partial<Workshop>) => {
-    const {dances, name, abbreviation, description, teachers} = data
+    const {instances, name, abbreviation, description, teachers} = data
+    const { _id: instanceId, dances } = instances?.[0] ?? { _id: guid() }
     return modifyWorkshop({
       id: workshopId,
       workshop: {
@@ -42,13 +44,20 @@ export function WorkshopEditor({workshop: workshopInDatabase, reservedAbbreviati
         abbreviation,
         description,
         teachers,
-        danceIds: dances ? dances.map(d => d._id) : undefined
+        instances: [
+          {
+            _id: instanceId,
+            danceIds: dances ? dances.map(d => d._id) : []
+          }
+        ]
       }
     })
   }
-  const {formProps, state} = useAutosavingState<Workshop, Partial<Workshop>>(workshopInDatabase, saveWorkshop, patchStrategy.partial)
 
-  const {_id: workshopId, dances} = formProps.value
+  const { formProps, state } = useAutosavingState<Workshop, Partial<Workshop>>(workshopInDatabase, saveWorkshop, patchStrategy.partial)
+
+  const {_id: workshopId, instances } = formProps.value
+  const dances = instances.flatMap(i => i.dances)
 
   return <Form className="workshopEditor" {...formProps}>
     <SyncStatus state={state} floatRight/>
@@ -60,7 +69,7 @@ export function WorkshopEditor({workshop: workshopInDatabase, reservedAbbreviati
         <Field path="teachers" component={Input} label={t('teachers')}/>
       </div>
       <div style={{flexGrow: 1, flexBasis: 300}}>
-        <ListField label={t('dances')} path="dances" component={DanceListItem} renderConflictItem={item => item.name} />
+        <ListField label={t('dances')} path="instances.0.dances" component={DanceListItem} renderConflictItem={item => item.name} />
         {dances.length === 0 && <p className={CssClass.textMuted}>{t('noDances')}</p>}
         <AddDanceChooser />
       </div>
@@ -102,18 +111,18 @@ function DanceListItem(
   {itemIndex, dragHandle}: {itemIndex: number, dragHandle: DragHandle}
 ) {
   const t = useT('components.workshopEditor')
-  const excludeFromSearch = useValueAt('dances')
+  const excludeFromSearch = useValueAt('instances.0.dances')
   return <Flex className="danceItem">
-    <Field label={t('dances')} labelStyle="hidden" path={`dances.${itemIndex}`} component={DanceChooser} componentProps={{excludeFromSearch}} />
+    <Field label={t('dances')} labelStyle="hidden" path={`instances.0.dances.${itemIndex}`} component={DanceChooser} componentProps={{excludeFromSearch}} />
     {dragHandle}
-    <RemoveItemButton path="dances" index={itemIndex} text="X" />
+    <RemoveItemButton path="instances.0.dances" index={itemIndex} text="X" />
   </Flex>
 }
 
 function AddDanceChooser() {
   const t = useT('components.workshopEditor')
-  const dances = useValueAt('dances')
-  const onAddDance = useAppendToList('dances')
+  const dances = useValueAt('instances.0.dances')
+  const onAddDance = useAppendToList('instances.0.dances')
 
   return <FormGroup label={t('addDance')} labelStyle="beside" style={{marginTop: 6}}>
     <DanceChooser excludeFromSearch={dances} value={null} onChange={dance => dance && onAddDance(dance)} key={dances.length} />

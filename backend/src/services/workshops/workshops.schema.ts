@@ -6,7 +6,16 @@ import type { Static } from '@feathersjs/typebox'
 import type { HookContext } from '../../declarations'
 import { dataValidator, queryValidator } from '../../validators'
 import { castAfterValidating } from '../../utils/cast-after-validating'
-import { Id, Name } from '../../utils/common-types'
+import { DateTime, Id, Name } from '../../utils/common-types'
+
+const WorkshopInstanceSchema = () =>Type.Object({
+  _id: Id(),
+  description: Type.String(),
+  abbreviation: Type.String(),
+  beginDate: DateTime(),
+  endDate: DateTime(),
+  danceIds: Type.Array(Id()),
+})
 
 // Main data model schema
 export const workshopsSchema = Type.Object(
@@ -17,7 +26,7 @@ export const workshopsSchema = Type.Object(
     abbreviation: Type.String(),
     description: Type.String(),
     teachers: Type.String(),
-    danceIds: Type.Array(Id())
+    instances: Type.Array(WorkshopInstanceSchema()),
   },
   { $id: 'Workshops', additionalProperties: false }
 )
@@ -31,7 +40,9 @@ export const workshopsExternalResolver = resolve<Workshops, HookContext>({})
 export const workshopsPartialDataSchema = Type.Intersect(
   [
     Type.Pick(workshopsSchema, ['name']),
-    Type.Partial(Type.Omit(workshopsSchema, ['_id', 'name'])),
+    Type.Partial(
+      Type.Omit(workshopsSchema, ['_id', 'name'])
+    ),
   ], {
     $id: 'PartialWorkshopsData'
   },
@@ -52,13 +63,13 @@ export const workshopsPatchValidator = getValidator(workshopsPatchSchema, dataVa
 export const workshopsPatchResolver = resolve<Workshops, HookContext>({})
 
 // Schema for allowed query properties
-export const workshopsQueryProperties = Type.Omit(workshopsSchema, ['danceIds'])
+export const workshopsQueryProperties = Type.Omit(workshopsSchema, ['instances'])
 export const workshopsQuerySchema = Type.Intersect(
   [
     querySyntax(workshopsQueryProperties),
     // Add additional query properties here
     Type.Object({
-      danceIds: Type.Optional(Id()),
+      'instances.danceIds': Type.Optional(Id()),
     }, { additionalProperties: false })
   ],
   { additionalProperties: false }

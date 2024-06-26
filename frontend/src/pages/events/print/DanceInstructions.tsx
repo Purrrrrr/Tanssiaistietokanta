@@ -26,12 +26,15 @@ query DanceInstructions($eventId: ID!) {
       _id
       name
       description
-      dances {
+      instances {
         _id
-        name
-        instructions
-        formation
-        category
+        dances {
+          _id
+          name
+          instructions
+          formation
+          category
+        }
       }
     }
   }
@@ -83,7 +86,7 @@ export default function DanceInstructions({eventId}) {
 }
 
 function getDances(workshops: Event['workshops']) {
-  const dances = uniq(workshops.flatMap(w => w.dances))
+  const dances = uniq(workshops.flatMap(w => w.instances).flatMap(i => i.dances))
   dances.sort((a, b) => a.name.localeCompare(b.name))
   return dances
 }
@@ -130,7 +133,8 @@ const markdownOverrides = {
 
 function Workshop({workshop}) {
   const t = useT('pages.events.danceInstructions')
-  const {name, description, dances} = workshop
+  const {name, description, instances } = workshop
+  const dances = instances.flatMap(i => i.dances)
 
   return <div className="workshop">
     <h2>

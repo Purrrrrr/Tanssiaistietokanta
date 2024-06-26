@@ -10,7 +10,17 @@ type Workshop {
   abbreviation: String
   description: String
   teachers: String
-  ocurrences: [String!]
+  danceIds: [ID!]!
+  dances: [Dance!]!
+  instances: [WorkshopInstance!]!
+}
+
+type WorkshopInstance {
+  _id: ID!
+  abbreviation: String
+  description: String
+  beginDate: String!
+  endDate: String!
   danceIds: [ID!]!
   dances: [Dance!]!
 }
@@ -28,7 +38,7 @@ input WorkshopInput {
   description: String
   teachers: String
   ocurrences: [String!]
-  danceIds: [ID!]!
+  instances: [WorkshopInstanceInput!]!
 }
 
 input WorkshopPatchInput {
@@ -37,5 +47,14 @@ input WorkshopPatchInput {
   description: String
   teachers: String
   ocurrences: [String!]
-  danceIds: [ID!]
+  instances: [WorkshopInstanceInput!]
+}
+
+input WorkshopInstanceInput {
+  _id: ID!
+  abbreviation: String
+  description: String
+  beginDate: String
+  endDate: String
+  danceIds: [ID!]!
 }

@@ -53,8 +53,21 @@ export const workshops = (app: Application) => {
         schemaHooks.resolveData(workshopsDataResolver)
       ],
       patch: [
+        async ({data, service, id}) => {
+          if (id === undefined || Array.isArray(data)) throw new Error('Cannot patch multiple documents')
+          if (data?.instances) {
+            const { instances: oldInstances } = await service.get(id)
+            data.instances = data.instances.map(instance => (
+              {
+                ...oldInstances.find(o => o._id === instance._id),
+                ...instance,
+              }
+            ))
+            console.log(oldInstances, data.instances)
+          }
+        },
         schemaHooks.validateData(workshopsPatchValidator),
-        schemaHooks.resolveData(workshopsPatchResolver)
+        schemaHooks.resolveData(workshopsPatchResolver),
       ],
       remove: []
     },
@@ -68,7 +81,7 @@ export const workshops = (app: Application) => {
     const eventIds = getFromData(data, item => item.eventId)
     //The dependency graph is not updated yet. We can get our previous dances from there in case some were removed
     const previousDanceIds = getDependenciesFor('workshops', data, 'uses', 'dances')
-    const nextDanceIds = getFromData(data, item => item.danceIds).flat()
+    const nextDanceIds = getFromData(data, item => item.instances.flatMap(i => i.danceIds)).flat()
     const danceIds = uniq([...nextDanceIds, ...previousDanceIds])
 
     const channels = [

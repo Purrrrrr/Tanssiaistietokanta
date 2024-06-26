@@ -13,8 +13,8 @@ export default (app: Application) => {
   function findTeachedIn(obj: { _id: string}, {eventId}: { eventId: string}) {
     return workshopService.find({
       query: eventId ?
-        {danceIds: obj._id, eventId} :
-        {danceIds: obj._id}
+        {'instances.danceIds': obj._id, eventId} :
+        {'instances.danceIds': obj._id}
     })
   }
 

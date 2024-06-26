@@ -9,8 +9,6 @@ export const up: MigrationFn = async params => {
       const source = description
         ?.split
         ?.("\n\n")[0].match(sourceRegex)?.[0] ?? ''
-
-      if (source) console.log(source, description.replace(source, ''))
       
       return {
         ...dance,

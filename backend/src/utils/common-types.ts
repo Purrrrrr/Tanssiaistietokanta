@@ -30,7 +30,7 @@ export function Date() {
 
 export function DateTime() {
   return Type.String({
-    format: 'date-time',
+    format: 'iso-date-time',
     default: '0000-01-01T00:00:00',
   })
 }

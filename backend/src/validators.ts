@@ -6,6 +6,7 @@ import type { FormatsPluginOptions } from '@feathersjs/schema'
 
 const formats: FormatsPluginOptions = [
   'date-time',
+  'iso-date-time',
   'time',
   'date',
   'email',
@@ -30,4 +31,4 @@ export const queryValidator: Ajv = addFormats(
   formats
 )
 TypeSystem.CreateFormat('date', dataValidator.compile(Date()))
-TypeSystem.CreateFormat('date-time', dataValidator.compile(DateTime()))
+TypeSystem.CreateFormat('iso-date-time', dataValidator.compile(DateTime()))

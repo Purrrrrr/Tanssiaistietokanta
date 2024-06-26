@@ -23,9 +23,12 @@ mutation createWorkshop($eventId: ID!, $workshop: WorkshopInput!) {
     abbreviation
     description
     teachers
-    dances {
+    instances {
       _id
-      name
+      dances {
+        _id
+        name
+      }
     }
   }
 }`))
@@ -38,9 +41,12 @@ mutation patchWorkshop($id: ID!, $workshop: WorkshopPatchInput!) {
     abbreviation
     description
     teachers
-    dances {
+    instances {
       _id
-      name
+      dances {
+        _id
+        name
+      }
     }
   }
 }`))
@@ -53,9 +59,12 @@ mutation deleteWorkshop($id: ID!) {
     abbreviation
     description
     teachers
-    dances {
+    instances {
       _id
-      name
+      dances {
+        _id
+        name
+      }
     }
   }
 }`))

@@ -12,6 +12,7 @@ import {DeleteButton} from 'components/widgets/DeleteButton'
 import {NavigateButton} from 'components/widgets/NavigateButton'
 import {WorkshopEditor} from 'components/WorkshopEditor'
 import {useFormatDate, useT} from 'i18n'
+import { guid } from 'utils/guid'
 
 import {Event, EventProgram as EventProgramType} from 'types'
 
@@ -154,7 +155,7 @@ function CreateWorkshopButton({eventId}) {
 
   return <AdminOnly>
     <Button
-      onClick={() => addLoadingAnimation(createWorkshop({eventId: eventId, workshop: {name: t('newWorkshop'), danceIds: []}}))}
+      onClick={() => addLoadingAnimation(createWorkshop({eventId: eventId, workshop: {name: t('newWorkshop'), instances: [{_id: guid(), danceIds: []}]}}))}
       intent="primary"
       text={t('createWorkshop')}
     />
@@ -166,7 +167,8 @@ function WorkshopCard({workshop, reservedAbbreviations}: {workshop: Workshop, re
   const addLoadingAnimation = useGlobalLoadingAnimation()
   const [showEditor, setShowEditor] = useState(false)
   const [deleteWorkshop] = useDeleteWorkshop({refetchQueries: ['getEvent']})
-  const {_id, abbreviation, name, description, dances} = workshop
+  const {_id, abbreviation, name, description, instances} = workshop
+  const dances = instances.flatMap(i => i.dances)
 
   return <Card style={{clear: 'right'}}>
     <DeleteButton onDelete={() => addLoadingAnimation(deleteWorkshop({id: _id}))}

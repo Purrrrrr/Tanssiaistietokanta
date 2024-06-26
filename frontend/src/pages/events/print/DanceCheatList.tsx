@@ -23,10 +23,12 @@ query DanceCheatList($eventId: ID!) {
     workshops {
       _id
       name
-      dances {
-        _id
-        name
-        description
+      instances {
+        dances {
+          _id
+          name
+          description
+        }
       }
     }
   }
@@ -63,7 +65,8 @@ function DanceCheatListView({workshops, mini, helpText}) {
 
 function WorkshopDances({workshop, mini}) {
   const t = useT('pages.events.danceCheatlist')
-  const {name, dances} = workshop
+  const {name, instances } = workshop
+  const dances = instances.flatMap(i => i.dances)
   return <>
     <PageTitle>{name}</PageTitle>
     {dances.length === 0 ?
