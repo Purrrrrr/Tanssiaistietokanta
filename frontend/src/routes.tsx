@@ -1,3 +1,4 @@
+import {lazy, Suspense} from 'react'
 import {Route, Routes, useParams} from 'react-router-dom'
 
 import {useEvent} from 'services/events'
@@ -6,26 +7,29 @@ import {AdminOnly} from 'services/users'
 import {Breadcrumb} from 'libraries/ui'
 import {LoadingState} from 'components/LoadingState'
 import {T, useTranslation} from 'i18n'
-import Dances from 'pages/dances'
-import Dance from 'pages/dances/Dance'
-import BallProgram from 'pages/events/BallProgram'
-import CreateEvent from 'pages/events/CreateEvent'
-import EventList from 'pages/events/EventList'
-import EventPage from 'pages/events/EventPage'
-import EventProgramPage from 'pages/events/EventProgramPage'
-import DanceCheatList from 'pages/events/print/DanceCheatList'
-import DanceInstructions from 'pages/events/print/DanceInstructions'
-import DanceList from 'pages/events/print/DanceList'
+
+const Dances = lazy(() => import('pages/dances'))
+const Dance = lazy(() => import('pages/dances/Dance'))
+const BallProgram = lazy(() => import('pages/events/BallProgram'))
+const CreateEvent = lazy(() => import('pages/events/CreateEvent'))
+const EventList = lazy(() => import('pages/events/EventList'))
+const EventPage = lazy(() => import('pages/events/EventPage'))
+const EventProgramPage = lazy(() => import('pages/events/EventProgramPage'))
+const DanceCheatList = lazy(() => import('pages/events/print/DanceCheatList'))
+const DanceInstructions = lazy(() => import('pages/events/print/DanceInstructions'))
+const DanceList = lazy(() => import('pages/events/print/DanceList'))
 
 export default function MainRoutes() {
   return <>
     <Breadcrumb text={<><img src="/fan32.png" alt=""/>{' '}<T msg="app.title"/></>} />
-    <Routes>
-      <Route index element={<EventList/>} />
-      <Route path="events/new" element={<CreateEvent/>} />
-      <Route path="events/:eventId/*" element={<EventRoutes/>} />
-      <Route path="dances/*" element={<DanceRoutes/>} />
-    </Routes>
+    <Suspense fallback={<LoadingState loading />}>
+      <Routes>
+        <Route index element={<EventList/>} />
+        <Route path="events/new" element={<CreateEvent/>} />
+        <Route path="events/:eventId/*" element={<EventRoutes/>} />
+        <Route path="dances/*" element={<DanceRoutes/>} />
+      </Routes>
+    </Suspense>
   </>
 }
 

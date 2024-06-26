@@ -2,6 +2,9 @@ import {useMemo} from 'react'
 
 import { backendQueryHook, entityCreateHook, entityDeleteHook, entityListQueryHook, entityUpdateHook, graphql, setupServiceUpdateFragment, useServiceEvents } from '../backend'
 
+import './dances'
+import './workshops'
+
 export * from './slideStyles'
 
 setupServiceUpdateFragment(

@@ -46,7 +46,7 @@ export function useGlobalLoadingAnimation() {
 interface LoadingStateProps {
   loading?: boolean,
   error?: ApolloError,
-  refetch: (variables?: Record<string, unknown> | undefined) => Promise<ApolloQueryResult<Record<string, unknown>>>
+  refetch?: (variables?: Record<string, unknown> | undefined) => Promise<ApolloQueryResult<Record<string, unknown>>>
 }
 
 export function LoadingState({loading, error, refetch} : LoadingStateProps) {
@@ -58,7 +58,7 @@ export function LoadingState({loading, error, refetch} : LoadingStateProps) {
     return <NonIdealState icon="error"
       title={t('errorMessage')}
       description={error.message}
-      action={<Button text={t('tryAgain')} onClick={() => refetch()} intent="primary" />}
+      action={refetch ? <Button text={t('tryAgain')} onClick={() => refetch()} intent="primary" /> : undefined}
     />
   }
   return null
