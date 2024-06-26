@@ -36,7 +36,7 @@
   "main": "lib/client",
   "scripts": {
     "create-migration": "ts-node src/create-migration.ts",
-    "dev": "cross-env CORS_ALLOW_LOCALHOST=true nodemon -x ts-node src/index.ts",
+    "dev": "cross-env CORS_ALLOW_LOCALHOST=true nodemon --watch src -e ts,graphql,json -x ts-node src/index.ts",
     "compile": "shx rm -rf lib/ && copyfiles -u 1 src/**/*.graphql lib && copyfiles -u 1 src/**/*.json lib && tsc",
     "start": "node lib/",
     "start-dev": "cross-env CORS_ALLOW_LOCALHOST=true node lib/",
