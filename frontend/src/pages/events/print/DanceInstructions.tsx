@@ -85,8 +85,12 @@ export default function DanceInstructions({eventId}) {
   </>
 }
 
-function getDances(workshops: Event['workshops']) {
-  const dances = uniq(workshops.flatMap(w => w.instances).flatMap(i => i.dances))
+interface Instance {
+  dances?: {name: string, _id: string}[] | null
+}
+
+function getDances(workshops: {instances: Instance[]}[]) {
+  const dances = uniq(workshops.flatMap(w => w.instances).flatMap(i => i.dances ?? []))
   dances.sort((a, b) => a.name.localeCompare(b.name))
   return dances
 }

@@ -15,6 +15,7 @@ import {
 } from './workshops.schema'
 
 import type { Application } from '../../declarations'
+import type { WorkshopInstance } from './workshops.schema'
 import { WorkshopsService, getOptions } from './workshops.class'
 import { workshopsPath, workshopsMethods } from './workshops.shared'
 import { defaultChannels, withoutCurrentConnection } from '../../utils/defaultChannels'
@@ -59,8 +60,9 @@ export const workshops = (app: Application) => {
             const { instances: oldInstances } = await service.get(id)
             data.instances = data.instances.map(instance => (
               {
+                description: '',
                 ...oldInstances.find(o => o._id === instance._id),
-                ...instance,
+                ...instance as (Omit<WorkshopInstance, 'description'> & {description?: string}),
               }
             ))
             console.log(oldInstances, data.instances)

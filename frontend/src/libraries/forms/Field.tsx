@@ -61,7 +61,7 @@ interface FieldData {
 export function useFieldData<Value>(
   path: string | number,
   value: Value,
-  {label, labelInfo, helperText, inline: maybeInline, labelStyle: maybeLabelStyle, ...rest}: FieldDataHookProps
+  {label, labelInfo, helperText, inline: maybeInline, labelStyle: maybeLabelStyle, containerClassName, ...rest}: FieldDataHookProps
 ) : FieldData {
 
   const ctx = useFormMetadata<unknown>()
@@ -93,6 +93,7 @@ export function useFieldData<Value>(
       helperText,
       labelStyle,
       inline,
+      className: containerClassName,
     },
   }
 }

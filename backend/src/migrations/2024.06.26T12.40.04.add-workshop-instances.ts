@@ -12,8 +12,8 @@ export const up: MigrationFn = async params => {
             danceIds,
             description: '',
             abbreviation: '',
-            beginDate: '0000-01-01T00:00:00.000',
-            endDate: '0000-01-01T00:00:00.000',
+            dateTime: '0000-01-01T00:00:00.000',
+            durationInMinutes: 105,
           }
         ]
       }

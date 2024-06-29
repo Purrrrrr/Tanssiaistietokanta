@@ -168,7 +168,7 @@ function WorkshopCard({workshop, reservedAbbreviations}: {workshop: Workshop, re
   const [showEditor, setShowEditor] = useState(false)
   const [deleteWorkshop] = useDeleteWorkshop({refetchQueries: ['getEvent']})
   const {_id, abbreviation, name, description, instances} = workshop
-  const dances = instances.flatMap(i => i.dances)
+  const dances = instances.flatMap(i => i.dances ?? [])
 
   return <Card style={{clear: 'right'}}>
     <DeleteButton onDelete={() => addLoadingAnimation(deleteWorkshop({id: _id}))}

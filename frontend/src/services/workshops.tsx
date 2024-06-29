@@ -8,9 +8,15 @@ setupServiceUpdateFragment(
     abbreviation
     description
     teachers
-    dances {
+    instances {
       _id
-      name
+      dateTime
+      durationInMinutes
+      abbreviation
+      dances {
+        _id
+        name
+      }
     }
   }`
 )
@@ -25,6 +31,9 @@ mutation createWorkshop($eventId: ID!, $workshop: WorkshopInput!) {
     teachers
     instances {
       _id
+      dateTime
+      durationInMinutes
+      abbreviation
       dances {
         _id
         name
@@ -43,6 +52,9 @@ mutation patchWorkshop($id: ID!, $workshop: WorkshopPatchInput!) {
     teachers
     instances {
       _id
+      dateTime
+      durationInMinutes
+      abbreviation
       dances {
         _id
         name
@@ -61,6 +73,9 @@ mutation deleteWorkshop($id: ID!) {
     teachers
     instances {
       _id
+      dateTime
+      durationInMinutes
+      abbreviation
       dances {
         _id
         name

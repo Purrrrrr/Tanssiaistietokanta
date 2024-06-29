@@ -17,12 +17,12 @@ type Workshop {
 
 type WorkshopInstance {
   _id: ID!
-  abbreviation: String
-  description: String
-  beginDate: String!
-  endDate: String!
-  danceIds: [ID!]!
-  dances: [Dance!]!
+  abbreviation: String!
+  description: String!
+  dateTime: String!
+  durationInMinutes: Float!
+  danceIds: [ID!]
+  dances: [Dance!]
 }
 
 type Mutation {
@@ -54,7 +54,7 @@ input WorkshopInstanceInput {
   _id: ID!
   abbreviation: String
   description: String
-  beginDate: String
-  endDate: String
-  danceIds: [ID!]!
+  dateTime: String
+  durationInMinutes: Float
+  danceIds: [ID!]
 }

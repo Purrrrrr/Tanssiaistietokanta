@@ -42,7 +42,14 @@ export function DateFieldInput({value, onChange, inline: _ignored, readOnly, id,
     timePrecision={showTime ? 'minute' : undefined}
     value={value || null}
     canClearSelection={false}
-    onChange={value => onChange(value ?? '')}
+    onChange={value => {
+      if (showTime && value) {
+        onChange(toISOString(new Date(value), true))
+      } else {
+        onChange(value ?? '')
+      }
+    }}
+    showTimezoneSelect={false}
     {...props}
   />
 }
@@ -152,14 +159,13 @@ function toDate(value: string | null | Date | undefined): Date | undefined | nul
 function toISOString(value: Date | null, showTime?: boolean): string {
   if (value === null) return ''
   return showTime
-    ? format(value, 'yyyy-MM-dd\'T\'HH:mm:ss')
+    ? format(value, 'yyyy-MM-dd\'T\'HH:mm:ss.SSS')
     : format(value, 'yyyy-MM-dd')
 }
 
 function useCommonProps(showTime?: boolean) {
   const strings = useFormStrings().dateTime
   const valueFormat = showTime ? strings.dateTimeFormat : strings.dateFormat
-
 
   return {
     locale: fi,

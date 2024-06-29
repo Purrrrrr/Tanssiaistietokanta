@@ -6,15 +6,15 @@ import type { Static } from '@feathersjs/typebox'
 import type { HookContext } from '../../declarations'
 import { dataValidator, queryValidator } from '../../validators'
 import { castAfterValidating } from '../../utils/cast-after-validating'
-import { DateTime, Id, Name } from '../../utils/common-types'
+import { DateTime, Id, Name, Nullable } from '../../utils/common-types'
 
 const WorkshopInstanceSchema = () =>Type.Object({
   _id: Id(),
   description: Type.String(),
   abbreviation: Type.String(),
-  beginDate: DateTime(),
-  endDate: DateTime(),
-  danceIds: Type.Array(Id()),
+  dateTime: DateTime(),
+  durationInMinutes: Type.Integer(),
+  danceIds: Nullable(Type.Array(Id())),
 })
 
 // Main data model schema
@@ -31,6 +31,7 @@ export const workshopsSchema = Type.Object(
   { $id: 'Workshops', additionalProperties: false }
 )
 export type Workshops = Static<typeof workshopsSchema>
+export type WorkshopInstance = Workshops['instances'][number]
 export const workshopsValidator = getValidator(workshopsSchema, dataValidator)
 export const workshopsResolver = resolve<Workshops, HookContext>({})
 

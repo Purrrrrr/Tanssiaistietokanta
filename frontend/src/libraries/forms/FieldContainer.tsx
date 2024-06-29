@@ -10,6 +10,7 @@ import {ErrorMessage} from './validation'
 
 
 export interface FieldContainerProps extends LabelTexts, InternalFieldContainerProps {
+  className?: string
   inline: boolean
   labelStyle: LabelStyle
   children?: React.ReactNode
@@ -29,7 +30,7 @@ interface InternalFieldContainerProps {
 }
 
 export function FieldContainer(props: FieldContainerProps) {
-  const {id, error, errorId, label, labelStyle, inline, labelInfo, helperText, children, conflictData} = props
+  const {id, className, error, errorId, label, labelStyle, inline, labelInfo, helperText, children, conflictData} = props
   const formGroupId = `${id}--formgroup`
 
   const errorMsg = <ErrorMessage id={errorId} error={error} />
@@ -46,6 +47,7 @@ export function FieldContainer(props: FieldContainerProps) {
   const helperTextId = `${id}--helperText`
 
   return <FormGroup
+    className={className}
     id={formGroupId}
     labelStyle={labelStyle}
     inline={inline}

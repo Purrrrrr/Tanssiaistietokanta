@@ -62,6 +62,21 @@ export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
   }
 )
 
+export interface NumberInputProps extends ExtendedFieldComponentProps<number, HTMLInputElement, ComponentProps<'input'>> {
+  inputRef?: React.Ref<HTMLInputElement>
+}
+export function NumberInput({value, className, onChange, inline, inputRef, ...props} : NumberInputProps) {
+  return <input
+    type="number"
+    ref={inputRef}
+    value={value ?? 0}
+    className={classNames(className, Classes.INPUT, inline || Classes.FILL)}
+    onKeyDown={e => (e.key === 'Escape' || e.key === 'Enter') && (e.target as HTMLInputElement).blur()}
+    onChange={e => onChange(parseFloat(e.target.value), e)}
+    {...props}
+  />
+}
+
 export interface InputProps extends ExtendedFieldComponentProps<string, HTMLInputElement, ComponentProps<'input'>> {
   inputRef?: React.Ref<HTMLInputElement>
 }

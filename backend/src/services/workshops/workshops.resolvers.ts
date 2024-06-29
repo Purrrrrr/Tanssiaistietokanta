@@ -17,7 +17,7 @@ export default (app: Application) => {
       event: (obj: { eventId: Id }) => eventService.get(obj.eventId)
     },
     WorkshopInstance: {
-      dances: (obj: { danceIds: string[] }) => obj.danceIds.map(getDance),
+      dances: (obj: { danceIds: string[] }) => obj.danceIds?.map(getDance),
     },
     Query: {
       workshop: (_: any, {id}: any, params: WorkshopsParams | undefined) => service.get(id, params)
