@@ -1,5 +1,5 @@
 import React, {ComponentProps} from 'react'
-import {Classes, Switch as BlueprintSwitch, TextArea as BlueprintTextArea, TextAreaProps as BlueprintTextAreaProps} from '@blueprintjs/core'
+import {Classes, Radio, Switch as BlueprintSwitch, TextArea as BlueprintTextArea, TextAreaProps as BlueprintTextAreaProps} from '@blueprintjs/core'
 import classNames from 'classnames'
 
 import {Field, useFieldData} from '../Field'
@@ -103,4 +103,25 @@ export function TextArea({value, onChange, inline: _ignored, inputRef, ...props}
     onChange={e => onChange && onChange(e.target.value, e)}
     {...props}
   />
+}
+
+interface RadioGroupProps<E extends string> extends FieldComponentProps<E | null, HTMLInputElement> {
+  options: {
+    value: E | null
+    label: string
+  }[]
+}
+
+export function RadioGroup<E extends string>({options, inline: _ignored, id, value, onChange, ...rest}: RadioGroupProps<E>) {
+  return options.map(({value: optionValue, label})=>
+    <Radio
+      id={`${id}-${optionValue}`}
+      key={optionValue}
+      value={optionValue ?? ''}
+      checked={optionValue === (value ?? null)}
+      label={label}
+      onChange={e => onChange(optionValue, e)}
+      {...rest}
+    />
+  )
 }
