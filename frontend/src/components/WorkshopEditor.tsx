@@ -4,7 +4,7 @@ import {string} from 'yup'
 import {usePatchWorkshop} from 'services/workshops'
 
 import {ActionButton as Button, DateField, DragHandle, formFor, NumberInput, patchStrategy, SyncStatus, TextArea, useAutosavingState} from 'libraries/forms'
-import {Card, CssClass, Flex, FormGroup} from 'libraries/ui'
+import {CssClass, Flex, FormGroup} from 'libraries/ui'
 import {DanceChooser} from 'components/widgets/DanceChooser'
 import {useT, useTranslation} from 'i18n'
 import { guid } from 'utils/guid'
@@ -122,7 +122,7 @@ function WorkshopInstanceEditor(
   const t = useT('components.workshopEditor')
   const instances = useValueAt('instances')
   const showDances = useValueAt('instanceSpecificDances')
-  return <Card>
+  return <div className="workshop-instance">
     <Flex spaced wrap alignItems="center">
       <DateField<Workshop> path={`instances.${itemIndex}.dateTime`} label={t('dateTime')} showTime containerClassName="flex-fill" />
       <Field component={NumberInput} path={`instances.${itemIndex}.durationInMinutes`} label={t('duration')} containerClassName="flex-fill" />
@@ -133,7 +133,7 @@ function WorkshopInstanceEditor(
     </Flex>
     {showDances && <Input path={`instances.${itemIndex}.abbreviation`} label={t('instanceAbbreviation')} helperText={t('instanceAbbreviationHelp')} />}
     {showDances && <DanceList instanceIndex={itemIndex} />}
-  </Card>
+  </div>
 }
 
 function DanceList({instanceIndex, bigTitle}: {instanceIndex: number, bigTitle?: boolean}) {
@@ -148,7 +148,7 @@ function DanceList({instanceIndex, bigTitle}: {instanceIndex: number, bigTitle?:
       component={DanceListItem}
       renderConflictItem={item => item.name}
     />
-    {dances?.length === 0 && <p className={CssClass.textMuted}>{t('noDances')}</p>}
+    {!dances?.length && <p className={CssClass.textMuted}>{t('noDances')}</p>}
     <AddDanceChooser instance={instanceIndex} />
   </>
 

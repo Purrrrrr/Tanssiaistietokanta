@@ -93,7 +93,7 @@ export const fi = {
     workshopEditor: {
       dances: 'Tanssit',
       addDance: 'Lisää tanssi: ',
-      noDances: 'Työpajan tanssilista on tyhjä.',
+      noDances: 'Tanssilista on tyhjä.',
       name: 'Nimi',
       required: '(pakollinen)',
       abbreviation: 'Lyhennemerkintä',
