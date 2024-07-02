@@ -26,6 +26,7 @@ query DanceInstructions($eventId: ID!) {
       _id
       name
       description
+      instanceSpecificDances
       instances {
         _id
         dances {

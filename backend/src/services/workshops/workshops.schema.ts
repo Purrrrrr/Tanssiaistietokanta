@@ -27,6 +27,7 @@ export const workshopsSchema = Type.Object(
     description: Type.String(),
     teachers: Type.String(),
     instances: Type.Array(WorkshopInstanceSchema()),
+    instanceSpecificDances: Type.Boolean()
   },
   { $id: 'Workshops', additionalProperties: false }
 )

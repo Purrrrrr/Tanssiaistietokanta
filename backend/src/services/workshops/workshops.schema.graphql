@@ -13,6 +13,7 @@ type Workshop {
   danceIds: [ID!]!
   dances: [Dance!]!
   instances: [WorkshopInstance!]!
+  instanceSpecificDances: Boolean!
 }
 
 type WorkshopInstance {
@@ -39,6 +40,7 @@ input WorkshopInput {
   teachers: String
   ocurrences: [String!]
   instances: [WorkshopInstanceInput!]!
+  instanceSpecificDances: Boolean!
 }
 
 input WorkshopPatchInput {
@@ -48,6 +50,7 @@ input WorkshopPatchInput {
   teachers: String
   ocurrences: [String!]
   instances: [WorkshopInstanceInput!]
+  instanceSpecificDances: Boolean
 }
 
 input WorkshopInstanceInput {

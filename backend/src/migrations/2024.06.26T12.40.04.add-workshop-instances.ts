@@ -15,7 +15,8 @@ export const up: MigrationFn = async params => {
             dateTime: '0000-01-01T00:00:00.000',
             durationInMinutes: 105,
           }
-        ]
+        ],
+        instanceSpecificDances: false,
       }
     }
   )

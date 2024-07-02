@@ -155,11 +155,24 @@ function CreateWorkshopButton({eventId}) {
 
   return <AdminOnly>
     <Button
-      onClick={() => addLoadingAnimation(createWorkshop({eventId: eventId, workshop: {name: t('newWorkshop'), instances: [{_id: guid(), danceIds: []}]}}))}
+      onClick={() => addLoadingAnimation(createWorkshop(newWorkshop({eventId, name: t('newWorkshop')})))}
       intent="primary"
       text={t('createWorkshop')}
     />
   </AdminOnly>
+}
+
+function newWorkshop({eventId, name}) {
+  return {
+    eventId: eventId,
+    workshop: {
+      name,
+      instanceSpecificDances: false,
+      instances: [
+        {_id: guid(), danceIds: []}
+      ]
+    }
+  }
 }
 
 function WorkshopCard({workshop, reservedAbbreviations}: {workshop: Workshop, reservedAbbreviations: string[]}) {

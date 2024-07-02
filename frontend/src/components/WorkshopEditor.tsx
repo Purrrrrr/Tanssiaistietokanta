@@ -22,6 +22,7 @@ const {
   Field,
   ListField,
   RemoveItemButton,
+  Switch,
   useValueAt,
   useAppendToList,
 } = formFor<Workshop>()
@@ -38,7 +39,7 @@ export function WorkshopEditor({workshop: workshopInDatabase, reservedAbbreviati
   })
   const workshopId = workshopInDatabase._id
   const saveWorkshop = (data: Partial<Workshop>) => {
-    const {instances, name, abbreviation, description, teachers} = data
+    const {instances, name, abbreviation, description, teachers, instanceSpecificDances} = data
     return modifyWorkshop({
       id: workshopId,
       workshop: {
@@ -46,6 +47,7 @@ export function WorkshopEditor({workshop: workshopInDatabase, reservedAbbreviati
         abbreviation,
         description,
         teachers,
+        instanceSpecificDances,
         instances: instances?.map(({dances, __typename, ...i}) => ({...i, danceIds: dances ? dances.map(d => d._id) : null})),
       }
     })
@@ -63,9 +65,12 @@ export function WorkshopEditor({workshop: workshopInDatabase, reservedAbbreviati
         <AbbreviationField path="abbreviation" label={t('abbreviation')} reservedAbbreviations={reservedAbbreviations} />
         <Field path="description" component={TextArea} label={t('description')} />
         <Input path="teachers" label={t('teachers')}/>
+        <Switch path="instanceSpecificDances" label={t('instanceSpecificDances')} />
       </div>
       <div style={{flexGrow: 1, flexBasis: 300}}>
-        <ListField label={t('instances')} path="instances" component={WorkshopInstanceEditor} renderConflictItem={item => item?.dances?.map(d => d.name)?.join(', ') ?? ''} />
+        {formProps.value.instanceSpecificDances || <DanceList instanceIndex={0} bigTitle />}
+        <h3>{t('instances')}</h3>
+        <ListField label={t('instances')} labelStyle="hidden" path="instances" component={WorkshopInstanceEditor} renderConflictItem={item => item?.dances?.map(d => d.name)?.join(', ') ?? ''} />
         <Button text={t('addInstance')} onClick={() => addInstance(newInstance(formProps.value.instances[0]))} />
       </div>
     </Flex>
@@ -115,21 +120,38 @@ function WorkshopInstanceEditor(
   {itemIndex, dragHandle}: {itemIndex: number, dragHandle: DragHandle}
 ) {
   const t = useT('components.workshopEditor')
-  const dances = useValueAt(`instances.${itemIndex}.dances`)
+  const instances = useValueAt('instances')
+  const showDances = useValueAt('instanceSpecificDances')
   return <Card>
     <Flex spaced wrap alignItems="center">
       <DateField<Workshop> path={`instances.${itemIndex}.dateTime`} label={t('dateTime')} showTime containerClassName="flex-fill" />
       <Field component={NumberInput} path={`instances.${itemIndex}.durationInMinutes`} label={t('duration')} containerClassName="flex-fill" />
       <div>
         {dragHandle}
-        <RemoveItemButton path="instances" index={itemIndex} text="X" />
+        {instances.length > 1 && <RemoveItemButton path="instances" index={itemIndex} text="X" />}
       </div>
     </Flex>
-    <Input path={`instances.${itemIndex}.abbreviation`} label={t('instanceAbbreviation')} helperText={t('instanceAbbreviationHelp')} />
-    <ListField label={t('dances')} path={`instances.${itemIndex}.dances`} component={DanceListItem} renderConflictItem={item => item.name} />
-    {dances?.length === 0 && <p className={CssClass.textMuted}>{t('noDances')}</p>}
-    <AddDanceChooser instance={itemIndex} />
+    {showDances && <Input path={`instances.${itemIndex}.abbreviation`} label={t('instanceAbbreviation')} helperText={t('instanceAbbreviationHelp')} />}
+    {showDances && <DanceList instanceIndex={itemIndex} />}
   </Card>
+}
+
+function DanceList({instanceIndex, bigTitle}: {instanceIndex: number, bigTitle?: boolean}) {
+  const t = useT('components.workshopEditor')
+  const dances = useValueAt(`instances.${instanceIndex}.dances`)
+  return <>
+    {bigTitle && <h3>{t('dances')}</h3>}
+    <ListField
+      labelStyle={bigTitle ? 'hidden' : 'above'}
+      label={t('dances')}
+      path={`instances.${instanceIndex}.dances`}
+      component={DanceListItem}
+      renderConflictItem={item => item.name}
+    />
+    {dances?.length === 0 && <p className={CssClass.textMuted}>{t('noDances')}</p>}
+    <AddDanceChooser instance={instanceIndex} />
+  </>
+
 }
 
 function DanceListItem(

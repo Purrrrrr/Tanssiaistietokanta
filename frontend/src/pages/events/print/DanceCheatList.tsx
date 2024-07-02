@@ -23,6 +23,7 @@ query DanceCheatList($eventId: ID!) {
     workshops {
       _id
       name
+      instanceSpecificDances
       instances {
         dances {
           _id

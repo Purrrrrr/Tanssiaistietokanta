@@ -101,6 +101,7 @@ export const fi = {
       abbreviationTaken: 'Lyhenne __abbreviation__ on jo käytössä toisessa pajassa. Tässä tapahtumassa ovat jo käytössä seuraavat lyhenteet: __abbreviations',
       description: 'Työpajan kuvaus',
       teachers: 'Opettaja(t)',
+      instanceSpecificDances: 'Joka opetuskerralla on omat tanssinsa',
       instances: 'Opetuskerrat',
       addInstance: 'Lisää opetuskerta',
       instanceAbbreviation: 'Kerran lyhenne',

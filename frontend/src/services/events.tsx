@@ -76,6 +76,7 @@ setupServiceUpdateFragment(
       abbreviation
       description
       teachers
+      instanceSpecificDances
       instances {
         _id
         dateTime
@@ -158,6 +159,7 @@ query getEvent($id: ID!) {
       abbreviation
       description
       teachers
+      instanceSpecificDances
       instances {
         _id
         dateTime
@@ -268,6 +270,7 @@ mutation patchEventProgram($id: ID!, $program: JSONPatch!) {
       abbreviation
       description
       teachers
+      instanceSpecificDances
       instances {
         _id
         dateTime
