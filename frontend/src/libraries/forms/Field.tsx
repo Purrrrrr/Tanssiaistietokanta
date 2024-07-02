@@ -1,7 +1,7 @@
 import React  from 'react'
 import classNames from 'classnames'
 
-import { Conflict, ConflictData, Deleted, FieldComponentDisplayProps, FieldComponentPropsWithoutEvent, NoRequiredProperties, PartialWhen, TypedStringPath, UserGivenFieldContainerProps } from './types'
+import { Conflict, ConflictData, Deleted, FieldComponentDisplayProps, FieldComponentProps, NoRequiredProperties, PartialWhen, TypedStringPath, UserGivenFieldContainerProps } from './types'
 
 import { FieldContainer, FieldContainerProps } from './FieldContainer'
 import { useFormMetadata } from './formContext'
@@ -11,21 +11,21 @@ import {useError, ValidationProps} from './validation'
 export type UntypedFieldProps<ValuePath, Value, Component extends React.ElementType, AdditionalProps> =
   {
     path: ValuePath
-    component: Component & React.JSXElementConstructor<FieldComponentPropsWithoutEvent<Value> & AdditionalProps>
+    component: Component & React.JSXElementConstructor<FieldComponentProps<Value> & AdditionalProps>
     renderConflictItem?: Value extends (infer I)[] ? (item: I) => (string | React.ReactNode) : never
   }
   & FieldDataHookProps
-  & MaybeComponentProps<Omit<React.ComponentPropsWithoutRef<Component>, keyof FieldComponentPropsWithoutEvent<Value>>>
+  & MaybeComponentProps<Omit<React.ComponentPropsWithoutRef<Component>, keyof FieldComponentProps<Value>>>
 
 type MaybeComponentProps<Props extends object> = PartialWhen<NoRequiredProperties<Props>, { componentProps: Props }>
 
-export type FieldProps<T, V, P extends FieldComponentPropsWithoutEvent<V>> = {
+export type FieldProps<T, V, P extends FieldComponentProps<V>> = {
   path: TypedStringPath<V, T>
   component: React.JSXElementConstructor<P>
   renderConflictItem?: V extends (infer I)[] ? (item: I) => string : never
-} & FieldDataHookProps & MaybeComponentProps<Omit<P, keyof FieldComponentPropsWithoutEvent<V>>>
+} & FieldDataHookProps & MaybeComponentProps<Omit<P, keyof FieldComponentProps<V>>>
 
-export function Field<T, V, P extends FieldComponentPropsWithoutEvent<V>>(
+export function Field<T, V, P extends FieldComponentProps<V>>(
   { path, component: Component, componentProps, renderConflictItem, ...rest }: FieldProps<T, V, P>
 ) {
   const dataProps = useFieldValueProps<T, V>(path)
