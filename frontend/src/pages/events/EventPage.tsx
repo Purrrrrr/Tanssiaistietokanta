@@ -127,7 +127,7 @@ function EventProgram({program}: {program: EventProgramType}) {
 const isRequestedDance = row => row.item.__typename === 'RequestedDance'
 
 function EventWorkshops({event}: {event: Event}) {
-  const {workshops, _id: eventId} = event
+  const {workshops, _id: eventId, beginDate, endDate} = event
   const t = useT('pages.events.eventPage')
   return <>
     <>
@@ -136,11 +136,13 @@ function EventWorkshops({event}: {event: Event}) {
           workshop={workshop}
           key={workshop._id}
           reservedAbbreviations={workshops.filter(w => w._id !== workshop._id).map(w => w.abbreviation).filter(a => a) as string[]}
+          beginDate={beginDate}
+          endDate={endDate}
         />
       )}
     </>
     <p>
-      <CreateWorkshopButton eventId={eventId} startDate={event.beginDate} />
+      <CreateWorkshopButton eventId={eventId} startDate={beginDate} />
       <NavigateButton href="print/dance-cheatlist" target="_blank"
         text={t('danceCheatlist')} />
       <NavigateButton href="print/dance-instructions" target="_blank"
@@ -149,34 +151,44 @@ function EventWorkshops({event}: {event: Event}) {
   </>
 }
 
-function CreateWorkshopButton({eventId}) {
+function CreateWorkshopButton({eventId, startDate}) {
   const t = useT('pages.events.eventPage')
   const addLoadingAnimation = useGlobalLoadingAnimation()
   const [createWorkshop] = useCreateWorkshop()
 
   return <AdminOnly>
     <Button
-      onClick={() => addLoadingAnimation(createWorkshop(newWorkshop({eventId, name: t('newWorkshop')})))}
+      onClick={() => addLoadingAnimation(createWorkshop(newWorkshop({eventId, name: t('newWorkshop')}, startDate)))}
       intent="primary"
       text={t('createWorkshop')}
     />
   </AdminOnly>
 }
 
-function newWorkshop({eventId, name}) {
+function newWorkshop({eventId, name}, startDate) {
+  const { dances: _, ...instance } = newInstance(undefined, startDate)
   return {
     eventId: eventId,
     workshop: {
       name,
       instanceSpecificDances: false,
       instances: [
-        {_id: guid(), danceIds: []}
+        {danceIds: [], description: '', ...instance}
       ]
     }
   }
 }
 
-function WorkshopCard({workshop, reservedAbbreviations}: {workshop: Workshop, reservedAbbreviations: string[]}) {
+function WorkshopCard(
+  {
+    workshop, reservedAbbreviations, beginDate, endDate
+  }: {
+    workshop: Workshop
+    reservedAbbreviations: string[]
+    beginDate: string
+    endDate: string
+  }
+) {
   const t = useT('pages.events.eventPage')
   const addLoadingAnimation = useGlobalLoadingAnimation()
   const [showEditor, setShowEditor] = useState(false)
@@ -205,7 +217,7 @@ function WorkshopCard({workshop, reservedAbbreviations}: {workshop: Workshop, re
       {dances.map(d => d.name).join(', ')}
     </>}
     <Collapse isOpen={showEditor}>
-      <WorkshopEditor workshop={workshop} reservedAbbreviations={reservedAbbreviations} />
+      <WorkshopEditor workshop={workshop} reservedAbbreviations={reservedAbbreviations} beginDate={beginDate} endDate={endDate} />
     </Collapse>
   </Card>
 }

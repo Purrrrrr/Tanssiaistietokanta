@@ -4,11 +4,11 @@ export interface Entity {
   _id: string | number
 }
 
-export type ListItemComponent<T, V> = React.ComponentType<{
+export type ListItemComponent<T, V, P = object> = React.ComponentType<{
   path: TypedStringPath<V[], T>
   itemIndex: number
   dragHandle: DragHandle
-}>
+} & P>
 
 export type DragHandle = React.ReactNode
 

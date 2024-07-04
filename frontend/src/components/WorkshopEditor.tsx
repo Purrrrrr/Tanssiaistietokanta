@@ -30,9 +30,11 @@ const {
 interface WorkshopEditorProps {
   workshop: Workshop
   reservedAbbreviations: string[]
+  beginDate: string
+  endDate: string
 }
 
-export function WorkshopEditor({workshop: workshopInDatabase, reservedAbbreviations}: WorkshopEditorProps) {
+export function WorkshopEditor({workshop: workshopInDatabase, reservedAbbreviations, beginDate, endDate}: WorkshopEditorProps) {
   const t = useT('components.workshopEditor')
   const [modifyWorkshop] = usePatchWorkshop({
     refetchQueries: ['getEvent']
@@ -124,14 +126,21 @@ function AbbreviationField({label, path, reservedAbbreviations}) {
 }
 
 function WorkshopInstanceEditor(
-  {itemIndex, dragHandle}: {itemIndex: number, dragHandle: DragHandle}
+  {itemIndex, dragHandle, beginDate, endDate}: {itemIndex: number, dragHandle: DragHandle, beginDate: string, endDate: string}
 ) {
   const t = useT('components.workshopEditor')
   const instances = useValueAt('instances')
   const showDances = useValueAt('instanceSpecificDances')
   return <div className="workshop-instance">
     <Flex spaced wrap alignItems="center">
-      <DateField<Workshop> path={`instances.${itemIndex}.dateTime`} label={t('dateTime')} showTime containerClassName="flex-fill" />
+      <DateField<Workshop>
+        path={`instances.${itemIndex}.dateTime`}
+        label={t('dateTime')}
+        showTime
+        containerClassName="flex-fill"
+        minDate={beginDate}
+        maxDate={endDate}
+      />
       <Field component={NumberInput} path={`instances.${itemIndex}.durationInMinutes`} label={t('duration')} containerClassName="flex-fill" />
       <div>
         {dragHandle}
