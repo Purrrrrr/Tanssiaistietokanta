@@ -10,7 +10,7 @@ import {useGlobalLoadingAnimation} from 'components/LoadingState'
 import {PageTitle} from 'components/PageTitle'
 import {DeleteButton} from 'components/widgets/DeleteButton'
 import {NavigateButton} from 'components/widgets/NavigateButton'
-import {WorkshopEditor} from 'components/WorkshopEditor'
+import {newInstance, WorkshopEditor} from 'components/WorkshopEditor'
 import {useFormatDate, useT} from 'i18n'
 import { guid } from 'utils/guid'
 
@@ -33,7 +33,7 @@ export default function EventPage({event}: {event: Event}) {
     <h2>{t('ballProgram')}</h2>
     <EventProgram program={event.program} />
     <h2>{t('workshops')}</h2>
-    <EventWorkshops workshops={event.workshops} eventId={event._id} />
+    <EventWorkshops event={event} />
   </>
 }
 
@@ -126,7 +126,8 @@ function EventProgram({program}: {program: EventProgramType}) {
 
 const isRequestedDance = row => row.item.__typename === 'RequestedDance'
 
-function EventWorkshops({workshops, eventId}: {workshops: Workshop[], eventId: string}) {
+function EventWorkshops({event}: {event: Event}) {
+  const {workshops, _id: eventId} = event
   const t = useT('pages.events.eventPage')
   return <>
     <>
@@ -139,7 +140,7 @@ function EventWorkshops({workshops, eventId}: {workshops: Workshop[], eventId: s
       )}
     </>
     <p>
-      <CreateWorkshopButton eventId={eventId} />
+      <CreateWorkshopButton eventId={eventId} startDate={event.beginDate} />
       <NavigateButton href="print/dance-cheatlist" target="_blank"
         text={t('danceCheatlist')} />
       <NavigateButton href="print/dance-instructions" target="_blank"

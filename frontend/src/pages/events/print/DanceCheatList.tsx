@@ -67,7 +67,7 @@ function DanceCheatListView({workshops, mini, helpText}) {
 function WorkshopDances({workshop, mini}) {
   const t = useT('pages.events.danceCheatlist')
   const {name, instances } = workshop
-  const dances = instances.flatMap(i => i.dances)
+  const dances = instances.flatMap(i => i.dances ?? [])
   return <>
     <PageTitle>{name}</PageTitle>
     {dances.length === 0 ?

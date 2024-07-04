@@ -70,19 +70,26 @@ export function WorkshopEditor({workshop: workshopInDatabase, reservedAbbreviati
       <div style={{flexGrow: 1, flexBasis: 300}}>
         {formProps.value.instanceSpecificDances || <DanceList instanceIndex={0} bigTitle />}
         <h3>{t('instances')}</h3>
-        <ListField label={t('instances')} labelStyle="hidden" path="instances" component={WorkshopInstanceEditor} renderConflictItem={item => item?.dances?.map(d => d.name)?.join(', ') ?? ''} />
+        <ListField<'instances', Instance[], {beginDate: string, endDate: string}>
+          label={t('instances')}
+          labelStyle="hidden"
+          path="instances"
+          componentProps={{beginDate, endDate}}
+          component={WorkshopInstanceEditor}
+          renderConflictItem={item => item?.dances?.map(d => d.name)?.join(', ') ?? ''}
+        />
         <Button text={t('addInstance')} onClick={() => addInstance(newInstance(formProps.value.instances[0]))} />
       </div>
     </Flex>
   </Form>
 }
 
-function newInstance(reference: Instance): Instance {
+export function newInstance(reference?: Instance, date?: string): Instance {
   return {
     _id: guid(),
     abbreviation: '',
-    dateTime: '0000-01-01T00:00:00.000',
-    durationInMinutes: reference.durationInMinutes,
+    dateTime: reference?.dateTime ?? `${date ?? new Date().toISOString().slice(0, 10)}T00:00:00.000`,
+    durationInMinutes: reference?.durationInMinutes ?? 105,
     dances: null,
   }
 }

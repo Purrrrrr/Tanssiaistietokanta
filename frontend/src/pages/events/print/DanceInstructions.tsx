@@ -14,7 +14,7 @@ import {selectElement} from 'utils/selectElement'
 import {showToast} from 'utils/toaster'
 import {uniq} from 'utils/uniq'
 
-import {Dance, Event} from 'types'
+import {Dance} from 'types'
 
 import './DanceInstructions.sass'
 
@@ -139,7 +139,7 @@ const markdownOverrides = {
 function Workshop({workshop}) {
   const t = useT('pages.events.danceInstructions')
   const {name, description, instances } = workshop
-  const dances = instances.flatMap(i => i.dances)
+  const dances = instances.flatMap(i => i.dances ?? [])
 
   return <div className="workshop">
     <h2>
