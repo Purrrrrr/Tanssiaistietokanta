@@ -90,7 +90,7 @@ export function newInstance(reference?: Instance, date?: string): Instance {
   return {
     _id: guid(),
     abbreviation: '',
-    dateTime: reference?.dateTime ?? `${date ?? new Date().toISOString().slice(0, 10)}T00:00:00.000`,
+    dateTime: reference?.dateTime ?? `${date ?? new Date().toISOString().slice(0, 10)}T12:00:00.000`,
     durationInMinutes: reference?.durationInMinutes ?? 105,
     dances: null,
   }
