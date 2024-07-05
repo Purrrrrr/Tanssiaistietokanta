@@ -14,9 +14,15 @@ type Dance implements ProgramItem {
   category: String
   instructions: String
   remarks: String
-  teachedIn(eventId: ID): [Workshop!]!
+  teachedIn(eventId: ID): [TeachedInWorkshop!]!
   slideStyleId: ID
   events: [Event!]!
+}
+
+type TeachedInWorkshop {
+  _id: ID!
+  workshop: Workshop!
+  instances: [WorkshopInstance!]
 }
 
 type Mutation {

@@ -14,7 +14,7 @@ export function Id() {
 export function SlideStyleId() {
   return Type.Union([Type.Null(), Type.String()])
 }
-export function Nullable(t: TSchema) {
+export function Nullable<T extends TSchema>(t: T) {
   return Type.Union([Type.Null(), t])
 }
 export function NullableString() {
@@ -24,13 +24,13 @@ export function NullableString() {
 export function Date() {
   return Type.String({
     format: 'date',
-    default: '0000-01-01',
+    default: '2000-01-01',
   })
 }
 
 export function DateTime() {
   return Type.String({
     format: 'iso-date-time',
-    default: '0000-01-01T00:00:00',
+    default: '2000-01-01T00:00:00',
   })
 }

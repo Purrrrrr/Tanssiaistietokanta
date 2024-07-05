@@ -56,8 +56,11 @@ function Footer({workshops}) {
 
 function ProgramItem({item}) {
   const teachedIn = (item.teachedIn ?? [])
-    .map(workshop => workshop.abbreviation)
-    .filter(a => a)
+    .map(({workshop, instances}) => instances
+      ? `${workshop.abbreviation} ${instances.map(i => i.abbreviation).join('/')}`
+      : workshop.abbreviation
+    )
+    .filter(Boolean)
     .join(', ')
   return <p>
     {item.name ?? <RequestedDance />}
@@ -94,7 +97,10 @@ query getDanceList($eventId: ID!) {
             }
             ... on Dance {
               teachedIn(eventId: $eventId) {
-                name, abbreviation
+                workshop {
+                  name, abbreviation
+                }
+                instances { abbreviation }
               }
             }
             ... on EventProgram {

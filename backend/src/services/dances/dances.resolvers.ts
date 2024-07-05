@@ -10,11 +10,24 @@ export default (app: Application) => {
   const workshopService = app.service('workshops')
   const eventService = app.service('events')
 
-  function findTeachedIn(obj: { _id: string}, {eventId}: { eventId: string}) {
-    return workshopService.find({
+  async function findTeachedIn(dance: { _id: string}, {eventId}: { eventId: string}) {
+    const workshops = await workshopService.find({
       query: eventId ?
-        {'instances.danceIds': obj._id, eventId} :
-        {'instances.danceIds': obj._id}
+        {'instances.danceIds': dance._id, eventId} :
+        {'instances.danceIds': dance._id}
+    })
+
+    return workshops.map(workshop => {
+      const instancesWithDance = workshop.instanceSpecificDances
+        ? workshop.instances.filter(instance => instance.danceIds?.includes(dance._id))
+        : null
+      const danceInAllInstances = instancesWithDance?.length === workshop.instances.length
+
+      return {
+        _id: `${dance._id}-${workshop._id}`,
+        workshop,
+        instances: danceInAllInstances ? null : instancesWithDance
+      }
     })
   }
 
@@ -22,7 +35,9 @@ export default (app: Application) => {
     const links = getDependencyLinks('dances', obj._id, 'usedBy')
 
     const workshopIds = Array.from(links.get('workshops') ?? [])
-    const workshops = await Promise.all(workshopIds.map(id => workshopService.get(id, {query: { $select: ['eventId']}})))
+    const workshops = await Promise.all(
+      workshopIds.map(id => workshopService.get(id, {query: { $select: ['eventId']}}))
+    )
     const ids = [
       ...Array.from(links.get('events') ?? []) as string[],
       ...workshops.map(workshop => workshop.eventId)

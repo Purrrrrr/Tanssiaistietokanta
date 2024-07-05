@@ -157,7 +157,9 @@ function toProgramSlide(parent: {_id: string, title: string}, {_id: id, item, sl
       return {
         ...common,
         title: item.name,
-        footer: item.teachedIn.length ? `${t('teachedInSet')} ${item.teachedIn.map(w => w.name).join(', ')}` : undefined,
+        footer: item.teachedIn.length ?
+          `${t('teachedInSet')} ${teachedIn(item)}`
+          : undefined,
         slideContent: {
           type: 'dance',
           value: item,
@@ -173,6 +175,14 @@ function toProgramSlide(parent: {_id: string, title: string}, {_id: id, item, sl
         }
       }
   }
+}
+
+function teachedIn(dance: Dance): string {
+  return dance.teachedIn.map(
+    ({workshop, instances}) => instances
+      ? `${workshop.name} (${instances.map(i => i.abbreviation).join('/')})`
+      : workshop.name
+  ).join(', ')
 }
 
 function intervalMusicSlide(danceSet: DanceSet, defaultIntervalMusic: IntervalMusic, setIndex: number, t: T): SlideContent | undefined {
