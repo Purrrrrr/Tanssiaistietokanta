@@ -238,8 +238,9 @@ export const fi = {
       },
       danceCheatlist: {
         helpText: 'Rastita tähän, jos osaat tanssin. Näin ei tanssiaisissa tarvitse miettiä, mikä tanssi on kyseessä.',
-        showHelpText: 'Näytä ohjeteksti',
-        miniView: 'Tiivistetty näkymä',
+        show: 'Näytä',
+        showHelpText: 'Luntin ohjeteksti',
+        showDescriptions: 'Tanssiohjeet',
         print: 'Tulosta',
         noDances: 'Ei tansseja',
         addDescription: 'Lisää kuvaus',

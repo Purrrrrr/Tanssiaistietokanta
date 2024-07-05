@@ -13,8 +13,13 @@ import {PageTitle} from 'components/PageTitle'
 import {PrintTable} from 'components/PrintTable'
 import PrintViewToolbar from 'components/widgets/PrintViewToolbar'
 import {useT} from 'i18n'
+import {uniq} from 'utils/uniq'
+
+import {DanceCheatListQuery} from 'types/gql/graphql'
 
 import './DanceCheatList.sass'
+
+type Workshop = NonNullable<DanceCheatListQuery['event']>['workshops'][0]
 
 const useCheatList = backendQueryHook(graphql(`
 query DanceCheatList($eventId: ID!) {
@@ -40,18 +45,19 @@ query DanceCheatList($eventId: ID!) {
 
 export default function DanceCheatList({eventId}) {
   const t = useT('pages.events.danceCheatlist')
-  const [mini, setMini] = useState(false)
+  const [showDescriptions, setShowDescriptions] = useState(false)
   const [helpText, setHelptext] = useState(true)
   const {data, ...loadingState} = useCheatList({eventId})
   if (!data?.event) return <LoadingState {...loadingState} />
 
   return <>
     <PrintViewToolbar>
-      <Switch id="miniView" inline label={t('miniView')} value={mini} onChange={setMini}/>
+      <span>{t('show')}{' '}</span>
+      <Switch id="miniView" inline label={t('showDescriptions')} value={showDescriptions} onChange={setShowDescriptions}/>
       <Switch id="helpText" inline label={t('showHelpText')} value={helpText} onChange={setHelptext}/>
       <Button text={t('print')} onClick={() => window.print()} />
     </PrintViewToolbar>
-    <DanceCheatListView workshops={data.event.workshops} mini={mini} helpText={helpText} />
+    <DanceCheatListView workshops={data.event.workshops} mini={!showDescriptions} helpText={helpText} />
   </>
 }
 
@@ -64,10 +70,10 @@ function DanceCheatListView({workshops, mini, helpText}) {
   </CenteredContainer>
 }
 
-function WorkshopDances({workshop, mini}) {
+function WorkshopDances({workshop, mini}: {workshop: Workshop, mini: boolean}) {
   const t = useT('pages.events.danceCheatlist')
   const {name, instances } = workshop
-  const dances = instances.flatMap(i => i.dances ?? [])
+  const dances = uniq(instances.flatMap(i => i.dances ?? []))
   return <>
     <PageTitle>{name}</PageTitle>
     {dances.length === 0 ?
