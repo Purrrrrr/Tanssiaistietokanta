@@ -11,8 +11,7 @@ import {PageTitle} from 'components/PageTitle'
 import {DeleteButton} from 'components/widgets/DeleteButton'
 import {NavigateButton} from 'components/widgets/NavigateButton'
 import {newInstance, WorkshopEditor} from 'components/WorkshopEditor'
-import {useFormatDate, useT} from 'i18n'
-import { guid } from 'utils/guid'
+import {useFormatDate, useFormatDateTime, useT} from 'i18n'
 
 import {Event, EventProgram as EventProgramType} from 'types'
 
@@ -193,8 +192,7 @@ function WorkshopCard(
   const addLoadingAnimation = useGlobalLoadingAnimation()
   const [showEditor, setShowEditor] = useState(false)
   const [deleteWorkshop] = useDeleteWorkshop({refetchQueries: ['getEvent']})
-  const {_id, abbreviation, name, description, instances} = workshop
-  const dances = instances.flatMap(i => i.dances ?? [])
+  const {_id, abbreviation, name } = workshop
 
   return <Card style={{clear: 'right'}}>
     <DeleteButton onDelete={() => addLoadingAnimation(deleteWorkshop({id: _id}))}
@@ -211,13 +209,34 @@ function WorkshopCard(
             <> ({abbreviation})</>
       }
     </h2>
-    {showEditor || <>
-      <p>{description}</p>
-      {t('dances') + ': '}
-      {dances.map(d => d.name).join(', ')}
-    </>}
+    {showEditor || <WorkshopSummary workshop={workshop} />}
     <Collapse isOpen={showEditor}>
       <WorkshopEditor workshop={workshop} reservedAbbreviations={reservedAbbreviations} beginDate={beginDate} endDate={endDate} />
     </Collapse>
   </Card>
+}
+
+function WorkshopSummary({workshop}: {workshop: Workshop}) {
+  const t = useT('pages.events.eventPage')
+  const formatDateTime = useFormatDateTime()
+  const {instanceSpecificDances, instances, description} = workshop
+
+  return <>
+    <p>{description}</p>
+    {instanceSpecificDances
+      ? instances.map(instance =>
+        <React.Fragment key={instance._id}>
+          <h3>{formatDateTime(new Date(instance.dateTime))}</h3>
+          <p>
+            {t('dances')} : {instance?.dances?.map(d => d.name)?.join(', ')}
+          </p>
+        </React.Fragment>
+      )
+      : <>
+        <h3>{instances.map(instance => formatDateTime(new Date(instance.dateTime))).join(', ')}</h3>
+        <p>{t('dances') + ': '}{instances[0]?.dances?.map(d => d.name)?.join(', ')}</p>
+      </>
+    }
+  </>
+
 }
