@@ -15,10 +15,13 @@ import {showToast} from 'utils/toaster'
 import {uniq} from 'utils/uniq'
 
 import {Dance} from 'types'
+import {DanceInstructionsQuery} from 'types/gql/graphql'
 
 import './DanceInstructions.sass'
 
-const useDanceInstructions= backendQueryHook(graphql(`
+type Workshop = NonNullable<DanceInstructionsQuery['event']>['workshops'][0]
+
+const useDanceInstructions = backendQueryHook(graphql(`
 query DanceInstructions($eventId: ID!) {
   event(id: $eventId) {
     _id
@@ -76,7 +79,7 @@ export default function DanceInstructions({eventId}) {
       {showWorkshops &&
         <>
           <h1>{t('workshops')}</h1>
-          {workshops.map(workshop => <Workshop key={workshop._id} workshop={workshop} />)}
+          {workshops.map(workshop => <WorkshopDetails key={workshop._id} workshop={workshop} />)}
         </>
       }
       <h1>{t('danceInstructions')}</h1>
@@ -136,10 +139,10 @@ const markdownOverrides = {
   a: { component: 'span' }
 }
 
-function Workshop({workshop}) {
+function WorkshopDetails({workshop}: {workshop: Workshop}) {
   const t = useT('pages.events.danceInstructions')
   const {name, description, instances } = workshop
-  const dances = instances.flatMap(i => i.dances ?? [])
+  const dances = uniq(instances.flatMap(i => i.dances ?? []))
 
   return <div className="workshop">
     <h2>
