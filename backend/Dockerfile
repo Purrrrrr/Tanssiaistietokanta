@@ -2,8 +2,8 @@
 FROM node:slim
 
 # Install pandoc and other necessary packages
-RUN apt-get update && \
-    apt-get install -y pandoc
+RUN apt-get update
+RUN apt-get install -y pandoc
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -16,9 +16,9 @@ RUN npm install
 
 # Copy the application code to the working directory
 COPY config config
-COPY src src
 COPY public public
 COPY tsconfig.json tsconfig.json
+COPY src src
 
 RUN npm run compile
 
