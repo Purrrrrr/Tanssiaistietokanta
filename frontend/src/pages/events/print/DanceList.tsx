@@ -3,8 +3,8 @@ import {useState} from 'react'
 import {backendQueryHook, graphql} from 'backend'
 import {useCallbackOnEventChanges} from 'services/events'
 
-import {Switch} from 'libraries/forms'
-import {Button} from 'libraries/ui'
+import {RadioGroup} from 'libraries/forms'
+import {AutosizedSection, Button} from 'libraries/ui'
 import {LoadingState} from 'components/LoadingState'
 import PrintViewToolbar from 'components/widgets/PrintViewToolbar'
 import {useT} from 'i18n'
@@ -14,31 +14,42 @@ import './DanceList.sass'
 function DanceList({eventId}) {
   const t = useT('pages.events.danceList')
   const {program, workshops, loadingState} = useBallProgram(eventId)
-  const [sidebyside, setSidebyside] = useState(false)
-  const colClass = (sidebyside ? ' three-columns' : '')
+  const [style, setStyle] = useState('default')
 
   if (!program) return <LoadingState {...loadingState} />
 
-  return <div className={'danceList' + colClass}>
+  return <div className={`danceList ${style}`}>
     <PrintViewToolbar>
-      <Switch id="showSideBySide" inline label={t('showSideBySide')} value={sidebyside} onChange={setSidebyside}/>
+      <RadioGroup
+        id="style"
+        inline
+        options={[
+          {value: 'default', label: 'Oletus'},
+          {value: 'three-columns', label: 'Rinnakkaiset setit'},
+          {value: 'large', label: 'Yksi setti per arkki'},
+        ]}
+        value={style}
+        onChange={setStyle}
+      />
       <Button text={t('print')} onClick={() => window.print()} />
     </PrintViewToolbar>
-    <PrintFooterContainer footer={<Footer workshops={workshops.filter(w => w.abbreviation)} />}>
-      {program.danceSets.map(
-        ({title, program}, key) => {
-          return <div key={key} className="section">
-            <h2>{title}</h2>
-            {program
-              .map(row => row.item)
-              .filter(item => item.__typename !== 'EventProgram' || item.showInLists)
-              .map((item, i) =>
-                <ProgramItem key={i} item={item} />
-              )}
-          </div>
-        }
-      )}
-    </PrintFooterContainer>
+    <main>
+      <PrintFooterContainer footer={<Footer workshops={workshops.filter(w => w.abbreviation)} />}>
+        {program.danceSets.map(
+          ({title, program}, key) => {
+            return <AutosizedSection key={key} className="section">
+              <h2>{title}</h2>
+              {program
+                .map(row => row.item)
+                .filter(item => item.__typename !== 'EventProgram' || item.showInLists)
+                .map((item, i) =>
+                  <ProgramItem key={i} item={item} />
+                )}
+            </AutosizedSection>
+          }
+        )}
+      </PrintFooterContainer>
+    </main>
   </div>
 }
 
@@ -64,8 +75,7 @@ function ProgramItem({item}) {
     .join(', ')
   return <p>
     {item.name ?? <RequestedDance />}
-    {teachedIn && (' ('+teachedIn+')')
-    }
+    {teachedIn && ` (${teachedIn})`}
   </p>
 }
 

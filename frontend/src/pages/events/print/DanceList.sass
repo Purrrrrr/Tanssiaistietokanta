@@ -2,22 +2,51 @@
   padding-top: 1px
   text-align: center
   margin-bottom: 2em
+  min-height: 100vh
+
+  main
+    margin-inline: auto
+    width: 210mm
+    min-height: 287mm
+    background: white
+  
+  section
+    max-width: 210mm
+
+  &.default
+    .section
+      height: 95mm
+      font-size: 1.8em
 
   &.three-columns
     .section
       vertical-align: top
       display: inline-block
-      width: 33%
-  
+      width: 50%
+      height: 95mm
+      font-size: 1.5em
+
+  &.large
+    .section
+      font-size: 4em
+      height: 287mm
+    footer
+      font-size: 1.5em
+  div
   //For the toolbar to not show weirdly
   label
     margin-bottom: 0
 
   @media screen
+    background: gray
     tfoot
       display: none
 
   @media print
+  
+    @page
+      size: A4
+
     .section
       page-break-inside: avoid
     tfoot,thead

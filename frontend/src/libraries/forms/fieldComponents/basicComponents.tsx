@@ -105,14 +105,14 @@ export function TextArea({value, onChange, inline: _ignored, inputRef, ...props}
   />
 }
 
-interface RadioGroupProps<E extends string> extends FieldComponentProps<E | null, HTMLInputElement> {
+interface RadioGroupProps<E extends string | null> extends FieldComponentProps<E, HTMLInputElement> {
   options: {
-    value: E | null
+    value: E
     label: string
   }[]
 }
 
-export function RadioGroup<E extends string>({options, inline: _ignored, id, value, onChange, ...rest}: RadioGroupProps<E>) {
+export function RadioGroup<E extends string>({options, id, value, onChange, ...rest}: RadioGroupProps<E>) {
   return options.map(({value: optionValue, label})=>
     <Radio
       id={`${id}-${optionValue}`}
