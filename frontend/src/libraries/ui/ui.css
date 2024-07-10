@@ -42,6 +42,18 @@
 .global-loading-spinner > * {
   place-self: center;
 }
+.global-loading-spinner .bp5-non-ideal-state {
+  transition: background 0.2s ease-in-out, width 0.2s, height 0.2s;
+  border-radius: 5px;
+  width: 350px;
+  height: 150px;
+}
+.global-loading-spinner.timeout > .bp5-non-ideal-state {
+  background: white;
+}
+.global-loading-spinner.timeout .bp5-spinner {
+  display: inline-block;
+}
 
 .bp5-card + p {
   margin-top: 10px;

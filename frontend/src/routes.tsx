@@ -1,11 +1,11 @@
-import {lazy, Suspense} from 'react'
+import {Suspense} from 'react'
 import {Route, Routes, useParams} from 'react-router-dom'
 
 import {useEvent} from 'services/events'
 import {AdminOnly} from 'services/users'
 
 import {Breadcrumb} from 'libraries/ui'
-import {LoadingState} from 'components/LoadingState'
+import {lazyLoadComponent as lazy, LoadingState} from 'components/LoadingState'
 import {T, useTranslation} from 'i18n'
 
 const Dances = lazy(() => import('pages/dances'))
@@ -22,7 +22,7 @@ const DanceList = lazy(() => import('pages/events/print/DanceList'))
 export default function MainRoutes() {
   return <>
     <Breadcrumb text={<><img src="/fan32.png" alt=""/>{' '}<T msg="app.title"/></>} />
-    <Suspense fallback={<LoadingState loading />}>
+    <Suspense>
       <Routes>
         <Route index element={<EventList/>} />
         <Route path="events/new" element={<CreateEvent/>} />

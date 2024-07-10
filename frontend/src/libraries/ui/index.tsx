@@ -10,6 +10,7 @@ import {
   IconName as BlueprintIconName,
   InputGroup as BlueprintInputGroup,
   Spinner,
+  NonIdealState,
 } from '@blueprintjs/core'
 import { IconPaths, Icons } from '@blueprintjs/icons'
 import classNames from 'classnames'
@@ -101,9 +102,11 @@ Icons.setLoaderOptions({
     (await iconModules[`${name}/${size}`]()).default as IconPaths,
 })
 
-export function GlobalSpinner({loading}) {
-  const className = classNames('global-loading-spinner', {loading})
-  return <div className={className}><Spinner size={100}/></div>
+export function GlobalSpinner({loading, timeout, connectionTimeoutMessage}) {
+  const className = classNames('global-loading-spinner', {loading, timeout})
+  return <div className={className}>
+    <NonIdealState icon={<Spinner size={60} />} title={timeout ? connectionTimeoutMessage : ''} />
+  </div>
 }
 
 interface IconProps {

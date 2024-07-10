@@ -61,6 +61,7 @@ export const fi = {
       delete: 'Poista',
     },
     loadingState: {
+      connectionError: 'Yhteydenotto palvelimeen ei onnistu',
       errorMessage: 'Tietojen lataaminen epäonnistui',
       tryAgain: 'Yritä uudelleen',
     },

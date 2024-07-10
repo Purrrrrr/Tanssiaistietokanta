@@ -1,46 +1,75 @@
-import {createContext, useCallback, useContext, useEffect, useState} from 'react'
+import {ComponentType, lazy, useEffect, useState, useSyncExternalStore} from 'react'
 import {ApolloError, ApolloQueryResult} from '@apollo/client'
 
 import {socket} from 'backend/feathers'
 
 import {Button, GlobalSpinner, NonIdealState, Spinner} from 'libraries/ui'
-import {useT} from 'i18n'
+import {useT, useTranslation} from 'i18n'
 
-export const StartLoadingContext = createContext<<T>(promise: Promise<T>) => Promise<T>>(p => p)
+const connectionProblemMessageTimeout = 5000
 
 export function GlobalLoadingState({children}) {
-  const [loading, setLoading] = useState(false)
+  const loading = useGlobalLoadingState()
   const [connected, setConnected] = useState(socket.connected)
-  const startLoading = useCallback(
-    (promise) => {
-      setLoading(true)
-      promise
-        .then(() => setLoading(false))
-        .catch(() => setLoading(false))
-      return promise
-    },
-    []
-  )
+  const [connectionTimeout, setConnectionTimeout] = useState(false)
 
   useEffect(() => {
-    socket.on('connect', () => {
-      setConnected(true)
-    })
-    socket.on('disconnect', () => {
-      setConnected(false)
-    })
+    const onConnect = () => setConnected(true)
+    const onDisconnect = () => setConnected(false)
+    socket.on('connect', onConnect)
+    socket.on('disconnect', onDisconnect)
+
+    return () => {
+      socket.off('connect', onConnect)
+      socket.off('disconnect', onDisconnect)
+    }
   }, [])
 
+  useEffect(() => {
+    if (connected) {
+      setConnectionTimeout(false)
+      return
+    }
+
+    const id = setTimeout(() => setConnectionTimeout(true), connectionProblemMessageTimeout)
+    return () => clearTimeout(id)
+  }, [connected])
+
   return <>
-    <StartLoadingContext.Provider value={startLoading}>
-      {children}
-    </StartLoadingContext.Provider>
-    <GlobalSpinner loading={loading || !connected}/>
+    {children}
+    <GlobalSpinner
+      loading={loading || !connected}
+      timeout={connectionTimeout}
+      connectionTimeoutMessage={useTranslation('components.loadingState.connectionError')}/>
   </>
 }
 
 export function useGlobalLoadingAnimation() {
-  return useContext(StartLoadingContext)
+  return addGlobalLoadingAnimation
+}
+
+export function lazyLoadComponent<T>(loadComponent: () => Promise<{default: ComponentType<T>}>) {
+  return lazy(() => addGlobalLoadingAnimation(loadComponent()))
+}
+
+const loadingPromises = new Set<Promise<unknown>>()
+const stateListeners = new Set<(loading: boolean) => unknown>()
+
+export function addGlobalLoadingAnimation<T>(promise: Promise<T>): Promise<T> {
+  loadingPromises.add(promise)
+  promise.finally(() => { loadingPromises.delete(promise) })
+  return promise
+}
+
+
+function useGlobalLoadingState() {
+  return useSyncExternalStore(
+    (callback) => {
+      stateListeners.add(callback)
+      return () => stateListeners.delete(callback)
+    },
+    () => loadingPromises.size > 0,
+  )
 }
 
 interface LoadingStateProps {
