@@ -239,12 +239,14 @@ export const fi = {
       },
       danceCheatlist: {
         helpText: 'Rastita tähän, jos osaat tanssin. Näin ei tanssiaisissa tarvitse miettiä, mikä tanssi on kyseessä.',
+        nrOfCopies: {
+          one: '1 kopio per sivu',
+          many: '__count__ kopiota per sivu',
+        },
         show: 'Näytä',
         showHelpText: 'Luntin ohjeteksti',
-        showDescriptions: 'Tanssiohjeet',
         print: 'Tulosta',
         noDances: 'Ei tansseja',
-        addDescription: 'Lisää kuvaus',
         iCanDanceThis: 'Osaan tanssin',
         danceName: 'Nimi',
       },

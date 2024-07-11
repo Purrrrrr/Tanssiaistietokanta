@@ -42,15 +42,23 @@ query DanceCheatList($eventId: ID!) {
 
 export default function DanceCheatList({eventId}) {
   const t = useT('pages.events.danceCheatlist')
-  const [repeats, setRepeats] = useState(1)
+  const [repeats, setRepeats] = useState(4)
   const [helpText, setHelptext] = useState(true)
   const {data, ...loadingState} = useCheatList({eventId})
   if (!data?.event) return <LoadingState {...loadingState} />
   const {workshops} = data.event
+  const copyCountStr = count => t('nrOfCopies', {count})
 
   return <div className={`dance-cheatsheet-page repeat-${repeats}`}>
     <PrintViewToolbar>
-      <Selector<number> selectedItem={repeats} items={[1, 2, 4, 6, 8]} onSelect={setRepeats} getItemText={i => `${i}`} text={`${repeats}`} alwaysEnabled />
+      <Selector<number>
+        selectedItem={repeats}
+        items={[1, 2, 4, 6, 8]}
+        onSelect={setRepeats}
+        getItemText={copyCountStr}
+        text={copyCountStr(repeats)}
+        alwaysEnabled
+      />
       <span>{t('show')}{' '}</span>
       <Switch id="helpText" inline label={t('showHelpText')} value={helpText} onChange={setHelptext}/>
       <Button text={t('print')} onClick={() => window.print()} />
