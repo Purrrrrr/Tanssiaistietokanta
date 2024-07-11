@@ -71,14 +71,15 @@ function DanceInstructionsView({eventId, showWorkshops, hilightEmpty, showShortI
 
   return <section className={classNames('dance-instructions', {'hilight-empty': hilightEmpty, showShortInstructions})} ref={elementRef}>
     {showWorkshops &&
-      <>
+      <section className="workshops">
         <h1>{t('workshops')}</h1>
         {workshops.map(workshop => <WorkshopDetails key={workshop._id} workshop={workshop} />)}
-      </>
+      </section>
     }
     <h1>{t('danceInstructions')}</h1>
-
-    {dances.map(dance => <InstructionsForDance key={dance._id} dance={dance} showShortInstructions={showShortInstructions} />)}
+    <section className="dances">
+      {dances.map(dance => <InstructionsForDance key={dance._id} dance={dance} showShortInstructions={showShortInstructions} />)}
+    </section>
   </section>
 }
 
