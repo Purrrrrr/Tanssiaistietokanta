@@ -27,7 +27,15 @@ export const dancesSchema = Type.Object(
 )
 export type Dances = Static<typeof dancesSchema>
 export const dancesValidator = getValidator(dancesSchema, dataValidator)
-export const dancesResolver = resolve<Dances, HookContext>({})
+export const dancesResolver = resolve<Dances, HookContext>({
+  description: value => value ?? '',
+  prelude: value => value ?? '',
+  formation: value => value ?? '',
+  source: value => value ?? '',
+  category: value => value ?? '',
+  instructions: value => value ?? '',
+  remarks: value => value ?? '',
+})
 
 export const dancesExternalResolver = resolve<Dances, HookContext>({})
 
