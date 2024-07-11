@@ -1,14 +1,19 @@
+@use 'sass:math'
+
 $A4h: 287mm
 $A4w: 210mm
+$aspect-ratio: math.div(210,287)
 
 .dance-cheatsheet-page
   min-height: 100vh
 
   main
+    padding: 10px
     margin-inline: auto
     height: $A4w
     width: $A4h
     background: white
+    transform-origin: top
 
   &.repeat-1, &.repeat-2
     main
@@ -37,6 +42,22 @@ $A4w: 210mm
 
   @media screen
     background: gray
+    
+  @media screen and (min-height: $A4w * 1.25)
+    main
+      transform: scale(1.2)
+    &.repeat-1 main, &.repeat-2 main
+      transform: scale(1.2 * $aspect-ratio)
+  @media screen and (min-height: $A4w * 1.5)
+    main
+      transform: scale(1.5)
+    &.repeat-1 main, &.repeat-2 main
+      transform: scale(1.5 * $aspect-ratio)
+  @media screen and (min-height: $A4w * 1.75)
+    main
+      transform: scale(1.75)
+    &.repeat-1 main, &.repeat-2 main
+      transform: scale(1.75 * $aspect-ratio)
 
 .dance-cheatsheet
   &.mini p
