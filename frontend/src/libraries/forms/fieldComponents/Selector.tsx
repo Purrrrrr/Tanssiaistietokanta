@@ -11,8 +11,9 @@ import  './Selector.scss'
 type SelectorProps<T> = SelectorMenuProps<T> & {
   text: string
   buttonProps?: Omit<ButtonProps, 'text'>
+  alwaysEnabled?: boolean
 }
-export function Selector<T>({text, buttonProps, onSelect, ...rest} : SelectorProps<T>) {
+export function Selector<T>({text, buttonProps, onSelect, alwaysEnabled, ...rest} : SelectorProps<T>) {
   const [open, setOpen] = useState(false)
   return <MenuButton
     menu={
@@ -22,6 +23,7 @@ export function Selector<T>({text, buttonProps, onSelect, ...rest} : SelectorPro
     buttonProps={buttonProps}
     open={open}
     onSetOpen={setOpen}
+    alwaysEnabled={alwaysEnabled}
   />
 }
 

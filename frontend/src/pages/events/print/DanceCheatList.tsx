@@ -1,13 +1,11 @@
 import {useState} from 'react'
-import classNames from 'classnames'
 
 import {backendQueryHook, graphql} from 'backend'
 import {useCallbackOnEventChanges} from 'services/events'
 
-import {Switch} from 'libraries/forms'
-import {Button} from 'libraries/ui'
+import {Selector, Switch} from 'libraries/forms'
+import {AutosizedSection, Button} from 'libraries/ui'
 import {CenteredContainer} from 'components/CenteredContainer'
-import {EditableDanceProperty} from 'components/EditableDanceProperty'
 import {LoadingState} from 'components/LoadingState'
 import {PageTitle} from 'components/PageTitle'
 import {PrintTable} from 'components/PrintTable'
@@ -33,7 +31,6 @@ query DanceCheatList($eventId: ID!) {
         dances {
           _id
           name
-          description
         }
       }
     }
@@ -45,32 +42,39 @@ query DanceCheatList($eventId: ID!) {
 
 export default function DanceCheatList({eventId}) {
   const t = useT('pages.events.danceCheatlist')
-  const [showDescriptions, setShowDescriptions] = useState(false)
+  const [repeats, setRepeats] = useState(1)
   const [helpText, setHelptext] = useState(true)
   const {data, ...loadingState} = useCheatList({eventId})
   if (!data?.event) return <LoadingState {...loadingState} />
+  const {workshops} = data.event
 
-  return <>
+  return <div className={`dance-cheatsheet-page repeat-${repeats}`}>
     <PrintViewToolbar>
+      <Selector<number> selectedItem={repeats} items={[1, 2, 4, 6, 8]} onSelect={setRepeats} getItemText={i => `${i}`} text={`${repeats}`} alwaysEnabled />
       <span>{t('show')}{' '}</span>
-      <Switch id="miniView" inline label={t('showDescriptions')} value={showDescriptions} onChange={setShowDescriptions}/>
       <Switch id="helpText" inline label={t('showHelpText')} value={helpText} onChange={setHelptext}/>
       <Button text={t('print')} onClick={() => window.print()} />
     </PrintViewToolbar>
-    <DanceCheatListView workshops={data.event.workshops} mini={!showDescriptions} helpText={helpText} />
-  </>
+    <main>
+      {Array(repeats).fill(1).map((_, i) =>
+        <DanceCheatListView key={`${repeats}-${i}`} workshops={workshops} helpText={helpText} />
+      )}
+    </main>
+  </div>
 }
 
-function DanceCheatListView({workshops, mini, helpText}) {
+function DanceCheatListView({workshops, helpText}) {
   const t = useT('pages.events.danceCheatlist')
-  return <CenteredContainer className={classNames('dance-cheatsheet', {mini})}>
-    {helpText && <p>{t('helpText')}</p>}
-    {workshops.map(workshop =>
-      <WorkshopDances key={workshop._id} workshop={workshop} mini={mini} />)}
-  </CenteredContainer>
+  return <AutosizedSection>
+    <CenteredContainer className="dance-cheatsheet">
+      {helpText && <p>{t('helpText')}</p>}
+      {workshops.map(workshop =>
+        <WorkshopDances key={workshop._id} workshop={workshop} />)}
+    </CenteredContainer>
+  </AutosizedSection>
 }
 
-function WorkshopDances({workshop, mini}: {workshop: Workshop, mini: boolean}) {
+function WorkshopDances({workshop }: {workshop: Workshop}) {
   const t = useT('pages.events.danceCheatlist')
   const {name, instances } = workshop
   const dances = uniq(instances.flatMap(i => i.dances ?? []))
@@ -82,15 +86,7 @@ function WorkshopDances({workshop, mini}: {workshop: Workshop, mini: boolean}) {
         {dances.map(dance =>
           <tr key={dance._id}>
             <td>
-              {mini
-                ? dance.name
-                : <>
-                  <strong>{dance.name}</strong>
-                  <div>
-                    <EditableDanceProperty dance={dance} property="description" type="markdown" addText={t('addDescription')} />
-                  </div>
-                </>
-              }
+              {dance.name}
             </td>
             <td />
           </tr>

@@ -1,3 +1,53 @@
+$A4h: 287mm
+$A4w: 210mm
+
+.dance-cheatsheet-page
+  min-height: 100vh
+
+  main
+    margin-inline: auto
+    height: $A4w
+    width: $A4h
+    background: white
+
+  &.repeat-1, &.repeat-2
+    main
+      width: $A4w
+      height: $A4h
+
+  &.repeat-1 section
+    height: 100%
+  &:not(.repeat-1) section
+    height: 47%
+    &:nth-child(odd)
+      margin-bottom: 5%
+
+  &.repeat-4
+    main
+      columns: 2 auto
+  &.repeat-6
+    main
+      columns: 3 auto
+  &.repeat-8
+    main
+      columns: 4 auto
+
+
+
+
+  @media screen
+    background: gray
+    main
+      padding: 10px
+      height: calc(100vh - 80px)
+      width: auto
+      aspect-ratio: $A4h / $A4w
+    &.repeat-1, &.repeat-2
+      main
+        height: calc(100vh - 80px)
+        aspect-ratio: $A4w / $A4h
+
+
 .dance-cheatsheet
   &.mini p
     max-width: 340px
