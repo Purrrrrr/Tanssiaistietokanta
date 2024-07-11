@@ -53,11 +53,16 @@ export function lazyLoadComponent<T>(loadComponent: () => Promise<{default: Comp
 }
 
 const loadingPromises = new Set<Promise<unknown>>()
-const stateListeners = new Set<(loading: boolean) => unknown>()
+const stateListeners = new Set<() => unknown>()
+const triggerListeners = () => stateListeners.forEach(listener => listener())
 
 export function addGlobalLoadingAnimation<T>(promise: Promise<T>): Promise<T> {
   loadingPromises.add(promise)
-  promise.finally(() => { loadingPromises.delete(promise) })
+  triggerListeners()
+  promise.finally(() => {
+    loadingPromises.delete(promise)
+    triggerListeners()
+  })
   return promise
 }
 
