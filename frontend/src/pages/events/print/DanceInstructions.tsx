@@ -28,6 +28,7 @@ export default function DanceInstructions({eventId}) {
   const t = useT('pages.events.danceInstructions')
   const dancesEl = useRef<HTMLElement>(null)
   const [showWorkshops, setShowWorkshops] = useState(true)
+  const [showDances, setShowDances] = useState(true)
   const [showShortInstructions, setShowShortInstructions] = useState(false)
   const [hilightEmpty, setHilightEmpty] = useState(false)
 
@@ -44,8 +45,13 @@ export default function DanceInstructions({eventId}) {
       <p>{t('defaultStylingDescription')}</p>
       <p>
         <Switch id="showWorkshops" inline label={t('showWorkshops')} value={showWorkshops} onChange={setShowWorkshops}/>
-        <Switch id="showShortInstructions" inline label={t('showShortInstructions')} value={showShortInstructions} onChange={setShowShortInstructions}/>
-        <Switch id="hilightEmpty" inline label={t('hilightEmpty')} value={hilightEmpty} onChange={setHilightEmpty}/>
+        <Switch id="showDances" inline label={t('showDances')} value={showDances} onChange={setShowDances}/>
+        {showDances &&
+          <>
+            <Switch id="showShortInstructions" inline label={t('showShortInstructions')} value={showShortInstructions} onChange={setShowShortInstructions}/>
+            <Switch id="hilightEmpty" inline label={t('hilightEmpty')} value={hilightEmpty} onChange={setHilightEmpty}/>
+          </>
+        }
         <Button text={t('selectAndCopy')} onClick={selectAndCopy}/>
         <Button text={t('print')} onClick={() => window.print()} />
       </p>
@@ -55,12 +61,13 @@ export default function DanceInstructions({eventId}) {
       elementRef={dancesEl}
       hilightEmpty={hilightEmpty}
       showWorkshops={showWorkshops}
+      showDances={showDances}
       showShortInstructions={showShortInstructions}
     />
   </>
 }
 
-function DanceInstructionsView({eventId, showWorkshops, hilightEmpty, showShortInstructions, elementRef}) {
+function DanceInstructionsView({eventId, showWorkshops, showDances, hilightEmpty, showShortInstructions, elementRef}) {
   const t = useT('pages.events.danceInstructions')
   const {data, refetch, ...loadingState} = useDanceInstructions({eventId})
 
@@ -76,10 +83,12 @@ function DanceInstructionsView({eventId, showWorkshops, hilightEmpty, showShortI
         {workshops.map(workshop => <WorkshopDetails key={workshop._id} workshop={workshop} />)}
       </section>
     }
-    <h1>{t('danceInstructions')}</h1>
-    <section className="dances">
-      {dances.map(dance => <InstructionsForDance key={dance._id} dance={dance} showShortInstructions={showShortInstructions} />)}
-    </section>
+    {showDances &&
+      <section className="dances">
+        <h1>{t('danceInstructions')}</h1>
+        {dances.map(dance => <InstructionsForDance key={dance._id} dance={dance} showShortInstructions={showShortInstructions} />)}
+      </section>
+    }
   </section>
 }
 
@@ -135,7 +144,7 @@ function InstructionsForDance({dance: danceInDatabase, showShortInstructions} : 
 
   const {name, instructions} = dance
 
-  return <div tabIndex={0} className={`dance-instructions-dance ${instructions ? 'not-empty' : 'empty'}`}>
+  return <div className={`dance-instructions-dance ${instructions ? 'not-empty' : 'empty'}`}>
     <Form value={dance} onChange={setDance}>
       <h2>
         {name}
