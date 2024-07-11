@@ -38,10 +38,16 @@ export function DanceDataImportButton({onImport, dance, ...props} : DanceDataImp
       onImport(data)
       return
     }
-    const {_id, category, formation, instructions} = data
+    const {_id, source, description, category, formation, instructions} = data
     patch({
       id: _id,
-      dance: { category, formation, instructions },
+      dance: {
+        category,
+        formation,
+        source,
+        description,
+        instructions
+      },
     })
   }
 
@@ -137,6 +143,16 @@ function ImportedDataView() {
       </RowItem>
       <RowItem>
         <Suggestions values={formations} onSuggest={useOnChangeFor('formation')} />
+      </RowItem>
+    </Row>
+    <Row>
+      <RowItem>
+        <Input label={label('source')} path="source" />
+      </RowItem>
+    </Row>
+    <Row>
+      <RowItem>
+        <Field path="description" component={MarkdownEditor} label={label('description')} />
       </RowItem>
     </Row>
     <InstructionEditor />

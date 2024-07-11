@@ -88,9 +88,11 @@ query DanceInstructions($eventId: ID!) {
         dances {
           _id
           name
+          description
           instructions
           formation
           category
+          source
         }
       }
     }
