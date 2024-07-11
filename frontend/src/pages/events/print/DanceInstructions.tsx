@@ -1,4 +1,4 @@
-import {useCallback, useRef, useState} from 'react'
+import React, {useCallback, useRef, useState} from 'react'
 import classNames from 'classnames'
 
 import {backendQueryHook, graphql} from 'backend'
@@ -10,7 +10,7 @@ import {Button} from 'libraries/ui'
 import {DanceDataImportButton} from 'components/DanceDataImportDialog'
 import {LoadingState} from 'components/LoadingState'
 import PrintViewToolbar from 'components/widgets/PrintViewToolbar'
-import {useT} from 'i18n'
+import {useFormatDateTime, useT} from 'i18n'
 import {selectElement} from 'utils/selectElement'
 import {showToast} from 'utils/toaster'
 import {uniq} from 'utils/uniq'
@@ -94,6 +94,7 @@ query DanceInstructions($eventId: ID!) {
       instanceSpecificDances
       instances {
         _id
+        dateTime
         dances {
           _id
           name
@@ -165,14 +166,27 @@ const markdownOverrides = {
 
 function WorkshopDetails({workshop}: {workshop: Workshop}) {
   const t = useT('pages.events.danceInstructions')
-  const {name, description, instances } = workshop
-  const dances = uniq(instances.flatMap(i => i.dances ?? []))
+  const {name, description, instanceSpecificDances, instances } = workshop
+  const formatDateTime = useFormatDateTime()
 
   return <div className="workshop">
     <h2>
       {name}
     </h2>
     <p className="description">{description}</p>
-    <p>{t('dances')}: {dances.map(d => d.name).join(', ')}</p>
+    {instanceSpecificDances
+      ? instances.map(instance =>
+        <React.Fragment key={instance._id}>
+          <h3>{formatDateTime(new Date(instance.dateTime))}</h3>
+          <p>
+            {t('dances')} : {instance?.dances?.map(d => d.name)?.join(', ')}
+          </p>
+        </React.Fragment>
+      )
+      : <>
+        <h3>{instances.map(instance => formatDateTime(new Date(instance.dateTime))).join(', ')}</h3>
+        <p>{t('dances') + ': '}{instances[0]?.dances?.map(d => d.name)?.join(', ')}</p>
+      </>
+    }
   </div>
 }

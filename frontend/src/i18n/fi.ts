@@ -223,7 +223,7 @@ export const fi = {
         createWorkshop: 'Uusi työpaja',
         newWorkshop: 'Uusi työpaja',
         danceCheatlist: 'Osaan tanssin -lunttilappu',
-        danceInstructions: 'Työpajojen tanssiohjeet',
+        danceInstructions: 'Työpajojen ohjelma ja tanssiohjeet',
         requestedDance: {
           one: 'Toivetanssi',
           many: '__count__ toivetanssia'
