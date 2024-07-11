@@ -263,6 +263,7 @@ export const fi = {
         instructionsCopied: 'Ohjeet kopioitu',
         print: 'Tulosta',
         showWorkshops: 'Näytä työpajojen kuvaukset',
+        hilightEmpty: 'Korosta tanssit ilman ohjeita',
         workshops: 'Työpajat',
         dances: 'Tanssit',
         danceInstructions: 'Tanssiohjeet',

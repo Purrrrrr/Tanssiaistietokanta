@@ -37,17 +37,17 @@ export interface ClickToEditMarkdownProps extends ExtendedFieldComponentProps<st
   markdownOverrides?: Record<string, unknown>
   syncState?: SyncState
 }
-export function ClickToEditMarkdown({value, readOnly, className, onChange, inline, syncState, ...props} : ClickToEditMarkdownProps) {
+export function ClickToEditMarkdown({value, readOnly, className, onChange, inline, syncState, markdownOverrides, ...props} : ClickToEditMarkdownProps) {
   return <ClosableEditor
     className={classNames(className, 'closable-editor-markdown')}
     inline={inline}
     readOnly={readOnly}
     aria-describedby={props['aria-describedby']}
     aria-label={props['aria-label']}
-    closedValue={<Markdown>{value ?? ''}</Markdown>}
+    closedValue={<Markdown options={{overrides: markdownOverrides}}>{value ?? ''}</Markdown>}
   >
     {syncState && <SyncStatus state={syncState} />}
-    <MarkdownEditor {...props} value={value} onChange={onChange} />
+    <MarkdownEditor {...props} value={value} onChange={onChange} markdownOverrides={markdownOverrides} />
   </ClosableEditor>
 }
 

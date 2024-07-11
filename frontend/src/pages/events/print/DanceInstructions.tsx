@@ -1,10 +1,11 @@
 import {useCallback, useRef, useState} from 'react'
+import classNames from 'classnames'
 
 import {backendQueryHook, graphql} from 'backend'
 import {usePatchDance} from 'services/dances'
 import {useCallbackOnEventChanges} from 'services/events'
 
-import {ClickToEditMarkdown, patchStrategy, Switch, useAutosavingState} from 'libraries/forms'
+import {ClickToEditMarkdown, formFor, patchStrategy, Switch, useAutosavingState} from 'libraries/forms'
 import {Button} from 'libraries/ui'
 import {DanceDataImportButton} from 'components/DanceDataImportDialog'
 import {LoadingState} from 'components/LoadingState'
@@ -20,6 +21,58 @@ import {DanceInstructionsQuery} from 'types/gql/graphql'
 import './DanceInstructions.sass'
 
 type Workshop = NonNullable<DanceInstructionsQuery['event']>['workshops'][0]
+
+const { Form, Field } = formFor<Dance>()
+
+export default function DanceInstructions({eventId}) {
+  const t = useT('pages.events.danceInstructions')
+  const dancesEl = useRef<HTMLElement>(null)
+  const [showWorkshops, setShowWorkshops] = useState(true)
+  const [hilightEmpty, setHilightEmpty] = useState(false)
+
+  function selectAndCopy() {
+    selectElement(dancesEl.current)
+    document.execCommand('copy')
+    showToast({message: t('instructionsCopied')})
+    window.getSelection()?.removeAllRanges()
+  }
+
+  return <>
+    <PrintViewToolbar maxHeight={180}>
+      <p>{t('clickInstructionsToEdit')}</p>
+      <p>{t('defaultStylingDescription')}</p>
+      <p>
+        <Switch id="showWorkshops" inline label={t('showWorkshops')} value={showWorkshops} onChange={setShowWorkshops}/>
+        <Switch id="hilightEmpty" inline label={t('hilightEmpty')} value={hilightEmpty} onChange={setHilightEmpty}/>
+        <Button text={t('selectAndCopy')} onClick={selectAndCopy}/>
+        <Button text={t('print')} onClick={() => window.print()} />
+      </p>
+    </PrintViewToolbar>
+    <DanceInstructionsView eventId={eventId} elementRef={dancesEl} hilightEmpty={hilightEmpty} showWorkshops={showWorkshops} />
+  </>
+}
+
+function DanceInstructionsView({eventId, showWorkshops, hilightEmpty, elementRef}) {
+  const t = useT('pages.events.danceInstructions')
+  const {data, refetch, ...loadingState} = useDanceInstructions({eventId})
+
+  if (!data?.event) return <LoadingState {...loadingState} refetch={refetch} />
+
+  const {workshops} = data.event
+  const dances = getDances(workshops)
+
+  return <section className={classNames('dance-instructions', {'hilight-empty': hilightEmpty})} ref={elementRef}>
+    {showWorkshops &&
+      <>
+        <h1>{t('workshops')}</h1>
+        {workshops.map(workshop => <WorkshopDetails key={workshop._id} workshop={workshop} />)}
+      </>
+    }
+    <h1>{t('danceInstructions')}</h1>
+
+    {dances.map(dance => <InstructionsForDance key={dance._id} dance={dance} />)}
+  </section>
+}
 
 const useDanceInstructions = backendQueryHook(graphql(`
 query DanceInstructions($eventId: ID!) {
@@ -47,48 +100,6 @@ query DanceInstructions($eventId: ID!) {
   useCallbackOnEventChanges(variables.eventId, refetch)
 })
 
-export default function DanceInstructions({eventId}) {
-  const t = useT('pages.events.danceInstructions')
-  const {data, refetch, ...loadingState} = useDanceInstructions({eventId})
-  const dancesEl = useRef<HTMLElement>(null)
-  const [showWorkshops, setShowWorkshops] = useState(true)
-
-  if (!data?.event) return <LoadingState {...loadingState} refetch={refetch} />
-
-  const {workshops} = data.event
-  const dances = getDances(workshops)
-
-  function selectAndCopy() {
-    selectElement(dancesEl.current)
-    document.execCommand('copy')
-    showToast({message: t('instructionsCopied')})
-    window.getSelection()?.removeAllRanges()
-  }
-
-  return <>
-    <PrintViewToolbar maxHeight={180}>
-      <p>{t('clickInstructionsToEdit')}</p>
-      <p>{t('defaultStylingDescription')}</p>
-      <p>
-        <Switch id="showWorkshops" inline label={t('showWorkshops')} value={showWorkshops} onChange={setShowWorkshops}/>
-        <Button text={t('selectAndCopy')} onClick={selectAndCopy}/>
-        <Button text={t('print')} onClick={() => window.print()} />
-      </p>
-    </PrintViewToolbar>
-    <section className="dance-instructions" ref={dancesEl}>
-      {showWorkshops &&
-        <>
-          <h1>{t('workshops')}</h1>
-          {workshops.map(workshop => <WorkshopDetails key={workshop._id} workshop={workshop} />)}
-        </>
-      }
-      <h1>{t('danceInstructions')}</h1>
-
-      {dances.map(dance => <InstructionsForDance key={dance._id} dance={dance} />)}
-    </section>
-  </>
-}
-
 interface Instance {
   dances?: {name: string, _id: string}[] | null
 }
@@ -112,30 +123,32 @@ function InstructionsForDance({dance: danceInDatabase} : {dance: Dance}) {
 
   const {name, instructions} = dance
 
-  return <div tabIndex={0} className="dance-instructions-dance">
-    <h2>
-      {name}
-      {' '}
-      <DanceDataImportButton dance={dance} />
-    </h2>
-    <ClickToEditMarkdown
-      id={'instructions-'+dance._id}
-      value={instructions}
-      onChange={(instructions) => typeof instructions === 'function'
-        ? setDance(dance => ({...dance, instructions: instructions(dance.instructions ?? '')}), 'instructions')
-        : setDance({...dance, instructions}, 'instructions')
-      }
-      markdownOverrides={markdownOverrides}
-    />
+  return <div tabIndex={0} className={`dance-instructions-dance ${instructions ? 'not-empty' : 'empty'}`}>
+    <Form value={dance} onChange={setDance}>
+      <h2>
+        {name}
+        {' '}
+        <DanceDataImportButton dance={dance} />
+      </h2>
+      <div className="instructions">
+        <Field
+          label=""
+          labelStyle="hidden-nowrapper"
+          path="instructions"
+          component={ClickToEditMarkdown}
+          componentProps={{markdownOverrides}}
+        />
+      </div>
+    </Form>
   </div>
 }
 
 const markdownOverrides = {
-  h1: { component: 'h2'},
-  h2: { component: 'h3'},
-  h3: { component: 'h4'},
-  h4: { component: 'h5'},
-  h5: { component: 'h6'},
+  h1: { component: 'h3'},
+  h2: { component: 'h4'},
+  h3: { component: 'h5'},
+  h4: { component: 'h6'},
+  h5: { component: 'span'},
   a: { component: 'span' }
 }
 
