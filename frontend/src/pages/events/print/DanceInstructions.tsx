@@ -28,6 +28,7 @@ export default function DanceInstructions({eventId}) {
   const t = useT('pages.events.danceInstructions')
   const dancesEl = useRef<HTMLElement>(null)
   const [showWorkshops, setShowWorkshops] = useState(true)
+  const [showShortInstructions, setShowShortInstructions] = useState(false)
   const [hilightEmpty, setHilightEmpty] = useState(false)
 
   function selectAndCopy() {
@@ -43,16 +44,23 @@ export default function DanceInstructions({eventId}) {
       <p>{t('defaultStylingDescription')}</p>
       <p>
         <Switch id="showWorkshops" inline label={t('showWorkshops')} value={showWorkshops} onChange={setShowWorkshops}/>
+        <Switch id="showShortInstructions" inline label={t('showShortInstructions')} value={showShortInstructions} onChange={setShowShortInstructions}/>
         <Switch id="hilightEmpty" inline label={t('hilightEmpty')} value={hilightEmpty} onChange={setHilightEmpty}/>
         <Button text={t('selectAndCopy')} onClick={selectAndCopy}/>
         <Button text={t('print')} onClick={() => window.print()} />
       </p>
     </PrintViewToolbar>
-    <DanceInstructionsView eventId={eventId} elementRef={dancesEl} hilightEmpty={hilightEmpty} showWorkshops={showWorkshops} />
+    <DanceInstructionsView
+      eventId={eventId}
+      elementRef={dancesEl}
+      hilightEmpty={hilightEmpty}
+      showWorkshops={showWorkshops}
+      showShortInstructions={showShortInstructions}
+    />
   </>
 }
 
-function DanceInstructionsView({eventId, showWorkshops, hilightEmpty, elementRef}) {
+function DanceInstructionsView({eventId, showWorkshops, hilightEmpty, showShortInstructions, elementRef}) {
   const t = useT('pages.events.danceInstructions')
   const {data, refetch, ...loadingState} = useDanceInstructions({eventId})
 
@@ -61,7 +69,7 @@ function DanceInstructionsView({eventId, showWorkshops, hilightEmpty, elementRef
   const {workshops} = data.event
   const dances = getDances(workshops)
 
-  return <section className={classNames('dance-instructions', {'hilight-empty': hilightEmpty})} ref={elementRef}>
+  return <section className={classNames('dance-instructions', {'hilight-empty': hilightEmpty, showShortInstructions})} ref={elementRef}>
     {showWorkshops &&
       <>
         <h1>{t('workshops')}</h1>
@@ -70,7 +78,7 @@ function DanceInstructionsView({eventId, showWorkshops, hilightEmpty, elementRef
     }
     <h1>{t('danceInstructions')}</h1>
 
-    {dances.map(dance => <InstructionsForDance key={dance._id} dance={dance} />)}
+    {dances.map(dance => <InstructionsForDance key={dance._id} dance={dance} showShortInstructions={showShortInstructions} />)}
   </section>
 }
 
@@ -112,7 +120,7 @@ function getDances(workshops: {instances: Instance[]}[]) {
   return dances
 }
 
-function InstructionsForDance({dance: danceInDatabase} : {dance: Dance}) {
+function InstructionsForDance({dance: danceInDatabase, showShortInstructions} : {dance: Dance, showShortInstructions: boolean}) {
   const [patchDance] = usePatchDance()
   const onChange = useCallback(
     (dance) => patchDance({
@@ -132,11 +140,11 @@ function InstructionsForDance({dance: danceInDatabase} : {dance: Dance}) {
         {' '}
         <DanceDataImportButton dance={dance} />
       </h2>
-      <div className="instructions">
+      <div className={showShortInstructions ? 'description' : 'instructions'}>
         <Field
           label=""
           labelStyle="hidden-nowrapper"
-          path="instructions"
+          path={showShortInstructions ? 'description' : 'instructions'}
           component={ClickToEditMarkdown}
           componentProps={{markdownOverrides}}
         />
