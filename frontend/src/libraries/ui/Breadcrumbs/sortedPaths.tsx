@@ -1,11 +1,9 @@
-import {sorted} from 'utils/sorted'
+import {sortedBy} from 'utils/sorted'
 
 import {Path} from './context'
 
 export function sortedPaths(paths : Path[]) : Path[] {
-  return sorted(paths, (a, b) => {
-    return depth(a) - depth(b)
-  })
+  return sortedBy(paths, depth)
 }
 
 function depth(path : Path) {

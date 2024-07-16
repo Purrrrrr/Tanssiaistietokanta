@@ -2,7 +2,7 @@ import React, {useCallback, useRef, useState} from 'react'
 import classNames from 'classnames'
 
 import {backendQueryHook, graphql} from 'backend'
-import {usePatchDance} from 'services/dances'
+import {sortDances, usePatchDance} from 'services/dances'
 import {useCallbackOnEventChanges} from 'services/events'
 
 import {ClickToEditMarkdown, formFor, patchStrategy, Switch, useAutosavingState} from 'libraries/forms'
@@ -127,8 +127,7 @@ interface Instance {
 
 function getDances(workshops: {instances: Instance[]}[]) {
   const dances = uniq(workshops.flatMap(w => w.instances).flatMap(i => i.dances ?? []))
-  dances.sort((a, b) => a.name.localeCompare(b.name))
-  return dances
+  return sortDances(dances)
 }
 
 function InstructionsForDance({dance: danceInDatabase, showShortInstructions} : {dance: Dance, showShortInstructions: boolean}) {

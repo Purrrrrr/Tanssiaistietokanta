@@ -1,6 +1,6 @@
 import {useMemo} from 'react'
 
-import {sorted} from 'utils/sorted'
+import {compareBy, sorted} from 'utils/sorted'
 
 import { Dance } from 'types'
 
@@ -89,11 +89,9 @@ mutation deleteDance($id: ID!) {
 }`))
 
 
-export function filterDances(dances : Dance[], searchString: string) {
-  return sorted<Dance>(
-    dances.filter(dance => filterDance(dance, searchString)),
-    (a, b) => a.name.localeCompare(b.name)
-  )
+export function filterDances(dances : Dance[], searchString: string): Dance[] {
+  return dances.filter(dance => filterDance(dance, searchString))
+    .sort(compareDances)
 }
 
 function filterDance(dance: Dance, search : string) {
@@ -101,3 +99,13 @@ function filterDance(dance: Dance, search : string) {
   const lName = dance.name.trim().toLowerCase()
   return lName.indexOf(lSearch) !== -1
 }
+
+export function sortDances(dances: Dance[]): Dance[] {
+  return sorted(dances, compareDances)
+}
+
+const compareDances = compareBy(
+  function danceSortKey(dance: Dance): string {
+    return dance.name.replace(/^(an?|the) */i, '')
+  }
+)
