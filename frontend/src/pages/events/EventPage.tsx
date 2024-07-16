@@ -11,7 +11,7 @@ import {PageTitle} from 'components/PageTitle'
 import {DeleteButton} from 'components/widgets/DeleteButton'
 import {NavigateButton} from 'components/widgets/NavigateButton'
 import {newInstance, WorkshopEditor} from 'components/WorkshopEditor'
-import {useFormatDate, useFormatDateTime, useT} from 'i18n'
+import {useFormatDate, useFormatDateTime, useT, useTranslation} from 'i18n'
 
 import {Event, EventProgram as EventProgramType} from 'types'
 
@@ -219,10 +219,11 @@ function WorkshopCard(
 function WorkshopSummary({workshop}: {workshop: Workshop}) {
   const t = useT('pages.events.eventPage')
   const formatDateTime = useFormatDateTime()
-  const {instanceSpecificDances, instances, description} = workshop
+  const {instanceSpecificDances, instances, description, teachers} = workshop
 
   return <>
     <p>{description}</p>
+    <p>{useTranslation('components.workshopEditor.teachers')}: {teachers}</p>
     {instanceSpecificDances
       ? instances.map(instance =>
         <React.Fragment key={instance._id}>
