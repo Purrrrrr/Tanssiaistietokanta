@@ -14,6 +14,8 @@ const DEFAULT_PAUSE_BETWEEN_DANCES = 3*60
 export const eventsSchema = Type.Object(
   {
     _id: Id(),
+    _versionId: Id(),
+    _updatedAt: Type.String(),
     name: Name(),
     beginDate: Date(),
     endDate: Date(),
@@ -116,7 +118,9 @@ export const eventsQuerySchema = Type.Intersect(
   [
     querySyntax(eventsQueryProperties),
     // Add additional query properties here
-    Type.Object({}, { additionalProperties: false })
+    Type.Object({
+      searchVersions: Type.Optional(Type.Boolean()),
+    }, { additionalProperties: false })
   ],
   { additionalProperties: false }
 )

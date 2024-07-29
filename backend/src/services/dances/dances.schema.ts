@@ -12,6 +12,8 @@ import { SlideStyleId, Id, Name } from '../../utils/common-types'
 export const dancesSchema = Type.Object(
   {
     _id: Id(),
+    _versionId: Id(),
+    _updatedAt: Type.String(),
     name: Name(),
     description: Type.String(),
     duration: Type.Number(),
@@ -67,7 +69,9 @@ export const dancesQuerySchema = Type.Intersect(
   [
     querySyntax(dancesQueryProperties),
     // Add additional query properties here
-    Type.Object({}, { additionalProperties: false })
+    Type.Object({
+      searchVersions: Type.Optional(Type.Boolean()),
+    }, { additionalProperties: false })
   ],
   { additionalProperties: false }
 )

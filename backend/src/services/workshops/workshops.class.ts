@@ -1,5 +1,5 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/service.class.html#custom-services
-import type { Id, NullableId, Params, ServiceInterface } from '@feathersjs/feathers'
+import type { Params } from '@feathersjs/feathers'
 import VersioningNeDBService from '../../utils/VersioningNeDBService'
 
 import type { Application } from '../../declarations'

@@ -10,6 +10,8 @@ import { DateTime, Id, Name, Nullable } from '../../utils/common-types'
 
 const WorkshopInstanceSchema = () =>Type.Object({
   _id: Id(),
+  _versionId: Id(),
+  _updatedAt: Type.String(),
   description: Type.String(),
   abbreviation: Type.String(),
   dateTime: DateTime(),
@@ -72,6 +74,7 @@ export const workshopsQuerySchema = Type.Intersect(
     // Add additional query properties here
     Type.Object({
       'instances.danceIds': Type.Optional(Id()),
+      searchVersions: Type.Optional(Type.Boolean()),
     }, { additionalProperties: false })
   ],
   { additionalProperties: false }

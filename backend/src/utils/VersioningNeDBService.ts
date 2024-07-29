@@ -1,11 +1,15 @@
 import type { Id, NullableId, Params, ServiceInterface } from '@feathersjs/feathers'
+import { Type, querySyntax } from '@feathersjs/typebox'
+import type { Static } from '@feathersjs/typebox'
 import type { Application } from '../declarations'
 
+import * as L from 'partial.lenses'
 import createNedbService from 'feathers-nedb'
 import NeDB from '@seald-io/nedb'
-import {debounce} from 'lodash'
+import {debounce, omitBy, isUndefined} from 'lodash'
 import path from 'path'
 import computeIfAbsent from './computeIfAbsent'
+import { Id as IdType } from './common-types'
 
 const VERSION_SAVE_DELAY_MS = 5000
 const MAX_VERSION_SAVE_DELAY_MS = 60000
@@ -16,7 +20,14 @@ export interface NeDBServiceOptions {
   indexes?: NeDB.EnsureIndexOptions[]
 }
 
-export default class VersioningNeDBService<Result extends {_id: Id }, Data, ServiceParams extends Params<{}>, Patch> implements ServiceInterface<Result, Data, ServiceParams, Patch> {
+const versionableQuerySchema = querySyntax(Type.Object({
+  _id: IdType(),
+  _versionId: IdType(),
+  _updatedAt: Type.String(),
+}))
+export type VersionSearchQuery = Omit<Static<typeof versionableQuerySchema>, '$select'> & { searchVersions?: boolean }
+
+export default class VersioningNeDBService<Result extends {_id: Id, _versionId?: Id }, Data, ServiceParams extends Params<VersionSearchQuery>, Patch> implements ServiceInterface<Result, Data, ServiceParams, Patch> {
   currentService: any
   versionService: any
   versionStoreFunctions = new Map()
@@ -48,6 +59,30 @@ export default class VersioningNeDBService<Result extends {_id: Id }, Data, Serv
   }
 
   async find(_params?: ServiceParams): Promise<Result[]> {
+    if (_params?.query?.searchVersions || _params?.query?._versionId) {
+      const {
+        _versionId,
+        _id,
+        searchVersions: _ignored,
+        ...query
+      } = _params.query
+
+      const versionParams = {
+        ..._params,
+        query: omitBy({
+          _recordId: _id,
+          _id: _versionId,
+          ...query,
+        }, isUndefined),
+      }
+
+      const results = await this.versionService.find(this.fixParams(versionParams)) as Array<Result & { _recordId: Id}>
+      return results.map(({_id, _recordId, ...rest}) => ({
+        _id: _recordId,
+        _versionId: _id,
+        ...rest,
+      })) as unknown as Result[]
+    }
     return this.currentService.find(this.fixParams(_params))
   }
 
