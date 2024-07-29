@@ -1,10 +1,13 @@
 type Query {
   events: [Event!]!
-  event(id: ID): Event
+  event(id: ID!, versionId: ID): Event
 }
 
-type Event {
+type Event implements Versionable {
   _id: ID!
+  _versionId: String
+  _updatedAt: String!
+  versions: [VersionInfo!]!
   name: String!
   beginDate: String!
   endDate: String!

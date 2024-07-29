@@ -27,7 +27,10 @@ const versionableQuerySchema = querySyntax(Type.Object({
 }))
 export type VersionSearchQuery = Omit<Static<typeof versionableQuerySchema>, '$select'> & { searchVersions?: boolean }
 
-export default class VersioningNeDBService<Result extends {_id: Id, _versionId?: Id }, Data, ServiceParams extends Params<VersionSearchQuery>, Patch> implements ServiceInterface<Result, Data, ServiceParams, Patch> {
+interface V {_id: Id, _versionId?: Id }
+type VersionOf<R extends V> = Omit<R, '_versionId'> & { _recordId: Id }
+
+export default class VersioningNeDBService<Result extends V, Data, ServiceParams extends Params<VersionSearchQuery>, Patch> implements ServiceInterface<Result, Data, ServiceParams, Patch> {
   currentService: any
   versionService: any
   versionStoreFunctions = new Map()
@@ -76,18 +79,18 @@ export default class VersioningNeDBService<Result extends {_id: Id, _versionId?:
         }, isUndefined),
       }
 
-      const results = await this.versionService.find(this.fixParams(versionParams)) as Array<Result & { _recordId: Id}>
-      return results.map(({_id, _recordId, ...rest}) => ({
-        _id: _recordId,
-        _versionId: _id,
-        ...rest,
-      })) as unknown as Result[]
+      const results = await this.versionService.find(this.fixParams(versionParams)) as VersionOf<Result>[]
+      return results.map(this.fixVersionResult)
     }
     return this.currentService.find(this.fixParams(_params))
   }
 
   async get(id: Id, _params?: ServiceParams): Promise<Result> {
     return this.currentService.get(id, this.fixParams(_params))
+  }
+
+  async getVersion(id: Id, versionId: Id, _params?: ServiceParams): Promise<Result> {
+    return this.fixVersionResult(await this.versionService.get(versionId, this.fixParams(_params)))
   }
 
   async create(data: Data, params?: ServiceParams): Promise<Result>
@@ -122,6 +125,14 @@ export default class VersioningNeDBService<Result extends {_id: Id, _versionId?:
       if (_params.query.$select === undefined) delete _params.query.$select
     }
     return _params
+  }
+
+  private fixVersionResult({_recordId, _id, ...result}: VersionOf<Result>): Result {
+    return {
+      _id: _recordId,
+      _versionId: _id,
+      ...result
+    } as unknown as Result
   }
 
   private async queueVersionSave(res: Result, params?: ServiceParams) {

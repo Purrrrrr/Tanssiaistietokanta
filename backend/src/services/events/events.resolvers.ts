@@ -12,6 +12,8 @@ export default (app: Application) => {
 
   const service = app.service('events')
 
+  const $sort = { beginDate: -1, name: 1}
+
   return {
     Event: {
       workshops: (obj: { _id: string }) => getWorkshops(obj._id),
@@ -20,6 +22,13 @@ export default (app: Application) => {
         if (!program.introductions.title) return L.set(['introductions', 'title'], event.name, program)
         return program
       },
+      versions: ({_id}: {_id: string}) => service.find({
+        query: {
+          $sort,
+          _id,
+          searchVersions: true,
+        }
+      })
     },
     DanceSet: {
       program: (obj: { program: any }) => L.modifyAsync(L.elems, getProgramItemData, obj.program),
@@ -34,8 +43,10 @@ export default (app: Application) => {
       __resolveType: (obj: { __typename: any }) => obj.__typename
     },
     Query: {
-      events: (_: any, __: any, params: EventsParams | undefined) => service.find({...params, query: { $sort: { beginDate: -1, name: 1} } }),
-      event: (_: any, {id}: any, params: EventsParams | undefined) => service.get(id, params)
+      events: (_: any, __: any, params: EventsParams | undefined) => service.find({...params, query: { $sort } }),
+      event: (_: any, {id, versionId}: any, params: EventsParams | undefined) => versionId
+        ? service.getVersion(id, versionId, params)
+        : service.get(id, params)
     },
     Mutation: {
       createEvent: (_: any, {event}: any, params: EventsParams | undefined) => service.create(event, params),

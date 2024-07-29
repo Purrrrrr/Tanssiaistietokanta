@@ -1,0 +1,10 @@
+interface Versionable {
+  _versionId: String
+  _updatedAt: String!
+  versions: [VersionInfo!]!
+}
+
+type VersionInfo {
+  _versionId: String!
+  _updatedAt: String!
+}
