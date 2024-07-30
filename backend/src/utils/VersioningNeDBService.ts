@@ -3,7 +3,6 @@ import { Type, querySyntax } from '@feathersjs/typebox'
 import type { Static } from '@feathersjs/typebox'
 import type { Application } from '../declarations'
 
-import * as L from 'partial.lenses'
 import createNedbService from 'feathers-nedb'
 import NeDB from '@seald-io/nedb'
 import {debounce, omitBy, isUndefined} from 'lodash'
@@ -25,7 +24,7 @@ const versionableQuerySchema = querySyntax(Type.Object({
   _versionId: IdType(),
   _updatedAt: Type.String(),
 }))
-export type VersionSearchQuery = Omit<Static<typeof versionableQuerySchema>, '$select'> & { searchVersions?: boolean }
+export type VersionSearchQuery = Omit<Static<typeof versionableQuerySchema>, '$select'> & { searchVersions?: boolean, $select?: string[] }
 
 interface V {_id: Id, _versionId?: Id }
 type VersionOf<R extends V> = Omit<R, '_versionId'> & { _recordId: Id }
@@ -66,6 +65,7 @@ export default class VersioningNeDBService<Result extends V, Data, ServiceParams
       const {
         _versionId,
         _id,
+        $select,
         searchVersions: _ignored,
         ...query
       } = _params.query
@@ -75,6 +75,13 @@ export default class VersioningNeDBService<Result extends V, Data, ServiceParams
         query: omitBy({
           _recordId: _id,
           _id: _versionId,
+          $select: $select?.map?.((key: string) => {
+            switch(key) {
+              case '_id': return '_recordId'
+              case '_versionId': return '_id'
+              default: return key
+            }
+          }),
           ...query,
         }, isUndefined),
       }
