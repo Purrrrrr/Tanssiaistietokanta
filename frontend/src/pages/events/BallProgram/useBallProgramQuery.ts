@@ -5,6 +5,7 @@ export const useBallProgramQuery = backendQueryHook(graphql(`
 query BallProgram($eventId: ID!) {
   event(id: $eventId) {
     _id
+    _versionId
     name
     program {
       slideStyleId

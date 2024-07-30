@@ -96,6 +96,7 @@ const useDanceList = backendQueryHook(graphql(`
 query getDanceList($eventId: ID!) {
   event(id: $eventId) {
     _id
+    _versionId
     program {
       danceSets {
         title

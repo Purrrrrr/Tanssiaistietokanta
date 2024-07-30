@@ -96,6 +96,7 @@ const useDanceInstructions = backendQueryHook(graphql(`
 query DanceInstructions($eventId: ID!) {
   event(id: $eventId) {
     _id
+    _versionId
     workshops {
       _id
       name
