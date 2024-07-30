@@ -22,7 +22,7 @@ type Workshop = NonNullable<DanceCheatListQuery['event']>['workshops'][0]
 const useCheatList = backendQueryHook(graphql(`
 query DanceCheatList($eventId: ID!) {
   event(id: $eventId) {
-    _id
+    _id, _versionId
     workshops {
       _id
       name

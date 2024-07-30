@@ -22,6 +22,9 @@ const cache = new InMemoryCache({
           merge: (_, incoming) => incoming
         },
       }
+    },
+    Event: {
+      keyFields: ['_id', '_versionId'],
     }
   }
 })
