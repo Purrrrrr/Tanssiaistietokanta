@@ -77,7 +77,7 @@ interface DanceEditorContainerProps {
   dance: Dance
   toolbar?: React.ReactNode
   children: React.ReactNode
-  titleComponent?: React.JSXElementConstructor<{className: string, children: React.ReactNode}> | 'h1'
+  titleComponent?: React.JSXElementConstructor<{className?: string, children: React.ReactNode}> | 'h1'
 }
 
 export function DanceEditorContainer({dance, children, toolbar, titleComponent: Title = H2} : DanceEditorContainerProps) {
@@ -91,11 +91,11 @@ export function DanceEditorContainer({dance, children, toolbar, titleComponent: 
 
   const {formProps, state} = useAutosavingState<Dance, Partial<Dance>>(dance, patchDance, patchStrategy.partial)
   return <Form {...formProps}>
-    <Flex spaced alignItems="center">
-      <Title className="flex-fill">
+    <Flex wrap spaced alignItems="center" justify="end">
+      <Title>
         {dance.name}
-        <SyncStatus style={{marginLeft: '1ch', top: '3px'}} className="flex-fill" state={state} />
       </Title>
+      <SyncStatus style={{marginLeft: '1ch', top: '3px'}} className="flex-fill" state={state} />
       {toolbar}
     </Flex>
     {children}

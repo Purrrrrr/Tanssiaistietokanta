@@ -24,7 +24,7 @@ export const formStringDefaults = {
     IN_SYNC: 'Tallennettu',
     MODIFIED_LOCALLY: 'Tallennetaan...',
     CONFLICT: 'Synkronointivirhe',
-    INVALID: 'Tiedoissa virheitä, tallennus pysäytetty',
+    INVALID: 'Tiedoissa virheitä',
   } satisfies Record<SyncState, string>,
 } as const
 

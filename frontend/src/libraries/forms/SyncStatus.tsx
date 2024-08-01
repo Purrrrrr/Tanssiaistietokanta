@@ -52,7 +52,9 @@ export function SyncStatus(
 
   return <span style={style} className={fullClassName}>
     <Icon icon={icons[state]} intent={iconIntents[state]} />
-    <span className="text">{texts[state]}</span>
+    {Object.entries(texts).map(([key, text]) =>
+      <span key={key} className={state === key ? 'text current' : 'text hidden'} aria-hidden={state !== key}>{text}</span>
+    )}
   </span>
 }
 

@@ -1,9 +1,13 @@
 .sync_status
-  display: inline-flex
+  display: inline-grid
+  grid-template-areas: "hidden hidden hidden hidden" "margin icon text margin2"
+  grid-template-rows: 0 auto
+  grid-template-columns: 0 auto auto 1fr
   position: relative
   font-size: initial
   font-weight: initial
   line-height: initial
+  vertical-align: middle
 
   &:before
     position: absolute
@@ -14,28 +18,35 @@
     left: -15px
     right: -15px
 
+  .bp5-icon
+    grid-area: icon
+
   .text
-    display: inline-block
     padding-left: 0.5ch
     overflow: hidden
     white-space: nowrap
-    max-width: 0
     transition: max-width 0.5s ease
+    &.current
+      max-width: 0
+      grid-area: text
+    &.hidden
+      grid-area: hidden
+
   &.status-changed, &.always-show-status, &:hover
-    .text
+    .text.current
       max-width: 35ch
-  &:hover .text
-    transition-duration: 0.5s
+    
 
   @media (prefers-reduced-motion)
     .text
       transition-duration: 0s
 
 .sync_status.block
-  display: flex
+  display: grid
   margin: 0 0.5ch
 
 .sync_status.right
+  grid-template-columns: 1fr auto auto 0
   float: right
 
   & + *
