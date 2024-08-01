@@ -21,6 +21,7 @@ query getDances {
     _id, name, description, remarks, duration, prelude, formation, source, category, instructions, slideStyleId
     events {
       _id
+      _versionId
       name
     }
   }
@@ -32,6 +33,7 @@ query getDance($id: ID!) {
     _id, name, description, remarks, duration, prelude, formation, source, category, instructions, slideStyleId
     events {
       _id
+      _versionId
       name
     }
   }
@@ -61,6 +63,7 @@ mutation createDance($dance: DanceInput!) {
     _id, name, description, remarks, duration, prelude, formation, source, category, instructions, slideStyleId
     events {
       _id
+      _versionId
       name
     }
   }
@@ -72,6 +75,7 @@ mutation patchDance($id: ID!, $dance: DancePatchInput!) {
     _id, name, description, remarks, duration, prelude, formation, source, category, instructions, slideStyleId
     events {
       _id
+      _versionId
       name
     }
   }
@@ -83,6 +87,7 @@ mutation deleteDance($id: ID!) {
     _id, name, description, remarks, duration, prelude, formation, source, category, instructions, slideStyleId
     events {
       _id
+      _versionId
       name
     }
   }
