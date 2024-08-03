@@ -28,7 +28,7 @@ const autoHideText: Record<SyncState, boolean> = {
 }
 
 export function SyncStatus(
-  {state, block, className, style, floatRight: right}:
+  {state, block, className, style: styleProp, floatRight: right}:
   {state : SyncState, block?: boolean, className?: string, style?: React.CSSProperties, floatRight?: boolean }
 ) {
   const previousState = useRef<SyncState | null>(null)
@@ -50,11 +50,20 @@ export function SyncStatus(
     {'status-changed': changed, 'always-show-status': !autoHideText[state], block, right}
   )
 
+  const style = {
+    // Hold space for the longest text so the layout doesn't jump
+    '--spaceholder': `"${getLongestText(Object.values(texts))}"`,
+    ...styleProp
+  }
+
   return <span style={style} className={fullClassName}>
-    <Icon icon={icons[state]} intent={iconIntents[state]} />
-    {Object.entries(texts).map(([key, text]) =>
-      <span key={key} className={state === key ? 'text current' : 'text hidden'} aria-hidden={state !== key}>{text}</span>
-    )}
+    <span className="content">
+      <Icon icon={icons[state]} intent={iconIntents[state]} />
+      <span className="text">{texts[state]}</span>
+    </span>
   </span>
 }
 
+function getLongestText(texts: string[]): string {
+  return texts.reduce((a, b) => a.length > b.length ? a : b)
+}

@@ -1,14 +1,13 @@
 .sync_status
-  display: inline-grid
-  grid-template-areas: "hidden hidden hidden hidden" "margin icon text margin2"
-  grid-template-rows: 0 auto
-  grid-template-columns: 0 auto auto 1fr
+  display: inline-flex
+  flex-direction: column
   position: relative
   font-size: initial
   font-weight: initial
   line-height: initial
   vertical-align: middle
 
+  // Create a larger hover area
   &:before
     position: absolute
     display: block
@@ -17,24 +16,28 @@
     bottom: -15px
     left: -15px
     right: -15px
+  
+  // Add an element to hold the amount of space the longest status text occupies
+  &:after
+    display: block
+    content: var(--spaceholder)
+    height: 0
+    overflow: hidden
 
-  .bp5-icon
-    grid-area: icon
+  .content
+    display: flex
 
   .text
     padding-left: 0.5ch
     overflow: hidden
     white-space: nowrap
-    transition: max-width 0.5s ease
-    &.current
-      max-width: 0
-      grid-area: text
-    &.hidden
-      grid-area: hidden
+    transition: flex 0.7s ease-in-out
+    flex: 0 0 0
 
   &.status-changed, &.always-show-status, &:hover
-    .text.current
-      max-width: 35ch
+    .text
+      transition-duration: 0.3s
+      flex: 1 1 0
     
 
   @media (prefers-reduced-motion)
@@ -46,8 +49,11 @@
   margin: 0 0.5ch
 
 .sync_status.right
-  grid-template-columns: 1fr auto auto 0
   float: right
+  align-items: end
+
+  .content
+    justify-content: end
 
   & + *
     clear: right
