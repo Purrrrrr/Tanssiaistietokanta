@@ -79,7 +79,7 @@
     "@feathersjs/cli": "^5.0.5",
     "@feathersjs/rest-client": "^5.0.5",
     "@types/glob": "^8.1.0",
-    "@types/lodash": "^4.14.194",
+    "@types/lodash": "^4.17.7",
     "@types/mocha": "^10.0.1",
     "@types/node": "^22.0.0",
     "@types/ramda": "^0.29.1",
