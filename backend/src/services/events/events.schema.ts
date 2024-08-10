@@ -15,7 +15,9 @@ export const eventsSchema = Type.Object(
   {
     _id: Id(),
     _versionId: Id(),
+    _versionNumber: Type.Number(),
     _updatedAt: Type.String(),
+    _createdAt: Type.String(),
     name: Name(),
     beginDate: Date(),
     endDate: Date(),

@@ -12,8 +12,10 @@ import { SlideStyleId, Id, Name } from '../../utils/common-types'
 export const dancesSchema = Type.Object(
   {
     _id: Id(),
+    _versionNumber: Type.Number(),
     _versionId: Id(),
     _updatedAt: Type.String(),
+    _createdAt: Type.String(),
     name: Name(),
     description: Type.String(),
     duration: Type.Number(),

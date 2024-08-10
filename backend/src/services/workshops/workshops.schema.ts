@@ -10,8 +10,6 @@ import { DateTime, Id, Name, Nullable } from '../../utils/common-types'
 
 const WorkshopInstanceSchema = () =>Type.Object({
   _id: Id(),
-  _versionId: Id(),
-  _updatedAt: Type.String(),
   description: Type.String(),
   abbreviation: Type.String(),
   dateTime: DateTime(),
@@ -23,6 +21,10 @@ const WorkshopInstanceSchema = () =>Type.Object({
 export const workshopsSchema = Type.Object(
   {
     _id: Id(),
+    _versionId: Id(),
+    _versionNumber: Type.Number(),
+    _updatedAt: Type.String(),
+    _createdAt: Type.String(),
     name: Name(),
     eventId: Id(),
     abbreviation: Type.String(),

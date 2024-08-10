@@ -1,183 +1,204 @@
-import type { Id, NullableId, Params, ServiceInterface } from '@feathersjs/feathers'
+import type { Id, Params } from '@feathersjs/feathers'
 import { Type, querySyntax } from '@feathersjs/typebox'
 import type { Static } from '@feathersjs/typebox'
-import type { Application } from '../declarations'
 
-import createNedbService from 'feathers-nedb'
-import NeDB from '@seald-io/nedb'
-import {debounce, omitBy, isUndefined} from 'lodash'
-import path from 'path'
-import computeIfAbsent from './computeIfAbsent'
+import { NeDBService, NeDBServiceOptions } from './NeDBService'
 import { Id as IdType } from './common-types'
 
-const VERSION_SAVE_DELAY_MS = 5000
-const MAX_VERSION_SAVE_DELAY_MS = 60000
-
-export interface NeDBServiceOptions {
-  app: Application
-  dbname: string
-  indexes?: NeDB.EnsureIndexOptions[]
-}
-
 const versionableQuerySchema = querySyntax(Type.Object({
-  _id: IdType(),
+  _id: Type.Union([IdType(), Type.Number()]),
   _versionId: IdType(),
+  _createdAt: Type.String(),
   _updatedAt: Type.String(),
 }))
 export type VersionSearchQuery = Omit<Static<typeof versionableQuerySchema>, '$select'> & { searchVersions?: boolean, $select?: string[] }
 
-interface V {_id: Id, _versionId?: Id }
-type VersionOf<R extends V> = Omit<R, '_versionId'> & { _recordId: Id }
+export interface Versionable { 
+  _id: Id
+  _versionId?: Id
+  _versionNumber: number
+  _updatedAt: string
+  _createdAt: string
+}
+type VersionOf<R extends Versionable> = Omit<R, '_versionId'> & { _recordId: Id, _versionCreatedAt: string }
 
-export default class VersioningNeDBService<Result extends V, Data, ServiceParams extends Params<VersionSearchQuery>, Patch> implements ServiceInterface<Result, Data, ServiceParams, Patch> {
-  currentService: any
-  versionService: any
+export default class VersioningNeDBService<Result extends Versionable, Data, ServiceParams extends Params<VersionSearchQuery>, Patch> extends NeDBService<Result, Data, ServiceParams, Patch> {
+  versionService: VersionService<Result>
   versionStoreFunctions = new Map()
 
   constructor(public params: NeDBServiceOptions) {
-    const Model = VersioningNeDBService.createNedb(params, params.dbname)
-    const VersionModel = VersioningNeDBService.createNedb(params, params.dbname+'-versions')
-    VersionModel.ensureIndex({fieldName: ['_recordId', '_id']})
-
-    this.currentService = createNedbService({Model})
-    this.versionService = createNedbService({Model: VersionModel})
+    super(params)
+    this.versionService = new VersionService(params)
   }
 
-  static createNedb(params: NeDBServiceOptions, dbName: string) {
-    const dbPath = params.app.get('nedb')
-    const neDB = new NeDB({
-      filename: path.resolve(dbPath, dbName+'.db'),
-      autoload: true,
-    })
-    params.indexes?.forEach(index => neDB.ensureIndex(index))
-    return neDB
-  }
-
-  getModel() {
-    return this.currentService.getModel()
-  }
   getVersionModel() {
     return this.versionService.getModel()
   }
 
   async find(_params?: ServiceParams): Promise<Result[]> {
     if (_params?.query?.searchVersions || _params?.query?._versionId) {
-      const {
-        _versionId,
-        _id,
-        $select,
-        searchVersions: _ignored,
-        ...query
-      } = _params.query
-
-      const versionParams = {
-        ..._params,
-        query: omitBy({
-          _recordId: _id,
-          _id: _versionId,
-          $select: $select?.map?.((key: string) => {
-            switch(key) {
-              case '_id': return '_recordId'
-              case '_versionId': return '_id'
-              default: return key
-            }
-          }),
-          ...query,
-        }, isUndefined),
-      }
-
-      const results = await this.versionService.find(this.fixParams(versionParams)) as VersionOf<Result>[]
-      return results.map(this.fixVersionResult)
+      return await this.versionService.find(_params)
     }
-    return this.currentService.find(this.fixParams(_params))
-  }
-
-  async get(id: Id, _params?: ServiceParams): Promise<Result> {
-    return this.currentService.get(id, this.fixParams(_params))
+    return this.currentService.find(this.mapParams(_params))
   }
 
   async getVersion(id: Id, versionId: Id, _params?: ServiceParams): Promise<Result> {
-    return this.fixVersionResult(await this.versionService.get(versionId, this.fixParams(_params)))
+    return await this.versionService.get(versionId, _params)
   }
 
-  async create(data: Data, params?: ServiceParams): Promise<Result>
-  async create(data: Data[], params?: ServiceParams): Promise<Result[]>
-  async create(data: Data | Data[], params?: ServiceParams): Promise<Result | Result[]> {
-    const p = this.fixParams(params)
-    const res = await this.currentService.create(this.addTimestamps(data, now()), p)
+  async getLatestVersionAtTime(id: Id, maxDate: string): Promise<Result> {
+    const current = await this.get(id)
 
-    return this.queueVersionSave(res, p)
+    return current
   }
 
-  async update(id: NullableId, data: Data, _params?: ServiceParams): Promise<Result | Result[]> {
-    const p = this.fixParams(_params)
-    const res = await this.currentService.update(id, this.addTimestamps(data), p)
-
-    return this.queueVersionSave(res, p)
+  protected onSave(result: Result): void {
+    this.versionService.saveVersion(result)
   }
 
-  async patch(id: NullableId, data: Patch, _params?: ServiceParams): Promise<Result | Result[]> {
-    const p = this.fixParams(_params)
-    const res = await this.currentService.patch(id, this.addTimestamps(data), p)
-
-    return this.queueVersionSave(res, p)
-  }
-
-  async remove(id: NullableId, _params?: ServiceParams): Promise<Result | Result[]> {
-    return this.currentService.remove(id, this.fixParams(_params))
-  }
-
-  private fixParams(_params?: ServiceParams): ServiceParams | undefined {
-    if (_params?.query !== undefined && '$select' in _params?.query) {
-      if (_params.query.$select === undefined) delete _params.query.$select
-    }
-    return _params
-  }
-
-  private fixVersionResult({_recordId, _id, ...result}: VersionOf<Result>): Result {
+  protected async mapData(_existing: Result | null, data: Data) {
+    const _updatedAt = now()
+    const increment = _existing !== null && await this.versionService.shouldIncrementVersion(_existing._id, _updatedAt)
     return {
-      _id: _recordId,
-      _versionId: _id,
-      ...result
+      ...data,
+      _versionNumber: (_existing?._versionNumber ?? 0) + (+increment),
+      _createdAt: _existing?._createdAt ?? now(),
+      _updatedAt,
     } as unknown as Result
   }
 
-  private async queueVersionSave(res: Result, params?: ServiceParams) {
-    runForAll(res, ({_id, ...record}) => {
-      this.getDebouncedSaveVersion(_id)({...record, _recordId: _id})
+  protected async mapPatch(_existing: Result, data: Patch) {
+    const _updatedAt = now()
+    const increment = await this.versionService.shouldIncrementVersion(_existing._id, _updatedAt)
+    return {
+      ...data,
+      _versionNumber: _existing._versionNumber + (+increment),
+      _createdAt: _existing._createdAt,
+      _updatedAt,
+    } as unknown as Result
+  }
+}
+
+const SECOND = 1000
+// If there are no updates to a version in CREATE_VERSION_AFTER_IDLE_TIME, create a new version on next save
+const CREATE_VERSION_AFTER_IDLE_TIME = 5 * SECOND;
+// If the latest version is older than MAX_VERSION_AGE, always create a new version
+const MAX_VERSION_AGE = 5 * 60 * SECOND;
+
+type VersionResult<X> = X & {
+  _versionId: Id
+  _versionCreatedAt: string
+}
+
+class VersionService<Result extends Versionable> extends NeDBService<VersionResult<Result>, Result, Params<VersionSearchQuery>, Result, VersionOf<Result>> {
+  private latestVersionCache: Map<Id, VersionResult<Result>>
+
+  constructor(public _params: NeDBServiceOptions) {
+    const { dbname, ...params} = _params
+    super({ ...params, dbname: `${dbname}-versions`})
+    this.getModel().ensureIndex({fieldName: ['_recordId', '_id']})
+    this.latestVersionCache = new Map()
+  }
+
+  async saveVersion(data: Result): Promise<VersionResult<Result>> {
+    const createNew = await this.shouldIncrementVersion(data._id, data._updatedAt)
+    
+    if (createNew) {
+      return this.create(data)
+    } else {
+      const latestVersion = await this.getLatestVersion(data._id) as VersionResult<Result>
+      return this.update(latestVersion._versionId, data) as Promise<VersionResult<Result>>
+    }
+  }
+
+  async shouldIncrementVersion(id: Id, updatedAt: string): Promise<boolean> {
+    const latestVersion = await this.getLatestVersion(id)
+    const newTimestamp = +new Date(updatedAt)
+    const lastUpdated = +new Date(latestVersion?._updatedAt ?? 0)
+    const lastVersionCreatedAt = +new Date(latestVersion?._versionCreatedAt ?? 0)
+
+    console.log({
+      latestVersion,
+      diff1: newTimestamp - lastUpdated,
+      diff2: newTimestamp - lastVersionCreatedAt,
+      increment: latestVersion === null
+      || newTimestamp > lastUpdated + CREATE_VERSION_AFTER_IDLE_TIME
+      || newTimestamp > lastVersionCreatedAt + MAX_VERSION_AGE
     })
-    return res
+    
+    return latestVersion === null
+      || newTimestamp > lastUpdated + CREATE_VERSION_AFTER_IDLE_TIME
+      || newTimestamp > lastVersionCreatedAt + MAX_VERSION_AGE
   }
 
-  private getDebouncedSaveVersion(id: Id) {
-    return computeIfAbsent(this.versionStoreFunctions, id, () =>
-      debounce((data: Data) => {
-        this.versionStoreFunctions.delete(id)
-        this.versionService.create(data)
-      }, VERSION_SAVE_DELAY_MS, {maxWait: MAX_VERSION_SAVE_DELAY_MS})
-    )
+  protected onSave(result: VersionOf<Result>): void {
+    console.log('Save version', result)
+    this.latestVersionCache.set(result._recordId, this.mapToResult(result))
   }
 
-  private addTimestamps(data: Data | Data[] | Patch, _createdAt?: string) {
-    return map(data, item => ({
-      ...item,
-      ...(_createdAt ? {_createdAt} : {}),
-      _updatedAt: now()
-    }))
+  async getLatestVersion(id: Id): Promise<VersionResult<Result> | null> {
+    const cached = this.latestVersionCache.get(id)
+    if (cached) return cached
+
+    const [result] = await this.find({
+      query: {
+        $sort: {
+          _updatedAt: -1
+        },
+        $limit: 1,
+        _id: id
+      },
+    })
+    this.latestVersionCache.set(id, result)
+    return result
   }
 
-}
+  protected mapParams(_params?: Params<VersionSearchQuery>): Params | undefined {
+    const params = super.mapParams(_params)
+    if (params?.query === undefined) return params
 
-function map<T, R>(data: T | T[], func: (t: T) => R): R | R[] {
-  return Array.isArray(data)
-    ? data.map(func)
-    : func(data)
-}
+    const {
+      _versionId,
+      _id,
+      $select,
+      searchVersions: _ignored,
+      ...query
+    } = params.query
 
-function runForAll<T>(data: T | T[], func: (t: T) => unknown) {
-  return Array.isArray(data)
-    ? data.forEach(func)
-    : func(data)
+    const versionQuery = query
+    if (_versionId) versionQuery._id = _versionId
+    if (_id) versionQuery._recordId = _id
+    if ($select) {
+      versionQuery.$select = $select.map?.((key: string) => {
+        switch(key) {
+          case '_id': return '_recordId'
+          case '_versionId': return '_id'
+          default: return key
+        }
+      })
+    }
+
+    return { ...params, query: versionQuery }
+  }
+
+  protected async mapData<D extends Result>(_existing: VersionOf<Result> | null, data: D) {
+    console.log('mapping version', data)
+    const { _id, ...rest } = data
+    return {
+      ...rest,
+      _recordId: _id,
+      _versionCreatedAt: _existing?._versionCreatedAt ?? now(),
+    } as unknown as VersionOf<Result>
+  }
+
+  protected mapToResult(record: VersionOf<Result>): VersionResult<Result> {
+    const { _id, _recordId, ...rest } = record
+    return {
+      _id: _recordId,
+      _versionId: _id,
+      ...rest
+    } as unknown as VersionResult<Result>
+  }
 }
 
 const now = () => new Date().toISOString()
