@@ -5,9 +5,13 @@ import createNedbService from 'feathers-nedb'
 import NeDB from '@seald-io/nedb'
 import path from 'path'
 
-export interface NeDBServiceOptions {
+export type NeDBServiceOptions = {
+  inMemoryOnly?: false
   app: Application
   dbname: string
+  indexes?: NeDB.EnsureIndexOptions[]
+} | {
+  inMemoryOnly: true
   indexes?: NeDB.EnsureIndexOptions[]
 }
 
@@ -19,16 +23,23 @@ export class NeDBService<Result extends BaseRecord, Data, ServiceParams extends 
   currentService: any
 
   constructor(public params: NeDBServiceOptions) {
-    const Model = NeDBService.createNedb(params, params.dbname)
+    const Model = NeDBService.createNedb(params)
     this.currentService = createNedbService({Model})
   }
 
-  static createNedb(params: NeDBServiceOptions, dbName: string) {
-    const dbPath = params.app.get('nedb')
-    const neDB = new NeDB({
-      filename: path.resolve(dbPath, dbName+'.db'),
-      autoload: true,
-    })
+  static createNedb(params: NeDBServiceOptions) {
+    const neDB = new NeDB(
+      params?.inMemoryOnly
+        ? {
+          inMemoryOnly: true,
+        } : {
+          filename: path.resolve(
+            params.app.get('nedb'),
+            params.dbname+'.db'
+          ),
+          autoload: true,
+        }
+    )
     params.indexes?.forEach(index => neDB.ensureIndex(index))
     return neDB
   }

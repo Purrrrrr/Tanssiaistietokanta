@@ -93,9 +93,12 @@ type VersionResult<X> = X & {
 class VersionService<Result extends Versionable> extends NeDBService<VersionResult<Result>, Result, Params<VersionSearchQuery>, Result, VersionOf<Result>> {
   private latestVersionCache: Map<Id, VersionResult<Result>>
 
-  constructor(public _params: NeDBServiceOptions) {
-    const { dbname, ...params} = _params
-    super({ ...params, dbname: `${dbname}-versions`})
+  constructor(public params: NeDBServiceOptions) {
+    super(
+      params.inMemoryOnly
+        ? {inMemoryOnly: true}
+        : { ...params, dbname: `${params.dbname}-versions`}
+    )
     this.getModel().ensureIndex({fieldName: ['_recordId', '_id']})
     this.latestVersionCache = new Map()
   }
