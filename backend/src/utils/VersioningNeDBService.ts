@@ -52,13 +52,15 @@ export default class VersioningNeDBService<Result extends Versionable, Data, Ser
     return current
   }
 
-  protected onSave(result: Result): void {
-    this.versionService.saveVersion(result)
+  protected async onSave(result: Result): Promise<void> {
+    await this.versionService.saveVersion(result)
   }
 
   protected async mapData(_existing: Result | null, data: Data) {
     const _updatedAt = now()
-    const increment = _existing !== null && await this.versionService.shouldIncrementVersion(_existing._id, _updatedAt)
+    // console.log('determining increment', _existing !== null)
+    const increment = _existing !== null
+      && await this.versionService.shouldIncrementVersion(_existing._id, _updatedAt)
     return {
       ...data,
       _versionNumber: (_existing?._versionNumber ?? 0) + (+increment),
@@ -81,9 +83,9 @@ export default class VersioningNeDBService<Result extends Versionable, Data, Ser
 
 const SECOND = 1000
 // If there are no updates to a version in CREATE_VERSION_AFTER_IDLE_TIME, create a new version on next save
-const CREATE_VERSION_AFTER_IDLE_TIME = 5 * SECOND;
+export const CREATE_VERSION_AFTER_IDLE_TIME = 5 * SECOND;
 // If the latest version is older than MAX_VERSION_AGE, always create a new version
-const MAX_VERSION_AGE = 5 * 60 * SECOND;
+export const MAX_VERSION_AGE = 5 * 60 * SECOND;
 
 type VersionResult<X> = X & {
   _versionId: Id
@@ -120,14 +122,15 @@ class VersionService<Result extends Versionable> extends NeDBService<VersionResu
     const lastUpdated = +new Date(latestVersion?._updatedAt ?? 0)
     const lastVersionCreatedAt = +new Date(latestVersion?._versionCreatedAt ?? 0)
 
-    console.log({
-      latestVersion,
-      diff1: newTimestamp - lastUpdated,
-      diff2: newTimestamp - lastVersionCreatedAt,
-      increment: latestVersion === null
-      || newTimestamp > lastUpdated + CREATE_VERSION_AFTER_IDLE_TIME
-      || newTimestamp > lastVersionCreatedAt + MAX_VERSION_AGE
-    })
+    // console.log({
+    //   id,
+    //   latestVersion,
+    //   diff1: newTimestamp - lastUpdated,
+    //   diff2: newTimestamp - lastVersionCreatedAt,
+    //   increment: latestVersion === null
+    //   || newTimestamp > lastUpdated + CREATE_VERSION_AFTER_IDLE_TIME
+    //   || newTimestamp > lastVersionCreatedAt + MAX_VERSION_AGE
+    // })
     
     return latestVersion === null
       || newTimestamp > lastUpdated + CREATE_VERSION_AFTER_IDLE_TIME
@@ -135,23 +138,28 @@ class VersionService<Result extends Versionable> extends NeDBService<VersionResu
   }
 
   protected onSave(result: VersionOf<Result>): void {
-    console.log('Save version', result)
+    // console.log('cache latest version', result._versionNumber)
     this.latestVersionCache.set(result._recordId, this.mapToResult(result))
   }
 
   async getLatestVersion(id: Id): Promise<VersionResult<Result> | null> {
+    // console.log(this.latestVersionCache)
     const cached = this.latestVersionCache.get(id)
     if (cached) return cached
 
-    const [result] = await this.find({
-      query: {
-        $sort: {
-          _updatedAt: -1
+    const [result] = ( 
+      await this.find({
+        query: {
+          $sort: {
+            _updatedAt: -1
+          },
+          $limit: 1,
+          _id: id
         },
-        $limit: 1,
-        _id: id
-      },
-    })
+      })
+    )
+
+    if (!result) return null
     this.latestVersionCache.set(id, result)
     return result
   }
@@ -185,7 +193,6 @@ class VersionService<Result extends Versionable> extends NeDBService<VersionResu
   }
 
   protected async mapData<D extends Result>(_existing: VersionOf<Result> | null, data: D) {
-    console.log('mapping version', data)
     const { _id, ...rest } = data
     return {
       ...rest,

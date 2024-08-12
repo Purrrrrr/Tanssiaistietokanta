@@ -61,8 +61,7 @@ export class NeDBService<Result extends BaseRecord, Data, ServiceParams extends 
   async create(data: Data | Data[], params?: ServiceParams): Promise<Result | Result[]> {
     const mappedData = await mapAsync(data, (item) => this.mapData(null, item))
     const records = await this.currentService.create(mappedData, this.mapParams(params))
-    console.log('created', records)
-    map(records, r => this.onSave(r))
+    await mapAsync(records, r => this.onSave(r))
     return this.mapToResults(records)
   }
 
@@ -87,7 +86,7 @@ export class NeDBService<Result extends BaseRecord, Data, ServiceParams extends 
     
     return mapAsync(items, async item => {
       const result = await mapper(item)
-      this.onSave(result)
+      await this.onSave(result)
       return this.mapToResult(result)
     })
   }
@@ -133,7 +132,7 @@ export class NeDBService<Result extends BaseRecord, Data, ServiceParams extends 
     return record as unknown as Result
   }
 
-  protected onSave(result: Record): void {}
+  protected onSave(result: Record): void | Promise<void> {}
 }
 
 function map<T, R>(data: T | T[], func: (t: T) => R): R | R[] {
@@ -142,8 +141,8 @@ function map<T, R>(data: T | T[], func: (t: T) => R): R | R[] {
     : func(data)
 }
 
-function mapAsync<T, R>(data: T | T[], func: (t: T) => Promise<R>): Promise<R | R[]> {
+function mapAsync<T, R>(data: T | T[], func: (t: T) => Promise<R> | R): Promise<R | R[]> {
   return Array.isArray(data)
     ? Promise.all(data.map(func))
-    : func(data)
+    : Promise.resolve(func(data))
 }
