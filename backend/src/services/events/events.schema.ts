@@ -1,7 +1,7 @@
 // // For more information about this file see https://dove.feathersjs.com/guides/cli/service.schemas.html
 import { resolve } from '@feathersjs/schema'
 import { Type, getValidator, querySyntax } from '@feathersjs/typebox'
-import type { Static, TProperties } from '@feathersjs/typebox'
+import type { Static, TObject, TProperties } from '@feathersjs/typebox'
 
 import type { HookContext } from '../../declarations'
 import { dataValidator, queryValidator } from '../../validators'
@@ -79,7 +79,8 @@ function EventProgram() {
     showInLists: Type.Boolean(),
   })
 }
-function ClosedObject(o: TProperties) {
+
+function ClosedObject<P extends TProperties>(o: P): TObject<P> {
   return Type.Object(
     o, { additionalProperties: false }
   )
