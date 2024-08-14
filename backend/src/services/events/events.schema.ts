@@ -31,6 +31,7 @@ export const eventsSchema = Type.Object(
         description: NullableString(),
       })
     }),
+    workshopVersions: Type.Record(Id(), Type.Number())
   },
   { $id: 'Events', additionalProperties: false }
 )
@@ -108,9 +109,12 @@ export const eventsDataValidator = castAfterValidating(eventsDataSchema, getVali
 export const eventsDataResolver = resolve<Events, HookContext>({})
 
 // Schema for updating existing entries
-export const eventsPatchSchema = Type.Partial(eventsSchema, {
-  $id: 'EventsPatch'
-})
+export const eventsPatchSchema = Type.Partial(
+  Type.Omit(eventsSchema, ['_id']),
+  {
+    $id: 'EventsPatch'
+  }
+)
 export type EventsPatch = Static<typeof eventsPatchSchema>
 export const eventsPatchValidator = getValidator(eventsPatchSchema, dataValidator)
 export const eventsPatchResolver = resolve<Events, HookContext>({})
