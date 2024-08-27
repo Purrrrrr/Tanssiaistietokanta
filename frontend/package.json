@@ -39,7 +39,7 @@
   "scripts": {
     "lint": "eslint --fix src",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
-    "prestart": "npm run codegen",
+    "prestart": "curl localhost:8082 --retry 6 --retry-connrefused -I -s > /dev/null && npm run codegen",
     "start": "vite",
     "prebuild": "npm run codegen",
     "build": "REACT_APP_BUILD_TIME=$(date -I) REACT_APP_COMMIT_REV=$(git show-ref --hash=6 HEAD) vite build",
