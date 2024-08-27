@@ -1,9 +1,8 @@
-# Use the official Node.js 14 image as the base image
+# Use the official Node.js image as the base image
 FROM node:slim
 
-# Install pandoc and other necessary packages
-RUN apt-get update
-RUN apt-get install -y pandoc
+# Add pandoc
+COPY --from=pandoc/minimal:latest /pandoc /bin/pandoc
 
 # Set the working directory inside the container
 WORKDIR /app
