@@ -12,7 +12,7 @@ export default function EventList() {
   const t = useT('pages.events.eventList')
   const deleteText = useTranslation('common.delete')
   const [events] = useEvents()
-  const [deleteEvent] = useDeleteEvent({refetchQueries: ['getEvent', 'getEvents']})
+  const [deleteEvent] = useDeleteEvent({refetchQueries: ['getEvents']})
 
   return <>
     <PageTitle>{t('pageTitle')}</PageTitle>

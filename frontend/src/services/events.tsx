@@ -287,7 +287,7 @@ mutation patchEventProgram($id: ID!, $program: JSONPatch!) {
 export const useDeleteEvent = entityDeleteHook('events', graphql(`
 mutation deleteEvent($id: ID!) {
   deleteEvent(id: $id) {
-    _id, name
+    _id, _versionId, name
   }
 }`))
 
