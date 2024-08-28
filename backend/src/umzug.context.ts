@@ -1,7 +1,7 @@
 import { MigrationFn as UmzugMigrationFn } from 'umzug';
 import type { ServiceInterface } from '@feathersjs/feathers'
 import path from 'path'
-import { memoize } from 'lodash'
+import { memoize } from 'es-toolkit'
 import NeDB from '@seald-io/nedb'
 import updateDatabase from './utils/updateDatabase'
 import VersioningNeDBService from './utils/VersioningNeDBService'
