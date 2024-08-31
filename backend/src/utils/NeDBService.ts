@@ -92,8 +92,12 @@ export class NeDBService<Result extends BaseRecord, Data, ServiceParams extends 
   }
 
   async remove(id: NullableId, _params?: ServiceParams): Promise<Result | Result[]> {
-    return this.mapToResults(
-      this.currentService.remove(id, this.mapParams(_params))
+    return mapAsync(
+      this.currentService.remove(id, this.mapParams(_params)),
+      async r => {
+        await this.onRemove(r);
+        return this.mapToResult(r)
+      }
     )
   }
 
@@ -133,6 +137,7 @@ export class NeDBService<Result extends BaseRecord, Data, ServiceParams extends 
   }
 
   protected onSave(result: Record): void | Promise<void> {}
+  protected onRemove(result: Record): void | Promise<void> {}
 }
 
 function map<T, R>(data: T | T[], func: (t: T) => R): R | R[] {

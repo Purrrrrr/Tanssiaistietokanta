@@ -20,7 +20,12 @@ export interface Versionable {
   _updatedAt: string
   _createdAt: string
 }
-type VersionOf<R extends Versionable> = Omit<R, '_versionId'> & { _recordId: Id, _versionCreatedAt: string }
+type VersionOf<R extends Versionable> = Omit<R, '_versionId'> & {
+  _recordId: Id,
+  _versionCreatedAt: string
+  //This appears on the last version to exist of the record if it's deleted
+  _recordDeletedAt?: string
+}
 
 export default class VersioningNeDBService<Result extends Versionable, Data, ServiceParams extends Params<VersionSearchQuery>, Patch> extends NeDBService<Result, Data, ServiceParams, Patch> {
   versionService: VersionService<Result>
@@ -54,6 +59,10 @@ export default class VersioningNeDBService<Result extends Versionable, Data, Ser
 
   protected async onSave(result: Result): Promise<void> {
     await this.versionService.saveVersion(result)
+  }
+
+  protected async onRemove(result: Result): Promise<void> {
+    await this.versionService.markAsDeleted(result)
   }
 
   protected async mapData(_existing: Result | null, data: Data) {
@@ -92,7 +101,7 @@ type VersionResult<X> = X & {
   _versionCreatedAt: string
 }
 
-class VersionService<Result extends Versionable> extends NeDBService<VersionResult<Result>, Result, Params<VersionSearchQuery>, Result, VersionOf<Result>> {
+class VersionService<Result extends Versionable> extends NeDBService<VersionResult<Result>, Result, Params<VersionSearchQuery>, { _recordDeletedAt: string }, VersionOf<Result>> {
   private latestVersionCache: Map<Id, VersionResult<Result>>
 
   constructor(public params: NeDBServiceOptions) {
@@ -140,6 +149,12 @@ class VersionService<Result extends Versionable> extends NeDBService<VersionResu
   protected onSave(result: VersionOf<Result>): void {
     // console.log('cache latest version', result._versionNumber)
     this.latestVersionCache.set(result._recordId, this.mapToResult(result))
+  }
+
+  async markAsDeleted(data: Result): Promise<void> {
+    const latest = await this.getLatestVersion(data._id)
+    if (!latest) return
+    await this.patch(latest._versionId, { _recordDeletedAt: now() })
   }
 
   async getLatestVersion(id: Id): Promise<VersionResult<Result> | null> {
