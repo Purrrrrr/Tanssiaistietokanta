@@ -8,7 +8,7 @@ export const up: MigrationFn = async params => {
     const versionModel = context.getVersionModel(name)
 
     const existingIds = new Set((await model.findAsync({})).map(r => r._id))
-    const records = await versionModel.findAsync({}).sort({ _updatedAt: 1 })
+    const records = await versionModel.findAsync({}).sort({ _updatedAt: -1 })
     for (const record of records) {
       const { _id, _recordId, _updatedAt } = record
       if (!existingIds.has(_recordId)) {
