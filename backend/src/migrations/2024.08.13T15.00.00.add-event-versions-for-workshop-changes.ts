@@ -1,4 +1,4 @@
-import { sortBy } from 'es-toolkit'
+import { sortBy, isEqual } from 'es-toolkit'
 
 import { MigrationFn } from '../umzug.context';
 import Nedb from '@seald-io/nedb';
@@ -53,19 +53,28 @@ export const up: MigrationFn = async params => {
     i => i.eventId,
   )
 
-  for (const versions of versionMap.values()) {
+  for (const [eventId, versions] of versionMap.entries()) {
     const groups = groupIntoVersionGroups(versions)
+    //Check for equality of workshopVersions across changes as a sanity check
+    let lastVersions = {}
+    let lastData = null
     for (const group of groups) {
       const { eventVersionId, data, workshops: workshopVersions, updatedAt: _updatedAt } = group
+      const versionsEqual = isEqual(lastVersions, workshopVersions)
+      const dataEqual = isEqual(lastData, data)
       if (eventVersionId) {
-        console.log(`Update ${group.eventId}`)
-        await eventModel.updateAsync({ _id: eventVersionId }, { ...data, workshopVersions, _updatedAt })
+        console.log(`Update ${group.eventId} data ${dataEqual ? 'SAME' : 'UPDATED'} workshops ${versionsEqual ? 'SAME' : 'UPDATED'}`)
+        await eventVersionModel.updateAsync({ _id: eventVersionId }, { ...data, workshopVersions, _updatedAt })
       } else {
-        console.log(`Create ${group.eventId}`)
+        console.log(`Create ${group.eventId} data ${dataEqual ? 'SAME' : 'UPDATED'} workshops ${versionsEqual ? 'SAME' : 'UPDATED'}`)
         const { _id, ...rest } = data
-        await eventModel.insertAsync({ ...rest, workshopVersions, _updatedAt })
+        await eventVersionModel.insertAsync({ ...rest, workshopVersions, _updatedAt } as unknown as Version)
       }
+      lastVersions = workshopVersions
+      lastData = data
     }
+    const lastWorkshopVersions = groups.at(-1)?.workshops
+    await eventModel.updateAsync({ _id: eventId }, { $set: { lastWorkshopVersions } })
   }
 
 
