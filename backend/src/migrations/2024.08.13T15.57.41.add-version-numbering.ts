@@ -11,11 +11,11 @@ export const up: MigrationFn = async params => {
     const records = await versionModel.findAsync({}).sort({ _updatedAt: 1 })
     for (const record of records) {
       const { _id, _recordId } = record
-      const versionNumber = counter.getVersionFor(_recordId)
-      await versionModel.updateAsync({ _id }, { $set: { versionNumber } })
+      const _versionNumber = counter.getVersionFor(_recordId)
+      await versionModel.updateAsync({ _id }, { $set: { _versionNumber } })
     }
-    for (const [_id, versionNumber] of counter.versionNumberMap.entries()) {
-      await model.updateAsync({ _id }, { $set: { versionNumber } })
+    for (const [_id, _versionNumber] of counter.versionNumberMap.entries()) {
+      await model.updateAsync({ _id }, { $set: { _versionNumber } })
     }
   }
 
