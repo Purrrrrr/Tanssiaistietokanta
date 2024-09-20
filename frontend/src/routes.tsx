@@ -26,6 +26,7 @@ export default function MainRoutes() {
       <Routes>
         <Route index element={<EventList/>} />
         <Route path="events/new" element={<CreateEvent/>} />
+        <Route path="events/:eventId/version/:eventVersionId/*" element={<EventRoutes/>} />
         <Route path="events/:eventId/*" element={<EventRoutes/>} />
         <Route path="dances/*" element={<DanceRoutes/>} />
       </Routes>
@@ -44,8 +45,8 @@ function DanceRoutes() {
 }
 
 function EventRoutes() {
-  const {eventId} = useParams()
-  const [event, loadingState] = useEvent(eventId)
+  const {eventId, eventVersionId} = useParams()
+  const [event, loadingState] = useEvent(eventId ?? '', eventVersionId)
 
   if (!event) return <LoadingState {...loadingState} />
 
@@ -54,7 +55,7 @@ function EventRoutes() {
     <Routes>
       <Route index element={<EventPage event={event}/>} />
       <Route path="program/*" element={<EventProgramRoutes event={event}/>} />
-      <Route path="ball-program/*" element={<BallProgram eventId={eventId}/>} />
+      <Route path="ball-program/*" element={<BallProgram eventId={eventId} eventVersionId={eventVersionId} />} />
       <Route path="print/*" element={<EventPrintRoutes />} />
     </Routes>
   </>

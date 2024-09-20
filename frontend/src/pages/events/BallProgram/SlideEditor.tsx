@@ -32,11 +32,12 @@ import {ProgramItemData, SlideContent} from './useBallProgram'
 interface SlideEditorProps {
   slide: SlideContent
   eventId: string
+  eventVersionId?: string
   eventProgram: EventProgramSettings
 }
-export function SlideEditor({slide, eventId, eventProgram}: SlideEditorProps) {
+export function SlideEditor({slide, eventId, eventVersionId, eventProgram}: SlideEditorProps) {
   const t = useT('components.eventProgramEditor')
-  const {formProps, state} = useEventProgramEditorForm(eventId, eventProgram)
+  const {formProps, state} = useEventProgramEditorForm(eventId, eventVersionId, eventProgram)
   const isDance = slide.slideContent?.type === 'dance'
 
   return <div>

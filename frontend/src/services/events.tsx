@@ -10,7 +10,7 @@ export * from './slideStyles'
 setupServiceUpdateFragment(
   'events',
   `fragment EventFragment on Event {
-    _id, _versionId, _updatedAt, name, beginDate, endDate,
+    _id, _versionId, _versionNumber, _updatedAt, name, beginDate, endDate,
     program {
       slideStyleId
       pauseBetweenDances
@@ -93,7 +93,7 @@ setupServiceUpdateFragment(
 const useEventInternal = backendQueryHook(graphql(`
 query getEvent($id: ID!, $versionId: ID) {
   event(id: $id, versionId: $versionId) {
-    _id, _versionId, _updatedAt, name, beginDate, endDate,
+    _id, _versionId, _versionNumber, _updatedAt, name, beginDate, endDate,
     program {
       slideStyleId
       pauseBetweenDances
@@ -204,7 +204,7 @@ mutation patchEvent($id: ID!, $event: EventPatchInput!) {
 export const usePatchEventProgram = entityUpdateHook('events', graphql(`
 mutation patchEventProgram($id: ID!, $program: JSONPatch!) {
   patchEventProgram(id: $id, program: $program) {
-    _id, _versionId, name, beginDate, endDate,
+    _id, _versionId, _versionNumber, name, beginDate, endDate,
     program {
       slideStyleId
       pauseBetweenDances

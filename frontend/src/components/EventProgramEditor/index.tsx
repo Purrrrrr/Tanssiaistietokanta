@@ -43,12 +43,13 @@ type T = Translator<'components.eventProgramEditor'>
 
 interface EventProgramEditorProps {
   eventId: string
+  eventVersionId?: string
   program: EventProgramSettings
 }
 
-export function EventProgramEditor({eventId, program: eventProgram}: EventProgramEditorProps) {
+export function EventProgramEditor({eventId, eventVersionId, program: eventProgram}: EventProgramEditorProps) {
   const t = useT('components.eventProgramEditor')
-  const {formProps, state} = useEventProgramEditorForm(eventId, eventProgram)
+  const {formProps, state} = useEventProgramEditorForm(eventId, eventVersionId, eventProgram)
   const {danceSets, introductions} = formProps.value
 
   return <Form {...formProps}>

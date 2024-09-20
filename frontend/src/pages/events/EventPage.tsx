@@ -24,19 +24,23 @@ const {
 
 export default function EventPage({event}: {event: Event}) {
   const t = useT('pages.events.eventPage')
+  const tCommon = useT('common')
+  const { _versionId, _versionNumber } = event
+  const readOnly = _versionId != undefined
+  const versionString = _versionId ? ` (${tCommon('version', { version: _versionNumber })})` : ''
   return <>
     <PageTitle>
-      {event.name}
+      {event.name + versionString}
     </PageTitle>
-    <EventDetails event={event} />
+    <EventDetails event={event} readOnly={readOnly} />
     <h2>{t('ballProgram')}</h2>
-    <EventProgram program={event.program} />
+    <EventProgram program={event.program} readOnly={readOnly} />
     <h2>{t('workshops')}</h2>
-    <EventWorkshops event={event} />
+    <EventWorkshops event={event} readOnly={readOnly} />
   </>
 }
 
-function EventDetails({event}: {event: Event}) {
+function EventDetails({event, readOnly}: {event: Event, readOnly: boolean}) {
   const [showEditor, setShowEditor] = useState(false)
   const t = useT('pages.events.eventPage')
   const formatDate = useFormatDate()
@@ -44,12 +48,14 @@ function EventDetails({event}: {event: Event}) {
     <p>
       {t('eventDate')}: {formatDate(new Date(event.beginDate))} - {formatDate(new Date(event.endDate))}
     </p>
-    <p>
-      <Button
-        onClick={() => setShowEditor(!showEditor)}
-        text={showEditor ? t('closeEditor') : t('openBasicDetailsEditor')}
-      />
-    </p>
+    { readOnly ||
+      <p>
+        <Button
+          onClick={() => setShowEditor(!showEditor)}
+          text={showEditor ? t('closeEditor') : t('openBasicDetailsEditor')}
+        />
+      </p>
+    }
     <Collapse isOpen={showEditor}>
       <EventDetailsForm event={event} />
     </Collapse>
@@ -82,7 +88,7 @@ function EventDetailsForm({event}: {event: Event}) {
   </Form>
 }
 
-function EventProgram({program}: {program: EventProgramType}) {
+function EventProgram({program, readOnly}: {program: EventProgramType, readOnly: boolean}) {
   const t = useT('pages.events.eventPage')
   if (!program || program.danceSets.length === 0) {
     return <>
@@ -101,7 +107,9 @@ function EventProgram({program}: {program: EventProgramType}) {
       )}
     </Card>
     <p>
-      <NavigateButton adminOnly intent="primary" href="program" text={t('editProgram')} />
+      {readOnly
+        ? <NavigateButton adminOnly href="program" text={t('viewProgram')} />
+        : <NavigateButton adminOnly intent="primary" href="program" text={t('editProgram')} />}
       <NavigateButton href="print/ball-dancelist" target="_blank"
         text={t('printBallDanceList')} />
       <NavigateButton href="ball-program" target="_blank"
@@ -125,7 +133,7 @@ function EventProgram({program}: {program: EventProgramType}) {
 
 const isRequestedDance = row => row.item.__typename === 'RequestedDance'
 
-function EventWorkshops({event}: {event: Event}) {
+function EventWorkshops({event, readOnly}: {event: Event, readOnly: boolean}) {
   const {workshops, _id: eventId, beginDate, endDate} = event
   const t = useT('pages.events.eventPage')
   return <>
@@ -133,6 +141,7 @@ function EventWorkshops({event}: {event: Event}) {
       {workshops.map(workshop =>
         <WorkshopCard
           workshop={workshop}
+          readOnly={readOnly}
           key={workshop._id}
           reservedAbbreviations={workshops.filter(w => w._id !== workshop._id).map(w => w.abbreviation).filter(a => a) as string[]}
           beginDate={beginDate}
@@ -141,7 +150,7 @@ function EventWorkshops({event}: {event: Event}) {
       )}
     </>
     <p>
-      <CreateWorkshopButton eventId={eventId} startDate={beginDate} />
+      {readOnly || <CreateWorkshopButton eventId={eventId} startDate={beginDate} />}
       <NavigateButton href="print/dance-cheatlist" target="_blank"
         text={t('danceCheatlist')} />
       <NavigateButton href="print/dance-instructions" target="_blank"
@@ -180,10 +189,11 @@ function newWorkshop({eventId, name}, startDate) {
 
 function WorkshopCard(
   {
-    workshop, reservedAbbreviations, beginDate, endDate
+    workshop, reservedAbbreviations, beginDate, endDate, readOnly
   }: {
     workshop: Workshop
     reservedAbbreviations: string[]
+    readOnly: boolean
     beginDate: string
     endDate: string
   }
@@ -195,14 +205,18 @@ function WorkshopCard(
   const {_id, abbreviation, name } = workshop
 
   return <Card style={{clear: 'right'}}>
-    <DeleteButton onDelete={() => addLoadingAnimation(deleteWorkshop({id: _id}))}
-      style={{float: 'right'}} text="Poista"
-      confirmText={'Haluatko varmasti poistaa työpajan '+name+'?'}
-    />
-    <Button
-      onClick={() => setShowEditor(!showEditor)}
-      style={{float: 'right'}} text={showEditor ? t('closeEditor') : t('openEditor')}
-    />
+    { readOnly ||
+      <>
+        <DeleteButton onDelete={() => addLoadingAnimation(deleteWorkshop({id: _id}))}
+          style={{float: 'right'}} text="Poista"
+          confirmText={'Haluatko varmasti poistaa työpajan '+name+'?'}
+        />
+        <Button
+          onClick={() => setShowEditor(!showEditor)}
+          style={{float: 'right'}} text={showEditor ? t('closeEditor') : t('openEditor')}
+        />
+      </>
+    }
     <h2>
       {name}
       {abbreviation &&

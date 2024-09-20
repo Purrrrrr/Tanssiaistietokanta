@@ -14,7 +14,7 @@ import {SlideContent, startSlideId, useBallProgramSlides} from './useBallProgram
 
 import './BallProgram.scss'
 
-export default function BallProgram({eventId}) {
+export default function BallProgram({eventId, eventVersionId}) {
   const [slides, {event, refetch, ...loadingState}] = useBallProgramSlides(eventId)
   const [isEditing, setEditing] = useState(false)
   const {'*': currentSlideId = startSlideId} = useParams()
@@ -28,7 +28,7 @@ export default function BallProgram({eventId}) {
     <BallProgramView slides={slides} onRefetch={refetch} isEditing={isEditing} onToggleEditing={() => setEditing(e => !e)}/>
     <div className="editor">
       <Button className="close" minimal icon="cross" onClick={() => setEditing(false)}/>
-      <SlideEditor slide={slide} eventId={eventId} eventProgram={event?.program} />
+      <SlideEditor slide={slide} eventId={eventId} eventVersionId={eventVersionId} eventProgram={event?.program} />
     </div>
   </div>
 }

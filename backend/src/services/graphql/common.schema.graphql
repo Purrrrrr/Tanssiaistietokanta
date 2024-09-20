@@ -6,5 +6,6 @@ interface Versionable {
 
 type VersionInfo {
   _versionId: String!
+  _versionNumber: Int!
   _updatedAt: String!
 }

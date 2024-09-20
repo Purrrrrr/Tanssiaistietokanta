@@ -6,6 +6,7 @@ type Query {
 type Event implements Versionable {
   _id: ID!
   _versionId: String
+  _versionNumber: String
   _updatedAt: String!
   versions: [VersionInfo!]!
   name: String!

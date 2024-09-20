@@ -1,3 +1,4 @@
+import { set } from 'partial.lenses'
 import {usePatchEventProgram} from 'services/events'
 
 import {formFor, useAutosavingState} from 'libraries/forms'
@@ -20,9 +21,17 @@ export const {
 
 export type {EventProgramSettings} from '../types'
 
-export function useEventProgramEditorForm(eventId: string, eventProgram: EventProgramSettings) {
+export function useEventProgramEditorForm(eventId: string, eventVersionId: string | undefined, eventProgram: EventProgramSettings) {
+  const readOnly = eventVersionId !== undefined
   const [patchEventProgram] = usePatchEventProgram()
-  const saveProgram = (program) => patchEventProgram({id: eventId, program})
+  const saveProgram = async (program) => {
+    if (readOnly) return
+    patchEventProgram({id: eventId, program})
+  }
 
-  return useAutosavingState<EventProgramSettings, JSONPatch>(eventProgram, saveProgram, patch)
+  const data = useAutosavingState<EventProgramSettings, JSONPatch>(eventProgram, saveProgram, patch)
+
+  return readOnly
+    ? set(['formProps', 'readOnly'], readOnly, data)
+    : data
 }

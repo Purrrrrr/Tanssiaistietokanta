@@ -212,6 +212,7 @@ export const fi = {
         eventDetails: 'Tapahtuman tiedot',
         eventName: 'Tapahtuman nimi',
         editProgram: 'Muokkaa ohjelmaa',
+        viewProgram: 'Ohjelman tiedot',
         addProgram: 'Luo ohjelma',
         workshops: 'Työpajat',
         printBallDanceList: 'Tulosta settilista',
@@ -304,6 +305,7 @@ export const fi = {
     cancel: 'Peruuta',
     save: 'Tallenna',
     move: 'Siirrä',
-    operationFailed: 'Tietojen tallennus epäonnistui :('
+    operationFailed: 'Tietojen tallennus epäonnistui :(',
+    version: 'versio __version__',
   },
 }
