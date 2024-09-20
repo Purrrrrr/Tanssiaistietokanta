@@ -31,7 +31,7 @@ export const eventsSchema = Type.Object(
         description: NullableString(),
       })
     }),
-    workshopVersions: Type.Record(Id(), Type.Number())
+    workshopVersions: Type.Record(Id(), Id())
   },
   { $id: 'Events', additionalProperties: false }
 )

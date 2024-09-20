@@ -59,7 +59,8 @@ export const up: MigrationFn = async params => {
     let lastVersions = {}
     let lastData = null
     for (const group of groups) {
-      const { eventVersionId, data, workshops: workshopVersions, updatedAt: _updatedAt } = group
+      const { eventVersionId, data, workshops: workshopVersions, updatedAt } = group
+      const _updatedAt = new Date(updatedAt).toISOString()
       const versionsEqual = isEqual(lastVersions, workshopVersions)
       const dataEqual = isEqual(lastData, data)
       if (eventVersionId) {
@@ -74,7 +75,7 @@ export const up: MigrationFn = async params => {
       lastData = data
     }
     const lastWorkshopVersions = groups.at(-1)?.workshops
-    await eventModel.updateAsync({ _id: eventId }, { $set: { lastWorkshopVersions } })
+    await eventModel.updateAsync({ _id: eventId }, { $set: { workshopVersions: lastWorkshopVersions } })
   }
 
 

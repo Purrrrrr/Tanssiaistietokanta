@@ -6,8 +6,9 @@ export default (app: Application) => {
   const workshopService = app.service('workshops')
   const danceService = app.service('dances')
 
-  function getWorkshops(eventId: string) {
-    return workshopService.find({query: {eventId, $sort: { name: 1 }}})
+  function getWorkshops(workshopVersions: Record<string, string>) {
+    const versionIds = Object.values(workshopVersions)
+    return workshopService.find({query: {_versionId: { $in: versionIds }, $sort: { name: 1 }}})
   }
 
   const service = app.service('events')
@@ -16,7 +17,7 @@ export default (app: Application) => {
 
   return {
     Event: {
-      workshops: (obj: { _id: string }) => getWorkshops(obj._id),
+      workshops: (obj: { workshopVersions: Record<string, string> }) => getWorkshops(obj.workshopVersions),
       program: (event: { name?: any; program?: any }) => {
         const { program } = event
         if (!program.introductions.title) return L.set(['introductions', 'title'], event.name, program)

@@ -48,7 +48,7 @@ export const workshops = (app: Application) => {
       results.map(async workshop => {
         const workshops = await workshopService.find({query: { eventId: workshop.eventId }})
         const workshopVersions = Object.fromEntries(
-          workshops.map(w => [w._id, w._versionNumber]) 
+          workshops.map(w => [w._id, w._versionId]) 
         )
         console.log(workshopVersions)
 
