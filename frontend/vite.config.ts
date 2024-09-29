@@ -56,7 +56,7 @@ function setEnv(mode: string) {
     loadEnv(mode, '.', ['REACT_APP_', 'NODE_ENV', 'PUBLIC_URL']),
   )
   process.env.NODE_ENV ||= mode
-  const { homepage } = JSON.parse(readFileSync('package.json', 'utf-8'))
+  // const { homepage } = JSON.parse(readFileSync('package.json', 'utf-8'))
   // process.env.PUBLIC_URL ||= homepage
   //   ? `${homepage.startsWith('http') || homepage.startsWith('/') ? homepage : `/${homepage}` }`.replace(/\/$/, '')
   //   : ''
