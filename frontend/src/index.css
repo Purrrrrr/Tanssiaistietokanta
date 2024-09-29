@@ -8,12 +8,24 @@ body {
 }
 
 #layout {
+  --main-margin-size: 25px;
+  --aside-size: 0px;
+  --main-size: min(100dvw - var(--aside-size), 1200px + var(--main-margin-size) * 2);
+  --space: calc(100dvw - var(--main-size));
+  --half-space: calc(var(--space) / 2);
+  --right-space: calc(var(--half-space) - var(--aside-size));
+  --left-space: min(var(--space) - var(--aside-size), var(--half-space));
+
   min-height: 100vh;
   display: grid;
-  grid-template: "header header header" min-content
-    ". main ." 1fr
-    "footer footer footer" min-content
-    / auto min(95%, 1200px) auto
+  grid-template: "header header header header" min-content
+    ". main . sidebar" 1fr
+    "footer footer footer sidebar" min-content
+    / var(--left-space) var(--main-size) var(--right-space) var(--aside-size);
+  transition: grid-template 200ms ease-in;
+}
+#layout:has(aside:not(:empty)) {
+  --aside-size: min(20%, 400px);
 }
 #layout > nav {
   grid-area: header;
@@ -25,9 +37,11 @@ body {
 
 #main-content {
   grid-area: main;
-  max-width: 95%;
-  width: 1200px;
-  margin: 0 auto;
+  padding-inline: var(--main-margin-size);
+}
+#layout > aside {
+  grid-area: sidebar;
+  background: #eee;
 }
 #layout > footer {
   grid-area: footer;

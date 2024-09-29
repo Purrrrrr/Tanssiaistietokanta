@@ -37,6 +37,16 @@ export default defineConfig(({ mode }) => {
         },
       }
     },
+    css: {
+      preprocessorOptions: {
+        sass: {
+          api: 'modern',
+        },
+        scss: {
+          api: 'modern',
+        },
+      },
+    },
   }
 })
 
