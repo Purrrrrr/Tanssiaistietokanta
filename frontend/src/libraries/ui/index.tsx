@@ -7,10 +7,9 @@ import {
   FormGroup as BlueprintFormGroup,
   FormGroupProps as BlueprintFormGroupProps,
   Icon as BlueprintIcon,
-  IconName as BlueprintIconName,
   InputGroup as BlueprintInputGroup,
-  Spinner,
   NonIdealState,
+  Spinner,
 } from '@blueprintjs/core'
 import { IconPaths, Icons } from '@blueprintjs/icons'
 import classNames from 'classnames'
@@ -43,6 +42,7 @@ export type IconName =
   | 'double-chevron-up'
   | 'edit'
   | 'error'
+  | 'history'
   | 'info-sign'
   | 'link'
   | 'move'
@@ -71,6 +71,8 @@ const iconModules = {
   'edit/20': () => import('@blueprintjs/icons/lib/esm/generated/20px/paths/edit'),
   'error/16': () => import('@blueprintjs/icons/lib/esm/generated/16px/paths/error'),
   'error/20': () => import('@blueprintjs/icons/lib/esm/generated/20px/paths/error'),
+  'history/16': () => import('@blueprintjs/icons/lib/esm/generated/16px/paths/history'),
+  'history/20': () => import('@blueprintjs/icons/lib/esm/generated/20px/paths/history'),
   'info-sign/16': () => import('@blueprintjs/icons/lib/esm/generated/16px/paths/info-sign'),
   'info-sign/20': () => import('@blueprintjs/icons/lib/esm/generated/20px/paths/info-sign'),
   'link/16': () => import('@blueprintjs/icons/lib/esm/generated/16px/paths/link'),
