@@ -9,24 +9,41 @@ body {
 
 #layout {
   --main-margin-size: 25px;
-  --aside-size: 0px;
-  --main-size: min(100dvw - var(--aside-size), 1200px + var(--main-margin-size) * 2);
+  --sidebar-size: 0px;
+  --main-size: min(100dvw - var(--sidebar-size), 1200px + var(--main-margin-size) * 2);
   --space: calc(100dvw - var(--main-size));
   --half-space: calc(var(--space) / 2);
-  --right-space: calc(var(--half-space) - var(--aside-size));
-  --left-space: min(var(--space) - var(--aside-size), var(--half-space));
+  --right-space: calc(var(--half-space) - var(--sidebar-size));
+  --left-space: min(var(--space) - var(--sidebar-size), var(--half-space));
+  --sidebar-anim-speed: 0.5s;
 
   min-height: 100vh;
   display: grid;
   grid-template: "header header header header" min-content
     ". main . sidebar" 1fr
     "footer footer footer sidebar" min-content
-    / var(--left-space) var(--main-size) var(--right-space) var(--aside-size);
-  transition: grid-template 200ms ease-in;
+    / var(--left-space) var(--main-size) var(--right-space) var(--sidebar-size);
+  transition: grid-template 0.3s ease-in;
 }
-#layout:has(aside:not(:empty)) {
-  --aside-size: min(20%, 400px);
+#layout:has(> aside > :not(:empty)) {
+  --sidebar-size: min(25%, 400px);
 }
+
+@media (max-width: 800px) {
+  #layout {
+    --main-size: min(100dvw, 1200px + var(--main-margin-size) * 2);
+    --sidebar-size: 0px;
+    grid-template: "header header header" min-content
+      "sidebar sidebar sidebar" var(--sidebar-size)
+      ". main . " 1fr
+      "footer footer footer" min-content
+      / 1fr var(--main-size) 1fr;
+  }
+  #layout:has(> aside > :not(:empty)) {
+    --sidebar-size: var(--sidebar-opened-height, auto);
+  }
+}
+
 #layout > nav {
   grid-area: header;
 }
@@ -43,6 +60,10 @@ body {
   grid-area: sidebar;
   background: #eee;
 }
+#layout > aside > :not(:empty) {
+  padding: 10px 20px;
+}
+
 #layout > footer {
   grid-area: footer;
   text-align: right;
