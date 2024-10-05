@@ -93,7 +93,7 @@ function EventProgram({program, readOnly}: {program: EventProgramType, readOnly:
   if (!program || program.danceSets.length === 0) {
     return <>
       <p>{t('noProgram')}</p>
-      <NavigateButton adminOnly intent="primary" href="program" text={t('addProgram')} />
+      {readOnly || <NavigateButton adminOnly intent="primary" href="program" text={t('addProgram')} />}
     </>
   }
 
