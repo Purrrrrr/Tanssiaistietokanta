@@ -1,4 +1,5 @@
 import React, { ReactNode, useCallback, useContext, useEffect, useId, useRef, useState } from 'react'
+import { ResizeSensor } from '@blueprintjs/core'
 
 type SidebarRegisterContextType = (id: string, content: ReactNode) => () => void
 const SidebarRegisterContext = React.createContext<SidebarRegisterContextType>(() => () => {})
@@ -16,24 +17,25 @@ export default function SideBar({children}: {children: ReactNode}) {
 }
 
 export function SidebarContainer() {
-  const ref = useRef<HTMLDivElement>(null)
   const data = useContext(SidebarContentContext)
 
-  useEffect(
-    () => {
-      const h = ref.current?.scrollHeight ?? 0
+  const updateHeight = useCallback(
+    (entries: {target: Element}[]) => {
+      const [{target}] = entries
+      const h = target?.scrollHeight ?? 0
       if (h > 0) {
-        console.log(h)
         document.body.style.setProperty('--sidebar-opened-height', `${h}px`)
       }
     },
-    [data]
+    []
   )
 
   if (!data) return null
-  return <div ref={ref}>
-    {Object.entries(data).map(([id, content]) => <React.Fragment key={id}>{content}</React.Fragment>)}
-  </div>
+  return <ResizeSensor onResize={updateHeight}>
+    <div>
+      {Object.entries(data).map(([id, content]) => <React.Fragment key={id}>{content}</React.Fragment>)}
+    </div>
+  </ResizeSensor>
 }
 
 export function SidebarContext({children}) {
