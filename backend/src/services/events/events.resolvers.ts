@@ -1,6 +1,7 @@
 import * as L from 'partial.lenses'
 import { Application } from "../../declarations"
 import { EventsParams } from './events.class'
+import { versionHistoryFieldResolvers, versionHistoryResolver } from '../../utils/version-history-resolvers'
 
 export default (app: Application) => {
   const workshopService = app.service('workshops')
@@ -23,14 +24,9 @@ export default (app: Application) => {
         if (!program.introductions.title) return L.set(['introductions', 'title'], event.name, program)
         return program
       },
-      versions: ({_id}: {_id: string}) => service.find({
-        query: {
-          $sort,
-          _id,
-          searchVersions: true,
-        }
-      })
+      versionHistory: versionHistoryResolver(service),
     },
+    VersionHistory: versionHistoryFieldResolvers(),
     DanceSet: {
       program: (obj: { program: any }) => L.modifyAsync(L.elems, getProgramItemData, obj.program),
     },

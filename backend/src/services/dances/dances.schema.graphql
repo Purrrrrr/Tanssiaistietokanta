@@ -3,8 +3,12 @@ type Query {
   dances: [Dance!]!
 }
 
-type Dance implements ProgramItem {
+type Dance implements ProgramItem & Versionable {
   _id: ID!
+  _versionId: String
+  _versionNumber: String
+  _updatedAt: String!
+  versionHistory: VersionHistory!
   name: String!
   description: String
   duration: Float

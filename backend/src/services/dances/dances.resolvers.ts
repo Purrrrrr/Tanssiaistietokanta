@@ -4,6 +4,7 @@ import { getDependencyLinks } from '../../utils/dependencies'
 
 import type { Dances } from './dances.schema'
 import type { Events } from '../events/events.schema'
+import { versionHistoryFieldResolvers, versionHistoryResolver } from '../../utils/version-history-resolvers'
 
 export default (app: Application) => {
   const service = app.service('dances')
@@ -50,7 +51,9 @@ export default (app: Application) => {
     Dance: {
       teachedIn: findTeachedIn,
       events: findEvents,
+      versionHistory: versionHistoryResolver(service),
     },
+    VersionHistory: versionHistoryFieldResolvers(),
     Query: {
       dance: (_: any, {id}: any, params: DancesParams | undefined) => service.get(id, params),
       dances: (_: any, __: any, params: DancesParams | undefined) => service.find(params),

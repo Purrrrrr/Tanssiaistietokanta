@@ -1,11 +1,21 @@
 interface Versionable {
   _versionId: String
   _updatedAt: String!
+  versionHistory: VersionHistory!
+}
+
+type VersionHistory {
   versions: [VersionInfo!]!
+  calendar: [VersionDayInfo!]!
 }
 
 type VersionInfo {
   _versionId: String!
   _versionNumber: Int!
   _updatedAt: String!
+}
+
+type VersionDayInfo {
+  date: String!
+  versions: [VersionInfo!]!
 }

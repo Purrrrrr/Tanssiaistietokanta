@@ -8,7 +8,7 @@ type Event implements Versionable {
   _versionId: String
   _versionNumber: String
   _updatedAt: String!
-  versions: [VersionInfo!]!
+  versionHistory: VersionHistory!
   name: String!
   beginDate: String!
   endDate: String!
