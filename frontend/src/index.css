@@ -59,6 +59,7 @@ body {
 #layout > aside {
   grid-area: sidebar;
   background: #eee;
+  overflow: hidden;
 }
 #layout > aside > :not(:empty) {
   padding: 10px 20px;

@@ -8,6 +8,7 @@ import {DateRangeField, formFor, patchStrategy, SyncStatus, useAutosavingState} 
 import {Button, Card, Collapse} from 'libraries/ui'
 import {useGlobalLoadingAnimation} from 'components/LoadingState'
 import {PageTitle} from 'components/PageTitle'
+import {VersionsButton} from 'components/versioning/VersionsButton'
 import {DeleteButton} from 'components/widgets/DeleteButton'
 import {NavigateButton} from 'components/widgets/NavigateButton'
 import {newInstance, WorkshopEditor} from 'components/WorkshopEditor'
@@ -32,6 +33,7 @@ export default function EventPage({event}: {event: Event}) {
     <PageTitle>
       {event.name + versionString}
     </PageTitle>
+    <VersionsButton entityType="event" id={event._id} versionId={event._versionId} />
     <EventDetails event={event} readOnly={readOnly} />
     <h2>{t('ballProgram')}</h2>
     <EventProgram program={event.program} readOnly={readOnly} />

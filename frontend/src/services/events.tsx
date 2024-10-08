@@ -90,6 +90,23 @@ setupServiceUpdateFragment(
   }`
 )
 
+export const useEventVersions = backendQueryHook(graphql(`
+query getEventVersions($id: ID!) {
+  event(id: $id) {
+    _id, _versionId,
+    versionHistory {
+      calendar {
+        date
+        versions {
+          _versionId
+          _versionNumber
+          _updatedAt
+        }
+      }
+    }
+  }
+}`))
+
 const useEventInternal = backendQueryHook(graphql(`
 query getEvent($id: ID!, $versionId: ID) {
   event(id: $id, versionId: $versionId) {
