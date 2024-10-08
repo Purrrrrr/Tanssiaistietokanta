@@ -39,6 +39,9 @@ body {
       "footer footer footer" min-content
       / 1fr var(--main-size) 1fr;
   }
+  #layout > aside {
+    overflow: hidden;
+  }
   #layout:has(> aside > :not(:empty)) {
     --sidebar-size: var(--sidebar-opened-height, auto);
   }
@@ -57,12 +60,18 @@ body {
   padding-inline: var(--main-margin-size);
 }
 #layout > aside {
+  position: relative;
   grid-area: sidebar;
-  background: #eee;
-  overflow: hidden;
+  background: #f8f8f8;
+  box-shadow: 0px 0px 10px rgba(0,0,0, 0.5);
+  /* overflow: hidden; */
 }
 #layout > aside > :not(:empty) {
   padding: 10px 20px;
+  position: sticky;
+  top: 0;
+  max-height: calc(100dvh - 50px);
+  overflow: auto;
 }
 
 #layout > footer {
