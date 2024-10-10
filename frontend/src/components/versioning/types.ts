@@ -4,7 +4,7 @@ export type { ID }
 
 export interface VersionSidebarProps {
   entityType: 'event' | 'dance'
-  id: ID
+  entityId: ID
   versionId?: ID
 }
 

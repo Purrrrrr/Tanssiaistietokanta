@@ -6,6 +6,7 @@ import {AdminOnly} from 'services/users'
 
 import {Breadcrumb} from 'libraries/ui'
 import {lazyLoadComponent as lazy, LoadingState} from 'components/LoadingState'
+import VersionableContentContainer from 'components/versioning/VersionableContentContainer'
 import {T, useTranslation} from 'i18n'
 
 const Dances = lazy(() => import('pages/dances'))
@@ -48,17 +49,20 @@ function EventRoutes() {
   const {eventId, eventVersionId} = useParams()
   const [event, loadingState] = useEvent(eventId ?? '', eventVersionId)
 
-  if (!event) return <LoadingState {...loadingState} />
-
-  return <>
-    <Breadcrumb text={event.name} />
-    <Routes>
-      <Route index element={<EventPage event={event}/>} />
-      <Route path="program/*" element={<EventProgramRoutes event={event}/>} />
-      <Route path="ball-program/*" element={<BallProgram eventId={eventId} eventVersionId={eventVersionId} />} />
-      <Route path="print/*" element={<EventPrintRoutes />} />
-    </Routes>
-  </>
+  return <VersionableContentContainer>
+    {event
+      ? <>
+        <Breadcrumb text={event.name} />
+        <Routes>
+          <Route index element={<EventPage event={event}/>} />
+          <Route path="program/*" element={<EventProgramRoutes event={event}/>} />
+          <Route path="ball-program/*" element={<BallProgram eventId={eventId} eventVersionId={eventVersionId} />} />
+          <Route path="print/*" element={<EventPrintRoutes />} />
+        </Routes>
+      </>
+      : <LoadingState {...loadingState} />
+    }
+  </VersionableContentContainer>
 }
 
 function EventProgramRoutes({event}) {

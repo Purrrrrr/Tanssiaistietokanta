@@ -11,11 +11,11 @@ const providers = {
   dance: DanceVersionsProvider,
 }
 
-export default function VersionSidebar({entityType, id, versionId}: VersionSidebarProps) {
+export default function VersionSidebar({entityType, entityId: id, versionId}: VersionSidebarProps) {
   const Provider = providers[entityType]
 
   return <Provider id={id}>
-    {(name, versions) => <VersionChooser name={name} id={id} versionId={versionId} versions={versions} />}
+    {(name, versions) => <VersionChooser name={name} entityId={id} versionId={versionId} versions={versions} />}
   </Provider>
 }
 

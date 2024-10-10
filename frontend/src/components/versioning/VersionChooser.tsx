@@ -18,7 +18,7 @@ interface VersionChooserProps extends Omit<VersionSidebarProps, 'entityType'> {
   versions: VersionCalendar
 }
 
-export default function VersionChooser({name, id, versionId, versions}: VersionChooserProps) {
+export default function VersionChooser({name, entityId: id, versionId, versions}: VersionChooserProps) {
   return <SideBar>
     <div className="version-chooser">
       <h2>Muokkaushistoria: {name}</h2>

@@ -6,7 +6,6 @@ import {GlobalLoadingState}  from './LoadingState'
 import Navigation from './Navigation'
 import { SidebarContainer, SidebarContext } from './SideBar'
 import {SupportedBrowserChecker} from './SupportedBrowserWarning'
-import VersionableContentContainer from './versioning/VersionableContentContainer'
 
 import './NavigationLayout.sass'
 
@@ -23,24 +22,22 @@ function NavigationLayout({children}) {
   return <BreadcrumbContext>
     <GlobalLoadingState>
       <SidebarContext>
-        <VersionableContentContainer>
-          <SupportedBrowserChecker />
-          <SkipToMainContent />
-          <div id="layout">
-            <Navigation/>
-            <main id="main-content">
-              {children}
-            </main>
-            <aside>
-              <SidebarContainer />
-            </aside>
-            <footer>
-              <T msg="app.title" /> v. {process.env.REACT_APP_BUILD_TIME ?? 'DEV'}-{process.env.REACT_APP_COMMIT_REV ?? 'HEAD'}
-              <LicenceLink />
-              {process.env.NODE_ENV === 'development' &&  <DebugManager />}
-            </footer>
-          </div>
-        </VersionableContentContainer>
+        <SupportedBrowserChecker />
+        <SkipToMainContent />
+        <div id="layout">
+          <Navigation/>
+          <main id="main-content">
+            {children}
+          </main>
+          <aside>
+            <SidebarContainer />
+          </aside>
+          <footer>
+            <T msg="app.title" /> v. {process.env.REACT_APP_BUILD_TIME ?? 'DEV'}-{process.env.REACT_APP_COMMIT_REV ?? 'HEAD'}
+            <LicenceLink />
+            {process.env.NODE_ENV === 'development' &&  <DebugManager />}
+          </footer>
+        </div>
       </SidebarContext>
     </GlobalLoadingState>
   </BreadcrumbContext>
