@@ -31,6 +31,7 @@ export const useDanceVersions = backendQueryHook(graphql(`
 query getDanceVersions($id: ID!) {
   dance(id: $id) {
     _id, _versionId,
+    name
     versionHistory {
       calendar {
         date

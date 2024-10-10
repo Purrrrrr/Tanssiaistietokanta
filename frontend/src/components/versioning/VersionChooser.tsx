@@ -1,9 +1,9 @@
 import { Fragment } from 'react'
 import { Link } from 'react-router-dom'
 
-import { useEventVersions } from 'services/events'
-
 import SideBar from 'components/SideBar'
+
+import type { VersionCalendar, VersionSidebarProps } from './types'
 
 import './VersionChooser.scss'
 
@@ -13,16 +13,16 @@ interface Version {
   _updatedAt: string,
 }
 
-interface VersionChooserProps {
-  // versions: Version[]
+interface VersionChooserProps extends Omit<VersionSidebarProps, 'entityType'> {
+  name: string
+  versions: VersionCalendar
 }
 
-export default function VersionChooser({id, versionId}) {
-  const event = useEventVersions({id})?.data?.event
-  const versions = event?.versionHistory?.calendar ?? []
+export default function VersionChooser({name, id, versionId, versions}: VersionChooserProps) {
   return <SideBar>
     <div className="version-chooser">
-      <h2>Muokkaushistoria</h2>
+      <h2>Muokkaushistoria: {name}</h2>
+      <Link to={`events/${id}`} className={!versionId ? 'current' : ''}>Nykyinen versio</Link>
       <div className="versions">
         {versions.map(day =>
           <Fragment key={day.date}>

@@ -94,6 +94,7 @@ export const useEventVersions = backendQueryHook(graphql(`
 query getEventVersions($id: ID!) {
   event(id: $id) {
     _id, _versionId,
+    name
     versionHistory {
       calendar {
         date

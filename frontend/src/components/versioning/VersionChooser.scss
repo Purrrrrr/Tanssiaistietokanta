@@ -1,9 +1,12 @@
 .version-chooser {
+  max-height: calc(100dvh - 50px);
   
   .versions {
+    max-height: calc(100dvh - 160px);
+    background: white;
+    overflow: auto;
     @media (max-width: 800px) {
       max-height: 300px;
-      overflow: auto;
       column-width: 120px;
     }
   }

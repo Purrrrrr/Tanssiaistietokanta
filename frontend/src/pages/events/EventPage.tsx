@@ -33,7 +33,7 @@ export default function EventPage({event}: {event: Event}) {
     <PageTitle>
       {event.name + versionString}
     </PageTitle>
-    <VersionsButton entityType="event" id={event._id} versionId={event._versionId} />
+    <VersionsButton entityType="event" id={event._id} versionId={event._versionId ?? undefined} />
     <EventDetails event={event} readOnly={readOnly} />
     <h2>{t('ballProgram')}</h2>
     <EventProgram program={event.program} readOnly={readOnly} />
