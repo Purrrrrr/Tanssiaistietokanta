@@ -4,7 +4,7 @@ import { VersionSidebarProps } from './types'
 
 import VersionSidebar from './VersionSidebar'
 
-interface VersionSidebarPropsAndId extends VersionSidebarProps {
+interface VersionSidebarPropsAndId extends Omit<VersionSidebarProps, 'onClose'> {
   //The id of the button that opened the sidebar.
   //Only one button at a time opens the sidebar
   //and that button must supply the props to it;
@@ -43,6 +43,6 @@ export default function VersionableContentContainer({children}) {
 
   return <VersionSidebarToggleContext.Provider value={context}>
     {children}
-    {sidebarProps && <VersionSidebar {...sidebarProps} />}
+    {sidebarProps && <VersionSidebar onClose={context.hideSidebar} {...sidebarProps} />}
   </VersionSidebarToggleContext.Provider>
 }

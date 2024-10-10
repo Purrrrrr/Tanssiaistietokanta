@@ -7,7 +7,7 @@ import { VersionSidebarProps } from './types'
 
 import { VersionSidebarToggleContext } from './VersionableContentContainer'
 
-interface VersionsButtonProps extends VersionSidebarProps {
+interface VersionsButtonProps extends Omit<VersionSidebarProps, 'onClose'> {
   id?: string
 }
 

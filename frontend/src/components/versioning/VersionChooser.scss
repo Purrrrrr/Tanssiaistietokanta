@@ -1,6 +1,20 @@
 .version-chooser {
   max-height: calc(100dvh - 50px);
 
+  .close {
+    float: right;
+    appearance: none;
+    border: none;
+    background: none;
+    font-size: 20px;
+    padding: 5px 7px;
+    border-radius: 4px;
+
+    &:hover {
+      background: #00000014;
+    }
+  }
+
   h2 {
     text-align: center;
   }

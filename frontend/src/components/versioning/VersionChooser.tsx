@@ -2,7 +2,7 @@ import { Fragment } from 'react'
 import { Link } from 'react-router-dom'
 
 import SideBar from 'components/SideBar'
-import { useT } from 'i18n'
+import { useT, useTranslation } from 'i18n'
 
 import type { VersionCalendar, VersionSidebarProps } from './types'
 
@@ -19,14 +19,15 @@ interface VersionChooserProps extends Omit<VersionSidebarProps, 'entityType'> {
   versions: VersionCalendar
 }
 
-export default function VersionChooser({name, entityId: id, versionId, versions, toVersionLink}: VersionChooserProps) {
+export default function VersionChooser({onClose, name, entityId: id, versionId, versions, toVersionLink}: VersionChooserProps) {
   const T = useT('versioning')
   const toLink = (v: string | null) => toVersionLink(id, v)
 
   return <SideBar>
     <div className="version-chooser">
+      <button aria-label={useTranslation('common.close')} className="close" onClick={onClose}>✖</button>
       <h2>{name} - {T('versionHistory')}</h2>
-      <VersionNavigation entityId={id} versions={versions} versionId={versionId} toVersionLink={toVersionLink} />
+      <VersionNavigation versions={versions} versionId={versionId} toVersionLink={toLink} />
       <div className="versions">
         <h3>{T('now')}</h3>
         <Link to={toLink(null)} className={!versionId ? 'current' : ''}>
@@ -53,7 +54,13 @@ export default function VersionChooser({name, entityId: id, versionId, versions,
   </SideBar>
 }
 
-function VersionNavigation({entityId: id, versionId, versions, toVersionLink}: Omit<VersionChooserProps, 'name'>) {
+interface VersionNavigationProps {
+  versionId?: string | null
+  versions: VersionCalendar
+  toVersionLink: (versionId: string | null) => string
+}
+
+function VersionNavigation({versionId, versions, toVersionLink}: VersionNavigationProps ) {
   const T = useT('versioning')
   const allVersions = [{_versionId: null, _versionNumber: null}, ...versions.flatMap(v => v.versions)]
   const versionIndex = versionId ? allVersions.findIndex(v => v._versionId === versionId) : 0
@@ -65,7 +72,7 @@ function VersionNavigation({entityId: id, versionId, versions, toVersionLink}: O
 
   return <div className="navigation">
     {previousVersion &&
-      <Link to={toVersionLink(id, previousVersion._versionId)}>{T('previous')}</Link>
+      <Link to={toVersionLink(previousVersion._versionId)}>{T('previous')}</Link>
     }
     {' '}
     <b>
@@ -76,7 +83,7 @@ function VersionNavigation({entityId: id, versionId, versions, toVersionLink}: O
     </b>
     {' '}
     {nextVersion &&
-      <Link to={`events/${id}/version/${nextVersion._versionId}`}>{T('next')}</Link>
+      <Link to={toVersionLink(nextVersion._versionId)}>{T('next')}</Link>
     }
   </div>
 }
