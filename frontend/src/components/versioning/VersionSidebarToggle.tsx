@@ -1,6 +1,7 @@
 import { useContext, useEffect } from 'react'
 
 import {Button} from 'libraries/ui'
+import { useTranslation } from 'i18n'
 
 import { VersionSidebarProps } from './types'
 
@@ -10,24 +11,24 @@ interface VersionsButtonProps extends VersionSidebarProps {
   id?: string
 }
 
-export function VersionsButton({id, versionId, entityId, entityType}: VersionsButtonProps) {
+export function VersionSidebarToggle({id, versionId, entityId, entityType, toVersionLink}: VersionsButtonProps) {
   const buttonId = id ?? `${entityType}-${entityId}`
   const { toggleSidebar, updateVersion } = useContext(VersionSidebarToggleContext)
 
   useEffect(
     () => {
       updateVersion({
-        buttonId, entityId, versionId, entityType,
+        buttonId, entityId, versionId, entityType, toVersionLink,
       })
     },
-    [buttonId, entityId, versionId, entityType, updateVersion]
+    [buttonId, entityId, versionId, entityType, updateVersion, toVersionLink]
   )
 
   return <Button
     icon="history"
     minimal
     style={{float: 'right'}}
-    onClick={() => toggleSidebar({ buttonId, entityId, versionId, entityType })}>
-    Muokkaushistoria
+    onClick={() => toggleSidebar({ buttonId, entityId, versionId, entityType, toVersionLink })}>
+    {useTranslation('versioning.versionHistory')}
   </Button>
 }

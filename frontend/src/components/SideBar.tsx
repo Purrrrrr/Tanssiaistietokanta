@@ -1,4 +1,4 @@
-import React, { ReactNode, useCallback, useContext, useEffect, useId, useRef, useState } from 'react'
+import React, { ReactNode, useCallback, useContext, useEffect, useId, useState } from 'react'
 import { ResizeSensor } from '@blueprintjs/core'
 
 type SidebarRegisterContextType = (id: string, content: ReactNode) => () => void

@@ -1,5 +1,13 @@
 .version-chooser {
   max-height: calc(100dvh - 50px);
+
+  h2 {
+    text-align: center;
+  }
+  .navigation {
+    text-align: center;
+    margin-block: 1.5em;
+  }
   
   .versions {
     max-height: calc(100dvh - 160px);

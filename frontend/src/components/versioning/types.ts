@@ -6,6 +6,7 @@ export interface VersionSidebarProps {
   entityType: 'event' | 'dance'
   entityId: ID
   versionId?: ID
+  toVersionLink: (id: string, versionId?: string | null) => string
 }
 
 export type VersionCalendar = {

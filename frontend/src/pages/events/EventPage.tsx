@@ -8,7 +8,7 @@ import {DateRangeField, formFor, patchStrategy, SyncStatus, useAutosavingState} 
 import {Button, Card, Collapse} from 'libraries/ui'
 import {useGlobalLoadingAnimation} from 'components/LoadingState'
 import {PageTitle} from 'components/PageTitle'
-import {VersionsButton} from 'components/versioning/VersionsButton'
+import {VersionSidebarToggle} from 'components/versioning/VersionSidebarToggle'
 import {DeleteButton} from 'components/widgets/DeleteButton'
 import {NavigateButton} from 'components/widgets/NavigateButton'
 import {newInstance, WorkshopEditor} from 'components/WorkshopEditor'
@@ -23,6 +23,10 @@ const {
   Form
 } = formFor<Event>()
 
+const eventVersionLink = (id: string, versionId?: null | string) => versionId
+  ? `/events/${id}/version/${versionId}`
+  : `/events/${id}`
+
 export default function EventPage({event}: {event: Event}) {
   const t = useT('pages.events.eventPage')
   const tCommon = useT('common')
@@ -33,7 +37,7 @@ export default function EventPage({event}: {event: Event}) {
     <PageTitle>
       {event.name + versionString}
     </PageTitle>
-    <VersionsButton entityType="event" entityId={event._id} versionId={event._versionId ?? undefined} />
+    <VersionSidebarToggle entityType="event" entityId={event._id} versionId={event._versionId ?? undefined} toVersionLink={eventVersionLink} />
     <EventDetails event={event} readOnly={readOnly} />
     <h2>{t('ballProgram')}</h2>
     <EventProgram program={event.program} readOnly={readOnly} />

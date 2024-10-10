@@ -297,6 +297,14 @@ export const fi = {
       },
     },
   },
+  versioning: {
+    versionHistory: 'Muokkaushistoria',
+    version: 'Versio __version__',
+    now: 'Nyt',
+    newestVersion: 'Tämänhetkinen versio',
+    next: 'Seuraava',
+    previous: 'Edellinen',
+  },
   common: {
     emptySearch: 'Tyhjennä haku',
     search: 'Hae...',

@@ -2,6 +2,7 @@ import { Fragment } from 'react'
 import { Link } from 'react-router-dom'
 
 import SideBar from 'components/SideBar'
+import { useT } from 'i18n'
 
 import type { VersionCalendar, VersionSidebarProps } from './types'
 
@@ -18,12 +19,19 @@ interface VersionChooserProps extends Omit<VersionSidebarProps, 'entityType'> {
   versions: VersionCalendar
 }
 
-export default function VersionChooser({name, entityId: id, versionId, versions}: VersionChooserProps) {
+export default function VersionChooser({name, entityId: id, versionId, versions, toVersionLink}: VersionChooserProps) {
+  const T = useT('versioning')
+  const toLink = (v: string | null) => toVersionLink(id, v)
+
   return <SideBar>
     <div className="version-chooser">
-      <h2>Muokkaushistoria: {name}</h2>
-      <Link to={`events/${id}`} className={!versionId ? 'current' : ''}>Nykyinen versio</Link>
+      <h2>{name} - {T('versionHistory')}</h2>
+      <VersionNavigation entityId={id} versions={versions} versionId={versionId} toVersionLink={toVersionLink} />
       <div className="versions">
+        <h3>{T('now')}</h3>
+        <Link to={toLink(null)} className={!versionId ? 'current' : ''}>
+          {T('newestVersion')}
+        </Link>
         {versions.map(day =>
           <Fragment key={day.date}>
             <h3>{day.date}</h3>
@@ -32,7 +40,7 @@ export default function VersionChooser({name, entityId: id, versionId, versions}
                 <li key={version._versionNumber}>
                   <VersionLink
                     version={version}
-                    linkBase={`/events/${id}/version`}
+                    toVersionLink={toLink}
                     current={version._versionId === versionId}
                   />
                 </li>
@@ -45,14 +53,42 @@ export default function VersionChooser({name, entityId: id, versionId, versions}
   </SideBar>
 }
 
+function VersionNavigation({entityId: id, versionId, versions, toVersionLink}: Omit<VersionChooserProps, 'name'>) {
+  const T = useT('versioning')
+  const allVersions = [{_versionId: null, _versionNumber: null}, ...versions.flatMap(v => v.versions)]
+  const versionIndex = versionId ? allVersions.findIndex(v => v._versionId === versionId) : 0
+  const currentVersion = allVersions[versionIndex]
+  const previousVersion = versionIndex >= 1
+    ? allVersions[versionIndex - 1] : null
+  const nextVersion = versionIndex + 1 < allVersions.length
+    ? allVersions[versionIndex + 1] : null
+
+  return <div className="navigation">
+    {previousVersion &&
+      <Link to={toVersionLink(id, previousVersion._versionId)}>{T('previous')}</Link>
+    }
+    {' '}
+    <b>
+      {currentVersion._versionNumber
+        ? T('version', { version: currentVersion._versionNumber })
+        : T('newestVersion')
+      }
+    </b>
+    {' '}
+    {nextVersion &&
+      <Link to={`events/${id}/version/${nextVersion._versionId}`}>{T('next')}</Link>
+    }
+  </div>
+}
+
 interface VersionLinkProps {
   version: Version
-  linkBase: string
+  toVersionLink: (versionId: string | null) => string
   current?: boolean
 }
 
-function VersionLink({version, linkBase, current}: VersionLinkProps) {
-  return <Link to={`${linkBase}/${version._versionId}`} className={current ? 'current' : ''}>
+function VersionLink({version, toVersionLink, current}: VersionLinkProps) {
+  return <Link to={toVersionLink(version._versionId)} className={current ? 'current' : ''}>
     {version._versionNumber}
     {' '}
     <span className="timestamp">(klo {version._updatedAt})</span>
