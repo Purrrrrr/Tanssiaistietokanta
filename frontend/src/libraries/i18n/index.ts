@@ -3,7 +3,7 @@ import { Autocomplete, Talkr, TParams, TProps, tr, useT as useBareT } from 'talk
 
 import { PrefixPath, Translator } from './types'
 
-import {useFormatDate, useFormatDateTime} from './dateTime'
+import {useFormatDate, useFormatDateTime, useFormatTime} from './dateTime'
 
 export type { PrefixPath, Translator } from './types'
 
@@ -15,6 +15,7 @@ export interface TranlationSystem<Translations> {
   TranslationContext: (props: TProps & {languages: Record<string, Translations>}) => JSX.Element
   useFormatDate: () => (d: Date) => string
   useFormatDateTime: () => (d: Date) => string
+  useFormatTime: () => (d: Date) => string
 }
 
 export function makeTranslator<Translations>(): TranlationSystem<Translations> {
@@ -26,6 +27,7 @@ export function makeTranslator<Translations>(): TranlationSystem<Translations> {
     TranslationContext: Talkr,
     useFormatDate,
     useFormatDateTime,
+    useFormatTime,
   }
 }
 

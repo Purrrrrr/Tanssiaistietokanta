@@ -39,8 +39,8 @@
     }
   }
 
-  ol {
-    column-width: 120px;
+  h3 {
+    margin-block: 0.8em;
   }
 
   ol, li {
@@ -48,6 +48,11 @@
     padding: 0;
     margin: 0;
   }
+  ol {
+    column-width: 120px;
+    margin-block: 0.8em;
+  }
+
   .timestamp {
     color: gray;
   }

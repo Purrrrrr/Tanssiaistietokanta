@@ -7,6 +7,7 @@ import { useT, useTranslation } from 'i18n'
 import type { VersionCalendar, VersionSidebarProps } from './types'
 
 import './VersionChooser.scss'
+import { useFormatDate, useFormatTime } from 'libraries/i18n/dateTime'
 
 interface Version {
   _versionId: string
@@ -20,6 +21,7 @@ interface VersionChooserProps extends Omit<VersionSidebarProps, 'entityType'> {
 }
 
 export default function VersionChooser({onClose, name, entityId: id, versionId, versions, toVersionLink}: VersionChooserProps) {
+  const formatDate = useFormatDate()
   const T = useT('versioning')
   const toLink = (v: string | null) => toVersionLink(id, v)
 
@@ -35,7 +37,7 @@ export default function VersionChooser({onClose, name, entityId: id, versionId, 
         </Link>
         {versions.map(day =>
           <Fragment key={day.date}>
-            <h3>{day.date}</h3>
+            <h3>{formatDate(new Date(day.date))}</h3>
             <ol>
               {day.versions.map(version =>
                 <li key={version._versionNumber}>
@@ -95,9 +97,10 @@ interface VersionLinkProps {
 }
 
 function VersionLink({version, toVersionLink, current}: VersionLinkProps) {
+  const formatTime = useFormatTime()
   return <Link to={toVersionLink(version._versionId)} className={current ? 'current' : ''}>
     {version._versionNumber}
     {' '}
-    <span className="timestamp">(klo {version._updatedAt})</span>
+    <span className="timestamp">({formatTime(new Date(`2000-01-01T${version._updatedAt}`))})</span>
   </Link>
 }
