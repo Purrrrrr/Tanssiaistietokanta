@@ -1,12 +1,14 @@
 import {useCallback} from 'react'
 import {Link, useNavigate} from 'react-router-dom'
 
+import { ID } from 'backend/types'
 import { useDeleteDance, usePatchDance } from 'services/dances'
 
 import {formFor, MarkdownEditor, MenuButton, patchStrategy, SelectorMenu, SyncStatus, useAutosavingState} from 'libraries/forms'
 import {Flex, H2, Icon} from 'libraries/ui'
 import {DanceDataImportButton} from 'components/DanceDataImportDialog'
 import {useGlobalLoadingAnimation} from 'components/LoadingState'
+import {VersionSidebarToggle} from 'components/versioning/VersionSidebarToggle'
 import {DeleteButton} from 'components/widgets/DeleteButton'
 import {DurationField} from 'components/widgets/DurationField'
 import {LinkMenuItem} from 'components/widgets/LinkMenuItem'
@@ -18,7 +20,7 @@ interface DanceEditorProps extends Pick<DanceEditorContainerProps, 'dance' | 'ti
   dance: DanceWithEvents
   onDelete?: () => unknown
   showLink?: boolean
-  showDelete?: boolean
+  showVersionHistory?: boolean
 }
 
 const {
@@ -29,7 +31,13 @@ const {
   useOnChangeFor,
 } = formFor<Dance>()
 
-export function DanceEditor({dance, onDelete, showLink, titleComponent} : DanceEditorProps) {
+function danceVersionLink(id: ID, versionId?: ID | null) {
+  return versionId
+    ? `/dances/${id}/version/${versionId}`
+    : `/dances/${id}`
+}
+
+export function DanceEditor({dance, onDelete, showLink, showVersionHistory, titleComponent} : DanceEditorProps) {
   const label = useT('domain.dance')
   const t = useT('components.danceEditor')
   const addLoadingAnimation = useGlobalLoadingAnimation()
@@ -44,6 +52,7 @@ export function DanceEditor({dance, onDelete, showLink, titleComponent} : DanceE
     titleComponent={titleComponent}
     toolbar={<>
       {showLink && <Link to={`/dances/${dance._id}`}><Icon icon="link"/>{t('linkToThisDance')}</Link>}
+      {showVersionHistory && <VersionSidebarToggle entityType="dance" entityId={dance._id} versionId={dance._versionId ?? undefined} toVersionLink={danceVersionLink} />}
       <DanceIsUsedIn events={dance.events} />
       <div>
         <DeleteButton onDelete={handleDelete}
@@ -96,7 +105,9 @@ export function DanceEditorContainer({dance, children, toolbar, titleComponent: 
         {dance.name}
       </Title>
       <SyncStatus style={{marginLeft: '1ch', top: '3px'}} className="flex-fill" state={state} />
-      {toolbar}
+      <Flex alignItems="center" style={{marginTop: '10px'}}>
+        {toolbar}
+      </Flex>
     </Flex>
     {children}
   </Form>

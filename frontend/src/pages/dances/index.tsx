@@ -68,7 +68,7 @@ function DanceList({dances}) {
   return <InfiniteScroll hasMore={canShowMore} loadMore={() => setLimit(limit + 5)}>
     {dances.slice(0, limit).map((dance : DanceWithEvents) =>
       <Card key={dance._id}>
-        <DanceEditor dance={dance} showLink />
+        <DanceEditor dance={dance} showLink showVersionHistory />
       </Card>)}
   </InfiniteScroll>
 }

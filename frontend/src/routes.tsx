@@ -36,13 +36,14 @@ export default function MainRoutes() {
 }
 
 function DanceRoutes() {
-  return <>
+  return <VersionableContentContainer>
     <Breadcrumb text={useTranslation('breadcrumbs.dances')} />
     <Routes>
       <Route index element={<Dances/>} />
+      <Route path=":danceId/version/:danceVersionId" element={<Dance/>} />
       <Route path=":danceId" element={<Dance/>} />
     </Routes>
-  </>
+  </VersionableContentContainer>
 }
 
 function EventRoutes() {

@@ -18,7 +18,7 @@ export type WritableDanceProperty = Exclude<keyof Dance, '_id' | '__typename' | 
 export const useDances = entityListQueryHook('dances', graphql(`
 query getDances {
   dances {
-    _id, name, description, remarks, duration, prelude, formation, source, category, instructions, slideStyleId
+    _id, _versionId, name, description, remarks, duration, prelude, formation, source, category, instructions, slideStyleId
     events {
       _id
       _versionId
@@ -46,8 +46,8 @@ query getDanceVersions($id: ID!) {
 }`))
 
 export const useDance = backendQueryHook(graphql(`
-query getDance($id: ID!) {
-  dance(id: $id) {
+query getDance($id: ID!, $versionId: ID) {
+  dance(id: $id, versionId: $versionId) {
     _id, name, description, remarks, duration, prelude, formation, source, category, instructions, slideStyleId
     events {
       _id

@@ -15,8 +15,8 @@ interface DancePageProps {
 
 export default function DancePage({parentType = 'dances'} : DancePageProps) {
   const navigate = useNavigate()
-  const {danceId} = useParams()
-  const result = useDance({id: danceId ?? ''})
+  const {danceId, danceVersionId} = useParams()
+  const result = useDance({id: danceId ?? '', versionId: danceVersionId})
   const t = useT('pages.dances.dancePage')
 
   if (!result.data?.dance) return <LoadingState {...result} />
@@ -27,6 +27,6 @@ export default function DancePage({parentType = 'dances'} : DancePageProps) {
     <Breadcrumb text={dance.name} />
     <PageTitle noRender>{dance.name}</PageTitle>
     <BackLink>{t(parentType === 'dances' ? 'backToDanceList' : 'backToEventProgram')}</BackLink>
-    <DanceEditor titleComponent={'h1'} dance={dance} onDelete={() => { navigate('..')}}  />
+    <DanceEditor titleComponent={'h1'} dance={dance} showVersionHistory onDelete={() => { navigate('..')}}  />
   </>
 }
