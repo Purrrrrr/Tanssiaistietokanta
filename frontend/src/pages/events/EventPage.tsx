@@ -8,6 +8,7 @@ import {DateRangeField, formFor, patchStrategy, SyncStatus, useAutosavingState} 
 import {Button, Card, Collapse} from 'libraries/ui'
 import {useGlobalLoadingAnimation} from 'components/LoadingState'
 import {PageTitle} from 'components/PageTitle'
+import {VersionedPageTitle} from 'components/versioning/VersionedPageTitle'
 import {VersionSidebarToggle} from 'components/versioning/VersionSidebarToggle'
 import {DeleteButton} from 'components/widgets/DeleteButton'
 import {NavigateButton} from 'components/widgets/NavigateButton'
@@ -29,14 +30,12 @@ const eventVersionLink = (id: string, versionId?: null | string) => versionId
 
 export default function EventPage({event}: {event: Event}) {
   const t = useT('pages.events.eventPage')
-  const tCommon = useT('common')
   const { _versionId, _versionNumber } = event
   const readOnly = _versionId != undefined
-  const versionString = _versionId ? ` (${tCommon('version', { version: _versionNumber })})` : ''
   return <>
-    <PageTitle>
-      {event.name + versionString}
-    </PageTitle>
+    <VersionedPageTitle showVersion={readOnly} versionNumber={_versionNumber}>
+      {event.name}
+    </VersionedPageTitle>
     <VersionSidebarToggle entityType="event" entityId={event._id} versionId={event._versionId ?? undefined} toVersionLink={eventVersionLink} />
     <EventDetails event={event} readOnly={readOnly} />
     <h2>{t('ballProgram')}</h2>

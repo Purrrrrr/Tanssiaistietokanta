@@ -27,7 +27,7 @@ export function useEventProgramEditorForm(eventId: string, eventVersionId: strin
   const [patchEventProgram] = usePatchEventProgram()
   const saveProgram = async (program) => {
     if (readOnly) return
-    patchEventProgram({id: eventId, program})
+    return patchEventProgram({id: eventId, program})
   }
 
   const data = useAutosavingState<EventProgramSettings, JSONPatch>(eventProgram, saveProgram, patch)

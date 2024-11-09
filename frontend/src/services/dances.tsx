@@ -13,12 +13,12 @@ setupServiceUpdateFragment(
   }`
 )
 
-export type WritableDanceProperty = Exclude<keyof Dance, '_id' | '__typename' | 'teachedIn'>
+export type WritableDanceProperty = Exclude<keyof Dance, '_id' | '_versionId' | '_versionNumber' | '__typename' | 'teachedIn'>
 
 export const useDances = entityListQueryHook('dances', graphql(`
 query getDances {
   dances {
-    _id, _versionId, name, description, remarks, duration, prelude, formation, source, category, instructions, slideStyleId
+    _id, _versionId, _versionNumber, name, description, remarks, duration, prelude, formation, source, category, instructions, slideStyleId
     events {
       _id
       _versionId
@@ -30,7 +30,7 @@ query getDances {
 export const useDanceVersions = backendQueryHook(graphql(`
 query getDanceVersions($id: ID!) {
   dance(id: $id) {
-    _id, _versionId,
+    _id, _versionId, _versionNumber,
     name
     versionHistory {
       calendar {
@@ -48,7 +48,7 @@ query getDanceVersions($id: ID!) {
 export const useDance = backendQueryHook(graphql(`
 query getDance($id: ID!, $versionId: ID) {
   dance(id: $id, versionId: $versionId) {
-    _id, name, description, remarks, duration, prelude, formation, source, category, instructions, slideStyleId
+    _id, _versionId, _versionNumber, name, description, remarks, duration, prelude, formation, source, category, instructions, slideStyleId
     events {
       _id
       _versionId
@@ -78,7 +78,7 @@ function useCallbackOnDanceChanges(danceId, callback) {
 export const useCreateDance = entityCreateHook('dances', graphql(`
 mutation createDance($dance: DanceInput!) {
   createDance(dance: $dance) {
-    _id, name, description, remarks, duration, prelude, formation, source, category, instructions, slideStyleId
+    _id, _versionId, _versionNumber, name, description, remarks, duration, prelude, formation, source, category, instructions, slideStyleId
     events {
       _id
       _versionId
@@ -90,7 +90,7 @@ mutation createDance($dance: DanceInput!) {
 export const usePatchDance = entityUpdateHook('dances', graphql(`
 mutation patchDance($id: ID!, $dance: DancePatchInput!) {
   patchDance(id: $id, dance: $dance) {
-    _id, name, description, remarks, duration, prelude, formation, source, category, instructions, slideStyleId
+    _id, _versionId, _versionNumber, name, description, remarks, duration, prelude, formation, source, category, instructions, slideStyleId
     events {
       _id
       _versionId
@@ -102,7 +102,7 @@ mutation patchDance($id: ID!, $dance: DancePatchInput!) {
 export const useDeleteDance = entityDeleteHook('dances', graphql(`
 mutation deleteDance($id: ID!) {
   deleteDance(id: $id) {
-    _id, name, description, remarks, duration, prelude, formation, source, category, instructions, slideStyleId
+    _id, _versionId, _versionNumber, name, description, remarks, duration, prelude, formation, source, category, instructions, slideStyleId
     events {
       _id
       _versionId

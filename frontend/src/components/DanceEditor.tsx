@@ -8,6 +8,7 @@ import {formFor, MarkdownEditor, MenuButton, patchStrategy, SelectorMenu, SyncSt
 import {Flex, H2, Icon} from 'libraries/ui'
 import {DanceDataImportButton} from 'components/DanceDataImportDialog'
 import {useGlobalLoadingAnimation} from 'components/LoadingState'
+import { useVersionedName } from 'components/versioning/VersionedPageTitle'
 import {VersionSidebarToggle} from 'components/versioning/VersionSidebarToggle'
 import {DeleteButton} from 'components/widgets/DeleteButton'
 import {DurationField} from 'components/widgets/DurationField'
@@ -41,6 +42,7 @@ export function DanceEditor({dance, onDelete, showLink, showVersionHistory, titl
   const label = useT('domain.dance')
   const t = useT('components.danceEditor')
   const addLoadingAnimation = useGlobalLoadingAnimation()
+  const readOnly = dance._versionId != null
   const [deleteDance] = useDeleteDance()
   const handleDelete = () => {
     addLoadingAnimation(deleteDance({id: dance._id}))
@@ -60,7 +62,7 @@ export function DanceEditor({dance, onDelete, showLink, showVersionHistory, titl
           text={t('deleteDance')}
           confirmText={t('deleteConfirmation')}
         />
-        <DanceDataImporter />
+        {readOnly || <DanceDataImporter />}
       </div>
     </>}
   >
@@ -90,19 +92,21 @@ interface DanceEditorContainerProps {
 }
 
 export function DanceEditorContainer({dance, children, toolbar, titleComponent: Title = H2} : DanceEditorContainerProps) {
+  const readOnly = dance._versionId != null
   const [modifyDance] = usePatchDance()
   const patchDance = useCallback(
-    (patches : Partial<DanceWithEvents>) =>
-      modifyDance({id: dance._id, dance: patches})
-    ,
-    [modifyDance, dance._id]
+    async (patches : Partial<DanceWithEvents>) => {
+      if (readOnly) return
+      return modifyDance({id: dance._id, dance: patches})
+    },
+    [modifyDance, dance._id, readOnly]
   )
 
   const {formProps, state} = useAutosavingState<Dance, Partial<Dance>>(dance, patchDance, patchStrategy.partial)
-  return <Form {...formProps}>
+  return <Form {...formProps} readOnly={readOnly}>
     <Flex wrap spaced alignItems="center" justify="end">
       <Title>
-        {dance.name}
+        {useVersionedName(dance.name, dance._versionId ? dance._versionNumber : null)}
       </Title>
       <SyncStatus style={{marginLeft: '1ch', top: '3px'}} className="flex-fill" state={state} />
       <Flex alignItems="center" style={{marginTop: '10px'}}>
