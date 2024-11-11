@@ -139,6 +139,7 @@ function groupIntoVersionGroups(items: Item[]): VersionGroup[] {
       }
     }
   }
+  groups.push(currentGroup)
 
   return groups
 }
