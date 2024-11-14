@@ -1,19 +1,17 @@
-import React, {useState} from 'react'
-import * as L from 'partial.lenses'
+import React from 'react'
 
-import {FieldComponentProps, formFor, MenuButton, SelectorMenu, toArrayPath, TypedStringPath} from 'libraries/forms'
+import {FieldComponentProps, formFor, TypedStringPath} from 'libraries/forms'
 import {DanceChooser} from 'components/widgets/DanceChooser'
 import {SlideStyleSelector} from 'components/widgets/SlideStyleSelector'
 import {useT} from 'i18n'
 
 import {Dance} from 'types'
 
-import {DanceProgram, EventProgramItem, EventProgramSettings, ProgramItemPath, RequestedDance} from '../types'
+import {DanceProgram, EventProgramItem, EventProgramSettings, RequestedDance} from '../types'
 
 const {
   Field,
   useValueAt,
-  useOnChangeFor,
 } = formFor<EventProgramSettings>()
 
 export const DanceProgramChooser = React.memo(function DanceProgramChooser({value, onChange, ...props} : FieldComponentProps<EventProgramItem, HTMLElement>) {
@@ -32,70 +30,6 @@ export const DanceProgramChooser = React.memo(function DanceProgramChooser({valu
     {...props}
   />
 })
-
-export function MoveItemToSectionSelector({itemPath} : { itemPath: ProgramItemPath}) {
-  const t = useT('components.eventProgramEditor')
-  const [open, setOpen] = useState(false)
-  return <MenuButton
-    menu={
-      <MoveItemToSectionMenu
-        itemPath={itemPath}
-        onSelected={() => setOpen(false)}
-      />
-    }
-    text={t('fields.moveItemToSection')}
-    open={open}
-    onSetOpen={setOpen}
-  />
-}
-
-interface SectionSelection {
-  name: string
-  index: number
-  isIntroductionsSection?: boolean
-}
-function MoveItemToSectionMenu(
-  {itemPath, onSelected} : { itemPath: ProgramItemPath, onSelected: () => void }
-) {
-  const t = useT('components.eventProgramEditor')
-  const [currentSectionType, maybeDanceSetIndex] = toArrayPath<EventProgramSettings>(itemPath)
-  const row = useValueAt(itemPath)
-  const onChangeProgram = useOnChangeFor('')
-
-  const canMoveToIntroductions = currentSectionType === 'danceSets' && row?.item?.__typename === 'EventProgram'
-  const introSection : SectionSelection = {name: t('titles.introductoryInformation'), isIntroductionsSection: true, index: 0}
-  const sections = useValueAt('danceSets')
-    .map(({title}, index) => ({name: title, index}))
-    .filter(({index}) => currentSectionType !== 'danceSets' || index !== maybeDanceSetIndex)
-  const commonT = useT('common')
-
-  //If something is deleted useValueAt may return undefined
-  if (row === undefined) return null
-
-  return <SelectorMenu<SectionSelection>
-    items={canMoveToIntroductions ? [introSection, ...sections] : sections}
-    getItemText={item => item?.name ?? ''}
-    filterable
-    emptySearchText={commonT('emptySearch')}
-    searchPlaceholder={commonT('search')}
-    itemPredicate={(search, item) => item.name.toLowerCase().includes(search.toLowerCase())}
-    onSelect={(section) => {
-      onSelected()
-      onChangeProgram((program: EventProgramSettings) => {
-        const removeItem = L.set(toArrayPath<EventProgramSettings>(itemPath), undefined)
-        const addItem = L.set(
-          [
-            section.isIntroductionsSection
-              ? ['introductions', 'program', L.appendTo]
-              : ['danceSets', section.index, 'program', L.appendTo]
-          ],
-          row,
-        )
-        return addItem(removeItem(program)) as EventProgramSettings
-      })
-    }}
-  />
-}
 
 export function InheritedSlideStyleSelector(
   {path, text, showLabel}:
