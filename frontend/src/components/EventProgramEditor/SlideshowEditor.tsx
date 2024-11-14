@@ -23,8 +23,8 @@ export function SlideshowEditor({ value }: {value: EventProgramSettings}) {
       <Field label="" inline path="slideStyleId" component={SlideStyleSelector} componentProps={{text: t('fields.eventDefaultStyle')}} />
     </div>
     {slides.map(slide =>
-      <Card>
-        <Flex wrap>
+      <Card key={slide.id}>
+        <Flex wrap spaced>
           <div className="flex-fill">
             <EventSlideEditor {...slide} eventProgram={value} />
           </div>

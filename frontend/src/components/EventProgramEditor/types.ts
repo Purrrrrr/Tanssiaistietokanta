@@ -1,4 +1,8 @@
+import {Translator} from 'i18n'
+
 import {Dance, Event} from 'types'
+
+export type T = Translator<'components.eventProgramEditor'>
 
 export type ProgramSectionPath = 'introductions' | DanceSetPath
 export type ProgramItemPath = `${ProgramSectionPath}.program.${number}`

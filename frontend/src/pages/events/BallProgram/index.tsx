@@ -4,13 +4,16 @@ import {useSwipeable} from 'react-swipeable'
 import classNames from 'classnames'
 
 import {Button, Markdown} from 'libraries/ui'
+import { EventSlide } from 'components/EventSlide/EventSlide'
+import { EventSlideProps } from 'components/EventSlide/types'
+import { useEventSlides } from 'components/EventSlide/useEventSlides'
 import {LoadingState} from 'components/LoadingState'
 import {Slide, SlideContainer, SlideNavigationList} from 'components/Slide'
 import {useOnKeydown} from 'utils/useOnKeydown'
 
 import {ProgramTitleSelector} from './ProgramTitleSelector'
 import {SlideEditor} from './SlideEditor'
-import {SlideContent, startSlideId, useBallProgramSlides} from './useBallProgram'
+import {Event, SlideContent, startSlideId, useBallProgramSlides} from './useBallProgram'
 
 import './BallProgram.scss'
 
@@ -19,13 +22,21 @@ export default function BallProgram({eventId, eventVersionId}) {
   const [isEditing, setEditing] = useState(false)
   const {'*': currentSlideId = startSlideId} = useParams()
 
+  const slides2 = useEventSlides(event?.program)
   if (!slides || !event) return <LoadingState {...loadingState} refetch={refetch} />
 
   const slideIndex = (i => i >= 0 ? i : 0)(slides.findIndex(s => s.id === currentSlideId))
-  const slide = slides[slideIndex]
+  const slide = slides2[slideIndex]
 
   return <div className={classNames('ball-program-container', {'is-editing': isEditing})}>
-    <BallProgramView slides={slides} onRefetch={refetch} isEditing={isEditing} onToggleEditing={() => setEditing(e => !e)}/>
+    <BallProgramView
+      slides={slides}
+      slides2={slides2}
+      event={event}
+      onRefetch={refetch}
+      isEditing={isEditing}
+      onToggleEditing={() => setEditing(e => !e)}
+    />
     <div className="editor">
       <Button className="close" minimal icon="cross" onClick={() => setEditing(false)}/>
       <SlideEditor slide={slide} eventId={eventId} eventVersionId={eventVersionId} eventProgram={event?.program} />
@@ -34,8 +45,10 @@ export default function BallProgram({eventId, eventVersionId}) {
 }
 
 function BallProgramView(
-  {slides, onRefetch, isEditing, onToggleEditing}: {
+  {slides: slides1, slides2, event, onRefetch, isEditing, onToggleEditing}: {
     slides: SlideContent[]
+    slides2: EventSlideProps[]
+    event: Event
     onRefetch: () => unknown
     onToggleEditing: () => unknown
     isEditing: boolean
@@ -43,13 +56,14 @@ function BallProgramView(
 ) {
   const {'*': currentSlideId = startSlideId} = useParams()
   const changeSlideId = useNavigate()
-  const slideIndex = (i => i >= 0 ? i : 0)(slides.findIndex(s => s.id === currentSlideId))
+  const slideIndex = (i => i >= 0 ? i : 0)(slides2.findIndex(s => s.id === currentSlideId))
+  const slide = slides2[slideIndex]
 
   const changeSlide = useCallback((indexDelta: number) => {
     const index = slideIndex + indexDelta
-    const nextSlide = slides[Math.min(Math.max(index, 0), slides.length-1)]
+    const nextSlide = slides2[Math.min(Math.max(index, 0), slides2.length-1)]
     changeSlideId(nextSlide.id)
-  }, [slides, slideIndex, changeSlideId])
+  }, [slides2, slideIndex, changeSlideId])
 
   useOnKeydown({
     ArrowLeft: () => changeSlide(-1),
@@ -61,31 +75,15 @@ function BallProgramView(
   const handlers = useSwipeable({
     onSwipedLeft: () => changeSlide(1),
     onSwipedRight: () => changeSlide(-1),
-    onSwipedUp: () => changeSlideId(parent?.id ?? slide.id),
+    onSwipedUp: () => changeSlideId(slide.parentId ?? slide.id),
   })
-
-  const {parent, slideContent, ...slide} = slides[slideIndex]
 
   return <SlideContainer fullscreen={!isEditing} {...handlers}>
     <div className="controls">
-      <ProgramTitleSelector value={parent?.id ?? slide.id} onChange={changeSlideId}
-        program={slides} />
+      <ProgramTitleSelector value={slide.parentId ?? slide.id} onChange={changeSlideId}
+        program={slides1} />
       <Button minimal icon="edit" onClick={onToggleEditing}/>
     </div>
-    <Slide {...slide}>
-      <SlideContentView slideContent={slideContent} />
-    </Slide>
+    <EventSlide {...slide} eventProgram={event.program}/>
   </SlideContainer>
-}
-
-function SlideContentView({slideContent}: Pick<SlideContent, 'slideContent'>) {
-  switch (slideContent?.type) {
-    case 'navigation':
-      return <SlideNavigationList items={slideContent.value} />
-    case 'text':
-      return <Markdown className="slide-program-description-content">{slideContent.value}</Markdown>
-    case 'dance':
-      return <Markdown className="slide-program-description-content">{slideContent.value.description ?? ''}</Markdown>
-  }
-  return null
 }

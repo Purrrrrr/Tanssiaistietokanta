@@ -4,23 +4,27 @@ export type EventSlideProps = TitleSlideProps | IntroductionSlideProps| DanceSet
 export interface TitleSlideProps {
   id: ''
   type: 'title'
+  parentId?: undefined
 }
 
 export interface DanceSetSlideProps {
   id: ID
   type: 'danceSet'
+  parentId?: undefined
   danceSetIndex: number
 }
 
 export interface IntroductionSlideProps {
   id: ID
   type: 'introduction'
+  parentId: ''
   itemIndex: number
 }
 
 export interface DanceProgramItemSlideProps {
   id: ID
   type: 'programItem'
+  parentId: ID
   danceSetIndex: number
   itemIndex: number
 }
@@ -28,6 +32,7 @@ export interface DanceProgramItemSlideProps {
 export interface IntervalMusicSlideProps {
   id: ID
   type: 'intervalMusic'
+  parentId: ID
   danceSetIndex: number
 }
 
@@ -74,7 +79,7 @@ export interface EventProgramItem extends NameAndDescription {
 
 export interface Workshop {
   workshop: { name: string }
-  instances?: {abbreviation: string}[]
+  instances?: {abbreviation: string}[] | null
 }
 
 export interface RequestedDance {

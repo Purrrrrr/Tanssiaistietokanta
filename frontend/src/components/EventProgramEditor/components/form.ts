@@ -4,7 +4,7 @@ import {usePatchEventProgram} from 'services/events'
 
 import {formFor, useAutosavingState, UseAutosavingStateReturn} from 'libraries/forms'
 
-import {EventProgramSettings} from '../types'
+import {EventProgramRow, EventProgramSettings, T} from '../types'
 import {JSONPatch, patch} from './patchStrategy'
 
 export const {
@@ -35,4 +35,9 @@ export function useEventProgramEditorForm(eventId: string, eventVersionId: strin
   return readOnly
     ? set(['formProps', 'readOnly'], readOnly, data)
     : data
+}
+
+export function programItemToString(item: EventProgramRow, t: T) {
+  if (item.item.__typename === 'RequestedDance') return t('programTypes.RequestedDance')
+  return item.item.name
 }

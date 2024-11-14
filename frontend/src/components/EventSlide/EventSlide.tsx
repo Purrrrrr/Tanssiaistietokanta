@@ -43,7 +43,8 @@ function DanceSetSlide({ eventProgram, danceSetIndex }: WithEventProgram<DanceSe
       <SlideNavigationList
         currentItem={danceSet._id}
         items={danceSetNavigation(danceSet)?.items ?? []}
-      />}
+      />
+    }
     slideStyleId={danceSet.titleSlideStyleId ?? eventProgram.slideStyleId}
   />
 }

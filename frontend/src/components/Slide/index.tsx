@@ -1,3 +1,4 @@
+import React from 'react'
 import {Link} from 'react-router-dom'
 import classnames from 'classnames'
 
@@ -32,7 +33,7 @@ export interface SlideLink {
   isPlaceholder?: boolean
 }
 
-export function Slide({id, title, type, children, footer, next, navigation, slideStyleId}: SlideProps) {
+export const Slide = React.memo(function Slide({id, title, type, children, footer, next, navigation, slideStyleId}: SlideProps) {
   const className = classnames(
     'slide',
     `slide-style-${slideStyleId ?? 'default'}`,
@@ -53,7 +54,7 @@ export function Slide({id, title, type, children, footer, next, navigation, slid
     {next && <NextSlide next={next} />}
     {navigation && <SlideSidebar currentItem={id} navigation={navigation} />}
   </section>
-}
+})
 
 function NextSlide({next}: {next: SlideLink}) {
   const t = useT('components.slide')

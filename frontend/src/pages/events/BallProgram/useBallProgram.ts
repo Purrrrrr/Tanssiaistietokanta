@@ -7,7 +7,7 @@ import {Translator, useT} from 'i18n'
 import {useBallProgramQuery} from './useBallProgramQuery'
 
 type BallProgramData = ReturnType<typeof useBallProgramQuery>
-type Event = NonNullable<NonNullable<BallProgramData['data']>['event']>
+export type Event = NonNullable<NonNullable<BallProgramData['data']>['event']>
 type ProgramSettings = NonNullable<Event['program']>
 type DanceSet = ProgramSettings['danceSets'][number]
 type ProgramRow = (ProgramSettings['introductions'] | DanceSet)['program'][number]

@@ -1,11 +1,13 @@
 import { EventProgram, EventSlideProps } from './types'
 
-export function useEventSlides(program: EventProgram): EventSlideProps[] {
+export function useEventSlides(program?: EventProgram): EventSlideProps[] {
+  if (!program) return []
   return [
     { id: '', type: 'title' },
     ...program.introductions.program.map((item, idx) => ({
       id: item._id,
       type: 'introduction',
+      parentId: '',
       itemIndex: idx
     } as const)),
     ...program.danceSets.flatMap((danceSet, danceSetIndex) => [
@@ -17,6 +19,7 @@ export function useEventSlides(program: EventProgram): EventSlideProps[] {
       ...danceSet.program.map((item, idx) => ({
         id: item._id,
         type: 'programItem',
+        parentId: danceSet._id,
         danceSetIndex,
         itemIndex: idx,
       } as const)),
@@ -26,6 +29,7 @@ export function useEventSlides(program: EventProgram): EventSlideProps[] {
             {
               id: intervalMusicId(danceSet._id),
               type: 'intervalMusic',
+              parentId: danceSet._id,
               danceSetIndex,
             } as const
           ]

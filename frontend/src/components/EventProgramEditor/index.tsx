@@ -10,10 +10,10 @@ import {BackLink} from 'components/widgets/BackLink'
 import {Duration} from 'components/widgets/Duration'
 import {DurationField} from 'components/widgets/DurationField'
 // import {NavigateButton} from 'components/widgets/NavigateButton'
-import {Translator, useT, useTranslation} from 'i18n'
+import {useT, useTranslation} from 'i18n'
 import {guid} from 'utils/guid'
 
-import {DanceProgramPath, DanceSet, DanceSetPath, EventProgramRow, EventProgramSettings, IntervalMusicPath, ProgramItemPath, ProgramSectionPath} from './types'
+import {DanceProgramPath, DanceSet, DanceSetPath, EventProgramRow, EventProgramSettings, IntervalMusicPath, ProgramItemPath, ProgramSectionPath, T} from './types'
 
 import {
   AddDanceSetButton,
@@ -25,6 +25,7 @@ import {
   IntervalMusicDefaultTextsSwitch,
   IntervalMusicSwitch,
   ListField,
+  programItemToString,
   ProgramTypeIcon,
   RemoveItemButton,
   Switch,
@@ -39,7 +40,7 @@ import { SlideshowEditor} from './SlideshowEditor'
 import './EventProgramEditor.sass'
 import '../Slide/slideStyles.scss'
 
-type T = Translator<'components.eventProgramEditor'>
+export { programItemToString }
 
 interface EventProgramEditorProps {
   eventId: string
@@ -220,11 +221,6 @@ function renderDanceSetValue(item: DanceSet, t: T) {
   return `${item.title} (${program})`
 }
 
-export function programItemToString(item: EventProgramRow, t: T) {
-  if (item.item.__typename === 'RequestedDance') return t('programTypes.RequestedDance')
-  return item.item.name
-}
-
 function ProgramDetailsEditor({path}: {path: ProgramItemPath}) {
   const __typename = useValueAt(`${path}.item.__typename`)
   //If something is deleted useValueAt may return undefined
@@ -304,9 +300,7 @@ function IntervalMusicEditor({danceSetPath}: {danceSetPath: DanceSetPath}) {
 
   return <tr className="intervalMusicDuration">
     <td><ProgramTypeIcon type="IntervalMusic" /></td>
-    <td>
-      <IntervalMusicDetailsEditor path={intervalMusicPath} />
-    </td>
+    <td></td>
     <td>
       <Field label={t('fields.intervalMusicDuration')} inline labelStyle="hidden" path={durationPath} component={DurationField} />
     </td>
@@ -316,25 +310,7 @@ function IntervalMusicEditor({danceSetPath}: {danceSetPath: DanceSetPath}) {
   </tr>
 }
 
-function IntervalMusicDetailsEditor({path}: {path: IntervalMusicPath}) {
-  const t = useT('components.eventProgramEditor')
-  const [open, setOpen] = useState(false)
-  return <Flex className="eventProgramItemEditor">
-    <div>{t('programTypes.IntervalMusic')}</div>
-    <MenuButton
-      menu={
-        <div className="eventProgramItemPopover">
-          <IntervalMusicDescriptionEditor path={path} />
-        </div>
-      }
-      text={t('buttons.editIntervalMusic')}
-      buttonProps={{rightIcon: 'caret-down'}}
-      open={open}
-      onSetOpen={setOpen}
-    />
-  </Flex>
-}
-
+/* TODO: remove at some point */
 export function IntervalMusicDescriptionEditor({path, noPreview}: {path: IntervalMusicPath, noPreview?: boolean}) {
   const t = useT('components.eventProgramEditor')
   const intervalMusic = useValueAt(path)
