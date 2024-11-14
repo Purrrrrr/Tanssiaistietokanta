@@ -36,17 +36,30 @@ export function EventSlideEditor({syncStatus, ...props}: WithEventProgram<EventS
         {' '}
         {syncStatus && <SyncStatus state={syncStatus}/>}
       </H2>
-      {/* TODO: parent */}
-      {/* slide.parent &&
-        <p><Link to={slide.parent.id}><Icon icon="link"/>{' '}{slide.parent.title}</Link></p>
-      */}
+      <ParentLink {...props} />
       <InheritedSlideStyleSelector
         showLabel
         path={slideStylePath} text={useTranslation('components.eventProgramEditor.fields.style')} />
     </SectionCard>
     <EventSlideContentEditor {...props} />
   </>
+}
 
+function ParentLink(props: WithEventProgram<EventSlideProps>) {
+  let title : string
+  switch(props.type) {
+    case 'title':
+    case 'danceSet':
+      return null
+    case 'introduction':
+      title = props.eventProgram.introductions.title
+      break
+    case 'intervalMusic':
+    case 'programItem': {
+      title = props.eventProgram.danceSets[props.danceSetIndex].title
+    }
+  }
+  return <p><Link to={props.parentId}><Icon icon="link"/>{' '}{title}</Link></p>
 }
 
 function getSlideStylePath(props: EventSlideProps) {
