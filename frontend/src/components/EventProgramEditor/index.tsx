@@ -1,11 +1,7 @@
-import React, {useCallback, useMemo, useRef, useState} from 'react'
+import React, {useCallback, useMemo, useRef} from 'react'
 
-import { useDance } from 'services/dances'
-
-import {ActionButton as Button, ClickToEdit, DragHandle, ListEditorContext, MarkdownEditor, MenuButton, SyncStatus} from 'libraries/forms'
+import {ActionButton as Button, ClickToEdit, DragHandle, ListEditorContext, SyncStatus} from 'libraries/forms'
 import {Card, CssClass, Flex, HTMLTable, Tab, Tabs} from 'libraries/ui'
-import {DanceEditor} from 'components/DanceEditor'
-import {LoadingState} from 'components/LoadingState'
 import {BackLink} from 'components/widgets/BackLink'
 import {Duration} from 'components/widgets/Duration'
 import {DurationField} from 'components/widgets/DurationField'
@@ -13,7 +9,7 @@ import {DurationField} from 'components/widgets/DurationField'
 import {useT, useTranslation} from 'i18n'
 import {guid} from 'utils/guid'
 
-import {DanceProgramPath, DanceSet, DanceSetPath, EventProgramRow, EventProgramSettings, IntervalMusicPath, ProgramItemPath, ProgramSectionPath, T} from './types'
+import {DanceProgramPath, DanceSet, DanceSetPath, EventProgramRow, EventProgramSettings, ProgramItemPath, ProgramSectionPath, T} from './types'
 
 import {
   AddDanceSetButton,
@@ -22,13 +18,11 @@ import {
   Field,
   Form,
   Input,
-  IntervalMusicDefaultTextsSwitch,
   IntervalMusicSwitch,
   ListField,
   programItemToString,
   ProgramTypeIcon,
   RemoveItemButton,
-  Switch,
   useAppendToList,
   useCreateNewEventProgramItem,
   useEventProgramEditorForm,
@@ -237,9 +231,6 @@ function ProgramDetailsEditor({path}: {path: ProgramItemPath}) {
 
 function DanceItemEditor({path}: {path: DanceProgramPath}) {
   const t = useT('components.eventProgramEditor')
-  const id = useValueAt(`${path}.item._id`)
-  const setItem = useOnChangeFor(`${path}.item`)
-  const [open, setOpen] = useState(false)
   return <Flex className="eventProgramItemEditor">
     <Field label={t('dance')} labelStyle="hidden" path={`${path as DanceProgramPath}.item`} component={DanceProgramChooser} />
     {/* id &&
@@ -248,47 +239,13 @@ function DanceItemEditor({path}: {path: DanceProgramPath}) {
         text={<Icon icon="edit" title={t('buttons.editDance')} />}
       />
     */}
-    {id &&
-      <MenuButton
-        menu={
-          <div className="danceEditorPopover">
-            <DanceLoadingEditor danceId={id} onDeleteDance={() => {setItem({__typename: 'RequestedDance'}); setOpen(false)}} />
-          </div>
-        }
-        text={t('buttons.editDance')}
-        buttonProps={{rightIcon: 'caret-down'}}
-        open={open}
-        onSetOpen={setOpen}
-      />
-    }
   </Flex>
-}
-
-function DanceLoadingEditor({danceId, onDeleteDance}: {danceId: string, onDeleteDance: () => unknown}) {
-  const result = useDance({id: danceId})
-  if (!result.data?.dance) return <LoadingState {...result} />
-
-  const {dance} = result.data
-  return <DanceEditor dance={dance} onDelete={onDeleteDance} showLink />
 }
 
 function EventProgramItemEditor({path}: {path: ProgramItemPath}) {
   const t = useT('components.eventProgramEditor')
-  const [open, setOpen] = useState(false)
   return <Flex className="eventProgramItemEditor">
     <Input label={t('fields.eventProgram.name')} labelStyle="hidden" path={`${path}.item.name`} required />
-    <MenuButton
-      menu={
-        <div className="eventProgramItemPopover">
-          <Field label={t('fields.eventProgram.description')} path={`${path}.item.description`} component={MarkdownEditor} />
-          <Switch label={t('fields.eventProgram.showInLists')} path={`${path}.item.showInLists`} inline />
-        </div>
-      }
-      text={t('buttons.editProgram')}
-      buttonProps={{rightIcon: 'caret-down'}}
-      open={open}
-      onSetOpen={setOpen}
-    />
   </Flex>
 }
 
@@ -300,7 +257,7 @@ function IntervalMusicEditor({danceSetPath}: {danceSetPath: DanceSetPath}) {
 
   return <tr className="intervalMusicDuration">
     <td><ProgramTypeIcon type="IntervalMusic" /></td>
-    <td></td>
+    <td>{t('programTypes.IntervalMusic')}</td>
     <td>
       <Field label={t('fields.intervalMusicDuration')} inline labelStyle="hidden" path={durationPath} component={DurationField} />
     </td>
@@ -308,28 +265,6 @@ function IntervalMusicEditor({danceSetPath}: {danceSetPath: DanceSetPath}) {
       <Button title={t('buttons.remove')} intent="danger" icon="cross" onClick={() => onSetIntervalMusic(null)} className="delete" />
     </td>
   </tr>
-}
-
-/* TODO: remove at some point */
-export function IntervalMusicDescriptionEditor({path, noPreview}: {path: IntervalMusicPath, noPreview?: boolean}) {
-  const t = useT('components.eventProgramEditor')
-  const intervalMusic = useValueAt(path)
-  const hasCustomTexts = typeof intervalMusic?.name === 'string'
-  return <>
-    <IntervalMusicDefaultTextsSwitch label={t('fields.intervalMusic.useDefaultTexts')} path={path} />
-    {hasCustomTexts
-      ? <>
-        <h2>{t('titles.customIntervalMusicTexts')}</h2>
-        <Input label={t('fields.intervalMusic.name')} path={`${path}.name`} required />
-        <Field label={t('fields.intervalMusic.description')} path={`${path}.description`} component={MarkdownEditor} componentProps={{noPreview}} />
-      </>
-      : <>
-        <h2>{t('titles.defaultIntervalMusicTexts')}</h2>
-        <Input label={t('fields.intervalMusic.name')} path='defaultIntervalMusic.name' componentProps={{placeholder:t('programTypes.IntervalMusic')}} />
-        <Field label={t('fields.intervalMusic.description')} path="defaultIntervalMusic.description" component={MarkdownEditor} componentProps={{noPreview}} />
-      </>
-    }
-  </>
 }
 
 function DanceSetDuration({ program, intervalMusicDuration}: { program: EventProgramRow[], intervalMusicDuration: number}) {

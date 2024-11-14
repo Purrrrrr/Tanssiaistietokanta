@@ -64,8 +64,9 @@ $borderColor: rgba(16, 22, 26, 0.15)
           div
             display: inline-block
       tr.intervalMusicDuration
-        .eventProgramItemEditor > :first-child
-          padding: 6px
+        td:nth-child(2)
+          line-height: 30px
+          padding-left: 10px
         td:nth-child(3)
           padding: 0
 
@@ -74,14 +75,6 @@ $borderColor: rgba(16, 22, 26, 0.15)
 
   .addDanceSetButtons
     margin: 1em 0
-
-.danceEditorPopover
-  width: min(750px, 80vw)
-  padding: 1em
-
-.eventProgramItemPopover
-  min-width: min(600px, 80vw)
-  padding: 1em
 
 .programType
   width: 28px
