@@ -3,14 +3,13 @@ import React, {useCallback, useMemo, useRef, useState} from 'react'
 import { useDance } from 'services/dances'
 
 import {ActionButton as Button, ClickToEdit, DragHandle, ListEditorContext, MarkdownEditor, MenuButton, SyncStatus} from 'libraries/forms'
-import {Card, CssClass, Flex, HTMLTable} from 'libraries/ui'
+import {Card, CssClass, Flex, HTMLTable, Tab, Tabs} from 'libraries/ui'
 import {DanceEditor} from 'components/DanceEditor'
 import {LoadingState} from 'components/LoadingState'
 import {BackLink} from 'components/widgets/BackLink'
 import {Duration} from 'components/widgets/Duration'
 import {DurationField} from 'components/widgets/DurationField'
 // import {NavigateButton} from 'components/widgets/NavigateButton'
-import {SlideStyleSelector} from 'components/widgets/SlideStyleSelector'
 import {Translator, useT, useTranslation} from 'i18n'
 import {guid} from 'utils/guid'
 
@@ -22,7 +21,6 @@ import {
   DanceProgramChooser,
   Field,
   Form,
-  InheritedSlideStyleSelector,
   Input,
   IntervalMusicDefaultTextsSwitch,
   IntervalMusicSwitch,
@@ -36,8 +34,10 @@ import {
   useOnChangeFor,
   useValueAt,
 } from './components'
+import { SlideshowEditor} from './SlideshowEditor'
 
 import './EventProgramEditor.sass'
+import '../Slide/slideStyles.scss'
 
 type T = Translator<'components.eventProgramEditor'>
 
@@ -48,9 +48,7 @@ interface EventProgramEditorProps {
 }
 
 export function EventProgramEditor({eventId, eventVersionId, program: eventProgram}: EventProgramEditorProps) {
-  const t = useT('components.eventProgramEditor')
   const {formProps, state} = useEventProgramEditorForm(eventId, eventVersionId, eventProgram)
-  const {danceSets, introductions} = formProps.value
 
   return <Form {...formProps}>
     <BackLink to="..">{useTranslation('pages.events.eventProgramPage.backToEvent')}</BackLink>
@@ -58,24 +56,31 @@ export function EventProgramEditor({eventId, eventVersionId, program: eventProgr
       {useTranslation('pages.events.eventProgramPage.pageTitle')}
       <SyncStatus style={{marginLeft: '1ch', top: '3px'}} className="flex-fill" state={state} />
     </h1>
-    <section className="eventProgramEditor">
-      <div className="main-toolbar">
-        <Input labelStyle="above" label={t('fields.programTitle')} path="introductions.title" inline />
-        <InheritedSlideStyleSelector path="introductions.titleSlideStyleId" text={t('fields.titleStyle')} />
-        <Field label={t('fields.pauseDuration')} inline path="pauseBetweenDances" component={DurationField} />
-        {introductions.program.length === 0 && <AddIntroductionButton />}
-        <Field label="" inline path="slideStyleId" component={SlideStyleSelector} componentProps={{text: t('fields.eventDefaultStyle')}} />
-      </div>
-      <ListEditorContext>
-        <IntroductoryInformation />
-        <ListField labelStyle="hidden-nowrapper" label="" path="danceSets" component={DanceSetEditor} renderConflictItem={item => renderDanceSetValue(item, t)} />
-      </ListEditorContext>
-      <div className="addDanceSetButtons">
-        {danceSets.length === 0 && t('danceProgramIsEmpty')}
-        <AddDanceSetButton />
-      </div>
-    </section>
+    <Tabs renderActiveTabPanelOnly>
+      <Tab id="main" title="Tanssiohjelma" panel={<MainEditor value={formProps.value} />} />
+      <Tab id="slideshow" title="Diashow" panel={<SlideshowEditor value={formProps.value} />} />
+    </Tabs>
   </Form>
+}
+
+function MainEditor({ value }: {value: EventProgramSettings}) {
+  const t = useT('components.eventProgramEditor')
+  const {danceSets, introductions} = value
+
+  return <section className="eventProgramEditor">
+    <div className="main-toolbar">
+      <Field label={t('fields.pauseDuration')} inline path="pauseBetweenDances" component={DurationField} />
+      {introductions.program.length === 0 && <AddIntroductionButton />}
+    </div>
+    <ListEditorContext>
+      <IntroductoryInformation />
+      <ListField labelStyle="hidden-nowrapper" label="" path="danceSets" component={DanceSetEditor} renderConflictItem={item => renderDanceSetValue(item, t)} />
+    </ListEditorContext>
+    <div className="addDanceSetButtons">
+      {danceSets.length === 0 && t('danceProgramIsEmpty')}
+      <AddDanceSetButton />
+    </div>
+  </section>
 }
 
 function IntroductoryInformation() {
@@ -100,7 +105,6 @@ const DanceSetEditor = React.memo(function DanceSetEditor({itemIndex, dragHandle
       <h2>
         <Field labelStyle="hidden" label={t('fields.danceSetName')} path={`danceSets.${itemIndex}.title`} inline component={ClickToEdit} />
       </h2>
-      <InheritedSlideStyleSelector path={`danceSets.${itemIndex}.titleSlideStyleId`} text={t('fields.titleStyle')} />
       {dragHandle}
       <RemoveItemButton path="danceSets" index={itemIndex} className="delete" text={t('buttons.removeDanceSet')} />
     </Flex>
@@ -205,7 +209,6 @@ const ProgramItemEditor = React.memo(function ProgramItemEditor({dragHandle, pat
     </td>
     <td>
       {dragHandle}
-      <InheritedSlideStyleSelector path={`${itemPath}.slideStyleId`} text={t('fields.style')} />
       <RemoveItemButton path={path} index={itemIndex} title={t('buttons.remove')} icon="cross" className="deleteItem" />
     </td>
   </React.Fragment>
@@ -308,7 +311,6 @@ function IntervalMusicEditor({danceSetPath}: {danceSetPath: DanceSetPath}) {
       <Field label={t('fields.intervalMusicDuration')} inline labelStyle="hidden" path={durationPath} component={DurationField} />
     </td>
     <td>
-      <InheritedSlideStyleSelector path={`${danceSetPath}.intervalMusic.slideStyleId`} text={t('fields.style')} />
       <Button title={t('buttons.remove')} intent="danger" icon="cross" onClick={() => onSetIntervalMusic(null)} className="delete" />
     </td>
   </tr>

@@ -71,7 +71,7 @@ function useCreateNewDanceSet(): (danceSets: DanceSet[]) => DanceSet {
       program: dances,
       titleSlideStyleId: null,
       intervalMusic: null,
-    }
+    } as DanceSet
   }
 }
 

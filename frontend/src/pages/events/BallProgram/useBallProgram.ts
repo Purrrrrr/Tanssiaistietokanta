@@ -1,4 +1,4 @@
-import {useMemo} from 'react'
+import {ReactElement, useMemo} from 'react'
 
 import { DanceSetPath, ProgramItemPath } from 'components/EventProgramEditor/types'
 import {SlideLink, SlideNavigation, SlideProps} from 'components/Slide'
@@ -140,7 +140,7 @@ function danceSetTitleSlide(danceSet: DanceSet, navigation: SlideNavigation, ind
   }
 }
 
-function toProgramSlide(parent: {_id: string, title: string}, {_id: id, item, slideStyleId}: ProgramRow, path: ProgramItemPath, t: T, navigation?: SlideNavigation): SlideContent {
+function toProgramSlide(parent: {_id: string, title: string | ReactElement}, {_id: id, item, slideStyleId}: ProgramRow, path: ProgramItemPath, t: T, navigation?: SlideNavigation): SlideContent {
   const common = {
     id, slideStyleId, navigation, type: item.__typename,
     parent: {id: parent._id, title: parent.title},

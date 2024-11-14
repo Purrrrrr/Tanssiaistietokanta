@@ -156,6 +156,11 @@ query getEvent($id: ID!, $versionId: ID) {
             }
             ... on Dance {
               _id
+              teachedIn(eventId: $id) {
+                _id
+                workshop { name }
+                instances { _id, abbreviation }
+              }
             }
             ... on EventProgram {
               showInLists
@@ -245,6 +250,11 @@ mutation patchEventProgram($id: ID!, $program: JSONPatch!) {
             }
             ... on Dance {
               _id
+              teachedIn(eventId: $id) {
+                _id
+                workshop { name }
+                instances { _id, abbreviation }
+              }
             }
             ... on EventProgram {
               showInLists

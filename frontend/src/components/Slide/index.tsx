@@ -11,10 +11,10 @@ export * from './SlideContainer'
 
 export interface SlideProps {
   id: string
-  title: string
+  title: string | React.ReactElement
   type?: string
   children?: React.ReactElement | React.ReactElement[] | string
-  footer?:  string
+  footer?:  string | React.ReactElement
   next?: SlideLink
   navigation?: SlideNavigation
   slideStyleId?: string | null | undefined
@@ -26,7 +26,7 @@ export interface SlideNavigation {
 }
 export interface SlideLink {
   id: string
-  title: string
+  title: string | React.ReactElement
   url?: string | undefined
   hidden?: boolean
   isPlaceholder?: boolean

@@ -1,13 +1,13 @@
 import { Fragment } from 'react'
 import { Link } from 'react-router-dom'
 
+import { useFormatDate, useFormatTime } from 'libraries/i18n/dateTime'
 import SideBar from 'components/SideBar'
 import { useT, useTranslation } from 'i18n'
 
 import type { VersionCalendar, VersionSidebarProps } from './types'
 
 import './VersionChooser.scss'
-import { useFormatDate, useFormatTime } from 'libraries/i18n/dateTime'
 
 interface Version {
   _versionId: string

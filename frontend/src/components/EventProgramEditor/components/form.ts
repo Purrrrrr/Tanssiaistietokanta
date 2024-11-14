@@ -2,7 +2,7 @@ import { set } from 'partial.lenses'
 
 import {usePatchEventProgram} from 'services/events'
 
-import {formFor, useAutosavingState} from 'libraries/forms'
+import {formFor, useAutosavingState, UseAutosavingStateReturn} from 'libraries/forms'
 
 import {EventProgramSettings} from '../types'
 import {JSONPatch, patch} from './patchStrategy'
@@ -22,7 +22,7 @@ export const {
 
 export type {EventProgramSettings} from '../types'
 
-export function useEventProgramEditorForm(eventId: string, eventVersionId: string | undefined, eventProgram: EventProgramSettings) {
+export function useEventProgramEditorForm(eventId: string, eventVersionId: string | undefined, eventProgram: EventProgramSettings): UseAutosavingStateReturn<EventProgramSettings> {
   const readOnly = eventVersionId !== undefined
   const [patchEventProgram] = usePatchEventProgram()
   const saveProgram = async (program) => {
