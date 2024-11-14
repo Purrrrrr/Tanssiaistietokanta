@@ -10,20 +10,21 @@ export interface SlideContainerProps extends Omit<React.HTMLAttributes<HTMLDivEl
   fullscreen?: boolean
 }
 
-function SlideContainerBase({children, color, size, fullscreen, ...props}: SlideContainerProps, ref: ForwardedRef<HTMLDivElement>) {
-  const className =classnames(
+function SlideContainerBase({children, color, size, fullscreen, className, ...props}: SlideContainerProps, ref: ForwardedRef<HTMLDivElement>) {
+  const allClassNames =classnames(
     'slide-backdrop',
     {
       full: fullscreen,
       preview: !fullscreen && size,
     },
+    className,
   )
   const style = {
     background: color,
     width: fullscreen ? undefined : size,
   }
 
-  return <div className={className} style={style} {...props} ref={ref}>
+  return <div className={allClassNames} style={style} {...props} ref={ref}>
     <div className="slide-container">
       {children}
     </div>

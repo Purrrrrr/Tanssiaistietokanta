@@ -41,9 +41,7 @@ function DanceSetSlide({ eventProgram, danceSetIndex }: WithEventProgram<DanceSe
     id={danceSet._id}
     title={danceSet.title}
     children={
-      <SlideNavigationList
-        currentItem={danceSet._id}
-        items={danceSetNavigation(danceSet)?.items ?? []}
+      <SlideNavigationList items={danceSetNavigation(danceSet)?.items ?? []}
       />
     }
     slideStyleId={danceSet.titleSlideStyleId ?? eventProgram.slideStyleId}

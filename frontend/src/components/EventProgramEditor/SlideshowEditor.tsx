@@ -25,10 +25,12 @@ export function SlideshowEditor({ value }: {value: EventProgramSettings}) {
     {slides.map(slide =>
       <Card key={slide.id}>
         <Flex wrap spaced>
-          <div className="flex-fill">
+          <div className="flex-fill" style={{maxWidth: 600}}>
             <EventSlideEditor {...slide} eventProgram={value} />
           </div>
-          <SlideContainer size={500}><EventSlide {...slide} eventProgram={value} /></SlideContainer>
+          <SlideContainer className="flex-fill" size={300} color="#eee">
+            <EventSlide {...slide} eventProgram={value} />
+          </SlideContainer>
         </Flex>
       </Card>
     )}
