@@ -1,13 +1,15 @@
 import { EventProgram, EventSlideProps } from './types'
 
+export const startSlideId = ''
+
 export function useEventSlides(program?: EventProgram): EventSlideProps[] {
   if (!program) return []
   return [
-    { id: '', type: 'title' },
+    { id: startSlideId, type: 'title' },
     ...program.introductions.program.map((item, idx) => ({
       id: item._id,
       type: 'introduction',
-      parentId: '',
+      parentId: startSlideId,
       itemIndex: idx
     } as const)),
     ...program.danceSets.flatMap((danceSet, danceSetIndex) => [

@@ -10,6 +10,7 @@ export function EventSlide(props: WithEventProgram<EventSlideProps>) {
   switch(props.type) {
     case 'title':
       return <Slide
+        type="program-title"
         id={props.id}
         title={eventProgram.introductions.title}
         slideStyleId={eventProgram.introductions.titleSlideStyleId ?? eventProgram.slideStyleId}

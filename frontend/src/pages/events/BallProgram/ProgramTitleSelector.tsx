@@ -1,15 +1,18 @@
-import { SlideContent } from './useBallProgram'
+import { startSlideId } from 'components/EventSlide/useEventSlides'
+
+import { Event } from './useBallProgram'
 
 interface ProgramTitleSelectorProps {
-  program: SlideContent[]
+  program: Event['program']
   value: string
   onChange: (value: string) => unknown
 }
 
 export function ProgramTitleSelector({program, value, onChange}: ProgramTitleSelectorProps) {
   return <select value={value} onChange={(e) => onChange(e.target.value)}>
-    {program.filter(isHeader).map((part, i) => <option key={i} value={part.id}>{part.title}</option>)}
+    <option value={startSlideId}>{program.introductions.title}</option>
+    {program.danceSets.map(danceSet =>
+      <option key={danceSet._id} value={danceSet._id}>{danceSet.title}</option>
+    )}
   </select>
 }
-
-const isHeader = ({type}: SlideContent) => type && ['DanceSet', 'Event'].includes(type)
