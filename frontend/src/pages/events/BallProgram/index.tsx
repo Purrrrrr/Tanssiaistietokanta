@@ -13,12 +13,13 @@ import {useOnKeydown} from 'utils/useOnKeydown'
 
 import {ProgramTitleSelector} from './ProgramTitleSelector'
 import {SlideEditor} from './SlideEditor'
-import {Event, useBallProgramSlides} from './useBallProgram'
+import {Event, useBallProgramQuery} from './useBallProgramQuery'
 
 import './BallProgram.scss'
 
 export default function BallProgram({eventId, eventVersionId}) {
-  const {event, refetch, ...loadingState} = useBallProgramSlides(eventId)
+  const {data, refetch, ...loadingState} = useBallProgramQuery({eventId})
+  const event = data?.event
   const [isEditing, setEditing] = useState(false)
   const {'*': currentSlideId = startSlideId} = useParams()
 

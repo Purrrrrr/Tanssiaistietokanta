@@ -1,6 +1,6 @@
 import { startSlideId } from 'components/EventSlide/useEventSlides'
 
-import { Event } from './useBallProgram'
+import { Event } from './useBallProgramQuery'
 
 interface ProgramTitleSelectorProps {
   program: Event['program']
