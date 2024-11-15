@@ -14,9 +14,7 @@ import {EventProgramSettings} from './types'
 import { Field } from './components'
 import { EventSlideEditor } from './components/EventSlideEditor'
 
-import './EventProgramEditor.sass'
 import '../Slide/slideStyles.scss'
-
 
 export function SlideshowEditor({ value }: {value: EventProgramSettings}) {
   const t = useT('components.eventProgramEditor')
