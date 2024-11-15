@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import {Link} from 'react-router-dom'
 
 import {DragHandle, formFor, MarkdownEditor, SyncState, SyncStatus} from 'libraries/forms'
@@ -15,7 +15,6 @@ import {
   Switch,
   useValueAt,
 } from 'components/EventProgramEditor/components'
-import { LinkToSlide } from 'components/Slide'
 import { Duration } from 'components/widgets/Duration'
 import {T, useT, useTranslation} from 'i18n'
 
@@ -26,7 +25,10 @@ import { ProgramItemPath, ProgramSectionPath } from '../types'
 import { IntervalMusicDefaultTextsSwitch} from './controls'
 import { programItemToString } from './form'
 
-export function EventSlideEditor({syncStatus, ...props}: WithEventProgram<EventSlideProps> & { syncStatus?: SyncState }) {
+type EventSlideEditorProps = WithEventProgram<EventSlideProps>
+  & Pick<LinkToSlideProps, 'hashLink'> & { syncStatus?: SyncState }
+
+export function EventSlideEditor({syncStatus, ...props}: EventSlideEditorProps ) {
   const slideStylePath = getSlideStylePath(props)
 
   return <>
@@ -45,7 +47,7 @@ export function EventSlideEditor({syncStatus, ...props}: WithEventProgram<EventS
   </>
 }
 
-function ParentLink(props: WithEventProgram<EventSlideProps>) {
+function ParentLink(props: WithEventProgram<EventSlideProps> & Pick<LinkToSlideProps, 'hashLink'>) {
   let title : string
   switch(props.type) {
     case 'title':
@@ -59,7 +61,11 @@ function ParentLink(props: WithEventProgram<EventSlideProps>) {
       title = props.eventProgram.danceSets[props.danceSetIndex].title
     }
   }
-  return <p><Link to={props.parentId}><Icon icon="link"/>{' '}{title}</Link></p>
+  return <p>
+    <LinkToSlide id={props.parentId} hashLink={props.hashLink}>
+      <Icon icon="link"/>{' '}{title}
+    </LinkToSlide>
+  </p>
 }
 
 function getSlideStylePath(props: EventSlideProps) {
@@ -81,14 +87,20 @@ function getSlideStylePath(props: EventSlideProps) {
   }
 }
 
-export function EventSlideContentEditor(props: WithEventProgram<EventSlideProps>) {
+export function EventSlideContentEditor({hashLink, ...props}: WithEventProgram<EventSlideProps> & Pick<LinkToSlideProps, 'hashLink'>) {
   const t = useT('components.eventProgramEditor')
 
   switch(props.type) {
     case 'title':
       return <SectionCard>
         <Input labelStyle="above" label={t('fields.programTitle')} path="introductions.title" inline />
-        <ListField label="" path="introductions.program" component={ProgramItem} renderConflictItem={item => programItemToString(item, t)} />
+        <ListField
+          label=""
+          path="introductions.program"
+          component={ProgramItem}
+          componentProps={{hashLink}}
+          renderConflictItem={item => programItemToString(item, t)}
+        />
       </SectionCard>
     case 'introduction': {
       const itemPath = `introductions.program.${props.itemIndex}` as const
@@ -99,7 +111,13 @@ export function EventSlideContentEditor(props: WithEventProgram<EventSlideProps>
       return <SectionCard>
         <H2><T msg={'pages.events.ballProgram.danceSetTitle'}/></H2>
         <Input labelStyle="above" label={t('fields.danceSetName')} path={`${itemPath}.title`} />
-        <ListField label="" path={`${itemPath}.program`} component={ProgramItem} renderConflictItem={item => programItemToString(item, t)} />
+        <ListField
+          label=""
+          path={`${itemPath}.program`}
+          component={ProgramItem}
+          componentProps={{hashLink}}
+          renderConflictItem={item => programItemToString(item, t)}
+        />
       </SectionCard>
     }
     case 'intervalMusic': {
@@ -125,9 +143,10 @@ interface ProgramItemProps {
   dragHandle: DragHandle
   path: `${ProgramSectionPath}.program`
   itemIndex: number
+  hashLink?: boolean
 }
 
-const ProgramItem = React.memo(function ProgramEditor({dragHandle, path, itemIndex} : ProgramItemProps) {
+const ProgramItem = React.memo(function ProgramEditor({dragHandle, path, itemIndex, hashLink}: ProgramItemProps) {
   const t = useT('components.eventProgramEditor')
   const itemPath = `${path}.${itemIndex}` as ProgramItemPath
   const item = useValueAt(itemPath)
@@ -138,7 +157,7 @@ const ProgramItem = React.memo(function ProgramEditor({dragHandle, path, itemInd
   return <Flex alignItems='center' spaced>
     <ProgramTypeIcon type={__typename} />
     <div className="flex-fill">
-      <LinkToSlide id={item._id} title={programItemToString(item, t)} />
+      <LinkToSlide id={item._id} hashLink={hashLink}>{programItemToString(item, t)}</LinkToSlide>
     </div>
     <div><Duration value={__typename === 'RequestedDance' ? 0 : item.item.duration} /></div>
     <div>
@@ -205,4 +224,17 @@ function DanceEditor({dance}: {dance: Dance}) {
     <DanceInput label={t('source')} labelInfo={t('sourceInfo')} path="source" />
     <Link target="_blank" to={`/dances/${dance._id}`}><Icon icon="link"/>{useTranslation('pages.events.ballProgram.linkToCompleteDance')}</Link>
   </DanceEditorContainer>
+}
+
+interface LinkToSlideProps {
+  children: ReactNode
+  id: string
+  hashLink?: boolean
+}
+
+function LinkToSlide({children, id, hashLink}: LinkToSlideProps) {
+  if (hashLink) {
+    return <a href={`#${id}`}>{children}</a>
+  }
+  return <Link to={id}>{children}</Link>
 }

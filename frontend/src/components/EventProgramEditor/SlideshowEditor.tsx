@@ -36,12 +36,12 @@ interface SlideBoxProps {
 }
 
 const SlideBox = React.memo(function SlideBox({eventProgram, slide}: SlideBoxProps) {
-  return <Card>
+  return <Card id={slide.id}>
     <Flex wrap spaced>
       <div className="flex-fill" style={{maxWidth: 600}}>
-        <EventSlideEditor {...slide} eventProgram={eventProgram} />
+        <EventSlideEditor {...slide} eventProgram={eventProgram} hashLink />
       </div>
-      <SlideContainer className="flex-fill" size={300} color="#eee">
+      <SlideContainer className="flex-fill inert" size={300} color="#eee">
         <EventSlide {...slide} eventProgram={eventProgram} />
       </SlideContainer>
     </Flex>
