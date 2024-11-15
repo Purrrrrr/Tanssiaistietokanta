@@ -8,7 +8,7 @@ import { FormMetadataContext, useFormStrings } from '../formContext'
 import { FormStrings } from '../strings'
 import {FieldComponentProps} from '../types'
 
-const defaultQRCode = '<QR value="https//..." size={50} />'
+const defaultQRCode = '<QR title="..." value="https//..." size={250} />'
 class QRCode extends PluginComponent<object> {
   // Define plugin name here, must be unique
   static pluginName = 'qrcode'
