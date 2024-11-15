@@ -5,7 +5,6 @@ import {Card, CssClass, Flex, HTMLTable, Tab, Tabs} from 'libraries/ui'
 import {BackLink} from 'components/widgets/BackLink'
 import {Duration} from 'components/widgets/Duration'
 import {DurationField} from 'components/widgets/DurationField'
-// import {NavigateButton} from 'components/widgets/NavigateButton'
 import {useT, useTranslation} from 'i18n'
 import {guid} from 'utils/guid'
 
@@ -233,12 +232,6 @@ function DanceItemEditor({path}: {path: DanceProgramPath}) {
   const t = useT('components.eventProgramEditor')
   return <Flex className="eventProgramItemEditor">
     <Field label={t('dance')} labelStyle="hidden" path={`${path as DanceProgramPath}.item`} component={DanceProgramChooser} />
-    {/* id &&
-      <NavigateButton
-        href={id}
-        text={<Icon icon="edit" title={t('buttons.editDance')} />}
-      />
-    */}
   </Flex>
 }
 

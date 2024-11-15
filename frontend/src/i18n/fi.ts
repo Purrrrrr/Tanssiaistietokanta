@@ -127,11 +127,9 @@ export const fi = {
         eventDefaultStyle: 'Ohjelman oletustyyli',
         intervalMusicAtEndOfSet: 'Taukomusiikki setin lopussa',
         intervalMusicDuration: 'Taukomusiikin kesto',
-        moveItemToSection: 'Siirrä settiin',
         pauseDuration: 'Tanssien välinen tauko',
         programTitle: 'Ohjelman otsikko',
         style: 'Tyyli',
-        titleStyle: 'Otsikon tyyli',
       },
       buttons: {
         addDance: 'Lisää tanssi',
@@ -141,14 +139,9 @@ export const fi = {
         cancel: 'Peruuta',
         removeDanceSet: 'Poista setti',
         remove: 'Poista',
-        editProgram: 'Ohjelman tiedot',
-        editIntervalMusic: 'Taukomusiikin kuvaus',
-        editDance: 'Tanssin tiedot',
-        save: 'Tallenna muutokset',
       },
       columnTitles: {
         name: 'Nimi',
-        actions: 'Toiminnot',
         duration: 'Kesto',
       },
       titles: {
