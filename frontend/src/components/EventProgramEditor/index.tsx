@@ -131,7 +131,7 @@ function ProgramListEditor({path}: {path: ProgramSectionPath}) {
           <thead>
             <tr>
               <th/>
-              <th>{t('columnTitles.name')}</th><th>{t('columnTitles.duration')}</th><th>{t('columnTitles.actions')}</th>
+              <th>{t('columnTitles.name')}</th><th colSpan={2}>{t('columnTitles.duration')}</th>
             </tr>
           </thead>
       }
