@@ -2,13 +2,32 @@ import React, {useCallback, useMemo, useRef} from 'react'
 
 import {ActionButton as Button, ClickToEdit, DragHandle, ListEditorContext, SyncStatus} from 'libraries/forms'
 import {Card, CssClass, Flex, HTMLTable, Tab, Tabs} from 'libraries/ui'
+import {
+  DanceProgramPath,
+  DanceSet,
+  DanceSetPath,
+  EventProgramRow,
+  EventProgramSettings,
+  Field,
+  Form,
+  Input,
+  ListField,
+  ProgramItemPath,
+  programItemToString,
+  ProgramSectionPath,
+  RemoveItemButton,
+  T,
+  useAppendToList,
+  useEventProgramEditorForm,
+  useOnChangeFor,
+  useValueAt,
+} from 'components/event/EventProgramForm'
 import {BackLink} from 'components/widgets/BackLink'
 import {Duration} from 'components/widgets/Duration'
 import {DurationField} from 'components/widgets/DurationField'
 import {useT, useTranslation} from 'i18n'
 import {guid} from 'utils/guid'
 
-import {DanceProgramPath, DanceSet, DanceSetPath, EventProgramRow, EventProgramSettings, ProgramItemPath, ProgramSectionPath, T} from './types'
 import {Event} from 'types'
 
 import {
@@ -16,20 +35,10 @@ import {
   AddIntroductionButton,
   DanceProgramChooser,
   DuplicateDancesWarning,
-  Field,
-  Form,
-  Input,
   IntervalMusicSwitch,
-  ListField,
   MissingDancesWarning,
-  programItemToString,
   ProgramTypeIcon,
-  RemoveItemButton,
-  useAppendToList,
   useCreateNewEventProgramItem,
-  useEventProgramEditorForm,
-  useOnChangeFor,
-  useValueAt,
 } from './components'
 import { SlideshowEditor} from './SlideshowEditor'
 

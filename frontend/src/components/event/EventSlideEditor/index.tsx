@@ -5,43 +5,51 @@ import {DragHandle, formFor, MarkdownEditor, SyncState, SyncStatus} from 'librar
 import {Callout, Flex, H2, Icon, SectionCard} from 'libraries/ui'
 import {DanceEditorContainer} from 'components/DanceEditor'
 import {
-  DanceProgramChooser,
   Field,
-  InheritedSlideStyleSelector,
   Input,
   ListField,
-  ProgramTypeIcon,
+  ProgramItemPath,
+  programItemToString,
+  ProgramSectionPath,
   RemoveItemButton,
   Switch,
-  useValueAt,
+  useValueAt
+} from 'components/event/EventProgramForm'
+import { EventSlideProps, WithEventProgram } from 'components/event/EventSlide'
+import {
+  DanceProgramChooser,
+  ProgramTypeIcon
 } from 'components/EventProgramEditor/components'
 import { Duration } from 'components/widgets/Duration'
 import {T, useT, useTranslation} from 'i18n'
 
 import {Dance} from 'types'
 
-import { EventSlideProps, WithEventProgram } from '../../EventSlide/types'
-import { ProgramItemPath, ProgramSectionPath } from '../types'
-import { IntervalMusicDefaultTextsSwitch} from './controls'
-import { programItemToString } from './form'
+import { InheritedSlideStyleSelector, IntervalMusicDefaultTextsSwitch } from './components'
 
 type EventSlideEditorProps = WithEventProgram<EventSlideProps>
   & Pick<LinkToSlideProps, 'hashLink'> & { syncStatus?: SyncState }
 
 export function EventSlideEditor({syncStatus, ...props}: EventSlideEditorProps ) {
   const slideStylePath = getSlideStylePath(props)
+  //const isDance = props.type === 'programItem' &&
+  //  props.eventProgram.danceSets[props.danceSetIndex].program[props.itemIndex].item
 
   return <>
     <SectionCard>
-      <H2>
-        <T msg={'pages.events.ballProgram.slideProperties'}/>
-        {' '}
-        {syncStatus && <SyncStatus state={syncStatus}/>}
-      </H2>
-      <ParentLink {...props} />
-      <InheritedSlideStyleSelector
-        showLabel
-        path={slideStylePath} text={useTranslation('components.eventProgramEditor.fields.style')} />
+      <Flex>
+        <H2>
+          <T msg={'pages.events.ballProgram.slideProperties'}/>
+          {' '}
+          {syncStatus && <SyncStatus state={syncStatus}/>}
+        </H2>
+        <ParentLink {...props} />
+        <InheritedSlideStyleSelector
+          showLabel
+          path={slideStylePath}
+          text={useTranslation('components.eventProgramEditor.fields.style')}
+        />
+      </Flex>
     </SectionCard>
     <EventSlideContentEditor {...props} />
   </>

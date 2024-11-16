@@ -2,9 +2,9 @@ import {
   EventProgramSettings,
   Form,
   useEventProgramEditorForm,
-} from 'components/EventProgramEditor/components'
-import { EventSlideEditor } from 'components/EventProgramEditor/components/EventSlideEditor'
-import { EventSlideProps } from 'components/EventSlide/types'
+} from 'components/event/EventProgramForm'
+import { EventSlideProps } from 'components/event/EventSlide'
+import { EventSlideEditor } from 'components/event/EventSlideEditor'
 
 interface SlideEditorProps {
   slide: EventSlideProps

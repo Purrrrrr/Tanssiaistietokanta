@@ -2,17 +2,12 @@ import React from 'react'
 import deepEquals from 'fast-deep-equal'
 
 import {Card, Flex} from 'libraries/ui'
-import {EventSlide} from 'components/EventSlide/EventSlide'
-import { EventSlideProps } from 'components/EventSlide/types'
-import {useEventSlides} from 'components/EventSlide/useEventSlides'
+import { EventProgramSettings, Field } from 'components/event/EventProgramForm'
+import {EventSlide, EventSlideProps, useEventSlides} from 'components/event/EventSlide'
+import { EventSlideEditor } from 'components/event/EventSlideEditor'
 import {SlideContainer} from 'components/Slide'
 import {SlideStyleSelector} from 'components/widgets/SlideStyleSelector'
 import {useT} from 'i18n'
-
-import {EventProgramSettings} from './types'
-
-import { Field } from './components'
-import { EventSlideEditor } from './components/EventSlideEditor'
 
 import '../Slide/slideStyles.scss'
 

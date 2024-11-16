@@ -1,4 +1,4 @@
-import { startSlideId } from 'components/EventSlide/useEventSlides'
+import { startSlideId } from 'components/event/EventSlide'
 
 import { Event } from './useBallProgramQuery'
 

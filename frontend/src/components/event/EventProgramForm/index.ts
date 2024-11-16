@@ -4,7 +4,8 @@ import {usePatchEventProgram} from 'services/events'
 
 import {formFor, useAutosavingState, UseAutosavingStateReturn} from 'libraries/forms'
 
-import {EventProgramRow, EventProgramSettings, T} from '../types'
+import {EventProgramRow, EventProgramSettings, IntervalMusic, T} from './types'
+
 import {JSONPatch, patch} from './patchStrategy'
 
 export const {
@@ -20,7 +21,15 @@ export const {
   useAppendToList,
 } = formFor<EventProgramSettings>()
 
-export type {EventProgramSettings} from '../types'
+export type * from './types'
+
+export const DEFAULT_INTERVAL_MUSIC_DURATION = 15*60
+export const DEFAULT_INTERVAL_MUSIC = {
+  name: null,
+  description: null,
+  duration: DEFAULT_INTERVAL_MUSIC_DURATION,
+  slideStyleId: null,
+} satisfies IntervalMusic
 
 export function useEventProgramEditorForm(eventId: string, eventVersionId: string | undefined, eventProgram: EventProgramSettings): UseAutosavingStateReturn<EventProgramSettings> {
   const readOnly = eventVersionId !== undefined
