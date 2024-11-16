@@ -166,6 +166,22 @@ export const fi = {
       },
       programListIsEmpty: 'Ei ohjelmaa',
       danceProgramIsEmpty: 'Ei tanssiohjelmaa.',
+      missingDancesWarning: {
+        title: {
+          one: 'Ohjelmasta puuttuu työpajoissa opetettu tanssi.',
+          many: 'Ohjelmasta puuttuu __count__ työpajoissa opetettua tanssia.',
+        }
+      },
+      duplicateDancesWarning: {
+        title: {
+          one: 'Seuraava tanssi esiintyy ohjelmassa useamman kerran',
+          many: 'Seuraavat tanssit esiintyvät ohjelmassa useamman kerran',
+        },
+        inDanceSets: {
+          one: 'setissä',
+          many: 'seteissä'
+        }
+      }
     },
     supportedBrowserWarning: {
       unsupportedBrowser: 'Selaimesi ei ole tuettu',

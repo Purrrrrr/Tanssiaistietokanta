@@ -8,6 +8,6 @@ export default function EventProgramEditorPage({event}: {event: Event}) {
   const t = useT('pages.events.eventProgramPage')
   return <>
     <PageTitle noRender>{t('pageTitle')}</PageTitle>
-    <EventProgramEditor eventId={event._id} eventVersionId={event._versionId ?? undefined} program={event.program} />
+    <EventProgramEditor event={event} />
   </>
 }

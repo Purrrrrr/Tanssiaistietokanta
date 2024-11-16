@@ -16,15 +16,15 @@ import { EventSlideEditor } from './components/EventSlideEditor'
 
 import '../Slide/slideStyles.scss'
 
-export function SlideshowEditor({ value }: {value: EventProgramSettings}) {
+export function SlideshowEditor({ program }: {program: EventProgramSettings}) {
   const t = useT('components.eventProgramEditor')
-  const slides = useEventSlides(value)
+  const slides = useEventSlides(program)
 
   return <section className="eventProgramEditor">
     <div className="main-toolbar">
       <Field label="" inline path="slideStyleId" component={SlideStyleSelector} componentProps={{text: t('fields.eventDefaultStyle')}} />
     </div>
-    {slides.map(slide => <SlideBox key={slide.id} eventProgram={value} slide={slide} />)}
+    {slides.map(slide => <SlideBox key={slide.id} eventProgram={program} slide={slide} />)}
   </section>
 }
 

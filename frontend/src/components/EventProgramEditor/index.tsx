@@ -9,16 +9,19 @@ import {useT, useTranslation} from 'i18n'
 import {guid} from 'utils/guid'
 
 import {DanceProgramPath, DanceSet, DanceSetPath, EventProgramRow, EventProgramSettings, ProgramItemPath, ProgramSectionPath, T} from './types'
+import {Event} from 'types'
 
 import {
   AddDanceSetButton,
   AddIntroductionButton,
   DanceProgramChooser,
+  DuplicateDancesWarning,
   Field,
   Form,
   Input,
   IntervalMusicSwitch,
   ListField,
+  MissingDancesWarning,
   programItemToString,
   ProgramTypeIcon,
   RemoveItemButton,
@@ -36,13 +39,11 @@ import '../Slide/slideStyles.scss'
 export { programItemToString }
 
 interface EventProgramEditorProps {
-  eventId: string
-  eventVersionId?: string
-  program: EventProgramSettings
+  event: Event
 }
 
-export function EventProgramEditor({eventId, eventVersionId, program: eventProgram}: EventProgramEditorProps) {
-  const {formProps, state} = useEventProgramEditorForm(eventId, eventVersionId, eventProgram)
+export function EventProgramEditor({event}: EventProgramEditorProps) {
+  const {formProps, formProps: { value }, state} = useEventProgramEditorForm(event._id, event._versionId ?? undefined, event.program)
 
   return <Form {...formProps}>
     <BackLink to="..">{useTranslation('pages.events.eventProgramPage.backToEvent')}</BackLink>
@@ -51,21 +52,23 @@ export function EventProgramEditor({eventId, eventVersionId, program: eventProgr
       <SyncStatus style={{marginLeft: '1ch', top: '3px'}} className="flex-fill" state={state} />
     </h1>
     <Tabs renderActiveTabPanelOnly>
-      <Tab id="main" title="Tanssiohjelma" panel={<MainEditor value={formProps.value} />} />
-      <Tab id="slideshow" title="Diashow" panel={<SlideshowEditor value={formProps.value} />} />
+      <Tab id="main" title="Tanssiohjelma" panel={<MainEditor program={value} workshops={event.workshops} />} />
+      <Tab id="slideshow" title="Diashow" panel={<SlideshowEditor program={value} />} />
     </Tabs>
   </Form>
 }
 
-function MainEditor({ value }: {value: EventProgramSettings}) {
+function MainEditor({ program, workshops }: {program: EventProgramSettings, workshops: Event['workshops']}) {
   const t = useT('components.eventProgramEditor')
-  const {danceSets, introductions} = value
+  const {danceSets, introductions} = program
 
   return <section className="eventProgramEditor">
     <div className="main-toolbar">
       <Field label={t('fields.pauseDuration')} inline path="pauseBetweenDances" component={DurationField} />
       {introductions.program.length === 0 && <AddIntroductionButton />}
     </div>
+    <MissingDancesWarning program={program} workshops={workshops} />
+    <DuplicateDancesWarning program={program} />
     <ListEditorContext>
       <IntroductoryInformation />
       <ListField labelStyle="hidden-nowrapper" label="" path="danceSets" component={DanceSetEditor} renderConflictItem={item => renderDanceSetValue(item, t)} />
@@ -94,7 +97,8 @@ function IntroductoryInformation() {
 
 const DanceSetEditor = React.memo(function DanceSetEditor({itemIndex, dragHandle} : {itemIndex: number, dragHandle: DragHandle}) {
   const t = useT('components.eventProgramEditor')
-  return <Card className="danceset">
+  const id = useValueAt(`danceSets.${itemIndex}._id`)
+  return <Card className="danceset" id={id}>
     <Flex className="sectionTitleRow">
       <h2>
         <Field labelStyle="hidden" label={t('fields.danceSetName')} path={`danceSets.${itemIndex}.title`} inline component={ClickToEdit} />
