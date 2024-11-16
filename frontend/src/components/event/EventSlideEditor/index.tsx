@@ -35,15 +35,17 @@ export function EventSlideEditor({syncStatus, ...props}: EventSlideEditorProps )
 
   return <>
     <SectionCard>
-      <Flex>
-        <H2>
-          <T msg={'pages.events.ballProgram.slideProperties'}/>
-          {' '}
-          {syncStatus && <SyncStatus state={syncStatus}/>}
-        </H2>
+      <H2 className="flex-fill">
+        <T msg={'pages.events.ballProgram.slideProperties'}/>
+        {' '}
+        {syncStatus && <SyncStatus state={syncStatus}/>}
+      </H2>
+      <p>
         <ParentLink {...props} />
+      </p>
+      <Flex spaced>
+        <DanceSelector {...props} />
         <InheritedSlideStyleSelector
-          showLabel
           path={slideStylePath}
           text={useTranslation('components.eventProgramEditor.fields.style')}
         />
@@ -52,6 +54,22 @@ export function EventSlideEditor({syncStatus, ...props}: EventSlideEditorProps )
     <EventSlideContentEditor {...props} />
   </>
 }
+
+function DanceSelector(props: WithEventProgram<EventSlideProps>) {
+  const t = useT('components.eventProgramEditor')
+
+  if (props.type !== 'programItem') return null
+
+  const itemPath = `danceSets.${props.danceSetIndex}.program.${props.itemIndex}` as const
+  const item = props.eventProgram.danceSets[props.danceSetIndex].program[props.itemIndex]
+  const itemType = item.item.__typename
+  if ((itemType === 'Dance' || itemType === 'RequestedDance')) {
+    return <Field label={t('dance')} path={`${itemPath}.item`} component={DanceProgramChooser} labelStyle="beside"/>
+  }
+  return null
+}
+
+
 
 function ParentLink(props: WithEventProgram<EventSlideProps> & Pick<LinkToSlideProps, 'hashLink'>) {
   let title : string
@@ -67,11 +85,9 @@ function ParentLink(props: WithEventProgram<EventSlideProps> & Pick<LinkToSlideP
       title = props.eventProgram.danceSets[props.danceSetIndex].title
     }
   }
-  return <p>
-    <LinkToSlide id={props.parentId} hashLink={props.hashLink}>
-      <Icon icon="link"/>{' '}{title}
-    </LinkToSlide>
-  </p>
+  return <LinkToSlide id={props.parentId} hashLink={props.hashLink}>
+    <Icon icon="link"/>{' '}{title}
+  </LinkToSlide>
 }
 
 function getSlideStylePath(props: EventSlideProps) {
@@ -134,13 +150,7 @@ export function EventSlideContentEditor({hashLink, ...props}: WithEventProgram<E
     }
     case 'programItem': {
       const itemPath = `danceSets.${props.danceSetIndex}.program.${props.itemIndex}` as const
-      const item = props.eventProgram.danceSets[props.danceSetIndex].program[props.itemIndex]
-      const itemType = item.item.__typename
-      return <>
-        {(itemType === 'Dance' || itemType === 'RequestedDance')
-          && <Field label={t('dance')} path={`${itemPath}.item`} component={DanceProgramChooser} />}
-        <ProgramItemEditor path={itemPath} />
-      </>
+      return <ProgramItemEditor path={itemPath} />
     }
   }
 }

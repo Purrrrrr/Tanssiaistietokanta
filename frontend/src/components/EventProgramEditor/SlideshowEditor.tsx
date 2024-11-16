@@ -30,7 +30,7 @@ interface SlideBoxProps {
 
 const SlideBox = React.memo(function SlideBox({eventProgram, slide}: SlideBoxProps) {
   return <Card id={slide.id}>
-    <Flex wrap spaced>
+    <Flex wrap>
       <div className="flex-fill" style={{maxWidth: 600}}>
         <EventSlideEditor {...slide} eventProgram={eventProgram} hashLink />
       </div>
