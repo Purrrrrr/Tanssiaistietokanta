@@ -4,6 +4,7 @@ import {Link} from 'react-router-dom'
 import {DragHandle, formFor, MarkdownEditor, SyncState, SyncStatus} from 'libraries/forms'
 import {Callout, Flex, H2, Icon, SectionCard} from 'libraries/ui'
 import {DanceEditorContainer} from 'components/DanceEditor'
+import { DanceProgramChooser } from 'components/event/DanceProgramChooser'
 import {
   Field,
   Input,
@@ -16,10 +17,7 @@ import {
   useValueAt
 } from 'components/event/EventProgramForm'
 import { EventSlideProps, WithEventProgram } from 'components/event/EventSlide'
-import {
-  DanceProgramChooser,
-  ProgramTypeIcon
-} from 'components/EventProgramEditor/components'
+import { ProgramTypeIcon } from 'components/event/ProgramTypeIcon'
 import { Duration } from 'components/widgets/Duration'
 import {T, useT, useTranslation} from 'i18n'
 

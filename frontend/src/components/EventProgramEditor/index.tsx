@@ -2,6 +2,7 @@ import React, {useCallback, useMemo, useRef} from 'react'
 
 import {ActionButton as Button, ClickToEdit, DragHandle, ListEditorContext, SyncStatus} from 'libraries/forms'
 import {Card, CssClass, Flex, HTMLTable, Tab, Tabs} from 'libraries/ui'
+import { DanceProgramChooser } from 'components/event/DanceProgramChooser'
 import {
   DanceProgramPath,
   DanceSet,
@@ -22,6 +23,7 @@ import {
   useOnChangeFor,
   useValueAt,
 } from 'components/event/EventProgramForm'
+import { ProgramTypeIcon } from 'components/event/ProgramTypeIcon'
 import {BackLink} from 'components/widgets/BackLink'
 import {Duration} from 'components/widgets/Duration'
 import {DurationField} from 'components/widgets/DurationField'
@@ -33,11 +35,9 @@ import {Event} from 'types'
 import {
   AddDanceSetButton,
   AddIntroductionButton,
-  DanceProgramChooser,
   DuplicateDancesWarning,
   IntervalMusicSwitch,
   MissingDancesWarning,
-  ProgramTypeIcon,
   useCreateNewEventProgramItem,
 } from './components'
 import { SlideshowEditor} from './SlideshowEditor'

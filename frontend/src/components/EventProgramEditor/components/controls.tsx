@@ -1,8 +1,8 @@
 import {ActionButton as Button} from 'libraries/forms'
-import {Icon, IconName} from 'libraries/ui'
 import {
-  DanceSet,   DEFAULT_INTERVAL_MUSIC, EventProgramItem, EventProgramRow, IntervalMusic, switchFor, useAppendToList
+  DanceSet,   DEFAULT_INTERVAL_MUSIC, EventProgramRow, IntervalMusic, switchFor, useAppendToList
 } from 'components/event/EventProgramForm'
+import { ProgramTypeIcon } from 'components/event/ProgramTypeIcon'
 import {useT} from 'i18n'
 import {guid} from 'utils/guid'
 
@@ -71,17 +71,3 @@ export const IntervalMusicSwitch = switchFor<IntervalMusic>({
   isChecked: intervalMusic => (intervalMusic?.duration ?? 0) > 0,
   toValue: checked => checked ? DEFAULT_INTERVAL_MUSIC : null,
 })
-
-type ProgramType = EventProgramItem['__typename'] | 'IntervalMusic'
-
-export function ProgramTypeIcon({type}: {type: ProgramType}) {
-  const t = useT('components.eventProgramEditor')
-  const icons: Record<ProgramType, IconName> = {
-    Dance: 'music',
-    RequestedDance: 'music',
-    EventProgram: 'info-sign',
-    IntervalMusic: 'time',
-  }
-
-  return <Icon className={`programType programType-${type}`} icon={icons[type]} title={t(`programTypes.${type}`)} />
-}
