@@ -47,8 +47,13 @@ export const workshops = (app: Application) => {
     await Promise.all(
       results.map(async workshop => {
         const workshops = await workshopService.find({query: { eventId: workshop.eventId }})
+
         const workshopVersions = Object.fromEntries(
-          workshops.map(w => [w._id, w._versionId]) 
+          ( await Promise.all(
+            workshops.map(async w =>
+              [w._id, (await workshopService.getLatestVersion(w._id))?._versionId] as const
+            )
+          )).filter(entry => entry[1] != undefined) as [string, string][]
         )
         console.log(workshopVersions)
 

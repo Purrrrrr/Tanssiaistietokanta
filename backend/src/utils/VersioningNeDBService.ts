@@ -51,10 +51,8 @@ export default class VersioningNeDBService<Result extends Versionable, Data, Ser
     return await this.versionService.get(versionId, _params)
   }
 
-  async getLatestVersionAtTime(id: Id, maxDate: string): Promise<Result> {
-    const current = await this.get(id)
-
-    return current
+  async getLatestVersion(id: Id): Promise<Result | null> {
+    return this.versionService.getLatestVersion(id)
   }
 
   protected async onSave(result: Result): Promise<void> {
