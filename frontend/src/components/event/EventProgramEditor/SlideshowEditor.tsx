@@ -9,7 +9,7 @@ import {SlideContainer} from 'components/Slide'
 import {SlideStyleSelector} from 'components/widgets/SlideStyleSelector'
 import {useT} from 'i18n'
 
-import '../Slide/slideStyles.scss'
+import 'components/Slide/slideStyles.scss'
 
 export function SlideshowEditor({ program }: {program: EventProgramSettings}) {
   const t = useT('components.eventProgramEditor')

@@ -1,4 +1,4 @@
-import {EventProgramEditor} from 'components/EventProgramEditor'
+import {EventProgramEditor} from 'components/event/EventProgramEditor'
 import {PageTitle} from 'components/PageTitle'
 import {useT} from 'i18n'
 

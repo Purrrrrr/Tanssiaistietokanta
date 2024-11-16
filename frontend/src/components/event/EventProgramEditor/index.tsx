@@ -43,7 +43,6 @@ import {
 import { SlideshowEditor} from './SlideshowEditor'
 
 import './EventProgramEditor.sass'
-import '../Slide/slideStyles.scss'
 
 export { programItemToString }
 
