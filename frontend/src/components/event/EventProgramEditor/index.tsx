@@ -1,4 +1,5 @@
 import React, {useCallback, useMemo, useRef} from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import {ActionButton as Button, ClickToEdit, DragHandle, ListEditorContext, SyncStatus} from 'libraries/forms'
 import {Card, CssClass, Flex, HTMLTable, Tab, Tabs} from 'libraries/ui'
@@ -52,6 +53,10 @@ interface EventProgramEditorProps {
 
 export function EventProgramEditor({event}: EventProgramEditorProps) {
   const {formProps, formProps: { value }, state} = useEventProgramEditorForm(event._id, event._versionId ?? undefined, event.program)
+  const { tabId } = useParams()
+  const navigate = useNavigate()
+  const changeTab = (nextTabId: string) =>
+    navigate(tabId ? `../${nextTabId}` : nextTabId)
 
   return <Form {...formProps}>
     <BackLink to="..">{useTranslation('pages.events.eventProgramPage.backToEvent')}</BackLink>
@@ -59,9 +64,9 @@ export function EventProgramEditor({event}: EventProgramEditorProps) {
       {useTranslation('pages.events.eventProgramPage.pageTitle')}
       <SyncStatus style={{marginLeft: '1ch', top: '3px'}} className="flex-fill" state={state} />
     </h1>
-    <Tabs renderActiveTabPanelOnly>
+    <Tabs id="programEditorTabs" renderActiveTabPanelOnly selectedTabId={tabId ?? 'main'} onChange={changeTab}>
       <Tab id="main" title="Tanssiohjelma" panel={<MainEditor program={value} workshops={event.workshops} />} />
-      <Tab id="slideshow" title="Diashow" panel={<SlideshowEditor program={value} />} />
+      <Tab id="slides" title="Diashow" panel={<SlideshowEditor program={value} />} />
     </Tabs>
   </Form>
 }
