@@ -1,39 +1,40 @@
 export type EventSlideProps = TitleSlideProps | IntroductionSlideProps| DanceSetSlideProps | DanceProgramItemSlideProps | IntervalMusicSlideProps
 
 
-export interface TitleSlideProps {
+export interface TitleSlideProps extends CommonSlideProps {
   id: ''
   type: 'title'
   parentId?: undefined
 }
 
-export interface DanceSetSlideProps {
-  id: ID
+export interface DanceSetSlideProps extends CommonSlideProps {
   type: 'danceSet'
   parentId?: undefined
   danceSetIndex: number
 }
 
-export interface IntroductionSlideProps {
-  id: ID
+export interface IntroductionSlideProps extends CommonSlideProps {
   type: 'introduction'
   parentId: ''
   itemIndex: number
 }
 
-export interface DanceProgramItemSlideProps {
-  id: ID
+export interface DanceProgramItemSlideProps extends CommonSlideProps {
   type: 'programItem'
   parentId: ID
   danceSetIndex: number
   itemIndex: number
 }
 
-export interface IntervalMusicSlideProps {
-  id: ID
+export interface IntervalMusicSlideProps extends CommonSlideProps {
   type: 'intervalMusic'
   parentId: ID
   danceSetIndex: number
+}
+
+interface CommonSlideProps {
+  id: ID
+  title: string
 }
 
 export type WithEventProgram<X> = { eventProgram: EventProgram } & X
