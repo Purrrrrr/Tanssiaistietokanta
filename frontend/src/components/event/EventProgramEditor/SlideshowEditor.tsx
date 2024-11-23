@@ -23,19 +23,35 @@ export function SlideshowEditor({ program }: {program: EventProgramSettings}) {
     onChangeSlide: (slide) => navigate(`../slides/${slide.id}`)
   })
 
+
+  return <section className="slideshowEditor">
+    <div className="main-toolbar">
+      <Field label="" inline path="slideStyleId" component={SlideStyleSelector} componentProps={{text: t('fields.eventDefaultStyle')}} />
+    </div>
+    <SlideNavigation currentSlide={currentSlide} slides={slides} eventProgram={program} />
+    <div {...swipeHandlers} className="slideEditors">
+      <SlideBox eventProgram={program} slide={currentSlide} />
+    </div>
+  </section>
+}
+
+function SlideNavigation({currentSlide, slides, eventProgram}: {currentSlide: EventSlideProps, slides: EventSlideProps[], eventProgram: EventProgramSettings}) {
+  const navigate = useNavigate()
+  const currentParentId = currentSlide.parentId ?? currentSlide.id
+
   useEffect(
     () => {
       document.getElementById(`slide-link-${currentSlide.id}`)?.scrollIntoView({ behavior: 'smooth'})
     },
     [currentSlide.id],
   )
+  const onWheel = (e: React.WheelEvent) => {
+    if (e.deltaY == 0) return
+    e.preventDefault()
+    document.querySelector('.slideNavigation')?.scrollBy(e.deltaY, 0)
+  }
 
-  const currentParentId = currentSlide.parentId ?? currentSlide.id
-
-  return <section className="slideshowEditor">
-    <div className="main-toolbar">
-      <Field label="" inline path="slideStyleId" component={SlideStyleSelector} componentProps={{text: t('fields.eventDefaultStyle')}} />
-    </div>
+  return <>
     <Tabs
       id="danceset"
       selectedTabId={currentSlide.parentId ?? currentSlide.id}
@@ -45,15 +61,11 @@ export function SlideshowEditor({ program }: {program: EventProgramSettings}) {
         <Tab id={slide.id} title={slide.title} />
       )}
     </Tabs>
-    <nav className="slideNavigation">
+    <nav className="slideNavigation" onWheel={onWheel}>
       {slides.filter(slide => (slide.id === currentParentId || slide.parentId === currentParentId))
-        .map(slide => <SlideLink key={slide.id} slide={slide} eventProgram={program} />)}
+        .map(slide => <SlideLink key={slide.id} slide={slide} eventProgram={eventProgram} />)}
     </nav>
-    <div {...swipeHandlers} className="slideEditors">
-      {/* slides.map(slide => <SlideBox key={slide.id} slide={slide} eventProgram={program} />) */}
-      <SlideBox eventProgram={program} slide={currentSlide} />
-    </div>
-  </section>
+  </>
 }
 
 const SlideLink = React.memo(function SlideLink({slide, eventProgram}: { slide: EventSlideProps, eventProgram: EventProgramSettings }) {
