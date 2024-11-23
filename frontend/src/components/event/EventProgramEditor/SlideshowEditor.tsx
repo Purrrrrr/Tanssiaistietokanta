@@ -45,11 +45,6 @@ function SlideNavigation({currentSlide, slides, eventProgram}: {currentSlide: Ev
     },
     [currentSlide.id],
   )
-  const onWheel = (e: React.WheelEvent) => {
-    if (e.deltaY == 0) return
-    e.preventDefault()
-    document.querySelector('.slideNavigation')?.scrollBy(e.deltaY, 0)
-  }
 
   return <>
     <Tabs
@@ -61,7 +56,7 @@ function SlideNavigation({currentSlide, slides, eventProgram}: {currentSlide: Ev
         <Tab id={slide.id} title={slide.title} />
       )}
     </Tabs>
-    <nav className="slideNavigation" onWheel={onWheel}>
+    <nav className="slideNavigation">
       {slides.filter(slide => (slide.id === currentParentId || slide.parentId === currentParentId))
         .map(slide => <SlideLink key={slide.id} slide={slide} eventProgram={eventProgram} />)}
     </nav>
