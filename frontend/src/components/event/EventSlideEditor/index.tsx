@@ -43,7 +43,7 @@ export function EventSlideEditor({syncStatus, ...props}: EventSlideEditorProps )
       <p>
         <ParentLink {...props} />
       </p>
-      <Flex spaced>
+      <Flex spaced wrap>
         <DanceSelector {...props} />
         <InheritedSlideStyleSelector
           path={slideStylePath}

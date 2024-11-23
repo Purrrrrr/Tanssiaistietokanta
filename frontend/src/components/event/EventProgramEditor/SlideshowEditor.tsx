@@ -1,11 +1,12 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import {Link, useNavigate, useParams} from 'react-router-dom'
 import deepEquals from 'fast-deep-equal'
 
-import {Card, Flex} from 'libraries/ui'
+import {Card, Flex, Tab, Tabs} from 'libraries/ui'
 import { EventProgramSettings, Field } from 'components/event/EventProgramForm'
-import {EventSlide, EventSlideProps, useEventSlides} from 'components/event/EventSlide'
+import {EventSlide, EventSlideProps, startSlideId, useEventSlides} from 'components/event/EventSlide'
 import { EventSlideEditor } from 'components/event/EventSlideEditor'
-import {SlideContainer} from 'components/Slide'
+import {SlideContainer, useSlideshowNavigation} from 'components/Slide'
 import {SlideStyleSelector} from 'components/widgets/SlideStyleSelector'
 import {useT} from 'i18n'
 
@@ -13,15 +14,56 @@ import 'components/Slide/slideStyles.scss'
 
 export function SlideshowEditor({ program }: {program: EventProgramSettings}) {
   const t = useT('components.eventProgramEditor')
+  const navigate = useNavigate()
   const slides = useEventSlides(program)
+  const { slideId = startSlideId } = useParams()
+  const currentSlide = slides.find(slide => slide.id === slideId ) ?? slides[0]
+  const swipeHandlers = useSlideshowNavigation({
+    slides, currentSlideId: currentSlide.id,
+    onChangeSlide: (slide) => navigate(`../slides/${slide.id}`)
+  })
 
-  return <section className="eventProgramEditor">
+  useEffect(
+    () => {
+      document.getElementById(`slide-link-${currentSlide.id}`)?.scrollIntoView({ behavior: 'smooth'})
+    },
+    [currentSlide.id],
+  )
+
+  const currentParentId = currentSlide.parentId ?? currentSlide.id
+
+  return <section className="slideshowEditor">
     <div className="main-toolbar">
       <Field label="" inline path="slideStyleId" component={SlideStyleSelector} componentProps={{text: t('fields.eventDefaultStyle')}} />
     </div>
-    {slides.map(slide => <SlideBox key={slide.id} eventProgram={program} slide={slide} />)}
+    <Tabs
+      id="danceset"
+      selectedTabId={currentSlide.parentId ?? currentSlide.id}
+      onChange={(id) => navigate(`../slides/${id}`)}
+    >
+      {slides.filter(slide => slide.parentId === undefined).map(slide =>
+        <Tab id={slide.id} title={slide.title} />
+      )}
+    </Tabs>
+    <nav className="slideNavigation">
+      {slides.filter(slide => (slide.id === currentParentId || slide.parentId === currentParentId))
+        .map(slide => <SlideLink key={slide.id} slide={slide} eventProgram={program} />)}
+    </nav>
+    <div {...swipeHandlers} className="slideEditors">
+      {/* slides.map(slide => <SlideBox key={slide.id} slide={slide} eventProgram={program} />) */}
+      <SlideBox eventProgram={program} slide={currentSlide} />
+    </div>
   </section>
 }
+
+const SlideLink = React.memo(function SlideLink({slide, eventProgram}: { slide: EventSlideProps, eventProgram: EventProgramSettings }) {
+  return <Link to={`../slides/${slide.id}`} id={`slide-link-${slide.id}`}>
+    <SlideContainer className="flex-fill inert" color="#eee">
+      <EventSlide {...slide} eventProgram={eventProgram} />
+    </SlideContainer>
+    <p>{slide.title}</p>
+  </Link>
+})
 
 interface SlideBoxProps {
   eventProgram: EventProgramSettings
@@ -31,12 +73,12 @@ interface SlideBoxProps {
 const SlideBox = React.memo(function SlideBox({eventProgram, slide}: SlideBoxProps) {
   return <Card id={slide.id}>
     <Flex wrap>
-      <div className="flex-fill" style={{maxWidth: 600}}>
-        <EventSlideEditor {...slide} eventProgram={eventProgram} hashLink />
-      </div>
-      <SlideContainer className="flex-fill inert" size={300} color="#eee">
+      <SlideContainer className="flex-fill inert" size="auto" color="#eee">
         <EventSlide {...slide} eventProgram={eventProgram} />
       </SlideContainer>
+      <div className="eventSlideEditor">
+        <EventSlideEditor {...slide} eventProgram={eventProgram} />
+      </div>
     </Flex>
   </Card>
 }, areSlideBoxPropsEqual)

@@ -6,7 +6,7 @@ import './SlideContainer.scss'
 export interface SlideContainerProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'color'> {
   children?: React.ReactElement | React.ReactElement[]
   color?: React.CSSProperties['background']
-  size?: number
+  size?: React.CSSProperties['width']
   fullscreen?: boolean
 }
 

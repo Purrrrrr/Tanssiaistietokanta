@@ -81,7 +81,32 @@ $borderColor: rgba(16, 22, 26, 0.15)
 
   .addDanceSetButtons
     margin: 1em 0
+  
+  .bp5-tab-list
+    flex-wrap: wrap
 
+  .slideNavigation
+    display: flex
+    overflow: auto
+    background: white
+    top: 0
+    margin-bottom: 10px
+    border: 1px solid black
+    & > a
+      padding: 10px
+      border-right: 1px solid black
+      & > p
+        text-align: center
+        margin: 0
+    .slide-backdrop
+      width: min(300px, 30dvw)
+      height: calc(min(300px, 30dvw) / 16 * 9)
+
+  .eventSlideEditor
+    width: 30dvw
+
+    @media only screen and (max-width: 800px)
+      width: 100%
   .inert a
     pointer-events: none
 

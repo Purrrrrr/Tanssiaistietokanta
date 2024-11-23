@@ -58,7 +58,7 @@ export function EventProgramEditor({event}: EventProgramEditorProps) {
   const changeTab = (nextTabId: string) =>
     navigate(tabId ? `../${nextTabId}` : nextTabId)
 
-  return <Form {...formProps}>
+  return <Form {...formProps} className="eventProgramEditor">
     <BackLink to="..">{useTranslation('pages.events.eventProgramPage.backToEvent')}</BackLink>
     <h1>
       {useTranslation('pages.events.eventProgramPage.pageTitle')}
@@ -75,7 +75,7 @@ function MainEditor({ program, workshops }: {program: EventProgramSettings, work
   const t = useT('components.eventProgramEditor')
   const {danceSets, introductions} = program
 
-  return <section className="eventProgramEditor">
+  return <section>
     <div className="main-toolbar">
       <Field label={t('fields.pauseDuration')} inline path="pauseBetweenDances" component={DurationField} />
       {introductions.program.length === 0 && <AddIntroductionButton />}
