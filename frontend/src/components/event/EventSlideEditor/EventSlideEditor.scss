@@ -1,0 +1,10 @@
+.program-list-item {
+  .item-name {
+    text-wrap: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .buttons {
+    white-space: nowrap;
+  }
+}

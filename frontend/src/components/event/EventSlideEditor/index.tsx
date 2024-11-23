@@ -25,6 +25,8 @@ import {Dance} from 'types'
 
 import { InheritedSlideStyleSelector, IntervalMusicDefaultTextsSwitch } from './components'
 
+import './EventSlideEditor.scss'
+
 type EventSlideEditorProps = WithEventProgram<EventSlideProps>
   & Pick<LinkToSlideProps, 'hashLink'> & { syncStatus?: SyncState }
 
@@ -170,13 +172,13 @@ const ProgramItem = React.memo(function ProgramEditor({dragHandle, path, itemInd
   if (!item) return null
   const {__typename } = item.item
 
-  return <Flex alignItems='center' spaced>
+  return <Flex alignItems='center' spaced className="program-list-item">
     <ProgramTypeIcon type={__typename} />
-    <div className="flex-fill">
+    <div className="flex-fill item-name">
       <LinkToSlide id={item._id} hashLink={hashLink}>{programItemToString(item, t)}</LinkToSlide>
     </div>
     <div><Duration value={__typename === 'RequestedDance' ? 0 : item.item.duration} /></div>
-    <div>
+    <div className="buttons">
       {dragHandle}
       <RemoveItemButton path={path} index={itemIndex} title={t('buttons.remove')} icon="cross" className="deleteItem" />
     </div>
