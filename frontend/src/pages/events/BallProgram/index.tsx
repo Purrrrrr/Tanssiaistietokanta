@@ -57,7 +57,7 @@ function BallProgramView(
   }
 ) {
   const changeSlideId = useNavigate()
-  const swipeHandlers = useSlideshowNavigation({
+  const { swipeHandlers } = useSlideshowNavigation({
     slides, currentSlideId: slide.id, onChangeSlide: slide => changeSlideId(slide.id),
   })
 

@@ -18,7 +18,7 @@ export function SlideshowEditor({ program }: {program: EventProgramSettings}) {
   const slides = useEventSlides(program)
   const { slideId = startSlideId } = useParams()
   const currentSlide = slides.find(slide => slide.id === slideId ) ?? slides[0]
-  const swipeHandlers = useSlideshowNavigation({
+  const { swipeHandlers, slideIndex } = useSlideshowNavigation({
     slides, currentSlideId: currentSlide.id,
     onChangeSlide: (slide) => navigate(`../slides/${slide.id}`)
   })
@@ -28,14 +28,14 @@ export function SlideshowEditor({ program }: {program: EventProgramSettings}) {
     <div className="main-toolbar">
       <Field label="" inline path="slideStyleId" component={SlideStyleSelector} componentProps={{text: t('fields.eventDefaultStyle')}} />
     </div>
-    <SlideNavigation currentSlide={currentSlide} slides={slides} eventProgram={program} />
+    <SlideNavigation currentSlide={currentSlide} slideIndex={slideIndex} slides={slides} eventProgram={program} />
     <div {...swipeHandlers} className="slideEditors">
       <SlideBox eventProgram={program} slide={currentSlide} />
     </div>
   </section>
 }
 
-function SlideNavigation({currentSlide, slides, eventProgram}: {currentSlide: EventSlideProps, slides: EventSlideProps[], eventProgram: EventProgramSettings}) {
+function SlideNavigation({currentSlide, slides, eventProgram, slideIndex}: {slideIndex: number, currentSlide: EventSlideProps, slides: EventSlideProps[], eventProgram: EventProgramSettings}) {
   const navigate = useNavigate()
   const currentParentId = currentSlide.parentId ?? currentSlide.id
 
@@ -57,8 +57,17 @@ function SlideNavigation({currentSlide, slides, eventProgram}: {currentSlide: Ev
       )}
     </Tabs>
     <nav className="slideNavigation">
-      {slides.filter(slide => (slide.id === currentParentId || slide.parentId === currentParentId))
-        .map(slide => <SlideLink key={slide.id} slide={slide} eventProgram={eventProgram} />)}
+      {slideIndex > 0 &&
+        <Link to={`../slides/${slides[slideIndex - 1].id}`} className="previous-slide-link">⇦</Link>
+      }
+      <div className="slides">
+        {slides.filter(slide => slide.id || (slide.id === currentParentId || slide.parentId === currentParentId))
+          .map(slide => <SlideLink key={slide.id} slide={slide} eventProgram={eventProgram} />)}
+
+      </div>
+      {slideIndex < slides.length - 1 &&
+        <Link to={`../slides/${slides[slideIndex + 1].id}`} className="next-slide-link">⇨</Link>
+      }
     </nav>
   </>
 }
@@ -70,7 +79,7 @@ const SlideLink = React.memo(function SlideLink({slide, eventProgram}: { slide: 
     </SlideContainer>
     <p>{slide.title}</p>
   </Link>
-})
+}, areSlideBoxPropsEqual)
 
 interface SlideBoxProps {
   eventProgram: EventProgramSettings

@@ -24,18 +24,24 @@ export function useSlideshowNavigation(
     (i => i === -1 ? 0 : i)(slides.findIndex(slide => slide.id === currentSlideId))
   const slide = slides[slideIndex]
 
+  const getBoundedSlideIndex = useCallback(
+    function getSlideForIndex(index: number) {
+      return Math.min(Math.max(index, 0), slides.length-1)
+    },
+    [slides.length]
+  )
+
   const changeSlide = useCallback((indexDelta: number) => {
-    const index = slideIndex + indexDelta
-    const nextIndex = Math.min(Math.max(index, 0), slides.length-1)
+    const nextIndex = getBoundedSlideIndex(slideIndex + indexDelta)
     onChangeSlide(slides[nextIndex], nextIndex)
-  }, [slides, slideIndex, onChangeSlide])
+  }, [slides, slideIndex, onChangeSlide, getBoundedSlideIndex])
 
   useOnKeydown({
     ArrowLeft: () => changeSlide(-1),
     ArrowRight: () => changeSlide(1),
   })
 
-  const handlers = useSwipeable({
+  const swipeHandlers = useSwipeable({
     onSwipedLeft: () => changeSlide(1),
     onSwipedRight: () => changeSlide(-1),
     onSwipedUp: () => {
@@ -46,5 +52,7 @@ export function useSlideshowNavigation(
     },
   })
 
-  return handlers
+  return {
+    swipeHandlers, slideIndex, getBoundedSlideIndex,
+  }
 }

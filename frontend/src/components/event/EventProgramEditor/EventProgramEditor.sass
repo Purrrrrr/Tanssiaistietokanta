@@ -87,20 +87,35 @@ $borderColor: rgba(16, 22, 26, 0.15)
 
   .slideNavigation
     display: flex
-    overflow: auto
-    background: white
-    top: 0
     margin-bottom: 10px
     border: 1px solid black
-    & > a
-      padding: 10px
+    .slides
+      display: flex
+      overflow: auto
+      background: white
+      top: 0
+      & > a
+        padding: 10px
+        border-right: 1px solid black
+        & > p
+          text-align: center
+          margin: 0
+      .slide-backdrop
+        width: min(300px, 30dvw)
+        height: calc(min(300px, 30dvw) / 16 * 9)
+
+    .previous-slide-link, .next-slide-link
+      display: block
+      flex: 0 0 40px
+      align-self: stretch
+      text-align: center
+      align-content: center
+      color: inherit
+      
+    .previous-slide-link
       border-right: 1px solid black
-      & > p
-        text-align: center
-        margin: 0
-    .slide-backdrop
-      width: min(300px, 30dvw)
-      height: calc(min(300px, 30dvw) / 16 * 9)
+    .next-slide-link
+      border-left: 1px solid black
 
   .eventSlideEditor
     width: min(35dvw, 425px)
