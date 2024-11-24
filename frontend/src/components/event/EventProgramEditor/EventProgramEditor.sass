@@ -95,6 +95,10 @@ $borderColor: rgba(16, 22, 26, 0.15)
       top: 0
       & > a
         padding: 10px
+        &:hover
+          text-decoration: none
+          & > p
+            text-decoration: underline
         & > p
           text-align: center
           margin: 0
@@ -103,6 +107,7 @@ $borderColor: rgba(16, 22, 26, 0.15)
         border-radius: 3px
         width: min(300px, 30dvw)
         height: calc(min(300px, 30dvw) / 16 * 9)
+        margin-inline: auto
       & > a.current
         .slide-backdrop
           outline: 2px solid gray
