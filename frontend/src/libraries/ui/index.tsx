@@ -37,6 +37,8 @@ export type Intent = 'none' | 'primary' | 'success' | 'warning' | 'danger';
 export type IconName =
   'arrow-left'
   | 'caret-down'
+  | 'chevron-left'
+  | 'chevron-right'
   | 'cross'
   | 'double-caret-vertical'
   | 'double-chevron-up'
@@ -61,6 +63,10 @@ const iconModules = {
   'arrow-left/20': () => import('@blueprintjs/icons/lib/esm/generated/20px/paths/arrow-left'),
   'caret-down/16': () => import('@blueprintjs/icons/lib/esm/generated/16px/paths/caret-down'),
   'caret-down/20': () => import('@blueprintjs/icons/lib/esm/generated/20px/paths/caret-down'),
+  'chevron-left/16': () => import('@blueprintjs/icons/lib/esm/generated/16px/paths/chevron-left'),
+  'chevron-left/20': () => import('@blueprintjs/icons/lib/esm/generated/20px/paths/chevron-left'),
+  'chevron-right/16': () => import('@blueprintjs/icons/lib/esm/generated/16px/paths/chevron-right'),
+  'chevron-right/20': () => import('@blueprintjs/icons/lib/esm/generated/20px/paths/chevron-right'),
   'cross/16': () => import('@blueprintjs/icons/lib/esm/generated/16px/paths/cross'),
   'cross/20': () => import('@blueprintjs/icons/lib/esm/generated/20px/paths/cross'),
   'double-caret-vertical/16': () => import('@blueprintjs/icons/lib/esm/generated/16px/paths/double-caret-vertical'),

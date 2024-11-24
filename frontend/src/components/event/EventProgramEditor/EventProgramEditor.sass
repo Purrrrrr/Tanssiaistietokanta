@@ -88,7 +88,6 @@ $borderColor: rgba(16, 22, 26, 0.15)
   .slideNavigation
     display: flex
     margin-bottom: 10px
-    border: 1px solid black
     .slides
       display: flex
       overflow: auto
@@ -96,13 +95,19 @@ $borderColor: rgba(16, 22, 26, 0.15)
       top: 0
       & > a
         padding: 10px
-        border-right: 1px solid black
         & > p
           text-align: center
           margin: 0
       .slide-backdrop
+        outline: 1px solid gray
+        border-radius: 3px
         width: min(300px, 30dvw)
         height: calc(min(300px, 30dvw) / 16 * 9)
+      & > a.current
+        .slide-backdrop
+          outline: 2px solid gray
+        p
+          font-weight: bold
 
     .previous-slide-link, .next-slide-link
       display: block
@@ -111,11 +116,6 @@ $borderColor: rgba(16, 22, 26, 0.15)
       text-align: center
       align-content: center
       color: inherit
-      
-    .previous-slide-link
-      border-right: 1px solid black
-    .next-slide-link
-      border-left: 1px solid black
 
   .eventSlideEditor
     width: min(35dvw, 425px)

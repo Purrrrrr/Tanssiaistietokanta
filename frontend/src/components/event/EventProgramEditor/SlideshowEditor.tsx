@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import {Link, useNavigate, useParams} from 'react-router-dom'
+import classNames from 'classnames'
 import deepEquals from 'fast-deep-equal'
 
 import {Card, Flex, Tab, Tabs} from 'libraries/ui'
@@ -7,6 +8,7 @@ import { EventProgramSettings, Field } from 'components/event/EventProgramForm'
 import {EventSlide, EventSlideProps, startSlideId, useEventSlides} from 'components/event/EventSlide'
 import { EventSlideEditor } from 'components/event/EventSlideEditor'
 import {SlideContainer, useSlideshowNavigation} from 'components/Slide'
+import { NavigateButton } from 'components/widgets/NavigateButton'
 import {SlideStyleSelector} from 'components/widgets/SlideStyleSelector'
 import {useT} from 'i18n'
 
@@ -58,28 +60,28 @@ function SlideNavigation({currentSlide, slides, eventProgram, slideIndex}: {slid
     </Tabs>
     <nav className="slideNavigation">
       {slideIndex > 0 &&
-        <Link to={`../slides/${slides[slideIndex - 1].id}`} className="previous-slide-link">⇦</Link>
+        <NavigateButton icon="chevron-left" href={`../slides/${slides[slideIndex - 1].id}`} className="previous-slide-link" />
       }
-      <div className="slides">
+      <div className="slides bp5-button">
         {slides.filter(slide => slide.id || (slide.id === currentParentId || slide.parentId === currentParentId))
-          .map(slide => <SlideLink key={slide.id} slide={slide} eventProgram={eventProgram} />)}
+          .map(slide => <SlideLink key={slide.id} slide={slide} eventProgram={eventProgram} current={slide === currentSlide} />)}
 
       </div>
       {slideIndex < slides.length - 1 &&
-        <Link to={`../slides/${slides[slideIndex + 1].id}`} className="next-slide-link">⇨</Link>
+        <NavigateButton icon="chevron-right" href={`../slides/${slides[slideIndex + 1].id}`} className="next-slide-link" />
       }
     </nav>
   </>
 }
 
-const SlideLink = React.memo(function SlideLink({slide, eventProgram}: { slide: EventSlideProps, eventProgram: EventProgramSettings }) {
-  return <Link to={`../slides/${slide.id}`} id={`slide-link-${slide.id}`}>
+const SlideLink = React.memo(function SlideLink({slide, eventProgram, current}: { slide: EventSlideProps, eventProgram: EventProgramSettings, current: boolean }) {
+  return <Link to={`../slides/${slide.id}`} id={`slide-link-${slide.id}`} className={classNames({current})}>
     <SlideContainer className="flex-fill inert" color="#eee">
       <EventSlide {...slide} eventProgram={eventProgram} />
     </SlideContainer>
     <p>{slide.title}</p>
   </Link>
-}, areSlideBoxPropsEqual)
+}, (props, newProps) => props.current === newProps.current && areSlideBoxPropsEqual(props, newProps))
 
 interface SlideBoxProps {
   eventProgram: EventProgramSettings

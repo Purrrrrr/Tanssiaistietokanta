@@ -5,8 +5,12 @@ import classNames from 'classnames'
 
 import {useIsAdmin} from 'services/users'
 
+import { Icon } from 'libraries/ui'
+
 interface NavigateButtonProps extends Omit<React.ComponentProps<typeof Link>, 'to'> {
-  text: string | React.ReactElement | React.ReactElement[],
+  text?: string | React.ReactElement | React.ReactElement[],
+  children?: string | React.ReactElement | React.ReactElement[],
+  icon?: React.ComponentProps<typeof Icon>['icon']
   adminOnly?: boolean,
   disabled?: boolean,
   href: string,
@@ -14,7 +18,7 @@ interface NavigateButtonProps extends Omit<React.ComponentProps<typeof Link>, 't
   className?: string,
 }
 
-export function NavigateButton({text, adminOnly, disabled, href, intent, className, ...props} : NavigateButtonProps) {
+export function NavigateButton({text, children, icon, adminOnly, disabled, href, intent, className, ...props} : NavigateButtonProps) {
   const isAdmin = useIsAdmin()
   if (adminOnly && !isAdmin) return null
 
@@ -29,7 +33,9 @@ export function NavigateButton({text, adminOnly, disabled, href, intent, classNa
 
   return <Link {...props} className={classes} role="button"
     tabIndex={0} to={href} onClick={onClick}>
+    {icon && <Icon icon={icon} />}
     {text}
+    {children}
   </Link>
 }
 
