@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { UIEvent, useEffect, useRef, useState } from 'react'
 import {Link, useNavigate, useParams} from 'react-router-dom'
 import classNames from 'classnames'
 import deepEquals from 'fast-deep-equal'
@@ -37,16 +37,11 @@ export function SlideshowEditor({ program }: {program: EventProgramSettings}) {
   </section>
 }
 
-function SlideNavigation({currentSlide, slides, eventProgram, slideIndex}: {slideIndex: number, currentSlide: EventSlideProps, slides: EventSlideProps[], eventProgram: EventProgramSettings}) {
-  const navigate = useNavigate()
-  const currentParentId = currentSlide.parentId ?? currentSlide.id
+interface SlideNavigationProps {slideIndex: number, currentSlide: EventSlideProps, slides: EventSlideProps[], eventProgram: EventProgramSettings}
 
-  useEffect(
-    () => {
-      document.getElementById(`slide-link-${currentSlide.id}`)?.scrollIntoView({ behavior: 'smooth'})
-    },
-    [currentSlide.id],
-  )
+function SlideNavigation(props: SlideNavigationProps) {
+  const {currentSlide, slides, eventProgram, slideIndex} = props
+  const navigate = useNavigate()
 
   return <>
     <Tabs
@@ -62,11 +57,7 @@ function SlideNavigation({currentSlide, slides, eventProgram, slideIndex}: {slid
       {slideIndex > 0 &&
         <NavigateButton icon="chevron-left" href={`../slides/${slides[slideIndex - 1].id}`} className="previous-slide-link" />
       }
-      <div className="slides bp5-button">
-        {slides.filter(slide => slide.id || (slide.id === currentParentId || slide.parentId === currentParentId))
-          .map(slide => <SlideLink key={slide.id} slide={slide} eventProgram={eventProgram} current={slide === currentSlide} />)}
-
-      </div>
+      <SlidePreviews {...props} />
       {slideIndex < slides.length - 1 &&
         <NavigateButton icon="chevron-right" href={`../slides/${slides[slideIndex + 1].id}`} className="next-slide-link" />
       }
@@ -74,14 +65,94 @@ function SlideNavigation({currentSlide, slides, eventProgram, slideIndex}: {slid
   </>
 }
 
-const SlideLink = React.memo(function SlideLink({slide, eventProgram, current}: { slide: EventSlideProps, eventProgram: EventProgramSettings, current: boolean }) {
-  return <Link to={`../slides/${slide.id}`} id={`slide-link-${slide.id}`} className={classNames({current})}>
+function SlidePreviews({slides, currentSlide, eventProgram}: SlideNavigationProps) {
+  const container = React.useRef<HTMLDivElement>(null)
+  const [rendered, setRendered] = useState({start: 0, end: 0})
+
+  useEffect(
+    () => {
+      const div = container.current
+      const slide = document.getElementById(`slide-link-${currentSlide.id}`) //?.scrollIntoView({ behavior: 'smooth'})
+      if (!div || !slide) return
+
+      console.log(slide.offsetLeft, slide.offsetWidth, div.offsetWidth, slide.offsetLeft + slide.offsetWidth / 2 - div.offsetWidth / 2)
+      div.scrollTo({ left: slide.offsetLeft + slide.offsetWidth / 2 - div.offsetWidth / 2, behavior: 'smooth'})
+    },
+    [currentSlide.id],
+  )
+
+  const onScroll = useDebouncedScrollPositionListener(scroll => {
+    const div = container.current
+    if (!div) return
+
+    const padding = 2
+    let start: number | undefined
+    let end: number | undefined
+
+    const children = Array.from(div.children) as HTMLElement[]
+    for(let i = 0; i < children.length; i++) {
+      const child = children[i]
+      if (start == undefined) {
+        if (child.offsetLeft + child.offsetWidth > scroll) {
+          start = i - padding
+        }
+      }
+      if (child.offsetLeft > scroll + div.offsetWidth) {
+        end = i + 1 + padding
+        break
+      }
+    }
+    setRendered({start: start ?? 0, end: end ?? Infinity})
+  })
+
+  return <div className="slides" ref={container} onScroll={onScroll}>
+    {slides.map((slide, i) => <SlideLink key={slide.id} slide={slide} eventProgram={eventProgram} current={slide === currentSlide} placeholder={i < rendered.start || i >= rendered.end} />)}
+  </div>
+}
+
+function useDebouncedScrollPositionListener(callBack: (scrollPosition: number) => unknown) {
+  const timer = useRef<NodeJS.Timeout>()
+  const lastEvent = useRef<number>()
+  const delay = 200
+  const debounceTreshold = 600
+
+  return (e: UIEvent<HTMLDivElement>) => {
+    const scroll = (e.target as HTMLDivElement).scrollLeft
+    const now = +new Date()
+    if (timer.current) {
+      clearTimeout(timer.current)
+    }
+    if (lastEvent.current && lastEvent.current + debounceTreshold < now) {
+      callBack(scroll)
+      lastEvent.current = now
+    } else {
+      timer.current = setTimeout(() => {
+        callBack(scroll)
+        lastEvent.current = now
+      }, delay)
+    }
+  }
+}
+
+const SlideLink = React.memo(function SlideLink(
+  {slide, eventProgram, current, placeholder}: { slide: EventSlideProps, eventProgram: EventProgramSettings, current: boolean, placeholder: boolean }
+) {
+  if (placeholder) {
+    return <a href={`../slides/${slide.id}`} id={`slide-link-${slide.id}`} className={classNames('slide-link', {current})}>
+      <SlideContainer className="flex-fill inert" color="#eee">
+        <div className="slide" />
+      </SlideContainer>
+      <p className="slide-link-title">{slide.title}</p>
+    </a>
+  }
+
+  return <Link to={`../slides/${slide.id}`} id={`slide-link-${slide.id}`} className={classNames('slide-link', {current})}>
     <SlideContainer className="flex-fill inert" color="#eee">
-      <EventSlide {...slide} eventProgram={eventProgram} />
+      <EventSlide {...slide} eventProgram={eventProgram} linkComponent="a" />
     </SlideContainer>
-    <p>{slide.title}</p>
+    <p className="slide-link-title">{slide.title}</p>
   </Link>
-}, (props, newProps) => props.current === newProps.current && areSlideBoxPropsEqual(props, newProps))
+}, (prevProps, newProps) => prevProps.current === newProps.current && newProps.placeholder === prevProps.placeholder && (newProps.placeholder || areSlideBoxPropsEqual(prevProps, newProps)))
 
 interface SlideBoxProps {
   eventProgram: EventProgramSettings
@@ -92,7 +163,7 @@ const SlideBox = React.memo(function SlideBox({eventProgram, slide}: SlideBoxPro
   return <Card id={slide.id}>
     <Flex wrap>
       <SlideContainer className="flex-fill inert" size="auto" color="#eee">
-        <EventSlide {...slide} eventProgram={eventProgram} />
+        <EventSlide {...slide} eventProgram={eventProgram} linkComponent="a" />
       </SlideContainer>
       <div className="eventSlideEditor">
         <EventSlideEditor {...slide} eventProgram={eventProgram} />
