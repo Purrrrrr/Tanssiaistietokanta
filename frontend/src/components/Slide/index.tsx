@@ -20,6 +20,7 @@ export interface SlideProps {
   next?: SlideLink
   navigation?: SlideNavigation
   slideStyleId?: string | null | undefined
+  linkComponent?: LinkComponentType
 }
 
 export interface SlideNavigation {
@@ -34,7 +35,7 @@ export interface SlideLink {
   isPlaceholder?: boolean
 }
 
-export const Slide = React.memo(function Slide({id, title, type, children, footer, next, navigation, slideStyleId}: SlideProps) {
+export function Slide({id, title, type, children, footer, next, navigation, slideStyleId, linkComponent}: SlideProps) {
   const className = classnames(
     'slide',
     `slide-style-${slideStyleId ?? 'default'}`,
@@ -52,12 +53,12 @@ export const Slide = React.memo(function Slide({id, title, type, children, foote
         </AutosizedSection>
       }
     </section>
-    {next && <NextSlide next={next} />}
-    {navigation && <SlideSidebar currentItem={id} navigation={navigation} />}
+    {next && <NextSlide next={next} linkComponent={linkComponent} />}
+    {navigation && <SlideSidebar currentItem={id} navigation={navigation} linkComponent={linkComponent} />}
   </section>
-})
+}
 
-function NextSlide({next}: {next: SlideLink}) {
+function NextSlide({next}: {next: SlideLink, linkComponent?: LinkComponentType}) {
   const t = useT('components.slide')
   return <section className="slide-next-slide">
     <div className="slide-content-area">
@@ -68,29 +69,47 @@ function NextSlide({next}: {next: SlideLink}) {
 }
 
 function SlideSidebar(
-  {currentItem, navigation}: {currentItem: string, navigation: SlideNavigation}
+  {currentItem, navigation, linkComponent}: {currentItem: string, navigation: SlideNavigation, linkComponent?: LinkComponentType}
 ) {
   return <>
     <h2 className="slide-navigation-title">{navigation.title}</h2>
     <AutosizedSection className="slide-navigation">
-      <SlideNavigationList currentItem={currentItem} {...navigation} />
+      <SlideNavigationList currentItem={currentItem} {...navigation} linkComponent={linkComponent} />
     </AutosizedSection>
   </>
 }
 
-export function SlideNavigationList({items, currentItem}: Pick<SlideNavigation, 'items'> & {currentItem?: string}) {
+interface SlideNavigationListProps extends Pick<SlideNavigation, 'items'> {
+  currentItem?: string
+  linkComponent?: LinkComponentType
+}
+
+export function SlideNavigationList({items, currentItem, linkComponent}: SlideNavigationListProps) {
   if (!items.length) return null
 
   return <ul className={classnames('slide-content-area slide-navigation-list', {'has-current': currentItem !== undefined})}>
     {items.filter(item => item.hidden !== true || item.id === currentItem).map((item) =>
       <li key={item.id} className={item.id === currentItem ? 'current' : undefined}>
-        <LinkToSlide {...item} />
+        <LinkToSlide {...item} component={linkComponent} />
       </li>
     )}
   </ul>
 }
 
-export function LinkToSlide({title, id, isPlaceholder, className}: SlideLink & {className?: string}) {
-  const classNames = classnames(className, {placeholder: isPlaceholder})
+export type LinkComponentType = React.ComponentType<{
+  href: string
+  children: React.ReactNode
+  className?: string
+}> | 'a'
+
+interface LinkToSlideProps extends SlideLink {
+  component?: LinkComponentType
+}
+
+function LinkToSlide({title, id, isPlaceholder, component: LinkComponent}: LinkToSlideProps) {
+  const classNames = classnames({placeholder: isPlaceholder})
+  if (LinkComponent) {
+    return <LinkComponent href={id} className={classNames}>{title}</LinkComponent>
+  }
   return <Link className={classNames} to={id}>{title}</Link>
 }

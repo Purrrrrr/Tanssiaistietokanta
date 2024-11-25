@@ -1,47 +1,50 @@
-import { Slide, SlideLink, SlideNavigation, SlideNavigationList, SlideProps } from 'components/Slide'
+import { LinkComponentType, Slide, SlideLink, SlideNavigation, SlideNavigationList, SlideProps } from 'components/Slide'
 
 import { DanceProgramItemSlideProps, DanceSet, DanceSetSlideProps, EventProgramItem, EventSlideProps, IntervalMusicSlideProps, RequestedDance, WithEventProgram } from './types'
 
 import { intervalMusicId } from './useEventSlides'
 import { intervalMusicTitle, markdown, RequestedDancePlaceholder, TeachedIn } from './utils'
 
-export function EventSlide(props: WithEventProgram<EventSlideProps>) {
-  const { eventProgram } = props
+export function EventSlide(props: WithEventProgram<EventSlideProps> & { linkComponent?: LinkComponentType }) {
+  const { id, eventProgram, linkComponent } = props
   switch(props.type) {
     case 'title':
       return <Slide
         type="program-title"
-        id={props.id}
+        id={id}
         title={props.title}
         slideStyleId={eventProgram.introductions.titleSlideStyleId ?? eventProgram.slideStyleId}
+        linkComponent={linkComponent}
       />
     case 'introduction': {
       const { item, slideStyleId } = eventProgram.introductions.program[props.itemIndex]
       return <Slide
-        id={props.id}
+        id={id}
         {...programItemContent(item)}
         slideStyleId={slideStyleId ?? eventProgram.slideStyleId}
+        linkComponent={linkComponent}
       />
     }
     case 'danceSet':
       return <DanceSetSlide {...props} eventProgram={eventProgram} />
     case 'intervalMusic':
-      return <Slide {...intervalMusicSlideProps(props)} />
+      return <Slide {...intervalMusicSlideProps(props)} linkComponent={linkComponent} />
     case 'programItem':
       return <Slide
-        id={props.id}
+        id={id}
+        linkComponent={linkComponent}
         {...danceProgramItemSlideProps(props)}
       />
   }
 }
 
-function DanceSetSlide({ eventProgram, danceSetIndex }: WithEventProgram<DanceSetSlideProps> ) {
+function DanceSetSlide({ eventProgram, danceSetIndex, linkComponent }: WithEventProgram<DanceSetSlideProps> & { linkComponent?: LinkComponentType } ) {
   const danceSet = eventProgram.danceSets[danceSetIndex]
   return <Slide
     id={danceSet._id}
     title={danceSet.title}
     children={
-      <SlideNavigationList items={danceSetNavigation(danceSet)?.items ?? []}
+      <SlideNavigationList items={danceSetNavigation(danceSet)?.items ?? []} linkComponent={linkComponent}
       />
     }
     slideStyleId={danceSet.titleSlideStyleId ?? eventProgram.slideStyleId}
