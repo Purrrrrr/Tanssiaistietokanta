@@ -1,4 +1,4 @@
-import React, { UIEvent, useEffect, useRef, useState } from 'react'
+import React, { UIEvent, useDeferredValue, useEffect, useRef, useState } from 'react'
 import {Link, useNavigate, useParams} from 'react-router-dom'
 import classNames from 'classnames'
 import deepEquals from 'fast-deep-equal'
@@ -24,15 +24,19 @@ export function SlideshowEditor({ program }: {program: EventProgramSettings}) {
     slides, currentSlideId: currentSlide.id,
     onChangeSlide: (slide) => navigate(`../slides/${slide.id}`)
   })
-
+  const deferredCurrentSlide = useDeferredValue(currentSlide)
+  const isStale = deferredCurrentSlide !== currentSlide
 
   return <section className="slideshowEditor">
     <div className="main-toolbar">
       <Field label="" inline path="slideStyleId" component={SlideStyleSelector} componentProps={{text: t('fields.eventDefaultStyle')}} />
     </div>
     <SlideNavigation currentSlide={currentSlide} slideIndex={slideIndex} slides={slides} eventProgram={program} />
-    <div {...swipeHandlers} className="slideEditors">
-      <SlideBox eventProgram={program} slide={currentSlide} />
+    <div {...swipeHandlers} className="slideEditors" style={{
+      opacity: isStale ? 0 : 1,
+      transition: 'opacity 0.1s linear'
+    }}>
+      <SlideBox eventProgram={program} slide={deferredCurrentSlide} />
     </div>
   </section>
 }
@@ -40,7 +44,7 @@ export function SlideshowEditor({ program }: {program: EventProgramSettings}) {
 interface SlideNavigationProps {slideIndex: number, currentSlide: EventSlideProps, slides: EventSlideProps[], eventProgram: EventProgramSettings}
 
 function SlideNavigation(props: SlideNavigationProps) {
-  const {currentSlide, slides, eventProgram, slideIndex} = props
+  const {currentSlide, slides, slideIndex} = props
   const navigate = useNavigate()
 
   return <>
