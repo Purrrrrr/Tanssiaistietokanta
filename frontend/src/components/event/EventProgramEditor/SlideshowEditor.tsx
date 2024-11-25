@@ -5,7 +5,7 @@ import deepEquals from 'fast-deep-equal'
 
 import {Card, Flex, Tab, Tabs} from 'libraries/ui'
 import { EventProgramSettings, Field } from 'components/event/EventProgramForm'
-import {EventSlide, EventSlideProps, startSlideId, useEventSlides} from 'components/event/EventSlide'
+import {EventSlide, EventSlidePreview, EventSlideProps, startSlideId, useEventSlides} from 'components/event/EventSlide'
 import { EventSlideEditor } from 'components/event/EventSlideEditor'
 import {SlideContainer, useSlideshowNavigation} from 'components/Slide'
 import { NavigateButton } from 'components/widgets/NavigateButton'
@@ -140,7 +140,7 @@ const SlideLink = React.memo(function SlideLink(
   if (placeholder) {
     return <a href={`../slides/${slide.id}`} id={`slide-link-${slide.id}`} className={classNames('slide-link', {current})}>
       <SlideContainer className="flex-fill inert" color="#eee">
-        <div className="slide" />
+        <EventSlidePreview {...slide} eventProgram={eventProgram} />
       </SlideContainer>
       <p className="slide-link-title">{slide.title}</p>
     </a>
