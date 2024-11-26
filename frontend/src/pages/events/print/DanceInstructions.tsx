@@ -19,6 +19,7 @@ import {Dance} from 'types'
 import {DanceInstructionsQuery} from 'types/gql/graphql'
 
 import './DanceInstructions.sass'
+import { MarkdownToJSX } from 'markdown-to-jsx'
 
 type Workshop = NonNullable<DanceInstructionsQuery['event']>['workshops'][0]
 
@@ -171,7 +172,7 @@ const markdownOverrides = {
   h4: { component: 'h6'},
   h5: { component: 'span'},
   a: { component: 'span' }
-}
+} as MarkdownToJSX.Overrides
 
 function WorkshopDetails({workshop}: {workshop: Workshop}) {
   const t = useT('pages.events.danceInstructions')

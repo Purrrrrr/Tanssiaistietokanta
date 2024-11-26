@@ -1,6 +1,7 @@
 import 'react-markdown-editor-lite/lib/index.css'
 import React from 'react'
 import MdEditor, { PluginComponent, Plugins }  from 'react-markdown-editor-lite'
+import { MarkdownToJSX } from 'markdown-to-jsx'
 
 import {AnchorButton, Markdown} from 'libraries/ui'
 
@@ -68,7 +69,7 @@ MdEditor.unuse(Plugins.Image)
 interface MarkdownEditorProps extends FieldComponentProps<string, HTMLTextAreaElement> {
   style?: React.CSSProperties
   onBlur?: (e: React.FocusEvent<HTMLTextAreaElement>) => void
-  markdownOverrides?: Record<string, unknown>
+  markdownOverrides?: MarkdownToJSX.Overrides
   noPreview?: boolean
 }
 

@@ -1,6 +1,7 @@
 import React, {ComponentProps, useRef, useState} from 'react'
 import {Classes} from '@blueprintjs/core'
 import classNames from 'classnames'
+import { MarkdownToJSX } from 'markdown-to-jsx'
 
 import {Icon, Markdown} from 'libraries/ui'
 
@@ -34,7 +35,7 @@ export function ClickToEdit({value, readOnly, valueFormatter, className, onChang
 export interface ClickToEditMarkdownProps extends ExtendedFieldComponentProps<string, HTMLTextAreaElement, ComponentProps<typeof MarkdownEditor>> {
   className?: string
   inline?: boolean
-  markdownOverrides?: Record<string, unknown>
+  markdownOverrides?: MarkdownToJSX.Overrides
   syncState?: SyncState
 }
 export function ClickToEditMarkdown({value, readOnly, className, onChange, inline, syncState, markdownOverrides, ...props} : ClickToEditMarkdownProps) {

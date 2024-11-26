@@ -190,7 +190,7 @@ export function SearchBar({id, onChange, value, placeholder, emptySearchText} : 
   />
 }
 
-export function Markdown({options, ...props}: React.ComponentPropsWithoutRef<MarkdownToJsx>) {
+export function Markdown({options, ...props}: React.ComponentPropsWithoutRef<typeof MarkdownToJsx>) {
   return <MarkdownToJsx
     {...props}
     options={options
