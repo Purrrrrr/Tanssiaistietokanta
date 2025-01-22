@@ -47,7 +47,7 @@ export const workshopsPartialDataSchema = Type.Intersect(
   [
     Type.Pick(workshopsSchema, ['name']),
     Type.Partial(
-      Type.Omit(workshopsSchema, ['_id', 'name'])
+      Type.Omit(workshopsSchema, ['_id', '_versionId', '_versionNumber', '_updatedAt', '_createdAt', 'name'])
     ),
   ], {
     $id: 'PartialWorkshopsData'
@@ -57,7 +57,7 @@ export const workshopsDataSchema = Type.Omit(workshopsSchema, ['_id'], {
   $id: 'WorkshopsData'
 })
 export type WorkshopsData = Static<typeof workshopsDataSchema>
-export const workshopsDataValidator = castAfterValidating(workshopsDataSchema, getValidator(workshopsPartialDataSchema, dataValidator))
+export const workshopsDataValidator = castAfterValidating(workshopsPartialDataSchema, getValidator(workshopsPartialDataSchema, dataValidator))
 export const workshopsDataResolver = resolve<Workshops, HookContext>({})
 
 // Schema for updating existing entries
