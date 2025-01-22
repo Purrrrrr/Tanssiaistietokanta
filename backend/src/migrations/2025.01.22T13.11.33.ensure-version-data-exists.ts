@@ -28,14 +28,14 @@ export const up: MigrationFn = async params => {
           const currentVersionNumber = Math.max(
             ...versionsById.get(_id)?.map(v => v._versionNumber) ?? [0]
           )
-          
+
           if (missingVersionNr || missingCreated || versionCount === 0) {
             //console.log({
             //  name, missingCreated, missingVersionNr, versionCount, id: _id,
             //  maxNumber,
             //})
           }
-          
+
           const updatedValues = {
             _versionNumber: _versionNumber ?? currentVersionNumber,
             _createdAt: _createdAt ?? obj._updatedAt
