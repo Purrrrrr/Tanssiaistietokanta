@@ -47,14 +47,14 @@ export const dancesExternalResolver = resolve<Dances, HookContext>({})
 export const dancesPartialDataSchema = Type.Intersect(
   [
     Type.Pick(dancesSchema, ['name']),
-    Type.Partial(Type.Omit(dancesSchema, ['_id', 'name'])),
+    Type.Partial(Type.Omit(dancesSchema, ['_id', '_versionId', '_versionNumber', '_updatedAt', '_createdAt', 'name'])),
   ], {
     $id: 'DancesData'
   },
 )
 export const dancesDataSchema = Type.Omit(dancesSchema, ['_id'])
 export type DancesData = Static<typeof dancesDataSchema>
-export const dancesDataValidator = castAfterValidating(dancesDataSchema, getValidator(dancesPartialDataSchema, dataValidator))
+export const dancesDataValidator = castAfterValidating(dancesPartialDataSchema, getValidator(dancesPartialDataSchema, dataValidator))
 export const dancesDataResolver = resolve<Dances, HookContext>({})
 
 // Schema for updating existing entries
