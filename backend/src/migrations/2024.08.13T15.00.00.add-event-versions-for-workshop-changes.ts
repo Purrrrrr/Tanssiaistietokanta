@@ -150,7 +150,7 @@ function group(item: Item, event: Version, workshops?: Record<string, string>): 
     eventId,
     createdAt: updatedAt,
     updatedAt,
-    workshops: { ...workshops } ?? {},
+    workshops: workshops ? { ...workshops } : {},
     data: event,
   }
 }
