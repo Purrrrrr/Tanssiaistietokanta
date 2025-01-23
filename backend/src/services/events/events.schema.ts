@@ -6,7 +6,7 @@ import type { Static, TObject, TProperties } from '@feathersjs/typebox'
 import type { HookContext } from '../../declarations'
 import { dataValidator, queryValidator } from '../../validators'
 import { castAfterValidating } from '../../utils/cast-after-validating'
-import { SlideStyleId, Id, Name, Date, NullableString, Nullable } from '../../utils/common-types'
+import { computedProperties, SlideStyleId, Id, Name, Date, NullableString, Nullable } from '../../utils/common-types'
 
 const DEFAULT_PAUSE_BETWEEN_DANCES = 3*60
 
@@ -97,7 +97,7 @@ export const eventsExternalResolver = resolve<Events, HookContext>({})
 export const eventsPartialDataSchema = Type.Intersect(
   [
     Type.Pick(eventsSchema, ['name', 'beginDate', 'endDate']),
-    Type.Partial(Type.Omit(eventsSchema, ['_id', 'name', 'beginDate', 'endDate'])),
+    Type.Partial(Type.Omit(eventsSchema, [...computedProperties, 'name', 'beginDate', 'endDate'])),
   ], {
     $id: 'PartialEventsData'
   })

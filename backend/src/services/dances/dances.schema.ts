@@ -1,12 +1,12 @@
 // // For more information about this file see https://dove.feathersjs.com/guides/cli/service.schemas.html
 import { resolve } from '@feathersjs/schema'
 import { Type, getValidator, querySyntax } from '@feathersjs/typebox'
-import type { Static, TSchema } from '@feathersjs/typebox'
+import type { Static } from '@feathersjs/typebox'
 
 import type { HookContext } from '../../declarations'
 import { dataValidator, queryValidator } from '../../validators'
 import { castAfterValidating } from '../../utils/cast-after-validating'
-import { SlideStyleId, Id, Name } from '../../utils/common-types'
+import { computedProperties, SlideStyleId, Id, Name } from '../../utils/common-types'
 
 // Main data model schema
 export const dancesSchema = Type.Object(
@@ -47,14 +47,14 @@ export const dancesExternalResolver = resolve<Dances, HookContext>({})
 export const dancesPartialDataSchema = Type.Intersect(
   [
     Type.Pick(dancesSchema, ['name']),
-    Type.Partial(Type.Omit(dancesSchema, ['_id', '_versionId', '_versionNumber', '_updatedAt', '_createdAt', 'name'])),
+    Type.Partial(Type.Omit(dancesSchema, [...computedProperties, 'name'])),
   ], {
     $id: 'DancesData'
   },
 )
 export const dancesDataSchema = Type.Omit(dancesSchema, ['_id'])
 export type DancesData = Static<typeof dancesDataSchema>
-export const dancesDataValidator = castAfterValidating(dancesPartialDataSchema, getValidator(dancesPartialDataSchema, dataValidator))
+export const dancesDataValidator = castAfterValidating(dancesDataSchema, getValidator(dancesPartialDataSchema, dataValidator))
 export const dancesDataResolver = resolve<Dances, HookContext>({})
 
 // Schema for updating existing entries
