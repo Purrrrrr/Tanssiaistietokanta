@@ -31,7 +31,7 @@ export const up: MigrationFn = async params => {
     }
 
     const program = await eventProgramDb.findOneAsync({_id: eventProgramId})
-    delete program._id
+    delete (program as Partial<Record<string, unknown>>)._id
 
     return {
       ...rowProps,
