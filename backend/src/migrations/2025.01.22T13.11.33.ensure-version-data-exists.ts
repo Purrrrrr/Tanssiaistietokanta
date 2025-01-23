@@ -4,16 +4,21 @@ import { isNil } from 'es-toolkit';
 export const up: MigrationFn = async params => {
   const models = ['events', 'dances', 'workshops']
     .map(name => ({
-      name,
       model: params.context.getModel(name),
       versionModel: params.context.getVersionModel(name),
     }))
 
-  //const now = new Date().toISOString()
-  type VersionRecord = { _recordId: string, _versionNumber: number }
+  interface VersionRecord {
+    _id: string
+    _recordId: string
+    _versionNumber: number
+    _updatedAt: string
+    _createdAt?: string
+    _versionCreatedAt?: string
+  }
 
   await Promise.all(models.map(
-    async ({name, model, versionModel}) => {
+    async ({model, versionModel}) => {
       const records = await model.findAsync({})
       const versionsRecords = await versionModel.findAsync<VersionRecord>({})
       const versionsById = Map.groupBy(versionsRecords, v => v._recordId)
@@ -24,9 +29,10 @@ export const up: MigrationFn = async params => {
 
           const missingVersionNr = isNil(_versionNumber)
           const missingCreated = isNil(_createdAt)
-          const versionCount = (versionsById.get(_id) ?? []).length
+          const versions = versionsById.get(_id) ?? []
+          const versionCount = versions.length
           const currentVersionNumber = Math.max(
-            ...versionsById.get(_id)?.map(v => v._versionNumber) ?? [0]
+            ...versions.map(v => v._versionNumber), 0
           )
 
           if (missingVersionNr || missingCreated || versionCount === 0) {
@@ -56,6 +62,20 @@ export const up: MigrationFn = async params => {
             }
 
             await versionModel.insertAsync(version)
+          } else {
+            for (const version of versions) {
+              const missingVersionCreatedAt = isNil(version._versionCreatedAt)
+
+              if (missingCreated || missingVersionCreatedAt) {
+                const updatedVersion = {
+                  ...version,
+                  _createdAt: version._createdAt ?? updatedValues._createdAt,
+                  _versionCreatedAt: version._versionCreatedAt ?? version._updatedAt,
+                }
+
+                await versionModel.updateAsync({ _id: version._id }, updatedVersion) 
+              }
+            }
           }
 
         })
