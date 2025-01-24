@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@apollo/client": "^3.10.4",
+    "@apollo/client": "^3.12.7",
     "@blueprintjs/core": "^5.10.3",
     "@blueprintjs/datetime2": "^2.3.5",
     "@blueprintjs/icons": "^5.9.0",
