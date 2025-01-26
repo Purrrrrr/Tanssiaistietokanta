@@ -203,7 +203,8 @@ export function Markdown({options, ...props}: React.ComponentPropsWithoutRef<typ
 const markdownComponents = {
   QR: ({size, value, title, ...props}) => {
     const parsedSize = parseInt(size, 10)
-    return  <div className="qr-container" style={{maxWidth: parsedSize}}>
+    const pxSize = `${parsedSize}px`
+    return  <div className="qr-container" style={{'--qr-size': pxSize} as React.CSSProperties}>
       {title && <p>{title}</p>}
       <QRCode {...props} value={value ?? ''} size={parsedSize} />
       <p className="url">{value}</p>

@@ -100,5 +100,7 @@
   display: none;
 }
 .qr-container .url {
+  max-width: calc(var(--qr-size) * 1.2);
   font-size: 80%;
+  overflow-wrap: anywhere;
 }
