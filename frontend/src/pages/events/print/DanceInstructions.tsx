@@ -1,5 +1,6 @@
 import React, {useCallback, useRef, useState} from 'react'
 import classNames from 'classnames'
+import { MarkdownToJSX } from 'markdown-to-jsx'
 
 import {backendQueryHook, graphql} from 'backend'
 import {sortDances, usePatchDance} from 'services/dances'
@@ -19,7 +20,6 @@ import {Dance} from 'types'
 import {DanceInstructionsQuery} from 'types/gql/graphql'
 
 import './DanceInstructions.sass'
-import { MarkdownToJSX } from 'markdown-to-jsx'
 
 type Workshop = NonNullable<DanceInstructionsQuery['event']>['workshops'][0]
 
