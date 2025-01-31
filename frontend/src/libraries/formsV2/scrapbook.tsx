@@ -2,7 +2,7 @@ import type { ComponentType } from 'react'
 
 import { FieldContainer } from './components/FieldContainer/FieldContainer'
 import { useFieldValueProps } from './hooks'
-import type { PathFor, TypedPath, UserGivenFieldContainerProps } from './types'
+import type { FieldPath, PathFor, UserGivenFieldContainerProps } from './types'
 
 //import {Reducer, useReducer} from 'react'
 
@@ -20,52 +20,50 @@ import type { PathFor, TypedPath, UserGivenFieldContainerProps } from './types'
  *
  */
 
-export type FieldInputComponent<T, Extra = unknown> = ComponentType<FieldInputComponentProps<T> & Extra>
+export type FieldInputComponent<Input, Output, Extra = unknown> = ComponentType<FieldInputComponentProps<Input, Output> & Extra>
 
-interface FieldInputComponentProps<T> {
-  value: T
-  onChange: (value: T) => unknown
+interface FieldInputComponentProps<Input, Output> {
+  value: Input
+  onChange: (value: Output) => unknown
 }
 
-export const TextInput : FieldInputComponent<string> = ({value, onChange}) =>
-  <input value={value} onChange={e => onChange(e.target.value)} />
-export const SuperTextInput = ({value, onChange, super: s} : FieldInputComponentProps<string | undefined> & { super: number, juttu?: string }) =>
+export const TextInput : FieldInputComponent<string | undefined | null, string> = ({value, onChange}) =>
+  <input value={value ?? ''} onChange={e => onChange(e.target.value)} />
+export const SuperTextInput = ({value, onChange, super: s} : FieldInputComponentProps<string | undefined, string> & { super: number, juttu?: string }) =>
   <>
-    <input value={value} onChange={e => onChange(e.target.value)} />
+    <input value={value ?? ''} onChange={e => onChange(e.target.value)} />
     {s}
   </>
 
-type FieldProps<T, Extra extends object>  = {
-  path: PathFor<T>
-  component: FieldInputComponent<T, Extra>
-} & Omit<Extra, keyof FieldInputComponentProps<T>>
+type FieldProps<Input, Output, Extra extends object>  = {
+  path: PathFor<Input>
+  component: FieldInputComponent<Input, Output, Extra>
+} & Omit<Extra, keyof FieldInputComponentProps<Input, Output>>
 & UserGivenFieldContainerProps
 
-export function Field<T, Extra extends object>({path, label, component: C, ...extra}: FieldProps<T, Extra>) {
-  const { value, onChange } = useFieldValueProps<T>(path)
+export function Field<Input, Output, Extra extends object>({path, label, component: C, ...extra}: FieldProps<Input, Output, Extra>) {
+  const { value, onChange } = useFieldValueProps<Input, Output>(path)
 
   return <FieldContainer label={label} id="" error={{errors: [path]}} errorId="" labelStyle="above">
     <C value={value} onChange={onChange} {...extra as Extra} />
   </FieldContainer>
 }
 
-export function withComponent<T, Extra extends object>(c: FieldInputComponent<T, Extra>): (p: Omit<FieldProps<T, Extra>, 'component'>) => React.ReactElement {
+export function withComponent<Input, Output, Extra extends object>(c: FieldInputComponent<Input, Output, Extra>): (props: Omit<FieldProps<Input, Output, Extra>, 'component'>) => React.ReactElement {
   return props => {
-    return <Field {...props as FieldProps<T, Extra>} component={c} />
+    return <Field {...props as FieldProps<Input, Output, Extra>} component={c} />
   }
 }
 
 export const InputField = withComponent(TextInput)
 
-//const EF : ComponentType<ExternalFieldProps<
-
-type ExternalFieldProps<Data, T, Extra extends object> = FieldProps<T, Extra> & {
-  path: TypedPath<T, Data>
+type ExternalFieldProps<Data, Input, Output, Extra extends object> = FieldProps<Input, Output, Extra> & {
+  path: FieldPath<Input, Output, Data>
 }
 
 interface FormFor<Data> {
-  Field: <T, Extra extends object>(props: ExternalFieldProps<Data, T, Extra>) => React.ReactElement
-  withComponent: <T, Extra extends object>(c: FieldInputComponent<T, Extra>) => (p: Omit<ExternalFieldProps<Data, T, Extra>, 'component'>) => React.ReactElement
+  Field: <Input, Output, Extra extends object>(props: ExternalFieldProps<Data, Input, Output, Extra>) => React.ReactElement
+  withComponent: <Input, Output, Extra extends object>(c: FieldInputComponent<Input, Output, Extra>) => (p: Omit<ExternalFieldProps<Data, Input, Output, Extra>, 'component'>) => React.ReactElement
 }
 
 export function formFor<Data>(): FormFor<Data> {
