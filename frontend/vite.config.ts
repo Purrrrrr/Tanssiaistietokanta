@@ -10,11 +10,20 @@ import backendConfig from './src/backendConfig.json'
 import setupProxy from './src/setupProxy'
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => {
+export default defineConfig(({ mode, command }) => {
+  const babelPlugins = [['babel-plugin-react-compiler', { target: '18' }]]
+  if (command === 'serve') {
+    babelPlugins.push(['@babel/plugin-transform-react-jsx-development', {}])
+  }
+
   setEnv(mode)
   return {
     plugins: [
-      react(),
+      react({
+        babel: {
+          plugins: babelPlugins,
+        },
+      }),
       tsconfigPaths(),
       envPlugin(),
       devServerPlugin(),
