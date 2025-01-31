@@ -14,13 +14,13 @@ export function useValueAt<T, Data = unknown>(path: PathFor<Data>): T {
   return value
 }
 
-export function useFieldValueProps<T, Data = unknown>(path: PathFor<Data>) {
+export function useFieldValueProps<Input, Output, Data = unknown>(path: PathFor<Data>) {
   const { getValueAt, dispatch } = useFormContext()
-  const [value, setValue] = useState(() => getValueAt<T>(path))
+  const [value, setValue] = useState(() => getValueAt<Input>(path))
   useFormValueSubscription(path, useCallback(() => setValue(getValueAt(path)), [path, getValueAt]))
 
-  const onChange = useCallback((value: T) => {
-    setValue(value)
+  const onChange = useCallback((value: Output) => {
+    setValue(value as unknown as Input)
     dispatch(change(path, value))
   }, [dispatch, path])
   return { value, onChange }

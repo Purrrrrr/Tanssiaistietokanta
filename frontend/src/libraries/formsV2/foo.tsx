@@ -6,14 +6,12 @@ import { formFor, SuperTextInput, TextInput } from './scrapbook'
 interface Data {
   a: string
   d?: string
-  b: string
+  b: string | null
 }
 
 const {
   withComponent, Field
 } = formFor<Data>()
-
-type A = Data['d']
 
 const Input = withComponent(TextInput)
 
@@ -22,7 +20,7 @@ export default function Foo() {
   return <Form value={value} onChange={onChange}>
     <h2>FOO</h2>
     <Field label="aaa" path="a" component={TextInput} />
-    <Field label="aaa" path="d" component={SuperTextInput} super={1}/>
+    <Field label="aaa" path="a" component={SuperTextInput} super={1}/>
     <Input label="aaa" path="b" />
   </Form>
 }
