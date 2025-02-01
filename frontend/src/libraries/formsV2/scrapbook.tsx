@@ -1,10 +1,9 @@
-import type { ComponentType } from 'react'
-
-import { FieldContainer } from './components/FieldContainer/FieldContainer'
+import { type ExternalFieldContainerProps, FieldContainer } from './components/FieldContainer'
+import { type FieldInputComponent, type FieldInputComponentProps, TextInput } from './components/inputs'
 import { useFieldValueProps } from './hooks'
-import type { FieldPath, PathFor, UserGivenFieldContainerProps } from './types'
+import type { FieldPath, PathFor } from './types'
 
-//import {Reducer, useReducer} from 'react'
+export { TextInput }
 
 /* TODO:
  *
@@ -20,21 +19,11 @@ import type { FieldPath, PathFor, UserGivenFieldContainerProps } from './types'
  *
  */
 
-export type FieldInputComponent<Input, Output extends Input, Extra = unknown> = ComponentType<FieldInputComponentProps<Input, Output> & Extra>
-
-interface FieldInputComponentProps<Input, Output extends Input> {
-  value: Input
-  onChange: (value: Output) => unknown
-}
-
-export const TextInput : FieldInputComponent<string | undefined | null, string> = ({value, onChange}) =>
-  <input value={value ?? ''} onChange={e => onChange(e.target.value)} />
-
 type FieldProps<Input, Output extends Input, Extra extends object>  = {
   path: PathFor<Input>
   component: FieldInputComponent<Input, Output, Extra>
 } & Omit<Extra, keyof FieldInputComponentProps<Input, Output>>
-& UserGivenFieldContainerProps
+& ExternalFieldContainerProps
 
 export function Field<Input, Output extends Input, Extra extends object>({path, label, component: C, ...extra}: FieldProps<Input, Output, Extra>) {
   const { value, onChange } = useFieldValueProps<Input, Output>(path)

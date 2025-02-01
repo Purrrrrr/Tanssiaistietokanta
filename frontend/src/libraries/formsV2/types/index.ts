@@ -1,23 +1,3 @@
-import type { ChangeEvent } from 'react'
-
-export type Version = 'SERVER' | 'LOCAL'
-
-export type NewValue<T> = T | ((t: T) => T)
-export type OnChangeHandler<T, EventElement = never> = (t: NewValue<T>, event?: ChangeEvent<EventElement>) => unknown
-
-export interface UserGivenFieldContainerProps extends LabelTexts {
-  containerClassName?: string
-  inline?: boolean
-  labelStyle?: LabelStyle
-}
-export type LabelStyle = 'beside' | 'above' | 'hidden' | 'hidden-nowrapper';
-
-export interface LabelTexts {
-  label: string
-  helperText?: string
-  labelInfo?: string
-}
-
 export type PathFor<_> = FieldPath<AnyType, AnyType, AnyType>
 export type FieldPath<Input, Output, Data, Depth extends number = 8> =
   Data extends AnyType ? string
