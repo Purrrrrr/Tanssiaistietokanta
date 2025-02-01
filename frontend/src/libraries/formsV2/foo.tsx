@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 import { Form } from './Form'
-import { formFor, TextInput } from './scrapbook'
+import { formFor, TextInput } from './index'
 
 interface Data {
   a: string
