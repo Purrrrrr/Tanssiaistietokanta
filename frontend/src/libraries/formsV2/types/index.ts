@@ -18,30 +18,7 @@ export interface LabelTexts {
   labelInfo?: string
 }
 
-
 export type PathFor<_> = FieldPath<AnyType, AnyType, AnyType>
-
-//export type TypeAtPath<T, Data> = unknown
-//export type TypedPathFor<T> = TypedPath<AnyType, T>
-//
-//export type TypedPath<Type, Data, Depth extends number = 8> =
-//  Data extends AnyType ? string
-//  : Joined<TypedArrayPath<Type, Data, Depth>>
-//
-//type TypedArrayPath<Type, Data, Depth extends number = 8> =
-//  Depth extends never ? never
-//  : (
-//    (ExtendsType<Type, Data> extends true ? [] : never)
-//    | (Data extends (infer U)[]
-//      ? [number, ...TypedArrayPath<Type, U, Decrement[Depth]>]
-//      : (Data extends object
-//          ? Required<{
-//            [K in (keyof Data)]: [K, ...TypedArrayPath<Type, Data[K], Decrement[Depth]>]
-//          }>[keyof Data]
-//          : never)
-//    )
-//  )
-
 export type FieldPath<Input, Output, Data, Depth extends number = 8> =
   Data extends AnyType ? string
   : Joined<FieldArrayPath<Input, Output, Data, Depth>>
@@ -62,14 +39,6 @@ type FieldArrayPath<Input, Output, Data, Depth extends number = 8> =
 
 const someSymbol = Symbol()
 type AnyType = typeof someSymbol
-
-type ExtendsType<Type, Target> =
-  //Type extends AnyType ? true :
-  //Target extends AnyType ? true :
-  //[{a: Type}, {a: Target}] extends [{a: Target}, {a: Type}] ? true
-  [Type, Target] extends [Target, Type] ? true
-  : Type extends AnyType ? 1
-  : Target extends AnyType ? 2 : 0
 
 type IsFieldFor<FieldInput, FieldOutput, Data> =
   [Data, FieldOutput] extends [FieldInput, Data] ? true
@@ -101,17 +70,3 @@ export function toArrayPath(p: string): (number | string)[]  {
     .split('.')
     .map(segment => segment.match(numberRegex) ? parseInt(segment, 10) : segment)
 }
-
-interface B {
-  a: string
-  b?: string
-  c: string | number
-}
-
-type T = FieldArrayPath<string | undefined, string, B>
-type T2 = FieldPath<string | undefined, string, B>
-type R = IsFieldFor<string | number, string, string>
-
-type A = string extends string | undefined ? 1 : 0
-
-
