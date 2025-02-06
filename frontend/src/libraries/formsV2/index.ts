@@ -29,8 +29,9 @@ UseAutosavingStateReturn
 */
 
 import { type FieldInputComponent, TextInput } from './components/inputs'
-import { type FieldProps, Field, withComponent } from './Field'
+import { type FieldProps, Field } from './Field'
 import type { FieldPath } from './types'
+import { withComponent } from './utils/withInputComponent'
 
 export { TextInput }
 

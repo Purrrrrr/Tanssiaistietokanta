@@ -1,11 +1,9 @@
 import { useEffect, useRef } from 'react'
 
-import { PathFor } from './types'
-
 import { FieldStyleContext } from './components/FieldContainer/context'
 import { FieldStyleContextProps } from './components/FieldContainer/types'
-import { FormContext, useFormContextValue } from './context'
-import { subscribe, unsubscribe, useFormReducer } from './reducer'
+import { type FormStateContext, FormContext, useFormContextValue } from './context'
+import { useFormReducer } from './reducer'
 
 
 interface FormProps<T> extends
@@ -13,7 +11,7 @@ interface FormProps<T> extends
   Partial<FieldStyleContextProps>
 {
   value: T
-  onChange: (t: T, Path: PathFor<T>) => unknown
+  onChange: (t: T) => unknown
   onSubmit?: (t: T, e: React.FormEvent) => unknown
 }
 
@@ -21,16 +19,13 @@ export function Form<T>({
   value, onChange, onSubmit, labelStyle, inline, children, ...rest
 }: FormProps<T>) {
   const form = useRef<HTMLFormElement>(null)
-  const [state, dispatch] = useFormReducer(value)
+  const { state, dispatch, subscribe } = useFormReducer(value)
 
   useEffect(
-    () => {
-      dispatch(subscribe('', onChange))
-      return () => dispatch(unsubscribe('', onChange))
-    },
-    [dispatch, onChange]
+    () => subscribe(state => onChange(state.data)),
+    [subscribe, onChange]
   )
-  const ctx = useFormContextValue(state, dispatch)
+  const ctx = useFormContextValue(state, dispatch, subscribe)
 
   const submitHandler = (e: React.FormEvent) => {
     //Sometimes forms from dialogs end up propagating into our form and we should not submit then
@@ -41,7 +36,7 @@ export function Form<T>({
 
   return <form onSubmit={submitHandler} {...rest} ref={form}>
     <FieldStyleContext inline={inline} labelStyle={labelStyle}>
-      <FormContext.Provider value={ctx}>
+      <FormContext.Provider value={ctx as FormStateContext<unknown>}>
         {children}
       </FormContext.Provider>
     </FieldStyleContext>

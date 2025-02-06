@@ -1,9 +1,12 @@
-import { Reducer, useEffect, useReducer } from 'react'
+import { Reducer, useCallback, useEffect, useReducer, useRef } from 'react'
 import * as L from 'partial.lenses'
 
 import createDebug from 'utils/debug'
 
-import { PathFor, toArrayPath } from './types'
+import { Errors, PathFor, toArrayPath } from './types'
+
+import { assoc } from './utils/data'
+import { withErrors } from './utils/validation'
 
 const debug = createDebug('formReducer')
 
@@ -11,7 +14,7 @@ type Selection = [number, number] | null
 
 export type FormAction<Data> = {
   type: 'EXTERNAL_CHANGE'
-  value: unknown
+  value: Data
 } | {
   type: 'CHANGE'
   path: PathFor<Data>
@@ -21,13 +24,9 @@ export type FormAction<Data> = {
   path: PathFor<Data>
   modifier: (value: unknown) => unknown
 } | {
-  type: 'SUBSCRIBE'
-  path: PathFor<Data>
-  callback: SubscriptionCallback<Data>
-} | {
-  type: 'UNSUBSCRIBE'
-  path: PathFor<Data>
-  callback: SubscriptionCallback<Data>
+  type: 'SET_VALIDATION_RESULT'
+  id: string
+  errors: Errors
 } | {
   type: 'FOCUS'
   path: PathFor<Data>
@@ -37,56 +36,52 @@ export type FormAction<Data> = {
 } | {
   type: 'SELECT'
   selection: Selection
-} | {
-  type: 'RUN_CALLBACKS'
 }
 
 export function change<Data>(path: PathFor<Data>, value: unknown): FormAction<Data> {
   return { type: 'CHANGE', path, value }
 }
-export function externalChange<Data>(value: unknown): FormAction<Data> {
+export function externalChange<Data>(value: Data): FormAction<Data> {
   return { type: 'EXTERNAL_CHANGE', value }
+}
+export function setValidationResult<Data>(id: string, errors: Errors): FormAction<Data> {
+  return { type: 'SET_VALIDATION_RESULT', id, errors }
 }
 export function apply<Data>(path: PathFor<Data>, modifier: (value: unknown) => unknown): FormAction<Data> {
   return { type: 'APPLY', path, modifier }
-}
-export function subscribe<Data>(path: PathFor<Data>, callback: SubscriptionCallback<Data>): FormAction<Data> {
-  return { type: 'SUBSCRIBE', path, callback }
-}
-export function unsubscribe<Data>(path: PathFor<Data>, callback: SubscriptionCallback<Data>): FormAction<Data> {
-  return { type: 'UNSUBSCRIBE', path, callback }
 }
 
 export interface FormState<Data> {
   focusedPath: PathFor<Data> | null
   selection: Selection
   data: Data
-  subscriptions: Subscription<Data>[]
-  callbacksToCall: CallbackData<Data>[]
+  errors: Record<string, Errors>
 }
 
-export interface CallbackData<Data> {
-  callback: SubscriptionCallback<Data>
-  changedPath: PathFor<Data>
-}
-export interface Subscription<Data> {
-  path: PathFor<Data>
-  callback: SubscriptionCallback<Data>
-}
-export type SubscriptionCallback<Data> = (data: Data, path: PathFor<Data>) => unknown
+export type SubscriptionCallback<Data> = (data: FormState<Data>) => unknown
 
 export function useFormReducer<Data>(initialData: Data) {
   const result = useReducer<Reducer<FormState<Data>, FormAction<Data>>, Data>(withDebugReturnValue(reducer), initialData, getInitialState)
-  const [{callbacksToCall}, dispatch] = result
+  const [state, dispatch] = result
+
+  const callbacks = useRef<Set<SubscriptionCallback<Data>>>(new Set())
+  const subscribe = useCallback(
+    (subscription: SubscriptionCallback<Data>) => {
+      callbacks.current.add(subscription)
+      return () => { callbacks.current.delete(subscription) }
+    }, []
+  )
 
   useEffect(
     () => {
-      if (callbacksToCall.length > 0) dispatch({ type: 'RUN_CALLBACKS' })
+      callbacks.current.forEach(callback => callback(state))
     },
-    [dispatch, callbacksToCall]
+    [state]
   )
 
-  return result
+  return {
+    state, dispatch, subscribe,
+  }
 }
 
 function getInitialState<Data>(data: Data): FormState<Data> {
@@ -94,8 +89,7 @@ function getInitialState<Data>(data: Data): FormState<Data> {
     focusedPath: null,
     selection: null,
     data,
-    subscriptions: [],
-    callbacksToCall: [],
+    errors: {},
   }
 }
 
@@ -111,47 +105,16 @@ function reducer<Data>(state: FormState<Data>, action: FormAction<Data>): FormSt
   debug(action)
   switch (action.type) {
     case 'EXTERNAL_CHANGE':
-      return addCallbacks(L.set('data', action.value, state), '')
+      return assoc(state, 'data', action.value)
     case 'CHANGE':
-      return addCallbacks(
-        L.set(['data', ...toArrayPath(action.path)], action.value, state),
-        action.path
-      )
+      return L.set(['data', ...toArrayPath(action.path)], action.value, state)
     case 'APPLY':
-      return addCallbacks(
-        L.modify(['data', ...toArrayPath(action.path)], action.modifier, state),
-        action.path
-      )
-    case 'SUBSCRIBE':
-      return L.set(['subscriptions', L.appendTo], { path: action.path, callback: action.callback }, state)
-    case 'UNSUBSCRIBE':
-      return L.remove(['subscriptions', L.find((s: Subscription<Data>) => s.path === action.path && s.callback === action.callback)], state)
-    case 'RUN_CALLBACKS': {
-      const { callbacksToCall, data } = state
-      callbacksToCall.forEach(({ callback, changedPath }) => callback(data, changedPath))
-      return { ...state, callbacksToCall: [] }
-    }
+      return L.modify(['data', ...toArrayPath(action.path)], action.modifier, state)
+    case 'SET_VALIDATION_RESULT':
+      return assoc(state, 'errors', withErrors(state.errors, action.id, action.errors))
     case 'FOCUS':
     case 'BLUR':
     case 'SELECT':
       return state
-  }
-}
-
-function addCallbacks<Data>(state: FormState<Data>, changedPath: PathFor<Data>): FormState<Data> {
-  const newCallbacksToCall = state.subscriptions
-    .filter(({path}) => {
-      // callback path needs to be equal to changed path or a prefix
-      if (!changedPath.startsWith(path)) return false
-      // if it is a prefix, the changed path should be inside the field pointed by path
-      if (changedPath.length == path.length) return true
-      if (path[changedPath.length] === '.') return true
-
-      return false
-    })
-    .map(({ callback }) => ({ callback, changedPath })) satisfies CallbackData<Data>[]
-  return {
-    ...state,
-    callbacksToCall: [...state.callbacksToCall, ...newCallbacksToCall],
   }
 }

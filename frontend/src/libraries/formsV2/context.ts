@@ -3,34 +3,39 @@ import { get } from 'partial.lenses'
 
 import { PathFor, toArrayPath } from './types'
 
-import { FormAction, FormState } from './reducer'
+import { FormAction, FormState, SubscriptionCallback } from './reducer'
 
 export interface FormStateContext<T> {
-  getData(): T
+  getState(): FormState<T>
   getValueAt<D>(path: PathFor<T>): D
   dispatch: Dispatch<FormAction<T>>
+  subscribe: (callback: SubscriptionCallback<T>) => () => void
 }
 
 export const FormContext = createContext<FormStateContext<unknown>>({
-  getData() { throw Error('No form context') },
+  getState() { throw Error('No form context') },
   getValueAt() { throw Error('No form context') },
-  dispatch() {}
+  dispatch() {},
+  subscribe() {
+    return () => {}
+  }
 })
 
 export function useFormContext<T>(): FormStateContext<T> {
   return useContext(FormContext) as FormStateContext<T>
 }
 
-export function useFormContextValue<D>(state: FormState<D>, dispatch: Dispatch<FormAction<D>>): FormStateContext<D> {
-  const valueRef = useRef<D>(state.data)
-  valueRef.current = state.data
+export function useFormContextValue<D>(state: FormState<D>, dispatch: Dispatch<FormAction<D>>, subscribe: FormStateContext<D>['subscribe']): FormStateContext<D> {
+  const stateRef = useRef<FormState<D>>(state)
+  stateRef.current = state
 
   return useMemo(
     () => ({
-      getData() { return valueRef.current },
-      getValueAt: (path: PathFor<D>) => get(toArrayPath(path), valueRef.current),
+      getState() { return stateRef.current },
+      getValueAt: (path: PathFor<D>) => get(toArrayPath(path), stateRef.current.data),
       dispatch,
+      subscribe,
     }),
-    [dispatch]
+    [dispatch, subscribe]
   )
 }

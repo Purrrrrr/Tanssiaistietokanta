@@ -1,3 +1,13 @@
+import { type Schema } from 'yup'
+
+export interface ValidationProps {
+  required?: boolean
+  schema?: Schema
+}
+
+export type ErrorMap = Record<string, Errors>
+export type Errors = string[]
+
 export type PathFor<_> = FieldPath<AnyType, AnyType, AnyType>
 export type FieldPath<Input, Output, Data, Depth extends number = 8> =
   Data extends AnyType ? string
@@ -38,7 +48,6 @@ type Joined<Path extends readonly unknown[]> =
         ? `${TargetPath}.${Joined<RemainingPaths>}`
         // Paths could not be destructured
         : never;
-
 
 type Decrement = [never, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
     11, 12, 13, 14, 15, 16, 17, 18, 19, 20, ...0[]]
