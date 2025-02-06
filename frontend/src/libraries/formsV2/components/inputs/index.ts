@@ -1,2 +1,2 @@
 export { TextInput } from './TextInput'
-export type { FieldInputComponent, FieldInputComponentProps } from './types'
+export type { FieldInputComponent, FieldInputComponentProps, OmitInputProps } from './types'
