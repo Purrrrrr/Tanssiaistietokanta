@@ -6,7 +6,7 @@ import createDebug from 'utils/debug'
 import { Errors, PathFor, toArrayPath } from './types'
 
 import { assoc } from './utils/data'
-import { withErrors } from './utils/validation'
+import { hasErrors, withErrors } from './utils/validation'
 
 const debug = createDebug('formReducer')
 
@@ -56,6 +56,7 @@ export interface FormState<Data> {
   selection: Selection
   data: Data
   errors: Record<string, Errors>
+  isValid: boolean
 }
 
 export type SubscriptionCallback<Data> = (data: FormState<Data>) => unknown
@@ -90,6 +91,7 @@ function getInitialState<Data>(data: Data): FormState<Data> {
     selection: null,
     data,
     errors: {},
+    isValid: true,
   }
 }
 
@@ -110,8 +112,14 @@ function reducer<Data>(state: FormState<Data>, action: FormAction<Data>): FormSt
       return L.set(['data', ...toArrayPath(action.path)], action.value, state)
     case 'APPLY':
       return L.modify(['data', ...toArrayPath(action.path)], action.modifier, state)
-    case 'SET_VALIDATION_RESULT':
-      return assoc(state, 'errors', withErrors(state.errors, action.id, action.errors))
+    case 'SET_VALIDATION_RESULT': {
+      const errors = withErrors(state.errors, action.id, action.errors)
+      return {
+        ...state,
+        errors,
+        isValid: !hasErrors(errors)
+      }
+    }
     case 'FOCUS':
     case 'BLUR':
     case 'SELECT':
