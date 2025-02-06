@@ -62,7 +62,7 @@ export interface FormState<Data> {
 export type SubscriptionCallback<Data> = (data: FormState<Data>) => unknown
 
 export function useFormReducer<Data>(initialData: Data) {
-  const result = useReducer<Reducer<FormState<Data>, FormAction<Data>>, Data>(withDebugReturnValue(reducer), initialData, getInitialState)
+  const result = useReducer<Reducer<FormState<Data>, FormAction<Data>>, Data>(debugReducer, initialData, getInitialState)
   const [state, dispatch] = result
 
   const callbacks = useRef<Set<SubscriptionCallback<Data>>>(new Set())
@@ -95,16 +95,14 @@ function getInitialState<Data>(data: Data): FormState<Data> {
   }
 }
 
-function withDebugReturnValue(fun: typeof reducer): typeof reducer {
-  return (...args) => {
-    const val = fun(...args)
-    debug(val)
-    return val
-  }
+function debugReducer<Data>(state: FormState<Data>, action: FormAction<Data>): FormState<Data> {
+  debug(action)
+  const val = reducer(state, action)
+  debug(val)
+  return val
 }
 
 function reducer<Data>(state: FormState<Data>, action: FormAction<Data>): FormState<Data> {
-  debug(action)
   switch (action.type) {
     case 'EXTERNAL_CHANGE':
       return assoc(state, 'data', action.value)
