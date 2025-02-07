@@ -5,7 +5,7 @@ export interface ValidationProps {
   schema?: Schema
 }
 
-export type ErrorMap = Record<string, Errors>
+export type ErrorMap = Partial<Record<string, Errors>>
 export type Errors = string[]
 
 export type PathFor<_> = FieldPath<AnyType, AnyType, AnyType>

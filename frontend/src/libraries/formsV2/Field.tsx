@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useId, useState } from 'react'
+import { useCallback, useEffect, useId, useState, useSyncExternalStore } from 'react'
 
 import { type ExternalFieldContainerProps, FieldContainer } from './components/FieldContainer'
 import type { FieldInputComponent, OmitInputProps } from './components/inputs'
@@ -13,7 +13,6 @@ import { validate } from './utils/validation'
  * working wrapper
  * list editor
  * conflict handling
- * Translator into form -> auto translated labels
  *
  * DONE:
  * reducer logic, types etc.
@@ -29,17 +28,18 @@ export type FieldProps<Input, Output extends Input, Extra extends object>  = {
 export function Field<Input, Output extends Input, Extra extends object>({path, label, component: C, required, schema, ...extra}: FieldProps<Input, Output, Extra>) {
   const id = useId()
   const errorId = `${id}-error`
-  const { value, onChange } = useFieldValueProps<Input, Output>(path, { required, schema })
+  const { value, onChange, error } = useFieldValueProps<Input, Output>(path, { required, schema })
 
-  return <FieldContainer label={label} id="" error={{errors: [path]}} errorId={errorId} labelStyle="above">
+  return <FieldContainer label={label} id="" error={error} errorId={errorId} labelStyle="above">
     <C id={id} value={value} onChange={onChange} {...extra as Extra} />
   </FieldContainer>
 }
 
 function useFieldValueProps<Input, Output extends Input, Data = unknown>(path: PathFor<Data>, validation: ValidationProps) {
   const id = `${path}:${useId()}`
-  const { getValueAt, dispatch, subscribe } = useFormContext()
+  const { getState, getValueAt, dispatch, subscribe } = useFormContext()
   const [value, setValue] = useState(() => getValueAt<Input>(path))
+  const error = useSyncExternalStore(subscribe, () => getState().errors[id])
 
   useEffect(
     () => subscribe(() => setValue(getValueAt(path))),
@@ -57,5 +57,5 @@ function useFieldValueProps<Input, Output extends Input, Data = unknown>(path: P
     setValue(value)
     dispatch(change(path, value))
   }, [dispatch, path])
-  return { value, onChange }
+  return { value, onChange, error }
 }
