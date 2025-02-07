@@ -3,7 +3,7 @@ import * as L from 'partial.lenses'
 
 import createDebug from 'utils/debug'
 
-import { Errors, PathFor, toArrayPath } from './types'
+import { ErrorMap, Errors, PathFor, toArrayPath } from './types'
 
 import { assoc } from './utils/data'
 import { hasErrors, withErrors } from './utils/validation'
@@ -55,7 +55,7 @@ export interface FormState<Data> {
   focusedPath: PathFor<Data> | null
   selection: Selection
   data: Data
-  errors: Record<string, Errors>
+  errors: ErrorMap
   isValid: boolean
 }
 

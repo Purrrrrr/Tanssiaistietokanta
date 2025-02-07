@@ -1,4 +1,4 @@
-import type {Error} from './ErrorMessage'
+import { Errors } from '../../types'
 
 export interface FieldStyleContextProps {
   inline: boolean
@@ -10,7 +10,7 @@ export interface FieldContainerProps extends ExternalFieldContainerProps {
   //TODO: implement this
   conflictElement?: React.ReactElement
   id: string
-  error: Error | null
+  error?: Errors
   errorId: string
 }
 
