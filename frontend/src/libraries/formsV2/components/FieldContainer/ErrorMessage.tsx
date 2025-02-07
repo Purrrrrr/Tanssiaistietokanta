@@ -1,15 +1,13 @@
 import { Colors } from '@blueprintjs/core'
 
-export interface Error {
-  errors: string[]
-}
+import { Errors } from '../../types'
 
 export function ErrorMessage(
   {id, error} :
-  {id ?: string, error: Error | null}
+  {id ?: string, error?: Errors}
 ) {
-  return error !== null ?
+  return error !== undefined ?
     <p id={id} style={{ color: Colors.RED2, marginTop: 5 }}>
-      {error.errors.join(', ')}
+      {error.join(', ')}
     </p> : null
 }
