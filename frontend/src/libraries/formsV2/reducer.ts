@@ -1,11 +1,12 @@
-import { Reducer, useCallback, useEffect, useReducer, useRef } from 'react'
+import { type Dispatch, type Reducer, useCallback, useEffect, useReducer, useRef } from 'react'
 import * as L from 'partial.lenses'
 
 import createDebug from 'utils/debug'
 
-import { ErrorMap, Errors, PathFor, toArrayPath } from './types'
+import { isSubPathOf, toArrayPath } from './types'
 
-import { assoc } from './utils/data'
+import type { ErrorMap, Errors, PathFor } from './types'
+import { apply as applyTo, merge, pluck } from './utils/data'
 import { hasErrors, withErrors } from './utils/validation'
 
 const debug = createDebug('formReducer')
@@ -25,6 +26,7 @@ export type FormAction<Data> = {
   modifier: (value: unknown) => unknown
 } | {
   type: 'SET_VALIDATION_RESULT'
+  path: PathFor<Data>
   id: string
   errors: Errors
 } | {
@@ -35,6 +37,7 @@ export type FormAction<Data> = {
   type: 'BLUR'
 } | {
   type: 'SELECT'
+  path: PathFor<Data>
   selection: Selection
 }
 
@@ -44,8 +47,8 @@ export function change<Data>(path: PathFor<Data>, value: unknown): FormAction<Da
 export function externalChange<Data>(value: Data): FormAction<Data> {
   return { type: 'EXTERNAL_CHANGE', value }
 }
-export function setValidationResult<Data>(id: string, errors: Errors): FormAction<Data> {
-  return { type: 'SET_VALIDATION_RESULT', id, errors }
+export function setValidationResult<Data>(path: PathFor<Data>, id: string, errors: Errors): FormAction<Data> {
+  return { type: 'SET_VALIDATION_RESULT', path, id, errors }
 }
 export function apply<Data>(path: PathFor<Data>, modifier: (value: unknown) => unknown): FormAction<Data> {
   return { type: 'APPLY', path, modifier }
@@ -57,32 +60,53 @@ export interface FormState<Data> {
   data: Data
   errors: ErrorMap
   isValid: boolean
+  changedPath: PathFor<Data>
 }
 
+interface CallbackDefinition<Data> {
+  path: PathFor<Data>
+  callback: SubscriptionCallback<Data>
+}
 export type SubscriptionCallback<Data> = (data: FormState<Data>) => unknown
 
-export function useFormReducer<Data>(initialData: Data) {
+export function useFormReducer<Data>(initialData: Data): FormReducerResult<Data> {
   const result = useReducer<Reducer<FormState<Data>, FormAction<Data>>, Data>(debugReducer, initialData, getInitialState)
   const [state, dispatch] = result
 
-  const callbacks = useRef<Set<SubscriptionCallback<Data>>>(new Set())
+  const callbacks = useRef<CallbackDefinition<Data>[]>([])
   const subscribe = useCallback(
-    (subscription: SubscriptionCallback<Data>) => {
-      callbacks.current.add(subscription)
-      return () => { callbacks.current.delete(subscription) }
+    (callback: SubscriptionCallback<Data>, path: PathFor<Data> = '') => {
+      const callbackDefinition = { callback, path }
+      callbacks.current.push(callbackDefinition)
+      return () => { applyTo(callbacks, 'current', pluck(callbackDefinition)) }
     }, []
+  )
+  const subscribeTo = useCallback(
+    (path: PathFor<Data>) => (c: SubscriptionCallback<Data>) => subscribe(c, path),
+    [subscribe]
   )
 
   useEffect(
     () => {
-      callbacks.current.forEach(callback => callback(state))
+      callbacks.current.forEach(({ callback, path }) => {
+        if (isSubPathOf(state.changedPath, path)) {
+          callback(state)
+        }
+      })
     },
     [state]
   )
 
   return {
-    state, dispatch, subscribe,
+    state, dispatch, subscribe, subscribeTo,
   }
+}
+
+export interface FormReducerResult<Data> {
+  state: FormState<Data>
+  dispatch: Dispatch<FormAction<Data>>
+  subscribe: (callback: SubscriptionCallback<Data>, path?: PathFor<Data>) => () => void
+  subscribeTo: (path: PathFor<Data>) => (callback: SubscriptionCallback<Data>) => () => void
 }
 
 function getInitialState<Data>(data: Data): FormState<Data> {
@@ -92,6 +116,7 @@ function getInitialState<Data>(data: Data): FormState<Data> {
     data,
     errors: {},
     isValid: true,
+    changedPath: '',
   }
 }
 
@@ -102,20 +127,31 @@ function debugReducer<Data>(state: FormState<Data>, action: FormAction<Data>): F
   return val
 }
 
+
 function reducer<Data>(state: FormState<Data>, action: FormAction<Data>): FormState<Data> {
   switch (action.type) {
     case 'EXTERNAL_CHANGE':
-      return assoc(state, 'data', action.value)
+      return merge(state, {
+        data: action.value,
+        changedPath: '',
+      })
     case 'CHANGE':
-      return L.set(['data', ...toArrayPath(action.path)], action.value, state)
+      return merge(state, {
+        data: L.set(toArrayPath(action.path), action.value, state.data),
+        changedPath: action.path,
+      })
     case 'APPLY':
-      return L.modify(['data', ...toArrayPath(action.path)], action.modifier, state)
+      return merge(state, {
+        data: L.modify(toArrayPath(action.path), action.modifier, state.data),
+        changedPath: action.path,
+      })
     case 'SET_VALIDATION_RESULT': {
       const errors = withErrors(state.errors, action.id, action.errors)
       return {
         ...state,
         errors,
-        isValid: !hasErrors(errors)
+        isValid: !hasErrors(errors),
+        changedPath: action.path
       }
     }
     case 'FOCUS':

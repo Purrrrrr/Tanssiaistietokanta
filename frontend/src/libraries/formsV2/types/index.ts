@@ -1,7 +1,7 @@
 import { type Schema } from 'yup'
 
 export type { FieldPath, PathFor } from './paths'
-export { toArrayPath } from './paths'
+export { isSubPathOf, toArrayPath } from './paths'
 
 export interface ValidationProps {
   required?: boolean

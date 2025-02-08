@@ -49,3 +49,14 @@ export function toArrayPath(p: string): (number | string)[]  {
     .split('.')
     .map(segment => segment.match(numberRegex) ? parseInt(segment, 10) : segment)
 }
+
+export function isSubPathOf(prefix: string, path: string) {
+  if (prefix === '') return true
+  // callback path needs to be equal to changed path or a prefix
+  if (!path.startsWith(prefix)) return false
+  // if it is a prefix, the changed path should be inside the field pointed by path
+  if (path.length == prefix.length) return true
+  if (path[prefix.length] === '.') return true
+
+  return false
+}

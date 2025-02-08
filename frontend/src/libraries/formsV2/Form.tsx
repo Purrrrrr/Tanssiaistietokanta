@@ -19,13 +19,13 @@ export function Form<T>({
   value, onChange, onSubmit, labelStyle, inline, children, ...rest
 }: FormProps<T>) {
   const form = useRef<HTMLFormElement>(null)
-  const { state, dispatch, subscribe } = useFormReducer(value)
+  const { state, dispatch, subscribe, subscribeTo } = useFormReducer(value)
 
   useEffect(
     () => subscribe(state => onChange(state.data)),
     [subscribe, onChange]
   )
-  const ctx = useFormContextValue(state, dispatch, subscribe)
+  const ctx = useFormContextValue(state, dispatch, subscribe, subscribeTo)
 
   const submitHandler = (e: React.FormEvent) => {
     //Sometimes forms from dialogs end up propagating into our form and we should not submit then
