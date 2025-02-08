@@ -1,3 +1,7 @@
+export function merge<T extends object >(obj: T, merged: Partial<T>): T {
+  return { ...obj, ...merged }
+}
+
 export function assoc<T extends object, K extends keyof T>(obj: T, key: K, value: T[K]): T {
   return { ...obj, [key]: value }
 }
@@ -10,8 +14,8 @@ export function push<T>(val: T): (arr: T[]) => T[] {
   return arr => [...arr, val]
 }
 
-export function pluck<T>(condition: (val: T) => boolean): (arr: T[]) => T[] {
-  return arr => arr.filter(item => !condition(item))
+export function pluck<T>(val: T): (arr: T[]) => T[] {
+  return arr => arr.filter(item => item !== val)
 }
 
 export function filter<T>(condition: (val: T) => boolean): (arr: T[]) => T[] {
