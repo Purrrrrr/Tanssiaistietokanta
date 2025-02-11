@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react'
 
-import { FieldStyleContext } from './components/FieldContainer/context'
-import { FieldStyleContextProps } from './components/FieldContainer/types'
+import { type FieldStyleContextProps, FieldStyleContext } from './components/FieldContainer'
 import { type FormStateContext, FormContext, useFormContextValue } from './context'
 import { useFormReducer } from './reducer'
 
@@ -10,22 +9,24 @@ interface FormProps<T> extends
   Omit<React.ComponentPropsWithoutRef<'form'>, 'onSubmit' | 'onChange'>,
   Partial<FieldStyleContextProps>
 {
+  readOnly?: boolean
   value: T
   onChange: (t: T) => unknown
   onSubmit?: (t: T, e: React.FormEvent) => unknown
 }
 
 export function Form<T>({
-  value, onChange, onSubmit, labelStyle, inline, children, ...rest
+  value, onChange, onSubmit, labelStyle, inline, children, readOnly = false, ...rest
 }: FormProps<T>) {
   const form = useRef<HTMLFormElement>(null)
-  const { state, dispatch, subscribe, subscribeTo } = useFormReducer(value)
+  const reducerData = useFormReducer(value)
+  const { state, subscribe } = reducerData
 
   useEffect(
     () => subscribe(state => onChange(state.data)),
     [subscribe, onChange]
   )
-  const ctx = useFormContextValue(state, dispatch, subscribe, subscribeTo)
+  const ctx = useFormContextValue(reducerData, readOnly)
 
   const submitHandler = (e: React.FormEvent) => {
     //Sometimes forms from dialogs end up propagating into our form and we should not submit then
