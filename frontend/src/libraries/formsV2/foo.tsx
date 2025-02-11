@@ -7,10 +7,11 @@ interface Data {
   a: string
   d?: string
   b: string | null
+  bo?: boolean
 }
 
 const {
-  Field, TextField
+  Field, TextField, Switch,
 } = formFor<Data>()
 
 export default function Foo() {
@@ -19,5 +20,6 @@ export default function Foo() {
     <h2>FOO</h2>
     <Field label="aaa" path="a" required component={TextInput} />
     <TextField label="aaa" path="b" />
+    <Switch path="bo" label="Is it on?" />
   </Form>
 }
