@@ -1,16 +1,18 @@
-import { createContext, Dispatch, useContext, useMemo, useRef } from 'react'
+import { createContext, useContext, useMemo, useRef } from 'react'
 import { get } from 'partial.lenses'
 
 import { PathFor, toArrayPath } from './types'
 
-import { FormAction, FormReducerResult, FormState } from './reducer'
+import { FormReducerResult, FormState } from './reducer'
 
 export interface FormStateContext<T> extends Omit<FormReducerResult<T>, 'state'> {
+  readOnly: boolean
   getState(): FormState<T>
   getValueAt<D>(path: PathFor<T>): D
 }
 
 export const FormContext = createContext<FormStateContext<unknown>>({
+  readOnly: true,
   getState() { throw Error('No form context') },
   getValueAt() { throw Error('No form context') },
   dispatch() {},
@@ -27,19 +29,21 @@ export function useFormContext<T>(): FormStateContext<T> {
 }
 
 export function useFormContextValue<D>(
-  state: FormState<D>, dispatch: Dispatch<FormAction<D>>, subscribe: FormStateContext<D>['subscribe'], subscribeTo: FormStateContext<D>['subscribeTo']
+  formReducer: FormReducerResult<D>, readOnly: boolean
 ): FormStateContext<D> {
+  const { state, dispatch, subscribe, subscribeTo } = formReducer
   const stateRef = useRef<FormState<D>>(state)
   stateRef.current = state
 
   return useMemo(
     () => ({
+      readOnly,
       getState() { return stateRef.current },
       getValueAt: (path: PathFor<D>) => get(toArrayPath(path), stateRef.current.data),
       dispatch,
       subscribe,
       subscribeTo,
     }),
-    [dispatch, subscribe, subscribeTo]
+    [readOnly, dispatch, subscribe, subscribeTo]
   )
 }
