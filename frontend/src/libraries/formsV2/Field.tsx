@@ -9,6 +9,7 @@ import { validate } from './utils/validation'
 
 /* TODO:
  *
+ * switchFor
  * list editor
  * FieldSet component
  *   wrapper?: none | fieldset
@@ -27,13 +28,25 @@ import { validate } from './utils/validation'
  *  error-reference
  *  input id?
  *  read only mode
+ * switch
  *
  */
 
-export type FieldProps<Input, Output extends Input, Extra extends object>  = {
-  path: PathFor<Input>
+export type FieldProps<Input, Output extends Input, Extra extends object> =
+  CommonFieldProps<Input, Output, Extra> & ExternalFieldContainerProps
+
+export type UnwrappedFieldProps<Input, Output extends Input, Extra extends object> =
+  CommonFieldProps<Input, Output, Extra> & ExternalBareFieldContainerProps
+
+export type SelfLabeledFieldProps<Input, Output extends Input, Extra extends object>  = {
+  component: FieldInputComponent<Input, Output, Extra & { label: string }>
+  label: string
+} & Omit<CommonFieldProps<Input, Output, Extra>, 'component'> & ExternalBareFieldContainerProps
+
+export type CommonFieldProps<Input, Output extends Input, Extra extends object> = ValidationProps & OmitInputProps<Extra> & {
   component: FieldInputComponent<Input, Output, Extra>
-} & OmitInputProps<Extra> & ExternalFieldContainerProps & ValidationProps
+  path: PathFor<Input>
+}
 
 export function Field<Input, Output extends Input, Extra extends object>({path, containerClassName, label, labelStyle, labelInfo, helperText, component: C, required, schema, ...extra}: FieldProps<Input, Output, Extra>) {
   const { inputProps, containerProps } = useFieldValueProps<Input, Output>(path, { required, schema })
@@ -51,16 +64,19 @@ export function Field<Input, Output extends Input, Extra extends object>({path, 
 }
 
 
-export type UnwrappedFieldProps<Input, Output extends Input, Extra extends object>  = {
-  path: PathFor<Input>
-  component: FieldInputComponent<Input, Output, Extra>
-} & OmitInputProps<Extra> & ExternalBareFieldContainerProps & ValidationProps
-
 export function UnwrappedField<Input, Output extends Input, Extra extends object>({path, label, component: C, required, schema, ...extra}: UnwrappedFieldProps<Input, Output, Extra>) {
   const { inputProps, containerProps } = useFieldValueProps<Input, Output>(path, { required, schema })
 
   return <BareFieldContainer {...containerProps} label={label}>
     <C {...inputProps} {...extra as Extra} />
+  </BareFieldContainer>
+}
+
+export function SelfLabeledField<Input, Output extends Input, Extra extends object>({path, label, component: C, required, schema, ...extra}: SelfLabeledFieldProps<Input, Output, Extra>) {
+  const { inputProps, containerProps } = useFieldValueProps<Input, Output>(path, { required, schema })
+
+  return <BareFieldContainer {...containerProps}>
+    <C {...inputProps} {...extra as Extra} label={label} />
   </BareFieldContainer>
 }
 
