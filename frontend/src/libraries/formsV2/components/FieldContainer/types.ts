@@ -9,7 +9,7 @@ export interface FieldContainerProps extends ExternalFieldContainerProps {
   children?: React.ReactNode
   //TODO: implement this
   conflictElement?: React.ReactElement
-  id: string
+  labelFor: string
   error?: Errors
   errorId: string
 }
@@ -19,8 +19,23 @@ export interface ExternalFieldContainerProps {
   inline?: boolean
   labelStyle?: LabelStyle
   label: string
-  helperText?: string
   labelInfo?: string
+  helperText?: string
 }
 
-type LabelStyle = 'beside' | 'above' | 'hidden' | 'hidden-nowrapper';
+export interface BareFieldContainerProps extends ExternalBareFieldContainerProps {
+  children?: React.ReactNode
+  //TODO: implement this
+  conflictElement?: React.ReactElement
+  labelFor: string
+  error?: Errors
+  errorId: string
+}
+
+export interface ExternalBareFieldContainerProps {
+  label?: string
+  labelInfo?: string
+  helperText?: string
+}
+
+type LabelStyle = 'beside' | 'above' | 'hidden'
