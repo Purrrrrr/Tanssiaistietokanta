@@ -1,2 +1,3 @@
+export { BareFieldContainer } from './BareFieldContainer'
 export { FieldContainer } from './FieldContainer'
-export type { ExternalFieldContainerProps } from './types'
+export type { ExternalBareFieldContainerProps, ExternalFieldContainerProps } from './types'
