@@ -9,13 +9,16 @@ import type { PathFor, ValidationProps } from './types'
 
 /* TODO:
  *
+ * translations (required etc.)
+ * MarkdownInput
+ * DurationField v2
+ * Add to dance editor
  * list editor
  * switchFor
  * TextArea
  * NumberInput
  * closable editors?
  * date time components (choose better implementation?)
- * MarkdownInput
  * Selector (choose better component?)
  * FieldSet component
  *   wrapper?: none | fieldset
@@ -23,7 +26,6 @@ import type { PathFor, ValidationProps } from './types'
  * inline prop with just CSS?
  * a11y-announcement element for list editor and such?? Is it needed? announcement API?
  * input field components
- * translations (required etc.)
  * various buttons
  * various hooks
  * sync -stuff and autosaving state
@@ -38,6 +40,7 @@ import type { PathFor, ValidationProps } from './types'
  *  input id?
  *  read only mode
  * switch
+ * onValidityChange
  *
  */
 

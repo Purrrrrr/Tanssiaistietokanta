@@ -13,18 +13,23 @@ interface FormProps<T> extends
   value: T
   onChange: (t: T) => unknown
   onSubmit?: (t: T, e: React.FormEvent) => unknown
+  onIsValidChange?: (isValid: boolean) => unknown
 }
 
 export function Form<T>({
-  value, onChange, onSubmit, labelStyle, inline, children, readOnly = false, ...rest
+  value, onChange, onSubmit, onIsValidChange, labelStyle, inline, children, readOnly = false, ...rest
 }: FormProps<T>) {
   const form = useRef<HTMLFormElement>(null)
   const reducerData = useFormReducer(value)
-  const { state, subscribe } = reducerData
+  const { state } = reducerData
 
   useEffect(
-    () => subscribe(state => onChange(state.data)),
-    [subscribe, onChange]
+    () => { onChange(state.data) },
+    [onChange, state.data]
+  )
+  useEffect(
+    () => { onIsValidChange?.(state.isValid) },
+    [onIsValidChange, state.isValid]
   )
   const ctx = useFormContextValue(reducerData, readOnly)
 
