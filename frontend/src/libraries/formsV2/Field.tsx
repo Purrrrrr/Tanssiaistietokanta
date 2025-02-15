@@ -3,21 +3,30 @@ import { useCallback, useEffect, useId, useState, useSyncExternalStore } from 'r
 import { type ExternalBareFieldContainerProps, type ExternalFieldContainerProps, BareFieldContainer, FieldContainer } from './components/FieldContainer'
 import type { FieldInputComponent, FieldInputComponentProps, OmitInputProps } from './components/inputs'
 import { useFormContext } from './context'
-import { change, setValidationResult } from './reducer'
+import { useRunValidation } from './hooks'
+import { change } from './reducer'
 import type { PathFor, ValidationProps } from './types'
-import { validate } from './utils/validation'
 
 /* TODO:
  *
- * switchFor
  * list editor
+ * switchFor
+ * TextArea
+ * NumberInput
+ * closable editors?
+ * date time components (choose better implementation?)
+ * MarkdownInput
+ * Selector (choose better component?)
  * FieldSet component
  *   wrapper?: none | fieldset
+ * RadioGroup with fieldset
  * inline prop with just CSS?
- * fieldset wrapper?
  * a11y-announcement element for list editor and such?? Is it needed? announcement API?
  * input field components
- * translations
+ * translations (required etc.)
+ * various buttons
+ * various hooks
+ * sync -stuff and autosaving state
  * conflict handling
  *
  * DONE:
@@ -87,17 +96,11 @@ function useFieldValueProps<Input, Output extends Input, Data = unknown>(path: P
   const { readOnly, getState, getValueAt, dispatch, subscribe, subscribeTo } = useFormContext()
   const [value, setValue] = useState(() => getValueAt<Input>(path))
   const error = useSyncExternalStore(subscribeTo(path), () => getState().errors[id])
+  useRunValidation(path, id, value, validation)
 
   useEffect(
     () => subscribe(() => setValue(getValueAt(path)), path),
     [subscribe, path, getValueAt]
-  )
-  useEffect(
-    () => {
-      validate(validation, value).then(errors => dispatch(setValidationResult(path, id, errors)))
-      return () => dispatch(setValidationResult(path, id, []))
-    },
-    [path, id, dispatch, value, validation]
   )
 
   const onChange = useCallback((value: Output) => {
