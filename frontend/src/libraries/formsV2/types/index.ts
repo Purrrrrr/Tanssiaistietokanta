@@ -9,6 +9,6 @@ export interface ValidationProps {
 }
 
 export type ErrorMap = Partial<Record<string, Errors>>
-export type Errors = string[]
+export type Errors = string[] | undefined
 
 

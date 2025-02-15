@@ -6,7 +6,7 @@ export function ErrorMessage(
   {id, error} :
   {id ?: string, error?: Errors}
 ) {
-  return error !== undefined ?
+  return error ?
     <p id={id} style={{ color: Colors.RED2, marginTop: 5 }}>
       {error.join(', ')}
     </p> : null
