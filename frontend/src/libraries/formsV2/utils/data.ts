@@ -3,6 +3,9 @@ export function merge<T extends object >(obj: T, merged: Partial<T>): T {
 }
 
 export function assoc<T extends object, K extends keyof T>(obj: T, key: K, value: T[K]): T {
+  if (obj[key] === value) {
+    return obj
+  }
   return { ...obj, [key]: value }
 }
 
@@ -23,6 +26,9 @@ export function filter<T>(condition: (val: T) => boolean): (arr: T[]) => T[] {
 }
 
 export function dissoc<T>(obj: Record<string, T>, key: string): Record<string, T> {
-  const { [key]: _, ...rest } = obj
-  return rest
+  if (key in obj) {
+    const { [key]: _, ...rest } = obj
+    return rest
+  }
+  return obj
 }
