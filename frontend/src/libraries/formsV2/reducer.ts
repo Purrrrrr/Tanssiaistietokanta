@@ -147,6 +147,7 @@ function reducer<Data>(state: FormState<Data>, action: FormAction<Data>): FormSt
       })
     case 'SET_VALIDATION_RESULT': {
       const errors = withErrors(state.errors, action.id, action.errors)
+      if (errors === state.errors) return state
       return {
         ...state,
         errors,
