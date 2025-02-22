@@ -84,7 +84,7 @@ function MainEditor({ program, workshops }: {program: EventProgramSettings, work
     <DuplicateDancesWarning program={program} />
     <ListEditorContext>
       <IntroductoryInformation />
-      <ListField labelStyle="hidden-nowrapper" label="" path="danceSets" component={DanceSetEditor} renderConflictItem={item => renderDanceSetValue(item, t)} />
+      <ListField labelStyle="hidden" label="" path="danceSets" component={DanceSetEditor} renderConflictItem={item => renderDanceSetValue(item, t)} />
     </ListEditorContext>
     <div className="addDanceSetButtons">
       {danceSets.length === 0 && t('danceProgramIsEmpty')}

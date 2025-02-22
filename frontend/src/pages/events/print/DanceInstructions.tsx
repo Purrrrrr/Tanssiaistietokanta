@@ -133,6 +133,7 @@ function getDances(workshops: {instances: Instance[]}[]) {
 }
 
 function InstructionsForDance({dance: danceInDatabase, showShortInstructions} : {dance: Dance, showShortInstructions: boolean}) {
+  const t = useT('domain.dance')
   const [patchDance] = usePatchDance()
   const onChange = useCallback(
     (dance) => patchDance({
@@ -144,6 +145,7 @@ function InstructionsForDance({dance: danceInDatabase, showShortInstructions} : 
   const {value: dance, onChange: setDance} = useAutosavingState<Dance, Partial<Dance>>(danceInDatabase, onChange, patchStrategy.partial)
 
   const {name, instructions} = dance
+  const field = showShortInstructions ? 'description' : 'instructions' as const
 
   return <div className={`dance-instructions-dance ${instructions ? 'not-empty' : 'empty'}`}>
     <Form value={dance} onChange={setDance}>
@@ -152,11 +154,11 @@ function InstructionsForDance({dance: danceInDatabase, showShortInstructions} : 
         {' '}
         <DanceDataImportButton dance={dance} />
       </h2>
-      <div className={showShortInstructions ? 'description' : 'instructions'}>
+      <div className={field}>
         <Field
-          label=""
-          labelStyle="hidden-nowrapper"
-          path={showShortInstructions ? 'description' : 'instructions'}
+          label={t(field)}
+          labelStyle="hidden"
+          path={field}
           component={ClickToEditMarkdown}
           componentProps={{markdownOverrides}}
         />
