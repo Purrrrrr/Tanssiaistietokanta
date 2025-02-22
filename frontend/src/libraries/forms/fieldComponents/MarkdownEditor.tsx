@@ -74,9 +74,7 @@ interface MarkdownEditorProps extends FieldComponentProps<string, HTMLTextAreaEl
 }
 
 export const MarkdownEditor = React.memo(function MarkdownEditor({value, onChange, inline: _ignored, markdownOverrides, noPreview, ...props} : MarkdownEditorProps) {
-  const strings = useFormStrings().markdownEditor
   return <MdEditor
-    config={{strings}}
     renderHTML={(text : string) => <Markdown options={{overrides: markdownOverrides}}>{text}</Markdown>}
     value={value ?? ''}
     onChange={({text}, e) => onChange(text, e)}
