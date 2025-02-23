@@ -1,8 +1,8 @@
 import type { ComponentType } from 'react'
 
-export type FieldInputComponent<Input, Output extends Input, Extra = unknown> = ComponentType<FieldInputComponentProps<Input, Output> & Extra>
+export type FieldInputComponent<Output extends Input, Extra = unknown, Input = Nullable<Output>> = ComponentType<FieldInputComponentProps<Output, Input> & Omit<Extra, 'value' | 'onChange'>>
 
-export interface FieldInputComponentProps<Input, Output extends Input> {
+export interface FieldInputComponentProps<Output extends Input, Input = Nullable<Output>> {
   inline?: boolean
   readOnly?: boolean
   id: string
@@ -12,4 +12,6 @@ export interface FieldInputComponentProps<Input, Output extends Input> {
   onChange: (value: Output) => unknown
 }
 
-export type OmitInputProps<Extra extends object> = Omit<Extra, keyof FieldInputComponentProps<unknown, unknown>>
+export type Nullable<T> = T | null | undefined
+
+export type OmitInputProps<Extra> = Omit<Extra, keyof FieldInputComponentProps<unknown, unknown>>

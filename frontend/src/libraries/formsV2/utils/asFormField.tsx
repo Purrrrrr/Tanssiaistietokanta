@@ -1,26 +1,26 @@
 import type { FieldInputComponent } from '../components/inputs'
 import { type FieldProps, type SelfLabeledFieldProps, type UnwrappedFieldProps, Field, SelfLabeledField, UnwrappedField } from '../Field'
 
-export function asFormField<Input, Output extends Input, Extra extends object>(
-  c: FieldInputComponent<Input, Output, Extra>): (props: Omit<FieldProps<Input, Output, Extra>, 'component'>
+export function asFormField<Output extends Input, Extra, Input>(
+  c: FieldInputComponent<Output, Extra, Input>): (props: Omit<FieldProps<Output, Extra, Input>, 'component'>
 ) => React.ReactElement {
   return props => {
-    return <Field {...props as FieldProps<Input, Output, Extra>} component={c} />
+    return <Field {...props as FieldProps<Output, Extra, Input>} component={c} />
   }
 }
 
-export function asUnwrappedFormField<Input, Output extends Input, Extra extends object>(
-  c: FieldInputComponent<Input, Output, Extra>): (props: Omit<UnwrappedFieldProps<Input, Output, Extra>, 'component'>
+export function asUnwrappedFormField<Output extends Input, Extra, Input>(
+  c: FieldInputComponent<Output, Extra, Input>): (props: Omit<UnwrappedFieldProps<Output, Extra, Input>, 'component'>
 ) => React.ReactElement {
   return props => {
-    return <UnwrappedField {...props as UnwrappedFieldProps<Input, Output, Extra>} component={c} />
+    return <UnwrappedField {...props as UnwrappedFieldProps<Output, Extra, Input>} component={c} />
   }
 }
 
-export function asSelfLabeledFormField<Input, Output extends Input, Extra extends object>(
-  c: FieldInputComponent<Input, Output, Extra & {label: string}>): (props: Omit<SelfLabeledFieldProps<Input, Output, Extra>, 'component'>
+export function asSelfLabeledFormField<Output extends Input, Extra, Input>(
+  c: FieldInputComponent<Output, Extra & {label: string}, Input>): (props: Omit<SelfLabeledFieldProps<Output, Extra, Input>, 'component'>
 ) => React.ReactElement {
   return props => {
-    return <SelfLabeledField<Input, Output, Extra> {...props as SelfLabeledFieldProps<Input, Output, Extra>} component={c} />
+    return <SelfLabeledField<Output, Extra, Input> {...props as SelfLabeledFieldProps<Output, Extra, Input>} component={c} />
   }
 }
