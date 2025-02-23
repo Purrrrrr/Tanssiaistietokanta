@@ -30,7 +30,7 @@ UseAutosavingStateReturn
 
 import { type ComponentProps } from 'react'
 
-import { type FieldInputComponent, Nullable, SwitchInput, TextInput } from './components/inputs'
+import { type FieldInputComponent, MarkdownInput, Nullable, SwitchInput, TextInput } from './components/inputs'
 import { MarkdownEditorProps } from './components/inputs/MarkdownInput'
 import { SwitchProps } from './components/inputs/SwitchInput'
 import { type FieldProps, type SelfLabeledFieldProps, Field } from './Field'
@@ -54,6 +54,7 @@ export { TextInput }
  */
 
 const TextField = asFormField(TextInput)
+const MarkdownField = asFormField(MarkdownInput)
 const Switch = asSelfLabeledFormField(SwitchInput)
 
 type ExternalFieldProps<Data, Output extends Input, Extra, Input> = FieldProps<Output, Extra, Input> & {
@@ -69,6 +70,7 @@ type ExternalSelfLabeledFieldProps<Data, Output extends Input, Extra, Input = Nu
 interface FormFor<Data> {
   Field: <Output extends Input, Extra, Input>(props: ExternalFieldProps<Data, Output, Extra, Input>) => React.ReactElement
   asFormField: <Output extends Input, Extra, Input>(c: FieldInputComponent<Output, Extra, Input>) => SpecializedFieldComponentFor<Data, Output, Extra, Input>
+  MarkdownField: SpecializedFieldComponentFor<Data, string, MarkdownEditorProps>
   TextField: SpecializedFieldComponentFor<Data, string, ComponentProps<'input'>>
   Switch: (p: Omit<ExternalSelfLabeledFieldProps<Data, boolean, SwitchProps>, 'component'>) => React.ReactElement
 }
@@ -77,6 +79,7 @@ export function formFor<Data>(): FormFor<Data> {
   return {
     Field,
     asFormField,
+    MarkdownField,
     TextField,
     Switch,
   } as FormFor<Data>

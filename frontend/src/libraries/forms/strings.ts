@@ -26,12 +26,6 @@ export const formStringDefaults = {
     CONFLICT: 'Synkronointivirhe',
     INVALID: 'Tiedoissa virheitä',
   } satisfies Record<SyncState, string>,
-} as const
-
-export type FormStrings = Stringize<typeof formStringDefaults>
-
-type Stringize<T> = {
-  [K in keyof T]: T[K] extends string
-    ? string
-    : T[K] extends object ? Stringize<T[K]> : T[K]
 }
+
+export type FormStrings = typeof formStringDefaults

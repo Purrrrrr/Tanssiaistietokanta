@@ -11,7 +11,7 @@ interface Data {
 }
 
 const {
-  Field, TextField, Switch,
+  Field, TextField, Switch, MarkdownField,
 } = formFor<Data>()
 
 export default function Foo() {
@@ -21,5 +21,6 @@ export default function Foo() {
     <Field label="aaa" path="a" required component={TextInput} />
     <TextField label="aaa" path="b" />
     <Switch path="bo" label="Is it on?" />
+    <MarkdownField path="d" label="markdooown" />
   </Form>
 }
