@@ -44,24 +44,24 @@ import type { PathFor, ValidationProps } from './types'
  *
  */
 
-export type FieldProps<Input, Output extends Input, Extra extends object> =
-  CommonFieldProps<Input, Output, Extra> & ExternalFieldContainerProps
+export type FieldProps<Output extends Input, Extra, Input> =
+  CommonFieldProps<Output, Extra, Input> & ExternalFieldContainerProps
 
-export type UnwrappedFieldProps<Input, Output extends Input, Extra extends object> =
-  CommonFieldProps<Input, Output, Extra> & ExternalBareFieldContainerProps
+export type UnwrappedFieldProps<Output extends Input, Extra, Input> =
+  CommonFieldProps<Output, Extra, Input> & ExternalBareFieldContainerProps
 
-export type SelfLabeledFieldProps<Input, Output extends Input, Extra extends object>  = {
-  component: FieldInputComponent<Input, Output, Extra & { label: string }>
+export type SelfLabeledFieldProps<Output extends Input, Extra, Input>  = {
+  component: FieldInputComponent<Output, Extra & { label: string }, Input>
   label: string
-} & Omit<CommonFieldProps<Input, Output, Extra>, 'component'> & ExternalBareFieldContainerProps
+} & Omit<CommonFieldProps<Output, Extra, Input>, 'component'> & ExternalBareFieldContainerProps
 
-export type CommonFieldProps<Input, Output extends Input, Extra extends object> = ValidationProps & OmitInputProps<Extra> & {
-  component: FieldInputComponent<Input, Output, Extra>
+type CommonFieldProps<Output extends Input, Extra, Input> = ValidationProps & OmitInputProps<Extra> & {
+  component: FieldInputComponent<Output, Extra, Input>
   path: PathFor<Input>
 }
 
-export function Field<Input, Output extends Input, Extra extends object>({path, containerClassName, label, labelStyle, labelInfo, helperText, component: C, required, schema, ...extra}: FieldProps<Input, Output, Extra>) {
-  const { inputProps, containerProps } = useFieldValueProps<Input, Output>(path, { required, schema })
+export function Field<Output extends Input, Extra, Input>({path, containerClassName, label, labelStyle, labelInfo, helperText, component: C, required, schema, ...extra}: FieldProps<Output, Extra, Input>) {
+  const { inputProps, containerProps } = useFieldValueProps<Output, Input>(path, { required, schema })
 
   return <FieldContainer
     label={label}
@@ -76,24 +76,23 @@ export function Field<Input, Output extends Input, Extra extends object>({path, 
 }
 
 
-export function UnwrappedField<Input, Output extends Input, Extra extends object>({path, label, component: C, required, schema, ...extra}: UnwrappedFieldProps<Input, Output, Extra>) {
-  const { inputProps, containerProps } = useFieldValueProps<Input, Output>(path, { required, schema })
+export function UnwrappedField<Output extends Input, Extra, Input>({path, label, component: C, required, schema, ...extra}: UnwrappedFieldProps<Output, Extra, Input>) {
+  const { inputProps, containerProps } = useFieldValueProps<Output, Input>(path, { required, schema })
 
   return <BareFieldContainer {...containerProps} label={label}>
     <C {...inputProps} {...extra as Extra} />
   </BareFieldContainer>
 }
 
-export function SelfLabeledField<Input, Output extends Input, Extra extends object>({path, label, component: C, required, schema, ...extra}: SelfLabeledFieldProps<Input, Output, Extra>) {
-  const { inputProps, containerProps } = useFieldValueProps<Input, Output>(path, { required, schema })
+export function SelfLabeledField<Output extends Input, Extra, Input>({path, label, component: C, required, schema, ...extra}: SelfLabeledFieldProps<Output, Extra, Input>) {
+  const { inputProps, containerProps } = useFieldValueProps<Output, Input>(path, { required, schema })
 
   return <BareFieldContainer {...containerProps}>
     <C {...inputProps} {...extra as Extra} label={label} />
   </BareFieldContainer>
 }
 
-
-function useFieldValueProps<Input, Output extends Input, Data = unknown>(path: PathFor<Data>, validation: ValidationProps) {
+function useFieldValueProps<Output extends Input, Input, Data = unknown>(path: PathFor<Data>, validation: ValidationProps) {
   const id = `${path}:${useId()}`
   const errorId = `${id}-error`
   const { readOnly, getState, getValueAt, dispatch, subscribe, subscribeTo } = useFormContext()
@@ -113,7 +112,7 @@ function useFieldValueProps<Input, Output extends Input, Data = unknown>(path: P
 
   const inputProps = {
     value, onChange, id, readOnly, 'aria-describedby': errorId,
-  } satisfies FieldInputComponentProps<Input, Output>
+  } satisfies FieldInputComponentProps<Output, Input>
   const containerProps = {
     error, errorId, labelFor: id,
   }
