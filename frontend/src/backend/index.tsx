@@ -115,3 +115,11 @@ export function backendQueryHook<T, V extends OperationVariables>(
     return queryResult
   }
 }
+
+type MetadataKey = '_id' | '_versionId' | '_versionNumber' | '_updatedAt'
+type MetadataObject = Partial<Record<MetadataKey, unknown>>
+
+export function cleanMetadataValues<T extends MetadataObject>(value: MetadataObject): Omit<T, MetadataKey> {
+  const { _id, _versionId, _versionNumber, _updatedAt, ...rest } = value
+  return rest as Omit<T, MetadataKey>
+}

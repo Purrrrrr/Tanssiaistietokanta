@@ -2,7 +2,7 @@ import React, {useCallback, useRef, useState} from 'react'
 import classNames from 'classnames'
 import { MarkdownToJSX } from 'markdown-to-jsx'
 
-import {backendQueryHook, graphql} from 'backend'
+import {backendQueryHook, cleanMetadataValues, graphql} from 'backend'
 import {sortDances, usePatchDance} from 'services/dances'
 import {useCallbackOnEventChanges} from 'services/events'
 
@@ -137,7 +137,7 @@ function InstructionsForDance({dance: danceInDatabase, showShortInstructions} : 
   const onChange = useCallback(
     (dance) => patchDance({
       id: danceInDatabase._id,
-      dance,
+      dance: cleanMetadataValues(dance),
     }),
     [danceInDatabase, patchDance]
   )

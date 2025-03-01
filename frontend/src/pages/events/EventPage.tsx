@@ -15,6 +15,7 @@ import {newInstance, WorkshopEditor} from 'components/WorkshopEditor'
 import {useFormatDate, useFormatDateTime, useT, useTranslation} from 'i18n'
 
 import {Event, EventProgram as EventProgramType} from 'types'
+import { cleanMetadataValues } from 'backend'
 
 type Workshop = Event['workshops'][0]
 
@@ -70,7 +71,7 @@ function EventDetailsForm({event}: {event: Event}) {
   const t = useT('pages.events.eventPage')
   const [patchEvent] = usePatchEvent()
   const patch = useCallback(
-    (eventPatch: Partial<Event>) => patchEvent({ id: event._id, event: eventPatch}),
+    (eventPatch: Partial<Event>) => patchEvent({ id: event._id, event: cleanMetadataValues(eventPatch)}),
     [event._id, patchEvent]
   )
   const {state, formProps} = useAutosavingState<Event, Partial<Event>>(event, patch, patchStrategy.partial)
