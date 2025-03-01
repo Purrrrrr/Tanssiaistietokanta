@@ -5,7 +5,7 @@ import { type FormStateContext, FormContext, useFormContextValue } from './conte
 import { useFormReducer } from './reducer'
 
 
-interface FormProps<T> extends
+export interface FormProps<T> extends
   Omit<React.ComponentPropsWithoutRef<'form'>, 'onSubmit' | 'onChange'>,
   Partial<FieldStyleContextProps>
 {
