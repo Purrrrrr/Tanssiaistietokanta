@@ -7,7 +7,8 @@ import { ID } from 'backend/types'
 import { cleanMetadataValues } from 'backend'
 import { useDeleteDance, usePatchDance } from 'services/dances'
 
-import {formFor, MarkdownEditor, MenuButton, patchStrategy, SelectorMenu, SyncStatus, useAutosavingState} from 'libraries/forms'
+import {MenuButton, patchStrategy, SelectorMenu, SyncStatus, useAutosavingState} from 'libraries/forms'
+import { type FieldInputComponentProps, formFor as formForV2 } from 'libraries/formsV2'
 import {Flex, H2, Icon} from 'libraries/ui'
 import {DanceDataImportButton} from 'components/DanceDataImportDialog'
 import {useGlobalLoadingAnimation} from 'components/LoadingState'
@@ -28,10 +29,11 @@ interface DanceEditorProps extends Pick<DanceEditorContainerProps, 'dance' | 'ti
 const {
   Form,
   Field,
-  Input,
+  TextField: Input,
+  MarkdownField,
   useValueAt,
-  useOnChangeFor,
-} = formFor<Dance>()
+  useChangeAt: useOnChangeFor,
+} = formForV2<Dance>()
 
 function danceVersionLink(id: ID, versionId?: ID | null) {
   return versionId
@@ -71,15 +73,18 @@ export function DanceEditor({dance, onDelete, showLink, showVersionHistory, titl
       <div style={{flexGrow: 1, flexBasis: 300}}>
         <Input label={label('name')} path="name" />
         <Input label={label('category')} path="category" />
-        <Field label={label('duration')} path="duration" component={DurationField} />
+        <Field label={label('duration')} path="duration" component={
+          ({onChange, ...props}: FieldInputComponentProps<number | null | undefined>) =>
+            <DurationField {...props} onChange={v => onChange(typeof v === 'function' ? v(props.value ?? 0) : v)} />
+        } />
         <Input label={label('prelude')} path="prelude" />
         <Input label={label('formation')} path="formation" />
         <Input label={label('source')} labelInfo={label('sourceInfo')} path="source" />
         <Input label={label('remarks')} path="remarks" />
       </div>
       <div style={{flexGrow: 2, flexBasis: 500}}>
-        <Field label={label('description')} path="description" component={MarkdownEditor} />
-        <Field label={label('instructions')} path="instructions" component={MarkdownEditor} />
+        <MarkdownField label={label('description')} path="description" />
+        <MarkdownField label={label('instructions')} path="instructions" />
       </div>
     </Flex>
   </DanceEditorContainer>

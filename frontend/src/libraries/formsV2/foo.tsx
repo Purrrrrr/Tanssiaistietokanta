@@ -11,7 +11,7 @@ interface Data {
 }
 
 const {
-  Field, TextField, Switch, MarkdownField,
+  Field, TextField, Switch, MarkdownField
 } = formFor<Data>()
 
 export default function Foo() {
