@@ -7,7 +7,8 @@ import { ID } from 'backend/types'
 import { cleanMetadataValues } from 'backend'
 import { useDeleteDance, usePatchDance } from 'services/dances'
 
-import {formFor, MarkdownEditor, patchStrategy, SyncStatus, useAutosavingState} from 'libraries/forms'
+import {patchStrategy, SyncStatus, useAutosavingState} from 'libraries/forms'
+import { type FieldInputComponentProps, formFor as formForV2 } from 'libraries/formsV2'
 import { Select } from 'libraries/formsV2/components/inputs'
 import {Button, Flex, H2, Icon} from 'libraries/ui'
 import {DanceDataImportButton} from 'components/DanceDataImportDialog'
@@ -28,10 +29,9 @@ interface DanceEditorProps extends Pick<DanceEditorContainerProps, 'dance' | 'ti
 const {
   Form,
   Field,
-  Input,
   useValueAt,
-  useOnChangeFor,
-} = formFor<EditableDance>()
+  useChangeAt: useOnChangeFor,
+} = formForV2<EditableDance>()
 
 function danceVersionLink(id: ID, versionId?: ID | null) {
   return versionId
@@ -69,13 +69,16 @@ export function DanceEditor({dance, onDelete, showLink, showVersionHistory, titl
   >
     <Flex spaced wrap className="danceEditor">
       <div style={{flexGrow: 1, flexBasis: 300}}>
-        <Input label={label('name')} path="name" />
-        <Input label={label('category')} path="category" />
-        <Field label={label('duration')} path="duration" component={DurationField} />
-        <Input label={label('prelude')} path="prelude" />
-        <Input label={label('formation')} path="formation" />
-        <Input label={label('source')} labelInfo={label('sourceInfo')} path="source" />
-        <Input label={label('remarks')} path="remarks" />
+        <Field.Text label={label('name')} path="name" />
+        <Field.Text label={label('category')} path="category" />
+        <Field.Custom label={label('duration')} path="duration" component={
+          ({onChange, ...props}: FieldInputComponentProps<number | null | undefined>) =>
+            <DurationField {...props} onChange={v => onChange(typeof v === 'function' ? v(props.value ?? 0) : v)} />
+        } />
+        <Field.Text label={label('prelude')} path="prelude" />
+        <Field.Text label={label('formation')} path="formation" />
+        <Field.Text label={label('source')} labelInfo={label('sourceInfo')} path="source" />
+        <Field.Text label={label('remarks')} path="remarks" />
         {/* <Field label={label('wikipageName')} path="wikipageName" component={DanceNameSearch} /> */}
         {dance.wikipageName &&
           <p>
@@ -85,8 +88,8 @@ export function DanceEditor({dance, onDelete, showLink, showVersionHistory, titl
         }
       </div>
       <div style={{flexGrow: 2, flexBasis: 500}}>
-        <Field label={label('description')} path="description" component={MarkdownEditor} componentProps={{className: 'max-h-150'}} />
-        <Field label={label('instructions')} path="instructions" component={MarkdownEditor} componentProps={{className: 'max-h-150'}} />
+        <Field.Markdown label={label('description')} path="description" className="max-h-150" />
+        <Field.Markdown label={label('instructions')} path="instructions" className="max-h-150" />
       </div>
     </Flex>
   </DanceEditorContainer>
@@ -141,8 +144,8 @@ function DanceIsUsedIn({events}: Pick<DanceWithEvents, 'events'>) {
       onChange={(event) => { if (event) navigate(`/events/${event._id}`) }}
       itemToString={event => event.name}
       itemClassName=""
-      buttonRenderer={(_, props) =>
-        <Button minimal rightIcon="caret-down" text={t('danceUsedInEvents', {count: events.length})} {...props} />
+      buttonRenderer={(_, { onClick, ...props }) =>
+        <Button minimal rightIcon="caret-down" text={t('danceUsedInEvents', {count: events.length})} {...props} onClick={(e) => onClick?.(e)} />
       }
       itemRenderer={event =>
         <Link to={`/events/${event._id}`} className="flex gap-2 py-1.5 px-2 hover:no-underline">
