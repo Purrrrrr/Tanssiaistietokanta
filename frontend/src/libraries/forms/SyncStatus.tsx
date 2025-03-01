@@ -7,6 +7,7 @@ import { useFormStrings } from './formContext'
 import {SyncState} from './useAutosavingState'
 
 import './SyncStatus.sass'
+import { formStringDefaults } from './strings'
 
 const icons : Record<SyncState, IconName> = {
   IN_SYNC: 'saved',
@@ -33,7 +34,8 @@ export function SyncStatus(
 ) {
   const previousState = useRef<SyncState | null>(null)
   const [changed, setChanged] = useState(false)
-  const texts = useFormStrings().syncState
+  //TODO: fix
+  const texts = formStringDefaults.syncState //useFormStrings().syncState
   useEffect(() => {
     if (previousState.current !== state && previousState.current !== null) {
       setChanged(true)
