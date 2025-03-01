@@ -1,5 +1,7 @@
 import * as L from 'partial.lenses'
 
+import { cleanMetadataValues } from 'backend'
+
 import {PatchStrategy, patchStrategy} from 'libraries/forms'
 import {removeTypenames} from 'utils/removeTypenames'
 
@@ -15,7 +17,7 @@ export const patch : PatchStrategy<EventProgramSettings, JSONPatch> = function p
 }
 
 function toProgramInput({introductions, danceSets, ...rest} : EventProgramSettings) {
-  return removeTypenames({
+  return cleanMetadataValues(removeTypenames({
     introductions: L.modify(
       ['program', L.elems], toProgramItemInput, introductions
     ),
@@ -23,7 +25,7 @@ function toProgramInput({introductions, danceSets, ...rest} : EventProgramSettin
       [L.elems, 'program', L.elems], toProgramItemInput, danceSets
     ),
     ...rest,
-  })
+  }))
 }
 
 function toProgramItemInput(row : EventProgramRow) {

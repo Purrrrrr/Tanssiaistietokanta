@@ -2,6 +2,7 @@ import {useCallback} from 'react'
 import {Link, useNavigate} from 'react-router-dom'
 
 import { ID } from 'backend/types'
+import { cleanMetadataValues } from 'backend'
 import { useDeleteDance, usePatchDance } from 'services/dances'
 
 import {formFor, MarkdownEditor, MenuButton, patchStrategy, SelectorMenu, SyncStatus, useAutosavingState} from 'libraries/forms'
@@ -97,7 +98,7 @@ export function DanceEditorContainer({dance, children, toolbar, titleComponent: 
   const patchDance = useCallback(
     async (patches : Partial<DanceWithEvents>) => {
       if (readOnly) return
-      return modifyDance({id: dance._id, dance: patches})
+      return modifyDance({id: dance._id, dance: cleanMetadataValues(patches)})
     },
     [modifyDance, dance._id, readOnly]
   )
