@@ -1,11 +1,11 @@
 import React from 'react'
 
+import {Dance} from 'types'
+
 import {FieldComponentProps} from 'libraries/forms'
 import {DanceProgram, EventProgramItem, RequestedDance} from 'components/event/EventProgramForm'
 import {DanceChooser} from 'components/widgets/DanceChooser'
 import {useT} from 'i18n'
-
-import {Dance} from 'types'
 
 export const DanceProgramChooser = React.memo(function DanceProgramChooser({value, onChange, ...props} : FieldComponentProps<EventProgramItem, HTMLElement>) {
   const t = useT('components.eventProgramEditor')

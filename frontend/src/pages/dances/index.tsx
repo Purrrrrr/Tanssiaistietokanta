@@ -2,6 +2,8 @@ import {useState} from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
 import {useNavigate} from 'react-router-dom'
 
+import { DanceInput, DanceWithEvents } from 'types'
+
 import { filterDances, useCreateDance, useDances } from 'services/dances'
 
 import {Button, Card, SearchBar} from 'libraries/ui'
@@ -11,8 +13,6 @@ import {PageTitle} from 'components/PageTitle'
 import {useT, useTranslation} from 'i18n'
 import {showToast} from 'utils/toaster'
 import {uploadDanceFile} from 'utils/uploadDanceFile'
-
-import { DanceInput, DanceWithEvents } from 'types'
 
 function DancesPage() {
   const t = useT('pages.dances.danceList')

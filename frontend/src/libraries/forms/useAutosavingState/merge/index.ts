@@ -1,6 +1,7 @@
 import deepEquals from 'fast-deep-equal'
 
 import {Entity, Mergeable, MergeableAs, MergeableObject, MergeData, PartialMergeResult, scalarConflict, SyncState} from '../types'
+
 import {mergeArrays} from './mergeArrays'
 import {mergeObjects} from './mergeObjects'
 import {mergeConflictingStrings} from './mergeStrings'

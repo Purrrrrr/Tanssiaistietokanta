@@ -3,11 +3,12 @@ import {DateInput3, DateRangeInput3} from '@blueprintjs/datetime2'
 import { format, parse } from 'date-fns'
 import fi from 'date-fns/locale/fi'
 
+import {Conflict, Deleted, FieldComponentProps, FieldPropsWithoutComponent} from '../types'
+
 import {Field, useFieldConflictData, useFieldData} from '../Field'
 import {FieldContainer} from '../FieldContainer'
 import { useFormStrings } from '../formContext'
 import { useFieldValueProps } from '../hooks'
-import {Conflict, Deleted, FieldComponentProps, FieldPropsWithoutComponent} from '../types'
 
 import './dateTime.css'
 

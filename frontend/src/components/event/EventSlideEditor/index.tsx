@@ -1,6 +1,8 @@
 import React, { ReactNode } from 'react'
 import {Link} from 'react-router-dom'
 
+import {Dance} from 'types'
+
 import {DragHandle, formFor, MarkdownEditor, SyncState, SyncStatus} from 'libraries/forms'
 import {Callout, Flex, H2, Icon, SectionCard} from 'libraries/ui'
 import {DanceEditorContainer} from 'components/DanceEditor'
@@ -20,8 +22,6 @@ import { EventSlideProps, WithEventProgram } from 'components/event/EventSlide'
 import { ProgramTypeIcon } from 'components/event/ProgramTypeIcon'
 import { Duration } from 'components/widgets/Duration'
 import {T, useT, useTranslation} from 'i18n'
-
-import {Dance} from 'types'
 
 import { InheritedSlideStyleSelector, IntervalMusicDefaultTextsSwitch } from './components'
 

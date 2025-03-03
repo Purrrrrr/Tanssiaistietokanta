@@ -1,5 +1,8 @@
 import React, {useCallback, useState} from 'react'
 
+import {Event, EventProgram as EventProgramType} from 'types'
+
+import { cleanMetadataValues } from 'backend'
 import {usePatchEvent} from 'services/events'
 import {AdminOnly} from 'services/users'
 import {useCreateWorkshop, useDeleteWorkshop} from 'services/workshops'
@@ -13,9 +16,6 @@ import {DeleteButton} from 'components/widgets/DeleteButton'
 import {NavigateButton} from 'components/widgets/NavigateButton'
 import {newInstance, WorkshopEditor} from 'components/WorkshopEditor'
 import {useFormatDate, useFormatDateTime, useT, useTranslation} from 'i18n'
-
-import {Event, EventProgram as EventProgramType} from 'types'
-import { cleanMetadataValues } from 'backend'
 
 type Workshop = Event['workshops'][0]
 

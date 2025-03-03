@@ -1,9 +1,9 @@
 import { ReactElement } from 'react'
 
+import { EventProgram, Workshop } from './types'
+
 import {Markdown} from 'libraries/ui'
 import {useTranslation} from 'i18n'
-
-import { EventProgram, Workshop } from './types'
 
 export function intervalMusicTitle(eventProgram: EventProgram, dancesetIndex: number): string | ReactElement {
   const { danceSets, defaultIntervalMusic } = eventProgram

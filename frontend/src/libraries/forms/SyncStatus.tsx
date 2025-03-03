@@ -4,10 +4,10 @@ import classNames from 'classnames'
 import {Icon, IconName, Intent} from 'libraries/ui'
 
 import { useFormStrings } from './formContext'
+import { formStringDefaults } from './strings'
 import {SyncState} from './useAutosavingState'
 
 import './SyncStatus.sass'
-import { formStringDefaults } from './strings'
 
 const icons : Record<SyncState, IconName> = {
   IN_SYNC: 'saved',

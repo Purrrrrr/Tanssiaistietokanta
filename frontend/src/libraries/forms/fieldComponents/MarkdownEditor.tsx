@@ -3,9 +3,9 @@ import React from 'react'
 import MdEditor from 'react-markdown-editor-lite'
 import { MarkdownToJSX } from 'markdown-to-jsx'
 
-import {Markdown} from 'libraries/ui'
-
 import {FieldComponentProps} from '../types'
+
+import {Markdown} from 'libraries/ui'
 
 interface MarkdownEditorProps extends FieldComponentProps<string, HTMLTextAreaElement> {
   style?: React.CSSProperties

@@ -3,10 +3,11 @@ import {Classes} from '@blueprintjs/core'
 import classNames from 'classnames'
 import { MarkdownToJSX } from 'markdown-to-jsx'
 
+import {ExtendedFieldComponentProps} from '../types'
+
 import {Icon, Markdown} from 'libraries/ui'
 
 import {SyncStatus} from '../SyncStatus'
-import {ExtendedFieldComponentProps} from '../types'
 import {SyncState} from '../useAutosavingState'
 import {Input} from './basicComponents'
 import {MarkdownEditor} from './MarkdownEditor'

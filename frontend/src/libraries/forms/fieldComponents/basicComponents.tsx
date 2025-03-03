@@ -2,10 +2,11 @@ import React, {ComponentProps} from 'react'
 import {Classes, Radio, Switch as BlueprintSwitch, TextArea as BlueprintTextArea, TextAreaProps as BlueprintTextAreaProps} from '@blueprintjs/core'
 import classNames from 'classnames'
 
+import {ExtendedFieldComponentProps, FieldComponentProps, FieldPropsWithoutComponent} from '../types'
+
 import {Field, useFieldData} from '../Field'
 import { FieldContainer } from '../FieldContainer'
 import { useFieldValueProps } from '../hooks'
-import {ExtendedFieldComponentProps, FieldComponentProps, FieldPropsWithoutComponent} from '../types'
 
 import '@blueprintjs/datetime2/lib/css/blueprint-datetime2.css'
 

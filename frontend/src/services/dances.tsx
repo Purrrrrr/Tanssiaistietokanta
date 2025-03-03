@@ -1,8 +1,8 @@
 import {useMemo} from 'react'
 
-import {compareBy, sorted} from 'utils/sorted'
-
 import { Dance } from 'types'
+
+import {compareBy, sorted} from 'utils/sorted'
 
 import { backendQueryHook, entityCreateHook, entityDeleteHook, entityListQueryHook, entityUpdateHook, graphql, setupServiceUpdateFragment, useServiceEvents } from '../backend'
 

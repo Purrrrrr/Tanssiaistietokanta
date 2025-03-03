@@ -1,6 +1,8 @@
 import React, {useCallback, useMemo, useRef} from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
+import {Event} from 'types'
+
 import {ActionButton as Button, ClickToEdit, DragHandle, ListEditorContext, SyncStatus} from 'libraries/forms'
 import {Card, CssClass, Flex, HTMLTable, Tab, Tabs} from 'libraries/ui'
 import { DanceProgramChooser } from 'components/event/DanceProgramChooser'
@@ -30,8 +32,6 @@ import {Duration} from 'components/widgets/Duration'
 import {DurationField} from 'components/widgets/DurationField'
 import {useT, useTranslation} from 'i18n'
 import {guid} from 'utils/guid'
-
-import {Event} from 'types'
 
 import {
   AddDanceSetButton,

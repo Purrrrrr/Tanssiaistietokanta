@@ -1,7 +1,8 @@
 import {applyPatch} from 'rfc6902'
 
-import { changedVersion, randomGeneratorWithSeed, toEntity} from '../testUtils'
 import {Entity} from '../types'
+
+import { changedVersion, randomGeneratorWithSeed, toEntity} from '../testUtils'
 import {arrayPatch} from './arrayPatch'
 import {toJSONPatch} from './index'
 

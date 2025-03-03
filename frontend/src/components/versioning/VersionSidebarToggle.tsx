@@ -1,9 +1,9 @@
 import { useContext, useEffect } from 'react'
 
+import { VersionSidebarProps } from './types'
+
 import {Button} from 'libraries/ui'
 import { useTranslation } from 'i18n'
-
-import { VersionSidebarProps } from './types'
 
 import { VersionSidebarToggleContext } from './VersionableContentContainer'
 

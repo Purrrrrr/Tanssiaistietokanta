@@ -1,4 +1,5 @@
 import {Deleted, scalarConflict} from '../types'
+
 import merge from './index'
 
 describe('merge', () => {

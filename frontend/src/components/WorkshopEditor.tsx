@@ -1,6 +1,8 @@
 import {useMemo} from 'react'
 import {string} from 'yup'
 
+import {Event} from 'types'
+
 import {usePatchWorkshop} from 'services/workshops'
 
 import {ActionButton as Button, DateField, DragHandle, formFor, NumberInput, patchStrategy, SyncStatus, TextArea, useAutosavingState} from 'libraries/forms'
@@ -8,8 +10,6 @@ import {CssClass, Flex, FormGroup} from 'libraries/ui'
 import {DanceChooser} from 'components/widgets/DanceChooser'
 import {useT, useTranslation} from 'i18n'
 import { guid } from 'utils/guid'
-
-import {Event} from 'types'
 
 import './WorkshopEditor.scss'
 

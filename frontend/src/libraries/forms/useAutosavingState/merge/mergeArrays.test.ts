@@ -1,5 +1,6 @@
-import {changedVersion, randomGeneratorWithSeed, toEntity} from '../testUtils'
 import {arrayConflict, Deleted, Entity, mapMergeData, MergeData, PartialMergeResult, removedArrayItemConflict, scalarConflict} from '../types'
+
+import {changedVersion, randomGeneratorWithSeed, toEntity} from '../testUtils'
 import merge from './index'
 import {mergeArrays} from './mergeArrays'
 

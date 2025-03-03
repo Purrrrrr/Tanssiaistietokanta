@@ -1,12 +1,12 @@
 import {useEffect, useState} from 'react'
 import {Suggest} from '@blueprintjs/select'
 
+import {Dance} from 'types'
+
 import {filterDances, useCreateDance, useDances} from 'services/dances'
 
 import {CssClass, MenuItem} from 'libraries/ui'
 import {useT} from 'i18n'
-
-import {Dance} from 'types'
 
 interface DanceChooserProps {
   value: Dance | null,

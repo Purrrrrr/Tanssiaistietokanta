@@ -1,6 +1,6 @@
-import {Button, Flex} from 'libraries/ui'
-
 import { ConflictData } from './types'
+
+import {Button, Flex} from 'libraries/ui'
 
 import {MenuButton} from './fieldComponents/Selector'
 import {useFormStrings} from './formContext'

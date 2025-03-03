@@ -1,9 +1,9 @@
-import {Callout} from 'libraries/ui'
+import {Dance, Event} from 'types'
 import {DanceSet, EventProgramSettings} from 'components/event/EventProgramForm/types'
+
+import {Callout} from 'libraries/ui'
 import {useT} from 'i18n'
 import {uniq} from 'utils/uniq'
-
-import {Dance, Event} from 'types'
 
 
 export function MissingDancesWarning({ program, workshops }: {program: EventProgramSettings, workshops: Event['workshops']}) {

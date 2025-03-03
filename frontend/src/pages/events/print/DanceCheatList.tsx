@@ -1,5 +1,7 @@
 import {useState} from 'react'
 
+import {DanceCheatListQuery} from 'types/gql/graphql'
+
 import {backendQueryHook, graphql} from 'backend'
 import {useCallbackOnEventChanges} from 'services/events'
 
@@ -12,8 +14,6 @@ import {PrintTable} from 'components/PrintTable'
 import PrintViewToolbar from 'components/widgets/PrintViewToolbar'
 import {useT} from 'i18n'
 import {uniq} from 'utils/uniq'
-
-import {DanceCheatListQuery} from 'types/gql/graphql'
 
 import './DanceCheatList.sass'
 

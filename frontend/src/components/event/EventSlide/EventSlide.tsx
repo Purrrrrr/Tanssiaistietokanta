@@ -1,6 +1,6 @@
-import { LinkComponentType, Slide, SlideLink, SlideNavigation, SlideNavigationList, SlideProps } from 'components/Slide'
-
 import { DanceProgramItemSlideProps, DanceSet, DanceSetSlideProps, EventProgramItem, EventSlideProps, IntervalMusicSlideProps, RequestedDance, WithEventProgram } from './types'
+
+import { LinkComponentType, Slide, SlideLink, SlideNavigation, SlideNavigationList, SlideProps } from 'components/Slide'
 
 import { intervalMusicId } from './useEventSlides'
 import { intervalMusicTitle, markdown, RequestedDancePlaceholder, TeachedIn } from './utils'

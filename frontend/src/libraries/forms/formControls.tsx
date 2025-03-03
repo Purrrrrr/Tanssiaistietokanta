@@ -1,8 +1,8 @@
 import React from 'react'
 
-import {Button} from 'libraries/ui'
-
 import {StringPathToList} from './types'
+
+import {Button} from 'libraries/ui'
 
 import {useFormIsValid, useFormMetadata} from './formContext'
 import {useRemoveFromList} from './hooks'
