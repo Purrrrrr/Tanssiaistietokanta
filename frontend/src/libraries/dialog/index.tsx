@@ -68,8 +68,8 @@ Dialog.Footer = function DialogBody({className, ...props}: React.HTMLAttributes<
 }
 
 export function Alert({isOpen, title, intent, confirmButtonText, cancelButtonText, children, onCancel, onConfirm, onClose} : AlertProps & {children: React.ReactNode, title: string}) {
-  const doCancel = useCallback((e) => {onCancel && onCancel(); onClose && onClose(false, e)}, [onCancel, onClose])
-  const doConfirm = useCallback((e) => {onConfirm && onConfirm(); onClose && onClose(true, e)}, [onConfirm, onClose])
+  const doCancel = useCallback((e) => {onCancel?.(); onClose?.(false, e)}, [onCancel, onClose])
+  const doConfirm = useCallback((e) => {onConfirm?.(); onClose?.(true, e)}, [onConfirm, onClose])
 
   return <Dialog isOpen={isOpen} title={title} onClose={doCancel} showCloseButton={false}>
     <div className={Classes.DIALOG_BODY}>

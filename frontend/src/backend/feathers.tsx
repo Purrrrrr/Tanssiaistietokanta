@@ -15,7 +15,6 @@ const isProd = process.env.NODE_ENV === 'production'
 export const socket = isProd
   ? io('/', {path: '/api/socket.io'})
   : io(devConfig.backendUrl)
-// eslint-disable-next-line @typescript-eslint/ban-types
 const app = feathers()
 
 app.configure(socketio(socket))

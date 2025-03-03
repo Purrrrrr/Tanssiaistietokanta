@@ -18,7 +18,7 @@ export default function PrintViewToolbar({children, icon = 'settings', maxHeight
   >
     <Icon className="more" icon={icon} iconSize={20}
       /* //Ignore error about tabIndex since it's a bug in the type definitions
-      // @ts-ignore */
+      // @ts-expect-error @typescript-eslint/ban-ts-comment */
       tabIndex={0}
       onFocus={() => setOpen(true)}
     />

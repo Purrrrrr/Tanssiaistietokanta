@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useState} from 'react'
 
 import {MergeableObject, SyncState} from './types'
-import {OnFormChangeHandler, StringPath, TypedStringPath, Version} from '../types'
+import {NewValue, OnFormChangeHandler, StringPath, TypedStringPath, Version} from '../types'
 
 import createDebug from 'utils/debug'
 
@@ -55,7 +55,7 @@ export function useAutosavingState<T extends MergeableObject, Patch>(
     const id = setTimeout(() => {
       if (state === 'CONFLICT' && now() - serverStateTime > DISABLE_CONFLICT_OVERRIDE_DELAY) {
         debug('Not saving conflict data on top of stale data')
-        refreshData && refreshData()
+        refreshData?.()
         return
       }
 
@@ -72,7 +72,7 @@ export function useAutosavingState<T extends MergeableObject, Patch>(
     return () => clearTimeout(id)
   }, [state, nonConflictingModifications, onPatch, originalData, serverStateTime, patchStrategy, refreshData, dispatch, patchPending])
 
-  const onModified = useCallback((modifications) => {
+  const onModified = useCallback((modifications: NewValue<T>) => {
     dispatch({ type: 'LOCAL_MODIFICATION', modifications})
   }, [dispatch])
   const onResolveConflict = useCallback(function <V>(path: TypedStringPath<V, T>, version: Version) {

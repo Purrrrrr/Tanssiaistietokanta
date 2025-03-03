@@ -37,7 +37,7 @@ export function Form<T>({
     //Sometimes forms from dialogs end up propagating into our form and we should not submit then
     if (e.target !== form.current) return
     e.preventDefault()
-    onSubmit && onSubmit(state.data, e)
+    onSubmit?.(context.getState().data, e)
   }
 
   return <form onSubmit={submitHandler} {...rest} ref={form}>

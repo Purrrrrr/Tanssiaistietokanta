@@ -6,7 +6,7 @@ const wordBoundary = (() => {
   try {
     return /(?<=\p{White_Space}+)(?!\p{White_Space}+)|(?<!\p{White_Space}+)(?=\p{White_Space}+)/u
     // eslint-disable-next-line no-unreachable
-  } catch(e) {
+  } catch(_ignored) {
     return /\b/
   }
 })()

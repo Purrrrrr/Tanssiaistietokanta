@@ -17,8 +17,8 @@ type FieldArrayPath<Input, Output, Data, Depth extends number = 8> =
     )
   )
 
-const someSymbol = Symbol()
-type AnyType = typeof someSymbol
+const _someUnusedSymbol = Symbol()
+type AnyType = typeof _someUnusedSymbol
 
 type IsFieldFor<FieldInput, FieldOutput, Data> =
   [Data, FieldOutput] extends [FieldInput, Data] ? true

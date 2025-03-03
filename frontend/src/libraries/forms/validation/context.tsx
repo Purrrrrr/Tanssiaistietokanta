@@ -43,7 +43,11 @@ export function useUpdateErrorContext(error) {
   useEffect(
     () => {
       if (!context) return
-      error ? context.addError(identity, error) : context.removeError(identity)
+      if (error) {
+        context.addError(identity, error)
+      } else {
+        context.removeError(identity)
+      }
       return () => context.removeError(identity)
     },
     [error, identity, context]
