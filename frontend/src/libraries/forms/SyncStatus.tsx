@@ -4,7 +4,6 @@ import classNames from 'classnames'
 import {Icon, IconName, Intent} from 'libraries/ui'
 
 import { useFormStrings } from './formContext'
-import { formStringDefaults } from './strings'
 import {SyncState} from './useAutosavingState'
 
 import './SyncStatus.sass'

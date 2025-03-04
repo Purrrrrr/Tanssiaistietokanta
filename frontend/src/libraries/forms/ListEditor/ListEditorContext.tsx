@@ -106,9 +106,11 @@ export function ListEditorContextInner({accessibilityContainer, children}: ListE
           activeData.onChangePath((items: unknown[]) => arrayMove(items, activeData.itemIndex, overData.itemIndex))
         } else if (move) {
           onChange(formValue => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const movePath = [...toArrayPath(activeData.path as any), activeData.itemIndex]
             const moved = L.get(movePath, formValue)
             return L.set(
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               [...toArrayPath(move.overData.path as any), L.slice(overData.itemIndex, 0)],
               [moved],
               L.remove(movePath, formValue)
