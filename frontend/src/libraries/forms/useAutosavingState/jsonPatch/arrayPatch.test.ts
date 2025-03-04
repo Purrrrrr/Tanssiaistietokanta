@@ -1,4 +1,4 @@
-import {applyPatch} from 'rfc6902'
+import {applyPatch, Operation} from 'rfc6902'
 
 import {Entity} from '../types'
 
@@ -113,7 +113,7 @@ function testPatch(original: Entity[], version: Entity[]) {
   const patch = arrayPatch(original, version, toJSONPatch)
 
   const patched = [...original]
-  const patchRes = applyPatch(patched, patch as any)
+  const patchRes = applyPatch(patched, patch as unknown as Operation[])
   try {
     expect(version.map(i => i._id)).toEqual(patched.map(i => i._id))
     expect(version).toEqual(patched)

@@ -4,7 +4,6 @@ import classNames from 'classnames'
 import {Icon, IconName, Intent} from 'libraries/ui'
 
 import { useFormStrings } from './formContext'
-import { formStringDefaults } from './strings'
 import {SyncState} from './useAutosavingState'
 
 import './SyncStatus.sass'
@@ -34,8 +33,7 @@ export function SyncStatus(
 ) {
   const previousState = useRef<SyncState | null>(null)
   const [changed, setChanged] = useState(false)
-  //TODO: fix
-  const texts = formStringDefaults.syncState //useFormStrings().syncState
+  const texts = useFormStrings().syncState
   useEffect(() => {
     if (previousState.current !== state && previousState.current !== null) {
       setChanged(true)

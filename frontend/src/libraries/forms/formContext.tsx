@@ -81,5 +81,6 @@ export function useFormMetadata<T>() {
 }
 
 export function useFormStrings(): FormStrings {
-  return useFormMetadata().getStrings()
+  const ctx = useContext(FormMetadataContext)
+  return ctx?.getStrings() ?? formStringDefaults
 }

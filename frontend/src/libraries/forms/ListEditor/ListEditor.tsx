@@ -95,6 +95,7 @@ function ListEditorItems<T, V extends Entity>({items, itemType, acceptsTypes, pa
       path={activeData.path}
       onChangePath={activeData.onChangePath as OnChangeHandler<V[]>}
       itemIndex={activeData.itemIndex}
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       component={activeData.component as ListItemComponent<any, V>}
       componentProps={componentProps}
       isTable={isTable}
