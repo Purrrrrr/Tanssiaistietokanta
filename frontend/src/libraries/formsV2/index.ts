@@ -30,7 +30,7 @@ UseAutosavingStateReturn
 
 import { type ComponentProps, type ComponentType } from 'react'
 
-import type { FieldPath, ValueAt } from './types'
+import type { FieldPath, Labelable, ValueAt } from './types'
 
 import { type FieldInputComponent, type FieldInputComponentProps, MarkdownInput, Nullable, SwitchInput, TextInput } from './components/inputs'
 import { SwitchProps } from './components/inputs/SwitchInput'
@@ -58,7 +58,7 @@ type FieldComponentFor<Data, Component> = Component extends ComponentType<infer 
     : 0
   : 1
 
-type ExternalSelfLabeledFieldProps<Data, Output extends Input, Extra, Input = Nullable<Output>> = SelfLabeledFieldProps<Output, Extra, Input> & {
+type ExternalSelfLabeledFieldProps<Data, Output extends Input, Extra extends Labelable, Input = Nullable<Output>> = SelfLabeledFieldProps<Output, Extra, Input> & {
   path: FieldPath<Input, Output, Data>
 }
 

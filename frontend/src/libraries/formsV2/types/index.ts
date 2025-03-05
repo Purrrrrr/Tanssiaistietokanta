@@ -12,4 +12,6 @@ export interface ValidationProps {
 export type ErrorMap = Partial<Record<string, Errors>>
 export type Errors = string[] | undefined
 
-
+export interface Labelable {
+  label: string
+}
