@@ -1,3 +1,5 @@
+import { Labelable } from '../types'
+
 import type { FieldInputComponent } from '../components/inputs'
 import { type FieldProps, type SelfLabeledFieldProps, type UnwrappedFieldProps, Field, SelfLabeledField, UnwrappedField } from '../Field'
 
@@ -17,7 +19,7 @@ export function asUnwrappedFormField<Output extends Input, Extra, Input>(
   }
 }
 
-export function asSelfLabeledFormField<Output extends Input, Extra, Input>(
+export function asSelfLabeledFormField<Output extends Input, Extra extends Labelable, Input>(
   c: FieldInputComponent<Output, Extra & {label: string}, Input>): (props: Omit<SelfLabeledFieldProps<Output, Extra, Input>, 'component'>
 ) => React.ReactElement {
   return props => {
