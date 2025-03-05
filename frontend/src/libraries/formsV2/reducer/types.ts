@@ -1,21 +1,21 @@
-import type { Errors, PathFor } from '../types'
+import type { Errors, GenericPath } from '../types'
 
 export type Selection = [number, number] | null
 
 export type FormAction<Data> = ValueAction<Data> | {
   type: 'SET_VALIDATION_RESULT'
-  path: PathFor<Data>
+  path: GenericPath
   id: string
   errors: Errors
 } | {
   type: 'FOCUS'
-  path: PathFor<Data>
+  path: GenericPath
   selection: Selection
 } | {
   type: 'BLUR'
 } | {
   type: 'SELECT'
-  path: PathFor<Data>
+  path: GenericPath
   selection: Selection
 }
 
@@ -24,10 +24,10 @@ export type ValueAction<Data> = {
   value: Data
 } | {
   type: 'CHANGE'
-  path: PathFor<Data>
+  path: GenericPath
   value: unknown
 } | {
   type: 'APPLY'
-  path: PathFor<Data>
+  path: GenericPath
   modifier: (value: unknown) => unknown
 }

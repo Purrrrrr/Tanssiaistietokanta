@@ -1,6 +1,6 @@
 import { get } from 'partial.lenses'
 
-import { FieldPath } from './types'
+import { DataPath } from './types'
 
 const defaultLocalizations = {
   markdownEditor: {
@@ -14,7 +14,7 @@ const defaultLocalizations = {
   },
 }
 
-type TranslationKey = FieldPath<string, string, typeof defaultLocalizations>
+type TranslationKey = DataPath<string, typeof defaultLocalizations>
 
 //TODO: implement some good system
 export const useFormTranslation = (key: TranslationKey) => {
