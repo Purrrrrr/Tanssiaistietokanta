@@ -1,45 +1,14 @@
 import { type Dispatch, type Reducer, useCallback, useEffect, useReducer, useRef } from 'react'
-import * as L from 'partial.lenses'
+import equal from 'fast-deep-equal'
 
-import createDebug from 'utils/debug'
+import type { FormAction, Selection } from './types'
+import type { ErrorMap, Errors, PathFor } from '../types'
+import { isSubPathOf } from '../types'
 
-import { isSubPathOf, toArrayPath } from './types'
-
-import type { ErrorMap, Errors, PathFor } from './types'
-import { apply as applyTo, merge, pluck } from './utils/data'
-import { hasErrors, withErrors } from './utils/validation'
-
-const debug = createDebug('formReducer')
-
-type Selection = [number, number] | null
-
-export type FormAction<Data> = {
-  type: 'EXTERNAL_CHANGE'
-  value: Data
-} | {
-  type: 'CHANGE'
-  path: PathFor<Data>
-  value: unknown
-} | {
-  type: 'APPLY'
-  path: PathFor<Data>
-  modifier: (value: unknown) => unknown
-} | {
-  type: 'SET_VALIDATION_RESULT'
-  path: PathFor<Data>
-  id: string
-  errors: Errors
-} | {
-  type: 'FOCUS'
-  path: PathFor<Data>
-  selection: Selection
-} | {
-  type: 'BLUR'
-} | {
-  type: 'SELECT'
-  path: PathFor<Data>
-  selection: Selection
-}
+import { apply as applyTo, merge, pluck } from '../utils/data'
+import { hasErrors, withErrors } from '../utils/validation'
+import { debugReducer } from './debug'
+import { valueReducer } from './valueReducer'
 
 export function change<Data>(path: PathFor<Data>, value: unknown): FormAction<Data> {
   return { type: 'CHANGE', path, value }
@@ -60,7 +29,10 @@ export interface FormState<Data> {
   data: Data
   errors: ErrorMap
   isValid: boolean
-  changedPath: PathFor<Data>
+  lastChange?: {
+    external?: boolean
+    path: PathFor<Data>
+  }
 }
 
 interface CallbackDefinition<Data> {
@@ -69,8 +41,8 @@ interface CallbackDefinition<Data> {
 }
 export type SubscriptionCallback<Data> = (data: FormState<Data>) => unknown
 
-export function useFormReducer<Data>(initialData: Data): FormReducerResult<Data> {
-  const result = useReducer<Reducer<FormState<Data>, FormAction<Data>>, Data>(debugReducer, initialData, getInitialState)
+export function useFormReducer<Data>(externalValue: Data, onChange: (changed: Data) => unknown): FormReducerResult<Data> {
+  const result = useReducer<Reducer<FormState<Data>, FormAction<Data>>, Data>(debugReducer(reducer), externalValue, getInitialState)
   const [state, dispatch] = result
 
   const callbacks = useRef<CallbackDefinition<Data>[]>([])
@@ -89,12 +61,23 @@ export function useFormReducer<Data>(initialData: Data): FormReducerResult<Data>
   useEffect(
     () => {
       callbacks.current.forEach(({ callback, path }) => {
-        if (isSubPathOf(state.changedPath, path)) {
+        if (state.lastChange && isSubPathOf(state.lastChange.path, path)) {
           callback(state)
         }
       })
     },
     [state]
+  )
+
+  const externalValueChanged = equal(state.data, externalValue)
+
+  useEffect(
+    () => {
+      if (externalValueChanged) {
+        dispatch(externalChange(externalValue))
+      }
+    },
+    [externalValue, externalValueChanged, dispatch]
   )
 
   return {
@@ -116,34 +99,21 @@ function getInitialState<Data>(data: Data): FormState<Data> {
     data,
     errors: {},
     isValid: true,
-    changedPath: '',
   }
 }
-
-function debugReducer<Data>(state: FormState<Data>, action: FormAction<Data>): FormState<Data> {
-  debug(action)
-  const val = reducer(state, action)
-  debug(val)
-  return val
-}
-
 
 function reducer<Data>(state: FormState<Data>, action: FormAction<Data>): FormState<Data> {
   switch (action.type) {
     case 'EXTERNAL_CHANGE':
       return merge(state, {
-        data: action.value,
-        changedPath: '',
+        data: valueReducer(state.data, action),
+        lastChange: { path: '', external: true },
       })
     case 'CHANGE':
-      return merge(state, {
-        data: L.set(toArrayPath(action.path), action.value, state.data),
-        changedPath: action.path,
-      })
     case 'APPLY':
       return merge(state, {
-        data: L.modify(toArrayPath(action.path), action.modifier, state.data),
-        changedPath: action.path,
+        data: valueReducer(state.data, action),
+        lastChange: { path: action.path },
       })
     case 'SET_VALIDATION_RESULT': {
       const errors = withErrors(state.errors, action.id, action.errors)
@@ -152,7 +122,7 @@ function reducer<Data>(state: FormState<Data>, action: FormAction<Data>): FormSt
         ...state,
         errors,
         isValid: !hasErrors(errors),
-        changedPath: action.path
+        lastChange: { path: action.path },
       }
     }
     case 'FOCUS':
