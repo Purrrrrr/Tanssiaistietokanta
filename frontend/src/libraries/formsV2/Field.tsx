@@ -8,47 +8,6 @@ import { useFormContext } from './context'
 import { useRunValidation } from './hooks'
 import { change } from './reducer'
 
-/* TODO:
- *
- * Make Form value controlled?
- * Simpler field types?
- * list editor
- * switchFor
- * TextArea
- * Fix Duration field?
- * NumberInput
- * closable editors?
- * date time components (choose better implementation?)
- * Selector (choose better component?)
- * FieldSet component
- *   wrapper?: none | fieldset
- * RadioGroup with fieldset
- * inline prop with just CSS?
- * better translation system?
- * a11y-announcement element for list editor and such?? Is it needed? announcement API?
- * input field components
- * various buttons
- * various hooks
- * sync -stuff and autosaving state
- * conflict handling
- *
- * DONE:
- * reducer logic, types etc.
- * validation
- * working wrapper
- *  always use <label>
- *  error-reference
- *  input id?
- *  read only mode
- * switch
- * onValidityChange
- * basic translation system
- * MarkdownInput
- * DurationField v2
- * Add to dance editor
- *
- */
-
 export type FieldProps<Output extends Input, Extra, Input> =
   CommonFieldProps<Output, Extra, Input> & ExternalFieldContainerProps
 

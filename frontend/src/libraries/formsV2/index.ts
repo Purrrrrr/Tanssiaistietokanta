@@ -1,33 +1,3 @@
-/* Need to export:
-ActionButton as Button
-ClickToEdit
-ClickToEditMarkdown
-DateField
-DateRangeField
-DragHandle
-FieldComponentProps
-formFor
-Input
-InputProps
-ListEditorContext
-MarkdownEditor
-MenuButton
-NumberInput
-patchStrategy
-PatchStrategy
-RadioGroup
-Selector
-SelectorMenu
-SubmitButton
-Switch
-SyncState
-SyncStatus
-TextArea
-TypedStringPath
-useAutosavingState
-UseAutosavingStateReturn
-*/
-
 import { type ComponentProps, type ComponentType } from 'react'
 
 import type { FieldPath, Labelable, ValueAt } from './types'
