@@ -10,13 +10,12 @@ import { change } from './reducer'
 
 /* TODO:
  *
- * translations (required etc.)
- * MarkdownInput
- * DurationField v2
- * Add to dance editor
+ * Make Form value controlled?
+ * Simpler field types?
  * list editor
  * switchFor
  * TextArea
+ * Fix Duration field?
  * NumberInput
  * closable editors?
  * date time components (choose better implementation?)
@@ -25,6 +24,7 @@ import { change } from './reducer'
  *   wrapper?: none | fieldset
  * RadioGroup with fieldset
  * inline prop with just CSS?
+ * better translation system?
  * a11y-announcement element for list editor and such?? Is it needed? announcement API?
  * input field components
  * various buttons
@@ -42,6 +42,10 @@ import { change } from './reducer'
  *  read only mode
  * switch
  * onValidityChange
+ * basic translation system
+ * MarkdownInput
+ * DurationField v2
+ * Add to dance editor
  *
  */
 
