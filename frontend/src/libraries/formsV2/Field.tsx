@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useId, useState, useSyncExternalStore } from 'react'
 
-import type { PathFor, ValidationProps } from './types'
+import type { Labelable, PathFor, ValidationProps } from './types'
 
 import { type ExternalBareFieldContainerProps, type ExternalFieldContainerProps, BareFieldContainer, FieldContainer } from './components/FieldContainer'
 import type { FieldInputComponent, FieldInputComponentProps, OmitInputProps } from './components/inputs'
@@ -51,10 +51,9 @@ export type FieldProps<Output extends Input, Extra, Input> =
 export type UnwrappedFieldProps<Output extends Input, Extra, Input> =
   CommonFieldProps<Output, Extra, Input> & ExternalBareFieldContainerProps
 
-export type SelfLabeledFieldProps<Output extends Input, Extra, Input>  = {
-  component: FieldInputComponent<Output, Extra & { label: string }, Input>
+export type SelfLabeledFieldProps<Output extends Input, Extra extends Labelable, Input> = {
   label: string
-} & Omit<CommonFieldProps<Output, Extra, Input>, 'component'> & ExternalBareFieldContainerProps
+} & CommonFieldProps<Output, Extra, Input> & ExternalBareFieldContainerProps
 
 type CommonFieldProps<Output extends Input, Extra, Input> = ValidationProps & OmitInputProps<Extra> & {
   component: FieldInputComponent<Output, Extra, Input>
@@ -85,11 +84,11 @@ export function UnwrappedField<Output extends Input, Extra, Input>({path, label,
   </BareFieldContainer>
 }
 
-export function SelfLabeledField<Output extends Input, Extra, Input>({path, label, component: C, required, schema, ...extra}: SelfLabeledFieldProps<Output, Extra, Input>) {
+export function SelfLabeledField<Output extends Input, Extra extends Labelable, Input>({path, label, component: C, required, schema, ...extra}: SelfLabeledFieldProps<Output, Extra, Input>) {
   const { inputProps, containerProps } = useFieldValueProps<Output, Input>(path, { required, schema })
 
   return <BareFieldContainer {...containerProps}>
-    <C {...inputProps} {...extra as Extra} label={label} />
+    <C {...inputProps} {...extra as unknown as Extra} label={label} />
   </BareFieldContainer>
 }
 
