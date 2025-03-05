@@ -1,4 +1,5 @@
-export type PathFor<_> = FieldPath<AnyType, AnyType, AnyType>
+export type GenericPath = string | number
+export type DataPath<T, Data> = FieldPath<T, T, Data>
 export type FieldPath<Input, Output, Data, Depth extends number = 8> =
   Data extends AnyType ? string
   : Joined<FieldArrayPath<Input, Output, Data, Depth>>
@@ -18,12 +19,12 @@ type FieldArrayPath<Input, Output, Data, Depth extends number = 8> =
   )
 
 const _someUnusedSymbol = Symbol()
-type AnyType = typeof _someUnusedSymbol
+export type AnyType = typeof _someUnusedSymbol
 
 type IsFieldFor<FieldInput, FieldOutput, Data> =
   [Data, FieldOutput] extends [FieldInput, Data] ? true
-  : Data extends AnyType ? 1
-  : [FieldInput, FieldOutput] extends [AnyType, AnyType] ? 2 : 0
+  : Data extends AnyType ? false
+  : [FieldInput, FieldOutput] extends [AnyType, AnyType] ? false : false
 
 type Joined<Path extends readonly unknown[]> =
   // Base recursive case, no more paths to traverse
@@ -43,15 +44,22 @@ type Decrement = [never, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
     11, 12, 13, 14, 15, 16, 17, 18, 19, 20, ...0[]]
 
 const numberRegex = /^(:?[1-9][0-9]*)|0$/
-export function toArrayPath(p: string): (number | string)[]  {
+export function toArrayPath(p: GenericPath): GenericPath[]  {
   if (p === '') return []
   return String(p)
     .split('.')
     .map(segment => segment.match(numberRegex) ? parseInt(segment, 10) : segment)
 }
 
-export function isSubPathOf(prefix: string, path: string) {
+export function isSubPathOf(prefix: GenericPath, path: GenericPath) {
   if (prefix === '') return true
+  if (typeof path === 'number') {
+    return isSubPathOf(prefix, String(path))
+  }
+  if (typeof prefix === 'number') {
+    return isSubPathOf(String(prefix), path)
+  }
+
   // callback path needs to be equal to changed path or a prefix
   if (!path.startsWith(prefix)) return false
   // if it is a prefix, the changed path should be inside the field pointed by path

@@ -2,7 +2,7 @@ import { type Dispatch, type Reducer, useCallback, useEffect, useReducer, useRef
 import equal from 'fast-deep-equal'
 
 import type { FormAction, Selection } from './types'
-import type { ErrorMap, Errors, PathFor } from '../types'
+import type { ErrorMap, Errors, GenericPath } from '../types'
 import { isSubPathOf } from '../types'
 
 import { apply as applyTo, merge, pluck } from '../utils/data'
@@ -10,33 +10,33 @@ import { hasErrors, withErrors } from '../utils/validation'
 import { debugReducer } from './debug'
 import { valueReducer } from './valueReducer'
 
-export function change<Data>(path: PathFor<Data>, value: unknown): FormAction<Data> {
+export function change<Data>(path: GenericPath, value: unknown): FormAction<Data> {
   return { type: 'CHANGE', path, value }
 }
 export function externalChange<Data>(value: Data): FormAction<Data> {
   return { type: 'EXTERNAL_CHANGE', value }
 }
-export function setValidationResult<Data>(path: PathFor<Data>, id: string, errors: Errors): FormAction<Data> {
+export function setValidationResult<Data>(path: GenericPath, id: string, errors: Errors): FormAction<Data> {
   return { type: 'SET_VALIDATION_RESULT', path, id, errors }
 }
-export function apply<Data>(path: PathFor<Data>, modifier: (value: unknown) => unknown): FormAction<Data> {
+export function apply<Data>(path: GenericPath, modifier: (value: unknown) => unknown): FormAction<Data> {
   return { type: 'APPLY', path, modifier }
 }
 
 export interface FormState<Data> {
-  focusedPath: PathFor<Data> | null
+  focusedPath: GenericPath | null
   selection: Selection
   data: Data
   errors: ErrorMap
   isValid: boolean
   lastChange?: {
     external?: boolean
-    path: PathFor<Data>
+    path: GenericPath
   }
 }
 
 interface CallbackDefinition<Data> {
-  path: PathFor<Data>
+  path: GenericPath
   callback: SubscriptionCallback<Data>
 }
 export type SubscriptionCallback<Data> = (data: FormState<Data>) => unknown
@@ -47,14 +47,14 @@ export function useFormReducer<Data>(externalValue: Data, onChange: (changed: Da
 
   const callbacks = useRef<CallbackDefinition<Data>[]>([])
   const subscribe = useCallback(
-    (callback: SubscriptionCallback<Data>, path: PathFor<Data> = '') => {
+    (callback: SubscriptionCallback<Data>, path: GenericPath = '') => {
       const callbackDefinition = { callback, path }
       callbacks.current.push(callbackDefinition)
       return () => { applyTo(callbacks, 'current', pluck(callbackDefinition)) }
     }, []
   )
   const subscribeTo = useCallback(
-    (path: PathFor<Data>) => (c: SubscriptionCallback<Data>) => subscribe(c, path),
+    (path: GenericPath) => (c: SubscriptionCallback<Data>) => subscribe(c, path),
     [subscribe]
   )
 
@@ -88,8 +88,8 @@ export function useFormReducer<Data>(externalValue: Data, onChange: (changed: Da
 export interface FormReducerResult<Data> {
   state: FormState<Data>
   dispatch: Dispatch<FormAction<Data>>
-  subscribe: (callback: SubscriptionCallback<Data>, path?: PathFor<Data>) => () => void
-  subscribeTo: (path: PathFor<Data>) => (callback: SubscriptionCallback<Data>) => () => void
+  subscribe: (callback: SubscriptionCallback<Data>, path?: GenericPath) => () => void
+  subscribeTo: (path: GenericPath) => (callback: SubscriptionCallback<Data>) => () => void
 }
 
 function getInitialState<Data>(data: Data): FormState<Data> {
