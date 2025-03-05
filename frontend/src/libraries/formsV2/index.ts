@@ -55,8 +55,8 @@ type FieldComponent<Data, Output extends Input, Extra, Input = Nullable<Output>>
 type FieldComponentFor<Data, Component> = Component extends ComponentType<infer Props>
   ? Props extends FieldInputComponentProps<infer Output, infer Input>
     ? FieldComponent<Data, Output, ComponentProps<Component>, Input>
-    : never
-  : never
+    : 0
+  : 1
 
 type ExternalSelfLabeledFieldProps<Data, Output extends Input, Extra, Input = Nullable<Output>> = SelfLabeledFieldProps<Output, Extra, Input> & {
   path: FieldPath<Input, Output, Data>
