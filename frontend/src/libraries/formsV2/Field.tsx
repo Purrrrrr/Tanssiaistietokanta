@@ -14,9 +14,8 @@ export type FieldProps<Output extends Input, Extra, Input> =
 export type UnwrappedFieldProps<Output extends Input, Extra, Input> =
   CommonFieldProps<Output, Extra, Input> & ExternalBareFieldContainerProps
 
-export type SelfLabeledFieldProps<Output extends Input, Extra extends Labelable, Input> = {
-  label: string
-} & CommonFieldProps<Output, Extra, Input> & ExternalBareFieldContainerProps
+export type SelfLabeledFieldProps<Output extends Input, Extra extends Labelable, Input> =
+  UnwrappedFieldProps<Output, Extra, Input>
 
 type CommonFieldProps<Output extends Input, Extra, Input> = ValidationProps & OmitInputProps<Extra> & {
   component: FieldInputComponent<Output, Extra, Input>
