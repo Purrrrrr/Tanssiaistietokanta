@@ -1,14 +1,14 @@
 import { createContext, useContext, useMemo, useRef } from 'react'
 import { get } from 'partial.lenses'
 
-import { PathFor, toArrayPath } from './types'
+import { DataPath, toArrayPath } from './types'
 
 import { FormReducerResult, FormState } from './reducer'
 
-export interface FormStateContext<T> extends Omit<FormReducerResult<T>, 'state'> {
+export interface FormStateContext<D> extends Omit<FormReducerResult<D>, 'state'> {
   readOnly: boolean
-  getState(): FormState<T>
-  getValueAt<D>(path: PathFor<T>): D
+  getState(): FormState<D>
+  getValueAt<T>(path: DataPath<T, D>): T
 }
 
 export const FormContext = createContext<FormStateContext<unknown>>({
@@ -24,8 +24,8 @@ export const FormContext = createContext<FormStateContext<unknown>>({
   },
 })
 
-export function useFormContext<T>(): FormStateContext<T> {
-  return useContext(FormContext) as FormStateContext<T>
+export function useFormContext<D>(): FormStateContext<D> {
+  return useContext(FormContext) as FormStateContext<D>
 }
 
 export function useFormContextValue<D>(
@@ -39,7 +39,7 @@ export function useFormContextValue<D>(
     () => ({
       readOnly,
       getState() { return stateRef.current },
-      getValueAt: (path: PathFor<D>) => get(toArrayPath(path), stateRef.current.data),
+      getValueAt: <T>(path: DataPath<T, D>) => get(toArrayPath(path), stateRef.current.data),
       dispatch,
       subscribe,
       subscribeTo,

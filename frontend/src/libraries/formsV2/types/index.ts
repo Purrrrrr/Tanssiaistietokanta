@@ -1,6 +1,6 @@
 import { type Schema } from 'yup'
 
-export type { FieldPath, PathFor } from './paths'
+export type { AnyType, DataPath, FieldPath, GenericPath } from './paths'
 export { isSubPathOf, toArrayPath } from './paths'
 export type { ValueAt } from './valueAt'
 
