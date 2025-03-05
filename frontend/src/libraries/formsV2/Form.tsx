@@ -16,23 +16,13 @@ export interface FormProps<T> extends
   onIsValidChange?: (isValid: boolean) => unknown
 }
 
-export function Form<T>({
-  value, onChange, onSubmit, onIsValidChange, labelStyle, inline, children, readOnly = false, ...rest
-}: FormProps<T>) {
+export function Form<T>(props: FormProps<T>) {
+  const {
+    onSubmit, labelStyle, inline, children, ...rest
+  } = props
+  const { context, formProps } = useForm(rest)
+
   const form = useRef<HTMLFormElement>(null)
-  const reducerData = useFormReducer(value)
-  const { state } = reducerData
-
-  useEffect(
-    () => { onChange(state.data) },
-    [onChange, state.data]
-  )
-  useEffect(
-    () => { onIsValidChange?.(state.isValid) },
-    [onIsValidChange, state.isValid]
-  )
-  const ctx = useFormContextValue(reducerData, readOnly)
-
   const submitHandler = (e: React.FormEvent) => {
     //Sometimes forms from dialogs end up propagating into our form and we should not submit then
     if (e.target !== form.current) return
@@ -40,11 +30,36 @@ export function Form<T>({
     onSubmit?.(context.getState().data, e)
   }
 
-  return <form onSubmit={submitHandler} {...rest} ref={form}>
+  return <form {...formProps} onSubmit={submitHandler} ref={form}>
     <FieldStyleContext inline={inline} labelStyle={labelStyle}>
-      <FormContext.Provider value={ctx as FormStateContext<unknown>}>
+      <FormContext.Provider value={context as FormStateContext<unknown>}>
         {children}
       </FormContext.Provider>
     </FieldStyleContext>
   </form>
+}
+
+function useForm<T>(props: FormProps<T>) {
+  const {
+    value, onChange, onIsValidChange, readOnly = false, ...rest
+  } = props
+  const reducerData = useFormReducer(value, onChange)
+  const { state } = reducerData
+
+  useEffect(
+    () => {
+      if (state.lastChange?.external) return
+      onChange(state.data)
+    },
+    [onChange, state.data, state.lastChange]
+  )
+  useEffect(
+    () => { onIsValidChange?.(state.isValid) },
+    [onIsValidChange, state.isValid]
+  )
+  const context = useFormContextValue(reducerData, readOnly)
+
+  return {
+    context, formProps: rest
+  }
 }
