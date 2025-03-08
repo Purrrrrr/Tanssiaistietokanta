@@ -59,7 +59,7 @@ function useFieldValueProps<Output extends Input, Input, Data = unknown>(path: F
   const errorId = `${id}-error`
   const { readOnly, getState, getValueAt, dispatch, subscribe, subscribeTo } = useFormContext<Data>()
   const [value, setValue] = useState(() => getValueAt<Input>(path))
-  const error = useSyncExternalStore(subscribeTo(path), () => getState().errors[id])
+  const error = useSyncExternalStore(subscribeTo(path), () => getState().validation.errors[id])
   useRunValidation(path, id, value, validation)
 
   useEffect(
