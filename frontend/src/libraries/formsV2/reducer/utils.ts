@@ -9,7 +9,7 @@ export function assoc<T extends object, K extends keyof T>(obj: T, key: K, value
   return { ...obj, [key]: value }
 }
 
-export function dissoc<T>(obj: Record<string, T>, key: string): Record<string, T> {
+export function dissoc<K extends string, O extends object>(obj: O, key: K): Omit<O, K> {
   if (key in obj) {
     const { [key]: _, ...rest } = obj
     return rest
