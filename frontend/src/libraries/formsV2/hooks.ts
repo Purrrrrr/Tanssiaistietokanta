@@ -5,7 +5,7 @@ import { DataPath, GenericPath, ValidationProps } from './types'
 
 import { useFormContext } from './context'
 import { apply, change, setValidationResult } from './reducer'
-import { validate } from './utils/validation'
+import { validate } from './utils/validate'
 
 export function useValueAt<T, Data = unknown>(path: DataPath<T, Data>): T {
   const { getValueAt, subscribe } = useFormContext<Data>()

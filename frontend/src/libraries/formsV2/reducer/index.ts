@@ -1,13 +1,13 @@
-import { type Dispatch, type Reducer, useCallback, useEffect, useReducer, useRef } from 'react'
+import { type Dispatch, type Reducer, useEffect, useReducer } from 'react'
 import equal from 'fast-deep-equal'
 
-import type { FormAction, Selection } from './types'
+import type { FormAction, Selection, SubscriptionCallback } from './types'
 import type { ErrorMap, Errors, GenericPath } from '../types'
-import { isSubPathOf } from '../types'
 
-import { apply as applyTo, merge, pluck } from '../utils/data'
-import { hasErrors, withErrors } from '../utils/validation'
 import { debugReducer } from './debug'
+import { useSubscriptions } from './subscriptions'
+import { merge } from './utils'
+import { hasErrors, withErrors } from './validation'
 import { valueReducer } from './valueReducer'
 
 export function change<Data>(path: GenericPath, value: unknown): FormAction<Data> {
@@ -35,38 +35,18 @@ export interface FormState<Data> {
   }
 }
 
-interface CallbackDefinition<Data> {
-  path: GenericPath
-  callback: SubscriptionCallback<Data>
-}
-export type SubscriptionCallback<Data> = (data: FormState<Data>) => unknown
-
 export function useFormReducer<Data>(externalValue: Data, onChange: (changed: Data) => unknown): FormReducerResult<Data> {
   const result = useReducer<Reducer<FormState<Data>, FormAction<Data>>, Data>(debugReducer(reducer), externalValue, getInitialState)
   const [state, dispatch] = result
-
-  const callbacks = useRef<CallbackDefinition<Data>[]>([])
-  const subscribe = useCallback(
-    (callback: SubscriptionCallback<Data>, path: GenericPath = '') => {
-      const callbackDefinition = { callback, path }
-      callbacks.current.push(callbackDefinition)
-      return () => { applyTo(callbacks, 'current', pluck(callbackDefinition)) }
-    }, []
-  )
-  const subscribeTo = useCallback(
-    (path: GenericPath) => (c: SubscriptionCallback<Data>) => subscribe(c, path),
-    [subscribe]
-  )
+  const { subscribe, subscribeTo, trigger } = useSubscriptions<FormState<Data>>()
 
   useEffect(
     () => {
-      callbacks.current.forEach(({ callback, path }) => {
-        if (state.lastChange && isSubPathOf(state.lastChange.path, path)) {
-          callback(state)
-        }
-      })
+      if (state.lastChange) {
+        trigger(state.lastChange.path, state)
+      }
     },
-    [state]
+    [state, trigger]
   )
 
   const externalValueChanged = equal(state.data, externalValue)
@@ -88,8 +68,8 @@ export function useFormReducer<Data>(externalValue: Data, onChange: (changed: Da
 export interface FormReducerResult<Data> {
   state: FormState<Data>
   dispatch: Dispatch<FormAction<Data>>
-  subscribe: (callback: SubscriptionCallback<Data>, path?: GenericPath) => () => void
-  subscribeTo: (path: GenericPath) => (callback: SubscriptionCallback<Data>) => () => void
+  subscribe: (callback: SubscriptionCallback<FormState<Data>>, path?: GenericPath) => () => void
+  subscribeTo: (path: GenericPath) => (callback: SubscriptionCallback<FormState<Data>>) => () => void
 }
 
 function getInitialState<Data>(data: Data): FormState<Data> {
