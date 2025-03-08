@@ -9,7 +9,6 @@ export interface ValidationProps {
   schema?: Schema
 }
 
-export type ErrorMap = Partial<Record<string, Errors>>
 export type Errors = string[] | undefined
 
 export interface Labelable {

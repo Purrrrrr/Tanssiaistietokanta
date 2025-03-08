@@ -2,12 +2,12 @@ import { type Dispatch, type Reducer, useEffect, useReducer } from 'react'
 import equal from 'fast-deep-equal'
 
 import type { FormAction, Selection, SubscriptionCallback } from './types'
-import type { ErrorMap, Errors, GenericPath } from '../types'
+import type { Errors, GenericPath } from '../types'
 
 import { debugReducer } from './debug'
 import { useSubscriptions } from './subscriptions'
 import { merge } from './utils'
-import { hasErrors, withErrors } from './validation'
+import { FormValidationState, validationReducer } from './validationReducer'
 import { valueReducer } from './valueReducer'
 
 export function change<Data>(path: GenericPath, value: unknown): FormAction<Data> {
@@ -23,12 +23,10 @@ export function apply<Data>(path: GenericPath, modifier: (value: unknown) => unk
   return { type: 'APPLY', path, modifier }
 }
 
-export interface FormState<Data> {
+export interface FormState<Data> extends FormValidationState {
   focusedPath: GenericPath | null
   selection: Selection
   data: Data
-  errors: ErrorMap
-  isValid: boolean
   lastChange?: {
     external?: boolean
     path: GenericPath
@@ -96,12 +94,12 @@ function reducer<Data>(state: FormState<Data>, action: FormAction<Data>): FormSt
         lastChange: { path: action.path },
       })
     case 'SET_VALIDATION_RESULT': {
-      const errors = withErrors(state.errors, action.id, action.errors)
+      const { errors, isValid } = validationReducer(state, action)
       if (errors === state.errors) return state
       return {
         ...state,
         errors,
-        isValid: !hasErrors(errors),
+        isValid,
         lastChange: { path: action.path },
       }
     }
