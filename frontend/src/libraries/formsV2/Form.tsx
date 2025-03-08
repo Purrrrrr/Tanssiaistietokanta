@@ -54,8 +54,8 @@ function useForm<T>(props: FormProps<T>) {
     [onChange, state.data, state.lastChange]
   )
   useEffect(
-    () => { onIsValidChange?.(state.isValid) },
-    [onIsValidChange, state.isValid]
+    () => { onIsValidChange?.(state.validation.isValid) },
+    [onIsValidChange, state.validation.isValid]
   )
   const context = useFormContextValue(reducerData, readOnly)
 

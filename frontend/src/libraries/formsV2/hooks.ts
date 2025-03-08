@@ -26,12 +26,12 @@ export function useApplyAt<T, Data = unknown>(path: DataPath<T, Data>) {
 
 export function useRunValidation(path: GenericPath, id: string, value: unknown, validation: ValidationProps) {
   const { getState, dispatch, subscribeTo } = useFormContext()
-  const error = useSyncExternalStore(subscribeTo(path), () => getState().errors[id])
+  const error = useSyncExternalStore(subscribeTo(path), () => getState().validation.errors[id])
 
   useEffect(
     () => {
       validate(validation, value).then(errors => {
-        const currentErrors = getState().errors[id]
+        const currentErrors = getState().validation.errors[id]
         if (equal(currentErrors, errors)) return
         dispatch(setValidationResult(path, id, errors))
       })
@@ -40,7 +40,7 @@ export function useRunValidation(path: GenericPath, id: string, value: unknown, 
   )
   useEffect(
     () => () => {
-      if (id in getState().errors) {
+      if (id in getState().validation.errors) {
         dispatch(setValidationResult(path, id, undefined))
       }
     },
