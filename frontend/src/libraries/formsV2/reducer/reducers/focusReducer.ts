@@ -1,5 +1,5 @@
-import { FocusAction, Selection } from './types'
-import type { GenericPath } from '../types'
+import { FocusAction, Selection } from '../types'
+import type { GenericPath } from '../../types'
 
 export interface FocusState {
   focusedPath: GenericPath | null
