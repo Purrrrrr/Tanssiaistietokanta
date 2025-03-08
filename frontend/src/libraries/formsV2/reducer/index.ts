@@ -6,11 +6,11 @@ import type { GenericPath } from '../types'
 
 import { externalChange } from './actionCreators'
 import { debugReducer } from './debug'
-import { type FocusState, focusReducer, initialFocusState } from './focusReducer'
+import { type FocusState, focusReducer, initialFocusState } from './reducers/focusReducer'
+import { FormValidationState, initialValidationState, validationReducer } from './reducers/validationReducer'
+import { valueReducer } from './reducers/valueReducer'
 import { useSubscriptions } from './subscriptions'
 import { assoc, dissoc } from './utils'
-import { FormValidationState, initialValidationState, validationReducer } from './validationReducer'
-import { valueReducer } from './valueReducer'
 
 export * from './actionCreators'
 

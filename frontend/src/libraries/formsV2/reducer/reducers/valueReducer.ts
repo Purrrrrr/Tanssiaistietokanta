@@ -1,7 +1,7 @@
 import * as L from 'partial.lenses'
 
-import { ValueAction } from './types'
-import { toArrayPath } from '../types'
+import { ValueAction } from '../types'
+import { toArrayPath } from '../../types'
 
 export function valueReducer<Data>(value: Data, action: ValueAction<Data>): Data {
   switch (action.type) {
