@@ -2,17 +2,7 @@ import type { Errors, GenericPath } from '../types'
 
 export type Selection = [number, number] | null
 
-export type FormAction<Data> = ValueAction<Data> | ValidationAction | {
-  type: 'FOCUS'
-  path: GenericPath
-  selection: Selection
-} | {
-  type: 'BLUR'
-} | {
-  type: 'SELECT'
-  path: GenericPath
-  selection: Selection
-}
+export type FormAction<Data> = ValueAction<Data> | ValidationAction | FocusAction
 
 export type ValueAction<Data> = {
   type: 'EXTERNAL_CHANGE'
@@ -32,6 +22,14 @@ export interface ValidationAction {
   path: GenericPath
   id: string
   errors: Errors
+}
+
+export type FocusAction = {
+  type: 'FOCUS'
+  path: GenericPath
+  selection: Selection
+} | {
+  type: 'BLUR'
 }
 
 export interface CallbackDefinition<State> {
