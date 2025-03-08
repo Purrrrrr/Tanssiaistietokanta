@@ -1,4 +1,4 @@
-import { type Dispatch, type Reducer, useEffect, useReducer } from 'react'
+import { type Dispatch, type Reducer, useEffect, useReducer, useRef } from 'react'
 import equal from 'fast-deep-equal'
 
 import type { FormAction, SubscriptionCallback } from './types'
@@ -40,15 +40,19 @@ export function useFormReducer<Data>(externalValue: Data, onChange: (changed: Da
     [state, trigger]
   )
 
-  const externalValueChanged = equal(state.data, externalValue)
+  const lastExternalState = useRef(externalValue)
+  const lastInternalState = useRef(state.data)
+  lastInternalState.current = state.data
 
   useEffect(
     () => {
-      if (externalValueChanged) {
+      const externalValueChanged = !equal(lastExternalState.current, externalValue)
+      if (externalValueChanged && !equal(externalValue, lastInternalState.current)) {
         dispatch(externalChange(externalValue))
+        lastExternalState.current = externalValue
       }
     },
-    [externalValue, externalValueChanged, dispatch]
+    [externalValue, dispatch]
   )
 
   return {
