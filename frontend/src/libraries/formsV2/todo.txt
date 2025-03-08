@@ -1,7 +1,6 @@
 TODO:
 
 Make Form value controlled?
-Simpler field types?
 list editor
 switchFor
 TextArea
@@ -36,6 +35,7 @@ basic translation system
 MarkdownInput
 DurationField v2
 Add to dance editor
+Simpler field types?
 
 /* Need to export:
 ActionButton as Button

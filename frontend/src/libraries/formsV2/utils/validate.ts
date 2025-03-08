@@ -1,8 +1,6 @@
 import { ValidationError } from 'yup'
 
-import type { ErrorMap, Errors, ValidationProps } from '../types'
-
-import { assoc, dissoc } from './data'
+import type { Errors, ValidationProps } from '../types'
 
 export async function validate(props: ValidationProps, value: unknown): Promise<Errors> {
   if (props.required && (value === null || value === undefined || value === '')) {
@@ -16,17 +14,4 @@ export async function validate(props: ValidationProps, value: unknown): Promise<
     }
   }
   return undefined
-}
-
-export function hasErrors(map: ErrorMap): boolean {
-  for (const _ in map) {
-    return true
-  }
-  return false
-}
-
-export function withErrors(map: ErrorMap, key: string, errors: Errors): ErrorMap {
-  return errors === undefined
-    ? dissoc(map, key)
-    : assoc(map, key, errors)
 }
