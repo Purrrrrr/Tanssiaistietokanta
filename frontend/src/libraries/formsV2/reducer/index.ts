@@ -1,31 +1,21 @@
 import { type Dispatch, type Reducer, useEffect, useReducer } from 'react'
 import equal from 'fast-deep-equal'
 
-import type { FormAction, Selection, SubscriptionCallback } from './types'
-import type { Errors, GenericPath } from '../types'
+import type { FormAction, SubscriptionCallback } from './types'
+import type { GenericPath } from '../types'
 
+import { externalChange } from './actionCreators'
 import { debugReducer } from './debug'
+import { type FocusState, focusReducer, initialFocusState } from './focusReducer'
 import { useSubscriptions } from './subscriptions'
-import { merge } from './utils'
+import { assoc, merge } from './utils'
 import { FormValidationState, validationReducer } from './validationReducer'
 import { valueReducer } from './valueReducer'
 
-export function change<Data>(path: GenericPath, value: unknown): FormAction<Data> {
-  return { type: 'CHANGE', path, value }
-}
-export function externalChange<Data>(value: Data): FormAction<Data> {
-  return { type: 'EXTERNAL_CHANGE', value }
-}
-export function setValidationResult<Data>(path: GenericPath, id: string, errors: Errors): FormAction<Data> {
-  return { type: 'SET_VALIDATION_RESULT', path, id, errors }
-}
-export function apply<Data>(path: GenericPath, modifier: (value: unknown) => unknown): FormAction<Data> {
-  return { type: 'APPLY', path, modifier }
-}
+export * from './actionCreators'
 
 export interface FormState<Data> extends FormValidationState {
-  focusedPath: GenericPath | null
-  selection: Selection
+  focus: FocusState
   data: Data
   lastChange?: {
     external?: boolean
@@ -72,8 +62,7 @@ export interface FormReducerResult<Data> {
 
 function getInitialState<Data>(data: Data): FormState<Data> {
   return {
-    focusedPath: null,
-    selection: null,
+    focus: initialFocusState,
     data,
     errors: {},
     isValid: true,
@@ -96,16 +85,14 @@ function reducer<Data>(state: FormState<Data>, action: FormAction<Data>): FormSt
     case 'SET_VALIDATION_RESULT': {
       const { errors, isValid } = validationReducer(state, action)
       if (errors === state.errors) return state
-      return {
-        ...state,
+      return merge(state, {
         errors,
         isValid,
         lastChange: { path: action.path },
-      }
+      })
     }
     case 'FOCUS':
     case 'BLUR':
-    case 'SELECT':
-      return state
+      return assoc(state, 'focus', focusReducer(state.focus, action))
   }
 }
