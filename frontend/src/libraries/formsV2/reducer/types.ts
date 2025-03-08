@@ -31,3 +31,9 @@ export type ValueAction<Data> = {
   path: GenericPath
   modifier: (value: unknown) => unknown
 }
+
+export interface CallbackDefinition<State> {
+  path: GenericPath
+  callback: SubscriptionCallback<State>
+}
+export type SubscriptionCallback<State> = (data: State) => unknown
