@@ -11,7 +11,7 @@ import { debugReducer } from './utils/debug'
 import { useSubscriptions } from './utils/useSubscriptions'
 
 export function useFormReducer<Data>(externalData: Data, onChange: (changed: Data) => unknown): FormReducerResult<Data> {
-  const result = useReducer<Reducer<FormState<Data>, FormAction<Data>>, Data>(debugReducer(reducer), externalData, getInitialState)
+  const result = useReducer<Reducer<FormState<Data>, FormAction<Data>>, Data>(debuggingReducer, externalData, getInitialState)
   const [state, dispatch] = result
   const { subscribe, trigger } = useSubscriptions<FormState<Data>>()
 
@@ -49,6 +49,8 @@ export function useFormReducer<Data>(externalData: Data, onChange: (changed: Dat
 function getInitialState<Data>(data: Data): FormState<Data> {
   return { ...initialState, data }
 }
+
+const debuggingReducer = debugReducer(reducer)
 
 function reducer<Data>(state: FormState<Data>, action: FormAction<Data>): FormState<Data> {
   switch (action.type) {

@@ -7,11 +7,14 @@ import { valueReducer } from './reducers/valueReducer'
 import { debugReducer } from './utils/debug'
 import { useSubscriptions } from './utils/useSubscriptions'
 
+const debuggingCommonReducer = debugReducer(commonReducer)
+const debuggingValueReducer = debugReducer(valueReducer)
+
 export function useFormReducer<Data>(externalValue: Data, onChange: (changed: Data) => unknown): FormReducerResult<Data> {
   const latestValue = useRef(externalValue)
   const { subscribe, trigger } = useSubscriptions<FormState<Data>>()
 
-  const result = useReducer<Reducer<CommonFormState, CommonReducerAction>>(debugReducer(commonReducer), initialState)
+  const result = useReducer<Reducer<CommonFormState, CommonReducerAction>>(debuggingCommonReducer, initialState)
   const [state, dispatch_r] = result
 
   useEffect(
@@ -25,7 +28,7 @@ export function useFormReducer<Data>(externalValue: Data, onChange: (changed: Da
         case 'EXTERNAL_CHANGE':
         case 'CHANGE':
         case 'APPLY': {
-          const newValue = valueReducer(latestValue.current, action)
+          const newValue = debuggingValueReducer(latestValue.current, action)
           onChange(newValue)
           latestValue.current = newValue
           break
