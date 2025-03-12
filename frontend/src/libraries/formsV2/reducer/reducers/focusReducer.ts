@@ -11,6 +11,6 @@ export const initialFocusState : FocusState = {
   selection: null,
 }
 
-export function focusReducer(state: FocusState, action: FocusAction): FocusState {
+export function focusReducer(state: FocusState, _action: FocusAction): FocusState {
   return state
 }
