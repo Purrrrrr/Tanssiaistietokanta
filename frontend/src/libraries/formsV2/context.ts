@@ -19,9 +19,6 @@ export const FormContext = createContext<FormStateContext<unknown>>({
   subscribe() {
     return () => {}
   },
-  subscribeTo() {
-    return () => () => {}
-  },
 })
 
 export function useFormContext<D>(): FormStateContext<D> {
@@ -31,7 +28,7 @@ export function useFormContext<D>(): FormStateContext<D> {
 export function useFormContextValue<D>(
   formReducer: FormReducerResult<D>, readOnly: boolean
 ): FormStateContext<D> {
-  const { state, dispatch, subscribe, subscribeTo } = formReducer
+  const { state, dispatch, subscribe } = formReducer
   const stateRef = useRef<FormState<D>>(state)
   stateRef.current = state
 
@@ -42,8 +39,7 @@ export function useFormContextValue<D>(
       getValueAt: <T>(path: DataPath<T, D>) => get(toArrayPath(path), stateRef.current.data),
       dispatch,
       subscribe,
-      subscribeTo,
     }),
-    [readOnly, dispatch, subscribe, subscribeTo]
+    [readOnly, dispatch, subscribe]
   )
 }

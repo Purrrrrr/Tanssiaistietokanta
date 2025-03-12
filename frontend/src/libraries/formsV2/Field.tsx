@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useId, useState, useSyncExternalStore } from 'react'
+import { useCallback, useEffect, useId, useState } from 'react'
 
 import type { AnyType, FieldPath, Labelable, ValidationProps } from './types'
 
@@ -57,13 +57,12 @@ export function SelfLabeledField<Output extends Input, Extra extends Labelable, 
 function useFieldValueProps<Output extends Input, Input, Data = unknown>(path: FieldPath<Input, Output, Data>, validation: ValidationProps) {
   const id = `${path}:${useId()}`
   const errorId = `${id}-error`
-  const { readOnly, getState, getValueAt, dispatch, subscribe, subscribeTo } = useFormContext<Data>()
+  const { readOnly, getValueAt, dispatch, subscribe } = useFormContext<Data>()
   const [value, setValue] = useState(() => getValueAt<Input>(path))
-  const error = useSyncExternalStore(subscribeTo(path), () => getState().validation.errors[id])
-  useRunValidation(path, id, value, validation)
+  const error = useRunValidation(path, id, value, validation)
 
   useEffect(
-    () => subscribe(() => setValue(getValueAt(path)), path),
+    () => subscribe(() => setValue(getValueAt(path))),
     [subscribe, path, getValueAt]
   )
 

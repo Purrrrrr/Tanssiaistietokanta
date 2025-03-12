@@ -5,12 +5,12 @@ import type { FormAction, SubscriptionCallback } from './types'
 import type { GenericPath } from '../types'
 
 import { externalChange } from './actionCreators'
-import { debugReducer } from './debug'
 import { type FocusState, focusReducer, initialFocusState } from './reducers/focusReducer'
 import { FormValidationState, initialValidationState, validationReducer } from './reducers/validationReducer'
 import { valueReducer } from './reducers/valueReducer'
-import { useSubscriptions } from './subscriptions'
-import { assoc, dissoc } from './utils'
+import { assoc, dissoc } from './utils/data'
+import { debugReducer } from './utils/debug'
+import { useSubscriptions } from './utils/useSubscriptions'
 
 export * from './actionCreators'
 
@@ -18,45 +18,41 @@ export interface FormState<Data> {
   focus: FocusState
   validation: FormValidationState
   data: Data
-  lastChange?: LastChange
 }
 
-interface LastChange {
-  external?: boolean
-  path: GenericPath
-}
-
-export function useFormReducer<Data>(externalValue: Data, onChange: (changed: Data) => unknown): FormReducerResult<Data> {
-  const result = useReducer<Reducer<FormState<Data>, FormAction<Data>>, Data>(debugReducer(lastChangeReducer), externalValue, getInitialState)
+export function useFormReducer<Data>(externalData: Data, onChange: (changed: Data) => unknown): FormReducerResult<Data> {
+  const result = useReducer<Reducer<FormState<Data>, FormAction<Data>>, Data>(debugReducer(reducer), externalData, getInitialState)
   const [state, dispatch] = result
-  const { subscribe, subscribeTo, trigger } = useSubscriptions<FormState<Data>>()
+  const { subscribe, trigger } = useSubscriptions<FormState<Data>>()
 
   useEffect(
-    () => {
-      if (state.lastChange) {
-        trigger(state.lastChange.path, state)
-      }
-    },
+    () => { trigger(state) },
     [state, trigger]
   )
 
-  const lastExternalState = useRef(externalValue)
-  const lastInternalState = useRef(state.data)
-  lastInternalState.current = state.data
-
+  const previousDataRef = useRef({
+    external: externalData,
+    internal: state.data,
+  })
   useEffect(
     () => {
-      const externalValueChanged = !equal(lastExternalState.current, externalValue)
-      if (externalValueChanged && !equal(externalValue, lastInternalState.current)) {
-        dispatch(externalChange(externalValue))
-        lastExternalState.current = externalValue
+      const { current: previous } = previousDataRef
+      const externalValueChanged = !equal(previous.external, externalData)
+      const internalValueChanged = !equal(previous.internal, state.data)
+
+      if (externalValueChanged && !equal(previous.internal, externalData)) {
+        dispatch(externalChange(externalData))
+      } else if (internalValueChanged && !equal(externalData, state.data)) {
+        onChange(state.data)
       }
-    },
-    [externalValue, dispatch]
+
+      previous.external = externalData
+      previous.internal = state.data
+    }, [externalData, state.data, dispatch, onChange]
   )
 
   return {
-    state, dispatch, subscribe, subscribeTo,
+    state, dispatch, subscribe
   }
 }
 
@@ -64,7 +60,6 @@ export interface FormReducerResult<Data> {
   state: FormState<Data>
   dispatch: Dispatch<FormAction<Data>>
   subscribe: (callback: SubscriptionCallback<FormState<Data>>, path?: GenericPath) => () => void
-  subscribeTo: (path: GenericPath) => (callback: SubscriptionCallback<FormState<Data>>) => () => void
 }
 
 function getInitialState<Data>(data: Data): FormState<Data> {
@@ -73,14 +68,6 @@ function getInitialState<Data>(data: Data): FormState<Data> {
     validation: initialValidationState,
     data,
   }
-}
-
-function lastChangeReducer<Data>(state: FormState<Data>, action: FormAction<Data>): FormState<Data> {
-  const newState = reducer(state, action)
-  if (newState === state) {
-    return dissoc(state, 'lastChange')
-  }
-  return assoc(newState, 'lastChange', lastChange(action))
 }
 
 function reducer<Data>(state: FormState<Data>, action: FormAction<Data>): FormState<Data> {
@@ -95,19 +82,5 @@ function reducer<Data>(state: FormState<Data>, action: FormAction<Data>): FormSt
     case 'FOCUS':
     case 'BLUR':
       return assoc(state, 'focus', focusReducer(state.focus, action))
-  }
-}
-
-function lastChange(action: FormAction<unknown>): LastChange | undefined {
-  switch (action.type) {
-    case 'EXTERNAL_CHANGE':
-      return { path: '', external: true }
-    case 'CHANGE':
-    case 'APPLY':
-    case 'SET_VALIDATION_RESULT':
-      return { path: action.path }
-    case 'FOCUS':
-    case 'BLUR':
-      return
   }
 }

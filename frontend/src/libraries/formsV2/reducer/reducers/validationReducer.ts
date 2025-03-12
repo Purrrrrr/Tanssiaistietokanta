@@ -1,7 +1,7 @@
 import { ValidationAction } from '../types'
 import type { Errors } from '../../types'
 
-import { assoc, dissoc } from '../utils'
+import { assoc, dissoc } from '../utils/data'
 
 export type ErrorMap = Partial<Record<string, Errors>>
 export interface FormValidationState {

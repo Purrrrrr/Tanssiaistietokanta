@@ -50,21 +50,3 @@ export function toArrayPath(p: GenericPath): GenericPath[]  {
     .split('.')
     .map(segment => segment.match(numberRegex) ? parseInt(segment, 10) : segment)
 }
-
-export function isSubPathOf(prefix: GenericPath, path: GenericPath) {
-  if (prefix === '') return true
-  if (typeof path === 'number') {
-    return isSubPathOf(prefix, String(path))
-  }
-  if (typeof prefix === 'number') {
-    return isSubPathOf(String(prefix), path)
-  }
-
-  // callback path needs to be equal to changed path or a prefix
-  if (!path.startsWith(prefix)) return false
-  // if it is a prefix, the changed path should be inside the field pointed by path
-  if (path.length == prefix.length) return true
-  if (path[prefix.length] === '.') return true
-
-  return false
-}

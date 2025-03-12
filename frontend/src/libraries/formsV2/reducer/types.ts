@@ -32,8 +32,4 @@ export type FocusAction = {
   type: 'BLUR'
 }
 
-export interface CallbackDefinition<State> {
-  path: GenericPath
-  callback: SubscriptionCallback<State>
-}
 export type SubscriptionCallback<State> = (data: State) => unknown
