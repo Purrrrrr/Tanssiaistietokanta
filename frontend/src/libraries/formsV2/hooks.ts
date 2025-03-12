@@ -25,8 +25,8 @@ export function useApplyAt<T, Data = unknown>(path: DataPath<T, Data>) {
 }
 
 export function useRunValidation(path: GenericPath, id: string, value: unknown, validation: ValidationProps) {
-  const { getState, dispatch, subscribeTo } = useFormContext()
-  const error = useSyncExternalStore(subscribeTo(path), () => getState().validation.errors[id])
+  const { getState, dispatch, subscribe } = useFormContext()
+  const error = useSyncExternalStore(subscribe, () => getState().validation.errors[id])
 
   useEffect(
     () => {

@@ -47,13 +47,6 @@ function useForm<T>(props: FormProps<T>) {
   const { state } = reducerData
 
   useEffect(
-    () => {
-      if (state.lastChange?.external) return
-      onChange(state.data)
-    },
-    [onChange, state.data, state.lastChange]
-  )
-  useEffect(
     () => { onIsValidChange?.(state.validation.isValid) },
     [onIsValidChange, state.validation.isValid]
   )
