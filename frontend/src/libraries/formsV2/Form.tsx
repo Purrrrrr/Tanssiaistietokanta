@@ -1,9 +1,9 @@
 import { useEffect, useRef } from 'react'
 
 import { type FieldStyleContextProps, FieldStyleContext } from './components/FieldContainer'
+import { ListEditorContext } from './components/ListEditor/context'
 import { type FormStateContext, FormContext, useFormContextValue } from './context'
 import { useFormReducer } from './reducer'
-
 
 export interface FormProps<T> extends
   Omit<React.ComponentPropsWithoutRef<'form'>, 'onSubmit' | 'onChange'>,
@@ -33,7 +33,9 @@ export function Form<T>(props: FormProps<T>) {
   return <form {...formProps} onSubmit={submitHandler} ref={form}>
     <FieldStyleContext inline={inline} labelStyle={labelStyle}>
       <FormContext.Provider value={context as FormStateContext<unknown>}>
-        {children}
+        <ListEditorContext>
+          {children}
+        </ListEditorContext>
       </FormContext.Provider>
     </FieldStyleContext>
   </form>
