@@ -11,7 +11,6 @@ import { type SpecializedFieldComponent, asFormField, asSelfLabeledFormField } f
 
 export { TextInput }
 export type { FieldInputComponentProps }
-export { ListEditorContext } from './components/ListEditor/context'
 export { ListField } from './ListField'
 
 const TextField = asFormField(TextInput)

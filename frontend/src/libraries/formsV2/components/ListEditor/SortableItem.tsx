@@ -49,7 +49,6 @@ export function SortableItem<Data extends Record<string, unknown>>({id, data, ch
 
   return (
     <Wrapper ref={setNodeRef} style={style} {...attributes}>
-      {id}
       {dragHandle}
       {children}
     </Wrapper>
