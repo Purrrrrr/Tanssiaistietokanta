@@ -17,6 +17,7 @@ import {
 import { DroppableData, ItemData } from './types'
 
 import { useFormContext } from 'libraries/formsV2/context'
+import { AnyType } from 'libraries/formsV2/types'
 
 interface ItemVisit {
   to: ItemData | DroppableData
@@ -26,7 +27,7 @@ interface ItemVisit {
 export const ItemVisitContext = createContext<ItemVisit | null>(null)
 
 export function ListEditorContext({children}: {children: React.ReactNode}): React.ReactNode {
-  const { dispatch } = useFormContext()
+  const { getValueAt, dispatch } = useFormContext<AnyType>()
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, useMemo(() => ({
@@ -75,17 +76,21 @@ export function ListEditorContext({children}: {children: React.ReactNode}): Reac
       const overData = visit?.to ?? over.data.current as ItemData | DroppableData
 
       if (activeData.path === overData.path || visit) {
+        //Somehow this seems to work like this
+        const insertingToLastPlace = visit && active.id === over.id
         dispatch({
           type: 'MOVE_ITEM',
           from: activeData.path,
           fromIndex: activeData.index,
-          to: visit?.to.path ?? overData.path,
-          toIndex: overData.type === 'item' ? overData.index : 0,
+          to: overData.path,
+          toIndex: insertingToLastPlace
+            ? getValueAt<unknown[]>(overData.path).length
+            : overData.type === 'item' ? overData.index : 0,
         })
       }
 
     },
-    [visit, dispatch]
+    [visit, dispatch, getValueAt]
   )
 
   return (
