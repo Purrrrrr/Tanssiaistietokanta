@@ -32,3 +32,11 @@ export function pluck<T>(val: T): (arr: T[]) => T[] {
 export function filter<T>(condition: (val: T) => boolean): (arr: T[]) => T[] {
   return arr => arr.filter(condition)
 }
+
+export function pluckIndex<T>(index: number): (arr: T[]) => T[]  {
+  return arr => arr.toSpliced(index, 1)
+}
+
+export function pushToIndex<T>(index: number, value: T): (arr: T[]) => T[]  {
+  return arr => arr.toSpliced(index, 0, value)
+}

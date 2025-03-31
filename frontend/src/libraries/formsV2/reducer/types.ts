@@ -23,6 +23,12 @@ export type ValueAction<Data> = {
   type: 'APPLY'
   path: GenericPath
   modifier: (value: unknown) => unknown
+} | {
+  type: 'MOVE_ITEM'
+  from: GenericPath
+  fromIndex: number
+  to: GenericPath
+  toIndex: number
 }
 
 export interface ValidationAction {
