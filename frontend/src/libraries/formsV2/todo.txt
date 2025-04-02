@@ -1,6 +1,11 @@
 TODO:
 
-list editor
+List editor
+  * Repeater
+    Proper drag handles
+    Field logic without any wrapper
+    Read only mode
+  
 FieldsetContainer
 TableListEditor
 Rethink bare field container needs

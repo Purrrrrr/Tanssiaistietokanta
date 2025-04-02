@@ -1,82 +1,49 @@
-import { useCallback, useEffect, useId, useState } from 'react'
+import { useId } from 'react'
 
-import type { AnyType, FieldPath, Labelable, ValidationProps } from './types'
+import type { AnyType, GenericPath, Labelable } from './types'
 
+import { type ConnectedFieldProps, ConnectedInputComponent } from './components/ConnectedInput'
 import { type ExternalBareFieldContainerProps, type ExternalFieldContainerProps, BareFieldContainer, FieldContainer } from './components/FieldContainer'
-import type { FieldInputComponent, FieldInputComponentProps, OmitInputProps } from './components/inputs'
-import { useFormContext } from './context'
-import { useRunValidation } from './hooks'
-import { change } from './reducer'
 
 export type FieldProps<Output extends Input, Extra, Input, Data = AnyType> =
-  CommonFieldProps<Output, Extra, Input, Data> & ExternalFieldContainerProps
+  ConnectedFieldProps<Output, Extra, Input, Data> & ExternalFieldContainerProps
 
 export type UnwrappedFieldProps<Output extends Input, Extra, Input, Data = AnyType> =
-  CommonFieldProps<Output, Extra, Input, Data> & ExternalBareFieldContainerProps
+  ConnectedFieldProps<Output, Extra, Input, Data> & ExternalBareFieldContainerProps
 
 export type SelfLabeledFieldProps<Output extends Input, Extra extends Labelable, Input, Data = AnyType> =
   UnwrappedFieldProps<Output, Extra, Input, Data>
 
-type CommonFieldProps<Output extends Input, Extra, Input, Data = AnyType> = ValidationProps & OmitInputProps<Extra> & {
-  component: FieldInputComponent<Output, Extra, Input>
-  path: FieldPath<Input, Output, Data>
-}
-
-export function Field<Output extends Input, Extra, Input, Data = AnyType>({path, containerClassName, label, labelStyle, labelInfo, helperText, component: C, required, schema, ...extra}: FieldProps<Output, Extra, Input, Data>) {
-  const { inputProps, containerProps } = useFieldValueProps<Output, Input, Data>(path, { required, schema })
+export function Field<Output extends Input, Extra, Input, Data = AnyType>({containerClassName, label, labelStyle, labelInfo, helperText, ...rest}: FieldProps<Output, Extra, Input, Data>) {
+  const id = useFieldId(rest.path)
 
   return <FieldContainer
+    labelFor={id}
     label={label}
     labelStyle={labelStyle}
     labelInfo={labelInfo}
     helperText={helperText}
     containerClassName={containerClassName}
-    {...containerProps}
   >
-    <C {...inputProps} {...extra as Extra} />
+    <ConnectedInputComponent id={id} {...rest as ConnectedFieldProps<Output, Extra, Input, Data> & Extra} />
   </FieldContainer>
 }
 
 
-export function UnwrappedField<Output extends Input, Extra, Input, Data = AnyType>({path, label, component: C, required, schema, ...extra}: UnwrappedFieldProps<Output, Extra, Input, Data>) {
-  const { inputProps, containerProps } = useFieldValueProps<Output, Input, Data>(path, { required, schema })
-
-  return <BareFieldContainer {...containerProps} label={label}>
-    <C {...inputProps} {...extra as Extra} />
+export function UnwrappedField<Output extends Input, Extra, Input, Data = AnyType>({label, ...rest}: UnwrappedFieldProps<Output, Extra, Input, Data>) {
+  const id = useFieldId(rest.path)
+  return <BareFieldContainer labelFor={id} label={label}>
+    <ConnectedInputComponent id={id} {...rest as ConnectedFieldProps<Output, Extra, Input, Data> & Extra} />
   </BareFieldContainer>
 }
 
-export function SelfLabeledField<Output extends Input, Extra extends Labelable, Input, Data = AnyType>({path, label, component: C, required, schema, ...extra}: SelfLabeledFieldProps<Output, Extra, Input, Data>) {
-  const { inputProps, containerProps } = useFieldValueProps<Output, Input, Data>(path, { required, schema })
-
-  return <BareFieldContainer {...containerProps}>
-    <C {...inputProps} {...extra as unknown as Extra} label={label} />
+export function SelfLabeledField<Output extends Input, Extra extends Labelable, Input, Data = AnyType>({label, ...rest}: SelfLabeledFieldProps<Output, Extra, Input, Data>) {
+  const id = useFieldId(rest.path)
+  return <BareFieldContainer labelFor={id}>
+    <ConnectedInputComponent id={id} {...rest as ConnectedFieldProps<Output, Extra, Input, Data> & Extra} label={label} />
   </BareFieldContainer>
 }
 
-function useFieldValueProps<Output extends Input, Input, Data = unknown>(path: FieldPath<Input, Output, Data>, validation: ValidationProps) {
-  const id = `${path}:${useId()}`
-  const errorId = `${id}-error`
-  const { readOnly, getValueAt, dispatch, subscribe } = useFormContext<Data>()
-  const [value, setValue] = useState(() => getValueAt<Input>(path))
-  const error = useRunValidation(path, id, value, validation)
-
-  useEffect(
-    () => subscribe(() => setValue(getValueAt(path))),
-    [subscribe, path, getValueAt]
-  )
-
-  const onChange = useCallback((value: Output) => {
-    setValue(value)
-    dispatch(change(path, value))
-  }, [dispatch, path])
-
-  const inputProps = {
-    value, onChange, id, readOnly, 'aria-describedby': errorId,
-  } satisfies FieldInputComponentProps<Output, Input>
-  const containerProps = {
-    error, errorId, labelFor: id,
-  }
-
-  return { inputProps, containerProps }
+function useFieldId(path: GenericPath): string {
+  return `${path}:${useId()}`
 }
