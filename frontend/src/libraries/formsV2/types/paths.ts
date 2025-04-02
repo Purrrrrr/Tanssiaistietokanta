@@ -1,7 +1,7 @@
 export type GenericPath = string | number
 export type DataPath<T, Data> = FieldPath<T, T, Data>
 export type FieldPath<Input, Output, Data, Depth extends number = 8> =
-  Data extends AnyType ? GenericPath 
+  Data extends AnyType ? GenericPath
   : Joined<FieldArrayPath<Input, Output, Data, Depth>>
 
 type FieldArrayPath<Input, Output, Data, Depth extends number = 8> =
