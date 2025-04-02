@@ -7,7 +7,7 @@ import { useFieldStyle } from './context'
 
 export function FieldContainer(props: FieldContainerProps) {
   const {
-    labelFor, containerClassName, error, errorId, label, labelInfo, helperText, children, conflictElement
+    labelFor, containerClassName, label, labelInfo, helperText, children, conflictElement
   } = props
   const { inline, labelStyle } = useFieldStyle(props)
   const formGroupId = `${labelFor}--formgroup`
@@ -30,6 +30,6 @@ export function FieldContainer(props: FieldContainerProps) {
     subLabel={conflictElement}
     intent={conflictElement !== undefined ? 'danger' : undefined}
   >
-    <BareFieldContainer labelFor="" children={children} error={error} errorId={errorId} />
+    <BareFieldContainer labelFor="" children={children} />
   </FormGroup>
 }

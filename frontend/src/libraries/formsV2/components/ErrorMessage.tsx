@@ -1,6 +1,6 @@
 import { Colors } from '@blueprintjs/core'
 
-import { Errors } from '../../types'
+import { Errors } from '../types'
 
 export function ErrorMessage(
   {id, error} :

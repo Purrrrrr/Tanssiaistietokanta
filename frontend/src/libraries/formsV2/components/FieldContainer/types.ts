@@ -1,5 +1,3 @@
-import { Errors } from '../../types'
-
 export interface FieldStyleContextProps {
   inline: boolean
   labelStyle: LabelStyle
@@ -10,8 +8,6 @@ export interface FieldContainerProps extends ExternalFieldContainerProps {
   //TODO: implement this
   conflictElement?: React.ReactElement
   labelFor: string
-  error?: Errors
-  errorId: string
 }
 
 export interface ExternalFieldContainerProps {
@@ -28,8 +24,6 @@ export interface BareFieldContainerProps extends ExternalBareFieldContainerProps
   //TODO: implement this
   conflictElement?: React.ReactElement
   labelFor: string
-  error?: Errors
-  errorId: string
 }
 
 export interface ExternalBareFieldContainerProps {
