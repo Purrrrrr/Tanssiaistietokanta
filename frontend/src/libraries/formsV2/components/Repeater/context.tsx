@@ -14,10 +14,10 @@ import {
   sortableKeyboardCoordinates,
 } from '@dnd-kit/sortable'
 
-import { DroppableData, ItemData } from './types'
+import type { DroppableData, ItemData } from './types'
+import type { AnyType } from '../../types'
 
-import { useFormContext } from 'libraries/formsV2/context'
-import { AnyType } from 'libraries/formsV2/types'
+import { useFormContext } from '../../context'
 
 interface ItemVisit {
   to: ItemData | DroppableData
@@ -26,7 +26,7 @@ interface ItemVisit {
 
 export const ItemVisitContext = createContext<ItemVisit | null>(null)
 
-export function ListEditorContext({children}: {children: React.ReactNode}): React.ReactNode {
+export function RepeaterContext({children}: {children: React.ReactNode}): React.ReactNode {
   const { getValueAt, dispatch } = useFormContext<AnyType>()
   const sensors = useSensors(
     useSensor(PointerSensor),

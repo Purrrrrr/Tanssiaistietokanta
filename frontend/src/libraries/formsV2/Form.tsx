@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 
 import { type FieldStyleContextProps, FieldStyleContext } from './components/FieldContainer'
-import { ListEditorContext } from './components/ListEditor/context'
+import { RepeaterContext } from './components/Repeater'
 import { type FormStateContext, FormContext, useFormContextValue } from './context'
 import { useFormReducer } from './reducer'
 
@@ -33,9 +33,9 @@ export function Form<T>(props: FormProps<T>) {
   return <form {...formProps} onSubmit={submitHandler} ref={form}>
     <FieldStyleContext inline={inline} labelStyle={labelStyle}>
       <FormContext.Provider value={context as FormStateContext<unknown>}>
-        <ListEditorContext>
+        <RepeaterContext>
           {children}
-        </ListEditorContext>
+        </RepeaterContext>
       </FormContext.Provider>
     </FieldStyleContext>
   </form>
