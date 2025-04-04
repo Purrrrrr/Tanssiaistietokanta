@@ -2,8 +2,8 @@ TODO:
 
 List editor
   * Repeater
+  * Field logic without any wrapper
     Proper drag handles
-    Field logic without any wrapper
     Read only mode
   
 FieldsetContainer

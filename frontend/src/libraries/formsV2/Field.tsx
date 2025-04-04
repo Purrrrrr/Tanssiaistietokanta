@@ -2,7 +2,7 @@ import { useId } from 'react'
 
 import type { AnyType, GenericPath, Labelable } from './types'
 
-import { type ConnectedFieldProps, ConnectedInputComponent } from './components/ConnectedInput'
+import { type ConnectedFieldProps, ConnectedInput } from './components/ConnectedInput'
 import { type ExternalBareFieldContainerProps, type ExternalFieldContainerProps, BareFieldContainer, FieldContainer } from './components/FieldContainer'
 
 export type FieldProps<Output extends Input, Extra, Input, Data = AnyType> =
@@ -25,7 +25,7 @@ export function Field<Output extends Input, Extra, Input, Data = AnyType>({conta
     helperText={helperText}
     containerClassName={containerClassName}
   >
-    <ConnectedInputComponent id={id} {...rest as ConnectedFieldProps<Output, Extra, Input, Data> & Extra} />
+    <ConnectedInput id={id} {...rest as ConnectedFieldProps<Output, Extra, Input, Data> & Extra} />
   </FieldContainer>
 }
 
@@ -33,14 +33,14 @@ export function Field<Output extends Input, Extra, Input, Data = AnyType>({conta
 export function UnwrappedField<Output extends Input, Extra, Input, Data = AnyType>({label, ...rest}: UnwrappedFieldProps<Output, Extra, Input, Data>) {
   const id = useFieldId(rest.path)
   return <BareFieldContainer labelFor={id} label={label}>
-    <ConnectedInputComponent id={id} {...rest as ConnectedFieldProps<Output, Extra, Input, Data> & Extra} />
+    <ConnectedInput id={id} {...rest as ConnectedFieldProps<Output, Extra, Input, Data> & Extra} />
   </BareFieldContainer>
 }
 
 export function SelfLabeledField<Output extends Input, Extra extends Labelable, Input, Data = AnyType>({label, ...rest}: SelfLabeledFieldProps<Output, Extra, Input, Data>) {
   const id = useFieldId(rest.path)
   return <BareFieldContainer labelFor={id}>
-    <ConnectedInputComponent id={id} {...rest as ConnectedFieldProps<Output, Extra, Input, Data> & Extra} label={label} />
+    <ConnectedInput id={id} {...rest as ConnectedFieldProps<Output, Extra, Input, Data> & Extra} label={label} />
   </BareFieldContainer>
 }
 
