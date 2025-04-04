@@ -9,7 +9,7 @@ import {ErrorMessage} from './ErrorMessage'
 import type { FieldInputComponent, OmitInputProps } from './inputs'
 
 
-export type ConnectedInputComponentProps<Output extends Input, Extra, Input, Data = AnyType> = ConnectedFieldProps<Output, Extra, Input, Data> & {
+export type ConnectedInputProps<Output extends Input, Extra, Input, Data = AnyType> = ConnectedFieldProps<Output, Extra, Input, Data> & {
   id: string
 }
 export type ConnectedFieldProps<Output extends Input, Extra, Input, Data = AnyType> = OmitInputProps<Extra> & ValidationProps & {
@@ -17,7 +17,7 @@ export type ConnectedFieldProps<Output extends Input, Extra, Input, Data = AnyTy
   path: FieldPath<Input, Output, Data>
 }
 
-export function ConnectedInputComponent<Output extends Input, Extra, Input, Data = AnyType>({path, component: C, id, required, schema, ...extra}: ConnectedInputComponentProps<Output, Extra, Input, Data>) {
+export function ConnectedInput<Output extends Input, Extra, Input, Data = AnyType>({path, component: C, id, required, schema, ...extra}: ConnectedInputProps<Output, Extra, Input, Data>) {
   const errorId = `${id}-error`
   const inputProps = useFieldValueProps<Output, Input, Data>(path)
   const error = useRunValidation(path, id, inputProps.value, { required, schema })

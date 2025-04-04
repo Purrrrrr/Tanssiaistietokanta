@@ -1,7 +1,7 @@
 import { type ReactNode, useContext, useId } from 'react'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 
-import { DroppableData, ItemData, ListItem } from './types'
+import { DroppableData, ID, ItemData, ListItem } from './types'
 import type { AnyType, DataPath } from '../../types'
 
 import { useFormContext } from '../../context'
@@ -16,6 +16,7 @@ export type RepeaterProps<Value extends ListItem, Data = AnyType> = {
 
 interface ChildCallbackProps<Value, Data> {
   path: DataPath<Value[], Data>
+  id: ID
   index: number
   value: Value
 }
@@ -38,7 +39,7 @@ export function Repeater<Value extends ListItem, Data = AnyType>({path, children
       {
         items.map((data) =>
           <SortableItem id={data.id} data={data} key={data.id}>
-            {children?.({ path, index: data.index, value: data.value })}
+            {children?.({ path, id: data.id, index: data.index, value: data.value })}
           </SortableItem>
         )
       }
