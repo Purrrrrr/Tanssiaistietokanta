@@ -1,4 +1,4 @@
-import {useMemo} from 'react'
+import {type ReactNode, useMemo} from 'react'
 import {useSortable} from '@dnd-kit/sortable'
 import {CSS} from '@dnd-kit/utilities'
 
@@ -8,7 +8,7 @@ import {Icon} from 'libraries/ui'
 interface SortableItemProps<Data> {
   id: string | number
   data: Data
-  children: React.ReactNode
+  children: (dragHandle: ReactNode) => ReactNode
 }
 
 export function SortableItem<Data extends Record<string, unknown>>({id, data, children}: SortableItemProps<Data>) {
@@ -49,8 +49,7 @@ export function SortableItem<Data extends Record<string, unknown>>({id, data, ch
 
   return (
     <Wrapper ref={setNodeRef} style={style} {...attributes}>
-      {dragHandle}
-      {children}
+      {children(dragHandle)}
     </Wrapper>
   )
 }
