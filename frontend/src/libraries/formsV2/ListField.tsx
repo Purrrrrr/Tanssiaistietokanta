@@ -13,13 +13,14 @@ export function ListField<Output extends Input & ListItem, Extra, Input, Data = 
   return <fieldset>
     <legend>{label}</legend>
     <Repeater path={path}>
-      {({ id, index }) =>
+      {({ dragHandle, id, index }) =>
         <>
           <ConnectedInput<Output, Extra, Input, Data>
             id={String(id)}
             path={`${path}.${index}` as FieldPath<Input, Output, Data>}
             component={component}
             {...extra as Extra & Omit<ConnectedFieldProps<Output, Extra, Input, Data>, 'path' | 'component'>} />
+          {dragHandle}
         </>
       }
     </Repeater>

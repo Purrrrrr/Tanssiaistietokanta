@@ -3,8 +3,11 @@ TODO:
 List editor
   * Repeater
   * Field logic without any wrapper
-    Proper drag handles
+  * Proper drag handles
     Read only mode
+    Repeating input field
+    Repeating form section
+    Is unwrapped field needed anymore?
   
 FieldsetContainer
 TableListEditor

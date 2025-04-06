@@ -10,11 +10,12 @@ import { Droppable } from './Droppable'
 import { SortableItem } from './SortableItem'
 
 export type RepeaterProps<Value extends ListItem, Data = AnyType> = {
-  children?: (props: ChildCallbackProps<Value, Data>) => ReactNode
+  children: (props: ChildCallbackProps<Value, Data>) => ReactNode
   path: DataPath<Value[], Data>
 }
 
 interface ChildCallbackProps<Value, Data> {
+  dragHandle: ReactNode
   path: DataPath<Value[], Data>
   id: ID
   index: number
@@ -39,7 +40,8 @@ export function Repeater<Value extends ListItem, Data = AnyType>({path, children
       {
         items.map((data) =>
           <SortableItem id={data.id} data={data} key={data.id}>
-            {children?.({ path, id: data.id, index: data.index, value: data.value })}
+            {dragHandle =>
+              children?.({ dragHandle, path, id: data.id, index: data.index, value: data.value })}
           </SortableItem>
         )
       }
