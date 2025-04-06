@@ -2,8 +2,7 @@ import { type ComponentProps, type ComponentType } from 'react'
 
 import type { Labelable, ValueAt } from './types'
 
-import { type FieldInputComponent, type FieldInputComponentProps, type Nullable, MarkdownInput, SwitchInput, TextInput } from './components/inputs'
-import { SwitchProps } from './components/inputs/SwitchInput'
+import { type FieldInputComponent, type FieldInputComponentProps, type Nullable, type SwitchInputProps, MarkdownInput, SwitchInput, TextInput } from './components/inputs'
 import { type FieldProps, type SelfLabeledFieldProps, Field } from './Field'
 import { type FormProps, Form } from './Form'
 import { useApplyAt, useChangeAt, useValueAt } from './hooks'
@@ -35,7 +34,7 @@ interface FieldsFor<Data> {
   asFormField: <Output extends Input, Extra, Input>(c: FieldInputComponent<Output, Extra, Input>) => FieldComponent<Data, Output, Extra, Input>
   MarkdownField: FieldComponentFor<Data, typeof MarkdownInput>
   TextField: FieldComponentFor<Data, typeof TextInput>
-  Switch: SelfLabeledFieldComponent<Data, boolean, SwitchProps>
+  Switch: SelfLabeledFieldComponent<Data, boolean, SwitchInputProps>
 }
 
 interface HooksFor<Data> {
