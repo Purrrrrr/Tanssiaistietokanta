@@ -56,7 +56,6 @@ function reducer<Data>(state: FormState<Data>, action: FormAction<Data>): FormSt
   switch (action.type) {
     case 'EXTERNAL_CHANGE':
     case 'CHANGE':
-    case 'APPLY':
     case 'MOVE_ITEM':
       return assoc(state, 'data', valueReducer(state.data, action))
     default:

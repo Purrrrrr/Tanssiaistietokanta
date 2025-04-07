@@ -12,8 +12,6 @@ export function valueReducer<Data>(value: Data, action: ValueAction<Data>): Data
       return action.value
     case 'CHANGE':
       return set(toArrayPath(action.path), action.value, value)
-    case 'APPLY':
-      return modify(toArrayPath(action.path), action.modifier, value)
     case 'MOVE_ITEM': {
       const { from, fromIndex, to, toIndex } = action
       const toPath = toArrayPath(to)

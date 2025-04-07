@@ -5,7 +5,7 @@ import type { Labelable, ValueAt } from './types'
 import { type FieldInputComponent, type FieldInputComponentProps, type Nullable, type SwitchInputProps, MarkdownInput, SwitchInput, TextInput } from './components/inputs'
 import { type FieldProps, type SelfLabeledFieldProps, Field } from './Field'
 import { type FormProps, Form } from './Form'
-import { useApplyAt, useChangeAt, useValueAt } from './hooks'
+import { useChangeAt, useValueAt } from './hooks'
 import { type SpecializedFieldComponent, asFormField, asSelfLabeledFormField } from './utils/asFormField'
 
 export { TextInput }
@@ -40,7 +40,6 @@ interface FieldsFor<Data> {
 interface HooksFor<Data> {
   useValueAt: <Path extends string>(path: Path) => ValueAt<Data, Path>
   useChangeAt: <Path extends string>(path: Path) => (value: ValueAt<Data, Path>) => unknown
-  useApplyAt: <Path extends string>(path: Path) => (mapper: (val: ValueAt<Data, Path>) => ValueAt<Data, Path>) => unknown
 }
 
 export function formFor<Data>(): FormFor<Data> {
@@ -53,6 +52,5 @@ export function formFor<Data>(): FormFor<Data> {
     Switch,
     useValueAt,
     useChangeAt,
-    useApplyAt
   } as FormFor<Data>
 }

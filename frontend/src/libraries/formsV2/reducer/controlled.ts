@@ -27,7 +27,6 @@ export function useFormReducer<Data>(externalValue: Data, onChange: (changed: Da
       switch (action.type) {
         case 'EXTERNAL_CHANGE':
         case 'CHANGE':
-        case 'APPLY':
         case 'MOVE_ITEM': {
           const newValue = debuggingValueReducer(latestValue.current, action)
           onChange(newValue)

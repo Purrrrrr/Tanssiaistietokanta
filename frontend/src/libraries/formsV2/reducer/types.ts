@@ -20,10 +20,6 @@ export type ValueAction<Data> = {
   path: GenericPath
   value: unknown
 } | {
-  type: 'APPLY'
-  path: GenericPath
-  modifier: (value: unknown) => unknown
-} | {
   type: 'MOVE_ITEM'
   from: GenericPath
   fromIndex: number
