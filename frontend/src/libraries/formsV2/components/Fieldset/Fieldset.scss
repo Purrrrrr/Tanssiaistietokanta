@@ -1,0 +1,26 @@
+.form-fieldset {
+  border: none;
+  padding: 0;
+
+  legend {
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  &.inline {
+    display: inline-flex;
+  }
+
+  &.label-beside {
+    flex-direction: row;
+
+    & > legend {
+      float: left;
+      margin: 0 10px 0 0;
+    }
+  }
+
+  &.label-beside:not(.inline) > :not(legend) {
+    flex: 1 1 auto;
+  }
+}
