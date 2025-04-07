@@ -36,7 +36,6 @@ export default function Foo() {
           <input type="text" value={value.value} onChange={e => onChange({ ...value, value: e.target.value})} />
       }
     />
-    ---
     <ListField path="l2" label="l 2"
       component={
         ({value, onChange}: {value: L, onChange: (l: L) => unknown}) =>

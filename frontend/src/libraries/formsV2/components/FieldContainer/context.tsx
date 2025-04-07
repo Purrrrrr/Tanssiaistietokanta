@@ -9,9 +9,12 @@ const defaults : FieldStyleContextProps = {
 const FieldStyleReactContext = createContext<FieldStyleContextProps>(defaults)
 
 export function FieldStyleContext(props: Partial<FieldStyleContextProps> & { children: React.ReactNode }) {
-  const { labelStyle, inline, children } = { ...defaults, ...props }
+  const { labelStyle, inline, children } = props
   const ctx = useMemo(
-    () => ({ labelStyle, inline }),
+    () => ({
+      labelStyle: labelStyle ?? defaults.labelStyle,
+      inline: inline ?? defaults.inline,
+    }),
     [inline, labelStyle],
   )
 
@@ -21,5 +24,8 @@ export function FieldStyleContext(props: Partial<FieldStyleContextProps> & { chi
 export function useFieldStyle({ inline, labelStyle }: Partial<FieldStyleContextProps>) {
   const ctx = useContext(FieldStyleReactContext)
 
-  return { ...ctx, inline, labelStyle }
+  return {
+    labelStyle: labelStyle ?? ctx.labelStyle,
+    inline: inline ?? ctx.inline,
+  }
 }
