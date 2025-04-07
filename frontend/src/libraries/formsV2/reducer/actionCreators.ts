@@ -10,6 +10,3 @@ export function externalChange<Data>(value: Data): FormAction<Data> {
 export function setValidationResult<Data>(path: GenericPath, id: string, errors: Errors): FormAction<Data> {
   return { type: 'SET_VALIDATION_RESULT', path, id, errors }
 }
-export function apply<Data>(path: GenericPath, modifier: (value: unknown) => unknown): FormAction<Data> {
-  return { type: 'APPLY', path, modifier }
-}

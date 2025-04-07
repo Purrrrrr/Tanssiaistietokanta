@@ -3,7 +3,7 @@ import { useSyncExternalStore } from 'react'
 import { DataPath } from './types'
 
 import { useFormContext } from './context'
-import { apply, change } from './reducer'
+import { change } from './reducer'
 
 export function useValueAt<T, Data = unknown>(path: DataPath<T, Data>): T {
   const { getValueAt, subscribe } = useFormContext<Data>()
@@ -14,10 +14,4 @@ export function useChangeAt<T, Data = unknown>(path: DataPath<T, Data>) {
   const { dispatch } = useFormContext<Data>()
 
   return (value: T) => dispatch(change(path, value))
-}
-
-export function useApplyAt<T, Data = unknown>(path: DataPath<T, Data>) {
-  const { dispatch } = useFormContext<Data>()
-
-  return (modifier: (value: T) => T) => dispatch(apply(path, modifier as (value: unknown) => unknown))
 }
