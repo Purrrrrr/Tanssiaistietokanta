@@ -1,12 +1,11 @@
 import { useCallback, useEffect, useState } from 'react'
 
-import type { AnyType, FieldPath, ValidationProps } from '../types'
+import type { AnyType, FieldPath } from '../types'
 
 import { useFormContext } from '../context'
-import { useRunValidation } from '../hooks'
 import { change } from '../reducer'
-import {ErrorMessage} from './ErrorMessage'
 import type { FieldInputComponent, OmitInputProps } from './inputs'
+import { type ValidationProps, ValidationMessage } from './ValidationMessage'
 
 
 export type ConnectedInputProps<Output extends Input, Extra, Input, Data = AnyType> = ConnectedFieldProps<Output, Extra, Input, Data> & {
@@ -20,10 +19,9 @@ export type ConnectedFieldProps<Output extends Input, Extra, Input, Data = AnyTy
 export function ConnectedInput<Output extends Input, Extra, Input, Data = AnyType>({path, component: C, id, required, schema, ...extra}: ConnectedInputProps<Output, Extra, Input, Data>) {
   const errorId = `${id}-error`
   const inputProps = useFieldValueProps<Output, Input, Data>(path)
-  const error = useRunValidation(path, id, inputProps.value, { required, schema })
   return <>
     <C {...inputProps} id={id} aria-describedby={errorId} {...extra as Extra} />
-    <ErrorMessage id={errorId} error={error} />
+    <ValidationMessage id={errorId} path={path} value={inputProps.value} required={required} schema={schema} />
   </>
 }
 
