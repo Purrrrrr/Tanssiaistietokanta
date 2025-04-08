@@ -5,6 +5,7 @@ import { DroppableData, ID, ItemData, ListItem } from './types'
 import type { AnyType, DataPath } from '../../types'
 
 import { useFormContext } from '../../context'
+import { useValueAt } from '../../hooks'
 import { ItemVisitContext } from './context'
 import { Droppable } from './Droppable'
 import { SortableItem } from './SortableItem'
@@ -27,8 +28,8 @@ const getId = (value: ListItem) => typeof value === 'object'
   ? value._id : value
 
 export function Repeater<Value extends ListItem, Data = AnyType>({path, children, table }: RepeaterProps<Value, Data>) {
-  const { readOnly, getValueAt } = useFormContext<Data>()
-  const values = getValueAt<Value[]>(path)
+  const { readOnly } = useFormContext<Data>()
+  const values = useValueAt<Value[], Data>(path)
   const fieldId = useId()
   const items = useItems(fieldId, path, values)
   const ids = items.map(item => item.id)
@@ -38,13 +39,11 @@ export function Repeater<Value extends ListItem, Data = AnyType>({path, children
 
   if (readOnly) {
     return <Wrapper>
-      {
-        items.map((data) =>
-          <Item key={data.id}>
-            {children?.({ dragHandle: null, path, id: data.id, index: data.index, value: data.value })}
-          </Item>
-        )
-      }
+      {items.map((data) =>
+        <Item key={data.id}>
+          {children?.({ dragHandle: null, ...data, path: data.path as DataPath<Value[], Data> })}
+        </Item>
+      )}
     </Wrapper>
   }
 
@@ -57,8 +56,7 @@ export function Repeater<Value extends ListItem, Data = AnyType>({path, children
       {
         items.map((data) =>
           <SortableItem id={data.id} data={data} key={data.id} asElement={Item}>
-            {dragHandle =>
-              children?.({ dragHandle, path, id: data.id, index: data.index, value: data.value })}
+            {dragHandle => children?.({ dragHandle, ...data, path: data.path as DataPath<Value[], Data> })}
           </SortableItem>
         )
       }

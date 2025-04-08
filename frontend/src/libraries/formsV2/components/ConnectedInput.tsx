@@ -34,7 +34,10 @@ function useFieldValueProps<Output extends Input, Input, Data = unknown>(path: F
   const [value, setValue] = useState(() => getValueAt<Input>(path))
 
   useEffect(
-    () => subscribe(() => setValue(getValueAt(path))),
+    () => {
+      setValue(getValueAt(path))
+      subscribe(() => { setValue(getValueAt(path)) })
+    },
     [subscribe, path, getValueAt]
   )
 
