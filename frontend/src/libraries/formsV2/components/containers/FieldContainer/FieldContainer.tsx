@@ -2,8 +2,8 @@ import { FieldContainerProps } from './types'
 
 import {FormGroup} from 'libraries/ui'
 
-import { BareFieldContainer } from './BareFieldContainer'
-import { useFieldStyle } from './context'
+import { useFieldStyle } from '../context'
+import { HiddenLabel } from './HiddenLabel'
 
 export function FieldContainer(props: FieldContainerProps) {
   const {
@@ -14,7 +14,12 @@ export function FieldContainer(props: FieldContainerProps) {
 
   if (labelStyle === 'hidden') {
     const Container = inline ? 'span' : 'div'
-    return <Container id={formGroupId}><BareFieldContainer {...props} /></Container>
+    return <Container id={formGroupId}>
+      <HiddenLabel labelFor={labelFor} label={label} labelInfo={labelInfo} />
+      {conflictElement}
+      {children}
+      {helperText}
+    </Container>
   }
   const helperTextId = `${labelFor}--helperText`
 
@@ -30,6 +35,6 @@ export function FieldContainer(props: FieldContainerProps) {
     subLabel={conflictElement}
     intent={conflictElement !== undefined ? 'danger' : undefined}
   >
-    <BareFieldContainer labelFor="" children={children} />
+    {children}
   </FormGroup>
 }
