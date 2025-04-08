@@ -21,16 +21,17 @@ TODO:
     * Repeater
     * Field logic without any wrapper
     * Proper drag handles
+    * Is unwrapped field needed anymore?
       Remove buttons
       Add buttons
       Proper drag and drop limits
       Read only mode
       Repeating input field
       Repeating form section
-      Is unwrapped field needed anymore?
   
-  FieldSet component
+* FieldSet component
     wrapper?: none | fieldset
+    Common container props? labelstyle etc.
   inline prop with just CSS?
   TableListEditor
   Rethink bare field container needs

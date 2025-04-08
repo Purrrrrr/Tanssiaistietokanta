@@ -1,6 +1,5 @@
 import { useState } from 'react'
 
-import { Form } from './Form'
 import { formFor, ListField, TextInput } from './index'
 
 interface Data {
@@ -18,7 +17,7 @@ interface L {
 }
 
 const {
-  Field, TextField, Switch, MarkdownField,
+  Form, Field, TextField, Switch, MarkdownField,
 } = formFor<Data>()
 
 export default function Foo() {
