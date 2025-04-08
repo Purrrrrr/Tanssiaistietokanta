@@ -1,9 +1,9 @@
 import { useEffect, useRef } from 'react'
 
-import { type FieldStyleContextProps, FieldStyleContext } from './components/FieldContainer'
-import { RepeaterContext } from './components/Repeater'
-import { type FormStateContext, FormContext, useFormContextValue } from './context'
-import { useFormReducer } from './reducer'
+import { type FormStateContext, FormContext, useFormContextValue } from '../../context'
+import { useFormReducer } from '../../reducer'
+import { type FieldStyleContextProps, FieldStyleContext } from '../FieldContainer'
+import { RepeaterContext } from '../Repeater'
 
 export interface FormProps<T> extends
   Omit<React.ComponentPropsWithoutRef<'form'>, 'onSubmit' | 'onChange'>,

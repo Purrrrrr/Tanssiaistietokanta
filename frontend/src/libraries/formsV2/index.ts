@@ -2,9 +2,9 @@ import { type ComponentProps, type ComponentType } from 'react'
 
 import type { Labelable, ValueAt } from './types'
 
+import { type FormProps, Form } from './components/Form'
 import { type FieldInputComponent, type FieldInputComponentProps, type Nullable, type SwitchInputProps, MarkdownInput, SwitchInput, TextInput } from './components/inputs'
 import { type FieldProps, type SelfLabeledFieldProps, Field } from './Field'
-import { type FormProps, Form } from './Form'
 import { useChangeAt, useValueAt } from './hooks'
 import { type SpecializedFieldComponent, asFormField, asSelfLabeledFormField } from './utils/asFormField'
 
