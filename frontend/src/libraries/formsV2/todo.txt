@@ -1,55 +1,53 @@
 TODO:
 
-List editor
-  * Repeater
-  * Field logic without any wrapper
-  * Proper drag handles
-    Remove buttons
-    Add buttons
-    Proper drag and drop limits
-    Read only mode
-    Repeating input field
-    Repeating form section
-    Is unwrapped field needed anymore?
+* reducer logic, types etc.
+* validation
+* working wrapper
+*  always use <label>
+*  error-reference
+*  input id?
+*  read only mode
+* switch
+* onValidityChange
+* basic translation system
+* MarkdownInput
+* DurationField v2
+* Add to dance editor
+* Simpler field types?
+* Make Form value controlled?
+* closable editors? Removed
+* FieldsetContainer
+  List editor
+    * Repeater
+    * Field logic without any wrapper
+    * Proper drag handles
+      Remove buttons
+      Add buttons
+      Proper drag and drop limits
+      Read only mode
+      Repeating input field
+      Repeating form section
+      Is unwrapped field needed anymore?
   
-TableListEditor
-Rethink bare field container needs
-switchFor
-TextArea
-Fix Duration field?
-NumberInput
-date time components (choose better implementation?)
-Selector (choose better component?)
-FieldSet component
-  wrapper?: none | fieldset
-RadioGroup with fieldset
-inline prop with just CSS?
-better translation system?
-a11y-announcement element for list editor and such?? Is it needed? announcement API?
-input field components
-various buttons
-various hooks
-sync stuff and autosaving state
-conflict handling
-
-DONE:
-reducer logic, types etc.
-validation
-working wrapper
- always use <label>
- error-reference
- input id?
- read only mode
-switch
-onValidityChange
-basic translation system
-MarkdownInput
-DurationField v2
-Add to dance editor
-Simpler field types?
-Make Form value controlled?
-closable editors? Removed
-FieldsetContainer
+  FieldSet component
+    wrapper?: none | fieldset
+  inline prop with just CSS?
+  TableListEditor
+  Rethink bare field container needs
+  switchFor
+  TextArea
+  Fix Duration field?
+  NumberInput
+  date time components (choose better implementation?)
+  Selector (choose better component?)
+  RadioGroup with fieldset
+  better translation system?
+  a11y-announcement element for list editor and such?? Is it needed? announcement API?
+  input field components
+  various buttons
+  various hooks
+  sync stuff and autosaving state
+  conflict handling
 
 /* Need to export:
 ActionButton as Button

@@ -8,16 +8,14 @@ import { type ExternalBareFieldContainerProps, type ExternalFieldContainerProps,
 export type FieldProps<Output extends Input, Extra, Input, Data = AnyType> =
   ConnectedFieldProps<Output, Extra, Input, Data> & ExternalFieldContainerProps
 
-export type UnwrappedFieldProps<Output extends Input, Extra, Input, Data = AnyType> =
+export type SelfLabeledFieldProps<Output extends Input, Extra extends Labelable, Input, Data = AnyType> =
   ConnectedFieldProps<Output, Extra, Input, Data> & ExternalBareFieldContainerProps
 
-export type SelfLabeledFieldProps<Output extends Input, Extra extends Labelable, Input, Data = AnyType> =
-  UnwrappedFieldProps<Output, Extra, Input, Data>
-
-export function Field<Output extends Input, Extra, Input, Data = AnyType>({containerClassName, label, labelStyle, labelInfo, helperText, ...rest}: FieldProps<Output, Extra, Input, Data>) {
+export function Field<Output extends Input, Extra, Input, Data = AnyType>({containerClassName, inline, label, labelStyle, labelInfo, helperText, ...rest}: FieldProps<Output, Extra, Input, Data>) {
   const id = useFieldId(rest.path)
 
   return <FieldContainer
+    inline={inline}
     labelFor={id}
     label={label}
     labelStyle={labelStyle}
@@ -27,14 +25,6 @@ export function Field<Output extends Input, Extra, Input, Data = AnyType>({conta
   >
     <ConnectedInput id={id} {...rest as ConnectedFieldProps<Output, Extra, Input, Data> & Extra} />
   </FieldContainer>
-}
-
-
-export function UnwrappedField<Output extends Input, Extra, Input, Data = AnyType>({label, ...rest}: UnwrappedFieldProps<Output, Extra, Input, Data>) {
-  const id = useFieldId(rest.path)
-  return <BareFieldContainer labelFor={id} label={label}>
-    <ConnectedInput id={id} {...rest as ConnectedFieldProps<Output, Extra, Input, Data> & Extra} />
-  </BareFieldContainer>
 }
 
 export function SelfLabeledField<Output extends Input, Extra extends Labelable, Input, Data = AnyType>({label, ...rest}: SelfLabeledFieldProps<Output, Extra, Input, Data>) {

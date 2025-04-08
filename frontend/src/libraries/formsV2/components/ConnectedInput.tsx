@@ -11,6 +11,10 @@ import { type ValidationProps, ValidationMessage } from './ValidationMessage'
 export type ConnectedInputProps<Output extends Input, Extra, Input, Data = AnyType> = ConnectedFieldProps<Output, Extra, Input, Data> & {
   id: string
 }
+
+export type WrappedFieldProps<WrapperProps, Output extends Input, Extra, Input, Data = AnyType> =
+  WrapperProps & ConnectedFieldProps<Output, Extra, Input, Data>
+
 export type ConnectedFieldProps<Output extends Input, Extra, Input, Data = AnyType> = OmitInputProps<Extra> & ValidationProps & {
   component: FieldInputComponent<Output, Extra, Input>
   path: FieldPath<Input, Output, Data>
