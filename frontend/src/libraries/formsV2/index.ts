@@ -10,7 +10,7 @@ import { type SpecializedFieldComponent, asFormField, asSelfLabeledFormField } f
 
 export { TextInput }
 export type { FieldInputComponentProps }
-export { ListField } from './ListField'
+export { RepeatingField } from './components/RepeatingField'
 
 const TextField = asFormField(TextInput)
 const MarkdownField = asFormField(MarkdownInput)

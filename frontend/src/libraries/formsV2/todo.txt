@@ -22,12 +22,12 @@ TODO:
     * Field logic without any wrapper
     * Proper drag handles
     * Is unwrapped field needed anymore?
-      Remove buttons
-      Add buttons
+    * Read only mode
       Proper drag and drop limits
-      Read only mode
       Repeating input field
       Repeating form section
+      Remove buttons
+      Add buttons
   
 * FieldSet component
     wrapper?: none | fieldset
