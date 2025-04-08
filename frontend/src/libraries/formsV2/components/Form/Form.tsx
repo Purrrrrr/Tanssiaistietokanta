@@ -1,8 +1,10 @@
 import { useEffect, useRef } from 'react'
 
+import { type FieldStyleContextProps } from '../containers/types'
+
 import { type FormStateContext, FormContext, useFormContextValue } from '../../context'
 import { useFormReducer } from '../../reducer'
-import { type FieldStyleContextProps, FieldStyleContext } from '../FieldContainer'
+import { FieldStyleContext } from '../containers/context'
 import { RepeaterContext } from '../Repeater'
 
 export interface FormProps<T> extends

@@ -1,8 +1,8 @@
-import { FieldContainerProps } from './types'
+import { LabelProps } from '../types'
 
 import './HiddenLabel.scss'
 
-type HiddenLabelProps = Pick<FieldContainerProps, 'label' | 'labelInfo'> & {
+interface HiddenLabelProps extends LabelProps {
   labelFor: string
 }
 

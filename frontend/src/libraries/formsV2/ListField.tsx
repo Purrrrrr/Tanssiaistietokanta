@@ -3,7 +3,7 @@ import type { AnyType, FieldPath } from './types'
 import { Flex } from 'libraries/ui'
 
 import { type ConnectedFieldProps, ConnectedInput } from './components/ConnectedInput'
-import { Fieldset } from './components/Fieldset'
+import { Fieldset } from './components/containers/Fieldset'
 import { type ListItem, Repeater } from './components/Repeater'
 
 export type ListFieldProps<Output extends Input & ListItem, Extra, Input, Data = AnyType> =
