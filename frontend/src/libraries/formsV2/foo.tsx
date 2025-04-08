@@ -21,14 +21,14 @@ const {
 } = formFor<Data>()
 
 export default function Foo() {
-  const [value, onChange] = useState<Data>({a: '', b: '', l: [{_id: '1', value: ''}, {_id: '2', value: ''}], l2: [{_id: '3', value: ''}, {_id: '4', value: ''}], s: ['aa', 'bb']})
-  return <Form value={value} onChange={onChange} readOnly>
+  const [value, onChange] = useState<Data>({a: '', b: '', l: [{_id: '1', value: 'a'}, {_id: '2', value: 'b'}], l2: [{_id: '3', value: 'c'}, {_id: '4', value: 'd'}], s: ['aa', 'bb']})
+  return <Form value={value} onChange={onChange}>
     <h2>FOO</h2>
     <Field label="aaa" path="a" required component={TextInput} />
+    <RepeatingField path="s" label="Strings" component={TextInput} />
     <TextField label="aaa" path="b" />
     <Switch path="bo" label="Is it on?" />
     <MarkdownField path="d" label="markdooown" />
-    <RepeatingField path="s" label="Strings" component={TextInput} />
     <RepeatingField path="l" label="l"
       component={
         ({value, onChange}: {value: L, onChange: (l: L) => unknown}) =>

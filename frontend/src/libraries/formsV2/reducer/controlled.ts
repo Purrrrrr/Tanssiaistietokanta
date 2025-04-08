@@ -41,7 +41,7 @@ export function useFormReducer<Data>(externalValue: Data, onChange: (changed: Da
   )
 
   return {
-    state: { data: externalValue, ...state },
+    state: { data: latestValue.current, ...state },
     dispatch, subscribe,
   }
 }
