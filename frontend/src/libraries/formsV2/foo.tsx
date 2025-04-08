@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { formFor, ListField, TextInput } from './index'
+import { formFor, RepeatingField, TextInput } from './index'
 
 interface Data {
   a: string
@@ -22,20 +22,20 @@ const {
 
 export default function Foo() {
   const [value, onChange] = useState<Data>({a: '', b: '', l: [{_id: '1', value: ''}, {_id: '2', value: ''}], l2: [{_id: '3', value: ''}, {_id: '4', value: ''}], s: ['aa', 'bb']})
-  return <Form value={value} onChange={onChange}>
+  return <Form value={value} onChange={onChange} readOnly>
     <h2>FOO</h2>
     <Field label="aaa" path="a" required component={TextInput} />
     <TextField label="aaa" path="b" />
     <Switch path="bo" label="Is it on?" />
     <MarkdownField path="d" label="markdooown" />
-    <ListField path="s" label="Strings" component={TextInput} />
-    <ListField path="l" label="l"
+    <RepeatingField path="s" label="Strings" component={TextInput} />
+    <RepeatingField path="l" label="l"
       component={
         ({value, onChange}: {value: L, onChange: (l: L) => unknown}) =>
           <input type="text" value={value.value} onChange={e => onChange({ ...value, value: e.target.value})} />
       }
     />
-    <ListField path="l2" label="l 2"
+    <RepeatingField path="l2" label="l 2"
       component={
         ({value, onChange}: {value: L, onChange: (l: L) => unknown}) =>
           <input type="text" value={value.value} onChange={e => onChange({ ...value, value: e.target.value})} />

@@ -8,10 +8,11 @@ import {Icon} from 'libraries/ui'
 interface SortableItemProps<Data> {
   id: string | number
   data: Data
+  asElement?: 'div' | 'tr'
   children: (dragHandle: ReactNode) => ReactNode
 }
 
-export function SortableItem<Data extends Record<string, unknown>>({id, data, children}: SortableItemProps<Data>) {
+export function SortableItem<Data extends Record<string, unknown>>({id, data, children, asElement: Wrapper = 'div'}: SortableItemProps<Data>) {
   const isGhost = data?.ghost
   const {
     isDragging,
@@ -41,7 +42,6 @@ export function SortableItem<Data extends Record<string, unknown>>({id, data, ch
     boxShadow: isRisen ? '4px 4px 4px rgba(33, 33, 33, 0.45)' : undefined,
   }
 
-  const Wrapper = 'div'
   const dragHandle = useMemo(
     () => <DragHandle buttonRef={setActivatorNodeRef} listeners={listeners} />,
     [listeners, setActivatorNodeRef]
