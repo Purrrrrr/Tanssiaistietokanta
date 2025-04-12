@@ -15,6 +15,19 @@ export interface ItemData<T = unknown> extends Record<string, unknown> {
   fieldId: string
   path: Path
   index: number
+  itemType: string | undefined
   value: T
   ghost?: boolean
 }
+
+export type AcceptedTypes<T, TypeDefinitions> = AcceptedType<T, TypeDefinitions>[]
+
+export type AcceptedType<T, TypeDefinitions> = {
+  [K in keyof TypeDefinitions]: TypeDefinitions[K] extends T ? K : never
+}[keyof TypeDefinitions]
+
+export type ItemTypeClassifier<T, TypeDefinitions> = (value: T) => ItemClassification<T, TypeDefinitions>
+
+export type ItemClassification<T, TypeDefinitions> = {
+  [K in keyof TypeDefinitions]: [K, TypeDefinitions[K]]
+}[keyof TypeDefinitions]
