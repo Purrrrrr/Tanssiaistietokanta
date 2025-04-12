@@ -1,7 +1,7 @@
 import { type ReactNode, useContext, useId } from 'react'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 
-import { DroppableData, ID, ItemData, ListItem } from './types'
+import { AcceptedTypes, DroppableData, ID, ItemData, ItemTypeClassifier, ListItem } from './types'
 import type { AnyType, DataPath } from '../../types'
 
 import { useFormContext } from '../../context'
@@ -10,9 +10,11 @@ import { ItemVisitContext } from './context'
 import { Droppable } from './Droppable'
 import { SortableItem } from './SortableItem'
 
-export type RepeaterProps<Value extends ListItem, Data = AnyType> = {
+export type RepeaterProps<Value extends ListItem, Data = AnyType, AcceptedTypeDefs = null> = {
   children: (props: ChildCallbackProps<Value, Data>) => ReactNode
   path: DataPath<Value[], Data>
+  accepts?: AcceptedTypes<Value, AcceptedTypeDefs>
+  itemType?: ItemTypeClassifier<Value, AcceptedTypeDefs>
   table?: boolean
 }
 
@@ -27,11 +29,11 @@ interface ChildCallbackProps<Value, Data> {
 const getId = (value: ListItem) => typeof value === 'object'
   ? value._id : value
 
-export function Repeater<Value extends ListItem, Data = AnyType>({path, children, table }: RepeaterProps<Value, Data>) {
+export function Repeater<Value extends ListItem, Data = AnyType>({path, children, table, itemType }: RepeaterProps<Value, Data>) {
   const { readOnly } = useFormContext<Data>()
   const values = useValueAt<Value[], Data>(path)
   const fieldId = useId()
-  const items = useItems(fieldId, path, values)
+  const items = useItems(fieldId, path, values, itemType)
   const ids = items.map(item => item.id)
 
   const Wrapper = table ? 'table' : 'div'
@@ -64,13 +66,16 @@ export function Repeater<Value extends ListItem, Data = AnyType>({path, children
   </Droppable>
 }
 
-function useItems<T extends ListItem>(fieldId: string, path: string | number, values: T[]): ItemData<T>[] {
+function useItems<T extends ListItem>(
+  fieldId: string, path: string | number, values: T[], getItemType?: (val: T) => string
+): ItemData<T>[] {
   const itemVisit = useContext(ItemVisitContext)
   const toItem = (value: T, index: number) => ({
     type: 'item',
     fieldId,
     id: getId(value),
     index, path, value,
+    itemType: getItemType?.(value),
   } satisfies ItemData<T>)
   const items = values.map(toItem)
 

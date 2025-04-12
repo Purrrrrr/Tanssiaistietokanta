@@ -39,7 +39,6 @@ export function RepeaterContext({children}: {children: React.ReactNode}): React.
 
   const onDragOver = useCallback(
     ({ over, active }: DragOverEvent) => {
-      console.log(`over ${over?.id}`)
       if (!over?.data.current || !active.data.current) return
 
       const activeData = active.data.current as ItemData
@@ -52,12 +51,12 @@ export function RepeaterContext({children}: {children: React.ReactNode}): React.
         return
       }
       const {
-        type, id, fieldId, path, index, value
+        type, id, fieldId, path, index, value, itemType,
       } = activeData
       setVisit({
         to: overData,
         item: {
-          type, id, fieldId, path, index, value
+          type, id, fieldId, path, index, value, itemType
         }
       })
 
