@@ -50,7 +50,7 @@
     "pretest": "npm run codegen",
     "test": "jest --watchAll",
     "codegen": "graphql-codegen --config codegen.ts",
-    "dev": "vite"
+    "dev": "NODE_OPTIONS=--max-old-space-size=8192 vite"
   },
   "eslintConfig": {
     "extends": [
