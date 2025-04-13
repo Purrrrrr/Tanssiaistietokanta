@@ -8,9 +8,10 @@ import { type ListItem, Repeater } from './Repeater'
 import { RepeaterProps } from './Repeater/Repeater'
 
 export type RepeatingFieldProps<Output extends Input & ListItem, Extra, Input, Data = AnyType, AcceptedTypeDefs = null> =
-  ConnectedFieldProps<Output, Extra, Input, Data> & {
+  Omit<ConnectedFieldProps<Output, Extra, Input, Data>, 'path'> &
+  Omit<RepeaterProps<Output, Data, AcceptedTypeDefs>, 'children'> & {
     label: string
-  } & Omit<RepeaterProps<Output, Data, AcceptedTypeDefs>, 'children'>
+  }
 
 export function RepeatingField<Output extends Input & ListItem, Extra, Input, Data = AnyType>(
   {label, path, table, component, accepts, itemType, ...extra}: RepeatingFieldProps<Output, Extra, Input, Data>
