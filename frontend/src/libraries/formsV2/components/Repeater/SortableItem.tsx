@@ -8,11 +8,12 @@ import {Icon} from 'libraries/ui'
 interface SortableItemProps<Data> {
   id: string | number
   data: Data
+  disabled?: boolean
   asElement?: 'div' | 'tr'
   children: (dragHandle: ReactNode) => ReactNode
 }
 
-export function SortableItem<Data extends Record<string, unknown>>({id, data, children, asElement: Wrapper = 'div'}: SortableItemProps<Data>) {
+export function SortableItem<Data extends Record<string, unknown>>({id, data, disabled, children, asElement: Wrapper = 'div'}: SortableItemProps<Data>) {
   const isGhost = data?.ghost
   const {
     isDragging,
@@ -23,8 +24,7 @@ export function SortableItem<Data extends Record<string, unknown>>({id, data, ch
     transform,
     transition,
   } = useSortable({
-    id,
-    data,
+    id, data, disabled: disabled ? { draggable: true, droppable: true } : false,
   })
 
   const isRisen = isDragging && !isGhost
