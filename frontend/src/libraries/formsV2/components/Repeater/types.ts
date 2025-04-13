@@ -20,7 +20,7 @@ export interface ItemData<T = unknown> extends Record<string, unknown> {
   ghost?: boolean
 }
 
-export type AcceptedTypes<T, TypeDefinitions> = AcceptedType<T, TypeDefinitions>[]
+export type AcceptedTypes<T, TypeDefinitions> = AcceptedType<T, TypeDefinitions>[] | AcceptedType<T, TypeDefinitions>
 
 export type AcceptedType<T, TypeDefinitions> = {
   [K in keyof TypeDefinitions]: TypeDefinitions[K] extends T ? K : never
