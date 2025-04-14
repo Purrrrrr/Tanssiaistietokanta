@@ -1,4 +1,5 @@
 import { type ReactNode, useContext, useId } from 'react'
+import { useDndContext } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 
 import { AcceptedTypes, DroppableData, ID, ItemData, ItemTypeClassifier, ListItem } from './types'
@@ -29,8 +30,9 @@ interface ChildCallbackProps<Value, Data> {
 const getId = (value: ListItem) => typeof value === 'object'
   ? value._id : value
 
-export function Repeater<Value extends ListItem, Data = AnyType>({path, children, table, itemType }: RepeaterProps<Value, Data>) {
+export function Repeater<Value extends ListItem, Data = AnyType>({path, children, table, itemType, accepts }: RepeaterProps<Value, Data>) {
   const { readOnly } = useFormContext<Data>()
+  const { active } = useDndContext()
   const values = useValueAt<Value[], Data>(path)
   const fieldId = useId()
   const items = useItems(fieldId, path, values, itemType)
@@ -49,15 +51,19 @@ export function Repeater<Value extends ListItem, Data = AnyType>({path, children
     </Wrapper>
   }
 
+  const activeItemData = active?.data.current as ItemData | undefined
+  const activeIsFromOtherRepeatable = activeItemData != null && activeItemData.fieldId !== fieldId
+  const disabled = activeIsFromOtherRepeatable && !isDropAccepted(activeItemData?.itemType, accepts)
+
   return <Droppable
     asElement={Wrapper}
     data={ { type: 'droppable', path, fieldId } satisfies DroppableData}
-    disabled={values.length > 0}
+    disabled={values.length > 0 || disabled}
   >
-    <SortableContext id={fieldId} items={ids} strategy={verticalListSortingStrategy}>
+    <SortableContext id={fieldId} items={ids} strategy={verticalListSortingStrategy} disabled={disabled}>
       {
         items.map((data) =>
-          <SortableItem id={data.id} data={data} key={data.id} asElement={Item}>
+          <SortableItem id={data.id} data={data} key={data.id} asElement={Item} disabled={disabled}>
             {dragHandle => children?.({ dragHandle, ...data, path: data.path as DataPath<Value[], Data> })}
           </SortableItem>
         )
@@ -67,7 +73,7 @@ export function Repeater<Value extends ListItem, Data = AnyType>({path, children
 }
 
 function useItems<T extends ListItem>(
-  fieldId: string, path: string | number, values: T[], getItemType?: (val: T) => string
+  fieldId: string, path: string | number, values: T[], itemType?: string | ((val: T) => [string, T])
 ): ItemData<T>[] {
   const itemVisit = useContext(ItemVisitContext)
   const toItem = (value: T, index: number) => ({
@@ -75,7 +81,7 @@ function useItems<T extends ListItem>(
     fieldId,
     id: getId(value),
     index, path, value,
-    itemType: getItemType?.(value),
+    itemType: typeof itemType === 'function' ? itemType(value)?.[0] : itemType,
   } satisfies ItemData<T>)
   const items = values.map(toItem)
 
@@ -100,4 +106,12 @@ function asGhost<T>(item: ItemData<T>): ItemData<T> {
     ghost: true,
     id: `${item.id}-ghost`
   }
+}
+
+function isDropAccepted<T>(itemType: T, accepted?: T | T[]): boolean {
+  if (Array.isArray(accepted)) {
+    return accepted.includes(itemType)
+  }
+
+  return accepted !== undefined && accepted === itemType
 }

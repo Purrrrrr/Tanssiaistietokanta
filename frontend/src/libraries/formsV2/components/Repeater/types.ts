@@ -26,8 +26,9 @@ export type AcceptedType<T, TypeDefinitions> = {
   [K in keyof TypeDefinitions]: TypeDefinitions[K] extends T ? K : never
 }[keyof TypeDefinitions]
 
-export type ItemTypeClassifier<T, TypeDefinitions> = (value: T) => ItemClassification<T, TypeDefinitions>
+export type ItemTypeClassifier<T, TypeDefinitions> =
+  AcceptedType<T, TypeDefinitions> | ((value: T) => ItemClassification<TypeDefinitions>)
 
-export type ItemClassification<T, TypeDefinitions> = {
+export type ItemClassification<TypeDefinitions> = {
   [K in keyof TypeDefinitions]: [K, TypeDefinitions[K]]
 }[keyof TypeDefinitions]

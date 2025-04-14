@@ -18,7 +18,7 @@ interface L {
 
 const {
   Form, Field, TextField, Switch, MarkdownField, RepeatingField
-} = formFor<Data, {'l': L}>()
+} = formFor<Data, {'l': L, 's': string}>()
 
 export default function Foo() {
   const [value, onChange] = useState<Data>({a: '', b: '', l: [{_id: '1', value: 'a'}, {_id: '2', value: 'b'}], l2: [{_id: '3', value: 'c'}, {_id: '4', value: 'd'}], s: ['aa', 'bb']})
@@ -31,7 +31,7 @@ export default function Foo() {
     <MarkdownField path="d" label="markdooown" />
     <RepeatingField path="l" label="l"
       accepts="l"
-      itemType={val => ['l', val]}
+      itemType="l"
       component={
         ({value, onChange}: {value: L, onChange: (l: L) => unknown}) =>
           <input type="text" value={value.value} onChange={e => onChange({ ...value, value: e.target.value})} />
@@ -39,7 +39,7 @@ export default function Foo() {
     />
     <RepeatingField path="l2" label="l 2"
       accepts="l"
-      itemType={val => ['l', val]}
+      itemType="l"
       component={
         ({value, onChange}: {value: L, onChange: (l: L) => unknown}) =>
           <input type="text" value={value.value} onChange={e => onChange({ ...value, value: e.target.value})} />
