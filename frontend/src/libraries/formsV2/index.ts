@@ -1,25 +1,18 @@
 import { type ComponentProps, type ComponentType, type ReactElement } from 'react'
 
-import type { Labelable, ValueAt } from './types'
+import type { ValueAt } from './types'
 
+import { type FieldComponent, type FieldProps, asFormField, Field } from './components/Field'
 import { type FormProps, Form } from './components/Form'
-import { type FieldInputComponent, type FieldInputComponentProps, type Nullable, type SwitchInputProps, MarkdownInput, SwitchInput, TextInput } from './components/inputs'
+import type { FieldInputComponent, FieldInputComponentProps, SwitchInputProps } from './components/inputs'
+import { MarkdownInput, SwitchInput, TextInput } from './components/inputs'
 import { ListItem } from './components/Repeater'
 import { type RepeatingFieldProps, RepeatingField } from './components/RepeatingField'
-import { type FieldProps, type SelfLabeledFieldProps, Field } from './Field'
+import { type SelfLabeledFieldComponent, asSelfLabeledFormField } from './components/SelflabeledField'
 import { useChangeAt, useValueAt } from './hooks'
-import { type SpecializedFieldComponent, asFormField, asSelfLabeledFormField } from './utils/asFormField'
 
 export { TextInput }
 export type { FieldInputComponentProps }
-export { RepeatingField } from './components/RepeatingField'
-
-const TextField = asFormField(TextInput)
-const MarkdownField = asFormField(MarkdownInput)
-const Switch = asSelfLabeledFormField(SwitchInput)
-
-type FieldComponent<Data, Output extends Input, Extra, Input = Nullable<Output>> = SpecializedFieldComponent<FieldProps<Output, Extra, Input, Data>>
-type SelfLabeledFieldComponent<Data, Output extends Input, Extra extends Labelable, Input = Nullable<Output>> = SpecializedFieldComponent<SelfLabeledFieldProps<Output, Extra, Input, Data>>
 
 type FieldComponentFor<Data, Component> = Component extends ComponentType<infer Props>
   ? Props extends FieldInputComponentProps<infer Output, infer Input>
@@ -45,16 +38,18 @@ interface HooksFor<Data> {
   useChangeAt: <Path extends string>(path: Path) => (value: ValueAt<Data, Path>) => unknown
 }
 
+const form = {
+  Form,
+  Field,
+  asFormField,
+  MarkdownField: asFormField(MarkdownInput),
+  TextField: asFormField(TextInput),
+  Switch: asSelfLabeledFormField(SwitchInput),
+  RepeatingField,
+  useValueAt,
+  useChangeAt,
+}
+
 export function formFor<Data, AcceptedDroppableTypes = null>(): FormFor<Data, AcceptedDroppableTypes> {
-  return {
-    Form,
-    Field,
-    asFormField,
-    MarkdownField,
-    TextField,
-    Switch,
-    RepeatingField,
-    useValueAt,
-    useChangeAt,
-  } as FormFor<Data, AcceptedDroppableTypes>
+  return form as FormFor<Data, AcceptedDroppableTypes>
 }
