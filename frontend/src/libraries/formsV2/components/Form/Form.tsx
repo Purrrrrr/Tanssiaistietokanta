@@ -5,7 +5,7 @@ import { type FieldStyleContextProps } from '../containers/types'
 import { type FormStateContext, FormContext, useFormContextValue } from '../../context'
 import { useFormReducer } from '../../reducer'
 import { FieldStyleContext } from '../containers/context'
-import { RepeaterContext } from '../Repeater'
+import { DndContext } from '../dnd/context'
 
 export interface FormProps<T> extends
   Omit<React.ComponentPropsWithoutRef<'form'>, 'onSubmit' | 'onChange'>,
@@ -35,9 +35,9 @@ export function Form<T>(props: FormProps<T>) {
   return <form {...formProps} onSubmit={submitHandler} ref={form}>
     <FieldStyleContext inline={inline} labelStyle={labelStyle}>
       <FormContext.Provider value={context as FormStateContext<unknown>}>
-        <RepeaterContext>
+        <DndContext>
           {children}
-        </RepeaterContext>
+        </DndContext>
       </FormContext.Provider>
     </FieldStyleContext>
   </form>

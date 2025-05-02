@@ -2,11 +2,11 @@ import { type ComponentProps, type ComponentType, type ReactElement } from 'reac
 
 import type { ValueAt } from './types'
 
+import { type ListItem } from './components/dnd'
 import { type FieldComponent, type FieldProps, asFormField, Field } from './components/Field'
 import { type FormProps, Form } from './components/Form'
 import type { FieldInputComponent, FieldInputComponentProps, SwitchInputProps } from './components/inputs'
 import { MarkdownInput, SwitchInput, TextInput } from './components/inputs'
-import { ListItem } from './components/Repeater'
 import { type RepeatingFieldProps, RepeatingField } from './components/RepeatingField'
 import { type SelfLabeledFieldComponent, asSelfLabeledFormField } from './components/SelflabeledField'
 import { useChangeAt, useValueAt } from './hooks'
