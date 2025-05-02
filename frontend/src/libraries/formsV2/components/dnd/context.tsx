@@ -1,8 +1,7 @@
 import {createContext, useCallback, useMemo, useState} from 'react'
 import {
   closestCenter,
-  CollisionDetection,
-  DndContext,
+  DndContext as DndKitContext,
   DragEndEvent,
   DragOverEvent,
   KeyboardSensor,
@@ -26,7 +25,7 @@ interface ItemVisit {
 
 export const ItemVisitContext = createContext<ItemVisit | null>(null)
 
-export function RepeaterContext({children}: {children: React.ReactNode}): React.ReactNode {
+export function DndContext({children}: {children: React.ReactNode}): React.ReactNode {
   const { getValueAt, dispatch } = useFormContext<AnyType>()
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -44,19 +43,19 @@ export function RepeaterContext({children}: {children: React.ReactNode}): React.
       const activeData = active.data.current as ItemData
       const overData = over.data.current as ItemData | DroppableData
       if (activeData === overData) return
-      if (activeData.fieldId === undefined) return
+      if (activeData.dropAreaId === undefined) return
 
-      if (activeData.fieldId === overData.fieldId) {
+      if (activeData.dropAreaId === overData.dropAreaId) {
         setVisit(null)
         return
       }
       const {
-        type, id, fieldId, path, index, value, itemType,
+        type, id, dropAreaId, path, index, value, itemType,
       } = activeData
       setVisit({
         to: overData,
         item: {
-          type, id, fieldId, path, index, value, itemType
+          type, id, dropAreaId, path, index, value, itemType
         }
       })
 
@@ -93,7 +92,7 @@ export function RepeaterContext({children}: {children: React.ReactNode}): React.
   )
 
   return (
-    <DndContext
+    <DndKitContext
       onDragOver={onDragOver}
       onDragEnd={onDragEnd}
       sensors={sensors}
@@ -101,41 +100,6 @@ export function RepeaterContext({children}: {children: React.ReactNode}): React.
       <ItemVisitContext.Provider value={visit}>
         {children}
       </ItemVisitContext.Provider>
-    </DndContext>
+    </DndKitContext>
   )
-}
-
-const droppablePadding = 10
-
-const collisionDetectionStrategy: CollisionDetection = (args) => {
-  //const activeData = getData(args.active)
-  //if (!activeData) return closestCenter(args)
-  console.log(args.droppableContainers)
-
-  return closestCenter({
-    ...args,
-    droppableContainers: args.droppableContainers.filter(c => c.id !== args.active.id),
-    //.map(
-    //  (container) => {
-    //    const data = container.data.current
-    //    if (data?.type === 'droppable' && container.rect.current ) {
-    //      const { width, height, top, left, right, bottom } = container.rect.current
-    //      return {
-    //        ...container,
-    //        rect: {
-    //          current: {
-    //            width: width + droppablePadding * 2,
-    //            height: height + droppablePadding * 2,
-    //            top: top - droppablePadding,
-    //            left: left - droppablePadding,
-    //            right: right + droppablePadding,
-    //            bottom: bottom + droppablePadding,
-    //          },
-    //        },
-    //      }
-    //    }
-    //    return container
-    //  }
-    //),
-  })
 }

@@ -24,16 +24,15 @@ TODO:
     * Is unwrapped field needed anymore?
     * Read only mode
     * Proper drag and drop limits
-      Repeating input field
       Repeating form section
+      TableListEditor
+      Repeating input field??
       Remove buttons
       Add buttons
   
 * FieldSet component
     wrapper?: none | fieldset
     Common container props? labelstyle etc.
-  inline prop with just CSS?
-  TableListEditor
   Rethink bare field container needs
   switchFor
   TextArea
@@ -42,13 +41,15 @@ TODO:
   date time components (choose better implementation?)
   Selector (choose better component?)
   RadioGroup with fieldset
-  better translation system?
-  a11y-announcement element for list editor and such?? Is it needed? announcement API?
   input field components
   various buttons
   various hooks
   sync stuff and autosaving state
   conflict handling
+  Nice to have
+    better translation system?
+    inline prop with just CSS?
+    a11y-announcement element for list editor and such?? Is it needed? announcement API?
 
 /* Need to export:
 ActionButton as Button
