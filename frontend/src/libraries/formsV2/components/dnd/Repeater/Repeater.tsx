@@ -10,7 +10,7 @@ import { SortableItemElement } from './SortableItem'
 import { ItemCallback, SortableList } from './SortableList'
 import { useIsDropAreaDisabled } from './useIsDropAreaDisabled'
 
-export interface RepeatingSectionProps<Value extends ListItem, Data = AnyType, AcceptedTypeDefs = null> {
+export interface RepeaterProps<Value extends ListItem, Data = AnyType, AcceptedTypeDefs = null> {
   path: DataPath<Value[], Data>
   accepts?: AcceptedTypes<Value, AcceptedTypeDefs>
   itemType?: ItemTypeClassifier<Value, AcceptedTypeDefs>
@@ -19,9 +19,9 @@ export interface RepeatingSectionProps<Value extends ListItem, Data = AnyType, A
   children: ItemCallback<Value, Data>
 }
 
-export function RepeatingSection<Value extends ListItem, Data = AnyType, AcceptedTypeDefs = null>({
+export function Repeater<Value extends ListItem, Data = AnyType, AcceptedTypeDefs = null>({
   path, accepts, itemType, asElement, itemElement, children
-}: RepeatingSectionProps<Value, Data, AcceptedTypeDefs>) {
+}: RepeaterProps<Value, Data, AcceptedTypeDefs>) {
   const dropAreaId = useId()
   const values = useValueAt<Value[], Data>(path)
   const items = useItems(dropAreaId, path, values, itemType)

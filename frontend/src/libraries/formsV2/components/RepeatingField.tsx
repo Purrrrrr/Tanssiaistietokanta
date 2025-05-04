@@ -1,4 +1,3 @@
-
 import type { AnyType, FieldPath } from '../types'
 
 import { Flex } from 'libraries/ui'
@@ -11,8 +10,8 @@ export type RepeatingFieldProps<Output extends Input & ListItem, Extra, Input, D
   Omit<ConnectedFieldProps<Output, Extra, Input, Data>, 'path'> &
   Omit<RepeatingSectionProps<Output, Data, AcceptedTypeDefs>, 'children'>
 
-export function RepeatingField<Output extends Input & ListItem, Extra, Input, Data = AnyType>(
-  {label, path, component, accepts, itemType, ...extra}: RepeatingFieldProps<Output, Extra, Input, Data>
+export function RepeatingField<Output extends Input & ListItem, Extra, Input, Data = AnyType, AcceptedTypeDefs = null>(
+  {label, path, component, accepts, itemType, ...extra}: RepeatingFieldProps<Output, Extra, Input, Data, AcceptedTypeDefs>
 ) {
   // TODO: flex as itemElement
   return <RepeatingSection label={label} path={path} accepts={accepts} itemType={itemType}>

@@ -1,14 +1,14 @@
 import type { AnyType } from '../types'
 
-import { type ListItem, type RepeatingSectionProps, RepeatingSection } from './dnd'
+import { type ListItem, type RepeaterProps, Repeater } from './dnd'
 
-export type RepeatingTableRowsProps<Output extends ListItem, Data = AnyType, AcceptedTypeDefs = null> =
-  Omit<RepeatingSectionProps<Output, Data, AcceptedTypeDefs>, 'asElement' | 'itemElement'>
+export type RepeatingTableRowsProps<Value extends ListItem, Data = AnyType, AcceptedTypeDefs = null> =
+  Omit<RepeaterProps<Value, Data, AcceptedTypeDefs>, 'asElement' | 'itemElement'>
 
-export function RepeatingTableRows<Output extends ListItem, Data = AnyType>(
-  {path, accepts, itemType, children}: RepeatingTableRowsProps<Output, Data>
+export function RepeatingTableRows<Value extends ListItem, Data = AnyType, AcceptedTypeDefs = null>(
+  {path, accepts, itemType, children}: RepeatingTableRowsProps<Value, Data, AcceptedTypeDefs>
 ) {
-  return <RepeatingSection path={path} accepts={accepts} itemType={itemType} asElement="tbody" itemElement="tr">
+  return <Repeater path={path} accepts={accepts} itemType={itemType} asElement="tbody" itemElement="tr">
     {children}
-  </RepeatingSection>
+  </Repeater>
 }

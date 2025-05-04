@@ -1,18 +1,18 @@
 import type { AnyType } from '../types'
 
 import { Fieldset } from './containers/Fieldset'
-import { type ListItem, type RepeatingSectionProps as DndRepeatingSectionProps, RepeatingSection as DndRepeatingSection } from './dnd'
+import { type ListItem, type RepeaterProps, Repeater } from './dnd'
 
-export interface RepeatingSectionProps<Output extends ListItem, Data = AnyType, AcceptedTypeDefs = null> extends DndRepeatingSectionProps<Output, Data, AcceptedTypeDefs> {
+export interface RepeatingSectionProps<Value extends ListItem, Data = AnyType, AcceptedTypeDefs = null> extends RepeaterProps<Value, Data, AcceptedTypeDefs> {
   label: string
 }
 
-export function RepeatingSection<Output extends ListItem, Data = AnyType, AcceptedTypeDefs = null>(
-  {label, path, accepts, itemType, children, itemElement }: RepeatingSectionProps<Output, Data, AcceptedTypeDefs>
+export function RepeatingSection<Value extends ListItem, Data = AnyType, AcceptedTypeDefs = null>(
+  {label, path, accepts, itemType, children, itemElement }: RepeatingSectionProps<Value, Data, AcceptedTypeDefs>
 ) {
   return <Fieldset label={label}>
-    <DndRepeatingSection path={path} accepts={accepts} itemType={itemType} itemElement={itemElement}>
+    <Repeater path={path} accepts={accepts} itemType={itemType} itemElement={itemElement}>
       {children}
-    </DndRepeatingSection>
+    </Repeater>
   </Fieldset>
 }
