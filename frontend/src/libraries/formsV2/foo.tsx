@@ -1,5 +1,7 @@
 import { useState } from 'react'
 
+import { Flex } from 'libraries/ui'
+
 import { formFor, TextInput } from './index'
 
 interface Data {
@@ -17,7 +19,8 @@ interface L {
 }
 
 const {
-  Form, Field, TextField, Switch, MarkdownField, RepeatingField
+  Form, Field, TextField, Switch, MarkdownField, RepeatingField,
+  RepeatingSection,
 } = formFor<Data, {'l': L, 's': string}>()
 
 export default function Foo() {
@@ -29,21 +32,21 @@ export default function Foo() {
     <TextField label="aaa" path="b" />
     <Switch path="bo" label="Is it on?" />
     <MarkdownField path="d" label="markdooown" />
-    <RepeatingField path="l" label="l"
-      accepts="l"
-      itemType="l"
-      component={
-        ({value, onChange}: {value: L, onChange: (l: L) => unknown}) =>
-          <input type="text" value={value.value} onChange={e => onChange({ ...value, value: e.target.value})} />
+    <RepeatingSection<L> path="l" label="l" accepts="l" itemType="l">
+      {({ dragHandle, path, index }) =>
+        <Flex>
+          <TextField label="Value" labelStyle="beside" path={`${path}.${index}.value`} />
+          {dragHandle}
+        </Flex>
       }
-    />
-    <RepeatingField path="l2" label="l 2"
-      accepts="l"
-      itemType="l"
-      component={
-        ({value, onChange}: {value: L, onChange: (l: L) => unknown}) =>
-          <input type="text" value={value.value} onChange={e => onChange({ ...value, value: e.target.value})} />
+    </RepeatingSection>
+    <RepeatingSection<L> path="l2" label="l 2" accepts="l" itemType="l">
+      {({ dragHandle, path, index }) =>
+        <Flex>
+          <TextField label="Value" labelStyle="beside" path={`${path}.${index}.value`} />
+          {dragHandle}
+        </Flex>
       }
-    />
+    </RepeatingSection>
   </Form>
 }

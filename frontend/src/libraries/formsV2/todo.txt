@@ -24,9 +24,9 @@ TODO:
     * Is unwrapped field needed anymore?
     * Read only mode
     * Proper drag and drop limits
-      Repeating form section
-      TableListEditor
-      Repeating input field??
+    * Repeating form section
+    * TableListEditor
+    * Repeating input field??
       Remove buttons
       Add buttons
   
