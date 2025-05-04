@@ -13,8 +13,8 @@ import {
   sortableKeyboardCoordinates,
 } from '@dnd-kit/sortable'
 
-import type { DroppableData, ItemData } from './types'
 import type { AnyType } from '../../types'
+import type { DroppableData, ItemData } from './RepeatingSection/types'
 
 import { useFormContext } from '../../context'
 
