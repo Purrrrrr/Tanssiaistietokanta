@@ -1,2 +1,2 @@
 export { DndContext } from './context'
-export { type ListItem, type RepeatingSectionProps, RepeatingSection } from './RepeatingSection'
+export { type ListItem, type RepeaterProps, Repeater } from './Repeater'

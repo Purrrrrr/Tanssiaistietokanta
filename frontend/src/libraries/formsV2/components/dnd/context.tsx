@@ -14,7 +14,7 @@ import {
 } from '@dnd-kit/sortable'
 
 import type { AnyType } from '../../types'
-import type { DroppableData, ItemData } from './RepeatingSection/types'
+import type { DroppableData, ItemData } from './Repeater/types'
 
 import { useFormContext } from '../../context'
 

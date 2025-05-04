@@ -8,6 +8,8 @@ import { type FormProps, Form } from './components/Form'
 import type { FieldInputComponent, FieldInputComponentProps, SwitchInputProps } from './components/inputs'
 import { MarkdownInput, SwitchInput, TextInput } from './components/inputs'
 import { type RepeatingFieldProps, RepeatingField } from './components/RepeatingField'
+import { RepeatingSection, RepeatingSectionProps } from './components/RepeatingSection'
+import { RepeatingTableRows, RepeatingTableRowsProps } from './components/RepeatingTableRows'
 import { type SelfLabeledFieldComponent, asSelfLabeledFormField } from './components/SelflabeledField'
 import { useChangeAt, useValueAt } from './hooks'
 
@@ -22,6 +24,8 @@ type FieldComponentFor<Data, Component> = Component extends ComponentType<infer 
 
 interface FormFor<Data, AcceptedDroppableTypes = null> extends FieldsFor<Data, AcceptedDroppableTypes>, HooksFor<Data> {
   Form: ComponentType<FormProps<Data>>
+  RepeatingSection: <O extends ListItem>(t: RepeatingSectionProps<O, Data, AcceptedDroppableTypes>) => ReactElement
+  RepeatingTableRows: <O extends ListItem>(t: RepeatingTableRowsProps<O, Data, AcceptedDroppableTypes>) => ReactElement
 }
 
 interface FieldsFor<Data, AcceptedDroppableTypes = null> {
@@ -40,6 +44,8 @@ interface HooksFor<Data> {
 
 const form = {
   Form,
+  RepeatingSection,
+  RepeatingTableRows,
   Field,
   asFormField,
   MarkdownField: asFormField(MarkdownInput),
