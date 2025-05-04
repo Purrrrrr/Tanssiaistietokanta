@@ -9,9 +9,11 @@ interface SortableItemProps<Data> {
   id: string | number
   data: Data
   disabled?: boolean
-  asElement?: ElementType<{children?: ReactNode}>
+  asElement?: SortableItemElement
   children: (dragHandle: ReactNode) => ReactNode
 }
+
+export type SortableItemElement =  ElementType<{children?: ReactNode}>
 
 export function SortableItem<Data extends Record<string, unknown>>({id, data, disabled, children, asElement = 'div'}: SortableItemProps<Data>) {
   const isGhost = data?.ghost
