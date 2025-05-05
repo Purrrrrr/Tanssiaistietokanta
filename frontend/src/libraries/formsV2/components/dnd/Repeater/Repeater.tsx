@@ -41,7 +41,7 @@ function useItems<T extends ListItem, TypeDefs>(
   const toItem = (value: T, index: number) => ({
     type: 'item',
     dropAreaId,
-    id: getId(value),
+    id: `${dropAreaId}-${getId(value)}`,
     index, path, value,
     itemType: typeof itemType === 'function' ? itemType(value)?.[0] : itemType,
   } satisfies ItemData<T>)
