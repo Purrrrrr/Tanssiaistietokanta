@@ -20,11 +20,11 @@ interface L {
 
 const {
   Form, Field, TextField, Switch, MarkdownField, RepeatingField,
-  RepeatingSection,
+  RepeatingSection, RepeatingTableRows
 } = formFor<Data, {'l': L, 's': string}>()
 
 export default function Foo() {
-  const [value, onChange] = useState<Data>({a: '', b: '', l: [{_id: '1', value: 'a'}, {_id: '2', value: 'b'}], l2: [{_id: '3', value: 'c'}, {_id: '4', value: 'd'}], s: ['aa', 'bb']})
+  const [value, onChange] = useState<Data>({a: '', b: '', l: [{_id: '1', value: 'a'}, {_id: '2', value: 'b'}, {_id: '5', value: 'a2'}, {_id: '6', value: 'b2'}], l2: [{_id: '3', value: 'c'}, {_id: '4', value: 'd'}], s: ['aa', 'bb']})
   return <Form value={value} onChange={onChange}>
     <h2>FOO</h2>
     <Field label="aaa" path="a" required component={TextInput} />
@@ -35,7 +35,7 @@ export default function Foo() {
     <RepeatingSection<L> path="l" label="l" accepts="l" itemType="l">
       {({ dragHandle, path, index }) =>
         <Flex>
-          <TextField label="Value" labelStyle="beside" path={`${path}.${index}.value`} />
+          <TextField label="Value" inline labelStyle="beside" path={`${path}.${index}.value`} />
           {dragHandle}
         </Flex>
       }
@@ -43,10 +43,19 @@ export default function Foo() {
     <RepeatingSection<L> path="l2" label="l 2" accepts="l" itemType="l">
       {({ dragHandle, path, index }) =>
         <Flex>
-          <TextField label="Value" labelStyle="beside" path={`${path}.${index}.value`} />
+          <TextField label="Value" inline labelStyle="beside" path={`${path}.${index}.value`} />
           {dragHandle}
         </Flex>
       }
     </RepeatingSection>
+    <table>
+      <RepeatingTableRows<L> path="l">
+        {({ dragHandle, path, index, value }) =>
+          <>
+            <td>fuu</td><td>{value.value}</td><td>{dragHandle}</td>
+          </>
+        }
+      </RepeatingTableRows>
+    </table>
   </Form>
 }
