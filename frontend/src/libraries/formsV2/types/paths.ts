@@ -22,9 +22,18 @@ const _someUnusedSymbol = Symbol()
 export type AnyType = typeof _someUnusedSymbol
 
 type IsFieldFor<FieldInput, FieldOutput, Data> =
-  [Data, FieldOutput] extends [FieldInput, Data] ? true
-  : Data extends AnyType ? false
-  : [FieldInput, FieldOutput] extends [AnyType, AnyType] ? false : false
+  And<
+    Extends<Data, FieldInput>,
+    Extends<FieldOutput, Data>
+  >
+
+type Extends<Value, Data> = Value extends Data ? true
+  : Value extends AnyType
+    ? true
+    : Data extends AnyType
+      ? true : false
+
+type And<A extends boolean, B extends boolean> = [A, B] extends [true, true] ? true : false
 
 type Joined<Path extends readonly unknown[]> =
   // Base recursive case, no more paths to traverse
