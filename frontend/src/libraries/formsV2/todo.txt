@@ -27,8 +27,8 @@ TODO:
     * Repeating form section
     * TableListEditor
     * Repeating input field??
-      Remove buttons
-      Add buttons
+    * Remove buttons
+      Add hook
   
 * FieldSet component
     wrapper?: none | fieldset

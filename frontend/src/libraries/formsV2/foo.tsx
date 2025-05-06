@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { Flex } from 'libraries/ui'
+import { Button, Flex } from 'libraries/ui'
 
 import { formFor, TextInput } from './index'
 
@@ -33,26 +33,33 @@ export default function Foo() {
     <Switch path="bo" label="Is it on?" />
     <MarkdownField path="d" label="markdooown" />
     <RepeatingSection<L> path="l" label="l" accepts="l" itemType="l">
-      {({ dragHandle, path, index }) =>
+      {({ dragHandle, path, index, onRemove }) =>
         <Flex>
           <TextField label="Value" inline labelStyle="beside" path={`${path}.${index}.value`} />
           {dragHandle}
+          <Button intent="danger" icon="cross" onClick={onRemove} />
         </Flex>
       }
     </RepeatingSection>
     <RepeatingSection<L> path="l2" label="l 2" accepts="l" itemType="l">
-      {({ dragHandle, path, index }) =>
+      {({ dragHandle, path, index, onRemove }) =>
         <Flex>
           <TextField label="Value" inline labelStyle="beside" path={`${path}.${index}.value`} />
           {dragHandle}
+          <Button intent="danger" icon="cross" onClick={onRemove} />
         </Flex>
       }
     </RepeatingSection>
     <table>
       <RepeatingTableRows<L> path="l">
-        {({ dragHandle, path, index, value }) =>
+        {({ dragHandle, value, onRemove }) =>
           <>
-            <td>fuu</td><td>{value.value}</td><td>{dragHandle}</td>
+            <td>fuu</td>
+            <td>{value.value}</td>
+            <td>
+              {dragHandle}
+              <Button intent="danger" icon="cross" onClick={onRemove} />
+            </td>
           </>
         }
       </RepeatingTableRows>

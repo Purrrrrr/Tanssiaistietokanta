@@ -19,6 +19,7 @@ export type ItemCallback<Value, Data> = (props: ItemCallbackProps<Value, Data>) 
 
 export interface ItemCallbackProps<Value, Data> {
   dragHandle: ReactNode
+  onRemove: () => void
   path: DataPath<Value[], Data>
   id: ID
   index: number
@@ -28,13 +29,13 @@ export interface ItemCallbackProps<Value, Data> {
 export function SortableList<Value extends ListItem, Data = AnyType>({
   disabled, dropAreaId, items, children, asElement: Wrapper = 'div'
 }: SortableListProps<Value, Data>) {
-  const { readOnly } = useFormContext<Data>()
+  const { readOnly, dispatch } = useFormContext<Data>()
 
   if (readOnly) {
     return <>
       {items.map((data) =>
         <Wrapper key={data.id}>
-          {children?.({ dragHandle: null, ...data, path: data.path as DataPath<Value[], Data> })}
+          {children?.({ dragHandle: null, ...data, path: data.path as DataPath<Value[], Data>, onRemove: noOp })}
         </Wrapper>
       )}
     </>
@@ -49,9 +50,16 @@ export function SortableList<Value extends ListItem, Data = AnyType>({
     {
       items.map((data) =>
         <SortableItem id={data.id} data={data} key={data.id} asElement={Wrapper} disabled={disabled}>
-          {dragHandle => children?.({ dragHandle, ...data, path: data.path as DataPath<Value[], Data> })}
+          {dragHandle => children?.({
+            dragHandle,
+            ...data,
+            path: data.path as DataPath<Value[], Data>,
+            onRemove: () => dispatch({ type: 'REMOVE_ITEM', path: data.path, index: data.index }),
+          })}
         </SortableItem>
       )
     }
   </SortableContext>
 }
+
+const noOp = () => {}
