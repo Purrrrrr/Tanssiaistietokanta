@@ -1,8 +1,13 @@
+import type { ListItem } from '../components/dnd'
+
+export type { ListItem }
 export type GenericPath = string | number
 export type DataPath<T, Data> = FieldPath<T, T, Data>
 export type FieldPath<Input, Output, Data, Depth extends number = 8> =
   Data extends AnyType ? GenericPath
   : Joined<FieldArrayPath<Input, Output, Data, Depth>>
+
+export type ListPath<Data> = FieldPath<ListItem[], AnyType, Data> & string
 
 type FieldArrayPath<Input, Output, Data, Depth extends number = 8> =
   Depth extends never ? never

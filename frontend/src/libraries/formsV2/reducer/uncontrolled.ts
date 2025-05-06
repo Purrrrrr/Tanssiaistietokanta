@@ -5,7 +5,7 @@ import type { FormAction, FormReducerResult, FormState } from './types'
 
 import { externalChange } from './actionCreators'
 import { commonReducer, initialState } from './reducers/commonReducer'
-import { valueReducer } from './reducers/valueReducer'
+import { isValueAction, valueReducer } from './reducers/valueReducer'
 import { assoc } from './utils/data'
 import { debugReducer } from './utils/debug'
 import { useSubscriptions } from './utils/useSubscriptions'
@@ -53,12 +53,8 @@ function getInitialState<Data>(data: Data): FormState<Data> {
 const debuggingReducer = debugReducer(reducer)
 
 function reducer<Data>(state: FormState<Data>, action: FormAction<Data>): FormState<Data> {
-  switch (action.type) {
-    case 'EXTERNAL_CHANGE':
-    case 'CHANGE':
-    case 'MOVE_ITEM':
-      return assoc(state, 'data', valueReducer(state.data, action))
-    default:
-      return commonReducer(state, action) as FormState<Data>
+  if (isValueAction(action)) {
+    return assoc(state, 'data', valueReducer(state.data, action))
   }
+  return commonReducer(state, action) as FormState<Data>
 }

@@ -1,6 +1,6 @@
 import type { AnyType, FieldPath } from '../types'
 
-import { Flex } from 'libraries/ui'
+import { Button, Flex } from 'libraries/ui'
 
 import { type ConnectedFieldProps, ConnectedInput } from './ConnectedInput'
 import { type ListItem } from './dnd'
@@ -15,7 +15,7 @@ export function RepeatingField<Output extends Input & ListItem, Extra, Input, Da
 ) {
   // TODO: flex as itemElement
   return <RepeatingSection label={label} path={path} accepts={accepts} itemType={itemType}>
-    {({ dragHandle, id, path: itemPath, index }) =>
+    {({ dragHandle, id, path: itemPath, index, onRemove }) =>
       <Flex>
         <ConnectedInput<Output, Extra, Input, Data>
           id={String(id)}
@@ -23,6 +23,7 @@ export function RepeatingField<Output extends Input & ListItem, Extra, Input, Da
           component={component}
           {...extra as Extra & Omit<ConnectedFieldProps<Output, Extra, Input, Data>, 'path' | 'component'>} />
         {dragHandle}
+        <Button intent="danger" icon="cross" onClick={onRemove} />
       </Flex>
     }
   </RepeatingSection>

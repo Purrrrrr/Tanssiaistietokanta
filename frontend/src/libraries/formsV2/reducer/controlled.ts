@@ -3,7 +3,7 @@ import { type Reducer, useCallback, useEffect, useReducer, useRef } from 'react'
 import type { FormAction, FormReducerResult, FormState } from './types'
 
 import { type CommonFormState, commonReducer, CommonReducerAction, initialState } from './reducers/commonReducer'
-import { valueReducer } from './reducers/valueReducer'
+import { isValueAction, valueReducer } from './reducers/valueReducer'
 import { debugReducer } from './utils/debug'
 import { useSubscriptions } from './utils/useSubscriptions'
 
@@ -14,8 +14,7 @@ export function useFormReducer<Data>(externalValue: Data, onChange: (changed: Da
   const latestValue = useRef(externalValue)
   const { subscribe, trigger } = useSubscriptions<FormState<Data>>()
 
-  const result = useReducer<Reducer<CommonFormState, CommonReducerAction>>(debuggingCommonReducer, initialState)
-  const [state, dispatch_r] = result
+  const [state, dispatch_rest] = useReducer<Reducer<CommonFormState, CommonReducerAction>>(debuggingCommonReducer, initialState)
 
   useEffect(
     () => { trigger({ ...state, data: externalValue }) },
@@ -24,20 +23,15 @@ export function useFormReducer<Data>(externalValue: Data, onChange: (changed: Da
 
   const dispatch = useCallback(
     (action: FormAction<Data>) => {
-      switch (action.type) {
-        case 'EXTERNAL_CHANGE':
-        case 'CHANGE':
-        case 'MOVE_ITEM': {
-          const newValue = debuggingValueReducer(latestValue.current, action)
-          onChange(newValue)
-          latestValue.current = newValue
-          break
-        }
-        default:
-          dispatch_r(action)
+      if (isValueAction(action)) {
+        const newValue = debuggingValueReducer(latestValue.current, action)
+        onChange(newValue)
+        latestValue.current = newValue
+      } else {
+        dispatch_rest(action)
       }
     },
-    [onChange, dispatch_r]
+    [onChange, dispatch_rest]
   )
 
   return {

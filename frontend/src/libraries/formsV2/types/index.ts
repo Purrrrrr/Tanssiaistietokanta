@@ -1,4 +1,4 @@
-export type { AnyType, DataPath, FieldPath, GenericPath } from './paths'
+export type { AnyType, DataPath, FieldPath, GenericPath, ListItem, ListPath } from './paths'
 export { toArrayPath } from './paths'
 export type { ValueAt } from './valueAt'
 

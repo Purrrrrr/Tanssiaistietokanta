@@ -25,6 +25,15 @@ export type ValueAction<Data> = {
   fromIndex: number
   to: GenericPath
   toIndex: number
+} | {
+  type: 'REMOVE_ITEM'
+  path: GenericPath
+  index: number
+} | {
+  type: 'ADD_ITEM'
+  path: GenericPath
+  index: number
+  value: unknown
 }
 
 export interface ValidationAction {
