@@ -15,10 +15,8 @@ export const FormContext = createContext<FormStateContext<unknown>>({
   readOnly: true,
   getState() { throw Error('No form context') },
   getValueAt() { throw Error('No form context') },
-  dispatch() {},
-  subscribe() {
-    return () => {}
-  },
+  dispatch() { throw Error('No form context') },
+  subscribe() { throw Error('No form context') },
 })
 
 export function useFormContext<D>(): FormStateContext<D> {

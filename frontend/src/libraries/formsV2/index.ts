@@ -1,6 +1,6 @@
 import { type ComponentProps, type ComponentType, type ReactElement } from 'react'
 
-import type { ValueAt } from './types'
+import type { ListPath, ValueAt } from './types'
 
 import { type ListItem } from './components/dnd'
 import { type FieldComponent, type FieldProps, asFormField, Field } from './components/Field'
@@ -11,7 +11,7 @@ import { type RepeatingFieldProps, RepeatingField } from './components/Repeating
 import { RepeatingSection, RepeatingSectionProps } from './components/RepeatingSection'
 import { RepeatingTableRows, RepeatingTableRowsProps } from './components/RepeatingTableRows'
 import { type SelfLabeledFieldComponent, asSelfLabeledFormField } from './components/SelflabeledField'
-import { useChangeAt, useValueAt } from './hooks'
+import { useAddItem, useAddItemAt, useChangeAt, useRemoveItem, useRemoveItemAt, useValueAt } from './hooks'
 
 export { TextInput }
 export type { FieldInputComponentProps }
@@ -40,6 +40,10 @@ interface FieldsFor<Data, AcceptedDroppableTypes = null> {
 interface HooksFor<Data> {
   useValueAt: <Path extends string>(path: Path) => ValueAt<Data, Path>
   useChangeAt: <Path extends string>(path: Path) => (value: ValueAt<Data, Path>) => unknown
+  useAddItem: () => <Path extends ListPath<Data>>(path: Path, value: ValueAt<Data, `${Path}.${number}`>, index?: number) => unknown
+  useAddItemAt: <Path extends ListPath<Data>>(path: Path) => (value: ValueAt<Data, `${Path}.${number}`>, index?: number) => unknown
+  useRemoveItem: () => <Path extends ListPath<Data>>(path: Path, index: number) => unknown
+  useRemoveItemAt: <Path extends ListPath<Data>>(path: Path) => (index: number) => unknown
 }
 
 const form = {
@@ -54,6 +58,10 @@ const form = {
   RepeatingField,
   useValueAt,
   useChangeAt,
+  useAddItem,
+  useAddItemAt,
+  useRemoveItem,
+  useRemoveItemAt,
 }
 
 export function formFor<Data, AcceptedDroppableTypes = null>(): FormFor<Data, AcceptedDroppableTypes> {
