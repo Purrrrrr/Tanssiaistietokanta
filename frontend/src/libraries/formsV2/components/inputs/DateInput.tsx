@@ -2,6 +2,9 @@ import 'react-date-picker/dist/DatePicker.css'
 import 'react-calendar/dist/Calendar.css'
 import DatePicker, { DatePickerProps } from 'react-date-picker'
 
-export type DateInputProps = DatePickerProps
+export interface DateInputProps extends DatePickerProps {
+  readOnly?: boolean
+}
 
-export const DateInput = (props: DatePickerProps) => (<DatePicker locale="fi-FI" {...props} />)
+export const DateInput = ({ readOnly, ...props }: DateInputProps) =>
+  (<DatePicker locale="fi-FI" {...props} disabled={readOnly} />)
