@@ -25,7 +25,7 @@ export function SlideshowEditor({ program }: {program: EventProgramSettings}) {
     onChangeSlide: (slide) => navigate(`../slides/${slide.id}`)
   })
   const deferredCurrentSlide = useDeferredValue(currentSlide)
-  const isStale = deferredCurrentSlide !== currentSlide
+  const isStale = deferredCurrentSlide.id !== currentSlide.id
 
   return <section className="slideshowEditor">
     <div className="main-toolbar">
