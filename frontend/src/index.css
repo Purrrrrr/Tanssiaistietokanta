@@ -51,10 +51,6 @@ body {
   grid-area: header;
 }
 
-#breadcrumbs img {
-  margin-right: 6px;
-}
-
 #main-content {
   grid-area: main;
   padding-inline: var(--main-margin-size);

@@ -22,7 +22,7 @@ const DanceList = lazy(() => import('pages/events/print/DanceList'))
 
 export default function MainRoutes() {
   return <>
-    <Breadcrumb text={<><img src="/fan32.png" alt=""/>{' '}<T msg="app.title"/></>} />
+    <Breadcrumb text={<><img className="mr-2" src="/fan32.png" alt=""/>{' '}<T msg="app.title"/></>} />
     <Suspense>
       <Routes>
         <Route index element={<EventList/>} />
