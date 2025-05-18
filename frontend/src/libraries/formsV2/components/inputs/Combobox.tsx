@@ -1,5 +1,6 @@
 import { ReactNode, useState } from 'react'
-import { useCombobox } from 'downshift'
+import classNames from 'classnames'
+import { useCombobox, UseComboboxState, UseComboboxStateChangeOptions } from 'downshift'
 
 import { FieldInputComponentProps } from './types'
 
@@ -15,7 +16,10 @@ export function Combobox<T>({
   value, onChange, id, readOnly,
   placeholder = '',
 }: ComboboxProps<T>) {
-  const [search, setSearch] = useState('')
+  'use no memo'
+  const [filteredItems, setFilteredItems] = useState<T[]>(items)
+  const selectionToStr = toDownShiftItemToString(itemToString)
+  const selected = value ?? null
   const {
     isOpen,
     getInputProps,
@@ -23,14 +27,19 @@ export function Combobox<T>({
     getMenuProps,
     getItemProps,
     highlightedIndex,
-    selectItem,
   } = useCombobox({
     id,
     inputId: id,
-    items,
-    selectedItem: value,
-    onSelectedItemChange: ({ selectedItem }) => onChange(selectedItem),
-    itemToString: toDownShiftItemToString(itemToString, placeholder),
+    items: filteredItems,
+    selectedItem: selected,
+    onSelectedItemChange: ({ selectedItem }) => {
+      onChange(selectedItem)
+    },
+    onInputValueChange: ({ inputValue}) => {
+      setFilteredItems(items.filter(item => selectionToStr(item).includes(inputValue)))
+    },
+    stateReducer: supplementaryReducer,
+    itemToString: selectionToStr,
   })
 
   if (readOnly) {
@@ -39,11 +48,9 @@ export function Combobox<T>({
     </div>
   }
 
-  const filteredItems = items
-
   return <div
+    className="flex"
     style={{
-      display: 'flex',
       flexDirection: 'column',
       width: 'fit-content',
       justifyContent: 'center',
@@ -52,32 +59,31 @@ export function Combobox<T>({
     }}
   >
     <button
-      style={{padding: '4px 8px'}}
+      className="px-4 py-2 text-white bg-blue-500"
       aria-label="toggle menu"
       {...getToggleButtonProps()}
     >
       {value ? renderItem(value) : placeholder}
       {isOpen ? <>&#8593;</> : <>&#8595;</>}
     </button>
-    <div style={{display: isOpen ? 'block' : 'none'}}>
-      <input
-        placeholder={placeholder}
-        {...getInputProps()}
-        value={search}
-        onChange={e => setSearch(e.target.value)}
-      />
-      <button
-        style={{padding: '4px 8px'}}
-        aria-label="toggle menu"
-        data-testid="clear-button"
-        onClick={() => selectItem(null)}
-      >
-        &#10007;
-      </button>
+    <input
+      className="p-2 border"
+      placeholder={placeholder}
+      {...getInputProps({
+        onKeyDown: e => {
+          if (e.key === 'Home' || e.key === 'End') {
+            (e as unknown as Record<string, boolean>).preventDownshiftDefault = true
+          }
+        }
+      })}
+    />
+    <div className={classNames(
+      isOpen ? 'block' : 'hidden',
+      'border'
+    )}>
       <ul
         {...getMenuProps()}
         style={{
-          listStyle: 'none',
           width: '100%',
           padding: '0',
           margin: '4px 0 0 0',
@@ -105,10 +111,18 @@ export function Combobox<T>({
 }
 
 function toDownShiftItemToString<T>(
-  itemToString: ((item: T) => string) | undefined, placeholder: string
-): ((item: T | null) => string) | undefined {
-  if (itemToString) {
-    return item => item ? itemToString(item) : placeholder
+  itemToString: (item: T) => string
+): ((item: T | null) => string) {
+  return item => item ? itemToString(item) : ''
+}
+
+function supplementaryReducer<T>(_state: UseComboboxState<T>, { type, changes }: UseComboboxStateChangeOptions<T>): Partial<UseComboboxState<T>> {
+  console.log(type, changes)
+  switch (type) {
+    case useCombobox.stateChangeTypes.InputKeyDownEscape:
+      return {
+        isOpen: false,
+      }
   }
-  return undefined
+  return changes
 }
