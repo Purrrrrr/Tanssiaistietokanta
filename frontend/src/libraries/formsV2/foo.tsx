@@ -41,6 +41,10 @@ export default function Foo() {
   </Form>
 }
 
+const choices = [
+  'maanantai', 'tiistai', 'keskiviikko', 'torstai', 'perjantai', 'lauantai', 'sunnuntai',
+]
+
 function FooContents() {
   const [s, setS] = useState<string | null>('a')
   const addToL = useAddItemAt('l')
@@ -50,7 +54,7 @@ function FooContents() {
 
   return <>
     <Combobox
-      items={['a', 'b']}
+      items={choices}
       value={s}
       onChange={setS}
       id="test"
