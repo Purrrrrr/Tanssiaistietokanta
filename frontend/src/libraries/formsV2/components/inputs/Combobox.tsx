@@ -1,8 +1,11 @@
 import { ReactNode, useState } from 'react'
+import {Classes} from '@blueprintjs/core'
 import classNames from 'classnames'
 import { useCombobox, UseComboboxState, UseComboboxStateChangeOptions } from 'downshift'
 
 import { FieldInputComponentProps } from './types'
+
+import { Button } from 'libraries/ui'
 
 interface ComboboxProps<T> extends FieldInputComponentProps<T | null> {
   items: T[]
@@ -58,16 +61,15 @@ export function Combobox<T>({
       alignSelf: 'center',
     }}
   >
-    <button
-      className="px-4 py-2 text-white bg-blue-500"
+    <Button
       aria-label="toggle menu"
       {...getToggleButtonProps()}
     >
       {value ? renderItem(value) : placeholder}
       {isOpen ? <>&#8593;</> : <>&#8595;</>}
-    </button>
+    </Button>
     <input
-      className="p-2 border"
+      className={Classes.INPUT}
       placeholder={placeholder}
       {...getInputProps({
         onKeyDown: e => {
