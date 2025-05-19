@@ -2,6 +2,8 @@ import { useState } from 'react'
 
 import { Button, Flex } from 'libraries/ui'
 
+import { FilterableSelect } from './components/inputs/selectors/FilterableSelect'
+import { Select } from './components/inputs/selectors/Select'
 import { Combobox, FieldInputComponentProps, formFor, TextInput } from './index'
 
 interface Data {
@@ -47,22 +49,43 @@ const choices = [
 
 function FooContents() {
   const [s, setS] = useState<string | null>('a')
+  const [s2, setS2] = useState<string | null>('a')
   const addToL = useAddItemAt('l')
   const addItem = useAddItem()
   const removeFromL = useRemoveItemAt('l')
   const removeItem = useRemoveItem()
 
   return <>
-    <Combobox
+    <FilterableSelect
       items={choices}
       value={s}
       onChange={setS}
       id="test"
       placeholder="valitse"
-      renderItem={String}
+      itemToString={String}
+      itemIcon={item => <span className="inline-block p-1 mr-1 w-6 text-center bg-amber-500 rounded-full">{(item ?? 'X').slice(0, 1)}</span>}
     />
-    <p>{s}</p>
+    <Select
+      items={choices}
+      value={s2}
+      onChange={setS2}
+      id="test2"
+      placeholder="valitse"
+      itemToString={String}
+      itemIcon={item => <span className="inline-block p-1 mr-1 w-6 text-center bg-amber-500 rounded-full">{(item ?? 'X').slice(0, 1)}</span>}
+    />
     <Field.Date path="rangeStart" label="Start" locale="fi-FI" />
+    {false &&
+      <Combobox
+        items={choices}
+        value={s}
+        onChange={setS}
+        id="test"
+        placeholder="valitse"
+        renderItem={String}
+      />
+    }
+    <p>{s}</p>
     <Field.DateRange startPath="rangeStart" endPath="rangeEnd" label="Range" />
     <Field.Custom label="aaa" path="a" required component={TextInput} />
     <Field.Repeating path="s" label="Strings" component={TextInput} />
