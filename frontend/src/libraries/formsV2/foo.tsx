@@ -57,22 +57,14 @@ function FooContents() {
 
   return <>
     <FilterableSelect
+      aria-label="jotakin"
       items={choices}
       value={s}
       onChange={setS}
       id="test"
       placeholder="valitse"
       itemToString={String}
-      itemIcon={item => <span className="inline-block p-1 mr-1 w-6 text-center bg-amber-500 rounded-full">{(item ?? 'X').slice(0, 1)}</span>}
-    />
-    <Select
-      items={choices}
-      value={s2}
-      onChange={setS2}
-      id="test2"
-      placeholder="valitse"
-      itemToString={String}
-      itemIcon={item => <span className="inline-block p-1 mr-1 w-6 text-center bg-amber-500 rounded-full">{(item ?? 'X').slice(0, 1)}</span>}
+      itemIcon={item => <Ball name={item} />}
     />
     <Field.Date path="rangeStart" label="Start" locale="fi-FI" />
     {false &&
@@ -102,6 +94,16 @@ function FooContents() {
       }
     </RepeatingSection>
     <Button intent="primary" icon="edit" onClick={() => addItem('l', { _id: id(), value: '' })} />
+    <Select
+      aria-label="jotakin"
+      items={choices}
+      value={s2}
+      onChange={setS2}
+      id="test2"
+      placeholder="valitse"
+      itemToString={String}
+      itemIcon={item => <Ball name={item} />}
+    />
     <RepeatingSection<L> path="l2" label="l 2" accepts="l" itemType="l">
       {({ dragHandle, path, index, onRemove }) =>
         <Flex>
@@ -132,4 +134,10 @@ function FooContents() {
 let i = 0
 function id() {
   return `id-${i++}`
+}
+
+function Ball({ name }: { name?: string | null }) {
+  return <span aria-hidden className="inline-block p-1 mr-1 w-6 text-center bg-amber-500 rounded-full">
+    {(name ?? 'X').slice(0, 1)}
+  </span>
 }

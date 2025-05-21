@@ -4,6 +4,8 @@ import classNames from 'classnames'
 
 import { Button } from 'libraries/ui'
 
+import { useFormTranslation } from '../../../localization'
+
 interface DropdownContainerProps {
   children: ReactNode
 }
@@ -16,12 +18,20 @@ export function DropdownContainer({ children }: DropdownContainerProps) {
 
 type DropdownButtonProps = ComponentProps<typeof Button> & {
   onClick?: React.MouseEventHandler
+  label?: string
+  chosenValue?: string | null
 }
 
-export const DropdownButton = forwardRef<HTMLButtonElement, DropdownButtonProps>((props: DropdownButtonProps, ref) => {
+export const DropdownButton = forwardRef<HTMLButtonElement, DropdownButtonProps>(({ label, chosenValue, ...props }: DropdownButtonProps, ref) => {
+  const value = useFormTranslation('selector.value')
+  const choose = useFormTranslation('selector.choose', { fieldName: label ?? value })
+  const chosen = useFormTranslation('selector.chosen', { value: chosenValue ?? '' })
+
+  const ariaLabel = `${choose}. ${chosenValue && chosen}`
+
   return <Button
     ref={ref}
-    aria-label="toggle menu"
+    aria-label={ariaLabel}
     {...props}
     rightIcon="double-caret-vertical"
   />

@@ -21,7 +21,7 @@ export function Field<Output extends Input, Extra, Input, Data = AnyType>({conta
     helperText={helperText}
     containerClassName={containerClassName}
   >
-    <ConnectedInput id={id} {...rest as ConnectedFieldProps<Output, Extra, Input, Data> & Extra} />
+    <ConnectedInput id={id} aria-label={label} {...rest as ConnectedFieldProps<Output, Extra, Input, Data> & Extra} />
   </FieldContainer>
 }
 

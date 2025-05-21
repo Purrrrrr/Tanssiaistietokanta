@@ -17,7 +17,7 @@ interface ComboboxProps<T> extends FieldInputComponentProps<T | null> {
 export function Select<T>({
   items, itemToString = String, itemIcon,
   value = null, onChange, id, readOnly,
-  placeholder = ''
+  placeholder = '', 'aria-label': ariaLabel,
 }: ComboboxProps<T>) {
   'use no memo'
   const valueToString = acceptNulls(itemToString, placeholder)
@@ -41,6 +41,8 @@ export function Select<T>({
   return <DropdownContainer>
     <DropdownButton
       {...getToggleButtonProps({ onClick: preventDownshiftDefaultWhen(e => e.detail === 0) })}
+      label={ariaLabel}
+      chosenValue={valueToString(value)}
       disabled={readOnly}
     >
       {itemIcon?.(value)}

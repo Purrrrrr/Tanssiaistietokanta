@@ -11,6 +11,6 @@ export function preventDownshiftDefaultWhen<T>(condition: (event: T) => boolean)
   }
 }
 
-export function preventDownshiftDefault<T>(event: T) {
+function preventDownshiftDefault<T>(event: T) {
   (event as unknown as Record<string, boolean>).preventDownshiftDefault = true
 }
