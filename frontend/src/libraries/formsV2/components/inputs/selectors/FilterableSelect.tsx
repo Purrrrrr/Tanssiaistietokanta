@@ -6,7 +6,7 @@ import { FieldInputComponentProps } from '../types'
 
 import { Dropdown, DropdownButton, DropdownContainer } from './Dropdown'
 import { Menu, MenuItem } from './Menu'
-import { acceptNulls, preventDownshiftDefault, preventDownshiftDefaultWhen } from './utils'
+import { acceptNulls, preventDownshiftDefaultWhen } from './utils'
 
 interface ComboboxProps<T> extends FieldInputComponentProps<T | null> {
   items: T[]
@@ -18,7 +18,7 @@ interface ComboboxProps<T> extends FieldInputComponentProps<T | null> {
 export function FilterableSelect<T>({
   items, itemToString = String, itemIcon,
   value = null, onChange, id, readOnly,
-  placeholder = ''
+  placeholder = '', 'aria-label': ariaLabel,
 }: ComboboxProps<T>) {
   'use no memo'
   const valueToString = acceptNulls(itemToString, placeholder)
@@ -53,7 +53,11 @@ export function FilterableSelect<T>({
   })
 
   return <DropdownContainer>
-    <DropdownButton {...getToggleButtonProps({ ref: buttonRef })} tabIndex={isOpen ? -1 : 0} disabled={readOnly}>
+    <DropdownButton
+      {...getToggleButtonProps({ ref: buttonRef })} tabIndex={isOpen ? -1 : 0} disabled={readOnly}
+      label={ariaLabel}
+      chosenValue={valueToString(value)}
+    >
       {itemIcon?.(value)}
       {valueToString(value)}
     </DropdownButton>

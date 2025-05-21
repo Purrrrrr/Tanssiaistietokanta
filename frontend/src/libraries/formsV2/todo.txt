@@ -37,6 +37,7 @@ TODO:
 * date time components (choose better implementation?)
   Selectors (choose better component?)
     Autocomplete field 
+    Selector
     Menubutton
   switchFor
   Fix Duration field?
@@ -53,6 +54,7 @@ TODO:
     a11y-announcement element for list editor and such?? Is it needed? announcement API?
   TextArea: remove from Workshop Editor
   Fix date components somewhat
+  Validation translations
 
 /* Need to export:
 ActionButton as Button
