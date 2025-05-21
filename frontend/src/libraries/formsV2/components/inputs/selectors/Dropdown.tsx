@@ -1,6 +1,8 @@
-import { type ReactNode, useCallback, useLayoutEffect, useRef, useState } from 'react'
+import { type ReactNode, ComponentProps, forwardRef, useCallback, useLayoutEffect, useRef, useState } from 'react'
 import { useScrollPosition } from '@n8tb1t/use-scroll-position'
 import classNames from 'classnames'
+
+import { Button } from 'libraries/ui'
 
 interface DropdownContainerProps {
   children: ReactNode
@@ -11,6 +13,19 @@ export function DropdownContainer({ children }: DropdownContainerProps) {
     {children}
   </div>
 }
+
+type DropdownButtonProps = ComponentProps<typeof Button> & {
+  onClick?: React.MouseEventHandler
+}
+
+export const DropdownButton = forwardRef<HTMLButtonElement, DropdownButtonProps>((props: DropdownButtonProps, ref) => {
+  return <Button
+    ref={ref}
+    aria-label="toggle menu"
+    {...props}
+    rightIcon="double-caret-vertical"
+  />
+})
 
 interface DropdrownProps {
   open: boolean
