@@ -4,10 +4,9 @@ import { useCombobox, UseComboboxState, UseComboboxStateChangeOptions } from 'do
 
 import { FieldInputComponentProps } from '../types'
 
-import { Button } from 'libraries/ui'
-
-import { Dropdown, DropdownContainer } from './Dropdown'
+import { Dropdown, DropdownButton, DropdownContainer } from './Dropdown'
 import { Menu, MenuItem } from './Menu'
+import { acceptNulls, preventDownshiftDefault, preventDownshiftDefaultWhen } from './utils'
 
 interface ComboboxProps<T> extends FieldInputComponentProps<T | null> {
   items: T[]
@@ -22,6 +21,7 @@ export function FilterableSelect<T>({
   placeholder = ''
 }: ComboboxProps<T>) {
   'use no memo'
+  const valueToString = acceptNulls(itemToString, placeholder)
   const buttonRef = useRef<HTMLButtonElement | null>(null)
   const [filteredItems, setFilteredItems] = useState<T[]>(items)
   const {
@@ -41,7 +41,7 @@ export function FilterableSelect<T>({
       onChange(selectedItem)
     },
     onInputValueChange: ({ inputValue}) => {
-      setFilteredItems(items.filter(item => itemToString(item).includes(inputValue)))
+      setFilteredItems(items.filter(item => valueToString(item).includes(inputValue)))
     },
     onIsOpenChange: (a) => {
       if (!a.isOpen && a.type !== useCombobox.stateChangeTypes.InputBlur) {
@@ -49,36 +49,19 @@ export function FilterableSelect<T>({
       }
     },
     stateReducer: supplementaryReducer,
-    itemToString: toDownShiftItemToString(itemToString),
+    itemToString: valueToString,
   })
 
-  if (readOnly) {
-    return <div>
-      {itemIcon?.(value)}
-      {value ? itemToString(value) : placeholder}
-    </div>
-  }
-
   return <DropdownContainer>
-    <Button
-      aria-label="toggle menu"
-      {...getToggleButtonProps({ ref: buttonRef })}
-      tabIndex={isOpen ? -1 : 0}
-      rightIcon="double-caret-vertical"
-    >
+    <DropdownButton {...getToggleButtonProps({ ref: buttonRef })} tabIndex={isOpen ? -1 : 0} disabled={readOnly}>
       {itemIcon?.(value)}
-      {value ? itemToString(value) : placeholder}
-    </Button>
+      {valueToString(value)}
+    </DropdownButton>
     <Dropdown open={isOpen}>
       <input
         className={Classes.INPUT}
-        placeholder={placeholder}
         {...getInputProps({
-          onKeyDown: e => {
-            if (e.key === 'Home' || e.key === 'End') {
-              (e as unknown as Record<string, boolean>).preventDownshiftDefault = true
-            }
-          }
+          onKeyDown: preventDownshiftDefaultWhen(e => e.key === 'Home' || e.key === 'End')
         })}
       />
       <Menu {...getMenuProps()}>
@@ -89,7 +72,7 @@ export function FilterableSelect<T>({
               {...getItemProps({ item, index })}
             >
               {itemIcon?.(item)}
-              {itemToString(item)}
+              {valueToString(item)}
             </MenuItem>
           ))}
       </Menu>
@@ -97,14 +80,7 @@ export function FilterableSelect<T>({
   </DropdownContainer>
 }
 
-function toDownShiftItemToString<T>(
-  itemToString: (item: T) => string
-): ((item: T | null) => string) {
-  return item => item ? itemToString(item) : ''
-}
-
 function supplementaryReducer<T>(_state: UseComboboxState<T>, { type, changes }: UseComboboxStateChangeOptions<T>): Partial<UseComboboxState<T>> {
-  console.log(type, changes)
   switch (type) {
     case useCombobox.stateChangeTypes.ItemClick:
     case useCombobox.stateChangeTypes.InputBlur:

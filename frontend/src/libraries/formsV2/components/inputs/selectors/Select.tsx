@@ -3,10 +3,9 @@ import { useSelect } from 'downshift'
 
 import { FieldInputComponentProps } from '../types'
 
-import { Button } from 'libraries/ui'
-
-import { Dropdown, DropdownContainer } from './Dropdown'
+import { Dropdown, DropdownButton, DropdownContainer } from './Dropdown'
 import { Menu, MenuItem } from './Menu'
+import { acceptNulls, preventDownshiftDefaultWhen } from './utils'
 
 interface ComboboxProps<T> extends FieldInputComponentProps<T | null> {
   items: T[]
@@ -21,8 +20,9 @@ export function Select<T>({
   placeholder = ''
 }: ComboboxProps<T>) {
   'use no memo'
+  const valueToString = acceptNulls(itemToString, placeholder)
   const {
-    isOpen:a,
+    isOpen,
     getToggleButtonProps,
     getMenuProps,
     getItemProps,
@@ -35,33 +35,17 @@ export function Select<T>({
       onChange(selectedItem)
     },
     stateReducer: (...args) => { console.log(...args); return args[1].changes },
-    itemToString: toDownShiftItemToString(itemToString),
+    itemToString: valueToString,
   })
-  const isOpen = a // true
-
-  if (readOnly) {
-    return <div>
-      {itemIcon?.(value)}
-      {value ? itemToString(value) : placeholder}
-    </div>
-  }
 
   return <DropdownContainer>
-    <Button
-      aria-label="toggle menu"
-      {...getToggleButtonProps({
-        onClick: e => {
-          if (e.detail === 0) {
-            (e as unknown as Record<string, boolean>).preventDownshiftDefault = true
-          }
-        },
-      })}
-      tabIndex={isOpen ? -1 : 0}
-      rightIcon="double-caret-vertical"
+    <DropdownButton
+      {...getToggleButtonProps({ onClick: preventDownshiftDefaultWhen(e => e.detail === 0) })}
+      disabled={readOnly}
     >
       {itemIcon?.(value)}
-      {value ? itemToString(value) : placeholder}
-    </Button>
+      {valueToString(value)}
+    </DropdownButton>
     <Dropdown open={isOpen}>
       <Menu {...getMenuProps()}>
         {isOpen &&
@@ -78,10 +62,4 @@ export function Select<T>({
       </Menu>
     </Dropdown>
   </DropdownContainer>
-}
-
-function toDownShiftItemToString<T>(
-  itemToString: (item: T) => string
-): ((item: T | null) => string) {
-  return item => item ? itemToString(item) : ''
 }
