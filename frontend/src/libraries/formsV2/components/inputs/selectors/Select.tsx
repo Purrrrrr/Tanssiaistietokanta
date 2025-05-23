@@ -1,26 +1,19 @@
-import { ReactNode } from 'react'
 import { useSelect } from 'downshift'
 
-import { FieldInputComponentProps } from '../types'
+import { SelectorProps } from './types'
 
 import { Dropdown, DropdownButton, DropdownContainer } from './Dropdown'
 import { Menu, MenuItem } from './Menu'
-import { acceptNulls, preventDownshiftDefaultWhen } from './utils'
-
-interface ComboboxProps<T> extends FieldInputComponentProps<T | null> {
-  items: T[]
-  placeholder?: string
-  itemToString?: (item: T) => string
-  itemIcon?: (item: T | null) => ReactNode
-}
+import { acceptNulls, preventDownshiftDefaultWhen, useItems } from './utils'
 
 export function Select<T>({
-  items, itemToString = String, itemIcon,
+  items: getItems, itemToString = String, itemIcon,
   value = null, onChange, id, readOnly,
   placeholder = '', 'aria-label': ariaLabel,
-}: ComboboxProps<T>) {
+}: SelectorProps<T>) {
   'use no memo'
   const valueToString = acceptNulls(itemToString, placeholder)
+  const [items, updateItems] = useItems(getItems)
   const {
     isOpen,
     getToggleButtonProps,
@@ -31,11 +24,13 @@ export function Select<T>({
     id,
     items,
     selectedItem: value,
-    onSelectedItemChange: ({ selectedItem }) => {
-      onChange(selectedItem)
-    },
-    stateReducer: (...args) => { console.log(...args); return args[1].changes },
     itemToString: valueToString,
+    onSelectedItemChange: ({ selectedItem }) => onChange(selectedItem),
+    onIsOpenChange: async (a) => {
+      if (a.isOpen) {
+        updateItems()
+      }
+    },
   })
 
   return <DropdownContainer>
