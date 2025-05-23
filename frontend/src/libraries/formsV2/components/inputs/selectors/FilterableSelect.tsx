@@ -1,29 +1,22 @@
-import { ReactNode, useRef, useState } from 'react'
+import { useRef } from 'react'
 import {Classes} from '@blueprintjs/core'
 import { useCombobox, UseComboboxState, UseComboboxStateChangeOptions } from 'downshift'
 
-import { FieldInputComponentProps } from '../types'
+import { SelectorProps } from './types'
 
 import { Dropdown, DropdownButton, DropdownContainer } from './Dropdown'
 import { Menu, MenuItem } from './Menu'
-import { acceptNulls, preventDownshiftDefaultWhen } from './utils'
-
-interface ComboboxProps<T> extends FieldInputComponentProps<T | null> {
-  items: T[]
-  placeholder?: string
-  itemToString?: (item: T) => string
-  itemIcon?: (item: T | null) => ReactNode
-}
+import { acceptNulls, preventDownshiftDefaultWhen, useFilteredItems } from './utils'
 
 export function FilterableSelect<T>({
   items, itemToString = String, itemIcon,
   value = null, onChange, id, readOnly,
   placeholder = '', 'aria-label': ariaLabel,
-}: ComboboxProps<T>) {
+}: SelectorProps<T>) {
   'use no memo'
   const valueToString = acceptNulls(itemToString, placeholder)
   const buttonRef = useRef<HTMLButtonElement | null>(null)
-  const [filteredItems, setFilteredItems] = useState<T[]>(items)
+  const [filteredItems, updateFilter] = useFilteredItems(items, itemToString)
   const {
     isOpen,
     getInputProps,
@@ -36,20 +29,18 @@ export function FilterableSelect<T>({
     inputId: id,
     items: filteredItems,
     selectedItem: value,
-    defaultInputValue: '',
-    onSelectedItemChange: ({ selectedItem }) => {
-      onChange(selectedItem)
-    },
-    onInputValueChange: ({ inputValue}) => {
-      setFilteredItems(items.filter(item => valueToString(item).includes(inputValue)))
-    },
-    onIsOpenChange: (a) => {
+    itemToString: valueToString,
+    onSelectedItemChange: ({ selectedItem }) => onChange(selectedItem),
+    onInputValueChange: async ({ inputValue}) => updateFilter(inputValue),
+    onIsOpenChange: async (a) => {
       if (!a.isOpen && a.type !== useCombobox.stateChangeTypes.InputBlur) {
         setTimeout(() => buttonRef.current?.focus?.(), 150)
       }
+      if (a.isOpen) {
+        updateFilter(valueToString(value))
+      }
     },
-    stateReducer: supplementaryReducer,
-    itemToString: valueToString,
+    stateReducer: clearInputOnBlurReducer,
   })
 
   return <DropdownContainer>
@@ -84,7 +75,7 @@ export function FilterableSelect<T>({
   </DropdownContainer>
 }
 
-function supplementaryReducer<T>(_state: UseComboboxState<T>, { type, changes }: UseComboboxStateChangeOptions<T>): Partial<UseComboboxState<T>> {
+function clearInputOnBlurReducer<T>(_state: UseComboboxState<T>, { type, changes }: UseComboboxStateChangeOptions<T>): Partial<UseComboboxState<T>> {
   switch (type) {
     case useCombobox.stateChangeTypes.ItemClick:
     case useCombobox.stateChangeTypes.InputBlur:

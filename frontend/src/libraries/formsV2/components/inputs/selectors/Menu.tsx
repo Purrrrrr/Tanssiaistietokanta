@@ -5,7 +5,7 @@ type MenuProps = Omit<ComponentProps<'ul'>, 'className'>
 
 export const Menu = forwardRef<HTMLUListElement, MenuProps>(
   function Menu(props: MenuProps, ref) {
-    return <ul className="overflow-auto max-h-[60dvh] " ref={ref} {...props} />
+    return <ul className="overflow-auto max-h-[60dvh]" ref={ref} {...props} />
   }
 )
 

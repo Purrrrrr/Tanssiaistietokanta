@@ -35,9 +35,10 @@ TODO:
 * Rethink bare field container needs
 * Range fields
 * date time components (choose better implementation?)
-  Selectors (choose better component?)
-    Autocomplete field 
-    Selector
+  Selectors
+  * Choose better component
+  * Selector
+  * Autocomplete field 
     Menubutton
   switchFor
   Fix Duration field?

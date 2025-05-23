@@ -4,7 +4,8 @@ import { Button, Flex } from 'libraries/ui'
 
 import { FilterableSelect } from './components/inputs/selectors/FilterableSelect'
 import { Select } from './components/inputs/selectors/Select'
-import { Combobox, FieldInputComponentProps, formFor, TextInput } from './index'
+import { Combobox, formFor, TextInput } from './index'
+import { AutocompleteInput } from './components/inputs/selectors/AutocompleteInput'
 
 interface Data {
   a: string
@@ -78,6 +79,15 @@ function FooContents() {
       />
     }
     <p>{s}</p>
+    <AutocompleteInput
+      items={choices}
+      value={s}
+      onChange={setS}
+      id="test3"
+      placeholder="valitse"
+      itemToString={String}
+      itemIcon={item => <Ball name={item} />}
+    />
     <Field.DateRange startPath="rangeStart" endPath="rangeEnd" label="Range" />
     <Field.Custom label="aaa" path="a" required component={TextInput} />
     <Field.Repeating path="s" label="Strings" component={TextInput} />
