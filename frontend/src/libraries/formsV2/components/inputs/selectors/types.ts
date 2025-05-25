@@ -6,7 +6,10 @@ export interface SelectorProps<T> extends FieldInputComponentProps<T | null> {
   items: Items<T>
   placeholder?: string
   itemToString?: (item: T) => string
+  itemRenderer?: (item: T) => ReactNode
   itemIcon?: (item: T | null) => ReactNode
+  itemClassName?: string
+  hilightedItemClassName?: string
 }
 
 export type Items<T> = T[] | ((filter: string) => Promise<T[]> | T[])

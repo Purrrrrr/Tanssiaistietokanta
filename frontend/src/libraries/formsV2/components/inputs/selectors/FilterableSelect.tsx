@@ -9,9 +9,10 @@ import { Menu, MenuItem } from './Menu'
 import { acceptNulls, preventDownshiftDefaultWhen, useFilteredItems } from './utils'
 
 export function FilterableSelect<T>({
-  items, itemToString = String, itemIcon,
+  items, itemToString = String, itemIcon, itemRenderer,
   value = null, onChange, id, readOnly,
   placeholder = '', 'aria-label': ariaLabel,
+  itemClassName, hilightedItemClassName,
 }: SelectorProps<T>) {
   'use no memo'
   const valueToString = acceptNulls(itemToString, placeholder)
@@ -37,7 +38,7 @@ export function FilterableSelect<T>({
         setTimeout(() => buttonRef.current?.focus?.(), 150)
       }
       if (a.isOpen) {
-        updateFilter(valueToString(value))
+        updateFilter('')
       }
     },
     stateReducer: clearInputOnBlurReducer,
@@ -64,10 +65,12 @@ export function FilterableSelect<T>({
           filteredItems.map((item, index) => (
             <MenuItem highlight={highlightedIndex === index}
               key={`${item}${index}`}
+              className={itemClassName}
+              hilightedClassName={hilightedItemClassName}
               {...getItemProps({ item, index })}
             >
               {itemIcon?.(item)}
-              {valueToString(item)}
+              {(itemRenderer ?? itemToString)(item)}
             </MenuItem>
           ))}
       </Menu>

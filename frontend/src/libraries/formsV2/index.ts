@@ -5,8 +5,11 @@ import type { ListPath, ValueAt } from './types'
 import { type ListItem } from './components/dnd'
 import { type FieldComponent, type FieldProps, asFormField, Field } from './components/Field'
 import { type FormProps, Form } from './components/Form'
-import type { DateInputProps, DateRangeInputProps, FieldInputComponent, FieldInputComponentProps, SwitchProps } from './components/inputs'
-import { Combobox, DateInput, DateRangeInput, MarkdownInput, Switch, TextInput } from './components/inputs'
+import type { DateInputProps, DateRangeInputProps, FieldInputComponent, FieldInputComponentProps, SelectorProps, SwitchProps } from './components/inputs'
+import {
+  AutocompleteInput, DateInput, DateRangeInput, FilterableSelect,
+  MarkdownInput, Select, selectorWithType, Switch, TextInput,
+} from './components/inputs'
 import { type Range, type RangeFieldComponent, type RangeFieldProps, asRangeField, RangeField} from './components/RangeField'
 import { type RepeatingFieldProps, RepeatingField } from './components/RepeatingField'
 import { RepeatingSection, RepeatingSectionProps } from './components/RepeatingSection'
@@ -14,7 +17,8 @@ import { RepeatingTableRows, RepeatingTableRowsProps } from './components/Repeat
 import { type SelfLabeledFieldComponent, asSelfLabeledFormField } from './components/SelflabeledField'
 import { useAddItem, useAddItemAt, useChangeAt, useRemoveItem, useRemoveItemAt, useValueAt } from './hooks/externalHookApi'
 
-export { Combobox, TextInput }
+export { withDefaults } from './withDefaults'
+export { TextInput }
 export type { FieldInputComponentProps }
 
 type FieldComponentFor<Data, Component> = Component extends ComponentType<infer Props>
@@ -23,9 +27,14 @@ type FieldComponentFor<Data, Component> = Component extends ComponentType<infer 
     : never
   : never
 
+type GetSelectorWithType<Data> = <T>() => FieldComponent<Data, T, SelectorProps<T>, T>
+
 interface FormFor<Data, AcceptedDroppableTypes = null> extends HooksFor<Data> {
   Form: ComponentType<FormProps<Data>>
   Field: FieldsFor<Data, AcceptedDroppableTypes>
+  selectWithType: GetSelectorWithType<Data>
+  autocompleteFieldWithType: GetSelectorWithType<Data>
+  filterableSelectWithType: GetSelectorWithType<Data>
   RepeatingSection: <O extends ListItem>(t: RepeatingSectionProps<O, Data, AcceptedDroppableTypes>) => ReactElement
   RepeatingTableRows: <O extends ListItem>(t: RepeatingTableRowsProps<O, Data, AcceptedDroppableTypes>) => ReactElement
 }
@@ -39,7 +48,6 @@ interface FieldsFor<Data, AcceptedDroppableTypes = null> {
   DateRange: RangeFieldComponent<Data, Date | null, DateRangeInputProps>
   Markdown: FieldComponentFor<Data, typeof MarkdownInput>
   Text: FieldComponentFor<Data, typeof TextInput>
-  //Combobox: FieldComponentFor<Data, typeof Combobox>
   Switch: SelfLabeledFieldComponent<Data, boolean, SwitchProps>
   Repeating: <O extends I & ListItem, E, I>(t: RepeatingFieldProps<O, E, I, Data, AcceptedDroppableTypes>) => ReactElement
 }
@@ -66,10 +74,12 @@ const form = {
     DateRange : asRangeField(DateRangeInput),
     Markdown: asFormField(MarkdownInput),
     Text: asFormField(TextInput),
-    //Combobox: asFormField(Combobox),
     Switch: asSelfLabeledFormField(Switch),
     Repeating: RepeatingField,
   },
+  selectWithType: <T>() => asFormField(selectorWithType<T>(Select)),
+  autocompleteFieldWithType: <T>() => asFormField(selectorWithType<T>(AutocompleteInput)),
+  filterableSelectWithType: <T>() => asFormField(selectorWithType<T>(FilterableSelect)),
   useValueAt,
   useChangeAt,
   useAddItem,

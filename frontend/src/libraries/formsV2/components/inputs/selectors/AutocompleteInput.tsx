@@ -8,9 +8,10 @@ import { Menu, MenuItem } from './Menu'
 import { acceptNulls, preventDownshiftDefaultWhen, useFilteredItems } from './utils'
 
 export function AutocompleteInput<T>({
-  items, itemToString = String, itemIcon,
+  items, itemToString = String, itemIcon, itemRenderer,
   value = null, onChange, id,
   placeholder = '',
+  itemClassName, hilightedItemClassName,
 }: SelectorProps<T>) {
   'use no memo'
   const valueToString = acceptNulls(itemToString, placeholder)
@@ -36,7 +37,6 @@ export function AutocompleteInput<T>({
       }
     },
     stateReducer: (state, { type, changes }) => {
-      console.log(state, type, changes)
       switch (type) {
         case useCombobox.stateChangeTypes.InputBlur:
           if (changes.highlightedIndex !== -1) break
@@ -69,10 +69,12 @@ export function AutocompleteInput<T>({
           filteredItems.map((item, index) => (
             <MenuItem highlight={highlightedIndex === index}
               key={`${item}${index}`}
+              className={itemClassName}
+              hilightedClassName={hilightedItemClassName}
               {...getItemProps({ item, index })}
             >
               {itemIcon?.(item)}
-              {valueToString(item)}
+              {(itemRenderer ?? itemToString)(item)}
             </MenuItem>
           ))}
       </Menu>

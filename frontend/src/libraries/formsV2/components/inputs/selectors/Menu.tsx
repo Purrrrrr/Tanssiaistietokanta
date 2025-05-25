@@ -9,12 +9,21 @@ export const Menu = forwardRef<HTMLUListElement, MenuProps>(
   }
 )
 
-interface MenuItemProps extends Omit<ComponentProps<'li'>, 'className'> {
+interface MenuItemProps extends ComponentProps<'li'> {
   highlight?: boolean
+  hilightedClassName?: string
 }
 
 export const MenuItem = forwardRef<HTMLLIElement, MenuItemProps>(
-  function MenuItem({ highlight, ...props }: MenuItemProps, ref) {
-    return <li ref={ref} {...props} className={classNames('flex items-center px-2 py-1.5 transition-colors', highlight && 'bg-blue-200' ) } />
+  function MenuItem({ highlight, className, hilightedClassName, ...props }: MenuItemProps, ref) {
+    return <li
+      ref={ref}
+      {...props}
+      className={classNames(
+        className ?? 'flex items-center px-2 py-1.5',
+        'transition-colors',
+        highlight && (hilightedClassName ?? 'bg-blue-200')
+      )}
+    />
   }
 )
