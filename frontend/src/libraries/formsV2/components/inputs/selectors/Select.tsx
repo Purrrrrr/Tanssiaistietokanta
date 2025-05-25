@@ -7,9 +7,10 @@ import { Menu, MenuItem } from './Menu'
 import { acceptNulls, preventDownshiftDefaultWhen, useItems } from './utils'
 
 export function Select<T>({
-  items: getItems, itemToString = String, itemIcon,
+  items: getItems, itemToString = String, itemIcon, itemRenderer,
   value = null, onChange, id, readOnly,
   placeholder = '', 'aria-label': ariaLabel,
+  itemClassName, hilightedItemClassName,
 }: SelectorProps<T>) {
   'use no memo'
   const valueToString = acceptNulls(itemToString, placeholder)
@@ -50,10 +51,12 @@ export function Select<T>({
             <MenuItem
               highlight={highlightedIndex === index}
               key={`${item}${index}`}
+              className={itemClassName}
+              hilightedClassName={hilightedItemClassName}
               {...getItemProps({ item, index })}
             >
               {itemIcon?.(item)}
-              {itemToString(item)}
+              {(itemRenderer ?? itemToString)(item)}
             </MenuItem>
           ))}
       </Menu>

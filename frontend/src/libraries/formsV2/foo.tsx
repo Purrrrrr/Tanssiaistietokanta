@@ -2,10 +2,10 @@ import { useState } from 'react'
 
 import { Button, Flex } from 'libraries/ui'
 
+import { AutocompleteInput } from './components/inputs/selectors/AutocompleteInput'
 import { FilterableSelect } from './components/inputs/selectors/FilterableSelect'
 import { Select } from './components/inputs/selectors/Select'
-import { Combobox, formFor, TextInput } from './index'
-import { AutocompleteInput } from './components/inputs/selectors/AutocompleteInput'
+import { formFor, TextInput, withDefaults } from './index'
 
 interface Data {
   a: string
@@ -26,6 +26,7 @@ interface L {
 const {
   Form, Field, RepeatingSection, RepeatingTableRows,
   useAddItem, useAddItemAt, useRemoveItem, useRemoveItemAt,
+  selectWithType,
 } = formFor<Data, {'l': L, 's': string}>()
 
 export default function Foo() {
@@ -48,6 +49,11 @@ const choices = [
   'maanantai', 'tiistai', 'keskiviikko', 'torstai', 'perjantai', 'lauantai', 'sunnuntai',
 ]
 
+const S = withDefaults(selectWithType<string>(), {
+  items: choices,
+  placeholder: 'Valitse',
+})
+
 function FooContents() {
   const [s, setS] = useState<string | null>('a')
   const [s2, setS2] = useState<string | null>('a')
@@ -57,6 +63,7 @@ function FooContents() {
   const removeItem = useRemoveItem()
 
   return <>
+    <S path="a" label="Viikonpäivä" />
     <FilterableSelect
       aria-label="jotakin"
       items={choices}
@@ -68,16 +75,6 @@ function FooContents() {
       itemIcon={item => <Ball name={item} />}
     />
     <Field.Date path="rangeStart" label="Start" locale="fi-FI" />
-    {false &&
-      <Combobox
-        items={choices}
-        value={s}
-        onChange={setS}
-        id="test"
-        placeholder="valitse"
-        renderItem={String}
-      />
-    }
     <p>{s}</p>
     <AutocompleteInput
       items={choices}
