@@ -29,19 +29,25 @@ const {
   selectWithType,
 } = formFor<Data, {'l': L, 's': string}>()
 
+const defaultData : Data = {
+  a: '', b: '',
+  l: [{_id: '1', value: 'a'}, {_id: '2', value: 'b'}, {_id: '5', value: 'a2'}, {_id: '6', value: 'b2'}],
+  l2: [{_id: '3', value: 'c'}, {_id: '4', value: 'd'}],
+  s: ['aa', 'bb'],
+  rangeStart: new Date(),
+  rangeEnd: new Date(),
+}
+
 export default function Foo() {
-  const [value, onChange] = useState<Data>({
-    a: '', b: '',
-    l: [{_id: '1', value: 'a'}, {_id: '2', value: 'b'}, {_id: '5', value: 'a2'}, {_id: '6', value: 'b2'}],
-    l2: [{_id: '3', value: 'c'}, {_id: '4', value: 'd'}],
-    s: ['aa', 'bb'],
-    rangeStart: new Date(),
-    rangeEnd: new Date(),
-  })
+  const [key, setKey] = useState<number>(0)
+  const [value, onChange] = useState<Data>(defaultData)
 
   return <Form value={value} onChange={onChange}>
     <h2>FOO</h2>
-    <FooContents />
+    <button type="button" className="border p-2 my-2 bg-fuchsia-800 text-white font-bold" onClick={() => { setKey(key + 1); onChange(defaultData) }}>
+      RESET
+    </button>
+    <FooContents key={key} />
   </Form>
 }
 
