@@ -12,6 +12,7 @@ const debuggingValueReducer = debugReducer(valueReducer)
 
 export function useFormReducer<Data>(externalValue: Data, onChange: (changed: Data) => unknown): FormReducerResult<Data> {
   const latestValue = useRef(externalValue)
+  latestValue.current = externalValue
   const { subscribe, trigger } = useSubscriptions<FormState<Data>>()
 
   const [state, dispatch_rest] = useReducer<Reducer<CommonFormState, CommonReducerAction>>(debuggingCommonReducer, initialState)
