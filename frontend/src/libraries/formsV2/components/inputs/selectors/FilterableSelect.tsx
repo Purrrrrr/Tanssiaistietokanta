@@ -25,6 +25,7 @@ export function FilterableSelect<T>({
     getMenuProps,
     getItemProps,
     highlightedIndex,
+    setHighlightedIndex,
   } = useCombobox({
     id,
     inputId: id,
@@ -32,7 +33,13 @@ export function FilterableSelect<T>({
     selectedItem: value,
     itemToString: valueToString,
     onSelectedItemChange: ({ selectedItem }) => onChange(selectedItem),
-    onInputValueChange: async ({ inputValue}) => updateFilter(inputValue),
+    onInputValueChange: async ({ inputValue}) => {
+      // Try to keep the hilighted item the same
+      const previousHilight = filteredItems[highlightedIndex]
+      const newItems = await updateFilter(inputValue)
+      const nextHilightedIndex = newItems.indexOf(previousHilight)
+      setHighlightedIndex(nextHilightedIndex > -1 ? nextHilightedIndex : 0)
+    },
     onIsOpenChange: async (a) => {
       if (!a.isOpen && a.type !== useCombobox.stateChangeTypes.InputBlur) {
         setTimeout(() => buttonRef.current?.focus?.(), 150)
@@ -78,7 +85,7 @@ export function FilterableSelect<T>({
   </DropdownContainer>
 }
 
-function clearInputOnBlurReducer<T>(_state: UseComboboxState<T>, { type, changes }: UseComboboxStateChangeOptions<T>): Partial<UseComboboxState<T>> {
+function clearInputOnBlurReducer<T>(state: UseComboboxState<T>, { type, changes }: UseComboboxStateChangeOptions<T>): Partial<UseComboboxState<T>> {
   switch (type) {
     case useCombobox.stateChangeTypes.ItemClick:
     case useCombobox.stateChangeTypes.InputBlur:
@@ -90,6 +97,7 @@ function clearInputOnBlurReducer<T>(_state: UseComboboxState<T>, { type, changes
       }
     case useCombobox.stateChangeTypes.InputKeyDownEscape:
       return {
+        selectedItem: state.selectedItem,
         isOpen: false,
         inputValue: '',
       }

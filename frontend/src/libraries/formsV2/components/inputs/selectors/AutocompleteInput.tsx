@@ -29,6 +29,7 @@ export function AutocompleteInput<T>({
     items: filteredItems,
     selectedItem: value,
     itemToString: valueToString,
+    defaultHighlightedIndex: 0,
     onSelectedItemChange: ({ selectedItem }) => onChange(selectedItem),
     onInputValueChange: async ({ inputValue}) => updateFilter(inputValue),
     onIsOpenChange: async (a) => {

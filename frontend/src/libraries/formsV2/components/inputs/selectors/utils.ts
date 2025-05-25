@@ -29,7 +29,11 @@ export function useItems<T>(getItems: Items<T>) {
 
 export function useFilteredItems<T>(items: Items<T>, itemToString: ItemToString<T>) {
   const [filteredItems, setFilteredItems] = useState<T[]>([])
-  const updateFilter = async (filter: string) => setFilteredItems(await getItems(items, filter, itemToString))
+  const updateFilter = async (filter: string) => {
+    const newItems = await getItems(items, filter, itemToString)
+    setFilteredItems(newItems)
+    return newItems
+  }
 
   return [
     filteredItems,
