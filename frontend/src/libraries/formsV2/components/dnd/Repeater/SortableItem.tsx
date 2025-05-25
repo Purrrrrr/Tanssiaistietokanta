@@ -2,8 +2,9 @@ import { type ElementType, type ReactNode, useMemo} from 'react'
 import {useSortable} from '@dnd-kit/sortable'
 import {CSS} from '@dnd-kit/utilities'
 
-import { useFormTranslation } from 'libraries/formsV2/localization'
 import {Icon} from 'libraries/ui'
+
+import { useFormTranslation } from '../../../localization'
 
 interface SortableItemProps<Data> {
   id: string | number
