@@ -89,7 +89,7 @@ type SelectorMenuProps<T> = {
 
 )
 type ItemRenderer<T> = (text: string | JSX.Element | undefined, ...rest: Parameters<BPItemRenderer<T>>) => ReturnType<BPItemRenderer<T>>
-export function SelectorMenu<T>({items, itemPredicate, selectedItem, getItemText, onSelect, filterable, searchPlaceholder, emptySearchText, itemRenderer = defaultItemRenderer} : SelectorMenuProps<T>) {
+function SelectorMenu<T>({items, itemPredicate, selectedItem, getItemText, onSelect, filterable, searchPlaceholder, emptySearchText, itemRenderer = defaultItemRenderer} : SelectorMenuProps<T>) {
   const [query, setQuery] = useState('')
   return <QueryList<T>
     query={query}

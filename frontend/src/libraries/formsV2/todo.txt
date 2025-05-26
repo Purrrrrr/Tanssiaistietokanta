@@ -41,9 +41,10 @@ TODO:
   * Selector
   * Autocomplete field 
   * Always hilight something
-    Menubutton
+  * Menubutton
     * Custom item renderer
     * Custom button renderer
+    Scroll into opened selector?
   switchFor
   More lazy loading for components?
   Fix Duration field?
@@ -72,13 +73,11 @@ formFor
 Input
 InputProps
 MarkdownEditor
-MenuButton
 NumberInput
 patchStrategy
 PatchStrategy
 RadioGroup
 Selector
-SelectorMenu
 SubmitButton
 Switch
 SyncState
