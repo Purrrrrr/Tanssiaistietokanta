@@ -43,7 +43,7 @@ TODO:
   * Always hilight something
     Menubutton
     * Custom item renderer
-      Custom button renderer
+    * Custom button renderer
   switchFor
   More lazy loading for components?
   Fix Duration field?

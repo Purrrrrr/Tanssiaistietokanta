@@ -9,7 +9,7 @@ import { Menu, MenuItem } from './Menu'
 import { acceptNulls, preventDownshiftDefaultWhen, useFilteredItems } from './utils'
 
 export default function FilterableSelect<T>({
-  items, itemToString = String, itemIcon, itemRenderer,
+  items, itemToString = String, itemIcon, itemRenderer, buttonRenderer,
   value = null, onChange, id, readOnly,
   placeholder = '', 'aria-label': ariaLabel,
   itemClassName, hilightedItemClassName,
@@ -50,16 +50,25 @@ export default function FilterableSelect<T>({
     },
     stateReducer: clearInputOnBlurReducer,
   })
+  const buttonProps = getToggleButtonProps({
+    ref: buttonRef,
+    tabIndex: isOpen ? -1 : 0,
+    disabled: readOnly,
+    'aria-label': ariaLabel,
+  })
 
   return <DropdownContainer>
-    <DropdownButton
-      {...getToggleButtonProps({ ref: buttonRef })} tabIndex={isOpen ? -1 : 0} disabled={readOnly}
-      label={ariaLabel}
-      chosenValue={valueToString(value)}
-    >
-      {itemIcon?.(value)}
-      {valueToString(value)}
-    </DropdownButton>
+    {buttonRenderer
+      ? buttonRenderer(value, buttonProps, valueToString(value))
+      : <DropdownButton
+        {...buttonProps}
+        label={ariaLabel}
+        chosenValue={valueToString(value)}
+      >
+        {itemIcon?.(value)}
+        {valueToString(value)}
+      </DropdownButton>
+    }
     <Dropdown open={isOpen}>
       <input
         className={Classes.INPUT}

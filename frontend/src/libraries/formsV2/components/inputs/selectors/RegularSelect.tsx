@@ -7,7 +7,7 @@ import { Menu, MenuItem } from './Menu'
 import { acceptNulls, preventDownshiftDefaultWhen, useItems } from './utils'
 
 export default function RegularSelect<T>({
-  items: getItems, itemToString = String, itemIcon, itemRenderer,
+  items: getItems, itemToString = String, itemIcon, itemRenderer, buttonRenderer,
   value = null, onChange, id, readOnly,
   placeholder = '', 'aria-label': ariaLabel,
   itemClassName, hilightedItemClassName,
@@ -33,17 +33,24 @@ export default function RegularSelect<T>({
       }
     },
   })
+  const buttonProps = getToggleButtonProps({
+    onClick: preventDownshiftDefaultWhen(e => e.detail === 0),
+    disabled: readOnly,
+    'aria-label': ariaLabel,
+  })
 
   return <DropdownContainer>
-    <DropdownButton
-      {...getToggleButtonProps({ onClick: preventDownshiftDefaultWhen(e => e.detail === 0) })}
-      label={ariaLabel}
-      chosenValue={valueToString(value)}
-      disabled={readOnly}
-    >
-      {itemIcon?.(value)}
-      {valueToString(value)}
-    </DropdownButton>
+    {buttonRenderer
+      ? buttonRenderer(value, buttonProps, valueToString(value))
+      : <DropdownButton
+        {...buttonProps}
+        label={ariaLabel}
+        chosenValue={valueToString(value)}
+      >
+        {itemIcon?.(value)}
+        {valueToString(value)}
+      </DropdownButton>
+    }
     <Dropdown open={isOpen}>
       <Menu {...getMenuProps()}>
         {isOpen &&

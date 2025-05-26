@@ -1,4 +1,3 @@
-import { type ComponentType } from 'react'
 import { Classes } from '@blueprintjs/core'
 import { useCombobox } from 'downshift'
 
@@ -9,12 +8,14 @@ import { Dropdown, DropdownContainer } from './Dropdown'
 import { Menu, MenuItem } from './Menu'
 import { acceptNulls, preventDownshiftDefaultWhen, useFilteredItems } from './utils'
 
+export type AutocompleteInputProps<T> = Omit<SelectorProps<T>, 'buttonRenderer'>
+
 export function AutocompleteInput<T>({
   items, itemToString = String, itemIcon, itemRenderer,
   value = null, onChange, id,
   placeholder = '',
   itemClassName, hilightedItemClassName,
-}: SelectorProps<T>) {
+}: AutocompleteInputProps<T>) {
   'use no memo'
   const valueToString = acceptNulls(itemToString, placeholder)
   const [filteredItems, updateFilter] = useFilteredItems(items, itemToString)
@@ -85,8 +86,8 @@ export function AutocompleteInput<T>({
   </DropdownContainer>
 }
 
-export function autocompleteWithType<T>(): FieldInputComponent<T, SelectorProps<T>, T> {
-  return AutocompleteInput as FieldInputComponent<T, SelectorProps<T>, T>
+export function autocompleteWithType<T>(): FieldInputComponent<T, AutocompleteInputProps<T>, T> {
+  return AutocompleteInput as FieldInputComponent<T, AutocompleteInputProps<T>, T>
 }
 
 AutocompleteInput.withType = autocompleteWithType
