@@ -2,10 +2,10 @@ import { useState } from 'react'
 
 import { Button, Flex } from 'libraries/ui'
 
+import { TextInput } from './components/inputs'
 import { AutocompleteInput } from './components/inputs/selectors/AutocompleteInput'
-import { FilterableSelect } from './components/inputs/selectors/FilterableSelect'
 import { Select } from './components/inputs/selectors/Select'
-import { formFor, TextInput, withDefaults } from './index'
+import { formFor, withDefaults } from './index'
 
 interface Data {
   a: string
@@ -70,7 +70,8 @@ function FooContents() {
 
   return <>
     <S path="a" label="Viikonpäivä" />
-    <FilterableSelect
+    <Select
+      filterable
       aria-label="jotakin"
       items={choices}
       value={s}
@@ -93,7 +94,6 @@ function FooContents() {
     />
     <Field.DateRange startPath="rangeStart" endPath="rangeEnd" label="Range" />
     <Field.Custom label="aaa" path="a" required component={TextInput} />
-    <Field.Repeating path="s" label="Strings" component={TextInput} />
     <Field.Text label="aaa" path="b" />
     <Field.Switch path="bo" label="Is it on?" />
     <Field.Markdown path="d" label="markdooown" />

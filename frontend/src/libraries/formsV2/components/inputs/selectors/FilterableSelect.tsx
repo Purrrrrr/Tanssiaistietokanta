@@ -8,7 +8,7 @@ import { Dropdown, DropdownButton, DropdownContainer } from './Dropdown'
 import { Menu, MenuItem } from './Menu'
 import { acceptNulls, preventDownshiftDefaultWhen, useFilteredItems } from './utils'
 
-export function FilterableSelect<T>({
+export default function FilterableSelect<T>({
   items, itemToString = String, itemIcon, itemRenderer,
   value = null, onChange, id, readOnly,
   placeholder = '', 'aria-label': ariaLabel,

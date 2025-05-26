@@ -12,3 +12,5 @@ export function RepeatingTableRows<Value extends ListItem, Data = AnyType, Accep
     {children}
   </Repeater>
 }
+
+export default RepeatingTableRows

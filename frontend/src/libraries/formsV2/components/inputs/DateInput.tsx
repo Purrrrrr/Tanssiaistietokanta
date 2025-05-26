@@ -8,3 +8,5 @@ export interface DateInputProps extends DatePickerProps {
 
 export const DateInput = ({ readOnly, ...props }: DateInputProps) =>
   (<DatePicker locale="fi-FI" {...props} disabled={readOnly} />)
+
+export default DateInput

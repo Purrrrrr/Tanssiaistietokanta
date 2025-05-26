@@ -35,6 +35,7 @@ TODO:
 * Rethink bare field container needs
 * Range fields
 * date time components (choose better implementation?)
+* Some lazy loading for components
   Selectors
   * Choose better component
   * Selector
@@ -44,6 +45,7 @@ TODO:
     * Custom item renderer
       Custom button renderer
   switchFor
+  More lazy loading for components?
   Fix Duration field?
   NumberInput
   RadioGroup with fieldset
