@@ -1,4 +1,4 @@
-import { type ReactNode, ComponentProps, forwardRef, useCallback, useLayoutEffect, useRef, useState } from 'react'
+import { type ReactNode, ComponentProps, forwardRef, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useScrollPosition } from '@n8tb1t/use-scroll-position'
 import classNames from 'classnames'
 
@@ -53,7 +53,7 @@ export const Dropdown = ({ children, open }: DropdrownProps) => {
     const { clientHeight } = document.documentElement
     const fromBottom = clientHeight - bottom
 
-    if (fromBottom < 30 && top > clientHeight - bottom) {
+    if (fromBottom < 10 && top > clientHeight - bottom) {
       setDirection('up')
     } else {
       setDirection('down')
@@ -61,9 +61,17 @@ export const Dropdown = ({ children, open }: DropdrownProps) => {
   }, [open])
 
   useLayoutEffect(updateDirection, [updateDirection])
+  useEffect(() => {
+    if (!element.current) return
+
+    const observer = new ResizeObserver(updateDirection)
+    observer.observe(element.current)
+
+    return () => observer.disconnect()
+  }, [updateDirection])
   useScrollPosition(updateDirection, [updateDirection], undefined, true, 100)
 
-  return <div ref={element} onResize={updateDirection} className={classNames(
+  return <div ref={element} className={classNames(
     'absolute z-50 w-fit left-0 transition-all bg-white shadow-black/40 shadow-md',
     direction === 'down' ? 'top-full origin-top' : 'bottom-full origin-bottom',
     open || 'scale-y-0 opacity-0',
