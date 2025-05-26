@@ -1,4 +1,4 @@
-import {useCallback} from 'react'
+import {useCallback, useId} from 'react'
 import {Link, useNavigate} from 'react-router-dom'
 
 import {Dance, DanceWithEvents, EditableDance} from 'types'
@@ -7,15 +7,15 @@ import { ID } from 'backend/types'
 import { cleanMetadataValues } from 'backend'
 import { useDeleteDance, usePatchDance } from 'services/dances'
 
-import {formFor, MarkdownEditor, MenuButton, patchStrategy, SelectorMenu, SyncStatus, useAutosavingState} from 'libraries/forms'
-import {Flex, H2, Icon} from 'libraries/ui'
+import {formFor, MarkdownEditor, patchStrategy, SyncStatus, useAutosavingState} from 'libraries/forms'
+import { Select } from 'libraries/formsV2/components/inputs'
+import {Button, Flex, H2, Icon} from 'libraries/ui'
 import {DanceDataImportButton} from 'components/DanceDataImportDialog'
 import {useGlobalLoadingAnimation} from 'components/LoadingState'
 import { useVersionedName } from 'components/versioning/VersionedPageTitle'
 import {VersionSidebarToggle} from 'components/versioning/VersionSidebarToggle'
 import {DeleteButton} from 'components/widgets/DeleteButton'
 import {DurationField} from 'components/widgets/DurationField'
-import {LinkMenuItem} from 'components/widgets/LinkMenuItem'
 import { useT } from 'i18n'
 
 interface DanceEditorProps extends Pick<DanceEditorContainerProps, 'dance' | 'titleComponent'> {
@@ -128,25 +128,28 @@ export function DanceEditorContainer({dance, children, toolbar, titleComponent: 
 
 
 function DanceIsUsedIn({events}: Pick<DanceWithEvents, 'events'>) {
+  const id = useId()
   const navigate = useNavigate()
   const t = useT('components.danceEditor')
   if (events.length === 0) return null
 
-  const menu = <SelectorMenu
-    items={events}
-    onSelect={(event) => { navigate(`/events/${event._id}`) }}
-    getItemText={event => event.name}
-    itemRenderer={(name, event, rest) =>
-      <LinkMenuItem key={event._id} icon="link" href={`/events/${event._id}`} text={name} active={rest.modifiers.active}/>
-    }
-  />
-
   return <div>
-    <MenuButton
-      alwaysEnabled
-      menu={menu}
-      text={t('danceUsedInEvents', {count: events.length})}
-      buttonProps={{minimal: true, rightIcon: 'caret-down'}}
+    <Select
+      id={id}
+      items={events}
+      value={events[0]}
+      onChange={(event) => { if (event) navigate(`/events/${event._id}`) }}
+      itemToString={event => event.name}
+      itemClassName=""
+      buttonRenderer={(_, props) =>
+        <Button minimal rightIcon="caret-down" text={t('danceUsedInEvents', {count: events.length})} {...props} />
+      }
+      itemRenderer={event =>
+        <Link to={`/events/${event._id}`} className="flex gap-2 py-1.5 px-2 hover:no-underline">
+          <Icon icon="link" />
+          <span className="whitespace-nowrap">{event.name}</span>
+        </Link>
+      }
     />
   </div>
 }
