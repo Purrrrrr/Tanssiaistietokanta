@@ -70,3 +70,5 @@ export const MarkdownInput : FieldInputComponent<string, MarkdownEditorProps> = 
     />
   }
 )
+
+export default MarkdownInput

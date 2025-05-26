@@ -4,7 +4,9 @@ import classNames from 'classnames'
 
 import type { FieldInputComponent } from './types'
 
-export const TextInput : FieldInputComponent<string, ComponentProps<'input'>> = ({value, onChange, className, inline, ...rest}) =>
+export type TextInputExtraProps = ComponentProps<'input'>
+
+export const TextInput : FieldInputComponent<string, TextInputExtraProps> = ({value, onChange, className, inline, ...rest}) =>
   <input
     value={value ?? ''}
     className={classNames(className, Classes.INPUT, inline || Classes.FILL)}
@@ -12,3 +14,5 @@ export const TextInput : FieldInputComponent<string, ComponentProps<'input'>> = 
     onChange={e => onChange(e.target.value)}
     {...rest}
   />
+
+export default TextInput

@@ -13,3 +13,5 @@ export const DateRangeInput = ({id, value, onChange, readOnly}: DateRangeInputPr
     onChange={v => onChange(Array.isArray(v) ? v : [v, null])}
     disabled={readOnly}
   />
+
+export default DateRangeInput

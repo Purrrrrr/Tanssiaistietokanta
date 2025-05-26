@@ -1,7 +1,9 @@
-import {Classes} from '@blueprintjs/core'
+import { type ComponentType } from 'react'
+import { Classes } from '@blueprintjs/core'
 import { useCombobox } from 'downshift'
 
 import { SelectorProps } from './types'
+import { FieldInputComponent } from '../types'
 
 import { Dropdown, DropdownContainer } from './Dropdown'
 import { Menu, MenuItem } from './Menu'
@@ -82,3 +84,9 @@ export function AutocompleteInput<T>({
     </Dropdown>
   </DropdownContainer>
 }
+
+export function autocompleteWithType<T>(): FieldInputComponent<T, SelectorProps<T>, T> {
+  return AutocompleteInput as FieldInputComponent<T, SelectorProps<T>, T>
+}
+
+AutocompleteInput.withType = autocompleteWithType

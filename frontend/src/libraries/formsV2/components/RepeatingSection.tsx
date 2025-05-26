@@ -16,3 +16,5 @@ export function RepeatingSection<Value extends ListItem, Data = AnyType, Accepte
     </Repeater>
   </Fieldset>
 }
+
+export default RepeatingSection

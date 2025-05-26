@@ -1,9 +1,19 @@
 import { useSyncExternalStore } from 'react'
 
-import { DataPath, ListItem, ListPath } from '../types'
+import type { DataPath, ListItem, ListPath, ValueAt } from '../types'
 
 import { useFormContext } from '../context'
 import { addItem, change, removeItem } from '../reducer'
+
+export interface HooksFor<Data> {
+  useValueAt: <Path extends string>(path: Path) => ValueAt<Data, Path>
+  useChangeAt: <Path extends string>(path: Path) => (value: ValueAt<Data, Path>) => unknown
+  useAddItem: () => <Path extends ListPath<Data>>(path: Path, value: ValueAt<Data, `${Path}.${number}`>, index?: number) => unknown
+  useAddItemAt: <Path extends ListPath<Data>>(path: Path) => (value: ValueAt<Data, `${Path}.${number}`>, index?: number) => unknown
+  useRemoveItem: () => <Path extends ListPath<Data>>(path: Path, index: number) => unknown
+  useRemoveItemAt: <Path extends ListPath<Data>>(path: Path) => (index: number) => unknown
+}
+
 
 export function useValueAt<T, Data = unknown>(path: DataPath<T, Data>): T {
   const { getValueAt, subscribe } = useFormContext<Data>()
@@ -40,4 +50,13 @@ export function useAddItemAt<T extends ListItem, Data = unknown>(path: DataPath<
   const { dispatch } = useFormContext<Data>()
 
   return (value: T, index: number = Infinity) => dispatch(addItem(path, index, value))
+}
+
+export default {
+  useValueAt,
+  useChangeAt,
+  useAddItem,
+  useAddItemAt,
+  useRemoveItem,
+  useRemoveItemAt,
 }
