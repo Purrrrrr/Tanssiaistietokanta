@@ -3,11 +3,12 @@ import { type ComponentType, type ReactElement, lazy } from 'react'
 import { type ListItem } from './components/dnd'
 import { type FieldComponent, type FieldProps, asFormField, Field } from './components/Field'
 import { type FormProps, Form } from './components/Form'
-import type { DateInputProps, DateRangeInputProps, FieldInputComponent, FieldInputComponentProps, SelectorProps, SelectProps, SwitchProps } from './components/inputs'
+import type { DateInputProps, DateRangeInputProps, FieldInputComponent, FieldInputComponentProps, SelectProps, SwitchProps } from './components/inputs'
 import {
   AutocompleteInput, Select, Switch,
 } from './components/inputs'
 import { type MarkdownEditorProps } from './components/inputs/MarkdownInput'
+import { AutocompleteInputProps } from './components/inputs/selectors/AutocompleteInput'
 import { type TextInputExtraProps } from './components/inputs/TextInput'
 import { type Range, type RangeFieldComponent, type RangeFieldProps, asRangeField, RangeField } from './components/RangeField'
 import { type RepeatingSectionProps } from './components/RepeatingSection'
@@ -22,7 +23,7 @@ interface FormFor<Data, AcceptedDroppableTypes = null> extends HooksFor<Data> {
   Form: ComponentType<FormProps<Data>>
   Field: FieldsFor<Data, AcceptedDroppableTypes>
   selectWithType: <T>() => FieldComponent<Data, T, SelectProps<T>, T>
-  autocompleteWithType: <T>() => FieldComponent<Data, T, SelectorProps<T>, T>
+  autocompleteWithType: <T>() => FieldComponent<Data, T, AutocompleteInputProps<T>, T>
   RepeatingSection: <O extends ListItem>(t: RepeatingSectionProps<O, Data, AcceptedDroppableTypes>) => ReactElement
   RepeatingTableRows: <O extends ListItem>(t: RepeatingTableRowsProps<O, Data, AcceptedDroppableTypes>) => ReactElement
 }
