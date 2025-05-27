@@ -8,7 +8,7 @@ import { acceptNulls, preventDownshiftDefaultWhen, useItems } from './utils'
 
 export default function RegularSelect<T>({
   items: getItems, itemToString = String, itemIcon, itemRenderer, buttonRenderer,
-  value = null, onChange, id, readOnly,
+  value, onChange, id, readOnly,
   placeholder = '', 'aria-label': ariaLabel,
   itemClassName, hilightedItemClassName,
 }: SelectorProps<T>) {
@@ -26,7 +26,7 @@ export default function RegularSelect<T>({
     items,
     selectedItem: value,
     itemToString: valueToString,
-    onSelectedItemChange: ({ selectedItem }) => onChange(selectedItem),
+    onSelectedItemChange: ({ selectedItem }) => onChange(selectedItem as T),
     onIsOpenChange: async (a) => {
       if (a.isOpen) {
         updateItems()

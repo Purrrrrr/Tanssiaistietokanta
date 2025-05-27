@@ -132,7 +132,7 @@ function DanceIsUsedIn({events}: Pick<DanceWithEvents, 'events'>) {
     <Select
       id={id}
       items={events}
-      value={null}
+      value={events[0]}
       onChange={(event) => { if (event) navigate(`/events/${event._id}`) }}
       itemToString={event => event.name}
       itemClassName=""
