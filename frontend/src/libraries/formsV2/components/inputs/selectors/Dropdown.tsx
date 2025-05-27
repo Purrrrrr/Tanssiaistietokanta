@@ -1,4 +1,4 @@
-import { type ReactNode, ComponentProps, forwardRef, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { type ReactNode, ComponentProps, forwardRef, useCallback, useEffect, useLayoutEffect, useRef } from 'react'
 import { useScrollPosition } from '@n8tb1t/use-scroll-position'
 import classNames from 'classnames'
 
@@ -11,7 +11,7 @@ interface DropdownContainerProps {
 }
 
 export function DropdownContainer({ children }: DropdownContainerProps) {
-  return <div className="relative w-fit">
+  return <div className="relative w-fit" data-dropdown-container="true">
     {children}
   </div>
 }
@@ -44,38 +44,68 @@ interface DropdrownProps {
 
 export const Dropdown = ({ children, open }: DropdrownProps) => {
   const element = useRef<HTMLDivElement>(null)
-  const [direction, setDirection] = useState('up')
+  const openRef = useRef<boolean>(open)
+  openRef.current = open
 
   const updateDirection = useCallback(() => {
-    if (!open || !element.current) return
-
-    const { top, bottom } = element.current.getBoundingClientRect()
-    const { clientHeight } = document.documentElement
-    const fromBottom = clientHeight - bottom
-
-    if (fromBottom < 10 && top > clientHeight - bottom) {
-      setDirection('up')
-    } else {
-      setDirection('down')
-    }
-  }, [open])
+    if (!element.current) return
+    const parent = element.current.closest('[data-dropdown-container]')
+    if (!parent || !openRef.current) return
+    updateDropdownPosition(element.current, parent)
+  }, [])
+  useLayoutEffect(() => {
+    element.current?.showPopover?.()
+  }, [])
 
   useLayoutEffect(updateDirection, [updateDirection])
-  useEffect(() => {
-    if (!element.current) return
-
-    const observer = new ResizeObserver(updateDirection)
-    observer.observe(element.current)
-
-    return () => observer.disconnect()
-  }, [updateDirection])
+  useResizeObserver(element, updateDirection)
   useScrollPosition(updateDirection, [updateDirection], undefined, true, 100)
 
-  return <div ref={element} className={classNames(
-    'absolute z-50 w-fit left-0 transition-all bg-white shadow-black/40 shadow-md',
-    direction === 'down' ? 'top-full origin-top' : 'bottom-full origin-bottom',
+  return <div popover="manual" ref={element} className={classNames(
+    'z-50 absolute w-fit max-w-dvw max-h-dvh transition-[scale,opacity] bg-white shadow-black/40 shadow-md',
     open || 'scale-y-0 opacity-0',
   )}>
     {children}
   </div>
+}
+
+function updateDropdownPosition(element: HTMLDivElement, anchorElement: Element) {
+  const anchor = anchorElement.getBoundingClientRect()
+  const { clientHeight: h, clientWidth: _w } = element
+  const { clientHeight: winH, clientWidth: _winW } = document.documentElement
+  const margin = 10
+
+  const spaceDown = winH - anchor.bottom - h
+  const spaceUp = anchor.top - h
+
+  let pointDown = true
+  const canPointDown = spaceDown > margin
+  if (!canPointDown) {
+    const canPointUp = spaceUp > margin
+    if (canPointUp) {
+      pointDown = false
+    } else {
+      pointDown = spaceDown > spaceUp
+    }
+  }
+  const top = pointDown
+    ? anchor.top + anchor.height
+    : anchor.top - h
+  element.style.top = toPx(top + window.scrollY)
+  element.style.left = toPx(anchor.left + window.scrollX)
+  element.style.transformOrigin = pointDown
+    ? 'top' : 'bottom'
+}
+
+const toPx = (value: number) => `${value}px`
+
+function useResizeObserver(element: { current: HTMLDivElement | null }, callback: () => void) {
+  useEffect(() => {
+    if (!element.current) return
+
+    const observer = new ResizeObserver(callback)
+    observer.observe(element.current)
+
+    return () => observer.disconnect()
+  }, [element, callback])
 }
