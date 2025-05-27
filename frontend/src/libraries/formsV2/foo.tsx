@@ -44,7 +44,7 @@ export default function Foo() {
 
   return <Form value={value} onChange={onChange}>
     <h2>FOO</h2>
-    <button type="button" className="border p-2 my-2 bg-fuchsia-800 text-white font-bold" onClick={() => { setKey(key + 1); onChange(defaultData) }}>
+    <button type="button" className="p-2 my-2 font-bold text-white bg-fuchsia-800 border" onClick={() => { setKey(key + 1); onChange(defaultData) }}>
       RESET
     </button>
     <FooContents key={key} />

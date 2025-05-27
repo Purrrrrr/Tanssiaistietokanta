@@ -140,7 +140,7 @@ function DanceIsUsedIn({events}: Pick<DanceWithEvents, 'events'>) {
         <Button minimal rightIcon="caret-down" text={t('danceUsedInEvents', {count: events.length})} {...props} />
       }
       itemRenderer={event =>
-        <Link to={`/events/${event._id}`} className="flex gap-2 px-2 py-1.5 hover:no-underline">
+        <Link to={`/events/${event._id}`} className="flex gap-2 py-1.5 px-2 hover:no-underline">
           <Icon icon="link" />
           <span className="whitespace-nowrap">{event.name}</span>
         </Link>
