@@ -13,7 +13,7 @@ export type AutocompleteInputProps<T> = Omit<SelectorProps<T>, 'buttonRenderer'>
 export function AutocompleteInput<T>({
   items, itemToString = String, itemIcon, itemRenderer,
   value, onChange, id,
-  placeholder = '',
+  placeholder = '', containerClassname,
   itemClassName, hilightedItemClassName,
 }: AutocompleteInputProps<T>) {
   'use no memo'
@@ -58,7 +58,7 @@ export function AutocompleteInput<T>({
     }
   })
 
-  return <DropdownContainer>
+  return <DropdownContainer className={containerClassname}>
     <input
       placeholder={placeholder}
       className={Classes.INPUT}

@@ -6,6 +6,7 @@ import {backendQueryHook, graphql} from 'backend'
 import {useCallbackOnEventChanges} from 'services/events'
 
 import {Selector, Switch} from 'libraries/forms'
+import { Select } from 'libraries/formsV2/components/inputs'
 import {AutosizedSection, Button} from 'libraries/ui'
 import {CenteredContainer} from 'components/CenteredContainer'
 import {LoadingState} from 'components/LoadingState'
@@ -47,19 +48,18 @@ export default function DanceCheatList({eventId}) {
   const {data, ...loadingState} = useCheatList({eventId})
   if (!data?.event) return <LoadingState {...loadingState} />
   const {workshops} = data.event
-  const copyCountStr = count => t('nrOfCopies', {count})
+  const copyCountStr = (count: number) => t('nrOfCopies', {count})
 
   return <div className={`dance-cheatsheet-page repeat-${repeats}`}>
     <PrintViewToolbar>
-      <Selector<number>
-        selectedItem={repeats}
+      <Select<number>
+        containerClassname="inline-block w-fit mr-2"
+        id="repeats"
+        value={repeats}
         items={[1, 2, 4, 6, 8]}
-        onSelect={setRepeats}
-        getItemText={copyCountStr}
-        text={copyCountStr(repeats)}
-        alwaysEnabled
+        onChange={setRepeats}
+        itemToString={copyCountStr}
       />
-      <span>{t('show')}{' '}</span>
       <Switch id="helpText" inline label={t('showHelpText')} value={helpText} onChange={setHelptext}/>
       <Button text={t('print')} onClick={() => window.print()} />
     </PrintViewToolbar>

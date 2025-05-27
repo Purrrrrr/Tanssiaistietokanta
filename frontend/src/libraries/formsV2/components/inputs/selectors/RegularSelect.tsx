@@ -9,7 +9,7 @@ import { acceptNulls, preventDownshiftDefaultWhen, useItems } from './utils'
 export default function RegularSelect<T>({
   items: getItems, itemToString = String, itemIcon, itemRenderer, buttonRenderer,
   value, onChange, id, readOnly,
-  placeholder = '', 'aria-label': ariaLabel,
+  placeholder = '', 'aria-label': ariaLabel, containerClassname,
   itemClassName, hilightedItemClassName,
 }: SelectorProps<T>) {
   'use no memo'
@@ -39,7 +39,7 @@ export default function RegularSelect<T>({
     'aria-label': ariaLabel,
   })
 
-  return <DropdownContainer>
+  return <DropdownContainer className={containerClassname}>
     {buttonRenderer
       ? buttonRenderer(value, buttonProps, valueToString(value))
       : <DropdownButton

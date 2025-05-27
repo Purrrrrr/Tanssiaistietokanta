@@ -7,11 +7,12 @@ import { Button } from 'libraries/ui'
 import { useFormTranslation } from '../../../localization'
 
 interface DropdownContainerProps {
+  className?: string
   children: ReactNode
 }
 
-export function DropdownContainer({ children }: DropdownContainerProps) {
-  return <div className="relative w-fit" data-dropdown-container="true">
+export function DropdownContainer({ children, className = 'inline-block w-fit' }: DropdownContainerProps) {
+  return <div className={className} data-dropdown-container="true">
     {children}
   </div>
 }
