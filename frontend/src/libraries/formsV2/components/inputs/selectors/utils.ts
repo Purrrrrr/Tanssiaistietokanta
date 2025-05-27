@@ -50,7 +50,7 @@ export async function getItems<T>(items: Items<T>, filter: string, itemToString:
 }
 
 export async function filterItems<T>(items: T[], filter: string, itemToString: ItemToString<T>): Promise<T[]> {
-  return items.filter(item => itemToString(item).includes(filter))
+  return items.filter(item => itemToString(item).toLowerCase().includes(filter.trim().toLowerCase()))
 }
 
 export function preventDownshiftDefaultWhen<T>(condition: (event: T) => boolean) {
