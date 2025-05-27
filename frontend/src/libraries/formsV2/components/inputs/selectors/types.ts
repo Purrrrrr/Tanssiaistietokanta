@@ -5,17 +5,17 @@ import { FieldInputComponentProps } from '../types'
 
 export interface SelectorProps<T> extends FieldInputComponentProps<T, T> {
   items: Items<T>
-  placeholder?: string
-  buttonRenderer?: (selectedItem: T | null, props: ButtonProps, valueString: string) => ReactNode
-  itemToString?: (item: T) => string
+  filterPlaceholder?: string
+  itemToString?: (item: T ) => string
+  buttonRenderer?: (selectedItem: T, props: DropdownButtonDownshiftProps) => ReactNode
   itemRenderer?: (item: T) => ReactNode
-  itemIcon?: (item: T | null) => ReactNode
+  itemIcon?: (item: T ) => ReactNode
   containerClassname?: string
   itemClassName?: string
   hilightedItemClassName?: string
 }
 
-interface ButtonProps extends Omit<UseComboboxGetToggleButtonPropsReturnValue, 'tabIndex'> {
+export interface DropdownButtonDownshiftProps extends Omit<UseComboboxGetToggleButtonPropsReturnValue, 'tabIndex'> {
   disabled?: boolean
   'aria-label'?: string
   tabIndex: number

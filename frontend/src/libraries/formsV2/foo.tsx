@@ -57,7 +57,7 @@ const choices = [
 
 const S = withDefaults(selectWithType<string>(), {
   items: choices,
-  placeholder: 'Valitse',
+  filterPlaceholder: 'Hae...',
 })
 
 function FooContents() {
@@ -77,7 +77,7 @@ function FooContents() {
       value={s}
       onChange={setS}
       id="test"
-      placeholder="valitse"
+      filterPlaceholder="Hae..."
       itemToString={String}
       itemIcon={item => <Ball name={item} />}
     />
@@ -113,7 +113,7 @@ function FooContents() {
       value={s2}
       onChange={setS2}
       id="test2"
-      placeholder="valitse"
+      filterPlaceholder="Hae..."
       itemToString={String}
       itemIcon={item => <Ball name={item} />}
     />

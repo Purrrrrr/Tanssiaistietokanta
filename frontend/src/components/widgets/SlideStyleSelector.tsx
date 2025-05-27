@@ -1,7 +1,10 @@
+import { useId } from 'react'
+import { Button } from '@blueprintjs/core'
+
 import {SlideStyle, useEventSlideStyles} from 'services/events'
 
-import {Selector} from 'libraries/forms'
-import {Icon, MenuItem} from 'libraries/ui'
+import { Select } from 'libraries/formsV2/components/inputs'
+import {Icon} from 'libraries/ui'
 import {useT} from 'i18n'
 
 interface SlideStyleSelectorProps {
@@ -16,6 +19,7 @@ interface SlideStyleSelectorProps {
 export function SlideStyleSelector({
   value, onChange, text, inheritsStyles = false, inheritedStyleId = undefined, inheritedStyleName = undefined
 } : SlideStyleSelectorProps) {
+  const id = useId()
   const t = useT('common')
   const {styles, defaultStyle} = useEventSlideStyles({
     useStyleInheritance: inheritsStyles,
@@ -23,25 +27,31 @@ export function SlideStyleSelector({
     inheritedStyleName,
   })
   const style = styles.find(s => s.id === (value ?? null)) ?? defaultStyle
-  return <Selector<SlideStyle>
-    selectedItem={style}
+  return <Select<SlideStyle>
     filterable
-    emptySearchText={t('emptySearch')}
-    searchPlaceholder={t('search')}
+    filterPlaceholder={t('search')}
+    id={id}
+    value={style}
     items={styles}
-    getItemText={item => <><SlideStyleBox value={item} size={50} aspectRatio={16/9} /> {item.name}</>}
-    itemPredicate={(search, item) => item.name.toLowerCase().includes(search.toLowerCase())}
-    itemRenderer={(text, item, {handleClick, modifiers: {active}}) =>
-      <MenuItem key={item.id} roleStructure="listoption" text={text} onClick={handleClick} active={active} />
+    itemToString={style => style.name}
+    onChange={style => onChange(style.id)}
+    itemIcon={style => style && <SlideStyleBox value={style} size={50} aspectRatio={16/9}/>}
+    buttonRenderer={(style, props) =>
+      <Button
+        {...props}
+        icon={<SlideStyleBox value={style} />}
+        rightIcon="double-caret-vertical"
+      >
+        {text}
+      </Button>
     }
-    onSelect={(style) => onChange(style.id)}
-    text={text}
-    buttonProps={{icon: <SlideStyleBox value={style} />}}
   />
 }
 
 function SlideStyleBox({value: {styleName, color}, size = 20, aspectRatio = 1}) {
-  return <span style={{height: size, width: size*aspectRatio, lineHeight: `${size - 4}px`, textAlign: 'center', border: `1px solid ${color}`, display: 'inline-block' }} className={`slide-style-${styleName}`}>
+  return <span
+    style={{height: size, width: size*aspectRatio, lineHeight: `${size - 4}px`, borderColor: color }}
+    className={`slide-style-${styleName} text-center border inline-block`}>
     <Icon icon="style" iconSize={12} color={color} />
   </span>
 }

@@ -136,8 +136,8 @@ function DanceIsUsedIn({events}: Pick<DanceWithEvents, 'events'>) {
       onChange={(event) => { if (event) navigate(`/events/${event._id}`) }}
       itemToString={event => event.name}
       itemClassName=""
-      buttonRenderer={(_, props) =>
-        <Button minimal rightIcon="caret-down" text={t('danceUsedInEvents', {count: events.length})} {...props} />
+      buttonRenderer={(_, { onClick, ...props }) =>
+        <Button minimal rightIcon="caret-down" text={t('danceUsedInEvents', {count: events.length})} {...props} onClick={(e) => onClick?.(e)} />
       }
       itemRenderer={event =>
         <Link to={`/events/${event._id}`} className="flex gap-2 py-1.5 px-2 hover:no-underline">
