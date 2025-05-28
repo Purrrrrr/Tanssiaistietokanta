@@ -4,6 +4,7 @@ import classnames from 'classnames'
 import './SlideContainer.scss'
 
 export interface SlideContainerProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'color'> {
+  onMouseDown?: (event: React.MouseEvent) => void
   children?: React.ReactElement | React.ReactElement[]
   color?: React.CSSProperties['background']
   size?: React.CSSProperties['width']

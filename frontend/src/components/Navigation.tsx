@@ -28,7 +28,7 @@ function Navigation() {
 function NavButton({href, ...props}) {
   const navigate = useNavigate()
   return <AnchorButton minimal {...props} href={href}
-    onClick={(e: React.MouseEvent) => {e.preventDefault(); navigate(href)}}
+    onClick={(e) => {e.preventDefault(); navigate(href)}}
   />
 }
 
