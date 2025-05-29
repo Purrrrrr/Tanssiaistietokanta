@@ -1,6 +1,9 @@
 .ball-program-container {
   display: flex;
   height: 100dvh;
+  --background-delay: 0.4s;
+  --background-speed: 0.3s;
+  --movement-delay: 0s;
   
   @media (orientation: landscape) {
     flex-direction: row-reverse;
@@ -9,10 +12,6 @@
     flex-direction: column;
     --background-delay: 0s;
   }
-
-  --background-delay: 0.4s;
-  --background-speed: 0.3s;
-  --movement-delay: 0s;
 
   & > * {
     transition: flex 0.3s ease var(--movement-delay), padding 0.3s ease var(--movement-delay), background-color var(--background-speed) ease var(--background-delay);
