@@ -21,15 +21,19 @@ export default function EventList() {
       <p>{t('youcanEditDancesIn')} <Link to="/dances">{t('danceDatabaseLinkName')}</Link></p>
     </AdminOnly>
     <h2>{t('danceEvents')}</h2>
-    {events.map(event =>
-      <h2 key={event._id}>
-        <Link to={'events/'+event._id} >{event.name}</Link>
-        <DeleteButton onDelete={() => deleteEvent({id: event._id})}
-          style={{float: 'right'}} text={deleteText}
-          confirmText={t('eventDeleteConfirmation', {eventName: event.name})}
-        />
-      </h2>
-    )}
+    <ul>
+      {events.map(event =>
+        <li key={event._id} className="flex justify-between my-3">
+          <h2 className="grow">
+            <Link to={'events/'+event._id} >{event.name}</Link>
+          </h2>
+          <DeleteButton onDelete={() => deleteEvent({id: event._id})}
+            text={deleteText}
+            confirmText={t('eventDeleteConfirmation', {eventName: event.name})}
+          />
+        </li>
+      )}
+    </ul>
     <NavigateButton adminOnly intent="primary" href="events/new" text={t('createEvent')} />
   </>
 }
