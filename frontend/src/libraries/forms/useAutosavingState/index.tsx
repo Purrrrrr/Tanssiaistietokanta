@@ -24,7 +24,7 @@ export type UseAutosavingStateReturn<T extends MergeableObject> = {
   state: SyncState
 }
 
-type AutosavingFormProps<T> = Pick<Required<FormProps<T>>, 'value' | 'onChange' | 'onValidityChange' | 'conflicts' | 'onResolveConflict'>
+type AutosavingFormProps<T> = Pick<Required<FormProps<T>>, 'value' | 'onChange' | 'onIsValidChange' | 'conflicts' | 'onResolveConflict'>
 
 const DISABLE_CONFLICT_OVERRIDE_DELAY = 1000 * 60 * 5 //Disable saving and overwriting conflicts after five minutes
 
@@ -79,8 +79,8 @@ export function useAutosavingState<T extends MergeableObject, Patch>(
     dispatch({ type: 'CONFLICT_RESOLVED', path: path as StringPath<T>, version })
   }, [dispatch])
 
-  const onValidityChange = useCallback(
-    ({hasErrors}) => setHasErrors(hasErrors),
+  const onIsValidChange = useCallback(
+    (isValid: boolean) => setHasErrors(!isValid),
     []
   )
 
@@ -88,7 +88,7 @@ export function useAutosavingState<T extends MergeableObject, Patch>(
     formProps: {
       value: modifications,
       onChange: onModified,
-      onValidityChange,
+      onIsValidChange,
       onResolveConflict,
       conflicts,
     },

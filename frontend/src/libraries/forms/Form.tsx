@@ -15,7 +15,7 @@ export interface FormProps<T> extends
   value: T
   onChange: OnFormChangeHandler<T>
   conflicts?: ConflictMap<T>
-  onValidityChange?: (validity: {hasErrors: boolean}) => unknown
+  onIsValidChange?: (isValid: boolean) => unknown
   onSubmit?: (t: T, e: React.FormEvent) => unknown
   strings?: FormStrings
 }
@@ -29,7 +29,7 @@ export function Form<T>({
   onChange,
   onResolveConflict = noOp,
   onSubmit,
-  onValidityChange,
+  onIsValidChange,
   readOnly = false,
   labelStyle = defaultLabelStyle,
   inline = false,
@@ -40,8 +40,8 @@ export function Form<T>({
   const form = useRef<HTMLFormElement>(null)
 
   useEffect(() => {
-    if (onValidityChange) onValidityChange({hasErrors})
-  }, [onValidityChange, hasErrors])
+    if (onIsValidChange) onIsValidChange(!hasErrors)
+  }, [onIsValidChange, hasErrors])
 
   const submitHandler = (e: React.FormEvent) => {
     //Sometimes forms from dialogs end up propagating into our form and we should not submit then
