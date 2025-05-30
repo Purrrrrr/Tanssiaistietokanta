@@ -16,6 +16,7 @@ export interface FormProps<T> extends
   onChange: (t: T) => unknown
   onSubmit?: (t: T, e: React.FormEvent) => unknown
   onIsValidChange?: (isValid: boolean) => unknown
+  onResolveConflict?: unknown, //TODO: implement
 }
 
 export function Form<T>(props: FormProps<T>) {
@@ -45,7 +46,8 @@ export function Form<T>(props: FormProps<T>) {
 
 function useForm<T>(props: FormProps<T>) {
   const {
-    value, onChange, onIsValidChange, readOnly = false, ...rest
+    value, onChange, onIsValidChange, readOnly = false, onResolveConflict: _unused,
+    ...rest
   } = props
   const reducerData = useFormReducer(value, onChange)
   const { state } = reducerData
