@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useLayoutEffect, useRef} from 'react'
+import React, {useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react'
 import {AlertProps, Classes} from '@blueprintjs/core'
 import classNames from 'classnames'
 
@@ -24,12 +24,16 @@ type DialogProps = {
 export function Dialog({isOpen, onClose, children, title, className, showCloseButton = true, closeButtonLabel} : DialogProps) {
   const modal = useRef<HTMLDialogElement>(null)
   const closeButton = useRef<HTMLButtonElement>(null)
+  const [shouldrender, setShouldRender] = useState(false)
 
   useLayoutEffect(() => {
     if (isOpen) {
       modal.current?.showModal()
+      setShouldRender(true)
     } else {
       modal.current?.close()
+      const id = setTimeout(() => setShouldRender(false), 600)
+      return () => clearTimeout(id)
     }
   }, [isOpen])
   useEffect(
@@ -47,19 +51,23 @@ export function Dialog({isOpen, onClose, children, title, className, showCloseBu
     ref={modal}
     className={classNames(
       className,
-      'block overflow-hidden fixed top-1/2 -translate-y-1/2 mx-auto bg-gray-100 rounded-md border border-gray-400 shadow-xl shadow-black/50',
-      '[[open]]:animate-appear',
-      'animate-dissapear',
+      'block overflow-hidden fixed top-1/2 -translate-y-1/2 mx-auto bg-gray-100 rounded-md border border-gray-400 shadow-xl shadow-black/50 transition-opacity duration-200',
+      '[[open]]:animate-appear [[open]]:opacity-100',
+      'animate-dissapear opacity-0',
       'backdrop:backdrop-blur-[2px]',
     )}
   >
-    <div className={Classes.DIALOG_HEADER}>
-      <h1 style={{fontSize: 18}} className={Classes.HEADING}>{title}</h1>
-      {showCloseButton && <button aria-label={closeButtonLabel} className={Classes.BUTTON+' '+Classes.DIALOG_CLOSE_BUTTON+' '+Classes.MINIMAL} onClick={onClose} ref={closeButton}>❌</button>}
-    </div>
-    <div className="max-h-[90dvh] overflow-auto">
-      {children}
-    </div>
+    {(isOpen || shouldrender) &&
+      <>
+        <div className={Classes.DIALOG_HEADER}>
+          <h1 style={{fontSize: 18}} className={Classes.HEADING}>{title}</h1>
+          {showCloseButton && <button aria-label={closeButtonLabel} className={Classes.BUTTON+' '+Classes.DIALOG_CLOSE_BUTTON+' '+Classes.MINIMAL} onClick={onClose} ref={closeButton}>❌</button>}
+        </div>
+        <div className="max-h-[90dvh] overflow-auto">
+          {children}
+        </div>
+      </>
+    }
   </dialog>
 }
 

@@ -8,13 +8,11 @@
   @keyframes dissapear {
     to {
       transform: scale(.25);
-      opacity: 0;
     }
   }
   @keyframes appear {
     from {
       transform: scale(.55);
-      opacity: 0;
     }
   }
 }
