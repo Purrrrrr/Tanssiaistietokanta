@@ -45,6 +45,8 @@ TODO:
     * Custom item renderer
     * Custom button renderer
 * Remove featherjs client
+* Remove aria focus trap
+  Date selectors output format -> string?
   date time selector
   Remove blueprint icons
   Remove apollo??
@@ -66,6 +68,19 @@ TODO:
   TextArea: remove from Workshop Editor
   Fix date components somewhat
   Validation translations
+
+  MISC:
+  Focus field on search clear
+  Select filter clear
+  Autocomplete clear??
+  Dance Selector
+  Add teached dances functionality <- focus on add
+  teached dances missing: cut unique??
+  Dance selector:
+    show Workshop
+    show category
+  
+  
 
 /* Need to export:
 ActionButton as Button
