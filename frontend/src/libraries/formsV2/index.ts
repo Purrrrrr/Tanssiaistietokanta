@@ -6,7 +6,7 @@ import { type ListItem } from './components/dnd'
 import { type FieldComponent, type FieldProps, asFormField, Field } from './components/Field'
 import { type FormProps, Form } from './components/Form'
 import type { DateInputProps, DateRangeInputProps, FieldInputComponent, FieldInputComponentProps, SwitchProps } from './components/inputs'
-import { DateInput, DateRangeInput, MarkdownInput, Switch, TextInput } from './components/inputs'
+import { Combobox, DateInput, DateRangeInput, MarkdownInput, Switch, TextInput } from './components/inputs'
 import { type Range, type RangeFieldComponent, type RangeFieldProps, asRangeField, RangeField} from './components/RangeField'
 import { type RepeatingFieldProps, RepeatingField } from './components/RepeatingField'
 import { RepeatingSection, RepeatingSectionProps } from './components/RepeatingSection'
@@ -14,7 +14,7 @@ import { RepeatingTableRows, RepeatingTableRowsProps } from './components/Repeat
 import { type SelfLabeledFieldComponent, asSelfLabeledFormField } from './components/SelflabeledField'
 import { useAddItem, useAddItemAt, useChangeAt, useRemoveItem, useRemoveItemAt, useValueAt } from './hooks/externalHookApi'
 
-export { TextInput }
+export { Combobox, TextInput }
 export type { FieldInputComponentProps }
 
 type FieldComponentFor<Data, Component> = Component extends ComponentType<infer Props>
@@ -39,6 +39,7 @@ interface FieldsFor<Data, AcceptedDroppableTypes = null> {
   DateRange: RangeFieldComponent<Data, Date | null, DateRangeInputProps>
   Markdown: FieldComponentFor<Data, typeof MarkdownInput>
   Text: FieldComponentFor<Data, typeof TextInput>
+  //Combobox: FieldComponentFor<Data, typeof Combobox>
   Switch: SelfLabeledFieldComponent<Data, boolean, SwitchProps>
   Repeating: <O extends I & ListItem, E, I>(t: RepeatingFieldProps<O, E, I, Data, AcceptedDroppableTypes>) => ReactElement
 }
@@ -65,6 +66,7 @@ const form = {
     DateRange : asRangeField(DateRangeInput),
     Markdown: asFormField(MarkdownInput),
     Text: asFormField(TextInput),
+    //Combobox: asFormField(Combobox),
     Switch: asSelfLabeledFormField(Switch),
     Repeating: RepeatingField,
   },
