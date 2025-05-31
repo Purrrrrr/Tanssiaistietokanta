@@ -1,56 +1,11 @@
 import 'react-markdown-editor-lite/lib/index.css'
 import React from 'react'
-import MdEditor, { Plugins }  from 'react-markdown-editor-lite'
+import MdEditor from 'react-markdown-editor-lite'
 import { MarkdownToJSX } from 'markdown-to-jsx'
 
 import {FieldComponentProps} from '../types'
 
-import {AnchorButton, Markdown} from 'libraries/ui'
-
-import { useFormStrings } from '../formContext'
-
-const defaultQRCode = '<QR title="..." value="https//..." size={250} />'
-function QRCode({ editor }) {
-  const { insertQRCode } = useFormStrings().markdownEditor
-  return (
-    <span
-      className="button"
-      title={insertQRCode}
-      onClick={() => editor.insertText(defaultQRCode)}
-    >
-      QR
-    </span>
-  )
-}
-QRCode.align = 'left'
-QRCode.pluginName = 'qrcode'
-
-function HelpLink() {
-  const { helpUrl, help } = useFormStrings().markdownEditor
-  return (
-    <AnchorButton
-      intent="primary"
-      small
-      target="_blank"
-      href={helpUrl}
-    >
-      {help}
-    </AnchorButton>
-  )
-}
-HelpLink.align = 'right'
-HelpLink.pluginName = 'helplink'
-
-const pluginList = [
-  Plugins.Header, Plugins.FontBold, Plugins.FontItalic, Plugins.FontUnderline,
-  Plugins.FontStrikethrough, Plugins.ListUnordered, Plugins.ListOrdered,
-  Plugins.BlockWrap, Plugins.BlockCodeInline, Plugins.BlockCodeBlock, Plugins.Table,
-  Plugins.Link, Plugins.Logger, Plugins.ModeToggle, Plugins.FullScreen,
-  QRCode,
-  HelpLink,
-]
-MdEditor.unuseAll()
-pluginList.forEach(plugin => MdEditor.use(plugin, {}))
+import {Markdown} from 'libraries/ui'
 
 interface MarkdownEditorProps extends FieldComponentProps<string, HTMLTextAreaElement> {
   style?: React.CSSProperties
