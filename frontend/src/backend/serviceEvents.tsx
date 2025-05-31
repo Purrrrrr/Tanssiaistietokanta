@@ -9,7 +9,7 @@ import {getOrComputeDefault} from 'utils/map'
 import {DocumentNode, gql} from './apollo'
 import {markDeleted, updateEntityFragment} from './apolloCache'
 import {closeChannelIfUnsused, ensureChannelIsOpen} from './channels'
-import feathers from './feathers'
+import { socket } from './feathers'
 
 const debug = createDebug('serviceEvents')
 
@@ -80,7 +80,6 @@ function getServiceEventEmitter(
   serviceName: ServiceName
 ) : EventEmitter {
   return getOrComputeDefault(serviceEventEmitters, serviceName, () => {
-    const service = feathers.service(serviceName)
     const emitter = new EventEmitter()
     emitter.setMaxListeners(40)
     const typeName = serviceTypeNameMap[serviceName]
@@ -88,15 +87,15 @@ function getServiceEventEmitter(
     if (!entityFragment) {
       throw new Error('Missing update fragment for service '+serviceName)
     }
-    service.on('created', (data: unknown) => debug('received created', data))
-    service.on('removed', (data: unknown) => debug('received removed', data))
-    service.on('updated', (data: unknown) => debug('received updated', data))
-    service.on('patched', (data: unknown) => debug('received patched', data))
+    socket.on(`${serviceName} created`, (data: unknown) => debug('received created', data))
+    socket.on(`${serviceName} removed`, (data: unknown) => debug('received removed', data))
+    socket.on(`${serviceName} updated`, (data: unknown) => debug('received updated', data))
+    socket.on(`${serviceName} patched`, (data: unknown) => debug('received patched', data))
 
-    service.on('created', (data: unknown) => emitter.emit('created', data, 'backend'))
-    service.on('removed', (data: unknown) => emitter.emit('removed', data, 'backend'))
-    service.on('updated', (data: unknown) => emitter.emit('updated', data, 'backend'))
-    service.on('patched', (data: unknown) => emitter.emit('updated', data, 'backend'))
+    socket.on(`${serviceName} created`, (data: unknown) => emitter.emit('created', data, 'backend'))
+    socket.on(`${serviceName} removed`, (data: unknown) => emitter.emit('removed', data, 'backend'))
+    socket.on(`${serviceName} updated`, (data: unknown) => emitter.emit('updated', data, 'backend'))
+    socket.on(`${serviceName} patched`, (data: unknown) => emitter.emit('updated', data, 'backend'))
 
     emitter.on('removed', markDeleted)
     emitter.on('updated', function updateCache(data, source) {

@@ -1,8 +1,8 @@
 import {FetchResult} from '@apollo/client'
-import feathers from '@feathersjs/client'
-import socketio from '@feathersjs/socketio-client'
 import {print} from 'graphql'
 import io from 'socket.io-client'
+
+import { ServiceName } from './types'
 
 import createDebug from 'utils/debug'
 
@@ -15,18 +15,22 @@ const isProd = process.env.NODE_ENV === 'production'
 export const socket = isProd
   ? io('/', {path: '/api/socket.io'})
   : io(devConfig.backendUrl)
-const app = feathers()
 
-app.configure(socketio(socket))
-//app.configure(feathers.authentication())
+export function makeFeathersRequest<T>(
+  service: ServiceName | 'channel-connections' | 'graphql',
+  verb: 'find' | 'create' | 'remove',
+  query: unknown,
+) {
+  return new Promise<T>((resolve, reject) =>
+    socket.emit(verb, service, query, (err: unknown, res: T) => err ? reject(err) : resolve(res) )
+  )
+}
 
-export default app
-
-const graphQLService = app.service('graphql')
+type R = FetchResult<Record<string, unknown>, Record<string, unknown>, Record<string, unknown>>
 
 export async function runGraphQlQuery({query, variables}) : Promise<FetchResult<Record<string, unknown>, Record<string, unknown>, Record<string, unknown>>> {
   debug('GraphQL query: %s\nVariables: %O', print(query), variables)
-  const result = await graphQLService.find({query: {query, variables}})
+  const result = await makeFeathersRequest<R>('graphql', 'find', {query, variables})
   if (debug.enabled) {
     Object.keys(result).forEach(
       key => Object.keys(result[key]).forEach(
