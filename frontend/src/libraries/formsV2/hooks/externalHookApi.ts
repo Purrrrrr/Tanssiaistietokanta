@@ -1,9 +1,9 @@
 import { useSyncExternalStore } from 'react'
 
-import { DataPath, ListItem, ListPath } from './types'
+import { DataPath, ListItem, ListPath } from '../types'
 
-import { useFormContext } from './context'
-import { addItem, change, removeItem } from './reducer'
+import { useFormContext } from '../context'
+import { addItem, change, removeItem } from '../reducer'
 
 export function useValueAt<T, Data = unknown>(path: DataPath<T, Data>): T {
   const { getValueAt, subscribe } = useFormContext<Data>()

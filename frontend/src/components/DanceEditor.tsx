@@ -29,8 +29,6 @@ interface DanceEditorProps extends Pick<DanceEditorContainerProps, 'dance' | 'ti
 const {
   Form,
   Field,
-  TextField: Input,
-  MarkdownField,
   useValueAt,
   useChangeAt: useOnChangeFor,
 } = formForV2<Dance>()
@@ -71,20 +69,20 @@ export function DanceEditor({dance, onDelete, showLink, showVersionHistory, titl
   >
     <Flex spaced wrap className="danceEditor">
       <div style={{flexGrow: 1, flexBasis: 300}}>
-        <Input label={label('name')} path="name" />
-        <Input label={label('category')} path="category" />
-        <Field label={label('duration')} path="duration" component={
+        <Field.Text label={label('name')} path="name" />
+        <Field.Text label={label('category')} path="category" />
+        <Field.Custom label={label('duration')} path="duration" component={
           ({onChange, ...props}: FieldInputComponentProps<number | null | undefined>) =>
             <DurationField {...props} onChange={v => onChange(typeof v === 'function' ? v(props.value ?? 0) : v)} />
         } />
-        <Input label={label('prelude')} path="prelude" />
-        <Input label={label('formation')} path="formation" />
-        <Input label={label('source')} labelInfo={label('sourceInfo')} path="source" />
-        <Input label={label('remarks')} path="remarks" />
+        <Field.Text label={label('prelude')} path="prelude" />
+        <Field.Text label={label('formation')} path="formation" />
+        <Field.Text label={label('source')} labelInfo={label('sourceInfo')} path="source" />
+        <Field.Text label={label('remarks')} path="remarks" />
       </div>
       <div style={{flexGrow: 2, flexBasis: 500}}>
-        <MarkdownField label={label('description')} path="description" />
-        <MarkdownField label={label('instructions')} path="instructions" />
+        <Field.Markdown label={label('description')} path="description" />
+        <Field.Markdown label={label('instructions')} path="instructions" />
       </div>
     </Flex>
   </DanceEditorContainer>
