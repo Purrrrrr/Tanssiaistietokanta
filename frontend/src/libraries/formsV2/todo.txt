@@ -77,8 +77,9 @@ TODO:
   Add teached dances functionality <- focus on add
   teached dances missing: cut unique??
   Dance selector:
-    show Workshop
-    show category
+  * show workshop
+    show category <- find a way to autofill the categories
+  intervalMusic on by defalt
   
   
 
