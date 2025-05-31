@@ -136,6 +136,7 @@ export const fi = {
         addDanceSet: 'Lisää tanssisetti',
         addInfo: 'Lisää muuta ohjelmaa',
         addIntroductoryInfo: 'Lisää alkutiedote',
+        editDanceSetName: 'Muokkaa tanssisetin nimeä',
         cancel: 'Peruuta',
         removeDanceSet: 'Poista setti',
         remove: 'Poista',

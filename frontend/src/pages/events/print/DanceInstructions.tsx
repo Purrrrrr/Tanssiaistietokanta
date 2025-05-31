@@ -14,7 +14,7 @@ import {Button, Markdown} from 'libraries/ui'
 import {DanceDataImportButton} from 'components/DanceDataImportDialog'
 import {LoadingState} from 'components/LoadingState'
 import PrintViewToolbar from 'components/widgets/PrintViewToolbar'
-import {useFormatDateTime, useT} from 'i18n'
+import {useFormatDateTime, useT, useTranslation} from 'i18n'
 import {selectElement} from 'utils/selectElement'
 import {showToast} from 'utils/toaster'
 import {uniq} from 'utils/uniq'
@@ -134,7 +134,6 @@ function getDances(workshops: {instances: Instance[]}[]) {
 
 function InstructionsForDance({dance, showShortInstructions} : {dance: Dance, showShortInstructions: boolean}) {
   const [editorOpen, setEditorOpen] = useState(false)
-  const tCommon = useT('common')
   const field = showShortInstructions ? 'description' : 'instructions' as const
   const value = dance[field] ?? ''
 
@@ -146,7 +145,7 @@ function InstructionsForDance({dance, showShortInstructions} : {dance: Dance, sh
         intent="primary"
         minimal
         icon="edit"
-        text={tCommon(editorOpen ? 'closeEditor' : 'edit')}
+        aria-label={useTranslation(editorOpen ? 'common.closeEditor' : 'common.edit')}
         onClick={() => setEditorOpen(!editorOpen)}
       />
     </h2>

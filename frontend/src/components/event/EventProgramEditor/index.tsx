@@ -1,9 +1,9 @@
-import React, {useCallback, useMemo, useRef} from 'react'
+import React, {useCallback, useMemo, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import {Event} from 'types'
 
-import {ActionButton as Button, ClickToEdit, DragHandle, ListEditorContext, SyncStatus} from 'libraries/forms'
+import {ActionButton as Button, DragHandle, ListEditorContext, SyncStatus} from 'libraries/forms'
 import {Card, CssClass, Flex, HTMLTable, Tab, Tabs} from 'libraries/ui'
 import { DanceProgramChooser } from 'components/event/DanceProgramChooser'
 import {
@@ -109,19 +109,42 @@ function IntroductoryInformation() {
 }
 
 const DanceSetEditor = React.memo(function DanceSetEditor({itemIndex, dragHandle} : {itemIndex: number, dragHandle: DragHandle}) {
-  const t = useT('components.eventProgramEditor')
   const id = useValueAt(`danceSets.${itemIndex}._id`)
+
   return <Card className="danceset" id={id}>
     <Flex className="sectionTitleRow">
       <h2>
-        <Field labelStyle="hidden" label={t('fields.danceSetName')} path={`danceSets.${itemIndex}.title`} inline component={ClickToEdit} />
+        <DanceSetNameEditor itemIndex={itemIndex} />
       </h2>
       {dragHandle}
-      <RemoveItemButton path="danceSets" index={itemIndex} className="delete" text={t('buttons.removeDanceSet')} />
+      <RemoveItemButton path="danceSets" index={itemIndex} className="delete" text={useTranslation('components.eventProgramEditor.buttons.removeDanceSet')} />
     </Flex>
     <ProgramListEditor path={`danceSets.${itemIndex}`} />
   </Card>
 })
+
+function DanceSetNameEditor({ itemIndex } : { itemIndex: number }) {
+  const label = useTranslation('components.eventProgramEditor.fields.danceSetName')
+  const name = useValueAt(`danceSets.${itemIndex}.title`)
+
+  const [editingName, setEditingName] = useState(false)
+  const buttonTitle = useTranslation(editingName ? 'common.closeEditor' : 'components.eventProgramEditor.buttons.editDanceSetName')
+
+  return <>
+    {editingName
+      ? <Input labelStyle="hidden" label={label} path={`danceSets.${itemIndex}.title`} inline />
+      : name
+    }
+    <Button
+      intent="primary"
+      minimal
+      icon={editingName ? 'cross' : 'edit' }
+      title={buttonTitle}
+      aria-label={buttonTitle}
+      onClick={() => setEditingName(!editingName)}
+    />
+  </>
+}
 
 function ProgramListEditor({path}: {path: ProgramSectionPath}) {
   const t = useT('components.eventProgramEditor')
