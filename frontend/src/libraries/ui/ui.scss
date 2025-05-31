@@ -104,3 +104,18 @@
   font-size: 80%;
   overflow-wrap: anywhere;
 }
+
+.markdown-content {
+  ul {
+    list-style: disc;
+  }
+  ol {
+    list-style: decimal;
+  }
+  p {
+    margin-block: 1em;
+  }
+  del {
+    text-decoration: line-through;
+  }
+}

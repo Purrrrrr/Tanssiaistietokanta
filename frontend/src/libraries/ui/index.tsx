@@ -193,8 +193,9 @@ export function SearchBar({id, onChange, value, placeholder, emptySearchText} : 
   />
 }
 
-export function Markdown({options, ...props}: React.ComponentPropsWithoutRef<typeof MarkdownToJsx>) {
+export function Markdown({options, className, ...props}: React.ComponentPropsWithoutRef<typeof MarkdownToJsx>) {
   return <MarkdownToJsx
+    className={classNames(className, 'markdown-content')}
     {...props}
     options={options
       ? { ...options, overrides: { ...markdownComponents, ...options.overrides } }
