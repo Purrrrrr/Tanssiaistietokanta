@@ -1,6 +1,7 @@
 import { ValidationError } from 'yup'
 
 import type { ErrorMap, Errors, ValidationProps } from '../types'
+
 import { assoc, dissoc } from './data'
 
 export async function validate(props: ValidationProps, value: unknown): Promise<Errors> {

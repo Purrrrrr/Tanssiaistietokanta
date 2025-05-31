@@ -1,6 +1,6 @@
-import {FormGroup} from 'libraries/ui'
-
 import { FieldContainerProps } from './types'
+
+import {FormGroup} from 'libraries/ui'
 
 import { BareFieldContainer } from './BareFieldContainer'
 import { useFieldStyle } from './context'

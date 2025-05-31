@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useId, useState, useSyncExternalStore } from 'react'
 
+import type { PathFor, ValidationProps } from './types'
+
 import { type ExternalBareFieldContainerProps, type ExternalFieldContainerProps, BareFieldContainer, FieldContainer } from './components/FieldContainer'
 import type { FieldInputComponent, FieldInputComponentProps, OmitInputProps } from './components/inputs'
 import { useFormContext } from './context'
 import { useRunValidation } from './hooks'
 import { change } from './reducer'
-import type { PathFor, ValidationProps } from './types'
 
 /* TODO:
  *

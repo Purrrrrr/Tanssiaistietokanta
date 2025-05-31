@@ -30,12 +30,13 @@ UseAutosavingStateReturn
 
 import { type ComponentProps, type ComponentType } from 'react'
 
+import type { FieldPath, ValueAt } from './types'
+
 import { type FieldInputComponent, type FieldInputComponentProps, MarkdownInput, Nullable, SwitchInput, TextInput } from './components/inputs'
 import { SwitchProps } from './components/inputs/SwitchInput'
 import { type FieldProps, type SelfLabeledFieldProps, Field } from './Field'
 import { type FormProps, Form } from './Form'
 import { useApplyAt, useChangeAt, useValueAt } from './hooks'
-import type { FieldPath, ValueAt } from './types'
 import { asFormField, asSelfLabeledFormField } from './utils/asFormField'
 
 export { TextInput }
