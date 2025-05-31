@@ -42,6 +42,7 @@ export type IconName =
   | 'cross'
   | 'double-caret-vertical'
   | 'double-chevron-up'
+  | 'download'
   | 'edit'
   | 'error'
   | 'history'
@@ -73,6 +74,8 @@ const iconModules = {
   'double-caret-vertical/20': () => import('@blueprintjs/icons/lib/esm/generated/20px/paths/double-caret-vertical'),
   'double-chevron-up/16': () => import('@blueprintjs/icons/lib/esm/generated/16px/paths/double-chevron-up'),
   'double-chevron-up/20': () => import('@blueprintjs/icons/lib/esm/generated/20px/paths/double-chevron-up'),
+  'download/16': () => import('@blueprintjs/icons/lib/esm/generated/16px/paths/download'),
+  'download/20': () => import('@blueprintjs/icons/lib/esm/generated/20px/paths/download'),
   'edit/16': () => import('@blueprintjs/icons/lib/esm/generated/16px/paths/edit'),
   'edit/20': () => import('@blueprintjs/icons/lib/esm/generated/20px/paths/edit'),
   'error/16': () => import('@blueprintjs/icons/lib/esm/generated/16px/paths/error'),

@@ -9,8 +9,8 @@ import {backendQueryHook, cleanMetadataValues, graphql} from 'backend'
 import {sortDances, usePatchDance} from 'services/dances'
 import {useCallbackOnEventChanges} from 'services/events'
 
-import {ClickToEditMarkdown, formFor, patchStrategy, Switch, useAutosavingState} from 'libraries/forms'
-import {Button} from 'libraries/ui'
+import {formFor, MarkdownEditor, patchStrategy, Switch, SyncStatus, useAutosavingState} from 'libraries/forms'
+import {Button, Markdown} from 'libraries/ui'
 import {DanceDataImportButton} from 'components/DanceDataImportDialog'
 import {LoadingState} from 'components/LoadingState'
 import PrintViewToolbar from 'components/widgets/PrintViewToolbar'
@@ -132,39 +132,54 @@ function getDances(workshops: {instances: Instance[]}[]) {
   return sortDances(dances)
 }
 
-function InstructionsForDance({dance: danceInDatabase, showShortInstructions} : {dance: Dance, showShortInstructions: boolean}) {
+function InstructionsForDance({dance, showShortInstructions} : {dance: Dance, showShortInstructions: boolean}) {
+  const [editorOpen, setEditorOpen] = useState(false)
+  const tCommon = useT('common')
+  const field = showShortInstructions ? 'description' : 'instructions' as const
+  const value = dance[field] ?? ''
+
+  return <div className={`dance-instructions-dance ${value.trim() !== '' ? 'not-empty' : 'empty'}`}>
+    <h2>
+      {dance.name}
+      <DanceDataImportButton dance={dance} minimal />
+      <Button
+        intent="primary"
+        minimal
+        icon="edit"
+        text={tCommon(editorOpen ? 'closeEditor' : 'edit')}
+        onClick={() => setEditorOpen(!editorOpen)}
+      />
+    </h2>
+    <div className={field}>
+      {editorOpen
+        ? <DanceFieldEditor dance={dance} field={field} />
+        : <Markdown options={{overrides: markdownOverrides}} children={dance[field] ?? ''} />
+      }
+    </div>
+  </div>
+}
+
+function DanceFieldEditor({dance: danceInDatabase, field} : {dance: Dance, field: 'description' | 'instructions'}) {
   const t = useT('domain.dance')
   const [patchDance] = usePatchDance()
-  const onChange = useCallback(
+  const onPatch= useCallback(
     (dance) => patchDance({
       id: danceInDatabase._id,
       dance: cleanMetadataValues(dance),
     }),
     [danceInDatabase, patchDance]
   )
-  const {value: dance, onChange: setDance} = useAutosavingState<Dance, Partial<Dance>>(danceInDatabase, onChange, patchStrategy.partial)
+  const {value, onChange, state } = useAutosavingState<Dance, Partial<Dance>>(danceInDatabase, onPatch, patchStrategy.partial)
 
-  const {name, instructions} = dance
-  const field = showShortInstructions ? 'description' : 'instructions' as const
-
-  return <div className={`dance-instructions-dance ${instructions ? 'not-empty' : 'empty'}`}>
-    <Form value={dance} onChange={setDance}>
-      <h2>
-        {name}
-        {' '}
-        <DanceDataImportButton dance={dance} />
-      </h2>
-      <div className={field}>
-        <Field
-          label={t(field)}
-          labelStyle="hidden"
-          path={field}
-          component={ClickToEditMarkdown}
-          componentProps={{markdownOverrides}}
-        />
-      </div>
-    </Form>
-  </div>
+  return <Form value={value} onChange={onChange}>
+    <SyncStatus state={state} floatRight />
+    <Field
+      label={t(field)}
+      path={field}
+      component={MarkdownEditor}
+      componentProps={{markdownOverrides}}
+    />
+  </Form>
 }
 
 const markdownOverrides = {

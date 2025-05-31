@@ -7,12 +7,12 @@ import {usePatchDance} from 'services/dances'
 import {getDanceData, ImportedDanceData} from 'libraries/danceWiki'
 import {Dialog} from 'libraries/dialog'
 import {formFor, MarkdownEditor, SubmitButton} from 'libraries/forms'
-import {Button, FormGroup, ProgressBar, Tag} from 'libraries/ui'
+import {Button, ButtonProps, FormGroup, ProgressBar, Tag} from 'libraries/ui'
 import { useT, useTranslation } from 'i18n'
 
 import {DanceNameSearch} from './DanceNameSearch'
 
-interface DanceDataImportButtonProps {
+interface DanceDataImportButtonProps extends ButtonProps {
   onImport?: (dance: Dance) => unknown,
   dance: Dance,
 }
@@ -52,7 +52,7 @@ export function DanceDataImportButton({onImport, dance, ...props} : DanceDataImp
   }
 
   return <>
-    <Button text={text} {...props} onClick={() => setOpen(true)} />
+    <Button text={text} icon="download" {...props} onClick={() => setOpen(true)} />
     <DanceDataImportDialog isOpen={isOpen} onClose={() => setOpen(false)}
       dance={dance} onImport={(data: ImporterState) => { setOpen(false); handleImport(data) }}
     />

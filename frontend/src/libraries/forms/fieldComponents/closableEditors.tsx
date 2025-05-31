@@ -1,25 +1,20 @@
 import React, {ComponentProps, useRef, useState} from 'react'
 import {Classes} from '@blueprintjs/core'
 import classNames from 'classnames'
-import { MarkdownToJSX } from 'markdown-to-jsx'
 
 import {ExtendedFieldComponentProps} from '../types'
 
-import {Icon, Markdown} from 'libraries/ui'
+import {Icon} from 'libraries/ui'
 
-import {SyncStatus} from '../SyncStatus'
-import {SyncState} from '../useAutosavingState'
 import {Input} from './basicComponents'
-import {MarkdownEditor} from './MarkdownEditor'
 
 import './ClosableEditor.sass'
 
 export interface ClickToEditProps extends ExtendedFieldComponentProps<string, HTMLInputElement, ComponentProps<'input'>> {
   valueFormatter?: (value: string) => React.ReactNode
   inline?: boolean
-  syncState?: SyncState
 }
-export function ClickToEdit({value, readOnly, valueFormatter, className, onChange, inline, syncState, ...props} : ClickToEditProps) {
+export function ClickToEdit({value, readOnly, valueFormatter, className, onChange, inline, ...props} : ClickToEditProps) {
   return <ClosableEditor
     className={className}
     inline={inline}
@@ -28,28 +23,7 @@ export function ClickToEdit({value, readOnly, valueFormatter, className, onChang
     aria-label={props['aria-label']}
     closedValue={valueFormatter ? valueFormatter(value ?? '') : value}
   >
-    {syncState && <SyncStatus state={syncState} />}
     <Input {...props} value={value} onChange={onChange} inline={inline} />
-  </ClosableEditor>
-}
-
-export interface ClickToEditMarkdownProps extends ExtendedFieldComponentProps<string, HTMLTextAreaElement, ComponentProps<typeof MarkdownEditor>> {
-  className?: string
-  inline?: boolean
-  markdownOverrides?: MarkdownToJSX.Overrides
-  syncState?: SyncState
-}
-export function ClickToEditMarkdown({value, readOnly, className, onChange, inline, syncState, markdownOverrides, ...props} : ClickToEditMarkdownProps) {
-  return <ClosableEditor
-    className={classNames(className, 'closable-editor-markdown')}
-    inline={inline}
-    readOnly={readOnly}
-    aria-describedby={props['aria-describedby']}
-    aria-label={props['aria-label']}
-    closedValue={<Markdown options={{overrides: markdownOverrides}}>{value ?? ''}</Markdown>}
-  >
-    {syncState && <SyncStatus state={syncState} />}
-    <MarkdownEditor {...props} value={value} onChange={onChange} markdownOverrides={markdownOverrides} />
   </ClosableEditor>
 }
 

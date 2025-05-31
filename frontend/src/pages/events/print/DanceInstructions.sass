@@ -38,13 +38,12 @@
     break-inside: avoid-page
 
     button
-      opacity: 0
+      float: right
       display: inline
-      transition: opacity 0.2s ease-in-out
 
-    &:focus, &:focus-within, &:hover
-      button
-        opacity: 1
+    @media (min-width: 420px)
+      .sync_status
+        margin-bottom: -1lh
 
     .instructions:not(:has(.rc-md-editor))
       column-count: 2
@@ -52,7 +51,6 @@
     @media print
       button
         display: none !important
-        opacity: 0
 
       .bp5-icon
         display: none !important
