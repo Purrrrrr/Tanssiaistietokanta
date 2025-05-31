@@ -1,25 +1,11 @@
-import { type ComponentProps, type ReactNode, forwardRef } from 'react'
+import { type ComponentProps, forwardRef } from 'react'
 import classNames from 'classnames'
-
-interface MenuContainerProps {
-  open: boolean
-  children: ReactNode
-}
-
-export const MenuContainer = ({ children, open }: MenuContainerProps) => {
-  return <div className={classNames(
-    'absolute top-full z-50 w-fit transition-all origin-top bg-white shadow-black/40 shadow-md',
-    open || 'scale-y-0 opacity-0',
-  )}>
-    {children}
-  </div>
-}
 
 type MenuProps = Omit<ComponentProps<'ul'>, 'className'>
 
 export const Menu = forwardRef<HTMLUListElement, MenuProps>(
   function Menu(props: MenuProps, ref) {
-    return <ul ref={ref} {...props} />
+    return <ul className="overflow-auto max-h-[60dvh] " ref={ref} {...props} />
   }
 )
 
