@@ -10,8 +10,6 @@
     "@blueprintjs/icons": "^5.9.0",
     "@blueprintjs/select": "^5.1.5",
     "@dnd-kit/sortable": "^10.0.0",
-    "@feathersjs/client": "^5.0.5",
-    "@feathersjs/socketio-client": "^5.0.5",
     "@react-aria/focus": "^3.19.1",
     "@tailwindcss/vite": "^4.1.6",
     "array-move": "4.0.0",
