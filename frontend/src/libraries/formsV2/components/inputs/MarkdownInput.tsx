@@ -41,7 +41,7 @@ HelpLink.align = 'right'
 HelpLink.pluginName = 'helplink'
 
 const pluginList = [
-  Plugins.Header, Plugins.FontBold, Plugins.FontItalic, Plugins.FontUnderline,
+  Plugins.Header, Plugins.FontBold, Plugins.FontItalic,
   Plugins.FontStrikethrough, Plugins.ListUnordered, Plugins.ListOrdered,
   Plugins.BlockWrap, Plugins.BlockCodeInline, Plugins.BlockCodeBlock, Plugins.Table,
   Plugins.Link, Plugins.Logger, Plugins.ModeToggle, Plugins.FullScreen,
