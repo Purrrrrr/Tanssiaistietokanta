@@ -141,8 +141,12 @@ function useDebouncedScrollPositionListener(callBack: (scrollPosition: number) =
 const SlideLink = React.memo(function SlideLink(
   {slide, eventProgram, current, placeholder}: { slide: EventSlideProps, eventProgram: EventProgramSettings, current: boolean, placeholder: boolean }
 ) {
+  const { eventId, eventVersionId } = useParams()
+  const rootUrl = eventVersionId
+    ? `/events/${eventId}/version/${eventVersionId}/program/slides/`
+    : `/events/${eventId}/program/slides/`
   if (placeholder) {
-    return <a href={`../slides/${slide.id}`} id={`slide-link-${slide.id}`} className={classNames('slide-link', {current})}>
+    return <a href={`${rootUrl}${slide.id}`} id={`slide-link-${slide.id}`} className={classNames('slide-link', {current})}>
       <SlideContainer className="flex-fill inert" color="#eee">
         <EventSlidePreview {...slide} eventProgram={eventProgram} />
       </SlideContainer>
@@ -150,7 +154,7 @@ const SlideLink = React.memo(function SlideLink(
     </a>
   }
 
-  return <Link to={`../slides/${slide.id}`} id={`slide-link-${slide.id}`} className={classNames('slide-link', {current})}>
+  return <Link to={`${rootUrl}${slide.id}`} id={`slide-link-${slide.id}`} className={classNames('slide-link', {current})}>
     <SlideContainer className="flex-fill inert" color="#eee">
       <EventSlide {...slide} eventProgram={eventProgram} linkComponent="a" />
     </SlideContainer>
