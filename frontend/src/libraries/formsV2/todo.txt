@@ -36,7 +36,7 @@ TODO:
 * Range fields
 * date time components (choose better implementation?)
 * Some lazy loading for components
-  Selectors
+* Selectors
   * Choose better component
   * Selector
   * Autocomplete field 
@@ -44,7 +44,14 @@ TODO:
   * Menubutton
     * Custom item renderer
     * Custom button renderer
-    Scroll into opened selector?
+* Remove featherjs client
+* Remove aria focus trap
+  Horizontal alignment of selector dropdown
+  Date selectors output format -> string?
+  date time selector
+  Remove blueprint icons
+  Remove apollo??
+  Scroll into opened selector?
   switchFor
   More lazy loading for components?
   Fix Duration field?
@@ -62,6 +69,10 @@ TODO:
   TextArea: remove from Workshop Editor
   Fix date components somewhat
   Validation translations
+
+  MISC:
+  Select filter clear
+  Autocomplete clear??
 
 /* Need to export:
 ActionButton as Button
