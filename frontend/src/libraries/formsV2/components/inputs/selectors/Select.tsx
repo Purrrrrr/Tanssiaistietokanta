@@ -5,7 +5,8 @@ import { FieldInputComponentProps } from '../types'
 
 import { Button } from 'libraries/ui'
 
-import { Menu, MenuContainer, MenuItem } from './Menu'
+import { Dropdown, DropdownContainer } from './Dropdown'
+import { Menu, MenuItem } from './Menu'
 
 interface ComboboxProps<T> extends FieldInputComponentProps<T | null> {
   items: T[]
@@ -45,15 +46,7 @@ export function Select<T>({
     </div>
   }
 
-  return <div
-    className="flex relative"
-    style={{
-      flexDirection: 'column',
-      width: 'fit-content',
-      justifyContent: 'center',
-      alignSelf: 'center',
-    }}
-  >
+  return <DropdownContainer>
     <Button
       aria-label="toggle menu"
       {...getToggleButtonProps({
@@ -69,7 +62,7 @@ export function Select<T>({
       {itemIcon?.(value)}
       {value ? itemToString(value) : placeholder}
     </Button>
-    <MenuContainer open={isOpen}>
+    <Dropdown open={isOpen}>
       <Menu {...getMenuProps()}>
         {isOpen &&
           items.map((item, index) => (
@@ -83,8 +76,8 @@ export function Select<T>({
             </MenuItem>
           ))}
       </Menu>
-    </MenuContainer>
-  </div>
+    </Dropdown>
+  </DropdownContainer>
 }
 
 function toDownShiftItemToString<T>(
