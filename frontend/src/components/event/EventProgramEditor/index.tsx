@@ -250,7 +250,7 @@ function DanceItemEditor({path}: {path: DanceProgramPath}) {
   const item = useValueAt(`${path}.item`)
   return <Flex className="eventProgramItemEditor">
     <Field label={t('dance')} labelStyle="hidden" path={`${path as DanceProgramPath}.item`} component={DanceProgramChooser} />
-    {item.__typename === 'Dance' && item.teachedIn.map(workshop =>
+    {item.__typename === 'Dance' && item.teachedIn?.map(workshop =>
       <WorkshopTag key={workshop._id} name={workshop.workshop.name} />
     )}
   </Flex>
