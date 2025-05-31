@@ -1,7 +1,8 @@
 import deepEquals from 'fast-deep-equal'
 
-import { areEqualWithoutId, mapToIds } from '../idUtils'
 import {arrayConflict, Conflict, Deleted, Entity, ID, mapMergeData, MergeData, MergeFunction, PartialMergeResult, removedArrayItemConflict, scopeConflicts, SyncState } from '../types'
+
+import { areEqualWithoutId, mapToIds } from '../idUtils'
 import {GTSort} from './GTSort'
 
 export function mergeArrays<T extends Entity>(

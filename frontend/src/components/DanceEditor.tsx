@@ -1,7 +1,9 @@
 import {useCallback} from 'react'
 import {Link, useNavigate} from 'react-router-dom'
 
+import {Dance, DanceWithEvents} from 'types'
 import { ID } from 'backend/types'
+
 import { cleanMetadataValues } from 'backend'
 import { useDeleteDance, usePatchDance } from 'services/dances'
 
@@ -15,8 +17,6 @@ import {DeleteButton} from 'components/widgets/DeleteButton'
 import {DurationField} from 'components/widgets/DurationField'
 import {LinkMenuItem} from 'components/widgets/LinkMenuItem'
 import { useT } from 'i18n'
-
-import {Dance, DanceWithEvents} from 'types'
 
 interface DanceEditorProps extends Pick<DanceEditorContainerProps, 'dance' | 'titleComponent'> {
   dance: DanceWithEvents

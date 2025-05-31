@@ -1,10 +1,10 @@
 import { set } from 'partial.lenses'
 
+import {EventProgramRow, EventProgramSettings, IntervalMusic, T} from './types'
+
 import {usePatchEventProgram} from 'services/events'
 
 import {formFor, useAutosavingState, UseAutosavingStateReturn} from 'libraries/forms'
-
-import {EventProgramRow, EventProgramSettings, IntervalMusic, T} from './types'
 
 import {JSONPatch, patch} from './patchStrategy'
 

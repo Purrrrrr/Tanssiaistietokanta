@@ -9,12 +9,12 @@ import {
 } from '@dnd-kit/sortable'
 import {CSS} from '@dnd-kit/utilities'
 
+import {Entity, ListEditorDroppableData, ListEditorItemData, ListItemComponent} from './types'
+import {FieldComponentProps, OnChangeHandler, TypedStringPath} from '../types'
+
 import {Icon} from 'libraries/ui'
 
-import {Entity, ListEditorDroppableData, ListEditorItemData, ListItemComponent} from './types'
-
 import { useFormStrings } from '../formContext'
-import {FieldComponentProps, OnChangeHandler, TypedStringPath} from '../types'
 import {ListEditorContext, ListEditorMoveContext} from './ListEditorContext'
 
 export interface ListEditorProps<T, V extends Entity, P = object> extends FieldComponentProps<V[]> {

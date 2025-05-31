@@ -1,8 +1,8 @@
 import { modify } from 'partial.lenses'
 
-import createDebug from 'utils/debug'
-
 import {Entity} from './types'
+
+import createDebug from 'utils/debug'
 
 import {apolloClient, DocumentNode} from './apollo'
 import {getSingleKey} from './apolloUtils'

@@ -2,6 +2,9 @@ import React, {useCallback, useRef, useState} from 'react'
 import classNames from 'classnames'
 import { MarkdownToJSX } from 'markdown-to-jsx'
 
+import {Dance} from 'types'
+import {DanceInstructionsQuery} from 'types/gql/graphql'
+
 import {backendQueryHook, cleanMetadataValues, graphql} from 'backend'
 import {sortDances, usePatchDance} from 'services/dances'
 import {useCallbackOnEventChanges} from 'services/events'
@@ -15,9 +18,6 @@ import {useFormatDateTime, useT} from 'i18n'
 import {selectElement} from 'utils/selectElement'
 import {showToast} from 'utils/toaster'
 import {uniq} from 'utils/uniq'
-
-import {Dance} from 'types'
-import {DanceInstructionsQuery} from 'types/gql/graphql'
 
 import './DanceInstructions.sass'
 

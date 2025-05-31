@@ -1,6 +1,6 @@
 import { Operation } from './types'
-
 import {Entity} from '../types'
+
 import {arrayPatch} from './arrayPatch'
 
 export type {Operation} from './types'

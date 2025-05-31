@@ -1,11 +1,11 @@
 import {Reducer, useReducer} from 'react'
 import * as L from 'partial.lenses'
 
+import {MergeableObject, MergeData, MergeResult, toFinalMergeResult} from './types'
+import {StringPath, Version} from '../types'
+
 import createDebug from 'utils/debug'
 
-import {MergeableObject, MergeData, MergeResult, toFinalMergeResult} from './types'
-
-import {StringPath, Version} from '../types'
 import mergeValues from './merge'
 
 export type SyncEvent = 'LOCAL_MODIFICATION' | 'PATCH_SENT' | 'PATCH_RESOLVED' | 'EXTERNAL_MODIFICATION' | 'CONFLICT_RESOLVED'

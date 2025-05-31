@@ -20,9 +20,9 @@ import {
 import * as L from 'partial.lenses'
 
 import {ListEditorItemData} from './types'
+import {toArrayPath} from '../types'
 
 import {useOnChangeFor} from '../hooks'
-import {toArrayPath} from '../types'
 
 const HasListEditorContext = createContext<boolean>(false)
 

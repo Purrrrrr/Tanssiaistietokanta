@@ -1,7 +1,7 @@
 import {Entity, ListItemComponent} from './types'
+import {FieldPropsWithoutComponent} from '../types'
 
 import {Field} from '../Field'
-import {FieldPropsWithoutComponent} from '../types'
 import {ListEditor, ListEditorProps} from './ListEditor'
 
 export interface UntypedListFieldProps<T, ValuePath, V extends Entity, P = object> extends Omit<ListFieldProps<T, V, P>, 'path'> {

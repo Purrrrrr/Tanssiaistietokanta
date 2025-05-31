@@ -1,7 +1,7 @@
 import { ID, Operation, PatchGenerator } from './types'
+import {Entity} from '../types'
 
 import {mapToIds} from '../idUtils'
-import {Entity} from '../types'
 
 export function arrayPatch<T extends Entity>(original: T[], changed: T[], toJSONPatch: PatchGenerator, pathBase = ''): Operation[] {
   const patch : Operation[] = []

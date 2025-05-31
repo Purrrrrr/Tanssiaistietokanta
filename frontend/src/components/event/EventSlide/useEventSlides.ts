@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
 
-import { useTranslation } from 'i18n'
-
 import { EventProgram, EventProgramRow, EventSlideProps } from './types'
+
+import { useTranslation } from 'i18n'
 
 export const startSlideId = ''
 

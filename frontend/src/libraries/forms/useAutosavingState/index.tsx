@@ -1,11 +1,11 @@
 import {useCallback, useEffect, useState} from 'react'
 
+import {MergeableObject, SyncState} from './types'
+import {OnFormChangeHandler, StringPath, TypedStringPath, Version} from '../types'
+
 import createDebug from 'utils/debug'
 
-import {MergeableObject, SyncState} from './types'
-
 import {FormProps} from '../Form'
-import {OnFormChangeHandler, StringPath, TypedStringPath, Version} from '../types'
 import {PatchStrategy} from './patchStrategies'
 import {useAutosavingStateReducer} from './reducer'
 

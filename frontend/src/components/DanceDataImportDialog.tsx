@@ -1,5 +1,7 @@
 import React, {useEffect, useState} from 'react'
 
+import {Dance} from 'types'
+
 import {usePatchDance} from 'services/dances'
 
 import {getDanceData, ImportedDanceData} from 'libraries/danceWiki'
@@ -7,8 +9,6 @@ import {Dialog} from 'libraries/dialog'
 import {formFor, MarkdownEditor, SubmitButton} from 'libraries/forms'
 import {Button, FormGroup, ProgressBar, Tag} from 'libraries/ui'
 import { useT, useTranslation } from 'i18n'
-
-import {Dance} from 'types'
 
 import {DanceNameSearch} from './DanceNameSearch'
 

@@ -1,9 +1,10 @@
 import React from 'react'
 
+import type { ID, VersionCalendar, VersionSidebarProps  } from './types'
+
 import { useDanceVersions } from 'services/dances'
 import { useEventVersions } from 'services/events'
 
-import type { ID, VersionCalendar, VersionSidebarProps  } from './types'
 import VersionChooser from './VersionChooser'
 
 const providers = {

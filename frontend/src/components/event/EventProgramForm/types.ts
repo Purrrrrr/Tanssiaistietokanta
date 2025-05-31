@@ -1,6 +1,6 @@
-import {Translator} from 'i18n'
-
 import {Dance, Event} from 'types'
+
+import {Translator} from 'i18n'
 
 export type T = Translator<'components.eventProgramEditor'>
 
