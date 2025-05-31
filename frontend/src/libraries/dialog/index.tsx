@@ -1,27 +1,14 @@
-import { FocusScope, useFocusManager } from '@react-aria/focus'
-import React, {useCallback, useEffect, useRef} from 'react'
-import {AlertProps, Classes, Overlay} from '@blueprintjs/core'
+import React, {useCallback, useEffect, useLayoutEffect, useRef} from 'react'
+import {AlertProps, Classes} from '@blueprintjs/core'
+import classNames from 'classnames'
 
 import {Button} from 'libraries/ui'
 
-type DialogProps = InnerDialogProps & {
+type DialogProps = {
   isOpen: boolean,
-}
-
-export function Dialog({isOpen, onClose, ...props} : DialogProps) {
-  return <Overlay isOpen={isOpen} lazy onClose={onClose} enforceFocus={false} canOutsideClickClose={false} className={Classes.OVERLAY_SCROLL_CONTAINER} hasBackdrop={true}>
-    <div className={Classes.DIALOG_CONTAINER}>
-      <FocusScope contain restoreFocus>
-        <InnerDialog {...props} onClose={onClose} />
-      </FocusScope>
-    </div>
-  </Overlay>
-}
-
-type InnerDialogProps = {
   onClose?: (e: React.SyntheticEvent) => unknown
   title: string
-  style ?: React.CSSProperties
+  // style ?: React.CSSProperties
   children: React.ReactNode
   className?: string,
 } & (
@@ -33,29 +20,47 @@ type InnerDialogProps = {
     closeButtonLabel?: string
   }
 )
-function InnerDialog({children, onClose, title, style, className, showCloseButton = true, closeButtonLabel} : InnerDialogProps) {
-  const closeButton = useRef<HTMLButtonElement>(null)
-  const focusManager = useFocusManager()
-  const dialogRef = useRef<HTMLDivElement>(null)
 
+export function Dialog({isOpen, onClose, children, title, className, showCloseButton = true, closeButtonLabel} : DialogProps) {
+  const modal = useRef<HTMLDialogElement>(null)
+  const closeButton = useRef<HTMLButtonElement>(null)
+
+  useLayoutEffect(() => {
+    if (isOpen) {
+      modal.current?.showModal()
+    } else {
+      modal.current?.close()
+    }
+  }, [isOpen])
   useEffect(
     () => {
-      if (dialogRef.current === null) return
-      if (dialogRef.current.contains(document.activeElement)) return
-      focusManager?.focusNext?.({
-        from: closeButton.current || undefined, wrap: true
-      })
+      if (!isOpen || modal.current === null) return
+      if (modal.current.contains(document.activeElement)) return
+
+      const focusables = getFocusableElements(modal.current).filter(el => el !== closeButton.current)
+      focusables[0]?.focus()
     },
-    [focusManager]
+    [isOpen]
   )
 
-  return <div ref={dialogRef} className={Classes.DIALOG+(className ? ' '+className : '')} style={style}>
+  return <dialog
+    ref={modal}
+    className={classNames(
+      className,
+      'block overflow-hidden fixed top-1/2 -translate-y-1/2 mx-auto bg-gray-100 rounded-md border border-gray-400 shadow-xl shadow-black/50',
+      '[[open]]:animate-appear',
+      'animate-dissapear',
+      'backdrop:backdrop-blur-[2px]',
+    )}
+  >
     <div className={Classes.DIALOG_HEADER}>
       <h1 style={{fontSize: 18}} className={Classes.HEADING}>{title}</h1>
       {showCloseButton && <button aria-label={closeButtonLabel} className={Classes.BUTTON+' '+Classes.DIALOG_CLOSE_BUTTON+' '+Classes.MINIMAL} onClick={onClose} ref={closeButton}>❌</button>}
     </div>
-    {children}
-  </div>
+    <div className="max-h-[90dvh] overflow-auto">
+      {children}
+    </div>
+  </dialog>
 }
 
 Dialog.Body = function DialogBody({className, ...props}: React.HTMLAttributes<HTMLDivElement>) {
@@ -83,3 +88,11 @@ export function Alert({isOpen, title, intent, confirmButtonText, cancelButtonTex
     </div>
   </Dialog>
 }
+
+function getFocusableElements(container: HTMLElement) {
+  return [
+    ...container.querySelectorAll(focusableSelector) as NodeListOf<HTMLElement>
+  ].filter(el => !el.getAttribute('aria-hidden') && el.style.display !== 'none')
+}
+
+const focusableSelector = 'a[href], area[href], input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), details, iframe, object, embed, [contenteditable], [tabindex]:not([tabindex="-1"])'

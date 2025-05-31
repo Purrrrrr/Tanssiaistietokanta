@@ -84,8 +84,7 @@ export function DanceDataImportDialog({dance: originalDance, isOpen, onClose, on
   }
 
   return <Dialog isOpen={isOpen} onClose={close} title={useTranslation('components.danceDataImportButton.dialogTitle')}
-    closeButtonLabel={useTranslation('common.close')}
-    style={{minWidth: 500, width: 'auto', maxWidth: '80%'}}>
+    closeButtonLabel={useTranslation('common.close')}>
     <Form value={dance} onChange={setDance} onSubmit={save}>
       <Dialog.Body>
         <DataImporter danceName={dance.name} onImport={importDone} />

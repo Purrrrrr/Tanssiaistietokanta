@@ -1,6 +1,24 @@
 @import url('https://fonts.googleapis.com/css2?family=Charm&family=Tangerine&display=swap');
 @import "tailwindcss";
 
+@theme {
+  --animate-appear: appear 0.2s ease-in-out forwards;
+  --animate-dissapear: dissapear 0.2s ease-in-out forwards;
+
+  @keyframes dissapear {
+    to {
+      transform: scale(.25);
+      opacity: 0;
+    }
+  }
+  @keyframes appear {
+    from {
+      transform: scale(.55);
+      opacity: 0;
+    }
+  }
+}
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
