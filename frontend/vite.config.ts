@@ -4,6 +4,7 @@ import { resolve } from 'node:path'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { defineConfig, loadEnv, Plugin } from 'vite'
+import { analyzer } from 'vite-bundle-analyzer'
 import checker from 'vite-plugin-checker'
 import tsconfigPaths from 'vite-tsconfig-paths'
 
@@ -38,6 +39,9 @@ export default defineConfig(({ mode, command }) => {
         typescript: true,
       }),
       tailwindcss(),
+      analyzer({
+        exclude: /.jpg$/,
+      }),
     ],
     preview: {
       proxy: {
