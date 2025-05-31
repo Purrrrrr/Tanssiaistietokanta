@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import { Button, Flex } from 'libraries/ui'
 
-import { FieldInputComponentProps, formFor, TextInput } from './index'
+import { Combobox, FieldInputComponentProps, formFor, TextInput } from './index'
 
 interface Data {
   a: string
@@ -42,12 +42,22 @@ export default function Foo() {
 }
 
 function FooContents() {
+  const [s, setS] = useState<string | null>('a')
   const addToL = useAddItemAt('l')
   const addItem = useAddItem()
   const removeFromL = useRemoveItemAt('l')
   const removeItem = useRemoveItem()
 
   return <>
+    <Combobox
+      items={['a', 'b']}
+      value={s}
+      onChange={setS}
+      id="test"
+      placeholder="valitse"
+      renderItem={String}
+    />
+    <p>{s}</p>
     <Field.Date path="rangeStart" label="Start" locale="fi-FI" />
     <Field.DateRange startPath="rangeStart" endPath="rangeEnd" label="Range" />
     <Field.Custom label="aaa" path="a" required component={TextInput} />

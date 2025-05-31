@@ -1,3 +1,4 @@
+export { Combobox } from './Combobox'
 export { type DateInputProps, DateInput } from './DateInput'
 export { type DateRangeInputProps, DateRangeInput } from './DateRangeInput'
 export { MarkdownInput } from './MarkdownInput'
