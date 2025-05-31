@@ -3,10 +3,11 @@ import React from 'react'
 import MdEditor, { Plugins }  from 'react-markdown-editor-lite'
 import { MarkdownToJSX } from 'markdown-to-jsx'
 
+import type { FieldInputComponent, FieldInputComponentProps } from './types'
+
 import {AnchorButton, Markdown} from 'libraries/ui'
 
 import { useFormTranslation } from '../../localization'
-import type { FieldInputComponent, FieldInputComponentProps } from './types'
 
 const defaultQRCode = '<QR title="..." value="https//..." size={250} />'
 function QRCode({ editor }) {
