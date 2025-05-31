@@ -47,7 +47,7 @@ export function SyncStatus(
   }, [state])
   const fullClassName = classNames(
     className, 'sync_status', state.toLowerCase(),
-    {'status-changed': changed, 'always-show-status': !autoHideText[state], block, right}
+    {'status-changed': changed, 'always-show-status': !autoHideText[state], 'display-block': block, right}
   )
 
   const style = {

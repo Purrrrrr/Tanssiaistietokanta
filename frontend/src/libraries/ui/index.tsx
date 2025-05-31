@@ -15,7 +15,7 @@ import { IconPaths, Icons } from '@blueprintjs/icons'
 import classNames from 'classnames'
 import MarkdownToJsx from 'markdown-to-jsx'
 
-import './ui.css'
+import './ui.scss'
 
 export * from './AutosizedSection'
 export { Breadcrumb, BreadcrumbContext, Breadcrumbs } from './Breadcrumbs'

@@ -22,7 +22,7 @@ export default function PrintViewToolbar({children, icon = 'settings', maxHeight
       tabIndex={0}
       onFocus={() => setOpen(true)}
     />
-    <div className="contents"
+    <div className="toolbar-contents"
       style={maxHeight ? {maxHeight} : undefined}
     >
       {children}

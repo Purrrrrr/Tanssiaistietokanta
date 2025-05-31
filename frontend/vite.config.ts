@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 
 import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
 import { defineConfig, loadEnv, Plugin } from 'vite'
 import checker from 'vite-plugin-checker'
 import tsconfigPaths from 'vite-tsconfig-paths'
@@ -36,6 +37,7 @@ export default defineConfig(({ mode, command }) => {
       checker({
         typescript: true,
       }),
+      tailwindcss(),
     ],
     preview: {
       proxy: {
