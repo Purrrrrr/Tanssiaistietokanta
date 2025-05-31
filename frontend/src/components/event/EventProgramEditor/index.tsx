@@ -247,9 +247,32 @@ function ProgramDetailsEditor({path}: {path: ProgramItemPath}) {
 
 function DanceItemEditor({path}: {path: DanceProgramPath}) {
   const t = useT('components.eventProgramEditor')
+  const item = useValueAt(`${path}.item`)
   return <Flex className="eventProgramItemEditor">
     <Field label={t('dance')} labelStyle="hidden" path={`${path as DanceProgramPath}.item`} component={DanceProgramChooser} />
+    {item.__typename === 'Dance' && item.teachedIn.map(workshop =>
+      <WorkshopTag key={workshop._id} name={workshop.workshop.name} />
+    )}
   </Flex>
+}
+
+function WorkshopTag({name} : { name: string}) {
+  const hash = name
+    .split('')
+    .map(s => s.codePointAt(0) ?? 0)
+    .reduce((acc, code) => code + (acc << 5) - acc, 0)
+  const mod = (n: number, m: number) => (n % m + m) % m
+  const style = {
+    background: `hsl(${mod(hash, 17) * 360 / 17}, 70%, 30%)`,
+    color: `hsl(${mod(hash, 37) * 360 / 37}, 90%, 90%)`,
+    fontWeight: 'bold',
+    borderRadius: 12,
+    lineHeight: '22px',
+    paddingBlock: 2,
+    paddingInline: 7,
+    margin: 2,
+  } as const
+  return <span style={style}>{name}</span>
 }
 
 function EventProgramItemEditor({path}: {path: ProgramItemPath}) {
