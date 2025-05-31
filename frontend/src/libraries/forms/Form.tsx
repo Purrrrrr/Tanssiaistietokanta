@@ -47,7 +47,7 @@ export function Form<T>({
     //Sometimes forms from dialogs end up propagating into our form and we should not submit then
     if (e.target !== form.current) return
     e.preventDefault()
-    onSubmit && onSubmit(value, e)
+    onSubmit?.(value, e)
   }
 
   const metadataContext = useCreateFormMetadataContext({value, onChange, labelStyle, inline, readOnly, conflicts, strings, onResolveConflict})

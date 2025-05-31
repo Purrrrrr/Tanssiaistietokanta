@@ -43,7 +43,7 @@ function isSupported(): boolean {
       && typeof Symbol === 'function'
       && typeof Object.assign === 'function'
       && typeof Promise === 'function'
-  } catch (e) {
+  } catch (_ignored) {
     return false
   }
 }

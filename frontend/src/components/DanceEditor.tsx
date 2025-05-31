@@ -47,7 +47,7 @@ export function DanceEditor({dance, onDelete, showLink, showVersionHistory, titl
   const [deleteDance] = useDeleteDance()
   const handleDelete = () => {
     addLoadingAnimation(deleteDance({id: dance._id}))
-    onDelete && onDelete()
+    onDelete?.()
   }
 
   return <DanceEditorContainer

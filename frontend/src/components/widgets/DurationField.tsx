@@ -26,7 +26,7 @@ export function DurationField({value: maybeValue, onChange, readOnly, className,
     if (newVal === value) { //Text has changed but value hasn't. Reset text!
       setParams({value, text: durationToString(value)})
     } else { //Propagate changed value
-      onChange && onChange(newVal, event)
+      onChange?.(newVal, event)
     }
   }, [params, onChange]))
   useEffect(() => setParams({text: durationToString(value ?? 0), value}), [value])
