@@ -35,12 +35,10 @@
 * Tool to create dance instruction leaflet
   MISC:
   * intervalMusic on by defalt
+  * teached dances missing: cut unique
     Focus field on search clear
-    Select filter clear
-    Autocomplete clear??
     Dance Selector
     Add teached dances functionality <- focus on add
-    teached dances missing: cut unique??
   Dance selector:
   * show workshop
     show category <- find a way to autofill the categories

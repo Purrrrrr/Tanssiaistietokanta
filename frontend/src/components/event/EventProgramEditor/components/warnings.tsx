@@ -35,7 +35,7 @@ export function MissingDancesWarning({ program, workshops }: {program: EventProg
       <p key={id}>
         <strong>{name}</strong>
         {': '}
-        {missingDances.map(dance => dance.name).join(', ')}
+        {uniq(missingDances).map(dance => dance.name).join(', ')}
       </p>
     )}
   </Callout>
