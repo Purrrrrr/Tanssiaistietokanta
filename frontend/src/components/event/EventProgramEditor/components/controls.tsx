@@ -62,7 +62,7 @@ function useCreateNewDanceSet(): (danceSets: DanceSet[]) => DanceSet {
       title: t('placeholderNames.danceSet', {number: danceSetNumber}),
       program: dances,
       titleSlideStyleId: null,
-      intervalMusic: null,
+      intervalMusic: DEFAULT_INTERVAL_MUSIC,
     } as DanceSet
   }
 }

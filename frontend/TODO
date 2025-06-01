@@ -33,6 +33,17 @@
     Character count for dance instructions
       Maximum?
 * Tool to create dance instruction leaflet
+  MISC:
+  * intervalMusic on by defalt
+    Focus field on search clear
+    Select filter clear
+    Autocomplete clear??
+    Dance Selector
+    Add teached dances functionality <- focus on add
+    teached dances missing: cut unique??
+  Dance selector:
+  * show workshop
+    show category <- find a way to autofill the categories
   Typed backend queries
   Better create dance dialog
     Add steps, including wiki import
