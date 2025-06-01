@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { MouseEvent } from 'react'
 import QRCode from 'react-qr-code'
 import {
   Button as BlueprintButton,
@@ -186,7 +186,17 @@ export function SearchBar({id, onChange, value, placeholder, emptySearchText} : 
   return <BlueprintInputGroup
     id={id}
     leftIcon="search"
-    rightElement={<Button aria-label={emptySearchText} minimal icon="cross" onClick={() => onChange('')} />}
+    rightElement={
+      <Button
+        aria-label={emptySearchText}
+        minimal
+        icon="cross"
+        onClick={(e: MouseEvent<HTMLElement>) => {
+          onChange('');
+          (e.target as HTMLButtonElement).closest('.bp5-input-group')?.querySelector('input')?.focus()
+        }}
+      />
+    }
     value={value}
     onChange={(e) => onChange(e.target.value)}
     placeholder={placeholder}
