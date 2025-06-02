@@ -5,7 +5,6 @@ import { hooks as schemaHooks } from '@feathersjs/schema'
 import {
   convertDataValidator,
   convertQueryValidator,
-  convertQueryResolver
 } from './convert.schema'
 
 import type { Application } from '../../declarations'

@@ -1,4 +1,4 @@
-import type { Params, } from '@feathersjs/feathers'
+import type { Id, Params, } from '@feathersjs/feathers'
 import VersioningNeDBService from '../../utils/VersioningNeDBService'
 
 import type { Application } from '../../declarations'
@@ -17,6 +17,17 @@ export class DancesService<ServiceParams extends DancesParams = DancesParams>
 {
   constructor(public options: DancesServiceOptions) {
     super({ ...options, dbname: 'dances'})
+  }
+
+  async get(id: Id, _params?: ServiceParams): Promise<Dances> {
+    const r = await super.get(id, _params)
+    try {
+      r.wikipage = await this.options.app.service('dancewiki').get(r.name, { updateFromWiki: true })
+    } catch (_) {
+      //404
+    }
+
+    return r
   }
 }
 export const getOptions = (app: Application) => {

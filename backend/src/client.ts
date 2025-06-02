@@ -4,6 +4,13 @@ import type { TransportConnection, Application } from '@feathersjs/feathers'
 import authenticationClient from '@feathersjs/authentication-client'
 import type { AuthenticationClientOptions } from '@feathersjs/authentication-client'
 
+import { dancewikiClient } from './services/dancewiki/dancewiki.shared'
+export type {
+  Dancewiki,
+  DancewikiData,
+  DancewikiQuery,
+} from './services/dancewiki/dancewiki.shared'
+
 import { graphqlClient } from './services/graphql/graphql.shared'
 export type { Graphql, GraphqlData, GraphqlQuery, GraphqlPatch } from './services/graphql/graphql.shared'
 
@@ -63,5 +70,6 @@ export const createClient = <Configuration = any>(
   client.configure(convertClient)
   client.configure(channelConnectionsClient)
   client.configure(graphqlClient)
+  client.configure(dancewikiClient)
   return client
 }

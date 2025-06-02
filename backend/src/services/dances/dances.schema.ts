@@ -26,6 +26,7 @@ export const dancesSchema = Type.Object(
     instructions: Type.String(),
     remarks: Type.String(),
     slideStyleId: SlideStyleId(),
+    wikipage: Type.Any(),
   },
   { $id: 'Dances', additionalProperties: false }
 )
