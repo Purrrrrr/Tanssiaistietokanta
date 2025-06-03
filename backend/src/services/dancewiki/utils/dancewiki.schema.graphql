@@ -1,0 +1,22 @@
+type Wikipage {
+  name: String!
+  _fetchedAt: String 
+  status: WikipageStatus!
+  instructions: String
+  formations: [String!]!
+  categories: [String!]!
+}
+
+enum WikipageStatus {
+  UNFETCHED
+  NOT_FOUND
+  FETCHED
+}
+
+type Query {
+  searchWiki(search: String!): [String!]!
+}
+
+type Mutation {
+  fetchWikipage(name: String!): Wikipage!
+}

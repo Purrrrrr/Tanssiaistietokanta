@@ -41,7 +41,12 @@ export const dancewiki = (app: Application) => {
         schemaHooks.resolveQuery(dancewikiQueryResolver)
       ],
       find: [],
-      get: [],
+      get: [ctx => {
+        const { provider } = ctx.arguments[1]
+        if (provider === 'rest') {
+          ctx.arguments[0] = decodeURIComponent(ctx.arguments[0])
+        }
+      }],
       create: [
         schemaHooks.validateData(dancewikiDataValidator),
         schemaHooks.resolveData(dancewikiDataResolver)

@@ -1,4 +1,4 @@
-import type { Id, NullableId, Params, ServiceInterface } from '@feathersjs/feathers'
+import type { Id, Params, ServiceInterface } from '@feathersjs/feathers'
 
 import type { Application } from '../../declarations'
 import type { Dancewiki, DancewikiData, DancewikiQuery } from './dancewiki.schema'
@@ -18,6 +18,7 @@ export interface DancewikiServiceOptions {
 
 export interface DancewikiParams extends Params<DancewikiQuery> {
   updateFromWiki?: boolean
+  noThrowOnNotFound?: boolean
 }
 
 interface StoredDanceWiki extends Pick<Dancewiki, '_id' | '_fetchedAt' | 'instructions'> {
@@ -35,9 +36,11 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
   categoryCache: {
     categories: DanceCategorization | null
     fetchedAt: Date | null
+    pendingPromise: Promise<DanceCategorization> | null
   } = {
     categories: null,
-    fetchedAt: null
+    fetchedAt: null,
+    pendingPromise: null,
   }
 
   constructor(public options: DancewikiServiceOptions) {
@@ -45,11 +48,30 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
   }
 
   async find(_params?: ServiceParams): Promise<Dancewiki[]> {
+    const params = this.fixParams(_params)
     if (_params?.updateFromWiki) {
       await this.updatePageList()
     }
-    const data = await this.storageService.find(_params)
-    return Promise.all(data.map(page => this.addData(page)))
+    const data = await this.storageService.find(params)
+    return await Promise.all(data.map(page => this.addData(page, _params)))
+  }
+
+  fixParams(_params?: ServiceParams): ServiceParams | undefined {
+    if (_params?.query && ('name' in _params.query)) {
+      const { name, ...query } = _params.query
+      return this.fixParams({ ..._params, query: { 
+        ...query,
+        _id: name,
+      }})
+    }
+    if (_params?.query?.$select?.includes('name')) {
+      const { $select, ...query } = _params.query
+      return { ..._params, query: { 
+        ...query,
+        $select: ['_id', ...$select],
+      }}
+    }
+    return _params
   }
 
   async updatePageList() {
@@ -75,10 +97,21 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
         throw new Error('initiate refetch')
       }
 
-      return this.addData(result)
+      return this.addData(result, _params)
     } catch (e) {
       if (_params?.updateFromWiki && typeof id === 'string') {
         return await this.create({ name: id })
+      }
+      if (_params?.noThrowOnNotFound) {
+        return {
+          _id: String(id),
+          _fetchedAt: new Date().toISOString(),
+          name: String(id),
+          status: 'NOT_FOUND',
+          instructions: null,
+          formations: [],
+          categories: [],
+        }
       }
       throw e
     }
@@ -116,38 +149,57 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
     return this.addData(created)
   }
 
-  async addData(data: StoredDanceWiki): Promise<Dancewiki> {
+  async addData(data: StoredDanceWiki, params?: ServiceParams): Promise<Dancewiki> {
     const { originalInstructions, instructions, ...rest } = data
     const name = data._id
-    const status = data._fetchedAt === null
-      ? 'UNFETCHED'
-      : instructions === null ? 'NOT_FOUND' : 'FETCHED'
+    const isSelected = (field: keyof Dancewiki) =>
+      params?.query?.$select === undefined || params?.query?.$select?.includes(field)
+
+    return {
+      ...rest,
+      name,
+      status: isSelected('status') ?
+        data._fetchedAt === null
+          ? 'UNFETCHED'
+          : instructions === null ? 'NOT_FOUND' : 'FETCHED'
+        : 'UNFETCHED', // Just some default value
+      instructions: isSelected('instructions') ? cleanupInstructions(instructions) : '',
+      formations: isSelected('formations') ? getFormations(instructions) : [],
+      categories: isSelected('categories')
+        ? await this.getCategories(name, instructions)
+        : [],
+    }
+  }
+
+  private async getCategories(name: string, instructions: string | null) {
     // Prevent infinite loop when fetching the categories page itself
     const categoryCache = name === categoriesPage
       ? {}
       : await this.getCategoryCache()
 
-    return {
-      ...rest,
-      name,
-      status,
-      instructions: cleanupInstructions(instructions),
-      formations: getFormations(instructions),
-      categories: uniq([
-        ...getCategoriesFromContent(instructions),
-        ...(categoryCache[data._id] ?? [])
-      ]),
-    }
+    return uniq([
+      ...getCategoriesFromContent(instructions),
+      ...(categoryCache[name] ?? [])
+    ])
   }
 
   private async getCategoryCache(): Promise<DanceCategorization> {
-    const { categories, fetchedAt } = this.categoryCache
+    const { categories, fetchedAt, pendingPromise } = this.categoryCache
+    if (pendingPromise) return pendingPromise
     if (categories === null || !fetchedAt || fetchedAt.valueOf() < new Date().valueOf() - DAY) {
-      const page = await this.get(categoriesPage, { updateFromWiki: true } as ServiceParams)
-      this.categoryCache.categories = getDanceCategorization(page.instructions ?? '')
-      return this.categoryCache.categories
+      this.categoryCache.pendingPromise = this.fetchCategoryCache()
+      return this.categoryCache.pendingPromise
     }
 
+    return categories
+  }
+
+  private async fetchCategoryCache(): Promise<DanceCategorization> {
+    const page = await this.get(categoriesPage, { updateFromWiki: true } as ServiceParams)
+    const categories = getDanceCategorization(page.instructions ?? '')
+    this.categoryCache = {
+      fetchedAt: new Date(), categories, pendingPromise: null,
+    }
     return categories
   }
 

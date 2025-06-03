@@ -21,6 +21,8 @@ type Dance implements ProgramItem & Versionable {
   teachedIn(eventId: ID): [TeachedInWorkshop!]!
   slideStyleId: ID
   events: [Event!]!
+  wikipageName: String
+  wikipage: Wikipage
 }
 
 type TeachedInWorkshop {
@@ -46,6 +48,7 @@ input DanceInput {
   remarks: String
   category: String
   instructions: String
+  wikipageName: String
 }
 input DancePatchInput {
   name: String

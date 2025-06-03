@@ -7,15 +7,12 @@ export async function getPageList(): Promise<string[]> {
 
   do {
     const url = continueToken ? `${baseUrl}&apcontinue=${encodeURIComponent(continueToken)}` : baseUrl
-    console.log(url)
     const res = await(get(url))
     continueToken = res.continue?.apcontinue ?? null
 
     results.push(...res.query.allpages.map((page: Page) => page.title))
   } while(continueToken)
   
-  console.log(results.length)
-  console.log(results)
   return results
 }
 

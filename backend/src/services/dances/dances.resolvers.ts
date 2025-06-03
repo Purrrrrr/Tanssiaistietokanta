@@ -10,6 +10,7 @@ export default (app: Application) => {
   const service = app.service('dances')
   const workshopService = app.service('workshops')
   const eventService = app.service('events')
+  const wikiService = app.service('dancewiki')
 
   async function findTeachedIn(dance: { _id: string}, {eventId}: { eventId: string}) {
     const workshops = await workshopService.find({
@@ -52,6 +53,11 @@ export default (app: Application) => {
       teachedIn: findTeachedIn,
       events: findEvents,
       versionHistory: versionHistoryResolver(service),
+      wikipage: (dance: Dances) => {
+        const name = dance.wikipageName ?? dance.name
+        if (!name) return null
+        return wikiService.get(name, { noThrowOnNotFound: true })
+      }
     },
     VersionHistory: versionHistoryFieldResolvers(),
     Query: {

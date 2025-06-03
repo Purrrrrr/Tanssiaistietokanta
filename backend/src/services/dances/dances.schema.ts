@@ -6,7 +6,7 @@ import type { Static } from '@feathersjs/typebox'
 import type { HookContext } from '../../declarations'
 import { dataValidator, queryValidator } from '../../validators'
 import { castAfterValidating } from '../../utils/cast-after-validating'
-import { computedProperties, SlideStyleId, Id, Name } from '../../utils/common-types'
+import { computedProperties, SlideStyleId, Id, Name, Nullable } from '../../utils/common-types'
 
 // Main data model schema
 export const dancesSchema = Type.Object(
@@ -26,7 +26,8 @@ export const dancesSchema = Type.Object(
     instructions: Type.String(),
     remarks: Type.String(),
     slideStyleId: SlideStyleId(),
-    wikipage: Type.Any(),
+    wikipage: Nullable(Type.Any()),
+    wikipageName: Nullable(Type.String()),
   },
   { $id: 'Dances', additionalProperties: false }
 )

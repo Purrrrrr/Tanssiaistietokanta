@@ -34,15 +34,24 @@
       Maximum?
 * Tool to create dance instruction leaflet
 * Apollo client 3.0
+  Find a way to autofill dance categories
+  * Integrate dance wiki to backend
+  * GraphQL queries for it
+    Use backend integration in frontend
+    wikiPageName field for dances
+    Show category/formation suggestions in DanceEditor
+    Automatic background fetcher
+    
   MISC:
   * intervalMusic on by defalt
   * teached dances missing: cut unique
   * Focus field on search clear
-    Dance Selector
     Add teached dances functionality <- focus on add
     Dance selector:
     * show workshop
-      show category <- find a way to autofill the categories
+      show category <- 
+  Teacher/people database
+  Apuopettajat / assistant teachers
   Typed backend queries
   Better create dance dialog
     Add steps, including wiki import
