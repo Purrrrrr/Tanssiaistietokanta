@@ -23,7 +23,7 @@ export interface DancewikiParams extends Params<DancewikiQuery> {
   noThrowOnNotFound?: boolean
 }
 
-interface StoredDanceWiki extends Pick<Dancewiki, '_id' | 'name' | '_fetchedAt' | 'instructions'> {
+interface StoredDanceWiki extends Pick<Dancewiki, '_id' | 'name' | 'status' | '_fetchedAt' | 'instructions'> {
   originalInstructions: string | null
 }
 
@@ -80,8 +80,8 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
     
     if (unfetched.length > 0) {
       console.time('fetch')
-      console.log(unfetched)
-      await this.fetchPages(unfetched.slice(0, MAX_CONCURRENT_FETCHES).map(page => page._id))
+      const pagesToFetch = unfetched.slice(0, MAX_CONCURRENT_FETCHES).map(page => page._id)
+      await this.fetchPages(pagesToFetch)
       console.timeEnd('fetch')
       console.log('pages fetched!')
       return
@@ -104,6 +104,7 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
       pagesToCreate.map(name => this.storageService.create({
         _id: name,
         name,
+        status: 'UNFETCHED',
         _fetchedAt: null,
         originalInstructions: null,
         instructions: null,
@@ -164,13 +165,15 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
 
   async storePage(page: ParsedPage): Promise<StoredDanceWiki> {
     const now = new Date().toISOString()
-    const contents = page?.revision?.contents ?? ''
+    const hasContents = page.revision !== null
+    const contents = page.revision?.contents ?? ''
     const dataToCreate : StoredDanceWiki = {
       _id: page.title,
       name: page.title,
+      status: hasContents ? 'FETCHED' : 'NOT_FOUND',
       _fetchedAt: now,
       originalInstructions: contents,
-      instructions: await convertToMarkdown(contents),
+      instructions: hasContents ? await convertToMarkdown(contents) : '',
     }
     
     const existing = await this.has(page.title)
@@ -181,22 +184,15 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
 
   addData(data: StoredDanceWiki, params?: ServiceParams): Dancewiki {
     const { originalInstructions, instructions, ...rest } = data
-    const name = data._id
     const isSelected = (field: keyof Dancewiki) =>
       params?.query?.$select === undefined || params?.query?.$select?.includes(field)
 
     return {
       ...rest,
-      name,
-      status: isSelected('status') ?
-        data._fetchedAt === null
-          ? 'UNFETCHED'
-          : instructions === null ? 'NOT_FOUND' : 'FETCHED'
-        : 'UNFETCHED', // Just some default value
       instructions: isSelected('instructions') ? cleanupInstructions(instructions) : '',
       formations: isSelected('formations') ? getFormations(instructions) : [],
       categories: isSelected('categories')
-        ? this.getCategories(name, instructions)
+        ? this.getCategories(data.name, instructions)
         : [],
     }
   }
