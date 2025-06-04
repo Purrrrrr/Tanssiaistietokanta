@@ -8,6 +8,7 @@ import path from 'path'
 export type NeDBServiceOptions = {
   inMemoryOnly?: false
   app: Application
+  id?: string
   dbname: string
   indexes?: NeDB.EnsureIndexOptions[]
 } | {
@@ -44,7 +45,7 @@ export class NeDBService<Result extends BaseRecord, Data, ServiceParams extends 
     return neDB
   }
 
-  getModel() {
+  getModel(): NeDB {
     return this.currentService.getModel()
   }
 

@@ -6,9 +6,13 @@ export default (app: Application) => {
 
   return {
     Query: {
-      searchWiki: async (_: any, {search}: any) => {
-        const entries = await service.find({ query: { $select: ['name'] }})
-        return entries.map(entry => entry.name).filter(name => name.startsWith(search))
+      searchWiki: async (_: any, {search}: { search: string }) => {
+        const entries = await service.find({ query: { $select: ['name'], status: { $ne: 'NOT_FOUND' } } })
+        const names = entries.map(entry => entry.name)
+
+        if (!search) return names
+        const searchLower = search.toLowerCase()
+        return names.filter(name => name.toLowerCase().includes(searchLower))
       },
     },
     Mutation: {

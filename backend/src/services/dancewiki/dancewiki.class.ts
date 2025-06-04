@@ -1,14 +1,16 @@
 import type { Id, Params, ServiceInterface } from '@feathersjs/feathers'
+import cron from 'node-cron'
 
 import type { Application } from '../../declarations'
 import type { Dancewiki, DancewikiData, DancewikiQuery } from './dancewiki.schema'
 import { NeDBService } from '../../utils/NeDBService'
-import { getPageList, getWikiPage } from './utils/wikiApi'
+import { getPageList, getWikiPage, getWikiPages, ParsedPage } from './utils/wikiApi'
 import convertToMarkdown from '../convert/pandoc'
 import { cleanupInstructions } from './utils/cleanupInstructions'
 import { DanceCategorization, getCategoriesFromContent, getDanceCategorization } from './utils/getCategories'
 import { getFormations } from './utils/getFormations'
 import { uniq } from 'ramda'
+import { Cache, createCache } from './utils/cache'
 
 export type { Dancewiki, DancewikiData, DancewikiQuery }
 
@@ -21,7 +23,7 @@ export interface DancewikiParams extends Params<DancewikiQuery> {
   noThrowOnNotFound?: boolean
 }
 
-interface StoredDanceWiki extends Pick<Dancewiki, '_id' | '_fetchedAt' | 'instructions'> {
+interface StoredDanceWiki extends Pick<Dancewiki, '_id' | 'name' | '_fetchedAt' | 'instructions'> {
   originalInstructions: string | null
 }
 
@@ -33,48 +35,66 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
   implements ServiceInterface<Dancewiki, DancewikiData, DancewikiParams, never>
 {
   storageService: NeDBService<StoredDanceWiki, StoredDanceWiki, DancewikiParams, never>
-  categoryCache: {
-    categories: DanceCategorization | null
-    fetchedAt: Date | null
-    pendingPromise: Promise<DanceCategorization> | null
-  } = {
-    categories: null,
-    fetchedAt: null,
-    pendingPromise: null,
-  }
+  categories : Cache<DanceCategorization>
 
   constructor(public options: DancewikiServiceOptions) {
-    this.storageService = new NeDBService({ ...options, dbname: 'dancewiki' })
+    this.storageService = new NeDBService({
+      ...options,
+      dbname: 'dancewiki',
+      id: 'name',
+      indexes: [{
+        fieldName: 'name',
+        unique: true,
+      }]
+    })
+    this.categories = createCache(async () => {
+      const page = await this.get(categoriesPage, { updateFromWiki: true } as ServiceParams)
+      return getDanceCategorization(page.instructions ?? '')
+    }, DAY)
+
+    // Update list of pages daily
+    cron.schedule('0 0 * * *', () => this.updatePageList())
+    cron.schedule('0 */15 * * * *', this.backgroundFetch.bind(this))
+  }
+
+  async has(name: string) {
+    const count = await this.storageService.getModel().countAsync({ name })
+    return count > 0
+  }
+  
+  async backgroundFetch(): Promise<void> {
+    console.log('Updating dance wiki entries')
+    const MAX_CONCURRENT_FETCHES = 50
+
+    const pageCount = await this.storageService.getModel().countAsync({})
+    if (pageCount === 0) {
+      await this.updatePageList()
+    }
+
+    if (!this.categories.isValid()) {
+      await this.categories.get()
+    }
+
+    const unfetched = await this.storageService.find({ query: { _fetchedAt: null } })
+    console.log(`${unfetched.length} unfetched wiki entries fetching ${Math.min(MAX_CONCURRENT_FETCHES, unfetched.length)}`)
+    
+    if (unfetched.length > 0) {
+      console.time('fetch')
+      console.log(unfetched)
+      await this.fetchPages(unfetched.slice(0, MAX_CONCURRENT_FETCHES).map(page => page._id))
+      console.timeEnd('fetch')
+      console.log('pages fetched!')
+      return
+    }
   }
 
   async find(_params?: ServiceParams): Promise<Dancewiki[]> {
-    const params = this.fixParams(_params)
-    if (_params?.updateFromWiki) {
-      await this.updatePageList()
-    }
-    const data = await this.storageService.find(params)
+    const data = await this.storageService.find(_params)
     return await Promise.all(data.map(page => this.addData(page, _params)))
   }
 
-  fixParams(_params?: ServiceParams): ServiceParams | undefined {
-    if (_params?.query && ('name' in _params.query)) {
-      const { name, ...query } = _params.query
-      return this.fixParams({ ..._params, query: { 
-        ...query,
-        _id: name,
-      }})
-    }
-    if (_params?.query?.$select?.includes('name')) {
-      const { $select, ...query } = _params.query
-      return { ..._params, query: { 
-        ...query,
-        $select: ['_id', ...$select],
-      }}
-    }
-    return _params
-  }
-
   async updatePageList() {
+    console.log('Updating dancewiki page list')
     const pagesInWiki = await getPageList()
     const pagesInStorage = await this.storageService.find()
     const existingPageNames = new Set(pagesInStorage.map(page => page._id))
@@ -83,6 +103,7 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
     return Promise.all(
       pagesToCreate.map(name => this.storageService.create({
         _id: name,
+        name,
         _fetchedAt: null,
         originalInstructions: null,
         instructions: null,
@@ -121,35 +142,44 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
   async create(data: DancewikiData[], params?: ServiceParams): Promise<Dancewiki[]>
   async create(
     data: DancewikiData | DancewikiData[],
-    params?: ServiceParams
+    _params?: ServiceParams
   ): Promise<Dancewiki | Dancewiki[]> {
     if (Array.isArray(data)) {
-      return Promise.all(data.map((current) => this.create(current, params)))
+      const created = await this.fetchPages(data.map(p => p.name))
+      return Promise.all(created.map(page => this.addData(page)))
     }
-    const now = new Date().toISOString()
-
-    const page = await getWikiPage(data.name)
-    const dataToCreate : StoredDanceWiki = page
-      ? {
-        _id: page.title,
-        _fetchedAt: now,
-        originalInstructions: page.contents,
-        instructions: await convertToMarkdown(page.contents),
-      } : {
-        _id: data.name,
-        _fetchedAt: now,
-        originalInstructions: null,
-        instructions: null,
-      }
-    
-    const existing = await this.storageService.find({ query: {_id: data.name}})
-    const created = existing.length > 0
-      ? await this.storageService.update(data.name, dataToCreate) as StoredDanceWiki
-      : await this.storageService.create(dataToCreate)
+    const created = await this.fetchPage(data.name)
     return this.addData(created)
   }
 
-  async addData(data: StoredDanceWiki, params?: ServiceParams): Promise<Dancewiki> {
+  async fetchPage(name: string) {
+    const page = await getWikiPage(name)
+    return await this.storePage(page)
+  }
+
+  async fetchPages(names: string[]) {
+    const pages = await getWikiPages(names)
+    return await Promise.all(pages.map(page => this.storePage(page)))
+  }
+
+  async storePage(page: ParsedPage): Promise<StoredDanceWiki> {
+    const now = new Date().toISOString()
+    const contents = page?.revision?.contents ?? ''
+    const dataToCreate : StoredDanceWiki = {
+      _id: page.title,
+      name: page.title,
+      _fetchedAt: now,
+      originalInstructions: contents,
+      instructions: await convertToMarkdown(contents),
+    }
+    
+    const existing = await this.has(page.title)
+    return existing
+      ? await this.storageService.update(page.title, dataToCreate) as StoredDanceWiki
+      : await this.storageService.create(dataToCreate)
+  }
+
+  addData(data: StoredDanceWiki, params?: ServiceParams): Dancewiki {
     const { originalInstructions, instructions, ...rest } = data
     const name = data._id
     const isSelected = (field: keyof Dancewiki) =>
@@ -166,41 +196,18 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
       instructions: isSelected('instructions') ? cleanupInstructions(instructions) : '',
       formations: isSelected('formations') ? getFormations(instructions) : [],
       categories: isSelected('categories')
-        ? await this.getCategories(name, instructions)
+        ? this.getCategories(name, instructions)
         : [],
     }
   }
 
-  private async getCategories(name: string, instructions: string | null) {
-    // Prevent infinite loop when fetching the categories page itself
-    const categoryCache = name === categoriesPage
-      ? {}
-      : await this.getCategoryCache()
+  private getCategories(name: string, instructions: string | null) {
+    const categoryCache = this.categories.getIfExists() ?? {}
 
     return uniq([
       ...getCategoriesFromContent(instructions),
       ...(categoryCache[name] ?? [])
     ])
-  }
-
-  private async getCategoryCache(): Promise<DanceCategorization> {
-    const { categories, fetchedAt, pendingPromise } = this.categoryCache
-    if (pendingPromise) return pendingPromise
-    if (categories === null || !fetchedAt || fetchedAt.valueOf() < new Date().valueOf() - DAY) {
-      this.categoryCache.pendingPromise = this.fetchCategoryCache()
-      return this.categoryCache.pendingPromise
-    }
-
-    return categories
-  }
-
-  private async fetchCategoryCache(): Promise<DanceCategorization> {
-    const page = await this.get(categoriesPage, { updateFromWiki: true } as ServiceParams)
-    const categories = getDanceCategorization(page.instructions ?? '')
-    this.categoryCache = {
-      fetchedAt: new Date(), categories, pendingPromise: null,
-    }
-    return categories
   }
 
 }

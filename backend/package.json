@@ -70,6 +70,7 @@
     "jsonata": "^2.0.3",
     "koa": "^2.14.2",
     "koa-bodyparser": "^4.4.0",
+    "node-cron": "^4.1.0",
     "partial.lenses": "^14.17.0",
     "ramda": "^0.29.0",
     "umzug": "^3.2.1",

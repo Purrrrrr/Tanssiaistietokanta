@@ -37,10 +37,12 @@
   Find a way to autofill dance categories
   * Integrate dance wiki to backend
   * GraphQL queries for it
+  * Automatic background fetcher
+    * Occasionally fetch list
+    * Fetch unfetched dances
+    wikipageName field for dances
     Use backend integration in frontend
-    wikiPageName field for dances
     Show category/formation suggestions in DanceEditor
-    Automatic background fetcher
     
   MISC:
   * intervalMusic on by defalt
