@@ -22,7 +22,7 @@ export class DancesService<ServiceParams extends DancesParams = DancesParams>
   async get(id: Id, _params?: ServiceParams): Promise<Dances> {
     const dance = await super.get(id, _params)
     if (_params?.query?.$select?.includes('wikipage')) {
-      dance.wikipage = await this.options.app.service('dancewiki').get(dance.name, { updateFromWiki: true })
+      dance.wikipage = await this.options.app.service('dancewiki').get(dance.name, { noThrowOnNotFound: true })
     }
     return dance
   }

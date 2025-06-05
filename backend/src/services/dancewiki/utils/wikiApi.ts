@@ -60,7 +60,7 @@ export async function getWikiPage(title: string | string[]): Promise<ParsedPage>
 
 async function fetchWikiPages(encodedTitle: string) {
   const url = `${wikiUrl}/api.php?action=query&prop=revisions&rvprop=ids|timestamp|content&rvslots=main&format=json&origin=*&titles=${encodedTitle}`
-  console.log(url)
+  // console.log(url)
   const res = await get(url)
 
   const { pages, normalized } = res.query

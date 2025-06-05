@@ -19,7 +19,6 @@ export interface DancewikiServiceOptions {
 }
 
 export interface DancewikiParams extends Params<DancewikiQuery> {
-  updateFromWiki?: boolean
   noThrowOnNotFound?: boolean
 }
 
@@ -48,13 +47,16 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
       }]
     })
     this.categories = createCache(async () => {
-      const page = await this.get(categoriesPage, { updateFromWiki: true } as ServiceParams)
+      const page = await this.has(categoriesPage)
+        ? await this.get(categoriesPage)
+        : await this.create({ name: categoriesPage})
+
       return getDanceCategorization(page.instructions ?? '')
     }, DAY)
 
     // Update list of pages daily
     cron.schedule('0 0 * * *', () => this.updatePageList())
-    cron.schedule('0 */15 * * * *', this.backgroundFetch.bind(this))
+    cron.schedule('0 */10 * * * *', this.backgroundFetch.bind(this))
   }
 
   async has(name: string) {
@@ -64,7 +66,7 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
   
   async backgroundFetch(): Promise<void> {
     console.log('Updating dance wiki entries')
-    const MAX_CONCURRENT_FETCHES = 50
+    const MAX_PAGES_TO_FETCH = 30
 
     const pageCount = await this.storageService.getModel().countAsync({})
     if (pageCount === 0) {
@@ -76,11 +78,11 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
     }
 
     const unfetched = await this.storageService.find({ query: { _fetchedAt: null } })
-    console.log(`${unfetched.length} unfetched wiki entries fetching ${Math.min(MAX_CONCURRENT_FETCHES, unfetched.length)}`)
+    console.log(`${unfetched.length} unfetched wiki entries fetching ${Math.min(MAX_PAGES_TO_FETCH, unfetched.length)}`)
     
     if (unfetched.length > 0) {
       console.time('fetch')
-      const pagesToFetch = unfetched.slice(0, MAX_CONCURRENT_FETCHES).map(page => page._id)
+      const pagesToFetch = unfetched.slice(0, MAX_PAGES_TO_FETCH).map(page => page._id)
       await this.fetchPages(pagesToFetch)
       console.timeEnd('fetch')
       console.log('pages fetched!')
@@ -115,15 +117,8 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
   async get(id: Id, _params?: ServiceParams): Promise<Dancewiki> {
     try {
       const result = await this.storageService.get(id, _params)
-      if (_params?.updateFromWiki && result.instructions === null)  {
-        throw new Error('initiate refetch')
-      }
-
       return this.addData(result, _params)
     } catch (e) {
-      if (_params?.updateFromWiki && typeof id === 'string') {
-        return await this.create({ name: id })
-      }
       if (_params?.noThrowOnNotFound) {
         return {
           _id: String(id),
