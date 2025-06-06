@@ -15,7 +15,7 @@ export function getDanceCategorization(indexPageContents: String) {
   let currentCategories : CategoryHeading[] = []
   const danceCategorization : DanceCategorization = {}
 
-  for (const part of indexPageContents.split(/\n+/)) {
+  for (const part of indexPageContents.split(/\n\n+/)) {
     const header = getHeaderData(part)
     if (header) {
       const { level, content } = header

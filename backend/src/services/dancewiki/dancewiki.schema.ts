@@ -19,6 +19,7 @@ export const dancewikiSchema = Type.Object(
       Type.Literal('FETCHED'),   // _fetchedAt != null && instructions != null
 
     ]),
+    spamScore: Type.Number(),
     name: Type.String(),
     instructions: Nullable(Type.String()),
     formations: Type.Array(Type.String()),
@@ -41,7 +42,7 @@ export const dancewikiDataValidator = getValidator(dancewikiDataSchema, dataVali
 export const dancewikiDataResolver = resolve<Dancewiki, HookContext<DancewikiService>>({})
 
 // Schema for allowed query properties
-export const dancewikiQueryProperties = Type.Pick(dancewikiSchema, ['_id', '_fetchedAt', 'status', 'name', 'instructions', 'formations', 'categories', ])
+export const dancewikiQueryProperties = Type.Pick(dancewikiSchema, ['_id', '_fetchedAt', 'status', 'spamScore', 'name', 'instructions', 'formations', 'categories', ])
 export const dancewikiQuerySchema = Type.Intersect(
   [
     querySyntax(dancewikiQueryProperties),

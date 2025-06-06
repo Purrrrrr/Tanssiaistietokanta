@@ -2,6 +2,7 @@ type Wikipage {
   name: String!
   _fetchedAt: String 
   status: WikipageStatus!
+  spamScore: Float!
   instructions: String
   formations: [String!]!
   categories: [String!]!
@@ -14,7 +15,8 @@ enum WikipageStatus {
 }
 
 type Query {
-  searchWiki(search: String!): [String!]!
+  searchWikiTitles(search: String!): [String!]!
+  searchWiki(search: String!): [Wikipage!]!
 }
 
 type Mutation {

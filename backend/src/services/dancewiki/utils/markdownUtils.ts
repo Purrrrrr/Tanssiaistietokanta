@@ -1,10 +1,24 @@
 export function getHeaderData(text: string) {
-  const match = text.match(HEADER_REGEX)
+  let match = text.match(HEADER_REGEX_1)
+  if (match) {
+    return {
+      level: 1,
+      content: match[1].trim()
+    }
+  }
+  match = text.match(HEADER_REGEX_2)
+  if (match) {
+    return {
+      level: 2,
+      content: match[1].trim()
+    }
+  }
+  match = text.match(HEADER_REGEX_HASH)
   if (match) {
     //Return header level
     return {
       level: match[1].length,
-      content: match[2],
+      content: match[2].trim(),
     }
   }
   return null
@@ -24,6 +38,8 @@ export function stripLinks(text: string): string {
   })
 }
 
-const HEADER_REGEX = /^(=+)([^=\n]([^\n]*[^=\n])?)\1$/
-const INTERNAL_LINK_REGEX = /\[\[([^\]]+)\]\]/g
+const HEADER_REGEX_1 = /^([^#].*)\n===+$/
+const HEADER_REGEX_2 = /^([^#].*)\n---+$/
+const HEADER_REGEX_HASH = /^(#+) *\[?([^\n[\]]*[^\n[\]: ])/
+const INTERNAL_LINK_REGEX = /\[([^\]]+)\]\(.* "wikilink"\)/g
 const EXTERNAL_LINK_REGEX = /\[([^ \]]+)( [^\]]+)?\]/g
