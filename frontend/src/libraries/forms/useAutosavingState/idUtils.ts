@@ -7,6 +7,7 @@ export function mapToIds(items: Entity[]): ID[] {
 }
 
 export function getId(item: Entity): ID {
+  if (typeof item == 'string') return item
   if ('_id' in item) {
     return item._id
   }
