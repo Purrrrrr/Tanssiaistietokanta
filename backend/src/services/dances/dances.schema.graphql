@@ -60,4 +60,5 @@ input DancePatchInput {
   remarks: String
   category: String
   instructions: String
+  wikipageName: String
 }

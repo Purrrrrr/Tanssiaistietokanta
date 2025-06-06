@@ -70,7 +70,7 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
   }
 
   async has(name: string) {
-    const count = await this.storageService.getModel().countAsync({ name })
+    const count = await this.storageService.getModel().countAsync({ name, status: { $ne: 'NOT_FOUND' }})
     return count > 0
   }
   
@@ -112,11 +112,15 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
     
     const pagesToCreate = pagesInWiki.filter(name => !existingPageNames.has(name))
     return Promise.all(
-      pagesToCreate.map(name => this.storageService.create({
-        _id: name,
-        name,
-        ...UNFETCHED_DANCE,
-      }))
+      pagesToCreate.map(name => {
+        const data = {
+          _id: name,
+          name,
+          ...UNFETCHED_DANCE,
+        }
+        data.spamScore = spamScore(data)
+        this.storageService.create(data)
+      })
     )
   }
 

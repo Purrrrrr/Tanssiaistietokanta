@@ -41,6 +41,15 @@ export const dancesResolver = resolve<Dances, HookContext>({
   category: value => value ?? '',
   instructions: value => value ?? '',
   remarks: value => value ?? '',
+  wikipageName: async (wikipageName, dance, ctx) => {
+    if (wikipageName != null) {
+      return wikipageName
+    }
+    if (await ctx.app.service('dancewiki').has(dance.name)) {
+      return dance.name
+    }
+    return null
+  }
 })
 
 export const dancesExternalResolver = resolve<Dances, HookContext>({})

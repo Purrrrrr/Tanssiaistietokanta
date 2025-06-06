@@ -67,10 +67,10 @@ export function spamScore(page: PageToScore): number {
   score += countsInTitle.quotinent * 50
   score += countsInContents.quotinent * 50
     
-  console.log({
-    title: name,
-    onlyOneRevision, headingCount, countsInContents, countsInTitle, score
-  })
+  // console.log({
+  //   title: name,
+  //   onlyOneRevision, headingCount, countsInContents, countsInTitle, score
+  // })
 
   return score
 }
@@ -82,7 +82,7 @@ function countSuspicious(text: string) {
   const suscpiciousWordCount = words.reduce(
     (count, word) => {
       const match = word.match(suscpiciousWords)
-      if (match) console.log(match)
+      // if (match) console.log(match)
       return match ? count + 1 : count
     },
     0,

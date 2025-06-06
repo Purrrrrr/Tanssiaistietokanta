@@ -15,8 +15,9 @@ enum WikipageStatus {
 }
 
 type Query {
-  searchWikiTitles(search: String!): [String!]!
-  searchWiki(search: String!): [Wikipage!]!
+  searchWikiTitles(search: String!, maxSpamScore: Float): [String!]!
+  searchWiki(search: String!, maxSpamScore: Float): [Wikipage!]!
+  wikipage(name: String!): Wikipage
 }
 
 type Mutation {
