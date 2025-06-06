@@ -54,13 +54,15 @@ pluginList.forEach(plugin => MdEditor.use(plugin, {}))
 
 interface MarkdownEditorProps extends FieldComponentProps<string, HTMLTextAreaElement> {
   style?: React.CSSProperties
+  className?: string
   onBlur?: (e: React.FocusEvent<HTMLTextAreaElement>) => void
   markdownOverrides?: MarkdownToJSX.Overrides
   noPreview?: boolean
 }
 
-export const MarkdownEditor = React.memo(function MarkdownEditor({value, onChange, inline: _ignored, markdownOverrides, noPreview, ...props} : MarkdownEditorProps) {
+export const MarkdownEditor = React.memo(function MarkdownEditor({value, onChange, className, inline: _ignored, markdownOverrides, noPreview, ...props} : MarkdownEditorProps) {
   return <MdEditor
+    className={className}
     renderHTML={(text : string) => <Markdown options={{overrides: markdownOverrides}}>{text}</Markdown>}
     value={value ?? ''}
     onChange={({text}, e) => onChange(text, e)}

@@ -17,6 +17,7 @@ import {DeleteButton} from 'components/widgets/DeleteButton'
 import {DurationField} from 'components/widgets/DurationField'
 import {LinkMenuItem} from 'components/widgets/LinkMenuItem'
 import { useT } from 'i18n'
+
 import { DanceNameSearch } from './DanceNameSearch'
 
 interface DanceEditorProps extends Pick<DanceEditorContainerProps, 'dance' | 'titleComponent'> {
@@ -78,11 +79,16 @@ export function DanceEditor({dance, onDelete, showLink, showVersionHistory, titl
         <Input label={label('source')} labelInfo={label('sourceInfo')} path="source" />
         <Input label={label('remarks')} path="remarks" />
         {/* <Field label={label('wikipageName')} path="wikipageName" component={DanceNameSearch} /> */}
-        <p>{label('wikipageName')} {dance.wikipageName}</p>
+        {dance.wikipageName &&
+          <p>
+            {t('danceInDanceWiki')}{' '}
+            <a target="_blank" href={`https://tanssi.dy.fi/${dance.wikipageName.replaceAll(' ', '_')}`}>{dance.wikipageName}</a>
+          </p>
+        }
       </div>
       <div style={{flexGrow: 2, flexBasis: 500}}>
-        <Field label={label('description')} path="description" component={MarkdownEditor} />
-        <Field label={label('instructions')} path="instructions" component={MarkdownEditor} />
+        <Field label={label('description')} path="description" component={MarkdownEditor} componentProps={{className: 'max-h-150'}} />
+        <Field label={label('instructions')} path="instructions" component={MarkdownEditor} componentProps={{className: 'max-h-150'}} />
       </div>
     </Flex>
   </DanceEditorContainer>

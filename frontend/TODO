@@ -43,6 +43,7 @@
   * Spam score system
   * wikipageName field for dances
     * Backend
+    Try to interpret dance source
     Use backend integration in frontend
       Searching page names
       Show category/formation suggestions in DanceEditor
