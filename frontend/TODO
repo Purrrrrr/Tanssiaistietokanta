@@ -40,9 +40,15 @@
   * Automatic background fetcher
     * Occasionally fetch list
     * Fetch unfetched dances
-    wikipageName field for dances
+  * Spam score system
+  * wikipageName field for dances
+    * Backend
     Use backend integration in frontend
-    Show category/formation suggestions in DanceEditor
+      Searching page names
+      Show category/formation suggestions in DanceEditor
+      wikipageName field
+    Wiki page selector field
+    Occasionally recompute categories, spam scores and formations
     
   MISC:
   * intervalMusic on by defalt
