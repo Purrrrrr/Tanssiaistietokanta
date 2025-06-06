@@ -17,6 +17,7 @@ import {DeleteButton} from 'components/widgets/DeleteButton'
 import {DurationField} from 'components/widgets/DurationField'
 import {LinkMenuItem} from 'components/widgets/LinkMenuItem'
 import { useT } from 'i18n'
+import { DanceNameSearch } from './DanceNameSearch'
 
 interface DanceEditorProps extends Pick<DanceEditorContainerProps, 'dance' | 'titleComponent'> {
   dance: DanceWithEvents
@@ -76,6 +77,8 @@ export function DanceEditor({dance, onDelete, showLink, showVersionHistory, titl
         <Input label={label('formation')} path="formation" />
         <Input label={label('source')} labelInfo={label('sourceInfo')} path="source" />
         <Input label={label('remarks')} path="remarks" />
+        {/* <Field label={label('wikipageName')} path="wikipageName" component={DanceNameSearch} /> */}
+        <p>{label('wikipageName')} {dance.wikipageName}</p>
       </div>
       <div style={{flexGrow: 2, flexBasis: 500}}>
         <Field label={label('description')} path="description" component={MarkdownEditor} />

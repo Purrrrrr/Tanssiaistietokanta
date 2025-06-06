@@ -1,21 +1,27 @@
-import {useCallback, useState} from 'react'
+import {useCallback} from 'react'
 
-import {searchWikiPages} from 'libraries/danceWiki'
+import { NewValue } from 'libraries/forms/types'
+
+import { useSearchWikiTitles } from 'services/dancewiki'
+
 import {Input} from 'libraries/forms'
 import {useDelayedEffect} from 'utils/useDelayedEffect'
 
-export function DanceNameSearch({value, onChange}) {
-  const [suggestions, setSuggestions] = useState([])
+export function DanceNameSearch({id, value, onChange}: {id: string, value: string | null, onChange: (changed: NewValue<string>) => unknown}) {
+  const [search, suggestions] = useSearchWikiTitles()
   useDelayedEffect(70,
     useCallback(
-      () => searchWikiPages(value).then(setSuggestions), [value]
+      () => {
+        if (value && value.length > 1) search(value)
+      },
+      [search, value]
     )
   )
 
   return <>
-    <Input id="danceSearch" value={value} onChange={onChange} list="dances" inline />
+    <Input id={id} value={value} onChange={onChange} list="dances" inline />
     <datalist id="dances">
-      {suggestions.map(suggestion => <option value={suggestion} key={suggestion} />)}
+      {((value && value.length > 1) ? suggestions : []).map(suggestion => <option value={suggestion} key={suggestion} />)}
     </datalist>
   </>
 }

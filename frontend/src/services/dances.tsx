@@ -10,6 +10,7 @@ setupServiceUpdateFragment(
   'dances',
   `fragment DanceFragment on Dance {
     _id, name, description, remarks, duration, prelude, formation, category, instructions, slideStyleId
+    wikipageName
   }`
 )
 
@@ -21,6 +22,8 @@ query getDances {
     _id, _versionId, _versionNumber, name, description, remarks, duration, prelude, formation, source, category, instructions, slideStyleId
     wikipageName
     wikipage {
+      _fetchedAt
+      status
       categories
       formations
     }
@@ -56,6 +59,8 @@ query getDance($id: ID!, $versionId: ID) {
     _id, _versionId, _versionNumber, name, description, remarks, duration, prelude, formation, source, category, instructions, slideStyleId
     wikipageName
     wikipage {
+      _fetchedAt
+      status
       categories
       formations
     }
@@ -91,6 +96,8 @@ mutation createDance($dance: DanceInput!) {
     _id, _versionId, _versionNumber, name, description, remarks, duration, prelude, formation, source, category, instructions, slideStyleId
     wikipageName
     wikipage {
+      _fetchedAt
+      status
       categories
       formations
     }
@@ -108,6 +115,8 @@ mutation patchDance($id: ID!, $dance: DancePatchInput!) {
     _id, _versionId, _versionNumber, name, description, remarks, duration, prelude, formation, source, category, instructions, slideStyleId
     wikipageName
     wikipage {
+      _fetchedAt
+      status
       categories
       formations
     }
@@ -125,6 +134,8 @@ mutation deleteDance($id: ID!) {
     _id, _versionId, _versionNumber, name, description, remarks, duration, prelude, formation, source, category, instructions, slideStyleId
     wikipageName
     wikipage {
+      _fetchedAt
+      status
       categories
       formations
     }

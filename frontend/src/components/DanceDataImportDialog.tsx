@@ -113,7 +113,7 @@ function DataImporter({danceName, onImport}) {
   }
 
   return <FormGroup label={t('searchDanceByName')} inline>
-    <DanceNameSearch value={search} onChange={setSearch} />
+    <DanceNameSearch id="danceSearch" value={search} onChange={setSearch} />
     <Button icon="search" intent="primary" onClick={importData} disabled={loading}/>
     {loading
       ? <div style={{margin: '10px 0px'}}>{t('loadingData')}<ProgressBar /></div>

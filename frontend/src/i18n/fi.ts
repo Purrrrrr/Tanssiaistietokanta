@@ -40,6 +40,7 @@ export const fi = {
       category: 'Kategoria',
       instructions: 'Pidemmät tanssiohjeet printtiin',
       slideStyleId: 'Tanssiaisten diatyyli',
+      wikipageName: 'Tanssiwikin sivun nimi'
     },
     slideStyles: {
       default: 'Valkoinen',
@@ -78,6 +79,7 @@ export const fi = {
         one: 'Käytössä yhdessä tapahtumassa',
         many: 'Käytössä __count__ tapahtumassa',
       },
+      danceInDanceWiki: 'Tanssi tanssiwikissä',
     },
     danceDataImportButton: {
       fetchInfoFromWiki: 'Hae tietoja tanssiwikistä',
