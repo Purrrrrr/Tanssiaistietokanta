@@ -6,6 +6,7 @@ type Wikipage {
   instructions: String
   formations: [String!]!
   categories: [String!]!
+  sources: [String!]!
 }
 
 enum WikipageStatus {

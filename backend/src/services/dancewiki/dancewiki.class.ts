@@ -12,6 +12,7 @@ import { getFormations } from './utils/getFormations'
 import { uniq } from 'ramda'
 import { Cache, createCache } from './utils/cache'
 import { spamScore } from './utils/spamScore'
+import { getSources } from './utils/getSources'
 
 export type { Dancewiki, DancewikiData, DancewikiQuery }
 
@@ -37,6 +38,7 @@ const UNFETCHED_DANCE = {
   instructions: null,
   categories: [],
   formations: [],
+  sources: [],
 }
 
 export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiParams>
@@ -171,23 +173,31 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
     const hasContents = page.revision !== null
     const contents = page.revision?.contents ?? ''
     const instructions = hasContents ? cleanupInstructions(await convertToMarkdown(contents)) : null
-    const dataToCreate : StoredDanceWiki = {
+    const dataToCreate : StoredDanceWiki = this.computeMetadata({
       _id: page.title,
       name: page.title,
       status: hasContents ? 'FETCHED' : 'NOT_FOUND',
-      spamScore: 0,
       _fetchedAt: now,
       instructions,
-      formations: getFormations(instructions),
-      categories: this.getCategories(page.title, instructions),
       revision: page.revision
-    }
-    dataToCreate.spamScore = spamScore(dataToCreate)
+    })
     
     const existing = await this.has(page.title)
     return existing
       ? await this.storageService.update(page.title, dataToCreate) as StoredDanceWiki
       : await this.storageService.create(dataToCreate)
+  }
+
+  computeMetadata(page: Omit<StoredDanceWiki, 'spamScore' | 'formations' | 'categories' | 'sources'>): StoredDanceWiki {
+    const result = {
+      ...page,
+      spamScore: 0,
+      formations: getFormations(page.instructions),
+      categories: this.getCategories(page.name, page.instructions),
+      sources: getSources(page.instructions),
+    }
+    result.spamScore = spamScore(result)
+    return result
   }
 
   addData(data: StoredDanceWiki): Dancewiki {
