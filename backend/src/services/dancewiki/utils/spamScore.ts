@@ -30,6 +30,7 @@ const suscpiciousWords = new RegExp(
     'glock',
     'mining',
     'weed',
+    'cannabis',
     'cheat',
     'roxicodone',
     'manufacture',
