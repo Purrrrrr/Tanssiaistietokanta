@@ -19,9 +19,10 @@ import './ui.scss'
 
 export * from './AutosizedSection'
 export { Breadcrumb, BreadcrumbContext, Breadcrumbs } from './Breadcrumbs'
+export { Collapse } from './Collapse'
 export * from './Flex'
 export type { ButtonProps, MenuItemProps } from '@blueprintjs/core'
-export { AnchorButton, Callout, Collapse, H2, HTMLTable, Menu, MenuItem, Navbar, NonIdealState, ProgressBar, SectionCard, Spinner, Tab, Tabs, Tag } from '@blueprintjs/core'
+export { AnchorButton, Callout, H2, HTMLTable, Menu, MenuItem, Navbar, NonIdealState, ProgressBar, SectionCard, Spinner, Tab, Tabs, Tag } from '@blueprintjs/core'
 export const CssClass = {
   formGroupInline: 'formgroup-inline',
   formGroupInlineFill: 'formgroup-inline-fill',
