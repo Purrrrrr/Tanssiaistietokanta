@@ -33,7 +33,7 @@ export function getLinkedInternalPages(text: string) {
 export function stripLinks(text: string): string {
   return text.replace(INTERNAL_LINK_REGEX, (_, linkText) => {
     return linkText
-  }).replace(EXTERNAL_LINK_REGEX, (_, link, linkText) => {
+  }).replace(EXTERNAL_LINK_REGEX, (_, linkText, link) => {
     return linkText || link
   })
 }
@@ -41,5 +41,5 @@ export function stripLinks(text: string): string {
 const HEADER_REGEX_1 = /^([^#].*)\n===+$/
 const HEADER_REGEX_2 = /^([^#].*)\n---+$/
 const HEADER_REGEX_HASH = /^(#+) *\[?([^\n[\]]*[^\n[\]: ])/
-const INTERNAL_LINK_REGEX = /\[([^\]]+)\]\(.* "wikilink"\)/g
-const EXTERNAL_LINK_REGEX = /\[([^ \]]+)( [^\]]+)?\]/g
+const INTERNAL_LINK_REGEX = /\[([^\]]+)\]\([^)]+ "wikilink"\)/g
+const EXTERNAL_LINK_REGEX = /\[([^\]]+)\]\(([^)]+)\)/g
