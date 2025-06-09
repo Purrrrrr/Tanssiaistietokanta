@@ -71,11 +71,6 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
     cron.schedule('0 */5 * * * *', this.backgroundFetch.bind(this))
     setTimeout(() => this.backgroundFetch(), 0)
   }
-
-  async has(name: string) {
-    const count = await this.storageService.getModel().countAsync({ name, status: { $ne: 'NOT_FOUND' }})
-    return count > 0
-  }
   
   async backgroundFetch(): Promise<void> {
     console.log('Updating dance wiki entries')
@@ -87,24 +82,7 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
     }
     if (!this.categories.isValid()) {
       await this.categories.get()
-      const categoriesPage = await this.get(categoriesPageName)
-      const categoriesFetched = categoriesPage.revision?.timestamp ?? ''
-      const pagesToUpdate = (await this.storageService.find({
-        query: {
-          status: 'FETCHED',
-        }
-      })).filter(page => 
-        (page._fetchedAt ?? '') < categoriesFetched || !page.metadataVersion || page.metadataVersion && page.metadataVersion < CURRENT_METADATA_VERSION
-      )
-      const pagesToStore = pagesToUpdate.map(page => {
-        const updated = this.computeMetadata(page)
-        if (equals(updated, page)) return null
-        return updated
-      }).filter(page => page !== null)
-      if (pagesToStore.length > 0) {
-        console.log(`Updating metadata for ${pagesToStore.length} pages`)
-        await Promise.all(pagesToStore.map(page => this.storageService.update(page.name, page)))
-      }
+      await this.updatePageMetadata()
     }
 
     const unfetched = await this.storageService.find({ query: { _fetchedAt: null } })
@@ -117,11 +95,6 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
       console.timeEnd('fetch')
       return
     }
-  }
-
-  async find(_params?: ServiceParams): Promise<Dancewiki[]> {
-    const data = await this.storageService.find(_params)
-    return data.map(page => this.addData(page))
   }
 
   async updatePageList() {
@@ -142,6 +115,37 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
         this.storageService.create(data)
       })
     )
+  }
+
+  async updatePageMetadata() {
+    const categoriesPage = await this.get(categoriesPageName)
+    const categoriesTimestamp = categoriesPage.revision?.timestamp ?? ''
+    const pagesToUpdate = (await this.storageService.find({
+      query: {
+        status: 'FETCHED',
+      }
+    })).filter(page =>
+      (page._fetchedAt ?? '') < categoriesTimestamp || !page.metadataVersion || page.metadataVersion && page.metadataVersion < CURRENT_METADATA_VERSION
+    )
+    const pagesToStore = pagesToUpdate.map(page => {
+      const updated = this.computeMetadata(page)
+      if (equals(updated, page)) return null
+      return updated
+    }).filter(page => page !== null)
+    if (pagesToStore.length > 0) {
+      console.log(`Updating metadata for ${pagesToStore.length} pages`)
+      await Promise.all(pagesToStore.map(page => this.storageService.update(page.name, page)))
+    }
+  }
+
+  async has(name: string) {
+    const count = await this.storageService.getModel().countAsync({ name, status: { $ne: 'NOT_FOUND' }})
+    return count > 0
+  }
+
+  async find(_params?: ServiceParams): Promise<Dancewiki[]> {
+    const data = await this.storageService.find(_params)
+    return data.map(page => this.addData(page))
   }
 
   async get(id: Id, _params?: ServiceParams): Promise<Dancewiki> {
