@@ -1,9 +1,9 @@
-import {ComponentType, lazy, useEffect, useState, useSyncExternalStore} from 'react'
+import {ComponentType, lazy, useEffect, useRef, useState, useSyncExternalStore} from 'react'
 import {ApolloError, ApolloQueryResult} from '@apollo/client'
 
 import {socket} from 'backend/feathers'
 
-import {Button, GlobalSpinner, NonIdealState, Spinner} from 'libraries/ui'
+import {Button, GlobalSpinner, NonIdealState} from 'libraries/ui'
 import {useT, useTranslation} from 'i18n'
 
 const connectionProblemMessageTimeout = 5000
@@ -66,7 +66,6 @@ export function addGlobalLoadingAnimation<T>(promise: Promise<T>): Promise<T> {
   return promise
 }
 
-
 function useGlobalLoadingState() {
   return useSyncExternalStore(
     (callback) => {
@@ -85,9 +84,7 @@ interface LoadingStateProps {
 
 export function LoadingState({loading, error, refetch} : LoadingStateProps) {
   const t = useT('components.loadingState')
-  if (loading) {
-    return <Spinner size={100} /> //<NonIdealState icon={<Spinner />} />;
-  }
+  useToggleGlobalLoadingAnimation(loading)
   if (error) {
     return <NonIdealState icon="error"
       title={t('errorMessage')}
@@ -96,4 +93,21 @@ export function LoadingState({loading, error, refetch} : LoadingStateProps) {
     />
   }
   return null
+}
+
+function useToggleGlobalLoadingAnimation(loading?: boolean) {
+  const promise = useRef(new Promise(() => {}))
+  useEffect(() => {
+    const curPromise = promise.current
+    if (loading) {
+      loadingPromises.add(curPromise)
+    } else {
+      loadingPromises.delete(curPromise)
+    }
+    triggerListeners()
+    return () => {
+      loadingPromises.delete(curPromise)
+      triggerListeners()
+    }
+  }, [loading])
 }

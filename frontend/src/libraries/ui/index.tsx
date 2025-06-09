@@ -9,7 +9,6 @@ import {
   Icon as BlueprintIcon,
   InputGroup as BlueprintInputGroup,
   NonIdealState,
-  Spinner,
 } from '@blueprintjs/core'
 import { IconPaths, Icons } from '@blueprintjs/icons'
 import classNames from 'classnames'
@@ -22,7 +21,7 @@ export { Breadcrumb, BreadcrumbContext, Breadcrumbs } from './Breadcrumbs'
 export { Collapse } from './Collapse'
 export * from './Flex'
 export type { ButtonProps, MenuItemProps } from '@blueprintjs/core'
-export { AnchorButton, Callout, H2, HTMLTable, Menu, MenuItem, Navbar, NonIdealState, ProgressBar, SectionCard, Spinner, Tab, Tabs, Tag } from '@blueprintjs/core'
+export { AnchorButton, Callout, H2, HTMLTable, Menu, MenuItem, Navbar, NonIdealState, ProgressBar, SectionCard, Tab, Tabs, Tag } from '@blueprintjs/core'
 export const CssClass = {
   formGroupInline: 'formgroup-inline',
   formGroupInlineFill: 'formgroup-inline-fill',
@@ -113,6 +112,15 @@ Icons.setLoaderOptions({
   loader: async (name, size) =>
     (await iconModules[`${name}/${size}`]()).default as IconPaths,
 })
+
+export function Spinner({ size, padding }: { size: number, padding?: boolean }) {
+  return <div
+    className={classNames('grid justify-center', padding && 'py-5')}
+    style={{ height: size }}
+  >
+    <img className="h-full object-contain sepia-50" src="/loading.gif" />
+  </div>
+}
 
 export function GlobalSpinner({loading, timeout, connectionTimeoutMessage}) {
   const className = classNames('global-loading-spinner', {loading, timeout})
