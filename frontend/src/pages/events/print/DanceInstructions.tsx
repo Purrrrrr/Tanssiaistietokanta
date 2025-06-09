@@ -2,7 +2,7 @@ import React, {useCallback, useRef, useState} from 'react'
 import classNames from 'classnames'
 import { MarkdownToJSX } from 'markdown-to-jsx'
 
-import {Dance} from 'types'
+import {Dance, EditableDance} from 'types'
 import {DanceInstructionsQuery} from 'types/gql/graphql'
 
 import {backendQueryHook, cleanMetadataValues, graphql} from 'backend'
@@ -158,7 +158,7 @@ function InstructionsForDance({dance, showShortInstructions} : {dance: Dance, sh
   </div>
 }
 
-function DanceFieldEditor({dance: danceInDatabase, field} : {dance: Dance, field: 'description' | 'instructions'}) {
+function DanceFieldEditor({dance: danceInDatabase, field} : {dance: EditableDance, field: 'description' | 'instructions'}) {
   const t = useT('domain.dance')
   const [patchDance] = usePatchDance()
   const onPatch= useCallback(
@@ -168,7 +168,7 @@ function DanceFieldEditor({dance: danceInDatabase, field} : {dance: Dance, field
     }),
     [danceInDatabase, patchDance]
   )
-  const {value, onChange, state } = useAutosavingState<Dance, Partial<Dance>>(danceInDatabase, onPatch, patchStrategy.partial)
+  const {value, onChange, state } = useAutosavingState<EditableDance, Partial<EditableDance>>(danceInDatabase, onPatch, patchStrategy.partial)
 
   return <Form value={value} onChange={onChange}>
     <SyncStatus state={state} floatRight />

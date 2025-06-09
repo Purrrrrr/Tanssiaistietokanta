@@ -1,4 +1,4 @@
-import {Dance, Event} from 'types'
+import {EditableDance, Event} from 'types'
 
 import {Translator} from 'i18n'
 
@@ -29,7 +29,7 @@ export type EventProgramRow = {
 }
 export type EventProgramItem = DanceProgram | EventProgram | RequestedDance
 
-export type DanceProgram = Dance & {
+export type DanceProgram = EditableDance & {
   __typename: 'Dance'
 }
 

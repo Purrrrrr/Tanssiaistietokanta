@@ -1,7 +1,7 @@
 import {useCallback} from 'react'
 import {Link, useNavigate} from 'react-router-dom'
 
-import {Dance, DanceWithEvents} from 'types'
+import {Dance, DanceWithEvents, EditableDance} from 'types'
 import { ID } from 'backend/types'
 
 import { cleanMetadataValues } from 'backend'
@@ -18,8 +18,6 @@ import {DurationField} from 'components/widgets/DurationField'
 import {LinkMenuItem} from 'components/widgets/LinkMenuItem'
 import { useT } from 'i18n'
 
-import { DanceNameSearch } from './DanceNameSearch'
-
 interface DanceEditorProps extends Pick<DanceEditorContainerProps, 'dance' | 'titleComponent'> {
   dance: DanceWithEvents
   onDelete?: () => unknown
@@ -33,7 +31,7 @@ const {
   Input,
   useValueAt,
   useOnChangeFor,
-} = formFor<Dance>()
+} = formFor<EditableDance>()
 
 function danceVersionLink(id: ID, versionId?: ID | null) {
   return versionId
@@ -111,8 +109,9 @@ export function DanceEditorContainer({dance, children, toolbar, titleComponent: 
     },
     [modifyDance, dance._id, readOnly]
   )
+  const { wikipage: _ignored, ...editedDance } = dance
 
-  const {formProps, state} = useAutosavingState<Dance, Partial<Dance>>(dance, patchDance, patchStrategy.partial)
+  const {formProps, state} = useAutosavingState<EditableDance, Partial<EditableDance>>(editedDance, patchDance, patchStrategy.partial)
   return <Form {...formProps} readOnly={readOnly}>
     <Flex wrap spaced alignItems="center" justify="end">
       <Title>

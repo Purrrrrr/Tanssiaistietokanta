@@ -12,7 +12,7 @@ export interface Entity {
   [key: string]: Mergeable
 }
 export type MergeableScalar  = undefined | null | string | number | boolean
-export type Mergeable = MergeableScalar | MergeableObject | Entity[] | string[]
+export type Mergeable = MergeableScalar | MergeableObject | Entity[]
 
 export type SyncState = 'IN_SYNC' | 'MODIFIED_LOCALLY' | 'CONFLICT' | 'INVALID'
 export interface PartialMergeResult<T> {
