@@ -9,7 +9,7 @@ import convertToMarkdown from '../convert/pandoc'
 import { cleanupInstructions } from './utils/cleanupInstructions'
 import { DanceCategorization, getCategoriesFromContent, getDanceCategorization } from './utils/getCategories'
 import { getFormations } from './utils/getFormations'
-import { uniq } from 'ramda'
+import { equals, uniq } from 'ramda'
 import { Cache, createCache } from './utils/cache'
 import { spamScore } from './utils/spamScore'
 import { getSources } from './utils/getSources'
@@ -24,12 +24,11 @@ export interface DancewikiParams extends Params<DancewikiQuery> {
   noThrowOnNotFound?: boolean
 }
 
-interface StoredDanceWiki extends Dancewiki {
-  revision?: ParsedPage['revision'] 
-}
+type StoredDanceWiki = Dancewiki
 
 const DAY = 24 * 60 * 60 * 1000
-const categoriesPage = 'Tanssiohjeet'
+const categoriesPageName = 'Tanssiohjeet'
+const CURRENT_METADATA_VERSION = 1
 
 const UNFETCHED_DANCE = {
   status: 'UNFETCHED' as const,
@@ -39,6 +38,8 @@ const UNFETCHED_DANCE = {
   categories: [],
   formations: [],
   sources: [],
+  revision: null,
+  metadataVersion: null,
 }
 
 export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiParams>
@@ -58,9 +59,9 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
       }]
     })
     this.categories = createCache(async () => {
-      const page = await this.has(categoriesPage)
-        ? await this.get(categoriesPage)
-        : await this.create({ name: categoriesPage})
+      const page = await this.has(categoriesPageName)
+        ? await this.get(categoriesPageName)
+        : await this.create({ name: categoriesPageName})
 
       return getDanceCategorization(page.instructions ?? '')
     }, DAY)
@@ -84,17 +85,34 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
     if (pageCount === 0) {
       await this.updatePageList()
     }
-
     if (!this.categories.isValid()) {
       await this.categories.get()
+      const categoriesPage = await this.get(categoriesPageName)
+      const categoriesFetched = categoriesPage.revision?.timestamp ?? ''
+      const pagesToUpdate = (await this.storageService.find({
+        query: {
+          status: 'FETCHED',
+        }
+      })).filter(page => 
+        (page._fetchedAt ?? '') < categoriesFetched || !page.metadataVersion || page.metadataVersion && page.metadataVersion < CURRENT_METADATA_VERSION
+      )
+      const pagesToStore = pagesToUpdate.map(page => {
+        const updated = this.computeMetadata(page)
+        if (equals(updated, page)) return null
+        return updated
+      }).filter(page => page !== null)
+      if (pagesToStore.length > 0) {
+        console.log(`Updating metadata for ${pagesToStore.length} pages`)
+        await Promise.all(pagesToStore.map(page => this.storageService.update(page.name, page)))
+      }
     }
 
     const unfetched = await this.storageService.find({ query: { _fetchedAt: null } })
-    console.log(`${unfetched.length} unfetched wiki entries fetching ${Math.min(MAX_PAGES_TO_FETCH, unfetched.length)}`)
     
     if (unfetched.length > 0) {
-      console.time('fetch')
       const pagesToFetch = unfetched.slice(0, MAX_PAGES_TO_FETCH).map(page => page._id)
+      console.log(`${unfetched.length} unfetched wiki entries fetching ${pagesToFetch.length}`)
+      console.time('fetch')
       await this.fetchPages(pagesToFetch)
       console.timeEnd('fetch')
       return
@@ -179,7 +197,7 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
       status: hasContents ? 'FETCHED' : 'NOT_FOUND',
       _fetchedAt: now,
       instructions,
-      revision: page.revision
+      revision: page.revision ?? null
     })
     
     const existing = await this.has(page.title)
@@ -188,21 +206,21 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
       : await this.storageService.create(dataToCreate)
   }
 
-  computeMetadata(page: Omit<StoredDanceWiki, 'spamScore' | 'formations' | 'categories' | 'sources'>): StoredDanceWiki {
+  computeMetadata(page: Omit<StoredDanceWiki, 'spamScore' | 'formations' | 'categories' | 'sources' | 'metadataVersion'>): StoredDanceWiki {
     const result = {
       ...page,
       spamScore: 0,
       formations: getFormations(page.instructions),
       categories: this.getCategories(page.name, page.instructions),
       sources: getSources(page.instructions),
+      metadataVersion: CURRENT_METADATA_VERSION,
     }
     result.spamScore = spamScore(result)
     return result
   }
 
   addData(data: StoredDanceWiki): Dancewiki {
-    const { revision: _, ...rest } = data
-    return rest 
+    return data
   }
 
   private getCategories(name: string, instructions: string | null) {

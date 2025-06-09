@@ -25,6 +25,13 @@ export const dancewikiSchema = Type.Object(
     formations: Type.Array(Type.String()),
     categories: Type.Array(Type.String()),
     sources: Type.Array(Type.String()),
+    revision: Nullable(Type.Object({
+      id: Type.Number(),
+      parent: Type.Number(),
+      timestamp: Type.String(),
+      contents: Type.String(),
+    })),
+    metadataVersion: Nullable(Type.Number()),
   },
   { $id: 'Dancewiki', additionalProperties: false }
 )
@@ -43,7 +50,7 @@ export const dancewikiDataValidator = getValidator(dancewikiDataSchema, dataVali
 export const dancewikiDataResolver = resolve<Dancewiki, HookContext<DancewikiService>>({})
 
 // Schema for allowed query properties
-export const dancewikiQueryProperties = Type.Pick(dancewikiSchema, ['_id', '_fetchedAt', 'status', 'spamScore', 'name', 'instructions', 'formations', 'categories', 'sources'])
+export const dancewikiQueryProperties = Type.Pick(dancewikiSchema, ['_id', '_fetchedAt', 'status', 'spamScore', 'name', 'instructions', 'formations', 'categories', 'sources', 'metadataVersion'])
 export const dancewikiQuerySchema = Type.Intersect(
   [
     querySyntax(dancewikiQueryProperties),

@@ -44,7 +44,7 @@ const suscpiciousWords = new RegExp(
 interface PageToScore {
   name: string
   instructions: string | null
-  revision?: ParsedPage['revision'] 
+  revision?: ParsedPage['revision'] | null
 }
 
 export function spamScore(page: PageToScore): number {
