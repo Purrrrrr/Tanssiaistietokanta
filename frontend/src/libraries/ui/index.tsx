@@ -118,7 +118,7 @@ export function Spinner({ size, padding }: { size: number, padding?: boolean }) 
     className={classNames('grid justify-center', padding && 'py-5')}
     style={{ height: size }}
   >
-    <img className="h-full w-full object-contain sepia-50" src="/loading.gif" />
+    <img className="object-contain w-full h-full sepia-50" src="/loading.gif" />
   </div>
 }
 

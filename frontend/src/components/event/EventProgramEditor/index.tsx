@@ -289,7 +289,7 @@ function WorkshopTag({name} : { name: string}) {
     background: `hsl(${mod(hash, 17) * 360 / 17}, 70%, 30%)`,
     color: `hsl(${mod(hash, 37) * 360 / 37}, 90%, 90%)`,
   } as const
-  return <span className="rounded-xl m-0.5 py-0.5 px-2 font-bold leading-5.5" style={style}>{name}</span>
+  return <span className="py-0.5 px-2 m-0.5 font-bold rounded-xl leading-5.5" style={style}>{name}</span>
 }
 
 function EventProgramItemEditor({path}: {path: ProgramItemPath}) {
