@@ -34,6 +34,8 @@
       Maximum?
 * Tool to create dance instruction leaflet
 * Apollo client 3.0
+* Nicer loading animation
+* Add loading animation to more pages
   Find a way to autofill dance categories
   * Integrate dance wiki to backend
   * GraphQL queries for it

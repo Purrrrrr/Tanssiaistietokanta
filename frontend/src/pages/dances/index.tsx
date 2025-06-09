@@ -8,7 +8,7 @@ import { filterDances, useCreateDance, useDances } from 'services/dances'
 
 import {Button, Card, SearchBar} from 'libraries/ui'
 import {DanceEditor} from 'components/DanceEditor'
-import {useGlobalLoadingAnimation} from 'components/LoadingState'
+import {LoadingState, useGlobalLoadingAnimation} from 'components/LoadingState'
 import {PageTitle} from 'components/PageTitle'
 import {useT, useTranslation} from 'i18n'
 import {showToast} from 'utils/toaster'
@@ -18,7 +18,7 @@ function DancesPage() {
   const t = useT('pages.dances.danceList')
   const navigate = useNavigate()
   const [search, setSearch] = useState('')
-  const [dances] = useDances()
+  const [dances, requestState] = useDances()
   const [createDance] = useCreateDance()
   const addLoadingAnimation = useGlobalLoadingAnimation()
 
@@ -39,6 +39,7 @@ function DancesPage() {
 
   return <>
     <PageTitle>{t('pageTitle')}</PageTitle>
+    <LoadingState {...requestState} />
     <div style={{marginBottom: 10, display: 'flex', alignItems: 'flex-start'}}>
       <SearchBar id="search-dances" value={search} onChange={setSearch} placeholder={useTranslation('common.search')} emptySearchText={useTranslation('common.emptySearch')}/>
       <Button text={t('createDance')} onClick={() => doCreateDance(emptyDance(t('untitledDance', {number: dances.length+1})))}/>

@@ -76,13 +76,13 @@ function useGlobalLoadingState() {
   )
 }
 
-interface LoadingStateProps {
+interface LoadingStateProps<Variables> {
   loading?: boolean,
   error?: ApolloError,
-  refetch?: (variables?: Record<string, unknown> | undefined) => Promise<ApolloQueryResult<Record<string, unknown>>>
+  refetch?: (variables?: Variables | undefined) => Promise<ApolloQueryResult<Record<string, unknown>>>
 }
 
-export function LoadingState({loading, error, refetch} : LoadingStateProps) {
+export function LoadingState<Variables>({loading, error, refetch} : LoadingStateProps<Variables>) {
   const t = useT('components.loadingState')
   useToggleGlobalLoadingAnimation(loading)
   if (error) {
