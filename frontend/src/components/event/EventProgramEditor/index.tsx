@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import {Event} from 'types'
 
 import {ActionButton as Button, DragHandle, ListEditorContext, SyncStatus} from 'libraries/forms'
-import {Card, CssClass, Flex, HTMLTable, Tab, Tabs} from 'libraries/ui'
+import {Card, Flex, HTMLTable, Tab, Tabs} from 'libraries/ui'
 import { DanceProgramChooser } from 'components/event/DanceProgramChooser'
 import {
   DanceProgramPath,
@@ -178,7 +178,7 @@ function ProgramListEditor({path}: {path: ProgramSectionPath}) {
         <ListField labelStyle="hidden-nowrapper" label="" itemType={getType} acceptsTypes={accepts} droppableElement={tableRef.current} isTable path={programPath} component={ProgramItemEditor} renderConflictItem={item => programItemToString(item, t)} accessibilityContainer={accessibilityContainer.current ?? undefined} />
         {program.length === 0 &&
             <tr>
-              <td className={CssClass.textMuted+ ' noProgram'} colSpan={5}>{t('programListIsEmpty')}</td>
+              <td className="text-gray-500 noProgram" colSpan={5}>{t('programListIsEmpty')}</td>
             </tr>
         }
         {intervalMusicDuration > 0 && <IntervalMusicEditor danceSetPath={path as DanceSetPath} />}

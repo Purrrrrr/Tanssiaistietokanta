@@ -3,7 +3,7 @@ import {ApolloError, ApolloQueryResult} from '@apollo/client'
 
 import {socket} from 'backend/feathers'
 
-import {Button, GlobalSpinner, NonIdealState} from 'libraries/ui'
+import {Button, GlobalSpinner, Icon} from 'libraries/ui'
 import {useT, useTranslation} from 'i18n'
 
 const connectionProblemMessageTimeout = 5000
@@ -86,11 +86,18 @@ export function LoadingState<Variables>({loading, error, refetch} : LoadingState
   const t = useT('components.loadingState')
   useToggleGlobalLoadingAnimation(loading)
   if (error) {
-    return <NonIdealState icon="error"
-      title={t('errorMessage')}
-      description={error.message}
-      action={refetch ? <Button text={t('tryAgain')} onClick={() => refetch()} intent="primary" /> : undefined}
-    />
+    return <div className="h-full flex flex-col gap-3 text-gray-500 justify-center items-center">
+      <Icon className="text-gray-400" icon="error" iconSize={48} />
+      <h2>{t('errorMessage')}</h2>
+      <p>{error.message}</p>
+      {refetch &&
+        <Button
+          text={t('tryAgain')}
+          onClick={() => refetch()}
+          intent="primary"
+        />
+      }
+    </div>
   }
   return null
 }

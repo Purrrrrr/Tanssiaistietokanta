@@ -1,0 +1,35 @@
+.markdown-content {
+  ul {
+    list-style: disc;
+  }
+  ol {
+    list-style: decimal;
+  }
+  p {
+    margin-block: 1em;
+  }
+  del {
+    text-decoration: line-through;
+  }
+}
+
+.qr-container {
+  display: inline-block;
+  text-align: center;
+  vertical-align: top;
+}
+.slide .qr-container {
+  margin-right: 5px;
+}
+.qr-container:before {
+  content: '';
+  display: block;
+}
+.qr-container + .qr-container:before {
+  display: none;
+}
+.qr-container .url {
+  max-width: calc(var(--qr-size) * 1.2);
+  font-size: 80%;
+  overflow-wrap: anywhere;
+}

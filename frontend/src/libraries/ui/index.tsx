@@ -1,5 +1,4 @@
 import React, { MouseEvent } from 'react'
-import QRCode from 'react-qr-code'
 import {
   Button as BlueprintButton,
   Card as BlueprintCard,
@@ -8,11 +7,9 @@ import {
   FormGroupProps as BlueprintFormGroupProps,
   Icon as BlueprintIcon,
   InputGroup as BlueprintInputGroup,
-  NonIdealState,
 } from '@blueprintjs/core'
 import { IconPaths, Icons } from '@blueprintjs/icons'
 import classNames from 'classnames'
-import MarkdownToJsx from 'markdown-to-jsx'
 
 import './ui.scss'
 
@@ -20,17 +17,17 @@ export * from './AutosizedSection'
 export { Breadcrumb, BreadcrumbContext, Breadcrumbs } from './Breadcrumbs'
 export { Collapse } from './Collapse'
 export * from './Flex'
+export { GlobalSpinner } from './GlobalLoadingSpinner'
+export { Markdown } from './Markdown'
 export type { ButtonProps, MenuItemProps } from '@blueprintjs/core'
-export { AnchorButton, Callout, H2, HTMLTable, Menu, MenuItem, Navbar, NonIdealState, ProgressBar, SectionCard, Tab, Tabs, Tag } from '@blueprintjs/core'
+export { AnchorButton, Callout, H2, HTMLTable, Menu, MenuItem, Navbar, ProgressBar, SectionCard, Tab, Tabs, Tag } from '@blueprintjs/core'
+
 export const CssClass = {
   formGroupInline: 'formgroup-inline',
   formGroupInlineFill: 'formgroup-inline-fill',
-  inlineFill: 'limited-width',
-  limitedWidth: 'limited-width',
   textMuted: Classes.TEXT_MUTED,
   textDisabled: Classes.TEXT_DISABLED,
 }
-
 
 type HTMLDivProps = React.HTMLAttributes<HTMLDivElement>;
 export type Intent = 'none' | 'primary' | 'success' | 'warning' | 'danger';
@@ -112,22 +109,6 @@ Icons.setLoaderOptions({
   loader: async (name, size) =>
     (await iconModules[`${name}/${size}`]()).default as IconPaths,
 })
-
-export function Spinner({ size, padding }: { size: number, padding?: boolean }) {
-  return <div
-    className={classNames('grid justify-center', padding && 'py-5')}
-    style={{ height: size }}
-  >
-    <img className="object-contain w-full h-full sepia-50" src="/loading.gif" />
-  </div>
-}
-
-export function GlobalSpinner({loading, timeout, connectionTimeoutMessage}) {
-  const className = classNames('global-loading-spinner', {loading, timeout})
-  return <div className={className}>
-    <NonIdealState icon={<Spinner size={60} />} title={timeout ? connectionTimeoutMessage : ''} />
-  </div>
-}
 
 interface IconProps {
   className?: string
@@ -211,27 +192,3 @@ export function SearchBar({id, onChange, value, placeholder, emptySearchText} : 
     placeholder={placeholder}
   />
 }
-
-export function Markdown({options, className, ...props}: React.ComponentPropsWithoutRef<typeof MarkdownToJsx>) {
-  return <MarkdownToJsx
-    className={classNames(className, 'markdown-content')}
-    {...props}
-    options={options
-      ? { ...options, overrides: { ...markdownComponents, ...options.overrides } }
-      : Markdown.defaultOptions
-    }
-  />
-}
-
-const markdownComponents = {
-  QR: ({size, value, title, ...props}) => {
-    const parsedSize = parseInt(size, 10)
-    const pxSize = `${parsedSize}px`
-    return  <div className="qr-container" style={{'--qr-size': pxSize} as React.CSSProperties}>
-      {title && <p>{title}</p>}
-      <QRCode {...props} value={value ?? ''} size={parsedSize} />
-      <p className="url">{value}</p>
-    </div>
-  },
-}
-Markdown.defaultOptions = { overrides: markdownComponents }

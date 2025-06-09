@@ -164,7 +164,7 @@ function DanceList({instanceIndex, bigTitle}: {instanceIndex: number, bigTitle?:
       component={DanceListItem}
       renderConflictItem={item => item.name}
     />
-    {!dances?.length && <p className={CssClass.textMuted}>{t('noDances')}</p>}
+    {!dances?.length && <p className="my-2 text-gray-500">{t('noDances')}</p>}
     <AddDanceChooser instance={instanceIndex} />
   </>
 
