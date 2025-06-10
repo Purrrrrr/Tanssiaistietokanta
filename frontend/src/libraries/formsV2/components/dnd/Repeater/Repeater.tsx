@@ -3,7 +3,7 @@ import { useContext, useId } from 'react'
 import { AcceptedTypes, ItemData, ItemTypeClassifier, ListItem } from './types'
 import type { AnyType, DataPath } from '../../../types'
 
-import { useValueAt } from '../../../hooks'
+import { useValueAt } from '../../../hooks/externalHookApi'
 import { ItemVisitContext } from '../context'
 import { type DroppableElement, DropArea } from './DropArea'
 import { SortableItemElement } from './SortableItem'

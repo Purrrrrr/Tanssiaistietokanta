@@ -3,10 +3,10 @@ import { Switch as BlueprintSwitch } from '@blueprintjs/core'
 
 import { FieldInputComponent, FieldInputComponentProps } from './types'
 
-export interface SwitchInputProps extends FieldInputComponentProps<boolean>, RefAttributes<HTMLInputElement> {
+export interface SwitchProps extends FieldInputComponentProps<boolean>, RefAttributes<HTMLInputElement> {
   label: string
 }
-export const SwitchInput : FieldInputComponent<boolean, SwitchInputProps> = React.forwardRef<HTMLInputElement, Omit<SwitchInputProps, 'ref'>>(
+export const Switch : FieldInputComponent<boolean, SwitchProps> = React.forwardRef<HTMLInputElement, Omit<SwitchProps, 'ref'>>(
   function Switch({ value, onChange, readOnly, ...props }, ref) {
     return <BlueprintSwitch
       inputRef={ref}

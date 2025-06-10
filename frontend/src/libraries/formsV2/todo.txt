@@ -17,7 +17,7 @@ TODO:
 * Make Form value controlled?
 * closable editors? Removed
 * FieldsetContainer
-  List editor
+* List editor
     * Repeater
     * Field logic without any wrapper
     * Proper drag handles
@@ -28,18 +28,17 @@ TODO:
     * TableListEditor
     * Repeating input field??
     * Remove buttons
-      Add hook
-  
+    * Add hook
 * FieldSet component
-    wrapper?: none | fieldset
-    Common container props? labelstyle etc.
-  Rethink bare field container needs
+  * wrapper?: none | fieldset ???
+  * Common container props? labelstyle etc.
+* Rethink bare field container needs
+* Range fields
+* date time components (choose better implementation?)
+  Selector (choose better component?)
   switchFor
-  TextArea
   Fix Duration field?
   NumberInput
-  date time components (choose better implementation?)
-  Selector (choose better component?)
   RadioGroup with fieldset
   input field components
   various buttons
@@ -50,17 +49,18 @@ TODO:
     better translation system?
     inline prop with just CSS?
     a11y-announcement element for list editor and such?? Is it needed? announcement API?
+  TextArea: remove from Workshop Editor
+  Fix date components somewhat
 
 /* Need to export:
 ActionButton as Button
 DateField
 DateRangeField
-DragHandle
-FieldComponentProps
+type DragHandle
+type FieldComponentProps
 formFor
 Input
 InputProps
-ListEditorContext
 MarkdownEditor
 MenuButton
 NumberInput

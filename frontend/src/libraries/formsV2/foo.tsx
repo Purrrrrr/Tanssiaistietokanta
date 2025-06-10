@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import { Button, Flex } from 'libraries/ui'
 
-import { formFor, TextInput } from './index'
+import { FieldInputComponentProps, formFor, TextInput } from './index'
 
 interface Data {
   a: string
@@ -12,6 +12,8 @@ interface Data {
   s: string[]
   l: L[]
   l2: L[]
+  rangeStart: Date | null,
+  rangeEnd: Date | null,
 }
 interface L {
   _id: string
@@ -19,13 +21,19 @@ interface L {
 }
 
 const {
-  Form, Field, TextField, Switch, MarkdownField, RepeatingField,
-  RepeatingSection, RepeatingTableRows,
+  Form, Field, RepeatingSection, RepeatingTableRows,
   useAddItem, useAddItemAt, useRemoveItem, useRemoveItemAt,
 } = formFor<Data, {'l': L, 's': string}>()
 
 export default function Foo() {
-  const [value, onChange] = useState<Data>({a: '', b: '', l: [{_id: '1', value: 'a'}, {_id: '2', value: 'b'}, {_id: '5', value: 'a2'}, {_id: '6', value: 'b2'}], l2: [{_id: '3', value: 'c'}, {_id: '4', value: 'd'}], s: ['aa', 'bb']})
+  const [value, onChange] = useState<Data>({
+    a: '', b: '',
+    l: [{_id: '1', value: 'a'}, {_id: '2', value: 'b'}, {_id: '5', value: 'a2'}, {_id: '6', value: 'b2'}],
+    l2: [{_id: '3', value: 'c'}, {_id: '4', value: 'd'}],
+    s: ['aa', 'bb'],
+    rangeStart: new Date(),
+    rangeEnd: new Date(),
+  })
 
   return <Form value={value} onChange={onChange}>
     <h2>FOO</h2>
@@ -40,15 +48,17 @@ function FooContents() {
   const removeItem = useRemoveItem()
 
   return <>
-    <Field label="aaa" path="a" required component={TextInput} />
-    <RepeatingField path="s" label="Strings" component={TextInput} />
-    <TextField label="aaa" path="b" />
-    <Switch path="bo" label="Is it on?" />
-    <MarkdownField path="d" label="markdooown" />
+    <Field.Date path="rangeStart" label="Start" locale="fi-FI" />
+    <Field.DateRange startPath="rangeStart" endPath="rangeEnd" label="Range" />
+    <Field.Custom label="aaa" path="a" required component={TextInput} />
+    <Field.Repeating path="s" label="Strings" component={TextInput} />
+    <Field.Text label="aaa" path="b" />
+    <Field.Switch path="bo" label="Is it on?" />
+    <Field.Markdown path="d" label="markdooown" />
     <RepeatingSection<L> path="l" label="l" accepts="l" itemType="l">
       {({ dragHandle, path, index, onRemove }) =>
         <Flex>
-          <TextField label="Value" inline labelStyle="beside" path={`${path}.${index}.value`} />
+          <Field.Text label="Value" inline labelStyle="beside" path={`${path}.${index}.value`} />
           {dragHandle}
           <Button intent="danger" icon="cross" onClick={onRemove} />
         </Flex>
@@ -58,7 +68,7 @@ function FooContents() {
     <RepeatingSection<L> path="l2" label="l 2" accepts="l" itemType="l">
       {({ dragHandle, path, index, onRemove }) =>
         <Flex>
-          <TextField label="Value" inline labelStyle="beside" path={`${path}.${index}.value`} />
+          <Field.Text label="Value" inline labelStyle="beside" path={`${path}.${index}.value`} />
           {dragHandle}
           <Button intent="danger" icon="cross" onClick={onRemove} />
         </Flex>

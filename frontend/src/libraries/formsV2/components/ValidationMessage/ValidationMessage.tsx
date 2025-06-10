@@ -8,19 +8,19 @@ import { setValidationResult } from '../../reducer'
 import { ErrorMessage } from './ErrorMessage'
 import { type ValidationProps, validate } from './validate'
 
-interface ValidationMessageProps extends ValidationProps {
+interface ValidationMessageProps<T> extends ValidationProps<T> {
   id: string
   path: GenericPath
   value?: unknown
 }
 
-export function ValidationMessage(props: ValidationMessageProps) {
+export function ValidationMessage<T>(props: ValidationMessageProps<T>) {
   const error = useRunValidation(props)
   return <ErrorMessage id={props.id} error={error} />
 
 }
 
-function useRunValidation(props: ValidationMessageProps) {
+function useRunValidation<T>(props: ValidationMessageProps<T>) {
   const { id, path, value: maybeValue, ...validation } = props
   const { getState, getValueAt, dispatch, subscribe } = useFormContext<AnyType>()
   const error = useSyncExternalStore(subscribe, () => getState().validation.errors[id])
