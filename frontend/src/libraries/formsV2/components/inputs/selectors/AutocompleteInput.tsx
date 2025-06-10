@@ -12,7 +12,7 @@ export type AutocompleteInputProps<T> = Omit<SelectorProps<T>, 'buttonRenderer'>
 
 export function AutocompleteInput<T>({
   items, itemToString = String, itemIcon, itemRenderer,
-  value = null, onChange, id,
+  value, onChange, id,
   placeholder = '',
   itemClassName, hilightedItemClassName,
 }: AutocompleteInputProps<T>) {
@@ -33,7 +33,7 @@ export function AutocompleteInput<T>({
     selectedItem: value,
     itemToString: valueToString,
     defaultHighlightedIndex: 0,
-    onSelectedItemChange: ({ selectedItem }) => onChange(selectedItem),
+    onSelectedItemChange: ({ selectedItem }) => onChange(selectedItem as T),
     onInputValueChange: async ({ inputValue}) => updateFilter(inputValue),
     onIsOpenChange: async (a) => {
       if (a.isOpen) {

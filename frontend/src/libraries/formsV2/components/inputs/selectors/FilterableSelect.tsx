@@ -10,7 +10,7 @@ import { acceptNulls, preventDownshiftDefaultWhen, useFilteredItems } from './ut
 
 export default function FilterableSelect<T>({
   items, itemToString = String, itemIcon, itemRenderer, buttonRenderer,
-  value = null, onChange, id, readOnly,
+  value, onChange, id, readOnly,
   placeholder = '', 'aria-label': ariaLabel,
   itemClassName, hilightedItemClassName,
 }: SelectorProps<T>) {
@@ -32,7 +32,7 @@ export default function FilterableSelect<T>({
     items: filteredItems,
     selectedItem: value,
     itemToString: valueToString,
-    onSelectedItemChange: ({ selectedItem }) => onChange(selectedItem),
+    onSelectedItemChange: ({ selectedItem }) => onChange(selectedItem as T),
     onInputValueChange: async ({ inputValue}) => {
       // Try to keep the hilighted item the same
       const previousHilight = filteredItems[highlightedIndex]

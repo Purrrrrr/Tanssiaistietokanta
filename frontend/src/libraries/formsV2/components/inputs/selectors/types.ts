@@ -3,7 +3,7 @@ import type { UseComboboxGetToggleButtonPropsReturnValue } from 'downshift'
 
 import { FieldInputComponentProps } from '../types'
 
-export interface SelectorProps<T> extends FieldInputComponentProps<T | null> {
+export interface SelectorProps<T> extends FieldInputComponentProps<T, T> {
   items: Items<T>
   placeholder?: string
   buttonRenderer?: (selectedItem: T | null, props: ButtonProps, valueString: string) => ReactNode
