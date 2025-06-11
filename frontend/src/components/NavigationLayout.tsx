@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 import {BreadcrumbContext} from 'libraries/ui'
 import {T, useTranslation} from 'i18n'
 
@@ -33,9 +35,13 @@ function NavigationLayout({children}) {
             <SidebarContainer />
           </aside>
           <footer>
+            {process.env.NODE_ENV === 'development' &&
+              <Link className="px-1 mr-1 border-e border-gray-400" to="/ui-showcase">UI Showcase</Link>}
             <T msg="app.title" /> v. {process.env.REACT_APP_BUILD_TIME ?? 'DEV'}-{process.env.REACT_APP_COMMIT_REV ?? 'HEAD'}
+            {' '}
             <LicenceLink />
-            {process.env.NODE_ENV === 'development' &&  <DebugManager />}
+            {process.env.NODE_ENV === 'development' &&
+              <DebugManager />}
           </footer>
         </div>
       </SidebarContext>

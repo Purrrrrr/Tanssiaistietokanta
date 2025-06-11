@@ -3,10 +3,10 @@ import { useState } from 'react'
 import { Button, Flex } from 'libraries/ui'
 
 import { TextInput } from './components/inputs'
+import { SegmentedInput } from './components/inputs/SegmentedInput'
 import { AutocompleteInput } from './components/inputs/selectors/AutocompleteInput'
 import { Select } from './components/inputs/selectors/Select'
 import { formFor, withDefaults } from './index'
-import { SegmentedInput } from './components/inputs/SegmentedInput'
 
 interface Data {
   a: string
@@ -39,7 +39,7 @@ const defaultData : Data = {
   rangeEnd: new Date(),
 }
 
-export default function Foo() {
+export default function UiShowcase() {
   const [key, setKey] = useState<number>(0)
   const [value, onChange] = useState<Data>(defaultData)
 
@@ -48,7 +48,7 @@ export default function Foo() {
     <button type="button" className="p-2 my-2 font-bold text-white bg-fuchsia-800 border" onClick={() => { setKey(key + 1); onChange(defaultData) }}>
       RESET
     </button>
-    <FooContents key={key} />
+    <ShowcaseContents key={key} />
   </Form>
 }
 
@@ -61,7 +61,7 @@ const S = withDefaults(selectWithType<string>(), {
   filterPlaceholder: 'Hae...',
 })
 
-function FooContents() {
+function ShowcaseContents() {
   const [s, setS] = useState<string | null>('a')
   const [s2, setS2] = useState<string | null>('a')
   const [s3, setS3] = useState<string>('')
