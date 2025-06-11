@@ -109,15 +109,22 @@ function updateDropdownPosition(element: HTMLDivElement, anchorElement: Element)
     }
   }
   const top = pointDown
-    ? anchor.top + anchor.height
-    : anchor.top - h
-  const minLeft = margin
-  const maxLeft = winW - w - margin
+    ? anchor.top + anchor.height + 3
+    : anchor.top - h - 3
   const centeredLeft = anchor.left + (anchor.width - w) / 2
-  const left = Math.max(minLeft, Math.min(maxLeft, centeredLeft))
+  const left = clamp({
+    min: margin,
+    max: winW - w - margin,
+    value: centeredLeft
+  })
 
   element.style.minWidth = toPx(anchor.width)
-  element.style.maxHeight = toPx(Math.max(200, (pointDown ? winH - anchor.bottom : anchor.top) - margin))
+  element.style.maxHeight = toPx(
+    clamp({
+      min: 200,
+      value: (pointDown ? winH - anchor.bottom : anchor.top) - margin,
+    })
+  )
   element.style.top = toPx(top + window.scrollY)
   element.style.left = toPx(left + window.scrollX)
   element.style.transformOrigin = pointDown
@@ -125,6 +132,7 @@ function updateDropdownPosition(element: HTMLDivElement, anchorElement: Element)
 }
 
 const toPx = (value: number) => `${value}px`
+const clamp = ({value, min = -Infinity, max = Infinity}: { value: number, min?: number, max?: number}) => Math.min(max, Math.max(min, value))
 
 function useResizeObserver(element: { current: HTMLDivElement | null }, callback: () => void) {
   useEffect(() => {
