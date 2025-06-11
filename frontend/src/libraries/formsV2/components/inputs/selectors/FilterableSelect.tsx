@@ -64,6 +64,7 @@ export default function FilterableSelect<T>(props: SelectorProps<T>) {
         placeholder={filterPlaceholder}
         className={Classes.INPUT+' w-full'}
         {...getInputProps({ onKeyDown: disableHomeAndEndKeys })}
+        onClick={undefined}
       />
       <Menu {...getMenuProps()}>
         {isOpen &&
