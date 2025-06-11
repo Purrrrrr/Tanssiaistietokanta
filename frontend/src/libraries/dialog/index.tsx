@@ -97,7 +97,7 @@ export function Alert({isOpen, title, intent, confirmButtonText, cancelButtonTex
   </Dialog>
 }
 
-function getFocusableElements(container: HTMLElement) {
+export function getFocusableElements(container: HTMLElement) {
   return [
     ...container.querySelectorAll(focusableSelector) as NodeListOf<HTMLElement>
   ].filter(el => !el.getAttribute('aria-hidden') && el.style.display !== 'none')

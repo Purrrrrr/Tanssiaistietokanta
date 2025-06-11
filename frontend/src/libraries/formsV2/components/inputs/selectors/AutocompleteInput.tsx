@@ -4,7 +4,7 @@ import { useCombobox } from 'downshift'
 import { SelectorProps } from './types'
 import { FieldInputComponent } from '../types'
 
-import { Dropdown, DropdownContainer } from './Dropdown'
+import { Dropdown, DropdownContainer } from '../../Dropdown'
 import { Menu, MenuItem, toMenuItemProps } from './Menu'
 import { acceptNulls, preventDownshiftDefaultWhen, useFilteredItems } from './utils'
 

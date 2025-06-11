@@ -1,4 +1,5 @@
-import { type ReactNode, useCallback, useEffect, useLayoutEffect, useRef } from 'react'
+import { type ReactNode, FocusEventHandler, MouseEventHandler, useCallback, useEffect, useLayoutEffect, useRef } from 'react'
+import { forwardRef } from 'react'
 import { useScrollPosition } from '@n8tb1t/use-scroll-position'
 import classNames from 'classnames'
 
@@ -6,28 +7,29 @@ interface DropdownContainerProps {
   className?: string
   children: ReactNode
 }
-
-export function DropdownContainer({ children, className = 'inline-block w-fit' }: DropdownContainerProps) {
-  return <div className={className} data-dropdown-container="true">
+export const DropdownContainer = forwardRef<HTMLDivElement, DropdownContainerProps>(({ children, className = 'inline-block w-fit' }, ref) => {
+  return <div className={className} data-dropdown-container="true" ref={ref}>
     {children}
   </div>
-}
+})
 
 interface DropdrownProps {
   open: boolean
   children: ReactNode
   arrow?: boolean
+  onClick?: MouseEventHandler
+  onBlur?: FocusEventHandler
 }
 
-export const Dropdown = ({ arrow, children, open }: DropdrownProps) => {
+export const Dropdown = ({ arrow, children, open, onClick, onBlur }: DropdrownProps) => {
   const element = useRef<HTMLDivElement>(null)
-  const openRef = useRef<boolean>(open)
-  openRef.current = open
+  // const openRef = useRef<boolean>(open)
+  // openRef.current = open
 
   const updateDirection = useCallback(() => {
     if (!element.current) return
     const parent = element.current.closest('[data-dropdown-container]')
-    if (!parent || !openRef.current) return
+    if (!parent) return
     updateDropdownPosition(element.current, parent, arrow)
   }, [arrow])
   useLayoutEffect(() => {
@@ -38,7 +40,7 @@ export const Dropdown = ({ arrow, children, open }: DropdrownProps) => {
   useResizeObserver(element, updateDirection)
   useScrollPosition(updateDirection, [updateDirection], undefined, true, 100)
 
-  return <div popover="manual" ref={element} className={classNames(
+  return <div onClick={onClick} onBlur={onBlur} popover="manual" ref={element} className={classNames(
     'z-50 absolute w-fit max-w-dvw max-h-dvh transition-[scale,opacity] bg-transparent p-2.5',
     open || 'scale-y-0 opacity-0',
   )}>
@@ -105,7 +107,7 @@ function updateDropdownPosition(element: HTMLDivElement, anchorElement: Element,
     triangle.style.top = toPx(
       pointDown ? 1 : elementH - 1
     )
-    triangle.style.left = toPx((elementW - triangleW) / 2)
+    triangle.style.left = toPx((elementWWithPadding - triangleW) / 2)
     triangle.style.rotate = pointDown ? '' : '180deg'
   }
 }

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 
+import { ConflictHandler } from 'libraries/forms/ConflictHandler'
 import { Button, Flex } from 'libraries/ui'
 
 import { TextInput } from './components/inputs'
@@ -72,6 +73,11 @@ function ShowcaseContents() {
 
   return <>
     <S path="a" label="Viikonpäivä" />
+    <ConflictHandler
+      localValue={<input className="border block"  defaultValue="fuu" />}
+      serverValue={<input className="border block"  defaultValue="fuu" />}
+      onResolve={() => {}}
+    />
     <SegmentedInput value={s3} onChange={setS3} />
     <Select
       filterable
