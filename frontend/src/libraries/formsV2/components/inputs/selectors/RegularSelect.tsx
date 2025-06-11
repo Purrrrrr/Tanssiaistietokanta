@@ -39,7 +39,7 @@ export default function RegularSelect<T>(props: SelectorProps<T>) {
 
   return <DropdownContainer className={containerClassname}>
     <DropdownButton selectorProps={props} buttonProps={buttonProps} />
-    <Dropdown open={isOpen}>
+    <Dropdown open={isOpen} arrow>
       <Menu {...getMenuProps()}>
         {isOpen &&
           items.map((item, index) => (

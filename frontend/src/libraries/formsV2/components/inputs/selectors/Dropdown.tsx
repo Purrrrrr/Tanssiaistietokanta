@@ -16,9 +16,10 @@ export function DropdownContainer({ children, className = 'inline-block w-fit' }
 interface DropdrownProps {
   open: boolean
   children: ReactNode
+  arrow?: boolean
 }
 
-export const Dropdown = ({ children, open }: DropdrownProps) => {
+export const Dropdown = ({ arrow, children, open }: DropdrownProps) => {
   const element = useRef<HTMLDivElement>(null)
   const openRef = useRef<boolean>(open)
   openRef.current = open
@@ -27,8 +28,8 @@ export const Dropdown = ({ children, open }: DropdrownProps) => {
     if (!element.current) return
     const parent = element.current.closest('[data-dropdown-container]')
     if (!parent || !openRef.current) return
-    updateDropdownPosition(element.current, parent)
-  }, [])
+    updateDropdownPosition(element.current, parent, arrow)
+  }, [arrow])
   useLayoutEffect(() => {
     element.current?.showPopover?.()
   }, [])
@@ -41,23 +42,25 @@ export const Dropdown = ({ children, open }: DropdrownProps) => {
     'z-50 absolute w-fit max-w-dvw max-h-dvh transition-[scale,opacity] bg-transparent p-2.5',
     open || 'scale-y-0 opacity-0',
   )}>
-    <div className='border-1 border-gray-400/50 bg-white shadow-black/40 shadow-md p-1'>
+    <div className="border-1 border-gray-400/50 bg-white shadow-black/40 shadow-md p-0.5">
       {children}
     </div>
-    <svg className="text-gray-400/50 w-5 h-2.5 absolute" width={20} height={10}>
-      <polygon points="10,0 0,10.5 20,10.5" stroke="currentColor" fill="#fff" />
-    </svg>
+    {arrow &&
+      <svg className="text-gray-400/50 w-5 h-2.5 absolute" width={20} height={10}>
+        <polygon points="10,0 0,10.5 20,10.5" stroke="currentColor" fill="#fff" />
+      </svg>
+    }
   </div>
 }
 
-function updateDropdownPosition(element: HTMLDivElement, anchorElement: Element) {
+function updateDropdownPosition(element: HTMLDivElement, anchorElement: Element, hasArrow?: boolean) {
   const anchor = anchorElement.getBoundingClientRect()
   const { clientHeight: elementHWithPadding, clientWidth: elementWWithPadding } = element
   const { clientHeight: winH, clientWidth: winW } = document.documentElement
   const margin = 10
-  // For shadows and the arrow to render properly
+  // For shadows and the arrow to render properly we have a transparent padding area
   const transparentPadding = 10
-  const triangleH = 10
+  const triangleH = hasArrow ? 10 : 0
   const triangleW = 20
   const elementH = elementHWithPadding - transparentPadding * 2 + triangleH
   const elementW = elementWWithPadding - transparentPadding * 2
@@ -86,7 +89,7 @@ function updateDropdownPosition(element: HTMLDivElement, anchorElement: Element)
     value: centeredLeft
   })
 
-  element.style.minWidth = toPx(anchor.width)
+  element.style.minWidth = toPx(anchor.width + transparentPadding * 2)
   element.style.maxHeight = toPx(
     clamp({
       min: 200,
@@ -97,12 +100,14 @@ function updateDropdownPosition(element: HTMLDivElement, anchorElement: Element)
   element.style.left = toPx(left + window.scrollX)
   element.style.transformOrigin = pointDown
     ? 'top' : 'bottom'
-  const triangle = element.childNodes[1] as HTMLDivElement
-  triangle.style.top = toPx(
-    pointDown ? 1 : elementH - 1
-  )
-  triangle.style.left = toPx((elementW - triangleW) / 2)
-  triangle.style.rotate = pointDown ? '' : '180deg'
+  if (hasArrow) {
+    const triangle = element.childNodes[1] as HTMLDivElement
+    triangle.style.top = toPx(
+      pointDown ? 1 : elementH - 1
+    )
+    triangle.style.left = toPx((elementW - triangleW) / 2)
+    triangle.style.rotate = pointDown ? '' : '180deg'
+  }
 }
 
 const toPx = (value: number) => `${value}px`
