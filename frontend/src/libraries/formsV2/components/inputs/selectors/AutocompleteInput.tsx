@@ -5,18 +5,20 @@ import { SelectorProps } from './types'
 import { FieldInputComponent } from '../types'
 
 import { Dropdown, DropdownContainer } from './Dropdown'
-import { Menu, MenuItem } from './Menu'
+import { Menu, MenuItem, toMenuItemProps } from './Menu'
 import { acceptNulls, preventDownshiftDefaultWhen, useFilteredItems } from './utils'
 
-export type AutocompleteInputProps<T> = Omit<SelectorProps<T>, 'buttonRenderer'>
+export interface AutocompleteInputProps<T> extends Omit<SelectorProps<T>, 'buttonRenderer'> {
+  placeholder?: string
+}
 
-export function AutocompleteInput<T>({
-  items, itemToString = String, itemIcon, itemRenderer,
-  value, onChange, id,
-  placeholder = '', containerClassname,
-  itemClassName, hilightedItemClassName,
-}: AutocompleteInputProps<T>) {
+export function AutocompleteInput<T>(props: AutocompleteInputProps<T>) {
   'use no memo'
+  const {
+    items, itemToString = String,
+    value, onChange, id,
+    placeholder = '', containerClassname,
+  } = props
   const valueToString = acceptNulls(itemToString, placeholder)
   const [filteredItems, updateFilter] = useFilteredItems(items, itemToString)
   const {
@@ -71,15 +73,12 @@ export function AutocompleteInput<T>({
       <Menu {...getMenuProps()}>
         {isOpen &&
           filteredItems.map((item, index) => (
-            <MenuItem highlight={highlightedIndex === index}
+            <MenuItem
+              highlight={highlightedIndex === index}
               key={`${item}${index}`}
-              className={itemClassName}
-              hilightedClassName={hilightedItemClassName}
+              {...toMenuItemProps(item, props)}
               {...getItemProps({ item, index })}
-            >
-              {itemIcon?.(item)}
-              {(itemRenderer ?? itemToString)(item)}
-            </MenuItem>
+            />
           ))}
       </Menu>
     </Dropdown>

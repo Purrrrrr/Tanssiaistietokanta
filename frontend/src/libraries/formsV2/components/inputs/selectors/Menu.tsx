@@ -1,6 +1,8 @@
 import { type ComponentProps, forwardRef } from 'react'
 import classNames from 'classnames'
 
+import { SelectorProps } from './types'
+
 type MenuProps = Omit<ComponentProps<'ul'>, 'className'>
 
 export const Menu = forwardRef<HTMLUListElement, MenuProps>(
@@ -27,3 +29,18 @@ export const MenuItem = forwardRef<HTMLLIElement, MenuItemProps>(
     />
   }
 )
+
+export function toMenuItemProps<T>(
+  item: T,
+  { itemClassName, hilightedItemClassName, itemIcon, itemRenderer, itemToString = String }: SelectorProps<T>
+): Pick<MenuItemProps, 'className' | 'hilightedClassName' | 'children'> {
+  return {
+    className: itemClassName,
+    hilightedClassName: hilightedItemClassName,
+    children: <>
+
+      {itemIcon?.(item)}
+      {(itemRenderer ?? itemToString)(item)}
+    </>
+  }
+}

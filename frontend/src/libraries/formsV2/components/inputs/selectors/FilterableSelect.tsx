@@ -1,21 +1,21 @@
-import { useRef } from 'react'
+import { KeyboardEvent, useRef } from 'react'
 import {Classes} from '@blueprintjs/core'
 import { useCombobox, UseComboboxState, UseComboboxStateChangeOptions } from 'downshift'
 
 import { SelectorProps } from './types'
 
 import { Dropdown, DropdownButton, DropdownContainer } from './Dropdown'
-import { Menu, MenuItem } from './Menu'
+import { Menu, MenuItem, toMenuItemProps } from './Menu'
 import { acceptNulls, preventDownshiftDefaultWhen, useFilteredItems } from './utils'
 
-export default function FilterableSelect<T>({
-  items, itemToString = String, itemIcon, itemRenderer, buttonRenderer,
-  value, onChange, id, readOnly,
-  placeholder = '', 'aria-label': ariaLabel, containerClassname,
-  itemClassName, hilightedItemClassName,
-}: SelectorProps<T>) {
+export default function FilterableSelect<T>(props: SelectorProps<T>) {
   'use no memo'
-  const valueToString = acceptNulls(itemToString, placeholder)
+  const {
+    items, itemToString = String,
+    value, onChange, id, containerClassname,
+    filterPlaceholder,
+  } = props
+  const valueToString = acceptNulls(itemToString)
   const buttonRef = useRef<HTMLButtonElement | null>(null)
   const [filteredItems, updateFilter] = useFilteredItems(items, itemToString)
   const {
@@ -53,46 +53,35 @@ export default function FilterableSelect<T>({
   const buttonProps = getToggleButtonProps({
     ref: buttonRef,
     tabIndex: isOpen ? -1 : 0,
-    disabled: readOnly,
-    'aria-label': ariaLabel,
   })
 
   return <DropdownContainer className={containerClassname}>
-    {buttonRenderer
-      ? buttonRenderer(value, buttonProps, valueToString(value))
-      : <DropdownButton
-        {...buttonProps}
-        label={ariaLabel}
-        chosenValue={valueToString(value)}
-      >
-        {itemIcon?.(value)}
-        {valueToString(value)}
-      </DropdownButton>
-    }
+    <DropdownButton selectorProps={props} buttonProps={buttonProps} />
     <Dropdown open={isOpen}>
       <input
-        className={Classes.INPUT}
-        {...getInputProps({
-          onKeyDown: preventDownshiftDefaultWhen(e => e.key === 'Home' || e.key === 'End')
-        })}
+        tabIndex={isOpen ? 0 : -1}
+        placeholder={filterPlaceholder}
+        className={Classes.INPUT+' w-full'}
+        {...getInputProps({ onKeyDown: disableHomeAndEndKeys })}
       />
       <Menu {...getMenuProps()}>
         {isOpen &&
           filteredItems.map((item, index) => (
-            <MenuItem highlight={highlightedIndex === index}
+            <MenuItem
+              highlight={highlightedIndex === index}
               key={`${item}${index}`}
-              className={itemClassName}
-              hilightedClassName={hilightedItemClassName}
+              {...toMenuItemProps(item, props)}
               {...getItemProps({ item, index })}
-            >
-              {itemIcon?.(item)}
-              {(itemRenderer ?? itemToString)(item)}
-            </MenuItem>
+            />
           ))}
       </Menu>
     </Dropdown>
   </DropdownContainer>
 }
+
+const disableHomeAndEndKeys = preventDownshiftDefaultWhen<KeyboardEvent>(
+  e => e.key === 'Home' || e.key === 'End'
+)
 
 function clearInputOnBlurReducer<T>(state: UseComboboxState<T>, { type, changes }: UseComboboxStateChangeOptions<T>): Partial<UseComboboxState<T>> {
   switch (type) {

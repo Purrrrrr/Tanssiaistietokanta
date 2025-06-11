@@ -3,17 +3,16 @@ import { useSelect } from 'downshift'
 import { SelectorProps } from './types'
 
 import { Dropdown, DropdownButton, DropdownContainer } from './Dropdown'
-import { Menu, MenuItem } from './Menu'
+import { Menu, MenuItem, toMenuItemProps } from './Menu'
 import { acceptNulls, preventDownshiftDefaultWhen, useItems } from './utils'
 
-export default function RegularSelect<T>({
-  items: getItems, itemToString = String, itemIcon, itemRenderer, buttonRenderer,
-  value, onChange, id, readOnly,
-  placeholder = '', 'aria-label': ariaLabel, containerClassname,
-  itemClassName, hilightedItemClassName,
-}: SelectorProps<T>) {
+export default function RegularSelect<T>(props: SelectorProps<T>) {
   'use no memo'
-  const valueToString = acceptNulls(itemToString, placeholder)
+  const {
+    items: getItems, itemToString = String,
+    value, onChange, id, containerClassname,
+  } = props
+  const valueToString = acceptNulls(itemToString)
   const [items, updateItems] = useItems(getItems)
   const {
     isOpen,
@@ -35,22 +34,10 @@ export default function RegularSelect<T>({
   })
   const buttonProps = getToggleButtonProps({
     onClick: preventDownshiftDefaultWhen(e => e.detail === 0),
-    disabled: readOnly,
-    'aria-label': ariaLabel,
   })
 
   return <DropdownContainer className={containerClassname}>
-    {buttonRenderer
-      ? buttonRenderer(value, buttonProps, valueToString(value))
-      : <DropdownButton
-        {...buttonProps}
-        label={ariaLabel}
-        chosenValue={valueToString(value)}
-      >
-        {itemIcon?.(value)}
-        {valueToString(value)}
-      </DropdownButton>
-    }
+    <DropdownButton selectorProps={props} buttonProps={buttonProps} />
     <Dropdown open={isOpen}>
       <Menu {...getMenuProps()}>
         {isOpen &&
@@ -58,13 +45,9 @@ export default function RegularSelect<T>({
             <MenuItem
               highlight={highlightedIndex === index}
               key={`${item}${index}`}
-              className={itemClassName}
-              hilightedClassName={hilightedItemClassName}
+              {...toMenuItemProps(item, props)}
               {...getItemProps({ item, index })}
-            >
-              {itemIcon?.(item)}
-              {(itemRenderer ?? itemToString)(item)}
-            </MenuItem>
+            />
           ))}
       </Menu>
     </Dropdown>
