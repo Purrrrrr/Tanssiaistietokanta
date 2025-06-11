@@ -6,6 +6,7 @@ import { TextInput } from './components/inputs'
 import { AutocompleteInput } from './components/inputs/selectors/AutocompleteInput'
 import { Select } from './components/inputs/selectors/Select'
 import { formFor, withDefaults } from './index'
+import { SegmentedInput } from './components/inputs/SegmentedInput'
 
 interface Data {
   a: string
@@ -63,6 +64,7 @@ const S = withDefaults(selectWithType<string>(), {
 function FooContents() {
   const [s, setS] = useState<string | null>('a')
   const [s2, setS2] = useState<string | null>('a')
+  const [s3, setS3] = useState<string>('')
   const addToL = useAddItemAt('l')
   const addItem = useAddItem()
   const removeFromL = useRemoveItemAt('l')
@@ -70,6 +72,7 @@ function FooContents() {
 
   return <>
     <S path="a" label="Viikonpäivä" />
+    <SegmentedInput value={s3} onChange={setS3} />
     <Select
       filterable
       aria-label="jotakin"
