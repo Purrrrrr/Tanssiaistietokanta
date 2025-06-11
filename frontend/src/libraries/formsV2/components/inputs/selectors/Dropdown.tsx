@@ -2,12 +2,6 @@ import { type ReactNode, useCallback, useEffect, useLayoutEffect, useRef } from 
 import { useScrollPosition } from '@n8tb1t/use-scroll-position'
 import classNames from 'classnames'
 
-import { DropdownButtonDownshiftProps, SelectorProps } from './types'
-
-import { Button } from 'libraries/ui'
-
-import { useFormTranslation } from '../../../localization'
-
 interface DropdownContainerProps {
   className?: string
   children: ReactNode
@@ -17,45 +11,6 @@ export function DropdownContainer({ children, className = 'inline-block w-fit' }
   return <div className={className} data-dropdown-container="true">
     {children}
   </div>
-}
-
-export function DropdownButton<T>(
-  props: { selectorProps: SelectorProps<T>, buttonProps: DropdownButtonDownshiftProps}
-): ReactNode {
-  const { buttonProps, selectorProps } = props
-  const {
-    'aria-label': label, readOnly,
-    itemIcon, itemToString = String,
-    value, buttonRenderer
-  } = selectorProps
-  const ariaLabel = useDropdownButtonLabel(itemToString(value), label)
-
-  if (buttonRenderer) {
-    return buttonRenderer(value, {
-      disabled: readOnly,
-      'aria-label': ariaLabel,
-      ...buttonProps,
-    })
-  }
-
-  return <Button
-    {...buttonProps}
-    active={buttonProps['aria-expanded']}
-    aria-label={ariaLabel}
-    disabled={readOnly}
-    rightIcon="double-caret-vertical"
-  >
-    {itemIcon?.(value)}
-    {itemToString(value)}
-  </Button>
-}
-
-function useDropdownButtonLabel(chosenValue: string, ariaLabel?: string) {
-  const value = useFormTranslation('selector.value')
-  const choose = useFormTranslation('selector.choose', { fieldName: ariaLabel ?? value })
-  const chosen = useFormTranslation('selector.chosen', { value: chosenValue ?? '' })
-
-  return `${choose}. ${chosenValue && chosen}`
 }
 
 interface DropdrownProps {
@@ -83,21 +38,32 @@ export const Dropdown = ({ children, open }: DropdrownProps) => {
   useScrollPosition(updateDirection, [updateDirection], undefined, true, 100)
 
   return <div popover="manual" ref={element} className={classNames(
-    'z-50 absolute w-fit max-w-dvw max-h-dvh transition-[scale,opacity] bg-white shadow-black/40 shadow-md',
+    'z-50 absolute w-fit max-w-dvw max-h-dvh transition-[scale,opacity] bg-transparent p-2.5',
     open || 'scale-y-0 opacity-0',
   )}>
-    {children}
+    <div className='border-1 border-gray-400/50 bg-white shadow-black/40 shadow-md p-1'>
+      {children}
+    </div>
+    <svg className="text-gray-400/50 w-5 h-2.5 absolute" width={20} height={10}>
+      <polygon points="10,0 0,10.5 20,10.5" stroke="currentColor" fill="#fff" />
+    </svg>
   </div>
 }
 
 function updateDropdownPosition(element: HTMLDivElement, anchorElement: Element) {
   const anchor = anchorElement.getBoundingClientRect()
-  const { clientHeight: h, clientWidth: w } = element
+  const { clientHeight: elementHWithPadding, clientWidth: elementWWithPadding } = element
   const { clientHeight: winH, clientWidth: winW } = document.documentElement
   const margin = 10
+  // For shadows and the arrow to render properly
+  const transparentPadding = 10
+  const triangleH = 10
+  const triangleW = 20
+  const elementH = elementHWithPadding - transparentPadding * 2 + triangleH
+  const elementW = elementWWithPadding - transparentPadding * 2
 
-  const spaceDown = winH - anchor.bottom - h
-  const spaceUp = anchor.top - h
+  const spaceDown = winH - anchor.bottom - elementH
+  const spaceUp = anchor.top - elementH
 
   let pointDown = true
   const canPointDown = spaceDown > margin
@@ -110,12 +76,13 @@ function updateDropdownPosition(element: HTMLDivElement, anchorElement: Element)
     }
   }
   const top = pointDown
-    ? anchor.top + anchor.height + 3
-    : anchor.top - h - 3
-  const centeredLeft = anchor.left + (anchor.width - w) / 2
+    ? anchor.top + anchor.height + triangleH - transparentPadding
+    : anchor.top - elementH - transparentPadding
+
+  const centeredLeft = anchor.left + (anchor.width - elementW) / 2 - transparentPadding
   const left = clamp({
     min: margin,
-    max: winW - w - margin,
+    max: winW - elementW - margin,
     value: centeredLeft
   })
 
@@ -130,6 +97,12 @@ function updateDropdownPosition(element: HTMLDivElement, anchorElement: Element)
   element.style.left = toPx(left + window.scrollX)
   element.style.transformOrigin = pointDown
     ? 'top' : 'bottom'
+  const triangle = element.childNodes[1] as HTMLDivElement
+  triangle.style.top = toPx(
+    pointDown ? 1 : elementH - 1
+  )
+  triangle.style.left = toPx((elementW - triangleW) / 2)
+  triangle.style.rotate = pointDown ? '' : '180deg'
 }
 
 const toPx = (value: number) => `${value}px`
