@@ -46,8 +46,8 @@ TODO:
     * Custom button renderer
 * Remove featherjs client
 * Remove aria focus trap
-  Horizontal alignment of selector dropdown
-  min-width of dropdown
+* Horizontal alignment of selector dropdown
+* min-width of dropdown
   Replace MenuButton in ConflictHandler
   Different style for selector button when dropdown is open
   

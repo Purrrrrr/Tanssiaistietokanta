@@ -91,8 +91,8 @@ export const Dropdown = ({ children, open }: DropdrownProps) => {
 
 function updateDropdownPosition(element: HTMLDivElement, anchorElement: Element) {
   const anchor = anchorElement.getBoundingClientRect()
-  const { clientHeight: h, clientWidth: _w } = element
-  const { clientHeight: winH, clientWidth: _winW } = document.documentElement
+  const { clientHeight: h, clientWidth: w } = element
+  const { clientHeight: winH, clientWidth: winW } = document.documentElement
   const margin = 10
 
   const spaceDown = winH - anchor.bottom - h
@@ -111,8 +111,15 @@ function updateDropdownPosition(element: HTMLDivElement, anchorElement: Element)
   const top = pointDown
     ? anchor.top + anchor.height
     : anchor.top - h
+  const minLeft = margin
+  const maxLeft = winW - w - margin
+  const centeredLeft = anchor.left + (anchor.width - w) / 2
+  const left = Math.max(minLeft, Math.min(maxLeft, centeredLeft))
+
+  element.style.minWidth = toPx(anchor.width)
+  element.style.maxHeight = toPx(Math.max(200, (pointDown ? winH - anchor.bottom : anchor.top) - margin))
   element.style.top = toPx(top + window.scrollY)
-  element.style.left = toPx(anchor.left + window.scrollX)
+  element.style.left = toPx(left + window.scrollX)
   element.style.transformOrigin = pointDown
     ? 'top' : 'bottom'
 }
