@@ -40,6 +40,7 @@ export function DropdownButton<T>(
 
   return <Button
     {...buttonProps}
+    active={buttonProps['aria-expanded']}
     aria-label={ariaLabel}
     disabled={readOnly}
     rightIcon="double-caret-vertical"

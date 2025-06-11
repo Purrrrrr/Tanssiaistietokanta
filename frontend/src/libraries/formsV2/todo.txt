@@ -48,8 +48,8 @@ TODO:
 * Remove aria focus trap
 * Horizontal alignment of selector dropdown
 * min-width of dropdown
+* Different style for selector button when dropdown is open
   Replace MenuButton in ConflictHandler
-  Different style for selector button when dropdown is open
   
   Date selectors output format -> string?
   date time selector
