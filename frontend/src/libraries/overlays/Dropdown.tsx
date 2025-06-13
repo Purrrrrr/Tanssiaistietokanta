@@ -22,10 +22,10 @@ interface DropdrownProps {
   children: ReactNode
   arrow?: boolean
   onClick?: MouseEventHandler
-  onBlur?: FocusEventHandler
+  tabIndex?: number
 }
 
-export const Dropdown = ({ id, auto, arrow, children, open, onToggle, onClick, onBlur }: DropdrownProps) => {
+export const Dropdown = ({ id, auto, arrow, children, open, onToggle, onClick, tabIndex }: DropdrownProps) => {
   const element = useRef<HTMLDivElement>(null)
 
   const updateDirection = useCallback(() => {
@@ -45,13 +45,12 @@ export const Dropdown = ({ id, auto, arrow, children, open, onToggle, onClick, o
     onToggle={onToggle}
     type={auto ? 'auto' : 'manual'}
     onClick={onClick}
-    onBlur={onBlur}
     ref={element}
-    className="absolute w-fit max-w-dvw max-h-dvh transition-[scale,opacity] bg-transparent p-2.5 duration-300 overflow-hidden"
+    className="absolute flex flex-col w-fit max-w-dvw max-h-dvh transition-[scale,opacity] bg-transparent p-2.5 duration-300 overflow-hidden"
     hideDelay={301}
     closedClassname="scale-y-0 scale-x-0 opacity-0"
   >
-    <div className="border-1 border-gray-400/50 bg-white shadow-black/40 shadow-md p-0.5 overflow-auto">
+    <div className="border-1 border-gray-400/50 bg-white shadow-black/40 shadow-md p-0.5 flex flex-col grow overflow-auto" tabIndex={tabIndex}>
       {children}
     </div>
     {arrow &&
@@ -108,10 +107,6 @@ function updateDropdownPosition(element: HTMLDivElement, anchorElement: Element,
   element.style.left = toPx(left + window.scrollX)
   element.style.transformOrigin = pointDown
     ? 'top' : 'bottom'
-  const menu = element.childNodes[0] as HTMLDivElement
-  if (menu) {
-    menu.style.maxHeight = toPx(maxH - transparentPadding * 2)
-  }
   if (hasArrow) {
     const triangle = element.childNodes[1] as HTMLDivElement
     if (!triangle) return

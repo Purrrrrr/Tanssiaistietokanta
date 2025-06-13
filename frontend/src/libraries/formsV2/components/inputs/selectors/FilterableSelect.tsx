@@ -59,7 +59,7 @@ export default function FilterableSelect<T>(props: SelectorProps<T>) {
 
   return <DropdownContainer className={containerClassname}>
     <DropdownButton selectorProps={props} buttonProps={buttonProps} />
-    <Dropdown open={isOpen} arrow>
+    <Dropdown open={isOpen} arrow tabIndex={-1}>
       <input
         tabIndex={isOpen ? 0 : -1}
         placeholder={filterPlaceholder}

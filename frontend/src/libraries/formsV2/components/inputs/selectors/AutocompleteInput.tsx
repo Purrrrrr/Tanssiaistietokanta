@@ -74,7 +74,7 @@ export function AutocompleteInput<T>(props: AutocompleteInputProps<T>) {
 
   return <DropdownContainer className={containerClassname}>
     <input className={Classes.INPUT + ' ' + Classes.FILL} {...inputProps} />
-    <Dropdown open={isOpen}>
+    <Dropdown open={isOpen} tabIndex={-1}>
       <Menu {...getMenuProps({}, { suppressRefError: true })} tabIndex={-1}>
         {filteredItems.map((item, index) => (
           <MenuItem
