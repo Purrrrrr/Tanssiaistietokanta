@@ -12,5 +12,6 @@ declare module 'react' {
 
   export interface HTMLAttributes<T> extends ReactHTMLAttributes<T> {
     popover?: 'auto' | 'manual' | 'hint'
+    popovertarget?: string
   }
 }

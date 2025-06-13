@@ -2,9 +2,10 @@ import { MouseEvent, ReactNode, useRef } from 'react'
 import { Button, ButtonProps } from '@blueprintjs/core'
 import { UseComboboxGetToggleButtonPropsReturnValue, useSelect } from 'downshift'
 
-import { Dropdown, DropdownContainer } from './Dropdown'
-import { preventDownshiftDefaultWhen } from './inputs/selectors/utils'
 import { getFocusableElements } from 'libraries/dialog'
+import { Dropdown, DropdownContainer } from 'libraries/overlays'
+
+import { preventDownshiftDefaultWhen } from './inputs/selectors/utils'
 
 interface MenuButtonProps {
   children: ReactNode

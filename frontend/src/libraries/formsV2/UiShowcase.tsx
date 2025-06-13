@@ -1,6 +1,7 @@
 import { useState } from 'react'
 
 import { ConflictHandler } from 'libraries/forms/ConflictHandler'
+import { Popover } from 'libraries/overlays/unstyled/Popover'
 import { Button, Flex } from 'libraries/ui'
 
 import { TextInput } from './components/inputs'
@@ -73,6 +74,16 @@ function ShowcaseContents() {
 
   return <>
     <S path="a" label="Viikonpäivä" />
+    <button type="button" className="block p-2 my-3 bg-fuchsia-500 text-white" popovertarget="koe">KOE</button>
+    <Popover
+      id="koe"
+      type="auto"
+      className="bg-red-500 w-10 h-10 transition-all duration-400"
+      closedClassname="opacity-0"
+      hidingClassname="translate-x-[100dvw]"
+      hideDelay={500}
+    />
+    <hr />
     <ConflictHandler
       localValue={<input className="border block"  defaultValue="fuu" />}
       serverValue={<input className="border block"  defaultValue="fuu" />}

@@ -41,7 +41,7 @@ export const Dropdown = ({ arrow, children, open, onClick, onBlur }: DropdrownPr
   useScrollPosition(updateDirection, [updateDirection], undefined, true, 100)
 
   return <div onClick={onClick} onBlur={onBlur} popover="manual" ref={element} className={classNames(
-    'z-50 absolute w-fit max-w-dvw max-h-dvh transition-[scale,opacity] bg-transparent p-2.5',
+    'absolute w-fit max-w-dvw max-h-dvh transition-[scale,opacity] bg-transparent p-2.5',
     open || 'scale-y-0 opacity-0',
   )}>
     <div className="border-1 border-gray-400/50 bg-white shadow-black/40 shadow-md p-0.5">
