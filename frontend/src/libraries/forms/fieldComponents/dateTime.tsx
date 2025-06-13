@@ -5,6 +5,9 @@ import fi from 'date-fns/locale/fi'
 
 import {Conflict, Deleted, FieldComponentProps, FieldPropsWithoutComponent} from '../types'
 
+import { DateInput } from 'libraries/formsV2/components/inputs'
+import DateTimeInput from 'libraries/formsV2/components/inputs/DateTimeInput'
+
 import {Field, useFieldConflictData, useFieldData} from '../Field'
 import {FieldContainer} from '../FieldContainer'
 import { useFormStrings } from '../formContext'
@@ -32,27 +35,47 @@ export interface DateFieldInputProps extends FieldComponentProps<string, HTMLInp
   maxDate?: string | Date | undefined
 }
 export function DateFieldInput({value, onChange, inline: _ignored, readOnly, id, showTime, minDate, maxDate, ...props} : DateFieldInputProps) {
-  return <DateInput3
-    {...useCommonProps(showTime)}
-    disabled={readOnly}
-    inputProps={{
-      id,
-    }}
-    minDate={toDate(minDate) ?? defaultMin}
-    maxDate={toDate(maxDate) ?? defaultMax}
-    timePrecision={showTime ? 'minute' : undefined}
-    value={value || null}
-    canClearSelection={false}
-    onChange={value => {
-      if (showTime && value) {
-        onChange(toISOString(new Date(value), true))
-      } else {
-        onChange(value ?? '')
-      }
-    }}
-    showTimezoneSelect={false}
-    {...props}
-  />
+  const Input = showTime ? DateTimeInput : DateInput
+
+  return <>
+    <DateInput3
+      {...useCommonProps(showTime)}
+      disabled={readOnly}
+      inputProps={{
+        id,
+      }}
+      minDate={toDate(minDate) ?? defaultMin}
+      maxDate={toDate(maxDate) ?? defaultMax}
+      timePrecision={showTime ? 'minute' : undefined}
+      value={value || null}
+      canClearSelection={false}
+      onChange={value => {
+        if (showTime && value) {
+          onChange(toISOString(new Date(value), true))
+        } else {
+          onChange(value ?? '')
+        }
+      }}
+      showTimezoneSelect={false}
+      {...props}
+    />
+    <Input
+      id={id}
+      value={value ?? null}
+      onChange={(value: Date |null) => {
+        if (!value) {
+          onChange('')
+        } else if (showTime && value) {
+          onChange(toISOString(value, true))
+        } else {
+          onChange(toISOString(value) ?? '')
+        }
+      }}
+      minDate={toDate(minDate) ?? defaultMin}
+      maxDate={toDate(maxDate) ?? defaultMax}
+      {...props}
+    />
+  </>
 }
 
 export interface DateRangeFieldProps<T> extends Omit<FieldPropsWithoutComponent<T, string>, 'path'> {

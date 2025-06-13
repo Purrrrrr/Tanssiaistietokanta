@@ -55,6 +55,7 @@ TODO:
   * Remove old selector
   * Fix click bug
   * Fix focus bug
+  Move dialog to overlays library
   
   Date selectors output format -> string?
   date time selector
