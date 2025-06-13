@@ -1,136 +1,81 @@
-import {useEffect, useState} from 'react'
-import {Suggest} from '@blueprintjs/select'
+import { useId } from 'react'
 
 import {Dance} from 'types'
 
 import {filterDances, useCreateDance, useDances} from 'services/dances'
 
-import {CssClass, MenuItem} from 'libraries/ui'
+import { AutocompleteInput } from 'libraries/formsV2/components/inputs'
 import {useT} from 'i18n'
 
 interface DanceChooserProps {
   value: Dance | null,
   excludeFromSearch?: Dance[],
-  onChange: (dance: Dance | null, e: React.ChangeEvent<HTMLElement>) => unknown,
+  onChange: (dance: Dance | null) => unknown,
   readOnly?: boolean
   hasConflict?: boolean
   emptyText?: string,
   allowEmpty?: boolean,
   placeholder?: string,
-  onBlur?: (e: React.FocusEvent) => unknown,
 }
 
-interface EmptyDancePlaceholder extends Dance {
-  _id: '',
-  empty: true
-}
-interface NewDancePlaceholder extends Dance {
-  _id: 'new',
-}
-
-export function DanceChooser({hasConflict, value, onChange, excludeFromSearch, allowEmpty = false, emptyText, onBlur, placeholder, readOnly, ...props} : DanceChooserProps) {
+export function DanceChooser({
+  value, onChange, allowEmpty, emptyText, excludeFromSearch, placeholder,
+}: DanceChooserProps) {
   const t = useT('components.danceChooser')
-  const [query, setQuery] = useState(value ? value.name : '')
   const [dances] = useDances()
   const [createDance] = useCreateDance()
-
-  useEffect(() => {
-    setQuery(value?.name ?? '')
-  }, [value?.name])
+  const id = useId()
 
   const items = excludeFromSearch
     ? dances.filter((dance: Dance) => dance._id === value?._id || !excludeFromSearch.some(excluded => excluded._id === dance._id))
     : dances
+  const getItems = (query: string) => {
+    const danceList = filterDances(items, query)
+    const showCreateDance = query.trim().length > 0
+      && !dances.some(dance => danceNameEquals(dance, query))
+    const extraItems : DanceChooserOption[] = []
+    if (allowEmpty) extraItems.push(null)
+    if (showCreateDance) extraItems.push({ __typename: 'createDance', name: query.trim() })
 
-  const showCreateDance = query.trim().length > 0
-    && !dances.some(dance => danceNameEquals(dance, query))
+    return extraItems.length > 0
+      ? [...danceList, ...extraItems]
+      : danceList
+  }
 
-  return <Suggest<(Dance)|EmptyDancePlaceholder>
-    items={items}
-    inputValueRenderer={dance => dance.name ?? ''}
-    itemDisabled={dance => {
-      if (isPlaceholder(dance)) return !allowEmpty
-      return false
+  const chooseOrCreateDance = (created: DanceChooserOption) => {
+    if (created?.__typename === 'createDance') {
+      createDance({dance: {name: created.name}}).then(response => {
+        if (!response?.data) {
+          return
+        }
+        onChange(response.data.createDance as Dance)
+      })
+    } else if ((allowEmpty && created === null) || created?.__typename === 'Dance') {
+      onChange(created)
+    }
+  }
+  return <AutocompleteInput<DanceChooserOption>
+    containerClassname=""
+    placeholder={placeholder ?? t('searchDance')}
+    id={id}
+    items={getItems}
+    value={value}
+    onChange={chooseOrCreateDance}
+    itemToString={item => item?.name ?? ''}
+    itemRenderer={item => {
+      if (item === null) return emptyText ?? t('emptyDancePlaceholder')
+      if (item.__typename === 'createDance') return `${t('createDance')}: ${item.name}`
+      return item.name
     }}
-    itemRenderer={renderDance}
-    itemsEqual="_id"
-    inputProps={{onBlur, placeholder: placeholder ?? t('searchDance'), onKeyDown: cancelEnter, intent: hasConflict ? 'danger' : undefined, ...props}}
-    itemListPredicate={(query, items) => {
-      const dances = filterDances(items, query)
-      return [...dances, emptyDancePlaceholder(emptyText)]
-    }}
-    createNewItemFromQuery={newDancePlaceholder}
-    createNewItemRenderer={showCreateDance ? renderCreateItem : undefined}
-    query={query}
-    onQueryChange={setQuery}
-    selectedItem={value}
-    onItemSelect={(item, e) => {
-      if (isNewDance(item)) {
-        createDance({dance: {name: item.name}}).then(response => {
-          if (!response?.data) {
-            return
-          }
-          onChange(response.data.createDance as Dance, e as React.ChangeEvent<HTMLElement>)
-          setQuery(item.name ?? '')
-        })
-      } else if (isPlaceholder(item)) {
-        onChange(null, e as React.ChangeEvent<HTMLElement>)
-        setQuery('')
-      } else {
-        onChange(item, e as React.ChangeEvent<HTMLElement>)
-        setQuery(item.name ?? '')
-      }
-    }}
-    disabled={readOnly}
-    popoverProps={{minimal: true}}
-    fill
   />
-
-  function emptyDancePlaceholder(text: string | undefined): EmptyDancePlaceholder {
-    return {__typename: 'Dance', _id: '', name: text ?? t('emptyDancePlaceholder'), empty: true}
-  }
-
-  function renderCreateItem(queryString: string, active: boolean, handleClick) {
-    return <MenuItem
-      active={active}
-      onClick={handleClick}
-      text={t('createDance') + ': ' + queryString}
-    />
-  }
 }
 
-function cancelEnter(e) {
-  if (e.key === 'Enter') {
-    //Stop keyboard selection events from triggering form submits or other actions
-    e.stopPropagation()
-    e.preventDefault()
-  }
+type DanceChooserOption = Dance | CreateDance | null
+interface CreateDance {
+ __typename: 'createDance'
+  name: string
 }
 
 function danceNameEquals(a: Dance, name: string) {
   return a.name.trim().toLowerCase() === name.trim().toLowerCase()
-}
-
-
-function isPlaceholder(object: Dance | EmptyDancePlaceholder): object is EmptyDancePlaceholder {
-  return 'empty' in object
-}
-
-function newDancePlaceholder(text: string): NewDancePlaceholder {
-  return {__typename: 'Dance', _id: 'new', name: text}
-}
-
-function isNewDance(object: Dance | EmptyDancePlaceholder | NewDancePlaceholder): object is NewDancePlaceholder {
-  return object._id === 'new'
-}
-
-function renderDance (dance, { handleClick, modifiers }) {
-  return <MenuItem
-    active={modifiers.active}
-    disabled={modifiers.disabled}
-    key={dance._id ?? 'empty'}
-    onClick={handleClick}
-    text={dance.name}
-    textClassName={(dance.empty && !modifiers.active) ? CssClass.textDisabled : undefined}
-  />
 }

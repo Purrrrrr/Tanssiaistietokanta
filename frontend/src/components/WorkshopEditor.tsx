@@ -6,13 +6,12 @@ import {Event} from 'types'
 import {usePatchWorkshop} from 'services/workshops'
 
 import {ActionButton as Button, DateField, DragHandle, formFor, NumberInput, patchStrategy, SyncStatus, TextArea, useAutosavingState} from 'libraries/forms'
-import {CssClass, Flex, FormGroup} from 'libraries/ui'
+import {Flex, FormGroup} from 'libraries/ui'
 import {DanceChooser} from 'components/widgets/DanceChooser'
 import {useT, useTranslation} from 'i18n'
 import { guid } from 'utils/guid'
 
 import './WorkshopEditor.scss'
-import { DanceChooser2 } from './widgets/DanceChooser2'
 
 type Workshop = Event['workshops'][0]
 type Instance = Workshop['instances'][number]
@@ -190,6 +189,5 @@ function AddDanceChooser({instance}: {instance: number}) {
 
   return <FormGroup label={t('addDance')} labelStyle="beside" style={{marginTop: 6}}>
     <DanceChooser excludeFromSearch={dances} value={null} onChange={dance => dance && onAddDance(dance)} key={dances.length} />
-    <DanceChooser2 excludeFromSearch={dances} value={null} onChange={dance => dance && onAddDance(dance)} key={-dances.length} />
   </FormGroup>
 }

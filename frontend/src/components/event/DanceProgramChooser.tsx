@@ -12,11 +12,10 @@ export const DanceProgramChooser = React.memo(function DanceProgramChooser({valu
   return <DanceChooser
     key={value?._id}
     value={value?._id ? value as Dance : null}
-    onChange={(dance, e) => onChange(
+    onChange={(dance) => onChange(
       dance
         ? {...dance, __typename: 'Dance'} as DanceProgram
         : {__typename: 'RequestedDance'} as RequestedDance,
-      e
     )}
     allowEmpty
     emptyText={t('programTypes.RequestedDance')}

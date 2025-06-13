@@ -50,6 +50,10 @@ TODO:
 * min-width of dropdown
 * Different style for selector button when dropdown is open
 * Replace MenuButton in ConflictHandler
+* DanceSelector
+  * Selector
+  * Remove old selector
+    Fix click bug
   
   Date selectors output format -> string?
   date time selector
