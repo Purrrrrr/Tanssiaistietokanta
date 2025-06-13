@@ -13,7 +13,7 @@ export function DropdownButton<T>(
   const {
     'aria-label': label, readOnly,
     itemIcon, itemToString = String,
-    value, buttonRenderer
+    value, buttonRenderer, placeholder
   } = selectorProps
   const ariaLabel = useDropdownButtonLabel(itemToString(value), label)
 
@@ -33,7 +33,7 @@ export function DropdownButton<T>(
     rightIcon="double-caret-vertical"
   >
     {itemIcon?.(value)}
-    {itemToString(value)}
+    {itemToString(value) || placeholder}
   </Button>
 }
 

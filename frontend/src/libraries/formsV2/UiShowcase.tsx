@@ -73,7 +73,7 @@ function ShowcaseContents() {
   const removeItem = useRemoveItem()
 
   return <>
-    <S path="a" label="Viikonpäivä" />
+    <S path="a" label="Viikonpäivä" placeholder="Valitse" />
     <button type="button" className="block p-2 my-3 bg-fuchsia-500 text-white" popovertarget="koe">KOE</button>
     <Popover
       id="koe"
@@ -89,7 +89,7 @@ function ShowcaseContents() {
       serverValue={<input className="border block"  defaultValue="fuu" />}
       onResolve={() => {}}
     />
-    <SegmentedInput value={s3} onChange={setS3} />
+    <div>SegmentedInput <SegmentedInput value={s3} onChange={setS3} /></div>
     <Select
       filterable
       aria-label="jotakin"

@@ -6,6 +6,7 @@ import { FieldInputComponentProps } from '../types'
 export interface SelectorProps<T> extends FieldInputComponentProps<T, T> {
   items: Items<T>
   filterPlaceholder?: string
+  placeholder?: string
   itemToString?: (item: T ) => string
   buttonRenderer?: (selectedItem: T, props: DropdownButtonDownshiftProps) => ReactNode
   itemRenderer?: (item: T) => ReactNode
