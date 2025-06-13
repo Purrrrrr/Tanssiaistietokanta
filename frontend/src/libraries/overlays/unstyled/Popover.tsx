@@ -1,4 +1,4 @@
-import { type ComponentProps, ForwardedRef, forwardRef, RefObject, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { type ComponentProps, type ForwardedRef, type RefObject, forwardRef, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import classNames from 'classnames'
 
 import { useShouldRender } from './useShouldRender'
@@ -38,43 +38,45 @@ export const ControlledPopover = forwardRef<HTMLDivElement, ControlledPopoverPro
     children, alwaysRenderChildren, hideDelay = 0, ...props
   }, externalRef) {
     const element = useRef<HTMLDivElement>(null)
-    useCopyRef(element, externalRef)
     const shouldRender = useShouldRender(open, hideDelay)
 
     useLayoutEffect(() => {
-      element.current?.togglePopover(shouldRender)
-    }, [shouldRender])
+      element.current?.togglePopover(open || shouldRender)
+    }, [open, shouldRender])
     useToggleEventHandler(element, event => {
       const opened = event.newState === 'open'
-      if (opened !== shouldRender) {
+      if (opened !== (open || shouldRender)) {
         element.current?.togglePopover(shouldRender)
         onToggle(opened)
       }
     })
 
     return <div
-      ref={element}
+      ref={handleRefs(element, externalRef)}
       popover={type}
       {...props}
       className={classNames(
         className,
         !shouldRender && closedClassname,
-        open && openClassname,
-        shouldRender && !open && (hidingClassname ?? closedClassname),
+        shouldRender && (
+          open ? openClassname : (hidingClassname ?? closedClassname)
+        ),
       )}
     >
       {(open || shouldRender || alwaysRenderChildren) && children}
     </div>
   }
 )
-
-function useCopyRef<T>(ref: RefObject<T>, externalRef?: ForwardedRef<T>) {
-  if (typeof externalRef === 'function') {
-    externalRef(ref.current)
-  } else if (externalRef) {
-    externalRef.current = ref.current
+function handleRefs<T>(...refs: ( ForwardedRef<T>)[]) {
+  return (node: T) => {
+    refs.forEach(ref => {
+      if (typeof ref === 'function') {
+        ref(node)
+      } else if (ref) {
+        ref.current = node
+      }
+    })
   }
-  return ref
 }
 
 function useToggleEventHandler(element: RefObject<HTMLDivElement>, handler: (e: ToggleEvent) => unknown) {

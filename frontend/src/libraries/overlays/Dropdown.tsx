@@ -1,7 +1,8 @@
 import { type ReactNode, FocusEventHandler, MouseEventHandler, useCallback, useEffect, useLayoutEffect, useRef } from 'react'
 import { forwardRef } from 'react'
 import { useScrollPosition } from '@n8tb1t/use-scroll-position'
-import classNames from 'classnames'
+
+import { Popover } from './unstyled/Popover'
 
 interface DropdownContainerProps {
   className?: string
@@ -14,17 +15,18 @@ export const DropdownContainer = forwardRef<HTMLDivElement, DropdownContainerPro
 })
 
 interface DropdrownProps {
+  id?: string
   open: boolean
+  onToggle?: (open: boolean) => unknown
+  auto?: boolean
   children: ReactNode
   arrow?: boolean
   onClick?: MouseEventHandler
   onBlur?: FocusEventHandler
 }
 
-export const Dropdown = ({ arrow, children, open, onClick, onBlur }: DropdrownProps) => {
+export const Dropdown = ({ id, auto, arrow, children, open, onToggle, onClick, onBlur }: DropdrownProps) => {
   const element = useRef<HTMLDivElement>(null)
-  // const openRef = useRef<boolean>(open)
-  // openRef.current = open
 
   const updateDirection = useCallback(() => {
     if (!element.current) return
@@ -32,19 +34,24 @@ export const Dropdown = ({ arrow, children, open, onClick, onBlur }: DropdrownPr
     if (!parent) return
     updateDropdownPosition(element.current, parent, arrow)
   }, [arrow])
-  useLayoutEffect(() => {
-    element.current?.showPopover?.()
-  }, [])
 
   useLayoutEffect(updateDirection, [updateDirection])
   useResizeObserver(element, updateDirection)
   useScrollPosition(updateDirection, [updateDirection], undefined, true, 100)
 
-  return <div onClick={onClick} onBlur={onBlur} popover="manual" ref={element} className={classNames(
-    'absolute w-fit max-w-dvw max-h-dvh transition-[scale,opacity] bg-transparent p-2.5',
-    open || 'scale-y-0 opacity-0',
-  )}>
-    <div className="border-1 border-gray-400/50 bg-white shadow-black/40 shadow-md p-0.5">
+  return <Popover
+    id={id}
+    open={open}
+    onToggle={onToggle}
+    type={auto ? 'auto' : 'manual'}
+    onClick={onClick}
+    onBlur={onBlur}
+    ref={element}
+    className="absolute w-fit max-w-dvw max-h-dvh transition-[scale,opacity] bg-transparent p-2.5 duration-300"
+    hideDelay={301}
+    closedClassname="scale-y-0 scale-x-0 opacity-0"
+  >
+    <div className="border-1 border-gray-400/50 bg-white shadow-black/40 shadow-md p-0.5 overflow-auto">
       {children}
     </div>
     {arrow &&
@@ -52,7 +59,7 @@ export const Dropdown = ({ arrow, children, open, onClick, onBlur }: DropdrownPr
         <polygon points="10,0 0,10.5 20,10.5" stroke="currentColor" fill="#fff" />
       </svg>
     }
-  </div>
+  </Popover>
 }
 
 function updateDropdownPosition(element: HTMLDivElement, anchorElement: Element, hasArrow?: boolean) {
@@ -104,6 +111,7 @@ function updateDropdownPosition(element: HTMLDivElement, anchorElement: Element,
     ? 'top' : 'bottom'
   if (hasArrow) {
     const triangle = element.childNodes[1] as HTMLDivElement
+    if (!triangle) return
     triangle.style.top = toPx(
       pointDown ? 1 : elementH - 1
     )

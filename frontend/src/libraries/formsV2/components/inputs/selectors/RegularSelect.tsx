@@ -42,15 +42,14 @@ export default function RegularSelect<T>(props: SelectorProps<T>) {
     <DropdownButton selectorProps={props} buttonProps={buttonProps} />
     <Dropdown open={isOpen} arrow>
       <Menu {...getMenuProps()}>
-        {isOpen &&
-          items.map((item, index) => (
-            <MenuItem
-              highlight={highlightedIndex === index}
-              key={`${item}${index}`}
-              {...toMenuItemProps(item, props)}
-              {...getItemProps({ item, index })}
-            />
-          ))}
+        {items.map((item, index) => (
+          <MenuItem
+            highlight={highlightedIndex === index}
+            key={`${item}${index}`}
+            {...toMenuItemProps(item, props)}
+            {...getItemProps({ item, index })}
+          />
+        ))}
       </Menu>
     </Dropdown>
   </DropdownContainer>

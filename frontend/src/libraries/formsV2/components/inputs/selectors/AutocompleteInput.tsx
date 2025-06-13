@@ -72,15 +72,14 @@ export function AutocompleteInput<T>(props: AutocompleteInputProps<T>) {
     />
     <Dropdown open={isOpen}>
       <Menu {...getMenuProps()}>
-        {isOpen &&
-          filteredItems.map((item, index) => (
-            <MenuItem
-              highlight={highlightedIndex === index}
-              key={`${item}${index}`}
-              {...toMenuItemProps(item, props)}
-              {...getItemProps({ item, index })}
-            />
-          ))}
+        {filteredItems.map((item, index) => (
+          <MenuItem
+            highlight={highlightedIndex === index}
+            key={`${item}${index}`}
+            {...toMenuItemProps(item, props)}
+            {...getItemProps({ item, index })}
+          />
+        ))}
       </Menu>
     </Dropdown>
   </DropdownContainer>
