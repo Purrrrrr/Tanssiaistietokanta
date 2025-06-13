@@ -10,7 +10,7 @@ export const formStringDefaults = {
     requiredList: 'Kentän täytyy sisältää ainakin yksi arvo',
   },
   moveItem: 'Siirrä',
-  hasConflicts: 'Kentässä on ristiriitoja',
+  hasConflicts: 'Tekemäsi muokkaukset ovat ristiriidassa jonkun muun tekemien muutosten kanssa:',
   conflictButton: 'Selvitä ristiriidat',
   local: 'Omat muokkauksesi',
   server: 'Palvelimen versio',
