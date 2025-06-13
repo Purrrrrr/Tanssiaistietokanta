@@ -45,6 +45,8 @@ export function AutocompleteInput<T>(props: AutocompleteInputProps<T>) {
     },
     stateReducer: (state, { type, changes }) => {
       switch (type) {
+        case useCombobox.stateChangeTypes.InputClick:
+          return state
         case useCombobox.stateChangeTypes.InputBlur:
           if (changes.highlightedIndex !== -1) break
           return {
@@ -73,7 +75,7 @@ export function AutocompleteInput<T>(props: AutocompleteInputProps<T>) {
   return <DropdownContainer className={containerClassname}>
     <input className={Classes.INPUT + ' ' + Classes.FILL} {...inputProps} />
     <Dropdown open={isOpen}>
-      <Menu {...getMenuProps({}, { suppressRefError: true })}>
+      <Menu {...getMenuProps({}, { suppressRefError: true })} tabIndex={-1}>
         {filteredItems.map((item, index) => (
           <MenuItem
             highlight={highlightedIndex === index}

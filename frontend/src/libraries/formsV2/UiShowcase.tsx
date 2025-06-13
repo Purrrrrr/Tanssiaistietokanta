@@ -18,6 +18,7 @@ interface Data {
   s: string[]
   l: L[]
   l2: L[]
+  num: number
   rangeStart: Date | null,
   rangeEnd: Date | null,
 }
@@ -37,6 +38,7 @@ const defaultData : Data = {
   l: [{_id: '1', value: 'a'}, {_id: '2', value: 'b'}, {_id: '5', value: 'a2'}, {_id: '6', value: 'b2'}],
   l2: [{_id: '3', value: 'c'}, {_id: '4', value: 'd'}],
   s: ['aa', 'bb'],
+  num: 0,
   rangeStart: new Date(),
   rangeEnd: new Date(),
 }
@@ -57,9 +59,14 @@ export default function UiShowcase() {
 const choices = [
   'maanantai', 'tiistai', 'keskiviikko', 'torstai', 'perjantai', 'lauantai', 'sunnuntai',
 ]
+const longChoices = Array(100).fill(0).map((_, i) => i)
 
 const S = withDefaults(selectWithType<string>(), {
   items: choices,
+  filterPlaceholder: 'Hae...',
+})
+const S2 = withDefaults(selectWithType<number>(), {
+  items: longChoices,
   filterPlaceholder: 'Hae...',
 })
 
@@ -75,6 +82,7 @@ function ShowcaseContents() {
   return <>
     <S path="a" label="Viikonpäivä" placeholder="Valitse" />
     <button type="button" className="block p-2 my-3 bg-fuchsia-500 text-white" popovertarget="koe">KOE</button>
+    <S2 path="num" label="Numero" />
     <Popover
       id="koe"
       type="auto"

@@ -41,7 +41,7 @@ export default function RegularSelect<T>(props: SelectorProps<T>) {
   return <DropdownContainer className={containerClassname}>
     <DropdownButton selectorProps={props} buttonProps={buttonProps} />
     <Dropdown open={isOpen} arrow>
-      <Menu {...getMenuProps({}, {suppressRefError: true})}>
+      <Menu {...getMenuProps({}, {suppressRefError: true})} tabIndex={-1}>
         {items.map((item, index) => (
           <MenuItem
             highlight={highlightedIndex === index}

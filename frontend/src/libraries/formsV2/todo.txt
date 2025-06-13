@@ -53,7 +53,8 @@ TODO:
 * DanceSelector
   * Selector
   * Remove old selector
-    Fix click bug
+  * Fix click bug
+  * Fix focus bug
   
   Date selectors output format -> string?
   date time selector

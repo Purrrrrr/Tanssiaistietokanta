@@ -47,7 +47,7 @@ export const Dropdown = ({ id, auto, arrow, children, open, onToggle, onClick, o
     onClick={onClick}
     onBlur={onBlur}
     ref={element}
-    className="absolute w-fit max-w-dvw max-h-dvh transition-[scale,opacity] bg-transparent p-2.5 duration-300"
+    className="absolute w-fit max-w-dvw max-h-dvh transition-[scale,opacity] bg-transparent p-2.5 duration-300 overflow-hidden"
     hideDelay={301}
     closedClassname="scale-y-0 scale-x-0 opacity-0"
   >
@@ -97,18 +97,21 @@ function updateDropdownPosition(element: HTMLDivElement, anchorElement: Element,
     max: winW - elementW - margin,
     value: centeredLeft
   })
+  const maxH = clamp({
+    min: 200,
+    value: (pointDown ? winH - anchor.bottom : anchor.top) - margin,
+  })
 
   element.style.minWidth = toPx(anchor.width + transparentPadding * 2)
-  element.style.maxHeight = toPx(
-    clamp({
-      min: 200,
-      value: (pointDown ? winH - anchor.bottom : anchor.top) - margin,
-    })
-  )
+  element.style.maxHeight = toPx(maxH)
   element.style.top = toPx(top + window.scrollY)
   element.style.left = toPx(left + window.scrollX)
   element.style.transformOrigin = pointDown
     ? 'top' : 'bottom'
+  const menu = element.childNodes[0] as HTMLDivElement
+  if (menu) {
+    menu.style.maxHeight = toPx(maxH - transparentPadding * 2)
+  }
   if (hasArrow) {
     const triangle = element.childNodes[1] as HTMLDivElement
     if (!triangle) return
