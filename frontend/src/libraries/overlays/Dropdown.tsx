@@ -23,9 +23,10 @@ interface DropdrownProps {
   arrow?: boolean
   onClick?: MouseEventHandler
   tabIndex?: number
+  alwaysRenderChildren?: boolean
 }
 
-export const Dropdown = ({ id, auto, arrow, children, open, onToggle, onClick, tabIndex }: DropdrownProps) => {
+export const Dropdown = ({ id, auto, arrow, children, open, onToggle, onClick, tabIndex, alwaysRenderChildren }: DropdrownProps) => {
   const element = useRef<HTMLDivElement>(null)
 
   const updateDirection = useCallback(() => {
@@ -49,6 +50,7 @@ export const Dropdown = ({ id, auto, arrow, children, open, onToggle, onClick, t
     className="absolute flex flex-col w-fit max-w-dvw max-h-dvh transition-[scale,opacity] bg-transparent p-2.5 duration-300 overflow-hidden"
     hideDelay={301}
     closedClassname="scale-y-0 scale-x-0 opacity-0"
+    alwaysRenderChildren={alwaysRenderChildren}
   >
     <div className="border-1 border-gray-400/50 bg-white shadow-black/40 shadow-md p-0.5 flex flex-col grow overflow-auto" tabIndex={tabIndex}>
       {children}
