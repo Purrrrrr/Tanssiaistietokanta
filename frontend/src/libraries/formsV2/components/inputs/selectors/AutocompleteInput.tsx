@@ -20,7 +20,7 @@ export function AutocompleteInput<T>(props: AutocompleteInputProps<T>) {
     value, onChange, id, readOnly,
     placeholder = '', containerClassname,
   } = props
-  const valueToString = acceptNulls(itemToString, placeholder)
+  const valueToString = acceptNulls(itemToString)
   const [filteredItems, updateFilter] = useFilteredItems(items, itemToString)
   const {
     isOpen,
@@ -64,15 +64,16 @@ export function AutocompleteInput<T>(props: AutocompleteInputProps<T>) {
   const inputProps = {
     placeholder,
     onFocus: openMenu,
+    disabled: readOnly,
     ...getInputProps({
       onKeyDown: preventDownshiftDefaultWhen(e => e.key === 'Home' || e.key === 'End')
     })
   }
 
   return <DropdownContainer className={containerClassname}>
-    <input className={Classes.INPUT + ' ' + Classes.FILL} {...inputProps} disabled={readOnly} />
+    <input className={Classes.INPUT + ' ' + Classes.FILL} {...inputProps} />
     <Dropdown open={isOpen}>
-      <Menu {...getMenuProps()}>
+      <Menu {...getMenuProps({}, { suppressRefError: true })}>
         {filteredItems.map((item, index) => (
           <MenuItem
             highlight={highlightedIndex === index}

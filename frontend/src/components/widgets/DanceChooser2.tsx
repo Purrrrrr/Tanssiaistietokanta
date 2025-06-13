@@ -19,7 +19,7 @@ interface DanceChooserProps {
 }
 
 export function DanceChooser2({
-  value, onChange, allowEmpty, emptyText, excludeFromSearch,
+  value, onChange, allowEmpty, emptyText, excludeFromSearch, placeholder,
 }: DanceChooserProps) {
   const t = useT('components.danceChooser')
   const [dances] = useDances()
@@ -55,6 +55,8 @@ export function DanceChooser2({
     }
   }
   return <AutocompleteInput<DanceChooserOption>
+    containerClassname=""
+    placeholder={placeholder ?? t('searchDance')}
     id={id}
     items={getItems}
     value={value}

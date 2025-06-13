@@ -67,7 +67,7 @@ export default function FilterableSelect<T>(props: SelectorProps<T>) {
         {...getInputProps({ onKeyDown: disableHomeAndEndKeys })}
         onClick={undefined}
       />
-      <Menu {...getMenuProps()}>
+      <Menu {...getMenuProps({}, {suppressRefError: true})}>
         {filteredItems.map((item, index) => (
           <MenuItem
             highlight={highlightedIndex === index}
