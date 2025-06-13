@@ -49,7 +49,7 @@ TODO:
 * Horizontal alignment of selector dropdown
 * min-width of dropdown
 * Different style for selector button when dropdown is open
-  Replace MenuButton in ConflictHandler
+* Replace MenuButton in ConflictHandler
   
   Date selectors output format -> string?
   date time selector
