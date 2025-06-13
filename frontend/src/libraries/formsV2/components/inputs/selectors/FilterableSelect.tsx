@@ -64,7 +64,7 @@ export default function FilterableSelect<T>(props: SelectorProps<T>) {
         tabIndex={isOpen ? 0 : -1}
         placeholder={filterPlaceholder}
         className={Classes.INPUT+' w-full'}
-        {...getInputProps({ onKeyDown: disableHomeAndEndKeys })}
+        {...getInputProps({ onKeyDown: disableHomeAndEndKeys }, { suppressRefError: true })}
         onClick={undefined}
       />
       <Menu {...getMenuProps({}, {suppressRefError: true})} tabIndex={-1}>
