@@ -52,6 +52,7 @@ export const ControlledPopover = forwardRef<HTMLDivElement, ControlledPopoverPro
     })
 
     return <div
+      inert={!open}
       ref={handleRefs(element, externalRef)}
       popover={type}
       {...props}

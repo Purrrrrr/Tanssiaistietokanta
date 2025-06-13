@@ -12,6 +12,7 @@ import {useT, useTranslation} from 'i18n'
 import { guid } from 'utils/guid'
 
 import './WorkshopEditor.scss'
+import { DanceChooser2 } from './widgets/DanceChooser2'
 
 type Workshop = Event['workshops'][0]
 type Instance = Workshop['instances'][number]
@@ -189,5 +190,6 @@ function AddDanceChooser({instance}: {instance: number}) {
 
   return <FormGroup label={t('addDance')} labelStyle="beside" style={{marginTop: 6}}>
     <DanceChooser excludeFromSearch={dances} value={null} onChange={dance => dance && onAddDance(dance)} key={dances.length} />
+    <DanceChooser2 excludeFromSearch={dances} value={null} onChange={dance => dance && onAddDance(dance)} key={-dances.length} />
   </FormGroup>
 }

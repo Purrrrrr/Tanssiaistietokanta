@@ -17,7 +17,7 @@ export function AutocompleteInput<T>(props: AutocompleteInputProps<T>) {
   'use no memo'
   const {
     items, itemToString = String,
-    value, onChange, id,
+    value, onChange, id, readOnly,
     placeholder = '', containerClassname,
   } = props
   const valueToString = acceptNulls(itemToString, placeholder)
@@ -61,15 +61,16 @@ export function AutocompleteInput<T>(props: AutocompleteInputProps<T>) {
     }
   })
 
+  const inputProps = {
+    placeholder,
+    onFocus: openMenu,
+    ...getInputProps({
+      onKeyDown: preventDownshiftDefaultWhen(e => e.key === 'Home' || e.key === 'End')
+    })
+  }
+
   return <DropdownContainer className={containerClassname}>
-    <input
-      placeholder={placeholder}
-      className={Classes.INPUT}
-      onFocus={openMenu}
-      {...getInputProps({
-        onKeyDown: preventDownshiftDefaultWhen(e => e.key === 'Home' || e.key === 'End')
-      })}
-    />
+    <input className={Classes.INPUT + ' ' + Classes.FILL} {...inputProps} disabled={readOnly} />
     <Dropdown open={isOpen}>
       <Menu {...getMenuProps()}>
         {filteredItems.map((item, index) => (
