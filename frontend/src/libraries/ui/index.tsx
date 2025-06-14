@@ -1,5 +1,6 @@
 import React, { MouseEvent } from 'react'
 import {
+  type ButtonProps as BlueprintButtonProps,
   Button as BlueprintButton,
   Card as BlueprintCard,
   Classes,
@@ -20,7 +21,6 @@ export * from './Flex'
 export { GlobalSpinner } from './GlobalLoadingSpinner'
 export { Markdown } from './Markdown'
 export { TagButton } from './Tag'
-export type { ButtonProps } from '@blueprintjs/core'
 export { AnchorButton, Callout, H2, HTMLTable, Navbar, ProgressBar, SectionCard, Tab, Tabs } from '@blueprintjs/core'
 
 export const CssClass = {
@@ -125,13 +125,15 @@ export function Icon(props : IconProps) {
   return <BlueprintIcon {...props} />
 }
 
-type CardProps = HTMLDivProps
+type CardProps = Omit<HTMLDivProps, 'onClick'>
 
 export function Card(props : CardProps) {
   return <BlueprintCard {...props} />
 }
 
-export const Button = BlueprintButton
+export type ButtonProps = Pick<BlueprintButtonProps, 'children' | 'icon' | 'rightIcon' | 'intent' | 'minimal' | 'onClick' | 'aria-label' | 'text' | 'className' | 'active' | 'disabled' | 'type' | 'title'>
+
+export const Button = (props: ButtonProps) => <BlueprintButton {...props} />
 
 export interface FormGroupProps extends Omit<BlueprintFormGroupProps, 'inline'>, React.ComponentPropsWithoutRef<'div'> {
   elementRef?: React.Ref<HTMLDivElement>
