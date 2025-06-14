@@ -55,10 +55,11 @@ TODO:
   * Remove old selector
   * Fix click bug
   * Fix focus bug
+* date time selector
+* Remove blueprintjs datetime selectors
+
   Move dialog to overlays library
-  
   Date selectors output format -> string?
-  date time selector
   Remove blueprint icons
   Remove apollo??
   Scroll into opened selector?
