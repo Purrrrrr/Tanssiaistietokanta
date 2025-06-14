@@ -19,7 +19,7 @@ const EventProgramPage = lazy(() => import('pages/events/EventProgramPage'))
 const DanceCheatList = lazy(() => import('pages/events/print/DanceCheatList'))
 const DanceInstructions = lazy(() => import('pages/events/print/DanceInstructions'))
 const DanceList = lazy(() => import('pages/events/print/DanceList'))
-const UiShowcase = lazy(() => import('libraries/formsV2/UiShowcase'))
+const UiShowcase = lazy(() => import('libraries/ui-showcase'))
 
 export default function MainRoutes() {
   return <>

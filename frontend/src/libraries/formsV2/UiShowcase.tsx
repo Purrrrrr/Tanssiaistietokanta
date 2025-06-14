@@ -1,6 +1,7 @@
 import { useState } from 'react'
 
 import { ConflictHandler } from 'libraries/forms/ConflictHandler'
+import { formFor, withDefaults } from 'libraries/formsV2'
 import { Popover } from 'libraries/overlays/unstyled/Popover'
 import { Button, Flex } from 'libraries/ui'
 
@@ -8,7 +9,6 @@ import { TextInput } from './components/inputs'
 import { SegmentedInput } from './components/inputs/SegmentedInput'
 import { AutocompleteInput } from './components/inputs/selectors/AutocompleteInput'
 import { Select } from './components/inputs/selectors/Select'
-import { formFor, withDefaults } from './index'
 
 interface Data {
   a: string
