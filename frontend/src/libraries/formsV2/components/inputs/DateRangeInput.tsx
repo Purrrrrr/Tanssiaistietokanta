@@ -16,7 +16,7 @@ export const DateRangeInput = ({id, value, onChange, readOnly, ...props}: DateRa
   const [open, setOpen] = useState(false)
   const dropdown = useRef<HTMLDivElement>(null)
 
-  return <DropdownContainer className="w-min flex">
+  return <DropdownContainer className="flex w-min">
     <DateRangePicker
       {...props}
       className="grow max-w-70"

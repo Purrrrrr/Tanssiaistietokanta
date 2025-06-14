@@ -86,7 +86,7 @@ export function LoadingState<Variables>({loading, error, refetch} : LoadingState
   const t = useT('components.loadingState')
   useToggleGlobalLoadingAnimation(loading)
   if (error) {
-    return <div className="h-full flex flex-col gap-3 text-gray-500 justify-center items-center">
+    return <div className="flex flex-col gap-3 justify-center items-center h-full text-gray-500">
       <Icon className="text-gray-400" icon="error" iconSize={48} />
       <h2>{t('errorMessage')}</h2>
       <p>{error.message}</p>

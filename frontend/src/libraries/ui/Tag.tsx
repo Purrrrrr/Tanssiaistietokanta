@@ -18,7 +18,7 @@ export function TagButton({ onClick, children, color, bg }: TagProps) {
       backgroundColor: bg,
     }}
     className={classNames(
-      'cursor-pointer rounded-sm p-1.5 focus:outline-2 hover:brightness-110 focus:outline-green-500',
+      'cursor-pointer rounded-sm p-1.5 focus:outline-2! hover:brightness-110 focus:outline-green-500',
       !color && 'text-white',
       !bg && 'bg-green-700',
     )}>

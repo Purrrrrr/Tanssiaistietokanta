@@ -27,7 +27,7 @@ export function VersionSidebarToggle({id, versionId, entityId, entityType, toVer
   return <Button
     icon="history"
     minimal
-    style={{float: 'right'}}
+    className="float-right"
     onClick={() => toggleSidebar({ buttonId, entityId, versionId, entityType, toVersionLink })}>
     {useTranslation('versioning.versionHistory')}
   </Button>

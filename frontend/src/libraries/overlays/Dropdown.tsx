@@ -47,16 +47,16 @@ export const Dropdown = ({ id, auto, arrow, children, open, onToggle, onClick, t
     type={auto ? 'auto' : 'manual'}
     onClick={onClick}
     ref={element}
-    className="absolute flex flex-col w-fit max-w-dvw max-h-dvh transition-[scale,opacity] bg-transparent p-2.5 duration-300 overflow-hidden"
+    className="flex overflow-hidden absolute flex-col p-2.5 bg-transparent duration-300 w-fit max-w-dvw max-h-dvh transition-[scale,opacity]"
     hideDelay={301}
     closedClassname="scale-y-0 scale-x-0 opacity-0"
     alwaysRenderChildren={alwaysRenderChildren}
   >
-    <div className="border-1 border-gray-400/50 bg-white shadow-black/40 shadow-md p-0.5 flex flex-col grow overflow-auto" tabIndex={tabIndex}>
+    <div className="flex overflow-auto flex-col p-0.5 bg-white shadow-md border-1 border-gray-400/50 shadow-black/40 grow" tabIndex={tabIndex}>
       {children}
     </div>
     {arrow &&
-      <svg className="text-gray-400/50 w-5 h-2.5 absolute" width={20} height={10}>
+      <svg className="absolute w-5 h-2.5 text-gray-400/50" width={20} height={10}>
         <polygon points="10,0 0,10.5 20,10.5" stroke="currentColor" fill="#fff" />
       </svg>
     }

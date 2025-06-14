@@ -14,7 +14,7 @@ export const DateTimeInput = ({ readOnly, ...props }: DateTimeInputProps) => {
   const [open, setOpen] = useState(false)
   const dropdown = useRef<HTMLDivElement>(null)
 
-  return <DropdownContainer className="w-full flex">
+  return <DropdownContainer className="flex w-full">
     <DateTimePicker
       className="grow"
       locale="fi-FI"

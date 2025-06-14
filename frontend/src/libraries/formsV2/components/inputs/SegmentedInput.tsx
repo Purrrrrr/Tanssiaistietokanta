@@ -120,12 +120,12 @@ export function SegmentedInput({
   const { results, parsed: parsedString } = parse(value, { parts })
   return <>
     <input
-      className="border p-2"
+      className="p-2 border"
       value={value}
       onChange={setValue}
     />
-    <p className="my-7 p-1 bg-pink-200">{parsedString}</p>
-    <pre className="my-7 bg-gray-300 p-3">
+    <p className="p-1 my-7 bg-pink-200">{parsedString}</p>
+    <pre className="p-3 my-7 bg-gray-300">
       {JSON.stringify(results, null, 2)}
     </pre>
   </>

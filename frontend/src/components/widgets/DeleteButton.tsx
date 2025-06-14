@@ -5,18 +5,18 @@ import {Button} from 'libraries/ui'
 import {useT} from 'i18n'
 
 interface DeleteButtonProps {
-  style?: React.CSSProperties
+  className?: string
   text: string
   disabled?: boolean
   onDelete: () => unknown
   confirmText: string
 }
 
-export function DeleteButton({onDelete, disabled, style, text, confirmText} : DeleteButtonProps) {
+export function DeleteButton({onDelete, disabled, className, text, confirmText} : DeleteButtonProps) {
   const t = useT('components.deleteButton')
   const [showDialog, setShowDialog] = useState(false)
   return <>
-    <Button style={style} icon="trash" text={text} disabled={disabled} intent="danger" onClick={() => setShowDialog(true)}/>
+    <Button className={className} icon="trash" text={text} disabled={disabled} intent="danger" onClick={() => setShowDialog(true)}/>
     <Alert title={text} isOpen={showDialog} onClose={() => setShowDialog(false)}
       onConfirm={onDelete}
       intent="danger"

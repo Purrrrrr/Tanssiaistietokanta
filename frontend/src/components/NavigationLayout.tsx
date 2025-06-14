@@ -36,7 +36,7 @@ function NavigationLayout({children}) {
           </aside>
           <footer>
             {process.env.NODE_ENV === 'development' &&
-              <Link className="px-1 mr-1 border-e border-gray-400" to="/ui-showcase">UI Showcase</Link>}
+              <Link className="px-1 mr-1 border-gray-400 border-e" to="/ui-showcase">UI Showcase</Link>}
             <T msg="app.title" /> v. {process.env.REACT_APP_BUILD_TIME ?? 'DEV'}-{process.env.REACT_APP_COMMIT_REV ?? 'HEAD'}
             {' '}
             <LicenceLink />

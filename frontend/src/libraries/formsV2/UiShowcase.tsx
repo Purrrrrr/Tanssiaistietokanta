@@ -81,20 +81,20 @@ function ShowcaseContents() {
 
   return <>
     <S path="a" label="Viikonpäivä" placeholder="Valitse" />
-    <button type="button" className="block p-2 my-3 bg-fuchsia-500 text-white" popovertarget="koe">KOE</button>
+    <button type="button" className="block p-2 my-3 text-white bg-fuchsia-500" popovertarget="koe">KOE</button>
     <S2 path="num" label="Numero" />
     <Popover
       id="koe"
       type="auto"
-      className="bg-red-500 w-10 h-10 transition-all duration-400"
+      className="w-10 h-10 bg-red-500 transition-all duration-400"
       closedClassname="opacity-0"
       hidingClassname="translate-x-[100dvw]"
       hideDelay={500}
     />
     <hr />
     <ConflictHandler
-      localValue={<input className="border block"  defaultValue="fuu" />}
-      serverValue={<input className="border block"  defaultValue="fuu" />}
+      localValue={<input className="block border"  defaultValue="fuu" />}
+      serverValue={<input className="block border"  defaultValue="fuu" />}
       onResolve={() => {}}
     />
     <div>SegmentedInput <SegmentedInput value={s3} onChange={setS3} /></div>

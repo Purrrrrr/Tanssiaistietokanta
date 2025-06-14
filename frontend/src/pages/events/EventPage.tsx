@@ -213,12 +213,12 @@ function WorkshopCard(
     { readOnly ||
       <>
         <DeleteButton onDelete={() => addLoadingAnimation(deleteWorkshop({id: _id}))}
-          style={{float: 'right'}} text="Poista"
+          className="float-right" text="Poista"
           confirmText={'Haluatko varmasti poistaa työpajan '+name+'?'}
         />
         <Button
           onClick={() => setShowEditor(!showEditor)}
-          style={{float: 'right'}} text={showEditor ? t('closeEditor') : t('openEditor')}
+          className="float-right" text={showEditor ? t('closeEditor') : t('openEditor')}
         />
       </>
     }
