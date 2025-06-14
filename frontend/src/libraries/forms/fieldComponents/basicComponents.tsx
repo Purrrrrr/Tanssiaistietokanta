@@ -8,8 +8,6 @@ import {Field, useFieldData} from '../Field'
 import { FieldContainer } from '../FieldContainer'
 import { useFieldValueProps } from '../hooks'
 
-import '@blueprintjs/datetime2/lib/css/blueprint-datetime2.css'
-
 export interface SwitchForProps<V> {
   isChecked: (v: V | null | undefined) => boolean
   toValue: (b: boolean, v: V | null | undefined) => V

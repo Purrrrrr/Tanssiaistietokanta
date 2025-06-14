@@ -1,11 +1,8 @@
-import React from 'react'
-import {DateInput3, DateRangeInput3} from '@blueprintjs/datetime2'
-import { format, parse } from 'date-fns'
-import fi from 'date-fns/locale/fi'
+import { format } from 'date-fns'
 
-import {Conflict, Deleted, FieldComponentProps, FieldPropsWithoutComponent} from '../types'
+import {Conflict, Deleted, FieldComponentProps, FieldPropsWithoutComponent, Version} from '../types'
 
-import { DateInput } from 'libraries/formsV2/components/inputs'
+import { DateInput, DateRangeInput } from 'libraries/formsV2/components/inputs'
 import DateTimeInput from 'libraries/formsV2/components/inputs/DateTimeInput'
 
 import {Field, useFieldConflictData, useFieldData} from '../Field'
@@ -17,8 +14,6 @@ import './dateTime.css'
 
 export const dateFormat = 'dd.MM.yyyy'
 export const dateTimeFormat = 'dd.MM.yyyy HH:mm'
-
-const referenceDate = new Date('2000-01-01T00:00:00.000')
 
 const defaultMax = new Date('2100-01-01')
 const defaultMin = new Date('1950-01-01')
@@ -37,139 +32,101 @@ export interface DateFieldInputProps extends FieldComponentProps<string, HTMLInp
 export function DateFieldInput({value, onChange, inline: _ignored, readOnly, id, showTime, minDate, maxDate, ...props} : DateFieldInputProps) {
   const Input = showTime ? DateTimeInput : DateInput
 
-  return <>
-    <DateInput3
-      {...useCommonProps(showTime)}
-      disabled={readOnly}
-      inputProps={{
-        id,
-      }}
-      minDate={toDate(minDate) ?? defaultMin}
-      maxDate={toDate(maxDate) ?? defaultMax}
-      timePrecision={showTime ? 'minute' : undefined}
-      value={value || null}
-      canClearSelection={false}
-      onChange={value => {
-        if (showTime && value) {
-          onChange(toISOString(new Date(value), true))
-        } else {
-          onChange(value ?? '')
-        }
-      }}
-      showTimezoneSelect={false}
-      {...props}
-    />
-    <Input
-      id={id}
-      value={value ?? null}
-      onChange={(value: Date |null) => {
-        if (!value) {
-          onChange('')
-        } else if (showTime && value) {
-          onChange(toISOString(value, true))
-        } else {
-          onChange(toISOString(value) ?? '')
-        }
-      }}
-      minDate={toDate(minDate) ?? defaultMin}
-      maxDate={toDate(maxDate) ?? defaultMax}
-      {...props}
-    />
-  </>
+  return <Input
+    readOnly={readOnly}
+    id={id}
+    value={value ?? null}
+    onChange={(value: Date |null) => {
+      if (!value) {
+        onChange('')
+      } else if (showTime && value) {
+        onChange(toISOString(value, true))
+      } else {
+        onChange(toISOString(value) ?? '')
+      }
+    }}
+    minDate={toDate(minDate) ?? defaultMin}
+    maxDate={toDate(maxDate) ?? defaultMax}
+    {...props}
+  />
 }
 
 export interface DateRangeFieldProps<T> extends Omit<FieldPropsWithoutComponent<T, string>, 'path'> {
   id: string
-  showTime?: boolean
-  allowSingleDayRange?: boolean
   minDate?: string | Date | undefined
   maxDate?: string | Date | undefined
   beginPath: FieldPropsWithoutComponent<T, string>['path']
-  beginLabel: string
   endPath: FieldPropsWithoutComponent<T, string>['path']
-  endLabel: string
 }
 
 export function DateRangeField<T>(
   {
     id,
-    beginPath, beginLabel,
-    endPath, endLabel,
-    label, labelStyle, labelInfo, inline, helperText,
-    allowSingleDayRange = true, showTime, minDate, maxDate,
-    ...rest
+    beginPath, endPath,
+    minDate, maxDate,
+    ...styleProps
   }: DateRangeFieldProps<T>
 ) {
   const beginDataProps = useFieldValueProps<T, string>(beginPath)
   const endDataProps = useFieldValueProps<T, string>(endPath)
-  const { containerProps } = useFieldData(id, null, {label, labelStyle, labelInfo, inline, helperText})
-  const subLabelStyle = containerProps.labelStyle.startsWith('hidden') || inline ?
-    'hidden' :
-    containerProps.labelStyle === 'beside' ? 'above' : 'beside'
-  const { fieldProps: beginFieldProps, containerProps: beginContainerProps } = useFieldData(beginPath, beginDataProps.value, {label: beginLabel, labelStyle: subLabelStyle, inline, ...rest })
-  const { fieldProps: endFieldProps, containerProps: endContainerProps } = useFieldData(endPath, endDataProps.value, {label: endLabel, labelStyle: subLabelStyle, inline, ...rest })
-
-  const renderConflictItem = (onChangeLocal) => (conflict: Conflict<string>, type: 'server' | 'local') => {
-    const value = conflict[type]
-    const onChange = type === 'local'
-      ? onChangeLocal
-      : () => {/* no-op */}
-    return <DateFieldInput
-      id={id+'-'+type}
-      readOnly={type === 'server'}
-      value={value === Deleted ? '' : value}
-      onChange={onChange}
-    />
+  // const { containerProps } = useFieldData(id, null, styleProps)
+  const { fieldProps: beginFieldProps, containerProps: beginContainerProps } = useFieldData(beginPath, beginDataProps.value, styleProps)
+  const { fieldProps: endFieldProps, containerProps: endContainerProps } = useFieldData(endPath, endDataProps.value, styleProps)
+  const errors = [
+    ...(beginContainerProps.error?.errors ?? []),
+    ...(endContainerProps.error?.errors ?? []),
+  ]
+  const containerProps = {
+    ...beginContainerProps,
+    error: errors.length ? { errors } : null
   }
 
-  const beginConflictData = useFieldConflictData<T, string>(beginPath, renderConflictItem(beginDataProps.onChange))
-  const endConflictData = useFieldConflictData<T, string>(endPath, renderConflictItem(endDataProps.onChange))
+  const beginDate = toDate(beginDataProps.value) ?? null
+  const endDate = toDate(endDataProps.value) ?? null
+  const conflictData = useCombinedConflictData(beginPath, beginDate, endPath, endDate)
 
-  //Complete hack to allow adding all the labels to the DOM correctly
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const containerComponent = React.forwardRef<HTMLDivElement, any>(
-    ({children, ...props}, ref) => {
-      return <div ref={ref} {...props} className={`dateRangeInputContainer ${containerProps.inline ? 'dateRangeInputContainer-inline' : 'dateRangeInputContainer-block'} ${props.className}`}>
-        <FieldContainer {...containerProps}>
-          <FieldContainer {...beginContainerProps} conflictData={beginConflictData}>
-            {children?.[0]}
-          </FieldContainer>
-          {' '}
-          <FieldContainer {...endContainerProps} conflictData={endConflictData}>
-            {children?.[1]}
-          </FieldContainer>
-        </FieldContainer>
-      </div>
+  return <FieldContainer {...containerProps} conflictData={conflictData}>
+    <DateRangeInput
+      readOnly={beginFieldProps.readOnly || endFieldProps.readOnly}
+      id={id}
+      value={[beginDate, endDate]}
+      onChange={([start, end]) => {
+        beginDataProps.onChange(toISOString(start))
+        endDataProps.onChange(toISOString(end))
+      }}
+      minDate={toDate(minDate) ?? defaultMin}
+      maxDate={toDate(maxDate) ?? defaultMax}
+    />
+  </FieldContainer>
+}
+
+function useCombinedConflictData<T>(
+  beginPath: FieldPropsWithoutComponent<T, string>['path'],
+  beginDate: Date | null,
+  endPath: FieldPropsWithoutComponent<T, string>['path'],
+  endDate: Date | null,
+) {
+  const extractValue = (conflict: Conflict<string>, type: 'local' | 'server') => {
+    const value = conflict[type]
+    return value === Deleted ? null : value
+  }
+  const strings = useFormStrings().dateTime
+  const beginConflictData = useFieldConflictData<T, string>(beginPath, extractValue)
+  const endConflictData = useFieldConflictData<T, string>(endPath, extractValue)
+
+  const fmt = (date: Date | null) => date ? format(date, strings.dateFormat) : ''
+  const renderRange = (start: Date | null, end: Date | null) =>
+    <p>{`${fmt(start)} - ${fmt(end)}`}</p>
+  return (beginConflictData || endConflictData)
+    ? {
+      localValue: renderRange(toDate(beginConflictData?.localValue as string | null) ?? beginDate, endConflictData?.localValue as Date | null ?? endDate),
+      serverValue: renderRange(toDate(beginConflictData?.serverValue as string | null) ?? beginDate, endConflictData?.serverValue as Date | null ?? endDate),
+      onResolve(version: Version) {
+        beginConflictData?.onResolve(version)
+        endConflictData?.onResolve(version)
+      }
     }
-  )
-
-  return <DateRangeInput3
-    {...useCommonProps(showTime)}
-    disabled={beginFieldProps.readOnly || endFieldProps.readOnly}
-    allowSingleDayRange={allowSingleDayRange}
-    shortcuts={false}
-    startInputProps={{
-      ...beginFieldProps,
-      className: 'bp5-fill',
-    }}
-    endInputProps={{
-      ...endFieldProps,
-      className: 'bp5-fill',
-    }}
-    popoverProps={{
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      targetTagName: containerComponent as any
-    }}
-    minDate={toDate(minDate) ?? defaultMin}
-    maxDate={toDate(maxDate) ?? defaultMax}
-    timePrecision={showTime ? 'minute' : undefined}
-    value={[toDate(beginDataProps.value) ?? null, toDate(endDataProps.value) ?? null]}
-    onChange={([start, end]) => {
-      beginDataProps.onChange(toISOString(start, showTime))
-      endDataProps.onChange(toISOString(end, showTime))
-
-    }}
-  />
+    : undefined
 }
 
 function toDate(value: string | null | Date | undefined): Date | undefined | null {
@@ -185,15 +142,4 @@ function toISOString(value: Date | null, showTime?: boolean): string {
   return showTime
     ? format(value, 'yyyy-MM-dd\'T\'HH:mm:ss.SSS')
     : format(value, 'yyyy-MM-dd')
-}
-
-function useCommonProps(showTime?: boolean) {
-  const strings = useFormStrings().dateTime
-  const valueFormat = showTime ? strings.dateTimeFormat : strings.dateFormat
-
-  return {
-    locale: fi,
-    formatDate: date => format(date, valueFormat),
-    parseDate: date => parse(date, valueFormat, referenceDate),
-  }
 }
