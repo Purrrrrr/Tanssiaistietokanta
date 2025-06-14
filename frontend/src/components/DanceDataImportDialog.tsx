@@ -7,7 +7,7 @@ import {usePatchDance} from 'services/dances'
 import {getDanceData, ImportedDanceData} from 'libraries/danceWiki'
 import {Dialog} from 'libraries/dialog'
 import {formFor, MarkdownEditor, SubmitButton} from 'libraries/forms'
-import {Button, ButtonProps, FormGroup, ProgressBar, Tag} from 'libraries/ui'
+import {Button, ButtonProps, FormGroup, ProgressBar, TagButton } from 'libraries/ui'
 import { useT, useTranslation } from 'i18n'
 
 import {DanceNameSearch} from './DanceNameSearch'
@@ -164,10 +164,9 @@ function Suggestions({values, onSuggest}) {
     {values.length === 0 && t('noSuggestions')}
     {values.map(value =>
       <React.Fragment key={value}>
-        <Tag large interactive intent="success"
-          onClick={() => onSuggest(value)}>
+        <TagButton onClick={() => onSuggest(value)}>
           {value}
-        </Tag>
+        </TagButton>
         {' '}
       </React.Fragment>
     )}

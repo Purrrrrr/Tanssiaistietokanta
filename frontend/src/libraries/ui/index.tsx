@@ -19,8 +19,9 @@ export { Collapse } from './Collapse'
 export * from './Flex'
 export { GlobalSpinner } from './GlobalLoadingSpinner'
 export { Markdown } from './Markdown'
-export type { ButtonProps, MenuItemProps } from '@blueprintjs/core'
-export { AnchorButton, Callout, H2, HTMLTable, Menu, MenuItem, Navbar, ProgressBar, SectionCard, Tab, Tabs, Tag } from '@blueprintjs/core'
+export { TagButton } from './Tag'
+export type { ButtonProps } from '@blueprintjs/core'
+export { AnchorButton, Callout, H2, HTMLTable, Navbar, ProgressBar, SectionCard, Tab, Tabs } from '@blueprintjs/core'
 
 export const CssClass = {
   formGroupInline: 'formgroup-inline',
@@ -124,9 +125,7 @@ export function Icon(props : IconProps) {
   return <BlueprintIcon {...props} />
 }
 
-interface CardProps extends HTMLDivProps {
-  elevation?: 0 | 1 | 2 | 3 | 4
-}
+type CardProps = HTMLDivProps
 
 export function Card(props : CardProps) {
   return <BlueprintCard {...props} />

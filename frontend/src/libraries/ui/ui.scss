@@ -9,9 +9,9 @@
 }
 
 @supports selector(:focus-visible) {
-  :focus {
-    outline:none;
-  }
+  // :focus {
+  //   outline:none;
+  // }
 
   :focus-visible {
     outline:rgba(45, 114, 210, 0.6) solid 2px !important;

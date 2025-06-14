@@ -35,6 +35,26 @@
 * Tool to create dance instruction leaflet
 * Apollo client 3.0
 * Nicer loading animation
+  Decide on UI colors
+    Make a Button replacement
+  UI Showcase
+  * Add formV2 stuff
+    Clean up
+    Add libraries/ui stuff
+  Blueprintjs migration
+  * Tag
+  * Menu
+    SectionCard
+    Icon loading components
+      Toast
+      Icon
+      AnchorButton
+      Tab, Tabs
+      Callout
+    ProgressBar
+    H2
+    HTMLTable
+    NavBar
 * Add loading animation to more pages
   Find a way to autofill dance categories
   * Integrate dance wiki to backend
@@ -53,10 +73,6 @@
       wikipageName field
     Wiki page selector field
 
-  UI Showcase
-  * Add formV2 stuff
-    Clean up
-    Add libraries/ui stuff
     
   MISC:
   * intervalMusic on by defalt
