@@ -79,16 +79,16 @@ function EventDetailsForm({event}: {event: Event}) {
   return <Form {...formProps}>
     <Card>
       <SyncStatus state={state} floatRight/>
-      <Input label={t('eventName')} path="name" />
-      <DateRangeField<Event>
-        id="eventDate"
-        label={t('eventDate')}
-        beginLabel={t('beginDate')}
-        beginPath="beginDate"
-        endLabel={t('endDate')}
-        endPath="endDate"
-        required
-      />
+      <div className="flex gap-6">
+        <Input label={t('eventName')} path="name" required containerClassName="w-100" />
+        <DateRangeField<Event>
+          id="eventDate"
+          label={t('eventDate')}
+          beginPath="beginDate"
+          endPath="endDate"
+          required
+        />
+      </div>
     </Card>
   </Form>
 }
