@@ -29,7 +29,7 @@ function HelpLink() {
   return (
     <AnchorButton
       intent="primary"
-      small
+      className="p-2"
       target="_blank"
       href={useFormTranslation('markdownEditor.helpUrl')}
     >

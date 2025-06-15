@@ -5,7 +5,9 @@ import type { Color } from './types'
 
 import { IconProp, renderIcon } from './Icon'
 
-const buttonClass = (color: Color, { active, className, minimal }) => classNames(
+const buttonClass = (color: Color, { active, className, minimal, anchor }) => classNames(
+  //TODO: remove text-inherit and no-underline when blueprintjs is eradicated
+  minimal && anchor && 'text-inherit! no-underline!',
   minimal
     ? 'bg-white text-stone-700'
     : ({
@@ -45,10 +47,39 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     className,
     ...rest
   } = props
-  return <button ref={ref} type={type} className={buttonClass(intent, {active, className, minimal})} {...rest}>
+  return <button ref={ref} type={type} className={buttonClass(intent, {active, className, minimal, anchor: false})} {...rest}>
     {renderIcon(icon)}
     {text}
     {children}
     {renderIcon(rightIcon)}
   </button>
+})
+
+export interface AnchorButtonProps extends ComponentProps<'a'> {
+  text?: React.ReactNode
+  icon?: IconProp
+  rightIcon?: IconProp
+  intent?: Color
+  minimal?: boolean
+  active?: boolean
+}
+
+export const AnchorButton = forwardRef<HTMLAnchorElement, AnchorButtonProps>(function Button(props: AnchorButtonProps, ref) {
+  const {
+    children,
+    text,
+    intent = 'none',
+    active,
+    icon,
+    rightIcon,
+    minimal,
+    className,
+    ...rest
+  } = props
+  return <a ref={ref} className={buttonClass(intent, {active, className, minimal, anchor: true})} {...rest}>
+    {renderIcon(icon)}
+    {text}
+    {children}
+    {renderIcon(rightIcon)}
+  </a>
 })

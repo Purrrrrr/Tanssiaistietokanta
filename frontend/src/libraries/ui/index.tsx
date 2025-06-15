@@ -12,17 +12,17 @@ import classNames from 'classnames'
 
 import { Button } from './Button'
 
-import './ui.scss'
+import './ui.css'
 
 export * from './AutosizedSection'
 export { Breadcrumb, BreadcrumbContext, Breadcrumbs } from './Breadcrumbs'
-export { type ButtonProps, Button } from './Button'
+export { type AnchorButtonProps, type ButtonProps, AnchorButton, Button } from './Button'
 export { Collapse } from './Collapse'
 export * from './Flex'
 export { GlobalSpinner } from './GlobalLoadingSpinner'
 export { Markdown } from './Markdown'
 export { TagButton } from './Tag'
-export { AnchorButton, Callout, H2, HTMLTable, Navbar, ProgressBar, SectionCard, Tab, Tabs } from '@blueprintjs/core'
+export { Callout, H2, HTMLTable, Navbar, ProgressBar, SectionCard, Tab, Tabs } from '@blueprintjs/core'
 
 export const CssClass = {
   formGroupInline: 'formgroup-inline',

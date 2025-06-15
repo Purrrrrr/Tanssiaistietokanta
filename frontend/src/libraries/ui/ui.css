@@ -1,4 +1,4 @@
-@import "~@blueprintjs/core/lib/css/blueprint.css";
+@import "../../../node_modules/@blueprintjs/core/lib/css/blueprint.css";
 
 .formgroup-inline {
   display: inline-flex;

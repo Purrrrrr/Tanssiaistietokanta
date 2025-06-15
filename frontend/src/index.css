@@ -18,7 +18,13 @@
 }
 
 @custom-variant active {
-  &:active, &.active {
+  &:active:not(:disabled), &.active:not(:disabled) {
+    @slot;
+  }
+}
+
+@custom-variant hover {
+  &:hover:not(:disabled) {
     @slot;
   }
 }

@@ -16,7 +16,7 @@ function Navigation() {
       </Navbar.Group>
       <Navbar.Group align="right">
         <AdminOnly>
-          <NavButton icon={<span style={{marginRight: 6}}>💃</span>} href="/dances" text={useTranslation('navigation.dances')} />
+          <NavButton icon={<span className="mr-1.5">💃</span>} href="/dances" text={useTranslation('navigation.dances')} />
           <Navbar.Divider />
         </AdminOnly>
         <LoginForm />
