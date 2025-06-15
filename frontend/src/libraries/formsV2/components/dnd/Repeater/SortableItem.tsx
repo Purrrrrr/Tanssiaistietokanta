@@ -2,7 +2,7 @@ import { type ElementType, type ReactNode, useMemo} from 'react'
 import {useSortable} from '@dnd-kit/sortable'
 import {CSS} from '@dnd-kit/utilities'
 
-import {Icon} from 'libraries/ui'
+import {Button} from 'libraries/ui'
 
 import { useFormTranslation } from '../../../localization'
 
@@ -61,13 +61,5 @@ export function SortableItem<Data extends Record<string, unknown>>({id, data, di
 
 function DragHandle({buttonRef, listeners}) {
   const moveLabel = useFormTranslation('moveItem')
-  return <button
-    type="button"
-    aria-label={moveLabel}
-    className="bp5-button"
-    ref={buttonRef}
-    style={{touchAction: 'none'}}
-    {...listeners}>
-    <Icon icon="move" />
-  </button>
+  return <Button aria-label={moveLabel} className="touch-none" icon="move" ref={buttonRef} {...listeners} />
 }

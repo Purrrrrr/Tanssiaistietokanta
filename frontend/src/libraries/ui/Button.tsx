@@ -7,9 +7,9 @@ import { IconProp, renderIcon } from './Icon'
 
 const buttonClass = (color: Color, { active, className, minimal }) => classNames(
   minimal
-    ? 'bg-white'
+    ? 'bg-white text-stone-700'
     : ({
-      none: 'bg-stone-200',
+      none: 'bg-stone-200 text-stone-700',
       primary: 'bg-sky-700 text-white',
       success: 'bg-lime-700 text-white',
       danger: ' bg-orange-700 text-white',

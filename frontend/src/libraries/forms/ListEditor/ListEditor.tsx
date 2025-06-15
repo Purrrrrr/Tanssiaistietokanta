@@ -12,7 +12,7 @@ import {CSS} from '@dnd-kit/utilities'
 import {Entity, ListEditorDroppableData, ListEditorItemData, ListItemComponent} from './types'
 import {FieldComponentProps, OnChangeHandler, TypedStringPath} from '../types'
 
-import {Icon} from 'libraries/ui'
+import {Button} from 'libraries/ui'
 
 import { useFormStrings } from '../formContext'
 import {ListEditorContext, ListEditorMoveContext} from './ListEditorContext'
@@ -156,7 +156,7 @@ export function SortableItem<T, V>({itemType, acceptsTypes, id, path, onChangePa
 
   const Wrapper = isTable ? 'tr' : 'div'
   const dragHandle = useMemo(
-    () => <button type="button" aria-label={moveItem} className="bp5-button" ref={setActivatorNodeRef} style={{touchAction: 'none'}} {...listeners}><Icon icon="move" /></button>,
+    () => <Button aria-label={moveItem} className="touch-none" icon="move" ref={setActivatorNodeRef} {...listeners} />,
     [listeners, setActivatorNodeRef, moveItem]
   )
 
