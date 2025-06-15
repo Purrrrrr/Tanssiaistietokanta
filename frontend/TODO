@@ -35,8 +35,8 @@
 * Tool to create dance instruction leaflet
 * Apollo client 3.0
 * Nicer loading animation
-  Decide on UI colors
-    Make a Button replacement
+* Decide on UI colors
+  * Make a Button replacement
   UI Showcase
   * Add formV2 stuff
     Clean up

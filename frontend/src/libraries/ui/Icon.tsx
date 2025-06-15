@@ -1,38 +1,13 @@
-import React, { MouseEvent } from 'react'
+import React, { ReactElement, ReactNode } from 'react'
 import {
-  Card as BlueprintCard,
-  Classes,
-  FormGroup as BlueprintFormGroup,
-  FormGroupProps as BlueprintFormGroupProps,
   Icon as BlueprintIcon,
-  InputGroup as BlueprintInputGroup,
 } from '@blueprintjs/core'
 import { IconPaths, Icons } from '@blueprintjs/icons'
-import classNames from 'classnames'
 
-import { Button } from './Button'
+import { Color } from './types'
 
-import './ui.scss'
+export type IconProp = IconName | ReactElement | undefined
 
-export * from './AutosizedSection'
-export { Breadcrumb, BreadcrumbContext, Breadcrumbs } from './Breadcrumbs'
-export { type ButtonProps, Button } from './Button'
-export { Collapse } from './Collapse'
-export * from './Flex'
-export { GlobalSpinner } from './GlobalLoadingSpinner'
-export { Markdown } from './Markdown'
-export { TagButton } from './Tag'
-export { AnchorButton, Callout, H2, HTMLTable, Navbar, ProgressBar, SectionCard, Tab, Tabs } from '@blueprintjs/core'
-
-export const CssClass = {
-  formGroupInline: 'formgroup-inline',
-  formGroupInlineFill: 'formgroup-inline-fill',
-  textMuted: Classes.TEXT_MUTED,
-  textDisabled: Classes.TEXT_DISABLED,
-}
-
-type HTMLDivProps = React.HTMLAttributes<HTMLDivElement>;
-export type Intent = 'none' | 'primary' | 'success' | 'warning' | 'danger';
 export type IconName =
   'arrow-left'
   | 'caret-down'
@@ -112,82 +87,23 @@ Icons.setLoaderOptions({
     (await iconModules[`${name}/${size}`]()).default as IconPaths,
 })
 
-interface IconProps {
+export interface IconProps {
   className?: string
   title?: string
   icon: IconName
   color?: string
   iconSize?: number
-  intent?: Intent
+  intent?: Color
   onClick?: React.MouseEventHandler<HTMLElement>
 }
 
-export function Icon(props : IconProps) {
-  return <BlueprintIcon {...props} />
+export function Icon({ intent, ...props}: IconProps) {
+  return <BlueprintIcon {...props} intent={intent} />
 }
 
-type CardProps = Omit<HTMLDivProps, 'onClick'>
-
-export function Card(props : CardProps) {
-  return <BlueprintCard {...props} />
-}
-
-export interface FormGroupProps extends Omit<BlueprintFormGroupProps, 'inline'>, React.ComponentPropsWithoutRef<'div'> {
-  elementRef?: React.Ref<HTMLDivElement>
-  inline?: boolean
-  labelStyle?: 'above' | 'beside'
-  children?: React.ReactNode
-}
-
-const FormGroupInstance = new BlueprintFormGroup({})
-
-export function FormGroup({ elementRef, className, inline, labelStyle: maybeLabelStyle, ...props} : FormGroupProps) {
-  const labelStyle = maybeLabelStyle ?? (inline ? 'beside' : 'above')
-  const inlineLabel = labelStyle === 'beside'
-  const inlineProps = inline
-    ? { inline: true, className: classNames(CssClass.formGroupInline, className) }
-    : { inline: inlineLabel, className: classNames(inlineLabel && CssClass.formGroupInlineFill, className) }
-
-  const {
-    intent, children, disabled, contentClassName, helperText, label, labelFor, labelInfo, style, subLabel,
-    ...rest
-  } = props
-  //@ts-expect-error Props is readonly, but we override it here
-  FormGroupInstance.props = {
-    intent, children, disabled, contentClassName, helperText, label, labelFor, labelInfo, style, subLabel,
-    ...inlineProps
+export function renderIcon(icon?: IconName | ReactElement | undefined): ReactNode {
+  if (typeof icon === 'string') {
+    return <Icon icon={icon} />
   }
-  const element = FormGroupInstance.render()
-
-  return React.cloneElement(element, {...rest, ref: elementRef}) //<BlueprintFormGroup {...props} {...inlineProps} />
-}
-
-interface SearchInputProps {
-  id?: string
-  value: string
-  placeholder?: string
-  emptySearchText: string,
-  onChange: (value: string) => unknown
-}
-
-export function SearchBar({id, onChange, value, placeholder, emptySearchText} : SearchInputProps) {
-  return <BlueprintInputGroup
-    id={id}
-    leftIcon="search"
-    rightElement={
-      <Button
-        className="m-1 h-6"
-        aria-label={emptySearchText}
-        minimal
-        icon="cross"
-        onClick={(e: MouseEvent<HTMLElement>) => {
-          onChange('');
-          (e.target as HTMLButtonElement).closest('.bp5-input-group')?.querySelector('input')?.focus()
-        }}
-      />
-    }
-    value={value}
-    onChange={(e) => onChange(e.target.value)}
-    placeholder={placeholder}
-  />
+  return icon
 }

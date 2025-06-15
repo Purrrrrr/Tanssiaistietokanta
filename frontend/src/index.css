@@ -17,6 +17,21 @@
   }
 }
 
+@custom-variant active {
+  &:active, &.active {
+    @slot;
+  }
+}
+
+@utility bg-* {
+  --current-bg: --value(--color-*);
+  background-color: --value(--color-*);
+}
+
+@utility bg-darken-* {
+  background-color: oklch(from var(--current-bg) calc(l - calc(--value(integer) / 100)) c h);
+}
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
