@@ -47,6 +47,7 @@
   Blueprintjs migration
   * Tag
   * Menu
+  * NavBar
     Icon loading components
     * AnchorButton
       Toast
@@ -57,7 +58,6 @@
     ProgressBar
     H2
     HTMLTable
-    NavBar
     Check todo markings in Button.tsx or other
 * Add loading animation to more pages
   Find a way to autofill dance categories

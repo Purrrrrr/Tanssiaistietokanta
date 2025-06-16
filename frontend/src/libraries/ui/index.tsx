@@ -22,7 +22,7 @@ export * from './Flex'
 export { GlobalSpinner } from './GlobalLoadingSpinner'
 export { Markdown } from './Markdown'
 export { TagButton } from './Tag'
-export { Callout, H2, HTMLTable, Navbar, ProgressBar, SectionCard, Tab, Tabs } from '@blueprintjs/core'
+export { Callout, H2, HTMLTable, ProgressBar, SectionCard, Tab, Tabs } from '@blueprintjs/core'
 
 export const CssClass = {
   formGroupInline: 'formgroup-inline',

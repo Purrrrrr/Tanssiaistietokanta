@@ -2,26 +2,19 @@ import { useNavigate } from 'react-router-dom'
 
 import {AdminOnly} from 'services/users'
 
-import {AnchorButton, Breadcrumbs, Navbar } from 'libraries/ui'
+import {AnchorButton, Breadcrumbs } from 'libraries/ui'
 import {useTranslation} from 'i18n'
 
-import LoginForm from './LoginForm'
-
-
 function Navigation() {
-  return <nav>
-    <Navbar id="navigation">
-      <Navbar.Group>
-        <Breadcrumbs label={useTranslation('navigation.breadcrumbs')}/>
-      </Navbar.Group>
-      <Navbar.Group align="right">
-        <AdminOnly>
-          <NavButton icon={<span className="mr-1.5">💃</span>} href="/dances" text={useTranslation('navigation.dances')} />
-          <Navbar.Divider />
-        </AdminOnly>
-        <LoginForm />
-      </Navbar.Group>
-    </Navbar>
+  return <nav className="flex flex-wrap min-h-12.5 h-auto justify-between px-3.5 items-center shadow-sm">
+    <div className="grow">
+      <Breadcrumbs label={useTranslation('navigation.breadcrumbs')}/>
+    </div>
+    <div>
+      <AdminOnly>
+        <NavButton icon={<span className="mr-1.5">💃</span>} href="/dances" text={useTranslation('navigation.dances')} />
+      </AdminOnly>
+    </div>
   </nav>
 }
 
