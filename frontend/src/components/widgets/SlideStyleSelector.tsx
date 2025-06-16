@@ -1,10 +1,9 @@
 import { useId } from 'react'
-import { Button } from '@blueprintjs/core'
 
 import {SlideStyle, useEventSlideStyles} from 'services/events'
 
 import { Select } from 'libraries/formsV2/components/inputs'
-import {Icon} from 'libraries/ui'
+import {Button, Icon} from 'libraries/ui'
 import {useT} from 'i18n'
 
 interface SlideStyleSelectorProps {
