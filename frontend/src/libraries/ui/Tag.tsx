@@ -2,7 +2,7 @@ import { MouseEvent, ReactNode } from 'react'
 import classNames from 'classnames'
 
 export interface TagProps {
-  onClick?: (e: MouseEvent) => unknown
+  onClick?: (e: MouseEvent<HTMLButtonElement>) => unknown
   children: ReactNode
   color?: string
   bg?: string

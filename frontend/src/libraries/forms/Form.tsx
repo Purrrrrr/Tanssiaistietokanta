@@ -43,7 +43,7 @@ export function Form<T>({
     if (onValidityChange) onValidityChange({hasErrors})
   }, [onValidityChange, hasErrors])
 
-  const submitHandler = (e: React.FormEvent) => {
+  const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     //Sometimes forms from dialogs end up propagating into our form and we should not submit then
     if (e.target !== form.current) return
     e.preventDefault()
