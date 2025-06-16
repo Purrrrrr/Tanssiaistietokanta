@@ -1,9 +1,8 @@
 import React from 'react'
-import {Link} from 'react-router-dom'
 
 import {useIsAdmin} from 'services/users'
 
-import { type Color, Icon } from 'libraries/ui'
+import { type Color, Icon, Link } from 'libraries/ui'
 import { buttonClass } from 'libraries/ui/Button'
 
 interface NavigateButtonProps extends Omit<React.ComponentProps<typeof Link>, 'to'> {
@@ -26,7 +25,7 @@ export function NavigateButton({text, children, icon, adminOnly, disabled, href,
   const onClick = props.onClick ??
     (props.target ==='_blank' ? openLinkWithTarget : undefined)
 
-  return <Link {...props} className={classes} role="button"
+  return <Link {...props} unstyled className={classes} role="button"
     tabIndex={0} to={href} onClick={onClick}>
     {icon && <Icon icon={icon} />}
     {text}

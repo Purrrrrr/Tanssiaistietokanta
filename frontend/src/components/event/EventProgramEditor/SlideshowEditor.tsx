@@ -1,9 +1,9 @@
 import React, { UIEvent, useDeferredValue, useEffect, useRef, useState } from 'react'
-import {Link, useNavigate, useParams} from 'react-router-dom'
+import {useNavigate, useParams} from 'react-router-dom'
 import classNames from 'classnames'
 import deepEquals from 'fast-deep-equal'
 
-import {Card, Flex, Tab, Tabs} from 'libraries/ui'
+import {Card, Flex, Link, Tab, Tabs} from 'libraries/ui'
 import { EventProgramSettings, Field } from 'components/event/EventProgramForm'
 import {EventSlide, EventSlidePreview, EventSlideProps, startSlideId, useEventSlides} from 'components/event/EventSlide'
 import { EventSlideEditor } from 'components/event/EventSlideEditor'
@@ -146,12 +146,12 @@ const SlideLink = React.memo(function SlideLink(
     ? `/events/${eventId}/version/${eventVersionId}/program/slides/`
     : `/events/${eventId}/program/slides/`
   if (placeholder) {
-    return <a href={`${rootUrl}${slide.id}`} id={`slide-link-${slide.id}`} className={classNames('slide-link', {current})}>
+    return <Link to={`${rootUrl}${slide.id}`} id={`slide-link-${slide.id}`} className={classNames('slide-link', {current})}>
       <SlideContainer className="flex-fill inert" color="#eee">
         <EventSlidePreview {...slide} eventProgram={eventProgram} />
       </SlideContainer>
       <p className="slide-link-title">{slide.title}</p>
-    </a>
+    </Link>
   }
 
   return <Link to={`${rootUrl}${slide.id}`} id={`slide-link-${slide.id}`} className={classNames('slide-link', {current})}>

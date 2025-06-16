@@ -1,6 +1,4 @@
-import { Link } from 'react-router-dom'
-
-import {BreadcrumbContext} from 'libraries/ui'
+import {BreadcrumbContext, Link, RegularLink} from 'libraries/ui'
 import {T, useTranslation} from 'i18n'
 
 import DebugManager from './DebugManager'
@@ -55,11 +53,12 @@ function navigationHidden() {
 }
 
 function SkipToMainContent() {
-  return <a id="skip-to-main-content" href="#main-content"><T msg="navigation.moveToContent" /></a>
+  // TODO style with tailwind
+  return <RegularLink unstyled id="skip-to-main-content" href="#main-content"><T msg="navigation.moveToContent" /></RegularLink>
 }
 
 function LicenceLink() {
-  return <a href={useTranslation('app.licenceLink')}>&copy; <T msg="app.copyright" /></a>
+  return <RegularLink href={useTranslation('app.licenceLink')}>&copy; <T msg="app.copyright" /></RegularLink>
 }
 
 export default NavigationLayout

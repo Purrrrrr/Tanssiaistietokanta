@@ -21,8 +21,8 @@ function Breadcrumb({href, current, text} : Path) {
   return <Link
     className={classNames(
       'flex items-center ',
-      !current && 'text-gray-500!',
-      current && 'text-black! font-semibold'
+      !current && 'text-gray-500 hover:text-gray-700',
+      current && 'font-semibold'
     )}
     aria-current={current ? 'page' : undefined}
     to={href}

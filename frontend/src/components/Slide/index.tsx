@@ -1,8 +1,7 @@
 import React from 'react'
-import {Link} from 'react-router-dom'
 import classnames from 'classnames'
 
-import { AutosizedSection } from 'libraries/ui'
+import { AutosizedSection, Link } from 'libraries/ui'
 import {useT} from 'i18n'
 
 import './Slide.scss'

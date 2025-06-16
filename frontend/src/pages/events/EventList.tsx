@@ -1,8 +1,7 @@
-import {Link} from 'react-router-dom'
-
 import {useDeleteEvent, useEvents} from 'services/events'
 import {AdminOnly} from 'services/users'
 
+import {Link} from 'libraries/ui'
 import { LoadingState } from 'components/LoadingState'
 import {PageTitle} from 'components/PageTitle'
 import {DeleteButton} from 'components/widgets/DeleteButton'

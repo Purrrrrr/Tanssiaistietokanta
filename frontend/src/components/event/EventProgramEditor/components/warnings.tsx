@@ -1,7 +1,7 @@
 import {Dance, Event} from 'types'
 import {DanceSet, EventProgramSettings} from 'components/event/EventProgramForm/types'
 
-import {Callout} from 'libraries/ui'
+import {Callout, RegularLink} from 'libraries/ui'
 import {useT} from 'i18n'
 import {uniq} from 'utils/uniq'
 
@@ -76,7 +76,7 @@ export function DuplicateDancesWarning({program}: {program: EventProgramSettings
             danceSets.map((danceSet, i) =>
               <>
                 {i === 0 ? ' ' : ', '}
-                <a key={danceSet._id} href={`#${danceSet._id}`}>{danceSet.title}</a>
+                <RegularLink key={danceSet._id} href={`#${danceSet._id}`}>{danceSet.title}</RegularLink>
               </>
             )
           }

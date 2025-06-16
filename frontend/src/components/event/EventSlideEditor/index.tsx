@@ -1,10 +1,9 @@
 import React, { ReactNode } from 'react'
-import {Link} from 'react-router-dom'
 
 import {Dance} from 'types'
 
 import {DragHandle, formFor, MarkdownEditor, SyncState, SyncStatus} from 'libraries/forms'
-import {Callout, Flex, H2, Icon, SectionCard} from 'libraries/ui'
+import {Callout, Flex, H2, Icon, Link, RegularLink, SectionCard} from 'libraries/ui'
 import {DanceEditorContainer} from 'components/DanceEditor'
 import { DanceProgramChooser } from 'components/event/DanceProgramChooser'
 import {
@@ -252,7 +251,7 @@ interface LinkToSlideProps {
 
 function LinkToSlide({children, id, hashLink}: LinkToSlideProps) {
   if (hashLink) {
-    return <a href={`#${id}`}>{children}</a>
+    return <RegularLink href={`#${id}`}>{children}</RegularLink>
   }
   return <Link to={id}>{children}</Link>
 }

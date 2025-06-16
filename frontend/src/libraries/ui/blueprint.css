@@ -38,15 +38,6 @@ strong{
 ::selection{
   background:rgba(125, 188, 255, 0.6);
 }
-a{
-  text-decoration:none;
-  color:#215db0;
-}
-a:hover{
-  cursor:pointer;
-  text-decoration:underline;
-  color:#215db0;
-}
 
 :focus{
   outline:rgba(45, 114, 210, 0.6) solid 2px;

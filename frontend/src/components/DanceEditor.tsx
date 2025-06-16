@@ -1,5 +1,5 @@
 import {useCallback, useId} from 'react'
-import {Link, useNavigate} from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
 
 import {Dance, DanceWithEvents, EditableDance} from 'types'
 import { ID } from 'backend/types'
@@ -9,7 +9,7 @@ import { useDeleteDance, usePatchDance } from 'services/dances'
 
 import {formFor, MarkdownEditor, patchStrategy, SyncStatus, useAutosavingState} from 'libraries/forms'
 import { Select } from 'libraries/formsV2/components/inputs'
-import {Button, Flex, H2, Icon} from 'libraries/ui'
+import {Button, Flex, H2, Icon, Link, RegularLink} from 'libraries/ui'
 import {DanceDataImportButton} from 'components/DanceDataImportDialog'
 import {useGlobalLoadingAnimation} from 'components/LoadingState'
 import { useVersionedName } from 'components/versioning/VersionedPageTitle'
@@ -80,7 +80,7 @@ export function DanceEditor({dance, onDelete, showLink, showVersionHistory, titl
         {dance.wikipageName &&
           <p>
             {t('danceInDanceWiki')}{' '}
-            <a target="_blank" href={`https://tanssi.dy.fi/${dance.wikipageName.replaceAll(' ', '_')}`}>{dance.wikipageName}</a>
+            <RegularLink target="_blank" href={`https://tanssi.dy.fi/${dance.wikipageName.replaceAll(' ', '_')}`}>{dance.wikipageName}</RegularLink>
           </p>
         }
       </div>

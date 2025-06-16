@@ -1,5 +1,5 @@
 import FormUiShowcase from 'libraries/formsV2/UiShowcase'
-import { Button, Tab, Tabs } from 'libraries/ui'
+import { Button, RegularLink, Tab, Tabs } from 'libraries/ui'
 
 import { Showcase } from './Showcase'
 import { titleCase } from './utils/titleCase'
@@ -11,9 +11,9 @@ export default function UiShowcase() {
     <section className="">
       <h1>UI Showcase</h1>
 
-      <a href="#">
+      <RegularLink href="#">
         Link
-      </a>
+      </RegularLink>
 
       <Showcase
         title="Button"
