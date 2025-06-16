@@ -1,4 +1,4 @@
-import { ComponentProps, forwardRef } from 'react'
+import { AnchorHTMLAttributes, ButtonHTMLAttributes, forwardRef } from 'react'
 import classNames from 'classnames'
 
 import type { Color } from './types'
@@ -35,7 +35,7 @@ export const buttonClass = (
   className,
 )
 
-export interface ButtonProps extends ComponentProps<'button'> {
+export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   text?: React.ReactNode
   icon?: IconProp
   rightIcon?: IconProp
@@ -65,7 +65,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   </button>
 })
 
-export interface AnchorButtonProps extends ComponentProps<'a'> {
+export interface AnchorButtonProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
   text?: React.ReactNode
   icon?: IconProp
   rightIcon?: IconProp
