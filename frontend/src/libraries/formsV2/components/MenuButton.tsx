@@ -1,15 +1,14 @@
 import { MouseEvent, ReactNode, useEffect, useId, useRef, useState } from 'react'
-import { Button, ButtonProps } from '@blueprintjs/core'
-import { UseComboboxGetToggleButtonPropsReturnValue } from 'downshift'
 
 import { getFocusableElements } from 'libraries/dialog'
 import { Dropdown, DropdownContainer } from 'libraries/overlays'
+import { Button, ButtonProps } from 'libraries/ui'
 
 interface MenuButtonProps {
   children: ReactNode
   containerClassname?: string
   text?: string
-  buttonRenderer?: (props: Omit<UseComboboxGetToggleButtonPropsReturnValue, 'tabIndex'>) => ReactNode
+  buttonRenderer?: (props: { active: boolean, children: ReactNode, popovertarget: string}) => ReactNode
   buttonProps?: ButtonProps
 }
 
@@ -36,7 +35,7 @@ export default function MenuButton({ children, buttonRenderer, text, buttonProps
 
   return <DropdownContainer className={containerClassname} ref={containerRef}>
     {buttonRenderer
-      ? null //buttonRenderer(downshiftButtonProps)
+      ? buttonRenderer({ active: open, children: text, popovertarget: dropdownId })
       : <Button
         active={open}
         rightIcon="double-caret-vertical"

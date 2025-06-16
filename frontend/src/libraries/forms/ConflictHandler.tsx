@@ -1,7 +1,9 @@
+import classNames from 'classnames'
+
 import { ConflictData } from './types'
 
 import MenuButton from 'libraries/formsV2/components/MenuButton'
-import {Button, Flex} from 'libraries/ui'
+import {Button, Icon} from 'libraries/ui'
 
 import {useFormStrings} from './formContext'
 
@@ -11,14 +13,14 @@ export function ConflictHandler({localValue, serverValue, onResolve}: ConflictDa
     {strings.hasConflicts}{' '}
     <MenuButton
       text={strings.conflictButton}
-      buttonProps={{
-        rightIcon: 'caret-down',
-        outlined: true,
-        small: true,
-        intent: 'danger',
-      }}
+      buttonRenderer={({active, children, ...props}) =>
+        <button type="button" className={classNames(className, { active })} {...props}>
+          {children}
+          <Icon icon="caret-down" />
+        </button>
+      }
     >
-      <Flex spaced style={{padding: '1em'}}>
+      <div className="flex gap-3 p-2">
         <div>
           {strings.server}
           {serverValue}
@@ -29,7 +31,9 @@ export function ConflictHandler({localValue, serverValue, onResolve}: ConflictDa
           {localValue}
           <Button intent="primary" text={strings.chooseThis} onClick={() => onResolve('LOCAL')} />
         </div>
-      </Flex>
+      </div>
     </MenuButton>
   </>
 }
+
+const className = 'p-1 bg-white text-red-700 border-1 rounded-xs border-red-700 hover:bg-red-50 active:bg-red-200 active:text-red-900'
