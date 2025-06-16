@@ -1,5 +1,5 @@
 import {Link} from 'react-router-dom'
-import {Classes} from '@blueprintjs/core'
+import classNames from 'classnames'
 
 import {Path, useBreadcrumbPaths} from './context'
 
@@ -8,17 +8,25 @@ export {Breadcrumb, BreadcrumbContext} from './context'
 export function Breadcrumbs({label}: {label: string}) {
   const paths = useBreadcrumbPaths()
   //Manually create the breadcrumb element since the Blueprint one is not fully accessible
-  return <ul id="breadcrumbs" className={Classes.BREADCRUMBS} aria-label={label}>
-    {paths.map(path => <li key={path.href}><Breadcrumb {...path} /></li>)}
+  return <ul id="breadcrumbs" className="flex flex-wrap items-center gap-2" aria-label={label}>
+    {paths.map(path =>
+      <li className="flex items-center h-7.5 gap-2 not-last:after:bg-[url('/breadcrumb-arrow.svg')] not-last:after:size-4 not-last:after:block" key={path.href}>
+        <Breadcrumb {...path} />
+      </li>
+    )}
   </ul>
 }
 
 function Breadcrumb({href, current, text} : Path) {
-  return <Link {...(current ? currentLinkProps : linkProps)} to={href}>{text}</Link>
-}
-
-const linkProps = {className: Classes.BREADCRUMB}
-const currentLinkProps = {
-  className: Classes.BREADCRUMB + ' ' + Classes.BREADCRUMB_CURRENT,
-  'aria-current': 'page',
+  return <Link
+    className={classNames(
+      'flex items-center ',
+      !current && 'text-gray-500!',
+      current && 'text-black! font-semibold'
+    )}
+    aria-current={current ? 'page' : undefined}
+    to={href}
+  >
+    {text}
+  </Link>
 }

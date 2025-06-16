@@ -23,14 +23,3 @@
 .bp5-card + p {
   margin-top: 10px;
 }
-
-.bp5-breadcrumbs {
-  min-height: 40px;
-  height: auto;
-  margin-bottom: 10px;
-}
-.bp5-breadcrumbs > li {
-  height: 30px;
-  margin-top: 10px;
-}
-
