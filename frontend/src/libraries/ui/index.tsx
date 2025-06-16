@@ -14,16 +14,18 @@ import './ui.css'
 
 export * from './AutosizedSection'
 export { Breadcrumb, BreadcrumbContext, Breadcrumbs } from './Breadcrumbs'
-export { type AnchorButtonProps, type ButtonProps, AnchorButton, Button } from './Button'
+export { type AnchorButtonProps, type ButtonProps, AnchorButton, Button, buttonClass } from './Button'
 export { Collapse } from './Collapse'
 export * from './Flex'
 export { GlobalSpinner } from './GlobalLoadingSpinner'
 export * from './Icon'
 export { Markdown } from './Markdown'
 export { TagButton } from './Tag'
+export type { Color } from './types'
 export { Callout, H2, HTMLTable, ProgressBar, SectionCard, Tab, Tabs } from '@blueprintjs/core'
 
 export const CssClass = {
+  input: Classes.INPUT,
   formGroupInline: 'formgroup-inline',
   formGroupInlineFill: 'formgroup-inline-fill',
   textMuted: Classes.TEXT_MUTED,

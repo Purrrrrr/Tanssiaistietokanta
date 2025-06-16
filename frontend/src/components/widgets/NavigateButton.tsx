@@ -1,11 +1,10 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
-import {Classes, Intent} from '@blueprintjs/core'
-import classNames from 'classnames'
 
 import {useIsAdmin} from 'services/users'
 
-import { Icon } from 'libraries/ui'
+import { type Color, Icon } from 'libraries/ui'
+import { buttonClass } from 'libraries/ui/Button'
 
 interface NavigateButtonProps extends Omit<React.ComponentProps<typeof Link>, 'to'> {
   text?: string | React.ReactElement | React.ReactElement[],
@@ -14,7 +13,7 @@ interface NavigateButtonProps extends Omit<React.ComponentProps<typeof Link>, 't
   adminOnly?: boolean,
   disabled?: boolean,
   href: string,
-  intent?: Intent,
+  intent?: Color,
   className?: string,
 }
 
@@ -22,12 +21,8 @@ export function NavigateButton({text, children, icon, adminOnly, disabled, href,
   const isAdmin = useIsAdmin()
   if (adminOnly && !isAdmin) return null
 
-  const classes = classNames(
-    Classes.BUTTON,
-    {[Classes.DISABLED]: disabled},
-    Classes.intentClass(intent),
-    className
-  )
+  const classes = buttonClass(intent ?? 'none', { anchor: true, className, disabled })
+
   const onClick = props.onClick ??
     (props.target ==='_blank' ? openLinkWithTarget : undefined)
 

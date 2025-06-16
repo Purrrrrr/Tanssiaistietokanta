@@ -5,9 +5,18 @@ import type { Color } from './types'
 
 import { IconProp, renderIcon } from './Icon'
 
-const buttonClass = (color: Color, { active, className, minimal, anchor }) => classNames(
+export const buttonClass = (
+  color: Color,
+  { active, disabled, className, minimal, anchor }: {
+    active?: boolean
+    disabled?: boolean
+    minimal?: boolean
+    anchor?: boolean
+    className?: string
+  }
+) => classNames(
   //TODO: remove text-inherit and no-underline when blueprintjs is eradicated
-  minimal && anchor && 'text-inherit! no-underline!',
+  minimal && anchor && 'hover:no-underline!',
   minimal
     ? 'bg-white text-stone-700'
     : ({
@@ -22,6 +31,7 @@ const buttonClass = (color: Color, { active, className, minimal, anchor }) => cl
   'cursor-pointer transition-colors hover:bg-darken-4 active:bg-darken-10',
   'disabled:cursor-not-allowed disabled:opacity-50 disabled:saturate-75',
   active && 'active',
+  disabled && 'disabled',
   className,
 )
 
