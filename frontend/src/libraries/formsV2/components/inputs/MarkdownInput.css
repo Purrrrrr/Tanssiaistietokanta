@@ -1,0 +1,6 @@
+.rc-md-editor .rc-md-navigation .button-wrap .button:not() {
+  color: #555;
+}
+.rc-md-editor .rc-md-navigation .button-wrap .text-white {
+  color: white;
+}

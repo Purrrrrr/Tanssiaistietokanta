@@ -118,7 +118,7 @@ body {
   grid-area: footer;
   text-align: right;
   padding: 4px;
-  color: gray;
+  @apply text-gray-500;
 }
 
 h1 {
