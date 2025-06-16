@@ -6,7 +6,7 @@ import {AnchorButton, Breadcrumbs } from 'libraries/ui'
 import {useTranslation} from 'i18n'
 
 function Navigation() {
-  return <nav className="flex flex-wrap min-h-12.5 h-auto justify-between px-3.5 items-center shadow-sm">
+  return <nav className="flex flex-wrap justify-between items-center px-3.5 mb-4 h-auto shadow-sm min-h-12.5 shadow-stone-600/30">
     <div className="grow">
       <Breadcrumbs label={useTranslation('navigation.breadcrumbs')}/>
     </div>

@@ -37,7 +37,7 @@ export function Showcase<P extends PropDefs>(showcase: ShowcaseProps<P>) {
     <h2>{title}</h2>
     <div className="flex justify-between items-center">
       <div className="p-2">{children(props)}</div>
-      {fields.length > 0 && <div className="border-l-1 border-stone-300 p-2 pl-7">{fields}</div>}
+      {fields.length > 0 && <div className="p-2 pl-7 border-l-1 border-stone-300">{fields}</div>}
     </div>
   </Card>
 
