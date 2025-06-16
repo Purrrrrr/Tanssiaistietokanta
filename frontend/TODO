@@ -39,18 +39,21 @@
   * Make a Button replacement
   UI Showcase
   * Add formV2 stuff
+  * Showcase component
+    Fix minimal icon background
+    Change intent to something else, add minimal to it's styles
     Clean up
     Add libraries/ui stuff
   Blueprintjs migration
   * Tag
   * Menu
-    SectionCard
     Icon loading components
-      AnchorButton
+    * AnchorButton
       Toast
       Icon
       Tab, Tabs
       Callout
+    SectionCard
     ProgressBar
     H2
     HTMLTable
