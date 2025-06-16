@@ -49,9 +49,9 @@ export default function UiShowcase() {
 
   return <Form value={value} onChange={onChange}>
     <h2>FOO</h2>
-    <button type="button" className="p-2 my-2 font-bold text-white bg-fuchsia-800 border" onClick={() => { setKey(key + 1); onChange(defaultData) }}>
+    <Button className="my-2" onClick={() => { setKey(key + 1); onChange(defaultData) }}>
       RESET
-    </button>
+    </Button>
     <ShowcaseContents key={key} />
   </Form>
 }
@@ -81,16 +81,7 @@ function ShowcaseContents() {
 
   return <>
     <S path="a" label="Viikonpäivä" placeholder="Valitse" />
-    <button type="button" className="block p-2 my-3 text-white bg-fuchsia-500" popovertarget="koe">KOE</button>
     <S2 path="num" label="Numero" />
-    <Popover
-      id="koe"
-      type="auto"
-      className="w-10 h-10 bg-red-500 transition-all duration-400"
-      closedClassname="opacity-0"
-      hidingClassname="translate-x-[100dvw]"
-      hideDelay={500}
-    />
     <hr />
     <ConflictHandler
       localValue={<input className="block border"  defaultValue="fuu" />}
