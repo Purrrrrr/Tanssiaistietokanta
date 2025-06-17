@@ -1,5 +1,6 @@
-import React, { ReactNode, useCallback, useContext, useEffect, useId, useState } from 'react'
-import { ResizeSensor } from '@blueprintjs/core'
+import React, { ReactNode, useCallback, useContext, useEffect, useId, useRef, useState } from 'react'
+
+import { useResizeObserver } from 'libraries/ui'
 
 type SidebarRegisterContextType = (id: string, content: ReactNode) => () => void
 const SidebarRegisterContext = React.createContext<SidebarRegisterContextType>(() => () => {})
@@ -18,6 +19,7 @@ export default function SideBar({children}: {children: ReactNode}) {
 
 export function SidebarContainer() {
   const data = useContext(SidebarContentContext)
+  const container = useRef<HTMLDivElement>(null)
 
   const updateHeight = useCallback(
     (entries: {target: Element}[]) => {
@@ -29,13 +31,12 @@ export function SidebarContainer() {
     },
     []
   )
+  useResizeObserver(container, updateHeight)
 
   if (!data) return null
-  return <ResizeSensor onResize={updateHeight}>
-    <div>
-      {Object.entries(data).map(([id, content]) => <React.Fragment key={id}>{content}</React.Fragment>)}
-    </div>
-  </ResizeSensor>
+  return <div ref={container}>
+    {Object.entries(data).map(([id, content]) => <React.Fragment key={id}>{content}</React.Fragment>)}
+  </div>
 }
 
 export function SidebarContext({children}) {
