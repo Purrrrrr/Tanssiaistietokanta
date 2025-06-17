@@ -61,7 +61,7 @@ export function Dialog({isOpen, onClose, children, title, className, showCloseBu
       <>
         <div className={Classes.DIALOG_HEADER}>
           <h1 style={{fontSize: 18}} className={Classes.HEADING}>{title}</h1>
-          {showCloseButton && <button aria-label={closeButtonLabel} className={Classes.BUTTON+' '+Classes.DIALOG_CLOSE_BUTTON+' '+Classes.MINIMAL} onClick={onClose} ref={closeButton}>❌</button>}
+          {showCloseButton && <Button aria-label={closeButtonLabel} minimal onClick={onClose} ref={closeButton}>❌</Button>}
         </div>
         <div className="overflow-auto max-h-[90dvh]">
           {children}

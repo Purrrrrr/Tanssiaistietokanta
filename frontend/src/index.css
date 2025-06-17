@@ -18,6 +18,7 @@
 
   --color-muted: var(--color-gray-500);
   --color-muted-hover: var(--color-gray-700);
+  --color-link: oklch(51.8% 0.158 264.376);
 }
 
 @custom-variant active {
