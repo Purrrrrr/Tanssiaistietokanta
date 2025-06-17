@@ -3,8 +3,8 @@ import { TypedDocumentNode } from '@graphql-typed-document-node/core'
 
 import { Entity, ServiceName } from './types'
 
+import {showErrorToast} from 'libraries/ui'
 import { useTranslation } from 'i18n'
-import {showErrorToast} from 'utils/toaster'
 
 import { apolloClient, ApolloProvider, FetchResult, MutationResult, useMutation, useQuery } from './apollo'
 import { appendToListQuery, filterRemovedFromListQuery } from './apolloCache'

@@ -6,12 +6,11 @@ import { DanceInput, DanceWithEvents } from 'types'
 
 import { filterDances, useCreateDance, useDances } from 'services/dances'
 
-import {Button, Card, SearchBar} from 'libraries/ui'
+import {Button, Card, SearchBar, showToast} from 'libraries/ui'
 import {DanceEditor} from 'components/DanceEditor'
 import {LoadingState, useGlobalLoadingAnimation} from 'components/LoadingState'
 import {PageTitle} from 'components/PageTitle'
 import {useT, useTranslation} from 'i18n'
-import {showToast} from 'utils/toaster'
 import {uploadDanceFile} from 'utils/uploadDanceFile'
 
 function DancesPage() {

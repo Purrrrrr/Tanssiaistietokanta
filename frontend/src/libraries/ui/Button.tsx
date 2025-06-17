@@ -3,6 +3,7 @@ import classNames from 'classnames'
 
 import type { Color } from './types'
 
+import { ColorClass } from './classes'
 import { IconProp, renderIcon } from './Icon'
 
 export const buttonClass = (
@@ -26,13 +27,7 @@ export const buttonClass = (
     } satisfies Record<Color, string>)[color],
   ] : [
     'rounded-xs shadow-xs hover:shadow-xs active:shadow-md shadow-stone-800/30 border-stone-400/40 border-1  hover:bg-darken-6 active:bg-darken-10 disabled:saturate-75',
-    ({
-      none: 'bg-stone-100 text-stone-700',
-      primary: 'bg-blue-600 text-white saturate-65',
-      success: 'bg-lime-700 text-white',
-      danger: ' bg-orange-700 text-white',
-      warning: ' bg-amber-400',
-    } satisfies Record<Color, string>)[color],
+    ColorClass.boxColors[color],
   ],
   active && 'active',
   disabled && 'disabled',

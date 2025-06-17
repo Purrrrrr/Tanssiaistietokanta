@@ -1,5 +1,5 @@
 import FormUiShowcase from 'libraries/formsV2/UiShowcase'
-import { Button, RegularLink, Tab, Tabs } from 'libraries/ui'
+import { Button, RegularLink, showToast, Tab, Tabs } from 'libraries/ui'
 
 import { Showcase } from './Showcase'
 import { titleCase } from './utils/titleCase'
@@ -10,6 +10,12 @@ export default function UiShowcase() {
   return <section>
     <section className="">
       <h1>UI Showcase</h1>
+
+      <div className="flex gap-2">
+        {colors.map(color =>
+          <Button key={color} color={color} onClick={() => showToast({ message: 'This is toast', intent: color })}>Show toast</Button>
+        )}
+      </div>
 
       <RegularLink href="#">
         Link

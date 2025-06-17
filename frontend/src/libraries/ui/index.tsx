@@ -22,6 +22,7 @@ export * from './Icon'
 export { Link, RegularLink } from './Link'
 export { Markdown } from './Markdown'
 export { TagButton } from './Tag'
+export * from './toaster'
 export type { Color } from './types'
 export { Callout, H2, HTMLTable, ProgressBar, SectionCard, Tab, Tabs } from '@blueprintjs/core'
 
