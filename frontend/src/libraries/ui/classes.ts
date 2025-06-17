@@ -10,5 +10,4 @@ export const CssClass = {
 
 export const ColorClass = {
   textMuted: 'text-muted',
-  textMutedInteractive: 'text-muted hover:text-muted-hover',
 }

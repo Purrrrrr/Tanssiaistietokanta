@@ -18,11 +18,11 @@ export const buttonClass = (
   minimal ? [
     'hover:bg-opacity-10 active:bg-opacity-20 disabled:saturate-85',
     ({
-      none: 'bg-transparent-gray-800 text-stone-700 ',
-      primary: 'bg-transparent-blue-600 text-blue-600 saturate-65',
-      success: 'bg-transparent-lime-700 text-lime-700',
-      danger: ' bg-transparent-orange-700 text-orange-700',
-      warning: ' bg-transparent-amber-400 text-amber-400',
+      none: 'bg-var-gray-800 text-stone-700 ',
+      primary: 'bg-var-blue-600 text-blue-600 saturate-65',
+      success: 'bg-var-lime-700 text-lime-700',
+      danger: ' bg-var-orange-700 text-orange-700',
+      warning: ' bg-var-amber-400 text-amber-400',
     } satisfies Record<Color, string>)[color],
   ] : [
     'rounded-xs shadow-xs hover:shadow-xs active:shadow-md shadow-stone-800/30 border-stone-400/40 border-1  hover:bg-darken-6 active:bg-darken-10 disabled:saturate-75',

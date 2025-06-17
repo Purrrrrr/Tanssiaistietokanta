@@ -43,9 +43,9 @@
   --current-bg: --value(--color-*);
   background-color: --value(--color-*);
 }
-@utility bg-transparent-* {
+
+@utility bg-var-* {
   --current-bg: --value(--color-*);
-  background-color: color-mix(in oklch --value(--color-*) 0%, transparent);
 }
 
 @utility bg-darken-* {

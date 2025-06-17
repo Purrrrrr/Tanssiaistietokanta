@@ -21,8 +21,8 @@ export function Breadcrumbs({label}: {label: string}) {
 function Breadcrumb({href, current, text} : Path) {
   return <Link
     className={classNames(
-      'flex items-center ',
-      !current && ColorClass.textMutedInteractive,
+      'flex items-center hover:text-link',
+      !current && ColorClass.textMuted,
       current && 'font-semibold'
     )}
     aria-current={current ? 'page' : undefined}
