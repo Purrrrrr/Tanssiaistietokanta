@@ -135,11 +135,11 @@ function WorkshopInstanceEditor(
         path={`instances.${itemIndex}.dateTime`}
         label={t('dateTime')}
         showTime
-        containerClassName="flex-fill"
+        containerClassName="grow"
         minDate={beginDate}
         maxDate={endDate}
       />
-      <Field component={NumberInput} path={`instances.${itemIndex}.durationInMinutes`} label={t('duration')} containerClassName="flex-fill" />
+      <Field component={NumberInput} path={`instances.${itemIndex}.durationInMinutes`} label={t('duration')} containerClassName="grow" />
       <div>
         {dragHandle}
         {instances.length > 1 && <RemoveItemButton path="instances" index={itemIndex} text="X" />}

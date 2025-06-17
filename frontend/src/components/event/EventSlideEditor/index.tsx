@@ -3,7 +3,7 @@ import React, { ReactNode } from 'react'
 import {Dance} from 'types'
 
 import {DragHandle, formFor, MarkdownEditor, SyncState, SyncStatus} from 'libraries/forms'
-import {Callout, Flex, H2, Icon, Link, RegularLink, SectionCard} from 'libraries/ui'
+import {Callout, H2, Icon, Link, RegularLink, SectionCard} from 'libraries/ui'
 import {DanceEditorContainer} from 'components/DanceEditor'
 import { DanceProgramChooser } from 'components/event/DanceProgramChooser'
 import {
@@ -36,7 +36,7 @@ export function EventSlideEditor({syncStatus, ...props}: EventSlideEditorProps )
 
   return <>
     <SectionCard>
-      <H2 className="flex-fill">
+      <H2 className="grow">
         <T msg={'pages.events.ballProgram.slideProperties'}/>
         {' '}
         {syncStatus && <SyncStatus state={syncStatus}/>}
@@ -44,13 +44,13 @@ export function EventSlideEditor({syncStatus, ...props}: EventSlideEditorProps )
       <p>
         <ParentLink {...props} />
       </p>
-      <Flex spaced wrap>
+      <div className="flex flex-wrap gap-3.5">
         <DanceSelector {...props} />
         <InheritedSlideStyleSelector
           path={slideStylePath}
           text={useTranslation('components.eventProgramEditor.fields.style')}
         />
-      </Flex>
+      </div>
     </SectionCard>
     <EventSlideContentEditor {...props} />
   </>
@@ -171,9 +171,9 @@ const ProgramItem = React.memo(function ProgramEditor({dragHandle, path, itemInd
   if (!item) return null
   const {__typename } = item.item
 
-  return <Flex alignItems='center' spaced className="program-list-item">
+  return <div className="flex items-center gap-3.5 program-list-item">
     <ProgramTypeIcon type={__typename} />
-    <div className="flex-fill item-name">
+    <div className="grow item-name">
       <LinkToSlide id={item._id} hashLink={hashLink}>{programItemToString(item, t)}</LinkToSlide>
     </div>
     <div><Duration value={__typename === 'RequestedDance' ? 0 : item.item.duration} /></div>
@@ -181,7 +181,7 @@ const ProgramItem = React.memo(function ProgramEditor({dragHandle, path, itemInd
       {dragHandle}
       <RemoveItemButton path={path} index={itemIndex} title={t('buttons.remove')} icon="cross" className="deleteItem" />
     </div>
-  </Flex>
+  </div>
 })
 
 function IntervalMusicDescriptionEditor({danceSetIndex}: {danceSetIndex: number}) {

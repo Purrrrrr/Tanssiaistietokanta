@@ -147,7 +147,7 @@ const SlideLink = React.memo(function SlideLink(
     : `/events/${eventId}/program/slides/`
   if (placeholder) {
     return <Link to={`${rootUrl}${slide.id}`} id={`slide-link-${slide.id}`} className={classNames('slide-link', {current})}>
-      <SlideContainer className="flex-fill inert" color="#eee">
+      <SlideContainer className="grow inert" color="#eee">
         <EventSlidePreview {...slide} eventProgram={eventProgram} />
       </SlideContainer>
       <p className="slide-link-title">{slide.title}</p>
@@ -155,7 +155,7 @@ const SlideLink = React.memo(function SlideLink(
   }
 
   return <Link to={`${rootUrl}${slide.id}`} id={`slide-link-${slide.id}`} className={classNames('slide-link', {current})}>
-    <SlideContainer className="flex-fill inert" color="#eee">
+    <SlideContainer className="grow inert" color="#eee">
       <EventSlide {...slide} eventProgram={eventProgram} linkComponent="a" />
     </SlideContainer>
     <p className="slide-link-title">{slide.title}</p>
@@ -170,7 +170,7 @@ interface SlideBoxProps {
 const SlideBox = React.memo(function SlideBox({eventProgram, slide}: SlideBoxProps) {
   return <Card id={slide.id}>
     <div className="flex flex-wrap">
-      <SlideContainer className="flex-fill inert" size="auto" color="#eee">
+      <SlideContainer className="grow inert" size="auto" color="#eee">
         <EventSlide {...slide} eventProgram={eventProgram} linkComponent="a" />
       </SlideContainer>
       <div className="eventSlideEditor">

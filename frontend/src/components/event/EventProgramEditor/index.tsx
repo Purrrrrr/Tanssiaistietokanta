@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import {Event} from 'types'
 
 import {ActionButton as Button, DragHandle, ListEditorContext, SyncStatus} from 'libraries/forms'
-import {Card, ColorClass, Flex, HTMLTable, Tab, Tabs} from 'libraries/ui'
+import {Card, ColorClass, HTMLTable, Tab, Tabs} from 'libraries/ui'
 import { DanceProgramChooser } from 'components/event/DanceProgramChooser'
 import {
   DanceProgramPath,
@@ -62,7 +62,7 @@ export function EventProgramEditor({event}: EventProgramEditorProps) {
     <BackLink to="..">{useTranslation('pages.events.eventProgramPage.backToEvent')}</BackLink>
     <h1>
       {useTranslation('pages.events.eventProgramPage.pageTitle')}
-      <SyncStatus style={{marginLeft: '1ch', top: '3px'}} className="flex-fill" state={state} />
+      <SyncStatus style={{marginLeft: '1ch', top: '3px'}} className="grow" state={state} />
     </h1>
     <Tabs id="programEditorTabs" renderActiveTabPanelOnly selectedTabId={tabId ?? 'main'} onChange={changeTab}>
       <Tab id="main" title="Tanssiohjelma" panel={<MainEditor program={value} workshops={event.workshops} />} />
@@ -99,11 +99,11 @@ function IntroductoryInformation() {
   if (infos.length === 0) return null
 
   return <Card className="danceset">
-    <Flex className="sectionTitleRow">
+    <div className="flex sectionTitleRow">
       <h2>
         <span>{t('titles.introductoryInformation')}</span>
       </h2>
-    </Flex>
+    </div>
     <ProgramListEditor path="introductions" />
   </Card>
 }
@@ -112,13 +112,13 @@ const DanceSetEditor = React.memo(function DanceSetEditor({itemIndex, dragHandle
   const id = useValueAt(`danceSets.${itemIndex}._id`)
 
   return <Card className="danceset" id={id}>
-    <Flex className="sectionTitleRow">
+    <div className="flex sectionTitleRow">
       <h2>
         <DanceSetNameEditor itemIndex={itemIndex} />
       </h2>
       {dragHandle}
       <RemoveItemButton path="danceSets" index={itemIndex} className="delete" text={useTranslation('components.eventProgramEditor.buttons.removeDanceSet')} />
-    </Flex>
+    </div>
     <ProgramListEditor path={`danceSets.${itemIndex}`} />
   </Card>
 })
@@ -234,9 +234,9 @@ const ProgramItemEditor = React.memo(function ProgramItemEditor({dragHandle, pat
       <ProgramTypeIcon type={__typename} />
     </td>
     <td>
-      <Flex className="eventProgramItemEditor">
+      <div className="flex eventProgramItemEditor">
         <ProgramDetailsEditor path={itemPath} />
-      </Flex>
+      </div>
     </td>
     <td className="add-spacing">
       <Duration value={__typename !== 'RequestedDance' ? item.item.duration : 0} />
@@ -271,12 +271,12 @@ function ProgramDetailsEditor({path}: {path: ProgramItemPath}) {
 function DanceItemEditor({path}: {path: DanceProgramPath}) {
   const t = useT('components.eventProgramEditor')
   const item = useValueAt(`${path}.item`)
-  return <Flex className="eventProgramItemEditor">
+  return <div className="flex eventProgramItemEditor">
     <Field label={t('dance')} labelStyle="hidden" path={`${path as DanceProgramPath}.item`} component={DanceProgramChooser} />
     {item.__typename === 'Dance' && item.teachedIn?.map(workshop =>
       <WorkshopTag key={workshop._id} name={workshop.workshop.name} />
     )}
-  </Flex>
+  </div>
 }
 
 function WorkshopTag({name} : { name: string}) {
@@ -294,9 +294,9 @@ function WorkshopTag({name} : { name: string}) {
 
 function EventProgramItemEditor({path}: {path: ProgramItemPath}) {
   const t = useT('components.eventProgramEditor')
-  return <Flex className="eventProgramItemEditor">
+  return <div className="flex eventProgramItemEditor">
     <Input label={t('fields.eventProgram.name')} labelStyle="hidden" path={`${path}.item.name`} required />
-  </Flex>
+  </div>
 }
 
 function IntervalMusicEditor({danceSetPath}: {danceSetPath: DanceSetPath}) {

@@ -9,7 +9,7 @@ import { useDeleteDance, usePatchDance } from 'services/dances'
 
 import {formFor, MarkdownEditor, patchStrategy, SyncStatus, useAutosavingState} from 'libraries/forms'
 import { Select } from 'libraries/formsV2/components/inputs'
-import {Button, Flex, H2, Icon, Link, RegularLink} from 'libraries/ui'
+import {Button, H2, Icon, Link, RegularLink} from 'libraries/ui'
 import {DanceDataImportButton} from 'components/DanceDataImportDialog'
 import {useGlobalLoadingAnimation} from 'components/LoadingState'
 import { useVersionedName } from 'components/versioning/VersionedPageTitle'
@@ -113,15 +113,15 @@ export function DanceEditorContainer({dance, children, toolbar, titleComponent: 
 
   const {formProps, state} = useAutosavingState<EditableDance, Partial<EditableDance>>(editedDance, patchDance, patchStrategy.partial)
   return <Form {...formProps} readOnly={readOnly}>
-    <Flex wrap spaced alignItems="center" justify="end">
-      <Title>
+    <div className="flex flex-wrap gap-3.5 justify-end items-center">
+      <Title className="m-0">
         {useVersionedName(dance.name, dance._versionId ? dance._versionNumber : null)}
       </Title>
-      <SyncStatus style={{marginLeft: '1ch', top: '3px'}} className="flex-fill" state={state} />
-      <Flex alignItems="center" style={{marginTop: '10px'}}>
+      <SyncStatus className="top-[3px] grow" state={state} />
+      <div className="flex items-center mt-2.5">
         {toolbar}
-      </Flex>
-    </Flex>
+      </div>
+    </div>
     {children}
   </Form>
 }
