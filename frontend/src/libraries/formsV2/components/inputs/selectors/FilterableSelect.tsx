@@ -1,10 +1,10 @@
 import { KeyboardEvent, useRef } from 'react'
-import {Classes} from '@blueprintjs/core'
 import { useCombobox, UseComboboxState, UseComboboxStateChangeOptions } from 'downshift'
 
 import { SelectorProps } from './types'
 
 import { Dropdown, DropdownContainer } from 'libraries/overlays'
+import { CssClass } from 'libraries/ui'
 
 import { DropdownButton } from './DropdownButton'
 import { Menu, MenuItem, toMenuItemProps } from './Menu'
@@ -63,7 +63,7 @@ export default function FilterableSelect<T>(props: SelectorProps<T>) {
       <input
         tabIndex={isOpen ? 0 : -1}
         placeholder={filterPlaceholder}
-        className={Classes.INPUT+' w-full'}
+        className={CssClass.input+' w-full'}
         {...getInputProps({ onKeyDown: disableHomeAndEndKeys }, { suppressRefError: true })}
         onClick={undefined}
       />

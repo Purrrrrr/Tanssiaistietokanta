@@ -1,10 +1,10 @@
-import { Classes } from '@blueprintjs/core'
 import { useCombobox } from 'downshift'
 
 import { SelectorProps } from './types'
 import { FieldInputComponent } from '../types'
 
 import { Dropdown, DropdownContainer } from 'libraries/overlays'
+import { CssClass } from 'libraries/ui'
 
 import { Menu, MenuItem, toMenuItemProps } from './Menu'
 import { acceptNulls, preventDownshiftDefaultWhen, useFilteredItems } from './utils'
@@ -73,7 +73,7 @@ export function AutocompleteInput<T>(props: AutocompleteInputProps<T>) {
   }
 
   return <DropdownContainer className={containerClassname}>
-    <input className={Classes.INPUT + ' ' + Classes.FILL} {...inputProps} />
+    <input className={CssClass.input} {...inputProps} />
     <Dropdown open={isOpen} tabIndex={-1}>
       <Menu {...getMenuProps({}, { suppressRefError: true })} tabIndex={-1}>
         {filteredItems.map((item, index) => (

@@ -1,15 +1,16 @@
 import {ComponentProps} from 'react'
-import {Classes} from '@blueprintjs/core'
 import classNames from 'classnames'
 
 import type { FieldInputComponent } from './types'
+
+import { CssClass } from 'libraries/ui'
 
 export type TextInputExtraProps = ComponentProps<'input'>
 
 export const TextInput : FieldInputComponent<string, TextInputExtraProps> = ({value, onChange, className, inline, ...rest}) =>
   <input
     value={value ?? ''}
-    className={classNames(className, Classes.INPUT, inline || Classes.FILL)}
+    className={classNames(className, CssClass.input, inline || 'w-full grow')}
     onKeyDown={e => (e.key === 'Escape' || e.key === 'Enter') && (e.target as HTMLInputElement).blur()}
     onChange={e => onChange(e.target.value)}
     {...rest}
