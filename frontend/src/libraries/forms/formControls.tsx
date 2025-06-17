@@ -13,7 +13,7 @@ export function SubmitButton({disabled, ...props} : ButtonProps) {
   const formIsValid = useFormIsValid()
   const {readOnly} = useFormMetadata()
   if (readOnly) return null
-  return <ActionButton type="submit" intent="primary"
+  return <ActionButton type="submit" color="primary"
     disabled={!formIsValid || disabled} {...props} />
 }
 
@@ -24,7 +24,7 @@ export interface RemoveItemButtonProps<T> extends ButtonProps {
 
 export function RemoveItemButton<T>({path, index, onClick, ...props}: RemoveItemButtonProps<T>) {
   const onRemove = useRemoveFromList<T>(path, index)
-  return <ActionButton onClick={(e) => { onRemove(); if (onClick) onClick(e) } } intent="danger" {...props} />
+  return <ActionButton onClick={(e) => { onRemove(); if (onClick) onClick(e) } } color="danger" {...props} />
 }
 
 export function ActionButton(props : ButtonProps) {

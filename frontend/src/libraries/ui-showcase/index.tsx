@@ -19,13 +19,14 @@ export default function UiShowcase() {
         title="Button"
         propDefs={{
           disabled: { type: 'boolean' },
+          minimal: { type: 'boolean' },
           icon: { type: 'boolean', default: true },
         }}
       >
-        {({ disabled, icon }) =>
+        {({ disabled, icon, minimal }) =>
           <div className="flex gap-2">
             {colors.map(color =>
-              <Button key={color} intent={color} icon={icon ? 'trash' : undefined} disabled={disabled as boolean} >{titleCase(color)}</Button>
+              <Button key={color} color={color} minimal={minimal as boolean} icon={icon ? 'trash' : undefined} disabled={disabled as boolean} >{titleCase(color)}</Button>
             )}
           </div>
         }

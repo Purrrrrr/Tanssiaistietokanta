@@ -121,11 +121,11 @@ function ShowcaseContents() {
         <Flex>
           <Field.Text label="Value" inline labelStyle="beside" path={`${path}.${index}.value`} />
           {dragHandle}
-          <Button intent="danger" icon="cross" onClick={onRemove} />
+          <Button color="danger" icon="cross" onClick={onRemove} />
         </Flex>
       }
     </RepeatingSection>
-    <Button intent="primary" icon="edit" onClick={() => addItem('l', { _id: id(), value: '' })} />
+    <Button color="primary" icon="edit" onClick={() => addItem('l', { _id: id(), value: '' })} />
     <Select
       aria-label="jotakin"
       items={choices}
@@ -141,11 +141,11 @@ function ShowcaseContents() {
         <Flex>
           <Field.Text label="Value" inline labelStyle="beside" path={`${path}.${index}.value`} />
           {dragHandle}
-          <Button intent="danger" icon="cross" onClick={onRemove} />
+          <Button color="danger" icon="cross" onClick={onRemove} />
         </Flex>
       }
     </RepeatingSection>
-    <Button intent="primary" icon="edit" onClick={() => addItem('l2', { _id: id(), value: '' })} />
+    <Button color="primary" icon="edit" onClick={() => addItem('l2', { _id: id(), value: '' })} />
     <table>
       <RepeatingTableRows<L> path="l">
         {({ dragHandle, value, onRemove }) =>
@@ -154,7 +154,7 @@ function ShowcaseContents() {
             <td>{value.value}</td>
             <td>
               {dragHandle}
-              <Button intent="danger" icon="cross" onClick={onRemove} />
+              <Button color="danger" icon="cross" onClick={onRemove} />
             </td>
           </>
         }

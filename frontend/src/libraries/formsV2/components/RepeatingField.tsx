@@ -23,7 +23,7 @@ export function RepeatingField<Output extends Input & ListItem, Extra, Input, Da
           component={component}
           {...extra as Extra & Omit<ConnectedFieldProps<Output, Extra, Input, Data>, 'path' | 'component'>} />
         {dragHandle}
-        <Button intent="danger" icon="cross" onClick={onRemove} />
+        <Button color="danger" icon="cross" onClick={onRemove} />
       </Flex>
     }
   </RepeatingSection>

@@ -142,7 +142,7 @@ function InstructionsForDance({dance, showShortInstructions} : {dance: Dance, sh
       {dance.name}
       <DanceDataImportButton dance={dance} minimal />
       <Button
-        intent="primary"
+        color="primary"
         minimal
         icon="edit"
         aria-label={useTranslation(editorOpen ? 'common.closeEditor' : 'common.edit')}

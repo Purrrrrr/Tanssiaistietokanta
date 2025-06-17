@@ -16,7 +16,7 @@ export function DeleteButton({onDelete, disabled, className, text, confirmText} 
   const t = useT('components.deleteButton')
   const [showDialog, setShowDialog] = useState(false)
   return <>
-    <Button className={className} icon="trash" text={text} disabled={disabled} intent="danger" onClick={() => setShowDialog(true)}/>
+    <Button className={className} icon="trash" text={text} disabled={disabled} color="danger" onClick={() => setShowDialog(true)}/>
     <Alert title={text} isOpen={showDialog} onClose={() => setShowDialog(false)}
       onConfirm={onDelete}
       intent="danger"

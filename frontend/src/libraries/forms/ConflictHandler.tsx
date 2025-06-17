@@ -24,12 +24,12 @@ export function ConflictHandler({localValue, serverValue, onResolve}: ConflictDa
         <div>
           {strings.server}
           {serverValue}
-          <Button intent="primary" text={strings.chooseThis} onClick={() => onResolve('SERVER')} />
+          <Button color="primary" text={strings.chooseThis} onClick={() => onResolve('SERVER')} />
         </div>
         <div>
           {strings.local}
           {localValue}
-          <Button intent="primary" text={strings.chooseThis} onClick={() => onResolve('LOCAL')} />
+          <Button color="primary" text={strings.chooseThis} onClick={() => onResolve('LOCAL')} />
         </div>
       </div>
     </MenuButton>

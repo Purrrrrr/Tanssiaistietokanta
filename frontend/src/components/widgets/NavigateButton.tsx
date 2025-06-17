@@ -12,15 +12,15 @@ interface NavigateButtonProps extends Omit<React.ComponentProps<typeof Link>, 't
   adminOnly?: boolean,
   disabled?: boolean,
   href: string,
-  intent?: Color,
+  color?: Color,
   className?: string,
 }
 
-export function NavigateButton({text, children, icon, adminOnly, disabled, href, intent, className, ...props} : NavigateButtonProps) {
+export function NavigateButton({text, children, icon, adminOnly, disabled, href, color, className, ...props} : NavigateButtonProps) {
   const isAdmin = useIsAdmin()
   if (adminOnly && !isAdmin) return null
 
-  const classes = buttonClass(intent ?? 'none', { className, disabled })
+  const classes = buttonClass(color ?? 'none', { className, disabled })
 
   const onClick = props.onClick ??
     (props.target ==='_blank' ? openLinkWithTarget : undefined)

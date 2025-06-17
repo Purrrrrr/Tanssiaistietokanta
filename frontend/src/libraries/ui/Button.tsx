@@ -14,18 +14,26 @@ export const buttonClass = (
     className?: string
   }
 ) => classNames(
-  minimal
-    ? 'bg-transparent text-stone-700 hover:bg-gray-800/10 active:bg-gray-800/20'
-    : ({
+  'cursor-pointer transition-colors disabled:cursor-not-allowed disabled:opacity-50 py-[5px] px-2 text-center inline-flex gap-1.5 items-center',
+  minimal ? [
+    'hover:bg-opacity-10 active:bg-opacity-20 disabled:saturate-85',
+    ({
+      none: 'bg-transparent-gray-800 text-stone-700 ',
+      primary: 'bg-transparent-blue-600 text-blue-600 saturate-65',
+      success: 'bg-transparent-lime-700 text-lime-700',
+      danger: ' bg-transparent-orange-700 text-orange-700',
+      warning: ' bg-transparent-amber-400 text-amber-400',
+    } satisfies Record<Color, string>)[color],
+  ] : [
+    'rounded-xs shadow-xs hover:shadow-xs active:shadow-md shadow-stone-800/30 border-stone-400/40 border-1  hover:bg-darken-6 active:bg-darken-10 disabled:saturate-75',
+    ({
       none: 'bg-stone-100 text-stone-700',
       primary: 'bg-blue-600 text-white saturate-65',
       success: 'bg-lime-700 text-white',
       danger: ' bg-orange-700 text-white',
       warning: ' bg-amber-400',
     } satisfies Record<Color, string>)[color],
-  'py-[5px] px-2 text-center inline-flex gap-1.5 items-center',
-  !minimal && 'rounded-xs shadow-xs hover:shadow-xs active:shadow-md shadow-stone-800/30 border-stone-400/40 border-1  hover:bg-darken-6 active:bg-darken-10',
-  'cursor-pointer transition-colors disabled:cursor-not-allowed disabled:opacity-50 disabled:saturate-75',
+  ],
   active && 'active',
   disabled && 'disabled',
   className,
@@ -35,7 +43,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   text?: React.ReactNode
   icon?: IconProp
   rightIcon?: IconProp
-  intent?: Color
+  color?: Color
   minimal?: boolean
   active?: boolean
 }
@@ -45,7 +53,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     type = 'button',
     children,
     text,
-    intent = 'none',
+    color = 'none',
     active,
     icon,
     rightIcon,
@@ -53,7 +61,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     className,
     ...rest
   } = props
-  return <button ref={ref} type={type} className={buttonClass(intent, {active, className, minimal})} {...rest}>
+  return <button ref={ref} type={type} className={buttonClass(color, {active, className, minimal})} {...rest}>
     {renderIcon(icon)}
     {text}
     {children}

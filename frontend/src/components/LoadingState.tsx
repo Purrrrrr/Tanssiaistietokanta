@@ -94,7 +94,7 @@ export function LoadingState<Variables>({loading, error, refetch} : LoadingState
         <Button
           text={t('tryAgain')}
           onClick={() => refetch()}
-          intent="primary"
+          color="primary"
         />
       }
     </div>

@@ -30,7 +30,7 @@ QRCode.pluginName = 'qrcode'
 function HelpLink() {
   return (
     <AnchorButton
-      intent="primary"
+      color="primary"
       className="p-2"
       target="_blank"
       href={useFormTranslation('markdownEditor.helpUrl')}

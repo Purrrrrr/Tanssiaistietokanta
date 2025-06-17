@@ -35,6 +35,6 @@ export default function EventList() {
         </li>
       )}
     </ul>
-    <NavigateButton adminOnly intent="primary" href="events/new" text={t('createEvent')} />
+    <NavigateButton adminOnly color="primary" href="events/new" text={t('createEvent')} />
   </>
 }

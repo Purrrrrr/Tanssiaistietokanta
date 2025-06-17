@@ -136,7 +136,7 @@ function DanceSetNameEditor({ itemIndex } : { itemIndex: number }) {
       : name
     }
     <Button
-      intent="primary"
+      color="primary"
       minimal
       icon={editingName ? 'cross' : 'edit' }
       title={buttonTitle}
@@ -312,7 +312,7 @@ function IntervalMusicEditor({danceSetPath}: {danceSetPath: DanceSetPath}) {
       <Field label={t('fields.intervalMusicDuration')} inline labelStyle="hidden" path={durationPath} component={DurationField} />
     </td>
     <td>
-      <Button title={t('buttons.remove')} intent="danger" icon="cross" onClick={() => onSetIntervalMusic(null)} className="delete" />
+      <Button title={t('buttons.remove')} color="danger" icon="cross" onClick={() => onSetIntervalMusic(null)} className="delete" />
     </td>
   </tr>
 }

@@ -90,7 +90,7 @@ export function Alert({isOpen, title, intent, confirmButtonText, cancelButtonTex
     </div>
     <div className={Classes.DIALOG_FOOTER}>
       <div className={Classes.ALERT_FOOTER}>
-        <Button intent={intent} text={confirmButtonText} onClick={doConfirm} />
+        <Button color={intent} text={confirmButtonText} onClick={doConfirm} />
         {cancelButtonText && <Button text={cancelButtonText} onClick={doCancel} />}
       </div>
     </div>

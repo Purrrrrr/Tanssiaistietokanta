@@ -43,9 +43,17 @@
   --current-bg: --value(--color-*);
   background-color: --value(--color-*);
 }
+@utility bg-transparent-* {
+  --current-bg: --value(--color-*);
+  background-color: color-mix(in oklch --value(--color-*) 0%, transparent);
+}
 
 @utility bg-darken-* {
   background-color: oklch(from var(--current-bg) calc(l - calc(--value(integer) / 100)) c h);
+}
+
+@utility bg-opacity-* {
+  background-color: oklch(from var(--current-bg) l c h / calc(--value(integer) / 100));
 }
 
 body {

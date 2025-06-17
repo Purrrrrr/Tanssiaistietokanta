@@ -98,7 +98,7 @@ function EventProgram({program, readOnly}: {program: EventProgramType, readOnly:
   if (!program || program.danceSets.length === 0) {
     return <>
       <p>{t('noProgram')}</p>
-      {readOnly || <NavigateButton adminOnly intent="primary" href="program" text={t('addProgram')} />}
+      {readOnly || <NavigateButton adminOnly color="primary" href="program" text={t('addProgram')} />}
     </>
   }
 
@@ -114,7 +114,7 @@ function EventProgram({program, readOnly}: {program: EventProgramType, readOnly:
     <p>
       {readOnly
         ? <NavigateButton adminOnly href="program" text={t('viewProgram')} />
-        : <NavigateButton adminOnly intent="primary" href="program" text={t('editProgram')} />}
+        : <NavigateButton adminOnly color="primary" href="program" text={t('editProgram')} />}
       <NavigateButton href="print/ball-dancelist" target="_blank"
         text={t('printBallDanceList')} />
       <NavigateButton href="ball-program" target="_blank"
@@ -172,7 +172,7 @@ function CreateWorkshopButton({eventId, startDate}) {
   return <AdminOnly>
     <Button
       onClick={() => addLoadingAnimation(createWorkshop(newWorkshop({eventId, name: t('newWorkshop')}, startDate)))}
-      intent="primary"
+      color="primary"
       text={t('createWorkshop')}
     />
   </AdminOnly>
