@@ -18,7 +18,7 @@ export function AutocompleteInput<T>(props: AutocompleteInputProps<T>) {
   const {
     items, itemToString = String,
     value, onChange, id, readOnly,
-    placeholder = '', containerClassname,
+    placeholder = '', containerClassname, inline,
   } = props
   const valueToString = acceptNulls(itemToString)
   const [filteredItems, updateFilter] = useFilteredItems(items, itemToString)
@@ -72,7 +72,7 @@ export function AutocompleteInput<T>(props: AutocompleteInputProps<T>) {
     })
   }
 
-  return <DropdownContainer className={containerClassname}>
+  return <DropdownContainer className={containerClassname ?? (inline ? undefined : 'grow f-full')}>
     <input className={CssClass.input+' w-full'} {...inputProps} />
     <Dropdown open={isOpen} tabIndex={-1}>
       <Menu {...getMenuProps({}, { suppressRefError: true })} tabIndex={-1}>

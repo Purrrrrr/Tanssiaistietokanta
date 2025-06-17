@@ -55,7 +55,6 @@ export function DanceChooser({
     }
   }
   return <AutocompleteInput<DanceChooserOption>
-    containerClassname="w-full"
     placeholder={placeholder ?? t('searchDance')}
     id={id}
     items={getItems}
