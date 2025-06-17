@@ -1,15 +1,13 @@
 import {useRef, useState} from 'react'
-import { ResizeSensor, ResizeSensorProps } from '@blueprintjs/core'
 
-import './AutosizedSection.sass'
-
-type ResizeEntry = Parameters<ResizeSensorProps['onResize']>[0][number]
+import { useResizeObserver } from './utils/useResizeObserver'
 
 export function AutosizedSection({children, className = '', ...props}) {
   const container = useRef<HTMLElement>(null)
+  const innerContainer = useRef<HTMLDivElement>(null)
   const [size, setSize] = useState(1)
 
-  const onResize = ([e]: ResizeEntry[]) => {
+  const onResize : ResizeObserverCallback = ([e]) => {
     if (e.contentBoxSize === null || container.current === null) return
     const innerSize = e.contentBoxSize[0]
     const containerStyle = getComputedStyle(container.current)
@@ -24,10 +22,9 @@ export function AutosizedSection({children, className = '', ...props}) {
 
     setSize(1 / overFlowAmount)
   }
+  useResizeObserver(innerContainer, onResize)
 
-  return <section className={'autosized-section '+ className} ref={container} {...props}>
-    <ResizeSensor onResize={onResize}>
-      <div className="autosized-section-inner" style={{scale: `${size}`}}>{children}</div>
-    </ResizeSensor>
+  return <section className={'max-w-full overflow-hidden '+ className} ref={container} {...props}>
+    <div ref={innerContainer} className="relative left-1/2 -translate-x-1/2 w-fit h-fit origin-top" style={{scale: `${size}`}}>{children}</div>
   </section>
 }

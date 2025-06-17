@@ -44,6 +44,15 @@
   * Showcase component
     Clean up
     Add libraries/ui stuff
+    * AutosizedSection
+      NonIdealState
+      Global loading indicator
+      Collapse
+      TagButton
+      AnchorButton
+      Breadcrumbs?
+      Dialog?
+
   Blueprintjs migration
   * Tag
   * Menu
@@ -52,12 +61,14 @@
     Icon loading components
     * AnchorButton
     * Toast
-      Icon
-      Tab, Tabs
       Callout
+      Tab, Tabs
+      Icon
     SectionCard
     ProgressBar
     H2
+    Input
+    FormGroup
     HTMLTable
     Check todo markings in Button.tsx or other
 * Add loading animation to more pages

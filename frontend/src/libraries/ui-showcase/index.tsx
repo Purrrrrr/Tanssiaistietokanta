@@ -1,5 +1,5 @@
 import FormUiShowcase from 'libraries/formsV2/UiShowcase'
-import { Button, RegularLink, showToast, Tab, Tabs } from 'libraries/ui'
+import { AutosizedSection, Button, RegularLink, showToast, Tab, Tabs } from 'libraries/ui'
 
 import { Showcase } from './Showcase'
 import { titleCase } from './utils/titleCase'
@@ -48,6 +48,34 @@ export default function UiShowcase() {
             <Tab id="tab2" title="Tab2" panel={<p>Panel 2</p>} />
             <Tab id="tab3" title="Tab3" panel={<p>Panel 3</p>} />
           </Tabs>
+        }
+      </Showcase>
+      <Showcase
+        title="Autosized section"
+        propDefs={{
+          lines: {
+            type: 'number',
+            default: 1,
+            min: 0,
+          },
+          cols: {
+            type: 'number',
+            default: 1,
+            min: 0,
+          },
+        }}
+      >
+        {({ cols, lines }) =>
+          <AutosizedSection className="bg-gray-200 size-50">
+            <div className="flex">
+              {Array(cols).fill(0).map((_, i) =>
+                <div key={i}>
+                  {Array(lines).fill(0).map((_, i) => <p key={i}>Lorem ipsum lorem ipsum</p>)}
+
+                </div>
+              )}
+            </div>
+          </AutosizedSection>
         }
       </Showcase>
     </section>

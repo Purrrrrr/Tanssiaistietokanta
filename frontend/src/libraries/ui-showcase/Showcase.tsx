@@ -1,7 +1,7 @@
 import { ReactNode, useId, useState } from 'react'
 
 import { Switch, TextInput } from 'libraries/formsV2/components/inputs'
-import { Card } from 'libraries/ui'
+import { Card, CssClass } from 'libraries/ui'
 
 interface ShowcaseProps<P extends PropDefs> {
   title: string
@@ -13,7 +13,7 @@ export type PropDefs = Record<string, PropDef>
 type PropDef =
   | { type: 'string', default?: string }
   | { type: 'boolean', default?: boolean }
-  | { type: 'number', default?: number }
+  | { type: 'number', default?: number, min?: number }
 
 type PropTypes<P extends PropDefs> = {
   [K in keyof P]: PropType<P[K]>
@@ -50,7 +50,7 @@ function defaultValue(def: PropDef) {
     case 'boolean':
       return def.default ?? false
     case 'number':
-      return def.default ?? 0
+      return def.default ?? def.min ?? 0
   }
 }
 
@@ -66,7 +66,7 @@ function PropField<P extends PropDef>({def, label, value, onChange}: PropFieldPr
   switch(def.type) {
     case 'string':
       return <div>
-        <label htmlFor={id}>{label}</label>
+        <label className="p-2" htmlFor={id}>{label}</label>
         <TextInput id={id} value={value as string} onChange={onChange} />
       </div>
     case 'boolean':
@@ -75,8 +75,8 @@ function PropField<P extends PropDef>({def, label, value, onChange}: PropFieldPr
       </div>
     case 'number':
       return <div>
-        <label htmlFor={id}>{label}</label>
-        <input type="number" id={id} value={value as number} onChange={e => onChange(parseFloat(e.target.value))} />
+        <label className="p-2" htmlFor={id}>{label}</label>
+        <input type="number" className={CssClass.input} id={id} value={value as number} min={def.min} onChange={e => onChange(parseFloat(e.target.value))} />
       </div>
   }
 }

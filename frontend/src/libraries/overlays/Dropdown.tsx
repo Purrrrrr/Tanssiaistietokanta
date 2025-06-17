@@ -1,6 +1,8 @@
-import { type ReactNode, MouseEventHandler, useCallback, useEffect, useLayoutEffect, useRef } from 'react'
+import { type ReactNode, MouseEventHandler, useCallback, useLayoutEffect, useRef } from 'react'
 import { forwardRef } from 'react'
 import { useScrollPosition } from '@n8tb1t/use-scroll-position'
+
+import { useResizeObserver } from 'libraries/ui'
 
 import { Popover } from './unstyled/Popover'
 
@@ -122,14 +124,3 @@ function updateDropdownPosition(element: HTMLDivElement, anchorElement: Element,
 
 const toPx = (value: number) => `${value}px`
 const clamp = ({value, min = -Infinity, max = Infinity}: { value: number, min?: number, max?: number}) => Math.min(max, Math.max(min, value))
-
-function useResizeObserver(element: { current: HTMLDivElement | null }, callback: () => void) {
-  useEffect(() => {
-    if (!element.current) return
-
-    const observer = new ResizeObserver(callback)
-    observer.observe(element.current)
-
-    return () => observer.disconnect()
-  }, [element, callback])
-}
