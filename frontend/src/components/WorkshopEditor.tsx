@@ -6,7 +6,7 @@ import {Event} from 'types'
 import {usePatchWorkshop} from 'services/workshops'
 
 import {ActionButton as Button, DateField, DragHandle, formFor, NumberInput, patchStrategy, SyncStatus, TextArea, useAutosavingState} from 'libraries/forms'
-import {Flex, FormGroup} from 'libraries/ui'
+import {ColorClass, Flex, FormGroup} from 'libraries/ui'
 import {DanceChooser} from 'components/widgets/DanceChooser'
 import {useT, useTranslation} from 'i18n'
 import { guid } from 'utils/guid'
@@ -164,7 +164,7 @@ function DanceList({instanceIndex, bigTitle}: {instanceIndex: number, bigTitle?:
       component={DanceListItem}
       renderConflictItem={item => item.name}
     />
-    {!dances?.length && <p className="my-2 text-gray-500">{t('noDances')}</p>}
+    {!dances?.length && <p className={`my-2 ${ColorClass.textMuted}`}>{t('noDances')}</p>}
     <AddDanceChooser instance={instanceIndex} />
   </>
 

@@ -1,4 +1,6 @@
-import {BreadcrumbContext, Link, RegularLink} from 'libraries/ui'
+import classNames from 'classnames'
+
+import {BreadcrumbContext, ColorClass, Link, RegularLink} from 'libraries/ui'
 import {T, useTranslation} from 'i18n'
 
 import DebugManager from './DebugManager'
@@ -32,7 +34,7 @@ function NavigationLayout({children}) {
           <aside>
             <SidebarContainer />
           </aside>
-          <footer>
+          <footer className={classNames(ColorClass.textMuted, 'text-right p-1')}>
             {process.env.NODE_ENV === 'development' &&
               <Link className="px-1 mr-1 border-gray-400 border-e" to="/ui-showcase">UI Showcase</Link>}
             <T msg="app.title" /> v. {process.env.REACT_APP_BUILD_TIME ?? 'DEV'}-{process.env.REACT_APP_COMMIT_REV ?? 'HEAD'}

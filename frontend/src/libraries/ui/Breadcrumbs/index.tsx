@@ -1,6 +1,7 @@
 import {Link} from 'react-router-dom'
 import classNames from 'classnames'
 
+import { ColorClass } from '../classes'
 import {Path, useBreadcrumbPaths} from './context'
 
 export {Breadcrumb, BreadcrumbContext} from './context'
@@ -21,7 +22,7 @@ function Breadcrumb({href, current, text} : Path) {
   return <Link
     className={classNames(
       'flex items-center ',
-      !current && 'text-gray-500 hover:text-gray-700',
+      !current && ColorClass.textMutedInteractive,
       current && 'font-semibold'
     )}
     aria-current={current ? 'page' : undefined}

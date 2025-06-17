@@ -1,4 +1,4 @@
-import { type ReactNode, FocusEventHandler, MouseEventHandler, useCallback, useEffect, useLayoutEffect, useRef } from 'react'
+import { type ReactNode, MouseEventHandler, useCallback, useEffect, useLayoutEffect, useRef } from 'react'
 import { forwardRef } from 'react'
 import { useScrollPosition } from '@n8tb1t/use-scroll-position'
 
