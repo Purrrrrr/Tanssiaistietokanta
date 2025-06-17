@@ -20,10 +20,10 @@ export const ColorClass = {
     warning: ' bg-amber-400',
   } satisfies Record<Color, string>,
   lightBoxColors: {
-    none: 'bg-white text-stone-700',
-    primary: 'bg-blue-200 text-white saturate-65',
-    success: 'bg-lime-200 text-white',
-    danger: ' bg-orange-200 text-white',
-    warning: ' bg-amber-100',
+    none: 'bg-gray-100 text-stone-700',
+    primary: 'bg-blue-50 text-blue-800 saturate-65',
+    success: 'bg-green-50 text-lime-800',
+    danger: ' bg-red-50 text-red-800',
+    warning: ' bg-amber-100 text-amber-800',
   } satisfies Record<Color, string>,
 }

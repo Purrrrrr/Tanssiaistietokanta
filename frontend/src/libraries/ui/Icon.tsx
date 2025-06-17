@@ -9,7 +9,7 @@ import { Color } from './types'
 export type IconProp = IconName | ReactElement | undefined
 
 export type IconName =
-  'arrow-left'
+  | 'arrow-left'
   | 'caret-down'
   | 'chevron-left'
   | 'chevron-right'
@@ -30,8 +30,10 @@ export type IconName =
   | 'search'
   | 'settings'
   | 'style'
+  | 'tick'
   | 'time'
   | 'trash'
+  | 'warning-sign'
 
 const iconModules = {
   'arrow-left/16': () => import('@blueprintjs/icons/lib/esm/generated/16px/paths/arrow-left'),
@@ -76,10 +78,14 @@ const iconModules = {
   'settings/20': () => import('@blueprintjs/icons/lib/esm/generated/20px/paths/settings'),
   'style/16': () => import('@blueprintjs/icons/lib/esm/generated/16px/paths/style'),
   'style/20': () => import('@blueprintjs/icons/lib/esm/generated/20px/paths/style'),
+  'tick/16': () => import('@blueprintjs/icons/lib/esm/generated/16px/paths/tick'),
+  'tick/20': () => import('@blueprintjs/icons/lib/esm/generated/20px/paths/tick'),
   'time/16': () => import('@blueprintjs/icons/lib/esm/generated/16px/paths/time'),
   'time/20': () => import('@blueprintjs/icons/lib/esm/generated/20px/paths/time'),
   'trash/16': () => import('@blueprintjs/icons/lib/esm/generated/16px/paths/trash'),
   'trash/20': () => import('@blueprintjs/icons/lib/esm/generated/20px/paths/trash'),
+  'warning-sign/16': () => import('@blueprintjs/icons/lib/esm/generated/16px/paths/warning-sign'),
+  'warning-sign/20': () => import('@blueprintjs/icons/lib/esm/generated/20px/paths/warning-sign'),
 }
 
 Icons.setLoaderOptions({
@@ -101,9 +107,9 @@ export function Icon({ intent, ...props}: IconProps) {
   return <BlueprintIcon {...props} intent={intent} />
 }
 
-export function renderIcon(icon?: IconName | ReactElement | undefined): ReactNode {
+export function renderIcon(icon?: IconName | ReactElement | undefined, props?: IconProps): ReactNode {
   if (typeof icon === 'string') {
-    return <Icon icon={icon} />
+    return <Icon {...props} icon={icon} />
   }
   return icon
 }

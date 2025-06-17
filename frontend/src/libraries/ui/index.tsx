@@ -15,6 +15,7 @@ import './ui.css'
 export * from './AutosizedSection'
 export { Breadcrumb, BreadcrumbContext, Breadcrumbs } from './Breadcrumbs'
 export { type AnchorButtonProps, type ButtonProps, AnchorButton, Button, buttonClass } from './Button'
+export { Callout } from './Callout'
 export { Collapse } from './Collapse'
 export { GlobalSpinner } from './GlobalLoadingSpinner'
 export * from './Icon'
@@ -24,7 +25,7 @@ export { TagButton } from './Tag'
 export * from './toaster'
 export type { Color } from './types'
 export { useResizeObserver } from './utils/useResizeObserver'
-export { Callout, H2, HTMLTable, ProgressBar, SectionCard, Tab, Tabs } from '@blueprintjs/core'
+export { H2, HTMLTable, ProgressBar, SectionCard, Tab, Tabs } from '@blueprintjs/core'
 
 export { ColorClass, CssClass }
 

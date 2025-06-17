@@ -1,5 +1,5 @@
 import FormUiShowcase from 'libraries/formsV2/UiShowcase'
-import { AutosizedSection, Button, RegularLink, showToast, Tab, Tabs } from 'libraries/ui'
+import { AutosizedSection, Button, Callout, RegularLink, showToast, Tab, Tabs } from 'libraries/ui'
 
 import { Showcase } from './Showcase'
 import { titleCase } from './utils/titleCase'
@@ -48,6 +48,22 @@ export default function UiShowcase() {
             <Tab id="tab2" title="Tab2" panel={<p>Panel 2</p>} />
             <Tab id="tab3" title="Tab3" panel={<p>Panel 3</p>} />
           </Tabs>
+        }
+      </Showcase>
+      <Showcase
+        title="Callout"
+        propDefs={{
+          title: { type: 'boolean', default: true },
+        }}
+      >
+        {({ title }) =>
+          <div className="flex flex-col gap-2">
+            {colors.map(color =>
+              <Callout key={color} intent={color} title={title ? titleCase(color) : undefined}>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              </Callout>
+            )}
+          </div>
         }
       </Showcase>
       <Showcase

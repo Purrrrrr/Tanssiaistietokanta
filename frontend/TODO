@@ -59,10 +59,11 @@
   * Menu
   * NavBar
   * Breadcrumbs
+    Classes for headings with margin
     Icon loading components
     * AnchorButton
     * Toast
-      Callout
+    * Callout
       Tab, Tabs
       Icon
     SectionCard
