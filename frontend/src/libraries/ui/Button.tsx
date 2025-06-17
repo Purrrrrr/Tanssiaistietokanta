@@ -7,29 +7,25 @@ import { IconProp, renderIcon } from './Icon'
 
 export const buttonClass = (
   color: Color,
-  { active, disabled, className, minimal, anchor }: {
+  { active, disabled, className, minimal }: {
     active?: boolean
     disabled?: boolean
     minimal?: boolean
-    anchor?: boolean
     className?: string
   }
 ) => classNames(
-  //TODO: remove text-inherit and no-underline when blueprintjs is eradicated
-  minimal && anchor && 'hover:no-underline!',
   minimal
-    ? 'bg-white text-stone-700'
+    ? 'bg-transparent text-stone-700 hover:bg-gray-800/10 active:bg-gray-800/20'
     : ({
-      none: 'bg-stone-200 text-stone-700',
+      none: 'bg-stone-100 text-stone-700',
       primary: 'bg-sky-700 text-white',
       success: 'bg-lime-700 text-white',
       danger: ' bg-orange-700 text-white',
       warning: ' bg-amber-400',
     } satisfies Record<Color, string>)[color],
   'py-[5px] px-2 text-center inline-flex gap-1.5 items-center',
-  !minimal && 'rounded-xs shadow-xs hover:shadow-sm active:shadow-md shadow-stone-800/50 border-stone-400/40 border-1',
-  'cursor-pointer transition-colors hover:bg-darken-4 active:bg-darken-10',
-  'disabled:cursor-not-allowed disabled:opacity-50 disabled:saturate-75',
+  !minimal && 'rounded-xs shadow-xs hover:shadow-sm active:shadow-md shadow-stone-800/30 border-stone-400/40 border-1  hover:bg-darken-4 active:bg-darken-10',
+  'cursor-pointer transition-colors disabled:cursor-not-allowed disabled:opacity-50 disabled:saturate-75',
   active && 'active',
   disabled && 'disabled',
   className,
@@ -57,7 +53,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     className,
     ...rest
   } = props
-  return <button ref={ref} type={type} className={buttonClass(intent, {active, className, minimal, anchor: false})} {...rest}>
+  return <button ref={ref} type={type} className={buttonClass(intent, {active, className, minimal})} {...rest}>
     {renderIcon(icon)}
     {text}
     {children}
@@ -86,7 +82,7 @@ export const AnchorButton = forwardRef<HTMLAnchorElement, AnchorButtonProps>(fun
     className,
     ...rest
   } = props
-  return <a ref={ref} className={buttonClass(intent, {active, className, minimal, anchor: true})} {...rest}>
+  return <a ref={ref} className={buttonClass(intent, {active, className, minimal})} {...rest}>
     {renderIcon(icon)}
     {text}
     {children}

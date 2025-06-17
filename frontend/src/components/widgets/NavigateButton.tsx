@@ -20,7 +20,7 @@ export function NavigateButton({text, children, icon, adminOnly, disabled, href,
   const isAdmin = useIsAdmin()
   if (adminOnly && !isAdmin) return null
 
-  const classes = buttonClass(intent ?? 'none', { anchor: true, className, disabled })
+  const classes = buttonClass(intent ?? 'none', { className, disabled })
 
   const onClick = props.onClick ??
     (props.target ==='_blank' ? openLinkWithTarget : undefined)
