@@ -73,7 +73,7 @@ export function AutocompleteInput<T>(props: AutocompleteInputProps<T>) {
   }
 
   return <DropdownContainer className={containerClassname}>
-    <input className={CssClass.input} {...inputProps} />
+    <input className={CssClass.input+' w-full'} {...inputProps} />
     <Dropdown open={isOpen} tabIndex={-1}>
       <Menu {...getMenuProps({}, { suppressRefError: true })} tabIndex={-1}>
         {filteredItems.map((item, index) => (

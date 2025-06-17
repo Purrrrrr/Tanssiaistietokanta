@@ -41,8 +41,8 @@ export function FieldContainer(props: FieldContainerProps) {
   }
   if (labelStyle === 'hidden') {
     return inline
-      ? <span id={formGroupId}>{conflictComponent}{children}{errorMsg}{helperText}</span>
-      : <div id={formGroupId}>{conflictComponent}{children}{errorMsg}{helperText}</div>
+      ? <span className={className} id={formGroupId}>{conflictComponent}{children}{errorMsg}{helperText}</span>
+      : <div className={className} id={formGroupId}>{conflictComponent}{children}{errorMsg}{helperText}</div>
   }
   const helperTextId = `${id}--helperText`
 

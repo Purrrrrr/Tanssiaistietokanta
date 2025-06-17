@@ -3,7 +3,7 @@ import {useNavigate, useParams} from 'react-router-dom'
 import classNames from 'classnames'
 import deepEquals from 'fast-deep-equal'
 
-import {Card, Flex, Link, Tab, Tabs} from 'libraries/ui'
+import {Card, Link, Tab, Tabs} from 'libraries/ui'
 import { EventProgramSettings, Field } from 'components/event/EventProgramForm'
 import {EventSlide, EventSlidePreview, EventSlideProps, startSlideId, useEventSlides} from 'components/event/EventSlide'
 import { EventSlideEditor } from 'components/event/EventSlideEditor'
@@ -169,14 +169,14 @@ interface SlideBoxProps {
 
 const SlideBox = React.memo(function SlideBox({eventProgram, slide}: SlideBoxProps) {
   return <Card id={slide.id}>
-    <Flex wrap>
+    <div className="flex flex-wrap">
       <SlideContainer className="flex-fill inert" size="auto" color="#eee">
         <EventSlide {...slide} eventProgram={eventProgram} linkComponent="a" />
       </SlideContainer>
       <div className="eventSlideEditor">
         <EventSlideEditor {...slide} eventProgram={eventProgram} />
       </div>
-    </Flex>
+    </div>
   </Card>
 }, areSlideBoxPropsEqual)
 

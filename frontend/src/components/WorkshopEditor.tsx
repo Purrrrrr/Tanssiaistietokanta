@@ -6,12 +6,10 @@ import {Event} from 'types'
 import {usePatchWorkshop} from 'services/workshops'
 
 import {ActionButton as Button, DateField, DragHandle, formFor, NumberInput, patchStrategy, SyncStatus, TextArea, useAutosavingState} from 'libraries/forms'
-import {ColorClass, Flex, FormGroup} from 'libraries/ui'
+import {ColorClass, FormGroup} from 'libraries/ui'
 import {DanceChooser} from 'components/widgets/DanceChooser'
 import {useT, useTranslation} from 'i18n'
 import { guid } from 'utils/guid'
-
-import './WorkshopEditor.scss'
 
 type Workshop = Event['workshops'][0]
 type Instance = Workshop['instances'][number]
@@ -61,15 +59,15 @@ export function WorkshopEditor({workshop: workshopInDatabase, reservedAbbreviati
 
   return <Form className="workshopEditor" {...formProps}>
     <SyncStatus state={state} floatRight/>
-    <Flex spaced wrap>
-      <div style={{flexGrow: 1, flexBasis: 300, maxWidth: '50ch'}}>
+    <div className="flex flex-wrap gap-3.5">
+      <div className="grow basis-75 max-w-[50ch]">
         <Input path="name" required label={t('name')} labelInfo={t('required')} />
         <AbbreviationField path="abbreviation" label={t('abbreviation')} reservedAbbreviations={reservedAbbreviations} />
         <Field path="description" component={TextArea} label={t('description')} />
         <Input path="teachers" label={t('teachers')}/>
         <Switch path="instanceSpecificDances" label={t('instanceSpecificDances')} />
       </div>
-      <div style={{flexGrow: 1, flexBasis: 300}}>
+      <div className="grow basis-75">
         {formProps.value.instanceSpecificDances || <DanceList instanceIndex={0} bigTitle />}
         <h3>{t('instances')}</h3>
         <ListField<'instances', Instance[], {beginDate: string, endDate: string}>
@@ -82,7 +80,7 @@ export function WorkshopEditor({workshop: workshopInDatabase, reservedAbbreviati
         />
         <Button text={t('addInstance')} onClick={() => addInstance(newInstance(formProps.value.instances[0]))} />
       </div>
-    </Flex>
+    </div>
   </Form>
 }
 
@@ -131,8 +129,8 @@ function WorkshopInstanceEditor(
   const t = useT('components.workshopEditor')
   const instances = useValueAt('instances')
   const showDances = useValueAt('instanceSpecificDances')
-  return <div className="workshop-instance">
-    <Flex spaced wrap alignItems="center">
+  return <div className="border-b-1 border-black/15 mb-5 bg-white pt-1 px-4 pb-4">
+    <div className="flex flex-wrap gap-3.5 items-center">
       <DateField<Workshop>
         path={`instances.${itemIndex}.dateTime`}
         label={t('dateTime')}
@@ -146,7 +144,7 @@ function WorkshopInstanceEditor(
         {dragHandle}
         {instances.length > 1 && <RemoveItemButton path="instances" index={itemIndex} text="X" />}
       </div>
-    </Flex>
+    </div>
     {showDances && <Input path={`instances.${itemIndex}.abbreviation`} label={t('instanceAbbreviation')} helperText={t('instanceAbbreviationHelp')} />}
     {showDances && <DanceList instanceIndex={itemIndex} />}
   </div>
@@ -175,11 +173,11 @@ function DanceListItem(
 ) {
   const t = useT('components.workshopEditor')
   const excludeFromSearch = useValueAt(path) ?? []
-  return <Flex className="danceItem">
-    <Field label={t('dances')} labelStyle="hidden" path={`${path}.${itemIndex}`} component={DanceChooser} componentProps={{excludeFromSearch}} />
+  return <div className="flex">
+    <Field containerClassName="grow" label={t('dances')} labelStyle="hidden" path={`${path}.${itemIndex}`} component={DanceChooser} componentProps={{excludeFromSearch}} />
     {dragHandle}
     <RemoveItemButton path={path} index={itemIndex} text="X" />
-  </Flex>
+  </div>
 }
 
 function AddDanceChooser({instance}: {instance: number}) {

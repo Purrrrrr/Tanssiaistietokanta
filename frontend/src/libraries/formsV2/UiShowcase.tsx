@@ -2,8 +2,7 @@ import { useState } from 'react'
 
 import { ConflictHandler } from 'libraries/forms/ConflictHandler'
 import { formFor, withDefaults } from 'libraries/formsV2'
-import { Popover } from 'libraries/overlays/unstyled/Popover'
-import { Button, Flex } from 'libraries/ui'
+import { Button } from 'libraries/ui'
 
 import { TextInput } from './components/inputs'
 import { SegmentedInput } from './components/inputs/SegmentedInput'
@@ -118,11 +117,11 @@ function ShowcaseContents() {
     <Field.Markdown path="d" label="markdooown" />
     <RepeatingSection<L> path="l" label="l" accepts="l" itemType="l">
       {({ dragHandle, path, index, onRemove }) =>
-        <Flex>
+        <div className="flex">
           <Field.Text label="Value" inline labelStyle="beside" path={`${path}.${index}.value`} />
           {dragHandle}
           <Button color="danger" icon="cross" onClick={onRemove} />
-        </Flex>
+        </div>
       }
     </RepeatingSection>
     <Button color="primary" icon="edit" onClick={() => addItem('l', { _id: id(), value: '' })} />
@@ -138,11 +137,11 @@ function ShowcaseContents() {
     />
     <RepeatingSection<L> path="l2" label="l 2" accepts="l" itemType="l">
       {({ dragHandle, path, index, onRemove }) =>
-        <Flex>
+        <div className="flex">
           <Field.Text label="Value" inline labelStyle="beside" path={`${path}.${index}.value`} />
           {dragHandle}
           <Button color="danger" icon="cross" onClick={onRemove} />
-        </Flex>
+        </div>
       }
     </RepeatingSection>
     <Button color="primary" icon="edit" onClick={() => addItem('l2', { _id: id(), value: '' })} />

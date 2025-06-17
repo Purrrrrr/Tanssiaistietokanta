@@ -67,8 +67,8 @@ export function DanceEditor({dance, onDelete, showLink, showVersionHistory, titl
       </div>
     </>}
   >
-    <Flex spaced wrap className="danceEditor">
-      <div style={{flexGrow: 1, flexBasis: 300}}>
+    <div className="flex flex-wrap gap-3.5 danceEditor">
+      <div className="grow basis-75">
         <Input label={label('name')} path="name" />
         <Input label={label('category')} path="category" />
         <Field label={label('duration')} path="duration" component={DurationField} />
@@ -84,11 +84,11 @@ export function DanceEditor({dance, onDelete, showLink, showVersionHistory, titl
           </p>
         }
       </div>
-      <div style={{flexGrow: 2, flexBasis: 500}}>
+      <div className="grow-2 basis-125">
         <Field label={label('description')} path="description" component={MarkdownEditor} componentProps={{className: 'max-h-150'}} />
         <Field label={label('instructions')} path="instructions" component={MarkdownEditor} componentProps={{className: 'max-h-150'}} />
       </div>
-    </Flex>
+    </div>
   </DanceEditorContainer>
 }
 

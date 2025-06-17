@@ -1,6 +1,6 @@
 import type { AnyType, FieldPath } from '../types'
 
-import { Button, Flex } from 'libraries/ui'
+import { Button } from 'libraries/ui'
 
 import { type ConnectedFieldProps, ConnectedInput } from './ConnectedInput'
 import { type ListItem } from './dnd'
@@ -16,7 +16,7 @@ export function RepeatingField<Output extends Input & ListItem, Extra, Input, Da
   // TODO: flex as itemElement
   return <RepeatingSection label={label} path={path} accepts={accepts} itemType={itemType}>
     {({ dragHandle, id, path: itemPath, index, onRemove }) =>
-      <Flex>
+      <div className="flex">
         <ConnectedInput<Output, Extra, Input, Data>
           id={String(id)}
           path={`${itemPath}.${index}` as FieldPath<Input, Output, Data>}
@@ -24,7 +24,7 @@ export function RepeatingField<Output extends Input & ListItem, Extra, Input, Da
           {...extra as Extra & Omit<ConnectedFieldProps<Output, Extra, Input, Data>, 'path' | 'component'>} />
         {dragHandle}
         <Button color="danger" icon="cross" onClick={onRemove} />
-      </Flex>
+      </div>
     }
   </RepeatingSection>
 }
