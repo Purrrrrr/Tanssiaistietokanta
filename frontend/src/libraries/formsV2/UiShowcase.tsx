@@ -47,7 +47,6 @@ export default function UiShowcase() {
   const [value, onChange] = useState<Data>(defaultData)
 
   return <Form value={value} onChange={onChange}>
-    <h2>FOO</h2>
     <Button className="my-2" onClick={() => { setKey(key + 1); onChange(defaultData) }}>
       RESET
     </Button>

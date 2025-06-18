@@ -22,7 +22,7 @@ export default function UiShowcase() {
     <p className="flex flex-wrap gap-[0.7ch]">
       <span>Available showcases:</span>
       {showcases.map(scase =>
-        <RegularLink href={`#${scase.title}`} onClick={() => setSelectedShowcase(scase)}>{scase.title}</RegularLink>
+        <RegularLink key={scase.title} href={`#${scase.title}`} onClick={() => setSelectedShowcase(scase)}>{scase.title}</RegularLink>
       )}
     </p>
 

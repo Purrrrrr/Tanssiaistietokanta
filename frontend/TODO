@@ -43,7 +43,7 @@
   UI Showcase
   * Add formV2 stuff
   * Showcase component
-    Clean up
+  * Clean up
     Add libraries/ui stuff
     * AutosizedSection
       NonIdealState
@@ -65,6 +65,9 @@
     * Toast
     * Callout
       Tab, Tabs
+      * basic element
+        vertical tabs?
+        support animation
       Icon
     SectionCard
     ProgressBar
