@@ -11,7 +11,11 @@ import { titleCase } from './utils/titleCase'
 const colors = ['none', 'primary', 'success', 'danger', 'warning'] as const
 
 export default function UiShowcase() {
-  const [selectedShowcase, setSelectedShowcase] = useState(showcases[0])
+  const [selectedShowcase, setSelectedShowcase] = useState(() => {
+    const hash = window.location.hash?.slice(1) ?? ''
+
+    return showcases.find(scase => scase.title === hash) ?? showcases[0]
+  })
   return <section>
     <h1>UI Showcase</h1>
 

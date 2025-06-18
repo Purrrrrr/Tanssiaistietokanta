@@ -7,7 +7,6 @@ import { Card, CssClass } from 'libraries/ui'
 
 export function ShowcaseContainer<P extends Record<string, unknown>>({ title, props, render}: Showcase<P>) {
   const [propsValue, setPropsValue] = useShowcaseState(props)
-  console.log(propsValue)
 
   const fields = Object.entries(props).map(([name, def]) =>
     <PropField
@@ -16,10 +15,8 @@ export function ShowcaseContainer<P extends Record<string, unknown>>({ title, pr
       def={def}
       value={propsValue[name]}
       onChange={value => {
-        console.log(value)
         setPropsValue(old => ({...old, [name]: value}))
-      }
-      }
+      }}
     />
   )
 
