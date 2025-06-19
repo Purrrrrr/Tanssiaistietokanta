@@ -1,9 +1,10 @@
 import { useId } from 'react'
+import { Style } from '@blueprintjs/icons'
 
 import {SlideStyle, useEventSlideStyles} from 'services/events'
 
 import { Select } from 'libraries/formsV2/components/inputs'
-import {Button, Icon} from 'libraries/ui'
+import {Button} from 'libraries/ui'
 import {useT} from 'i18n'
 
 interface SlideStyleSelectorProps {
@@ -51,6 +52,6 @@ function SlideStyleBox({value: {styleName, color}, size = 20, aspectRatio = 1}) 
   return <span
     style={{height: size, width: size*aspectRatio, lineHeight: `${size - 4}px`, borderColor: color }}
     className={`slide-style-${styleName} text-center border inline-block`}>
-    <Icon icon="style" iconSize={12} color={color} />
+    <Style size={12} color={color} />
   </span>
 }

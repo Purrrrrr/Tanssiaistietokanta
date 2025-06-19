@@ -1,15 +1,13 @@
 import {useState} from 'react'
+import { DoubleChevronUp, Settings } from '@blueprintjs/icons'
 import classNames from 'classnames'
-
-import {Icon, IconName} from 'libraries/ui'
 
 interface PrintViewToolbarProps {
   children: React.ReactNode,
-  icon?: IconName,
   maxHeight?: number
 }
 
-export default function PrintViewToolbar({children, icon = 'settings', maxHeight} : PrintViewToolbarProps) {
+export default function PrintViewToolbar({children, maxHeight} : PrintViewToolbarProps) {
   const [isOpen, setOpen] = useState(true)
 
   return <div
@@ -26,7 +24,7 @@ export default function PrintViewToolbar({children, icon = 'settings', maxHeight
       )}
       onFocus={() => setOpen(true)}
     >
-      <Icon icon={icon} iconSize={20} />
+      <Settings size={20} />
     </button>
     <div
       className={classNames(
@@ -44,7 +42,7 @@ export default function PrintViewToolbar({children, icon = 'settings', maxHeight
       )}
       onClick={() => setOpen(false)}
     >
-      <Icon icon="double-chevron-up" iconSize={20} />
+      <DoubleChevronUp size={20} />
     </button>
   </div>
 }

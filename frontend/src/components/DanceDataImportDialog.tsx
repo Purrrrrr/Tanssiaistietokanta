@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react'
+import { Download, Search } from '@blueprintjs/icons'
 
 import {Dance} from 'types'
 
@@ -52,7 +53,7 @@ export function DanceDataImportButton({onImport, dance, ...props} : DanceDataImp
   }
 
   return <>
-    <Button text={text} icon="download" {...props} onClick={() => setOpen(true)} />
+    <Button text={text} icon={<Download />} {...props} onClick={() => setOpen(true)} />
     <DanceDataImportDialog isOpen={isOpen} onClose={() => setOpen(false)}
       dance={dance} onImport={(data: ImporterState) => { setOpen(false); handleImport(data) }}
     />
@@ -114,7 +115,7 @@ function DataImporter({danceName, onImport}) {
 
   return <FormGroup label={t('searchDanceByName')} inline>
     <DanceNameSearch id="danceSearch" value={search} onChange={setSearch} />
-    <Button icon="search" color="primary" onClick={importData} disabled={loading}/>
+    <Button icon={<Search />} color="primary" onClick={importData} disabled={loading}/>
     {loading
       ? <div style={{margin: '10px 0px'}}>{t('loadingData')}<ProgressBar /></div>
       : <p>{t('searchHelp')}</p>}

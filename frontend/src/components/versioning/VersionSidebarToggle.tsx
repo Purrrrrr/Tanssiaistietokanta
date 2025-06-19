@@ -1,4 +1,5 @@
 import { useContext, useEffect } from 'react'
+import { History } from '@blueprintjs/icons'
 
 import { VersionSidebarProps } from './types'
 
@@ -25,7 +26,7 @@ export function VersionSidebarToggle({id, versionId, entityId, entityType, toVer
   )
 
   return <Button
-    icon="history"
+    icon={<History />}
     minimal
     className="float-right"
     onClick={() => toggleSidebar({ buttonId, entityId, versionId, entityType, toVersionLink })}>

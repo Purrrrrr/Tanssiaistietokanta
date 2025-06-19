@@ -1,6 +1,6 @@
-import {Link} from 'react-router-dom'
+import { ArrowLeft } from '@blueprintjs/icons'
 
-import {Icon} from 'libraries/ui'
+import { Link } from 'libraries/ui'
 
 interface BackLinkProps {
   children: React.ReactElement | string,
@@ -9,6 +9,6 @@ interface BackLinkProps {
 
 export function BackLink({children, to = '..'} : BackLinkProps) {
   return <p style={{margin: '10px 0'}}>
-    <Link to={to}><Icon icon="arrow-left"/>{children}</Link>
+    <Link to={to}><ArrowLeft />{children}</Link>
   </p>
 }

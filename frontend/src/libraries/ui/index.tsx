@@ -11,6 +11,7 @@ import { ColorClass, CssClass } from './classes'
 import { Icon } from './Icon'
 
 import './ui.css'
+import { Search } from '@blueprintjs/icons'
 
 export * from './AutosizedSection'
 export { Breadcrumb, BreadcrumbContext, Breadcrumbs } from './Breadcrumbs'
@@ -79,7 +80,7 @@ interface SearchInputProps {
 
 export function SearchBar({id, onChange, value, placeholder, emptySearchText} : SearchInputProps) {
   return <div id={id} className={CssClass.inputGroup}>
-    <Icon icon="search" />
+    <Search />
     <input
       type="text"
       className={CssClass.input+' px-4'}

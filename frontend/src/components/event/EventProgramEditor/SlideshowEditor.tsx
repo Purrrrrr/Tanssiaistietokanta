@@ -1,5 +1,6 @@
 import React, { UIEvent, useDeferredValue, useEffect, useRef, useState } from 'react'
 import {useNavigate, useParams} from 'react-router-dom'
+import { ChevronLeft, ChevronRight } from '@blueprintjs/icons'
 import classNames from 'classnames'
 import deepEquals from 'fast-deep-equal'
 
@@ -59,11 +60,11 @@ function SlideNavigation(props: SlideNavigationProps) {
     </Tabs>
     <nav className="slideNavigation">
       {slideIndex > 0 &&
-        <NavigateButton icon="chevron-left" href={`../slides/${slides[slideIndex - 1].id}`} className="previous-slide-link" />
+        <NavigateButton icon={<ChevronLeft />} href={`../slides/${slides[slideIndex - 1].id}`} className="previous-slide-link" />
       }
       <SlidePreviews {...props} />
       {slideIndex < slides.length - 1 &&
-        <NavigateButton icon="chevron-right" href={`../slides/${slides[slideIndex + 1].id}`} className="next-slide-link" />
+        <NavigateButton icon={<ChevronRight />} href={`../slides/${slides[slideIndex + 1].id}`} className="next-slide-link" />
       }
     </nav>
   </>
