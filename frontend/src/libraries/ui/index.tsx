@@ -3,12 +3,12 @@ import {
   Card as BlueprintCard,
   FormGroup as BlueprintFormGroup,
   FormGroupProps as BlueprintFormGroupProps,
-  InputGroup as BlueprintInputGroup,
 } from '@blueprintjs/core'
 import classNames from 'classnames'
 
 import { Button } from './Button'
 import { ColorClass, CssClass } from './classes'
+import { Icon } from './Icon'
 
 import './ui.css'
 
@@ -78,12 +78,18 @@ interface SearchInputProps {
 }
 
 export function SearchBar({id, onChange, value, placeholder, emptySearchText} : SearchInputProps) {
-  return <BlueprintInputGroup
-    id={id}
-    leftIcon="search"
-    rightElement={
+  return <div id={id} className={CssClass.inputGroup}>
+    <Icon icon="search" />
+    <input
+      type="text"
+      className={CssClass.input+' px-4'}
+      value={value}
+      onChange={e => onChange(e.target.value)}
+      placeholder={placeholder}
+    />
+    <span className={CssClass.inputAction}>
       <Button
-        className="m-1 h-6"
+        className="m-1 h-6 px-2"
         aria-label={emptySearchText}
         minimal
         icon="cross"
@@ -92,9 +98,6 @@ export function SearchBar({id, onChange, value, placeholder, emptySearchText} : 
           (e.target as HTMLButtonElement).closest('.bp5-input-group')?.querySelector('input')?.focus()
         }}
       />
-    }
-    value={value}
-    onChange={(e) => onChange(e.target.value)}
-    placeholder={placeholder}
-  />
+    </span>
+  </div>
 }

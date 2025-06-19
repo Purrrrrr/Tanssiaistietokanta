@@ -1,12 +1,41 @@
 import React, { ReactElement, ReactNode } from 'react'
+import { Classes } from '@blueprintjs/core'
 import {
-  Icon as BlueprintIcon,
-} from '@blueprintjs/core'
-import { IconPaths, Icons } from '@blueprintjs/icons'
+  ArrowLeft, CaretDown, ChevronLeft, ChevronRight, Cross, DoubleCaretVertical, DoubleChevronUp, Download, Edit, Error, History, InfoSign, Link, Move, Music, Outdated, Refresh, Saved, Search, Settings, Style, Tick, Time, Trash, WarningSign
+} from '@blueprintjs/icons'
+import classNames from 'classnames'
 
 import { Color } from './types'
 
 export type IconProp = IconName | ReactElement | undefined
+
+const icons = {
+  'arrow-left': ArrowLeft,
+  'caret-down': CaretDown,
+  'chevron-left': ChevronLeft,
+  'chevron-right': ChevronRight,
+  cross: Cross,
+  'double-caret-vertical': DoubleCaretVertical,
+  'double-chevron-up': DoubleChevronUp,
+  download: Download,
+  edit: Edit,
+  error: Error,
+  history: History,
+  'info-sign': InfoSign,
+  link: Link,
+  move: Move,
+  music: Music,
+  outdated: Outdated,
+  refresh: Refresh,
+  saved: Saved,
+  search: Search,
+  settings: Settings,
+  style: Style,
+  tick: Tick,
+  time: Time,
+  trash: Trash,
+  'warning-sign': WarningSign,
+} satisfies Record<IconName, unknown>
 
 export type IconName =
   | 'arrow-left'
@@ -35,64 +64,6 @@ export type IconName =
   | 'trash'
   | 'warning-sign'
 
-const iconModules = {
-  'arrow-left/16': () => import('@blueprintjs/icons/lib/esm/generated/16px/paths/arrow-left'),
-  'arrow-left/20': () => import('@blueprintjs/icons/lib/esm/generated/20px/paths/arrow-left'),
-  'caret-down/16': () => import('@blueprintjs/icons/lib/esm/generated/16px/paths/caret-down'),
-  'caret-down/20': () => import('@blueprintjs/icons/lib/esm/generated/20px/paths/caret-down'),
-  'chevron-left/16': () => import('@blueprintjs/icons/lib/esm/generated/16px/paths/chevron-left'),
-  'chevron-left/20': () => import('@blueprintjs/icons/lib/esm/generated/20px/paths/chevron-left'),
-  'chevron-right/16': () => import('@blueprintjs/icons/lib/esm/generated/16px/paths/chevron-right'),
-  'chevron-right/20': () => import('@blueprintjs/icons/lib/esm/generated/20px/paths/chevron-right'),
-  'cross/16': () => import('@blueprintjs/icons/lib/esm/generated/16px/paths/cross'),
-  'cross/20': () => import('@blueprintjs/icons/lib/esm/generated/20px/paths/cross'),
-  'double-caret-vertical/16': () => import('@blueprintjs/icons/lib/esm/generated/16px/paths/double-caret-vertical'),
-  'double-caret-vertical/20': () => import('@blueprintjs/icons/lib/esm/generated/20px/paths/double-caret-vertical'),
-  'double-chevron-up/16': () => import('@blueprintjs/icons/lib/esm/generated/16px/paths/double-chevron-up'),
-  'double-chevron-up/20': () => import('@blueprintjs/icons/lib/esm/generated/20px/paths/double-chevron-up'),
-  'download/16': () => import('@blueprintjs/icons/lib/esm/generated/16px/paths/download'),
-  'download/20': () => import('@blueprintjs/icons/lib/esm/generated/20px/paths/download'),
-  'edit/16': () => import('@blueprintjs/icons/lib/esm/generated/16px/paths/edit'),
-  'edit/20': () => import('@blueprintjs/icons/lib/esm/generated/20px/paths/edit'),
-  'error/16': () => import('@blueprintjs/icons/lib/esm/generated/16px/paths/error'),
-  'error/20': () => import('@blueprintjs/icons/lib/esm/generated/20px/paths/error'),
-  'history/16': () => import('@blueprintjs/icons/lib/esm/generated/16px/paths/history'),
-  'history/20': () => import('@blueprintjs/icons/lib/esm/generated/20px/paths/history'),
-  'info-sign/16': () => import('@blueprintjs/icons/lib/esm/generated/16px/paths/info-sign'),
-  'info-sign/20': () => import('@blueprintjs/icons/lib/esm/generated/20px/paths/info-sign'),
-  'link/16': () => import('@blueprintjs/icons/lib/esm/generated/16px/paths/link'),
-  'link/20': () => import('@blueprintjs/icons/lib/esm/generated/20px/paths/link'),
-  'move/16': () => import('@blueprintjs/icons/lib/esm/generated/16px/paths/move'),
-  'move/20': () => import('@blueprintjs/icons/lib/esm/generated/20px/paths/move'),
-  'music/16': () => import('@blueprintjs/icons/lib/esm/generated/16px/paths/music'),
-  'music/20': () => import('@blueprintjs/icons/lib/esm/generated/20px/paths/music'),
-  'outdated/16': () => import('@blueprintjs/icons/lib/esm/generated/16px/paths/outdated'),
-  'outdated/20': () => import('@blueprintjs/icons/lib/esm/generated/20px/paths/outdated'),
-  'refresh/16': () => import('@blueprintjs/icons/lib/esm/generated/16px/paths/refresh'),
-  'refresh/20': () => import('@blueprintjs/icons/lib/esm/generated/20px/paths/refresh'),
-  'saved/16': () => import('@blueprintjs/icons/lib/esm/generated/16px/paths/saved'),
-  'saved/20': () => import('@blueprintjs/icons/lib/esm/generated/20px/paths/saved'),
-  'search/16': () => import('@blueprintjs/icons/lib/esm/generated/16px/paths/search'),
-  'search/20': () => import('@blueprintjs/icons/lib/esm/generated/20px/paths/search'),
-  'settings/16': () => import('@blueprintjs/icons/lib/esm/generated/16px/paths/settings'),
-  'settings/20': () => import('@blueprintjs/icons/lib/esm/generated/20px/paths/settings'),
-  'style/16': () => import('@blueprintjs/icons/lib/esm/generated/16px/paths/style'),
-  'style/20': () => import('@blueprintjs/icons/lib/esm/generated/20px/paths/style'),
-  'tick/16': () => import('@blueprintjs/icons/lib/esm/generated/16px/paths/tick'),
-  'tick/20': () => import('@blueprintjs/icons/lib/esm/generated/20px/paths/tick'),
-  'time/16': () => import('@blueprintjs/icons/lib/esm/generated/16px/paths/time'),
-  'time/20': () => import('@blueprintjs/icons/lib/esm/generated/20px/paths/time'),
-  'trash/16': () => import('@blueprintjs/icons/lib/esm/generated/16px/paths/trash'),
-  'trash/20': () => import('@blueprintjs/icons/lib/esm/generated/20px/paths/trash'),
-  'warning-sign/16': () => import('@blueprintjs/icons/lib/esm/generated/16px/paths/warning-sign'),
-  'warning-sign/20': () => import('@blueprintjs/icons/lib/esm/generated/20px/paths/warning-sign'),
-}
-
-Icons.setLoaderOptions({
-  loader: async (name, size) =>
-    (await iconModules[`${name}/${size}`]()).default as IconPaths,
-})
-
 export interface IconProps {
   className?: string
   title?: string
@@ -103,8 +74,14 @@ export interface IconProps {
   onClick?: React.MouseEventHandler<HTMLElement>
 }
 
-export function Icon({ intent, ...props}: IconProps) {
-  return <BlueprintIcon {...props} intent={intent} />
+export function Icon({ icon, intent, className, ...props}: IconProps) {
+  const IconComponent = icons[icon]
+  return <>
+    <IconComponent
+      className={classNames(Classes.intentClass(intent), className)}
+      {...props}
+    />
+  </>
 }
 
 export function renderIcon(icon?: IconName | ReactElement | undefined, props?: IconProps): ReactNode {

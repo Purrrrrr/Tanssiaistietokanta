@@ -6,6 +6,8 @@ import { Color } from './types'
 
 export const CssClass = {
   input: Classes.INPUT,
+  inputGroup: Classes.INPUT_GROUP,
+  inputAction: Classes.INPUT_ACTION,
   formGroupInline: 'formgroup-inline',
   formGroupInlineFill: 'formgroup-inline-fill',
 }
