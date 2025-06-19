@@ -68,7 +68,7 @@ export interface AnchorButtonProps extends AnchorHTMLAttributes<HTMLAnchorElemen
   text?: React.ReactNode
   icon?: IconProp
   rightIcon?: IconProp
-  intent?: Color
+  color?: Color
   minimal?: boolean
   active?: boolean
 }
@@ -77,7 +77,7 @@ export const AnchorButton = forwardRef<HTMLAnchorElement, AnchorButtonProps>(fun
   const {
     children,
     text,
-    intent = 'none',
+    color = 'none',
     active,
     icon,
     rightIcon,
@@ -85,7 +85,7 @@ export const AnchorButton = forwardRef<HTMLAnchorElement, AnchorButtonProps>(fun
     className,
     ...rest
   } = props
-  return <a ref={ref} className={buttonClass(intent, {active, className, minimal})} {...rest}>
+  return <a ref={ref} className={buttonClass(color, {active, className, minimal})} {...rest}>
     {renderIcon(icon)}
     {text}
     {children}
