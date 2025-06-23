@@ -6,7 +6,7 @@ import { FieldInputComponent } from '../types'
 import { Dropdown, DropdownContainer } from 'libraries/overlays'
 import { CssClass } from 'libraries/ui'
 
-import { Menu, MenuItem, toMenuItemProps } from './Menu'
+import { Menu, MenuItem, renderMenuItems, toMenuItemProps } from './Menu'
 import { acceptNulls, preventDownshiftDefaultWhen, useFilteredItems } from './utils'
 
 export interface AutocompleteInputProps<T> extends Omit<SelectorProps<T>, 'buttonRenderer'> {
@@ -16,12 +16,12 @@ export interface AutocompleteInputProps<T> extends Omit<SelectorProps<T>, 'butto
 export function AutocompleteInput<T>(props: AutocompleteInputProps<T>) {
   'use no memo'
   const {
-    items, itemToString = String,
+    items, itemToString = String, categoryTitleRenderer,
     value, onChange, id, readOnly,
     placeholder = '', containerClassname, inline,
   } = props
   const valueToString = acceptNulls(itemToString)
-  const [filteredItems, updateFilter] = useFilteredItems(items, itemToString)
+  const [filteredItemData, updateFilter] = useFilteredItems(items, itemToString)
   const {
     isOpen,
     getInputProps,
@@ -32,7 +32,7 @@ export function AutocompleteInput<T>(props: AutocompleteInputProps<T>) {
   } = useCombobox({
     id,
     inputId: id,
-    items: filteredItems,
+    items: filteredItemData.items,
     selectedItem: value,
     itemToString: valueToString,
     defaultHighlightedIndex: 0,
@@ -76,7 +76,7 @@ export function AutocompleteInput<T>(props: AutocompleteInputProps<T>) {
     <input className={CssClass.input+' w-full'} {...inputProps} />
     <Dropdown open={isOpen} tabIndex={-1}>
       <Menu {...getMenuProps({}, { suppressRefError: true })} tabIndex={-1}>
-        {filteredItems.map((item, index) => (
+        {renderMenuItems(filteredItemData, categoryTitleRenderer, (item, index) => (
           <MenuItem
             highlight={highlightedIndex === index}
             key={`${item}${index}`}

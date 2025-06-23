@@ -7,19 +7,20 @@ import { Dropdown, DropdownContainer } from 'libraries/overlays'
 import { CssClass } from 'libraries/ui'
 
 import { DropdownButton } from './DropdownButton'
-import { Menu, MenuItem, toMenuItemProps } from './Menu'
+import { Menu, MenuItem, renderMenuItems, toMenuItemProps } from './Menu'
 import { acceptNulls, preventDownshiftDefaultWhen, useFilteredItems } from './utils'
 
 export default function FilterableSelect<T>(props: SelectorProps<T>) {
   'use no memo'
   const {
-    items, itemToString = String,
+    items, itemToString = String, categoryTitleRenderer = title => <strong>{title}</strong>,
+
     value, onChange, id, containerClassname,
     filterPlaceholder,
   } = props
   const valueToString = acceptNulls(itemToString)
   const buttonRef = useRef<HTMLButtonElement | null>(null)
-  const [filteredItems, updateFilter] = useFilteredItems(items, itemToString)
+  const [filteredItemData, updateFilter] = useFilteredItems(items, itemToString)
   const {
     isOpen,
     getInputProps,
@@ -31,15 +32,15 @@ export default function FilterableSelect<T>(props: SelectorProps<T>) {
   } = useCombobox({
     id,
     inputId: id,
-    items: filteredItems,
+    items: filteredItemData.items,
     selectedItem: value,
     itemToString: valueToString,
     onSelectedItemChange: ({ selectedItem }) => onChange(selectedItem as T),
     onInputValueChange: async ({ inputValue}) => {
       // Try to keep the hilighted item the same
-      const previousHilight = filteredItems[highlightedIndex]
+      const previousHilight = filteredItemData[highlightedIndex]
       const newItems = await updateFilter(inputValue)
-      const nextHilightedIndex = newItems.indexOf(previousHilight)
+      const nextHilightedIndex = newItems.items.indexOf(previousHilight)
       setHighlightedIndex(nextHilightedIndex > -1 ? nextHilightedIndex : 0)
     },
     onIsOpenChange: async (a) => {
@@ -68,7 +69,7 @@ export default function FilterableSelect<T>(props: SelectorProps<T>) {
         onClick={undefined}
       />
       <Menu {...getMenuProps({}, {suppressRefError: true})} tabIndex={-1}>
-        {filteredItems.map((item, index) => (
+        {renderMenuItems(filteredItemData, categoryTitleRenderer, (item, index) => (
           <MenuItem
             highlight={highlightedIndex === index}
             key={`${item}${index}`}

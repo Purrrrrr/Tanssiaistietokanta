@@ -5,6 +5,7 @@ import { Dance } from 'types'
 import {compareBy, sorted} from 'utils/sorted'
 
 import { backendQueryHook, entityCreateHook, entityDeleteHook, entityListQueryHook, entityUpdateHook, graphql, setupServiceUpdateFragment, useServiceEvents } from '../backend'
+import { filterItemList } from 'libraries/formsV2/components/inputs/selectors/itemUtils'
 
 setupServiceUpdateFragment(
   'dances',
@@ -149,22 +150,15 @@ mutation deleteDance($id: ID!) {
 
 
 export function filterDances(dances : Dance[], searchString: string): Dance[] {
-  return dances.filter(dance => filterDance(dance, searchString))
-    .sort(compareDances)
-}
-
-function filterDance(dance: Dance, search : string) {
-  const lSearch = search.trim().toLowerCase()
-  const lName = dance.name.trim().toLowerCase()
-  return lName.indexOf(lSearch) !== -1
+  return filterItemList(sortDances(dances), searchString, dance => dance.name)
 }
 
 export function sortDances(dances: Dance[]): Dance[] {
   return sorted(dances, compareDances)
 }
 
-const compareDances = compareBy(
-  function danceSortKey(dance: Dance): string {
-    return dance.name.replace(/^(an?|the) */i, '')
-  }
-)
+const compareDances = compareBy(danceSortKey)
+
+function danceSortKey(dance: Dance): string {
+  return dance.name.replace(/^(an?|the) */i, '')
+}

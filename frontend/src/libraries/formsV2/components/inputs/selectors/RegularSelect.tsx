@@ -5,17 +5,17 @@ import { SelectorProps } from './types'
 import { Dropdown, DropdownContainer } from 'libraries/overlays'
 
 import { DropdownButton } from './DropdownButton'
-import { Menu, MenuItem, toMenuItemProps } from './Menu'
+import { Menu, MenuItem, renderMenuItems, toMenuItemProps } from './Menu'
 import { acceptNulls, preventDownshiftDefaultWhen, useItems } from './utils'
 
 export default function RegularSelect<T>(props: SelectorProps<T>) {
   'use no memo'
   const {
-    items: getItems, itemToString = String,
+    items: getItems, itemToString = String, categoryTitleRenderer,
     value, onChange, id, containerClassname,
   } = props
   const valueToString = acceptNulls(itemToString)
-  const [items, updateItems] = useItems(getItems)
+  const [itemData, updateItems] = useItems(getItems)
   const {
     isOpen,
     getToggleButtonProps,
@@ -24,7 +24,7 @@ export default function RegularSelect<T>(props: SelectorProps<T>) {
     highlightedIndex,
   } = useSelect({
     id,
-    items,
+    items: itemData.items,
     selectedItem: value,
     itemToString: valueToString,
     onSelectedItemChange: ({ selectedItem }) => onChange(selectedItem as T),
@@ -42,10 +42,10 @@ export default function RegularSelect<T>(props: SelectorProps<T>) {
     <DropdownButton selectorProps={props} buttonProps={buttonProps} />
     <Dropdown open={isOpen} arrow tabIndex={-1}>
       <Menu {...getMenuProps({}, {suppressRefError: true})} tabIndex={-1}>
-        {items.map((item, index) => (
+        {renderMenuItems(itemData, categoryTitleRenderer, (item, index) => (
           <MenuItem
             highlight={highlightedIndex === index}
-            key={`${item}${index}`}
+            key={`${itemToString(item)}${index}`}
             {...toMenuItemProps(item, props)}
             {...getItemProps({ item, index })}
           />

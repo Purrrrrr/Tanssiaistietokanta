@@ -1,7 +1,7 @@
-import { type ComponentProps, forwardRef } from 'react'
+import { type ComponentProps, forwardRef, Fragment, ReactNode } from 'react'
 import classNames from 'classnames'
 
-import { SelectorProps } from './types'
+import { InternalItemData, SelectorProps } from './types'
 
 type MenuProps = Omit<ComponentProps<'ul'>, 'className'>
 
@@ -10,6 +10,25 @@ export const Menu = forwardRef<HTMLUListElement, MenuProps>(
     return <ul className="overflow-auto p-1 grow" ref={ref} {...props} />
   }
 )
+
+export function renderMenuItems<T>(
+  itemData: InternalItemData<T>,
+  titleRenderer: (title: string) => ReactNode = defaultTitleRenderer,
+  itemRenderer: (item: T, index: number) => ReactNode,
+) {
+  let startingIndex = 0
+
+  return itemData.categories.map(category => {
+    const result = <Fragment key={category.title}>
+      {itemData.showCategories && titleRenderer(category.title)}
+      {category.items.map((item, index) => ( itemRenderer(item, index + startingIndex)))}
+    </Fragment>
+    startingIndex += category.items.length
+    return result
+  })
+}
+
+const defaultTitleRenderer = (title: string) => <strong>{title}</strong>
 
 interface MenuItemProps extends ComponentProps<'li'> {
   highlight?: boolean
@@ -44,3 +63,4 @@ export function toMenuItemProps<T>(
     </>
   }
 }
+
