@@ -4,6 +4,7 @@ import { type Showcase, booleanProp, numberProp, showcase } from './types'
 
 import FormUiShowcase from 'libraries/formsV2/UiShowcase'
 import { AutosizedSection, Button, Callout, RegularLink, showToast, Tab, Tabs } from 'libraries/ui'
+import { ColoredTag, TAG_COLOR_COUNT } from 'components/widgets/ColoredTag'
 
 import { ShowcaseContainer } from './ShowcaseContainer'
 import { titleCase } from './utils/titleCase'
@@ -12,7 +13,7 @@ const colors = ['none', 'primary', 'success', 'danger', 'warning'] as const
 
 export default function UiShowcase() {
   const [selectedShowcase, setSelectedShowcase] = useState(() => {
-    const hash = window.location.hash?.slice(1) ?? ''
+    const hash = decodeURIComponent(window.location.hash?.slice(1) ?? '')
 
     return showcases.find(scase => scase.title === hash) ?? showcases[0]
   })
@@ -107,4 +108,16 @@ const showcases : Showcase<Record<string, unknown>>[] = [
         <Tab id="tab3" title="Tab3" panel={<p>Panel 3</p>} />
       </Tabs>
   }),
+  showcase({
+    title: 'Colored tag',
+    props: { },
+    render: () => range(TAG_COLOR_COUNT).map(color =>
+      <ColoredTag key={color} title={`Tag color ${color}`} color={color} />
+    )
+  }),
 ]
+
+function range(count: number): number[] {
+  console.log(Array(count).fill(0).map((_, index) => index))
+  return Array(count).fill(0).map((_, index) => index)
+}

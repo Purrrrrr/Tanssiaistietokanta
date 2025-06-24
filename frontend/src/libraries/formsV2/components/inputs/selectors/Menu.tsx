@@ -41,7 +41,7 @@ export const MenuItem = forwardRef<HTMLLIElement, MenuItemProps>(
       ref={ref}
       {...props}
       className={classNames(
-        className ?? 'flex items-center px-2 py-1.5',
+        className ?? 'flex items-center px-2 min-h-7.5',
         'transition-colors',
         highlight && (hilightedClassName ?? 'bg-blue-200')
       )}

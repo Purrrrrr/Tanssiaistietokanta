@@ -7,6 +7,8 @@ import {filterDances, useCreateDance, useDances} from 'services/dances'
 import { AutocompleteInput } from 'libraries/formsV2/components/inputs'
 import {useT} from 'i18n'
 
+import { ColoredTag } from './ColoredTag'
+
 interface DanceChooserProps {
   value: Dance | null,
   excludeFromSearch?: Dance[],
@@ -64,9 +66,31 @@ export function DanceChooser({
     itemRenderer={item => {
       if (item === null) return emptyText ?? t('emptyDancePlaceholder')
       if (item.__typename === 'createDance') return `${t('createDance')}: ${item.name}`
-      return item.name
+
+      const category = getCategory(item)
+      return <div className="flex grow items-center justify-between">
+        <span>{item.name}</span>
+        {category && <ColoredTag small {...category} />}
+      </div>
     }}
   />
+}
+
+function getCategory(dance: Dance) {
+  if (dance.category?.trim()) {
+    return {
+      title: dance.category,
+      hashSource: dance.category,
+    }
+  }
+  if (dance.wikipage?.categories?.length) {
+    const guess = dance.wikipage?.categories[0]
+    return {
+      title: `${guess}?`,
+      hashSource: guess,
+    }
+  }
+  return null
 }
 
 type DanceChooserOption = Dance | CreateDance | null
