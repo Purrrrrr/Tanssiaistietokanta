@@ -83,10 +83,12 @@ export function DanceChooser({
     inputRenderer={props => {
       const dance = dances.find(d => d._id === value?._id)
       const category = dance && getCategory(dance)
+      const workshop = dance && workshops.find(w => w.instances.some(i => i.dances?.some(d => d._id === dance._id)))
 
       return <div className="flex grow">
-        <input className={CssClass.input + ' w-full'} {...props} />
+        <input className={CssClass.input + ' grow'} {...props} />
         {category && <ColoredTag small {...category} />}
+        {workshop && <ColoredTag small title={workshop.name} />}
       </div>
     }}
     itemToString={item => item?.name ?? ''}

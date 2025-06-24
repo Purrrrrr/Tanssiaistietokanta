@@ -29,7 +29,6 @@ import {
 import { EventMetadataContext } from 'components/event/EventProgramForm/eventMetadata'
 import { ProgramTypeIcon } from 'components/event/ProgramTypeIcon'
 import {BackLink} from 'components/widgets/BackLink'
-import { ColoredTag } from 'components/widgets/ColoredTag'
 import {Duration} from 'components/widgets/Duration'
 import {DurationField} from 'components/widgets/DurationField'
 import {useT, useTranslation} from 'i18n'
@@ -275,12 +274,8 @@ function ProgramDetailsEditor({path}: {path: ProgramItemPath}) {
 
 function DanceItemEditor({path}: {path: DanceProgramPath}) {
   const t = useT('components.eventProgramEditor')
-  const item = useValueAt(`${path}.item`)
-  return <div className="flex eventProgramItemEditor">
+  return <div className="eventProgramItemEditor">
     <Field label={t('dance')} labelStyle="hidden" path={`${path as DanceProgramPath}.item`} component={DanceProgramChooser} />
-    {item.__typename === 'Dance' && item.teachedIn?.map(workshop =>
-      <ColoredTag key={workshop._id} title={workshop.workshop.name} />
-    )}
   </div>
 }
 
