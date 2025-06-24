@@ -40,6 +40,34 @@
   * Fix minimal icon background
   * Change intent to something else, add minimal to it's styles
 * Allow dropdown container to fill width
+* Add loading animation to more pages
+* intervalMusic on by defalt
+* teached dances missing: cut unique
+* Focus field on search clear
+* Add teached dances functionality -> Added to DanceChooser
+* Dance selector:
+  * show workshop
+  * show category
+  
+  Find a way to autofill dance categories
+  * Integrate dance wiki to backend
+  * GraphQL queries for it
+  * Automatic background fetcher
+    * Occasionally fetch list
+    * Fetch unfetched dances
+  * Spam score system
+  * wikipageName field for dances
+    * Backend
+  * Try to interpret dance source
+  * Occasionally recompute categories, spam scores and formations
+    Group dances page by category
+    Category selector
+    Use backend integration in frontend
+      Searching page names
+      Show category/formation suggestions in DanceEditor
+      wikipageName field
+    Wiki page selector field
+
   UI Showcase
   * Add formV2 stuff
   * Showcase component
@@ -77,33 +105,7 @@
     HTMLTable
     Check todo markings in Button.tsx or other
     separate Icon components by Icon
-* Add loading animation to more pages
-  Find a way to autofill dance categories
-  * Integrate dance wiki to backend
-  * GraphQL queries for it
-  * Automatic background fetcher
-    * Occasionally fetch list
-    * Fetch unfetched dances
-  * Spam score system
-  * wikipageName field for dances
-    * Backend
-  * Try to interpret dance source
-  * Occasionally recompute categories, spam scores and formations
-    Use backend integration in frontend
-      Searching page names
-      Show category/formation suggestions in DanceEditor
-      wikipageName field
-    Wiki page selector field
-
     
-  MISC:
-  * intervalMusic on by defalt
-  * teached dances missing: cut unique
-  * Focus field on search clear
-    Add teached dances functionality <- focus on add
-    Dance selector:
-    * show workshop
-      show category <- 
   Teacher/people database
   Apuopettajat / assistant teachers
   Typed backend queries
