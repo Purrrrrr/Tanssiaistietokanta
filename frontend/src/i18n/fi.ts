@@ -306,6 +306,7 @@ export const fi = {
         createDance: 'Uusi tanssi',
         danceCreated: 'Tanssi __name__ luotu',
         uploadDance: 'Tuo tanssi tiedostosta',
+        noCategory: 'Luokittelemattomat'
       },
       dancePage: {
         backToDanceList: 'Takaisin tanssilistaan',
