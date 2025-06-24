@@ -1,7 +1,7 @@
 import {getLinkedInternalPages, getHeaderData, stripLinks} from './markdownUtils'
 
 const categoryTagRegex = /<Luokka:([^>]+)>/g
-const categoryLinkRegex = /\[Luokka:([^\]]+)\]\(Luokka:.* "wikilink"\)/g
+const categoryLinkRegex = /\[[^\]]+\]\(Luokka: ([^)]*) "wikilink"\)/g
 
 export function getCategoriesFromContent(content: string | null) {
   if (content === null) return []

@@ -28,7 +28,7 @@ type StoredDanceWiki = Dancewiki
 
 const DAY = 24 * 60 * 60 * 1000
 const categoriesPageName = 'Tanssiohjeet'
-const CURRENT_METADATA_VERSION = 1
+const CURRENT_METADATA_VERSION = 1.002
 
 const UNFETCHED_DANCE = {
   status: 'UNFETCHED' as const,
