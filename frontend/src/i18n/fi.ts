@@ -85,6 +85,8 @@ export const fi = {
         many: 'Käytössä __count__ tapahtumassa',
       },
       danceInDanceWiki: 'Tanssi tanssiwikissä',
+      suggestions: 'Ehdotuksia',
+      editInstructions: 'Muokkaa tanssiohjeita',
     },
     danceDataImportButton: {
       fetchInfoFromWiki: 'Hae tietoja tanssiwikistä',

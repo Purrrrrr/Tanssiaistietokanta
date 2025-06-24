@@ -1,4 +1,5 @@
-import classNames from "classnames"
+import { MouseEventHandler } from 'react'
+import classNames from 'classnames'
 
 interface TagColor {
   background: string
@@ -14,13 +15,16 @@ interface ColoredTagProps {
   hashSource?: string
   color?: number
   small?: boolean
+  onClick?: MouseEventHandler
 }
 
-export function ColoredTag({ title, hashSource, color, small } : ColoredTagProps) {
+export function ColoredTag({ title, hashSource, color, small, onClick } : ColoredTagProps) {
   const colorIndex = Math.abs(color ?? hash(hashSource ?? title)) % TAG_COLOR_COUNT
   return <span
+    onClick={onClick}
     className={classNames(
       'inline-block py-0.5 px-2 m-0.5 font-bold text-shadow-xs rounded-xl leading-5.5',
+      onClick && 'cursor-pointer hover:brightness-95 active:brightness-85',
       small || 'py-0.5 ',
     )}
     style={colors[colorIndex]}

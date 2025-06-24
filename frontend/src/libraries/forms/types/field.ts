@@ -1,3 +1,5 @@
+import { ReactNode } from 'react'
+
 import {ValidationProps} from '../validation'
 import {TypedStringPath} from './path'
 
@@ -13,7 +15,7 @@ export interface UserGivenFieldContainerProps extends LabelTexts {
 
 export interface LabelTexts {
   label: string
-  helperText?: string
+  helperText?: ReactNode
   labelInfo?: string
 }
 

@@ -1,5 +1,6 @@
-import {useCallback, useId} from 'react'
+import {useCallback, useId, useState} from 'react'
 import {useNavigate} from 'react-router-dom'
+import { ChevronDown, ChevronUp } from '@blueprintjs/icons'
 
 import {Dance, DanceWithEvents, EditableDance} from 'types'
 import { ID } from 'backend/types'
@@ -9,7 +10,7 @@ import { useDeleteDance, usePatchDance } from 'services/dances'
 
 import {formFor, MarkdownEditor, patchStrategy, SyncStatus, useAutosavingState} from 'libraries/forms'
 import { Select } from 'libraries/formsV2/components/inputs'
-import {Button, H2, Icon, Link, RegularLink} from 'libraries/ui'
+import {Button, Collapse, H2, Icon, Link, RegularLink} from 'libraries/ui'
 import {DanceDataImportButton} from 'components/DanceDataImportDialog'
 import {useGlobalLoadingAnimation} from 'components/LoadingState'
 import { useVersionedName } from 'components/versioning/VersionedPageTitle'
@@ -17,6 +18,8 @@ import {VersionSidebarToggle} from 'components/versioning/VersionSidebarToggle'
 import {DeleteButton} from 'components/widgets/DeleteButton'
 import {DurationField} from 'components/widgets/DurationField'
 import { useT } from 'i18n'
+
+import { ColoredTag } from './widgets/ColoredTag'
 
 interface DanceEditorProps extends Pick<DanceEditorContainerProps, 'dance' | 'titleComponent'> {
   dance: DanceWithEvents
@@ -40,6 +43,7 @@ function danceVersionLink(id: ID, versionId?: ID | null) {
 }
 
 export function DanceEditor({dance, onDelete, showLink, showVersionHistory, titleComponent} : DanceEditorProps) {
+  const [showInstructions, setShowInstructions] = useState(false)
   const label = useT('domain.dance')
   const t = useT('components.danceEditor')
   const addLoadingAnimation = useGlobalLoadingAnimation()
@@ -67,15 +71,15 @@ export function DanceEditor({dance, onDelete, showLink, showVersionHistory, titl
       </div>
     </>}
   >
-    <div className="flex flex-wrap gap-3.5 danceEditor">
+    <div className="flex flex-wrap gap-3.5">
       <div className="grow basis-75">
         <Input label={label('name')} path="name" />
-        <Input label={label('category')} path="category" />
+        <Input
+          label={label('category')}
+          path="category"
+          helperText={!dance.category && <Suggestions suggestions={dance.wikipage?.categories} path="category" />}
+        />
         <Field label={label('duration')} path="duration" component={DurationField} />
-        <Input label={label('prelude')} path="prelude" />
-        <Input label={label('formation')} path="formation" />
-        <Input label={label('source')} labelInfo={label('sourceInfo')} path="source" />
-        <Input label={label('remarks')} path="remarks" />
         {/* <Field label={label('wikipageName')} path="wikipageName" component={DanceNameSearch} /> */}
         {dance.wikipageName &&
           <p>
@@ -84,11 +88,24 @@ export function DanceEditor({dance, onDelete, showLink, showVersionHistory, titl
           </p>
         }
       </div>
-      <div className="grow-2 basis-125">
-        <Field label={label('description')} path="description" component={MarkdownEditor} componentProps={{className: 'max-h-150'}} />
-        <Field label={label('instructions')} path="instructions" component={MarkdownEditor} componentProps={{className: 'max-h-150'}} />
+      <div className="grow basis-75">
+        <Input label={label('prelude')} path="prelude" />
+        <Input label={label('formation')} path="formation" />
+        <Input label={label('source')} labelInfo={label('sourceInfo')} path="source" />
+        <Input label={label('remarks')} path="remarks" />
       </div>
     </div>
+    <div className="text-right">
+      <Button
+        text={t('editInstructions')}
+        onClick={() => setShowInstructions(s => !s)}
+        rightIcon={showInstructions ? <ChevronUp/> : <ChevronDown />}
+      />
+    </div>
+    <Collapse isOpen={showInstructions}>
+      <Field label={label('description')} path="description" component={MarkdownEditor} componentProps={{className: 'max-h-150'}} />
+      <Field label={label('instructions')} path="instructions" component={MarkdownEditor} componentProps={{className: 'max-h-150'}} />
+    </Collapse>
   </DanceEditorContainer>
 }
 
@@ -151,6 +168,22 @@ function DanceIsUsedIn({events}: Pick<DanceWithEvents, 'events'>) {
         </Link>
       }
     />
+  </div>
+}
+
+function Suggestions(
+  {suggestions, path}: { suggestions?: string[], path: 'category' | 'formation' }
+) {
+  const t = useT('components.danceEditor')
+  const onChange = useOnChangeFor(path)
+
+  if (!suggestions?.length) return null
+
+  return <div>
+    {t('suggestions')}:
+    {suggestions.map(suggestion =>
+      <ColoredTag key={suggestion} small title={suggestion} onClick={() => onChange(suggestion)} />
+    )}
   </div>
 }
 
