@@ -1,11 +1,12 @@
 import { useId } from 'react'
 
-import {Dance} from 'types'
+import {Dance, Workshop} from 'types'
 
 import {filterDances, useCreateDance, useDances} from 'services/dances'
 
 import { AutocompleteInput } from 'libraries/formsV2/components/inputs'
 import { CssClass } from 'libraries/ui'
+import { DanceIdSet } from 'components/event/EventProgramForm/eventMetadata'
 import {useT} from 'i18n'
 
 import { ColoredTag } from './ColoredTag'
@@ -19,10 +20,12 @@ interface DanceChooserProps {
   emptyText?: string,
   allowEmpty?: boolean,
   placeholder?: string,
+  workshops?: Workshop[]
+  chosenDancesIds?: DanceIdSet
 }
 
 export function DanceChooser({
-  value, onChange, allowEmpty, emptyText, excludeFromSearch, placeholder,
+  value, onChange, allowEmpty, emptyText, excludeFromSearch, placeholder, workshops = [], chosenDancesIds = new Set(),
 }: DanceChooserProps) {
   const t = useT('components.danceChooser')
   const [dances] = useDances()
@@ -32,6 +35,7 @@ export function DanceChooser({
   const items = excludeFromSearch
     ? dances.filter((dance: Dance) => dance._id === value?._id || !excludeFromSearch.some(excluded => excluded._id === dance._id))
     : dances
+  const dancesInWorkshops = workshops.flatMap(w => w.instances).flatMap(i => i.dances).map(d => d?._id)
   const getItems = (query: string) => {
     const danceList = filterDances(items, query)
     const showCreateDance = query.trim().length > 0
@@ -39,10 +43,22 @@ export function DanceChooser({
     const extraItems : DanceChooserOption[] = []
     if (allowEmpty) extraItems.push(null)
     if (showCreateDance) extraItems.push({ __typename: 'createDance', name: query.trim() })
-
-    return extraItems.length > 0
-      ? [...danceList, ...extraItems]
-      : danceList
+    const isWorkshopDance = (id: string) => !chosenDancesIds.has(id) && dancesInWorkshops.includes(id)
+    const categories = [
+      {
+        title: t('categories.missingFromWorkshops'),
+        items: danceList.filter(dance => isWorkshopDance(dance._id))
+      },
+      {
+        title: t('categories.dances'),
+        items: danceList.filter(dance => !isWorkshopDance(dance._id))
+      },
+      {
+        title: t('categories.other'),
+        items: extraItems,
+      },
+    ]
+    return { categories }
   }
 
   const chooseOrCreateDance = (created: DanceChooserOption) => {

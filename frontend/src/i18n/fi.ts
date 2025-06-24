@@ -70,6 +70,11 @@ export const fi = {
       searchDance: 'Etsi tanssia...',
       emptyDancePlaceholder: 'Tansseja ei löytynyt',
       createDance: 'Luo uusi tanssi',
+      categories: {
+        missingFromWorkshops: 'Puuttuvat työpajoissa opetetut tanssit',
+        dances: 'Tanssit',
+        other: 'Muut',
+      },
     },
     danceEditor: {
       linkToThisDance: 'Linkki tähän tanssiin',

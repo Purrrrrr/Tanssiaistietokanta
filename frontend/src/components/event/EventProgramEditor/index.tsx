@@ -26,6 +26,7 @@ import {
   useOnChangeFor,
   useValueAt,
 } from 'components/event/EventProgramForm'
+import { EventMetadataContext, useWorkshops } from 'components/event/EventProgramForm/eventMetadata'
 import { ProgramTypeIcon } from 'components/event/ProgramTypeIcon'
 import {BackLink} from 'components/widgets/BackLink'
 import { ColoredTag } from 'components/widgets/ColoredTag'
@@ -65,10 +66,13 @@ export function EventProgramEditor({event}: EventProgramEditorProps) {
       {useTranslation('pages.events.eventProgramPage.pageTitle')}
       <SyncStatus style={{marginLeft: '1ch', top: '3px'}} className="grow" state={state} />
     </h1>
-    <Tabs id="programEditorTabs" renderActiveTabPanelOnly selectedTabId={tabId ?? 'main'} onChange={changeTab}>
-      <Tab id="main" title="Tanssiohjelma" panel={<MainEditor program={value} workshops={event.workshops} />} />
-      <Tab id="slides" title="Diashow" panel={<SlideshowEditor program={value} />} />
-    </Tabs>
+
+    <EventMetadataContext program={value} workshops={event.workshops}>
+      <Tabs id="programEditorTabs" renderActiveTabPanelOnly selectedTabId={tabId ?? 'main'} onChange={changeTab}>
+        <Tab id="main" title="Tanssiohjelma" panel={<MainEditor program={value} workshops={event.workshops} />} />
+        <Tab id="slides" title="Diashow" panel={<SlideshowEditor program={value} />} />
+      </Tabs>
+    </EventMetadataContext>
   </Form>
 }
 

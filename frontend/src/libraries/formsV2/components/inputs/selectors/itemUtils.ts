@@ -48,10 +48,12 @@ async function getItems<T>(items: Items<T>, filter: string, itemToString: ItemTo
   }
 
   return {
-    categories: items.categories.map(category => ({
-      ...category,
-      items: filterItemList(category.items, filter, itemToString)
-    }))
+    categories: items.categories
+      .map(category => ({
+        ...category,
+        items: filterItemList(category.items, filter, itemToString)
+      }))
+      .filter(category => category.items.length > 0)
   }
 }
 

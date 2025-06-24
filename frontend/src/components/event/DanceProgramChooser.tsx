@@ -7,8 +7,14 @@ import {DanceProgram, EventProgramItem, RequestedDance} from 'components/event/E
 import {DanceChooser} from 'components/widgets/DanceChooser'
 import {useT} from 'i18n'
 
-export const DanceProgramChooser = React.memo(function DanceProgramChooser({value, onChange, ...props} : FieldComponentProps<EventProgramItem, HTMLElement>) {
+import { useChosenDanceIds, useWorkshops } from './EventProgramForm/eventMetadata'
+
+type DanceProgramChooserProps = FieldComponentProps<EventProgramItem, HTMLElement>
+
+export const DanceProgramChooser = React.memo(function DanceProgramChooser({value, onChange, ...props} : DanceProgramChooserProps) {
   const t = useT('components.eventProgramEditor')
+  const workshops = useWorkshops()
+  const chosenDanceIds = useChosenDanceIds()
   return <DanceChooser
     key={value?._id}
     value={value?._id ? value as Dance : null}
@@ -19,6 +25,8 @@ export const DanceProgramChooser = React.memo(function DanceProgramChooser({valu
     )}
     allowEmpty
     emptyText={t('programTypes.RequestedDance')}
+    workshops={workshops}
+    chosenDancesIds={chosenDanceIds}
     {...props}
   />
 })
