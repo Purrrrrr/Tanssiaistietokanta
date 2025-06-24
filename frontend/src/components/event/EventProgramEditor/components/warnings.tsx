@@ -1,20 +1,16 @@
-import {Dance, Event} from 'types'
+import {Dance} from 'types'
 import {DanceSet, EventProgramSettings} from 'components/event/EventProgramForm/types'
 
 import {Callout, RegularLink} from 'libraries/ui'
+import { useChosenDanceIds, useWorkshops } from 'components/event/EventProgramForm/eventMetadata'
 import {useT} from 'i18n'
 import {uniq} from 'utils/uniq'
 
 
-export function MissingDancesWarning({ program, workshops }: {program: EventProgramSettings, workshops: Event['workshops']}) {
+export function MissingDancesWarning() {
   const t = useT('components.eventProgramEditor.missingDancesWarning')
-  const allDanceIds = new Set(
-    program.danceSets
-      .flatMap(set => set.program)
-      .map(row => row.item)
-      .filter(item => item.__typename === 'Dance')
-      .map(dance => dance._id)
-  )
+  const allDanceIds = useChosenDanceIds()
+  const workshops = useWorkshops()
   const workshopsWithMissing = workshops
     .map(workshop => ({
       id: workshop._id,

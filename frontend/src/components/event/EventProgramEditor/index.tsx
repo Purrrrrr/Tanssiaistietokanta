@@ -26,7 +26,7 @@ import {
   useOnChangeFor,
   useValueAt,
 } from 'components/event/EventProgramForm'
-import { EventMetadataContext, useWorkshops } from 'components/event/EventProgramForm/eventMetadata'
+import { EventMetadataContext } from 'components/event/EventProgramForm/eventMetadata'
 import { ProgramTypeIcon } from 'components/event/ProgramTypeIcon'
 import {BackLink} from 'components/widgets/BackLink'
 import { ColoredTag } from 'components/widgets/ColoredTag'
@@ -69,14 +69,14 @@ export function EventProgramEditor({event}: EventProgramEditorProps) {
 
     <EventMetadataContext program={value} workshops={event.workshops}>
       <Tabs id="programEditorTabs" renderActiveTabPanelOnly selectedTabId={tabId ?? 'main'} onChange={changeTab}>
-        <Tab id="main" title="Tanssiohjelma" panel={<MainEditor program={value} workshops={event.workshops} />} />
+        <Tab id="main" title="Tanssiohjelma" panel={<MainEditor program={value} />} />
         <Tab id="slides" title="Diashow" panel={<SlideshowEditor program={value} />} />
       </Tabs>
     </EventMetadataContext>
   </Form>
 }
 
-function MainEditor({ program, workshops }: {program: EventProgramSettings, workshops: Event['workshops']}) {
+function MainEditor({ program }: {program: EventProgramSettings }) {
   const t = useT('components.eventProgramEditor')
   const {danceSets, introductions} = program
 
@@ -85,7 +85,7 @@ function MainEditor({ program, workshops }: {program: EventProgramSettings, work
       <Field label={t('fields.pauseDuration')} inline path="pauseBetweenDances" component={DurationField} />
       {introductions.program.length === 0 && <AddIntroductionButton />}
     </div>
-    <MissingDancesWarning program={program} workshops={workshops} />
+    <MissingDancesWarning />
     <DuplicateDancesWarning program={program} />
     <ListEditorContext>
       <IntroductoryInformation />
