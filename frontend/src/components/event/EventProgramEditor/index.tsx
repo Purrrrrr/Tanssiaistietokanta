@@ -28,6 +28,7 @@ import {
 } from 'components/event/EventProgramForm'
 import { ProgramTypeIcon } from 'components/event/ProgramTypeIcon'
 import {BackLink} from 'components/widgets/BackLink'
+import { ColoredTag } from 'components/widgets/ColoredTag'
 import {Duration} from 'components/widgets/Duration'
 import {DurationField} from 'components/widgets/DurationField'
 import {useT, useTranslation} from 'i18n'
@@ -44,7 +45,6 @@ import {
 import { SlideshowEditor} from './SlideshowEditor'
 
 import './EventProgramEditor.sass'
-import { ColoredTag } from 'components/widgets/ColoredTag'
 
 export { programItemToString }
 

@@ -1,7 +1,8 @@
-import { useCombobox } from 'downshift'
+import { ReactNode } from 'react'
+import { type UseComboboxGetInputPropsOptions, useCombobox } from 'downshift'
 
-import { SelectorProps } from './types'
-import { FieldInputComponent } from '../types'
+import type { SelectorProps } from './types'
+import type { FieldInputComponent } from '../types'
 
 import { Dropdown, DropdownContainer } from 'libraries/overlays'
 import { CssClass } from 'libraries/ui'
@@ -11,12 +12,19 @@ import { acceptNulls, preventDownshiftDefaultWhen, useFilteredItems } from './ut
 
 export interface AutocompleteInputProps<T> extends Omit<SelectorProps<T>, 'buttonRenderer'> {
   placeholder?: string
+  inputRenderer?: (props: InputProps) => ReactNode
+}
+
+interface InputProps extends Omit<UseComboboxGetInputPropsOptions, 'onChange'> {
+  placeholder: string
+  disabled?: boolean
+  onChange?: React.ChangeEventHandler<HTMLInputElement>
 }
 
 export function AutocompleteInput<T>(props: AutocompleteInputProps<T>) {
   'use no memo'
   const {
-    items, itemToString = String, categoryTitleRenderer,
+    items, itemToString = String, categoryTitleRenderer, inputRenderer,
     value, onChange, id, readOnly,
     placeholder = '', containerClassname, inline,
   } = props
@@ -73,7 +81,10 @@ export function AutocompleteInput<T>(props: AutocompleteInputProps<T>) {
   }
 
   return <DropdownContainer className={containerClassname ?? (inline ? undefined : 'grow f-full')}>
-    <input className={CssClass.input+' w-full'} {...inputProps} />
+    {inputRenderer
+      ? inputRenderer(inputProps)
+      : <input className={CssClass.input+' w-full'} {...inputProps} />
+    }
     <Dropdown open={isOpen} tabIndex={-1}>
       <Menu {...getMenuProps({}, { suppressRefError: true })} tabIndex={-1}>
         {renderMenuItems(filteredItemData, categoryTitleRenderer, (item, index) => (

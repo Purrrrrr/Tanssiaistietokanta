@@ -5,6 +5,7 @@ import {Dance} from 'types'
 import {filterDances, useCreateDance, useDances} from 'services/dances'
 
 import { AutocompleteInput } from 'libraries/formsV2/components/inputs'
+import { CssClass } from 'libraries/ui'
 import {useT} from 'i18n'
 
 import { ColoredTag } from './ColoredTag'
@@ -56,12 +57,22 @@ export function DanceChooser({
       onChange(created)
     }
   }
+
   return <AutocompleteInput<DanceChooserOption>
     placeholder={placeholder ?? t('searchDance')}
     id={id}
     items={getItems}
     value={value}
     onChange={chooseOrCreateDance}
+    inputRenderer={props => {
+      const dance = dances.find(d => d._id === value?._id)
+      const category = dance && getCategory(dance)
+
+      return <div className="flex grow">
+        <input className={CssClass.input + ' w-full'} {...props} />
+        {category && <ColoredTag small {...category} />}
+      </div>
+    }}
     itemToString={item => item?.name ?? ''}
     itemRenderer={item => {
       if (item === null) return emptyText ?? t('emptyDancePlaceholder')
