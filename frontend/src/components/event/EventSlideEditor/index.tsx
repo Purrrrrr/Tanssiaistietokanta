@@ -26,6 +26,13 @@ import { InheritedSlideStyleSelector, IntervalMusicDefaultTextsSwitch } from './
 
 import './EventSlideEditor.scss'
 
+const markdownEditorProps = {
+  noPreview: true,
+  style: {
+    minHeight: 'max(30dvh, 300px)',
+  },
+}
+
 type EventSlideEditorProps = WithEventProgram<EventSlideProps>
   & Pick<LinkToSlideProps, 'hashLink'> & { syncStatus?: SyncState }
 
@@ -195,12 +202,12 @@ function IntervalMusicDescriptionEditor({danceSetIndex}: {danceSetIndex: number}
       ? <>
         <h2>{t('titles.customIntervalMusicTexts')}</h2>
         <Input label={t('fields.intervalMusic.name')} path={`${path}.name`} required />
-        <Field label={t('fields.intervalMusic.description')} path={`${path}.description`} component={MarkdownEditor} componentProps={{noPreview: true}} />
+        <Field label={t('fields.intervalMusic.description')} path={`${path}.description`} component={MarkdownEditor} componentProps={markdownEditorProps} />
       </>
       : <>
         <h2>{t('titles.defaultIntervalMusicTexts')}</h2>
         <Input label={t('fields.intervalMusic.name')} path='defaultIntervalMusic.name' componentProps={{placeholder:t('programTypes.IntervalMusic')}} />
-        <Field label={t('fields.intervalMusic.description')} path="defaultIntervalMusic.description" component={MarkdownEditor} componentProps={{noPreview: true}} />
+        <Field label={t('fields.intervalMusic.description')} path="defaultIntervalMusic.description" component={MarkdownEditor} componentProps={markdownEditorProps} />
       </>
     }
   </>
@@ -221,7 +228,7 @@ function ProgramItemEditor({path}: {path: ProgramItemPath}) {
       return <SectionCard>
         <H2><T msg={'pages.events.ballProgram.infoTitle'}/></H2>
         <Input label={t('fields.eventProgram.name')} path={`${path}.item.name`} required />
-        <Field label={t('fields.eventProgram.description')} path={`${path}.item.description`} component={MarkdownEditor} componentProps={{noPreview: true}} />
+        <Field label={t('fields.eventProgram.description')} path={`${path}.item.description`} component={MarkdownEditor} componentProps={markdownEditorProps} />
         <Switch label={t('fields.eventProgram.showInLists')} path={`${path}.item.showInLists`} inline />
         <Callout><T msg={'pages.events.ballProgram.currentItemAlwaysShownInLists'}/></Callout>
       </SectionCard>
@@ -237,7 +244,7 @@ function DanceEditor({dance}: {dance: Dance}) {
   const t = useT('domain.dance')
   return <DanceEditorContainer dance={dance}>
     <DanceInput label={t('name')} path="name" />
-    <DanceField label={t('description')} path="description" component={MarkdownEditor} componentProps={{noPreview: true}}/>
+    <DanceField label={t('description')} path="description" component={MarkdownEditor} componentProps={markdownEditorProps}/>
     <DanceInput label={t('source')} labelInfo={t('sourceInfo')} path="source" />
     <Link target="_blank" to={`/dances/${dance._id}`}><Icon icon="link"/>{useTranslation('pages.events.ballProgram.linkToCompleteDance')}</Link>
   </DanceEditorContainer>
