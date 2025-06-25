@@ -4,7 +4,7 @@ import { Link as LinkIcon } from '@blueprintjs/icons'
 import {Dance} from 'types'
 
 import {DragHandle, formFor, MarkdownEditor, SyncState, SyncStatus} from 'libraries/forms'
-import {Callout, H2, Link, RegularLink, SectionCard} from 'libraries/ui'
+import {Button, Callout, H2, Link, RegularLink, SectionCard} from 'libraries/ui'
 import {DanceEditorContainer} from 'components/DanceEditor'
 import { DanceProgramChooser } from 'components/event/DanceProgramChooser'
 import {
@@ -23,6 +23,7 @@ import { ProgramTypeIcon } from 'components/event/ProgramTypeIcon'
 import { Duration } from 'components/widgets/Duration'
 import {T, useT, useTranslation} from 'i18n'
 
+import { isMissingInstruction } from '../EventProgramEditor/components'
 import { InheritedSlideStyleSelector, IntervalMusicDefaultTextsSwitch } from './components'
 
 import './EventSlideEditor.scss'
@@ -221,7 +222,8 @@ function ProgramItemEditor({path}: {path: ProgramItemPath}) {
   switch(item.__typename) {
     case 'Dance':
       return <SectionCard>
-        <DanceEditor dance={item} />
+        {/* TODO: fix types */}
+        <DanceEditor dance={item as Dance} />
       </SectionCard>
     case 'RequestedDance':
       return null
@@ -239,6 +241,7 @@ function ProgramItemEditor({path}: {path: ProgramItemPath}) {
 const {
   Field: DanceField,
   Input: DanceInput,
+  useOnChangeFor: useOnChangeForDanceField,
 } = formFor<Dance>()
 
 function DanceEditor({dance}: {dance: Dance}) {
@@ -250,13 +253,25 @@ function DanceEditor({dance}: {dance: Dance}) {
     <DanceInput label={label('source')} labelInfo={label('sourceInfo')} path="source" />
 
     {dance.wikipageName &&
-      <p>
-        {t('danceInDanceWiki')}{' '}
-        <RegularLink target="_blank" href={`https://tanssi.dy.fi/${dance.wikipageName.replaceAll(' ', '_')}`}><LinkIcon/> {dance.wikipageName}</RegularLink>
-      </p>
+      <>
+        <p>
+          {t('danceInDanceWiki')}{' '}
+          <RegularLink target="_blank" href={`https://tanssi.dy.fi/${dance.wikipageName.replaceAll(' ', '_')}`}><LinkIcon/> {dance.wikipageName}</RegularLink>
+        </p>
+        {isMissingInstruction(dance) && <CopyDancewikiInstructionsButton path="description" instructions={dance.wikipage?.instructions} />}
+      </>
     }
     <Link target="_blank" to={`/dances/${dance._id}`}><LinkIcon/> {useTranslation('pages.events.ballProgram.linkToCompleteDance')}</Link>
   </DanceEditorContainer>
+}
+
+function CopyDancewikiInstructionsButton({path, instructions}: { path: 'description' | 'instructions', instructions: string | null | undefined }) {
+  const t = useT('components.danceEditor')
+  const setInstructions = useOnChangeForDanceField(path)
+  if (!instructions) return null
+
+  const onClick = () => setInstructions(instructions)
+  return <p><Button color="primary" text={t('copyFromDancewiki')} onClick={onClick} /></p>
 }
 
 interface LinkToSlideProps {

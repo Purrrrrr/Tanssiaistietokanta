@@ -157,6 +157,9 @@ query getEvent($id: ID!, $versionId: ID) {
             ... on Dance {
               _id
               wikipageName
+              wikipage {
+                instructions
+              }
               teachedIn(eventId: $id) {
                 _id
                 workshop { name }

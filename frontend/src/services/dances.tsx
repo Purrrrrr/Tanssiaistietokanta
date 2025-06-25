@@ -27,6 +27,7 @@ query getDances {
       status
       categories
       formations
+      instructions
     }
     events {
       _id
@@ -64,6 +65,7 @@ query getDance($id: ID!, $versionId: ID) {
       status
       categories
       formations
+      instructions
     }
     events {
       _id
@@ -101,6 +103,7 @@ mutation createDance($dance: DanceInput!) {
       status
       categories
       formations
+      instructions
     }
     events {
       _id
@@ -120,6 +123,7 @@ mutation patchDance($id: ID!, $dance: DancePatchInput!) {
       status
       categories
       formations
+      instructions
     }
     events {
       _id
@@ -139,6 +143,7 @@ mutation deleteDance($id: ID!) {
       status
       categories
       formations
+      instructions
     }
     events {
       _id

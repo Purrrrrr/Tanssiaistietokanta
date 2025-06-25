@@ -76,7 +76,7 @@ function useDancesWithMissingInstructions() {
     .filter(isMissingInstruction)
 }
 
-function isMissingInstruction(dance: { description?: string | null}) {
+export function isMissingInstruction(dance: { description?: string | null}) {
   const instructionLength = dance.description?.trim()?.length ?? 0
   return instructionLength < 10
 }
@@ -115,7 +115,7 @@ export function DuplicateDancesWarning({program}: {program: EventProgramSettings
   const t = useT('components.eventProgramEditor.duplicateDancesWarning')
 
   const duplicateMap: {
-    [key in string]: { dance: Dance, danceSets: DanceSet[] }
+    [key in string]: { dance: Omit<Dance, 'wikipage'>, danceSets: DanceSet[] }
   } = {}
 
   for (const danceSet of program.danceSets.values()) {
