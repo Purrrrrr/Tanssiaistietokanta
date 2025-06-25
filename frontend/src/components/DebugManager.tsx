@@ -9,7 +9,7 @@ export default function DebugManager() {
 
   return <>
     <Button minimal className="p-2" onClick={() => setVisible(!visible)}>⚙</Button>
-    <fieldset className={`fixed bottom-7.5 right-1.5 items-start flex flex-col bg-white border-stone-500 border-1 shadow-sm shadow-stone-600/50 p-2 transition-opacity ${visible ? '' : 'opacity-0'}`}>
+    <fieldset className={`fixed bottom-7.5 right-1.5 items-start flex flex-col bg-white border-stone-500 border-1 shadow-sm shadow-stone-600/50 p-2 transition-opacity ${visible ? '' : 'opacity-0 pointer-events-none'}`}>
       <legend>Debug namespaces</legend>
       <Button minimal className="absolute top-0 right-1.5 p-2" onClick={() => setVisible(false)}>x</Button>
       {state.map(([namespace, enabled]) =>
