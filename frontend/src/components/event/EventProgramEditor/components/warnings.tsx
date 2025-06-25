@@ -45,7 +45,10 @@ export function MissingDanceInstructionsWarning({program}: {program: EventProgra
     <ul className="ps-3">
       {missing.map(({ id, danceSet, dance }) =>
         <li className="list-disc list-item my-1">
-          <Link to={linkToSlide(id)}>
+          <Link
+            to={linkToSlide(id)}
+            onClick={() => document.querySelector('.slideEditors')?.scrollIntoView({behavior: 'smooth', block: 'nearest', inline: 'nearest'})}
+          >
             {dance.name}
           </Link>
           {' '}
