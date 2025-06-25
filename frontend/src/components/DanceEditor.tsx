@@ -130,7 +130,7 @@ export function DanceEditorContainer({dance, children, toolbar, titleComponent: 
 
   const {formProps, state} = useAutosavingState<EditableDance, Partial<EditableDance>>(editedDance, patchDance, patchStrategy.partial)
   return <Form {...formProps} readOnly={readOnly}>
-    <div className="flex flex-wrap gap-3.5 justify-end items-center">
+    <div className="flex flex-wrap gap-3.5 items-center">
       <Title className="m-0">
         {useVersionedName(dance.name, dance._versionId ? dance._versionNumber : null)}
       </Title>

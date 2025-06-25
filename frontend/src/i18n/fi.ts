@@ -226,7 +226,7 @@ export const fi = {
         },
         youcanEditDancesIn: 'Voit muokata tanssitapahtumien tansseja',
         danceDatabaseLinkName: 'tanssitietokannasta',
-        danceEvents: 'tanssitapahtumia',
+        danceEvents: 'Tanssitapahtumat tietokannassa',
         eventDeleteConfirmation: 'Haluatko varmasti poistaa tapahtuman __eventName__?',
         createEvent: 'Uusi tapahtuma',
       },
