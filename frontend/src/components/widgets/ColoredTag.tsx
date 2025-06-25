@@ -23,9 +23,11 @@ export function ColoredTag({ title, hashSource, color, small, onClick } : Colore
   return <span
     onClick={onClick}
     className={classNames(
-      'inline-block py-0.5 px-2 m-0.5 font-bold text-shadow-xs rounded-xl leading-5.5',
+      'inline-block px-2 mx-0.5 font-bold text-shadow-xs rounded-xl',
       onClick && 'cursor-pointer hover:brightness-95 active:brightness-85',
-      small || 'py-0.5 ',
+      small
+        ? 'py-0 my-0.5 text-xs'
+        : 'leading-5.5',
     )}
     style={colors[colorIndex]}
   >

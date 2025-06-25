@@ -13,22 +13,27 @@ import { NavigateButton } from 'components/widgets/NavigateButton'
 import {SlideStyleSelector} from 'components/widgets/SlideStyleSelector'
 import {useT} from 'i18n'
 
+import { MissingDanceInstructionsWarning } from './components'
+import { useLinkToSlide } from './useLinkToSlide'
+
 import 'components/Slide/slideStyles.scss'
 
 export function SlideshowEditor({ program }: {program: EventProgramSettings}) {
   const t = useT('components.eventProgramEditor')
   const navigate = useNavigate()
+  const linkToSlide = useLinkToSlide()
   const slides = useEventSlides(program)
   const { slideId = startSlideId } = useParams()
   const currentSlide = slides.find(slide => slide.id === slideId ) ?? slides[0]
   const { swipeHandlers, slideIndex } = useSlideshowNavigation({
     slides, currentSlideId: currentSlide.id,
-    onChangeSlide: (slide) => navigate(`../slides/${slide.id}`)
+    onChangeSlide: (slide) => navigate(linkToSlide(slide.id))
   })
   const deferredCurrentSlide = useDeferredValue(currentSlide)
   const isStale = deferredCurrentSlide.id !== currentSlide.id
 
   return <section className="slideshowEditor">
+    <MissingDanceInstructionsWarning program={program} />
     <div className="main-toolbar">
       <Field label="" inline path="slideStyleId" component={SlideStyleSelector} componentProps={{text: t('fields.eventDefaultStyle')}} />
     </div>
@@ -46,13 +51,14 @@ interface SlideNavigationProps {slideIndex: number, currentSlide: EventSlideProp
 
 function SlideNavigation(props: SlideNavigationProps) {
   const {currentSlide, slides, slideIndex} = props
+  const linkToSlide = useLinkToSlide()
   const navigate = useNavigate()
 
   return <>
     <Tabs
       id="danceset"
       selectedTabId={currentSlide.parentId ?? currentSlide.id}
-      onChange={(id) => navigate(`../slides/${id}`)}
+      onChange={(id) => navigate(linkToSlide(id as string))}
     >
       {slides.filter(slide => slide.parentId === undefined).map(slide =>
         <Tab id={slide.id} title={slide.title} />
@@ -60,11 +66,11 @@ function SlideNavigation(props: SlideNavigationProps) {
     </Tabs>
     <nav className="slideNavigation">
       {slideIndex > 0 &&
-        <NavigateButton icon={<ChevronLeft />} href={`../slides/${slides[slideIndex - 1].id}`} className="previous-slide-link" />
+        <NavigateButton icon={<ChevronLeft />} href={linkToSlide(slides[slideIndex - 1].id)} className="previous-slide-link" />
       }
       <SlidePreviews {...props} />
       {slideIndex < slides.length - 1 &&
-        <NavigateButton icon={<ChevronRight />} href={`../slides/${slides[slideIndex + 1].id}`} className="next-slide-link" />
+        <NavigateButton icon={<ChevronRight />} href={linkToSlide(slides[slideIndex + 1].id)} className="next-slide-link" />
       }
     </nav>
   </>
@@ -142,22 +148,14 @@ function useDebouncedScrollPositionListener(callBack: (scrollPosition: number) =
 const SlideLink = React.memo(function SlideLink(
   {slide, eventProgram, current, placeholder}: { slide: EventSlideProps, eventProgram: EventProgramSettings, current: boolean, placeholder: boolean }
 ) {
-  const { eventId, eventVersionId } = useParams()
-  const rootUrl = eventVersionId
-    ? `/events/${eventId}/version/${eventVersionId}/program/slides/`
-    : `/events/${eventId}/program/slides/`
-  if (placeholder) {
-    return <Link to={`${rootUrl}${slide.id}`} id={`slide-link-${slide.id}`} className={classNames('slide-link', {current})}>
-      <SlideContainer className="grow inert" color="#eee">
-        <EventSlidePreview {...slide} eventProgram={eventProgram} />
-      </SlideContainer>
-      <p className="slide-link-title">{slide.title}</p>
-    </Link>
-  }
+  const linkToSlide = useLinkToSlide()
 
-  return <Link to={`${rootUrl}${slide.id}`} id={`slide-link-${slide.id}`} className={classNames('slide-link', {current})}>
+  return <Link to={linkToSlide(slide.id)} id={`slide-link-${slide.id}`} className={classNames('slide-link', {current})}>
     <SlideContainer className="grow inert" color="#eee">
-      <EventSlide {...slide} eventProgram={eventProgram} linkComponent="a" />
+      {placeholder
+        ? <EventSlidePreview {...slide} eventProgram={eventProgram} />
+        : <EventSlide {...slide} eventProgram={eventProgram} linkComponent="a" />
+      }
     </SlideContainer>
     <p className="slide-link-title">{slide.title}</p>
   </Link>

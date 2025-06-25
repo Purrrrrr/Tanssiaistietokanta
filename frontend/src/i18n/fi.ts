@@ -176,6 +176,20 @@ export const fi = {
       },
       programListIsEmpty: 'Ei ohjelmaa',
       danceProgramIsEmpty: 'Ei tanssiohjelmaa.',
+      missingDanceInstructionsWarning: {
+        programIsMissingInstructions: 'Ohjelmasta puuttuu tanssiohjeita',
+        dancesWithoutInstructions: {
+          one: 'Diashowssa on yksi tanssi, jolta puuttuu tanssiohjeet.',
+          many: 'Diashowssa on __count__ tanssia, joilta puuttuu tanssiohjeet.',
+        },
+        clickLinksToOpenSlide: 'Klikkaa linkkejä muokataksesi ohjeita.',
+        inSet: 'setissä',
+        teachedInSet: 'opetettu setissä',
+        missingDancesCount: {
+          one: 'puuttuva tanssiohje',
+          many: 'puuttuvaa tanssiohjetta',
+        }
+      },
       missingDancesWarning: {
         title: {
           one: 'Ohjelmasta puuttuu työpajoissa opetettu tanssi.',
@@ -256,6 +270,11 @@ export const fi = {
         pageTitle: 'Tanssiaisohjelma',
         backToEvent: 'Takaisin tapahtuman tietoihin',
         loginRequired: 'Sinun täytyy olla kirjautunut käyttääksesi tätä sivua',
+        tabs: {
+          main: 'Tanssiohjelma',
+          slides: 'Diashow',
+          missingInstructions: 'Puuttuvat tanssiohjeet',
+        }
       },
       danceCheatlist: {
         helpText: 'Rastita tähän, jos osaat tanssin. Näin ei tanssiaisissa tarvitse miettiä, mikä tanssi on kyseessä.',

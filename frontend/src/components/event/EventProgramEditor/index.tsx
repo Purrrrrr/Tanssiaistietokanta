@@ -39,6 +39,7 @@ import {
   AddIntroductionButton,
   DuplicateDancesWarning,
   IntervalMusicSwitch,
+  MissingDanceInstructionsCounterTag,
   MissingDancesWarning,
   useCreateNewEventProgramItem,
 } from './components'
@@ -56,20 +57,26 @@ export function EventProgramEditor({event}: EventProgramEditorProps) {
   const {formProps, formProps: { value }, state} = useEventProgramEditorForm(event._id, event._versionId ?? undefined, event.program)
   const { tabId } = useParams()
   const navigate = useNavigate()
-  const changeTab = (nextTabId: string) =>
-    navigate(tabId ? `../${nextTabId}` : nextTabId)
+  const changeTab = (nextTabId: string) => navigate(`../${nextTabId}`)
+  const t = useT('pages.events.eventProgramPage')
 
   return <Form {...formProps} className="eventProgramEditor">
-    <BackLink to="..">{useTranslation('pages.events.eventProgramPage.backToEvent')}</BackLink>
+    <BackLink to="..">{t('backToEvent')}</BackLink>
     <h1>
-      {useTranslation('pages.events.eventProgramPage.pageTitle')}
+      {t('pageTitle')}
       <SyncStatus style={{marginLeft: '1ch', top: '3px'}} className="grow" state={state} />
     </h1>
 
     <EventMetadataContext program={value} workshops={event.workshops}>
       <Tabs id="programEditorTabs" renderActiveTabPanelOnly selectedTabId={tabId ?? 'main'} onChange={changeTab}>
-        <Tab id="main" title="Tanssiohjelma" panel={<MainEditor program={value} />} />
-        <Tab id="slides" title="Diashow" panel={<SlideshowEditor program={value} />} />
+        <Tab id="main" title={t('tabs.main')} panel={<MainEditor program={value} />} />
+        <Tab
+          id="slides"
+          title={<>
+            {t('tabs.slides')}
+            <MissingDanceInstructionsCounterTag />
+          </>}
+          panel={<SlideshowEditor program={value} />} />
       </Tabs>
     </EventMetadataContext>
   </Form>

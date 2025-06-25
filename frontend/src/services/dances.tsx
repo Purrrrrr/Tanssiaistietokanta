@@ -2,10 +2,10 @@ import {useMemo} from 'react'
 
 import { Dance } from 'types'
 
+import { filterItemList } from 'libraries/formsV2/components/inputs/selectors/itemUtils'
 import {compareBy, sorted} from 'utils/sorted'
 
 import { backendQueryHook, entityCreateHook, entityDeleteHook, entityListQueryHook, entityUpdateHook, graphql, setupServiceUpdateFragment, useServiceEvents } from '../backend'
-import { filterItemList } from 'libraries/formsV2/components/inputs/selectors/itemUtils'
 
 setupServiceUpdateFragment(
   'dances',

@@ -1,5 +1,5 @@
 import {Suspense} from 'react'
-import {Route, Routes, useParams} from 'react-router-dom'
+import {Navigate, Route, Routes, useParams} from 'react-router-dom'
 
 import {useEvent} from 'services/events'
 import {AdminOnly} from 'services/users'
@@ -72,7 +72,7 @@ function EventProgramRoutes({event}) {
   return <AdminOnly fallback={useTranslation('pages.events.eventProgramPage.loginRequired')}>
     <Breadcrumb text={useTranslation('breadcrumbs.eventProgram')} />
     <Routes>
-      <Route index element={<EventProgramPage event={event}/>} />
+      <Route index element={<Navigate to="main" />} />
       <Route path=":tabId/:slideId?" element={<EventProgramPage event={event}/>} />
       <Route path="dance/:danceId" element={<Dance parentType='eventProgram'/>} />
     </Routes>

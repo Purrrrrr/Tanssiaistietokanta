@@ -1,11 +1,85 @@
 import {Dance} from 'types'
 import {DanceSet, EventProgramSettings} from 'components/event/EventProgramForm/types'
 
-import {Callout, RegularLink} from 'libraries/ui'
+import { useDances } from 'services/dances'
+
+import {Callout, Link, RegularLink} from 'libraries/ui'
 import { useChosenDanceIds, useWorkshops } from 'components/event/EventProgramForm/eventMetadata'
+import { ColoredTag } from 'components/widgets/ColoredTag'
 import {useT} from 'i18n'
+import { compareBy } from 'utils/sorted'
 import {uniq} from 'utils/uniq'
 
+import { useLinkToSlide } from '../useLinkToSlide'
+
+export function MissingDanceInstructionsCounterTag() {
+  const count = useDancesWithMissingInstructions().length
+  const t = useT('components.eventProgramEditor.missingDanceInstructionsWarning')
+  if (!count) return null
+
+  return <span className="inline-block rounded-full bg-red-600 text-white font-bold h-5 px-2 align-middle ms-2 -mt-0.5">
+    {count} {t('missingDancesCount', {count})}
+  </span>
+}
+
+export function MissingDanceInstructionsWarning({program}: {program: EventProgramSettings}) {
+  const t = useT('components.eventProgramEditor.missingDanceInstructionsWarning')
+  const linkToSlide = useLinkToSlide()
+  const missing = program.danceSets
+    .flatMap(danceSet => {
+      return danceSet.program
+        .map(row => {
+          if (row.item.__typename !== 'Dance') return null
+          if (!isMissingInstruction(row.item)) return null
+
+          return { id: row._id, danceSet, dance: row.item }
+        })
+        .filter(row => row !== null)
+    })
+    .sort(compareBy(item => item.dance.name))
+
+  if (missing.length === 0) return null
+
+  return <Callout className="mb-4" intent="warning" title={t('programIsMissingInstructions')}>
+    <p>{t('dancesWithoutInstructions', { count: missing.length })} {t('clickLinksToOpenSlide')}</p>
+    <ul className="ps-3">
+      {missing.map(({ id, danceSet, dance }) =>
+        <li className="list-disc list-item my-1">
+          <Link to={linkToSlide(id)}>
+            {dance.name}
+          </Link>
+          {' '}
+          {t('inSet')}
+          {' '}
+          <strong>{danceSet.title}</strong>
+          {dance.teachedIn.length > 0 &&
+            <span>
+              {' '}(
+              {t('teachedInSet')}
+              {dance.teachedIn.map(workshop => <ColoredTag small title={workshop.workshop.name} />)}
+              )
+            </span>
+          }
+        </li>
+      )}
+    </ul>
+  </Callout>
+}
+
+function useDancesWithMissingInstructions() {
+  const [dances] = useDances()
+  const chosenDanceIds = useChosenDanceIds()
+
+  return Array.from(chosenDanceIds as Set<string>)
+    .map(id => dances.find(dance => dance._id === id))
+    .filter(dance => dance !== undefined)
+    .filter(isMissingInstruction)
+}
+
+function isMissingInstruction(dance: { description?: string | null}) {
+  const instructionLength = dance.description?.trim()?.length ?? 0
+  return instructionLength < 10
+}
 
 export function MissingDancesWarning() {
   const t = useT('components.eventProgramEditor.missingDancesWarning')
