@@ -48,6 +48,10 @@
 * Dance selector:
   * show workshop
   * show category
+  Copy instructions from wiki button  
+  * On event slide editor
+    On dance editor
+  Ability to view dance wiki entry inline
   
   Find a way to autofill dance categories
   * Integrate dance wiki to backend
@@ -60,7 +64,6 @@
     * Backend
   * Try to interpret dance source
   * Occasionally recompute categories, spam scores and formations
-    Group dances page by category
     Category selector
     Use backend integration in frontend
       Searching page names
