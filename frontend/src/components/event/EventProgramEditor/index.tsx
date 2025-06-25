@@ -61,7 +61,7 @@ export function EventProgramEditor({event}: EventProgramEditorProps) {
   const t = useT('pages.events.eventProgramPage')
 
   return <Form {...formProps} className="eventProgramEditor">
-    <BackLink to="..">{t('backToEvent')}</BackLink>
+    <BackLink to="../..">{t('backToEvent')}</BackLink>
     <h1>
       {t('pageTitle')}
       <SyncStatus style={{marginLeft: '1ch', top: '3px'}} className="grow" state={state} />
