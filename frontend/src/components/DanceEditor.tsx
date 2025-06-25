@@ -1,6 +1,6 @@
 import {useCallback, useId, useState} from 'react'
 import {useNavigate} from 'react-router-dom'
-import { ChevronDown, ChevronUp } from '@blueprintjs/icons'
+import { ChevronDown, ChevronUp, Link as LinkIcon } from '@blueprintjs/icons'
 
 import {Dance, DanceWithEvents, EditableDance} from 'types'
 import { ID } from 'backend/types'
@@ -10,7 +10,7 @@ import { useDeleteDance, usePatchDance } from 'services/dances'
 
 import {formFor, MarkdownEditor, patchStrategy, SyncStatus, useAutosavingState} from 'libraries/forms'
 import { Select } from 'libraries/formsV2/components/inputs'
-import {Button, Collapse, H2, Icon, Link, RegularLink} from 'libraries/ui'
+import {Button, Collapse, H2, Link, RegularLink} from 'libraries/ui'
 import {DanceDataImportButton} from 'components/DanceDataImportDialog'
 import {useGlobalLoadingAnimation} from 'components/LoadingState'
 import { useVersionedName } from 'components/versioning/VersionedPageTitle'
@@ -58,7 +58,7 @@ export function DanceEditor({dance, onDelete, showLink, showVersionHistory, titl
     dance={dance}
     titleComponent={titleComponent}
     toolbar={<>
-      {showLink && <Link to={`/dances/${dance._id}`}><Icon icon="link"/>{t('linkToThisDance')}</Link>}
+      {showLink && <Link to={`/dances/${dance._id}`}><LinkIcon />{t('linkToThisDance')}</Link>}
       {showVersionHistory && <VersionSidebarToggle entityType="dance" entityId={dance._id} versionId={dance._versionId ?? undefined} toVersionLink={danceVersionLink} />}
       <DanceIsUsedIn events={dance.events} />
       <div>
@@ -84,7 +84,7 @@ export function DanceEditor({dance, onDelete, showLink, showVersionHistory, titl
         {dance.wikipageName &&
           <p>
             {t('danceInDanceWiki')}{' '}
-            <RegularLink target="_blank" href={`https://tanssi.dy.fi/${dance.wikipageName.replaceAll(' ', '_')}`}>{dance.wikipageName}</RegularLink>
+            <RegularLink target="_blank" href={`https://tanssi.dy.fi/${dance.wikipageName.replaceAll(' ', '_')}`}><LinkIcon /> {dance.wikipageName}</RegularLink>
           </p>
         }
       </div>
@@ -163,7 +163,7 @@ function DanceIsUsedIn({events}: Pick<DanceWithEvents, 'events'>) {
       }
       itemRenderer={event =>
         <Link to={`/events/${event._id}`} className="flex gap-2 py-1.5 px-2 hover:no-underline">
-          <Icon icon="link" />
+          <LinkIcon />
           <span className="whitespace-nowrap">{event.name}</span>
         </Link>
       }

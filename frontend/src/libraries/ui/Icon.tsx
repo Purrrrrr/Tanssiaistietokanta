@@ -1,7 +1,7 @@
 import React, { ReactElement, ReactNode } from 'react'
 import { Classes } from '@blueprintjs/core'
 import {
-  CaretDown, Cross, DoubleCaretVertical, Edit, Error, InfoSign, Link, Move, Music, Outdated, Refresh, Saved, Tick, Time, Trash, WarningSign
+  CaretDown, Cross, DoubleCaretVertical, Edit, Error, InfoSign, Move, Music, Outdated, Refresh, Saved, Tick, Time, Trash, WarningSign
 } from '@blueprintjs/icons'
 import classNames from 'classnames'
 
@@ -16,7 +16,6 @@ const icons = {
   edit: Edit,
   error: Error,
   'info-sign': InfoSign,
-  link: Link,
   move: Move,
   music: Music,
   outdated: Outdated,
@@ -35,7 +34,6 @@ export type IconName =
   | 'edit'
   | 'error'
   | 'info-sign'
-  | 'link'
   | 'move'
   | 'music'
   | 'outdated'

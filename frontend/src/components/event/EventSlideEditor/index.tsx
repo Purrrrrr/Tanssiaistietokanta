@@ -1,9 +1,10 @@
 import React, { ReactNode } from 'react'
+import { Link as LinkIcon } from '@blueprintjs/icons'
 
 import {Dance} from 'types'
 
 import {DragHandle, formFor, MarkdownEditor, SyncState, SyncStatus} from 'libraries/forms'
-import {Callout, H2, Icon, Link, RegularLink, SectionCard} from 'libraries/ui'
+import {Callout, H2, Link, RegularLink, SectionCard} from 'libraries/ui'
 import {DanceEditorContainer} from 'components/DanceEditor'
 import { DanceProgramChooser } from 'components/event/DanceProgramChooser'
 import {
@@ -94,7 +95,7 @@ function ParentLink(props: WithEventProgram<EventSlideProps> & Pick<LinkToSlideP
     }
   }
   return <LinkToSlide id={props.parentId} hashLink={props.hashLink}>
-    <Icon icon="link"/>{' '}{title}
+    <LinkIcon />{' '}{title}
   </LinkToSlide>
 }
 
@@ -241,12 +242,20 @@ const {
 } = formFor<Dance>()
 
 function DanceEditor({dance}: {dance: Dance}) {
-  const t = useT('domain.dance')
+  const t = useT('components.danceEditor')
+  const label = useT('domain.dance')
   return <DanceEditorContainer dance={dance}>
-    <DanceInput label={t('name')} path="name" />
-    <DanceField label={t('description')} path="description" component={MarkdownEditor} componentProps={markdownEditorProps}/>
-    <DanceInput label={t('source')} labelInfo={t('sourceInfo')} path="source" />
-    <Link target="_blank" to={`/dances/${dance._id}`}><Icon icon="link"/>{useTranslation('pages.events.ballProgram.linkToCompleteDance')}</Link>
+    <DanceInput label={label('name')} path="name" />
+    <DanceField label={label('description')} path="description" component={MarkdownEditor} componentProps={markdownEditorProps}/>
+    <DanceInput label={label('source')} labelInfo={label('sourceInfo')} path="source" />
+
+    {dance.wikipageName &&
+      <p>
+        {t('danceInDanceWiki')}{' '}
+        <RegularLink target="_blank" href={`https://tanssi.dy.fi/${dance.wikipageName.replaceAll(' ', '_')}`}><LinkIcon/> {dance.wikipageName}</RegularLink>
+      </p>
+    }
+    <Link target="_blank" to={`/dances/${dance._id}`}><LinkIcon/> {useTranslation('pages.events.ballProgram.linkToCompleteDance')}</Link>
   </DanceEditorContainer>
 }
 
