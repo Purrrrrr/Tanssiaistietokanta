@@ -1,4 +1,4 @@
-import {Fragment, useState} from 'react'
+import {useState} from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
 import {useNavigate} from 'react-router-dom'
 
@@ -60,49 +60,17 @@ function DanceUploader({onUpload} : {onUpload: (d: DanceInput) => unknown}) {
   return <Button text={useTranslation('pages.dances.danceList.uploadDance')} onClick={chooseFile}/>
 }
 
-function DanceList({dances}: {dances: DanceWithEvents[]}) {
+function DanceList({dances}) {
   const [limit, setLimit] = useState(5)
   const canShowMore = dances.length > limit
-  const t = useT('pages.dances.danceList')
   if (!dances.length) return null
 
-  const categories = sliceCategories(dances, limit)
-
   return <InfiniteScroll hasMore={canShowMore} loadMore={() => setLimit(limit + 5)}>
-    {categories.map(category =>
-      <Fragment>
-        <h2>{category.title || t('noCategory')}</h2>
-        {category.dances.map((dance : DanceWithEvents) =>
-          <Card key={dance._id}>
-            <DanceEditor dance={dance} showLink />
-          </Card>
-        )}
-      </Fragment>
-    )}
+    {dances.slice(0, limit).map((dance : DanceWithEvents) =>
+      <Card key={dance._id}>
+        <DanceEditor dance={dance} showLink />
+      </Card>)}
   </InfiniteScroll>
 }
 
-function sliceCategories(allDances: DanceWithEvents[], limit: number) {
-  const byCategory = Object.groupBy(allDances, dance => dance.category ?? '')
-  const categories = Object.keys(byCategory).sort()
-  let limitRemaining = limit
-  interface DanceBlock {
-    title: string
-    dances: DanceWithEvents[]
-  }
-  const categoryBlocks : DanceBlock[] = []
-
-  for (const category of categories) {
-    const dances = byCategory[category]
-    if (!dances) continue
-
-    categoryBlocks.push({
-      title: category,
-      dances: dances.length < limitRemaining ? dances : dances.slice(0, limitRemaining)
-    })
-    limitRemaining -= dances.length
-    if (limitRemaining <= 0) break
-  }
-  return categoryBlocks
-}
 export default DancesPage

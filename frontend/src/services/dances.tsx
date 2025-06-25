@@ -149,11 +149,11 @@ mutation deleteDance($id: ID!) {
 }`))
 
 
-export function filterDances<T extends Dance>(dances : T[], searchString: string): T[] {
+export function filterDances(dances : Dance[], searchString: string): Dance[] {
   return filterItemList(sortDances(dances), searchString, dance => dance.name)
 }
 
-export function sortDances<T extends Dance>(dances: T[]): T[] {
+export function sortDances(dances: Dance[]): Dance[] {
   return sorted(dances, compareDances)
 }
 
