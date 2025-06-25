@@ -22,7 +22,6 @@ export function useSlideshowNavigation(
 ) {
   const slideIndex = currentSlideIndex ??
     (i => i === -1 ? 0 : i)(slides.findIndex(slide => slide.id === currentSlideId))
-  const slide = slides[slideIndex]
 
   const getBoundedSlideIndex = useCallback(
     function getSlideForIndex(index: number) {
@@ -44,12 +43,6 @@ export function useSlideshowNavigation(
   const swipeHandlers = useSwipeable({
     onSwipedLeft: () => changeSlide(1),
     onSwipedRight: () => changeSlide(-1),
-    onSwipedUp: () => {
-      const nextIndex = slides.findIndex(s => s.id === slide.parentId)
-      if (nextIndex !== -1) {
-        onChangeSlide(slides[nextIndex], nextIndex)
-      }
-    },
   })
 
   return {
