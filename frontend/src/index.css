@@ -65,8 +65,8 @@ body {
 #layout {
   --main-margin-size: 25px;
   --sidebar-size: 0px;
-  --main-size: min(100dvw - var(--sidebar-size), 1200px + var(--main-margin-size) * 2);
-  --space: calc(100dvw - var(--main-size));
+  --main-size: min(100% - var(--sidebar-size), 1200px + var(--main-margin-size) * 2);
+  --space: calc(100% - var(--main-size));
   --half-space: calc(var(--space) / 2);
   --right-space: calc(var(--half-space) - var(--sidebar-size));
   --left-space: min(var(--space) - var(--sidebar-size), var(--half-space));
@@ -116,7 +116,6 @@ body {
   grid-area: sidebar;
   background: #f8f8f8;
   box-shadow: 0px 0px 10px rgba(0,0,0, 0.5);
-  /* overflow: hidden; */
 }
 #layout > aside > :not(:empty) {
   display: flex;
