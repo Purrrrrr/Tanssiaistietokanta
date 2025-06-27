@@ -20,7 +20,7 @@ export default function BallProgram({eventId, eventVersionId}) {
   const [isEditing, setEditing] = useState(false)
   const onToggleEditing = () => setEditing(e => !e)
 
-  const {'*': currentSlideId = startSlideId} = useParams()
+  const {slideId: currentSlideId = startSlideId} = useParams()
 
   useOnKeydown({
     r: refetch as () => unknown,
@@ -56,14 +56,17 @@ function BallProgramView(
     isEditing: boolean
   }
 ) {
-  const changeSlideId = useNavigate()
+  const navigate = useNavigate()
+  const baseUrl = event._versionId
+    ? `/events/${event._id}/version/${event._versionId}/ball-program/`
+    : `/events/${event._id}/ball-program/`
   const { swipeHandlers } = useSlideshowNavigation({
-    slides, currentSlideId: slide.id, onChangeSlide: slide => changeSlideId(slide.id),
+    slides, currentSlideId: slide.id, onChangeSlide: slide => navigate(baseUrl + slide.id),
   })
 
   return <SlideContainer fullscreen={!isEditing} {...swipeHandlers}>
     <div className="controls">
-      <ProgramTitleSelector value={slide.parentId ?? slide.id} onChange={changeSlideId}
+      <ProgramTitleSelector value={slide.parentId ?? slide.id} onChange={id => navigate(baseUrl + id)}
         program={event.program} />
       <Button minimal icon="edit" onClick={onToggleEditing}/>
     </div>

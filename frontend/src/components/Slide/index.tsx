@@ -110,5 +110,5 @@ function LinkToSlide({title, id, isPlaceholder, component: LinkComponent}: LinkT
   if (LinkComponent) {
     return <LinkComponent href={id} className={classNames}>{title}</LinkComponent>
   }
-  return <Link className={classNames} to={id}>{title}</Link>
+  return <Link className={classNames} relative="path" to={`../${id}`}>{title}</Link>
 }
