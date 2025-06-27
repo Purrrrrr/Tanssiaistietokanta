@@ -41,6 +41,7 @@ export default defineConfig(({ mode, command }) => {
       tailwindcss(),
       analyzer({
         exclude: /.jpg$/,
+        openAnalyzer: false,
       }),
     ],
     preview: {
