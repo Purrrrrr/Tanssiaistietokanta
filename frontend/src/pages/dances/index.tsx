@@ -1,76 +1,64 @@
-import {useState} from 'react'
-import InfiniteScroll from 'react-infinite-scroller'
-import {useNavigate} from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 
-import { DanceInput, DanceWithEvents } from 'types'
+import { filterDances, useDances } from 'services/dances'
 
-import { filterDances, useCreateDance, useDances } from 'services/dances'
-
-import {Button, Card, SearchBar, showToast} from 'libraries/ui'
-import {DanceEditor} from 'components/DanceEditor'
-import {LoadingState, useGlobalLoadingAnimation} from 'components/LoadingState'
+import {ModeButton, ModeSelector, SearchBar} from 'libraries/ui'
+import { CreateDanceButtons } from 'components/dance/CreateDanceButtons'
+import { DanceList, View } from 'components/dance/DanceList'
+import {LoadingState} from 'components/LoadingState'
 import {PageTitle} from 'components/PageTitle'
 import {useT, useTranslation} from 'i18n'
-import {uploadDanceFile} from 'utils/uploadDanceFile'
 
 function DancesPage() {
   const t = useT('pages.dances.danceList')
-  const navigate = useNavigate()
-  const [search, setSearch] = useState('')
+  const { search, setSearch, view, setView } = useDanceListState()
   const [dances, requestState] = useDances()
-  const [createDance] = useCreateDance()
-  const addLoadingAnimation = useGlobalLoadingAnimation()
 
   const filteredDances = filterDances(dances, search)
-
-  async function doCreateDance(dance : DanceInput) {
-    const result = await addLoadingAnimation(createDance({dance}))
-    const id = result.data?.createDance?._id
-
-    if (id) {
-      navigate(id)
-      showToast({
-        intent: 'primary',
-        message: t('danceCreated', {name: dance.name}),
-      })
-    }
-  }
 
   return <>
     <PageTitle>{t('pageTitle')}</PageTitle>
     <LoadingState {...requestState} />
-    <div style={{marginBottom: 10, display: 'flex', alignItems: 'flex-start'}}>
-      <SearchBar id="search-dances" value={search} onChange={setSearch} placeholder={useTranslation('common.search')} emptySearchText={useTranslation('common.emptySearch')}/>
-      <Button text={t('createDance')} onClick={() => doCreateDance(emptyDance(t('untitledDance', {number: dances.length+1})))}/>
-      <DanceUploader onUpload={(dance) => doCreateDance(dance)} />
+    <div className="mb-2.5 flex justify-between">
+      <div className="flex">
+        <SearchBar id="search-dances" value={search} onChange={setSearch} placeholder={useTranslation('common.search')} emptySearchText={useTranslation('common.emptySearch')}/>
+        <CreateDanceButtons danceCount={dances.length} />
+      </div>
+      <div>
+        <ModeSelector label={t('view')}>
+          <ModeButton text={t('viewMode.tight')} selected={view === 'tight'} onClick={() => setView('tight')} />
+          <ModeButton text={t('viewMode.extended')} selected={view === 'extended'} onClick={() => setView('extended')} />
+        </ModeSelector>
+      </div>
     </div>
-    <DanceList key={search} dances={filteredDances} />
+    <DanceList key={search} dances={filteredDances} view={view} />
   </>
 }
 
-function emptyDance(name: string): DanceInput {
-  return {name}
+interface DanceListState {
+  search: string
+  view: View
+  category?: string
 }
-function DanceUploader({onUpload} : {onUpload: (d: DanceInput) => unknown}) {
-  async function chooseFile() {
-    const dance = await uploadDanceFile()
-    if (dance) onUpload(dance)
-  }
+const views : View[] = ['tight', 'extended']
 
-  return <Button text={useTranslation('pages.dances.danceList.uploadDance')} onClick={chooseFile}/>
-}
+function useDanceListState() {
+  const [searchParams, setSearchParams] = useSearchParams()
+  const view = searchParams.get('view')
 
-function DanceList({dances}) {
-  const [limit, setLimit] = useState(5)
-  const canShowMore = dances.length > limit
-  if (!dances.length) return null
-
-  return <InfiniteScroll hasMore={canShowMore} loadMore={() => setLimit(limit + 5)}>
-    {dances.slice(0, limit).map((dance : DanceWithEvents) =>
-      <Card key={dance._id}>
-        <DanceEditor dance={dance} showLink />
-      </Card>)}
-  </InfiniteScroll>
+  return {
+    search: searchParams.get('search') ?? '',
+    setSearch: (newSearch: string) => setSearchParams(p => {
+      if (newSearch) p.set('search', newSearch)
+      else p.delete('search')
+      return p
+    }),
+    view: views.find(w => w === view) ?? 'tight' as const,
+    setView: (newView: View) => setSearchParams(p => {
+      p.set('view', newView)
+      return p
+    }),
+  } satisfies DanceListState & Record<string, unknown>
 }
 
 export default DancesPage

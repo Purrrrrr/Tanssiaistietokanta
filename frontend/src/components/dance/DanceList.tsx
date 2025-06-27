@@ -1,0 +1,79 @@
+import {useState} from 'react'
+import { ChevronDown, ChevronUp } from '@blueprintjs/icons'
+
+import { DanceWithEvents } from 'types'
+
+import {SyncStatus } from 'libraries/forms'
+import { Button, Card, Collapse, ColorClass } from 'libraries/ui'
+import {DanceEditor, FullDanceEditorFields} from 'components/DanceEditor'
+import { InfiniteItemLoader } from 'components/InfiniteItemLoader'
+import { useT, useTranslation } from 'i18n'
+
+import { Form, useDanceEditorState } from './DanceForm'
+import { DanceIsUsedIn } from './DanceIsUsedIn'
+import { DanceLink } from './DanceLink'
+import { DeleteDanceButton } from './DeleteDanceButton'
+
+interface DanceListProps {
+  dances: DanceWithEvents[]
+  view?: View
+}
+export type View = 'tight' | 'extended'
+
+export function DanceList({dances, view}: DanceListProps) {
+  if (view === 'extended') {
+    return <InfiniteItemLoader items={dances}>
+      {dances => dances.map((dance : DanceWithEvents) => <ExtendedDanceListRow dance={dance} key={dance._id} />)}
+    </InfiniteItemLoader>
+  }
+
+  return <ul className="mb-4 border-gray-100 border-1">
+    <InfiniteItemLoader items={dances}>
+      {dances => dances.map((dance : DanceWithEvents) => <DanceListRow key={dance._id} dance={dance} />)}
+    </InfiniteItemLoader>
+  </ul>
+}
+
+function DanceListRow({ dance }: { dance: DanceWithEvents }) {
+  const t = useT('pages.dances.danceList')
+  const [showEditor, setShowEditor] = useState(false)
+
+  return <li className="even:bg-gray-100">
+    <div className="flex justify-between items-center *:p-2">
+      <div className="grow"><DanceLink dance={dance} /></div>
+      <div className="w-80">
+        {dance.category || <span className={ColorClass.textMuted}>{t('noCategory')}</span>}
+      </div>
+      <div className="w-80 text-right">
+        {dance.events.length > 0
+          ? <DanceIsUsedIn events={dance.events} />
+          : <DeleteDanceButton minimal dance={dance} />
+        }
+        <Button
+          minimal
+          text={useTranslation('common.edit')}
+          color="primary"
+          onClick={() => setShowEditor(!showEditor)}
+          rightIcon={showEditor ? <ChevronUp/> : <ChevronDown />}
+        />
+      </div>
+    </div>
+    <Collapse isOpen={showEditor}>
+      <PlainDanceEditor dance={dance} />
+    </Collapse>
+  </li>
+}
+
+function PlainDanceEditor({ dance }: { dance: DanceWithEvents }) {
+  const {formProps, state} = useDanceEditorState(dance)
+  return <Form className="p-2 border-t-1 border-gray-200 "{...formProps}>
+    <SyncStatus floatRight state={state} />
+    <FullDanceEditorFields dance={dance} />
+  </Form>
+}
+
+function ExtendedDanceListRow({ dance }: { dance: DanceWithEvents }) {
+  return <Card>
+    <DanceEditor dance={dance} showLink />
+  </Card>
+}

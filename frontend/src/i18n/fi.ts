@@ -66,6 +66,14 @@ export const fi = {
       errorMessage: 'Tietojen lataaminen epäonnistui',
       tryAgain: 'Yritä uudelleen',
     },
+    dance: {
+      createDanceButton: {
+        createDance: 'Uusi tanssi',
+        untitledDance: 'Nimetön tanssi #__number__',
+        danceCreated: 'Tanssi __name__ luotu',
+        uploadDance: 'Tuo tanssi tiedostosta',
+      },
+    },
     danceChooser: {
       searchDance: 'Etsi tanssia...',
       emptyDancePlaceholder: 'Tansseja ei löytynyt',
@@ -81,8 +89,8 @@ export const fi = {
       deleteDance: 'Poista tanssi',
       deleteConfirmation: 'Haluatko varmasti poistaa tämän tanssin?',
       danceUsedInEvents: {
-        one: 'Käytössä yhdessä tapahtumassa',
-        many: 'Käytössä __count__ tapahtumassa',
+        one: 'Yksi Tanssitapahtuma',
+        many: '__count__ Tanssitapahtumaa',
       },
       danceInDanceWiki: 'Tanssi tanssiwikissä',
       copyFromDancewiki: 'Kopioi ohjeet tanssiwikistä',
@@ -324,10 +332,12 @@ export const fi = {
     dances: {
       danceList: {
         pageTitle: 'Tanssit',
-        untitledDance: 'Nimetön tanssi #__number__',
-        createDance: 'Uusi tanssi',
-        danceCreated: 'Tanssi __name__ luotu',
-        uploadDance: 'Tuo tanssi tiedostosta',
+        view: 'Näkymä',
+        viewMode: {
+          tight: 'Tiivis',
+          extended: 'Laaja',
+        },
+        noCategory: 'Ei kategoriaa',
       },
       dancePage: {
         backToDanceList: 'Takaisin tanssilistaan',

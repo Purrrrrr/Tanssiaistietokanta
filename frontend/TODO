@@ -48,10 +48,13 @@
 * Dance selector:
   * show workshop
   * show category
+* Dances page
+  * View modes: tight / full
+  * Toggle editing by button
+  Ability to view dance wiki entry inline
   Copy instructions from wiki button  
   * On event slide editor
     On dance editor
-  Ability to view dance wiki entry inline
   
   Find a way to autofill dance categories
   * Integrate dance wiki to backend

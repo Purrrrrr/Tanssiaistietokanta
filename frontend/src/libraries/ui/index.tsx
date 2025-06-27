@@ -4,14 +4,13 @@ import {
   FormGroup as BlueprintFormGroup,
   FormGroupProps as BlueprintFormGroupProps,
 } from '@blueprintjs/core'
+import { Search } from '@blueprintjs/icons'
 import classNames from 'classnames'
 
 import { Button } from './Button'
 import { ColorClass, CssClass } from './classes'
-import { Icon } from './Icon'
 
 import './ui.css'
-import { Search } from '@blueprintjs/icons'
 
 export * from './AutosizedSection'
 export { Breadcrumb, BreadcrumbContext, Breadcrumbs } from './Breadcrumbs'
@@ -22,6 +21,7 @@ export { GlobalSpinner } from './GlobalLoadingSpinner'
 export * from './Icon'
 export { Link, RegularLink } from './Link'
 export { Markdown } from './Markdown'
+export { ModeButton, ModeSelector } from './ModeSelector'
 export { Tab, Tabs } from './Tabs'
 export { TagButton } from './Tag'
 export * from './toaster'
