@@ -108,6 +108,7 @@ body {
 
 #main-content {
   grid-area: main;
+  padding-top: 16px;
   padding-inline: var(--main-margin-size);
 }
 #layout > aside {
