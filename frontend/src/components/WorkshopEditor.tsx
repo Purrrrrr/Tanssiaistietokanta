@@ -129,7 +129,7 @@ function WorkshopInstanceEditor(
   const t = useT('components.workshopEditor')
   const instances = useValueAt('instances')
   const showDances = useValueAt('instanceSpecificDances')
-  return <div className="border-b-1 border-black/15 mb-5 bg-white pt-1 px-4 pb-4">
+  return <div className="px-4 pt-1 pb-4 mb-5 bg-white border-b-1 border-black/15">
     <div className="flex flex-wrap gap-3.5 items-center">
       <DateField<Workshop>
         path={`instances.${itemIndex}.dateTime`}

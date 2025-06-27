@@ -85,7 +85,7 @@ export function DanceChooser({
       const category = dance && getCategory(dance)
       const workshop = dance && workshops.find(w => w.instances.some(i => i.dances?.some(d => d._id === dance._id)))
 
-      return <div className="flex flex-wrap grow items-center">
+      return <div className="flex flex-wrap items-center grow">
         <input className={CssClass.input + ' grow'} {...props} />
         <span>
           {category && <ColoredTag small {...category} />}
@@ -99,7 +99,7 @@ export function DanceChooser({
       if (item.__typename === 'createDance') return `${t('createDance')}: ${item.name}`
 
       const category = getCategory(item)
-      return <div className="flex grow items-center justify-between">
+      return <div className="flex justify-between items-center grow">
         <span>{item.name}</span>
         {category && <ColoredTag small {...category} />}
       </div>

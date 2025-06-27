@@ -22,9 +22,9 @@ export default function EventList() {
       <p>{t('youcanEditDancesIn')} <Link to="/dances">{t('danceDatabaseLinkName')}</Link></p>
     </AdminOnly>
     <h2>{t('danceEvents')}</h2>
-    <ul className="mb-4 border-1 border-gray-100">
+    <ul className="mb-4 border-gray-100 border-1">
       {events.map(event =>
-        <li key={event._id} className="flex justify-between items-center p-2  even:bg-gray-100">
+        <li key={event._id} className="flex justify-between items-center p-2 even:bg-gray-100">
           <Link className="grow" to={'events/'+event._id} >{event.name}</Link>
           <DeleteButton onDelete={() => deleteEvent({id: event._id})}
             text={deleteText}

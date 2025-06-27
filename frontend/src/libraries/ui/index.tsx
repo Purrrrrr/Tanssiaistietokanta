@@ -90,7 +90,7 @@ export function SearchBar({id, onChange, value, placeholder, emptySearchText} : 
     />
     <span className={CssClass.inputAction}>
       <Button
-        className="m-1 h-6 px-2"
+        className="px-2 m-1 h-6"
         aria-label={emptySearchText}
         minimal
         icon="cross"

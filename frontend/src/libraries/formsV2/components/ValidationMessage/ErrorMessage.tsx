@@ -5,7 +5,7 @@ export function ErrorMessage(
   {id ?: string, error?: Errors}
 ) {
   return error ?
-    <p id={id} className="text-red-600 mt-1.5">
+    <p id={id} className="mt-1.5 text-red-600">
       {error.join(', ')}
     </p> : null
 }

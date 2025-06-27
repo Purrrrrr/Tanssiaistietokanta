@@ -17,7 +17,7 @@ export function MissingDanceInstructionsCounterTag() {
   const t = useT('components.eventProgramEditor.missingDanceInstructionsWarning')
   if (!count) return null
 
-  return <span className="inline-block rounded-full bg-red-600 text-white font-bold h-5 px-2 align-middle ms-2 -mt-0.5">
+  return <span className="inline-block px-2 -mt-0.5 h-5 font-bold text-white align-middle bg-red-600 rounded-full ms-2">
     {count} {t('missingDancesCount', {count})}
   </span>
 }
@@ -44,7 +44,7 @@ export function MissingDanceInstructionsWarning({program}: {program: EventProgra
     <p>{t('dancesWithoutInstructions', { count: missing.length })} {t('clickLinksToOpenSlide')}</p>
     <ul className="ps-3">
       {missing.map(({ id, danceSet, dance }) =>
-        <li className="list-disc list-item my-1">
+        <li className="my-1 list-disc list-item">
           <Link
             to={linkToSlide(id)}
             onClick={() => document.querySelector('.slideEditors')?.scrollIntoView({behavior: 'smooth', block: 'nearest', inline: 'nearest'})}

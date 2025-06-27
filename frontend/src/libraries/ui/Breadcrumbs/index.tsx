@@ -9,9 +9,9 @@ export {Breadcrumb, BreadcrumbContext} from './context'
 export function Breadcrumbs({label}: {label: string}) {
   const paths = useBreadcrumbPaths()
   //Manually create the breadcrumb element since the Blueprint one is not fully accessible
-  return <ul id="breadcrumbs" className="flex flex-wrap items-center gap-2" aria-label={label}>
+  return <ul id="breadcrumbs" className="flex flex-wrap gap-2 items-center" aria-label={label}>
     {paths.map(path =>
-      <li className="flex items-center h-7.5 gap-2 not-last:after:bg-[url('/breadcrumb-arrow.svg')] not-last:after:size-4 not-last:after:block" key={path.href}>
+      <li className="flex gap-2 items-center h-7.5 not-last:after:bg-[url('/breadcrumb-arrow.svg')] not-last:after:size-4 not-last:after:block" key={path.href}>
         <Breadcrumb {...path} />
       </li>
     )}

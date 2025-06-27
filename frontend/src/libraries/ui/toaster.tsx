@@ -26,7 +26,7 @@ export function ToastContainer() {
   )
 
   return <section aria-live="assertive">
-    <Popover type="manual" open={toasts.length > 0} className="left-1/2 -translate-x-1/2 flex flex-col gap-4 p-10 bg-transparent">
+    <Popover type="manual" open={toasts.length > 0} className="flex left-1/2 flex-col gap-4 p-10 bg-transparent -translate-x-1/2">
       {toasts.map(({ id, ...rest })=> <Toast key={id} {...rest} />
       )}
     </Popover>
@@ -44,7 +44,7 @@ function Toast({ onClose, closing, toast }: Omit<ToastData, 'id'>) {
 
     <div className="p-3">{toast.message}</div>
     {toast.isCloseButtonShown !== false &&
-      <button className="mt-1 me-1 p-1 cursor-pointer hover:bg-gray-800/20" onClick={onClose}>X</button>
+      <button className="p-1 mt-1 cursor-pointer me-1 hover:bg-gray-800/20" onClick={onClose}>X</button>
     }
   </div>
 }

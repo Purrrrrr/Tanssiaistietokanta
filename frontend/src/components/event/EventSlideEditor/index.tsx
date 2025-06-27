@@ -177,7 +177,7 @@ const ProgramItem = React.memo(function ProgramEditor({dragHandle, path, itemInd
   if (!item) return null
   const {__typename } = item.item
 
-  return <div className="flex items-center gap-3.5 program-list-item">
+  return <div className="flex gap-3.5 items-center program-list-item">
     <ProgramTypeIcon type={__typename} />
     <div className="grow item-name">
       <LinkToSlide id={item._id}>{programItemToString(item, t)}</LinkToSlide>

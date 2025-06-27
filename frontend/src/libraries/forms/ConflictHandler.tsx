@@ -36,4 +36,4 @@ export function ConflictHandler({localValue, serverValue, onResolve}: ConflictDa
   </>
 }
 
-const className = 'p-1 bg-white text-red-700 border-1 rounded-xs border-red-700 hover:bg-red-50 active:bg-red-200 active:text-red-900'
+const className = 'p-1 text-red-700 bg-white border-red-700 hover:bg-red-50 active:text-red-900 active:bg-red-200 border-1 rounded-xs'
