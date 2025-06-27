@@ -54,7 +54,9 @@
   Copy instructions from wiki button  
   * On event slide editor
     On dance editor
-  
+
+  Common list component and style for dance/event lists
+
   Find a way to autofill dance categories
   * Integrate dance wiki to backend
   * GraphQL queries for it
