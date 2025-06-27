@@ -1,6 +1,6 @@
 import { Link as LinkIcon } from '@blueprintjs/icons'
 
-import {Dance, DanceWithEvents} from 'types'
+import {DanceWithEvents} from 'types'
 
 import {MarkdownEditor, SyncStatus } from 'libraries/forms'
 import {H2, RegularLink} from 'libraries/ui'
@@ -16,43 +16,19 @@ import { DanceLink, danceVersionLink } from './dance/DanceLink'
 import { DeleteDanceButton } from './dance/DeleteDanceButton'
 import { ColoredTag } from './widgets/ColoredTag'
 
-interface DanceEditorProps extends Pick<DanceEditorContainerProps, 'dance' | 'titleComponent'> {
+interface DanceEditorProps {
   dance: DanceWithEvents
+  titleComponent?: React.JSXElementConstructor<{className?: string, children: React.ReactNode}> | 'h1'
   onDelete?: () => unknown
   showLink?: boolean
   showVersionHistory?: boolean
 }
 
-export function DanceEditor({dance, onDelete, showLink, showVersionHistory, titleComponent} : DanceEditorProps) {
+export function DanceEditor({dance, onDelete, showLink, showVersionHistory, titleComponent: Title = H2} : DanceEditorProps) {
   const t = useT('components.danceEditor')
   const readOnly = dance._versionId != null
-
-  return <DanceEditorContainer
-    dance={dance}
-    titleComponent={titleComponent}
-    toolbar={<>
-      {showLink && <DanceLink dance={dance}><LinkIcon />{t('linkToThisDance')}</DanceLink>}
-      {showVersionHistory && <VersionSidebarToggle entityType="dance" entityId={dance._id} versionId={dance._versionId ?? undefined} toVersionLink={danceVersionLink} />}
-      <DanceIsUsedIn events={dance.events} />
-      <div>
-        <DeleteDanceButton dance={dance} onDelete={onDelete} />
-        {readOnly || <DanceDataImporter />}
-      </div>
-    </>}
-  >
-    <FullDanceEditorFields dance={dance} />
-  </DanceEditorContainer>
-}
-
-interface DanceEditorContainerProps {
-  dance: Dance
-  toolbar?: React.ReactNode
-  children: React.ReactNode
-  titleComponent?: React.JSXElementConstructor<{className?: string, children: React.ReactNode}> | 'h1'
-}
-
-export function DanceEditorContainer({dance, children, toolbar, titleComponent: Title = H2} : DanceEditorContainerProps) {
   const {formProps, state} = useDanceEditorState(dance)
+
   return <Form {...formProps}>
     <div className="flex flex-wrap gap-3.5 items-center">
       <Title className="m-0">
@@ -60,14 +36,28 @@ export function DanceEditorContainer({dance, children, toolbar, titleComponent: 
       </Title>
       <SyncStatus className="top-[3px] grow" state={state} />
       <div className="flex items-center mt-2.5">
-        {toolbar}
+        {showLink && <DanceLink dance={dance}><LinkIcon />{t('linkToThisDance')}</DanceLink>}
+        {showVersionHistory && <VersionSidebarToggle entityType="dance" entityId={dance._id} versionId={dance._versionId ?? undefined} toVersionLink={danceVersionLink} />}
+        <DanceIsUsedIn events={dance.events} />
+        <div>
+          <DeleteDanceButton dance={dance} onDelete={onDelete} />
+          {readOnly || <DanceDataImporter />}
+        </div>
       </div>
     </div>
-    {children}
+    <FullDanceEditorFields dance={dance} />
   </Form>
 }
 
-export function FullDanceEditorFields({ dance }: { dance: DanceWithEvents }) {
+export function PlainDanceEditor({ dance }: { dance: DanceWithEvents }) {
+  const {formProps, state} = useDanceEditorState(dance)
+  return <Form className="p-2 border-t-1 border-gray-200 "{...formProps}>
+    <SyncStatus floatRight state={state} />
+    <FullDanceEditorFields dance={dance} />
+  </Form>
+}
+
+function FullDanceEditorFields({ dance }: { dance: DanceWithEvents }) {
   const t = useT('components.danceEditor')
   const label = useT('domain.dance')
   return <>
@@ -90,7 +80,11 @@ export function FullDanceEditorFields({ dance }: { dance: DanceWithEvents }) {
       </div>
       <div className="grow basis-75">
         <Input label={label('prelude')} path="prelude" />
-        <Input label={label('formation')} path="formation" />
+        <Input
+          label={label('formation')}
+          path="formation"
+          helperText={!dance.formation && <Suggestions suggestions={dance.wikipage?.formations} path="formation" />}
+        />
         <Input label={label('source')} labelInfo={label('sourceInfo')} path="source" />
         <Input label={label('remarks')} path="remarks" />
       </div>

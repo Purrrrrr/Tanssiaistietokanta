@@ -3,9 +3,9 @@ import { Link as LinkIcon } from '@blueprintjs/icons'
 
 import {Dance} from 'types'
 
-import {DragHandle, formFor, MarkdownEditor, SyncState, SyncStatus} from 'libraries/forms'
+import {DragHandle, MarkdownEditor, SyncState, SyncStatus} from 'libraries/forms'
 import {Button, Callout, H2, Link, RegularLink, SectionCard} from 'libraries/ui'
-import {DanceEditorContainer} from 'components/DanceEditor'
+import { Field as DanceField, Form as DanceForm, Input as DanceInput, useDanceEditorState, useOnChangeFor as useOnChangeForDanceField } from 'components/dance/DanceForm'
 import { DanceProgramChooser } from 'components/event/DanceProgramChooser'
 import {
   Field,
@@ -235,16 +235,16 @@ function ProgramItemEditor({path}: {path: ProgramItemPath}) {
   }
 }
 
-const {
-  Field: DanceField,
-  Input: DanceInput,
-  useOnChangeFor: useOnChangeForDanceField,
-} = formFor<Dance>()
-
 function DanceEditor({dance}: {dance: Dance}) {
   const t = useT('components.danceEditor')
   const label = useT('domain.dance')
-  return <DanceEditorContainer dance={dance}>
+  const { formProps, state } = useDanceEditorState(dance)
+
+  return <DanceForm {...formProps}>
+    <div className="flex flex-wrap gap-3.5 items-center">
+      <H2 className="m-0">{dance.name}</H2>
+      <SyncStatus className="top-[3px] grow" state={state} />
+    </div>
     <DanceInput label={label('name')} path="name" />
     <DanceField label={label('description')} path="description" component={MarkdownEditor} componentProps={markdownEditorProps}/>
     <DanceInput label={label('source')} labelInfo={label('sourceInfo')} path="source" />
@@ -259,7 +259,7 @@ function DanceEditor({dance}: {dance: Dance}) {
       </>
     }
     <Link target="_blank" to={`/dances/${dance._id}`}><LinkIcon/> {useTranslation('pages.events.ballProgram.linkToCompleteDance')}</Link>
-  </DanceEditorContainer>
+  </DanceForm>
 }
 
 function CopyDancewikiInstructionsButton({path, instructions}: { path: 'description' | 'instructions', instructions: string | null | undefined }) {

@@ -3,13 +3,11 @@ import { ChevronDown, ChevronUp } from '@blueprintjs/icons'
 
 import { DanceWithEvents } from 'types'
 
-import {SyncStatus } from 'libraries/forms'
 import { Button, Card, Collapse, ColorClass } from 'libraries/ui'
-import {DanceEditor, FullDanceEditorFields} from 'components/DanceEditor'
+import {DanceEditor, PlainDanceEditor} from 'components/DanceEditor'
 import { InfiniteItemLoader } from 'components/InfiniteItemLoader'
 import { useT, useTranslation } from 'i18n'
 
-import { Form, useDanceEditorState } from './DanceForm'
 import { DanceIsUsedIn } from './DanceIsUsedIn'
 import { DanceLink } from './DanceLink'
 import { DeleteDanceButton } from './DeleteDanceButton'
@@ -62,14 +60,6 @@ function DanceListRow({ dance }: { dance: DanceWithEvents }) {
       <PlainDanceEditor dance={dance} />
     </Collapse>
   </li>
-}
-
-function PlainDanceEditor({ dance }: { dance: DanceWithEvents }) {
-  const {formProps, state} = useDanceEditorState(dance)
-  return <Form className="p-2 border-t-1 border-gray-200 "{...formProps}>
-    <SyncStatus floatRight state={state} />
-    <FullDanceEditorFields dance={dance} />
-  </Form>
 }
 
 function ExtendedDanceListRow({ dance }: { dance: DanceWithEvents }) {
