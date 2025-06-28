@@ -19,17 +19,16 @@ function DancesPage() {
   return <>
     <PageTitle>{t('pageTitle')}</PageTitle>
     <LoadingState {...requestState} />
-    <div className="mb-2.5 flex justify-between">
-      <div className="flex">
-        <SearchBar id="search-dances" value={search} onChange={setSearch} placeholder={useTranslation('common.search')} emptySearchText={useTranslation('common.emptySearch')}/>
+    <div className="flex flex-wrap gap-4 mb-2.5">
+      <SearchBar id="search-dances" value={search} onChange={setSearch} placeholder={useTranslation('common.search')} emptySearchText={useTranslation('common.emptySearch')}/>
+      <div>
         <CreateDanceButtons danceCount={dances.length} />
       </div>
-      <div>
-        <ModeSelector label={t('view')}>
-          <ModeButton text={t('viewMode.tight')} selected={view === 'tight'} onClick={() => setView('tight')} />
-          <ModeButton text={t('viewMode.extended')} selected={view === 'extended'} onClick={() => setView('extended')} />
-        </ModeSelector>
-      </div>
+      <div className="grow" />
+      <ModeSelector label={t('view')}>
+        <ModeButton text={t('viewMode.tight')} selected={view === 'tight'} onClick={() => setView('tight')} />
+        <ModeButton text={t('viewMode.extended')} selected={view === 'extended'} onClick={() => setView('extended')} />
+      </ModeSelector>
     </div>
     <DanceList key={search} dances={filteredDances} view={view} />
   </>

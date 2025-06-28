@@ -51,7 +51,7 @@ export function DanceEditor({dance, onDelete, showLink, showVersionHistory, titl
 
 export function PlainDanceEditor({ dance }: { dance: DanceWithEvents }) {
   const {formProps, state} = useDanceEditorState(dance)
-  return <Form className="p-2 border-t-1 border-gray-200 "{...formProps}>
+  return <Form className="p-2 border-gray-200 border-t-1"{...formProps}>
     <SyncStatus floatRight state={state} />
     <FullDanceEditorFields dance={dance} />
   </Form>

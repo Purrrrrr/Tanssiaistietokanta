@@ -37,12 +37,12 @@ function DanceListRow({ dance }: { dance: DanceWithEvents }) {
   const [showEditor, setShowEditor] = useState(false)
 
   return <li className="even:bg-gray-100">
-    <div className="flex justify-between items-center *:p-2">
-      <div className="grow"><DanceLink dance={dance} /></div>
-      <div className="w-80">
+    <div className="flex flex-wrap justify-between items-center *:p-2">
+      <div className="max-lg:min-w-[max(160px,50%)] lg:grow"><DanceLink dance={dance} /></div>
+      <div className="max-lg:min-w-[max(160px,50%)] lg:w-80">
         {dance.category || <span className={ColorClass.textMuted}>{t('noCategory')}</span>}
       </div>
-      <div className="w-80 text-right">
+      <div className="flex justify-end max-[360px]:flex-col max-[360px]:gap-2 max-md:w-full grow lg:max-w-80">
         {dance.events.length > 0
           ? <DanceIsUsedIn events={dance.events} />
           : <DeleteDanceButton minimal dance={dance} />
