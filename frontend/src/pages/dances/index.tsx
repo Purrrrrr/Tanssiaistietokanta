@@ -4,10 +4,10 @@ import { filterDances, useDances } from 'services/dances'
 
 import {FormGroup, ModeButton, ModeSelector, SearchBar} from 'libraries/ui'
 import { CreateDanceButtons } from 'components/dance/CreateDanceButtons'
+import { AnyCategory, anyCategory, DanceViewCategorySelector } from 'components/dance/DanceCategorySelector'
 import { DanceList, View } from 'components/dance/DanceList'
 import {LoadingState} from 'components/LoadingState'
 import {PageTitle} from 'components/PageTitle'
-import { AnyCategory, anyCategory, DanceCategoryChooser } from 'components/widgets/DanceCategorySelector'
 import {useT, useTranslation} from 'i18n'
 
 function DancesPage() {
@@ -27,7 +27,7 @@ function DancesPage() {
       </div>
       <div className="grow" />
       <FormGroup inline label={useTranslation('domain.dance.category')} id="dc">
-        <DanceCategoryChooser id="dc" allowAnyCategory allowEmpty value={category} onChange={setCategory} />
+        <DanceViewCategorySelector id="dc" value={category} onChange={setCategory} dances={dances} />
       </FormGroup>
       <ModeSelector label={t('view')}>
         <ModeButton text={t('viewMode.tight')} selected={view === 'tight'} onClick={() => setView('tight')} />
