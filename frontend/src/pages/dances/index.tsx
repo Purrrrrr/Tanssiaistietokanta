@@ -20,7 +20,7 @@ function DancesPage() {
   return <>
     <PageTitle>{t('pageTitle')}</PageTitle>
     <LoadingState {...requestState} />
-    <div className="flex flex-wrap gap-4 mb-2.5">
+    <div className="flex flex-wrap gap-2 mb-2.5">
       <SearchBar id="search-dances" value={search} onChange={setSearch} placeholder={useTranslation('common.search')} emptySearchText={useTranslation('common.emptySearch')}/>
       <div>
         <CreateDanceButtons danceCount={dances.length} />
@@ -34,6 +34,7 @@ function DancesPage() {
         <ModeButton text={t('viewMode.extended')} selected={view === 'extended'} onClick={() => setView('extended')} />
       </ModeSelector>
     </div>
+    <p>{t('showingNDances', { count: filteredDances.length })}</p>
     <DanceList key={search} dances={filteredDances} view={view} />
   </>
 }

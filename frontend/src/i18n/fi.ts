@@ -342,6 +342,10 @@ export const fi = {
           extended: 'Laaja',
         },
         noCategory: 'Ei kategoriaa',
+        showingNDances: {
+          one: 'Näytetään 1 tanssi',
+          many: 'Näytetään __count__ tanssia',
+        }
       },
       dancePage: {
         backToDanceList: 'Takaisin tanssilistaan',
