@@ -110,9 +110,12 @@ const showcases : Showcase<Record<string, unknown>>[] = [
   }),
   showcase({
     title: 'Colored tag',
-    props: { },
-    render: () => range(TAG_COLOR_COUNT).map(color =>
-      <ColoredTag key={color} title={`Tag color ${color}`} color={color} />
+    props: {
+      small: booleanProp(),
+      tag: booleanProp(),
+    },
+    render: ({ small, tag }) => range(TAG_COLOR_COUNT).map(color =>
+      <ColoredTag small={small} tag={tag ? String(color) : undefined} key={color} title={`Tag color ${color}`} color={color} />
     )
   }),
 ]
