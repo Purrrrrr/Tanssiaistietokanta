@@ -84,6 +84,10 @@ export const fi = {
         other: 'Muut',
       },
     },
+    danceCategoryChooser: {
+      anyCategory: 'Kaikki kategoriat',
+      noCategory: 'Ei kategoriaa',
+    },
     danceEditor: {
       linkToThisDance: 'Linkki tähän tanssiin',
       deleteDance: 'Poista tanssi',

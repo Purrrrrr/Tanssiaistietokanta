@@ -31,7 +31,7 @@ export default function FilterableSelect<T>(props: SelectorProps<T>) {
     setHighlightedIndex,
   } = useCombobox({
     id,
-    inputId: id,
+    toggleButtonId: id,
     items: filteredItemData.items,
     selectedItem: value,
     itemToString: valueToString,
@@ -72,7 +72,7 @@ export default function FilterableSelect<T>(props: SelectorProps<T>) {
         {renderMenuItems(filteredItemData, categoryTitleRenderer, (item, index) => (
           <MenuItem
             highlight={highlightedIndex === index}
-            key={`${item}${index}`}
+            key={`${itemToString(item)}${index}`}
             {...toMenuItemProps(item, props)}
             {...getItemProps({ item, index })}
           />

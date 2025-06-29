@@ -1,5 +1,6 @@
 type Query {
   dance(id: ID!, versionId: ID): Dance!
+  danceCategories: [String!]!
   dances: [Dance!]!
 }
 

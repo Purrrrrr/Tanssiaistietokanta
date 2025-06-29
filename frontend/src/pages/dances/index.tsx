@@ -2,19 +2,20 @@ import { useSearchParams } from 'react-router-dom'
 
 import { filterDances, useDances } from 'services/dances'
 
-import {ModeButton, ModeSelector, SearchBar} from 'libraries/ui'
+import {FormGroup, ModeButton, ModeSelector, SearchBar} from 'libraries/ui'
 import { CreateDanceButtons } from 'components/dance/CreateDanceButtons'
 import { DanceList, View } from 'components/dance/DanceList'
 import {LoadingState} from 'components/LoadingState'
 import {PageTitle} from 'components/PageTitle'
+import { AnyCategory, anyCategory, DanceCategoryChooser } from 'components/widgets/DanceCategorySelector'
 import {useT, useTranslation} from 'i18n'
 
 function DancesPage() {
   const t = useT('pages.dances.danceList')
-  const { search, setSearch, view, setView } = useDanceListState()
+  const { search, setSearch, category, setCategory, view, setView } = useDanceListState()
   const [dances, requestState] = useDances()
 
-  const filteredDances = filterDances(dances, search)
+  const filteredDances = filterDances(dances, search, category !== anyCategory ? category : undefined)
 
   return <>
     <PageTitle>{t('pageTitle')}</PageTitle>
@@ -25,6 +26,9 @@ function DancesPage() {
         <CreateDanceButtons danceCount={dances.length} />
       </div>
       <div className="grow" />
+      <FormGroup inline label={useTranslation('domain.dance.category')} id="dc">
+        <DanceCategoryChooser id="dc" allowAnyCategory allowEmpty value={category} onChange={setCategory} />
+      </FormGroup>
       <ModeSelector label={t('view')}>
         <ModeButton text={t('viewMode.tight')} selected={view === 'tight'} onClick={() => setView('tight')} />
         <ModeButton text={t('viewMode.extended')} selected={view === 'extended'} onClick={() => setView('extended')} />
@@ -37,7 +41,7 @@ function DancesPage() {
 interface DanceListState {
   search: string
   view: View
-  category?: string
+  category?: string | AnyCategory
 }
 const views : View[] = ['tight', 'extended']
 
@@ -55,6 +59,12 @@ function useDanceListState() {
     view: views.find(w => w === view) ?? 'tight' as const,
     setView: (newView: View) => setSearchParams(p => {
       p.set('view', newView)
+      return p
+    }),
+    category: searchParams.has('category') ? (searchParams.get('category') ?? '') : anyCategory,
+    setCategory: (newCategory: string | AnyCategory) => setSearchParams(p => {
+      if (newCategory !== anyCategory) p.set('category', newCategory)
+      else p.delete('category')
       return p
     }),
   } satisfies DanceListState & Record<string, unknown>

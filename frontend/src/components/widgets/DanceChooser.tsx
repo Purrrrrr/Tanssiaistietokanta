@@ -25,7 +25,7 @@ interface DanceChooserProps {
 }
 
 export function DanceChooser({
-  value, onChange, allowEmpty, emptyText, excludeFromSearch, placeholder, workshops = [], chosenDancesIds = new Set(),
+  value, onChange, readOnly, allowEmpty, emptyText, excludeFromSearch, placeholder, workshops = [], chosenDancesIds = new Set(),
 }: DanceChooserProps) {
   const t = useT('components.danceChooser')
   const [dances] = useDances()
@@ -80,6 +80,7 @@ export function DanceChooser({
     items={getItems}
     value={value}
     onChange={chooseOrCreateDance}
+    readOnly={readOnly}
     inputRenderer={props => {
       const dance = dances.find(d => d._id === value?._id)
       const category = dance && getCategory(dance)

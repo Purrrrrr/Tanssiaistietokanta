@@ -5,6 +5,7 @@ import { getDependencyLinks } from '../../utils/dependencies'
 import type { Dances } from './dances.schema'
 import type { Events } from '../events/events.schema'
 import { versionHistoryFieldResolvers, versionHistoryResolver } from '../../utils/version-history-resolvers'
+import { uniq } from "ramda"
 
 export default (app: Application) => {
   const service = app.service('dances')
@@ -65,6 +66,8 @@ export default (app: Application) => {
         ? service.getVersion(id, versionId, params)
         : service.get(id, params),
       dances: (_: any, __: any, params: DancesParams | undefined) => service.find(params),
+      danceCategories: async (_: any, __: any, params: DancesParams | undefined) => 
+        uniq((await service.find(params)).map(dance => dance.category)).filter(Boolean),
     },
     Mutation: {
       createDance: (_: any, {dance}: any, params: DancesParams | undefined) => service.create(dance, params),

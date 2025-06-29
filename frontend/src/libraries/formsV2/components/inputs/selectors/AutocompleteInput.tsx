@@ -90,7 +90,7 @@ export function AutocompleteInput<T>(props: AutocompleteInputProps<T>) {
         {renderMenuItems(filteredItemData, categoryTitleRenderer, (item, index) => (
           <MenuItem
             highlight={highlightedIndex === index}
-            key={`${item}${index}`}
+            key={`${itemToString(item)}${index}`}
             {...toMenuItemProps(item, props)}
             {...getItemProps({ item, index })}
           />

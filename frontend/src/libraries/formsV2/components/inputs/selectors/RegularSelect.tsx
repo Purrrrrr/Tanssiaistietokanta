@@ -24,6 +24,7 @@ export default function RegularSelect<T>(props: SelectorProps<T>) {
     highlightedIndex,
   } = useSelect({
     id,
+    toggleButtonId: id,
     items: itemData.items,
     selectedItem: value,
     itemToString: valueToString,

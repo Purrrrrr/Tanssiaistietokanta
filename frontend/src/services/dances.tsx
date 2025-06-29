@@ -17,6 +17,11 @@ setupServiceUpdateFragment(
 
 export type WritableDanceProperty = Exclude<keyof Dance, '_id' | '_versionId' | '_versionNumber' | '__typename' | 'teachedIn'>
 
+export const useDanceCategories = entityListQueryHook('dances', graphql(`
+query getDanceCategories {
+  danceCategories
+}`))
+
 export const useDances = entityListQueryHook('dances', graphql(`
 query getDances {
   dances {
@@ -154,8 +159,12 @@ mutation deleteDance($id: ID!) {
 }`))
 
 
-export function filterDances<T extends Dance>(dances : T[], searchString: string): T[] {
-  return filterItemList(sortDances(dances), searchString, dance => dance.name)
+export function filterDances<T extends Dance>(dances : T[], searchString: string, categoryFilter?: string): T[] {
+  const filtered = filterItemList(sortDances(dances), searchString, dance => dance.name)
+  if (categoryFilter !== undefined) {
+    return filtered.filter(dance => dance.category === categoryFilter)
+  }
+  return filtered
 }
 
 export function sortDances<T extends Dance>(dances: T[]): T[] {
