@@ -162,7 +162,7 @@ query getEvent($id: ID!, $versionId: ID) {
               }
               teachedIn(eventId: $id) {
                 _id
-                workshop { name }
+                workshop { name, abbreviation }
                 instances { _id, abbreviation }
               }
             }
@@ -256,7 +256,7 @@ mutation patchEventProgram($id: ID!, $program: JSONPatch!) {
               _id
               teachedIn(eventId: $id) {
                 _id
-                workshop { name }
+                workshop { name, abbreviation }
                 instances { _id, abbreviation }
               }
             }

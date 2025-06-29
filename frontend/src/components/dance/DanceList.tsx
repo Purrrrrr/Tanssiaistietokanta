@@ -6,6 +6,7 @@ import { DanceWithEvents } from 'types'
 import { Button, Card, Collapse, ColorClass } from 'libraries/ui'
 import {DanceEditor, PlainDanceEditor} from 'components/DanceEditor'
 import { InfiniteItemLoader } from 'components/InfiniteItemLoader'
+import { ColoredTag } from 'components/widgets/ColoredTag'
 import { useT, useTranslation } from 'i18n'
 
 import { DanceIsUsedIn } from './DanceIsUsedIn'
@@ -40,7 +41,10 @@ function DanceListRow({ dance }: { dance: DanceWithEvents }) {
     <div className="flex flex-wrap justify-between items-center *:p-2">
       <div className="max-lg:min-w-[max(160px,50%)] lg:grow"><DanceLink dance={dance} /></div>
       <div className="max-lg:min-w-[max(160px,50%)] lg:w-80">
-        {dance.category || <span className={ColorClass.textMuted}>{t('noCategory')}</span>}
+        {dance.category
+          ? <ColoredTag title={dance.category} />
+          : <span className={ColorClass.textMuted}>{t('noCategory')}</span>
+        }
       </div>
       <div className="flex justify-end max-[360px]:flex-col max-[360px]:gap-2 max-md:w-full grow lg:max-w-80">
         {dance.events.length > 0

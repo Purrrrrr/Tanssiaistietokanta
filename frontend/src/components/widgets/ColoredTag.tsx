@@ -74,11 +74,11 @@ export function ColoredTag({ tag, title, hashSource, color, small, onClick } : C
     onClick={onClick}
     className={classNames(
       className,
-      'inline-block px-2 mx-0.5 font-bold rounded-full overflow-hidden',
+      'align-middle inline-block px-2 mx-0.5 font-bold rounded-full overflow-hidden',
       onClick && 'cursor-pointer hover:brightness-95 active:brightness-85',
       small
         ? 'my-0.5 text-xs inset-ring-2'
-        : 'leading-6 h-6.5 inset-ring-3',
+        : 'leading-5.5 h-6 inset-ring-2',
     )}
   >
     {tag &&
