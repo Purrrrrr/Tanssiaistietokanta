@@ -73,8 +73,7 @@ export function DanceViewCategorySelector({ id, value, onChange, dances }: Dance
     onChange={onChange}
     itemToString={itemToString}
     itemRenderer={item => <>
-      {itemToString(item)}
-      {' '}
+      <span className="me-1">{itemToString(item)}</span>
       <span className={ColorClass.textMuted}>({countsByCategory.get(item)?.length ?? 0})</span>
 
     </>}
