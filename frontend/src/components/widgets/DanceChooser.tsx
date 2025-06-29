@@ -89,7 +89,7 @@ export function DanceChooser({
         <input className={CssClass.input + ' grow'} {...props} />
         <span>
           {category && <ColoredTag small {...category} />}
-          {workshop && <ColoredTag small title={workshop.name} />}
+          {workshop && <ColoredTag small tag={workshop.abbreviation ?? undefined} title={workshop.name} />}
         </span>
       </div>
     }}
