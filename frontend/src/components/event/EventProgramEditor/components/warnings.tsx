@@ -1,3 +1,5 @@
+import { Fragment } from 'react'
+
 import {Dance} from 'types'
 import {DanceSet, EventProgramSettings} from 'components/event/EventProgramForm/types'
 
@@ -146,11 +148,11 @@ export function DuplicateDancesWarning({program}: {program: EventProgramSettings
           {': '}
           {t('inDanceSets', { count: danceSets.length })}
           {
-            danceSets.map((danceSet, i) =>
-              <>
+            uniq(danceSets).map((danceSet, i) =>
+              <Fragment key={danceSet._id}>
                 {i === 0 ? ' ' : ', '}
-                <RegularLink key={danceSet._id} href={`#${danceSet._id}`}>{danceSet.title}</RegularLink>
-              </>
+                <RegularLink href={`#${danceSet._id}`}>{danceSet.title}</RegularLink>
+              </Fragment>
             )
           }
         </p>

@@ -89,6 +89,7 @@ export function Tabs(props: TabsProps) {
         const { title, icon, disabled }= tab
 
         return <button
+          key={tab.id}
           role="tab"
           className={classNames('cursor-pointer pb-1', selected && 'border-b-3 border-b-blue-400')}
           id={tabId(id, tab, index)}
@@ -109,6 +110,7 @@ export function Tabs(props: TabsProps) {
 
       const tabPanelId = panelId(id, tab, index)
       return <div
+        key={id}
         role="tabpanel"
         id={tabPanelId}
         className={selected ? '' : 'hidden'}

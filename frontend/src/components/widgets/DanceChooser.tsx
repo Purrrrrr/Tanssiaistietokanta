@@ -84,7 +84,7 @@ export function DanceChooser({
     inputRenderer={props => {
       const dance = dances.find(d => d._id === value?._id)
       const category = dance && getCategory(dance)
-      const workshop = dance && workshops.find(w => w.instances.some(i => i.dances?.some(d => d._id === dance._id)))
+      const workshop = value && workshops.find(w => w.instances.some(i => i.dances?.some(d => d._id === value._id)))
 
       return <div className="flex flex-wrap items-center grow">
         <input className={CssClass.input + ' grow'} {...props} />

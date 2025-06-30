@@ -75,7 +75,8 @@
       Wiki page selector field
       Ability to reload wiki page
       Show wikipage fetch time
-
+  
+  Fix dance chooser bug: first write a filter, press enter -> does not choose
   Common list component and style for dance/event lists
 
   Better create dance dialog

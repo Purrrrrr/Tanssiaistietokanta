@@ -52,6 +52,7 @@ export function AutocompleteInput<T>(props: AutocompleteInputProps<T>) {
       }
     },
     stateReducer: (state, { type, changes }) => {
+      console.log(state, type, changes)
       switch (type) {
         case useCombobox.stateChangeTypes.InputClick:
           return state
