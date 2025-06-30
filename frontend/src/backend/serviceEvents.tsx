@@ -81,7 +81,7 @@ function getServiceEventEmitter(
 ) : EventEmitter {
   return getOrComputeDefault(serviceEventEmitters, serviceName, () => {
     const emitter = new EventEmitter()
-    emitter.setMaxListeners(40)
+    emitter.setMaxListeners(Infinity)
     const typeName = serviceTypeNameMap[serviceName]
     const entityFragment = serviceUpdateFragmentMap[serviceName]
     if (!entityFragment) {
