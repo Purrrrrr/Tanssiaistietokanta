@@ -75,10 +75,8 @@ export function Tabs(props: TabsProps) {
       const index = Array.from(tabContainer.current.children).findIndex(child => child.id === activeElement.id)
       const next = index + direction
       const count = tabs.length
-      console.log(index, next, count)
       const nextElement = children.item(next < 0 ? count - 1 : (next % count)) as HTMLElement | null
       nextElement?.focus()
-      console.log(nextElement)
     }
   }
 

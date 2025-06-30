@@ -37,6 +37,7 @@ export function AutocompleteInput<T>(props: AutocompleteInputProps<T>) {
     getItemProps,
     highlightedIndex,
     openMenu,
+    setHighlightedIndex,
   } = useCombobox({
     id,
     inputId: id,
@@ -44,15 +45,22 @@ export function AutocompleteInput<T>(props: AutocompleteInputProps<T>) {
     selectedItem: value,
     itemToString: valueToString,
     defaultHighlightedIndex: 0,
-    onSelectedItemChange: ({ selectedItem }) => onChange(selectedItem as T),
-    onInputValueChange: async ({ inputValue}) => updateFilter(inputValue),
+    onSelectedItemChange: ({ selectedItem }) => {
+      onChange(selectedItem as T)
+    },
+    onInputValueChange: async ({ inputValue}) => {
+      // Try to keep the hilighted item the same
+      const previousHilight = filteredItemData[highlightedIndex]
+      const newItems = await updateFilter(inputValue)
+      const nextHilightedIndex = newItems.items.indexOf(previousHilight)
+      setHighlightedIndex(nextHilightedIndex > -1 ? nextHilightedIndex : 0)
+    },
     onIsOpenChange: async (a) => {
       if (a.isOpen) {
         updateFilter(valueToString(value))
       }
     },
     stateReducer: (state, { type, changes }) => {
-      console.log(state, type, changes)
       switch (type) {
         case useCombobox.stateChangeTypes.InputClick:
           return state
@@ -61,11 +69,13 @@ export function AutocompleteInput<T>(props: AutocompleteInputProps<T>) {
           return {
             isOpen: false,
             inputValue: valueToString(value ?? state.selectedItem),
+            selectedItem: value,
           }
         case useCombobox.stateChangeTypes.InputKeyDownEscape:
           return {
             isOpen: false,
             inputValue: valueToString(value ?? state.selectedItem),
+            selectedItem: value,
           }
       }
       return changes

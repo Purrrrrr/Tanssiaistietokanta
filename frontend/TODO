@@ -60,6 +60,7 @@
   * Use backend integration in frontend
     * Show category/formation suggestions in DanceEditor
     * wikipageName field (in backend)
+* Fix dance chooser bug: press esc, open, write a filter, press enter -> does not choose
 * Dances page
   * View modes: tight / full
   * Toggle editing by button
@@ -75,8 +76,10 @@
       Wiki page selector field
       Ability to reload wiki page
       Show wikipage fetch time
-  
-  Fix dance chooser bug: first write a filter, press enter -> does not choose
+  Sorting of dance list
+    By name
+    By popularity
+    By category
   Common list component and style for dance/event lists
 
   Better create dance dialog
