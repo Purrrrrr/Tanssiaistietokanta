@@ -40,6 +40,8 @@ export default defineConfig(({ mode, command }) => {
       }),
       tailwindcss(),
       analyzer({
+        defaultSizes: 'gzip',
+        analyzerMode: 'static',
         exclude: /.jpg$/,
         openAnalyzer: false,
       }),
