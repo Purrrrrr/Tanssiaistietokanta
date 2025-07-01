@@ -48,12 +48,13 @@ function DanceListRow({ dance }: { dance: DanceWithEvents }) {
       </div>
       <div className="flex justify-end max-[360px]:flex-col max-[360px]:gap-2 max-md:w-full grow lg:max-w-80">
         {dance.events.length > 0
-          ? <DanceIsUsedIn events={dance.events} />
+          ? <DanceIsUsedIn minimal events={dance.events} wikipageName={dance.wikipageName} />
           : <DeleteDanceButton minimal dance={dance} />
         }
         <Button
           minimal
-          text={useTranslation('common.edit')}
+          icon="edit"
+          aria-label={useTranslation('common.edit')}
           color="primary"
           onClick={() => setShowEditor(!showEditor)}
           rightIcon={showEditor ? <ChevronUp/> : <ChevronDown />}

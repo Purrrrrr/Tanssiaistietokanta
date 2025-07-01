@@ -1,6 +1,5 @@
 import { useId } from 'react'
-import {useNavigate} from 'react-router-dom'
-import { Link as LinkIcon } from '@blueprintjs/icons'
+import { DocumentOpen, Link as LinkIcon, TimelineEvents } from '@blueprintjs/icons'
 
 import {DanceWithEvents} from 'types'
 
@@ -8,26 +7,46 @@ import { Select } from 'libraries/formsV2/components/inputs'
 import {Button, Link } from 'libraries/ui'
 import { useT } from 'i18n'
 
-export function DanceIsUsedIn({events}: Pick<DanceWithEvents, 'events'>) {
+export function DanceIsUsedIn({events, minimal, wikipageName }: Pick<DanceWithEvents, 'events'> & { minimal?: boolean, wikipageName?: string | null }) {
   const id = useId()
-  const navigate = useNavigate()
   const t = useT('components.danceEditor')
   if (events.length === 0) return null
 
+  const buttonText = t('danceUsedInEvents', {count: events.length})
+  const links = events.map(event => ({ text: event.name, link: `/events/${event._id}`}))
+  if (wikipageName) {
+    links.push({
+      text: 'Tanssiwiki: '+wikipageName,
+      link: `https://tanssi.dy.fi/${wikipageName.replaceAll(' ', '_')}`,
+    })
+  }
   return <Select
     id={id}
-    items={events}
-    value={events[0]}
-    onChange={(event) => { if (event) navigate(`/events/${event._id}`) }}
-    itemToString={event => event.name}
+    items={links}
+    value={links[0]}
+    onChange={() => { /* nop */  }}
+    itemToString={link => link.text}
     itemClassName=""
     buttonRenderer={(_, props) =>
-      <Button active={props['aria-expanded']} minimal rightIcon="caret-down" text={t('danceUsedInEvents', {count: events.length})} {...props} />
+      <Button
+        active={props['aria-expanded']}
+        minimal
+        rightIcon="caret-down"
+        text={minimal
+          ? <>
+            <TimelineEvents />
+            {events.length}
+            {wikipageName && <>{' '}<DocumentOpen /> 1</>}
+          </>
+          : buttonText}
+        aria-label={buttonText}
+        {...props}
+      />
     }
-    itemRenderer={event =>
-      <Link to={`/events/${event._id}`} className="flex gap-2 py-1.5 px-2 hover:no-underline">
+    itemRenderer={link =>
+      <Link to={link.link} className="flex gap-2 py-1.5 px-2 hover:no-underline">
         <LinkIcon />
-        <span className="whitespace-nowrap">{event.name}</span>
+        <span className="whitespace-nowrap">{link.text}</span>
       </Link>
     }
   />

@@ -68,7 +68,10 @@
   * Category selector
     Dance list category suggestions
     Dance wiki integration
-      Show if dance has wiki page in list
+    * Show if dance has wiki page in list
+      Better dance link menu
+        Categorize
+        Non-minimal: better text
       Ability to view dance wiki entry inline
       Copy instructions from wiki button  
       * On event slide editor

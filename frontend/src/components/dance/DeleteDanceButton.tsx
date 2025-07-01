@@ -25,6 +25,7 @@ export function DeleteDanceButton({minimal, dance, onDelete} : DeleteDanceButton
     minimal={minimal}
     onDelete={handleDelete}
     disabled={dance.events.length > 0}
+    iconOnly={minimal}
     text={t('deleteDance')}
     confirmText={t('deleteConfirmation')}
   />
