@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import type { InternalItemData, Items, ItemToString, SyncItems } from './types'
+import type { InternalItemData, ItemCategory, Items, ItemToString, SyncItems } from './types'
 
 const emptyResult : InternalItemData<unknown> = {
   showCategories: false,
@@ -53,7 +53,7 @@ async function getItems<T>(items: Items<T>, filter: string, itemToString: ItemTo
         ...category,
         items: filterItemList(category.items, filter, itemToString)
       }))
-      .filter(category => category.items.length > 0)
+      .filter(categoryHasItems)
   }
 }
 
@@ -86,9 +86,12 @@ function toItemData<T>(items: SyncItems<T>): InternalItemData<T> {
     }
   }
 
+  const categories = items.categories.filter(categoryHasItems)
   return {
     showCategories: true,
-    categories: items.categories,
-    items: items.categories.flatMap(category => category.items),
+    categories,
+    items: categories.flatMap(category => category.items),
   }
 }
+
+const categoryHasItems = <T>(category: ItemCategory<T>) => category.items.length > 0
