@@ -15,6 +15,7 @@ import { DanceIsUsedIn } from './dance/DanceIsUsedIn'
 import { DanceLink, danceVersionLink } from './dance/DanceLink'
 import { DeleteDanceButton } from './dance/DeleteDanceButton'
 import { ColoredTag } from './widgets/ColoredTag'
+import { WikipageSelector } from './dance/WikipageSelector'
 
 interface DanceEditorProps {
   dance: DanceWithEvents
@@ -70,7 +71,7 @@ function FullDanceEditorFields({ dance }: { dance: DanceWithEvents }) {
           helperText={!dance.category && <Suggestions suggestions={dance.wikipage?.categories} path="category" />}
         />
         <Field label={label('duration')} path="duration" component={DurationField} />
-        {/* <Field label={label('wikipageName')} path="wikipageName" component={DanceNameSearch} /> */}
+        <Field label={label('wikipageName')} path="wikipageName" component={WikipageSelector} />
         {dance.wikipageName &&
           <p>
             {t('danceInDanceWiki')}{' '}

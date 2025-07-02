@@ -10,7 +10,7 @@ import { useT } from 'i18n'
 export function DanceIsUsedIn({events, minimal, wikipageName }: Pick<DanceWithEvents, 'events'> & { minimal?: boolean, wikipageName?: string | null }) {
   const id = useId()
   const t = useT('components.danceEditor')
-  if (events.length === 0) return null
+  if (events.length === 0 && !wikipageName) return null
 
   const buttonText = t(wikipageName ? 'danceUsedInEventsAndWiki' : 'danceUsedInEvents', {count: events.length})
   const eventLinks = events.map(event => ({ text: event.name, link: `/events/${event._id}`}))
@@ -35,7 +35,7 @@ export function DanceIsUsedIn({events, minimal, wikipageName }: Pick<DanceWithEv
   return <Select
     id={id}
     items={links}
-    value={eventLinks[0]}
+    value={{ text: 'dummy', link: '' }}
     onChange={() => { /* nop */  }}
     itemToString={link => link.text}
     itemClassName=""
@@ -47,8 +47,9 @@ export function DanceIsUsedIn({events, minimal, wikipageName }: Pick<DanceWithEv
         text={minimal
           ? <>
             {wikipageName && <><DocumentOpen />{'1 '}</>}
-            <TimelineEvents />
-            {events.length}
+            <span className={events.length === 0 ? 'text-gray-400' : ''}>
+              <TimelineEvents /> {events.length}
+            </span>
           </>
           : buttonText}
         {...props}
