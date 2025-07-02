@@ -67,7 +67,7 @@
   * Mobile styles
   * Category selector
   * Show wiki page link also when no events
-    Sort categories in category selector
+  * Sort categories in category selector
     Dance list category suggestions
     Dance wiki integration
     * Show if dance has wiki page in list
@@ -76,7 +76,7 @@
       * Non-minimal: better text
       * Does it fit better on mobile now? Fix if it does
     * Wiki page selector field
-      Take spam into account in wiki page selector
+      Take spam into account in wiki page selector (show spam articles separately?)
       Ability to view dance wiki entry inline
       Copy instructions from wiki button  
       * On event slide editor

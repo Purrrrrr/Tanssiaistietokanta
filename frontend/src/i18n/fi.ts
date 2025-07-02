@@ -97,6 +97,7 @@ export const fi = {
         many: '__count__ tanssitapahtumaa',
       },
       danceUsedInEventsAndWiki: {
+        zero: 'Wikisivu, Ei tanssitapahtumia',
         one: 'Yksi tanssitapahtuma ja wikisivu',
         many: '__count__ tanssitapahtumaa ja wikisivu',
       },
