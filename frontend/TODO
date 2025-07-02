@@ -69,9 +69,9 @@
     Dance list category suggestions
     Dance wiki integration
     * Show if dance has wiki page in list
-      Better dance link menu
-        Categorize
-        Non-minimal: better text
+    * Better dance link menu
+      * Categorize
+      * Non-minimal: better text
       Ability to view dance wiki entry inline
       Copy instructions from wiki button  
       * On event slide editor
@@ -84,6 +84,8 @@
     By popularity
     By category
   Common list component and style for dance/event lists
+
+  Fix: Pressing tab when focused on select button loses all focus
 
   Better create dance dialog
     Ask name first /w autocomplete from dance wiki, then maybe upload file

@@ -93,9 +93,14 @@ export const fi = {
       deleteDance: 'Poista tanssi',
       deleteConfirmation: 'Haluatko varmasti poistaa tämän tanssin?',
       danceUsedInEvents: {
-        one: 'Yksi Tanssitapahtuma',
-        many: '__count__ Tanssitapahtumaa',
+        one: 'Yksi tanssitapahtuma',
+        many: '__count__ tanssitapahtumaa',
       },
+      danceUsedInEventsAndWiki: {
+        one: 'Yksi tanssitapahtuma ja wikisivu',
+        many: '__count__ tanssitapahtumaa ja wikisivu',
+      },
+      danceEvents: 'Tanssitapahtumat',
       danceInDanceWiki: 'Tanssi tanssiwikissä',
       copyFromDancewiki: 'Kopioi ohjeet tanssiwikistä',
       suggestions: 'Ehdotuksia',

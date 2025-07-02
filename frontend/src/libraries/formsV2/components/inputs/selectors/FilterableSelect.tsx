@@ -13,7 +13,7 @@ import { acceptNulls, preventDownshiftDefaultWhen, useFilteredItems } from './ut
 export default function FilterableSelect<T>(props: SelectorProps<T>) {
   'use no memo'
   const {
-    items, itemToString = String, categoryTitleRenderer = title => <strong>{title}</strong>,
+    items, itemToString = String, categoryTitleRenderer,
 
     value, onChange, id, containerClassname,
     filterPlaceholder,

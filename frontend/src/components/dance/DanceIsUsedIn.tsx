@@ -12,18 +12,30 @@ export function DanceIsUsedIn({events, minimal, wikipageName }: Pick<DanceWithEv
   const t = useT('components.danceEditor')
   if (events.length === 0) return null
 
-  const buttonText = t('danceUsedInEvents', {count: events.length})
-  const links = events.map(event => ({ text: event.name, link: `/events/${event._id}`}))
-  if (wikipageName) {
-    links.push({
-      text: 'Tanssiwiki: '+wikipageName,
-      link: `https://tanssi.dy.fi/${wikipageName.replaceAll(' ', '_')}`,
-    })
-  }
+  const buttonText = t(wikipageName ? 'danceUsedInEventsAndWiki' : 'danceUsedInEvents', {count: events.length})
+  const eventLinks = events.map(event => ({ text: event.name, link: `/events/${event._id}`}))
+  const links = wikipageName
+    ? {
+      categories: [
+        {
+          title: t('danceEvents'),
+          items: eventLinks,
+        },
+        {
+          title: t('danceInDanceWiki'),
+          items: [{
+            text: 'Tanssiwiki: '+wikipageName,
+            link: `https://tanssi.dy.fi/${wikipageName.replaceAll(' ', '_')}`,
+          }],
+        },
+      ]
+    }
+    : eventLinks
+
   return <Select
     id={id}
     items={links}
-    value={links[0]}
+    value={eventLinks[0]}
     onChange={() => { /* nop */  }}
     itemToString={link => link.text}
     itemClassName=""
@@ -39,8 +51,8 @@ export function DanceIsUsedIn({events, minimal, wikipageName }: Pick<DanceWithEv
             {wikipageName && <>{' '}<DocumentOpen /> 1</>}
           </>
           : buttonText}
-        aria-label={buttonText}
         {...props}
+        aria-label={buttonText}
       />
     }
     itemRenderer={link =>
