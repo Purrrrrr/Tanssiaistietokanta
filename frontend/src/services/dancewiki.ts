@@ -13,7 +13,7 @@ export function useSearchWikiTitles() {
   const [executeQuery, { data }] = useLazyQuery(nameSearchQuery)
 
   const doSearch = useCallback(async (search: string) => {
-    const results = await executeQuery({ variables: { search, maxSpamScore: 3 } })
+    const results = await executeQuery({ variables: { search, maxSpamScore: 1.5 } })
     return results.data?.searchWikiTitles ?? []
   }, [executeQuery])
 
