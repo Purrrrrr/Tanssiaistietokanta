@@ -1,10 +1,8 @@
-import { type ReactNode, MouseEventHandler, useCallback, useLayoutEffect, useRef } from 'react'
+import { type ReactNode, MouseEventHandler, useRef } from 'react'
 import { forwardRef } from 'react'
-import { useScrollPosition } from '@n8tb1t/use-scroll-position'
-
-import { useResizeObserver } from 'libraries/ui'
 
 import { Popover } from './unstyled/Popover'
+import { AnchoringCallbackProps, toPx, useAnchorToElement } from './useAnchorToElement'
 
 interface DropdownContainerProps {
   className?: string
@@ -18,6 +16,7 @@ export const DropdownContainer = forwardRef<HTMLDivElement, DropdownContainerPro
 
 interface DropdrownProps {
   id?: string
+  anchorElement?: string | HTMLElement
   open: boolean
   onToggle?: (open: boolean) => unknown
   auto?: boolean
@@ -28,19 +27,16 @@ interface DropdrownProps {
   alwaysRenderChildren?: boolean
 }
 
-export const Dropdown = ({ id, auto, arrow, children, open, onToggle, onClick, tabIndex, alwaysRenderChildren }: DropdrownProps) => {
+export const Dropdown = ({ id, anchorElement, auto, arrow, children, open, onToggle, onClick, tabIndex, alwaysRenderChildren }: DropdrownProps) => {
   const element = useRef<HTMLDivElement>(null)
+  const arrowTriangle = useRef<SVGSVGElement>(null)
+  const parent = anchorElement
+    ? typeof anchorElement === 'string'
+      ? document.getElementById(anchorElement)
+      : anchorElement
+    : element.current?.closest('[data-dropdown-container]')
 
-  const updateDirection = useCallback(() => {
-    if (!element.current) return
-    const parent = element.current.closest('[data-dropdown-container]')
-    if (!parent) return
-    updateDropdownPosition(element.current, parent, arrow)
-  }, [arrow])
-
-  useLayoutEffect(updateDirection, [updateDirection])
-  useResizeObserver(element, updateDirection)
-  useScrollPosition(updateDirection, [updateDirection], undefined, true, 100)
+  useAnchorToElement(element.current, parent, arrow ? 10 : 0, arrow ? updateTriangle : undefined)
 
   return <Popover
     id={id}
@@ -58,69 +54,20 @@ export const Dropdown = ({ id, auto, arrow, children, open, onToggle, onClick, t
       {children}
     </div>
     {arrow &&
-      <svg className="absolute w-5 h-2.5 text-gray-400/50" width={20} height={10}>
+      <svg ref={arrowTriangle} className="absolute w-5 h-2.5 text-gray-400/50" width={20} height={10}>
         <polygon points="10,0 0,10.5 20,10.5" stroke="currentColor" fill="#fff" />
       </svg>
     }
   </Popover>
 }
 
-function updateDropdownPosition(element: HTMLDivElement, anchorElement: Element, hasArrow?: boolean) {
-  const anchor = anchorElement.getBoundingClientRect()
-  const { clientHeight: elementHWithPadding, clientWidth: elementWWithPadding } = element
-  const { clientHeight: winH, clientWidth: winW } = document.documentElement
-  const margin = 10
-  // For shadows and the arrow to render properly we have a transparent padding area
-  const transparentPadding = 10
-  const triangleH = hasArrow ? 10 : 0
+function updateTriangle({ element, elementH, transparentPadding, elementW, pointDown }: AnchoringCallbackProps) {
+  const arrowElement = element.childNodes[1] as HTMLDivElement
+  if (!arrowElement) return
   const triangleW = 20
-  const elementH = elementHWithPadding - transparentPadding * 2 + triangleH
-  const elementW = elementWWithPadding - transparentPadding * 2
-
-  const spaceDown = winH - anchor.bottom - elementH
-  const spaceUp = anchor.top - elementH
-
-  let pointDown = true
-  const canPointDown = spaceDown > margin
-  if (!canPointDown) {
-    const canPointUp = spaceUp > margin
-    if (canPointUp) {
-      pointDown = false
-    } else {
-      pointDown = spaceDown > spaceUp
-    }
-  }
-  const top = pointDown
-    ? anchor.top + anchor.height + triangleH - transparentPadding
-    : anchor.top - elementH - transparentPadding
-
-  const centeredLeft = anchor.left + (anchor.width - elementW) / 2 - transparentPadding
-  const left = clamp({
-    min: margin,
-    max: winW - elementW - margin,
-    value: centeredLeft
-  })
-  const maxH = clamp({
-    min: 200,
-    value: (pointDown ? winH - anchor.bottom : anchor.top) - margin,
-  })
-
-  element.style.minWidth = toPx(anchor.width + transparentPadding * 2)
-  element.style.maxHeight = toPx(maxH)
-  element.style.top = toPx(top + window.scrollY)
-  element.style.left = toPx(left + window.scrollX)
-  element.style.transformOrigin = pointDown
-    ? 'top' : 'bottom'
-  if (hasArrow) {
-    const triangle = element.childNodes[1] as HTMLDivElement
-    if (!triangle) return
-    triangle.style.top = toPx(
-      pointDown ? 1 : elementH - 1
-    )
-    triangle.style.left = toPx((elementWWithPadding - triangleW) / 2)
-    triangle.style.rotate = pointDown ? '' : '180deg'
-  }
+  arrowElement.style.top = toPx(
+    pointDown ? 1 : elementH - 1
+  )
+  arrowElement.style.left = toPx((elementW + transparentPadding * 2 - triangleW) / 2)
+  arrowElement.style.rotate = pointDown ? '' : '180deg'
 }
-
-const toPx = (value: number) => `${value}px`
-const clamp = ({value, min = -Infinity, max = Infinity}: { value: number, min?: number, max?: number}) => Math.min(max, Math.max(min, value))
