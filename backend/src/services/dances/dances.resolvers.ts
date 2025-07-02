@@ -67,7 +67,7 @@ export default (app: Application) => {
         : service.get(id, params),
       dances: (_: any, __: any, params: DancesParams | undefined) => service.find(params),
       danceCategories: async (_: any, __: any, params: DancesParams | undefined) => 
-        uniq((await service.find(params)).map(dance => dance.category)).filter(Boolean),
+        uniq((await service.find(params)).map(dance => dance.category)).filter(Boolean).sort(),
     },
     Mutation: {
       createDance: (_: any, {dance}: any, params: DancesParams | undefined) => service.create(dance, params),
