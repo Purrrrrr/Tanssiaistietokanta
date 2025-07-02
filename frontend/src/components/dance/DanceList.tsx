@@ -38,15 +38,15 @@ function DanceListRow({ dance }: { dance: DanceWithEvents }) {
   const [showEditor, setShowEditor] = useState(false)
 
   return <li className="even:bg-gray-100">
-    <div className="flex flex-wrap justify-between items-center *:p-2">
-      <div className="max-lg:min-w-[max(160px,50%)] lg:grow"><DanceLink dance={dance} /></div>
-      <div className="max-lg:min-w-[max(160px,50%)] lg:w-80">
+    <div className="flex flex-wrap justify-end items-center *:p-2">
+      <div className="max-md:min-w-[max(160px,50%)] md:grow"><DanceLink dance={dance} /></div>
+      <div className="max-md:min-w-[max(160px,50%)] md:w-80">
         {dance.category
           ? <ColoredTag title={dance.category} />
           : <span className={ColorClass.textMuted}>{t('noCategory')}</span>
         }
       </div>
-      <div className="flex justify-end max-[360px]:flex-col max-[360px]:gap-2 max-md:w-full grow lg:max-w-80">
+      <div className="flex justify-end max-[360px]:flex-col max-[360px]:gap-2 max-sm:w-full md:basis-52">
         <DanceIsUsedIn minimal events={dance.events} wikipageName={dance.wikipageName} />
         <DeleteDanceButton minimal dance={dance} />
         <Button
