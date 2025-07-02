@@ -46,9 +46,9 @@ export function DanceIsUsedIn({events, minimal, wikipageName }: Pick<DanceWithEv
         rightIcon="caret-down"
         text={minimal
           ? <>
+            {wikipageName && <><DocumentOpen />{'1 '}</>}
             <TimelineEvents />
             {events.length}
-            {wikipageName && <>{' '}<DocumentOpen /> 1</>}
           </>
           : buttonText}
         {...props}
