@@ -174,5 +174,5 @@ export function sortDances<T extends Dance>(dances: T[]): T[] {
 const compareDances = compareBy(danceSortKey)
 
 function danceSortKey(dance: Dance): string {
-  return dance.name.replace(/^(an?|the) */i, '')
+  return dance.name.replace(/^(an?|the) +/i, '')
 }
