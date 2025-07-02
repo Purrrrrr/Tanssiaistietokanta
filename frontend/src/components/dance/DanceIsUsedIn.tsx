@@ -24,7 +24,7 @@ export function DanceIsUsedIn({events, minimal, wikipageName }: Pick<DanceWithEv
         {
           title: t('danceInDanceWiki'),
           items: [{
-            text: 'Tanssiwiki: '+wikipageName,
+            text: wikipageName,
             link: `https://tanssi.dy.fi/${wikipageName.replaceAll(' ', '_')}`,
           }],
         },
