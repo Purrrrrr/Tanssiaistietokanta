@@ -106,7 +106,7 @@ export function Tabs(props: TabsProps) {
 
       const tabPanelId = panelId(id, tab, index)
       return <div
-        key={id}
+        key={tab.id}
         role="tabpanel"
         id={tabPanelId}
         className={selected ? '' : 'hidden'}

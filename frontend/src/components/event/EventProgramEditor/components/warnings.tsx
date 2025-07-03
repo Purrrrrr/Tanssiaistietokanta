@@ -46,7 +46,7 @@ export function MissingDanceInstructionsWarning({program}: {program: EventProgra
     <p>{t('dancesWithoutInstructions', { count: missing.length })} {t('clickLinksToOpenSlide')}</p>
     <ul className="ps-3">
       {missing.map(({ id, danceSet, dance }) =>
-        <li className="my-1 list-disc list-item">
+        <li key={id} className="my-1 list-disc list-item">
           <Link
             to={linkToSlide(id)}
             onClick={() => document.querySelector('.slideEditors')?.scrollIntoView({behavior: 'smooth', block: 'nearest', inline: 'nearest'})}

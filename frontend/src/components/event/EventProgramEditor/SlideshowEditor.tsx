@@ -61,7 +61,7 @@ function SlideNavigation(props: SlideNavigationProps) {
       onChange={(id) => navigate(linkToSlide(id as string))}
     >
       {slides.filter(slide => slide.parentId === undefined).map(slide =>
-        <Tab id={slide.id} title={slide.title} />
+        <Tab key={slide.id} id={slide.id} title={slide.title} />
       )}
     </Tabs>
     <nav className="slideNavigation">
