@@ -1,5 +1,5 @@
 import React, {ComponentProps} from 'react'
-import {Classes, Radio, Switch as BlueprintSwitch, TextArea as BlueprintTextArea, TextAreaProps as BlueprintTextAreaProps} from '@blueprintjs/core'
+import {Radio, Switch as BlueprintSwitch, TextArea as BlueprintTextArea, TextAreaProps as BlueprintTextAreaProps} from '@blueprintjs/core'
 import classNames from 'classnames'
 
 import {ExtendedFieldComponentProps, FieldComponentProps, FieldPropsWithoutComponent} from '../types'
@@ -7,6 +7,7 @@ import {ExtendedFieldComponentProps, FieldComponentProps, FieldPropsWithoutCompo
 import {Field, useFieldData} from '../Field'
 import { FieldContainer } from '../FieldContainer'
 import { useFieldValueProps } from '../hooks'
+import { CssClass } from 'libraries/ui'
 
 export interface SwitchForProps<V> {
   isChecked: (v: V | null | undefined) => boolean
@@ -69,7 +70,7 @@ export function NumberInput({value, className, onChange, inline, inputRef, ...pr
     type="number"
     ref={inputRef}
     value={value ?? 0}
-    className={classNames(className, Classes.INPUT, inline || Classes.FILL)}
+    className={classNames(className, CssClass.input, inline || CssClass.inputFill)}
     onKeyDown={e => (e.key === 'Escape' || e.key === 'Enter') && (e.target as HTMLInputElement).blur()}
     onChange={e => onChange(parseFloat(e.target.value), e)}
     {...props}
@@ -83,7 +84,7 @@ export function Input({value, className, onChange, inline, inputRef, ...props} :
   return <input
     ref={inputRef}
     value={value ?? ''}
-    className={classNames(className, Classes.INPUT, inline || Classes.FILL)}
+    className={classNames(className, CssClass.input, inline || CssClass.inputFill)}
     onKeyDown={e => (e.key === 'Escape' || e.key === 'Enter') && (e.target as HTMLInputElement).blur()}
     onChange={e => onChange(e.target.value, e)}
     {...props}

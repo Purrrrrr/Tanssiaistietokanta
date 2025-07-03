@@ -1,13 +1,10 @@
-import {
-  Classes,
-} from '@blueprintjs/core'
-
 import { Color } from './types'
 
 export const CssClass = {
-  input: Classes.INPUT,
-  inputGroup: Classes.INPUT_GROUP,
-  inputAction: Classes.INPUT_ACTION,
+  input: 'bp5-input',
+  inputGroup: 'bp5-input-group',
+  inputAction: 'bp5-input-action',
+  inputFill: 'bp5-fill',
   formGroupInline: 'formgroup-inline',
   formGroupInlineFill: 'formgroup-inline-fill',
 }

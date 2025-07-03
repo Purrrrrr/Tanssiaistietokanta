@@ -1,8 +1,16 @@
 import React, {useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react'
-import {AlertProps, Classes} from '@blueprintjs/core'
 import classNames from 'classnames'
 
-import {Button} from 'libraries/ui'
+import {Button, Color} from 'libraries/ui'
+
+const Classes = {
+  DIALOG_HEADER: 'bp5-dialog-header',
+  HEADING: 'bp5-dialog',
+  DIALOG_BODY: 'bp5-dialog',
+  DIALOG_FOOTER: 'bp5-dialog-footer',
+  ALERT_CONTENTS: 'bp5-alert-contents',
+  ALERT_FOOTER: 'bp5-alert-footer',
+}
 
 type DialogProps = {
   isOpen: boolean,
@@ -78,6 +86,18 @@ Dialog.Body = function DialogBody({className, ...props}: React.HTMLAttributes<HT
 Dialog.Footer = function DialogBody({className, ...props}: React.HTMLAttributes<HTMLDivElement>) {
   const cls = `${className ?? ''} ${Classes.DIALOG_FOOTER}`
   return <div className={cls} {...props} />
+}
+
+interface AlertProps {
+  cancelButtonText?: string;
+  children: React.ReactNode;
+  confirmButtonText?: string;
+  title: string
+  intent?: Color
+  isOpen: boolean;
+  onCancel?(evt?: React.SyntheticEvent<HTMLElement>): void;
+  onConfirm?(evt?: React.SyntheticEvent<HTMLElement>): void;
+  onClose?(confirmed: boolean, evt?: React.SyntheticEvent<HTMLElement>): void;
 }
 
 export function Alert({isOpen, title, intent, confirmButtonText, cancelButtonText, children, onCancel, onConfirm, onClose} : AlertProps & {children: React.ReactNode, title: string}) {

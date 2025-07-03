@@ -84,6 +84,7 @@
       Show wikipage fetch time
 
   Remove dialog? It is not used anymore. At least remove the blueprint css for it
+  Remove date-fns
 
   Dance list category suggestions
   Sorting of dance list
