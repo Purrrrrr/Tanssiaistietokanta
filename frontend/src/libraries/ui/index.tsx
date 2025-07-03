@@ -23,11 +23,10 @@ export { Link, RegularLink } from './Link'
 export { Markdown } from './Markdown'
 export { ModeButton, ModeSelector } from './ModeSelector'
 export { Tab, Tabs } from './Tabs'
-export { TagButton } from './Tag'
 export * from './toaster'
 export type { Color } from './types'
 export { useResizeObserver } from './utils/useResizeObserver'
-export { H2, HTMLTable, ProgressBar, SectionCard } from '@blueprintjs/core'
+export { H2, HTMLTable, SectionCard } from '@blueprintjs/core'
 
 export { ColorClass, CssClass }
 

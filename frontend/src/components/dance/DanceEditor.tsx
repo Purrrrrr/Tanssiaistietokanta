@@ -4,7 +4,6 @@ import {Dance, DanceWithEvents} from 'types'
 
 import {MarkdownEditor, MarkdownEditorProps, SyncStatus } from 'libraries/forms'
 import {Button, H2, RegularLink} from 'libraries/ui'
-import {DanceDataImportButton} from 'components/DanceDataImportDialog'
 import { useVersionedName } from 'components/versioning/VersionedPageTitle'
 import {VersionSidebarToggle} from 'components/versioning/VersionSidebarToggle'
 import { ColoredTag } from 'components/widgets/ColoredTag'
@@ -27,7 +26,6 @@ interface DanceEditorProps {
 
 export function DanceEditor({dance, onDelete, showLink, showVersionHistory, titleComponent: Title = H2} : DanceEditorProps) {
   const t = useT('components.danceEditor')
-  const readOnly = dance._versionId != null
   const {formProps, state} = useDanceEditorState(dance)
 
   return <Form {...formProps}>
@@ -42,7 +40,6 @@ export function DanceEditor({dance, onDelete, showLink, showVersionHistory, titl
         <DanceIsUsedIn events={dance.events} />
         <div>
           <DeleteDanceButton dance={dance} onDelete={onDelete} />
-          {readOnly || <DanceDataImporter />}
         </div>
       </div>
     </div>
@@ -124,10 +121,4 @@ function Suggestions(
       <ColoredTag key={suggestion} small title={suggestion} onClick={() => onChange(suggestion)} />
     )}
   </div>
-}
-
-function DanceDataImporter() {
-  const dance = useValueAt('')
-  const onChange = useOnChangeFor('')
-  return <DanceDataImportButton dance={dance} onImport={onChange} />
 }

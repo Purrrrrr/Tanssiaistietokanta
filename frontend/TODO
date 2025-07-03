@@ -83,6 +83,8 @@
       Ability to reload wiki page
       Show wikipage fetch time
 
+  Remove dialog? It is not used anymore. At least remove the blueprint css for it
+
   Dance list category suggestions
   Sorting of dance list
     By name
@@ -127,7 +129,6 @@
         vertical tabs?
     * Icon (half-way done)
     SectionCard
-    ProgressBar
     H2
     Input
     FormGroup
