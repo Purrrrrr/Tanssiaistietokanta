@@ -9,9 +9,10 @@ import {backendQueryHook, cleanMetadataValues, graphql} from 'backend'
 import {sortDances, usePatchDance} from 'services/dances'
 import {useCallbackOnEventChanges} from 'services/events'
 
-import {formFor, MarkdownEditor, patchStrategy, Switch, SyncStatus, useAutosavingState} from 'libraries/forms'
+import {formFor, patchStrategy, Switch, SyncStatus, useAutosavingState} from 'libraries/forms'
 import {Button, Markdown, showToast} from 'libraries/ui'
-import {DanceDataImportButton} from 'components/DanceDataImportDialog'
+import { InstructionEditor } from 'components/dance/DanceEditor'
+import { WikipageSelector } from 'components/dance/WikipageSelector'
 import {LoadingState} from 'components/LoadingState'
 import PrintViewToolbar from 'components/widgets/PrintViewToolbar'
 import {useFormatDateTime, useT, useTranslation} from 'i18n'
@@ -113,6 +114,10 @@ query DanceInstructions($eventId: ID!) {
           formation
           category
           source
+          wikipageName
+          wikipage {
+            instructions
+          }
         }
       }
     }
@@ -139,7 +144,6 @@ function InstructionsForDance({dance, showShortInstructions} : {dance: Dance, sh
   return <div className={`dance-instructions-dance ${value.trim() !== '' ? 'not-empty' : 'empty'}`}>
     <h2>
       {dance.name}
-      <DanceDataImportButton dance={dance} minimal />
       <Button
         color="primary"
         minimal
@@ -157,7 +161,7 @@ function InstructionsForDance({dance, showShortInstructions} : {dance: Dance, sh
   </div>
 }
 
-function DanceFieldEditor({dance: danceInDatabase, field} : {dance: EditableDance, field: 'description' | 'instructions'}) {
+function DanceFieldEditor({dance: danceInDatabase, field} : {dance: Dance, field: 'description' | 'instructions'}) {
   const t = useT('domain.dance')
   const [patchDance] = usePatchDance()
   const onPatch= useCallback(
@@ -174,9 +178,10 @@ function DanceFieldEditor({dance: danceInDatabase, field} : {dance: EditableDanc
     <Field
       label={t(field)}
       path={field}
-      component={MarkdownEditor}
-      componentProps={{markdownOverrides}}
+      component={InstructionEditor}
+      componentProps={{ wikipage: danceInDatabase.wikipage, markdownOverrides}}
     />
+    <Field label={t('wikipageName')} path="wikipageName" component={WikipageSelector} componentProps={{ possibleName: danceInDatabase.name }} />
   </Form>
 }
 
