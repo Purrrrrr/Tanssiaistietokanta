@@ -21,7 +21,7 @@ export function DanceNameSearch({id, value, onChange}: {id: string, value: strin
   return <>
     <Input id={id} value={value} onChange={onChange} list="dances" inline />
     <datalist id="dances">
-      {((value && value.length > 1) ? suggestions : []).map(suggestion => <option value={suggestion} key={suggestion} />)}
+      {((value && value.length > 1) ? suggestions : []).map(suggestion => <option value={suggestion.name} key={suggestion.name} />)}
     </datalist>
   </>
 }

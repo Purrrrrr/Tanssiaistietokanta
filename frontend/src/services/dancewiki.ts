@@ -4,8 +4,10 @@ import { useLazyQuery, useMutation } from '@apollo/client'
 import { graphql } from '../backend'
 
 const nameSearchQuery = graphql(`
-query searchDancewiki($search: String!, $maxSpamScore: Float) {
-  searchWikiTitles(search: $search, maxSpamScore: $maxSpamScore)
+query searchDancewiki($search: String!) {
+  searchWiki(search: $search) {
+    name, spamScore
+  }
 }
 `)
 
@@ -13,11 +15,11 @@ export function useSearchWikiTitles() {
   const [executeQuery, { data }] = useLazyQuery(nameSearchQuery)
 
   const doSearch = useCallback(async (search: string) => {
-    const results = await executeQuery({ variables: { search, maxSpamScore: 1.5 } })
-    return results.data?.searchWikiTitles ?? []
+    const results = await executeQuery({ variables: { search } })
+    return results.data?.searchWiki ?? []
   }, [executeQuery])
 
-  return [doSearch, data?.searchWikiTitles ?? []] as const
+  return [doSearch, data?.searchWiki ?? []] as const
 }
 
 const fetchWikipageQuery = graphql(`
