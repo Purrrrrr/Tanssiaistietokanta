@@ -1,7 +1,7 @@
 import React, { ReactElement, ReactNode } from 'react'
 import { Classes } from '@blueprintjs/core'
 import {
-  Cross, DoubleCaretVertical, Edit, InfoSign, Move, Music, Time
+  Cross, DoubleCaretVertical, Edit, Move
 } from '@blueprintjs/icons'
 import classNames from 'classnames'
 
@@ -13,20 +13,14 @@ const icons = {
   cross: Cross,
   'double-caret-vertical': DoubleCaretVertical,
   edit: Edit,
-  'info-sign': InfoSign,
   move: Move,
-  music: Music,
-  time: Time,
 } satisfies Record<IconName, unknown>
 
 export type IconName =
   | 'cross'
   | 'double-caret-vertical'
   | 'edit'
-  | 'info-sign'
   | 'move'
-  | 'music'
-  | 'time'
 
 export interface IconProps {
   className?: string
