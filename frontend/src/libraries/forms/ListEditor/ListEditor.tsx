@@ -1,4 +1,5 @@
 import React, {useContext, useMemo} from 'react'
+import { Move } from '@blueprintjs/icons'
 import {
   useDroppable
 } from '@dnd-kit/core'
@@ -156,7 +157,7 @@ export function SortableItem<T, V>({itemType, acceptsTypes, id, path, onChangePa
 
   const Wrapper = isTable ? 'tr' : 'div'
   const dragHandle = useMemo(
-    () => <Button aria-label={moveItem} className="touch-none" icon="move" ref={setActivatorNodeRef} {...listeners} />,
+    () => <Button aria-label={moveItem} className="touch-none" icon={<Move />} ref={setActivatorNodeRef} {...listeners} />,
     [listeners, setActivatorNodeRef, moveItem]
   )
 

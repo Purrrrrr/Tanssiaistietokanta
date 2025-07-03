@@ -4,7 +4,7 @@ import {
   FormGroup as BlueprintFormGroup,
   FormGroupProps as BlueprintFormGroupProps,
 } from '@blueprintjs/core'
-import { Search } from '@blueprintjs/icons'
+import { Cross, Search } from '@blueprintjs/icons'
 import classNames from 'classnames'
 
 import { Button } from './Button'
@@ -18,7 +18,6 @@ export { type AnchorButtonProps, type ButtonProps, AnchorButton, Button, buttonC
 export { Callout } from './Callout'
 export { Collapse } from './Collapse'
 export { GlobalSpinner } from './GlobalLoadingSpinner'
-export * from './Icon'
 export { Link, RegularLink } from './Link'
 export { Markdown } from './Markdown'
 export { ModeButton, ModeSelector } from './ModeSelector'
@@ -92,7 +91,7 @@ export function SearchBar({id, onChange, value, placeholder, emptySearchText} : 
         className="px-2 m-1 h-6"
         aria-label={emptySearchText}
         minimal
-        icon="cross"
+        icon={<Cross />}
         onClick={(e: MouseEvent<HTMLElement>) => {
           onChange('');
           (e.target as HTMLButtonElement).closest('.bp5-input-group')?.querySelector('input')?.focus()

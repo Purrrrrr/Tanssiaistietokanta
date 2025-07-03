@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react'
-import { Link as LinkIcon } from '@blueprintjs/icons'
+import { Cross, Link as LinkIcon } from '@blueprintjs/icons'
 
 import {Dance} from 'types'
 
@@ -185,7 +185,7 @@ const ProgramItem = React.memo(function ProgramEditor({dragHandle, path, itemInd
     <div><Duration value={__typename === 'RequestedDance' ? 0 : item.item.duration} /></div>
     <div className="buttons">
       {dragHandle}
-      <RemoveItemButton path={path} index={itemIndex} title={t('buttons.remove')} icon="cross" className="deleteItem" />
+      <RemoveItemButton path={path} index={itemIndex} title={t('buttons.remove')} icon={<Cross />} className="deleteItem" />
     </div>
   </div>
 })

@@ -1,5 +1,3 @@
-import { WikipageSelector } from "components/dance/WikipageSelector";
-
 export const fi = {
   app: {
     title: 'Tanssiaistietokanta',

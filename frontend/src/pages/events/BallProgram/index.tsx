@@ -1,5 +1,6 @@
 import {useState} from 'react'
 import {useNavigate, useParams} from 'react-router-dom'
+import { Cross, Edit } from '@blueprintjs/icons'
 import classNames from 'classnames'
 
 import {Button} from 'libraries/ui'
@@ -41,7 +42,7 @@ export default function BallProgram({eventId, eventVersionId}) {
       onToggleEditing={() => setEditing(e => !e)}
     />
     <div className="editor">
-      <Button className="close" minimal icon="cross" onClick={() => setEditing(false)}/>
+      <Button className="close" minimal icon={<Cross />} onClick={() => setEditing(false)}/>
       <SlideEditor slide={slide} eventId={eventId} eventVersionId={eventVersionId} eventProgram={event?.program} />
     </div>
   </div>
@@ -68,7 +69,7 @@ function BallProgramView(
     <div className="controls">
       <ProgramTitleSelector value={slide.parentId ?? slide.id} onChange={id => navigate(baseUrl + id)}
         program={event.program} />
-      <Button minimal icon="edit" onClick={onToggleEditing}/>
+      <Button minimal icon={<Edit />} onClick={onToggleEditing}/>
     </div>
     <EventSlide {...slide} eventProgram={event.program}/>
   </SlideContainer>

@@ -1,4 +1,5 @@
 import { MouseEvent, ReactNode, useEffect, useId, useRef, useState } from 'react'
+import { DoubleCaretVertical } from '@blueprintjs/icons'
 
 import { getFocusableElements } from 'libraries/dialog'
 import { Dropdown, DropdownContainer } from 'libraries/overlays'
@@ -38,7 +39,7 @@ export default function MenuButton({ children, buttonRenderer, text, buttonProps
       ? buttonRenderer({ active: open, children: text, popovertarget: dropdownId })
       : <Button
         active={open}
-        rightIcon="double-caret-vertical"
+        rightIcon={<DoubleCaretVertical />}
         text={text}
         popovertarget={dropdownId}
         {...buttonProps}

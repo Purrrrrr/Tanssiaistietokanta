@@ -1,4 +1,5 @@
 import { type ElementType, type ReactNode, useMemo} from 'react'
+import { Move } from '@blueprintjs/icons'
 import {useSortable} from '@dnd-kit/sortable'
 import {CSS} from '@dnd-kit/utilities'
 
@@ -61,5 +62,5 @@ export function SortableItem<Data extends Record<string, unknown>>({id, data, di
 
 function DragHandle({buttonRef, listeners}) {
   const moveLabel = useFormTranslation('moveItem')
-  return <Button aria-label={moveLabel} className="touch-none" icon="move" ref={buttonRef} {...listeners} />
+  return <Button aria-label={moveLabel} className="touch-none" icon={<Move />} ref={buttonRef} {...listeners} />
 }

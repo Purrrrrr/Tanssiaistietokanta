@@ -1,4 +1,5 @@
 import { type ReactNode } from 'react'
+import { DoubleCaretVertical } from '@blueprintjs/icons'
 
 import { DropdownButtonDownshiftProps, SelectorProps } from './types'
 
@@ -30,7 +31,7 @@ export function DropdownButton<T>(
     active={buttonProps['aria-expanded']}
     aria-label={ariaLabel}
     disabled={readOnly}
-    rightIcon="double-caret-vertical"
+    rightIcon={<DoubleCaretVertical />}
   >
     {itemIcon?.(value)}
     {itemToString(value) || placeholder}

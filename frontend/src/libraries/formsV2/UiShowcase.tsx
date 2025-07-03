@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Cross, Edit } from '@blueprintjs/icons'
 
 import { ConflictHandler } from 'libraries/forms/ConflictHandler'
 import { formFor, withDefaults } from 'libraries/formsV2'
@@ -119,11 +120,11 @@ function ShowcaseContents() {
         <div className="flex">
           <Field.Text label="Value" inline labelStyle="beside" path={`${path}.${index}.value`} />
           {dragHandle}
-          <Button color="danger" icon="cross" onClick={onRemove} />
+          <Button color="danger" icon={<Cross />} onClick={onRemove} />
         </div>
       }
     </RepeatingSection>
-    <Button color="primary" icon="edit" onClick={() => addItem('l', { _id: id(), value: '' })} />
+    <Button color="primary" icon={<Edit />} onClick={() => addItem('l', { _id: id(), value: '' })} />
     <Select
       aria-label="jotakin"
       items={choices}
@@ -139,11 +140,11 @@ function ShowcaseContents() {
         <div className="flex">
           <Field.Text label="Value" inline labelStyle="beside" path={`${path}.${index}.value`} />
           {dragHandle}
-          <Button color="danger" icon="cross" onClick={onRemove} />
+          <Button color="danger" icon={<Cross />} onClick={onRemove} />
         </div>
       }
     </RepeatingSection>
-    <Button color="primary" icon="edit" onClick={() => addItem('l2', { _id: id(), value: '' })} />
+    <Button color="primary" icon={<Edit />} onClick={() => addItem('l2', { _id: id(), value: '' })} />
     <table>
       <RepeatingTableRows<L> path="l">
         {({ dragHandle, value, onRemove }) =>
@@ -152,7 +153,7 @@ function ShowcaseContents() {
             <td>{value.value}</td>
             <td>
               {dragHandle}
-              <Button color="danger" icon="cross" onClick={onRemove} />
+              <Button color="danger" icon={<Cross />} onClick={onRemove} />
             </td>
           </>
         }

@@ -1,3 +1,5 @@
+import { Cross } from '@blueprintjs/icons'
+
 import type { AnyType, FieldPath } from '../types'
 
 import { Button } from 'libraries/ui'
@@ -23,7 +25,7 @@ export function RepeatingField<Output extends Input & ListItem, Extra, Input, Da
           component={component}
           {...extra as Extra & Omit<ConnectedFieldProps<Output, Extra, Input, Data>, 'path' | 'component'>} />
         {dragHandle}
-        <Button color="danger" icon="cross" onClick={onRemove} />
+        <Button color="danger" icon={<Cross />} onClick={onRemove} />
       </div>
     }
   </RepeatingSection>

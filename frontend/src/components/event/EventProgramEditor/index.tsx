@@ -1,5 +1,6 @@
 import React, {useCallback, useMemo, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { Cross, Edit } from '@blueprintjs/icons'
 
 import {Event} from 'types'
 
@@ -149,7 +150,7 @@ function DanceSetNameEditor({ itemIndex } : { itemIndex: number }) {
     <Button
       color="primary"
       minimal
-      icon={editingName ? 'cross' : 'edit' }
+      icon={editingName ? <Cross /> : <Edit />}
       title={buttonTitle}
       aria-label={buttonTitle}
       onClick={() => setEditingName(!editingName)}
@@ -254,7 +255,7 @@ const ProgramItemEditor = React.memo(function ProgramItemEditor({dragHandle, pat
     </td>
     <td>
       {dragHandle}
-      <RemoveItemButton path={path} index={itemIndex} title={t('buttons.remove')} icon="cross" className="deleteItem" />
+      <RemoveItemButton path={path} index={itemIndex} title={t('buttons.remove')} icon={<Cross />} className="deleteItem" />
     </td>
   </React.Fragment>
 })
@@ -306,7 +307,7 @@ function IntervalMusicEditor({danceSetPath}: {danceSetPath: DanceSetPath}) {
       <Field label={t('fields.intervalMusicDuration')} inline labelStyle="hidden" path={durationPath} component={DurationField} />
     </td>
     <td>
-      <Button title={t('buttons.remove')} color="danger" icon="cross" onClick={() => onSetIntervalMusic(null)} className="delete" />
+      <Button title={t('buttons.remove')} color="danger" icon={<Cross />} onClick={() => onSetIntervalMusic(null)} className="delete" />
     </td>
   </tr>
 }

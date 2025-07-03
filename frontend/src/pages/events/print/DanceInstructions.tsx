@@ -1,4 +1,5 @@
 import React, {useCallback, useRef, useState} from 'react'
+import { Edit } from '@blueprintjs/icons'
 import classNames from 'classnames'
 import { MarkdownToJSX } from 'markdown-to-jsx'
 
@@ -147,7 +148,7 @@ function InstructionsForDance({dance, showShortInstructions} : {dance: Dance, sh
       <Button
         color="primary"
         minimal
-        icon="edit"
+        icon={<Edit />}
         aria-label={useTranslation(editorOpen ? 'common.closeEditor' : 'common.edit')}
         onClick={() => setEditorOpen(!editorOpen)}
       />

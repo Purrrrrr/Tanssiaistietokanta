@@ -4,10 +4,11 @@ import classNames from 'classnames'
 
 import {ExtendedFieldComponentProps, FieldComponentProps, FieldPropsWithoutComponent} from '../types'
 
+import { CssClass } from 'libraries/ui'
+
 import {Field, useFieldData} from '../Field'
 import { FieldContainer } from '../FieldContainer'
 import { useFieldValueProps } from '../hooks'
-import { CssClass } from 'libraries/ui'
 
 export interface SwitchForProps<V> {
   isChecked: (v: V | null | undefined) => boolean

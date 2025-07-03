@@ -10,7 +10,7 @@ import { ColoredTag } from 'components/widgets/ColoredTag'
 import {DurationField} from 'components/widgets/DurationField'
 import { useT } from 'i18n'
 
-import { Field, Form, Input, useDanceEditorState, useOnChangeFor, useValueAt } from './DanceForm'
+import { Field, Form, Input, useDanceEditorState, useOnChangeFor } from './DanceForm'
 import { DanceIsUsedIn } from './DanceIsUsedIn'
 import { DanceLink, danceVersionLink } from './DanceLink'
 import { DeleteDanceButton } from './DeleteDanceButton'

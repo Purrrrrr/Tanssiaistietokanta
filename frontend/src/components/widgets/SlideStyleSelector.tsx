@@ -1,5 +1,5 @@
 import { useId } from 'react'
-import { Style } from '@blueprintjs/icons'
+import { DoubleCaretVertical, Style } from '@blueprintjs/icons'
 
 import {SlideStyle, useEventSlideStyles} from 'services/events'
 
@@ -40,7 +40,7 @@ export function SlideStyleSelector({
       <Button
         {...props}
         icon={<SlideStyleBox value={style} />}
-        rightIcon="double-caret-vertical"
+        rightIcon={<DoubleCaretVertical />}
       >
         {text}
       </Button>

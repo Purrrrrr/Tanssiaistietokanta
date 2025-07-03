@@ -77,7 +77,7 @@ function PropField<T>({def, label, value, onChange}: PropFieldProps<T>) {
           min={def.min}
           max={def.max}
           step={def.step}
-      onChange={e => onChange(parseFloat(e.target.value) as T)}
+          onChange={e => onChange(parseFloat(e.target.value) as T)}
         />
       </div>
     case 'other':

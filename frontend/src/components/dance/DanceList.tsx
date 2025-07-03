@@ -1,5 +1,5 @@
 import {useState} from 'react'
-import { ChevronDown, ChevronUp } from '@blueprintjs/icons'
+import { ChevronDown, ChevronUp, Edit } from '@blueprintjs/icons'
 
 import { DanceWithEvents } from 'types'
 
@@ -51,7 +51,7 @@ function DanceListRow({ dance }: { dance: DanceWithEvents }) {
         <DeleteDanceButton minimal dance={dance} />
         <Button
           minimal
-          icon="edit"
+          icon={<Edit />}
           aria-label={useTranslation('common.edit')}
           color="primary"
           onClick={() => setShowEditor(!showEditor)}

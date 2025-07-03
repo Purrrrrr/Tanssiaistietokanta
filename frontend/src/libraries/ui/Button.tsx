@@ -1,10 +1,9 @@
-import { AnchorHTMLAttributes, ButtonHTMLAttributes, forwardRef, ReactNode } from 'react'
+import { AnchorHTMLAttributes, ButtonHTMLAttributes, forwardRef } from 'react'
 import classNames from 'classnames'
 
 import type { Color } from './types'
 
 import { ColorClass } from './classes'
-import { IconProp, renderIcon } from './Icon'
 
 export const buttonClass = (
   color: Color,
@@ -36,8 +35,8 @@ export const buttonClass = (
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   text?: React.ReactNode
-  icon?: IconProp
-  rightIcon?: IconProp
+  icon?: React.ReactElement
+  rightIcon?: React.ReactElement
   color?: Color
   minimal?: boolean
   active?: boolean
@@ -57,17 +56,17 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     ...rest
   } = props
   return <button ref={ref} type={type} className={buttonClass(color, {active, className, minimal})} {...rest}>
-    {renderIcon(icon)}
+    {icon}
     {text}
     {children}
-    {renderIcon(rightIcon)}
+    {rightIcon}
   </button>
 })
 
 export interface AnchorButtonProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
   text?: React.ReactNode
-  icon?: IconProp
-  rightIcon?: IconProp
+  icon?: React.ReactElement
+  rightIcon?: React.ReactElement
   color?: Color
   minimal?: boolean
   active?: boolean
@@ -86,9 +85,9 @@ export const AnchorButton = forwardRef<HTMLAnchorElement, AnchorButtonProps>(fun
     ...rest
   } = props
   return <a ref={ref} className={buttonClass(color, {active, className, minimal})} {...rest}>
-    {renderIcon(icon)}
+    {icon}
     {text}
     {children}
-    {renderIcon(rightIcon)}
+    {rightIcon}
   </a>
 })
