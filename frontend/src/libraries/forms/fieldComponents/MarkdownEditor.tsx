@@ -6,7 +6,7 @@ import {FieldComponentProps} from '../types'
 
 import { MarkdownInput } from 'libraries/formsV2/components/inputs'
 
-interface MarkdownEditorProps extends FieldComponentProps<string, HTMLTextAreaElement> {
+export interface MarkdownEditorProps extends FieldComponentProps<string, HTMLTextAreaElement> {
   style?: React.CSSProperties
   className?: string
   onBlur?: (e: React.FocusEvent<HTMLTextAreaElement>) => void

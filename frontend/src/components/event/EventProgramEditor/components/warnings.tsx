@@ -81,7 +81,7 @@ function useDancesWithMissingInstructions() {
     .filter(isMissingInstruction)
 }
 
-export function isMissingInstruction(dance: { description?: string | null}) {
+function isMissingInstruction(dance: { description?: string | null}) {
   const instructionLength = dance.description?.trim()?.length ?? 0
   return instructionLength < 10
 }

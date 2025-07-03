@@ -1,9 +1,9 @@
 import { Link as LinkIcon } from '@blueprintjs/icons'
 
-import {DanceWithEvents} from 'types'
+import {Dance, DanceWithEvents} from 'types'
 
-import {MarkdownEditor, SyncStatus } from 'libraries/forms'
-import {H2, RegularLink} from 'libraries/ui'
+import {MarkdownEditor, MarkdownEditorProps, SyncStatus } from 'libraries/forms'
+import {Button, H2, RegularLink} from 'libraries/ui'
 import {DanceDataImportButton} from 'components/DanceDataImportDialog'
 import { useVersionedName } from 'components/versioning/VersionedPageTitle'
 import {VersionSidebarToggle} from 'components/versioning/VersionSidebarToggle'
@@ -61,6 +61,7 @@ export function PlainDanceEditor({ dance }: { dance: DanceWithEvents }) {
 function FullDanceEditorFields({ dance }: { dance: DanceWithEvents }) {
   const t = useT('components.danceEditor')
   const label = useT('domain.dance')
+  const { wikipage, wikipageName } = dance
   return <>
     <div className="flex flex-wrap gap-3.5">
       <div className="grow basis-75">
@@ -71,11 +72,11 @@ function FullDanceEditorFields({ dance }: { dance: DanceWithEvents }) {
           helperText={!dance.category && <Suggestions suggestions={dance.wikipage?.categories} path="category" />}
         />
         <Field label={label('duration')} path="duration" component={DurationField} />
-        <Field label={label('wikipageName')} path="wikipageName" component={WikipageSelector} />
-        {dance.wikipageName &&
+        <Field label={label('wikipageName')} path="wikipageName" component={WikipageSelector} componentProps={{ possibleName: dance.name }} />
+        {wikipageName &&
           <p>
             {t('danceInDanceWiki')}{' '}
-            <RegularLink target="_blank" href={`https://tanssi.dy.fi/${dance.wikipageName.replaceAll(' ', '_')}`}><LinkIcon /> {dance.wikipageName}</RegularLink>
+            <RegularLink target="_blank" href={`https://tanssi.dy.fi/${wikipageName.replaceAll(' ', '_')}`}><LinkIcon /> {dance.wikipageName}</RegularLink>
           </p>
         }
       </div>
@@ -90,8 +91,22 @@ function FullDanceEditorFields({ dance }: { dance: DanceWithEvents }) {
         <Input label={label('remarks')} path="remarks" />
       </div>
     </div>
-    <Field label={label('description')} path="description" component={MarkdownEditor} componentProps={{className: 'max-h-150'}} />
-    <Field label={label('instructions')} path="instructions" component={MarkdownEditor} componentProps={{className: 'max-h-150'}} />
+    <Field label={label('description')} path="description" component={InstructionEditor} componentProps={{ wikipage, className: 'max-h-150'}} />
+    <Field label={label('instructions')} path="instructions" component={InstructionEditor} componentProps={{ wikipage, className: 'max-h-150'}} />
+  </>
+}
+
+export interface InstructionEditorProps extends MarkdownEditorProps {
+  wikipage?: Dance['wikipage']
+}
+
+export function InstructionEditor({ wikipage, ...props }: InstructionEditorProps) {
+  const t = useT('components.danceEditor')
+  const isMissingvalue = (props.value ?? '').trim().length < 10
+  const onClick = () => props.onChange(wikipage?.instructions ?? '')
+  return <>
+    <MarkdownEditor {...props} />
+    {isMissingvalue && wikipage && <p className="pt-2"><Button color="primary" text={t('copyFromDancewiki')} onClick={onClick} /></p>}
   </>
 }
 
