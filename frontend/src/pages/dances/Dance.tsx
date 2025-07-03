@@ -3,7 +3,7 @@ import {useNavigate, useParams} from 'react-router-dom'
 import { useDance } from 'services/dances'
 
 import {Breadcrumb} from 'libraries/ui'
-import {DanceEditor} from 'components/DanceEditor'
+import {DanceEditor} from 'components/dance/DanceEditor'
 import {LoadingState} from 'components/LoadingState'
 import {PageTitle} from 'components/PageTitle'
 import {BackLink} from 'components/widgets/BackLink'

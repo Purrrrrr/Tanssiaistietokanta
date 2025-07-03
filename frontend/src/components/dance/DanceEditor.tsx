@@ -7,15 +7,15 @@ import {H2, RegularLink} from 'libraries/ui'
 import {DanceDataImportButton} from 'components/DanceDataImportDialog'
 import { useVersionedName } from 'components/versioning/VersionedPageTitle'
 import {VersionSidebarToggle} from 'components/versioning/VersionSidebarToggle'
+import { ColoredTag } from 'components/widgets/ColoredTag'
 import {DurationField} from 'components/widgets/DurationField'
 import { useT } from 'i18n'
 
-import { Field, Form, Input, useDanceEditorState, useOnChangeFor, useValueAt } from './dance/DanceForm'
-import { DanceIsUsedIn } from './dance/DanceIsUsedIn'
-import { DanceLink, danceVersionLink } from './dance/DanceLink'
-import { DeleteDanceButton } from './dance/DeleteDanceButton'
-import { ColoredTag } from './widgets/ColoredTag'
-import { WikipageSelector } from './dance/WikipageSelector'
+import { Field, Form, Input, useDanceEditorState, useOnChangeFor, useValueAt } from './DanceForm'
+import { DanceIsUsedIn } from './DanceIsUsedIn'
+import { DanceLink, danceVersionLink } from './DanceLink'
+import { DeleteDanceButton } from './DeleteDanceButton'
+import { WikipageSelector } from './WikipageSelector'
 
 interface DanceEditorProps {
   dance: DanceWithEvents

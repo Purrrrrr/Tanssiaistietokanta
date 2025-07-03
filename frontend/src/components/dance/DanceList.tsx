@@ -4,11 +4,11 @@ import { ChevronDown, ChevronUp } from '@blueprintjs/icons'
 import { DanceWithEvents } from 'types'
 
 import { Button, Card, Collapse, ColorClass } from 'libraries/ui'
-import {DanceEditor, PlainDanceEditor} from 'components/DanceEditor'
 import { InfiniteItemLoader } from 'components/InfiniteItemLoader'
 import { ColoredTag } from 'components/widgets/ColoredTag'
 import { useT, useTranslation } from 'i18n'
 
+import {DanceEditor, PlainDanceEditor} from './DanceEditor'
 import { DanceIsUsedIn } from './DanceIsUsedIn'
 import { DanceLink } from './DanceLink'
 import { DeleteDanceButton } from './DeleteDanceButton'
