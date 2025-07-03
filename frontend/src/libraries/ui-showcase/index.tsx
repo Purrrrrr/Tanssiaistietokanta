@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Trash } from '@blueprintjs/icons'
 
 import { type Showcase, booleanProp, numberProp, showcase } from './types'
 
@@ -62,7 +63,7 @@ const showcases : Showcase<Record<string, unknown>>[] = [
     render: ({ disabled, icon, minimal }) =>
       <div className="flex gap-2">
         {colors.map(color =>
-          <Button key={color} color={color} minimal={minimal} icon={icon ? 'trash' : undefined} disabled={disabled} >{titleCase(color)}</Button>
+          <Button key={color} color={color} minimal={minimal} icon={icon ? <Trash /> : undefined} disabled={disabled} >{titleCase(color)}</Button>
         )}
       </div>
   }),

@@ -1,9 +1,10 @@
+import { CaretDown } from '@blueprintjs/icons'
 import classNames from 'classnames'
 
 import { ConflictData } from './types'
 
 import MenuButton from 'libraries/formsV2/components/MenuButton'
-import {Button, Icon} from 'libraries/ui'
+import {Button} from 'libraries/ui'
 
 import {useFormStrings} from './formContext'
 
@@ -16,7 +17,7 @@ export function ConflictHandler({localValue, serverValue, onResolve}: ConflictDa
       buttonRenderer={({active, children, ...props}) =>
         <button type="button" className={classNames(className, { active })} {...props}>
           {children}
-          <Icon icon="caret-down" />
+          <CaretDown />
         </button>
       }
     >

@@ -1,8 +1,6 @@
 import { Children, ComponentProps, KeyboardEventHandler, useId, useRef, useState } from 'react'
 import classNames from 'classnames'
 
-import { IconProp, renderIcon } from './Icon'
-
 type TabId = string | number
 
 export interface TabProps extends Omit<ComponentProps<'div'>, 'id' | 'title' | 'onClick'> {
@@ -23,7 +21,7 @@ export interface TabProps extends Omit<ComponentProps<'div'>, 'id' | 'title' | '
     }) => React.JSX.Element);
     title?: React.ReactNode;
     /** Name of a Blueprint UI icon (or an icon element) to render before the children. */
-    icon?: IconProp
+    icon?: React.ReactElement
 }
 
 export function Tab(_: TabProps) {
@@ -97,7 +95,7 @@ export function Tabs(props: TabsProps) {
           tabIndex={selected ? 0 : -1}
           onClick={(e) => onChange(tab.id, selectedTabId, e)}
         >
-          {renderIcon(icon)}
+          {icon}
           {title}
         </button>
       })}

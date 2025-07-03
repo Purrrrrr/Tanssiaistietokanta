@@ -1,4 +1,4 @@
-import { AnchorHTMLAttributes, ButtonHTMLAttributes, forwardRef } from 'react'
+import { AnchorHTMLAttributes, ButtonHTMLAttributes, forwardRef, ReactNode } from 'react'
 import classNames from 'classnames'
 
 import type { Color } from './types'

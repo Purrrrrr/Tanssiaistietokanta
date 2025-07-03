@@ -1,5 +1,5 @@
 import { useId } from 'react'
-import { DocumentOpen, Link as LinkIcon, TimelineEvents } from '@blueprintjs/icons'
+import { CaretDown, DocumentOpen, Link as LinkIcon, TimelineEvents } from '@blueprintjs/icons'
 
 import {DanceWithEvents} from 'types'
 
@@ -43,7 +43,7 @@ export function DanceIsUsedIn({events, minimal, wikipageName }: Pick<DanceWithEv
       <Button
         active={props['aria-expanded']}
         minimal
-        rightIcon="caret-down"
+        rightIcon={<CaretDown />}
         text={minimal
           ? <>
             {wikipageName && <><DocumentOpen />{'1 '}</>}

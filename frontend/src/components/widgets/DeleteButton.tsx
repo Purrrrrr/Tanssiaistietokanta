@@ -1,4 +1,5 @@
 import {useState} from 'react'
+import { Trash } from '@blueprintjs/icons'
 
 import {Alert} from 'libraries/dialog'
 import {Button, ButtonProps} from 'libraries/ui'
@@ -20,7 +21,7 @@ export function DeleteButton({onDelete, iconOnly, disabled, minimal, className, 
     <Button
       minimal={minimal}
       className={className}
-      icon="trash"
+      icon={<Trash />}
       text={iconOnly ? undefined : text}
       aria-label={text}
       disabled={disabled}

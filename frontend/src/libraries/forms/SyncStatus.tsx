@@ -1,24 +1,17 @@
-import React, {useEffect, useRef, useState} from 'react'
+import React, {ReactNode, useEffect, useRef, useState} from 'react'
+import { Error, Outdated, Refresh, Saved } from '@blueprintjs/icons'
 import classNames from 'classnames'
-
-import {Icon, IconName, Intent} from 'libraries/ui'
 
 import { useFormStrings } from './formContext'
 import {SyncState} from './useAutosavingState'
 
 import './SyncStatus.sass'
 
-const icons : Record<SyncState, IconName> = {
-  IN_SYNC: 'saved',
-  MODIFIED_LOCALLY: 'refresh',
-  CONFLICT: 'outdated',
-  INVALID: 'error',
-}
-const iconIntents : Record<SyncState, Intent> = {
-  IN_SYNC: 'success',
-  MODIFIED_LOCALLY: 'primary',
-  CONFLICT: 'warning',
-  INVALID: 'danger',
+const icons : Record<SyncState, ReactNode> = {
+  IN_SYNC: <Saved className="text-lime-700" />,
+  MODIFIED_LOCALLY: <Refresh className="text-sky-600"/>,
+  CONFLICT: <Outdated className="text-yellow-700" />,
+  INVALID: <Error className="text-red-700" />,
 }
 const autoHideText: Record<SyncState, boolean> = {
   IN_SYNC: true,
@@ -29,7 +22,7 @@ const autoHideText: Record<SyncState, boolean> = {
 
 export function SyncStatus(
   {state, block, className, style: styleProp, floatRight: right}:
-  {state : SyncState, block?: boolean, className?: string, style?: React.CSSProperties, floatRight?: boolean }
+  {state: SyncState, block?: boolean, className?: string, style?: React.CSSProperties, floatRight?: boolean }
 ) {
   const previousState = useRef<SyncState | null>(null)
   const [changed, setChanged] = useState(false)
@@ -55,10 +48,9 @@ export function SyncStatus(
     '--spaceholder': `"${getLongestText(Object.values(texts))}"`,
     ...styleProp
   }
-
   return <span style={style} className={fullClassName}>
     <span className="content">
-      <Icon icon={icons[state]} intent={iconIntents[state]} />
+      {icons[state]}
       <span className="text">{texts[state]}</span>
     </span>
   </span>

@@ -1,9 +1,10 @@
 import {ComponentType, lazy, useEffect, useRef, useState, useSyncExternalStore} from 'react'
 import {ApolloError, ApolloQueryResult} from '@apollo/client'
+import { Error } from '@blueprintjs/icons'
 
 import {socket} from 'backend/feathers'
 
-import {Button, ColorClass, GlobalSpinner, Icon} from 'libraries/ui'
+import {Button, ColorClass, GlobalSpinner} from 'libraries/ui'
 import {useT, useTranslation} from 'i18n'
 
 const connectionProblemMessageTimeout = 5000
@@ -87,7 +88,7 @@ export function LoadingState<Variables>({loading, error, refetch} : LoadingState
   useToggleGlobalLoadingAnimation(loading)
   if (error) {
     return <div className={`flex flex-col gap-3 justify-center items-center h-full ${ColorClass.textMuted}`}>
-      <Icon className="text-gray-400" icon="error" iconSize={48} />
+      <Error className="text-gray-400" size={48} />
       <h2>{t('errorMessage')}</h2>
       <p>{error.message}</p>
       {refetch &&

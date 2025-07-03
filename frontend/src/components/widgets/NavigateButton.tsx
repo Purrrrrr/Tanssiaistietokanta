@@ -2,13 +2,13 @@ import React from 'react'
 
 import {useIsAdmin} from 'services/users'
 
-import { type Color, IconProp, Link, renderIcon } from 'libraries/ui'
+import { type Color, Link } from 'libraries/ui'
 import { buttonClass } from 'libraries/ui/Button'
 
 interface NavigateButtonProps extends Omit<React.ComponentProps<typeof Link>, 'to'> {
   text?: string | React.ReactElement | React.ReactElement[],
   children?: string | React.ReactElement | React.ReactElement[],
-  icon?: IconProp
+  icon?: React.ReactElement
   adminOnly?: boolean,
   disabled?: boolean,
   href: string,
@@ -27,7 +27,7 @@ export function NavigateButton({text, children, icon, adminOnly, disabled, href,
 
   return <Link {...props} unstyled className={classes} role="button"
     tabIndex={0} to={href} onClick={onClick}>
-    {renderIcon(icon)}
+    {icon}
     {text}
     {children}
   </Link>
