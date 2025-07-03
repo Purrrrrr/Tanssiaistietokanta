@@ -61,6 +61,7 @@
     * Show category/formation suggestions in DanceEditor
     * wikipageName field (in backend)
 * Fix dance chooser bug: press esc, open, write a filter, press enter -> does not choose
+* Remove date-fns
 * Dances page
   * View modes: tight / full
   * Toggle editing by button
@@ -84,7 +85,6 @@
       Show wikipage fetch time
 
   Remove dialog? It is not used anymore. At least remove the blueprint css for it
-  Remove date-fns
 
   Dance list category suggestions
   Sorting of dance list

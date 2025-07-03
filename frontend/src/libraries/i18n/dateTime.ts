@@ -1,16 +1,31 @@
-import { format } from 'date-fns'
-import { fi } from 'date-fns/locale'
-
-export const dateFormat = 'dd.MM.yyyy'
-export const dateTimeFormat = 'eeeeee dd.MM.yyyy \'klo\' HH:mm'
-export const timeFormat = '\'klo\' HH:mm:ss'
+const locale = 'FI-fi'
 
 export function useFormatDate() {
-  return (date: Date) => format(date, dateFormat)
+  const formatter = new Intl.DateTimeFormat(locale, {
+    dateStyle: 'short',
+  })
+
+  return formatter.format
 }
 export function useFormatDateTime() {
-  return (date: Date) => format(date, dateTimeFormat, {locale: fi})
+  const formatter = new Intl.DateTimeFormat('fi', {
+    weekday: 'short',
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+  })
+
+  return formatter.format
 }
 export function useFormatTime() {
-  return (date: Date) => format(date, timeFormat, {locale: fi})
+  const formatter = new Intl.DateTimeFormat(locale, {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    timeZoneName: undefined,
+  })
+
+  return (date: Date) => `klo ${formatter.format(date)}`
 }

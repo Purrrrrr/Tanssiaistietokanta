@@ -1,19 +1,14 @@
-import { format } from 'date-fns'
-
 import {Conflict, Deleted, FieldComponentProps, FieldPropsWithoutComponent, Version} from '../types'
 
 import { DateInput, DateRangeInput } from 'libraries/formsV2/components/inputs'
 import DateTimeInput from 'libraries/formsV2/components/inputs/DateTimeInput'
+import { useFormatDate } from 'libraries/i18n/dateTime'
 
 import {Field, useFieldConflictData, useFieldData} from '../Field'
 import {FieldContainer} from '../FieldContainer'
-import { useFormStrings } from '../formContext'
 import { useFieldValueProps } from '../hooks'
 
 import './dateTime.css'
-
-export const dateFormat = 'dd.MM.yyyy'
-export const dateTimeFormat = 'dd.MM.yyyy HH:mm'
 
 const defaultMax = new Date('2100-01-01')
 const defaultMin = new Date('1950-01-01')
@@ -45,8 +40,8 @@ export function DateFieldInput({value, onChange, inline: _ignored, readOnly, id,
         onChange(toISOString(value) ?? '')
       }
     }}
-    minDate={toDate(minDate) ?? defaultMin}
-    maxDate={toDate(maxDate) ?? defaultMax}
+    minDate={toStartOfDay(toDate(minDate)) ?? defaultMin}
+    maxDate={toEndOfDay(toDate(maxDate)) ?? defaultMax}
     {...props}
   />
 }
@@ -110,11 +105,11 @@ function useCombinedConflictData<T>(
     const value = conflict[type]
     return value === Deleted ? null : value
   }
-  const strings = useFormStrings().dateTime
   const beginConflictData = useFieldConflictData<T, string>(beginPath, extractValue)
   const endConflictData = useFieldConflictData<T, string>(endPath, extractValue)
 
-  const fmt = (date: Date | null) => date ? format(date, strings.dateFormat) : ''
+  const format  = useFormatDate()
+  const fmt = (date: Date | null) => date ? format(date) : ''
   const renderRange = (start: Date | null, end: Date | null) =>
     <p>{`${fmt(start)} - ${fmt(end)}`}</p>
   return (beginConflictData || endConflictData)
@@ -129,6 +124,24 @@ function useCombinedConflictData<T>(
     : undefined
 }
 
+function toStartOfDay(value: Date | null | undefined) {
+  if (!value) return value
+  const date = new Date(value)
+  date.setHours(0)
+  date.setMinutes(0)
+  date.setSeconds(0)
+  return date
+}
+
+function toEndOfDay(value: Date | null | undefined) {
+  if (!value) return value
+  const date = new Date(value)
+  date.setHours(23)
+  date.setMinutes(59)
+  date.setSeconds(59.999)
+  return date
+}
+
 function toDate(value: string | null | Date | undefined): Date | undefined | null {
   if (typeof value === 'string') {
     const parsed = new Date(value)
@@ -139,7 +152,29 @@ function toDate(value: string | null | Date | undefined): Date | undefined | nul
 
 function toISOString(value: Date | null, showTime?: boolean): string {
   if (value === null) return ''
-  return showTime
-    ? format(value, 'yyyy-MM-dd\'T\'HH:mm:ss.SSS')
-    : format(value, 'yyyy-MM-dd')
+
+  const date = [
+    value.getFullYear(),
+    value.getMonth() + 1,
+    value.getDate(),
+  ]
+    .map(prefix)
+    .join('-')
+  if (!showTime) {
+    return date
+  }
+
+  const time = [
+    value.getHours(),
+    value.getMinutes(),
+    value.getSeconds(),
+  ]
+    .map(prefix)
+    .join(':')
+
+  return `${date}T${time}.${value.getMilliseconds()}`
 }
+
+const prefix = (d: number) => d < 10
+  ? `0${d}`
+  : String(d)
