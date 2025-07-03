@@ -5,7 +5,7 @@ import MarkdownToJsx from 'markdown-to-jsx'
 
 import './Markdown.css'
 
-export function Markdown({options, className, ...props}: ComponentPropsWithoutRef<typeof MarkdownToJsx>) {
+export default function Markdown({options, className, ...props}: ComponentPropsWithoutRef<typeof MarkdownToJsx>) {
   return <MarkdownToJsx
     className={classNames(className, 'markdown-content')}
     {...props}

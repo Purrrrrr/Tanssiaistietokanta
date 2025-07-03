@@ -1,13 +1,11 @@
-import React, { MouseEvent } from 'react'
+import React  from 'react'
 import {
   Card as BlueprintCard,
   FormGroup as BlueprintFormGroup,
   FormGroupProps as BlueprintFormGroupProps,
 } from '@blueprintjs/core'
-import { Cross, Search } from '@blueprintjs/icons'
 import classNames from 'classnames'
 
-import { Button } from './Button'
 import { ColorClass, CssClass } from './classes'
 
 import './ui.css'
@@ -19,13 +17,15 @@ export { Callout } from './Callout'
 export { Collapse } from './Collapse'
 export { GlobalSpinner } from './GlobalLoadingSpinner'
 export { Link, RegularLink } from './Link'
-export { Markdown } from './Markdown'
 export { ModeButton, ModeSelector } from './ModeSelector'
+export { SearchBar } from './SearchBar'
 export { Tab, Tabs } from './Tabs'
 export * from './toaster'
 export type { Color } from './types'
 export { useResizeObserver } from './utils/useResizeObserver'
 export { H2, HTMLTable, SectionCard } from '@blueprintjs/core'
+
+export const Markdown = React.lazy(() => import('./Markdown'))
 
 export { ColorClass, CssClass }
 
@@ -66,37 +66,4 @@ export function FormGroup({ elementRef, className, inline, labelStyle: maybeLabe
   const element = FormGroupInstance.render()
 
   return React.cloneElement(element, {...rest, ref: elementRef}) //<BlueprintFormGroup {...props} {...inlineProps} />
-}
-
-interface SearchInputProps {
-  id?: string
-  value: string
-  placeholder?: string
-  emptySearchText: string,
-  onChange: (value: string) => unknown
-}
-
-export function SearchBar({id, onChange, value, placeholder, emptySearchText} : SearchInputProps) {
-  return <div id={id} className={CssClass.inputGroup}>
-    <Search />
-    <input
-      type="text"
-      className={CssClass.input+' px-4'}
-      value={value}
-      onChange={e => onChange(e.target.value)}
-      placeholder={placeholder}
-    />
-    <span className={CssClass.inputAction}>
-      <Button
-        className="px-2 m-1 h-6"
-        aria-label={emptySearchText}
-        minimal
-        icon={<Cross />}
-        onClick={(e: MouseEvent<HTMLElement>) => {
-          onChange('');
-          (e.target as HTMLButtonElement).closest('.bp5-input-group')?.querySelector('input')?.focus()
-        }}
-      />
-    </span>
-  </div>
 }
