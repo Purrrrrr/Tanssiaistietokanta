@@ -210,7 +210,7 @@ export function useEvent(id: string, versionId?: string) {
 export const useEvents = entityListQueryHook('events', graphql(`
 query getEvents {
   events {
-    _id, _versionId, name
+    _id, _versionId, name, beginDate, endDate
   }
 }`))
 

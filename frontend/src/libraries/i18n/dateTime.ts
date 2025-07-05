@@ -1,11 +1,13 @@
 const locale = 'FI-fi'
 
+export type DateLike = Date | number | string
+
 export function useFormatDate() {
   const formatter = new Intl.DateTimeFormat(locale, {
     dateStyle: 'short',
   })
 
-  return formatter.format
+  return (date: DateLike) => formatter.format(toDate(date))
 }
 export function useFormatDateTime() {
   const formatter = new Intl.DateTimeFormat('fi', {
@@ -17,7 +19,7 @@ export function useFormatDateTime() {
     minute: 'numeric',
   })
 
-  return formatter.format
+  return (date: DateLike) => formatter.format(toDate(date))
 }
 export function useFormatTime() {
   const formatter = new Intl.DateTimeFormat(locale, {
@@ -27,5 +29,7 @@ export function useFormatTime() {
     timeZoneName: undefined,
   })
 
-  return (date: Date) => `klo ${formatter.format(date)}`
+  return (date: DateLike) => `klo ${formatter.format(toDate(date))}`
 }
+
+const toDate = (date: DateLike) => date instanceof Date ? date : new Date(date)

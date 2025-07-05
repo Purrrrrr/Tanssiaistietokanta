@@ -51,7 +51,7 @@ function EventDetails({event, readOnly}: {event: Event, readOnly: boolean}) {
   const formatDate = useFormatDate()
   return <>
     <p>
-      {t('eventDate')}: {formatDate(new Date(event.beginDate))} - {formatDate(new Date(event.endDate))}
+      {t('eventDate')}: {formatDate(event.beginDate)} - {formatDate(event.endDate)}
     </p>
     { readOnly ||
       <p>

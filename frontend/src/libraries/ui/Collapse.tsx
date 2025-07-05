@@ -7,7 +7,7 @@ export interface CollapseProps {
   keepChildrenMounted?: boolean;
 }
 
-export function Collapse({children, isOpen, keepChildrenMounted}: CollapseProps) {
+export default function Collapse({children, isOpen, keepChildrenMounted}: CollapseProps) {
   const [shouldrender, setShouldRender] = useState(false)
   useLayoutEffect(() => {
     if (isOpen) {

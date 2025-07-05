@@ -1,7 +1,9 @@
 import {useDeleteEvent, useEvents} from 'services/events'
 import {AdminOnly} from 'services/users'
 
+import { useFormatDate } from 'libraries/i18n/dateTime'
 import {Link} from 'libraries/ui'
+import ItemList from 'libraries/ui/ItemList'
 import { LoadingState } from 'components/LoadingState'
 import {PageTitle} from 'components/PageTitle'
 import {DeleteButton} from 'components/widgets/DeleteButton'
@@ -13,6 +15,7 @@ export default function EventList() {
   const deleteText = useTranslation('common.delete')
   const [events, requestState] = useEvents()
   const [deleteEvent] = useDeleteEvent({refetchQueries: ['getEvents']})
+  const formatDate = useFormatDate()
 
   return <>
     <PageTitle>{t('pageTitle')}</PageTitle>
@@ -22,17 +25,23 @@ export default function EventList() {
       <p>{t('youcanEditDancesIn')} <Link to="/dances">{t('danceDatabaseLinkName')}</Link></p>
     </AdminOnly>
     <h2>{t('danceEvents')}</h2>
-    <ul className="mb-4 border-gray-100 border-1">
+    <ItemList>
       {events.map(event =>
-        <li key={event._id} className="flex justify-between items-center p-2 even:bg-gray-100">
-          <Link className="grow" to={'events/'+event._id} >{event.name}</Link>
-          <DeleteButton onDelete={() => deleteEvent({id: event._id})}
-            text={deleteText}
-            confirmText={t('eventDeleteConfirmation', {eventName: event.name})}
-          />
-        </li>
+        <ItemList.Row key={event._id}>
+          <Link to={'events/'+event._id} >{event.name}</Link>
+          <div>
+            {formatDate(event.beginDate)} - {formatDate(event.endDate)}
+          </div>
+          <div className="text-right">
+            <DeleteButton onDelete={() => deleteEvent({id: event._id})}
+              minimal
+              text={deleteText}
+              confirmText={t('eventDeleteConfirmation', {eventName: event.name})}
+            />
+          </div>
+        </ItemList.Row>
       )}
-    </ul>
+    </ItemList>
     <NavigateButton adminOnly color="primary" href="events/new" text={t('createEvent')} />
   </>
 }

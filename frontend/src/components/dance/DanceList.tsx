@@ -3,7 +3,8 @@ import { ChevronDown, ChevronUp, Edit } from '@blueprintjs/icons'
 
 import { DanceWithEvents } from 'types'
 
-import { Button, Card, Collapse, ColorClass } from 'libraries/ui'
+import { Button, Card, ColorClass } from 'libraries/ui'
+import ItemList from 'libraries/ui/ItemList'
 import { InfiniteItemLoader } from 'components/InfiniteItemLoader'
 import { ColoredTag } from 'components/widgets/ColoredTag'
 import { useT, useTranslation } from 'i18n'
@@ -26,43 +27,40 @@ export function DanceList({dances, view}: DanceListProps) {
     </InfiniteItemLoader>
   }
 
-  return <ul className="mb-4 border-gray-100 border-1">
-    <InfiniteItemLoader items={dances}>
-      {dances => dances.map((dance : DanceWithEvents) => <DanceListRow key={dance._id} dance={dance} />)}
-    </InfiniteItemLoader>
-  </ul>
+  return <InfiniteItemLoader items={dances}>
+    {dances =>
+      <ItemList>
+        {dances.map((dance : DanceWithEvents) => <DanceListRow key={dance._id} dance={dance} />)}
+      </ItemList>
+    }
+  </InfiniteItemLoader>
 }
 
 function DanceListRow({ dance }: { dance: DanceWithEvents }) {
   const t = useT('pages.dances.danceList')
   const [showEditor, setShowEditor] = useState(false)
 
-  return <li className="even:bg-gray-100">
-    <div className="flex flex-wrap justify-end items-center *:p-2">
-      <div className="max-md:min-w-[max(160px,50%)] md:grow"><DanceLink dance={dance} /></div>
-      <div className="max-md:min-w-[max(160px,50%)] md:w-80">
-        {dance.category
-          ? <ColoredTag title={dance.category} />
-          : <span className={ColorClass.textMuted}>{t('noCategory')}</span>
-        }
-      </div>
-      <div className="flex justify-end max-[360px]:flex-col max-[360px]:gap-2 max-sm:w-full md:basis-52">
-        <DanceIsUsedIn minimal events={dance.events} wikipageName={dance.wikipageName} />
-        <DeleteDanceButton minimal dance={dance} />
-        <Button
-          minimal
-          icon={<Edit />}
-          aria-label={useTranslation('common.edit')}
-          color="primary"
-          onClick={() => setShowEditor(!showEditor)}
-          rightIcon={showEditor ? <ChevronUp/> : <ChevronDown />}
-        />
-      </div>
+  return <ItemList.Row expandableContent={<PlainDanceEditor dance={dance} />} isOpen={showEditor}>
+    <div className="max-md:min-w-[max(160px,50%)]"><DanceLink dance={dance} /></div>
+    <div className="max-md:min-w-[max(160px,50%)]">
+      {dance.category
+        ? <ColoredTag title={dance.category} />
+        : <span className={ColorClass.textMuted}>{t('noCategory')}</span>
+      }
     </div>
-    <Collapse isOpen={showEditor}>
-      <PlainDanceEditor dance={dance} />
-    </Collapse>
-  </li>
+    <div className="max-sm:w-full text-right">
+      <DanceIsUsedIn minimal events={dance.events} wikipageName={dance.wikipageName} />
+      <DeleteDanceButton minimal dance={dance} />
+      <Button
+        minimal
+        icon={<Edit />}
+        aria-label={useTranslation('common.edit')}
+        color="primary"
+        onClick={() => setShowEditor(!showEditor)}
+        rightIcon={showEditor ? <ChevronUp/> : <ChevronDown />}
+      />
+    </div>
+  </ItemList.Row>
 }
 
 function ExtendedDanceListRow({ dance }: { dance: DanceWithEvents }) {
