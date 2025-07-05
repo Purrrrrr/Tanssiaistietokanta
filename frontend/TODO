@@ -92,8 +92,10 @@
     By popularity
     By category
   Miksi voltati in ca rosina ei kategorisoidu automaattisesti?
+
+* ModeButton appearance tweak
   Common list component and style for dance/event lists
-  ModeButton appearance tweak
+  Associate a dance to interval music
 
   Fix: Pressing tab when focused on select button loses all focus
 

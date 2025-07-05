@@ -7,14 +7,15 @@ import { ColorClass } from './classes'
 
 export const buttonClass = (
   color: Color,
-  { active, disabled, className, minimal }: {
+  { active, disabled, className, minimal, paddingClass }: {
     active?: boolean
     disabled?: boolean
     minimal?: boolean
     className?: string
+    paddingClass?: string
   }
 ) => classNames(
-  'cursor-pointer transition-colors disabled:cursor-not-allowed disabled:opacity-50 py-[5px] px-2 text-center inline-flex gap-1.5 items-center',
+  'cursor-pointer transition-colors disabled:cursor-not-allowed disabled:opacity-50 text-center inline-flex gap-1.5 items-center',
   minimal ? [
     'hover:bg-opacity-10 active:bg-opacity-20 disabled:saturate-85',
     ({
@@ -28,6 +29,7 @@ export const buttonClass = (
     'rounded-xs shadow-xs hover:shadow-xs active:shadow-md shadow-stone-800/30 border-stone-400/40 border-1  hover:bg-darken-6 active:bg-darken-10 disabled:saturate-75',
     ColorClass.boxColors[color],
   ],
+  paddingClass ?? 'py-[5px] px-2',
   active && 'active',
   disabled && 'disabled',
   className,
@@ -40,6 +42,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   color?: Color
   minimal?: boolean
   active?: boolean
+  paddingClass?: string
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(props: ButtonProps, ref) {
@@ -53,9 +56,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     rightIcon,
     minimal,
     className,
+    paddingClass,
     ...rest
   } = props
-  return <button ref={ref} type={type} className={buttonClass(color, {active, className, minimal})} {...rest}>
+  return <button ref={ref} type={type} className={buttonClass(color, {active, className, minimal, paddingClass})} {...rest}>
     {icon}
     {text}
     {children}

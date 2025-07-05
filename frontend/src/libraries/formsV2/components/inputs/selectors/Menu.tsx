@@ -28,7 +28,7 @@ export function renderMenuItems<T>(
   })
 }
 
-const defaultTitleRenderer = (title: string) => <strong className="block px-1 py-1.5">{title}</strong>
+const defaultTitleRenderer = (title: string) => <strong className="block py-1.5 px-1">{title}</strong>
 
 interface MenuItemProps extends ComponentProps<'li'> {
   highlight?: boolean

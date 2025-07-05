@@ -12,8 +12,8 @@ export const CssClass = {
 export const ColorClass = {
   textMuted: 'text-muted',
   boxColors: {
-    none: 'bg-stone-100 text-stone-700',
-    primary: 'bg-blue-600 text-white saturate-65',
+    none: 'bg-stone-50 text-stone-700',
+    primary: 'bg-sky-700 text-white saturate-65',
     success: 'bg-lime-700 text-white',
     danger: ' bg-orange-700 text-white',
     warning: ' bg-amber-400',
