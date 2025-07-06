@@ -25,12 +25,13 @@ export interface ListEditorProps<T, V extends Entity, P = object> extends FieldC
   isTable?: boolean
   accessibilityContainer?: Element | undefined
   path: TypedStringPath<V[], T>
+  itemClassname?: string
   component: ListItemComponent<T, V, P>
   componentProps?: P
 }
 
 export function ListEditor<T, V extends Entity>({
-  value, onChange, path, itemType, acceptsTypes, droppableElement, component: Component, inline: _ignored, readOnly, isTable, accessibilityContainer, componentProps,
+  value, onChange, path, itemType, acceptsTypes, droppableElement, component: Component, inline: _ignored, readOnly, isTable, accessibilityContainer, componentProps, itemClassname,
 }: ListEditorProps<T, V>) {
   const items = value ?? []
 
@@ -38,7 +39,7 @@ export function ListEditor<T, V extends Entity>({
     const Wrapper = isTable ? 'tr' : 'div'
     return <React.Fragment>
       {items.map((item, index) =>
-        <Wrapper key={item._id}><Component path={path} itemIndex={index} dragHandle={null} {...componentProps} /></Wrapper>
+        <Wrapper key={item._id} className={itemClassname}><Component path={path} itemIndex={index} dragHandle={null} {...componentProps} /></Wrapper>
       )}
     </React.Fragment>
   }
@@ -52,6 +53,7 @@ export function ListEditor<T, V extends Entity>({
     component={Component}
     componentProps={componentProps}
     isTable={isTable}
+    className={itemClassname}
   />
 
   return (
@@ -73,7 +75,7 @@ interface ListEditorItemsProps<T, V> extends Omit<SortableItemProps<T, V>, 'id' 
   itemType?: string | ((value: V) => string)
   items: V[]
 }
-function ListEditorItems<T, V extends Entity>({items, itemType, acceptsTypes, path, onChangePath, component, componentProps, isTable}: ListEditorItemsProps<T, V>) {
+function ListEditorItems<T, V extends Entity>({items, itemType, acceptsTypes, path, onChangePath, component, componentProps, isTable, className}: ListEditorItemsProps<T, V>) {
   const move = useContext(ListEditorMoveContext)
   const filteredItems = move
     ? items.filter(item => item._id !== move.activeId)
@@ -82,7 +84,7 @@ function ListEditorItems<T, V extends Entity>({items, itemType, acceptsTypes, pa
   const ids = filteredItems.map(item => item._id)
   const wrappers = filteredItems.map((item, index) => {
     const type = typeof itemType === 'function' ? itemType(item) : itemType
-    return <SortableItem<T, V> key={item._id} id={item._id} itemType={type} acceptsTypes={acceptsTypes} path={path} onChangePath={onChangePath} itemIndex={index} component={component} isTable={isTable} componentProps={componentProps} />
+    return <SortableItem<T, V> key={item._id} id={item._id} itemType={type} acceptsTypes={acceptsTypes} path={path} onChangePath={onChangePath} itemIndex={index} component={component} isTable={isTable} componentProps={componentProps} className={className} />
   })
 
   if (move && move.overPath === path) {
@@ -100,6 +102,7 @@ function ListEditorItems<T, V extends Entity>({items, itemType, acceptsTypes, pa
       component={activeData.component as ListItemComponent<any, V>}
       componentProps={componentProps}
       isTable={isTable}
+      className={className}
     />)
   }
 
@@ -118,9 +121,10 @@ interface SortableItemProps<T, V, P = object> {
   path: TypedStringPath<V[], T>
   onChangePath: OnChangeHandler<V[]>
   itemIndex: number
+  className?: string
 }
 
-export function SortableItem<T, V>({itemType, acceptsTypes, id, path, onChangePath, itemIndex, component: Component, isTable, componentProps}: SortableItemProps<T, V>) {
+export function SortableItem<T, V>({itemType, acceptsTypes, id, path, onChangePath, itemIndex, component: Component, isTable, componentProps, className}: SortableItemProps<T, V>) {
   const {
     isDragging,
     attributes: { tabIndex: _ignored, ...attributes},
@@ -162,7 +166,7 @@ export function SortableItem<T, V>({itemType, acceptsTypes, id, path, onChangePa
   )
 
   return (
-    <Wrapper ref={setNodeRef} style={style} {...attributes}>
+    <Wrapper ref={setNodeRef} style={style} {...attributes} className={className}>
       <Component path={path} itemIndex={itemIndex} dragHandle={dragHandle} {...componentProps} />
     </Wrapper>
   )

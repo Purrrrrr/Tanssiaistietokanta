@@ -62,6 +62,8 @@
     * wikipageName field (in backend)
 * Fix dance chooser bug: press esc, open, write a filter, press enter -> does not choose
 * Remove date-fns
+* ModeButton appearance tweak
+* Common list component and style for dance/event lists
 * Dances page
   * View modes: tight / full
   * Toggle editing by button
@@ -93,8 +95,6 @@
     By category
   Miksi voltati in ca rosina ei kategorisoidu automaattisesti?
 
-* ModeButton appearance tweak
-  Common list component and style for dance/event lists
   Associate a dance to interval music
 
   Fix: Pressing tab when focused on select button loses all focus

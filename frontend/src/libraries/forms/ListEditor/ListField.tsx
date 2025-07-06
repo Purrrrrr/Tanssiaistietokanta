@@ -11,12 +11,12 @@ export interface UntypedListFieldProps<T, ValuePath, V extends Entity, P = objec
 export interface ListFieldProps<T, V extends Entity, P = object>
   extends
   FieldPropsWithoutComponent<T, V[]>,
-  Pick<ListEditorProps<T, V, P>, 'itemType' | 'droppableElement' | 'acceptsTypes' | 'accessibilityContainer' | 'isTable' | 'componentProps'>
+  Pick<ListEditorProps<T, V, P>, 'itemType' | 'droppableElement' | 'acceptsTypes' | 'accessibilityContainer' | 'isTable' | 'itemClassname' | 'componentProps'>
 {
   component: ListItemComponent<T, V, P>
   renderConflictItem: (item: V) => string
 }
-export function ListField<T, V extends Entity>({accessibilityContainer, component, itemType, isTable, droppableElement, acceptsTypes, renderConflictItem, componentProps, ...props} : ListFieldProps<T, V>) {
-  return <Field<T, V[], ListEditorProps<T, V>> {...props} component={ListEditor} renderConflictItem={renderConflictItem} componentProps={{path: props.path, accessibilityContainer, component, isTable, itemType, acceptsTypes, droppableElement, componentProps}} />
+export function ListField<T, V extends Entity>({accessibilityContainer, component, itemType, isTable, droppableElement, acceptsTypes, renderConflictItem, componentProps, itemClassname, ...props} : ListFieldProps<T, V>) {
+  return <Field<T, V[], ListEditorProps<T, V>> {...props} component={ListEditor} renderConflictItem={renderConflictItem} componentProps={{path: props.path, accessibilityContainer, component, isTable, itemClassname, itemType, acceptsTypes, droppableElement, componentProps}} />
 }
 
