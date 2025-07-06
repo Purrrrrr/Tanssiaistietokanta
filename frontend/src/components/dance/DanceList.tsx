@@ -41,10 +41,10 @@ function DanceListRow({ dance }: { dance: DanceWithEvents }) {
   const [showEditor, setShowEditor] = useState(false)
 
   return <ItemList.Row expandableContent={<PlainDanceEditor dance={dance} />} isOpen={showEditor}>
-    <div className="max-md:min-w-[max(140px,50%)] grow">
+    <div className="max-md:basis-35 grow">
       <DanceLink dance={dance} />
     </div>
-    <div className="max-md:min-w-[max(140px,50%)] grow">
+    <div className="max-md:basis-35 grow">
       {dance.category
         ? <ColoredTag title={dance.category} />
         : <span className={ColorClass.textMuted}>{t('noCategory')}</span>
