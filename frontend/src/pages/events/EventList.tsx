@@ -25,7 +25,7 @@ export default function EventList() {
       <p>{t('youcanEditDancesIn')} <Link to="/dances">{t('danceDatabaseLinkName')}</Link></p>
     </AdminOnly>
     <h2>{t('danceEvents')}</h2>
-    <ItemList>
+    <ItemList columns="grid-cols-[1fr_minmax(min(300px,30%),max-content)_max-content] gap-x-4">
       {events.map(event =>
         <ItemList.Row key={event._id}>
           <Link to={'events/'+event._id} >{event.name}</Link>

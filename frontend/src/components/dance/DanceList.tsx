@@ -29,7 +29,7 @@ export function DanceList({dances, view}: DanceListProps) {
 
   return <InfiniteItemLoader items={dances}>
     {dances =>
-      <ItemList>
+      <ItemList columns="grid-cols-[1fr_minmax(min(300px,30%),max-content)_max-content]">
         {dances.map((dance : DanceWithEvents) => <DanceListRow key={dance._id} dance={dance} />)}
       </ItemList>
     }
@@ -41,14 +41,16 @@ function DanceListRow({ dance }: { dance: DanceWithEvents }) {
   const [showEditor, setShowEditor] = useState(false)
 
   return <ItemList.Row expandableContent={<PlainDanceEditor dance={dance} />} isOpen={showEditor}>
-    <div className="max-md:min-w-[max(160px,50%)]"><DanceLink dance={dance} /></div>
-    <div className="max-md:min-w-[max(160px,50%)]">
+    <div className="max-md:min-w-[max(140px,50%)] grow">
+      <DanceLink dance={dance} />
+    </div>
+    <div className="max-md:min-w-[max(140px,50%)] grow">
       {dance.category
         ? <ColoredTag title={dance.category} />
         : <span className={ColorClass.textMuted}>{t('noCategory')}</span>
       }
     </div>
-    <div className="max-sm:w-full text-right">
+    <div className="text-right max-sm:w-full">
       <DanceIsUsedIn minimal events={dance.events} wikipageName={dance.wikipageName} />
       <DeleteDanceButton minimal dance={dance} />
       <Button

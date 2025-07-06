@@ -7,29 +7,38 @@ type WrapPoint = 'md' | 'sm'
 
 export interface ItemListProps {
   children?: React.ReactNode
+  columns?: string | number
   'wrap-breakpoint'?: WrapPoint
 }
 
 const listWrapClasses = {
-  'md': 'wrap-md md:table',
-  'sm': 'wrap-sm sm:table'
+  'md': 'wrap-md md:grid',
+  'sm': 'wrap-sm sm:grid'
 } satisfies Record<WrapPoint, string>
 
-export default function ItemList({ children, 'wrap-breakpoint': wrapPoint = 'sm' }: ItemListProps) {
+export default function ItemList({ children, 'wrap-breakpoint': wrapPoint = 'sm', columns }: ItemListProps) {
+  const columnCount = typeof columns === 'number' ? columns : undefined
   return <ul
+    style={{'--item-list-cols': columnCount} as React.CSSProperties}
     className={classNames(
+      columnCount
+        ? 'grid-cols-[repeat(var(--var),minmax(0,1fr))]'
+        : columns,
       'group mb-4 border-gray-100 border-1 w-full',
-      listWrapClasses[wrapPoint],
+      columns && listWrapClasses[wrapPoint],
     )}
   >
     {children}
   </ul>
 }
 
+const colorClassname = 'nth-of-type-[even]:bg-gray-100'
+
 const rowClasses = classNames(
-  'flex flex-wrap justify-end items-center *:p-2 even:bg-gray-100',
-  'group-[.wrap-md]:md:table-row group-[.wrap-md]:md:*:table-cell',
-  'group-[.wrap-sm]:sm:table-row group-[.wrap-sm]:sm:*:table-cell',
+  colorClassname,
+  'flex flex-wrap gap-4 items-center p-2',
+  'group-[.wrap-md]:md:grid grid-cols-subgrid col-span-full',
+  'group-[.wrap-sm]:sm:grid grid-cols-subgrid col-span-full',
 )
 
 interface ItemListRowProps {
@@ -39,19 +48,16 @@ interface ItemListRowProps {
 }
 
 function ItemListRow({ children, expandableContent, isOpen }: ItemListRowProps) {
-  if (expandableContent !== undefined) {
-    // The tr/td tags are a hack, not sure if full width is possible otherwise
-    return <>
-      <ItemListRow>{children}</ItemListRow>
-      <tr>
-        <td colSpan={100}>
-          <Collapse isOpen={isOpen}>{expandableContent}</Collapse>
-        </td>
-      </tr>
-    </>
-  }
-
-  return <li className={rowClasses}>{children}</li>
+  return <>
+    <li className={rowClasses}>
+      {children}
+    </li>
+    {expandableContent &&
+      <div className={classNames('col-span-full', colorClassname)}>
+        <Collapse isOpen={isOpen}>{expandableContent}</Collapse>
+      </div>
+    }
+  </>
 }
 
 ItemList.Row = ItemListRow
