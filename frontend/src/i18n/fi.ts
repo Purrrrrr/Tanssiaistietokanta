@@ -108,22 +108,14 @@ export const fi = {
         many: '__count__ tanssitapahtumaa ja wikisivu',
       },
       danceEvents: 'Tanssitapahtumat',
-      danceInDanceWiki: 'Tanssi tanssiwikissä',
       copyFromDancewiki: 'Kopioi ohjeet tanssiwikistä',
       suggestions: 'Ehdotuksia',
       editInstructions: 'Muokkaa tanssiohjeita',
     },
-    danceDataImportButton: {
-      fetchInfoFromWiki: 'Hae tietoja tanssiwikistä',
-      dialogTitle: 'Hae tanssin tietoja tanssiwikistä',
-      searchDanceByName: 'Hae tanssi nimellä',
-      loadingData: 'Ladataan tietoja...',
-      searchHelp: 'Hae tietoja hakunapilla, jotta voit liittää niitä tietokantaan',
-      suggestionsFromWiki: 'Ehdotukset wikistä',
-      noSuggestions: 'Ei ehdotuksia',
-      wikiVersion: 'Tanssiwikin versio',
-      danceDbVersion: 'Tietokannassa oleva versio',
-      useThisVersion: 'Käytä tätä versiota'
+    danceWikiPreview: {
+      danceInDanceWiki: 'Tanssi tanssiwikissä',
+      danceFetched: 'Sivun tiedot ja sisältö haettu __date__',
+      openInstructions: 'Avaa wikin ohje',
     },
     workshopEditor: {
       dances: 'Tanssit',

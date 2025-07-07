@@ -4,9 +4,10 @@ import { Cross, Link as LinkIcon } from '@blueprintjs/icons'
 import {Dance} from 'types'
 
 import {DragHandle, MarkdownEditor, SyncState, SyncStatus} from 'libraries/forms'
-import {Callout, H2, Link, RegularLink, SectionCard} from 'libraries/ui'
+import {Callout, H2, Link, SectionCard} from 'libraries/ui'
 import { InstructionEditor } from 'components/dance/DanceEditor'
 import { Field as DanceField, Form as DanceForm, Input as DanceInput, useDanceEditorState } from 'components/dance/DanceForm'
+import { LinkToDanceWiki } from 'components/dance/DanceWikiPreview'
 import { DanceProgramChooser } from 'components/event/DanceProgramChooser'
 import {
   Field,
@@ -236,7 +237,7 @@ function ProgramItemEditor({path}: {path: ProgramItemPath}) {
 }
 
 function DanceEditor({dance}: {dance: Dance}) {
-  const t = useT('components.danceEditor')
+  const t = useT('components.danceWikiPreview')
   const label = useT('domain.dance')
   const { formProps, state } = useDanceEditorState(dance)
 
@@ -252,7 +253,7 @@ function DanceEditor({dance}: {dance: Dance}) {
     {dance.wikipageName &&
       <p>
         {t('danceInDanceWiki')}{' '}
-        <RegularLink target="_blank" href={`https://tanssi.dy.fi/${dance.wikipageName.replaceAll(' ', '_')}`}><LinkIcon/> {dance.wikipageName}</RegularLink>
+        <LinkToDanceWiki page={dance.wikipageName} />
       </p>
     }
     <Link target="_blank" to={`/dances/${dance._id}`}><LinkIcon/> {useTranslation('pages.events.ballProgram.linkToCompleteDance')}</Link>

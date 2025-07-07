@@ -3,6 +3,8 @@ import QRCode from 'react-qr-code'
 import classNames from 'classnames'
 import MarkdownToJsx from 'markdown-to-jsx'
 
+import { RegularLink } from './Link'
+
 import './Markdown.css'
 
 export default function Markdown({options, className, ...props}: ComponentPropsWithoutRef<typeof MarkdownToJsx>) {
@@ -17,6 +19,7 @@ export default function Markdown({options, className, ...props}: ComponentPropsW
 }
 
 const markdownComponents = {
+  a: RegularLink,
   QR: ({size, value, title, ...props}) => {
     const parsedSize = parseInt(size, 10)
     const pxSize = `${parsedSize}px`

@@ -9,20 +9,20 @@ import { useT } from 'i18n'
 
 export function DanceIsUsedIn({events, minimal, wikipageName }: Pick<DanceWithEvents, 'events'> & { minimal?: boolean, wikipageName?: string | null }) {
   const id = useId()
-  const t = useT('components.danceEditor')
+  const t = useT('components')
   if (events.length === 0 && !wikipageName) return null
 
-  const buttonText = t(wikipageName ? 'danceUsedInEventsAndWiki' : 'danceUsedInEvents', {count: events.length})
+  const buttonText = t(wikipageName ? 'danceEditor.danceUsedInEventsAndWiki' : 'danceEditor.danceUsedInEvents', {count: events.length})
   const eventLinks = events.map(event => ({ text: event.name, link: `/events/${event._id}`}))
   const links = wikipageName
     ? {
       categories: [
         {
-          title: t('danceEvents'),
+          title: t('danceEditor.danceEvents'),
           items: eventLinks,
         },
         {
-          title: t('danceInDanceWiki'),
+          title: t('danceWikiPreview.danceInDanceWiki'),
           items: [{
             text: wikipageName,
             link: `https://tanssi.dy.fi/${wikipageName.replaceAll(' ', '_')}`,

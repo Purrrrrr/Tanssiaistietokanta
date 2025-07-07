@@ -15,6 +15,7 @@ import { DanceIsUsedIn } from './DanceIsUsedIn'
 import { DanceLink, danceVersionLink } from './DanceLink'
 import { DeleteDanceButton } from './DeleteDanceButton'
 import { WikipageSelector } from './WikipageSelector'
+import DanceWikiPreview from './DanceWikiPreview'
 
 interface DanceEditorProps {
   dance: DanceWithEvents
@@ -56,9 +57,8 @@ export function PlainDanceEditor({ dance }: { dance: DanceWithEvents }) {
 }
 
 function FullDanceEditorFields({ dance }: { dance: DanceWithEvents }) {
-  const t = useT('components.danceEditor')
   const label = useT('domain.dance')
-  const { wikipage, wikipageName } = dance
+  const { wikipage } = dance
   return <>
     <div className="flex flex-wrap gap-3.5">
       <div className="grow basis-75">
@@ -70,12 +70,6 @@ function FullDanceEditorFields({ dance }: { dance: DanceWithEvents }) {
         />
         <Field label={label('duration')} path="duration" component={DurationField} />
         <Field label={label('wikipageName')} path="wikipageName" component={WikipageSelector} componentProps={{ possibleName: dance.name }} />
-        {wikipageName &&
-          <p>
-            {t('danceInDanceWiki')}{' '}
-            <RegularLink target="_blank" href={`https://tanssi.dy.fi/${wikipageName.replaceAll(' ', '_')}`}><LinkIcon /> {dance.wikipageName}</RegularLink>
-          </p>
-        }
       </div>
       <div className="grow basis-75">
         <Input label={label('prelude')} path="prelude" />
@@ -88,6 +82,7 @@ function FullDanceEditorFields({ dance }: { dance: DanceWithEvents }) {
         <Input label={label('remarks')} path="remarks" />
       </div>
     </div>
+    <DanceWikiPreview dance={dance} />
     <Field label={label('description')} path="description" component={InstructionEditor} componentProps={{ wikipage, className: 'max-h-150'}} />
     <Field label={label('instructions')} path="instructions" component={InstructionEditor} componentProps={{ wikipage, className: 'max-h-150'}} />
   </>
