@@ -23,7 +23,7 @@ export default function DanceWikiPreview({ dance }: DanceWikiPreviewProps) {
   if (!wikipageName || !wikipage) return null
   const hasInstructions = wikipage._fetchedAt && wikipage.instructions
 
-  return <div className="mb-5 p-2 bg-gray-200 rounded-sm">
+  return <div className="mb-5 p-2 bg-gray-200/80 rounded-sm">
     <div className="flex items-center gap-10">
       <div>
         {t('danceInDanceWiki')}:

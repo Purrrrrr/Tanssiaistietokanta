@@ -22,7 +22,7 @@ export default function ItemList({ children, 'wrap-breakpoint': wrapPoint = 'sm'
     style={{'--item-list-cols': columnCount} as React.CSSProperties}
     className={classNames(
       columnCount
-        ? 'grid-cols-[repeat(var(--var),minmax(0,1fr))]'
+        ? 'grid-cols-[repeat(var(--item-list-cols),minmax(0,1fr))]'
         : columns,
       'group mb-4 border-gray-100 border-1 w-full',
       columns && listWrapClasses[wrapPoint],
