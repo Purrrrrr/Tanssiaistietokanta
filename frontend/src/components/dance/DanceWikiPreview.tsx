@@ -3,6 +3,8 @@ import { ChevronDown, ChevronUp, Link as LinkIcon } from '@blueprintjs/icons'
 
 import { Dance } from 'types'
 
+import { useFetchDanceFromWiki } from 'services/dancewiki'
+
 import { useFormatDateTime } from 'libraries/i18n/dateTime'
 import {Button, Collapse, RegularLink} from 'libraries/ui'
 import Markdown from 'libraries/ui/Markdown'
@@ -18,6 +20,7 @@ export default function DanceWikiPreview({ dance }: DanceWikiPreviewProps) {
   const t = useT('components.danceWikiPreview')
   const [open, setOpen] = useState(false)
   const formatDateTime = useFormatDateTime()
+  const fetch = useFetchDanceFromWiki()
 
   const { wikipageName, wikipage } = dance
   if (!wikipageName || !wikipage) return null
@@ -37,6 +40,10 @@ export default function DanceWikiPreview({ dance }: DanceWikiPreviewProps) {
       </div>
       <div className="flex items-center gap-2">
         {wikipage._fetchedAt && t('danceFetched', { date: formatDateTime(wikipage._fetchedAt) })}
+        <Button
+          text={t('fetchInstructions')}
+          onClick={() => fetch(wikipageName)}
+        />
         {hasInstructions && <Button
           color="primary"
           text={t('openInstructions')}

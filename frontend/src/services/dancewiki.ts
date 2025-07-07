@@ -37,12 +37,7 @@ mutation fetchFromDanceWiki($name: String!) {
 `)
 
 export function useFetchDanceFromWiki() {
-  const [executeQuery, { data }] = useMutation(fetchWikipageQuery)
+  const [executeQuery] = useMutation(fetchWikipageQuery)
 
-  // const doSearch = useCallback(async (search: string) => {
-  //   const results = await executeQuery({ variables: { search, maxSpamScore: 3 } })
-  //   return results.data?.searchWikiTitles ?? []
-  // }, [executeQuery])
-  //
-  // return [doSearch, data?.searchWikiTitles ?? []] as const
+  return (name: string) => executeQuery({ variables: { name }})
 }
