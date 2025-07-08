@@ -67,8 +67,8 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
     }, DAY)
 
     // Update list of pages daily
-    cron.schedule('0 0 * * *', () => this.updatePageList())
-    cron.schedule('0 */5 * * * *', this.backgroundFetch.bind(this))
+    cron.schedule('*/20 * * * *', () => this.updatePageList())
+    cron.schedule('*/5 * * * *', this.backgroundFetch.bind(this))
     setTimeout(() => this.backgroundFetch(), 0)
   }
   
