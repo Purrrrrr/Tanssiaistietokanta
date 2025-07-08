@@ -30,7 +30,7 @@ export function Callout({ children, icon, title, intent, className, ...rest }: C
     <div className={classNames('flex gap-2 p-4 pb-3 items-start', ColorClass.lightBoxColors[intent ?? 'none'], className)} {...rest}>
       {iconToRender}
       <div>
-        {title && <h5 className="text-base! mb-1.5! mt-[-3px]!">{title}</h5>}
+        {title && <h5 className="mb-1.5 mt-[-3px] font-bold">{title}</h5>}
         {children}
       </div>
     </div>

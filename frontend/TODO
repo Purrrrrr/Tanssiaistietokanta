@@ -91,7 +91,6 @@
   * Count each dance only once in missing dances warning
   
   Periodically fetch wikipages in the background
-
     
   Show amount of dances in set
   Counters for categories used total for dance program
@@ -138,10 +137,8 @@
     * AnchorButton
     * Toast
     * Callout
-      Tab, Tabs
+    * Tab, Tabs
       * basic element
-        support animation
-        vertical tabs?
     * Icon (half-way done)
     SectionCard
     H2
