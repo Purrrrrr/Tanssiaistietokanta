@@ -103,7 +103,7 @@ export function MissingDancesWarning() {
 
   if (workshopsWithMissing.length === 0) return null
 
-  const missingCount = workshopsWithMissing.flatMap(w => w.missingDances).length
+  const missingCount = new Set(workshopsWithMissing.flatMap(w => w.missingDances).map(dance => dance._id)).size
 
   return <Callout intent="warning" title={t('title', { count: missingCount })}>
     {workshopsWithMissing.map(({id, name, missingDances}) =>

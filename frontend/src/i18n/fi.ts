@@ -211,7 +211,7 @@ export const fi = {
       },
       missingDancesWarning: {
         title: {
-          one: 'Ohjelmasta puuttuu työpajoissa opetettu tanssi.',
+          one: 'Ohjelmasta puuttuu yksi työpajoissa opetettu tanssi.',
           many: 'Ohjelmasta puuttuu __count__ työpajoissa opetettua tanssia.',
         }
       },

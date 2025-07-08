@@ -85,13 +85,13 @@
     * Ability to view dance wiki entry inline
     * Show wikipage fetch time
     * Ability to reload wiki page
+* Bugfixes
+  * Sort events by date in dance event lists
+  * Link to program editor needs tab id
+  * Count each dance only once in missing dances warning
   
   Periodically fetch wikipages in the background
 
-  Bugfixes
-  * Sort events by date in dance event lists
-  * Link to program editor needs tab id
-    Count each dance only once in missing dances warning
     
   Show amount of dances in set
   Counters for categories used total for dance program
