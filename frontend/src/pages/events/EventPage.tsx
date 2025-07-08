@@ -113,8 +113,8 @@ function EventProgram({program, readOnly}: {program: EventProgramType, readOnly:
     </Card>
     <p>
       {readOnly
-        ? <NavigateButton adminOnly href="program" text={t('viewProgram')} />
-        : <NavigateButton adminOnly color="primary" href="program" text={t('editProgram')} />}
+        ? <NavigateButton adminOnly href="program/main" text={t('viewProgram')} />
+        : <NavigateButton adminOnly color="primary" href="program/main" text={t('editProgram')} />}
       <NavigateButton href="print/ball-dancelist" target="_blank"
         text={t('printBallDanceList')} />
       <NavigateButton href="ball-program" target="_blank"

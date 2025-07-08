@@ -72,7 +72,7 @@ function EventProgramRoutes({event}) {
   return <AdminOnly fallback={useTranslation('pages.events.eventProgramPage.loginRequired')}>
     <Breadcrumb text={useTranslation('breadcrumbs.eventProgram')} />
     <Routes>
-      <Route index element={<Navigate to="main" />} />
+      <Route index element={<Navigate to="main" replace />} />
       <Route path=":tabId/:slideId?" element={<EventProgramPage event={event}/>} />
       <Route path="dance/:danceId" element={<Dance parentType='eventProgram'/>} />
     </Routes>
