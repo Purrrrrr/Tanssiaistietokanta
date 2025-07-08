@@ -89,9 +89,9 @@
   Periodically fetch wikipages in the background
 
   Bugfixes
-    Sort events by date in dance event lists
-    Count each dance only once in missing dances warning
+  * Sort events by date in dance event lists
   * Link to program editor needs tab id
+    Count each dance only once in missing dances warning
     
   Show amount of dances in set
   Counters for categories used total for dance program

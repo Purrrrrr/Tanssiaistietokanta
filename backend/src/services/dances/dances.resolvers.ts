@@ -39,14 +39,14 @@ export default (app: Application) => {
 
     const workshopIds = Array.from(links.get('workshops') ?? [])
     const workshops = await Promise.all(
-      workshopIds.map(id => workshopService.get(id, {query: { $select: ['eventId']}}))
+      workshopIds.map(id => workshopService.get(id, {query: { $select: ['eventId'] }}))
     )
     const ids = [
       ...Array.from(links.get('events') ?? []) as string[],
       ...workshops.map(workshop => workshop.eventId)
     ]
 
-    return eventService.find({query: {_id: {$in: ids}}})
+    return eventService.find({query: {_id: {$in: ids}, $sort: { beginDate: 1 } }})
   }
 
   return {
