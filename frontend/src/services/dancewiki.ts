@@ -1,7 +1,20 @@
 import { useCallback } from 'react'
-import { useLazyQuery, useMutation } from '@apollo/client'
+import { useLazyQuery } from '@apollo/client'
 
-import { graphql } from '../backend'
+import { entityUpdateHook, graphql, setupServiceUpdateFragment } from '../backend'
+
+setupServiceUpdateFragment(
+  'dancewiki',
+  `fragment DanceWikiFragment on Wikipage {
+    _id
+    _fetchedAt
+    name
+    status
+    categories
+    formations
+    instructions
+  }`
+)
 
 const nameSearchQuery = graphql(`
 query searchDancewiki($search: String!) {
@@ -25,6 +38,7 @@ export function useSearchWikiTitles() {
 const fetchWikipageQuery = graphql(`
 mutation fetchFromDanceWiki($name: String!) {
   fetchWikipage(name: $name) {
+    _id
     _fetchedAt
     name
     status
@@ -36,8 +50,13 @@ mutation fetchFromDanceWiki($name: String!) {
 }
 `)
 
-export function useFetchDanceFromWiki() {
-  const [executeQuery] = useMutation(fetchWikipageQuery)
+const useFetchQuery = entityUpdateHook('dancewiki', fetchWikipageQuery)
 
-  return (name: string) => executeQuery({ variables: { name }})
+export function useFetchDanceFromWiki() {
+  const [executeQuery, d] = useFetchQuery()
+
+  return [
+    (name: string) => executeQuery({ name }),
+    d,
+  ] as const
 }

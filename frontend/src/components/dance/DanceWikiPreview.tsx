@@ -20,7 +20,6 @@ export default function DanceWikiPreview({ dance }: DanceWikiPreviewProps) {
   const t = useT('components.danceWikiPreview')
   const [open, setOpen] = useState(false)
   const formatDateTime = useFormatDateTime()
-  const fetch = useFetchDanceFromWiki()
 
   const { wikipageName, wikipage } = dance
   if (!wikipageName || !wikipage) return null
@@ -30,20 +29,11 @@ export default function DanceWikiPreview({ dance }: DanceWikiPreviewProps) {
     <div className="flex items-center gap-10">
       <div>
         {t('danceInDanceWiki')}:
-        <RegularLink
-          className="ms-2"
-          target="_blank"
-          href={`https://tanssi.dy.fi/${wikipageName.replaceAll(' ', '_')}`}
-        >
-          <LinkIcon /> {dance.wikipageName}
-        </RegularLink>
+        <LinkToDanceWiki className="ms-2" page={wikipageName} />
       </div>
       <div className="flex items-center gap-2">
         {wikipage._fetchedAt && t('danceFetched', { date: formatDateTime(wikipage._fetchedAt) })}
-        <Button
-          text={t('fetchInstructions')}
-          onClick={() => fetch(wikipageName)}
-        />
+        <FetchWikipageButton page={wikipageName} />
         {hasInstructions && <Button
           color="primary"
           text={t('openInstructions')}
@@ -69,13 +59,25 @@ const options = {
   },
 }
 
-export function LinkToDanceWiki({ page }: { page: string }) {
+export function LinkToDanceWiki({ className, page }: { className?: string, page: string }) {
   return <RegularLink
+    className={className}
     target="_blank"
     href={`${danceWikiUrl}${page.replaceAll(' ', '_')}`}
   >
     <LinkIcon /> {page}
   </RegularLink>
+}
+
+function FetchWikipageButton({ page }: { page: string}) {
+  const t = useT('components.danceWikiPreview')
+  const [fetch, {loading}] = useFetchDanceFromWiki()
+
+  return <Button
+    disabled={loading}
+    text={t(loading ? 'fetching' : 'fetchInstructions')}
+    onClick={() => fetch(page)}
+  />
 }
 
 export function WikiLink({ href, ...props }: React.ComponentProps<'a'>) {

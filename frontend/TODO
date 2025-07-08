@@ -71,7 +71,7 @@
   * Category selector
   * Show wiki page link also when no events
   * Sort categories in category selector
-    Dance wiki integration
+  * Dance wiki integration
     * Show if dance has wiki page in list
     * Better dance link menu
       * Categorize
@@ -84,7 +84,19 @@
       * On dance editor
     * Ability to view dance wiki entry inline
     * Show wikipage fetch time
-      Ability to reload wiki page
+    * Ability to reload wiki page
+  
+  Periodically fetch wikipages in the background
+
+  Bugfixes
+    Sort events by date in dance event lists
+    Count each dance only once in missing dances warning
+    
+  Show amount of dances in set
+  Counters for categories used total for dance program
+  Ability to set other program duration?
+  Associate a dance to interval music
+  Ability to see more info about program item in editor
 
   Remove dialog? It is not used anymore. At least remove the blueprint css for it
 
@@ -95,7 +107,6 @@
     By category
   Miksi voltati in ca rosina ei kategorisoidu automaattisesti?
 
-  Associate a dance to interval music
 
   Fix: Pressing tab when focused on select button loses all focus
 

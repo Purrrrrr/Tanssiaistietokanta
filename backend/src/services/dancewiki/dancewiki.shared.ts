@@ -17,7 +17,7 @@ export type DancewikiClientService = Pick<
 
 export const dancewikiPath = 'dancewiki'
 
-export const dancewikiMethods: Array<keyof DancewikiService> = ['find', 'get', 'create']
+export const dancewikiMethods: Array<keyof DancewikiService> = ['find', 'get', 'update', 'create']
 
 export const dancewikiClient = (client: ClientApplication) => {
   const connection = client.get('connection')

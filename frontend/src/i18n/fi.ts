@@ -116,7 +116,8 @@ export const fi = {
       danceInDanceWiki: 'Tanssi tanssiwikissä',
       danceFetched: 'Sivun tiedot ja sisältö haettu __date__',
       openInstructions: 'Avaa wikin ohje',
-      fetchInstructions: 'Päivitä tiedot'
+      fetchInstructions: 'Päivitä tiedot',
+      fetching: 'Haetaan tietoja...',
     },
     workshopEditor: {
       dances: 'Tanssit',

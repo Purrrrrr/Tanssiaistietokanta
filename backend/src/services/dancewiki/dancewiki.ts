@@ -14,6 +14,8 @@ import {
 import type { Application } from '../../declarations'
 import { DancewikiService, getOptions } from './dancewiki.class'
 import { dancewikiPath, dancewikiMethods } from './dancewiki.shared'
+import { defaultChannels, withoutCurrentConnection } from '../../utils/defaultChannels'
+import { getDependenciesFor } from '../../utils/dependencies'
 
 export * from './dancewiki.class'
 export * from './dancewiki.schema'
@@ -47,6 +49,10 @@ export const dancewiki = (app: Application) => {
           ctx.arguments[0] = decodeURIComponent(ctx.arguments[0])
         }
       }],
+      update: [
+        schemaHooks.validateData(dancewikiDataValidator),
+        schemaHooks.resolveData(dancewikiDataResolver)
+      ],
       create: [
         schemaHooks.validateData(dancewikiDataValidator),
         schemaHooks.resolveData(dancewikiDataResolver)
@@ -58,6 +64,23 @@ export const dancewiki = (app: Application) => {
     error: {
       all: []
     }
+  }).publish((data, context) => {
+    const danceIds = getDependenciesFor('dancewiki', data, 'usedBy', 'dances')
+    console.log(danceIds)
+
+    const channels = [
+      ...danceIds.map(id => app.channel(`dances/${id}`)),
+      app.channel('dances'),
+    ]
+      console.log([
+      ...danceIds.map(id => (`dances/${id}`)),
+      ('dances'),
+    ])
+
+    return [
+      ...withoutCurrentConnection(channels, context),
+      ...defaultChannels(app, context)
+    ]
   })
 }
 

@@ -1,6 +1,7 @@
 type Wikipage {
-  name: String!
+  _id: String!
   _fetchedAt: String 
+  name: String!
   status: WikipageStatus!
   spamScore: Float!
   instructions: String

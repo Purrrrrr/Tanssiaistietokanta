@@ -37,7 +37,7 @@ export default (app: Application) => {
       wikipage: async (_: any, { name }: { name: string }) => service.get(name, { noThrowOnNotFound: true })
     },
     Mutation: {
-      fetchWikipage: (_: any, {name}: any, params: DancewikiParams | undefined) => service.create({name}, params),
+      fetchWikipage: (_: any, {name}: any, params: DancewikiParams | undefined) => service.update(name, {name}, params),
     }
   }
 }

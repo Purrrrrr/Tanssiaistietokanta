@@ -19,6 +19,7 @@ const serviceTypeNameMap : {
   dances: 'Dance',
   events: 'Event',
   workshops: 'Workshop',
+  dancewiki: 'Dancewiki',
 }
 const serviceUpdateFragmentMap : {
   [key in ServiceName]?: DocumentNode

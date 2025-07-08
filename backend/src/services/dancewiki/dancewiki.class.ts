@@ -166,6 +166,13 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
     }
   }
 
+  async update(id: string | null, data: DancewikiData, params?: ServiceParams): Promise<Dancewiki | Dancewiki[]> {
+    if (id) {
+      return this.create({ name: id}, params)
+    }
+    return this.create(data, params)
+  }
+
   async create(data: DancewikiData, params?: ServiceParams): Promise<Dancewiki>
   async create(data: DancewikiData[], params?: ServiceParams): Promise<Dancewiki[]>
   async create(
