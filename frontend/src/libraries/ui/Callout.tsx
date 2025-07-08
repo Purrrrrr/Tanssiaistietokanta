@@ -21,7 +21,6 @@ const defaultIcons = {
   warning: <WarningSign />,
 } satisfies Record<Color, React.ReactElement| undefined>
 
-//TODO: fix heading margins
 export function Callout({ children, icon, title, intent, className, ...rest }: CalloutProps) {
   const iconToRender = icon === false
     ? undefined

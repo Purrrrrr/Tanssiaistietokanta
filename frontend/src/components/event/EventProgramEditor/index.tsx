@@ -175,6 +175,16 @@ function ProgramListEditor({path}: {path: ProgramSectionPath}) {
     ? 0
     : (programRow as DanceSet).intervalMusic?.duration ?? 0
 
+  const itemsByType = Object.groupBy(
+    programRow.program,
+    row => row.item.__typename,
+  )
+  const counts = [
+    t('danceCount', { count: itemsByType.Dance?.length ?? 0 }),
+    t('requestedDanceCount', { count: itemsByType.RequestedDance?.length ?? 0 }),
+    t('otherProgramCount', { count: itemsByType.EventProgram?.length ?? 0 }),
+  ].filter(count => count !== '').join(', ')
+
   return <>
     <div ref={accessibilityContainer} />
     <HTMLTable ref={tableRef} compact bordered className="programList">
@@ -198,6 +208,7 @@ function ProgramListEditor({path}: {path: ProgramSectionPath}) {
       <tfoot>
         <tr className="eventProgramFooter">
           <td colSpan={2} className="add-spacing">
+            {counts && <p>{counts}</p>}
             {isIntroductionsSection ||
               <Button
                 text={t('buttons.addDance')}

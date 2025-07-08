@@ -159,6 +159,21 @@ export const fi = {
         programTitle: 'Ohjelman otsikko',
         style: 'Tyyli',
       },
+      danceCount: {
+        zero: '',
+        one: '1 tanssi',
+        many: '__count__ tanssia',
+      },
+      requestedDanceCount: {
+        zero: '',
+        one: '1 toivetanssi',
+        many: '__count__ toivetanssia',
+      },
+      otherProgramCount: {
+        zero: '',
+        one: '1 muu ohjelma',
+        many: '__count__ muuta ohjelmaa',
+      },
       buttons: {
         addDance: 'Lisää tanssi',
         addDanceSet: 'Lisää tanssisetti',
