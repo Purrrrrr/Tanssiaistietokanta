@@ -39,6 +39,11 @@ export default (app: Application) => {
     ProgramItem: {
       __resolveType: (obj: { __typename: any }) => obj.__typename
     },
+    IntervalMusic: {
+      dance: (intervalMusic?: { dance?: string | null }) => {
+        return getDance(intervalMusic?.dance)
+      }
+    },
     Query: {
       events: (_: any, __: any, params: EventsParams | undefined) => service.find({...params, query: { $sort } }),
       event: (_: any, {id, versionId}: any, params: EventsParams | undefined) => versionId
@@ -85,7 +90,7 @@ export default (app: Application) => {
     return {item: {__typename, ...dance}, ...rest}
   }
 
-  async function getDance(id: string) {
+  async function getDance(id: string | null | undefined) {
     return id ? await danceService.get(id).catch(() => null) : null
   }
 

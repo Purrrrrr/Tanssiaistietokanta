@@ -69,6 +69,7 @@ function DanceSet() {
       description: Nullable(Type.String()),
       duration: Type.Number(),
       slideStyleId: SlideStyleId(),
+      dance: Type.Optional(Type.String()),
     }))
   })
 }

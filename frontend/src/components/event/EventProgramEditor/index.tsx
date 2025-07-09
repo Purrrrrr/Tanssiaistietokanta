@@ -325,7 +325,18 @@ function IntervalMusicEditor({danceSetPath}: {danceSetPath: DanceSetPath}) {
 
   return <tr className="intervalMusicDuration">
     <td><ProgramTypeIcon type="IntervalMusic" /></td>
-    <td>{t('programTypes.IntervalMusic')}</td>
+    <td>
+      <div className="flex gap-2">
+        {t('programTypes.IntervalMusic')}
+        <Field
+          label={t('dance')}
+          labelStyle="hidden"
+          containerClassName="grow"
+          path={`${danceSetPath}.intervalMusic.dance`}
+          component={DanceProgramChooser}
+        />
+      </div>
+    </td>
     <td>
       <Field label={t('fields.intervalMusicDuration')} inline labelStyle="hidden" path={durationPath} component={DurationField} />
     </td>

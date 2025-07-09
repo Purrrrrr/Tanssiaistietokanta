@@ -73,6 +73,7 @@ type IntervalMusic {
   description: String
   duration: Float!
   slideStyleId: ID
+  dance: Dance
 }
 
 type Mutation {

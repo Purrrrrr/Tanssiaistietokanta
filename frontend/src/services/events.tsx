@@ -67,6 +67,9 @@ setupServiceUpdateFragment(
           description
           duration
           slideStyleId
+          dance {
+            _id, name
+          }
         }
       }
     }
@@ -177,6 +180,9 @@ query getEvent($id: ID!, $versionId: ID) {
           description
           duration
           slideStyleId
+          dance {
+            _id, name
+          }
         }
       }
     }
@@ -293,6 +299,9 @@ mutation patchEventProgram($id: ID!, $program: JSONPatch!) {
           description
           duration
           slideStyleId
+          dance {
+            _id, name
+          }
         }
       }
     }

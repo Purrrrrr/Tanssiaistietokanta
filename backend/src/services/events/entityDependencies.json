@@ -3,5 +3,10 @@
     "type": "uses",
     "service": "dances",
     "path": "program.danceSets.program[type='Dance'].dance"
+  },
+  {
+    "type": "uses",
+    "service": "dances",
+    "path": "program.danceSets.intervalMusic.dance"
   }
 ]

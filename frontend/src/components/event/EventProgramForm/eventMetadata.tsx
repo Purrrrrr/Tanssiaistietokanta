@@ -17,10 +17,14 @@ export function EventMetadataContext(
   const chosenDancesRef = useRef<Set<string>>(emptySet)
 
   const currentDances = program.danceSets
-    .flatMap(set => set.program)
-    .map(row => row.item)
-    .filter(item => item.__typename === 'Dance')
-    .map(dance => dance._id)
+    .flatMap(set => [
+      ...set.program
+        .map(row => row.item)
+        .filter(item => item.__typename === 'Dance')
+        .map(dance => dance._id),
+      set.intervalMusic?.dance?._id
+    ])
+    .filter(id => id !== null && id !== undefined)
 
   if (notEqual(chosenDancesRef.current, currentDances)) {
     chosenDancesRef.current = new Set(currentDances)

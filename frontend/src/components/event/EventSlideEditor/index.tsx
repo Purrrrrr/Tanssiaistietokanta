@@ -197,6 +197,7 @@ function IntervalMusicDescriptionEditor({danceSetIndex}: {danceSetIndex: number}
   const intervalMusic = useValueAt(path)
   const hasCustomTexts = typeof intervalMusic?.name === 'string'
   return <>
+    <Field label={t('dance')} path={`${path}.dance`} component={DanceProgramChooser} labelStyle="beside"/>
     <IntervalMusicDefaultTextsSwitch label={t('fields.intervalMusic.useDefaultTexts')} path={path} />
     {hasCustomTexts
       ? <>

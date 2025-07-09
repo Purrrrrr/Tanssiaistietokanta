@@ -22,10 +22,19 @@ function toProgramInput({introductions, danceSets, ...rest} : EventProgramSettin
       ['program', L.elems], toProgramItemInput, introductions
     ),
     danceSets: L.modify(
-      [L.elems, 'program', L.elems], toProgramItemInput, danceSets
+      L.elems,
+      compose(
+        L.modify(['intervalMusic', 'dance'], (dance) => dance?._id),
+        L.modify(['program', L.elems], toProgramItemInput)
+      ),
+      danceSets
     ),
     ...rest,
   }))
+}
+
+function compose(fun: (val: unknown) =>  unknown, fun2: (val: unknown) => unknown) {
+  return (value: unknown) => fun2(fun(value))
 }
 
 function toProgramItemInput(row : EventProgramRow) {
