@@ -90,11 +90,22 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
     if (unfetched.length > 0) {
       const pagesToFetch = unfetched.slice(0, MAX_PAGES_TO_FETCH).map(page => page._id)
       console.log(`${unfetched.length} unfetched wiki entries fetching ${pagesToFetch.length}`)
-      console.time('fetch')
       await this.fetchPages(pagesToFetch)
-      console.timeEnd('fetch')
       return
     }
+    
+    const lastWeek = new Date(new Date().valueOf() - 7 * DAY).toISOString()
+    const stale = await this.storageService.find({ query: {
+      _fetchedAt: { $lt: lastWeek },
+      spamScore: { $lt: 1 },
+      $limit: MAX_PAGES_TO_FETCH }
+    })
+    if (stale.length > 0) {
+      const pagesToFetch = stale.map(page => page._id)
+      console.log(`fetching ${stale.length} stale wiki entries`)
+      await this.fetchPages(pagesToFetch)
+    }
+
   }
 
   async updatePageList() {
