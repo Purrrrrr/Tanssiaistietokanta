@@ -1,6 +1,6 @@
 import {ActionButton as Button} from 'libraries/forms'
 import {
-  DanceSet,   DEFAULT_INTERVAL_MUSIC, EventProgramRow, IntervalMusic, switchFor, useAppendToList
+  DanceSet, DEFAULT_INTERVAL_MUSIC, EventProgramRow, IntervalMusic, switchFor, useAppendToList
 } from 'components/event/EventProgramForm'
 import { ProgramTypeIcon } from 'components/event/ProgramTypeIcon'
 import {useT} from 'i18n'

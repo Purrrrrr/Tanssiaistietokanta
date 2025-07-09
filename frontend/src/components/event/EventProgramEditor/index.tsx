@@ -89,7 +89,7 @@ function MainEditor({ program }: {program: EventProgramSettings }) {
   const {danceSets, introductions} = program
 
   return <section>
-    <div className="main-toolbar">
+    <div className="flex flex-wrap items-start justify-between gap-2">
       <Field label={t('fields.pauseDuration')} inline path="pauseBetweenDances" component={DurationField} />
       {introductions.program.length === 0 && <AddIntroductionButton />}
     </div>
@@ -99,7 +99,7 @@ function MainEditor({ program }: {program: EventProgramSettings }) {
       <IntroductoryInformation />
       <ListField labelStyle="hidden" label="" path="danceSets" component={DanceSetEditor} renderConflictItem={item => renderDanceSetValue(item, t)} />
     </ListEditorContext>
-    <div className="addDanceSetButtons">
+    <div className="my-3.5">
       {danceSets.length === 0 && t('danceProgramIsEmpty')}
       <AddDanceSetButton />
     </div>
@@ -112,12 +112,10 @@ function IntroductoryInformation() {
   const infos = useValueAt('introductions.program')
   if (infos.length === 0) return null
 
-  return <Card className="danceset">
-    <div className="flex sectionTitleRow">
-      <h2>
-        <span>{t('titles.introductoryInformation')}</span>
-      </h2>
-    </div>
+  return <Card marginClass="my-4" noPadding className="min-w-fit">
+    <h2 className="px-2.5 py-1 font-bold text-lg bg-gray-100 TODO">
+      <span>{t('titles.introductoryInformation')}</span>
+    </h2>
     <ProgramListEditor path="introductions" />
   </Card>
 }
@@ -125,9 +123,9 @@ function IntroductoryInformation() {
 const DanceSetEditor = React.memo(function DanceSetEditor({itemIndex, dragHandle} : {itemIndex: number, dragHandle: DragHandle}) {
   const id = useValueAt(`danceSets.${itemIndex}._id`)
 
-  return <Card className="danceset" id={id}>
-    <div className="flex sectionTitleRow">
-      <h2>
+  return <Card marginClass="my-4" noPadding className="min-w-fit" id={id}>
+    <div className="flex flex-wrap justify-end px-2.5 py-1 bg-gray-100">
+      <h2 className="grow font-bold text-lg TODO">
         <DanceSetNameEditor itemIndex={itemIndex} />
       </h2>
       {dragHandle}
@@ -263,10 +261,10 @@ const ProgramItemEditor = React.memo(function ProgramItemEditor({dragHandle, pat
 
   return <React.Fragment>
     <td>
-      <ProgramTypeIcon type={__typename} />
+      <ProgramTypeIcon type={__typename} className="size-7" />
     </td>
     <td>
-      <div className="flex eventProgramItemEditor">
+      <div className="flex">
         <ProgramDetailsEditor path={itemPath} />
       </div>
     </td>
@@ -290,6 +288,7 @@ function renderDanceSetValue(item: DanceSet, t: T) {
 }
 
 function ProgramDetailsEditor({path}: {path: ProgramItemPath}) {
+  const t = useT('components.eventProgramEditor')
   const __typename = useValueAt(`${path}.item.__typename`)
   //If something is deleted useValueAt may return undefined
   if (__typename === undefined) return null
@@ -297,24 +296,22 @@ function ProgramDetailsEditor({path}: {path: ProgramItemPath}) {
   switch(__typename) {
     case 'Dance':
     case 'RequestedDance':
-      return <DanceItemEditor path={path as DanceProgramPath} />
+      return <Field
+        label={t('dance')}
+        labelStyle="hidden"
+        containerClassName="w-full"
+        path={`${path as DanceProgramPath}.item`}
+        component={DanceProgramChooser}
+      />
     case 'EventProgram':
-      return <EventProgramItemEditor path={path} />
+      return <Input
+        label={t('fields.eventProgram.name')}
+        labelStyle="hidden"
+        containerClassName="w-full"
+        path={`${path}.item.name`}
+        required
+      />
   }
-}
-
-function DanceItemEditor({path}: {path: DanceProgramPath}) {
-  const t = useT('components.eventProgramEditor')
-  return <div className="eventProgramItemEditor">
-    <Field label={t('dance')} labelStyle="hidden" path={`${path as DanceProgramPath}.item`} component={DanceProgramChooser} />
-  </div>
-}
-
-function EventProgramItemEditor({path}: {path: ProgramItemPath}) {
-  const t = useT('components.eventProgramEditor')
-  return <div className="flex eventProgramItemEditor">
-    <Input label={t('fields.eventProgram.name')} labelStyle="hidden" path={`${path}.item.name`} required />
-  </div>
 }
 
 function IntervalMusicEditor({danceSetPath}: {danceSetPath: DanceSetPath}) {
@@ -324,7 +321,7 @@ function IntervalMusicEditor({danceSetPath}: {danceSetPath: DanceSetPath}) {
   const onSetIntervalMusic = useOnChangeFor(intervalMusicPath)
 
   return <tr className="intervalMusicDuration">
-    <td><ProgramTypeIcon type="IntervalMusic" /></td>
+    <td><ProgramTypeIcon type="IntervalMusic" className="size-7" /></td>
     <td>
       <div className="flex gap-2">
         {t('programTypes.IntervalMusic')}

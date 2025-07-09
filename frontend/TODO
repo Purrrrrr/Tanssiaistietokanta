@@ -131,6 +131,8 @@
   * Menu
   * NavBar
   * Breadcrumbs
+  * Card
+  * separate Icon components by Icon
     Classes for headings with margin
     Icon loading components
     * AnchorButton
@@ -145,7 +147,6 @@
     FormGroup
     HTMLTable
     Check todo markings in Button.tsx or other
-  * separate Icon components by Icon
     
   Teacher/people database
   Apuopettajat / assistant teachers

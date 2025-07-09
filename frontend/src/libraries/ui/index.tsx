@@ -1,6 +1,5 @@
 import React  from 'react'
 import {
-  Card as BlueprintCard,
   FormGroup as BlueprintFormGroup,
   FormGroupProps as BlueprintFormGroupProps,
 } from '@blueprintjs/core'
@@ -32,10 +31,21 @@ export { ColorClass, CssClass }
 type HTMLDivProps = React.HTMLAttributes<HTMLDivElement>;
 export type Intent = 'none' | 'primary' | 'success' | 'warning' | 'danger';
 
-type CardProps = Omit<HTMLDivProps, 'onClick'>
+interface CardProps extends Omit<HTMLDivProps, 'onClick'> {
+  noPadding?: boolean
+  marginClass?: string
+}
 
-export function Card(props : CardProps) {
-  return <BlueprintCard {...props} />
+export function Card({ className, noPadding, marginClass, ...props }: CardProps) {
+  return <div
+    {...props}
+    className={classNames(
+      'border-1 border-gray-200 shadow-gray-300 shadow-xs',
+      noPadding || 'p-6',
+      marginClass ?? 'my-2',
+      className,
+    )}
+  />
 }
 
 export interface FormGroupProps extends Omit<BlueprintFormGroupProps, 'inline'>, React.ComponentPropsWithoutRef<'div'> {

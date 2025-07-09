@@ -1,86 +1,39 @@
 $borderColor: rgba(16, 22, 26, 0.15)
 
 .eventProgramEditor
-  
-  .main-toolbar
-    display: flex
-    flex-wrap: wrap
-    align-items: flex-start
+  table.programList
+    background: white
+    width: 100%
+    border-top: 1px solid $borderColor
 
-    .bp5-form-group
-      margin-bottom: 5px
-
-    #introductions--titleSlideStyleId--formgroup
-      margin-right: auto
-  
-  .bp5-card
-    padding: 0
-    margin-bottom: 15px
-  .bp5-callout
-    margin-bottom: 5px
-
-  .danceset
-    min-width: fit-content
-    padding: 6px 0 0 0
-    margin: 1em 0
-    background: rgba(191, 204, 214, 0.15)
-
-    .sectionTitleRow
-      margin: 0 10px 0.3em
-      flex-wrap: wrap
-      justify-content: flex-end
-      & > h2
-        margin: 0
-        flex-grow: 1
-
-      @media only screen and (max-width: 350px)
-        & > h2
-          flex-basis: 100%
-      & > :not(h2):first-of-type
-        margin-left: auto
-
-    table.programList
-      background: white
-      width: 100%
-      border-top: 1px solid $borderColor
-
-      tfoot
-        th, td
-          border-top: 1px solid $borderColor
-        td
-          border-left: 1px solid $borderColor
-
-        .bp5-switch
-          margin-left: 1em
-
+    tfoot
+      th, td
+        border-top: 1px solid $borderColor
       td
+        border-left: 1px solid $borderColor
+
+      .bp5-switch
+        margin-left: 1em
+
+    td
+      padding: 0
+    td.add-spacing
+      padding: 6px
+
+    tr:not(.eventProgramFooter)
+      th:not(:nth-child(2)),td:not(:nth-child(2))
+        width: 1%
+      td:nth-child(4)
+        white-space: nowrap
+        text-align: right
+        div
+          display: inline-block
+    tr.intervalMusicDuration
+      td:nth-child(2)
+        line-height: 30px
+        padding-left: 10px
+      td:nth-child(3)
         padding: 0
-      td.add-spacing
-        padding: 6px
-
-      tr:not(.eventProgramFooter)
-        th:not(:nth-child(2)),td:not(:nth-child(2))
-          width: 1%
-        td:nth-child(4)
-          white-space: nowrap
-          text-align: right
-          div
-            display: inline-block
-      tr.intervalMusicDuration
-        td:nth-child(2)
-          line-height: 30px
-          padding-left: 10px
-        td:nth-child(3)
-          padding: 0
-
-  .eventProgramItemEditor > :nth-child(1)
-      flex-grow: 1
-
-  .addDanceSetButtons
-    margin: 1em 0
-  
-  .bp5-tab-list
-    flex-wrap: wrap
 
   .slideNavigation
     display: flex
@@ -129,23 +82,3 @@ $borderColor: rgba(16, 22, 26, 0.15)
       width: 100%
   .inert a
     pointer-events: none
-
-.programType
-  width: 28px
-  height: 28px
-  display: inline-flex
-  align-items: center
-  justify-content: center
-
-  &.programType-Dance
-    color: #cd6266
-  &.programType-RequestedDance
-    color: gray
-  &.programType-EventProgram
-    color: #4d92c2
-  &.programType-IntervalMusic
-    color: #c2a222
-
-button .programType
-  width: auto
-  height: auto

@@ -34,9 +34,7 @@ export function SlideshowEditor({ program }: {program: EventProgramSettings}) {
 
   return <section className="slideshowEditor">
     <MissingDanceInstructionsWarning program={program} />
-    <div className="main-toolbar">
-      <Field label="" inline path="slideStyleId" component={SlideStyleSelector} componentProps={{text: t('fields.eventDefaultStyle')}} />
-    </div>
+    <Field label="" inline path="slideStyleId" component={SlideStyleSelector} componentProps={{text: t('fields.eventDefaultStyle')}} />
     <SlideNavigation currentSlide={currentSlide} slideIndex={slideIndex} slides={slides} eventProgram={program} />
     <div {...swipeHandlers} className="slideEditors" style={{
       opacity: isStale ? 0 : 1,
@@ -167,7 +165,7 @@ interface SlideBoxProps {
 }
 
 const SlideBox = React.memo(function SlideBox({eventProgram, slide}: SlideBoxProps) {
-  return <Card id={slide.id}>
+  return <Card noPadding id={slide.id}>
     <div className="flex flex-wrap">
       <SlideContainer className="grow inert" size="auto" color="#eee">
         <EventSlide {...slide} eventProgram={eventProgram} linkComponent="a" />

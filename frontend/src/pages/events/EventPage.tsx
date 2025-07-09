@@ -142,7 +142,7 @@ function EventWorkshops({event, readOnly}: {event: Event, readOnly: boolean}) {
   const {workshops, _id: eventId, beginDate, endDate} = event
   const t = useT('pages.events.eventPage')
   return <>
-    <>
+    <div className="my-4">
       {workshops.map(workshop =>
         <WorkshopCard
           workshop={workshop}
@@ -153,7 +153,7 @@ function EventWorkshops({event, readOnly}: {event: Event, readOnly: boolean}) {
           endDate={endDate}
         />
       )}
-    </>
+    </div>
     <p>
       {readOnly || <CreateWorkshopButton eventId={eventId} startDate={beginDate} />}
       <NavigateButton href="print/dance-cheatlist" target="_blank"
@@ -209,7 +209,7 @@ function WorkshopCard(
   const [deleteWorkshop] = useDeleteWorkshop({refetchQueries: ['getEvent']})
   const {_id, abbreviation, name } = workshop
 
-  return <Card style={{clear: 'right'}}>
+  return <Card marginClass="" style={{clear: 'right'}}>
     { readOnly ||
       <>
         <DeleteButton onDelete={() => addLoadingAnimation(deleteWorkshop({id: _id}))}
