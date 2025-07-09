@@ -161,17 +161,17 @@ export const fi = {
         style: 'Tyyli',
       },
       danceCount: {
-        zero: '',
+        zero: '-',
         one: '1 tanssi',
         many: '__count__ tanssia',
       },
       requestedDanceCount: {
-        zero: '',
+        zero: '-',
         one: '1 toivetanssi',
         many: '__count__ toivetanssia',
       },
       otherProgramCount: {
-        zero: '',
+        zero: '-',
         one: '1 muu ohjelma',
         many: '__count__ muuta ohjelmaa',
       },
