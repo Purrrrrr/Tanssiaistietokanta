@@ -253,6 +253,7 @@ const ProgramItemEditor = React.memo(function ProgramItemEditor({dragHandle, pat
 
   if (!item) return null
   const {__typename } = item.item
+  const editableDuration = __typename === 'EventProgram'
 
   return <React.Fragment>
     <td>
@@ -263,8 +264,11 @@ const ProgramItemEditor = React.memo(function ProgramItemEditor({dragHandle, pat
         <ProgramDetailsEditor path={itemPath} />
       </div>
     </td>
-    <td className="add-spacing">
-      <Duration value={__typename !== 'RequestedDance' ? item.item.duration : 0} />
+    <td className={editableDuration ? '' : 'add-spacing'}>
+      {editableDuration
+        ? <Field label={t('fields.eventProgram.duration')} inline labelStyle="hidden" path={`${itemPath}.item.duration`} component={DurationField} />
+        : <Duration value={__typename !== 'RequestedDance' ? item.item.duration : 0} />
+      }
     </td>
     <td>
       {dragHandle}

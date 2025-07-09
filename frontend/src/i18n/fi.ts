@@ -144,6 +144,7 @@ export const fi = {
         eventProgram: {
           name: 'Ohjelman nimi',
           description: 'Ohjelman kuvaus',
+          duration: 'Ohjelman kesto',
           showInLists: 'Näytä ohjelma tanssilistoissa',
         },
         intervalMusic: {

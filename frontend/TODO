@@ -91,10 +91,10 @@
   * Count each dance only once in missing dances warning
 * Show amount of dances in set
 * Counters for categories used total for dance program
+* Ability to set other program duration
   
   Periodically fetch wikipages in the background
     
-  Ability to set other program duration?
   Associate a dance to interval music
   Ability to see more info about program item in editor
 
