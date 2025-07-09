@@ -1,6 +1,6 @@
-import React, {useCallback, useMemo, useRef, useState } from 'react'
+import React, {useCallback, useMemo, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Cross, Edit } from '@blueprintjs/icons'
+import { Cross } from '@blueprintjs/icons'
 
 import {Event} from 'types'
 
@@ -44,6 +44,7 @@ import {
   MissingDancesWarning,
   useCreateNewEventProgramItem,
 } from './components'
+import { DanceSetNameEditor } from './components/DanceSetNameEditor'
 import { DanceCategoryStats } from './components/stats'
 import { SlideshowEditor} from './SlideshowEditor'
 
@@ -113,7 +114,7 @@ function IntroductoryInformation() {
   if (infos.length === 0) return null
 
   return <Card marginClass="my-4" noPadding className="min-w-fit">
-    <h2 className="px-2.5 py-1 font-bold text-lg bg-gray-100 TODO">
+    <h2 className="px-2.5 py-1 font-bold text-lg bg-gray-50 TODO">
       <span>{t('titles.introductoryInformation')}</span>
     </h2>
     <ProgramListEditor path="introductions" />
@@ -124,7 +125,7 @@ const DanceSetEditor = React.memo(function DanceSetEditor({itemIndex, dragHandle
   const id = useValueAt(`danceSets.${itemIndex}._id`)
 
   return <Card marginClass="my-4" noPadding className="min-w-fit" id={id}>
-    <div className="flex flex-wrap justify-end px-2.5 py-1 bg-gray-100">
+    <div className="flex flex-wrap justify-end px-2.5 py-1 bg-gray-50">
       <h2 className="grow font-bold text-lg TODO">
         <DanceSetNameEditor itemIndex={itemIndex} />
       </h2>
@@ -134,29 +135,6 @@ const DanceSetEditor = React.memo(function DanceSetEditor({itemIndex, dragHandle
     <ProgramListEditor path={`danceSets.${itemIndex}`} />
   </Card>
 })
-
-function DanceSetNameEditor({ itemIndex } : { itemIndex: number }) {
-  const label = useTranslation('components.eventProgramEditor.fields.danceSetName')
-  const name = useValueAt(`danceSets.${itemIndex}.title`)
-
-  const [editingName, setEditingName] = useState(false)
-  const buttonTitle = useTranslation(editingName ? 'common.closeEditor' : 'components.eventProgramEditor.buttons.editDanceSetName')
-
-  return <>
-    {editingName
-      ? <Input labelStyle="hidden" label={label} path={`danceSets.${itemIndex}.title`} inline />
-      : name
-    }
-    <Button
-      color="primary"
-      minimal
-      icon={editingName ? <Cross /> : <Edit />}
-      title={buttonTitle}
-      aria-label={buttonTitle}
-      onClick={() => setEditingName(!editingName)}
-    />
-  </>
-}
 
 function ProgramListEditor({path}: {path: ProgramSectionPath}) {
   const t = useT('components.eventProgramEditor')
@@ -186,8 +164,21 @@ function ProgramListEditor({path}: {path: ProgramSectionPath}) {
             </tr>
           </thead>
       }
-      <tbody>
-        <ListField labelStyle="hidden-nowrapper" label="" itemType={getType} acceptsTypes={accepts} droppableElement={tableRef.current} isTable path={programPath} component={ProgramItemEditor} renderConflictItem={item => programItemToString(item, t)} accessibilityContainer={accessibilityContainer.current ?? undefined} />
+      <tbody className="*:odd:bg-gray-100/80">
+        <ListField
+          labelStyle="hidden-nowrapper"
+          label=""
+          itemType={getType}
+          acceptsTypes={accepts}
+          droppableElement={tableRef.current}
+          isTable
+          path={programPath}
+          component={ProgramItemEditor}
+          renderConflictItem={item => programItemToString(item, t)}
+          accessibilityContainer={accessibilityContainer.current
+            ??
+            undefined}
+        />
         {program.length === 0 &&
             <tr>
               <td className={`${ColorClass.textMuted} p-0`} colSpan={5}>{t('programListIsEmpty')}</td>
