@@ -59,7 +59,7 @@ const colors = [
 export const TAG_COLOR_COUNT = colors.length
 
 interface ColoredTagProps {
-  tag?: string
+  tag?: string | number
   title: string
   hashSource?: string
   color?: number

@@ -44,6 +44,7 @@ import {
   MissingDancesWarning,
   useCreateNewEventProgramItem,
 } from './components'
+import { DanceCategoryStats } from './components/stats'
 import { SlideshowEditor} from './SlideshowEditor'
 
 import './EventProgramEditor.sass'
@@ -102,6 +103,7 @@ function MainEditor({ program }: {program: EventProgramSettings }) {
       {danceSets.length === 0 && t('danceProgramIsEmpty')}
       <AddDanceSetButton />
     </div>
+    <DanceCategoryStats />
   </section>
 }
 

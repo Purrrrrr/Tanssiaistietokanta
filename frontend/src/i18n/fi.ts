@@ -239,7 +239,10 @@ export const fi = {
           one: 'setissä',
           many: 'seteissä'
         }
-      }
+      },
+      danceCategoryStats: {
+        title: 'Tanssien määrät tanssiaisissa kategorioittain:',
+      },
     },
     supportedBrowserWarning: {
       unsupportedBrowser: 'Selaimesi ei ole tuettu',
