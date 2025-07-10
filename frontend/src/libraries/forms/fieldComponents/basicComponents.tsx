@@ -1,5 +1,5 @@
 import React, {ComponentProps} from 'react'
-import {Radio, Switch as BlueprintSwitch, TextArea as BlueprintTextArea, TextAreaProps as BlueprintTextAreaProps} from '@blueprintjs/core'
+import {Switch as BlueprintSwitch, TextArea as BlueprintTextArea, TextAreaProps as BlueprintTextAreaProps} from '@blueprintjs/core'
 import classNames from 'classnames'
 
 import {ExtendedFieldComponentProps, FieldComponentProps, FieldPropsWithoutComponent} from '../types'
@@ -115,14 +115,18 @@ interface RadioGroupProps<E extends string | null> extends FieldComponentProps<E
 
 export function RadioGroup<E extends string>({options, id, value, onChange, ...rest}: RadioGroupProps<E>) {
   return options.map(({value: optionValue, label})=>
-    <Radio
-      id={`${id}-${optionValue}`}
-      key={optionValue}
-      value={optionValue ?? ''}
-      checked={optionValue === (value ?? null)}
-      label={label}
-      onChange={e => onChange(optionValue, e)}
-      {...rest}
-    />
+    <label className="mx-2">
+      <input
+        className="me-1"
+        type="radio"
+        id={`${id}-${optionValue}`}
+        key={optionValue}
+        value={optionValue ?? ''}
+        checked={optionValue === (value ?? null)}
+        onChange={e => onChange(optionValue, e)}
+        {...rest}
+      />
+      {label}
+    </label>
   )
 }
