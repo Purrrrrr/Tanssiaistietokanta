@@ -8,7 +8,7 @@ import {AdminOnly} from 'services/users'
 import {useCreateWorkshop, useDeleteWorkshop} from 'services/workshops'
 
 import {DateRangeField, formFor, patchStrategy, SyncStatus, useAutosavingState} from 'libraries/forms'
-import {Button, Card, Collapse} from 'libraries/ui'
+import {Button, Card, Collapse, H2} from 'libraries/ui'
 import {useGlobalLoadingAnimation} from 'components/LoadingState'
 import {VersionedPageTitle} from 'components/versioning/VersionedPageTitle'
 import {VersionSidebarToggle} from 'components/versioning/VersionSidebarToggle'
@@ -38,9 +38,9 @@ export default function EventPage({event}: {event: Event}) {
     </VersionedPageTitle>
     <VersionSidebarToggle entityType="event" entityId={event._id} versionId={event._versionId ?? undefined} toVersionLink={eventVersionLink} />
     <EventDetails event={event} readOnly={readOnly} />
-    <h2>{t('ballProgram')}</h2>
+    <H2>{t('ballProgram')}</H2>
     <EventProgram program={event.program} readOnly={readOnly} />
-    <h2>{t('workshops')}</h2>
+    <H2>{t('workshops')}</H2>
     <EventWorkshops event={event} readOnly={readOnly} />
   </>
 }
@@ -222,12 +222,12 @@ function WorkshopCard(
         />
       </>
     }
-    <h2>
+    <H2>
       {name}
       {abbreviation &&
             <> ({abbreviation})</>
       }
-    </h2>
+    </H2>
     {showEditor || <WorkshopSummary workshop={workshop} />}
     <Collapse isOpen={showEditor}>
       <WorkshopEditor workshop={workshop} reservedAbbreviations={reservedAbbreviations} beginDate={beginDate} endDate={endDate} />

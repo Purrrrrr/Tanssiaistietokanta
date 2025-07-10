@@ -1,10 +1,11 @@
 import React, { ReactNode } from 'react'
 import { Cross, Link as LinkIcon } from '@blueprintjs/icons'
+import classNames from 'classnames'
 
 import {Dance} from 'types'
 
 import {DragHandle, MarkdownEditor, SyncState, SyncStatus} from 'libraries/forms'
-import {Callout, H2, Link, SectionCard} from 'libraries/ui'
+import {Callout, H2, Link} from 'libraries/ui'
 import { InstructionEditor } from 'components/dance/DanceEditor'
 import { Field as DanceField, Form as DanceForm, Input as DanceInput, useDanceEditorState } from 'components/dance/DanceForm'
 import { LinkToDanceWiki } from 'components/dance/DanceWikiPreview'
@@ -46,7 +47,7 @@ export function EventSlideEditor({syncStatus, ...props}: EventSlideEditorProps )
 
   return <>
     <SectionCard>
-      <H2 className="grow">
+      <H2>
         <T msg={'pages.events.ballProgram.slideProperties'}/>
         {' '}
         {syncStatus && <SyncStatus state={syncStatus}/>}
@@ -201,12 +202,12 @@ function IntervalMusicDescriptionEditor({danceSetIndex}: {danceSetIndex: number}
     <IntervalMusicDefaultTextsSwitch label={t('fields.intervalMusic.useDefaultTexts')} path={path} />
     {hasCustomTexts
       ? <>
-        <h2>{t('titles.customIntervalMusicTexts')}</h2>
+        <H2>{t('titles.customIntervalMusicTexts')}</H2>
         <Input label={t('fields.intervalMusic.name')} path={`${path}.name`} required />
         <Field label={t('fields.intervalMusic.description')} path={`${path}.description`} component={MarkdownEditor} componentProps={markdownEditorProps} />
       </>
       : <>
-        <h2>{t('titles.defaultIntervalMusicTexts')}</h2>
+        <H2>{t('titles.defaultIntervalMusicTexts')}</H2>
         <Input label={t('fields.intervalMusic.name')} path='defaultIntervalMusic.name' componentProps={{placeholder:t('programTypes.IntervalMusic')}} />
         <Field label={t('fields.intervalMusic.description')} path="defaultIntervalMusic.description" component={MarkdownEditor} componentProps={markdownEditorProps} />
       </>
@@ -243,7 +244,7 @@ function DanceEditor({dance}: {dance: Dance}) {
   const { formProps, state } = useDanceEditorState(dance)
 
   return <DanceForm {...formProps}>
-    <div className="flex flex-wrap gap-3.5 items-center">
+    <div className="flex flex-wrap gap-3.5 items-center mb-2">
       <H2 className="m-0">{dance.name}</H2>
       <SyncStatus className="top-[3px] grow" state={state} />
     </div>
@@ -268,4 +269,8 @@ interface LinkToSlideProps {
 
 function LinkToSlide({children, id}: LinkToSlideProps) {
   return <Link relative="path" to={`../${id}`}>{children}</Link>
+}
+
+function SectionCard({ children }: { children: ReactNode}) {
+  return <div className="not-last:border-b-1 border-gray-300 p-5">{children}</div>
 }

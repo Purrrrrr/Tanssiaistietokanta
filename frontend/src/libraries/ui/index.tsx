@@ -22,7 +22,7 @@ export { Tab, Tabs } from './Tabs'
 export * from './toaster'
 export type { Color } from './types'
 export { useResizeObserver } from './utils/useResizeObserver'
-export { H2, HTMLTable, SectionCard } from '@blueprintjs/core'
+export { HTMLTable } from '@blueprintjs/core'
 
 export const Markdown = React.lazy(() => import('./Markdown'))
 
@@ -34,6 +34,10 @@ export type Intent = 'none' | 'primary' | 'success' | 'warning' | 'danger';
 interface CardProps extends Omit<HTMLDivProps, 'onClick'> {
   noPadding?: boolean
   marginClass?: string
+}
+
+export function H2({ children, className }: { children: React.ReactNode, className?: string }) {
+  return <h2 className={classNames(className ?? 'my-2', 'font-bold text-lg')}>{children}</h2>
 }
 
 export function Card({ className, noPadding, marginClass, ...props }: CardProps) {

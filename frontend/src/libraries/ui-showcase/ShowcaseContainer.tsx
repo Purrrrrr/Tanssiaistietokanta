@@ -3,7 +3,7 @@ import { useId, useState } from 'react'
 import { PropDef, Showcase } from './types'
 
 import { Switch, TextInput } from 'libraries/formsV2/components/inputs'
-import { Card, CssClass } from 'libraries/ui'
+import { Card, CssClass, H2 } from 'libraries/ui'
 
 export function ShowcaseContainer<P extends Record<string, unknown>>({ title, props, render}: Showcase<P>) {
   const [propsValue, setPropsValue] = useShowcaseState(props)
@@ -21,7 +21,7 @@ export function ShowcaseContainer<P extends Record<string, unknown>>({ title, pr
   )
 
   return <Card>
-    <h2>{title}</h2>
+    <H2>{title}</H2>
     <div className="flex justify-between items-center">
       <div className="p-2">{render(propsValue)}</div>
       {fields.length > 0 && <div className="p-2 pl-7 border-l-1 border-stone-300">{fields}</div>}

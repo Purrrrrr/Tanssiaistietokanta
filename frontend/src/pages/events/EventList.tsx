@@ -2,7 +2,7 @@ import {useDeleteEvent, useEvents} from 'services/events'
 import {AdminOnly} from 'services/users'
 
 import { useFormatDate } from 'libraries/i18n/dateTime'
-import {Link} from 'libraries/ui'
+import {H2, Link} from 'libraries/ui'
 import ItemList from 'libraries/ui/ItemList'
 import { LoadingState } from 'components/LoadingState'
 import {PageTitle} from 'components/PageTitle'
@@ -24,7 +24,7 @@ export default function EventList() {
     <AdminOnly>
       <p>{t('youcanEditDancesIn')} <Link to="/dances">{t('danceDatabaseLinkName')}</Link></p>
     </AdminOnly>
-    <h2>{t('danceEvents')}</h2>
+    <H2>{t('danceEvents')}</H2>
     <ItemList columns="grid-cols-[1fr_minmax(min(300px,30%),max-content)_max-content] gap-x-4">
       {events.map(event =>
         <ItemList.Row key={event._id}>

@@ -141,11 +141,11 @@
     * Tab, Tabs
       * basic element
     * Icon (half-way done)
-    SectionCard
-    H2
+  * SectionCard
+  * H2
+    HTMLTable
     Input
     FormGroup
-    HTMLTable
     Check todo markings in Button.tsx or other
     
   Teacher/people database

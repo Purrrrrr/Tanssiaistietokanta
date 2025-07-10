@@ -3,7 +3,7 @@ import { Link as LinkIcon } from '@blueprintjs/icons'
 import {Dance, DanceWithEvents} from 'types'
 
 import {MarkdownEditor, MarkdownEditorProps, SyncStatus } from 'libraries/forms'
-import {Button, H2, RegularLink} from 'libraries/ui'
+import {Button, H2} from 'libraries/ui'
 import { useVersionedName } from 'components/versioning/VersionedPageTitle'
 import {VersionSidebarToggle} from 'components/versioning/VersionSidebarToggle'
 import { ColoredTag } from 'components/widgets/ColoredTag'
@@ -13,24 +13,25 @@ import { useT } from 'i18n'
 import { Field, Form, Input, useDanceEditorState, useOnChangeFor } from './DanceForm'
 import { DanceIsUsedIn } from './DanceIsUsedIn'
 import { DanceLink, danceVersionLink } from './DanceLink'
+import DanceWikiPreview from './DanceWikiPreview'
 import { DeleteDanceButton } from './DeleteDanceButton'
 import { WikipageSelector } from './WikipageSelector'
-import DanceWikiPreview from './DanceWikiPreview'
 
 interface DanceEditorProps {
   dance: DanceWithEvents
-  titleComponent?: React.JSXElementConstructor<{className?: string, children: React.ReactNode}> | 'h1'
+  titleComponent?: 'h2' | 'h1'
   onDelete?: () => unknown
   showLink?: boolean
   showVersionHistory?: boolean
 }
 
-export function DanceEditor({dance, onDelete, showLink, showVersionHistory, titleComponent: Title = H2} : DanceEditorProps) {
+export function DanceEditor({dance, onDelete, showLink, showVersionHistory, titleComponent = 'h2'} : DanceEditorProps) {
   const t = useT('components.danceEditor')
   const {formProps, state} = useDanceEditorState(dance)
+  const Title = titleComponent === 'h2' ? H2 : 'h1'
 
   return <Form {...formProps}>
-    <div className="flex flex-wrap gap-3.5 items-center">
+    <div className="flex flex-wrap gap-3.5 items-center mb-2">
       <Title className="m-0">
         {useVersionedName(dance.name, dance._versionId ? dance._versionNumber : null)}
       </Title>

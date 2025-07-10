@@ -4,7 +4,7 @@ import { Error } from '@blueprintjs/icons'
 
 import {socket} from 'backend/feathers'
 
-import {Button, ColorClass, GlobalSpinner} from 'libraries/ui'
+import {Button, ColorClass, GlobalSpinner, H2} from 'libraries/ui'
 import {useT, useTranslation} from 'i18n'
 
 const connectionProblemMessageTimeout = 5000
@@ -89,7 +89,7 @@ export function LoadingState<Variables>({loading, error, refetch} : LoadingState
   if (error) {
     return <div className={`flex flex-col gap-3 justify-center items-center h-full ${ColorClass.textMuted}`}>
       <Error className="text-gray-400" size={48} />
-      <h2>{t('errorMessage')}</h2>
+      <H2>{t('errorMessage')}</H2>
       <p>{error.message}</p>
       {refetch &&
         <Button

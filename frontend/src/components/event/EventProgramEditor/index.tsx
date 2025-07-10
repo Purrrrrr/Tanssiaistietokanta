@@ -5,7 +5,7 @@ import { Cross } from '@blueprintjs/icons'
 import {Event} from 'types'
 
 import {ActionButton as Button, DragHandle, ListEditorContext, SyncStatus} from 'libraries/forms'
-import {Card, ColorClass, HTMLTable, Tab, Tabs} from 'libraries/ui'
+import {Card, ColorClass, H2, HTMLTable, Tab, Tabs} from 'libraries/ui'
 import { DanceProgramChooser } from 'components/event/DanceProgramChooser'
 import {
   DanceProgramPath,
@@ -114,9 +114,9 @@ function IntroductoryInformation() {
   if (infos.length === 0) return null
 
   return <Card marginClass="my-4" noPadding className="min-w-fit">
-    <h2 className="px-2.5 py-1 font-bold text-lg bg-gray-50 TODO">
+    <H2 className="px-2.5 py-1 bg-gray-50">
       <span>{t('titles.introductoryInformation')}</span>
-    </h2>
+    </H2>
     <ProgramListEditor path="introductions" />
   </Card>
 }
@@ -126,9 +126,9 @@ const DanceSetEditor = React.memo(function DanceSetEditor({itemIndex, dragHandle
 
   return <Card marginClass="my-4" noPadding className="min-w-fit" id={id}>
     <div className="flex flex-wrap justify-end px-2.5 py-1 bg-gray-50">
-      <h2 className="grow font-bold text-lg TODO">
+      <H2 className="grow">
         <DanceSetNameEditor itemIndex={itemIndex} />
-      </h2>
+      </H2>
       {dragHandle}
       <RemoveItemButton path="danceSets" index={itemIndex} className="delete" text={useTranslation('components.eventProgramEditor.buttons.removeDanceSet')} />
     </div>

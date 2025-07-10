@@ -15,7 +15,7 @@ export function GlobalSpinner({loading, timeout, connectionTimeoutMessage}) {
       timeout && 'bg-white rounded-2xl w-fit p-4 shadow-lg shadow-black/20',
     )}>
       <img className="h-15 sepia-50" src="/loading.gif" />
-      {timeout && <h2 className={ColorClass.textMuted}>{connectionTimeoutMessage}</h2>}
+      {timeout && <h2 className={ColorClass.textMuted+' my-2 font-bold text-lg'}>{connectionTimeoutMessage}</h2>}
     </div>
   </div>
 }

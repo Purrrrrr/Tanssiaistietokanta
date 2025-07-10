@@ -3,7 +3,7 @@ import { Fragment } from 'react'
 import type { VersionCalendar, VersionSidebarProps } from './types'
 
 import { useFormatDate, useFormatTime } from 'libraries/i18n/dateTime'
-import { Link } from 'libraries/ui'
+import { H2, Link } from 'libraries/ui'
 import SideBar from 'components/SideBar'
 import { useT, useTranslation } from 'i18n'
 
@@ -28,7 +28,7 @@ export default function VersionChooser({onClose, name, entityId: id, versionId, 
   return <SideBar>
     <div className="version-chooser">
       <button aria-label={useTranslation('common.close')} className="close" onClick={onClose}>✖</button>
-      <h2>{name} - {T('versionHistory')}</h2>
+      <H2>{name} - {T('versionHistory')}</H2>
       <VersionNavigation versions={versions} versionId={versionId} toVersionLink={toLink} />
       <div className="versions">
         <h3>{T('now')}</h3>

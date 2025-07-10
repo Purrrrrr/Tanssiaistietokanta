@@ -11,7 +11,7 @@ import {sortDances, usePatchDance} from 'services/dances'
 import {useCallbackOnEventChanges} from 'services/events'
 
 import {formFor, patchStrategy, Switch, SyncStatus, useAutosavingState} from 'libraries/forms'
-import {Button, Markdown, showToast} from 'libraries/ui'
+import {Button, H2, Markdown, showToast} from 'libraries/ui'
 import { InstructionEditor } from 'components/dance/DanceEditor'
 import { WikipageSelector } from 'components/dance/WikipageSelector'
 import {LoadingState} from 'components/LoadingState'
@@ -143,7 +143,7 @@ function InstructionsForDance({dance, showShortInstructions} : {dance: Dance, sh
   const value = dance[field] ?? ''
 
   return <div className={`dance-instructions-dance ${value.trim() !== '' ? 'not-empty' : 'empty'}`}>
-    <h2>
+    <H2>
       {dance.name}
       <Button
         color="primary"
@@ -152,7 +152,7 @@ function InstructionsForDance({dance, showShortInstructions} : {dance: Dance, sh
         aria-label={useTranslation(editorOpen ? 'common.closeEditor' : 'common.edit')}
         onClick={() => setEditorOpen(!editorOpen)}
       />
-    </h2>
+    </H2>
     <div className={field}>
       {editorOpen
         ? <DanceFieldEditor dance={dance} field={field} />
@@ -201,9 +201,9 @@ function WorkshopDetails({workshop}: {workshop: Workshop}) {
   const formatDateTime = useFormatDateTime()
 
   return <div className="workshop">
-    <h2>
+    <H2>
       {name}
-    </h2>
+    </H2>
     <p className="description">{description}</p>
     {instanceSpecificDances
       ? instances.map(instance =>
