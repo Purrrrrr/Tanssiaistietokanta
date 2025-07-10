@@ -39,28 +39,46 @@ export function IntroductoryInformation() {
   const infos = useValueAt('introductions.program')
   if (infos.length === 0) return null
 
-  return <Card marginClass="my-4" noPadding className="min-w-fit">
-    <H2 className="px-2.5 py-1 bg-gray-50">
-      <span>{t('titles.introductoryInformation')}</span>
-    </H2>
+  return <DanceSetCard title={t('titles.introductoryInformation')}>
     <ProgramListEditor path="introductions" />
-  </Card>
+  </DanceSetCard>
 }
 
 export const DanceSetEditor = React.memo(function DanceSetEditor({itemIndex, dragHandle} : {itemIndex: number, dragHandle: DragHandle}) {
   const id = useValueAt(`danceSets.${itemIndex}._id`)
 
-  return <Card marginClass="my-4" noPadding className="min-w-fit" id={id}>
-    <div className="flex flex-wrap justify-end px-2.5 py-1 bg-gray-50">
-      <H2 className="grow">
-        <DanceSetNameEditor itemIndex={itemIndex} />
-      </H2>
+  return <DanceSetCard
+    id={id}
+    title={<DanceSetNameEditor itemIndex={itemIndex} />}
+    toolbar={<>
       {dragHandle}
-      <RemoveItemButton path="danceSets" index={itemIndex} className="delete" text={useTranslation('components.eventProgramEditor.buttons.removeDanceSet')} />
-    </div>
+      <RemoveItemButton
+        path="danceSets"
+        index={itemIndex}
+        text={useTranslation('components.eventProgramEditor.buttons.removeDanceSet')}
+      />
+    </>}
+  >
     <ProgramListEditor path={`danceSets.${itemIndex}`} />
-  </Card>
+  </DanceSetCard>
 })
+
+function DanceSetCard({ id, children, title, toolbar}: {
+  id?: string
+  children: React.ReactNode
+  title: React.ReactNode
+  toolbar?: React.ReactNode
+}) {
+  return <Card marginClass="my-4" noPadding className="min-w-fit" id={id}>
+    <div className="flex flex-wrap px-2.5 py-1 bg-gray-50">
+      <H2 className="grow">
+        {title}
+      </H2>
+      {toolbar}
+    </div>
+    {children}
+  </Card>
+}
 
 function ProgramListEditor({path}: {path: ProgramSectionPath}) {
   const t = useT('components.eventProgramEditor')
@@ -113,8 +131,8 @@ function ProgramListEditor({path}: {path: ProgramSectionPath}) {
         {intervalMusicDuration > 0 && <IntervalMusicEditor danceSetPath={path as DanceSetPath} />}
       </tbody>
       <tfoot>
-        <tr className="eventProgramFooter">
-          <td colSpan={2} className="add-spacing">
+        <tr>
+          <td colSpan={2} className="p-1.5">
             <ProgramItemCounters program={programRow.program} />
             {isIntroductionsSection ||
               <Button
@@ -133,10 +151,12 @@ function ProgramListEditor({path}: {path: ProgramSectionPath}) {
               />
             }
             {isIntroductionsSection ||
-              <IntervalMusicSwitch inline label={t('fields.intervalMusicAtEndOfSet')} path={`${path}.intervalMusic` as `danceSets.${number}.intervalMusic`} />
+              <span className="ms-3">
+                <IntervalMusicSwitch inline label={t('fields.intervalMusicAtEndOfSet')} path={`${path}.intervalMusic` as `danceSets.${number}.intervalMusic`} />
+              </span>
             }
           </td>
-          <td colSpan={2} className="add-spacing">
+          <td colSpan={2} className="p-1.5">
             <DanceSetDuration program={program} intervalMusicDuration={intervalMusicDuration} />
           </td>
         </tr>
@@ -185,13 +205,13 @@ const ProgramItemEditor = React.memo(function ProgramItemEditor({dragHandle, pat
         <ProgramDetailsEditor path={itemPath} />
       </div>
     </td>
-    <td className={editableDuration ? '' : 'add-spacing'}>
+    <td className={editableDuration ? '' : 'p-1.5'}>
       {editableDuration
         ? <Field label={t('fields.eventProgram.duration')} inline labelStyle="hidden" path={`${itemPath}.item.duration`} component={DurationField} />
         : <Duration value={__typename !== 'RequestedDance' ? item.item.duration : 0} />
       }
     </td>
-    <td>
+    <td className="whitespace-nowrap text-right">
       {dragHandle}
       <RemoveItemButton path={path} index={itemIndex} title={t('buttons.remove')} icon={<Cross />} className="deleteItem" />
     </td>
@@ -231,10 +251,10 @@ function IntervalMusicEditor({danceSetPath}: {danceSetPath: DanceSetPath}) {
   const durationPath = `${danceSetPath}.intervalMusic.duration` as const
   const onSetIntervalMusic = useOnChangeFor(intervalMusicPath)
 
-  return <tr className="intervalMusicDuration">
+  return <tr>
     <td><ProgramTypeIcon type="IntervalMusic" className="size-7" /></td>
     <td>
-      <div className="flex gap-2">
+      <div className="flex gap-2 items-center ps-2.5">
         {t('programTypes.IntervalMusic')}
         <Field
           label={t('dance')}
@@ -248,7 +268,7 @@ function IntervalMusicEditor({danceSetPath}: {danceSetPath: DanceSetPath}) {
     <td>
       <Field label={t('fields.intervalMusicDuration')} inline labelStyle="hidden" path={durationPath} component={DurationField} />
     </td>
-    <td>
+    <td className="text-right">
       <Button title={t('buttons.remove')} color="danger" icon={<Cross />} onClick={() => onSetIntervalMusic(null)} className="delete" />
     </td>
   </tr>
