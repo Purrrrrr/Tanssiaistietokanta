@@ -133,8 +133,8 @@
   * Breadcrumbs
   * Card
   * separate Icon components by Icon
-    Classes for headings with margin
-    Icon loading components
+  * Classes for headings with margin
+  * Icon loading components
     * AnchorButton
     * Toast
     * Callout
