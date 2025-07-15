@@ -18,7 +18,7 @@ export function mergeConflictingStrings(
   const { conflict, result } = merge3(server, original, local, {stringSeparator: wordBoundary})
 
   if (!conflict) {
-    const value = result.join()
+    const value = result.join('')
     return {
       state: 'MODIFIED_LOCALLY',
       modifications: value,
