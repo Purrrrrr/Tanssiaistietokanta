@@ -1,16 +1,8 @@
-import React, {useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react'
+import React, {useEffect, useLayoutEffect, useRef, useState} from 'react'
+import { Cross } from '@blueprintjs/icons'
 import classNames from 'classnames'
 
-import {Button, Color} from 'libraries/ui'
-
-const Classes = {
-  DIALOG_HEADER: 'bp5-dialog-header',
-  HEADING: 'bp5-dialog',
-  DIALOG_BODY: 'bp5-dialog',
-  DIALOG_FOOTER: 'bp5-dialog-footer',
-  ALERT_CONTENTS: 'bp5-alert-contents',
-  ALERT_FOOTER: 'bp5-alert-footer',
-}
+import {Button} from 'libraries/ui'
 
 type DialogProps = {
   isOpen: boolean,
@@ -67,9 +59,9 @@ export function Dialog({isOpen, onClose, children, title, className, showCloseBu
   >
     {(isOpen || shouldrender) &&
       <>
-        <div className={Classes.DIALOG_HEADER}>
-          <h1 style={{fontSize: 18}} className={Classes.HEADING}>{title}</h1>
-          {showCloseButton && <Button aria-label={closeButtonLabel} minimal onClick={onClose} ref={closeButton}>❌</Button>}
+        <div className="flex justify-between items-center p-2 mb-3 bg-gray-50 border-gray-300 border-b-1">
+          <h1 className="text-base reset">{title}</h1>
+          {showCloseButton && <Button aria-label={closeButtonLabel} minimal onClick={onClose} ref={closeButton}><Cross /></Button>}
         </div>
         <div className="overflow-auto max-h-[90dvh]">
           {children}
@@ -80,41 +72,10 @@ export function Dialog({isOpen, onClose, children, title, className, showCloseBu
 }
 
 Dialog.Body = function DialogBody({className, ...props}: React.HTMLAttributes<HTMLDivElement>) {
-  const cls = `${className ?? ''} ${Classes.DIALOG_BODY}`
-  return <div className={cls} {...props} />
+  return <div className={classNames(className, 'px-3 break-words')} {...props} />
 }
-Dialog.Footer = function DialogBody({className, ...props}: React.HTMLAttributes<HTMLDivElement>) {
-  const cls = `${className ?? ''} ${Classes.DIALOG_FOOTER}`
-  return <div className={cls} {...props} />
-}
-
-interface AlertProps {
-  cancelButtonText?: string;
-  children: React.ReactNode;
-  confirmButtonText?: string;
-  title: string
-  intent?: Color
-  isOpen: boolean;
-  onCancel?(evt?: React.SyntheticEvent<HTMLElement>): void;
-  onConfirm?(evt?: React.SyntheticEvent<HTMLElement>): void;
-  onClose?(confirmed: boolean, evt?: React.SyntheticEvent<HTMLElement>): void;
-}
-
-export function Alert({isOpen, title, intent, confirmButtonText, cancelButtonText, children, onCancel, onConfirm, onClose} : AlertProps & {children: React.ReactNode, title: string}) {
-  const doCancel = useCallback((e) => {onCancel?.(); onClose?.(false, e)}, [onCancel, onClose])
-  const doConfirm = useCallback((e) => {onConfirm?.(); onClose?.(true, e)}, [onConfirm, onClose])
-
-  return <Dialog isOpen={isOpen} title={title} onClose={doCancel} showCloseButton={false}>
-    <div className={Classes.DIALOG_BODY}>
-      <div className={Classes.ALERT_CONTENTS}>{children}</div>
-    </div>
-    <div className={Classes.DIALOG_FOOTER}>
-      <div className={Classes.ALERT_FOOTER}>
-        <Button color={intent} text={confirmButtonText} onClick={doConfirm} />
-        {cancelButtonText && <Button text={cancelButtonText} onClick={doCancel} />}
-      </div>
-    </div>
-  </Dialog>
+Dialog.Footer = function DialogFooter({className = 'flex gap-3 justify-between items-center', ...props}: React.HTMLAttributes<HTMLDivElement>) {
+  return <div className={classNames(className, 'bg-gray-50 mt-3 px-3 py-2 border-t-1 border-gray-300')} {...props} />
 }
 
 export function getFocusableElements(container: HTMLElement) {

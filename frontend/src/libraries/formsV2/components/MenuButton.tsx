@@ -1,8 +1,7 @@
 import { MouseEvent, ReactNode, useEffect, useId, useRef, useState } from 'react'
 import { DoubleCaretVertical } from '@blueprintjs/icons'
 
-import { getFocusableElements } from 'libraries/dialog'
-import { Dropdown, DropdownContainer } from 'libraries/overlays'
+import { Dropdown, DropdownContainer, getFocusableElements } from 'libraries/overlays'
 import { Button, ButtonProps } from 'libraries/ui'
 
 interface MenuButtonProps {

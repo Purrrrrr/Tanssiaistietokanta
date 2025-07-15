@@ -136,7 +136,7 @@ body {
   grid-area: footer;
 }
 
-h1 {
+h1:not(.reset) {
   font-size: 2em;
   font-weight: bold;
   margin-block: .67em;

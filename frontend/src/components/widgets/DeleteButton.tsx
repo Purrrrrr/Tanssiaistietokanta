@@ -1,7 +1,7 @@
 import {useState} from 'react'
 import { Trash } from '@blueprintjs/icons'
 
-import {Alert} from 'libraries/dialog'
+import {Alert} from 'libraries/overlays'
 import {Button, ButtonProps} from 'libraries/ui'
 import {useT} from 'i18n'
 
@@ -30,7 +30,7 @@ export function DeleteButton({onDelete, iconOnly, disabled, minimal, className, 
     />
     <Alert title={text} isOpen={showDialog} onClose={() => setShowDialog(false)}
       onConfirm={onDelete}
-      intent="danger"
+      color="danger"
       cancelButtonText={t('cancel')}
       confirmButtonText={t('delete')}>
       {confirmText}

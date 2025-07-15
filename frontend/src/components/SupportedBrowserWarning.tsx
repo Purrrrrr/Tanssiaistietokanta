@@ -1,6 +1,6 @@
 import {useState} from 'react'
 
-import {Alert} from 'libraries/dialog'
+import {Alert} from 'libraries/overlays'
 import {useT} from 'i18n'
 
 const browsersLinks = {
@@ -23,7 +23,7 @@ export function SupportedBrowserWarning() {
       setShowDialog(false)
       window.open('https://www.mozilla.org/firefox/browsers/', '__blank')
     }}
-    intent="primary"
+    color="primary"
     cancelButtonText={t('continueAnyWay')}
     confirmButtonText={t('downloadBetterBrowser')}>
     <p>{t('siteMayNotWork')}</p>
