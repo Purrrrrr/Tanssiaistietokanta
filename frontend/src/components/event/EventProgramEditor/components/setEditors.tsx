@@ -70,7 +70,7 @@ function DanceSetCard({ id, children, title, toolbar}: {
   toolbar?: React.ReactNode
 }) {
   return <Card marginClass="my-4" noPadding className="min-w-fit" id={id}>
-    <div className="flex flex-wrap px-2.5 py-1 bg-gray-50">
+    <div className="flex flex-wrap py-1 px-2.5 bg-gray-50">
       <H2 className="grow">
         {title}
       </H2>
@@ -211,7 +211,7 @@ const ProgramItemEditor = React.memo(function ProgramItemEditor({dragHandle, pat
         : <Duration value={__typename !== 'RequestedDance' ? item.item.duration : 0} />
       }
     </td>
-    <td className="whitespace-nowrap text-right">
+    <td className="text-right whitespace-nowrap">
       {dragHandle}
       <RemoveItemButton path={path} index={itemIndex} title={t('buttons.remove')} icon={<Cross />} className="deleteItem" />
     </td>

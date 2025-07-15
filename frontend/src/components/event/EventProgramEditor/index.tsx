@@ -72,7 +72,7 @@ function MainEditor({ program }: {program: EventProgramSettings }) {
   const {danceSets, introductions} = program
 
   return <section>
-    <div className="flex flex-wrap items-start justify-between gap-2">
+    <div className="flex flex-wrap gap-2 justify-between items-start">
       <Field label={t('fields.pauseDuration')} inline path="pauseBetweenDances" component={DurationField} />
       {introductions.program.length === 0 && <AddIntroductionButton />}
     </div>

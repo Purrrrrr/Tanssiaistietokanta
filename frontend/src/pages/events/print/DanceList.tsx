@@ -38,7 +38,7 @@ function DanceList({eventId}) {
         {program.danceSets.map(
           ({title, program}, key) => {
             return <AutosizedSection key={key} className="section">
-              <h2 className="font-bold text-3xl mb-4">{title}</h2>
+              <h2 className="mb-4 text-3xl font-bold">{title}</h2>
               {program
                 .map(row => row.item)
                 .filter(item => item.__typename !== 'EventProgram' || item.showInLists)

@@ -246,14 +246,14 @@ function WorkshopSummary({workshop}: {workshop: Workshop}) {
     {instanceSpecificDances
       ? instances.map(instance =>
         <React.Fragment key={instance._id}>
-          <h3 className="font-bold text-base my-1">{formatDateTime(new Date(instance.dateTime))}</h3>
+          <h3 className="my-1 text-base font-bold">{formatDateTime(new Date(instance.dateTime))}</h3>
           <p>
             {t('dances')} : {instance?.dances?.map(d => d.name)?.join(', ')}
           </p>
         </React.Fragment>
       )
       : <>
-        <h3 className="font-bold text-base my-1">{instances.map(instance => formatDateTime(new Date(instance.dateTime))).join(', ')}</h3>
+        <h3 className="my-1 text-base font-bold">{instances.map(instance => formatDateTime(new Date(instance.dateTime))).join(', ')}</h3>
         <p>{t('dances') + ': '}{instances[0]?.dances?.map(d => d.name)?.join(', ')}</p>
       </>
     }

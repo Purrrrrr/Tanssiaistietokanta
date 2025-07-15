@@ -25,13 +25,13 @@ export default function DanceWikiPreview({ dance }: DanceWikiPreviewProps) {
   if (!wikipageName || !wikipage) return null
   const hasInstructions = wikipage._fetchedAt && wikipage.instructions
 
-  return <div className="mb-5 p-2 bg-gray-200/80 rounded-sm">
-    <div className="flex items-center gap-10">
+  return <div className="p-2 mb-5 rounded-sm bg-gray-200/80">
+    <div className="flex gap-10 items-center">
       <div>
         {t('danceInDanceWiki')}:
         <LinkToDanceWiki className="ms-2" page={wikipageName} />
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex gap-2 items-center">
         {wikipage._fetchedAt && t('danceFetched', { date: formatDateTime(wikipage._fetchedAt) })}
         <FetchWikipageButton page={wikipageName} />
         {hasInstructions && <Button
@@ -45,7 +45,7 @@ export default function DanceWikiPreview({ dance }: DanceWikiPreviewProps) {
     </div>
     {hasInstructions && <Collapse isOpen={open}>
 
-      <div className="mt-2 p-2 bg-white border-1 border-gray-300 max-h-120 overflow-auto">
+      <div className="overflow-auto p-2 mt-2 bg-white border-gray-300 border-1 max-h-120">
         <Markdown children={dance.wikipage?.instructions ?? ''} options={options} />
       </div>
     </Collapse>

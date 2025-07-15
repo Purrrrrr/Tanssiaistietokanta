@@ -272,5 +272,5 @@ function LinkToSlide({children, id}: LinkToSlideProps) {
 }
 
 function SectionCard({ children }: { children: ReactNode}) {
-  return <div className="not-last:border-b-1 border-gray-300 p-5">{children}</div>
+  return <div className="p-5 border-gray-300 not-last:border-b-1">{children}</div>
 }

@@ -69,7 +69,7 @@ export function WorkshopEditor({workshop: workshopInDatabase, reservedAbbreviati
       </div>
       <div className="grow basis-75">
         {formProps.value.instanceSpecificDances || <DanceList instanceIndex={0} bigTitle />}
-        <h3 className="font-bold text-base my-2">{t('instances')}</h3>
+        <h3 className="my-2 text-base font-bold">{t('instances')}</h3>
         <ListField<'instances', Instance[], {beginDate: string, endDate: string}>
           label={t('instances')}
           labelStyle="hidden"
@@ -154,7 +154,7 @@ function DanceList({instanceIndex, bigTitle}: {instanceIndex: number, bigTitle?:
   const t = useT('components.workshopEditor')
   const dances = useValueAt(`instances.${instanceIndex}.dances`)
   return <>
-    {bigTitle && <h3 className="font-bold text-base my-2">{t('dances')}</h3>}
+    {bigTitle && <h3 className="my-2 text-base font-bold">{t('dances')}</h3>}
     <ListField
       labelStyle={bigTitle ? 'hidden' : 'above'}
       label={t('dances')}
