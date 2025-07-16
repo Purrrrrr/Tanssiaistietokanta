@@ -1,8 +1,9 @@
 import React, { ReactNode } from 'react'
 import { Cross, Link as LinkIcon } from '@blueprintjs/icons'
-import classNames from 'classnames'
 
-import {Dance} from 'types'
+import { Dance } from 'types'
+
+import { useDance } from 'services/dances'
 
 import {DragHandle, MarkdownEditor, SyncState, SyncStatus} from 'libraries/forms'
 import {Callout, H2, Link} from 'libraries/ui'
@@ -222,8 +223,7 @@ function ProgramItemEditor({path}: {path: ProgramItemPath}) {
   switch(item.__typename) {
     case 'Dance':
       return <SectionCard>
-        {/* TODO: fix types */}
-        <DanceEditor dance={item as Dance} />
+        <DanceEditor id={item._id} />
       </SectionCard>
     case 'RequestedDance':
       return null
@@ -238,7 +238,14 @@ function ProgramItemEditor({path}: {path: ProgramItemPath}) {
   }
 }
 
-function DanceEditor({dance}: {dance: Dance}) {
+function DanceEditor({id}: {id: string}) {
+  const result = useDance({id})
+  if (!result.data?.dance) return null
+
+  return <DanceEditorForm dance={result.data.dance} />
+}
+
+function DanceEditorForm({ dance }: { dance: Dance}){
   const t = useT('components.danceWikiPreview')
   const label = useT('domain.dance')
   const { formProps, state } = useDanceEditorState(dance)
