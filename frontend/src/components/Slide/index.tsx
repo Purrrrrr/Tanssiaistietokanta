@@ -57,12 +57,12 @@ export function Slide({id, title, type, children, footer, next, navigation, slid
   </section>
 }
 
-function NextSlide({next}: {next: SlideLink, linkComponent?: LinkComponentType}) {
+function NextSlide({next, linkComponent}: {next: SlideLink, linkComponent?: LinkComponentType}) {
   const t = useT('components.slide')
   return <section className="slide-next-slide">
     <div className="slide-content-area">
       {t('afterThis')}:{' '}
-      <LinkToSlide {...next} />
+      <LinkToSlide {...next} component={linkComponent} />
     </div>
   </section>
 }

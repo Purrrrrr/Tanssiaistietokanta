@@ -61,7 +61,7 @@ export function MissingDanceInstructionsWarning({program}: {program: EventProgra
             <span>
               {' '}(
               {t('teachedInSet')}
-              {dance.teachedIn.map(workshop => <ColoredTag tag={workshop.workshop.abbreviation ?? undefined} title={workshop.workshop.name} />)}
+              {dance.teachedIn.map(workshop => <ColoredTag key={workshop._id} tag={workshop.workshop.abbreviation ?? undefined} title={workshop.workshop.name} />)}
               )
             </span>
           }

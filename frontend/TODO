@@ -117,13 +117,13 @@
   * Clean up
     Add libraries/ui stuff
     * AutosizedSection
+    * Dialog + alert
       NonIdealState
       Global loading indicator
       Collapse
       TagButton
       AnchorButton
       Breadcrumbs?
-      Dialog?
 
   Blueprintjs migration
   * Tag

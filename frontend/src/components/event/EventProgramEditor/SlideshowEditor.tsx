@@ -84,7 +84,6 @@ function SlidePreviews({slides, currentSlide, eventProgram}: SlideNavigationProp
       const slide = document.getElementById(`slide-link-${currentSlide.id}`) //?.scrollIntoView({ behavior: 'smooth'})
       if (!div || !slide) return
 
-      console.log(slide.offsetLeft, slide.offsetWidth, div.offsetWidth, slide.offsetLeft + slide.offsetWidth / 2 - div.offsetWidth / 2)
       div.scrollTo({ left: slide.offsetLeft + slide.offsetWidth / 2 - div.offsetWidth / 2, behavior: 'smooth'})
     },
     [currentSlide.id],
@@ -152,12 +151,14 @@ const SlideLink = React.memo(function SlideLink(
     <SlideContainer className="grow inert" color="#eee">
       {placeholder
         ? <EventSlidePreview {...slide} eventProgram={eventProgram} />
-        : <EventSlide {...slide} eventProgram={eventProgram} linkComponent="a" />
+        : <EventSlide {...slide} eventProgram={eventProgram} linkComponent={PreviewLink} />
       }
     </SlideContainer>
     <p className="slide-link-title">{slide.title}</p>
   </Link>
 }, (prevProps, newProps) => prevProps.current === newProps.current && newProps.placeholder === prevProps.placeholder && (newProps.placeholder || areSlideBoxPropsEqual(prevProps, newProps)))
+
+const PreviewLink = ({ children }: { children: React.ReactNode }) => <span>{children}</span>
 
 interface SlideBoxProps {
   eventProgram: EventProgramSettings

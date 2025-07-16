@@ -26,7 +26,7 @@ export function EventSlide(props: WithEventProgram<EventSlideProps> & { linkComp
       />
     }
     case 'danceSet':
-      return <DanceSetSlide {...props} eventProgram={eventProgram} />
+      return <DanceSetSlide {...props} eventProgram={eventProgram} linkComponent={linkComponent} />
     case 'intervalMusic':
       return <Slide {...intervalMusicSlideProps(props)} linkComponent={linkComponent} />
     case 'programItem':
