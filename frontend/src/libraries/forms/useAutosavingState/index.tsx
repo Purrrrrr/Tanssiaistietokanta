@@ -1,4 +1,5 @@
-import {useCallback, useEffect, useState} from 'react'
+import {useCallback, useEffect, useRef, useState} from 'react'
+import equal from 'fast-deep-equal'
 
 import {MergeableObject, SyncState} from './types'
 import {NewValue, OnFormChangeHandler, StringPath, TypedStringPath, Version} from '../types'
@@ -6,7 +7,7 @@ import {NewValue, OnFormChangeHandler, StringPath, TypedStringPath, Version} fro
 import createDebug from 'utils/debug'
 
 import {FormProps} from '../Form'
-import {PatchStrategy} from './patchStrategies'
+import {jsonPatch, PatchStrategy} from './patchStrategies'
 import {useAutosavingStateReducer} from './reducer'
 
 const debug = createDebug('useAutoSavingState')
@@ -43,9 +44,15 @@ export function useAutosavingState<T extends MergeableObject, Patch>(
   const { serverState: originalData, serverStateTime, mergeResult, patchPending } = reducerState
   const { state: mergeState, modifications, nonConflictingModifications, conflicts } = mergeResult
   const state = hasErrors ? 'INVALID' : mergeState
+  const lastServerState = useRef<T>()
 
   useEffect(() => {
+    if (equal(serverState, lastServerState.current)) return
+    if (debug.enabled) {
+      debug('external modification diff', jsonPatch(lastServerState.current, serverState))
+    }
     dispatch({ type: 'EXTERNAL_MODIFICATION', serverState })
+    lastServerState.current = serverState
   }, [serverState, dispatch])
 
   useEffect(() => {
