@@ -96,6 +96,21 @@
 * Periodically fetch wikipages in the background
 * Remove dialog? It is not used anymore. At least remove the blueprint css for it
   
+  Ropecon 2025 post todo
+  * Actually hide items that are supposed to be hidden from lists
+    Better drag and drop somehow?
+    Fix slideshow preview and slideshow to be actually identical
+    Fonts in prints (settilistat different views)
+    Print scaling, add padding to fix
+    Check all prints
+    Better control of row+column count for cheatheet
+    Image support? Better stock slides??
+    Show dance in interval music
+    Option to show interval music in lists
+    Dance set title view seems unnecessary. Remove?
+    Maybe ability to set separate list name for items
+    Exporable dance settilista with links to dance wiki
+
   Ability to see more info about program item in editor
 
   Dance list category suggestions

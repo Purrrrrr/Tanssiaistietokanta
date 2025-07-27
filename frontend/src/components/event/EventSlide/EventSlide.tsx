@@ -136,6 +136,7 @@ function danceSetNavigation(danceSet?: DanceSet | null): SlideNavigation | undef
     items: danceSet.program.map(item => ({
       id: item._id,
       title: programItemContent(item.item).title,
+      hidden: item.item.__typename === 'EventProgram' && item.item.showInLists === false
     }))
   }
 }
