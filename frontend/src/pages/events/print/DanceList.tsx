@@ -3,8 +3,9 @@ import {useState} from 'react'
 import {backendQueryHook, graphql} from 'backend'
 import {useCallbackOnEventChanges} from 'services/events'
 
-import {RadioGroup} from 'libraries/forms'
+import {RadioGroup, Switch} from 'libraries/forms'
 import {AutosizedSection, Button} from 'libraries/ui'
+import { LinkToDanceWiki } from 'components/dance/DanceWikiPreview'
 import {LoadingState} from 'components/LoadingState'
 import PrintViewToolbar from 'components/widgets/PrintViewToolbar'
 import {useT} from 'i18n'
@@ -15,23 +16,27 @@ function DanceList({eventId}) {
   const t = useT('pages.events.danceList')
   const {program, workshops, loadingState} = useBallProgram(eventId)
   const [style, setStyle] = useState('default')
+  const [showLinks, setShowLinks] = useState(true)
 
   if (!program) return <LoadingState {...loadingState} />
 
   return <div className={`danceList ${style}`}>
     <PrintViewToolbar>
-      <RadioGroup
-        id="style"
-        inline
-        options={[
-          {value: 'default', label: 'Oletus'},
-          {value: 'three-columns', label: 'Rinnakkaiset setit'},
-          {value: 'large', label: 'Yksi setti per arkki'},
-        ]}
-        value={style}
-        onChange={setStyle}
-      />
-      <Button text={t('print')} onClick={() => window.print()} />
+      <div className="flex items-center gap-2">
+        <Switch id="showlinks" value={showLinks} onChange={setShowLinks} label={t('showLinks')} />
+        <RadioGroup
+          id="style"
+          inline
+          options={[
+            {value: 'default', label: t('style.default')},
+            {value: 'three-columns', label: t('style.three-columns')},
+            {value: 'large', label: t('style.large')},
+          ]}
+          value={style}
+          onChange={setStyle}
+        />
+        <Button text={t('print')} onClick={() => window.print()} />
+      </div>
     </PrintViewToolbar>
     <main>
       <PrintFooterContainer footer={<Footer workshops={workshops.filter(w => w.abbreviation)} />}>
@@ -43,7 +48,7 @@ function DanceList({eventId}) {
                 .map(row => row.item)
                 .filter(item => item.__typename !== 'EventProgram' || item.showInLists)
                 .map((item, i) =>
-                  <ProgramItem key={i} item={item} />
+                  <ProgramItem key={i} item={item} showLinks={showLinks} />
                 )}
             </AutosizedSection>
           }
@@ -65,18 +70,29 @@ function Footer({workshops}) {
   </>
 }
 
-function ProgramItem({item}) {
-  const teachedIn = (item.teachedIn ?? [])
-    .map(({workshop, instances}) => instances
-      ? `${workshop.abbreviation} ${instances.map(i => i.abbreviation).join('/')}`
-      : workshop.abbreviation
-    )
-    .filter(Boolean)
-    .join(', ')
-  return <p>
-    {item.name ?? <RequestedDance />}
-    {teachedIn && ` (${teachedIn})`}
-  </p>
+function ProgramItem({item, showLinks}: {item: BallProgramItem, showLinks: boolean}) {
+  switch (item.__typename) {
+    case 'RequestedDance':
+      return <p><RequestedDance /></p>
+    case 'EventProgram':
+      return <p>{item.name}</p>
+    case 'Dance': {
+      const teachedIn = item.teachedIn
+        .map(({workshop, instances}) => instances
+          ? `${workshop.abbreviation} ${instances.map(i => i.abbreviation).join('/')}`
+          : workshop.abbreviation
+        )
+        .filter(Boolean)
+        .join(', ')
+
+      return <p>
+        {showLinks && item.wikipageName
+          ? <LinkToDanceWiki page={item.wikipageName}>{item.name}</LinkToDanceWiki>
+          : item.name}
+        {teachedIn && ` (${teachedIn})`}
+      </p>
+    }
+  }
 }
 
 const RequestedDance = () => <>_________________________</>
@@ -113,6 +129,7 @@ query getDanceList($eventId: ID!) {
                 }
                 instances { abbreviation }
               }
+              wikipageName
             }
             ... on EventProgram {
               showInLists
@@ -135,5 +152,8 @@ function useBallProgram(eventId: string) {
   const {program = null, workshops = []} = data?.event ?? {}
   return {program, workshops, loadingState}
 }
+
+type BallProgram = ReturnType<typeof useBallProgram>
+type BallProgramItem = Exclude<BallProgram['program'], null>['danceSets'][number]['program'][number]['item']
 
 export default DanceList

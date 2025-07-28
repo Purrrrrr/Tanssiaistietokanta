@@ -327,7 +327,12 @@ export const fi = {
         danceName: 'Nimi',
       },
       danceList: {
-        showSideBySide: 'Näytä setit rinnakkain',
+        style: {
+          'default': 'Oletus',
+          'three-columns': 'Rinnakkaiset setit',
+          large: 'Yksi setti per arkki',
+        },
+        showLinks: 'Linkit tanssiwikiin',
         print: 'Tulosta',
         emptyLinesAreRequestedDances: 'Tyhjät rivit ovat toivetansseja.',
         workshopNameIsInParenthesis: 'Suluissa opetussetti',

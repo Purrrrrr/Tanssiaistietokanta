@@ -59,13 +59,15 @@ const options = {
   },
 }
 
-export function LinkToDanceWiki({ className, page }: { className?: string, page: string }) {
+export function LinkToDanceWiki({ className, page, children }: {
+  className?: string, page: string, children?: React.ReactNode
+}) {
   return <RegularLink
     className={className}
     target="_blank"
     href={`${danceWikiUrl}${page.replaceAll(' ', '_')}`}
   >
-    <LinkIcon /> {page}
+    {children ?? <><LinkIcon /> {page}</>}
   </RegularLink>
 }
 

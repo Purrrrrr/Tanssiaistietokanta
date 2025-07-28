@@ -98,8 +98,9 @@
   
   Ropecon 2025 post todo
   * Actually hide items that are supposed to be hidden from lists
+  * Fix links in dance set slide editor
+  * Settilista print with links to dance wiki
     Event program editor tabs should be links
-    Fix links in dance set slide editor
     Better navigation in slide editor: it's hard to find a specific slide
     Easier adding of slides in slide editor
     Better drag and drop somehow?
@@ -113,7 +114,6 @@
     Option to show interval music in lists
     Dance set title view seems unnecessary. Remove?
     Maybe ability to set separate list name for items
-    Exporable dance settilista with links to dance wiki
 
   Ability to see more info about program item in editor
 
