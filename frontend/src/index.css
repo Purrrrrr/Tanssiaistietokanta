@@ -65,7 +65,7 @@ body {
 #layout {
   --main-margin-size: 25px;
   --sidebar-size: 0px;
-  --main-size: min(100% - var(--sidebar-size), 1200px + var(--main-margin-size) * 2);
+  --main-size: min(100% - var(--sidebar-size), 1360px + var(--main-margin-size) * 2);
   --space: calc(100% - var(--main-size));
   --half-space: calc(var(--space) / 2);
   --right-space: calc(var(--half-space) - var(--sidebar-size));
