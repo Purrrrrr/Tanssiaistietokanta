@@ -62,8 +62,16 @@
 .qr-container + .qr-container:before {
   display: none;
 }
+.qr-container .svg-container {
+  width: var(--qr-size);
+  height: var(--qr-size);
+}
+.qr-container svg {
+  width: 100%;
+  height: 100%;
+}
 .qr-container .url {
   max-width: calc(var(--qr-size) * 1.2);
-  font-size: 80%;
+  font-size: calc(var(--qr-size) / 14 * var(--qr-font-size));
   overflow-wrap: anywhere;
 }
