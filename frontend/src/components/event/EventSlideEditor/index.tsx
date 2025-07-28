@@ -1,4 +1,5 @@
 import React, { ReactNode } from 'react'
+import { useParams } from 'react-router-dom'
 import { Cross, Link as LinkIcon } from '@blueprintjs/icons'
 
 import { Dance } from 'types'
@@ -275,7 +276,8 @@ interface LinkToSlideProps {
 }
 
 function LinkToSlide({children, id}: LinkToSlideProps) {
-  return <Link relative="path" to={`../${id}`}>{children}</Link>
+  const { slideId } = useParams()
+  return <Link relative="path" to={slideId ? `../${id}` : id}>{children}</Link>
 }
 
 function SectionCard({ children }: { children: ReactNode}) {

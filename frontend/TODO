@@ -98,6 +98,10 @@
   
   Ropecon 2025 post todo
   * Actually hide items that are supposed to be hidden from lists
+    Event program editor tabs should be links
+    Fix links in dance set slide editor
+    Better navigation in slide editor: it's hard to find a specific slide
+    Easier adding of slides in slide editor
     Better drag and drop somehow?
     Fix slideshow preview and slideshow to be actually identical
     Fonts in prints (settilistat different views)
