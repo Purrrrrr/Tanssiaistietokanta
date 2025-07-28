@@ -4,7 +4,7 @@ import { ChevronLeft, ChevronRight } from '@blueprintjs/icons'
 import classNames from 'classnames'
 import deepEquals from 'fast-deep-equal'
 
-import {Card, Link, Tab, Tabs} from 'libraries/ui'
+import {Card, Link} from 'libraries/ui'
 import { EventProgramSettings, Field } from 'components/event/EventProgramForm'
 import {EventSlide, EventSlidePreview, EventSlideProps, startSlideId, useEventSlides} from 'components/event/EventSlide'
 import { EventSlideEditor } from 'components/event/EventSlideEditor'
@@ -14,6 +14,7 @@ import {SlideStyleSelector} from 'components/widgets/SlideStyleSelector'
 import {useT} from 'i18n'
 
 import { MissingDanceInstructionsWarning } from './components'
+import { SlideChooser } from './components/SlideChooser'
 import { useLinkToSlide } from './useLinkToSlide'
 
 import 'components/Slide/slideStyles.scss'
@@ -34,7 +35,14 @@ export function SlideshowEditor({ program }: {program: EventProgramSettings}) {
 
   return <section className="slideshowEditor">
     <MissingDanceInstructionsWarning program={program} />
-    <Field label="" inline path="slideStyleId" component={SlideStyleSelector} componentProps={{text: t('fields.eventDefaultStyle')}} />
+    <div className="flex justify-between">
+      <SlideChooser
+        slides={slides}
+        currentSlide={deferredCurrentSlide}
+        onChoose={id => navigate(linkToSlide(id))}
+      />
+      <Field label="" inline path="slideStyleId" component={SlideStyleSelector} componentProps={{text: t('fields.eventDefaultStyle')}} />
+    </div>
     <SlideNavigation currentSlide={currentSlide} slideIndex={slideIndex} slides={slides} eventProgram={program} />
     <div {...swipeHandlers} className="slideEditors" style={{
       opacity: isStale ? 0 : 1,
@@ -48,20 +56,10 @@ export function SlideshowEditor({ program }: {program: EventProgramSettings}) {
 interface SlideNavigationProps {slideIndex: number, currentSlide: EventSlideProps, slides: EventSlideProps[], eventProgram: EventProgramSettings}
 
 function SlideNavigation(props: SlideNavigationProps) {
-  const {currentSlide, slides, slideIndex} = props
+  const {slides, slideIndex} = props
   const linkToSlide = useLinkToSlide()
-  const navigate = useNavigate()
 
   return <>
-    <Tabs
-      id="danceset"
-      selectedTabId={currentSlide.parentId ?? currentSlide.id}
-      onChange={(id) => navigate(linkToSlide(id as string))}
-    >
-      {slides.filter(slide => slide.parentId === undefined).map(slide =>
-        <Tab key={slide.id} id={slide.id} title={slide.title} />
-      )}
-    </Tabs>
     <nav className="slideNavigation">
       {slideIndex > 0 &&
         <NavigateButton icon={<ChevronLeft />} href={linkToSlide(slides[slideIndex - 1].id)} className="previous-slide-link" />

@@ -160,6 +160,9 @@ export const fi = {
         programTitle: 'Ohjelman otsikko',
         style: 'Tyyli',
       },
+      slides: {
+        moveToSlide: 'Siirry diaan',
+      },
       danceCount: {
         zero: '-',
         one: '1 tanssi',

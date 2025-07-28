@@ -13,6 +13,7 @@ import { acceptNulls, preventDownshiftDefaultWhen, useFilteredItems } from './ut
 export interface AutocompleteInputProps<T> extends Omit<SelectorProps<T>, 'buttonRenderer'> {
   placeholder?: string
   inputRenderer?: (props: InputProps) => ReactNode
+  emptyInputByDefault?: boolean
 }
 
 interface InputProps extends Omit<UseComboboxGetInputPropsOptions, 'onChange'> {
@@ -24,7 +25,7 @@ interface InputProps extends Omit<UseComboboxGetInputPropsOptions, 'onChange'> {
 export function AutocompleteInput<T>(props: AutocompleteInputProps<T>) {
   'use no memo'
   const {
-    items, itemToString = String, categoryTitleRenderer, inputRenderer,
+    items, itemToString = String, emptyInputByDefault, categoryTitleRenderer, inputRenderer,
     value, onChange, id, readOnly,
     placeholder = '', containerClassname, inline,
   } = props
@@ -45,6 +46,8 @@ export function AutocompleteInput<T>(props: AutocompleteInputProps<T>) {
     selectedItem: value,
     itemToString: valueToString,
     defaultHighlightedIndex: 0,
+    defaultInputValue: emptyInputByDefault ? '' : undefined,
+    initialInputValue: emptyInputByDefault ? '' : undefined,
     onSelectedItemChange: ({ selectedItem }) => {
       onChange(selectedItem as T)
     },
@@ -55,9 +58,9 @@ export function AutocompleteInput<T>(props: AutocompleteInputProps<T>) {
       const nextHilightedIndex = newItems.items.indexOf(previousHilight)
       setHighlightedIndex(nextHilightedIndex > -1 ? nextHilightedIndex : 0)
     },
-    onIsOpenChange: async (a) => {
-      if (a.isOpen) {
-        updateFilter(valueToString(value))
+    onIsOpenChange: async ({ isOpen }) => {
+      if (isOpen) {
+        updateFilter(emptyInputByDefault ? '' : valueToString(value))
       }
     },
     stateReducer: (state, { type, changes }) => {
@@ -68,15 +71,20 @@ export function AutocompleteInput<T>(props: AutocompleteInputProps<T>) {
           if (changes.highlightedIndex !== -1) break
           return {
             isOpen: false,
-            inputValue: valueToString(value ?? state.selectedItem),
+            inputValue: emptyInputByDefault ? '' : valueToString(value ?? state.selectedItem),
             selectedItem: value,
           }
         case useCombobox.stateChangeTypes.InputKeyDownEscape:
           return {
             isOpen: false,
-            inputValue: valueToString(value ?? state.selectedItem),
+            inputValue: emptyInputByDefault ? '' : valueToString(value ?? state.selectedItem),
             selectedItem: value,
           }
+      }
+      if (emptyInputByDefault && !changes.isOpen) {
+        return {
+          ...changes, inputValue: '',
+        }
       }
       return changes
     }
