@@ -15,6 +15,7 @@ export function SlideChooser({ currentSlide, slides, onChoose }: SlideChooserPro
   const parent = currentSlide.parentId && slides.find(slide => slide.id === currentSlide.parentId)
 
   return <FormGroup
+    className="md:min-w-100"
     label={useTranslation('components.eventProgramEditor.slides.moveToSlide')}
     labelStyle="beside"
     labelFor="slidechooser"

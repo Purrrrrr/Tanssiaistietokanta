@@ -45,8 +45,7 @@ export function AutocompleteInput<T>(props: AutocompleteInputProps<T>) {
     items: filteredItemData.items,
     selectedItem: value,
     itemToString: valueToString,
-    defaultHighlightedIndex: 0,
-    defaultInputValue: emptyInputByDefault ? '' : undefined,
+    defaultHighlightedIndex: emptyInputByDefault ? filteredItemData.items.findIndex(item => item === value) : 0,
     initialInputValue: emptyInputByDefault ? '' : undefined,
     onSelectedItemChange: ({ selectedItem }) => {
       onChange(selectedItem as T)
