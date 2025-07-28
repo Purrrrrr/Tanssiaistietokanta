@@ -65,7 +65,8 @@ export function AutocompleteInput<T>(props: AutocompleteInputProps<T>) {
     stateReducer: (state, { type, changes }) => {
       switch (type) {
         case useCombobox.stateChangeTypes.InputClick:
-          return state
+          if (state.isOpen) return state
+          return changes
         case useCombobox.stateChangeTypes.InputBlur:
           if (changes.highlightedIndex !== -1) break
           return {
