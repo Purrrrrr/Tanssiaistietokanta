@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 import {Event} from 'types'
 
@@ -41,8 +41,6 @@ interface EventProgramEditorProps {
 export function EventProgramEditor({event}: EventProgramEditorProps) {
   const {formProps, formProps: { value }, state} = useEventProgramEditorForm(event._id, event._versionId ?? undefined, event.program)
   const { tabId } = useParams()
-  const navigate = useNavigate()
-  const changeTab = (nextTabId: string) => navigate(`../${nextTabId}`)
   const t = useT('pages.events.eventProgramPage')
 
   return <Form {...formProps} className="eventProgramEditor">
@@ -53,10 +51,11 @@ export function EventProgramEditor({event}: EventProgramEditorProps) {
     </h1>
 
     <EventMetadataContext program={value} workshops={event.workshops}>
-      <Tabs id="programEditorTabs" renderActiveTabPanelOnly selectedTabId={tabId ?? 'main'} onChange={changeTab}>
-        <Tab id="main" title={t('tabs.main')} panel={<MainEditor program={value} />} />
+      <Tabs id="programEditorTabs" renderActiveTabPanelOnly selectedTabId={tabId ?? 'main'}>
+        <Tab id="main" href='../main' title={t('tabs.main')} panel={<MainEditor program={value} />} />
         <Tab
           id="slides"
+          href='../slides'
           title={<>
             {t('tabs.slides')}
             <MissingDanceInstructionsCounterTag />

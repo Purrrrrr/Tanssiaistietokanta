@@ -101,7 +101,7 @@
   * Fix links in dance set slide editor
   * Settilista print with links to dance wiki
   * Fix slideshow preview and slideshow to be actually identical
-    Event program editor tabs should be links
+  * Event program editor tabs should be links
     Better navigation in slide editor: it's hard to find a specific slide
     Easier adding of slides in slide editor
     Better drag and drop somehow?

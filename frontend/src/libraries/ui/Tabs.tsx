@@ -1,4 +1,5 @@
 import { Children, ComponentProps, KeyboardEventHandler, useId, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 import classNames from 'classnames'
 
 type TabId = string | number
@@ -20,6 +21,7 @@ export interface TabProps extends Omit<ComponentProps<'div'>, 'id' | 'title' | '
         tabPanelId: string;
     }) => React.JSX.Element);
     title?: React.ReactNode;
+    href?: string
     /** Name of a Blueprint UI icon (or an icon element) to render before the children. */
     icon?: React.ReactElement
 }
@@ -84,17 +86,24 @@ export function Tabs(props: TabsProps) {
         const selected = tab.id === selectedTabId
         const { title, icon, disabled }= tab
 
-        return <button
-          key={tab.id}
-          role="tab"
-          className={classNames('cursor-pointer pb-1', selected && 'border-b-3 border-b-blue-400')}
-          id={tabId(id, tab, index)}
-          aria-expanded={selected}
-          disabled={disabled}
-          aria-controls={panelId(id, tab, index)}
-          tabIndex={selected ? 0 : -1}
-          onClick={(e) => onChange(tab.id, selectedTabId, e)}
-        >
+        const commonProps = {
+          role: 'tab',
+          className: classNames('cursor-pointer pb-1', selected && 'border-b-3 border-b-blue-400'),
+          id: tabId(id, tab, index),
+          'aria-expanded': selected,
+          'aria-controls': panelId(id, tab, index),
+          tabIndex: selected ? 0 : -1,
+          onClick: (e) => onChange(tab.id, selectedTabId, e),
+        }
+
+        if (tab.href && !disabled) {
+          return <Link key={tab.id} to={tab.href} {...commonProps}>
+            {icon}
+            {title}
+          </Link>
+        }
+
+        return <button key={tab.id} {...commonProps} disabled={disabled}>
           {icon}
           {title}
         </button>
