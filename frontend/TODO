@@ -103,17 +103,28 @@
   * Fix slideshow preview and slideshow to be actually identical
   * Event program editor tabs should be links
   * Better navigation in slide editor: it's hard to find a specific slide
+  * Check that a workshop without dances works (For kertauspaja eg. recap workshop)
+  * Backend support
+    * Option to show interval music in lists
+    * Separate list name for items
+    * Time and date for ball
+    * Migrations
+      Dance tags (how to represent?)
+    Frontend support
+      Option to show interval music in lists
+      Maybe ability to set separate list name for items
+      Add time and date for ball, include it in print
+      Add support for dance tags (fast, switching couples, stealing, etc.)
     Easier adding of slides in slide editor
     Better drag and drop somehow?
-    Fonts in prints (settilistat different views)
-    Print scaling, add padding to fix
-    Check all prints
-    Better control of row+column count for cheatheet
+    Prints:
+      Fonts in prints (settilistat different views)
+      Print scaling, add padding to fix
+      Check all prints
+      Better control of row+column count for cheatheet
     Image support? Better stock slides??
     Show dance in interval music
-    Option to show interval music in lists
     Dance set title view seems unnecessary. Remove?
-    Maybe ability to set separate list name for items
 
   Ability to see more info about program item in editor
 

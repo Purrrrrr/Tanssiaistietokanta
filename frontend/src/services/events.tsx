@@ -12,11 +12,13 @@ setupServiceUpdateFragment(
   `fragment EventFragment on Event {
     _id, _versionId, _versionNumber, _updatedAt, name, beginDate, endDate,
     program {
+      dateTime
       slideStyleId
       pauseBetweenDances
       defaultIntervalMusic {
         name
         description
+        showInLists
       }
       introductions {
         title
@@ -70,6 +72,7 @@ setupServiceUpdateFragment(
           dance {
             _id, name
           }
+          showInLists
         }
       }
     }
@@ -116,11 +119,13 @@ query getEvent($id: ID!, $versionId: ID) {
   event(id: $id, versionId: $versionId) {
     _id, _versionId, _versionNumber, _updatedAt, name, beginDate, endDate,
     program {
+      dateTime
       slideStyleId
       pauseBetweenDances
       defaultIntervalMusic {
         name
         description
+        showInLists
       }
       introductions {
         title
@@ -183,6 +188,7 @@ query getEvent($id: ID!, $versionId: ID) {
           dance {
             _id, name
           }
+          showInLists
         }
       }
     }
@@ -239,11 +245,13 @@ mutation patchEventProgram($id: ID!, $program: JSONPatch!) {
   patchEventProgram(id: $id, program: $program) {
     _id, _versionId, _versionNumber, name, beginDate, endDate,
     program {
+      dateTime
       slideStyleId
       pauseBetweenDances
       defaultIntervalMusic {
         name
         description
+        showInLists
       }
       introductions {
         title
@@ -302,6 +310,7 @@ mutation patchEventProgram($id: ID!, $program: JSONPatch!) {
           dance {
             _id, name
           }
+          showInLists
         }
       }
     }

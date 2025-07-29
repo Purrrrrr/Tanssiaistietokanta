@@ -17,6 +17,7 @@ type Event implements Versionable {
 }
 
 type EventProgramSettings {
+  dateTime: String!
   introductions: Introductions!
   danceSets: [DanceSet!]!
   slideStyleId: ID
@@ -27,6 +28,7 @@ type EventProgramSettings {
 type DefaultIntervalMusic {
   name: String
   description: String
+  showInLists: Boolean!
 }
 
 type Introductions {
@@ -74,6 +76,7 @@ type IntervalMusic {
   duration: Float!
   slideStyleId: ID
   dance: Dance
+  showInLists: Boolean!
 }
 
 type Mutation {

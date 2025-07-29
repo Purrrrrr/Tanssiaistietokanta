@@ -11,11 +11,13 @@ query BallProgram($eventId: ID!) {
     _versionId
     name
     program {
+      dateTime
       slideStyleId
       pauseBetweenDances
       defaultIntervalMusic {
         name
         description
+        showInLists
       }
       introductions {
         title
@@ -55,6 +57,7 @@ query BallProgram($eventId: ID!) {
           description
           duration
           slideStyleId
+          showInLists
         }
         program {
           _id

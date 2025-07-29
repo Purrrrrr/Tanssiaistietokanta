@@ -29,6 +29,7 @@ export const DEFAULT_INTERVAL_MUSIC = {
   description: null,
   duration: DEFAULT_INTERVAL_MUSIC_DURATION,
   slideStyleId: null,
+  showInLists: false,
 } satisfies IntervalMusic
 
 export function useEventProgramEditorForm(eventId: string, eventVersionId: string | undefined, eventProgram: EventProgramSettings): UseAutosavingStateReturn<EventProgramSettings> {

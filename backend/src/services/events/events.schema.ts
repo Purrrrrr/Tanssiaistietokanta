@@ -6,7 +6,7 @@ import type { Static, TObject, TProperties } from '@feathersjs/typebox'
 import type { HookContext } from '../../declarations'
 import { dataValidator, queryValidator } from '../../validators'
 import { castAfterValidating } from '../../utils/cast-after-validating'
-import { computedProperties, SlideStyleId, Id, Name, Date, NullableString, Nullable } from '../../utils/common-types'
+import { computedProperties, SlideStyleId, Id, Name, Date, NullableString, Nullable, DateTime } from '../../utils/common-types'
 
 const DEFAULT_PAUSE_BETWEEN_DANCES = 3*60
 
@@ -22,6 +22,7 @@ export const eventsSchema = Type.Object(
     beginDate: Date(),
     endDate: Date(),
     program: ClosedObject({
+      dateTime: DateTime(),
       introductions: Introductions(),
       danceSets: Type.Array(DanceSet()),
       slideStyleId: SlideStyleId(),
@@ -29,6 +30,7 @@ export const eventsSchema = Type.Object(
       defaultIntervalMusic: ClosedObject({
         name: NullableString(),
         description: NullableString(),
+        showInLists: Type.Boolean(),
       })
     }),
     workshopVersions: Type.Record(Id(), Id())
@@ -70,12 +72,14 @@ function DanceSet() {
       duration: Type.Number(),
       slideStyleId: SlideStyleId(),
       dance: Type.Optional(Type.String()),
+      showInLists: Type.Boolean(),
     }))
   })
 }
 function EventProgram() {
   return ClosedObject({
     name: Type.String(),
+    nameInLists: Nullable(Type.String()),
     description: Type.String(),
     duration: Type.Number(),
     showInLists: Type.Boolean(),
