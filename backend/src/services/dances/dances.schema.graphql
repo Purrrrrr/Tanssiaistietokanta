@@ -24,7 +24,10 @@ type Dance implements ProgramItem & Versionable {
   events: [Event!]!
   wikipageName: String
   wikipage: Wikipage
+  tags: Tags
 }
+
+scalar Tags
 
 type TeachedInWorkshop {
   _id: ID!

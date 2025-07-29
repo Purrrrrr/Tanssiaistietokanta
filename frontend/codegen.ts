@@ -12,6 +12,9 @@ const config: CodegenConfig = {
       plugins: [],
       config: {
         nonOptionalTypename: false,
+        scalars: {
+          Tags: 'Record<string, boolean>',
+        },
       },
     }
   }

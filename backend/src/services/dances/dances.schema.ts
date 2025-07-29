@@ -28,6 +28,7 @@ export const dancesSchema = Type.Object(
     slideStyleId: SlideStyleId(),
     wikipage: Nullable(Type.Any()),
     wikipageName: Nullable(Type.String()),
+    tags: Type.Record(Type.String(), Type.Boolean()),
   },
   { $id: 'Dances', additionalProperties: false }
 )
@@ -49,7 +50,8 @@ export const dancesResolver = resolve<Dances, HookContext>({
       return dance.name
     }
     return null
-  }
+  },
+  tags: value => value ?? {},
 })
 
 export const dancesExternalResolver = resolve<Dances, HookContext>({})

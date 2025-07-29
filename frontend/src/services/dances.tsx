@@ -25,7 +25,7 @@ query getDanceCategories {
 export const useDances = entityListQueryHook('dances', graphql(`
 query getDances {
   dances {
-    _id, _versionId, _versionNumber, name, description, remarks, duration, prelude, formation, source, category, instructions, slideStyleId
+    _id, _versionId, _versionNumber, name, description, remarks, duration, prelude, formation, source, category, instructions, slideStyleId, tags
     wikipageName
     wikipage {
       _id
@@ -64,7 +64,7 @@ query getDanceVersions($id: ID!) {
 export const useDance = backendQueryHook(graphql(`
 query getDance($id: ID!, $versionId: ID) {
   dance(id: $id, versionId: $versionId) {
-    _id, _versionId, _versionNumber, name, description, remarks, duration, prelude, formation, source, category, instructions, slideStyleId
+    _id, _versionId, _versionNumber, name, description, remarks, duration, prelude, formation, source, category, instructions, slideStyleId, tags
     wikipageName
     wikipage {
       _id
@@ -124,7 +124,7 @@ mutation createDance($dance: DanceInput!) {
 export const usePatchDance = entityUpdateHook('dances', graphql(`
 mutation patchDance($id: ID!, $dance: DancePatchInput!) {
   patchDance(id: $id, dance: $dance) {
-    _id, _versionId, _versionNumber, name, description, remarks, duration, prelude, formation, source, category, instructions, slideStyleId
+    _id, _versionId, _versionNumber, name, description, remarks, duration, prelude, formation, source, category, instructions, slideStyleId, tags
     wikipageName
     wikipage {
       _id
@@ -145,7 +145,7 @@ mutation patchDance($id: ID!, $dance: DancePatchInput!) {
 export const useDeleteDance = entityDeleteHook('dances', graphql(`
 mutation deleteDance($id: ID!) {
   deleteDance(id: $id) {
-    _id, _versionId, _versionNumber, name, description, remarks, duration, prelude, formation, source, category, instructions, slideStyleId
+    _id, _versionId, _versionNumber, name, description, remarks, duration, prelude, formation, source, category, instructions, slideStyleId, tags
     wikipageName
     wikipage {
       _id
@@ -178,6 +178,6 @@ export function sortDances<T extends Dance>(dances: T[]): T[] {
 
 const compareDances = compareBy(danceSortKey)
 
-function danceSortKey(dance: Dance): string {
+function danceSortKey(dance: Pick<Dance, 'name'>): string {
   return dance.name.replace(/^(an?|the) +/i, '')
 }
