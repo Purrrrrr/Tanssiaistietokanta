@@ -32,7 +32,7 @@ export default function EventList() {
           <div>
             {formatDate(event.beginDate)} - {formatDate(event.endDate)}
           </div>
-          <div className="text-right">
+          <div className="grow text-right">
             <DeleteButton onDelete={() => deleteEvent({id: event._id})}
               minimal
               text={deleteText}
