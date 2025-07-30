@@ -10,6 +10,8 @@ export const up: MigrationFn = async params => {
 
       return R.compose(
         L.set(['program', 'dateTime'], programDateTime),
+        L.set(['program', 'introductions', 'program', L.elems, 'eventProgram', L.when(R.isNotNil), 'nameInLists'], null),
+        L.set(['program', 'danceSets', L.elems, 'program', L.elems, 'eventProgram', L.when(R.isNotNil), 'nameInLists'], null),
         L.set(['program', 'danceSets', L.elems, 'intervalMusic', L.when(R.isNotNil), 'showInLists'], false),
         L.set(['program', 'defaultIntervalMusic', 'showInLists'], false),
       )(event)

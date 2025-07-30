@@ -207,11 +207,13 @@ function IntervalMusicDescriptionEditor({danceSetIndex}: {danceSetIndex: number}
         <H2>{t('titles.customIntervalMusicTexts')}</H2>
         <Input label={t('fields.intervalMusic.name')} path={`${path}.name`} required />
         <Field label={t('fields.intervalMusic.description')} path={`${path}.description`} component={MarkdownEditor} componentProps={markdownEditorProps} />
+        <Switch label={t('fields.intervalMusic.showInLists')} path={`${path}.showInLists`} inline />
       </>
       : <>
         <H2>{t('titles.defaultIntervalMusicTexts')}</H2>
         <Input label={t('fields.intervalMusic.name')} path='defaultIntervalMusic.name' componentProps={{placeholder:t('programTypes.IntervalMusic')}} />
         <Field label={t('fields.intervalMusic.description')} path="defaultIntervalMusic.description" component={MarkdownEditor} componentProps={markdownEditorProps} />
+        <Switch label={t('fields.intervalMusic.showInLists')} path="defaultIntervalMusic.showInLists" inline />
       </>
     }
   </>

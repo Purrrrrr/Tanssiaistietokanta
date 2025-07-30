@@ -111,9 +111,12 @@
     * Migrations
     * Dance tags (how to represent?)
     Frontend support
-      Option to show interval music in lists
+    * Option to show interval music in lists
+        Modify lists to support it
       Maybe ability to set separate list name for items
-      Add time and date for ball, include it in print
+        Support for showing it
+    * Add time and date for ball
+        Include it in print
       Add support for dance tags (fast, switching couples, stealing, etc.)
     Easier adding of slides in slide editor
     Better drag and drop somehow?
@@ -125,6 +128,8 @@
     Image support? Better stock slides??
     Show dance in interval music
     Dance set title view seems unnecessary. Remove?
+    Showing of dance tags
+    Icons for dance tags
 
   Ability to see more info about program item in editor
 

@@ -234,7 +234,7 @@ mutation createEvent($event: EventInput!) {
 }`))
 
 export const usePatchEvent = entityUpdateHook('events', graphql(`
-mutation patchEvent($id: ID!, $event: EventPatchInput!) {
+mutation patchEvent($id: ID!, $event: JSONPatch!) {
   patchEvent(id: $id, event: $event) {
     _id, _versionId, name, beginDate, endDate
   }

@@ -7,7 +7,7 @@ import {usePatchEvent} from 'services/events'
 import {AdminOnly} from 'services/users'
 import {useCreateWorkshop, useDeleteWorkshop} from 'services/workshops'
 
-import {DateRangeField, formFor, patchStrategy, SyncStatus, useAutosavingState} from 'libraries/forms'
+import {DateField, DateRangeField, formFor, patchStrategy, SyncStatus, useAutosavingState} from 'libraries/forms'
 import {Button, Card, Collapse, H2} from 'libraries/ui'
 import {useGlobalLoadingAnimation} from 'components/LoadingState'
 import {VersionedPageTitle} from 'components/versioning/VersionedPageTitle'
@@ -16,6 +16,7 @@ import {DeleteButton} from 'components/widgets/DeleteButton'
 import {NavigateButton} from 'components/widgets/NavigateButton'
 import {newInstance, WorkshopEditor} from 'components/WorkshopEditor'
 import {useFormatDate, useFormatDateTime, useT, useTranslation} from 'i18n'
+import { JSONPatch } from 'components/event/EventProgramForm/patchStrategy'
 
 type Workshop = Event['workshops'][0]
 
@@ -71,10 +72,10 @@ function EventDetailsForm({event}: {event: Event}) {
   const t = useT('pages.events.eventPage')
   const [patchEvent] = usePatchEvent()
   const patch = useCallback(
-    (eventPatch: Partial<Event>) => patchEvent({ id: event._id, event: cleanMetadataValues(eventPatch)}),
+    (eventPatch: JSONPatch) => patchEvent({ id: event._id, event: eventPatch}),
     [event._id, patchEvent]
   )
-  const {state, formProps} = useAutosavingState<Event, Partial<Event>>(event, patch, patchStrategy.partial)
+  const {state, formProps} = useAutosavingState<Event, JSONPatch>(event, patch, patchStrategy.jsonPatch)
 
   return <Form {...formProps}>
     <Card>
@@ -87,6 +88,13 @@ function EventDetailsForm({event}: {event: Event}) {
           beginPath="beginDate"
           endPath="endDate"
           required
+        />
+        <DateField<Event>
+          label={(t('ballDateTime'))}
+          path="program.dateTime"
+          showTime
+          minDate={formProps.value.beginDate}
+          maxDate={formProps.value.endDate}
         />
       </div>
     </Card>

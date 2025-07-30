@@ -151,6 +151,7 @@ export const fi = {
           useDefaultTexts: 'Käytä oletusotsikkoa ja kuvausta',
           name: 'Otsikko diashowssa',
           description: 'Tarkempi kuvaus',
+          showInLists: 'Näytä taukomusiikki tanssilistoissa',
         },
         danceSetName: 'Tanssisetin nimi',
         eventDefaultStyle: 'Ohjelman oletustyyli',
@@ -304,8 +305,7 @@ export const fi = {
           many: '__count__ toivetanssia'
         },
         eventDate: 'Tapahtuman ajankohta',
-        beginDate: 'Alkaa',
-        endDate: 'Loppuu',
+        ballDateTime: 'Tanssiaisten ajankohta',
       },
       eventProgramPage: {
         pageTitle: 'Tanssiaisohjelma',
