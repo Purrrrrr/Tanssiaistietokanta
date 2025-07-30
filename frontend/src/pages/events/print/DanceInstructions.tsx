@@ -72,10 +72,11 @@ export default function DanceInstructions({eventId}) {
 function DanceInstructionsView({eventId, showWorkshops, showDances, hilightEmpty, showShortInstructions, elementRef}) {
   const t = useT('pages.events.danceInstructions')
   const {data, refetch, ...loadingState} = useDanceInstructions({eventId})
+  const formatDateTime = useFormatDateTime()
 
   if (!data?.event) return <LoadingState {...loadingState} refetch={refetch} />
 
-  const {workshops} = data.event
+  const {workshops, program} = data.event
   const dances = getDances(workshops)
 
   return <section className={classNames('dance-instructions', {'hilight-empty': hilightEmpty, showShortInstructions})} ref={elementRef}>
@@ -83,6 +84,12 @@ function DanceInstructionsView({eventId, showWorkshops, showDances, hilightEmpty
       <section className="workshops">
         <h1>{t('workshops')}</h1>
         {workshops.map(workshop => <WorkshopDetails key={workshop._id} workshop={workshop} />)}
+        {program.dateTime && <>
+          <H2>
+            {t('ball')}
+          </H2>
+          <p className="font-bold">{formatDateTime(program.dateTime)}</p>
+        </>}
       </section>
     }
     {showDances &&
@@ -99,6 +106,9 @@ query DanceInstructions($eventId: ID!) {
   event(id: $eventId) {
     _id
     _versionId
+    program {
+      dateTime
+    }
     workshops {
       _id
       name

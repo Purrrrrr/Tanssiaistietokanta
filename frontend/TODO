@@ -111,12 +111,12 @@
     * Migrations
     * Dance tags (how to represent?)
     Frontend support
+    * Add time and date for ball
+      * Include it in print
     * Option to show interval music in lists
         Modify lists to support it
       Maybe ability to set separate list name for items
         Support for showing it
-    * Add time and date for ball
-        Include it in print
       Add support for dance tags (fast, switching couples, stealing, etc.)
     Easier adding of slides in slide editor
     Better drag and drop somehow?
