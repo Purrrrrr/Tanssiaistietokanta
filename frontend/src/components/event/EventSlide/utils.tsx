@@ -1,8 +1,15 @@
-import { DanceSet, EventProgram, Workshop } from './types'
+import { DanceSet, EventProgram, EventProgramItem, RequestedDance, Workshop } from './types'
 
 import {Markdown} from 'libraries/ui'
-import { SlideLink } from 'components/Slide'
+import { SlideLink, SlideProps } from 'components/Slide'
 import {useTranslation} from 'i18n'
+
+export function programItemTitle(item: EventProgramItem | RequestedDance): SlideProps['title'] {
+  if (item.__typename === 'RequestedDance') {
+    return <RequestedDancePlaceholder />
+  }
+  return item.name ?? ''
+}
 
 export function linkToDanceSet(danceSet?: DanceSet | null): SlideLink | undefined {
   if (!danceSet) return undefined
