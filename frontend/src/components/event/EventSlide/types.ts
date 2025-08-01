@@ -46,7 +46,7 @@ export interface EventProgram {
   introductions: Introductions
   danceSets: DanceSet[]
   slideStyleId?: SlideStyleID
-  defaultIntervalMusic: NameAndDescription
+  defaultIntervalMusic: DefaultIntervalMusic
 }
 
 interface Introductions {
@@ -64,7 +64,12 @@ export interface DanceSet {
     description?: string | null
     name?: string | null
     slideStyleId?: SlideStyleID
+    showInLists?: boolean
   } | null
+}
+
+export interface DefaultIntervalMusic extends NameAndDescription {
+  showInLists?: boolean
 }
 
 export interface EventProgramRow {

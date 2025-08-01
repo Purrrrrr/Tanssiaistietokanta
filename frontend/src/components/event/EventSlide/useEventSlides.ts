@@ -4,11 +4,13 @@ import { EventProgram, EventProgramRow, EventSlideProps } from './types'
 
 import { useTranslation } from 'i18n'
 
+import { intervalMusicTitle } from './utils'
+
 export const startSlideId = ''
 
 export function useEventSlides(program?: EventProgram): EventSlideProps[] {
   const programItemTitle = useProgramItemTitle()
-  const intervalMusicTitle = useTranslation('components.eventProgramEditor.programTypes.IntervalMusic')
+  const defaultIntervalMusicTitle = useTranslation('components.eventProgramEditor.programTypes.IntervalMusic')
 
   return useMemo(
     () => program ? [
@@ -40,7 +42,7 @@ export function useEventSlides(program?: EventProgram): EventSlideProps[] {
             ? [
               {
                 id: intervalMusicId(danceSet._id),
-                title: danceSet.intervalMusic.name || program.defaultIntervalMusic.name || intervalMusicTitle,
+                title: intervalMusicTitle(program, danceSet) ?? defaultIntervalMusicTitle,
                 type: 'intervalMusic',
                 parentId: danceSet._id,
                 danceSetIndex,
@@ -50,7 +52,7 @@ export function useEventSlides(program?: EventProgram): EventSlideProps[] {
         )
       ]),
     ] : [],
-    [program, intervalMusicTitle, programItemTitle]
+    [program, defaultIntervalMusicTitle, programItemTitle]
   )
 }
 

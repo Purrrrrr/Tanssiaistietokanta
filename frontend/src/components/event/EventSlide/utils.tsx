@@ -1,16 +1,22 @@
-import { ReactElement } from 'react'
-
-import { EventProgram, Workshop } from './types'
+import { DanceSet, EventProgram, Workshop } from './types'
 
 import {Markdown} from 'libraries/ui'
+import { SlideLink } from 'components/Slide'
 import {useTranslation} from 'i18n'
 
-export function intervalMusicTitle(eventProgram: EventProgram, dancesetIndex: number): string | ReactElement {
-  const { danceSets, defaultIntervalMusic } = eventProgram
-  const danceSet = danceSets[dancesetIndex]
+export function linkToDanceSet(danceSet?: DanceSet | null): SlideLink | undefined {
+  if (!danceSet) return undefined
+  return {
+    id: danceSet._id,
+    title: danceSet.title
+  }
+}
+
+export function intervalMusicTitle<T>(eventProgram: EventProgram, danceSet: DanceSet): string | undefined {
+  const { defaultIntervalMusic } = eventProgram
 
   return (danceSet.intervalMusic?.name ?? defaultIntervalMusic?.name)
-    || <DefaultIntervalMusicTitle />
+    || undefined
 }
 
 export function DefaultIntervalMusicTitle() {
