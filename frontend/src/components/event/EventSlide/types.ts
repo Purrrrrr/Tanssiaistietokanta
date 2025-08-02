@@ -35,6 +35,7 @@ export interface IntervalMusicSlideProps extends CommonSlideProps {
 interface CommonSlideProps {
   id: ID
   title: string
+  next?: EventSlideProps
 }
 
 export type WithEventProgram<X> = { eventProgram: EventProgram } & X

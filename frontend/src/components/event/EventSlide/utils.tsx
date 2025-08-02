@@ -1,7 +1,7 @@
 import { DanceSet, EventProgram, EventProgramItem, RequestedDance, Workshop } from './types'
 
 import {Markdown} from 'libraries/ui'
-import { SlideLink, SlideProps } from 'components/Slide'
+import { SlideProps } from 'components/Slide'
 import {useTranslation} from 'i18n'
 
 export function programItemTitle(item: EventProgramItem | RequestedDance): SlideProps['title'] {
@@ -9,14 +9,6 @@ export function programItemTitle(item: EventProgramItem | RequestedDance): Slide
     return <RequestedDancePlaceholder />
   }
   return item.name ?? ''
-}
-
-export function linkToDanceSet(danceSet?: DanceSet | null): SlideLink | undefined {
-  if (!danceSet) return undefined
-  return {
-    id: danceSet._id,
-    title: danceSet.title
-  }
 }
 
 export function intervalMusicTitle<T>(eventProgram: EventProgram, danceSet: DanceSet): string | undefined {

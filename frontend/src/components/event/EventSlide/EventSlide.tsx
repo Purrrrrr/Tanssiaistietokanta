@@ -1,9 +1,9 @@
-import { DanceProgramItemSlideProps, DanceSet, DanceSetSlideProps, EventProgram, EventProgramItem, EventSlideProps, IntervalMusicSlideProps, RequestedDance, WithEventProgram } from './types'
+import type { DanceProgramItemSlideProps, DanceSet, DanceSetSlideProps, EventProgram, EventProgramItem, EventSlideProps, IntervalMusicSlideProps } from './types'
 
-import { LinkComponentType, Slide, SlideNavigation, SlideNavigationList, SlideProps } from 'components/Slide'
+import { LinkComponentType, Slide, SlideNavigation, SlideNavigationList } from 'components/Slide'
 
 import { intervalMusicId } from './useEventSlides'
-import { DefaultIntervalMusicTitle, intervalMusicTitle, linkToDanceSet, markdown, programItemTitle, TeachedIn } from './utils'
+import { DefaultIntervalMusicTitle, intervalMusicTitle, markdown, programItemTitle, TeachedIn } from './utils'
 
 export type WithCommonProps<X> = {
   eventProgram: EventProgram
@@ -26,9 +26,9 @@ export function EventSlide(props: WithCommonProps<EventSlideProps>) {
       return <Slide
         id={id}
         title={props.title}
-        {...programItemContent(item)}
         slideStyleId={slideStyleId ?? eventProgram.slideStyleId}
         linkComponent={linkComponent}
+        children={markdown((item as EventProgramItem).description)}
       />
     }
     case 'danceSet':
@@ -61,7 +61,7 @@ function IntervalMusicSlide(props: WithCommonProps<IntervalMusicSlideProps>) {
     },
     eventProgram,
     danceSetIndex,
-    id, title, linkComponent
+    id, title, linkComponent, next
   } = props
 
   const danceSet = danceSets[danceSetIndex]
@@ -75,58 +75,39 @@ function IntervalMusicSlide(props: WithCommonProps<IntervalMusicSlideProps>) {
       intervalMusic?.description ?? defaultIntervalMusic?.description ?? ''
     )}
     slideStyleId={intervalMusic?.slideStyleId ?? defaultSlideStyleId}
-    next={linkToDanceSet(nextDanceSet)}
+    next={next}
     navigation={danceSetNavigation(eventProgram, nextDanceSet ?? danceSet)}
     linkComponent={linkComponent}
   />
 }
 
 function DanceProgramItemSlide(props: WithCommonProps<DanceProgramItemSlideProps>) {
-  const { id, title, linkComponent, eventProgram, danceSetIndex, itemIndex } = props
-  const item = eventProgram.danceSets[danceSetIndex].program[itemIndex]
+  const { id, next, title, linkComponent, eventProgram, eventProgram: { danceSets }, danceSetIndex, itemIndex } = props
+  const { item, slideStyleId } = eventProgram.danceSets[danceSetIndex].program[itemIndex]
+  const navigationDanceSet = next?.type === 'danceSet'
+    ? danceSets[next.danceSetIndex]
+    : danceSets[danceSetIndex]
+
+  const content = item.__typename === 'RequestedDance'
+    ? {
+      children: ''
+    }
+    : {
+      children: markdown(item.description ?? ''),
+      footer: item.teachedIn?.length
+        ? <TeachedIn teachedIn={item.teachedIn} />
+        : undefined,
+    }
 
   return <Slide
     id={id}
     title={title}
     linkComponent={linkComponent}
-    slideStyleId={item.slideStyleId ?? eventProgram.slideStyleId}
-    {...programItemContent(item.item)}
-    {...getNavigationLinks(props)}
+    slideStyleId={slideStyleId ?? eventProgram.slideStyleId}
+    navigation={danceSetNavigation(eventProgram, navigationDanceSet)}
+    next={next}
+    {...content}
   />
-}
-
-function getNavigationLinks(props: WithEventProgram<DanceProgramItemSlideProps> ): Pick<SlideProps, 'next' | 'navigation'> {
-  const { eventProgram, eventProgram: {danceSets}, danceSetIndex: programSetIndex, itemIndex } = props
-
-  const danceSet = danceSets[programSetIndex]
-  const isLastProgramItem = itemIndex === danceSet.program.length - 1
-
-  if (isLastProgramItem) {
-    if (danceSet.intervalMusic) {
-      return {
-        navigation: danceSetNavigation(eventProgram, danceSet),
-        next: {
-          id: intervalMusicId(danceSet._id),
-          title: intervalMusicTitle(eventProgram, danceSet) ?? <DefaultIntervalMusicTitle />
-        }
-      }
-    } else {
-      const nextDanceSet = danceSets[programSetIndex + 1]
-      return {
-        next: linkToDanceSet(nextDanceSet),
-        navigation: danceSetNavigation(eventProgram, nextDanceSet ?? danceSet),
-      }
-    }
-  }
-
-  const next = danceSet.program[itemIndex + 1]
-  return {
-    navigation: danceSetNavigation(eventProgram, danceSet),
-    next: {
-      id: next._id,
-      title: programItemTitle(next.item),
-    }
-  }
 }
 
 function danceSetNavigation(eventProgram: EventProgram, danceSet: DanceSet): SlideNavigation | undefined {
@@ -154,18 +135,5 @@ function danceSetNavigation(eventProgram: EventProgram, danceSet: DanceSet): Sli
   return {
     title: danceSet.title,
     items
-  }
-}
-
-function programItemContent(item: EventProgramItem | RequestedDance): Pick<SlideProps, 'children' | 'footer'> {
-  if (item.__typename === 'RequestedDance') {
-    return {
-      children: ''
-    }
-  }
-
-  return {
-    children: markdown(item.description ?? ''),
-    footer: item.teachedIn?.length ? <TeachedIn teachedIn={item.teachedIn} /> : undefined,
   }
 }
