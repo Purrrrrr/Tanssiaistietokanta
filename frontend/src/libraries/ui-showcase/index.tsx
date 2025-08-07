@@ -4,12 +4,12 @@ import { Trash } from '@blueprintjs/icons'
 import { type Showcase, booleanProp, numberProp, showcase } from './types'
 
 import FormUiShowcase from 'libraries/formsV2/UiShowcase'
+import { Alert, Dialog } from 'libraries/overlays'
 import { AutosizedSection, Button, Callout, RegularLink, showToast, Tab, Tabs } from 'libraries/ui'
 import { ColoredTag, TAG_COLOR_COUNT } from 'components/widgets/ColoredTag'
 
 import { ShowcaseContainer } from './ShowcaseContainer'
 import { titleCase } from './utils/titleCase'
-import { Alert, Dialog } from 'libraries/overlays'
 
 const colors = ['none', 'primary', 'success', 'danger', 'warning'] as const
 

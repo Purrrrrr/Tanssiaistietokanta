@@ -2,13 +2,13 @@ import React, {useCallback, useState} from 'react'
 
 import {Event, EventProgram as EventProgramType} from 'types'
 
-import { cleanMetadataValues } from 'backend'
 import {usePatchEvent} from 'services/events'
 import {AdminOnly} from 'services/users'
 import {useCreateWorkshop, useDeleteWorkshop} from 'services/workshops'
 
 import {DateField, DateRangeField, formFor, patchStrategy, SyncStatus, useAutosavingState} from 'libraries/forms'
 import {Button, Card, Collapse, H2} from 'libraries/ui'
+import { JSONPatch } from 'components/event/EventProgramForm/patchStrategy'
 import {useGlobalLoadingAnimation} from 'components/LoadingState'
 import {VersionedPageTitle} from 'components/versioning/VersionedPageTitle'
 import {VersionSidebarToggle} from 'components/versioning/VersionSidebarToggle'
@@ -16,7 +16,6 @@ import {DeleteButton} from 'components/widgets/DeleteButton'
 import {NavigateButton} from 'components/widgets/NavigateButton'
 import {newInstance, WorkshopEditor} from 'components/WorkshopEditor'
 import {useFormatDate, useFormatDateTime, useT, useTranslation} from 'i18n'
-import { JSONPatch } from 'components/event/EventProgramForm/patchStrategy'
 
 type Workshop = Event['workshops'][0]
 

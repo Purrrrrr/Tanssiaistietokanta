@@ -90,7 +90,3 @@ export function WikiLink({ href, ...props }: React.ComponentProps<'a'>) {
 
   return <RegularLink {...props} href={link} target="_blank" />
 }
-
-function toWikiUrl(href?: string) {
-
-}
