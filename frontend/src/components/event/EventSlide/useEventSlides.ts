@@ -1,10 +1,8 @@
 import { useMemo } from 'react'
 
-import { EventProgram, EventProgramRow, EventSlideProps } from './types'
+import { EventParentSlideProps, EventProgram, EventProgramRow, EventSlideProps } from './types'
 
 import { useTranslation } from 'i18n'
-
-import { intervalMusicTitle } from './utils'
 
 export const startSlideId = ''
 
@@ -14,48 +12,64 @@ export function useEventSlides(program?: EventProgram): EventSlideProps[] {
 
   return useMemo(
     () => program ?
-      addNextLinks([
-        { id: startSlideId, type: 'title', title: program.introductions.title },
-        ...program.introductions.program.map((item, idx) => ({
-          id: item._id,
-          title: programItemTitle(item),
-          type: 'introduction',
-          parentId: startSlideId,
-          itemIndex: idx
-        } as const)),
-        ...program.danceSets.flatMap((danceSet, danceSetIndex) => [
-          {
-            id: danceSet._id,
-            title: danceSet.title,
-            type: 'danceSet',
-            danceSetIndex,
-          } as const,
-          ...danceSet.program.map((item, idx) => ({
+      addNextLinks(flatten([
+        {
+          id: startSlideId,
+          type: 'title',
+          title: program.introductions.title,
+          children: program.introductions.program.map((item, idx) => ({
             id: item._id,
             title: programItemTitle(item),
-            type: 'programItem',
-            parentId: danceSet._id,
-            danceSetIndex,
-            itemIndex: idx,
+            type: 'introduction',
+            parentId: startSlideId,
+            itemIndex: idx
           } as const)),
-          ...(
-            danceSet.intervalMusic
-              ? [
-                {
-                  id: intervalMusicId(danceSet._id),
-                  title: intervalMusicTitle(program, danceSet) ?? defaultIntervalMusicTitle,
-                  type: 'intervalMusic',
-                  parentId: danceSet._id,
-                  danceSetIndex,
-                } as const
-              ]
-              : []
-          )
-        ]),
-      ])
+        },
+        ...program.danceSets.map((danceSet, danceSetIndex) => ({
+          id: danceSet._id,
+          title: danceSet.title,
+          type: 'danceSet' as const,
+          danceSetIndex,
+          children: [
+            ...danceSet.program.map((item, idx) => ({
+              id: item._id,
+              title: programItemTitle(item),
+              type: 'programItem',
+              parentId: danceSet._id,
+              danceSetIndex,
+              itemIndex: idx,
+              showInLists: item.item.__typename !== 'EventProgram' || item.item.showInLists !== false,
+            } as const)),
+            ...(
+              danceSet.intervalMusic
+                ? [
+                  {
+                    id: intervalMusicId(danceSet._id),
+                    title: (danceSet.intervalMusic.name ?? program.defaultIntervalMusic.name) || defaultIntervalMusicTitle,
+                    type: 'intervalMusic' as const,
+                    parentId: danceSet._id,
+                    danceSetIndex,
+                    showInLists: danceSet.intervalMusic.showInLists ?? program.defaultIntervalMusic.showInLists ?? false,
+                  }
+                ]
+                : []
+            )
+          ]
+        })),
+      ]))
       : [],
     [program, defaultIntervalMusicTitle, programItemTitle]
   )
+}
+
+function flatten(parentSlides: EventParentSlideProps[]): EventSlideProps[] {
+  return parentSlides.flatMap(parent => {
+    parent.children.forEach(child => child.parent = parent)
+    return [
+      parent,
+      ...parent.children,
+    ]
+  })
 }
 
 function addNextLinks(slides: EventSlideProps[]): EventSlideProps[] {
@@ -73,6 +87,6 @@ function useProgramItemTitle() {
     : item.item.name ?? ''
 }
 
-export function intervalMusicId(danceSetId: string): string {
+function intervalMusicId(danceSetId: string): string {
   return `${danceSetId}-intervalMusic`
 }

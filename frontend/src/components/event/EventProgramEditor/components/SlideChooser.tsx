@@ -12,7 +12,7 @@ interface SlideChooserProps {
 }
 
 export function SlideChooser({ currentSlide, slides, onChoose }: SlideChooserProps) {
-  const parent = currentSlide.parentId && slides.find(slide => slide.id === currentSlide.parentId)
+  const { parent } = currentSlide
 
   return <FormGroup
     className="md:min-w-100"
@@ -30,7 +30,7 @@ export function SlideChooser({ currentSlide, slides, onChoose }: SlideChooserPro
       onChange={slide => onChoose(slide.id)}
       itemRenderer={slide => <div className={classNames(
         'flex items-center gap-2',
-        slide.parentId !== undefined
+        slide.parent !== undefined
           ? 'ps-4'
           : 'font-bold'
       )}>

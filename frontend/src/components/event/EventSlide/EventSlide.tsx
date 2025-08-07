@@ -1,9 +1,8 @@
-import type { DanceProgramItemSlideProps, DanceSet, DanceSetSlideProps, EventProgram, EventProgramItem, EventSlideProps, IntervalMusicSlideProps } from './types'
+import type { DanceProgramItemSlideProps, DanceSetSlideProps, EventParentSlideProps, EventProgram, EventProgramItem, EventSlideProps, IntervalMusicSlideProps } from './types'
 
 import { LinkComponentType, Slide, SlideNavigation, SlideNavigationList } from 'components/Slide'
 
-import { intervalMusicId } from './useEventSlides'
-import { DefaultIntervalMusicTitle, intervalMusicTitle, markdown, programItemTitle, TeachedIn } from './utils'
+import { markdown, TeachedIn } from './utils'
 
 export type WithCommonProps<X> = {
   eventProgram: EventProgram
@@ -40,14 +39,14 @@ export function EventSlide(props: WithCommonProps<EventSlideProps>) {
   }
 }
 
-function DanceSetSlide({ id, title, eventProgram, danceSetIndex, linkComponent }: WithCommonProps<DanceSetSlideProps>) {
+function DanceSetSlide(props: WithCommonProps<DanceSetSlideProps>) {
+  const { id, title, eventProgram, danceSetIndex, linkComponent } = props
   const danceSet = eventProgram.danceSets[danceSetIndex]
-  const navigation = danceSetNavigation(eventProgram, danceSet)
   return <Slide
     id={id}
     title={title}
     children={
-      <SlideNavigationList items={navigation?.items ?? []} linkComponent={linkComponent}
+      <SlideNavigationList items={danceSetNavigation(props)?.items ?? []} linkComponent={linkComponent}
       />
     }
     slideStyleId={danceSet.titleSlideStyleId ?? eventProgram.slideStyleId}
@@ -59,14 +58,11 @@ function IntervalMusicSlide(props: WithCommonProps<IntervalMusicSlideProps>) {
     eventProgram: {
       danceSets, defaultIntervalMusic, slideStyleId: defaultSlideStyleId
     },
-    eventProgram,
     danceSetIndex,
-    id, title, linkComponent, next
+    id, title, linkComponent, next, parent
   } = props
 
-  const danceSet = danceSets[danceSetIndex]
-  const nextDanceSet = danceSets[danceSetIndex + 1]
-  const { intervalMusic } = danceSet
+  const { intervalMusic } = danceSets[danceSetIndex]
 
   return <Slide
     id={id}
@@ -76,17 +72,14 @@ function IntervalMusicSlide(props: WithCommonProps<IntervalMusicSlideProps>) {
     )}
     slideStyleId={intervalMusic?.slideStyleId ?? defaultSlideStyleId}
     next={next}
-    navigation={danceSetNavigation(eventProgram, nextDanceSet ?? danceSet)}
+    navigation={danceSetNavigation((next as DanceSetSlideProps | undefined) ?? parent)}
     linkComponent={linkComponent}
   />
 }
 
 function DanceProgramItemSlide(props: WithCommonProps<DanceProgramItemSlideProps>) {
-  const { id, next, title, linkComponent, eventProgram, eventProgram: { danceSets }, danceSetIndex, itemIndex } = props
+  const { id, next, title, linkComponent, eventProgram, danceSetIndex, itemIndex } = props
   const { item, slideStyleId } = eventProgram.danceSets[danceSetIndex].program[itemIndex]
-  const navigationDanceSet = next?.type === 'danceSet'
-    ? danceSets[next.danceSetIndex]
-    : danceSets[danceSetIndex]
 
   const content = item.__typename === 'RequestedDance'
     ? {
@@ -104,36 +97,20 @@ function DanceProgramItemSlide(props: WithCommonProps<DanceProgramItemSlideProps
     title={title}
     linkComponent={linkComponent}
     slideStyleId={slideStyleId ?? eventProgram.slideStyleId}
-    navigation={danceSetNavigation(eventProgram, navigationDanceSet)}
+    navigation={danceSetNavigation(next?.parent)}
     next={next}
     {...content}
   />
 }
 
-function danceSetNavigation(eventProgram: EventProgram, danceSet: DanceSet): SlideNavigation | undefined {
-  if (!danceSet) return undefined
-  const items = danceSet.program.map(item => ({
-    id: item._id,
-    title: programItemTitle(item.item),
-    hidden: item.item.__typename === 'EventProgram' && item.item.showInLists === false
-  }))
-
-  if (danceSet.intervalMusic) {
-    const showIntervalMusic  = danceSet.intervalMusic.description
-      ? danceSet.intervalMusic.showInLists
-      : eventProgram.defaultIntervalMusic.showInLists
-
-    if (showIntervalMusic) {
-      items.push({
-        id: intervalMusicId(danceSet._id),
-        title: intervalMusicTitle(eventProgram, danceSet) ?? <DefaultIntervalMusicTitle />,
-        hidden: false,
-      })
-    }
-  }
-
+function danceSetNavigation(parent?: EventParentSlideProps): SlideNavigation | undefined {
+  if (!parent) return undefined
   return {
-    title: danceSet.title,
-    items
+    title: parent.title,
+    items: parent.children.map(item => ({
+      id: item.id,
+      title: item.title,
+      hidden: !item.showInLists,
+    }))
   }
 }

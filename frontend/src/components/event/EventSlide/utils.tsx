@@ -1,30 +1,7 @@
-import { DanceSet, EventProgram, EventProgramItem, RequestedDance, Workshop } from './types'
+import { Workshop } from './types'
 
 import {Markdown} from 'libraries/ui'
-import { SlideProps } from 'components/Slide'
 import {useTranslation} from 'i18n'
-
-export function programItemTitle(item: EventProgramItem | RequestedDance): SlideProps['title'] {
-  if (item.__typename === 'RequestedDance') {
-    return <RequestedDancePlaceholder />
-  }
-  return item.name ?? ''
-}
-
-export function intervalMusicTitle<T>(eventProgram: EventProgram, danceSet: DanceSet): string | undefined {
-  const { defaultIntervalMusic } = eventProgram
-
-  return (danceSet.intervalMusic?.name ?? defaultIntervalMusic?.name)
-    || undefined
-}
-
-export function DefaultIntervalMusicTitle() {
-  return useTranslation('pages.events.ballProgram.intervalMusic')
-}
-
-export function RequestedDancePlaceholder() {
-  return useTranslation('pages.events.ballProgram.requestedDance')
-}
 
 export function TeachedIn({teachedIn}: {teachedIn: Workshop[]}) {
   const teachedInStr = teachedIn.map(

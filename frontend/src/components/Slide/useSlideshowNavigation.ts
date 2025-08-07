@@ -5,7 +5,6 @@ import {useOnKeydown} from 'utils/useOnKeydown'
 
 interface Slide {
   id: string
-  parentId?: string
 }
 
 type SlideNavigationProps = {
