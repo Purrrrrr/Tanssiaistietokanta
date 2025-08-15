@@ -28,7 +28,7 @@ export default function PrintViewToolbar({children, maxHeight} : PrintViewToolba
     </button>
     <div
       className={classNames(
-        'overflow-y-auto p-2 max-h-20 transition max-w-[800px]',
+        'overflow-y-auto p-2 max-h-20 transition max-w-[1200px]',
         isOpen || 'opacity-0 -translate-y-full'
       )}
       style={maxHeight ? {maxHeight} : undefined}

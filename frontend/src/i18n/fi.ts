@@ -319,6 +319,9 @@ export const fi = {
       },
       danceCheatlist: {
         helpText: 'Rastita tähän, jos osaat tanssin. Näin ei tanssiaisissa tarvitse miettiä, mikä tanssi on kyseessä.',
+        rows: 'Rivien määrä',
+        cols: 'Sarakkeiden määrä',
+        landscape: 'Tulosta vaakasuunnassa',
         nrOfCopies: {
           one: '1 kopio per sivu',
           many: '__count__ kopiota per sivu',

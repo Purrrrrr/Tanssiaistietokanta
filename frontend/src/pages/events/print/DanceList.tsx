@@ -7,7 +7,7 @@ import {RadioGroup, Switch} from 'libraries/forms'
 import {AutosizedSection, Button} from 'libraries/ui'
 import { LinkToDanceWiki } from 'components/dance/DanceWikiPreview'
 import {LoadingState} from 'components/LoadingState'
-import PrintViewToolbar from 'components/widgets/PrintViewToolbar'
+import { A4Page, PrintPageContainer, PrintViewToolbar } from 'components/print'
 import {useT} from 'i18n'
 
 import './DanceList.sass'
@@ -20,42 +20,44 @@ function DanceList({eventId}) {
 
   if (!program) return <LoadingState {...loadingState} />
 
-  return <div className={`danceList ${style}`}>
-    <PrintViewToolbar>
-      <div className="flex items-center gap-2">
-        <Switch id="showlinks" value={showLinks} onChange={setShowLinks} label={t('showLinks')} />
-        <RadioGroup
-          id="style"
-          inline
-          options={[
-            {value: 'default', label: t('style.default')},
-            {value: 'three-columns', label: t('style.three-columns')},
-            {value: 'large', label: t('style.large')},
-          ]}
-          value={style}
-          onChange={setStyle}
-        />
-        <Button text={t('print')} onClick={() => window.print()} />
-      </div>
-    </PrintViewToolbar>
-    <main>
-      <PrintFooterContainer footer={<Footer workshops={workshops.filter(w => w.abbreviation)} />}>
-        {program.danceSets.map(
-          ({title, program}, key) => {
-            return <AutosizedSection key={key} className="section">
-              <h2 className="mb-4 text-3xl font-bold">{title}</h2>
-              {program
-                .map(row => row.item)
-                .filter(item => item.__typename !== 'EventProgram' || item.showInLists)
-                .map((item, i) =>
-                  <ProgramItem key={i} item={item} showLinks={showLinks} />
-                )}
-            </AutosizedSection>
-          }
-        )}
-      </PrintFooterContainer>
-    </main>
-  </div>
+  return <PrintPageContainer>
+    <div className={`danceList ${style}`}>
+      <PrintViewToolbar>
+        <div className="flex items-center gap-2">
+          <Switch id="showlinks" value={showLinks} onChange={setShowLinks} label={t('showLinks')} />
+          <RadioGroup
+            id="style"
+            inline
+            options={[
+              {value: 'default', label: t('style.default')},
+              {value: 'three-columns', label: t('style.three-columns')},
+              {value: 'large', label: t('style.large')},
+            ]}
+            value={style}
+            onChange={setStyle}
+          />
+          <Button text={t('print')} onClick={() => window.print()} />
+        </div>
+      </PrintViewToolbar>
+      <A4Page>
+        <PrintFooterContainer footer={<Footer workshops={workshops.filter(w => w.abbreviation)} />}>
+          {program.danceSets.map(
+            ({title, program}, key) => {
+              return <AutosizedSection key={key} className="section text-center">
+                <h2 className="mb-4 text-3xl font-bold">{title}</h2>
+                {program
+                  .map(row => row.item)
+                  .filter(item => item.__typename !== 'EventProgram' || item.showInLists)
+                  .map((item, i) =>
+                    <ProgramItem key={i} item={item} showLinks={showLinks} />
+                  )}
+              </AutosizedSection>
+            }
+          )}
+        </PrintFooterContainer>
+      </A4Page>
+    </div>
+  </PrintPageContainer>
 }
 
 function Footer({workshops}) {

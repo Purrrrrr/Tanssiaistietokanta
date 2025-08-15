@@ -1,17 +1,9 @@
 .danceList
-  padding-top: 1px
-  text-align: center
-  margin-bottom: 2em
-  min-height: 100vh
-
-  main
-    margin-inline: auto
-    width: 210mm
-    min-height: 287mm
-    background: white
-  
   section
     max-width: 210mm
+
+  h2
+    font-size: 1em
 
   &.default
     .section
@@ -38,12 +30,10 @@
     margin-bottom: 0
 
   @media screen
-    background: gray
     tfoot
       display: none
 
   @media print
-
     .section
       page-break-inside: avoid
     tfoot,thead
@@ -52,12 +42,14 @@
       display: table-footer-group
       td
         opacity: 0
+        padding-block: 4mm
     thead
       display: table-header-group
     footer
       position: fixed
       bottom: 0
       width: 100%
+      padding-block: 4mm
 
     @page
       size: A4

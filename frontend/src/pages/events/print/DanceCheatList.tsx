@@ -5,14 +5,14 @@ import {DanceCheatListQuery} from 'types/gql/graphql'
 import {backendQueryHook, graphql} from 'backend'
 import {useCallbackOnEventChanges} from 'services/events'
 
-import {Switch} from 'libraries/forms'
+import {NumberInput, Switch} from 'libraries/forms'
 import {Select} from 'libraries/formsV2/components/inputs'
 import {AutosizedSection, Button} from 'libraries/ui'
 import {CenteredContainer} from 'components/CenteredContainer'
 import {LoadingState} from 'components/LoadingState'
 import {PageTitle} from 'components/PageTitle'
+import { A4Page, PrintPageContainer, PrintViewToolbar, RepeatingGrid } from 'components/print'
 import {PrintTable} from 'components/PrintTable'
-import PrintViewToolbar from 'components/widgets/PrintViewToolbar'
 import {useT} from 'i18n'
 import {uniq} from 'utils/uniq'
 
@@ -43,43 +43,65 @@ query DanceCheatList($eventId: ID!) {
 
 export default function DanceCheatList({eventId}) {
   const t = useT('pages.events.danceCheatlist')
-  const [repeats, setRepeats] = useState(4)
+  const [cols, setCols] = useState(2)
+  const [rows, setRows] = useState(2)
+  const [landscape, setLandscape] = useState(true)
   const [helpText, setHelptext] = useState(true)
   const {data, ...loadingState} = useCheatList({eventId})
   if (!data?.event) return <LoadingState {...loadingState} />
   const {workshops} = data.event
-  const copyCountStr = (count: number) => t('nrOfCopies', {count})
 
-  return <div className={`dance-cheatsheet-page repeat-${repeats}`}>
-    <PrintViewToolbar>
-      <Select<number>
-        containerClassname="inline-block w-fit mr-2"
-        id="repeats"
-        value={repeats}
-        items={[1, 2, 4, 6, 8]}
-        onChange={setRepeats}
-        itemToString={copyCountStr}
-      />
-      <Switch id="helpText" inline label={t('showHelpText')} value={helpText} onChange={setHelptext}/>
-      <Button text={t('print')} onClick={() => window.print()} />
-    </PrintViewToolbar>
-    <main>
-      {Array(repeats).fill(1).map((_, i) =>
-        <DanceCheatListView key={`${repeats}-${i}`} workshops={workshops} helpText={helpText} />
-      )}
-    </main>
-  </div>
+  return <PrintPageContainer>
+    <div className="dance-cheatsheet-page">
+      <PrintViewToolbar>
+        <div className="flex items-center gap-2 *:mb-0!">
+          <label htmlFor="cols">{t('cols')}</label>
+          <NumberInput
+            inline
+            id="cols"
+            size={2}
+            min={1}
+            max={10}
+            value={cols}
+            onChange={setCols}
+          />
+          <label htmlFor="rows">{t('rows')}</label>
+          <NumberInput
+            inline
+            id="rows"
+            size={2}
+            min={1}
+            max={10}
+            value={rows}
+            onChange={setRows}
+          />
+          <span> = {t('nrOfCopies', { count: rows * cols })}</span>
+          <Switch id="landscape" inline label={t('landscape')} value={landscape} onChange={setLandscape}/>
+          <Switch id="helpText" inline label={t('showHelpText')} value={helpText} onChange={setHelptext}/>
+          <Button text={t('print')} onClick={() => window.print()} />
+        </div>
+      </PrintViewToolbar>
+      <A4Page onePage landscape={landscape}>
+        <RepeatingGrid cols={normalize(cols)} rows={normalize(rows)} repeatChildren>
+          <DanceCheatListView workshops={workshops} helpText={helpText} />
+        </RepeatingGrid>
+      </A4Page>
+    </div>
+  </PrintPageContainer>
 }
+
+const normalize = (n: number) => isNaN(n)
+  ? 1
+  : n < 1
+    ? 1 : n
 
 function DanceCheatListView({workshops, helpText}) {
   const t = useT('pages.events.danceCheatlist')
-  return <AutosizedSection>
-    <CenteredContainer className="dance-cheatsheet">
-      {helpText && <p>{t('helpText')}</p>}
-      {workshops.map(workshop =>
-        <WorkshopDances key={workshop._id} workshop={workshop} />)}
-    </CenteredContainer>
-  </AutosizedSection>
+  return <div className="dance-cheatsheet">
+    {helpText && <p>{t('helpText')}</p>}
+    {workshops.map(workshop =>
+      <WorkshopDances key={workshop._id} workshop={workshop} />)}
+  </div>
 }
 
 function WorkshopDances({workshop }: {workshop: Workshop}) {
@@ -87,10 +109,10 @@ function WorkshopDances({workshop }: {workshop: Workshop}) {
   const {name, instances } = workshop
   const dances = uniq(instances.flatMap(i => i.dances ?? []))
   return <>
-    <PageTitle>{name}</PageTitle>
+    <h2>{name}</h2>
     {dances.length === 0 ?
       <p>{t('noDances')}</p> :
-      <PrintTable headings={[t('danceName'), t('iCanDanceThis')]}>
+      <PrintTable className="w-full" headings={[t('danceName'), t('iCanDanceThis')]}>
         {dances.map(dance =>
           <tr key={dance._id}>
             <td>
