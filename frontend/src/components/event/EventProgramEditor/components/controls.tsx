@@ -1,6 +1,6 @@
 import {ActionButton as Button} from 'libraries/forms'
 import {
-  DanceSet, DEFAULT_INTERVAL_MUSIC, EventProgramRow, IntervalMusic, switchFor, useAppendToList
+  DanceSet, DEFAULT_INTERVAL_MUSIC, EventProgramRow, IntervalMusic, ProgramSectionPath, switchFor, useAppendToList
 } from 'components/event/EventProgramForm'
 import { ProgramTypeIcon } from 'components/event/ProgramTypeIcon'
 import {useT} from 'i18n'
@@ -19,6 +19,27 @@ export function AddIntroductionButton() {
     onClick={addIntroductoryInfo}
     className="addIntroductoryInfo"
   />
+}
+
+export function DanceSetItemButtons({path}: {path: ProgramSectionPath}) {
+  const t = useT('components.eventProgramEditor')
+  const programPath = `${path}.program` as const
+  const onAddItem = useAppendToList(programPath)
+  const newEventProgramItem = useCreateNewEventProgramItem()
+
+  return <>
+    <Button
+      text={t('buttons.addDance')}
+      rightIcon={<ProgramTypeIcon type="Dance" />}
+      onClick={() => onAddItem({item: {__typename: 'RequestedDance'}, slideStyleId: null, _id: guid()})}
+      className="addDance" />
+    <Button
+      text={t('buttons.addInfo')}
+      rightIcon={<ProgramTypeIcon type="EventProgram" />}
+      onClick={() => onAddItem(newEventProgramItem)}
+      className="addInfo"
+    />
+  </>
 }
 
 export function useCreateNewEventProgramItem(): () => EventProgramRow {

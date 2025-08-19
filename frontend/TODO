@@ -109,6 +109,8 @@
     * Print scaling, add padding to fix
     * Better control of row+column count for cheatheet
     * Check all prints
+  * Easier adding of slides in slide editor
+    Edit and link to interval music in dance set slide editor
   * Backend support
     * Option to show interval music in lists
     * Separate list name for items
@@ -123,7 +125,6 @@
       Maybe ability to set separate list name for items
         Support for showing it
       Add support for dance tags (fast, switching couples, stealing, etc.)
-    Easier adding of slides in slide editor
     Better drag and drop somehow?
     Image support? Better stock slides??
     Show dance in interval music

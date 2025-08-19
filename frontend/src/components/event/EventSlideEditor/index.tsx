@@ -28,6 +28,7 @@ import { ProgramTypeIcon } from 'components/event/ProgramTypeIcon'
 import { Duration } from 'components/widgets/Duration'
 import {T, useT, useTranslation} from 'i18n'
 
+import { AddIntroductionButton, DanceSetItemButtons } from '../EventProgramEditor/components'
 import { InheritedSlideStyleSelector, IntervalMusicDefaultTextsSwitch } from './components'
 
 import './EventSlideEditor.scss'
@@ -131,11 +132,12 @@ export function EventSlideContentEditor(props: WithEventProgram<EventSlideProps>
       return <SectionCard>
         <Input labelStyle="above" label={t('fields.programTitle')} path="introductions.title" inline />
         <ListField
-          label=""
+          label={t('titles.introductoryInformation')}
           path="introductions.program"
           component={ProgramItem}
           renderConflictItem={item => programItemToString(item, t)}
         />
+        <AddIntroductionButton />
       </SectionCard>
     case 'introduction': {
       const itemPath = `introductions.program.${props.itemIndex}` as const
@@ -152,6 +154,7 @@ export function EventSlideContentEditor(props: WithEventProgram<EventSlideProps>
           component={ProgramItem}
           renderConflictItem={item => programItemToString(item, t)}
         />
+        <DanceSetItemButtons path={itemPath} />
       </SectionCard>
     }
     case 'intervalMusic': {

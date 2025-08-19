@@ -16,7 +16,6 @@ import {
   programItemToString,
   ProgramSectionPath,
   RemoveItemButton,
-  useAppendToList,
   useOnChangeFor,
   useValueAt,
 } from 'components/event/EventProgramForm'
@@ -24,15 +23,9 @@ import { ProgramTypeIcon } from 'components/event/ProgramTypeIcon'
 import {Duration} from 'components/widgets/Duration'
 import {DurationField} from 'components/widgets/DurationField'
 import {useT, useTranslation} from 'i18n'
-import {guid} from 'utils/guid'
 
-import {
-  AddIntroductionButton,
-  IntervalMusicSwitch,
-  useCreateNewEventProgramItem,
-} from './controls'
+import { AddIntroductionButton, DanceSetItemButtons, IntervalMusicSwitch } from './controls'
 import { DanceSetNameEditor } from './DanceSetNameEditor'
-
 
 export function IntroductoryInformation() {
   const t = useT('components.eventProgramEditor')
@@ -84,13 +77,11 @@ function ProgramListEditor({path}: {path: ProgramSectionPath}) {
   const t = useT('components.eventProgramEditor')
   const tableRef = useRef(null)
   const programPath = `${path}.program` as const
-  const onAddItem = useAppendToList(programPath)
   const accessibilityContainer = useRef<HTMLDivElement>(null)
   const programRow = useValueAt(path)
   const getType = useCallback((item: EventProgramRow) => item.item.__typename, [])
   const isIntroductionsSection = path.startsWith('introductions')
   const accepts = useMemo(() => isIntroductionsSection ? ['EventProgram'] : ['Dance', 'RequestedDance', 'EventProgram'], [isIntroductionsSection])
-  const newEventProgramItem = useCreateNewEventProgramItem()
   if (!programRow) return null
   const { program } = programRow
   const intervalMusicDuration = isIntroductionsSection
@@ -134,21 +125,9 @@ function ProgramListEditor({path}: {path: ProgramSectionPath}) {
         <tr>
           <td colSpan={2} className="p-1.5">
             <ProgramItemCounters program={programRow.program} />
-            {isIntroductionsSection ||
-              <Button
-                text={t('buttons.addDance')}
-                rightIcon={<ProgramTypeIcon type="Dance" />}
-                onClick={() => onAddItem({item: {__typename: 'RequestedDance'}, slideStyleId: null, _id: guid()})}
-                className="addDance" />
-            }
             {isIntroductionsSection
               ? <AddIntroductionButton />
-              : <Button
-                text={t('buttons.addInfo')}
-                rightIcon={<ProgramTypeIcon type="EventProgram" />}
-                onClick={() => onAddItem(newEventProgramItem)}
-                className="addInfo"
-              />
+              : <DanceSetItemButtons path={path} />
             }
             {isIntroductionsSection ||
               <span className="ms-3">
