@@ -2,7 +2,6 @@ import React, { UIEvent, useDeferredValue, useEffect, useRef, useState } from 'r
 import {useNavigate, useParams} from 'react-router-dom'
 import { ChevronLeft, ChevronRight } from '@blueprintjs/icons'
 import classNames from 'classnames'
-import deepEquals from 'fast-deep-equal'
 
 import {Card, Link} from 'libraries/ui'
 import { EventProgramSettings, Field } from 'components/event/EventProgramForm'
@@ -140,7 +139,7 @@ function useDebouncedScrollPositionListener(callBack: (scrollPosition: number) =
   }
 }
 
-const SlideLink = React.memo(function SlideLink(
+function SlideLink(
   {slide, eventProgram, current, placeholder}: { slide: EventSlideProps, eventProgram: EventProgramSettings, current: boolean, placeholder: boolean }
 ) {
   const linkToSlide = useLinkToSlide()
@@ -154,7 +153,7 @@ const SlideLink = React.memo(function SlideLink(
     </SlideContainer>
     <p className="slide-link-title">{slide.title}</p>
   </Link>
-}, (prevProps, newProps) => prevProps.current === newProps.current && newProps.placeholder === prevProps.placeholder && (newProps.placeholder || areSlideBoxPropsEqual(prevProps, newProps)))
+}
 
 const PreviewLink = ({ children }: { children: React.ReactNode }) => <span>{children}</span>
 
@@ -163,7 +162,7 @@ interface SlideBoxProps {
   slide: EventSlideProps
 }
 
-const SlideBox = React.memo(function SlideBox({eventProgram, slide}: SlideBoxProps) {
+function SlideBox({eventProgram, slide}: SlideBoxProps) {
   return <Card noPadding id={slide.id}>
     <div className="flex flex-wrap">
       <SlideContainer className="grow inert" size="auto" color="#eee">
@@ -174,44 +173,4 @@ const SlideBox = React.memo(function SlideBox({eventProgram, slide}: SlideBoxPro
       </div>
     </div>
   </Card>
-}, areSlideBoxPropsEqual)
-
-function areSlideBoxPropsEqual(props: SlideBoxProps, nextProps: SlideBoxProps): boolean {
-  if (!deepEquals(nextProps.slide, props.slide)) {
-    return false
-  }
-  const { eventProgram: program } = props
-  const { eventProgram: nextProgram, slide } = nextProps
-
-  if (nextProgram.slideStyleId !== program.slideStyleId) {
-    return false
-  }
-
-  switch(slide.type) {
-    case 'title':
-      return deepEquals(nextProgram.introductions, program.introductions)
-    case 'introduction':
-      return nextProgram.introductions.title === program.introductions.title && deepEquals(
-        nextProgram.introductions.program[slide.itemIndex],
-        program.introductions.program[slide.itemIndex],
-      )
-    case 'danceSet':
-      return deepEquals(nextProgram.danceSets[slide.danceSetIndex], program.danceSets[slide.danceSetIndex])
-    case 'intervalMusic': {
-      const nextDanceSet = nextProgram.danceSets[slide.danceSetIndex]
-      const danceSet = program.danceSets[slide.danceSetIndex]
-      return nextDanceSet.title === danceSet.title && deepEquals(
-        [nextProgram.defaultIntervalMusic, nextDanceSet.intervalMusic],
-        [program.defaultIntervalMusic, danceSet.intervalMusic]
-      )
-    }
-    case 'programItem':{
-      const nextDanceSet = nextProgram.danceSets[slide.danceSetIndex]
-      const danceSet = program.danceSets[slide.danceSetIndex]
-      return nextDanceSet.title === danceSet.title && deepEquals(
-        danceSet.program[slide.itemIndex],
-        nextDanceSet.program[slide.itemIndex]
-      )
-    }
-  }
 }
