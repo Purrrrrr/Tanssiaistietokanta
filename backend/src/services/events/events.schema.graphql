@@ -91,73 +91,12 @@ input EventInput {
   name: String!
   beginDate: String!
   endDate: String!
-  program: ProgramInput
 }
 
 input EventPatchInput {
   name: String
   beginDate: String
   endDate: String
-}
-
-input ProgramInput {
-  introductions: IntroductionsInput!
-  danceSets: [DanceSetInput!]!
-  slideStyleId: ID
-  "The pause between two program items in seconds"
-  pauseBetweenDances: Float!
-  defaultIntervalMusic: DefaultIntervalMusicInput!
-}
-
-input DefaultIntervalMusicInput {
-  name: String
-  description: String
-}
-
-input IntroductionsInput {
-  title: String!
-  titleSlideStyleId: ID
-  program: [IntroductionInput!]!
-}
-
-input IntroductionInput {
-  "Row id"
-  _id: ID!
-  slideStyleId: ID
-  type: IntroductionProgramType!
-  eventProgram: EventProgramInput
-}
-
-input DanceSetInput {
-  _id: ID!
-  title: String!
-  titleSlideStyleId: ID
-  program: [ProgramItemInput!]!
-  intervalMusic: IntervalMusicInput
-}
-
-input ProgramItemInput {
-  "Row id"
-  _id: ID!
-  slideStyleId: ID
-  "The actual type of the item, the rest of the fields are used depending on the value of this field"
-  type: ProgramType!
-  dance: ID
-  eventProgram: EventProgramInput
-}
-
-input EventProgramInput {
-  name: String!
-  description: String
-  duration: Float
-  showInLists: Boolean!
-}
-
-input IntervalMusicInput {
-  name: String
-  description: String
-  duration: Float!
-  slideStyleId: ID
 }
 
 enum IntroductionProgramType {
