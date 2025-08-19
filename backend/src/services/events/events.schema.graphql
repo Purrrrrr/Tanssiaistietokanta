@@ -63,7 +63,8 @@ type RequestedDance {
 }
 
 type EventProgram implements ProgramItem {
-  name: String!
+  name: String! 
+  nameInLists: String
   description: String
   duration: Float
   showInLists: Boolean!

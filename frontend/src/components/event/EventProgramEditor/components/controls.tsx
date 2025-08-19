@@ -28,6 +28,7 @@ export function useCreateNewEventProgramItem(): () => EventProgramRow {
       __typename: 'EventProgram',
       _id: undefined,
       name: t('placeholderNames.newProgramItem'),
+      nameInLists: null,
       description: '',
       duration: 0,
       showInLists: false
