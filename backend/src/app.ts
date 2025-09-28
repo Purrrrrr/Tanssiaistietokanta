@@ -1,5 +1,6 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/application.html
 import { feathers, HookContext, NextFunction } from '@feathersjs/feathers'
+import { mkdirSync } from 'fs'
 import configuration from '@feathersjs/configuration'
 import { koa, rest, bodyParser, errorHandler, parseAuthentication, cors, serveStatic } from '@feathersjs/koa'
 import socketio from '@feathersjs/socketio'
@@ -25,7 +26,21 @@ app.use(cors())
 app.use(serveStatic(app.get('public')))
 app.use(errorHandler())
 app.use(parseAuthentication())
-app.use(bodyParser())
+
+const uploadTmp = app.get('uploadTmp')
+mkdirSync(uploadTmp, { recursive: true })
+mkdirSync(app.get('uploadDir'), { recursive: true })
+
+app.use(bodyParser({
+  multipart: true,
+  formidable: {
+    uploadDir: uploadTmp,
+  },
+}))
+app.use((ctx, next) => {
+  Object.assign(ctx.request.body, ctx.request.files)
+  return next()
+})
 app.use(graphqlServiceMiddleware)
 console.log(allowLocalhostOnDev(app.get('origins')))
 
@@ -38,6 +53,7 @@ app.configure(
     }
   })
 )
+
 function allowLocalhostOnDev(origins: string[] | undefined) {
   if (process.env.CORS_ALLOW_LOCALHOST !== 'true') return origins
   const localhost = /^http:\/\/localhost:[0-9]{2,4}$/
