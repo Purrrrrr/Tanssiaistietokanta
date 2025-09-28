@@ -1,6 +1,7 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/application.html
 import { feathers, HookContext, NextFunction } from '@feathersjs/feathers'
-import { mkdirSync } from 'fs'
+import { existsSync, mkdirSync } from 'fs'
+import { unlink } from 'fs/promises'
 import configuration from '@feathersjs/configuration'
 import { koa, rest, bodyParser, errorHandler, parseAuthentication, cors, serveStatic } from '@feathersjs/koa'
 import socketio from '@feathersjs/socketio'
@@ -37,9 +38,14 @@ app.use(bodyParser({
     uploadDir: uploadTmp,
   },
 }))
-app.use((ctx, next) => {
+app.use(async (ctx, next) => {
   Object.assign(ctx.request.body, ctx.request.files)
-  return next()
+  await next()
+  const filesToCleanup = Object.values(ctx.request.files ?? {})
+    .flat()
+    .filter(file => existsSync(file.filepath))
+
+  await Promise.all(filesToCleanup.map(file => unlink(file.filepath)))
 })
 app.use(graphqlServiceMiddleware)
 console.log(allowLocalhostOnDev(app.get('origins')))
