@@ -36,7 +36,8 @@
   "main": "lib/client",
   "scripts": {
     "create-migration": "ts-node src/create-migration.ts",
-    "dev": "cross-env CORS_ALLOW_LOCALHOST=true nodemon --watch src -e ts,graphql,json -x ts-node src/index.ts",
+    "dev": "cross-env CORS_ALLOW_LOCALHOST=true tsx watch --include \"src/**/*.graphql\" --clear-screen=false src/index.ts",
+    "typecheck": "nodemon --watch src -e ts -x tsc --noEmit",
     "compile": "shx rm -rf lib/ && copyfiles -u 1 src/**/*.graphql lib && copyfiles -u 1 src/**/*.json lib && tsc",
     "start": "node lib/",
     "start-dev": "cross-env CORS_ALLOW_LOCALHOST=true node lib/",
@@ -94,6 +95,7 @@
     "prettier": "^2.8.8",
     "shx": "^0.3.4",
     "ts-node": "^10.9.1",
+    "tsx": "^4.20.6",
     "typescript": "^5.8.3"
   }
 }
