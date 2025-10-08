@@ -7,7 +7,6 @@ import { NeDBService } from '../../utils/NeDBService'
 
 import type { Application } from '../../declarations'
 import type { File, FileData, FilePatch, FileQuery } from './files.schema'
-import { map } from '../../utils/map'
 
 export type { File, FileData, FilePatch, FileQuery }
 
@@ -18,15 +17,13 @@ export interface FileServiceOptions {
 
 export interface FileParams extends Params<FileQuery> {}
 
-interface InternalFileData extends Omit<File, '_id' | 'buffer'> {
-  storedName: string
-}
+interface InternalFileData extends Omit<File, '_id' | 'buffer'> {}
 
 export class FileService<ServiceParams extends FileParams = FileParams>
   implements ServiceInterface<File, FileData, ServiceParams, FilePatch>
 {
   uploadDir: string
-  db: NeDBService<File & InternalFileData, InternalFileData, ServiceParams, FilePatch>
+  db: NeDBService<File, InternalFileData, ServiceParams, FilePatch>
 
   constructor(public options: FileServiceOptions) {
 
@@ -42,16 +39,15 @@ export class FileService<ServiceParams extends FileParams = FileParams>
   }
 
   async find(_params?: ServiceParams): Promise<File[]> {
-    return (await this.db.find(_params)).map(omitInternalFields)
+    return this.db.find(_params)
   }
 
   async get(id: Id, _params?: ServiceParams): Promise<File> {
     const download = _params?.query?.download
-    const file = await this.db.get(id)
-    const result = omitInternalFields(file)
+    const result = await this.db.get(id)
     
     if (download) {
-      const filePath = join(this.uploadDir, file.storedName)
+      const filePath = join(this.uploadDir, result.fileId)
       const buffer = await readFile(filePath) as any
       result.buffer = buffer
     }
@@ -73,20 +69,19 @@ export class FileService<ServiceParams extends FileParams = FileParams>
 
     const { filepath, originalFilename, size, mimetype } = upload
     
-    const storedName = basename(filepath)
-    await rename(filepath, join(this.uploadDir, storedName)) 
+    const fileId = basename(filepath)
+    await rename(filepath, join(this.uploadDir, fileId)) 
 
-    return omitInternalFields(
-      await this.db.create({
-        path,
-        name: originalFilename,
-        storedName,
-        size,
-        mimetype,
-        _createdAt: now(),
-        _updatedAt: now(),
-      }, params)
-    )
+    return await this.db.create({
+      path,
+      name: originalFilename,
+      fileId,
+      size,
+      mimetype,
+      _createdAt: now(),
+      _updatedAt: now(),
+    }, params)
+
   }
 
   // This method has to be added to the 'methods' option to make it available to clients
@@ -99,13 +94,9 @@ export class FileService<ServiceParams extends FileParams = FileParams>
   // }
   //
   async remove(id: NullableId, _params?: ServiceParams): Promise<File | File[]> {
-    return map(await this.db.remove(id, _params), omitInternalFields)
+    return this.db.remove(id, _params)
   }
 
-}
-
-function omitInternalFields({ storedName, ...file }: InternalFileData & File): File {
-  return file
 }
 
 export const getOptions = (app: Application) => {
