@@ -16,6 +16,7 @@ export const fileSchema = Type.Object(
     _updatedAt: Type.String(),
     path: Type.String(),
     name: Type.String(),
+    fileId: Type.String(),
     mimetype: Type.String(),
     size: Type.Number(),
     buffer: Type.Optional(Type.Unknown())
