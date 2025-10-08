@@ -60,7 +60,7 @@ export const file = (app: Application) => {
                 ? 'inline'
                 : contentDisposition(name),
             }
-            ctx.dispatch = buffer
+            ctx.dispatch = buffer as unknown as File // Type hack to allow downloadinng the data
           }
         },
       ],

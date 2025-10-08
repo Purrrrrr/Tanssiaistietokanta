@@ -3,7 +3,7 @@ import { PersistentFile } from 'formidable'
 import { join, basename } from 'path'
 import { rename, readFile } from 'fs/promises'
 import type { Id, NullableId, Params, ServiceInterface } from '@feathersjs/feathers'
-import VersioningNeDBService from '../../utils/VersioningNeDBService'
+import { NeDBService } from '../../utils/NeDBService'
 
 import type { Application } from '../../declarations'
 import type { File, FileData, FilePatch, FileQuery } from './files.schema'
@@ -18,7 +18,7 @@ export interface FileServiceOptions {
 
 export interface FileParams extends Params<FileQuery> {}
 
-interface InternalFileData extends Pick<File, 'name' | 'mimetype'> {
+interface InternalFileData extends Omit<File, '_id' | 'buffer'> {
   storedName: string
 }
 
@@ -26,11 +26,18 @@ export class FileService<ServiceParams extends FileParams = FileParams>
   implements ServiceInterface<File, FileData, ServiceParams, FilePatch>
 {
   uploadDir: string
-  db: VersioningNeDBService<File & InternalFileData, InternalFileData, ServiceParams, FilePatch>
+  db: NeDBService<File & InternalFileData, InternalFileData, ServiceParams, FilePatch>
 
   constructor(public options: FileServiceOptions) {
 
-    this.db = new VersioningNeDBService({ ...options, dbname: 'files'})
+    this.db = new NeDBService({
+      ...options,
+      dbname: 'files',
+      indexes: [
+        { fieldName: 'path' },
+        { fieldName: ['path', 'name'], unique: true },
+      ],
+    })
     this.uploadDir = options.uploadDir
   }
 
@@ -58,20 +65,26 @@ export class FileService<ServiceParams extends FileParams = FileParams>
     if (Array.isArray(data)) {
       return Promise.all(data.map(current => this.create(current, params)))
     }
-    const { upload } = data
+    const { upload, path } = data
 
     if (!(upload instanceof PersistentFile)) {
       throw new Error('upload should be a file')
     }
+
+    const { filepath, originalFilename, size, mimetype } = upload
     
-    const storedName = basename(upload.filepath)
-    await rename(upload.filepath, join(this.uploadDir, storedName)) 
+    const storedName = basename(filepath)
+    await rename(filepath, join(this.uploadDir, storedName)) 
 
     return omitInternalFields(
       await this.db.create({
-        name: upload.originalFilename,
+        path,
+        name: originalFilename,
         storedName,
-        mimetype: upload.mimetype,
+        size,
+        mimetype,
+        _createdAt: now(),
+        _updatedAt: now(),
       }, params)
     )
   }
@@ -88,6 +101,7 @@ export class FileService<ServiceParams extends FileParams = FileParams>
   async remove(id: NullableId, _params?: ServiceParams): Promise<File | File[]> {
     return map(await this.db.remove(id, _params), omitInternalFields)
   }
+
 }
 
 function omitInternalFields({ storedName, ...file }: InternalFileData & File): File {
@@ -100,3 +114,5 @@ export const getOptions = (app: Application) => {
     uploadDir: app.get('uploadDir'),
   }
 }
+
+const now = () => new Date().toISOString()

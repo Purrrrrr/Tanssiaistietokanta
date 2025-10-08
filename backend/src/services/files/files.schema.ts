@@ -7,18 +7,17 @@ import type { HookContext } from '../../declarations'
 import { dataValidator, queryValidator } from '../../validators'
 import type { FileService } from './files.class'
 import { Id } from '../../utils/common-types'
-import { buffer } from 'stream/consumers'
 
 // Main data model schema
 export const fileSchema = Type.Object(
   {
     _id: Id(),
-    _versionId: Id(),
-    _versionNumber: Type.Number(),
-    _updatedAt: Type.String(),
     _createdAt: Type.String(),
+    _updatedAt: Type.String(),
+    path: Type.String(),
     name: Type.String(),
     mimetype: Type.String(),
+    size: Type.Number(),
     buffer: Type.Optional(Type.Unknown())
   },
   { $id: 'File', additionalProperties: false }
@@ -32,6 +31,7 @@ export const fileExternalResolver = resolve<File, HookContext<FileService>>({})
 // Schema for creating new entries
 export const fileDataSchema = Type.Object(
   {
+    path: Type.String(),
     upload: Type.Object(
       {
         filepath: Type.String(),
@@ -50,7 +50,7 @@ export const fileDataResolver = resolve<File, HookContext<FileService>>({})
 
 // Schema for updating existing entries
 export const filePatchSchema = Type.Partial(
-  Type.Pick(fileSchema, ['name']),
+  Type.Pick(fileSchema, ['path', 'name']),
   { $id: 'FilePatch' },
 )
 export type FilePatch = Static<typeof filePatchSchema>
