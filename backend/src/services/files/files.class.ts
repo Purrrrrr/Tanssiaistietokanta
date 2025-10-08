@@ -1,8 +1,7 @@
-// For more information about this file see https://dove.feathersjs.com/guides/cli/service.class.html#custom-services
 import { PersistentFile } from 'formidable'
 import { join, basename } from 'path'
-import { rename, readFile } from 'fs/promises'
-import type { Id, NullableId, Params, ServiceInterface } from '@feathersjs/feathers'
+import { rename, readFile, unlink } from 'fs/promises'
+import type { Id, Params } from '@feathersjs/feathers'
 import { NeDBService } from '../../utils/NeDBService'
 
 import type { Application } from '../../declarations'
@@ -17,17 +16,11 @@ export interface FileServiceOptions {
 
 export interface FileParams extends Params<FileQuery> {}
 
-interface InternalFileData extends Omit<File, '_id' | 'buffer'> {}
-
 export class FileService<ServiceParams extends FileParams = FileParams>
-  implements ServiceInterface<File, FileData, ServiceParams, FilePatch>
+  extends NeDBService<File, FileData, ServiceParams, FilePatch>
 {
-  uploadDir: string
-  db: NeDBService<File, InternalFileData, ServiceParams, FilePatch>
-
   constructor(public options: FileServiceOptions) {
-
-    this.db = new NeDBService({
+    super({
       ...options,
       dbname: 'files',
       indexes: [
@@ -35,19 +28,14 @@ export class FileService<ServiceParams extends FileParams = FileParams>
         { fieldName: ['path', 'name'], unique: true },
       ],
     })
-    this.uploadDir = options.uploadDir
-  }
-
-  async find(_params?: ServiceParams): Promise<File[]> {
-    return this.db.find(_params)
   }
 
   async get(id: Id, _params?: ServiceParams): Promise<File> {
     const download = _params?.query?.download
-    const result = await this.db.get(id)
+    const result = await super.get(id)
     
     if (download) {
-      const filePath = join(this.uploadDir, result.fileId)
+      const filePath = this.idToPath(result.fileId)
       const buffer = await readFile(filePath) as any
       result.buffer = buffer
     }
@@ -55,12 +43,7 @@ export class FileService<ServiceParams extends FileParams = FileParams>
     return result
   }
 
-  async create(data: FileData, params?: ServiceParams): Promise<File>
-  async create(data: FileData[], params?: ServiceParams): Promise<File[]>
-  async create(data: FileData | FileData[], params?: ServiceParams): Promise<File | File[]> {
-    if (Array.isArray(data)) {
-      return Promise.all(data.map(current => this.create(current, params)))
-    }
+  protected async mapData(_existing: File | null, data: FileData): Promise<File> {
     const { upload, path } = data
 
     if (!(upload instanceof PersistentFile)) {
@@ -70,33 +53,28 @@ export class FileService<ServiceParams extends FileParams = FileParams>
     const { filepath, originalFilename, size, mimetype } = upload
     
     const fileId = basename(filepath)
-    await rename(filepath, join(this.uploadDir, fileId)) 
+    await rename(filepath, this.idToPath(fileId)) 
+    const _updatedAt = now()
 
-    return await this.db.create({
+    return {
       path,
       name: originalFilename,
       fileId,
       size,
       mimetype,
-      _createdAt: now(),
-      _updatedAt: now(),
-    }, params)
-
+      _createdAt: _existing?._createdAt ?? _updatedAt,
+      _updatedAt,
+    } as File
   }
 
-  // This method has to be added to the 'methods' option to make it available to clients
-  // async update(id: NullableId, data: FileData, _params?: ServiceParams): Promise<File> {
-  //   return this.db.update(id, data, _params)
-  // }
-  //
-  // async patch(id: NullableId, data: FilePatch, _params?: ServiceParams): Promise<File> {
-  //   return this.db.patch(id, data, _params)
-  // }
-  //
-  async remove(id: NullableId, _params?: ServiceParams): Promise<File | File[]> {
-    return this.db.remove(id, _params)
+  protected onRemove(result: File): void | Promise<void> {
+    const path = this.idToPath(result.fileId)
+    return unlink(path)
   }
 
+  private idToPath(fileId: string) {
+    return join(this.options.uploadDir, fileId)
+  }
 }
 
 export const getOptions = (app: Application) => {

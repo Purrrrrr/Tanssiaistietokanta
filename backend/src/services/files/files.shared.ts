@@ -9,7 +9,7 @@ export type FileClientService = Pick<FileService<Params<FileQuery>>, (typeof fil
 
 export const filePath = 'files'
 
-export const fileMethods: Array<keyof FileService> = ['find', 'get', 'create', /* 'patch',*/ 'remove' ]
+export const fileMethods: Array<keyof FileService> = ['find', 'get', 'create', 'update', 'patch', 'remove' ]
 
 export const fileClient = (client: ClientApplication) => {
   const connection = client.get('connection')
