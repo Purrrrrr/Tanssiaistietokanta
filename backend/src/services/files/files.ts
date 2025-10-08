@@ -42,7 +42,8 @@ export const file = (app: Application) => {
       find: [],
       get: [],
       create: [schemaHooks.validateData(fileDataValidator), schemaHooks.resolveData(fileDataResolver)],
-      // patch: [schemaHooks.validateData(filePatchValidator), schemaHooks.resolveData(filePatchResolver)],
+      update: [schemaHooks.validateData(fileDataValidator), schemaHooks.resolveData(fileDataResolver)],
+      patch: [schemaHooks.validateData(filePatchValidator), schemaHooks.resolveData(filePatchResolver)],
       remove: [],
     },
     after: {
