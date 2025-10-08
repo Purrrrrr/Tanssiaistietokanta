@@ -64,6 +64,7 @@
     "@graphql-tools/merge": "^8.4.1",
     "@koa/cors": "^5.0.0",
     "@seald-io/nedb": "^4.0.1",
+    "content-disposition": "^0.5.4",
     "es-toolkit": "^1.16.0",
     "fast-json-patch": "^3.1.1",
     "feathers-nedb": "^6.0.0",
