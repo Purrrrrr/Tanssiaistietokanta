@@ -38,10 +38,12 @@ app.use(bodyParser({
     uploadDir: uploadTmp,
   },
 }))
+
 app.use(async (ctx, next) => {
-  Object.assign(ctx.request.body, ctx.request.files)
+  const { body, files } = ctx.request
+  Object.assign(body, files)
   await next()
-  const filesToCleanup = Object.values(ctx.request.files ?? {})
+  const filesToCleanup = Object.values(files ?? {})
     .flat()
     .filter(file => existsSync(file.filepath))
 

@@ -11,6 +11,6 @@
     "max": 50
   },
   "nedb": "data",
-  "uploadTmp": "./uploads/tmp",
-  "uploadDir": "./uploads/ready",
+  "uploadTmp": "./data/uploads/tmp",
+  "uploadDir": "./data/uploads/ready"
 }

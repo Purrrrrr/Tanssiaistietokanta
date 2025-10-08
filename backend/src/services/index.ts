@@ -1,3 +1,4 @@
+import { file } from './files/files'
 import { dancewiki } from './dancewiki/dancewiki'
 import { graphql } from './graphql/graphql'
 import { channelConnections } from './channel-connections/channel-connections'
@@ -9,6 +10,7 @@ import { dances } from './dances/dances'
 import type { Application } from '../declarations'
 
 export const services = (app: Application) => {
+  app.configure(file)
   app.configure(dancewiki)
   app.configure(graphql)
   app.configure(channelConnections)
