@@ -257,6 +257,11 @@ export const fi = {
       siteMayNotWork: 'Selaimesi ei tue kaikkia tämän sivuston käyttämiä ominaisuuksia. Jos jatkat, sivusto ei välttämättä toimi tarkoituksenmukaisesti.',
       possibleSupportedBrowsers: 'Tanssitietokanta on kehitetty ja testattu enimmäkseen Firefoxilla, mutta se tukee ainakin seuraavien selaimien uusimpia versioita:',
     },
+    files: {
+      UploadButton: {
+        upload: 'Lähetä tiedosto',
+      },
+    },
   },
   pages: {
     events: {
