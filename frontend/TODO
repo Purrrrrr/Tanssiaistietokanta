@@ -117,6 +117,7 @@
     * Time and date for ball
     * Migrations
     * Dance tags (how to represent?)
+  * Dance set title view seems unnecessary. Remove? Nah.
     Frontend support
     * Add time and date for ball
       * Include it in print
@@ -128,9 +129,33 @@
     Better drag and drop somehow?
     Image support? Better stock slides??
     Show dance in interval music
-    Dance set title view seems unnecessary. Remove?
     Showing of dance tags
     Icons for dance tags
+
+  Templates for event/interval music slides?
+  Documents?
+  Files and images
+  * Basic backend
+  * Do we use versioning? Not now
+  * Basic file list
+  * File size formatter
+  * Upload button
+    * Progress
+      Dropzone
+    Rename button/functionality
+    Delete file button
+    Aborting file transfers
+    Better file list columns
+    Clear existing files when updating
+    Root + path
+    GraphQL endpoint?
+    Validate upload type/check malware
+      Type checking
+      Virus checking?
+    Zipping downloads?
+    UI
+      File in events
+      Files in markdown
 
   Ability to see more info about program item in editor
 
