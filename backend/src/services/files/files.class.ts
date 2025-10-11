@@ -56,6 +56,10 @@ export class FileService<ServiceParams extends FileParams = FileParams>
     await rename(filepath, this.idToPath(fileId)) 
     const _updatedAt = now()
 
+    if (_existing?.fileId) {
+      await unlink(this.idToPath(_existing.fileId))
+    }
+
     return {
       path,
       name: originalFilename,
