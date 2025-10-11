@@ -6,6 +6,8 @@ import { type File, type Progress, doUpload } from 'services/files'
 import { Button, ButtonProps } from 'libraries/ui'
 import { useT } from 'i18n'
 
+import useFilesize from './useFilesize'
+
 interface UploadButtonProps extends Pick<ButtonProps, 'color' | 'minimal' | 'paddingClass' | 'icon' | 'text'>{
   path?: string
   fileId?: string
@@ -16,10 +18,11 @@ export function UploadButton({path, fileId, onUpload, icon, ...rest}: UploadButt
   const input = useRef<HTMLInputElement>(null)
   const [upload, progress] = useUpload(path, fileId)
   const T = useT('components.files.UploadButton')
+  const filesize = useFilesize()
 
   if (progress) {
     return <div>
-      {progress.uploaded}/{progress.total}
+      {filesize(progress.uploaded)}/{filesize(progress.total)}
     </div>
   }
 
