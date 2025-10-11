@@ -139,14 +139,21 @@
   * Do we use versioning? Not now
   * Basic file list
   * File size formatter
+  * Clear existing files when updating file contents
+    Ability to name an upload?
+    Empty list view
+    Fail if size too big
   * Upload button
     * Progress
+      Nicer progress style
+        Maybe in list?
+      File type restriction for replacement upload?
+        Or maybe ask about if name is same?
       Dropzone
     Rename button/functionality
     Delete file button
     Aborting file transfers
     Better file list columns
-    Clear existing files when updating
     Root + path
     GraphQL endpoint?
     Validate upload type/check malware
