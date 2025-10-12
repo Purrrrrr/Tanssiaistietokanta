@@ -14,6 +14,7 @@ export const fileSchema = Type.Object(
     _id: Id(),
     _createdAt: Type.String(),
     _updatedAt: Type.String(),
+    root: Type.String(),
     path: Type.String(),
     name: Type.String(),
     fileId: Type.String(),
@@ -32,7 +33,9 @@ export const fileExternalResolver = resolve<File, HookContext<FileService>>({})
 // Schema for creating new entries
 export const fileDataSchema = Type.Object(
   {
+    root: Type.String(),
     path: Type.String(),
+    filename: Type.Optional(Type.String({ minLength: 1 })),
     upload: Type.Object(
       {
         filepath: Type.String(),
@@ -59,7 +62,7 @@ export const filePatchValidator = getValidator(filePatchSchema, dataValidator)
 export const filePatchResolver = resolve<File, HookContext<FileService>>({})
 
 // Schema for allowed query properties
-export const fileQueryProperties = Type.Pick(fileSchema, ['_id'])
+export const fileQueryProperties = Type.Omit(fileSchema, ['_id', 'fileId', 'buffer'])
 export const fileQuerySchema = Type.Intersect(
   [
     querySyntax(fileQueryProperties),

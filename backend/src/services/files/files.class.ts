@@ -24,8 +24,8 @@ export class FileService<ServiceParams extends FileParams = FileParams>
       ...options,
       dbname: 'files',
       indexes: [
-        { fieldName: 'path' },
-        { fieldName: ['path', 'name'], unique: true },
+        { fieldName: ['root', 'path'] },
+        { fieldName: ['root', 'path', 'name'], unique: true },
       ],
     })
   }
@@ -44,7 +44,7 @@ export class FileService<ServiceParams extends FileParams = FileParams>
   }
 
   protected async mapData(_existing: File | null, data: FileData): Promise<File> {
-    const { upload, path } = data
+    const { upload, path, root } = data
 
     if (!(upload instanceof PersistentFile)) {
       throw new Error('upload should be a file')
@@ -61,8 +61,9 @@ export class FileService<ServiceParams extends FileParams = FileParams>
     }
 
     return {
+      root,
       path,
-      name: originalFilename,
+      name: data.filename ?? originalFilename,
       fileId,
       size,
       mimetype,

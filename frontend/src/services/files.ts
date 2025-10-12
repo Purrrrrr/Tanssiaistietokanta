@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useState } from 'react'
 
+import { fetchWithProgress } from 'utils/fetchWithProgress'
+
 export const MAX_UPLOAD_SIZE = 20 * 1024 ** 2
 
-export type UploadFailureReason = 'aborted' | 'too_big' | 'server' | 'other'
+export type UploadFailureReason = 'aborted' | 'too_big' | 'already_exists' | 'server' | 'unknown'
 
 class UploadError extends Error {
   code: UploadFailureReason
@@ -16,7 +18,7 @@ export function getUploadError(error: unknown): UploadError{
   if (error instanceof UploadError) {
     return error
   }
-  return new UploadError('other')
+  return new UploadError('unknown')
 }
 
 export interface UploadedFile {
@@ -28,7 +30,9 @@ export interface UploadedFile {
 }
 
 interface UploadOptions {
+  root?: string
   path?: string
+  filename?: string
   file: Blob
   fileId?: string
   onProgress?: (progress: Progress) => unknown
@@ -40,47 +44,45 @@ export interface Progress {
   total: number
 }
 
-export function doUpload({ path, file, fileId, onProgress, signal }: UploadOptions) {
-  const promise = Promise.withResolvers<UploadedFile>()
-
+export async function doUpload({ root, path, file, filename, fileId, onProgress, signal }: UploadOptions) {
   if (file.size > MAX_UPLOAD_SIZE) {
     return Promise.reject(new UploadError('too_big'))
   }
 
-  const request = new XMLHttpRequest()
-  request.upload.addEventListener('progress', ({ lengthComputable, loaded, total }) => {
-    if (lengthComputable) {
-      onProgress?.({
-        uploaded: loaded,
-        total,
-      })
-    }
+  const data = toFormData({
+    root: root ?? '',
+    path: path ?? '',
+    upload: file,
+    filename,
   })
-  request.addEventListener('load', () => {
-    if (request.status === 200) {
-      promise.resolve(JSON.parse(request.responseText))
-    } else {
-      promise.reject(new UploadError('server', request.responseText))
-    }
-  })
-  request.addEventListener('error', () => {
-    promise.reject(new UploadError('server', request.responseText))
-  })
-  signal?.addEventListener('abort', () => {
-    request.abort()
-    promise.reject(new UploadError('aborted'))
-  })
-  if (fileId) {
-    request.open('PUT', `/api/files/${fileId}`)
-  } else {
-    request.open('POST', '/api/files')
-  }
-  const formData = new FormData()
-  formData.append('path', path ?? '')
-  formData.append('upload', file)
-  request.send(formData)
+  const options = { data, onProgress, signal }
+  const response = fileId
+    ? await fetchWithProgress('PUT', `/api/files/${fileId}`, options)
+    : await fetchWithProgress('POST', '/api/files', options)
 
-  return promise.promise
+  if (response.type === 'error') {
+    throw new UploadError(response.error)
+  }
+
+  switch (response.status) {
+    case 200:
+    case 201:
+      return JSON.parse(response.content) as UploadedFile
+    case 409:
+      throw new UploadError('already_exists')
+    default:
+      throw new UploadError('server', response.content)
+  }
+}
+
+function toFormData(object: object) {
+  const formData = new FormData()
+  for (const [key, value] of Object.entries(object)) {
+    if (value != null) {
+      formData.append(key, value)
+    }
+  }
+  return formData
 }
 
 export async function getFiles() {
