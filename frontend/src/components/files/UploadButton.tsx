@@ -20,7 +20,7 @@ export function UploadButton({path, fileId, onUpload, icon, ...rest}: UploadButt
   const T = useT('components.files.UploadButton')
   const filesize = useFilesize()
 
-  const getErrorMessage = (e: unknown) => {
+  const getErrorMessage = (e: unknown, file: File) => {
     const error = getUploadError(e)
     switch (error.code) {
       case 'too_big':
@@ -31,8 +31,10 @@ export function UploadButton({path, fileId, onUpload, icon, ...rest}: UploadButt
         return T('errorReason.server', {
           message: error.message,
         })
-      case 'other':
-        return T('errorReason.other')
+      case 'already_exists':
+        return T('errorReason.already_exists', { filename: file.name })
+      case 'unknown':
+        return T('errorReason.unknown')
     }
   }
   const upload = async (file: File) => {
@@ -40,7 +42,7 @@ export function UploadButton({path, fileId, onUpload, icon, ...rest}: UploadButt
       const result = await doUpload(file)
       onUpload?.(result)
     } catch (e) {
-      const message = getErrorMessage(e)
+      const message = getErrorMessage(e, file)
       if (message) alert(message)
     }
   }

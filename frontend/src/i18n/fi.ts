@@ -264,7 +264,8 @@ export const fi = {
         errorReason: {
           'too_big': 'Tiedosto on liian suuri. Et voi lähettää tiedostoja, joiden koko on yli __max_size__',
           'server': 'Virhe tiedoston lähetyksessä: __message__',
-          'other': 'Tuntematon virhe tiedoston lähetyksessä',
+          'unknown': 'Tuntematon virhe tiedoston lähetyksessä',
+          'already_exists': 'Tiedosto __filename__ on jo olemassa',
         }
       },
     },

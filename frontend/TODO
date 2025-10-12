@@ -144,7 +144,7 @@
   * Better file list columns
   * Aborting file transfers
   * Fail if size too big
-    Ability to name an upload?
+  * Ability to name an upload?
   * Upload button
     * Progress
       Nicer progress style

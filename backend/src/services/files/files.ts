@@ -13,12 +13,32 @@ import {
   fileQueryResolver
 } from './files.schema'
 
-import type { Application } from '../../declarations'
-import { File, FileService, getOptions } from './files.class'
+import type { Application, HookContext, NextFunction } from '../../declarations'
+import { File, FileData, FileService, getOptions } from './files.class'
 import { filePath, fileMethods } from './files.shared'
 
 export * from './files.class'
 export * from './files.schema'
+
+async function validateUniqueName(ctx: HookContext, next: NextFunction) {
+  if (!ctx.http) {
+    return next()
+  }
+
+  const data = (ctx.data as FileData)
+  const { root, path } = data
+  const filename = data.filename ?? data.upload.originalFilename
+  const res = await ctx.app.service('files').find({ query: { root, path, name: filename }})
+  if (res.length > 0) {
+    ctx.http.status = 409
+    ctx.result = {
+      code: 'FILE_EXISTS',
+      message: 'The file already exists',
+    }
+    return
+  }
+  await next()
+}
 
 // A configure function that registers the service and its hooks via `app.configure`
 export const file = (app: Application) => {
@@ -35,7 +55,10 @@ export const file = (app: Application) => {
       all: [
         // schemaHooks.resolveExternal(fileExternalResolver),
         // schemaHooks.resolveResult(fileResolver)
-      ]
+      ], 
+      create: [validateUniqueName],
+      update: [validateUniqueName],
+      patch: [validateUniqueName],
     },
     before: {
       all: [schemaHooks.validateQuery(fileQueryValidator), schemaHooks.resolveQuery(fileQueryResolver)],
