@@ -57,7 +57,11 @@ export function doUpload({ path, file, fileId, onProgress, signal }: UploadOptio
     }
   })
   request.addEventListener('load', () => {
-    promise.resolve(JSON.parse(request.responseText))
+    if (request.status === 200) {
+      promise.resolve(JSON.parse(request.responseText))
+    } else {
+      promise.reject(new UploadError('server', request.responseText))
+    }
   })
   request.addEventListener('error', () => {
     promise.reject(new UploadError('server', request.responseText))
