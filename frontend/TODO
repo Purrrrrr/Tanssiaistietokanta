@@ -140,9 +140,11 @@
   * Basic file list
   * File size formatter
   * Clear existing files when updating file contents
+  * Empty list view
+  * Better file list columns
+  * Aborting file transfers
+  * Fail if size too big
     Ability to name an upload?
-    Empty list view
-    Fail if size too big
   * Upload button
     * Progress
       Nicer progress style
@@ -152,8 +154,6 @@
       Dropzone
     Rename button/functionality
     Delete file button
-    Aborting file transfers
-    Better file list columns
     Root + path
     GraphQL endpoint?
     Validate upload type/check malware
@@ -163,6 +163,7 @@
     UI
       File in events
       Files in markdown
+      Move documents to own service to facilitate this?
 
   Ability to see more info about program item in editor
 
