@@ -258,6 +258,7 @@ export const fi = {
       possibleSupportedBrowsers: 'Tanssitietokanta on kehitetty ja testattu enimmäkseen Firefoxilla, mutta se tukee ainakin seuraavien selaimien uusimpia versioita:',
     },
     files: {
+      noFiles: 'Ei tiedostoja',
       UploadButton: {
         upload: 'Lähetä tiedosto',
       },

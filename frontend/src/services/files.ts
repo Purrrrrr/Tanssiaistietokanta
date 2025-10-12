@@ -1,7 +1,27 @@
 import { useCallback, useEffect, useState } from 'react'
 
-export interface File {
+const MAX_UPLOAD_SIZE = 20 * 1024 ** 2
+
+export type UploadFailureReason = 'aborted' | 'too_big' | 'server' | 'other'
+
+class UploadError extends Error {
+  code: UploadFailureReason
+  constructor(cause: UploadFailureReason, serverMessage?: string) {
+    super(serverMessage)
+    this.code = cause
+  }
+}
+
+export function getUploadFailureReason(error: unknown): UploadFailureReason {
+  if (error instanceof UploadError) {
+    return error.code
+  }
+  return 'other'
+}
+
+export interface UploadedFile {
   _id: string
+  _updatedAt: string
   name: string
   size: number
   //TODO: more fields
@@ -12,6 +32,7 @@ interface UploadOptions {
   file: Blob
   fileId?: string
   onProgress?: (progress: Progress) => unknown
+  signal?: AbortSignal
 }
 
 export interface Progress {
@@ -19,12 +40,15 @@ export interface Progress {
   total: number
 }
 
-export function doUpload({ path, file, fileId, onProgress }: UploadOptions) {
-  const promise = Promise.withResolvers<File>()
+export function doUpload({ path, file, fileId, onProgress, signal }: UploadOptions) {
+  const promise = Promise.withResolvers<UploadedFile>()
+
+  if (file.size > MAX_UPLOAD_SIZE) {
+    return Promise.reject(new UploadError('too_big'))
+  }
 
   const request = new XMLHttpRequest()
   request.upload.addEventListener('progress', ({ lengthComputable, loaded, total }) => {
-    console.log({lengthComputable, loaded, total})
     if (lengthComputable) {
       onProgress?.({
         uploaded: loaded,
@@ -36,7 +60,11 @@ export function doUpload({ path, file, fileId, onProgress }: UploadOptions) {
     promise.resolve(JSON.parse(request.responseText))
   })
   request.addEventListener('error', () => {
-    promise.reject(new Error(request.responseText))
+    promise.reject(new UploadError('server', request.responseText))
+  })
+  signal?.addEventListener('abort', () => {
+    request.abort()
+    promise.reject(new UploadError('aborted'))
   })
   if (fileId) {
     request.open('PUT', `/api/files/${fileId}`)
@@ -57,7 +85,7 @@ export async function getFiles() {
 }
 
 export function useFiles() {
-  const [files, setFiles] = useState<File[]>([])
+  const [files, setFiles] = useState<UploadedFile[]>([])
   const refetch = useCallback(() => {
     getFiles().then(setFiles)
   }, [])
