@@ -261,6 +261,11 @@ export const fi = {
       noFiles: 'Ei tiedostoja',
       UploadButton: {
         upload: 'Lähetä tiedosto',
+        errorReason: {
+          'too_big': 'Tiedosto on liian suuri. Et voi lähettää tiedostoja, joiden koko on yli __max_size__',
+          'server': 'Virhe tiedoston lähetyksessä: __message__',
+          'other': 'Tuntematon virhe tiedoston lähetyksessä',
+        }
       },
     },
   },

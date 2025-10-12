@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState } from 'react'
 import { Add } from '@blueprintjs/icons'
 
-import { type Progress, type UploadedFile, doUpload, getUploadFailureReason } from 'services/files'
+import { type Progress, type UploadedFile, doUpload, getUploadError, MAX_UPLOAD_SIZE } from 'services/files'
 
 import { Button, ButtonProps } from 'libraries/ui'
 import { useT } from 'i18n'
@@ -20,12 +20,28 @@ export function UploadButton({path, fileId, onUpload, icon, ...rest}: UploadButt
   const T = useT('components.files.UploadButton')
   const filesize = useFilesize()
 
+  const getErrorMessage = (e: unknown) => {
+    const error = getUploadError(e)
+    switch (error.code) {
+      case 'too_big':
+        return T('errorReason.too_big', {
+          max_size: filesize(MAX_UPLOAD_SIZE)
+        })
+      case 'server':
+        return T('errorReason.server', {
+          message: error.message,
+        })
+      case 'other':
+        return T('errorReason.other')
+    }
+  }
   const upload = async (file: File) => {
     try {
       const result = await doUpload(file)
       onUpload?.(result)
     } catch (e) {
-      alert(getUploadFailureReason(e))
+      const message = getErrorMessage(e)
+      if (message) alert(message)
     }
   }
 

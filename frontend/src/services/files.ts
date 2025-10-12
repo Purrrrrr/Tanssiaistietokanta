@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 
-const MAX_UPLOAD_SIZE = 20 * 1024 ** 2
+export const MAX_UPLOAD_SIZE = 20 * 1024 ** 2
 
 export type UploadFailureReason = 'aborted' | 'too_big' | 'server' | 'other'
 
@@ -12,11 +12,11 @@ class UploadError extends Error {
   }
 }
 
-export function getUploadFailureReason(error: unknown): UploadFailureReason {
+export function getUploadError(error: unknown): UploadError{
   if (error instanceof UploadError) {
-    return error.code
+    return error
   }
-  return 'other'
+  return new UploadError('other')
 }
 
 export interface UploadedFile {
