@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
 
-import { fetchWithProgress } from 'utils/fetchWithProgress'
+import { fetchWithProgress, FetchWithProgressOptions } from 'utils/fetchWithProgress'
+
+export type { Progress } from 'utils/fetchWithProgress'
 
 export const MAX_UPLOAD_SIZE = 20 * 1024 ** 2
 
@@ -29,19 +31,12 @@ export interface UploadedFile {
   //TODO: more fields
 }
 
-interface UploadOptions {
+interface UploadOptions extends Pick<FetchWithProgressOptions, 'signal' | 'onProgress'> {
   root?: string
   path?: string
   filename?: string
   file: Blob
   fileId?: string
-  onProgress?: (progress: Progress) => unknown
-  signal?: AbortSignal
-}
-
-export interface Progress {
-  uploaded: number
-  total: number
 }
 
 export async function doUpload({ root, path, file, filename, fileId, onProgress, signal }: UploadOptions) {

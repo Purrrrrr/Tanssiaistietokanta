@@ -1,4 +1,4 @@
-interface FetchWithProgressOptions {
+export interface FetchWithProgressOptions {
   data: FormData
   onProgress?: (progress: Progress) => unknown
   signal?: AbortSignal
