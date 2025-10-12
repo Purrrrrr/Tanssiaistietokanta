@@ -1,4 +1,5 @@
-import { Upload } from '@blueprintjs/icons'
+import { useRef } from 'react'
+import { Add, Upload } from '@blueprintjs/icons'
 
 import { useFiles } from 'services/files'
 
@@ -9,26 +10,52 @@ import { useT } from 'i18n'
 
 import { UploadButton } from './UploadButton'
 import useFilesize from './useFilesize'
+import { useUploadQueue } from './useUploadQueue'
 
 export function FileList() {
+  const input = useRef<HTMLInputElement>(null)
   const [files, fetchFiles] = useFiles()
+  const [doUpload, uploads] = useUploadQueue('', '')
   const filesize = useFilesize()
   const T = useT('components.files')
   const formatDate = useFormatDateTime()
 
+  const upload = (file: File) => doUpload(file).then(fetchFiles)
+  const itemCount = files.length + upload.length
+
   return <div>
+    <input
+      className="hidden"
+      ref={input}
+      type="file"
+      onChange={e => e.target.files && upload(e.target.files[0])}
+    />
     <div className="flex my-2">
-      <UploadButton onUpload={fetchFiles} text="Lisää tiedosto"/>
+      <Button icon={<Add />} onClick={() => input.current?.click()} text="Lisää tiedosto"/>
       <Button text="Reload" onClick={fetchFiles} />
     </div>
     <ItemList columns="grid-cols-[1fr_minmax(200px,auto)_minmax(100px,auto)_min-content]">
-      {files.map(file => <ItemList.Row key={file._id}>
-        <RegularLink href={`/api/files/${file._id}?download=true`} target="_blank">{file.name}</RegularLink>
-        <span>{formatDate(file._updatedAt)}</span>
-        <span>{filesize(file.size)}</span>
-        <UploadButton minimal icon={<Upload />} fileId={file._id} onUpload={fetchFiles} />
-      </ItemList.Row>)}
-      {files.length === 0 && <div className="text-center py-6 col-span-full text-muted text-base">{T('noFiles')}</div>}
+      {files.map(file =>
+        <ItemList.Row key={file._id}>
+          <RegularLink href={`/api/files/${file._id}?download=true`} target="_blank">{file.name}</RegularLink>
+          <span>{formatDate(file._updatedAt)}</span>
+          <span>{filesize(file.size)}</span>
+          <UploadButton minimal icon={<Upload />} fileId={file._id} onUpload={fetchFiles} />
+        </ItemList.Row>
+      )}
+      {uploads.map(upload =>
+        <ItemList.Row key={upload.id}>
+          <span>Lähetetään {upload.file.name}...</span>
+          <span className="col-span-2">
+            {upload.progress
+              && <>{filesize(upload.progress.uploaded)}/{filesize(upload.progress.total)}</>
+            }
+          </span>
+          <Button minimal text="X" onClick={upload.abort} />
+        </ItemList.Row>
+
+      )}
+      {itemCount === 0 && <div className="text-center py-6 col-span-full text-muted text-base">{T('noFiles')}</div>}
     </ItemList>
   </div>
 }
