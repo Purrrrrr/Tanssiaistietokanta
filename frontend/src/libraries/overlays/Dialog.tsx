@@ -5,14 +5,16 @@ import classNames from 'classnames'
 import { useShouldRender } from 'libraries/common/useShouldRender'
 import { Button } from 'libraries/ui'
 
-type DialogProps = {
+export type DialogProps = {
   isOpen: boolean
   onClose?: (e: React.SyntheticEvent) => unknown
   title: string
   // style ?: React.CSSProperties
   children: React.ReactNode
   className?: string
-} & (
+} & DialogCloseButtonProps
+
+export type DialogCloseButtonProps = (
   {
     showCloseButton?: true
     closeButtonLabel: string

@@ -156,9 +156,13 @@ function OverlayShowcase() {
       onClose={() => setModal(null)}
       isOpen={modal === 'alert'}
       title="This is an alert"
-      color="danger"
-      cancelButtonText="Cancel"
-      confirmButtonText="OK"
+      buttons={[
+        {
+          text: 'Ok',
+          color: 'danger',
+        },
+        'Cancel',
+      ]}
     >
       <p>Some children go here</p>
     </Alert>

@@ -28,11 +28,19 @@ export function DeleteButton({ onDelete, iconOnly, disabled, minimal, className,
       color="danger"
       onClick={() => setShowDialog(true)}
     />
-    <Alert title={text} isOpen={showDialog} onClose={() => setShowDialog(false)}
-      onConfirm={onDelete}
-      color="danger"
-      cancelButtonText={t('cancel')}
-      confirmButtonText={t('delete')}>
+    <Alert
+      title={text}
+      isOpen={showDialog}
+      onClose={() => setShowDialog(false)}
+      buttons={[
+        {
+          text: t('delete'),
+          color: 'danger',
+          action: onDelete,
+        },
+        t('cancel'),
+      ]}
+    >
       {confirmText}
     </Alert>
   </>

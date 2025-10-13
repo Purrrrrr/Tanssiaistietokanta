@@ -1,38 +1,59 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 
-import { Button, Color } from 'libraries/ui'
+import { Button, ButtonProps } from 'libraries/ui'
 
 import { Dialog } from './Dialog'
 
 interface AlertProps {
-  cancelButtonText?: string
-  children: React.ReactNode
-  confirmButtonText?: string
   title: string
-  color?: Color
+  children: React.ReactNode
+  button?: Action
+  buttons?: Action[]
   isOpen: boolean
-  onCancel?(evt?: React.SyntheticEvent<HTMLElement>): void
-  onConfirm?(evt?: React.SyntheticEvent<HTMLElement>): void
-  onClose?(confirmed: boolean, evt?: React.SyntheticEvent<HTMLElement>): void
+  onClose(): void
+  onChoose?(action: Action): void
 }
 
-export function Alert({ isOpen, title, color, confirmButtonText, cancelButtonText, children, onCancel, onConfirm, onClose }: AlertProps & { children: React.ReactNode, title: string }) {
-  const doCancel = useCallback((e) => {
-    onCancel?.()
-    onClose?.(false, e)
-  }, [onCancel, onClose])
-  const doConfirm = useCallback((e) => {
-    onConfirm?.()
-    onClose?.(true, e)
-  }, [onConfirm, onClose])
+type Action = string | ActionProps
 
-  return <Dialog isOpen={isOpen} title={title} onClose={doCancel} showCloseButton={false}>
+interface ActionProps extends Pick<ButtonProps, 'icon' | 'color'> {
+  id?: string
+  text: string
+  action?(): unknown
+}
+
+export function Alert({ children, button, buttons, onClose, onChoose, ...rest }: AlertProps) {
+  const buttonProps: ButtonProps[] = [button, ...buttons ?? []]
+    .filter(action => action !== undefined)
+    .map((actionSpec, index) => {
+      const color = index === 0 ? 'primary' : 'none'
+      if (typeof actionSpec === 'string') {
+        return {
+          color,
+          text: actionSpec,
+          key: index,
+          onClick: () => { onChoose?.(actionSpec); onClose() },
+        }
+      }
+      const { action, id, ...rest } = actionSpec
+      return {
+        color,
+        ...rest,
+        key: id ?? index,
+        onClick: () => {
+          action?.()
+          onChoose?.(actionSpec)
+          onClose()
+        },
+      }
+    })
+
+  return <Dialog onClose={onClose} {...rest} showCloseButton={false}>
     <Dialog.Body>
       {children}
     </Dialog.Body>
     <Dialog.Footer className="flex flex-row-reverse">
-      <Button color={color} text={confirmButtonText} onClick={doConfirm} />
-      {cancelButtonText && <Button text={cancelButtonText} onClick={doCancel} />}
+      {buttonProps.map((props, i) => <Button key={props.id ?? i} {...props} />)}
     </Dialog.Footer>
   </Dialog>
 }
