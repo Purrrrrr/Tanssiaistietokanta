@@ -259,6 +259,12 @@ export const fi = {
     },
     files: {
       noFiles: 'Ei tiedostoja',
+      alreadyExistsConfirm: {
+        title: 'Tiedosto on jo olemassa',
+        content: 'Tiedosto __filename__ on jo olemassa, haluatko korvata sen?',
+        ok: 'Korvaa',
+        cancel: 'Peruuta',
+      },
       UploadButton: {
         upload: 'Lähetä tiedosto',
         errorReason: {

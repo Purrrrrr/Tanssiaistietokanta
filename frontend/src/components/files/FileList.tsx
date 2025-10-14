@@ -4,6 +4,7 @@ import { Add, Upload } from '@blueprintjs/icons'
 import { useFiles } from 'services/files'
 
 import { useFormatDateTime } from 'libraries/i18n/dateTime'
+import { useAlerts } from 'libraries/overlays/AlertContext'
 import { Button, RegularLink } from 'libraries/ui'
 import ItemList from 'libraries/ui/ItemList'
 import { useT } from 'i18n'
@@ -19,16 +20,34 @@ export function FileList() {
   const filesize = useFilesize()
   const T = useT('components.files')
   const formatDate = useFormatDateTime()
+  const showAlert = useAlerts()
 
-  const upload = (file: File) => doUpload(file).then(fetchFiles)
-  const itemCount = files.length + upload.length
+  const startUpload = async (file: File) => {
+    const existingFile = files.find(f => f.name === file.name)
+    if (existingFile) {
+      await showAlert({
+        title: T('alreadyExistsConfirm.title'),
+        children: T('alreadyExistsConfirm.content', { filename: file.name }),
+        buttons: [
+          {
+            text: T('alreadyExistsConfirm.ok'),
+            action: () => doUpload(file, existingFile._id).then(fetchFiles)
+          },
+          T('alreadyExistsConfirm.cancel'),
+        ]
+      })
+    } else {
+      await doUpload(file).then(fetchFiles)
+    }
+  }
+  const itemCount = files.length + uploads.length
 
   return <div>
     <input
       className="hidden"
       ref={input}
       type="file"
-      onChange={e => e.target.files && upload(e.target.files[0])}
+      onChange={e => e.target.files && startUpload(e.target.files[0])}
     />
     <div className="flex my-2">
       <Button icon={<Add />} onClick={() => input.current?.click()} text="Lisää tiedosto"/>
