@@ -149,8 +149,7 @@
     * Progress
       Nicer progress style
         Maybe in list?
-      File type restriction for replacement upload?
-        Or maybe ask about if name is same?
+    * Ask when uploading when a file with the same name already exists
       Dropzone
     Rename button/functionality
     Delete file button

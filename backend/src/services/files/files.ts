@@ -28,8 +28,8 @@ async function validateUniqueName(ctx: HookContext, next: NextFunction) {
   const data = (ctx.data as FileData)
   const { root, path } = data
   const filename = data.filename ?? data.upload.originalFilename
-  const res = await ctx.app.service('files').find({ query: { root, path, name: filename }})
-  if (res.length > 0) {
+  const [duplicateFile] = await ctx.app.service('files').find({ query: { root, path, name: filename }})
+  if (duplicateFile && (!ctx.id || ctx.id !== duplicateFile._id)) {
     ctx.http.status = 409
     ctx.result = {
       code: 'FILE_EXISTS',
