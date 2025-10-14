@@ -23,7 +23,7 @@ function DanceList({ eventId }) {
   return <PrintPageContainer>
     <div className={`danceList ${style}`}>
       <PrintViewToolbar>
-        <div className="flex items-center gap-2">
+        <div className="flex gap-2 items-center">
           <Switch id="showlinks" value={showLinks} onChange={setShowLinks} label={t('showLinks')} />
           <RadioGroup
             id="style"
@@ -43,7 +43,7 @@ function DanceList({ eventId }) {
         <PrintFooterContainer footer={<Footer workshops={workshops.filter(w => w.abbreviation)} />}>
           {program.danceSets.map(
             ({ title, program }, key) => {
-              return <AutosizedSection key={key} className="section text-center">
+              return <AutosizedSection key={key} className="text-center section">
                 <h2 className="mb-4 text-3xl font-bold">{title}</h2>
                 {program
                   .map(row => row.item)
