@@ -4,7 +4,7 @@ import { useQueue } from 'libraries/i18n/useQueue'
 
 import { useGetUploadErrorMessage } from './useGetUploadErrorMessage'
 
-interface Upload {
+export interface Upload {
   file: File
   abort: () => unknown
   error?: string

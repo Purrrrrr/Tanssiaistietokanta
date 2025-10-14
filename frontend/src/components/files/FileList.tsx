@@ -10,6 +10,7 @@ import ItemList from 'libraries/ui/ItemList'
 import { useT } from 'i18n'
 
 import { DeleteFileButton } from './DeleteFileButton'
+import { UploadProgressList } from './UploadProgres'
 import useFilesize from './useFilesize'
 import { useUploadQueue } from './useUploadQueue'
 
@@ -40,7 +41,6 @@ export function FileList() {
       await doUpload(file).then(fetchFiles)
     }
   }
-  const itemCount = files.length + uploads.length
 
   return <div>
     <input
@@ -49,9 +49,9 @@ export function FileList() {
       type="file"
       onChange={e => e.target.files && startUpload(e.target.files[0])}
     />
-    <div className="flex my-2">
+    <div className="flex my-2 gap-3 items-center">
       <Button icon={<Add />} onClick={() => input.current?.click()} text="Lisää tiedosto"/>
-      <Button text="Reload" onClick={fetchFiles} />
+      <UploadProgressList uploads={uploads} />
     </div>
     <ItemList columns="grid-cols-[1fr_minmax(200px,auto)_minmax(100px,auto)_min-content]">
       {files.map(file =>
@@ -64,19 +64,7 @@ export function FileList() {
           </div>
         </ItemList.Row>
       )}
-      {uploads.map(upload =>
-        <ItemList.Row key={upload.id}>
-          <span>Lähetetään {upload.file.name}...</span>
-          <span className="col-span-2">
-            {upload.progress
-              && <>{filesize(upload.progress.uploaded)}/{filesize(upload.progress.total)}</>
-            }
-          </span>
-          <Button minimal text="X" onClick={upload.abort} />
-        </ItemList.Row>
-
-      )}
-      {itemCount === 0 && <div className="text-center py-6 col-span-full text-muted text-base">{T('noFiles')}</div>}
+      {files.length === 0 && <div className="col-span-full py-6 text-base text-center text-muted">{T('noFiles')}</div>}
     </ItemList>
   </div>
 }

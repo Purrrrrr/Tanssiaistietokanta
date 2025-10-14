@@ -149,7 +149,8 @@
     * Progress
     * Progress in list
     * Ask when uploading when a file with the same name already exists
-      Nicer progress style
+    * Nicer progress style
+      Upload speed
       Dropzone
   * Delete file button
   * Root + path
