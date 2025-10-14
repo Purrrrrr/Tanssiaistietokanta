@@ -4,17 +4,17 @@ import { Button, ButtonProps } from 'libraries/ui'
 
 import { Dialog } from './Dialog'
 
-interface AlertProps {
+export interface AlertProps {
   title: string
   children: React.ReactNode
-  button?: Action
-  buttons?: Action[]
+  button?: AlertAction
+  buttons?: AlertAction[]
   isOpen: boolean
   onClose(): void
-  onChoose?(action: Action): void
+  onChoose?(action: AlertAction): void
 }
 
-type Action = string | ActionProps
+export type AlertAction = string | ActionProps
 
 interface ActionProps extends Pick<ButtonProps, 'icon' | 'color'> {
   id?: string
@@ -48,7 +48,7 @@ export function Alert({ children, button, buttons, onClose, onChoose, ...rest }:
       }
     })
 
-  return <Dialog onClose={onClose} {...rest} showCloseButton={false}>
+  return <Dialog onClose={() => {}} {...rest} showCloseButton={false}>
     <Dialog.Body>
       {children}
     </Dialog.Body>

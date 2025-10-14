@@ -3,6 +3,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { BackendProvider } from 'backend'
 import { UserContextProvider } from 'services/users'
 
+import { AlertContext } from 'libraries/overlays/AlertContext'
 import { ToastContainer } from 'libraries/ui'
 import NavigationLayout from 'components/NavigationLayout'
 import { TranslationContext, translations } from 'i18n'
@@ -16,7 +17,9 @@ function DanceOrganizer() {
         <BrowserRouter>
           <ToastContainer />
           <NavigationLayout>
-            <AppRoutes />
+            <AlertContext>
+              <AppRoutes />
+            </AlertContext>
           </NavigationLayout>
         </BrowserRouter>
       </TranslationContext>
