@@ -95,7 +95,7 @@ export class NeDBService<Result extends BaseRecord, Data, ServiceParams extends 
 
   async remove(id: NullableId, _params?: ServiceParams): Promise<Result | Result[]> {
     return mapAsync(
-      this.currentService.remove(id, this.mapParams(_params)),
+      await this.currentService.remove(id, this.mapParams(_params)),
       async r => {
         await this.onRemove(r);
         return this.mapToResult(r)
