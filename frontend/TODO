@@ -147,13 +147,13 @@
   * Ability to name an upload?
   * Upload button
     * Progress
-      Nicer progress style
-        Maybe in list?
+    * Progress in list
     * Ask when uploading when a file with the same name already exists
+      Nicer progress style
       Dropzone
+  * Delete file button
+  * Root + path
     Rename button/functionality
-    Delete file button
-    Root + path
     GraphQL endpoint?
     Validate upload type/check malware
       Type checking
