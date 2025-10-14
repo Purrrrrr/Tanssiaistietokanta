@@ -265,6 +265,11 @@ export const fi = {
         ok: 'Korvaa',
         cancel: 'Peruuta',
       },
+      DeleteFileButton: {
+        text: 'Poista',
+        confirmTitle: 'Poistetaanko tiedosto?',
+        confirmText: 'Haluatko varmasti poistaa tiedoston __filename__?',
+      },
       UploadButton: {
         upload: 'Lähetä tiedosto',
         errorReason: {

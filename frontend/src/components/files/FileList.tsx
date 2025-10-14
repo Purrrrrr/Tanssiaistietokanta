@@ -1,15 +1,15 @@
 import { useRef } from 'react'
-import { Add, Upload } from '@blueprintjs/icons'
+import { Add } from '@blueprintjs/icons'
 
-import { useFiles } from 'services/files'
+import { UploadedFile, useDeleteFile, useFiles } from 'services/files'
 
 import { useFormatDateTime } from 'libraries/i18n/dateTime'
 import { useAlerts } from 'libraries/overlays/AlertContext'
 import { Button, RegularLink } from 'libraries/ui'
 import ItemList from 'libraries/ui/ItemList'
-import { useT } from 'i18n'
+import { DeleteButton } from 'components/widgets/DeleteButton'
+import { useT, useTranslation } from 'i18n'
 
-import { UploadButton } from './UploadButton'
 import useFilesize from './useFilesize'
 import { useUploadQueue } from './useUploadQueue'
 
@@ -59,7 +59,9 @@ export function FileList() {
           <RegularLink href={`/api/files/${file._id}?download=true`} target="_blank">{file.name}</RegularLink>
           <span>{formatDate(file._updatedAt)}</span>
           <span>{filesize(file.size)}</span>
-          <UploadButton minimal icon={<Upload />} fileId={file._id} onUpload={fetchFiles} />
+          <div>
+            <DeleteFileButton file={file} onDelete={fetchFiles} />
+          </div>
         </ItemList.Row>
       )}
       {uploads.map(upload =>
@@ -79,3 +81,17 @@ export function FileList() {
   </div>
 }
 
+function DeleteFileButton({ file, onDelete }: {
+  file: UploadedFile
+  onDelete: () => void
+}) {
+  const T = useT('components.files.DeleteFileButton')
+  const deleteFile = useDeleteFile()
+  return <DeleteButton
+    minimal
+    text={T('text')}
+    confirmTitle={T('confirmTitle')}
+    confirmText={T('confirmText', { filename: file.name })}
+    onDelete={() => deleteFile(file._id).then(onDelete)}
+  />
+}

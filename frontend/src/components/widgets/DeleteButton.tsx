@@ -11,10 +11,11 @@ interface DeleteButtonProps extends ButtonProps {
   disabled?: boolean
   onDelete: () => unknown
   confirmText: string
+  confirmTitle?: string
   minimal?: boolean
 }
 
-export function DeleteButton({ onDelete, iconOnly, disabled, minimal, className, text, confirmText }: DeleteButtonProps) {
+export function DeleteButton({ onDelete, iconOnly, disabled, minimal, className, text, confirmTitle, confirmText }: DeleteButtonProps) {
   const t = useT('components.deleteButton')
   const [showDialog, setShowDialog] = useState(false)
   return <>
@@ -29,7 +30,7 @@ export function DeleteButton({ onDelete, iconOnly, disabled, minimal, className,
       onClick={() => setShowDialog(true)}
     />
     <Alert
-      title={text}
+      title={confirmTitle ?? text}
       isOpen={showDialog}
       onClose={() => setShowDialog(false)}
       buttons={[

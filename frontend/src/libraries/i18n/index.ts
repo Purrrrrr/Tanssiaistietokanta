@@ -9,7 +9,7 @@ export type { PrefixPath, Translator } from './types'
 
 export interface TranlationSystem<Translations> {
   useT: <P extends PrefixPath<Translations> | ''>(prefix: P) => Translator<Translations, P>
-  useTranslation: (prefix: Autocomplete<Translations>) => string
+  useTranslation: (prefix: Autocomplete<Translations>, params?: TParams) => string
   T: (props: { msg: Autocomplete<Translations> }) => JSX.Element
   useLocalization: typeof useLocalization
   TranslationContext: (props: TProps & { languages: Record<string, Translations> }) => JSX.Element
@@ -48,8 +48,8 @@ function useT(prefix: string): (key: string, params?: TParams) => string {
 function T({ msg }: { msg: string }): JSX.Element {
   return useTranslation(msg) as unknown as JSX.Element
 }
-function useTranslation(key: string): string {
-  return useBareT().T(key)
+function useTranslation(key: string, params?: TParams): string {
+  return useBareT().T(key, params)
 }
 
 const useLocalization: () => Pick<ReturnType<typeof useBareT>, 'locale' | 'setLocale'> = useBareT

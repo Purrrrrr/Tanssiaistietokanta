@@ -93,3 +93,9 @@ export function useFiles() {
   useEffect(refetch, [refetch])
   return [files, refetch] as const
 }
+
+export function useDeleteFile() {
+  return async (fileId: string) => {
+    await fetch(`/api/files/${fileId}`, { method: 'DELETE' })
+  }
+}
