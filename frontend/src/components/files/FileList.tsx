@@ -1,15 +1,15 @@
 import { useRef } from 'react'
 import { Add } from '@blueprintjs/icons'
 
-import { UploadedFile, useDeleteFile, useFiles } from 'services/files'
+import { useFiles } from 'services/files'
 
 import { useFormatDateTime } from 'libraries/i18n/dateTime'
 import { useAlerts } from 'libraries/overlays/AlertContext'
 import { Button, RegularLink } from 'libraries/ui'
 import ItemList from 'libraries/ui/ItemList'
-import { DeleteButton } from 'components/widgets/DeleteButton'
-import { useT, useTranslation } from 'i18n'
+import { useT } from 'i18n'
 
+import { DeleteFileButton } from './DeleteFileButton'
 import useFilesize from './useFilesize'
 import { useUploadQueue } from './useUploadQueue'
 
@@ -79,19 +79,4 @@ export function FileList() {
       {itemCount === 0 && <div className="text-center py-6 col-span-full text-muted text-base">{T('noFiles')}</div>}
     </ItemList>
   </div>
-}
-
-function DeleteFileButton({ file, onDelete }: {
-  file: UploadedFile
-  onDelete: () => void
-}) {
-  const T = useT('components.files.DeleteFileButton')
-  const deleteFile = useDeleteFile()
-  return <DeleteButton
-    minimal
-    text={T('text')}
-    confirmTitle={T('confirmTitle')}
-    confirmText={T('confirmText', { filename: file.name })}
-    onDelete={() => deleteFile(file._id).then(onDelete)}
-  />
 }
