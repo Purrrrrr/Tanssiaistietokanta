@@ -1,5 +1,7 @@
 import { useRef } from 'react'
 
+import { type Progress } from 'services/files'
+
 import { Button } from 'libraries/ui'
 import { useT, useTranslation } from 'i18n'
 
@@ -19,26 +21,21 @@ export function UploadProgressList({ uploads }: { uploads: (Upload & {id: number
 }
 
 export function UploadProgress({ file, progress: _progress, abort, error }: Upload) {
-  const filesize = useFilesize()
   const progress = _progress ?? {
     uploaded: 0, total: file.size,
   }
-  const percentage = `${progress.uploaded / progress.total * 100}%`
-  const speed = useUploadSpeed(progress.uploaded)
 
   return <div className="grid grid-cols-subgrid col-span-full items-center">
     <span>{file.name}</span>
     {error
       ? <div className="col-span-2 text-red-800 font-semibold">{error}</div>
-      : <>
-        <div className="relative w-40 h-5 bg-white inset-shadow-sm shadow-black border-1 border-gray-400">
-          <div style={{ width: percentage }} className="absolute top-0 left-0 h-full  bg-linear-to-r from-lime-400 to-amber-200 from-70%"></div>
-          <span className="absolute inset-0 text-center">{filesize(progress.uploaded)}/{filesize(progress.total)}</span>
-        </div>
-        <div className='min-w-16 text-right'>{filesize(speed)}/s</div>
-      </>
+      : <ProgressBar progress={progress} />
     }
-    <Button color="danger" text={useTranslation('common.cancel')} onClick={abort} />
+    <Button
+      color={error ? 'success': 'danger'}
+      text={useTranslation(error ? 'common.delete' : 'common.cancel')}
+      onClick={abort}
+    />
   </div>
 }
 
@@ -57,4 +54,18 @@ function useUploadSpeed(uploaded: number) {
   }
 
   return speed.current
+}
+
+function ProgressBar({ progress }: { progress: Progress }) {
+  const filesize = useFilesize()
+  const percentage = `${progress.uploaded / progress.total * 100}%`
+  const speed = useUploadSpeed(progress.uploaded)
+
+  return <>
+    <div className="relative w-40 h-5 bg-white inset-shadow-sm shadow-black border-1 border-gray-400">
+      <div style={{ width: percentage }} className="absolute top-0 left-0 h-full  bg-linear-to-r from-lime-400 to-amber-200 from-70%"></div>
+      <span className="absolute inset-0 text-center">{filesize(progress.uploaded)}/{filesize(progress.total)}</span>
+    </div>
+    <div className='min-w-16 text-right'>{filesize(speed)}/s</div>
+  </>
 }
