@@ -277,10 +277,11 @@ export const fi = {
       UploadButton: {
         upload: 'Lähetä tiedosto',
         errorReason: {
-          'too_big': 'Tiedosto on liian suuri. Et voi lähettää tiedostoja, joiden koko on yli __max_size__',
-          'server': 'Virhe tiedoston lähetyksessä: __message__',
-          'unknown': 'Tuntematon virhe tiedoston lähetyksessä',
-          'already_exists': 'Tiedosto __filename__ on jo olemassa',
+          too_big: 'Tiedosto on liian suuri. Et voi lähettää tiedostoja, joiden koko on yli __max_size__',
+          server: 'Virhe tiedoston lähetyksessä: __message__',
+          unknown: 'Tuntematon virhe tiedoston lähetyksessä',
+          already_exists: 'Tiedosto __filename__ on jo olemassa',
+          file_is_infected: 'Tiedosto sisältää haittaohjelman',
         }
       },
     },

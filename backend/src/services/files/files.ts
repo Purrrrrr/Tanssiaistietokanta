@@ -14,23 +14,19 @@ import {
 } from './files.schema'
 
 import type { Application, HookContext, NextFunction } from '../../declarations'
-import { File, FileData, FileService, getOptions } from './files.class'
+import { File, FileData, FileService, getOptions, VirusInfectionError } from './files.class'
 import { filePath, fileMethods } from './files.shared'
 
 export * from './files.class'
 export * from './files.schema'
 
 async function validateUniqueName(ctx: HookContext, next: NextFunction) {
-  if (!ctx.http) {
-    return next()
-  }
-
   const data = (ctx.data as FileData)
   const { root, path } = data
   const filename = data.filename ?? data.upload.originalFilename
   const [duplicateFile] = await ctx.app.service('files').find({ query: { root, path, name: filename }})
   if (duplicateFile && (!ctx.id || ctx.id !== duplicateFile._id)) {
-    ctx.http.status = 409
+    if (ctx.http) ctx.http.status = 409
     ctx.result = {
       code: 'FILE_EXISTS',
       message: 'The file already exists',
@@ -38,6 +34,21 @@ async function validateUniqueName(ctx: HookContext, next: NextFunction) {
     return
   }
   await next()
+}
+async function addInfectionStatusCode(ctx: HookContext, next: NextFunction) {
+  try {
+    await next()
+  } catch (e) {
+    if (e instanceof VirusInfectionError) {
+      if (ctx.http) ctx.http.status = 422
+      ctx.result = {
+        code: 'FILE_IS_INFECTED',
+        message: e.message,
+      }
+    } else {
+      throw e
+    }
+  }
 }
 
 // A configure function that registers the service and its hooks via `app.configure`
@@ -56,8 +67,8 @@ export const file = (app: Application) => {
         // schemaHooks.resolveExternal(fileExternalResolver),
         // schemaHooks.resolveResult(fileResolver)
       ], 
-      create: [validateUniqueName],
-      update: [validateUniqueName],
+      create: [validateUniqueName, addInfectionStatusCode],
+      update: [validateUniqueName, addInfectionStatusCode],
       patch: [validateUniqueName],
     },
     before: {

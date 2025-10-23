@@ -18,7 +18,7 @@ export function UploadProgressList({ uploads }: { uploads: (Upload & {id: number
   </div>
 }
 
-export function UploadProgress({ file, progress: _progress, abort }: Upload) {
+export function UploadProgress({ file, progress: _progress, abort, error }: Upload) {
   const filesize = useFilesize()
   const progress = _progress ?? {
     uploaded: 0, total: file.size,
@@ -28,11 +28,16 @@ export function UploadProgress({ file, progress: _progress, abort }: Upload) {
 
   return <div className="grid grid-cols-subgrid col-span-full items-center">
     <span>{file.name}</span>
-    <div className="relative w-40 h-5 bg-white inset-shadow-sm shadow-black border-1 border-gray-400">
-      <div style={{ width: percentage }} className="absolute top-0 left-0 h-full  bg-linear-to-r from-lime-400 to-amber-200 from-70%"></div>
-      <span className="absolute inset-0 text-center">{filesize(progress.uploaded)}/{filesize(progress.total)}</span>
-    </div>
-    <div className='min-w-16 text-right'>{filesize(speed)}/s</div>
+    {error
+      ? <div className="col-span-2 text-red-800 font-semibold">{error}</div>
+      : <>
+        <div className="relative w-40 h-5 bg-white inset-shadow-sm shadow-black border-1 border-gray-400">
+          <div style={{ width: percentage }} className="absolute top-0 left-0 h-full  bg-linear-to-r from-lime-400 to-amber-200 from-70%"></div>
+          <span className="absolute inset-0 text-center">{filesize(progress.uploaded)}/{filesize(progress.total)}</span>
+        </div>
+        <div className='min-w-16 text-right'>{filesize(speed)}/s</div>
+      </>
+    }
     <Button color="danger" text={useTranslation('common.cancel')} onClick={abort} />
   </div>
 }

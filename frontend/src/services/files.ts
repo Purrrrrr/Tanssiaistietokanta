@@ -6,7 +6,7 @@ export type { Progress } from 'utils/fetchWithProgress'
 
 export const MAX_UPLOAD_SIZE = 20 * 1024 ** 2
 
-export type UploadFailureReason = 'aborted' | 'too_big' | 'already_exists' | 'server' | 'unknown'
+export type UploadFailureReason = 'aborted' | 'too_big' | 'already_exists' | 'server' | 'unknown' | 'file_is_infected'
 
 class UploadError extends Error {
   code: UploadFailureReason
@@ -65,6 +65,8 @@ export async function doUpload({ root, path, file, filename, fileId, onProgress,
       return JSON.parse(response.content) as UploadedFile
     case 409:
       throw new UploadError('already_exists')
+    case 422:
+      throw new UploadError('file_is_infected')
     default:
       throw new UploadError('server', response.content)
   }

@@ -58,7 +58,7 @@ export class FileService<ServiceParams extends FileParams = FileParams>
     const infected = await this.scanner.isInfected(filepath)
 
     if (infected) {
-      throw new Error('Infected file')
+      throw new VirusInfectionError('Infected file')
     }
     
     const fileId = basename(filepath)
@@ -90,6 +90,8 @@ export class FileService<ServiceParams extends FileParams = FileParams>
     return join(this.options.uploadDir, fileId)
   }
 }
+
+export class VirusInfectionError extends Error {}
 
 export const getOptions = (app: Application) => {
   return { 
