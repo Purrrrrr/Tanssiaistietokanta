@@ -6,6 +6,7 @@ import { NeDBService } from '../../utils/NeDBService'
 
 import type { Application } from '../../declarations'
 import type { File, FileData, FilePatch, FileQuery } from './files.schema'
+import { ClamScanner } from './clamscanner'
 
 export type { File, FileData, FilePatch, FileQuery }
 
@@ -19,6 +20,8 @@ export interface FileParams extends Params<FileQuery> {}
 export class FileService<ServiceParams extends FileParams = FileParams>
   extends NeDBService<File, FileData, ServiceParams, FilePatch>
 {
+  scanner: ClamScanner
+
   constructor(public options: FileServiceOptions) {
     super({
       ...options,
@@ -28,6 +31,7 @@ export class FileService<ServiceParams extends FileParams = FileParams>
         { fieldName: ['root', 'path', 'name'], unique: true },
       ],
     })
+    this.scanner = new ClamScanner(options.app)
   }
 
   async get(id: Id, _params?: ServiceParams): Promise<File> {
@@ -51,6 +55,11 @@ export class FileService<ServiceParams extends FileParams = FileParams>
     }
 
     const { filepath, originalFilename, size, mimetype } = upload
+    const infected = await this.scanner.isInfected(filepath)
+
+    if (infected) {
+      throw new Error('Infected file')
+    }
     
     const fileId = basename(filepath)
     await rename(filepath, this.idToPath(fileId)) 

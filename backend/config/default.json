@@ -12,5 +12,8 @@
   },
   "nedb": "data",
   "uploadTmp": "./data/uploads/tmp",
-  "uploadDir": "./data/uploads/ready"
+  "uploadDir": "./data/uploads/ready",
+  "clamav": {
+    "socket": "/var/run/clamav/clamd.ctl"
+  }
 }
