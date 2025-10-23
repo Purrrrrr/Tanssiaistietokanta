@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { Add } from '@blueprintjs/icons'
+import { Add, InfoSign } from '@blueprintjs/icons'
 
 import { useFiles } from 'services/files'
 
@@ -49,7 +49,7 @@ export function FileList() {
       type="file"
       onChange={e => e.target.files && startUpload(e.target.files[0])}
     />
-    <div className="flex my-2 gap-3 items-center">
+    <div className="flex my-5 gap-3 items-start">
       <Button icon={<Add />} onClick={() => input.current?.click()} text="Lisää tiedosto"/>
       <UploadProgressList uploads={uploads} />
     </div>
@@ -64,7 +64,12 @@ export function FileList() {
           </div>
         </ItemList.Row>
       )}
-      {files.length === 0 && <div className="col-span-full py-6 text-base text-center text-muted">{T('noFiles')}</div>}
+      {files.length === 0 &&
+        <div className="col-span-full py-4 text-base text-center text-muted">
+          <InfoSign size={20} className="mr-2"/>
+          {T('noFiles')}
+        </div>
+      }
     </ItemList>
   </div>
 }

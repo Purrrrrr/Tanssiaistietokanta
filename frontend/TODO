@@ -150,10 +150,12 @@
     * Progress in list
     * Ask when uploading when a file with the same name already exists
     * Nicer progress style
-      Upload speed
+    * Upload speed
+      Upload ETA
       Dropzone
   * Delete file button
   * Root + path
+  * Icon for empty list?
     Rename button/functionality
     GraphQL endpoint?
     Validate upload type/check malware
