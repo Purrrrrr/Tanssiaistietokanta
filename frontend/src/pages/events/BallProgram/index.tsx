@@ -75,7 +75,7 @@ function BallProgramView(
   </SlideContainer>
 }
 
-function useBallProgram(eventId: string, eventVersionId?: string | null) {
+function useBallProgram(eventId: string, _eventVersionId?: string | null) {
   const {data, refetch, ...loadingState} = useBallProgramQuery({eventId})
   const event = data?.event
   const slides = useEventSlides(event?.program)

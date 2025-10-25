@@ -29,7 +29,7 @@ interface L {
 
 const {
   Form, Field, RepeatingSection, RepeatingTableRows,
-  useAddItem, useAddItemAt, useRemoveItem, useRemoveItemAt,
+  useAddItem,
   selectWithType,
 } = formFor<Data, {'l': L, 's': string}>()
 
@@ -73,10 +73,10 @@ function ShowcaseContents() {
   const [s, setS] = useState<string | null>('a')
   const [s2, setS2] = useState<string | null>('a')
   const [s3, setS3] = useState<string>('')
-  const addToL = useAddItemAt('l')
+  // const addToL = useAddItemAt('l')
   const addItem = useAddItem()
-  const removeFromL = useRemoveItemAt('l')
-  const removeItem = useRemoveItem()
+  // const removeFromL = useRemoveItemAt('l')
+  // const removeItem = useRemoveItem()
 
   return <>
     <S path="a" label="Viikonpäivä" placeholder="Valitse" />

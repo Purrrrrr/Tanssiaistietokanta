@@ -44,6 +44,7 @@ export function changedVersion(
   const removeKey = (arr: Entity[]) => {
     modifySomeObject(arr, obj => {
       const res = { ...obj }
+      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
       delete res[randomKey(res)]
       return res
     })

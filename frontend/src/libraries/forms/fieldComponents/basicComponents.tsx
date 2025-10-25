@@ -115,7 +115,7 @@ interface RadioGroupProps<E extends string | null> extends FieldComponentProps<E
 
 export function RadioGroup<E extends string>({options, id, value, onChange, ...rest}: RadioGroupProps<E>) {
   return options.map(({value: optionValue, label})=>
-    <label className="mx-2">
+    <label key={optionValue} className="mx-2">
       <input
         className="me-1"
         type="radio"
