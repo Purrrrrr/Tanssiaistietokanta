@@ -156,11 +156,11 @@
   * Delete file button
   * Root + path
   * Icon for empty list?
+  * Validate upload type/check malware
+    * Type checking: Maybe not now
+    * Virus checking?
     Rename button/functionality
     GraphQL endpoint?
-    Validate upload type/check malware
-      Type checking
-      Virus checking?
     Zipping downloads?
     UI
       File in events
