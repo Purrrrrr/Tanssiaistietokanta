@@ -6,7 +6,7 @@ import { useFieldSubscription } from '../hooks/useFieldSubscription'
 import { change } from '../reducer'
 import { type ExternalFieldContainerProps, FieldContainer } from './containers/FieldContainer'
 import type { FieldInputComponent, Nullable, OmitInputProps } from './inputs'
-import { type ValidationProps, ValidationMessage } from './ValidationMessage'
+import { ValidationMessage, type ValidationProps } from './ValidationMessage'
 
 export type RangeFieldProps<Output extends Input, Extra, Input, Data = AnyType> =
   ExternalFieldContainerProps & Omit<ValidationProps<Range<Input>>, 'required'> & OmitInputProps<Extra> & {

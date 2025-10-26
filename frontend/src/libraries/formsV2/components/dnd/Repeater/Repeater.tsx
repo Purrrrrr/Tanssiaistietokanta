@@ -5,7 +5,7 @@ import type { AnyType, DataPath } from '../../../types'
 
 import { useValueAt } from '../../../hooks/externalHookApi'
 import { ItemVisitContext } from '../context'
-import { type DroppableElement, DropArea } from './DropArea'
+import { DropArea, type DroppableElement } from './DropArea'
 import { SortableItemElement } from './SortableItem'
 import { ItemCallback, SortableList } from './SortableList'
 import { useIsDropAreaDisabled } from './useIsDropAreaDisabled'

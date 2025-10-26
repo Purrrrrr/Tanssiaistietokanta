@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { type UseComboboxGetInputPropsOptions, useCombobox } from 'downshift'
+import { useCombobox, type UseComboboxGetInputPropsOptions } from 'downshift'
 
 import type { SelectorProps } from './types'
 import type { FieldInputComponent } from '../types'

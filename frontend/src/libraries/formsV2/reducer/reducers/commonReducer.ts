@@ -1,7 +1,7 @@
 import type { FocusAction, ValidationAction } from '../types'
 
 import { assoc } from '../utils/data'
-import { type FocusState, focusReducer, initialFocusState } from './focusReducer'
+import { focusReducer, type FocusState, initialFocusState } from './focusReducer'
 import { FormValidationState, initialValidationState, validationReducer } from './validationReducer'
 
 export interface CommonFormState {

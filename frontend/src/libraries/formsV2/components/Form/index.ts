@@ -1,1 +1,1 @@
-export { type FormProps, Form } from './Form'
+export { Form, type FormProps } from './Form'

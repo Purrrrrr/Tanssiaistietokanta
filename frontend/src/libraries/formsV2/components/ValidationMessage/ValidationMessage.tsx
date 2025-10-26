@@ -6,7 +6,7 @@ import { AnyType, GenericPath } from '../../types'
 import { useFormContext } from '../../context'
 import { setValidationResult } from '../../reducer'
 import { ErrorMessage } from './ErrorMessage'
-import { type ValidationProps, validate } from './validate'
+import { validate, type ValidationProps } from './validate'
 
 interface ValidationMessageProps<T> extends ValidationProps<T> {
   id: string

@@ -1,3 +1,3 @@
 export { AutocompleteInput } from './AutocompleteInput'
-export { type SelectProps, Select } from './Select'
+export { Select, type SelectProps } from './Select'
 export type { SelectorProps } from './types'

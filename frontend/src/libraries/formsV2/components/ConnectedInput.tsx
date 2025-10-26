@@ -5,7 +5,7 @@ import type { AnyType, FieldPath } from '../types'
 import { useFieldSubscription } from '../hooks/useFieldSubscription'
 import { change } from '../reducer'
 import type { FieldInputComponent, OmitInputProps } from './inputs'
-import { type ValidationProps, ValidationMessage } from './ValidationMessage'
+import { ValidationMessage, type ValidationProps } from './ValidationMessage'
 
 export type ConnectedFieldProps<Output extends Input, Extra, Input, Data = AnyType> = OmitInputProps<Extra> & ValidationProps<Input> & {
   component: FieldInputComponent<Output, Extra, Input>

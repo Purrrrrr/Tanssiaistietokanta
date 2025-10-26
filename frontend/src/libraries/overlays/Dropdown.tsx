@@ -1,4 +1,4 @@
-import { type ReactNode, MouseEventHandler, useRef } from 'react'
+import { MouseEventHandler, type ReactNode, useRef } from 'react'
 import { forwardRef } from 'react'
 
 import { Popover } from './unstyled/Popover'

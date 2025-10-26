@@ -1,9 +1,9 @@
-export { type DateInputProps, DateInput } from './DateInput'
-export { type DateRangeInputProps, DateRangeInput } from './DateRangeInput'
+export { DateInput, type DateInputProps } from './DateInput'
+export { DateRangeInput, type DateRangeInputProps } from './DateRangeInput'
 export { MarkdownInput } from './MarkdownInput'
 export {
-  type SelectorProps, type SelectProps, AutocompleteInput, Select
-} from './selectors'
-export { type SwitchProps, Switch } from './Switch'
+  AutocompleteInput, Select,
+  type SelectorProps, type SelectProps} from './selectors'
+export { Switch, type SwitchProps } from './Switch'
 export { TextInput } from './TextInput'
 export type { FieldInputComponent, FieldInputComponentProps, Nullable, OmitInputProps } from './types'

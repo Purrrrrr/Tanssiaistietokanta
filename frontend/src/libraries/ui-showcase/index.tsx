@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Trash } from '@blueprintjs/icons'
 
-import { type Showcase, booleanProp, numberProp, showcase } from './types'
+import { booleanProp, numberProp, type Showcase, showcase } from './types'
 
 import FormUiShowcase from 'libraries/formsV2/UiShowcase'
 import { Alert, Dialog } from 'libraries/overlays'

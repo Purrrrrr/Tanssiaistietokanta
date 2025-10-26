@@ -6,7 +6,7 @@ import { Button } from 'libraries/ui'
 
 import { type ConnectedFieldProps, ConnectedInput } from './ConnectedInput'
 import { type ListItem } from './dnd'
-import { type RepeatingSectionProps, RepeatingSection } from './RepeatingSection'
+import { RepeatingSection, type RepeatingSectionProps } from './RepeatingSection'
 
 export type RepeatingFieldProps<Output extends Input & ListItem, Extra, Input, Data = AnyType, AcceptedTypeDefs = null> =
   Omit<ConnectedFieldProps<Output, Extra, Input, Data>, 'path'> &

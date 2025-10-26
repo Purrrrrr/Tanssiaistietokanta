@@ -1,8 +1,8 @@
-import { type ComponentType, type ReactElement, lazy } from 'react'
+import { type ComponentType, lazy, type ReactElement } from 'react'
 
 import { type ListItem } from './components/dnd'
-import { type FieldComponent, type FieldProps, asFormField, Field } from './components/Field'
-import { type FormProps, Form } from './components/Form'
+import { asFormField, Field, type FieldComponent, type FieldProps } from './components/Field'
+import { Form, type FormProps } from './components/Form'
 import type { DateInputProps, DateRangeInputProps, FieldInputComponent, FieldInputComponentProps, SelectProps, SwitchProps } from './components/inputs'
 import {
   AutocompleteInput, Select, Switch,
@@ -10,10 +10,10 @@ import {
 import { type MarkdownEditorProps } from './components/inputs/MarkdownInput'
 import { AutocompleteInputProps } from './components/inputs/selectors/AutocompleteInput'
 import { type TextInputExtraProps } from './components/inputs/TextInput'
-import { type Range, type RangeFieldComponent, type RangeFieldProps, asRangeField, RangeField } from './components/RangeField'
+import { asRangeField, type Range, RangeField, type RangeFieldComponent, type RangeFieldProps } from './components/RangeField'
 import { type RepeatingSectionProps } from './components/RepeatingSection'
 import { type RepeatingTableRowsProps } from './components/RepeatingTableRows'
-import { type SelfLabeledFieldComponent, asSelfLabeledFormField } from './components/SelflabeledField'
+import { asSelfLabeledFormField, type SelfLabeledFieldComponent } from './components/SelflabeledField'
 import hookApi, { type HooksFor } from './hooks/externalHookApi'
 
 export { withDefaults } from './utils/withDefaults'

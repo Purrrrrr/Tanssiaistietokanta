@@ -11,7 +11,7 @@ import './ui.css'
 
 export * from './AutosizedSection'
 export { Breadcrumb, BreadcrumbContext, Breadcrumbs } from './Breadcrumbs'
-export { type AnchorButtonProps, type ButtonProps, AnchorButton, Button, buttonClass } from './Button'
+export { AnchorButton, type AnchorButtonProps, Button, buttonClass, type ButtonProps } from './Button'
 export { Callout } from './Callout'
 export { default as Collapse } from './Collapse'
 export { GlobalSpinner } from './GlobalLoadingSpinner'

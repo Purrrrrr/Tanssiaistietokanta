@@ -1,2 +1,2 @@
-export { type RepeaterProps, Repeater } from './Repeater'
+export { Repeater, type RepeaterProps } from './Repeater'
 export type { ListItem } from './types'
