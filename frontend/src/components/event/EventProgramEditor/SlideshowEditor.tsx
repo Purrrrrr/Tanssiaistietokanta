@@ -24,7 +24,7 @@ export function SlideshowEditor({ program }: {program: EventProgramSettings}) {
   const linkToSlide = useLinkToSlide()
   const slides = useEventSlides(program)
   const { slideId = startSlideId } = useParams()
-  const currentSlide = slides.find(slide => slide.id === slideId ) ?? slides[0]
+  const currentSlide = slides.find(slide => slide.id === slideId) ?? slides[0]
   const { swipeHandlers, slideIndex } = useSlideshowNavigation({
     slides, currentSlideId: currentSlide.id,
     onChangeSlide: (slide) => navigate(linkToSlide(slide.id))

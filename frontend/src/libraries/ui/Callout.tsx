@@ -7,10 +7,10 @@ import { Color } from './types'
 import { ColorClass } from './classes'
 
 export interface CalloutProps extends ComponentPropsWithoutRef<'div'> {
-  children?: React.ReactNode;
+  children?: React.ReactNode
   icon?: React.ReactElement | false
-  intent?: Color;
-  title?: string;
+  intent?: Color
+  title?: string
 }
 
 const defaultIcons = {

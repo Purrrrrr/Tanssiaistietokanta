@@ -5,25 +5,25 @@ import classNames from 'classnames'
 type TabId = string | number
 
 export interface TabProps extends Omit<ComponentProps<'div'>, 'id' | 'title' | 'onClick'> {
-    disabled?: boolean;
-    /**
+  disabled?: boolean
+  /**
      * Unique identifier used to control which tab is selected
      * and to generate ARIA attributes for accessibility.
      */
-    id: TabId;
-    /**
+  id: TabId
+  /**
      * Panel content, rendered by the parent `Tabs` when this tab is active.
      * If omitted, no panel will be rendered for this tab.
      * Can either be an element or a renderer.
      */
-    panel?: React.JSX.Element | ((props: {
-        tabTitleId: string;
-        tabPanelId: string;
-    }) => React.JSX.Element);
-    title?: React.ReactNode;
-    href?: string
-    /** Name of a Blueprint UI icon (or an icon element) to render before the children. */
-    icon?: React.ReactElement
+  panel?: React.JSX.Element | ((props: {
+    tabTitleId: string
+    tabPanelId: string
+  }) => React.JSX.Element)
+  title?: React.ReactNode
+  href?: string
+  /** Name of a Blueprint UI icon (or an icon element) to render before the children. */
+  icon?: React.ReactElement
 }
 
 export function Tab(_: TabProps) {
@@ -32,24 +32,22 @@ export function Tab(_: TabProps) {
 
 export interface TabsProps {
   className?: string
-  children?: React.ReactNode;
+  children?: React.ReactNode
   id?: string
   defaultSelectedTabId?: TabId
-  renderActiveTabPanelOnly?: boolean;
-  selectedTabId?: TabId;
+  renderActiveTabPanelOnly?: boolean
+  selectedTabId?: TabId
   /**
    * Whether to show tabs stacked vertically on the left side.
    *
    * @default false
    */
-  vertical?: boolean;
+  vertical?: boolean
   /**
    * A callback function that is invoked when a tab in the tab list is clicked.
    */
-  onChange?(newTabId: TabId, prevTabId: TabId | undefined, event: React.MouseEvent<HTMLElement>): void;
+  onChange?(newTabId: TabId, prevTabId: TabId | undefined, event: React.MouseEvent<HTMLElement>): void
 }
-
-
 
 export function Tabs(props: TabsProps) {
   const id = useId()
@@ -57,13 +55,13 @@ export function Tabs(props: TabsProps) {
   const { className, children, renderActiveTabPanelOnly } = props
   const [selectedTabId, onChange] = useSelectedTabId(props)
   const tabs = Children.map(children, child => {
-    if (typeof child !== 'object' || child === null || !('props' in child )) {
+    if (typeof child !== 'object' || child === null || !('props' in child)) {
       return null
     }
     return child.props as TabProps
   })?.filter(tab => tab) ?? []
 
-  const onKeyDown : KeyboardEventHandler = (e) => {
+  const onKeyDown: KeyboardEventHandler = (e) => {
     if (!tabContainer.current) return
     const { activeElement } = document
     if (!activeElement) return
@@ -81,6 +79,7 @@ export function Tabs(props: TabsProps) {
   }
 
   return <>
+    {/* eslint-disable-next-line jsx-a11y/interactive-supports-focus */ /* This is good enough for now */}
     <div ref={tabContainer} className={classNames(className, 'flex flex-wrap gap-5 py-3')} role="tablist" onKeyDown={onKeyDown}>
       {tabs.map((tab, index) => {
         const selected = tab.id === selectedTabId
@@ -143,7 +142,7 @@ function useSelectedTabId(props: TabsProps): [TabId | undefined, Exclude<TabsPro
     (tabId, ...rest) => {
       setTab(tabId)
       props.onChange?.(tabId, ...rest)
-    }
+    },
   ] as const
 }
 

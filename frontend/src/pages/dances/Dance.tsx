@@ -27,6 +27,6 @@ export default function DancePage({parentType = 'dances'} : DancePageProps) {
     <Breadcrumb text={dance.name} />
     <PageTitle noRender>{dance.name}</PageTitle>
     <BackLink>{t(parentType === 'dances' ? 'backToDanceList' : 'backToEventProgram')}</BackLink>
-    <DanceEditor titleComponent={'h1'} dance={dance} showVersionHistory onDelete={() => { navigate('..')}}  />
+    <DanceEditor titleComponent="h1" dance={dance} showVersionHistory onDelete={() => { navigate('..')}}  />
   </>
 }

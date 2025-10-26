@@ -6,14 +6,14 @@ import { type Color, Link } from 'libraries/ui'
 import { buttonClass } from 'libraries/ui/Button'
 
 interface NavigateButtonProps extends Omit<React.ComponentProps<typeof Link>, 'to'> {
-  text?: string | React.ReactElement | React.ReactElement[],
-  children?: string | React.ReactElement | React.ReactElement[],
+  text?: string | React.ReactElement | React.ReactElement[]
+  children?: string | React.ReactElement | React.ReactElement[]
   icon?: React.ReactElement
-  adminOnly?: boolean,
-  disabled?: boolean,
-  href: string,
-  color?: Color,
-  className?: string,
+  adminOnly?: boolean
+  disabled?: boolean
+  href: string
+  color?: Color
+  className?: string
 }
 
 export function NavigateButton({text, children, icon, adminOnly, disabled, href, color, className, ...props} : NavigateButtonProps) {

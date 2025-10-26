@@ -4,13 +4,13 @@ export type ListItem = ID | { _id: ID }
 export type Path = string | number
 
 export interface DroppableData {
-  type: 'droppable',
+  type: 'droppable'
   dropAreaId: string
   path: Path
 }
 
 export interface ItemData<T = unknown> extends Record<string, unknown> {
-  type: 'item',
+  type: 'item'
   id: ID
   dropAreaId: string
   path: Path
@@ -27,7 +27,7 @@ export type AcceptedType<T, TypeDefinitions> = {
 }[keyof TypeDefinitions]
 
 export type ItemTypeClassifier<T, TypeDefinitions> =
-  AcceptedType<T, TypeDefinitions> | ((value: T) => ItemClassification<TypeDefinitions> )
+  AcceptedType<T, TypeDefinitions> | ((value: T) => ItemClassification<TypeDefinitions>)
 
 export type ItemClassification<TypeDefinitions> = {
   [K in keyof TypeDefinitions]: [K, TypeDefinitions[K]]

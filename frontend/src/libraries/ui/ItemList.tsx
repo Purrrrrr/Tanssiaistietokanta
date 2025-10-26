@@ -12,8 +12,8 @@ export interface ItemListProps {
 }
 
 const listWrapClasses = {
-  'md': 'wrap-md md:grid',
-  'sm': 'wrap-sm sm:grid'
+  md: 'wrap-md md:grid',
+  sm: 'wrap-sm sm:grid',
 } satisfies Record<WrapPoint, string>
 
 export default function ItemList({ children, 'wrap-breakpoint': wrapPoint = 'sm', columns }: ItemListProps) {

@@ -13,7 +13,7 @@ export function ensureIsVisible(element) {
   })
 }
 
-function isElementInViewport (element) {
+function isElementInViewport(element) {
   const rect = element.getBoundingClientRect()
   return (
     rect.top >= 0 &&

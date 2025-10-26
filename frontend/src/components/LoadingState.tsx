@@ -40,6 +40,7 @@ export function GlobalLoadingState({children}) {
     {children}
     <GlobalSpinner
       loading={loading || !connected}
+      loadingMessage={useTranslation('components.loadingState.loading')}
       timeout={connectionTimeout}
       connectionTimeoutMessage={useTranslation('components.loadingState.connectionError')}/>
   </>
@@ -78,8 +79,8 @@ function useGlobalLoadingState() {
 }
 
 interface LoadingStateProps<Variables> {
-  loading?: boolean,
-  error?: ApolloError,
+  loading?: boolean
+  error?: ApolloError
   refetch?: (variables?: Variables | undefined) => Promise<ApolloQueryResult<Record<string, unknown>>>
 }
 

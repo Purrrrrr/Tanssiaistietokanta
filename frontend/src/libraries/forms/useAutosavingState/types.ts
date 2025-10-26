@@ -104,15 +104,15 @@ function toConflictMap(conflicts: Conflict<unknown>[]): ConflictMap<unknown> {
 }
 
 export interface MergeData<T> {
-  server: T,
-  original: T,
-  local: T,
+  server: T
+  original: T
+  local: T
 }
 
 export interface MergeableAs<T> {
-  server: T,
-  original: T | undefined | null,
-  local: T,
+  server: T
+  original: T | undefined | null
+  local: T
 }
 
 export function mapMergeData<T, R>(data: MergeData<T>, mapper: (t: T) => R): MergeData<R> {

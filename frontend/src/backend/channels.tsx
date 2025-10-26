@@ -24,7 +24,7 @@ const listenersByChannel = new Map<string, Set<unknown>>()
 
 export function ensureChannelIsOpen(channel : string, listenerId: unknown) {
   const listeners = getListeners(channel)
-  if (socketConnected && listeners.size === 0 ) {
+  if (socketConnected && listeners.size === 0) {
     openChannel(channel)
   }
   listeners.add(listenerId)

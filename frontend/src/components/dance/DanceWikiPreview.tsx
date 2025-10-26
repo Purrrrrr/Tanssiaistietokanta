@@ -60,7 +60,9 @@ const options = {
 }
 
 export function LinkToDanceWiki({ className, page, children }: {
-  className?: string, page: string, children?: React.ReactNode
+  className?: string
+  page: string
+  children?: React.ReactNode
 }) {
   return <RegularLink
     className={className}
@@ -89,8 +91,4 @@ export function WikiLink({ href, ...props }: React.ComponentProps<'a'>) {
     : href
 
   return <RegularLink {...props} href={link} target="_blank" />
-}
-
-function toWikiUrl(_href?: string) {
-
 }

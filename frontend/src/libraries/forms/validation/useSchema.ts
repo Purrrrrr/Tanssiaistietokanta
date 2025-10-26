@@ -6,8 +6,8 @@ import { useFormStrings } from '../formContext'
 type Type = 'list' | 'number' | 'text' | 'email'
 
 export interface ValidationProps {
-  type?: Type,
-  required?: boolean,
+  type?: Type
+  required?: boolean
   schema?: Schema
 }
 

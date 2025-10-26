@@ -7,7 +7,7 @@ export function AutosizedSection({children, className = '', ...props}) {
   const innerContainer = useRef<HTMLDivElement>(null)
   const [size, setSize] = useState(1)
 
-  const onResize : ResizeObserverCallback = ([e]) => {
+  const onResize: ResizeObserverCallback = ([e]) => {
     if (e.contentBoxSize === null || container.current === null) return
     const innerSize = e.contentBoxSize[0]
     const containerStyle = getComputedStyle(container.current)

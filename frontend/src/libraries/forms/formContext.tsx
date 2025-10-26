@@ -59,6 +59,7 @@ export function useCreateFormMetadataContext<T>(
         getConflictAt: (path) => conflictsRef.current?.get?.(path),
         getStrings: () => stringsRef.current,
         subscribeToChanges: (listener: ChangeListener) => {
+          /* eslint-disable-next-line react-hooks/immutability */
           listeners.add(listener)
           return () => listeners.delete(listener)
         },

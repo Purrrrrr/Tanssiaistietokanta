@@ -70,7 +70,8 @@ interface ColoredTagProps {
 export function ColoredTag({ tag, title, hashSource, color, small, onClick } : ColoredTagProps) {
   const colorIndex = Math.abs(color ?? hash(hashSource ?? title)) % TAG_COLOR_COUNT
   const className = colors[colorIndex]
-  return <span
+  const Element = onClick ? 'button' : 'span'
+  return <Element
     onClick={onClick}
     className={classNames(
       className,
@@ -90,7 +91,7 @@ export function ColoredTag({ tag, title, hashSource, color, small, onClick } : C
         {tag}
       </span>}
     {title}
-  </span>
+  </Element>
 }
 
 function hash(title: string): number {

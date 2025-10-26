@@ -11,8 +11,7 @@ export interface UntypedListFieldProps<T, ValuePath, V extends Entity, P = objec
 export interface ListFieldProps<T, V extends Entity, P = object>
   extends
   FieldPropsWithoutComponent<T, V[]>,
-  Pick<ListEditorProps<T, V, P>, 'itemType' | 'droppableElement' | 'acceptsTypes' | 'accessibilityContainer' | 'isTable' | 'itemClassname' | 'componentProps'>
-{
+  Pick<ListEditorProps<T, V, P>, 'itemType' | 'droppableElement' | 'acceptsTypes' | 'accessibilityContainer' | 'isTable' | 'itemClassname' | 'componentProps'> {
   component: ListItemComponent<T, V, P>
   renderConflictItem: (item: V) => string
 }

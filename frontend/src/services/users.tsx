@@ -1,13 +1,13 @@
 import React, {createContext, useContext, useState} from 'react'
 
 interface User {
-  name: string,
+  name: string
   isAdmin: boolean
 }
 interface UserContextType {
-  user: User | null,
-  login: () => void,
-  logout: () => void,
+  user: User | null
+  login: () => void
+  logout: () => void
 }
 
 export const UserContext = createContext<UserContextType>({
@@ -28,9 +28,9 @@ export function UserContextProvider({children}) {
   return <UserContext.Provider value={userContext} children={children} />
 }
 
-export function useIsAdmin() {
+export function useIsAdmin(): boolean {
   const {user} = useContext(UserContext)
-  return user && user.isAdmin
+  return user?.isAdmin ?? false
 }
 
 //TODO: better type

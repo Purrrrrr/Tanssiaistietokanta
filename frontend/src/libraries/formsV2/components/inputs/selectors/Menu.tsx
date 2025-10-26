@@ -21,7 +21,7 @@ export function renderMenuItems<T>(
   return itemData.categories.map(category => {
     const result = <Fragment key={category.title}>
       {itemData.showCategories && titleRenderer(category.title)}
-      {category.items.map((item, index) => ( itemRenderer(item, index + startingIndex)))}
+      {category.items.map((item, index) => (itemRenderer(item, index + startingIndex)))}
     </Fragment>
     startingIndex += category.items.length
     return result

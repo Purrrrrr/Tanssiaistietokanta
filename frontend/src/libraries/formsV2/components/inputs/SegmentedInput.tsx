@@ -68,7 +68,7 @@ function numericPart(length: number): Part {
   }
 }
 
-function regexPart(matcher: RegExp | string): Part {
+function _regexPart(matcher: RegExp | string): Part {
   const regex = matcher instanceof RegExp
     ? matcher
     : new RegExp(`^${matcher}`)

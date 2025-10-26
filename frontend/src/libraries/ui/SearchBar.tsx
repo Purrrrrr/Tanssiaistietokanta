@@ -8,13 +8,13 @@ interface SearchInputProps {
   id?: string
   value: string
   placeholder?: string
-  emptySearchText: string,
+  emptySearchText: string
   onChange: (value: string) => unknown
 }
 
-export function SearchBar({id, onChange, value, placeholder, emptySearchText} : SearchInputProps) {
+export function SearchBar({id, onChange, value, placeholder, emptySearchText}: SearchInputProps) {
   return <div id={id} className="relative">
-    <Search className="absolute top-0 left-0 m-[7px] text-gray-600 z-1"/>
+    <Search className="absolute top-0 left-0 m-[7px] text-gray-600 z-1" />
     <input
       type="text"
       className={CssClass.input+' px-7.5! w-full'}

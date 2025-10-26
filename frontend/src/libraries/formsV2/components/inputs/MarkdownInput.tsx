@@ -15,13 +15,13 @@ const defaultQRCode = '<QR title="..." value="https//..." size="250" font-size="
 function QRCode({ editor }) {
   const insertQRCode = useFormTranslation('markdownEditor.insertQRCode')
   return (
-    <span
+    <button
       className="button"
       title={insertQRCode}
       onClick={() => editor.insertText(defaultQRCode)}
     >
       QR
-    </span>
+    </button>
   )
 }
 QRCode.align = 'left'

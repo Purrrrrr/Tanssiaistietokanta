@@ -19,5 +19,5 @@ export type VersionCalendar = {
 export interface Version {
   _versionId: string
   _versionNumber: number
-  _updatedAt: string,
+  _updatedAt: string
 }

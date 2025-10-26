@@ -9,10 +9,10 @@ import { useT } from 'i18n'
 interface DanceCategoryChooserProps {
   id: string
   value: string
-  onChange: (category: string) => unknown,
+  onChange: (category: string) => unknown
   readOnly?: boolean
-  allowEmpty?: boolean,
-  placeholder?: string,
+  allowEmpty?: boolean
+  placeholder?: string
 }
 
 export function DanceCategoryChooser({
@@ -44,7 +44,7 @@ export type AnyCategory = typeof anyCategory
 interface DanceViewCategorySelectorProps {
   id: string
   value: DanceViewCategory
-  onChange: (category: DanceViewCategory) => unknown,
+  onChange: (category: DanceViewCategory) => unknown
   dances: Dance[]
 }
 

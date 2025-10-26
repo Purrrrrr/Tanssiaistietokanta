@@ -85,7 +85,7 @@ export interface EventProgramRow {
 }
 
 export interface EventProgramItem extends NameAndDescription {
-  __typename: 'Dance' | 'EventProgram';
+  __typename: 'Dance' | 'EventProgram'
   teachedIn?: Workshop[]
   showInLists?: boolean
 }
@@ -96,7 +96,7 @@ export interface Workshop {
 }
 
 export interface RequestedDance {
-  __typename: 'RequestedDance';
+  __typename: 'RequestedDance'
 }
 
 export interface NameAndDescription {

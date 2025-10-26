@@ -8,7 +8,7 @@ export function useSubscriptions<State>() {
   return useMemo(() => {
     function subscribe(callback: SubscriptionCallback<State>) {
       callbacks.current.add(callback)
-      return () => { callbacks.current.delete(callback) }
+      return () => void callbacks.current.delete(callback)
     }
     const trigger = (state: State) => {
       for (const  callback of callbacks.current) {

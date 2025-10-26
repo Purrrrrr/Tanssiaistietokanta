@@ -22,7 +22,7 @@ export function makeFeathersRequest<T>(
   query: unknown,
 ) {
   return new Promise<T>((resolve, reject) =>
-    socket.emit(verb, service, query, (err: unknown, res: T) => err ? reject(err) : resolve(res) )
+    socket.emit(verb, service, query, (err: unknown, res: T) => err ? reject(err) : resolve(res))
   )
 }
 

@@ -6,6 +6,8 @@ interface HiddenLabelProps extends LabelProps {
 
 export function HiddenLabel({label, labelFor, labelInfo}: HiddenLabelProps) {
   return <label htmlFor={labelFor} className="sr-only">
-    {label}{labelInfo ? ' ' : ''}{labelInfo}
+    {label}
+    {labelInfo ? ' ' : ''}
+    {labelInfo}
   </label>
 }

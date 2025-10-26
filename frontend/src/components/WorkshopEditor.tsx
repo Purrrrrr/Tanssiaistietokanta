@@ -110,8 +110,7 @@ function AbbreviationField({label, path, reservedAbbreviations}) {
           {abbreviations: values, abbreviation: value}
         )
       }
-    }
-    ,
+    },
     [reservedAbbreviations, maxLenErrorMsg, t]
   )
 

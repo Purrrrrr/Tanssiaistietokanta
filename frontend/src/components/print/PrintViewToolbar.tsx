@@ -3,7 +3,7 @@ import { DoubleChevronUp, Settings } from '@blueprintjs/icons'
 import classNames from 'classnames'
 
 interface PrintViewToolbarProps {
-  children: React.ReactNode,
+  children: React.ReactNode
   maxHeight?: number
 }
 

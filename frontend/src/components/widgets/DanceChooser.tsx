@@ -12,14 +12,14 @@ import {useT} from 'i18n'
 import { ColoredTag } from './ColoredTag'
 
 interface DanceChooserProps {
-  value: Dance | null,
-  excludeFromSearch?: Dance[],
-  onChange: (dance: Dance | null) => unknown,
+  value: Dance | null
+  excludeFromSearch?: Dance[]
+  onChange: (dance: Dance | null) => unknown
   readOnly?: boolean
   hasConflict?: boolean
-  emptyText?: string,
-  allowEmpty?: boolean,
-  placeholder?: string,
+  emptyText?: string
+  allowEmpty?: boolean
+  placeholder?: string
   workshops?: Workshop[]
   chosenDancesIds?: DanceIdSet
 }

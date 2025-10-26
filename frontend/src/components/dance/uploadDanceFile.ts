@@ -23,7 +23,7 @@ function requestUserFile(types?: string) : Promise<File> {
     input.addEventListener('change', (e : Event)  => {
       const files = (e.target as HTMLInputElement).files
 
-      if (!files || !files[0]) {
+      if (!files?.[0]) {
         reject()
       } else {
         resolve(files[0])
@@ -39,13 +39,13 @@ function stripExtension(fileName : string) {
 
 async function decodeAudioData(file : File) : Promise<{duration?: number}> {
   const buffer = await readFile(file)
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     new AudioContext().decodeAudioData(buffer, resolve, reject)
   })
 }
 
 function readFile(file : File) : Promise<ArrayBuffer> {
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     const reader = new FileReader()
     reader.onload = (_) => {
       const {result} = reader

@@ -74,7 +74,7 @@ function EventProgramRoutes({event}) {
     <Routes>
       <Route index element={<Navigate to="main" replace />} />
       <Route path=":tabId/:slideId?" element={<EventProgramPage event={event}/>} />
-      <Route path="dance/:danceId" element={<Dance parentType='eventProgram'/>} />
+      <Route path="dance/:danceId" element={<Dance parentType="eventProgram"/>} />
     </Routes>
   </AdminOnly>
 }

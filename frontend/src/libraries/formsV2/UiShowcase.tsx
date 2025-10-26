@@ -19,8 +19,8 @@ interface Data {
   l: L[]
   l2: L[]
   num: number
-  rangeStart: Date | null,
-  rangeEnd: Date | null,
+  rangeStart: Date | null
+  rangeEnd: Date | null
 }
 interface L {
   _id: string
@@ -31,7 +31,7 @@ const {
   Form, Field, RepeatingSection, RepeatingTableRows,
   useAddItem,
   selectWithType,
-} = formFor<Data, {'l': L, 's': string}>()
+} = formFor<Data, {l: L, s: string}>()
 
 const defaultData : Data = {
   a: '', b: '',
@@ -87,7 +87,11 @@ function ShowcaseContents() {
       serverValue={<input className="block border"  defaultValue="fuu" />}
       onResolve={() => {}}
     />
-    <div>SegmentedInput <SegmentedInput value={s3} onChange={setS3} /></div>
+    <div>
+      SegmentedInput
+      {' '}
+      <SegmentedInput value={s3} onChange={setS3} />
+    </div>
     <Select
       filterable
       aria-label="jotakin"

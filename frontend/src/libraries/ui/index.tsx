@@ -1,4 +1,4 @@
-import React  from 'react'
+import React from 'react'
 import {
   FormGroup as BlueprintFormGroup,
   FormGroupProps as BlueprintFormGroupProps,
@@ -28,8 +28,8 @@ export const Markdown = React.lazy(() => import('./Markdown'))
 
 export { ColorClass, CssClass }
 
-type HTMLDivProps = React.HTMLAttributes<HTMLDivElement>;
-export type Intent = 'none' | 'primary' | 'success' | 'warning' | 'danger';
+type HTMLDivProps = React.HTMLAttributes<HTMLDivElement>
+export type Intent = 'none' | 'primary' | 'success' | 'warning' | 'danger'
 
 interface CardProps extends Omit<HTMLDivProps, 'onClick'> {
   noPadding?: boolean
@@ -61,7 +61,7 @@ export interface FormGroupProps extends Omit<BlueprintFormGroupProps, 'inline'>,
 
 const FormGroupInstance = new BlueprintFormGroup({})
 
-export function FormGroup({ elementRef, className, inline, labelStyle: maybeLabelStyle, ...props} : FormGroupProps) {
+export function FormGroup({ elementRef, className, inline, labelStyle: maybeLabelStyle, ...props}: FormGroupProps) {
   const labelStyle = maybeLabelStyle ?? (inline ? 'beside' : 'above')
   const inlineLabel = labelStyle === 'beside'
   const inlineProps = inline
@@ -72,12 +72,12 @@ export function FormGroup({ elementRef, className, inline, labelStyle: maybeLabe
     intent, children, disabled, contentClassName, helperText, label, labelFor, labelInfo, style, subLabel,
     ...rest
   } = props
-  //@ts-expect-error Props is readonly, but we override it here
+  // @ts-expect-error Props is readonly, but we override it here
   FormGroupInstance.props = {
     intent, children, disabled, contentClassName, helperText, label, labelFor, labelInfo, style, subLabel,
-    ...inlineProps
+    ...inlineProps,
   }
   const element = FormGroupInstance.render()
 
-  return React.cloneElement(element, {...rest, ref: elementRef}) //<BlueprintFormGroup {...props} {...inlineProps} />
+  return React.cloneElement(element, {...rest, ref: elementRef}) // <BlueprintFormGroup {...props} {...inlineProps} />
 }

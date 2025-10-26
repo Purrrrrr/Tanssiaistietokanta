@@ -8,7 +8,7 @@ import { Popover } from 'libraries/overlays'
 import { ColorClass } from './classes'
 
 let idCounter = 0
-let toastState : ToastData[] = []
+let toastState: ToastData[] = []
 const toastListeners = new Set<() => unknown>()
 
 function setToasts(replacer: (old: ToastData[]) => ToastData[]) {
@@ -22,29 +22,27 @@ export function ToastContainer() {
       toastListeners.add(listener)
       return () => toastListeners.delete(listener)
     },
-    () => toastState
+    () => toastState,
   )
 
   return <section aria-live="assertive">
     <Popover type="manual" open={toasts.length > 0} className="flex left-1/2 flex-col gap-4 p-10 bg-transparent -translate-x-1/2">
-      {toasts.map(({ id, ...rest })=> <Toast key={id} {...rest} />
-      )}
+      {toasts.map(({ id, ...rest }) => <Toast key={id} {...rest} />)}
     </Popover>
   </section>
 }
 
 function Toast({ onClose, closing, toast }: Omit<ToastData, 'id'>) {
-  return <div className={
-    classNames(
-      'flex items-start gap-2 shadow-lg shadow-stone-500/40 starting:opacity-0 transition-opacity border-1 border-black/50 rounded-sm',
-      ColorClass.boxColors[toast.intent ?? 'none'],
-      closing && 'opacity-0'
-    )}
-  >
+  return <div className={classNames(
+    'flex items-start gap-2 shadow-lg shadow-stone-500/40 starting:opacity-0 transition-opacity border-1 border-black/50 rounded-sm',
+    ColorClass.boxColors[toast.intent ?? 'none'],
+    closing && 'opacity-0',
+  )}>
 
     <div className="p-3">{toast.message}</div>
-    {toast.isCloseButtonShown !== false &&
-      <button className="p-1 mt-1 cursor-pointer me-1 hover:bg-gray-800/20" onClick={onClose}>X</button>
+    {
+      toast.isCloseButtonShown !== false &&
+        <button className="p-1 mt-1 cursor-pointer me-1 hover:bg-gray-800/20" onClick={onClose}>X</button>
     }
   </div>
 }
@@ -57,15 +55,15 @@ export interface ToastData {
 }
 
 export interface ToastProps {
-  message: React.ReactNode;
-  onDismiss?: (didTimeoutExpire: boolean) => void;
+  message: React.ReactNode
+  onDismiss?: (didTimeoutExpire: boolean) => void
   /** Milliseconds to wait before automatically dismissing toast. Default: 5000 */
-  timeout?: number;
+  timeout?: number
   intent?: Color
-  isCloseButtonShown?: boolean;
+  isCloseButtonShown?: boolean
 }
 
-export function showToast(toast : ToastProps) {
+export function showToast(toast: ToastProps) {
   const id = ++idCounter
   const toastData = {
     toast,
@@ -75,7 +73,7 @@ export function showToast(toast : ToastProps) {
       if (toastData.closing) return
       setToasts(toasts => toasts.map(toast => toast.id === id ? { ...toast, closing: true} : toast))
       setTimeout(() => setToasts(toasts => toasts.filter(toast => toast.id !== id)), 500)
-    }
+    },
   }
   setTimeout(toastData.onClose, toast.timeout ?? 5000)
   setToasts(toasts => [...toasts, toastData])

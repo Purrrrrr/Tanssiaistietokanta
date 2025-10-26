@@ -1,4 +1,4 @@
-export function merge<T extends object >(obj: T, merged: Partial<T>): T {
+export function merge<T extends object>(obj: T, merged: Partial<T>): T {
   return { ...obj, ...merged }
 }
 

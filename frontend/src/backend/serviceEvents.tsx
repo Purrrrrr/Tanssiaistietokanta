@@ -75,7 +75,7 @@ function unSubscribeToService<T extends Entity>(serviceName : ServiceName, chann
   closeChannelIfUnsused(channel, callbacks)
 }
 
-const serviceEventEmitters : Map<ServiceName, EventEmitter> = new Map()
+const serviceEventEmitters = new Map<ServiceName, EventEmitter>()
 
 function getServiceEventEmitter(
   serviceName: ServiceName

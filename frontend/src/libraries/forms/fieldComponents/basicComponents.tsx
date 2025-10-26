@@ -101,7 +101,7 @@ export function TextArea({value, onChange, inline: _ignored, inputRef, ...props}
     value={value ?? ''}
     fill
     onKeyDown={e => (e.key === 'Escape') && (e.target as HTMLTextAreaElement).blur()}
-    onChange={e => onChange && onChange(e.target.value, e)}
+    onChange={e => onChange?.(e.target.value, e)}
     {...props}
   />
 }

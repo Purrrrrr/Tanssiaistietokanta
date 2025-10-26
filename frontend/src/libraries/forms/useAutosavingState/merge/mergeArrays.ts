@@ -38,8 +38,8 @@ export function mergeArrays<T extends Entity>(
   const mergedValues = new Map<ID, T>()
   const nonConflictingMergedValues = new Map<ID, T>()
   const modifiedIds = new Set<ID>()
-  const changeConflictsById: Map<ID, Conflict<unknown>[]> = new Map()
-  const removalConflicts: Map<ID, MergeData<T | typeof Deleted>> = new Map()
+  const changeConflictsById = new Map<ID, Conflict<unknown>[]>()
+  const removalConflicts  = new Map<ID, MergeData<T | typeof Deleted>>()
 
   data.local.ids.forEach((id, localIndex) => {
     const local = mergeData.local[localIndex]

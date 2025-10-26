@@ -13,7 +13,7 @@ export const buttonClass = (
     minimal?: boolean
     className?: string
     paddingClass?: string
-  }
+  },
 ) => classNames(
   'cursor-pointer transition-colors disabled:cursor-not-allowed disabled:opacity-50 text-center inline-flex gap-1.5 items-center',
   minimal ? [

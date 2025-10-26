@@ -63,10 +63,12 @@ export function ListEditor<T, V extends Entity>({
           element={droppableElement}
           acceptsTypes={acceptsTypes}
           path={path}
-          onChangePath={onChange as OnChangeHandler<unknown>}>
+          onChangePath={onChange as OnChangeHandler<unknown>}
+        >
           {itemDom}
         </Droppable>
-        : itemDom}
+        : itemDom
+      }
     </ListEditorContext>
   )
 }
@@ -87,26 +89,28 @@ function ListEditorItems<T, V extends Entity>({items, itemType, acceptsTypes, pa
     return <SortableItem<T, V> key={item._id} id={item._id} itemType={type} acceptsTypes={acceptsTypes} path={path} onChangePath={onChangePath} itemIndex={index} component={component} isTable={isTable} componentProps={componentProps} className={className} />
   })
 
-  if (move && move.overPath === path) {
+  if (move?.overPath === path) {
     const { activeId, activeData } = move
     ids.push(activeId)
-    wrappers.push(<SortableItem
-      key={activeId}
-      id={activeId}
-      itemType={activeData.type}
-      acceptsTypes={activeData.acceptsTypes}
-      path={activeData.path}
-      onChangePath={activeData.onChangePath as OnChangeHandler<V[]>}
-      itemIndex={activeData.itemIndex}
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      component={activeData.component as ListItemComponent<any, V>}
-      componentProps={componentProps}
-      isTable={isTable}
-      className={className}
-    />)
+    wrappers.push(
+      <SortableItem
+        key={activeId}
+        id={activeId}
+        itemType={activeData.type}
+        acceptsTypes={activeData.acceptsTypes}
+        path={activeData.path}
+        onChangePath={activeData.onChangePath as OnChangeHandler<V[]>}
+        itemIndex={activeData.itemIndex}
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        component={activeData.component as ListItemComponent<any, V>}
+        componentProps={componentProps}
+        isTable={isTable}
+        className={className}
+      />
+    )
   }
 
-  return <SortableContext items={ids} strategy={verticalListSortingStrategy} >
+  return <SortableContext items={ids} strategy={verticalListSortingStrategy}>
     {wrappers}
   </SortableContext>
 }
@@ -188,7 +192,7 @@ function Droppable({children, element, acceptsTypes, path, onChangePath}: Droppa
     return <>{children}</>
   }
 
-  return <div ref={setNodeRef} >
+  return <div ref={setNodeRef}>
     {children}
   </div>
 }

@@ -3,8 +3,8 @@ import classNames from 'classnames'
 import './PrintTable.sass'
 
 interface PrintTableProps {
-  children: React.ReactNode,
-  headings?: string[],
+  children: React.ReactNode
+  headings?: string[]
   className?: string
 }
 

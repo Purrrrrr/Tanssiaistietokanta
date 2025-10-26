@@ -6,7 +6,7 @@ import {Graph, makeGraph} from './Graph'
 const log : (...a: unknown[]) => void = () => { /* */ }
 
 type InputData = MergeData<{
-  id: ID,
+  id: ID
   removedInOtherVersion: boolean
   isAdded: boolean
 }[]>

@@ -3,7 +3,7 @@ import { ArrowLeft } from '@blueprintjs/icons'
 import { Link } from 'libraries/ui'
 
 interface BackLinkProps {
-  children: React.ReactElement | string,
+  children: React.ReactElement | string
   to?: string
 }
 

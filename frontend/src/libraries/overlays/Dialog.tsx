@@ -5,12 +5,12 @@ import classNames from 'classnames'
 import {Button} from 'libraries/ui'
 
 type DialogProps = {
-  isOpen: boolean,
+  isOpen: boolean
   onClose?: (e: React.SyntheticEvent) => unknown
   title: string
   // style ?: React.CSSProperties
   children: React.ReactNode
-  className?: string,
+  className?: string
 } & (
   {
     showCloseButton?: true
@@ -21,7 +21,7 @@ type DialogProps = {
   }
 )
 
-export function Dialog({isOpen, onClose, children, title, className, showCloseButton = true, closeButtonLabel} : DialogProps) {
+export function Dialog({isOpen, onClose, children, title, className, showCloseButton = true, closeButtonLabel}: DialogProps) {
   const modal = useRef<HTMLDialogElement>(null)
   const closeButton = useRef<HTMLButtonElement>(null)
   const [shouldrender, setShouldRender] = useState(false)

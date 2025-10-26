@@ -2,7 +2,7 @@ import { createProxyMiddleware } from 'http-proxy-middleware'
 
 import backendConfig from './backendConfig.json'
 
-export default function(app) {
+export default function (app) {
   app.use(
     '/api',
     createProxyMiddleware({

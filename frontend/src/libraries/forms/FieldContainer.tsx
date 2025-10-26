@@ -37,12 +37,26 @@ export function FieldContainer(props: FieldContainerProps) {
   const conflictComponent = conflictData ? <ConflictHandler {...conflictData} /> : null
 
   if (labelStyle === 'hidden-nowrapper') {
-    return <React.Fragment>{conflictComponent}{children}{errorMsg}</React.Fragment>
+    return <React.Fragment>
+      {conflictComponent}
+      {children}
+      {errorMsg}
+    </React.Fragment>
   }
   if (labelStyle === 'hidden') {
     return inline
-      ? <span className={className} id={formGroupId}>{conflictComponent}{children}{errorMsg}{helperText}</span>
-      : <div className={className} id={formGroupId}>{conflictComponent}{children}{errorMsg}{helperText}</div>
+      ? <span className={className} id={formGroupId}>
+        {conflictComponent}
+        {children}
+        {errorMsg}
+        {helperText}
+      </span>
+      : <div className={className} id={formGroupId}>
+        {conflictComponent}
+        {children}
+        {errorMsg}
+        {helperText}
+      </div>
   }
   const helperTextId = `${id}--helperText`
 
@@ -58,6 +72,7 @@ export function FieldContainer(props: FieldContainerProps) {
     subLabel={conflictComponent}
     intent={conflictData ? 'danger' : undefined}
   >
-    {children}{errorMsg}
+    {children}
+    {errorMsg}
   </FormGroup>
 }

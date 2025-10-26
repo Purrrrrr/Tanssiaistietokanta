@@ -11,7 +11,8 @@ import {useFormStrings} from './formContext'
 export function ConflictHandler({localValue, serverValue, onResolve}: ConflictData) {
   const strings = useFormStrings()
   return <>
-    {strings.hasConflicts}{' '}
+    {strings.hasConflicts}
+    {' '}
     <MenuButton
       text={strings.conflictButton}
       buttonRenderer={({active, children, ...props}) =>

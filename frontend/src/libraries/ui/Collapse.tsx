@@ -2,9 +2,9 @@ import { useLayoutEffect, useState } from 'react'
 import classNames from 'classnames'
 
 export interface CollapseProps {
-  children?: React.ReactNode;
-  isOpen?: boolean;
-  keepChildrenMounted?: boolean;
+  children?: React.ReactNode
+  isOpen?: boolean
+  keepChildrenMounted?: boolean
 }
 
 export default function Collapse({children, isOpen, keepChildrenMounted}: CollapseProps) {

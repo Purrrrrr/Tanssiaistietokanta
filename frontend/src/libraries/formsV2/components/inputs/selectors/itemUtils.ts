@@ -82,7 +82,7 @@ function toItemData<T>(items: SyncItems<T>): InternalItemData<T> {
     return {
       showCategories: false,
       items,
-      categories: [ { items, title: '' }]
+      categories: [{ items, title: '' }]
     }
   }
 

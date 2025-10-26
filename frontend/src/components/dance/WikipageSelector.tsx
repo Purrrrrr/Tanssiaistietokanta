@@ -9,11 +9,11 @@ import {useT} from 'i18n'
 
 
 interface WikipageSelectorProps {
-  value: string | null,
-  onChange: (value: string | null) => unknown,
+  value: string | null
+  onChange: (value: string | null) => unknown
   readOnly?: boolean
-  emptyText?: string,
-  placeholder?: string,
+  emptyText?: string
+  placeholder?: string
   possibleName?: string
 }
 
@@ -41,7 +41,7 @@ export function WikipageSelector({ value, onChange, readOnly, placeholder, possi
     }
     const groups = Object.groupBy(pages, page => {
       if (page.spamScore < spamTreshold) {
-        const isSuggested = suggestionTerms && suggestionTerms.some(isTermInPage(page))
+        const isSuggested = suggestionTerms?.some(isTermInPage(page))
         return isSuggested ? 'suggestion' : 'regular'
       }
       return 'spam'
@@ -51,7 +51,7 @@ export function WikipageSelector({ value, onChange, readOnly, placeholder, possi
       categories: [
         {
           title: t('suggestions'),
-          items: ( groups.suggestion ?? [] )
+          items: (groups.suggestion ?? [])
             .sort((a, b) => {
               const suggestioCountA = suggestionTerms?.filter(isTermInPage(a))?.length ?? 0
               const suggestioCountB = suggestionTerms?.filter(isTermInPage(b))?.length ?? 0

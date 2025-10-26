@@ -52,103 +52,6 @@
     "codegen": "graphql-codegen --config codegen.ts",
     "dev": "NODE_OPTIONS=--max-old-space-size=8192 vite"
   },
-  "eslintConfig": {
-    "extends": [
-      "eslint:recommended",
-      "plugin:react-hooks/recommended",
-      "plugin:@typescript-eslint/recommended"
-    ],
-    "env": {
-      "browser": true,
-      "es6": true
-    },
-    "plugins": [
-      "react",
-      "simple-import-sort",
-      "import"
-    ],
-    "rules": {
-      "@typescript-eslint/no-explicit-any": 1,
-      "@typescript-eslint/no-non-null-assertion": 1,
-      "@typescript-eslint/ban-ts-comment": "error",
-      "simple-import-sort/imports": [
-        "error",
-        {
-          "groups": [
-            [
-              "^node:"
-            ],
-            [
-              "react",
-              "^@?\\w"
-            ],
-            [
-              "^types(/.*)?\\u0000?$",
-              "^\\./types(/.*)?\\u0000?$",
-              "^\\.\\./types(/.*)?\\u0000?$",
-              "^.*/types(/.*)?\\u0000?$"
-            ],
-            [
-              "^(backend|services)(/.*|$)"
-            ],
-            [
-              "^(libraries)(/.*|$)",
-              "^(components|pages|utils|i18n)(/.*|$)"
-            ],
-            [
-              "^"
-            ],
-            [
-              "^\\."
-            ],
-            [
-              "^\\u0000"
-            ]
-          ]
-        }
-      ],
-      "simple-import-sort/exports": "error",
-      "import/first": "error",
-      "import/newline-after-import": "error",
-      "import/no-duplicates": "error",
-      "no-trailing-spaces": [
-        "error"
-      ],
-      "comma-dangle": [
-        "error",
-        "only-multiline"
-      ],
-      "comma-spacing": 1,
-      "indent": [
-        "error",
-        2,
-        {
-          "SwitchCase": 1
-        }
-      ],
-      "linebreak-style": [
-        "error",
-        "unix"
-      ],
-      "quotes": [
-        "error",
-        "single"
-      ],
-      "semi": [
-        "error",
-        "never"
-      ],
-      "@typescript-eslint/no-unused-vars": [
-        "warn",
-        {
-          "varsIgnorePattern": "^_",
-          "argsIgnorePattern": "^_",
-          "caughtErrorsIgnorePattern": "^_",
-          "destructuredArrayIgnorePattern": "^_"
-        }
-      ]
-    }
-  },
   "browserslist": {
     "production": [
       "last 1 chrome version",
@@ -166,27 +69,31 @@
     "@babel/plugin-transform-react-jsx-development": "^7.25.9",
     "@babel/preset-env": "^7.24.7",
     "@babel/preset-typescript": "7.21",
+    "@eslint/js": "^9.38.0",
     "@graphql-codegen/cli": "^5.0.5",
     "@graphql-codegen/client-preset": "^4.6.3",
+    "@stylistic/eslint-plugin": "^3.1.0",
     "@types/jest": "^29.0.0",
     "@types/node": "^20.11.5",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
-    "@typescript-eslint/eslint-plugin": "^8.28.0",
-    "@typescript-eslint/parser": "^8.25.0",
-    "@typescript-eslint/utils": "^8.25.0",
     "@vitejs/plugin-react": "^4.3.4",
     "babel-jest": "^29.7.0",
     "babel-plugin-react-compiler": "^19.0.0-beta-27714ef-20250124",
-    "eslint": "^8.57.0",
-    "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-react": "^7.34.2",
+    "eslint": "^9.38.0",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-import-x": "^4.16.1",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-compiler": "^19.1.0-rc.2",
-    "eslint-plugin-react-hooks": "^4.6.2",
-    "eslint-plugin-simple-import-sort": "8.0.0",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "globals": "^16.4.0",
     "jest": "^29.7.0",
     "source-map-explorer": "2.5.3",
     "typescript": "5.7",
+    "typescript-eslint": "^8.46.2",
     "vite": "^6.0.11",
     "vite-bundle-analyzer": "^0.21.0",
     "vite-plugin-checker": "^0.6.4",

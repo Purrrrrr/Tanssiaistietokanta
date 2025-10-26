@@ -22,7 +22,10 @@ export const Popover = forwardRef<HTMLDivElement, PopoverProps>(
 
     return <ControlledPopover
       open={open ?? uncontrolledOpen}
-      onToggle={newOpen => { setUncontrolledOpen(newOpen); onToggle?.(newOpen) }}
+      onToggle={newOpen => {
+        setUncontrolledOpen(newOpen)
+        onToggle?.(newOpen)
+      }}
       ref={ref}
       {...props}
     />
@@ -68,7 +71,7 @@ export const ControlledPopover = forwardRef<HTMLDivElement, ControlledPopoverPro
     </div>
   }
 )
-function handleRefs<T>(...refs: ( ForwardedRef<T>)[]) {
+function handleRefs<T>(...refs: (ForwardedRef<T>)[]) {
   return (node: T) => {
     refs.forEach(ref => {
       if (typeof ref === 'function') {

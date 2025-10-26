@@ -43,7 +43,7 @@ const markdownEditorProps = {
 type EventSlideEditorProps = WithEventProgram<EventSlideProps>
   & { syncStatus?: SyncState }
 
-export function EventSlideEditor({syncStatus, ...props}: EventSlideEditorProps ) {
+export function EventSlideEditor({syncStatus, ...props}: EventSlideEditorProps) {
   const slideStylePath = getSlideStylePath(props)
   //const isDance = props.type === 'programItem' &&
   //  props.eventProgram.danceSets[props.danceSetIndex].program[props.itemIndex].item
@@ -51,7 +51,7 @@ export function EventSlideEditor({syncStatus, ...props}: EventSlideEditorProps )
   return <>
     <SectionCard>
       <H2>
-        <T msg={'pages.events.ballProgram.slideProperties'}/>
+        <T msg="pages.events.ballProgram.slideProperties"/>
         {' '}
         {syncStatus && <SyncStatus state={syncStatus}/>}
       </H2>
@@ -146,7 +146,7 @@ export function EventSlideContentEditor(props: WithEventProgram<EventSlideProps>
     case 'danceSet': {
       const itemPath = `danceSets.${props.danceSetIndex}` as const
       return <SectionCard>
-        <H2><T msg={'pages.events.ballProgram.danceSetTitle'}/></H2>
+        <H2><T msg="pages.events.ballProgram.danceSetTitle"/></H2>
         <Input labelStyle="above" label={t('fields.danceSetName')} path={`${itemPath}.title`} />
         <ListField
           label=""
@@ -159,7 +159,7 @@ export function EventSlideContentEditor(props: WithEventProgram<EventSlideProps>
     }
     case 'intervalMusic': {
       return <SectionCard>
-        <H2><T msg={'pages.events.ballProgram.intervalMusicTitle'}/></H2>
+        <H2><T msg="pages.events.ballProgram.intervalMusicTitle"/></H2>
         <IntervalMusicDescriptionEditor danceSetIndex={props.danceSetIndex} />
       </SectionCard>
     }
@@ -214,7 +214,7 @@ function IntervalMusicDescriptionEditor({danceSetIndex}: {danceSetIndex: number}
       </>
       : <>
         <H2>{t('titles.defaultIntervalMusicTexts')}</H2>
-        <Input label={t('fields.intervalMusic.name')} path='defaultIntervalMusic.name' componentProps={{placeholder:t('programTypes.IntervalMusic')}} />
+        <Input label={t('fields.intervalMusic.name')} path="defaultIntervalMusic.name" componentProps={{placeholder:t('programTypes.IntervalMusic')}} />
         <Field label={t('fields.intervalMusic.description')} path="defaultIntervalMusic.description" component={MarkdownEditor} componentProps={markdownEditorProps} />
         <Switch label={t('fields.intervalMusic.showInLists')} path="defaultIntervalMusic.showInLists" inline />
       </>
@@ -235,11 +235,11 @@ function ProgramItemEditor({path}: {path: ProgramItemPath}) {
       return null
     case 'EventProgram':
       return <SectionCard>
-        <H2><T msg={'pages.events.ballProgram.infoTitle'}/></H2>
+        <H2><T msg="pages.events.ballProgram.infoTitle"/></H2>
         <Input label={t('fields.eventProgram.name')} path={`${path}.item.name`} required />
         <Field label={t('fields.eventProgram.description')} path={`${path}.item.description`} component={MarkdownEditor} componentProps={markdownEditorProps} />
         <Switch label={t('fields.eventProgram.showInLists')} path={`${path}.item.showInLists`} inline />
-        <Callout><T msg={'pages.events.ballProgram.currentItemAlwaysShownInLists'}/></Callout>
+        <Callout><T msg="pages.events.ballProgram.currentItemAlwaysShownInLists"/></Callout>
       </SectionCard>
   }
 }

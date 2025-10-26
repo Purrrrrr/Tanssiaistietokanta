@@ -62,6 +62,7 @@ export const fi = {
       delete: 'Poista',
     },
     loadingState: {
+      loading: 'Ladataan...',
       connectionError: 'Yhteydenotto palvelimeen ei onnistu',
       errorMessage: 'Tietojen lataaminen epäonnistui',
       tryAgain: 'Yritä uudelleen',
@@ -334,7 +335,7 @@ export const fi = {
       },
       danceList: {
         style: {
-          'default': 'Oletus',
+          default: 'Oletus',
           'three-columns': 'Rinnakkaiset setit',
           large: 'Yksi setti per arkki',
         },

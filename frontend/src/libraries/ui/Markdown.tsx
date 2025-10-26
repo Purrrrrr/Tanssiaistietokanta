@@ -11,9 +11,10 @@ export default function Markdown({options, className, ...props}: ComponentPropsW
   return <MarkdownToJsx
     className={classNames(className, 'markdown-content')}
     {...props}
-    options={options
-      ? { ...options, overrides: { ...markdownComponents, ...options.overrides } }
-      : Markdown.defaultOptions
+    options={
+      options
+        ? { ...options, overrides: { ...markdownComponents, ...options.overrides } }
+        : Markdown.defaultOptions
     }
   />
 }
@@ -24,7 +25,7 @@ const markdownComponents = {
     const parsedFontSize = parseFloat(fontSize ?? '100') / 100
     const parsedSize = parseInt(size, 10)
     const pxSize = `${parsedSize / 14}em`
-    return  <div className="qr-container" style={{'--qr-size': pxSize, '--qr-font-size': parsedFontSize} as CSSProperties}>
+    return <div className="qr-container" style={{'--qr-size': pxSize, '--qr-font-size': parsedFontSize} as CSSProperties}>
       {title && <p>{title}</p>}
       <div className="svg-container">
         <QRCode {...props} value={value ?? ''} size={parsedSize} />

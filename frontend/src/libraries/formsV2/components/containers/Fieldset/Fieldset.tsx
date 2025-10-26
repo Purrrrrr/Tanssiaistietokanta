@@ -19,7 +19,13 @@ export function Fieldset({ inline: inlineProp, labelStyle: labelStyleProp, label
     { inline }
   )
   return <fieldset className={className}>
-    {label && <legend className="bp5-label">{label}{labelInfo ? ' ' : ''}{labelInfo}</legend>}
+    {label &&
+      <legend className="bp5-label">
+        {label}
+        {labelInfo ? ' ' : ''}
+        {labelInfo}
+      </legend>
+    }
     {children}
   </fieldset>
 }

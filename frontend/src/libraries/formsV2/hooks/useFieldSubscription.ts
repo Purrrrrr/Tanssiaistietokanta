@@ -12,7 +12,7 @@ export function useFieldSubscription<Output extends Input, Input, Data = unknown
   useEffect(
     () => {
       setValue(getter(getValueAt))
-      subscribe(() => { setValue(getter(getValueAt)) })
+      subscribe(() => setValue(getter(getValueAt)))
     },
     [subscribe, getValueAt, getter]
   )

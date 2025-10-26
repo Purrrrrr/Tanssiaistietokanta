@@ -12,7 +12,7 @@ import './VersionChooser.scss'
 interface Version {
   _versionId: string
   _versionNumber: number
-  _updatedAt: string,
+  _updatedAt: string
 }
 
 interface VersionChooserProps extends Omit<VersionSidebarProps, 'entityType'> {
@@ -62,7 +62,7 @@ interface VersionNavigationProps {
   toVersionLink: (versionId: string | null) => string
 }
 
-function VersionNavigation({versionId, versions, toVersionLink}: VersionNavigationProps ) {
+function VersionNavigation({versionId, versions, toVersionLink}: VersionNavigationProps) {
   const T = useT('versioning')
   const allVersions = [{_versionId: null, _versionNumber: null}, ...versions.flatMap(v => v.versions)]
   const versionIndex = versionId ? allVersions.findIndex(v => v._versionId === versionId) : 0

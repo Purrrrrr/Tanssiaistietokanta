@@ -52,10 +52,10 @@ export function EventProgramEditor({event}: EventProgramEditorProps) {
 
     <EventMetadataContext program={value} workshops={event.workshops}>
       <Tabs id="programEditorTabs" renderActiveTabPanelOnly selectedTabId={tabId ?? 'main'}>
-        <Tab id="main" href='../main' title={t('tabs.main')} panel={<MainEditor program={value} />} />
+        <Tab id="main" href="../main" title={t('tabs.main')} panel={<MainEditor program={value} />} />
         <Tab
           id="slides"
-          href='../slides'
+          href="../slides"
           title={<>
             {t('tabs.slides')}
             <MissingDanceInstructionsCounterTag />

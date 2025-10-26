@@ -24,7 +24,14 @@ export interface RemoveItemButtonProps<T> extends ButtonProps {
 
 export function RemoveItemButton<T>({path, index, onClick, ...props}: RemoveItemButtonProps<T>) {
   const onRemove = useRemoveFromList<T>(path, index)
-  return <ActionButton onClick={(e) => { onRemove(); if (onClick) onClick(e) } } color="danger" {...props} />
+  return <ActionButton
+    onClick={(e) => {
+      onRemove()
+      if (onClick) onClick(e) }
+    }
+    color="danger"
+    {...props}
+  />
 }
 
 export function ActionButton(props : ButtonProps) {

@@ -43,7 +43,7 @@ export function Field<T, V, P extends FieldComponentProps<V>>(
           ? <Component {...allProps} />
           : <Component {...allProps} readOnly value={conflict.server} />
       case 'array':
-        return <ConflictListValue list={value as unknown[]} renderItem={renderConflictItem}/>
+        return <ConflictListValue list={value as unknown[]} renderItem={renderConflictItem} />
     }
     return null
   })
@@ -108,7 +108,9 @@ export function useFieldConflictData<T, V>(path: TypedStringPath<V, T>, renderIt
   return {
     localValue,
     serverValue: renderItem(conflict, 'server'),
-    onResolve(version) { ctx.onResolveConflict(path, version) }
+    onResolve(version) {
+      ctx.onResolveConflict(path, version)
+    }
   }
 }
 
