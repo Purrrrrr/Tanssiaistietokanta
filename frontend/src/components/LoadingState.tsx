@@ -4,6 +4,7 @@ import { Error } from '@blueprintjs/icons'
 
 import { socket } from 'backend/feathers'
 
+import { useDelayedValue } from 'libraries/common/useDelayedValue'
 import { Button, ColorClass, GlobalSpinner, H2 } from 'libraries/ui'
 import { useT, useTranslation } from 'i18n'
 
@@ -12,7 +13,8 @@ const connectionProblemMessageTimeout = 5000
 export function GlobalLoadingState({ children }) {
   const loading = useGlobalLoadingState()
   const [connected, setConnected] = useState(socket.connected)
-  const [connectionTimeout, setConnectionTimeout] = useState(false)
+  const connectedAWhileAgo = useDelayedValue(connected, connectionProblemMessageTimeout)
+  const connectionTimeout = !connected && !connectedAWhileAgo
 
   useEffect(() => {
     const onConnect = () => setConnected(true)
@@ -25,16 +27,6 @@ export function GlobalLoadingState({ children }) {
       socket.off('disconnect', onDisconnect)
     }
   }, [])
-
-  useEffect(() => {
-    if (connected) {
-      setConnectionTimeout(false)
-      return
-    }
-
-    const id = setTimeout(() => setConnectionTimeout(true), connectionProblemMessageTimeout)
-    return () => clearTimeout(id)
-  }, [connected])
 
   return <>
     {children}

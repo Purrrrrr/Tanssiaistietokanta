@@ -20,7 +20,7 @@ export function useItems<T>(items: Items<T>) {
 
   return [
     toItemData(items),
-    async () => {},
+    async () => { /* nop */ },
   ] as const
 }
 

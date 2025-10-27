@@ -1,7 +1,8 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useRef } from 'react'
 import { Cross } from '@blueprintjs/icons'
 import classNames from 'classnames'
 
+import { useShouldRender } from 'libraries/common/useShouldRender'
 import { Button } from 'libraries/ui'
 
 type DialogProps = {
@@ -24,16 +25,13 @@ type DialogProps = {
 export function Dialog({ isOpen, onClose, children, title, className, showCloseButton = true, closeButtonLabel }: DialogProps) {
   const modal = useRef<HTMLDialogElement>(null)
   const closeButton = useRef<HTMLButtonElement>(null)
-  const [shouldrender, setShouldRender] = useState(false)
+  const shouldrender = useShouldRender(isOpen, 600)
 
   useLayoutEffect(() => {
     if (isOpen) {
       modal.current?.showModal()
-      setShouldRender(true)
     } else {
       modal.current?.close()
-      const id = setTimeout(() => setShouldRender(false), 600)
-      return () => clearTimeout(id)
     }
   }, [isOpen])
   useEffect(

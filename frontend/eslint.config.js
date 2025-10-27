@@ -74,7 +74,7 @@ export default defineConfig(
     rules: {
       // --- TODO Fix these eventually somehow
       'react-hooks/refs': 0,
-      'react-hooks/set-state-in-effect': 0,
+      'react-hooks/set-state-in-effect': 1,
       'react/prop-types': 0,
       '@typescript-eslint/no-empty-function': 0,
       // --- TODO Check if these are sane

@@ -1,5 +1,6 @@
-import { useLayoutEffect, useState } from 'react'
 import classNames from 'classnames'
+
+import { useShouldRender } from 'libraries/common/useShouldRender'
 
 export interface CollapseProps {
   children?: React.ReactNode
@@ -8,15 +9,7 @@ export interface CollapseProps {
 }
 
 export default function Collapse({ children, isOpen = false, keepChildrenMounted }: CollapseProps) {
-  const [shouldrender, setShouldRender] = useState(false)
-  useLayoutEffect(() => {
-    if (isOpen) {
-      setShouldRender(true)
-    } else {
-      const id = setTimeout(() => setShouldRender(false), 200)
-      return () => clearTimeout(id)
-    }
-  }, [isOpen])
+  const shouldrender = useShouldRender(isOpen, 200)
 
   return <div className={classNames(
     'grid transition-[grid-template-rows] duration-300',

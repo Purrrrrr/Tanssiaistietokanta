@@ -1,13 +1,15 @@
-import React, { ReactNode, useEffect, useRef, useState } from 'react'
+import React from 'react'
 import { Error, Outdated, Refresh, Saved } from '@blueprintjs/icons'
 import classNames from 'classnames'
+
+import { useDelayedValue } from 'libraries/common/useDelayedValue'
 
 import { useFormStrings } from './formContext'
 import { SyncState } from './useAutosavingState'
 
 import './SyncStatus.sass'
 
-const icons: Record<SyncState, ReactNode> = {
+const icons: Record<SyncState, React.ReactNode> = {
   IN_SYNC: <Saved className="text-lime-700" />,
   MODIFIED_LOCALLY: <Refresh className="text-sky-600" />,
   CONFLICT: <Outdated className="text-yellow-700" />,
@@ -24,23 +26,13 @@ export function SyncStatus(
   { state, block, className, style: styleProp, floatRight: right }:
   { state: SyncState, block?: boolean, className?: string, style?: React.CSSProperties, floatRight?: boolean },
 ) {
-  const previousState = useRef<SyncState | null>(null)
-  const [changed, setChanged] = useState(false)
+  const previousState = useDelayedValue(state, 1000)
+  const shownState = useDelayedValue(state, 400) // Debounce a bit so people have time to see the changes
+  const changed = state !== previousState
   const texts = useFormStrings().syncState
-  useEffect(() => {
-    if (previousState.current !== state && previousState.current !== null) {
-      setChanged(true)
-    }
-    previousState.current = state
-
-    const id = setTimeout(() => {
-      setChanged(false)
-    }, 1000)
-    return () => clearTimeout(id)
-  }, [state])
   const fullClassName = classNames(
-    className, 'sync_status', state.toLowerCase(),
-    { 'status-changed': changed, 'always-show-status': !autoHideText[state], 'display-block': block, right },
+    className, 'sync_status', shownState.toLowerCase(),
+    { 'status-changed': changed, 'always-show-status': !autoHideText[shownState], 'display-block': block, right },
   )
 
   const style = {
@@ -50,8 +42,8 @@ export function SyncStatus(
   }
   return <span style={style} className={fullClassName}>
     <span className="content">
-      {icons[state]}
-      <span className="text">{texts[state]}</span>
+      {icons[shownState]}
+      <span className="text">{texts[shownState]}</span>
     </span>
   </span>
 }

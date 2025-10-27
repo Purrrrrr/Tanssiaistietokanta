@@ -62,4 +62,4 @@ export function SortableList<Value extends ListItem, Data = AnyType>({
   </SortableContext>
 }
 
-const noOp = () => {}
+const noOp = () => { /* nop */ }

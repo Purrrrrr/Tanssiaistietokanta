@@ -1,7 +1,7 @@
 import { type ComponentProps, type ForwardedRef, forwardRef, type RefObject, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import classNames from 'classnames'
 
-import { useShouldRender } from './useShouldRender'
+import { useShouldRender } from 'libraries/common/useShouldRender'
 
 interface PopoverProps extends ComponentProps<'div'> {
   type: 'manual' | 'auto'
