@@ -3,13 +3,12 @@ import { useEffect, useState } from 'react'
 import { useUpdateErrorContext } from './context'
 import { useSchema, ValidationProps } from './useSchema'
 
-export function useError(value, schemaDef: ValidationProps) {
+export function useError(value: unknown, schemaDef: ValidationProps) {
   const schema = useSchema(schemaDef)
   const [error, setError] = useState(null)
   useEffect(
     () => {
       if (!schema) {
-        setError(null)
         return
       }
       schema.validate(value)

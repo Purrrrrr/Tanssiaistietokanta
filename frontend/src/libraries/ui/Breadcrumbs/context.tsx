@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useRef, useState } from 'react'
+import React, { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { useHref } from 'react-router-dom'
 
 import { sortedPaths } from './sortedPaths'
@@ -17,11 +17,11 @@ export const PathContext = createContext<Path[]>([])
 
 export function BreadcrumbContext({ children }) {
   const [paths, setPaths] = useState<Path[]>([])
-  const val = useRef({
+  const val = useMemo(() => ({
     add: (v: Path) => setPaths((old) => add(old, v)),
     remove: (v: Path) => setPaths((old) => remove(old, v)),
-  })
-  return <RegisterContext.Provider value={val.current}>
+  }), [])
+  return <RegisterContext.Provider value={val}>
     <PathContext.Provider value={paths}>
       {children}
     </PathContext.Provider>
