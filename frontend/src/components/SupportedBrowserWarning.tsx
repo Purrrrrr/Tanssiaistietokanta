@@ -28,7 +28,7 @@ export function SupportedBrowserWarning() {
         action: () => {
           setShowDialog(false)
           window.open('https://www.mozilla.org/firefox/browsers/', '__blank')
-        }
+        },
       },
       t('continueAnyWay'),
     ]}

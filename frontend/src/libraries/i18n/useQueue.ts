@@ -11,7 +11,7 @@ export function useQueue<T>(initialState: WithId<T>[] = []) {
 
   const queueApi = useMemo(() => {
     const updateItem = (id: number, state: Partial<T>) => setItems(items =>
-      items.map(u => u.id === id ? { ...u, ...state } : u)
+      items.map(u => u.id === id ? { ...u, ...state } : u),
     )
     const removeItem = (id: number) => {
       setItems(items => items.filter(u => u.id != id))

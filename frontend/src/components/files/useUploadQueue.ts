@@ -1,4 +1,4 @@
-import { type Progress, doUpload  } from 'services/files'
+import { doUpload, type Progress } from 'services/files'
 
 import { useQueue } from 'libraries/i18n/useQueue'
 

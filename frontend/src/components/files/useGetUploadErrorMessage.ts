@@ -17,7 +17,7 @@ export function useGetUploadErrorMessage() {
         return 'aborted'
       case 'too_big':
         return T('errorReason.too_big', {
-          max_size: filesize(MAX_UPLOAD_SIZE)
+          max_size: filesize(MAX_UPLOAD_SIZE),
         })
       case 'server':
         return T('errorReason.server', {

@@ -8,7 +8,7 @@ import { useT, useTranslation } from 'i18n'
 import useFilesize from './useFilesize'
 import { Upload } from './useUploadQueue'
 
-export function UploadProgressList({ uploads }: { uploads: (Upload & {id: number})[] }) {
+export function UploadProgressList({ uploads }: { uploads: (Upload & { id: number })[] }) {
   const T = useT('components.files')
   if (uploads.length === 0) return null
 
@@ -32,7 +32,7 @@ export function UploadProgress({ file, progress: _progress, abort, error }: Uplo
       : <ProgressBar progress={progress} />
     }
     <Button
-      color={error ? 'success': 'danger'}
+      color={error ? 'success' : 'danger'}
       text={useTranslation(error ? 'common.delete' : 'common.cancel')}
       onClick={abort}
     />
@@ -41,10 +41,12 @@ export function UploadProgress({ file, progress: _progress, abort, error }: Uplo
 
 function useUploadSpeed(uploaded: number) {
   const lastUploaded = useRef<number>(uploaded)
+  // eslint-disable-next-line react-hooks/purity
   const lastUpdate = useRef<number>(Date.now())
   const speed = useRef<number>(0)
 
   if (uploaded !== lastUploaded.current) {
+    // eslint-disable-next-line react-hooks/purity
     const now = Date.now()
     if (lastUpdate.current !== now) {
       speed.current = (uploaded - lastUploaded.current) / (now - lastUpdate.current) * 1000
@@ -66,6 +68,6 @@ function ProgressBar({ progress }: { progress: Progress }) {
       <div style={{ width: percentage }} className="absolute top-0 left-0 h-full  bg-linear-to-r from-lime-400 to-amber-200 from-70%"></div>
       <span className="absolute inset-0 text-center">{filesize(progress.uploaded)}/{filesize(progress.total)}</span>
     </div>
-    <div className='min-w-16 text-right'>{filesize(speed)}/s</div>
+    <div className="min-w-16 text-right">{filesize(speed)}/s</div>
   </>
 }

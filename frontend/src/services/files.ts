@@ -16,7 +16,7 @@ class UploadError extends Error {
   }
 }
 
-export function getUploadError(error: unknown): UploadError{
+export function getUploadError(error: unknown): UploadError {
   if (error instanceof UploadError) {
     return error
   }
@@ -28,7 +28,7 @@ export interface UploadedFile {
   _updatedAt: string
   name: string
   size: number
-  //TODO: more fields
+  // TODO: more fields
 }
 
 interface UploadOptions extends Pick<FetchWithProgressOptions, 'signal' | 'onProgress'> {

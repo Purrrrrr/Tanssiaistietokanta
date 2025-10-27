@@ -282,7 +282,7 @@ export const fi = {
           unknown: 'Tuntematon virhe tiedoston lähetyksessä',
           already_exists: 'Tiedosto __filename__ on jo olemassa',
           file_is_infected: 'Tiedosto sisältää haittaohjelman',
-        }
+        },
       },
     },
   },

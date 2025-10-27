@@ -18,7 +18,6 @@ export interface Progress {
   total: number
 }
 
-
 export function fetchWithProgress(method: string, url: string, { data, onProgress, signal }: FetchWithProgressOptions) {
   const promise = Promise.withResolvers<Response>()
   const request = new XMLHttpRequest()
@@ -34,7 +33,7 @@ export function fetchWithProgress(method: string, url: string, { data, onProgres
     promise.resolve({
       type: 'ok',
       status: request.status,
-      content: request.responseText
+      content: request.responseText,
     })
   })
   request.addEventListener('error', () => {

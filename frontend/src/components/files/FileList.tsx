@@ -32,10 +32,10 @@ export function FileList() {
         buttons: [
           {
             text: T('alreadyExistsConfirm.ok'),
-            action: () => doUpload(file, existingFile._id).then(fetchFiles)
+            action: () => doUpload(file, existingFile._id).then(fetchFiles),
           },
           T('alreadyExistsConfirm.cancel'),
-        ]
+        ],
       })
     } else {
       await doUpload(file).then(fetchFiles)
@@ -50,7 +50,7 @@ export function FileList() {
       onChange={e => e.target.files && startUpload(e.target.files[0])}
     />
     <div className="flex my-5 gap-3 items-start">
-      <Button icon={<Add />} onClick={() => input.current?.click()} text="Lisää tiedosto"/>
+      <Button icon={<Add />} onClick={() => input.current?.click()} text="Lisää tiedosto" />
       <UploadProgressList uploads={uploads} />
     </div>
     <ItemList columns="grid-cols-[1fr_minmax(200px,auto)_minmax(100px,auto)_min-content]">
@@ -62,11 +62,11 @@ export function FileList() {
           <div>
             <DeleteFileButton file={file} onDelete={fetchFiles} />
           </div>
-        </ItemList.Row>
+        </ItemList.Row>,
       )}
       {files.length === 0 &&
         <div className="col-span-full py-4 text-base text-center text-muted">
-          <InfoSign size={20} className="mr-2"/>
+          <InfoSign size={20} className="mr-2" />
           {T('noFiles')}
         </div>
       }

@@ -9,13 +9,13 @@ import { useT } from 'i18n'
 import useFilesize from './useFilesize'
 import { useUploadQueue } from './useUploadQueue'
 
-interface UploadButtonProps extends Pick<ButtonProps, 'color' | 'minimal' | 'paddingClass' | 'icon' | 'text'>{
+interface UploadButtonProps extends Pick<ButtonProps, 'color' | 'minimal' | 'paddingClass' | 'icon' | 'text'> {
   path?: string
   fileId?: string
   onUpload?: (file: UploadedFile) => unknown
 }
 
-export function UploadButton({path, fileId, onUpload, icon, ...rest}: UploadButtonProps) {
+export function UploadButton({ path, fileId, onUpload, icon, ...rest }: UploadButtonProps) {
   const input = useRef<HTMLInputElement>(null)
   const [doUpload, uploads] = useUploadQueue('', path)
   const T = useT('components.files.UploadButton')
