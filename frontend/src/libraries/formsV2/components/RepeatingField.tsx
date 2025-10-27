@@ -13,7 +13,7 @@ export type RepeatingFieldProps<Output extends Input & ListItem, Extra, Input, D
   Omit<RepeatingSectionProps<Output, Data, AcceptedTypeDefs>, 'children'>
 
 export function RepeatingField<Output extends Input & ListItem, Extra, Input, Data = AnyType, AcceptedTypeDefs = null>(
-  {label, path, component, accepts, itemType, ...extra}: RepeatingFieldProps<Output, Extra, Input, Data, AcceptedTypeDefs>
+  { label, path, component, accepts, itemType, ...extra }: RepeatingFieldProps<Output, Extra, Input, Data, AcceptedTypeDefs>,
 ) {
   // TODO: flex as itemElement
   return <RepeatingSection label={label} path={path} accepts={accepts} itemType={itemType}>

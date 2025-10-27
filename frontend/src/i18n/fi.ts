@@ -40,7 +40,7 @@ export const fi = {
       category: 'Kategoria',
       instructions: 'Pidemmät tanssiohjeet printtiin',
       slideStyleId: 'Tanssiaisten diatyyli',
-      wikipageName: 'Tanssiwikin sivun nimi'
+      wikipageName: 'Tanssiwikin sivun nimi',
     },
     slideStyles: {
       default: 'Valkoinen',
@@ -138,7 +138,7 @@ export const fi = {
       instanceAbbreviationHelp: 'Lyhennemerkintä näytetään työpajan lyhennemerkinnän rinnalla niiden tanssien kohdalla, jotka on opetettu ainoastaan tällä opetuskerralla.',
       instanceAbbreviationExample: 'Tämä lyhenne näytetään muodossa __abbreviation__',
       dateTime: 'Ajankohta',
-      duration: 'Kesto minuuteissa'
+      duration: 'Kesto minuuteissa',
     },
     eventProgramEditor: {
       fields: {
@@ -228,13 +228,13 @@ export const fi = {
         missingDancesCount: {
           one: 'puuttuva tanssiohje',
           many: 'puuttuvaa tanssiohjetta',
-        }
+        },
       },
       missingDancesWarning: {
         title: {
           one: 'Ohjelmasta puuttuu yksi työpajoissa opetettu tanssi.',
           many: 'Ohjelmasta puuttuu __count__ työpajoissa opetettua tanssia.',
-        }
+        },
       },
       duplicateDancesWarning: {
         title: {
@@ -243,8 +243,8 @@ export const fi = {
         },
         inDanceSets: {
           one: 'setissä',
-          many: 'seteissä'
-        }
+          many: 'seteissä',
+        },
       },
       danceCategoryStats: {
         title: 'Tanssien määrät tanssiaisissa kategorioittain:',
@@ -255,7 +255,7 @@ export const fi = {
       continueAnyWay: 'Jatka sivustolle',
       downloadBetterBrowser: 'Lataa uusin Firefox',
       siteMayNotWork: 'Selaimesi ei tue kaikkia tämän sivuston käyttämiä ominaisuuksia. Jos jatkat, sivusto ei välttämättä toimi tarkoituksenmukaisesti.',
-      possibleSupportedBrowsers: 'Tanssitietokanta on kehitetty ja testattu enimmäkseen Firefoxilla, mutta se tukee ainakin seuraavien selaimien uusimpia versioita:'
+      possibleSupportedBrowsers: 'Tanssitietokanta on kehitetty ja testattu enimmäkseen Firefoxilla, mutta se tukee ainakin seuraavien selaimien uusimpia versioita:',
     },
   },
   pages: {
@@ -303,7 +303,7 @@ export const fi = {
         danceInstructions: 'Työpajojen ohjelma ja tanssiohjeet',
         requestedDance: {
           one: 'Toivetanssi',
-          many: '__count__ toivetanssia'
+          many: '__count__ toivetanssia',
         },
         eventDate: 'Tapahtuman ajankohta',
         ballDateTime: 'Tanssiaisten ajankohta',
@@ -316,7 +316,7 @@ export const fi = {
           main: 'Tanssiohjelma',
           slides: 'Diashow',
           missingInstructions: 'Puuttuvat tanssiohjeet',
-        }
+        },
       },
       danceCheatlist: {
         helpText: 'Rastita tähän, jos osaat tanssin. Näin ei tanssiaisissa tarvitse miettiä, mikä tanssi on kyseessä.',
@@ -383,7 +383,7 @@ export const fi = {
         showingNDances: {
           one: 'Näytetään 1 tanssi',
           many: 'Näytetään __count__ tanssia',
-        }
+        },
       },
       dancePage: {
         backToDanceList: 'Takaisin tanssilistaan',

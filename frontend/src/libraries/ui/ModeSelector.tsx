@@ -2,7 +2,7 @@ import { Button, ButtonProps } from './Button'
 
 // TODO: aria props with label
 
-export function ModeSelector({ children, label }: { children: React.ReactNode, label: string}) {
+export function ModeSelector({ children, label }: { children: React.ReactNode, label: string }) {
   return <div className="inline-block">
     <label>{label}</label>
     <div className="inline-block p-0.5 bg-gray-200 rounded-lg shadow-xs shadow-stone-400/40 ms-3">

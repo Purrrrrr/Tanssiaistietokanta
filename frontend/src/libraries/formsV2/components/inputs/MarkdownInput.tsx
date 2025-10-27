@@ -1,11 +1,11 @@
 import 'react-markdown-editor-lite/lib/index.css'
 import React from 'react'
-import MdEditor, { Plugins }  from 'react-markdown-editor-lite'
+import MdEditor, { Plugins } from 'react-markdown-editor-lite'
 import { MarkdownToJSX } from 'markdown-to-jsx'
 
 import type { FieldInputComponent, FieldInputComponentProps } from './types'
 
-import {AnchorButton, Markdown} from 'libraries/ui'
+import { AnchorButton, Markdown } from 'libraries/ui'
 
 import { useFormTranslation } from '../../localization'
 
@@ -61,18 +61,18 @@ export interface MarkdownEditorProps extends FieldInputComponentProps<string> {
   noPreview?: boolean
 }
 
-export const MarkdownInput : FieldInputComponent<string, MarkdownEditorProps> = React.memo(
-  function MarkdownEditor({value, onChange, className, inline: _ignored, markdownOverrides, noPreview, ...props} : MarkdownEditorProps) {
+export const MarkdownInput: FieldInputComponent<string, MarkdownEditorProps> = React.memo(
+  function MarkdownEditor({ value, onChange, className, inline: _ignored, markdownOverrides, noPreview, ...props }: MarkdownEditorProps) {
     return <MdEditor
       className={className}
-      renderHTML={(text : string) => <Markdown options={{overrides: markdownOverrides}}>{text}</Markdown>}
+      renderHTML={(text: string) => <Markdown options={{ overrides: markdownOverrides }}>{text}</Markdown>}
       value={value ?? ''}
-      onChange={({text}) => onChange(text)}
+      onChange={({ text }) => onChange(text)}
       {...props}
-      view={noPreview ? {menu: true, md: true, html: false} : undefined}
-      canView={noPreview ? {menu: true, md: true, html: false, both: false, fullScreen: true, hideMenu: true} : undefined}
+      view={noPreview ? { menu: true, md: true, html: false } : undefined}
+      canView={noPreview ? { menu: true, md: true, html: false, both: false, fullScreen: true, hideMenu: true } : undefined}
     />
-  }
+  },
 )
 
 export default MarkdownInput

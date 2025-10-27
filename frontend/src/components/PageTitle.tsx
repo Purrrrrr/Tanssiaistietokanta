@@ -1,23 +1,22 @@
-import {useEffect} from 'react'
+import { useEffect } from 'react'
 
-export function PageTitle({children, noRender} : {children: string, noRender?: boolean}) {
+export function PageTitle({ children, noRender }: { children: string, noRender?: boolean }) {
   useEffect(
     () => {
       setPageSubtitle(children)
     },
-    [children]
+    [children],
   )
 
   return noRender ? null : <h1>{children}</h1>
 }
 
-function setPageSubtitle(title : string) {
+function setPageSubtitle(title: string) {
   document.title = getPageMainTitle() + ' - ' + title
-
 }
 
-let mainTitle : string
+let mainTitle: string
 function getPageMainTitle() {
-  if (mainTitle === undefined) mainTitle = document.title
+  mainTitle ??= document.title
   return mainTitle
 }

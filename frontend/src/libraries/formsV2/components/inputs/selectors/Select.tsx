@@ -16,7 +16,6 @@ export function Select<T>({ filterable, ...props }: SelectProps<T>) {
     : <RegularSelect {...props} />
 }
 
-
 export function selectWithType<T>(): FieldInputComponent<T, SelectProps<T>, T> {
   return Select as FieldInputComponent<T, SelectProps<T>, T>
 }

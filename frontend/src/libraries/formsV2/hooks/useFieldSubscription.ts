@@ -14,7 +14,7 @@ export function useFieldSubscription<Output extends Input, Input, Data = unknown
       setValue(getter(getValueAt))
       subscribe(() => setValue(getter(getValueAt)))
     },
-    [subscribe, getValueAt, getter]
+    [subscribe, getValueAt, getter],
   )
 
   const onChange = useCallback((value: Output) => {
@@ -23,6 +23,6 @@ export function useFieldSubscription<Output extends Input, Input, Data = unknown
   }, [setter, dispatch])
 
   return {
-    value, onChange, readOnly
+    value, onChange, readOnly,
   }
 }

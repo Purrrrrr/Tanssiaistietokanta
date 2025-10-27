@@ -1,25 +1,25 @@
-import React  from 'react'
+import React from 'react'
 
-import {PropertyAtPath, StringPath} from './types'
+import { PropertyAtPath, StringPath } from './types'
 
-import {Field, UntypedFieldProps} from './Field'
-import {InputField, InputFieldProps, SwitchField, SwitchFieldForValueProps, SwitchFieldProps, switchFor, SwitchForProps} from './fieldComponents/basicComponents'
-import {Form, FormProps} from './Form'
-import {RemoveItemButton, RemoveItemButtonProps} from './formControls'
-import {FormHooksFor, formHooksFor} from './hooks'
-import {Entity, ListField, UntypedListFieldProps} from './ListEditor'
+import { Field, UntypedFieldProps } from './Field'
+import { InputField, InputFieldProps, SwitchField, SwitchFieldForValueProps, SwitchFieldProps, switchFor, SwitchForProps } from './fieldComponents/basicComponents'
+import { Form, FormProps } from './Form'
+import { RemoveItemButton, RemoveItemButtonProps } from './formControls'
+import { FormHooksFor, formHooksFor } from './hooks'
+import { Entity, ListField, UntypedListFieldProps } from './ListEditor'
 
 export * from './fieldComponents/basicComponents'
 export * from './fieldComponents/dateTime'
 export * from './fieldComponents/MarkdownEditor'
-export {ActionButton, asFormControl, FormControl, SubmitButton} from './formControls'
-export type {DragHandle} from './ListEditor'
-export {ListEditorContext} from './ListEditor'
+export { ActionButton, asFormControl, FormControl, SubmitButton } from './formControls'
+export type { DragHandle } from './ListEditor'
+export { ListEditorContext } from './ListEditor'
 export * from './SyncStatus'
 export type { FieldComponentProps, OnChangeHandler, TypedStringPath } from './types'
 export { toArrayPath } from './types'
 export * from './useAutosavingState'
-export {Validate} from './validation'
+export { Validate } from './validation'
 
 interface FormFor<T> extends FormHooksFor<T> {
   Form: React.JSXElementConstructor<FormProps<T>>

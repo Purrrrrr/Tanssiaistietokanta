@@ -1,10 +1,10 @@
 import { ComponentProps } from 'react'
-import {Link as RouterLink} from 'react-router-dom'
+import { Link as RouterLink } from 'react-router-dom'
 import classNames from 'classnames'
 
 const className = 'cursor-pointer hover:underline text-link'
 
-export function RegularLink({ unstyled, children, ...props }: ComponentProps<'a'> & { unstyled?: boolean }) {
+export function RegularLink({ unstyled = false, children, ...props }: ComponentProps<'a'> & { unstyled?: boolean }) {
   return <a
     {...props}
     className={classNames(
@@ -16,7 +16,7 @@ export function RegularLink({ unstyled, children, ...props }: ComponentProps<'a'
   </a>
 }
 
-export function Link({ unstyled, ...props }: ComponentProps<typeof RouterLink> & { unstyled?: boolean }) {
+export function Link({ unstyled = false, ...props }: ComponentProps<typeof RouterLink> & { unstyled?: boolean }) {
   return <RouterLink
     {...props}
     className={classNames(

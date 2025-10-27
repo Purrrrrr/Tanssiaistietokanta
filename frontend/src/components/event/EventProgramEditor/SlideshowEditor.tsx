@@ -1,16 +1,16 @@
 import React, { UIEvent, useDeferredValue, useEffect, useRef, useState } from 'react'
-import {useNavigate, useParams} from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { ChevronLeft, ChevronRight } from '@blueprintjs/icons'
 import classNames from 'classnames'
 
-import {Card, Link} from 'libraries/ui'
+import { Card, Link } from 'libraries/ui'
 import { EventProgramSettings, Field } from 'components/event/EventProgramForm'
-import {EventSlide, EventSlidePreview, EventSlideProps, startSlideId, useEventSlides} from 'components/event/EventSlide'
+import { EventSlide, EventSlidePreview, EventSlideProps, startSlideId, useEventSlides } from 'components/event/EventSlide'
 import { EventSlideEditor } from 'components/event/EventSlideEditor'
-import {SlideContainer, useSlideshowNavigation} from 'components/Slide'
+import { SlideContainer, useSlideshowNavigation } from 'components/Slide'
 import { NavigateButton } from 'components/widgets/NavigateButton'
-import {SlideStyleSelector} from 'components/widgets/SlideStyleSelector'
-import {useT} from 'i18n'
+import { SlideStyleSelector } from 'components/widgets/SlideStyleSelector'
+import { useT } from 'i18n'
 
 import { MissingDanceInstructionsWarning } from './components'
 import { SlideChooser } from './components/SlideChooser'
@@ -18,7 +18,7 @@ import { useLinkToSlide } from './useLinkToSlide'
 
 import 'components/Slide/slideStyles.scss'
 
-export function SlideshowEditor({ program }: {program: EventProgramSettings}) {
+export function SlideshowEditor({ program }: { program: EventProgramSettings }) {
   const t = useT('components.eventProgramEditor')
   const navigate = useNavigate()
   const linkToSlide = useLinkToSlide()
@@ -27,7 +27,7 @@ export function SlideshowEditor({ program }: {program: EventProgramSettings}) {
   const currentSlide = slides.find(slide => slide.id === slideId) ?? slides[0]
   const { swipeHandlers, slideIndex } = useSlideshowNavigation({
     slides, currentSlideId: currentSlide.id,
-    onChangeSlide: (slide) => navigate(linkToSlide(slide.id))
+    onChangeSlide: (slide) => navigate(linkToSlide(slide.id)),
   })
   const deferredCurrentSlide = useDeferredValue(currentSlide)
   const isStale = deferredCurrentSlide.id !== currentSlide.id
@@ -40,22 +40,22 @@ export function SlideshowEditor({ program }: {program: EventProgramSettings}) {
         currentSlide={deferredCurrentSlide}
         onChoose={id => navigate(linkToSlide(id))}
       />
-      <Field label="" inline path="slideStyleId" component={SlideStyleSelector} componentProps={{text: t('fields.eventDefaultStyle')}} />
+      <Field label="" inline path="slideStyleId" component={SlideStyleSelector} componentProps={{ text: t('fields.eventDefaultStyle') }} />
     </div>
     <SlideNavigation currentSlide={currentSlide} slideIndex={slideIndex} slides={slides} eventProgram={program} />
     <div {...swipeHandlers} className="slideEditors" style={{
       opacity: isStale ? 0 : 1,
-      transition: 'opacity 0.1s linear'
+      transition: 'opacity 0.1s linear',
     }}>
       <SlideBox eventProgram={program} slide={deferredCurrentSlide} />
     </div>
   </section>
 }
 
-interface SlideNavigationProps {slideIndex: number, currentSlide: EventSlideProps, slides: EventSlideProps[], eventProgram: EventProgramSettings}
+interface SlideNavigationProps { slideIndex: number, currentSlide: EventSlideProps, slides: EventSlideProps[], eventProgram: EventProgramSettings }
 
 function SlideNavigation(props: SlideNavigationProps) {
-  const {slides, slideIndex} = props
+  const { slides, slideIndex } = props
   const linkToSlide = useLinkToSlide()
 
   return <>
@@ -71,17 +71,17 @@ function SlideNavigation(props: SlideNavigationProps) {
   </>
 }
 
-function SlidePreviews({slides, currentSlide, eventProgram}: SlideNavigationProps) {
+function SlidePreviews({ slides, currentSlide, eventProgram }: SlideNavigationProps) {
   const container = React.useRef<HTMLDivElement>(null)
-  const [rendered, setRendered] = useState({start: 0, end: 0})
+  const [rendered, setRendered] = useState({ start: 0, end: 0 })
 
   useEffect(
     () => {
       const div = container.current
-      const slide = document.getElementById(`slide-link-${currentSlide.id}`) //?.scrollIntoView({ behavior: 'smooth'})
+      const slide = document.getElementById(`slide-link-${currentSlide.id}`) // ?.scrollIntoView({ behavior: 'smooth'})
       if (!div || !slide) return
 
-      div.scrollTo({ left: slide.offsetLeft + slide.offsetWidth / 2 - div.offsetWidth / 2, behavior: 'smooth'})
+      div.scrollTo({ left: slide.offsetLeft + slide.offsetWidth / 2 - div.offsetWidth / 2, behavior: 'smooth' })
     },
     [currentSlide.id],
   )
@@ -95,7 +95,7 @@ function SlidePreviews({slides, currentSlide, eventProgram}: SlideNavigationProp
     let end: number | undefined
 
     const children = Array.from(div.children) as HTMLElement[]
-    for(let i = 0; i < children.length; i++) {
+    for (let i = 0; i < children.length; i++) {
       const child = children[i]
       if (start == undefined) {
         if (child.offsetLeft + child.offsetWidth > scroll) {
@@ -107,7 +107,7 @@ function SlidePreviews({slides, currentSlide, eventProgram}: SlideNavigationProp
         break
       }
     }
-    setRendered({start: start ?? 0, end: end ?? Infinity})
+    setRendered({ start: start ?? 0, end: end ?? Infinity })
   })
 
   return <div className="slides" ref={container} onScroll={onScroll}>
@@ -140,11 +140,11 @@ function useDebouncedScrollPositionListener(callBack: (scrollPosition: number) =
 }
 
 function SlideLink(
-  {slide, eventProgram, current, placeholder}: { slide: EventSlideProps, eventProgram: EventProgramSettings, current: boolean, placeholder: boolean }
+  { slide, eventProgram, current, placeholder }: { slide: EventSlideProps, eventProgram: EventProgramSettings, current: boolean, placeholder: boolean },
 ) {
   const linkToSlide = useLinkToSlide()
 
-  return <Link to={linkToSlide(slide.id)} id={`slide-link-${slide.id}`} className={classNames('slide-link', {current})}>
+  return <Link to={linkToSlide(slide.id)} id={`slide-link-${slide.id}`} className={classNames('slide-link', { current })}>
     <SlideContainer className="grow inert" color="#eee">
       {placeholder
         ? <EventSlidePreview {...slide} eventProgram={eventProgram} />
@@ -162,7 +162,7 @@ interface SlideBoxProps {
   slide: EventSlideProps
 }
 
-function SlideBox({eventProgram, slide}: SlideBoxProps) {
+function SlideBox({ eventProgram, slide }: SlideBoxProps) {
   return <Card noPadding id={slide.id}>
     <div className="flex flex-wrap">
       <SlideContainer className="grow inert" size="auto" color="#eee">

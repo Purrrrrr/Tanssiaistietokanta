@@ -66,7 +66,7 @@ function updateTriangle({ element, elementH, transparentPadding, elementW, point
   if (!arrowElement) return
   const triangleW = 20
   arrowElement.style.top = toPx(
-    pointDown ? 1 : elementH - 1
+    pointDown ? 1 : elementH - 1,
   )
   arrowElement.style.left = toPx((elementW + transparentPadding * 2 - triangleW) / 2)
   arrowElement.style.rotate = pointDown ? '' : '180deg'

@@ -6,7 +6,7 @@ export type RepeatingTableRowsProps<Value extends ListItem, Data = AnyType, Acce
   Omit<RepeaterProps<Value, Data, AcceptedTypeDefs>, 'asElement' | 'itemElement'>
 
 export function RepeatingTableRows<Value extends ListItem, Data = AnyType, AcceptedTypeDefs = null>(
-  {path, accepts, itemType, children}: RepeatingTableRowsProps<Value, Data, AcceptedTypeDefs>
+  { path, accepts, itemType, children }: RepeatingTableRowsProps<Value, Data, AcceptedTypeDefs>,
 ) {
   return <Repeater path={path} accepts={accepts} itemType={itemType} asElement="tbody" itemElement="tr">
     {children}

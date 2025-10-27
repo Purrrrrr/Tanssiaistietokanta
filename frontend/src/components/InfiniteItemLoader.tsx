@@ -1,7 +1,7 @@
-import {useState} from 'react'
+import { useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
 
-export function InfiniteItemLoader<T>({ items, children } : { items: T[], children: (items: T[]) => React.ReactNode }) {
+export function InfiniteItemLoader<T>({ items, children }: { items: T[], children: (items: T[]) => React.ReactNode }) {
   const [limit, setLimit] = useState(5)
   const canShowMore = items.length > limit
   if (!items.length) return null

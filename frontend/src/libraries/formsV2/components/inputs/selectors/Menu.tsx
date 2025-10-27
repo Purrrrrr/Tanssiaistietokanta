@@ -8,7 +8,7 @@ type MenuProps = Omit<ComponentProps<'ul'>, 'className'>
 export const Menu = forwardRef<HTMLUListElement, MenuProps>(
   function Menu(props: MenuProps, ref) {
     return <ul className="overflow-auto p-1 grow" ref={ref} {...props} />
-  }
+  },
 )
 
 export function renderMenuItems<T>(
@@ -43,15 +43,15 @@ export const MenuItem = forwardRef<HTMLLIElement, MenuItemProps>(
       className={classNames(
         className ?? 'flex items-center px-2 min-h-7.5',
         'transition-colors',
-        highlight && (hilightedClassName ?? 'bg-blue-200')
+        highlight && (hilightedClassName ?? 'bg-blue-200'),
       )}
     />
-  }
+  },
 )
 
 export function toMenuItemProps<T>(
   item: T,
-  { itemClassName, hilightedItemClassName, itemIcon, itemRenderer, itemToString = String }: SelectorProps<T>
+  { itemClassName, hilightedItemClassName, itemIcon, itemRenderer, itemToString = String }: SelectorProps<T>,
 ): Pick<MenuItemProps, 'className' | 'hilightedClassName' | 'children'> {
   return {
     className: itemClassName,
@@ -60,7 +60,6 @@ export function toMenuItemProps<T>(
 
       {itemIcon?.(item)}
       {(itemRenderer ?? itemToString)(item)}
-    </>
+    </>,
   }
 }
-

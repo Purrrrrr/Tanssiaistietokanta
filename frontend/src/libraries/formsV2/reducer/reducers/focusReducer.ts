@@ -6,7 +6,7 @@ export interface FocusState {
   selection: Selection
 }
 
-export const initialFocusState : FocusState = {
+export const initialFocusState: FocusState = {
   focusedPath: null,
   selection: null,
 }

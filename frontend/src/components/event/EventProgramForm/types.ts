@@ -1,6 +1,6 @@
-import {EditableDance, Event} from 'types'
+import { EditableDance, Event } from 'types'
 
-import {Translator} from 'i18n'
+import { Translator } from 'i18n'
 
 export type T = Translator<'components.eventProgramEditor'>
 
@@ -22,6 +22,8 @@ export type DanceSet = ODanceSet & {
   program: EventProgramRow[]
 }
 
+// Mergeable entity type check fails it this is an interface
+/* eslint-disable-next-line @typescript-eslint/consistent-type-definitions */
 export type EventProgramRow = {
   _id: string
   item: EventProgramItem
@@ -33,6 +35,7 @@ export type DanceProgram = EditableDance & {
   __typename: 'Dance'
 }
 
+/* eslint-disable-next-line @typescript-eslint/consistent-type-definitions */
 export type RequestedDance = {
   __typename: 'RequestedDance'
   duration?: never
@@ -44,6 +47,7 @@ export type EventProgram = ProgramItem & {
   showInLists: boolean
 }
 
+/* eslint-disable-next-line @typescript-eslint/consistent-type-definitions */
 export type ProgramItem = {
   _id?: string
   name: string

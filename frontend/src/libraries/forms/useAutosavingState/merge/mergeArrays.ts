@@ -1,14 +1,14 @@
 import deepEquals from 'fast-deep-equal'
 
-import {arrayConflict, Conflict, Deleted, Entity, ID, mapMergeData, MergeData, MergeFunction, PartialMergeResult, removedArrayItemConflict, scopeConflicts, SyncState } from '../types'
+import { arrayConflict, Conflict, Deleted, Entity, ID, mapMergeData, MergeData, MergeFunction, PartialMergeResult, removedArrayItemConflict, scopeConflicts, SyncState } from '../types'
 
 import { areEqualWithoutId, mapToIds } from '../idUtils'
-import {GTSort} from './GTSort'
+import { GTSort } from './GTSort'
 
 export function mergeArrays<T extends Entity>(
   mergeData: MergeData<T[]>,
   merge: MergeFunction,
-) : PartialMergeResult<T[]> {
+): PartialMergeResult<T[]> {
   const data = mapMergeData(mergeData, values => {
     const ids = mapToIds(values)
     const idToData = new Map(
@@ -18,9 +18,9 @@ export function mergeArrays<T extends Entity>(
           {
             value: values[index],
             index,
-          }
-        ]
-      )
+          },
+        ],
+      ),
     )
     return {
       ids,
@@ -39,7 +39,7 @@ export function mergeArrays<T extends Entity>(
   const nonConflictingMergedValues = new Map<ID, T>()
   const modifiedIds = new Set<ID>()
   const changeConflictsById = new Map<ID, Conflict<unknown>[]>()
-  const removalConflicts  = new Map<ID, MergeData<T | typeof Deleted>>()
+  const removalConflicts = new Map<ID, MergeData<T | typeof Deleted>>()
 
   data.local.ids.forEach((id, localIndex) => {
     const local = mergeData.local[localIndex]
@@ -48,7 +48,7 @@ export function mergeArrays<T extends Entity>(
 
     if (!serverData || !original) {
       if (original && !deepEquals(original, local)) {
-        removalConflicts.set(id, {local, original, server: Deleted})
+        removalConflicts.set(id, { local, original, server: Deleted })
       }
       mergedValues.set(id, local)
       nonConflictingMergedValues.set(id, local)
@@ -56,8 +56,8 @@ export function mergeArrays<T extends Entity>(
     }
     const server = serverData.value
 
-    const result = merge<T>({ original, local, server})
-    switch(result.state) {
+    const result = merge<T>({ original, local, server })
+    switch (result.state) {
       case 'MODIFIED_LOCALLY':
         modifiedIds.add(id)
         mergedValues.set(id, result.modifications)
@@ -80,18 +80,18 @@ export function mergeArrays<T extends Entity>(
   data.server.ids.forEach((id, index) => {
     if (data.local.has(id)) return
     const server = data.server.getValue(id)
-    if (!server) return //Should not happen
+    if (!server) return // Should not happen
 
     const original = data.original.getValue(id)
     if (original) {
       if (!deepEquals(original, server)) {
         nonConflictingMergedValues.set(id, server)
-        removalConflicts.set(id, {local: Deleted, original, server})
+        removalConflicts.set(id, { local: Deleted, original, server })
       }
       return
     }
 
-    //Values is added on server. Compute and check if a matching addition has been made locally. Count matching additions by position from the end
+    // Values is added on server. Compute and check if a matching addition has been made locally. Count matching additions by position from the end
 
     const indexFromEnd = data.server.ids.length - index
     const matchingLocalIndex = data.local.ids.length - indexFromEnd
@@ -105,21 +105,21 @@ export function mergeArrays<T extends Entity>(
     nonConflictingMergedValues.set(id, server)
   })
 
-  const {localVersion, serverVersion} = GTSort(
-    mapMergeData(data, ({ids}) =>
+  const { localVersion, serverVersion } = GTSort(
+    mapMergeData(data, ({ ids }) =>
       ids
         .filter(id => allExistingIds.has(id) || changeConflictsById.has(id) || removalConflicts.has(id))
         .map(id => ({
           id,
           removedInOtherVersion: !allExistingIds.has(id),
           isAdded: !data.original.has(id),
-        }))
-    )
+        })),
+    ),
   )
 
   const hasStructuralChanges = !deepEquals(localVersion, data.server.ids)
   const hasStructuralConflict = !deepEquals(localVersion, serverVersion)
-  const isModified = hasStructuralChanges || modifiedIds.size  > 0
+  const isModified = hasStructuralChanges || modifiedIds.size > 0
   const conflicts = [
     ...Array.from(changeConflictsById.entries())
       .flatMap(([id, conflicts]) =>
@@ -128,27 +128,27 @@ export function mergeArrays<T extends Entity>(
             local: localVersion.indexOf(id),
             server: serverVersion.indexOf(id),
           },
-          conflicts
-        )
+          conflicts,
+        ),
       ),
     ...Array.from(removalConflicts.entries())
       .flatMap(([id, mergeData]) =>
         removedArrayItemConflict(
           mergeData,
-          mergeData.local !== Deleted ? localVersion.indexOf(id) : serverVersion.indexOf(id)
-        )
+          mergeData.local !== Deleted ? localVersion.indexOf(id) : serverVersion.indexOf(id),
+        ),
       ),
   ]
   if (hasStructuralConflict) {
     conflicts.push(arrayConflict(mergeData))
   }
 
-  let state : SyncState = isModified ? 'MODIFIED_LOCALLY' : 'IN_SYNC'
+  let state: SyncState = isModified ? 'MODIFIED_LOCALLY' : 'IN_SYNC'
   if (conflicts.length > 0) state = 'CONFLICT'
 
-  function getFromMap(map: Map<ID, T>, id: ID): T{
+  function getFromMap(map: Map<ID, T>, id: ID): T {
     const val = map.get(id)
-    if (!val) throw new Error('Unknown merged id '+id)
+    if (!val) throw new Error('Unknown merged id ' + id)
     return val
   }
   return {

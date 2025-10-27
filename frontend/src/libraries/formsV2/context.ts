@@ -24,7 +24,7 @@ export function useFormContext<D>(): FormStateContext<D> {
 }
 
 export function useFormContextValue<D>(
-  formReducer: FormReducerResult<D>, readOnly: boolean
+  formReducer: FormReducerResult<D>, readOnly: boolean,
 ): FormStateContext<D> {
   const { state, dispatch, subscribe } = formReducer
   const stateRef = useRef<FormState<D>>(state)
@@ -38,6 +38,6 @@ export function useFormContextValue<D>(
       dispatch,
       subscribe,
     }),
-    [readOnly, dispatch, subscribe]
+    [readOnly, dispatch, subscribe],
   )
 }

@@ -5,8 +5,7 @@ import { DanceWikiSearchResult } from 'types'
 import { useSearchWikiTitles } from 'services/dancewiki'
 
 import { AutocompleteInput } from 'libraries/formsV2/components/inputs'
-import {useT} from 'i18n'
-
+import { useT } from 'i18n'
 
 interface WikipageSelectorProps {
   value: string | null
@@ -18,7 +17,7 @@ interface WikipageSelectorProps {
 }
 
 const commonWords = [
-  'the', 'a', 'an', 'of'
+  'the', 'a', 'an', 'of',
 ]
 
 export function WikipageSelector({ value, onChange, readOnly, placeholder, possibleName }: WikipageSelectorProps) {
@@ -56,15 +55,15 @@ export function WikipageSelector({ value, onChange, readOnly, placeholder, possi
               const suggestioCountA = suggestionTerms?.filter(isTermInPage(a))?.length ?? 0
               const suggestioCountB = suggestionTerms?.filter(isTermInPage(b))?.length ?? 0
               return suggestioCountB - suggestioCountA
-            })
+            }),
         },
         {
           title: t('wikipage'),
-          items: groups.regular ?? []
+          items: groups.regular ?? [],
         },
         {
           title: t('spam'),
-          items: groups.spam ?? []
+          items: groups.spam ?? [],
         },
       ],
     }

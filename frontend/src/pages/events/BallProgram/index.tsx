@@ -1,27 +1,27 @@
-import {useState} from 'react'
-import {useNavigate, useParams} from 'react-router-dom'
+import { useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Cross, Edit } from '@blueprintjs/icons'
 import classNames from 'classnames'
 
-import {Button} from 'libraries/ui'
+import { Button } from 'libraries/ui'
 import { EventSlide, EventSlideProps, startSlideId, useEventSlides } from 'components/event/EventSlide'
-import {LoadingState} from 'components/LoadingState'
-import {SlideContainer, useSlideshowNavigation} from 'components/Slide'
-import {useOnKeydown} from 'utils/useOnKeydown'
+import { LoadingState } from 'components/LoadingState'
+import { SlideContainer, useSlideshowNavigation } from 'components/Slide'
+import { useOnKeydown } from 'utils/useOnKeydown'
 
-import {ProgramTitleSelector} from './ProgramTitleSelector'
-import {SlideEditor} from './SlideEditor'
-import {Event, useBallProgramQuery} from './useBallProgramQuery'
+import { ProgramTitleSelector } from './ProgramTitleSelector'
+import { SlideEditor } from './SlideEditor'
+import { Event, useBallProgramQuery } from './useBallProgramQuery'
 
 import './BallProgram.scss'
 
-export default function BallProgram({eventId, eventVersionId}) {
+export default function BallProgram({ eventId, eventVersionId }) {
   const { event, slides, refetch, loadingState } = useBallProgram(eventId, eventVersionId)
 
   const [isEditing, setEditing] = useState(false)
   const onToggleEditing = () => setEditing(e => !e)
 
-  const {slideId: currentSlideId = startSlideId} = useParams()
+  const { slideId: currentSlideId = startSlideId } = useParams()
 
   useOnKeydown({
     r: refetch as () => unknown,
@@ -33,7 +33,7 @@ export default function BallProgram({eventId, eventVersionId}) {
   const slideIndex = (i => i >= 0 ? i : 0)(slides.findIndex(s => s.id === currentSlideId))
   const slide = slides[slideIndex]
 
-  return <div className={classNames('ball-program-container', {'is-editing': isEditing})}>
+  return <div className={classNames('ball-program-container', { 'is-editing': isEditing })}>
     <BallProgramView
       slides={slides}
       currentSlide={slide}
@@ -42,20 +42,20 @@ export default function BallProgram({eventId, eventVersionId}) {
       onToggleEditing={() => setEditing(e => !e)}
     />
     <div className="editor">
-      <Button className="close" minimal icon={<Cross />} onClick={() => setEditing(false)}/>
+      <Button className="close" minimal icon={<Cross />} onClick={() => setEditing(false)} />
       <SlideEditor slide={slide} eventId={eventId} eventVersionId={eventVersionId} eventProgram={event?.program} />
     </div>
   </div>
 }
 
 function BallProgramView(
-  {slides, currentSlide: slide, event, isEditing, onToggleEditing}: {
+  { slides, currentSlide: slide, event, isEditing, onToggleEditing }: {
     slides: EventSlideProps[]
     currentSlide: EventSlideProps
     event: Event
     onToggleEditing: () => unknown
     isEditing: boolean
-  }
+  },
 ) {
   const navigate = useNavigate()
   const baseUrl = event._versionId
@@ -69,17 +69,16 @@ function BallProgramView(
     <div className="controls">
       <ProgramTitleSelector value={slide.parentId ?? slide.id} onChange={id => navigate(baseUrl + id)}
         program={event.program} />
-      <Button minimal icon={<Edit />} onClick={onToggleEditing}/>
+      <Button minimal icon={<Edit />} onClick={onToggleEditing} />
     </div>
-    <EventSlide {...slide} eventProgram={event.program}/>
+    <EventSlide {...slide} eventProgram={event.program} />
   </SlideContainer>
 }
 
 function useBallProgram(eventId: string, _eventVersionId?: string | null) {
-  const {data, refetch, ...loadingState} = useBallProgramQuery({eventId})
+  const { data, refetch, ...loadingState } = useBallProgramQuery({ eventId })
   const event = data?.event
   const slides = useEventSlides(event?.program)
 
   return { event, slides, loadingState, refetch }
-
 }

@@ -1,4 +1,4 @@
-import {createContext, useCallback, useMemo, useState} from 'react'
+import { createContext, useCallback, useMemo, useState } from 'react'
 import {
   closestCenter,
   DndContext as DndKitContext,
@@ -25,14 +25,14 @@ interface ItemVisit {
 
 export const ItemVisitContext = createContext<ItemVisit | null>(null)
 
-export function DndContext({children}: {children: React.ReactNode}): React.ReactNode {
+export function DndContext({ children }: { children: React.ReactNode }): React.ReactNode {
   const { getValueAt, dispatch } = useFormContext<AnyType>()
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, useMemo(() => ({
       coordinateGetter: sortableKeyboardCoordinates,
       scrollBehavior: 'instant' as const,
-    }), []))
+    }), [])),
   )
   const [visit, setVisit] = useState<ItemVisit | null>(null)
 
@@ -55,12 +55,11 @@ export function DndContext({children}: {children: React.ReactNode}): React.React
       setVisit({
         to: overData,
         item: {
-          type, id, dropAreaId, path, index, value, itemType
-        }
+          type, id, dropAreaId, path, index, value, itemType,
+        },
       })
-
     },
-    []
+    [],
   )
   const onDragEnd = useCallback(
     ({ active, over }: DragEndEvent) => {
@@ -74,7 +73,7 @@ export function DndContext({children}: {children: React.ReactNode}): React.React
       const overData = visit?.to ?? over.data.current as ItemData | DroppableData
 
       if (activeData.path === overData.path || visit) {
-        //Somehow this seems to work like this
+        // Somehow this seems to work like this
         const insertingToLastPlace = visit && active.id === over.id
         dispatch({
           type: 'MOVE_ITEM',
@@ -86,9 +85,8 @@ export function DndContext({children}: {children: React.ReactNode}): React.React
             : overData.type === 'item' ? overData.index : 0,
         })
       }
-
     },
-    [visit, dispatch, getValueAt]
+    [visit, dispatch, getValueAt],
   )
 
   return (

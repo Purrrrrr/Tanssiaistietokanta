@@ -1,17 +1,17 @@
-import {useState} from 'react'
+import { useState } from 'react'
 
-import {DanceCheatListQuery} from 'types/gql/graphql'
+import { DanceCheatListQuery } from 'types/gql/graphql'
 
-import {backendQueryHook, graphql} from 'backend'
-import {useCallbackOnEventChanges} from 'services/events'
+import { backendQueryHook, graphql } from 'backend'
+import { useCallbackOnEventChanges } from 'services/events'
 
-import {NumberInput, Switch} from 'libraries/forms'
-import {Button} from 'libraries/ui'
-import {LoadingState} from 'components/LoadingState'
+import { NumberInput, Switch } from 'libraries/forms'
+import { Button } from 'libraries/ui'
+import { LoadingState } from 'components/LoadingState'
 import { A4Page, PrintPageContainer, PrintViewToolbar, RepeatingGrid } from 'components/print'
-import {PrintTable} from 'components/PrintTable'
-import {useT} from 'i18n'
-import {uniq} from 'utils/uniq'
+import { PrintTable } from 'components/PrintTable'
+import { useT } from 'i18n'
+import { uniq } from 'utils/uniq'
 
 import './DanceCheatList.sass'
 
@@ -33,20 +33,20 @@ query DanceCheatList($eventId: ID!) {
       }
     }
   }
-}`), ({refetch, variables}) => {
+}`), ({ refetch, variables }) => {
   if (variables === undefined) throw new Error('Unknown event id')
   useCallbackOnEventChanges(variables.eventId, refetch)
 })
 
-export default function DanceCheatList({eventId}) {
+export default function DanceCheatList({ eventId }) {
   const t = useT('pages.events.danceCheatlist')
   const [cols, setCols] = useState(2)
   const [rows, setRows] = useState(2)
   const [landscape, setLandscape] = useState(true)
   const [helpText, setHelptext] = useState(true)
-  const {data, ...loadingState} = useCheatList({eventId})
+  const { data, ...loadingState } = useCheatList({ eventId })
   if (!data?.event) return <LoadingState {...loadingState} />
-  const {workshops} = data.event
+  const { workshops } = data.event
 
   return <PrintPageContainer>
     <div className="dance-cheatsheet-page">
@@ -73,8 +73,8 @@ export default function DanceCheatList({eventId}) {
             onChange={setRows}
           />
           <span> = {t('nrOfCopies', { count: rows * cols })}</span>
-          <Switch id="landscape" inline label={t('landscape')} value={landscape} onChange={setLandscape}/>
-          <Switch id="helpText" inline label={t('showHelpText')} value={helpText} onChange={setHelptext}/>
+          <Switch id="landscape" inline label={t('landscape')} value={landscape} onChange={setLandscape} />
+          <Switch id="helpText" inline label={t('showHelpText')} value={helpText} onChange={setHelptext} />
           <Button text={t('print')} onClick={() => window.print()} />
         </div>
       </PrintViewToolbar>
@@ -92,7 +92,7 @@ const normalize = (n: number) => isNaN(n)
   : n < 1
     ? 1 : n
 
-function DanceCheatListView({workshops, helpText}) {
+function DanceCheatListView({ workshops, helpText }) {
   const t = useT('pages.events.danceCheatlist')
   return <div className="dance-cheatsheet">
     {helpText && <p>{t('helpText')}</p>}
@@ -101,9 +101,9 @@ function DanceCheatListView({workshops, helpText}) {
   </div>
 }
 
-function WorkshopDances({workshop }: {workshop: Workshop}) {
+function WorkshopDances({ workshop }: { workshop: Workshop }) {
   const t = useT('pages.events.danceCheatlist')
-  const {name, instances } = workshop
+  const { name, instances } = workshop
   const dances = uniq(instances.flatMap(i => i.dances ?? []))
   return <>
     <h2>{name}</h2>
@@ -116,7 +116,7 @@ function WorkshopDances({workshop }: {workshop: Workshop}) {
               {dance.name}
             </td>
             <td />
-          </tr>
+          </tr>,
         )}
       </PrintTable>
     }

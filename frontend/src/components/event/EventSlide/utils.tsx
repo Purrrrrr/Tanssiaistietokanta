@@ -1,13 +1,13 @@
 import { Workshop } from './types'
 
-import {Markdown} from 'libraries/ui'
-import {useTranslation} from 'i18n'
+import { Markdown } from 'libraries/ui'
+import { useTranslation } from 'i18n'
 
-export function TeachedIn({teachedIn}: {teachedIn: Workshop[]}) {
+export function TeachedIn({ teachedIn }: { teachedIn: Workshop[] }) {
   const teachedInStr = teachedIn.map(
-    ({workshop, instances}) => instances
+    ({ workshop, instances }) => instances
       ? `${workshop.name} (${instances.map(i => i.abbreviation).join('/')})`
-      : workshop.name
+      : workshop.name,
   ).join(', ')
 
   return `${useTranslation('pages.events.ballProgram.teachedInSet')} ${teachedInStr}`

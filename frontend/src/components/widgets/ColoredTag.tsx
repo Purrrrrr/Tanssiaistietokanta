@@ -67,7 +67,7 @@ interface ColoredTagProps {
   onClick?: MouseEventHandler
 }
 
-export function ColoredTag({ tag, title, hashSource, color, small, onClick } : ColoredTagProps) {
+export function ColoredTag({ tag, title, hashSource, color, small, onClick }: ColoredTagProps) {
   const colorIndex = Math.abs(color ?? hash(hashSource ?? title)) % TAG_COLOR_COUNT
   const className = colors[colorIndex]
   const Element = onClick ? 'button' : 'span'
@@ -86,7 +86,7 @@ export function ColoredTag({ tag, title, hashSource, color, small, onClick } : C
       <span className={classNames(
         className.replace(/text-\w+-\d+/, 'text-white'),
         'text-shadow-sm text-shadow-black/20 inline-block inset-ring-20 h-full rounded-e-full -ms-2 me-1',
-        small ? 'px-1.5' : 'px-2'
+        small ? 'px-1.5' : 'px-2',
       )}>
         {tag}
       </span>}

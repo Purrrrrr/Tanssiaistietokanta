@@ -19,7 +19,7 @@ const defaultIcons = {
   success: <Tick />,
   danger: <Error className="text-red-700" />,
   warning: <WarningSign />,
-} satisfies Record<Color, React.ReactElement| undefined>
+} satisfies Record<Color, React.ReactElement | undefined>
 
 export function Callout({ children, icon, title, intent, className, ...rest }: CalloutProps) {
   const iconToRender = icon === false

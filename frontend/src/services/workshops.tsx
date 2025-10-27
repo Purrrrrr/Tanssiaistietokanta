@@ -19,7 +19,7 @@ setupServiceUpdateFragment(
         name
       }
     }
-  }`
+  }`,
 )
 
 export const useCreateWorkshop = entityCreateHook('workshops', graphql(`

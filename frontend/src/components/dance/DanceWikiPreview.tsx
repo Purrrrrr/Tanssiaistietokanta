@@ -6,7 +6,7 @@ import { Dance } from 'types'
 import { useFetchDanceFromWiki } from 'services/dancewiki'
 
 import { useFormatDateTime } from 'libraries/i18n/dateTime'
-import {Button, Collapse, RegularLink} from 'libraries/ui'
+import { Button, Collapse, RegularLink } from 'libraries/ui'
 import Markdown from 'libraries/ui/Markdown'
 import { useT } from 'i18n'
 
@@ -38,7 +38,7 @@ export default function DanceWikiPreview({ dance }: DanceWikiPreviewProps) {
           color="primary"
           text={t('openInstructions')}
           onClick={() => setOpen(!open)}
-          rightIcon={open ? <ChevronUp/> : <ChevronDown />}
+          rightIcon={open ? <ChevronUp /> : <ChevronDown />}
         />}
       </div>
 
@@ -73,9 +73,9 @@ export function LinkToDanceWiki({ className, page, children }: {
   </RegularLink>
 }
 
-function FetchWikipageButton({ page }: { page: string}) {
+function FetchWikipageButton({ page }: { page: string }) {
   const t = useT('components.danceWikiPreview')
-  const [fetch, {loading}] = useFetchDanceFromWiki()
+  const [fetch, { loading }] = useFetchDanceFromWiki()
 
   return <Button
     disabled={loading}

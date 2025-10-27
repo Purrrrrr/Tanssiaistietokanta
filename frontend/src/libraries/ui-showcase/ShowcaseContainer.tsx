@@ -5,7 +5,7 @@ import { PropDef, Showcase } from './types'
 import { Switch, TextInput } from 'libraries/formsV2/components/inputs'
 import { Card, CssClass, H2 } from 'libraries/ui'
 
-export function ShowcaseContainer<P extends Record<string, unknown>>({ title, props, render}: Showcase<P>) {
+export function ShowcaseContainer<P extends Record<string, unknown>>({ title, props, render }: Showcase<P>) {
   const [propsValue, setPropsValue] = useShowcaseState(props)
 
   const fields = Object.entries(props).map(([name, def]) =>
@@ -15,9 +15,9 @@ export function ShowcaseContainer<P extends Record<string, unknown>>({ title, pr
       def={def}
       value={propsValue[name]}
       onChange={value => {
-        setPropsValue(old => ({...old, [name]: value}))
+        setPropsValue(old => ({ ...old, [name]: value }))
       }}
-    />
+    />,
   )
 
   return <Card>
@@ -29,14 +29,13 @@ export function ShowcaseContainer<P extends Record<string, unknown>>({ title, pr
   </Card>
 }
 
-
 function useShowcaseState<P extends Record<string, unknown>>(props: Showcase<P>['props']) {
   return useState<P>(() =>
     Object.fromEntries(
       Object.entries(props).map(([name, def]) => {
         return [name, def.default]
-      })
-    ) as P
+      }),
+    ) as P,
   )
 }
 
@@ -47,9 +46,9 @@ interface PropFieldProps<T> {
   onChange: (value: T) => unknown
 }
 
-function PropField<T>({def, label, value, onChange}: PropFieldProps<T>) {
+function PropField<T>({ def, label, value, onChange }: PropFieldProps<T>) {
   const id = useId()
-  switch(def.type) {
+  switch (def.type) {
     case 'string':
       return <div>
         <label className="p-2" htmlFor={id}>{label}</label>

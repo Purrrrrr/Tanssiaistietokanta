@@ -7,8 +7,8 @@ export default function (app) {
     '/api',
     createProxyMiddleware({
       target: `http://${backendConfig.host}:${backendConfig.port}`,
-      pathRewrite: {'^/api' : ''},
+      pathRewrite: { '^/api': '' },
       changeOrigin: true,
-    })
+    }),
   )
 }

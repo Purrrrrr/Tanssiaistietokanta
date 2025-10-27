@@ -45,20 +45,20 @@ type Joined<Path extends readonly unknown[]> =
   Path extends []
     ? ''
     // Here we have 1 path to access
-    : Path extends [infer TargetPath extends string|number]
+    : Path extends [infer TargetPath extends string | number]
       ? TargetPath
       // Here we have 1 or more paths to access
-      : Path extends [infer TargetPath extends string|number, ...infer RemainingPaths]
+      : Path extends [infer TargetPath extends string | number, ...infer RemainingPaths]
         // Recurse and grab paths
         ? `${TargetPath}.${Joined<RemainingPaths>}`
         // Paths could not be destructured
-        : never;
+        : never
 
 type Decrement = [never, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
     11, 12, 13, 14, 15, 16, 17, 18, 19, 20, ...0[]]
 
 const numberRegex = /^(:?[1-9][0-9]*)|0$/
-export function toArrayPath(p: GenericPath): GenericPath[]  {
+export function toArrayPath(p: GenericPath): GenericPath[] {
   if (p === '') return []
   return String(p)
     .split('.')

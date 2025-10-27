@@ -1,7 +1,7 @@
-import {Dance} from 'types'
+import { Dance } from 'types'
 import { ID } from 'backend/types'
 
-import {Link} from 'libraries/ui'
+import { Link } from 'libraries/ui'
 
 type DanceLinkProps = {
   children?: React.ReactNode

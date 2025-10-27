@@ -1,8 +1,8 @@
-import {Entity} from './types'
+import { Entity } from './types'
 
-export const toEntity = (item: Entity | number | string) => typeof item !== 'object' ? {_id: item, value: item} : item
+export const toEntity = (item: Entity | number | string) => typeof item !== 'object' ? { _id: item, value: item } : item
 
-//mulberry32
+// mulberry32
 export function randomGeneratorWithSeed(seed: number) {
   return () => {
     let t = seed += 0x6D2B79F5
@@ -10,21 +10,20 @@ export function randomGeneratorWithSeed(seed: number) {
     t = Math.imul(t ^ t >>> 15, t | 1)
     t ^= t + Math.imul(t ^ t >>> 7, t | 61)
     return ((t ^ t >>> 14) >>> 0) / 4294967296
-
   }
 }
 
 export function changedVersion(
   original: Entity[],
   random: () => number,
-  amounts: {add?: number, remove?: number, move?: number, addKeys?: number, removeKeys?: number, modifyValues?: number}
+  amounts: { add?: number, remove?: number, move?: number, addKeys?: number, removeKeys?: number, modifyValues?: number },
 
 ) {
-  const {add = 0, remove = 0, move = 0, addKeys = 0, removeKeys = 0, modifyValues = 0} = amounts
+  const { add = 0, remove = 0, move = 0, addKeys = 0, removeKeys = 0, modifyValues = 0 } = amounts
   const version = [...original]
 
   let i = 100
-  const randomIndex = (arr: unknown[]) => Math.floor(random()*arr.length)
+  const randomIndex = (arr: unknown[]) => Math.floor(random() * arr.length)
   const addRandom = (arr: unknown[]) => arr.splice(randomIndex(arr), 0, toEntity(++i))
   const removeRandom = (arr: unknown[]) => arr.splice(randomIndex(arr), 1)
   const moveRandom = (arr: unknown[]) => {
@@ -34,7 +33,7 @@ export function changedVersion(
   }
   const addKey = (arr: Entity[]) => {
     modifySomeObject(arr, obj => {
-      const key = 'key-'+random()
+      const key = 'key-' + random()
       return {
         ...obj,
         [key]: random(),
@@ -76,5 +75,5 @@ export function changedVersion(
 }
 
 const repeatIn = <T>(arr: T[], num: number, action: (arr: T[]) => unknown) => {
-  for(let i = 0; i < num; i++) action(arr)
+  for (let i = 0; i < num; i++) action(arr)
 }

@@ -4,18 +4,18 @@ import classNames from 'classnames'
 import { ConflictData } from './types'
 
 import MenuButton from 'libraries/formsV2/components/MenuButton'
-import {Button} from 'libraries/ui'
+import { Button } from 'libraries/ui'
 
-import {useFormStrings} from './formContext'
+import { useFormStrings } from './formContext'
 
-export function ConflictHandler({localValue, serverValue, onResolve}: ConflictData) {
+export function ConflictHandler({ localValue, serverValue, onResolve }: ConflictData) {
   const strings = useFormStrings()
   return <>
     {strings.hasConflicts}
     {' '}
     <MenuButton
       text={strings.conflictButton}
-      buttonRenderer={({active, children, ...props}) =>
+      buttonRenderer={({ active, children, ...props }) =>
         <button type="button" className={classNames(className, { active })} {...props}>
           {children}
           <CaretDown />

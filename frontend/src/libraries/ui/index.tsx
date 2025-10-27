@@ -40,7 +40,7 @@ export function H2({ children, className }: { children: React.ReactNode, classNa
   return <h2 className={classNames(className ?? 'my-2', 'font-bold text-lg')}>{children}</h2>
 }
 
-export function Card({ className, noPadding, marginClass, ...props }: CardProps) {
+export function Card({ className, noPadding = false, marginClass, ...props }: CardProps) {
   return <div
     {...props}
     className={classNames(
@@ -61,7 +61,7 @@ export interface FormGroupProps extends Omit<BlueprintFormGroupProps, 'inline'>,
 
 const FormGroupInstance = new BlueprintFormGroup({})
 
-export function FormGroup({ elementRef, className, inline, labelStyle: maybeLabelStyle, ...props}: FormGroupProps) {
+export function FormGroup({ elementRef, className, inline, labelStyle: maybeLabelStyle, ...props }: FormGroupProps) {
   const labelStyle = maybeLabelStyle ?? (inline ? 'beside' : 'above')
   const inlineLabel = labelStyle === 'beside'
   const inlineProps = inline
@@ -79,5 +79,5 @@ export function FormGroup({ elementRef, className, inline, labelStyle: maybeLabe
   }
   const element = FormGroupInstance.render()
 
-  return React.cloneElement(element, {...rest, ref: elementRef}) // <BlueprintFormGroup {...props} {...inlineProps} />
+  return React.cloneElement(element, { ...rest, ref: elementRef }) // <BlueprintFormGroup {...props} {...inlineProps} />
 }

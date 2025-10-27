@@ -1,12 +1,12 @@
 import deepEquals from 'fast-deep-equal'
 
-import {Entity, Mergeable, MergeableAs, MergeableObject, MergeData, PartialMergeResult, scalarConflict, SyncState} from '../types'
+import { Entity, Mergeable, MergeableAs, MergeableObject, MergeData, PartialMergeResult, scalarConflict, SyncState } from '../types'
 
-import {mergeArrays} from './mergeArrays'
-import {mergeObjects} from './mergeObjects'
-import {mergeConflictingStrings} from './mergeStrings'
+import { mergeArrays } from './mergeArrays'
+import { mergeObjects } from './mergeObjects'
+import { mergeConflictingStrings } from './mergeStrings'
 
-export default function merge<T extends Mergeable>(data : MergeData<T>) : PartialMergeResult<T> {
+export default function merge<T extends Mergeable>(data: MergeData<T>): PartialMergeResult<T> {
   if (nonNullData(data)) {
     if (isMergeableAsArray(data)) {
       return mergeArrays(asCompleteMergeData<Entity[]>(data, []), merge) as unknown as PartialMergeResult<T>
@@ -16,7 +16,7 @@ export default function merge<T extends Mergeable>(data : MergeData<T>) : Partia
     }
   }
 
-  const {local, server} = data
+  const { local, server } = data
   const state = getMergeState(data)
   const inSync = state === 'IN_SYNC'
   const modifications = inSync ? data.server : local
@@ -40,24 +40,24 @@ export default function merge<T extends Mergeable>(data : MergeData<T>) : Partia
     modifications: local,
     nonConflictingModifications: server,
     conflicts: [
-      scalarConflict(data)
+      scalarConflict(data),
     ],
   }
 }
 
-function nonNullData(data : MergeData<Mergeable>) : boolean {
+function nonNullData(data: MergeData<Mergeable>): boolean {
   return /* data.original != null && */ data.server != null && data.local != null
 }
 
-function isMergeableAsArray(data : MergeData<Mergeable>) : data is MergeableAs<Entity[]> {
+function isMergeableAsArray(data: MergeData<Mergeable>): data is MergeableAs<Entity[]> {
   return isMergeableAs(Array.isArray, data)
 }
 
-function isMergeableAsObjects(data : MergeData<Mergeable>) : data is MergeableAs<Entity> {
+function isMergeableAsObjects(data: MergeData<Mergeable>): data is MergeableAs<Entity> {
   return isMergeableAs(value => typeof value === 'object' && !Array.isArray(value), data)
 }
 
-function isMergeableAsStrings(data : MergeData<Mergeable>) : data is MergeableAs<string> {
+function isMergeableAsStrings(data: MergeData<Mergeable>): data is MergeableAs<string> {
   return isMergeableAs(value => typeof value === 'string', data)
 }
 
@@ -78,13 +78,13 @@ function asCompleteMergeData<T>(partialData: MergeableAs<T>, defaultValue: T): M
 
   return {
     ...partialData,
-    original: partialData.original ?? defaultValue
+    original: partialData.original ?? defaultValue,
   }
 }
 
 function getMergeState<T extends Mergeable>(
-  {server, original, local} : MergeData<T>
-) : SyncState {
+  { server, original, local }: MergeData<T>,
+): SyncState {
   const modifiedLocally = !deepEquals(original, local)
   if (!modifiedLocally) {
     return 'IN_SYNC'
@@ -93,7 +93,7 @@ function getMergeState<T extends Mergeable>(
   const modifiedOnServer = !deepEquals(original, server)
   const conflict = !deepEquals(server, local)
 
-  if (!modifiedOnServer) { //& modified locally
+  if (!modifiedOnServer) { // & modified locally
     return 'MODIFIED_LOCALLY'
   }
   if (!conflict) { // Both have same modifications
@@ -102,4 +102,3 @@ function getMergeState<T extends Mergeable>(
 
   return 'CONFLICT'
 }
-

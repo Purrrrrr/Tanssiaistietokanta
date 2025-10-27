@@ -1,11 +1,11 @@
-import {useState } from 'react'
+import { useState } from 'react'
 import { Cross, Edit } from '@blueprintjs/icons'
 
-import {ActionButton as Button } from 'libraries/forms'
+import { ActionButton as Button } from 'libraries/forms'
 import { Input, useValueAt } from 'components/event/EventProgramForm'
-import {useTranslation} from 'i18n'
+import { useTranslation } from 'i18n'
 
-export function DanceSetNameEditor({ itemIndex } : { itemIndex: number }) {
+export function DanceSetNameEditor({ itemIndex }: { itemIndex: number }) {
   const label = useTranslation('components.eventProgramEditor.fields.danceSetName')
   const name = useValueAt(`danceSets.${itemIndex}.title`)
 

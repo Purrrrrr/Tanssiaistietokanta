@@ -1,13 +1,13 @@
-import {useContext} from 'react'
+import { useContext } from 'react'
 
-import {UserContext} from 'services/users'
+import { UserContext } from 'services/users'
 
-import {Button} from 'libraries/ui'
+import { Button } from 'libraries/ui'
 import { useT } from 'i18n'
 
 function LoginForm() {
   const t = useT('components.loginForm')
-  const {user, login, logout} = useContext(UserContext)
+  const { user, login, logout } = useContext(UserContext)
   return <>
     {user
       ? <Button onClick={logout}>{t('logout')}</Button>
@@ -16,4 +16,3 @@ function LoginForm() {
 }
 
 export default LoginForm
-

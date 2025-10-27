@@ -31,12 +31,12 @@ const {
   Form, Field, RepeatingSection, RepeatingTableRows,
   useAddItem,
   selectWithType,
-} = formFor<Data, {l: L, s: string}>()
+} = formFor<Data, { l: L, s: string }>()
 
-const defaultData : Data = {
+const defaultData: Data = {
   a: '', b: '',
-  l: [{_id: '1', value: 'a'}, {_id: '2', value: 'b'}, {_id: '5', value: 'a2'}, {_id: '6', value: 'b2'}],
-  l2: [{_id: '3', value: 'c'}, {_id: '4', value: 'd'}],
+  l: [{ _id: '1', value: 'a' }, { _id: '2', value: 'b' }, { _id: '5', value: 'a2' }, { _id: '6', value: 'b2' }],
+  l2: [{ _id: '3', value: 'c' }, { _id: '4', value: 'd' }],
   s: ['aa', 'bb'],
   num: 0,
   rangeStart: new Date(),
@@ -83,8 +83,8 @@ function ShowcaseContents() {
     <S2 path="num" label="Numero" />
     <hr />
     <ConflictHandler
-      localValue={<input className="block border"  defaultValue="fuu" />}
-      serverValue={<input className="block border"  defaultValue="fuu" />}
+      localValue={<input className="block border" defaultValue="fuu" />}
+      serverValue={<input className="block border" defaultValue="fuu" />}
       onResolve={() => {}}
     />
     <div>

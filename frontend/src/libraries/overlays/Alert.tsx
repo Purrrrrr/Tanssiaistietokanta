@@ -1,6 +1,6 @@
-import React, {useCallback} from 'react'
+import React, { useCallback } from 'react'
 
-import {Button, Color} from 'libraries/ui'
+import { Button, Color } from 'libraries/ui'
 
 import { Dialog } from './Dialog'
 
@@ -16,7 +16,7 @@ interface AlertProps {
   onClose?(confirmed: boolean, evt?: React.SyntheticEvent<HTMLElement>): void
 }
 
-export function Alert({isOpen, title, color, confirmButtonText, cancelButtonText, children, onCancel, onConfirm, onClose}: AlertProps & {children: React.ReactNode, title: string}) {
+export function Alert({ isOpen, title, color, confirmButtonText, cancelButtonText, children, onCancel, onConfirm, onClose }: AlertProps & { children: React.ReactNode, title: string }) {
   const doCancel = useCallback((e) => {
     onCancel?.()
     onClose?.(false, e)

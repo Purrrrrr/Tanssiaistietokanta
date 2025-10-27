@@ -72,48 +72,16 @@ export default defineConfig(
       },
     },
     rules: {
-      // TODO: remove ASAP
-      '@stylistic/comma-dangle': 0,
-      '@stylistic/indent': 0,
-      '@stylistic/spaced-comment': 0,
-      '@stylistic/space-before-blocks': 0,
-      '@stylistic/padded-blocks': 0,
-      //AUTOFIX
-      '@stylistic/type-annotation-spacing': 0,
-      '@stylistic/keyword-spacing': 0,
-      '@stylistic/no-multi-spaces': 0,
-      '@stylistic/semi': 0,
-      '@stylistic/arrow-spacing': 0,
-      '@stylistic/key-spacing': 0,
-      '@stylistic/space-unary-ops': 0,
-      '@stylistic/no-multiple-empty-lines': 0,
-      // ??
-      '@stylistic/jsx-first-prop-new-line': 0,
-      '@stylistic/jsx-indent-props': 0,
-      '@stylistic/jsx-tag-spacing': 0,
-      '@stylistic/jsx-max-props-per-line': 0,
-      '@stylistic/jsx-one-expression-per-line': 0,
       // --- TODO check these
-      '@typescript-eslint/prefer-nullish-coalescing': 0,
       'react-hooks/refs': 0,
       'react-hooks/set-state-in-effect': 0,
       'react/prop-types': 0,
-      '@typescript-eslint/consistent-indexed-object-style': 0,
-      '@typescript-eslint/consistent-type-definitions': 0,
       '@typescript-eslint/no-empty-function': 0,
-      '@stylistic/space-infix-ops': 0,
-      '@stylistic/jsx-closing-bracket-location': 0,
-      '@stylistic/object-curly-spacing': 0,
       '@stylistic/operator-linebreak': 0,
-      '@stylistic/block-spacing': 0,
       '@stylistic/indent-binary-ops': 0,
       '@stylistic/arrow-parens': 0,
-      '@stylistic/jsx-curly-newline': 0,
       '@stylistic/multiline-ternary': 0,
-      //TODO how many statements
-      '@stylistic/max-statements-per-line': 0,
-      //TODO: enable to 1
-      '@stylistic/brace-style': [0, '1tbs'],
+      '@stylistic/indent': 0,
       // ---
 
       /* Style stuff */
@@ -124,18 +92,15 @@ export default defineConfig(
       'linebreak-style': ['error', 'unix'],
       quotes: ['error', 'single'],
       semi: ['error', 'never'],
+      '@stylistic/max-statements-per-line': [1, { max: 2 }],
       '@stylistic/jsx-closing-tag-location': [1, 'line-aligned'],
       '@stylistic/quote-props': [1, 'as-needed'],
+      '@stylistic/jsx-max-props-per-line': [0, { maximum: { single: 3, multi: 1 } }],
       '@stylistic/member-delimiter-style': ['error', {
-        multiline: {
-          delimiter: 'none',
-          requireLast: true,
-        },
-        singleline: {
-          delimiter: 'comma',
-          requireLast: false,
-        },
+        multiline: { delimiter: 'none', requireLast: true },
+        singleline: { delimiter: 'comma', requireLast: false },
       }],
+      '@stylistic/brace-style': [2, '1tbs', { allowSingleLine: true }],
 
       /** Import ordering */
       'simple-import-sort/imports': [
@@ -167,6 +132,10 @@ export default defineConfig(
       '@typescript-eslint/non-nullable-type-assertion-style': 0,
       '@typescript-eslint/prefer-regexp-exec': 0,
       '@stylistic/jsx-wrap-multilines': 0,
+      '@stylistic/jsx-first-prop-new-line': 0,
+      '@stylistic/jsx-one-expression-per-line': 0,
+      '@stylistic/jsx-closing-bracket-location': 0,
+      '@stylistic/jsx-curly-newline': 0,
     },
   },
 

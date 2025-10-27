@@ -1,9 +1,9 @@
-import {useMemo} from 'react'
+import { useMemo } from 'react'
 
 import { Dance } from 'types'
 
 import { filterItemList } from 'libraries/formsV2/components/inputs/selectors/itemUtils'
-import {compareBy, sorted} from 'utils/sorted'
+import { compareBy, sorted } from 'utils/sorted'
 
 import { backendQueryHook, entityCreateHook, entityDeleteHook, entityListQueryHook, entityUpdateHook, graphql, setupServiceUpdateFragment, useServiceEvents } from '../backend'
 
@@ -12,7 +12,7 @@ setupServiceUpdateFragment(
   `fragment DanceFragment on Dance {
     _id, name, description, remarks, duration, prelude, formation, category, instructions, slideStyleId
     wikipageName
-  }`
+  }`,
 )
 
 export type WritableDanceProperty = Exclude<keyof Dance, '_id' | '_versionId' | '_versionNumber' | '__typename' | 'teachedIn'>
@@ -80,7 +80,7 @@ query getDance($id: ID!, $versionId: ID) {
       name
     }
   }
-}`), ({refetch, variables}) => {
+}`), ({ refetch, variables }) => {
   if (variables === undefined) throw new Error('Unknown dance id')
   useCallbackOnDanceChanges(variables.id, refetch)
 })
@@ -163,8 +163,7 @@ mutation deleteDance($id: ID!) {
   }
 }`))
 
-
-export function filterDances<T extends Dance>(dances : T[], searchString: string, categoryFilter?: string): T[] {
+export function filterDances<T extends Dance>(dances: T[], searchString: string, categoryFilter?: string): T[] {
   const filtered = filterItemList(sortDances(dances), searchString, dance => dance.name)
   if (categoryFilter !== undefined) {
     return filtered.filter(dance => dance.category === categoryFilter)

@@ -1,10 +1,10 @@
-import {useCallback, useEffect, useMemo, useState} from 'react'
-import {arrayMoveImmutable} from 'array-move'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { arrayMoveImmutable } from 'array-move'
 import * as L from 'partial.lenses'
 
-import {AnyList, FieldDataProps, NewValue, PropertyAtPath, StringPath, StringPathToList, TypedStringPath} from './types'
+import { AnyList, FieldDataProps, NewValue, PropertyAtPath, StringPath, StringPathToList, TypedStringPath } from './types'
 
-import {FormMetadataContextType, useFormMetadata} from './formContext'
+import { FormMetadataContextType, useFormMetadata } from './formContext'
 
 export interface FormHooksFor<T> {
   useValueAt: <P extends StringPath<T>>(path: P) => PropertyAtPath<T, P>
@@ -28,9 +28,9 @@ export function formHooksFor<T>(): FormHooksFor<T> {
         onChange(items =>
           L.set(
             L.append,
-            typeof(item) === 'function' ? (item as ((t: unknown[]) => unknown))(items) : item,
+            typeof item === 'function' ? (item as ((t: unknown[]) => unknown))(items) : item,
             items,
-          )
+          ),
         )
       }, [onChange])
     },
@@ -46,20 +46,19 @@ export function formHooksFor<T>(): FormHooksFor<T> {
   } as FormHooksFor<T>
 }
 
-export function useValueAt<T, V>(path: TypedStringPath<V, T>) : V{
+export function useValueAt<T, V>(path: TypedStringPath<V, T>): V {
   const ctx = useFormMetadata<T>()
   const [state, setState] = useState<V>(() => ctx.getValueAt(path))
   useFormValueSubscription(ctx, useCallback(
     () => setState(ctx.getValueAt(path)),
-    [ctx, path]
+    [ctx, path],
   ))
   return state
 }
 
 export function useFieldValueProps<T, V>(
-  path : TypedStringPath<V, T>
-): FieldDataProps<V>
-{
+  path: TypedStringPath<V, T>,
+): FieldDataProps<V> {
   const ctx = useFormMetadata<T>()
   const [value, setValue] = useState(() => ctx.getValueAt<V>(path))
 
@@ -67,7 +66,7 @@ export function useFieldValueProps<T, V>(
     () => {
       setValue(ctx.getValueAt<V>(path))
     },
-    [ctx, path]
+    [ctx, path],
   ))
 
   const onChange = useCallback((v) => {
@@ -82,7 +81,7 @@ export function useRemoveFromList<T>(path: StringPathToList<T>, index: number) {
   const onChange = useOnChangeFor<T, AnyList>(path)
   return useCallback(
     () => onChange(L.set(index, undefined)),
-    [onChange, index]
+    [onChange, index],
   )
 }
 
@@ -95,12 +94,10 @@ export function useFormValueSubscription<T>(ctx: FormMetadataContextType<T>, cal
   return ctx
 }
 
-export function useOnChangeFor<T, V>(path : TypedStringPath<V, T>) : (v: NewValue<V>) => unknown {
+export function useOnChangeFor<T, V>(path: TypedStringPath<V, T>): (v: NewValue<V>) => unknown {
   const { onChangePath } = useFormMetadata<T>()
   return useCallback(
     val => onChangePath(path, val),
-    [onChangePath, path]
+    [onChangePath, path],
   )
 }
-
-

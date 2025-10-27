@@ -8,13 +8,13 @@ import { Button } from 'libraries/ui'
 import { useFormTranslation } from '../../../localization'
 
 export function DropdownButton<T>(
-  props: { selectorProps: SelectorProps<T>, buttonProps: DropdownButtonDownshiftProps}
+  props: { selectorProps: SelectorProps<T>, buttonProps: DropdownButtonDownshiftProps },
 ): ReactNode {
   const { buttonProps, selectorProps } = props
   const {
     'aria-label': label, readOnly,
     itemIcon, itemToString = String,
-    value, buttonRenderer, placeholder
+    value, buttonRenderer, placeholder,
   } = selectorProps
   const ariaLabel = useDropdownButtonLabel(itemToString(value), label)
 

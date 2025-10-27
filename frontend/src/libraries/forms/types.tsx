@@ -1,7 +1,7 @@
 import React from 'react'
 
-import type {NewValue} from './types/fieldComponent'
-import type {StringPath} from './types/path'
+import type { NewValue } from './types/fieldComponent'
+import type { StringPath } from './types/path'
 
 export * from './types/field'
 export * from './types/fieldComponent'
@@ -49,5 +49,5 @@ export type PathComponent = string | number | symbol
 export interface ConflictData {
   localValue: React.ReactNode
   serverValue: React.ReactNode
-  onResolve(version: Version) : void
+  onResolve(version: Version): void
 }

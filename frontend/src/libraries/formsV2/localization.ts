@@ -16,13 +16,13 @@ const defaultLocalizations = {
   selector: {
     choose: 'Valitse __fieldName__',
     chosen: 'Valittuna nyt __value__',
-    value: 'arvo'
+    value: 'arvo',
   },
 }
 
 type TranslationKey = DataPath<string, typeof defaultLocalizations>
 
-//TODO: implement some good system
+// TODO: implement some good system
 export const useFormTranslation = (key: TranslationKey, substitutions?: Record<string, string>) => {
   const translation = get(key.split('.'), defaultLocalizations)
 

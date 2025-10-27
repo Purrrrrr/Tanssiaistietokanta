@@ -13,8 +13,8 @@ interface SlideEditorProps {
   eventProgram: EventProgramSettings
 }
 
-export function SlideEditor({slide, eventId, eventVersionId, eventProgram}: SlideEditorProps) {
-  const {formProps, state} = useEventProgramEditorForm(eventId, eventVersionId, eventProgram)
+export function SlideEditor({ slide, eventId, eventVersionId, eventProgram }: SlideEditorProps) {
+  const { formProps, state } = useEventProgramEditorForm(eventId, eventVersionId, eventProgram)
 
   return <div>
     <Form {...formProps}>

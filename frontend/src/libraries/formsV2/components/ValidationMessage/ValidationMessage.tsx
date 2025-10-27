@@ -17,7 +17,6 @@ interface ValidationMessageProps<T> extends ValidationProps<T> {
 export function ValidationMessage<T>(props: ValidationMessageProps<T>) {
   const error = useRunValidation(props)
   return <ErrorMessage id={props.id} error={error} />
-
 }
 
 function useRunValidation<T>(props: ValidationMessageProps<T>) {
@@ -34,7 +33,7 @@ function useRunValidation<T>(props: ValidationMessageProps<T>) {
         dispatch(setValidationResult(path, id, errors))
       })
     },
-    [path, id, dispatch, getState, value, validation]
+    [path, id, dispatch, getState, value, validation],
   )
   useEffect(
     () => () => {
@@ -42,7 +41,7 @@ function useRunValidation<T>(props: ValidationMessageProps<T>) {
         dispatch(setValidationResult(path, id, undefined))
       }
     },
-    [path, id, dispatch, getState]
+    [path, id, dispatch, getState],
   )
 
   return error

@@ -1,7 +1,7 @@
-import {useState} from 'react'
+import { useState } from 'react'
 
 import { Button } from 'libraries/ui'
-import {enableNamespaces, getKnownNamespaces} from 'utils/debug'
+import { enableNamespaces, getKnownNamespaces } from 'utils/debug'
 
 export default function DebugManager() {
   const [state, setState] = useState(() => Array.from(getKnownNamespaces().entries()))
@@ -22,8 +22,8 @@ export default function DebugManager() {
               setState(Array.from(getKnownNamespaces().entries()))
             }}
           />
-          {' '+namespace}
-        </label>
+          {' ' + namespace}
+        </label>,
       )}
     </fieldset>
   </>

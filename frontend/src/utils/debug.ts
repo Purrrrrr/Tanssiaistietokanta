@@ -1,6 +1,6 @@
 import debug from 'debug'
 
-const knownNamespaces : string[] = [
+const knownNamespaces: string[] = [
   'socket.io-client',
   'socket.io-client:manager',
   'socket.io-client:url',
@@ -8,7 +8,7 @@ const knownNamespaces : string[] = [
   'dance-organizer',
 ]
 
-export default function createDebugger(namespace : string) {
+export default function createDebugger(namespace: string) {
   const ns = `dance-organizer:${namespace}`
   knownNamespaces.push(ns)
   return debug(ns)
@@ -16,7 +16,7 @@ export default function createDebugger(namespace : string) {
 
 export function getKnownNamespaces(): Map<string, boolean> {
   return new Map(
-    knownNamespaces.map(ns => [ns, debug.enabled(ns)])
+    knownNamespaces.map(ns => [ns, debug.enabled(ns)]),
   )
 }
 

@@ -9,7 +9,7 @@ import type { FieldInputComponent, Nullable } from './inputs'
 export type FieldProps<Output extends Input, Extra, Input, Data = AnyType> =
   ConnectedFieldProps<Output, Extra, Input, Data> & ExternalFieldContainerProps
 
-export function Field<Output extends Input, Extra, Input, Data = AnyType>({containerClassName, inline, label, labelStyle, labelInfo, helperText, ...rest}: FieldProps<Output, Extra, Input, Data>) {
+export function Field<Output extends Input, Extra, Input, Data = AnyType>({ containerClassName, inline, label, labelStyle, labelInfo, helperText, ...rest }: FieldProps<Output, Extra, Input, Data>) {
   const id = useId()
 
   return <FieldContainer

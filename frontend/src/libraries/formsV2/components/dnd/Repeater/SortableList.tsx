@@ -7,7 +7,7 @@ import type { AnyType, DataPath } from '../../../types'
 import { useFormContext } from '../../../context'
 import { SortableItem, SortableItemElement } from './SortableItem'
 
-export type SortableListProps<Value extends ListItem, Data = AnyType> = {
+export interface SortableListProps<Value extends ListItem, Data = AnyType> {
   disabled?: boolean
   dropAreaId: string
   items: ItemData<Value>[]
@@ -27,7 +27,7 @@ export interface ItemCallbackProps<Value, Data> {
 }
 
 export function SortableList<Value extends ListItem, Data = AnyType>({
-  disabled, dropAreaId, items, children, asElement: Wrapper = 'div'
+  disabled, dropAreaId, items, children, asElement: Wrapper = 'div',
 }: SortableListProps<Value, Data>) {
   const { readOnly, dispatch } = useFormContext<Data>()
 
@@ -36,7 +36,7 @@ export function SortableList<Value extends ListItem, Data = AnyType>({
       {items.map((data) =>
         <Wrapper key={data.id}>
           {children?.({ dragHandle: null, ...data, path: data.path as DataPath<Value[], Data>, onRemove: noOp })}
-        </Wrapper>
+        </Wrapper>,
       )}
     </>
   }
@@ -56,7 +56,7 @@ export function SortableList<Value extends ListItem, Data = AnyType>({
             path: data.path as DataPath<Value[], Data>,
             onRemove: () => dispatch({ type: 'REMOVE_ITEM', path: data.path, index: data.index }),
           })}
-        </SortableItem>
+        </SortableItem>,
       )
     }
   </SortableContext>

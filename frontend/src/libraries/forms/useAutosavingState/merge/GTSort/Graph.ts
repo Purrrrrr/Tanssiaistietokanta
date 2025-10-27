@@ -16,10 +16,10 @@ export function makeGraph<T>(nodeIterable: Iterable<T>): Graph<T> {
   const nodes = new Set(nodeIterable)
   const nodeList = Array.from(nodes)
   const incoming = new Map<T, Set<T>>(
-    nodeList.map(node => [node, new Set()])
+    nodeList.map(node => [node, new Set()]),
   )
   const outgoing = new Map<T, Set<T>>(
-    nodeList.map(node => [node, new Set()])
+    nodeList.map(node => [node, new Set()]),
   )
 
   function incomingEdges(node: T) {
@@ -33,10 +33,10 @@ export function makeGraph<T>(nodeIterable: Iterable<T>): Graph<T> {
     return edges
   }
 
-  //Kosaraju's algorithm
+  // Kosaraju's algorithm
   function connectedComponents(): Graph<Set<T>> {
     const visited = new Set<T>()
-    const list : T[] = []
+    const list: T[] = []
 
     function visit(n: T) {
       if (visited.has(n)) return
@@ -95,7 +95,7 @@ export function makeGraph<T>(nodeIterable: Iterable<T>): Graph<T> {
       outgoingEdges(node).forEach(target => {
         incomingEdges(target).delete(node)
       })
-      incomingEdges(node).forEach(source=> {
+      incomingEdges(node).forEach(source => {
         outgoingEdges(source).delete(node)
       })
       incoming.delete(node)
@@ -113,10 +113,10 @@ export function makeGraph<T>(nodeIterable: Iterable<T>): Graph<T> {
     toDot: (nodeToStr) => {
       const edges = Array.from(outgoing.entries())
         .map(([source, outgoingEdges]) =>
-          Array.from(outgoingEdges).map(target => ([source, target] as const))
+          Array.from(outgoingEdges).map(target => ([source, target] as const)),
         )
         .flat()
-        .map(([from, to])=> `${nodeToStr(from)} -> ${nodeToStr(to)}`)
+        .map(([from, to]) => `${nodeToStr(from)} -> ${nodeToStr(to)}`)
         .join('; ')
       return `digraph { ${edges} }`
     },
@@ -124,7 +124,7 @@ export function makeGraph<T>(nodeIterable: Iterable<T>): Graph<T> {
       const graph = makeGraph(nodes)
       outgoing
         .forEach((outgoingEdges, source) =>
-          outgoingEdges.forEach(target => graph.addEdge(source, target))
+          outgoingEdges.forEach(target => graph.addEdge(source, target)),
         )
       return graph
     },

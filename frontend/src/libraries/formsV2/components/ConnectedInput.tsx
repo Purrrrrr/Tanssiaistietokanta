@@ -16,7 +16,7 @@ export type ConnectedInputProps<Output extends Input, Extra, Input, Data = AnyTy
   id: string
 }
 
-export function ConnectedInput<Output extends Input, Extra, Input, Data = AnyType>({path, component: C, id, required, schema, ...extra}: ConnectedInputProps<Output, Extra, Input, Data>) {
+export function ConnectedInput<Output extends Input, Extra, Input, Data = AnyType>({ path, component: C, id, required, schema, ...extra }: ConnectedInputProps<Output, Extra, Input, Data>) {
   const errorId = `${id}-error`
   const inputProps = useFieldSubscription<Output, Input, Data>(
     useCallback((getValueAt) => getValueAt(path), [path]),

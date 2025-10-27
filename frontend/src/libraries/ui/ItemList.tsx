@@ -19,7 +19,7 @@ const listWrapClasses = {
 export default function ItemList({ children, 'wrap-breakpoint': wrapPoint = 'sm', columns }: ItemListProps) {
   const columnCount = typeof columns === 'number' ? columns : undefined
   return <ul
-    style={{'--item-list-cols': columnCount} as React.CSSProperties}
+    style={{ '--item-list-cols': columnCount } as React.CSSProperties}
     className={classNames(
       columnCount
         ? 'grid-cols-[repeat(var(--item-list-cols),minmax(0,1fr))]'

@@ -1,12 +1,12 @@
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import classNames from 'classnames'
 
 import { ColorClass } from '../classes'
-import {Path, useBreadcrumbPaths} from './context'
+import { Path, useBreadcrumbPaths } from './context'
 
-export {Breadcrumb, BreadcrumbContext} from './context'
+export { Breadcrumb, BreadcrumbContext } from './context'
 
-export function Breadcrumbs({label}: {label: string}) {
+export function Breadcrumbs({ label }: { label: string }) {
   const paths = useBreadcrumbPaths()
   // Manually create the breadcrumb element since the Blueprint one is not fully accessible
   return <ul id="breadcrumbs" className="flex flex-wrap gap-2 items-center" aria-label={label}>
@@ -18,7 +18,7 @@ export function Breadcrumbs({label}: {label: string}) {
   </ul>
 }
 
-function Breadcrumb({href, current, text}: Path) {
+function Breadcrumb({ href, current, text }: Path) {
   return <Link
     className={classNames(
       'flex items-center hover:text-link',

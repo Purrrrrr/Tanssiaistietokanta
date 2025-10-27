@@ -1,11 +1,11 @@
 import { modify } from 'partial.lenses'
 
-import {Entity} from './types'
+import { Entity } from './types'
 
 import createDebug from 'utils/debug'
 
-import {apolloClient, DocumentNode} from './apollo'
-import {getSingleKey} from './apolloUtils'
+import { apolloClient, DocumentNode } from './apollo'
+import { getSingleKey } from './apolloUtils'
 
 const debug = createDebug('apolloCache')
 
@@ -13,9 +13,9 @@ export function getApolloCache() {
   return apolloClient.cache
 }
 
-export function appendToListQuery(query : DocumentNode, newValue : Entity) {
+export function appendToListQuery(query: DocumentNode, newValue: Entity) {
   debug('appending to query', newValue)
-  getApolloCache().updateQuery({query}, data => {
+  getApolloCache().updateQuery({ query }, data => {
     const key = getSingleKey(data)
     debug(key)
     debug(data)
@@ -23,14 +23,14 @@ export function appendToListQuery(query : DocumentNode, newValue : Entity) {
   })
 }
 
-export function filterRemovedFromListQuery(query : DocumentNode) {
-  getApolloCache().updateQuery({query}, data => {
+export function filterRemovedFromListQuery(query: DocumentNode) {
+  getApolloCache().updateQuery({ query }, data => {
     const key = getSingleKey(data)
     return modify(key, list => list.filter(isExistingEntity), data)
   })
 }
 
-export function updateEntityFragment(typeName : string, fragment : DocumentNode, data : Entity) {
+export function updateEntityFragment(typeName: string, fragment: DocumentNode, data: Entity) {
   const id = data._id
   if (!id) {
     throw new Error(`Missing id in updated value ${JSON.stringify(data)}`)
@@ -45,11 +45,10 @@ export function updateEntityFragment(typeName : string, fragment : DocumentNode,
 
 const deletedIds = new Set()
 
-export function isExistingEntity(entity : Entity) {
+export function isExistingEntity(entity: Entity) {
   return !deletedIds.has(entity._id)
 }
 
-export function markDeleted(entity : Entity) {
+export function markDeleted(entity: Entity) {
   deletedIds.add(entity._id)
 }
-

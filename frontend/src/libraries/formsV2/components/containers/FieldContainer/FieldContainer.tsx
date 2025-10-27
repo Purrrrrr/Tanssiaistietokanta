@@ -1,13 +1,13 @@
 import { FieldContainerProps } from './types'
 
-import {FormGroup} from 'libraries/ui'
+import { FormGroup } from 'libraries/ui'
 
 import { useFieldStyle } from '../context'
 import { HiddenLabel } from './HiddenLabel'
 
 export function FieldContainer(props: FieldContainerProps) {
   const {
-    labelFor, containerClassName, label, labelInfo, helperText, children, conflictElement
+    labelFor, containerClassName, label, labelInfo, helperText, children, conflictElement,
   } = props
   const { inline, labelStyle } = useFieldStyle(props)
   const formGroupId = `${labelFor}--formgroup`

@@ -1,17 +1,17 @@
 import { ID, Operation, PatchGenerator } from './types'
-import {Entity} from '../types'
+import { Entity } from '../types'
 
-import {mapToIds} from '../idUtils'
+import { mapToIds } from '../idUtils'
 
 export function arrayPatch<T extends Entity>(original: T[], changed: T[], toJSONPatch: PatchGenerator, pathBase = ''): Operation[] {
-  const patch : Operation[] = []
+  const patch: Operation[] = []
   const originalIds = mapToIds(original)
   const modifiedIds = mapToIds(changed)
   const originalIndexesById = new Map(
-    originalIds.map((id, index) => [id, index])
+    originalIds.map((id, index) => [id, index]),
   )
   const modifiedIndexesById = new Map(
-    modifiedIds.map((id, index) => [id, index])
+    modifiedIds.map((id, index) => [id, index]),
   )
   const commonIds = new Set([...originalIds, ...modifiedIds])
 
@@ -42,13 +42,13 @@ export function arrayPatch<T extends Entity>(original: T[], changed: T[], toJSON
   const movedIntoPlaceFrom = new Map<ID, number>()
 
   let i = 0
-  while(indexInModified < modifiedIds.length || indexInOriginal < originalIds.length) {
+  while (indexInModified < modifiedIds.length || indexInOriginal < originalIds.length) {
     i++
-    if (i > 99) return patch //throw new Error('baaa')
+    if (i > 99) return patch // throw new Error('baaa')
     const id = modifiedIds[indexInModified]
     const originalId = originalIds[indexInOriginal]
 
-    if (id && !originalIndexesById.has(id)) { //Add
+    if (id && !originalIndexesById.has(id)) { // Add
       patch.push({
         op: 'add',
         path: `${pathBase}/${indexInModified}`,
@@ -61,7 +61,7 @@ export function arrayPatch<T extends Entity>(original: T[], changed: T[], toJSON
 
     const originalMovedTo = modifiedIndexesById.get(originalId)
 
-    if (originalMovedTo === undefined) { //Remove
+    if (originalMovedTo === undefined) { // Remove
       testId(indexInModified, originalId)
       patch.push({
         op: 'remove',
@@ -92,7 +92,7 @@ export function arrayPatch<T extends Entity>(original: T[], changed: T[], toJSON
       + movedIntoBefore
       + addRemove
 
-    //A moved item
+    // A moved item
     testId(from, id)
     patch.push({
       op: 'move',
@@ -108,7 +108,7 @@ export function arrayPatch<T extends Entity>(original: T[], changed: T[], toJSON
 
 function count<T>(i: Iterable<T>, pred: (i: T) => boolean): number {
   let result = 0
-  for(const item of i) {
+  for (const item of i) {
     if (pred(item)) result++
   }
   return result

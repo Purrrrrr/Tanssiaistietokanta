@@ -1,9 +1,9 @@
-import {ID, mapMergeData, MergeData } from '../../types'
+import { ID, mapMergeData, MergeData } from '../../types'
 
 import { getTopNodes } from './comparisons'
-import {Graph, makeGraph} from './Graph'
+import { Graph, makeGraph } from './Graph'
 
-const log : (...a: unknown[]) => void = () => { /* */ }
+const log: (...a: unknown[]) => void = () => { /* */ }
 
 type InputData = MergeData<{
   id: ID
@@ -33,11 +33,11 @@ interface Node {
 
 /** Merge deletes and modifications */
 export function GTSort(mergeIds: InputData) {
-  const analyzedIds = mapMergeData(mergeIds, idData=> {
-    const ids = idData.map(({id}) => id)
+  const analyzedIds = mapMergeData(mergeIds, idData => {
+    const ids = idData.map(({ id }) => id)
     const idToIndex = new Map(ids.map((id, index) => [id, index]))
     const at = (i: number) => ids[i]
-    const nodes : Node[] = idData.map(({id, isAdded, removedInOtherVersion}, index) => ({
+    const nodes: Node[] = idData.map(({ id, isAdded, removedInOtherVersion }, index) => ({
       id,
       index,
       previous: null,
@@ -48,8 +48,8 @@ export function GTSort(mergeIds: InputData) {
     }))
     const nodeAt = (i: number) => nodes[i]
     nodes.forEach((node, index) => {
-      node.previous = nodeAt(index-1) ?? null
-      node.next = nodeAt(index+1) ?? null
+      node.previous = nodeAt(index - 1) ?? null
+      node.next = nodeAt(index + 1) ?? null
     })
     const indexOf = idToIndex.get.bind(idToIndex)
     const hasPathBetween = (from: ID, to: ID) => {
@@ -63,7 +63,7 @@ export function GTSort(mergeIds: InputData) {
       length: ids.length,
       toNode: (id: ID) => {
         const index = indexOf(id)
-        if (index === undefined) throw new Error('Unknown node id '+id)
+        if (index === undefined) throw new Error('Unknown node id ' + id)
         return nodeAt(index)
       },
       hasPathBetween,
@@ -106,20 +106,19 @@ export function GTSort(mergeIds: InputData) {
   log(localVersion)
 
   return {
-    serverVersion, localVersion
+    serverVersion, localVersion,
   }
 }
-
 
 function addEdges(mergedGraph: Graph<ID>, original: AnalyzedList, version1: AnalyzedList, version2: AnalyzedList) {
   if (version1.length === 0) return
   let fromNode = version1.nodes[0]
-  let lastInOriginal : ID | null = null
+  let lastInOriginal: ID | null = null
 
   const debug = [fromNode.id]
-  while(fromNode.next) {
-    const {id: from, isAdded, removedInOtherVersion} = fromNode
-    const {id: to, removedInOtherVersion: removedInOtherVersion2} = fromNode.next
+  while (fromNode.next) {
+    const { id: from, isAdded, removedInOtherVersion } = fromNode
+    const { id: to, removedInOtherVersion: removedInOtherVersion2 } = fromNode.next
     fromNode = fromNode.next
 
     const originalHasPath = original.hasPathBetween(from, to)
@@ -133,12 +132,12 @@ function addEdges(mergedGraph: Graph<ID>, original: AnalyzedList, version1: Anal
     if (isAdded && lastInOriginal !== null) {
       const v2HasTransitivePath = version2.hasPathBetween(lastInOriginal, to)
       const originalHasTransitivePath = original.hasPathBetween(lastInOriginal, to)
-      //log({from, to, lastInOriginal, originalHasTransitivePath, v2HasTransitivePath})
+      // log({from, to, lastInOriginal, originalHasTransitivePath, v2HasTransitivePath})
       if (originalHasTransitivePath && !v2HasTransitivePath) {
         debug.push(` | ${to}`)
         continue
       }
-    } else if (!isAdded){
+    } else if (!isAdded) {
       lastInOriginal = from
     }
 
@@ -152,7 +151,7 @@ function lastAddedNodesAfter(id: ID, data: MergeData<AnalyzedList>): ID[] {
   return [data.local, data.server]
     .map(versionData => {
       let candidate = versionData.toNode(id)
-      while(candidate?.next?.isAdded) {
+      while (candidate?.next?.isAdded) {
         candidate = candidate.next
       }
       return candidate
@@ -169,7 +168,7 @@ function getCommonPredecessor(node, data: MergeData<AnalyzedList>) {
   const visitedLocal = new Set()
   const visitedServer = new Set()
 
-  for(;;) {
+  for (;;) {
     const local = data.local.at(localIndex)
     const server = data.server.at(serverIndex)
     if (!local && !server) break
@@ -193,7 +192,7 @@ function getCommonSuccessor(node, data: MergeData<AnalyzedList>) {
   const visitedLocal = new Set()
   const visitedServer = new Set()
 
-  for(;;) {
+  for (;;) {
     const local = data.local.at(localIndex)
     const server = data.server.at(serverIndex)
     if (!local && !server) break
@@ -224,29 +223,29 @@ function topologicalSort(graph: Graph<ID>, data: MergeData<AnalyzedList>, prefer
 
   function selectNode(component: Set<ID>): ID {
     const candidates = Array.from(component).filter(node => marked.has(node))
-    //console.log('!! '+candidates.join(', '))
+    // console.log('!! '+candidates.join(', '))
 
     const top = getTopNodes(
       candidates,
       id => successors.has(id),
       id => {
         const indexOfCandidate = preferredVersion.indexOf(id) ?? Infinity
-        //Prefer candidates that are first in the list
-        //log(id, -indexOfCandidate)
+        // Prefer candidates that are first in the list
+        // log(id, -indexOfCandidate)
         return -indexOfCandidate
       },
       id => {
         const indexOfCandidate = otherVersion.indexOf(id) ?? Infinity
-        //Prefer candidates that are first in the list
-        //log(id, -indexOfCandidate)
+        // Prefer candidates that are first in the list
+        // log(id, -indexOfCandidate)
         return -indexOfCandidate
-      }
+      },
     )
     if (top.length > 1) {
-      console.log('!! multiple nodes '+top.join(', '))
+      console.log('!! multiple nodes ' + top.join(', '))
       throw new Error('Can\'t decide next node. This should not happen')
     } else {
-      //log('!! one '+top[0])
+      // log('!! one '+top[0])
     }
 
     return top[0]
@@ -254,13 +253,13 @@ function topologicalSort(graph: Graph<ID>, data: MergeData<AnalyzedList>, prefer
   const setToString = com => `{ ${Array.from(com).map(String).join(', ')} }`
 
   function getRank(c: Set<ID>): number {
-    //The higher numbers go first
-    if (c.size > 1) return 1 //Complex group, probably not added
+    // The higher numbers go first
+    if (c.size > 1) return 1 // Complex group, probably not added
     const id = firstItem(c)
 
-    if (data.original.has(id)) return 1 //Not added
-    if (data.local.has(id)) return 2 //Added to local
-    if (data.server.has(id)) return 3 //Added to server
+    if (data.original.has(id)) return 1 // Not added
+    if (data.local.has(id)) return 2 // Added to local
+    if (data.server.has(id)) return 3 // Added to server
     throw new Error('??')
   }
   function getStartIndexInPreferred(c: Set<ID>): number {
@@ -272,7 +271,7 @@ function topologicalSort(graph: Graph<ID>, data: MergeData<AnalyzedList>, prefer
     return -(otherVersion.indexOf(node) ?? Infinity)
   }
 
-  while(!graph.isEmpty()) {
+  while (!graph.isEmpty()) {
     const sourceComponents = new Set(components.sourceNodes())
 
     const topComponents = getTopNodes(sourceComponents,
@@ -281,7 +280,7 @@ function topologicalSort(graph: Graph<ID>, data: MergeData<AnalyzedList>, prefer
       getStartIndexInOther,
     )
 
-    //console.log(`Choices ${Array.from(sourceComponents).map(setToString).join(', ')}`)
+    // console.log(`Choices ${Array.from(sourceComponents).map(setToString).join(', ')}`)
     if (topComponents.length > 1) {
       console.log(`Many choices ${topComponents.map(setToString).join(', ')}`)
       topComponents.forEach(comp => {
@@ -291,9 +290,9 @@ function topologicalSort(graph: Graph<ID>, data: MergeData<AnalyzedList>, prefer
     }
 
     const component = topComponents[0]
-    const selected : ID[] = []
+    const selected: ID[] = []
 
-    while(component.size > 0) {
+    while (component.size > 0) {
       const node = selectNode(component)
       selected.push(node)
       const edges = graph.outgoingEdges(node)
@@ -309,13 +308,13 @@ function topologicalSort(graph: Graph<ID>, data: MergeData<AnalyzedList>, prefer
       }
       component.delete(node)
       graph.removeNode(node)
-      //log(graph.toDot(String))
+      // log(graph.toDot(String))
     }
 
-    //log('Selected: '+selected.join(', '))
+    // log('Selected: '+selected.join(', '))
     components.removeNode(component)
     sourceComponents.delete(component)
-    //log(components.toDot(setToString))
+    // log(components.toDot(setToString))
   }
 
   return merged
@@ -324,7 +323,6 @@ function topologicalSort(graph: Graph<ID>, data: MergeData<AnalyzedList>, prefer
 function firstNode(nodes: Set<ID>, list: AnalyzedList): ID {
   return getTopNodes(nodes, id => -(list.indexOf(id) ?? Infinity))[0]
 }
-
 
 function firstItem<T>(set: Set<T>): T {
   return Array.from(set)[0]

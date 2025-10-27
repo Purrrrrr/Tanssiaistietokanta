@@ -1,34 +1,34 @@
-import React, {useCallback, useState} from 'react'
+import React, { useCallback, useState } from 'react'
 
-import {Event, EventProgram as EventProgramType} from 'types'
+import { Event, EventProgram as EventProgramType } from 'types'
 
-import {usePatchEvent} from 'services/events'
-import {AdminOnly} from 'services/users'
-import {useCreateWorkshop, useDeleteWorkshop} from 'services/workshops'
+import { usePatchEvent } from 'services/events'
+import { AdminOnly } from 'services/users'
+import { useCreateWorkshop, useDeleteWorkshop } from 'services/workshops'
 
-import {DateField, DateRangeField, formFor, patchStrategy, SyncStatus, useAutosavingState} from 'libraries/forms'
-import {Button, Card, Collapse, H2} from 'libraries/ui'
+import { DateField, DateRangeField, formFor, patchStrategy, SyncStatus, useAutosavingState } from 'libraries/forms'
+import { Button, Card, Collapse, H2 } from 'libraries/ui'
 import { JSONPatch } from 'components/event/EventProgramForm/patchStrategy'
-import {useGlobalLoadingAnimation} from 'components/LoadingState'
-import {VersionedPageTitle} from 'components/versioning/VersionedPageTitle'
-import {VersionSidebarToggle} from 'components/versioning/VersionSidebarToggle'
-import {DeleteButton} from 'components/widgets/DeleteButton'
-import {NavigateButton} from 'components/widgets/NavigateButton'
-import {newInstance, WorkshopEditor} from 'components/WorkshopEditor'
-import {useFormatDate, useFormatDateTime, useT, useTranslation} from 'i18n'
+import { useGlobalLoadingAnimation } from 'components/LoadingState'
+import { VersionedPageTitle } from 'components/versioning/VersionedPageTitle'
+import { VersionSidebarToggle } from 'components/versioning/VersionSidebarToggle'
+import { DeleteButton } from 'components/widgets/DeleteButton'
+import { NavigateButton } from 'components/widgets/NavigateButton'
+import { newInstance, WorkshopEditor } from 'components/WorkshopEditor'
+import { useFormatDate, useFormatDateTime, useT, useTranslation } from 'i18n'
 
 type Workshop = Event['workshops'][0]
 
 const {
   Input,
-  Form
+  Form,
 } = formFor<Event>()
 
 const eventVersionLink = (id: string, versionId?: null | string) => versionId
   ? `/events/${id}/version/${versionId}`
   : `/events/${id}`
 
-export default function EventPage({event}: {event: Event}) {
+export default function EventPage({ event }: { event: Event }) {
   const t = useT('pages.events.eventPage')
   const { _versionId, _versionNumber } = event
   const readOnly = _versionId != undefined
@@ -45,7 +45,7 @@ export default function EventPage({event}: {event: Event}) {
   </>
 }
 
-function EventDetails({event, readOnly}: {event: Event, readOnly: boolean}) {
+function EventDetails({ event, readOnly }: { event: Event, readOnly: boolean }) {
   const [showEditor, setShowEditor] = useState(false)
   const t = useT('pages.events.eventPage')
   const formatDate = useFormatDate()
@@ -67,18 +67,18 @@ function EventDetails({event, readOnly}: {event: Event, readOnly: boolean}) {
   </>
 }
 
-function EventDetailsForm({event}: {event: Event}) {
+function EventDetailsForm({ event }: { event: Event }) {
   const t = useT('pages.events.eventPage')
   const [patchEvent] = usePatchEvent()
   const patch = useCallback(
-    (eventPatch: JSONPatch) => patchEvent({ id: event._id, event: eventPatch}),
-    [event._id, patchEvent]
+    (eventPatch: JSONPatch) => patchEvent({ id: event._id, event: eventPatch }),
+    [event._id, patchEvent],
   )
-  const {state, formProps} = useAutosavingState<Event, JSONPatch>(event, patch, patchStrategy.jsonPatch)
+  const { state, formProps } = useAutosavingState<Event, JSONPatch>(event, patch, patchStrategy.jsonPatch)
 
   return <Form {...formProps}>
     <Card>
-      <SyncStatus state={state} floatRight/>
+      <SyncStatus state={state} floatRight />
       <div className="flex gap-6">
         <Input label={t('eventName')} path="name" required containerClassName="w-100" />
         <DateRangeField<Event>
@@ -100,7 +100,7 @@ function EventDetailsForm({event}: {event: Event}) {
   </Form>
 }
 
-function EventProgram({program, readOnly}: {program: EventProgramType, readOnly: boolean}) {
+function EventProgram({ program, readOnly }: { program: EventProgramType, readOnly: boolean }) {
   const t = useT('pages.events.eventPage')
   if (!program || program.danceSets.length === 0) {
     return <>
@@ -112,10 +112,10 @@ function EventProgram({program, readOnly}: {program: EventProgramType, readOnly:
   return <>
     <Card>
       {program.danceSets.map((danceSet, index) =>
-        <p key={index} >
+        <p key={index}>
           <strong>{danceSet.title}</strong>:{' '}
           {formatDances(danceSet.program)}
-        </p>
+        </p>,
       )}
     </Card>
     <p>
@@ -131,12 +131,12 @@ function EventProgram({program, readOnly}: {program: EventProgramType, readOnly:
 
   function formatDances(program) {
     const danceNames = program
-      .filter(({item}) => item.__typename !== 'EventProgram' || item.showInLists)
+      .filter(({ item }) => item.__typename !== 'EventProgram' || item.showInLists)
       .map(row => row.item.name)
       .filter(a => a)
     const requestedDanceCount = program.filter(isRequestedDance).length
     if (requestedDanceCount) {
-      danceNames.push(t('requestedDance', {count: requestedDanceCount}))
+      danceNames.push(t('requestedDance', { count: requestedDanceCount }))
     }
 
     return danceNames.join(', ')
@@ -145,8 +145,8 @@ function EventProgram({program, readOnly}: {program: EventProgramType, readOnly:
 
 const isRequestedDance = row => row.item.__typename === 'RequestedDance'
 
-function EventWorkshops({event, readOnly}: {event: Event, readOnly: boolean}) {
-  const {workshops, _id: eventId, beginDate, endDate} = event
+function EventWorkshops({ event, readOnly }: { event: Event, readOnly: boolean }) {
+  const { workshops, _id: eventId, beginDate, endDate } = event
   const t = useT('pages.events.eventPage')
   return <>
     <div className="my-4">
@@ -158,7 +158,7 @@ function EventWorkshops({event, readOnly}: {event: Event, readOnly: boolean}) {
           reservedAbbreviations={workshops.filter(w => w._id !== workshop._id).map(w => w.abbreviation).filter(a => a) as string[]}
           beginDate={beginDate}
           endDate={endDate}
-        />
+        />,
       )}
     </div>
     <p>
@@ -171,21 +171,21 @@ function EventWorkshops({event, readOnly}: {event: Event, readOnly: boolean}) {
   </>
 }
 
-function CreateWorkshopButton({eventId, startDate}) {
+function CreateWorkshopButton({ eventId, startDate }) {
   const t = useT('pages.events.eventPage')
   const addLoadingAnimation = useGlobalLoadingAnimation()
   const [createWorkshop] = useCreateWorkshop()
 
   return <AdminOnly>
     <Button
-      onClick={() => addLoadingAnimation(createWorkshop(newWorkshop({eventId, name: t('newWorkshop')}, startDate)))}
+      onClick={() => addLoadingAnimation(createWorkshop(newWorkshop({ eventId, name: t('newWorkshop') }, startDate)))}
       color="primary"
       text={t('createWorkshop')}
     />
   </AdminOnly>
 }
 
-function newWorkshop({eventId, name}, startDate) {
+function newWorkshop({ eventId, name }, startDate) {
   const { dances: _, ...instance } = newInstance(undefined, startDate)
   return {
     eventId: eventId,
@@ -193,35 +193,35 @@ function newWorkshop({eventId, name}, startDate) {
       name,
       instanceSpecificDances: false,
       instances: [
-        {danceIds: [], description: '', ...instance}
-      ]
-    }
+        { danceIds: [], description: '', ...instance },
+      ],
+    },
   }
 }
 
 function WorkshopCard(
   {
-    workshop, reservedAbbreviations, beginDate, endDate, readOnly
+    workshop, reservedAbbreviations, beginDate, endDate, readOnly,
   }: {
     workshop: Workshop
     reservedAbbreviations: string[]
     readOnly: boolean
     beginDate: string
     endDate: string
-  }
+  },
 ) {
   const t = useT('pages.events.eventPage')
   const addLoadingAnimation = useGlobalLoadingAnimation()
   const [showEditor, setShowEditor] = useState(false)
-  const [deleteWorkshop] = useDeleteWorkshop({refetchQueries: ['getEvent']})
-  const {_id, abbreviation, name } = workshop
+  const [deleteWorkshop] = useDeleteWorkshop({ refetchQueries: ['getEvent'] })
+  const { _id, abbreviation, name } = workshop
 
-  return <Card marginClass="" style={{clear: 'right'}}>
+  return <Card marginClass="" style={{ clear: 'right' }}>
     { readOnly ||
       <>
-        <DeleteButton onDelete={() => addLoadingAnimation(deleteWorkshop({id: _id}))}
+        <DeleteButton onDelete={() => addLoadingAnimation(deleteWorkshop({ id: _id }))}
           className="float-right" text="Poista"
-          confirmText={'Haluatko varmasti poistaa työpajan '+name+'?'}
+          confirmText={'Haluatko varmasti poistaa työpajan ' + name + '?'}
         />
         <Button
           onClick={() => setShowEditor(!showEditor)}
@@ -242,10 +242,10 @@ function WorkshopCard(
   </Card>
 }
 
-function WorkshopSummary({workshop}: {workshop: Workshop}) {
+function WorkshopSummary({ workshop }: { workshop: Workshop }) {
   const t = useT('pages.events.eventPage')
   const formatDateTime = useFormatDateTime()
-  const {instanceSpecificDances, instances, description, teachers} = workshop
+  const { instanceSpecificDances, instances, description, teachers } = workshop
 
   return <>
     <p>{description}</p>
@@ -257,7 +257,7 @@ function WorkshopSummary({workshop}: {workshop: Workshop}) {
           <p>
             {t('dances')} : {instance?.dances?.map(d => d.name)?.join(', ')}
           </p>
-        </React.Fragment>
+        </React.Fragment>,
       )
       : <>
         <h3 className="my-1 text-base font-bold">{instances.map(instance => formatDateTime(new Date(instance.dateTime))).join(', ')}</h3>
@@ -265,5 +265,4 @@ function WorkshopSummary({workshop}: {workshop: Workshop}) {
       </>
     }
   </>
-
 }

@@ -1,7 +1,7 @@
 import createDebug from 'utils/debug'
-import {getOrComputeDefault} from 'utils/map'
+import { getOrComputeDefault } from 'utils/map'
 
-import {makeFeathersRequest, socket} from './feathers'
+import { makeFeathersRequest, socket } from './feathers'
 
 const debug = createDebug('channels')
 
@@ -22,14 +22,14 @@ socket.on('disconnect', () => {
 
 const listenersByChannel = new Map<string, Set<unknown>>()
 
-export function ensureChannelIsOpen(channel : string, listenerId: unknown) {
+export function ensureChannelIsOpen(channel: string, listenerId: unknown) {
   const listeners = getListeners(channel)
   if (socketConnected && listeners.size === 0) {
     openChannel(channel)
   }
   listeners.add(listenerId)
 }
-export function closeChannelIfUnsused(channel : string, listenerId: unknown) {
+export function closeChannelIfUnsused(channel: string, listenerId: unknown) {
   const listeners = getListeners(channel)
   listeners.delete(listenerId)
   if (socketConnected && listeners.size === 0) {
@@ -37,16 +37,16 @@ export function closeChannelIfUnsused(channel : string, listenerId: unknown) {
   }
 }
 
-function getListeners(channel : string) : Set<unknown> {
+function getListeners(channel: string): Set<unknown> {
   return getOrComputeDefault(listenersByChannel, channel, () => new Set())
 }
 
-async function openChannel(channel : string) {
+async function openChannel(channel: string) {
   debug(`enable channel ${channel}`)
-  const result = await makeFeathersRequest('channel-connections', 'create', {name: channel})
+  const result = await makeFeathersRequest('channel-connections', 'create', { name: channel })
   debug('current channels: ', result)
 }
-async function closeChannel(channel : string) {
+async function closeChannel(channel: string) {
   debug(`disable channel ${channel}`)
   const result = await makeFeathersRequest('channel-connections', 'remove', channel)
   debug('current channels: ', result)

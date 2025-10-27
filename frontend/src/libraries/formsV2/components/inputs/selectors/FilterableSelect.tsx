@@ -36,7 +36,7 @@ export default function FilterableSelect<T>(props: SelectorProps<T>) {
     selectedItem: value,
     itemToString: valueToString,
     onSelectedItemChange: ({ selectedItem }) => onChange(selectedItem as T),
-    onInputValueChange: async ({ inputValue}) => {
+    onInputValueChange: async ({ inputValue }) => {
       // Try to keep the hilighted item the same
       const previousHilight = filteredItemData[highlightedIndex]
       const newItems = await updateFilter(inputValue)
@@ -64,11 +64,11 @@ export default function FilterableSelect<T>(props: SelectorProps<T>) {
       <input
         tabIndex={isOpen ? 0 : -1}
         placeholder={filterPlaceholder}
-        className={CssClass.input+' w-full'}
+        className={CssClass.input + ' w-full'}
         {...getInputProps({ onKeyDown: disableHomeAndEndKeys }, { suppressRefError: true })}
         onClick={undefined}
       />
-      <Menu {...getMenuProps({}, {suppressRefError: true})} tabIndex={-1}>
+      <Menu {...getMenuProps({}, { suppressRefError: true })} tabIndex={-1}>
         {renderMenuItems(filteredItemData, categoryTitleRenderer, (item, index) => (
           <MenuItem
             highlight={highlightedIndex === index}
@@ -83,7 +83,7 @@ export default function FilterableSelect<T>(props: SelectorProps<T>) {
 }
 
 const disableHomeAndEndKeys = preventDownshiftDefaultWhen<KeyboardEvent>(
-  e => e.key === 'Home' || e.key === 'End'
+  e => e.key === 'Home' || e.key === 'End',
 )
 
 function clearInputOnBlurReducer<T>(state: UseComboboxState<T>, { type, changes }: UseComboboxStateChangeOptions<T>): Partial<UseComboboxState<T>> {

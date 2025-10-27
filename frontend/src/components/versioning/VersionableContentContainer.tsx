@@ -5,9 +5,9 @@ import { VersionSidebarProps } from './types'
 import VersionSidebar from './VersionSidebar'
 
 interface VersionSidebarPropsAndId extends Omit<VersionSidebarProps, 'onClose'> {
-  //The id of the button that opened the sidebar.
-  //Only one button at a time opens the sidebar
-  //and that button must supply the props to it;
+  // The id of the button that opened the sidebar.
+  // Only one button at a time opens the sidebar
+  // and that button must supply the props to it;
   buttonId: string
 }
 
@@ -20,25 +20,25 @@ interface VersionSidebarToggleContextType {
 export const VersionSidebarToggleContext = createContext<VersionSidebarToggleContextType>({
   toggleSidebar: () => {},
   updateVersion: () => {},
-  hideSidebar: () => {}
+  hideSidebar: () => {},
 })
 
-export default function VersionableContentContainer({children}) {
+export default function VersionableContentContainer({ children }) {
   const [sidebarProps, setSidebarProps] = useState<VersionSidebarPropsAndId | null>(null)
 
   const context = useMemo(() => ({
     toggleSidebar: (props: VersionSidebarPropsAndId) => {
-      //Acts as a toggle
+      // Acts as a toggle
       setSidebarProps(
-        existing => existing?.buttonId  === props.buttonId ? null : props
+        existing => existing?.buttonId === props.buttonId ? null : props,
       )
     },
     updateVersion: (props: VersionSidebarPropsAndId) => {
       setSidebarProps(
-        existing => existing?.buttonId === props.buttonId ? props : existing
+        existing => existing?.buttonId === props.buttonId ? props : existing,
       )
     },
-    hideSidebar: () => setSidebarProps(null)
+    hideSidebar: () => setSidebarProps(null),
   }), [])
 
   return <VersionSidebarToggleContext.Provider value={context}>

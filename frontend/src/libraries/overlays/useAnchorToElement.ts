@@ -31,7 +31,7 @@ function updateElementPosition(
   element: HTMLElement,
   anchorElement: Element,
   spacing: number,
-  callback?: (props: AnchoringCallbackProps) => void
+  callback?: (props: AnchoringCallbackProps) => void,
 ) {
   const anchor = anchorElement.getBoundingClientRect()
   const { clientHeight: elementHWithPadding, clientWidth: elementWWithPadding } = element
@@ -56,14 +56,14 @@ function updateElementPosition(
     }
   }
   const top = pointDown
-    ? anchor.top + anchor.height + spacing- transparentPadding
+    ? anchor.top + anchor.height + spacing - transparentPadding
     : anchor.top - elementH - transparentPadding
 
   const centeredLeft = anchor.left + (anchor.width - elementW) / 2 - transparentPadding
   const left = clamp({
     min: margin,
     max: winW - elementW - margin,
-    value: centeredLeft
+    value: centeredLeft,
   })
   const maxH = clamp({
     min: 200,
@@ -81,4 +81,4 @@ function updateElementPosition(
 }
 
 export const toPx = (value: number) => `${value}px`
-const clamp = ({value, min = -Infinity, max = Infinity}: { value: number, min?: number, max?: number}) => Math.min(max, Math.max(min, value))
+const clamp = ({ value, min = -Infinity, max = Infinity }: { value: number, min?: number, max?: number }) => Math.min(max, Math.max(min, value))

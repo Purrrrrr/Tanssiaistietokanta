@@ -2,10 +2,10 @@ import { useState } from 'react'
 
 import type { InternalItemData, ItemCategory, Items, ItemToString, SyncItems } from './types'
 
-const emptyResult : InternalItemData<unknown> = {
+const emptyResult: InternalItemData<unknown> = {
   showCategories: false,
   categories: [],
-  items: []
+  items: [],
 }
 
 export function useItems<T>(items: Items<T>) {
@@ -34,7 +34,7 @@ export function useFilteredItems<T>(items: Items<T>, itemToString: ItemToString<
 
   return [
     filteredItems,
-    updateFilter
+    updateFilter,
   ] as const
 }
 
@@ -44,16 +44,15 @@ async function getItems<T>(items: Items<T>, filter: string, itemToString: ItemTo
   }
   if (Array.isArray(items)) {
     return filterItemList(items, filter, itemToString)
-
   }
 
   return {
     categories: items.categories
       .map(category => ({
         ...category,
-        items: filterItemList(category.items, filter, itemToString)
+        items: filterItemList(category.items, filter, itemToString),
       }))
-      .filter(categoryHasItems)
+      .filter(categoryHasItems),
   }
 }
 
@@ -64,7 +63,7 @@ export function filterItemList<T>(items: T[], rawFilter: string, itemToString: I
       const indexOfFilter = itemToString(item).toLowerCase().indexOf(filter)
 
       return {
-        item, indexOfFilter, index
+        item, indexOfFilter, index,
       }
     })
     .filter(hit => hit.indexOfFilter >= 0)
@@ -82,7 +81,7 @@ function toItemData<T>(items: SyncItems<T>): InternalItemData<T> {
     return {
       showCategories: false,
       items,
-      categories: [{ items, title: '' }]
+      categories: [{ items, title: '' }],
     }
   }
 

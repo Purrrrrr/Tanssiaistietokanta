@@ -2,9 +2,9 @@ import { createContext, useContext, useMemo } from 'react'
 
 import { FieldStyleContextProps } from './types'
 
-const defaults : FieldStyleContextProps = {
+const defaults: FieldStyleContextProps = {
   inline: false,
-  labelStyle: 'above'
+  labelStyle: 'above',
 }
 const FieldStyleReactContext = createContext<FieldStyleContextProps>(defaults)
 

@@ -8,7 +8,7 @@ interface PrintTableProps {
   className?: string
 }
 
-export function PrintTable({children, headings, className} : PrintTableProps) {
+export function PrintTable({ children, headings, className }: PrintTableProps) {
   return <table className={classNames(className, 'printTable')}>
     {headings && <thead>
       <tr>

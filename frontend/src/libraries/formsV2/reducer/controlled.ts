@@ -19,7 +19,7 @@ export function useFormReducer<Data>(externalValue: Data, onChange: (changed: Da
 
   useEffect(
     () => { trigger({ ...state, data: externalValue }) },
-    [state, externalValue, trigger]
+    [state, externalValue, trigger],
   )
 
   const dispatch = useCallback(
@@ -32,7 +32,7 @@ export function useFormReducer<Data>(externalValue: Data, onChange: (changed: Da
         dispatch_rest(action)
       }
     },
-    [onChange, dispatch_rest]
+    [onChange, dispatch_rest],
   )
 
   return {

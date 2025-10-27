@@ -1,4 +1,4 @@
-import type {ChangeEvent} from 'react'
+import type { ChangeEvent } from 'react'
 
 export type ChangeListener = () => unknown
 export type NewValue<T> = T | ((t: T) => T)

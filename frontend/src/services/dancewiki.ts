@@ -13,7 +13,7 @@ setupServiceUpdateFragment(
     categories
     formations
     instructions
-  }`
+  }`,
 )
 
 const nameSearchQuery = graphql(`

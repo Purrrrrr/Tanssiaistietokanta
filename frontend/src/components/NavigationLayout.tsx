@@ -1,17 +1,17 @@
 import classNames from 'classnames'
 
-import {BreadcrumbContext, ColorClass, Link, RegularLink} from 'libraries/ui'
-import {T, useTranslation} from 'i18n'
+import { BreadcrumbContext, ColorClass, Link, RegularLink } from 'libraries/ui'
+import { T, useTranslation } from 'i18n'
 
 import DebugManager from './DebugManager'
-import {GlobalLoadingState}  from './LoadingState'
+import { GlobalLoadingState } from './LoadingState'
 import Navigation from './Navigation'
 import { SidebarContainer, SidebarContext } from './SideBar'
-import {SupportedBrowserChecker} from './SupportedBrowserWarning'
+import { SupportedBrowserChecker } from './SupportedBrowserWarning'
 
 import './NavigationLayout.sass'
 
-function NavigationLayout({children}) {
+function NavigationLayout({ children }) {
   if (navigationHidden()) {
     return <BreadcrumbContext>
       <GlobalLoadingState>
@@ -27,7 +27,7 @@ function NavigationLayout({children}) {
         <SupportedBrowserChecker />
         <SkipToMainContent />
         <div id="layout">
-          <Navigation/>
+          <Navigation />
           <main id="main-content">
             {children}
           </main>

@@ -7,7 +7,7 @@ export interface VersionSidebarProps {
   entityId: ID
   versionId?: ID
   toVersionLink: (id: string, versionId?: string | null) => string
-  //Todo: split into types with and without this
+  // Todo: split into types with and without this
   onClose: () => void
 }
 

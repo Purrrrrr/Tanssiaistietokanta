@@ -56,10 +56,10 @@ export function DanceViewCategorySelector({ id, value, onChange, dances }: Dance
   const items = [
     anyCategory,
     '',
-    ...categories
+    ...categories,
   ] as DanceViewCategory[]
 
-  const countsByCategory : Map<DanceViewCategory, Dance[]> = Map.groupBy(dances, dance => dance.category ?? '')
+  const countsByCategory: Map<DanceViewCategory, Dance[]> = Map.groupBy(dances, dance => dance.category ?? '')
   countsByCategory.set(anyCategory, dances)
   const itemToString = (category: DanceViewCategory) => {
     if (category === anyCategory) return t('anyCategory')
@@ -79,5 +79,4 @@ export function DanceViewCategorySelector({ id, value, onChange, dances }: Dance
     </>}
     items={items}
   />
-
 }

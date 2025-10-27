@@ -25,7 +25,7 @@ export default function UiShowcase() {
     <p className="flex flex-wrap gap-[0.7ch]">
       <span>Available showcases:</span>
       {showcases.map(scase =>
-        <RegularLink key={scase.title} href={`#${scase.title}`} onClick={() => setSelectedShowcase(scase)}>{scase.title}</RegularLink>
+        <RegularLink key={scase.title} href={`#${scase.title}`} onClick={() => setSelectedShowcase(scase)}>{scase.title}</RegularLink>,
       )}
     </p>
 
@@ -34,18 +34,18 @@ export default function UiShowcase() {
   </section>
 }
 
-const showcases : Showcase<Record<string, unknown>>[] = [
+const showcases: Showcase<Record<string, unknown>>[] = [
   showcase({
     title: 'Link',
     props: {},
-    render: () => <RegularLink href="#">Link</RegularLink>
+    render: () => <RegularLink href="#">Link</RegularLink>,
   }),
   showcase({
     title: 'Toasts',
     props: {},
     render: () => <div className="flex gap-2">
       {colors.map(color =>
-        <Button key={color} color={color} onClick={() => showToast({ message: 'This is toast', intent: color })}>Show toast</Button>
+        <Button key={color} color={color} onClick={() => showToast({ message: 'This is toast', intent: color })}>Show toast</Button>,
       )}
     </div>,
   }),
@@ -64,13 +64,13 @@ const showcases : Showcase<Record<string, unknown>>[] = [
     render: ({ disabled, icon, minimal }) =>
       <div className="flex gap-2">
         {colors.map(color =>
-          <Button key={color} color={color} minimal={minimal} icon={icon ? <Trash /> : undefined} disabled={disabled} >{titleCase(color)}</Button>
+          <Button key={color} color={color} minimal={minimal} icon={icon ? <Trash /> : undefined} disabled={disabled}>{titleCase(color)}</Button>,
         )}
-      </div>
+      </div>,
   }),
   showcase({
     title: 'Autosized section',
-    props:{
+    props: {
       lines: numberProp({ default: 1, min: 0 }),
       cols: numberProp({ default: 1, min: 0 }),
     },
@@ -81,24 +81,24 @@ const showcases : Showcase<Record<string, unknown>>[] = [
             <div key={i}>
               {Array(lines).fill(0).map((_, i) => <p key={i}>Lorem ipsum lorem ipsum</p>)}
 
-            </div>
+            </div>,
           )}
         </div>
-      </AutosizedSection>
+      </AutosizedSection>,
   }),
   showcase({
     title: 'Callout',
     props: {
-      title: booleanProp({default: true})
+      title: booleanProp({ default: true }),
     },
     render: ({ title }) =>
       <div className="flex flex-col gap-2">
         {colors.map(color =>
           <Callout key={color} intent={color} title={title ? titleCase(color) : undefined}>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-          </Callout>
+          </Callout>,
         )}
-      </div>
+      </div>,
   }),
   showcase({
     title: 'Tabs',
@@ -108,7 +108,7 @@ const showcases : Showcase<Record<string, unknown>>[] = [
         <Tab id="tab1" title="Tab1" panel={<p>Panel 1</p>} />
         <Tab id="tab2" title="Tab2" panel={<p>Panel 2</p>} />
         <Tab id="tab3" title="Tab3" panel={<p>Panel 3</p>} />
-      </Tabs>
+      </Tabs>,
   }),
   showcase({
     title: 'Colored tag',
@@ -117,8 +117,8 @@ const showcases : Showcase<Record<string, unknown>>[] = [
       tag: booleanProp(),
     },
     render: ({ small, tag }) => range(TAG_COLOR_COUNT).map(color =>
-      <ColoredTag small={small} tag={tag ? String(color) : undefined} key={color} title={`Tag color ${color}`} color={color} />
-    )
+      <ColoredTag small={small} tag={tag ? String(color) : undefined} key={color} title={`Tag color ${color}`} color={color} />,
+    ),
   }),
   showcase({
     title: 'Overlays',

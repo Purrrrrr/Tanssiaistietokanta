@@ -1,8 +1,8 @@
-import {useRef, useState} from 'react'
+import { useRef, useState } from 'react'
 
 import { useResizeObserver } from './utils/useResizeObserver'
 
-export function AutosizedSection({children, className = '', ...props}) {
+export function AutosizedSection({ children, className = '', ...props }) {
   const container = useRef<HTMLElement>(null)
   const innerContainer = useRef<HTMLDivElement>(null)
   const [size, setSize] = useState(1)
@@ -24,7 +24,7 @@ export function AutosizedSection({children, className = '', ...props}) {
   }
   useResizeObserver(innerContainer, onResize)
 
-  return <section className={'max-w-full overflow-hidden '+ className} ref={container} {...props}>
-    <div ref={innerContainer} className="relative left-1/2 origin-top -translate-x-1/2 w-fit h-fit p-px" style={{scale: `${size}`}}>{children}</div>
+  return <section className={'max-w-full overflow-hidden ' + className} ref={container} {...props}>
+    <div ref={innerContainer} className="relative left-1/2 origin-top -translate-x-1/2 w-fit h-fit p-px" style={{ scale: `${size}` }}>{children}</div>
   </section>
 }

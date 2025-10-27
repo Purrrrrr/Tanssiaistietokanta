@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useMemo, useRef } from 'react'
 import * as L from 'partial.lenses'
 
-import {ChangeListener, Conflict, ConflictMap, LabelStyle, NewValue, OnFormChangeHandler, toArrayPath, TypedStringPath, Version} from './types'
+import { ChangeListener, Conflict, ConflictMap, LabelStyle, NewValue, OnFormChangeHandler, toArrayPath, TypedStringPath, Version } from './types'
 
-import {formStringDefaults, FormStrings} from './strings'
+import { formStringDefaults, FormStrings } from './strings'
 
 export const FormValidityContext = React.createContext<boolean>(true)
 export function useFormIsValid(): boolean {
@@ -21,12 +21,10 @@ export interface FormMetadataContextType<T> {
   inline: boolean
   labelStyle: LabelStyle
 }
-export const FormMetadataContext = React.createContext<FormMetadataContextType<unknown>|null>(null)
-
+export const FormMetadataContext = React.createContext<FormMetadataContextType<unknown> | null>(null)
 
 export interface useCreateFormMetadataContextArgs<T> extends
-  Pick<Partial<FormMetadataContextType<T>>, 'readOnly' | 'inline' | 'labelStyle' | 'onResolveConflict'>
-{
+  Pick<Partial<FormMetadataContextType<T>>, 'readOnly' | 'inline' | 'labelStyle' | 'onResolveConflict'> {
   value: T
   onChange: OnFormChangeHandler<T>
   conflicts?: ConflictMap<T>
@@ -34,7 +32,7 @@ export interface useCreateFormMetadataContextArgs<T> extends
 }
 
 export function useCreateFormMetadataContext<T>(
-  {value, onChange, labelStyle, inline, readOnly, conflicts, strings, onResolveConflict}: useCreateFormMetadataContextArgs<T>
+  { value, onChange, labelStyle, inline, readOnly, conflicts, strings, onResolveConflict }: useCreateFormMetadataContextArgs<T>,
 ): FormMetadataContextType<T> {
   const listeners = useMemo(() => new Set<ChangeListener>(), [])
   const valueRef = useRef<T>()
@@ -48,7 +46,7 @@ export function useCreateFormMetadataContext<T>(
     () => {
       const onChangePath = (path, newValue) => {
         const val = valueRef.current
-        valueRef.current = typeof newValue  === 'function'
+        valueRef.current = typeof newValue === 'function'
           ? L.modify(toArrayPath(path), newValue, val)
           : L.set(toArrayPath(path), newValue, val)
 
@@ -67,7 +65,7 @@ export function useCreateFormMetadataContext<T>(
         onChangePath,
         onResolveConflict,
       }
-    }, [readOnly, labelStyle, inline, onChange, listeners, onResolveConflict]
+    }, [readOnly, labelStyle, inline, onChange, listeners, onResolveConflict],
   )
 
   useEffect(() => listeners.forEach(l => l()), [listeners, value])

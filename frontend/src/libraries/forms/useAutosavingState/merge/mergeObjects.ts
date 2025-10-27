@@ -1,17 +1,17 @@
-import {Conflict, Deleted, mapMergeData, MergeableObject, MergeData, MergeFunction, PartialMergeResult, scalarConflict, scopeConflicts, SyncState} from '../types'
+import { Conflict, Deleted, mapMergeData, MergeableObject, MergeData, MergeFunction, PartialMergeResult, scalarConflict, scopeConflicts, SyncState } from '../types'
 
 export function mergeObjects<T extends MergeableObject>(
-  data : MergeData<T>,
+  data: MergeData<T>,
   merge: MergeFunction,
-) : PartialMergeResult<T> {
-  const modifications : Partial<T> = {}
+): PartialMergeResult<T> {
+  const modifications: Partial<T> = {}
   const nonConflictingModifications: Partial<T> = {}
 
   let hasConflicts = false
   let hasModifications = false
 
   const keys = getAllKeys(data)
-  const conflicts : Conflict<unknown>[] = []
+  const conflicts: Conflict<unknown>[] = []
   for (const key of keys) {
     const dataInKey = indexMergeData(data, key)
     const subResult = merge(dataInKey)
@@ -30,7 +30,7 @@ export function mergeObjects<T extends MergeableObject>(
               local: existsIn.local ? dataInKey.local : Deleted,
               server: existsIn.server ? dataInKey.server : Deleted,
               original: dataInKey.original,
-            }, [String(key)]
+            }, [String(key)],
           ))
         }
         hasConflicts = true
@@ -49,10 +49,10 @@ export function mergeObjects<T extends MergeableObject>(
     }
   }
 
-  let state : SyncState = 'IN_SYNC'
+  let state: SyncState = 'IN_SYNC'
   if (hasConflicts) {
     state = 'CONFLICT'
-    //Hack: propagate conflicts to outer objects so that fields that edit whole objects can detect them easily
+    // Hack: propagate conflicts to outer objects so that fields that edit whole objects can detect them easily
     conflicts.push(scalarConflict(data))
   } else if (hasModifications) state = 'MODIFIED_LOCALLY'
 
@@ -64,7 +64,7 @@ export function mergeObjects<T extends MergeableObject>(
   }
 }
 
-function indexMergeData<T extends MergeableObject>(data : MergeData<T>, key: keyof T) : MergeData<T[typeof key]> {
+function indexMergeData<T extends MergeableObject>(data: MergeData<T>, key: keyof T): MergeData<T[typeof key]> {
   return {
     server: get(data.server, key),
     original: get(data.original, key),
@@ -80,6 +80,6 @@ function getAllKeys<T extends MergeableObject>(data: MergeData<T>): (keyof T)[] 
     ...[data.server, data.original, data.local]
       .map(value => Object.keys(value ?? {}))
       .flat()
-      .filter(key => typeof key !== 'symbol')
+      .filter(key => typeof key !== 'symbol'),
   ])) as (keyof T)[]
 }

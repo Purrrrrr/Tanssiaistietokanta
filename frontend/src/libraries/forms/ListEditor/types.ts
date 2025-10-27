@@ -1,4 +1,4 @@
-import {OnChangeHandler, TypedStringPath} from '../types'
+import { OnChangeHandler, TypedStringPath } from '../types'
 
 export interface Entity {
   _id: string | number

@@ -71,7 +71,7 @@ export function showToast(toast: ToastProps) {
     closing: false,
     onClose() {
       if (toastData.closing) return
-      setToasts(toasts => toasts.map(toast => toast.id === id ? { ...toast, closing: true} : toast))
+      setToasts(toasts => toasts.map(toast => toast.id === id ? { ...toast, closing: true } : toast))
       setTimeout(() => setToasts(toasts => toasts.filter(toast => toast.id !== id)), 500)
     },
   }
@@ -79,7 +79,7 @@ export function showToast(toast: ToastProps) {
   setToasts(toasts => [...toasts, toastData])
 }
 
-export function showErrorToast(failMsg: string, e: {message: string}) {
+export function showErrorToast(failMsg: string, e: { message: string }) {
   showToast({
     intent: 'danger',
     message: `${failMsg} ${e.message}`,

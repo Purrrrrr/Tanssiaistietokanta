@@ -1,12 +1,12 @@
 import { set } from 'partial.lenses'
 
-import {EventProgramRow, EventProgramSettings, IntervalMusic, T} from './types'
+import { EventProgramRow, EventProgramSettings, IntervalMusic, T } from './types'
 
-import {usePatchEventProgram} from 'services/events'
+import { usePatchEventProgram } from 'services/events'
 
-import {formFor, useAutosavingState, UseAutosavingStateReturn} from 'libraries/forms'
+import { formFor, useAutosavingState, UseAutosavingStateReturn } from 'libraries/forms'
 
-import {JSONPatch, patch} from './patchStrategy'
+import { JSONPatch, patch } from './patchStrategy'
 
 export const {
   Input,
@@ -23,7 +23,7 @@ export const {
 
 export type * from './types'
 
-export const DEFAULT_INTERVAL_MUSIC_DURATION = 15*60
+export const DEFAULT_INTERVAL_MUSIC_DURATION = 15 * 60
 export const DEFAULT_INTERVAL_MUSIC = {
   name: null,
   description: null,
@@ -37,7 +37,7 @@ export function useEventProgramEditorForm(eventId: string, eventVersionId: strin
   const [patchEventProgram] = usePatchEventProgram()
   const saveProgram = async (program) => {
     if (readOnly) return
-    return patchEventProgram({id: eventId, program})
+    return patchEventProgram({ id: eventId, program })
   }
 
   const data = useAutosavingState<EventProgramSettings, JSONPatch>(eventProgram, saveProgram, patch)

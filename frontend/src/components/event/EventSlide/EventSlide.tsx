@@ -11,7 +11,7 @@ export type WithCommonProps<X> = {
 
 export function EventSlide(props: WithCommonProps<EventSlideProps>) {
   const { id, eventProgram, linkComponent } = props
-  switch(props.type) {
+  switch (props.type) {
     case 'title':
       return <Slide
         type="program-title"
@@ -56,10 +56,10 @@ function DanceSetSlide(props: WithCommonProps<DanceSetSlideProps>) {
 function IntervalMusicSlide(props: WithCommonProps<IntervalMusicSlideProps>) {
   const {
     eventProgram: {
-      danceSets, defaultIntervalMusic, slideStyleId: defaultSlideStyleId
+      danceSets, defaultIntervalMusic, slideStyleId: defaultSlideStyleId,
     },
     danceSetIndex,
-    id, title, linkComponent, next, parent
+    id, title, linkComponent, next, parent,
   } = props
 
   const { intervalMusic } = danceSets[danceSetIndex]
@@ -68,7 +68,7 @@ function IntervalMusicSlide(props: WithCommonProps<IntervalMusicSlideProps>) {
     id={id}
     title={title}
     children={markdown(
-      intervalMusic?.description ?? defaultIntervalMusic?.description ?? ''
+      intervalMusic?.description ?? defaultIntervalMusic?.description ?? '',
     )}
     slideStyleId={intervalMusic?.slideStyleId ?? defaultSlideStyleId}
     next={next}
@@ -83,7 +83,7 @@ function DanceProgramItemSlide(props: WithCommonProps<DanceProgramItemSlideProps
 
   const content = item.__typename === 'RequestedDance'
     ? {
-      children: ''
+      children: '',
     }
     : {
       children: markdown(item.description ?? ''),
@@ -111,6 +111,6 @@ function danceSetNavigation(parent?: EventParentSlideProps): SlideNavigation | u
       id: item.id,
       title: item.title,
       hidden: !item.showInLists,
-    }))
+    })),
   }
 }

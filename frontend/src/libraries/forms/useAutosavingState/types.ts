@@ -11,14 +11,14 @@ export interface Entity {
   _id: ID
   [key: string]: Mergeable
 }
-export type MergeableScalar  = undefined | null | string | number | boolean
+export type MergeableScalar = undefined | null | string | number | boolean
 export type Mergeable = MergeableScalar | MergeableObject | Entity[]
 
 export type SyncState = 'IN_SYNC' | 'MODIFIED_LOCALLY' | 'CONFLICT' | 'INVALID'
 export interface PartialMergeResult<T> {
   state: SyncState
-  nonConflictingModifications: T //The version that can be sent to the server without breaking stuff because of conflicts
-  modifications: T //Local version, including conflicts
+  nonConflictingModifications: T // The version that can be sent to the server without breaking stuff because of conflicts
+  modifications: T // Local version, including conflicts
   conflicts: Conflict<unknown>[]
 }
 
@@ -26,7 +26,7 @@ export interface MergeResult<T> extends Omit<PartialMergeResult<T>, 'conflicts'>
   conflicts: ConflictMap<T>
 }
 
-export function scalarConflict(data: MergeData<unknown>, path: PathParam = []): Conflict<unknown>{
+export function scalarConflict(data: MergeData<unknown>, path: PathParam = []): Conflict<unknown> {
   return {
     type: 'scalar',
     ...data,
@@ -34,7 +34,7 @@ export function scalarConflict(data: MergeData<unknown>, path: PathParam = []): 
   }
 }
 
-export function removedArrayItemConflict(data: MergeData<unknown>, index: number, path: PathParam = []): Conflict<unknown>{
+export function removedArrayItemConflict(data: MergeData<unknown>, index: number, path: PathParam = []): Conflict<unknown> {
   return {
     type: 'removedArrayItem',
     index,
@@ -43,7 +43,7 @@ export function removedArrayItemConflict(data: MergeData<unknown>, index: number
   }
 }
 
-export function arrayConflict(data: MergeData<unknown>, path: PathParam = []): Conflict<unknown>{
+export function arrayConflict(data: MergeData<unknown>, path: PathParam = []): Conflict<unknown> {
   return {
     type: 'array',
     ...data,
@@ -51,13 +51,13 @@ export function arrayConflict(data: MergeData<unknown>, path: PathParam = []): C
   }
 }
 
-type PathParam = Path | {server: Path, local: Path}
+type PathParam = Path | { server: Path, local: Path }
 export function conflictPath(path: PathParam = []) {
   if (Array.isArray(path)) {
     return {
-      //Copy the other array since we usually modify it
+      // Copy the other array since we usually modify it
       serverPath: path,
-      localPath: path.slice()
+      localPath: path.slice(),
     }
   }
   return {
@@ -68,10 +68,10 @@ export function conflictPath(path: PathParam = []) {
 
 export function scopeConflicts<T>(
   path: PathComponent | { server: PathComponent, local: PathComponent },
-  conflicts: Conflict<T>[]
+  conflicts: Conflict<T>[],
 ): Conflict<T>[] {
-  if (typeof path !== 'object') return scopeConflicts({server: path, local: path}, conflicts)
-  for(const c of conflicts) {
+  if (typeof path !== 'object') return scopeConflicts({ server: path, local: path }, conflicts)
+  for (const c of conflicts) {
     c.localPath.push(path.local)
     c.serverPath.push(path.server)
   }
@@ -99,7 +99,7 @@ function toConflictMap(conflicts: Conflict<unknown>[]): ConflictMap<unknown> {
           : path,
         c,
       ]
-    })
+    }),
   )
 }
 

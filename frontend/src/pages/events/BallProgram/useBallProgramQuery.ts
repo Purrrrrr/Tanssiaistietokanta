@@ -1,5 +1,5 @@
-import {backendQueryHook, graphql} from 'backend'
-import {useCallbackOnEventChanges} from 'services/events'
+import { backendQueryHook, graphql } from 'backend'
+import { useCallbackOnEventChanges } from 'services/events'
 
 type BallProgramData = ReturnType<typeof useBallProgramQuery>
 export type Event = NonNullable<NonNullable<BallProgramData['data']>['event']>
@@ -86,7 +86,7 @@ query BallProgram($eventId: ID!) {
       }
     }
   }
-}`), ({refetch, variables}) => {
+}`), ({ refetch, variables }) => {
   if (variables === undefined) throw new Error('Unknown event id')
   useCallbackOnEventChanges(variables.eventId, refetch)
 })

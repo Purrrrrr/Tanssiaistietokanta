@@ -1,9 +1,9 @@
-import { type ElementType, type ReactNode, useMemo} from 'react'
+import { type ElementType, type ReactNode, useMemo } from 'react'
 import { Move } from '@blueprintjs/icons'
-import {useSortable} from '@dnd-kit/sortable'
-import {CSS} from '@dnd-kit/utilities'
+import { useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 
-import {Button} from 'libraries/ui'
+import { Button } from 'libraries/ui'
 
 import { useFormTranslation } from '../../../localization'
 
@@ -15,13 +15,13 @@ interface SortableItemProps<Data> {
   children: (dragHandle: ReactNode) => ReactNode
 }
 
-export type SortableItemElement =  ElementType<{children?: ReactNode}>
+export type SortableItemElement = ElementType<{ children?: ReactNode }>
 
-export function SortableItem<Data extends Record<string, unknown>>({id, data, disabled, children, asElement = 'div'}: SortableItemProps<Data>) {
+export function SortableItem<Data extends Record<string, unknown>>({ id, data, disabled, children, asElement = 'div' }: SortableItemProps<Data>) {
   const isGhost = data?.ghost
   const {
     isDragging,
-    attributes: { tabIndex: _ignored, ...attributes},
+    attributes: { tabIndex: _ignored, ...attributes },
     listeners,
     setNodeRef,
     setActivatorNodeRef,
@@ -48,7 +48,7 @@ export function SortableItem<Data extends Record<string, unknown>>({id, data, di
 
   const dragHandle = useMemo(
     () => <DragHandle buttonRef={setActivatorNodeRef} listeners={listeners} />,
-    [listeners, setActivatorNodeRef]
+    [listeners, setActivatorNodeRef],
   )
 
   const Wrapper = asElement as 'div'
@@ -60,7 +60,7 @@ export function SortableItem<Data extends Record<string, unknown>>({id, data, di
   )
 }
 
-function DragHandle({buttonRef, listeners}) {
+function DragHandle({ buttonRef, listeners }) {
   const moveLabel = useFormTranslation('moveItem')
   return <Button aria-label={moveLabel} className="touch-none" icon={<Move />} ref={buttonRef} {...listeners} />
 }

@@ -1,16 +1,16 @@
-import {useEffect} from 'react'
+import { useEffect } from 'react'
 
 type KeyDownHandler = (e: KeyboardEvent) => unknown
-type KeyDownHandlerParam = KeyDownHandler | {[key: string]: KeyDownHandler}
+type KeyDownHandlerParam = KeyDownHandler | Record<string, KeyDownHandler>
 
-export function useOnKeydown(onKeydown : KeyDownHandlerParam, key?: string) {
+export function useOnKeydown(onKeydown: KeyDownHandlerParam, key?: string) {
   useEffect(() => {
-    function onPress(event : KeyboardEvent) {
+    function onPress(event: KeyboardEvent) {
       if (isInputTag(event.target)) return
       if (key && event.key !== key) return
 
-      if (typeof(onKeydown) === 'object') {
-        if (typeof(onKeydown[event.key]) === 'function') {
+      if (typeof onKeydown === 'object') {
+        if (typeof onKeydown[event.key] === 'function') {
           onKeydown[event.key](event)
         }
       } else {

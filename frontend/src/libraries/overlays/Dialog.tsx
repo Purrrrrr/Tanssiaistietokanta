@@ -1,8 +1,8 @@
-import React, {useEffect, useLayoutEffect, useRef, useState} from 'react'
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Cross } from '@blueprintjs/icons'
 import classNames from 'classnames'
 
-import {Button} from 'libraries/ui'
+import { Button } from 'libraries/ui'
 
 type DialogProps = {
   isOpen: boolean
@@ -21,7 +21,7 @@ type DialogProps = {
   }
 )
 
-export function Dialog({isOpen, onClose, children, title, className, showCloseButton = true, closeButtonLabel}: DialogProps) {
+export function Dialog({ isOpen, onClose, children, title, className, showCloseButton = true, closeButtonLabel }: DialogProps) {
   const modal = useRef<HTMLDialogElement>(null)
   const closeButton = useRef<HTMLButtonElement>(null)
   const [shouldrender, setShouldRender] = useState(false)
@@ -44,7 +44,7 @@ export function Dialog({isOpen, onClose, children, title, className, showCloseBu
       const focusables = getFocusableElements(modal.current).filter(el => el !== closeButton.current)
       focusables[0]?.focus()
     },
-    [isOpen]
+    [isOpen],
   )
 
   return <dialog
@@ -71,16 +71,16 @@ export function Dialog({isOpen, onClose, children, title, className, showCloseBu
   </dialog>
 }
 
-Dialog.Body = function DialogBody({className, ...props}: React.HTMLAttributes<HTMLDivElement>) {
+Dialog.Body = function DialogBody({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return <div className={classNames(className, 'px-3 break-words')} {...props} />
 }
-Dialog.Footer = function DialogFooter({className = 'flex gap-3 justify-between items-center', ...props}: React.HTMLAttributes<HTMLDivElement>) {
+Dialog.Footer = function DialogFooter({ className = 'flex gap-3 justify-between items-center', ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return <div className={classNames(className, 'bg-gray-50 mt-3 px-3 py-2 border-t-1 border-gray-300')} {...props} />
 }
 
 export function getFocusableElements(container: HTMLElement) {
   return [
-    ...container.querySelectorAll(focusableSelector) as NodeListOf<HTMLElement>
+    ...container.querySelectorAll(focusableSelector) as NodeListOf<HTMLElement>,
   ].filter(el => !el.getAttribute('aria-hidden') && el.style.display !== 'none')
 }
 

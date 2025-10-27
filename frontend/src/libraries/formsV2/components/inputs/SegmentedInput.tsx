@@ -5,7 +5,7 @@ interface SegmentedInputProps {
 
 interface Part {
   parse: (this: Part, s: string, context: PartContext) => ParseResult
-  //onStep: (num: amount) => unknown
+  // onStep: (num: amount) => unknown
 }
 
 interface PartContext {
@@ -20,7 +20,7 @@ interface ParseResult {
 }
 
 const parts: Part[] = [
-  //regexPart('\\w\\w?'),
+  // regexPart('\\w\\w?'),
   numericPart(2),
   separator(':'),
   numericPart(2),
@@ -42,7 +42,7 @@ function separator(char: string): Part {
         parsedString: (parsedAmount || s.length > 0) ? char : '',
         value: '',
       }
-    }
+    },
   }
 }
 
@@ -64,7 +64,7 @@ function numericPart(length: number): Part {
         parsedString: '',
         value: '0',
       }
-    }
+    },
   }
 }
 
@@ -84,12 +84,11 @@ function _regexPart(matcher: RegExp | string): Part {
       }
 
       return nothingParsed
-    }
+    },
   }
 }
 
-
-const nothingParsed : ParseResult = {
+const nothingParsed: ParseResult = {
   parsedAmount: 0,
   parsedString: '',
   value: '',
@@ -109,12 +108,12 @@ function parse(text: string, ctx: Omit<PartContext, 'value'>): {
 
   return {
     results,
-    parsed: results.map(r => r.parsedString).join('')
+    parsed: results.map(r => r.parsedString).join(''),
   }
 }
 
 export function SegmentedInput({
-  value, onChange
+  value, onChange,
 }: SegmentedInputProps) {
   const setValue = (e) => onChange(parse(e.target.value, { parts }).parsed)
   const { results, parsed: parsedString } = parse(value, { parts })

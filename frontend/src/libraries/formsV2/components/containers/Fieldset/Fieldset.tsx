@@ -16,7 +16,7 @@ export function Fieldset({ inline: inlineProp, labelStyle: labelStyleProp, label
   const className = classNames(
     'form-fieldset bp5-form-group',
     labelStyle === 'beside' && 'label-beside',
-    { inline }
+    { inline },
   )
   return <fieldset className={className}>
     {label &&

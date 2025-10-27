@@ -7,7 +7,7 @@ const SidebarRegisterContext = React.createContext<SidebarRegisterContextType>((
 
 const SidebarContentContext = React.createContext<Record<string, ReactNode>>({})
 
-export default function SideBar({children}: {children: ReactNode}) {
+export default function SideBar({ children }: { children: ReactNode }) {
   const register = useContext(SidebarRegisterContext)
   const id = useId()
   useEffect(() => {
@@ -22,14 +22,14 @@ export function SidebarContainer() {
   const container = useRef<HTMLDivElement>(null)
 
   const updateHeight = useCallback(
-    (entries: {target: Element}[]) => {
-      const [{target}] = entries
+    (entries: { target: Element }[]) => {
+      const [{ target }] = entries
       const h = target?.scrollHeight ?? 0
       if (h > 0) {
         document.body.style.setProperty('--sidebar-opened-height', `${h}px`)
       }
     },
-    []
+    [],
   )
   useResizeObserver(container, updateHeight)
 
@@ -39,14 +39,14 @@ export function SidebarContainer() {
   </div>
 }
 
-export function SidebarContext({children}) {
+export function SidebarContext({ children }) {
   const [contents, setContents] = useState<Record<string, ReactNode>>({})
   const register = useCallback(
     (id: string, content: ReactNode) => {
-      setContents(c => ({...c, [id]: content}))
-      return () => setContents(({[id]: _lost, ...c}) => c)
+      setContents(c => ({ ...c, [id]: content }))
+      return () => setContents(({ [id]: _lost, ...c }) => c)
     },
-    []
+    [],
   )
 
   return <SidebarRegisterContext.Provider value={register}>

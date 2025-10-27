@@ -1,15 +1,15 @@
-import {ComponentType, lazy, useEffect, useRef, useState, useSyncExternalStore} from 'react'
-import {ApolloError, ApolloQueryResult} from '@apollo/client'
+import { ComponentType, lazy, useEffect, useRef, useState, useSyncExternalStore } from 'react'
+import { ApolloError, ApolloQueryResult } from '@apollo/client'
 import { Error } from '@blueprintjs/icons'
 
-import {socket} from 'backend/feathers'
+import { socket } from 'backend/feathers'
 
-import {Button, ColorClass, GlobalSpinner, H2} from 'libraries/ui'
-import {useT, useTranslation} from 'i18n'
+import { Button, ColorClass, GlobalSpinner, H2 } from 'libraries/ui'
+import { useT, useTranslation } from 'i18n'
 
 const connectionProblemMessageTimeout = 5000
 
-export function GlobalLoadingState({children}) {
+export function GlobalLoadingState({ children }) {
   const loading = useGlobalLoadingState()
   const [connected, setConnected] = useState(socket.connected)
   const [connectionTimeout, setConnectionTimeout] = useState(false)
@@ -42,7 +42,7 @@ export function GlobalLoadingState({children}) {
       loading={loading || !connected}
       loadingMessage={useTranslation('components.loadingState.loading')}
       timeout={connectionTimeout}
-      connectionTimeoutMessage={useTranslation('components.loadingState.connectionError')}/>
+      connectionTimeoutMessage={useTranslation('components.loadingState.connectionError')} />
   </>
 }
 
@@ -50,7 +50,7 @@ export function useGlobalLoadingAnimation() {
   return addGlobalLoadingAnimation
 }
 
-export function lazyLoadComponent<T>(loadComponent: () => Promise<{default: ComponentType<T>}>) {
+export function lazyLoadComponent<T>(loadComponent: () => Promise<{ default: ComponentType<T> }>) {
   return lazy(() => addGlobalLoadingAnimation(loadComponent()))
 }
 
@@ -84,7 +84,7 @@ interface LoadingStateProps<Variables> {
   refetch?: (variables?: Variables | undefined) => Promise<ApolloQueryResult<Record<string, unknown>>>
 }
 
-export function LoadingState<Variables>({loading, error, refetch} : LoadingStateProps<Variables>) {
+export function LoadingState<Variables>({ loading, error, refetch }: LoadingStateProps<Variables>) {
   const t = useT('components.loadingState')
   useToggleGlobalLoadingAnimation(loading)
   if (error) {

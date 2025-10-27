@@ -62,7 +62,6 @@ interface FieldsFor<Data, _AcceptedDroppableTypes = null> {
   RadioGroup?
 }
 
-
 */
 
 const form = {
@@ -75,7 +74,7 @@ const form = {
     Range: RangeField,
     withRangeComponent: asRangeField,
     Date: asFormField(lazy(() => import('./components/inputs/DateInput'))),
-    DateRange : asRangeField(lazy(() => import('./components/inputs/DateRangeInput'))),
+    DateRange: asRangeField(lazy(() => import('./components/inputs/DateRangeInput'))),
     Markdown: asFormField(lazy(() => import('./components/inputs/MarkdownInput'))),
     Text: asFormField(lazy(() => import('./components/inputs/TextInput'))),
     Switch: asSelfLabeledFormField(Switch),

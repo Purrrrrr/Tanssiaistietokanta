@@ -83,7 +83,7 @@ export function Tabs(props: TabsProps) {
     <div ref={tabContainer} className={classNames(className, 'flex flex-wrap gap-5 py-3')} role="tablist" onKeyDown={onKeyDown}>
       {tabs.map((tab, index) => {
         const selected = tab.id === selectedTabId
-        const { title, icon, disabled }= tab
+        const { title, icon, disabled } = tab
 
         const commonProps = {
           role: 'tab',

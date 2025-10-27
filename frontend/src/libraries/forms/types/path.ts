@@ -43,7 +43,7 @@ export type Idx<T, K extends string> =
     ? Idx<Exclude<T, undefined>, K> | undefined
     : K extends keyof T
       ? T[K]
-      : K extends `${number}` ? number extends keyof T ? T[number] : never : never;
+      : K extends `${number}` ? number extends keyof T ? T[number] : never : never
 
 export type PropertyAtArrayPath<Target, Path extends readonly unknown[]> =
   Path extends []
@@ -54,7 +54,7 @@ export type PropertyAtArrayPath<Target, Path extends readonly unknown[]> =
         // Target path is not keyof Target
         : never
       // Paths could not be destructured
-      : never;
+      : never
 
 type Decrement = [never, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
     11, 12, 13, 14, 15, 16, 17, 18, 19, 20, ...0[]]
@@ -66,14 +66,14 @@ type Joined<Path extends readonly unknown[]> =
   Path extends []
     ? ''
     // Here we have 1 path to access
-    : Path extends [infer TargetPath extends string|number]
+    : Path extends [infer TargetPath extends string | number]
       ? TargetPath
       // Here we have 1 or more paths to access
-      : Path extends [infer TargetPath extends string|number, ...infer RemainingPaths]
+      : Path extends [infer TargetPath extends string | number, ...infer RemainingPaths]
         // Recurse and grab paths
         ? `${TargetPath}.${Joined<RemainingPaths>}`
         // Paths could not be destructured
-        : never;
+        : never
 
 const numberRegex = /^(:?[1-9][0-9]*)|0$/
 export function toArrayPath<T>(p: StringPath<T>): ArrayPath<T> {

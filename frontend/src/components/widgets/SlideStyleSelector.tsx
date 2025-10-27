@@ -1,11 +1,11 @@
 import { useId } from 'react'
 import { DoubleCaretVertical, Style } from '@blueprintjs/icons'
 
-import {SlideStyle, useEventSlideStyles} from 'services/events'
+import { SlideStyle, useEventSlideStyles } from 'services/events'
 
 import { Select } from 'libraries/formsV2/components/inputs'
-import {Button} from 'libraries/ui'
-import {useT} from 'i18n'
+import { Button } from 'libraries/ui'
+import { useT } from 'i18n'
 
 interface SlideStyleSelectorProps {
   value: string | null | undefined
@@ -17,11 +17,11 @@ interface SlideStyleSelectorProps {
 }
 
 export function SlideStyleSelector({
-  value, onChange, text, inheritsStyles = false, inheritedStyleId = undefined, inheritedStyleName = undefined
-} : SlideStyleSelectorProps) {
+  value, onChange, text, inheritsStyles = false, inheritedStyleId = undefined, inheritedStyleName = undefined,
+}: SlideStyleSelectorProps) {
   const id = useId()
   const t = useT('common')
-  const {styles, defaultStyle} = useEventSlideStyles({
+  const { styles, defaultStyle } = useEventSlideStyles({
     useStyleInheritance: inheritsStyles,
     inheritedStyleId,
     inheritedStyleName,
@@ -35,7 +35,7 @@ export function SlideStyleSelector({
     items={styles}
     itemToString={style => style.name}
     onChange={style => onChange(style.id)}
-    itemIcon={style => style && <SlideStyleBox value={style} size={50} aspectRatio={16/9}/>}
+    itemIcon={style => style && <SlideStyleBox value={style} size={50} aspectRatio={16 / 9} />}
     buttonRenderer={(style, props) =>
       <Button
         {...props}
@@ -48,9 +48,9 @@ export function SlideStyleSelector({
   />
 }
 
-function SlideStyleBox({value: {styleName, color}, size = 20, aspectRatio = 1}) {
+function SlideStyleBox({ value: { styleName, color }, size = 20, aspectRatio = 1 }) {
   return <span
-    style={{height: size, width: size*aspectRatio, lineHeight: `${size - 4}px`, borderColor: color }}
+    style={{ height: size, width: size * aspectRatio, lineHeight: `${size - 4}px`, borderColor: color }}
     className={`slide-style-${styleName} text-center border inline-block`}>
     <Style size={12} color={color} />
   </span>

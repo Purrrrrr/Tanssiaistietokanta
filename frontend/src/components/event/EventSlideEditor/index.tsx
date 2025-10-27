@@ -6,8 +6,8 @@ import { Dance } from 'types'
 
 import { useDance } from 'services/dances'
 
-import {DragHandle, MarkdownEditor, SyncState, SyncStatus} from 'libraries/forms'
-import {Callout, H2, Link} from 'libraries/ui'
+import { DragHandle, MarkdownEditor, SyncState, SyncStatus } from 'libraries/forms'
+import { Callout, H2, Link } from 'libraries/ui'
 import { InstructionEditor } from 'components/dance/DanceEditor'
 import { Field as DanceField, Form as DanceForm, Input as DanceInput, useDanceEditorState } from 'components/dance/DanceForm'
 import { LinkToDanceWiki } from 'components/dance/DanceWikiPreview'
@@ -21,12 +21,12 @@ import {
   ProgramSectionPath,
   RemoveItemButton,
   Switch,
-  useValueAt
+  useValueAt,
 } from 'components/event/EventProgramForm'
 import { EventSlideProps, WithEventProgram } from 'components/event/EventSlide'
 import { ProgramTypeIcon } from 'components/event/ProgramTypeIcon'
 import { Duration } from 'components/widgets/Duration'
-import {T, useT, useTranslation} from 'i18n'
+import { T, useT, useTranslation } from 'i18n'
 
 import { AddIntroductionButton, DanceSetItemButtons } from '../EventProgramEditor/components'
 import { InheritedSlideStyleSelector, IntervalMusicDefaultTextsSwitch } from './components'
@@ -43,17 +43,17 @@ const markdownEditorProps = {
 type EventSlideEditorProps = WithEventProgram<EventSlideProps>
   & { syncStatus?: SyncState }
 
-export function EventSlideEditor({syncStatus, ...props}: EventSlideEditorProps) {
+export function EventSlideEditor({ syncStatus, ...props }: EventSlideEditorProps) {
   const slideStylePath = getSlideStylePath(props)
-  //const isDance = props.type === 'programItem' &&
+  // const isDance = props.type === 'programItem' &&
   //  props.eventProgram.danceSets[props.danceSetIndex].program[props.itemIndex].item
 
   return <>
     <SectionCard>
       <H2>
-        <T msg="pages.events.ballProgram.slideProperties"/>
+        <T msg="pages.events.ballProgram.slideProperties" />
         {' '}
-        {syncStatus && <SyncStatus state={syncStatus}/>}
+        {syncStatus && <SyncStatus state={syncStatus} />}
       </H2>
       <p>
         <ParentLink {...props} />
@@ -79,16 +79,14 @@ function DanceSelector(props: WithEventProgram<EventSlideProps>) {
   const item = props.eventProgram.danceSets[props.danceSetIndex].program[props.itemIndex]
   const itemType = item.item.__typename
   if ((itemType === 'Dance' || itemType === 'RequestedDance')) {
-    return <Field label={t('dance')} path={`${itemPath}.item`} component={DanceProgramChooser} labelStyle="beside"/>
+    return <Field label={t('dance')} path={`${itemPath}.item`} component={DanceProgramChooser} labelStyle="beside" />
   }
   return null
 }
 
-
-
 function ParentLink(props: WithEventProgram<EventSlideProps>) {
-  let title : string
-  switch(props.type) {
+  let title: string
+  switch (props.type) {
     case 'title':
     case 'danceSet':
       return null
@@ -106,7 +104,7 @@ function ParentLink(props: WithEventProgram<EventSlideProps>) {
 }
 
 function getSlideStylePath(props: EventSlideProps) {
-  switch(props.type) {
+  switch (props.type) {
     case 'title':
       return 'introductions.titleSlideStyleId' as const
     case 'introduction': {
@@ -127,7 +125,7 @@ function getSlideStylePath(props: EventSlideProps) {
 export function EventSlideContentEditor(props: WithEventProgram<EventSlideProps>) {
   const t = useT('components.eventProgramEditor')
 
-  switch(props.type) {
+  switch (props.type) {
     case 'title':
       return <SectionCard>
         <Input labelStyle="above" label={t('fields.programTitle')} path="introductions.title" inline />
@@ -146,7 +144,7 @@ export function EventSlideContentEditor(props: WithEventProgram<EventSlideProps>
     case 'danceSet': {
       const itemPath = `danceSets.${props.danceSetIndex}` as const
       return <SectionCard>
-        <H2><T msg="pages.events.ballProgram.danceSetTitle"/></H2>
+        <H2><T msg="pages.events.ballProgram.danceSetTitle" /></H2>
         <Input labelStyle="above" label={t('fields.danceSetName')} path={`${itemPath}.title`} />
         <ListField
           label=""
@@ -159,7 +157,7 @@ export function EventSlideContentEditor(props: WithEventProgram<EventSlideProps>
     }
     case 'intervalMusic': {
       return <SectionCard>
-        <H2><T msg="pages.events.ballProgram.intervalMusicTitle"/></H2>
+        <H2><T msg="pages.events.ballProgram.intervalMusicTitle" /></H2>
         <IntervalMusicDescriptionEditor danceSetIndex={props.danceSetIndex} />
       </SectionCard>
     }
@@ -176,13 +174,13 @@ interface ProgramItemProps {
   itemIndex: number
 }
 
-const ProgramItem = React.memo(function ProgramEditor({dragHandle, path, itemIndex}: ProgramItemProps) {
+const ProgramItem = React.memo(function ProgramEditor({ dragHandle, path, itemIndex }: ProgramItemProps) {
   const t = useT('components.eventProgramEditor')
   const itemPath = `${path}.${itemIndex}` as ProgramItemPath
   const item = useValueAt(itemPath)
 
   if (!item) return null
-  const {__typename } = item.item
+  const { __typename } = item.item
 
   return <div className="flex gap-3.5 items-center program-list-item">
     <ProgramTypeIcon type={__typename} />
@@ -197,13 +195,13 @@ const ProgramItem = React.memo(function ProgramEditor({dragHandle, path, itemInd
   </div>
 })
 
-function IntervalMusicDescriptionEditor({danceSetIndex}: {danceSetIndex: number}) {
+function IntervalMusicDescriptionEditor({ danceSetIndex }: { danceSetIndex: number }) {
   const path = `danceSets.${danceSetIndex}.intervalMusic` as const
   const t = useT('components.eventProgramEditor')
   const intervalMusic = useValueAt(path)
   const hasCustomTexts = typeof intervalMusic?.name === 'string'
   return <>
-    <Field label={t('dance')} path={`${path}.dance`} component={DanceProgramChooser} labelStyle="beside"/>
+    <Field label={t('dance')} path={`${path}.dance`} component={DanceProgramChooser} labelStyle="beside" />
     <IntervalMusicDefaultTextsSwitch label={t('fields.intervalMusic.useDefaultTexts')} path={path} />
     {hasCustomTexts
       ? <>
@@ -214,7 +212,7 @@ function IntervalMusicDescriptionEditor({danceSetIndex}: {danceSetIndex: number}
       </>
       : <>
         <H2>{t('titles.defaultIntervalMusicTexts')}</H2>
-        <Input label={t('fields.intervalMusic.name')} path="defaultIntervalMusic.name" componentProps={{placeholder:t('programTypes.IntervalMusic')}} />
+        <Input label={t('fields.intervalMusic.name')} path="defaultIntervalMusic.name" componentProps={{ placeholder: t('programTypes.IntervalMusic') }} />
         <Field label={t('fields.intervalMusic.description')} path="defaultIntervalMusic.description" component={MarkdownEditor} componentProps={markdownEditorProps} />
         <Switch label={t('fields.intervalMusic.showInLists')} path="defaultIntervalMusic.showInLists" inline />
       </>
@@ -222,11 +220,11 @@ function IntervalMusicDescriptionEditor({danceSetIndex}: {danceSetIndex: number}
   </>
 }
 
-function ProgramItemEditor({path}: {path: ProgramItemPath}) {
+function ProgramItemEditor({ path }: { path: ProgramItemPath }) {
   const t = useT('components.eventProgramEditor')
   const item = useValueAt(`${path}.item`)
 
-  switch(item.__typename) {
+  switch (item.__typename) {
     case 'Dance':
       return <SectionCard>
         <DanceEditor id={item._id} />
@@ -235,23 +233,23 @@ function ProgramItemEditor({path}: {path: ProgramItemPath}) {
       return null
     case 'EventProgram':
       return <SectionCard>
-        <H2><T msg="pages.events.ballProgram.infoTitle"/></H2>
+        <H2><T msg="pages.events.ballProgram.infoTitle" /></H2>
         <Input label={t('fields.eventProgram.name')} path={`${path}.item.name`} required />
         <Field label={t('fields.eventProgram.description')} path={`${path}.item.description`} component={MarkdownEditor} componentProps={markdownEditorProps} />
         <Switch label={t('fields.eventProgram.showInLists')} path={`${path}.item.showInLists`} inline />
-        <Callout><T msg="pages.events.ballProgram.currentItemAlwaysShownInLists"/></Callout>
+        <Callout><T msg="pages.events.ballProgram.currentItemAlwaysShownInLists" /></Callout>
       </SectionCard>
   }
 }
 
-function DanceEditor({id}: {id: string}) {
-  const result = useDance({id})
+function DanceEditor({ id }: { id: string }) {
+  const result = useDance({ id })
   if (!result.data?.dance) return null
 
   return <DanceEditorForm dance={result.data.dance} />
 }
 
-function DanceEditorForm({ dance }: { dance: Dance}){
+function DanceEditorForm({ dance }: { dance: Dance }) {
   const t = useT('components.danceWikiPreview')
   const label = useT('domain.dance')
   const { formProps, state } = useDanceEditorState(dance)
@@ -262,7 +260,7 @@ function DanceEditorForm({ dance }: { dance: Dance}){
       <SyncStatus className="top-[3px] grow" state={state} />
     </div>
     <DanceInput label={label('name')} path="name" />
-    <DanceField label={label('description')} path="description" component={InstructionEditor} componentProps={{ wikipage: dance.wikipage, ...markdownEditorProps}}/>
+    <DanceField label={label('description')} path="description" component={InstructionEditor} componentProps={{ wikipage: dance.wikipage, ...markdownEditorProps }} />
     <DanceInput label={label('source')} labelInfo={label('sourceInfo')} path="source" />
 
     {dance.wikipageName &&
@@ -271,7 +269,7 @@ function DanceEditorForm({ dance }: { dance: Dance}){
         <LinkToDanceWiki page={dance.wikipageName} />
       </p>
     }
-    <Link target="_blank" to={`/dances/${dance._id}`}><LinkIcon/> {useTranslation('pages.events.ballProgram.linkToCompleteDance')}</Link>
+    <Link target="_blank" to={`/dances/${dance._id}`}><LinkIcon /> {useTranslation('pages.events.ballProgram.linkToCompleteDance')}</Link>
   </DanceForm>
 }
 
@@ -280,11 +278,11 @@ interface LinkToSlideProps {
   id: string
 }
 
-function LinkToSlide({children, id}: LinkToSlideProps) {
+function LinkToSlide({ children, id }: LinkToSlideProps) {
   const { slideId } = useParams()
   return <Link relative="path" to={slideId ? `../${id}` : id}>{children}</Link>
 }
 
-function SectionCard({ children }: { children: ReactNode}) {
+function SectionCard({ children }: { children: ReactNode }) {
   return <div className="p-5 border-gray-300 not-last:border-b-1">{children}</div>
 }

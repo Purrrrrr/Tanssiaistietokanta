@@ -1,4 +1,4 @@
-import {createContext, useContext, useEffect, useMemo, useState} from 'react'
+import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 
 export const ErrorCollectionContext = createContext({
   errors: new Map(),
@@ -21,18 +21,18 @@ export function useValidationResult() {
           errors.delete(identity)
           setErrorCount(errors.size)
         }
-      }
+      },
     }
   }, [])
   const hasErrors = errorCount !== 0
 
   const Provider = useMemo(
-    () => ({children}) =>
+    () => ({ children }) =>
       <ErrorCollectionContext.Provider children={children} value={context} />,
-    [context]
+    [context],
   )
 
-  return {hasErrors, ValidationContainer: Provider}
+  return { hasErrors, ValidationContainer: Provider }
 }
 
 let counter = 0
@@ -50,6 +50,6 @@ export function useUpdateErrorContext(error) {
       }
       return () => context.removeError(identity)
     },
-    [error, identity, context]
+    [error, identity, context],
   )
 }

@@ -2,12 +2,11 @@ import React from 'react'
 
 import { LabelStyle, LabelTexts, Version } from './types'
 
-import {FormGroup} from 'libraries/ui'
+import { FormGroup } from 'libraries/ui'
 
-import {ConflictHandler} from './ConflictHandler'
-import type {Error} from './validation'
-import {ErrorMessage} from './validation'
-
+import { ConflictHandler } from './ConflictHandler'
+import type { Error } from './validation'
+import { ErrorMessage } from './validation'
 
 export interface FieldContainerProps extends LabelTexts, InternalFieldContainerProps {
   className?: string
@@ -20,7 +19,7 @@ export interface FieldContainerProps extends LabelTexts, InternalFieldContainerP
 interface ConflictData {
   localValue: React.ReactNode
   serverValue: React.ReactNode
-  onResolve(version: Version) : void
+  onResolve(version: Version): void
 }
 
 interface InternalFieldContainerProps {
@@ -30,7 +29,7 @@ interface InternalFieldContainerProps {
 }
 
 export function FieldContainer(props: FieldContainerProps) {
-  const {id, className, error, errorId, label, labelStyle, inline, labelInfo, helperText, children, conflictData} = props
+  const { id, className, error, errorId, label, labelStyle, inline, labelInfo, helperText, children, conflictData } = props
   const formGroupId = `${id}--formgroup`
 
   const errorMsg = <ErrorMessage id={errorId} error={error} />

@@ -1,9 +1,9 @@
-import {DanceWithEvents } from 'types'
+import { DanceWithEvents } from 'types'
 
 import { useDeleteDance } from 'services/dances'
 
-import {useGlobalLoadingAnimation} from 'components/LoadingState'
-import {DeleteButton} from 'components/widgets/DeleteButton'
+import { useGlobalLoadingAnimation } from 'components/LoadingState'
+import { DeleteButton } from 'components/widgets/DeleteButton'
 import { useT } from 'i18n'
 
 interface DeleteDanceButtonProps {
@@ -12,12 +12,12 @@ interface DeleteDanceButtonProps {
   onDelete?: () => unknown
 }
 
-export function DeleteDanceButton({minimal, dance, onDelete} : DeleteDanceButtonProps) {
+export function DeleteDanceButton({ minimal, dance, onDelete }: DeleteDanceButtonProps) {
   const t = useT('components.danceEditor')
   const addLoadingAnimation = useGlobalLoadingAnimation()
   const [deleteDance] = useDeleteDance()
   const handleDelete = () => {
-    addLoadingAnimation(deleteDance({id: dance._id}))
+    addLoadingAnimation(deleteDance({ id: dance._id }))
     onDelete?.()
   }
 
@@ -30,4 +30,3 @@ export function DeleteDanceButton({minimal, dance, onDelete} : DeleteDanceButton
     confirmText={t('deleteConfirmation')}
   />
 }
-

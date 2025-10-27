@@ -9,7 +9,7 @@ export interface FormValidationState {
   isValid: boolean
 }
 
-export const initialValidationState : FormValidationState = {
+export const initialValidationState: FormValidationState = {
   errors: {},
   isValid: true,
 }

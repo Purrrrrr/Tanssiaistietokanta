@@ -7,8 +7,8 @@ interface BackLinkProps {
   to?: string
 }
 
-export function BackLink({children, to = '..'} : BackLinkProps) {
-  return <p style={{margin: '10px 0'}}>
+export function BackLink({ children, to = '..' }: BackLinkProps) {
+  return <p style={{ margin: '10px 0' }}>
     <Link to={to}><ArrowLeft />{children}</Link>
   </p>
 }

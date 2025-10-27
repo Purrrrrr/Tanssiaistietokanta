@@ -22,7 +22,7 @@ export function useEventSlides(program?: EventProgram): EventSlideProps[] {
             title: programItemTitle(item),
             type: 'introduction',
             parentId: startSlideId,
-            itemIndex: idx
+            itemIndex: idx,
           } as const)),
         },
         ...program.danceSets.map((danceSet, danceSetIndex) => ({
@@ -45,20 +45,20 @@ export function useEventSlides(program?: EventProgram): EventSlideProps[] {
                 ? [
                   {
                     id: intervalMusicId(danceSet._id),
-                    title: (danceSet.intervalMusic.name ?? program.defaultIntervalMusic.name) || defaultIntervalMusicTitle,
+                    title: (danceSet.intervalMusic.name ?? program.defaultIntervalMusic.name) ?? defaultIntervalMusicTitle,
                     type: 'intervalMusic' as const,
                     parentId: danceSet._id,
                     danceSetIndex,
                     showInLists: danceSet.intervalMusic.showInLists ?? program.defaultIntervalMusic.showInLists ?? false,
-                  }
+                  },
                 ]
                 : []
-            )
-          ]
+            ),
+          ],
         })),
       ]))
       : [],
-    [program, defaultIntervalMusicTitle, programItemTitle]
+    [program, defaultIntervalMusicTitle, programItemTitle],
   )
 }
 
@@ -73,7 +73,7 @@ function flatten(parentSlides: EventParentSlideProps[]): EventSlideProps[] {
 }
 
 function addNextLinks(slides: EventSlideProps[]): EventSlideProps[] {
-  for(let i = 1; i < slides.length; i++) {
+  for (let i = 1; i < slides.length; i++) {
     slides[i - 1].next = slides[i]
   }
   return slides

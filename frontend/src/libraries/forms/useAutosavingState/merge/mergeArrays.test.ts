@@ -1,8 +1,8 @@
-import {arrayConflict, Deleted, Entity, mapMergeData, MergeData, PartialMergeResult, removedArrayItemConflict, scalarConflict} from '../types'
+import { arrayConflict, Deleted, Entity, mapMergeData, MergeData, PartialMergeResult, removedArrayItemConflict, scalarConflict } from '../types'
 
-import {changedVersion, randomGeneratorWithSeed, toEntity} from '../testUtils'
+import { changedVersion, randomGeneratorWithSeed, toEntity } from '../testUtils'
 import merge from './index'
-import {mergeArrays} from './mergeArrays'
+import { mergeArrays } from './mergeArrays'
 
 type DummyEntity = Entity | number
 type DummyEntityList = DummyEntity[] | string
@@ -44,19 +44,19 @@ describe('mergeArrays', () => {
   test('conflicts in item', () => {
     expect(doMerge({
       original: [1, 2, 3, 4, 5],
-      server: [1, 2, {_id: 3, value: 5}, 4, 5],
-      local: [1, 2, {_id: 3, value: 1}, 4, 5],
+      server: [1, 2, { _id: 3, value: 5 }, 4, 5],
+      local: [1, 2, { _id: 3, value: 1 }, 4, 5],
     })).toMatchObject(mergeResult({
       state: 'CONFLICT',
-      modifications: [1, 2, {_id: 3, value: 1}, 4, 5],
-      nonConflictingModifications: [1, 2, {_id: 3, value: 5}, 4, 5],
+      modifications: [1, 2, { _id: 3, value: 1 }, 4, 5],
+      nonConflictingModifications: [1, 2, { _id: 3, value: 5 }, 4, 5],
       conflicts: [
         scalarConflict(
-          {local: 1, server: 5, original: 3},
+          { local: 1, server: 5, original: 3 },
           ['value', 2],
         ),
         scalarConflict(
-          {local: {_id: 3, value: 1}, server: {_id: 3, value: 5}, original: {_id: 3, value: 3}},
+          { local: { _id: 3, value: 1 }, server: { _id: 3, value: 5 }, original: { _id: 3, value: 3 } },
           [2],
         ),
       ],
@@ -66,20 +66,20 @@ describe('mergeArrays', () => {
   test('conflicts in moved item', () => {
     expect(doMerge({
       original: [1, 2, 3, 4, 5],
-      server: [1, 2, 4, {_id: 3, value: 5}, 5],
-      local: [1, 2, {_id: 3, value: 1}, 4, 5],
+      server: [1, 2, 4, { _id: 3, value: 5 }, 5],
+      local: [1, 2, { _id: 3, value: 1 }, 4, 5],
     })).toMatchObject(mergeResult({
       state: 'CONFLICT',
-      modifications: [1, 2, 4, {_id: 3, value: 1}, 5],
-      nonConflictingModifications: [1, 2, 4, {_id: 3, value: 5}, 5],
+      modifications: [1, 2, 4, { _id: 3, value: 1 }, 5],
+      nonConflictingModifications: [1, 2, 4, { _id: 3, value: 5 }, 5],
       conflicts: [
         scalarConflict(
-          {local: 1, server: 5, original: 3},
-          ['value', 3]
+          { local: 1, server: 5, original: 3 },
+          ['value', 3],
         ),
         scalarConflict(
-          {local: {_id: 3, value: 1}, server: {_id: 3, value: 5}, original: {_id: 3, value: 3}},
-          [3]
+          { local: { _id: 3, value: 1 }, server: { _id: 3, value: 5 }, original: { _id: 3, value: 3 } },
+          [3],
         ),
       ],
     }))
@@ -88,26 +88,26 @@ describe('mergeArrays', () => {
   test('conflicts in moved item #2', () => {
     expect(doMerge({
       original: [1, 2, 3, 4, 5],
-      server: [1, 2, 4, {_id: 3, value: 5}, 5],
-      local: [1, {_id: 3, value: 1}, 2, 4, 5],
+      server: [1, 2, 4, { _id: 3, value: 5 }, 5],
+      local: [1, { _id: 3, value: 1 }, 2, 4, 5],
     })).toMatchObject(mergeResult({
       state: 'CONFLICT',
-      modifications: [1, {_id: 3, value: 1}, 2, 4, 5],
-      nonConflictingModifications: [1, 2, 4, {_id: 3, value: 5}, 5],
+      modifications: [1, { _id: 3, value: 1 }, 2, 4, 5],
+      nonConflictingModifications: [1, 2, 4, { _id: 3, value: 5 }, 5],
       conflicts: [
         scalarConflict(
-          {local: 1, server: 5, original: 3},
-          {server: ['value', 3], local: ['value', 1]}
+          { local: 1, server: 5, original: 3 },
+          { server: ['value', 3], local: ['value', 1] },
         ),
         scalarConflict(
-          {local: {_id: 3, value: 1}, server: {_id: 3, value: 5}, original: {_id: 3, value: 3}},
-          {server: [3], local: [1]}
+          { local: { _id: 3, value: 1 }, server: { _id: 3, value: 5 }, original: { _id: 3, value: 3 } },
+          { server: [3], local: [1] },
         ),
         arrayConflict({
           original: toEntityList([1, 2, 3, 4, 5]),
-          server: toEntityList([1, 2, 4, {_id: 3, value: 5}, 5]),
-          local: toEntityList([1, {_id: 3, value: 1}, 2, 4, 5]),
-        })
+          server: toEntityList([1, 2, 4, { _id: 3, value: 5 }, 5]),
+          local: toEntityList([1, { _id: 3, value: 1 }, 2, 4, 5]),
+        }),
       ],
     }))
   })
@@ -152,12 +152,12 @@ describe('mergeArrays', () => {
     test('identical additions on end', () => {
       expect(doMerge({
         original: [1, 2, 3, 4, 5],
-        server: [1, 2, 3, 4, 5, {_id: 6, data: 6}],
-        local: [1, 2, 3, 4, 5, {_id: 7, data: 6}],
+        server: [1, 2, 3, 4, 5, { _id: 6, data: 6 }],
+        local: [1, 2, 3, 4, 5, { _id: 7, data: 6 }],
       })).toMatchObject(mergeResult({
         state: 'IN_SYNC',
-        modifications: [1, 2, 3, 4, 5, {_id: 6, data: 6}],
-        nonConflictingModifications: [1, 2, 3, 4, 5, {_id: 6, data: 6}],
+        modifications: [1, 2, 3, 4, 5, { _id: 6, data: 6 }],
+        nonConflictingModifications: [1, 2, 3, 4, 5, { _id: 6, data: 6 }],
         conflicts: [],
       }))
     })
@@ -190,45 +190,45 @@ describe('mergeArrays', () => {
     })
     test('removal of modified value (modified locally)', () => {
       expect(doMerge({
-        original: [1, 2, {_id: 3, value: 'b'}, 4, 5],
+        original: [1, 2, { _id: 3, value: 'b' }, 4, 5],
         server: [1, 2, 4, 5],
-        local: [1, 2, {_id: 3, value: 'a'}, 4, 5],
+        local: [1, 2, { _id: 3, value: 'a' }, 4, 5],
       })).toMatchObject(mergeResult({
         state: 'CONFLICT',
-        modifications: [1, 2, {_id: 3, value: 'a'}, 4, 5],
+        modifications: [1, 2, { _id: 3, value: 'a' }, 4, 5],
         nonConflictingModifications: [1, 2, 4, 5],
         conflicts: [
           removedArrayItemConflict(
-            {original: {_id: 3, value: 'b'}, local: {_id: 3, value: 'a'}, server: Deleted},
+            { original: { _id: 3, value: 'b' }, local: { _id: 3, value: 'a' }, server: Deleted },
             2,
           ),
           arrayConflict({
-            original: toEntityList([1, 2, {_id: 3, value: 'b'}, 4, 5]),
+            original: toEntityList([1, 2, { _id: 3, value: 'b' }, 4, 5]),
             server: toEntityList([1, 2, 4, 5]),
-            local: toEntityList([1, 2, {_id: 3, value: 'a'}, 4, 5]),
-          })
+            local: toEntityList([1, 2, { _id: 3, value: 'a' }, 4, 5]),
+          }),
         ],
       }))
     })
     test('removal of modified value (modified on server)', () => {
       expect(doMerge({
-        original: [1, 2, {_id: 3, value: 'b'}, 4, 5],
-        server: [1, 2, {_id: 3, value: 'a'}, 4, 5],
+        original: [1, 2, { _id: 3, value: 'b' }, 4, 5],
+        server: [1, 2, { _id: 3, value: 'a' }, 4, 5],
         local: [1, 2, 4, 5],
       })).toMatchObject(mergeResult({
         state: 'CONFLICT',
         modifications: [1, 2, 4, 5],
-        nonConflictingModifications: [1, 2, {_id: 3, value: 'a'}, 4, 5],
+        nonConflictingModifications: [1, 2, { _id: 3, value: 'a' }, 4, 5],
         conflicts: [
           removedArrayItemConflict(
-            {original: {_id: 3, value: 'b'}, local: Deleted, server: {_id: 3, value: 'a'}},
+            { original: { _id: 3, value: 'b' }, local: Deleted, server: { _id: 3, value: 'a' } },
             2,
           ),
           arrayConflict({
-            original: toEntityList([1, 2, {_id: 3, value: 'b'}, 4, 5]),
-            server: toEntityList([1, 2, {_id: 3, value: 'a'}, 4, 5]),
+            original: toEntityList([1, 2, { _id: 3, value: 'b' }, 4, 5]),
+            server: toEntityList([1, 2, { _id: 3, value: 'a' }, 4, 5]),
             local: toEntityList([1, 2, 4, 5]),
-          })
+          }),
         ],
       }))
     })
@@ -373,7 +373,7 @@ describe('mergeArrays', () => {
             original: toEntityList('1234567890'),
             server: toEntityList('412567890'),
             local: toEntityList('245167890'),
-          })
+          }),
         ],
       }))
     })
@@ -382,76 +382,76 @@ describe('mergeArrays', () => {
   describe('modifying items', () => {
     test('modifying locally', () => {
       expect(doMerge({
-        original: [1, 2, 3, 4, {_id: 5, value: 5}],
-        server: [1, 2, 3, 4, {_id: 5, value: 5}],
-        local: [1, 2, 3, 4, {_id: 5, value: 8}],
+        original: [1, 2, 3, 4, { _id: 5, value: 5 }],
+        server: [1, 2, 3, 4, { _id: 5, value: 5 }],
+        local: [1, 2, 3, 4, { _id: 5, value: 8 }],
       })).toMatchObject(mergeResult({
         state: 'MODIFIED_LOCALLY',
-        modifications: [1, 2, 3, 4, {_id: 5, value: 8}],
-        nonConflictingModifications: [1, 2, 3, 4, {_id: 5, value: 8}],
+        modifications: [1, 2, 3, 4, { _id: 5, value: 8 }],
+        nonConflictingModifications: [1, 2, 3, 4, { _id: 5, value: 8 }],
         conflicts: [],
       }))
     })
     test('modifying on server', () => {
       expect(doMerge({
-        original: [1, 2, 3, 4, {_id: 5, value: 5}],
-        server: [1, 2, 3, 4, {_id: 5, value: 8}],
-        local: [1, 2, 3, 4, {_id: 5, value: 5}],
+        original: [1, 2, 3, 4, { _id: 5, value: 5 }],
+        server: [1, 2, 3, 4, { _id: 5, value: 8 }],
+        local: [1, 2, 3, 4, { _id: 5, value: 5 }],
       })).toMatchObject(mergeResult({
         state: 'IN_SYNC',
-        modifications: [1, 2, 3, 4, {_id: 5, value: 8}],
-        nonConflictingModifications: [1, 2, 3, 4, {_id: 5, value: 8}],
+        modifications: [1, 2, 3, 4, { _id: 5, value: 8 }],
+        nonConflictingModifications: [1, 2, 3, 4, { _id: 5, value: 8 }],
         conflicts: [],
       }))
     })
     test('modifying on both', () => {
       expect(doMerge({
-        original: [1, 2, 3, 4, {_id: 5, value: 5}],
-        server: [1, 2, 3, 4, {_id: 5, value: 8}],
-        local: [1, 2, 3, 4, {_id: 5, value: 8}],
+        original: [1, 2, 3, 4, { _id: 5, value: 5 }],
+        server: [1, 2, 3, 4, { _id: 5, value: 8 }],
+        local: [1, 2, 3, 4, { _id: 5, value: 8 }],
       })).toMatchObject(mergeResult({
         state: 'IN_SYNC',
-        modifications: [1, 2, 3, 4, {_id: 5, value: 8}],
-        nonConflictingModifications: [1, 2, 3, 4, {_id: 5, value: 8}],
+        modifications: [1, 2, 3, 4, { _id: 5, value: 8 }],
+        nonConflictingModifications: [1, 2, 3, 4, { _id: 5, value: 8 }],
         conflicts: [],
       }))
     })
 
     test('modifying and moving on server', () => {
       expect(doMerge({
-        original: [1, 2, 3, 4, {_id: 5, value: 5}],
-        server: [1, 2, {_id: 5, value: 8}, 3, 4],
-        local: [1, 2, 3, 4, {_id: 5, value: 5}],
+        original: [1, 2, 3, 4, { _id: 5, value: 5 }],
+        server: [1, 2, { _id: 5, value: 8 }, 3, 4],
+        local: [1, 2, 3, 4, { _id: 5, value: 5 }],
       })).toMatchObject(mergeResult({
         state: 'IN_SYNC',
-        modifications: [1, 2, {_id: 5, value: 8}, 3, 4],
-        nonConflictingModifications: [1, 2, {_id: 5, value: 8}, 3, 4],
+        modifications: [1, 2, { _id: 5, value: 8 }, 3, 4],
+        nonConflictingModifications: [1, 2, { _id: 5, value: 8 }, 3, 4],
         conflicts: [],
       }))
     })
 
     test('modifying and moving locally', () => {
       expect(doMerge({
-        original: [1, 2, 3, 4, {_id: 5, value: 5}],
-        server: [1, 2, 3, 4, {_id: 5, value: 5}],
-        local: [1, 2, {_id: 5, value: 8}, 3, 4],
+        original: [1, 2, 3, 4, { _id: 5, value: 5 }],
+        server: [1, 2, 3, 4, { _id: 5, value: 5 }],
+        local: [1, 2, { _id: 5, value: 8 }, 3, 4],
       })).toMatchObject(mergeResult({
         state: 'MODIFIED_LOCALLY',
-        modifications: [1, 2, {_id: 5, value: 8}, 3, 4],
-        nonConflictingModifications: [1, 2, {_id: 5, value: 8}, 3, 4],
+        modifications: [1, 2, { _id: 5, value: 8 }, 3, 4],
+        nonConflictingModifications: [1, 2, { _id: 5, value: 8 }, 3, 4],
         conflicts: [],
       }))
     })
 
     test('modifying and moving on both', () => {
       expect(doMerge({
-        original: [1, 2, 3, 4, {_id: 5, value: 5}],
-        server: [1, 2, {_id: 5, value: 5}, 3, 4],
-        local: [1, 2, {_id: 5, value: 8}, 3, 4],
+        original: [1, 2, 3, 4, { _id: 5, value: 5 }],
+        server: [1, 2, { _id: 5, value: 5 }, 3, 4],
+        local: [1, 2, { _id: 5, value: 8 }, 3, 4],
       })).toMatchObject(mergeResult({
         state: 'MODIFIED_LOCALLY',
-        modifications: [1, 2, {_id: 5, value: 8}, 3, 4],
-        nonConflictingModifications: [1, 2, {_id: 5, value: 8}, 3, 4],
+        modifications: [1, 2, { _id: 5, value: 8 }, 3, 4],
+        nonConflictingModifications: [1, 2, { _id: 5, value: 8 }, 3, 4],
         conflicts: [],
       }))
     })
@@ -461,24 +461,24 @@ describe('mergeArrays', () => {
     expect(doMerge({
       original: [1, 2, 3, 4, 5],
       server: [1, 4, 5, 6],
-      local: [1, {_id: 2}, {_id: 3}, 4],
+      local: [1, { _id: 2 }, { _id: 3 }, 4],
     })).toMatchObject(mergeResult({
       state: 'CONFLICT',
-      modifications: [1, {_id: 2}, {_id: 3}, 4, 6],
+      modifications: [1, { _id: 2 }, { _id: 3 }, 4, 6],
       nonConflictingModifications: [1, 4, 6],
       conflicts: [
         removedArrayItemConflict(
-          {original: {_id: 2, value: 2}, local: {_id: 2}, server: Deleted},
+          { original: { _id: 2, value: 2 }, local: { _id: 2 }, server: Deleted },
           1,
         ),
         removedArrayItemConflict(
-          {original: {_id: 3, value: 3}, local: {_id: 3}, server: Deleted},
+          { original: { _id: 3, value: 3 }, local: { _id: 3 }, server: Deleted },
           2,
         ),
         arrayConflict({
           original: toEntityList([1, 2, 3, 4, 5]),
           server: toEntityList([1, 4, 5, 6]),
-          local: toEntityList([1, {_id: 2}, {_id: 3}, 4]),
+          local: toEntityList([1, { _id: 2 }, { _id: 3 }, 4]),
         }),
       ],
     }))
@@ -538,8 +538,8 @@ describe('mergeArrays', () => {
   test('tough cases 6B', () => {
     expect(doMerge({
       original: [1, 2, 3, 4],
-      server: [1, 9,  2, 8, 3, 7, 4, 6],
-      local:  [1, 11, 2, 3, 4, 10],
+      server: [1, 9, 2, 8, 3, 7, 4, 6],
+      local: [1, 11, 2, 3, 4, 10],
     })).toMatchObject(mergeResult({
       state: 'MODIFIED_LOCALLY',
       modifications: [1, 9, 11, 2, 8, 3, 7, 4, 6, 10],
@@ -551,7 +551,7 @@ describe('mergeArrays', () => {
     expect(doMerge({
       original: [3, 4],
       server: [8, 3, 7, 4, 6],
-      local:  [3, 4, 10],
+      local: [3, 4, 10],
     })).toMatchObject(mergeResult({
       state: 'MODIFIED_LOCALLY',
       modifications: [8, 3, 7, 4, 6, 10],
@@ -562,7 +562,7 @@ describe('mergeArrays', () => {
   test('tough cases 6C', () => {
     expect(doMerge({
       original: [1, 2, 3, 4],
-      server: [1, {_id: 9, value: 9}, 2, 8, 3, 7, 4, 6],
+      server: [1, { _id: 9, value: 9 }, 2, 8, 3, 7, 4, 6],
       local: [1, 11, 2, 3, 12, 4, 10],
     })).toMatchObject(mergeResult({
       state: 'MODIFIED_LOCALLY',
@@ -599,7 +599,7 @@ describe('mergeArrays', () => {
           original: toEntityList('ABC'),
           server: toEntityList('BAC'),
           local: toEntityList('ACB'),
-        })
+        }),
       ],
     }))
   })
@@ -618,7 +618,7 @@ describe('mergeArrays', () => {
           original: toEntityList('ABCxabc'),
           server: toEntityList('acbxBAC'),
           local: toEntityList('ACBxbac'),
-        })
+        }),
       ],
     }))
   })
@@ -675,29 +675,29 @@ describe('mergeArrays', () => {
     })
 
     function testStability(original: Entity[], v1: Entity[], v2: Entity[]) {
-      mergeArrays({original, server: v2, local: v1}, merge)
+      mergeArrays({ original, server: v2, local: v1 }, merge)
     }
 
     test('random adding', () => {
       const original = [1, 2, 4, 5, 6, 7, 8, 9, 10].map(toEntity)
-      const version = changedVersion(original, random, { add: random()*20 })
-      const version2 = changedVersion(original, random, { add: random()*20 })
+      const version = changedVersion(original, random, { add: random() * 20 })
+      const version2 = changedVersion(original, random, { add: random() * 20 })
 
       testStability(original, version, version2)
     })
 
     test('random removals', () => {
       const original = [1, 2, 4, 5, 6, 7, 8, 9, 10].map(toEntity)
-      const version = changedVersion(original, random, { remove: random()*8 })
-      const version2 = changedVersion(original, random, { remove: random()*8 })
+      const version = changedVersion(original, random, { remove: random() * 8 })
+      const version2 = changedVersion(original, random, { remove: random() * 8 })
 
       testStability(original, version, version2)
     })
 
     test('random moving', () => {
       const original = [1, 2, 4, 5, 6, 7, 8, 9, 10].map(toEntity)
-      const version = changedVersion(original, random, { move: random()*8 })
-      const version2 = changedVersion(original, random, { move: random()*8 })
+      const version = changedVersion(original, random, { move: random() * 8 })
+      const version2 = changedVersion(original, random, { move: random() * 8 })
 
       testStability(original, version, version2)
     })
@@ -705,14 +705,14 @@ describe('mergeArrays', () => {
     test('random everything', () => {
       const original = [1, 2, 4, 5, 6, 7, 8, 9, 10].map(toEntity)
       const version = changedVersion(original, random, {
-        add: random()*20,
-        remove: random()*8,
-        move: random()*8,
+        add: random() * 20,
+        remove: random() * 8,
+        move: random() * 8,
       })
       const version2 = changedVersion(original, random, {
-        add: random()*20,
-        remove: random()*8,
-        move: random()*8,
+        add: random() * 20,
+        remove: random() * 8,
+        move: random() * 8,
       })
 
       testStability(original, version, version2)

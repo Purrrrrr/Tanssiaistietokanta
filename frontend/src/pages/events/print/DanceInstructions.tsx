@@ -1,24 +1,24 @@
-import React, {useCallback, useRef, useState} from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import { Edit } from '@blueprintjs/icons'
 import classNames from 'classnames'
 import { MarkdownToJSX } from 'markdown-to-jsx'
 
-import {Dance, EditableDance} from 'types'
-import {DanceInstructionsQuery} from 'types/gql/graphql'
+import { Dance, EditableDance } from 'types'
+import { DanceInstructionsQuery } from 'types/gql/graphql'
 
-import {backendQueryHook, cleanMetadataValues, graphql} from 'backend'
-import {sortDances, usePatchDance} from 'services/dances'
-import {useCallbackOnEventChanges} from 'services/events'
+import { backendQueryHook, cleanMetadataValues, graphql } from 'backend'
+import { sortDances, usePatchDance } from 'services/dances'
+import { useCallbackOnEventChanges } from 'services/events'
 
-import {formFor, patchStrategy, Switch, SyncStatus, useAutosavingState} from 'libraries/forms'
-import {Button, H2, Markdown, showToast} from 'libraries/ui'
+import { formFor, patchStrategy, Switch, SyncStatus, useAutosavingState } from 'libraries/forms'
+import { Button, H2, Markdown, showToast } from 'libraries/ui'
 import { InstructionEditor } from 'components/dance/DanceEditor'
 import { WikipageSelector } from 'components/dance/WikipageSelector'
-import {LoadingState} from 'components/LoadingState'
-import {PrintViewToolbar} from 'components/print'
-import {useFormatDateTime, useT, useTranslation} from 'i18n'
-import {selectElement} from 'utils/selectElement'
-import {uniq} from 'utils/uniq'
+import { LoadingState } from 'components/LoadingState'
+import { PrintViewToolbar } from 'components/print'
+import { useFormatDateTime, useT, useTranslation } from 'i18n'
+import { selectElement } from 'utils/selectElement'
+import { uniq } from 'utils/uniq'
 
 import './DanceInstructions.sass'
 
@@ -26,7 +26,7 @@ type Workshop = NonNullable<DanceInstructionsQuery['event']>['workshops'][0]
 
 const { Form, Field } = formFor<Dance>()
 
-export default function DanceInstructions({eventId}) {
+export default function DanceInstructions({ eventId }) {
   const t = useT('pages.events.danceInstructions')
   const dancesEl = useRef<HTMLElement>(null)
   const [showWorkshops, setShowWorkshops] = useState(true)
@@ -37,7 +37,7 @@ export default function DanceInstructions({eventId}) {
   function selectAndCopy() {
     selectElement(dancesEl.current)
     document.execCommand('copy')
-    showToast({message: t('instructionsCopied')})
+    showToast({ message: t('instructionsCopied') })
     window.getSelection()?.removeAllRanges()
   }
 
@@ -46,15 +46,15 @@ export default function DanceInstructions({eventId}) {
       <p>{t('clickInstructionsToEdit')}</p>
       <p>{t('defaultStylingDescription')}</p>
       <p>
-        <Switch id="showWorkshops" inline label={t('showWorkshops')} value={showWorkshops} onChange={setShowWorkshops}/>
-        <Switch id="showDances" inline label={t('showDances')} value={showDances} onChange={setShowDances}/>
+        <Switch id="showWorkshops" inline label={t('showWorkshops')} value={showWorkshops} onChange={setShowWorkshops} />
+        <Switch id="showDances" inline label={t('showDances')} value={showDances} onChange={setShowDances} />
         {showDances &&
           <>
-            <Switch id="showShortInstructions" inline label={t('showShortInstructions')} value={showShortInstructions} onChange={setShowShortInstructions}/>
-            <Switch id="hilightEmpty" inline label={t('hilightEmpty')} value={hilightEmpty} onChange={setHilightEmpty}/>
+            <Switch id="showShortInstructions" inline label={t('showShortInstructions')} value={showShortInstructions} onChange={setShowShortInstructions} />
+            <Switch id="hilightEmpty" inline label={t('hilightEmpty')} value={hilightEmpty} onChange={setHilightEmpty} />
           </>
         }
-        <Button text={t('selectAndCopy')} onClick={selectAndCopy}/>
+        <Button text={t('selectAndCopy')} onClick={selectAndCopy} />
         <Button text={t('print')} onClick={() => window.print()} />
       </p>
     </PrintViewToolbar>
@@ -69,17 +69,17 @@ export default function DanceInstructions({eventId}) {
   </>
 }
 
-function DanceInstructionsView({eventId, showWorkshops, showDances, hilightEmpty, showShortInstructions, elementRef}) {
+function DanceInstructionsView({ eventId, showWorkshops, showDances, hilightEmpty, showShortInstructions, elementRef }) {
   const t = useT('pages.events.danceInstructions')
-  const {data, refetch, ...loadingState} = useDanceInstructions({eventId})
+  const { data, refetch, ...loadingState } = useDanceInstructions({ eventId })
   const formatDateTime = useFormatDateTime()
 
   if (!data?.event) return <LoadingState {...loadingState} refetch={refetch} />
 
-  const {workshops, program} = data.event
+  const { workshops, program } = data.event
   const dances = getDances(workshops)
 
-  return <section className={classNames('dance-instructions', {'hilight-empty': hilightEmpty, showShortInstructions})} ref={elementRef}>
+  return <section className={classNames('dance-instructions', { 'hilight-empty': hilightEmpty, showShortInstructions })} ref={elementRef}>
     {showWorkshops &&
       <section className="workshops">
         <h1>{t('workshops')}</h1>
@@ -133,21 +133,21 @@ query DanceInstructions($eventId: ID!) {
       }
     }
   }
-}`), ({refetch, variables}) => {
+}`), ({ refetch, variables }) => {
   if (variables === undefined) throw new Error('Unknown event id')
   useCallbackOnEventChanges(variables.eventId, refetch)
 })
 
 interface Instance {
-  dances?: {name: string, _id: string}[] | null
+  dances?: { name: string, _id: string }[] | null
 }
 
-function getDances(workshops: {instances: Instance[]}[]) {
+function getDances(workshops: { instances: Instance[] }[]) {
   const dances = uniq(workshops.flatMap(w => w.instances).flatMap(i => i.dances ?? []))
   return sortDances(dances)
 }
 
-function InstructionsForDance({dance, showShortInstructions} : {dance: Dance, showShortInstructions: boolean}) {
+function InstructionsForDance({ dance, showShortInstructions }: { dance: Dance, showShortInstructions: boolean }) {
   const [editorOpen, setEditorOpen] = useState(false)
   const field = showShortInstructions ? 'description' : 'instructions' as const
   const value = dance[field] ?? ''
@@ -166,23 +166,23 @@ function InstructionsForDance({dance, showShortInstructions} : {dance: Dance, sh
     <div className={field}>
       {editorOpen
         ? <DanceFieldEditor dance={dance} field={field} />
-        : <Markdown options={{overrides: markdownOverrides}} children={dance[field] ?? ''} />
+        : <Markdown options={{ overrides: markdownOverrides }} children={dance[field] ?? ''} />
       }
     </div>
   </div>
 }
 
-function DanceFieldEditor({dance: danceInDatabase, field} : {dance: Dance, field: 'description' | 'instructions'}) {
+function DanceFieldEditor({ dance: danceInDatabase, field }: { dance: Dance, field: 'description' | 'instructions' }) {
   const t = useT('domain.dance')
   const [patchDance] = usePatchDance()
-  const onPatch= useCallback(
+  const onPatch = useCallback(
     (dance) => patchDance({
       id: danceInDatabase._id,
       dance: cleanMetadataValues(dance),
     }),
-    [danceInDatabase, patchDance]
+    [danceInDatabase, patchDance],
   )
-  const {value, onChange, state } = useAutosavingState<EditableDance, Partial<EditableDance>>(danceInDatabase, onPatch, patchStrategy.partial)
+  const { value, onChange, state } = useAutosavingState<EditableDance, Partial<EditableDance>>(danceInDatabase, onPatch, patchStrategy.partial)
 
   return <Form value={value} onChange={onChange}>
     <SyncStatus state={state} floatRight />
@@ -190,24 +190,24 @@ function DanceFieldEditor({dance: danceInDatabase, field} : {dance: Dance, field
       label={t(field)}
       path={field}
       component={InstructionEditor}
-      componentProps={{ wikipage: danceInDatabase.wikipage, markdownOverrides}}
+      componentProps={{ wikipage: danceInDatabase.wikipage, markdownOverrides }}
     />
     <Field label={t('wikipageName')} path="wikipageName" component={WikipageSelector} componentProps={{ possibleName: danceInDatabase.name }} />
   </Form>
 }
 
 const markdownOverrides = {
-  h1: { component: 'h3'},
-  h2: { component: 'h4'},
-  h3: { component: 'h5'},
-  h4: { component: 'h6'},
-  h5: { component: 'span'},
-  a: { component: 'span' }
+  h1: { component: 'h3' },
+  h2: { component: 'h4' },
+  h3: { component: 'h5' },
+  h4: { component: 'h6' },
+  h5: { component: 'span' },
+  a: { component: 'span' },
 } as MarkdownToJSX.Overrides
 
-function WorkshopDetails({workshop}: {workshop: Workshop}) {
+function WorkshopDetails({ workshop }: { workshop: Workshop }) {
   const t = useT('pages.events.danceInstructions')
-  const {name, description, instanceSpecificDances, instances } = workshop
+  const { name, description, instanceSpecificDances, instances } = workshop
   const formatDateTime = useFormatDateTime()
 
   return <div className="workshop">
@@ -222,7 +222,7 @@ function WorkshopDetails({workshop}: {workshop: Workshop}) {
           <p>
             {t('dances')} : {instance?.dances?.map(d => d.name)?.join(', ')}
           </p>
-        </React.Fragment>
+        </React.Fragment>,
       )
       : <>
         <h3 className="font-bold">{instances.map(instance => formatDateTime(new Date(instance.dateTime))).join(', ')}</h3>

@@ -17,7 +17,7 @@ export function useFormReducer<Data>(externalData: Data, onChange: (changed: Dat
 
   useEffect(
     () => { trigger(state) },
-    [state, trigger]
+    [state, trigger],
   )
 
   const previousDataRef = useRef({
@@ -38,11 +38,11 @@ export function useFormReducer<Data>(externalData: Data, onChange: (changed: Dat
 
       previous.external = externalData
       previous.internal = state.data
-    }, [externalData, state.data, dispatch, onChange]
+    }, [externalData, state.data, dispatch, onChange],
   )
 
   return {
-    state, dispatch, subscribe
+    state, dispatch, subscribe,
   }
 }
 

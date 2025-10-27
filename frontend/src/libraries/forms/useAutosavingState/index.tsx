@@ -1,14 +1,14 @@
-import {useCallback, useEffect, useRef, useState} from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import equal from 'fast-deep-equal'
 
-import {MergeableObject, SyncState} from './types'
-import {NewValue, OnFormChangeHandler, StringPath, TypedStringPath, Version} from '../types'
+import { MergeableObject, SyncState } from './types'
+import { NewValue, OnFormChangeHandler, StringPath, TypedStringPath, Version } from '../types'
 
 import createDebug from 'utils/debug'
 
-import {FormProps} from '../Form'
-import {jsonPatch, PatchStrategy} from './patchStrategies'
-import {useAutosavingStateReducer} from './reducer'
+import { FormProps } from '../Form'
+import { jsonPatch, PatchStrategy } from './patchStrategies'
+import { useAutosavingStateReducer } from './reducer'
 
 const debug = createDebug('useAutoSavingState')
 
@@ -18,7 +18,7 @@ export type { PatchStrategy } from './patchStrategies'
 export * as patchStrategy from './patchStrategies'
 export type { SyncState } from './types'
 
-export type UseAutosavingStateReturn<T extends MergeableObject> = {
+export interface UseAutosavingStateReturn<T extends MergeableObject> {
   value: T
   onChange: OnFormChangeHandler<T>
   formProps: AutosavingFormProps<T>
@@ -27,18 +27,17 @@ export type UseAutosavingStateReturn<T extends MergeableObject> = {
 
 type AutosavingFormProps<T> = Pick<Required<FormProps<T>>, 'value' | 'onChange' | 'onValidityChange' | 'conflicts' | 'onResolveConflict'>
 
-const DISABLE_CONFLICT_OVERRIDE_DELAY = 1000 * 60 * 5 //Disable saving and overwriting conflicts after five minutes
+const DISABLE_CONFLICT_OVERRIDE_DELAY = 1000 * 60 * 5 // Disable saving and overwriting conflicts after five minutes
 
 export const USE_BACKEND_VALUE = Symbol('useBackendValue')
 export const USE_LOCAL_VALUE = Symbol('useLocalValue')
 
 export function useAutosavingState<T extends MergeableObject, Patch>(
-  serverState : T,
-  onPatch : (patch : Patch) => Promise<unknown>,
+  serverState: T,
+  onPatch: (patch: Patch) => Promise<unknown>,
   patchStrategy: PatchStrategy<T, Patch>,
   refreshData?: () => unknown,
-) : UseAutosavingStateReturn<T>
-{
+): UseAutosavingStateReturn<T> {
   const [hasErrors, setHasErrors] = useState(false)
   const [reducerState, dispatch] = useAutosavingStateReducer<T>(serverState)
   const { serverState: originalData, serverStateTime, mergeResult, patchPending } = reducerState
@@ -80,15 +79,15 @@ export function useAutosavingState<T extends MergeableObject, Patch>(
   }, [state, nonConflictingModifications, onPatch, originalData, serverStateTime, patchStrategy, refreshData, dispatch, patchPending])
 
   const onModified = useCallback((modifications: NewValue<T>) => {
-    dispatch({ type: 'LOCAL_MODIFICATION', modifications})
+    dispatch({ type: 'LOCAL_MODIFICATION', modifications })
   }, [dispatch])
   const onResolveConflict = useCallback(function <V>(path: TypedStringPath<V, T>, version: Version) {
     dispatch({ type: 'CONFLICT_RESOLVED', path: path as StringPath<T>, version })
   }, [dispatch])
 
   const onValidityChange = useCallback(
-    ({hasErrors}) => setHasErrors(hasErrors),
-    []
+    ({ hasErrors }) => setHasErrors(hasErrors),
+    [],
   )
 
   return {

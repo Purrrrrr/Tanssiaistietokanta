@@ -1,11 +1,11 @@
-import {useCallback } from 'react'
+import { useCallback } from 'react'
 
-import {Dance, DanceWithEvents, EditableDance} from 'types'
+import { Dance, DanceWithEvents, EditableDance } from 'types'
 
 import { cleanMetadataValues } from 'backend'
 import { usePatchDance } from 'services/dances'
 
-import {formFor, patchStrategy, useAutosavingState} from 'libraries/forms'
+import { formFor, patchStrategy, useAutosavingState } from 'libraries/forms'
 
 const {
   Form,
@@ -21,11 +21,11 @@ export function useDanceEditorState(dance: Dance) {
   const readOnly = dance._versionId != null
   const [modifyDance] = usePatchDance()
   const patchDance = useCallback(
-    async (patches : Partial<DanceWithEvents>) => {
+    async (patches: Partial<DanceWithEvents>) => {
       if (readOnly) return
-      return modifyDance({id: dance._id, dance: cleanMetadataValues(patches)})
+      return modifyDance({ id: dance._id, dance: cleanMetadataValues(patches) })
     },
-    [modifyDance, dance._id, readOnly]
+    [modifyDance, dance._id, readOnly],
   )
   const { wikipage: _ignored, ...editedDance } = dance
 
@@ -33,7 +33,7 @@ export function useDanceEditorState(dance: Dance) {
 
   return {
     formProps: {
-      ...formProps, readOnly
+      ...formProps, readOnly,
     },
     ...rest,
   }

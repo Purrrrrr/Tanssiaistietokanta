@@ -2,13 +2,13 @@ import { useSearchParams } from 'react-router-dom'
 
 import { filterDances, useDances } from 'services/dances'
 
-import {FormGroup, ModeButton, ModeSelector, SearchBar} from 'libraries/ui'
+import { FormGroup, ModeButton, ModeSelector, SearchBar } from 'libraries/ui'
 import { CreateDanceButtons } from 'components/dance/CreateDanceButtons'
 import { AnyCategory, anyCategory, DanceViewCategorySelector } from 'components/dance/DanceCategorySelector'
 import { DanceList, View } from 'components/dance/DanceList'
-import {LoadingState} from 'components/LoadingState'
-import {PageTitle} from 'components/PageTitle'
-import {useT, useTranslation} from 'i18n'
+import { LoadingState } from 'components/LoadingState'
+import { PageTitle } from 'components/PageTitle'
+import { useT, useTranslation } from 'i18n'
 
 function DancesPage() {
   const t = useT('pages.dances.danceList')
@@ -21,7 +21,7 @@ function DancesPage() {
     <PageTitle>{t('pageTitle')}</PageTitle>
     <LoadingState {...requestState} />
     <div className="flex flex-wrap gap-2 mb-2.5">
-      <SearchBar id="search-dances" value={search} onChange={setSearch} placeholder={useTranslation('common.search')} emptySearchText={useTranslation('common.emptySearch')}/>
+      <SearchBar id="search-dances" value={search} onChange={setSearch} placeholder={useTranslation('common.search')} emptySearchText={useTranslation('common.emptySearch')} />
       <div>
         <CreateDanceButtons danceCount={dances.length} />
       </div>
@@ -44,7 +44,7 @@ interface DanceListState {
   view: View
   category?: string | AnyCategory
 }
-const views : View[] = ['tight', 'extended']
+const views: View[] = ['tight', 'extended']
 
 function useDanceListState() {
   const [searchParams, setSearchParams] = useSearchParams()

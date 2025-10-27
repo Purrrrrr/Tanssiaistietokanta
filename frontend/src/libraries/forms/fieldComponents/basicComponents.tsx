@@ -1,12 +1,12 @@
-import React, {ComponentProps} from 'react'
-import {Switch as BlueprintSwitch, TextArea as BlueprintTextArea, TextAreaProps as BlueprintTextAreaProps} from '@blueprintjs/core'
+import React, { ComponentProps } from 'react'
+import { Switch as BlueprintSwitch, TextArea as BlueprintTextArea, TextAreaProps as BlueprintTextAreaProps } from '@blueprintjs/core'
 import classNames from 'classnames'
 
-import {ExtendedFieldComponentProps, FieldComponentProps, FieldPropsWithoutComponent} from '../types'
+import { ExtendedFieldComponentProps, FieldComponentProps, FieldPropsWithoutComponent } from '../types'
 
 import { CssClass } from 'libraries/ui'
 
-import {Field, useFieldData} from '../Field'
+import { Field, useFieldData } from '../Field'
 import { FieldContainer } from '../FieldContainer'
 import { useFieldValueProps } from '../hooks'
 
@@ -15,8 +15,8 @@ export interface SwitchForProps<V> {
   toValue: (b: boolean, v: V | null | undefined) => V
 }
 export type SwitchFieldForValueProps<T, V> = Omit<FieldPropsWithoutComponent<T, V>, 'labelStyle'>
-export function switchFor<T, V>({isChecked, toValue}: SwitchForProps<V>) {
-  return function SwitchFieldForValue({path, ...rest}: SwitchFieldForValueProps<T, V>) {
+export function switchFor<T, V>({ isChecked, toValue }: SwitchForProps<V>) {
+  return function SwitchFieldForValue({ path, ...rest }: SwitchFieldForValueProps<T, V>) {
     const { value, onChange, ...dataProps } = useFieldValueProps<T, V>(path)
     const { fieldProps, containerProps } = useFieldData(path, value, rest)
 
@@ -27,24 +27,24 @@ export function switchFor<T, V>({isChecked, toValue}: SwitchForProps<V>) {
       onChange: onChangeMapped,
       label: containerProps.label,
       ...fieldProps,
-      ...dataProps
+      ...dataProps,
     } as SwitchProps
 
     return <FieldContainer {...containerProps} labelStyle="hidden-nowrapper">
-      <Switch {...allProps}  />
+      <Switch {...allProps} />
     </FieldContainer>
   }
 }
 
 export type SwitchFieldProps<T> = Omit<FieldPropsWithoutComponent<T, boolean>, 'labelStyle'>
-export function SwitchField<T>({label, ...props} : SwitchFieldProps<T>) {
-  return <Field<T, boolean, SwitchProps> {...props} label={label} labelStyle="hidden-nowrapper" component={Switch} componentProps={{label}} />
+export function SwitchField<T>({ label, ...props }: SwitchFieldProps<T>) {
+  return <Field<T, boolean, SwitchProps> {...props} label={label} labelStyle="hidden-nowrapper" component={Switch} componentProps={{ label }} />
 }
 
 export interface InputFieldProps<T> extends FieldPropsWithoutComponent<T, string> {
   componentProps?: Omit<InputProps, keyof FieldComponentProps<T>>
 }
-export function InputField<T>(props : InputFieldProps<T>) {
+export function InputField<T>(props: InputFieldProps<T>) {
   return <Field<T, string, InputProps> {...props} component={Input} />
 }
 
@@ -60,13 +60,13 @@ export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
       disabled={readOnly}
       {...props}
     />
-  }
+  },
 )
 
 export interface NumberInputProps extends ExtendedFieldComponentProps<number, HTMLInputElement, ComponentProps<'input'>> {
   inputRef?: React.Ref<HTMLInputElement>
 }
-export function NumberInput({value, className, onChange, inline, inputRef, ...props} : NumberInputProps) {
+export function NumberInput({ value, className, onChange, inline = false, inputRef, ...props }: NumberInputProps) {
   return <input
     type="number"
     ref={inputRef}
@@ -81,7 +81,7 @@ export function NumberInput({value, className, onChange, inline, inputRef, ...pr
 export interface InputProps extends ExtendedFieldComponentProps<string, HTMLInputElement, ComponentProps<'input'>> {
   inputRef?: React.Ref<HTMLInputElement>
 }
-export function Input({value, className, onChange, inline, inputRef, ...props} : InputProps) {
+export function Input({ value, className, onChange, inline = false, inputRef, ...props }: InputProps) {
   return <input
     ref={inputRef}
     value={value ?? ''}
@@ -95,7 +95,7 @@ export function Input({value, className, onChange, inline, inputRef, ...props} :
 interface TextAreaProps extends FieldComponentProps<string, HTMLTextAreaElement>, Pick<BlueprintTextAreaProps, 'growVertically'> {
   inputRef?: React.Ref<HTMLTextAreaElement>
 }
-export function TextArea({value, onChange, inline: _ignored, inputRef, ...props} : TextAreaProps) {
+export function TextArea({ value, onChange, inline: _ignored, inputRef, ...props }: TextAreaProps) {
   return <BlueprintTextArea
     inputRef={inputRef}
     value={value ?? ''}
@@ -113,8 +113,8 @@ interface RadioGroupProps<E extends string | null> extends FieldComponentProps<E
   }[]
 }
 
-export function RadioGroup<E extends string>({options, id, value, onChange, ...rest}: RadioGroupProps<E>) {
-  return options.map(({value: optionValue, label})=>
+export function RadioGroup<E extends string>({ options, id, value, onChange, ...rest }: RadioGroupProps<E>) {
+  return options.map(({ value: optionValue, label }) =>
     <label key={optionValue} className="mx-2">
       <input
         className="me-1"
@@ -127,6 +127,6 @@ export function RadioGroup<E extends string>({options, id, value, onChange, ...r
         {...rest}
       />
       {label}
-    </label>
+    </label>,
   )
 }

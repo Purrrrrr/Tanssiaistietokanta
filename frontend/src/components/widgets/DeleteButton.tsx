@@ -1,9 +1,9 @@
-import {useState} from 'react'
+import { useState } from 'react'
 import { Trash } from '@blueprintjs/icons'
 
-import {Alert} from 'libraries/overlays'
-import {Button, ButtonProps} from 'libraries/ui'
-import {useT} from 'i18n'
+import { Alert } from 'libraries/overlays'
+import { Button, ButtonProps } from 'libraries/ui'
+import { useT } from 'i18n'
 
 interface DeleteButtonProps extends ButtonProps {
   text: string
@@ -14,7 +14,7 @@ interface DeleteButtonProps extends ButtonProps {
   minimal?: boolean
 }
 
-export function DeleteButton({onDelete, iconOnly, disabled, minimal, className, text, confirmText} : DeleteButtonProps) {
+export function DeleteButton({ onDelete, iconOnly, disabled, minimal, className, text, confirmText }: DeleteButtonProps) {
   const t = useT('components.deleteButton')
   const [showDialog, setShowDialog] = useState(false)
   return <>

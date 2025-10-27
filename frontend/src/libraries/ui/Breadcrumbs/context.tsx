@@ -1,7 +1,7 @@
-import React, {createContext, useContext, useEffect, useRef, useState} from 'react'
-import {useHref} from 'react-router-dom'
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react'
+import { useHref } from 'react-router-dom'
 
-import {sortedPaths} from './sortedPaths'
+import { sortedPaths } from './sortedPaths'
 
 export interface Path {
   text: string | JSX.Element
@@ -15,7 +15,7 @@ const RegisterContext = createContext({
 })
 export const PathContext = createContext<Path[]>([])
 
-export function BreadcrumbContext({children}) {
+export function BreadcrumbContext({ children }) {
   const [paths, setPaths] = useState<Path[]>([])
   const val = useRef({
     add: (v: Path) => setPaths((old) => add(old, v)),
@@ -38,11 +38,11 @@ function remove(array: Path[], value: Path) {
   return index === -1 ? array : array.filter(item => item !== value)
 }
 
-export const Breadcrumb = React.memo(function ({text}: {text: Path['text']}) {
+export const Breadcrumb = React.memo(function ({ text }: { text: Path['text'] }) {
   const href = useHref('.')
   const paths = useContext(RegisterContext)
   useEffect(() => {
-    const route = {text, href}
+    const route = { text, href }
     paths.add(route)
     return () => paths.remove(route)
   }, [text, href, paths])

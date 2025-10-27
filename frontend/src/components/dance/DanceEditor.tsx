@@ -1,13 +1,13 @@
 import { Link as LinkIcon } from '@blueprintjs/icons'
 
-import {Dance, DanceWithEvents} from 'types'
+import { Dance, DanceWithEvents } from 'types'
 
-import {MarkdownEditor, MarkdownEditorProps, SyncStatus } from 'libraries/forms'
-import {Button, H2} from 'libraries/ui'
+import { MarkdownEditor, MarkdownEditorProps, SyncStatus } from 'libraries/forms'
+import { Button, H2 } from 'libraries/ui'
 import { useVersionedName } from 'components/versioning/VersionedPageTitle'
-import {VersionSidebarToggle} from 'components/versioning/VersionSidebarToggle'
+import { VersionSidebarToggle } from 'components/versioning/VersionSidebarToggle'
 import { ColoredTag } from 'components/widgets/ColoredTag'
-import {DurationField} from 'components/widgets/DurationField'
+import { DurationField } from 'components/widgets/DurationField'
 import { useT } from 'i18n'
 
 import { Field, Form, Input, useDanceEditorState, useOnChangeFor } from './DanceForm'
@@ -25,9 +25,9 @@ interface DanceEditorProps {
   showVersionHistory?: boolean
 }
 
-export function DanceEditor({dance, onDelete, showLink, showVersionHistory, titleComponent = 'h2'} : DanceEditorProps) {
+export function DanceEditor({ dance, onDelete, showLink, showVersionHistory, titleComponent = 'h2' }: DanceEditorProps) {
   const t = useT('components.danceEditor')
-  const {formProps, state} = useDanceEditorState(dance)
+  const { formProps, state } = useDanceEditorState(dance)
   const Title = titleComponent === 'h2' ? H2 : 'h1'
 
   return <Form {...formProps}>
@@ -50,7 +50,7 @@ export function DanceEditor({dance, onDelete, showLink, showVersionHistory, titl
 }
 
 export function PlainDanceEditor({ dance }: { dance: DanceWithEvents }) {
-  const {formProps, state} = useDanceEditorState(dance)
+  const { formProps, state } = useDanceEditorState(dance)
   return <Form className="p-2 border-gray-200 border-t-1"{...formProps}>
     <SyncStatus floatRight state={state} />
     <FullDanceEditorFields dance={dance} />
@@ -84,8 +84,8 @@ function FullDanceEditorFields({ dance }: { dance: DanceWithEvents }) {
       </div>
     </div>
     <DanceWikiPreview dance={dance} />
-    <Field label={label('description')} path="description" component={InstructionEditor} componentProps={{ wikipage, className: 'max-h-150'}} />
-    <Field label={label('instructions')} path="instructions" component={InstructionEditor} componentProps={{ wikipage, className: 'max-h-150'}} />
+    <Field label={label('description')} path="description" component={InstructionEditor} componentProps={{ wikipage, className: 'max-h-150' }} />
+    <Field label={label('instructions')} path="instructions" component={InstructionEditor} componentProps={{ wikipage, className: 'max-h-150' }} />
   </>
 }
 
@@ -104,7 +104,7 @@ export function InstructionEditor({ wikipage, ...props }: InstructionEditorProps
 }
 
 function Suggestions(
-  {suggestions, path}: { suggestions?: string[], path: 'category' | 'formation' }
+  { suggestions, path }: { suggestions?: string[], path: 'category' | 'formation' },
 ) {
   const t = useT('components.danceEditor')
   const onChange = useOnChangeFor(path)
@@ -114,7 +114,7 @@ function Suggestions(
   return <div>
     {t('suggestions')}:
     {suggestions.map(suggestion =>
-      <ColoredTag key={suggestion} small title={suggestion} onClick={() => onChange(suggestion)} />
+      <ColoredTag key={suggestion} small title={suggestion} onClick={() => onChange(suggestion)} />,
     )}
   </div>
 }

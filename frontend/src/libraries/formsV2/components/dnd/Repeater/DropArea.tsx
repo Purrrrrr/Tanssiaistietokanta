@@ -12,7 +12,7 @@ export interface DroppableProps<Value extends ListItem, Data = AnyType> {
   disabled?: boolean
 }
 
-export type DroppableElement = ElementType<{style: CSSProperties | undefined}>
+export type DroppableElement = ElementType<{ style: CSSProperties | undefined }>
 
 export function DropArea<Value extends ListItem, Data = AnyType>({
   id, path, asElement = 'div', children, disabled,
@@ -22,7 +22,7 @@ export function DropArea<Value extends ListItem, Data = AnyType>({
     path,
     dropAreaId: id,
   } satisfies DroppableData
-  const {setNodeRef } = useDroppable({
+  const { setNodeRef } = useDroppable({
     disabled: disabled,
     id: useId(),
     data,

@@ -11,13 +11,13 @@ export function useSubscriptions<State>() {
       return () => void callbacks.current.delete(callback)
     }
     const trigger = (state: State) => {
-      for (const  callback of callbacks.current) {
+      for (const callback of callbacks.current) {
         callback(state)
       }
     }
 
     return {
-      subscribe, trigger
+      subscribe, trigger,
     }
   }, [])
 }

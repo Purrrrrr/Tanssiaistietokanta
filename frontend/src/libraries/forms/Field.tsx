@@ -1,4 +1,4 @@
-import React  from 'react'
+import React from 'react'
 import classNames from 'classnames'
 
 import { Conflict, ConflictData, Deleted, FieldComponentDisplayProps, FieldComponentProps, NoRequiredProperties, PartialWhen, TypedStringPath, UserGivenFieldContainerProps } from './types'
@@ -6,7 +6,7 @@ import { Conflict, ConflictData, Deleted, FieldComponentDisplayProps, FieldCompo
 import { FieldContainer, FieldContainerProps } from './FieldContainer'
 import { useFormMetadata } from './formContext'
 import { useFieldValueProps } from './hooks'
-import {useError, ValidationProps} from './validation'
+import { useError, ValidationProps } from './validation'
 
 export type UntypedFieldProps<ValuePath, Value, Component extends React.ElementType, AdditionalProps> =
   {
@@ -26,12 +26,12 @@ export type FieldProps<T, V, P extends FieldComponentProps<V>> = {
 } & FieldDataHookProps & MaybeComponentProps<Omit<P, keyof FieldComponentProps<V>>>
 
 export function Field<T, V, P extends FieldComponentProps<V>>(
-  { path, component: Component, componentProps, renderConflictItem, ...rest }: FieldProps<T, V, P>
+  { path, component: Component, componentProps, renderConflictItem, ...rest }: FieldProps<T, V, P>,
 ) {
   const dataProps = useFieldValueProps<T, V>(path)
   const { fieldProps, containerProps } = useFieldData(path, dataProps.value, rest)
   const allProps = {
-    ...componentProps, ...fieldProps, ...dataProps
+    ...componentProps, ...fieldProps, ...dataProps,
   } as P
 
   const conflictData = useFieldConflictData<T, V>(path, (conflict, type) => {
@@ -48,7 +48,7 @@ export function Field<T, V, P extends FieldComponentProps<V>>(
     return null
   })
 
-  return <FieldContainer {...containerProps} conflictData={conflictData}><Component {...allProps}  /></FieldContainer>
+  return <FieldContainer {...containerProps} conflictData={conflictData}><Component {...allProps} /></FieldContainer>
 }
 
 interface FieldDataHookProps extends UserGivenFieldContainerProps, ValidationProps {}
@@ -61,9 +61,8 @@ interface FieldData {
 export function useFieldData<Value>(
   path: string | number,
   value: Value,
-  {label, labelInfo, helperText, inline: maybeInline, labelStyle: maybeLabelStyle, containerClassName, ...rest}: FieldDataHookProps
-) : FieldData {
-
+  { label, labelInfo, helperText, inline: maybeInline, labelStyle: maybeLabelStyle, containerClassName, ...rest }: FieldDataHookProps,
+): FieldData {
   const ctx = useFormMetadata<unknown>()
   const inline = maybeInline ?? ctx.inline
   const labelStyle = maybeLabelStyle ?? ctx.labelStyle
@@ -74,15 +73,15 @@ export function useFieldData<Value>(
 
   const helperTextId = `${id}--helperText`
   const ariaProps = labelStyle === 'hidden' || labelStyle === 'hidden-nowrapper'
-    ? {'aria-label': labelInfo ? `${label} ${labelInfo}` : label}
+    ? { 'aria-label': labelInfo ? `${label} ${labelInfo}` : label }
     : {}
   return {
     fieldProps: {
       id,
       inline,
       readOnly: ctx.readOnly,
-      'aria-describedby': classNames(errorId, {[helperTextId]: helperText}),
-      ...ariaProps
+      'aria-describedby': classNames(errorId, { [helperTextId]: helperText }),
+      ...ariaProps,
     },
     containerProps: {
       id,
@@ -110,14 +109,14 @@ export function useFieldConflictData<T, V>(path: TypedStringPath<V, T>, renderIt
     serverValue: renderItem(conflict, 'server'),
     onResolve(version) {
       ctx.onResolveConflict(path, version)
-    }
+    },
   }
 }
 
 function ConflictListValue<T>(
-  { list, renderItem = String }: { list: T[], renderItem?: (item: T) => string }
+  { list, renderItem = String }: { list: T[], renderItem?: (item: T) => string },
 ) {
   return <ul>
-    {list.map((item) => <li key={(item as {_id?: string | number })?._id ?? renderItem(item)}>{renderItem(item)}</li>)}
+    {list.map((item) => <li key={(item as { _id?: string | number })?._id ?? renderItem(item)}>{renderItem(item)}</li>)}
   </ul>
 }

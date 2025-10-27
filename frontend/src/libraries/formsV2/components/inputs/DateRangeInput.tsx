@@ -11,8 +11,7 @@ export interface DateRangeInputProps extends FieldInputComponentProps<[Date | nu
   maxDate?: Date
 }
 
-export const DateRangeInput = ({id, value, onChange, readOnly, ...props}: DateRangeInputProps) =>
-{
+export const DateRangeInput = ({ id, value, onChange, readOnly, ...props }: DateRangeInputProps) => {
   const [open, setOpen] = useState(false)
   const dropdown = useRef<HTMLDivElement>(null)
 

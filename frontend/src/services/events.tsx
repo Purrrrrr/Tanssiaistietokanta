@@ -1,4 +1,4 @@
-import {useMemo} from 'react'
+import { useMemo } from 'react'
 
 import { backendQueryHook, entityCreateHook, entityDeleteHook, entityListQueryHook, entityUpdateHook, graphql, setupServiceUpdateFragment, useServiceEvents } from '../backend'
 
@@ -93,7 +93,7 @@ setupServiceUpdateFragment(
         }
       }
     }
-  }`
+  }`,
 )
 
 export const useEventVersions = backendQueryHook(graphql(`
@@ -210,12 +210,12 @@ query getEvent($id: ID!, $versionId: ID) {
       }
     }
   }
-}`), ({refetch, variables}) => {
+}`), ({ refetch, variables }) => {
   if (variables === undefined) throw new Error('Unknown event id')
   useCallbackOnEventChanges(variables.id, refetch)
 })
 export function useEvent(id: string, versionId?: string) {
-  const res = useEventInternal({id, versionId})
+  const res = useEventInternal({ id, versionId })
   return [res?.data?.event, res] as const
 }
 

@@ -1,5 +1,5 @@
-import {useMemo} from 'react'
-import {array, number, Schema, string} from 'yup'
+import { useMemo } from 'react'
+import { array, number, Schema, string } from 'yup'
 
 import { useFormStrings } from '../formContext'
 
@@ -22,16 +22,16 @@ export function useSchema(schemaDef: ValidationProps) {
       return required
         ? baseValidator(type).required(value => Array.isArray(value)
           ? messages.requiredList
-          : messages.required
+          : messages.required,
         )
         : baseValidator(type).nullable()
     },
-    [type, required, schema, messages.required, messages.requiredList]
+    [type, required, schema, messages.required, messages.requiredList],
   )
 }
 
 function baseValidator(type?: Type) {
-  switch(type) {
+  switch (type) {
     case 'list':
       return array()
     case 'number':

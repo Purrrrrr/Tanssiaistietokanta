@@ -1,13 +1,13 @@
 import { useId } from 'react'
 
-import {Dance, Workshop} from 'types'
+import { Dance, Workshop } from 'types'
 
-import {filterDances, useCreateDance, useDances} from 'services/dances'
+import { filterDances, useCreateDance, useDances } from 'services/dances'
 
 import { AutocompleteInput } from 'libraries/formsV2/components/inputs'
 import { CssClass } from 'libraries/ui'
 import { DanceIdSet } from 'components/event/EventProgramForm/eventMetadata'
-import {useT} from 'i18n'
+import { useT } from 'i18n'
 
 import { ColoredTag } from './ColoredTag'
 
@@ -40,18 +40,18 @@ export function DanceChooser({
     const danceList = filterDances(items, query)
     const showCreateDance = query.trim().length > 0
       && !dances.some(dance => danceNameEquals(dance, query))
-    const extraItems : DanceChooserOption[] = []
+    const extraItems: DanceChooserOption[] = []
     if (allowEmpty) extraItems.push(null)
     if (showCreateDance) extraItems.push({ __typename: 'createDance', name: query.trim() })
     const isWorkshopDance = (id: string) => !chosenDancesIds.has(id) && dancesInWorkshops.includes(id)
     const categories = [
       {
         title: t('categories.missingFromWorkshops'),
-        items: danceList.filter(dance => isWorkshopDance(dance._id))
+        items: danceList.filter(dance => isWorkshopDance(dance._id)),
       },
       {
         title: t('categories.dances'),
-        items: danceList.filter(dance => !isWorkshopDance(dance._id))
+        items: danceList.filter(dance => !isWorkshopDance(dance._id)),
       },
       {
         title: t('categories.other'),
@@ -63,7 +63,7 @@ export function DanceChooser({
 
   const chooseOrCreateDance = (created: DanceChooserOption) => {
     if (created?.__typename === 'createDance') {
-      createDance({dance: {name: created.name}}).then(response => {
+      createDance({ dance: { name: created.name } }).then(response => {
         if (!response?.data) {
           return
         }

@@ -1,4 +1,4 @@
-export type EventSlideProps = TitleSlideProps | IntroductionSlideProps| DanceSetSlideProps | DanceProgramItemSlideProps | IntervalMusicSlideProps
+export type EventSlideProps = TitleSlideProps | IntroductionSlideProps | DanceSetSlideProps | DanceProgramItemSlideProps | IntervalMusicSlideProps
 export type EventParentSlideProps = TitleSlideProps | DanceSetSlideProps
 
 export interface TitleSlideProps extends CommonSlideProps {
@@ -92,7 +92,7 @@ export interface EventProgramItem extends NameAndDescription {
 
 export interface Workshop {
   workshop: { name: string }
-  instances?: {abbreviation: string}[] | null
+  instances?: { abbreviation: string }[] | null
 }
 
 export interface RequestedDance {

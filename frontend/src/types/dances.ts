@@ -1,4 +1,4 @@
-import {GetDancesQuery, SearchDancewikiQuery} from './gql/graphql'
+import { GetDancesQuery, SearchDancewikiQuery } from './gql/graphql'
 
 export type DanceWithEvents = GetDancesQuery['dances'][0]
 export type Dance = Omit<GetDancesQuery['dances'][0], 'events'>

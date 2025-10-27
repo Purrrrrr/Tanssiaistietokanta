@@ -32,7 +32,7 @@ export function SlideChooser({ currentSlide, slides, onChoose }: SlideChooserPro
         'flex items-center gap-2',
         slide.parent !== undefined
           ? 'ps-4'
-          : 'font-bold'
+          : 'font-bold',
       )}>
         {slide.title}
       </div>}

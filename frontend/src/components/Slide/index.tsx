@@ -2,7 +2,7 @@ import React from 'react'
 import classnames from 'classnames'
 
 import { AutosizedSection, Link } from 'libraries/ui'
-import {useT} from 'i18n'
+import { useT } from 'i18n'
 
 import './Slide.scss'
 import './slideStyles.scss'
@@ -15,7 +15,7 @@ export interface SlideProps {
   title: string | React.ReactElement
   type?: string
   children?: React.ReactElement | React.ReactElement[] | string
-  footer?:  string | React.ReactElement
+  footer?: string | React.ReactElement
   next?: SlideLink
   navigation?: SlideNavigation
   slideStyleId?: string | null | undefined
@@ -34,11 +34,11 @@ export interface SlideLink {
   isPlaceholder?: boolean
 }
 
-export function Slide({id, title, type, children, footer, next, navigation, slideStyleId, linkComponent}: SlideProps) {
+export function Slide({ id, title, type, children, footer, next, navigation, slideStyleId, linkComponent }: SlideProps) {
   const className = classnames(
     'slide',
     `slide-style-${slideStyleId ?? 'default'}`,
-    type && 'slide-type-'+type,
+    type && 'slide-type-' + type,
   )
   return <section className={className}>
     <h1 className="slide-title">{title}</h1>
@@ -57,7 +57,7 @@ export function Slide({id, title, type, children, footer, next, navigation, slid
   </section>
 }
 
-function NextSlide({next, linkComponent}: {next: SlideLink, linkComponent?: LinkComponentType}) {
+function NextSlide({ next, linkComponent }: { next: SlideLink, linkComponent?: LinkComponentType }) {
   const t = useT('components.slide')
   return <section className="slide-next-slide">
     <div className="slide-content-area">
@@ -68,7 +68,7 @@ function NextSlide({next, linkComponent}: {next: SlideLink, linkComponent?: Link
 }
 
 function SlideSidebar(
-  {currentItem, navigation, linkComponent}: {currentItem: string, navigation: SlideNavigation, linkComponent?: LinkComponentType}
+  { currentItem, navigation, linkComponent }: { currentItem: string, navigation: SlideNavigation, linkComponent?: LinkComponentType },
 ) {
   return <>
     <h2 className="slide-navigation-title">{navigation.title}</h2>
@@ -83,14 +83,14 @@ interface SlideNavigationListProps extends Pick<SlideNavigation, 'items'> {
   linkComponent?: LinkComponentType
 }
 
-export function SlideNavigationList({items, currentItem, linkComponent}: SlideNavigationListProps) {
+export function SlideNavigationList({ items, currentItem, linkComponent }: SlideNavigationListProps) {
   if (!items.length) return null
 
-  return <ul className={classnames('slide-content-area slide-navigation-list', {'has-current': currentItem !== undefined})}>
+  return <ul className={classnames('slide-content-area slide-navigation-list', { 'has-current': currentItem !== undefined })}>
     {items.filter(item => item.hidden !== true || item.id === currentItem).map((item) =>
       <li key={item.id} className={item.id === currentItem ? 'current' : undefined}>
         <LinkToSlide {...item} component={linkComponent} />
-      </li>
+      </li>,
     )}
   </ul>
 }
@@ -105,8 +105,8 @@ interface LinkToSlideProps extends SlideLink {
   component?: LinkComponentType
 }
 
-function LinkToSlide({title, id, isPlaceholder, component: LinkComponent}: LinkToSlideProps) {
-  const classNames = classnames({placeholder: isPlaceholder})
+function LinkToSlide({ title, id, isPlaceholder, component: LinkComponent }: LinkToSlideProps) {
+  const classNames = classnames({ placeholder: isPlaceholder })
   if (LinkComponent) {
     return <LinkComponent href={id} className={classNames}>{title}</LinkComponent>
   }

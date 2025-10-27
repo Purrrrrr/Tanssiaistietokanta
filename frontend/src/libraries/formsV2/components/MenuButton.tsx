@@ -8,7 +8,7 @@ interface MenuButtonProps {
   children: ReactNode
   containerClassname?: string
   text?: string
-  buttonRenderer?: (props: { active: boolean, children: ReactNode, popovertarget: string}) => ReactNode
+  buttonRenderer?: (props: { active: boolean, children: ReactNode, popovertarget: string }) => ReactNode
   buttonProps?: ButtonProps
 }
 
@@ -36,13 +36,15 @@ export default function MenuButton({ children, buttonRenderer, text, buttonProps
   return <DropdownContainer className={containerClassname} ref={containerRef}>
     {buttonRenderer
       ? buttonRenderer({ active: open, children: text, popovertarget: dropdownId })
-      : <Button
-        active={open}
-        rightIcon={<DoubleCaretVertical />}
-        text={text}
-        popovertarget={dropdownId}
-        {...buttonProps}
-      />
+      : (
+        <Button
+          active={open}
+          rightIcon={<DoubleCaretVertical />}
+          text={text}
+          popovertarget={dropdownId}
+          {...buttonProps}
+        />
+      )
     }
     <Dropdown auto arrow id={dropdownId} open={open} onClick={onClick} onToggle={setOpen}>
       {children}

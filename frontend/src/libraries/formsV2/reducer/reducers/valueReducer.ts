@@ -24,7 +24,7 @@ export function valueReducer<Data>(value: Data, action: ValueAction<Data>): Data
       const movedItem = get(fromPath, value)[fromIndex]
       return modify(
         toPath, pushToIndex(toIndex, movedItem),
-        modify(fromPath, pluckIndex(fromIndex), value)
+        modify(fromPath, pluckIndex(fromIndex), value),
       )
     }
     case 'REMOVE_ITEM':

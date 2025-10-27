@@ -9,8 +9,7 @@ import { DndContext } from '../dnd/context'
 
 export interface FormProps<T> extends
   Omit<React.ComponentPropsWithoutRef<'form'>, 'onSubmit' | 'onChange'>,
-  Partial<FieldStyleContextProps>
-{
+  Partial<FieldStyleContextProps> {
   readOnly?: boolean
   value: T
   onChange: (t: T) => unknown
@@ -26,7 +25,7 @@ export function Form<T>(props: FormProps<T>) {
 
   const form = useRef<HTMLFormElement>(null)
   const submitHandler = (e: React.FormEvent) => {
-    //Sometimes forms from dialogs end up propagating into our form and we should not submit then
+    // Sometimes forms from dialogs end up propagating into our form and we should not submit then
     if (e.target !== form.current) return
     e.preventDefault()
     onSubmit?.(context.getState().data, e)
@@ -52,11 +51,11 @@ function useForm<T>(props: FormProps<T>) {
 
   useEffect(
     () => { onIsValidChange?.(state.validation.isValid) },
-    [onIsValidChange, state.validation.isValid]
+    [onIsValidChange, state.validation.isValid],
   )
   const context = useFormContextValue(reducerData, readOnly)
 
   return {
-    context, formProps: rest
+    context, formProps: rest,
   }
 }

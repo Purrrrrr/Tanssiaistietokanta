@@ -14,7 +14,6 @@ export interface HooksFor<Data> {
   useRemoveItemAt: <Path extends ListPath<Data>>(path: Path) => (index: number) => unknown
 }
 
-
 export function useValueAt<T, Data = unknown>(path: DataPath<T, Data>): T {
   const { getValueAt, subscribe } = useFormContext<Data>()
   return useSyncExternalStore(subscribe, () => getValueAt<T>(path))

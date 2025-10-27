@@ -1,37 +1,31 @@
-import {useEffect } from 'react'
-import {EventEmitter} from 'events'
+import { useEffect } from 'react'
+import { EventEmitter } from 'events'
 
-import {Entity, ID, ServiceName} from './types'
+import { Entity, ID, ServiceName } from './types'
 
 import createDebug from 'utils/debug'
-import {getOrComputeDefault} from 'utils/map'
+import { getOrComputeDefault } from 'utils/map'
 
-import {DocumentNode, gql} from './apollo'
-import {markDeleted, updateEntityFragment} from './apolloCache'
-import {closeChannelIfUnsused, ensureChannelIsOpen} from './channels'
+import { DocumentNode, gql } from './apollo'
+import { markDeleted, updateEntityFragment } from './apolloCache'
+import { closeChannelIfUnsused, ensureChannelIsOpen } from './channels'
 import { socket } from './feathers'
 
 const debug = createDebug('serviceEvents')
 
-const serviceTypeNameMap : {
-  [key in ServiceName]: string
-} = {
+const serviceTypeNameMap: Record<ServiceName, string> = {
   dances: 'Dance',
   events: 'Event',
   workshops: 'Workshop',
   dancewiki: 'Dancewiki',
 }
-const serviceUpdateFragmentMap : {
-  [key in ServiceName]?: DocumentNode
-} = {}
+const serviceUpdateFragmentMap: Partial<Record<ServiceName, DocumentNode>> = {}
 
 export type EventName = 'created' | 'removed' | 'updated'
 export type Callback<T extends Entity> = (data: T, source: 'backend' | 'frontend') => unknown
 export type EntityListCallbacks<T extends Entity> = Required<Callbacks<T>>
 export type EntityCallbacks<T extends Entity> = Omit<EntityListCallbacks<T>, 'created'>
-type Callbacks<T extends Entity> = {
-  [property in EventName]?: Callback<T>
-}
+type Callbacks<T extends Entity> = Partial<Record<EventName, Callback<T>>>
 
 export function setupServiceUpdateFragment(service: ServiceName, fragment: string) {
   serviceUpdateFragmentMap[service] = gql(fragment)
@@ -41,21 +35,21 @@ export function emitServiceEvent(service: ServiceName, eventName: EventName, dat
   getServiceEventEmitter(service).emit(eventName, data, 'frontend')
 }
 
-export function useServiceListEvents<T extends Entity>(service : ServiceName, callbacks : EntityListCallbacks<T>) {
+export function useServiceListEvents<T extends Entity>(service: ServiceName, callbacks: EntityListCallbacks<T>) {
   return useServiceEvents(service, service, callbacks)
 }
-export function useEntityEvents<T extends Entity>(service : ServiceName, id: ID, callbacks: EntityCallbacks<T>) {
+export function useEntityEvents<T extends Entity>(service: ServiceName, id: ID, callbacks: EntityCallbacks<T>) {
   return useServiceEvents(service, `${service}/${id}`, callbacks)
 }
 
-export function useServiceEvents<T extends Entity>(service : ServiceName, channel : string, callbacks : Callbacks<T>) {
+export function useServiceEvents<T extends Entity>(service: ServiceName, channel: string, callbacks: Callbacks<T>) {
   useEffect(() => {
     subscribeToService(service, channel, callbacks)
     return () => unSubscribeToService(service, channel, callbacks)
   }, [service, channel, callbacks])
 }
 
-function subscribeToService<T extends Entity>(serviceName : ServiceName, channel: string, callbacks : Callbacks<T>) {
+function subscribeToService<T extends Entity>(serviceName: ServiceName, channel: string, callbacks: Callbacks<T>) {
   debug(`subscribe service ${serviceName}`)
   ensureChannelIsOpen(channel, callbacks)
 
@@ -64,7 +58,7 @@ function subscribeToService<T extends Entity>(serviceName : ServiceName, channel
     service.on(eventName, callbacks[eventName])
   }
 }
-function unSubscribeToService<T extends Entity>(serviceName : ServiceName, channel: string, callbacks : Callbacks<T>) {
+function unSubscribeToService<T extends Entity>(serviceName: ServiceName, channel: string, callbacks: Callbacks<T>) {
   debug(`unsubscribe service ${serviceName}`)
 
   const service = getServiceEventEmitter(serviceName)
@@ -78,15 +72,15 @@ function unSubscribeToService<T extends Entity>(serviceName : ServiceName, chann
 const serviceEventEmitters = new Map<ServiceName, EventEmitter>()
 
 function getServiceEventEmitter(
-  serviceName: ServiceName
-) : EventEmitter {
+  serviceName: ServiceName,
+): EventEmitter {
   return getOrComputeDefault(serviceEventEmitters, serviceName, () => {
     const emitter = new EventEmitter()
     emitter.setMaxListeners(Infinity)
     const typeName = serviceTypeNameMap[serviceName]
     const entityFragment = serviceUpdateFragmentMap[serviceName]
     if (!entityFragment) {
-      throw new Error('Missing update fragment for service '+serviceName)
+      throw new Error('Missing update fragment for service ' + serviceName)
     }
     socket.on(`${serviceName} created`, (data: unknown) => debug('received created', data))
     socket.on(`${serviceName} removed`, (data: unknown) => debug('received removed', data))
@@ -111,4 +105,3 @@ function getServiceEventEmitter(
     return emitter
   })
 }
-

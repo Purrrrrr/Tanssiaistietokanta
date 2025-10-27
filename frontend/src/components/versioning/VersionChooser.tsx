@@ -20,7 +20,7 @@ interface VersionChooserProps extends Omit<VersionSidebarProps, 'entityType'> {
   versions: VersionCalendar
 }
 
-export default function VersionChooser({onClose, name, entityId: id, versionId, versions, toVersionLink}: VersionChooserProps) {
+export default function VersionChooser({ onClose, name, entityId: id, versionId, versions, toVersionLink }: VersionChooserProps) {
   const formatDate = useFormatDate()
   const T = useT('versioning')
   const toLink = (v: string | null) => toVersionLink(id, v)
@@ -46,10 +46,10 @@ export default function VersionChooser({onClose, name, entityId: id, versionId, 
                     toVersionLink={toLink}
                     current={version._versionId === versionId}
                   />
-                </li>
+                </li>,
               )}
             </ol>
-          </Fragment>
+          </Fragment>,
         )}
       </div>
     </div>
@@ -62,9 +62,9 @@ interface VersionNavigationProps {
   toVersionLink: (versionId: string | null) => string
 }
 
-function VersionNavigation({versionId, versions, toVersionLink}: VersionNavigationProps) {
+function VersionNavigation({ versionId, versions, toVersionLink }: VersionNavigationProps) {
   const T = useT('versioning')
-  const allVersions = [{_versionId: null, _versionNumber: null}, ...versions.flatMap(v => v.versions)]
+  const allVersions = [{ _versionId: null, _versionNumber: null }, ...versions.flatMap(v => v.versions)]
   const versionIndex = versionId ? allVersions.findIndex(v => v._versionId === versionId) : 0
   const currentVersion = allVersions[versionIndex]
   const previousVersion = versionIndex >= 1
@@ -96,7 +96,7 @@ interface VersionLinkProps {
   current?: boolean
 }
 
-function VersionLink({version, toVersionLink, current}: VersionLinkProps) {
+function VersionLink({ version, toVersionLink, current }: VersionLinkProps) {
   const formatTime = useFormatTime()
   return <Link to={toVersionLink(version._versionId)} className={current ? 'current' : ''}>
     {version._versionNumber}

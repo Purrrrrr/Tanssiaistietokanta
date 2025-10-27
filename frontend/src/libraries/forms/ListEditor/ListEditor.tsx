@@ -1,22 +1,22 @@
-import React, {useContext, useMemo} from 'react'
+import React, { useContext, useMemo } from 'react'
 import { Move } from '@blueprintjs/icons'
 import {
-  useDroppable
+  useDroppable,
 } from '@dnd-kit/core'
 import {
   SortableContext,
   useSortable,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
-import {CSS} from '@dnd-kit/utilities'
+import { CSS } from '@dnd-kit/utilities'
 
-import {Entity, ListEditorDroppableData, ListEditorItemData, ListItemComponent} from './types'
-import {FieldComponentProps, OnChangeHandler, TypedStringPath} from '../types'
+import { Entity, ListEditorDroppableData, ListEditorItemData, ListItemComponent } from './types'
+import { FieldComponentProps, OnChangeHandler, TypedStringPath } from '../types'
 
-import {Button} from 'libraries/ui'
+import { Button } from 'libraries/ui'
 
 import { useFormStrings } from '../formContext'
-import {ListEditorContext, ListEditorMoveContext} from './ListEditorContext'
+import { ListEditorContext, ListEditorMoveContext } from './ListEditorContext'
 
 export interface ListEditorProps<T, V extends Entity, P = object> extends FieldComponentProps<V[]> {
   itemType?: string | ((value: V) => string)
@@ -39,7 +39,7 @@ export function ListEditor<T, V extends Entity>({
     const Wrapper = isTable ? 'tr' : 'div'
     return <React.Fragment>
       {items.map((item, index) =>
-        <Wrapper key={item._id} className={itemClassname}><Component path={path} itemIndex={index} dragHandle={null} {...componentProps} /></Wrapper>
+        <Wrapper key={item._id} className={itemClassname}><Component path={path} itemIndex={index} dragHandle={null} {...componentProps} /></Wrapper>,
       )}
     </React.Fragment>
   }
@@ -59,14 +59,16 @@ export function ListEditor<T, V extends Entity>({
   return (
     <ListEditorContext accessibilityContainer={accessibilityContainer}>
       {acceptsTypes
-        ? <Droppable
-          element={droppableElement}
-          acceptsTypes={acceptsTypes}
-          path={path}
-          onChangePath={onChange as OnChangeHandler<unknown>}
-        >
-          {itemDom}
-        </Droppable>
+        ? (
+          <Droppable
+            element={droppableElement}
+            acceptsTypes={acceptsTypes}
+            path={path}
+            onChangePath={onChange as OnChangeHandler<unknown>}
+          >
+            {itemDom}
+          </Droppable>
+        )
         : itemDom
       }
     </ListEditorContext>
@@ -77,7 +79,7 @@ interface ListEditorItemsProps<T, V> extends Omit<SortableItemProps<T, V>, 'id' 
   itemType?: string | ((value: V) => string)
   items: V[]
 }
-function ListEditorItems<T, V extends Entity>({items, itemType, acceptsTypes, path, onChangePath, component, componentProps, isTable, className}: ListEditorItemsProps<T, V>) {
+function ListEditorItems<T, V extends Entity>({ items, itemType, acceptsTypes, path, onChangePath, component, componentProps, isTable, className }: ListEditorItemsProps<T, V>) {
   const move = useContext(ListEditorMoveContext)
   const filteredItems = move
     ? items.filter(item => item._id !== move.activeId)
@@ -106,7 +108,7 @@ function ListEditorItems<T, V extends Entity>({items, itemType, acceptsTypes, pa
         componentProps={componentProps}
         isTable={isTable}
         className={className}
-      />
+      />,
     )
   }
 
@@ -128,10 +130,10 @@ interface SortableItemProps<T, V, P = object> {
   className?: string
 }
 
-export function SortableItem<T, V>({itemType, acceptsTypes, id, path, onChangePath, itemIndex, component: Component, isTable, componentProps, className}: SortableItemProps<T, V>) {
+export function SortableItem<T, V>({ itemType, acceptsTypes, id, path, onChangePath, itemIndex, component: Component, isTable, componentProps, className }: SortableItemProps<T, V>) {
   const {
     isDragging,
-    attributes: { tabIndex: _ignored, ...attributes},
+    attributes: { tabIndex: _ignored, ...attributes },
     listeners,
     setNodeRef,
     setActivatorNodeRef,
@@ -148,7 +150,7 @@ export function SortableItem<T, V>({itemType, acceptsTypes, id, path, onChangePa
       component: Component as ListItemComponent<unknown, unknown>,
     } satisfies ListEditorItemData,
   })
-  const {moveItem} = useFormStrings()
+  const { moveItem } = useFormStrings()
 
   const scale = isDragging ? 1.01 : 1
 
@@ -166,7 +168,7 @@ export function SortableItem<T, V>({itemType, acceptsTypes, id, path, onChangePa
   const Wrapper = isTable ? 'tr' : 'div'
   const dragHandle = useMemo(
     () => <Button aria-label={moveItem} className="touch-none" icon={<Move />} ref={setActivatorNodeRef} {...listeners} />,
-    [listeners, setActivatorNodeRef, moveItem]
+    [listeners, setActivatorNodeRef, moveItem],
   )
 
   return (
@@ -181,10 +183,10 @@ interface DroppableProps extends ListEditorDroppableData {
   children: JSX.Element | JSX.Element[]
 }
 
-function Droppable({children, element, acceptsTypes, path, onChangePath}: DroppableProps) {
-  const {setNodeRef} = useDroppable({
-    id: 'droppable:'+path,
-    data: { acceptsTypes, path, onChangePath} satisfies ListEditorDroppableData
+function Droppable({ children, element, acceptsTypes, path, onChangePath }: DroppableProps) {
+  const { setNodeRef } = useDroppable({
+    id: 'droppable:' + path,
+    data: { acceptsTypes, path, onChangePath } satisfies ListEditorDroppableData,
   })
 
   if (element !== undefined) {

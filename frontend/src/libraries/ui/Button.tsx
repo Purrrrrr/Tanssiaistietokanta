@@ -59,7 +59,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     paddingClass,
     ...rest
   } = props
-  return <button ref={ref} type={type} className={buttonClass(color, {active, className, minimal, paddingClass})} {...rest}>
+  return <button ref={ref} type={type} className={buttonClass(color, { active, className, minimal, paddingClass })} {...rest}>
     {icon}
     {text}
     {children}
@@ -88,7 +88,7 @@ export const AnchorButton = forwardRef<HTMLAnchorElement, AnchorButtonProps>(fun
     className,
     ...rest
   } = props
-  return <a ref={ref} className={buttonClass(color, {active, className, minimal})} {...rest}>
+  return <a ref={ref} className={buttonClass(color, { active, className, minimal })} {...rest}>
     {icon}
     {text}
     {children}

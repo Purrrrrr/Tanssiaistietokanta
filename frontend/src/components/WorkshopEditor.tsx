@@ -1,14 +1,14 @@
-import {useMemo} from 'react'
-import {string} from 'yup'
+import { useMemo } from 'react'
+import { string } from 'yup'
 
-import {Event} from 'types'
+import { Event } from 'types'
 
-import {usePatchWorkshop} from 'services/workshops'
+import { usePatchWorkshop } from 'services/workshops'
 
-import {ActionButton as Button, DateField, DragHandle, formFor, NumberInput, patchStrategy, SyncStatus, TextArea, useAutosavingState} from 'libraries/forms'
-import {ColorClass, FormGroup} from 'libraries/ui'
-import {DanceChooser} from 'components/widgets/DanceChooser'
-import {useT, useTranslation} from 'i18n'
+import { ActionButton as Button, DateField, DragHandle, formFor, NumberInput, patchStrategy, SyncStatus, TextArea, useAutosavingState } from 'libraries/forms'
+import { ColorClass, FormGroup } from 'libraries/ui'
+import { DanceChooser } from 'components/widgets/DanceChooser'
+import { useT, useTranslation } from 'i18n'
 import { guid } from 'utils/guid'
 
 type Workshop = Event['workshops'][0]
@@ -32,14 +32,14 @@ interface WorkshopEditorProps {
   endDate: string
 }
 
-export function WorkshopEditor({workshop: workshopInDatabase, reservedAbbreviations, beginDate, endDate}: WorkshopEditorProps) {
+export function WorkshopEditor({ workshop: workshopInDatabase, reservedAbbreviations, beginDate, endDate }: WorkshopEditorProps) {
   const t = useT('components.workshopEditor')
   const [modifyWorkshop] = usePatchWorkshop({
-    refetchQueries: ['getEvent']
+    refetchQueries: ['getEvent'],
   })
   const workshopId = workshopInDatabase._id
   const saveWorkshop = (data: Partial<Workshop>) => {
-    const {instances, name, abbreviation, description, teachers, instanceSpecificDances} = data
+    const { instances, name, abbreviation, description, teachers, instanceSpecificDances } = data
     return modifyWorkshop({
       id: workshopId,
       workshop: {
@@ -48,33 +48,33 @@ export function WorkshopEditor({workshop: workshopInDatabase, reservedAbbreviati
         description,
         teachers,
         instanceSpecificDances,
-        instances: instances?.map(({dances, __typename, ...i}) => ({...i, danceIds: dances ? dances.map(d => d._id) : null})),
-      }
+        instances: instances?.map(({ dances, __typename, ...i }) => ({ ...i, danceIds: dances ? dances.map(d => d._id) : null })),
+      },
     })
   }
 
   const { formProps, state } = useAutosavingState<Workshop, Partial<Workshop>>(workshopInDatabase, saveWorkshop, patchStrategy.partial)
 
-  const addInstance = (instance: Instance) => formProps.onChange(w => ({...w, instances: [...w.instances, instance]}), 'instances')
+  const addInstance = (instance: Instance) => formProps.onChange(w => ({ ...w, instances: [...w.instances, instance] }), 'instances')
 
   return <Form className="workshopEditor" {...formProps}>
-    <SyncStatus state={state} floatRight/>
+    <SyncStatus state={state} floatRight />
     <div className="flex flex-wrap gap-3.5">
       <div className="grow basis-75 max-w-[50ch]">
         <Input path="name" required label={t('name')} labelInfo={t('required')} />
         <AbbreviationField path="abbreviation" label={t('abbreviation')} reservedAbbreviations={reservedAbbreviations} />
         <Field path="description" component={TextArea} label={t('description')} />
-        <Input path="teachers" label={t('teachers')}/>
+        <Input path="teachers" label={t('teachers')} />
         <Switch path="instanceSpecificDances" label={t('instanceSpecificDances')} />
       </div>
       <div className="grow basis-75">
         {formProps.value.instanceSpecificDances || <DanceList instanceIndex={0} bigTitle />}
         <h3 className="my-2 text-base font-bold">{t('instances')}</h3>
-        <ListField<'instances', Instance[], {beginDate: string, endDate: string}>
+        <ListField<'instances', Instance[], { beginDate: string, endDate: string }>
           label={t('instances')}
           labelStyle="hidden"
           path="instances"
-          componentProps={{beginDate, endDate}}
+          componentProps={{ beginDate, endDate }}
           component={WorkshopInstanceEditor}
           renderConflictItem={item => item?.dances?.map(d => d.name)?.join(', ') ?? ''}
         />
@@ -94,7 +94,7 @@ export function newInstance(reference?: Instance, date?: string): Instance {
   }
 }
 
-function AbbreviationField({label, path, reservedAbbreviations}) {
+function AbbreviationField({ label, path, reservedAbbreviations }) {
   const t = useT('components.workshopEditor')
   const maxLenErrorMsg = useTranslation('validationMessage.maxLength')
   const schema = useMemo(
@@ -104,14 +104,14 @@ function AbbreviationField({label, path, reservedAbbreviations}) {
         .nullable()
         .max(3, maxLenErrorMsg)
 
-      function getAbbreviationTakenError({value, values}) {
+      function getAbbreviationTakenError({ value, values }) {
         return t(
           'abbreviationTaken',
-          {abbreviations: values, abbreviation: value}
+          { abbreviations: values, abbreviation: value },
         )
       }
     },
-    [reservedAbbreviations, maxLenErrorMsg, t]
+    [reservedAbbreviations, maxLenErrorMsg, t],
   )
 
   return <Input
@@ -123,7 +123,7 @@ function AbbreviationField({label, path, reservedAbbreviations}) {
 }
 
 function WorkshopInstanceEditor(
-  {itemIndex, dragHandle, beginDate, endDate}: {itemIndex: number, dragHandle: DragHandle, beginDate: string, endDate: string}
+  { itemIndex, dragHandle, beginDate, endDate }: { itemIndex: number, dragHandle: DragHandle, beginDate: string, endDate: string },
 ) {
   const t = useT('components.workshopEditor')
   const instances = useValueAt('instances')
@@ -149,7 +149,7 @@ function WorkshopInstanceEditor(
   </div>
 }
 
-function DanceList({instanceIndex, bigTitle}: {instanceIndex: number, bigTitle?: boolean}) {
+function DanceList({ instanceIndex, bigTitle }: { instanceIndex: number, bigTitle?: boolean }) {
   const t = useT('components.workshopEditor')
   const dances = useValueAt(`instances.${instanceIndex}.dances`)
   return <>
@@ -164,27 +164,26 @@ function DanceList({instanceIndex, bigTitle}: {instanceIndex: number, bigTitle?:
     {!dances?.length && <p className={`my-2 ${ColorClass.textMuted}`}>{t('noDances')}</p>}
     <AddDanceChooser instance={instanceIndex} />
   </>
-
 }
 
 function DanceListItem(
-  {path, itemIndex, dragHandle}: {path: `instances.${number}.dances`, itemIndex: number, dragHandle: DragHandle}
+  { path, itemIndex, dragHandle }: { path: `instances.${number}.dances`, itemIndex: number, dragHandle: DragHandle },
 ) {
   const t = useT('components.workshopEditor')
   const excludeFromSearch = useValueAt(path) ?? []
   return <div className="flex">
-    <Field containerClassName="grow" label={t('dances')} labelStyle="hidden" path={`${path}.${itemIndex}`} component={DanceChooser} componentProps={{excludeFromSearch}} />
+    <Field containerClassName="grow" label={t('dances')} labelStyle="hidden" path={`${path}.${itemIndex}`} component={DanceChooser} componentProps={{ excludeFromSearch }} />
     {dragHandle}
     <RemoveItemButton path={path} index={itemIndex} text="X" />
   </div>
 }
 
-function AddDanceChooser({instance}: {instance: number}) {
+function AddDanceChooser({ instance }: { instance: number }) {
   const t = useT('components.workshopEditor')
   const dances = useValueAt(`instances.${instance}.dances`) ?? []
   const onAddDance = useAppendToList(`instances.${instance}.dances`)
 
-  return <FormGroup label={t('addDance')} labelStyle="beside" style={{marginTop: 6}}>
+  return <FormGroup label={t('addDance')} labelStyle="beside" style={{ marginTop: 6 }}>
     <DanceChooser excludeFromSearch={dances} value={null} onChange={dance => dance && onAddDance(dance)} key={dances.length} />
   </FormGroup>
 }

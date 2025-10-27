@@ -1,9 +1,9 @@
 import { useParams } from 'react-router-dom'
 
-import {Event} from 'types'
+import { Event } from 'types'
 
-import {ListEditorContext, SyncStatus} from 'libraries/forms'
-import {Tab, Tabs} from 'libraries/ui'
+import { ListEditorContext, SyncStatus } from 'libraries/forms'
+import { Tab, Tabs } from 'libraries/ui'
 import {
   DanceSet,
   EventProgramSettings,
@@ -15,9 +15,9 @@ import {
   useEventProgramEditorForm,
 } from 'components/event/EventProgramForm'
 import { EventMetadataContext } from 'components/event/EventProgramForm/eventMetadata'
-import {BackLink} from 'components/widgets/BackLink'
-import {DurationField} from 'components/widgets/DurationField'
-import {useT} from 'i18n'
+import { BackLink } from 'components/widgets/BackLink'
+import { DurationField } from 'components/widgets/DurationField'
+import { useT } from 'i18n'
 
 import {
   AddDanceSetButton,
@@ -28,7 +28,7 @@ import {
 } from './components'
 import { DanceSetEditor, IntroductoryInformation } from './components/setEditors'
 import { DanceCategoryStats } from './components/stats'
-import { SlideshowEditor} from './SlideshowEditor'
+import { SlideshowEditor } from './SlideshowEditor'
 
 import './EventProgramEditor.sass'
 
@@ -38,8 +38,8 @@ interface EventProgramEditorProps {
   event: Event
 }
 
-export function EventProgramEditor({event}: EventProgramEditorProps) {
-  const {formProps, formProps: { value }, state} = useEventProgramEditorForm(event._id, event._versionId ?? undefined, event.program)
+export function EventProgramEditor({ event }: EventProgramEditorProps) {
+  const { formProps, formProps: { value }, state } = useEventProgramEditorForm(event._id, event._versionId ?? undefined, event.program)
   const { tabId } = useParams()
   const t = useT('pages.events.eventProgramPage')
 
@@ -47,7 +47,7 @@ export function EventProgramEditor({event}: EventProgramEditorProps) {
     <BackLink to="../..">{t('backToEvent')}</BackLink>
     <h1>
       {t('pageTitle')}
-      <SyncStatus style={{marginLeft: '1ch', top: '3px'}} className="grow" state={state} />
+      <SyncStatus style={{ marginLeft: '1ch', top: '3px' }} className="grow" state={state} />
     </h1>
 
     <EventMetadataContext program={value} workshops={event.workshops}>
@@ -66,9 +66,9 @@ export function EventProgramEditor({event}: EventProgramEditorProps) {
   </Form>
 }
 
-function MainEditor({ program }: {program: EventProgramSettings }) {
+function MainEditor({ program }: { program: EventProgramSettings }) {
   const t = useT('components.eventProgramEditor')
-  const {danceSets, introductions} = program
+  const { danceSets, introductions } = program
 
   return <section>
     <div className="flex flex-wrap gap-2 justify-between items-start">

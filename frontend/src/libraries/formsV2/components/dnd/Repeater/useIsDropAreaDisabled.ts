@@ -4,7 +4,7 @@ import { AcceptedTypes, ItemData, ListItem } from './types'
 
 export function useIsDropAreaDisabled<Value extends ListItem, AcceptedTypeDefs = null>(
   dropAreaId: string,
-  accepts?: AcceptedTypes<Value, AcceptedTypeDefs>
+  accepts?: AcceptedTypes<Value, AcceptedTypeDefs>,
 ) {
   const { active } = useDndContext()
 

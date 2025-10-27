@@ -10,7 +10,7 @@ export function EventSlidePreview(props: WithEventProgram<EventSlideProps>) {
 
 function getSlideStyle(props: WithEventProgram<EventSlideProps>) {
   const { eventProgram, eventProgram: { introductions, danceSets, slideStyleId: defaultSlideStyleId } } = props
-  switch(props.type) {
+  switch (props.type) {
     case 'title':
       return introductions.titleSlideStyleId ?? defaultSlideStyleId
     case 'introduction':

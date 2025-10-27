@@ -3,16 +3,16 @@ import { Autocomplete, Talkr, TParams, TProps, tr, useT as useBareT } from 'talk
 
 import { PrefixPath, Translator } from './types'
 
-import {DateLike, useFormatDate, useFormatDateTime, useFormatTime} from './dateTime'
+import { DateLike, useFormatDate, useFormatDateTime, useFormatTime } from './dateTime'
 
 export type { PrefixPath, Translator } from './types'
 
 export interface TranlationSystem<Translations> {
   useT: <P extends PrefixPath<Translations> | ''>(prefix: P) => Translator<Translations, P>
   useTranslation: (prefix: Autocomplete<Translations>) => string
-  T: (props: {msg: Autocomplete<Translations>}) => JSX.Element
+  T: (props: { msg: Autocomplete<Translations> }) => JSX.Element
   useLocalization: typeof useLocalization
-  TranslationContext: (props: TProps & {languages: Record<string, Translations>}) => JSX.Element
+  TranslationContext: (props: TProps & { languages: Record<string, Translations> }) => JSX.Element
   useFormatDate: () => (d: DateLike) => string
   useFormatDateTime: () => (d: DateLike) => string
   useFormatTime: () => (d: DateLike) => string
@@ -45,11 +45,11 @@ function useT(prefix: string): (key: string, params?: TParams) => string {
   }, [context.locale, prefix])
 }
 
-function T({msg} : {msg: string}): JSX.Element {
+function T({ msg }: { msg: string }): JSX.Element {
   return useTranslation(msg) as unknown as JSX.Element
 }
 function useTranslation(key: string): string {
   return useBareT().T(key)
 }
 
-const useLocalization : () => Pick<ReturnType<typeof useBareT>, 'locale' | 'setLocale'> = useBareT
+const useLocalization: () => Pick<ReturnType<typeof useBareT>, 'locale' | 'setLocale'> = useBareT

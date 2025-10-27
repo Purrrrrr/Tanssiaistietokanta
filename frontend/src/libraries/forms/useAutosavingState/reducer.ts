@@ -1,8 +1,8 @@
-import {Reducer, useReducer} from 'react'
+import { Reducer, useReducer } from 'react'
 import * as L from 'partial.lenses'
 
-import {MergeableObject, MergeData, MergeResult, toFinalMergeResult} from './types'
-import {StringPath, Version} from '../types'
+import { MergeableObject, MergeData, MergeResult, toFinalMergeResult } from './types'
+import { StringPath, Version } from '../types'
 
 import createDebug from 'utils/debug'
 
@@ -40,7 +40,7 @@ export function useAutosavingStateReducer<T extends MergeableObject>(serverState
   return useReducer<Reducer<SyncStore<T>, SyncAction<T>>, T>(reducer, serverState, getInitialState)
 }
 
-function getInitialState<T extends MergeableObject>(serverState: T) : SyncStore<T> {
+function getInitialState<T extends MergeableObject>(serverState: T): SyncStore<T> {
   return {
     patchPending: false,
     serverState,
@@ -51,11 +51,11 @@ function getInitialState<T extends MergeableObject>(serverState: T) : SyncStore<
       modifications: serverState,
       nonConflictingModifications: serverState,
       conflicts: new Map(),
-    }
+    },
   }
 }
 
-function reducer<T extends MergeableObject>(reducerState : SyncStore<T>, action : SyncAction<T>) : SyncStore<T> {
+function reducer<T extends MergeableObject>(reducerState: SyncStore<T>, action: SyncAction<T>): SyncStore<T> {
   const { mergeResult: { modifications, nonConflictingModifications }, serverState } = reducerState
   debug(action.type)
   switch (action.type) {
@@ -99,7 +99,7 @@ function reducer<T extends MergeableObject>(reducerState : SyncStore<T>, action 
       )
   }
 }
-function resolveConflict<T extends MergeableObject>(reducerState: SyncStore<T>, path: StringPath<T>, version: Version) : SyncStore<T> {
+function resolveConflict<T extends MergeableObject>(reducerState: SyncStore<T>, path: StringPath<T>, version: Version): SyncStore<T> {
   const { mergeResult: { modifications, conflicts }, serverState } = reducerState
   const conflict = conflicts.get(String(path))
   if (!conflict) return reducerState
@@ -107,7 +107,7 @@ function resolveConflict<T extends MergeableObject>(reducerState: SyncStore<T>, 
   switch (version) {
     case 'LOCAL':
     {
-      const {mergeResult: { state, ...mergeResult }, ...merged} = merge(
+      const { mergeResult: { state, ...mergeResult }, ...merged } = merge(
         {
           server: L.set(conflict.serverPath, conflict.local, serverState),
           original: reducerState.conflictOrigin ?? serverState,
@@ -138,11 +138,11 @@ function resolveConflict<T extends MergeableObject>(reducerState: SyncStore<T>, 
   }
 }
 
-function merge<T extends MergeableObject>(mergeData: MergeData<T>, serverStateTime: number, patchPending: boolean) : SyncStore<T> {
+function merge<T extends MergeableObject>(mergeData: MergeData<T>, serverStateTime: number, patchPending: boolean): SyncStore<T> {
   const mergeResult = toFinalMergeResult(mergeValues(mergeData))
   const hasConflicts = mergeResult.state === 'CONFLICT'
 
-  debug({mergeData, mergeResult})
+  debug({ mergeData, mergeResult })
 
   return {
     patchPending,

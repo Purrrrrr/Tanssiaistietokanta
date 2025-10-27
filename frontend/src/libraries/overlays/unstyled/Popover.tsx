@@ -29,7 +29,7 @@ export const Popover = forwardRef<HTMLDivElement, PopoverProps>(
       ref={ref}
       {...props}
     />
-  }
+  },
 )
 
 type ControlledPopoverProps = PopoverProps & Required<Pick<PopoverProps, 'open' | 'onToggle'>>
@@ -69,7 +69,7 @@ export const ControlledPopover = forwardRef<HTMLDivElement, ControlledPopoverPro
     >
       {(open || shouldRender || alwaysRenderChildren) && children}
     </div>
-  }
+  },
 )
 function handleRefs<T>(...refs: (ForwardedRef<T>)[]) {
   return (node: T) => {
@@ -93,6 +93,6 @@ function useToggleEventHandler(element: RefObject<HTMLDivElement>, handler: (e: 
       node?.addEventListener('toggle', h)
       return () => node?.removeEventListener('toggle', h)
     },
-    [element]
+    [element],
   )
 }

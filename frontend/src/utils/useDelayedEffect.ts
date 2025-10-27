@@ -1,11 +1,11 @@
-import {useEffect} from 'react'
+import { useEffect } from 'react'
 
 export function useDelayedEffect(timeout: number, effect: () => unknown) {
   useEffect(
     () => {
-      let id : number | null = window.setTimeout(
+      let id: number | null = window.setTimeout(
         () => { effect(); id = null },
-        timeout
+        timeout,
       )
       return () => {
         if (id) {
@@ -13,6 +13,6 @@ export function useDelayedEffect(timeout: number, effect: () => unknown) {
         }
       }
     },
-    [effect, timeout]
+    [effect, timeout],
   )
 }

@@ -50,7 +50,7 @@ export function AutocompleteInput<T>(props: AutocompleteInputProps<T>) {
     onSelectedItemChange: ({ selectedItem }) => {
       onChange(selectedItem as T)
     },
-    onInputValueChange: async ({ inputValue}) => {
+    onInputValueChange: async ({ inputValue }) => {
       // Try to keep the hilighted item the same
       const previousHilight = filteredItemData[highlightedIndex]
       const newItems = await updateFilter(inputValue)
@@ -87,7 +87,7 @@ export function AutocompleteInput<T>(props: AutocompleteInputProps<T>) {
         }
       }
       return changes
-    }
+    },
   })
 
   const inputProps = {
@@ -95,14 +95,14 @@ export function AutocompleteInput<T>(props: AutocompleteInputProps<T>) {
     onFocus: openMenu,
     disabled: readOnly,
     ...getInputProps({
-      onKeyDown: preventDownshiftDefaultWhen(e => e.key === 'Home' || e.key === 'End')
-    })
+      onKeyDown: preventDownshiftDefaultWhen(e => e.key === 'Home' || e.key === 'End'),
+    }),
   }
 
   return <DropdownContainer className={containerClassname ?? (inline ? undefined : 'grow f-full')}>
     {inputRenderer
       ? inputRenderer(inputProps)
-      : <input className={CssClass.input+' w-full'} {...inputProps} />
+      : <input className={CssClass.input + ' w-full'} {...inputProps} />
     }
     <Dropdown open={isOpen} tabIndex={-1}>
       <Menu {...getMenuProps({}, { suppressRefError: true })} tabIndex={-1}>

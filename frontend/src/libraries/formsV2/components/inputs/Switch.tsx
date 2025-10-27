@@ -6,7 +6,7 @@ import { FieldInputComponent, FieldInputComponentProps } from './types'
 export interface SwitchProps extends FieldInputComponentProps<boolean>, RefAttributes<HTMLInputElement> {
   label: string
 }
-export const Switch : FieldInputComponent<boolean, SwitchProps> = React.forwardRef<HTMLInputElement, Omit<SwitchProps, 'ref'>>(
+export const Switch: FieldInputComponent<boolean, SwitchProps> = React.forwardRef<HTMLInputElement, Omit<SwitchProps, 'ref'>>(
   function Switch({ value, onChange, readOnly, ...props }, ref) {
     return <BlueprintSwitch
       inputRef={ref}
@@ -15,5 +15,5 @@ export const Switch : FieldInputComponent<boolean, SwitchProps> = React.forwardR
       disabled={readOnly}
       {...props}
     />
-  }
+  },
 )

@@ -1,4 +1,4 @@
-import {createContext, useCallback, useContext, useMemo, useState} from 'react'
+import { createContext, useCallback, useContext, useMemo, useState } from 'react'
 import {
   Active,
   closestCenter,
@@ -19,10 +19,10 @@ import {
 } from '@dnd-kit/sortable'
 import * as L from 'partial.lenses'
 
-import {ListEditorItemData} from './types'
-import {toArrayPath} from '../types'
+import { ListEditorItemData } from './types'
+import { toArrayPath } from '../types'
 
-import {useOnChangeFor} from '../hooks'
+import { useOnChangeFor } from '../hooks'
 
 const HasListEditorContext = createContext<boolean>(false)
 
@@ -38,7 +38,7 @@ export interface ListEditorContextProps {
   accessibilityContainer?: Element | undefined
   children: JSX.Element | JSX.Element[]
 }
-export function ListEditorContext({accessibilityContainer, children}: ListEditorContextProps) {
+export function ListEditorContext({ accessibilityContainer, children }: ListEditorContextProps) {
   const hasExistingContext = useContext(HasListEditorContext)
   if (hasExistingContext) return <>{children}</>
 
@@ -51,24 +51,24 @@ export function ListEditorContext({accessibilityContainer, children}: ListEditor
   )
 }
 
-export function ListEditorContextInner({accessibilityContainer, children}: ListEditorContextProps) {
+export function ListEditorContextInner({ accessibilityContainer, children }: ListEditorContextProps) {
   const onChange = useOnChangeFor('')
   const [move, setMove] = useState<ListEditorMove | null>(null)
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, useMemo(() => ({
       coordinateGetter: sortableKeyboardCoordinates,
-    }), []))
+    }), [])),
   )
   // console.log(`move ${move?.activeData.path} -> ${move?.overPath}`)
 
   const onDragOver = useCallback(
-    ({over, active}: DragOverEvent) => {
+    ({ over, active }: DragOverEvent) => {
       const activeData = getData(active)
       const overData = getData(over)
-      //console.log(overData)
+      // console.log(overData)
       if (!activeData || !over || !overData) return
-      //console.log(overData.path+'  '+overData.itemIndex)
+      // console.log(overData.path+'  '+overData.itemIndex)
       if (over.id === active.id) {
         // console.log('over itself?')
         return
@@ -81,7 +81,7 @@ export function ListEditorContextInner({accessibilityContainer, children}: ListE
         return
       }
       if (activeData.type && overData.acceptsTypes?.includes?.(activeData?.type)) {
-        //console.log('move '+overData.path)
+        // console.log('move '+overData.path)
         setMove({
           overPath: overData.path,
           overData,
@@ -90,12 +90,12 @@ export function ListEditorContextInner({accessibilityContainer, children}: ListE
         })
       }
     },
-    [move]
+    [move],
   )
   const handleDragEnd = useCallback(
     function handleDragEnd(event: DragEndEvent) {
       setMove(null)
-      const {active, over} = event
+      const { active, over } = event
 
       if (over === null) return
       if (active.id === over.id) return
@@ -113,18 +113,18 @@ export function ListEditorContextInner({accessibilityContainer, children}: ListE
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               [...toArrayPath(move.overData.path as any), L.slice(overData.itemIndex, 0)],
               [moved],
-              L.remove(movePath, formValue)
+              L.remove(movePath, formValue),
             )
           })
         }
       }
     },
-    [move, onChange]
+    [move, onChange],
   )
 
   return (
     <DndContext
-      accessibility={{container: accessibilityContainer}}
+      accessibility={{ container: accessibilityContainer }}
       sensors={sensors}
       collisionDetection={collisionDetectionStrategy}
       onDragOver={onDragOver}
@@ -148,12 +148,12 @@ const collisionDetectionStrategy: CollisionDetection = (args) => {
       (container) => {
         const containerData = getData(container)
         if (containerData?.path === activeData.path) return true
-        //if (containerData?.acceptsTypes) console.log(containerData.itemIndex, containerData.acceptsTypes)
+        // if (containerData?.acceptsTypes) console.log(containerData.itemIndex, containerData.acceptsTypes)
         if (activeData.type && containerData?.acceptsTypes?.includes?.(activeData.type)) {
           return true
         }
         return false
-      }
+      },
     ),
   })
 }

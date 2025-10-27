@@ -2,7 +2,7 @@ import { CommonContainerProps } from '../types'
 
 export interface FieldContainerProps extends ExternalFieldContainerProps {
   children?: React.ReactNode
-  //TODO: implement this
+  // TODO: implement this
   conflictElement?: React.ReactElement
   labelFor: string
 }

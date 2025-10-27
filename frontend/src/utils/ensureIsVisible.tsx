@@ -5,7 +5,7 @@ export function ensureIsVisible(element) {
   return wait(50).then(() => {
     if (isElementInViewport(element)) return
     if (supportsNativeSmoothScroll) {
-      element.scrollIntoView({behavior: 'smooth'})
+      element.scrollIntoView({ behavior: 'smooth' })
     } else {
       element.scrollIntoView()
     }

@@ -1,7 +1,7 @@
-import {useCallback } from 'react'
-import {useSwipeable} from 'react-swipeable'
+import { useCallback } from 'react'
+import { useSwipeable } from 'react-swipeable'
 
-import {useOnKeydown} from 'utils/useOnKeydown'
+import { useOnKeydown } from 'utils/useOnKeydown'
 
 interface Slide {
   id: string
@@ -17,16 +17,16 @@ type SlideNavigationProps = {
 )
 
 export function useSlideshowNavigation(
-  {slides, currentSlideIndex, currentSlideId, onChangeSlide}: SlideNavigationProps
+  { slides, currentSlideIndex, currentSlideId, onChangeSlide }: SlideNavigationProps,
 ) {
   const slideIndex = currentSlideIndex ??
     (i => i === -1 ? 0 : i)(slides.findIndex(slide => slide.id === currentSlideId))
 
   const getBoundedSlideIndex = useCallback(
     function getSlideForIndex(index: number) {
-      return Math.min(Math.max(index, 0), slides.length-1)
+      return Math.min(Math.max(index, 0), slides.length - 1)
     },
-    [slides.length]
+    [slides.length],
   )
 
   const changeSlide = useCallback((indexDelta: number) => {

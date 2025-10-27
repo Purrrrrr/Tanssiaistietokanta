@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useContext, useRef } from 'react'
 
-import {  Workshop } from 'types'
+import { Workshop } from 'types'
 import { EventProgramSettings } from './types'
 
 const emptySet = new Set<string>()
@@ -12,7 +12,7 @@ const WorkshopsContext = createContext<Workshop[]>([])
 const ChosenDancesContext = createContext<DanceIdSet>(emptySet)
 
 export function EventMetadataContext(
-  {program, workshops, children}: {workshops: Workshop[], program: EventProgramSettings, children: ReactNode}
+  { program, workshops, children }: { workshops: Workshop[], program: EventProgramSettings, children: ReactNode },
 ) {
   const chosenDancesRef = useRef<Set<string>>(emptySet)
 
@@ -22,7 +22,7 @@ export function EventMetadataContext(
         .map(row => row.item)
         .filter(item => item.__typename === 'Dance')
         .map(dance => dance._id),
-      set.intervalMusic?.dance?._id
+      set.intervalMusic?.dance?._id,
     ])
     .filter(id => id !== null && id !== undefined)
 

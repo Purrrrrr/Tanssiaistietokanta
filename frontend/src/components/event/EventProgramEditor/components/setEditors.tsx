@@ -1,8 +1,8 @@
-import React, {useCallback, useMemo, useRef } from 'react'
+import React, { useCallback, useMemo, useRef } from 'react'
 import { Cross } from '@blueprintjs/icons'
 
-import {ActionButton as Button, DragHandle} from 'libraries/forms'
-import {Card, ColorClass, H2, HTMLTable} from 'libraries/ui'
+import { ActionButton as Button, DragHandle } from 'libraries/forms'
+import { Card, ColorClass, H2, HTMLTable } from 'libraries/ui'
 import { DanceProgramChooser } from 'components/event/DanceProgramChooser'
 import {
   DanceProgramPath,
@@ -20,9 +20,9 @@ import {
   useValueAt,
 } from 'components/event/EventProgramForm'
 import { ProgramTypeIcon } from 'components/event/ProgramTypeIcon'
-import {Duration} from 'components/widgets/Duration'
-import {DurationField} from 'components/widgets/DurationField'
-import {useT, useTranslation} from 'i18n'
+import { Duration } from 'components/widgets/Duration'
+import { DurationField } from 'components/widgets/DurationField'
+import { useT, useTranslation } from 'i18n'
 
 import { AddIntroductionButton, DanceSetItemButtons, IntervalMusicSwitch } from './controls'
 import { DanceSetNameEditor } from './DanceSetNameEditor'
@@ -37,7 +37,7 @@ export function IntroductoryInformation() {
   </DanceSetCard>
 }
 
-export const DanceSetEditor = React.memo(function DanceSetEditor({itemIndex, dragHandle} : {itemIndex: number, dragHandle: DragHandle}) {
+export const DanceSetEditor = React.memo(function DanceSetEditor({ itemIndex, dragHandle }: { itemIndex: number, dragHandle: DragHandle }) {
   const id = useValueAt(`danceSets.${itemIndex}._id`)
 
   return <DanceSetCard
@@ -56,7 +56,7 @@ export const DanceSetEditor = React.memo(function DanceSetEditor({itemIndex, dra
   </DanceSetCard>
 })
 
-function DanceSetCard({ id, children, title, toolbar}: {
+function DanceSetCard({ id, children, title, toolbar }: {
   id?: string
   children: React.ReactNode
   title: React.ReactNode
@@ -73,7 +73,7 @@ function DanceSetCard({ id, children, title, toolbar}: {
   </Card>
 }
 
-function ProgramListEditor({path}: {path: ProgramSectionPath}) {
+function ProgramListEditor({ path }: { path: ProgramSectionPath }) {
   const t = useT('components.eventProgramEditor')
   const tableRef = useRef(null)
   const programPath = `${path}.program` as const
@@ -94,7 +94,7 @@ function ProgramListEditor({path}: {path: ProgramSectionPath}) {
       {program.length === 0 ||
           <thead>
             <tr>
-              <th/>
+              <th />
               <th>{t('columnTitles.name')}</th><th colSpan={2}>{t('columnTitles.duration')}</th>
             </tr>
           </thead>
@@ -144,7 +144,7 @@ function ProgramListEditor({path}: {path: ProgramSectionPath}) {
   </>
 }
 
-function ProgramItemCounters({program}: {program: EventProgramRow[]}) {
+function ProgramItemCounters({ program }: { program: EventProgramRow[] }) {
   const t = useT('components.eventProgramEditor')
   const itemsByType = Object.groupBy(
     program,
@@ -166,13 +166,13 @@ interface ProgramItemEditorProps {
   itemIndex: number
 }
 
-const ProgramItemEditor = React.memo(function ProgramItemEditor({dragHandle, path, itemIndex} : ProgramItemEditorProps) {
+const ProgramItemEditor = React.memo(function ProgramItemEditor({ dragHandle, path, itemIndex }: ProgramItemEditorProps) {
   const t = useT('components.eventProgramEditor')
   const itemPath = `${path}.${itemIndex}` as ProgramItemPath
   const item = useValueAt(itemPath)
 
   if (!item) return null
-  const {__typename } = item.item
+  const { __typename } = item.item
   const editableDuration = __typename === 'EventProgram'
 
   return <React.Fragment>
@@ -197,13 +197,13 @@ const ProgramItemEditor = React.memo(function ProgramItemEditor({dragHandle, pat
   </React.Fragment>
 })
 
-function ProgramDetailsEditor({path}: {path: ProgramItemPath}) {
+function ProgramDetailsEditor({ path }: { path: ProgramItemPath }) {
   const t = useT('components.eventProgramEditor')
   const __typename = useValueAt(`${path}.item.__typename`)
-  //If something is deleted useValueAt may return undefined
+  // If something is deleted useValueAt may return undefined
   if (__typename === undefined) return null
 
-  switch(__typename) {
+  switch (__typename) {
     case 'Dance':
     case 'RequestedDance':
       return <Field
@@ -224,7 +224,7 @@ function ProgramDetailsEditor({path}: {path: ProgramItemPath}) {
   }
 }
 
-function IntervalMusicEditor({danceSetPath}: {danceSetPath: DanceSetPath}) {
+function IntervalMusicEditor({ danceSetPath }: { danceSetPath: DanceSetPath }) {
   const t = useT('components.eventProgramEditor')
   const intervalMusicPath = `${danceSetPath}.intervalMusic` as const
   const durationPath = `${danceSetPath}.intervalMusic.duration` as const
@@ -253,15 +253,15 @@ function IntervalMusicEditor({danceSetPath}: {danceSetPath: DanceSetPath}) {
   </tr>
 }
 
-function DanceSetDuration({ program, intervalMusicDuration}: { program: EventProgramRow[], intervalMusicDuration: number}) {
+function DanceSetDuration({ program, intervalMusicDuration }: { program: EventProgramRow[], intervalMusicDuration: number }) {
   const t = useT('components.eventProgramEditor')
   const pause = useValueAt('pauseBetweenDances')
-  const duration = program.map(({item}) => item.duration ?? 0).reduce((y, x) => x+y, 0)
-  const durationWithPauses = duration + pause*program.length + intervalMusicDuration
+  const duration = program.map(({ item }) => item.duration ?? 0).reduce((y, x) => x + y, 0)
+  const durationWithPauses = duration + pause * program.length + intervalMusicDuration
 
   return <>
-    <strong><Duration value={durationWithPauses}/></strong>{' '+t('duration.pausesIncluded')}
+    <strong><Duration value={durationWithPauses} /></strong>{' ' + t('duration.pausesIncluded')}
     <br />
-    <strong><Duration value={duration}/></strong>{' '+t('duration.dances')}
+    <strong><Duration value={duration} /></strong>{' ' + t('duration.dances')}
   </>
 }

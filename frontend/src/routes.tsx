@@ -1,13 +1,13 @@
-import {Suspense} from 'react'
-import {Navigate, Route, Routes, useParams} from 'react-router-dom'
+import { Suspense } from 'react'
+import { Navigate, Route, Routes, useParams } from 'react-router-dom'
 
-import {useEvent} from 'services/events'
-import {AdminOnly} from 'services/users'
+import { useEvent } from 'services/events'
+import { AdminOnly } from 'services/users'
 
-import {Breadcrumb} from 'libraries/ui'
-import {lazyLoadComponent as lazy, LoadingState} from 'components/LoadingState'
+import { Breadcrumb } from 'libraries/ui'
+import { lazyLoadComponent as lazy, LoadingState } from 'components/LoadingState'
 import VersionableContentContainer from 'components/versioning/VersionableContentContainer'
-import {T, useTranslation} from 'i18n'
+import { T, useTranslation } from 'i18n'
 
 const Dances = lazy(() => import('pages/dances'))
 const Dance = lazy(() => import('pages/dances/Dance'))
@@ -23,15 +23,15 @@ const UiShowcase = lazy(() => import('libraries/ui-showcase'))
 
 export default function MainRoutes() {
   return <>
-    <Breadcrumb text={<><img className="mr-2" src="/fan32.png" alt=""/>{' '}<T msg="app.title"/></>} />
+    <Breadcrumb text={<><img className="mr-2" src="/fan32.png" alt="" />{' '}<T msg="app.title" /></>} />
     <Suspense>
       <Routes>
-        <Route index element={<EventList/>} />
+        <Route index element={<EventList />} />
         <Route path="ui-showcase" element={<UiShowcase />} />
-        <Route path="events/new" element={<CreateEvent/>} />
-        <Route path="events/:eventId/version/:eventVersionId/*" element={<EventRoutes/>} />
-        <Route path="events/:eventId/*" element={<EventRoutes/>} />
-        <Route path="dances/*" element={<DanceRoutes/>} />
+        <Route path="events/new" element={<CreateEvent />} />
+        <Route path="events/:eventId/version/:eventVersionId/*" element={<EventRoutes />} />
+        <Route path="events/:eventId/*" element={<EventRoutes />} />
+        <Route path="dances/*" element={<DanceRoutes />} />
       </Routes>
     </Suspense>
   </>
@@ -41,15 +41,15 @@ function DanceRoutes() {
   return <VersionableContentContainer>
     <Breadcrumb text={useTranslation('breadcrumbs.dances')} />
     <Routes>
-      <Route index element={<Dances/>} />
-      <Route path=":danceId/version/:danceVersionId" element={<Dance/>} />
-      <Route path=":danceId" element={<Dance/>} />
+      <Route index element={<Dances />} />
+      <Route path=":danceId/version/:danceVersionId" element={<Dance />} />
+      <Route path=":danceId" element={<Dance />} />
     </Routes>
   </VersionableContentContainer>
 }
 
 function EventRoutes() {
-  const {eventId, eventVersionId} = useParams()
+  const { eventId, eventVersionId } = useParams()
   const [event, loadingState] = useEvent(eventId ?? '', eventVersionId)
 
   return <VersionableContentContainer>
@@ -57,8 +57,8 @@ function EventRoutes() {
       ? <>
         <Breadcrumb text={event.name} />
         <Routes>
-          <Route index element={<EventPage event={event}/>} />
-          <Route path="program/*" element={<EventProgramRoutes event={event}/>} />
+          <Route index element={<EventPage event={event} />} />
+          <Route path="program/*" element={<EventProgramRoutes event={event} />} />
           <Route path="ball-program/:slideId?" element={<BallProgram eventId={eventId} eventVersionId={eventVersionId} />} />
           <Route path="print/*" element={<EventPrintRoutes />} />
         </Routes>
@@ -68,22 +68,22 @@ function EventRoutes() {
   </VersionableContentContainer>
 }
 
-function EventProgramRoutes({event}) {
+function EventProgramRoutes({ event }) {
   return <AdminOnly fallback={useTranslation('pages.events.eventProgramPage.loginRequired')}>
     <Breadcrumb text={useTranslation('breadcrumbs.eventProgram')} />
     <Routes>
       <Route index element={<Navigate to="main" replace />} />
-      <Route path=":tabId/:slideId?" element={<EventProgramPage event={event}/>} />
-      <Route path="dance/:danceId" element={<Dance parentType="eventProgram"/>} />
+      <Route path=":tabId/:slideId?" element={<EventProgramPage event={event} />} />
+      <Route path="dance/:danceId" element={<Dance parentType="eventProgram" />} />
     </Routes>
   </AdminOnly>
 }
 
 function EventPrintRoutes() {
-  const {eventId} = useParams()
+  const { eventId } = useParams()
   return <Routes>
-    <Route path="ball-dancelist" element={<DanceList eventId={eventId}/>} />
-    <Route path="dance-cheatlist" element={<DanceCheatList eventId={eventId}/>} />
+    <Route path="ball-dancelist" element={<DanceList eventId={eventId} />} />
+    <Route path="dance-cheatlist" element={<DanceCheatList eventId={eventId} />} />
     <Route path="dance-instructions" element={<DanceInstructions eventId={eventId} />} />
   </Routes>
 }

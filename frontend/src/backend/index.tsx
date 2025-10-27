@@ -3,7 +3,7 @@ import { TypedDocumentNode } from '@graphql-typed-document-node/core'
 
 import { Entity, ServiceName } from './types'
 
-import {showErrorToast} from 'libraries/ui'
+import { showErrorToast } from 'libraries/ui'
 import { useTranslation } from 'i18n'
 
 import { apolloClient, ApolloProvider, FetchResult, MutationResult, useMutation, useQuery } from './apollo'
@@ -15,13 +15,13 @@ export { updateEntityFragment } from './apolloCache'
 export { setupServiceUpdateFragment, useServiceEvents } from './serviceEvents'
 export { graphql } from 'types/gql'
 
-export const BackendProvider = ({children}) => <ApolloProvider client={apolloClient} children={children} />
+export const BackendProvider = ({ children }) => <ApolloProvider client={apolloClient} children={children} />
 
-export function entityListQueryHook<T extends {[k in number]: Entity[]}, V extends OperationVariables>(
-  service : ServiceName, compiledQuery: TypedDocumentNode<T, V>
+export function entityListQueryHook<T extends Record<number, Entity[]>, V extends OperationVariables>(
+  service: ServiceName, compiledQuery: TypedDocumentNode<T, V>,
 ): () => [
   ValueOf<T>,
-  QueryResult<T, V>
+  QueryResult<T, V>,
 ] {
   const callbacks = {
     created: (data) => appendToListQuery(compiledQuery, data),
@@ -30,7 +30,7 @@ export function entityListQueryHook<T extends {[k in number]: Entity[]}, V exten
   }
 
   return () => {
-    //TODO: type this
+    // TODO: type this
     useServiceListEvents(service, callbacks)
 
     const result = useQuery<T, V>(compiledQuery, { fetchPolicy: 'cache-and-network' })
@@ -40,13 +40,13 @@ export function entityListQueryHook<T extends {[k in number]: Entity[]}, V exten
       : empty
 
     return [
-      data, result
+      data, result,
     ]
   }
 }
 
 export function entityCreateHook<T, V>(
-  service: ServiceName, query: TypedDocumentNode<T, V>, options = {}
+  service: ServiceName, query: TypedDocumentNode<T, V>, options = {},
 ) {
   return makeMutationHook<T, V>(query, {
     ...options,
@@ -55,7 +55,7 @@ export function entityCreateHook<T, V>(
 }
 
 export function entityUpdateHook<T, V>(
-  service: ServiceName, query: TypedDocumentNode<T, V>, options = {}
+  service: ServiceName, query: TypedDocumentNode<T, V>, options = {},
 ) {
   return makeMutationHook<T, V>(query, {
     ...options,
@@ -64,7 +64,7 @@ export function entityUpdateHook<T, V>(
 }
 
 export function entityDeleteHook<T, V>(
-  service: ServiceName, query: TypedDocumentNode<T, V>, options = {}
+  service: ServiceName, query: TypedDocumentNode<T, V>, options = {},
 ) {
   return makeMutationHook<T, V>(query, {
     ...options,
@@ -83,7 +83,7 @@ export function makeMutationHook<T, V>(
   const { onCompleted, fireEvent } = options ?? {}
   return (args = {}) => {
     const operationFailed = useTranslation('common.operationFailed')
-    const options : MutationHookOptions<T, V> = {
+    const options: MutationHookOptions<T, V> = {
       onError: err => { showErrorToast(operationFailed, err) },
       ...args,
       onCompleted: (data) => {
@@ -94,13 +94,13 @@ export function makeMutationHook<T, V>(
         }
         if (onCompleted) onCompleted(data)
         if (args.onCompleted) args.onCompleted(data)
-      }
+      },
     }
     const [runQuery, data] = useMutation<T, V>(query, options)
 
     return [
-      (variables) => runQuery({variables}),
-      data
+      (variables) => runQuery({ variables }),
+      data,
     ]
   }
 }

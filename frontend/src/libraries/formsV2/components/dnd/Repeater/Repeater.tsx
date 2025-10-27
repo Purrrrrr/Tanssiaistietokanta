@@ -20,7 +20,7 @@ export interface RepeaterProps<Value extends ListItem, Data = AnyType, AcceptedT
 }
 
 export function Repeater<Value extends ListItem, Data = AnyType, AcceptedTypeDefs = null>({
-  path, accepts, itemType, asElement, itemElement, children
+  path, accepts, itemType, asElement, itemElement, children,
 }: RepeaterProps<Value, Data, AcceptedTypeDefs>) {
   const dropAreaId = useId()
   const values = useValueAt<Value[], Data>(path)
@@ -35,7 +35,7 @@ export function Repeater<Value extends ListItem, Data = AnyType, AcceptedTypeDef
 }
 
 function useItems<T extends ListItem, TypeDefs>(
-  dropAreaId: string, path: string | number, values: T[], itemType?: ItemTypeClassifier<T, TypeDefs>
+  dropAreaId: string, path: string | number, values: T[], itemType?: ItemTypeClassifier<T, TypeDefs>,
 ): ItemData<T>[] {
   const itemVisit = useContext(ItemVisitContext)
   const toItem = (value: T, index: number) => ({
@@ -69,6 +69,6 @@ function asGhost<T>(item: ItemData<T>): ItemData<T> {
   return {
     ...item,
     ghost: true,
-    id: `${item.id}-ghost`
+    id: `${item.id}-ghost`,
   }
 }

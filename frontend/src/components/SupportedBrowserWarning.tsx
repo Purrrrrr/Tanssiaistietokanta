@@ -1,7 +1,7 @@
-import {useState} from 'react'
+import { useState } from 'react'
 
-import {Alert} from 'libraries/overlays'
-import {useT} from 'i18n'
+import { Alert } from 'libraries/overlays'
+import { useT } from 'i18n'
 
 const browsersLinks = {
   Firefox: 'https://www.mozilla.org/firefox/browsers/',
@@ -12,7 +12,6 @@ export function SupportedBrowserChecker() {
   const hasSupport = isSupported()
 
   return hasSupport ? null : <SupportedBrowserWarning />
-
 }
 export function SupportedBrowserWarning() {
   const t = useT('components.supportedBrowserWarning')
@@ -34,7 +33,6 @@ export function SupportedBrowserWarning() {
       {Object.entries(browsersLinks).map(([name, url]) => <li key={name}><a href={url}>{name}</a></li>)}
     </ul>
   </Alert>
-
 }
 
 function isSupported(): boolean {

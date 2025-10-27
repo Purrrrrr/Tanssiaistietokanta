@@ -1,9 +1,9 @@
 import { Operation } from './types'
-import {Entity} from '../types'
+import { Entity } from '../types'
 
-import {arrayPatch} from './arrayPatch'
+import { arrayPatch } from './arrayPatch'
 
-export type {Operation} from './types'
+export type { Operation } from './types'
 
 export function toJSONPatch<T>(original: T, changed: T, pathBase = ''): Operation[] {
   const commonType = getCommonType(original, changed)
@@ -23,8 +23,8 @@ export function toJSONPatch<T>(original: T, changed: T, pathBase = ''): Operatio
     {
       op: 'replace',
       value: changed,
-      path: pathBase
-    }
+      path: pathBase,
+    },
   ]
 }
 
@@ -35,7 +35,6 @@ function getCommonType(original: unknown, changed: unknown) {
   return originalType === changedType ? originalType : null
 }
 
-
 function getType(value: unknown) {
   if (value == null) return 'undefined'
   if (Array.isArray(value)) return 'array'
@@ -43,7 +42,7 @@ function getType(value: unknown) {
 }
 
 function objectPatch(original: object, changed: object, pathBase: string): Operation[] {
-  const ops : Operation[] = []
+  const ops: Operation[] = []
   for (const key of Object.keys(original)) {
     if (key in changed) {
       ops.push(...toJSONPatch(original[key], changed[key], `${pathBase}/${escapePathToken(key)}`))
