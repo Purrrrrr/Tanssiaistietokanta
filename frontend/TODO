@@ -159,8 +159,9 @@
   * Validate upload type/check malware
     * Type checking: Maybe not now
     * Virus checking?
+  * GraphQL endpoint
+    Use GraphQL hooks
     Rename button/functionality
-    GraphQL endpoint?
     Zipping downloads?
     UI
       File in events

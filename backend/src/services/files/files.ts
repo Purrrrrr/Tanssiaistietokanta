@@ -14,17 +14,29 @@ import {
 } from './files.schema'
 
 import type { Application, HookContext, NextFunction } from '../../declarations'
-import { File, FileData, FileService, getOptions, VirusInfectionError } from './files.class'
+import { File, FileData, FilePatch, FileService, getOptions, VirusInfectionError } from './files.class'
 import { filePath, fileMethods } from './files.shared'
 
 export * from './files.class'
 export * from './files.schema'
 
+async function getDuplicates(ctx: HookContext) {
+  if (ctx.method === 'patch') {
+    const { name }= (ctx.data as FilePatch)
+    if (name === undefined || !ctx.id) return []
+    const original = await ctx.app.service('files').get(ctx.id)
+    if (!original) return []
+    return await ctx.app.service('files').find({ query: { root: original.root, path: original.path, name }})
+  } else {
+    const data = (ctx.data as FileData)
+    const { root, path } = data
+    const filename = data.filename ?? data.upload?.originalFilename
+    return await ctx.app.service('files').find({ query: { root, path, name: filename }})
+  }
+}
+
 async function validateUniqueName(ctx: HookContext, next: NextFunction) {
-  const data = (ctx.data as FileData)
-  const { root, path } = data
-  const filename = data.filename ?? data.upload.originalFilename
-  const [duplicateFile] = await ctx.app.service('files').find({ query: { root, path, name: filename }})
+  const [duplicateFile] = await getDuplicates(ctx)
   if (duplicateFile && (!ctx.id || ctx.id !== duplicateFile._id)) {
     if (ctx.http) ctx.http.status = 409
     ctx.result = {
@@ -35,6 +47,7 @@ async function validateUniqueName(ctx: HookContext, next: NextFunction) {
   }
   await next()
 }
+
 async function addInfectionStatusCode(ctx: HookContext, next: NextFunction) {
   try {
     await next()
