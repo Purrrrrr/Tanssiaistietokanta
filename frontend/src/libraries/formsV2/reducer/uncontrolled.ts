@@ -13,12 +13,7 @@ import { useSubscriptions } from './utils/useSubscriptions'
 export function useFormReducer<Data>(externalData: Data, onChange: (changed: Data) => unknown): FormReducerResult<Data> {
   const result = useReducer<Reducer<FormState<Data>, FormAction<Data>>, Data>(debuggingReducer, externalData, getInitialState)
   const [state, dispatch] = result
-  const { subscribe, trigger } = useSubscriptions<FormState<Data>>()
-
-  useEffect(
-    () => { trigger(state) },
-    [state, trigger],
-  )
+  const { subscribe } = useSubscriptions<FormState<Data>>(state)
 
   const previousDataRef = useRef({
     external: externalData,

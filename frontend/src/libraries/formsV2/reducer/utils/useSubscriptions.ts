@@ -1,11 +1,11 @@
-import { useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 
 import type { SubscriptionCallback } from '../types'
 
-export function useSubscriptions<State>() {
+export function useSubscriptions<State>(state: State) {
   const callbacks = useRef<Set<SubscriptionCallback<State>>>(new Set())
 
-  return useMemo(() => {
+  const api = useMemo(() => {
     function subscribe(callback: SubscriptionCallback<State>) {
       callbacks.current.add(callback)
       return () => void callbacks.current.delete(callback)
@@ -20,4 +20,12 @@ export function useSubscriptions<State>() {
       subscribe, trigger,
     }
   }, [])
+  const { trigger } = api
+
+  useEffect(
+    () => { trigger(state) },
+    [state, trigger],
+  )
+
+  return api
 }
