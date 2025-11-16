@@ -22,8 +22,12 @@ interface ActionProps extends Pick<ButtonProps, 'icon' | 'color'> {
   action?(): unknown
 }
 
+interface KeyedButtonProps extends ButtonProps {
+  key: string | number
+}
+
 export function Alert({ children, button, buttons, onClose, onChoose, ...rest }: AlertProps) {
-  const buttonProps: ButtonProps[] = [button, ...buttons ?? []]
+  const buttonProps: KeyedButtonProps[] = [button, ...buttons ?? []]
     .filter(action => action !== undefined)
     .map((actionSpec, index) => {
       const color = index === 0 ? 'primary' : 'none'
@@ -53,7 +57,7 @@ export function Alert({ children, button, buttons, onClose, onChoose, ...rest }:
       {children}
     </Dialog.Body>
     <Dialog.Footer className="flex flex-row-reverse">
-      {buttonProps.map((props, i) => <Button key={props.id ?? i} {...props} />)}
+      {buttonProps.map((props) => <Button {...props} key={props.key} />)}
     </Dialog.Footer>
   </Dialog>
 }
