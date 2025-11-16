@@ -13,18 +13,18 @@ export function getApolloCache() {
   return apolloClient.cache
 }
 
-export function appendToListQuery(query: DocumentNode, newValue: Entity) {
+export function appendToListQuery(query: DocumentNode, newValue: Entity, variables?: unknown) {
   debug('appending to query', newValue)
-  getApolloCache().updateQuery({ query }, data => {
+  getApolloCache().updateQuery({ query, variables }, data => {
+    debug(data)
     const key = getSingleKey(data)
     debug(key)
-    debug(data)
     return modify(key, list => [...list, newValue], data)
   })
 }
 
-export function filterRemovedFromListQuery(query: DocumentNode) {
-  getApolloCache().updateQuery({ query }, data => {
+export function filterRemovedFromListQuery(query: DocumentNode, variables?: unknown) {
+  getApolloCache().updateQuery({ query, variables }, data => {
     const key = getSingleKey(data)
     return modify(key, list => list.filter(isExistingEntity), data)
   })

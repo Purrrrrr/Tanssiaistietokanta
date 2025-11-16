@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { MutationHookOptions, OperationVariables, QueryHookOptions, QueryResult } from '@apollo/client'
 import { TypedDocumentNode } from '@graphql-typed-document-node/core'
 
@@ -19,21 +20,21 @@ export const BackendProvider = ({ children }) => <ApolloProvider client={apolloC
 
 export function entityListQueryHook<T extends Record<number, Entity[]>, V extends OperationVariables>(
   service: ServiceName, compiledQuery: TypedDocumentNode<T, V>,
-): () => [
+): (...args: OptionalIfEmptyObject<V>) => [
   ValueOf<T>,
   QueryResult<T, V>,
 ] {
-  const callbacks = {
-    created: (data) => appendToListQuery(compiledQuery, data),
-    updated: () => { /* do nothing */ },
-    removed: () => filterRemovedFromListQuery(compiledQuery),
-  }
-
-  return () => {
+  return (...args: OptionalIfEmptyObject<V>) => {
+    const [variables] = args
+    const callbacks = useMemo(() => ({
+      created: (data) => appendToListQuery(compiledQuery, data, variables),
+      updated: () => { /* do nothing */ },
+      removed: () => filterRemovedFromListQuery(compiledQuery, variables),
+    }), [variables])
     // TODO: type this
     useServiceListEvents(service, callbacks)
 
-    const result = useQuery<T, V>(compiledQuery, { fetchPolicy: 'cache-and-network' })
+    const result = useQuery<T, V>(compiledQuery, { fetchPolicy: 'cache-and-network', variables })
     const empty = [] as ValueOf<T>
     const data = result.data !== undefined
       ? getSingleValue(result.data)
@@ -44,6 +45,8 @@ export function entityListQueryHook<T extends Record<number, Entity[]>, V extend
     ]
   }
 }
+
+type OptionalIfEmptyObject<V> = V[keyof V] extends never ? [] : [V]
 
 export function entityCreateHook<T, V>(
   service: ServiceName, query: TypedDocumentNode<T, V>, options = {},

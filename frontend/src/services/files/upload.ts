@@ -1,5 +1,3 @@
-import { useCallback, useEffect, useState } from 'react'
-
 import { fetchWithProgress, FetchWithProgressOptions } from 'utils/fetchWithProgress'
 
 export type { Progress } from 'utils/fetchWithProgress'
@@ -80,24 +78,4 @@ function toFormData(object: object) {
     }
   }
   return formData
-}
-
-export async function getFiles() {
-  const response = await fetch('/api/files')
-  return response.json()
-}
-
-export function useFiles() {
-  const [files, setFiles] = useState<UploadedFile[]>([])
-  const refetch = useCallback(() => {
-    getFiles().then(setFiles)
-  }, [])
-  useEffect(refetch, [refetch])
-  return [files, refetch] as const
-}
-
-export function useDeleteFile() {
-  return async (fileId: string) => {
-    await fetch(`/api/files/${fileId}`, { method: 'DELETE' })
-  }
 }

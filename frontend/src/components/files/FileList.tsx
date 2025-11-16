@@ -16,7 +16,8 @@ import { useUploadQueue } from './useUploadQueue'
 
 export function FileList() {
   const input = useRef<HTMLInputElement>(null)
-  const [files, fetchFiles] = useFiles()
+  const queryVars = { root: '' }
+  const [files] = useFiles(queryVars)
   const [doUpload, uploads] = useUploadQueue('', '')
   const filesize = useFilesize()
   const T = useT('components.files')
@@ -32,13 +33,13 @@ export function FileList() {
         buttons: [
           {
             text: T('alreadyExistsConfirm.ok'),
-            action: () => doUpload(file, existingFile._id).then(fetchFiles),
+            action: () => doUpload(file, existingFile._id),
           },
           T('alreadyExistsConfirm.cancel'),
         ],
       })
     } else {
-      await doUpload(file).then(fetchFiles)
+      await doUpload(file)
     }
   }
 
@@ -60,7 +61,7 @@ export function FileList() {
           <span>{formatDate(file._updatedAt)}</span>
           <span>{filesize(file.size)}</span>
           <div>
-            <DeleteFileButton file={file} onDelete={fetchFiles} />
+            <DeleteFileButton file={file} />
           </div>
         </ItemList.Row>,
       )}

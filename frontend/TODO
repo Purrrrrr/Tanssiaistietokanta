@@ -160,8 +160,9 @@
     * Type checking: Maybe not now
     * Virus checking?
   * GraphQL endpoint
-    Use GraphQL hooks
+  * Use GraphQL hooks
     Rename button/functionality
+    Retry uploads?
     Zipping downloads?
     UI
       File in events
