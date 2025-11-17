@@ -11,7 +11,7 @@ export interface Upload {
   progress?: Progress
 }
 
-export function useUploadQueue(root: string = '', path: string = '') {
+export function useUploadQueue(root: string, path: string = '') {
   const [uploads, queue] = useQueue<Upload>()
   const getError = useGetUploadErrorMessage()
 

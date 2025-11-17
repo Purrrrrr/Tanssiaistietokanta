@@ -15,11 +15,15 @@ import { UploadProgressList } from './UploadProgres'
 import useFilesize from './useFilesize'
 import { useUploadQueue } from './useUploadQueue'
 
-export function FileList() {
+interface FileListProps {
+  root: string
+}
+
+export function FileList({ root }: FileListProps) {
   const input = useRef<HTMLInputElement>(null)
-  const queryVars = { root: '' }
+  const queryVars = { root }
   const [files] = useFiles(queryVars)
-  const [doUpload, uploads] = useUploadQueue('', '')
+  const [doUpload, uploads] = useUploadQueue(root)
   const filesize = useFilesize()
   const T = useT('components.files')
   const formatDate = useFormatDateTime()
@@ -45,16 +49,6 @@ export function FileList() {
   }
 
   return <div>
-    <input
-      className="hidden"
-      ref={input}
-      type="file"
-      onChange={e => e.target.files && startUpload(e.target.files[0])}
-    />
-    <div className="flex my-5 gap-3 items-start">
-      <Button icon={<Add />} onClick={() => input.current?.click()} text="Lisää tiedosto" />
-      <UploadProgressList uploads={uploads} />
-    </div>
     <ItemList columns="grid-cols-[1fr_minmax(200px,auto)_minmax(100px,auto)_max-content]">
       {files.map(file =>
         <ItemList.Row key={file._id}>
@@ -74,5 +68,15 @@ export function FileList() {
         </div>
       }
     </ItemList>
+    <input
+      className="hidden"
+      ref={input}
+      type="file"
+      onChange={e => e.target.files && startUpload(e.target.files[0])}
+    />
+    <div className="flex my-5 gap-3 items-start">
+      <Button icon={<Add />} onClick={() => input.current?.click()} text="Lisää tiedosto" />
+      <UploadProgressList uploads={uploads} />
+    </div>
   </div>
 }

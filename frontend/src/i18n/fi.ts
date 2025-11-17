@@ -339,6 +339,7 @@ export const fi = {
         },
         eventDate: 'Tapahtuman ajankohta',
         ballDateTime: 'Tanssiaisten ajankohta',
+        files: 'Tapahtumaan liittyvät tiedostot',
       },
       eventProgramPage: {
         pageTitle: 'Tanssiaisohjelma',
