@@ -274,6 +274,10 @@ export const fi = {
         confirmTitle: 'Poistetaanko tiedosto?',
         confirmText: 'Haluatko varmasti poistaa tiedoston __filename__?',
       },
+      RenameFileButton: {
+        text: 'Nimeä uudelleen',
+        ok: 'Nimeä uudelleen',
+      },
       UploadButton: {
         upload: 'Lähetä tiedosto',
         errorReason: {

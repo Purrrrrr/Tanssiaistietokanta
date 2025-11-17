@@ -4,12 +4,13 @@ import { Add, InfoSign } from '@blueprintjs/icons'
 import { useFiles } from 'services/files'
 
 import { useFormatDateTime } from 'libraries/i18n/dateTime'
-import { useAlerts } from 'libraries/overlays/AlertContext'
+import { useAlerts } from 'libraries/overlays'
 import { Button, RegularLink } from 'libraries/ui'
 import ItemList from 'libraries/ui/ItemList'
 import { useT } from 'i18n'
 
 import { DeleteFileButton } from './DeleteFileButton'
+import { RenameFileButton } from './RenameFileButton'
 import { UploadProgressList } from './UploadProgres'
 import useFilesize from './useFilesize'
 import { useUploadQueue } from './useUploadQueue'
@@ -54,13 +55,14 @@ export function FileList() {
       <Button icon={<Add />} onClick={() => input.current?.click()} text="Lisää tiedosto" />
       <UploadProgressList uploads={uploads} />
     </div>
-    <ItemList columns="grid-cols-[1fr_minmax(200px,auto)_minmax(100px,auto)_min-content]">
+    <ItemList columns="grid-cols-[1fr_minmax(200px,auto)_minmax(100px,auto)_max-content]">
       {files.map(file =>
         <ItemList.Row key={file._id}>
           <RegularLink href={`/api/files/${file._id}?download=true`} target="_blank">{file.name}</RegularLink>
           <span>{formatDate(file._updatedAt)}</span>
           <span>{filesize(file.size)}</span>
           <div>
+            <RenameFileButton file={file} />
             <DeleteFileButton file={file} />
           </div>
         </ItemList.Row>,

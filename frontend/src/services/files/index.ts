@@ -1,4 +1,4 @@
-import { entityDeleteHook, entityListQueryHook, graphql, setupServiceUpdateFragment } from 'backend'
+import { entityDeleteHook, entityListQueryHook, entityUpdateHook, graphql, setupServiceUpdateFragment } from 'backend'
 
 export * from './upload'
 
@@ -32,3 +32,13 @@ export const useFiles = entityListQueryHook('files', graphql(`
     }
   }
 `))
+
+export const useRenameFile = entityUpdateHook('files', graphql(`
+mutation renameFile($id: ID!, $name: String!, $path: String) {
+  renameFile(id: $id, name: $name, path: $path) {
+    _id
+    _updatedAt
+    name
+    size
+  }
+}`))
