@@ -151,8 +151,7 @@
     * Ask when uploading when a file with the same name already exists
     * Nicer progress style
     * Upload speed
-      Upload ETA
-      Dropzone
+    * Upload ETA
   * Delete file button
   * Root + path
   * Icon for empty list?
@@ -162,8 +161,9 @@
   * GraphQL endpoint
   * Use GraphQL hooks
   * Rename button/functionality
+    Upload Dropzone
     UI
-      File in events
+    * File in events
       Files in markdown
       Move documents to own service to facilitate this?
     Unify list item toolbar button style

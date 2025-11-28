@@ -3,7 +3,7 @@ import { Autocomplete, Talkr, TParams, TProps, tr, useT as useBareT } from 'talk
 
 import { PrefixPath, Translator } from './types'
 
-import { DateLike, useFormatDate, useFormatDateTime, useFormatTime } from './dateTime'
+import { DateLike, useFormatDate, useFormatDateTime, useFormatDuration, useFormatTime } from './dateTime'
 
 export type { PrefixPath, Translator } from './types'
 
@@ -16,6 +16,7 @@ export interface TranlationSystem<Translations> {
   useFormatDate: () => (d: DateLike) => string
   useFormatDateTime: () => (d: DateLike) => string
   useFormatTime: () => (d: DateLike) => string
+  useFormatDuration: () => (seconds: number) => string
 }
 
 export function makeTranslator<Translations>(): TranlationSystem<Translations> {
@@ -28,6 +29,7 @@ export function makeTranslator<Translations>(): TranlationSystem<Translations> {
     useFormatDate,
     useFormatDateTime,
     useFormatTime,
+    useFormatDuration,
   }
 }
 

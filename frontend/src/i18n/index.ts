@@ -16,4 +16,5 @@ export const {
   TranslationContext,
   useFormatDate,
   useFormatDateTime,
+  useFormatDuration,
 } = makeTranslator<Translations>()

@@ -3,7 +3,7 @@ import { useRef } from 'react'
 import { type Progress } from 'services/files'
 
 import { Button } from 'libraries/ui'
-import { useT, useTranslation } from 'i18n'
+import { useFormatDuration, useT, useTranslation } from 'i18n'
 
 import useFilesize from './useFilesize'
 import { Upload } from './useUploadQueue'
@@ -60,14 +60,20 @@ function useUploadSpeed(uploaded: number) {
 
 function ProgressBar({ progress }: { progress: Progress }) {
   const filesize = useFilesize()
+  const duration = useFormatDuration()
   const percentage = `${progress.uploaded / progress.total * 100}%`
   const speed = useUploadSpeed(progress.uploaded)
+  const ETA = (progress.total - progress.uploaded) / speed
+  console.log(ETA)
 
   return <>
     <div className="relative w-40 h-5 bg-white inset-shadow-sm shadow-black border-1 border-gray-400">
       <div style={{ width: percentage }} className="absolute top-0 left-0 h-full  bg-linear-to-r from-lime-400 to-amber-200 from-70%"></div>
       <span className="absolute inset-0 text-center">{filesize(progress.uploaded)}/{filesize(progress.total)}</span>
     </div>
-    <div className="min-w-16 text-right">{filesize(speed)}/s</div>
+    <div className="min-w-30 text-right">
+      {filesize(speed)}/s
+      {Number.isFinite(ETA) && `, ${duration(ETA)}`}
+    </div>
   </>
 }
