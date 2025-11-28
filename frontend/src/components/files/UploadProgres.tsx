@@ -14,7 +14,7 @@ export function UploadProgressList({ uploads }: { uploads: (Upload & { id: numbe
 
   return <div className="flex gap-3 w-fit">
     <div className="py-2">{T('uploadingFiles', { count: uploads.length })}</div>
-    <div className="-mt-1 px-2 py-1 bg-gray-100 rounded-md  grid grid-cols-[auto_auto_auto_auto] gap-4">
+    <div className="-mt-1 px-2 py-1 bg-gray-100 rounded-md  grid grid-cols-[1fr_auto_auto_auto] gap-4 items-center">
       {uploads.map(upload => <UploadProgress key={upload.id} {...upload} />)}
     </div>
   </div>
@@ -25,8 +25,8 @@ export function UploadProgress({ file, progress: _progress, abort, error }: Uplo
     uploaded: 0, total: file.size,
   }
 
-  return <div className="grid grid-cols-subgrid col-span-full items-center">
-    <span>{file.name}</span>
+  return <>
+    <span title={file.name} className="overflow-ellipsis overflow-hidden">{file.name}</span>
     {error
       ? <div className="col-span-2 text-red-800 font-semibold">{error}</div>
       : <ProgressBar progress={progress} />
@@ -36,7 +36,7 @@ export function UploadProgress({ file, progress: _progress, abort, error }: Uplo
       text={useTranslation(error ? 'common.delete' : 'common.cancel')}
       onClick={abort}
     />
-  </div>
+  </>
 }
 
 function useUploadSpeed(uploaded: number) {

@@ -52,7 +52,9 @@ export function FileList({ root }: FileListProps) {
     <ItemList columns="grid-cols-[1fr_minmax(200px,auto)_minmax(100px,auto)_max-content]">
       {files.map(file =>
         <ItemList.Row key={file._id}>
-          <RegularLink href={`/api/files/${file._id}?download=true`} target="_blank">{file.name}</RegularLink>
+          <RegularLink href={`/api/files/${file._id}?download=true`} target="_blank" title={file.name} className="overflow-ellipsis overflow-hidden">
+            {file.name}
+          </RegularLink>
           <span>{formatDate(file._updatedAt)}</span>
           <span>{filesize(file.size)}</span>
           <div>
