@@ -41,7 +41,6 @@
     "compile": "shx rm -rf lib/ && copyfiles -u 1 src/**/*.graphql lib && copyfiles -u 1 src/**/*.json lib && tsc",
     "start": "node lib/",
     "start-dev": "cross-env CORS_ALLOW_LOCALHOST=true node lib/",
-    "prettier": "npx prettier \"**/*.ts\" --write",
     "mocha": "cross-env NODE_ENV=test mocha test/ --require ts-node/register --recursive --extension .ts --exit",
     "test": "npm run mocha",
     "bundle:client": "npm run compile && npm pack --pack-destination ./public"
