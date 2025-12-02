@@ -33,4 +33,17 @@ This projects uses React as the framework for the app and vite to build it.
 ## Building a production build
 
 Run `npm run build` to build a production build for your app. You then need to host the app on a server
-that properly rewrites api calls to the backend. Such a configuration is sadly not provided right now.
+that properly rewrites api calls to the backend.
+
+A working configuration for an Apache virtual host would look something like this:
+
+```
+<Location />
+	RewriteCond %{REQUEST_URI} !^/api/.*
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteRule ^ index.html [QSA,L]
+</Location>
+
+ProxyPass "/api" "http://localhost:8082"
+ProxyPassReverse "/api" "http://localhost:8082"
+```

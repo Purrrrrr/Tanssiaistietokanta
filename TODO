@@ -95,10 +95,9 @@
 * Associate a dance to interval music
 * Periodically fetch wikipages in the background
 * Remove dialog? It is not used anymore. At least remove the blueprint css for it
-
 * Data dump
 * Proper readme files
-  Sample nginx config
+* Sample Apache config
   
   Ropecon 2025 post todo
   * Actually hide items that are supposed to be hidden from lists
