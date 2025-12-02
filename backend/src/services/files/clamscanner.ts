@@ -20,6 +20,7 @@ export class ClamScanner {
       this.scannerPromise
         .then(clamAV => clamAV.getVersion())
         .then(version => logger.info(`ClamAV: version is ${version}`))
+        .catch(error => logger.warn(`Unable to initiailize ClamAV because of '${error}'`))
     } else {
       logger.warn("ClamAV: not configured")
     }
@@ -27,11 +28,19 @@ export class ClamScanner {
 
   async isInfected(path: string) {
     // Default to letting everything pass
-    if (!this.scannerPromise) return false
-
-    const scanner = await this.scannerPromise
-    const { isInfected } = await scanner.scanFile(path)
-    return isInfected
+    if (!this.scannerPromise) {
+      logger.warn('Unable to scan a file without ClamAV configured')
+      return false
+    }
+    
+    try {
+      const scanner = await this.scannerPromise
+      const { isInfected } = await scanner.scanFile(path)
+      return isInfected
+    } catch (_) {
+      logger.warn('Unable to scan a file without a working ClamAV connection')
+      return true
+    }
   }
 }
 
