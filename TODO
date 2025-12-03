@@ -165,6 +165,7 @@
   * GraphQL endpoint
   * Use GraphQL hooks
   * Rename button/functionality
+  * Better keyboard usability for file rename dialog (working enter key)
     Upload Dropzone
     UI
     * File in events
@@ -173,7 +174,6 @@
     Unify list item toolbar button style
     Retry uploads?
     Zipping downloads?
-    Better keyboard usability for file rename dialog (working enter key)
 
   Ability to see more info about program item in editor
 

@@ -4,7 +4,7 @@ import { Edit } from '@blueprintjs/icons'
 import { UploadedFile, useRenameFile } from 'services/files'
 
 import { TextInput } from 'libraries/formsV2/components/inputs'
-import { Alert } from 'libraries/overlays'
+import { Dialog } from 'libraries/overlays'
 import { Button } from 'libraries/ui'
 import { useT } from 'i18n'
 
@@ -23,19 +23,28 @@ export function RenameFileButton({ file }: {
       text={t('components.files.RenameFileButton.text')}
       onClick={() => setName(file.name)}
     />
-    <Alert
+    <Dialog
       isOpen={name !== null}
       onClose={() => setName(null)}
       title={t('components.files.RenameFileButton.text')}
-      buttons={[
-        {
-          text: t('components.files.RenameFileButton.ok'),
-          action: () => name && renameFile({ id: file._id, name }),
-        },
-        t('common.cancel'),
-      ]}
+      showCloseButton={false}
     >
-      <TextInput className="w-100!" id="name" value={name} onChange={setName} />
-    </Alert>
+      <form onSubmit={e => {
+        console.log(e)
+        e.preventDefault()
+        if (name) {
+          renameFile({ id: file._id, name })
+          setName(null)
+        }
+      }}>
+        <Dialog.Body>
+          <TextInput className="w-100!" id="name" value={name} onChange={setName} onKeyDown={() => { /* Override default keydown blur */ }} />
+        </Dialog.Body>
+        <Dialog.Footer className="flex flex-row-reverse">
+          <Button color="primary" type="submit" text={t('components.files.RenameFileButton.ok')} />
+          <Button text={t('common.cancel')} onClick={() => setName(null)} />
+        </Dialog.Footer>
+      </form>
+    </Dialog>
   </>
 }
