@@ -7,7 +7,7 @@ export default (app: Application) => {
   return {
     Query: {
       file: (_: any, {id}: any, params: FileParams | undefined) => service.get(id, params),
-      files: (_: any, { root, path }: any, params: FileParams | undefined) => service.find({
+      files: (_: any, { root, path = '' }: any, params: FileParams | undefined) => service.find({
         ...params,
         query: {
           root,
