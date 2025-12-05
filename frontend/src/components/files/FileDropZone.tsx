@@ -1,10 +1,8 @@
-import { useEffect } from 'react'
-
 import { useDragOver } from './useDragOver'
 
 interface FileDropZoneProps {
   children: React.ReactNode
-  onDrop?: (files: File[]) => unknown
+  onDrop?: (files: DataTransferItem[]) => unknown
 }
 
 export function FileDropZone({ children, onDrop }: FileDropZoneProps) {

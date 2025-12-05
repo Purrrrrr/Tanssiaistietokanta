@@ -4,7 +4,7 @@ export type DropEffect = 'none' | 'copy' | 'move' | 'link'
 
 interface UseDragOverOptions {
   dropEffect?: DropEffect
-  onDrop?: (files: File[]) => void
+  onDrop?: (items: DataTransferItem[]) => void
 }
 
 // Global shared drag state
@@ -22,10 +22,9 @@ export function useDragOver<T extends HTMLElement>(options: UseDragOverOptions =
     const zone = ref.current
     if (!zone) return
 
-    const onDragEnter = (e: DragEvent) => {
-      if (!hasFiles(e)) {
-        return
-      }
+    const abortCtrl = new AbortController()
+    zone.addEventListener('dragenter', (e: DragEvent) => {
+      if (!hasFiles(e)) return
 
       depth.current += 1
       if (depth.current === 1) {
@@ -33,12 +32,9 @@ export function useDragOver<T extends HTMLElement>(options: UseDragOverOptions =
         lastActiveZone = zone
         setIsOver(true)
       }
-    }
-
-    const onDragLeave = (e: DragEvent) => {
-      if (!hasFiles(e)) {
-        return
-      }
+    }, abortCtrl)
+    zone.addEventListener('dragleave', (e: DragEvent) => {
+      if (!hasFiles(e)) return
 
       depth.current -= 1
       if (depth.current === 0) {
@@ -46,63 +42,38 @@ export function useDragOver<T extends HTMLElement>(options: UseDragOverOptions =
         if (lastActiveZone === zone) lastActiveZone = null
         setIsOver(false)
       }
-    }
-
-    const onDragOver = (e: DragEvent) => {
-      if (!hasFiles(e)) {
-        // Reject drop
-        if (e.dataTransfer) {
-          e.dataTransfer.dropEffect = 'none'
-        }
-        return
-      }
+    }, abortCtrl)
+    zone.addEventListener('dragover', (e: DragEvent) => {
+      if (!hasFiles(e)) return
 
       e.preventDefault()
       if (e.dataTransfer && lastActiveZone === zone) {
         e.dataTransfer.dropEffect = dropEffect
       }
-    }
+    }, abortCtrl)
 
-    const onDrop = (e: DragEvent) => {
-      if (!hasFiles(e)) {
-        return // ignore drop
-      }
-
+    zone.addEventListener('drop', (e: DragEvent) => {
       e.preventDefault()
 
       depth.current = 0
-      setIsOver(false)
-
       activeDropZoneCount -= 1
+      setIsOver(false)
       if (lastActiveZone === zone) lastActiveZone = null
 
       if (onDropCallback) {
-        const files = getDataTransferItems(e)
-          .map(file => file.getAsFile())
-          .filter(file => file !== null)
-        onDropCallback(files)
+        const items = getDataTransferItems(e)
+          .filter(item => item.kind === 'file')
+        onDropCallback(items)
       }
-    }
+    }, abortCtrl)
 
-    const globalOnDragOver = (e: DragEvent) => {
+    window.addEventListener('dragover', (e: DragEvent) => {
       if (activeDropZoneCount === 0 && e.dataTransfer) {
         e.dataTransfer.dropEffect = 'none'
       }
-    }
+    }, abortCtrl)
 
-    zone.addEventListener('dragenter', onDragEnter)
-    zone.addEventListener('dragleave', onDragLeave)
-    zone.addEventListener('dragover', onDragOver)
-    zone.addEventListener('drop', onDrop)
-    window.addEventListener('dragover', globalOnDragOver)
-
-    return () => {
-      zone.removeEventListener('dragenter', onDragEnter)
-      zone.removeEventListener('dragleave', onDragLeave)
-      zone.removeEventListener('dragover', onDragOver)
-      zone.removeEventListener('drop', onDrop)
-      window.removeEventListener('dragover', globalOnDragOver)
-    }
+    return () => abortCtrl.abort()
   }, [onDropCallback, dropEffect])
 
   return { ref, isOver }

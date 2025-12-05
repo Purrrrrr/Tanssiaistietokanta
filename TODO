@@ -167,8 +167,8 @@
   * Rename button/functionality
   * Better keyboard usability for file rename dialog (working enter key)
   * Upload Dropzone
-    Ask about duplicates all at once when dropping
-    Refuse folder uploads somehow
+  * Ask about duplicates all at once when dropping
+  * Refuse folder uploads somehow
     UI
     * File in events
       Files in markdown

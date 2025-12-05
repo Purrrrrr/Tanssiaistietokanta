@@ -30,27 +30,37 @@ export function FileList({ root }: FileListProps) {
   const formatDate = useFormatDateTime()
   const showAlert = useAlerts()
 
-  const startUpload = async (file: File) => {
-    const existingFile = files.find(f => f.name === file.name)
-    if (existingFile) {
+  const getExistingFile = (file: File) => files.find(f => f.name === file.name)
+  const startUploads = async (files: File[]) => {
+    const filesAndDuplicates = files.map(file => ({ file, duplicate: getExistingFile(file) }))
+
+    filesAndDuplicates.filter(f => !f.duplicate).map(file => doUpload(file.file))
+    for (const { file, duplicate } of filesAndDuplicates) {
+      if (!duplicate) continue
       await showAlert({
         title: T('alreadyExistsConfirm.title'),
         children: T('alreadyExistsConfirm.content', { filename: file.name }),
         buttons: [
           {
             text: T('alreadyExistsConfirm.ok'),
-            action: () => doUpload(file, existingFile._id),
+            action: () => doUpload(file, duplicate._id),
           },
           T('alreadyExistsConfirm.cancel'),
         ],
       })
-    } else {
-      await doUpload(file)
     }
+  }
+  const onDragAndDrop = (items: DataTransferItem[]) => {
+    startUploads(
+      items
+        .filter(item => item.webkitGetAsEntry()?.isFile)
+        .map(item => item.getAsFile())
+        .filter(file => file !== null),
+    )
   }
 
   return <div>
-    <FileDropZone onDrop={files => files.forEach(startUpload)}>
+    <FileDropZone onDrop={onDragAndDrop}>
       <ItemList columns="grid-cols-[1fr_minmax(200px,auto)_minmax(100px,auto)_max-content]">
         {files.map(file =>
           <ItemList.Row key={file._id}>
@@ -76,7 +86,8 @@ export function FileList({ root }: FileListProps) {
         className="hidden"
         ref={input}
         type="file"
-        onChange={e => e.target.files && startUpload(e.target.files[0])}
+        multiple
+        onChange={e => e.target.files && startUploads([...e.target.files])}
       />
     </FileDropZone>
     <div className="flex my-5 gap-3 items-start">
