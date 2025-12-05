@@ -258,7 +258,22 @@ export const fi = {
       possibleSupportedBrowsers: 'Tanssitietokanta on kehitetty ja testattu enimmäkseen Firefoxilla, mutta se tukee ainakin seuraavien selaimien uusimpia versioita:',
     },
     files: {
+      name: 'Nimi',
+      size: 'Koko',
+      date: 'Päivämäärä',
       noFiles: 'Ei tiedostoja',
+      filesSelected: {
+        one: 'Yksi tiedosto valittu, yhteensä __sizeTotal__',
+        many: '__count__ tiedostoa valittu, yhteensä __sizeTotal__',
+      },
+      DeleteSelectionButton: {
+        text: 'Poista kaikki',
+        confirmTitle: {
+          one: 'Poistetaanko tiedosto?',
+          many: 'Poistetaanko __count__ tiedostoa?',
+        },
+        confirmText: 'Haluatko varmasti poistaa tiedostot: __filenames__?',
+      },
       uploadingFiles: {
         one: 'Lähetetään tiedostoa...',
         many: 'Lähetetään __count__ tiedostoa...',
