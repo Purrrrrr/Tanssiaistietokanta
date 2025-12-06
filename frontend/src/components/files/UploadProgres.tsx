@@ -14,7 +14,7 @@ export function UploadProgressList({ uploads }: { uploads: (Upload & { id: numbe
 
   return <div className="flex gap-3 w-fit">
     <div className="py-2">{T('uploadingFiles', { count: uploads.length })}</div>
-    <div className="-mt-1 px-2 py-1 bg-gray-100 rounded-md  grid grid-cols-[1fr_auto_auto_auto] gap-4 items-center">
+    <div className="grid gap-4 items-center py-1 px-2 -mt-1 bg-gray-100 rounded-md grid-cols-[1fr_auto_auto_auto]">
       {uploads.map(upload => <UploadProgress key={upload.id} {...upload} />)}
     </div>
   </div>
@@ -26,9 +26,9 @@ export function UploadProgress({ file, progress: _progress, abort, error }: Uplo
   }
 
   return <>
-    <span title={file.name} className="overflow-ellipsis overflow-hidden">{file.name}</span>
+    <span title={file.name} className="overflow-hidden overflow-ellipsis">{file.name}</span>
     {error
-      ? <div className="col-span-2 text-red-800 font-semibold">{error}</div>
+      ? <div className="col-span-2 font-semibold text-red-800">{error}</div>
       : <ProgressBar progress={progress} />
     }
     <Button
@@ -67,11 +67,11 @@ function ProgressBar({ progress }: { progress: Progress }) {
   console.log(ETA)
 
   return <>
-    <div className="relative w-40 h-5 bg-white inset-shadow-sm shadow-black border-1 border-gray-400">
+    <div className="relative w-40 h-5 bg-white border-gray-400 inset-shadow-sm shadow-black border-1">
       <div style={{ width: percentage }} className="absolute top-0 left-0 h-full  bg-linear-to-r from-lime-400 to-amber-200 from-70%"></div>
       <span className="absolute inset-0 text-center">{filesize(progress.uploaded)}/{filesize(progress.total)}</span>
     </div>
-    <div className="min-w-30 text-right">
+    <div className="text-right min-w-30">
       {filesize(speed)}/s
       {Number.isFinite(ETA) && `, ${duration(ETA)}`}
     </div>

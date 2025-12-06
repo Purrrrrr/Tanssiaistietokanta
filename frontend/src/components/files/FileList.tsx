@@ -77,7 +77,7 @@ export function FileList({ root }: FileListProps) {
         {files.map(file =>
           <ItemList.Row key={file._id}>
             <SelectionBox {...selector.selectItemProps(file)} />
-            <RegularLink href={`/api/files/${file._id}?download=true`} target="_blank" title={file.name} className="overflow-ellipsis overflow-hidden">
+            <RegularLink href={`/api/files/${file._id}?download=true`} target="_blank" title={file.name} className="overflow-hidden overflow-ellipsis">
               {file.name}
             </RegularLink>
             <span>{formatDate(file._updatedAt)}</span>
@@ -103,7 +103,8 @@ export function FileList({ root }: FileListProps) {
         onChange={e => e.target.files && startUploads([...e.target.files])}
       />
     </FileDropZone>
-    <div className="flex my-5 gap-3 items-start">
+    <div className="flex gap-3 items-start my-5">
+      <Button icon={<Add />} onClick={() => input.current?.click()} text="Lisää tiedosto" />
       {selector.selected.length > 0 &&
         <div className="flex gap-3 items-center">
           {T('filesSelected', {
@@ -113,7 +114,6 @@ export function FileList({ root }: FileListProps) {
           <DeleteSelectionButton files={selector.selected} />
         </div>
       }
-      <Button icon={<Add />} onClick={() => input.current?.click()} text="Lisää tiedosto" />
       <UploadProgressList uploads={uploads} />
     </div>
   </div>
