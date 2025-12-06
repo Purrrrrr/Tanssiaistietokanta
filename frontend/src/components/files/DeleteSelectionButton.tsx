@@ -11,7 +11,12 @@ export function DeleteSelectionButton({ files }: {
   return <DeleteButton
     text={T('text')}
     confirmTitle={T('confirmTitle', { count: files.length })}
-    confirmText={T('confirmText', { filenames: files.map(file => file.name).join(', ') })}
+    confirmText={<>
+      <p>{T('confirmText')}</p>
+      <ul>
+        {files.map(file => <li className="list-disc list-inside list-item" key={file._id}>{file.name}</li>)}
+      </ul>
+    </>}
     onDelete={() => Promise.all(files.map(file => deleteFile({ id: file._id })))}
   />
 }

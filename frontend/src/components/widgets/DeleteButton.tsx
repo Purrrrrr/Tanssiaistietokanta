@@ -9,7 +9,7 @@ interface DeleteButtonProps extends ButtonProps {
   iconOnly?: boolean
   disabled?: boolean
   onDelete: () => unknown
-  confirmText: string
+  confirmText: React.ReactNode
   confirmTitle?: string
   minimal?: boolean
 }

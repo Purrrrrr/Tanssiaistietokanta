@@ -170,7 +170,9 @@
   * Refuse folder uploads somehow
   * Ask about duplicates nicely (not all at once)
   * Selection and group actions (delete) for files
+  * Nicer multiple delete confirm
     Nicer and larger select boxes
+    Limit on concurrent uploads
     UI
     * File in events
       Files in markdown

@@ -272,7 +272,7 @@ export const fi = {
           one: 'Poistetaanko tiedosto?',
           many: 'Poistetaanko __count__ tiedostoa?',
         },
-        confirmText: 'Haluatko varmasti poistaa tiedostot: __filenames__?',
+        confirmText: 'Haluatko varmasti poistaa nämä tiedostot?',
       },
       uploadingFiles: {
         one: 'Lähetetään tiedostoa...',

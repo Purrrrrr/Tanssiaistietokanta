@@ -38,7 +38,9 @@ export function SupportedBrowserWarning() {
       {t('possibleSupportedBrowsers')}
     </p>
     <ul>
-      {Object.entries(browsersLinks).map(([name, url]) => <li key={name}><a href={url}>{name}</a></li>)}
+      {Object.entries(browsersLinks).map(([name, url]) =>
+        <li className="list-disc list-inside list-item" key={name}><a href={url}>{name}</a></li>,
+      )}
     </ul>
   </Alert>
 }
