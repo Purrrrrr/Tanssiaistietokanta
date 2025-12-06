@@ -20,7 +20,7 @@ export const ColorClass = {
     none: 'bg-gray-100 text-stone-700',
     primary: 'bg-blue-50 text-blue-800 saturate-65',
     success: 'bg-green-50 text-lime-800',
-    danger: ' bg-red-50 text-red-800',
-    warning: ' bg-amber-100 text-amber-800',
+    danger: 'bg-red-50 text-red-800',
+    warning: 'bg-amber-100 bg-opacity-60 text-amber-800',
   } satisfies Record<Color, string>,
 }
