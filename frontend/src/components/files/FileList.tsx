@@ -17,6 +17,7 @@ import { RenameFileButton } from './RenameFileButton'
 import { UploadProgressList } from './UploadProgres'
 import useFilesize from './useFilesize'
 import { useUploadQueue } from './useUploadQueue'
+import { SelectionBox } from './SelectionBox'
 
 interface FileListProps {
   root: string
@@ -67,7 +68,7 @@ export function FileList({ root }: FileListProps) {
       <ItemList columns="grid-cols-[auto_1fr_minmax(200px,auto)_minmax(100px,auto)_max-content]">
         {files.length > 0 &&
           <ItemList.Header>
-            <input type="checkbox" {...selector.selectAllProps} />
+            <SelectionBox {...selector.selectAllProps} />
             <span>{T('name')}</span>
             <span>{T('date')}</span>
             <span>{T('size')}</span>
@@ -75,7 +76,7 @@ export function FileList({ root }: FileListProps) {
         }
         {files.map(file =>
           <ItemList.Row key={file._id}>
-            <input type="checkbox" {...selector.selectItemProps(file)} />
+            <SelectionBox {...selector.selectItemProps(file)} />
             <RegularLink href={`/api/files/${file._id}?download=true`} target="_blank" title={file.name} className="overflow-ellipsis overflow-hidden">
               {file.name}
             </RegularLink>
