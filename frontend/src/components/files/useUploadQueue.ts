@@ -1,12 +1,16 @@
-import { doUpload, type Progress } from 'services/files'
+import { doUpload, type Progress, UploadedFile } from 'services/files'
 
 import { useQueue } from 'libraries/i18n/useQueue'
 
 import { useGetUploadErrorMessage } from './useGetUploadErrorMessage'
 
+const MAX_CONCURRENT_UPLOADS = 5
+
 export interface Upload {
   file: File
   abort: () => unknown
+  state: 'pending' | 'in-progress' | 'error'
+  start: () => void
   error?: string
   progress?: Progress
 }
@@ -17,25 +21,58 @@ export function useUploadQueue(root: string, path: string = '') {
 
   const upload = async (file: File, fileId?: string) => {
     const abortController = new AbortController()
-    const abort = () => {
+    const queuePending = () => {
+      queue.updateItems(uploads => {
+        let maxStartCount = MAX_CONCURRENT_UPLOADS - inProgressCount(uploads)
+
+        return uploads.map(upload => {
+          if (upload.state !== 'pending' || maxStartCount === 0) {
+            return upload
+          }
+          maxStartCount -= 1
+          upload.start()
+          return { ...upload, start: () => {}, state: 'in-progress' }
+        })
+      })
+    }
+    const removeUpload = () => {
       queue.remove(id)
       abortController.abort()
     }
-    const id = queue.push({ file, abort })
 
-    try {
-      const result = await doUpload({
-        root, path, fileId, file,
-        signal: abortController.signal,
-        onProgress: (progress) => queue.update(id, { progress }),
-      })
-      abort()
-      return result
-    } catch (e) {
-      queue.update(id, { error: getError(e, file) })
-      throw e
-    }
+    const result = Promise.withResolvers<UploadedFile>()
+    const id = queue.push({
+      file,
+      abort: removeUpload,
+      state: 'pending',
+      start: async () => {
+        console.log('Starting upload ' + id)
+        try {
+          const uploadedFile = await doUpload({
+            root, path, fileId, file,
+            signal: abortController.signal,
+            onProgress: (progress) => queue.update(id, { progress }),
+          })
+          removeUpload()
+          console.log('Finished upload ' + id)
+          result.resolve(uploadedFile)
+        } catch (e) {
+          queue.update(id, { error: getError(e, file), state: 'error' })
+          result.reject(e)
+        } finally {
+          queuePending()
+        }
+      },
+    })
+    console.log('queued ' + id)
+
+    queuePending()
+    return result.promise
   }
 
   return [upload, uploads] as const
+}
+
+function inProgressCount(queue: Upload[]) {
+  return queue.filter(upload => upload.state === 'in-progress').length
 }

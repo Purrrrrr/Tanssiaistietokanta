@@ -278,6 +278,7 @@ export const fi = {
         one: 'Lähetetään tiedostoa...',
         many: 'Lähetetään __count__ tiedostoa...',
       },
+      pending: 'Odotetaan lähetysvuoroa...',
       alreadyExistsConfirm: {
         title: 'Tiedosto on jo olemassa',
         content: 'Tiedosto __filename__ on jo olemassa, haluatko korvata sen?',

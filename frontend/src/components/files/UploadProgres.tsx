@@ -20,22 +20,41 @@ export function UploadProgressList({ uploads }: { uploads: (Upload & { id: numbe
   </div>
 }
 
-export function UploadProgress({ file, progress: _progress, abort, error }: Upload) {
+export function UploadProgress({ file, state, progress: _progress, abort, error }: Upload) {
   const progress = _progress ?? {
     uploaded: 0, total: file.size,
   }
+  const T = useT('components.files')
 
   return <>
     <span title={file.name} className="overflow-hidden overflow-ellipsis">{file.name}</span>
-    {error
-      ? <div className="col-span-2 font-semibold text-red-800">{error}</div>
-      : <ProgressBar progress={progress} />
-    }
+    {state === 'pending' && <div className="col-span-2 font-semibold text-red-800">{T('pending')}</div>}
+    {state === 'in-progress' && <ProgressBar progress={progress} />}
+    {error && <div className="col-span-2 font-semibold text-red-800">{error}</div>}
     <Button
       color={error ? 'success' : 'danger'}
       text={useTranslation(error ? 'common.delete' : 'common.cancel')}
       onClick={abort}
     />
+  </>
+}
+
+function ProgressBar({ progress }: { progress: Progress }) {
+  const filesize = useFilesize()
+  const duration = useFormatDuration()
+  const percentage = `${progress.uploaded / progress.total * 100}%`
+  const speed = useUploadSpeed(progress.uploaded)
+  const ETA = (progress.total - progress.uploaded) / speed
+
+  return <>
+    <div className="relative w-40 h-5 bg-white border-gray-400 inset-shadow-sm shadow-black border-1">
+      <div style={{ width: percentage }} className="absolute top-0 left-0 h-full  bg-linear-to-r from-lime-400 to-amber-200 from-70%"></div>
+      <span className="absolute inset-0 text-center">{filesize(progress.uploaded)}/{filesize(progress.total)}</span>
+    </div>
+    <div className="text-right min-w-30">
+      {filesize(speed)}/s
+      {Number.isFinite(ETA) && `, ${duration(ETA)}`}
+    </div>
   </>
 }
 
@@ -56,24 +75,4 @@ function useUploadSpeed(uploaded: number) {
   }
 
   return speed.current
-}
-
-function ProgressBar({ progress }: { progress: Progress }) {
-  const filesize = useFilesize()
-  const duration = useFormatDuration()
-  const percentage = `${progress.uploaded / progress.total * 100}%`
-  const speed = useUploadSpeed(progress.uploaded)
-  const ETA = (progress.total - progress.uploaded) / speed
-  console.log(ETA)
-
-  return <>
-    <div className="relative w-40 h-5 bg-white border-gray-400 inset-shadow-sm shadow-black border-1">
-      <div style={{ width: percentage }} className="absolute top-0 left-0 h-full  bg-linear-to-r from-lime-400 to-amber-200 from-70%"></div>
-      <span className="absolute inset-0 text-center">{filesize(progress.uploaded)}/{filesize(progress.total)}</span>
-    </div>
-    <div className="text-right min-w-30">
-      {filesize(speed)}/s
-      {Number.isFinite(ETA) && `, ${duration(ETA)}`}
-    </div>
-  </>
 }

@@ -26,6 +26,7 @@ export function useQueue<T>(initialState: WithId<T>[] = []) {
       return id
     }
     return {
+      updateItems: setItems,
       update: updateItem,
       remove: removeItem,
       push: pushItem,
