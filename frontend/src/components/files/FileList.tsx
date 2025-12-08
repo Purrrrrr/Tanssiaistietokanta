@@ -14,10 +14,10 @@ import { DeleteFileButton } from './DeleteFileButton'
 import { DeleteSelectionButton } from './DeleteSelectionButton'
 import { FileDropZone } from './FileDropZone'
 import { RenameFileButton } from './RenameFileButton'
+import { SelectionBox } from './SelectionBox'
 import { UploadProgressList } from './UploadProgres'
 import useFilesize from './useFilesize'
 import { useUploadQueue } from './useUploadQueue'
-import { SelectionBox } from './SelectionBox'
 
 interface FileListProps {
   root: string
@@ -34,20 +34,31 @@ export function FileList({ root }: FileListProps) {
   const showAlert = useAlerts()
   const selector = useMultipleSelection(files)
 
-  const getExistingFile = (file: File) => files.find(f => f.name === file.name)
-  const startUploads = async (files: File[]) => {
-    const filesAndDuplicates = files.map(file => ({ file, duplicate: getExistingFile(file) }))
+  const startUploads = async (filesToUpload: File[]) => {
+    const filesAndDuplicates = filesToUpload.map(file => ({
+      file,
+      uploadedDuplicate: files.find(f => f.name === file.name),
+      uploadingDuplicate: uploads.find(upload => upload.file.name === file.name),
+    }))
 
-    filesAndDuplicates.filter(f => !f.duplicate).map(file => doUpload(file.file))
-    for (const { file, duplicate } of filesAndDuplicates) {
-      if (!duplicate) continue
+    filesAndDuplicates.filter(f => !f.uploadedDuplicate && !f.uploadingDuplicate).map(file => doUpload(file.file))
+    for (const { file, uploadedDuplicate, uploadingDuplicate } of filesAndDuplicates) {
+      if (uploadingDuplicate) {
+        await showAlert({
+          title: T('alreadyUploadingAlert.title'),
+          children: T('alreadyUploadingAlert.content', { filename: file.name }),
+          button: T('alreadyUploadingAlert.ok'),
+        })
+        continue
+      }
+      if (!uploadedDuplicate) continue
       await showAlert({
         title: T('alreadyExistsConfirm.title'),
         children: T('alreadyExistsConfirm.content', { filename: file.name }),
         buttons: [
           {
             text: T('alreadyExistsConfirm.ok'),
-            action: () => doUpload(file, duplicate._id),
+            action: () => doUpload(file, uploadedDuplicate._id),
           },
           T('alreadyExistsConfirm.cancel'),
         ],

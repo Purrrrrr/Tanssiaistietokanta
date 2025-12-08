@@ -285,6 +285,11 @@ export const fi = {
         ok: 'Korvaa',
         cancel: 'Peruuta',
       },
+      alreadyUploadingAlert: {
+        title: 'Lataat jo tiedostoa',
+        content: 'Tiedosto __filename__ on jo latausjonossa. Et voi ladata samaan paikkaan kahta samannimistä tiedostoa.',
+        ok: 'Ok',
+      },
       DeleteFileButton: {
         text: 'Poista',
         confirmTitle: 'Poistetaanko tiedosto?',

@@ -173,7 +173,9 @@
   * Nicer multiple delete confirm
   * Nicer and larger select boxes
   * Limit on concurrent uploads
-    Prevent uploading duplicates at the same time
+  * Prevent uploading duplicates at the same time
+    Flag to just change file name on conflict
+    Handle graphql errors on rename
     UI
     * Files in events
       Files in markdown

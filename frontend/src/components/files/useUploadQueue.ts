@@ -46,7 +46,6 @@ export function useUploadQueue(root: string, path: string = '') {
       abort: removeUpload,
       state: 'pending',
       start: async () => {
-        console.log('Starting upload ' + id)
         try {
           const uploadedFile = await doUpload({
             root, path, fileId, file,
@@ -54,7 +53,6 @@ export function useUploadQueue(root: string, path: string = '') {
             onProgress: (progress) => queue.update(id, { progress }),
           })
           removeUpload()
-          console.log('Finished upload ' + id)
           result.resolve(uploadedFile)
         } catch (e) {
           queue.update(id, { error: getError(e, file), state: 'error' })
@@ -64,7 +62,6 @@ export function useUploadQueue(root: string, path: string = '') {
         }
       },
     })
-    console.log('queued ' + id)
 
     queuePending()
     return result.promise
