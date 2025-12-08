@@ -13,56 +13,12 @@ import {
   fileQueryResolver
 } from './files.schema'
 
-import type { Application, HookContext, NextFunction } from '../../declarations'
-import { File, FileData, FilePatch, FileService, getOptions, VirusInfectionError } from './files.class'
+import type { Application } from '../../declarations'
+import { File, FileService, getOptions } from './files.class'
 import { filePath, fileMethods } from './files.shared'
 
 export * from './files.class'
 export * from './files.schema'
-
-async function getDuplicates(ctx: HookContext) {
-  if (ctx.method === 'patch') {
-    const { name }= (ctx.data as FilePatch)
-    if (name === undefined || !ctx.id) return []
-    const original = await ctx.app.service('files').get(ctx.id)
-    if (!original) return []
-    return await ctx.app.service('files').find({ query: { root: original.root, path: original.path, name }})
-  } else {
-    const data = (ctx.data as FileData)
-    const { root, path } = data
-    const filename = data.filename ?? data.upload?.originalFilename
-    return await ctx.app.service('files').find({ query: { root, path, name: filename }})
-  }
-}
-
-async function validateUniqueName(ctx: HookContext, next: NextFunction) {
-  const [duplicateFile] = await getDuplicates(ctx)
-  if (duplicateFile && (!ctx.id || ctx.id !== duplicateFile._id)) {
-    if (ctx.http) ctx.http.status = 409
-    ctx.result = {
-      code: 'FILE_EXISTS',
-      message: 'The file already exists',
-    }
-    return
-  }
-  await next()
-}
-
-async function addInfectionStatusCode(ctx: HookContext, next: NextFunction) {
-  try {
-    await next()
-  } catch (e) {
-    if (e instanceof VirusInfectionError) {
-      if (ctx.http) ctx.http.status = 422
-      ctx.result = {
-        code: 'FILE_IS_INFECTED',
-        message: e.message,
-      }
-    } else {
-      throw e
-    }
-  }
-}
 
 // A configure function that registers the service and its hooks via `app.configure`
 export const file = (app: Application) => {
@@ -80,9 +36,9 @@ export const file = (app: Application) => {
         // schemaHooks.resolveExternal(fileExternalResolver),
         // schemaHooks.resolveResult(fileResolver)
       ], 
-      create: [validateUniqueName, addInfectionStatusCode],
-      update: [validateUniqueName, addInfectionStatusCode],
-      patch: [validateUniqueName],
+      create: [],
+      update: [],
+      patch: [],
     },
     before: {
       all: [schemaHooks.validateQuery(fileQueryValidator), schemaHooks.resolveQuery(fileQueryResolver)],

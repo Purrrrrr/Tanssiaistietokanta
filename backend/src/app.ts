@@ -15,6 +15,7 @@ import initDependencyGraph from './dependencyGraph'
 import {preventRemovingOfUsedItems} from './hooks/prevent-removing-of-used-items'
 import { migrateDb } from './umzug'
 import { channels } from './channels'
+import { addErrorStatusCode } from './hooks/addErrorStatusCode'
 
 const app: Application = koa(feathers())
 
@@ -76,7 +77,7 @@ app.configure(services)
 // Register hooks that run on all service methods
 app.hooks({
   around: {
-    all: [logError]
+    all: [logError, addErrorStatusCode]
   },
   before: {
     remove: [preventRemovingOfUsedItems],
