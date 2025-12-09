@@ -297,7 +297,10 @@ export const fi = {
       },
       RenameFileButton: {
         text: 'Nimeä uudelleen',
-        ok: 'Nimeä uudelleen',
+        rename: 'Nimeä uudelleen',
+        ok: 'Ok',
+        errorTitle: 'Virhe uudelleennimeämisessä',
+        duplicateError: 'Tämän niminen tiedosto on jo olemassa',
       },
       UploadButton: {
         upload: 'Lähetä tiedosto',

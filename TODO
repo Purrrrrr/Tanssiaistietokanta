@@ -174,8 +174,8 @@
   * Nicer and larger select boxes
   * Limit on concurrent uploads
   * Prevent uploading duplicates at the same time
+  * Handle graphql errors on rename
     Flag to just change file name on conflict
-    Handle graphql errors on rename
     UI
     * Files in events
       Files in markdown

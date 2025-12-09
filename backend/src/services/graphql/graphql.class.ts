@@ -1,15 +1,15 @@
-// For more information about this file see https://dove.feathersjs.com/guides/cli/service.class.html#custom-services
 import type { Params, ServiceInterface } from '@feathersjs/feathers'
 import { Middleware } from '@feathersjs/koa'
 import { ApolloServer } from "@apollo/server";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import { koaMiddleware } from "@as-integrations/koa";
-// import schema from "./graphql.schema";
 import { loadFilesSync } from '@graphql-tools/load-files'
 import { mergeResolvers } from '@graphql-tools/merge'
 import { logger } from '../../logger'
 
 import type { Application } from '../../declarations'
+import { ErrorWithStatus } from '../../hooks/addErrorStatusCode';
+import { GraphQLError } from 'graphql';
 
 type Graphql = any
 type GraphqlData = any
@@ -96,6 +96,15 @@ export class GraphqlService<ServiceParams extends GraphqlParams = GraphqlParams>
     // Set up Apollo Server
     const server = new ApolloServer({
       typeDefs: this.options.schema,
+      formatError: (formattedError, error) => {
+        if (error instanceof GraphQLError) {
+          const { originalError } = error
+          if (originalError instanceof ErrorWithStatus) {
+            return originalError.result
+          }
+        }
+        return formattedError
+      },
       resolvers,
       logger,
       plugins: [ApolloServerPluginDrainHttpServer({ httpServer: app.server })],

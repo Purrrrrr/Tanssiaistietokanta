@@ -83,11 +83,14 @@ export function makeMutationHook<T, V>(
   query: TypedDocumentNode<T, V>,
   options?: MutateHookOptions<T, V>,
 ): (args?: MutationHookOptions<T, V>) => [(vars: V) => Promise<FetchResult<T>>, MutationResult<T>] {
-  const { onCompleted, fireEvent } = options ?? {}
+  const { onCompleted, onError, fireEvent } = options ?? {}
   return (args = {}) => {
     const operationFailed = useTranslation('common.operationFailed')
     const options: MutationHookOptions<T, V> = {
-      onError: err => { showErrorToast(operationFailed, err) },
+      onError: onError ?? (err => {
+        showErrorToast(operationFailed, err)
+        throw err.cause
+      }),
       ...args,
       onCompleted: (data) => {
         if (fireEvent) {
