@@ -42,10 +42,15 @@ function HelpLink() {
 HelpLink.align = 'right'
 HelpLink.pluginName = 'helplink'
 
+function ConditionalImagePlugin(props) {
+  if (!props.editor.onImageUpload) return null
+  return <Plugins.Image {...props} />
+}
+
 const pluginList = [
   Plugins.Header, Plugins.FontBold, Plugins.FontItalic,
   Plugins.FontStrikethrough, Plugins.ListUnordered, Plugins.ListOrdered,
-  Plugins.BlockWrap, Plugins.BlockCodeInline, Plugins.BlockCodeBlock, Plugins.Table,
+  Plugins.BlockWrap, Plugins.BlockCodeInline, Plugins.BlockCodeBlock, ConditionalImagePlugin, Plugins.Table,
   Plugins.Link, Plugins.Logger, Plugins.ModeToggle, Plugins.FullScreen,
   QRCode,
   HelpLink,
@@ -59,10 +64,11 @@ export interface MarkdownEditorProps extends FieldInputComponentProps<string> {
   onBlur?: (e: React.FocusEvent<HTMLTextAreaElement>) => void
   markdownOverrides?: MarkdownToJSX.Overrides
   noPreview?: boolean
+  onImageUpload?: React.ComponentProps<typeof MdEditor>['onImageUpload']
 }
 
 export const MarkdownInput: FieldInputComponent<string, MarkdownEditorProps> = React.memo(
-  function MarkdownEditor({ value, onChange, className, inline: _ignored, markdownOverrides, noPreview, ...props }: MarkdownEditorProps) {
+  function MarkdownEditor({ value, onChange, className, inline: _ignored, markdownOverrides, onImageUpload, noPreview, ...props }: MarkdownEditorProps) {
     return <MdEditor
       className={className}
       renderHTML={(text: string) => <Markdown options={{ overrides: markdownOverrides }}>{text}</Markdown>}
@@ -71,6 +77,7 @@ export const MarkdownInput: FieldInputComponent<string, MarkdownEditorProps> = R
       {...props}
       view={noPreview ? { menu: true, md: true, html: false } : undefined}
       canView={noPreview ? { menu: true, md: true, html: false, both: false, fullScreen: true, hideMenu: true } : undefined}
+      onImageUpload={onImageUpload}
     />
   },
 )
