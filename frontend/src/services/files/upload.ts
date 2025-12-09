@@ -33,11 +33,12 @@ interface UploadOptions extends Pick<FetchWithProgressOptions, 'signal' | 'onPro
   root?: string
   path?: string
   filename?: string
+  autoRename?: boolean
   file: Blob
   fileId?: string
 }
 
-export async function doUpload({ root, path, file, filename, fileId, onProgress, signal }: UploadOptions) {
+export async function doUpload({ root, path, file, filename, fileId, autoRename, onProgress, signal }: UploadOptions) {
   if (file.size > MAX_UPLOAD_SIZE) {
     return Promise.reject(new UploadError('too_big'))
   }
@@ -47,6 +48,7 @@ export async function doUpload({ root, path, file, filename, fileId, onProgress,
     path: path ?? '',
     upload: file,
     filename,
+    autoRename,
   })
   const options = { data, onProgress, signal }
   const response = fileId

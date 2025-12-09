@@ -19,7 +19,7 @@ export function useUploadQueue(root: string, path: string = '') {
   const [uploads, queue] = useQueue<Upload>()
   const getError = useGetUploadErrorMessage()
 
-  const upload = async (file: File, fileId?: string) => {
+  const upload = async (file: File, fileId?: string, autoRename?: boolean) => {
     const abortController = new AbortController()
     const queuePending = () => {
       queue.updateItems(uploads => {
@@ -49,6 +49,7 @@ export function useUploadQueue(root: string, path: string = '') {
         try {
           const uploadedFile = await doUpload({
             root, path, fileId, file,
+            autoRename,
             signal: abortController.signal,
             onProgress: (progress) => queue.update(id, { progress }),
           })

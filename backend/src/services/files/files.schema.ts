@@ -45,6 +45,9 @@ export const fileDataSchema = Type.Object(
       },
       { $id: 'Upload', additionalProperties: true }
     ),
+    autoRename: Type.Optional(Type.Union([Type.Boolean(), Type.Literal('true')],{
+      description: 'If true, automatically rename file in case of file name conflicts',
+    })),
   },
   { $id: 'FileData', additionalProperties: false }
 )
@@ -62,7 +65,7 @@ export const filePatchValidator = getValidator(filePatchSchema, dataValidator)
 export const filePatchResolver = resolve<File, HookContext<FileService>>({})
 
 // Schema for allowed query properties
-export const fileQueryProperties = Type.Omit(fileSchema, ['_id', 'fileId', 'buffer'])
+export const fileQueryProperties = Type.Omit(fileSchema, ['fileId', 'buffer'])
 export const fileQuerySchema = Type.Intersect(
   [
     querySyntax(fileQueryProperties),

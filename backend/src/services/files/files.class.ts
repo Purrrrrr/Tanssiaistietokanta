@@ -1,5 +1,5 @@
 import { PersistentFile } from 'formidable'
-import { join, basename } from 'path'
+import { join, basename, parse } from 'path'
 import { rename, readFile, unlink } from 'fs/promises'
 import type { Id, Params } from '@feathersjs/feathers'
 import { NeDBService } from '../../utils/NeDBService'
@@ -49,13 +49,13 @@ export class FileService
   }
 
   protected async mapData(_existing: File | null, data: FileData): Promise<File> {
-    const { upload, path, root } = data
+    const { upload, path, root, autoRename } = data
     if (!(upload instanceof PersistentFile)) {
       throw new Error('upload should be a file')
     }
     const { filepath, originalFilename, size, mimetype } = upload
 
-    const name = await this.handleNameDuplicates(root, path, data.filename ?? originalFilename, _existing)
+    const name = await this.handleNameDuplicates({ root, path, name: data.filename ?? originalFilename, autoRename }, _existing)
     const infected = await this.scanner.isInfected(filepath)
 
     if (infected) {
@@ -86,25 +86,45 @@ export class FileService
   }
 
   protected async mapPatch(existing: File, data: FilePatch) {
-    const name = await this.handleNameDuplicates(
-      existing.root,
-      data.path ?? existing.path,
-      data.name ?? existing.name,
+    const patched = { ...existing, ...data }
+    patched.name = await this.handleNameDuplicates(
+      patched,
       existing
     )
-    return { ...existing, ...data, name }
+    return patched
   }
 
-  private async handleNameDuplicates(root: string, path: string, proposedName: string, existingFile: File | null) {
-    const duplicates = await this.find({ query: { root, path, name: proposedName }})
-    if (duplicates.length > 0 && duplicates.some(duplicate => duplicate._id !== existingFile?._id)) {
-      throw new ErrorWithStatus(409, {
-        code: 'FILE_EXISTS',
-        message: 'The file already exists',
-      })
+
+  private async handleNameDuplicates(
+    { autoRename, ...filePath }: Pick<File, 'root' | 'path' | 'name'> & Pick<FileData, 'autoRename'>,
+    existingFile: File | null
+  ) {
+    let hasDuplicates = await this.hasDuplicateName(filePath, existingFile)
+    if (hasDuplicates) {
+      if (!autoRename) {
+        throw new ErrorWithStatus(409, {
+          code: 'FILE_EXISTS',
+          message: 'The file already exists',
+        })
+      }
+      
+      const { name, ext } = parse(filePath.name)
+      let counter = 2
+      let proposedName: string
+      do {
+        proposedName = ext ? `${name} (${counter}).${ext}` : `${name} (${counter})`
+        hasDuplicates = await this.hasDuplicateName({ ...filePath, name: proposedName }, existingFile)
+        counter += 1
+      } while (hasDuplicates)
+      return proposedName
     }
 
-    return proposedName
+    return filePath.name
+  }
+
+  private async hasDuplicateName({ root, path, name }: Pick<File, 'root' | 'path' | 'name'>, existingFile: File | null) {
+    const duplicates = await this.find({ query: { root, path, name } })
+    return duplicates.length > 0 && (!existingFile || duplicates.some(file => file._id !== existingFile._id))
   }
 
   protected onRemove(result: File): void | Promise<void> {
