@@ -12,10 +12,17 @@ type File {
   name: String!
   mimetype: String!
   size: Int!
+  unused: Boolean!
 }
 
 type Mutation {
   renameFile(id: ID!, name: String!, path: String): File!
+  markFileUsage(usages: [FileUsageInput!]!): [File!]!
   moveFile(id: ID!, name: String!, path: String): File!
   deleteFile(id: ID!): File!
+}
+
+input FileUsageInput {
+  _id: ID!
+  unused: Boolean!
 }

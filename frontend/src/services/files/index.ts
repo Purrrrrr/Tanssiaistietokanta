@@ -1,4 +1,4 @@
-import { entityDeleteHook, entityListQueryHook, entityUpdateHook, graphql, setupServiceUpdateFragment } from 'backend'
+import { entityDeleteHook, entityListQueryHook, entityUpdateHook, graphql, makeMutationHook, setupServiceUpdateFragment } from 'backend'
 
 export * from './upload'
 
@@ -42,3 +42,14 @@ mutation renameFile($id: ID!, $name: String!, $path: String) {
     size
   }
 }`))
+
+export const useMarkFileUsage = makeMutationHook(graphql(`
+mutation markFileUsage($usages: [FileUsageInput!]!) {
+  markFileUsage(usages: $usages) {
+    _id
+    _updatedAt
+    name
+    size
+  }
+}
+`))

@@ -20,6 +20,7 @@ export const fileSchema = Type.Object(
     fileId: Type.String(),
     mimetype: Type.String(),
     size: Type.Number(),
+    unused: Type.Boolean({ description: 'If true, the file will be removed eventually by a scheduled job' }),
     buffer: Type.Optional(Type.Unknown())
   },
   { $id: 'File', additionalProperties: false }
@@ -36,6 +37,7 @@ export const fileDataSchema = Type.Object(
     root: Type.String(),
     path: Type.String(),
     filename: Type.Optional(Type.String({ minLength: 1 })),
+    unused: Type.Optional(Type.Boolean({ description: 'If true, the file will be removed eventually by a scheduled job' })),
     upload: Type.Object(
       {
         filepath: Type.String(),
@@ -57,7 +59,7 @@ export const fileDataResolver = resolve<File, HookContext<FileService>>({})
 
 // Schema for updating existing entries
 export const filePatchSchema = Type.Partial(
-  Type.Pick(fileSchema, ['path', 'name']),
+  Type.Pick(fileSchema, ['path', 'name', 'unused']),
   { $id: 'FilePatch' },
 )
 export type FilePatch = Static<typeof filePatchSchema>

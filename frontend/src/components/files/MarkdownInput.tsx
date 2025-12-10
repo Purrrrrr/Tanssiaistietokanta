@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react'
 
 import { ID } from 'backend/types'
 
-import { useDeleteFile } from 'services/files'
+import { useMarkFileUsage } from 'services/files'
 
 import {
   MarkdownInput as MarkdownInputOriginal,
@@ -20,7 +20,7 @@ export interface MarkdownInputProps extends Omit<MarkdownInputPropsOriginal, 'on
 
 export function MarkdownInput({ fileRoot, filePath, ...props }: MarkdownInputProps) {
   const [doUpload, uploads] = useUploadQueue(fileRoot, filePath)
-  const [deleteFile] = useDeleteFile({ onError: () => { /* Do nothing, probably already deleted */ } })
+  const [markUsages] = useMarkFileUsage()
   const onImageUpload = async (file: File) => {
     const result = await doUpload(file, undefined, true)
     return getMarkdownUrl(result._id)
@@ -32,13 +32,18 @@ export function MarkdownInput({ fileRoot, filePath, ...props }: MarkdownInputPro
 
   useEffect(
     () => {
-      console.log(imageIds, previousIds.current)
       const deleted = previousIds.current.filter(id => !imageIds.includes(id))
-      if (deleted.length > 0) console.log('deleting files', deleted)
-      deleted.forEach(id => deleteFile({ id }))
+      const newUsed = imageIds.filter(id => !previousIds.current.includes(id))
+      const usages = [
+        ...deleted.map(_id => ({ _id, unused: true })),
+        ...newUsed.map(_id => ({ _id, unused: false })),
+      ]
+      if (usages.length > 0) {
+        markUsages({ usages })
+      }
       previousIds.current = imageIds
     },
-    [imageIds, deleteFile],
+    [imageIds, markUsages],
   )
 
   return <>

@@ -180,7 +180,9 @@
     * Files in events
     * Files in markdown
     * Remove dangling files somehow
-      Mark dangling files unused and remove in a scheduled job (for undo to work)
+    * Mark dangling files just unused (for undo to work)
+      update _updatedAt
+      Remove unused files in a scheduled job
     Zipping downloads?
     Notes for files?
     Toasts on rename and delete success

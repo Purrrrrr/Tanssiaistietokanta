@@ -49,7 +49,7 @@ export class FileService
   }
 
   protected async mapData(_existing: File | null, data: FileData): Promise<File> {
-    const { upload, path, root, autoRename } = data
+    const { upload, path, root, autoRename, unused = false } = data
     if (!(upload instanceof PersistentFile)) {
       throw new Error('upload should be a file')
     }
@@ -80,6 +80,7 @@ export class FileService
       fileId,
       size,
       mimetype,
+      unused,
       _createdAt: _existing?._createdAt ?? _updatedAt,
       _updatedAt,
     } as File
