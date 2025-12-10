@@ -7,7 +7,7 @@ import type { DateInputProps, DateRangeInputProps, FieldInputComponent, FieldInp
 import {
   AutocompleteInput, Select, Switch,
 } from './components/inputs'
-import { type MarkdownEditorProps } from './components/inputs/MarkdownInput'
+import { type MarkdownInputProps } from './components/inputs/MarkdownInput'
 import { AutocompleteInputProps } from './components/inputs/selectors/AutocompleteInput'
 import { type TextInputExtraProps } from './components/inputs/TextInput'
 import { asRangeField, type Range, RangeField, type RangeFieldComponent, type RangeFieldProps } from './components/RangeField'
@@ -35,7 +35,7 @@ interface FieldsFor<Data, _AcceptedDroppableTypes = null> {
   withRangeComponent: <Output extends Input, Extra, Input>(c: FieldInputComponent<Range<Output>, Extra, Range<Input>>) => RangeFieldComponent<Data, Output, Extra, Input>
   Date: FieldComponent<Data, Date | null, DateInputProps>
   DateRange: RangeFieldComponent<Data, Date | null, DateRangeInputProps>
-  Markdown: FieldComponent<Data, string, MarkdownEditorProps>
+  Markdown: FieldComponent<Data, string, MarkdownInputProps>
   Text: FieldComponent<Data, string, TextInputExtraProps>
   Switch: SelfLabeledFieldComponent<Data, boolean, SwitchProps>
   // Repeating: <O extends I & ListItem, E, I>(t: RepeatingFieldProps<O, E, I, Data, AcceptedDroppableTypes>) => ReactElement

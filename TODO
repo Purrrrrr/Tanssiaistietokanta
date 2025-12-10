@@ -178,8 +178,9 @@
   * Flag to just change file name on conflict
     UI
     * Files in events
-      Files in markdown
-      Remove dangling files somehow
+    * Files in markdown
+    * Remove dangling files somehow
+      Mark dangling files unused and remove in a scheduled job (for undo to work)
     Zipping downloads?
     Notes for files?
     Toasts on rename and delete success

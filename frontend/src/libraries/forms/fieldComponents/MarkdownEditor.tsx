@@ -1,6 +1,6 @@
 import 'react-markdown-editor-lite/lib/index.css'
+import { MarkdownToJSX } from 'markdown-to-jsx/react'
 import React from 'react'
-import { MarkdownToJSX } from 'markdown-to-jsx'
 
 import { FieldComponentProps } from '../types'
 

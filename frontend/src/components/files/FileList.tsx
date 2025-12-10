@@ -21,13 +21,14 @@ import { useUploadQueue } from './useUploadQueue'
 
 interface FileListProps {
   root: string
+  path?: string
 }
 
-export function FileList({ root }: FileListProps) {
+export function FileList({ root, path }: FileListProps) {
   const input = useRef<HTMLInputElement>(null)
-  const queryVars = { root }
+  const queryVars = { root, path }
   const [files] = useFiles(queryVars)
-  const [doUpload, uploads] = useUploadQueue(root)
+  const [doUpload, uploads] = useUploadQueue(root, path)
   const filesize = useFilesize()
   const T = useT('components.files')
   const formatDate = useFormatDateTime()

@@ -260,7 +260,7 @@ function DanceEditorForm({ dance }: { dance: Dance }) {
       <SyncStatus className="top-[3px] grow" state={state} />
     </div>
     <DanceInput label={label('name')} path="name" />
-    <DanceField label={label('description')} path="description" component={InstructionEditor} componentProps={{ wikipage: dance.wikipage, ...markdownEditorProps }} />
+    <DanceField label={label('description')} path="description" component={InstructionEditor} componentProps={{ danceId: dance._id, wikipage: dance.wikipage, ...markdownEditorProps }} />
     <DanceInput label={label('source')} labelInfo={label('sourceInfo')} path="source" />
 
     {dance.wikipageName &&

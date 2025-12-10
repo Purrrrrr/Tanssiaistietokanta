@@ -1,9 +1,11 @@
 import { Link as LinkIcon } from '@blueprintjs/icons'
 
 import { Dance, DanceWithEvents } from 'types'
+import { ID } from 'backend/types'
 
 import { MarkdownEditor, MarkdownEditorProps, SyncStatus } from 'libraries/forms'
 import { Button, H2 } from 'libraries/ui'
+import { MarkdownInput } from 'components/files/MarkdownInput'
 import { useVersionedName } from 'components/versioning/VersionedPageTitle'
 import { VersionSidebarToggle } from 'components/versioning/VersionSidebarToggle'
 import { ColoredTag } from 'components/widgets/ColoredTag'
@@ -84,21 +86,22 @@ function FullDanceEditorFields({ dance }: { dance: DanceWithEvents }) {
       </div>
     </div>
     <DanceWikiPreview dance={dance} />
-    <Field label={label('description')} path="description" component={InstructionEditor} componentProps={{ wikipage, className: 'max-h-150' }} />
-    <Field label={label('instructions')} path="instructions" component={InstructionEditor} componentProps={{ wikipage, className: 'max-h-150' }} />
+    <Field label={label('description')} path="description" component={InstructionEditor} componentProps={{ danceId: dance._id, wikipage, className: 'max-h-150' }} />
+    <Field label={label('instructions')} path="instructions" component={InstructionEditor} componentProps={{ danceId: dance._id, wikipage, className: 'max-h-150' }} />
   </>
 }
 
 export interface InstructionEditorProps extends MarkdownEditorProps {
+  danceId: ID
   wikipage?: Dance['wikipage']
 }
 
-export function InstructionEditor({ wikipage, ...props }: InstructionEditorProps) {
+export function InstructionEditor({ danceId, wikipage, ...props }: InstructionEditorProps) {
   const t = useT('components.danceEditor')
   const isMissingvalue = (props.value ?? '').trim().length < 10
   const onClick = () => props.onChange(wikipage?.instructions ?? '')
   return <>
-    <MarkdownEditor {...props} />
+    <MarkdownInput {...props} fileRoot={`dances/${danceId}/markdown`} />
     {isMissingvalue && wikipage && <p className="pt-2"><Button color="primary" text={t('copyFromDancewiki')} onClick={onClick} /></p>}
   </>
 }
