@@ -113,7 +113,7 @@ export class FileService
       let counter = 2
       let proposedName: string
       do {
-        proposedName = ext ? `${name} (${counter}).${ext}` : `${name} (${counter})`
+        proposedName = ext ? `${name} (${counter})${ext}` : `${name} (${counter})`
         hasDuplicates = await this.hasDuplicateName({ ...filePath, name: proposedName }, existingFile)
         counter += 1
       } while (hasDuplicates)
