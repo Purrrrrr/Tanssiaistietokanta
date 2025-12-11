@@ -87,7 +87,7 @@ export class FileService
   }
 
   protected async mapPatch(existing: File, data: FilePatch) {
-    const patched = { ...existing, ...data }
+    const patched = { ...existing, ...data, _updatedAt: now() }
     patched.name = await this.handleNameDuplicates(
       patched,
       existing
