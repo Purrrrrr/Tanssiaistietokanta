@@ -88,7 +88,7 @@ query getDance($id: ID!, $versionId: ID) {
 function useCallbackOnDanceChanges(danceId, callback) {
   const callbacks = useMemo(() => {
     const updateFn = () => {
-      console.log('Dance has changed, running callback')
+      // console.log('Dance has changed, running callback')
       callback()
     }
     return {

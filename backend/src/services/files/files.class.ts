@@ -2,12 +2,14 @@ import { PersistentFile } from 'formidable'
 import { join, basename, parse } from 'path'
 import { rename, readFile, unlink } from 'fs/promises'
 import type { Id, Params } from '@feathersjs/feathers'
-import { NeDBService } from '../../utils/NeDBService'
+import cron from 'node-cron'
 
+import { NeDBService } from '../../utils/NeDBService'
 import type { Application } from '../../declarations'
+import { ErrorWithStatus } from '../../hooks/addErrorStatusCode'
 import type { File, FileData, FilePatch, FileQuery } from './files.schema'
 import { ClamScanner } from './clamscanner'
-import { ErrorWithStatus } from '../../hooks/addErrorStatusCode'
+import { sum, takeWhile } from 'es-toolkit'
 
 export type { File, FileData, FilePatch, FileQuery }
 
@@ -17,6 +19,9 @@ export interface FileServiceOptions {
 }
 
 export interface FileParams extends Params<FileQuery> {}
+
+const MB = 1024**2
+const CleanUpTreshold = 5 * MB
 
 export class FileService
   extends NeDBService<File, FileData, FileParams, FilePatch>
@@ -33,6 +38,27 @@ export class FileService
       ],
     })
     this.scanner = new ClamScanner(options.app)
+    cron.schedule('0 0 * * *', () => this.cleanUp())
+  }
+
+  async cleanUp() {
+    const allFiles = await this.find({ query: { unused: true, $sort: { _updatedAt: 1 /* ASC */ } }})
+    const byRoot = Map.groupBy(allFiles, file => file.root)
+    
+    for (const [root, files] of byRoot.entries()) {
+      const size = sum(files.map(file => file.size))
+
+      if (size > CleanUpTreshold) {
+        let sizeLeft = size
+        const picked = takeWhile(files, file => {
+          if (sizeLeft <= 0) return false
+          sizeLeft -= file.size
+          return true
+        })
+        console.log(`Clean up ${picked.length} unused files from root ${root}`)
+        await Promise.all(picked.map(file => this.remove(file._id)))
+      }
+    }
   }
 
   async get(id: Id, _params?: FileParams): Promise<File> {

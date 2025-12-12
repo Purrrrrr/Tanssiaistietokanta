@@ -26,7 +26,6 @@ export function MarkdownInput({ fileRoot, filePath, ...props }: MarkdownInputPro
     return getMarkdownUrl(result._id)
   }
   const ast = parser(props.value ?? '')
-  console.log(ast)
   const imageIds = getImages(ast).map(getUploadedFileId).filter(id => id !== null)
   const previousIds = useRef<string[]>([])
 

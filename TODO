@@ -181,8 +181,8 @@
     * Files in markdown
     * Remove dangling files somehow
     * Mark dangling files just unused (for undo to work)
-      update _updatedAt
-      Remove unused files in a scheduled job
+    * update _updatedAt
+    * Remove unused files in a scheduled job
     Zipping downloads?
     Notes for files?
     Toasts on rename and delete success
