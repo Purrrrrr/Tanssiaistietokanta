@@ -1,6 +1,6 @@
 import { PersistentFile } from 'formidable'
 import { join, basename, parse } from 'path'
-import { rename, readFile, unlink } from 'fs/promises'
+import { rename, readdir, readFile, stat, unlink } from 'fs/promises'
 import type { Id, Params } from '@feathersjs/feathers'
 import cron from 'node-cron'
 
@@ -16,12 +16,15 @@ export type { File, FileData, FilePatch, FileQuery }
 export interface FileServiceOptions {
   app: Application
   uploadDir: string
+  uploadTmp: string
 }
 
 export interface FileParams extends Params<FileQuery> {}
 
 const MB = 1024**2
-const CleanUpTreshold = 5 * MB
+const RootSizeCleanUpTreshold = 5 * MB
+const DAY = 24 * 60 * 60 * 1000;
+const MaxTmpFileAge = 3 * DAY
 
 export class FileService
   extends NeDBService<File, FileData, FileParams, FilePatch>
@@ -38,17 +41,19 @@ export class FileService
       ],
     })
     this.scanner = new ClamScanner(options.app)
-    cron.schedule('0 0 * * *', () => this.cleanUp())
+    cron.schedule('0 0 * * *', () => Promise.all([
+      this.cleanUpUnused(), this.cleanUpTmp(),
+    ]))
   }
 
-  async cleanUp() {
+  async cleanUpUnused() {
     const allFiles = await this.find({ query: { unused: true, $sort: { _updatedAt: 1 /* ASC */ } }})
     const byRoot = Map.groupBy(allFiles, file => file.root)
     
     for (const [root, files] of byRoot.entries()) {
       const size = sum(files.map(file => file.size))
 
-      if (size > CleanUpTreshold) {
+      if (size > RootSizeCleanUpTreshold) {
         let sizeLeft = size
         const picked = takeWhile(files, file => {
           if (sizeLeft <= 0) return false
@@ -57,6 +62,25 @@ export class FileService
         })
         console.log(`Clean up ${picked.length} unused files from root ${root}`)
         await Promise.all(picked.map(file => this.remove(file._id)))
+      }
+    }
+  }
+
+  async cleanUpTmp() {
+    const tmpDir = this.options.uploadTmp
+    const now = Date.now();
+    const files = await readdir(tmpDir);
+
+    for (const file of files) {
+      const filePath = join(tmpDir, file);
+      const fileStat = await stat(filePath);
+
+      // Skip directories
+      if (!fileStat.isFile()) continue;
+
+      const age = now - fileStat.mtimeMs;
+      if (age > MaxTmpFileAge) {
+        await unlink(filePath);
       }
     }
   }
@@ -168,6 +192,7 @@ export const getOptions = (app: Application) => {
   return { 
     app,
     uploadDir: app.get('uploadDir'),
+    uploadTmp: app.get('uploadTmp'),
   }
 }
 

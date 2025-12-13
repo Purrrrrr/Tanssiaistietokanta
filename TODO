@@ -183,10 +183,10 @@
     * Mark dangling files just unused (for undo to work)
     * update _updatedAt
     * Remove unused files in a scheduled job
+  * Clean up file upload tmp occasionally
     Zipping downloads?
     Notes for files?
     Toasts on rename and delete success
-    Clean up file upload tmp occasionally
 
   Unify list item toolbar button style
     Minimal buttons
