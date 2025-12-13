@@ -23,7 +23,7 @@ export function CreateDanceButtons({ danceCount }: { danceCount: number }) {
     if (id) {
       navigate(id)
       showToast({
-        intent: 'primary',
+        color: 'primary',
         message: t('danceCreated', { name: dance.name }),
       })
     }

@@ -33,7 +33,7 @@ export function FieldContainer(props: FieldContainerProps) {
     helperText={<span id={helperTextId}>{helperText}</span>}
     label={label}
     subLabel={conflictElement}
-    intent={conflictElement !== undefined ? 'danger' : undefined}
+    color={conflictElement !== undefined ? 'danger' : undefined}
   >
     {children}
   </FormGroup>

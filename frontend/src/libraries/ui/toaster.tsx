@@ -35,7 +35,7 @@ export function ToastContainer() {
 function Toast({ onClose, closing, toast }: Omit<ToastData, 'id'>) {
   return <div className={classNames(
     'flex items-start gap-2 shadow-lg shadow-stone-500/40 starting:opacity-0 transition-opacity border-1 border-black/50 rounded-sm',
-    ColorClass.boxColors[toast.intent ?? 'none'],
+    ColorClass.boxColors[toast.color ?? 'none'],
     closing && 'opacity-0',
   )}>
 
@@ -59,7 +59,7 @@ export interface ToastProps {
   onDismiss?: (didTimeoutExpire: boolean) => void
   /** Milliseconds to wait before automatically dismissing toast. Default: 5000 */
   timeout?: number
-  intent?: Color
+  color?: Color
   isCloseButtonShown?: boolean
 }
 
@@ -81,7 +81,7 @@ export function showToast(toast: ToastProps) {
 
 export function showErrorToast(failMsg: string, e: { message: string }) {
   showToast({
-    intent: 'danger',
+    color: 'danger',
     message: `${failMsg} ${e.message}`,
     isCloseButtonShown: true,
     timeout: 30000,
