@@ -99,7 +99,7 @@ export class FileService
   }
 
   protected async mapData(_existing: File | null, data: FileData): Promise<File> {
-    const { upload, path, root, autoRename, unused = false } = data
+    const { upload, path, root, autoRename, unused = false, notes = '' } = data
     if (!(upload instanceof PersistentFile)) {
       throw new Error('upload should be a file')
     }
@@ -129,11 +129,12 @@ export class FileService
       name,
       fileId,
       size,
+      notes,
       mimetype,
       unused,
       _createdAt: _existing?._createdAt ?? _updatedAt,
       _updatedAt,
-    } as File
+    } satisfies Omit<File, '_id'> as File
   }
 
   protected async mapPatch(existing: File, data: FilePatch) {

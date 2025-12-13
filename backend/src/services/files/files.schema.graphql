@@ -10,6 +10,7 @@ type File {
   root: String!
   path: String!
   name: String!
+  notes: String!
   mimetype: String!
   size: Int!
   unused: Boolean!
