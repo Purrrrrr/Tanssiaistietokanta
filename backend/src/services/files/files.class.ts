@@ -1,4 +1,5 @@
 import { PersistentFile } from 'formidable'
+import archiver  from 'archiver'
 import { join, basename, parse } from 'path'
 import { rename, readdir, readFile, stat, unlink } from 'fs/promises'
 import type { Id, Params } from '@feathersjs/feathers'
@@ -10,6 +11,7 @@ import { ErrorWithStatus } from '../../hooks/addErrorStatusCode'
 import type { File, FileData, FilePatch, FileQuery } from './files.schema'
 import { ClamScanner } from './clamscanner'
 import { sum, takeWhile } from 'es-toolkit'
+import { PassThrough, Stream } from 'stream'
 
 export type { File, FileData, FilePatch, FileQuery }
 
@@ -85,14 +87,54 @@ export class FileService
     }
   }
 
+  async find(_params?: FileParams): Promise<File[]> {
+    const download = _params?.query?.download
+    if (download) {
+      delete _params.query?.download
+    }
+    const result = await super.find(_params)
+
+    if (download) {
+      switch (result.length) {
+        case 0:
+          throw new ErrorWithStatus(404, 'Files not found')
+        case 1:
+        {
+          const filePath = this.idToPath(result[0].fileId)
+          result[0].buffer = await readFile(filePath)
+          break
+        }
+        default:
+        {
+          const archiveProgress = Promise.withResolvers()
+          const stream = new PassThrough()
+          const archive = archiver('zip', { zlib: { level: 9 }})
+          archive.on('error', e => archiveProgress.reject(e))
+          archive.on('finish', () => archiveProgress.resolve(true))
+          archive.pipe(stream)
+
+          for (const { name, fileId } of result) {
+            archive.file(this.idToPath(fileId), { name })
+          }
+
+          archive.finalize()
+
+          await archiveProgress.promise
+          result[0].buffer = stream
+        }
+      }
+    }
+
+    return result
+  }
+
   async get(id: Id, _params?: FileParams): Promise<File> {
     const download = _params?.query?.download
     const result = await super.get(id)
     
     if (download) {
       const filePath = this.idToPath(result.fileId)
-      const buffer = await readFile(filePath) as any
-      result.buffer = buffer
+      result.buffer = await readFile(filePath)
     }
 
     return result

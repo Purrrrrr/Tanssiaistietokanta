@@ -7,6 +7,7 @@ import type { HookContext } from '../../declarations'
 import { dataValidator, queryValidator } from '../../validators'
 import type { FileService } from './files.class'
 import { Id } from '../../utils/common-types'
+import { Stream } from 'stream'
 
 // Main data model schema
 export const fileSchema = Type.Object(
@@ -26,7 +27,7 @@ export const fileSchema = Type.Object(
   },
   { $id: 'File', additionalProperties: false }
 )
-export type File = Static<typeof fileSchema> & { buffer?: Buffer }
+export type File = Static<typeof fileSchema> & { buffer?: Buffer | Stream }
 export const fileValidator = getValidator(fileSchema, dataValidator)
 export const fileResolver = resolve<File, HookContext<FileService>>({})
 

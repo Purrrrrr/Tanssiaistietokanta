@@ -185,7 +185,8 @@
     * Remove unused files in a scheduled job
   * Clean up file upload tmp occasionally
   * Toasts on rename and delete success
-    Zipping downloads?
+  * Zipping downloads
+    Download many button
     Notes for files?
 
   Unify list item toolbar button style

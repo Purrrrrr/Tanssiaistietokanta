@@ -13,7 +13,7 @@ import {
   fileQueryResolver
 } from './files.schema'
 
-import type { Application } from '../../declarations'
+import type { Application, HookContext } from '../../declarations'
 import { File, FileService, getOptions } from './files.class'
 import { filePath, fileMethods } from './files.shared'
 
@@ -35,7 +35,7 @@ export const file = (app: Application) => {
       all: [
         // schemaHooks.resolveExternal(fileExternalResolver),
         // schemaHooks.resolveResult(fileResolver)
-      ], 
+      ],
       create: [],
       update: [],
       patch: [],
@@ -51,20 +51,24 @@ export const file = (app: Application) => {
     },
     after: {
       all: [],
+      find: [
+        (ctx) => {
+          const files = (ctx.dispatch ?? ctx.result) as File[]
+
+          const file = files[0]
+          if (file?.buffer) {
+            addDownloadHeaders(ctx, { name: 'download.zip', mimetype: 'application/zip' })
+            ctx.dispatch = file.buffer as unknown as File // Type hack to allow downloadinng the data
+          }
+        },
+      ],
       get: [
         (ctx) => {
-          const { buffer, mimetype, name } = (ctx.dispatch ?? ctx.result) as File
+          const file = (ctx.dispatch ?? ctx.result) as File
 
-          if (buffer) {
-            const isInline = mimetype.match(/^(image|audio|text)\//)
-            ctx.http ??= {}
-            ctx.http.headers = {
-              'content-type': mimetype,
-              'content-disposition': isInline
-                ? 'inline'
-                : contentDisposition(name),
-            }
-            ctx.dispatch = buffer as unknown as File // Type hack to allow downloadinng the data
+          if (file.buffer) {
+            addDownloadHeaders(ctx,file )
+            ctx.dispatch = file.buffer as unknown as File // Type hack to allow downloadinng the data
           }
         },
       ],
@@ -73,6 +77,17 @@ export const file = (app: Application) => {
       all: []
     }
   })
+}
+
+function addDownloadHeaders(ctx: HookContext, { name, mimetype }: Pick<File, 'name' | 'mimetype'>) {
+  const isInline = mimetype.match(/^(image|audio|text)\//)
+  ctx.http ??= {}
+  ctx.http.headers = {
+    'content-type': mimetype,
+    'content-disposition': isInline
+      ? 'inline'
+      : contentDisposition(name),
+  }
 }
 
 // Add this service to the service type index
