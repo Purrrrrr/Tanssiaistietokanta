@@ -184,9 +184,9 @@
     * update _updatedAt
     * Remove unused files in a scheduled job
   * Clean up file upload tmp occasionally
+  * Toasts on rename and delete success
     Zipping downloads?
     Notes for files?
-    Toasts on rename and delete success
 
   Unify list item toolbar button style
     Minimal buttons

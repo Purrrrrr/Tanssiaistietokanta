@@ -273,6 +273,10 @@ export const fi = {
           many: 'Poistetaanko __count__ tiedostoa?',
         },
         confirmText: 'Haluatko varmasti poistaa nämä tiedostot?',
+        successMessage: {
+          one: '1 tiedosto poistettu',
+          many: '__count__ tiedostoa poistettu',
+        },
       },
       uploadingFiles: {
         one: 'Lähetetään tiedostoa...',
@@ -294,6 +298,7 @@ export const fi = {
         text: 'Poista',
         confirmTitle: 'Poistetaanko tiedosto?',
         confirmText: 'Haluatko varmasti poistaa tiedoston __filename__?',
+        successMessage: 'Tiedosto poistettu',
       },
       RenameFileButton: {
         text: 'Nimeä uudelleen',
@@ -301,6 +306,7 @@ export const fi = {
         ok: 'Ok',
         errorTitle: 'Virhe uudelleennimeämisessä',
         duplicateError: 'Tämän niminen tiedosto on jo olemassa',
+        successMessage: 'Tiedosto nimetty uudelleen',
       },
       UploadButton: {
         upload: 'Lähetä tiedosto',
