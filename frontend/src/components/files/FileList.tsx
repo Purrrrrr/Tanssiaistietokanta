@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { Add, InfoSign } from '@blueprintjs/icons'
+import { Add } from '@blueprintjs/icons'
 
 import { useFiles } from 'services/files'
 
@@ -77,7 +77,10 @@ export function FileList({ root, path }: FileListProps) {
 
   return <div>
     <FileDropZone onDrop={onDragAndDrop}>
-      <ItemList columns="grid-cols-[auto_1fr_minmax(200px,auto)_minmax(100px,auto)_max-content]">
+      <ItemList
+        items={files}
+        emptyText={T('noFiles')}
+        columns="grid-cols-[auto_1fr_minmax(200px,auto)_minmax(100px,auto)_max-content]">
         {files.length > 0 &&
           <ItemList.Header>
             <SelectionBox {...selector.selectAllProps} />
@@ -100,12 +103,6 @@ export function FileList({ root, path }: FileListProps) {
             </div>
           </ItemList.Row>,
         )}
-        {files.length === 0 &&
-          <div className="col-span-full py-4 text-base text-center text-muted">
-            <InfoSign size={20} className="mr-2" />
-            {T('noFiles')}
-          </div>
-        }
       </ItemList>
       <input
         className="hidden"

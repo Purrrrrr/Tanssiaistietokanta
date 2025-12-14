@@ -332,6 +332,7 @@ export const fi = {
         youcanEditDancesIn: 'Voit muokata tanssitapahtumien tansseja',
         danceDatabaseLinkName: 'tanssitietokannasta',
         danceEvents: 'Tanssitapahtumat tietokannassa',
+        noEvents: 'Ei tapahtumia',
         eventDeleteConfirmation: 'Haluatko varmasti poistaa tapahtuman __eventName__?',
         createEvent: 'Uusi tapahtuma',
       },
@@ -447,6 +448,7 @@ export const fi = {
           one: 'Näytetään 1 tanssi',
           many: 'Näytetään __count__ tanssia',
         },
+        noDances: 'Ei tansseja',
       },
       dancePage: {
         backToDanceList: 'Takaisin tanssilistaan',

@@ -189,7 +189,8 @@
     Download many button
     Notes for files?
 
-  Unify list item toolbar button style
+  Unify list item toolbar button and other styles
+  * Empty list style
     Minimal buttons
     Tooltips for icon buttons?
     Move delete event to event page

@@ -34,7 +34,6 @@ function DancesPage() {
         <ModeButton text={t('viewMode.extended')} selected={view === 'extended'} onClick={() => setView('extended')} />
       </ModeSelector>
     </div>
-    <p>{t('showingNDances', { count: filteredDances.length })}</p>
     <DanceList key={search} dances={filteredDances} view={view} />
   </>
 }

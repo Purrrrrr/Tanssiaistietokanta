@@ -1,4 +1,5 @@
 import React from 'react'
+import { InfoSign } from '@blueprintjs/icons'
 import classNames from 'classnames'
 
 const Collapse = React.lazy(() => import('./Collapse'))
@@ -9,6 +10,8 @@ export interface ItemListProps {
   children?: React.ReactNode
   columns?: string | number
   'wrap-breakpoint'?: WrapPoint
+  items: unknown[]
+  emptyText: string
 }
 
 const listWrapClasses = {
@@ -16,7 +19,7 @@ const listWrapClasses = {
   sm: 'wrap-sm sm:grid',
 } satisfies Record<WrapPoint, string>
 
-export default function ItemList({ children, 'wrap-breakpoint': wrapPoint = 'sm', columns }: ItemListProps) {
+export default function ItemList({ children, items, emptyText, 'wrap-breakpoint': wrapPoint = 'sm', columns }: ItemListProps) {
   const columnCount = typeof columns === 'number' ? columns : undefined
   return <ul
     style={{ '--item-list-cols': columnCount } as React.CSSProperties}
@@ -24,11 +27,14 @@ export default function ItemList({ children, 'wrap-breakpoint': wrapPoint = 'sm'
       columnCount
         ? 'grid-cols-[repeat(var(--item-list-cols),minmax(0,1fr))]'
         : columns,
-      'group mb-4 border-gray-100 border-b-1 w-full',
+      'group mb-4 border-gray-200 border-b-1 w-full',
       columns && listWrapClasses[wrapPoint],
     )}
   >
-    {children}
+    {items.length > 0
+      ? children
+      : <EmptyList text={emptyText} />
+    }
   </ul>
 }
 
@@ -37,7 +43,7 @@ const commonRowClasses = classNames(
   'group-[.wrap-md]:md:grid grid-cols-subgrid col-span-full',
   'group-[.wrap-sm]:sm:grid grid-cols-subgrid col-span-full',
 )
-const rowColorClassname = 'nth-of-type-[even]:bg-gray-100 border-x-1 border-gray-100'
+const rowColorClassname = 'nth-of-type-[even]:bg-gray-100 border-x-1 border-gray-200'
 const rowClasses = classNames(
   'first:border-t-1',
   rowColorClassname,
@@ -67,6 +73,13 @@ function ItemListRow({ children, expandableContent, isOpen }: ItemListRowProps) 
       </div>
     }
   </>
+}
+
+function EmptyList({ text }: { text: React.ReactNode }) {
+  return <div className="col-span-full py-4 text-base text-center text-muted border-1 border-b-0 border-gray-200">
+    <InfoSign size={20} className="mr-2" />
+    {text}
+  </div>
 }
 
 ItemList.Header = ItemListHeader

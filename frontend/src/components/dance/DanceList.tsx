@@ -21,19 +21,32 @@ interface DanceListProps {
 export type View = 'tight' | 'extended'
 
 export function DanceList({ dances, view }: DanceListProps) {
-  if (view === 'extended') {
-    return <InfiniteItemLoader items={dances}>
-      {dances => dances.map((dance: DanceWithEvents) => <ExtendedDanceListRow dance={dance} key={dance._id} />)}
-    </InfiniteItemLoader>
-  }
+  const t = useT('pages.dances.danceList')
 
-  return <InfiniteItemLoader items={dances}>
-    {dances =>
-      <ItemList columns="grid-cols-[1fr_minmax(min(300px,30%),max-content)_max-content]">
-        {dances.map((dance: DanceWithEvents) => <DanceListRow key={dance._id} dance={dance} />)}
-      </ItemList>
+  return <div className="mt-6">
+    {dances.length > 0 &&
+      <p className="my-3">{t('showingNDances', { count: dances.length })}</p>
     }
-  </InfiniteItemLoader>
+    <InfiniteItemLoader items={dances}>
+      {dances => view === 'extended'
+        ? (
+          <>
+            {dances.map((dance: DanceWithEvents) => <ExtendedDanceListRow dance={dance} key={dance._id} />)}
+            {dances.length > 0 || <p>{t('noDances')}</p>}
+          </>
+        )
+        : (
+          <ItemList
+            items={dances}
+            emptyText={t('noDances')}
+            columns="grid-cols-[1fr_minmax(min(300px,30%),max-content)_max-content]"
+          >
+            {dances.map((dance: DanceWithEvents) => <DanceListRow key={dance._id} dance={dance} />) }
+          </ItemList>
+        )
+      }
+    </InfiniteItemLoader>
+  </div>
 }
 
 function DanceListRow({ dance }: { dance: DanceWithEvents }) {
