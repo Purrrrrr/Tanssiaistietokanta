@@ -41,6 +41,11 @@ export function DanceList({ dances, view }: DanceListProps) {
             emptyText={t('noDances')}
             columns="grid-cols-[1fr_minmax(min(300px,30%),max-content)_max-content]"
           >
+            <ItemList.Header>
+              <span>{(t('name'))}</span>
+              <span>{(t('category'))}</span>
+              <span>{(t('danceUsageAndTools'))}</span>
+            </ItemList.Header>
             {dances.map((dance: DanceWithEvents) => <DanceListRow key={dance._id} dance={dance} />) }
           </ItemList>
         )

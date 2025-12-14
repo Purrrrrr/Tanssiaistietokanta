@@ -26,6 +26,10 @@ export default function EventList() {
     </AdminOnly>
     <H2>{t('danceEvents')}</H2>
     <ItemList columns="grid-cols-[1fr_minmax(min(300px,30%),max-content)_max-content] gap-x-4" items={events} emptyText={t('noEvents')}>
+      <ItemList.Header>
+        <span>{t('name')}</span>
+        <span>{t('date')}</span>
+      </ItemList.Header>
       {events.map(event =>
         <ItemList.Row key={event._id}>
           <Link to={'events/' + event._id}>{event.name}</Link>

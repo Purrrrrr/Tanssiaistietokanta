@@ -186,15 +186,15 @@
   * Toasts on rename and delete success
   * Zipping downloads
   * Limit on zip filesize
-    Download many button
+    Download many files button
     Notes for files?
 
   Unify list item toolbar button and other styles
   * Empty list style
-    Minimal buttons
+  * Add list headers
+    Minimal buttons (in event program)
     Tooltips for icon buttons?
     Move delete event to event page
-    Add list headers
 
   Ability to see more info about program item in editor
 

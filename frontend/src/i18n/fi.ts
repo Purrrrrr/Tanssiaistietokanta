@@ -335,6 +335,8 @@ export const fi = {
         noEvents: 'Ei tapahtumia',
         eventDeleteConfirmation: 'Haluatko varmasti poistaa tapahtuman __eventName__?',
         createEvent: 'Uusi tapahtuma',
+        name: 'Nimi',
+        date: 'Tapahtuman päivämäärä',
       },
       createEvent: {
         newEventBreadcrumb: 'Uusi tapahtuma',
@@ -449,6 +451,9 @@ export const fi = {
           many: 'Näytetään __count__ tanssia',
         },
         noDances: 'Ei tansseja',
+        name: 'Nimi',
+        category: 'Kategoria',
+        danceUsageAndTools: 'Käyttökohteet ja muokkaus',
       },
       dancePage: {
         backToDanceList: 'Takaisin tanssilistaan',
