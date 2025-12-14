@@ -9,7 +9,7 @@ import { ColorClass } from './classes'
 export interface CalloutProps extends ComponentPropsWithoutRef<'div'> {
   children?: React.ReactNode
   icon?: React.ReactElement | false
-  intent?: Color
+  color?: Color
   title?: string
 }
 
@@ -21,12 +21,12 @@ const defaultIcons = {
   warning: <WarningSign />,
 } satisfies Record<Color, React.ReactElement | undefined>
 
-export function Callout({ children, icon, title, intent, className, ...rest }: CalloutProps) {
+export function Callout({ children, icon, title, color, className, ...rest }: CalloutProps) {
   const iconToRender = icon === false
     ? undefined
-    : icon ?? defaultIcons[intent ?? 'none']
+    : icon ?? defaultIcons[color ?? 'none']
   return <>
-    <div className={classNames('flex gap-2 p-4 pb-3 items-start', ColorClass.lightBoxColors[intent ?? 'none'], className)} {...rest}>
+    <div className={classNames('flex gap-2 p-4 pb-3 items-start', ColorClass.lightBoxColors[color ?? 'none'], className)} {...rest}>
       {iconToRender}
       <div>
         {title && <h5 className="mb-1.5 font-bold mt-[-3px]">{title}</h5>}

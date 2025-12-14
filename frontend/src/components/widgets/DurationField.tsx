@@ -17,7 +17,7 @@ interface DurationFieldProps extends FieldComponentProps<number, HTMLInputElemen
 
 export function DurationField({ value: maybeValue, onChange, readOnly, className, ...props }: DurationFieldProps) {
   const value = maybeValue ?? 0
-  const [params, setParams] = useState<DurationState>({ value, text: durationToString(value ?? 0) })
+  const [params, setParams] = useState<DurationState>({ value, text: durationToString(value) })
 
   useDelayedEffect(10, useCallback(() => {
     const { value, text, event } = params
@@ -29,7 +29,7 @@ export function DurationField({ value: maybeValue, onChange, readOnly, className
       onChange?.(newVal, event)
     }
   }, [params, onChange]))
-  useEffect(() => setParams({ text: durationToString(value ?? 0), value }), [value])
+  useEffect(() => setParams({ text: durationToString(value), value }), [value])
 
   return <Input
     {...props}
@@ -59,6 +59,8 @@ function onDurationFieldKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
       target.blur(); break
     case 'ArrowLeft':
       selectArea(target, 'minutes'); break
+    case ':':
+    case '.':
     case 'ArrowRight':
       selectArea(target, 'seconds'); break
     case 'ArrowUp':

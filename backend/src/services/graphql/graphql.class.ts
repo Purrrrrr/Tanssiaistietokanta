@@ -1,15 +1,15 @@
-// For more information about this file see https://dove.feathersjs.com/guides/cli/service.class.html#custom-services
 import type { Params, ServiceInterface } from '@feathersjs/feathers'
 import { Middleware } from '@feathersjs/koa'
 import { ApolloServer } from "@apollo/server";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import { koaMiddleware } from "@as-integrations/koa";
-// import schema from "./graphql.schema";
 import { loadFilesSync } from '@graphql-tools/load-files'
 import { mergeResolvers } from '@graphql-tools/merge'
 import { logger } from '../../logger'
 
 import type { Application } from '../../declarations'
+import { ErrorWithStatus } from '../../hooks/addErrorStatusCode';
+import { GraphQLError } from 'graphql';
 
 type Graphql = any
 type GraphqlData = any
@@ -27,40 +27,39 @@ export interface GraphqlServiceOptions {
 export interface GraphqlParams extends Params<GraphqlQuery> {}
 
 export const graphqlServiceMiddleware : Middleware<Application> = async (ctx, next) => {
-  const service = ctx.app.service('graphql')
-  if (!service) return await next()
-  const middleware = await service.getMiddleware()
-  await middleware(ctx, next)
+  const middleware = await ctx.app.service('graphql')?.getMiddleware()
+  if (middleware) {
+    await middleware(ctx, next)
+  } else {
+    await next()
+  }
 }
 
-// This is a skeleton for a custom service class. Remove or add the methods you need here
 export class GraphqlService<ServiceParams extends GraphqlParams = GraphqlParams>
   implements ServiceInterface<Graphql, GraphqlData, ServiceParams, GraphqlPatch>
 {
-  private apolloMiddleware : Middleware<any>
-  private innerApolloMiddlewarePromise : ResolvablePromise<Middleware<any>>
-  private apolloServerPromise: ResolvablePromise<ApolloServer>
+  private apolloMiddleware: Middleware<any>
+  private apolloServerPromise: Promise<ApolloServer>
   private resolveApolloServer: (server: ApolloServer) => void = () => {}
-  private schema: string
 
   constructor(public options: GraphqlServiceOptions) {
-    this.schema = options.schema
+    const { promise, resolve } = Promise.withResolvers<ApolloServer>()
+    this.apolloServerPromise = promise
+    this.resolveApolloServer = resolve
+
     const pathRegex = new RegExp(`^${options.path}(/.*')?$`)
+    const innerMiddleWarePromise = this.apolloServerPromise.then(server =>
+      koaMiddleware(server, {
+        context: async ({ ctx }) => ({ token: ctx.headers.token }),
+      })
+    )
     this.apolloMiddleware = async (ctx, next) => {
       if (pathRegex.test(ctx.request.url)) {
-        const innerApolloMiddleware = await this.innerApolloMiddlewarePromise
+        const innerApolloMiddleware = await innerMiddleWarePromise
         await innerApolloMiddleware(ctx, next)
         return
       }
       await next();
-    }
-    this.apolloServerPromise = makePromise()
-    this.innerApolloMiddlewarePromise = makePromise()
-    this.resolveApolloServer = (server) => {
-      this.apolloServerPromise.resolve(server)
-      this.innerApolloMiddlewarePromise.resolve(koaMiddleware(server, {
-        context: async ({ ctx }) => ({ token: ctx.headers.token }),
-      }))
     }
   }
 
@@ -83,7 +82,7 @@ export class GraphqlService<ServiceParams extends GraphqlParams = GraphqlParams>
     return this.apolloMiddleware
   }
 
-  async setup(app: Application, path: string): Promise<void> {
+  async setup(app: Application, _path: string): Promise<void> {
     const resolvers = this.getResolvers(app)
     const context = ({
       req = {headers: {}},
@@ -96,7 +95,16 @@ export class GraphqlService<ServiceParams extends GraphqlParams = GraphqlParams>
 
     // Set up Apollo Server
     const server = new ApolloServer({
-      typeDefs: this.schema,
+      typeDefs: this.options.schema,
+      formatError: (formattedError, error) => {
+        if (error instanceof GraphQLError) {
+          const { originalError } = error
+          if (originalError instanceof ErrorWithStatus) {
+            return originalError.result
+          }
+        }
+        return formattedError
+      },
       resolvers,
       logger,
       plugins: [ApolloServerPluginDrainHttpServer({ httpServer: app.server })],
@@ -117,19 +125,6 @@ export class GraphqlService<ServiceParams extends GraphqlParams = GraphqlParams>
 
     return mergeResolvers(resolvers.map(applyContext))
   }
-}
-
-interface ResolvablePromise<T> extends Promise<T> {
-  resolve(t: T): void
-}
-
-function makePromise<T>(): ResolvablePromise<T> {
-  let resolve
-  const promise = new Promise<T>(resolveFn => {
-    resolve = resolveFn
-  }) as ResolvablePromise<T>
-  promise.resolve = resolve as any
-  return promise
 }
 
 export const getOptions = (app: Application, path: string, schema: string) => {

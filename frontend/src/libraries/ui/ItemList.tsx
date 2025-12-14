@@ -24,7 +24,7 @@ export default function ItemList({ children, 'wrap-breakpoint': wrapPoint = 'sm'
       columnCount
         ? 'grid-cols-[repeat(var(--item-list-cols),minmax(0,1fr))]'
         : columns,
-      'group mb-4 border-gray-100 border-1 w-full',
+      'group mb-4 border-gray-100 border-b-1 w-full',
       columns && listWrapClasses[wrapPoint],
     )}
   >
@@ -32,14 +32,23 @@ export default function ItemList({ children, 'wrap-breakpoint': wrapPoint = 'sm'
   </ul>
 }
 
-const colorClassname = 'nth-of-type-[even]:bg-gray-100'
-
-const rowClasses = classNames(
-  colorClassname,
+const commonRowClasses = classNames(
   'flex flex-wrap gap-4 items-center p-2',
   'group-[.wrap-md]:md:grid grid-cols-subgrid col-span-full',
   'group-[.wrap-sm]:sm:grid grid-cols-subgrid col-span-full',
 )
+const rowColorClassname = 'nth-of-type-[even]:bg-gray-100 border-x-1 border-gray-100'
+const rowClasses = classNames(
+  'first:border-t-1',
+  rowColorClassname,
+  commonRowClasses,
+)
+
+function ItemListHeader({ children }: { children: React.ReactNode }) {
+  return <li className={classNames(commonRowClasses, 'font-bold border-b-1 border-gray-400')}>
+    {children}
+  </li>
+}
 
 interface ItemListRowProps {
   children?: React.ReactNode
@@ -53,11 +62,12 @@ function ItemListRow({ children, expandableContent, isOpen }: ItemListRowProps) 
       {children}
     </li>
     {expandableContent &&
-      <div className={classNames('col-span-full', colorClassname)}>
+      <div className={classNames('col-span-full', rowColorClassname)}>
         <Collapse isOpen={isOpen}>{expandableContent}</Collapse>
       </div>
     }
   </>
 }
 
+ItemList.Header = ItemListHeader
 ItemList.Row = ItemListRow

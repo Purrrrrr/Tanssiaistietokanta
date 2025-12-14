@@ -36,7 +36,8 @@
   "main": "lib/client",
   "scripts": {
     "create-migration": "ts-node src/create-migration.ts",
-    "dev": "cross-env CORS_ALLOW_LOCALHOST=true nodemon --watch src -e ts,graphql,json -x ts-node src/index.ts",
+    "dev": "cross-env CORS_ALLOW_LOCALHOST=true tsx watch --include \"src/**/*.graphql\" --clear-screen=false src/index.ts",
+    "typecheck": "nodemon --watch src -e ts -x tsc --noEmit",
     "compile": "shx rm -rf lib/ && copyfiles -u 1 src/**/*.graphql lib && copyfiles -u 1 src/**/*.json lib && tsc",
     "start": "node lib/",
     "start-dev": "cross-env CORS_ALLOW_LOCALHOST=true node lib/",
@@ -61,7 +62,11 @@
     "@graphql-tools/load-files": "^6.6.1",
     "@graphql-tools/merge": "^8.4.1",
     "@koa/cors": "^5.0.0",
-    "@seald-io/nedb": "^4.0.1",
+    "@seald-io/nedb": "^4.1.2",
+    "@types/archiver": "^7.0.0",
+    "archiver": "^7.0.1",
+    "clamscan": "^2.4.0",
+    "content-disposition": "^0.5.4",
     "es-toolkit": "^1.16.0",
     "fast-json-patch": "^3.1.1",
     "feathers-nedb": "^6.0.0",
@@ -79,6 +84,7 @@
     "@feathersjs/cli": "^5.0.5",
     "@feathersjs/rest-client": "^5.0.5",
     "@types/chai": "^4.3.17",
+    "@types/clamscan": "^2.4.1",
     "@types/glob": "^8.1.0",
     "@types/lodash": "^4.17.7",
     "@types/mocha": "^10.0.1",
@@ -93,6 +99,7 @@
     "prettier": "^2.8.8",
     "shx": "^0.3.4",
     "ts-node": "^10.9.1",
+    "tsx": "^4.20.6",
     "typescript": "^5.8.3"
   }
 }

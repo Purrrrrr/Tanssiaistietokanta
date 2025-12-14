@@ -1,7 +1,7 @@
+import MarkdownToJsx from 'markdown-to-jsx/react'
 import type { ComponentPropsWithoutRef, CSSProperties } from 'react'
 import QRCode from 'react-qr-code'
 import classNames from 'classnames'
-import MarkdownToJsx from 'markdown-to-jsx'
 
 import { RegularLink } from './Link'
 

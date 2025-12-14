@@ -42,7 +42,7 @@ export function MissingDanceInstructionsWarning({ program }: { program: EventPro
 
   if (missing.length === 0) return null
 
-  return <Callout className="mb-4" intent="warning" title={t('programIsMissingInstructions')}>
+  return <Callout className="mb-4" color="warning" title={t('programIsMissingInstructions')}>
     <p>{t('dancesWithoutInstructions', { count: missing.length })} {t('clickLinksToOpenSlide')}</p>
     <ul className="ps-3">
       {missing.map(({ id, danceSet, dance }) =>
@@ -105,7 +105,7 @@ export function MissingDancesWarning() {
 
   const missingCount = new Set(workshopsWithMissing.flatMap(w => w.missingDances).map(dance => dance._id)).size
 
-  return <Callout intent="warning" title={t('title', { count: missingCount })}>
+  return <Callout color="warning" title={t('title', { count: missingCount })}>
     {workshopsWithMissing.map(({ id, name, missingDances }) =>
       <p key={id}>
         <strong>{name}</strong>
@@ -138,7 +138,7 @@ export function DuplicateDancesWarning({ program }: { program: EventProgramSetti
 
   if (duplicates.length === 0) return null
 
-  return <Callout intent="warning" title={t('title', { count: duplicates.length })}>
+  return <Callout color="warning" title={t('title', { count: duplicates.length })}>
     {duplicates.map(({ dance, danceSets }) => ({ dance, danceSets: uniq(danceSets) }))
       .map(({ dance, danceSets }) =>
         <p key={dance._id}>

@@ -5,6 +5,8 @@ import {
 } from '@blueprintjs/core'
 import classNames from 'classnames'
 
+import { Color } from './types'
+
 import { ColorClass, CssClass } from './classes'
 
 import './ui.css'
@@ -29,7 +31,6 @@ export const Markdown = React.lazy(() => import('./Markdown'))
 export { ColorClass, CssClass }
 
 type HTMLDivProps = React.HTMLAttributes<HTMLDivElement>
-export type Intent = 'none' | 'primary' | 'success' | 'warning' | 'danger'
 
 interface CardProps extends Omit<HTMLDivProps, 'onClick'> {
   noPadding?: boolean
@@ -37,7 +38,7 @@ interface CardProps extends Omit<HTMLDivProps, 'onClick'> {
 }
 
 export function H2({ children, className }: { children: React.ReactNode, className?: string }) {
-  return <h2 className={classNames(className ?? 'my-2', 'font-bold text-lg')}>{children}</h2>
+  return <h2 className={classNames(className ?? 'my-4', 'font-bold text-lg')}>{children}</h2>
 }
 
 export function Card({ className, noPadding = false, marginClass, ...props }: CardProps) {
@@ -52,11 +53,12 @@ export function Card({ className, noPadding = false, marginClass, ...props }: Ca
   />
 }
 
-export interface FormGroupProps extends Omit<BlueprintFormGroupProps, 'inline'>, React.ComponentPropsWithoutRef<'div'> {
+export interface FormGroupProps extends Omit<BlueprintFormGroupProps, 'inline' | 'intent'>, React.ComponentPropsWithoutRef<'div'> {
   elementRef?: React.Ref<HTMLDivElement>
   inline?: boolean
   labelStyle?: 'above' | 'beside'
   children?: React.ReactNode
+  color?: Color
 }
 
 const FormGroupInstance = new BlueprintFormGroup({})
@@ -69,12 +71,12 @@ export function FormGroup({ elementRef, className, inline, labelStyle: maybeLabe
     : { inline: inlineLabel, className: classNames(inlineLabel && CssClass.formGroupInlineFill, className) }
 
   const {
-    intent, children, disabled, contentClassName, helperText, label, labelFor, labelInfo, style, subLabel,
+    color, children, disabled, contentClassName, helperText, label, labelFor, labelInfo, style, subLabel,
     ...rest
   } = props
   // @ts-expect-error Props is readonly, but we override it here
   FormGroupInstance.props = {
-    intent, children, disabled, contentClassName, helperText, label, labelFor, labelInfo, style, subLabel,
+    intent: color, children, disabled, contentClassName, helperText, label, labelFor, labelInfo, style, subLabel,
     ...inlineProps,
   }
   const element = FormGroupInstance.render()

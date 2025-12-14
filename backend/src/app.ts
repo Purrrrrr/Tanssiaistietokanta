@@ -1,5 +1,7 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/application.html
 import { feathers, HookContext, NextFunction } from '@feathersjs/feathers'
+import { existsSync, mkdirSync } from 'fs'
+import { unlink } from 'fs/promises'
 import configuration from '@feathersjs/configuration'
 import { koa, rest, bodyParser, errorHandler, parseAuthentication, cors, serveStatic } from '@feathersjs/koa'
 import socketio from '@feathersjs/socketio'
@@ -13,6 +15,8 @@ import initDependencyGraph from './dependencyGraph'
 import {preventRemovingOfUsedItems} from './hooks/prevent-removing-of-used-items'
 import { migrateDb } from './umzug'
 import { channels } from './channels'
+import { addErrorStatusCode } from './hooks/addErrorStatusCode'
+import { MaxFileSize } from './services/files/files.class'
 
 const app: Application = koa(feathers())
 
@@ -25,7 +29,29 @@ app.use(cors())
 app.use(serveStatic(app.get('public')))
 app.use(errorHandler())
 app.use(parseAuthentication())
-app.use(bodyParser())
+
+const uploadTmp = app.get('uploadTmp')
+mkdirSync(uploadTmp, { recursive: true })
+mkdirSync(app.get('uploadDir'), { recursive: true })
+
+app.use(bodyParser({
+  multipart: true,
+  formidable: {
+    uploadDir: uploadTmp,
+    maxFileSize: MaxFileSize,
+  },
+}))
+
+app.use(async (ctx, next) => {
+  const { body, files } = ctx.request
+  Object.assign(body, files)
+  await next()
+  const filesToCleanup = Object.values(files ?? {})
+    .flat()
+    .filter(file => existsSync(file.filepath))
+
+  await Promise.all(filesToCleanup.map(file => unlink(file.filepath)))
+})
 app.use(graphqlServiceMiddleware)
 console.log(allowLocalhostOnDev(app.get('origins')))
 
@@ -38,6 +64,7 @@ app.configure(
     }
   })
 )
+
 function allowLocalhostOnDev(origins: string[] | undefined) {
   if (process.env.CORS_ALLOW_LOCALHOST !== 'true') return origins
   const localhost = /^http:\/\/localhost:[0-9]{2,4}$/
@@ -52,7 +79,7 @@ app.configure(services)
 // Register hooks that run on all service methods
 app.hooks({
   around: {
-    all: [logError]
+    all: [logError, addErrorStatusCode]
   },
   before: {
     remove: [preventRemovingOfUsedItems],

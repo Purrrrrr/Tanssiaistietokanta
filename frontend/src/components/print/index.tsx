@@ -42,7 +42,7 @@ interface RepeatingGridProps {
 export function RepeatingGrid({ cols, rows, children, repeatChildren }: RepeatingGridProps) {
   return <div
     style={{ '--cols': cols, '--rows': rows } as React.CSSProperties}
-    className="max-h-full grid grid-cols-[repeat(var(--cols),1fr)] grid-rows-[repeat(var(--rows),1fr)] gap-1"
+    className="grid gap-1 max-h-full grid-cols-[repeat(var(--cols),1fr)] grid-rows-[repeat(var(--rows),1fr)]"
   >
     {repeatChildren
       ? Array(cols * rows).fill(1).map((_, i) =>

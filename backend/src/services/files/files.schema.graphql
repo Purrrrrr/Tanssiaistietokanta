@@ -1,0 +1,29 @@
+type Query {
+  file(id: ID!): File!
+  files(root: String!, path: String): [File!]!
+}
+
+type File {
+  _id: ID!
+  _createdAt: String!
+  _updatedAt: String!
+  root: String!
+  path: String!
+  name: String!
+  notes: String!
+  mimetype: String!
+  size: Int!
+  unused: Boolean!
+}
+
+type Mutation {
+  renameFile(id: ID!, name: String!, path: String): File!
+  markFileUsage(usages: [FileUsageInput!]!): [File!]!
+  moveFile(id: ID!, name: String!, path: String): File!
+  deleteFile(id: ID!): File!
+}
+
+input FileUsageInput {
+  _id: ID!
+  unused: Boolean!
+}

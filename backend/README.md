@@ -16,7 +16,9 @@ This project uses [Feathers](http://feathersjs.com). An open source framework fo
     npm ci
     ```
 
-   You also need to install [pandoc](https://pandoc.org/installing.html) for the dance wiki integration to work. At least version 1.17 is recommended.
+   You also need to install some other software:
+   First you need [pandoc](https://pandoc.org/installing.html) for the dance wiki integration to work. At least version 1.17 is recommended.
+   Also a running ClamAV daemon is strongly recommended if using file uploads.
 
 3. Start your app in development mode
 

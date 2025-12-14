@@ -1,7 +1,7 @@
 import 'react-markdown-editor-lite/lib/index.css'
+import { MarkdownToJSX } from 'markdown-to-jsx/react'
 import React from 'react'
 import MdEditor, { Plugins } from 'react-markdown-editor-lite'
-import { MarkdownToJSX } from 'markdown-to-jsx'
 
 import type { FieldInputComponent, FieldInputComponentProps } from './types'
 
@@ -42,10 +42,17 @@ function HelpLink() {
 HelpLink.align = 'right'
 HelpLink.pluginName = 'helplink'
 
+function ConditionalImagePlugin(props) {
+  if (!props.editor.props.onImageUpload) return null
+  return <Plugins.Image {...props} />
+}
+ConditionalImagePlugin.align = 'left'
+ConditionalImagePlugin.pluginName = 'image'
+
 const pluginList = [
   Plugins.Header, Plugins.FontBold, Plugins.FontItalic,
   Plugins.FontStrikethrough, Plugins.ListUnordered, Plugins.ListOrdered,
-  Plugins.BlockWrap, Plugins.BlockCodeInline, Plugins.BlockCodeBlock, Plugins.Table,
+  Plugins.BlockWrap, Plugins.BlockCodeInline, Plugins.BlockCodeBlock, ConditionalImagePlugin, Plugins.Table,
   Plugins.Link, Plugins.Logger, Plugins.ModeToggle, Plugins.FullScreen,
   QRCode,
   HelpLink,
@@ -53,7 +60,7 @@ const pluginList = [
 MdEditor.unuseAll()
 pluginList.forEach(plugin => MdEditor.use(plugin, {}))
 
-export interface MarkdownEditorProps extends FieldInputComponentProps<string> {
+export interface MarkdownInputProps extends FieldInputComponentProps<string>, Partial<Pick<React.ComponentProps<typeof MdEditor>, 'onImageUpload' | 'imageAccept'>> {
   style?: React.CSSProperties
   className?: string
   onBlur?: (e: React.FocusEvent<HTMLTextAreaElement>) => void
@@ -61,8 +68,8 @@ export interface MarkdownEditorProps extends FieldInputComponentProps<string> {
   noPreview?: boolean
 }
 
-export const MarkdownInput: FieldInputComponent<string, MarkdownEditorProps> = React.memo(
-  function MarkdownEditor({ value, onChange, className, inline: _ignored, markdownOverrides, noPreview, ...props }: MarkdownEditorProps) {
+export const MarkdownInput: FieldInputComponent<string, MarkdownInputProps> = React.memo(
+  function MarkdownEditor({ value, onChange, className, inline: _ignored, markdownOverrides, noPreview, ...props }: MarkdownInputProps) {
     return <MdEditor
       className={className}
       renderHTML={(text: string) => <Markdown options={{ overrides: markdownOverrides }}>{text}</Markdown>}
@@ -71,6 +78,7 @@ export const MarkdownInput: FieldInputComponent<string, MarkdownEditorProps> = R
       {...props}
       view={noPreview ? { menu: true, md: true, html: false } : undefined}
       canView={noPreview ? { menu: true, md: true, html: false, both: false, fullScreen: true, hideMenu: true } : undefined}
+      allowPasteImage={props.onImageUpload !== undefined}
     />
   },
 )

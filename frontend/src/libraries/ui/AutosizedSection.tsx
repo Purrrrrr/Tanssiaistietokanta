@@ -25,6 +25,6 @@ export function AutosizedSection({ children, className = '', ...props }) {
   useResizeObserver(innerContainer, onResize)
 
   return <section className={'max-w-full overflow-hidden ' + className} ref={container} {...props}>
-    <div ref={innerContainer} className="relative left-1/2 origin-top -translate-x-1/2 w-fit h-fit p-px" style={{ scale: `${size}` }}>{children}</div>
+    <div ref={innerContainer} className="relative left-1/2 p-px origin-top -translate-x-1/2 w-fit h-fit" style={{ scale: `${size}` }}>{children}</div>
   </section>
 }

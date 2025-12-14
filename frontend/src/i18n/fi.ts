@@ -257,6 +257,68 @@ export const fi = {
       siteMayNotWork: 'Selaimesi ei tue kaikkia tämän sivuston käyttämiä ominaisuuksia. Jos jatkat, sivusto ei välttämättä toimi tarkoituksenmukaisesti.',
       possibleSupportedBrowsers: 'Tanssitietokanta on kehitetty ja testattu enimmäkseen Firefoxilla, mutta se tukee ainakin seuraavien selaimien uusimpia versioita:',
     },
+    files: {
+      name: 'Nimi',
+      size: 'Koko',
+      date: 'Päivämäärä',
+      noFiles: 'Ei tiedostoja',
+      filesSelected: {
+        one: 'Yksi tiedosto valittu, yhteensä __sizeTotal__',
+        many: '__count__ tiedostoa valittu, yhteensä __sizeTotal__',
+      },
+      DeleteSelectionButton: {
+        text: 'Poista kaikki',
+        confirmTitle: {
+          one: 'Poistetaanko tiedosto?',
+          many: 'Poistetaanko __count__ tiedostoa?',
+        },
+        confirmText: 'Haluatko varmasti poistaa nämä tiedostot?',
+        successMessage: {
+          one: '1 tiedosto poistettu',
+          many: '__count__ tiedostoa poistettu',
+        },
+      },
+      uploadingFiles: {
+        one: 'Lähetetään tiedostoa...',
+        many: 'Lähetetään __count__ tiedostoa...',
+      },
+      pending: 'Odotetaan lähetysvuoroa...',
+      alreadyExistsConfirm: {
+        title: 'Tiedosto on jo olemassa',
+        content: 'Tiedosto __filename__ on jo olemassa, haluatko korvata sen?',
+        ok: 'Korvaa',
+        cancel: 'Peruuta',
+      },
+      alreadyUploadingAlert: {
+        title: 'Lataat jo tiedostoa',
+        content: 'Tiedosto __filename__ on jo latausjonossa. Et voi ladata samaan paikkaan kahta samannimistä tiedostoa.',
+        ok: 'Ok',
+      },
+      DeleteFileButton: {
+        text: 'Poista',
+        confirmTitle: 'Poistetaanko tiedosto?',
+        confirmText: 'Haluatko varmasti poistaa tiedoston __filename__?',
+        successMessage: 'Tiedosto poistettu',
+      },
+      RenameFileButton: {
+        text: 'Nimeä uudelleen',
+        rename: 'Nimeä uudelleen',
+        ok: 'Ok',
+        errorTitle: 'Virhe uudelleennimeämisessä',
+        duplicateError: 'Tämän niminen tiedosto on jo olemassa',
+        successMessage: 'Tiedosto nimetty uudelleen',
+      },
+      UploadButton: {
+        upload: 'Lähetä tiedosto',
+        errorReason: {
+          too_big: 'Tiedosto on liian suuri. Et voi lähettää tiedostoja, joiden koko on yli __max_size__',
+          server: 'Virhe tiedoston lähetyksessä: __message__',
+          unknown: 'Tuntematon virhe tiedoston lähetyksessä',
+          already_exists: 'Tiedosto __filename__ on jo olemassa',
+          file_is_infected: 'Tiedosto sisältää haittaohjelman',
+        },
+      },
+    },
   },
   pages: {
     events: {
@@ -307,6 +369,7 @@ export const fi = {
         },
         eventDate: 'Tapahtuman ajankohta',
         ballDateTime: 'Tanssiaisten ajankohta',
+        files: 'Tapahtumaan liittyvät tiedostot',
       },
       eventProgramPage: {
         pageTitle: 'Tanssiaisohjelma',

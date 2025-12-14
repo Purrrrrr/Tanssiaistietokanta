@@ -8,7 +8,18 @@ export const configurationSchema = Type.Intersect([
   Type.Object({
     host: Type.String(),
     port: Type.Number(),
-    public: Type.String()
+    public: Type.String(),
+    uploadTmp: Type.String(),
+    uploadDir: Type.String(),
+    clamav: Type.Optional(Type.Union([
+      Type.Object({
+        socket: Type.Optional(Type.String()),
+      }),
+      Type.Object({
+        host: Type.Optional(Type.String()),
+        port: Type.Optional(Type.Number()),
+      })
+    ]))
   })
 ])
 

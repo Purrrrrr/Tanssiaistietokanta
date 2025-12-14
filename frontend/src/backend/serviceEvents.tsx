@@ -18,6 +18,7 @@ const serviceTypeNameMap: Record<ServiceName, string> = {
   events: 'Event',
   workshops: 'Workshop',
   dancewiki: 'Dancewiki',
+  files: 'File',
 }
 const serviceUpdateFragmentMap: Partial<Record<ServiceName, DocumentNode>> = {}
 

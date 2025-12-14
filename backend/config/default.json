@@ -10,5 +10,10 @@
     "default": 10,
     "max": 50
   },
-  "nedb": "data"
+  "nedb": "data",
+  "uploadTmp": "./data/uploads/tmp",
+  "uploadDir": "./data/uploads/ready",
+  "clamav": {
+    "socket": "/var/run/clamav/clamd.ctl"
+  }
 }

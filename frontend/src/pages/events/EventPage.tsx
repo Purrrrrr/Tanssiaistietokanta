@@ -9,6 +9,7 @@ import { useCreateWorkshop, useDeleteWorkshop } from 'services/workshops'
 import { DateField, DateRangeField, formFor, patchStrategy, SyncStatus, useAutosavingState } from 'libraries/forms'
 import { Button, Card, Collapse, H2 } from 'libraries/ui'
 import { JSONPatch } from 'components/event/EventProgramForm/patchStrategy'
+import { FileList } from 'components/files/FileList'
 import { useGlobalLoadingAnimation } from 'components/LoadingState'
 import { VersionedPageTitle } from 'components/versioning/VersionedPageTitle'
 import { VersionSidebarToggle } from 'components/versioning/VersionSidebarToggle'
@@ -42,6 +43,8 @@ export default function EventPage({ event }: { event: Event }) {
     <EventProgram program={event.program} readOnly={readOnly} />
     <H2>{t('workshops')}</H2>
     <EventWorkshops event={event} readOnly={readOnly} />
+    <H2>{t('files')}</H2>
+    <FileList root={`events/${event._id}`} />
   </>
 }
 

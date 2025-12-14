@@ -20,7 +20,7 @@ export const buttonClass = (
     'hover:bg-opacity-10 active:bg-opacity-20 disabled:saturate-85',
     ({
       none: 'bg-var-gray-800 text-stone-700 ',
-      primary: 'bg-var-blue-600 text-blue-600 saturate-65',
+      primary: 'bg-var-sky-600 text-sky-600 saturate-65',
       success: 'bg-var-lime-700 text-lime-700',
       danger: ' bg-var-orange-700 text-orange-700',
       warning: ' bg-var-amber-400 text-amber-400',

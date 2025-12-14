@@ -4,6 +4,7 @@ import type { Application } from '../declarations'
 import createNedbService from 'feathers-nedb'
 import NeDB from '@seald-io/nedb'
 import path from 'path'
+import { map, mapAsync } from './map'
 
 export type NeDBServiceOptions = {
   inMemoryOnly?: false
@@ -94,7 +95,7 @@ export class NeDBService<Result extends BaseRecord, Data, ServiceParams extends 
 
   async remove(id: NullableId, _params?: ServiceParams): Promise<Result | Result[]> {
     return mapAsync(
-      this.currentService.remove(id, this.mapParams(_params)),
+      await this.currentService.remove(id, this.mapParams(_params)),
       async r => {
         await this.onRemove(r);
         return this.mapToResult(r)
@@ -139,16 +140,4 @@ export class NeDBService<Result extends BaseRecord, Data, ServiceParams extends 
 
   protected onSave(result: Record): void | Promise<void> {}
   protected onRemove(result: Record): void | Promise<void> {}
-}
-
-function map<T, R>(data: T | T[], func: (t: T) => R): R | R[] {
-  return Array.isArray(data)
-    ? data.map(func)
-    : func(data)
-}
-
-function mapAsync<T, R>(data: T | T[], func: (t: T) => Promise<R> | R): Promise<R | R[]> {
-  return Array.isArray(data)
-    ? Promise.all(data.map(func))
-    : Promise.resolve(func(data))
 }

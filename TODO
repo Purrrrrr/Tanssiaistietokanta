@@ -120,6 +120,7 @@
     * Time and date for ball
     * Migrations
     * Dance tags (how to represent?)
+  * Dance set title view seems unnecessary. Remove? Nah.
     Frontend support
     * Add time and date for ball
       * Include it in print
@@ -131,9 +132,68 @@
     Better drag and drop somehow?
     Image support? Better stock slides??
     Show dance in interval music
-    Dance set title view seems unnecessary. Remove?
     Showing of dance tags
     Icons for dance tags
+
+  Templates for event/interval music slides?
+  Documents?
+  Files and images
+  * Basic backend
+  * Do we use versioning? Not now
+  * Basic file list
+  * File size formatter
+  * Clear existing files when updating file contents
+  * Empty list view
+  * Better file list columns
+  * Aborting file transfers
+  * Fail if size too big
+  * Ability to name an upload?
+  * Upload button
+    * Progress
+    * Progress in list
+    * Ask when uploading when a file with the same name already exists
+    * Nicer progress style
+    * Upload speed
+    * Upload ETA
+  * Delete file button
+  * Root + path
+  * Icon for empty list?
+  * Validate upload type/check malware
+    * Type checking: Maybe not now
+    * Virus checking?
+  * GraphQL endpoint
+  * Use GraphQL hooks
+  * Rename button/functionality
+  * Better keyboard usability for file rename dialog (working enter key)
+  * Upload Dropzone
+  * Refuse folder uploads somehow
+  * Ask about duplicates nicely (not all at once)
+  * Selection and group actions (delete) for files
+  * Nicer multiple delete confirm
+  * Nicer and larger select boxes
+  * Limit on concurrent uploads
+  * Prevent uploading duplicates at the same time
+  * Handle graphql errors on rename
+  * Flag to just change file name on conflict
+    UI
+    * Files in events
+    * Files in markdown
+    * Remove dangling files somehow
+    * Mark dangling files just unused (for undo to work)
+    * update _updatedAt
+    * Remove unused files in a scheduled job
+  * Clean up file upload tmp occasionally
+  * Toasts on rename and delete success
+  * Zipping downloads
+  * Limit on zip filesize
+    Download many button
+    Notes for files?
+
+  Unify list item toolbar button style
+    Minimal buttons
+    Tooltips for icon buttons?
+    Move delete event to event page
+    Add list headers
 
   Ability to see more info about program item in editor
 

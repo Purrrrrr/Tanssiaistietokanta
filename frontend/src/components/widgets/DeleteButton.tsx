@@ -1,7 +1,6 @@
-import { useState } from 'react'
 import { Trash } from '@blueprintjs/icons'
 
-import { Alert } from 'libraries/overlays'
+import { useAlerts } from 'libraries/overlays'
 import { Button, ButtonProps } from 'libraries/ui'
 import { useT } from 'i18n'
 
@@ -10,30 +9,34 @@ interface DeleteButtonProps extends ButtonProps {
   iconOnly?: boolean
   disabled?: boolean
   onDelete: () => unknown
-  confirmText: string
+  confirmText: React.ReactNode
+  confirmTitle?: string
   minimal?: boolean
 }
 
-export function DeleteButton({ onDelete, iconOnly, disabled, minimal, className, text, confirmText }: DeleteButtonProps) {
+export function DeleteButton({ onDelete, iconOnly, disabled, minimal, className, text, confirmTitle, confirmText }: DeleteButtonProps) {
   const t = useT('components.deleteButton')
-  const [showDialog, setShowDialog] = useState(false)
-  return <>
-    <Button
-      minimal={minimal}
-      className={className}
-      icon={<Trash />}
-      text={iconOnly ? undefined : text}
-      aria-label={text}
-      disabled={disabled}
-      color="danger"
-      onClick={() => setShowDialog(true)}
-    />
-    <Alert title={text} isOpen={showDialog} onClose={() => setShowDialog(false)}
-      onConfirm={onDelete}
-      color="danger"
-      cancelButtonText={t('cancel')}
-      confirmButtonText={t('delete')}>
-      {confirmText}
-    </Alert>
-  </>
+  const showAlert = useAlerts()
+
+  return <Button
+    minimal={minimal}
+    className={className}
+    icon={<Trash />}
+    text={iconOnly ? undefined : text}
+    aria-label={text}
+    disabled={disabled}
+    color="danger"
+    onClick={() => showAlert({
+      title: confirmTitle ?? text,
+      buttons: [
+        {
+          text: t('delete'),
+          color: 'danger',
+          action: onDelete,
+        },
+        t('cancel'),
+      ],
+      children: confirmText,
+    })}
+  />
 }

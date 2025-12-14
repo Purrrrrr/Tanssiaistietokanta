@@ -11,7 +11,8 @@ It has been used in some form in Ropecon to plan balls and show instruction slid
 * Ability to make events with workshops and a ball with dances
 * The ball program has a slideshow for showing dance instructions and other info
 * Ability to generate dance instruction leaflets for printing
-* Ability to genereta checkbox style cheat lists for marking which dances you have learned
+* Ability to generate checkbox style cheat lists for marking which dances you have learned
+* File storage for event related files
 * Real-time collaborative editing
 
 ## Project Structure

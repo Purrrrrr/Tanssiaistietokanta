@@ -67,7 +67,7 @@ export default class VersioningNeDBService<Result extends Versionable, Data, Ser
     const _updatedAt = now()
     // console.log('determining increment', _existing !== null)
     const increment = _existing !== null
-      && await this.versionService.shouldIncrementVersion(_existing._id, _updatedAt)
+      && await this.versionService.shouldIncrementVersion(_existing._id)
     return {
       ...data,
       _versionNumber: (_existing?._versionNumber ?? 0) + (+increment),
@@ -78,7 +78,7 @@ export default class VersioningNeDBService<Result extends Versionable, Data, Ser
 
   protected async mapPatch(_existing: Result, data: Patch) {
     const _updatedAt = now()
-    const increment = await this.versionService.shouldIncrementVersion(_existing._id, _updatedAt)
+    const increment = await this.versionService.shouldIncrementVersion(_existing._id)
     return {
       ...data,
       _versionNumber: _existing._versionNumber + (+increment),
@@ -113,7 +113,7 @@ class VersionService<Result extends Versionable> extends NeDBService<VersionResu
   }
 
   async saveVersion(data: Result): Promise<VersionResult<Result>> {
-    const createNew = await this.shouldIncrementVersion(data._id, data._updatedAt)
+    const createNew = await this.shouldIncrementVersion(data._id)
     
     if (createNew) {
       return this.create(data)
@@ -123,24 +123,17 @@ class VersionService<Result extends Versionable> extends NeDBService<VersionResu
     }
   }
 
-  async shouldIncrementVersion(id: Id, updatedAt: string): Promise<boolean> {
+  async shouldIncrementVersion(id: Id): Promise<boolean> {
     const latestVersion = await this.getLatestVersion(id)
+    if (latestVersion === null) {
+      return true
+    }
+    const updatedAt = now()
     const newTimestamp = +new Date(updatedAt)
     const lastUpdated = +new Date(latestVersion?._updatedAt ?? 0)
     const lastVersionCreatedAt = +new Date(latestVersion?._versionCreatedAt ?? 0)
-
-    // console.log({
-    //   id,
-    //   latestVersion,
-    //   diff1: newTimestamp - lastUpdated,
-    //   diff2: newTimestamp - lastVersionCreatedAt,
-    //   increment: latestVersion === null
-    //   || newTimestamp > lastUpdated + CREATE_VERSION_AFTER_IDLE_TIME
-    //   || newTimestamp > lastVersionCreatedAt + MAX_VERSION_AGE
-    // })
     
-    return latestVersion === null
-      || newTimestamp > lastUpdated + CREATE_VERSION_AFTER_IDLE_TIME
+    return newTimestamp > lastUpdated + CREATE_VERSION_AFTER_IDLE_TIME
       || newTimestamp > lastVersionCreatedAt + MAX_VERSION_AGE
   }
 

@@ -10,10 +10,7 @@ export function useFieldSubscription<Output extends Input, Input, Data = unknown
   const [value, setValue] = useState(() => getter(getValueAt))
 
   useEffect(
-    () => {
-      setValue(getter(getValueAt))
-      subscribe(() => setValue(getter(getValueAt)))
-    },
+    () => subscribe(() => setValue(getter(getValueAt))),
     [subscribe, getValueAt, getter],
   )
 

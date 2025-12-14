@@ -45,7 +45,7 @@ const showcases: Showcase<Record<string, unknown>>[] = [
     props: {},
     render: () => <div className="flex gap-2">
       {colors.map(color =>
-        <Button key={color} color={color} onClick={() => showToast({ message: 'This is toast', intent: color })}>Show toast</Button>,
+        <Button key={color} color={color} onClick={() => showToast({ message: 'This is toast', color })}>Show toast</Button>,
       )}
     </div>,
   }),
@@ -94,7 +94,7 @@ const showcases: Showcase<Record<string, unknown>>[] = [
     render: ({ title }) =>
       <div className="flex flex-col gap-2">
         {colors.map(color =>
-          <Callout key={color} intent={color} title={title ? titleCase(color) : undefined}>
+          <Callout key={color} color={color} title={title ? titleCase(color) : undefined}>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
           </Callout>,
         )}
@@ -156,9 +156,13 @@ function OverlayShowcase() {
       onClose={() => setModal(null)}
       isOpen={modal === 'alert'}
       title="This is an alert"
-      color="danger"
-      cancelButtonText="Cancel"
-      confirmButtonText="OK"
+      buttons={[
+        {
+          text: 'Ok',
+          color: 'danger',
+        },
+        'Cancel',
+      ]}
     >
       <p>Some children go here</p>
     </Alert>

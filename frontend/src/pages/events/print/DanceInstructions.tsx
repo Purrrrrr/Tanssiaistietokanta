@@ -1,7 +1,7 @@
+import { MarkdownToJSX } from 'markdown-to-jsx/react'
 import React, { useCallback, useRef, useState } from 'react'
 import { Edit } from '@blueprintjs/icons'
 import classNames from 'classnames'
-import { MarkdownToJSX } from 'markdown-to-jsx'
 
 import { Dance, EditableDance } from 'types'
 import { DanceInstructionsQuery } from 'types/gql/graphql'
@@ -190,7 +190,7 @@ function DanceFieldEditor({ dance: danceInDatabase, field }: { dance: Dance, fie
       label={t(field)}
       path={field}
       component={InstructionEditor}
-      componentProps={{ wikipage: danceInDatabase.wikipage, markdownOverrides }}
+      componentProps={{ danceId: danceInDatabase._id, wikipage: danceInDatabase.wikipage, markdownOverrides }}
     />
     <Field label={t('wikipageName')} path="wikipageName" component={WikipageSelector} componentProps={{ possibleName: danceInDatabase.name }} />
   </Form>
