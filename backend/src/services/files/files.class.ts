@@ -110,7 +110,7 @@ export class FileService
         {
           const size = sum(result.map(file => file.size))
           if (size > MaxZipSize) {
-            throw new ErrorWithStatus(422, `Combined file size exceeds the limit of ${MaxZipSize} bytes`)
+            throw new ErrorWithStatus(422, `Combined file size ${size/1024} kb exceeds the limit of ${MaxZipSize/1024} kb`)
           }
           const archiveProgress = Promise.withResolvers()
           const stream = new PassThrough()
