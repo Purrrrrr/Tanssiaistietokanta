@@ -27,6 +27,8 @@ const MB = 1024**2
 const RootSizeCleanUpTreshold = 5 * MB
 const DAY = 24 * 60 * 60 * 1000;
 const MaxTmpFileAge = 3 * DAY
+const MaxZipSize = 50 * MB
+export const MaxFileSize = 30 * MB
 
 export class FileService
   extends NeDBService<File, FileData, FileParams, FilePatch>
@@ -51,7 +53,7 @@ export class FileService
   async cleanUpUnused() {
     const allFiles = await this.find({ query: { unused: true, $sort: { _updatedAt: 1 /* ASC */ } }})
     const byRoot = Map.groupBy(allFiles, file => file.root)
-    
+
     for (const [root, files] of byRoot.entries()) {
       const size = sum(files.map(file => file.size))
 
@@ -106,6 +108,10 @@ export class FileService
         }
         default:
         {
+          const size = sum(result.map(file => file.size))
+          if (size > MaxZipSize) {
+            throw new ErrorWithStatus(422, `Combined file size exceeds the limit of ${MaxZipSize} bytes`)
+          }
           const archiveProgress = Promise.withResolvers()
           const stream = new PassThrough()
           const archive = archiver('zip', { zlib: { level: 9 }})

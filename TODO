@@ -186,6 +186,7 @@
   * Clean up file upload tmp occasionally
   * Toasts on rename and delete success
   * Zipping downloads
+  * Limit on zip filesize
     Download many button
     Notes for files?
 

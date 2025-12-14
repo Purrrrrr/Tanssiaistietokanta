@@ -16,6 +16,7 @@ import {preventRemovingOfUsedItems} from './hooks/prevent-removing-of-used-items
 import { migrateDb } from './umzug'
 import { channels } from './channels'
 import { addErrorStatusCode } from './hooks/addErrorStatusCode'
+import { MaxFileSize } from './services/files/files.class'
 
 const app: Application = koa(feathers())
 
@@ -37,6 +38,7 @@ app.use(bodyParser({
   multipart: true,
   formidable: {
     uploadDir: uploadTmp,
+    maxFileSize: MaxFileSize,
   },
 }))
 
