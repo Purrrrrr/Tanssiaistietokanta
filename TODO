@@ -79,7 +79,7 @@
       * Does it fit better on mobile now? Fix if it does
     * Wiki page selector field
     * Take spam into account in wiki page selector (show spam articles separately?)
-    * Copy instructions from wiki button  
+    * Copy instructions from wiki button
       * On event slide editor
       * On dance editor
     * Ability to view dance wiki entry inline
@@ -124,6 +124,23 @@
       * Include it in print
     * Option to show interval music in lists
       * Modify lists to support it
+* Blueprintjs migration
+  * Tag
+  * Menu
+  * NavBar
+  * Breadcrumbs
+  * Card
+  * separate Icon components by Icon
+  * Classes for headings with margin
+  * Icon loading components
+    * AnchorButton
+    * Toast
+    * Callout
+    * Tab, Tabs
+      * basic element
+    * Icon (half-way done)
+  * SectionCard
+  * H2
 * Files and images
   * Basic backend
   * Do we use versioning? Not now
@@ -173,6 +190,12 @@
   * Toasts on rename and delete success
   * Zipping downloads
   * Limit on zip filesize
+  * Download many files button
+* Unify list item toolbar button and other styles
+  * Empty list style
+  * Add list headers
+  * Move delete event to event page
+  * Tooltips for icon buttons?
 
   Ropecon 2025 post todo - Part 2
     Edit and link to interval music in dance set slide editor ??
@@ -187,20 +210,13 @@
 
   Templates for event/interval music slides?
   Documents?
-  Files and images - Part 2
-  * Download many files button
-    Notes for files?
-  
+  Notes for files?
+
   Take anchor positioning into use once Firefox 149 releases
 
-  Unify list item toolbar button and other styles
-  * Empty list style
-  * Add list headers
-  * Move delete event to event page
+  Implement event program item editor using ItemList?
     Minimal buttons (in event program)
-    Tooltips for icon buttons?
-
-  Ability to see more info about program item in editor
+    Ability to see more info about program item in editor
 
   Dance list category suggestions
   Sorting of dance list
@@ -228,28 +244,12 @@
       AnchorButton
       Breadcrumbs?
 
-  Blueprintjs migration
-  * Tag
-  * Menu
-  * NavBar
-  * Breadcrumbs
-  * Card
-  * separate Icon components by Icon
-  * Classes for headings with margin
-  * Icon loading components
-    * AnchorButton
-    * Toast
-    * Callout
-    * Tab, Tabs
-      * basic element
-    * Icon (half-way done)
-  * SectionCard
-  * H2
+  Blueprintjs migration - Part 2
     HTMLTable
     Input
     FormGroup
     Check todo markings in Button.tsx or other
-    
+
   Teacher/people database
   Apuopettajat / assistant teachers
   Typed backend queries
