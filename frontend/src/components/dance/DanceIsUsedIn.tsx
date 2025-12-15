@@ -43,6 +43,7 @@ export function DanceIsUsedIn({ events, minimal, wikipageName }: Pick<DanceWithE
       <Button
         active={props['aria-expanded']}
         minimal
+        tooltip={minimal ? buttonText : undefined}
         rightIcon={<CaretDown />}
         text={minimal
           ? <>

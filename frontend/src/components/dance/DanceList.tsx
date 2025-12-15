@@ -75,6 +75,7 @@ function DanceListRow({ dance }: { dance: DanceWithEvents }) {
         minimal
         icon={<Edit />}
         aria-label={useTranslation('common.edit')}
+        tooltip={useTranslation('common.edit')}
         color="primary"
         onClick={() => setShowEditor(!showEditor)}
         rightIcon={showEditor ? <ChevronUp /> : <ChevronDown />}

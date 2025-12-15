@@ -15,7 +15,7 @@ export const buttonClass = (
     paddingClass?: string
   },
 ) => classNames(
-  'cursor-pointer transition-colors disabled:cursor-not-allowed disabled:opacity-50 text-center inline-flex gap-1.5 items-center',
+  'cursor-pointer transition-colors disabled:cursor-not-allowed disabled:opacity-50 text-center inline-flex gap-1.5 items-center peer',
   minimal ? [
     'hover:bg-opacity-10 active:bg-opacity-20 disabled:saturate-85',
     ({
@@ -43,6 +43,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   minimal?: boolean
   active?: boolean
   paddingClass?: string
+  tooltip?: React.ReactNode
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(props: ButtonProps, ref) {
@@ -57,14 +58,17 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     minimal,
     className,
     paddingClass,
+    tooltip,
     ...rest
   } = props
-  return <button ref={ref} type={type} className={buttonClass(color, { active, className, minimal, paddingClass })} {...rest}>
-    {icon}
-    {text}
-    {children}
-    {rightIcon}
-  </button>
+  return <TooltipContainer tooltip={tooltip}>
+    <button ref={ref} type={type} className={buttonClass(color, { active, className, minimal, paddingClass })} {...rest}>
+      {icon}
+      {text}
+      {children}
+      {rightIcon}
+    </button>
+  </TooltipContainer>
 })
 
 export interface AnchorButtonProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
@@ -74,6 +78,7 @@ export interface AnchorButtonProps extends AnchorHTMLAttributes<HTMLAnchorElemen
   color?: Color
   minimal?: boolean
   active?: boolean
+  tooltip?: React.ReactNode
 }
 
 export const AnchorButton = forwardRef<HTMLAnchorElement, AnchorButtonProps>(function Button(props: AnchorButtonProps, ref) {
@@ -86,12 +91,33 @@ export const AnchorButton = forwardRef<HTMLAnchorElement, AnchorButtonProps>(fun
     rightIcon,
     minimal,
     className,
+    tooltip,
     ...rest
   } = props
-  return <a ref={ref} className={buttonClass(color, { active, className, minimal })} {...rest}>
-    {icon}
-    {text}
-    {children}
-    {rightIcon}
-  </a>
+  return <TooltipContainer tooltip={tooltip}>
+    <a ref={ref} className={buttonClass(color, { active, className, minimal })} {...rest}>
+      {icon}
+      {text}
+      {children}
+      {rightIcon}
+    </a>
+  </TooltipContainer>
 })
+
+interface TooltipContainerProps {
+  children: React.ReactNode
+  tooltip?: React.ReactNode
+}
+
+function TooltipContainer({ children, tooltip }: TooltipContainerProps) {
+  if (!tooltip) {
+    return children
+  }
+
+  return <div className="inline relative">
+    {children}
+    <div aria-hidden className="absolute w-max  z-40 p-[3px] bg-gray-50 border-1 border-gray-500 shadow-md shadow-black/10 opacity-0 peer-hover:delay-1000 peer-focus-within:delay-1000 transition-opacity peer-hover:opacity-100 top-12/10 peer-focus-within:opacity-100 right-1/2 translate-x-1/2 scale-0 peer-hover:scale-100 peer-focus-within:scale-100 origin-top">
+      {tooltip}
+    </div>
+  </div>
+}

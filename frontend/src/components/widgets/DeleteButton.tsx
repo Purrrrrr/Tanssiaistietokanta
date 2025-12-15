@@ -14,17 +14,15 @@ interface DeleteButtonProps extends ButtonProps {
   minimal?: boolean
 }
 
-export function DeleteButton({ onDelete, iconOnly, disabled, minimal, className, text, confirmTitle, confirmText }: DeleteButtonProps) {
+export function DeleteButton({ onDelete, iconOnly, text, confirmTitle, confirmText, ...props }: DeleteButtonProps) {
   const t = useT('components.deleteButton')
   const showAlert = useAlerts()
 
   return <Button
-    minimal={minimal}
-    className={className}
+    {...props}
     icon={<Trash />}
     text={iconOnly ? undefined : text}
     aria-label={text}
-    disabled={disabled}
     color="danger"
     onClick={() => showAlert({
       title: confirmTitle ?? text,
