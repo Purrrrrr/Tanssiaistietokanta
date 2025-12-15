@@ -12,6 +12,7 @@ import { useMultipleSelection } from 'utils/useMultipleSelection'
 
 import { DeleteFileButton } from './DeleteFileButton'
 import { DeleteSelectionButton } from './DeleteSelectionButton'
+import { DownloadSelectionButton } from './DownloadSelectionButton'
 import { FileDropZone } from './FileDropZone'
 import { RenameFileButton } from './RenameFileButton'
 import { SelectionBox } from './SelectionBox'
@@ -121,6 +122,7 @@ export function FileList({ root, path }: FileListProps) {
             sizeTotal: filesize(selector.selected.map(file => file.size).reduce((a, b) => a + b)),
           })}
           <DeleteSelectionButton files={selector.selected} />
+          <DownloadSelectionButton files={selector.selected} />
         </div>
       }
       <UploadProgressList uploads={uploads} />

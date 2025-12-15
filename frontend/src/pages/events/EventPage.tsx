@@ -62,7 +62,7 @@ function EventDetails({ event, readOnly }: { event: Event, readOnly: boolean }) 
   })
 
   return <>
-    <p className="flex justify-between clear-both mt-3">
+    <p className="flex clear-both justify-between mt-3">
       {t('eventDate')}: {formatDate(event.beginDate)} - {formatDate(event.endDate)}
       { readOnly ||
         <div>

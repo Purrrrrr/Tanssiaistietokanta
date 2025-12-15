@@ -78,7 +78,7 @@ function ItemListRow({ children, expandableContent, isOpen }: ItemListRowProps) 
 }
 
 function EmptyList({ text }: { text: React.ReactNode }) {
-  return <div className="col-span-full py-4 text-base text-center text-muted border-1 border-b-0 border-gray-200">
+  return <div className="col-span-full py-4 text-base text-center border-b-0 border-gray-200 text-muted border-1">
     <InfoSign size={20} className="mr-2" />
     {text}
   </div>

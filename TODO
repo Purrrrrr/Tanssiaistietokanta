@@ -174,7 +174,6 @@
   * Zipping downloads
   * Limit on zip filesize
 
-
   Ropecon 2025 post todo - Part 2
     Edit and link to interval music in dance set slide editor ??
     Maybe ability to set separate list name for items
@@ -189,8 +188,10 @@
   Templates for event/interval music slides?
   Documents?
   Files and images - Part 2
-    Download many files button
+  * Download many files button
     Notes for files?
+  
+  Take anchor positioning into use once Firefox 149 releases
 
   Unify list item toolbar button and other styles
   * Empty list style

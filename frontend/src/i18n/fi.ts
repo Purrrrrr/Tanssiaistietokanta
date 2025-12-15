@@ -266,6 +266,7 @@ export const fi = {
         one: 'Yksi tiedosto valittu, yhteensä __sizeTotal__',
         many: '__count__ tiedostoa valittu, yhteensä __sizeTotal__',
       },
+      downloadSelected: 'Lataa valitut',
       DeleteSelectionButton: {
         text: 'Poista kaikki',
         confirmTitle: {
