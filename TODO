@@ -98,8 +98,7 @@
 * Data dump
 * Proper readme files
 * Sample Apache config
-  
-  Ropecon 2025 post todo
+* Ropecon 2025 post todo
   * Actually hide items that are supposed to be hidden from lists
   * Fix links in dance set slide editor
   * Settilista print with links to dance wiki
@@ -113,7 +112,6 @@
     * Better control of row+column count for cheatheet
     * Check all prints
   * Easier adding of slides in slide editor
-    Edit and link to interval music in dance set slide editor
   * Backend support
     * Option to show interval music in lists
     * Separate list name for items
@@ -121,23 +119,12 @@
     * Migrations
     * Dance tags (how to represent?)
   * Dance set title view seems unnecessary. Remove? Nah.
-    Frontend support
+  * Frontend support
     * Add time and date for ball
       * Include it in print
     * Option to show interval music in lists
       * Modify lists to support it
-      Maybe ability to set separate list name for items
-        Support for showing it
-      Add support for dance tags (fast, switching couples, stealing, etc.)
-    Better drag and drop somehow?
-    Image support? Better stock slides??
-    Show dance in interval music
-    Showing of dance tags
-    Icons for dance tags
-
-  Templates for event/interval music slides?
-  Documents?
-  Files and images
+* Files and images
   * Basic backend
   * Do we use versioning? Not now
   * Basic file list
@@ -175,7 +162,7 @@
   * Prevent uploading duplicates at the same time
   * Handle graphql errors on rename
   * Flag to just change file name on conflict
-    UI
+  * UI
     * Files in events
     * Files in markdown
     * Remove dangling files somehow
@@ -186,6 +173,22 @@
   * Toasts on rename and delete success
   * Zipping downloads
   * Limit on zip filesize
+
+
+  Ropecon 2025 post todo - Part 2
+    Edit and link to interval music in dance set slide editor ??
+    Maybe ability to set separate list name for items
+      Support for showing it
+    Add support for dance tags (fast, switching couples, stealing, etc.)
+    Better drag and drop somehow?
+    Image support? Better stock slides??
+    Show dance in interval music
+    Showing of dance tags
+    Icons for dance tags
+
+  Templates for event/interval music slides?
+  Documents?
+  Files and images - Part 2
     Download many files button
     Notes for files?
 
@@ -204,7 +207,6 @@
     By popularity
     By category
   Miksi voltati in ca rosina ei kategorisoidu automaattisesti?
-
 
   Fix: Pressing tab when focused on select button loses all focus
 
