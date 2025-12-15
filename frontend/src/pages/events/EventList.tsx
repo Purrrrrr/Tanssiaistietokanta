@@ -1,4 +1,4 @@
-import { useDeleteEvent, useEvents } from 'services/events'
+import { useEvents } from 'services/events'
 import { AdminOnly } from 'services/users'
 
 import { useFormatDate } from 'libraries/i18n/dateTime'
@@ -6,15 +6,12 @@ import { H2, Link } from 'libraries/ui'
 import ItemList from 'libraries/ui/ItemList'
 import { LoadingState } from 'components/LoadingState'
 import { PageTitle } from 'components/PageTitle'
-import { DeleteButton } from 'components/widgets/DeleteButton'
 import { NavigateButton } from 'components/widgets/NavigateButton'
-import { useT, useTranslation } from 'i18n'
+import { useT } from 'i18n'
 
 export default function EventList() {
   const t = useT('pages.events.eventList')
-  const deleteText = useTranslation('common.delete')
   const [events, requestState] = useEvents()
-  const [deleteEvent] = useDeleteEvent({ refetchQueries: ['getEvents'] })
   const formatDate = useFormatDate()
 
   return <>
@@ -25,7 +22,7 @@ export default function EventList() {
       <p>{t('youcanEditDancesIn')} <Link to="/dances">{t('danceDatabaseLinkName')}</Link></p>
     </AdminOnly>
     <H2>{t('danceEvents')}</H2>
-    <ItemList columns="grid-cols-[1fr_minmax(min(300px,30%),max-content)_max-content] gap-x-4" items={events} emptyText={t('noEvents')}>
+    <ItemList columns="grid-cols-[1fr_max-content] gap-x-4" items={events} emptyText={t('noEvents')} className="max-w-200">
       <ItemList.Header>
         <span>{t('name')}</span>
         <span>{t('date')}</span>
@@ -35,13 +32,6 @@ export default function EventList() {
           <Link to={'events/' + event._id}>{event.name}</Link>
           <div>
             {formatDate(event.beginDate)} - {formatDate(event.endDate)}
-          </div>
-          <div className="text-right grow">
-            <DeleteButton onDelete={() => deleteEvent({ id: event._id })}
-              minimal
-              text={deleteText}
-              confirmText={t('eventDeleteConfirmation', { eventName: event.name })}
-            />
           </div>
         </ItemList.Row>,
       )}

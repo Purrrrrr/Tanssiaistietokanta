@@ -195,9 +195,9 @@
   Unify list item toolbar button and other styles
   * Empty list style
   * Add list headers
+  * Move delete event to event page
     Minimal buttons (in event program)
     Tooltips for icon buttons?
-    Move delete event to event page
 
   Ability to see more info about program item in editor
 

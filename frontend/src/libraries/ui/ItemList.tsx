@@ -8,6 +8,7 @@ type WrapPoint = 'md' | 'sm'
 
 export interface ItemListProps {
   children?: React.ReactNode
+  className?: string
   columns?: string | number
   'wrap-breakpoint'?: WrapPoint
   items: unknown[]
@@ -19,11 +20,12 @@ const listWrapClasses = {
   sm: 'wrap-sm sm:grid',
 } satisfies Record<WrapPoint, string>
 
-export default function ItemList({ children, items, emptyText, 'wrap-breakpoint': wrapPoint = 'sm', columns }: ItemListProps) {
+export default function ItemList({ children, className, items, emptyText, 'wrap-breakpoint': wrapPoint = 'sm', columns }: ItemListProps) {
   const columnCount = typeof columns === 'number' ? columns : undefined
   return <ul
     style={{ '--item-list-cols': columnCount } as React.CSSProperties}
     className={classNames(
+      className,
       columnCount
         ? 'grid-cols-[repeat(var(--item-list-cols),minmax(0,1fr))]'
         : columns,

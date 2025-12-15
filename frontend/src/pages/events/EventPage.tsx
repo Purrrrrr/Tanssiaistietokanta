@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react'
 
 import { Event, EventProgram as EventProgramType } from 'types'
 
-import { usePatchEvent } from 'services/events'
+import { useDeleteEvent, usePatchEvent } from 'services/events'
 import { AdminOnly } from 'services/users'
 import { useCreateWorkshop, useDeleteWorkshop } from 'services/workshops'
 
@@ -17,6 +17,7 @@ import { DeleteButton } from 'components/widgets/DeleteButton'
 import { NavigateButton } from 'components/widgets/NavigateButton'
 import { newInstance, WorkshopEditor } from 'components/WorkshopEditor'
 import { useFormatDate, useFormatDateTime, useT, useTranslation } from 'i18n'
+import { useNavigate } from 'react-router-dom'
 
 type Workshop = Event['workshops'][0]
 
@@ -34,10 +35,12 @@ export default function EventPage({ event }: { event: Event }) {
   const { _versionId, _versionNumber } = event
   const readOnly = _versionId != undefined
   return <>
-    <VersionedPageTitle showVersion={readOnly} versionNumber={_versionNumber}>
-      {event.name}
-    </VersionedPageTitle>
-    <VersionSidebarToggle entityType="event" entityId={event._id} versionId={event._versionId ?? undefined} toVersionLink={eventVersionLink} />
+    <div className="flex justify-between items-center">
+      <VersionedPageTitle showVersion={readOnly} versionNumber={_versionNumber}>
+        {event.name}
+      </VersionedPageTitle>
+      <VersionSidebarToggle entityType="event" entityId={event._id} versionId={event._versionId ?? undefined} toVersionLink={eventVersionLink} />
+    </div>
     <EventDetails event={event} readOnly={readOnly} />
     <H2>{t('ballProgram')}</H2>
     <EventProgram program={event.program} readOnly={readOnly} />
@@ -52,18 +55,29 @@ function EventDetails({ event, readOnly }: { event: Event, readOnly: boolean }) 
   const [showEditor, setShowEditor] = useState(false)
   const t = useT('pages.events.eventPage')
   const formatDate = useFormatDate()
+  const navigate = useNavigate()
+  const [deleteEvent] = useDeleteEvent({
+    refetchQueries: ['getEvents'],
+    onCompleted: () => navigate('/'),
+  })
+
   return <>
-    <p>
+    <p className="flex justify-between clear-both mt-3">
       {t('eventDate')}: {formatDate(event.beginDate)} - {formatDate(event.endDate)}
+      { readOnly ||
+        <div>
+          <Button
+            onClick={() => setShowEditor(!showEditor)}
+            text={showEditor ? t('closeEditor') : t('openBasicDetailsEditor')}
+          />
+          <DeleteButton
+            onDelete={() => deleteEvent({ id: event._id })}
+            text={t('deleteEvent')}
+            confirmText={t('eventDeleteConfirmation', { eventName: event.name })}
+          />
+        </div>
+      }
     </p>
-    { readOnly ||
-      <p>
-        <Button
-          onClick={() => setShowEditor(!showEditor)}
-          text={showEditor ? t('closeEditor') : t('openBasicDetailsEditor')}
-        />
-      </p>
-    }
     <Collapse isOpen={showEditor}>
       <EventDetailsForm event={event} />
     </Collapse>
