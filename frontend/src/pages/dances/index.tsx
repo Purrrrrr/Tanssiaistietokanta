@@ -1,18 +1,14 @@
-import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-
-import { DanceWithEvents } from 'types'
 
 import { filterDances, useDances } from 'services/dances'
 
-import { FormGroup, ModeButton, ModeSelector, SearchBar, type Sort } from 'libraries/ui'
+import { FormGroup, ModeButton, ModeSelector, SearchBar } from 'libraries/ui'
 import { CreateDanceButtons } from 'components/dance/CreateDanceButtons'
 import { AnyCategory, anyCategory, DanceViewCategorySelector } from 'components/dance/DanceCategorySelector'
 import { DanceList, View } from 'components/dance/DanceList'
 import { LoadingState } from 'components/LoadingState'
 import { PageTitle } from 'components/PageTitle'
 import { useT, useTranslation } from 'i18n'
-import { sortedBy } from 'utils/sorted'
 
 function DancesPage() {
   const t = useT('pages.dances.danceList')
@@ -20,8 +16,6 @@ function DancesPage() {
   const [dances, requestState] = useDances()
 
   const filteredDances = filterDances(dances, search, category !== anyCategory ? category : undefined)
-  const [sort, setSort] = useState<Sort>({ key: 'name', direction: 'asc' })
-  const sortedDances = sortedBy(filteredDances, danceSorter(sort.key), sort.direction === 'desc')
 
   return <>
     <PageTitle>{t('pageTitle')}</PageTitle>
@@ -40,20 +34,8 @@ function DancesPage() {
         <ModeButton text={t('viewMode.extended')} selected={view === 'extended'} onClick={() => setView('extended')} />
       </ModeSelector>
     </div>
-    <DanceList key={search} dances={sortedDances} view={view} sort={sort} onSort={setSort} />
+    <DanceList key={search} dances={filteredDances} view={view} />
   </>
-}
-
-function danceSorter(key: string) {
-  switch (key) {
-    default:
-    case 'name':
-      return (dance: DanceWithEvents) => dance.name
-    case 'category':
-      return (dance: DanceWithEvents) => dance.category?.trim() === '' ? null : dance.category
-    case 'popularity':
-      return (dance: DanceWithEvents) => dance.events.length + (dance.wikipageName ? 0.5 : 0)
-  }
 }
 
 interface DanceListState {

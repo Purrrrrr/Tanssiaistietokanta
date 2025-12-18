@@ -7,6 +7,7 @@ import { Button, Card, ColorClass, ItemList, type Sort } from 'libraries/ui'
 import { InfiniteItemLoader } from 'components/InfiniteItemLoader'
 import { ColoredTag } from 'components/widgets/ColoredTag'
 import { useT, useTranslation } from 'i18n'
+import { sortedBy } from 'utils/sorted'
 
 import { DanceEditor, PlainDanceEditor } from './DanceEditor'
 import { DanceIsUsedIn } from './DanceIsUsedIn'
@@ -16,13 +17,13 @@ import { DeleteDanceButton } from './DeleteDanceButton'
 interface DanceListProps {
   dances: DanceWithEvents[]
   view?: View
-  sort: Sort
-  onSort: (sort: Sort) => void
 }
 export type View = 'tight' | 'extended'
 
-export function DanceList({ dances, view, sort, onSort }: DanceListProps) {
+export function DanceList({ dances, view }: DanceListProps) {
   const t = useT('pages.dances.danceList')
+  const [sort, setSort] = useState<Sort>({ key: 'name', direction: 'asc' })
+  const sortedDances = sortedBy(dances, danceSorter(sort.key), sort.direction === 'desc')
 
   return <div className="mt-6">
     {dances.length > 0 &&
@@ -32,27 +33,39 @@ export function DanceList({ dances, view, sort, onSort }: DanceListProps) {
       {dances => view === 'extended'
         ? (
           <>
-            {dances.map((dance: DanceWithEvents) => <ExtendedDanceListRow dance={dance} key={dance._id} />)}
+            {sortedDances.map((dance: DanceWithEvents) => <ExtendedDanceListRow dance={dance} key={dance._id} />)}
             {dances.length > 0 || <p>{t('noDances')}</p>}
           </>
         )
         : (
           <ItemList
-            items={dances}
+            items={sortedDances}
             emptyText={t('noDances')}
             columns="grid-cols-[1fr_minmax(min(300px,30%),max-content)_max-content]"
           >
-            <ItemList.SortableHeader currentSort={sort} onSort={onSort} columns={[
+            <ItemList.SortableHeader currentSort={sort} onSort={setSort} columns={[
               { key: 'name', label: t('name') },
               { key: 'category', label: t('category') },
               { key: 'popularity', label: t('danceUsage') },
             ]} />
-            {dances.map((dance: DanceWithEvents) => <DanceListRow key={dance._id} dance={dance} />) }
+            {sortedDances.map((dance: DanceWithEvents) => <DanceListRow key={dance._id} dance={dance} />) }
           </ItemList>
         )
       }
     </InfiniteItemLoader>
   </div>
+}
+
+function danceSorter(key: string) {
+  switch (key) {
+    default:
+    case 'name':
+      return (dance: DanceWithEvents) => dance.name
+    case 'category':
+      return (dance: DanceWithEvents) => dance.category?.trim() === '' ? null : dance.category
+    case 'popularity':
+      return (dance: DanceWithEvents) => dance.events.length + (dance.wikipageName ? 0.5 : 0)
+  }
 }
 
 function DanceListRow({ dance }: { dance: DanceWithEvents }) {
