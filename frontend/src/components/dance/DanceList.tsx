@@ -20,26 +20,26 @@ interface DanceListProps {
 }
 export type View = 'tight' | 'extended'
 
-export function DanceList({ dances, view }: DanceListProps) {
+export function DanceList({ dances: unsortedDances, view }: DanceListProps) {
   const t = useT('pages.dances.danceList')
   const [sort, setSort] = useState<Sort>({ key: 'name', direction: 'asc' })
-  const sortedDances = sortedBy(dances, danceSorter(sort.key), sort.direction === 'desc')
+  const dances = sortedBy(unsortedDances, danceSorter(sort.key), sort.direction === 'desc')
 
   return <div className="mt-6">
     {dances.length > 0 &&
       <p className="my-3">{t('showingNDances', { count: dances.length })}</p>
     }
-    <InfiniteItemLoader items={dances}>
+    <InfiniteItemLoader key={view} items={dances}>
       {dances => view === 'extended'
         ? (
           <>
-            {sortedDances.map((dance: DanceWithEvents) => <ExtendedDanceListRow dance={dance} key={dance._id} />)}
+            {dances.map((dance: DanceWithEvents) => <ExtendedDanceListRow dance={dance} key={dance._id} />)}
             {dances.length > 0 || <p>{t('noDances')}</p>}
           </>
         )
         : (
           <ItemList
-            items={sortedDances}
+            items={dances}
             emptyText={t('noDances')}
             columns="grid-cols-[1fr_minmax(min(300px,30%),max-content)_max-content]"
           >
@@ -48,7 +48,7 @@ export function DanceList({ dances, view }: DanceListProps) {
               { key: 'category', label: t('category') },
               { key: 'popularity', label: t('danceUsage') },
             ]} />
-            {sortedDances.map((dance: DanceWithEvents) => <DanceListRow key={dance._id} dance={dance} />) }
+            {dances.map((dance: DanceWithEvents) => <DanceListRow key={dance._id} dance={dance} />) }
           </ItemList>
         )
       }
