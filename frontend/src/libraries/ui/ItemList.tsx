@@ -1,6 +1,8 @@
 import React from 'react'
-import { InfoSign } from '@blueprintjs/icons'
+import { CaretDown, InfoSign } from '@blueprintjs/icons'
 import classNames from 'classnames'
+
+import { Button } from './Button'
 
 const Collapse = React.lazy(() => import('./Collapse'))
 
@@ -20,7 +22,7 @@ const listWrapClasses = {
   sm: 'wrap-sm sm:grid',
 } satisfies Record<WrapPoint, string>
 
-export default function ItemList({ children, className, items, emptyText, 'wrap-breakpoint': wrapPoint = 'sm', columns }: ItemListProps) {
+export function ItemList({ children, className, items, emptyText, 'wrap-breakpoint': wrapPoint = 'sm', columns }: ItemListProps) {
   const columnCount = typeof columns === 'number' ? columns : undefined
   return <ul
     style={{ '--item-list-cols': columnCount } as React.CSSProperties}
@@ -41,19 +43,19 @@ export default function ItemList({ children, className, items, emptyText, 'wrap-
 }
 
 const commonRowClasses = classNames(
-  'flex flex-wrap gap-4 items-center p-2',
+  'flex flex-wrap gap-4 items-center',
   'group-[.wrap-md]:md:grid grid-cols-subgrid col-span-full',
   'group-[.wrap-sm]:sm:grid grid-cols-subgrid col-span-full',
 )
 const rowColorClassname = 'nth-of-type-[even]:bg-gray-100 border-x-1 border-gray-200'
 const rowClasses = classNames(
-  'first:border-t-1',
+  'first:border-t-1 p-2',
   rowColorClassname,
   commonRowClasses,
 )
 
-function ItemListHeader({ children }: { children: React.ReactNode }) {
-  return <li className={classNames(commonRowClasses, 'font-bold border-b-1 border-gray-400')}>
+function ItemListHeader({ children, paddingClass }: { children: React.ReactNode, paddingClass?: string }) {
+  return <li className={classNames(commonRowClasses, 'font-bold border-b-1 border-gray-400', paddingClass ?? 'p-2')}>
     {children}
   </li>
 }
@@ -62,6 +64,7 @@ interface ItemListRowProps {
   children?: React.ReactNode
   expandableContent?: React.ReactNode
   isOpen?: boolean
+  paddingClass?: string
 }
 
 function ItemListRow({ children, expandableContent, isOpen }: ItemListRowProps) {
@@ -84,5 +87,36 @@ function EmptyList({ text }: { text: React.ReactNode }) {
   </div>
 }
 
+interface SortButtonProps {
+  sortKey: string
+  currentSort: Sort
+  onSort: (key: Sort) => void
+  children: React.ReactNode
+}
+
+export interface Sort {
+  key: string
+  direction: 'asc' | 'desc'
+}
+
+function SortButton({ sortKey, currentSort, onSort, children }: SortButtonProps) {
+  const isCurrent = currentSort.key === sortKey
+  const isAscending = currentSort.direction === 'asc'
+
+  return <Button
+    onClick={() => {
+      const newDirection = isCurrent && isAscending ? 'desc' : 'asc'
+      onSort({ key: sortKey, direction: newDirection })
+    }}
+    aria-sort={isCurrent ? (isAscending ? 'ascending' : 'descending') : undefined}
+    minimal
+    className="flex items-center gap-1 first:rounded-tl-md last:rounded-tr-md"
+  >
+    {children}
+    {isCurrent && <CaretDown className={classNames('transition-transform', isAscending && 'rotate-180')} />}
+  </Button>
+}
+
 ItemList.Header = ItemListHeader
+ItemList.SortButton = SortButton
 ItemList.Row = ItemListRow

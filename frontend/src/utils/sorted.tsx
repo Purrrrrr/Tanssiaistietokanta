@@ -8,11 +8,16 @@ export function sorted<Item>(
 export function sortedBy<Item>(
   items: Item[],
   sortKey: (item: Item) => string | number | null | undefined,
+  descending = false,
 ) {
-  return sorted(items, compareBy(sortKey))
+  return sorted(items, compareBy(sortKey, descending))
 }
 
-export function compareBy<Item>(sortKey: (item: Item) => string | number | null | undefined): (a: Item, b: Item) => number {
+export function compareBy<Item>(sortKey: (item: Item) => string | number | null | undefined, descending = false): (a: Item, b: Item) => number {
+  if (descending) {
+    const ascComparator = compareBy(sortKey, false)
+    return (a, b) => -ascComparator(a, b)
+  }
   return (a, b) => {
     const keyA = sortKey(a)
     const keyB = sortKey(b)

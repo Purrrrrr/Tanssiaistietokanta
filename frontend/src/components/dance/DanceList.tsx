@@ -3,8 +3,7 @@ import { ChevronDown, ChevronUp, Edit } from '@blueprintjs/icons'
 
 import { DanceWithEvents } from 'types'
 
-import { Button, Card, ColorClass } from 'libraries/ui'
-import ItemList from 'libraries/ui/ItemList'
+import { Button, Card, ColorClass, ItemList, type Sort } from 'libraries/ui'
 import { InfiniteItemLoader } from 'components/InfiniteItemLoader'
 import { ColoredTag } from 'components/widgets/ColoredTag'
 import { useT, useTranslation } from 'i18n'
@@ -17,10 +16,12 @@ import { DeleteDanceButton } from './DeleteDanceButton'
 interface DanceListProps {
   dances: DanceWithEvents[]
   view?: View
+  sort: Sort
+  onSort: (sort: Sort) => void
 }
 export type View = 'tight' | 'extended'
 
-export function DanceList({ dances, view }: DanceListProps) {
+export function DanceList({ dances, view, sort, onSort }: DanceListProps) {
   const t = useT('pages.dances.danceList')
 
   return <div className="mt-6">
@@ -41,10 +42,10 @@ export function DanceList({ dances, view }: DanceListProps) {
             emptyText={t('noDances')}
             columns="grid-cols-[1fr_minmax(min(300px,30%),max-content)_max-content]"
           >
-            <ItemList.Header>
-              <span>{(t('name'))}</span>
-              <span>{(t('category'))}</span>
-              <span>{(t('danceUsageAndTools'))}</span>
+            <ItemList.Header paddingClass="">
+              <ItemList.SortButton sortKey="name" currentSort={sort} onSort={onSort}>{t('name')}</ItemList.SortButton>
+              <ItemList.SortButton sortKey="category" currentSort={sort} onSort={onSort}>{t('category')}</ItemList.SortButton>
+              <ItemList.SortButton sortKey="popularity" currentSort={sort} onSort={onSort}>{t('danceUsage')}</ItemList.SortButton>
             </ItemList.Header>
             {dances.map((dance: DanceWithEvents) => <DanceListRow key={dance._id} dance={dance} />) }
           </ItemList>

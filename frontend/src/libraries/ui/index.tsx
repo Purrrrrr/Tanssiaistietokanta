@@ -17,6 +17,7 @@ export { AnchorButton, type AnchorButtonProps, Button, buttonClass, type ButtonP
 export { Callout } from './Callout'
 export { default as Collapse } from './Collapse'
 export { GlobalSpinner } from './GlobalLoadingSpinner'
+export { ItemList, type Sort } from './ItemList'
 export { Link, RegularLink } from './Link'
 export { ModeButton, ModeSelector } from './ModeSelector'
 export { SearchBar } from './SearchBar'

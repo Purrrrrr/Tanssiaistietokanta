@@ -196,6 +196,12 @@
   * Add list headers
   * Move delete event to event page
   * Tooltips for icon buttons?
+* Sorting of dance list
+  * By name
+  * By popularity
+  * By category
+
+  Tooltips with https://github.com/doeixd/invokers?
 
   Ropecon 2025 post todo - Part 2
     Edit and link to interval music in dance set slide editor ??
@@ -219,10 +225,6 @@
     Ability to see more info about program item in editor
 
   Dance list category suggestions
-  Sorting of dance list
-    By name
-    By popularity
-    By category
   Miksi voltati in ca rosina ei kategorisoidu automaattisesti?
 
   Fix: Pressing tab when focused on select button loses all focus

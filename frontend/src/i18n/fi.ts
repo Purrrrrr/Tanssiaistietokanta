@@ -455,7 +455,7 @@ export const fi = {
         noDances: 'Ei tansseja',
         name: 'Nimi',
         category: 'Kategoria',
-        danceUsageAndTools: 'Käyttökohteet ja muokkaus',
+        danceUsage: 'Käyttökohteet',
       },
       dancePage: {
         backToDanceList: 'Takaisin tanssilistaan',

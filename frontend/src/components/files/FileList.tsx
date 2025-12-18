@@ -5,8 +5,7 @@ import { useFiles } from 'services/files'
 
 import { useFormatDateTime } from 'libraries/i18n/dateTime'
 import { useAlerts } from 'libraries/overlays'
-import { Button, RegularLink } from 'libraries/ui'
-import ItemList from 'libraries/ui/ItemList'
+import { Button, ItemList, RegularLink } from 'libraries/ui'
 import { useT } from 'i18n'
 import { useMultipleSelection } from 'utils/useMultipleSelection'
 
