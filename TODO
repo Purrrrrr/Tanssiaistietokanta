@@ -200,6 +200,7 @@
   * By name
   * By popularity
   * By category
+* Fix item list header when the list wraps
 
   Tooltips with https://github.com/doeixd/invokers?
 

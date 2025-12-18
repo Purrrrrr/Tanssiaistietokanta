@@ -48,11 +48,11 @@ function danceSorter(key: string) {
   switch (key) {
     default:
     case 'name':
-      return (a: DanceWithEvents) => a.name
+      return (dance: DanceWithEvents) => dance.name
     case 'category':
-      return (a: DanceWithEvents) => a.category
+      return (dance: DanceWithEvents) => dance.category?.trim() === '' ? null : dance.category
     case 'popularity':
-      return (a: DanceWithEvents) => a.events.length
+      return (dance: DanceWithEvents) => dance.events.length + (dance.wikipageName ? 0.5 : 0)
   }
 }
 

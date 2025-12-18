@@ -9,11 +9,12 @@ export function sortedBy<Item>(
   items: Item[],
   sortKey: (item: Item) => string | number | null | undefined,
   descending = false,
+  nullsLast = true,
 ) {
-  return sorted(items, compareBy(sortKey, descending))
+  return sorted(items, compareBy(sortKey, descending, nullsLast))
 }
 
-export function compareBy<Item>(sortKey: (item: Item) => string | number | null | undefined, descending = false): (a: Item, b: Item) => number {
+export function compareBy<Item>(sortKey: (item: Item) => string | number | null | undefined, descending = false, nullsLast = true): (a: Item, b: Item) => number {
   if (descending) {
     const ascComparator = compareBy(sortKey, false)
     return (a, b) => -ascComparator(a, b)
@@ -22,11 +23,14 @@ export function compareBy<Item>(sortKey: (item: Item) => string | number | null 
     const keyA = sortKey(a)
     const keyB = sortKey(b)
 
+    if (keyA == null && keyB == null) {
+      return 0
+    }
     if (keyA == null) {
-      return keyB == null ? 0 : -1
+      return nullsLast ? 1 : -1
     }
     if (keyB == null) {
-      return keyA == null ? 0 : 1
+      return nullsLast ? -1 : 1
     }
     if (typeof keyA === 'string' && typeof keyB === 'string') return keyA.localeCompare(keyB)
     if (keyA < keyB) return -1

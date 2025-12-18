@@ -43,9 +43,9 @@ export function ItemList({ children, className, items, emptyText, 'wrap-breakpoi
 }
 
 const commonRowClasses = classNames(
-  'flex flex-wrap gap-4 items-center',
-  'group-[.wrap-md]:md:grid grid-cols-subgrid col-span-full',
-  'group-[.wrap-sm]:sm:grid grid-cols-subgrid col-span-full',
+  'flex flex-wrap gap-4 items-center grid-cols-subgrid col-span-full',
+  'group-[.wrap-md]:md:grid group-[.wrap-sm]:sm:grid',
+  'group-[.wrap-md]:max-md:gap-x-1 group-[.wrap-sm]:max-sm:gap-x-1',
 )
 const rowColorClassname = 'nth-of-type-[even]:bg-gray-100 border-x-1 border-gray-200'
 const rowClasses = classNames(
@@ -55,7 +55,11 @@ const rowClasses = classNames(
 )
 
 function ItemListHeader({ children, paddingClass }: { children: React.ReactNode, paddingClass?: string }) {
-  return <li className={classNames(commonRowClasses, 'font-bold border-b-1 border-gray-400', paddingClass ?? 'p-2')}>
+  return <li className={classNames(
+    commonRowClasses,
+    'font-bold border-b-1 border-gray-400',
+    paddingClass ?? 'p-2',
+  )}>
     {children}
   </li>
 }
