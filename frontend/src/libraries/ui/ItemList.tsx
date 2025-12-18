@@ -91,6 +91,30 @@ function EmptyList({ text }: { text: React.ReactNode }) {
   </div>
 }
 
+interface SortableItemListHeaderProps {
+  columns: {
+    key: string
+    label: React.ReactNode
+  }[]
+  currentSort: Sort
+  onSort: (key: Sort) => void
+}
+
+function SortableItemListHeader({ columns, currentSort, onSort }: SortableItemListHeaderProps) {
+  return <ItemListHeader paddingClass="">
+    {columns.map(column => (
+      <SortButton
+        key={column.key}
+        sortKey={column.key}
+        currentSort={currentSort}
+        onSort={onSort}
+      >
+        {column.label}
+      </SortButton>
+    ))}
+  </ItemListHeader>
+}
+
 interface SortButtonProps {
   sortKey: string
   currentSort: Sort
@@ -122,5 +146,6 @@ function SortButton({ sortKey, currentSort, onSort, children }: SortButtonProps)
 }
 
 ItemList.Header = ItemListHeader
+ItemList.SortableHeader = SortableItemListHeader
 ItemList.SortButton = SortButton
 ItemList.Row = ItemListRow

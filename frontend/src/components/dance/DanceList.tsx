@@ -42,11 +42,11 @@ export function DanceList({ dances, view, sort, onSort }: DanceListProps) {
             emptyText={t('noDances')}
             columns="grid-cols-[1fr_minmax(min(300px,30%),max-content)_max-content]"
           >
-            <ItemList.Header paddingClass="">
-              <ItemList.SortButton sortKey="name" currentSort={sort} onSort={onSort}>{t('name')}</ItemList.SortButton>
-              <ItemList.SortButton sortKey="category" currentSort={sort} onSort={onSort}>{t('category')}</ItemList.SortButton>
-              <ItemList.SortButton sortKey="popularity" currentSort={sort} onSort={onSort}>{t('danceUsage')}</ItemList.SortButton>
-            </ItemList.Header>
+            <ItemList.SortableHeader currentSort={sort} onSort={onSort} columns={[
+              { key: 'name', label: t('name') },
+              { key: 'category', label: t('category') },
+              { key: 'popularity', label: t('danceUsage') },
+            ]} />
             {dances.map((dance: DanceWithEvents) => <DanceListRow key={dance._id} dance={dance} />) }
           </ItemList>
         )
