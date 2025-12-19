@@ -9,10 +9,11 @@ import socketio from '@feathersjs/socketio'
 import { configurationValidator } from './configuration'
 import type { Application } from './declarations'
 import { logError } from './hooks/log-error'
+import { authentication } from './authentication'
 import { services } from './services/index'
 import { graphqlServiceMiddleware } from './services/graphql/graphql.class'
 import initDependencyGraph from './dependencyGraph'
-import {preventRemovingOfUsedItems} from './hooks/prevent-removing-of-used-items'
+import { preventRemovingOfUsedItems } from './hooks/prevent-removing-of-used-items'
 import { migrateDb } from './umzug'
 import { channels } from './channels'
 import { addErrorStatusCode } from './hooks/addErrorStatusCode'
@@ -68,12 +69,10 @@ app.configure(
 function allowLocalhostOnDev(origins: string[] | undefined) {
   if (process.env.CORS_ALLOW_LOCALHOST !== 'true') return origins
   const localhost = /^http:\/\/localhost:[0-9]{2,4}$/
-  return origins ? [
-    ...origins,
-    localhost
-  ] : localhost
+  return origins ? [...origins, localhost] : localhost
 }
 app.configure(channels)
+app.configure(authentication)
 app.configure(services)
 
 // Register hooks that run on all service methods
