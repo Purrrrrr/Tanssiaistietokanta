@@ -4,6 +4,9 @@ import type { TransportConnection, Application } from '@feathersjs/feathers'
 import authenticationClient from '@feathersjs/authentication-client'
 import type { AuthenticationClientOptions } from '@feathersjs/authentication-client'
 
+import { userClient } from './services/users/users.shared'
+export type { User, UserData, UserQuery, UserPatch } from './services/users/users.shared'
+
 import { fileClient } from './services/files/files.shared'
 export type { File, FileData, FileQuery, FilePatch } from './services/files/files.shared'
 
@@ -71,5 +74,6 @@ export const createClient = <Configuration = any,>(
   client.configure(graphqlClient)
   client.configure(dancewikiClient)
   client.configure(fileClient)
+  client.configure(userClient)
   return client
 }

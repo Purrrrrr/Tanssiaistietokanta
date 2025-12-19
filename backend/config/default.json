@@ -15,5 +15,25 @@
   "uploadDir": "./data/uploads/ready",
   "clamav": {
     "socket": "/var/run/clamav/clamd.ctl"
+  },
+  "authentication": {
+    "entity": "user",
+    "service": "users",
+    "secret": "DKLjO/wDec2zWbcORS5ajeTZ5748Pwa4",
+    "authStrategies": [
+      "jwt"
+    ],
+    "jwtOptions": {
+      "header": {
+        "typ": "access"
+      },
+      "audience": "https://tanssit.purr.dy.fi",
+      "algorithm": "HS256",
+      "expiresIn": "1d"
+    },
+    "local": {
+      "usernameField": "email",
+      "passwordField": "password"
+    }
   }
 }
