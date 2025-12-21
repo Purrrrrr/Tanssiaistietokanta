@@ -1,8 +1,10 @@
+import { useSyncExternalStore } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { getCurrentUser, login, logout, subscribeToAuthChanges } from 'backend/authentication'
 import { AdminOnly } from 'services/users'
 
-import { AnchorButton, Breadcrumbs } from 'libraries/ui'
+import { AnchorButton, Breadcrumbs, Button } from 'libraries/ui'
 import { useTranslation } from 'i18n'
 
 function Navigation() {
@@ -14,6 +16,7 @@ function Navigation() {
       <AdminOnly>
         <NavButton icon={<span className="mr-1.5">💃</span>} href="/dances" text={useTranslation('navigation.dances')} />
       </AdminOnly>
+      <FakeLogin />
     </div>
   </nav>
 }
@@ -23,6 +26,19 @@ function NavButton({ href, ...props }) {
   return <AnchorButton minimal {...props} href={href}
     onClick={(e) => { e.preventDefault(); navigate(href) }}
   />
+}
+
+function FakeLogin() {
+  const user = useSyncExternalStore(subscribeToAuthChanges, getCurrentUser)
+
+  if (user) {
+    return <span>
+      {user.email}
+      <Button onClick={logout}>Logout</Button>
+    </span>
+  }
+
+  return <Button onClick={() => { login('test@example.com', 'supersecret') }}>Login</Button>
 }
 
 export default Navigation
