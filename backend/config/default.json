@@ -21,8 +21,13 @@
     "service": "users",
     "secret": "DKLjO/wDec2zWbcORS5ajeTZ5748Pwa4",
     "authStrategies": [
-      "jwt"
+      "refreshToken",
+      "jwt",
+      "local"
     ],
+    "refreshTokenOptions": {
+      "expiresIn": "30d"
+    },
     "jwtOptions": {
       "header": {
         "typ": "access"

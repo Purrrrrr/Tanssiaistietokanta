@@ -3,6 +3,7 @@ import { AuthenticationService, JWTStrategy } from '@feathersjs/authentication'
 import { LocalStrategy } from '@feathersjs/authentication-local'
 
 import type { Application } from './declarations'
+import { RefreshTokenStrategy, setRefreshTokenCookie } from './refreshTokenStrategy'
 
 declare module './declarations' {
   interface ServiceTypes {
@@ -13,8 +14,14 @@ declare module './declarations' {
 export const authentication = (app: Application) => {
   const authentication = new AuthenticationService(app)
 
+  authentication.register('refreshToken', new RefreshTokenStrategy())
   authentication.register('jwt', new JWTStrategy())
   authentication.register('local', new LocalStrategy())
 
   app.use('authentication', authentication)
+  app.service('authentication').hooks({
+    after: {
+      create: [setRefreshTokenCookie]
+    },
+  })
 }

@@ -203,6 +203,15 @@
 * Fix item list header when the list wraps
 * Fix workshop dance list dnd dragging two lists at once (probably some id problem)
 
+  Authentication
+  * Basic backend support
+    Basic login/logout in frontend
+    Add name field
+    Refresh tokens in cookies
+    Some way to configure first user without API (maybe something like a feathers-first-user file)
+    Prevent creating users without some token? Invite functionality?
+    Access control
+
   Tooltips with https://github.com/doeixd/invokers?
 
   Ropecon 2025 post todo - Part 2
