@@ -206,9 +206,10 @@
   Authentication
   * Basic backend support
   * Refresh tokens in cookies
+  * Basic login/logout in frontend
     Store refresh tokens in db
-    Basic login/logout in frontend
-    Add name field
+    Real login page
+    Add name field to users
     Some way to configure first user without API (maybe something like a feathers-first-user file)
     Prevent creating users without some token? Invite functionality?
     Access control
