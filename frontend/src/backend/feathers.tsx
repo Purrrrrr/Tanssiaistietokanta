@@ -6,25 +6,34 @@ import { ServiceName } from './types'
 
 import createDebug from 'utils/debug'
 
-import devConfig from '../devConfig'
+import { getCurrentAccessToken, initializeAuthentication, setSocketAuthToken, subscribeToAuthChanges } from './authentication'
+import { backendHost, backendPath } from './constants'
 
 const debug = createDebug('graphql')
 
-const isProd = process.env.NODE_ENV === 'production'
+export const socket = io(backendHost, { path: `${backendPath}/socket.io` })
 
-export const socket = isProd
-  ? io('/', { path: '/api/socket.io' })
-  : io(devConfig.backendUrl)
-
-export function makeFeathersRequest<T>(
+export async function makeFeathersRequest<T>(
   service: ServiceName | 'channel-connections' | 'graphql' | 'authentication',
   verb: 'find' | 'create' | 'remove',
   query: unknown,
 ) {
+  await initializeAuthentication()
   return new Promise<T>((resolve, reject) =>
     socket.emit(verb, service, query, (err: unknown, res: T) => err ? reject(err) : resolve(res)),
   )
 }
+
+subscribeToAuthChanges(authState => {
+  if (!socket.connected) return
+  setSocketAuthToken(socket, authState ? authState.accessToken : null)
+})
+socket.on('connect', () => {
+  const accessToken = getCurrentAccessToken()
+  if (accessToken) {
+    setSocketAuthToken(socket, accessToken)
+  }
+})
 
 type R = FetchResult<Record<string, unknown>, Record<string, unknown>, Record<string, unknown>>
 
