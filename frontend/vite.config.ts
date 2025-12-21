@@ -6,7 +6,6 @@ import checker from 'vite-plugin-checker'
 import tsconfigPaths from 'vite-tsconfig-paths'
 
 import backendConfig from './src/backendConfig.json'
-import setupProxy from './src/setupProxy'
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode, command }) => {
@@ -27,7 +26,7 @@ export default defineConfig(({ mode, command }) => {
       tsconfigPaths(),
       envPlugin(),
       htmlPlugin(mode),
-      setupProxyPlugin(),
+      // setupProxyPlugin(),
       checker({
         typescript: true,
       }),
@@ -42,15 +41,6 @@ export default defineConfig(({ mode, command }) => {
     base: PUBLIC_URL || '',
     resolve: {
       alias: [{ find: /^~([^/])/, replacement: '$1' }],
-    },
-    preview: {
-      proxy: {
-        '/api': {
-          target: `http://${backendConfig.host}:${backendConfig.port}`,
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api/, ''),
-        },
-      }
     },
     css: {
       preprocessorOptions: {
@@ -70,6 +60,19 @@ export default defineConfig(({ mode, command }) => {
       host: 'localhost',
       port: 3000,
       open: false,
+      proxy: {
+        '/api/socket.io': {
+          target: `ws://${backendConfig.host}:${backendConfig.port}/socket.io`,
+          ws: true,
+          rewriteWsOrigin: true,
+          rewrite: (path) => path.replace(/^\/api/, ''),
+        },
+        '/api': {
+          target: `http://${backendConfig.host}:${backendConfig.port}`,
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api/, ''),
+        },
+      }
     },
   }
 })
@@ -99,25 +102,6 @@ function envPlugin(): Plugin {
           ]),
         ),
       }
-    },
-  }
-}
-
-// Configuring the Proxy Manually
-// https://create-react-app.dev/docs/proxying-api-requests-in-development/#configuring-the-proxy-manually
-// https://vitejs.dev/guide/api-plugin.html#configureserver
-// Migration guide: Follow the guide below and remove src/setupProxy
-// https://vitejs.dev/config/server-options.html#server-proxy
-function setupProxyPlugin(): Plugin {
-  return {
-    name: 'setup-proxy-plugin',
-    config() {
-      return {
-        server: { proxy: {} },
-      }
-    },
-    configureServer(server) {
-      setupProxy(server.middlewares)
     },
   }
 }
