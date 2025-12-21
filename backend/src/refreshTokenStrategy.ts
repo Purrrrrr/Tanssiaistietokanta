@@ -40,24 +40,38 @@ export class RefreshTokenStrategy implements AuthenticationStrategy {
   }
 }
 
+const cookiesSecure = process.env.CORS_ALLOW_LOCALHOST !== 'true'
+const cookieOpts = {
+  httpOnly: true,
+  secure: cookiesSecure,
+}
+
 export const setRefreshTokenCookie = (auth: AuthenticationService): HookFunction<Application, AuthenticationService> => {
   const config = {
     ...defaultRefreshTokenOptions,
     ...auth.configuration?.refreshToken as Partial<RefereshTokenOptions>
   }
+  const maxAge = ms(config.expiresIn as ms.StringValue) / 1000
 
   return (context: HookContext) => {
-    if (!context.http) return
+    setCookie(context, context.result.user._id, maxAge)
     console.log(context.result)
-    context.http.headers ??= {}
-    context.http.headers['Set-Cookie'] = serialize(
-      'refreshToken',
-      context.result.user._id,
-      {
-        httpOnly: true,
-        // secure: true,
-        maxAge: ms(config.expiresIn as ms.StringValue) / 1000,
-      }
-    )
   }
+}
+
+export const clearRefreshTokenCookie = (): HookFunction<Application, AuthenticationService> => {
+  return (context: HookContext) => {
+    setCookie(context, 'nil', 0)
+  }
+}
+
+function setCookie(context: HookContext, value: string, maxAge?: number) {
+  if (!context.http) return
+
+  context.http.headers ??= {}
+  context.http.headers['Set-Cookie'] = serialize(
+    'refreshToken',
+    value,
+    { ...cookieOpts, maxAge, },
+  )
 }
