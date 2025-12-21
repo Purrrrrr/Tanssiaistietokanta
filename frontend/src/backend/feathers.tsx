@@ -17,7 +17,7 @@ export const socket = isProd
   : io(devConfig.backendUrl)
 
 export function makeFeathersRequest<T>(
-  service: ServiceName | 'channel-connections' | 'graphql',
+  service: ServiceName | 'channel-connections' | 'graphql' | 'authentication',
   verb: 'find' | 'create' | 'remove',
   query: unknown,
 ) {
