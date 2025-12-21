@@ -21,7 +21,7 @@ export const authentication = (app: Application) => {
   app.use('authentication', authentication)
   app.service('authentication').hooks({
     after: {
-      create: [setRefreshTokenCookie]
+      create: [setRefreshTokenCookie(authentication)]
     },
   })
 }

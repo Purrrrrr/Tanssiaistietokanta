@@ -1,3 +1,5 @@
+import { backendUrl } from 'backend/constants'
+
 import { fetchWithProgress, FetchWithProgressOptions } from 'utils/fetchWithProgress'
 
 export type { Progress } from 'utils/fetchWithProgress'
@@ -52,8 +54,8 @@ export async function doUpload({ root, path, file, filename, fileId, autoRename,
   })
   const options = { data, onProgress, signal }
   const response = fileId
-    ? await fetchWithProgress('PUT', `/api/files/${fileId}`, options)
-    : await fetchWithProgress('POST', '/api/files', options)
+    ? await fetchWithProgress('PUT', `${backendUrl}/files/${fileId}`, options)
+    : await fetchWithProgress('POST', `${backendUrl}/files`, options)
 
   if (response.type === 'error') {
     throw new UploadError(response.error)
