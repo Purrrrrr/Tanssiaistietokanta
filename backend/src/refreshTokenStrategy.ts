@@ -12,15 +12,9 @@ const defaultRefreshTokenOptions = {
 type RefereshTokenOptions = typeof defaultRefreshTokenOptions
 
 export class RefreshTokenStrategy implements AuthenticationStrategy {
-  private config: RefereshTokenOptions = defaultRefreshTokenOptions
   private app: Application | null = null
 
   async setup(auth: AuthenticationService) {
-    const config = {
-      ...defaultRefreshTokenOptions,
-      ...auth.configuration?.refreshToken as Partial<RefereshTokenOptions>
-    }
-    this.config = config
     this.app = auth.app as Application
   }
 
@@ -40,23 +34,30 @@ export class RefreshTokenStrategy implements AuthenticationStrategy {
     console.log(refreshToken, user)
 
     return {
-      authentication: { strategy: 'test', refreshToken, ...this.config },
+      authentication: { strategy: 'refreshToken' },
       user
     }
   }
 }
 
-export const setRefreshTokenCookie: HookFunction<Application, AuthenticationService> = (context: HookContext) => {
-  if (!context.http) return
-  const { authentication } = context.result
-  context.http.headers ??= {}
-  context.http.headers['Set-Cookie'] = serialize(
-    'refreshToken',
-    authentication.refreshToken,
-    {
-      httpOnly: true,
-      secure: true,
-      maxAge: ms(authentication.expiresIn as ms.StringValue) / 1000,
-    }
-  )
+export const setRefreshTokenCookie = (auth: AuthenticationService): HookFunction<Application, AuthenticationService> => {
+  const config = {
+    ...defaultRefreshTokenOptions,
+    ...auth.configuration?.refreshToken as Partial<RefereshTokenOptions>
+  }
+
+  return (context: HookContext) => {
+    if (!context.http) return
+    console.log(context.result)
+    context.http.headers ??= {}
+    context.http.headers['Set-Cookie'] = serialize(
+      'refreshToken',
+      context.result.user._id,
+      {
+        httpOnly: true,
+        // secure: true,
+        maxAge: ms(config.expiresIn as ms.StringValue) / 1000,
+      }
+    )
+  }
 }
