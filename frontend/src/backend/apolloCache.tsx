@@ -9,7 +9,7 @@ import { getSingleKey } from './apolloUtils'
 
 const debug = createDebug('apolloCache')
 
-export function getApolloCache() {
+function getApolloCache() {
   return apolloClient.cache
 }
 
