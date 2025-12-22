@@ -75,7 +75,7 @@ export async function logout() {
 
 export function setSocketAuthToken(socket: Socket, accessToken: string | null) {
   if (accessToken === null) {
-    socket.emit('remove', 'authentication')
+    socket.emit('remove', 'authentication', accessToken)
   } else {
     socket.emit('create', 'authentication', { strategy: 'jwt', accessToken })
   }
