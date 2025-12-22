@@ -1,3 +1,5 @@
+import { getCurrentAccessToken } from 'backend/authentication'
+
 export interface FetchWithProgressOptions {
   data: FormData
   onProgress?: (progress: Progress) => unknown
@@ -49,6 +51,10 @@ export function fetchWithProgress(method: string, url: string, { data, onProgres
       error: 'aborted',
     })
   })
+  const token = getCurrentAccessToken()
+  if (token) {
+    request.setRequestHeader('Authorization', `Bearer ${token}`)
+  }
   request.open(method, url)
   request.send(data)
 
