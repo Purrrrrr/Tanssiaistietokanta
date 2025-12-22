@@ -207,9 +207,10 @@
   * Basic backend support
   * Refresh tokens in cookies
   * Basic login/logout in frontend
+  * Add name field to users
+    Recover by using refresh token when auth token has expired (eg. if user's machine has been in sleep mode)
     Store refresh tokens in db
     Real login page
-    Add name field to users
     Some way to configure first user without API (maybe something like a feathers-first-user file)
     Prevent creating users without some token? Invite functionality?
     Access control
