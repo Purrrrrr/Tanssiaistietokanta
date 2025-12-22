@@ -1,27 +1,15 @@
 import { EventEmitter } from 'events'
 
-export interface AuthResponse {
-  accessToken: string
-  authentication: {
-    payload: {
-      exp: number
-    }
-  }
-  user: User
-}
-export interface User {
-  _id: string
-  name: string
-  email: string
+import { AuthResponse } from './types'
+
+interface AuthStateEvents {
+  change: [AuthResponse | null]
+  initialize: []
 }
 
-export class AuthState extends EventEmitter<{ change: [AuthResponse | null] }> {
+export class AuthState extends EventEmitter<AuthStateEvents> {
   private lastResponse: AuthResponse | null | undefined
   private initializationPromise = Promise.withResolvers()
-
-  get initialized() {
-    return this.lastResponse !== undefined
-  }
 
   get currentUser() {
     return this.lastResponse?.user ?? null
@@ -31,13 +19,21 @@ export class AuthState extends EventEmitter<{ change: [AuthResponse | null] }> {
     return this.lastResponse?.accessToken ?? null
   }
 
+  get authExpiresAt() {
+    return this.lastResponse?.authentication.payload.exp ?? null
+  }
+
   setState(response: AuthResponse | null) {
     this.lastResponse = response
     this.initializationPromise.resolve(true)
     this.emit('change', this.lastResponse)
   }
 
-  waitForInitialization() {
+  initialize() {
+    if (this.lastResponse === undefined) {
+      this.lastResponse = null
+      this.emit('initialize')
+    }
     return this.initializationPromise.promise
   }
 }
