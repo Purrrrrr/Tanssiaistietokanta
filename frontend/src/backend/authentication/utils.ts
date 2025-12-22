@@ -22,18 +22,36 @@ export class RefreshScheduler {
       this.timeoutId = null
       this.callback()
     }, scheduledDelay)
+
+    // Do a refresh when window becomes visible
+    window.addEventListener('focus', () => this.runRefresh(), { once: true })
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        this.runRefresh()
+      }
+    }, { once: true })
+  }
+
+  private runRefresh() {
+    debug('Running token refresh manually')
+    this.clearRefresh()
+    this.callback()
   }
 
   clearRefresh() {
     if (this.timeoutId !== null) {
       clearTimeout(this.timeoutId)
       this.timeoutId = null
-      this.tokenExpiry = 0
     }
   }
 
   hasExpired() {
-    return msUntilTokenExpires(this.tokenExpiry) <= 0
+    return msUntilTokenExpires(this.tokenExpiry) === 0
+  }
+
+  expire() {
+    this.clearRefresh()
+    this.tokenExpiry = 0
   }
 }
 
