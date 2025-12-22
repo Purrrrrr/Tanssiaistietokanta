@@ -12,6 +12,7 @@ import type { UserService } from './users.class'
 export const userSchema = Type.Object(
   {
     _id: Type.Number(),
+    name: Type.String(),
     email: Type.String(),
     password: Type.Optional(Type.String()),
     googleId: Type.Optional(Type.String()),
@@ -49,7 +50,7 @@ export const userPatchResolver = resolve<User, HookContext<UserService>>({
 })
 
 // Schema for allowed query properties
-export const userQueryProperties = Type.Pick(userSchema, ['_id', 'email', 'googleId', 'githubId'])
+export const userQueryProperties = Type.Pick(userSchema, ['_id', 'name', 'email', 'googleId', 'githubId'])
 export const userQuerySchema = Type.Intersect(
   [
     querySyntax(userQueryProperties),
