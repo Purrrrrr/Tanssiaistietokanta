@@ -10,7 +10,7 @@ const refreshScheduler = new RefreshScheduler(refreshAuth)
 const authState = new AuthState()
 authState.on('change', (state) => {
   if (state === null) {
-    refreshScheduler.clearRefresh()
+    refreshScheduler.expire()
     return
   }
 
