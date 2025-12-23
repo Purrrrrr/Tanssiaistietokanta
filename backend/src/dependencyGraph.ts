@@ -2,12 +2,15 @@ import { updateDependencies, registerDependencies, clearDependencies } from './u
 import { loadDependencyTypes } from './utils/dependencyRelations'
 import type { Application, ServiceTypes } from './declarations'
 
-type ServiceName = keyof ServiceTypes
+const skippedServices = ['authentication'] as const
+
+type ServiceName = Exclude<keyof ServiceTypes, typeof skippedServices[number]>
 const serviceDependencyRelations : Partial<Record<ServiceName, any>> = {}
 const serviceReverseDependencyRelations : Partial<Record<ServiceName, any>> = {}
 
 export default async function init(app: Application) {
   const serviceNames = (Object.keys(app.services) as ServiceName[])
+    .filter(name => !skippedServices.includes(name as typeof skippedServices[number]))
   serviceNames.forEach((serviceName: ServiceName) => {
     const service = app.service(serviceName as keyof ServiceTypes)
     serviceDependencyRelations[serviceName] = []
@@ -19,7 +22,7 @@ export default async function init(app: Application) {
   })
 
   for (const serviceName of serviceNames) {
-    const dependencyRelations = await loadDependencyTypes(serviceName)
+    const dependencyRelations = loadDependencyTypes(serviceName)
 
     serviceDependencyRelations[serviceName] = dependencyRelations
     dependencyRelations.forEach(relation => {
@@ -34,7 +37,7 @@ export default async function init(app: Application) {
 async function loadInitialDependencies(app: Application) {
   for (const [serviceName, relations] of Object.entries(serviceDependencyRelations)) {
     if (relations.length === 0) continue
-    const service = app.service(serviceName as ServiceName) as ServiceTypes[keyof ServiceTypes]
+    const service = app.service(serviceName as ServiceName) as ServiceTypes[ServiceName]
     const items = await service.find({})
 
     if (!Array.isArray(items)) continue
