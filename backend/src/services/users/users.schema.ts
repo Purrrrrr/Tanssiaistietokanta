@@ -7,11 +7,12 @@ import { passwordHash } from '@feathersjs/authentication-local'
 import type { HookContext } from '../../declarations'
 import { dataValidator, queryValidator } from '../../validators'
 import type { UserService } from './users.class'
+import { Id } from '../../utils/common-types'
 
 // Main data model schema
 export const userSchema = Type.Object(
   {
-    _id: Type.Number(),
+    _id: Id(),
     name: Type.String(),
     email: Type.String(),
     password: Type.Optional(Type.String()),
