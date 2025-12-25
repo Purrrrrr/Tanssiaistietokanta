@@ -26,5 +26,7 @@ export type HookContext<S = any> = FeathersHookContext<Application, S>
 declare module '@feathersjs/feathers' {
   interface Params {
     user?: User
+    cookies?: Record<string, string | undefined>
+    IP?: string
   }
 }
