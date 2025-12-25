@@ -20,8 +20,8 @@ export class SessionsService<ServiceParams extends SessionsParams = SessionsPara
       ...options,
       dbname: 'sessions',
       indexes: [
-        { fieldName: ['token'], unique: true },
-        { fieldName: ['userId'] },
+        { fieldName: 'token', unique: true },
+        { fieldName: 'userId' },
       ],
     })
   }

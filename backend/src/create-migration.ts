@@ -2,7 +2,7 @@ import { createMigration } from './umzug'
 
 function main() {
   if (process.argv.length < 3) {
-    console.error('Usage node ./create-migration.js migration-name')
+    console.error('Usage ts-node ./create-migration.ts migration-name')
     return
   }
 
