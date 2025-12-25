@@ -40,7 +40,7 @@ export function refreshAuth() {
 }
 
 export function login(username: string, password: string) {
-  return auth('local', { email: username, password })
+  return auth('local', { username, password })
 }
 
 async function auth(strategy: string, body?: Record<string, unknown>) {

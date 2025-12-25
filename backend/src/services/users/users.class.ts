@@ -1,5 +1,5 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/service.class.html#custom-services
-import type { Id, NullableId, Params, ServiceInterface } from '@feathersjs/feathers'
+import type { Params } from '@feathersjs/feathers'
 
 import type { Application } from '../../declarations'
 import type { User, UserData, UserPatch, UserQuery } from './users.schema'
@@ -18,7 +18,14 @@ export class UserService<ServiceParams extends UserParams = UserParams>
   extends NeDBService<User, UserData, ServiceParams, UserPatch>
 {
   constructor(public options: UserServiceOptions) {
-    super({ ...options, dbname: 'users' })
+    super({
+      ...options,
+      dbname: 'users',
+      indexes: [
+        { fieldName: 'username', unique: true },
+        { fieldName: 'email', unique: true },
+      ]
+    })
   }
 
   get id() {

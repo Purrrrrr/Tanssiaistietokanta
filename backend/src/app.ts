@@ -97,8 +97,9 @@ app.hooks({
     async (context: HookContext<Application>, next: NextFunction) => {
       await migrateDb(context.app)
       await initDependencyGraph(context.app)
-      await next()
-    }
+     await next()
+    },
+
   ],
   teardown: []
 })

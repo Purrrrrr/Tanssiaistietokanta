@@ -35,6 +35,7 @@
   ],
   "main": "lib/client",
   "scripts": {
+    "create-user": "ts-node src/create-user.ts",
     "create-migration": "ts-node src/create-migration.ts",
     "dev": "cross-env CORS_ALLOW_LOCALHOST=true tsx watch --include \"src/**/*.graphql\" --clear-screen=false src/index.ts",
     "typecheck": "nodemon --watch src -e ts -x tsc --noEmit",
@@ -78,6 +79,7 @@
     "jsonata": "^2.0.3",
     "koa": "^2.14.2",
     "koa-bodyparser": "^4.4.0",
+    "minimal-password-prompt": "^1.1.0",
     "ms": "^2.1.3",
     "node-cron": "^4.1.0",
     "partial.lenses": "^14.17.0",

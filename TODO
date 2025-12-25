@@ -210,10 +210,12 @@
   * Add name field to users
   * Recover by using refresh token when auth token has expired (eg. if user's machine has been in sleep mode)
   * Store refresh tokens in db
+  * Some way to configure first user without API (maybe something like a feathers-first-user file)
     Real login page
-    Some way to configure first user without API (maybe something like a feathers-first-user file)
-    Prevent creating users without some token? Invite functionality?
-    Access control
+    Do not refresh token on every focus, only refresh after some time has passed
+    Access control system
+    Replace old OnlyAdmin components with the new system
+    Allow creating users with some token? Invite functionality?
 
   Tooltips with https://github.com/doeixd/invokers?
 

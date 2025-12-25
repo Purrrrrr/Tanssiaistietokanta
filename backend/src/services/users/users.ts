@@ -1,5 +1,6 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/service.html
 import { authenticate } from '@feathersjs/authentication'
+import { existsSync, readFileSync, unlinkSync } from 'fs'
 
 import { hooks as schemaHooks } from '@feathersjs/schema'
 
@@ -15,11 +16,41 @@ import {
 } from './users.schema'
 
 import type { Application } from '../../declarations'
-import { UserService, getOptions } from './users.class'
+import { User, UserService, getOptions } from './users.class'
 import { userPath, userMethods } from './users.shared'
 
 export * from './users.class'
 export * from './users.schema'
+
+export const createUserFile = './data/create-user.json'
+type CreateUser = Pick<User, 'username' | 'password'>
+
+async function initializeFirstUser(userService: UserService) {
+  if (existsSync(createUserFile)) {
+    const users = await userService.find({ query: { $limit: 1 } })
+    if (users.length > 0) {
+      console.log('Users already exist. Skipping initial user creation.')
+      return
+    }
+
+    const fileContents = readFileSync(createUserFile, 'utf-8')
+    const { username, password } = JSON.parse(fileContents) as CreateUser
+    console.log(`Creating initial user '${username}' from ${createUserFile}`)
+
+    if (!username || !password) {
+      console.error(`create-user.json must contain both 'username' and 'password' fields`)
+    }
+
+    await userService.create({
+      name: username,
+      username,
+      password
+    })
+
+    console.log(`User '${username}' created. Deleting ${createUserFile}`)
+    unlinkSync(createUserFile)
+  }
+}
 
 // A configure function that registers the service and its hooks via `app.configure`
 export const user = (app: Application) => {
@@ -56,6 +87,8 @@ export const user = (app: Application) => {
       all: []
     }
   })
+
+  initializeFirstUser(app.service('users'))
 }
 
 // Add this service to the service type index
