@@ -54,6 +54,11 @@ app.use(async (ctx, next) => {
   await Promise.all(filesToCleanup.map(file => unlink(file.filepath)))
 })
 app.use(graphqlServiceMiddleware)
+app.use(async (ctx, next) => {
+  ctx.feathers ??= {}
+  ctx.feathers.IP = ctx.request.ip
+  await next()
+})
 console.log(allowLocalhostOnDev(app.get('origins')))
 
 // Configure services and transports

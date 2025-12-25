@@ -1,3 +1,4 @@
+import { sessions } from './sessions/sessions'
 import { user } from './users/users'
 import { file } from './files/files'
 import { dancewiki } from './dancewiki/dancewiki'
@@ -11,6 +12,7 @@ import { dances } from './dances/dances'
 import type { Application } from '../declarations'
 
 export const services = (app: Application) => {
+  app.configure(sessions)
   app.configure(user)
   app.configure(file)
   app.configure(dancewiki)

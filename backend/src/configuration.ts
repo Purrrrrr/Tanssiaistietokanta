@@ -19,12 +19,17 @@ export const configurationSchema = Type.Intersect([
         host: Type.Optional(Type.String()),
         port: Type.Optional(Type.Number()),
       })
-    ]))
+    ])),
   })
 ])
 
 export type ApplicationConfiguration = Static<typeof configurationSchema> & {
   importExtension: string
+  authentication: {
+    refreshTokenOptions: {
+      expiresIn: string
+    }
+  }
 }
 
 export const configurationValidator = getValidator(configurationSchema, dataValidator)
