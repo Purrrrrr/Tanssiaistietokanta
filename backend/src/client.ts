@@ -4,6 +4,14 @@ import type { TransportConnection, Application } from '@feathersjs/feathers'
 import authenticationClient from '@feathersjs/authentication-client'
 import type { AuthenticationClientOptions } from '@feathersjs/authentication-client'
 
+import { sessionsClient } from './services/sessions/sessions.shared'
+export type {
+  Sessions,
+  SessionsData,
+  SessionsQuery,
+  SessionsPatch
+} from './services/sessions/sessions.shared'
+
 import { userClient } from './services/users/users.shared'
 export type { User, UserData, UserQuery, UserPatch } from './services/users/users.shared'
 
@@ -75,5 +83,6 @@ export const createClient = <Configuration = any,>(
   client.configure(dancewikiClient)
   client.configure(fileClient)
   client.configure(userClient)
+  client.configure(sessionsClient)
   return client
 }
