@@ -27,6 +27,17 @@ This project uses [Feathers](http://feathersjs.com). An open source framework fo
     npm start
     ```
 
+## Creating a default user
+
+Run the user creation script to create an initial admin user:
+
+```
+npm run create-user username-goes-here
+```
+
+This creates a user creation file in the data directory. The given user will be
+created on the next server startup after which the file is deleted.
+
 ## Running In Production Mode
 
 You can run the app in production mode by running:

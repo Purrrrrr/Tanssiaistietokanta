@@ -10,5 +10,6 @@ export interface AuthResponse {
 export interface User {
   _id: string
   name: string
-  email: string
+  username: string
+  email?: string
 }
