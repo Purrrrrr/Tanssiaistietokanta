@@ -211,8 +211,8 @@
   * Recover by using refresh token when auth token has expired (eg. if user's machine has been in sleep mode)
   * Store refresh tokens in db
   * Some way to configure first user without API (maybe something like a feathers-first-user file)
+  * Do not refresh token on every focus, only refresh after some time has passed
     Real login page
-    Do not refresh token on every focus, only refresh after some time has passed
     Access control system
     Replace old OnlyAdmin components with the new system
     Allow creating users with some token? Invite functionality?

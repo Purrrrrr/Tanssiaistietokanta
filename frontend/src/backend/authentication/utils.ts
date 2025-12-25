@@ -5,10 +5,14 @@ export const debug = createDebug('auth')
 const MINUTE = 60 * 1000
 const MAX_DELAY = 10 * MINUTE
 const REFRESH_MARGIN = MINUTE
+const MINIMUM_TIME_BETWEEN_REFRESHES = 5 * MINUTE
+
+const now = () => Date.now()
 
 export class RefreshScheduler {
   private timeoutId: number | null = null
   private tokenExpiry: number = 0
+  private lastRefresh: number = 0
 
   constructor(public callback: () => void) {}
 
@@ -16,6 +20,7 @@ export class RefreshScheduler {
     this.clearRefresh()
 
     this.tokenExpiry = expiry
+    this.lastRefresh = now()
     const scheduledDelay = Math.min(MAX_DELAY, (msUntilTokenExpires(expiry) - REFRESH_MARGIN))
     debug('Scheduling token refresh in %d ms', scheduledDelay)
     this.timeoutId = window.setTimeout(() => {
@@ -33,7 +38,11 @@ export class RefreshScheduler {
   }
 
   private runRefresh() {
+    if (now() - this.lastRefresh < MINIMUM_TIME_BETWEEN_REFRESHES) {
+      return
+    }
     debug('Running token refresh manually')
+    this.lastRefresh = now()
     this.clearRefresh()
     this.callback()
   }
