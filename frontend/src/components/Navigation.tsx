@@ -33,7 +33,7 @@ function FakeLogin() {
 
   if (user) {
     return <span>
-      {user.email}
+      {user.username}
       <Button onClick={logout}>Logout</Button>
     </span>
   }

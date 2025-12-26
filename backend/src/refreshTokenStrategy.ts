@@ -71,13 +71,14 @@ export const setRefreshTokenCookie = (auth: AuthenticationService): HookFunction
 
     let newToken: string
     if (existingSession) {
-      const updateResult = await sessionService.update(existingSession._id, { _createdAt: existingSession._createdAt }, {
+      const updateResult = await sessionService.patch(existingSession._id, {}, {
         ...context.params,
         provider: null,
       })
       newToken = Array.isArray(updateResult) ? updateResult[0].token : updateResult.token
     } else {
-      const createResult = await sessionService.create({}, { ...context.params, 'provider': null })
+      const user = context.result.user
+      const createResult = await sessionService.create({}, { ...context.params, 'provider': null, user })
       newToken = createResult.token
     }
 
