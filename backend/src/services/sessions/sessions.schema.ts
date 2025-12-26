@@ -36,24 +36,21 @@ export const sessionDataSchema = Type.Object({}, {
 })
 export type SessionData = Static<typeof sessionDataSchema>
 export const sessionDataValidator = getValidator(sessionDataSchema, dataValidator)
+export const newSessionDataResolver = resolve<Session, HookContext<SessionsService>>({
+  _createdAt: () => new Date().toISOString(),
+  userId: (_value, _session, context) => context.params?.user?._id,
+  userAgent: (_value, session, context) => {
+    return context.params.headers?.['user-agent'] ?? session.userAgent ?? ''
+  },
+})
 export const sessionDataResolver = resolve<Session, HookContext<SessionsService>>({
   token: () => crypto.randomUUID().replaceAll('-', ''),
-  _createdAt: async (value) => {
-    console.log('Setting _createdAt, value:', value)
-    return value ?? new Date().toISOString()
-  },
-  _updatedAt: async () => new Date().toISOString(),
-  _expiresAt: async (_value, _session, context) => {
+  _updatedAt: () => new Date().toISOString(),
+  _expiresAt: (_value, _session, context) => {
     const { expiresIn } = context.app.get('authentication').refreshTokenOptions
     return new Date(Date.now() + ms(expiresIn as ms.StringValue)).toISOString()
   },
-  userId: async (_value, _session, context) => context.params.user?._id,
-  userAgent: async (_value, session, context) => {
-    return context.params.headers?.['user-agent'] ?? session.userAgent ?? ''
-  },
-  IP: async (_value, session, context) => {
-    return context.params.IP ?? session.IP ?? ''
-  }
+  IP: (_value, session, context) => context.params.IP ?? session.IP ?? ''
 })
 
 // Schema for updating existing entries

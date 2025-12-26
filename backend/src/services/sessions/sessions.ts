@@ -10,7 +10,8 @@ import {
   sessionExternalResolver,
   sessionDataResolver,
   sessionPatchResolver,
-  sessionQueryResolver
+  sessionQueryResolver,
+  newSessionDataResolver
 } from './sessions.schema'
 
 import type { Application } from '../../declarations'
@@ -48,7 +49,8 @@ export const sessions = (app: Application) => {
       create: [
         disallow('external'),
         schemaHooks.validateData(sessionDataValidator),
-        schemaHooks.resolveData(sessionDataResolver)
+        schemaHooks.resolveData(newSessionDataResolver),
+        schemaHooks.resolveData(sessionDataResolver),
       ],
       update: [
         disallow('external'),
@@ -58,7 +60,8 @@ export const sessions = (app: Application) => {
       patch: [
         disallow('external'),
         schemaHooks.validateData(sessionPatchValidator),
-        schemaHooks.resolveData(sessionPatchResolver)
+        schemaHooks.resolveData(sessionDataResolver),
+        schemaHooks.resolveData(sessionPatchResolver),
       ],
       remove: []
     },
