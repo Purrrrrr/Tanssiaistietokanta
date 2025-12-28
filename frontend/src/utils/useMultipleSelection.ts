@@ -5,7 +5,7 @@ import { ID } from 'backend/types'
 export function useMultipleSelection<T extends { _id: ID }>(
   allItems: T[],
 ) {
-  const [selected, setSelected] = useState<ID[]>(allItems.map(f => f._id))
+  const [selected, setSelected] = useState<ID[]>([])
   const isSelected = (item: T) => selected.includes(item._id)
   const allSelected = !allItems.find(item => !isSelected(item))
 
