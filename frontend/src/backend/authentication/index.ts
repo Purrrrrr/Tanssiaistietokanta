@@ -5,6 +5,7 @@ import { AuthState } from './state'
 import { RefreshScheduler } from './utils'
 
 export { setSocketAuthToken } from './requests'
+export type { User } from './types'
 
 const refreshScheduler = new RefreshScheduler(refreshAuth)
 const authState = new AuthState()
