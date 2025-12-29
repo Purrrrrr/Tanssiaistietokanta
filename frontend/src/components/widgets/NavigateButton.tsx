@@ -14,16 +14,17 @@ interface NavigateButtonProps extends Omit<React.ComponentProps<typeof Link>, 't
   requireRight?: RightQueryInput
   entityId?: ID
   disabled?: boolean
+  minimal?: boolean
   href: string
   color?: Color
   className?: string
 }
 
-export function NavigateButton({ text, children, icon, disabled, href, color, className, requireRight, entityId, ...props }: NavigateButtonProps) {
+export function NavigateButton({ text, children, icon, disabled, minimal, href, color, className, requireRight, entityId, ...props }: NavigateButtonProps) {
   const hasRight = useHasRight(requireRight, entityId)
   if (!hasRight) return null
 
-  const classes = buttonClass(color ?? 'none', { className, disabled })
+  const classes = buttonClass(color ?? 'none', { className, disabled, minimal })
 
   const onClick = props.onClick ??
     (props.target === '_blank' ? openLinkWithTarget : undefined)
