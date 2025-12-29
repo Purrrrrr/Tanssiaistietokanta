@@ -2,10 +2,10 @@ import { Suspense } from 'react'
 import { Navigate, Route, Routes, useParams } from 'react-router-dom'
 
 import { useEvent } from 'services/events'
-import { AdminOnly } from 'services/users'
 
 import { Breadcrumb } from 'libraries/ui'
 import { lazyLoadComponent as lazy, LoadingState } from 'components/LoadingState'
+import { RequirePermissions } from 'components/rights/RequirePermissions'
 import VersionableContentContainer from 'components/versioning/VersionableContentContainer'
 import { T, useTranslation } from 'i18n'
 
@@ -28,7 +28,9 @@ export default function MainRoutes() {
       <Routes>
         <Route index element={<EventList />} />
         <Route path="ui-showcase" element={<UiShowcase />} />
-        <Route path="events/new" element={<CreateEvent />} />
+        <Route path="events/new" element={
+          <RequirePermissions right="events:create" fallback="loginPage"><CreateEvent /></RequirePermissions>
+        } />
         <Route path="events/:eventId/version/:eventVersionId/*" element={<EventRoutes />} />
         <Route path="events/:eventId/*" element={<EventRoutes />} />
         <Route path="dances/*" element={<DanceRoutes />} />
@@ -38,45 +40,49 @@ export default function MainRoutes() {
 }
 
 function DanceRoutes() {
-  return <VersionableContentContainer>
-    <Breadcrumb text={useTranslation('breadcrumbs.dances')} />
-    <Routes>
-      <Route index element={<Dances />} />
-      <Route path=":danceId/version/:danceVersionId" element={<Dance />} />
-      <Route path=":danceId" element={<Dance />} />
-    </Routes>
-  </VersionableContentContainer>
+  return <RequirePermissions right="dances:read" fallback="loginPage">
+    <VersionableContentContainer>
+      <Breadcrumb text={useTranslation('breadcrumbs.dances')} />
+      <Routes>
+        <Route index element={<Dances />} />
+        <Route path=":danceId/version/:danceVersionId" element={<Dance />} />
+        <Route path=":danceId" element={<Dance />} />
+      </Routes>
+    </VersionableContentContainer>
+  </RequirePermissions>
 }
 
 function EventRoutes() {
   const { eventId, eventVersionId } = useParams()
   const [event, loadingState] = useEvent(eventId ?? '', eventVersionId)
 
-  return <VersionableContentContainer>
-    {event
-      ? <>
-        <Breadcrumb text={event.name} />
-        <Routes>
-          <Route index element={<EventPage event={event} />} />
-          <Route path="program/*" element={<EventProgramRoutes event={event} />} />
-          <Route path="ball-program/:slideId?" element={<BallProgram eventId={eventId} eventVersionId={eventVersionId} />} />
-          <Route path="print/*" element={<EventPrintRoutes />} />
-        </Routes>
-      </>
-      : <LoadingState {...loadingState} />
-    }
-  </VersionableContentContainer>
+  return <RequirePermissions right="events:read" entityId={eventId} fallback="loginPage">
+    <VersionableContentContainer>
+      {event
+        ? <>
+          <Breadcrumb text={event.name} />
+          <Routes>
+            <Route index element={<EventPage event={event} />} />
+            <Route path="program/*" element={<EventProgramRoutes event={event} />} />
+            <Route path="ball-program/:slideId?" element={<BallProgram eventId={eventId} eventVersionId={eventVersionId} />} />
+            <Route path="print/*" element={<EventPrintRoutes />} />
+          </Routes>
+        </>
+        : <LoadingState {...loadingState} />
+      }
+    </VersionableContentContainer>
+  </RequirePermissions>
 }
 
 function EventProgramRoutes({ event }) {
-  return <AdminOnly fallback={useTranslation('pages.events.eventProgramPage.loginRequired')}>
+  return <RequirePermissions right="events:modify" entityId={event.id} fallback="loginPage">
     <Breadcrumb text={useTranslation('breadcrumbs.eventProgram')} />
     <Routes>
       <Route index element={<Navigate to="main" replace />} />
       <Route path=":tabId/:slideId?" element={<EventProgramPage event={event} />} />
       <Route path="dance/:danceId" element={<Dance parentType="eventProgram" />} />
     </Routes>
-  </AdminOnly>
+  </RequirePermissions>
 }
 
 function EventPrintRoutes() {

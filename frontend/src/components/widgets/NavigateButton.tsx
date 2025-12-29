@@ -1,6 +1,8 @@
 import React from 'react'
 
-import { useIsAdmin } from 'services/users'
+import { ID } from 'backend/types'
+
+import { RightQueryInput, useHasRight } from 'services/users'
 
 import { type Color, Link } from 'libraries/ui'
 import { buttonClass } from 'libraries/ui/Button'
@@ -9,16 +11,17 @@ interface NavigateButtonProps extends Omit<React.ComponentProps<typeof Link>, 't
   text?: string | React.ReactElement | React.ReactElement[]
   children?: string | React.ReactElement | React.ReactElement[]
   icon?: React.ReactElement
-  adminOnly?: boolean
+  requireRight?: RightQueryInput
+  entityId?: ID
   disabled?: boolean
   href: string
   color?: Color
   className?: string
 }
 
-export function NavigateButton({ text, children, icon, adminOnly, disabled, href, color, className, ...props }: NavigateButtonProps) {
-  const isAdmin = useIsAdmin()
-  if (adminOnly && !isAdmin) return null
+export function NavigateButton({ text, children, icon, disabled, href, color, className, requireRight, entityId, ...props }: NavigateButtonProps) {
+  const hasRight = useHasRight(requireRight, entityId)
+  if (!hasRight) return null
 
   const classes = buttonClass(color ?? 'none', { className, disabled })
 

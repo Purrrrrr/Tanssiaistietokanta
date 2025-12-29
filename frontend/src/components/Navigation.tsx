@@ -2,10 +2,11 @@ import { useSyncExternalStore } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { getCurrentUser, login, logout, subscribeToAuthChanges } from 'backend/authentication'
-import { AdminOnly } from 'services/users'
 
 import { AnchorButton, Breadcrumbs, Button } from 'libraries/ui'
 import { useTranslation } from 'i18n'
+
+import { RequirePermissions } from './rights/RequirePermissions'
 
 function Navigation() {
   return <nav className="flex relative z-10 flex-wrap justify-between items-center px-3.5 h-auto bg-white shadow-sm min-h-12.5 shadow-stone-600/30">
@@ -13,9 +14,9 @@ function Navigation() {
       <Breadcrumbs label={useTranslation('navigation.breadcrumbs')} />
     </div>
     <div>
-      <AdminOnly>
+      <RequirePermissions right="dances:read">
         <NavButton icon={<span className="mr-1.5">💃</span>} href="/dances" text={useTranslation('navigation.dances')} />
-      </AdminOnly>
+      </RequirePermissions>
       <FakeLogin />
     </div>
   </nav>

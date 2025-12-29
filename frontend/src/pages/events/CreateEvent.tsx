@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { useCreateEvent } from 'services/events'
-import { AdminOnly } from 'services/users'
 
 import { DateRangeField, formFor, SubmitButton } from 'libraries/forms'
 import { Breadcrumb } from 'libraries/ui'
@@ -31,7 +30,7 @@ export default function CreateEventForm() {
   })
   const [event, setEvent] = useState({ name: '', beginDate: '', endDate: '' })
 
-  return <AdminOnly>
+  return <>
     <Breadcrumb text={t('newEventBreadcrumb')} />
     <PageTitle>{t('newEvent')}</PageTitle>
     <Form labelStyle="above" value={event} onChange={setEvent} onSubmit={() => addLoadingAnimation(createEvent({ event }))} errorDisplay="onSubmit">
@@ -47,5 +46,5 @@ export default function CreateEventForm() {
       </div>
       <SubmitButton text={t('create')} />
     </Form>
-  </AdminOnly>
+  </>
 }

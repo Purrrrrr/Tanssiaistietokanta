@@ -1,10 +1,10 @@
 import { useEvents } from 'services/events'
-import { AdminOnly } from 'services/users'
 
 import { useFormatDate } from 'libraries/i18n/dateTime'
 import { H2, ItemList, Link } from 'libraries/ui'
 import { LoadingState } from 'components/LoadingState'
 import { PageTitle } from 'components/PageTitle'
+import { RequirePermissions } from 'components/rights/RequirePermissions'
 import { NavigateButton } from 'components/widgets/NavigateButton'
 import { useT } from 'i18n'
 
@@ -17,9 +17,9 @@ export default function EventList() {
     <PageTitle>{t('pageTitle')}</PageTitle>
     <LoadingState {...requestState} />
     <p>{t('weHaveXEvents', { count: events.length })}</p>
-    <AdminOnly>
+    <RequirePermissions right="dances:read">
       <p>{t('youcanEditDancesIn')} <Link to="/dances">{t('danceDatabaseLinkName')}</Link></p>
-    </AdminOnly>
+    </RequirePermissions>
     <H2>{t('danceEvents')}</H2>
     <ItemList columns="grid-cols-[1fr_max-content] gap-x-4" items={events} emptyText={t('noEvents')} className="max-w-200" wrap-breakpoint="none">
       <ItemList.Header>
@@ -35,6 +35,6 @@ export default function EventList() {
         </ItemList.Row>,
       )}
     </ItemList>
-    <NavigateButton adminOnly color="primary" href="events/new" text={t('createEvent')} />
+    <NavigateButton requireRight="events:create" color="primary" href="events/new" text={t('createEvent')} />
   </>
 }
