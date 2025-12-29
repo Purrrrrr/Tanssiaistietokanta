@@ -20,11 +20,12 @@ export interface FormMetadataContextType<T> {
   readOnly: boolean
   inline: boolean
   labelStyle: LabelStyle
+  showErrors: boolean
 }
 export const FormMetadataContext = React.createContext<FormMetadataContextType<unknown> | null>(null)
 
 export interface useCreateFormMetadataContextArgs<T> extends
-  Pick<Partial<FormMetadataContextType<T>>, 'readOnly' | 'inline' | 'labelStyle' | 'onResolveConflict'> {
+  Pick<Partial<FormMetadataContextType<T>>, 'readOnly' | 'inline' | 'labelStyle' | 'onResolveConflict' | 'showErrors'> {
   value: T
   onChange: OnFormChangeHandler<T>
   conflicts?: ConflictMap<T>
@@ -32,7 +33,7 @@ export interface useCreateFormMetadataContextArgs<T> extends
 }
 
 export function useCreateFormMetadataContext<T>(
-  { value, onChange, labelStyle, inline, readOnly, conflicts, strings, onResolveConflict }: useCreateFormMetadataContextArgs<T>,
+  { value, onChange, labelStyle, inline, readOnly, conflicts, strings, onResolveConflict, showErrors }: useCreateFormMetadataContextArgs<T>,
 ): FormMetadataContextType<T> {
   const listeners = useMemo(() => new Set<ChangeListener>(), [])
   const valueRef = useRef<T>()
@@ -61,11 +62,11 @@ export function useCreateFormMetadataContext<T>(
           listeners.add(listener)
           return () => listeners.delete(listener)
         },
-        readOnly, labelStyle, inline,
+        readOnly, labelStyle, inline, showErrors,
         onChangePath,
         onResolveConflict,
       }
-    }, [readOnly, labelStyle, inline, onChange, listeners, onResolveConflict],
+    }, [readOnly, labelStyle, inline, onChange, listeners, onResolveConflict, showErrors],
   )
 
   useEffect(() => listeners.forEach(l => l()), [listeners, value])

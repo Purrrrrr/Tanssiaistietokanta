@@ -4,17 +4,15 @@ import { StringPathToList } from './types'
 
 import { Button } from 'libraries/ui'
 
-import { useFormIsValid, useFormMetadata } from './formContext'
+import { useFormMetadata } from './formContext'
 import { useRemoveFromList } from './hooks'
 
 type ButtonProps = React.ComponentProps<typeof Button>
 
-export function SubmitButton({ disabled, ...props }: ButtonProps) {
-  const formIsValid = useFormIsValid()
+export function SubmitButton(props: ButtonProps) {
   const { readOnly } = useFormMetadata()
   if (readOnly) return null
-  return <ActionButton type="submit" color="primary"
-    disabled={!formIsValid || disabled} {...props} />
+  return <ActionButton type="submit" color="primary" {...props} />
 }
 
 export interface RemoveItemButtonProps<T> extends ButtonProps {
