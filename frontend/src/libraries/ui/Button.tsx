@@ -17,7 +17,7 @@ export const buttonClass = (
 ) => classNames(
   'cursor-pointer transition-colors disabled:cursor-not-allowed disabled:opacity-50 text-center inline-flex gap-1.5 items-center peer',
   minimal ? [
-    'hover:bg-opacity-10 active:bg-opacity-20 disabled:saturate-85',
+    'hover:bg-opacity-10 active:bg-opacity-20 focus:bg-opacity-5 disabled:saturate-85',
     ({
       none: 'bg-var-gray-800 text-stone-700 ',
       primary: 'bg-var-sky-600 text-sky-600 saturate-65',

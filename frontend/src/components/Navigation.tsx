@@ -1,23 +1,27 @@
 import { useSyncExternalStore } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Person as User } from '@blueprintjs/icons'
 
-import { getCurrentUser, login, logout, subscribeToAuthChanges } from 'backend/authentication'
+import { getCurrentUser, logout, subscribeToAuthChanges } from 'backend/authentication'
 
+import MenuButton from 'libraries/formsV2/components/MenuButton'
 import { AnchorButton, Breadcrumbs, Button } from 'libraries/ui'
-import { useTranslation } from 'i18n'
+import { useT, useTranslation } from 'i18n'
 
 import { RequirePermissions } from './rights/RequirePermissions'
+import { NavigateButton } from './widgets/NavigateButton'
 
 function Navigation() {
   return <nav className="flex relative z-10 flex-wrap justify-between items-center px-3.5 h-auto bg-white shadow-sm min-h-12.5 shadow-stone-600/30">
     <div className="grow">
       <Breadcrumbs label={useTranslation('navigation.breadcrumbs')} />
     </div>
-    <div>
+    <div className="flex items-center">
       <RequirePermissions right="dances:read">
-        <NavButton icon={<span className="mr-1.5">💃</span>} href="/dances" text={useTranslation('navigation.dances')} />
+        <NavButton icon={<span className="mr-0.5">💃</span>} href="/dances" text={useTranslation('navigation.dances')} />
       </RequirePermissions>
-      <FakeLogin />
+      <div className="mx-1 self-stretch w-[1px] bg-stone-300" />
+      <LoginStatus />
     </div>
   </nav>
 }
@@ -29,17 +33,24 @@ function NavButton({ href, ...props }) {
   />
 }
 
-function FakeLogin() {
+function LoginStatus() {
   const user = useSyncExternalStore(subscribeToAuthChanges, getCurrentUser)
+  const t = useT('navigation')
 
   if (user) {
     return <span>
-      {user.username}
-      <Button onClick={logout}>Logout</Button>
+      <MenuButton text={user.name} buttonRenderer={props => <Button minimal icon={<User className="mt-[1px] mr-0.5 text-amber-600" />} {...props} />}>
+        <Button minimal onClick={logout}>{t('logout')}</Button>
+      </MenuButton>
     </span>
   }
 
-  return <Button onClick={() => { login('test@example.com', 'supersecret') }}>Login</Button>
+  return <NavigateButton
+    minimal
+    href="/login"
+    icon={<User className="mt-[1px] text-orange-500" />}
+    text={t('login')}
+  />
 }
 
 export default Navigation
