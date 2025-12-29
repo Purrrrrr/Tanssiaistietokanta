@@ -212,9 +212,13 @@
   * Store refresh tokens in db
   * Some way to configure first user without API (maybe something like a feathers-first-user file)
   * Do not refresh token on every focus, only refresh after some time has passed
-    Real login page
-    Access control system
-    Replace old OnlyAdmin components with the new system
+  * Access control system
+  * Replace old OnlyAdmin components with the new system
+  * Real login page
+    Bring submit error option to formV2
+    Nicer logout menu keyboard a11y
+    Maybe more flexible right id associations (eg. file id + event id)
+    Associate files with some service and entity id
     Allow creating users with some token? Invite functionality?
 
   Tooltips with https://github.com/doeixd/invokers?
