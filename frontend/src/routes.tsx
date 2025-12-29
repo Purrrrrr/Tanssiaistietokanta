@@ -5,6 +5,7 @@ import { useEvent } from 'services/events'
 
 import { Breadcrumb } from 'libraries/ui'
 import { lazyLoadComponent as lazy, LoadingState } from 'components/LoadingState'
+import { LoginForm } from 'components/rights/LoginForm'
 import { RequirePermissions } from 'components/rights/RequirePermissions'
 import VersionableContentContainer from 'components/versioning/VersionableContentContainer'
 import { T, useTranslation } from 'i18n'
@@ -27,6 +28,7 @@ export default function MainRoutes() {
     <Suspense>
       <Routes>
         <Route index element={<EventList />} />
+        <Route path="login" element={<LoginForm redirectTo="/" />} />
         <Route path="ui-showcase" element={<UiShowcase />} />
         <Route path="events/new" element={
           <RequirePermissions right="events:create" fallback="loginPage"><CreateEvent /></RequirePermissions>

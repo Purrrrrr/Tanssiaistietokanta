@@ -8,6 +8,8 @@ export const fi = {
     dances: 'Tanssit',
     breadcrumbs: 'Murupolku',
     moveToContent: 'Siirry pääsisältöön',
+    login: 'Kirjaudu',
+    logout: 'Kirjaudu ulos',
   },
   breadcrumbs: {
     app: 'Tanssiaistietokanta',
@@ -55,7 +57,8 @@ export const fi = {
     },
     loginForm: {
       login: 'Kirjaudu sisään',
-      logout: 'Kirjaudu ulos',
+      username: 'Käyttäjätunnus',
+      password: 'Salasana',
     },
     deleteButton: {
       cancel: 'Peruuta',
