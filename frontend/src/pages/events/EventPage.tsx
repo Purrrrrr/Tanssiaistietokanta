@@ -1,9 +1,10 @@
 import React, { useCallback, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-import { Event, EventProgram as EventProgramType } from 'types'
+import { Event } from 'types'
 
 import { useDeleteEvent, usePatchEvent } from 'services/events'
-import { AdminOnly } from 'services/users'
+import { useHasRight } from 'services/users'
 import { useCreateWorkshop, useDeleteWorkshop } from 'services/workshops'
 
 import { DateField, DateRangeField, formFor, patchStrategy, SyncStatus, useAutosavingState } from 'libraries/forms'
@@ -17,7 +18,6 @@ import { DeleteButton } from 'components/widgets/DeleteButton'
 import { NavigateButton } from 'components/widgets/NavigateButton'
 import { newInstance, WorkshopEditor } from 'components/WorkshopEditor'
 import { useFormatDate, useFormatDateTime, useT, useTranslation } from 'i18n'
-import { useNavigate } from 'react-router-dom'
 
 type Workshop = Event['workshops'][0]
 
@@ -43,7 +43,7 @@ export default function EventPage({ event }: { event: Event }) {
     </div>
     <EventDetails event={event} readOnly={readOnly} />
     <H2>{t('ballProgram')}</H2>
-    <EventProgram program={event.program} readOnly={readOnly} />
+    <EventProgram event={event} readOnly={readOnly} />
     <H2>{t('workshops')}</H2>
     <EventWorkshops event={event} readOnly={readOnly} />
     <H2>{t('files')}</H2>
@@ -117,12 +117,14 @@ function EventDetailsForm({ event }: { event: Event }) {
   </Form>
 }
 
-function EventProgram({ program, readOnly }: { program: EventProgramType, readOnly: boolean }) {
+function EventProgram({ event, readOnly }: { event: Event, readOnly: boolean }) {
+  const { _id, program } = event
+
   const t = useT('pages.events.eventPage')
   if (!program || program.danceSets.length === 0) {
     return <>
       <p>{t('noProgram')}</p>
-      {readOnly || <NavigateButton adminOnly color="primary" href="program" text={t('addProgram')} />}
+      {readOnly || <NavigateButton requireRight="events:create" color="primary" href="program" text={t('addProgram')} />}
     </>
   }
 
@@ -136,9 +138,13 @@ function EventProgram({ program, readOnly }: { program: EventProgramType, readOn
       )}
     </Card>
     <p>
-      {readOnly
-        ? <NavigateButton adminOnly href="program/main" text={t('viewProgram')} />
-        : <NavigateButton adminOnly color="primary" href="program/main" text={t('editProgram')} />}
+      <NavigateButton
+        requireRight="events:modify"
+        entityId={_id}
+        href="program/main"
+        color={readOnly ? undefined : 'primary'}
+        text={readOnly ? t('viewProgram') : t('editProgram')}
+      />
       <NavigateButton href="print/ball-dancelist" target="_blank"
         text={t('printBallDanceList')} />
       <NavigateButton href="ball-program" target="_blank"
@@ -192,14 +198,15 @@ function CreateWorkshopButton({ eventId, startDate }) {
   const t = useT('pages.events.eventPage')
   const addLoadingAnimation = useGlobalLoadingAnimation()
   const [createWorkshop] = useCreateWorkshop()
+  const hasRight = useHasRight('workshops:create', eventId)
 
-  return <AdminOnly>
-    <Button
-      onClick={() => addLoadingAnimation(createWorkshop(newWorkshop({ eventId, name: t('newWorkshop') }, startDate)))}
-      color="primary"
-      text={t('createWorkshop')}
-    />
-  </AdminOnly>
+  if (!hasRight) return null
+
+  return <Button
+    onClick={() => addLoadingAnimation(createWorkshop(newWorkshop({ eventId, name: t('newWorkshop') }, startDate)))}
+    color="primary"
+    text={t('createWorkshop')}
+  />
 }
 
 function newWorkshop({ eventId, name }, startDate) {
