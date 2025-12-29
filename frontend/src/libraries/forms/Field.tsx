@@ -86,7 +86,7 @@ export function useFieldData<Value>(
     containerProps: {
       id,
       errorId,
-      error,
+      error: ctx.showErrors ? error : null,
       label,
       labelInfo,
       helperText,

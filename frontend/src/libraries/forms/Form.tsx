@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import { ConflictMap, OnFormChangeHandler } from './types'
 
@@ -17,6 +17,7 @@ export interface FormProps<T> extends
   onValidityChange?: (validity: { hasErrors: boolean }) => unknown
   onSubmit?: (t: T, e: React.FormEvent) => unknown
   strings?: FormStrings
+  errorDisplay?: 'always' | 'onSubmit'
 }
 
 const noOp = () => { /* no op */ }
@@ -33,10 +34,12 @@ export function Form<T>({
   labelStyle = defaultLabelStyle,
   inline = false,
   strings,
+  errorDisplay = 'always',
   ...rest
 }: FormProps<T>) {
   const { hasErrors, ValidationContainer } = useValidationResult()
   const form = useRef<HTMLFormElement>(null)
+  const [hasSubmitted, setHasSubmitted] = useState(false)
 
   useEffect(() => {
     if (onValidityChange) onValidityChange({ hasErrors })
@@ -46,10 +49,13 @@ export function Form<T>({
     // Sometimes forms from dialogs end up propagating into our form and we should not submit then
     if (e.target !== form.current) return
     e.preventDefault()
+    setHasSubmitted(true)
+    if (hasErrors) return
     onSubmit?.(value, e)
   }
+  const showErrors = errorDisplay === 'always' || hasSubmitted
 
-  const metadataContext = useCreateFormMetadataContext({ value, onChange, labelStyle, inline, readOnly, conflicts, strings, onResolveConflict })
+  const metadataContext = useCreateFormMetadataContext({ value, onChange, labelStyle, inline, readOnly, conflicts, strings, onResolveConflict, showErrors })
 
   return <FormMetadataContext.Provider value={metadataContext as FormMetadataContextType<unknown>}>
     <FormValidityContext.Provider value={!hasErrors}>
