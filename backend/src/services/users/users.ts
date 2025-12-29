@@ -18,6 +18,7 @@ import {
 import type { Application } from '../../declarations'
 import { User, UserService, getOptions } from './users.class'
 import { userPath, userMethods } from './users.shared'
+import { titleCase } from '../dancewiki/utils/titleCase'
 
 export * from './users.class'
 export * from './users.schema'
@@ -42,7 +43,7 @@ async function initializeFirstUser(userService: UserService) {
     }
 
     await userService.create({
-      name: username,
+      name: titleCase(username),
       username,
       password
     })
