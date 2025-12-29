@@ -6,7 +6,7 @@ import { Button } from './Button'
 
 const Collapse = React.lazy(() => import('./Collapse'))
 
-type WrapPoint = 'md' | 'sm'
+type WrapPoint = 'md' | 'sm' | 'none'
 
 export interface ItemListProps {
   children?: React.ReactNode
@@ -20,6 +20,7 @@ export interface ItemListProps {
 const listWrapClasses = {
   md: 'wrap-md md:grid',
   sm: 'wrap-sm sm:grid',
+  none: 'wrap-none grid',
 } satisfies Record<WrapPoint, string>
 
 export function ItemList({ children, className, items, emptyText, 'wrap-breakpoint': wrapPoint = 'sm', columns }: ItemListProps) {
@@ -44,8 +45,8 @@ export function ItemList({ children, className, items, emptyText, 'wrap-breakpoi
 
 const commonRowClasses = classNames(
   'flex flex-wrap gap-4 items-center grid-cols-subgrid col-span-full',
-  'group-[.wrap-md]:md:grid group-[.wrap-sm]:sm:grid',
-  'group-[.wrap-md]:max-md:gap-x-1 group-[.wrap-sm]:max-sm:gap-x-1',
+  'group-[.wrap-md]:md:grid group-[.wrap-sm]:sm:grid group-[.wrap-none]:grid',
+  'group-[.wrap-md]:max-md:gap-x-1 group-[.wrap-sm]:max-sm:gap-x-1 group-[.wrap-none]:gap-x-1',
 )
 const rowColorClassname = 'nth-of-type-[even]:bg-gray-100 border-x-1 border-gray-200'
 const rowClasses = classNames(
