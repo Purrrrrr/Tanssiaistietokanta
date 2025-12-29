@@ -21,8 +21,12 @@ export function ValidationMessage<T>(props: ValidationMessageProps<T>) {
 
 function useRunValidation<T>(props: ValidationMessageProps<T>) {
   const { id, path, value: maybeValue, ...validation } = props
-  const { getState, getValueAt, dispatch, subscribe } = useFormContext<AnyType>()
-  const error = useSyncExternalStore(subscribe, () => getState().validation.errors[id])
+  const { getState, getValueAt, dispatch, subscribe, errorDisplay } = useFormContext<AnyType>()
+  const error = useSyncExternalStore(subscribe, () => {
+    const { errors, hasSubmitted } = getState().validation
+    const displayError = (errorDisplay === 'always' || hasSubmitted)
+    return displayError ? errors[id] : undefined
+  })
   const value = 'value' in props ? maybeValue : getValueAt(path)
 
   useEffect(

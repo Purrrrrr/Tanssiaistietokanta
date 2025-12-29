@@ -36,11 +36,13 @@ export type ValueAction<Data> = {
   value: unknown
 }
 
-export interface ValidationAction {
+export type ValidationAction = {
   type: 'SET_VALIDATION_RESULT'
   path: GenericPath
   id: string
   errors: Errors
+} | {
+  type: 'FORM_SUBMIT'
 }
 
 export type FocusAction = {

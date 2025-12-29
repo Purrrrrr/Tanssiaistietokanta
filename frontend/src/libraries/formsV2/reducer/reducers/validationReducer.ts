@@ -7,14 +7,24 @@ export type ErrorMap = Partial<Record<string, Errors>>
 export interface FormValidationState {
   errors: ErrorMap
   isValid: boolean
+  hasSubmitted: boolean
 }
 
 export const initialValidationState: FormValidationState = {
   errors: {},
   isValid: true,
+  hasSubmitted: false,
 }
 
 export function validationReducer(state: FormValidationState, action: ValidationAction): FormValidationState {
+  if (action.type === 'FORM_SUBMIT') {
+    if (state.hasSubmitted) return state
+    return {
+      ...state,
+      hasSubmitted: true,
+    }
+  }
+
   const { id, errors } = action
   const errorMap = errors === undefined
     ? dissoc(state.errors, id)
@@ -25,6 +35,7 @@ export function validationReducer(state: FormValidationState, action: Validation
   return {
     errors: errorMap,
     isValid: isValid(errorMap),
+    hasSubmitted: state.hasSubmitted,
   }
 }
 
