@@ -30,13 +30,13 @@ export function LoginForm({ redirectTo }: { redirectTo?: string }) {
     }
   }
 
-  return <Form value={value} onChange={setValue} onSubmit={onSubmit}>
+  return <Form value={value} onChange={setValue} onSubmit={onSubmit} errorDisplay="onSubmit">
     <H2>{t('login')}</H2>
     {error && <ErrorMessage error={{ errors: [error] }} />}
-    <div className="flex gap-3 items-center">
+    <div className="flex gap-3">
       <Input path="username" label={t('username')} required />
       <Input path="password" label={t('password')} required componentProps={{ type: 'password' }} />
-      <Button color="primary" type="submit">{t('login')}</Button>
     </div>
+    <Button color="primary" type="submit">{t('login')}</Button>
   </Form>
 }
