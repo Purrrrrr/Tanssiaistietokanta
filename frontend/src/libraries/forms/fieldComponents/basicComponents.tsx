@@ -72,7 +72,7 @@ export function NumberInput({ value, className, onChange, inline = false, inputR
     ref={inputRef}
     value={value ?? 0}
     className={classNames(className, CssClass.input, inline || CssClass.inputFill)}
-    onKeyDown={e => (e.key === 'Escape' || e.key === 'Enter') && (e.target as HTMLInputElement).blur()}
+    onKeyDown={e => (e.key === 'Escape') && (e.target as HTMLInputElement).blur()}
     onChange={e => onChange(parseFloat(e.target.value), e)}
     {...props}
   />
@@ -86,7 +86,7 @@ export function Input({ value, className, onChange, inline = false, inputRef, ..
     ref={inputRef}
     value={value ?? ''}
     className={classNames(className, CssClass.input, inline || CssClass.inputFill)}
-    onKeyDown={e => (e.key === 'Escape' || e.key === 'Enter') && (e.target as HTMLInputElement).blur()}
+    onKeyDown={e => (e.key === 'Escape') && (e.target as HTMLInputElement).blur()}
     onChange={e => onChange(e.target.value, e)}
     {...props}
   />
