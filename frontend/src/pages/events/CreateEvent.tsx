@@ -34,9 +34,9 @@ export default function CreateEventForm() {
   return <AdminOnly>
     <Breadcrumb text={t('newEventBreadcrumb')} />
     <PageTitle>{t('newEvent')}</PageTitle>
-    <Form labelStyle="beside" value={event} onChange={setEvent} onSubmit={() => addLoadingAnimation(createEvent({ event }))}>
-      <div className="flex gap-6">
-        <Input label={t('name')} path="name" required containerClassName="w-100" />
+    <Form labelStyle="above" value={event} onChange={setEvent} onSubmit={() => addLoadingAnimation(createEvent({ event }))} errorDisplay="onSubmit">
+      <div className="flexz gap-3">
+        <Input label={t('name')} path="name" required containerClassName="w-60" />
         <DateRangeField<EventForm>
           id="eventDate"
           label={t('eventDate')}
