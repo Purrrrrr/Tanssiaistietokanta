@@ -215,7 +215,7 @@
   * Access control system
   * Replace old OnlyAdmin components with the new system
   * Real login page
-    Bring submit error option to formV2
+  * Bring submit error option to formV2
     Nicer logout menu keyboard a11y
     Maybe more flexible right id associations (eg. file id + event id)
     Associate files with some service and entity id

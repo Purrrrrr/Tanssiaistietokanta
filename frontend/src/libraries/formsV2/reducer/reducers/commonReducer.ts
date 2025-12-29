@@ -18,7 +18,8 @@ export type CommonReducerAction = ValidationAction | FocusAction
 
 export function commonReducer(state: CommonFormState, action: CommonReducerAction): CommonFormState {
   switch (action.type) {
-    case 'SET_VALIDATION_RESULT': {
+    case 'SET_VALIDATION_RESULT':
+    case 'FORM_SUBMIT': {
       return assoc(state, 'validation', validationReducer(state.validation, action))
     }
     case 'FOCUS':
