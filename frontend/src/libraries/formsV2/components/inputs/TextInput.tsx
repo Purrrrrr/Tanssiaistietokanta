@@ -11,7 +11,7 @@ export const TextInput: FieldInputComponent<string, TextInputExtraProps> = ({ va
   <input
     value={value ?? ''}
     className={classNames(className, CssClass.input, inline || 'w-full grow')}
-    onKeyDown={e => (e.key === 'Escape' || e.key === 'Enter') && (e.target as HTMLInputElement).blur()}
+    onKeyDown={e => (e.key === 'Escape') && (e.target as HTMLInputElement).blur()}
     onChange={e => onChange(e.target.value)}
     {...rest}
   />
