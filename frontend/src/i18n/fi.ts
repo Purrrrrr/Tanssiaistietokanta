@@ -341,7 +341,7 @@ export const fi = {
       createEvent: {
         newEventBreadcrumb: 'Uusi tapahtuma',
         newEvent: 'Luo uusi tapahtuma',
-        create: 'Luo',
+        create: 'Luo tapahtuma',
         name: 'Nimi',
         eventDate: 'Tapahtuman ajankohta',
         beginDate: 'Alkaa',
