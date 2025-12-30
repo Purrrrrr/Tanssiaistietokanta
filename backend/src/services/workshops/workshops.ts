@@ -1,5 +1,5 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/service.html
-
+import { authenticate } from '@feathersjs/authentication'
 import { hooks as schemaHooks } from '@feathersjs/schema'
 import { uniq } from 'ramda'
 
@@ -68,7 +68,11 @@ export const workshops = (app: Application) => {
       all: [
         schemaHooks.resolveExternal(workshopsExternalResolver),
         schemaHooks.resolveResult(workshopsResolver)
-      ]
+      ],
+      create: [authenticate('jwt')],
+      update: [authenticate('jwt')],
+      patch: [authenticate('jwt')],
+      remove: [authenticate('jwt')],
     },
     before: {
       all: [

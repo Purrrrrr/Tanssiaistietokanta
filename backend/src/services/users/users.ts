@@ -19,6 +19,7 @@ import type { Application } from '../../declarations'
 import { User, UserService, getOptions } from './users.class'
 import { userPath, userMethods } from './users.shared'
 import { titleCase } from '../dancewiki/utils/titleCase'
+import { disallow } from 'feathers-hooks-common'
 
 export * from './users.class'
 export * from './users.schema'
@@ -83,7 +84,6 @@ export const user = (app: Application) => {
           }
           return next()
         },
-        authenticate('jwt'),
       ],
       update: [authenticate('jwt')],
       patch: [authenticate('jwt')],
@@ -93,7 +93,7 @@ export const user = (app: Application) => {
       all: [schemaHooks.validateQuery(userQueryValidator), schemaHooks.resolveQuery(userQueryResolver)],
       find: [],
       get: [],
-      create: [schemaHooks.validateData(userDataValidator), schemaHooks.resolveData(userDataResolver)],
+      create: [disallow('external'), schemaHooks.validateData(userDataValidator), schemaHooks.resolveData(userDataResolver)],
       patch: [schemaHooks.validateData(userPatchValidator), schemaHooks.resolveData(userPatchResolver)],
       remove: []
     },

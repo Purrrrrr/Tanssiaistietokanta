@@ -1,5 +1,5 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/service.html
-
+import { authenticate } from '@feathersjs/authentication'
 import { hooks as schemaHooks } from '@feathersjs/schema'
 import { omit } from 'ramda'
 
@@ -35,7 +35,11 @@ export const events = (app: Application) => {
   // Initialize hooks
   app.service(eventsPath).hooks({
     around: {
-      all: [schemaHooks.resolveExternal(eventsExternalResolver), schemaHooks.resolveResult(eventsResolver)]
+      all: [schemaHooks.resolveExternal(eventsExternalResolver), schemaHooks.resolveResult(eventsResolver)],
+      create: [authenticate('jwt')],
+      update: [authenticate('jwt')],
+      patch: [authenticate('jwt')],
+      remove: [authenticate('jwt')],
     },
     before: {
       all: [mergeJsonPatch(omit(['_id', '_createdAt', '_updatedAt']) as (data: unknown) => unknown), schemaHooks.validateQuery(eventsQueryValidator), schemaHooks.resolveQuery(eventsQueryResolver)],
