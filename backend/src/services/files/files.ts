@@ -16,6 +16,7 @@ import {
 import type { Application, HookContext } from '../../declarations'
 import { File, FileService, getOptions } from './files.class'
 import { filePath, fileMethods } from './files.shared'
+import { authenticate } from '@feathersjs/authentication'
 
 export * from './files.class'
 export * from './files.schema'
@@ -33,6 +34,7 @@ export const file = (app: Application) => {
   app.service(filePath).hooks({
     around: {
       all: [
+        authenticate('jwt'),
         // schemaHooks.resolveExternal(fileExternalResolver),
         // schemaHooks.resolveResult(fileResolver)
       ],

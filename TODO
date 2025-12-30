@@ -217,6 +217,7 @@
   * Real login page
   * Bring submit error option to formV2
   * Allow to initialize first user while the server is running
+  * Enforce auth on server. Prevent all changing operations and access to files from unauthenticated users
     Nicer logout menu keyboard a11y
     Maybe more flexible right id associations (eg. file id + event id)
     Associate files with some service and entity id

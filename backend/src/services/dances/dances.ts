@@ -18,6 +18,7 @@ import { DancesService, getOptions } from './dances.class'
 import { dancesPath, dancesMethods } from './dances.shared'
 import { defaultChannels, withoutCurrentConnection } from '../../utils/defaultChannels'
 import { getDependenciesFor } from '../../utils/dependencies'
+import { authenticate } from '@feathersjs/authentication'
 
 export * from './dances.class'
 export * from './dances.schema'
@@ -34,7 +35,11 @@ export const dances = (app: Application) => {
   // Initialize hooks
   app.service(dancesPath).hooks({
     around: {
-      all: [schemaHooks.resolveExternal(dancesExternalResolver), schemaHooks.resolveResult(dancesResolver)]
+      all: [schemaHooks.resolveExternal(dancesExternalResolver), schemaHooks.resolveResult(dancesResolver)],
+      create: [authenticate('jwt')],
+      update: [authenticate('jwt')],
+      patch: [authenticate('jwt')],
+      remove: [authenticate('jwt')],
     },
     before: {
       all: [schemaHooks.validateQuery(dancesQueryValidator), schemaHooks.resolveQuery(dancesQueryResolver)],
