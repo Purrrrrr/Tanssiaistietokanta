@@ -26,31 +26,37 @@ export * from './users.schema'
 export const createUserFile = './data/create-user.json'
 type CreateUser = Pick<User, 'username' | 'password'>
 
-async function initializeFirstUser(userService: UserService) {
-  if (existsSync(createUserFile)) {
-    const users = await userService.find({ query: { $limit: 1 } })
-    if (users.length > 0) {
-      console.log('Users already exist. Skipping initial user creation.')
-      return
+async function initializeFirstUser(userService: UserService, throwOnMissingFile = false) {
+  if (!existsSync(createUserFile)) {
+    if (throwOnMissingFile) {
+      throw new Error(`Initial user creation file ${createUserFile} not found`)
     }
-
-    const fileContents = readFileSync(createUserFile, 'utf-8')
-    const { username, password } = JSON.parse(fileContents) as CreateUser
-    console.log(`Creating initial user '${username}' from ${createUserFile}`)
-
-    if (!username || !password) {
-      console.error(`create-user.json must contain both 'username' and 'password' fields`)
-    }
-
-    await userService.create({
-      name: titleCase(username),
-      username,
-      password
-    })
-
-    console.log(`User '${username}' created. Deleting ${createUserFile}`)
-    unlinkSync(createUserFile)
+    return
   }
+  const users = await userService.find({ query: { $limit: 1 } })
+  if (users.length > 0) {
+    console.log('Users already exist. Skipping initial user creation.')
+    throw new Error('Users already exist')
+  }
+
+  const fileContents = readFileSync(createUserFile, 'utf-8')
+  const { username, password } = JSON.parse(fileContents) as CreateUser
+  console.log(`Creating initial user '${username}' from ${createUserFile}`)
+
+  if (!username || !password) {
+    console.error(`create-user.json must contain both 'username' and 'password' fields`)
+    throw new Error('Invalid create-user.json file')
+  }
+
+  const result = await userService.create({
+    name: titleCase(username),
+    username,
+    password
+  })
+
+  console.log(`User '${username}' created. Deleting ${createUserFile}`)
+  unlinkSync(createUserFile)
+  return result
 }
 
 // A configure function that registers the service and its hooks via `app.configure`
@@ -68,7 +74,17 @@ export const user = (app: Application) => {
       all: [schemaHooks.resolveExternal(userExternalResolver), schemaHooks.resolveResult(userResolver)],
       find: [authenticate('jwt')],
       get: [authenticate('jwt')],
-      create: [],
+      create: [
+        async (ctx, next) => {
+          const createDefault = ctx.data && 'createDefault' in ctx.data
+          if (createDefault) {
+            ctx.result = await initializeFirstUser(ctx.service, true)
+            return
+          }
+          return next()
+        },
+        authenticate('jwt'),
+      ],
       update: [authenticate('jwt')],
       patch: [authenticate('jwt')],
       remove: [authenticate('jwt')]

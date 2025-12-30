@@ -1,4 +1,5 @@
 import { writeFileSync } from 'fs'
+import config from 'config'
 import prompt from 'minimal-password-prompt'
 
 async function main() {
@@ -25,7 +26,27 @@ async function main() {
     JSON.stringify({ username, password })
   )
 
-  console.log(`User ${username} will be created on next server start.`)
+  const host = config.get('host')
+  const port = config.get('port')
+  const serverUrl = `http://${host}:${port}`
+
+  try {
+    console.log(`Attempting to notify server at ${serverUrl} to create user...`)
+    const result = await fetch(`${serverUrl}/users`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ createDefault: true })
+    })
+    if (result.ok) {
+      console.log(`User ${username} created successfully on server.`)
+    } else {
+      console.log(`Server responded with status ${result.status} and '${await result.text()}'. User ${username} will be created on next server start.`)
+    }
+  } catch (error) {
+    console.log(`Could not connect to server at ${serverUrl}. User ${username} will be created on next server start.`)
+  }
 }
 
 main()
