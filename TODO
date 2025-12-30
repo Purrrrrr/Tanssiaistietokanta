@@ -216,6 +216,7 @@
   * Replace old OnlyAdmin components with the new system
   * Real login page
   * Bring submit error option to formV2
+  * Allow to initialize first user while the server is running
     Nicer logout menu keyboard a11y
     Maybe more flexible right id associations (eg. file id + event id)
     Associate files with some service and entity id
