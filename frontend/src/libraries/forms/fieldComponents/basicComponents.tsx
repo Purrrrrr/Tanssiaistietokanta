@@ -48,7 +48,7 @@ export function InputField<T>(props: InputFieldProps<T>) {
   return <Field<T, string, InputProps> {...props} component={Input} />
 }
 
-interface SwitchProps extends FieldComponentProps<boolean, HTMLInputElement> {
+interface SwitchProps extends FieldComponentProps<boolean> {
   label: string
 }
 export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
@@ -56,14 +56,14 @@ export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
     return <BlueprintSwitch
       inputRef={ref}
       checked={value ?? false}
-      onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(e.target.checked, e)}
+      onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(e.target.checked)}
       disabled={readOnly}
       {...props}
     />
   },
 )
 
-export interface NumberInputProps extends ExtendedFieldComponentProps<number, HTMLInputElement, ComponentProps<'input'>> {
+export interface NumberInputProps extends ExtendedFieldComponentProps<number, ComponentProps<'input'>> {
   inputRef?: React.Ref<HTMLInputElement>
 }
 export function NumberInput({ value, className, onChange, inline = false, inputRef, ...props }: NumberInputProps) {
@@ -73,12 +73,12 @@ export function NumberInput({ value, className, onChange, inline = false, inputR
     value={value ?? 0}
     className={classNames(className, CssClass.input, inline || CssClass.inputFill)}
     onKeyDown={e => (e.key === 'Escape') && (e.target as HTMLInputElement).blur()}
-    onChange={e => onChange(parseFloat(e.target.value), e)}
+    onChange={e => onChange(parseFloat(e.target.value))}
     {...props}
   />
 }
 
-export interface InputProps extends ExtendedFieldComponentProps<string, HTMLInputElement, ComponentProps<'input'>> {
+export interface InputProps extends ExtendedFieldComponentProps<string, ComponentProps<'input'>> {
   inputRef?: React.Ref<HTMLInputElement>
 }
 export function Input({ value, className, onChange, inline = false, inputRef, ...props }: InputProps) {
@@ -87,26 +87,27 @@ export function Input({ value, className, onChange, inline = false, inputRef, ..
     value={value ?? ''}
     className={classNames(className, CssClass.input, inline || CssClass.inputFill)}
     onKeyDown={e => (e.key === 'Escape') && (e.target as HTMLInputElement).blur()}
-    onChange={e => onChange(e.target.value, e)}
+    onChange={e => onChange(e.target.value)}
     {...props}
   />
 }
 
-interface TextAreaProps extends FieldComponentProps<string, HTMLTextAreaElement>, Pick<BlueprintTextAreaProps, 'growVertically'> {
+interface TextAreaProps extends FieldComponentProps<string>, Pick<BlueprintTextAreaProps, 'growVertically'> {
   inputRef?: React.Ref<HTMLTextAreaElement>
 }
+
 export function TextArea({ value, onChange, inline: _ignored, inputRef, ...props }: TextAreaProps) {
   return <BlueprintTextArea
     inputRef={inputRef}
     value={value ?? ''}
     fill
     onKeyDown={e => (e.key === 'Escape') && (e.target as HTMLTextAreaElement).blur()}
-    onChange={e => onChange?.(e.target.value, e)}
+    onChange={e => onChange?.(e.target.value)}
     {...props}
   />
 }
 
-interface RadioGroupProps<E extends string | null> extends FieldComponentProps<E, HTMLInputElement> {
+interface RadioGroupProps<E extends string | null> extends FieldComponentProps<E> {
   options: {
     value: E
     label: string
@@ -123,7 +124,7 @@ export function RadioGroup<E extends string>({ options, id, value, onChange, ...
         key={optionValue}
         value={optionValue ?? ''}
         checked={optionValue === (value ?? null)}
-        onChange={e => onChange(optionValue, e)}
+        onChange={() => onChange(optionValue)}
         {...rest}
       />
       {label}

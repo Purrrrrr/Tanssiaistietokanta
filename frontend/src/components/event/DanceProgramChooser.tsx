@@ -9,7 +9,7 @@ import { useT } from 'i18n'
 
 import { useChosenDanceIds, useWorkshops } from './EventProgramForm/eventMetadata'
 
-type DanceProgramChooserProps = FieldComponentProps<EventProgramItem, HTMLElement>
+type DanceProgramChooserProps = FieldComponentProps<EventProgramItem>
 
 export const DanceProgramChooser = React.memo(function DanceProgramChooser({ value, onChange, ...props }: DanceProgramChooserProps) {
   const t = useT('components.eventProgramEditor')
