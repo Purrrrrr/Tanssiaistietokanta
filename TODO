@@ -202,6 +202,8 @@
   * By category
 * Fix item list header when the list wraps
 * Fix workshop dance list dnd dragging two lists at once (probably some id problem)
+* Remove function callback style onChange from formV1
+* Remove event from onChange in formV1
 
   Authentication
   * Basic backend support
@@ -218,10 +220,14 @@
   * Bring submit error option to formV2
   * Allow to initialize first user while the server is running
   * Enforce auth on server. Prevent all changing operations and access to files from unauthenticated users
-    Nicer logout menu keyboard a11y
     Maybe more flexible right id associations (eg. file id + event id)
     Associate files with some service and entity id
+    Make all pages and functions have some rights check
+
+  Auth Part 2
     Allow creating users with some token? Invite functionality?
+    Nicer logout menu keyboard a11y
+
 
   Tooltips with https://github.com/doeixd/invokers?
 

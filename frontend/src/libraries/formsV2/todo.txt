@@ -57,8 +57,8 @@ TODO:
   * Fix focus bug
 * date time selector
 * Remove blueprintjs datetime selectors
+* Move dialog to overlays library
 
-  Move dialog to overlays library
   Date selectors output format -> string?
   Remove blueprint icons
   Remove apollo??

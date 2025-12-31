@@ -10,23 +10,23 @@ import './DurationField.css'
 interface DurationState {
   value: number
   text: string
-  event?: React.ChangeEvent<HTMLInputElement>
+  fromEvent?: boolean
 }
 
-interface DurationFieldProps extends FieldComponentProps<number, HTMLInputElement>, Omit<InputProps, 'ref' | 'onChange' | 'value'> { }
+interface DurationFieldProps extends FieldComponentProps<number>, Omit<InputProps, 'ref' | 'onChange' | 'value'> { }
 
 export function DurationField({ value: maybeValue, onChange, readOnly, className, ...props }: DurationFieldProps) {
   const value = maybeValue ?? 0
   const [params, setParams] = useState<DurationState>({ value, text: durationToString(value) })
 
   useDelayedEffect(10, useCallback(() => {
-    const { value, text, event } = params
+    const { value, text, fromEvent } = params
     const newVal = parseDuration(text)
-    if (!event) return
+    if (!fromEvent) return
     if (newVal === value) { // Text has changed but value hasn't. Reset text!
       setParams({ value, text: durationToString(value) })
     } else { // Propagate changed value
-      onChange?.(newVal, event)
+      onChange?.(newVal)
     }
   }, [params, onChange]))
   useEffect(() => setParams({ text: durationToString(value), value }), [value])
@@ -38,7 +38,7 @@ export function DurationField({ value: maybeValue, onChange, readOnly, className
     style={{ minWidth: `${params.text.length}ch` }}
     value={params.text}
     readOnly={readOnly}
-    onChange={(text, event) => setParams({ value, text: typeof text === 'function' ? text(params.text) : text, event })}
+    onChange={text => setParams({ value, text, fromEvent: true })}
     onClick={readOnly ? undefined : onDurationFieldFocus}
     onKeyDown={readOnly ? undefined : onDurationFieldKeyDown}
     onFocus={readOnly ? undefined : onDurationFieldFocus}

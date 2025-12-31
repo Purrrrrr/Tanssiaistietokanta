@@ -19,7 +19,7 @@ export function DateField<T>({ showTime, minDate, maxDate, ...props }: DateField
   return <Field<T, string, DateFieldInputProps> {...props} component={DateFieldInput} componentProps={{ showTime, minDate, maxDate }} />
 }
 
-export interface DateFieldInputProps extends FieldComponentProps<string, HTMLInputElement> {
+export interface DateFieldInputProps extends FieldComponentProps<string> {
   showTime?: boolean
   minDate?: string | Date | undefined
   maxDate?: string | Date | undefined
