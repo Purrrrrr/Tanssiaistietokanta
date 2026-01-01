@@ -1,14 +1,19 @@
 import React, { ComponentProps } from 'react'
 import { Switch as BlueprintSwitch, TextArea as BlueprintTextArea, TextAreaProps as BlueprintTextAreaProps } from '@blueprintjs/core'
-import classNames from 'classnames'
 
 import { ExtendedFieldComponentProps, FieldComponentProps, FieldPropsWithoutComponent } from '../types'
 
-import { CssClass } from 'libraries/ui'
+import { TextInput } from 'libraries/formsV2/components/inputs'
 
 import { Field, useFieldData } from '../Field'
 import { FieldContainer } from '../FieldContainer'
 import { useFieldValueProps } from '../hooks'
+
+export { NumberInput } from 'libraries/formsV2/components/inputs'
+
+export type NumberInputProps = ExtendedFieldComponentProps<number, ComponentProps<'input'>>
+export type InputProps = ExtendedFieldComponentProps<string, ComponentProps<'input'>>
+export const Input = TextInput
 
 export interface SwitchForProps<V> {
   isChecked: (v: V | null | undefined) => boolean
@@ -63,42 +68,10 @@ export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
   },
 )
 
-export interface NumberInputProps extends ExtendedFieldComponentProps<number, ComponentProps<'input'>> {
-  inputRef?: React.Ref<HTMLInputElement>
-}
-export function NumberInput({ value, className, onChange, inline = false, inputRef, ...props }: NumberInputProps) {
-  return <input
-    type="number"
-    ref={inputRef}
-    value={value ?? 0}
-    className={classNames(className, CssClass.input, inline || CssClass.inputFill)}
-    onKeyDown={e => (e.key === 'Escape') && (e.target as HTMLInputElement).blur()}
-    onChange={e => onChange(parseFloat(e.target.value))}
-    {...props}
-  />
-}
+type TextAreaProps = FieldComponentProps<string> & Pick<BlueprintTextAreaProps, 'growVertically'>
 
-export interface InputProps extends ExtendedFieldComponentProps<string, ComponentProps<'input'>> {
-  inputRef?: React.Ref<HTMLInputElement>
-}
-export function Input({ value, className, onChange, inline = false, inputRef, ...props }: InputProps) {
-  return <input
-    ref={inputRef}
-    value={value ?? ''}
-    className={classNames(className, CssClass.input, inline || CssClass.inputFill)}
-    onKeyDown={e => (e.key === 'Escape') && (e.target as HTMLInputElement).blur()}
-    onChange={e => onChange(e.target.value)}
-    {...props}
-  />
-}
-
-interface TextAreaProps extends FieldComponentProps<string>, Pick<BlueprintTextAreaProps, 'growVertically'> {
-  inputRef?: React.Ref<HTMLTextAreaElement>
-}
-
-export function TextArea({ value, onChange, inline: _ignored, inputRef, ...props }: TextAreaProps) {
+export function TextArea({ value, onChange, inline: _ignored, ...props }: TextAreaProps) {
   return <BlueprintTextArea
-    inputRef={inputRef}
     value={value ?? ''}
     fill
     onKeyDown={e => (e.key === 'Escape') && (e.target as HTMLTextAreaElement).blur()}

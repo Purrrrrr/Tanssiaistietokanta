@@ -58,15 +58,13 @@ TODO:
 * date time selector
 * Remove blueprintjs datetime selectors
 * Move dialog to overlays library
+* NumberInput
 
   Date selectors output format -> string?
-  Remove blueprint icons
-  Remove apollo??
   Scroll into opened selector?
   switchFor
   More lazy loading for components?
   Fix Duration field?
-  NumberInput
   RadioGroup with fieldset
   input field components
   various buttons
