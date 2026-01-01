@@ -1,7 +1,3 @@
-.duration-field {
+.duration-field:not(.grow) {
   box-sizing: content-box;
-}
-
-.bp5-fill.duration-field {
-  box-sizing: inherit; 
 }
