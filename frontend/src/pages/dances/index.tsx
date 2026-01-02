@@ -8,6 +8,7 @@ import { AnyCategory, anyCategory, DanceViewCategorySelector } from 'components/
 import { DanceList, View } from 'components/dance/DanceList'
 import { LoadingState } from 'components/LoadingState'
 import { PageTitle } from 'components/PageTitle'
+import { RequirePermissions } from 'components/rights/RequirePermissions'
 import { useT, useTranslation } from 'i18n'
 
 function DancesPage() {
@@ -19,22 +20,26 @@ function DancesPage() {
 
   return <>
     <PageTitle>{t('pageTitle')}</PageTitle>
-    <LoadingState {...requestState} />
-    <div className="flex flex-wrap gap-2 mb-2.5">
-      <SearchBar id="search-dances" value={search} onChange={setSearch} placeholder={useTranslation('common.search')} emptySearchText={useTranslation('common.emptySearch')} />
-      <div>
-        <CreateDanceButtons danceCount={dances.length} />
+    <RequirePermissions right="dances:read">
+      <LoadingState {...requestState} />
+      <div className="flex flex-wrap gap-2 mb-2.5">
+        <SearchBar id="search-dances" value={search} onChange={setSearch} placeholder={useTranslation('common.search')} emptySearchText={useTranslation('common.emptySearch')} />
+        <RequirePermissions right="dances:create">
+          <div>
+            <CreateDanceButtons danceCount={dances.length} />
+          </div>
+        </RequirePermissions>
+        <div className="grow" />
+        <FormGroup inline label={useTranslation('domain.dance.category')} id="dc">
+          <DanceViewCategorySelector id="dc" value={category} onChange={setCategory} dances={dances} />
+        </FormGroup>
+        <ModeSelector label={t('view')}>
+          <ModeButton text={t('viewMode.tight')} selected={view === 'tight'} onClick={() => setView('tight')} />
+          <ModeButton text={t('viewMode.extended')} selected={view === 'extended'} onClick={() => setView('extended')} />
+        </ModeSelector>
       </div>
-      <div className="grow" />
-      <FormGroup inline label={useTranslation('domain.dance.category')} id="dc">
-        <DanceViewCategorySelector id="dc" value={category} onChange={setCategory} dances={dances} />
-      </FormGroup>
-      <ModeSelector label={t('view')}>
-        <ModeButton text={t('viewMode.tight')} selected={view === 'tight'} onClick={() => setView('tight')} />
-        <ModeButton text={t('viewMode.extended')} selected={view === 'extended'} onClick={() => setView('extended')} />
-      </ModeSelector>
-    </div>
-    <DanceList key={search} dances={filteredDances} view={view} />
+      <DanceList key={search} dances={filteredDances} view={view} />
+    </RequirePermissions>
   </>
 }
 

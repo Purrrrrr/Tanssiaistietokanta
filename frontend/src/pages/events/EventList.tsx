@@ -20,21 +20,23 @@ export default function EventList() {
     <RequirePermissions right="dances:read">
       <p>{t('youcanEditDancesIn')} <Link to="/dances">{t('danceDatabaseLinkName')}</Link></p>
     </RequirePermissions>
-    <H2>{t('danceEvents')}</H2>
-    <ItemList columns="grid-cols-[1fr_max-content] gap-x-4" items={events} emptyText={t('noEvents')} className="max-w-200" wrap-breakpoint="none">
-      <ItemList.Header>
-        <span>{t('name')}</span>
-        <span>{t('date')}</span>
-      </ItemList.Header>
-      {events.map(event =>
-        <ItemList.Row key={event._id}>
-          <Link to={'events/' + event._id}>{event.name}</Link>
-          <div>
-            {formatDate(event.beginDate)} - {formatDate(event.endDate)}
-          </div>
-        </ItemList.Row>,
-      )}
-    </ItemList>
+    <RequirePermissions right="events:read">
+      <H2>{t('danceEvents')}</H2>
+      <ItemList columns="grid-cols-[1fr_max-content] gap-x-4" items={events} emptyText={t('noEvents')} className="max-w-200" wrap-breakpoint="none">
+        <ItemList.Header>
+          <span>{t('name')}</span>
+          <span>{t('date')}</span>
+        </ItemList.Header>
+        {events.map(event =>
+          <ItemList.Row key={event._id}>
+            <Link to={'events/' + event._id}>{event.name}</Link>
+            <div>
+              {formatDate(event.beginDate)} - {formatDate(event.endDate)}
+            </div>
+          </ItemList.Row>,
+        )}
+      </ItemList>
+    </RequirePermissions>
     <NavigateButton requireRight="events:create" color="primary" href="events/new" text={t('createEvent')} />
   </>
 }

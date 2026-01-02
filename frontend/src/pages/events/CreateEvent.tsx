@@ -7,6 +7,7 @@ import { DateRangeField, formFor, SubmitButton } from 'libraries/forms'
 import { Breadcrumb } from 'libraries/ui'
 import { useGlobalLoadingAnimation } from 'components/LoadingState'
 import { PageTitle } from 'components/PageTitle'
+import { RequirePermissions } from 'components/rights/RequirePermissions'
 import { useT } from 'i18n'
 
 interface EventForm {
@@ -33,18 +34,20 @@ export default function CreateEventForm() {
   return <>
     <Breadcrumb text={t('newEventBreadcrumb')} />
     <PageTitle>{t('newEvent')}</PageTitle>
-    <Form labelStyle="above" value={event} onChange={setEvent} onSubmit={() => addLoadingAnimation(createEvent({ event }))} errorDisplay="onSubmit">
-      <div className="flexz gap-3">
-        <Input label={t('name')} path="name" required containerClassName="w-60" />
-        <DateRangeField<EventForm>
-          id="eventDate"
-          label={t('eventDate')}
-          beginPath="beginDate"
-          endPath="endDate"
-          required
-        />
-      </div>
-      <SubmitButton text={t('create')} />
-    </Form>
+    <RequirePermissions right="events:create" fallback="loginPage">
+      <Form labelStyle="above" value={event} onChange={setEvent} onSubmit={() => addLoadingAnimation(createEvent({ event }))} errorDisplay="onSubmit">
+        <div className="flexz gap-3">
+          <Input label={t('name')} path="name" required containerClassName="w-60" />
+          <DateRangeField<EventForm>
+            id="eventDate"
+            label={t('eventDate')}
+            beginPath="beginDate"
+            endPath="endDate"
+            required
+          />
+        </div>
+        <SubmitButton text={t('create')} />
+      </Form>
+    </RequirePermissions>
   </>
 }

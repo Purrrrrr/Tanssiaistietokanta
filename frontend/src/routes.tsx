@@ -30,9 +30,7 @@ export default function MainRoutes() {
         <Route index element={<EventList />} />
         <Route path="login" element={<LoginForm redirectTo="/" />} />
         <Route path="ui-showcase" element={<UiShowcase />} />
-        <Route path="events/new" element={
-          <RequirePermissions right="events:create" fallback="loginPage"><CreateEvent /></RequirePermissions>
-        } />
+        <Route path="events/new" element={<CreateEvent />} />
         <Route path="events/:eventId/version/:eventVersionId/*" element={<EventRoutes />} />
         <Route path="events/:eventId/*" element={<EventRoutes />} />
         <Route path="dances/*" element={<DanceRoutes />} />

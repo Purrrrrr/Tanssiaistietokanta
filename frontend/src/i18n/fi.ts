@@ -265,6 +265,7 @@ export const fi = {
       size: 'Koko',
       date: 'Päivämäärä',
       noFiles: 'Ei tiedostoja',
+      addFile: 'Lisää tiedosto',
       filesSelected: {
         one: 'Yksi tiedosto valittu, yhteensä __sizeTotal__',
         many: '__count__ tiedostoa valittu, yhteensä __sizeTotal__',

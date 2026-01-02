@@ -22,6 +22,7 @@ export function DeleteDanceButton({ minimal, dance, onDelete }: DeleteDanceButto
   }
 
   return <DeleteButton
+    requireRight="dances:delete"
     minimal={minimal}
     onDelete={handleDelete}
     disabled={dance.events.length > 0}

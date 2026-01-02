@@ -1,8 +1,6 @@
 import React from 'react'
 
-import { ID } from 'backend/types'
-
-import { RightQueryInput, useHasRight } from 'services/users'
+import { RightQueryInput, RightsEntity, useHasRight } from 'services/users'
 
 import { type Color, Link } from 'libraries/ui'
 import { buttonClass } from 'libraries/ui/Button'
@@ -12,7 +10,7 @@ interface NavigateButtonProps extends Omit<React.ComponentProps<typeof Link>, 't
   children?: string | React.ReactElement | React.ReactElement[]
   icon?: React.ReactElement
   requireRight?: RightQueryInput
-  entityId?: ID
+  entity?: RightsEntity
   disabled?: boolean
   minimal?: boolean
   href: string
@@ -20,8 +18,8 @@ interface NavigateButtonProps extends Omit<React.ComponentProps<typeof Link>, 't
   className?: string
 }
 
-export function NavigateButton({ text, children, icon, disabled, minimal, href, color, className, requireRight, entityId, ...props }: NavigateButtonProps) {
-  const hasRight = useHasRight(requireRight, entityId)
+export function NavigateButton({ text, children, icon, disabled, minimal, href, color, className, requireRight, entity, ...props }: NavigateButtonProps) {
+  const hasRight = useHasRight(requireRight, entity)
   if (!hasRight) return null
 
   const classes = buttonClass(color ?? 'none', { className, disabled, minimal })

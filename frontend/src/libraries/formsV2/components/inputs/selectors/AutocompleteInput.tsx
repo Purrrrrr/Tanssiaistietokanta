@@ -92,11 +92,11 @@ export function AutocompleteInput<T>(props: AutocompleteInputProps<T>) {
 
   const inputProps = {
     placeholder,
-    onFocus: openMenu,
-    disabled: readOnly,
-    ...getInputProps({
+    onFocus: readOnly ? undefined : openMenu,
+    readOnly,
+    ...(readOnly ? null : getInputProps({
       onKeyDown: preventDownshiftDefaultWhen(e => e.key === 'Home' || e.key === 'End'),
-    }),
+    })),
   }
 
   return <DropdownContainer className={containerClassname ?? (inline ? undefined : 'grow f-full')}>

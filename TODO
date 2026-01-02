@@ -222,6 +222,12 @@
   * Enforce auth on server. Prevent all changing operations and access to files from unauthenticated users
   * Simplify rights check for now
     Make all pages and functions have some rights check
+    * FileList
+    * EventList
+    * Dances
+      Events
+    Check a11y for form field readOnly vs disabled vs some other rendering method
+    Render readOnly selectors more lightly
 
   Auth Part 2
     Allow creating users with some token? Invite functionality?

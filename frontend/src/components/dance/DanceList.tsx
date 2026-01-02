@@ -13,6 +13,7 @@ import { DanceEditor, PlainDanceEditor } from './DanceEditor'
 import { DanceIsUsedIn } from './DanceIsUsedIn'
 import { DanceLink } from './DanceLink'
 import { DeleteDanceButton } from './DeleteDanceButton'
+import { RequirePermissions } from 'components/rights/RequirePermissions'
 
 interface DanceListProps {
   dances: DanceWithEvents[]
@@ -85,15 +86,17 @@ function DanceListRow({ dance }: { dance: DanceWithEvents }) {
     <div className="text-right max-sm:w-full">
       <DanceIsUsedIn minimal events={dance.events} wikipageName={dance.wikipageName} />
       <DeleteDanceButton minimal dance={dance} />
-      <Button
-        minimal
-        icon={<Edit />}
-        aria-label={useTranslation('common.edit')}
-        tooltip={useTranslation('common.edit')}
-        color="primary"
-        onClick={() => setShowEditor(!showEditor)}
-        rightIcon={showEditor ? <ChevronUp /> : <ChevronDown />}
-      />
+      <RequirePermissions right="dances:modify">
+        <Button
+          minimal
+          icon={<Edit />}
+          aria-label={useTranslation('common.edit')}
+          tooltip={useTranslation('common.edit')}
+          color="primary"
+          onClick={() => setShowEditor(!showEditor)}
+          rightIcon={showEditor ? <ChevronUp /> : <ChevronDown />}
+        />
+      </RequirePermissions>
     </div>
   </ItemList.Row>
 }

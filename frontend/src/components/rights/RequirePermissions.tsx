@@ -1,4 +1,5 @@
 import { RightQueryInput, RightsEntity, useHasRight } from 'services/users'
+
 import { LoginForm } from './LoginForm'
 
 interface RequirePermissionsProps extends RequirePermissionsWrapperProps {
