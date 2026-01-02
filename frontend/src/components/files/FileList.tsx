@@ -2,10 +2,11 @@ import { useRef } from 'react'
 import { Add } from '@blueprintjs/icons'
 
 import { useFiles } from 'services/files'
+import { useHasRight } from 'services/users'
 
 import { useFormatDateTime } from 'libraries/i18n/dateTime'
 import { useAlerts } from 'libraries/overlays'
-import { Button, ItemList, RegularLink } from 'libraries/ui'
+import { Button, H2, ItemList, RegularLink } from 'libraries/ui'
 import { useT } from 'i18n'
 import { useMultipleSelection } from 'utils/useMultipleSelection'
 
@@ -20,11 +21,12 @@ import useFilesize from './useFilesize'
 import { useUploadQueue } from './useUploadQueue'
 
 interface FileListProps {
+  title?: string
   root: string
   path?: string
 }
 
-export function FileList({ root, path }: FileListProps) {
+export function FileList({ title, root, path }: FileListProps) {
   const input = useRef<HTMLInputElement>(null)
   const queryVars = { root, path }
   const [files] = useFiles(queryVars)
@@ -34,6 +36,7 @@ export function FileList({ root, path }: FileListProps) {
   const formatDate = useFormatDateTime()
   const showAlert = useAlerts()
   const selector = useMultipleSelection(files)
+  const canUseFiles = useHasRight('files:read')
 
   const startUploads = async (filesToUpload: File[]) => {
     const filesAndDuplicates = filesToUpload.map(file => ({
@@ -75,7 +78,12 @@ export function FileList({ root, path }: FileListProps) {
     )
   }
 
+  if (!canUseFiles) {
+    return null
+  }
+
   return <div>
+    {title && <H2>{title}</H2>}
     <FileDropZone onDrop={onDragAndDrop}>
       <ItemList
         items={files}
