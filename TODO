@@ -220,14 +220,15 @@
   * Bring submit error option to formV2
   * Allow to initialize first user while the server is running
   * Enforce auth on server. Prevent all changing operations and access to files from unauthenticated users
-    Maybe more flexible right id associations (eg. file id + event id)
-    Associate files with some service and entity id
+  * Simplify rights check for now
     Make all pages and functions have some rights check
 
   Auth Part 2
     Allow creating users with some token? Invite functionality?
     Nicer logout menu keyboard a11y
-
+    Entity specific rights
+      Return a rights override with the entity and provide it to the RequirePermissions components
+      Associate files with some service and entity id?
 
   Tooltips with https://github.com/doeixd/invokers?
 
