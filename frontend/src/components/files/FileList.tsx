@@ -2,7 +2,7 @@ import { useRef } from 'react'
 import { Add } from '@blueprintjs/icons'
 
 import { useFiles } from 'services/files'
-import { useHasRight } from 'services/users'
+import { useHasRights } from 'services/users'
 
 import { useFormatDateTime } from 'libraries/i18n/dateTime'
 import { useAlerts } from 'libraries/overlays'
@@ -36,9 +36,12 @@ export function FileList({ title, root, path }: FileListProps) {
   const formatDate = useFormatDateTime()
   const showAlert = useAlerts()
   const selector = useMultipleSelection(files)
-  const canUseFiles = useHasRight('files:read')
+  const [canUseFiles, canUpload, canModify, canDelete] = useHasRights([
+    'files:read', 'files:create', 'files:modify', 'files:delete',
+  ])
 
   const startUploads = async (filesToUpload: File[]) => {
+    if (!canUpload) return
     const filesAndDuplicates = filesToUpload.map(file => ({
       file,
       uploadedDuplicate: files.find(f => f.name === file.name),
@@ -84,7 +87,7 @@ export function FileList({ title, root, path }: FileListProps) {
 
   return <div>
     {title && <H2>{title}</H2>}
-    <FileDropZone onDrop={onDragAndDrop}>
+    <FileDropZone enabled={canUpload} onDrop={onDragAndDrop}>
       <ItemList
         items={files}
         emptyText={T('noFiles')}
@@ -106,8 +109,8 @@ export function FileList({ title, root, path }: FileListProps) {
             <span>{formatDate(file._updatedAt)}</span>
             <span>{filesize(file.size)}</span>
             <div>
-              <RenameFileButton file={file} />
-              <DeleteFileButton file={file} />
+              {canModify && <RenameFileButton file={file} />}
+              {canDelete && <DeleteFileButton file={file} />}
             </div>
           </ItemList.Row>,
         )}
@@ -121,14 +124,14 @@ export function FileList({ title, root, path }: FileListProps) {
       />
     </FileDropZone>
     <div className="flex gap-3 items-start my-5">
-      <Button icon={<Add />} onClick={() => input.current?.click()} text="Lisää tiedosto" />
+      {canUpload && <Button icon={<Add />} onClick={() => input.current?.click()} text={T('addFile')} />}
       {selector.selected.length > 0 &&
         <div className="flex gap-3 items-center">
           {T('filesSelected', {
             count: selector.selected.length,
             sizeTotal: filesize(selector.selected.map(file => file.size).reduce((a, b) => a + b)),
           })}
-          <DeleteSelectionButton files={selector.selected} />
+          {canDelete && <DeleteSelectionButton files={selector.selected} />}
           <DownloadSelectionButton files={selector.selected} />
         </div>
       }

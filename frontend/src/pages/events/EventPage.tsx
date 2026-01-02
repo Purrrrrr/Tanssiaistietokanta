@@ -117,7 +117,7 @@ function EventDetailsForm({ event }: { event: Event }) {
 }
 
 function EventProgram({ event, readOnly }: { event: Event, readOnly: boolean }) {
-  const { _id, program } = event
+  const { program } = event
 
   const t = useT('pages.events.eventPage')
   if (!program || program.danceSets.length === 0) {
@@ -139,7 +139,6 @@ function EventProgram({ event, readOnly }: { event: Event, readOnly: boolean }) 
     <p>
       <NavigateButton
         requireRight="events:modify"
-        entityId={_id}
         href="program/main"
         color={readOnly ? undefined : 'primary'}
         text={readOnly ? t('viewProgram') : t('editProgram')}

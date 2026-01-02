@@ -3,7 +3,9 @@ import { Link as LinkIcon } from '@blueprintjs/icons'
 import { Dance, DanceWithEvents } from 'types'
 import { ID } from 'backend/types'
 
-import { MarkdownEditor, MarkdownEditorProps, SyncStatus } from 'libraries/forms'
+import { useHasRight } from 'services/users'
+
+import { MarkdownEditorProps, SyncStatus } from 'libraries/forms'
 import { Button, H2 } from 'libraries/ui'
 import { MarkdownInput } from 'components/files/MarkdownInput'
 import { useVersionedName } from 'components/versioning/VersionedPageTitle'
@@ -31,8 +33,9 @@ export function DanceEditor({ dance, onDelete, showLink, showVersionHistory, tit
   const t = useT('components.danceEditor')
   const { formProps, state } = useDanceEditorState(dance)
   const Title = titleComponent === 'h2' ? H2 : 'h1'
+  const canEdit = useHasRight('dances:modify')
 
-  return <Form {...formProps}>
+  return <Form {...formProps} readOnly={!canEdit}>
     <div className="flex flex-wrap gap-3.5 items-center mb-2">
       <Title className="m-0">
         {useVersionedName(dance.name, dance._versionId ? dance._versionNumber : null)}
@@ -53,7 +56,8 @@ export function DanceEditor({ dance, onDelete, showLink, showVersionHistory, tit
 
 export function PlainDanceEditor({ dance }: { dance: DanceWithEvents }) {
   const { formProps, state } = useDanceEditorState(dance)
-  return <Form className="p-2 border-gray-200 border-t-1"{...formProps}>
+  const canEdit = useHasRight('dances:modify')
+  return <Form className="p-2 border-gray-200 border-t-1"{...formProps} readOnly={!canEdit}>
     <SyncStatus floatRight state={state} />
     <FullDanceEditorFields dance={dance} />
   </Form>
@@ -99,10 +103,11 @@ export interface InstructionEditorProps extends MarkdownEditorProps {
 export function InstructionEditor({ danceId, wikipage, ...props }: InstructionEditorProps) {
   const t = useT('components.danceEditor')
   const isMissingvalue = (props.value ?? '').trim().length < 10
-  const onClick = () => props.onChange(wikipage?.instructions ?? '')
+  const canCopyFromWiki = isMissingvalue && wikipage && !props.readOnly
+  const copyInstructionsFromWiki = () => props.onChange(wikipage?.instructions ?? '')
   return <>
     <MarkdownInput {...props} fileRoot={`dances/${danceId}/markdown`} />
-    {isMissingvalue && wikipage && <p className="pt-2"><Button color="primary" text={t('copyFromDancewiki')} onClick={onClick} /></p>}
+    {canCopyFromWiki && <p className="pt-2"><Button color="primary" text={t('copyFromDancewiki')} onClick={copyInstructionsFromWiki} /></p>}
   </>
 }
 

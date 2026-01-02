@@ -25,5 +25,5 @@ export type RightsList = JoinedList<Rights, ',', 3>
 
 // Example
 // const right: RightQueryString = 'files:manage,create'
-//
+
 export type RightQueryInput = RightQueryString | RightQueryString[] | RightQuery | RightQuery[]
