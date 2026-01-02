@@ -1,27 +1,11 @@
 import { useSyncExternalStore } from 'react'
 
-import { ID, ServiceName } from 'backend/types'
+import { Right, RightQuery, RightQueryInput, RightsEntity, RightsList, ServiceName } from './types'
 
 import { getCurrentUser, subscribeToAuthChanges, type User } from 'backend/authentication'
 
-import { JoinedList } from './typeUtils'
-
+export type { RightQueryInput, RightsEntity } from './types'
 export { login, logout } from 'backend/authentication'
-
-export const rights = ['create', 'delete', 'manage', 'read', 'modify'] as const
-export type Rights = [...typeof rights]
-export type Right = Rights[number]
-export type Scope = ServiceName
-export interface RightQuery {
-  right: Right
-  service: Scope
-  entity?: ID
-}
-
-export type RightQueryString = `${ServiceName}${`/${ID}` | ''}:${RightsList}`
-export type RightsList = JoinedList<Rights, ',', 3>
-
-export const r: RightQueryString = 'files/adad:manage,create'
 
 export function useCurrentUser() {
   return useSyncExternalStore(subscribeToAuthChanges, getCurrentUser)
@@ -34,28 +18,29 @@ function hasRight(user: User | null, { right, service }: RightQuery) {
   return user !== null
 }
 
-export function useHasRight(query?: RightQueryInput, entityId?: ID) {
+export function useHasRight(query?: RightQueryInput, entity?: RightsEntity) {
   const user = useCurrentUser()
   if (query === undefined) return true
-  return parseRightQuery(query, entityId).every(q => hasRight(user, q))
+  return parseRightQuery(query, entity).every(q => hasRight(user, q))
 }
 
-export function useHasRights(queries: RightQueryInput, entityId?: ID) {
+export function useHasRights(queries: RightQueryInput, entity?: RightsEntity) {
   const user = useCurrentUser()
-  return parseRightQuery(queries, entityId).map(query => hasRight(user, query))
+  return parseRightQuery(queries, entity).map(query => hasRight(user, query))
 }
 
-export type RightQueryInput = RightQueryString | RightQueryString[] | RightQuery | RightQuery[]
-
-export function parseRightQuery(query: RightQueryInput, optionalId?: ID): RightQuery[] {
+export function parseRightQuery(query: RightQueryInput, entity?: RightsEntity): RightQuery[] {
   if (Array.isArray(query)) {
-    return query.flatMap(q => parseRightQuery(q, optionalId))
+    return query.flatMap((q: RightQueryInput) => parseRightQuery(q, entity))
   }
   if (typeof query !== 'string') {
-    return [{ ...query, entity: optionalId ?? query.entity }]
+    return [{
+      ...query,
+      entity: query.entity ?? entity,
+    }]
   }
-  const [servicePart, rightsPart] = query.split(':')
-  const [service, entity] = servicePart.split('/')
+
+  const [service, rightsPart] = query.split(':') as [ServiceName, RightsList]
   const rights = rightsPart.split(',') as Right[]
-  return rights.map(right => ({ service: service as ServiceName, entity: optionalId ?? entity ?? undefined, right }))
+  return rights.map(right => ({ service, entity, right }))
 }

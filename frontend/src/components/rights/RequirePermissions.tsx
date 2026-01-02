@@ -1,6 +1,5 @@
-import { ID } from 'backend/types'
-
-import { RightQueryInput, useHasRight } from 'services/users'
+import { RightQueryInput, RightsEntity, useHasRight } from 'services/users'
+import { LoginForm } from './LoginForm'
 
 interface RequirePermissionsProps extends RequirePermissionsWrapperProps {
   children: React.ReactNode
@@ -13,11 +12,11 @@ export function RequirePermissions(props: RequirePermissionsProps) {
 
 interface RequirePermissionsWrapperProps extends NoRightsFallbackProps {
   right: RightQueryInput
-  entityId?: ID
+  entity?: RightsEntity
 }
 
-export function useRequirePermissionsWrapper({ right, entityId, ...props }: RequirePermissionsWrapperProps) {
-  if (useHasRight(right, entityId)) {
+export function useRequirePermissionsWrapper({ right, entity, ...props }: RequirePermissionsWrapperProps) {
+  if (useHasRight(right, entity)) {
     return (children: React.ReactNode) => <>{children}</>
   }
 
@@ -29,7 +28,14 @@ interface NoRightsFallbackProps {
   fallbackContents?: React.ReactNode
 }
 
-export function NoRightsFallback(props: NoRightsFallbackProps) {
-  // TODO: implement 'loginPage' and 'message' fallbacks
-  return props.fallbackContents ?? null
+export function NoRightsFallback({ fallback, fallbackContents }: NoRightsFallbackProps) {
+  switch (fallback) {
+    case 'hide':
+      return fallbackContents ?? null
+    case 'loginPage':
+      return <LoginForm />
+    case 'message':
+      // TODO: implement 'message' fallback style
+      return fallbackContents ?? null
+  }
 }

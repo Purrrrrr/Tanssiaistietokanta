@@ -58,7 +58,7 @@ function EventRoutes() {
   const { eventId, eventVersionId } = useParams()
   const [event, loadingState] = useEvent(eventId ?? '', eventVersionId)
 
-  return <RequirePermissions right="events:read" entityId={eventId} fallback="loginPage">
+  return <RequirePermissions right="events:read" fallback="loginPage">
     <VersionableContentContainer>
       {event
         ? <>
@@ -77,7 +77,7 @@ function EventRoutes() {
 }
 
 function EventProgramRoutes({ event }) {
-  return <RequirePermissions right="events:modify" entityId={event.id} fallback="loginPage">
+  return <RequirePermissions right="events:modify" fallback="loginPage">
     <Breadcrumb text={useTranslation('breadcrumbs.eventProgram')} />
     <Routes>
       <Route index element={<Navigate to="main" replace />} />
