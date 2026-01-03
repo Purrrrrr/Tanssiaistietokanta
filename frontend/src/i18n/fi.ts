@@ -352,6 +352,7 @@ export const fi = {
         endDate: 'Loppuu',
       },
       eventPage: {
+        loginToEdit: 'Kirjaudu muokataksesi tapahtumaa',
         ballProgram: 'Tanssiaisohjelma',
         noProgram: 'Ei ohjelmaa',
         eventDetails: 'Tapahtuman tiedot',

@@ -6,6 +6,7 @@ import { Breadcrumb } from 'libraries/ui'
 import { DanceEditor } from 'components/dance/DanceEditor'
 import { LoadingState } from 'components/LoadingState'
 import { PageTitle } from 'components/PageTitle'
+import { RequirePermissions } from 'components/rights/RequirePermissions'
 import { BackLink } from 'components/widgets/BackLink'
 import { useT } from 'i18n'
 
@@ -27,6 +28,8 @@ export default function DancePage({ parentType = 'dances' }: DancePageProps) {
     <Breadcrumb text={dance.name} />
     <PageTitle noRender>{dance.name}</PageTitle>
     <BackLink>{t(parentType === 'dances' ? 'backToDanceList' : 'backToEventProgram')}</BackLink>
-    <DanceEditor titleComponent="h1" dance={dance} showVersionHistory onDelete={() => { navigate('..') }} />
+    <RequirePermissions right="dances:read">
+      <DanceEditor titleComponent="h1" dance={dance} showVersionHistory onDelete={() => { navigate('..') }} />
+    </RequirePermissions>
   </>
 }

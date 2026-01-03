@@ -8,10 +8,11 @@ import { useHasRight } from 'services/users'
 import { useCreateWorkshop, useDeleteWorkshop } from 'services/workshops'
 
 import { DateField, DateRangeField, formFor, patchStrategy, SyncStatus, useAutosavingState } from 'libraries/forms'
-import { Button, Card, Collapse, H2 } from 'libraries/ui'
+import { Button, Card, Collapse, H2, Link } from 'libraries/ui'
 import { JSONPatch } from 'components/event/EventProgramForm/patchStrategy'
 import { FileList } from 'components/files/FileList'
 import { useGlobalLoadingAnimation } from 'components/LoadingState'
+import { RequirePermissions } from 'components/rights/RequirePermissions'
 import { VersionedPageTitle } from 'components/versioning/VersionedPageTitle'
 import { VersionSidebarToggle } from 'components/versioning/VersionSidebarToggle'
 import { DeleteButton } from 'components/widgets/DeleteButton'
@@ -34,7 +35,7 @@ export default function EventPage({ event }: { event: Event }) {
   const t = useT('pages.events.eventPage')
   const { _versionId, _versionNumber } = event
   const readOnly = _versionId != undefined
-  return <>
+  return <RequirePermissions right="events:read">
     <div className="flex justify-between items-center">
       <VersionedPageTitle showVersion={readOnly} versionNumber={_versionNumber}>
         {event.name}
@@ -47,7 +48,7 @@ export default function EventPage({ event }: { event: Event }) {
     <H2>{t('workshops')}</H2>
     <EventWorkshops event={event} readOnly={readOnly} />
     <FileList title={t('files')} root={`events/${event._id}`} />
-  </>
+  </RequirePermissions>
 }
 
 function EventDetails({ event, readOnly }: { event: Event, readOnly: boolean }) {
@@ -65,11 +66,17 @@ function EventDetails({ event, readOnly }: { event: Event, readOnly: boolean }) 
       {t('eventDate')}: {formatDate(event.beginDate)} - {formatDate(event.endDate)}
       { readOnly ||
         <div>
-          <Button
-            onClick={() => setShowEditor(!showEditor)}
-            text={showEditor ? t('closeEditor') : t('openBasicDetailsEditor')}
-          />
+          <RequirePermissions
+            right="events:modify"
+            fallback={<Link to={`/login?redirectTo=${encodeURIComponent(window.location.pathname)}`}>{t('loginToEdit')}</Link>}
+          >
+            <Button
+              onClick={() => setShowEditor(!showEditor)}
+              text={showEditor ? t('closeEditor') : t('openBasicDetailsEditor')}
+            />
+          </RequirePermissions>
           <DeleteButton
+            requireRight="events:delete"
             onDelete={() => deleteEvent({ id: event._id })}
             text={t('deleteEvent')}
             confirmText={t('eventDeleteConfirmation', { eventName: event.name })}
@@ -77,9 +84,11 @@ function EventDetails({ event, readOnly }: { event: Event, readOnly: boolean }) 
         </div>
       }
     </p>
-    <Collapse isOpen={showEditor}>
-      <EventDetailsForm event={event} />
-    </Collapse>
+    <RequirePermissions right="events:modify">
+      <Collapse isOpen={showEditor}>
+        <EventDetailsForm event={event} />
+      </Collapse>
+    </RequirePermissions>
   </>
 }
 
@@ -241,14 +250,16 @@ function WorkshopCard(
   return <Card marginClass="" style={{ clear: 'right' }}>
     { readOnly ||
       <>
-        <DeleteButton onDelete={() => addLoadingAnimation(deleteWorkshop({ id: _id }))}
+        <DeleteButton requireRight="workshops:delete" onDelete={() => addLoadingAnimation(deleteWorkshop({ id: _id }))}
           className="float-right" text="Poista"
           confirmText={'Haluatko varmasti poistaa työpajan ' + name + '?'}
         />
-        <Button
-          onClick={() => setShowEditor(!showEditor)}
-          className="float-right" text={showEditor ? t('closeEditor') : t('openEditor')}
-        />
+        <RequirePermissions right="workshops:modify">
+          <Button
+            onClick={() => setShowEditor(!showEditor)}
+            className="float-right" text={showEditor ? t('closeEditor') : t('openEditor')}
+          />
+        </RequirePermissions>
       </>
     }
     <H2>

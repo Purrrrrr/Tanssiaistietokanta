@@ -3,9 +3,12 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Cross, Edit } from '@blueprintjs/icons'
 import classNames from 'classnames'
 
+import { useHasRight } from 'services/users'
+
 import { Button } from 'libraries/ui'
 import { EventSlide, EventSlideProps, startSlideId, useEventSlides } from 'components/event/EventSlide'
 import { LoadingState } from 'components/LoadingState'
+import { RequirePermissions } from 'components/rights/RequirePermissions'
 import { SlideContainer, useSlideshowNavigation } from 'components/Slide'
 import { useOnKeydown } from 'utils/useOnKeydown'
 
@@ -16,10 +19,17 @@ import { Event, useBallProgramQuery } from './useBallProgramQuery'
 import './BallProgram.scss'
 
 export default function BallProgram({ eventId, eventVersionId }) {
+  return <RequirePermissions right="events:read">
+    <BallProgramView eventId={eventId} eventVersionId={eventVersionId} />
+  </RequirePermissions>
+}
+
+function BallProgramView({ eventId, eventVersionId }) {
   const { event, slides, refetch, loadingState } = useBallProgram(eventId, eventVersionId)
 
   const [isEditing, setEditing] = useState(false)
-  const onToggleEditing = () => setEditing(e => !e)
+  const onToggleEditing = () => setEditing(e => !e && canEdit)
+  const canEdit = useHasRight('events:modify')
 
   const { slideId: currentSlideId = startSlideId } = useParams()
 
@@ -34,21 +44,23 @@ export default function BallProgram({ eventId, eventVersionId }) {
   const slide = slides[slideIndex]
 
   return <div className={classNames('ball-program-container', { 'is-editing': isEditing })}>
-    <BallProgramView
+    <BallProgramSlideView
       slides={slides}
       currentSlide={slide}
       event={event}
       isEditing={isEditing}
-      onToggleEditing={() => setEditing(e => !e)}
+      onToggleEditing={onToggleEditing}
     />
-    <div className="editor">
-      <Button className="close" minimal icon={<Cross />} onClick={() => setEditing(false)} />
-      <SlideEditor slide={slide} eventId={eventId} eventVersionId={eventVersionId} eventProgram={event?.program} />
-    </div>
+    <RequirePermissions right="events:modify">
+      <div className="editor">
+        <Button className="close" minimal icon={<Cross />} onClick={() => setEditing(false)} />
+        <SlideEditor slide={slide} eventId={eventId} eventVersionId={eventVersionId} eventProgram={event?.program} />
+      </div>
+    </RequirePermissions>
   </div>
 }
 
-function BallProgramView(
+function BallProgramSlideView(
   { slides, currentSlide: slide, event, isEditing, onToggleEditing }: {
     slides: EventSlideProps[]
     currentSlide: EventSlideProps
@@ -64,12 +76,15 @@ function BallProgramView(
   const { swipeHandlers } = useSlideshowNavigation({
     slides, currentSlideId: slide.id, onChangeSlide: slide => navigate(baseUrl + slide.id),
   })
+  const canEdit = useHasRight('events:modify')
 
-  return <SlideContainer fullscreen={!isEditing} {...swipeHandlers}>
+  return <SlideContainer fullscreen={!isEditing || !canEdit} {...swipeHandlers}>
     <div className="controls">
       <ProgramTitleSelector value={slide.parentId ?? slide.id} onChange={id => navigate(baseUrl + id)}
         program={event.program} />
-      <Button minimal icon={<Edit />} onClick={onToggleEditing} />
+      <RequirePermissions right="events:modify">
+        <Button minimal icon={<Edit />} onClick={onToggleEditing} />
+      </RequirePermissions>
     </div>
     <EventSlide {...slide} eventProgram={event.program} />
   </SlideContainer>

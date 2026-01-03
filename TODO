@@ -221,13 +221,17 @@
   * Allow to initialize first user while the server is running
   * Enforce auth on server. Prevent all changing operations and access to files from unauthenticated users
   * Simplify rights check for now
-    Make all pages and functions have some rights check
+  * Make all pages and functions have some rights check
     * FileList
     * EventList
     * Dances
-      Events
+    * Events
+    Move permission checks to own library to integrate with other components
+  Forms
     Check a11y for form field readOnly vs disabled vs some other rendering method
     Render readOnly selectors more lightly
+
+  Test websocket performance with something. Gatling?
 
   Auth Part 2
     Allow creating users with some token? Invite functionality?

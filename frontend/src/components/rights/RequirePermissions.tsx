@@ -25,18 +25,14 @@ export function useRequirePermissionsWrapper({ right, entity, ...props }: Requir
 }
 
 interface NoRightsFallbackProps {
-  fallback?: 'loginPage' | 'message' | 'hide'
-  fallbackContents?: React.ReactNode
+  fallback?: 'loginPage' | React.ReactNode
 }
 
-export function NoRightsFallback({ fallback, fallbackContents }: NoRightsFallbackProps) {
+export function NoRightsFallback({ fallback }: NoRightsFallbackProps) {
   switch (fallback) {
-    case 'hide':
-      return fallbackContents ?? null
     case 'loginPage':
       return <LoginForm />
-    case 'message':
-      // TODO: implement 'message' fallback style
-      return fallbackContents ?? null
+    default:
+      return fallback
   }
 }
