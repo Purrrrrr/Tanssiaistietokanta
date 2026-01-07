@@ -2,7 +2,7 @@ import { Dance } from 'types'
 
 import { useDanceCategories } from 'services/dances'
 
-import FilterableSelect from 'libraries/formsV2/components/inputs/selectors/FilterableSelect'
+import { Select } from 'libraries/formsV2/components/inputs'
 import { ColorClass } from 'libraries/ui'
 import { useT } from 'i18n'
 
@@ -24,7 +24,8 @@ export function DanceCategoryChooser({
     ? ['', ...categories]
     : categories
 
-  return <FilterableSelect<string>
+  return <Select<string>
+    filterable
     id={id}
     placeholder={placeholder}
     value={value}
@@ -67,7 +68,8 @@ export function DanceViewCategorySelector({ id, value, onChange, dances }: Dance
     return category
   }
 
-  return <FilterableSelect<DanceViewCategory>
+  return <Select<DanceViewCategory>
+    filterable
     id={id}
     value={value}
     onChange={onChange}

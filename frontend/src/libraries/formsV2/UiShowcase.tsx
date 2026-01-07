@@ -5,10 +5,7 @@ import { ConflictHandler } from 'libraries/forms/ConflictHandler'
 import { formFor, withDefaults } from 'libraries/formsV2'
 import { Button } from 'libraries/ui'
 
-import { TextInput } from './components/inputs'
-import { SegmentedInput } from './components/inputs/SegmentedInput'
-import { AutocompleteInput } from './components/inputs/selectors/AutocompleteInput'
-import { Select } from './components/inputs/selectors/Select'
+import { AutocompleteInput, SegmentedInput, Select, TextInput } from './components/inputs'
 
 interface Data {
   a: string

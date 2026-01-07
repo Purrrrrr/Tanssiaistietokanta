@@ -7,8 +7,8 @@ import { useMarkFileUsage } from 'services/files'
 
 import {
   MarkdownInput as MarkdownInputOriginal,
-  MarkdownInputProps as MarkdownInputPropsOriginal,
-} from 'libraries/formsV2/components/inputs/MarkdownInput'
+  type MarkdownInputProps as MarkdownInputPropsOriginal,
+} from 'libraries/formsV2/components/inputs'
 
 import { UploadProgressList } from './UploadProgres'
 import { useUploadQueue } from './useUploadQueue'

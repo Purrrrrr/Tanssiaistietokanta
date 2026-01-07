@@ -22,7 +22,7 @@ interface InputProps extends Omit<UseComboboxGetInputPropsOptions, 'onChange'> {
   onChange?: React.ChangeEventHandler<HTMLInputElement>
 }
 
-export function AutocompleteInput<T>(props: AutocompleteInputProps<T>) {
+export default function AutocompleteInput<T>(props: AutocompleteInputProps<T>) {
   'use no memo'
   const {
     items, itemToString = String, emptyInputByDefault, categoryTitleRenderer, inputRenderer,

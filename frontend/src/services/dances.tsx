@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 
 import { Dance } from 'types'
 
-import { filterItemList } from 'libraries/formsV2/components/inputs/selectors/itemUtils'
+import { filterItemList } from 'libraries/formsV2/components/inputs'
 import { compareBy, sorted } from 'utils/sorted'
 
 import { backendQueryHook, entityCreateHook, entityDeleteHook, entityListQueryHook, entityUpdateHook, graphql, setupServiceUpdateFragment, useServiceEvents } from '../backend'

@@ -3,13 +3,8 @@ import { type ComponentType, lazy, type ReactElement } from 'react'
 import { type ListItem } from './components/dnd'
 import { asFormField, Field, type FieldComponent, type FieldProps } from './components/Field'
 import { Form, type FormProps } from './components/Form'
-import type { DateInputProps, DateRangeInputProps, FieldInputComponent, FieldInputComponentProps, SelectProps, SwitchProps } from './components/inputs'
-import {
-  AutocompleteInput, Select, Switch,
-} from './components/inputs'
-import { type MarkdownInputProps } from './components/inputs/MarkdownInput'
-import { AutocompleteInputProps } from './components/inputs/selectors/AutocompleteInput'
-import { type TextInputExtraProps } from './components/inputs/TextInput'
+import type { AutocompleteInputProps, DateInputProps, DateRangeInputProps, FieldInputComponent, FieldInputComponentProps, MarkdownInputProps, SelectProps, SwitchProps, TextInputExtraProps } from './components/inputs'
+import { AutocompleteInput, DateInput, DateRangeInput, MarkdownInput, Select, Switch, TextInput } from './components/inputs'
 import { asRangeField, type Range, RangeField, type RangeFieldComponent, type RangeFieldProps } from './components/RangeField'
 import { type RepeatingSectionProps } from './components/RepeatingSection'
 import { asSelfLabeledFormField, type SelfLabeledFieldComponent } from './components/SelflabeledField'
@@ -69,10 +64,10 @@ const form = {
     withComponent: asFormField,
     Range: RangeField,
     withRangeComponent: asRangeField,
-    Date: asFormField(lazy(() => import('./components/inputs/DateInput'))),
-    DateRange: asRangeField(lazy(() => import('./components/inputs/DateRangeInput'))),
-    Markdown: asFormField(lazy(() => import('./components/inputs/MarkdownInput'))),
-    Text: asFormField(lazy(() => import('./components/inputs/TextInput'))),
+    Date: asFormField(DateInput),
+    DateRange: asRangeField(DateRangeInput),
+    Markdown: asFormField(MarkdownInput),
+    Text: asFormField(TextInput),
     Switch: asSelfLabeledFormField(Switch),
     // Repeating: RepeatingField,
   },

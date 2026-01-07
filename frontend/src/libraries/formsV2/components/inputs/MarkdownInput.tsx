@@ -68,7 +68,7 @@ export interface MarkdownInputProps extends FieldInputComponentProps<string>, Pa
   noPreview?: boolean
 }
 
-export const MarkdownInput: FieldInputComponent<string, MarkdownInputProps> = React.memo(
+const MarkdownInput: FieldInputComponent<string, MarkdownInputProps> = React.memo(
   function MarkdownEditor({ value, onChange, className, inline: _ignored, markdownOverrides, noPreview, ...props }: MarkdownInputProps) {
     if (props.readOnly) {
       return <div className="markdown-content custom-html-style p-3 border-1 border-gray-300 min-h-8">

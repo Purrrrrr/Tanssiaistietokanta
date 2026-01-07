@@ -59,11 +59,12 @@ TODO:
 * Remove blueprintjs datetime selectors
 * Move dialog to overlays library
 * NumberInput
+* More lazy loading for components
 
   Date selectors output format -> string?
   Scroll into opened selector?
   switchFor
-  More lazy loading for components?
+  Lazy loading for all components?
   Fix Duration field?
   RadioGroup with fieldset
   input field components

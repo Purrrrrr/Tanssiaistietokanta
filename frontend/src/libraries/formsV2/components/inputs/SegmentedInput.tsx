@@ -1,4 +1,4 @@
-interface SegmentedInputProps {
+export interface SegmentedInputProps {
   value: string
   onChange: (changed: string) => unknown
 }
@@ -112,7 +112,7 @@ function parse(text: string, ctx: Omit<PartContext, 'value'>): {
   }
 }
 
-export function SegmentedInput({
+export default function SegmentedInput({
   value, onChange,
 }: SegmentedInputProps) {
   const setValue = (e) => onChange(parse(e.target.value, { parts }).parsed)

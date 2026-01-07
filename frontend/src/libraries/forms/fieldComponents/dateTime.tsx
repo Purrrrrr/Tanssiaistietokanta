@@ -1,7 +1,6 @@
 import { Conflict, Deleted, FieldComponentProps, FieldPropsWithoutComponent, Version } from '../types'
 
-import { DateInput, DateRangeInput } from 'libraries/formsV2/components/inputs'
-import DateTimeInput from 'libraries/formsV2/components/inputs/DateTimeInput'
+import { DateInput, DateRangeInput, DateTimeInput } from 'libraries/formsV2/components/inputs'
 import { useFormatDate } from 'libraries/i18n/dateTime'
 
 import { Field, useFieldConflictData, useFieldData } from '../Field'
