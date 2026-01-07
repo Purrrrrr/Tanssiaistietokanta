@@ -38,7 +38,8 @@ export interface ListEditorContextProps {
   accessibilityContainer?: Element | undefined
   children: JSX.Element | JSX.Element[]
 }
-export function ListEditorContext({ accessibilityContainer, children }: ListEditorContextProps) {
+
+export default function ListEditorContext({ accessibilityContainer, children }: ListEditorContextProps) {
   const hasExistingContext = useContext(HasListEditorContext)
   if (hasExistingContext) return <>{children}</>
 
@@ -51,7 +52,7 @@ export function ListEditorContext({ accessibilityContainer, children }: ListEdit
   )
 }
 
-export function ListEditorContextInner({ accessibilityContainer, children }: ListEditorContextProps) {
+function ListEditorContextInner({ accessibilityContainer, children }: ListEditorContextProps) {
   const onChange = useOnChangeFor('')
   const [move, setMove] = useState<ListEditorMove | null>(null)
   const sensors = useSensors(

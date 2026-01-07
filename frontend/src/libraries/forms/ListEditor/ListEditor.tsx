@@ -16,7 +16,7 @@ import { FieldComponentProps, OnChangeHandler, TypedStringPath } from '../types'
 import { Button } from 'libraries/ui'
 
 import { useFormStrings } from '../formContext'
-import { ListEditorContext, ListEditorMoveContext } from './ListEditorContext'
+import ListEditorContext, { ListEditorMoveContext } from './ListEditorContext'
 
 export interface ListEditorProps<T, V extends Entity, P = object> extends FieldComponentProps<V[]> {
   itemType?: string | ((value: V) => string)
@@ -29,7 +29,7 @@ export interface ListEditorProps<T, V extends Entity, P = object> extends FieldC
   componentProps?: P
 }
 
-export function ListEditor<T, V extends Entity>({
+export default function ListEditor<T, V extends Entity>({
   value, onChange, path, itemType, acceptsTypes, droppableElement, component: Component, inline: _ignored, readOnly, accessibilityContainer, componentProps, itemClassname,
 }: ListEditorProps<T, V>) {
   const items = value ?? []
