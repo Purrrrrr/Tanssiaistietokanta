@@ -28,7 +28,7 @@ interface L {
 }
 
 const {
-  Form, Field, RepeatingSection, RepeatingTableRows,
+  Form, Field, RepeatingSection,
   useAddItem,
   selectWithType,
 } = formFor<Data, { l: L, s: string }>()
@@ -149,20 +149,6 @@ function ShowcaseContents() {
       }
     </RepeatingSection>
     <Button color="primary" icon={<Edit />} onClick={() => addItem('l2', { _id: id(), value: '' })} />
-    <table>
-      <RepeatingTableRows<L> path="l">
-        {({ dragHandle, value, onRemove }) =>
-          <>
-            <td>fuu</td>
-            <td>{value.value}</td>
-            <td>
-              {dragHandle}
-              <Button color="danger" icon={<Cross />} onClick={onRemove} />
-            </td>
-          </>
-        }
-      </RepeatingTableRows>
-    </table>
   </>
 }
 

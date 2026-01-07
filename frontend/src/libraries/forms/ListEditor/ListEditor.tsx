@@ -22,7 +22,6 @@ export interface ListEditorProps<T, V extends Entity, P = object> extends FieldC
   itemType?: string | ((value: V) => string)
   droppableElement?: HTMLElement | null
   acceptsTypes?: string[]
-  isTable?: boolean
   accessibilityContainer?: Element | undefined
   path: TypedStringPath<V[], T>
   itemClassname?: string
@@ -31,15 +30,14 @@ export interface ListEditorProps<T, V extends Entity, P = object> extends FieldC
 }
 
 export function ListEditor<T, V extends Entity>({
-  value, onChange, path, itemType, acceptsTypes, droppableElement, component: Component, inline: _ignored, readOnly, isTable, accessibilityContainer, componentProps, itemClassname,
+  value, onChange, path, itemType, acceptsTypes, droppableElement, component: Component, inline: _ignored, readOnly, accessibilityContainer, componentProps, itemClassname,
 }: ListEditorProps<T, V>) {
   const items = value ?? []
 
   if (readOnly) {
-    const Wrapper = isTable ? 'tr' : 'div'
     return <React.Fragment>
       {items.map((item, index) =>
-        <Wrapper key={item._id} className={itemClassname}><Component path={path} itemIndex={index} dragHandle={null} {...componentProps} /></Wrapper>,
+        <div key={item._id} className={itemClassname}><Component path={path} itemIndex={index} dragHandle={null} {...componentProps} /></div>,
       )}
     </React.Fragment>
   }
@@ -52,7 +50,6 @@ export function ListEditor<T, V extends Entity>({
     onChangePath={onChange}
     component={Component}
     componentProps={componentProps}
-    isTable={isTable}
     className={itemClassname}
   />
 
@@ -79,7 +76,7 @@ interface ListEditorItemsProps<T, V> extends Omit<SortableItemProps<T, V>, 'id' 
   itemType?: string | ((value: V) => string)
   items: V[]
 }
-function ListEditorItems<T, V extends Entity>({ items, itemType, acceptsTypes, path, onChangePath, component, componentProps, isTable, className }: ListEditorItemsProps<T, V>) {
+function ListEditorItems<T, V extends Entity>({ items, itemType, acceptsTypes, path, onChangePath, component, componentProps, className }: ListEditorItemsProps<T, V>) {
   const componentId = useId()
   const move = useContext(ListEditorMoveContext)
   const filteredItems = move
@@ -89,7 +86,7 @@ function ListEditorItems<T, V extends Entity>({ items, itemType, acceptsTypes, p
   const ids = filteredItems.map(item => `${componentId}-${item._id}`) as (string | number)[]
   const wrappers = filteredItems.map((item, index) => {
     const type = typeof itemType === 'function' ? itemType(item) : itemType
-    return <SortableItem<T, V> key={item._id} id={`${componentId}-${item._id}`} itemType={type} acceptsTypes={acceptsTypes} path={path} onChangePath={onChangePath} itemIndex={index} component={component} isTable={isTable} componentProps={componentProps} className={className} />
+    return <SortableItem<T, V> key={item._id} id={`${componentId}-${item._id}`} itemType={type} acceptsTypes={acceptsTypes} path={path} onChangePath={onChangePath} itemIndex={index} component={component} componentProps={componentProps} className={className} />
   })
 
   if (move?.overPath === path) {
@@ -107,7 +104,6 @@ function ListEditorItems<T, V extends Entity>({ items, itemType, acceptsTypes, p
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         component={activeData.component as ListItemComponent<any, V>}
         componentProps={componentProps}
-        isTable={isTable}
         className={className}
       />,
     )
@@ -122,7 +118,6 @@ interface SortableItemProps<T, V, P = object> {
   acceptsTypes?: string[]
   itemType?: string
   id: string | number
-  isTable?: boolean
   component: ListItemComponent<T, V, P>
   componentProps?: P
   path: TypedStringPath<V[], T>
@@ -131,7 +126,7 @@ interface SortableItemProps<T, V, P = object> {
   className?: string
 }
 
-export function SortableItem<T, V>({ itemType, acceptsTypes, id, path, onChangePath, itemIndex, component: Component, isTable, componentProps, className }: SortableItemProps<T, V>) {
+export function SortableItem<T, V>({ itemType, acceptsTypes, id, path, onChangePath, itemIndex, component: Component, componentProps, className }: SortableItemProps<T, V>) {
   const {
     isDragging,
     attributes: { tabIndex: _ignored, ...attributes },
@@ -166,16 +161,15 @@ export function SortableItem<T, V>({ itemType, acceptsTypes, id, path, onChangeP
     boxShadow: isDragging ? '4px 4px 4px rgba(33, 33, 33, 0.45)' : undefined,
   }
 
-  const Wrapper = isTable ? 'tr' : 'div'
   const dragHandle = useMemo(
     () => <Button aria-label={moveItem} className="touch-none" icon={<Move />} ref={setActivatorNodeRef} {...listeners} />,
     [listeners, setActivatorNodeRef, moveItem],
   )
 
   return (
-    <Wrapper ref={setNodeRef} style={style} {...attributes} className={className}>
+    <div ref={setNodeRef} style={style} {...attributes} className={className}>
       <Component path={path} itemIndex={itemIndex} dragHandle={dragHandle} {...componentProps} />
-    </Wrapper>
+    </div>
   )
 }
 

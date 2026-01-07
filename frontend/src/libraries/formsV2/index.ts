@@ -12,7 +12,6 @@ import { AutocompleteInputProps } from './components/inputs/selectors/Autocomple
 import { type TextInputExtraProps } from './components/inputs/TextInput'
 import { asRangeField, type Range, RangeField, type RangeFieldComponent, type RangeFieldProps } from './components/RangeField'
 import { type RepeatingSectionProps } from './components/RepeatingSection'
-import { type RepeatingTableRowsProps } from './components/RepeatingTableRows'
 import { asSelfLabeledFormField, type SelfLabeledFieldComponent } from './components/SelflabeledField'
 import hookApi, { type HooksFor } from './hooks/externalHookApi'
 
@@ -25,7 +24,6 @@ interface FormFor<Data, AcceptedDroppableTypes = null> extends HooksFor<Data> {
   selectWithType: <T>() => FieldComponent<Data, T, SelectProps<T>, T>
   autocompleteWithType: <T>() => FieldComponent<Data, T, AutocompleteInputProps<T>, T>
   RepeatingSection: <O extends ListItem>(t: RepeatingSectionProps<O, Data, AcceptedDroppableTypes>) => ReactElement
-  RepeatingTableRows: <O extends ListItem>(t: RepeatingTableRowsProps<O, Data, AcceptedDroppableTypes>) => ReactElement
 }
 
 interface FieldsFor<Data, _AcceptedDroppableTypes = null> {
@@ -46,7 +44,6 @@ interface FieldsFor<Data, _AcceptedDroppableTypes = null> {
 {
   Form,
   RepeatingSection,
-  RepeatingTableRows,
   Field:
     .withComponent
   RangeField
@@ -67,7 +64,6 @@ interface FieldsFor<Data, _AcceptedDroppableTypes = null> {
 const form = {
   Form,
   RepeatingSection: lazy(() => import('./components/RepeatingSection')),
-  RepeatingTableRows: lazy(() => import('./components/RepeatingTableRows')),
   Field: {
     Custom: Field,
     withComponent: asFormField,

@@ -205,7 +205,7 @@
 * Remove function callback style onChange from formV1
 * Remove event from onChange in formV1
 * Remove HTMLTable
-  Remove table support from list editors
+* Remove table support from list editors
 
   Authentication
   * Basic backend support

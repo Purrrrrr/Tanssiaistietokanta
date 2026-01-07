@@ -1,4 +1,4 @@
-import { type ElementType, type ReactNode, useMemo } from 'react'
+import { useMemo } from 'react'
 import { Move } from '@blueprintjs/icons'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
@@ -11,13 +11,11 @@ interface SortableItemProps<Data> {
   id: string | number
   data: Data
   disabled?: boolean
-  asElement?: SortableItemElement
-  children: (dragHandle: ReactNode) => ReactNode
+  itemClassName?: string
+  children: (dragHandle: React.ReactNode) => React.ReactNode
 }
 
-export type SortableItemElement = ElementType<{ children?: ReactNode }>
-
-export function SortableItem<Data extends Record<string, unknown>>({ id, data, disabled, children, asElement = 'div' }: SortableItemProps<Data>) {
+export function SortableItem<Data extends Record<string, unknown>>({ id, data, disabled, children, itemClassName }: SortableItemProps<Data>) {
   const isGhost = data?.ghost
   const {
     isDragging,
@@ -51,12 +49,10 @@ export function SortableItem<Data extends Record<string, unknown>>({ id, data, d
     [listeners, setActivatorNodeRef],
   )
 
-  const Wrapper = asElement as 'div'
-
   return (
-    <Wrapper ref={setNodeRef} style={style} {...attributes}>
+    <div ref={setNodeRef} style={style} {...attributes} className={itemClassName}>
       {children(dragHandle)}
-    </Wrapper>
+    </div>
   )
 }
 

@@ -5,8 +5,7 @@ import type { AnyType, DataPath } from '../../../types'
 
 import { useValueAt } from '../../../hooks/externalHookApi'
 import { ItemVisitContext } from '../context'
-import { DropArea, type DroppableElement } from './DropArea'
-import { SortableItemElement } from './SortableItem'
+import { DropArea } from './DropArea'
 import { ItemCallback, SortableList } from './SortableList'
 import { useIsDropAreaDisabled } from './useIsDropAreaDisabled'
 
@@ -14,21 +13,21 @@ export interface RepeaterProps<Value extends ListItem, Data = AnyType, AcceptedT
   path: DataPath<Value[], Data>
   accepts?: AcceptedTypes<Value, AcceptedTypeDefs>
   itemType?: ItemTypeClassifier<Value, AcceptedTypeDefs>
-  asElement?: DroppableElement
-  itemElement?: SortableItemElement
+  itemClassName?: string
   children: ItemCallback<Value, Data>
+  className?: string
 }
 
 export function Repeater<Value extends ListItem, Data = AnyType, AcceptedTypeDefs = null>({
-  path, accepts, itemType, asElement, itemElement, children,
+  path, accepts, itemType, itemClassName, children, className,
 }: RepeaterProps<Value, Data, AcceptedTypeDefs>) {
   const dropAreaId = useId()
   const values = useValueAt<Value[], Data>(path)
   const items = useItems(dropAreaId, path, values, itemType)
   const disabled = useIsDropAreaDisabled(dropAreaId, accepts)
 
-  return <DropArea id={dropAreaId} path={path} asElement={asElement}>
-    <SortableList items={items} disabled={disabled} dropAreaId={dropAreaId} asElement={itemElement}>
+  return <DropArea id={dropAreaId} path={path} className={className}>
+    <SortableList items={items} disabled={disabled} dropAreaId={dropAreaId} itemClassName={itemClassName}>
       {children}
     </SortableList>
   </DropArea>

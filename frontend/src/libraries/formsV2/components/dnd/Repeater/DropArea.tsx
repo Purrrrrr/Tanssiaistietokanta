@@ -1,4 +1,4 @@
-import { CSSProperties, ElementType, useId } from 'react'
+import { useId } from 'react'
 import { useDroppable } from '@dnd-kit/core'
 
 import { DroppableData, ListItem } from './types'
@@ -6,16 +6,14 @@ import type { AnyType, DataPath } from '../../../types'
 
 export interface DroppableProps<Value extends ListItem, Data = AnyType> {
   id: string
+  className?: string
   path: DataPath<Value[], Data>
-  asElement?: DroppableElement
   children?: React.ReactNode
   disabled?: boolean
 }
 
-export type DroppableElement = ElementType<{ style: CSSProperties | undefined }>
-
 export function DropArea<Value extends ListItem, Data = AnyType>({
-  id, path, asElement = 'div', children, disabled,
+  id, path, children, disabled,
 }: DroppableProps<Value, Data>) {
   const data = {
     type: 'droppable',
@@ -31,9 +29,7 @@ export function DropArea<Value extends ListItem, Data = AnyType>({
     minHeight: 30,
   }
 
-  const Wrapper = asElement as unknown as 'div'
-
-  return <Wrapper ref={setNodeRef} style={style}>
+  return <div ref={setNodeRef} style={style}>
     {children}
-  </Wrapper>
+  </div>
 }

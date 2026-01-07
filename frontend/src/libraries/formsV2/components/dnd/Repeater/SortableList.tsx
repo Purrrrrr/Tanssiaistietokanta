@@ -5,14 +5,14 @@ import { ID, ItemData, ListItem } from './types'
 import type { AnyType, DataPath } from '../../../types'
 
 import { useFormContext } from '../../../context'
-import { SortableItem, SortableItemElement } from './SortableItem'
+import { SortableItem } from './SortableItem'
 
 export interface SortableListProps<Value extends ListItem, Data = AnyType> {
   disabled?: boolean
   dropAreaId: string
   items: ItemData<Value>[]
-  asElement?: SortableItemElement
   children: ItemCallback<Value, Data>
+  itemClassName?: string
 }
 
 export type ItemCallback<Value, Data> = (props: ItemCallbackProps<Value, Data>) => ReactNode
@@ -27,16 +27,16 @@ export interface ItemCallbackProps<Value, Data> {
 }
 
 export function SortableList<Value extends ListItem, Data = AnyType>({
-  disabled, dropAreaId, items, children, asElement: Wrapper = 'div',
+  disabled, dropAreaId, items, children, itemClassName,
 }: SortableListProps<Value, Data>) {
   const { readOnly, dispatch } = useFormContext<Data>()
 
   if (readOnly) {
     return <>
       {items.map((data) =>
-        <Wrapper key={data.id}>
+        <div key={data.id} className={itemClassName}>
           {children?.({ dragHandle: null, ...data, path: data.path as DataPath<Value[], Data>, onRemove: noOp })}
-        </Wrapper>,
+        </div>,
       )}
     </>
   }
@@ -49,7 +49,7 @@ export function SortableList<Value extends ListItem, Data = AnyType>({
   >
     {
       items.map((data) =>
-        <SortableItem id={data.id} data={data} key={data.id} asElement={Wrapper} disabled={disabled}>
+        <SortableItem id={data.id} data={data} key={data.id} itemClassName={itemClassName} disabled={disabled}>
           {dragHandle => children?.({
             dragHandle,
             ...data,
