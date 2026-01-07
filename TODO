@@ -201,6 +201,7 @@
   * By popularity
   * By category
 * Fix item list header when the list wraps
+* Fix workshop dance list dnd dragging two lists at once (probably some id problem)
 
   Tooltips with https://github.com/doeixd/invokers?
 

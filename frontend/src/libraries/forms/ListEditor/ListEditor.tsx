@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react'
+import React, { useContext, useId, useMemo } from 'react'
 import { Move } from '@blueprintjs/icons'
 import {
   useDroppable,
@@ -80,15 +80,16 @@ interface ListEditorItemsProps<T, V> extends Omit<SortableItemProps<T, V>, 'id' 
   items: V[]
 }
 function ListEditorItems<T, V extends Entity>({ items, itemType, acceptsTypes, path, onChangePath, component, componentProps, isTable, className }: ListEditorItemsProps<T, V>) {
+  const componentId = useId()
   const move = useContext(ListEditorMoveContext)
   const filteredItems = move
     ? items.filter(item => item._id !== move.activeId)
     : items
 
-  const ids = filteredItems.map(item => item._id)
+  const ids = filteredItems.map(item => `${componentId}-${item._id}`) as (string | number)[]
   const wrappers = filteredItems.map((item, index) => {
     const type = typeof itemType === 'function' ? itemType(item) : itemType
-    return <SortableItem<T, V> key={item._id} id={item._id} itemType={type} acceptsTypes={acceptsTypes} path={path} onChangePath={onChangePath} itemIndex={index} component={component} isTable={isTable} componentProps={componentProps} className={className} />
+    return <SortableItem<T, V> key={item._id} id={`${componentId}-${item._id}`} itemType={type} acceptsTypes={acceptsTypes} path={path} onChangePath={onChangePath} itemIndex={index} component={component} isTable={isTable} componentProps={componentProps} className={className} />
   })
 
   if (move?.overPath === path) {
