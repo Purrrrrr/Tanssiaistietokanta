@@ -5,11 +5,11 @@ import { useEvent } from 'services/events'
 
 import { Breadcrumb } from 'libraries/ui'
 import { lazyLoadComponent as lazy, LoadingState } from 'components/LoadingState'
-import { LoginForm } from 'components/rights/LoginForm'
 import { RequirePermissions } from 'components/rights/RequirePermissions'
 import VersionableContentContainer from 'components/versioning/VersionableContentContainer'
 import { T, useTranslation } from 'i18n'
 
+const LoginForm = lazy(() => import('components/rights/LoginForm'))
 const Dances = lazy(() => import('pages/dances'))
 const Dance = lazy(() => import('pages/dances/Dance'))
 const BallProgram = lazy(() => import('pages/events/BallProgram'))

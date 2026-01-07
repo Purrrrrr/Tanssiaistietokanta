@@ -15,7 +15,7 @@ export interface LoginFields {
 
 const { Form, Input } = formFor<LoginFields>()
 
-export function LoginForm({ redirectTo }: { redirectTo?: string }) {
+export function LoginForm({ redirectTo, defaultRedirectTo }: { redirectTo?: string, defaultRedirectTo?: string }) {
   const [value, setValue] = useState<LoginFields>({ username: '', password: '' })
   const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
@@ -25,9 +25,10 @@ export function LoginForm({ redirectTo }: { redirectTo?: string }) {
     const user = await login(username, password)
     if (!user) {
       setError('Invalid username or password')
-    } else if (redirectTo) {
-      navigate(redirectTo)
+      return
     }
+    const target = redirectTo ?? new URLSearchParams(window.location.search).get('redirectTo') ?? defaultRedirectTo
+    if (target) navigate(target)
   }
 
   return <Form value={value} onChange={setValue} onSubmit={onSubmit} errorDisplay="onSubmit">
@@ -40,3 +41,5 @@ export function LoginForm({ redirectTo }: { redirectTo?: string }) {
     <Button color="primary" type="submit">{t('login')}</Button>
   </Form>
 }
+
+export default LoginForm

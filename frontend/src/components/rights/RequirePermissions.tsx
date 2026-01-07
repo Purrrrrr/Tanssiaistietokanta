@@ -1,6 +1,8 @@
+import { lazy } from 'react'
+
 import { RightQueryInput, RightsEntity, useHasRight } from 'services/users'
 
-import { LoginForm } from './LoginForm'
+const LoginForm = lazy(() => import('components/rights/LoginForm'))
 
 interface RequirePermissionsProps extends RequirePermissionsWrapperProps {
   children: React.ReactNode
