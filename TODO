@@ -204,6 +204,8 @@
 * Fix workshop dance list dnd dragging two lists at once (probably some id problem)
 * Remove function callback style onChange from formV1
 * Remove event from onChange in formV1
+* Remove HTMLTable
+  Remove table support from list editors
 
   Authentication
   * Basic backend support
@@ -286,7 +288,6 @@
       Breadcrumbs?
 
   Blueprintjs migration - Part 2
-    HTMLTable
     Input
     FormGroup
     Check todo markings in Button.tsx or other

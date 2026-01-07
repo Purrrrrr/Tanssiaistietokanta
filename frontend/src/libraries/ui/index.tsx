@@ -25,7 +25,6 @@ export { Tab, Tabs } from './Tabs'
 export * from './toaster'
 export type { Color } from './types'
 export { useResizeObserver } from './utils/useResizeObserver'
-export { HTMLTable } from '@blueprintjs/core'
 
 export const Markdown = React.lazy(() => import('./Markdown'))
 

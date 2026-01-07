@@ -366,15 +366,6 @@ label.bp5-label.bp5-disabled {
 label.bp5-label.bp5-inline{
   line-height:30px;
 }
-
-table.bp5-html-table.bp5-html-table-bordered th:not(:first-child){
-  box-shadow:inset 1px 0 0 0 rgba(17, 20, 24, 0.15);
-}
-table.bp5-html-table.bp5-html-table-bordered tbody tr td:not(:first-child),
-table.bp5-html-table.bp5-html-table-bordered tfoot tr td:not(:first-child){
-  box-shadow:inset 1px 1px 0 0 rgba(17, 20, 24, 0.15);
-}
-
 .bp5-flex-expander{
   flex:1 1;
 }
