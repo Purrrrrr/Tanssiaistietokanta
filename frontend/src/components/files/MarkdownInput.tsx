@@ -1,6 +1,7 @@
 import { MarkdownToJSX, parser, RuleType } from 'markdown-to-jsx/react'
 import { useEffect, useRef } from 'react'
 
+import { FileOwner, FileOwningId } from 'types/files'
 import { ID } from 'backend/types'
 
 import { useMarkFileUsage } from 'services/files'
@@ -14,12 +15,13 @@ import { UploadProgressList } from './UploadProgres'
 import { useUploadQueue } from './useUploadQueue'
 
 export interface MarkdownInputProps extends Omit<MarkdownInputPropsOriginal, 'onImageUpload'> {
-  fileRoot: string
+  fileOwner: FileOwner
+  fileOwningId: FileOwningId
   filePath?: string
 }
 
-export function MarkdownInput({ fileRoot, filePath, ...props }: MarkdownInputProps) {
-  const [doUpload, uploads] = useUploadQueue(fileRoot, filePath)
+export function MarkdownInput({ fileOwner, fileOwningId, filePath, ...props }: MarkdownInputProps) {
+  const [doUpload, uploads] = useUploadQueue(fileOwner, fileOwningId, filePath)
   const [markUsages] = useMarkFileUsage()
   const onImageUpload = async (file: File) => {
     const result = await doUpload(file, undefined, true)

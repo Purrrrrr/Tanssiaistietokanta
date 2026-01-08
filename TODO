@@ -229,6 +229,8 @@
     * Dances
     * Events
   * Move permission checks to own library to integrate with other components
+  * Associate files with some service and entity id
+    Allow authenticating file downloads somehow
     Load file components only when user has the rights. Lazy loading
   Forms
     Check a11y for form field readOnly vs disabled vs some other rendering method
@@ -241,7 +243,6 @@
     Nicer logout menu keyboard a11y
     Entity specific rights
       Return a rights override with the entity and provide it to the RequirePermissions components
-      Associate files with some service and entity id?
 
   Tooltips with https://github.com/doeixd/invokers?
 

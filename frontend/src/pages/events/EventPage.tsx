@@ -46,7 +46,7 @@ export default function EventPage({ event }: { event: Event }) {
     <EventProgram event={event} readOnly={readOnly} />
     <H2>{t('workshops')}</H2>
     <EventWorkshops event={event} readOnly={readOnly} />
-    <FileList title={t('files')} root={`events/${event._id}`} />
+    <FileList title={t('files')} owner="events" owningId={event._id} />
   </RequirePermissions>
 }
 

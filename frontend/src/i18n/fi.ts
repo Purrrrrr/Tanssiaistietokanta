@@ -59,6 +59,7 @@ export const fi = {
       login: 'Kirjaudu sisään',
       username: 'Käyttäjätunnus',
       password: 'Salasana',
+      invalidCredentials: 'Virheellinen käyttäjätunnus tai salasana',
     },
     deleteButton: {
       cancel: 'Peruuta',

@@ -52,10 +52,10 @@ export function fetchWithProgress(method: string, url: string, { data, onProgres
     })
   })
   const token = getCurrentAccessToken()
+  request.open(method, url)
   if (token) {
     request.setRequestHeader('Authorization', `Bearer ${token}`)
   }
-  request.open(method, url)
   request.send(data)
 
   return promise.promise

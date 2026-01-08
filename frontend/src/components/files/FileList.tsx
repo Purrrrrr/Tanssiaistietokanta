@@ -1,6 +1,8 @@
 import { useRef } from 'react'
 import { Add } from '@blueprintjs/icons'
 
+import { FileOwner, FileOwningId } from 'types/files'
+
 import { useFiles } from 'services/files'
 
 import { useRights } from 'libraries/access-control'
@@ -22,15 +24,16 @@ import { useUploadQueue } from './useUploadQueue'
 
 interface FileListProps {
   title?: string
-  root: string
+  owner: FileOwner
+  owningId: FileOwningId
   path?: string
 }
 
-export function FileList({ title, root, path }: FileListProps) {
+export function FileList({ title, owner, owningId, path }: FileListProps) {
   const input = useRef<HTMLInputElement>(null)
-  const queryVars = { root, path }
+  const queryVars = { owner, owningId, path }
   const [files] = useFiles(queryVars)
-  const [doUpload, uploads] = useUploadQueue(root, path)
+  const [doUpload, uploads] = useUploadQueue(owner, owningId, path)
   const filesize = useFilesize()
   const T = useT('components.files')
   const formatDate = useFormatDateTime()

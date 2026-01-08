@@ -24,7 +24,7 @@ export function LoginForm({ redirectTo, defaultRedirectTo }: { redirectTo?: stri
   const onSubmit = async ({ username, password }: LoginFields) => {
     const user = await login(username, password)
     if (!user) {
-      setError('Invalid username or password')
+      setError(t('invalidCredentials'))
       return
     }
     const target = redirectTo ?? new URLSearchParams(window.location.search).get('redirectTo') ?? defaultRedirectTo

@@ -147,10 +147,11 @@ export class FileService
   }
 
   protected async mapData(_existing: File | null, data: FileData): Promise<File> {
-    const { upload, path, root, autoRename, unused = false, notes = '' } = data
+    const { upload, path, owner, owningId, autoRename, unused = false, notes = '' } = data
     if (!(upload instanceof PersistentFile)) {
       throw new Error('upload should be a file')
     }
+    const root = `${owner}/${owningId}`
     const { filepath, originalFilename, size, mimetype } = upload
 
     const name = await this.handleNameDuplicates({ root, path, name: data.filename ?? originalFilename, autoRename }, _existing)
@@ -172,6 +173,8 @@ export class FileService
     }
 
     return {
+      owner,
+      owningId,
       root,
       path,
       name,

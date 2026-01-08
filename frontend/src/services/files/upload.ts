@@ -1,3 +1,5 @@
+import { FileOwner, FileOwningId } from 'types/files'
+
 import { backendUrl } from 'backend/constants'
 
 import { fetchWithProgress, FetchWithProgressOptions } from 'utils/fetchWithProgress'
@@ -32,7 +34,8 @@ export interface UploadedFile {
 }
 
 interface UploadOptions extends Pick<FetchWithProgressOptions, 'signal' | 'onProgress'> {
-  root?: string
+  owner: FileOwner
+  owningId: FileOwningId
   path?: string
   filename?: string
   autoRename?: boolean
@@ -40,13 +43,14 @@ interface UploadOptions extends Pick<FetchWithProgressOptions, 'signal' | 'onPro
   fileId?: string
 }
 
-export async function doUpload({ root, path, file, filename, fileId, autoRename, onProgress, signal }: UploadOptions) {
+export async function doUpload({ owner, owningId, path, file, filename, fileId, autoRename, onProgress, signal }: UploadOptions) {
   if (file.size > MAX_UPLOAD_SIZE) {
     return Promise.reject(new UploadError('too_big'))
   }
 
   const data = toFormData({
-    root: root ?? '',
+    owner,
+    owningId,
     path: path ?? '',
     upload: file,
     filename,

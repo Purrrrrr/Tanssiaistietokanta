@@ -11,6 +11,7 @@ const config: CodegenConfig = {
       preset: 'client',
       plugins: [],
       config: {
+        enumsAsConst: true,
         nonOptionalTypename: false,
         scalars: {
           Tags: 'Record<string, boolean>',

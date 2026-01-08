@@ -9,13 +9,18 @@ import type { FileService } from './files.class'
 import { Id } from '../../utils/common-types'
 import { Stream } from 'stream'
 
+const owningServiceSchema = Type.Union([Type.Literal('dances'), Type.Literal('events')])
+const owningIdSchema = Type.String({ minLength: 1, pattern: '^[^/]+$' })
+
 // Main data model schema
 export const fileSchema = Type.Object(
   {
     _id: Id(),
     _createdAt: Type.String(),
     _updatedAt: Type.String(),
-    root: Type.String(),
+    owner: owningServiceSchema,
+    owningId: owningIdSchema,
+    root: Type.String(), // Derived from owner + owningId
     path: Type.String(),
     name: Type.String(),
     notes: Type.String(),
@@ -27,6 +32,7 @@ export const fileSchema = Type.Object(
   },
   { $id: 'File', additionalProperties: false }
 )
+
 export type File = Static<typeof fileSchema> & { buffer?: Buffer | Stream }
 export const fileValidator = getValidator(fileSchema, dataValidator)
 export const fileResolver = resolve<File, HookContext<FileService>>({})
@@ -36,7 +42,8 @@ export const fileExternalResolver = resolve<File, HookContext<FileService>>({})
 // Schema for creating new entries
 export const fileDataSchema = Type.Object(
   {
-    root: Type.String(),
+    owner: owningServiceSchema,
+    owningId: owningIdSchema,
     path: Type.String(),
     filename: Type.Optional(Type.String({ minLength: 1 })),
     notes: Type.Optional(Type.String()),

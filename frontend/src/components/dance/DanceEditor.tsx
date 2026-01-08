@@ -105,7 +105,7 @@ export function InstructionEditor({ danceId, wikipage, ...props }: InstructionEd
   const canCopyFromWiki = isMissingvalue && wikipage && !props.readOnly
   const copyInstructionsFromWiki = () => props.onChange(wikipage?.instructions ?? '')
   return <>
-    <MarkdownInput {...props} fileRoot={`dances/${danceId}/markdown`} />
+    <MarkdownInput {...props} fileOwner="dances" fileOwningId={danceId} filePath="instructions" />
     {canCopyFromWiki && <p className="pt-2"><Button color="primary" text={t('copyFromDancewiki')} onClick={copyInstructionsFromWiki} /></p>}
   </>
 }

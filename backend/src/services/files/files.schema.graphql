@@ -1,19 +1,25 @@
 type Query {
   file(id: ID!): File!
-  files(root: String!, path: String): [File!]!
+  files(owner: Service!, owningId: ID!, path: String): [File!]!
 }
 
 type File {
   _id: ID!
   _createdAt: String!
   _updatedAt: String!
-  root: String!
+  owner: Service!
+  owningId: ID!
   path: String!
   name: String!
   notes: String!
   mimetype: String!
   size: Int!
   unused: Boolean!
+}
+
+enum Service {
+  dances
+  events
 }
 
 type Mutation {

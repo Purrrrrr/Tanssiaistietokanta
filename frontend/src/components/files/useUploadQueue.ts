@@ -1,4 +1,4 @@
-import { doUpload, type Progress, UploadedFile } from 'services/files'
+import { doUpload, FileOwner, FileOwningId, type Progress, UploadedFile } from 'services/files'
 
 import { useQueue } from 'libraries/i18n/useQueue'
 
@@ -15,7 +15,7 @@ export interface Upload {
   progress?: Progress
 }
 
-export function useUploadQueue(root: string, path: string = '') {
+export function useUploadQueue(owner: FileOwner, owningId: FileOwningId, path: string = '') {
   const [uploads, queue] = useQueue<Upload>()
   const getError = useGetUploadErrorMessage()
 
@@ -48,7 +48,7 @@ export function useUploadQueue(root: string, path: string = '') {
       start: async () => {
         try {
           const uploadedFile = await doUpload({
-            root, path, fileId, file,
+            owner, owningId, path, fileId, file,
             autoRename,
             signal: abortController.signal,
             onProgress: (progress) => queue.update(id, { progress }),

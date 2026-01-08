@@ -8,12 +8,11 @@ export default (app: Application) => {
   return {
     Query: {
       file: (_: any, {id}: any, params: FileParams | undefined) => service.get(id, params),
-      files: (_: any, { root, path = '' }: any, params: FileParams | undefined) => service.find({
+      files: (_: any, { owner, owningId, path = '' }: any, params: FileParams | undefined) => service.find({
         ...params,
         query: {
-          root,
-          path,
-        }
+          owner, owningId, path,
+        },
       }),
     },
     Mutation: {
