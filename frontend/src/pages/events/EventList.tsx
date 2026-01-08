@@ -17,10 +17,10 @@ export default function EventList() {
     <PageTitle>{t('pageTitle')}</PageTitle>
     <LoadingState {...requestState} />
     <p>{t('weHaveXEvents', { count: events.length })}</p>
-    <RequirePermissions right="dances:read">
+    <RequirePermissions requireRight="dances:read">
       <p>{t('youcanEditDancesIn')} <Link to="/dances">{t('danceDatabaseLinkName')}</Link></p>
     </RequirePermissions>
-    <RequirePermissions right="events:read">
+    <RequirePermissions requireRight="events:read">
       <H2>{t('danceEvents')}</H2>
       <ItemList columns="grid-cols-[1fr_max-content] gap-x-4" items={events} emptyText={t('noEvents')} className="max-w-200" wrap-breakpoint="none">
         <ItemList.Header>

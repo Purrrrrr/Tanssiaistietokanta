@@ -83,7 +83,7 @@ function EventProgramRoutes({ event }) {
 
 function EventPrintRoutes() {
   const { eventId } = useParams()
-  return <RequirePermissions right="events:read">
+  return <RequirePermissions requireRight="events:read">
     <Routes>
       <Route path="ball-dancelist" element={<DanceList eventId={eventId} />} />
       <Route path="dance-cheatlist" element={<DanceCheatList eventId={eventId} />} />

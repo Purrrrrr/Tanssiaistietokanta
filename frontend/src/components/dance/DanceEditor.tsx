@@ -3,8 +3,7 @@ import { Link as LinkIcon } from '@blueprintjs/icons'
 import { Dance, DanceWithEvents } from 'types'
 import { ID } from 'backend/types'
 
-import { useHasRight } from 'services/users'
-
+import { useRight } from 'libraries/access-control'
 import { MarkdownEditorProps, SyncStatus } from 'libraries/forms'
 import { Button, H2 } from 'libraries/ui'
 import { MarkdownInput } from 'components/files/MarkdownInput'
@@ -33,7 +32,7 @@ export function DanceEditor({ dance, onDelete, showLink, showVersionHistory, tit
   const t = useT('components.danceEditor')
   const { formProps, state } = useDanceEditorState(dance)
   const Title = titleComponent === 'h2' ? H2 : 'h1'
-  const canEdit = useHasRight('dances:modify')
+  const canEdit = useRight('dances:modify')
 
   return <Form {...formProps} readOnly={!canEdit}>
     <div className="flex flex-wrap gap-3.5 items-center mb-2">
@@ -56,7 +55,7 @@ export function DanceEditor({ dance, onDelete, showLink, showVersionHistory, tit
 
 export function PlainDanceEditor({ dance }: { dance: DanceWithEvents }) {
   const { formProps, state } = useDanceEditorState(dance)
-  const canEdit = useHasRight('dances:modify')
+  const canEdit = useRight('dances:modify')
   return <Form className="p-2 border-gray-200 border-t-1"{...formProps} readOnly={!canEdit}>
     <SyncStatus floatRight state={state} />
     <FullDanceEditorFields dance={dance} />

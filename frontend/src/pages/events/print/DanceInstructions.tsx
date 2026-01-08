@@ -21,7 +21,6 @@ import { selectElement } from 'utils/selectElement'
 import { uniq } from 'utils/uniq'
 
 import './DanceInstructions.sass'
-import { RequirePermissions } from 'components/rights/RequirePermissions'
 
 type Workshop = NonNullable<DanceInstructionsQuery['event']>['workshops'][0]
 
@@ -156,15 +155,14 @@ function InstructionsForDance({ dance, showShortInstructions }: { dance: Dance, 
   return <div className={`dance-instructions-dance ${value.trim() !== '' ? 'not-empty' : 'empty'}`}>
     <H2>
       {dance.name}
-      <RequirePermissions right="dances:modify">
-        <Button
-          color="primary"
-          minimal
-          icon={<Edit />}
-          aria-label={useTranslation(editorOpen ? 'common.closeEditor' : 'common.edit')}
-          onClick={() => setEditorOpen(!editorOpen)}
-        />
-      </RequirePermissions>
+      <Button
+        requireRight="dances:modify"
+        color="primary"
+        minimal
+        icon={<Edit />}
+        aria-label={useTranslation(editorOpen ? 'common.closeEditor' : 'common.edit')}
+        onClick={() => setEditorOpen(!editorOpen)}
+      />
     </H2>
     <div className={field}>
       {editorOpen

@@ -1,7 +1,5 @@
 import { Trash } from '@blueprintjs/icons'
 
-import { RightQueryInput, RightsEntity, useHasRight } from 'services/users'
-
 import { useAlerts } from 'libraries/overlays'
 import { Button, ButtonProps } from 'libraries/ui'
 import { useT } from 'i18n'
@@ -14,16 +12,11 @@ interface DeleteButtonProps extends ButtonProps {
   confirmText: React.ReactNode
   confirmTitle?: string
   minimal?: boolean
-  requireRight?: RightQueryInput
-  entity?: RightsEntity
 }
 
-export function DeleteButton({ onDelete, iconOnly, text, confirmTitle, confirmText, requireRight, entity, ...props }: DeleteButtonProps) {
+export function DeleteButton({ onDelete, iconOnly, text, confirmTitle, confirmText, ...props }: DeleteButtonProps) {
   const t = useT('components.deleteButton')
   const showAlert = useAlerts()
-  const hasRight = useHasRight(requireRight, entity)
-
-  if (!hasRight) return null
 
   return <Button
     {...props}

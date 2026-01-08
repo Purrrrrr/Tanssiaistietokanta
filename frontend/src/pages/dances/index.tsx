@@ -20,11 +20,11 @@ function DancesPage() {
 
   return <>
     <PageTitle>{t('pageTitle')}</PageTitle>
-    <RequirePermissions right="dances:read">
+    <RequirePermissions requireRight="dances:read">
       <LoadingState {...requestState} />
       <div className="flex flex-wrap gap-2 mb-2.5">
         <SearchBar id="search-dances" value={search} onChange={setSearch} placeholder={useTranslation('common.search')} emptySearchText={useTranslation('common.emptySearch')} />
-        <RequirePermissions right="dances:create">
+        <RequirePermissions requireRight="dances:create">
           <div>
             <CreateDanceButtons danceCount={dances.length} />
           </div>

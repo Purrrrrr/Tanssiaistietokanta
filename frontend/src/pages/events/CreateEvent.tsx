@@ -34,7 +34,7 @@ export default function CreateEventForm() {
   return <>
     <Breadcrumb text={t('newEventBreadcrumb')} />
     <PageTitle>{t('newEvent')}</PageTitle>
-    <RequirePermissions right="events:create" fallback="loginPage">
+    <RequirePermissions requireRight="events:create" fallback="loginPage">
       <Form labelStyle="above" value={event} onChange={setEvent} onSubmit={() => addLoadingAnimation(createEvent({ event }))} errorDisplay="onSubmit">
         <div className="flexz gap-3">
           <Input label={t('name')} path="name" required containerClassName="w-60" />

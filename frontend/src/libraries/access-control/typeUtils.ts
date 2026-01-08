@@ -21,3 +21,9 @@ type Join<T extends string[], Sep extends string> = T extends [infer F extends s
     ? F
     : `${F}${Sep}${Join<R, Sep>}`
   : never
+
+export type UnionToTuple<T, R extends unknown[] = []>
+  = [T] extends [never] ? R
+  : (T extends T ? Set<Promise<T>> : never) extends { has: (_: infer L) => boolean }
+    ? UnionToTuple<Exclude<T, Awaited<L>>, [...R, Awaited<L>]>
+    : never

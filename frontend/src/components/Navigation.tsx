@@ -8,7 +8,6 @@ import MenuButton from 'libraries/formsV2/components/MenuButton'
 import { AnchorButton, Breadcrumbs, Button } from 'libraries/ui'
 import { useT, useTranslation } from 'i18n'
 
-import { RequirePermissions } from './rights/RequirePermissions'
 import { NavigateButton } from './widgets/NavigateButton'
 
 function Navigation() {
@@ -17,9 +16,7 @@ function Navigation() {
       <Breadcrumbs label={useTranslation('navigation.breadcrumbs')} />
     </div>
     <div className="flex items-center">
-      <RequirePermissions right="dances:read">
-        <NavButton icon={<span className="mr-0.5">💃</span>} href="/dances" text={useTranslation('navigation.dances')} />
-      </RequirePermissions>
+      <NavButton requireRight="dances:read" icon={<span className="mr-0.5">💃</span>} href="/dances" text={useTranslation('navigation.dances')} />
       <div className="mx-1 self-stretch w-[1px] bg-stone-300" />
       <LoginStatus />
     </div>

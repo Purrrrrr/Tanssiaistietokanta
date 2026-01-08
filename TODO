@@ -228,7 +228,8 @@
     * EventList
     * Dances
     * Events
-    Move permission checks to own library to integrate with other components
+  * Move permission checks to own library to integrate with other components
+    Load file components only when user has the rights. Lazy loading
   Forms
     Check a11y for form field readOnly vs disabled vs some other rendering method
     Render readOnly selectors more lightly

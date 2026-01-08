@@ -1,29 +1,20 @@
 import { lazy } from 'react'
 
-import { RightQueryInput, RightsEntity, useHasRight } from 'services/users'
+import { RightsQueryProps, useRequirePermissions } from 'libraries/access-control'
 
 const LoginForm = lazy(() => import('components/rights/LoginForm'))
 
-interface RequirePermissionsProps extends RequirePermissionsWrapperProps {
+interface RequirePermissionsProps extends NoRightsFallbackProps, RightsQueryProps {
   children: React.ReactNode
 }
 
 export function RequirePermissions(props: RequirePermissionsProps) {
-  const wrapper = useRequirePermissionsWrapper(props)
-  return wrapper(props.children)
-}
-
-interface RequirePermissionsWrapperProps extends NoRightsFallbackProps {
-  right: RightQueryInput
-  entity?: RightsEntity
-}
-
-export function useRequirePermissionsWrapper({ right, entity, ...props }: RequirePermissionsWrapperProps) {
-  if (useHasRight(right, entity)) {
-    return (children: React.ReactNode) => <>{children}</>
+  const allowed = useRequirePermissions(props)
+  if (allowed) {
+    return props.children
   }
 
-  return () => <NoRightsFallback {...props} />
+  return <NoRightsFallback {...props} />
 }
 
 interface NoRightsFallbackProps {

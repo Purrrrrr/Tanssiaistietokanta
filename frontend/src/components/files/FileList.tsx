@@ -2,8 +2,8 @@ import { useRef } from 'react'
 import { Add } from '@blueprintjs/icons'
 
 import { useFiles } from 'services/files'
-import { useHasRights } from 'services/users'
 
+import { useRights } from 'libraries/access-control'
 import { useFormatDateTime } from 'libraries/i18n/dateTime'
 import { useAlerts } from 'libraries/overlays'
 import { Button, H2, ItemList, RegularLink } from 'libraries/ui'
@@ -36,7 +36,7 @@ export function FileList({ title, root, path }: FileListProps) {
   const formatDate = useFormatDateTime()
   const showAlert = useAlerts()
   const selector = useMultipleSelection(files)
-  const [canUseFiles, canUpload, canModify, canDelete] = useHasRights([
+  const [canUseFiles, canUpload, canModify, canDelete] = useRights([
     'files:read', 'files:create', 'files:modify', 'files:delete',
   ])
 

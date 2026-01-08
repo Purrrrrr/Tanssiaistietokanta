@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom'
 import { Event } from 'types'
 
 import { useDeleteEvent, usePatchEvent } from 'services/events'
-import { useHasRight } from 'services/users'
 import { useCreateWorkshop, useDeleteWorkshop } from 'services/workshops'
 
 import { DateField, DateRangeField, formFor, patchStrategy, SyncStatus, useAutosavingState } from 'libraries/forms'
@@ -35,7 +34,7 @@ export default function EventPage({ event }: { event: Event }) {
   const t = useT('pages.events.eventPage')
   const { _versionId, _versionNumber } = event
   const readOnly = _versionId != undefined
-  return <RequirePermissions right="events:read">
+  return <RequirePermissions requireRight="events:read">
     <div className="flex justify-between items-center">
       <VersionedPageTitle showVersion={readOnly} versionNumber={_versionNumber}>
         {event.name}
@@ -67,7 +66,7 @@ function EventDetails({ event, readOnly }: { event: Event, readOnly: boolean }) 
       { readOnly ||
         <div>
           <RequirePermissions
-            right="events:modify"
+            requireRight="events:modify"
             fallback={<Link to={`/login?redirectTo=${encodeURIComponent(window.location.pathname)}`}>{t('loginToEdit')}</Link>}
           >
             <Button
@@ -84,7 +83,7 @@ function EventDetails({ event, readOnly }: { event: Event, readOnly: boolean }) 
         </div>
       }
     </p>
-    <RequirePermissions right="events:modify">
+    <RequirePermissions requireRight="events:modify">
       <Collapse isOpen={showEditor}>
         <EventDetailsForm event={event} />
       </Collapse>
@@ -205,11 +204,9 @@ function CreateWorkshopButton({ eventId, startDate }) {
   const t = useT('pages.events.eventPage')
   const addLoadingAnimation = useGlobalLoadingAnimation()
   const [createWorkshop] = useCreateWorkshop()
-  const hasRight = useHasRight('workshops:create', eventId)
-
-  if (!hasRight) return null
 
   return <Button
+    requireRight="workshops:create"
     onClick={() => addLoadingAnimation(createWorkshop(newWorkshop({ eventId, name: t('newWorkshop') }, startDate)))}
     color="primary"
     text={t('createWorkshop')}
@@ -254,12 +251,11 @@ function WorkshopCard(
           className="float-right" text="Poista"
           confirmText={'Haluatko varmasti poistaa työpajan ' + name + '?'}
         />
-        <RequirePermissions right="workshops:modify">
-          <Button
-            onClick={() => setShowEditor(!showEditor)}
-            className="float-right" text={showEditor ? t('closeEditor') : t('openEditor')}
-          />
-        </RequirePermissions>
+        <Button
+          requireRight="workshops:modify"
+          onClick={() => setShowEditor(!showEditor)}
+          className="float-right" text={showEditor ? t('closeEditor') : t('openEditor')}
+        />
       </>
     }
     <H2>

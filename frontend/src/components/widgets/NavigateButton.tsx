@@ -1,7 +1,6 @@
 import React from 'react'
 
-import { RightQueryInput, RightsEntity, useHasRight } from 'services/users'
-
+import { withPermissionChecking } from 'libraries/access-control'
 import { type Color, Link } from 'libraries/ui'
 import { buttonClass } from 'libraries/ui/Button'
 
@@ -9,8 +8,6 @@ interface NavigateButtonProps extends Omit<React.ComponentProps<typeof Link>, 't
   text?: string | React.ReactElement | React.ReactElement[]
   children?: string | React.ReactElement | React.ReactElement[]
   icon?: React.ReactElement
-  requireRight?: RightQueryInput
-  entity?: RightsEntity
   disabled?: boolean
   minimal?: boolean
   href: string
@@ -18,10 +15,7 @@ interface NavigateButtonProps extends Omit<React.ComponentProps<typeof Link>, 't
   className?: string
 }
 
-export function NavigateButton({ text, children, icon, disabled, minimal, href, color, className, requireRight, entity, ...props }: NavigateButtonProps) {
-  const hasRight = useHasRight(requireRight, entity)
-  if (!hasRight) return null
-
+export const NavigateButton = withPermissionChecking(({ text, children, icon, disabled, minimal, href, color, className, ...props }: NavigateButtonProps) => {
   const classes = buttonClass(color ?? 'none', { className, disabled, minimal })
 
   const onClick = props.onClick ??
@@ -33,7 +27,7 @@ export function NavigateButton({ text, children, icon, disabled, minimal, href, 
     {text}
     {children}
   </Link>
-}
+})
 
 function openLinkWithTarget(e) {
   e.preventDefault()
