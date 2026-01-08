@@ -37,7 +37,8 @@ export const file = (app: Application) => {
         // schemaHooks.resolveExternal(fileExternalResolver),
         // schemaHooks.resolveResult(fileResolver)
       ],
-      find: [authenticate('jwt')],
+      find: [authenticate('refreshToken', 'jwt')],
+      get: [authenticate('refreshToken', 'jwt')],
       create: [authenticate('jwt')],
       update: [authenticate('jwt')],
       patch: [authenticate('jwt')],

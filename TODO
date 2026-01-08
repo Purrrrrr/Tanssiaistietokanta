@@ -230,7 +230,7 @@
     * Events
   * Move permission checks to own library to integrate with other components
   * Associate files with some service and entity id
-    Allow authenticating file downloads somehow
+  * Allow authenticating file downloads somehow
     Load file components only when user has the rights. Lazy loading
   Forms
     Check a11y for form field readOnly vs disabled vs some other rendering method

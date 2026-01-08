@@ -1,5 +1,6 @@
 import { AuthenticationParams, AuthenticationRequest, AuthenticationService, AuthenticationStrategy } from '@feathersjs/authentication'
 import { parse, serialize } from 'cookie'
+import { IncomingMessage, ServerResponse } from 'http';
 
 import type { Application, HookContext } from './declarations'
 import { NotAuthenticated } from '@feathersjs/errors'
@@ -24,8 +25,20 @@ export class RefreshTokenStrategy implements AuthenticationStrategy {
     this.userService = this.app.service('users')
   }
 
-  async authenticate(_authentication: AuthenticationRequest, params: AuthenticationParams) {
-    const { refreshToken } = params.cookies ?? {}
+  async parse(req: IncomingMessage, res: ServerResponse): Promise<AuthenticationRequest | null> {
+    if (req.headers.authorization) {
+      // Prefer other strategies if Authorization header is present
+      return null
+    }
+    const cookies = parse(req.headers.cookie || '')
+    if (cookies.refreshToken) {
+      return { strategy: 'refreshToken', refreshToken: cookies.refreshToken }
+    }
+    return null
+  }
+
+  async authenticate(authentication: AuthenticationRequest, params: AuthenticationParams) {
+    const refreshToken = authentication.refreshToken ?? params.cookies?.refreshToken ?? null
 
     if (!refreshToken) {
       throw new NotAuthenticated('No refresh token cookie')
