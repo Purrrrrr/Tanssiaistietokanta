@@ -34,13 +34,14 @@ export const file = (app: Application) => {
   app.service(filePath).hooks({
     around: {
       all: [
-        authenticate('jwt'),
         // schemaHooks.resolveExternal(fileExternalResolver),
         // schemaHooks.resolveResult(fileResolver)
       ],
-      create: [],
-      update: [],
-      patch: [],
+      find: [authenticate('jwt')],
+      create: [authenticate('jwt')],
+      update: [authenticate('jwt')],
+      patch: [authenticate('jwt')],
+      remove: [authenticate('jwt')],
     },
     before: {
       all: [schemaHooks.validateQuery(fileQueryValidator), schemaHooks.resolveQuery(fileQueryResolver)],
