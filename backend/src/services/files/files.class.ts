@@ -1,7 +1,7 @@
 import { PersistentFile } from 'formidable'
 import archiver  from 'archiver'
-import { join, basename, parse } from 'path'
-import { rename, readdir, readFile, stat, unlink } from 'fs/promises'
+import { join, dirname, basename, parse } from 'path'
+import { rename, readdir, readFile, stat, unlink, mkdir } from 'fs/promises'
 import type { Id, Params } from '@feathersjs/feathers'
 import cron from 'node-cron'
 
@@ -102,7 +102,7 @@ export class FileService
           throw new ErrorWithStatus(404, 'Files not found')
         case 1:
         {
-          const filePath = this.idToPath(result[0].fileId)
+          const filePath = this.idToPath(result[0])
           result[0].buffer = await readFile(filePath)
           break
         }
@@ -119,8 +119,8 @@ export class FileService
           archive.on('finish', () => archiveProgress.resolve(true))
           archive.pipe(stream)
 
-          for (const { name, fileId } of result) {
-            archive.file(this.idToPath(fileId), { name })
+          for (const file of result) {
+            archive.file(this.idToPath(file), { name: file.name })
           }
 
           archive.finalize()
@@ -137,9 +137,9 @@ export class FileService
   async get(id: Id, _params?: FileParams): Promise<File> {
     const download = _params?.query?.download
     const result = await super.get(id)
-    
+
     if (download) {
-      const filePath = this.idToPath(result.fileId)
+      const filePath = this.idToPath(result)
       result.buffer = await readFile(filePath)
     }
 
@@ -163,13 +163,15 @@ export class FileService
         message: 'Infected file',
       })
     }
-    
+
     const fileId = basename(filepath)
-    await rename(filepath, this.idToPath(fileId)) 
+    const fileStoragePath = this.idToPath({ fileId, owner, owningId })
+    await mkdir(dirname(fileStoragePath), { recursive: true })
+    await rename(filepath, fileStoragePath)
     const _updatedAt = now()
 
     if (_existing?.fileId) {
-      await unlink(this.idToPath(_existing.fileId))
+      await unlink(this.idToPath({ fileId: _existing.fileId, owner, owningId }))
     }
 
     return {
@@ -210,7 +212,7 @@ export class FileService
           message: 'The file already exists',
         })
       }
-      
+
       const { name, ext } = parse(filePath.name)
       let counter = 2
       let proposedName: string
@@ -231,17 +233,17 @@ export class FileService
   }
 
   protected onRemove(result: File): void | Promise<void> {
-    const path = this.idToPath(result.fileId)
+    const path = this.idToPath(result)
     return unlink(path)
   }
 
-  private idToPath(fileId: string) {
-    return join(this.options.uploadDir, fileId)
+  private idToPath({ owner, owningId, fileId }: Pick<File, 'fileId' | 'owner' | 'owningId'>) {
+    return join(this.options.uploadDir, owner, owningId, fileId)
   }
 }
 
 export const getOptions = (app: Application) => {
-  return { 
+  return {
     app,
     uploadDir: app.get('uploadDir'),
     uploadTmp: app.get('uploadTmp'),
