@@ -1,4 +1,5 @@
 import { useEvents } from 'services/events'
+import { useCurrentUser } from 'services/users'
 
 import { useFormatDate } from 'libraries/i18n/dateTime'
 import { H2, ItemList, Link } from 'libraries/ui'
@@ -12,16 +13,27 @@ export default function EventList() {
   const t = useT('pages.events.eventList')
   const [events, requestState] = useEvents()
   const formatDate = useFormatDate()
+  const user = useCurrentUser()
 
   return <>
     <PageTitle>{t('pageTitle')}</PageTitle>
     <LoadingState {...requestState} />
-    <p>{t('weHaveXEvents', { count: events.length })}</p>
-    <RequirePermissions requireRight="dances:read">
-      <p>{t('youcanEditDancesIn')} <Link to="/dances">{t('danceDatabaseLinkName')}</Link></p>
-    </RequirePermissions>
+    <p>
+      {t('welcomeMessage.message')}
+      <RequirePermissions requireRight="dances:read">
+        {t('welcomeMessage.danceInstructionsPostfix')}
+        <Link to="/dances">{t('welcomeMessage.danceInstructions')}</Link>
+      </RequirePermissions>.
+    </p>
+    <H2>{t('danceEvents')}</H2>
+    {!user && <p>
+      {' '}
+      {t('loginToEdit.moveTo')}
+      <Link to="/login">{t('loginToEdit.loginPage')}</Link>
+      {t('loginToEdit.toEdit')}
+    </p>}
     <RequirePermissions requireRight="events:read">
-      <H2>{t('danceEvents')}</H2>
+      <p>{t('weHaveXEvents', { count: events.length })}</p>
       <ItemList columns="grid-cols-[1fr_max-content] gap-x-4" items={events} emptyText={t('noEvents')} className="max-w-200" wrap-breakpoint="none">
         <ItemList.Header>
           <span>{t('name')}</span>

@@ -330,12 +330,23 @@ export const fi = {
     events: {
       eventList: {
         pageTitle: 'Tanssiaistietokanta',
+        welcomeMessage: {
+          message: 'Tervetuloa Tanssiaistietokantaan! Tälle sivustolle on koottu joitakin Suomessa järjestettäviä historiallisen tanssin tapahtumia',
+          danceInstructionsPostfix: ' ja niihin liittyviä ',
+          danceInstructions: 'tanssiohjeita',
+        },
+        loginToEdit: {
+          moveTo: 'Et ole kirjautunut sisään. Muokataksesi tapahtumia, siirry ',
+          loginPage: 'kirjautumissivulle',
+          toEdit: ' ja kirjaudu sisään.',
+        },
         weHaveXEvents: {
           zero: 'Kannassa ei ole tällä hetkellä yhtäkään tanssitapahtumaa.',
           one: 'Kannassa on tällä hetkellä yksi tanssitapahtuma.',
           many: 'Kannassa on tällä hetkellä __count__ tanssitapahtumaa.',
         },
-        youcanEditDancesIn: 'Voit muokata tanssitapahtumien tansseja',
+        youcanViewDancesIn: 'Voit myös tarkastella tanssitapahtumien tansseja',
+        youcanEditDancesIn: 'Voit myös muokata tanssitapahtumien tansseja',
         danceDatabaseLinkName: 'tanssitietokannasta',
         danceEvents: 'Tanssitapahtumat tietokannassa',
         noEvents: 'Ei tapahtumia',

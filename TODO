@@ -207,7 +207,7 @@
 * Remove HTMLTable
 * Remove table support from list editors
 
-  Authentication
+* Authentication
   * Basic backend support
   * Refresh tokens in cookies
   * Basic login/logout in frontend
@@ -231,7 +231,6 @@
   * Move permission checks to own library to integrate with other components
   * Associate files with some service and entity id
   * Allow authenticating file downloads somehow
-    Load file components only when user has the rights. Lazy loading
   Forms
     Check a11y for form field readOnly vs disabled vs some other rendering method
     Render readOnly selectors more lightly
@@ -239,6 +238,8 @@
   Test websocket performance with something. Gatling?
 
   Auth Part 2
+    Load file components only when user has the rights. Lazy loading
+    Some own component or system for auth needing pages
     Allow creating users with some token? Invite functionality?
     Nicer logout menu keyboard a11y
     Entity specific rights
