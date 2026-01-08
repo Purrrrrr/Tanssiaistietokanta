@@ -61,7 +61,7 @@ export const file = (app: Application) => {
 
           const file = files[0]
           if (file?.buffer) {
-            addDownloadHeaders(ctx, { name: 'download.zip', mimetype: 'application/zip' })
+            addDownloadHeaders(ctx, file, true)
             ctx.dispatch = file.buffer as unknown as File // Type hack to allow downloadinng the data
           }
         },
@@ -71,7 +71,7 @@ export const file = (app: Application) => {
           const file = (ctx.dispatch ?? ctx.result) as File
 
           if (file.buffer) {
-            addDownloadHeaders(ctx,file )
+            addDownloadHeaders(ctx, file)
             ctx.dispatch = file.buffer as unknown as File // Type hack to allow downloadinng the data
           }
         },
@@ -83,8 +83,8 @@ export const file = (app: Application) => {
   })
 }
 
-function addDownloadHeaders(ctx: HookContext, { name, mimetype }: Pick<File, 'name' | 'mimetype'>) {
-  const isInline = mimetype.match(/^(image|audio|text)\//)
+function addDownloadHeaders(ctx: HookContext, { name, mimetype }: Pick<File, 'name' | 'mimetype'>, forceDownload = false) {
+  const isInline = !forceDownload && mimetype.match(/^(image|audio|text)\//)
   ctx.http ??= {}
   ctx.http.headers = {
     'content-type': mimetype,

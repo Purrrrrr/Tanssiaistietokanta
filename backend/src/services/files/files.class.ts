@@ -127,6 +127,8 @@ export class FileService
 
           await archiveProgress.promise
           result[0].buffer = stream
+          result[0].name = 'download.zip'
+          result[0].mimetype = 'application/zip'
         }
       }
     }
