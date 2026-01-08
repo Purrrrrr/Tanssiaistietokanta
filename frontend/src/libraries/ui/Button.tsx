@@ -37,9 +37,7 @@ export const buttonClass = (
   className,
 )
 
-export interface ButtonProps extends ButtonOwnProps, RightsQueryProps {}
-
-interface ButtonOwnProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends RightsQueryProps, ButtonHTMLAttributes<HTMLButtonElement> {
   text?: React.ReactNode
   icon?: React.ReactElement
   rightIcon?: React.ReactElement
@@ -50,7 +48,7 @@ interface ButtonOwnProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   tooltip?: React.ReactNode
 }
 
-export const Button = withPermissionChecking(forwardRef<HTMLButtonElement, ButtonOwnProps>(function Button(props: ButtonOwnProps, ref) {
+export const Button = withPermissionChecking(forwardRef<HTMLButtonElement, ButtonProps>(function Button(props: ButtonProps, ref) {
   const {
     type = 'button',
     children,
@@ -63,6 +61,8 @@ export const Button = withPermissionChecking(forwardRef<HTMLButtonElement, Butto
     className,
     paddingClass,
     tooltip,
+    requireRight: _ignoredRequireRight,
+    entity: _ignoredEntity,
     ...rest
   } = props
   return <TooltipContainer tooltip={tooltip}>
@@ -75,7 +75,7 @@ export const Button = withPermissionChecking(forwardRef<HTMLButtonElement, Butto
   </TooltipContainer>
 }))
 
-export interface AnchorButtonProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
+export interface AnchorButtonProps extends RightsQueryProps, AnchorHTMLAttributes<HTMLAnchorElement> {
   text?: React.ReactNode
   icon?: React.ReactElement
   rightIcon?: React.ReactElement
@@ -96,6 +96,8 @@ export const AnchorButton = withPermissionChecking(forwardRef<HTMLAnchorElement,
     minimal,
     className,
     tooltip,
+    requireRight: _ignoredRequireRight,
+    entity: _ignoredEntity,
     ...rest
   } = props
   return <TooltipContainer tooltip={tooltip}>
