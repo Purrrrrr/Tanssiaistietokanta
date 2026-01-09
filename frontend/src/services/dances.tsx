@@ -25,15 +25,10 @@ query getDanceCategories {
 export const useDances = entityListQueryHook('dances', graphql(`
 query getDances {
   dances {
-    _id, _versionId, _versionNumber, name, description, remarks, duration, prelude, formation, source, category, instructions, slideStyleId, tags
+    _id, _versionId, name, category,
     wikipageName
     wikipage {
-      _id
-      _fetchedAt
-      status
       categories
-      formations
-      instructions
     }
     events {
       _id
@@ -163,7 +158,7 @@ mutation deleteDance($id: ID!) {
   }
 }`))
 
-export function filterDances<T extends Dance>(dances: T[], searchString: string, categoryFilter?: string): T[] {
+export function filterDances<T extends Pick<Dance, 'name' | 'category'>>(dances: T[], searchString: string, categoryFilter?: string): T[] {
   const filtered = filterItemList(sortDances(dances), searchString, dance => dance.name)
   if (categoryFilter !== undefined) {
     return filtered.filter(dance => dance.category === categoryFilter)
@@ -171,7 +166,7 @@ export function filterDances<T extends Dance>(dances: T[], searchString: string,
   return filtered
 }
 
-export function sortDances<T extends Dance>(dances: T[]): T[] {
+export function sortDances<T extends Pick<Dance, 'name'>>(dances: T[]): T[] {
   return sorted(dances, compareDances)
 }
 

@@ -1,10 +1,14 @@
 import { useState } from 'react'
 import { ChevronDown, ChevronUp, Edit } from '@blueprintjs/icons'
 
-import { DanceWithEvents } from 'types'
+import { DanceListItem } from 'types'
+import { ID } from 'backend/types'
+
+import { useDance } from 'services/dances'
 
 import { Button, ColorClass, ItemList, type Sort } from 'libraries/ui'
 import { InfiniteItemLoader } from 'components/InfiniteItemLoader'
+import { LoadingState } from 'components/LoadingState'
 import { ColoredTag } from 'components/widgets/ColoredTag'
 import { useT, useTranslation } from 'i18n'
 import { sortedBy } from 'utils/sorted'
@@ -15,7 +19,7 @@ import { DanceLink } from './DanceLink'
 import { DeleteDanceButton } from './DeleteDanceButton'
 
 interface DanceListProps {
-  dances: DanceWithEvents[]
+  dances: DanceListItem[]
 }
 
 export function DanceList({ dances: unsortedDances }: DanceListProps) {
@@ -39,7 +43,7 @@ export function DanceList({ dances: unsortedDances }: DanceListProps) {
             { key: 'category', label: t('category') },
             { key: 'popularity', label: t('danceUsage') },
           ]} />
-          {dances.map((dance: DanceWithEvents) => <DanceListRow key={dance._id} dance={dance} />) }
+          {dances.map((dance: DanceListItem) => <DanceListRow key={dance._id} dance={dance} />) }
         </ItemList>
       }
     </InfiniteItemLoader>
@@ -50,19 +54,19 @@ function danceSorter(key: string) {
   switch (key) {
     default:
     case 'name':
-      return (dance: DanceWithEvents) => dance.name
+      return (dance: DanceListItem) => dance.name
     case 'category':
-      return (dance: DanceWithEvents) => dance.category?.trim() === '' ? null : dance.category
+      return (dance: DanceListItem) => dance.category?.trim() === '' ? null : dance.category
     case 'popularity':
-      return (dance: DanceWithEvents) => dance.events.length + (dance.wikipageName ? 0.5 : 0)
+      return (dance: DanceListItem) => dance.events.length + (dance.wikipageName ? 0.5 : 0)
   }
 }
 
-function DanceListRow({ dance }: { dance: DanceWithEvents }) {
+function DanceListRow({ dance }: { dance: DanceListItem }) {
   const t = useT('pages.dances.danceList')
   const [showEditor, setShowEditor] = useState(false)
 
-  return <ItemList.Row expandableContent={<PlainDanceEditor dance={dance} />} isOpen={showEditor}>
+  return <ItemList.Row expandableContent={<DanceListRowEditor danceId={dance._id} />} isOpen={showEditor}>
     <div className="max-md:basis-35 grow">
       <DanceLink dance={dance} />
     </div>
@@ -87,4 +91,11 @@ function DanceListRow({ dance }: { dance: DanceWithEvents }) {
       />
     </div>
   </ItemList.Row>
+}
+
+function DanceListRowEditor({ danceId }: { danceId: ID }) {
+  const result = useDance({ id: danceId })
+  if (!result.data?.dance) return <LoadingState {...result} />
+
+  return <PlainDanceEditor dance={result.data.dance} />
 }

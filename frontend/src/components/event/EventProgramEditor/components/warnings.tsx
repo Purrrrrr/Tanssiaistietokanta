@@ -3,7 +3,7 @@ import { Fragment } from 'react'
 import { Dance } from 'types'
 import { DanceSet, EventProgramSettings } from 'components/event/EventProgramForm/types'
 
-import { useDances } from 'services/dances'
+import { entityListQueryHook, graphql } from 'backend'
 
 import { Callout, Link, RegularLink } from 'libraries/ui'
 import { useChosenDanceIds, useWorkshops } from 'components/event/EventProgramForm/eventMetadata'
@@ -72,7 +72,7 @@ export function MissingDanceInstructionsWarning({ program }: { program: EventPro
 }
 
 function useDancesWithMissingInstructions() {
-  const [dances] = useDances()
+  const [dances] = useDanceDescriptions()
   const chosenDanceIds = useChosenDanceIds()
 
   return Array.from(chosenDanceIds as Set<string>)
@@ -80,6 +80,13 @@ function useDancesWithMissingInstructions() {
     .filter(dance => dance !== undefined)
     .filter(isMissingInstruction)
 }
+
+const useDanceDescriptions = entityListQueryHook('dances', graphql(`
+query getDancesWithMissingInstructions {
+  dances {
+    _id, _versionId, description
+  }
+}`))
 
 function isMissingInstruction(dance: { description?: string | null }) {
   const instructionLength = dance.description?.trim()?.length ?? 0

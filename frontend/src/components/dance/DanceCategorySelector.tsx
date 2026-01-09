@@ -46,7 +46,7 @@ interface DanceViewCategorySelectorProps {
   id: string
   value: DanceViewCategory
   onChange: (category: DanceViewCategory) => unknown
-  dances: Dance[]
+  dances: Pick<Dance, 'category'>[]
 }
 
 export type DanceViewCategory = string | AnyCategory
@@ -60,7 +60,7 @@ export function DanceViewCategorySelector({ id, value, onChange, dances }: Dance
     ...categories,
   ] as DanceViewCategory[]
 
-  const countsByCategory: Map<DanceViewCategory, Dance[]> = Map.groupBy(dances, dance => dance.category ?? '')
+  const countsByCategory: Map<DanceViewCategory, Pick<Dance, 'category'>[]> = Map.groupBy(dances, dance => dance.category ?? '')
   countsByCategory.set(anyCategory, dances)
   const itemToString = (category: DanceViewCategory) => {
     if (category === anyCategory) return t('anyCategory')

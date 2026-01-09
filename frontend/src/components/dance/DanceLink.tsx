@@ -10,7 +10,7 @@ type DanceLinkProps = {
   id: ID
   versionId?: ID
 } | {
-  dance: Dance
+  dance: Pick<Dance, '_id' | '_versionId' | 'name'>
 })
 
 export function DanceLink(props: DanceLinkProps) {

@@ -1,6 +1,6 @@
 import { useId } from 'react'
 
-import { Dance, Workshop } from 'types'
+import { DanceListItem, Workshop } from 'types'
 
 import { filterDances, useCreateDance, useDances } from 'services/dances'
 
@@ -11,9 +11,11 @@ import { useT } from 'i18n'
 
 import { ColoredTag } from './ColoredTag'
 
+type Dance = Omit<DanceListItem, 'events'>
+
 interface DanceChooserProps {
   value: Dance | null
-  excludeFromSearch?: Dance[]
+  excludeFromSearch?: Pick<Dance, '_id'>[]
   onChange: (dance: Dance | null) => unknown
   readOnly?: boolean
   hasConflict?: boolean

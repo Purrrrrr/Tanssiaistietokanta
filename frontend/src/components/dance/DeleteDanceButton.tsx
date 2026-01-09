@@ -8,7 +8,7 @@ import { useT } from 'i18n'
 
 interface DeleteDanceButtonProps {
   minimal?: boolean
-  dance: DanceWithEvents
+  dance: Pick<DanceWithEvents, '_id' | 'events'>
   onDelete?: () => unknown
 }
 
