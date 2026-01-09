@@ -230,8 +230,9 @@
   * Move permission checks to own library to integrate with other components
   * Associate files with some service and entity id
   * Allow authenticating file downloads somehow
+* A way to load less data for dance list: only ids, names, links and categories perhaps
+* Check that events still update dances as they should
   
-  A way to load less data for dance list: only ids, names, links and categories perhaps
   Login icon?
   Load icons lazily? Centralize them somewhere for replacement
   Ability to hide and publish events (rights management)
