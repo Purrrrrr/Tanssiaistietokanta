@@ -3,24 +3,22 @@ import { ChevronDown, ChevronUp, Edit } from '@blueprintjs/icons'
 
 import { DanceWithEvents } from 'types'
 
-import { Button, Card, ColorClass, ItemList, type Sort } from 'libraries/ui'
+import { Button, ColorClass, ItemList, type Sort } from 'libraries/ui'
 import { InfiniteItemLoader } from 'components/InfiniteItemLoader'
 import { ColoredTag } from 'components/widgets/ColoredTag'
 import { useT, useTranslation } from 'i18n'
 import { sortedBy } from 'utils/sorted'
 
-import { DanceEditor, PlainDanceEditor } from './DanceEditor'
+import { PlainDanceEditor } from './DanceEditor'
 import { DanceIsUsedIn } from './DanceIsUsedIn'
 import { DanceLink } from './DanceLink'
 import { DeleteDanceButton } from './DeleteDanceButton'
 
 interface DanceListProps {
   dances: DanceWithEvents[]
-  view?: View
 }
-export type View = 'tight' | 'extended'
 
-export function DanceList({ dances: unsortedDances, view }: DanceListProps) {
+export function DanceList({ dances: unsortedDances }: DanceListProps) {
   const t = useT('pages.dances.danceList')
   const [sort, setSort] = useState<Sort>({ key: 'name', direction: 'asc' })
   const dances = sortedBy(unsortedDances, danceSorter(sort.key), sort.direction === 'desc')
@@ -29,28 +27,20 @@ export function DanceList({ dances: unsortedDances, view }: DanceListProps) {
     {dances.length > 0 &&
       <p className="my-3">{t('showingNDances', { count: dances.length })}</p>
     }
-    <InfiniteItemLoader key={view} items={dances}>
-      {dances => view === 'extended'
-        ? (
-          <>
-            {dances.map((dance: DanceWithEvents) => <ExtendedDanceListRow dance={dance} key={dance._id} />)}
-            {dances.length > 0 || <p>{t('noDances')}</p>}
-          </>
-        )
-        : (
-          <ItemList
-            items={dances}
-            emptyText={t('noDances')}
-            columns="grid-cols-[1fr_minmax(min(300px,30%),max-content)_max-content]"
-          >
-            <ItemList.SortableHeader currentSort={sort} onSort={setSort} columns={[
-              { key: 'name', label: t('name') },
-              { key: 'category', label: t('category') },
-              { key: 'popularity', label: t('danceUsage') },
-            ]} />
-            {dances.map((dance: DanceWithEvents) => <DanceListRow key={dance._id} dance={dance} />) }
-          </ItemList>
-        )
+    <InfiniteItemLoader items={dances}>
+      {dances =>
+        <ItemList
+          items={dances}
+          emptyText={t('noDances')}
+          columns="grid-cols-[1fr_minmax(min(300px,30%),max-content)_max-content]"
+        >
+          <ItemList.SortableHeader currentSort={sort} onSort={setSort} columns={[
+            { key: 'name', label: t('name') },
+            { key: 'category', label: t('category') },
+            { key: 'popularity', label: t('danceUsage') },
+          ]} />
+          {dances.map((dance: DanceWithEvents) => <DanceListRow key={dance._id} dance={dance} />) }
+        </ItemList>
       }
     </InfiniteItemLoader>
   </div>
@@ -97,10 +87,4 @@ function DanceListRow({ dance }: { dance: DanceWithEvents }) {
       />
     </div>
   </ItemList.Row>
-}
-
-function ExtendedDanceListRow({ dance }: { dance: DanceWithEvents }) {
-  return <Card>
-    <DanceEditor dance={dance} showLink />
-  </Card>
 }

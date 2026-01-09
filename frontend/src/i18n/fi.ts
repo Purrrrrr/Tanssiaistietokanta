@@ -100,7 +100,6 @@ export const fi = {
       noCategory: 'Ei kategoriaa',
     },
     danceEditor: {
-      linkToThisDance: 'Linkki tähän tanssiin',
       deleteDance: 'Poista tanssi',
       deleteConfirmation: 'Haluatko varmasti poistaa tämän tanssin?',
       danceUsedInEvents: {

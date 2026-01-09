@@ -1,5 +1,3 @@
-import { Link as LinkIcon } from '@blueprintjs/icons'
-
 import { Dance, DanceWithEvents } from 'types'
 import { ID } from 'backend/types'
 
@@ -15,7 +13,7 @@ import { useT } from 'i18n'
 
 import { Field, Form, Input, useDanceEditorState, useOnChangeFor } from './DanceForm'
 import { DanceIsUsedIn } from './DanceIsUsedIn'
-import { DanceLink, danceVersionLink } from './DanceLink'
+import { danceVersionLink } from './DanceLink'
 import DanceWikiPreview from './DanceWikiPreview'
 import { DeleteDanceButton } from './DeleteDanceButton'
 import { WikipageSelector } from './WikipageSelector'
@@ -24,12 +22,10 @@ interface DanceEditorProps {
   dance: DanceWithEvents
   titleComponent?: 'h2' | 'h1'
   onDelete?: () => unknown
-  showLink?: boolean
   showVersionHistory?: boolean
 }
 
-export function DanceEditor({ dance, onDelete, showLink, showVersionHistory, titleComponent = 'h2' }: DanceEditorProps) {
-  const t = useT('components.danceEditor')
+export function DanceEditor({ dance, onDelete, showVersionHistory, titleComponent = 'h2' }: DanceEditorProps) {
   const { formProps, state } = useDanceEditorState(dance)
   const Title = titleComponent === 'h2' ? H2 : 'h1'
   const canEdit = useRight('dances:modify')
@@ -41,7 +37,6 @@ export function DanceEditor({ dance, onDelete, showLink, showVersionHistory, tit
       </Title>
       <SyncStatus className="top-[3px] grow" state={state} />
       <div className="flex items-center mt-2.5">
-        {showLink && <DanceLink dance={dance}><LinkIcon />{t('linkToThisDance')}</DanceLink>}
         {showVersionHistory && <VersionSidebarToggle entityType="dance" entityId={dance._id} versionId={dance._versionId ?? undefined} toVersionLink={danceVersionLink} />}
         <DanceIsUsedIn events={dance.events} />
         <div>
