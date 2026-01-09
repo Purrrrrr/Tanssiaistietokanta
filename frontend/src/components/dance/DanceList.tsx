@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import { ChevronDown, ChevronUp, Edit } from '@blueprintjs/icons'
 
 import { DanceListItem } from 'types'
@@ -66,7 +66,7 @@ function DanceListRow({ dance }: { dance: DanceListItem }) {
   const t = useT('pages.dances.danceList')
   const [showEditor, setShowEditor] = useState(false)
 
-  return <ItemList.Row expandableContent={<DanceListRowEditor danceId={dance._id} />} isOpen={showEditor}>
+  return <ItemList.Row expandableContent={<Suspense><DanceListRowEditor danceId={dance._id} /></Suspense>} isOpen={showEditor}>
     <div className="max-md:basis-35 grow">
       <DanceLink dance={dance} />
     </div>
