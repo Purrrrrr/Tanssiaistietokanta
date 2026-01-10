@@ -1,11 +1,5 @@
 import React from 'react'
-import {
-  FormGroup as BlueprintFormGroup,
-  FormGroupProps as BlueprintFormGroupProps,
-} from '@blueprintjs/core'
 import classNames from 'classnames'
-
-import { Color } from './types'
 
 import { ColorClass, CssClass } from './classes'
 
@@ -16,6 +10,7 @@ export { Breadcrumb, BreadcrumbContext, Breadcrumbs } from './Breadcrumbs'
 export { AnchorButton, type AnchorButtonProps, Button, buttonClass, type ButtonProps } from './Button'
 export { Callout } from './Callout'
 export { default as Collapse } from './Collapse'
+export { FormGroup, type FormGroupProps } from './FormGroup'
 export { GlobalSpinner } from './GlobalLoadingSpinner'
 export { ItemList, type Sort } from './ItemList'
 export { Link, RegularLink } from './Link'
@@ -50,35 +45,4 @@ export function Card({ className, noPadding = false, marginClass, ...props }: Ca
       className,
     )}
   />
-}
-
-export interface FormGroupProps extends Omit<BlueprintFormGroupProps, 'inline' | 'intent'>, React.ComponentPropsWithoutRef<'div'> {
-  elementRef?: React.Ref<HTMLDivElement>
-  inline?: boolean
-  labelStyle?: 'above' | 'beside'
-  children?: React.ReactNode
-  color?: Color
-}
-
-const FormGroupInstance = new BlueprintFormGroup({})
-
-export function FormGroup({ elementRef, className, inline, labelStyle: maybeLabelStyle, ...props }: FormGroupProps) {
-  const labelStyle = maybeLabelStyle ?? (inline ? 'beside' : 'above')
-  const inlineLabel = labelStyle === 'beside'
-  const inlineProps = inline
-    ? { inline: true, className: classNames(CssClass.formGroupInline, className) }
-    : { inline: inlineLabel, className: classNames(inlineLabel && CssClass.formGroupInlineFill, className) }
-
-  const {
-    color, children, disabled, contentClassName, helperText, label, labelFor, labelInfo, style, subLabel,
-    ...rest
-  } = props
-  // @ts-expect-error Props is readonly, but we override it here
-  FormGroupInstance.props = {
-    intent: color, children, disabled, contentClassName, helperText, label, labelFor, labelInfo, style, subLabel,
-    ...inlineProps,
-  }
-  const element = FormGroupInstance.render()
-
-  return React.cloneElement(element, { ...rest, ref: elementRef }) // <BlueprintFormGroup {...props} {...inlineProps} />
 }
