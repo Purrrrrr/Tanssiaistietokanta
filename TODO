@@ -232,6 +232,9 @@
   * Allow authenticating file downloads somehow
 * A way to load less data for dance list: only ids, names, links and categories perhaps
 * Check that events still update dances as they should
+  Investigate why loading forms in collapses re-renders page
+  Log login attempts somehow
+  Use ItemList in setEditors
   
   Login icon?
   Load icons lazily? Centralize them somewhere for replacement
