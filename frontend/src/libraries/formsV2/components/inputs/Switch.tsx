@@ -1,19 +1,39 @@
-import React, { RefAttributes } from 'react'
-import { Switch as BlueprintSwitch } from '@blueprintjs/core'
+import classNames from 'classnames'
 
 import { FieldInputComponent, FieldInputComponentProps } from './types'
 
-export interface SwitchProps extends FieldInputComponentProps<boolean>, RefAttributes<HTMLInputElement> {
+export interface SwitchProps extends FieldInputComponentProps<boolean> {
   label: string
 }
-export const Switch: FieldInputComponent<boolean, SwitchProps> = React.forwardRef<HTMLInputElement, Omit<SwitchProps, 'ref'>>(
-  function Switch({ value, onChange, readOnly, ...props }, ref) {
-    return <BlueprintSwitch
-      inputRef={ref}
+
+const Classes = {
+  CONTROL: 'bp5-control',
+  SWITCH: 'bp5-switch',
+  DISABLED: 'bp5-disabled',
+  INLINE: 'bp5-inline',
+  CONTROL_INDICATOR: 'bp5-control-indicator',
+}
+
+export const Switch: FieldInputComponent<boolean, SwitchProps> = function Switch({ value, onChange, inline, readOnly: disabled, label, ...rest }: SwitchProps) {
+  return <label
+    className={classNames(
+      Classes.CONTROL,
+      Classes.SWITCH,
+      {
+        [Classes.DISABLED]: disabled,
+        [Classes.INLINE]: inline,
+      },
+    )}
+  >
+    <input
+      type="checkbox"
+      disabled={disabled}
       checked={value ?? false}
       onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(e.target.checked)}
-      disabled={readOnly}
-      {...props}
+
+      {...rest}
     />
-  },
-)
+    <span className={Classes.CONTROL_INDICATOR} />
+    {label}
+  </label>
+}

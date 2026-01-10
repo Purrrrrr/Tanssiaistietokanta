@@ -1,17 +1,16 @@
 import React, { ComponentProps } from 'react'
-import { Switch as BlueprintSwitch } from '@blueprintjs/core'
 import classNames from 'classnames'
 
 import { ExtendedFieldComponentProps, FieldComponentProps, FieldPropsWithoutComponent } from '../types'
 
-import { TextInput } from 'libraries/formsV2/components/inputs'
+import { Switch, TextInput } from 'libraries/formsV2/components/inputs'
 import { CssClass } from 'libraries/ui'
 
 import { Field, useFieldData } from '../Field'
 import { FieldContainer } from '../FieldContainer'
 import { useFieldValueProps } from '../hooks'
 
-export { NumberInput } from 'libraries/formsV2/components/inputs'
+export { NumberInput, Switch } from 'libraries/formsV2/components/inputs'
 
 export type NumberInputProps = ExtendedFieldComponentProps<number, ComponentProps<'input'>>
 export type InputProps = ExtendedFieldComponentProps<string, ComponentProps<'input'>>
@@ -58,17 +57,6 @@ export function InputField<T>(props: InputFieldProps<T>) {
 interface SwitchProps extends FieldComponentProps<boolean> {
   label: string
 }
-export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
-  function Switch({ value, onChange, readOnly, ...props }, ref) {
-    return <BlueprintSwitch
-      inputRef={ref}
-      checked={value ?? false}
-      onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(e.target.checked)}
-      disabled={readOnly}
-      {...props}
-    />
-  },
-)
 
 type TextAreaProps = FieldComponentProps<string> & React.ComponentProps<'textarea'>
 
