@@ -4,6 +4,7 @@ import { defineConfig, loadEnv, Plugin } from 'vite'
 import { analyzer } from 'vite-bundle-analyzer'
 import checker from 'vite-plugin-checker'
 import tsconfigPaths from 'vite-tsconfig-paths'
+import { jsSizeReporter } from './vite-plugin-js-size'
 
 import backendConfig from './src/backendConfig.json'
 
@@ -37,6 +38,7 @@ export default defineConfig(({ mode, command }) => {
         exclude: /.jpg$/,
         openAnalyzer: false,
       }),
+      jsSizeReporter({ maxIncreaseKb: 50 }),
     ],
     base: PUBLIC_URL || '',
     resolve: {
