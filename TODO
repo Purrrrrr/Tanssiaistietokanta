@@ -300,8 +300,10 @@
       Breadcrumbs?
 
   Blueprintjs migration - Part 2
-    Input
-    FormGroup
+  * Input
+  * FormGroup
+    Proper CSS for inputs
+    Proper CSS for FormGroup
     Check todo markings in Button.tsx or other
 
   Teacher/people database
