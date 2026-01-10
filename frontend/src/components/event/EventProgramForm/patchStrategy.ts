@@ -1,6 +1,6 @@
 import * as L from 'partial.lenses'
 
-import { EventProgramRow, EventProgramSettings } from './types'
+import { DanceSet, EventProgramRow, EventProgramSettings } from './types'
 
 import { cleanMetadataValues } from 'backend'
 
@@ -24,7 +24,11 @@ function toProgramInput({ introductions, danceSets, ...rest }: EventProgramSetti
     danceSets: L.modify(
       L.elems,
       compose(
-        L.modify(['intervalMusic', 'dance'], (dance) => dance?._id),
+        (danceSet) => (
+          (danceSet as DanceSet).intervalMusic
+            ? L.modify(['intervalMusic', 'dance'], (dance) => dance?._id, danceSet)
+            : danceSet
+        ),
         L.modify(['program', L.elems], toProgramItemInput),
       ),
       danceSets,
