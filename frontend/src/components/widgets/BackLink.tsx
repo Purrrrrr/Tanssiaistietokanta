@@ -1,4 +1,4 @@
-import { ArrowLeft } from '@blueprintjs/icons'
+import { ArrowLeft } from 'libraries/ui/icons'
 
 import { Link } from 'libraries/ui'
 

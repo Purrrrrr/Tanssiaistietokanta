@@ -1,5 +1,5 @@
 import React, { useContext, useId, useMemo } from 'react'
-import { Move } from '@blueprintjs/icons'
+import { Move } from 'libraries/ui/icons'
 import {
   useDroppable,
 } from '@dnd-kit/core'

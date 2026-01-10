@@ -1,5 +1,5 @@
 import { ComponentPropsWithoutRef } from 'react'
-import { Error, InfoSign, Tick, WarningSign } from '@blueprintjs/icons'
+import { Error, InfoSign, Tick, WarningSign } from 'libraries/ui/icons'
 import classNames from 'classnames'
 
 import { Color } from './types'

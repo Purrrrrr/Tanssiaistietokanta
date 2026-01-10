@@ -1,5 +1,5 @@
 import { useContext, useEffect } from 'react'
-import { History } from '@blueprintjs/icons'
+import { History } from 'libraries/ui/icons'
 
 import { VersionSidebarProps } from './types'
 

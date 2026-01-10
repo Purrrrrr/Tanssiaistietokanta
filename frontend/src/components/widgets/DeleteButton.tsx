@@ -1,4 +1,4 @@
-import { Trash } from '@blueprintjs/icons'
+import { Trash } from 'libraries/ui/icons'
 
 import { useAlerts } from 'libraries/overlays'
 import { Button, ButtonProps } from 'libraries/ui'

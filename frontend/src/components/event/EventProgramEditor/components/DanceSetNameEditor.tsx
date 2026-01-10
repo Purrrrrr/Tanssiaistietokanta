@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Cross, Edit } from '@blueprintjs/icons'
+import { Cross, Edit } from 'libraries/ui/icons'
 
 import { ActionButton as Button } from 'libraries/forms'
 import { Input, useValueAt } from 'components/event/EventProgramForm'

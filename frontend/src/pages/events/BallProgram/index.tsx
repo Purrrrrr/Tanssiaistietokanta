@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Cross, Edit } from '@blueprintjs/icons'
+import { Cross, Edit } from 'libraries/ui/icons'
 import classNames from 'classnames'
 
 import { useRight } from 'libraries/access-control'

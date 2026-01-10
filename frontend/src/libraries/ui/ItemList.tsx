@@ -1,5 +1,5 @@
 import React from 'react'
-import { CaretDown, InfoSign } from '@blueprintjs/icons'
+import { CaretDown, InfoSign } from 'libraries/ui/icons'
 import classNames from 'classnames'
 
 import { Button } from './Button'

@@ -1,5 +1,5 @@
 import { type ReactNode } from 'react'
-import { DoubleCaretVertical } from '@blueprintjs/icons'
+import { DoubleCaretVertical } from 'libraries/ui/icons'
 
 import { DropdownButtonDownshiftProps, SelectorProps } from './types'
 

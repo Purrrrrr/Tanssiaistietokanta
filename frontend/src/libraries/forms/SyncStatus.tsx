@@ -1,5 +1,5 @@
 import React from 'react'
-import { Error, Outdated, Refresh, Saved } from '@blueprintjs/icons'
+import { Error, Outdated, Refresh, Saved } from 'libraries/ui/icons'
 import classNames from 'classnames'
 
 import { useDelayedValue } from 'libraries/common/useDelayedValue'

@@ -1,4 +1,4 @@
-import { InfoSign, Music, Time } from '@blueprintjs/icons'
+import { InfoSign, Music, Time } from 'libraries/ui/icons'
 import classNames from 'classnames'
 
 import { EventProgramItem } from 'components/event/EventProgramForm'

@@ -1,5 +1,5 @@
 import { useId } from 'react'
-import { DoubleCaretVertical, Style } from '@blueprintjs/icons'
+import { DoubleCaretVertical, Style } from 'libraries/ui/icons'
 
 import { SlideStyle, useEventSlideStyles } from 'services/events'
 

@@ -1,4 +1,4 @@
-import { Cross } from '@blueprintjs/icons'
+import { Cross } from 'libraries/ui/icons'
 
 import type { AnyType, FieldPath } from '../types'
 

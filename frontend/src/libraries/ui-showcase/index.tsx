@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Trash } from '@blueprintjs/icons'
+import { Trash } from 'libraries/ui/icons'
 
 import { booleanProp, numberProp, type Showcase, showcase } from './types'
 

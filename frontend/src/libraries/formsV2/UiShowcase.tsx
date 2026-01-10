@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Cross, Edit } from '@blueprintjs/icons'
+import { Cross, Edit } from 'libraries/ui/icons'
 
 import { ConflictHandler } from 'libraries/forms/ConflictHandler'
 import { formFor, withDefaults } from 'libraries/formsV2'

@@ -1,5 +1,5 @@
 import { MouseEvent } from 'react'
-import { Cross, Search } from '@blueprintjs/icons'
+import { Cross, Search } from 'libraries/ui/icons'
 
 import { Button } from './Button'
 import { CssClass } from './classes'

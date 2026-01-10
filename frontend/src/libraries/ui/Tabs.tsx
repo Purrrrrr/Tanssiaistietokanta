@@ -22,7 +22,7 @@ export interface TabProps extends Omit<ComponentProps<'div'>, 'id' | 'title' | '
   }) => React.JSX.Element)
   title?: React.ReactNode
   href?: string
-  /** Name of a Blueprint UI icon (or an icon element) to render before the children. */
+  /** An icon element to render before the children. */
   icon?: React.ReactElement
 }
 

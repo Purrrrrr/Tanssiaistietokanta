@@ -1,6 +1,6 @@
 import React, { UIEvent, useDeferredValue, useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { ChevronLeft, ChevronRight } from '@blueprintjs/icons'
+import { ChevronLeft, ChevronRight } from 'libraries/ui/icons'
 import classNames from 'classnames'
 
 import { Card, Link } from 'libraries/ui'

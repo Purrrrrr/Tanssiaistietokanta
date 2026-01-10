@@ -1,5 +1,5 @@
 import { Suspense, useState } from 'react'
-import { ChevronDown, ChevronUp, Edit } from '@blueprintjs/icons'
+import { ChevronDown, ChevronUp, Edit } from 'libraries/ui/icons'
 
 import { DanceListItem } from 'types'
 import { ID } from 'backend/types'

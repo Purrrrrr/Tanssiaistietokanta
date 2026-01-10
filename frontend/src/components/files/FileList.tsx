@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { Add } from '@blueprintjs/icons'
+import { Add } from 'libraries/ui/icons'
 
 import { FileOwner, FileOwningId } from 'types/files'
 

@@ -1,5 +1,5 @@
 import { useId } from 'react'
-import { CaretDown, DocumentOpen, Link as LinkIcon, TimelineEvents } from '@blueprintjs/icons'
+import { CaretDown, DocumentOpen, Link as LinkIcon, TimelineEvents } from 'libraries/ui/icons'
 
 import { DanceWithEvents } from 'types'
 

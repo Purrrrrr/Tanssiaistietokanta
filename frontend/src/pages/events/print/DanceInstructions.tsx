@@ -1,6 +1,6 @@
 import { MarkdownToJSX } from 'markdown-to-jsx/react'
 import React, { useCallback, useRef, useState } from 'react'
-import { Edit } from '@blueprintjs/icons'
+import { Edit } from 'libraries/ui/icons'
 import classNames from 'classnames'
 
 import { Dance, EditableDance } from 'types'

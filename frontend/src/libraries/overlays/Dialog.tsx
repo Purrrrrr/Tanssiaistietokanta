@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect, useRef } from 'react'
-import { Cross } from '@blueprintjs/icons'
+import { Cross } from 'libraries/ui/icons'
 import classNames from 'classnames'
 
 import { useShouldRender } from 'libraries/common/useShouldRender'

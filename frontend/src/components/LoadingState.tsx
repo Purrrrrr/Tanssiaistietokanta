@@ -1,6 +1,6 @@
 import { ComponentType, lazy, useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { ApolloError, ApolloQueryResult } from '@apollo/client'
-import { Error } from '@blueprintjs/icons'
+import { Error } from 'libraries/ui/icons'
 
 import { socket } from 'backend/feathers'
 

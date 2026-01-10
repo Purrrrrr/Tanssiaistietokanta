@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ChevronDown, ChevronUp, Link as LinkIcon } from '@blueprintjs/icons'
+import { ChevronDown, ChevronUp, Link as LinkIcon } from 'libraries/ui/icons'
 
 import { Dance } from 'types'
 

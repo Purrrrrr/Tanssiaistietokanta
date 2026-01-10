@@ -1,5 +1,5 @@
 import { MouseEvent, ReactNode, useEffect, useId, useRef, useState } from 'react'
-import { DoubleCaretVertical } from '@blueprintjs/icons'
+import { DoubleCaretVertical } from 'libraries/ui/icons'
 
 import { Dropdown, DropdownContainer, getFocusableElements } from 'libraries/overlays'
 import { Button, ButtonProps } from 'libraries/ui'

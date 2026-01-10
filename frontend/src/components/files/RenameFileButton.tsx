@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Edit } from '@blueprintjs/icons'
+import { Edit } from 'libraries/ui/icons'
 
 import { UploadedFile, useRenameFile } from 'services/files'
 

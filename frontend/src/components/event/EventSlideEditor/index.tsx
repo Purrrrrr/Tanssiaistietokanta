@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react'
 import { useParams } from 'react-router-dom'
-import { Cross, Link as LinkIcon } from '@blueprintjs/icons'
+import { Cross, Link as LinkIcon } from 'libraries/ui/icons'
 
 import { Dance } from 'types'
 

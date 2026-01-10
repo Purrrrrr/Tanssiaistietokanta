@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { DoubleChevronUp, Settings } from '@blueprintjs/icons'
+import { DoubleChevronUp, Settings } from 'libraries/ui/icons'
 import classNames from 'classnames'
 
 interface PrintViewToolbarProps {

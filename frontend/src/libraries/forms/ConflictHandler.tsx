@@ -1,4 +1,4 @@
-import { CaretDown } from '@blueprintjs/icons'
+import { CaretDown } from 'libraries/ui/icons'
 import classNames from 'classnames'
 
 import { ConflictData } from './types'

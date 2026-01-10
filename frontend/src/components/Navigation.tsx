@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Person as User } from '@blueprintjs/icons'
+import { Person as User } from 'libraries/ui/icons'
 
 import { getCurrentUser, logout, subscribeToAuthChanges } from 'backend/authentication'
 

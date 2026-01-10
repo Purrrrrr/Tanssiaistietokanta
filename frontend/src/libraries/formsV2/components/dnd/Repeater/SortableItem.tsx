@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { Move } from '@blueprintjs/icons'
+import { Move } from 'libraries/ui/icons'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 
