@@ -2,6 +2,7 @@ import { Color } from './types'
 
 export const CssClass = {
   input: 'bp5-input',
+  fill: 'bp5-fill',
   formGroupInline: 'formgroup-inline',
   formGroupInlineFill: 'formgroup-inline-fill',
 }

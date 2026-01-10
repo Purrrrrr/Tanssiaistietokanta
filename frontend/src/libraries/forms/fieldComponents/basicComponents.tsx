@@ -1,9 +1,11 @@
 import React, { ComponentProps } from 'react'
-import { Switch as BlueprintSwitch, TextArea as BlueprintTextArea, TextAreaProps as BlueprintTextAreaProps } from '@blueprintjs/core'
+import { Switch as BlueprintSwitch } from '@blueprintjs/core'
+import classNames from 'classnames'
 
 import { ExtendedFieldComponentProps, FieldComponentProps, FieldPropsWithoutComponent } from '../types'
 
 import { TextInput } from 'libraries/formsV2/components/inputs'
+import { CssClass } from 'libraries/ui'
 
 import { Field, useFieldData } from '../Field'
 import { FieldContainer } from '../FieldContainer'
@@ -68,15 +70,21 @@ export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
   },
 )
 
-type TextAreaProps = FieldComponentProps<string> & Pick<BlueprintTextAreaProps, 'growVertically'>
+type TextAreaProps = FieldComponentProps<string> & React.ComponentProps<'textarea'>
 
-export function TextArea({ value, onChange, inline: _ignored, ...props }: TextAreaProps) {
-  return <BlueprintTextArea
+export function TextArea({ value, onChange, inline: _ignored, className, ...props }: TextAreaProps) {
+  return <textarea
     value={value ?? ''}
-    fill
     onKeyDown={e => (e.key === 'Escape') && (e.target as HTMLTextAreaElement).blur()}
     onChange={e => onChange?.(e.target.value)}
     {...props}
+    className={classNames(
+      className,
+      'resize-y',
+      CssClass.input,
+      CssClass.fill,
+
+    )}
   />
 }
 

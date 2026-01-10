@@ -352,9 +352,6 @@ textarea.bp5-input {
   line-height:inherit;
 }
 
-.bp5-text-area.bp5-text-area-auto-resize{
-  resize:horizontal;
-}
 label.bp5-label{
   display:block;
   margin-bottom:15px;
