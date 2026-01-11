@@ -1,9 +1,9 @@
 import React, { UIEvent, useDeferredValue, useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { ChevronLeft, ChevronRight } from 'libraries/ui/icons'
 import classNames from 'classnames'
 
 import { Card, Link } from 'libraries/ui'
+import { ChevronLeft, ChevronRight } from 'libraries/ui/icons'
 import { EventProgramSettings, Field } from 'components/event/EventProgramForm'
 import { EventSlide, EventSlidePreview, EventSlideProps, startSlideId, useEventSlides } from 'components/event/EventSlide'
 import { EventSlideEditor } from 'components/event/EventSlideEditor'
@@ -116,8 +116,8 @@ function SlidePreviews({ slides, currentSlide, eventProgram }: SlideNavigationPr
 }
 
 function useDebouncedScrollPositionListener(callBack: (scrollPosition: number) => unknown) {
-  const timer = useRef<NodeJS.Timeout>()
-  const lastEvent = useRef<number>()
+  const timer = useRef<number>(0)
+  const lastEvent = useRef<number>(0)
   const delay = 200
   const debounceTreshold = 600
 
@@ -131,7 +131,7 @@ function useDebouncedScrollPositionListener(callBack: (scrollPosition: number) =
       callBack(scroll)
       lastEvent.current = now
     } else {
-      timer.current = setTimeout(() => {
+      timer.current = window.setTimeout(() => {
         callBack(scroll)
         lastEvent.current = now
       }, delay)

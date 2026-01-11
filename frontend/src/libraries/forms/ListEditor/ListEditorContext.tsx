@@ -36,7 +36,7 @@ export const ListEditorMoveContext = createContext<ListEditorMove | null>(null)
 
 export interface ListEditorContextProps {
   accessibilityContainer?: Element | undefined
-  children: JSX.Element | JSX.Element[]
+  children: React.ReactNode
 }
 
 export default function ListEditorContext({ accessibilityContainer, children }: ListEditorContextProps) {

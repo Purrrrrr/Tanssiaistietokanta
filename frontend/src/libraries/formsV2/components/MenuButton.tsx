@@ -1,14 +1,14 @@
 import { MouseEvent, ReactNode, useEffect, useId, useRef, useState } from 'react'
-import { DoubleCaretVertical } from 'libraries/ui/icons'
 
 import { Dropdown, DropdownContainer, getFocusableElements } from 'libraries/overlays'
 import { Button, ButtonProps } from 'libraries/ui'
+import { DoubleCaretVertical } from 'libraries/ui/icons'
 
 interface MenuButtonProps {
   children: ReactNode
   containerClassname?: string
   text?: string
-  buttonRenderer?: (props: { active: boolean, children: ReactNode, popovertarget: string }) => ReactNode
+  buttonRenderer?: (props: { active: boolean, children: ReactNode, popoverTarget: string }) => ReactNode
   buttonProps?: ButtonProps
 }
 
@@ -35,13 +35,13 @@ export default function MenuButton({ children, buttonRenderer, text, buttonProps
 
   return <DropdownContainer className={containerClassname} ref={containerRef}>
     {buttonRenderer
-      ? buttonRenderer({ active: open, children: text, popovertarget: dropdownId })
+      ? buttonRenderer({ active: open, children: text, popoverTarget: dropdownId })
       : (
         <Button
           active={open}
           rightIcon={<DoubleCaretVertical />}
           text={text}
-          popovertarget={dropdownId}
+          popoverTarget={dropdownId}
           {...buttonProps}
         />
       )

@@ -42,6 +42,6 @@ export function FormControl({ children }) {
 
   return children
 }
-export function asFormControl<T extends JSX.IntrinsicAttributes>(Component: React.ComponentType<T>) {
+export function asFormControl<T extends React.Attributes>(Component: React.ComponentType<T>) {
   return (props: T) => <FormControl><Component {...props} /></FormControl>
 }

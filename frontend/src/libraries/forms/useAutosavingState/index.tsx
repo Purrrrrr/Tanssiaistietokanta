@@ -43,7 +43,7 @@ export function useAutosavingState<T extends MergeableObject, Patch>(
   const { serverState: originalData, serverStateTime, mergeResult, patchPending } = reducerState
   const { state: mergeState, modifications, nonConflictingModifications, conflicts } = mergeResult
   const state = hasErrors ? 'INVALID' : mergeState
-  const lastServerState = useRef<T>()
+  const lastServerState = useRef<T>(serverState)
 
   useEffect(() => {
     if (equal(serverState, lastServerState.current)) return

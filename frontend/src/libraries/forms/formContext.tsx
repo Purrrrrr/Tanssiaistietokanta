@@ -36,11 +36,11 @@ export function useCreateFormMetadataContext<T>(
   { value, onChange, labelStyle, inline, readOnly, conflicts, strings, onResolveConflict, showErrors }: useCreateFormMetadataContextArgs<T>,
 ): FormMetadataContextType<T> {
   const listeners = useMemo(() => new Set<ChangeListener>(), [])
-  const valueRef = useRef<T>()
+  const valueRef = useRef<T>(value)
   valueRef.current = value
-  const conflictsRef = useRef<ConflictMap<T>>()
+  const conflictsRef = useRef<ConflictMap<T>>(conflicts)
   conflictsRef.current = conflicts
-  const stringsRef = useRef<FormStrings>()
+  const stringsRef = useRef<FormStrings>(formStringDefaults)
   stringsRef.current = strings ?? formStringDefaults
 
   const metadataContext = useMemo(

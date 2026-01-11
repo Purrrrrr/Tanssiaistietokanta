@@ -4,7 +4,7 @@ import { useHref } from 'react-router-dom'
 import { sortedPaths } from './sortedPaths'
 
 export interface Path {
-  text: string | JSX.Element
+  text: React.ReactNode
   href: string
   current?: true
 }

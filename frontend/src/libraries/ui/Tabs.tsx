@@ -16,10 +16,10 @@ export interface TabProps extends Omit<ComponentProps<'div'>, 'id' | 'title' | '
      * If omitted, no panel will be rendered for this tab.
      * Can either be an element or a renderer.
      */
-  panel?: React.JSX.Element | ((props: {
+  panel?: React.ReactNode | ((props: {
     tabTitleId: string
     tabPanelId: string
-  }) => React.JSX.Element)
+  }) => React.ReactNode)
   title?: React.ReactNode
   href?: string
   /** An icon element to render before the children. */
@@ -119,7 +119,7 @@ export function Tabs(props: TabsProps) {
         id={tabPanelId}
         className={selected ? '' : 'hidden'}
         aria-hidden={!selected}
-        inert={selected ? undefined : 'inert'}
+        inert={!selected}
       >
         {
           typeof tab.panel === 'function'

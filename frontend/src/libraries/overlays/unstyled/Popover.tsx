@@ -3,7 +3,7 @@ import classNames from 'classnames'
 
 import { useShouldRender } from 'libraries/common/useShouldRender'
 
-interface PopoverProps extends ComponentProps<'div'> {
+interface PopoverProps extends Omit<ComponentProps<'div'>, 'onToggle'> {
   type: 'manual' | 'auto'
   hideDelay?: number
   open?: boolean
@@ -55,7 +55,7 @@ export const ControlledPopover = forwardRef<HTMLDivElement, ControlledPopoverPro
     })
 
     return <div
-      inert={open ? undefined : 'inert'}
+      inert={!open}
       ref={handleRefs(element, externalRef)}
       popover={type}
       {...props}
@@ -83,7 +83,7 @@ function handleRefs<T>(...refs: (ForwardedRef<T>)[]) {
   }
 }
 
-function useToggleEventHandler(element: RefObject<HTMLDivElement>, handler: (e: ToggleEvent) => unknown) {
+function useToggleEventHandler(element: RefObject<HTMLDivElement | null>, handler: (e: ToggleEvent) => unknown) {
   const handlerRef = useRef(handler)
   handlerRef.current = handler
   useEffect(

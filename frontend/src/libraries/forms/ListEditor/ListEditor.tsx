@@ -175,7 +175,7 @@ export function SortableItem<T, V>({ itemType, acceptsTypes, id, path, onChangeP
 
 interface DroppableProps extends ListEditorDroppableData {
   element?: HTMLElement | null
-  children: JSX.Element | JSX.Element[]
+  children: React.ReactNode
 }
 
 function Droppable({ children, element, acceptsTypes, path, onChangePath }: DroppableProps) {

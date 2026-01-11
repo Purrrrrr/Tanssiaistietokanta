@@ -1,4 +1,4 @@
-import { type Reducer, useEffect, useReducer, useRef } from 'react'
+import { useEffect, useReducer, useRef } from 'react'
 import equal from 'fast-deep-equal'
 
 import type { FormAction, FormReducerResult, FormState } from './types'
@@ -11,7 +11,7 @@ import { debugReducer } from './utils/debug'
 import { useSubscriptions } from './utils/useSubscriptions'
 
 export function useFormReducer<Data>(externalData: Data, onChange: (changed: Data) => unknown): FormReducerResult<Data> {
-  const result = useReducer<Reducer<FormState<Data>, FormAction<Data>>, Data>(debuggingReducer, externalData, getInitialState)
+  const result = useReducer<FormState<Data>, Data, [FormAction<Data>]>(debuggingReducer, externalData, getInitialState)
   const [state, dispatch] = result
   const { subscribe } = useSubscriptions<FormState<Data>>(state)
 

@@ -1,4 +1,4 @@
-import { type Reducer, useCallback, useMemo, useReducer, useRef } from 'react'
+import { useCallback, useMemo, useReducer, useRef } from 'react'
 
 import type { FormAction, FormReducerResult, FormState } from './types'
 
@@ -13,7 +13,7 @@ const debuggingValueReducer = debugReducer(valueReducer)
 export function useFormReducer<Data>(externalValue: Data, onChange: (changed: Data) => unknown): FormReducerResult<Data> {
   const latestValue = useRef(externalValue)
   latestValue.current = externalValue
-  const [state, dispatch_rest] = useReducer<Reducer<CommonFormState, CommonReducerAction>>(debuggingCommonReducer, initialState)
+  const [state, dispatch_rest] = useReducer<CommonFormState, [CommonReducerAction]>(debuggingCommonReducer, initialState)
   const compositeState = useMemo(() => ({
     ...state, data: externalValue,
   }), [state, externalValue])

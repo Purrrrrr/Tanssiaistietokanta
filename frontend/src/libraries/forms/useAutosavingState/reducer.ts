@@ -1,4 +1,4 @@
-import { Reducer, useReducer } from 'react'
+import { useReducer } from 'react'
 import * as L from 'partial.lenses'
 
 import { MergeableObject, MergeData, MergeResult, toFinalMergeResult } from './types'
@@ -37,7 +37,7 @@ export type SyncAction<T> = {
 }
 
 export function useAutosavingStateReducer<T extends MergeableObject>(serverState: T) {
-  return useReducer<Reducer<SyncStore<T>, SyncAction<T>>, T>(reducer, serverState, getInitialState)
+  return useReducer<SyncStore<T>, T, [SyncAction<T>]>(reducer, serverState, getInitialState)
 }
 
 function getInitialState<T extends MergeableObject>(serverState: T): SyncStore<T> {

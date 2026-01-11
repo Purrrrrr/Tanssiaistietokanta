@@ -1,6 +1,5 @@
 import { MarkdownToJSX } from 'markdown-to-jsx/react'
 import React, { useCallback, useRef, useState } from 'react'
-import { Edit } from 'libraries/ui/icons'
 import classNames from 'classnames'
 
 import { Dance, EditableDance } from 'types'
@@ -12,6 +11,7 @@ import { useCallbackOnEventChanges } from 'services/events'
 
 import { formFor, patchStrategy, Switch, SyncStatus, useAutosavingState } from 'libraries/forms'
 import { Button, H2, Markdown, showToast } from 'libraries/ui'
+import { Edit } from 'libraries/ui/icons'
 import { InstructionEditor } from 'components/dance/DanceEditor'
 import { WikipageSelector } from 'components/dance/WikipageSelector'
 import { LoadingState } from 'components/LoadingState'

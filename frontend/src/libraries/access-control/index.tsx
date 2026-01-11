@@ -1,5 +1,3 @@
-import { forwardRef } from 'react'
-
 import { RightQuery, RightQueryString, ServiceName, ServiceRightsEntity } from './types'
 
 import { useRightsQueryFn } from './context'
@@ -21,7 +19,7 @@ export function useRights<Service extends ServiceName>(query: RightQueryString<S
 }
 
 export function withPermissionChecking<Props>(Component: React.ComponentType<Props>): React.ComponentType<Props & RightsQueryProps> {
-  return forwardRef(<Service extends ServiceName = ServiceName>(props: Props & RightsQueryProps<Service>, ref) => <RequirePermissions {...props}>
-    <Component {...props} ref={ref} />
-  </RequirePermissions>) as React.ComponentType<Props & RightsQueryProps>
+  return <Service extends ServiceName = ServiceName>(props: Props & RightsQueryProps<Service>) => <RequirePermissions {...props}>
+    <Component {...props} />
+  </RequirePermissions>
 }
