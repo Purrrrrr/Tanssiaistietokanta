@@ -1,6 +1,7 @@
 import React from 'react'
-import { CaretDown, InfoSign } from 'libraries/ui/icons'
 import classNames from 'classnames'
+
+import { CaretDown, InfoSign } from 'libraries/ui/icons'
 
 import { Button } from './Button'
 
@@ -70,16 +71,17 @@ interface ItemListRowProps {
   expandableContent?: React.ReactNode
   isOpen?: boolean
   paddingClass?: string
+  expandableContentLoadingMessage?: string
 }
 
-function ItemListRow({ children, expandableContent, isOpen }: ItemListRowProps) {
+function ItemListRow({ children, expandableContent, expandableContentLoadingMessage, isOpen }: ItemListRowProps) {
   return <>
     <li className={rowClasses}>
       {children}
     </li>
     {expandableContent &&
       <div className={classNames('col-span-full', rowColorClassname)}>
-        <Collapse isOpen={isOpen}>{expandableContent}</Collapse>
+        <Collapse isOpen={isOpen} loadingMessage={expandableContentLoadingMessage}>{expandableContent}</Collapse>
       </div>
     }
   </>

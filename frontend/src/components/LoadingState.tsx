@@ -1,11 +1,11 @@
 import { ComponentType, lazy, useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { ApolloError, ApolloQueryResult } from '@apollo/client'
-import { Error } from 'libraries/ui/icons'
 
 import { socket } from 'backend/feathers'
 
 import { useDelayedValue } from 'libraries/common/useDelayedValue'
 import { Button, ColorClass, GlobalSpinner, H2 } from 'libraries/ui'
+import { Error } from 'libraries/ui/icons'
 import { useT, useTranslation } from 'i18n'
 
 const connectionProblemMessageTimeout = 5000

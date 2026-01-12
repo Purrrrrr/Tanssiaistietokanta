@@ -61,7 +61,7 @@ function EventDetails({ event, readOnly }: { event: Event, readOnly: boolean }) 
   })
 
   return <>
-    <p className="flex clear-both justify-between mt-3">
+    <div className="flex clear-both justify-between mt-3">
       {t('eventDate')}: {formatDate(event.beginDate)} - {formatDate(event.endDate)}
       { readOnly ||
         <div>
@@ -82,9 +82,9 @@ function EventDetails({ event, readOnly }: { event: Event, readOnly: boolean }) 
           />
         </div>
       }
-    </p>
+    </div>
     <RequirePermissions requireRight="events:modify">
-      <Collapse isOpen={showEditor}>
+      <Collapse isOpen={showEditor} loadingMessage={t('loadingEditor')}>
         <EventDetailsForm event={event} />
       </Collapse>
     </RequirePermissions>
@@ -265,7 +265,7 @@ function WorkshopCard(
       }
     </H2>
     {showEditor || <WorkshopSummary workshop={workshop} />}
-    <Collapse isOpen={showEditor}>
+    <Collapse isOpen={showEditor} loadingMessage={t('loadingEditor')}>
       <WorkshopEditor workshop={workshop} reservedAbbreviations={reservedAbbreviations} beginDate={beginDate} endDate={endDate} />
     </Collapse>
   </Card>

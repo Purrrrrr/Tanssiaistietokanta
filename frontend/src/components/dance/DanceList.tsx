@@ -1,5 +1,4 @@
-import { Suspense, useState } from 'react'
-import { ChevronDown, ChevronUp, Edit } from 'libraries/ui/icons'
+import { useState } from 'react'
 
 import { DanceListItem } from 'types'
 import { ID } from 'backend/types'
@@ -7,8 +6,8 @@ import { ID } from 'backend/types'
 import { useDance } from 'services/dances'
 
 import { Button, ColorClass, ItemList, type Sort } from 'libraries/ui'
+import { ChevronDown, ChevronUp, Edit } from 'libraries/ui/icons'
 import { InfiniteItemLoader } from 'components/InfiniteItemLoader'
-import { LoadingState } from 'components/LoadingState'
 import { ColoredTag } from 'components/widgets/ColoredTag'
 import { useT, useTranslation } from 'i18n'
 import { sortedBy } from 'utils/sorted'
@@ -66,7 +65,11 @@ function DanceListRow({ dance }: { dance: DanceListItem }) {
   const t = useT('pages.dances.danceList')
   const [showEditor, setShowEditor] = useState(false)
 
-  return <ItemList.Row expandableContent={<Suspense><DanceListRowEditor danceId={dance._id} /></Suspense>} isOpen={showEditor}>
+  return <ItemList.Row
+    expandableContent={<DanceListRowEditor danceId={dance._id} />}
+    expandableContentLoadingMessage={t('loadingEditor')}
+    isOpen={showEditor}
+  >
     <div className="max-md:basis-35 grow">
       <DanceLink dance={dance} />
     </div>
@@ -95,7 +98,7 @@ function DanceListRow({ dance }: { dance: DanceListItem }) {
 
 function DanceListRowEditor({ danceId }: { danceId: ID }) {
   const result = useDance({ id: danceId })
-  if (!result.data?.dance) return <LoadingState {...result} />
+  if (!result.data?.dance) return null
 
   return <PlainDanceEditor dance={result.data.dance} />
 }

@@ -367,6 +367,7 @@ export const fi = {
         ballProgram: 'Tanssiaisohjelma',
         noProgram: 'Ei ohjelmaa',
         eventDetails: 'Tapahtuman tiedot',
+        loadingEditor: 'Ladataan lomaketta...',
         deleteEvent: 'Poista tämä tapahtuma',
         eventDeleteConfirmation: 'Haluatko varmasti poistaa tapahtuman __eventName__?',
         eventName: 'Tapahtuman nimi',
@@ -472,6 +473,7 @@ export const fi = {
         name: 'Nimi',
         category: 'Kategoria',
         danceUsage: 'Käyttökohteet',
+        loadingEditor: 'Ladataan lomaketta...',
       },
       dancePage: {
         backToDanceList: 'Takaisin tanssilistaan',
