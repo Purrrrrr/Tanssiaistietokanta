@@ -1,0 +1,10 @@
+diff --git a/node_modules/react-markdown-editor-lite/esm/components/DropList/index.mjs b/node_modules/react-markdown-editor-lite/esm/components/DropList/index.mjs
+index ddf169b..2ab17cf 100644
+--- a/node_modules/react-markdown-editor-lite/esm/components/DropList/index.mjs
++++ b/node_modules/react-markdown-editor-lite/esm/components/DropList/index.mjs
+@@ -1,4 +1,4 @@
+-import { Component } from "react";
++import React, { Component } from "react";
+ class DropList extends Component {
+     constructor(props){
+         super(props);
