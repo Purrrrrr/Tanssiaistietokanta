@@ -66,6 +66,11 @@
   },
   "overrides": {
     "@blueprintjs/icons": {
+      "react": "^19",
+      "react-dom": "^19",
+      "@types/react": "^19"
+    },
+    "react-infinite-scroller": {
       "react": "^19"
     }
   },
