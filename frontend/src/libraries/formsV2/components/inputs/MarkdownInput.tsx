@@ -11,7 +11,7 @@ import { useFormTranslation } from '../../localization'
 
 import './MarkdownInput.css'
 
-const defaultQRCode = '<QR title="..." value="https//..." size="250" font-size="100" />'
+const defaultQRCode = '<QR title="..." value="https//..." size="250" fontSize="100" />'
 function QRCode({ editor }) {
   const insertQRCode = useFormTranslation('markdownEditor.insertQRCode')
   return (
