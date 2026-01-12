@@ -232,7 +232,9 @@
   * Allow authenticating file downloads somehow
 * A way to load less data for dance list: only ids, names, links and categories perhaps
 * Check that events still update dances as they should
-  Investigate why loading forms in collapses re-renders page
+* Upgrade React to 19
+* Investigate why loading forms in collapses re-renders page
+  Get rid of forwardRefs
   Log login attempts somehow
   Use ItemList in setEditors
   
