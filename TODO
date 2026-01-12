@@ -234,7 +234,7 @@
 * Check that events still update dances as they should
 * Upgrade React to 19
 * Investigate why loading forms in collapses re-renders page
-  Get rid of forwardRefs
+* Get rid of forwardRefs
   Log login attempts somehow
   Use ItemList in setEditors
   

@@ -1,4 +1,4 @@
-import React, { ForwardedRef } from 'react'
+import React from 'react'
 import classnames from 'classnames'
 
 import './SlideContainer.scss'
@@ -11,7 +11,7 @@ export interface SlideContainerProps extends Omit<React.HTMLAttributes<HTMLDivEl
   fullscreen?: boolean
 }
 
-function SlideContainerBase({ children, color, size, fullscreen, className, ...props }: SlideContainerProps, ref: ForwardedRef<HTMLDivElement>) {
+export function SlideContainer({ children, color, size, fullscreen, className, ...props }: SlideContainerProps) {
   const allClassNames = classnames(
     'slide-backdrop',
     {
@@ -25,11 +25,9 @@ function SlideContainerBase({ children, color, size, fullscreen, className, ...p
     width: fullscreen ? undefined : size,
   }
 
-  return <div className={allClassNames} style={style} {...props} ref={ref}>
+  return <div className={allClassNames} style={style} {...props}>
     <div className="slide-container">
       {children}
     </div>
   </div>
 }
-
-export const SlideContainer = React.forwardRef(SlideContainerBase)

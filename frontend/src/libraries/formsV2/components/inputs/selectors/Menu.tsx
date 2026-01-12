@@ -1,15 +1,13 @@
-import { type ComponentProps, forwardRef, Fragment, ReactNode } from 'react'
+import { type ComponentProps, Fragment, ReactNode } from 'react'
 import classNames from 'classnames'
 
 import { InternalItemData, SelectorProps } from './types'
 
 type MenuProps = Omit<ComponentProps<'ul'>, 'className'>
 
-export const Menu = forwardRef<HTMLUListElement, MenuProps>(
-  function Menu(props: MenuProps, ref) {
-    return <ul className="overflow-auto p-1 grow" ref={ref} {...props} />
-  },
-)
+export function Menu(props: MenuProps) {
+  return <ul className="overflow-auto p-1 grow" {...props} />
+}
 
 export function renderMenuItems<T>(
   itemData: InternalItemData<T>,
@@ -35,19 +33,16 @@ interface MenuItemProps extends ComponentProps<'li'> {
   hilightedClassName?: string
 }
 
-export const MenuItem = forwardRef<HTMLLIElement, MenuItemProps>(
-  function MenuItem({ highlight, className, hilightedClassName, ...props }: MenuItemProps, ref) {
-    return <li
-      ref={ref}
-      {...props}
-      className={classNames(
-        className ?? 'flex items-center px-2 min-h-7.5',
-        'transition-colors',
-        highlight && (hilightedClassName ?? 'bg-blue-200'),
-      )}
-    />
-  },
-)
+export function MenuItem({ highlight, className, hilightedClassName, ...props }: MenuItemProps) {
+  return <li
+    {...props}
+    className={classNames(
+      className ?? 'flex items-center px-2 min-h-7.5',
+      'transition-colors',
+      highlight && (hilightedClassName ?? 'bg-blue-200'),
+    )}
+  />
+}
 
 export function toMenuItemProps<T>(
   item: T,

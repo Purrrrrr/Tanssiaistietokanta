@@ -1,4 +1,4 @@
-import { AnchorHTMLAttributes, ButtonHTMLAttributes, forwardRef } from 'react'
+import { ComponentProps } from 'react'
 import classNames from 'classnames'
 
 import type { Color } from './types'
@@ -37,7 +37,7 @@ export const buttonClass = (
   className,
 )
 
-export interface ButtonProps extends RightsQueryProps, ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends RightsQueryProps, ComponentProps<'button'> {
   text?: React.ReactNode
   icon?: React.ReactElement
   rightIcon?: React.ReactElement
@@ -48,7 +48,7 @@ export interface ButtonProps extends RightsQueryProps, ButtonHTMLAttributes<HTML
   tooltip?: React.ReactNode
 }
 
-export const Button = withPermissionChecking(forwardRef<HTMLButtonElement, ButtonProps>(function Button(props: ButtonProps, ref) {
+export const Button = withPermissionChecking(function Button(props: ButtonProps) {
   const {
     type = 'button',
     children,
@@ -66,16 +66,16 @@ export const Button = withPermissionChecking(forwardRef<HTMLButtonElement, Butto
     ...rest
   } = props
   return <TooltipContainer tooltip={tooltip}>
-    <button ref={ref} type={type} className={buttonClass(color, { active, className, minimal, paddingClass })} {...rest}>
+    <button type={type} className={buttonClass(color, { active, className, minimal, paddingClass })} {...rest}>
       {icon}
       {text}
       {children}
       {rightIcon}
     </button>
   </TooltipContainer>
-}))
+})
 
-export interface AnchorButtonProps extends RightsQueryProps, AnchorHTMLAttributes<HTMLAnchorElement> {
+export interface AnchorButtonProps extends RightsQueryProps, ComponentProps<'a'> {
   text?: React.ReactNode
   icon?: React.ReactElement
   rightIcon?: React.ReactElement
@@ -85,7 +85,7 @@ export interface AnchorButtonProps extends RightsQueryProps, AnchorHTMLAttribute
   tooltip?: React.ReactNode
 }
 
-export const AnchorButton = withPermissionChecking(forwardRef<HTMLAnchorElement, AnchorButtonProps>(function Button(props: AnchorButtonProps, ref) {
+export const AnchorButton = withPermissionChecking(function Button(props: AnchorButtonProps) {
   const {
     children,
     text,
@@ -101,14 +101,14 @@ export const AnchorButton = withPermissionChecking(forwardRef<HTMLAnchorElement,
     ...rest
   } = props
   return <TooltipContainer tooltip={tooltip}>
-    <a ref={ref} className={buttonClass(color, { active, className, minimal })} {...rest}>
+    <a className={buttonClass(color, { active, className, minimal })} {...rest}>
       {icon}
       {text}
       {children}
       {rightIcon}
     </a>
   </TooltipContainer>
-}))
+})
 
 interface TooltipContainerProps {
   children: React.ReactNode

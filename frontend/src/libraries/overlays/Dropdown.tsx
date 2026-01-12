@@ -1,5 +1,4 @@
-import { MouseEventHandler, type ReactNode, useRef } from 'react'
-import { forwardRef } from 'react'
+import { MouseEventHandler, type ReactNode, Ref, useRef } from 'react'
 
 import { Popover } from './unstyled/Popover'
 import { AnchoringCallbackProps, toPx, useAnchorToElement } from './useAnchorToElement'
@@ -7,12 +6,13 @@ import { AnchoringCallbackProps, toPx, useAnchorToElement } from './useAnchorToE
 interface DropdownContainerProps {
   className?: string
   children: ReactNode
+  ref?: Ref<HTMLDivElement>
 }
-export const DropdownContainer = forwardRef<HTMLDivElement, DropdownContainerProps>(({ children, className = 'inline-block w-fit' }, ref) => {
+export const DropdownContainer = ({ children, className = 'inline-block w-fit', ref }: DropdownContainerProps) => {
   return <div className={className} data-dropdown-container="true" ref={ref}>
     {children}
   </div>
-})
+}
 
 interface DropdrownProps {
   id?: string
