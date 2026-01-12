@@ -10,10 +10,18 @@ interface Options {
 interface SizeReport {
   timestamp: string
   commit: string
-  totalKb: number
+  total: number
+  biggestChunk: number
+  chunks: Chunk[]
+}
+
+interface Chunk {
+  name: string
+  size: number
 }
 
 let totalKb: number
+let report: SizeReport
 
 export function jsSizeReporter(options: Options = {}) {
   const {
@@ -27,31 +35,23 @@ export function jsSizeReporter(options: Options = {}) {
       _options: unknown,
       bundle: OutputBundle
     ) {
-      let totalBytes = 0
-
-      for (const chunk of Object.values(bundle)) {
-        if (chunk.type === "chunk") {
-          totalBytes += Buffer.byteLength(chunk.code)
-        }
-      }
-
-      totalKb = totalBytes / 1024
+      report = createSizeReport(bundle)
     },
     closeBundle() {
-      let report: SizeReport[] = []
+      let reports: SizeReport[] = []
 
       if (fs.existsSync(file)) {
         try {
-          const reportRaw = JSON.parse(fs.readFileSync(file, "utf8")) as SizeReport[]
-          // I have no idea why this is necessary, but somehow entries without totalKb end up in the file
-          report = reportRaw.filter(r => r && typeof r.totalKb === 'number')
+          reports = JSON.parse(fs.readFileSync(file, "utf8")) as SizeReport[]
         } catch {}
       }
-      report.push(createSizeReport(totalKb))
+      if (report) {
+        reports.push(report)
+      }
 
       fs.writeFileSync(
         file,
-        JSON.stringify(report, null, 2)
+        JSON.stringify(reports, null, 2)
       )
 
       const branches = [...watchBranches]
@@ -62,14 +62,14 @@ export function jsSizeReporter(options: Options = {}) {
 
       console.log("\n")
       console.log('=== JS Bundle Size Report ===')
-      console.log(`📦 JS size: ${totalKb.toFixed(2)} KB`)
+      console.log(`📦 JS size: ${formatSize(report.total)}`)
 
       const branchReport = branches.map(branch => {
         const sha = getGitCommitSha(branch)
-        const previousEntry = report
+        const previousEntry = reports
           .find(r => r.commit === sha)
         if (previousEntry) {
-          return reportSizeChange(branch, previousEntry, totalKb)
+          return formatReport(branch, previousEntry, report)
         }
         return null
       }).filter(r => r != null)
@@ -78,8 +78,8 @@ export function jsSizeReporter(options: Options = {}) {
         console.log(frame('JS Bundle Size Change From', padColumns(branchReport)))
       }
 
-      const lastRuns = report.slice(-5).map((r, index) => {
-        return reportSizeChange(String(index + 1), r, totalKb)
+      const lastRuns = reports.slice(-5).map((r, index) => {
+        return formatReport(String(index + 1), r, report)
       })
 
       if (lastRuns.length > 0) {
@@ -89,16 +89,24 @@ export function jsSizeReporter(options: Options = {}) {
   }
 }
 
-function reportSizeChange(title: string, report: SizeReport, currentKb: number): string[] {
-  const previousKb = report.totalKb
-  const delta = currentKb - previousKb
-  const sign = delta >= 0 ? "+" : ""
+function formatDelta(bytes: number): string {
+  const sign = bytes >= 0 ? "+" : ""
+  return sign + formatSize(bytes)
+}
+
+function formatSize(bytes: number): string {
+  return (bytes / 1024).toFixed(2) + " KB"
+}
+
+function formatReport(title: string, previousReport: SizeReport, currentReport: SizeReport): string[] {
+  const sign = currentReport.total - previousReport.total >= 0 ? "+" : ""
   return [
     title,
-    `🕒 ${timeDelta(report.timestamp)}`,
-    `📝 ${shortenCommitSha(report.commit)}`,
-    `📅 ${report.timestamp}`,
-    `📦 ${report.totalKb.toFixed(2)} KB (${sign}${delta.toFixed(2)} KB)`
+    `🕒 ${timeDelta(previousReport.timestamp)}`,
+    `📝 ${shortenCommitSha(previousReport.commit)}`,
+    `📅 ${previousReport.timestamp}`,
+    `📦 ${formatSize(previousReport.total)} (${sign}${formatSize((currentReport.total - previousReport.total))})`,
+    `Biggest chunk ${formatSize(previousReport.biggestChunk)} (${formatDelta((currentReport.biggestChunk - previousReport.biggestChunk))})`,
   ]
 }
 
@@ -150,11 +158,26 @@ function frame(title: string, body: string):string {
   return topBorder + framedLines + bottomBorder;
 }
 
-function createSizeReport(totalKb: number): SizeReport {
+function createSizeReport(bundle: OutputBundle): SizeReport {
+  let totalBytes = 0
+  let biggestChunk = 0
+  const chunks: Chunk[] = []
+
+  for (const chunk of Object.values(bundle)) {
+    if (chunk.type === "chunk") {
+      const size = Buffer.byteLength(chunk.code)
+      biggestChunk = Math.max(biggestChunk, size)
+      totalBytes += size
+      chunks.push({ name: chunk.fileName, size })
+    }
+  }
+
   return {
     timestamp: new Date().toISOString(),
     commit: getGitCommitSha('HEAD'),
-    totalKb
+    total: totalBytes,
+    biggestChunk: biggestChunk,
+    chunks,
   }
 }
 
