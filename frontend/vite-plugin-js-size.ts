@@ -47,9 +47,7 @@ export function jsSizeReporter(options: Options = {}) {
           report = reportRaw.filter(r => r && typeof r.totalKb === 'number')
         } catch {}
       }
-      console.log(report)
       report.push(createSizeReport(totalKb))
-      console.log(report)
 
       fs.writeFileSync(
         file,
