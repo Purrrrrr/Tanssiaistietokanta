@@ -38,7 +38,7 @@ export default defineConfig(({ mode, command }) => {
         exclude: /.jpg$/,
         openAnalyzer: false,
       }),
-      jsSizeReporter({ maxIncreaseKb: 50 }),
+      jsSizeReporter({ watchBranches: ['origin/main', 'main', 'release'] }),
     ],
     base: PUBLIC_URL || '',
     resolve: {
