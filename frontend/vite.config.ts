@@ -40,7 +40,7 @@ export default defineConfig(({ mode, command }) => {
       }),
       jsSizeReporter({ watchBranches: ['origin/main', 'main', 'release'] }),
     ],
-    base: PUBLIC_URL || '',
+    base: PUBLIC_URL || '/',
     resolve: {
       alias: [{ find: /^~([^/])/, replacement: '$1' }],
     },
