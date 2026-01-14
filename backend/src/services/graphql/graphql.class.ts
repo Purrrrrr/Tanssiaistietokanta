@@ -10,6 +10,7 @@ import { logger } from '../../logger'
 import type { Application } from '../../declarations'
 import { ErrorWithStatus } from '../../hooks/addErrorStatusCode';
 import { GraphQLError } from 'graphql';
+import { addLogData } from '../../hooks/log-request';
 
 type Graphql = any
 type GraphqlData = any
@@ -66,16 +67,34 @@ export class GraphqlService<ServiceParams extends GraphqlParams = GraphqlParams>
   async find(_params?: ServiceParams): Promise<Graphql> {
     if (!_params) throw new Error('Params needed')
     const {query, ...contextValue} = _params
+    addLogData('graphqlQuery', this.getQueryName(query))
+    addLogData('variables', query.variables)
     const server = await this.apolloServerPromise
     const res = await server.executeOperation(query, { contextValue })
     const { body } = res
     if (body.kind === 'single') {
       if (body.singleResult.errors) {
-        body.singleResult.errors.forEach(logger.error.bind(logger))
+        // body.singleResult.errors.forEach(logger.error.bind(logger))
       }
       return body.singleResult
     }
     throw new Error('Can\'t handle result body of type '+body.kind)
+  }
+
+  private getQueryName(query: any): string | null {
+    if (typeof query === 'string') {
+      const match = query.match(/(query|mutation|subscription)\s+([a-zA-Z0-9_]+)/)
+      if (match && match[2]) {
+        return match[2]
+      }
+      return null
+    }
+    
+    const operation = query?.query?.definitions?.find(
+      (def: any) => def.kind === "OperationDefinition"
+    )
+
+    return operation?.name?.value ?? null
   }
 
   async getMiddleware(_params?: ServiceParams): Promise<Middleware> {

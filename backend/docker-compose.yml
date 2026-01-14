@@ -7,3 +7,4 @@ services:
     - "8082:8082"
     volumes:
     - ./data:/app/data
+    - ./logs:/app/logs

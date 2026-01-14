@@ -235,6 +235,7 @@
 * Upgrade React to 19
 * Investigate why loading forms in collapses re-renders page
 * Get rid of forwardRefs
+* More robust login solution
   Log login attempts somehow
   Use ItemList in setEditors
   

@@ -8,7 +8,7 @@ import socketio from '@feathersjs/socketio'
 
 import { configurationValidator } from './configuration'
 import type { Application } from './declarations'
-import { logError } from './hooks/log-error'
+import { logRequest } from './hooks/log-request'
 import { authentication } from './authentication'
 import { services } from './services/index'
 import { graphqlServiceMiddleware } from './services/graphql/graphql.class'
@@ -83,7 +83,7 @@ app.configure(services)
 // Register hooks that run on all service methods
 app.hooks({
   around: {
-    all: [logError, addErrorStatusCode]
+    all: [logRequest({ ignoredPaths: ['channel-connections']}), addErrorStatusCode]
   },
   before: {
     remove: [preventRemovingOfUsedItems],
