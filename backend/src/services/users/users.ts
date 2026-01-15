@@ -20,6 +20,7 @@ import { User, UserService, getOptions } from './users.class'
 import { userPath, userMethods } from './users.shared'
 import { titleCase } from '../dancewiki/utils/titleCase'
 import { disallow } from 'feathers-hooks-common'
+import { logger } from '../../requestLogger'
 
 export * from './users.class'
 export * from './users.schema'
@@ -36,16 +37,16 @@ async function initializeFirstUser(userService: UserService, throwOnMissingFile 
   }
   const users = await userService.find({ query: { $limit: 1 } })
   if (users.length > 0) {
-    console.log('Users already exist. Skipping initial user creation.')
+    logger.warn('Users already exist. Skipping initial user creation.')
     throw new Error('Users already exist')
   }
 
   const fileContents = readFileSync(createUserFile, 'utf-8')
   const { username, password } = JSON.parse(fileContents) as CreateUser
-  console.log(`Creating initial user '${username}' from ${createUserFile}`)
+  logger.info(`Creating initial user '${username}' from ${createUserFile}`)
 
   if (!username || !password) {
-    console.error(`create-user.json must contain both 'username' and 'password' fields`)
+    logger.error(`create-user.json must contain both 'username' and 'password' fields`)
     throw new Error('Invalid create-user.json file')
   }
 
@@ -55,7 +56,7 @@ async function initializeFirstUser(userService: UserService, throwOnMissingFile 
     password
   })
 
-  console.log(`User '${username}' created. Deleting ${createUserFile}`)
+  logger.info(`User '${username}' created. Deleting ${createUserFile}`)
   unlinkSync(createUserFile)
   return result
 }

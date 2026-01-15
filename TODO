@@ -240,9 +240,9 @@
   * Log app setup as request
   * Log app shutdown
   * Log error line and file
-    Event logging, levels + messages + level filtering. Use some inner winston instance?
+  * Event logging, levels + messages + level filtering. Use some inner winston instance?
+  * Replace console.log with logging
     Log all scheduled functions:setup them at service setup and make them public so hooks apply
-    Replace console.log with logging
     Maybe some log query tool?
   Log login attempts somehow
     Log username with local

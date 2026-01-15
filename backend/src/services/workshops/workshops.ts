@@ -55,7 +55,6 @@ export const workshops = (app: Application) => {
             )
           )).filter(entry => entry[1] != undefined) as [string, string][]
         )
-        console.log(workshopVersions)
 
         eventService.patch(workshop.eventId, { workshopVersions })
       })
@@ -97,7 +96,6 @@ export const workshops = (app: Application) => {
                 ...instance as (Omit<WorkshopInstance, 'description'> & {description?: string}),
               }
             ))
-            console.log(oldInstances, data.instances)
           }
         },
         schemaHooks.validateData(workshopsPatchValidator),

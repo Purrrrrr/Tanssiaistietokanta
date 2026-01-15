@@ -1,7 +1,7 @@
 import ClamScan from 'clamscan'
 
 import type { Application } from '../../declarations'
-import { logger } from '../../logger'
+import { logger } from '../../requestLogger'
 
 export class ClamScanner {
   scannerPromise?: Promise<ClamScan>

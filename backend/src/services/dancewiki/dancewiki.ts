@@ -66,16 +66,11 @@ export const dancewiki = (app: Application) => {
     }
   }).publish((data, context) => {
     const danceIds = getDependenciesFor('dancewiki', data, 'usedBy', 'dances')
-    console.log(danceIds)
 
     const channels = [
       ...danceIds.map(id => app.channel(`dances/${id}`)),
       app.channel('dances'),
     ]
-      console.log([
-      ...danceIds.map(id => (`dances/${id}`)),
-      ('dances'),
-    ])
 
     return [
       ...withoutCurrentConnection(channels, context),

@@ -74,7 +74,7 @@ export class GraphqlService<ServiceParams extends GraphqlParams = GraphqlParams>
     const { body } = res
     if (body.kind === 'single') {
       if (body.singleResult.errors) {
-        // body.singleResult.errors.forEach(logger.error.bind(logger))
+        addLogData('graphqlErrors', body.singleResult.errors)
       }
       return body.singleResult
     }

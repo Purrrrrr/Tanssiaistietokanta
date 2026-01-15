@@ -1,4 +1,6 @@
-import { logger } from './logger'
+import { createLogger } from 'winston';
+import { logger as mainLogger } from './logger'
+import Transport from 'winston-transport';
 
 interface LogData extends Record<string, unknown>, RequestIdentity {
   message: string
@@ -8,7 +10,7 @@ interface LogData extends Record<string, unknown>, RequestIdentity {
   errorStack?: string
   timestamp: string
   durationMs?: number
-  messages?: string[]
+  messages?: unknown[]
 }
 
 interface RequestIdentity {
@@ -17,7 +19,25 @@ interface RequestIdentity {
   id?: string | number | null
 }
 
+class RequestMessageTransport extends Transport {
+  constructor() {
+    super({})
+  }
+  log(info: unknown, callback: () => void) {
+    if (!request) {
+      throw new Error('No active request to log message to')
+    }
+    request.data.messages ??= []
+    request.data.messages.push(info)
+    callback()
+  }
+}
+
 let request: RequestLogger | undefined
+export const logger = createLogger({
+  level: mainLogger.level,
+  transports: [new RequestMessageTransport()],
+})
 
 class RequestLogger {
   public data: LogData
@@ -53,7 +73,7 @@ class RequestLogger {
 
   writeRequest() {
     this.data.durationMs = new Date().getTime() - this.startTime.getTime();
-    logger.log(
+    mainLogger.log(
       'error' in this.data ? 'error' : 'info',
       this.data,
     );
