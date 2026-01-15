@@ -18,6 +18,9 @@ import { migrateDb } from './umzug'
 import { channels } from './channels'
 import { addErrorStatusCode } from './hooks/addErrorStatusCode'
 import { MaxFileSize } from './services/files/files.class'
+import { finalizeRequest, initializeRequest } from './requestLogger'
+
+initializeRequest({ method: 'startup' })
 
 const app: Application = koa(feathers())
 
@@ -97,11 +100,15 @@ app.hooks({
     async (context: HookContext<Application>, next: NextFunction) => {
       await migrateDb(context.app)
       await initDependencyGraph(context.app)
-     await next()
+      await next()
+      // Finalize app startup request log
+      finalizeRequest()
     },
-
   ],
-  teardown: []
+  teardown: [async (_: HookContext<Application>, next: NextFunction) => {
+    initializeRequest({ method: 'shutdown' }).writeRequest()
+    await next()
+  }]
 })
 
 export { app }

@@ -10,7 +10,7 @@ import { logger } from '../../logger'
 import type { Application } from '../../declarations'
 import { ErrorWithStatus } from '../../hooks/addErrorStatusCode';
 import { GraphQLError } from 'graphql';
-import { addLogData } from '../../hooks/log-request';
+import { addLogData } from '../../requestLogger';
 
 type Graphql = any
 type GraphqlData = any

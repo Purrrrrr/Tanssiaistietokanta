@@ -236,7 +236,20 @@
 * Investigate why loading forms in collapses re-renders page
 * Get rid of forwardRefs
 * More robust login solution
+  * Helper functions. Init request, log request, withRequestLogging
+  * Log app setup as request
+  * Log app shutdown
+  * Log error line and file
+    Event logging, levels + messages + level filtering. Use some inner winston instance?
+    Log all scheduled functions:setup them at service setup and make them public so hooks apply
+    Replace console.log with logging
+    Maybe some log query tool?
   Log login attempts somehow
+    Log username with local
+    Log token cookie value
+    Auth header type (JWT or ?)
+    Session ID
+
   Use ItemList in setEditors
   
   Login icon?
