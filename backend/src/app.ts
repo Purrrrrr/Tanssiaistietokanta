@@ -18,9 +18,7 @@ import { migrateDb } from './umzug'
 import { channels } from './channels'
 import { addErrorStatusCode } from './hooks/addErrorStatusCode'
 import { MaxFileSize } from './services/files/files.class'
-import { finalizeRequest, initializeRequest } from './requestLogger'
-
-initializeRequest({ method: 'startup' })
+import { logger, withRequestLogger } from './requestLogger'
 
 const app: Application = koa(feathers())
 
@@ -56,13 +54,12 @@ app.use(async (ctx, next) => {
 
   await Promise.all(filesToCleanup.map(file => unlink(file.filepath)))
 })
-app.use(graphqlServiceMiddleware)
+app.use(graphqlServiceMiddleware())
 app.use(async (ctx, next) => {
   ctx.feathers ??= {}
   ctx.feathers.IP = ctx.request.ip
   await next()
 })
-console.log(allowLocalhostOnDev(app.get('origins')))
 
 // Configure services and transports
 app.configure(rest())
@@ -98,17 +95,21 @@ app.hooks({
 app.hooks({
   setup: [
     async (context: HookContext<Application>, next: NextFunction) => {
-      await migrateDb(context.app)
-      await initDependencyGraph(context.app)
-      await next()
-      // Finalize app startup request log
-      finalizeRequest()
+      await withRequestLogger({ path: 'app', method: 'setup' }, async () => {
+        logger.info('Migrating DB')
+        await migrateDb(context.app)
+        logger.info('Initializing dependency graph')
+        await initDependencyGraph(context.app)
+        logger.info('Running rest of setup calls')
+        await next()
+        const port = app.get('port')
+        const host = app.get('host')
+        logger.info(`Feathers app listening on http://${host}:${port}`)
+        logger.info('Allowed CORS hosts', allowLocalhostOnDev(app.get('origins')))
+      })
     },
   ],
-  teardown: [async (_: HookContext<Application>, next: NextFunction) => {
-    initializeRequest({ method: 'shutdown' }).writeRequest()
-    await next()
-  }]
+  teardown: [],
 })
 
 export { app }

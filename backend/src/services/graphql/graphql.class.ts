@@ -27,12 +27,16 @@ export interface GraphqlServiceOptions {
 
 export interface GraphqlParams extends Params<GraphqlQuery> {}
 
-export const graphqlServiceMiddleware : Middleware<Application> = async (ctx, next) => {
-  const middleware = await ctx.app.service('graphql')?.getMiddleware()
-  if (middleware) {
+export const graphqlServiceMiddleware = (): Middleware<Application> => {
+  let middleware: Middleware<Application> | undefined
+  return async (ctx, next) => {
+    if (middleware === undefined) {
+      middleware = await ctx.app.service('graphql')?.getMiddleware()
+      if (middleware === null) {
+        middleware = (_, next) => next()
+      }
+    }
     await middleware(ctx, next)
-  } else {
-    await next()
   }
 }
 

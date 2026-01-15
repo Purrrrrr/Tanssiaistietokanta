@@ -1,6 +1,7 @@
 import { createLogger } from 'winston';
 import { logger as mainLogger } from './logger'
 import Transport from 'winston-transport';
+import { AsyncLocalStorage } from 'async_hooks';
 
 interface LogData extends Record<string, unknown>, RequestIdentity {
   message: string
@@ -23,17 +24,22 @@ class RequestMessageTransport extends Transport {
   constructor() {
     super({})
   }
-  log(info: unknown, callback: () => void) {
-    if (!request) {
+  log(info: any, callback: () => void) {
+    const requestLogger = loggerStorage.getStore()
+    if (!requestLogger) {
       throw new Error('No active request to log message to')
     }
-    request.data.messages ??= []
-    request.data.messages.push(info)
+    const now = new Date()
+    info.timestamp = now.toISOString()
+    info.time = now.getTime() - requestLogger.startTime.getTime()
+    requestLogger.data.messages ??= []
+    requestLogger.data.messages.push(info)
     callback()
   }
 }
 
-let request: RequestLogger | undefined
+const loggerStorage = new AsyncLocalStorage<RequestLogger>();
+
 export const logger = createLogger({
   level: mainLogger.level,
   transports: [new RequestMessageTransport()],
@@ -41,10 +47,10 @@ export const logger = createLogger({
 
 class RequestLogger {
   public data: LogData
-  private startTime: Date
+  public startTime: Date
 
-  constructor(context: RequestIdentity) {
-    const { path = 'app', method, id } = context;
+  constructor(context: RequestIdentity, initialData: Record<string, unknown> = {}) {
+    const { path = 'app', method, id } = context
     this.startTime = new Date()
     this.data = {
       message: `${path} -> ${method}`,
@@ -52,75 +58,74 @@ class RequestLogger {
       method,
       path,
       id,
+      ...initialData,
     }
   }
 
   logData(key: string, data: unknown) {
-    this.data[key] = data;
+    this.data[key] = data
   }
 
   logError(error: any, includeStack: boolean = true) {
     if (error instanceof Error) {
-      this.data.error = error.message;
-      this.data.errorLocation = error.stack?.split('\n')?.[1]?.replace(/^\s+at\s+/, '');
+      this.data.error = error.message
+      this.data.errorLocation = error.stack?.split('\n')?.[1]?.replace(/^\s+at\s+/, '')
       if (includeStack) {
-        this.data.errorStack = error.stack;
+        this.data.errorStack = error.stack
       }
     } else {
-      this.data.error = String(error);
+      this.data.error = String(error)
     }
   }
 
   writeRequest() {
-    this.data.durationMs = new Date().getTime() - this.startTime.getTime();
+    this.data.durationMs = new Date().getTime() - this.startTime.getTime()
     mainLogger.log(
       'error' in this.data ? 'error' : 'info',
       this.data,
-    );
+    )
   }
 }
 
 export function hasRequest(): boolean {
-  return request !== undefined
-}
-
-export function initializeRequest(context: RequestIdentity, initialData: Record<string, unknown> = {}): RequestLogger {
-  if (request !== undefined) {
-    return request
-  }
-  request = new RequestLogger(context)
-  request.data = { ...request.data, ...initialData }
-
-  return request
-}
-export function finalizeRequest() {
-  request?.writeRequest()
-  request = undefined
+  return loggerStorage.getStore() !== undefined
 }
 
 export function addLogData(key: string, data: unknown) {
-  if (request) {
-    request.logData(key, data)
-  }
+  loggerStorage.getStore()?.logData(key, data)
 }
 
-export function withRequestLogging<Args extends unknown[], Result extends unknown>(
+export function withRequestLogger<T>(
   context: RequestIdentity,
-  fn: (...args: Args) => Promise<Result>
-): ((...args: Args) => Promise<Result>) {
-  return async (...args: Args): Promise<Result> => {
-    if (request !== undefined) {
-      return fn(...args)
-    }
-    
-    const logger = initializeRequest(context)
+  fn: (logger: RequestLogger) => Promise<T>
+): Promise<T> {
+  const existingLogger = loggerStorage.getStore()
+  if (existingLogger) {
+    console.log('request already exists, skipping logger init')
+    return fn(existingLogger)
+  }
+
+  const logger = new RequestLogger(context)
+  return loggerStorage.run(logger, async () => {
     try {
-      return await fn(...args)
-    } catch (error: any) {
+      return await fn(logger)
+    } catch (error) {
       logger.logError(error)
       throw error
     } finally {
-      finalizeRequest()
+      logger.writeRequest()
     }
+  })
+}
+
+export function withRequestLogging<Args extends unknown[], Result extends unknown>(
+  path: string,
+  method: string,
+  fn: (...args: Args) => Promise<Result>
+): ((...args: Args) => Promise<Result>) {
+  return async (...args: Args): Promise<Result> => {
+    return withRequestLogger({ method, path }, async () => {
+      return await fn(...args)
+    })
   }
 }

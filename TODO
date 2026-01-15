@@ -242,6 +242,9 @@
   * Log error line and file
   * Event logging, levels + messages + level filtering. Use some inner winston instance?
   * Replace console.log with logging
+  * Sub-event timestamps
+  * Nicer timestamps
+  * Fix async logging somehow -> https://nodejs.org/api/async_context.html#class-asynclocalstorage
     Log all scheduled functions:setup them at service setup and make them public so hooks apply
     Maybe some log query tool?
   Log login attempts somehow

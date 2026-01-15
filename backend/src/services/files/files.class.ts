@@ -50,6 +50,10 @@ export class FileService
     ]))
   }
 
+  async setup(): Promise<void> {
+    return this.scanner.init()
+  }
+
   async cleanUpUnused() {
     const allFiles = await this.find({ query: { unused: true, $sort: { _updatedAt: 1 /* ASC */ } }})
     const byRoot = Map.groupBy(allFiles, file => file.root)
