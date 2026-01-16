@@ -20,7 +20,6 @@ interface Chunk {
   size: number
 }
 
-let totalKb: number
 let report: SizeReport
 
 export function jsSizeReporter(options: Options = {}) {
@@ -38,6 +37,9 @@ export function jsSizeReporter(options: Options = {}) {
       report = createSizeReport(bundle)
     },
     closeBundle() {
+      if (!report) {
+        return
+      }
       let reports: SizeReport[] = []
 
       if (fs.existsSync(file)) {
