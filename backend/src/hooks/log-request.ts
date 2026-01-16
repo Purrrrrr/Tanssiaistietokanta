@@ -15,10 +15,10 @@ export const logRequest = ({ ignoredPaths = [] }: LogRequestOptions = {}) => asy
   if (hasRequest()) {
     return next()
   }
-  withRequestLogger(context, async logger => {
+  return withRequestLogger(context, async logger => {
     logger.logData('provider', context.params.provider ?? 'internal')
     try {
-      await next()
+      return await next()
     } catch (error: any) {
       const includeStack = !(error instanceof NotAuthenticated)
       logger.logError(error, includeStack)
