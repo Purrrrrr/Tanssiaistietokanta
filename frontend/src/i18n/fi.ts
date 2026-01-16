@@ -8,6 +8,7 @@ export const fi = {
     dances: 'Tanssit',
     breadcrumbs: 'Murupolku',
     moveToContent: 'Siirry pääsisältöön',
+    userSettings: 'Käyttäjäasetukset',
     login: 'Kirjaudu',
     logout: 'Kirjaudu ulos',
   },
@@ -478,6 +479,14 @@ export const fi = {
       dancePage: {
         backToDanceList: 'Takaisin tanssilistaan',
         backToEventProgram: 'Takaisin ohjelman tietoihin',
+      },
+    },
+    users: {
+      userList: {
+        pageTitle: 'Käyttäjät',
+        noUsers: 'Ei käyttäjiä',
+        name: 'Nimi',
+        username: 'Käyttäjätunnus',
       },
     },
   },

@@ -1,11 +1,11 @@
 import { useSyncExternalStore } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Person as User } from 'libraries/ui/icons'
 
 import { getCurrentUser, logout, subscribeToAuthChanges } from 'backend/authentication'
 
 import MenuButton from 'libraries/formsV2/components/MenuButton'
 import { AnchorButton, Breadcrumbs, Button } from 'libraries/ui'
+import { Person as User } from 'libraries/ui/icons'
 import { useT, useTranslation } from 'i18n'
 
 import { NavigateButton } from './widgets/NavigateButton'
@@ -37,6 +37,7 @@ function LoginStatus() {
   if (user) {
     return <span>
       <MenuButton text={user.name} buttonRenderer={props => <Button minimal icon={<User className="mt-[1px] mr-0.5 text-amber-600" />} {...props} />}>
+        <NavigateButton minimal href="/users">{t('userSettings')}</NavigateButton>
         <Button minimal onClick={logout}>{t('logout')}</Button>
       </MenuButton>
     </span>

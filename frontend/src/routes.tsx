@@ -21,6 +21,7 @@ const DanceCheatList = lazy(() => import('pages/events/print/DanceCheatList'))
 const DanceInstructions = lazy(() => import('pages/events/print/DanceInstructions'))
 const DanceList = lazy(() => import('pages/events/print/DanceList'))
 const UiShowcase = lazy(() => import('libraries/ui-showcase'))
+const Users = lazy(() => import('pages/users'))
 
 export default function MainRoutes() {
   return <>
@@ -34,6 +35,7 @@ export default function MainRoutes() {
         <Route path="events/:eventId/version/:eventVersionId/*" element={<EventRoutes />} />
         <Route path="events/:eventId/*" element={<EventRoutes />} />
         <Route path="dances/*" element={<DanceRoutes />} />
+        <Route path="users" element={<Users />} />
       </Routes>
     </Suspense>
   </>

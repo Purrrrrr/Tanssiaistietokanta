@@ -4,11 +4,30 @@ import { RightQuery, ServiceRightParams } from 'libraries/access-control/types'
 
 import { getCurrentUser, subscribeToAuthChanges, type User } from 'backend/authentication'
 
+import { backendQueryHook, entityListQueryHook, graphql, setupServiceUpdateFragment } from '../backend'
+
 export { login, logout } from 'backend/authentication'
 
 export function useCurrentUser() {
   return useSyncExternalStore(subscribeToAuthChanges, getCurrentUser)
 }
+setupServiceUpdateFragment('users', `fragment UserFragment on User {
+  _id, name, username,
+}`)
+
+export const useUsers = entityListQueryHook('users', graphql(`
+query getUsers {
+  users {
+    _id, name, username,
+  }
+}`))
+
+export const useUser = backendQueryHook(graphql(`
+query getUser($id: ID!) {
+  user(id: $id) {
+    _id, name, username,
+  }
+}`))
 
 declare global {
   interface AccessControlServiceRegistry {
