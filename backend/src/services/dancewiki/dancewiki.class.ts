@@ -67,12 +67,12 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
       return getDanceCategorization(page.instructions ?? '')
     }, DAY)
 
-    // Update list of pages daily
-    cron.schedule('*/20 * * * *', () => this.updatePageList())
+    // Update list of pages hourly
+    cron.schedule('0 * * * *', () => this.updatePageList())
     cron.schedule('*/5 * * * *', this.backgroundFetch.bind(this))
     setTimeout(() => this.backgroundFetch(), 0)
   }
-  
+
   backgroundFetch = withRequestLogging('dancewikis', 'backgroundFetch', async(): Promise<void> => {
     logger.info('Updating dance wiki entries')
     const MAX_PAGES_TO_FETCH = 50
@@ -221,7 +221,7 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
       instructions,
       revision: page.revision ?? null
     })
-    
+
     const existing = await this.has(page.title)
     return existing
       ? await this.storageService.update(page.title, dataToCreate) as StoredDanceWiki

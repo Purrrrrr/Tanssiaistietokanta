@@ -245,7 +245,7 @@
   * Sub-event timestamps
   * Nicer timestamps
   * Fix async logging somehow -> https://nodejs.org/api/async_context.html#class-asynclocalstorage
-    Log all scheduled functions:setup them at service setup and make them public so hooks apply
+  * Log all scheduled functions
     Maybe some log query tool?
   Log login attempts somehow
     Log username with local

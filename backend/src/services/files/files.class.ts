@@ -12,6 +12,7 @@ import type { File, FileData, FilePatch, FileQuery } from './files.schema'
 import { ClamScanner } from './clamscanner'
 import { sum, takeWhile } from 'es-toolkit'
 import { PassThrough, Stream } from 'stream'
+import { logger, withRequestLogging } from '../../requestLogger'
 
 export type { File, FileData, FilePatch, FileQuery }
 
@@ -54,7 +55,7 @@ export class FileService
     return this.scanner.init()
   }
 
-  async cleanUpUnused() {
+  cleanUpUnused = withRequestLogging('files', 'cleanUpUnused', async () => {
     const allFiles = await this.find({ query: { unused: true, $sort: { _updatedAt: 1 /* ASC */ } }})
     const byRoot = Map.groupBy(allFiles, file => file.root)
 
@@ -68,17 +69,26 @@ export class FileService
           sizeLeft -= file.size
           return true
         })
-        console.log(`Clean up ${picked.length} unused files from root ${root}`)
+        logger.info(`Cleaning up ${picked.length} unused files from root ${root}`)
         await Promise.all(picked.map(file => this.remove(file._id)))
+        logger.info(`Unused files for root ${root} cleaned up`)
+      } else {
+        logger.info(`No need to clean up unused files for root ${root} (size ${(size/1024).toFixed(2)}kb)`)
       }
     }
-  }
+  })
 
-  async cleanUpTmp() {
+  cleanUpTmp = withRequestLogging('files', 'cleanUpTmp', async () => {
     const tmpDir = this.options.uploadTmp
     const now = Date.now();
     const files = await readdir(tmpDir);
+    if (files.length === 0) {
+      logger.info(`No files in tmp dir ${tmpDir}`)
+      return
+    }
+    logger.info(`Checking ${files.length} files in tmp dir ${tmpDir}`)
 
+    const filesToUnlink = []
     for (const file of files) {
       const filePath = join(tmpDir, file);
       const fileStat = await stat(filePath);
@@ -88,10 +98,15 @@ export class FileService
 
       const age = now - fileStat.mtimeMs;
       if (age > MaxTmpFileAge) {
-        await unlink(filePath);
+        filesToUnlink.push(filePath);
       }
     }
-  }
+    if (filesToUnlink.length > 0) {
+      logger.info(`Removing ${filesToUnlink.length} files from tmp dir ${tmpDir}`)
+      await Promise.all(filesToUnlink.map(unlink));
+      logger.info(`Files removed`)
+    }
+  })
 
   async find(_params?: FileParams): Promise<File[]> {
     const download = _params?.query?.download
