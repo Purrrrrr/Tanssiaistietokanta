@@ -17,7 +17,7 @@ export const logRequest = ({ ignoredPaths = [] }: LogRequestOptions = {}) => asy
   }
   return withRequestLogger(context, async logger => {
     logger.logData('provider', context.params.provider ?? 'internal')
-    logger.logData('connection-id', context.params.connection.id)
+    logger.logData('connection-id', context.params.connection?.id)
     try {
       return await next()
     } catch (error: any) {
