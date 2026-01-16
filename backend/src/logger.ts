@@ -77,7 +77,7 @@ export const logger = createLogger({
       format: format.combine(format.splat(), cliJson()),
     }),
     new transports.File({
-      filename: 'logs/requests.log',
+      filename: 'logs/requests.json',
       level: 'info',
       format: format.combine(format.splat(), format.json()),
     }),
