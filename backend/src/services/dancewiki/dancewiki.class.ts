@@ -13,6 +13,7 @@ import { equals, uniq } from 'ramda'
 import { Cache, createCache } from './utils/cache'
 import { spamScore } from './utils/spamScore'
 import { getSources } from './utils/getSources'
+import { logger, withRequestLogging } from '../../requestLogger'
 
 export type { Dancewiki, DancewikiData, DancewikiQuery }
 
@@ -72,8 +73,8 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
     setTimeout(() => this.backgroundFetch(), 0)
   }
   
-  async backgroundFetch(): Promise<void> {
-    console.log('Updating dance wiki entries')
+  backgroundFetch = withRequestLogging('dancewikis', 'backgroundFetch', async(): Promise<void> => {
+    logger.info('Updating dance wiki entries')
     const MAX_PAGES_TO_FETCH = 50
 
     const pageCount = await this.storageService.getModel().countAsync({})
@@ -86,14 +87,14 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
     }
 
     const unfetched = await this.storageService.find({ query: { _fetchedAt: null } })
-    
+
     if (unfetched.length > 0) {
       const pagesToFetch = unfetched.slice(0, MAX_PAGES_TO_FETCH).map(page => page._id)
-      console.log(`${unfetched.length} unfetched wiki entries fetching ${pagesToFetch.length}`)
+      logger.info(`${unfetched.length} unfetched wiki entries fetching ${pagesToFetch.length}`)
       await this.fetchPages(pagesToFetch)
       return
     }
-    
+
     const lastWeek = new Date(new Date().valueOf() - 7 * DAY).toISOString()
     const stale = await this.storageService.find({ query: {
       _fetchedAt: { $lt: lastWeek },
@@ -102,18 +103,17 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
     })
     if (stale.length > 0) {
       const pagesToFetch = stale.map(page => page._id)
-      console.log(`fetching ${stale.length} stale wiki entries`)
+      logger.info(`fetching ${stale.length} stale wiki entries`)
       await this.fetchPages(pagesToFetch)
     }
+  })
 
-  }
-
-  async updatePageList() {
-    console.log('Updating dancewiki page list')
+  updatePageList = withRequestLogging('dancewikis', 'updatePageList', async () => {
+    logger.info('Updating dancewiki page list')
     const pagesInWiki = await getPageList()
     const pagesInStorage = await this.storageService.find()
     const existingPageNames = new Set(pagesInStorage.map(page => page._id))
-    
+
     const pagesToCreate = pagesInWiki.filter(name => !existingPageNames.has(name))
     return Promise.all(
       pagesToCreate.map(name => {
@@ -126,7 +126,7 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
         this.storageService.create(data)
       })
     )
-  }
+  })
 
   async updatePageMetadata() {
     const categoriesPage = await this.get(categoriesPageName)
@@ -144,7 +144,7 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
       return updated
     }).filter(page => page !== null)
     if (pagesToStore.length > 0) {
-      console.log(`Updating metadata for ${pagesToStore.length} pages`)
+      logger.info(`Updating metadata for ${pagesToStore.length} pages`)
       await Promise.all(pagesToStore.map(page => this.storageService.update(page.name, page)))
     }
   }
