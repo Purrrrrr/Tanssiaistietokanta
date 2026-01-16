@@ -1,7 +1,7 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/logging.html
 import { MESSAGE } from 'triple-beam'
 import { createLogger, format, transports } from 'winston'
-import { 
+import {
   bold,
   red,
   redBright,
@@ -21,7 +21,8 @@ function indent(str: string): string {
 
 function formatObject(obj: any): string {
   const data = omit(obj, ['message', 'level'])
-  if (Object.keys(data).filter(isString).length === 0) return ''
+  const validKeys = Object.entries(data).filter(([k, v]) => v !== undefined && typeof k !== 'symbol')
+  if (validKeys.length === 0) return ''
   return formatValue(data)
 }
 
