@@ -126,6 +126,6 @@ export function withRequestLogging<Args extends unknown[], Result extends unknow
   return async (...args: Args): Promise<Result> => {
     return withRequestLogger({ method, path }, async () => {
       return await fn(...args)
-    })
+    }).catch(() => null as Result)
   }
 }
