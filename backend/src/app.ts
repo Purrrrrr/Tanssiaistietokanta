@@ -105,7 +105,7 @@ app.hooks({
         const port = app.get('port')
         const host = app.get('host')
         logger.info(`Feathers app listening on http://${host}:${port}`)
-        logger.info('Allowed CORS hosts', allowLocalhostOnDev(app.get('origins')))
+        logger.info('Allowed CORS hosts', { hosts: allowLocalhostOnDev(app.get('origins')) })
       })
     },
   ],

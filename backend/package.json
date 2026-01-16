@@ -77,7 +77,6 @@
     "feathers-hooks-common": "^8.2.1",
     "feathers-nedb": "^6.0.0",
     "graphql": "^16.6.0",
-    "json-colorizer": "^3.0.1",
     "jsonata": "^2.0.3",
     "koa": "^2.14.2",
     "koa-bodyparser": "^4.4.0",
