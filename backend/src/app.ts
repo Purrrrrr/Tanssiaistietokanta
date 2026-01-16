@@ -67,7 +67,7 @@ app.configure(
   socketio({
     cors: {
       origin: allowLocalhostOnDev(app.get('origins'))
-    }
+    },
   })
 )
 
@@ -79,6 +79,12 @@ function allowLocalhostOnDev(origins: string[] | undefined) {
 app.configure(channels)
 app.configure(authentication)
 app.configure(services)
+
+app.on('connection', (connection) => {
+  const uuid = crypto.randomUUID().slice(0, 8)
+  // Add dashes between every 2 characters
+  connection.id = uuid.match(/.{1,2}/g)?.join('-').toUpperCase()
+})
 
 // Register hooks that run on all service methods
 app.hooks({

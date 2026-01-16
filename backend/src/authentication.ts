@@ -4,6 +4,7 @@ import { LocalStrategy } from '@feathersjs/authentication-local'
 
 import type { Application } from './declarations'
 import { clearRefreshTokenCookie, parseCookies, RefreshTokenStrategy, setRefreshTokenCookie } from './refreshTokenStrategy'
+import { addLogData } from './requestLogger'
 
 declare module './declarations' {
   interface ServiceTypes {
@@ -21,7 +22,12 @@ export const authentication = (app: Application) => {
   app.use('authentication', authentication)
   app.service('authentication').hooks({
     before: {
-      all: [parseCookies],
+      all: [parseCookies, (ctx) => {
+        addLogData('refreshToken', ctx.params.cookies?.refreshToken ?? null)
+        addLogData('authStrategy', ctx.params.authentication?.strategy ?? null)
+        addLogData('username', ctx.data?.username)
+        addLogData('password', ctx.data?.password ? '<hidden>' : undefined)
+      }],
     },
     after: {
       create: [setRefreshTokenCookie(authentication)],

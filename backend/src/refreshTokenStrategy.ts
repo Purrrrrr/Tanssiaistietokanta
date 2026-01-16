@@ -58,7 +58,7 @@ export class RefreshTokenStrategy implements AuthenticationStrategy {
 
     return {
       authentication: { strategy: 'refreshToken' },
-      user
+      user,
     }
   }
 }

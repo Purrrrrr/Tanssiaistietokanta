@@ -247,12 +247,14 @@
   * Fix async logging somehow -> https://nodejs.org/api/async_context.html#class-asynclocalstorage
   * Log all scheduled functions
     Maybe some log query tool?
-  Log login attempts somehow
-    Log username with local
-    Log token cookie value
-    Auth header type (JWT or ?)
-    Session ID
+* Log login attempts somehow
+  * Log username with local
+  * Log token cookie value
+  * Auth strategy
+  * Session ID (not easy, replace with connection id)
+  * Connection ID
 
+  Load file components only when user has the rights. Lazy loading OR don't fetch files when no rights
   Use ItemList in setEditors
   
   Login icon?
@@ -266,7 +268,6 @@
   Test websocket performance with something. Gatling?
 
   Auth Part 2
-    Load file components only when user has the rights. Lazy loading
     Some own component or system for auth needing pages
     Allow creating users with some token? Invite functionality?
     Nicer logout menu keyboard a11y
