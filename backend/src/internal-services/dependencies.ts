@@ -2,7 +2,7 @@ import type { Id } from '@feathersjs/feathers'
 import type { EntityDependency } from './dependencyRelations'
 
 import R from 'ramda'
-import getOrComputeDefault from './computeIfAbsent'
+import getOrComputeDefault from '../utils/computeIfAbsent'
 
 type ServiceName = string
 interface Entity {

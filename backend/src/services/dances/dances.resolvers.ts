@@ -1,6 +1,6 @@
 import { Application } from "../../declarations"
 import { DancesParams } from "./dances.class"
-import { getDependencyLinks } from '../../utils/dependencies'
+import { getDependencyLinks } from '../../internal-services/dependencies'
 
 import type { Dances } from './dances.schema'
 import type { Events } from '../events/events.schema'

@@ -19,7 +19,7 @@ import type { WorkshopInstance } from './workshops.schema'
 import { WorkshopsService, getOptions } from './workshops.class'
 import { workshopsPath, workshopsMethods } from './workshops.shared'
 import { defaultChannels, withoutCurrentConnection } from '../../utils/defaultChannels'
-import { getDependenciesFor } from '../../utils/dependencies'
+import { getDependenciesFor } from '../../internal-services/dependencies'
 import getFromData from '../../utils/getFromData'
 
 export * from './workshops.class'

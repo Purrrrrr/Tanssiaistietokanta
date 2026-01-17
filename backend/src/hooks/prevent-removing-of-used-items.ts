@@ -1,6 +1,6 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/hook.html
 import type { HookContext } from '../declarations'
-import { isUsedBySomething } from '../utils/dependencies'
+import { isUsedBySomething } from '../internal-services/dependencies'
 
 export const preventRemovingOfUsedItems = async (context: HookContext) => {
   const {id, path} = context

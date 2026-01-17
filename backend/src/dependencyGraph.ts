@@ -1,5 +1,5 @@
-import { updateDependencies, registerDependencies, clearDependencies } from './utils/dependencies'
-import { loadDependencyTypes } from './utils/dependencyRelations'
+import { updateDependencies, registerDependencies, clearDependencies } from './internal-services/dependencies'
+import { loadDependencyTypes } from './internal-services/dependencyRelations'
 import type { Application, ServiceTypes } from './declarations'
 
 const skippedServices = ['authentication'] as const

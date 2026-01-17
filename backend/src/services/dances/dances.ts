@@ -17,7 +17,7 @@ import type { Application } from '../../declarations'
 import { DancesService, getOptions } from './dances.class'
 import { dancesPath, dancesMethods } from './dances.shared'
 import { defaultChannels, withoutCurrentConnection } from '../../utils/defaultChannels'
-import { getDependenciesFor } from '../../utils/dependencies'
+import { getDependenciesFor } from '../../internal-services/dependencies'
 import { authenticate } from '@feathersjs/authentication'
 
 export * from './dances.class'

@@ -15,7 +15,7 @@ import type { Application } from '../../declarations'
 import { DancewikiService, getOptions } from './dancewiki.class'
 import { dancewikiPath, dancewikiMethods } from './dancewiki.shared'
 import { defaultChannels, withoutCurrentConnection } from '../../utils/defaultChannels'
-import { getDependenciesFor } from '../../utils/dependencies'
+import { getDependenciesFor } from '../../internal-services/dependencies'
 
 export * from './dancewiki.class'
 export * from './dancewiki.schema'
