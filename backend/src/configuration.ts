@@ -24,6 +24,7 @@ export const configurationSchema = Type.Intersect([
 ])
 
 export type ApplicationConfiguration = Static<typeof configurationSchema> & {
+  instanceId: string
   importExtension: string
   authentication: {
     refreshTokenOptions: {

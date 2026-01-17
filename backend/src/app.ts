@@ -19,6 +19,7 @@ import { channels } from './channels'
 import { addErrorStatusCode } from './hooks/addErrorStatusCode'
 import { MaxFileSize } from './services/files/files.class'
 import { logger, withRequestLogger } from './requestLogger'
+import sessions, { socketIOSessionCookieMiddleware } from './internal-services/sessions'
 
 const app: Application = koa(feathers())
 
@@ -55,11 +56,6 @@ app.use(async (ctx, next) => {
   await Promise.all(filesToCleanup.map(file => unlink(file.filepath)))
 })
 app.use(graphqlServiceMiddleware())
-app.use(async (ctx, next) => {
-  ctx.feathers ??= {}
-  ctx.feathers.IP = ctx.request.ip
-  await next()
-})
 
 // Configure services and transports
 app.configure(rest())
@@ -68,7 +64,7 @@ app.configure(
     cors: {
       origin: allowLocalhostOnDev(app.get('origins'))
     },
-  })
+  }, io => io.engine.on('headers', socketIOSessionCookieMiddleware))
 )
 
 function allowLocalhostOnDev(origins: string[] | undefined) {
@@ -79,12 +75,7 @@ function allowLocalhostOnDev(origins: string[] | undefined) {
 app.configure(channels)
 app.configure(authentication)
 app.configure(services)
-
-app.on('connection', (connection) => {
-  const uuid = crypto.randomUUID().slice(0, 8)
-  // Add dashes between every 2 characters
-  connection.id = uuid.match(/.{1,2}/g)?.join('-').toUpperCase()
-})
+app.configure(sessions)
 
 // Register hooks that run on all service methods
 app.hooks({

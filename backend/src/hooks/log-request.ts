@@ -16,15 +16,20 @@ export const logRequest = ({ ignoredPaths = [] }: LogRequestOptions = {}) => asy
     return next()
   }
   return withRequestLogger(context, async logger => {
-    logger.logData('provider', context.params.provider ?? 'internal')
-    logger.logData('connection-id', context.params.connection?.id)
+    const { app, params } = context
+    const { connection, provider, sessionId } = params
+    logger.logData('provider', provider ?? 'internal')
+    logger.logData('sessionId',  connection?.sessionId ?? sessionId)
+    logger.logData('instanceId', app.get('instanceId'))
+    logger.logData('connectionId', connection?.id)
     try {
       return await next()
     } catch (error: any) {
       const includeStack = !(error instanceof NotAuthenticated)
       logger.logError(error, includeStack)
     } finally {
-      logger.logData('user', context.params.user ? pick(context.params.user, ['_id', 'username', 'name']) : undefined)
+      // Intentionally pick user from params here because it's not set earlier
+      logger.logData('user', params.user ? pick(params.user, ['_id', 'username', 'name', 'sessionId']) : undefined)
       logger.logData('statusCode', context.http?.status)
     }
   })

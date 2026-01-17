@@ -1,10 +1,8 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/channels.html
 import type { RealTimeConnection, Params } from '@feathersjs/feathers'
-import type { AuthenticationResult } from '@feathersjs/authentication'
 import '@feathersjs/transport-commons'
 import type { Application, HookContext } from './declarations'
 import { defaultChannels } from './utils/defaultChannels'
-import { logger } from './logger'
 
 export const channels = (app: Application) => {
   app.on('connection', (connection: RealTimeConnection) => {

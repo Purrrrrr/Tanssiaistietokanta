@@ -3,6 +3,7 @@ import { MESSAGE } from 'triple-beam'
 import { createLogger, format, transports } from 'winston'
 import {
   bold,
+  gray,
   red,
   redBright,
   yellow,
@@ -11,7 +12,7 @@ import {
   magenta,
   type Color,
 } from 'colorette'
-import { isString, omit } from 'es-toolkit'
+import { omit } from 'es-toolkit'
 import { formatValue } from './utils/colorized-json'
 
 function indent(str: string): string {
@@ -40,11 +41,12 @@ const levelFormatter = (level: string, uppercase: boolean) => {
 }
 
 const cliJson = format((info) => {
-  const { provider = 'internal', level, message, errorStack, messages, durationMs, method, path, timestamp, ...rest } = info
+  const { instanceId, connectionId, provider = 'internal', level, message, errorStack, messages, durationMs, method, path, timestamp, ...rest } = info
   const msgStr = typeof message === 'string' ? message : formatValue(message as string | object)
-  const ts = timestamp ?? new Date().toISOString()
+  const ts = timestamp as string ?? new Date().toISOString()
   const durationStr =  durationMs ?  ` (${bold(`${durationMs}ms`)})` : ''
-  let msg = `${ts} ${levelFormatter(level, true)}: ${bold(magenta(provider as string))} -> ${bold(msgStr)}${durationStr}`
+  const connectionStr = connectionId ? `(${gray(connectionId as string)})` : ''
+  let msg = `${bold(ts)} ${levelFormatter(level, true)}: ${bold(magenta(provider as string))}${connectionStr} -> ${bold(msgStr)}${durationStr}`
 
   const json = formatObject(rest)
   if (json) msg += ' '+indent(json).trimStart()
