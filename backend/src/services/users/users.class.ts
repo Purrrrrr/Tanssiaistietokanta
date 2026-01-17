@@ -13,7 +13,6 @@ export interface UserServiceOptions {
 
 export interface UserParams extends Params<UserQuery> {}
 
-// This is a skeleton for a custom service class. Remove or add the methods you need here
 export class UserService<ServiceParams extends UserParams = UserParams>
   extends NeDBService<User, UserData, ServiceParams, UserPatch>
 {

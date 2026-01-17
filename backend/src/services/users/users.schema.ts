@@ -16,6 +16,7 @@ export const userSchema = Type.Object(
     name: Type.String(),
     username: Type.String(),
     password: Type.Optional(Type.String()),
+    sessionId: Type.Optional(Id()),
     email: Type.Optional(Type.String()),
     googleId: Type.Optional(Type.String()),
     githubId: Type.Optional(Type.String())
@@ -24,11 +25,18 @@ export const userSchema = Type.Object(
 )
 export type User = Static<typeof userSchema>
 export const userValidator = getValidator(userSchema, dataValidator)
-export const userResolver = resolve<User, HookContext<UserService>>({})
+export const userResolver = resolve<User, HookContext<UserService>>({
+  sessionId: async (_: string | undefined, user: User, ctx) => {
+    if (!ctx.params.user || ctx.params.user._id !== user._id) {
+      return undefined
+    }
+    return ctx.params.sessionId
+  },
+})
 
 export const userExternalResolver = resolve<User, HookContext<UserService>>({
   // The password should never be visible externally
-  password: async () => undefined
+  password: async () => undefined,
 })
 
 // Schema for creating new entries

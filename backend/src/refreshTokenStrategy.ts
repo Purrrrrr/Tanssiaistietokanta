@@ -63,10 +63,6 @@ export class RefreshTokenStrategy implements AuthenticationStrategy {
   }
 }
 
-export const parseCookies = (context: HookContext) => {
-  context.params.cookies = parse(context.params.headers?.cookie || '')
-}
-
 export const setRefreshTokenCookie = (auth: AuthenticationService): HookFunction<Application, AuthenticationService> => {
   const config = {
     ...defaultRefreshTokenOptions,
@@ -77,10 +73,12 @@ export const setRefreshTokenCookie = (auth: AuthenticationService): HookFunction
   return async (context: HookContext) => {
     if (!context.http) return
     const sessionService = context.app.service('sessions')
-    const existingToken = context.params.cookies?.refreshToken
-    const [existingSession] = await sessionService.find({ query: {
-      token: existingToken,
-    }})
+    const existingToken = context.params.cookies?.refreshToken as string | undefined
+    const [existingSession] = existingToken
+      ? await sessionService.find({ query: {
+        token: existingToken,
+      }})
+      : [null]
 
     let newToken: string
     if (existingSession) {
@@ -103,7 +101,10 @@ export const clearRefreshTokenCookie = (): HookFunction<Application, Authenticat
   return async (context: HookContext) => {
     if (!context.http) return
     const sessionService = context.app.service('sessions')
-    const existingToken = context.params.cookies?.refreshToken
+    const existingToken = context.params.cookies?.refreshToken as string | undefined
+    if (!existingToken) {
+      return
+    }
     const [existingSession] = await sessionService.find({ query: {
       token: existingToken,
     }})

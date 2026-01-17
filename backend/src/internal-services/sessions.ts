@@ -5,8 +5,8 @@ import { chunk } from "es-toolkit";
 declare module '@feathersjs/feathers' {
   interface Params {
     cookies?: Record<string, string | undefined>
-    instanceId: string
-    sessionId: string
+    instanceId?: string
+    sessionId?: string
     IP?: string
   }
 }
