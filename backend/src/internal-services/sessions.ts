@@ -1,6 +1,7 @@
 import { Application, HookContext } from "../declarations";
 import { parse, serialize } from 'cookie'
 import { Middleware } from "koa";
+import createId from '../utils/random-id'
 
 declare module '@feathersjs/feathers' {
   interface Params {
@@ -102,12 +103,4 @@ function makeCookie(name: string, value: string, httpOnly = true) {
       maxAge: YEAR,
     },
   )
-}
-
-function createId(): string {
-  const uuid = crypto.randomUUID()
-    .replaceAll('-', '')
-    .slice(0, 10)
-  // Add dashes between every 2 characters for readability
-  return uuid.match(/.{1,2}/g)!.join('-').toUpperCase()
 }

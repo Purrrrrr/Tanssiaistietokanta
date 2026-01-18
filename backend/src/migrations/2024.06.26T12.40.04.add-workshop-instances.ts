@@ -1,5 +1,5 @@
 import { MigrationFn } from '../umzug.context';
-import guid from '../utils/guid';
+import randomId from '../utils/random-id';
 
 export const up: MigrationFn = async params => {
   const eventsDb = params.context.getModel('events')
@@ -14,7 +14,7 @@ export const up: MigrationFn = async params => {
         ...workshop,
         instances: [
           {
-            _id: guid(),
+            _id: randomId(),
             danceIds,
             description: '',
             abbreviation: '',
