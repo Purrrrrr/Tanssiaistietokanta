@@ -19,7 +19,7 @@ import { channels } from './channels'
 import { addErrorStatusCode } from './hooks/addErrorStatusCode'
 import { MaxFileSize } from './services/files/files.class'
 import { logger, withRequestLogger } from './requestLogger'
-import sessions, { socketIOSessionCookieMiddleware } from './internal-services/sessions'
+import sessions, { restSessionCookieMiddleware, socketIOSessionCookieMiddleware } from './internal-services/sessions'
 
 const app: Application = koa(feathers())
 
@@ -31,6 +31,7 @@ app.set('importExtension', __filename.split('.').at(-1) ?? '.js')
 app.use(cors())
 app.use(serveStatic(app.get('public')))
 app.use(errorHandler())
+app.use(restSessionCookieMiddleware)
 app.use(parseAuthentication())
 
 const uploadTmp = app.get('uploadTmp')

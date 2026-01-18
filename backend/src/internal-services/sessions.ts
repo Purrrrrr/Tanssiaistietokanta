@@ -1,6 +1,6 @@
 import { Application, HookContext } from "../declarations";
 import { parse, serialize } from 'cookie'
-import { chunk } from "es-toolkit";
+import { Middleware } from "koa";
 
 declare module '@feathersjs/feathers' {
   interface Params {
@@ -32,39 +32,35 @@ export function socketIOSessionCookieMiddleware(headers: any, request: { headers
   }
 }
 
+export const restSessionCookieMiddleware: Middleware = async (ctx, next) => {
+  const { request, res } = ctx
+  const cookie = request.headers.cookie || ''
+  const cookies = parse(cookie)
+  let sessionId = cookies[SESSION_COOKIE_NAME]
+  if (!sessionId) {
+    sessionId = createId()
+    res.setHeader('Set-Cookie', getNewSessionCookies(sessionId))
+  }
+
+  // Set stuff to feathers context params
+  const params = ctx.feathers ??= {}
+  params.IP = request.ip
+  params.cookies = cookies
+  params.sessionId = sessionId
+  await next()
+}
+
 export default function setupSessions(app: Application) {
   const instanceId = createId()
   app.set('instanceId', instanceId)
-
-  app.use(async (ctx, next) => {
-    const { request, res } = ctx
-    const cookie = request.headers.cookie || ''
-    const cookies = parse(cookie)
-    let sessionId = cookies[SESSION_COOKIE_NAME]
-    if (!sessionId) {
-      sessionId = createId()
-      res.setHeader('Set-Cookie', getNewSessionCookies(sessionId))
-    }
-
-    // Set stuff to feathers context params
-    const params = ctx.feathers ??= {}
-    params.IP = request.ip
-    params.cookies = cookies
-    params.sessionId = sessionId
-    await next()
-  })
   app.on('login', (_authResult, _params, ctx: HookContext) => {
-    if (!ctx.http) return
-    ctx.http.headers ??= {}
-    ctx.http.headers['Set-Cookie'] = makeCookie(LOGGED_IN_COOKIE_NAME, YES, YEAR)
+    setCookies(ctx, makeCookie(LOGGED_IN_COOKIE_NAME, YES, false))
   })
   app.on('logout', (_authResult, _params, ctx: HookContext) => {
-    if (!ctx.http) return
-    ctx.http.headers ??= {}
-    ctx.http.headers['Set-Cookie'] = [
-      makeCookie(LOGGED_IN_COOKIE_NAME, NO, YEAR),
-      makeCookie(SESSION_COOKIE_NAME, '', YEAR)
-    ]
+    setCookies(ctx, [
+      makeCookie(LOGGED_IN_COOKIE_NAME, NO, false),
+      makeCookie(SESSION_COOKIE_NAME, '')
+    ])
   })
   app.on('connection', (connection) => {
     const cookies = parse(connection.headers?.cookie || '')
@@ -76,23 +72,35 @@ export default function setupSessions(app: Application) {
 
 function getNewSessionCookies(sessionId: string) {
   return [
-    makeCookie(SESSION_COOKIE_NAME, sessionId, YEAR),
-    makeCookie(LOGGED_IN_COOKIE_NAME, NO, YEAR),
+    makeCookie(SESSION_COOKIE_NAME, sessionId),
+    makeCookie(LOGGED_IN_COOKIE_NAME, NO, false),
   ]
 }
 
-const cookiesSecure = process.env.CORS_ALLOW_LOCALHOST !== 'true'
-const cookieOpts = {
-  path: '/',
-  httpOnly: true,
-  secure: cookiesSecure,
+function setCookies(ctx: HookContext, cookies: string | string[]) {
+  if (!ctx.http) return
+  ctx.http.headers ??= {}
+  const { headers, headers: { ['Set-Cookie']: setCookie } } = ctx.http
+
+  if (setCookie) {
+    const cookieList = Array.isArray(cookies) ? cookies : [cookies]
+    const existingCookies = Array.isArray(setCookie) ? setCookie : [setCookie]
+    headers['Set-Cookie'] = [...existingCookies, ...cookieList]
+    return
+  } else {
+    headers['Set-Cookie'] = cookies
+  }
 }
 
-function makeCookie(name: string, value: string, maxAge?: number) {
+function makeCookie(name: string, value: string, httpOnly = true) {
   return serialize(
     name,
-    value,
-    { ...cookieOpts, maxAge, },
+    value, { 
+      path: '/',
+      secure: process.env.CORS_ALLOW_LOCALHOST !== 'true',
+      httpOnly,
+      maxAge: YEAR,
+    },
   )
 }
 

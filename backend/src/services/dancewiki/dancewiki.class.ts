@@ -74,7 +74,6 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
   }
 
   backgroundFetch = withRequestLogging('dancewikis', 'backgroundFetch', async(): Promise<void> => {
-    logger.info('Updating dance wiki entries')
     const MAX_PAGES_TO_FETCH = 50
 
     const pageCount = await this.storageService.getModel().countAsync({})
