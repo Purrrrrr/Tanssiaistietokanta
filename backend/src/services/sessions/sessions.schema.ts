@@ -14,6 +14,7 @@ export const sessionSchema = Type.Object(
   {
     _id: Id(),
     userId: Id(),
+    sessionId: Type.String(),
     token: Type.String(),
     _createdAt: Type.String(),
     _updatedAt: Type.String(),
@@ -39,6 +40,7 @@ export const sessionDataValidator = getValidator(sessionDataSchema, dataValidato
 export const newSessionDataResolver = resolve<Session, HookContext<SessionsService>>({
   _createdAt: () => new Date().toISOString(),
   userId: (_value, _session, context) => context.params?.user?._id,
+  sessionId: (_, __, ctx) => ctx.params.sessionId,
   userAgent: (_value, session, context) => {
     return context.params.headers?.['user-agent'] ?? session.userAgent ?? ''
   },
