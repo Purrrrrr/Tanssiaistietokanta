@@ -8,6 +8,7 @@ type Event implements Versionable {
   _versionId: String
   _versionNumber: String
   _updatedAt: String!
+  allowedViewers: [String!]!
   versionHistory: VersionHistory!
   name: String!
   beginDate: String!
@@ -91,12 +92,14 @@ input EventInput {
   name: String!
   beginDate: String!
   endDate: String!
+  allowedViewers: [String!]!
 }
 
 input EventPatchInput {
   name: String
   beginDate: String
   endDate: String
+  allowedViewers: [String!]
 }
 
 enum IntroductionProgramType {

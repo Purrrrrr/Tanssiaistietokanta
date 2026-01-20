@@ -18,6 +18,7 @@ export const eventsSchema = Type.Object(
     _versionNumber: Type.Number(),
     _updatedAt: Type.String(),
     _createdAt: Type.String(),
+    allowedViewers: Type.Array(Id()),
     name: Name(),
     beginDate: Date(),
     endDate: Date(),

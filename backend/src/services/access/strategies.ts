@@ -3,6 +3,7 @@ import { User } from "../users/users.class";
 import { Access, ServiceName } from "./access.schema";
 
 type ServiceParams<Service extends ServiceName> = Parameters<ServiceClass<Service>['find']>[0]
+type ServiceEntity<Service extends ServiceName> = Awaited<ReturnType<ServiceClass<Service>['get']>>
 type ServiceClass<Service extends ServiceName> = ServiceTypes[Service]
 
 export interface PermissionQuery {
@@ -53,6 +54,32 @@ export const AllowLoggedInStrategy: AccessControlStrategy<ServiceName> = {
   async checkPermission({ service, action, user }) {
     return {
       service, action, allowed: user !== undefined, validity: 'global', appliesTo: 'user'
+    }
+  }
+}
+
+export const AllowEveryone = 'everyone'
+export const AllowLoggedIn = 'logged-in';
+export const allowUser = (userId: string) => `user:${userId}`;
+
+export function entityFieldBasedListingStrategy<Service extends ServiceName>(field: keyof ServiceEntity<Service>): AccessControlStrategy<Service> {
+  return {
+    async getListQuery({ user }) {
+      return {
+        [field]: {
+          $in: user
+            ? [allowUser(user._id), AllowLoggedIn, AllowEveryone]
+            : [AllowEveryone],
+        },
+      }
+    },
+    async checkPermission({ service, action }) {
+      if (action !== 'find' && action !== 'get') {
+        throw new Error('entityFieldBasedLlstingStrategy can only be used for find and get actions')
+      }
+      return {
+        service, action, allowed: true, validity: 'global', appliesTo: 'user'
+      }
     }
   }
 }
