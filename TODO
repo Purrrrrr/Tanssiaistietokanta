@@ -256,6 +256,13 @@
   Auth Part 2
   * Entity specific rights: events public/private
     Ability to query all rights for service or service & entity
+    Ability to use data and query in access strategy
+    Reload event list when access rights change
+    Event edit rights
+    Event access right edit rights ("manage" action)
+    File rights.
+    Make sure files can be marked used/unused
+    Workshop rights
     Frontend rights querying
     Some own component or system for auth needing pages
     Test that versions still work
