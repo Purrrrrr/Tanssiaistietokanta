@@ -1,11 +1,11 @@
 import { useState } from 'react'
-import { Trash } from 'libraries/ui/icons'
 
 import { booleanProp, numberProp, type Showcase, showcase } from './types'
 
 import FormUiShowcase from 'libraries/formsV2/UiShowcase'
 import { Alert, Dialog } from 'libraries/overlays'
 import { AutosizedSection, Button, Callout, RegularLink, showToast, Tab, Tabs } from 'libraries/ui'
+import { Trash } from 'libraries/ui/icons'
 import { ColoredTag, TAG_COLOR_COUNT } from 'components/widgets/ColoredTag'
 
 import { ShowcaseContainer } from './ShowcaseContainer'

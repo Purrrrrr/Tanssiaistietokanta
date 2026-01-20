@@ -1,10 +1,10 @@
 import { useId } from 'react'
-import { CaretDown, DocumentOpen, Link as LinkIcon, TimelineEvents } from 'libraries/ui/icons'
 
 import { DanceWithEvents } from 'types'
 
 import { Select } from 'libraries/formsV2/components/inputs'
 import { Button, Link } from 'libraries/ui'
+import { CaretDown, DocumentOpen, Link as LinkIcon, TimelineEvents } from 'libraries/ui/icons'
 import { useT } from 'i18n'
 
 export function DanceIsUsedIn({ events, minimal, wikipageName }: Pick<DanceWithEvents, 'events'> & { minimal?: boolean, wikipageName?: string | null }) {

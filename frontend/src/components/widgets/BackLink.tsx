@@ -1,6 +1,5 @@
-import { ArrowLeft } from 'libraries/ui/icons'
-
 import { Link } from 'libraries/ui'
+import { ArrowLeft } from 'libraries/ui/icons'
 
 interface BackLinkProps {
   children: React.ReactElement | string

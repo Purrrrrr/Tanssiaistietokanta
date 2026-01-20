@@ -1,8 +1,8 @@
 import React, { useCallback, useMemo, useRef } from 'react'
-import { Cross } from 'libraries/ui/icons'
 
 import { ActionButton as Button, DragHandle } from 'libraries/forms'
 import { Card, ColorClass, H2 } from 'libraries/ui'
+import { Cross } from 'libraries/ui/icons'
 import { DanceProgramChooser } from 'components/event/DanceProgramChooser'
 import {
   DanceProgramPath,

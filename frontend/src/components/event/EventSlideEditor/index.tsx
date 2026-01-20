@@ -1,6 +1,5 @@
 import React, { ReactNode } from 'react'
 import { useParams } from 'react-router-dom'
-import { Cross, Link as LinkIcon } from 'libraries/ui/icons'
 
 import { Dance } from 'types'
 
@@ -8,6 +7,7 @@ import { useDance } from 'services/dances'
 
 import { DragHandle, MarkdownEditor, SyncState, SyncStatus } from 'libraries/forms'
 import { Callout, H2, Link } from 'libraries/ui'
+import { Cross, Link as LinkIcon } from 'libraries/ui/icons'
 import { InstructionEditor } from 'components/dance/DanceEditor'
 import { Field as DanceField, Form as DanceForm, Input as DanceInput, useDanceEditorState } from 'components/dance/DanceForm'
 import { LinkToDanceWiki } from 'components/dance/DanceWikiPreview'

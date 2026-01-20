@@ -1,9 +1,9 @@
 import { useMemo } from 'react'
-import { Move } from 'libraries/ui/icons'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 
 import { Button } from 'libraries/ui'
+import { Move } from 'libraries/ui/icons'
 
 import { useFormTranslation } from '../../../localization'
 

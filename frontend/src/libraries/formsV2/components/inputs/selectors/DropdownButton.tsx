@@ -1,9 +1,9 @@
 import { type ReactNode } from 'react'
-import { DoubleCaretVertical } from 'libraries/ui/icons'
 
 import { DropdownButtonDownshiftProps, SelectorProps } from './types'
 
 import { Button } from 'libraries/ui'
+import { DoubleCaretVertical } from 'libraries/ui/icons'
 
 import { useFormTranslation } from '../../../localization'
 

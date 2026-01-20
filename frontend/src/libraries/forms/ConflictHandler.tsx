@@ -1,10 +1,10 @@
-import { CaretDown } from 'libraries/ui/icons'
 import classNames from 'classnames'
 
 import { ConflictData } from './types'
 
 import MenuButton from 'libraries/formsV2/components/MenuButton'
 import { Button } from 'libraries/ui'
+import { CaretDown } from 'libraries/ui/icons'
 
 import { useFormStrings } from './formContext'
 

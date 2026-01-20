@@ -1,6 +1,6 @@
-import { InfoSign, Music, Time } from 'libraries/ui/icons'
 import classNames from 'classnames'
 
+import { InfoSign, Music, Time } from 'libraries/ui/icons'
 import { EventProgramItem } from 'components/event/EventProgramForm'
 import { useT } from 'i18n'
 

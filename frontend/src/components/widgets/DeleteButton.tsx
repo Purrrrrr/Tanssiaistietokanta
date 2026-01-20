@@ -1,7 +1,6 @@
-import { Trash } from 'libraries/ui/icons'
-
 import { useAlerts } from 'libraries/overlays'
 import { Button, ButtonProps } from 'libraries/ui'
+import { Trash } from 'libraries/ui/icons'
 import { useT } from 'i18n'
 
 interface DeleteButtonProps extends ButtonProps {

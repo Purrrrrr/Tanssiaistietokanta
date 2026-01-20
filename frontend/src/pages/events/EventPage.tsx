@@ -11,6 +11,7 @@ import { Button, Card, Collapse, H2, Link } from 'libraries/ui'
 import { JSONPatch } from 'components/event/EventProgramForm/patchStrategy'
 import { FileList } from 'components/files/FileList'
 import { useGlobalLoadingAnimation } from 'components/LoadingState'
+import AllowedViewersSelector from 'components/rights/AllowedViewersSelector'
 import { RequirePermissions } from 'components/rights/RequirePermissions'
 import { VersionedPageTitle } from 'components/versioning/VersionedPageTitle'
 import { VersionSidebarToggle } from 'components/versioning/VersionSidebarToggle'
@@ -18,7 +19,6 @@ import { DeleteButton } from 'components/widgets/DeleteButton'
 import { NavigateButton } from 'components/widgets/NavigateButton'
 import { newInstance, WorkshopEditor } from 'components/WorkshopEditor'
 import { useFormatDate, useFormatDateTime, useT, useTranslation } from 'i18n'
-import AllowedViewersSelector from 'components/rights/AllowedViewersSelector'
 
 type Workshop = Event['workshops'][0]
 

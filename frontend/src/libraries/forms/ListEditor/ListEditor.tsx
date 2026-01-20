@@ -1,5 +1,4 @@
 import React, { useContext, useId, useMemo } from 'react'
-import { Move } from 'libraries/ui/icons'
 import {
   useDroppable,
 } from '@dnd-kit/core'
@@ -14,6 +13,7 @@ import { Entity, ListEditorDroppableData, ListEditorItemData, ListItemComponent 
 import { FieldComponentProps, OnChangeHandler, TypedStringPath } from '../types'
 
 import { Button } from 'libraries/ui'
+import { Move } from 'libraries/ui/icons'
 
 import { useFormStrings } from '../formContext'
 import ListEditorContext, { ListEditorMoveContext } from './ListEditorContext'

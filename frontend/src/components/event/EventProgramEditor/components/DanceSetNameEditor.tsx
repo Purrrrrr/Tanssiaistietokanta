@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { Cross, Edit } from 'libraries/ui/icons'
 
 import { ActionButton as Button } from 'libraries/forms'
+import { Cross, Edit } from 'libraries/ui/icons'
 import { Input, useValueAt } from 'components/event/EventProgramForm'
 import { useTranslation } from 'i18n'
 

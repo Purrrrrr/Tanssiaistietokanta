@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import { Cross, Edit } from 'libraries/ui/icons'
 
 import { ConflictHandler } from 'libraries/forms/ConflictHandler'
 import { formFor, withDefaults } from 'libraries/formsV2'
 import { Button } from 'libraries/ui'
+import { Cross, Edit } from 'libraries/ui/icons'
 
 import { AutocompleteInput, SegmentedInput, Select, TextInput } from './components/inputs'
 

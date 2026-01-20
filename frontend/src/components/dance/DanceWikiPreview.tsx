@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { ChevronDown, ChevronUp, Link as LinkIcon } from 'libraries/ui/icons'
 
 import { Dance } from 'types'
 
@@ -7,6 +6,7 @@ import { useFetchDanceFromWiki } from 'services/dancewiki'
 
 import { useFormatDateTime } from 'libraries/i18n/dateTime'
 import { Button, Collapse, RegularLink } from 'libraries/ui'
+import { ChevronDown, ChevronUp, Link as LinkIcon } from 'libraries/ui/icons'
 import Markdown from 'libraries/ui/Markdown'
 import { useT } from 'i18n'
 

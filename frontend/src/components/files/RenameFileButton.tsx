@@ -1,11 +1,11 @@
 import { useState } from 'react'
-import { Edit } from 'libraries/ui/icons'
 
 import { UploadedFile, useRenameFile } from 'services/files'
 
 import { TextInput } from 'libraries/formsV2/components/inputs'
 import { Dialog, useAlerts } from 'libraries/overlays'
 import { Button, showToast } from 'libraries/ui'
+import { Edit } from 'libraries/ui/icons'
 import { Translator, useT } from 'i18n'
 
 export function RenameFileButton({ file }: {

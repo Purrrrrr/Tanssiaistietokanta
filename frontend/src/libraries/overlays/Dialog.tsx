@@ -1,9 +1,9 @@
 import React, { useEffect, useLayoutEffect, useRef } from 'react'
-import { Cross } from 'libraries/ui/icons'
 import classNames from 'classnames'
 
 import { useShouldRender } from 'libraries/common/useShouldRender'
 import { Button } from 'libraries/ui'
+import { Cross } from 'libraries/ui/icons'
 
 export type DialogProps = {
   isOpen: boolean

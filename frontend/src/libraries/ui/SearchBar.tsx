@@ -1,4 +1,5 @@
 import { MouseEvent } from 'react'
+
 import { Cross, Search } from 'libraries/ui/icons'
 
 import { Button } from './Button'

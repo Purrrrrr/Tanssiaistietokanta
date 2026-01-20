@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Cross, Edit } from 'libraries/ui/icons'
 import classNames from 'classnames'
 
 import { useRight } from 'libraries/access-control'
 import { Button } from 'libraries/ui'
+import { Cross, Edit } from 'libraries/ui/icons'
 import { EventSlide, EventSlideProps, startSlideId, useEventSlides } from 'components/event/EventSlide'
 import { LoadingState } from 'components/LoadingState'
 import { RequirePermissions } from 'components/rights/RequirePermissions'
