@@ -253,6 +253,7 @@
   * Auth strategy
   * Session ID (not easy, replace with connection id)
   * Connection ID
+* Load file components only when user has the rights. Lazy loading OR don't fetch files when no rights
   Auth Part 2
   * Entity specific rights: events public/private
     Ability to query all rights for service or service & entity
@@ -273,7 +274,6 @@
     Nicer logout menu keyboard a11y
     Allow creating users with some token? Invite functionality?
 
-  Load file components only when user has the rights. Lazy loading OR don't fetch files when no rights
   Use ItemList in setEditors
   
   Login icon?
