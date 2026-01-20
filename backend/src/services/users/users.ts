@@ -77,6 +77,7 @@ export const user = (app: Application) => {
       find: [authenticate('jwt')],
       get: [authenticate('jwt')],
       create: [
+        authenticate('jwt'),
         async (ctx, next) => {
           const createDefault = ctx.data && 'createDefault' in ctx.data
           if (createDefault) {
