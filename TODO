@@ -254,13 +254,14 @@
   * Session ID (not easy, replace with connection id)
   * Connection ID
 * Load file components only when user has the rights. Lazy loading OR don't fetch files when no rights
+* Centralize icons for replacement
   Auth Part 2
   * Entity specific rights: events public/private
     Ability to query all rights for service or service & entity
     Ability to use data and query in access strategy
     Reload event list when access rights change
     Event edit rights
-    Event access right edit rights ("manage" action)
+    Event access edit rights ("manage" action)
     File rights.
     Make sure files can be marked used/unused
     Workshop rights
@@ -275,9 +276,17 @@
     Allow creating users with some token? Invite functionality?
 
   Use ItemList in setEditors
+
+  Bundle size reducing
+    Replace Apollo
+    Load translations async as json
+    Load translations in parts as-needed
+    Lazy load
+      Icons?
+      Workshop edit form
+      Delete button?
   
   Login icon?
-  Load icons lazily? Centralize them somewhere for replacement
   Ability to hide and publish events (rights management)
 
   Forms
@@ -344,6 +353,3 @@
   Typed backend queries
   Character count for dance instructions
     Maximum?
-
-  In the future?
-    Remove apollo??
