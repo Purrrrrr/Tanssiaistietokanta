@@ -53,7 +53,7 @@ export const events = (app: Application) => {
     }
   })
 
-  app.service('access').setStrategy('dances', composedStrategy({
+  app.service('access').setStrategy('events', composedStrategy({
     find: AllowAllStrategy,
     get: AllowAllStrategy,
     default: AllowLoggedInStrategy,

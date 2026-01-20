@@ -127,7 +127,7 @@ export const workshops = (app: Application) => {
     ]
   })
 
-  app.service('access').setStrategy('dances', composedStrategy({
+  app.service('access').setStrategy('workshops', composedStrategy({
     find: AllowAllStrategy,
     get: AllowAllStrategy,
     default: AllowLoggedInStrategy,
