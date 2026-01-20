@@ -2,7 +2,7 @@ import { updateDependencies, registerDependencies, clearDependencies } from './i
 import { loadDependencyTypes } from './internal-services/dependencyRelations'
 import type { Application, ServiceTypes } from './declarations'
 
-const skippedServices = ['authentication'] as const
+const skippedServices = ['authentication', 'rights'] as const
 
 type ServiceName = Exclude<keyof ServiceTypes, typeof skippedServices[number]>
 const serviceDependencyRelations : Partial<Record<ServiceName, any>> = {}

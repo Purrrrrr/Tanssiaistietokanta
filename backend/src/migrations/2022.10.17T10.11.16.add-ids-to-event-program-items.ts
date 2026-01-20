@@ -1,6 +1,6 @@
 import * as L from 'partial.lenses';
 import R from 'ramda';
-import guid from '../utils/guid';
+import guid from '../utils/random-id';
 import { MigrationFn } from '../umzug.context';
 
 export const up: MigrationFn = async params => {
