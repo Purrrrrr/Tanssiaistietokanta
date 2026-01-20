@@ -1,5 +1,4 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/service.html
-import { authenticate } from '@feathersjs/authentication'
 import { hooks as schemaHooks } from '@feathersjs/schema'
 import { omit } from 'ramda'
 
@@ -18,6 +17,7 @@ import type { Application } from '../../declarations'
 import { EventsService, getOptions } from './events.class'
 import { eventsPath, eventsMethods } from './events.shared'
 import { mergeJsonPatch, SupportsJsonPatch } from '../../hooks/merge-json-patch'
+import { AllowAllStrategy, AllowLoggedInStrategy, composedStrategy } from '../access/strategies'
 
 export * from './events.class'
 export * from './events.schema'
@@ -36,10 +36,6 @@ export const events = (app: Application) => {
   app.service(eventsPath).hooks({
     around: {
       all: [schemaHooks.resolveExternal(eventsExternalResolver), schemaHooks.resolveResult(eventsResolver)],
-      create: [authenticate('jwt')],
-      update: [authenticate('jwt')],
-      patch: [authenticate('jwt')],
-      remove: [authenticate('jwt')],
     },
     before: {
       all: [mergeJsonPatch(omit(['_id', '_createdAt', '_updatedAt']) as (data: unknown) => unknown), schemaHooks.validateQuery(eventsQueryValidator), schemaHooks.resolveQuery(eventsQueryResolver)],
@@ -56,6 +52,12 @@ export const events = (app: Application) => {
       all: []
     }
   })
+
+  app.service('access').setStrategy('dances', composedStrategy({
+    find: AllowAllStrategy,
+    get: AllowAllStrategy,
+    default: AllowLoggedInStrategy,
+  }))
 }
 
 // Add this service to the service type index

@@ -1,5 +1,4 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/service.html
-import { authenticate } from '@feathersjs/authentication'
 import { hooks as schemaHooks } from '@feathersjs/schema'
 import { uniq } from 'ramda'
 
@@ -20,6 +19,7 @@ import { WorkshopsService, getOptions } from './workshops.class'
 import { workshopsPath, workshopsMethods } from './workshops.shared'
 import { defaultChannels, withoutCurrentConnection } from '../../utils/defaultChannels'
 import { getDependenciesFor } from '../../internal-services/dependencies'
+import { AllowAllStrategy, AllowLoggedInStrategy, composedStrategy } from '../access/strategies'
 import getFromData from '../../utils/getFromData'
 
 export * from './workshops.class'
@@ -68,10 +68,6 @@ export const workshops = (app: Application) => {
         schemaHooks.resolveExternal(workshopsExternalResolver),
         schemaHooks.resolveResult(workshopsResolver)
       ],
-      create: [authenticate('jwt')],
-      update: [authenticate('jwt')],
-      patch: [authenticate('jwt')],
-      remove: [authenticate('jwt')],
     },
     before: {
       all: [
@@ -130,6 +126,12 @@ export const workshops = (app: Application) => {
       ...defaultChannels(app, context)
     ]
   })
+
+  app.service('access').setStrategy('dances', composedStrategy({
+    find: AllowAllStrategy,
+    get: AllowAllStrategy,
+    default: AllowLoggedInStrategy,
+  }))
 }
 
 // Add this service to the service type index

@@ -1,3 +1,4 @@
+import { access } from './access/access'
 import { sessions } from './sessions/sessions'
 import { user } from './users/users'
 import { file } from './files/files'
@@ -12,6 +13,7 @@ import { dances } from './dances/dances'
 import type { Application } from '../declarations'
 
 export const services = (app: Application) => {
+  app.configure(access)
   app.configure(sessions)
   app.configure(user)
   app.configure(file)

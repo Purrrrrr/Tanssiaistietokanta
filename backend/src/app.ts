@@ -20,6 +20,7 @@ import { addErrorStatusCode } from './hooks/addErrorStatusCode'
 import { MaxFileSize } from './services/files/files.class'
 import { logger, withRequestLogger } from './requestLogger'
 import sessions, { restSessionCookieMiddleware, socketIOSessionCookieMiddleware } from './internal-services/sessions'
+import { checkAccess } from './services/access/hooks'
 
 const app: Application = koa(feathers())
 
@@ -81,7 +82,7 @@ app.configure(sessions)
 // Register hooks that run on all service methods
 app.hooks({
   around: {
-    all: [logRequest({ ignoredPaths: ['channel-connections']}), addErrorStatusCode]
+    all: [logRequest({ ignoredPaths: ['channel-connections']}), checkAccess, addErrorStatusCode]
   },
   before: {
     remove: [preventRemovingOfUsedItems],
