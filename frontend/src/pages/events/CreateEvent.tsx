@@ -7,6 +7,7 @@ import { DateRangeField, formFor, SubmitButton } from 'libraries/forms'
 import { Breadcrumb } from 'libraries/ui'
 import { useGlobalLoadingAnimation } from 'components/LoadingState'
 import { PageTitle } from 'components/PageTitle'
+import AllowedViewersSelector, { AllowEveryone } from 'components/rights/AllowedViewersSelector'
 import { RequirePermissions } from 'components/rights/RequirePermissions'
 import { useT } from 'i18n'
 
@@ -14,11 +15,13 @@ interface EventForm {
   name: string
   beginDate: string
   endDate: string
+  allowedViewers: string[]
 }
 
 const {
   Form,
   Input,
+  Field,
 } = formFor<EventForm>()
 
 export default function CreateEventForm() {
@@ -29,7 +32,7 @@ export default function CreateEventForm() {
     onCompleted: (data) => navigate('/events/' + data.createEvent._id),
     refetchQueries: ['getEvents'],
   })
-  const [event, setEvent] = useState({ name: '', beginDate: '', endDate: '' })
+  const [event, setEvent] = useState({ name: '', beginDate: '', endDate: '', allowedViewers: [AllowEveryone] })
 
   return <>
     <Breadcrumb text={t('newEventBreadcrumb')} />
@@ -45,6 +48,7 @@ export default function CreateEventForm() {
             endPath="endDate"
             required
           />
+          <Field path="allowedViewers" label={t('allowedViewers')} component={AllowedViewersSelector} />
         </div>
         <SubmitButton text={t('create')} />
       </Form>

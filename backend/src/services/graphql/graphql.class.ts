@@ -11,6 +11,7 @@ import type { Application } from '../../declarations'
 import { ErrorWithStatus } from '../../hooks/addErrorStatusCode';
 import { GraphQLError } from 'graphql';
 import { addLogData } from '../../requestLogger';
+import { withAccessParams } from '../access/hooks';
 
 type Graphql = any
 type GraphqlData = any
@@ -74,7 +75,7 @@ export class GraphqlService<ServiceParams extends GraphqlParams = GraphqlParams>
     addLogData('graphqlQuery', this.getQueryName(query))
     addLogData('variables', query.variables)
     const server = await this.apolloServerPromise
-    const res = await server.executeOperation(query, { contextValue })
+    const res = await withAccessParams({ user: _params.user }, () => server.executeOperation(query, { contextValue }))
     const { body } = res
     if (body.kind === 'single') {
       if (body.singleResult.errors) {

@@ -101,7 +101,6 @@ export function withRequestLogger<T>(
 ): Promise<T> {
   const existingLogger = loggerStorage.getStore()
   if (existingLogger) {
-    console.log('request already exists, skipping logger init')
     return fn(existingLogger)
   }
 

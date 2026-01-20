@@ -31,6 +31,10 @@ export const fi = {
   dateFormat: 'dd.MM.yyyy',
   dateTimeFormat: 'dd.MM.yyyy HH:mm',
   domain: {
+    allowedViewers: {
+      everyone: 'Kaikki',
+      loggedIn: 'Kirjautuneet käyttäjät',
+    },
     dance: {
       name: 'Nimi',
       description: 'Kuvaus ja lyhyt ohje',
@@ -362,6 +366,7 @@ export const fi = {
         eventDate: 'Tapahtuman ajankohta',
         beginDate: 'Alkaa',
         endDate: 'Loppuu',
+        allowedViewers: 'Näkyvyys',
       },
       eventPage: {
         loginToEdit: 'Kirjaudu muokataksesi tapahtumaa',
@@ -392,6 +397,7 @@ export const fi = {
         },
         eventDate: 'Tapahtuman ajankohta',
         ballDateTime: 'Tanssiaisten ajankohta',
+        allowedViewers: 'Näkyvyys',
         files: 'Tapahtumaan liittyvät tiedostot',
       },
       eventProgramPage: {

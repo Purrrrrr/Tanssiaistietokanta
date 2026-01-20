@@ -15,10 +15,13 @@ export function arrayPatch<T extends Entity>(original: T[], changed: T[], toJSON
   )
   const commonIds = new Set([...originalIds, ...modifiedIds])
 
+  const isPlainArray = [...original, ...changed].some(i => typeof i === 'string' || typeof i === 'number')
+  const pathPostFix = isPlainArray ? '' : '/_id'
+
   function testId(index, id) {
     patch.push({
       op: 'test',
-      path: `${pathBase}/${index}/_id`,
+      path: `${pathBase}/${index}${pathPostFix}`,
       value: id,
     })
   }

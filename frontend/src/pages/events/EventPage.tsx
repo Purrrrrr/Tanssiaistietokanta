@@ -18,12 +18,14 @@ import { DeleteButton } from 'components/widgets/DeleteButton'
 import { NavigateButton } from 'components/widgets/NavigateButton'
 import { newInstance, WorkshopEditor } from 'components/WorkshopEditor'
 import { useFormatDate, useFormatDateTime, useT, useTranslation } from 'i18n'
+import AllowedViewersSelector from 'components/rights/AllowedViewersSelector'
 
 type Workshop = Event['workshops'][0]
 
 const {
   Input,
   Form,
+  Field,
 } = formFor<Event>()
 
 const eventVersionLink = (id: string, versionId?: null | string) => versionId
@@ -103,8 +105,8 @@ function EventDetailsForm({ event }: { event: Event }) {
   return <Form {...formProps}>
     <Card>
       <SyncStatus state={state} floatRight />
+      <Input label={t('eventName')} path="name" required containerClassName="w-100" />
       <div className="flex gap-6">
-        <Input label={t('eventName')} path="name" required containerClassName="w-100" />
         <DateRangeField<Event>
           id="eventDate"
           label={t('eventDate')}
@@ -120,6 +122,7 @@ function EventDetailsForm({ event }: { event: Event }) {
           maxDate={formProps.value.endDate}
         />
       </div>
+      <Field path="allowedViewers" label={t('allowedViewers')} component={AllowedViewersSelector} />
     </Card>
   </Form>
 }
