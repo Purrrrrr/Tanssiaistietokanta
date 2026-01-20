@@ -33,6 +33,9 @@ export function MarkdownInput({ fileOwner, fileOwningId, filePath, ...props }: M
 
   useEffect(
     () => {
+      if (props.readOnly) {
+        return
+      }
       const deleted = previousIds.current.filter(id => !imageIds.includes(id))
       const newUsed = imageIds.filter(id => !previousIds.current.includes(id))
       const usages = [
@@ -44,7 +47,7 @@ export function MarkdownInput({ fileOwner, fileOwningId, filePath, ...props }: M
       }
       previousIds.current = imageIds
     },
-    [imageIds, markUsages],
+    [imageIds, markUsages, props.readOnly],
   )
 
   return <>

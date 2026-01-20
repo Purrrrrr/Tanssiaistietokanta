@@ -30,7 +30,7 @@ export function DanceEditor({ dance, onDelete, showVersionHistory, titleComponen
   const Title = titleComponent === 'h2' ? H2 : 'h1'
   const canEdit = useRight('dances:modify')
 
-  return <Form {...formProps} readOnly={!canEdit}>
+  return <Form {...formProps} readOnly={!canEdit || formProps.readOnly}>
     <div className="flex flex-wrap gap-3.5 items-center mb-2">
       <Title className="m-0">
         {useVersionedName(dance.name, dance._versionId ? dance._versionNumber : null)}
