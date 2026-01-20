@@ -1,5 +1,4 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/service.html
-
 import { hooks as schemaHooks } from '@feathersjs/schema'
 
 import {

@@ -12,20 +12,20 @@ export function useCurrentUser() {
   return useSyncExternalStore(subscribeToAuthChanges, getCurrentUser)
 }
 setupServiceUpdateFragment('users', `fragment UserFragment on User {
-  _id, name, username,
+  _id, name, username, sessionId,
 }`)
 
 export const useUsers = entityListQueryHook('users', graphql(`
 query getUsers {
   users {
-    _id, name, username,
+    _id, name, username, sessionId,
   }
 }`))
 
 export const useUser = backendQueryHook(graphql(`
 query getUser($id: ID!) {
   user(id: $id) {
-    _id, name, username,
+    _id, name, username, sessionId,
   }
 }`))
 
