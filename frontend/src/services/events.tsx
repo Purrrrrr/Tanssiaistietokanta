@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import equal from 'fast-deep-equal'
 
 import { backendQueryHook, entityCreateHook, entityDeleteHook, entityListQueryHook, entityUpdateHook, graphql, setupServiceUpdateFragment, useServiceEvents } from '../backend'
 
@@ -224,7 +225,12 @@ query getEvents {
   events {
     _id, _versionId, name, beginDate, endDate, allowedViewers,
   }
-}`))
+}`), {
+  refetchOnUpdate: (old, updated) => {
+    console.log(old, updated)
+    return !equal(old?.allowedViewers, updated.allowedViewers)
+  },
+})
 
 export const useCreateEvent = entityCreateHook('events', graphql(`
 mutation createEvent($event: EventInput!) {

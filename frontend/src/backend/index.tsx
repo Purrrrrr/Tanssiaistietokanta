@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useEffectEvent, useMemo } from 'react'
 import { MutationHookOptions, OperationVariables, QueryHookOptions, QueryResult } from '@apollo/client'
 import { TypedDocumentNode } from '@graphql-typed-document-node/core'
 
@@ -18,17 +18,30 @@ export { graphql } from 'types/gql'
 
 export const BackendProvider = ({ children }) => <ApolloProvider client={apolloClient} children={children} />
 
+type ItemOf<T> = T extends (infer U)[] ? U : never
+
 export function entityListQueryHook<T extends Record<number, Entity[]>, V extends OperationVariables>(
   service: ServiceName, compiledQuery: TypedDocumentNode<T, V>,
+  options?: {
+    refetchOnUpdate?: (old: ItemOf<ValueOf<T>> | undefined, updated: ItemOf<ValueOf<T>>, variables?: V) => boolean
+  },
 ): (...args: OptionalIfEmptyObject<V>) => [
   ValueOf<T>,
   QueryResult<T, V>,
 ] {
   return (...args: OptionalIfEmptyObject<V>) => {
     const [variables] = args
+    const onUpdate = useEffectEvent((updated) => {
+      if (options?.refetchOnUpdate) {
+        const old = (data as Entity[])?.find(item => item._id === updated._id)
+        if (options.refetchOnUpdate(old as ItemOf<ValueOf<T>>, updated, variables)) {
+          result.refetch()
+        }
+      }
+    })
     const callbacks = useMemo(() => ({
       created: (data) => appendToListQuery(compiledQuery, data, variables),
-      updated: () => { /* do nothing */ },
+      updated: onUpdate,
       removed: () => filterRemovedFromListQuery(compiledQuery, variables),
     }), [variables])
     // TODO: type this

@@ -259,7 +259,10 @@
   * Entity specific rights: events public/private
   * Ability to query all rights for service or service & entity
   * Ability to use data and query in access strategy
-    Reload event list when access rights change
+  * Reload event list when access rights change
+  * Only send update events for events that user has access to
+    Some reusable system to manage publishing data for access controlled objects. 
+      Make sure that events that should "dissapear" are sent a notice event (but only if rights have changed)
     Event edit rights
     Event access edit rights ("manage" action)
     File rights.

@@ -17,7 +17,9 @@ import type { Application } from '../../declarations'
 import { EventsService, getOptions } from './events.class'
 import { eventsPath, eventsMethods } from './events.shared'
 import { mergeJsonPatch, SupportsJsonPatch } from '../../hooks/merge-json-patch'
-import { AllowAllStrategy, AllowLoggedInStrategy, entityFieldBasedListingQuery } from '../access/strategies'
+import { AllowAllStrategy, AllowLoggedInStrategy, allowUser, entityFieldBasedListingQuery } from '../access/strategies'
+import { defaultChannels } from '../../utils/defaultChannels'
+import { addLogData, logger } from '../../requestLogger'
 
 export * from './events.class'
 export * from './events.schema'
@@ -51,6 +53,33 @@ export const events = (app: Application) => {
     error: {
       all: []
     }
+  }).publish((data, context) => {
+    if (Array.isArray(data)) {
+      logger.error('Publishing arrays of events is not supported')
+      return defaultChannels(app, context)
+    }
+    return defaultChannels(app, context).flatMap(channel => {
+      //TODO turn into reusable function
+      if (data.allowedViewers.includes('everyone')) {
+        return [channel]
+      }
+      if (data.allowedViewers.includes('logged-in')) {
+        logger.info('users', { users: channel.connections.map(connection => !!connection.user) })
+        return [
+          channel.filter(connection => connection.user !== undefined),
+          channel.filter(connection => !connection.user).send({ _id: data._id, inaccessible: false }),
+        ]
+      }
+      return [
+        channel.filter(connection => {
+          return connection.user && data.allowedViewers.includes(allowUser(connection.user._id))
+        }),
+        channel.filter(connection => {
+          return !connection.user || !data.allowedViewers.includes(allowUser(connection.user._id))
+        }).send({ _id: data._id, inaccessible: false })
+      ]
+    })
+
   })
 
   app.service('access').addAccessStrategy({

@@ -30,7 +30,11 @@ export function filterRemovedFromListQuery(query: DocumentNode, variables?: unkn
   })
 }
 
-export function updateEntityFragment(typeName: string, fragment: DocumentNode, data: Entity) {
+export function updateEntityFragment(typeName: string, fragment: DocumentNode, data: Entity | { inaccessible: true }) {
+  if ('inaccessible' in data) {
+    // Entity rights have been changed so that the entity is not visible to the user
+    return
+  }
   const id = data._id
   if (!id) {
     throw new Error(`Missing id in updated value ${JSON.stringify(data)}`)

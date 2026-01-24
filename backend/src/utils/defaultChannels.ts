@@ -6,7 +6,6 @@ export function defaultChannels(app: Application, context: HookContext) {
   const { id, path: serviceName } = context
 
   const channels = [
-    app.channel('everything'),
     app.channel(serviceName)
   ]
   if (id) {
