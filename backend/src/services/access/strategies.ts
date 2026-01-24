@@ -1,5 +1,5 @@
 import { HookContext } from "../../declarations";
-import { AccessResult, GlobalRequestData, RequestData, ServiceEntity, ServiceName, ServiceQuery } from "./types";
+import { AccessResult, GlobalRequestData, RequestData, ServiceData, ServiceEntity, ServiceName, ServiceQuery } from "./types";
 
 export * from './action-strategies'
 
@@ -14,7 +14,8 @@ export interface ListPermissionQuery<Service extends ServiceName = ServiceName> 
 
 }
 export interface PermissionQuery<Service extends ServiceName = ServiceName, Action extends string = string> extends RequestData<Service>, AuthenticationContext<Action> {
-
+  query: ServiceQuery<Service>
+  data?: ServiceData<Service>
 }
 
 interface AuthenticationContext<Action extends string = string> {

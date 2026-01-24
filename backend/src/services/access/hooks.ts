@@ -21,7 +21,7 @@ export async function checkAccess(ctx: HookContext, next: NextFunction) {
     if (!authenticationFunction) {
       return next()
     }
-    const query = {
+    const query: PermissionQuery = {
       app,
       ctx,
       user,
@@ -29,7 +29,10 @@ export async function checkAccess(ctx: HookContext, next: NextFunction) {
       serviceName: path as ServiceName,
       action: toAction(method),
       entityId: id as string | undefined,
-    } as PermissionQuery
+      query: params.query || {},
+      data: params.data,
+      canDo: null as any, // will be set later
+    }
 
     let data: unknown
     query.canDo = async (action: string) => {
