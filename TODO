@@ -257,7 +257,7 @@
 * Centralize icons for replacement
   Auth Part 2
   * Entity specific rights: events public/private
-    Ability to query all rights for service or service & entity
+  * Ability to query all rights for service or service & entity
     Ability to use data and query in access strategy
     Reload event list when access rights change
     Event edit rights

@@ -18,7 +18,7 @@ import { DancesService, getOptions } from './dances.class'
 import { dancesPath, dancesMethods } from './dances.shared'
 import { defaultChannels, withoutCurrentConnection } from '../../utils/defaultChannels'
 import { getDependenciesFor } from '../../internal-services/dependencies'
-import { AllowAllStrategy, AllowLoggedInStrategy, composedStrategy } from '../access/strategies'
+import { AllowAllStrategy, AllowLoggedInStrategy } from '../access/strategies'
 
 export * from './dances.class'
 export * from './dances.schema'
@@ -66,11 +66,20 @@ export const dances = (app: Application) => {
     ]
   })
 
-  app.service('access').setStrategy('dances', composedStrategy({
-    find: AllowAllStrategy,
-    get: AllowAllStrategy,
-    default: AllowLoggedInStrategy,
-  }))
+  app.service('access').addAccessStrategy({
+    service: 'dances',
+    actions: {
+      read: AllowAllStrategy,
+      create: AllowLoggedInStrategy,
+      modify: AllowLoggedInStrategy,
+      delete: AllowLoggedInStrategy,
+    },
+    authenticate: {
+      find: ({ canDo }) => canDo('read'),
+      get: ({ canDo }) => canDo('read'),
+      default: ({ canDo }) => canDo('modify'),
+    }
+  })
 }
 
 // Add this service to the service type index

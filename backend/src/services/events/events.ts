@@ -17,7 +17,7 @@ import type { Application } from '../../declarations'
 import { EventsService, getOptions } from './events.class'
 import { eventsPath, eventsMethods } from './events.shared'
 import { mergeJsonPatch, SupportsJsonPatch } from '../../hooks/merge-json-patch'
-import { AllowLoggedInStrategy, composedStrategy, entityFieldBasedListingStrategy } from '../access/strategies'
+import { AllowAllStrategy, AllowLoggedInStrategy, entityFieldBasedListingQuery } from '../access/strategies'
 
 export * from './events.class'
 export * from './events.schema'
@@ -53,11 +53,21 @@ export const events = (app: Application) => {
     }
   })
 
-  app.service('access').setStrategy('events', composedStrategy({
-    find: entityFieldBasedListingStrategy<'events'>('allowedViewers'),
-    get: entityFieldBasedListingStrategy<'events'>('allowedViewers'),
-    default: AllowLoggedInStrategy,
-  }))
+  app.service('access').addAccessStrategy({
+    service: 'events',
+    actions: {
+      read: AllowAllStrategy,
+      create: AllowLoggedInStrategy,
+      modify: AllowLoggedInStrategy,
+    },
+    getFindQuery: entityFieldBasedListingQuery<'events'>('allowedViewers'),
+    authenticate: {
+      find: ({ canDo }) => canDo('read'),
+      get: ({ canDo }) => canDo('read'),
+      create: ({ canDo }) => canDo('create'),
+      default: ({ canDo }) => canDo('modify'),
+    }
+  })
 }
 
 // Add this service to the service type index

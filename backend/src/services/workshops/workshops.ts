@@ -19,8 +19,8 @@ import { WorkshopsService, getOptions } from './workshops.class'
 import { workshopsPath, workshopsMethods } from './workshops.shared'
 import { defaultChannels, withoutCurrentConnection } from '../../utils/defaultChannels'
 import { getDependenciesFor } from '../../internal-services/dependencies'
-import { AllowAllStrategy, AllowLoggedInStrategy, composedStrategy } from '../access/strategies'
 import getFromData from '../../utils/getFromData'
+import { AllowAllStrategy, AllowLoggedInStrategy } from '../access/strategies'
 
 export * from './workshops.class'
 export * from './workshops.schema'
@@ -34,7 +34,7 @@ export const workshops = (app: Application) => {
     // You can add additional custom events to be sent to clients here
     events: []
   })
-  
+
   const workshopService = app.service(workshopsPath)
 
   const updateEventWorkshopVersions = async (context: HookContext<WorkshopsService>) => {
@@ -127,11 +127,20 @@ export const workshops = (app: Application) => {
     ]
   })
 
-  app.service('access').setStrategy('workshops', composedStrategy({
-    find: AllowAllStrategy,
-    get: AllowAllStrategy,
-    default: AllowLoggedInStrategy,
-  }))
+  app.service('access').addAccessStrategy({
+    service: 'workshops',
+    actions: {
+      read: AllowAllStrategy,
+      create: AllowLoggedInStrategy,
+      modify: AllowLoggedInStrategy,
+      delete: AllowLoggedInStrategy,
+    },
+    authenticate: {
+      find: ({ canDo }) => canDo('read'),
+      get: ({ canDo }) => canDo('read'),
+      default: ({ canDo }) => canDo('modify'),
+    }
+  })
 }
 
 // Add this service to the service type index

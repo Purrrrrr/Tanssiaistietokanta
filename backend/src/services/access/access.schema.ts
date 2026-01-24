@@ -1,6 +1,6 @@
 // // For more information about this file see https://dove.feathersjs.com/guides/cli/service.schemas.html
 import { resolve } from '@feathersjs/schema'
-import { Type, getValidator, querySyntax } from '@feathersjs/typebox'
+import { Type, getValidator } from '@feathersjs/typebox'
 import type { Static } from '@feathersjs/typebox'
 
 import type { HookContext } from '../../declarations'
@@ -22,10 +22,10 @@ export const accessSchema = Type.Object(
   {
     service: serviceNameSchema,
     action: Type.String(),
-    allowed: Type.Boolean(),
-    validity: Type.Union([Type.Literal('global'), Type.Literal('entity-specific')]),
     entityId: Type.Optional(Id()),
+    validity: Type.Union([Type.Literal('global'), Type.Literal('entity')]),
     appliesTo: Type.Union([Type.Literal('everyone'), Type.Literal('user')]),
+    allowed: Type.Union([Type.Literal('GRANT'), Type.Literal('DENY'), Type.Literal('UNKNOWN')]),
   },
   { $id: 'Access', additionalProperties: false }
 )
@@ -36,12 +36,14 @@ export const accessResolver = resolve<Access, HookContext<AccessService>>({})
 export const accessExternalResolver = resolve<Access, HookContext<AccessService>>({})
 
 // Schema for allowed query properties
-export const accessQueryProperties = Type.Pick(accessSchema, ['service', 'action', 'entityId'])
+export const accessQueryProperties = Type.Partial(Type.Pick(accessSchema, ['service', 'action', 'entityId']))
 export const accessQuerySchema = Type.Intersect(
   [
     accessQueryProperties,
     // Add additional query properties here
-    Type.Object({}, { additionalProperties: false })
+    Type.Object({
+
+    }, { additionalProperties: false })
   ],
   { additionalProperties: false }
 )

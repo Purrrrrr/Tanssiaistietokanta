@@ -8,32 +8,53 @@ type AccessParamContext = Pick<PermissionQuery, 'user'>
 const paramStorage = new AsyncLocalStorage<AccessParamContext>();
 
 export async function checkAccess(ctx: HookContext, next: NextFunction) {
-  const { app, params, path, method, id } = ctx;
+  const { app, params, service, path, method, id } = ctx;
   const accessService = app.service('access');
 
   return withAccessParams({ user: params.user }, async ({ user })=> {
-    if (!accessService.hasStrategy(path)) {
+    const stragegy = accessService.getAccessStrategy(path as ServiceName);
+    if (!stragegy) {
       return next()
     }
 
-    const res = await accessService.find({
+    const authenticationFunction = stragegy.authenticate[method] ?? stragegy.authenticate['default'];
+    if (!authenticationFunction) {
+      return next()
+    }
+    const query = {
+      app,
+      ctx,
       user,
-      query: {
-        service: path as ServiceName,
-        action: toAction(method),
-        entityId: id as string | undefined
-      }
-    });
+      service: service,
+      serviceName: path as ServiceName,
+      action: toAction(method),
+      entityId: id as string | undefined,
+    } as PermissionQuery
 
-    if (!res.allowed) {
+    let data: unknown
+    query.canDo = async (action: string) => {
+      if (stragegy.initRequestData && data === undefined) {
+        data = await stragegy.initRequestData(query)
+      }
+      const permission = await stragegy.actions[action]?.hasPermission({
+        ...query,
+        data,
+      })
+      return permission === 'GRANT'
+    }
+
+    const result = await authenticationFunction(query)
+
+    if (result === false || result === 'DENY') {
       throw new Error('Access denied');
     }
-    if (method === 'find' || method === 'get') {
-      const query = await accessService.getListQuery({ user, service: path as ServiceName })
+
+    if (stragegy.getFindQuery && (method === 'find' || method === 'get')) {
+      const findQuery = await stragegy.getFindQuery(query)
       ctx.params.query ??= {}
       ctx.params.query = {
         ...ctx.params.query,
-        ...query,
+        ...findQuery,
       }
     }
 
