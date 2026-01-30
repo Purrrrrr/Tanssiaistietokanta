@@ -3,9 +3,8 @@ import type { Params, ServiceInterface } from '@feathersjs/feathers'
 
 import type { Application } from '../../declarations'
 import type { Access, AccessQuery, ServiceName } from './access.schema'
-import { AccessStrategy, AccessStrategyDataStore, Action } from './strategies'
+import { AccessStrategy, Action } from './strategies'
 import { AccessDataStoreFactory } from './accessDataStore'
-import { Validator } from '@feathersjs/schema'
 
 export type { Access, AccessQuery }
 
@@ -72,12 +71,19 @@ export class AccessService<ServiceParams extends AccessParams = AccessParams>
           service: serviceName,
           action: action,
           entityId,
-          allowed: hasPermission ? 'GRANT' : 'DENY',
+          allowed: hasPermissionToGrant(hasPermission),
           ...authorization,
         }
       })
     )
   }
+}
+
+function hasPermissionToGrant(hasPermission: boolean | undefined): 'GRANT' | 'DENY' | 'UNKNOWN' {
+  if (hasPermission === undefined) {
+    return 'UNKNOWN'
+  }
+  return hasPermission ? 'GRANT' : 'DENY'
 }
 
 export const getOptions = (app: Application) => {

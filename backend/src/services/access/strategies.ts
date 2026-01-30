@@ -29,7 +29,7 @@ export interface AccessStrategyDataStore<AccessData> {
 interface AuthResponse {
   validity: 'global' | 'entity'
   appliesTo: 'everyone' | 'user'
-  hasPermission: boolean
+  hasPermission: boolean | undefined
 }
 
 interface StrategyConfig {

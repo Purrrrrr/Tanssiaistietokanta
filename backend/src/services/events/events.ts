@@ -105,7 +105,11 @@ export const events = (app: Application) => {
         } as const
       }
       if (!entityId || !accessData) {
-        throw new Error('Entity ID and accessData are required for this action')
+        return {
+          validity: 'entity',
+          appliesTo: 'user',
+          hasPermission: undefined,
+        } as const
       }
 
       const { viewers } = accessData
