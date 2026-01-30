@@ -3,8 +3,9 @@ import type { Params, ServiceInterface } from '@feathersjs/feathers'
 
 import type { Application } from '../../declarations'
 import type { Access, AccessQuery, ServiceName } from './access.schema'
-import { ServiceAccessStrategy } from './strategies'
-import { ActionPermissionQuery, ServiceActionStrategy } from './action-strategies'
+import { AccessStrategy, AccessStrategyDataStore, Action } from './strategies'
+import { AccessDataStoreFactory } from './accessDataStore'
+import { Validator } from '@feathersjs/schema'
 
 export type { Access, AccessQuery }
 
@@ -14,32 +15,31 @@ export interface AccessServiceOptions {
 
 export interface AccessParams extends Params<AccessQuery> {}
 
-export interface ServiceStrategy<Service extends ServiceName, Action extends string, Data>
-  extends ServiceAccessStrategy<Service, Action>, ServiceActionStrategy<Service, Action, Data> {
-  service: Service
-}
-
 export class AccessService<ServiceParams extends AccessParams = AccessParams>
   implements ServiceInterface<Access, never, ServiceParams, never>
 {
-  private strategies: Map<string, ServiceStrategy<ServiceName, string, unknown>> = new Map()
+  private strategies: Map<ServiceName, AccessStrategy<unknown>> = new Map()
+  private storeFactory: AccessDataStoreFactory
+  getStore: AccessDataStoreFactory['getStore']
 
-  constructor(public options: AccessServiceOptions) {}
-
-  addAccessStrategy<Service extends ServiceName, Action extends string, Data>(
-    strategy: ServiceStrategy<Service, Action, Data>
-  ) {
-    if (this.strategies.has(strategy.service)) {
-      throw new Error(`Access actions for service ${strategy.service} are already set`)
-    }
-    this.strategies.set(strategy.service, strategy as any)
+  constructor(public options: AccessServiceOptions) {
+    this.storeFactory = new AccessDataStoreFactory(options.app)
+    this.getStore = this.storeFactory.getStore.bind(this.storeFactory)
   }
 
-  getAccessStrategy<Service extends ServiceName>(service?: Service): ServiceStrategy<Service, string, unknown> | undefined {
-    if (!service) {
-      throw new Error('Service must be specified in the query')
-    }
-    return this.strategies.get(service) as any
+  setAccessStrategy<Service extends ServiceName, Data>(
+    service: Service,
+    strategy: AccessStrategy<Data>
+  ) {
+    this.strategies.set(service, strategy as any)
+    strategy.initialize?.({
+      app: this.options.app,
+      serviceName: service,
+    })
+  }
+
+  getAccessStrategy<Service extends ServiceName>(service: Service): AccessStrategy<unknown> | undefined {
+    return this.strategies.get(service)
   }
 
   async find(params?: ServiceParams): Promise<Access[]> {
@@ -49,42 +49,31 @@ export class AccessService<ServiceParams extends AccessParams = AccessParams>
       : Array.from(this.strategies.keys()) as ServiceName[]
 
     const results = await Promise.all(
-      services.map(serviceName => this.findServiceAccess(serviceName, action, entityId, params?.user))
+      services.map(serviceName => this.findServiceAccess(serviceName, action as Action, entityId, params?.user))
     )
     return results.flat()
   }
 
-  async findServiceAccess(serviceName: ServiceName, action?: string, entityId?: string, user?: any): Promise<Access[]> {
+  async findServiceAccess(serviceName: ServiceName, actionQuery?: Action, entityId?: string, user?: any): Promise<Access[]> {
     const strategy = this.getAccessStrategy(serviceName)
     if (!strategy) {
       return []
     }
 
-    const actions = action
-      ? { [action]: strategy.actions[action] }
-      : strategy.actions
-    const query: ActionPermissionQuery<ServiceName> = {
-      app: this.options.app,
-      user,
-      serviceName,
-      service: this.options.app.service(serviceName),
-      entityId,
-      data: undefined,
-      action: '',
-    }
-    query.data = await strategy?.initRequestData?.(query)
+    const actions: Action[] = actionQuery
+      ? [actionQuery]
+      : ['read', 'create', 'update', 'remove', 'manage-access']
 
     return Promise.all(
-      Object.entries(actions).map(async ([actionName, { validity, appliesTo, hasPermission }]) => {
-        query.action = actionName
-        const allowed = validity === 'global' || entityId
-          ? await hasPermission(query)
-          : 'UNKNOWN' as const
+      actions.map(async (action) => {
+        const { hasPermission, ...authorization }= await strategy.authorize(action, user, entityId)
 
         return {
           service: serviceName,
-          action: actionName,
-          entityId, validity, appliesTo, allowed,
+          action: action,
+          entityId,
+          allowed: hasPermission ? 'GRANT' : 'DENY',
+          ...authorization,
         }
       })
     )

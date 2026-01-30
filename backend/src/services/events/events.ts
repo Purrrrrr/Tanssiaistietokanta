@@ -10,16 +10,19 @@ import {
   eventsExternalResolver,
   eventsDataResolver,
   eventsPatchResolver,
-  eventsQueryResolver
+  eventsQueryResolver,
+  eventsSchema,
+  eventAccessDataSchema
 } from './events.schema'
 
 import type { Application } from '../../declarations'
 import { EventsService, getOptions } from './events.class'
 import { eventsPath, eventsMethods } from './events.shared'
 import { mergeJsonPatch, SupportsJsonPatch } from '../../hooks/merge-json-patch'
-import { AllowAllStrategy, AllowLoggedInStrategy, allowUser, entityFieldBasedListingQuery } from '../access/strategies'
 import { defaultChannels } from '../../utils/defaultChannels'
-import { addLogData, logger } from '../../requestLogger'
+import { Static } from '@feathersjs/typebox'
+import { AccessStrategy, Action, Id } from '../access/strategies'
+import { User } from '../users/users.class'
 
 export * from './events.class'
 export * from './events.schema'
@@ -54,49 +57,80 @@ export const events = (app: Application) => {
       all: []
     }
   }).publish((data, context) => {
-    if (Array.isArray(data)) {
-      logger.error('Publishing arrays of events is not supported')
-      return defaultChannels(app, context)
-    }
-    return defaultChannels(app, context).flatMap(channel => {
-      //TODO turn into reusable function
-      if (data.allowedViewers.includes('everyone')) {
-        return [channel]
-      }
-      if (data.allowedViewers.includes('logged-in')) {
-        logger.info('users', { users: channel.connections.map(connection => !!connection.user) })
-        return [
-          channel.filter(connection => connection.user !== undefined),
-          channel.filter(connection => !connection.user).send({ _id: data._id, inaccessible: false }),
-        ]
-      }
-      return [
-        channel.filter(connection => {
-          return connection.user && data.allowedViewers.includes(allowUser(connection.user._id))
-        }),
-        channel.filter(connection => {
-          return !connection.user || !data.allowedViewers.includes(allowUser(connection.user._id))
-        }).send({ _id: data._id, inaccessible: false })
-      ]
+    return defaultChannels(app, context)
+    // if (Array.isArray(data)) {
+    //   logger.error('Publishing arrays of events is not supported')
+    // }
+    // return defaultChannels(app, context).flatMap(channel => {
+    //   //TODO turn into reusable function
+    //   if (data.allowedViewers.includes('everyone')) {
+    //     return [channel]
+    //   }
+    //   if (data.allowedViewers.includes('logged-in')) {
+    //     logger.info('users', { users: channel.connections.map(connection => !!connection.user) })
+    //     return [
+    //       channel.filter(connection => connection.user !== undefined),
+    //       channel.filter(connection => !connection.user).send({ _id: data._id, inaccessible: false }),
+    //     ]
+    //   }
+    //   return [
+    //     channel.filter(connection => {
+    //       return connection.user && data.allowedViewers.includes(allowUser(connection.user._id))
+    //     }),
+    //     channel.filter(connection => {
+    //       return !connection.user || !data.allowedViewers.includes(allowUser(connection.user._id))
+    //     }).send({ _id: data._id, inaccessible: false })
+    //   ]
+    // })
+  })
+
+  const allowUser = (userId: string) => `user:${userId}`;
+  class EventAccessStrategy implements AccessStrategy<Static<typeof eventAccessDataSchema>> {
+    store = app.service('access').getStore('events', eventAccessDataSchema, {
+      viewers: ['everyone']
     })
+    async authorize(action: Action, user?: User, entityId?: Id, accessData?: Static<typeof eventAccessDataSchema>) {
+      if (action === 'create') {
+        return {
+          validity: 'global',
+          appliesTo: 'user',
+          hasPermission: !!user,
+        } as const
+      }
+      if (action !== 'read') {
+        return {
+          validity: 'global',
+          appliesTo: 'user',
+          hasPermission: !!user && this.hasAccess(accessData?.viewers || [], user?._id),
+        } as const
+      }
+      if (!entityId || !accessData) {
+        throw new Error('Entity ID and accessData are required for this action')
+      }
 
-  })
+      const { viewers } = accessData
 
-  app.service('access').addAccessStrategy({
-    service: 'events',
-    actions: {
-      read: AllowAllStrategy,
-      create: AllowLoggedInStrategy,
-      modify: AllowLoggedInStrategy,
-    },
-    getFindQuery: entityFieldBasedListingQuery<'events'>('allowedViewers'),
-    authenticate: {
-      find: ({ canDo }) => canDo('read'),
-      get: ({ canDo }) => canDo('read'),
-      create: ({ canDo }) => canDo('create'),
-      default: ({ canDo }) => canDo('modify'),
+      return {
+        validity: 'entity',
+        appliesTo: 'user',
+        hasPermission: this.hasAccess(viewers, user?._id)
+      } as const
     }
-  })
+    hasAccess(userList: string[], userId: string | undefined) {
+      if (userList.includes('everyone')) {
+        return true
+      }
+      if (userList.includes('logged-in') && userId) {
+        return true
+      }
+      if (userId && userList.includes(allowUser(userId))) {
+        return true
+      }
+      return false
+    }
+  }
+
+  app.service('access').setAccessStrategy('events', new EventAccessStrategy())
 }
 
 // Add this service to the service type index

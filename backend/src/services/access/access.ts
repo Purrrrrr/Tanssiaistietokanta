@@ -7,7 +7,7 @@ import {
   accessQueryResolver
 } from './access.schema'
 
-import type { Application } from '../../declarations'
+import type { Application, HookContext } from '../../declarations'
 import { AccessService, getOptions } from './access.class'
 import { accessPath, accessMethods } from './access.shared'
 

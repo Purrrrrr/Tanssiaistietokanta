@@ -18,7 +18,7 @@ export const eventsSchema = Type.Object(
     _versionNumber: Type.Number(),
     _updatedAt: Type.String(),
     _createdAt: Type.String(),
-    allowedViewers: Type.Array(Id()),
+    accessControl: EventAccessData(),
     name: Name(),
     beginDate: Date(),
     endDate: Date(),
@@ -38,6 +38,14 @@ export const eventsSchema = Type.Object(
   },
   { $id: 'Events', additionalProperties: false }
 )
+
+export const eventAccessDataSchema = EventAccessData()
+
+function EventAccessData() {
+  return Type.Object({
+    viewers: Type.Array(Type.String()),
+  }, { additionalProperties: false })
+}
 
 function Introductions() {
   return ClosedObject({

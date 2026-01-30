@@ -20,7 +20,6 @@ import { workshopsPath, workshopsMethods } from './workshops.shared'
 import { defaultChannels, withoutCurrentConnection } from '../../utils/defaultChannels'
 import { getDependenciesFor } from '../../internal-services/dependencies'
 import getFromData from '../../utils/getFromData'
-import { AllowAllStrategy, AllowLoggedInStrategy } from '../access/strategies'
 
 export * from './workshops.class'
 export * from './workshops.schema'
@@ -127,18 +126,23 @@ export const workshops = (app: Application) => {
     ]
   })
 
-  app.service('access').addAccessStrategy({
-    service: 'workshops',
-    actions: {
-      read: AllowAllStrategy,
-      create: AllowLoggedInStrategy,
-      modify: AllowLoggedInStrategy,
-      delete: AllowLoggedInStrategy,
-    },
-    authenticate: {
-      find: ({ canDo }) => canDo('read'),
-      get: ({ canDo }) => canDo('read'),
-      default: ({ canDo }) => canDo('modify'),
+  app.service('access').setAccessStrategy('workshops', {
+    authorize(action, user) {
+      if (action === 'read') {
+        return {
+          validity: 'global',
+          appliesTo: 'everyone',
+          hasPermission: true,
+        }
+      }
+
+      const isLoggedIn = !!user
+      
+      return {
+        validity: 'global',
+        appliesTo: 'user',
+        hasPermission: isLoggedIn,
+      }
     }
   })
 }

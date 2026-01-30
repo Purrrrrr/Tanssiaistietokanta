@@ -18,7 +18,6 @@ import { DancesService, getOptions } from './dances.class'
 import { dancesPath, dancesMethods } from './dances.shared'
 import { defaultChannels, withoutCurrentConnection } from '../../utils/defaultChannels'
 import { getDependenciesFor } from '../../internal-services/dependencies'
-import { AllowAllStrategy, AllowLoggedInStrategy } from '../access/strategies'
 
 export * from './dances.class'
 export * from './dances.schema'
@@ -66,18 +65,23 @@ export const dances = (app: Application) => {
     ]
   })
 
-  app.service('access').addAccessStrategy({
-    service: 'dances',
-    actions: {
-      read: AllowAllStrategy,
-      create: AllowLoggedInStrategy,
-      modify: AllowLoggedInStrategy,
-      delete: AllowLoggedInStrategy,
-    },
-    authenticate: {
-      find: ({ canDo }) => canDo('read'),
-      get: ({ canDo }) => canDo('read'),
-      default: ({ canDo }) => canDo('modify'),
+  app.service('access').setAccessStrategy('dances', {
+    authorize(action, user) {
+      if (action === 'read') {
+        return {
+          validity: 'global',
+          appliesTo: 'everyone',
+          hasPermission: true,
+        }
+      }
+
+      const isLoggedIn = !!user
+      
+      return {
+        validity: 'global',
+        appliesTo: 'user',
+        hasPermission: isLoggedIn,
+      }
     }
   })
 }

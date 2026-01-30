@@ -15,7 +15,9 @@ interface EventForm {
   name: string
   beginDate: string
   endDate: string
-  allowedViewers: string[]
+  accessControl: {
+    viewers: string[]
+  }
 }
 
 const {
@@ -32,7 +34,7 @@ export default function CreateEventForm() {
     onCompleted: (data) => navigate('/events/' + data.createEvent._id),
     refetchQueries: ['getEvents'],
   })
-  const [event, setEvent] = useState({ name: '', beginDate: '', endDate: '', allowedViewers: [AllowEveryone] })
+  const [event, setEvent] = useState({ name: '', beginDate: '', endDate: '', accessControl: { viewers: [AllowEveryone] } })
 
   return <>
     <Breadcrumb text={t('newEventBreadcrumb')} />
@@ -48,7 +50,7 @@ export default function CreateEventForm() {
             endPath="endDate"
             required
           />
-          <Field path="allowedViewers" label={t('allowedViewers')} component={AllowedViewersSelector} />
+          <Field path="accessControl.viewers" label={t('allowedViewers')} component={AllowedViewersSelector} />
         </div>
         <SubmitButton text={t('create')} />
       </Form>

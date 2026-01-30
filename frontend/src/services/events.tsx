@@ -11,7 +11,10 @@ export * from './slideStyles'
 setupServiceUpdateFragment(
   'events',
   `fragment EventFragment on Event {
-    _id, _versionId, _versionNumber, _updatedAt, name, beginDate, endDate, allowedViewers,
+    _id, _versionId, _versionNumber, _updatedAt, name, beginDate, endDate,
+    accessControl {
+      viewers
+    }
     program {
       dateTime
       slideStyleId
@@ -118,7 +121,10 @@ query getEventVersions($id: ID!) {
 const useEventInternal = backendQueryHook(graphql(`
 query getEvent($id: ID!, $versionId: ID) {
   event(id: $id, versionId: $versionId) {
-    _id, _versionId, _versionNumber, _updatedAt, name, beginDate, endDate, allowedViewers,
+    _id, _versionId, _versionNumber, _updatedAt, name, beginDate, endDate,
+    accessControl {
+      viewers
+    }
     program {
       dateTime
       slideStyleId
@@ -223,33 +229,45 @@ export function useEvent(id: string, versionId?: string) {
 export const useEvents = entityListQueryHook('events', graphql(`
 query getEvents {
   events {
-    _id, _versionId, name, beginDate, endDate, allowedViewers,
+    _id, _versionId, name, beginDate, endDate,
+    accessControl {
+      viewers
+    }
   }
 }`), {
-  refetchOnUpdate: (old, updated) => {
-    console.log(old, updated)
-    return !equal(old?.allowedViewers, updated.allowedViewers)
-  },
+  // refetchOnUpdate: (old, updated) => {
+  //   console.log(old, updated)
+  //   return !equal(old?.allowedViewers, updated.allowedViewers)
+  // },
 })
 
 export const useCreateEvent = entityCreateHook('events', graphql(`
 mutation createEvent($event: EventInput!) {
   createEvent(event: $event) {
-    _id, _versionId, name, beginDate, endDate, allowedViewers,
+    _id, _versionId, name, beginDate, endDate,
+    accessControl {
+      viewers
+    }
   }
 }`))
 
 export const usePatchEvent = entityUpdateHook('events', graphql(`
 mutation patchEvent($id: ID!, $event: JSONPatch!) {
   patchEvent(id: $id, event: $event) {
-    _id, _versionId, name, beginDate, endDate, allowedViewers,
+    _id, _versionId, name, beginDate, endDate,
+    accessControl {
+      viewers
+    }
   }
 }`))
 
 export const usePatchEventProgram = entityUpdateHook('events', graphql(`
 mutation patchEventProgram($id: ID!, $program: JSONPatch!) {
   patchEventProgram(id: $id, program: $program) {
-    _id, _versionId, _versionNumber, name, beginDate, endDate, allowedViewers,
+    _id, _versionId, _versionNumber, name, beginDate, endDate,
+    accessControl {
+      viewers
+    }
     program {
       dateTime
       slideStyleId

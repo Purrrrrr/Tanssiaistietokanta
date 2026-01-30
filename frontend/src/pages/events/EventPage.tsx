@@ -122,7 +122,7 @@ function EventDetailsForm({ event }: { event: Event }) {
           maxDate={formProps.value.endDate}
         />
       </div>
-      <Field path="allowedViewers" label={t('allowedViewers')} component={AllowedViewersSelector} />
+      <Field path="accessControl.viewers" label={t('allowedViewers')} component={AllowedViewersSelector} />
     </Card>
   </Form>
 }
