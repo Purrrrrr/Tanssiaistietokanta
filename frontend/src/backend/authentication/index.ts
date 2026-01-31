@@ -7,6 +7,8 @@ import { RefreshScheduler } from './utils'
 export { setSocketAuthToken } from './requests'
 export type { User } from './types'
 
+const loggedInCookieName = 'danceOrganizerLoggedIn'
+
 const refreshScheduler = new RefreshScheduler(refreshAuth)
 const authState = new AuthState()
 authState.on('change', (state) => {
@@ -17,7 +19,13 @@ authState.on('change', (state) => {
 
   refreshScheduler.scheduleRefresh(state.authentication.payload.exp)
 })
-authState.on('initialize', () => auth('refreshToken'))
+authState.on('initialize', () => {
+  const isLoggedIn = document.cookie.split('; ')
+    .find((cookie) => cookie === `${loggedInCookieName}=yes`)
+
+  if (isLoggedIn) auth('refreshToken')
+  else authState.setState(null)
+})
 
 export const initializeAuthentication = () => authState.initialize()
 

@@ -24,15 +24,25 @@ export async function makeFeathersRequest<T>(
   )
 }
 
+let socketLoggedIn = false
 subscribeToAuthChanges(authState => {
   if (!socket.connected) return
-  setSocketAuthToken(socket, authState ? authState.accessToken : null)
+
+  const shouldSetState = (authState !== null) !== socketLoggedIn
+  if (shouldSetState) {
+    setSocketAuthToken(socket, authState ? authState.accessToken : null)
+  }
+  socketLoggedIn = authState !== null
 })
 socket.on('connect', () => {
   const accessToken = getCurrentAccessToken()
+  socketLoggedIn = accessToken !== null
   if (accessToken) {
     setSocketAuthToken(socket, accessToken)
   }
+})
+socket.on('disconnect', () => {
+  socketLoggedIn = false
 })
 
 type R = FetchResult<Record<string, unknown>, Record<string, unknown>, Record<string, unknown>>
