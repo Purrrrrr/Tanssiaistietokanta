@@ -78,6 +78,11 @@ export async function checkAccess(ctx: HookContext, next: NextFunction) {
         updateAccessData(stragegy, stragegy.store, accessControlPatch)
 
         ctx.data = data.filter((op: any) => !op.path.startsWith('/accessControl'))
+        if (ctx.data.length === 0) {
+          // Prevent empty patch from creating an entity version
+          ctx.params.jsonPatch = false
+          ctx.data = {}
+        }
       }
     }
 

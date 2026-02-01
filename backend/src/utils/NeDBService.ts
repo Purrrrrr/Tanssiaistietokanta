@@ -1,4 +1,5 @@
 import type { Id, NullableId, Params, ServiceInterface } from '@feathersjs/feathers'
+import { isEmptyObject } from 'es-toolkit'
 import type { Application } from '../declarations'
 
 import createNedbService from 'feathers-nedb'
@@ -74,6 +75,9 @@ export class NeDBService<Result extends BaseRecord, Data, ServiceParams extends 
   }
 
   async patch(id: NullableId, data: Patch, _params?: ServiceParams): Promise<Result | Result[]> {
+    if (isEmptyObject(data)) {
+      return this.get(id as Id, _params)
+    }
     return this.updateItems(id, _params, async original =>
       this.currentService.patch(original._id, await this.mapPatch(original, data))
     )
