@@ -290,14 +290,12 @@
       Delete button?
   
   Login icon?
-  Ability to hide and publish events (rights management)
 
   Forms
     Check a11y for form field readOnly vs disabled vs some other rendering method
     Render readOnly selectors more lightly
 
   Test websocket performance with something. Gatling?
-
 
   Tooltips with https://github.com/doeixd/invokers?
 

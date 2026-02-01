@@ -1,6 +1,7 @@
 import { updateDependencies, registerDependencies, clearDependencies } from './internal-services/dependencies'
 import { loadDependencyTypes } from './internal-services/dependencyRelations'
 import type { Application, ServiceTypes } from './declarations'
+import { SkipAccessControl } from './services/access/hooks'
 
 const skippedServices = ['authentication', 'rights'] as const
 
@@ -38,7 +39,7 @@ async function loadInitialDependencies(app: Application) {
   for (const [serviceName, relations] of Object.entries(serviceDependencyRelations)) {
     if (relations.length === 0) continue
     const service = app.service(serviceName as ServiceName) as ServiceTypes[ServiceName]
-    const items = await service.find({})
+    const items = await service.find({ [SkipAccessControl]: true })
 
     if (!Array.isArray(items)) continue
     items.forEach(item => {

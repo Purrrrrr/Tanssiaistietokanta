@@ -5,6 +5,8 @@ import { AccessStrategy, AccessStrategyDataStore, Action } from "./strategies";
 import { User } from "./types";
 import { isJsonPatch, getPatched } from "../../hooks/merge-json-patch";
 
+export const SkipAccessControl = Symbol('SkipAccessControl');
+
 interface AccessParamContext {
   user?: User
 }
@@ -14,6 +16,10 @@ const paramStorage = new AsyncLocalStorage<AccessParamContext>();
 export async function checkAccess(ctx: HookContext, next: NextFunction) {
   const { app, params, path, method, id, data } = ctx;
   const accessService = app.service('access');
+  if (params[SkipAccessControl]) {
+    // Some internal service calls need to have full access, eg. the dependecy graph
+    return next();
+  }
 
   return withAccessParams({ user: params.user }, async ({ user })=> {
     const stragegy = accessService.getAccessStrategy(path as ServiceName);
