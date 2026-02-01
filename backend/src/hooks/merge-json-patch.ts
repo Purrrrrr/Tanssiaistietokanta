@@ -11,7 +11,12 @@ export const mergeJsonPatch = (cleanup?: (data: unknown) => unknown) => {
 
     if (id === undefined) throw new Error('Cannot patch multiple documents')
     if (!Array.isArray(data)) throw new Error('JSON Patch should be an array')
-
+    
+    if (data.length === 0) {
+      // Prevent empty patch from creating an entity version
+      context.data = {}
+      return
+    }
     const original = await service.get(id)
     context.data = getPatched(original, data)
     if (cleanup) context.data = cleanup(context.data)
