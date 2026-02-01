@@ -66,22 +66,12 @@ export const dances = (app: Application) => {
   })
 
   app.service('access').setAccessStrategy('dances', {
-    authorize(action, user) {
+    authorize({ user, action }) {
       if (action === 'read') {
-        return {
-          validity: 'global',
-          appliesTo: 'everyone',
-          hasPermission: true,
-        }
+        return true
       }
-
-      const isLoggedIn = !!user
       
-      return {
-        validity: 'global',
-        appliesTo: 'user',
-        hasPermission: isLoggedIn,
-      }
+      return !!user
     }
   })
 }

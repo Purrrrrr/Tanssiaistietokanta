@@ -12,7 +12,8 @@ import {
   eventsPatchResolver,
   eventsQueryResolver,
   eventsSchema,
-  eventAccessDataSchema
+  eventAccessDataSchema,
+  EventAccessData
 } from './events.schema'
 
 import type { Application } from '../../declarations'
@@ -20,9 +21,7 @@ import { EventsService, getOptions } from './events.class'
 import { eventsPath, eventsMethods } from './events.shared'
 import { mergeJsonPatch, SupportsJsonPatch } from '../../hooks/merge-json-patch'
 import { defaultChannels } from '../../utils/defaultChannels'
-import { Static } from '@feathersjs/typebox'
-import { AccessStrategy, Action, Id } from '../access/strategies'
-import { User } from '../users/users.class'
+import { AccessStrategy, AuthParams } from '../access/strategies'
 
 export * from './events.class'
 export * from './events.schema'
@@ -85,40 +84,22 @@ export const events = (app: Application) => {
   })
 
   const allowUser = (userId: string) => `user:${userId}`;
-  class EventAccessStrategy implements AccessStrategy<Static<typeof eventAccessDataSchema>> {
+
+
+  class EventAccessStrategy implements AccessStrategy<EventAccessData> {
     store = app.service('access').getStore('events', eventAccessDataSchema, {
       viewers: ['everyone']
     })
-    async authorize(action: Action, user?: User, entityId?: Id, accessData?: Static<typeof eventAccessDataSchema>) {
-      if (action === 'create') {
-        return {
-          validity: 'global',
-          appliesTo: 'user',
-          hasPermission: !!user,
-        } as const
+    async authorize({ type, action, entityData, user }: AuthParams<EventAccessData>) {
+      if (type === 'global') {
+        return undefined
       }
+      const { viewers } = entityData
+      const canRead = this.hasAccess(viewers, user?._id)
       if (action !== 'read') {
-        return {
-          validity: 'global',
-          appliesTo: 'user',
-          hasPermission: !!user && this.hasAccess(accessData?.viewers || [], user?._id),
-        } as const
+        return !!user && canRead
       }
-      if (!entityId || !accessData) {
-        return {
-          validity: 'entity',
-          appliesTo: 'user',
-          hasPermission: undefined,
-        } as const
-      }
-
-      const { viewers } = accessData
-
-      return {
-        validity: 'entity',
-        appliesTo: 'user',
-        hasPermission: this.hasAccess(viewers, user?._id)
-      } as const
+      return canRead
     }
     hasAccess(userList: string[], userId: string | undefined) {
       if (userList.includes('everyone')) {

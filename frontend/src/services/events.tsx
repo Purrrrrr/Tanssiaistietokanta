@@ -235,10 +235,9 @@ query getEvents {
     }
   }
 }`), {
-  // refetchOnUpdate: (old, updated) => {
-  //   console.log(old, updated)
-  //   return !equal(old?.allowedViewers, updated.allowedViewers)
-  // },
+  refetchOnUpdate: (old, updated) => {
+    return !old || 'inaccessible' in updated
+  },
 })
 
 export const useCreateEvent = entityCreateHook('events', graphql(`

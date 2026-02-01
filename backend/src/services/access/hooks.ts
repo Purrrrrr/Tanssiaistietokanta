@@ -1,11 +1,12 @@
 import { HookContext, NextFunction } from "../../declarations";
 import { ServiceName } from "./access.schema";
 import { AsyncLocalStorage } from 'async_hooks';
-import { AccessStrategy, AccessStrategyDataStore, Action } from "./strategies";
+import { Action } from "./strategies";
 import { User } from "./types";
 import { isJsonPatch, getPatched } from "../../hooks/merge-json-patch";
 
 export const SkipAccessControl = Symbol('SkipAccessControl');
+export const PreviousAccessControl = Symbol('PreviousAccessControl');
 
 interface AccessParamContext {
   user?: User
@@ -14,7 +15,7 @@ interface AccessParamContext {
 const paramStorage = new AsyncLocalStorage<AccessParamContext>();
 
 export async function checkAccess(ctx: HookContext, next: NextFunction) {
-  const { app, params, path, method, id, data } = ctx;
+  const { app, params, path, method, id } = ctx;
   const accessService = app.service('access');
   if (params[SkipAccessControl]) {
     // Some internal service calls need to have full access, eg. the dependecy graph
@@ -33,16 +34,16 @@ export async function checkAccess(ctx: HookContext, next: NextFunction) {
       if (!Array.isArray(result)) {
         return
       }
-      const authorizedEntities = await Promise.all(
-        result.map(async entity => {
-          const accessData = await stragegy.store?.getAccess(entity._id)
-          const authorization = await stragegy.authorize('read', user, entity._id, accessData)
-          return authorization.hasPermission
-            ? { ...entity, accessControl: accessData }
-            : null
+      ctx.result = authorizeList(result, async entity => {
+        const entityData = await stragegy.store?.getAccess(entity._id)
+        const hasPermission = await stragegy.authorizeEntity({
+          action: 'read',
+          entityData,
+          user,
         })
-      )
-      ctx.result = authorizedEntities.filter(e => e !== null)
+        return { entityData: entityData, hasPermission }
+
+      })
       return
     }
     const action = toAction(method);
@@ -50,44 +51,65 @@ export async function checkAccess(ctx: HookContext, next: NextFunction) {
       return next()
     }
 
-    let accessData = await stragegy.store?.getAccess(id as string)
-    const authorization = await stragegy.authorize(action, user, id, accessData)
-    if (!authorization.hasPermission) {
+    let entityData = await stragegy.store?.getAccess(id as string)
+    const hasPermission = await stragegy.authorizeEntity({ action, user, entityData })
+    if (!hasPermission) {
       throw new Error('Access denied');
     }
 
-    if (stragegy.store && data) {
-      async function updateAccessData(stragegy: AccessStrategy<unknown>, store: AccessStrategyDataStore<unknown>, updatedData: unknown) {
-        const manageAccessAuth = await stragegy.authorize('manage-access', user, id, accessData)
-        if (!manageAccessAuth.hasPermission) {
+    if (stragegy.store) {
+      const updatedData = getAccessControlUpdate(ctx, entityData)
+
+      if (updatedData) {
+        ctx.params[PreviousAccessControl] = entityData
+        const hasManagePermission = await stragegy.authorizeEntity({
+          action: 'manage-access', user, entityData,
+        })
+        if (!hasManagePermission) {
           throw new Error('Manage access denied');
         }
-        console.log('Storing access control data', updatedData)
-        store.dataValidator(updatedData)
-        await store.setAccess(id as string, updatedData)
-        accessData = updatedData
-      }
-
-      if ('accessControl' in data) {
-        updateAccessData(stragegy, stragegy.store, data.accessControl)
-        delete data.accessControl
-      }
-      if (isJsonPatch(ctx)) {
-        const patch = data.filter((op: any) => op.path.startsWith('/accessControl'))
-        const accessControlPatch = getPatched({ accessControl: accessData }, patch).accessControl
-        updateAccessData(stragegy, stragegy.store, accessControlPatch)
-
-        ctx.data = data.filter((op: any) => !op.path.startsWith('/accessControl'))
+        stragegy.store.dataValidator(updatedData)
+        await stragegy.store.setAccess(id as string, updatedData)
+        entityData = updatedData
       }
     }
 
     await next()
-    const result = ctx.result
-    ctx.result = {
-      ...result,
-      accessControl: accessData
-    }
+    ctx.result = addAccessData(ctx.result, entityData)
   })
+}
+
+async function authorizeList<T, R>(list: T[], authorizer: (item: T) => Promise<{ hasPermission?: boolean, entityData: R}>): Promise<T[]> {
+  const authorized = await Promise.all(
+    list.map(async item => {
+      const { entityData, hasPermission } = await authorizer(item)
+      return hasPermission
+        ? addAccessData(item, entityData)
+        : null
+    })
+  )
+  return authorized.filter(item => item !== null)
+}
+
+function addAccessData<T>(result: T, data: unknown): T {
+  return { ...result, accessControl: data } as T
+}
+
+function getAccessControlUpdate<T>(ctx: HookContext, entityData: T): T | undefined {
+  const { data } = ctx
+  if (!data) return undefined
+
+  if ('accessControl' in data) {
+    const accessControlData = data.accessControl
+    delete data.accessControl
+    return accessControlData
+  }
+  if (isJsonPatch(ctx)) {
+    const patch = data.filter((op: any) => op.path.startsWith('/accessControl'))
+    ctx.data = data.filter((op: any) => !op.path.startsWith('/accessControl'))
+    return getPatched({ accessControl: entityData }, patch).accessControl
+  }
+  return undefined
 }
 
 export function withAccessParams<T>(

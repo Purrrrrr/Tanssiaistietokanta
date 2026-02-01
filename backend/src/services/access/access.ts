@@ -4,15 +4,48 @@ import {
   accessQueryValidator,
   accessResolver,
   accessExternalResolver,
-  accessQueryResolver
+  accessQueryResolver,
+  ServiceName
 } from './access.schema'
 
 import type { Application, HookContext } from '../../declarations'
 import { AccessService, getOptions } from './access.class'
 import { accessPath, accessMethods } from './access.shared'
+import { FeathersService } from '@feathersjs/feathers'
+import { Publisher } from '@feathersjs/transport-commons/lib/channels/mixins'
+import { PreviousAccessControl } from './hooks'
 
 export * from './access.class'
 export * from './access.schema'
+
+export const channelAccessControl = (app: Application) => {
+  function wrapPublish(originalPublish: Publisher) {
+    return async function<T>(this: FeathersService, data: T, context: HookContext) {
+      const channels = await originalPublish.call(this, data, context)
+      if (!channels) {
+        return channels
+      }
+
+      return app.service('access').handlePublish(
+        context.path as ServiceName,
+        data,
+        channels,
+        context.params[PreviousAccessControl],
+      )
+    }
+  }
+
+  app.mixins.push(function (service: FeathersService) {
+    const publish = service.publish
+
+    service.publish = function(this: FeathersService, event, publisher) {
+      if (typeof event === 'function') {
+        return publish.call(this, wrapPublish(event) as any, undefined as any)
+      }
+      return publish.call(this, event, wrapPublish(publisher) as any)
+    } as typeof service.publish
+  })
+}
 
 // A configure function that registers the service and its hooks via `app.configure`
 export const access = (app: Application) => {

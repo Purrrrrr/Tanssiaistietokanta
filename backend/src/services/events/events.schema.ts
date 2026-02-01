@@ -40,6 +40,7 @@ export const eventsSchema = Type.Object(
 )
 
 export const eventAccessDataSchema = EventAccessData()
+export type EventAccessData = Static<typeof eventAccessDataSchema>
 
 function EventAccessData() {
   return Type.Object({

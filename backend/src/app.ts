@@ -21,6 +21,7 @@ import { MaxFileSize } from './services/files/files.class'
 import { logger, withRequestLogger } from './requestLogger'
 import sessions, { restSessionCookieMiddleware, socketIOSessionCookieMiddleware } from './internal-services/sessions'
 import { checkAccess } from './services/access/hooks'
+import { channelAccessControl } from './services/access/access'
 
 const app: Application = koa(feathers())
 
@@ -76,6 +77,7 @@ function allowLocalhostOnDev(origins: string[] | undefined) {
 }
 app.configure(channels)
 app.configure(authentication)
+app.configure(channelAccessControl)
 app.configure(services)
 app.configure(sessions)
 

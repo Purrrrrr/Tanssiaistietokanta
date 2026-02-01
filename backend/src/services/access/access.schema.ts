@@ -23,8 +23,8 @@ export const accessSchema = Type.Object(
     service: serviceNameSchema,
     action: Type.String(),
     entityId: Type.Optional(Id()),
-    validity: Type.Union([Type.Literal('global'), Type.Literal('entity')]),
-    appliesTo: Type.Union([Type.Literal('everyone'), Type.Literal('user')]),
+    target: Type.Union([Type.Literal('everything'), Type.Literal('entity')]),
+    // appliesTo: Type.Union([Type.Literal('everyone'), Type.Literal('user')]),
     allowed: Type.Union([Type.Literal('GRANT'), Type.Literal('DENY'), Type.Literal('UNKNOWN')]),
   },
   { $id: 'Access', additionalProperties: false }
