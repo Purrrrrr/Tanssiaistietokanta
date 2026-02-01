@@ -39,9 +39,13 @@ export function updateEntityFragment(typeName: string, fragment: DocumentNode, d
   if (!id) {
     throw new Error(`Missing id in updated value ${JSON.stringify(data)}`)
   }
-
+  const cache = getApolloCache()
+  debug('updating fragment', {
+    id: cache.identify({ ...data, __typename: typeName }),
+    data,
+  })
   getApolloCache().writeFragment({
-    id: `${typeName}:${id}`,
+    id: cache.identify({ ...data, __typename: typeName }),
     fragment,
     data,
   })

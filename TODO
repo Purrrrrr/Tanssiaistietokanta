@@ -263,7 +263,7 @@
   * Only send update events for events that user has access to
   * Some reusable system to manage publishing data for access controlled objects. 
     * Make sure that events that should "dissapear" are sent a notice event (but only if rights have changed)
-    Fix event list not updating
+  * Fix event list not updating
     Event edit rights
     Event access edit rights ("manage" action)
     File rights.

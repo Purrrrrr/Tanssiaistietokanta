@@ -1,5 +1,4 @@
 import { useMemo } from 'react'
-import equal from 'fast-deep-equal'
 
 import { backendQueryHook, entityCreateHook, entityDeleteHook, entityListQueryHook, entityUpdateHook, graphql, setupServiceUpdateFragment, useServiceEvents } from '../backend'
 
@@ -77,23 +76,6 @@ setupServiceUpdateFragment(
             _id, name
           }
           showInLists
-        }
-      }
-    }
-    workshops {
-      _id
-      name
-      abbreviation
-      description
-      teachers
-      instanceSpecificDances
-      instances {
-        _id
-        dateTime
-        durationInMinutes
-        abbreviation
-        dances {
-          _id, name
         }
       }
     }

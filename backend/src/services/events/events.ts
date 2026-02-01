@@ -20,7 +20,6 @@ import type { Application } from '../../declarations'
 import { EventsService, getOptions } from './events.class'
 import { eventsPath, eventsMethods } from './events.shared'
 import { mergeJsonPatch, SupportsJsonPatch } from '../../hooks/merge-json-patch'
-import { defaultChannels } from '../../utils/defaultChannels'
 import { AccessStrategy, AuthParams } from '../access/strategies'
 
 export * from './events.class'
@@ -42,7 +41,7 @@ export const events = (app: Application) => {
       all: [schemaHooks.resolveExternal(eventsExternalResolver), schemaHooks.resolveResult(eventsResolver)],
     },
     before: {
-      all: [mergeJsonPatch(omit(['_id', '_createdAt', '_updatedAt']) as (data: unknown) => unknown), schemaHooks.validateQuery(eventsQueryValidator), schemaHooks.resolveQuery(eventsQueryResolver)],
+      all: [mergeJsonPatch(omit(['_id', '_versionId', '_createdAt', '_updatedAt']) as (data: unknown) => unknown), schemaHooks.validateQuery(eventsQueryValidator), schemaHooks.resolveQuery(eventsQueryResolver)],
       find: [],
       get: [],
       create: [schemaHooks.validateData(eventsDataValidator), schemaHooks.resolveData(eventsDataResolver)],
@@ -55,32 +54,6 @@ export const events = (app: Application) => {
     error: {
       all: []
     }
-  }).publish((data, context) => {
-    return defaultChannels(app, context)
-    // if (Array.isArray(data)) {
-    //   logger.error('Publishing arrays of events is not supported')
-    // }
-    // return defaultChannels(app, context).flatMap(channel => {
-    //   //TODO turn into reusable function
-    //   if (data.allowedViewers.includes('everyone')) {
-    //     return [channel]
-    //   }
-    //   if (data.allowedViewers.includes('logged-in')) {
-    //     logger.info('users', { users: channel.connections.map(connection => !!connection.user) })
-    //     return [
-    //       channel.filter(connection => connection.user !== undefined),
-    //       channel.filter(connection => !connection.user).send({ _id: data._id, inaccessible: false }),
-    //     ]
-    //   }
-    //   return [
-    //     channel.filter(connection => {
-    //       return connection.user && data.allowedViewers.includes(allowUser(connection.user._id))
-    //     }),
-    //     channel.filter(connection => {
-    //       return !connection.user || !data.allowedViewers.includes(allowUser(connection.user._id))
-    //     }).send({ _id: data._id, inaccessible: false })
-    //   ]
-    // })
   })
 
   const allowUser = (userId: string) => `user:${userId}`;
