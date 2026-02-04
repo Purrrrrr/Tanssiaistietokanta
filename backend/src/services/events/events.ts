@@ -1,6 +1,8 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/service.html
+import * as L from 'partial.lenses';
+import * as R from 'ramda';
 import { hooks as schemaHooks } from '@feathersjs/schema'
-import { omit } from 'ramda'
+import { compose, omit } from 'ramda'
 
 import {
   eventsDataValidator,
@@ -41,7 +43,17 @@ export const events = (app: Application) => {
       all: [schemaHooks.resolveExternal(eventsExternalResolver), schemaHooks.resolveResult(eventsResolver)],
     },
     before: {
-      all: [mergeJsonPatch(omit(['_id', '_versionId', '_createdAt', '_updatedAt']) as (data: unknown) => unknown), schemaHooks.validateQuery(eventsQueryValidator), schemaHooks.resolveQuery(eventsQueryResolver)],
+      all: [
+        mergeJsonPatch(
+          compose(
+            omit(['_id', '_versionId', '_createdAt', '_updatedAt']) as (data: unknown) => unknown,
+            L.remove(['program', 'introductions', 'program', L.elems, 'dance']),
+            L.remove(['program', 'danceSets', L.elems, 'program', L.elems, 'dance']),
+            L.remove(['program', 'danceSets', L.elems, 'intervalMusic', L.when(R.isNotNil), 'dance']),
+          ),
+        ),
+        schemaHooks.validateQuery(eventsQueryValidator), schemaHooks.resolveQuery(eventsQueryResolver),
+      ],
       find: [],
       get: [],
       create: [schemaHooks.validateData(eventsDataValidator), schemaHooks.resolveData(eventsDataResolver)],

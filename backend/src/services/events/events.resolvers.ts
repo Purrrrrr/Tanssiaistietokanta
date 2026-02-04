@@ -5,7 +5,6 @@ import { versionHistoryFieldResolvers, versionHistoryResolver } from '../../util
 
 export default (app: Application) => {
   const workshopService = app.service('workshops')
-  const danceService = app.service('dances')
 
   function getWorkshops(workshopVersions: Record<string, string>) {
     const versionIds = Object.values(workshopVersions)
@@ -27,23 +26,6 @@ export default (app: Application) => {
       versionHistory: versionHistoryResolver(service),
     },
     VersionHistory: versionHistoryFieldResolvers(),
-    DanceSet: {
-      program: (obj: { program: any }) => L.modifyAsync(L.elems, getProgramItemData, obj.program),
-    },
-    Introductions: {
-      program: (obj: { program: any }) => L.modifyAsync(L.elems, getProgramItemData, obj.program),
-    },
-    EventProgramItem: {
-      __resolveType: (obj: { __typename: any }) => obj.__typename
-    },
-    ProgramItem: {
-      __resolveType: (obj: { __typename: any }) => obj.__typename
-    },
-    IntervalMusic: {
-      dance: (intervalMusic?: { dance?: string | null }) => {
-        return getDance(intervalMusic?.dance)
-      }
-    },
     Query: {
       events: (_: any, __: any, params: EventsParams | undefined) => service.find({...params, query: { $sort } }),
       event: (_: any, {id, versionId}: any, params: EventsParams | undefined) => versionId
@@ -66,31 +48,5 @@ export default (app: Application) => {
       },
       deleteEvent: (_: any, {id}: any, params: EventsParams | undefined) => service.remove(id, params)
     }
-  }
-
-  async function getProgramItemData(item: any) {
-    switch(item.type) {
-      case 'Dance':
-      case 'RequestedDance':
-        return await addDanceData(item)
-      case 'EventProgram':
-        return await addEventProgramData(item)
-      default:
-        throw new Error('unknown type name '+item.__typename)
-    }
-  }
-
-  async function addDanceData({dance: danceId, ...rest}: any) {
-    const dance = await getDance(danceId) ?? {_id: null}
-    const __typename = dance._id ? 'Dance' : 'RequestedDance'
-    return {item: {__typename, ...dance}, ...rest}
-  }
-
-  async function getDance(id: string | null | undefined) {
-    return id ? await danceService.get(id).catch(() => null) : null
-  }
-
-  async function addEventProgramData({eventProgram, type: __typename, ...rest}: any) {
-    return {item: {...eventProgram, __typename}, ...rest}
   }
 }

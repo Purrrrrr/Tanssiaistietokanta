@@ -1,10 +1,10 @@
 import classNames from 'classnames'
 
 import { InfoSign, Music, Time } from 'libraries/ui/icons'
-import { EventProgramItem } from 'components/event/EventProgramForm'
+import { EventProgramRow } from 'components/event/EventProgramForm'
 import { useT } from 'i18n'
 
-type ProgramType = EventProgramItem['__typename'] | 'IntervalMusic'
+type ProgramType = EventProgramRow['type'] | 'IntervalMusic'
 
 const typeClasses = {
   Dance: 'text-[#cd6266]',

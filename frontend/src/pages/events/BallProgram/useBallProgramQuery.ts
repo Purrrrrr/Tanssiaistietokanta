@@ -25,24 +25,23 @@ query BallProgram($eventId: ID!) {
         program {
           _id
           slideStyleId
-          item {
-            __typename
-            ... on ProgramItem {
-              name
-              description
-              duration
-            }
-            ... on Dance {
+          type
+          eventProgram {
+            name
+            description
+            duration
+            showInLists
+          }
+          dance {
+            _id
+            name
+            description
+            duration
+            source
+            teachedIn(eventId: $eventId) { 
               _id
-              source
-              teachedIn(eventId: $eventId) { 
-                _id
-                workshop { name }
-                instances { _id, abbreviation }
-              }
-            }
-            ... on EventProgram {
-              showInLists
+              workshop { name }
+              instances { _id, abbreviation }
             }
           }
         }
@@ -61,25 +60,24 @@ query BallProgram($eventId: ID!) {
         }
         program {
           _id
+          type
           slideStyleId
-          item {
-            __typename
-            ... on ProgramItem {
-              name
-              description
-              duration
-            }
-            ... on Dance {
+          eventProgram {
+            name
+            description
+            duration
+            showInLists
+          }
+          dance {
+            _id
+            name
+            description
+            duration
+            source
+            teachedIn(eventId: $eventId) { 
               _id
-              source
-              teachedIn(eventId: $eventId) { 
-                _id
-                workshop { name }
-                instances { _id, abbreviation }
-              }
-            }
-            ... on EventProgram {
-              showInLists
+              workshop { name }
+              instances { _id, abbreviation }
             }
           }
         }

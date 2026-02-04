@@ -19,3 +19,5 @@ type VersionDayInfo {
   date: String!
   versions: [VersionInfo!]!
 }
+
+scalar JSONPatch

@@ -19,8 +19,8 @@ export function EventMetadataContext(
   const currentDances = program.danceSets
     .flatMap(set => [
       ...set.program
-        .map(row => row.item)
-        .filter(item => item.__typename === 'Dance')
+        .map(row => row.dance)
+        .filter(dance => dance != null)
         .map(dance => dance._id),
       set.intervalMusic?.dance?._id,
     ])

@@ -1,3 +1,5 @@
+import { Dance } from 'types'
+
 export type EventSlideProps = TitleSlideProps | IntroductionSlideProps | DanceSetSlideProps | DanceProgramItemSlideProps | IntervalMusicSlideProps
 export type EventParentSlideProps = TitleSlideProps | DanceSetSlideProps
 
@@ -80,14 +82,16 @@ export interface DefaultIntervalMusic extends NameAndDescription {
 
 export interface EventProgramRow {
   _id: ID
-  item: EventProgramItem | RequestedDance
+  type: 'Dance' | 'EventProgram' | 'RequestedDance'
+  dance?: (Omit<Dance, 'wikipage'> & { teachedIn?: Workshop[] }) | null
+  eventProgram?: EventProgramData | null
   slideStyleId?: SlideStyleID
 }
 
-export interface EventProgramItem extends NameAndDescription {
-  __typename: 'Dance' | 'EventProgram'
-  teachedIn?: Workshop[]
-  showInLists?: boolean
+interface EventProgramData {
+  name: string
+  description?: string | null
+  showInLists: boolean
 }
 
 export interface Workshop {

@@ -2,11 +2,11 @@
   {
     "type": "uses",
     "service": "dances",
-    "path": "program.danceSets.program[type='Dance'].dance"
+    "path": "program.danceSets.program[type='Dance'].danceId"
   },
   {
     "type": "uses",
     "service": "dances",
-    "path": "program.danceSets.intervalMusic.dance"
+    "path": "program.danceSets.intervalMusic.danceId"
   }
 ]

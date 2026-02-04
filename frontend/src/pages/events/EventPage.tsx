@@ -8,6 +8,7 @@ import { useCreateWorkshop, useDeleteWorkshop } from 'services/workshops'
 
 import { DateField, DateRangeField, formFor, patchStrategy, SyncStatus, useAutosavingState } from 'libraries/forms'
 import { Button, Card, Collapse, H2, Link } from 'libraries/ui'
+import { DanceSet, EventProgramRow } from 'components/event/EventProgramForm'
 import { JSONPatch } from 'components/event/EventProgramForm/patchStrategy'
 import { FileList } from 'components/files/FileList'
 import { useGlobalLoadingAnimation } from 'components/LoadingState'
@@ -161,11 +162,12 @@ function EventProgram({ event, readOnly }: { event: Event, readOnly: boolean }) 
     </p>
   </>
 
-  function formatDances(program) {
+  function formatDances(program: DanceSet['program']) {
     const danceNames = program
-      .filter(({ item }) => item.__typename !== 'EventProgram' || item.showInLists)
-      .map(row => row.item.name)
-      .filter(a => a)
+      .filter(row => row.type === 'Dance' || row.eventProgram?.showInLists)
+      .map(row => row.dance ?? row.eventProgram)
+      .filter(item => item != null)
+      .map(item => item.name)
     const requestedDanceCount = program.filter(isRequestedDance).length
     if (requestedDanceCount) {
       danceNames.push(t('requestedDance', { count: requestedDanceCount }))
@@ -175,7 +177,7 @@ function EventProgram({ event, readOnly }: { event: Event, readOnly: boolean }) 
   }
 }
 
-const isRequestedDance = row => row.item.__typename === 'RequestedDance'
+const isRequestedDance = (row: EventProgramRow) => row.type === 'RequestedDance'
 
 function EventWorkshops({ event, readOnly }: { event: Event, readOnly: boolean }) {
   const { workshops, _id: eventId, beginDate, endDate } = event

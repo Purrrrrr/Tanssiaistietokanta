@@ -1,4 +1,4 @@
-import type { DanceProgramItemSlideProps, DanceSetSlideProps, EventParentSlideProps, EventProgram, EventProgramItem, EventSlideProps, IntervalMusicSlideProps } from './types'
+import type { DanceProgramItemSlideProps, DanceSetSlideProps, EventParentSlideProps, EventProgram, EventSlideProps, IntervalMusicSlideProps } from './types'
 
 import { LinkComponentType, Slide, SlideNavigation, SlideNavigationList } from 'components/Slide'
 
@@ -21,13 +21,17 @@ export function EventSlide(props: WithCommonProps<EventSlideProps>) {
         linkComponent={linkComponent}
       />
     case 'introduction': {
-      const { item, slideStyleId } = eventProgram.introductions.program[props.itemIndex]
+      const { eventProgram: program, slideStyleId } = eventProgram.introductions.program[props.itemIndex]
+      if (!program) {
+        console.error('No introduction program found for slide', props)
+        return null
+      }
       return <Slide
         id={id}
         title={props.title}
         slideStyleId={slideStyleId ?? eventProgram.slideStyleId}
         linkComponent={linkComponent}
-        children={markdown((item as EventProgramItem).description)}
+        children={markdown(program.description)}
       />
     }
     case 'danceSet':
@@ -79,16 +83,16 @@ function IntervalMusicSlide(props: WithCommonProps<IntervalMusicSlideProps>) {
 
 function DanceProgramItemSlide(props: WithCommonProps<DanceProgramItemSlideProps>) {
   const { id, next, title, linkComponent, eventProgram, danceSetIndex, itemIndex } = props
-  const { item, slideStyleId } = eventProgram.danceSets[danceSetIndex].program[itemIndex]
+  const { type, dance, eventProgram: program, slideStyleId } = eventProgram.danceSets[danceSetIndex].program[itemIndex]
 
-  const content = item.__typename === 'RequestedDance'
+  const content = type === 'RequestedDance'
     ? {
       children: '',
     }
     : {
-      children: markdown(item.description ?? ''),
-      footer: item.teachedIn?.length
-        ? <TeachedIn teachedIn={item.teachedIn} />
+      children: markdown(dance?.description ?? program?.description ?? ''),
+      footer: dance?.teachedIn?.length
+        ? <TeachedIn teachedIn={dance.teachedIn} />
         : undefined,
     }
 

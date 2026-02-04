@@ -30,15 +30,15 @@ export function MissingDanceInstructionsWarning({ program }: { program: EventPro
   const missing = program.danceSets
     .flatMap(danceSet => {
       return danceSet.program
-        .map(row => {
-          if (row.item.__typename !== 'Dance') return null
-          if (!isMissingInstruction(row.item)) return null
+        .map(({ _id, dance }) => {
+          if (!dance) return null
+          if (!isMissingInstruction(dance)) return null
 
-          return { id: row._id, danceSet, dance: row.item }
+          return { id: _id, danceSet, dance: dance }
         })
         .filter(row => row !== null)
     })
-    .sort(compareBy(item => item.dance.name))
+    .sort(compareBy(row => row.dance.name))
 
   if (missing.length === 0) return null
 
@@ -130,8 +130,8 @@ export function DuplicateDancesWarning({ program }: { program: EventProgramSetti
 
   for (const danceSet of program.danceSets.values()) {
     danceSet.program
-      .map(row => row.item)
-      .filter(item => item.__typename === 'Dance')
+      .map(row => row.dance)
+      .filter(dance => !!dance)
       .forEach(dance => {
         if (dance._id in duplicateMap) {
           duplicateMap[dance._id].danceSets.push(danceSet)

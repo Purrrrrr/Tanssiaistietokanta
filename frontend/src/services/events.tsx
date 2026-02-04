@@ -29,18 +29,27 @@ setupServiceUpdateFragment(
         program {
           _id
           slideStyleId
-          item {
-            __typename
-            ... on ProgramItem {
-              name
-              duration
-              description
+          type
+          eventProgram {
+            name
+            description
+            duration
+            showInLists
+          }
+          danceId
+          dance {
+            _id
+            name
+            duration
+            description
+            wikipageName
+            wikipage {
+              instructions
             }
-            ... on Dance {
+            teachedIn(eventId: $id) {
               _id
-            }
-            ... on EventProgram {
-              showInLists
+              workshop { name, abbreviation }
+              instances { _id, abbreviation }
             }
           }
         }
@@ -51,18 +60,27 @@ setupServiceUpdateFragment(
         titleSlideStyleId
         program {
           _id
-          item {
-            __typename
-            ... on ProgramItem {
-              name
-              duration
-              description
+          type
+          eventProgram {
+            name
+            description
+            duration
+            showInLists
+          }
+          danceId
+          dance {
+            _id
+            name
+            duration
+            description
+            wikipageName
+            wikipage {
+              instructions
             }
-            ... on Dance {
+            teachedIn(eventId: $id) {
               _id
-            }
-            ... on EventProgram {
-              showInLists
+              workshop { name, abbreviation }
+              instances { _id, abbreviation }
             }
           }
           slideStyleId
@@ -72,6 +90,7 @@ setupServiceUpdateFragment(
           description
           duration
           slideStyleId
+          danceId
           dance {
             _id, name
           }
@@ -122,18 +141,27 @@ query getEvent($id: ID!, $versionId: ID) {
         program {
           _id
           slideStyleId
-          item {
-            __typename
-            ... on ProgramItem {
-              name
-              duration
-              description
+          type
+          eventProgram {
+            name
+            description
+            duration
+            showInLists
+          }
+          danceId
+          dance {
+            _id
+            name
+            duration
+            description
+            wikipageName
+            wikipage {
+              instructions
             }
-            ... on Dance {
+            teachedIn(eventId: $id) {
               _id
-            }
-            ... on EventProgram {
-              showInLists
+              workshop { name, abbreviation }
+              instances { _id, abbreviation }
             }
           }
         }
@@ -144,27 +172,27 @@ query getEvent($id: ID!, $versionId: ID) {
         titleSlideStyleId
         program {
           _id
-          item {
-            __typename
-            ... on ProgramItem {
-              name
-              duration
-              description
+          type
+          eventProgram {
+            name
+            description
+            duration
+            showInLists
+          }
+          danceId
+          dance {
+            _id
+            name
+            duration
+            description
+            wikipageName
+            wikipage {
+              instructions
             }
-            ... on Dance {
+            teachedIn(eventId: $id) {
               _id
-              wikipageName
-              wikipage {
-                instructions
-              }
-              teachedIn(eventId: $id) {
-                _id
-                workshop { name, abbreviation }
-                instances { _id, abbreviation }
-              }
-            }
-            ... on EventProgram {
-              showInLists
+              workshop { name, abbreviation }
+              instances { _id, abbreviation }
             }
           }
           slideStyleId
@@ -174,6 +202,7 @@ query getEvent($id: ID!, $versionId: ID) {
           description
           duration
           slideStyleId
+          danceId
           dance {
             _id, name
           }
@@ -264,23 +293,27 @@ mutation patchEventProgram($id: ID!, $program: JSONPatch!) {
         program {
           _id
           slideStyleId
-          item {
-            __typename
-            ... on ProgramItem {
-              name
-              duration
-              description
+          type
+          eventProgram {
+            name
+            description
+            duration
+            showInLists
+          }
+          danceId
+          dance {
+            _id
+            name
+            duration
+            description
+            wikipageName
+            wikipage {
+              instructions
             }
-            ... on Dance {
+            teachedIn(eventId: $id) {
               _id
-              teachedIn(eventId: $id) {
-                _id
-                workshop { name, abbreviation }
-                instances { _id, abbreviation }
-              }
-            }
-            ... on EventProgram {
-              showInLists
+              workshop { name, abbreviation }
+              instances { _id, abbreviation }
             }
           }
         }
@@ -291,18 +324,27 @@ mutation patchEventProgram($id: ID!, $program: JSONPatch!) {
         titleSlideStyleId
         program {
           _id
-          item {
-            __typename
-            ... on ProgramItem {
-              name
-              duration
-              description
+          type
+          eventProgram {
+            name
+            description
+            duration
+            showInLists
+          }
+          danceId
+          dance {
+            _id
+            name
+            duration
+            description
+            wikipageName
+            wikipage {
+              instructions
             }
-            ... on Dance {
+            teachedIn(eventId: $id) {
               _id
-            }
-            ... on EventProgram {
-              showInLists
+              workshop { name, abbreviation }
+              instances { _id, abbreviation }
             }
           }
           slideStyleId
@@ -312,6 +354,7 @@ mutation patchEventProgram($id: ID!, $program: JSONPatch!) {
           description
           duration
           slideStyleId
+          danceId
           dance {
             _id, name
           }

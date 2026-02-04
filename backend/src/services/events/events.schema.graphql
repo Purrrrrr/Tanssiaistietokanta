@@ -53,27 +53,24 @@ type DanceSet {
 type EventProgramRow {
   _id: ID!
   slideStyleId: ID
-  item: EventProgramItem!
-}
-union EventProgramItem = RequestedDance | Dance | EventProgram
-
-interface ProgramItem {
-  name: String!
-  duration: Float
-  description: String
+  type: EventProgramRowType!
+  danceId: ID
+  dance: Dance
+  eventProgram: EventProgram
 }
 
-type RequestedDance {
-  _: Int
+enum EventProgramRowType {
+  RequestedDance
+  Dance
+  EventProgram
 }
 
-type EventProgram implements ProgramItem {
+type EventProgram {
   name: String! 
   nameInLists: String
   description: String
   duration: Float
   showInLists: Boolean!
-  slideStyleId: ID
 }
 
 type IntervalMusic {
@@ -81,6 +78,7 @@ type IntervalMusic {
   description: String
   duration: Float!
   slideStyleId: ID
+  danceId: ID
   dance: Dance
   showInLists: Boolean!
 }
@@ -99,24 +97,6 @@ input EventInput {
   accessControl: EventAccessControlInput
 }
 
-input EventPatchInput {
-  name: String
-  beginDate: String
-  endDate: String
-  accessControl: EventAccessControlInput
-}
-
 input EventAccessControlInput {
   viewers: [String!]!
 }
-
-enum IntroductionProgramType {
-  EventProgram
-}
-enum ProgramType {
-  Dance
-  EventProgram
-  RequestedDance
-}
-
-scalar JSONPatch

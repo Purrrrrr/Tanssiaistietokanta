@@ -2,12 +2,13 @@ import { useMemo } from 'react'
 
 import { EventParentSlideProps, EventProgram, EventProgramRow, EventSlideProps } from './types'
 
-import { useTranslation } from 'i18n'
+import { useT, useTranslation } from 'i18n'
+import { getProgramName } from '../utils'
 
 export const startSlideId = ''
 
 export function useEventSlides(program?: EventProgram): EventSlideProps[] {
-  const programItemTitle = useProgramItemTitle()
+  const programItemTitle = useProgramRowTitle()
   const defaultIntervalMusicTitle = useTranslation('components.eventProgramEditor.programTypes.IntervalMusic')
 
   return useMemo(
@@ -17,9 +18,9 @@ export function useEventSlides(program?: EventProgram): EventSlideProps[] {
           id: startSlideId,
           type: 'title',
           title: program.introductions.title,
-          children: program.introductions.program.map((item, idx) => ({
-            id: item._id,
-            title: programItemTitle(item),
+          children: program.introductions.program.map((row, idx) => ({
+            id: row._id,
+            title: programItemTitle(row),
             type: 'introduction',
             parentId: startSlideId,
             itemIndex: idx,
@@ -31,14 +32,14 @@ export function useEventSlides(program?: EventProgram): EventSlideProps[] {
           type: 'danceSet' as const,
           danceSetIndex,
           children: [
-            ...danceSet.program.map((item, idx) => ({
-              id: item._id,
-              title: programItemTitle(item),
+            ...danceSet.program.map((row, idx) => ({
+              id: row._id,
+              title: programItemTitle(row),
               type: 'programItem',
               parentId: danceSet._id,
               danceSetIndex,
               itemIndex: idx,
-              showInLists: item.item.__typename !== 'EventProgram' || item.item.showInLists !== false,
+              showInLists: row.type !== 'EventProgram' || row.eventProgram?.showInLists !== false,
             } as const)),
             ...(
               danceSet.intervalMusic
@@ -79,12 +80,10 @@ function addNextLinks(slides: EventSlideProps[]): EventSlideProps[] {
   return slides
 }
 
-function useProgramItemTitle() {
-  const requestedDanceTitle = useTranslation('components.eventProgramEditor.programTypes.RequestedDance')
+function useProgramRowTitle() {
+  const T = useT('components.eventProgramEditor')
 
-  return (item: EventProgramRow) => item.item.__typename === 'RequestedDance'
-    ? requestedDanceTitle
-    : item.item.name ?? ''
+  return (row: EventProgramRow) => getProgramName(row, T)
 }
 
 function intervalMusicId(danceSetId: string): string {

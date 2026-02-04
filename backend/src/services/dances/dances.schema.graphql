@@ -4,7 +4,7 @@ type Query {
   dances: [Dance!]!
 }
 
-type Dance implements ProgramItem & Versionable {
+type Dance implements Versionable {
   _id: ID!
   _versionId: String
   _versionNumber: String

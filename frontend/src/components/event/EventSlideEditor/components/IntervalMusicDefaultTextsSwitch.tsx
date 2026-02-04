@@ -1,4 +1,5 @@
-import { DEFAULT_INTERVAL_MUSIC, IntervalMusic, switchFor } from 'components/event/EventProgramForm'
+import { IntervalMusic, switchFor } from 'components/event/EventProgramForm'
+import { DEFAULT_INTERVAL_MUSIC } from 'components/event/utils'
 
 export const IntervalMusicSwitch = switchFor<IntervalMusic>({
   isChecked: intervalMusic => (intervalMusic?.duration ?? 0) > 0,

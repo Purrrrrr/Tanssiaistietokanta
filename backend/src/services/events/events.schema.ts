@@ -1,5 +1,6 @@
 // // For more information about this file see https://dove.feathersjs.com/guides/cli/service.schemas.html
 import { resolve } from '@feathersjs/schema'
+import * as L from 'partial.lenses'
 import { Type, getValidator, querySyntax } from '@feathersjs/typebox'
 import type { Static, TObject, TProperties } from '@feathersjs/typebox'
 
@@ -57,35 +58,54 @@ function Introductions() {
       slideStyleId: SlideStyleId(),
       type: Type.Literal('EventProgram'),
       eventProgram: EventProgram(),
+      danceId: Type.Optional(Type.Null()),
     }))
   })
 }
+
 function DanceSet() {
   return  ClosedObject({
     _id: Type.String(),
     title: Type.String(),
     titleSlideStyleId: SlideStyleId(),
-    program: Type.Array(ClosedObject({
-      _id: Type.String(),
-      slideStyleId: SlideStyleId(),
-      type: Type.Union([
-        Type.Literal('Dance'),
-        Type.Literal('RequestedDance'),
-        Type.Literal('EventProgram'),
-      ]),
-      dance: Type.Optional(Type.String()),
-      eventProgram: Type.Optional(EventProgram()),
-    })),
+    program: Type.Array(EventProgramRow()),
     intervalMusic: Nullable(ClosedObject({
       name: Nullable(Type.String()),
       description: Nullable(Type.String()),
       duration: Type.Number(),
       slideStyleId: SlideStyleId(),
-      dance: Type.Optional(Type.String()),
+      danceId: Nullable(Id()),
       showInLists: Type.Boolean(),
     }))
   })
 }
+
+function EventProgramRow() {
+  return Type.Union([
+    ClosedObject({
+      _id: Type.String(),
+      slideStyleId: SlideStyleId(),
+      type: Type.Literal('Dance'),
+      danceId: Id(),
+      eventProgram: Type.Optional(Type.Null()),
+    }),
+    ClosedObject({
+      _id: Type.String(),
+      slideStyleId: SlideStyleId(),
+      type: Type.Literal('RequestedDance'),
+      danceId: Type.Optional(Type.Null()),
+      eventProgram: Type.Optional(Type.Null()),
+    }),
+    ClosedObject({
+      _id: Type.String(),
+      slideStyleId: SlideStyleId(),
+      type: Type.Literal('EventProgram'),
+      danceId: Type.Optional(Type.Null()),
+      eventProgram: Type.Optional(EventProgram()),
+    }),
+  ])
+}
+
 function EventProgram() {
   return ClosedObject({
     name: Type.String(),
@@ -104,7 +124,35 @@ function ClosedObject<P extends TProperties>(o: P): TObject<P> {
 
 export type Events = Static<typeof eventsSchema>
 export const eventsValidator = getValidator(eventsSchema, dataValidator)
-export const eventsResolver = resolve<Events, HookContext>({})
+export const eventsResolver = resolve<Events, HookContext>({
+
+  program: async (program, _event, context) => {
+    const danceService = context.app.service('dances')
+
+    const fetchDance = async (item: { danceId: string }) => {
+      if (!item) return item
+      const dance = item.danceId
+        ? await danceService.get(item.danceId).catch(() => null)
+        : null
+      return {
+        ...item,
+        dance
+      }
+    }
+
+    return L.modifyAsync(
+      ['danceSets', L.elems],
+      async (danceSet: any) => {
+        return {
+          ...danceSet,
+          intervalMusic: await fetchDance(danceSet.intervalMusic),
+          program: await L.modifyAsync(L.elems, fetchDance, danceSet.program)
+        }
+      },
+      program,
+    )
+  }
+})
 
 export const eventsExternalResolver = resolve<Events, HookContext>({})
 

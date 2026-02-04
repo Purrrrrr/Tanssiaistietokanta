@@ -10,7 +10,6 @@ import {
   Field,
   Form,
   ListField,
-  programItemToString,
   T,
   useEventProgramEditorForm,
 } from 'components/event/EventProgramForm'
@@ -19,6 +18,7 @@ import { BackLink } from 'components/widgets/BackLink'
 import { DurationField } from 'components/widgets/DurationField'
 import { useT } from 'i18n'
 
+import { getProgramName } from '../utils'
 import {
   AddDanceSetButton,
   AddIntroductionButton,
@@ -31,8 +31,6 @@ import { DanceCategoryStats } from './components/stats'
 import { SlideshowEditor } from './SlideshowEditor'
 
 import './EventProgramEditor.sass'
-
-export { programItemToString }
 
 interface EventProgramEditorProps {
   event: Event
@@ -84,7 +82,7 @@ function MainEditor({ program }: { program: EventProgramSettings }) {
         label=""
         path="danceSets"
         component={DanceSetEditor}
-        renderConflictItem={item => renderDanceSetValue(item, t)} />
+        renderConflictItem={danceSet => renderDanceSetValue(danceSet, t)} />
     </ListEditorContext>
     <div className="my-3.5">
       {danceSets.length === 0 && t('danceProgramIsEmpty')}
@@ -94,7 +92,9 @@ function MainEditor({ program }: { program: EventProgramSettings }) {
   </section>
 }
 
-function renderDanceSetValue(item: DanceSet, t: T) {
-  const program = item.program.map(i => programItemToString(i, t)).join(', ')
-  return `${item.title} (${program})`
+function renderDanceSetValue(danceSet: DanceSet, t: T) {
+  const program = danceSet.program
+    .map(i => getProgramName(i, t))
+    .join(', ')
+  return `${danceSet.title} (${program})`
 }

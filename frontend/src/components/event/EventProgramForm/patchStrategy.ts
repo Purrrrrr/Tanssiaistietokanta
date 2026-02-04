@@ -1,6 +1,6 @@
 import * as L from 'partial.lenses'
 
-import { DanceSet, EventProgramRow, EventProgramSettings } from './types'
+import { EventProgramRow, EventProgramSettings } from './types'
 
 import { cleanMetadataValues } from 'backend'
 
@@ -25,9 +25,7 @@ function toProgramInput({ introductions, danceSets, ...rest }: EventProgramSetti
       L.elems,
       compose(
         (danceSet) => (
-          (danceSet as DanceSet).intervalMusic
-            ? L.modify(['intervalMusic', 'dance'], (dance) => dance?._id, danceSet)
-            : danceSet
+          L.modify(['intervalMusic', L.when(val => val != null), 'dance'], (dance) => dance?._id, danceSet)
         ),
         L.modify(['program', L.elems], toProgramItemInput),
       ),
@@ -41,25 +39,6 @@ function compose(fun: (val: unknown) => unknown, fun2: (val: unknown) => unknown
   return (value: unknown) => fun2(fun(value))
 }
 
-function toProgramItemInput(row: EventProgramRow) {
-  const { _id, slideStyleId, item } = row
-  if (item === undefined) console.log(row)
-  const { __typename, ...restItem } = item
-  const commonProps = { _id, slideStyleId, type: __typename }
-  switch (__typename) {
-    case 'Dance':
-      return {
-        ...commonProps,
-        dance: item._id,
-      }
-    case 'RequestedDance':
-      return commonProps
-    case 'EventProgram':
-      return {
-        ...commonProps,
-        eventProgram: restItem,
-      }
-    default:
-      throw new Error('Unexpected program item type ' + __typename)
-  }
+function toProgramItemInput({ dance, ...row }: EventProgramRow) {
+  return row
 }

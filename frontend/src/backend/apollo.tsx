@@ -7,10 +7,6 @@ export { ApolloClient }
 export type { DocumentNode, FetchResult, MutationResult } from '@apollo/client'
 
 const cache = new InMemoryCache({
-  possibleTypes: {
-    EventProgramItem: ['RequestedDance', 'Dance', 'EventProgram'],
-    ProgramItem: ['Dance', 'EventProgram'],
-  },
   typePolicies: {
     Query: {
       fields: {

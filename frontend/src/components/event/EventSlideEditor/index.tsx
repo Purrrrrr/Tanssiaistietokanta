@@ -17,7 +17,6 @@ import {
   Input,
   ListField,
   ProgramItemPath,
-  programItemToString,
   ProgramSectionPath,
   RemoveItemButton,
   Switch,
@@ -29,6 +28,7 @@ import { Duration } from 'components/widgets/Duration'
 import { T, useT, useTranslation } from 'i18n'
 
 import { AddIntroductionButton, DanceSetItemButtons } from '../EventProgramEditor/components'
+import { getProgramDuration, getProgramName } from '../utils'
 import { InheritedSlideStyleSelector, IntervalMusicDefaultTextsSwitch } from './components'
 
 import './EventSlideEditor.scss'
@@ -45,8 +45,6 @@ type EventSlideEditorProps = WithEventProgram<EventSlideProps>
 
 export function EventSlideEditor({ syncStatus, ...props }: EventSlideEditorProps) {
   const slideStylePath = getSlideStylePath(props)
-  // const isDance = props.type === 'programItem' &&
-  //  props.eventProgram.danceSets[props.danceSetIndex].program[props.itemIndex].item
 
   return <>
     <SectionCard>
@@ -75,11 +73,11 @@ function DanceSelector(props: WithEventProgram<EventSlideProps>) {
 
   if (props.type !== 'programItem') return null
 
-  const itemPath = `danceSets.${props.danceSetIndex}.program.${props.itemIndex}` as const
-  const item = props.eventProgram.danceSets[props.danceSetIndex].program[props.itemIndex]
-  const itemType = item.item.__typename
-  if ((itemType === 'Dance' || itemType === 'RequestedDance')) {
-    return <Field label={t('dance')} path={`${itemPath}.item`} component={DanceProgramChooser} labelStyle="beside" />
+  const rowPath = `danceSets.${props.danceSetIndex}.program.${props.itemIndex}` as const
+  const row = props.eventProgram.danceSets[props.danceSetIndex].program[props.itemIndex]
+  const rowType = row.type
+  if ((rowType === 'Dance' || rowType === 'RequestedDance')) {
+    return <Field label={t('dance')} path={rowPath} component={DanceProgramChooser} labelStyle="beside" />
   }
   return null
 }
@@ -133,7 +131,7 @@ export function EventSlideContentEditor(props: WithEventProgram<EventSlideProps>
           label={t('titles.introductoryInformation')}
           path="introductions.program"
           component={ProgramItem}
-          renderConflictItem={item => programItemToString(item, t)}
+          renderConflictItem={item => getProgramName(item, t)}
         />
         <AddIntroductionButton />
       </SectionCard>
@@ -150,7 +148,7 @@ export function EventSlideContentEditor(props: WithEventProgram<EventSlideProps>
           label=""
           path={`${itemPath}.program`}
           component={ProgramItem}
-          renderConflictItem={item => programItemToString(item, t)}
+          renderConflictItem={item => getProgramName(item, t)}
         />
         <DanceSetItemButtons path={itemPath} />
       </SectionCard>
@@ -162,8 +160,8 @@ export function EventSlideContentEditor(props: WithEventProgram<EventSlideProps>
       </SectionCard>
     }
     case 'programItem': {
-      const itemPath = `danceSets.${props.danceSetIndex}.program.${props.itemIndex}` as const
-      return <ProgramItemEditor path={itemPath} />
+      const rowPath = `danceSets.${props.danceSetIndex}.program.${props.itemIndex}` as const
+      return <ProgramItemEditor path={rowPath} />
     }
   }
 }
@@ -176,18 +174,18 @@ interface ProgramItemProps {
 
 const ProgramItem = React.memo(function ProgramEditor({ dragHandle, path, itemIndex }: ProgramItemProps) {
   const t = useT('components.eventProgramEditor')
-  const itemPath = `${path}.${itemIndex}` as ProgramItemPath
-  const item = useValueAt(itemPath)
+  const rowPath = `${path}.${itemIndex}` as ProgramItemPath
+  const row = useValueAt(rowPath)
 
-  if (!item) return null
-  const { __typename } = item.item
+  if (!row) return null
+  const { type } = row
 
   return <div className="flex gap-3.5 items-center program-list-item">
-    <ProgramTypeIcon type={__typename} />
+    <ProgramTypeIcon type={type} />
     <div className="grow item-name">
-      <LinkToSlide id={item._id}>{programItemToString(item, t)}</LinkToSlide>
+      <LinkToSlide id={row._id}>{getProgramName(row, t)}</LinkToSlide>
     </div>
-    <div><Duration value={__typename === 'RequestedDance' ? 0 : item.item.duration} /></div>
+    <div><Duration value={getProgramDuration(row)} /></div>
     <div className="buttons">
       {dragHandle}
       <RemoveItemButton path={path} index={itemIndex} title={t('buttons.remove')} icon={<Cross />} className="deleteItem" />
@@ -222,21 +220,22 @@ function IntervalMusicDescriptionEditor({ danceSetIndex }: { danceSetIndex: numb
 
 function ProgramItemEditor({ path }: { path: ProgramItemPath }) {
   const t = useT('components.eventProgramEditor')
-  const item = useValueAt(`${path}.item`)
+  const { type, dance } = useValueAt(path)
 
-  switch (item.__typename) {
+  switch (type) {
     case 'Dance':
+      if (!dance) return null
       return <SectionCard>
-        <DanceEditor id={item._id} />
+        <DanceEditor id={dance?._id} />
       </SectionCard>
     case 'RequestedDance':
       return null
     case 'EventProgram':
       return <SectionCard>
         <H2><T msg="pages.events.ballProgram.infoTitle" /></H2>
-        <Input label={t('fields.eventProgram.name')} path={`${path}.item.name`} required />
-        <Field label={t('fields.eventProgram.description')} path={`${path}.item.description`} component={MarkdownEditor} componentProps={markdownEditorProps} />
-        <Switch label={t('fields.eventProgram.showInLists')} path={`${path}.item.showInLists`} inline />
+        <Input label={t('fields.eventProgram.name')} path={`${path}.eventProgram.name`} required />
+        <Field label={t('fields.eventProgram.description')} path={`${path}.eventProgram.description`} component={MarkdownEditor} componentProps={markdownEditorProps} />
+        <Switch label={t('fields.eventProgram.showInLists')} path={`${path}.eventProgram.showInLists`} inline />
         <Callout><T msg="pages.events.ballProgram.currentItemAlwaysShownInLists" /></Callout>
       </SectionCard>
   }

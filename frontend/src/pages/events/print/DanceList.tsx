@@ -46,10 +46,8 @@ function DanceList({ eventId }) {
               return <AutosizedSection key={key} className="text-center section">
                 <h2 className="mb-4 text-3xl font-bold">{title}</h2>
                 {program
-                  .map(row => row.item)
-                  .filter(item => item.__typename !== 'EventProgram' || item.showInLists)
-                  .map((item, i) =>
-                    <ProgramItem key={i} item={item} showLinks={showLinks} />,
+                  .map((row, i) =>
+                    <ProgramItem key={i} row={row} showLinks={showLinks} />,
                   )}
               </AutosizedSection>
             },
@@ -72,14 +70,17 @@ function Footer({ workshops }) {
   </>
 }
 
-function ProgramItem({ item, showLinks }: { item: BallProgramItem, showLinks: boolean }) {
-  switch (item.__typename) {
+function ProgramItem({ row, showLinks }: { row: BallProgramRow, showLinks: boolean }) {
+  switch (row.type) {
     case 'RequestedDance':
       return <p><RequestedDance /></p>
     case 'EventProgram':
-      return <p>{item.name}</p>
+      if (!row.eventProgram?.showInLists) return null
+      return <p>{row.eventProgram.name}</p>
     case 'Dance': {
-      const teachedIn = item.teachedIn
+      if (!row.dance) return null
+      const { teachedIn, name, wikipageName } = row.dance
+      const teachedInLinks = teachedIn
         .map(({ workshop, instances }) => instances
           ? `${workshop.abbreviation} ${instances.map(i => i.abbreviation).join('/')}`
           : workshop.abbreviation,
@@ -88,10 +89,10 @@ function ProgramItem({ item, showLinks }: { item: BallProgramItem, showLinks: bo
         .join(', ')
 
       return <p>
-        {showLinks && item.wikipageName
-          ? <LinkToDanceWiki page={item.wikipageName}>{item.name}</LinkToDanceWiki>
-          : item.name}
-        {teachedIn && ` (${teachedIn})`}
+        {showLinks && wikipageName
+          ? <LinkToDanceWiki page={wikipageName}>{name}</LinkToDanceWiki>
+          : name}
+        {teachedInLinks && ` (${teachedInLinks})`}
       </p>
     }
   }
@@ -119,23 +120,20 @@ query getDanceList($eventId: ID!) {
       danceSets {
         title
         program {
-          item {
-            __typename
-            ... on ProgramItem {
-              name
-            }
-            ... on Dance {
-              teachedIn(eventId: $eventId) {
-                workshop {
-                  name, abbreviation
-                }
-                instances { abbreviation }
+          type
+          dance {
+            name
+            teachedIn(eventId: $eventId) {
+              workshop {
+                name, abbreviation
               }
-              wikipageName
+              instances { abbreviation }
             }
-            ... on EventProgram {
-              showInLists
-            }
+            wikipageName
+          }
+          eventProgram {
+            name
+            showInLists
           }
         }
       }
@@ -156,6 +154,6 @@ function useBallProgram(eventId: string) {
 }
 
 type BallProgram = ReturnType<typeof useBallProgram>
-type BallProgramItem = Exclude<BallProgram['program'], null>['danceSets'][number]['program'][number]['item']
+type BallProgramRow = Exclude<BallProgram['program'], null>['danceSets'][number]['program'][number]
 
 export default DanceList
