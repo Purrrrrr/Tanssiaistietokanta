@@ -1,6 +1,7 @@
 import type { Params, ServiceInterface } from '@feathersjs/feathers'
 import { Middleware } from '@feathersjs/koa'
 import { ApolloServer } from "@apollo/server";
+import { unwrapResolverError } from "@apollo/server/errors";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import { koaMiddleware } from "@as-integrations/koa";
 import { loadFilesSync } from '@graphql-tools/load-files'
@@ -12,6 +13,7 @@ import { ErrorWithStatus } from '../../hooks/addErrorStatusCode';
 import { GraphQLError } from 'graphql';
 import { addLogData } from '../../requestLogger';
 import { withAccessParams } from '../access/hooks';
+import { BadRequest } from '@feathersjs/errors';
 
 type Graphql = any
 type GraphqlData = any
@@ -121,10 +123,20 @@ export class GraphqlService<ServiceParams extends GraphqlParams = GraphqlParams>
     const server = new ApolloServer({
       typeDefs: this.options.schema,
       formatError: (formattedError, error) => {
+        const unwrapped = unwrapResolverError(error)
         if (error instanceof GraphQLError) {
           const { originalError } = error
           if (originalError instanceof ErrorWithStatus) {
             return originalError.result
+          }
+        }
+        if (unwrapped instanceof BadRequest) {
+          return {
+            ...formattedError,
+            extensions: {
+              ...formattedError.extensions,
+              data: unwrapped.data,
+            }
           }
         }
         return formattedError
