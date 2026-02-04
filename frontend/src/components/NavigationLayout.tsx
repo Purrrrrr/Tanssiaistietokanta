@@ -11,6 +11,10 @@ import { SupportedBrowserChecker } from './SupportedBrowserWarning'
 
 import './NavigationLayout.sass'
 
+if (process.env.NODE_ENV === 'development') {
+  import('./dev.css')
+}
+
 function NavigationLayout({ children }) {
   if (navigationHidden()) {
     return <BreadcrumbContext>
