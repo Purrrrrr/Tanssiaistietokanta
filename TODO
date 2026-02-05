@@ -267,12 +267,15 @@
   * Fix event list not updating
   * Fix event program graphql structure to match db structure more closely
   * Fix changing dances leading to teachedIn becoming undefined in slide editor
-    Don't fetch dances on the backend if not necessary
+  * Don't fetch dances on the backend if not necessary
+    User roles
+    User selector
     Event edit rights
     Event access edit rights ("manage" action)
     File rights.
     Make sure files can be marked used/unused
     Workshop rights
+    User access control
     Frontend rights querying
     Some own component or system for auth needing pages
     Test that versions still work

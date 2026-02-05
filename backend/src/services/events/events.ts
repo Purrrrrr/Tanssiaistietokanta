@@ -22,6 +22,7 @@ import { EventsService, getOptions } from './events.class'
 import { eventsPath, eventsMethods } from './events.shared'
 import { mergeJsonPatch, SupportsJsonPatch } from '../../hooks/merge-json-patch'
 import { AccessStrategy, AuthParams } from '../access/strategies'
+import { User } from '../users/users.class'
 
 export * from './events.class'
 export * from './events.schema'

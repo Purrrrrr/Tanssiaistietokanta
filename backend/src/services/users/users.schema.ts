@@ -20,6 +20,7 @@ export const userSchema = Type.Object(
     email: Type.Optional(Type.String()),
     googleId: Type.Optional(Type.String()),
     githubId: Type.Optional(Type.String()),
+    roles: Type.Array(Type.String()),
   },
   { $id: 'User', additionalProperties: false },
 )
@@ -60,7 +61,7 @@ export const userPatchResolver = resolve<User, HookContext<UserService>>({
 })
 
 // Schema for allowed query properties
-export const userQueryProperties = Type.Pick(userSchema, ['_id', 'name', 'username', 'email', 'googleId', 'githubId'])
+export const userQueryProperties = Type.Pick(userSchema, ['_id', 'name', 'username', 'email', 'googleId', 'githubId', 'roles'])
 export const userQuerySchema = Type.Intersect(
   [
     querySyntax(userQueryProperties),
@@ -72,12 +73,8 @@ export const userQuerySchema = Type.Intersect(
 export type UserQuery = Static<typeof userQuerySchema>
 export const userQueryValidator = getValidator(userQuerySchema, queryValidator)
 export const userQueryResolver = resolve<UserQuery, HookContext<UserService>>({
-  // If there is a user (e.g. with authentication), they are only allowed to see their own data
-  _id: async (value, _user, context) => {
-    if (context.params.user) {
-      return context.params.user._id
-    }
-
-    return value
+  roles: async (value) => {
+    // Prevent users without user role from logging in
+    return value ?? 'user'
   },
 })
