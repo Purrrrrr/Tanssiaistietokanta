@@ -127,22 +127,13 @@ export const workshops = (app: Application) => {
   })
 
   app.service('access').setAccessStrategy('workshops', {
-    authorize(action, user) {
+    authorize({ action, user }) {
       if (action === 'read') {
-        return {
-          validity: 'global',
-          appliesTo: 'everyone',
-          hasPermission: true,
-        }
+        return true
       }
 
       const isLoggedIn = !!user
-
-      return {
-        validity: 'global',
-        appliesTo: 'user',
-        hasPermission: isLoggedIn,
-      }
+      return isLoggedIn
     },
   })
 }
