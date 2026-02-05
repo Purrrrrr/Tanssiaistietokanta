@@ -5,15 +5,15 @@ import type { Static } from '@feathersjs/typebox'
 import { NeDBService, NeDBServiceOptions } from './NeDBService'
 import { Id as IdType } from './common-types'
 
-const versionableQuerySchema = querySyntax(Type.Object({
+const _versionableQuerySchema = querySyntax(Type.Object({
   _id: Type.Union([IdType(), Type.Number()]),
   _versionId: IdType(),
   _createdAt: Type.String(),
   _updatedAt: Type.String(),
 }))
-export type VersionSearchQuery = Omit<Static<typeof versionableQuerySchema>, '$select'> & { searchVersions?: boolean, $select?: string[] }
+export type VersionSearchQuery = Omit<Static<typeof _versionableQuerySchema>, '$select'> & { searchVersions?: boolean, $select?: string[] }
 
-export interface Versionable { 
+export interface Versionable {
   _id: Id
   _versionId?: Id
   _versionNumber: number
@@ -21,9 +21,9 @@ export interface Versionable {
   _createdAt: string
 }
 type VersionOf<R extends Versionable> = Omit<R, '_versionId'> & {
-  _recordId: Id,
+  _recordId: Id
   _versionCreatedAt: string
-  //This appears on the last version to exist of the record if it's deleted
+  // This appears on the last version to exist of the record if it's deleted
   _recordDeletedAt?: string
 }
 
@@ -100,9 +100,9 @@ export default class VersioningNeDBService<Result extends Versionable, Data, Ser
 
 const SECOND = 1000
 // If there are no updates to a version in CREATE_VERSION_AFTER_IDLE_TIME, create a new version on next save
-export const CREATE_VERSION_AFTER_IDLE_TIME = 5 * SECOND;
+export const CREATE_VERSION_AFTER_IDLE_TIME = 5 * SECOND
 // If the latest version is older than MAX_VERSION_AGE, always create a new version
-export const MAX_VERSION_AGE = 5 * 60 * SECOND;
+export const MAX_VERSION_AGE = 5 * 60 * SECOND
 
 type VersionResult<X> = X & {
   _versionId: Id
@@ -115,16 +115,16 @@ class VersionService<Result extends Versionable> extends NeDBService<VersionResu
   constructor(public params: NeDBServiceOptions) {
     super(
       params.inMemoryOnly
-        ? {inMemoryOnly: true}
-        : { ...params, dbname: `${params.dbname}-versions`}
+        ? { inMemoryOnly: true }
+        : { ...params, dbname: `${params.dbname}-versions` },
     )
-    this.getModel().ensureIndex({fieldName: ['_recordId', '_id']})
+    this.getModel().ensureIndex({ fieldName: ['_recordId', '_id'] })
     this.latestVersionCache = new Map()
   }
 
   async saveVersion(data: Result): Promise<VersionResult<Result>> {
     const createNew = await this.shouldIncrementVersion(data._id)
-    
+
     if (createNew) {
       return this.create(data)
     } else {
@@ -142,7 +142,7 @@ class VersionService<Result extends Versionable> extends NeDBService<VersionResu
     const newTimestamp = +new Date(updatedAt)
     const lastUpdated = +new Date(latestVersion?._updatedAt ?? 0)
     const lastVersionCreatedAt = +new Date(latestVersion?._versionCreatedAt ?? 0)
-    
+
     return newTimestamp > lastUpdated + CREATE_VERSION_AFTER_IDLE_TIME
       || newTimestamp > lastVersionCreatedAt + MAX_VERSION_AGE
   }
@@ -163,14 +163,14 @@ class VersionService<Result extends Versionable> extends NeDBService<VersionResu
     const cached = this.latestVersionCache.get(id)
     if (cached) return cached
 
-    const [result] = ( 
+    const [result] = (
       await this.find({
         query: {
           $sort: {
-            _updatedAt: -1
+            _updatedAt: -1,
           },
           $limit: 1,
-          _id: id
+          _id: id,
         },
       })
     )
@@ -197,7 +197,7 @@ class VersionService<Result extends Versionable> extends NeDBService<VersionResu
     if (_id) versionQuery._recordId = _id
     if ($select) {
       versionQuery.$select = $select.map?.((key: string) => {
-        switch(key) {
+        switch (key) {
           case '_id': return '_recordId'
           case '_versionId': return '_id'
           default: return key
@@ -222,7 +222,7 @@ class VersionService<Result extends Versionable> extends NeDBService<VersionResu
     return {
       _id: _recordId,
       _versionId: _id,
-      ...rest
+      ...rest,
     } as unknown as VersionResult<Result>
   }
 }

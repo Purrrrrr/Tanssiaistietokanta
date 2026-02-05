@@ -5,7 +5,7 @@ import type {
   Dancewiki,
   DancewikiData,
   DancewikiQuery,
-  DancewikiService
+  DancewikiService,
 } from './dancewiki.class'
 
 export type { Dancewiki, DancewikiData, DancewikiQuery }
@@ -17,13 +17,13 @@ export type DancewikiClientService = Pick<
 
 export const dancewikiPath = 'dancewiki'
 
-export const dancewikiMethods: Array<keyof DancewikiService> = ['find', 'get', 'update', 'create']
+export const dancewikiMethods: (keyof DancewikiService)[] = ['find', 'get', 'update', 'create']
 
 export const dancewikiClient = (client: ClientApplication) => {
   const connection = client.get('connection')
 
   client.use(dancewikiPath, connection.service(dancewikiPath), {
-    methods: dancewikiMethods
+    methods: dancewikiMethods,
   })
 }
 

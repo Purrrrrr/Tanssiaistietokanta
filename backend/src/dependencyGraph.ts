@@ -6,8 +6,8 @@ import { SkipAccessControl } from './services/access/hooks'
 const skippedServices = ['authentication', 'rights'] as const
 
 type ServiceName = Exclude<keyof ServiceTypes, typeof skippedServices[number]>
-const serviceDependencyRelations : Partial<Record<ServiceName, any>> = {}
-const serviceReverseDependencyRelations : Partial<Record<ServiceName, any>> = {}
+const serviceDependencyRelations: Partial<Record<ServiceName, any>> = {}
+const serviceReverseDependencyRelations: Partial<Record<ServiceName, any>> = {}
 
 export default async function init(app: Application) {
   const serviceNames = (Object.keys(app.services) as ServiceName[])
@@ -33,7 +33,6 @@ export default async function init(app: Application) {
 
   await loadInitialDependencies(app)
 }
-
 
 async function loadInitialDependencies(app: Application) {
   for (const [serviceName, relations] of Object.entries(serviceDependencyRelations)) {

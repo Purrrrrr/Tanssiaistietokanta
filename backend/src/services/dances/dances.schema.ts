@@ -30,7 +30,7 @@ export const dancesSchema = Type.Object(
     wikipageName: Nullable(Type.String()),
     tags: Type.Record(Type.String(), Type.Boolean()),
   },
-  { $id: 'Dances', additionalProperties: false }
+  { $id: 'Dances', additionalProperties: false },
 )
 export type Dances = Static<typeof dancesSchema>
 export const dancesValidator = getValidator(dancesSchema, dataValidator)
@@ -62,7 +62,7 @@ export const dancesPartialDataSchema = Type.Intersect(
     Type.Pick(dancesSchema, ['name']),
     Type.Partial(Type.Omit(dancesSchema, [...computedProperties, 'name'])),
   ], {
-    $id: 'DancesData'
+    $id: 'DancesData',
   },
 )
 export const dancesDataSchema = Type.Omit(dancesSchema, ['_id'])
@@ -72,7 +72,7 @@ export const dancesDataResolver = resolve<Dances, HookContext>({})
 
 // Schema for updating existing entries
 export const dancesPatchSchema = Type.Partial(dancesSchema, {
-  $id: 'DancesPatch'
+  $id: 'DancesPatch',
 })
 export type DancesPatch = Static<typeof dancesPatchSchema>
 export const dancesPatchValidator = getValidator(dancesPatchSchema, dataValidator)
@@ -86,9 +86,9 @@ export const dancesQuerySchema = Type.Intersect(
     // Add additional query properties here
     Type.Object({
       searchVersions: Type.Optional(Type.Boolean()),
-    }, { additionalProperties: false })
+    }, { additionalProperties: false }),
   ],
-  { additionalProperties: false }
+  { additionalProperties: false },
 )
 export type DancesQuery = Static<typeof dancesQuerySchema>
 export const dancesQueryValidator = getValidator(dancesQuerySchema, queryValidator)

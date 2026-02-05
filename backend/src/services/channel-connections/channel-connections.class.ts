@@ -6,7 +6,7 @@ import type { Application } from '../../declarations'
 import type {
   ChannelConnections,
   ChannelConnectionsData,
-  ChannelConnectionsQuery
+  ChannelConnectionsQuery,
 } from './channel-connections.schema'
 
 export type { ChannelConnections, ChannelConnectionsData, ChannelConnectionsQuery }
@@ -23,10 +23,9 @@ const channelSymbolName = 'Symbol(@feathersjs/transport-commons/channels)'
 
 // This is a skeleton for a custom service class. Remove or add the methods you need here
 export class ChannelConnectionsService<
-  ServiceParams extends ChannelConnectionsParams = ChannelConnectionsParams
+  ServiceParams extends ChannelConnectionsParams = ChannelConnectionsParams,
 > implements
-    ServiceInterface<ChannelConnections[], ChannelConnectionsData, ServiceParams>
-{
+    ServiceInterface<ChannelConnections[], ChannelConnectionsData, ServiceParams> {
   app: Application
   channels: Record<string, Channel> | undefined
 
@@ -54,7 +53,7 @@ export class ChannelConnectionsService<
 
   async create(
     data: ChannelConnectionsData,
-    params?: ServiceParams
+    params?: ServiceParams,
   ): Promise<ChannelConnections[]> {
     if (!params?.connection) return []
     const { connection } = params

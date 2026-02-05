@@ -15,7 +15,7 @@ export const dancesClient = (client: ClientApplication) => {
   const connection = client.get('connection')
 
   client.use(dancesPath, connection.service(dancesPath), {
-    methods: dancesMethods
+    methods: dancesMethods,
   })
 }
 

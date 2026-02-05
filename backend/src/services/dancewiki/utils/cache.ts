@@ -18,7 +18,7 @@ const emptyData = {
 }
 
 export function createCache<T>(getData: () => Promise<T>, expireTimeInMs: number): Cache<T> {
-  let cacheData : CacheData<T> = emptyData
+  let cacheData: CacheData<T> = emptyData
 
   const isExpired = () =>
     !cacheData.fetchedAt || cacheData.fetchedAt < now() - expireTimeInMs
@@ -52,7 +52,7 @@ export function createCache<T>(getData: () => Promise<T>, expireTimeInMs: number
     invalidate() {
       cacheData = emptyData
       fillCache()
-    }
+    },
   }
 }
 

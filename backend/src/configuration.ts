@@ -18,9 +18,9 @@ export const configurationSchema = Type.Intersect([
       Type.Object({
         host: Type.Optional(Type.String()),
         port: Type.Optional(Type.Number()),
-      })
+      }),
     ])),
-  })
+  }),
 ])
 
 export type ApplicationConfiguration = Static<typeof configurationSchema> & {

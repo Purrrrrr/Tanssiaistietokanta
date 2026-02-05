@@ -1,5 +1,5 @@
 import { PersistentFile } from 'formidable'
-import archiver  from 'archiver'
+import archiver from 'archiver'
 import { join, dirname, basename, parse } from 'path'
 import { rename, readdir, readFile, stat, unlink, mkdir } from 'fs/promises'
 import type { Id, Params } from '@feathersjs/feathers'
@@ -11,7 +11,7 @@ import { ErrorWithStatus } from '../../hooks/addErrorStatusCode'
 import type { File, FileData, FilePatch, FileQuery } from './files.schema'
 import { ClamScanner } from './clamscanner'
 import { sum, takeWhile } from 'es-toolkit'
-import { PassThrough, Stream } from 'stream'
+import { PassThrough } from 'stream'
 import { logger, withRequestLogging } from '../../requestLogger'
 
 export type { File, FileData, FilePatch, FileQuery }
@@ -24,16 +24,15 @@ export interface FileServiceOptions {
 
 export interface FileParams extends Params<FileQuery> {}
 
-const MB = 1024**2
+const MB = 1024 ** 2
 const RootSizeCleanUpTreshold = 5 * MB
-const DAY = 24 * 60 * 60 * 1000;
+const DAY = 24 * 60 * 60 * 1000
 const MaxTmpFileAge = 3 * DAY
 const MaxZipSize = 50 * MB
 export const MaxFileSize = 30 * MB
 
 export class FileService
-  extends NeDBService<File, FileData, FileParams, FilePatch>
-{
+  extends NeDBService<File, FileData, FileParams, FilePatch> {
   scanner: ClamScanner
 
   constructor(public options: FileServiceOptions) {
@@ -56,7 +55,7 @@ export class FileService
   }
 
   cleanUpUnused = withRequestLogging('files', 'cleanUpUnused', async () => {
-    const allFiles = await this.find({ query: { unused: true, $sort: { _updatedAt: 1 /* ASC */ } }})
+    const allFiles = await this.find({ query: { unused: true, $sort: { _updatedAt: 1 /* ASC */ } } })
     const byRoot = Map.groupBy(allFiles, file => file.root)
 
     for (const [root, files] of byRoot.entries()) {
@@ -73,15 +72,15 @@ export class FileService
         await Promise.all(picked.map(file => this.remove(file._id)))
         logger.info(`Unused files for root ${root} cleaned up`)
       } else {
-        logger.info(`No need to clean up unused files for root ${root} (size ${(size/1024).toFixed(2)}kb)`)
+        logger.info(`No need to clean up unused files for root ${root} (size ${(size / 1024).toFixed(2)}kb)`)
       }
     }
   })
 
   cleanUpTmp = withRequestLogging('files', 'cleanUpTmp', async () => {
     const tmpDir = this.options.uploadTmp
-    const now = Date.now();
-    const files = await readdir(tmpDir);
+    const now = Date.now()
+    const files = await readdir(tmpDir)
     if (files.length === 0) {
       logger.info(`No files in tmp dir ${tmpDir}`)
       return
@@ -90,21 +89,21 @@ export class FileService
 
     const filesToUnlink = []
     for (const file of files) {
-      const filePath = join(tmpDir, file);
-      const fileStat = await stat(filePath);
+      const filePath = join(tmpDir, file)
+      const fileStat = await stat(filePath)
 
       // Skip directories
-      if (!fileStat.isFile()) continue;
+      if (!fileStat.isFile()) continue
 
-      const age = now - fileStat.mtimeMs;
+      const age = now - fileStat.mtimeMs
       if (age > MaxTmpFileAge) {
-        filesToUnlink.push(filePath);
+        filesToUnlink.push(filePath)
       }
     }
     if (filesToUnlink.length > 0) {
       logger.info(`Removing ${filesToUnlink.length} files from tmp dir ${tmpDir}`)
-      await Promise.all(filesToUnlink.map(unlink));
-      logger.info(`Files removed`)
+      await Promise.all(filesToUnlink.map(unlink))
+      logger.info('Files removed')
     }
   })
 
@@ -129,11 +128,11 @@ export class FileService
         {
           const size = sum(result.map(file => file.size))
           if (size > MaxZipSize) {
-            throw new ErrorWithStatus(422, `Combined file size ${size/1024} kb exceeds the limit of ${MaxZipSize/1024} kb`)
+            throw new ErrorWithStatus(422, `Combined file size ${size / 1024} kb exceeds the limit of ${MaxZipSize / 1024} kb`)
           }
           const archiveProgress = Promise.withResolvers()
           const stream = new PassThrough()
-          const archive = archiver('zip', { zlib: { level: 9 }})
+          const archive = archiver('zip', { zlib: { level: 9 } })
           archive.on('error', e => archiveProgress.reject(e))
           archive.on('finish', () => archiveProgress.resolve(true))
           archive.pipe(stream)
@@ -215,15 +214,14 @@ export class FileService
     const patched = { ...existing, ...data, _updatedAt: now() }
     patched.name = await this.handleNameDuplicates(
       patched,
-      existing
+      existing,
     )
     return patched
   }
 
-
   private async handleNameDuplicates(
     { autoRename, ...filePath }: Pick<File, 'root' | 'path' | 'name'> & Pick<FileData, 'autoRename'>,
-    existingFile: File | null
+    existingFile: File | null,
   ) {
     let hasDuplicates = await this.hasDuplicateName(filePath, existingFile)
     if (hasDuplicates) {

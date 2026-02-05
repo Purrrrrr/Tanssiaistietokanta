@@ -1,6 +1,6 @@
-import updateDatabase from '../utils/updateDatabase';
-import * as L from 'partial.lenses';
-import { MigrationFn } from '../umzug.context';
+import updateDatabase from '../utils/updateDatabase'
+import * as L from 'partial.lenses'
+import { MigrationFn } from '../umzug.context'
 
 export const up: MigrationFn = async params => {
   const eventsDb = params.context.getModel('events')
@@ -13,8 +13,8 @@ export const up: MigrationFn = async params => {
         program: program?.introductions ?? [],
       },
       danceSets: program?.danceSets ?? [],
-    })
+    }),
   ))
 }
 
-export const down: MigrationFn = async () => {};
+export const down: MigrationFn = async () => {}

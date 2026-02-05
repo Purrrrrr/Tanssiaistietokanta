@@ -1,14 +1,14 @@
-import * as L from 'partial.lenses';
-import R from 'ramda';
-import { MigrationFn } from '../umzug.context';
+import * as L from 'partial.lenses'
+import R from 'ramda'
+import { MigrationFn } from '../umzug.context'
 
 export const up: MigrationFn = async params => {
   await params.context.updateDatabase('events', L.modify(
     [
-      'program', 'defaultIntervalMusic', 
+      'program', 'defaultIntervalMusic',
     ],
-    R.omit(['duration', 'slideStyleId'])
+    R.omit(['duration', 'slideStyleId']),
   ))
 }
 
-export const down: MigrationFn = async () => {};
+export const down: MigrationFn = async () => {}

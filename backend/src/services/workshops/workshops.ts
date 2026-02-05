@@ -10,7 +10,7 @@ import {
   workshopsExternalResolver,
   workshopsDataResolver,
   workshopsPatchResolver,
-  workshopsQueryResolver
+  workshopsQueryResolver,
 } from './workshops.schema'
 
 import type { Application, HookContext } from '../../declarations'
@@ -31,7 +31,7 @@ export const workshops = (app: Application) => {
     // A list of all methods this service exposes externally
     methods: workshopsMethods,
     // You can add additional custom events to be sent to clients here
-    events: []
+    events: [],
   })
 
   const workshopService = app.service(workshopsPath)
@@ -45,18 +45,18 @@ export const workshops = (app: Application) => {
 
     await Promise.all(
       results.map(async workshop => {
-        const workshops = await workshopService.find({query: { eventId: workshop.eventId }})
+        const workshops = await workshopService.find({ query: { eventId: workshop.eventId } })
 
         const workshopVersions = Object.fromEntries(
-          ( await Promise.all(
+          (await Promise.all(
             workshops.map(async w =>
-              [w._id, (await workshopService.getLatestVersion(w._id))?._versionId] as const
-            )
-          )).filter(entry => entry[1] != undefined) as [string, string][]
+              [w._id, (await workshopService.getLatestVersion(w._id))?._versionId] as const,
+            ),
+          )).filter(entry => entry[1] != undefined) as [string, string][],
         )
 
         eventService.patch(workshop.eventId, { workshopVersions })
-      })
+      }),
     )
   }
 
@@ -65,22 +65,22 @@ export const workshops = (app: Application) => {
     around: {
       all: [
         schemaHooks.resolveExternal(workshopsExternalResolver),
-        schemaHooks.resolveResult(workshopsResolver)
+        schemaHooks.resolveResult(workshopsResolver),
       ],
     },
     before: {
       all: [
         schemaHooks.validateQuery(workshopsQueryValidator),
-        schemaHooks.resolveQuery(workshopsQueryResolver)
+        schemaHooks.resolveQuery(workshopsQueryResolver),
       ],
       find: [],
       get: [],
       create: [
         schemaHooks.validateData(workshopsDataValidator),
-        schemaHooks.resolveData(workshopsDataResolver)
+        schemaHooks.resolveData(workshopsDataResolver),
       ],
       patch: [
-        async ({data, service, id}) => {
+        async ({ data, service, id }) => {
           if (id === undefined || Array.isArray(data)) throw new Error('Cannot patch multiple documents')
           if (data?.instances) {
             const { instances: oldInstances } = await service.get(id)
@@ -88,7 +88,7 @@ export const workshops = (app: Application) => {
               {
                 description: '',
                 ...oldInstances.find(o => o._id === instance._id),
-                ...instance as (Omit<WorkshopInstance, 'description'> & {description?: string}),
+                ...instance as (Omit<WorkshopInstance, 'description'> & { description?: string }),
               }
             ))
           }
@@ -96,7 +96,7 @@ export const workshops = (app: Application) => {
         schemaHooks.validateData(workshopsPatchValidator),
         schemaHooks.resolveData(workshopsPatchResolver),
       ],
-      remove: []
+      remove: [],
     },
     after: {
       all: [],
@@ -106,23 +106,23 @@ export const workshops = (app: Application) => {
       remove: [updateEventWorkshopVersions],
     },
     error: {
-      all: []
-    }
+      all: [],
+    },
   }).publish((data, context) => {
     const eventIds = getFromData(data, item => item.eventId)
-    //The dependency graph is not updated yet. We can get our previous dances from there in case some were removed
+    // The dependency graph is not updated yet. We can get our previous dances from there in case some were removed
     const previousDanceIds = getDependenciesFor('workshops', data, 'uses', 'dances')
     const nextDanceIds = getFromData(data, item => item.instances.flatMap(i => i.danceIds)).flat()
     const danceIds = uniq([...nextDanceIds, ...previousDanceIds])
 
     const channels = [
       ...eventIds.map(id => app.channel(`events/${id}/workshops`)),
-      ...danceIds.map(id => app.channel(`dances/${id}/workshops`))
+      ...danceIds.map(id => app.channel(`dances/${id}/workshops`)),
     ]
 
     return [
       ...withoutCurrentConnection(channels, context),
-      ...defaultChannels(app, context)
+      ...defaultChannels(app, context),
     ]
   })
 
@@ -137,13 +137,13 @@ export const workshops = (app: Application) => {
       }
 
       const isLoggedIn = !!user
-      
+
       return {
         validity: 'global',
         appliesTo: 'user',
         hasPermission: isLoggedIn,
       }
-    }
+    },
   })
 }
 

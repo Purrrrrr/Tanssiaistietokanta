@@ -1,8 +1,8 @@
-import { Application, ServiceTypes } from "../../declarations";
-import { User } from "../users/users.class";
-import { ServiceName } from "./access.schema";
+import { Application, ServiceTypes } from '../../declarations'
+import { User } from '../users/users.class'
+import { ServiceName } from './access.schema'
 
-export type { User } from "../users/users.class";
+export type { User } from '../users/users.class'
 export type AccessResult = 'GRANT' | 'DENY'
 
 export type ServiceQuery<Service extends ServiceName> = Parameters<ServiceClass<Service>['find']>[0]

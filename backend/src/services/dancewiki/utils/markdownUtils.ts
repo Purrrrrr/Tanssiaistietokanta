@@ -3,19 +3,19 @@ export function getHeaderData(text: string) {
   if (match) {
     return {
       level: 1,
-      content: match[1].trim()
+      content: match[1].trim(),
     }
   }
   match = text.match(HEADER_REGEX_2)
   if (match) {
     return {
       level: 2,
-      content: match[1].trim()
+      content: match[1].trim(),
     }
   }
   match = text.match(HEADER_REGEX_HASH)
   if (match) {
-    //Return header level
+    // Return header level
     return {
       level: match[1].length,
       content: match[2].trim(),

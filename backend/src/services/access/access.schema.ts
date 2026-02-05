@@ -27,7 +27,7 @@ export const accessSchema = Type.Object(
     // appliesTo: Type.Union([Type.Literal('everyone'), Type.Literal('user')]),
     allowed: Type.Union([Type.Literal('GRANT'), Type.Literal('DENY'), Type.Literal('UNKNOWN')]),
   },
-  { $id: 'Access', additionalProperties: false }
+  { $id: 'Access', additionalProperties: false },
 )
 export type Access = Static<typeof accessSchema>
 export const accessValidator = getValidator(accessSchema, dataValidator)
@@ -43,9 +43,9 @@ export const accessQuerySchema = Type.Intersect(
     // Add additional query properties here
     Type.Object({
 
-    }, { additionalProperties: false })
+    }, { additionalProperties: false }),
   ],
-  { additionalProperties: false }
+  { additionalProperties: false },
 )
 export type AccessQuery = Static<typeof accessQuerySchema>
 export const accessQueryValidator = getValidator(accessQuerySchema, queryValidator)

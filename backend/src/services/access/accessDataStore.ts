@@ -13,7 +13,7 @@ export class AccessDataStoreFactory {
     this.neDB = new NeDB({
       filename: path.resolve(
         app.get('nedb'),
-        'access-data.db'
+        'access-data.db',
       ),
       autoload: true,
     })
@@ -51,8 +51,8 @@ class NedbAccessDataStore<Data> implements AccessStrategyDataStore<Data> {
   async getAccess(entityId: string | number): Promise<Data> {
     const doc = await this.neDB.findOneAsync({ entityId, service: this.service }).execAsync()
     return doc?.data ?? this.defaultData
-    
   }
+
   async setAccess(entityId: string | number, data: Data): Promise<void> {
     const query = { entityId, service: this.service }
     await this.neDB.updateAsync(query, { ...query, data }, { upsert: true })

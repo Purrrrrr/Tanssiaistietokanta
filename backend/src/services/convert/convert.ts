@@ -21,12 +21,12 @@ export const convert = (app: Application) => {
     // A list of all methods this service exposes externally
     methods: convertMethods,
     // You can add additional custom events to be sent to clients here
-    events: []
+    events: [],
   })
   // Initialize hooks
   app.service(convertPath).hooks({
     around: {
-      all: []
+      all: [],
     },
     before: {
       all: [],
@@ -34,11 +34,11 @@ export const convert = (app: Application) => {
       create: [schemaHooks.validateData(convertDataValidator)],
     },
     after: {
-      all: []
+      all: [],
     },
     error: {
-      all: []
-    }
+      all: [],
+    },
   })
 }
 

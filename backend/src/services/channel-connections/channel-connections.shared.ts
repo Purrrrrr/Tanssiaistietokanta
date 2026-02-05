@@ -5,7 +5,7 @@ import type {
   ChannelConnections,
   ChannelConnectionsData,
   ChannelConnectionsQuery,
-  ChannelConnectionsService
+  ChannelConnectionsService,
 } from './channel-connections.class'
 
 export type { ChannelConnections, ChannelConnectionsData, ChannelConnectionsQuery }
@@ -23,7 +23,7 @@ export const channelConnectionsClient = (client: ClientApplication) => {
   const connection = client.get('connection')
 
   client.use(channelConnectionsPath, connection.service(channelConnectionsPath), {
-    methods: channelConnectionsMethods
+    methods: channelConnectionsMethods,
   })
 }
 

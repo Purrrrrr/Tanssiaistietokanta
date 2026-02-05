@@ -8,13 +8,13 @@ export type FileClientService = Pick<FileService, (typeof fileMethods)[number]>
 
 export const filePath = 'files'
 
-export const fileMethods: Array<keyof FileService> = ['find', 'get', 'create', 'update', 'patch', 'remove' ]
+export const fileMethods: (keyof FileService)[] = ['find', 'get', 'create', 'update', 'patch', 'remove']
 
 export const fileClient = (client: ClientApplication) => {
   const connection = client.get('connection')
 
   client.use(filePath, connection.service(filePath), {
-    methods: fileMethods
+    methods: fileMethods,
   })
 }
 

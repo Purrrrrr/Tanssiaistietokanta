@@ -15,10 +15,9 @@ export interface EventsParams extends Params<EventsQuery> {}
 
 // This is a skeleton for a custom service class. Remove or add the methods you need here
 export class EventsService<ServiceParams extends EventsParams = EventsParams>
-  extends VersioningNeDBService<Events, EventsData, ServiceParams, EventsPatch>
-{
+  extends VersioningNeDBService<Events, EventsData, ServiceParams, EventsPatch> {
   constructor(public options: EventsServiceOptions) {
-    super({ ...options, dbname: 'events'})
+    super({ ...options, dbname: 'events' })
   }
 }
 

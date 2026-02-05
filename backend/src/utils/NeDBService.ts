@@ -27,7 +27,7 @@ export class NeDBService<Result extends BaseRecord, Data, ServiceParams extends 
 
   constructor(public params: NeDBServiceOptions) {
     const Model = NeDBService.createNedb(params)
-    this.currentService = createNedbService({Model})
+    this.currentService = createNedbService({ Model })
   }
 
   static createNedb(params: NeDBServiceOptions) {
@@ -38,10 +38,10 @@ export class NeDBService<Result extends BaseRecord, Data, ServiceParams extends 
         } : {
           filename: path.resolve(
             params.app.get('nedb'),
-            params.dbname+'.db'
+            params.dbname + '.db',
           ),
           autoload: true,
-        }
+        },
     )
     params.indexes?.forEach(index => neDB.ensureIndex(index))
     return neDB
@@ -70,7 +70,7 @@ export class NeDBService<Result extends BaseRecord, Data, ServiceParams extends 
 
   async update(id: NullableId, data: Data, _params?: ServiceParams): Promise<Result | Result[]> {
     return this.updateItems(id, _params, async original =>
-      this.currentService.update(original._id, await this.mapData(original, data))
+      this.currentService.update(original._id, await this.mapData(original, data)),
     )
   }
 
@@ -79,7 +79,7 @@ export class NeDBService<Result extends BaseRecord, Data, ServiceParams extends 
       return this.get(id as Id, _params)
     }
     return this.updateItems(id, _params, async original =>
-      this.currentService.patch(original._id, await this.mapPatch(original, data))
+      this.currentService.patch(original._id, await this.mapPatch(original, data)),
     )
   }
 
@@ -89,7 +89,7 @@ export class NeDBService<Result extends BaseRecord, Data, ServiceParams extends 
     const items = id === null
       ? await this.currentService.find(params) as Record[]
       : await this.currentService.get(id, params) as Record
-    
+
     return mapAsync(items, async item => {
       const result = await mapper(item)
       await this.onSave(result)
@@ -101,9 +101,9 @@ export class NeDBService<Result extends BaseRecord, Data, ServiceParams extends 
     return mapAsync(
       await this.currentService.remove(id, this.mapParams(_params)),
       async r => {
-        await this.onRemove(r);
+        await this.onRemove(r)
         return this.mapToResult(r)
-      }
+      },
     )
   }
 
@@ -117,13 +117,13 @@ export class NeDBService<Result extends BaseRecord, Data, ServiceParams extends 
     const { query } = _params
     if ('$select' in query) {
       const { $select, ...rest } = query
-      //Delete a troublesome undefined select query
+      // Delete a troublesome undefined select query
       if ($select === undefined) {
         return {
           ..._params,
           query: {
-            ...rest
-          }
+            ...rest,
+          },
         }
       }
     }
@@ -142,6 +142,6 @@ export class NeDBService<Result extends BaseRecord, Data, ServiceParams extends 
     return record as unknown as Result
   }
 
-  protected onSave(result: Record): void | Promise<void> {}
-  protected onRemove(result: Record): void | Promise<void> {}
+  protected onSave(_result: Record): void | Promise<void> {}
+  protected onRemove(_result: Record): void | Promise<void> {}
 }

@@ -1,4 +1,4 @@
-import { MigrationFn } from '../umzug.context';
+import { MigrationFn } from '../umzug.context'
 
 export const up: MigrationFn = async params => {
   const { context } = params
@@ -18,9 +18,8 @@ export const up: MigrationFn = async params => {
       await model.updateAsync({ _id }, { $set: { _versionNumber } })
     }
   }
-
 }
-export const down: MigrationFn = async () => {};
+export const down: MigrationFn = async () => {}
 
 class VersionCounter {
   versionNumberMap = new Map<string, number>()

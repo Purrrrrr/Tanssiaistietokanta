@@ -1,19 +1,19 @@
-import { Application } from "../../declarations"
-import { DancesParams } from "./dances.class"
+import { Application } from '../../declarations'
+import { DancesParams } from './dances.class'
 import { getDependencyLinks } from '../../internal-services/dependencies'
 
 import type { Dances } from './dances.schema'
 import type { Events } from '../events/events.schema'
 import { versionHistoryFieldResolvers, versionHistoryResolver } from '../../utils/version-history-resolvers'
-import { uniq } from "ramda"
-import { WorkshopsService } from "../workshops/workshops.class"
-import { DancewikiService } from "../dancewiki/dancewiki.class"
+import { uniq } from 'ramda'
+import { WorkshopsService } from '../workshops/workshops.class'
+import { DancewikiService } from '../dancewiki/dancewiki.class'
 
 export async function findTeachedIn(workshopService: WorkshopsService, danceId: string, eventId: string) {
   const workshops = await workshopService.find({
     query: eventId ?
-      {'instances.danceIds': danceId, eventId} :
-      {'instances.danceIds': danceId}
+      { 'instances.danceIds': danceId, eventId } :
+      { 'instances.danceIds': danceId },
   })
 
   return workshops.map(workshop => {
@@ -25,7 +25,7 @@ export async function findTeachedIn(workshopService: WorkshopsService, danceId: 
     return {
       _id: `${danceId}-${workshop._id}`,
       workshop,
-      instances: danceInAllInstances ? null : instancesWithDance
+      instances: danceInAllInstances ? null : instancesWithDance,
     }
   })
 }
@@ -47,19 +47,19 @@ export default (app: Application) => {
 
     const workshopIds = Array.from(links.get('workshops') ?? [])
     const workshops = await Promise.all(
-      workshopIds.map(id => workshopService.get(id, {query: { $select: ['eventId'] }}))
+      workshopIds.map(id => workshopService.get(id, { query: { $select: ['eventId'] } })),
     )
     const ids = [
       ...Array.from(links.get('events') ?? []) as string[],
-      ...workshops.map(workshop => workshop.eventId)
+      ...workshops.map(workshop => workshop.eventId),
     ]
 
-    return eventService.find({query: {_id: {$in: ids}, $sort: { beginDate: 1 } }})
+    return eventService.find({ query: { _id: { $in: ids }, $sort: { beginDate: 1 } } })
   }
 
   return {
     Dance: {
-      teachedIn: (dance: { _id: string}, {eventId}: { eventId: string}) =>
+      teachedIn: (dance: { _id: string }, { eventId}: { eventId: string }) =>
         findTeachedIn(workshopService, dance._id, eventId),
       events: findEvents,
       versionHistory: versionHistoryResolver(service),
@@ -67,18 +67,18 @@ export default (app: Application) => {
     },
     VersionHistory: versionHistoryFieldResolvers(),
     Query: {
-      dance: (_: any, {id, versionId}: any, params: DancesParams | undefined) => versionId
+      dance: (_: any, { id, versionId }: any, params: DancesParams | undefined) => versionId
         ? service.getVersion(id, versionId, params)
         : service.get(id, params),
       dances: (_: any, __: any, params: DancesParams | undefined) => service.find(params),
-      danceCategories: async (_: any, __: any, params: DancesParams | undefined) => 
+      danceCategories: async (_: any, __: any, params: DancesParams | undefined) =>
         uniq((await service.find(params)).map(dance => dance.category)).filter(Boolean).sort(),
     },
     Mutation: {
-      createDance: (_: any, {dance}: any, params: DancesParams | undefined) => service.create(dance, params),
-      modifyDance: (_: any, {id, dance}: any, params: DancesParams | undefined) => service.update(id, dance, params),
-      patchDance: (_: any, {id, dance}: any, params: DancesParams | undefined) => service.patch(id, dance, params),
-      deleteDance: (_: any, {id}: any, params: DancesParams | undefined) => service.remove(id, params),
-    }
+      createDance: (_: any, { dance }: any, params: DancesParams | undefined) => service.create(dance, params),
+      modifyDance: (_: any, { id, dance }: any, params: DancesParams | undefined) => service.update(id, dance, params),
+      patchDance: (_: any, { id, dance }: any, params: DancesParams | undefined) => service.patch(id, dance, params),
+      deleteDance: (_: any, { id }: any, params: DancesParams | undefined) => service.remove(id, params),
+    },
   }
 }

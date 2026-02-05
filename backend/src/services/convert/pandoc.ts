@@ -1,6 +1,6 @@
-import {spawn} from 'child_process'
+import { spawn } from 'child_process'
 
-export default async function(input: string, inputFormat = 'mediawiki', outputFormat = 'markdown_github'): Promise<string> {
+export default async function (input: string, inputFormat = 'mediawiki', outputFormat = 'markdown_github'): Promise<string> {
   if (!allowedFormats.includes(inputFormat)) {
     throw new Error(`Unallowed format ${inputFormat}. Allowed formats ${allowedFormats.join(', ')}`)
   }
@@ -14,10 +14,10 @@ export default async function(input: string, inputFormat = 'mediawiki', outputFo
 const allowedFormats = [
   'mediawiki',
   'markdown',
-  'markdown_github'
+  'markdown_github',
 ]
 
-function pandoc(src: string, options: ReadonlyArray<string>, pandocPath = 'pandoc'): Promise<string> {
+function pandoc(src: string, options: readonly string[], pandocPath = 'pandoc'): Promise<string> {
   return new Promise((resolve, reject) => {
     let result = ''
     let error = ''
@@ -36,9 +36,9 @@ function pandoc(src: string, options: ReadonlyArray<string>, pandocPath = 'pando
     pdSpawn.stderr.on('data', data => {
       error += data
     })
-    //pdSpawn.stderr.on('data', onStdOutData);
-    //pdSpawn.stderr.on('end', onStdOutEnd);
-    /*pdSpawn.on('error', (err) => {
+    // pdSpawn.stderr.on('data', onStdOutData);
+    // pdSpawn.stderr.on('end', onStdOutEnd);
+    /* pdSpawn.on('error', (err) => {
       reject(new Error(err+'\n'+error));
     }); */
 

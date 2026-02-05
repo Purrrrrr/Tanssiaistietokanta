@@ -20,6 +20,7 @@ export function formatValue(value: any): string {
       } else if (isPlainObject(value)) {
         return formatObject(value)
       }
+      return colorette.black(String(value))
     default:
       return colorette.gray(String(value))
   }

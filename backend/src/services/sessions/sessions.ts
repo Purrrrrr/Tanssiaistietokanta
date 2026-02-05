@@ -10,7 +10,7 @@ import {
   sessionDataResolver,
   sessionPatchResolver,
   sessionQueryResolver,
-  newSessionDataResolver
+  newSessionDataResolver,
 } from './sessions.schema'
 
 import type { Application } from '../../declarations'
@@ -28,20 +28,20 @@ export const sessions = (app: Application) => {
     // A list of all methods this service exposes externally
     methods: sessionsMethods,
     // You can add additional custom events to be sent to clients here
-    events: []
+    events: [],
   })
   // Initialize hooks
   app.service(sessionsPath).hooks({
     around: {
       all: [
         schemaHooks.resolveExternal(sessionExternalResolver),
-        schemaHooks.resolveResult(sessionResolver)
-      ]
+        schemaHooks.resolveResult(sessionResolver),
+      ],
     },
     before: {
       all: [
         schemaHooks.validateQuery(sessionQueryValidator),
-        schemaHooks.resolveQuery(sessionQueryResolver)
+        schemaHooks.resolveQuery(sessionQueryResolver),
       ],
       find: [],
       get: [],
@@ -54,7 +54,7 @@ export const sessions = (app: Application) => {
       update: [
         disallow('external'),
         schemaHooks.validateData(sessionDataValidator),
-        schemaHooks.resolveData(sessionDataResolver)
+        schemaHooks.resolveData(sessionDataResolver),
       ],
       patch: [
         disallow('external'),
@@ -62,14 +62,14 @@ export const sessions = (app: Application) => {
         schemaHooks.resolveData(sessionDataResolver),
         schemaHooks.resolveData(sessionPatchResolver),
       ],
-      remove: []
+      remove: [],
     },
     after: {
-      all: [iff(isProvider('external'), discard('token'))]
+      all: [iff(isProvider('external'), discard('token'))],
     },
     error: {
-      all: []
-    }
+      all: [],
+    },
   })
 }
 

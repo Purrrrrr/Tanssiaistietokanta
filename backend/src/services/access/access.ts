@@ -5,7 +5,7 @@ import {
   accessResolver,
   accessExternalResolver,
   accessQueryResolver,
-  ServiceName
+  ServiceName,
 } from './access.schema'
 
 import type { Application, HookContext } from '../../declarations'
@@ -38,7 +38,7 @@ export const channelAccessControl = (app: Application) => {
   app.mixins.push(function (service: FeathersService) {
     const publish = service.publish
 
-    service.publish = function(this: FeathersService, event, publisher) {
+    service.publish = function (this: FeathersService, event, publisher) {
       if (typeof event === 'function') {
         return publish.call(this, wrapPublish(event) as any, undefined as any)
       }
@@ -54,23 +54,23 @@ export const access = (app: Application) => {
     // A list of all methods this service exposes externally
     methods: accessMethods,
     // You can add additional custom events to be sent to clients here
-    events: []
+    events: [],
   })
   // Initialize hooks
   app.service(accessPath).hooks({
     around: {
-      all: [schemaHooks.resolveExternal(accessExternalResolver), schemaHooks.resolveResult(accessResolver)]
+      all: [schemaHooks.resolveExternal(accessExternalResolver), schemaHooks.resolveResult(accessResolver)],
     },
     before: {
       all: [schemaHooks.validateQuery(accessQueryValidator), schemaHooks.resolveQuery(accessQueryResolver)],
       find: [],
     },
     after: {
-      all: []
+      all: [],
     },
     error: {
-      all: []
-    }
+      all: [],
+    },
   })
 }
 

@@ -15,8 +15,7 @@ export interface WorkshopsParams extends Params<WorkshopsQuery> {}
 
 // This is a skeleton for a custom service class. Remove or add the methods you need here
 export class WorkshopsService<ServiceParams extends WorkshopsParams = WorkshopsParams>
-  extends VersioningNeDBService<Workshops, WorkshopsData, ServiceParams, WorkshopsPatch>
-{
+  extends VersioningNeDBService<Workshops, WorkshopsData, ServiceParams, WorkshopsPatch> {
   constructor(public options: WorkshopsServiceOptions) {
     super({
       ...options,
@@ -24,7 +23,6 @@ export class WorkshopsService<ServiceParams extends WorkshopsParams = WorkshopsP
     })
   }
 }
-
 
 export const getOptions = (app: Application) => {
   return { app }

@@ -6,7 +6,7 @@ import type {
   WorkshopsData,
   WorkshopsPatch,
   WorkshopsQuery,
-  WorkshopsService
+  WorkshopsService,
 } from './workshops.class'
 
 export type { Workshops, WorkshopsData, WorkshopsPatch, WorkshopsQuery }
@@ -24,7 +24,7 @@ export const workshopsClient = (client: ClientApplication) => {
   const connection = client.get('connection')
 
   client.use(workshopsPath, connection.service(workshopsPath), {
-    methods: workshopsMethods
+    methods: workshopsMethods,
   })
 }
 

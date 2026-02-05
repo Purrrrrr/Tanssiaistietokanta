@@ -1,5 +1,5 @@
-import { MigrationFn } from '../umzug.context';
-import { isNil } from 'es-toolkit';
+import { MigrationFn } from '../umzug.context'
+import { isNil } from 'es-toolkit'
 
 export const up: MigrationFn = async params => {
   const models = ['events', 'dances', 'workshops']
@@ -18,7 +18,7 @@ export const up: MigrationFn = async params => {
   }
 
   await Promise.all(models.map(
-    async ({model, versionModel}) => {
+    async ({ model, versionModel }) => {
       const records = await model.findAsync({})
       const versionsRecords = await versionModel.findAsync<VersionRecord>({})
       const versionsById = Map.groupBy(versionsRecords, v => v._recordId)
@@ -32,24 +32,24 @@ export const up: MigrationFn = async params => {
           const versions = versionsById.get(_id) ?? []
           const versionCount = versions.length
           const currentVersionNumber = Math.max(
-            ...versions.map(v => v._versionNumber), 0
+            ...versions.map(v => v._versionNumber), 0,
           )
 
           if (missingVersionNr || missingCreated || versionCount === 0) {
-            //console.log({
+            // console.log({
             //  name, missingCreated, missingVersionNr, versionCount, id: _id,
             //  maxNumber,
-            //})
+            // })
           }
 
           const updatedValues = {
             _versionNumber: _versionNumber ?? currentVersionNumber,
-            _createdAt: _createdAt ?? obj._updatedAt
+            _createdAt: _createdAt ?? obj._updatedAt,
           }
 
           if (missingVersionNr || missingCreated) {
             const updated = { ...obj, ...updatedValues }
-            await model.updateAsync({ _id }, updated) 
+            await model.updateAsync({ _id }, updated)
           }
 
           if (versionCount === 0) {
@@ -73,15 +73,14 @@ export const up: MigrationFn = async params => {
                   _versionCreatedAt: version._versionCreatedAt ?? version._updatedAt,
                 }
 
-                await versionModel.updateAsync({ _id: version._id }, updatedVersion) 
+                await versionModel.updateAsync({ _id: version._id }, updatedVersion)
               }
             }
           }
-
-        })
+        }),
       )
-    }
+    },
   ))
 }
 
-export const down: MigrationFn = async () => {};
+export const down: MigrationFn = async () => {}

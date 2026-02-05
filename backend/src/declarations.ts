@@ -13,7 +13,7 @@ export interface Configuration extends ApplicationConfiguration {
 }
 
 // A mapping of service names to types. Will be extended in service files.
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
+
 export interface ServiceTypes {}
 
 // The application instance type that will be used everywhere else

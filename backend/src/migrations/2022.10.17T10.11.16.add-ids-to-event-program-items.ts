@@ -1,7 +1,7 @@
-import * as L from 'partial.lenses';
-import R from 'ramda';
-import guid from '../utils/random-id';
-import { MigrationFn } from '../umzug.context';
+import * as L from 'partial.lenses'
+import R from 'ramda'
+import guid from '../utils/random-id'
+import { MigrationFn } from '../umzug.context'
 
 export const up: MigrationFn = async params => {
   const eventsDb = params.context.getModel('events')
@@ -15,14 +15,13 @@ export const up: MigrationFn = async params => {
       program: {
         introductions: L.modify([L.elems, '_id'], guid),
         danceSets: L.modify(
-          [L.elems, 'program', L.elems, '_id'], guid
-        )
-      }
+          [L.elems, 'program', L.elems, '_id'], guid,
+        ),
+      },
     }, event)
 
-    await eventsDb.updateAsync({ _id: event._id}, newEvent)
+    await eventsDb.updateAsync({ _id: event._id }, newEvent)
   }
-
 }
 
-export const down: MigrationFn = async () => {};
+export const down: MigrationFn = async () => {}

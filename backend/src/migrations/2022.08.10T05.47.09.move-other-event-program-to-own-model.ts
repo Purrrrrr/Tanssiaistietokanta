@@ -1,7 +1,7 @@
 import * as L from 'partial.lenses'
 import R from 'ramda'
 import evolve from '../utils/evolveObjAsync'
-import { MigrationFn } from '../umzug.context';
+import { MigrationFn } from '../umzug.context'
 
 export const up: MigrationFn = async params => {
   const eventsDb = params.context.getModel('events')
@@ -21,20 +21,20 @@ export const up: MigrationFn = async params => {
           danceSets: L.modifyAsync(
             [
               L.elems, 'program', L.elems,
-              L.when(R.propEq('__typename', 'OtherProgram'))
+              L.when(R.propEq('__typename', 'OtherProgram')),
             ],
-            modEventProgram
-          )
-        }
+            modEventProgram,
+          ),
+        },
       },
-      event
+      event,
     )
 
-    await eventsDb.updateAsync({ _id: event._id}, newEvent)
+    await eventsDb.updateAsync({ _id: event._id }, newEvent)
   }
 
   async function modEventProgram(item: any) {
-    const eventProgramId  = await storeEventProgram(item, eventProgramDb)
+    const eventProgramId = await storeEventProgram(item, eventProgramDb)
     return { eventProgramId, __typename: 'EventProgram' }
   }
 }
@@ -46,4 +46,4 @@ async function storeEventProgram(eventProgram: any, eventProgramDb: any) {
   return _id
 }
 
-export const down: MigrationFn = async () => {};
+export const down: MigrationFn = async () => {}

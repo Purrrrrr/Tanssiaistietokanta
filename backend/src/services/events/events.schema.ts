@@ -11,7 +11,7 @@ import { computedProperties, SlideStyleId, Id, Name, Date, NullableString, Nulla
 import { Dances } from '../dances/dances.schema'
 import { findTeachedIn, findWikipage } from '../dances/dances.resolvers'
 
-const DEFAULT_PAUSE_BETWEEN_DANCES = 3*60
+const DEFAULT_PAUSE_BETWEEN_DANCES = 3 * 60
 
 // Main data model schema
 export const eventsSchema = Type.Object(
@@ -35,11 +35,11 @@ export const eventsSchema = Type.Object(
         name: NullableString(),
         description: NullableString(),
         showInLists: Type.Boolean(),
-      })
+      }),
     }),
-    workshopVersions: Type.Record(Id(), Id())
+    workshopVersions: Type.Record(Id(), Id()),
   },
-  { $id: 'Events', additionalProperties: false }
+  { $id: 'Events', additionalProperties: false },
 )
 
 export const eventAccessDataSchema = EventAccessData()
@@ -61,12 +61,12 @@ function Introductions() {
       type: Type.Literal('EventProgram'),
       eventProgram: EventProgram(),
       danceId: Type.Optional(Type.Null()),
-    }))
+    })),
   })
 }
 
 function DanceSet() {
-  return  ClosedObject({
+  return ClosedObject({
     _id: Type.String(),
     title: Type.String(),
     titleSlideStyleId: SlideStyleId(),
@@ -78,7 +78,7 @@ function DanceSet() {
       slideStyleId: SlideStyleId(),
       danceId: Nullable(Id()),
       showInLists: Type.Boolean(),
-    }))
+    })),
   })
 }
 
@@ -120,7 +120,7 @@ function EventProgram() {
 
 function ClosedObject<P extends TProperties>(o: P): TObject<P> {
   return Type.Object(
-    o, { additionalProperties: false }
+    o, { additionalProperties: false },
   )
 }
 
@@ -132,7 +132,7 @@ export const eventsResolver = resolve<Events, HookContext>({
       return addDataToProgram(event, context.app)
     }
     return program
-  }
+  },
 })
 
 export async function addDataToProgram(event: Events, app: Application): Promise<Events['program']> {
@@ -158,7 +158,7 @@ export async function addDataToProgram(event: Events, app: Application): Promise
       : null
     return {
       ...item,
-      dance
+      dance,
     }
   }
 
@@ -168,7 +168,7 @@ export async function addDataToProgram(event: Events, app: Application): Promise
       return {
         ...danceSet,
         intervalMusic: await fetchDance(danceSet.intervalMusic),
-        program: await L.modifyAsync(L.elems, fetchDance, danceSet.program)
+        program: await L.modifyAsync(L.elems, fetchDance, danceSet.program),
       }
     },
     event.program,
@@ -183,10 +183,10 @@ export const eventsPartialDataSchema = Type.Intersect(
     Type.Pick(eventsSchema, ['name', 'beginDate', 'endDate']),
     Type.Partial(Type.Omit(eventsSchema, [...computedProperties, 'name', 'beginDate', 'endDate'])),
   ], {
-    $id: 'PartialEventsData'
+    $id: 'PartialEventsData',
   })
 export const eventsDataSchema = Type.Omit(eventsSchema, ['_id'], {
-  $id: 'EventsData'
+  $id: 'EventsData',
 })
 export type EventsData = Static<typeof eventsDataSchema>
 export const eventsDataValidator = castAfterValidating(eventsDataSchema, getValidator(eventsPartialDataSchema, dataValidator))
@@ -196,8 +196,8 @@ export const eventsDataResolver = resolve<Events, HookContext>({})
 export const eventsPatchSchema = Type.Partial(
   Type.Omit(eventsSchema, ['_id']),
   {
-    $id: 'EventsPatch'
-  }
+    $id: 'EventsPatch',
+  },
 )
 export type EventsPatch = Static<typeof eventsPatchSchema>
 export const eventsPatchValidator = getValidator(eventsPatchSchema, dataValidator)
@@ -211,9 +211,9 @@ export const eventsQuerySchema = Type.Intersect(
     // Add additional query properties here
     Type.Object({
       searchVersions: Type.Optional(Type.Boolean()),
-    }, { additionalProperties: false })
+    }, { additionalProperties: false }),
   ],
-  { additionalProperties: false }
+  { additionalProperties: false },
 )
 export type EventsQuery = Static<typeof eventsQuerySchema>
 export const eventsQueryValidator = getValidator(eventsQuerySchema, queryValidator)

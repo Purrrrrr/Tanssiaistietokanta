@@ -18,9 +18,9 @@ async function evolveObjAsync<T>(transformations: TransformationObject<T>, objec
   if (object === null) return object
   if (typeof object !== 'object') return object
 
-  const result : T = object instanceof Array
+  const result: T = object instanceof Array
     ? [...object] as T
-    : {...object}
+    : { ...object }
 
   const keys = Object.keys(object) as (keyof T)[]
   for (const key of keys) {

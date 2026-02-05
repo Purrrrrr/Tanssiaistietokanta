@@ -8,7 +8,7 @@ import {
   dancewikiResolver,
   dancewikiExternalResolver,
   dancewikiDataResolver,
-  dancewikiQueryResolver
+  dancewikiQueryResolver,
 } from './dancewiki.schema'
 
 import type { Application } from '../../declarations'
@@ -27,20 +27,20 @@ export const dancewiki = (app: Application) => {
     // A list of all methods this service exposes externally
     methods: dancewikiMethods,
     // You can add additional custom events to be sent to clients here
-    events: []
+    events: [],
   })
   // Initialize hooks
   app.service(dancewikiPath).hooks({
     around: {
       all: [
         schemaHooks.resolveExternal(dancewikiExternalResolver),
-        schemaHooks.resolveResult(dancewikiResolver)
-      ]
+        schemaHooks.resolveResult(dancewikiResolver),
+      ],
     },
     before: {
       all: [
         schemaHooks.validateQuery(dancewikiQueryValidator),
-        schemaHooks.resolveQuery(dancewikiQueryResolver)
+        schemaHooks.resolveQuery(dancewikiQueryResolver),
       ],
       find: [],
       get: [ctx => {
@@ -51,19 +51,19 @@ export const dancewiki = (app: Application) => {
       }],
       update: [
         schemaHooks.validateData(dancewikiDataValidator),
-        schemaHooks.resolveData(dancewikiDataResolver)
+        schemaHooks.resolveData(dancewikiDataResolver),
       ],
       create: [
         schemaHooks.validateData(dancewikiDataValidator),
-        schemaHooks.resolveData(dancewikiDataResolver)
+        schemaHooks.resolveData(dancewikiDataResolver),
       ],
     },
     after: {
-      all: []
+      all: [],
     },
     error: {
-      all: []
-    }
+      all: [],
+    },
   }).publish((data, context) => {
     const danceIds = getDependenciesFor('dancewiki', data, 'usedBy', 'dances')
 
@@ -74,7 +74,7 @@ export const dancewiki = (app: Application) => {
 
     return [
       ...withoutCurrentConnection(channels, context),
-      ...defaultChannels(app, context)
+      ...defaultChannels(app, context),
     ]
   })
 }

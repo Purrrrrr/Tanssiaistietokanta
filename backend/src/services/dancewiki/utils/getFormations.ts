@@ -1,10 +1,10 @@
-import {titleCase} from './titleCase'
+import { titleCase } from './titleCase'
 
 export function getFormations(instructions: string | null) {
   if (!instructions) return []
-  //The formation is usually found in the first two parts of the instructions
-  //The rest often contains words that are not the true formation
-  //but match our guesses
+  // The formation is usually found in the first two parts of the instructions
+  // The rest often contains words that are not the true formation
+  // but match our guesses
   const firstParts = toParts(instructions).slice(0, 2).join(' ')
 
   const formations = []
@@ -12,14 +12,14 @@ export function getFormations(instructions: string | null) {
     for (const regex of regexes) {
       const match = firstParts.match(regex)
       if (match) {
-        formations.push({guess: formationGuess, length: match[0].length})
+        formations.push({ guess: formationGuess, length: match[0].length })
       }
     }
   }
-  formations.sort((a, b) => b.length - a.length) //Longest match first
+  formations.sort((a, b) => b.length - a.length) // Longest match first
 
   return unique(
-    formations.map(f => titleCase(f.guess))
+    formations.map(f => titleCase(f.guess)),
   )
 }
 
@@ -35,29 +35,29 @@ function unique(words: string[]) {
 
 const possibleFillerWord = '[^ ]*'
 const formationRegexes = {
-  'piiri': [
+  piiri: [
     regex(wordPrefix('piiri')),
   ],
-  'paripiiri': [
-    regex(wordPrefix('parei'), wordPrefix('piiri')), //pareittain piirin kehällä/piirissä
+  paripiiri: [
+    regex(wordPrefix('parei'), wordPrefix('piiri')), // pareittain piirin kehällä/piirissä
     regex(wordPrefix('paripiiri')),
     regex(wordPrefix('parijonopiiri')),
   ],
-  'riveissä': [
+  riveissä: [
     regex(wordPrefix('rivi')),
-    regex(wordPrefix('rivei'))
+    regex(wordPrefix('rivei')),
   ],
-  //Kolmen henkilön rivissä
-  //kolmelle tanssijalle rivissä
+  // Kolmen henkilön rivissä
+  // kolmelle tanssijalle rivissä
   'neljän parin neliö': [
-    regex(wordPrefix('(neljä|4)'), wordPrefix('pari'), wordPrefix('neliö'))
+    regex(wordPrefix('(neljä|4)'), wordPrefix('pari'), wordPrefix('neliö')),
   ],
-  'neliö': [
+  neliö: [
     regex(wordPrefix('neliö')),
   ],
-  'solatanssi': [
+  solatanssi: [
     regex(wordPrefix('sola')),
-    regex(word('solissa'))
+    regex(word('solissa')),
   ],
   'bordonialainen solatanssi': [
     regex(wordPrefix('bordonial'), '(sola|solissa)'),
@@ -71,12 +71,12 @@ const formationRegexes = {
   'neljän parin jono': [
     regex(wordPrefix('(neljä|4)'), wordPrefix('pari'), wordPrefix('(pari)?jono')),
   ],
-  'parijono': [
+  parijono: [
     regex(wordPrefix('parijon')),
     regex(wordPrefix('pari'), wordPrefix('jono')),
-    //neljän parin parijonossa
+    // neljän parin parijonossa
   ],
-  'paritanssi': [
+  paritanssi: [
     regex(wordPrefix('paritanssi')),
     regex(wordPrefix('yhdelle parille')),
   ],
@@ -87,6 +87,6 @@ const formationRegexes = {
 */
 }
 
-function word(word: string) {return `\\b${word}\\b` }
-function wordPrefix(word: string) {return `\\b${word}[^ ]*\\b` }
+function word(word: string) { return `\\b${word}\\b` }
+function wordPrefix(word: string) { return `\\b${word}[^ ]*\\b` }
 function regex(...words: string[]) { return new RegExp(words.join(' *'), 'ig') }

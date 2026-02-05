@@ -1,6 +1,6 @@
 // // For more information about this file see https://dove.feathersjs.com/guides/cli/service.schemas.html
 import { resolve } from '@feathersjs/schema'
-import { Type, getValidator, querySyntax } from '@feathersjs/typebox'
+import { Type, getValidator } from '@feathersjs/typebox'
 import type { Static } from '@feathersjs/typebox'
 
 import type { HookContext } from '../../declarations'
@@ -8,7 +8,7 @@ import { dataValidator, queryValidator } from '../../validators'
 
 // Main data model schema
 export const convertSchema = Type.String(
-  { $id: 'Convert', additionalProperties: false }
+  { $id: 'Convert', additionalProperties: false },
 )
 export type Convert = Static<typeof convertSchema>
 
@@ -18,7 +18,7 @@ export const convertDataSchema = Type.Object({
   inputFormat: Type.Optional(Type.String()),
   outputFormat: Type.Optional(Type.String()),
 }, {
-  $id: 'ConvertData'
+  $id: 'ConvertData',
 })
 export type ConvertData = Static<typeof convertDataSchema>
 export const convertDataValidator = getValidator(convertDataSchema, dataValidator)

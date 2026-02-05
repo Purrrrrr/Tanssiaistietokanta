@@ -23,7 +23,7 @@ export const sessionSchema = Type.Object(
     IP: Type.String(),
     userAgent: Type.String(),
   },
-  { $id: 'Sessions', additionalProperties: false }
+  { $id: 'Sessions', additionalProperties: false },
 )
 export type Session = Static<typeof sessionSchema>
 export const sessionValidator = getValidator(sessionSchema, dataValidator)
@@ -33,7 +33,7 @@ export const sessionExternalResolver = resolve<Session, HookContext<SessionsServ
 
 // Schema for creating new entries
 export const sessionDataSchema = Type.Object({}, {
-  $id: 'SessionsData'
+  $id: 'SessionsData',
 })
 export type SessionData = Static<typeof sessionDataSchema>
 export const sessionDataValidator = getValidator(sessionDataSchema, dataValidator)
@@ -52,26 +52,26 @@ export const sessionDataResolver = resolve<Session, HookContext<SessionsService>
     const { expiresIn } = context.app.get('authentication').refreshTokenOptions
     return new Date(Date.now() + ms(expiresIn as ms.StringValue)).toISOString()
   },
-  IP: (_value, session, context) => context.params.IP ?? session.IP ?? ''
+  IP: (_value, session, context) => context.params.IP ?? session.IP ?? '',
 })
 
 // Schema for updating existing entries
 export const sessionPatchSchema = Type.Partial(sessionSchema, {
-  $id: 'SessionsPatch'
+  $id: 'SessionsPatch',
 })
 export type SessionPatch = Static<typeof sessionPatchSchema>
 export const sessionPatchValidator = getValidator(sessionPatchSchema, dataValidator)
 export const sessionPatchResolver = resolve<Session, HookContext<SessionsService>>({})
 
 // Schema for allowed query properties
-export const sessionQueryProperties = sessionSchema //Type.Pick(sessionsSchema, ['id', 'text'])
+export const sessionQueryProperties = sessionSchema // Type.Pick(sessionsSchema, ['id', 'text'])
 export const sessionQuerySchema = Type.Intersect(
   [
     querySyntax(sessionQueryProperties),
     // Add additional query properties here
-    Type.Object({}, { additionalProperties: false })
+    Type.Object({}, { additionalProperties: false }),
   ],
-  { additionalProperties: false }
+  { additionalProperties: false },
 )
 export type SessionQuery = Static<typeof sessionQuerySchema>
 export const sessionQueryValidator = getValidator(sessionQuerySchema, queryValidator)
@@ -83,5 +83,5 @@ export const sessionQueryResolver = resolve<SessionQuery, HookContext<SessionsSe
     }
 
     return value
-  }
+  },
 })

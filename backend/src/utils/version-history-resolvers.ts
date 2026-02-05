@@ -1,19 +1,19 @@
-import { Params } from "@feathersjs/feathers";
-import VersioningNeDBService, { Versionable } from "./VersioningNeDBService";
+import { Params } from '@feathersjs/feathers'
+import VersioningNeDBService, { Versionable } from './VersioningNeDBService'
 
 export interface BaseVersions {
   versions: Promise<Versionable[]>
 }
 
 export function versionHistoryResolver(service: VersioningNeDBService<Versionable, unknown, Params, unknown>) {
-  return ({_id}: Versionable): BaseVersions => ({
+  return ({ _id }: Versionable): BaseVersions => ({
     versions: service.find({
       query: {
         $sort: { _updatedAt: -1 },
         _id,
         searchVersions: true,
-      }
-    })
+      },
+    }),
   })
 }
 
@@ -24,9 +24,9 @@ export function versionHistoryFieldResolvers() {
 
       return Array.from(groups.entries()).map(([date, versionsOnDate]) => ({
         date,
-        versions: versionsOnDate.map(({_versionId, _versionNumber, _updatedAt}) => ({_versionId, _versionNumber, _updatedAt: getTime(_updatedAt)}))
+        versions: versionsOnDate.map(({ _versionId, _versionNumber, _updatedAt }) => ({ _versionId, _versionNumber, _updatedAt: getTime(_updatedAt) })),
       })).sort((a, b) => b.date.localeCompare(a.date))
-    }
+    },
   }
 }
 

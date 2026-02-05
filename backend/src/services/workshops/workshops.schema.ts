@@ -8,7 +8,7 @@ import { dataValidator, queryValidator } from '../../validators'
 import { castAfterValidating } from '../../utils/cast-after-validating'
 import { computedProperties, DateTime, Id, Name, Nullable } from '../../utils/common-types'
 
-const WorkshopInstanceSchema = () =>Type.Object({
+const WorkshopInstanceSchema = () => Type.Object({
   _id: Id(),
   description: Type.String(),
   abbreviation: Type.String(),
@@ -31,9 +31,9 @@ export const workshopsSchema = Type.Object(
     description: Type.String(),
     teachers: Type.String(),
     instances: Type.Array(WorkshopInstanceSchema()),
-    instanceSpecificDances: Type.Boolean()
+    instanceSpecificDances: Type.Boolean(),
   },
-  { $id: 'Workshops', additionalProperties: false }
+  { $id: 'Workshops', additionalProperties: false },
 )
 export type Workshops = Static<typeof workshopsSchema>
 export type WorkshopInstance = Workshops['instances'][number]
@@ -47,14 +47,14 @@ export const workshopsPartialDataSchema = Type.Intersect(
   [
     Type.Pick(workshopsSchema, ['name']),
     Type.Partial(
-      Type.Omit(workshopsSchema, [...computedProperties, 'name'])
+      Type.Omit(workshopsSchema, [...computedProperties, 'name']),
     ),
   ], {
-    $id: 'PartialWorkshopsData'
+    $id: 'PartialWorkshopsData',
   },
 )
 export const workshopsDataSchema = Type.Omit(workshopsSchema, ['_id'], {
-  $id: 'WorkshopsData'
+  $id: 'WorkshopsData',
 })
 export type WorkshopsData = Static<typeof workshopsDataSchema>
 export const workshopsDataValidator = castAfterValidating(workshopsDataSchema, getValidator(workshopsPartialDataSchema, dataValidator))
@@ -62,7 +62,7 @@ export const workshopsDataResolver = resolve<Workshops, HookContext>({})
 
 // Schema for updating existing entries
 export const workshopsPatchSchema = Type.Partial(workshopsSchema, {
-  $id: 'WorkshopsPatch'
+  $id: 'WorkshopsPatch',
 })
 export type WorkshopsPatch = Static<typeof workshopsPatchSchema>
 export const workshopsPatchValidator = getValidator(workshopsPatchSchema, dataValidator)
@@ -77,9 +77,9 @@ export const workshopsQuerySchema = Type.Intersect(
     Type.Object({
       'instances.danceIds': Type.Optional(Id()),
       searchVersions: Type.Optional(Type.Boolean()),
-    }, { additionalProperties: false })
+    }, { additionalProperties: false }),
   ],
-  { additionalProperties: false }
+  { additionalProperties: false },
 )
 export type WorkshopsQuery = Static<typeof workshopsQuerySchema>
 export const workshopsQueryValidator = getValidator(workshopsQuerySchema, queryValidator)

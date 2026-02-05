@@ -5,7 +5,7 @@ import { hooks as schemaHooks } from '@feathersjs/schema'
 import {
   channelConnectionsDataValidator,
   channelConnectionsQueryValidator,
-  channelConnectionsQueryResolver
+  channelConnectionsQueryResolver,
 } from './channel-connections.schema'
 
 import type { Application } from '../../declarations'
@@ -22,17 +22,17 @@ export const channelConnections = (app: Application) => {
     // A list of all methods this service exposes externally
     methods: channelConnectionsMethods,
     // You can add additional custom events to be sent to clients here
-    events: []
+    events: [],
   })
   // Initialize hooks
   app.service(channelConnectionsPath).hooks({
     around: {
-      all: []
+      all: [],
     },
     before: {
       all: [
         schemaHooks.validateQuery(channelConnectionsQueryValidator),
-        schemaHooks.resolveQuery(channelConnectionsQueryResolver)
+        schemaHooks.resolveQuery(channelConnectionsQueryResolver),
       ],
       find: [
 
@@ -40,14 +40,14 @@ export const channelConnections = (app: Application) => {
       create: [
         schemaHooks.validateData(channelConnectionsDataValidator),
       ],
-      remove: []
+      remove: [],
     },
     after: {
-      all: []
+      all: [],
     },
     error: {
-      all: []
-    }
+      all: [],
+    },
   })
 }
 

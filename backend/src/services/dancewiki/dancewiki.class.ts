@@ -44,10 +44,9 @@ const UNFETCHED_DANCE = {
 }
 
 export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiParams>
-  implements ServiceInterface<Dancewiki, DancewikiData, DancewikiParams, never>
-{
+implements ServiceInterface<Dancewiki, DancewikiData, DancewikiParams, never> {
   storageService: NeDBService<StoredDanceWiki, StoredDanceWiki, DancewikiParams, never>
-  categories : Cache<DanceCategorization>
+  categories: Cache<DanceCategorization>
 
   constructor(public options: DancewikiServiceOptions) {
     this.storageService = new NeDBService({
@@ -57,12 +56,12 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
       indexes: [{
         fieldName: 'name',
         unique: true,
-      }]
+      }],
     })
     this.categories = createCache(async () => {
       const page = await this.has(categoriesPageName)
         ? await this.get(categoriesPageName)
-        : await this.create({ name: categoriesPageName})
+        : await this.create({ name: categoriesPageName })
 
       return getDanceCategorization(page.instructions ?? '')
     }, DAY)
@@ -73,7 +72,7 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
     setTimeout(() => this.backgroundFetch(), 0)
   }
 
-  backgroundFetch = withRequestLogging('dancewikis', 'backgroundFetch', async(): Promise<void> => {
+  backgroundFetch = withRequestLogging('dancewikis', 'backgroundFetch', async (): Promise<void> => {
     const MAX_PAGES_TO_FETCH = 50
 
     const pageCount = await this.storageService.getModel().countAsync({})
@@ -98,7 +97,7 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
     const stale = await this.storageService.find({ query: {
       _fetchedAt: { $lt: lastWeek },
       spamScore: { $lt: 1 },
-      $limit: MAX_PAGES_TO_FETCH }
+      $limit: MAX_PAGES_TO_FETCH },
     })
     if (stale.length > 0) {
       const pagesToFetch = stale.map(page => page._id)
@@ -123,7 +122,7 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
         }
         data.spamScore = spamScore(data)
         this.storageService.create(data)
-      })
+      }),
     )
   })
 
@@ -133,9 +132,9 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
     const pagesToUpdate = (await this.storageService.find({
       query: {
         status: 'FETCHED',
-      }
+      },
     })).filter(page =>
-      (page._fetchedAt ?? '') < categoriesTimestamp || !page.metadataVersion || page.metadataVersion && page.metadataVersion < CURRENT_METADATA_VERSION
+      (page._fetchedAt ?? '') < categoriesTimestamp || !page.metadataVersion || (page.metadataVersion && page.metadataVersion < CURRENT_METADATA_VERSION),
     )
     const pagesToStore = pagesToUpdate.map(page => {
       const updated = this.computeMetadata(page)
@@ -149,7 +148,7 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
   }
 
   async has(name: string) {
-    const count = await this.storageService.getModel().countAsync({ name, status: { $ne: 'NOT_FOUND' }})
+    const count = await this.storageService.getModel().countAsync({ name, status: { $ne: 'NOT_FOUND' } })
     return count > 0
   }
 
@@ -178,7 +177,7 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
 
   async update(id: string | null, data: DancewikiData, params?: ServiceParams): Promise<Dancewiki | Dancewiki[]> {
     if (id) {
-      return this.create({ name: id}, params)
+      return this.create({ name: id }, params)
     }
     return this.create(data, params)
   }
@@ -187,7 +186,7 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
   async create(data: DancewikiData[], params?: ServiceParams): Promise<Dancewiki[]>
   async create(
     data: DancewikiData | DancewikiData[],
-    _params?: ServiceParams
+    _params?: ServiceParams,
   ): Promise<Dancewiki | Dancewiki[]> {
     if (Array.isArray(data)) {
       const created = await this.fetchPages(data.map(p => p.name))
@@ -212,13 +211,13 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
     const hasContents = page.revision !== null
     const contents = page.revision?.contents ?? ''
     const instructions = hasContents ? cleanupInstructions(await convertToMarkdown(contents)) : null
-    const dataToCreate : StoredDanceWiki = this.computeMetadata({
+    const dataToCreate: StoredDanceWiki = this.computeMetadata({
       _id: page.title,
       name: page.title,
       status: hasContents ? 'FETCHED' : 'NOT_FOUND',
       _fetchedAt: now,
       instructions,
-      revision: page.revision ?? null
+      revision: page.revision ?? null,
     })
 
     const existing = await this.has(page.title)
@@ -249,10 +248,9 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
 
     return uniq([
       ...getCategoriesFromContent(instructions),
-      ...(categoryCache[name] ?? [])
+      ...(categoryCache[name] ?? []),
     ])
   }
-
 }
 
 export const getOptions = (app: Application) => {

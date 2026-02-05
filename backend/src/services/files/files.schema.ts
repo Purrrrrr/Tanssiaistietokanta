@@ -28,9 +28,9 @@ export const fileSchema = Type.Object(
     mimetype: Type.String(),
     size: Type.Number(),
     unused: Type.Boolean({ description: 'If true, the file will be removed eventually by a scheduled job' }),
-    buffer: Type.Optional(Type.Unknown())
+    buffer: Type.Optional(Type.Unknown()),
   },
-  { $id: 'File', additionalProperties: false }
+  { $id: 'File', additionalProperties: false },
 )
 
 export type File = Static<typeof fileSchema> & { buffer?: Buffer | Stream }
@@ -55,13 +55,13 @@ export const fileDataSchema = Type.Object(
         mimetype: Type.String(),
         size: Type.Number(),
       },
-      { $id: 'Upload', additionalProperties: true }
+      { $id: 'Upload', additionalProperties: true },
     ),
-    autoRename: Type.Optional(Type.Union([Type.Boolean(), Type.Literal('true')],{
+    autoRename: Type.Optional(Type.Union([Type.Boolean(), Type.Literal('true')], {
       description: 'If true, automatically rename file in case of file name conflicts',
     })),
   },
-  { $id: 'FileData', additionalProperties: false }
+  { $id: 'FileData', additionalProperties: false },
 )
 export type FileData = Static<typeof fileDataSchema>
 export const fileDataValidator = getValidator(fileDataSchema, dataValidator)
@@ -85,9 +85,9 @@ export const fileQuerySchema = Type.Intersect(
     Type.Object({
       download: Type.Optional(Type.Boolean()),
       searchVersions: Type.Optional(Type.Boolean()),
-    }, { additionalProperties: false })
+    }, { additionalProperties: false }),
   ],
-  { additionalProperties: false }
+  { additionalProperties: false },
 )
 export type FileQuery = Static<typeof fileQuerySchema>
 export const fileQueryValidator = getValidator(fileQuerySchema, queryValidator)

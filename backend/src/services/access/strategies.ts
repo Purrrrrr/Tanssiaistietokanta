@@ -1,7 +1,7 @@
-import { Validator } from "@feathersjs/schema";
-import { Application } from "../../declarations";
-import { ServiceName } from "./access.schema";
-import { User } from "./types";
+import { Validator } from '@feathersjs/schema'
+import { Application } from '../../declarations'
+import { ServiceName } from './access.schema'
+import { User } from './types'
 
 export interface Entity {
   _id: Id
@@ -20,7 +20,7 @@ export interface AugmentedAccessStrategy<EntityAccessData = unknown, GlobalAcces
 }
 
 export function augmentStrategy<EntityAccessData, GlobalAccessData>(
-  strategy: AccessStrategy<EntityAccessData, GlobalAccessData>
+  strategy: AccessStrategy<EntityAccessData, GlobalAccessData>,
 ): AugmentedAccessStrategy<EntityAccessData, GlobalAccessData> {
   const augmented: AugmentedAccessStrategy<EntityAccessData, GlobalAccessData> = {
     ...strategy,
@@ -33,7 +33,7 @@ export function augmentStrategy<EntityAccessData, GlobalAccessData>(
     },
     authorizeGlobal: async (params) => {
       return strategy.authorize({ type: 'global', entityData: undefined, ...params })
-    }
+    },
   }
   return augmented
 }
@@ -56,13 +56,13 @@ export type AuthParams<EntityAccessData> = GlobalAuthParams | EntityAuthParams<E
 
 interface GlobalAuthParams {
   type: 'global'
-  user: User | undefined,
+  user: User | undefined
   action: GlobalAction | Action
   entityData: undefined
 }
 interface EntityAuthParams<EntityAccessData> {
   type: 'entity'
-  user: User | undefined,
+  user: User | undefined
   action: Action
   entityData: EntityAccessData
 }
@@ -82,6 +82,6 @@ export interface AccessStrategyDataStore<AccessData> {
 export type AuthResponse = boolean
 
 interface StrategyConfig {
-  app:Application 
+  app: Application
   serviceName: ServiceName
 }

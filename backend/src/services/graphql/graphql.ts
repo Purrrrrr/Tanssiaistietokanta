@@ -3,7 +3,7 @@
 import type { Application } from '../../declarations'
 import { GraphqlService, getOptions } from './graphql.class'
 import { graphqlPath, graphqlMethods } from './graphql.shared'
-import schema from "./graphql.schema";
+import schema from './graphql.schema'
 
 export * from './graphql.class'
 
@@ -14,31 +14,31 @@ export const graphql = (app: Application) => {
     // A list of all methods this service exposes externally
     methods: graphqlMethods,
     // You can add additional custom events to be sent to clients here
-    events: []
+    events: [],
   })
   // Initialize hooks
   app.service(graphqlPath).hooks({
     around: {
-      all: []
+      all: [],
     },
     before: {
       all: [],
       find: [],
     },
     after: {
-      all: []
+      all: [],
     },
     error: {
-      all: []
-    }
+      all: [],
+    },
   })
 
   app.use('/graphql-schema', {
-    async find(options?: any) {
+    async find(_options?: any) {
       return schema
-    }
+    },
   }, {
-    methods: ['find']
+    methods: ['find'],
   })
 }
 

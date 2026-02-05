@@ -1,5 +1,5 @@
-import { getHeaderData } from "./markdownUtils";
-import { ParsedPage } from "./wikiApi";
+import { getHeaderData } from './markdownUtils'
+import { ParsedPage } from './wikiApi'
 
 const suscpiciousWords = new RegExp(
   [
@@ -38,7 +38,7 @@ const suscpiciousWords = new RegExp(
     // Non latin letters
     '[\\P{Script=Latn}&&\\p{Letter}]',
   ].join('|'),
-  'vi'
+  'vi',
 )
 
 interface PageToScore {
@@ -51,7 +51,7 @@ export function spamScore(page: PageToScore): number {
   const { name, instructions, revision } = page
   const onlyOneRevision = revision?.parent === 0
 
-  const text = (name+'\n\n'+(instructions ?? ''))
+  const text = (name + '\n\n' + (instructions ?? ''))
   const parts = text.split(/\n\n/)
   const headingCount = parts.filter(getHeaderData).length
 
@@ -67,7 +67,7 @@ export function spamScore(page: PageToScore): number {
 
   score += countsInTitle.quotinent * 50
   score += countsInContents.quotinent * 50
-    
+
   // console.log({
   //   title: name,
   //   onlyOneRevision, headingCount, countsInContents, countsInTitle, score
@@ -77,7 +77,6 @@ export function spamScore(page: PageToScore): number {
 }
 
 function countSuspicious(text: string) {
-
   const words = text.split(/\s+/)
   const wordCount = words.length
   const suscpiciousWordCount = words.reduce(

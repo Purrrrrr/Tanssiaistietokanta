@@ -15,7 +15,7 @@ export const graphqlClient = (client: ClientApplication) => {
   const connection = client.get('connection')
 
   client.use(graphqlPath, connection.service(graphqlPath), {
-    methods: graphqlMethods
+    methods: graphqlMethods,
   })
 }
 

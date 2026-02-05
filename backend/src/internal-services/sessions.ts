@@ -1,6 +1,6 @@
-import { Application, HookContext } from "../declarations";
+import { Application, HookContext } from '../declarations'
 import { parse, serialize } from 'cookie'
-import { Middleware } from "koa";
+import { Middleware } from 'koa'
 import createId from '../utils/random-id'
 
 declare module '@feathersjs/feathers' {
@@ -21,21 +21,21 @@ const YEAR = 60 * 60 * 24 * 365
 type Headers = Record<string, string | undefined>
 
 export function socketIOSessionCookieMiddleware(headers: any, request: { headers: Headers }) {
-  const cookies = parse(request.headers.cookie || '')
+  const cookies = parse(request.headers.cookie ?? '')
   let sessionId = cookies[SESSION_COOKIE_NAME]
   if (!sessionId) {
     sessionId = createId()
     headers['Set-Cookie'] = getNewSessionCookies(sessionId)
     request.headers.cookie = [
       request.headers.cookie,
-      serialize(SESSION_COOKIE_NAME, sessionId)
+      serialize(SESSION_COOKIE_NAME, sessionId),
     ].filter(Boolean).join('; ')
   }
 }
 
 export const restSessionCookieMiddleware: Middleware = async (ctx, next) => {
   const { request, res } = ctx
-  const cookie = request.headers.cookie || ''
+  const cookie = request.headers.cookie ?? ''
   const cookies = parse(cookie)
   let sessionId = cookies[SESSION_COOKIE_NAME]
   if (!sessionId) {
@@ -60,14 +60,13 @@ export default function setupSessions(app: Application) {
   app.on('logout', (_authResult, _params, ctx: HookContext) => {
     setCookies(ctx, [
       makeCookie(LOGGED_IN_COOKIE_NAME, NO, false),
-      makeCookie(SESSION_COOKIE_NAME, '')
+      makeCookie(SESSION_COOKIE_NAME, ''),
     ])
   })
   app.on('connection', (connection) => {
-    const cookies = parse(connection.headers?.cookie || '')
+    const cookies = parse(connection.headers?.cookie ?? '')
     connection.id = createId()
-    connection.sessionId
-    connection.sessionId = cookies[SESSION_COOKIE_NAME] || ''
+    connection.sessionId = cookies[SESSION_COOKIE_NAME] ?? ''
   })
 }
 
@@ -96,7 +95,7 @@ function setCookies(ctx: HookContext, cookies: string | string[]) {
 function makeCookie(name: string, value: string, httpOnly = true) {
   return serialize(
     name,
-    value, { 
+    value, {
       path: '/',
       secure: process.env.CORS_ALLOW_LOCALHOST !== 'true',
       httpOnly,

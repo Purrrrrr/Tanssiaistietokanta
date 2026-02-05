@@ -14,8 +14,7 @@ export interface UserServiceOptions {
 export interface UserParams extends Params<UserQuery> {}
 
 export class UserService<ServiceParams extends UserParams = UserParams>
-  extends NeDBService<User, UserData, ServiceParams, UserPatch>
-{
+  extends NeDBService<User, UserData, ServiceParams, UserPatch> {
   constructor(public options: UserServiceOptions) {
     super({
       ...options,
@@ -23,13 +22,11 @@ export class UserService<ServiceParams extends UserParams = UserParams>
       indexes: [
         { fieldName: 'username', unique: true },
         { fieldName: 'email', unique: true },
-      ]
+      ],
     })
   }
 
-  get id() {
-    return '_id'
-  }
+  public readonly id = '_id'
 }
 
 export const getOptions = (app: Application) => {

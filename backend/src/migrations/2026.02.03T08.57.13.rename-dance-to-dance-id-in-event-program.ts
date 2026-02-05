@@ -14,4 +14,4 @@ export const up: MigrationFn = async params => {
     }),
   ))
 }
-export const down: MigrationFn = async params => {}
+export const down: MigrationFn = async _params => {}

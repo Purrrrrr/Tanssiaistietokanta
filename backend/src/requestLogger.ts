@@ -1,7 +1,7 @@
-import { createLogger } from 'winston';
+import { createLogger } from 'winston'
 import { logger as mainLogger } from './logger'
-import Transport from 'winston-transport';
-import { AsyncLocalStorage } from 'async_hooks';
+import Transport from 'winston-transport'
+import { AsyncLocalStorage } from 'async_hooks'
 
 interface LogData extends Record<string, unknown>, RequestIdentity {
   message: string
@@ -24,6 +24,7 @@ class RequestMessageTransport extends Transport {
   constructor() {
     super({})
   }
+
   log(info: any, callback: () => void) {
     const requestLogger = loggerStorage.getStore()
     if (!requestLogger) {
@@ -38,7 +39,7 @@ class RequestMessageTransport extends Transport {
   }
 }
 
-const loggerStorage = new AsyncLocalStorage<RequestLogger>();
+const loggerStorage = new AsyncLocalStorage<RequestLogger>()
 
 export const logger = createLogger({
   level: mainLogger.level,
@@ -97,7 +98,7 @@ export function addLogData(key: string, data: unknown) {
 
 export function withRequestLogger<T>(
   context: RequestIdentity,
-  fn: (logger: RequestLogger) => Promise<T>
+  fn: (logger: RequestLogger) => Promise<T>,
 ): Promise<T> {
   const existingLogger = loggerStorage.getStore()
   if (existingLogger) {
@@ -117,10 +118,10 @@ export function withRequestLogger<T>(
   })
 }
 
-export function withRequestLogging<Args extends unknown[], Result extends unknown>(
+export function withRequestLogging<Args extends unknown[], Result>(
   path: string,
   method: string,
-  fn: (...args: Args) => Promise<Result>
+  fn: (...args: Args) => Promise<Result>,
 ): ((...args: Args) => Promise<Result>) {
   return async (...args: Args): Promise<Result> => {
     return withRequestLogger({ method, path }, async () => {

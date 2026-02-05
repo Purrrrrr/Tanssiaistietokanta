@@ -1,4 +1,4 @@
-import type { Id, Params, } from '@feathersjs/feathers'
+import type { Id, Params } from '@feathersjs/feathers'
 import VersioningNeDBService from '../../utils/VersioningNeDBService'
 
 import type { Application } from '../../declarations'
@@ -13,10 +13,9 @@ export interface DancesServiceOptions {
 export interface DancesParams extends Params<DancesQuery> {}
 
 export class DancesService<ServiceParams extends DancesParams = DancesParams>
-  extends VersioningNeDBService<Dances, DancesData, ServiceParams, DancesPatch>
-{
+  extends VersioningNeDBService<Dances, DancesData, ServiceParams, DancesPatch> {
   constructor(public options: DancesServiceOptions) {
-    super({ ...options, dbname: 'dances'})
+    super({ ...options, dbname: 'dances' })
   }
 
   async get(id: Id, _params?: ServiceParams): Promise<Dances> {

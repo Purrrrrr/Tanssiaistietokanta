@@ -19,16 +19,16 @@ const formats: FormatsPluginOptions = [
   'uri-template',
   'json-pointer',
   'relative-json-pointer',
-  'regex'
+  'regex',
 ]
 
 export const dataValidator: Ajv = addFormats(new Ajv({}), formats)
 
 export const queryValidator: Ajv = addFormats(
   new Ajv({
-    coerceTypes: true
+    coerceTypes: true,
   }),
-  formats
+  formats,
 )
 TypeSystem.CreateFormat('date', dataValidator.compile(Date()))
 TypeSystem.CreateFormat('iso-date-time', dataValidator.compile(DateTime()))

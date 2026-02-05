@@ -16,7 +16,7 @@ export const dancewikiSchema = Type.Object(
     status: Type.Union([
       Type.Literal('UNFETCHED'), // _fetchedAt == null && instructions == null
       Type.Literal('NOT_FOUND'), // _fetchedAt != null && instructions == null
-      Type.Literal('FETCHED'),   // _fetchedAt != null && instructions != null
+      Type.Literal('FETCHED'), // _fetchedAt != null && instructions != null
 
     ]),
     spamScore: Type.Number(),
@@ -33,7 +33,7 @@ export const dancewikiSchema = Type.Object(
     })),
     metadataVersion: Nullable(Type.Number()),
   },
-  { $id: 'Dancewiki', additionalProperties: false }
+  { $id: 'Dancewiki', additionalProperties: false },
 )
 export type Dancewiki = Static<typeof dancewikiSchema>
 export const dancewikiValidator = getValidator(dancewikiSchema, dataValidator)
@@ -43,7 +43,7 @@ export const dancewikiExternalResolver = resolve<Dancewiki, HookContext<Dancewik
 
 // Schema for creating new entries
 export const dancewikiDataSchema = Type.Pick(dancewikiSchema, ['name'], {
-  $id: 'DancewikiData'
+  $id: 'DancewikiData',
 })
 export type DancewikiData = Static<typeof dancewikiDataSchema>
 export const dancewikiDataValidator = getValidator(dancewikiDataSchema, dataValidator)
@@ -55,9 +55,9 @@ export const dancewikiQuerySchema = Type.Intersect(
   [
     querySyntax(dancewikiQueryProperties),
     // Add additional query properties here
-    Type.Object({}, { additionalProperties: false })
+    Type.Object({}, { additionalProperties: false }),
   ],
-  { additionalProperties: false }
+  { additionalProperties: false },
 )
 export type DancewikiQuery = Static<typeof dancewikiQuerySchema>
 export const dancewikiQueryValidator = getValidator(dancewikiQuerySchema, queryValidator)

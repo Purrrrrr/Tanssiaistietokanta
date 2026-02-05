@@ -1,4 +1,4 @@
-import { MigrationFn as UmzugMigrationFn } from 'umzug';
+import { MigrationFn as UmzugMigrationFn } from 'umzug'
 import type { ServiceInterface } from '@feathersjs/feathers'
 import path from 'path'
 import { memoize } from 'es-toolkit'
@@ -35,8 +35,8 @@ export function getContext(app: Application) {
   }
   const getDb = memoize(function getDb(name: string) {
     return new NeDB({
-      filename: path.join(dbPath, name+'.db'),
-      autoload: true
+      filename: path.join(dbPath, name + '.db'),
+      autoload: true,
     })
   })
   return {
@@ -46,7 +46,7 @@ export function getContext(app: Application) {
     updateDatabase: async (name: string, modificator: (i: unknown) => unknown) => {
       await updateDatabase(getModel(name), modificator)
       await updateDatabase(getVersionModel(name), modificator)
-    }
+    },
   }
 }
 
@@ -54,7 +54,7 @@ function getModels(app: Application) {
   return Object.fromEntries(
     Object.entries(app.services)
       .map(([k, service]) => ([k, service?.getModel?.()]))
-      .filter(([, model]) => model)
+      .filter(([, model]) => model),
   )
 }
 
@@ -62,6 +62,6 @@ function getVersionModels(app: Application) {
   return Object.fromEntries(
     Object.entries(app.services)
       .map(([k, service]) => ([k, service?.getVersionModel?.()]))
-      .filter(([, model]) => model)
+      .filter(([, model]) => model),
   )
 }

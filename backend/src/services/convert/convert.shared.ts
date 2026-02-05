@@ -15,7 +15,7 @@ export const convertClient = (client: ClientApplication) => {
   const connection = client.get('connection')
 
   client.use(convertPath, connection.service(convertPath), {
-    methods: convertMethods
+    methods: convertMethods,
   })
 }
 

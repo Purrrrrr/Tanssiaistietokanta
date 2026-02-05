@@ -1,29 +1,29 @@
-import { HookContext, NextFunction } from "../../declarations";
-import { ServiceName } from "./access.schema";
-import { AsyncLocalStorage } from 'async_hooks';
-import { Action } from "./strategies";
-import { User } from "./types";
-import { isJsonPatch, getPatched } from "../../hooks/merge-json-patch";
+import { HookContext, NextFunction } from '../../declarations'
+import { ServiceName } from './access.schema'
+import { AsyncLocalStorage } from 'async_hooks'
+import { Action } from './strategies'
+import { User } from './types'
+import { isJsonPatch, getPatched } from '../../hooks/merge-json-patch'
 
-export const SkipAccessControl = Symbol('SkipAccessControl');
-export const PreviousAccessControl = Symbol('PreviousAccessControl');
+export const SkipAccessControl = Symbol('SkipAccessControl')
+export const PreviousAccessControl = Symbol('PreviousAccessControl')
 
 interface AccessParamContext {
   user?: User
 }
 
-const paramStorage = new AsyncLocalStorage<AccessParamContext>();
+const paramStorage = new AsyncLocalStorage<AccessParamContext>()
 
 export async function checkAccess(ctx: HookContext, next: NextFunction) {
-  const { app, params, path, method, id } = ctx;
-  const accessService = app.service('access');
+  const { app, params, path, method, id } = ctx
+  const accessService = app.service('access')
   if (params[SkipAccessControl]) {
     // Some internal service calls need to have full access, eg. the dependecy graph
-    return next();
+    return next()
   }
 
-  return withAccessParams({ user: params.user }, async ({ user })=> {
-    const stragegy = accessService.getAccessStrategy(path as ServiceName);
+  return withAccessParams({ user: params.user }, async ({ user }) => {
+    const stragegy = accessService.getAccessStrategy(path as ServiceName)
     if (!stragegy) {
       return next()
     }
@@ -42,11 +42,10 @@ export async function checkAccess(ctx: HookContext, next: NextFunction) {
           user,
         })
         return { entityData: entityData, hasPermission }
-
       })
       return
     }
-    const action = toAction(method);
+    const action = toAction(method)
     if (!action) {
       return next()
     }
@@ -54,7 +53,7 @@ export async function checkAccess(ctx: HookContext, next: NextFunction) {
     let entityData = await stragegy.store?.getAccess(id as string)
     const hasPermission = await stragegy.authorizeEntity({ action, user, entityData })
     if (!hasPermission) {
-      throw new Error('Access denied');
+      throw new Error('Access denied')
     }
 
     if (stragegy.store) {
@@ -66,7 +65,7 @@ export async function checkAccess(ctx: HookContext, next: NextFunction) {
           action: 'manage-access', user, entityData,
         })
         if (!hasManagePermission) {
-          throw new Error('Manage access denied');
+          throw new Error('Manage access denied')
         }
         stragegy.store.dataValidator(updatedData)
         await stragegy.store.setAccess(id as string, updatedData)
@@ -79,14 +78,14 @@ export async function checkAccess(ctx: HookContext, next: NextFunction) {
   })
 }
 
-async function authorizeList<T, R>(list: T[], authorizer: (item: T) => Promise<{ hasPermission?: boolean, entityData: R}>): Promise<T[]> {
+async function authorizeList<T, R>(list: T[], authorizer: (item: T) => Promise<{ hasPermission?: boolean, entityData: R }>): Promise<T[]> {
   const authorized = await Promise.all(
     list.map(async item => {
       const { entityData, hasPermission } = await authorizer(item)
       return hasPermission
         ? addAccessData(item, entityData)
         : null
-    })
+    }),
   )
   return authorized.filter(item => item !== null)
 }
@@ -114,7 +113,7 @@ function getAccessControlUpdate<T>(ctx: HookContext, entityData: T): T | undefin
 
 export function withAccessParams<T>(
   context: AccessParamContext,
-  fn: (ctx: AccessParamContext) => Promise<T>
+  fn: (ctx: AccessParamContext) => Promise<T>,
 ): Promise<T> {
   const existingCtx = paramStorage.getStore()
   if (existingCtx) {

@@ -19,9 +19,9 @@ export const userSchema = Type.Object(
     sessionId: Type.Optional(Id()),
     email: Type.Optional(Type.String()),
     googleId: Type.Optional(Type.String()),
-    githubId: Type.Optional(Type.String())
+    githubId: Type.Optional(Type.String()),
   },
-  { $id: 'User', additionalProperties: false }
+  { $id: 'User', additionalProperties: false },
 )
 export type User = Static<typeof userSchema>
 export const userValidator = getValidator(userSchema, dataValidator)
@@ -41,22 +41,22 @@ export const userExternalResolver = resolve<User, HookContext<UserService>>({
 
 // Schema for creating new entries
 export const userDataSchema = Type.Pick(userSchema, ['username', 'password', 'name', 'email', 'googleId', 'githubId'], {
-  $id: 'UserData'
+  $id: 'UserData',
 })
 export type UserData = Static<typeof userDataSchema>
 export const userDataValidator = getValidator(userDataSchema, dataValidator)
 export const userDataResolver = resolve<User, HookContext<UserService>>({
-  password: passwordHash({ strategy: 'local' })
+  password: passwordHash({ strategy: 'local' }),
 })
 
 // Schema for updating existing entries
 export const userPatchSchema = Type.Partial(userSchema, {
-  $id: 'UserPatch'
+  $id: 'UserPatch',
 })
 export type UserPatch = Static<typeof userPatchSchema>
 export const userPatchValidator = getValidator(userPatchSchema, dataValidator)
 export const userPatchResolver = resolve<User, HookContext<UserService>>({
-  password: passwordHash({ strategy: 'local' })
+  password: passwordHash({ strategy: 'local' }),
 })
 
 // Schema for allowed query properties
@@ -65,9 +65,9 @@ export const userQuerySchema = Type.Intersect(
   [
     querySyntax(userQueryProperties),
     // Add additional query properties here
-    Type.Object({}, { additionalProperties: false })
+    Type.Object({}, { additionalProperties: false }),
   ],
-  { additionalProperties: false }
+  { additionalProperties: false },
 )
 export type UserQuery = Static<typeof userQuerySchema>
 export const userQueryValidator = getValidator(userQuerySchema, queryValidator)
@@ -79,5 +79,5 @@ export const userQueryResolver = resolve<UserQuery, HookContext<UserService>>({
     }
 
     return value
-  }
+  },
 })

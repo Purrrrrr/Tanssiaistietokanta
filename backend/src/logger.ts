@@ -36,25 +36,29 @@ const levelColors: Record<string, Color> = {
 }
 
 const levelFormatter = (level: string, uppercase: boolean) => {
-  const colorizeLevel = levelColors[level] ?? levelColors['default']
+  const colorizeLevel = levelColors[level] ?? levelColors.default
   return bold(colorizeLevel(uppercase ? level.toUpperCase() : level))
 }
 
 const cliJson = format((info) => {
-  const { instanceId, connectionId, provider = 'internal', level, message, errorStack, messages, durationMs, method, path, timestamp, ...rest } = info
+  const {
+    instanceId: _instanceId_, messages: _messages, method: _method, path: _path,
+    connectionId, provider = 'internal', level,
+    message, errorStack, durationMs, timestamp, ...rest
+  } = info
   const msgStr = typeof message === 'string' ? message : formatValue(message as string | object)
   const ts = timestamp as string ?? new Date().toISOString()
-  const durationStr =  durationMs ?  ` (${bold(`${durationMs}ms`)})` : ''
+  const durationStr = durationMs ? ` (${bold(`${durationMs}ms`)})` : ''
   const connectionStr = connectionId ? `(${gray(connectionId as string)})` : ''
   let msg = `${bold(ts)} ${levelFormatter(level, true)}: ${bold(magenta(provider as string))}${connectionStr} -> ${bold(msgStr)}${durationStr}`
 
   const json = formatObject(rest)
-  if (json) msg += ' '+indent(json).trimStart()
+  if (json) msg += ' ' + indent(json).trimStart()
 
   if (Array.isArray(info.messages)) {
     const messages = info.messages
       .map(subInfo => {
-        const { time, timestamp, ...json } = subInfo
+        const { time, timestamp: _timestamp, ...json } = subInfo
         return `${bold(`+${time}ms`.padEnd(8))} ${levelFormatter(subInfo.level, false)}: ${subInfo.message} ${indent(formatObject(json)).trimStart()}`
       })
     msg += `\n${messages.map(indent).join('\n')}`
@@ -83,5 +87,5 @@ export const logger = createLogger({
       level: 'info',
       format: format.combine(format.splat(), format.json()),
     }),
-  ]
+  ],
 })

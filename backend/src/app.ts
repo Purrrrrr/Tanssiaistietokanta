@@ -65,9 +65,9 @@ app.configure(rest())
 app.configure(
   socketio({
     cors: {
-      origin: allowLocalhostOnDev(app.get('origins'))
+      origin: allowLocalhostOnDev(app.get('origins')),
     },
-  }, io => io.engine.on('headers', socketIOSessionCookieMiddleware))
+  }, io => io.engine.on('headers', socketIOSessionCookieMiddleware)),
 )
 
 function allowLocalhostOnDev(origins: string[] | undefined) {
@@ -84,13 +84,13 @@ app.configure(sessions)
 // Register hooks that run on all service methods
 app.hooks({
   around: {
-    all: [logRequest({ ignoredPaths: ['channel-connections']}), checkAccess, addErrorStatusCode]
+    all: [logRequest({ ignoredPaths: ['channel-connections'] }), checkAccess, addErrorStatusCode],
   },
   before: {
     remove: [preventRemovingOfUsedItems],
   },
   after: {},
-  error: {}
+  error: {},
 })
 // Register application setup and teardown hooks here
 app.hooks({

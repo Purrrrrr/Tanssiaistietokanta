@@ -25,7 +25,7 @@ export class ClamScanner {
           clamdscan: {
             ...options,
             multiscan: true,
-          }
+          },
         })
         const version = await scanner.getVersion()
         logger.info(`ClamAV: version is ${version}`)
@@ -34,7 +34,7 @@ export class ClamScanner {
         logger.error(`ClamAV: unable to initialize ClamAV because of '${error}'`)
       }
     } else {
-      logger.warn("ClamAV: not configured")
+      logger.warn('ClamAV: not configured')
     }
   }
 
@@ -48,7 +48,7 @@ export class ClamScanner {
       logger.warn('Unable to scan a file without ClamAV configured')
       return false
     }
-    
+
     try {
       const { isInfected } = await this.scanner.scanFile(path)
       return isInfected
@@ -58,4 +58,3 @@ export class ClamScanner {
     }
   }
 }
-

@@ -9,13 +9,13 @@ export type AccessClientService = Pick<AccessService<Params<AccessQuery>>, (type
 
 export const accessPath = 'access'
 
-export const accessMethods: Array<keyof AccessService> = ['find']
+export const accessMethods: (keyof AccessService)[] = ['find']
 
 export const accessClient = (client: ClientApplication) => {
   const connection = client.get('connection')
 
   client.use(accessPath, connection.service(accessPath), {
-    methods: accessMethods
+    methods: accessMethods,
   })
 }
 

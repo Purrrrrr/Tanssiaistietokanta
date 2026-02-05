@@ -6,11 +6,11 @@ export function defaultChannels(app: Application, context: HookContext) {
   const { id, path: serviceName } = context
 
   const channels = [
-    app.channel(serviceName)
+    app.channel(serviceName),
   ]
   if (id) {
     channels.push(
-      app.channel(`${serviceName}/${id}`)
+      app.channel(`${serviceName}/${id}`),
     )
   }
 
@@ -24,6 +24,6 @@ export function withoutCurrentConnection(channels: Channel[], context: HookConte
   return channels.map(channel =>
     channel.filter(conn => {
       return conn !== connection
-    })
+    }),
   )
 }

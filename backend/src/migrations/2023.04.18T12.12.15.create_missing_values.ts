@@ -1,7 +1,7 @@
-import updateDatabase from '../utils/updateDatabase';
-import * as L from 'partial.lenses';
-import R from 'ramda';
-import { MigrationFn } from '../umzug.context';
+import updateDatabase from '../utils/updateDatabase'
+import * as L from 'partial.lenses'
+import R from 'ramda'
+import { MigrationFn } from '../umzug.context'
 
 export const up: MigrationFn = async params => {
   const eventsDb = params.context.getModel('events')
@@ -18,8 +18,8 @@ export const up: MigrationFn = async params => {
           [L.elems, 'slideStyleId', whenUndefined],
           null,
           danceSet.program,
-        )
-      })
+        ),
+      }),
     ),
     L.set(
       ['program', 'introductions', 'titleSlideStyleId', whenUndefined],
@@ -36,4 +36,4 @@ export const up: MigrationFn = async params => {
   ))
 }
 
-export const down: MigrationFn = async () => {};
+export const down: MigrationFn = async () => {}

@@ -1,6 +1,6 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/service.html
-import * as L from 'partial.lenses';
-import * as R from 'ramda';
+import * as L from 'partial.lenses'
+import * as R from 'ramda'
 import { hooks as schemaHooks } from '@feathersjs/schema'
 import { compose, omit } from 'ramda'
 
@@ -13,9 +13,8 @@ import {
   eventsDataResolver,
   eventsPatchResolver,
   eventsQueryResolver,
-  eventsSchema,
   eventAccessDataSchema,
-  EventAccessData
+  EventAccessData,
 } from './events.schema'
 
 import type { Application } from '../../declarations'
@@ -34,7 +33,7 @@ export const events = (app: Application) => {
     // A list of all methods this service exposes externally
     methods: eventsMethods,
     // You can add additional custom events to be sent to clients here
-    events: []
+    events: [],
   })
 
   // Initialize hooks
@@ -58,23 +57,23 @@ export const events = (app: Application) => {
       get: [],
       create: [schemaHooks.validateData(eventsDataValidator), schemaHooks.resolveData(eventsDataResolver)],
       patch: [schemaHooks.validateData(eventsPatchValidator), schemaHooks.resolveData(eventsPatchResolver)],
-      remove: []
+      remove: [],
     },
     after: {
-      all: []
+      all: [],
     },
     error: {
-      all: []
-    }
+      all: [],
+    },
   })
 
-  const allowUser = (userId: string) => `user:${userId}`;
-
+  const allowUser = (userId: string) => `user:${userId}`
 
   class EventAccessStrategy implements AccessStrategy<EventAccessData> {
     store = app.service('access').getStore('events', eventAccessDataSchema, {
-      viewers: ['everyone']
+      viewers: ['everyone'],
     })
+
     async authorize({ type, action, entityData, user }: AuthParams<EventAccessData>) {
       if (type === 'global') {
         return undefined
@@ -86,6 +85,7 @@ export const events = (app: Application) => {
       }
       return canRead
     }
+
     hasAccess(userList: string[], userId: string | undefined) {
       if (userList.includes('everyone')) {
         return true

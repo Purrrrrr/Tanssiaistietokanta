@@ -7,8 +7,8 @@ interface Page {
 }
 
 interface Revision {
-  revid: number,
-  parentid: number,
+  revid: number
+  parentid: number
   timestamp: string
   slots: {
     main: {
@@ -31,16 +31,16 @@ export interface ParsedPage {
 export async function getPageList(): Promise<string[]> {
   const baseUrl = `${wikiUrl}/api.php?action=query&list=allpages&aplimit=max&format=json`
   const results = []
-  let continueToken : string | null = null;
+  let continueToken: string | null = null
 
   do {
     const url = continueToken ? `${baseUrl}&apcontinue=${encodeURIComponent(continueToken)}` : baseUrl
-    const res = await(get(url))
+    const res = await (get(url))
     continueToken = res.continue?.apcontinue ?? null
 
     results.push(...res.query.allpages.map((page: Page) => page.title))
-  } while(continueToken)
-  
+  } while (continueToken)
+
   return results
 }
 
@@ -68,14 +68,14 @@ async function fetchWikiPages(encodedTitle: string) {
     return pageList
   }
   const replacements = Object.fromEntries(
-    normalized.map(({from, to}: {from: string, to: string}) => [to, from])
-  ) 
+    normalized.map(({ from, to}: { from: string, to: string }) => [to, from]),
+  )
 
   return pageList.map(page => {
     if (page.title in replacements) {
       return {
         ...page,
-        title: replacements[page.title]
+        title: replacements[page.title],
       }
     }
     return page
@@ -93,7 +93,7 @@ function parsePage(page: Page): ParsedPage {
       title: page.title,
     }
   }
-  const { revid, timestamp, parentid, slots }= page.revisions[0]
+  const { revid, timestamp, parentid, slots } = page.revisions[0]
 
   return {
     id: page.pageid,

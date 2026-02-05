@@ -1,9 +1,9 @@
-import {isTitlecase, titleCase} from './titleCase'
+import { isTitlecase, titleCase } from './titleCase'
 
 export function cleanupInstructions(instructions: string | null) {
   if (instructions === null) return null
   return cleanupLanguage(
-    cleanupStrangeTags(instructions)
+    cleanupStrangeTags(instructions),
   )
 }
 
@@ -78,10 +78,10 @@ const replacements = {
 
 function cleanupLanguage(text: string): string {
   let ret = text
-  for(const [replace, replacement] of Object.entries(replacements)) {
+  for (const [replace, replacement] of Object.entries(replacements)) {
     ret = ret.replace(
-      new RegExp('\\b'+replace+'\\b', 'ig'),
-      word => isTitlecase(word) ? titleCase(replacement) : replacement
+      new RegExp('\\b' + replace + '\\b', 'ig'),
+      word => isTitlecase(word) ? titleCase(replacement) : replacement,
     )
   }
   return ret

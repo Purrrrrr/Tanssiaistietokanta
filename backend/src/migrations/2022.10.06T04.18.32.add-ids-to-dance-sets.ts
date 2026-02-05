@@ -1,6 +1,6 @@
 import * as L from 'partial.lenses'
-import guid from '../utils/random-id';
-import { MigrationFn } from '../umzug.context';
+import guid from '../utils/random-id'
+import { MigrationFn } from '../umzug.context'
 
 export const up: MigrationFn = async params => {
   const eventsDb = params.context.getModel('events')
@@ -13,12 +13,11 @@ export const up: MigrationFn = async params => {
     const newEvent = L.modify(
       ['program', 'danceSets', L.elems, '_id'],
       guid,
-      event
+      event,
     )
 
-    await eventsDb.updateAsync({ _id: event._id}, newEvent)
+    await eventsDb.updateAsync({ _id: event._id }, newEvent)
   }
-
 }
 
-export const down: MigrationFn = async () => {};
+export const down: MigrationFn = async () => {}

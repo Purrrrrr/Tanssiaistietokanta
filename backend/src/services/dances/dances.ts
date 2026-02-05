@@ -10,7 +10,7 @@ import {
   dancesExternalResolver,
   dancesDataResolver,
   dancesPatchResolver,
-  dancesQueryResolver
+  dancesQueryResolver,
 } from './dances.schema'
 
 import type { Application } from '../../declarations'
@@ -29,7 +29,7 @@ export const dances = (app: Application) => {
     // A list of all methods this service exposes externally
     methods: dancesMethods,
     // You can add additional custom events to be sent to clients here
-    events: []
+    events: [],
   })
   // Initialize hooks
   app.service(dancesPath).hooks({
@@ -42,26 +42,26 @@ export const dances = (app: Application) => {
       get: [],
       create: [schemaHooks.validateData(dancesDataValidator), schemaHooks.resolveData(dancesDataResolver)],
       patch: [schemaHooks.validateData(dancesPatchValidator), schemaHooks.resolveData(dancesPatchResolver)],
-      remove: []
+      remove: [],
     },
     after: {
-      all: []
+      all: [],
     },
     error: {
-      all: []
-    }
+      all: [],
+    },
   }).publish((data, context) => {
     const eventIds = getDependenciesFor('dances', data, 'usedBy', 'events')
     const workshopIds = getDependenciesFor('dances', data, 'usedBy', 'workshops')
 
     const channels = [
       ...eventIds.map(id => app.channel(`events/${id}/dances`)),
-      ...workshopIds.map(id => app.channel(`workshops/${id}/dances`))
+      ...workshopIds.map(id => app.channel(`workshops/${id}/dances`)),
     ]
 
     return [
       ...withoutCurrentConnection(channels, context),
-      ...defaultChannels(app, context)
+      ...defaultChannels(app, context),
     ]
   })
 
@@ -70,9 +70,9 @@ export const dances = (app: Application) => {
       if (action === 'read') {
         return true
       }
-      
+
       return !!user
-    }
+    },
   })
 }
 

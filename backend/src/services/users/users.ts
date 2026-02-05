@@ -12,7 +12,7 @@ import {
   userExternalResolver,
   userDataResolver,
   userPatchResolver,
-  userQueryResolver
+  userQueryResolver,
 } from './users.schema'
 
 import type { Application } from '../../declarations'
@@ -46,14 +46,14 @@ async function initializeFirstUser(userService: UserService, throwOnMissingFile 
   logger.info(`Creating initial user '${username}' from ${createUserFile}`)
 
   if (!username || !password) {
-    logger.error(`create-user.json must contain both 'username' and 'password' fields`)
+    logger.error('create-user.json must contain both \'username\' and \'password\' fields')
     throw new Error('Invalid create-user.json file')
   }
 
   const result = await userService.create({
     name: titleCase(username),
     username,
-    password
+    password,
   })
 
   logger.info(`User '${username}' created. Deleting ${createUserFile}`)
@@ -68,7 +68,7 @@ export const user = (app: Application) => {
     // A list of all methods this service exposes externally
     methods: userMethods,
     // You can add additional custom events to be sent to clients here
-    events: []
+    events: [],
   })
   // Initialize hooks
   app.service(userPath).hooks({
@@ -89,7 +89,7 @@ export const user = (app: Application) => {
       ],
       update: [authenticate('jwt')],
       patch: [authenticate('jwt')],
-      remove: [authenticate('jwt')]
+      remove: [authenticate('jwt')],
     },
     before: {
       all: [schemaHooks.validateQuery(userQueryValidator), schemaHooks.resolveQuery(userQueryResolver)],
@@ -97,14 +97,14 @@ export const user = (app: Application) => {
       get: [],
       create: [disallow('external'), schemaHooks.validateData(userDataValidator), schemaHooks.resolveData(userDataResolver)],
       patch: [schemaHooks.validateData(userPatchValidator), schemaHooks.resolveData(userPatchResolver)],
-      remove: []
+      remove: [],
     },
     after: {
-      all: []
+      all: [],
     },
     error: {
-      all: []
-    }
+      all: [],
+    },
   })
 
   initializeFirstUser(app.service('users'))

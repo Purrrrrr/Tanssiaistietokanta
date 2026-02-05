@@ -1,6 +1,6 @@
 import { AuthenticationParams, AuthenticationRequest, AuthenticationService, AuthenticationStrategy } from '@feathersjs/authentication'
 import { parse, serialize } from 'cookie'
-import { IncomingMessage, ServerResponse } from 'http';
+import { IncomingMessage, ServerResponse } from 'http'
 
 import type { Application, HookContext } from './declarations'
 import { NotAuthenticated } from '@feathersjs/errors'
@@ -25,12 +25,12 @@ export class RefreshTokenStrategy implements AuthenticationStrategy {
     this.userService = this.app.service('users')
   }
 
-  async parse(req: IncomingMessage, res: ServerResponse): Promise<AuthenticationRequest | null> {
+  async parse(req: IncomingMessage, _res: ServerResponse): Promise<AuthenticationRequest | null> {
     if (req.headers.authorization) {
       // Prefer other strategies if Authorization header is present
       return null
     }
-    const cookies = parse(req.headers.cookie || '')
+    const cookies = parse(req.headers.cookie ?? '')
     if (cookies.refreshToken) {
       return { strategy: 'refreshToken', refreshToken: cookies.refreshToken }
     }
@@ -66,7 +66,7 @@ export class RefreshTokenStrategy implements AuthenticationStrategy {
 export const setRefreshTokenCookie = (auth: AuthenticationService): HookFunction<Application, AuthenticationService> => {
   const config = {
     ...defaultRefreshTokenOptions,
-    ...auth.configuration?.refreshToken as Partial<RefereshTokenOptions>
+    ...auth.configuration?.refreshToken as Partial<RefereshTokenOptions>,
   }
   const maxAge = ms(config.expiresIn as ms.StringValue) / 1000
 
@@ -77,7 +77,7 @@ export const setRefreshTokenCookie = (auth: AuthenticationService): HookFunction
     const [existingSession] = existingToken
       ? await sessionService.find({ query: {
         token: existingToken,
-      }})
+      } })
       : [null]
 
     let newToken: string
@@ -89,7 +89,7 @@ export const setRefreshTokenCookie = (auth: AuthenticationService): HookFunction
       newToken = Array.isArray(updateResult) ? updateResult[0].token : updateResult.token
     } else {
       const user = context.result.user
-      const createResult = await sessionService.create({}, { ...context.params, 'provider': null, user })
+      const createResult = await sessionService.create({}, { ...context.params, provider: null, user })
       newToken = createResult.token
     }
 
@@ -107,7 +107,7 @@ export const clearRefreshTokenCookie = (): HookFunction<Application, Authenticat
     }
     const [existingSession] = await sessionService.find({ query: {
       token: existingToken,
-    }})
+    } })
 
     if (existingSession) {
       await sessionService.remove(existingSession._id, context.params)
@@ -132,6 +132,6 @@ function setTokenCookie(
   http.headers['Set-Cookie'] = serialize(
     'refreshToken',
     value,
-    { ...cookieOpts, maxAge, },
+    { ...cookieOpts, maxAge },
   )
 }

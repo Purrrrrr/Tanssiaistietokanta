@@ -19,7 +19,7 @@ export const logRequest = ({ ignoredPaths = [] }: LogRequestOptions = {}) => asy
     const { app, params } = context
     const { connection, provider, sessionId } = params
     logger.logData('provider', provider ?? 'internal')
-    logger.logData('sessionId',  connection?.sessionId ?? sessionId)
+    logger.logData('sessionId', connection?.sessionId ?? sessionId)
     logger.logData('instanceId', app.get('instanceId'))
     logger.logData('connectionId', connection?.id)
     try {

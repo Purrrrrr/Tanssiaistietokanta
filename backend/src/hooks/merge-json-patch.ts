@@ -5,13 +5,13 @@ import { applyPatch, Operation } from 'fast-json-patch'
 
 export const mergeJsonPatch = (cleanup?: (data: unknown) => unknown) => {
   return async (context: HookContext) => {
-    const {data, params, service, id} = context
+    const { data, params, service, id } = context
     if (!isJsonPatch(context)) return
     delete params.query.jsonPatch
 
     if (id === undefined) throw new Error('Cannot patch multiple documents')
     if (!Array.isArray(data)) throw new Error('JSON Patch should be an array')
-    
+
     if (data.length === 0) {
       // Prevent empty patch from creating an entity version
       context.data = {}
@@ -24,20 +24,19 @@ export const mergeJsonPatch = (cleanup?: (data: unknown) => unknown) => {
 }
 
 export function isJsonPatch(ctx: HookContext): boolean {
-  const {method, params} = ctx
+  const { method, params } = ctx
   if (method !== 'patch') return false
 
   const param = params.jsonPatch ?? params.query.jsonPatch
   return param === true || param === 'true' || param === '1'
 }
-    
 
 export function getPatched<T>(original: T, patch: Operation[]): T {
   return applyPatch(original, patch ?? [], true, false).newDocument
 }
 
 export type SupportsJsonPatch<S extends ServiceInterface> = S & {
-  patch: S['patch'] extends Function ? (
+  patch: S['patch'] extends (...args: any[]) => unknown ? (
     (
       (id: NullableId, data: Operation[], _params?: Parameters<S['patch']>[2] & { jsonPatch: true }) => ReturnType<S['patch']>)
     )

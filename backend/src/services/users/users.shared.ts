@@ -9,13 +9,13 @@ export type UserClientService = Pick<UserService<Params<UserQuery>>, (typeof use
 
 export const userPath = 'users'
 
-export const userMethods: Array<keyof UserService> = ['find', 'get', 'create', 'patch', 'remove']
+export const userMethods: (keyof UserService)[] = ['find', 'get', 'create', 'patch', 'remove']
 
 export const userClient = (client: ClientApplication) => {
   const connection = client.get('connection')
 
   client.use(userPath, connection.service(userPath), {
-    methods: userMethods
+    methods: userMethods,
   })
 }
 

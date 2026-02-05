@@ -1,8 +1,8 @@
 import { sortBy, isEqual } from 'es-toolkit'
 
-import { MigrationFn } from '../umzug.context';
-import Nedb from '@seald-io/nedb';
-import { CREATE_VERSION_AFTER_IDLE_TIME, MAX_VERSION_AGE } from '../utils/VersioningNeDBService';
+import { MigrationFn } from '../umzug.context'
+import Nedb from '@seald-io/nedb'
+import { CREATE_VERSION_AFTER_IDLE_TIME, MAX_VERSION_AGE } from '../utils/VersioningNeDBService'
 
 interface Version extends Record<string, unknown> {
   _id: string
@@ -33,14 +33,14 @@ export const up: MigrationFn = async params => {
           updatedAt: +new Date(e._updatedAt),
           event: e,
         })),
-        ...workshopVersions.map(({_updatedAt, _recordId, _id, eventId}) => ({
+        ...workshopVersions.map(({ _updatedAt, _recordId, _id, eventId }) => ({
           type: 'workshop' as const,
           eventId,
           workshopId: _recordId,
           workshopVersionId: _id,
           updatedAt: +new Date(_updatedAt),
         })),
-        ...workshopVersions.filter(w => w._recordDeletedAt).map(({_recordDeletedAt, _recordId, eventId}) => ({
+        ...workshopVersions.filter(w => w._recordDeletedAt).map(({ _recordDeletedAt, _recordId, eventId }) => ({
           type: 'workshop' as const,
           eventId,
           workshopId: _recordId,
@@ -55,7 +55,7 @@ export const up: MigrationFn = async params => {
 
   for (const [eventId, versions] of versionMap.entries()) {
     const groups = groupIntoVersionGroups(versions)
-    //Check for equality of workshopVersions across changes as a sanity check
+    // Check for equality of workshopVersions across changes as a sanity check
     let lastVersions = {}
     let lastData = null
     for (const group of groups) {
@@ -77,11 +77,9 @@ export const up: MigrationFn = async params => {
     const lastWorkshopVersions = groups.at(-1)?.workshops
     await eventModel.updateAsync({ _id: eventId }, { $set: { workshopVersions: lastWorkshopVersions } })
   }
-
-
 }
 
-export const down: MigrationFn = async () => {};
+export const down: MigrationFn = async () => {}
 
 type Item = {
   type: 'event'
@@ -101,34 +99,33 @@ type Item = {
 interface VersionGroup {
   eventId: string
   eventVersionId?: string
-  data: Version 
+  data: Version
   createdAt: number
   updatedAt: number
   workshops: Record<string, string>
 }
 
-
 function groupIntoVersionGroups(items: Item[]): VersionGroup[] {
-  const groups : VersionGroup[] = []
+  const groups: VersionGroup[] = []
   const firstEvent = items.find(i => i.type === 'event')
   if (!firstEvent) {
-    //This should not happen, still somehow happens
-    return [] 
+    // This should not happen, still somehow happens
+    return []
   }
   let currentGroup: VersionGroup = group(items[0], firstEvent.event)
   // console.log(items[0].eventId)
-  
+
   for (const item of items) {
-    const createNewVersion = 
+    const createNewVersion =
       item.updatedAt > currentGroup.updatedAt + CREATE_VERSION_AFTER_IDLE_TIME
-      item.updatedAt > currentGroup.createdAt + MAX_VERSION_AGE
+      || item.updatedAt > currentGroup.createdAt + MAX_VERSION_AGE
     if (createNewVersion || (currentGroup.eventVersionId && item.type === 'event')) {
       groups.push(currentGroup)
       const data = item.type === 'event' ? item.event : currentGroup.data
       currentGroup = group(item, data, currentGroup.workshops)
     }
     if (item.type === 'event') {
-      currentGroup.eventVersionId = item.eventVersionId 
+      currentGroup.eventVersionId = item.eventVersionId
     } else {
       if (item.workshopVersionId !== null) {
         // console.log(`workshop ${item.workshopId} = ${item.workshopVersionId}`)
@@ -145,7 +142,7 @@ function groupIntoVersionGroups(items: Item[]): VersionGroup[] {
 }
 
 function group(item: Item, event: Version, workshops?: Record<string, string>): VersionGroup {
-  const { updatedAt, eventId} = item
+  const { updatedAt, eventId } = item
   return {
     eventId,
     createdAt: updatedAt,

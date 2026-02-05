@@ -6,11 +6,9 @@ import {
   fileDataValidator,
   filePatchValidator,
   fileQueryValidator,
-  fileResolver,
-  fileExternalResolver,
   fileDataResolver,
   filePatchResolver,
-  fileQueryResolver
+  fileQueryResolver,
 } from './files.schema'
 
 import type { Application, HookContext } from '../../declarations'
@@ -78,8 +76,8 @@ export const file = (app: Application) => {
       ],
     },
     error: {
-      all: []
-    }
+      all: [],
+    },
   })
 }
 

@@ -1,4 +1,4 @@
-import {getLinkedInternalPages, getHeaderData, stripLinks} from './markdownUtils'
+import { getLinkedInternalPages, getHeaderData, stripLinks } from './markdownUtils'
 
 const categoryTagRegex = /<Luokka:([^>]+)>/g
 const categoryLinkRegex = /\[[^\]]+\]\(Luokka: ([^)]*) "wikilink"\)/g
@@ -11,9 +11,9 @@ export function getCategoriesFromContent(content: string | null) {
   return [...categoryTags, ...categoryLinks].map(match => match[1])
 }
 
-export function getDanceCategorization(indexPageContents: String) {
-  let currentCategories : CategoryHeading[] = []
-  const danceCategorization : DanceCategorization = {}
+export function getDanceCategorization(indexPageContents: string) {
+  let currentCategories: CategoryHeading[] = []
+  const danceCategorization: DanceCategorization = {}
 
   for (const part of indexPageContents.split(/\n\n+/)) {
     const header = getHeaderData(part)
@@ -23,8 +23,8 @@ export function getDanceCategorization(indexPageContents: String) {
         ...currentCategories.filter(category => category.level < level),
         {
           level,
-          content: stripLinks(content)
-        }
+          content: stripLinks(content),
+        },
       ]
     } else {
       // Normal text content

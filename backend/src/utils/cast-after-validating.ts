@@ -1,5 +1,5 @@
 import type { Static, TSchema } from '@feathersjs/typebox'
-import type { Validator} from '@feathersjs/schema'
+import type { Validator } from '@feathersjs/schema'
 import { Value } from '@sinclair/typebox/value'
 import { omitComputedProperties } from './common-types'
 

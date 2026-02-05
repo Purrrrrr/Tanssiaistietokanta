@@ -12,13 +12,13 @@ export type SessionsClientService = Pick<
 
 export const sessionsPath = 'sessions'
 
-export const sessionsMethods: Array<keyof SessionsService> = ['find', 'get', 'create', 'patch', 'remove']
+export const sessionsMethods: (keyof SessionsService)[] = ['find', 'get', 'create', 'patch', 'remove']
 
 export const sessionsClient = (client: ClientApplication) => {
   const connection = client.get('connection')
 
   client.use(sessionsPath, connection.service(sessionsPath), {
-    methods: sessionsMethods
+    methods: sessionsMethods,
   })
 }
 

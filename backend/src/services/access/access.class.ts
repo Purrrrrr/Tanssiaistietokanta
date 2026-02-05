@@ -19,9 +19,8 @@ const EMPTY_CHANNEL = new Channel()
 export interface AccessParams extends Params<AccessQuery> {}
 
 export class AccessService<ServiceParams extends AccessParams = AccessParams>
-  implements ServiceInterface<Access, never, ServiceParams, never>
-{
-  private strategies: Map<ServiceName, AugmentedAccessStrategy<unknown>> = new Map()
+implements ServiceInterface<Access, never, ServiceParams, never> {
+  private strategies = new Map<ServiceName, AugmentedAccessStrategy<unknown>>()
   private storeFactory: AccessDataStoreFactory
   getStore: AccessDataStoreFactory['getStore']
 
@@ -32,7 +31,7 @@ export class AccessService<ServiceParams extends AccessParams = AccessParams>
 
   setAccessStrategy<Service extends ServiceName, Data>(
     service: Service,
-    strategy: AccessStrategy<Data>
+    strategy: AccessStrategy<Data>,
   ) {
     this.strategies.set(service, augmentStrategy(strategy) as any)
     strategy.initialize?.({
@@ -46,13 +45,13 @@ export class AccessService<ServiceParams extends AccessParams = AccessParams>
   }
 
   async find(params?: ServiceParams): Promise<Access[]> {
-    const { entityId, service, action } = params?.query || {}
+    const { entityId, service, action } = params?.query ?? {}
     const services = service
       ? [service]
       : Array.from(this.strategies.keys()) as ServiceName[]
 
     const results = await Promise.all(
-      services.map(serviceName => this.findServiceAccess(serviceName, action as GlobalAction | EntityAction, entityId, params?.user))
+      services.map(serviceName => this.findServiceAccess(serviceName, action as GlobalAction | EntityAction, entityId, params?.user)),
     )
     return results.flat()
   }
@@ -66,7 +65,6 @@ export class AccessService<ServiceParams extends AccessParams = AccessParams>
     const actions: (GlobalAction | EntityAction)[] = actionQuery
       ? [actionQuery]
       : ['read', 'create', 'update', 'remove', 'manage-access']
-
 
     return Promise.all(
       actions.map(async (action) => {
@@ -83,7 +81,7 @@ export class AccessService<ServiceParams extends AccessParams = AccessParams>
           allowed: hasPermissionToGrant(hasPermission),
           target: entityId ? 'entity' : 'everything',
         }
-      })
+      }),
     )
   }
 
@@ -109,17 +107,13 @@ export class AccessService<ServiceParams extends AccessParams = AccessParams>
     }
     const entityData = await strategy.store?.getAccess(entityId)
     const channelList = Array.isArray(channels) ? channels : [channels]
-    
-    const channelConnection2 = channelList.map(channel =>
-      [channel.connections, channel.data]
-    )
+
     const channelConnections = channelList.flatMap(channel =>
       channel.connections.map(connection => ({
         connection,
         data: channel.data,
-      }))
+      })),
     )
-    // logger.info('Publishing access for entity', { entityId, channelList, channelConnections, channelConnection2 })
 
     return Promise.all(
       channelConnections.map(async (c) => {
@@ -132,7 +126,7 @@ export class AccessService<ServiceParams extends AccessParams = AccessParams>
         }
         if (previousAccessData) {
           logger.info('Had permission to access entity', { entityId, user: user?._id })
-          const hadPermission =  await strategy.authorizeEntity({ action: 'read', user, entityData: previousAccessData })
+          const hadPermission = await strategy.authorizeEntity({ action: 'read', user, entityData: previousAccessData })
           if (hadPermission) {
             // Send minimal data to indicate that the entity is now inaccessible
             return new Channel([c.connection], { _id: entityId, inaccessible: true })
@@ -140,7 +134,7 @@ export class AccessService<ServiceParams extends AccessParams = AccessParams>
         }
         logger.info('No permission to access entity', { entityId, user: user?._id })
         return EMPTY_CHANNEL
-      })
+      }),
     )
   }
 }
