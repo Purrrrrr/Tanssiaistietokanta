@@ -265,8 +265,10 @@
   * Some reusable system to manage publishing data for access controlled objects. 
     * Make sure that events that should "dissapear" are sent a notice event (but only if rights have changed)
   * Fix event list not updating
-    Fix event program graphql structure to match db structure more closely
-    Fix changing dances leading to teachedIn becoming undefined in slide editor
+  * Fix event program graphql structure to match db structure more closely
+  * Fix changing dances leading to teachedIn becoming undefined in slide editor
+    Don't fetch dances if not necessary
+    Make some sense of names in event program: rows, items...
     Event edit rights
     Event access edit rights ("manage" action)
     File rights.

@@ -11,12 +11,12 @@ import { useT } from 'i18n'
 
 import { ColoredTag } from './ColoredTag'
 
-type Dance = Omit<DanceListItem, 'events'>
+export type DanceChooserItem = Omit<DanceListItem, 'events'>
 
 interface DanceChooserProps {
-  value: Dance | null
-  excludeFromSearch?: Pick<Dance, '_id'>[]
-  onChange: (dance: Dance | null) => unknown
+  value: DanceChooserItem | null
+  excludeFromSearch?: Pick<DanceChooserItem, '_id'>[]
+  onChange: (dance: DanceChooserItem | null) => unknown
   readOnly?: boolean
   hasConflict?: boolean
   emptyText?: string
@@ -35,7 +35,7 @@ export function DanceChooser({
   const id = useId()
 
   const items = excludeFromSearch
-    ? dances.filter((dance: Dance) => dance._id === value?._id || !excludeFromSearch.some(excluded => excluded._id === dance._id))
+    ? dances.filter((dance: DanceChooserItem) => dance._id === value?._id || !excludeFromSearch.some(excluded => excluded._id === dance._id))
     : dances
   const dancesInWorkshops = workshops.flatMap(w => w.instances).flatMap(i => i.dances).map(d => d?._id)
   const getItems = (query: string) => {
@@ -69,7 +69,7 @@ export function DanceChooser({
         if (!response?.data) {
           return
         }
-        onChange(response.data.createDance as Dance)
+        onChange(response.data.createDance as DanceChooserItem)
       })
     } else if ((allowEmpty && created === null) || created?.__typename === 'Dance') {
       onChange(created)
@@ -110,7 +110,7 @@ export function DanceChooser({
   />
 }
 
-function getCategory(dance: Dance) {
+function getCategory(dance: DanceChooserItem) {
   if (dance.category?.trim()) {
     return {
       title: dance.category,
@@ -127,12 +127,12 @@ function getCategory(dance: Dance) {
   return null
 }
 
-type DanceChooserOption = Dance | CreateDance | null
+type DanceChooserOption = DanceChooserItem | CreateDance | null
 interface CreateDance {
  __typename: 'createDance'
   name: string
 }
 
-function danceNameEquals(a: Dance, name: string) {
+function danceNameEquals(a: DanceChooserItem, name: string) {
   return a.name.trim().toLowerCase() === name.trim().toLowerCase()
 }

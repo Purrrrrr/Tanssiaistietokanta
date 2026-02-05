@@ -1,9 +1,9 @@
 import React from 'react'
 
-import { Dance } from 'types'
+import { Workshop } from 'types'
 
 import { FieldComponentProps } from 'libraries/forms'
-import { DanceChooser } from 'components/widgets/DanceChooser'
+import { DanceChooser, type DanceChooserItem } from 'components/widgets/DanceChooser'
 import { useT } from 'i18n'
 
 import { EventProgramRow, IntervalMusic } from './EventProgramForm'
@@ -20,7 +20,7 @@ export const DanceProgramChooser = React.memo(function DanceProgramChooser({ val
   return <DanceChooser
     key={dance?._id ?? ''}
     value={dance}
-    onChange={(dance) => onChange(getValue(value, dance as Dance | null))}
+    onChange={(dance) => onChange(getValue(value, dance, workshops))}
     allowEmpty
     emptyText={t('programTypes.RequestedDance')}
     workshops={workshops}
@@ -29,25 +29,54 @@ export const DanceProgramChooser = React.memo(function DanceProgramChooser({ val
   />
 })
 
-function getValue(originalValue: EventProgramRow | IntervalMusic | null, dance: Dance | null): EventProgramRow | IntervalMusic {
-  const dancePart = {
-    dance: dance as EventProgramRow['dance'],
-    danceId: dance?._id ?? null,
-  }
+function getValue(
+  originalValue: EventProgramRow | IntervalMusic | null,
+  dance: DanceChooserItem | null,
+  workshops: Workshop[],
+): EventProgramRow | IntervalMusic {
+  const danceId = dance?._id ?? null
 
   if (!originalValue) {
     throw new Error('Original value is null. This should not happen.')
   }
-  if (originalValue && 'type' in originalValue) {
+  if ('type' in originalValue) {
     return {
       ...originalValue,
-      ...dancePart,
       type: dance ? 'Dance' : 'RequestedDance',
       eventProgram: null,
+      dance: addWorkshops(dance, workshops),
+      danceId,
     }
   }
   return {
     ...originalValue,
-    ...dancePart,
+    dance: dance,
+    danceId,
+  }
+}
+
+function addWorkshops(
+  dance: DanceChooserItem | null,
+  workshops: Workshop[],
+): EventProgramRow['dance'] | null {
+  if (!dance) return null
+
+  const teachedIn = workshops.map(workshop => {
+    const instancesWithDance = workshop.instanceSpecificDances
+      ? workshop.instances.filter(instance => instance.dances?.map(({ _id }) => _id).includes(dance._id))
+      : null
+    if (instancesWithDance?.length === 0) return null
+    const danceInAllInstances = instancesWithDance?.length === workshop.instances.length
+
+    return {
+      _id: `${dance._id}-${workshop._id}`,
+      workshop,
+      instances: danceInAllInstances ? null : instancesWithDance,
+    }
+  }).filter(workshop => workshop !== null)
+
+  return {
+    ...dance,
+    teachedIn,
   }
 }
