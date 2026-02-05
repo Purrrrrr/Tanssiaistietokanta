@@ -9,4 +9,5 @@ type User {
   username: String!
   email: String
   sessionId: String
+  groups: [String!]!
 }

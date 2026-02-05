@@ -13,6 +13,8 @@ setupServiceUpdateFragment(
     _id, _versionId, _versionNumber, _updatedAt, name, beginDate, endDate,
     accessControl {
       viewers
+      editors
+      owners
     }
     program {
       dateTime
@@ -109,6 +111,8 @@ query getEvent($id: ID!, $versionId: ID) {
     _id, _versionId, _versionNumber, _updatedAt, name, beginDate, endDate,
     accessControl {
       viewers
+      editors
+      owners
     }
     program {
       dateTime
@@ -211,6 +215,8 @@ query getEvents {
     _id, _versionId, name, beginDate, endDate,
     accessControl {
       viewers
+      editors
+      owners
     }
   }
 }`), {
@@ -225,6 +231,8 @@ mutation createEvent($event: EventInput!) {
     _id, _versionId, name, beginDate, endDate,
     accessControl {
       viewers
+      editors
+      owners
     }
   }
 }`))
@@ -235,6 +243,8 @@ mutation patchEvent($id: ID!, $event: JSONPatch!) {
     _id, _versionId, name, beginDate, endDate,
     accessControl {
       viewers
+      editors
+      owners
     }
   }
 }`))
@@ -245,6 +255,8 @@ mutation patchEventProgram($id: ID!, $program: JSONPatch!) {
     _id, _versionId, _versionNumber, name, beginDate, endDate,
     accessControl {
       viewers
+      editors
+      owners
     }
     program {
       dateTime

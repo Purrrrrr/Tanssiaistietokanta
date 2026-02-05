@@ -2,7 +2,7 @@ import { FieldComponentProps, RadioGroup } from 'libraries/forms'
 import { useT } from 'i18n'
 
 export const AllowEveryone = 'everyone'
-export const AllowLoggedIn = 'logged-in'
+export const AllowLoggedIn = 'group:user'
 export const allowUser = (userId: string) => `user:${userId}`
 
 export default function AllowedViewersSelector(props: FieldComponentProps<string[]>) {

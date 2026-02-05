@@ -41,7 +41,7 @@ export const userExternalResolver = resolve<User, HookContext<UserService>>({
 })
 
 // Schema for creating new entries
-export const userDataSchema = Type.Pick(userSchema, ['username', 'password', 'name', 'email', 'googleId', 'githubId'], {
+export const userDataSchema = Type.Pick(userSchema, ['username', 'password', 'name', 'email', 'googleId', 'githubId', 'groups'], {
   $id: 'UserData',
 })
 export type UserData = Static<typeof userDataSchema>
@@ -75,6 +75,6 @@ export const userQueryValidator = getValidator(userQuerySchema, queryValidator)
 export const userQueryResolver = resolve<UserQuery, HookContext<UserService>>({
   groups: async (value) => {
     // Prevent users without user role from logging in
-    return value ?? 'user'
+    return value ?? 'users'
   },
 })

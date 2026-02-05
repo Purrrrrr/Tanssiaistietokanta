@@ -54,6 +54,7 @@ async function initializeFirstUser(userService: UserService, throwOnMissingFile 
     name: titleCase(username),
     username,
     password,
+    groups: ['users', 'admins'],
   })
 
   logger.info(`User '${username}' created. Deleting ${createUserFile}`)
