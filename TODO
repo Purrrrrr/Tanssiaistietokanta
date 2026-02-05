@@ -268,7 +268,7 @@
   * Fix event program graphql structure to match db structure more closely
   * Fix changing dances leading to teachedIn becoming undefined in slide editor
   * Don't fetch dances on the backend if not necessary
-    User roles
+  * User groups
     User selector
     Event edit rights
     Event access edit rights ("manage" action)
