@@ -3,9 +3,8 @@ import {
   DanceSet, EventProgramRow, IntervalMusic, ProgramSectionPath, switchFor, useAppendToList,
 } from 'components/event/EventProgramForm'
 import { ProgramTypeIcon } from 'components/event/ProgramTypeIcon'
-import { DEFAULT_INTERVAL_MUSIC, newEventProgramEventProgramRow, newRequestedDanceEventProgramRow } from 'components/event/utils'
+import { DEFAULT_INTERVAL_MUSIC, newDanceSet, newEventProgramEventProgramRow, newRequestedDanceEventProgramRow } from 'components/event/utils'
 import { useT, useTranslation } from 'i18n'
-import { guid } from 'utils/guid'
 
 export function AddIntroductionButton() {
   const addIntroduction = useAppendToList('introductions.program')
@@ -48,29 +47,17 @@ export function useCreateNewEventProgramItem(): () => EventProgramRow {
 }
 
 export function AddDanceSetButton() {
+  const t = useT('components.eventProgramEditor')
   const onAddDanceSet = useAppendToList('danceSets')
-  const newDanceSet = useCreateNewDanceSet()
   return <Button
-    text={useTranslation('components.eventProgramEditor.buttons.addDanceSet')}
+    text={t('buttons.addDanceSet')}
     rightIcon={<ProgramTypeIcon type="Dance" />}
-    onClick={() => onAddDanceSet(newDanceSet)}
+    onClick={() => onAddDanceSet((danceSets: DanceSet[]) => {
+      const danceSetNumber = danceSets.length + 1
+      return newDanceSet(t('placeholderNames.danceSet', { number: danceSetNumber }))
+    })}
     className="addDanceSet"
   />
-}
-
-function useCreateNewDanceSet(): (danceSets: DanceSet[]) => DanceSet {
-  const t = useT('components.eventProgramEditor')
-  return (danceSets: DanceSet[]) => {
-    const danceSetNumber = danceSets.length + 1
-    const dances = Array.from({ length: 6 }, newRequestedDanceEventProgramRow)
-    return {
-      _id: guid(),
-      title: t('placeholderNames.danceSet', { number: danceSetNumber }),
-      program: dances,
-      titleSlideStyleId: null,
-      intervalMusic: DEFAULT_INTERVAL_MUSIC,
-    } as DanceSet
-  }
 }
 
 export const IntervalMusicSwitch = switchFor<IntervalMusic>({

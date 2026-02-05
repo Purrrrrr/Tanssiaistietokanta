@@ -1,4 +1,4 @@
-import { EventProgramRow, IntervalMusic, T } from './EventProgramForm/types'
+import { DanceSet, EventProgramRow, IntervalMusic, T } from './EventProgramForm/types'
 
 import { guid } from 'utils/guid'
 
@@ -17,6 +17,17 @@ interface SimpleEventProgramRow {
   type: EventProgramRow['type']
   dance?: { name: string, duration?: number | null } | null
   eventProgram?: { name: string, duration?: number | null } | null
+}
+
+export function newDanceSet(title: string): DanceSet {
+  const dances = Array.from({ length: 6 }, newRequestedDanceEventProgramRow)
+  return {
+    _id: guid(),
+    title,
+    program: dances,
+    titleSlideStyleId: null,
+    intervalMusic: DEFAULT_INTERVAL_MUSIC,
+  }
 }
 
 export function newRequestedDanceEventProgramRow(): EventProgramRow {
