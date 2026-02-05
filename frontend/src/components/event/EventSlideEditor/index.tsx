@@ -220,14 +220,18 @@ function IntervalMusicDescriptionEditor({ danceSetIndex }: { danceSetIndex: numb
 
 function ProgramItemEditor({ path }: { path: ProgramItemPath }) {
   const t = useT('components.eventProgramEditor')
-  const { type, dance } = useValueAt(path)
+  const row = useValueAt(path)
 
-  switch (type) {
+  switch (row.type) {
     case 'Dance':
-      if (!dance) return null
+    {
+      // TODO fix type
+      const { danceId } = row as any
+      if (!danceId) return null
       return <SectionCard>
-        <DanceEditor id={dance?._id} />
+        <DanceEditor id={danceId} />
       </SectionCard>
+    }
     case 'RequestedDance':
       return null
     case 'EventProgram':

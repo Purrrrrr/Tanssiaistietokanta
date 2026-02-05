@@ -6,33 +6,41 @@ import type { Dances } from './dances.schema'
 import type { Events } from '../events/events.schema'
 import { versionHistoryFieldResolvers, versionHistoryResolver } from '../../utils/version-history-resolvers'
 import { uniq } from "ramda"
+import { WorkshopsService } from "../workshops/workshops.class"
+import { DancewikiService } from "../dancewiki/dancewiki.class"
+
+export async function findTeachedIn(workshopService: WorkshopsService, danceId: string, eventId: string) {
+  const workshops = await workshopService.find({
+    query: eventId ?
+      {'instances.danceIds': danceId, eventId} :
+      {'instances.danceIds': danceId}
+  })
+
+  return workshops.map(workshop => {
+    const instancesWithDance = workshop.instanceSpecificDances
+      ? workshop.instances.filter(instance => instance.danceIds?.includes(danceId))
+      : null
+    const danceInAllInstances = instancesWithDance?.length === workshop.instances.length
+
+    return {
+      _id: `${danceId}-${workshop._id}`,
+      workshop,
+      instances: danceInAllInstances ? null : instancesWithDance
+    }
+  })
+}
+
+export function findWikipage(wikiService: DancewikiService, dance: Dances) {
+  const name = dance.wikipageName ?? dance.name
+  if (!name) return null
+  return wikiService.get(name, { noThrowOnNotFound: true })
+}
 
 export default (app: Application) => {
   const service = app.service('dances')
   const workshopService = app.service('workshops')
   const eventService = app.service('events')
   const wikiService = app.service('dancewiki')
-
-  async function findTeachedIn(dance: { _id: string}, {eventId}: { eventId: string}) {
-    const workshops = await workshopService.find({
-      query: eventId ?
-        {'instances.danceIds': dance._id, eventId} :
-        {'instances.danceIds': dance._id}
-    })
-
-    return workshops.map(workshop => {
-      const instancesWithDance = workshop.instanceSpecificDances
-        ? workshop.instances.filter(instance => instance.danceIds?.includes(dance._id))
-        : null
-      const danceInAllInstances = instancesWithDance?.length === workshop.instances.length
-
-      return {
-        _id: `${dance._id}-${workshop._id}`,
-        workshop,
-        instances: danceInAllInstances ? null : instancesWithDance
-      }
-    })
-  }
 
   async function findEvents(obj: Dances): Promise<Events[]> {
     const links = getDependencyLinks('dances', obj._id, 'usedBy')
@@ -51,14 +59,11 @@ export default (app: Application) => {
 
   return {
     Dance: {
-      teachedIn: findTeachedIn,
+      teachedIn: (dance: { _id: string}, {eventId}: { eventId: string}) =>
+        findTeachedIn(workshopService, dance._id, eventId),
       events: findEvents,
       versionHistory: versionHistoryResolver(service),
-      wikipage: (dance: Dances) => {
-        const name = dance.wikipageName ?? dance.name
-        if (!name) return null
-        return wikiService.get(name, { noThrowOnNotFound: true })
-      }
+      wikipage: (dance: Dances) => findWikipage(wikiService, dance),
     },
     VersionHistory: versionHistoryFieldResolvers(),
     Query: {

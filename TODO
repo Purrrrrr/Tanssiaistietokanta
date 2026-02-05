@@ -267,8 +267,7 @@
   * Fix event list not updating
   * Fix event program graphql structure to match db structure more closely
   * Fix changing dances leading to teachedIn becoming undefined in slide editor
-    Don't fetch dances if not necessary
-    Make some sense of names in event program: rows, items...
+    Don't fetch dances on the backend if not necessary
     Event edit rights
     Event access edit rights ("manage" action)
     File rights.
@@ -283,6 +282,13 @@
     Allow creating users
     Nicer logout menu keyboard a11y
     Allow creating users with some token? Invite functionality?
+
+  Make some sense of names in event program: rows, items...
+  Prefetch dances somehow in eventprogram slide editor
+  Prevent event program slide editor from scrolling to the top when changing slides
+  Forms:
+    Structural sharing for form data
+    Prevent callbacks running for out of bounds array data
 
   Use ItemList in setEditors
 

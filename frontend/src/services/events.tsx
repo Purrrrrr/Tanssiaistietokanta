@@ -36,22 +36,6 @@ setupServiceUpdateFragment(
             duration
             showInLists
           }
-          danceId
-          dance {
-            _id
-            name
-            duration
-            description
-            wikipageName
-            wikipage {
-              instructions
-            }
-            teachedIn(eventId: $id) {
-              _id
-              workshop { name, abbreviation }
-              instances { _id, abbreviation }
-            }
-          }
         }
       }
       danceSets {
@@ -147,22 +131,6 @@ query getEvent($id: ID!, $versionId: ID) {
             description
             duration
             showInLists
-          }
-          danceId
-          dance {
-            _id
-            name
-            duration
-            description
-            wikipageName
-            wikipage {
-              instructions
-            }
-            teachedIn(eventId: $id) {
-              _id
-              workshop { name, abbreviation }
-              instances { _id, abbreviation }
-            }
           }
         }
       }
@@ -299,22 +267,6 @@ mutation patchEventProgram($id: ID!, $program: JSONPatch!) {
             description
             duration
             showInLists
-          }
-          danceId
-          dance {
-            _id
-            name
-            duration
-            description
-            wikipageName
-            wikipage {
-              instructions
-            }
-            teachedIn(eventId: $id) {
-              _id
-              workshop { name, abbreviation }
-              instances { _id, abbreviation }
-            }
           }
         }
       }

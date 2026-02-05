@@ -4,10 +4,12 @@ import * as L from 'partial.lenses'
 import { Type, getValidator, querySyntax } from '@feathersjs/typebox'
 import type { Static, TObject, TProperties } from '@feathersjs/typebox'
 
-import type { HookContext } from '../../declarations'
+import type { Application, HookContext } from '../../declarations'
 import { dataValidator, queryValidator } from '../../validators'
 import { castAfterValidating } from '../../utils/cast-after-validating'
 import { computedProperties, SlideStyleId, Id, Name, Date, NullableString, Nullable, DateTime } from '../../utils/common-types'
+import { Dances } from '../dances/dances.schema'
+import { findTeachedIn, findWikipage } from '../dances/dances.resolvers'
 
 const DEFAULT_PAUSE_BETWEEN_DANCES = 3*60
 
@@ -87,21 +89,21 @@ function EventProgramRow() {
       slideStyleId: SlideStyleId(),
       type: Type.Literal('Dance'),
       danceId: Id(),
-      eventProgram: Type.Optional(Type.Null()),
+      eventProgram: Type.Null(),
     }),
     ClosedObject({
       _id: Type.String(),
       slideStyleId: SlideStyleId(),
       type: Type.Literal('RequestedDance'),
       danceId: Type.Optional(Type.Null()),
-      eventProgram: Type.Optional(Type.Null()),
+      eventProgram: Type.Null(),
     }),
     ClosedObject({
       _id: Type.String(),
       slideStyleId: SlideStyleId(),
       type: Type.Literal('EventProgram'),
       danceId: Type.Optional(Type.Null()),
-      eventProgram: Type.Optional(EventProgram()),
+      eventProgram: EventProgram(),
     }),
   ])
 }
@@ -125,34 +127,53 @@ function ClosedObject<P extends TProperties>(o: P): TObject<P> {
 export type Events = Static<typeof eventsSchema>
 export const eventsValidator = getValidator(eventsSchema, dataValidator)
 export const eventsResolver = resolve<Events, HookContext>({
-
-  program: async (program, _event, context) => {
-    const danceService = context.app.service('dances')
-
-    const fetchDance = async (item: { danceId: string }) => {
-      if (!item) return item
-      const dance = item.danceId
-        ? await danceService.get(item.danceId).catch(() => null)
-        : null
-      return {
-        ...item,
-        dance
-      }
+  program: async (program, event, context) => {
+    if (context.id && program) {
+      return addDataToProgram(event, context.app)
     }
-
-    return L.modifyAsync(
-      ['danceSets', L.elems],
-      async (danceSet: any) => {
-        return {
-          ...danceSet,
-          intervalMusic: await fetchDance(danceSet.intervalMusic),
-          program: await L.modifyAsync(L.elems, fetchDance, danceSet.program)
-        }
-      },
-      program,
-    )
+    return program
   }
 })
+
+export async function addDataToProgram(event: Events, app: Application): Promise<Events['program']> {
+  const danceService = app.service('dances')
+  const workshopService = app.service('workshops')
+  const wikiService = app.service('dancewiki')
+
+  const augmentDance = async (dance: Dances | null) => {
+    if (!dance) return dance
+    const wikipage = await findWikipage(wikiService, dance)
+    const teachedIn = await findTeachedIn(workshopService, dance._id, event._id)
+    return {
+      ...dance,
+      wikipage,
+      teachedIn,
+    }
+  }
+
+  const fetchDance = async (item: { danceId: string }) => {
+    if (!item) return item
+    const dance = item.danceId
+      ? await augmentDance(await danceService.get(item.danceId).catch(() => null))
+      : null
+    return {
+      ...item,
+      dance
+    }
+  }
+
+  return L.modifyAsync(
+    ['danceSets', L.elems],
+    async (danceSet: any) => {
+      return {
+        ...danceSet,
+        intervalMusic: await fetchDance(danceSet.intervalMusic),
+        program: await L.modifyAsync(L.elems, fetchDance, danceSet.program)
+      }
+    },
+    event.program,
+  )
+}
 
 export const eventsExternalResolver = resolve<Events, HookContext>({})
 
