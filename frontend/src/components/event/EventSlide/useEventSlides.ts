@@ -3,6 +3,7 @@ import { useMemo } from 'react'
 import { EventParentSlideProps, EventProgram, EventProgramRow, EventSlideProps } from './types'
 
 import { useT, useTranslation } from 'i18n'
+
 import { getProgramName } from '../utils'
 
 export const startSlideId = ''

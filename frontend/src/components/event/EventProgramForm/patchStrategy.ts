@@ -39,6 +39,6 @@ function compose(fun: (val: unknown) => unknown, fun2: (val: unknown) => unknown
   return (value: unknown) => fun2(fun(value))
 }
 
-function toProgramItemInput({ dance, ...row }: EventProgramRow) {
+function toProgramItemInput({ dance: _unused, ...row }: EventProgramRow) {
   return row
 }
