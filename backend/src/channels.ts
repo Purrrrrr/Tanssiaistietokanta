@@ -27,6 +27,8 @@ export const channels = (app: Application) => {
     // To publish only for a specific event use `app.publish(eventname, () => {})`
 
     // e.g. to publish all service events to all authenticated users use
-    return defaultChannels(app, context)
+    //
+    return app.service('access')
+      .handlePublish(data, defaultChannels(app, context), context)
   })
 }

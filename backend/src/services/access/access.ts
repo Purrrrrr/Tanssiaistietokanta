@@ -5,7 +5,6 @@ import {
   accessResolver,
   accessExternalResolver,
   accessQueryResolver,
-  ServiceName,
 } from './access.schema'
 
 import type { Application, HookContext } from '../../declarations'
@@ -13,7 +12,6 @@ import { AccessService, getOptions } from './access.class'
 import { accessPath, accessMethods } from './access.shared'
 import { FeathersService } from '@feathersjs/feathers'
 import { Publisher } from '@feathersjs/transport-commons/lib/channels/mixins'
-import { PreviousAccessControl } from './hooks'
 
 export * from './access.class'
 export * from './access.schema'
@@ -26,12 +24,7 @@ export const channelAccessControl = (app: Application) => {
         return channels
       }
 
-      return app.service('access').handlePublish(
-        context.path as ServiceName,
-        data,
-        channels,
-        context.params[PreviousAccessControl],
-      )
+      return app.service('access').handlePublish(data, channels, context)
     }
   }
 

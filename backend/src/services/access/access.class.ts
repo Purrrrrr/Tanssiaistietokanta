@@ -1,12 +1,13 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/service.class.html#custom-services
 import type { Id, Params, ServiceInterface } from '@feathersjs/feathers'
 
-import type { Application } from '../../declarations'
+import type { Application, HookContext } from '../../declarations'
 import type { Access, AccessQuery, ServiceName } from './access.schema'
 import { Channel } from '@feathersjs/transport-commons'
 import { AccessStrategy, AugmentedAccessStrategy, augmentStrategy, GlobalAction, Action as EntityAction } from './strategies'
 import { AccessDataStoreFactory } from './accessDataStore'
 import { logger } from '../../requestLogger'
+import { PreviousAccessControl } from './hooks'
 
 export type { Access, AccessQuery }
 
@@ -86,15 +87,15 @@ implements ServiceInterface<Access, never, ServiceParams, never> {
   }
 
   async handlePublish<T>(
-    service: ServiceName,
     data: T,
     channels: Channel | Channel[],
-    previousAccessData: unknown,
+    context: HookContext
   ): Promise<Channel | Channel[]> {
     if (Array.isArray(data)) {
       logger.error('AccessService.publish does not support publishing arrays of data.', { data })
       return channels
     }
+    const service = context.path as ServiceName
     const strategy = this.getAccessStrategy(service)
     if (!strategy) {
       return channels
@@ -105,6 +106,7 @@ implements ServiceInterface<Access, never, ServiceParams, never> {
       logger.error('AccessService.publish does not support publishing data withoud _id.', { data })
       return channels
     }
+    const previousAccessData = context.params[PreviousAccessControl]
     const entityData = await strategy.store?.getAccess(entityId)
     const channelList = Array.isArray(channels) ? channels : [channels]
 
