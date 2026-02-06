@@ -68,34 +68,44 @@ export const events = (app: Application) => {
     },
   })
 
+  const allowEveryone = 'everyone'
   const allowUser = (userId: string) => `user:${userId}`
+  const allowGroup = (group: string) => `group:${group}`
 
   class EventAccessStrategy implements AccessStrategy<EventAccessData> {
     store = app.service('access').getStore('events', eventAccessDataSchema, {
       viewers: ['everyone'],
+      owners: [],
+      editors: [],
     })
 
     async authorize({ type, action, entityData, user }: AuthParams<EventAccessData>) {
       if (type === 'global') {
         return undefined
       }
-      const { viewers } = entityData
-      const canRead = this.hasAccess(viewers, user?._id)
-      if (action !== 'read') {
-        return !!user && canRead
+      if (user?.groups.includes('admins')) {
+        return true
       }
-      return canRead
+      const { viewers, owners, editors } = entityData
+      const isOwner = this.hasAccess(owners, user)
+      const canEdit = this.hasAccess(editors, user) || isOwner
+      const canRead = this.hasAccess(viewers, user) || canEdit
+      if (action === 'read') {
+        return canRead
+      }
+      if (action === 'manage-access') {
+        return isOwner
+      }
+      return canEdit
     }
 
-    hasAccess(userList: string[], userId: string | undefined) {
-      if (userList.includes('everyone')) {
+    hasAccess(userList: string[], user?: User | null) {
+      if (userList.includes(allowEveryone)) {
         return true
       }
-      if (userList.includes('logged-in') && userId) {
-        return true
-      }
-      if (userId && userList.includes(allowUser(userId))) {
-        return true
+      if (user) {
+        return userList.includes(allowUser(user?._id))
+          || user.groups.some(group => userList.includes(allowGroup(group)))
       }
       return false
     }

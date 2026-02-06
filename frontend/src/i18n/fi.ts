@@ -34,6 +34,10 @@ export const fi = {
     allowedViewers: {
       everyone: 'Kaikki',
       loggedIn: 'Kirjautuneet käyttäjät',
+      chosenUsers: 'Valitut käyttäjät',
+      addUser: 'Lisää käyttäjä',
+      removeUser: 'Poista käyttäjä __name__',
+      noUsers: 'Ei käyttäjiä',
     },
     dance: {
       name: 'Nimi',

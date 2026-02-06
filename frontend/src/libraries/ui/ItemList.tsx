@@ -16,6 +16,7 @@ export interface ItemListProps {
   'wrap-breakpoint'?: WrapPoint
   items: unknown[]
   emptyText: string
+  noMargin?: boolean
 }
 
 const listWrapClasses = {

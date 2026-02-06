@@ -269,10 +269,12 @@
   * Fix changing dances leading to teachedIn becoming undefined in slide editor
   * Don't fetch dances on the backend if not necessary
   * User groups
-    User selector
-    Event edit rights
-    Event access edit rights ("manage" action)
-    File rights.
+  * Event edit rights
+  * Event access edit rights ("manage" action)
+  * Users/logged-in/everyone selector
+    Fix publish access control system
+    User selector for owners
+    File rights
     Make sure files can be marked used/unused
     Workshop rights
     User access control
@@ -293,6 +295,7 @@
     Structural sharing for form data
     Prevent callbacks running for out of bounds array data
 
+  No results text for selectors other than Autocomplete
   Use ItemList in setEditors
 
   Bundle size reducing

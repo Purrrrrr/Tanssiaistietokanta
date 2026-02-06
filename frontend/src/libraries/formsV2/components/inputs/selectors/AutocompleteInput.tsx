@@ -14,6 +14,7 @@ export interface AutocompleteInputProps<T> extends Omit<SelectorProps<T>, 'butto
   placeholder?: string
   inputRenderer?: (props: InputProps) => ReactNode
   emptyInputByDefault?: boolean
+  noResultsText?: string
 }
 
 interface InputProps extends Omit<UseComboboxGetInputPropsOptions, 'onChange'> {
@@ -114,6 +115,11 @@ export default function AutocompleteInput<T>(props: AutocompleteInputProps<T>) {
             {...getItemProps({ item, index })}
           />
         ))}
+        {filteredItemData.items.length === 0 && props.noResultsText &&
+          <li className="p-2 text-center text-gray-500">
+            {props.noResultsText}
+          </li>
+        }
       </Menu>
     </Dropdown>
   </DropdownContainer>

@@ -19,6 +19,8 @@ type Event implements Versionable {
 
 type EventAccessControl {
   viewers: [String!]!
+  editors: [String!]!
+  owners: [String!]!
 }
 
 type EventProgramSettings {

@@ -47,7 +47,9 @@ export type EventAccessData = Static<typeof eventAccessDataSchema>
 
 function EventAccessData() {
   return Type.Object({
-    viewers: Type.Array(Type.String()),
+    viewers: Type.Array(Type.String({ pattern: 'everyone|user:.+|group:.+' })),
+    editors: Type.Array(Type.String({ pattern: 'everyone|user:.+|group:.+' })),
+    owners: Type.Array(Type.String({ pattern: 'user:.+' })),
   }, { additionalProperties: false })
 }
 
