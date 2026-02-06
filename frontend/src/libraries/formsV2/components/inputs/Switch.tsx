@@ -7,17 +7,15 @@ export interface SwitchProps extends FieldInputComponentProps<boolean> {
 }
 
 const Classes = {
-  CONTROL: 'bp5-control',
   SWITCH: 'bp5-switch',
   DISABLED: 'bp5-disabled',
   INLINE: 'bp5-inline',
-  CONTROL_INDICATOR: 'bp5-control-indicator',
+  CONTROL_INDICATOR: 'bp5-switch-indicator',
 }
 
 export const Switch: FieldInputComponent<boolean, SwitchProps> = function Switch({ value, onChange, inline, readOnly: disabled, label, ...rest }: SwitchProps) {
   return <label
     className={classNames(
-      Classes.CONTROL,
       Classes.SWITCH,
       {
         [Classes.DISABLED]: disabled,

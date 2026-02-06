@@ -1,8 +1,9 @@
 import { Color } from './types'
 
 export const CssClass = {
-  input: 'bp5-input',
-  fill: 'bp5-fill',
+  input: 'bp5-input bp5-input-box',
+  inputElement: 'bp5-input',
+  inputBox: 'bp5-input-box',
   formGroupInline: 'formgroup-inline',
   formGroupInlineFill: 'formgroup-inline-fill',
 }

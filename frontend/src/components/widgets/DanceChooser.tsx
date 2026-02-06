@@ -88,8 +88,8 @@ export function DanceChooser({
       const category = dance && getCategory(dance)
       const workshop = value && workshops.find(w => w.instances.some(i => i.dances?.some(d => d._id === value._id)))
 
-      return <div className="flex flex-wrap items-center grow">
-        <input className={CssClass.input + ' grow'} {...props} />
+      return <div className={'flex flex-wrap items-center grow ' + CssClass.inputBox}>
+        <input className={CssClass.inputElement + ' grow'} {...props} />
         <span>
           {category && <ColoredTag small {...category} />}
           {workshop && <ColoredTag small tag={workshop.abbreviation ?? undefined} title={workshop.name} />}

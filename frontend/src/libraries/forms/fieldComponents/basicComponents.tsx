@@ -68,10 +68,8 @@ export function TextArea({ value, onChange, inline: _ignored, className, ...prop
     {...props}
     className={classNames(
       className,
-      'resize-y',
-      CssClass.input,
-      CssClass.fill,
-
+      'w-full p-2.5 resize-y',
+      CssClass.inputBox,
     )}
   />
 }

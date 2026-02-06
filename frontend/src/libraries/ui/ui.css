@@ -13,13 +13,8 @@
     outline:none;
   }
 
-  :focus-visible {
+  :focus-visible:not(.bp5-input) {
     outline:rgba(45, 114, 210, 0.6) solid 2px !important;
     outline-offset:2px;
-    -moz-outline-radius:6px;
   }
-}
-
-.bp5-card + p {
-  margin-top: 10px;
 }
