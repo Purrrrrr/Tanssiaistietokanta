@@ -1,6 +1,8 @@
 import { Color } from './types'
 
 export const CssClass = {
+  interactiveElement: 'interactive-bg',
+  interactiveTrigger: 'interactive-trigger',
   input: 'bp5-input bp5-input-box',
   inputElement: 'bp5-input',
   inputBox: 'bp5-input-box',

@@ -61,110 +61,84 @@ a .bp5-icon {
   display:block;
   margin-bottom:10px;
   position:relative;
-  text-transform:none;
-  &.bp5-disabled{
-    color:rgba(95, 107, 124, 0.6);
-    cursor:not-allowed;
-  }
+
   &.bp5-inline{
     display:inline-block;
     margin-right:20px;
   }
-  padding-left:38px;
-}
-.bp5-switch input{
-  left:0;
-  opacity:0;
-  position:absolute;
-  top:0;
-  z-index:-1;
-}
-.bp5-switch .bp5-switch-indicator{
-  background-clip:padding-box;
-  background-color:transparent;
-  border:none;
-  border-radius:1.75em;
-  cursor:pointer;
-  display:inline-block;
-  font-size:16px;
-  height:1em;
-  margin-right:10px;
-  margin-top:-3px;
-  position:relative;
-  -webkit-user-select:none;
-     -moz-user-select:none;
-      -ms-user-select:none;
-          user-select:none;
-  vertical-align:middle;
-  width:1em;
 
-  margin-left:-38px;
-  box-shadow:none !important;
-  min-width:1.75em;
-  transition:background-color 100ms cubic-bezier(0.4, 1, 0.75, 0.9);
-  width:auto;
-  background:rgba(143, 153, 168, 0.3);
-  color:#1c2127;
-
-  &::before{
-    content:"";
-    display:block;
-    background:#ffffff;
-    border-radius:50%;
-    box-shadow:0 0 0 1px rgba(17, 20, 24, 0.5);
-    height:calc(1em - 4px);
+  input{
     left:0;
-    margin:2px;
+    opacity:0;
     position:absolute;
-    transition:left 100ms cubic-bezier(0.4, 1, 0.75, 0.9);
-    width:calc(1em - 4px);
+    top:0;
+    z-index:-1;
   }
-}
-.bp5-switch input:checked ~ .bp5-switch-indicator{
-  background-color:#2d72d2;
-  box-shadow:inset 0 0 0 1px rgba(17, 20, 24, 0.2);
-  color:#ffffff;
-  &::before{
-    left:calc(100% - 1em);
-  }
-}
-.bp5-switch:hover input:checked ~ .bp5-switch-indicator{
-  background-color:#215db0;
-}
-.bp5-switch:hover .bp5-switch-indicator{
-  background:rgba(143, 153, 168, 0.4);
-}
-.bp5-switch input:not(:disabled):active:checked ~ .bp5-switch-indicator{
-  background:#184a90;
-}
-.bp5-switch input:not(:disabled):active ~ .bp5-switch-indicator{
-  box-shadow:inset 0 0 0 1px #738091;
-  background:rgba(143, 153, 168, 0.5);
-}
-.bp5-switch input:focus ~ .bp5-switch-indicator{
-  outline:rgba(45, 114, 210, 0.6) solid 2px;
-  outline-offset:2px;
-  -moz-outline-radius:6px;
-  outline:#2d72d2 solid 2px;
-}
+  .bp5-switch-indicator{
+    border-radius:1.75em;
+    display:inline-block;
+    font-size:16px;
+    height:1em;
+    margin-right:10px;
+    margin-top:-3px;
+    position:relative;
+    -webkit-user-select:none;
+            user-select:none;
+    vertical-align:middle;
+    min-width:1.75em;
+    transition:background-color 100ms cubic-bezier(0.4, 1, 0.75, 0.9);
 
-.bp5-switch input:disabled ~ .bp5-switch-indicator{
-  box-shadow:none;
-  cursor:not-allowed;
-  background:rgba(143, 153, 168, 0.15);
-  color:rgba(95, 107, 124, 0.6);
-  &::before{
-    background:rgba(255, 255, 255, 0.8);
-    box-shadow:none;
+    &::before{
+      content:"";
+      display:block;
+      background:#ffffff;
+      border-radius:50%;
+      height:calc(1em - 4px);
+      left:0;
+      margin:2px;
+      position:absolute;
+      transition:left 100ms cubic-bezier(0.4, 1, 0.75, 0.9);
+      width:calc(1em - 4px);
+    }
   }
-}
-.bp5-switch input:checked:disabled ~ .bp5-switch-indicator{
-  box-shadow:none;
-  background:rgba(45, 114, 210, 0.5);
-  color:rgba(255, 255, 255, 0.6);
-  &::before{
-    background:rgba(255, 255, 255, 0.5);
-    box-shadow:none;
+  input:checked ~ .bp5-switch-indicator{
+    &::before{
+      left:calc(100% - 1em);
+    }
+  }
+
+  .bp5-switch-indicator{
+    --interactive-base-color:#8e98a84d;
+  }
+  input:checked ~ .bp5-switch-indicator{
+    --interactive-base-color:#2d72d2;
+  }
+  &:has(input:not(:disabled)) {
+    .bp5-switch-indicator{
+      cursor:pointer;
+      ::before {
+        box-shadow:0 0 0 1px rgba(17, 20, 24, 0.5);
+      }
+    }
+    input:focus ~ .bp5-switch-indicator{
+      outline-offset:2px;
+      -moz-outline-radius:6px;
+      outline:#2d72d2 solid 2px;
+    }
+  }
+  &:has(input:disabled) {
+    color:rgba(95, 107, 124, 0.6);
+    cursor:not-allowed;
+    .bp5-switch-indicator{
+      &::before{
+        background:rgba(255, 255, 255, 0.8);
+      }
+    }
+    input:checked ~ .bp5-switch-indicator{
+      &::before{
+        background:rgba(255, 255, 255, 0.5);
+      }
+    }
   }
 }
 

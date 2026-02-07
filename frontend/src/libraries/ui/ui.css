@@ -18,3 +18,42 @@
     outline-offset:2px;
   }
 }
+
+:root {
+  --interactive-base-color: #2d72d2;
+  --interactive-base-chroma: 100;
+  --interactive-opacity: 100;
+  --interactive-base-luminance: 100;
+  --interactive-hover-luminance: 15;
+  --interactive-active-luminance: 30;
+}
+
+.interactive-trigger {
+  --interactive-is-hover: 0;
+  --interactive-is-active: 0;
+  &:not(:disabled):not(:has(:disabled)) {
+    &:hover {
+      --interactive-is-hover: 1;
+    } 
+    &:active, &:has(:active) {
+      --interactive-is-hover: 0;
+      --interactive-is-active: 1;
+    } 
+  }
+  &:disabled, &:has(:disabled) {
+    --interactive-opacity: 60;
+  }
+}
+
+.interactive-bg {
+  background: oklch(
+    from var(--interactive-base-color)
+    calc(l * 1% * (var(--interactive-base-luminance)
+      - var(--interactive-is-hover) * var(--interactive-hover-luminance)
+      - var(--interactive-is-active) * var(--interactive-active-luminance)
+    ))
+    calc(c * var(--interactive-base-chroma) / 100)
+    h
+    / calc(alpha * (1% * var(--interactive-opacity)))
+    ) !important;
+}

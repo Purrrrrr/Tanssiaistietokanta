@@ -2,6 +2,7 @@ import { useState } from 'react'
 
 import { booleanProp, numberProp, type Showcase, showcase } from './types'
 
+import { Switch } from 'libraries/forms'
 import FormUiShowcase from 'libraries/formsV2/UiShowcase'
 import { Alert, Dialog } from 'libraries/overlays'
 import { AutosizedSection, Button, Callout, RegularLink, showToast, Tab, Tabs } from 'libraries/ui'
@@ -69,6 +70,11 @@ const showcases: Showcase<Record<string, unknown>>[] = [
       </div>,
   }),
   showcase({
+    title: 'Switch',
+    props: {},
+    render: () => <SwitchShowcase />,
+  }),
+  showcase({
     title: 'Autosized section',
     props: {
       lines: numberProp({ default: 1, min: 0 }),
@@ -130,6 +136,16 @@ const showcases: Showcase<Record<string, unknown>>[] = [
 function range(count: number): number[] {
   console.log(Array(count).fill(0).map((_, index) => index))
   return Array(count).fill(0).map((_, index) => index)
+}
+
+function SwitchShowcase() {
+  const [on, setOn] = useState(false)
+  return <div className="grid grid-flow-row grid-cols-2 grid-rows-2">
+    <Switch id="demo-switch1" value={on} onChange={setOn} label="Switch" />
+    <Switch id="demo-switch2" value={!on} onChange={(v) => setOn(!v)} label="Opposite switch" />
+    <Switch id="demo-switch3" value={on} readOnly label="Readonly switch" onChange={() => {}} />
+    <Switch id="demo-switch4" value={!on} readOnly label="Opposite readonly switch" onChange={() => {}} />
+  </div>
 }
 
 function OverlayShowcase() {
