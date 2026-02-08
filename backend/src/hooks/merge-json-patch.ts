@@ -27,7 +27,7 @@ export function isJsonPatch(ctx: HookContext): boolean {
   const { method, params } = ctx
   if (method !== 'patch') return false
 
-  const param = params.jsonPatch ?? params.query.jsonPatch
+  const param = params?.jsonPatch ?? params?.query?.jsonPatch
   return param === true || param === 'true' || param === '1'
 }
 
