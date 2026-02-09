@@ -11,7 +11,7 @@ import { acceptNulls, preventDownshiftDefaultWhen, useItems } from './utils'
 export default function RegularSelect<T>(props: SelectorProps<T>) {
   'use no memo'
   const {
-    items: getItems, itemToString = String, categoryTitleRenderer,
+    items: getItems, itemToString = String, categoryTitleRenderer, noResultsText,
     value, onChange, id, containerClassname,
   } = props
   const valueToString = acceptNulls(itemToString)
@@ -43,7 +43,7 @@ export default function RegularSelect<T>(props: SelectorProps<T>) {
     <DropdownButton selectorProps={props} buttonProps={buttonProps} />
     <Dropdown open={isOpen} arrow tabIndex={-1}>
       <Menu {...getMenuProps({}, { suppressRefError: true })} tabIndex={-1}>
-        {renderMenuItems(itemData, categoryTitleRenderer, (item, index) => (
+        {renderMenuItems(itemData, categoryTitleRenderer, noResultsText, (item, index) => (
           <MenuItem
             highlight={highlightedIndex === index}
             key={`${itemToString(item)}${index}`}

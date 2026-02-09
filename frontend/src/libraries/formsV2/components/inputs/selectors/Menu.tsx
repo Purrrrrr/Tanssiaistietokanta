@@ -12,8 +12,15 @@ export function Menu(props: MenuProps) {
 export function renderMenuItems<T>(
   itemData: InternalItemData<T>,
   titleRenderer: (title: string) => ReactNode = defaultTitleRenderer,
+  noResultsText: ReactNode,
   itemRenderer: (item: T, index: number) => ReactNode,
 ) {
+  if (itemData.items.length === 0 && noResultsText) {
+    return <li className="p-2 text-center text-gray-500">
+      {noResultsText}
+    </li>
+  }
+
   let startingIndex = 0
 
   return itemData.categories.map(category => {

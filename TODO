@@ -256,6 +256,7 @@
 * Load file components only when user has the rights. Lazy loading OR don't fetch files when no rights
 * Centralize icons for replacement
 * Clearly indicate prod/dev in frontend to prevent accidents
+* No results text for selectors other than Autocomplete
   Auth Part 2
   * Entity specific rights: events public/private
   * Ability to query all rights for service or service & entity
@@ -295,7 +296,6 @@
     Structural sharing for form data
     Prevent callbacks running for out of bounds array data
 
-  No results text for selectors other than Autocomplete
   Use ItemList in setEditors
 
   Bundle size reducing

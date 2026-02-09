@@ -16,6 +16,7 @@ export interface SelectorProps<T> extends FieldInputComponentProps<T, T> {
   containerClassname?: string
   itemClassName?: string
   hilightedItemClassName?: string
+  noResultsText?: ReactNode
 }
 
 export interface DropdownButtonDownshiftProps extends Omit<UseComboboxGetToggleButtonPropsReturnValue, 'tabIndex'> {

@@ -14,7 +14,6 @@ export interface AutocompleteInputProps<T> extends Omit<SelectorProps<T>, 'butto
   placeholder?: string
   inputRenderer?: (props: InputProps) => ReactNode
   emptyInputByDefault?: boolean
-  noResultsText?: string
 }
 
 interface InputProps extends Omit<UseComboboxGetInputPropsOptions, 'onChange'> {
@@ -26,7 +25,7 @@ interface InputProps extends Omit<UseComboboxGetInputPropsOptions, 'onChange'> {
 export default function AutocompleteInput<T>(props: AutocompleteInputProps<T>) {
   'use no memo'
   const {
-    items, itemToString = String, emptyInputByDefault, categoryTitleRenderer, inputRenderer,
+    items, itemToString = String, emptyInputByDefault, categoryTitleRenderer, noResultsText, inputRenderer,
     value, onChange, id, readOnly,
     placeholder = '', containerClassname, inline,
   } = props
@@ -107,7 +106,7 @@ export default function AutocompleteInput<T>(props: AutocompleteInputProps<T>) {
     }
     <Dropdown open={isOpen} tabIndex={-1}>
       <Menu {...getMenuProps({}, { suppressRefError: true })} tabIndex={-1}>
-        {renderMenuItems(filteredItemData, categoryTitleRenderer, (item, index) => (
+        {renderMenuItems(filteredItemData, categoryTitleRenderer, noResultsText, (item, index) => (
           <MenuItem
             highlight={highlightedIndex === index}
             key={`${itemToString(item)}${index}`}
@@ -115,11 +114,6 @@ export default function AutocompleteInput<T>(props: AutocompleteInputProps<T>) {
             {...getItemProps({ item, index })}
           />
         ))}
-        {filteredItemData.items.length === 0 && props.noResultsText &&
-          <li className="p-2 text-center text-gray-500">
-            {props.noResultsText}
-          </li>
-        }
       </Menu>
     </Dropdown>
   </DropdownContainer>

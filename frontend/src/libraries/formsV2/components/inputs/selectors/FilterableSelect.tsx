@@ -13,7 +13,7 @@ import { acceptNulls, preventDownshiftDefaultWhen, useFilteredItems } from './ut
 export default function FilterableSelect<T>(props: SelectorProps<T>) {
   'use no memo'
   const {
-    items, itemToString = String, categoryTitleRenderer,
+    items, itemToString = String, categoryTitleRenderer, noResultsText,
 
     value, onChange, id, containerClassname,
     filterPlaceholder,
@@ -69,7 +69,7 @@ export default function FilterableSelect<T>(props: SelectorProps<T>) {
         onClick={undefined}
       />
       <Menu {...getMenuProps({}, { suppressRefError: true })} tabIndex={-1}>
-        {renderMenuItems(filteredItemData, categoryTitleRenderer, (item, index) => (
+        {renderMenuItems(filteredItemData, categoryTitleRenderer, noResultsText, (item, index) => (
           <MenuItem
             highlight={highlightedIndex === index}
             key={`${itemToString(item)}${index}`}
