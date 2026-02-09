@@ -5,8 +5,6 @@ import type { Color } from './types'
 
 import { RightsQueryProps, withPermissionChecking } from 'libraries/access-control'
 
-import { ColorClass } from './classes'
-
 export const buttonClass = (
   color: Color,
   { active, disabled, className, minimal, paddingClass }: {
@@ -17,20 +15,17 @@ export const buttonClass = (
     paddingClass?: string
   },
 ) => classNames(
-  'cursor-pointer transition-colors disabled:cursor-not-allowed disabled:opacity-50 text-center inline-flex gap-1.5 items-center peer',
-  minimal ? [
-    'hover:bg-opacity-10 active:bg-opacity-20 focus:bg-opacity-5 disabled:saturate-85',
-    ({
-      none: 'bg-var-gray-800 text-stone-700 ',
-      primary: 'bg-var-sky-600 text-sky-600 saturate-65',
-      success: 'bg-var-lime-700 text-lime-700',
-      danger: ' bg-var-orange-700 text-orange-700',
-      warning: ' bg-var-amber-400 text-amber-400',
-    } satisfies Record<Color, string>)[color],
-  ] : [
-    'rounded-xs shadow-xs hover:shadow-xs active:shadow-md shadow-stone-800/30 border-stone-400/40 border-1  hover:bg-darken-6 active:bg-darken-10 disabled:saturate-75',
-    ColorClass.boxColors[color],
-  ],
+  'interactive-control text-center inline-flex gap-1.5 items-center peer',
+  minimal
+    ? 'interactive-control-minimal'
+    : 'interactive-control-filled rounded-xs shadow-xs hover:shadow-xs active:shadow-md shadow-stone-800/30 border-stone-400/40 border-1',
+  ({
+    none: minimal ? 'bg-mix-base-stone-800' : 'bg-mix-base-neutral',
+    primary: 'bg-mix-base-primary',
+    success: 'bg-mix-base-success',
+    danger: 'bg-mix-base-danger',
+    warning: 'bg-mix-base-warning',
+  } satisfies Record<Color, string>)[color],
   paddingClass ?? 'py-[5px] px-2',
   active && 'active',
   disabled && 'disabled',

@@ -1,13 +1,4 @@
 @charset "UTF-8";
-html{
-  box-sizing:border-box;
-}
-
-*,
-*::before,
-*::after{
-  box-sizing:inherit;
-}
 
 body{
   font-size:14px;
@@ -56,92 +47,6 @@ a .bp5-icon {
   color:inherit;
 }
 
-.bp5-switch{
-  cursor:pointer;
-  display:block;
-  margin-bottom:10px;
-  position:relative;
-
-  &.bp5-inline{
-    display:inline-block;
-    margin-right:20px;
-  }
-
-  input{
-    left:0;
-    opacity:0;
-    position:absolute;
-    top:0;
-    z-index:-1;
-  }
-  .bp5-switch-indicator{
-    border-radius:1.75em;
-    display:inline-block;
-    font-size:16px;
-    height:1em;
-    margin-right:10px;
-    margin-top:-3px;
-    position:relative;
-    -webkit-user-select:none;
-            user-select:none;
-    vertical-align:middle;
-    min-width:1.75em;
-    transition:background-color 100ms cubic-bezier(0.4, 1, 0.75, 0.9);
-
-    &::before{
-      content:"";
-      display:block;
-      background:#ffffff;
-      border-radius:50%;
-      height:calc(1em - 4px);
-      left:0;
-      margin:2px;
-      position:absolute;
-      transition:left 100ms cubic-bezier(0.4, 1, 0.75, 0.9);
-      width:calc(1em - 4px);
-    }
-  }
-  input:checked ~ .bp5-switch-indicator{
-    &::before{
-      left:calc(100% - 1em);
-    }
-  }
-
-  .bp5-switch-indicator{
-    --interactive-base-color:#8e98a84d;
-  }
-  input:checked ~ .bp5-switch-indicator{
-    --interactive-base-color:#2d72d2;
-  }
-  &:has(input:not(:disabled)) {
-    .bp5-switch-indicator{
-      cursor:pointer;
-      ::before {
-        box-shadow:0 0 0 1px rgba(17, 20, 24, 0.5);
-      }
-    }
-    input:focus ~ .bp5-switch-indicator{
-      outline-offset:2px;
-      -moz-outline-radius:6px;
-      outline:#2d72d2 solid 2px;
-    }
-  }
-  &:has(input:disabled) {
-    color:rgba(95, 107, 124, 0.6);
-    cursor:not-allowed;
-    .bp5-switch-indicator{
-      &::before{
-        background:rgba(255, 255, 255, 0.8);
-      }
-    }
-    input:checked ~ .bp5-switch-indicator{
-      &::before{
-        background:rgba(255, 255, 255, 0.5);
-      }
-    }
-  }
-}
-
 /* Form group */
 .bp5-form-group{
   display:flex;
@@ -151,7 +56,7 @@ a .bp5-icon {
 .bp5-form-group label.bp5-label{
   margin-bottom:5px;
 }
-.bp5-form-group .bp5-switch{
+.bp5-form-group .switch{
   margin-top:7px;
 }
 .bp5-form-group .bp5-form-group-sub-label,

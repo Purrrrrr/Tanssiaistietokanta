@@ -2,24 +2,20 @@ import classNames from 'classnames'
 
 import { FieldInputComponent, FieldInputComponentProps } from './types'
 
-import { CssClass } from 'libraries/ui'
-
 export interface SwitchProps extends FieldInputComponentProps<boolean> {
   label: string
 }
 
 const Classes = {
-  SWITCH: 'bp5-switch',
-  INLINE: 'bp5-inline',
-  CONTROL_INDICATOR: 'bp5-switch-indicator',
+  SWITCH: 'switch',
+  CONTROL_INDICATOR: 'switch-indicator',
 }
 
 export const Switch: FieldInputComponent<boolean, SwitchProps> = function Switch({ value, onChange, inline, readOnly: disabled, label, ...rest }: SwitchProps) {
   return <label
     className={classNames(
       Classes.SWITCH,
-      CssClass.interactiveTrigger,
-      inline && Classes.INLINE,
+      inline && 'inline-block mr-5',
     )}
   >
     <input
@@ -30,7 +26,7 @@ export const Switch: FieldInputComponent<boolean, SwitchProps> = function Switch
 
       {...rest}
     />
-    <span className={Classes.CONTROL_INDICATOR + ' ' + CssClass.interactiveElement} />
+    <span className={Classes.CONTROL_INDICATOR} />
     {label}
   </label>
 }

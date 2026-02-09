@@ -1,4 +1,35 @@
 @import "./blueprint.css";
+@import "tailwindcss";
+
+@theme {
+  --color-muted: var(--color-gray-500);
+  --color-muted-hover: var(--color-gray-700);
+  --color-link: var(--color-sky-700); /* oklch(51.8% 0.158 264.376); */
+
+  --color-neutral: var(--color-stone-50);
+  --color-primary: var(--color-sky-700);
+  --color-success: oklch(from var(--color-lime-700) calc(l - 0.03) c h);
+  --color-danger: var(--color-orange-700);
+  --color-warning: var(--color-amber-400);
+}
+
+@custom-variant active {
+  &:active:not(:disabled,.disabled), &.active:not(:disabled,.disabled) {
+    @slot;
+  }
+}
+
+@custom-variant hover {
+  &:hover:not(:disabled,.disabled) {
+    @slot;
+  }
+}
+
+@custom-variant disabled {
+  &:disabled, &.disabled {
+    @slot;
+  }
+}
 
 .formgroup-inline {
   display: inline-flex;
@@ -19,41 +50,123 @@
   }
 }
 
-:root {
-  --interactive-base-color: #2d72d2;
-  --interactive-base-chroma: 100;
-  --interactive-opacity: 100;
-  --interactive-base-luminance: 100;
-  --interactive-hover-luminance: 15;
-  --interactive-active-luminance: 30;
-}
-
-.interactive-trigger {
-  --interactive-is-hover: 0;
-  --interactive-is-active: 0;
-  &:not(:disabled):not(:has(:disabled)) {
-    &:hover {
-      --interactive-is-hover: 1;
-    } 
-    &:active, &:has(:active) {
-      --interactive-is-hover: 0;
-      --interactive-is-active: 1;
-    } 
-  }
-  &:disabled, &:has(:disabled) {
-    --interactive-opacity: 60;
+.interactive-control {
+  @apply transition-colors bg-color-mix;
+  cursor: pointer;
+  &:disabled, &.disabled {
+    cursor: not-allowed;
   }
 }
-
-.interactive-bg {
-  background: oklch(
-    from var(--interactive-base-color)
-    calc(l * 1% * (var(--interactive-base-luminance)
-      - var(--interactive-is-hover) * var(--interactive-hover-luminance)
-      - var(--interactive-is-active) * var(--interactive-active-luminance)
-    ))
-    calc(c * var(--interactive-base-chroma) / 100)
+.interactive-control-filled {
+  color: oklch(
+    from var(--bg-mix-base)
+    clamp(0, calc((0.8 - l) * 9999), 1) /* Try to pick good contrast */
+    0
     h
-    / calc(alpha * (1% * var(--interactive-opacity)))
-    ) !important;
+  );
+  @apply hover:bg-mix-lightness-90 active:bg-mix-lightness-80 disabled:opacity-40;
+}
+
+.interactive-control-minimal {
+  color: oklch(from var(--bg-mix-base) min(l, 0.75) c h);
+ @apply bg-mix-alpha-0 hover:bg-mix-alpha-10 active:bg-mix-alpha-20 disabled:saturate-65 disabled:opacity-90;
+}
+
+.switch {
+  cursor:pointer;
+  display:block;
+  margin-bottom:10px;
+  position:relative;
+
+  input{
+    @apply sr-only;
+  }
+  .switch-indicator{
+    border-radius:1.75em;
+    display:inline-block;
+    font-size:16px;
+    height:1em;
+    margin-right:10px;
+    margin-top:-3px;
+    position:relative;
+    -webkit-user-select:none;
+            user-select:none;
+    vertical-align:middle;
+    min-width:1.75em;
+    transition:background-color 100ms cubic-bezier(0.4, 1, 0.75, 0.9);
+
+    &::before{
+      content:"";
+      display:block;
+      background:#ffffff;
+      border-radius:50%;
+      height:calc(1em - 4px);
+      left:0;
+      margin:2px;
+      position:absolute;
+      transition:left 100ms cubic-bezier(0.4, 1, 0.75, 0.9);
+      width:calc(1em - 4px);
+    }
+  }
+  input:checked ~ .switch-indicator{
+    &::before{
+      left:calc(100% - 1em);
+    }
+  }
+  .switch-indicator{
+    @apply bg-color-mix;
+    @apply bg-mix-base-[#8e98a84d];
+  }
+  input:checked ~ .switch-indicator{
+    @apply bg-mix-base-[#2d72d2];
+  }
+
+  &:has(input:not(:disabled)) {
+    &:hover {
+      @apply bg-mix-lightness-85
+    } 
+    &:has(input:active) {
+      @apply bg-mix-lightness-80
+    } 
+
+    .switch-indicator ::before {
+      box-shadow:0 0 0 1px rgba(17, 20, 24, 0.5);
+    }
+    input:focus ~ .switch-indicator{
+      outline-offset:2px;
+      -moz-outline-radius:6px;
+      outline:#2d72d2 solid 2px;
+    }
+  }
+  &:has(input:disabled) {
+    color:#5e6a7b99;
+    cursor:not-allowed;
+    .switch-indicator{
+      &::before{
+        background:#ffffffcc;
+      }
+    }
+    input:checked ~ .switch-indicator{
+      &::before{
+        background:#ffffff80;
+      }
+    }
+  }
+}
+
+@utility bg-color-mix {
+  background: oklch(from var(--bg-mix-base) calc(l * var(--bg-mix-lightness, 100) / 100) calc(c * var(--bg-mix-chroma, 100) / 100) h / calc(alpha * var(--bg-mix-alpha, 100) / 100));
+}
+@utility bg-mix-base-* {
+  --bg-mix-base: --value([color]);
+  --bg-mix-base: --value(--color-*);
+}
+@utility bg-mix-lightness-* {
+  --bg-mix-lightness: --value(integer);
+}
+@utility bg-mix-chroma-* {
+  --bg-mix-chroma: --value(integer);
+}
+@utility bg-mix-alpha-* {
+  --bg-mix-alpha: --value(integer);
 }

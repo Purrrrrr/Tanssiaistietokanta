@@ -1,8 +1,6 @@
 import { Color } from './types'
 
 export const CssClass = {
-  interactiveElement: 'interactive-bg',
-  interactiveTrigger: 'interactive-trigger',
   input: 'bp5-input bp5-input-box',
   inputElement: 'bp5-input',
   inputBox: 'bp5-input-box',
@@ -13,11 +11,11 @@ export const CssClass = {
 export const ColorClass = {
   textMuted: 'text-muted',
   boxColors: {
-    none: 'bg-stone-50 text-stone-700',
-    primary: 'bg-sky-700 text-white saturate-90',
-    success: 'bg-lime-700 text-white',
-    danger: ' bg-orange-700 text-white',
-    warning: ' bg-amber-400',
+    none: 'bg-neutral text-stone-700',
+    primary: 'bg-primary text-white',
+    success: 'bg-success text-white',
+    danger: ' bg-danger text-white',
+    warning: ' bg-warning',
   } satisfies Record<Color, string>,
   lightBoxColors: {
     none: 'bg-gray-100 text-stone-700',

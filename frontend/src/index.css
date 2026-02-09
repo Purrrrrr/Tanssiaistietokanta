@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Charm&family=Tangerine&display=swap');
 @import "tailwindcss";
+@reference "./libraries/ui/ui.css";
 
 @theme {
   --animate-appear: appear 0.2s ease-in-out forwards;
@@ -15,45 +16,6 @@
       transform: scale(.55);
     }
   }
-
-  --color-muted: var(--color-gray-500);
-  --color-muted-hover: var(--color-gray-700);
-  --color-link: var(--color-sky-700); /* oklch(51.8% 0.158 264.376); */
-}
-
-@custom-variant active {
-  &:active:not(:disabled,.disabled), &.active:not(:disabled,.disabled) {
-    @slot;
-  }
-}
-
-@custom-variant hover {
-  &:hover:not(:disabled,.disabled) {
-    @slot;
-  }
-}
-
-@custom-variant disabled {
-  &:disabled, &.disabled {
-    @slot;
-  }
-}
-
-@utility bg-* {
-  --current-bg: --value(--color-*);
-  background-color: --value(--color-*);
-}
-
-@utility bg-var-* {
-  --current-bg: --value(--color-*);
-}
-
-@utility bg-darken-* {
-  background-color: oklch(from var(--current-bg) calc(l - calc(--value(integer) / 100)) c h);
-}
-
-@utility bg-opacity-* {
-  background-color: oklch(from var(--current-bg) l c h / calc(--value(integer) / 100));
 }
 
 body {
