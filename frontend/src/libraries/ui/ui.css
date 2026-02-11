@@ -47,16 +47,6 @@
   --bg-mix-alpha: --value(integer);
 }
 
-@supports selector(:focus-visible) {
-  :focus {
-    outline:none;
-  }
-
-  :focus-visible:not(.bp5-input) {
-    outline:rgba(45, 114, 210, 0.6) solid 2px !important;
-    outline-offset:2px;
-  }
-}
 
 .interactive-control {
   @apply transition-colors bg-color-mix;

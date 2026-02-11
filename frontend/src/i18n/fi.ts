@@ -32,10 +32,10 @@ export const fi = {
   dateTimeFormat: 'dd.MM.yyyy HH:mm',
   domain: {
     allowedViewers: {
-      everyone: 'Kaikki',
+      everyone: 'Kaikki käyttäjät',
       loggedIn: 'Kirjautuneet käyttäjät',
       chosenUsers: 'Valitut käyttäjät',
-      addUser: 'Lisää käyttäjä',
+      add: 'Lisää...',
       removeUser: 'Poista käyttäjä __name__',
       noUsers: 'Ei käyttäjiä',
     },

@@ -57,6 +57,15 @@ h1:not(.reset) {
   outline-offset:2px;
   -moz-outline-radius:6px;
 }
+@supports selector(:focus-visible) {
+  :focus {
+    outline:none;
+  }
+  :focus-visible:not(.bp5-input) {
+    outline:rgba(45, 114, 210, 0.6) solid 2px !important;
+    outline-offset:2px;
+  }
+}
 
 #layout {
   --main-margin-size: 25px;

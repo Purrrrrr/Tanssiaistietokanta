@@ -53,7 +53,7 @@ export function MenuItem({ highlight, className, hilightedClassName, ...props }:
 
 export function toMenuItemProps<T>(
   item: T,
-  { itemClassName, hilightedItemClassName, itemIcon, itemRenderer, itemToString = String }: SelectorProps<T>,
+  { itemClassName, hilightedItemClassName, itemIcon, itemRenderer, itemToString = String }: Omit<SelectorProps<T>, 'value'>,
 ): Pick<MenuItemProps, 'className' | 'hilightedClassName' | 'children'> {
   return {
     className: itemClassName,

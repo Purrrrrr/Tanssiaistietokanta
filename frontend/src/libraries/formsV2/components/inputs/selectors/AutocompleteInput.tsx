@@ -10,7 +10,8 @@ import { CssClass } from 'libraries/ui'
 import { Menu, MenuItem, renderMenuItems, toMenuItemProps } from './Menu'
 import { acceptNulls, preventDownshiftDefaultWhen, useFilteredItems } from './utils'
 
-export interface AutocompleteInputProps<T> extends Omit<SelectorProps<T>, 'buttonRenderer'> {
+export interface AutocompleteInputProps<T> extends Omit<SelectorProps<T>, 'buttonRenderer' | 'value'> {
+  value?: T | null
   placeholder?: string
   inputRenderer?: (props: InputProps) => ReactNode
   emptyInputByDefault?: boolean
@@ -26,7 +27,7 @@ export default function AutocompleteInput<T>(props: AutocompleteInputProps<T>) {
   'use no memo'
   const {
     itemToString = String, emptyInputByDefault, categoryTitleRenderer, noResultsText, inputRenderer,
-    value, onChange, id, readOnly,
+    value = null, onChange, id, readOnly,
     placeholder = '', containerClassname, inline,
   } = props
   const valueToString = acceptNulls(itemToString)
