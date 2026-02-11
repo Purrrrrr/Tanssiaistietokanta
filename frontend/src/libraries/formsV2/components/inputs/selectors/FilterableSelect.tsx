@@ -13,14 +13,14 @@ import { acceptNulls, preventDownshiftDefaultWhen, useFilteredItems } from './ut
 export default function FilterableSelect<T>(props: SelectorProps<T>) {
   'use no memo'
   const {
-    items, itemToString = String, categoryTitleRenderer, noResultsText,
+    itemToString = String, categoryTitleRenderer, noResultsText,
 
     value, onChange, id, containerClassname,
     filterPlaceholder,
   } = props
   const valueToString = acceptNulls(itemToString)
   const buttonRef = useRef<HTMLButtonElement | null>(null)
-  const [filteredItemData, updateFilter] = useFilteredItems(items, itemToString)
+  const [filteredItemData, updateFilter] = useFilteredItems(props)
   const {
     isOpen,
     getInputProps,

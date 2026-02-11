@@ -11,11 +11,11 @@ import { acceptNulls, preventDownshiftDefaultWhen, useItems } from './utils'
 export default function RegularSelect<T>(props: SelectorProps<T>) {
   'use no memo'
   const {
-    items: getItems, itemToString = String, categoryTitleRenderer, noResultsText,
+    itemToString = String, categoryTitleRenderer, noResultsText,
     value, onChange, id, containerClassname,
   } = props
   const valueToString = acceptNulls(itemToString)
-  const [itemData, updateItems] = useItems(getItems)
+  const [itemData, updateItems] = useItems(props)
   const {
     isOpen,
     getToggleButtonProps,

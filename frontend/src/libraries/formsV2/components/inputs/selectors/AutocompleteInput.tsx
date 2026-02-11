@@ -25,12 +25,12 @@ interface InputProps extends Omit<UseComboboxGetInputPropsOptions, 'onChange'> {
 export default function AutocompleteInput<T>(props: AutocompleteInputProps<T>) {
   'use no memo'
   const {
-    items, itemToString = String, emptyInputByDefault, categoryTitleRenderer, noResultsText, inputRenderer,
+    itemToString = String, emptyInputByDefault, categoryTitleRenderer, noResultsText, inputRenderer,
     value, onChange, id, readOnly,
     placeholder = '', containerClassname, inline,
   } = props
   const valueToString = acceptNulls(itemToString)
-  const [filteredItemData, updateFilter] = useFilteredItems(items, itemToString)
+  const [filteredItemData, updateFilter] = useFilteredItems(props)
   const {
     isOpen,
     getInputProps,

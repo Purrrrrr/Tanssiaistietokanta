@@ -7,6 +7,7 @@ export interface SelectorProps<T> extends FieldInputComponentProps<T, T> {
   items: Items<T>
   filterPlaceholder?: string
   placeholder?: string
+  itemHidden?: (item: T) => boolean
   itemToString?: (item: T) => string
   buttonRenderer?: (selectedItem: T, props: DropdownButtonDownshiftProps) => ReactNode
   itemCategory?: (item: T) => string

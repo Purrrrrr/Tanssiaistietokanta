@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import type { InternalItemData, ItemCategory, Items, ItemToString, SyncItems } from './types'
+import type { InternalItemData, ItemCategory, Items, ItemToString, SelectorProps, SyncItems } from './types'
 
 const emptyResult: InternalItemData<unknown> = {
   showCategories: false,
@@ -8,11 +8,13 @@ const emptyResult: InternalItemData<unknown> = {
   items: [],
 }
 
-export function useItems<T>(items: Items<T>) {
+type ItemProps<T> = Pick<SelectorProps<T>, 'items' | 'itemHidden' | 'itemToString'>
+
+export function useItems<T>({ items, itemHidden }: ItemProps<T>) {
   const [itemData, setItems] = useState<InternalItemData<T>>(emptyResult as InternalItemData<T>)
   if (typeof items === 'function') {
     const loadItems = async () => {
-      setItems(toItemData(await items('')))
+      setItems(toItemData(await items(''), itemHidden))
     }
 
     return [itemData, loadItems] as const
@@ -24,10 +26,10 @@ export function useItems<T>(items: Items<T>) {
   ] as const
 }
 
-export function useFilteredItems<T>(items: Items<T>, itemToString: ItemToString<T>) {
+export function useFilteredItems<T>({ items, itemToString = String, itemHidden }: ItemProps<T>) {
   const [filteredItems, setFilteredItems] = useState(emptyResult as InternalItemData<T>)
   const updateFilter = async (filter: string) => {
-    const newItems = toItemData(await getItems(items, filter, itemToString))
+    const newItems = toItemData(await getItems(items, filter, itemToString), itemHidden)
     setFilteredItems(newItems)
     return newItems
   }
@@ -76,8 +78,9 @@ export function filterItemList<T>(items: T[], rawFilter: string, itemToString: I
     .map(hit => hit.item)
 }
 
-function toItemData<T>(items: SyncItems<T>): InternalItemData<T> {
-  if (Array.isArray(items)) {
+function toItemData<T>(rawItems: SyncItems<T>, itemHidden?: (item: T) => boolean): InternalItemData<T> {
+  if (Array.isArray(rawItems)) {
+    const items = hideItems(rawItems, itemHidden)
     return {
       showCategories: false,
       items,
@@ -85,12 +88,24 @@ function toItemData<T>(items: SyncItems<T>): InternalItemData<T> {
     }
   }
 
-  const categories = items.categories.filter(categoryHasItems)
+  const categories = itemHidden
+    ? rawItems.categories.map(category => ({
+      ...category,
+      items: hideItems(category.items, itemHidden),
+    }))
+    : rawItems.categories
+
   return {
     showCategories: true,
-    categories,
+    categories: categories.filter(categoryHasItems),
     items: categories.flatMap(category => category.items),
   }
+}
+
+function hideItems<T>(items: T[], itemHidden?: (item: T) => boolean): T[] {
+  return itemHidden
+    ? items.filter(item => !itemHidden(item))
+    : items
 }
 
 const categoryHasItems = <T>(category: ItemCategory<T>) => category.items.length > 0
