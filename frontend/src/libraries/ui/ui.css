@@ -1,4 +1,3 @@
-@import "./blueprint.css";
 @import "tailwindcss";
 
 @theme {
@@ -31,12 +30,21 @@
   }
 }
 
-.formgroup-inline {
-  display: inline-flex;
-  margin-bottom: 0
+@utility bg-color-mix {
+  background: oklch(from var(--bg-mix-base) calc(l * var(--bg-mix-lightness, 100) / 100) calc(c * var(--bg-mix-chroma, 100) / 100) h / calc(alpha * var(--bg-mix-alpha, 100) / 100));
 }
-.formgroup-inline-fill > div {
-  flex: 1 1 auto;
+@utility bg-mix-base-* {
+  --bg-mix-base: --value([color]);
+  --bg-mix-base: --value(--color-*);
+}
+@utility bg-mix-lightness-* {
+  --bg-mix-lightness: --value(integer);
+}
+@utility bg-mix-chroma-* {
+  --bg-mix-chroma: --value(integer);
+}
+@utility bg-mix-alpha-* {
+  --bg-mix-alpha: --value(integer);
 }
 
 @supports selector(:focus-visible) {
@@ -57,116 +65,204 @@
     cursor: not-allowed;
   }
 }
-.interactive-control-filled {
-  color: oklch(
-    from var(--bg-mix-base)
-    clamp(0, calc((0.8 - l) * 9999), 1) /* Try to pick good contrast */
-    0
-    h
-  );
-  @apply hover:bg-mix-lightness-90 active:bg-mix-lightness-80 disabled:opacity-40;
-}
 
-.interactive-control-minimal {
-  color: oklch(from var(--bg-mix-base) min(l, 0.75) c h);
- @apply bg-mix-alpha-0 hover:bg-mix-alpha-10 active:bg-mix-alpha-20 disabled:saturate-65 disabled:opacity-90;
-}
-
-.switch {
-  cursor:pointer;
-  display:block;
-  margin-bottom:10px;
-  position:relative;
-
-  input{
-    @apply sr-only;
+@layer components {
+  .formgroup-inline {
+    display: inline-flex;
+    margin-bottom: 0
   }
-  .switch-indicator{
-    border-radius:1.75em;
-    display:inline-block;
-    font-size:16px;
-    height:1em;
-    margin-right:10px;
-    margin-top:-3px;
+  .formgroup-inline-fill > div {
+    flex: 1 1 auto;
+  }
+
+  .interactive-control-filled {
+    color: oklch(
+      from var(--bg-mix-base)
+      clamp(0, calc((0.8 - l) * 9999), 1) /* Try to pick good contrast */
+      0
+      h
+    );
+    @apply hover:bg-mix-lightness-90 active:bg-mix-lightness-80 disabled:opacity-40;
+  }
+
+  .interactive-control-minimal {
+    color: oklch(from var(--bg-mix-base) min(l, 0.75) c h);
+   @apply bg-mix-alpha-0 hover:bg-mix-alpha-10 active:bg-mix-alpha-20 disabled:saturate-65 disabled:opacity-90;
+  }
+
+  .switch {
+    cursor:pointer;
+    display:block;
+    margin-bottom:10px;
     position:relative;
-    -webkit-user-select:none;
-            user-select:none;
-    vertical-align:middle;
-    min-width:1.75em;
-    transition:background-color 100ms cubic-bezier(0.4, 1, 0.75, 0.9);
 
-    &::before{
-      content:"";
-      display:block;
-      background:#ffffff;
-      border-radius:50%;
-      height:calc(1em - 4px);
-      left:0;
-      margin:2px;
-      position:absolute;
-      transition:left 100ms cubic-bezier(0.4, 1, 0.75, 0.9);
-      width:calc(1em - 4px);
+    input{
+      @apply sr-only;
     }
-  }
-  input:checked ~ .switch-indicator{
-    &::before{
-      left:calc(100% - 1em);
-    }
-  }
-  .switch-indicator{
-    @apply bg-color-mix;
-    @apply bg-mix-base-[#8e98a84d];
-  }
-  input:checked ~ .switch-indicator{
-    @apply bg-mix-base-[#2d72d2];
-  }
-
-  &:has(input:not(:disabled)) {
-    &:hover {
-      @apply bg-mix-lightness-85
-    } 
-    &:has(input:active) {
-      @apply bg-mix-lightness-80
-    } 
-
-    .switch-indicator ::before {
-      box-shadow:0 0 0 1px rgba(17, 20, 24, 0.5);
-    }
-    input:focus ~ .switch-indicator{
-      outline-offset:2px;
-      -moz-outline-radius:6px;
-      outline:#2d72d2 solid 2px;
-    }
-  }
-  &:has(input:disabled) {
-    color:#5e6a7b99;
-    cursor:not-allowed;
     .switch-indicator{
+      border-radius:1.75em;
+      display:inline-block;
+      font-size:16px;
+      height:1em;
+      margin-right:10px;
+      margin-top:-3px;
+      position:relative;
+      -webkit-user-select:none;
+              user-select:none;
+      vertical-align:middle;
+      min-width:1.75em;
+      transition:background-color 100ms cubic-bezier(0.4, 1, 0.75, 0.9);
+
       &::before{
-        background:#ffffffcc;
+        content:"";
+        display:block;
+        background:#ffffff;
+        border-radius:50%;
+        height:calc(1em - 4px);
+        left:0;
+        margin:2px;
+        position:absolute;
+        transition:left 100ms cubic-bezier(0.4, 1, 0.75, 0.9);
+        width:calc(1em - 4px);
       }
     }
     input:checked ~ .switch-indicator{
       &::before{
-        background:#ffffff80;
+        left:calc(100% - 1em);
+      }
+    }
+    .switch-indicator{
+      @apply bg-color-mix;
+      @apply bg-mix-base-[#8e98a84d];
+    }
+    input:checked ~ .switch-indicator{
+      @apply bg-mix-base-[#2d72d2];
+    }
+
+    &:has(input:not(:disabled)) {
+      &:hover {
+        @apply bg-mix-lightness-85
+      } 
+      &:has(input:active) {
+        @apply bg-mix-lightness-80
+      } 
+
+      .switch-indicator ::before {
+        box-shadow:0 0 0 1px rgba(17, 20, 24, 0.5);
+      }
+      input:focus ~ .switch-indicator{
+        outline-offset:2px;
+        -moz-outline-radius:6px;
+        outline:#2d72d2 solid 2px;
+      }
+    }
+    &:has(input:disabled) {
+      color:#5e6a7b99;
+      cursor:not-allowed;
+      .switch-indicator{
+        &::before{
+          background:#ffffffcc;
+        }
+      }
+      input:checked ~ .switch-indicator{
+        &::before{
+          background:#ffffff80;
+        }
       }
     }
   }
-}
 
-@utility bg-color-mix {
-  background: oklch(from var(--bg-mix-base) calc(l * var(--bg-mix-lightness, 100) / 100) calc(c * var(--bg-mix-chroma, 100) / 100) h / calc(alpha * var(--bg-mix-alpha, 100) / 100));
-}
-@utility bg-mix-base-* {
-  --bg-mix-base: --value([color]);
-  --bg-mix-base: --value(--color-*);
-}
-@utility bg-mix-lightness-* {
-  --bg-mix-lightness: --value(integer);
-}
-@utility bg-mix-chroma-* {
-  --bg-mix-chroma: --value(integer);
-}
-@utility bg-mix-alpha-* {
-  --bg-mix-alpha: --value(integer);
+  .bp5-icon{
+    display:inline-block;
+    flex:0 0 auto;
+    vertical-align:text-bottom;
+
+    & > svg {
+      display:block;
+      &:not([fill]){
+        fill:currentcolor;
+      }
+    }
+    a & {
+      color:inherit;
+    }
+  }
+
+  /* Form group */
+  .bp5-form-group{
+    display:flex;
+    flex-direction:column;
+    margin:0 0 15px;
+    & label.bp5-label{
+      margin-bottom:5px;
+    }
+    & .bp5-form-group-sub-label,
+    & .bp5-form-helper-text{
+      color:#5f6b7c;
+      font-size:12px;
+    }
+    &.bp5-inline{
+      align-items:flex-start;
+      flex-direction:row;
+      label.bp5-label{
+        line-height:30px;
+        margin:0 10px 0 0;
+      }
+    }
+  }
+  label.bp5-label{
+    display:block;
+    margin-top:0;
+  }
+
+  .bp5-input{
+    height:30px;
+    line-height:30px;
+    vertical-align:middle;
+    &::placeholder{
+      color:#5f6b7c;
+      opacity:1;
+    }
+    &:disabled{
+      background:rgba(211, 216, 222, 0.5);
+      color:rgba(95, 107, 124, 0.6);
+      cursor:not-allowed;
+      resize:none;
+    }
+    &:disabled::placeholder{
+      color:rgba(95, 107, 124, 0.6);
+    }
+    &::-ms-clear{
+      display:none;
+    }
+  }
+  @supports (-webkit-touch-callout: none){
+    input.bp5-input:disabled{
+      opacity:1;
+      -webkit-text-fill-color:rgba(95, 107, 124, 0.6);
+    }
+  }
+  .bp5-input-box {
+    padding-inline:10px;
+    font-size:14px;
+    font-weight:400;
+    appearance:none;
+    background:#fff;
+    border:none;
+    border-radius:2px;
+    box-shadow:0 0 0 0 rgba(45, 114, 210, 0), 0 0 0 0 rgba(45, 114, 210, 0), inset 0 0 0 1px rgba(17, 20, 24, 0.2), inset 0 1px 1px rgba(17, 20, 24, 0.3);
+    color:#1c2127;
+    outline:none;
+    transition:box-shadow 100ms cubic-bezier(0.4, 1, 0.75, 0.9);
+
+    &:focus, &:focus-within{
+      box-shadow:inset 0 0 1px 2px #2d72d2, 0 0 0 2px rgba(45, 114, 210, 0.3), inset 0 1px 1px rgba(17, 20, 24, 0.2);
+    }
+    &[readonly], &.readonly {
+      box-shadow:inset 0 0 0 1px rgba(17, 20, 24, 0.15);
+    }
+    &:disabled{
+      box-shadow:none;
+    }
+  }
 }

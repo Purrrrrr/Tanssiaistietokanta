@@ -10,7 +10,7 @@ import { useFormStrings } from './formContext'
 
 export function ConflictHandler({ localValue, serverValue, onResolve }: ConflictData) {
   const strings = useFormStrings()
-  return <>
+  return <span className="text-red-800">
     {strings.hasConflicts}
     {' '}
     <MenuButton
@@ -35,7 +35,7 @@ export function ConflictHandler({ localValue, serverValue, onResolve }: Conflict
         </div>
       </div>
     </MenuButton>
-  </>
+  </span>
 }
 
 const className = 'p-1 text-red-700 bg-white border-red-700 hover:bg-red-50 active:text-red-900 active:bg-red-200 border-1 rounded-xs'
