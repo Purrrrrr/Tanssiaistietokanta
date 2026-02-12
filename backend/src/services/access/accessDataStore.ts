@@ -8,16 +8,11 @@ import { getValidator, Static, TObject, TSchema } from '@feathersjs/typebox'
 import { dataValidator } from '../../validators'
 
 export class AccessDataStoreFactory {
-  private neDB: NeDB
+  private app: Application
+  private neDBInstances = new Map<string, NeDB>()
+
   constructor(app: Application) {
-    this.neDB = new NeDB({
-      filename: path.resolve(
-        app.get('nedb'),
-        'access-data.db',
-      ),
-      autoload: true,
-    })
-    this.neDB.ensureIndex({ fieldName: ['service', 'entityId'] })
+    this.app = app
   }
 
   public getStore<Schema extends TSchema>(
@@ -25,14 +20,27 @@ export class AccessDataStoreFactory {
     schema: Schema,
     defaultData: Static<Schema>,
   ): NedbAccessDataStore<Static<Schema>> {
-    return new NedbAccessDataStore<Static<Schema>>(this.neDB, service, schema as any, defaultData)
+    let neDB = this.neDBInstances.get(service)
+
+    if (!neDB) {
+      neDB = new NeDB({
+        filename: path.resolve(
+          this.app.get('nedb'),
+          `${service}-access.db`,
+        ),
+        autoload: true,
+      })
+      neDB.ensureIndex({ fieldName: 'entityId' })
+      this.neDBInstances.set(service, neDB)
+    }
+
+    return new NedbAccessDataStore<Static<Schema>>(neDB, schema as any, defaultData)
   }
 }
 
 interface AccessData<Data> {
   _id?: string
   entityId: string | number
-  service: string
   data: Data
 }
 
@@ -41,7 +49,6 @@ class NedbAccessDataStore<Data> implements AccessStrategyDataStore<Data> {
 
   constructor(
     private neDB: NeDB<AccessData<Data>>,
-    private service: string,
     schema: TObject,
     private defaultData: Data,
   ) {
@@ -49,12 +56,11 @@ class NedbAccessDataStore<Data> implements AccessStrategyDataStore<Data> {
   }
 
   async getAccess(entityId: string | number): Promise<Data> {
-    const doc = await this.neDB.findOneAsync({ entityId, service: this.service }).execAsync()
+    const doc = await this.neDB.findOneAsync({ entityId }).execAsync()
     return doc?.data ?? this.defaultData
   }
 
   async setAccess(entityId: string | number, data: Data): Promise<void> {
-    const query = { entityId, service: this.service }
-    await this.neDB.updateAsync(query, { ...query, data }, { upsert: true })
+    await this.neDB.updateAsync({ entityId }, { entityId, data }, { upsert: true })
   }
 }
