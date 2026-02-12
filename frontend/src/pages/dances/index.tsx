@@ -30,8 +30,8 @@ function DancesPage() {
           </div>
         </RequirePermissions>
         <div className="grow" />
-        <FormGroup inline label={useTranslation('domain.dance.category')} id="dc">
-          <DanceViewCategorySelector id="dc" value={category} onChange={setCategory} dances={dances} />
+        <FormGroup inline label={useTranslation('domain.dance.category')} labelFor="dancecategory">
+          <DanceViewCategorySelector id="dancecategory" value={category} onChange={setCategory} dances={dances} />
         </FormGroup>
       </div>
       <DanceList key={search} dances={filteredDances} />

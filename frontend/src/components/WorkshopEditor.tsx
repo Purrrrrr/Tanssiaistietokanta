@@ -183,7 +183,7 @@ function AddDanceChooser({ instance }: { instance: number }) {
   const dances = useValueAt(`instances.${instance}.dances`) ?? []
   const onAddDance = useAppendToList(`instances.${instance}.dances`)
 
-  return <FormGroup label={t('addDance')} labelStyle="beside" style={{ marginTop: 6 }}>
+  return <FormGroup label={t('addDance')} labelStyle="beside" className="mt-1.5">
     <DanceChooser excludeFromSearch={dances} value={null} onChange={dance => dance && onAddDance(dance)} key={dances.length} />
   </FormGroup>
 }
