@@ -5,7 +5,8 @@ import { useCurrentUser, useUsers } from 'services/users'
 
 import { formFor } from 'libraries/forms'
 import { Fieldset } from 'libraries/formsV2/components/containers/Fieldset'
-import { Button, ItemList } from 'libraries/ui'
+import { H2, ItemList } from 'libraries/ui'
+import { DeleteButton } from 'components/widgets/DeleteButton'
 import { useT } from 'i18n'
 import { guid } from 'utils/guid'
 
@@ -33,31 +34,35 @@ export function EventGrantsEditor() {
   // const hasLoggedInGrant = grants.some(g => g.principal === 'group:user')
 
   return (
-    <Fieldset label={t('grants')} className="w-max">
-      <ItemList noMargin items={grants} columns="grid-cols-[max-content_max-content_max-content]" emptyText={t('noGrants')} wrap-breakpoint="none">
-        <ItemList.Header>
-          <span>{t('principal')}</span>
-          <span>{t('role')}</span>
-          <span />
-        </ItemList.Header>
-        {grants.map((grant, index) => <GrantEditor key={grant._id} index={index} organizerCount={organizerCount} />)}
-      </ItemList>
+    <section>
+      <H2 className="mb-4">{t('accessRights')}</H2>
+      <Field path="accessControl.viewAccess" label={t('allowedViewers')} labelStyle="beside" component={ViewAccessSelector} />
+      <Fieldset label={t('grants')} className="w-max">
+        <ItemList noMargin items={grants} columns="grid-cols-[max-content_max-content_max-content]" emptyText={t('noGrants')} wrap-breakpoint="none">
+          <ItemList.Header>
+            <span>{t('principal')}</span>
+            <span>{t('role')}</span>
+            <span />
+          </ItemList.Header>
+          {grants.map((grant, index) => <GrantEditor key={grant._id} index={index} organizerCount={organizerCount} />)}
+        </ItemList>
 
-      <UserSelector
-        id="add-user-grant"
-        aria-label={t('addGrant')}
-        value={null}
-        onChange={user => user && addGrant({
-          _id: guid(),
-          principal: `user:${user._id}`,
-          role: GrantRole.Viewer,
-        })}
-        placeholder={t('addGrant')}
-        excludeFromSearch={excludedUserIds}
-        noResultsText={t('nothingToAdd')}
-      />
-      <Field path="accessControl.viewAccess" label={t('allowedViewers')} component={ViewAccessSelector} />
-    </Fieldset>
+        <UserSelector
+          id="add-user-grant"
+          aria-label={t('addGrant')}
+          value={null}
+          onChange={user => user && addGrant({
+            _id: guid(),
+            principal: `user:${user._id}`,
+            role: GrantRole.Viewer,
+          })}
+          placeholder={t('addGrant')}
+          excludeFromSearch={excludedUserIds}
+          noResultsText={t('nothingToAdd')}
+          className="mb-2"
+        />
+      </Fieldset>
+    </section>
   )
 }
 
@@ -79,12 +84,13 @@ function GrantEditor({ index, organizerCount }: { index: number, organizerCount:
     }
     return principal
   }
+  const principal = formatPrincipal(grant.principal)
 
   const disabled = !currentUser?.groups.includes('admins') && grant.role === GrantRole.Organizer
     && (grant.principal === `user:${currentUser?._id}` || organizerCount <= 1)
 
   return <ItemList.Row>
-    <span>{formatPrincipal(grant.principal)}</span>
+    <span className="min-w-60">{principal}</span>
     {disabled
       ? <span>{t(`roles.${grant.role}`)}</span>
       :
@@ -95,11 +101,12 @@ function GrantEditor({ index, organizerCount }: { index: number, organizerCount:
         labelStyle="hidden"
       />
     }
-    <Button
-      onClick={removeGrant}
+    <DeleteButton
+      onDelete={removeGrant}
+      confirmText={t('confirmRemove', { user: principal })}
       text={t('remove')}
       color="danger"
-      // disabled={!canRemoveGrant(grant)}
+      minimal
       disabled={disabled}
     />
   </ItemList.Row>
