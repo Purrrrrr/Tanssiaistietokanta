@@ -15,6 +15,7 @@ import {
   eventsQueryResolver,
   eventAccessDataSchema,
   EventAccessData,
+  GrantRole,
 } from './events.schema'
 
 import type { Application } from '../../declarations'
@@ -68,15 +69,12 @@ export const events = (app: Application) => {
     },
   })
 
-  const allowEveryone = 'everyone'
-  const allowUser = (userId: string) => `user:${userId}`
-  const allowGroup = (group: string) => `group:${group}`
+  const roleHierarchy: Record<GrantRole, number> = { viewer: 1, teacher: 2, organizer: 3 }
 
   class EventAccessStrategy implements AccessStrategy<EventAccessData> {
     store = app.service('access').getStore('events', eventAccessDataSchema, {
-      viewers: ['everyone'],
-      owners: [],
-      editors: [],
+      viewAccess: 'limited',
+      grants: [],
     })
 
     async authorize({ type, action, entityData, user }: AuthParams<EventAccessData>) {
@@ -86,28 +84,39 @@ export const events = (app: Application) => {
       if (user?.groups.includes('admins')) {
         return true
       }
-      const { viewers, owners, editors } = entityData
-      const isOwner = this.hasAccess(owners, user)
-      const canEdit = this.hasAccess(editors, user) || isOwner
-      const canRead = this.hasAccess(viewers, user) || canEdit
+
+      const { viewAccess, grants } = entityData
+      const userRole = this.getUserRole(grants, user)
+
       if (action === 'read') {
-        return canRead
+        return viewAccess === 'public' || userRole !== null
       }
       if (action === 'manage-access') {
-        return isOwner
+        return userRole === 'organizer'
       }
-      return canEdit
+      // action === 'update' or 'remove'
+      return userRole === 'teacher' || userRole === 'organizer'
     }
 
-    hasAccess(userList: string[], user?: User | null) {
-      if (userList.includes(allowEveryone)) {
-        return true
+    getUserRole(grants: EventAccessData['grants'], user?: User | null): GrantRole | null {
+      if (!user) {
+        return null
       }
-      if (user) {
-        return userList.includes(allowUser(user?._id))
-          || user.groups.some(group => userList.includes(allowGroup(group)))
+
+      const userPrincipal = `user:${user._id}`
+      const groupPrincipals = user.groups.map(group => `group:${group}`)
+
+      let highestRole: GrantRole | null = null
+
+      for (const grant of grants) {
+        if (grant.principal === userPrincipal || groupPrincipals.includes(grant.principal)) {
+          if (!highestRole || roleHierarchy[grant.role] > roleHierarchy[highestRole]) {
+            highestRole = grant.role
+          }
+        }
       }
-      return false
+
+      return highestRole
     }
   }
 

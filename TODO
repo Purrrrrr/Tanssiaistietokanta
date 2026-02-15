@@ -274,7 +274,7 @@
   * Event access edit rights ("manage" action)
   * Users/logged-in/everyone selector
   * Fix publish access control system
-    User selector for owners
+  * User selector for owners
     File rights
     Make sure files can be marked used/unused
     Workshop rights

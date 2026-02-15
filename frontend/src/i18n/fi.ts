@@ -61,6 +61,26 @@ export const fi = {
     },
   },
   components: {
+    viewAccessSelector: {
+      public: 'Julkinen',
+      limited: 'Rajoitettu',
+    },
+    grantEditor: {
+      allowedViewers: 'Näkyvyys',
+      principal: 'Valtuutettu',
+      role: 'Rooli',
+      roles: {
+        viewer: 'Katsoja',
+        organizer: 'Järjestäjä',
+        teacher: 'Opettaja',
+      },
+      grants: 'Pääsyoikeudet',
+      loggedInUsers: 'Kirjautuneet käyttäjät',
+      addGrant: 'Lisää pääsyoikeus...',
+      remove: 'Poista',
+      nothingToAdd: 'Ei mahdollisiä lisättäviä',
+      noGrants: 'Ei pääsyoikeuksia',
+    },
     slide: {
       afterThis: 'Tämän jälkeen',
     },
@@ -370,7 +390,6 @@ export const fi = {
         eventDate: 'Tapahtuman ajankohta',
         beginDate: 'Alkaa',
         endDate: 'Loppuu',
-        allowedViewers: 'Näkyvyys',
       },
       eventPage: {
         loginToEdit: 'Kirjaudu muokataksesi tapahtumaa',
@@ -401,7 +420,6 @@ export const fi = {
         },
         eventDate: 'Tapahtuman ajankohta',
         ballDateTime: 'Tanssiaisten ajankohta',
-        allowedViewers: 'Näkyvyys',
         files: 'Tapahtumaan liittyvät tiedostot',
       },
       eventProgramPage: {

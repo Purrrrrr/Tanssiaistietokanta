@@ -25,7 +25,7 @@ const listWrapClasses = {
   none: 'wrap-none grid',
 } satisfies Record<WrapPoint, string>
 
-export function ItemList({ children, className, items, emptyText, 'wrap-breakpoint': wrapPoint = 'sm', columns }: ItemListProps) {
+export function ItemList({ children, className, items, emptyText, 'wrap-breakpoint': wrapPoint = 'sm', columns, noMargin }: ItemListProps) {
   const columnCount = typeof columns === 'number' ? columns : undefined
   return <ul
     style={{ '--item-list-cols': columnCount } as React.CSSProperties}
@@ -34,7 +34,8 @@ export function ItemList({ children, className, items, emptyText, 'wrap-breakpoi
       columnCount
         ? 'grid-cols-[repeat(var(--item-list-cols),minmax(0,1fr))]'
         : columns,
-      'group mb-4 border-gray-200 border-b-1 w-full',
+      !noMargin && 'mb-4',
+      'group border-gray-200 border-b-1 w-full',
       columns && listWrapClasses[wrapPoint],
     )}
   >
@@ -61,7 +62,7 @@ function ItemListHeader({ children, paddingClass }: { children: React.ReactNode,
   return <li className={classNames(
     commonRowClasses,
     'font-bold border-b-1 border-gray-400',
-    paddingClass ?? 'p-2',
+    paddingClass ?? '*:p-2',
   )}>
     {children}
   </li>
@@ -89,7 +90,7 @@ function ItemListRow({ children, expandableContent, expandableContentLoadingMess
 }
 
 function EmptyList({ text }: { text: React.ReactNode }) {
-  return <div className="col-span-full py-4 text-base text-center border-b-0 border-gray-200 text-muted border-1">
+  return <div className="col-span-full p-4 text-base text-center border-b-0 border-gray-200 text-muted border-1">
     <InfoSign size={20} className="mr-2" />
     {text}
   </div>

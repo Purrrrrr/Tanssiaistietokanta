@@ -23,5 +23,6 @@ export default function AllowedViewersSelector({ value, ...props }: FieldCompone
     itemToString={option => option.label}
     onChange={changed => props.onChange(changed.map(item => item.value))}
     placeholder={t('add')}
+    noResultsText={t('noUsers')}
   />
 }

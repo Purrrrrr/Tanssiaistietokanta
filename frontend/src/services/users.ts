@@ -18,14 +18,14 @@ setupServiceUpdateFragment('users', `fragment UserFragment on User {
 export const useUsers = entityListQueryHook('users', graphql(`
 query getUsers {
   users {
-    _id, name, username, sessionId,
+    _id, name, username, sessionId, groups,
   }
 }`))
 
 export const useUser = backendQueryHook(graphql(`
 query getUser($id: ID!) {
   user(id: $id) {
-    _id, name, username, sessionId,
+    _id, name, username, sessionId, groups,
   }
 }`))
 

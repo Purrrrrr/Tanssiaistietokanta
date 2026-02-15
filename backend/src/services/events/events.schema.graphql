@@ -18,9 +18,25 @@ type Event implements Versionable {
 }
 
 type EventAccessControl {
-  viewers: [String!]!
-  editors: [String!]!
-  owners: [String!]!
+  viewAccess: ViewAccess!
+  grants: [Grant!]!
+}
+
+enum ViewAccess {
+  public
+  limited
+}
+
+type Grant {
+  _id: ID!
+  principal: String!
+  role: GrantRole!
+}
+
+enum GrantRole {
+  viewer
+  teacher
+  organizer
 }
 
 type EventProgramSettings {
@@ -100,5 +116,12 @@ input EventInput {
 }
 
 input EventAccessControlInput {
-  viewers: [String!]!
+  viewAccess: ViewAccess
+  grants: [GrantInput!]
+}
+
+input GrantInput {
+  _id: ID!
+  principal: String!
+  role: GrantRole!
 }

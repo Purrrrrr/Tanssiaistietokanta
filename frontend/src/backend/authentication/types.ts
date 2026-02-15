@@ -1,3 +1,5 @@
+import { GetUserQuery } from 'types/gql/graphql'
+
 export interface AuthResponse {
   accessToken: string
   authentication: {
@@ -7,9 +9,5 @@ export interface AuthResponse {
   }
   user: User
 }
-export interface User {
-  _id: string
-  name: string
-  username: string
-  email?: string
-}
+
+export type User = GetUserQuery['user']

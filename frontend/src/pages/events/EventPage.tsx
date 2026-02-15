@@ -12,7 +12,7 @@ import { DanceSet, EventProgramRow } from 'components/event/EventProgramForm'
 import { JSONPatch } from 'components/event/EventProgramForm/patchStrategy'
 import { FileList } from 'components/files/FileList'
 import { useGlobalLoadingAnimation } from 'components/LoadingState'
-import AllowedViewersSelector from 'components/rights/AllowedViewersSelector'
+import { EventGrantsEditor } from 'components/rights/EventGrantsEditor'
 import { RequirePermissions } from 'components/rights/RequirePermissions'
 import { VersionedPageTitle } from 'components/versioning/VersionedPageTitle'
 import { VersionSidebarToggle } from 'components/versioning/VersionSidebarToggle'
@@ -26,7 +26,6 @@ type Workshop = Event['workshops'][0]
 const {
   Input,
   Form,
-  Field,
 } = formFor<Event>()
 
 const eventVersionLink = (id: string, versionId?: null | string) => versionId
@@ -123,7 +122,7 @@ function EventDetailsForm({ event }: { event: Event }) {
           maxDate={formProps.value.endDate}
         />
       </div>
-      <Field path="accessControl.viewers" label={t('allowedViewers')} component={AllowedViewersSelector} />
+      <EventGrantsEditor />
     </Card>
   </Form>
 }

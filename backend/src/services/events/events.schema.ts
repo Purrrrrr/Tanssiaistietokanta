@@ -13,6 +13,23 @@ import { findTeachedIn, findWikipage } from '../dances/dances.resolvers'
 
 const DEFAULT_PAUSE_BETWEEN_DANCES = 3 * 60
 
+export const grantRoleSchema = Type.Union([Type.Literal('viewer'), Type.Literal('teacher'), Type.Literal('organizer')])
+export type GrantRole = Static<typeof grantRoleSchema>
+
+export const eventAccessDataSchema = EventAccessData()
+export type EventAccessData = Static<typeof eventAccessDataSchema>
+
+function EventAccessData() {
+  return Type.Object({
+    viewAccess: Type.Union([Type.Literal('public'), Type.Literal('limited')]),
+    grants: Type.Array(Type.Object({
+      _id: Id(),
+      principal: Type.String({ pattern: 'user:.+|group:.+' }),
+      role: grantRoleSchema,
+    }, { additionalProperties: false })),
+  }, { additionalProperties: false })
+}
+
 // Main data model schema
 export const eventsSchema = Type.Object(
   {
@@ -41,17 +58,6 @@ export const eventsSchema = Type.Object(
   },
   { $id: 'Events', additionalProperties: false },
 )
-
-export const eventAccessDataSchema = EventAccessData()
-export type EventAccessData = Static<typeof eventAccessDataSchema>
-
-function EventAccessData() {
-  return Type.Object({
-    viewers: Type.Array(Type.String({ pattern: 'everyone|user:.+|group:.+' })),
-    editors: Type.Array(Type.String({ pattern: 'everyone|user:.+|group:.+' })),
-    owners: Type.Array(Type.String({ pattern: 'user:.+' })),
-  }, { additionalProperties: false })
-}
 
 function Introductions() {
   return ClosedObject({

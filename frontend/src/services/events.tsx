@@ -12,9 +12,12 @@ setupServiceUpdateFragment(
   `fragment EventFragment on Event {
     _id, _versionId, _versionNumber, _updatedAt, name, beginDate, endDate,
     accessControl {
-      viewers
-      editors
-      owners
+      viewAccess
+      grants {
+        _id
+        principal
+        role
+      }
     }
     program {
       dateTime
@@ -110,9 +113,12 @@ query getEvent($id: ID!, $versionId: ID) {
   event(id: $id, versionId: $versionId) {
     _id, _versionId, _versionNumber, _updatedAt, name, beginDate, endDate,
     accessControl {
-      viewers
-      editors
-      owners
+      viewAccess
+      grants {
+        _id
+        principal
+        role
+      }
     }
     program {
       dateTime
@@ -214,9 +220,12 @@ query getEvents {
   events {
     _id, _versionId, name, beginDate, endDate,
     accessControl {
-      viewers
-      editors
-      owners
+      viewAccess
+      grants {
+        _id
+        principal
+        role
+      }
     }
   }
 }`), {
@@ -230,9 +239,12 @@ mutation createEvent($event: EventInput!) {
   createEvent(event: $event) {
     _id, _versionId, name, beginDate, endDate,
     accessControl {
-      viewers
-      editors
-      owners
+      viewAccess
+      grants {
+        _id
+        principal
+        role
+      }
     }
   }
 }`))
@@ -242,9 +254,12 @@ mutation patchEvent($id: ID!, $event: JSONPatch!) {
   patchEvent(id: $id, event: $event) {
     _id, _versionId, name, beginDate, endDate,
     accessControl {
-      viewers
-      editors
-      owners
+      viewAccess
+      grants {
+        _id
+        principal
+        role
+      }
     }
   }
 }`))
@@ -254,9 +269,12 @@ mutation patchEventProgram($id: ID!, $program: JSONPatch!) {
   patchEventProgram(id: $id, program: $program) {
     _id, _versionId, _versionNumber, name, beginDate, endDate,
     accessControl {
-      viewers
-      editors
-      owners
+      viewAccess
+      grants {
+        _id
+        principal
+        role
+      }
     }
     program {
       dateTime
