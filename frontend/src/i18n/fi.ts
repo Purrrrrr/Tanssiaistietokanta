@@ -73,7 +73,7 @@ export const fi = {
       roles: {
         viewer: 'Katsoja',
         organizer: 'Järjestäjä',
-        teacher: 'Opettaja',
+        teacher: 'Muokkaaja',
       },
       grants: 'Valtuutukset',
       loggedInUsers: 'Kirjautuneet käyttäjät',

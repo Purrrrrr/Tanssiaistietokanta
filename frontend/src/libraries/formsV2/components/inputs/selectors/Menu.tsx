@@ -44,7 +44,7 @@ export function MenuItem({ highlight, className, hilightedClassName, ...props }:
   return <li
     {...props}
     className={classNames(
-      className ?? 'flex items-center px-2 min-h-7.5',
+      className ?? 'flex gap-2 items-center px-2 min-h-7.5',
       'transition-colors',
       highlight && (hilightedClassName ?? 'bg-blue-200'),
     )}

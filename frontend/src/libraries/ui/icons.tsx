@@ -23,6 +23,7 @@ export {
   Saved,
   Search,
   Settings,
+  Star,
   Style,
   Tick,
   Time,
