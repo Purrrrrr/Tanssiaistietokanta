@@ -8,6 +8,7 @@ import { AccessStrategy, AugmentedAccessStrategy, augmentStrategy, GlobalAction,
 import { AccessDataStoreFactory } from './accessDataStore'
 import { logger } from '../../requestLogger'
 import { PreviousAccessControl } from './hooks'
+import { User } from './types'
 
 export type { Access, AccessQuery }
 
@@ -21,7 +22,7 @@ export interface AccessParams extends Params<AccessQuery> {}
 
 export class AccessService<ServiceParams extends AccessParams = AccessParams>
 implements ServiceInterface<Access, never, ServiceParams, never> {
-  private strategies = new Map<ServiceName, AugmentedAccessStrategy<unknown>>()
+  private strategies = new Map<ServiceName, AugmentedAccessStrategy<ServiceName, unknown>>()
   private storeFactory: AccessDataStoreFactory
   getStore: AccessDataStoreFactory['getStore']
 
@@ -32,7 +33,7 @@ implements ServiceInterface<Access, never, ServiceParams, never> {
 
   setAccessStrategy<Service extends ServiceName, Data>(
     service: Service,
-    strategy: AccessStrategy<Data>,
+    strategy: AccessStrategy<Service, Data>,
   ) {
     this.strategies.set(service, augmentStrategy(strategy) as any)
     strategy.initialize?.({
@@ -41,23 +42,23 @@ implements ServiceInterface<Access, never, ServiceParams, never> {
     })
   }
 
-  getAccessStrategy<Service extends ServiceName>(service: Service): AugmentedAccessStrategy<unknown> | undefined {
+  getAccessStrategy<Service extends ServiceName>(service: Service): AugmentedAccessStrategy<ServiceName, unknown> | undefined {
     return this.strategies.get(service)
   }
 
   async find(params?: ServiceParams): Promise<Access[]> {
-    const { entityId, service, action } = params?.query ?? {}
+    const { entityId, service, action, owner, owningId } = params?.query ?? {}
     const services = service
       ? [service]
       : Array.from(this.strategies.keys()) as ServiceName[]
 
     const results = await Promise.all(
-      services.map(serviceName => this.findServiceAccess(serviceName, action as GlobalAction | EntityAction, entityId, params?.user)),
+      services.map(serviceName => this.findServiceAccess(serviceName, action as GlobalAction | EntityAction, entityId, params?.user, owner, owningId)),
     )
     return results.flat()
   }
 
-  async findServiceAccess(serviceName: ServiceName, actionQuery?: GlobalAction | EntityAction, entityId?: string, user?: any): Promise<Access[]> {
+  async findServiceAccess(serviceName: ServiceName, actionQuery?: GlobalAction | EntityAction, entityId?: string, user?: User, owner?: ServiceName, owningId?: string): Promise<Access[]> {
     const strategy = this.getAccessStrategy(serviceName)
     if (!strategy) {
       return []
@@ -69,27 +70,40 @@ implements ServiceInterface<Access, never, ServiceParams, never> {
 
     return Promise.all(
       actions.map(async (action) => {
-        const hasPermission = entityId && action !== 'create'
-          ? await strategy.authorizeEntity({
-            action, user, entityData: await strategy.store?.getAccess(entityId),
-          })
-          : await strategy.authorizeGlobal({ action, user })
-
+        const hasPermission = await this.getAccess(strategy, action, user, entityId, owner, owningId)
         return {
           service: serviceName,
           action: action,
           entityId,
+          owner,
+          owningId,
           allowed: hasPermissionToGrant(hasPermission),
-          target: entityId ? 'entity' : 'everything',
+          target: strategy.authTarget(action),
         }
       }),
     )
   }
 
+  async hasAccess(serviceName: ServiceName, action: GlobalAction | EntityAction, user?: User, entityId?: Id, owner?: ServiceName, owningId?: Id): Promise<boolean | undefined> {
+    const strategy = this.getAccessStrategy(serviceName)
+    return strategy
+      ? this.getAccess(strategy, action, user, entityId, owner, owningId)
+      : true
+  }
+
+  private async getAccess(strategy: AugmentedAccessStrategy, action: GlobalAction | EntityAction, user?: User, entityId?: Id, owner?: ServiceName, owningId?: Id): Promise<boolean | undefined> {
+    if (entityId && action !== 'create') {
+      return strategy.authorizeEntity({
+        action, user, entityData: await strategy.store?.getAccess(entityId), owner, owningId,
+      })
+    }
+    return strategy.authorizeGlobal({ action, user, owner, owningId })
+  }
+
   async handlePublish<T>(
     data: T,
     channels: Channel | Channel[],
-    context: HookContext
+    context: HookContext,
   ): Promise<Channel | Channel[]> {
     if (Array.isArray(data)) {
       logger.error('AccessService.publish does not support publishing arrays of data.', { data })

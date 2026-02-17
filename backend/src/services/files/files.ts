@@ -55,7 +55,7 @@ export const file = (app: Application) => {
       all: [],
       find: [
         (ctx) => {
-          const files = (ctx.dispatch ?? ctx.result) as File[]
+          const files = (ctx.dispatch ?? ctx.result) as unknown as File[]
 
           const file = files[0]
           if (file?.buffer) {
@@ -77,6 +77,31 @@ export const file = (app: Application) => {
     },
     error: {
       all: [],
+    },
+  })
+
+  const fileService = app.service(filePath)
+  const accessService = app.service('access')
+
+  accessService.setAccessStrategy('files', {
+    getOwnerFromData(file) {
+      return {
+        owner: file.owner,
+        owningId: file.owningId,
+      }
+    },
+    getEntityOwner: async (entityId) => {
+      return await fileService.get(entityId, { query: { $select: ['owner', 'owningId'] } })
+    },
+    authTarget: 'owner',
+    authorize({ action, user, owner, owningId }) {
+      if (!owner) {
+        return false
+      }
+      if (!user?.groups.includes('file-access') && !user?.groups.includes('admins')) {
+        return false
+      }
+      return accessService.hasAccess(owner, action, user, owningId)
     },
   })
 }

@@ -45,13 +45,31 @@ export async function checkAccess(ctx: HookContext, next: NextFunction) {
       })
       return
     }
+
+    if (method === 'create') {
+      const context = stragegy.getOwnerFromData?.(ctx.data)
+
+      const hasPermission = await stragegy.authorizeGlobal({
+        action: 'create',
+        user,
+        ...context,
+      })
+
+      if (hasPermission === false) {
+        throw new Error('Access denied')
+      }
+
+      return next()
+    }
+
     const action = toAction(method)
     if (!action) {
       return next()
     }
 
     let entityData = await stragegy.store?.getAccess(id as string)
-    const hasPermission = await stragegy.authorizeEntity({ action, user, entityData })
+    const ownerData = id ? await stragegy.getEntityOwner?.(id) : undefined
+    const hasPermission = await stragegy.authorizeEntity({ action, user, entityData, ...ownerData })
     if (!hasPermission) {
       throw new Error('Access denied')
     }

@@ -71,15 +71,19 @@ export const events = (app: Application) => {
 
   const roleHierarchy: Record<GrantRole, number> = { viewer: 1, teacher: 2, organizer: 3 }
 
-  class EventAccessStrategy implements AccessStrategy<EventAccessData> {
+  class EventAccessStrategy implements AccessStrategy<'events', EventAccessData> {
     store = app.service('access').getStore('events', eventAccessDataSchema, {
       viewAccess: 'limited',
       grants: [],
     })
 
+    authTarget = 'entity' as const
+
     async authorize({ type, action, entityData, user }: AuthParams<EventAccessData>) {
       if (type === 'global') {
-        return undefined
+        return action === 'create'
+          ? false
+          : undefined
       }
       if (user?.groups.includes('admins')) {
         return true

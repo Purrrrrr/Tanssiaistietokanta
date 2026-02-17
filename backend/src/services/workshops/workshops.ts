@@ -126,14 +126,22 @@ export const workshops = (app: Application) => {
     ]
   })
 
-  app.service('access').setAccessStrategy('workshops', {
-    authorize({ action, user }) {
-      if (action === 'read') {
-        return true
-      }
+  const service = app.service('workshops')
+  const accessService = app.service('access')
 
-      const isLoggedIn = !!user
-      return isLoggedIn
+  accessService.setAccessStrategy('workshops', {
+    getOwnerFromData(workshop) {
+      return workshop
+        ? { owningId: workshop.eventId }
+        : undefined
+    },
+    getEntityOwner: async (entityId) => {
+      const result = await service.get(entityId, { query: { $select: ['eventId'] } })
+      return { owner: 'events', owningId: result.eventId }
+    },
+    authTarget: 'owner',
+    authorize({ action, user, owningId: eventId }) {
+      return accessService.hasAccess('events', action, user, eventId)
     },
   })
 }

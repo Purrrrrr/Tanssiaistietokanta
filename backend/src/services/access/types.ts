@@ -7,6 +7,7 @@ export type AccessResult = 'GRANT' | 'DENY'
 
 export type ServiceQuery<Service extends ServiceName> = Parameters<ServiceClass<Service>['find']>[0]
 export type ServiceEntity<Service extends ServiceName> = Awaited<ReturnType<ServiceClass<Service>['get']>>
+export type ServiceCreateData<Service extends ServiceName> = Parameters<ServiceClass<Service>['create']>[0]
 export type ServiceData<Service extends ServiceName> =
   | Parameters<ServiceClass<Service>['create']>[0]
   | Parameters<ServiceClass<Service>['update' | 'patch']>[1]

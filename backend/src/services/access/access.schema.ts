@@ -13,9 +13,12 @@ export const serviceNameSchema = Type.Union([
   Type.Literal('workshops'),
   Type.Literal('dances'),
   Type.Literal('users'),
+  Type.Literal('files'),
 ], { $id: 'ServiceName' })
 
 export type ServiceName = Static<typeof serviceNameSchema>
+export const authTargetSchema = Type.Union([Type.Literal('everything'), Type.Literal('owner'), Type.Literal('entity')])
+export type AuthTarget = Static<typeof authTargetSchema>
 
 // Main data model schema
 export const accessSchema = Type.Object(
@@ -23,7 +26,9 @@ export const accessSchema = Type.Object(
     service: serviceNameSchema,
     action: Type.String(),
     entityId: Type.Optional(Id()),
-    target: Type.Union([Type.Literal('everything'), Type.Literal('entity')]),
+    owner: Type.Optional(Type.Ref(serviceNameSchema)),
+    owningId: Type.Optional(Id()),
+    target: authTargetSchema,
     // appliesTo: Type.Union([Type.Literal('everyone'), Type.Literal('user')]),
     allowed: Type.Union([Type.Literal('GRANT'), Type.Literal('DENY'), Type.Literal('UNKNOWN')]),
   },
@@ -36,7 +41,7 @@ export const accessResolver = resolve<Access, HookContext<AccessService>>({})
 export const accessExternalResolver = resolve<Access, HookContext<AccessService>>({})
 
 // Schema for allowed query properties
-export const accessQueryProperties = Type.Partial(Type.Pick(accessSchema, ['service', 'action', 'entityId']))
+export const accessQueryProperties = Type.Partial(Type.Pick(accessSchema, ['service', 'action', 'entityId', 'owner', 'owningId']))
 export const accessQuerySchema = Type.Intersect(
   [
     accessQueryProperties,

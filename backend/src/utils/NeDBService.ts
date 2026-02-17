@@ -59,13 +59,11 @@ export class NeDBService<Result extends BaseRecord, Data, ServiceParams extends 
     return this.mapToResult(await this.currentService.get(id, this.mapParams(_params)))
   }
 
-  async create(data: Data, params?: ServiceParams): Promise<Result>
-  async create(data: Data[], params?: ServiceParams): Promise<Result[]>
-  async create(data: Data | Data[], params?: ServiceParams): Promise<Result | Result[]> {
-    const mappedData = await mapAsync(data, (item) => this.mapData(null, item))
-    const records = await this.currentService.create(mappedData, this.mapParams(params))
-    await mapAsync(records, r => this.onSave(r))
-    return this.mapToResults(records)
+  async create(data: Data, params?: ServiceParams): Promise<Result> {
+    const mappedData = await this.mapData(null, data)
+    const record = await this.currentService.create(mappedData, this.mapParams(params))
+    await this.onSave(record)
+    return this.mapToResult(record)
   }
 
   async update(id: NullableId, data: Data, _params?: ServiceParams): Promise<Result | Result[]> {
