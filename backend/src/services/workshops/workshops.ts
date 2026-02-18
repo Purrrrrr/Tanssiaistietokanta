@@ -20,6 +20,7 @@ import { workshopsPath, workshopsMethods } from './workshops.shared'
 import { defaultChannels, withoutCurrentConnection } from '../../utils/defaultChannels'
 import { getDependenciesFor } from '../../internal-services/dependencies'
 import getFromData from '../../utils/getFromData'
+import { SkipAccessControl } from '../access/hooks'
 
 export * from './workshops.class'
 export * from './workshops.schema'
@@ -136,7 +137,7 @@ export const workshops = (app: Application) => {
         : undefined
     },
     getEntityOwner: async (entityId) => {
-      const result = await service.get(entityId, { query: { $select: ['eventId'] } })
+      const result = await service.get(entityId, { [SkipAccessControl]: true, query: { $select: ['eventId'] } })
       return { owner: 'events', owningId: result.eventId }
     },
     authTarget: 'owner',

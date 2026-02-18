@@ -21,7 +21,7 @@ export class UserService<ServiceParams extends UserParams = UserParams>
       dbname: 'users',
       indexes: [
         { fieldName: 'username', unique: true },
-        { fieldName: 'email', unique: true },
+        { fieldName: 'email', unique: true, sparse: true },
       ],
     })
   }

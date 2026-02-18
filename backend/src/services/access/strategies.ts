@@ -21,8 +21,9 @@ export interface AugmentedAccessStrategy<Service extends ServiceName = ServiceNa
 }
 
 export function augmentStrategy<Service extends ServiceName, EntityAccessData>(
-  { authTarget, ...strategy }: AccessStrategy<Service, EntityAccessData>,
+  strategy: AccessStrategy<Service, EntityAccessData>,
 ): AugmentedAccessStrategy<Service, EntityAccessData> {
+  const { authTarget } = strategy
   const augmented: AugmentedAccessStrategy<Service, EntityAccessData> = {
     ...strategy,
     authTarget: typeof authTarget === 'function'

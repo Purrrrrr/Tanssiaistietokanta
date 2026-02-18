@@ -12,6 +12,12 @@ interface AccessParamContext {
   user?: User
 }
 
+declare module '@feathersjs/feathers' {
+  interface Params {
+    [SkipAccessControl]?: boolean
+  }
+}
+
 const paramStorage = new AsyncLocalStorage<AccessParamContext>()
 
 export async function checkAccess(ctx: HookContext, next: NextFunction) {
@@ -36,10 +42,14 @@ export async function checkAccess(ctx: HookContext, next: NextFunction) {
       }
       ctx.result = authorizeList(result, async entity => {
         const entityData = await stragegy.store?.getAccess(entity._id)
+        const ownerData = entity._id // Sometimes entities are queried without an id, eg. in some grahpql resolvers
+          ? await stragegy.getEntityOwner?.(entity._id)
+          : undefined
         const hasPermission = await stragegy.authorizeEntity({
           action: 'read',
           entityData,
           user,
+          ...ownerData,
         })
         return { entityData: entityData, hasPermission }
       })

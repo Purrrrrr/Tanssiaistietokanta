@@ -15,6 +15,7 @@ import type { Application, HookContext } from '../../declarations'
 import { File, FileService, getOptions } from './files.class'
 import { filePath, fileMethods } from './files.shared'
 import { authenticate } from '@feathersjs/authentication'
+import { SkipAccessControl } from '../access/hooks'
 
 export * from './files.class'
 export * from './files.schema'
@@ -91,7 +92,7 @@ export const file = (app: Application) => {
       }
     },
     getEntityOwner: async (entityId) => {
-      return await fileService.get(entityId, { query: { $select: ['owner', 'owningId'] } })
+      return await fileService.get(entityId, { [SkipAccessControl]: true, query: { $select: ['owner', 'owningId'] } })
     },
     authTarget: 'owner',
     authorize({ action, user, owner, owningId }) {

@@ -8,6 +8,7 @@ import { versionHistoryFieldResolvers, versionHistoryResolver } from '../../util
 import { uniq } from 'ramda'
 import { WorkshopsService } from '../workshops/workshops.class'
 import { DancewikiService } from '../dancewiki/dancewiki.class'
+import { SkipAccessControl } from '../access/hooks'
 
 export async function findTeachedIn(workshopService: WorkshopsService, danceId: string, eventId: string) {
   const workshops = await workshopService.find({
@@ -46,9 +47,7 @@ export default (app: Application) => {
     const links = getDependencyLinks('dances', obj._id, 'usedBy')
 
     const workshopIds = Array.from(links.get('workshops') ?? [])
-    const workshops = await Promise.all(
-      workshopIds.map(id => workshopService.get(id, { query: { $select: ['eventId'] } })),
-    )
+    const workshops = await workshopService.find({ [SkipAccessControl]: true, query: { _id: { $in: workshopIds as string[] }, $select: ['eventId'] } })
     const ids = [
       ...Array.from(links.get('events') ?? []) as string[],
       ...workshops.map(workshop => workshop.eventId),
