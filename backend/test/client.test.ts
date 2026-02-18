@@ -1,18 +1,18 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/client.test.html
 import assert from 'assert'
-import axios from 'axios'
 
 import rest from '@feathersjs/rest-client'
-import authenticationClient from '@feathersjs/authentication-client'
 import { app } from '../src/app'
 import { createClient } from '../src/client'
 import type { UserData } from '../src/client'
+import { rm } from 'fs/promises'
 
 const port = app.get('port')
 const appUrl = `http://${app.get('host')}:${port}`
+console.log(appUrl)
 
 describe('application client tests', () => {
-  const client = createClient(rest(appUrl).axios(axios))
+  const client = createClient(rest(appUrl).fetch(fetch))
 
   before(async () => {
     await app.listen(port)
@@ -20,6 +20,7 @@ describe('application client tests', () => {
 
   after(async () => {
     await app.teardown()
+    await rm(app.get('nedb'), { recursive: true, force: true })
   })
 
   it('initialized the client', () => {
@@ -29,14 +30,18 @@ describe('application client tests', () => {
   it('creates and authenticates a user with username and password', async () => {
     const userData: UserData = {
       username: 'someone@example.com',
-      password: 'supersecret'
+      password: 'supersecret',
+      name: 'Test User',
+      groups: ['users'],
     }
 
-    await client.service('users').create(userData)
+    const res = await app.service('users').create(userData)
+    console.log('Created user:', res)
 
     const { user, accessToken } = await client.authenticate({
       strategy: 'local',
-      ...userData
+      username: userData.username,
+      password: userData.password,
     })
 
     assert.ok(accessToken, 'Created access token for user')
@@ -44,8 +49,5 @@ describe('application client tests', () => {
     assert.strictEqual(user.password, undefined, 'Password is hidden to clients')
 
     await client.logout()
-
-    // Remove the test user on the server
-    await app.service('users').remove(user.id)
   })
 })

@@ -1,5 +1,5 @@
 import type { Id, Params, ServiceInterface } from '@feathersjs/feathers'
-import cron from 'node-cron'
+import cron, { ScheduledTask } from 'node-cron'
 
 import type { Application } from '../../declarations'
 import type { Dancewiki, DancewikiData, DancewikiQuery } from './dancewiki.schema'
@@ -47,6 +47,8 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
 implements ServiceInterface<Dancewiki, DancewikiData, DancewikiParams, never> {
   storageService: NeDBService<StoredDanceWiki, StoredDanceWiki, DancewikiParams, never>
   categories: Cache<DanceCategorization>
+  timer: NodeJS.Timeout
+  cronjobs: ScheduledTask[] = []
 
   constructor(public options: DancewikiServiceOptions) {
     this.storageService = new NeDBService({
@@ -67,9 +69,16 @@ implements ServiceInterface<Dancewiki, DancewikiData, DancewikiParams, never> {
     }, DAY)
 
     // Update list of pages hourly
-    cron.schedule('0 * * * *', () => this.updatePageList())
-    cron.schedule('*/5 * * * *', this.backgroundFetch.bind(this))
-    setTimeout(() => this.backgroundFetch(), 0)
+    this.cronjobs = [
+      cron.schedule('0 * * * *', () => this.updatePageList()),
+      cron.schedule('*/5 * * * *', this.backgroundFetch.bind(this)),
+    ]
+    this.timer = setTimeout(() => this.backgroundFetch(), 60000)
+  }
+
+  async teardown(): Promise<void> {
+    this.cronjobs.forEach(job => job.stop())
+    clearTimeout(this.timer)
   }
 
   backgroundFetch = withRequestLogging('dancewikis', 'backgroundFetch', async (): Promise<void> => {

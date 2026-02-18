@@ -1,4 +1,6 @@
 {
   "port": 8998,
-  "nedb": "data"
+  "nedb": "data-test",
+  "uploadTmp": "./data-test/uploads/tmp",
+  "uploadDir": "./data-test/uploads/ready"
 }
