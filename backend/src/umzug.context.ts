@@ -10,14 +10,17 @@ import type { Application } from './declarations'
 export type MigrationFn = UmzugMigrationFn<MigrationContext>
 
 export interface MigrationContext {
+  dbPath: string
+  rootPath: string
   getModel(name: string): NeDB
   getVersionModel(name: string): NeDB
   getService(name: string): ServiceInterface
   updateDatabase(name: string, modificator: (i: unknown) => unknown): Promise<void>
 }
 
-export function getContext(app: Application) {
-  const dbPath = app.get('nedb')
+export function getContext(app: Application): MigrationContext {
+  const rootPath = path.join(__dirname, '..')
+  const dbPath = path.join(rootPath, app.get('nedb'))
   const services = app.services
   const models = getModels(app)
   const versionModels = getVersionModels(app)
@@ -40,6 +43,8 @@ export function getContext(app: Application) {
     })
   })
   return {
+    rootPath,
+    dbPath,
     getModel,
     getVersionModel,
     getService,

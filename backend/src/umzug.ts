@@ -1,6 +1,6 @@
 import { Umzug, JSONStorage } from 'umzug'
 import path from 'path'
-import { getContext } from './umzug.context'
+import { getContext, MigrationContext } from './umzug.context'
 import type { Application } from './declarations'
 
 export async function migrateDb(app: Application) {
@@ -11,19 +11,34 @@ export async function migrateDb(app: Application) {
   await umzug.up()
 }
 
-export function createMigration(name: string) {
-  getUmzug({}).create({
+export function createMigration(name: string, type: 'production' | 'test' = 'production') {
+  const rootPath = path.join(__dirname, '..')
+  new Umzug({
+    migrations: { glob: ['src/migrations/*.ts', { cwd: rootPath }] },
+    logger: console,
+  }).create({
     name,
-    folder: path.join(__dirname, '/migrations'),
+    folder: path.join(
+      rootPath,
+      type === 'production' ? 'src' : 'test',
+      '/migrations',
+    ),
     skipVerify: true,
   })
 }
 
-function getUmzug<Ctx extends object>(context: Ctx, extension: string = 'ts') {
-  const rawStorage = new JSONStorage({ path: path.join(__dirname, '../data/executed-migrations.json') })
+function getUmzug<Ctx extends MigrationContext>(context: Ctx, extension: string = 'ts') {
+  const rawStorage = new JSONStorage({ path: path.join(context.dbPath, 'executed-migrations.json') })
   const replaceExtension = (name: string) => name.replace(/\.ts$/, '.js')
   return new Umzug<Ctx>({
-    migrations: { glob: [`./migrations/*.${extension}`, { cwd: __dirname }] },
+    migrations: {
+      glob: [
+        process.env.NODE_ENV === 'test'
+          ? `@(src|test)/migrations/*.${extension}`
+          : `src/migrations/*.${extension}`,
+        { cwd: context.rootPath },
+      ],
+    },
     context,
     storage: {
       logMigration({ name }: { name: string }): Promise<void> {

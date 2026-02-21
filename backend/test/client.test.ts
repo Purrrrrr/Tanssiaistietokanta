@@ -4,12 +4,10 @@ import assert from 'assert'
 import rest from '@feathersjs/rest-client'
 import { app } from '../src/app'
 import { createClient } from '../src/client'
-import type { UserData } from '../src/client'
-import { rm } from 'fs/promises'
+import { normalUser } from './fixtures/test-users'
 
 const port = app.get('port')
 const appUrl = `http://${app.get('host')}:${port}`
-console.log(appUrl)
 
 describe('application client tests', () => {
   const client = createClient(rest(appUrl).fetch(fetch))
@@ -20,7 +18,6 @@ describe('application client tests', () => {
 
   after(async () => {
     await app.teardown()
-    await rm(app.get('nedb'), { recursive: true, force: true })
   })
 
   it('initialized the client', () => {
@@ -28,20 +25,10 @@ describe('application client tests', () => {
   })
 
   it('creates and authenticates a user with username and password', async () => {
-    const userData: UserData = {
-      username: 'someone@example.com',
-      password: 'supersecret',
-      name: 'Test User',
-      groups: ['users'],
-    }
-
-    const res = await app.service('users').create(userData)
-    console.log('Created user:', res)
-
     const { user, accessToken } = await client.authenticate({
       strategy: 'local',
-      username: userData.username,
-      password: userData.password,
+      username: normalUser.username,
+      password: normalUser.password,
     })
 
     assert.ok(accessToken, 'Created access token for user')

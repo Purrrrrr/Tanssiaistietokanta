@@ -6,13 +6,14 @@
     "target": "ESNext",
     "module": "commonjs",
     "outDir": "./lib",
-    "rootDir": "./src",
+    "rootDir": ".",
     "declaration": true,
     "strict": true,
     "esModuleInterop": true
   },
   "include": [
-    "src"
+    "src",
+    "test"
   ],
   "exclude": [
   ]
