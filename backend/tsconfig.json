@@ -3,10 +3,11 @@
     "files": true
   },
   "compilerOptions": {
+    "types": ["node", "mocha"],
     "target": "ESNext",
     "module": "commonjs",
     "outDir": "./lib",
-    "rootDir": ".",
+    "rootDirs": ["src", "test"],
     "declaration": true,
     "strict": true,
     "esModuleInterop": true
