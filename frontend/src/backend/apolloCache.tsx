@@ -1,6 +1,6 @@
 import { modify } from 'partial.lenses'
 
-import { Entity } from './types'
+import { Entity } from 'types'
 
 import createDebug from 'utils/debug'
 

@@ -2,7 +2,7 @@ import { useEffectEvent, useMemo } from 'react'
 import { MutationHookOptions, OperationVariables, QueryHookOptions, QueryResult } from '@apollo/client'
 import { TypedDocumentNode } from '@graphql-typed-document-node/core'
 
-import { Entity, ServiceName } from './types'
+import { Entity, ServiceName } from 'types'
 
 import { showErrorToast } from 'libraries/ui'
 import { useTranslation } from 'i18n'
@@ -13,6 +13,7 @@ import { getSingleValue, ValueOf } from './apolloUtils'
 import { emitServiceEvent, EventName, useServiceListEvents } from './serviceEvents'
 
 export { updateEntityFragment } from './apolloCache'
+export { type FetchRequestProgress, isConnected, restRequestWithProgress, type RestRequestWithProgressOptions, subscribeToConnected } from './connection'
 export { setupServiceUpdateFragment, useServiceEvents } from './serviceEvents'
 export { graphql } from 'types/gql'
 

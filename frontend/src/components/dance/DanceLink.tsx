@@ -1,5 +1,4 @@
-import { Dance } from 'types'
-import { ID } from 'backend/types'
+import { Dance, ID } from 'types'
 
 import { Link } from 'libraries/ui'
 

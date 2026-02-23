@@ -1,5 +1,4 @@
-import { Dance, DanceWithEvents } from 'types'
-import { ID } from 'backend/types'
+import { Dance, DanceWithEvents, ID } from 'types'
 
 import { useRight } from 'libraries/access-control'
 import { MarkdownEditorProps, SyncStatus } from 'libraries/forms'

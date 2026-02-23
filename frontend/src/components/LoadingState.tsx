@@ -1,7 +1,7 @@
-import { ComponentType, lazy, useEffect, useRef, useState, useSyncExternalStore } from 'react'
+import { ComponentType, lazy, useEffect, useRef, useSyncExternalStore } from 'react'
 import { ApolloError, ApolloQueryResult } from '@apollo/client'
 
-import { socket } from 'backend/feathers'
+import { isConnected, subscribeToConnected } from 'backend'
 
 import { useDelayedValue } from 'libraries/common/useDelayedValue'
 import { Button, ColorClass, GlobalSpinner, H2 } from 'libraries/ui'
@@ -11,22 +11,10 @@ import { useT, useTranslation } from 'i18n'
 const connectionProblemMessageTimeout = 5000
 
 export function GlobalLoadingState({ children }) {
+  const connected = useSyncExternalStore(subscribeToConnected, isConnected)
   const loading = useGlobalLoadingState()
-  const [connected, setConnected] = useState(socket.connected)
   const connectedAWhileAgo = useDelayedValue(connected, connectionProblemMessageTimeout)
   const connectionTimeout = !connected && !connectedAWhileAgo
-
-  useEffect(() => {
-    const onConnect = () => setConnected(true)
-    const onDisconnect = () => setConnected(false)
-    socket.on('connect', onConnect)
-    socket.on('disconnect', onDisconnect)
-
-    return () => {
-      socket.off('connect', onConnect)
-      socket.off('disconnect', onDisconnect)
-    }
-  }, [])
 
   return <>
     {children}

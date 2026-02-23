@@ -1,7 +1,6 @@
 import { useState } from 'react'
 
-import { DanceListItem } from 'types'
-import { ID } from 'backend/types'
+import { DanceListItem, ID } from 'types'
 
 import { useDance } from 'services/dances'
 

@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 
-import { type Progress } from 'services/files'
+import { type FetchRequestProgress } from 'types/files'
 
 import { Button } from 'libraries/ui'
 import { useFormatDuration, useT, useTranslation } from 'i18n'
@@ -39,7 +39,7 @@ export function UploadProgress({ file, state, progress: _progress, abort, error 
   </>
 }
 
-function ProgressBar({ progress }: { progress: Progress }) {
+function ProgressBar({ progress }: { progress: FetchRequestProgress }) {
   const filesize = useFilesize()
   const duration = useFormatDuration()
   const percentage = `${progress.uploaded / progress.total * 100}%`

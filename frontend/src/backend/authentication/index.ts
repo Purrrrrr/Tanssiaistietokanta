@@ -1,15 +1,21 @@
 import { AuthResponse } from './types'
 
-import { loginRequest, logoutRequest } from './requests'
-import { AuthState } from './state'
-import { RefreshScheduler } from './utils'
+import { restRequest } from 'backend/connection'
 
-export { setSocketAuthToken } from './requests'
+import { AuthState } from './state'
+import { debug, RefreshScheduler } from './utils'
+
 export type { User } from './types'
 
 const loggedInCookieName = 'danceOrganizerLoggedIn'
 
 const refreshScheduler = new RefreshScheduler(refreshAuth)
+function refreshAuth() {
+  return refreshScheduler.hasExpired()
+    ? auth('refreshToken')
+    : auth('jwt', { accessToken: authState.currentAccessToken })
+}
+
 const authState = new AuthState()
 authState.on('change', (state) => {
   if (state === null) {
@@ -19,6 +25,7 @@ authState.on('change', (state) => {
 
   refreshScheduler.scheduleRefresh(state.authentication.payload.exp)
 })
+
 authState.on('initialize', () => {
   const isLoggedIn = document.cookie.split('; ')
     .find((cookie) => cookie === `${loggedInCookieName}=yes`)
@@ -33,31 +40,13 @@ export function getCurrentUser() {
   return authState.currentUser
 }
 
-export function getCurrentAccessToken() {
-  return authState.currentAccessToken
-}
-
 export function subscribeToAuthChanges(callback: (state: AuthResponse | null) => unknown) {
   authState.on('change', callback)
   return () => { authState.off('change', callback) }
 }
 
-export function refreshAuth() {
-  return refreshScheduler.hasExpired()
-    ? auth('refreshToken')
-    : auth('jwt', { accessToken: authState.currentAccessToken })
-}
-
 export function login(username: string, password: string) {
   return auth('local', { username, password })
-}
-
-async function auth(strategy: string, body?: Record<string, unknown>) {
-  refreshScheduler.clearRefresh()
-  const result = await loginRequest({ strategy, ...body })
-
-  authState.setState(result)
-  return result?.user
 }
 
 export async function logout() {
@@ -65,6 +54,23 @@ export async function logout() {
   if (token === null) return
 
   refreshScheduler.clearRefresh()
-  await logoutRequest(token)
+  debug('Logging out user')
+  await restRequest('authentication', 'DELETE')
   authState.setState(null)
+}
+
+async function auth(strategy: string, body?: Record<string, unknown>) {
+  refreshScheduler.clearRefresh()
+  debug('Authenticating with strategy: %s', strategy)
+  const response = await restRequest<AuthResponse>('authentication', 'POST', { strategy, ...body })
+
+  if (response.type !== 'ok') {
+    debug('Authentication failed with status: %d', response.status)
+    return null
+  }
+  const result = response.data
+  debug('Authentication succeeded for user: %O', result.user)
+
+  authState.setState(result)
+  return result?.user
 }

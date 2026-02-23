@@ -1,7 +1,7 @@
 import createDebug from 'utils/debug'
 import { getOrComputeDefault } from 'utils/map'
 
-import { makeFeathersRequest, socket } from './feathers'
+import { socket, socketRequest } from './connection'
 
 const debug = createDebug('channels')
 
@@ -43,11 +43,11 @@ function getListeners(channel: string): Set<unknown> {
 
 async function openChannel(channel: string) {
   debug(`enable channel ${channel}`)
-  const result = await makeFeathersRequest('channel-connections', 'create', { name: channel })
+  const result = await socketRequest('channel-connections', 'create', { name: channel })
   debug('current channels: ', result)
 }
 async function closeChannel(channel: string) {
   debug(`disable channel ${channel}`)
-  const result = await makeFeathersRequest('channel-connections', 'remove', channel)
+  const result = await socketRequest('channel-connections', 'remove', channel)
   debug('current channels: ', result)
 }

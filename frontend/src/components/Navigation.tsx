@@ -1,7 +1,7 @@
-import { useSyncExternalStore } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { getCurrentUser, logout, subscribeToAuthChanges } from 'backend/authentication'
+import { logout } from 'backend/authentication'
+import { useCurrentUser } from 'services/users'
 
 import MenuButton from 'libraries/formsV2/components/MenuButton'
 import { AnchorButton, Breadcrumbs, Button } from 'libraries/ui'
@@ -31,7 +31,7 @@ function NavButton({ href, ...props }) {
 }
 
 function LoginStatus() {
-  const user = useSyncExternalStore(subscribeToAuthChanges, getCurrentUser)
+  const user = useCurrentUser()
   const t = useT('navigation')
 
   if (user) {

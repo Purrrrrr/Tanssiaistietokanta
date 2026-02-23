@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { EventEmitter } from 'events'
 
-import { Entity, ID, ServiceName } from './types'
+import { Entity, ID, ServiceName } from 'types'
 
 import createDebug from 'utils/debug'
 import { getOrComputeDefault } from 'utils/map'
@@ -9,7 +9,7 @@ import { getOrComputeDefault } from 'utils/map'
 import { DocumentNode, gql } from './apollo'
 import { markDeleted, updateEntityFragment } from './apolloCache'
 import { closeChannelIfUnsused, ensureChannelIsOpen } from './channels'
-import { socket } from './feathers'
+import { socket } from './connection'
 
 const debug = createDebug('serviceEvents')
 

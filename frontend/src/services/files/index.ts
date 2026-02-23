@@ -1,8 +1,6 @@
 import { entityDeleteHook, entityListQueryHook, entityUpdateHook, graphql, makeMutationHook, setupServiceUpdateFragment } from 'backend'
 
 export * from './upload'
-export type { ID as FileOwningId } from 'backend/types'
-export type { Service as FileOwner } from 'types/gql/graphql'
 
 export const useDeleteFile = entityDeleteHook('files', graphql(`
 mutation deleteFile($id: ID!) {

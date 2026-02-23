@@ -1,4 +1,4 @@
-import type { ID } from 'backend/types'
+import type { ID } from 'types'
 
 export type { ID }
 

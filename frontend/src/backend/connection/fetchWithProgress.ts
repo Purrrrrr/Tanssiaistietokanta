@@ -1,26 +1,22 @@
-import { getCurrentAccessToken } from 'backend/authentication'
+import { RestResult } from './types'
+
+import { backendUrl } from './constants'
 
 export interface FetchWithProgressOptions {
   data: FormData
-  onProgress?: (progress: Progress) => unknown
+  onProgress?: (progress: FetchRequestProgress) => unknown
   signal?: AbortSignal
+  accessToken: string | null
 }
 
-type Response = {
-  type: 'ok'
-  status: number
-  content: string
-} | {
-  type: 'error'
-  error: 'aborted' | 'unknown'
-}
+type Response = RestResult<string, 'aborted' | 'unknown'>
 
-export interface Progress {
+export interface FetchRequestProgress {
   uploaded: number
   total: number
 }
 
-export function fetchWithProgress(method: string, url: string, { data, onProgress, signal }: FetchWithProgressOptions) {
+export function fetchWithProgress(url: string, method: string, { data, onProgress, signal, accessToken }: FetchWithProgressOptions): Promise<Response> {
   const promise = Promise.withResolvers<Response>()
   const request = new XMLHttpRequest()
   request.upload.addEventListener('progress', ({ lengthComputable, loaded, total }) => {
@@ -35,7 +31,7 @@ export function fetchWithProgress(method: string, url: string, { data, onProgres
     promise.resolve({
       type: 'ok',
       status: request.status,
-      content: request.responseText,
+      data: request.responseText,
     })
   })
   request.addEventListener('error', () => {
@@ -51,10 +47,9 @@ export function fetchWithProgress(method: string, url: string, { data, onProgres
       error: 'aborted',
     })
   })
-  const token = getCurrentAccessToken()
-  request.open(method, url)
-  if (token) {
-    request.setRequestHeader('Authorization', `Bearer ${token}`)
+  request.open(method, backendUrl(url))
+  if (accessToken) {
+    request.setRequestHeader('Authorization', `Bearer ${accessToken}`)
   }
   request.send(data)
 

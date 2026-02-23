@@ -1,8 +1,8 @@
 import { MarkdownToJSX, parser, RuleType } from 'markdown-to-jsx/react'
 import { useEffect, useRef } from 'react'
 
+import { ID } from 'types'
 import { FileOwner, FileOwningId } from 'types/files'
-import { ID } from 'backend/types'
 
 import { useMarkFileUsage } from 'services/files'
 

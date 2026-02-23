@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { ID } from 'backend/types'
+import { ID } from 'types'
 
 export function useMultipleSelection<T extends { _id: ID }>(
   allItems: T[],

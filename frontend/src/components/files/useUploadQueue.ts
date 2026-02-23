@@ -1,4 +1,6 @@
-import { doUpload, FileOwner, FileOwningId, type Progress, UploadedFile } from 'services/files'
+import type { FetchRequestProgress, FileOwner, FileOwningId } from 'types/files'
+
+import { doUpload, UploadedFile } from 'services/files'
 
 import { useQueue } from 'libraries/i18n/useQueue'
 
@@ -12,7 +14,7 @@ export interface Upload {
   state: 'pending' | 'in-progress' | 'error'
   start: () => void
   error?: string
-  progress?: Progress
+  progress?: FetchRequestProgress
 }
 
 export function useUploadQueue(owner: FileOwner, owningId: FileOwningId, path: string = '') {

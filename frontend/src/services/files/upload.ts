@@ -1,10 +1,6 @@
 import { FileOwner, FileOwningId } from 'types/files'
 
-import { backendUrl } from 'backend/constants'
-
-import { fetchWithProgress, FetchWithProgressOptions } from 'utils/fetchWithProgress'
-
-export type { Progress } from 'utils/fetchWithProgress'
+import { restRequestWithProgress, RestRequestWithProgressOptions } from 'backend'
 
 export const MAX_UPLOAD_SIZE = 20 * 1024 ** 2
 
@@ -33,7 +29,7 @@ export interface UploadedFile {
   // TODO: more fields
 }
 
-interface UploadOptions extends Pick<FetchWithProgressOptions, 'signal' | 'onProgress'> {
+interface UploadOptions extends Pick<RestRequestWithProgressOptions, 'signal' | 'onProgress'> {
   owner: FileOwner
   owningId: FileOwningId
   path?: string
@@ -58,8 +54,8 @@ export async function doUpload({ owner, owningId, path, file, filename, fileId, 
   })
   const options = { data, onProgress, signal }
   const response = fileId
-    ? await fetchWithProgress('PUT', `${backendUrl}/files/${fileId}`, options)
-    : await fetchWithProgress('POST', `${backendUrl}/files`, options)
+    ? await restRequestWithProgress('PUT', `files/${fileId}`, options)
+    : await restRequestWithProgress('POST', 'files', options)
 
   if (response.type === 'error') {
     throw new UploadError(response.error)
@@ -68,13 +64,13 @@ export async function doUpload({ owner, owningId, path, file, filename, fileId, 
   switch (response.status) {
     case 200:
     case 201:
-      return JSON.parse(response.content) as UploadedFile
+      return JSON.parse(response.data) as UploadedFile
     case 409:
       throw new UploadError('already_exists')
     case 422:
       throw new UploadError('file_is_infected')
     default:
-      throw new UploadError('server', response.content)
+      throw new UploadError('server', response.data)
   }
 }
 
