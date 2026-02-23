@@ -2,10 +2,10 @@ import { useNavigate } from 'react-router-dom'
 
 import { DanceInput } from 'types'
 
+import { addGlobalLoadingAnimation } from 'backend'
 import { useCreateDance } from 'services/dances'
 
 import { Button, showToast } from 'libraries/ui'
-import { useGlobalLoadingAnimation } from 'components/LoadingState'
 import { useT, useTranslation } from 'i18n'
 
 import { uploadDanceFile } from './uploadDanceFile'
@@ -14,10 +14,9 @@ export function CreateDanceButtons({ danceCount }: { danceCount: number }) {
   const t = useT('components.dance.createDanceButton')
   const navigate = useNavigate()
   const [createDance] = useCreateDance()
-  const addLoadingAnimation = useGlobalLoadingAnimation()
 
   async function doCreateDance(dance: DanceInput) {
-    const result = await addLoadingAnimation(createDance({ dance }))
+    const result = await addGlobalLoadingAnimation(createDance({ dance }))
     const id = result.data?.createDance?._id
 
     if (id) {

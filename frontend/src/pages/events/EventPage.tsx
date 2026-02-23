@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { Event } from 'types'
 
+import { addGlobalLoadingAnimation } from 'backend'
 import { useDeleteEvent, usePatchEvent } from 'services/events'
 import { useCreateWorkshop, useDeleteWorkshop } from 'services/workshops'
 
@@ -11,7 +12,6 @@ import { Button, Card, Collapse, H2, Link } from 'libraries/ui'
 import { DanceSet, EventProgramRow } from 'components/event/EventProgramForm'
 import { JSONPatch } from 'components/event/EventProgramForm/patchStrategy'
 import { FileList } from 'components/files/FileList'
-import { useGlobalLoadingAnimation } from 'components/LoadingState'
 import { EventGrantsEditor } from 'components/rights/EventGrantsEditor'
 import { RequirePermissions } from 'components/rights/RequirePermissions'
 import { VersionedPageTitle } from 'components/versioning/VersionedPageTitle'
@@ -206,12 +206,11 @@ function EventWorkshops({ event, readOnly }: { event: Event, readOnly: boolean }
 
 function CreateWorkshopButton({ eventId, startDate }) {
   const t = useT('pages.events.eventPage')
-  const addLoadingAnimation = useGlobalLoadingAnimation()
   const [createWorkshop] = useCreateWorkshop()
 
   return <Button
     requireRight="workshops:create"
-    onClick={() => addLoadingAnimation(createWorkshop(newWorkshop({ eventId, name: t('newWorkshop') }, startDate)))}
+    onClick={() => addGlobalLoadingAnimation(createWorkshop(newWorkshop({ eventId, name: t('newWorkshop') }, startDate)))}
     color="primary"
     text={t('createWorkshop')}
   />
@@ -243,7 +242,6 @@ function WorkshopCard(
   },
 ) {
   const t = useT('pages.events.eventPage')
-  const addLoadingAnimation = useGlobalLoadingAnimation()
   const [showEditor, setShowEditor] = useState(false)
   const [deleteWorkshop] = useDeleteWorkshop({ refetchQueries: ['getEvent'] })
   const { _id, abbreviation, name } = workshop
@@ -251,7 +249,7 @@ function WorkshopCard(
   return <Card marginClass="" style={{ clear: 'right' }}>
     { readOnly ||
       <>
-        <DeleteButton requireRight="workshops:delete" onDelete={() => addLoadingAnimation(deleteWorkshop({ id: _id }))}
+        <DeleteButton requireRight="workshops:delete" onDelete={() => addGlobalLoadingAnimation(deleteWorkshop({ id: _id }))}
           className="float-right" text="Poista"
           confirmText={'Haluatko varmasti poistaa työpajan ' + name + '?'}
         />

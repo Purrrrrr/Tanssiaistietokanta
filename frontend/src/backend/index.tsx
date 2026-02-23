@@ -1,13 +1,13 @@
-import { useEffect, useState, useSyncExternalStore } from 'react'
-
-import { GlobalLoadingState } from 'components/LoadingState'
+import { useEffect, useState } from 'react'
 
 import { apolloClient, ApolloProvider } from './apollo'
 import { initializeAuthentication, subscribeToAuthChanges } from './authentication'
-import { isConnected, setAccessToken, subscribeToConnected } from './connection'
+import { setAccessToken } from './connection'
+import { GlobalLoadingState } from './GlobalLoadingState'
 
 export { updateEntityFragment } from './apolloCache'
 export { type FetchRequestProgress, restRequestWithProgress, type RestRequestWithProgressOptions } from './connection'
+export { addGlobalLoadingAnimation, lazyLoadComponent, useShowGlobalLoadingAnimation } from './GlobalLoadingState'
 export {
   backendQueryHook,
   entityCreateHook,
@@ -28,10 +28,9 @@ export const BackendProvider = ({ children }) => {
   useEffect(() => {
     initializeAuthentication().then(() => setInitialized(true))
   }, [])
-  const connected = useSyncExternalStore(subscribeToConnected, isConnected)
 
   return <ApolloProvider client={apolloClient}>
-    <GlobalLoadingState connected={connected && initialized}>
+    <GlobalLoadingState appInitialized={initialized}>
       {initialized && children}
     </GlobalLoadingState>
   </ApolloProvider>

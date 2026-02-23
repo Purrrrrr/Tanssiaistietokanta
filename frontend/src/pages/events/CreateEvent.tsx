@@ -4,12 +4,12 @@ import { useNavigate } from 'react-router-dom'
 import { EventInput } from 'types'
 import { GrantRole, ViewAccess } from 'types/gql/graphql'
 
+import { addGlobalLoadingAnimation } from 'backend'
 import { useCreateEvent } from 'services/events'
 import { useCurrentUser } from 'services/users'
 
 import { DateRangeField, formFor, SubmitButton } from 'libraries/forms'
 import { Breadcrumb } from 'libraries/ui'
-import { useGlobalLoadingAnimation } from 'components/LoadingState'
 import { PageTitle } from 'components/PageTitle'
 import { EventGrantsEditor } from 'components/rights/EventGrantsEditor'
 import { RequirePermissions } from 'components/rights/RequirePermissions'
@@ -24,7 +24,6 @@ const {
 export default function CreateEventForm() {
   const t = useT('pages.events.createEvent')
   const navigate = useNavigate()
-  const addLoadingAnimation = useGlobalLoadingAnimation()
   const currentUser = useCurrentUser()
   const [createEvent] = useCreateEvent({
     onCompleted: (data) => navigate('/events/' + data.createEvent._id),
@@ -46,7 +45,7 @@ export default function CreateEventForm() {
     <Breadcrumb text={t('newEventBreadcrumb')} />
     <PageTitle>{t('newEvent')}</PageTitle>
     <RequirePermissions requireRight="events:create" fallback="loginPage">
-      <Form labelStyle="above" value={event} onChange={setEvent} onSubmit={() => addLoadingAnimation(createEvent({ event }))} errorDisplay="onSubmit">
+      <Form labelStyle="above" value={event} onChange={setEvent} onSubmit={() => addGlobalLoadingAnimation(createEvent({ event }))} errorDisplay="onSubmit">
         <div className="flex gap-3">
           <Input label={t('name')} path="name" required containerClassName="w-60" />
           <DateRangeField<EventInput>

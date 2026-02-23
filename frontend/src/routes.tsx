@@ -1,10 +1,11 @@
 import { Suspense } from 'react'
 import { Navigate, Route, Routes, useParams } from 'react-router-dom'
 
+import { lazyLoadComponent as lazy } from 'backend'
 import { useEvent } from 'services/events'
 
 import { Breadcrumb } from 'libraries/ui'
-import { lazyLoadComponent as lazy, LoadingState } from 'components/LoadingState'
+import { LoadingState } from 'components/LoadingState'
 import { RequirePermissions } from 'components/rights/RequirePermissions'
 import VersionableContentContainer from 'components/versioning/VersionableContentContainer'
 import { T, useTranslation } from 'i18n'
