@@ -11,9 +11,9 @@ import { TranslationContext, translations } from 'i18n'
 import AppRoutes from './routes'
 
 function DanceOrganizer() {
-  return <BackendProvider>
-    <RightsContext>
-      <TranslationContext languages={translations} defaultLanguage="fi">
+  return <TranslationContext languages={translations} defaultLanguage="fi">
+    <BackendProvider>
+      <RightsContext>
         <BrowserRouter>
           <ToastContainer />
           <NavigationLayout>
@@ -22,9 +22,9 @@ function DanceOrganizer() {
             </AlertContext>
           </NavigationLayout>
         </BrowserRouter>
-      </TranslationContext>
-    </RightsContext>
-  </BackendProvider>
+      </RightsContext>
+    </BackendProvider>
+  </TranslationContext>
 }
 
 export default DanceOrganizer

@@ -3,7 +3,6 @@ import { print } from 'graphql'
 
 import createDebug from 'utils/debug'
 
-import { initializeAuthentication } from './authentication'
 import { socketRequest } from './connection'
 
 export { ApolloProvider, gql, useMutation, useQuery } from '@apollo/client'
@@ -47,7 +46,6 @@ type R = FetchResult<Record<string, unknown>, Record<string, unknown>, Record<st
 
 export async function runGraphQlQuery({ query, variables }): Promise<FetchResult<Record<string, unknown>, Record<string, unknown>, Record<string, unknown>>> {
   debug('GraphQL query: %s\nVariables: %O', print(query), variables)
-  await initializeAuthentication()
   const result = await socketRequest<R>('graphql', 'find', { query, variables })
   if (debug.enabled) {
     Object.keys(result).forEach(

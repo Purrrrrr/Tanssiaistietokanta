@@ -1,17 +1,19 @@
 import { ComponentType, lazy, useEffect, useRef, useSyncExternalStore } from 'react'
 import { ApolloError, ApolloQueryResult } from '@apollo/client'
 
-import { isConnected, subscribeToConnected } from 'backend'
-
 import { useDelayedValue } from 'libraries/common/useDelayedValue'
 import { Button, ColorClass, GlobalSpinner, H2 } from 'libraries/ui'
 import { Error } from 'libraries/ui/icons'
 import { useT, useTranslation } from 'i18n'
 
-const connectionProblemMessageTimeout = 5000
+const connectionProblemMessageTimeout = 10000
 
-export function GlobalLoadingState({ children }) {
-  const connected = useSyncExternalStore(subscribeToConnected, isConnected)
+interface GlobalLoadingStateProps {
+  children: React.ReactNode
+  connected: boolean
+}
+
+export function GlobalLoadingState({ children, connected }: GlobalLoadingStateProps) {
   const loading = useGlobalLoadingState()
   const connectedAWhileAgo = useDelayedValue(connected, connectionProblemMessageTimeout)
   const connectionTimeout = !connected && !connectedAWhileAgo
