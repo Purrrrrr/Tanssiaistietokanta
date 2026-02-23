@@ -1,10 +1,16 @@
-import { ApolloClient, ApolloLink, InMemoryCache, Observable } from '@apollo/client'
+import { ApolloClient, ApolloLink, FetchResult, InMemoryCache, Observable } from '@apollo/client'
+import { print } from 'graphql'
 
-import { runGraphQlQuery } from './feathers'
+import createDebug from 'utils/debug'
+
+import { initializeAuthentication } from './authentication'
+import { socketRequest } from './connection'
 
 export { ApolloProvider, gql, useMutation, useQuery } from '@apollo/client'
 export { ApolloClient }
 export type { DocumentNode, FetchResult, MutationResult } from '@apollo/client'
+
+const debug = createDebug('graphql')
 
 const cache = new InMemoryCache({
   typePolicies: {
@@ -32,6 +38,27 @@ const socketLink = new ApolloLink((operation) => {
   )
 })
 
+export const apolloClient = new ApolloClient({
+  link: socketLink,
+  cache,
+})
+
+type R = FetchResult<Record<string, unknown>, Record<string, unknown>, Record<string, unknown>>
+
+export async function runGraphQlQuery({ query, variables }): Promise<FetchResult<Record<string, unknown>, Record<string, unknown>, Record<string, unknown>>> {
+  debug('GraphQL query: %s\nVariables: %O', print(query), variables)
+  await initializeAuthentication()
+  const result = await socketRequest<R>('graphql', 'find', { query, variables })
+  if (debug.enabled) {
+    Object.keys(result).forEach(
+      key => Object.keys(result[key]).forEach(
+        dataKey => debug('%s.%s: %O', key, dataKey, result[key][dataKey]),
+      ),
+    )
+  }
+  return result
+}
+
 function observableFromPromise<T>(promise: Promise<T>): Observable<T> {
   return new Observable(observer => {
     async function run() {
@@ -46,8 +73,3 @@ function observableFromPromise<T>(promise: Promise<T>): Observable<T> {
     run().then(() => observer.complete(), e => observer.error(e))
   })
 }
-
-export const apolloClient = new ApolloClient({
-  link: socketLink,
-  cache,
-})
