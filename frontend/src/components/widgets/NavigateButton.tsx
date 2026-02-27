@@ -1,10 +1,10 @@
 import React from 'react'
 
-import { RightsQueryProps, withPermissionChecking } from 'libraries/access-control'
+import { omitPermissionCheckingProps, PermissionCheckedProps, withPermissionChecking } from 'libraries/access-control'
 import { type Color, Link } from 'libraries/ui'
 import { buttonClass } from 'libraries/ui/Button'
 
-interface NavigateButtonProps extends Omit<React.ComponentProps<typeof Link>, 'to'>, RightsQueryProps {
+interface NavigateButtonProps extends Omit<React.ComponentProps<typeof Link>, 'to'>, PermissionCheckedProps {
   text?: string | React.ReactElement | React.ReactElement[]
   children?: string | React.ReactElement | React.ReactElement[]
   icon?: React.ReactElement
@@ -15,13 +15,14 @@ interface NavigateButtonProps extends Omit<React.ComponentProps<typeof Link>, 't
   className?: string
 }
 
-export const NavigateButton = withPermissionChecking(({ text, children, icon, disabled, minimal, href, color, className, requireRight: _ignoredRequireRight, entity: _ignoredEntity, ...props }: NavigateButtonProps) => {
+export const NavigateButton = withPermissionChecking((props: NavigateButtonProps) => {
+  const { text, children, icon, disabled, minimal, href, color, className, ...rest } = omitPermissionCheckingProps(props)
   const classes = buttonClass(color ?? 'none', { className, disabled, minimal })
 
   const onClick = props.onClick ??
     (props.target === '_blank' ? openLinkWithTarget : undefined)
 
-  return <Link {...props} unstyled className={classes} role="button"
+  return <Link {...rest} unstyled className={classes} role="button"
     tabIndex={0} to={href} onClick={onClick}>
     {icon}
     {text}

@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from 'react'
 
-import { RightQuery, ServiceRightParams } from 'libraries/access-control/types'
+import { RightQuery } from 'libraries/access-control/types'
 
 import { getCurrentUser, subscribeToAuthChanges, type User } from 'backend/authentication'
 
@@ -30,15 +30,15 @@ query getUser($id: ID!) {
 }`))
 
 declare global {
-  interface AccessControlServiceRegistry {
-    dances: ServiceRightParams<['create', 'read', 'modify', 'delete']>
-    events: ServiceRightParams<['create', 'read', 'modify', 'delete']>
-    workshops: ServiceRightParams<['create', 'read', 'modify', 'delete']>
-    files: ServiceRightParams<['create', 'read', 'modify', 'delete']>
+  interface AccessControlServiceRights {
+    dances: ['create', 'read', 'modify', 'delete']
+    events: ['create', 'read', 'modify', 'delete']
+    workshops: ['create', 'read', 'modify', 'delete']
+    files: ['create', 'read', 'modify', 'delete']
   }
 }
 
-export function hasRight(user: User | null, { right, service }: RightQuery) {
+export async function hasRight(user: User | null, { right, service }: RightQuery) {
   if (right === 'read' && service !== 'files') {
     return true
   }

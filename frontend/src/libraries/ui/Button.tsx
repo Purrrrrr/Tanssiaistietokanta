@@ -3,7 +3,7 @@ import classNames from 'classnames'
 
 import type { Color } from './types'
 
-import { RightsQueryProps, withPermissionChecking } from 'libraries/access-control'
+import { omitPermissionCheckingProps, PermissionCheckedProps, withPermissionChecking } from 'libraries/access-control'
 
 export const buttonClass = (
   color: Color,
@@ -32,7 +32,7 @@ export const buttonClass = (
   className,
 )
 
-export interface ButtonProps extends RightsQueryProps, ComponentProps<'button'> {
+export interface ButtonProps extends PermissionCheckedProps, ComponentProps<'button'> {
   text?: React.ReactNode
   icon?: React.ReactElement
   rightIcon?: React.ReactElement
@@ -56,10 +56,8 @@ export const Button = withPermissionChecking(function Button(props: ButtonProps)
     className,
     paddingClass,
     tooltip,
-    requireRight: _ignoredRequireRight,
-    entity: _ignoredEntity,
     ...rest
-  } = props
+  } = omitPermissionCheckingProps(props)
   return <TooltipContainer tooltip={tooltip}>
     <button type={type} className={buttonClass(color, { active, className, minimal, paddingClass })} {...rest}>
       {icon}
@@ -70,7 +68,7 @@ export const Button = withPermissionChecking(function Button(props: ButtonProps)
   </TooltipContainer>
 })
 
-export interface AnchorButtonProps extends RightsQueryProps, ComponentProps<'a'> {
+export interface AnchorButtonProps extends PermissionCheckedProps, ComponentProps<'a'> {
   text?: React.ReactNode
   icon?: React.ReactElement
   rightIcon?: React.ReactElement
@@ -91,10 +89,8 @@ export const AnchorButton = withPermissionChecking(function Button(props: Anchor
     minimal,
     className,
     tooltip,
-    requireRight: _ignoredRequireRight,
-    entity: _ignoredEntity,
     ...rest
-  } = props
+  } = omitPermissionCheckingProps(props)
   return <TooltipContainer tooltip={tooltip}>
     <a className={buttonClass(color, { active, className, minimal })} {...rest}>
       {icon}

@@ -1,12 +1,12 @@
 import { createContext, useContext } from 'react'
 
-import { RightQuery } from './types'
+import { RightQuery, ServiceName } from './types'
 
 export type RightsProviderFunction<User> = (
   user: User | null,
-  query: RightQuery,
-) => boolean
-export type RightsQueryFunction = (right: RightQuery) => boolean
+  query: RightQuery<ServiceName>,
+) => Promise<boolean>
+export type RightsQueryFunction = (right: RightQuery<ServiceName>) => Promise<boolean>
 
 interface RightsQueryContextType<User = unknown> {
   user: User | null
@@ -15,7 +15,7 @@ interface RightsQueryContextType<User = unknown> {
 
 const RightsQueryContext = createContext<RightsQueryContextType>({
   user: null,
-  hasRight: () => false,
+  hasRight: () => Promise.resolve(false),
 })
 
 export function AccessControlProvider<User>({

@@ -1,10 +1,10 @@
 The MIT License (MIT)
 
-Copyright (c) 2022 Purr Consuegra
+Copyright (c) 2026 Purr Consuegra
 Flower stylesheet Copyright (c) 2022 Sampo Juustinen
 Loading animation by Eadweard Muybridge - Phenakistoscope_3g07690u.jpg, Public Domain, https://commons.wikimedia.org/w/index.php?curid=73113471
 See public/backgrounds/flower/licenses.txt for flower background image copyrights
-
+Structural object sharing code (replaceEqualDeep) Copyright (c) 2021-present Tanner Linsley
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

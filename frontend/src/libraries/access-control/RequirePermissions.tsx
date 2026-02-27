@@ -1,14 +1,17 @@
-import { RightQuery, RightQueryString, ServiceName, ServiceRightQuery, ServiceRightsEntity } from './types'
+import { RightQueryContext, RightsQuery } from './types'
 
-import { useRightsQueryFn } from './context'
-import { parseRightQueryString } from './queryParser'
+import { useRights } from './hooks'
 
-type RequirePermissionsProps<Service extends ServiceName> = RightsQueryProps<Service> & {
+export interface RequirePermissionsProps extends RightsQueryProps {
   children: React.ReactNode
   fallback?: React.ReactNode
 }
 
-export function RequirePermissions<Service extends ServiceName>(props: RequirePermissionsProps<Service>) {
+export interface RightsQueryProps extends RightQueryContext {
+  requireRight: RightsQuery['rights']
+}
+
+export function RequirePermissions(props: RequirePermissionsProps) {
   if (!useRequirePermissions(props)) {
     return props.fallback ?? null
   }
@@ -16,28 +19,6 @@ export function RequirePermissions<Service extends ServiceName>(props: RequirePe
   return props.children
 }
 
-export function useRequirePermissions<Service extends ServiceName>(props: RightsQueryProps<Service>): boolean {
-  const queries = parseRightQueryProps(props)
-  const queryFn = useRightsQueryFn()
-  return queries.map(queryFn).every(Boolean)
-}
-
-export interface RightsQueryProps<Service extends ServiceName = ServiceName> {
-  requireRight?: RightQueryString<Service> | ServiceRightQuery<Service> | ServiceRightQuery<Service>[]
-  entity?: ServiceRightsEntity<Service>
-}
-
-export function parseRightQueryProps<Service extends ServiceName>(props: RightsQueryProps<Service>): RightQuery[] {
-  if (props.requireRight === undefined) {
-    return []
-  }
-  if (Array.isArray(props.requireRight)) {
-    if (props.entity) throw new Error('Cannot specify entity when requireRight is an array of RightQuery objects')
-    return props.requireRight as RightQuery[]
-  }
-  if (typeof props.requireRight === 'object') {
-    if (props.entity) throw new Error('Cannot specify entity when requireRight is a RightQuery object')
-    return [props.requireRight as RightQuery]
-  }
-  return parseRightQueryString(props.requireRight, props.entity) as RightQuery[]
+export function useRequirePermissions({ requireRight, ...ctx }: RightsQueryProps): boolean {
+  return useRights(requireRight, ctx).every(Boolean)
 }
