@@ -17,7 +17,7 @@ export const serviceNameSchema = Type.Union([
 ], { $id: 'ServiceName' })
 
 export type ServiceName = Static<typeof serviceNameSchema>
-export const authTargetSchema = Type.Union([Type.Literal('everything'), Type.Literal('owner'), Type.Literal('entity')])
+export const authTargetSchema = Type.Union([Type.Literal('everything'), Type.Literal('owner'), Type.Literal('entity')], { $id: 'AccessTarget' })
 export type AuthTarget = Static<typeof authTargetSchema>
 
 // Main data model schema
@@ -30,7 +30,7 @@ export const accessSchema = Type.Object(
     owningId: Type.Optional(Id()),
     target: authTargetSchema,
     // appliesTo: Type.Union([Type.Literal('everyone'), Type.Literal('user')]),
-    allowed: Type.Union([Type.Literal('GRANT'), Type.Literal('DENY'), Type.Literal('UNKNOWN')]),
+    allowed: Type.Union([Type.Literal('GRANT'), Type.Literal('DENY'), Type.Literal('UNKNOWN')], { $id: 'AccessAllowed' }),
   },
   { $id: 'Access', additionalProperties: false },
 )
@@ -55,3 +55,12 @@ export const accessQuerySchema = Type.Intersect(
 export type AccessQuery = Static<typeof accessQuerySchema>
 export const accessQueryValidator = getValidator(accessQuerySchema, queryValidator)
 export const accessQueryResolver = resolve<AccessQuery, HookContext<AccessService>>({})
+
+export const graphQLSchema = {
+  types: {
+    Access: accessSchema,
+  },
+  inputs: {
+    AccessQuery: accessQuerySchema,
+  },
+}

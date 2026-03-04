@@ -3,12 +3,13 @@
 import type { Application } from '../../declarations'
 import { GraphqlService, getOptions } from './graphql.class'
 import { graphqlPath, graphqlMethods } from './graphql.shared'
-import schema from './graphql.schema'
+import getSchema from './graphql.get-schema'
 
 export * from './graphql.class'
 
 // A configure function that registers the service and its hooks via `app.configure`
 export const graphql = (app: Application) => {
+  const schema = getSchema(app)
   // Register our service on the Feathers application
   app.use(graphqlPath, new GraphqlService(getOptions(app, '/graphql', schema)), {
     // A list of all methods this service exposes externally
