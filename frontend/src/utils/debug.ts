@@ -23,3 +23,23 @@ export function getKnownNamespaces(): Map<string, boolean> {
 export function enableNamespaces(namespaces: readonly string[]) {
   debug.enable(namespaces.join(','))
 }
+
+if (process.env.NODE_ENV === 'development') {
+  debug.formatters.t = (v: unknown) => {
+    if (!Array.isArray(v)) {
+      return JSON.stringify(v)
+    }
+    // Imitate console.table for arrays of objects
+    const items = v.filter(item => typeof item === 'object' && item !== null)
+    const keys = Array.from(new Set(items.flatMap(item => Object.keys(item))))
+    const stringifyValue = (value: unknown) => typeof value === 'object' && value !== null ? JSON.stringify(value) : String(value)
+    const table = [keys, ...v.map(item => keys.map(key => stringifyValue(item[key])))]
+    const columnWidths = keys.map((_, index) => Math.max(...table.map(row => row[index].length)))
+    const separator = columnWidths.map(width => '-'.repeat(width))
+    table.splice(1, 0, separator)
+
+    return `\n${table.map(row => row.map((cell, index) => cell.padEnd(columnWidths[index])).join(' | ')).join('\n')}`
+  }
+} else {
+  debug.formatters.t = JSON.stringify
+}

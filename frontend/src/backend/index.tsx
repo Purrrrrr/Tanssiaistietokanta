@@ -6,7 +6,7 @@ import { setAccessToken } from './connection'
 import { GlobalLoadingState } from './GlobalLoadingState'
 
 export { updateEntityFragment } from './apolloCache'
-export { type FetchRequestProgress, restRequestWithProgress, type RestRequestWithProgressOptions } from './connection'
+export { type FetchRequestProgress, restRequestWithProgress, type RestRequestWithProgressOptions, socketRequest } from './connection'
 export { addGlobalLoadingAnimation, lazyLoadComponent, useShowGlobalLoadingAnimation } from './GlobalLoadingState'
 export {
   backendQueryHook,
