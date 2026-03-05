@@ -74,6 +74,9 @@ class RequestLogger {
       if (includeStack) {
         this.data.errorStack = error.stack
       }
+      if ('data' in error && typeof error.data === 'object') {
+        this.data.errorData = error.data
+      }
     } else {
       this.data.error = String(error)
     }
