@@ -35,6 +35,14 @@ export async function checkAccess(ctx: HookContext, next: NextFunction) {
     }
 
     if (method === 'find') {
+      const hasPermission = await stragegy.authorizeGlobal({
+        action: 'list',
+        user,
+      })
+      if (!hasPermission) {
+        throw new Error('Access denied')
+      }
+
       await next()
       const result = ctx.result
       if (!Array.isArray(result)) {
@@ -159,9 +167,9 @@ function toAction(method: string): Action | null {
       return 'read'
     case 'update':
     case 'patch':
-      return 'update'
+      return 'modify'
     case 'remove':
-      return 'remove'
+      return 'delete'
     default:
       return null
   }

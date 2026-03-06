@@ -1,6 +1,6 @@
 import { AuthResponse } from './types'
 
-import { restRequest } from 'backend/connection'
+import { restRequest, setAccessToken } from 'backend/connection'
 
 import { AuthState } from './state'
 import { debug, RefreshScheduler } from './utils'
@@ -26,15 +26,22 @@ authState.on('change', (state) => {
   refreshScheduler.scheduleRefresh(state.authentication.payload.exp)
 })
 
-authState.on('initialize', () => {
+export const initializeAuthentication = async () => {
   const isLoggedIn = document.cookie.split('; ')
     .find((cookie) => cookie === `${loggedInCookieName}=yes`)
 
-  if (isLoggedIn) auth('refreshToken')
-  else authState.setState(null)
-})
-
-export const initializeAuthentication = () => authState.initialize()
+  if (isLoggedIn) {
+    await auth('refreshToken')
+    if (authState.currentAccessToken) {
+      await setAccessToken(authState.currentAccessToken)
+    }
+    subscribeToAuthChanges(authState => {
+      setAccessToken(authState?.accessToken ?? null)
+    })
+  } else {
+    authState.setState(null)
+  }
+}
 
 export function getCurrentUser() {
   return authState.currentUser

@@ -7,8 +7,8 @@ export interface Entity {
   _id: Id
 }
 export type Id = string | number
-export type GlobalAction = 'create'
-export type Action = 'read' | 'update' | 'remove' | 'manage-access'
+export type GlobalAction = 'list' | 'create'
+export type Action = 'read' | 'modify' | 'delete' | 'manage-access'
 
 export interface AugmentedAccessStrategy<Service extends ServiceName = ServiceName, EntityAccessData = unknown> extends AccessStrategy<Service, EntityAccessData> {
   authTarget: (action: Action | GlobalAction) => AuthTarget

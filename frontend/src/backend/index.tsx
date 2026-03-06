@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import { apolloClient, ApolloProvider } from './apollo'
-import { initializeAuthentication, subscribeToAuthChanges } from './authentication'
-import { setAccessToken } from './connection'
+import { initializeAuthentication } from './authentication'
 import { GlobalLoadingState } from './GlobalLoadingState'
 
 export { updateEntityFragment } from './apolloCache'
@@ -18,10 +17,6 @@ export {
 } from './hooks'
 export { setupServiceUpdateFragment, useServiceEvents } from './serviceEvents'
 export { graphql } from 'types/gql'
-
-subscribeToAuthChanges(authState => {
-  setAccessToken(authState ? authState.accessToken : null)
-})
 
 export const BackendProvider = ({ children }) => {
   const [initialized, setInitialized] = useState(false)

@@ -12,7 +12,7 @@ function UsersPage() {
 
   return <>
     <PageTitle>{t('pageTitle')}</PageTitle>
-    <RequirePermissions requireRight="events:read">
+    <RequirePermissions requireRight="events:list">
       <LoadingState {...requestState} />
       <ItemList columns="grid-cols-[1fr_1fr_1fr] gap-x-4" items={users} emptyText={t('noUsers')} className="max-w-200">
         <ItemList.Header>

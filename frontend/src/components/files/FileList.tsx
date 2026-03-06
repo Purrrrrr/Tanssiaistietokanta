@@ -9,7 +9,7 @@ export type { FileListProps }
 const FileListLazy = lazy(() => import('./FileListImpl'))
 
 export function FileList(props: FileListProps) {
-  if (!useRight('files:read')) {
+  if (!useRight('files:read', { owner: props.owner, owningId: props.owningId })) {
     return null
   }
 

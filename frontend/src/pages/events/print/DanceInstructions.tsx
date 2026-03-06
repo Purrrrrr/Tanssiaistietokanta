@@ -157,6 +157,7 @@ function InstructionsForDance({ dance, showShortInstructions }: { dance: Dance, 
       {dance.name}
       <Button
         requireRight="dances:modify"
+        entityId={dance._id}
         color="primary"
         minimal
         icon={<Edit />}

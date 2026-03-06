@@ -10,9 +10,9 @@ export type PermissionCheckedProps = Partial<RightsQueryProps>
 export function withPermissionChecking<Props>(
   Component: React.ComponentType<Props>,
 ): React.ComponentType<Props & PermissionCheckedProps> {
-  return (props: Props & PermissionCheckedProps) => (
-    <RequirePermissions requireRight={props.requireRight ?? []}{...props}>
-      <Component {...props} />
+  return ({ requireRight, ...props }: Props & PermissionCheckedProps) => (
+    <RequirePermissions requireRight={requireRight ?? []} {...props}>
+      <Component {...props as Props} requireRight={requireRight} />
     </RequirePermissions>
   )
 }
@@ -21,7 +21,7 @@ export function omitPermissionCheckingProps<Props>(props: Props & PermissionChec
   const {
     requireRight: _ignoreRight, entityId: _ignoreEntityId,
     context: _ignorecontext, contextId: _ignorecontextId,
-    owner: _ignoreOwner, ownerId: _ignoreOwnerId,
+    owner: _ignoreOwner, owningId: _ignoreOwningId,
     ...rest
   } = props
   return rest as Props

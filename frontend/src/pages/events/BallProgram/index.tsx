@@ -18,7 +18,7 @@ import { Event, useBallProgramQuery } from './useBallProgramQuery'
 import './BallProgram.scss'
 
 export default function BallProgram({ eventId, eventVersionId }) {
-  return <RequirePermissions requireRight="events:read">
+  return <RequirePermissions requireRight="events:read" entityId={eventId}>
     <BallProgramView eventId={eventId} eventVersionId={eventVersionId} />
   </RequirePermissions>
 }
@@ -28,7 +28,7 @@ function BallProgramView({ eventId, eventVersionId }) {
 
   const [isEditing, setEditing] = useState(false)
   const onToggleEditing = () => setEditing(e => !e && canEdit)
-  const canEdit = useRight('events:modify')
+  const canEdit = useRight('events:modify', { entityId: eventId })
 
   const { slideId: currentSlideId = startSlideId } = useParams()
 
@@ -50,7 +50,7 @@ function BallProgramView({ eventId, eventVersionId }) {
       isEditing={isEditing}
       onToggleEditing={onToggleEditing}
     />
-    <RequirePermissions requireRight="events:modify">
+    <RequirePermissions requireRight="events:modify" entityId={eventId}>
       <div className="editor">
         <Button className="close" minimal icon={<Cross />} onClick={() => setEditing(false)} />
         <SlideEditor slide={slide} eventId={eventId} eventVersionId={eventVersionId} eventProgram={event?.program} />
@@ -75,13 +75,13 @@ function BallProgramSlideView(
   const { swipeHandlers } = useSlideshowNavigation({
     slides, currentSlideId: slide.id, onChangeSlide: slide => navigate(baseUrl + slide.id),
   })
-  const canEdit = useRight('events:modify')
+  const canEdit = useRight('events:modify', { entityId: event._id })
 
   return <SlideContainer fullscreen={!isEditing || !canEdit} {...swipeHandlers}>
     <div className="controls">
       <ProgramTitleSelector value={slide.parentId ?? slide.id} onChange={id => navigate(baseUrl + id)}
         program={event.program} />
-      <Button requireRight="events:modify" minimal icon={<Edit />} onClick={onToggleEditing} />
+      <Button requireRight="events:modify" entityId={event._id} minimal icon={<Edit />} onClick={onToggleEditing} />
     </div>
     <EventSlide {...slide} eventProgram={event.program} />
   </SlideContainer>

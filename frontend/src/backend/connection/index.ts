@@ -10,12 +10,12 @@ export const socket = io(backendHost, { path: `${backendPath}/socket.io` })
 
 let accessToken: string | null = null
 
-export function setAccessToken(token: string | null) {
+export async function setAccessToken(token: string | null) {
   if (token === accessToken) return
   debug('Setting backend connection accessToken')
 
   if (socket.connected) {
-    setSocketAccessToken(token)
+    await setSocketAccessToken(token)
   }
   accessToken = token
 }
@@ -29,7 +29,7 @@ socket.on('connect', () => {
 export async function socketRequest<T>(
   service: string,
   verb: 'find' | 'create' | 'remove',
-  query: unknown,
+  query?: unknown,
 ) {
   return new Promise<T>((resolve, reject) =>
     socket.emit(verb, service, query, (err: unknown, res: T) => err ? reject(err) : resolve(res)),
@@ -39,10 +39,10 @@ export async function socketRequest<T>(
 function setSocketAccessToken(accessToken: string | null) {
   if (accessToken === null) {
     debug('Removing socket accessToken')
-    socket.emit('remove', 'authentication')
+    return socketRequest('authentication', 'remove')
   } else {
     debug('Setting socket accessToken')
-    socket.emit('create', 'authentication', { strategy: 'jwt', accessToken })
+    return socketRequest('authentication', 'create', { strategy: 'jwt', accessToken })
   }
 }
 

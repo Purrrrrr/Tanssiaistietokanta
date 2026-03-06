@@ -80,13 +80,17 @@ export const events = (app: Application) => {
     authTarget = 'entity' as const
 
     async authorize({ type, action, entityData, user }: AuthParams<EventAccessData>) {
-      if (type === 'global') {
-        return action === 'create'
-          ? false
-          : undefined
-      }
       if (user?.groups.includes('admins')) {
         return true
+      }
+      if (type === 'global') {
+        if (action === 'list') {
+          return true
+        }
+        if (action === 'create') {
+          return !!user
+        }
+        return undefined
       }
 
       const { viewAccess, grants } = entityData
@@ -95,10 +99,10 @@ export const events = (app: Application) => {
       if (action === 'read') {
         return viewAccess === 'public' || userRole !== null
       }
-      if (action === 'manage-access') {
+      if (action === 'manage-access' || action === 'delete') {
         return userRole === 'organizer'
       }
-      // action === 'update' or 'remove'
+      // action === 'modify'
       return userRole === 'teacher' || userRole === 'organizer'
     }
 

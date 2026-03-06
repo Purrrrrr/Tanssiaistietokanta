@@ -30,7 +30,7 @@ export interface RightQuery<Service extends ServiceName = ServiceName> extends R
 /* Provide shorthand for specifying a common entity/owner context for queries from different services
  *
  * If context is provided and matches the service, contextId will be used as entityId for that service's rights if entityId is not explicitly provided
- * If context is provided and does not match the service, context will be used as owner and contextId will be used as ownerId for that service's rights if owner/ownerId are not explicitly provided
+ * If context is provided and does not match the service, context will be used as owner and contextId will be used as owningId for that service's rights if owner/owningId are not explicitly provided
  *
  * This allows for more concise queries when multiple rights share the same context/owner, while still allowing for explicit overrides when needed
  **/
@@ -42,10 +42,10 @@ export interface RightQueryContext extends RightQueryParams {
 export interface RightQueryParams {
   entityId?: ID
   owner?: ServiceName
-  ownerId?: ID
+  owningId?: ID
 }
 
-export type ID = string | number
+export type ID = string
 export type ServiceName = keyof ServiceMap
 export type ServiceRights<Service extends ServiceName = ServiceName> = AccessControlServiceRights[Service]
 export type ServiceRight<Service extends ServiceName = ServiceName> = ServiceRights<Service>[number]

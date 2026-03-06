@@ -5,6 +5,7 @@ import { RightQuery } from 'libraries/access-control/types'
 import { getCurrentUser, subscribeToAuthChanges, type User } from 'backend/authentication'
 
 import { backendQueryHook, entityListQueryHook, graphql, setupServiceUpdateFragment } from '../backend'
+import { clearAccessCache, hasAccess } from './access'
 
 export { login, logout } from 'backend/authentication'
 
@@ -31,16 +32,16 @@ query getUser($id: ID!) {
 
 declare global {
   interface AccessControlServiceRights {
-    dances: ['create', 'read', 'modify', 'delete']
-    events: ['create', 'read', 'modify', 'delete']
-    workshops: ['create', 'read', 'modify', 'delete']
-    files: ['create', 'read', 'modify', 'delete']
+    dances: ['create', 'list', 'read', 'modify', 'delete']
+    events: ['create', 'list', 'read', 'modify', 'delete']
+    workshops: ['create', 'list', 'read', 'modify', 'delete']
+    files: ['create', 'list', 'read', 'modify', 'delete']
   }
 }
 
-export async function hasRight(user: User | null, { right, service }: RightQuery) {
-  if (right === 'read' && service !== 'files') {
-    return true
-  }
-  return user !== null
+subscribeToAuthChanges(clearAccessCache)
+
+export async function hasRight(_user: User | null, query: RightQuery) {
+  const { right, service, ...rest } = query
+  return await hasAccess({ action: right, ...rest, service })
 }

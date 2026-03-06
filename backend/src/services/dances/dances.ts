@@ -68,7 +68,7 @@ export const dances = (app: Application) => {
   app.service('access').setAccessStrategy('dances', {
     authTarget: 'everything',
     authorize({ user, action }) {
-      if (action === 'read') {
+      if (action === 'read' || action === 'list') {
         return true
       }
 

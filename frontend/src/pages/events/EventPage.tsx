@@ -36,7 +36,7 @@ export default function EventPage({ event }: { event: Event }) {
   const t = useT('pages.events.eventPage')
   const { _versionId, _versionNumber } = event
   const readOnly = _versionId != undefined
-  return <RequirePermissions requireRight="events:read">
+  return <RequirePermissions requireRight="events:read" entityId={event._id}>
     <div className="flex justify-between items-center">
       <VersionedPageTitle showVersion={readOnly} versionNumber={_versionNumber}>
         {event.name}
@@ -69,6 +69,7 @@ function EventDetails({ event, readOnly }: { event: Event, readOnly: boolean }) 
         <div>
           <RequirePermissions
             requireRight="events:modify"
+            entityId={event._id}
             fallback={<Link to={`/login?redirectTo=${encodeURIComponent(window.location.pathname)}`}>{t('loginToEdit')}</Link>}
           >
             <Button
@@ -78,6 +79,7 @@ function EventDetails({ event, readOnly }: { event: Event, readOnly: boolean }) 
           </RequirePermissions>
           <DeleteButton
             requireRight="events:delete"
+            entityId={event._id}
             onDelete={() => deleteEvent({ id: event._id })}
             text={t('deleteEvent')}
             confirmText={t('eventDeleteConfirmation', { eventName: event.name })}
@@ -85,7 +87,7 @@ function EventDetails({ event, readOnly }: { event: Event, readOnly: boolean }) 
         </div>
       }
     </div>
-    <RequirePermissions requireRight="events:modify">
+    <RequirePermissions requireRight="events:modify" entityId={event._id}>
       <Collapse isOpen={showEditor} loadingMessage={t('loadingEditor')}>
         <EventDetailsForm event={event} />
       </Collapse>
@@ -134,7 +136,7 @@ function EventProgram({ event, readOnly }: { event: Event, readOnly: boolean }) 
   if (!program || program.danceSets.length === 0) {
     return <>
       <p>{t('noProgram')}</p>
-      {readOnly || <NavigateButton requireRight="events:create" color="primary" href="program" text={t('addProgram')} />}
+      {readOnly || <NavigateButton requireRight="events:modify" entityId={event._id} color="primary" href="program" text={t('addProgram')} />}
     </>
   }
 
@@ -150,6 +152,7 @@ function EventProgram({ event, readOnly }: { event: Event, readOnly: boolean }) 
     <p>
       <NavigateButton
         requireRight="events:modify"
+        entityId={event._id}
         href="program/main"
         color={readOnly ? undefined : 'primary'}
         text={readOnly ? t('viewProgram') : t('editProgram')}
@@ -186,6 +189,7 @@ function EventWorkshops({ event, readOnly }: { event: Event, readOnly: boolean }
       {workshops.map(workshop =>
         <WorkshopCard
           workshop={workshop}
+          eventId={eventId}
           readOnly={readOnly}
           key={workshop._id}
           reservedAbbreviations={workshops.filter(w => w._id !== workshop._id).map(w => w.abbreviation).filter(a => a) as string[]}
@@ -210,6 +214,8 @@ function CreateWorkshopButton({ eventId, startDate }) {
 
   return <Button
     requireRight="workshops:create"
+    owner="events"
+    owningId={eventId}
     onClick={() => addGlobalLoadingAnimation(createWorkshop(newWorkshop({ eventId, name: t('newWorkshop') }, startDate)))}
     color="primary"
     text={t('createWorkshop')}
@@ -232,9 +238,10 @@ function newWorkshop({ eventId, name }, startDate) {
 
 function WorkshopCard(
   {
-    workshop, reservedAbbreviations, beginDate, endDate, readOnly,
+    workshop, reservedAbbreviations, beginDate, endDate, readOnly, eventId,
   }: {
     workshop: Workshop
+    eventId: string
     reservedAbbreviations: string[]
     readOnly: boolean
     beginDate: string
@@ -249,12 +256,18 @@ function WorkshopCard(
   return <Card marginClass="" style={{ clear: 'right' }}>
     { readOnly ||
       <>
-        <DeleteButton requireRight="workshops:delete" onDelete={() => addGlobalLoadingAnimation(deleteWorkshop({ id: _id }))}
+        <DeleteButton
+          requireRight="workshops:delete"
+          owner="events"
+          owningId={eventId}
+          onDelete={() => addGlobalLoadingAnimation(deleteWorkshop({ id: _id }))}
           className="float-right" text="Poista"
           confirmText={'Haluatko varmasti poistaa työpajan ' + name + '?'}
         />
         <Button
           requireRight="workshops:modify"
+          owner="events"
+          owningId={eventId}
           onClick={() => setShowEditor(!showEditor)}
           className="float-right" text={showEditor ? t('closeEditor') : t('openEditor')}
         />

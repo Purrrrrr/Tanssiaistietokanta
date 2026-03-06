@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 
-import { ID, RightQuery, RightQueryContext, RightsQuery, ServiceName, ServiceRight, SingleRightQueryString } from './types'
+import { RightQuery, RightQueryContext, RightsQuery, ServiceName, ServiceRight, SingleRightQueryString } from './types'
 
 import { useRightsQueryFn } from './context'
 import { replaceEqualDeep } from './utils'
@@ -30,7 +30,7 @@ export function useRights(rights: RightsList, context?: RightQueryContext): bool
 
 type RightsList = RightsQuery['rights']
 
-function useParsedRights({ rights, context, contextId, entityId, owner, ownerId }: RightsQuery): RightQuery<ServiceName>[] {
+function useParsedRights({ rights, context, contextId, entityId, owner, owningId }: RightsQuery): RightQuery<ServiceName>[] {
   const stableRights = useStableRightsProp(rights)
 
   return useMemo(() => {
@@ -44,17 +44,17 @@ function useParsedRights({ rights, context, contextId, entityId, owner, ownerId 
         // If context is provided and matches the service
         // => use contextId as entityId if it is not explicitly provided
         // If context is provided and does not match the service
-        // => use context as owner and contextId as ownerId if it is not explicitly provided
+        // => use context as owner and contextId as owningId if it is not explicitly provided
         return {
           service,
           right,
           entityId: entityId ?? (context === service ? contextId : undefined),
           owner: owner ?? (context !== service ? context : undefined),
-          ownerId: ownerId ?? (context !== service ? contextId : undefined),
+          owningId: owningId ?? (context !== service ? contextId : undefined),
         }
       })
     })
-  }, [stableRights, context, contextId, entityId, owner, ownerId])
+  }, [stableRights, context, contextId, entityId, owner, owningId])
 }
 
 function useStableRightsProp(rights: RightsList): RightsList {

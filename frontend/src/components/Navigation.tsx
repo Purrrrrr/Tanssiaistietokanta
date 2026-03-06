@@ -16,7 +16,7 @@ function Navigation() {
       <Breadcrumbs label={useTranslation('navigation.breadcrumbs')} />
     </div>
     <div className="flex items-center">
-      <NavButton requireRight="dances:read" icon={<span className="mr-0.5">💃</span>} href="/dances" text={useTranslation('navigation.dances')} />
+      <NavButton requireRight="dances:list" icon={<span className="mr-0.5">💃</span>} href="/dances" text={useTranslation('navigation.dances')} />
       <div className="mx-1 self-stretch w-[1px] bg-stone-300" />
       <LoginStatus />
     </div>

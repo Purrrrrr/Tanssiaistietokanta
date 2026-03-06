@@ -9,7 +9,7 @@ export default function EventProgramEditorPage({ event }: { event: Event }) {
   const t = useT('pages.events.eventProgramPage')
   return <>
     <PageTitle noRender>{t('pageTitle')}</PageTitle>
-    <RequirePermissions requireRight="events:read,modify" fallback="loginPage">
+    <RequirePermissions requireRight="events:read,modify" fallback="loginPage" entityId={event._id}>
       <EventProgramEditor event={event} />
     </RequirePermissions>
   </>

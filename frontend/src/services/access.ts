@@ -1,4 +1,4 @@
-import { type Access, AccessAllowed, type AccessQuery, AccessTarget, ServiceName } from 'types/gql/graphql'
+import { type Access, AccessAllowed, type AccessQuery, ServiceName } from 'types/gql/graphql'
 
 import { socketRequest } from 'backend'
 
@@ -9,6 +9,11 @@ const debug = createDebug('access')
 const globalAccess = new Map<`${ServiceName}:${string}`, AccessAllowed>()
 const accessCache: Access[] = []
 
+export function clearAccessCache() {
+  globalAccess.clear()
+  accessCache.length = 0
+}
+
 interface SpecificAccessQuery extends AccessQuery {
   service: ServiceName
   action: string
@@ -17,7 +22,11 @@ interface SpecificAccessQuery extends AccessQuery {
 export async function hasAccess(query: SpecificAccessQuery): Promise<boolean> {
   const access = await checkAccess(query)
   if (access === AccessAllowed.Unknown) {
-    debug('Access for query %O is unknown, defaulting to deny', query)
+    console.warn(
+      'Access for query %O is unknown, defaulting to deny',
+      // Try to filter out undefined values from the query for better logging
+      Object.fromEntries(Object.entries(query).filter(([_, value]) => value !== undefined)),
+    )
   }
   return access === AccessAllowed.Grant
 }
@@ -59,12 +68,16 @@ async function fetchGlobalAccesses(): Promise<void> {
 async function fetchAccess(query: AccessQuery): Promise<Access[]> {
   const accesses = await socketRequest<Access[]>('access', 'find', query)
   debug('Fetched accesses for query %o:\n%t', query, accesses)
+  if (accesses === null) {
+    console.warn('Received null accesses for query %o, treating as empty array', query)
+    return []
+  }
   updateAccessCache(accesses)
   return accesses
 }
 
 function updateAccessCache(accesses: Access[]) {
-  accesses.forEach(access => {
+  accesses?.forEach(access => {
     const existingIndex = accessCache.findIndex(a => hasEqualAccessQuery(a, access))
     if (existingIndex !== -1) {
       accessCache[existingIndex] = access

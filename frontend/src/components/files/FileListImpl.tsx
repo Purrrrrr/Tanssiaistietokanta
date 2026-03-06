@@ -42,7 +42,7 @@ export default function FileList({ title, owner, owningId, path }: FileListProps
   const selector = useMultipleSelection(files)
   const [canUseFiles, canUpload, canModify, canDelete] = useRights([
     'files:read', 'files:create', 'files:modify', 'files:delete',
-  ])
+  ], { owner, owningId })
 
   const startUploads = async (filesToUpload: File[]) => {
     if (!canUpload) return

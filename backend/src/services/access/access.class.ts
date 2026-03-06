@@ -66,7 +66,7 @@ implements ServiceInterface<Access, never, ServiceParams, never> {
 
     const actions: (GlobalAction | EntityAction)[] = actionQuery
       ? [actionQuery]
-      : ['read', 'create', 'update', 'remove', 'manage-access']
+      : ['list', 'read', 'create', 'modify', 'delete', 'manage-access']
 
     return Promise.all(
       actions.map(async (action) => {
@@ -92,7 +92,7 @@ implements ServiceInterface<Access, never, ServiceParams, never> {
   }
 
   private async getAccess(strategy: AugmentedAccessStrategy, action: GlobalAction | EntityAction, user?: User, entityId?: Id, owner?: ServiceName, owningId?: Id): Promise<boolean | undefined> {
-    if (entityId && action !== 'create') {
+    if (entityId && action !== 'create' && action !== 'list') {
       return strategy.authorizeEntity({
         action, user, entityData: await strategy.store?.getAccess(entityId), owner, owningId,
       })

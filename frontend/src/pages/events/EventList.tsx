@@ -20,7 +20,7 @@ export default function EventList() {
     <LoadingState {...requestState} />
     <p>
       {t('welcomeMessage.message')}
-      <RequirePermissions requireRight="dances:read">
+      <RequirePermissions requireRight="dances:list">
         {t('welcomeMessage.danceInstructionsPostfix')}
         <Link to="/dances">{t('welcomeMessage.danceInstructions')}</Link>
       </RequirePermissions>.
@@ -32,7 +32,7 @@ export default function EventList() {
       <Link to="/login">{t('loginToEdit.loginPage')}</Link>
       {t('loginToEdit.toEdit')}
     </p>}
-    <RequirePermissions requireRight="events:read">
+    <RequirePermissions requireRight="events:list">
       <p>{t('weHaveXEvents', { count: events.length })}</p>
       <ItemList columns="grid-cols-[1fr_max-content] gap-x-4" items={events} emptyText={t('noEvents')} className="max-w-200" wrap-breakpoint="none">
         <ItemList.Header>

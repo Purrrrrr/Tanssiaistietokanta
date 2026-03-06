@@ -83,6 +83,7 @@ function DanceListRow({ dance }: { dance: DanceListItem }) {
       <DeleteDanceButton minimal dance={dance} />
       <Button
         requireRight="dances:modify"
+        entityId={dance._id}
         minimal
         icon={<Edit />}
         aria-label={useTranslation('common.edit')}

@@ -96,11 +96,11 @@ export const file = (app: Application) => {
     },
     authTarget: 'owner',
     authorize({ action, user, owner, owningId }) {
-      if (!owner) {
-        return false
-      }
       if (!user?.groups.includes('file-access') && !user?.groups.includes('admins')) {
         return false
+      }
+      if (!owner || !owningId) {
+        return undefined
       }
       return accessService.hasAccess(owner, action, user, owningId)
     },

@@ -20,7 +20,7 @@ function DancesPage() {
 
   return <>
     <PageTitle>{t('pageTitle')}</PageTitle>
-    <RequirePermissions requireRight="dances:read">
+    <RequirePermissions requireRight="dances:list">
       <LoadingState {...requestState} />
       <div className="flex flex-wrap gap-2 mb-2.5">
         <SearchBar id="search-dances" value={search} onChange={setSearch} placeholder={useTranslation('common.search')} emptySearchText={useTranslation('common.emptySearch')} />

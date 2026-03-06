@@ -27,7 +27,7 @@ interface DanceEditorProps {
 export function DanceEditor({ dance, onDelete, showVersionHistory, titleComponent = 'h2' }: DanceEditorProps) {
   const { formProps, state } = useDanceEditorState(dance)
   const Title = titleComponent === 'h2' ? H2 : 'h1'
-  const canEdit = useRight('dances:modify')
+  const canEdit = useRight('dances:modify', { entityId: dance._id })
 
   return <Form {...formProps} readOnly={!canEdit || formProps.readOnly}>
     <div className="flex flex-wrap gap-3.5 items-center mb-2">
@@ -49,7 +49,7 @@ export function DanceEditor({ dance, onDelete, showVersionHistory, titleComponen
 
 export function PlainDanceEditor({ dance }: { dance: DanceWithEvents }) {
   const { formProps, state } = useDanceEditorState(dance)
-  const canEdit = useRight('dances:modify')
+  const canEdit = useRight('dances:modify', { entityId: dance._id })
   return <Form className="p-2 border-gray-200 border-t-1"{...formProps} readOnly={!canEdit}>
     <SyncStatus floatRight state={state} />
     <FullDanceEditorFields dance={dance} />
