@@ -374,7 +374,6 @@ mutation deleteEvent($id: ID!) {
 export function useCallbackOnEventChanges(eventId, callback) {
   const callbacks = useMemo(() => {
     const updateFn = () => {
-      console.log('Event has changed, running callback')
       callback()
     }
     return {

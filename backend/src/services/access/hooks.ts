@@ -4,6 +4,7 @@ import { AsyncLocalStorage } from 'async_hooks'
 import { Action } from './strategies'
 import { User } from './types'
 import { isJsonPatch, getPatched } from '../../hooks/merge-json-patch'
+import { isEqual } from 'es-toolkit'
 
 export const SkipAccessControl = Symbol('SkipAccessControl')
 export const PreviousAccessControl = Symbol('PreviousAccessControl')
@@ -105,6 +106,9 @@ export async function checkAccess(ctx: HookContext, next: NextFunction) {
         }
         stragegy.store.dataValidator(updatedData)
         await stragegy.store.setAccess(id as string, updatedData)
+        if (!isEqual(entityData, updatedData)) {
+          accessService.emit('updated', { service: path, id, accessData: updatedData })
+        }
         entityData = updatedData
       }
     }

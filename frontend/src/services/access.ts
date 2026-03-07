@@ -1,17 +1,47 @@
+import EventEmitter from 'events'
+
 import { type Access, AccessAllowed, type AccessQuery, ServiceName } from 'types/gql/graphql'
 
 import { socketRequest } from 'backend'
+import { socket } from 'backend/connection'
 
 import createDebug from 'utils/debug'
 
 const debug = createDebug('access')
 
 const globalAccess = new Map<`${ServiceName}:${string}`, AccessAllowed>()
-const accessCache: Access[] = []
+let accessCache: Access[] = []
+const eventEmitter = new EventEmitter()
+eventEmitter.setMaxListeners(100)
+
+export function subscribeToAccessUpdates(callback: () => unknown) {
+  eventEmitter.on('update', callback)
+  return () => eventEmitter.off('update', callback)
+}
 
 export function clearAccessCache() {
   globalAccess.clear()
   accessCache.length = 0
+  eventEmitter.emit('update')
+  debug('Cleared access cache')
+}
+
+socket.on('access updated', (updatedAccess: { service: ServiceName, id: string }) => {
+  debug('Received access updated event: %O', updatedAccess)
+  const before = accessCache.length
+  accessCache = accessCache.filter(access => !affectsAccess(access, updatedAccess))
+  eventEmitter.emit('update')
+  debug(`Removed ${before - accessCache.length} accesses from cache due to access update`)
+})
+
+function affectsAccess(access: Access, updatedAccess: { service: ServiceName, id: string }): boolean {
+  if (access.owner === updatedAccess.service && access.owningId === updatedAccess.id) {
+    return true
+  }
+  if (access.service === updatedAccess.service && access.entityId === updatedAccess.id) {
+    return true
+  }
+  return false
 }
 
 interface SpecificAccessQuery extends AccessQuery {

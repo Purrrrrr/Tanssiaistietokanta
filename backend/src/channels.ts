@@ -5,9 +5,9 @@ import type { Application, HookContext } from './declarations'
 import { defaultChannels } from './utils/defaultChannels'
 
 export const channels = (app: Application) => {
-  app.on('connection', (_connection: RealTimeConnection) => {
+  app.on('connection', (connection: RealTimeConnection) => {
     // On a new real-time connection, add it to the anonymous channel
-    // app.channel('anonymous').join(connection)
+    app.channel('access').join(connection)
   })
 
   /* app.on('login', (authResult: AuthenticationResult, { connection }: Params) => {

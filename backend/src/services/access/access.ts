@@ -64,6 +64,8 @@ export const access = (app: Application) => {
     error: {
       all: [],
     },
+  }).publish(() => {
+    return app.channel('access')
   })
 }
 

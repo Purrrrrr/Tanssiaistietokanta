@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { RightQuery, RightQueryContext, RightsQuery, ServiceName, ServiceRight, SingleRightQueryString } from './types'
 
-import { useRightsQueryFn } from './context'
+import { useRightsContext } from './context'
 import { replaceEqualDeep } from './utils'
 
 const PENDING_RESULT = [false]
@@ -12,18 +12,25 @@ export function useRight(right: SingleRightQueryString, context?: RightQueryCont
 }
 
 export function useRights(rights: RightsList, context?: RightQueryContext): boolean[] {
-  const queryFn = useRightsQueryFn()
+  const { hasRight: queryFn, subscribe } = useRightsContext()
   const parsedRights = useParsedRights({ rights, ...context })
 
   const idRef = useRef(0)
   const [result, setResult] = useState(PENDING_RESULT)
+
   useEffect(() => {
-    const id = idRef.current
-    Promise.all(parsedRights.map(queryFn)).then(newestResult => {
-      if (id !== idRef.current) return
-      setResult(newestResult)
-    })
-  }, [parsedRights, queryFn])
+    const loadRightsResult = () => {
+      idRef.current += 1
+      const id = idRef.current
+      Promise.all(parsedRights.map(queryFn)).then(newestResult => {
+        if (id !== idRef.current) return
+        setResult(newestResult)
+      })
+    }
+
+    loadRightsResult()
+    return subscribe(loadRightsResult)
+  }, [parsedRights, queryFn, subscribe])
 
   return result
 }

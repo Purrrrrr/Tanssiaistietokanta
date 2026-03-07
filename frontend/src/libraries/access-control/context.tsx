@@ -2,35 +2,33 @@ import { createContext, useContext } from 'react'
 
 import { RightQuery, ServiceName } from './types'
 
-export type RightsProviderFunction<User> = (
-  user: User | null,
+export type RightsProviderFunction = (
   query: RightQuery<ServiceName>,
 ) => Promise<boolean>
 export type RightsQueryFunction = (right: RightQuery<ServiceName>) => Promise<boolean>
 
-interface RightsQueryContextType<User = unknown> {
-  user: User | null
-  hasRight: RightsProviderFunction<User>
+interface RightsQueryContextType {
+  subscribe: (callback: () => void) => () => void
+  hasRight: RightsProviderFunction
 }
 
 const RightsQueryContext = createContext<RightsQueryContextType>({
-  user: null,
+  subscribe: () => () => {},
   hasRight: () => Promise.resolve(false),
 })
 
-export function AccessControlProvider<User>({
-  user,
+export function AccessControlProvider({
   hasRight,
+  subscribe,
   children,
-}: RightsQueryContextType<User> & { children: React.ReactNode }) {
+}: RightsQueryContextType & { children: React.ReactNode }) {
   return (
-    <RightsQueryContext.Provider value={{ user, hasRight } as RightsQueryContextType}>
+    <RightsQueryContext.Provider value={{ hasRight, subscribe }}>
       {children}
     </RightsQueryContext.Provider>
   )
 }
 
-export function useRightsQueryFn(): RightsQueryFunction {
-  const { user, hasRight } = useContext(RightsQueryContext)
-  return hasRight.bind(null, user)
+export function useRightsContext(): RightsQueryContextType {
+  return useContext(RightsQueryContext)
 }

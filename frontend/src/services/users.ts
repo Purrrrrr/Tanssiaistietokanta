@@ -2,7 +2,7 @@ import { useSyncExternalStore } from 'react'
 
 import { RightQuery } from 'libraries/access-control/types'
 
-import { getCurrentUser, subscribeToAuthChanges, type User } from 'backend/authentication'
+import { getCurrentUser, subscribeToAuthChanges } from 'backend/authentication'
 
 import { backendQueryHook, entityListQueryHook, graphql, setupServiceUpdateFragment } from '../backend'
 import { clearAccessCache, hasAccess } from './access'
@@ -41,7 +41,7 @@ declare global {
 
 subscribeToAuthChanges(clearAccessCache)
 
-export async function hasRight(_user: User | null, query: RightQuery) {
+export async function hasRight(query: RightQuery) {
   const { right, service, ...rest } = query
   return await hasAccess({ action: right, ...rest, service })
 }
