@@ -8,6 +8,8 @@ export type Action = 'list' | 'create' | 'read' | 'modify' | 'delete' | 'manage-
 
 export interface AccessStrategy<Service extends ServiceName, EntityAccessData = unknown, ExtraAction extends string = never> {
   initialize?(config: StrategyConfig): Promise<void> | void
+  allowAuth?(method: string): ('refreshToken' | 'jwt')[]
+
   extraActions?: ExtraAction[]
   requestToActions?(request: RequestData<Service>): (Action | ExtraAction)[] | undefined
 

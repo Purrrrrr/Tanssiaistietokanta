@@ -21,43 +21,25 @@ declare module '@feathersjs/feathers' {
 
 const paramStorage = new AsyncLocalStorage<AccessParamContext>()
 
-function toRequestData(ctx: HookContext): RequestData<ServiceName> {
-  const { path, method, id, params, data } = ctx
-  switch (method) {
-    case 'find':
-      return { path: path as ServiceName, method, params }
-    case 'get':
-    case 'remove':
-      if (!id) {
-        break
-      }
-      return { path: path as ServiceName, method, id, params }
-    case 'create':
-    case 'update':
-    case 'patch':
-      if (!id) {
-        break
-      }
-      return { path: path as ServiceName, method, id, params, data }
-    default:
-  }
-  return { path: path as ServiceName, method: 'unknown', methodName: method, id, params, data }
-}
-
 export async function checkAccess(ctx: HookContext, next: NextFunction) {
-  const { app, params, path, method, id } = ctx
-  const accessService = app.service('access')
-  if (params[SkipAccessControl]) {
+  const { path, method, id } = ctx
+  const accessService = ctx.app.service('access')
+  if (ctx.params[SkipAccessControl]) {
     // Some internal service calls need to have full access, eg. the dependecy graph
     return next()
   }
-
-  return withAccessParams({ user: params.user }, async ({ user }) => {
-    const strategy = accessService.getAccessStrategy(path as ServiceName)
-    if (!strategy) {
-      return next()
+  const strategy = accessService.getAccessStrategy(path as ServiceName)
+  if (!strategy) {
+    return next()
+  }
+  if (ctx.params.authenticated !== true && path !== 'authentication') {
+    const strategies = strategy.allowAuth?.(method) ?? []
+    if (strategies.length > 0) {
+      await auth(ctx, strategies)
     }
+  }
 
+  return withAccessParams({ user: ctx.params.user }, async ({ user }) => {
     if (!await strategy.authorizeRequest(toRequestData(ctx), user)) {
       throw new Error('Access denied')
     }
@@ -155,4 +137,49 @@ export function withAccessParams<T>(
   return paramStorage.run(context, async () => {
     return await fn(context)
   })
+}
+
+function toRequestData(ctx: HookContext): RequestData<ServiceName> {
+  const { path, method, id, params, data } = ctx
+  switch (method) {
+    case 'find':
+      return { path: path as ServiceName, method, params }
+    case 'get':
+    case 'remove':
+      if (!id) {
+        break
+      }
+      return { path: path as ServiceName, method, id, params }
+    case 'create':
+    case 'update':
+    case 'patch':
+      if (!id) {
+        break
+      }
+      return { path: path as ServiceName, method, id, params, data }
+    default:
+  }
+  return { path: path as ServiceName, method: 'unknown', methodName: method, id, params, data }
+}
+
+const auth = async (context: HookContext, strategies: string[]) => {
+  const { app, params } = context
+  const { authentication } = params
+  const authService = app.service('authentication')
+
+  if (params.authenticated === true) {
+    return
+  }
+
+  if (authentication) {
+    const { authentication, ...authParams } = params
+    const authResult = await authService.authenticate(authentication, authParams, ...strategies)
+    const { accessToken: _token, ...authResultWithoutToken } = authResult
+
+    context.params = {
+      ...params,
+      ...authResultWithoutToken,
+      authenticated: true,
+    }
+  }
 }

@@ -14,7 +14,6 @@ import {
 import type { Application, HookContext } from '../../declarations'
 import { File, FileService, getOptions } from './files.class'
 import { filePath, fileMethods } from './files.shared'
-import { authenticate } from '@feathersjs/authentication'
 import { SkipAccessControl } from '../access/hooks'
 
 export * from './files.class'
@@ -36,12 +35,12 @@ export const file = (app: Application) => {
         // schemaHooks.resolveExternal(fileExternalResolver),
         // schemaHooks.resolveResult(fileResolver)
       ],
-      find: [authenticate('refreshToken', 'jwt')],
-      get: [authenticate('refreshToken', 'jwt')],
-      create: [authenticate('jwt')],
-      update: [authenticate('jwt')],
-      patch: [authenticate('jwt')],
-      remove: [authenticate('jwt')],
+      find: [],
+      get: [],
+      create: [],
+      update: [],
+      patch: [],
+      remove: [],
     },
     before: {
       all: [schemaHooks.validateQuery(fileQueryValidator), schemaHooks.resolveQuery(fileQueryResolver)],
@@ -85,6 +84,9 @@ export const file = (app: Application) => {
   const accessService = app.service('access')
 
   accessService.setAccessStrategy('files', {
+    allowAuth: method => method === 'find' || method === 'get'
+      ? ['refreshToken', 'jwt']
+      : ['jwt'],
     getOwnerFromData(file) {
       return {
         owner: file.owner,
