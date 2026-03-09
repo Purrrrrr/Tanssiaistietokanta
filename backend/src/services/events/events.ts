@@ -79,17 +79,17 @@ export const events = (app: Application) => {
 
     authTarget = 'entity' as const
 
-    async authorize({ type, action, entityData, user }: AuthParams<EventAccessData>) {
+    async authorize({ action, entityData, user }: AuthParams<EventAccessData>) {
       if (user?.groups.includes('admins')) {
         return true
       }
-      if (type === 'global') {
-        if (action === 'list') {
-          return true
-        }
-        if (action === 'create') {
-          return !!user
-        }
+      if (action === 'list') {
+        return true
+      }
+      if (action === 'create') {
+        return !!user
+      }
+      if (!entityData) {
         return undefined
       }
 

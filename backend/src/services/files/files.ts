@@ -99,7 +99,10 @@ export const file = (app: Application) => {
       if (!user?.groups.includes('file-access') && !user?.groups.includes('admins')) {
         return false
       }
-      if (!owner || !owningId) {
+      if (action === 'list') {
+        return true
+      }
+      if ((!owner)) {
         return undefined
       }
       return accessService.hasAccess(owner, action, user, owningId)

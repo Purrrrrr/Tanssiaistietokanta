@@ -4,7 +4,8 @@ import type { Id, Params, ServiceInterface } from '@feathersjs/feathers'
 import type { Application, HookContext } from '../../declarations'
 import type { Access, AccessQuery, ServiceName } from './access.schema'
 import { Channel } from '@feathersjs/transport-commons'
-import { AccessStrategy, AugmentedAccessStrategy, augmentStrategy, GlobalAction, Action as EntityAction } from './strategies'
+import { AccessStrategy, Action } from './strategies'
+import { AugmentedAccessStrategy, augmentStrategy } from './augmentStrategy'
 import { AccessDataStoreFactory } from './accessDataStore'
 import { logger } from '../../requestLogger'
 import { PreviousAccessControl } from './hooks'
@@ -31,9 +32,9 @@ implements ServiceInterface<Access, never, ServiceParams, never> {
     this.getStore = this.storeFactory.getStore.bind(this.storeFactory)
   }
 
-  setAccessStrategy<Service extends ServiceName, Data>(
+  setAccessStrategy<Service extends ServiceName, Data, ExtraActions extends string = never>(
     service: Service,
-    strategy: AccessStrategy<Service, Data>,
+    strategy: AccessStrategy<Service, Data, ExtraActions>,
   ) {
     this.strategies.set(service, augmentStrategy(strategy) as any)
     strategy.initialize?.({
@@ -53,20 +54,20 @@ implements ServiceInterface<Access, never, ServiceParams, never> {
       : Array.from(this.strategies.keys()) as ServiceName[]
 
     const results = await Promise.all(
-      services.map(serviceName => this.findServiceAccess(serviceName, action as GlobalAction | EntityAction, entityId, params?.user, owner, owningId)),
+      services.map(serviceName => this.findServiceAccess(serviceName, action as Action, entityId, params?.user, owner, owningId)),
     )
     return results.flat()
   }
 
-  async findServiceAccess(serviceName: ServiceName, actionQuery?: GlobalAction | EntityAction, entityId?: string, user?: User, owner?: ServiceName, owningId?: string): Promise<Access[]> {
+  async findServiceAccess(serviceName: ServiceName, actionQuery?: Action, entityId?: string, user?: User, owner?: ServiceName, owningId?: string): Promise<Access[]> {
     const strategy = this.getAccessStrategy(serviceName)
     if (!strategy) {
       return []
     }
 
-    const actions: (GlobalAction | EntityAction)[] = actionQuery
+    const actions: (Action)[] = actionQuery
       ? [actionQuery]
-      : ['list', 'read', 'create', 'modify', 'delete', 'manage-access']
+      : ['list', 'read', 'create', 'modify', 'delete', 'manage-access', ...strategy.extraActions ?? []]
 
     return Promise.all(
       actions.map(async (action) => {
@@ -84,20 +85,20 @@ implements ServiceInterface<Access, never, ServiceParams, never> {
     )
   }
 
-  async hasAccess(serviceName: ServiceName, action: GlobalAction | EntityAction, user?: User, entityId?: Id, owner?: ServiceName, owningId?: Id): Promise<boolean | undefined> {
+  async hasAccess(serviceName: ServiceName, action: Action, user?: User, entityId?: Id, owner?: ServiceName, owningId?: Id): Promise<boolean | undefined> {
     const strategy = this.getAccessStrategy(serviceName)
     return strategy
       ? this.getAccess(strategy, action, user, entityId, owner, owningId)
       : true
   }
 
-  private async getAccess(strategy: AugmentedAccessStrategy, action: GlobalAction | EntityAction, user?: User, entityId?: Id, owner?: ServiceName, owningId?: Id): Promise<boolean | undefined> {
-    if (entityId && action !== 'create' && action !== 'list') {
-      return strategy.authorizeEntity({
-        action, user, entityData: await strategy.store?.getAccess(entityId), owner, owningId,
-      })
-    }
-    return strategy.authorizeGlobal({ action, user, owner, owningId })
+  private async getAccess(strategy: AugmentedAccessStrategy, action: Action, user?: User, entityId?: Id, owner?: ServiceName, owningId?: Id): Promise<boolean | undefined> {
+    const entityData = entityId
+      ? await strategy.store?.getAccess(entityId)
+      : undefined
+    return strategy.authorize({
+      action, user, entityData, owner, owningId,
+    })
   }
 
   async handlePublish<T>(
@@ -134,7 +135,7 @@ implements ServiceInterface<Access, never, ServiceParams, never> {
     return Promise.all(
       channelConnections.map(async (c) => {
         const { user } = c.connection
-        const hasPermission = await strategy.authorizeEntity({ action: 'read', user, entityData })
+        const hasPermission = await strategy.authorize({ action: 'read', user, entityData })
 
         if (hasPermission) {
           logger.info('Has permission to access entity', { entityId, user: user?._id })
@@ -142,7 +143,7 @@ implements ServiceInterface<Access, never, ServiceParams, never> {
         }
         if (previousAccessData) {
           logger.info('Had permission to access entity', { entityId, user: user?._id })
-          const hadPermission = await strategy.authorizeEntity({ action: 'read', user, entityData: previousAccessData })
+          const hadPermission = await strategy.authorize({ action: 'read', user, entityData: previousAccessData })
           if (hadPermission) {
             // Send minimal data to indicate that the entity is now inaccessible
             return new Channel([c.connection], { _id: entityId, inaccessible: true })

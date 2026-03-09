@@ -1,7 +1,7 @@
 import { HookContext, NextFunction } from '../../declarations'
 import { ServiceName } from './access.schema'
 import { AsyncLocalStorage } from 'async_hooks'
-import { Action } from './strategies'
+import { RequestData } from './strategies'
 import { User } from './types'
 import { isJsonPatch, getPatched } from '../../hooks/merge-json-patch'
 import { isEqual } from 'es-toolkit'
@@ -21,6 +21,29 @@ declare module '@feathersjs/feathers' {
 
 const paramStorage = new AsyncLocalStorage<AccessParamContext>()
 
+function toRequestData(ctx: HookContext): RequestData<ServiceName> {
+  const { path, method, id, params, data } = ctx
+  switch (method) {
+    case 'find':
+      return { path: path as ServiceName, method, params }
+    case 'get':
+    case 'remove':
+      if (!id) {
+        break
+      }
+      return { path: path as ServiceName, method, id, params }
+    case 'create':
+    case 'update':
+    case 'patch':
+      if (!id) {
+        break
+      }
+      return { path: path as ServiceName, method, id, params, data }
+    default:
+  }
+  return { path: path as ServiceName, method: 'unknown', methodName: method, id, params, data }
+}
+
 export async function checkAccess(ctx: HookContext, next: NextFunction) {
   const { app, params, path, method, id } = ctx
   const accessService = app.service('access')
@@ -30,31 +53,27 @@ export async function checkAccess(ctx: HookContext, next: NextFunction) {
   }
 
   return withAccessParams({ user: params.user }, async ({ user }) => {
-    const stragegy = accessService.getAccessStrategy(path as ServiceName)
-    if (!stragegy) {
+    const strategy = accessService.getAccessStrategy(path as ServiceName)
+    if (!strategy) {
       return next()
     }
 
-    if (method === 'find') {
-      const hasPermission = await stragegy.authorizeGlobal({
-        action: 'list',
-        user,
-      })
-      if (!hasPermission) {
-        throw new Error('Access denied')
-      }
+    if (!await strategy.authorizeRequest(toRequestData(ctx), user)) {
+      throw new Error('Access denied')
+    }
 
+    if (method === 'find') {
       await next()
       const result = ctx.result
       if (!Array.isArray(result)) {
         return
       }
       ctx.result = authorizeList(result, async entity => {
-        const entityData = await stragegy.store?.getAccess(entity._id)
+        const entityData = await strategy.store?.getAccess(entity._id)
         const ownerData = entity._id // Sometimes entities are queried without an id, eg. in some grahpql resolvers
-          ? await stragegy.getEntityOwner?.(entity._id)
+          ? await strategy.getEntityOwner?.(entity._id)
           : undefined
-        const hasPermission = await stragegy.authorizeEntity({
+        const hasPermission = await strategy.authorize({
           action: 'read',
           entityData,
           user,
@@ -65,56 +84,29 @@ export async function checkAccess(ctx: HookContext, next: NextFunction) {
       return
     }
 
-    if (method === 'create') {
-      const context = stragegy.getOwnerFromData?.(ctx.data)
+    await next()
 
-      const hasPermission = await stragegy.authorizeGlobal({
-        action: 'create',
-        user,
-        ...context,
-      })
-
-      if (hasPermission === false) {
-        throw new Error('Access denied')
-      }
-
-      return next()
-    }
-
-    const action = toAction(method)
-    if (!action) {
-      return next()
-    }
-
-    let entityData = await stragegy.store?.getAccess(id as string)
-    const ownerData = id ? await stragegy.getEntityOwner?.(id) : undefined
-    const hasPermission = await stragegy.authorizeEntity({ action, user, entityData, ...ownerData })
-    if (!hasPermission) {
-      throw new Error('Access denied')
-    }
-
-    if (stragegy.store) {
+    if (id && strategy.store) {
+      let entityData = await strategy.store?.getAccess(id as string)
       const updatedData = getAccessControlUpdate(ctx, entityData)
 
       if (updatedData) {
         ctx.params[PreviousAccessControl] = entityData
-        const hasManagePermission = await stragegy.authorizeEntity({
+        const hasManagePermission = await strategy.authorize({
           action: 'manage-access', user, entityData,
         })
         if (!hasManagePermission) {
           throw new Error('Manage access denied')
         }
-        stragegy.store.dataValidator(updatedData)
-        await stragegy.store.setAccess(id as string, updatedData)
+        strategy.store.dataValidator(updatedData)
+        await strategy.store.setAccess(id as string, updatedData)
         if (!isEqual(entityData, updatedData)) {
           accessService.emit('updated', { service: path, id, accessData: updatedData })
         }
         entityData = updatedData
       }
+      ctx.result = addAccessData(ctx.result, entityData)
     }
-
-    await next()
-    ctx.result = addAccessData(ctx.result, entityData)
   })
 }
 
@@ -163,18 +155,4 @@ export function withAccessParams<T>(
   return paramStorage.run(context, async () => {
     return await fn(context)
   })
-}
-
-function toAction(method: string): Action | null {
-  switch (method) {
-    case 'get':
-      return 'read'
-    case 'update':
-    case 'patch':
-      return 'modify'
-    case 'remove':
-      return 'delete'
-    default:
-      return null
-  }
 }

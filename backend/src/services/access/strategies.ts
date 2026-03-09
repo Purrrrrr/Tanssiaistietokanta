@@ -1,89 +1,47 @@
 import { Validator } from '@feathersjs/schema'
 import { Application } from '../../declarations'
 import { AuthTarget, ServiceName } from './access.schema'
-import { ServiceCreateData, User } from './types'
+import { MaybePromise, ServiceCreateData, ServiceParams, ServicePatchData, ServiceUpdateData, User } from './types'
 
-export interface Entity {
-  _id: Id
-}
 export type Id = string | number
-export type GlobalAction = 'list' | 'create'
-export type Action = 'read' | 'modify' | 'delete' | 'manage-access'
+export type Action = 'list' | 'create' | 'read' | 'modify' | 'delete' | 'manage-access'
 
-export interface AugmentedAccessStrategy<Service extends ServiceName = ServiceName, EntityAccessData = unknown> extends AccessStrategy<Service, EntityAccessData> {
-  authTarget: (action: Action | GlobalAction) => AuthTarget
-  authorizeEntity(
-    params: Omit<EntityAuthParams<EntityAccessData>, 'type'>,
-  ): MaybePromise<AuthResponse>
-  authorizeGlobal(
-    params: Omit<GlobalAuthParams, 'type' | 'entityData'>,
-  ): MaybePromise<AuthResponse | undefined>
-}
-
-export function augmentStrategy<Service extends ServiceName, EntityAccessData>(
-  strategy: AccessStrategy<Service, EntityAccessData>,
-): AugmentedAccessStrategy<Service, EntityAccessData> {
-  const { authTarget } = strategy
-  const augmented: AugmentedAccessStrategy<Service, EntityAccessData> = {
-    ...strategy,
-    authTarget: typeof authTarget === 'function'
-      ? authTarget
-      : () => authTarget,
-    authorizeEntity: async (params) => {
-      const result = await strategy.authorize({ type: 'entity', ...params })
-      if (result === undefined) {
-        return false
-      }
-      return result
-    },
-    authorizeGlobal: async (params) => {
-      return strategy.authorize({ type: 'global', entityData: undefined, ...params })
-    },
-  }
-  return augmented
-}
-
-export interface AccessStrategy<Service extends ServiceName, EntityAccessData = unknown> {
+export interface AccessStrategy<Service extends ServiceName, EntityAccessData = unknown, ExtraAction extends string = never> {
   initialize?(config: StrategyConfig): Promise<void> | void
+  extraActions?: ExtraAction[]
+  requestToActions?(request: RequestData<Service>): (Action | ExtraAction)[] | undefined
 
-  authorize(
-    params: AuthParams<EntityAccessData>,
-  ): MaybePromise<AuthResponse | undefined>
-  authTarget: AuthTarget | ((action: Action | GlobalAction) => AuthTarget)
-  // globalStore?: GlobalAccessStrategyDataStore<GlobalAccessData>
+  authorize(params: AuthParams<EntityAccessData, ExtraAction>): MaybePromise<AuthResponse | undefined>
+  authTarget: AuthTarget | ((action: Action) => AuthTarget)
   store?: AccessStrategyDataStore<EntityAccessData>
 
   getOwnerFromData?(data: ServiceCreateData<Service>): EntityOwner | undefined
   getEntityOwner?(entityId: Id): MaybePromise<EntityOwner> | undefined
-
-  // authorizeRequest?(method: Methods, requestData: RequestData<ServiceName, Action, AccessData>): Promise<boolean> | boolean
 }
 
-type MaybePromise<T> = Promise<T> | T
-
-export type AuthParams<EntityAccessData> = GlobalAuthParams | EntityAuthParams<EntityAccessData>
-
-interface GlobalAuthParams extends EntityOwner {
-  type: 'global'
-  user: User | undefined
-  action: GlobalAction | Action
-  entityData: undefined
+export type RequestData<Service extends ServiceName> = RequestDataCommon<Service> & (
+  | { method: 'find', id?: never, data?: never }
+  | { method: 'get', id: Id, data?: never }
+  | { method: 'create', id: Id, data: ServiceCreateData<Service> }
+  | { method: 'update', id: Id, data: ServiceUpdateData<Service> }
+  | { method: 'patch', id: Id, data: ServicePatchData<Service> }
+  | { method: 'remove', id: Id, data?: never }
+  | { method: 'unknown', methodName: string, id?: Id, data?: unknown }
+)
+export interface RequestDataCommon<Service extends ServiceName> {
+  path: Service
+  params: ServiceParams<Service>
 }
-interface EntityAuthParams<EntityAccessData> extends EntityOwner {
-  type: 'entity'
+
+export interface AuthParams<EntityAccessData, ExtraAction extends string = never> extends EntityOwner {
   user: User | undefined
-  action: Action
-  entityData: EntityAccessData
+  action: Action | ExtraAction
+  entityData: EntityAccessData | undefined
 }
 
 export interface EntityOwner {
   owner?: ServiceName
   owningId?: Id
-}
-
-export interface GlobalAccessStrategyDataStore<AccessData> {
-  dataValidator: Validator<AccessData>
-  setAccess?(accessData: AccessData): Promise<void> | void
 }
 
 /* The store should store all access related data for an entity. */
