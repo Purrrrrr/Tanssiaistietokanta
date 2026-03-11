@@ -31,9 +31,14 @@ export const initializeAuthentication = async () => {
     .find((cookie) => cookie === `${loggedInCookieName}=yes`)
 
   if (isLoggedIn) {
-    await auth('refreshToken')
-    if (authState.currentAccessToken) {
-      await setAccessToken(authState.currentAccessToken)
+    try {
+      await auth('refreshToken')
+      if (authState.currentAccessToken) {
+        await setAccessToken(authState.currentAccessToken)
+      }
+    } catch (error) {
+      console.error('Failed to refresh token on initialization', error)
+      authState.setState(null)
     }
     subscribeToAuthChanges(authState => {
       setAccessToken(authState?.accessToken ?? null)
