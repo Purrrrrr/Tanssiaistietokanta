@@ -3,6 +3,7 @@ import { GrantRole } from 'types/gql/graphql'
 
 import { useCurrentUser, useUsers } from 'services/users'
 
+import { useRight } from 'libraries/access-control'
 import { formFor } from 'libraries/forms'
 import { Fieldset } from 'libraries/formsV2/components/containers/Fieldset'
 import { H2, ItemList } from 'libraries/ui'
@@ -22,6 +23,7 @@ const {
 
 export function EventGrantsEditor() {
   const t = useT('components.grantEditor')
+  const hasRight = useRight('events:manage-access')
 
   const grants = useValueAt('accessControl.grants')
   const addGrant = useAppendToList('accessControl.grants')
@@ -31,7 +33,9 @@ export function EventGrantsEditor() {
     .filter(g => g.principal.startsWith('user:'))
     .map(g => ({ _id: g.principal.substring(5) }))
 
-  // const hasLoggedInGrant = grants.some(g => g.principal === 'group:user')
+  if (!hasRight) {
+    return null
+  }
 
   return (
     <section>

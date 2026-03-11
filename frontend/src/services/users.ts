@@ -33,7 +33,7 @@ query getUser($id: ID!) {
 declare global {
   interface AccessControlServiceRights {
     dances: ['create', 'list', 'read', 'modify', 'delete']
-    events: ['create', 'list', 'read', 'modify', 'delete']
+    events: ['create', 'list', 'read', 'modify', 'delete', 'manage-access']
     workshops: ['create', 'list', 'read', 'modify', 'delete']
     files: ['create', 'list', 'read', 'modify', 'delete']
   }
