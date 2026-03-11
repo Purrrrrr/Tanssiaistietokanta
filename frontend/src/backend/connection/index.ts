@@ -12,7 +12,7 @@ let accessToken: string | null = null
 
 export async function setAccessToken(token: string | null) {
   if (token === accessToken) return
-  debug('Setting backend connection accessToken')
+  debug('Setting backend connection accessToken to %s, with socket %s', token, socket.connected ? 'connected' : 'disconnected')
 
   if (socket.connected) {
     await setSocketAccessToken(token)
