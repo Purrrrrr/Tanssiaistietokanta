@@ -32,7 +32,7 @@ export async function checkAccess(ctx: HookContext, next: NextFunction) {
   if (!strategy) {
     return next()
   }
-  if (ctx.params.authenticated !== true && path !== 'authentication') {
+  if (ctx.params.authenticated !== true && path !== 'authentication' && paramStorage.getStore()?.user === undefined) {
     const strategies = strategy.allowAuth?.(method) ?? []
     if (strategies.length > 0) {
       await auth(ctx, strategies)
