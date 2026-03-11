@@ -166,10 +166,6 @@ const auth = async (context: HookContext, strategies: string[]) => {
   const { authentication } = params
   const authService = app.service('authentication')
 
-  if (params.authenticated === true) {
-    return
-  }
-
   if (authentication) {
     const { authentication, ...authParams } = params
     const authResult = await authService.authenticate(authentication, authParams, ...strategies)
