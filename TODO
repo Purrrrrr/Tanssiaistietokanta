@@ -283,7 +283,10 @@
   * Propagate rights changes to frontend
   * Make useRights hook follow backend access changes
   * Make sure files can be marked used/unused if user is not in file-allowing groups
-    Manage rights check for event ui
+  * Manage rights check for event ui
+    Fix updating of file lists
+    Fix updating of rights
+    Ensure this thing actually works all the time
     Some own component or system for auth needing pages
     Test that versions still work
     Profile page
@@ -301,6 +304,17 @@
     Prevent callbacks running for out of bounds array data
 
   Use ItemList in setEditors
+
+  File linking/copying
+    Ability to copy a file to different location/name
+    Ability to replace file contents with contents of another
+    Ability to download folders of files
+  Event slide rework
+    Store slide styles in own service/db
+      CSS in db
+      Variables?
+      Make slides some kind of grid with defined areas
+    Use file service for images
 
   Bundle size reducing
     Replace Apollo
