@@ -30,7 +30,7 @@ export const logRequest = ({ ignoredPaths = [] }: LogRequestOptions = {}) => asy
       throw error
     } finally {
       // Intentionally pick user from params here because it's not set earlier
-      logger.logData('user', params.user ? pick(params.user, ['_id', 'username', 'name', 'sessionId']) : undefined)
+      logger.logData('user', params.user ? pick(params.user, ['_id', 'username', 'name', 'sessionId', 'groups']) : undefined)
       logger.logData('statusCode', context.http?.status)
     }
   })
