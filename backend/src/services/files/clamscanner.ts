@@ -34,6 +34,7 @@ export class ClamScanner {
         logger.error(`ClamAV: unable to initialize ClamAV because of '${error}'`)
       }
     } else {
+      this.initialized = true
       logger.warn('ClamAV: not configured')
     }
   }
