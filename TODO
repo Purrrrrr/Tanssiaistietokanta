@@ -281,7 +281,7 @@
   * Frontend rights querying
   * Propagate rights changes to frontend
   * Make useRights hook follow backend access changes
-    Make sure files can be marked used/unused
+  * Make sure files can be marked used/unused if user is not in file-allowing groups
     Manage rights check for event ui
     Some own component or system for auth needing pages
     Test that versions still work

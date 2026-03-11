@@ -96,18 +96,31 @@ export const file = (app: Application) => {
     getEntityOwner: async (entityId) => {
       return await fileService.get(entityId, { [SkipAccessControl]: true, query: { $select: ['owner', 'owningId'] } })
     },
+    extraActions: ['modify-unused'],
+    requestToActions(request) {
+      if (request.method === 'patch') {
+        const isUnusedSet = Object.entries(request.data).every(
+          ([key, value]) => key === 'unused' || value === undefined,
+        )
+        return isUnusedSet ? ['modify-unused'] : ['modify']
+      }
+    },
     authTarget: 'owner',
     authorize({ action, user, owner, owningId }) {
-      if (!user?.groups.includes('file-access') && !user?.groups.includes('admins')) {
+      const requireFileAccessGroup = action !== 'modify-unused' && action !== 'read'
+      if (requireFileAccessGroup && !user?.groups.includes('file-access') && !user?.groups.includes('admins')) {
         return false
       }
       if (action === 'list') {
         return true
       }
-      if ((!owner)) {
+      if (!owner) {
         return undefined
       }
-      return accessService.hasAccess(owner, action, user, owningId)
+      const effectiveAction = action === 'modify-unused'
+        ? 'modify'
+        : action
+      return accessService.hasAccess(owner, effectiveAction, user, owningId)
     },
   })
 }

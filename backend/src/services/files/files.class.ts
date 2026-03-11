@@ -13,6 +13,7 @@ import { ClamScanner } from './clamscanner'
 import { sum, takeWhile } from 'es-toolkit'
 import { PassThrough } from 'stream'
 import { logger, withRequestLogging } from '../../requestLogger'
+import { SkipAccessControl } from '../access/hooks'
 
 export type { File, FileData, FilePatch, FileQuery }
 
@@ -55,7 +56,7 @@ export class FileService
   }
 
   cleanUpUnused = withRequestLogging('files', 'cleanUpUnused', async () => {
-    const allFiles = await this.find({ query: { unused: true, $sort: { _updatedAt: 1 /* ASC */ } } })
+    const allFiles = await this.find({ [SkipAccessControl]: true, query: { unused: true, $sort: { _updatedAt: 1 /* ASC */ } } })
     const byRoot = Map.groupBy(allFiles, file => file.root)
 
     for (const [root, files] of byRoot.entries()) {
@@ -247,7 +248,7 @@ export class FileService
   }
 
   private async hasDuplicateName({ root, path, name }: Pick<File, 'root' | 'path' | 'name'>, existingFile: File | null) {
-    const duplicates = await this.find({ query: { root, path, name } })
+    const duplicates = await this.find({ [SkipAccessControl]: true, query: { root, path, name } })
     return duplicates.length > 0 && (!existingFile || duplicates.some(file => file._id !== existingFile._id))
   }
 
