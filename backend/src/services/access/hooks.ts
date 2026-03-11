@@ -73,7 +73,7 @@ export async function checkAccess(ctx: HookContext, next: NextFunction) {
       let entityData = await strategy.store?.getAccess(id as string)
       const updatedData = getAccessControlUpdate(ctx, entityData)
 
-      if (updatedData) {
+      if (updatedData && !isEqual(entityData, updatedData)) {
         ctx.params[PreviousAccessControl] = entityData
         const hasManagePermission = await strategy.authorize({
           action: 'manage-access', user, entityData,
@@ -83,9 +83,7 @@ export async function checkAccess(ctx: HookContext, next: NextFunction) {
         }
         strategy.store.dataValidator(updatedData)
         await strategy.store.setAccess(id as string, updatedData)
-        if (!isEqual(entityData, updatedData)) {
-          accessService.emit('updated', { service: path, id, accessData: updatedData })
-        }
+        accessService.emit('updated', { service: path, id, accessData: updatedData })
         entityData = updatedData
       }
       ctx.result = addAccessData(ctx.result, entityData)
