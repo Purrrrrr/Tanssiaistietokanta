@@ -30,6 +30,10 @@ export class RefreshTokenStrategy implements AuthenticationStrategy {
       // Prefer other strategies if Authorization header is present
       return null
     }
+    if (req.url?.startsWith('/socket.io')) {
+      // Don't attempt to authenticate socket.io requests with this strategy
+      return null
+    }
     const cookies = parse(req.headers.cookie ?? '')
     if (cookies.refreshToken) {
       return { strategy: 'refreshToken', refreshToken: cookies.refreshToken }
