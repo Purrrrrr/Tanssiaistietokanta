@@ -88,7 +88,7 @@ function Image(props: React.ComponentProps<'img'>) {
   /* eslint-disable jsx-a11y/alt-text */
   return id
     ? <img {...props} src={getDownloadUrl(id)} />
-    : <img {...props} />
+    : <img {...props} src={props.src === '' ? '/404.png' : props.src} />
   /* eslint-enable jsx-a11y/alt-text */
 }
 
