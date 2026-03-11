@@ -4,7 +4,7 @@ import { RestResult } from './types'
 
 import { backendHost, backendPath, debug } from './constants'
 import { fetchRequest } from './fetch'
-import { fetchWithProgress, FetchWithProgressOptions } from './fetchWithProgress'
+import { fetchWithProgress, FetchWithProgressOptions, Method } from './fetchWithProgress'
 
 export const socket = io(backendHost, { path: `${backendPath}/socket.io` })
 
@@ -68,8 +68,8 @@ export function restRequest<T>(
 }
 
 export function restRequestWithProgress(
+  method: Method,
   url: string,
-  method: string,
   options: Omit<FetchWithProgressOptions, 'accessToken'>,
 ): Promise<RestResult<string, 'aborted' | 'unknown'>> {
   return fetchWithProgress(url, method, { ...options, accessToken })

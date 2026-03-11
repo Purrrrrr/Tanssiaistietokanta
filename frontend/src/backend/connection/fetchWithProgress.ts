@@ -16,7 +16,9 @@ export interface FetchRequestProgress {
   total: number
 }
 
-export function fetchWithProgress(url: string, method: string, { data, onProgress, signal, accessToken }: FetchWithProgressOptions): Promise<Response> {
+export type Method = 'POST' | 'PUT' | 'PATCH'
+
+export function fetchWithProgress(url: string, method: Method, { data, onProgress, signal, accessToken }: FetchWithProgressOptions): Promise<Response> {
   const promise = Promise.withResolvers<Response>()
   const request = new XMLHttpRequest()
   request.upload.addEventListener('progress', ({ lengthComputable, loaded, total }) => {
