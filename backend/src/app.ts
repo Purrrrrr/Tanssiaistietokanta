@@ -16,7 +16,6 @@ import initDependencyGraph from './dependencyGraph'
 import { preventRemovingOfUsedItems } from './hooks/prevent-removing-of-used-items'
 import { migrateDb } from './umzug'
 import { channels } from './channels'
-import { addErrorStatusCode } from './hooks/addErrorStatusCode'
 import { MaxFileSize } from './services/files/files.class'
 import { logger, withRequestLogger } from './requestLogger'
 import sessions, { restSessionCookieMiddleware, socketIOSessionCookieMiddleware } from './internal-services/sessions'
@@ -84,7 +83,7 @@ app.configure(sessions)
 // Register hooks that run on all service methods
 app.hooks({
   around: {
-    all: [logRequest({ ignoredPaths: ['channel-connections'] }), checkAccess, addErrorStatusCode],
+    all: [logRequest({ ignoredPaths: ['channel-connections'] }), checkAccess],
   },
   before: {
     remove: [preventRemovingOfUsedItems],

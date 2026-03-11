@@ -27,6 +27,7 @@ export const logRequest = ({ ignoredPaths = [] }: LogRequestOptions = {}) => asy
     } catch (error: any) {
       const includeStack = !(error instanceof NotAuthenticated)
       logger.logError(error, includeStack)
+      throw error
     } finally {
       // Intentionally pick user from params here because it's not set earlier
       logger.logData('user', params.user ? pick(params.user, ['_id', 'username', 'name', 'sessionId']) : undefined)

@@ -9,11 +9,9 @@ import { mergeResolvers } from '@graphql-tools/merge'
 import { logger } from '../../logger'
 
 import type { Application } from '../../declarations'
-import { ErrorWithStatus } from '../../hooks/addErrorStatusCode'
-import { GraphQLError } from 'graphql'
 import { addLogData } from '../../requestLogger'
 import { withAccessParams } from '../access/hooks'
-import { BadRequest } from '@feathersjs/errors'
+import { FeathersError } from '@feathersjs/errors'
 
 type Graphql = any
 type GraphqlData = any
@@ -113,13 +111,7 @@ implements ServiceInterface<Graphql, GraphqlData, ServiceParams, GraphqlPatch> {
       typeDefs: this.options.schema,
       formatError: (formattedError, error) => {
         const unwrapped = unwrapResolverError(error)
-        if (error instanceof GraphQLError) {
-          const { originalError } = error
-          if (originalError instanceof ErrorWithStatus) {
-            return originalError.result
-          }
-        }
-        if (unwrapped instanceof BadRequest) {
+        if (unwrapped instanceof FeathersError) {
           return {
             ...formattedError,
             extensions: {

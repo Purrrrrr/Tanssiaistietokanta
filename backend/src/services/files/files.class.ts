@@ -7,12 +7,12 @@ import cron from 'node-cron'
 
 import { NeDBService } from '../../utils/NeDBService'
 import type { Application } from '../../declarations'
-import { ErrorWithStatus } from '../../hooks/addErrorStatusCode'
 import type { File, FileData, FilePatch, FileQuery } from './files.schema'
 import { ClamScanner } from './clamscanner'
 import { sum, takeWhile } from 'es-toolkit'
 import { PassThrough } from 'stream'
 import { logger, withRequestLogging } from '../../requestLogger'
+import { Conflict, NotFound, Unprocessable } from '@feathersjs/errors'
 import { SkipAccessControl } from '../access/hooks'
 
 export type { File, FileData, FilePatch, FileQuery }
@@ -118,7 +118,7 @@ export class FileService
     if (download) {
       switch (result.length) {
         case 0:
-          throw new ErrorWithStatus(404, 'Files not found')
+          throw new NotFound('Files not found')
         case 1:
         {
           const filePath = this.idToPath(result[0])
@@ -129,7 +129,7 @@ export class FileService
         {
           const size = sum(result.map(file => file.size))
           if (size > MaxZipSize) {
-            throw new ErrorWithStatus(422, `Combined file size ${size / 1024} kb exceeds the limit of ${MaxZipSize / 1024} kb`)
+            throw new Unprocessable(`Combined file size ${size / 1024} kb exceeds the limit of ${MaxZipSize / 1024} kb`)
           }
           const archiveProgress = Promise.withResolvers()
           const stream = new PassThrough()
@@ -179,7 +179,7 @@ export class FileService
     const infected = await this.scanner.isInfected(filepath)
 
     if (infected) {
-      throw new ErrorWithStatus(422, {
+      throw new Unprocessable({
         code: 'FILE_IS_INFECTED',
         message: 'Infected file',
       })
@@ -227,7 +227,7 @@ export class FileService
     let hasDuplicates = await this.hasDuplicateName(filePath, existingFile)
     if (hasDuplicates) {
       if (!autoRename) {
-        throw new ErrorWithStatus(409, {
+        throw new Conflict({
           code: 'FILE_EXISTS',
           message: 'The file already exists',
         })

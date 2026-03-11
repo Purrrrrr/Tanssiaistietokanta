@@ -5,6 +5,7 @@ import { RequestData } from './strategies'
 import { User } from './types'
 import { isJsonPatch, getPatched } from '../../hooks/merge-json-patch'
 import { isEqual } from 'es-toolkit'
+import { Forbidden } from '@feathersjs/errors'
 
 export const SkipAccessControl = Symbol('SkipAccessControl')
 export const PreviousAccessControl = Symbol('PreviousAccessControl')
@@ -41,7 +42,7 @@ export async function checkAccess(ctx: HookContext, next: NextFunction) {
 
   return withAccessParams({ user: ctx.params.user }, async ({ user }) => {
     if (!await strategy.authorizeRequest(toRequestData(ctx), user)) {
-      throw new Error('Access denied')
+      throw new Forbidden(`Access denied to ${path}/${id ?? ''} for method ${method}`)
     }
 
     if (method === 'find') {
@@ -78,7 +79,7 @@ export async function checkAccess(ctx: HookContext, next: NextFunction) {
           action: 'manage-access', user, entityData,
         })
         if (!hasManagePermission) {
-          throw new Error('Manage access denied')
+          throw new Forbidden(`Manage access denied to ${path}/${id ?? ''} for method ${method}`)
         }
         strategy.store.dataValidator(updatedData)
         await strategy.store.setAccess(id as string, updatedData)
