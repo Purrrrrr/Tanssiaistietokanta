@@ -67,22 +67,28 @@ export async function checkAccess(ctx: HookContext, next: NextFunction) {
       return
     }
 
+    // TODO: remove access control data before creating/updating entity
     await next()
 
-    if (id && strategy.store) {
-      let entityData = await strategy.store?.getAccess(id as string)
+    const accessId = method === 'create' ? ctx.result._id : id
+    console.log(accessId)
+    if (accessId && strategy.store) {
+      let entityData = await strategy.store?.getAccess(accessId as string)
       const updatedData = getAccessControlUpdate(ctx, entityData)
 
+      console.log(entityData, updatedData)
       if (updatedData && !isEqual(entityData, updatedData)) {
         ctx.params[PreviousAccessControl] = entityData
-        const hasManagePermission = await strategy.authorize({
-          action: 'manage-access', user, entityData,
-        })
-        if (!hasManagePermission) {
-          throw new Forbidden(`Manage access denied to ${path}/${id ?? ''} for method ${method}`)
+        if (method !== 'create') {
+          const hasManagePermission = await strategy.authorize({
+            action: 'manage-access', user, entityData,
+          })
+          if (!hasManagePermission) {
+            throw new Forbidden(`Manage access denied to ${path}/${accessId ?? ''} for method ${method}`)
+          }
         }
         strategy.store.dataValidator(updatedData)
-        await strategy.store.setAccess(id as string, updatedData)
+        await strategy.store.setAccess(accessId as string, updatedData)
         accessService.emit('updated', { service: path, id, accessData: updatedData })
         entityData = updatedData
       }
