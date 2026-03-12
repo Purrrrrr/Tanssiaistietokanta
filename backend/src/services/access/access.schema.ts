@@ -8,13 +8,10 @@ import { dataValidator, queryValidator } from '../../validators'
 import type { AccessService } from './access.class'
 import { Id } from '../../utils/common-types'
 
-export const serviceNameSchema = Type.Union([
-  Type.Literal('events'),
-  Type.Literal('workshops'),
-  Type.Literal('dances'),
-  Type.Literal('users'),
-  Type.Literal('files'),
-], { $id: 'ServiceName' })
+const serviceNames = ['events', 'workshops', 'dances', 'users', 'files'] as const
+const serviceNameLiterals = serviceNames.map(name => Type.Literal(name))
+
+export const serviceNameSchema = Type.Union(serviceNameLiterals, { $id: 'ServiceName' })
 
 export type ServiceName = Static<typeof serviceNameSchema>
 export const authTargetSchema = Type.Union([Type.Literal('everything'), Type.Literal('owner'), Type.Literal('entity')], { $id: 'AccessTarget' })
@@ -41,13 +38,19 @@ export const accessResolver = resolve<Access, HookContext<AccessService>>({})
 export const accessExternalResolver = resolve<Access, HookContext<AccessService>>({})
 
 // Schema for allowed query properties
-export const accessQueryProperties = Type.Partial(Type.Pick(accessSchema, ['service', 'action', 'entityId', 'owner', 'owningId']))
+export const accessQueryProperties = Type.Partial(Type.Intersect([
+  Type.Pick(accessSchema, ['action', 'entityId', 'owningId']),
+  Type.Object({
+    service: Type.Optional(Type.Union(serviceNameLiterals)),
+    owner: Type.Optional(Type.Union(serviceNameLiterals)),
+  }),
+]))
 export const accessQuerySchema = Type.Intersect(
   [
     accessQueryProperties,
     // Add additional query properties here
     Type.Object({
-
+      queries: Type.Optional(Type.Array(accessQueryProperties)),
     }, { additionalProperties: false }),
   ],
   { additionalProperties: false },

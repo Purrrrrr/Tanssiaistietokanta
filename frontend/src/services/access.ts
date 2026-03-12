@@ -95,11 +95,34 @@ async function fetchGlobalAccesses(): Promise<void> {
   })
 }
 
+interface FetchQueue {
+  queries: AccessQuery[]
+  promise?: PromiseWithResolvers<Access[]>
+}
+
+let queue: FetchQueue | null = null
+
 async function fetchAccess(query: AccessQuery): Promise<Access[]> {
-  const accesses = await socketRequest<Access[]>('access', 'find', query)
-  debug('Fetched accesses for query %o:\n%t', query, accesses)
+  queue ??= { queries: [] }
+  const currentQueue = queue
+  if (!currentQueue.promise) {
+    const promise = Promise.withResolvers<Access[]>()
+    currentQueue.promise = promise
+    window.setTimeout(() => {
+      doFetchAccess(currentQueue.queries).then(promise.resolve).catch(promise.reject)
+      queue = null
+    }, 0)
+  }
+  queue.queries.push(query)
+
+  return currentQueue.promise.promise
+}
+
+async function doFetchAccess(queries: AccessQuery[]): Promise<Access[]> {
+  const accesses = await socketRequest<Access[]>('access', 'find', { queries })
+  debug('Fetched accesses for queries %o:\n%t', queries, accesses)
   if (accesses === null) {
-    console.warn('Received null accesses for query %o, treating as empty array', query)
+    console.warn('Received null accesses for queries %o, treating as empty array', queries)
     return []
   }
   updateAccessCache(accesses)

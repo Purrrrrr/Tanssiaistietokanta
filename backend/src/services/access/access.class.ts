@@ -48,13 +48,23 @@ implements ServiceInterface<Access, never, ServiceParams, never> {
   }
 
   async find(params?: ServiceParams): Promise<Access[]> {
-    const { entityId, service, action, owner, owningId } = params?.query ?? {}
+    if (params?.query?.queries) {
+      const results = await Promise.all(
+        params.query.queries.map(query => this.findQuery(query, params?.user)),
+      )
+      return results.flat()
+    }
+    return this.findQuery(params?.query, params?.user)
+  }
+
+  async findQuery(query: AccessQuery = {}, user: User | undefined) {
+    const { entityId, service, action, owner, owningId } = query
     const services = service
       ? [service]
       : Array.from(this.strategies.keys()) as ServiceName[]
 
     const results = await Promise.all(
-      services.map(serviceName => this.findServiceAccess(serviceName, action as Action, entityId, params?.user, owner, owningId)),
+      services.map(serviceName => this.findServiceAccess(serviceName, action as Action, entityId, user, owner, owningId)),
     )
     return results.flat()
   }
