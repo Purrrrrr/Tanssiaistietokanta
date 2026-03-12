@@ -124,7 +124,7 @@ function EventDetailsForm({ event }: { event: Event }) {
           maxDate={formProps.value.endDate}
         />
       </div>
-      <EventGrantsEditor />
+      <EventGrantsEditor eventId={event._id} />
     </Card>
   </Form>
 }

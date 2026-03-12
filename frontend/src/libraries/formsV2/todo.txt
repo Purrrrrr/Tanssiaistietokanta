@@ -60,6 +60,7 @@ TODO:
 * Move dialog to overlays library
 * NumberInput
 * More lazy loading for components
+  Input specific readonly flag
 
   Date selectors output format -> string?
   Scroll into opened selector?

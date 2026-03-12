@@ -8,6 +8,7 @@ export interface FieldPropsWithoutComponent<T, V> extends UserGivenFieldContaine
 }
 
 export interface UserGivenFieldContainerProps extends LabelTexts {
+  readOnly?: boolean
   containerClassName?: string
   inline?: boolean
   labelStyle?: LabelStyle

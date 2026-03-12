@@ -61,7 +61,7 @@ interface FieldData {
 export function useFieldData<Value>(
   path: string | number,
   value: Value,
-  { label, labelInfo, helperText, inline: maybeInline, labelStyle: maybeLabelStyle, containerClassName, ...rest }: FieldDataHookProps,
+  { label, labelInfo, helperText, inline: maybeInline, labelStyle: maybeLabelStyle, containerClassName, readOnly = false, ...rest }: FieldDataHookProps,
 ): FieldData {
   const ctx = useFormMetadata<unknown>()
   const inline = maybeInline ?? ctx.inline
@@ -79,7 +79,7 @@ export function useFieldData<Value>(
     fieldProps: {
       id,
       inline,
-      readOnly: ctx.readOnly,
+      readOnly: ctx.readOnly || readOnly,
       'aria-describedby': classNames(errorId, { [helperTextId]: helperText }),
       ...ariaProps,
     },

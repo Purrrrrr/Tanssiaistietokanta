@@ -21,9 +21,9 @@ const {
   Field, useValueAt, useAppendToList, useRemoveFromList,
 } = formFor<EventAccessControl>()
 
-export function EventGrantsEditor() {
+export function EventGrantsEditor({ eventId }: { eventId?: string }) {
   const t = useT('components.grantEditor')
-  const hasRight = useRight('events:manage-access')
+  const canEdit = useRight('events:manage-access', { entityId: eventId })
 
   const grants = useValueAt('accessControl.grants')
   const addGrant = useAppendToList('accessControl.grants')
@@ -33,14 +33,10 @@ export function EventGrantsEditor() {
     .filter(g => g.principal.startsWith('user:'))
     .map(g => ({ _id: g.principal.substring(5) }))
 
-  if (!hasRight) {
-    return null
-  }
-
   return (
     <section>
       <H2 className="mb-4">{t('accessRights')}</H2>
-      <Field path="accessControl.viewAccess" label={t('allowedViewers')} labelStyle="beside" component={ViewAccessSelector} />
+      <Field path="accessControl.viewAccess" label={t('allowedViewers')} labelStyle="beside" component={ViewAccessSelector} readOnly={!canEdit} />
       <Fieldset label={t('grants')} className="w-max">
         <ItemList noMargin items={grants} columns="grid-cols-[max-content_max-content_max-content]" emptyText={t('noGrants')} wrap-breakpoint="none">
           <ItemList.Header>
@@ -48,29 +44,31 @@ export function EventGrantsEditor() {
             <span>{t('role')}</span>
             <span />
           </ItemList.Header>
-          {grants.map((grant, index) => <GrantEditor key={grant._id} index={index} organizerCount={organizerCount} />)}
+          {grants.map((grant, index) => <GrantEditor key={grant._id} index={index} organizerCount={organizerCount} disabled={!canEdit} />)}
         </ItemList>
 
-        <UserSelector
-          id="add-user-grant"
-          aria-label={t('addGrant')}
-          value={null}
-          onChange={user => user && addGrant({
-            _id: guid(),
-            principal: `user:${user._id}`,
-            role: GrantRole.Viewer,
-          })}
-          placeholder={t('addGrant')}
-          excludeFromSearch={excludedUserIds}
-          noResultsText={t('nothingToAdd')}
-          className="mb-2"
-        />
+        {canEdit &&
+          <UserSelector
+            id="add-user-grant"
+            aria-label={t('addGrant')}
+            value={null}
+            onChange={user => user && addGrant({
+              _id: guid(),
+              principal: `user:${user._id}`,
+              role: GrantRole.Viewer,
+            })}
+            placeholder={t('addGrant')}
+            excludeFromSearch={excludedUserIds}
+            noResultsText={t('nothingToAdd')}
+            className="mb-2"
+          />
+        }
       </Fieldset>
     </section>
   )
 }
 
-function GrantEditor({ index, organizerCount }: { index: number, organizerCount: number }) {
+function GrantEditor({ index, organizerCount, disabled }: { index: number, organizerCount: number, disabled: boolean }) {
   const grantPath = `accessControl.grants.${index}` as const
   const grant = useValueAt(grantPath)
   const t = useT('components.grantEditor')
@@ -90,12 +88,12 @@ function GrantEditor({ index, organizerCount }: { index: number, organizerCount:
   }
   const principal = formatPrincipal(grant.principal)
 
-  const disabled = !currentUser?.groups.includes('admins') && grant.role === GrantRole.Organizer
-    && (grant.principal === `user:${currentUser?._id}` || organizerCount <= 1)
+  const rowDisabled = disabled
+    || (!currentUser?.groups.includes('admins') && grant.role === GrantRole.Organizer && (grant.principal === `user:${currentUser?._id}` || organizerCount <= 1))
 
   return <ItemList.Row>
     <span className="min-w-60">{principal}</span>
-    {disabled
+    {rowDisabled
       ? <span>{t(`roles.${grant.role}`)}</span>
       :
       <Field
@@ -105,13 +103,15 @@ function GrantEditor({ index, organizerCount }: { index: number, organizerCount:
         labelStyle="hidden"
       />
     }
-    <DeleteButton
-      onDelete={removeGrant}
-      confirmText={t('confirmRemove', { user: principal })}
-      text={t('remove')}
-      color="danger"
-      minimal
-      disabled={disabled}
-    />
+    {!disabled &&
+      <DeleteButton
+        onDelete={removeGrant}
+        confirmText={t('confirmRemove', { user: principal })}
+        text={t('remove')}
+        color="danger"
+        minimal
+        disabled={rowDisabled}
+      />
+    }
   </ItemList.Row>
 }

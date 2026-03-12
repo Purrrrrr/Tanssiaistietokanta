@@ -81,7 +81,7 @@ interface RadioGroupProps<E extends string | null> extends FieldComponentProps<E
   }[]
 }
 
-export function RadioGroup<E extends string>({ options, id, value, onChange, ...rest }: RadioGroupProps<E>) {
+export function RadioGroup<E extends string>({ options, readOnly, id, value, onChange, ...rest }: RadioGroupProps<E>) {
   return options.map(({ value: optionValue, label }) =>
     <label key={optionValue} className="mx-2">
       <input
@@ -92,6 +92,7 @@ export function RadioGroup<E extends string>({ options, id, value, onChange, ...
         value={optionValue ?? ''}
         checked={optionValue === (value ?? null)}
         onChange={() => onChange(optionValue)}
+        disabled={readOnly}
         {...rest}
       />
       {label}
