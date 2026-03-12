@@ -93,16 +93,13 @@ function GrantEditor({ index, organizerCount, disabled }: { index: number, organ
 
   return <ItemList.Row>
     <span className="min-w-60">{principal}</span>
-    {rowDisabled
-      ? <span>{t(`roles.${grant.role}`)}</span>
-      :
-      <Field
-        path={`${grantPath}.role`}
-        component={EventRoleSelector}
-        label={t('role')}
-        labelStyle="hidden"
-      />
-    }
+    <Field
+      path={`${grantPath}.role`}
+      component={EventRoleSelector}
+      readOnly={rowDisabled}
+      label={t('role')}
+      labelStyle="hidden"
+    />
     {!disabled &&
       <DeleteButton
         onDelete={removeGrant}
