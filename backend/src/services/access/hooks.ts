@@ -67,33 +67,34 @@ export async function checkAccess(ctx: HookContext, next: NextFunction) {
       return
     }
 
-    // TODO: remove access control data before creating/updating entity
+    if (!strategy.store) {
+      return next()
+    }
+
+    let currentAccessControl = id ? strategy.store.getAccess(id as string) : undefined
+    const updatedAccessControl = getAccessControlUpdate(ctx, strategy)
+
     await next()
 
-    const accessId = method === 'create' ? ctx.result._id : id
-    console.log(accessId)
-    if (accessId && strategy.store) {
-      let entityData = await strategy.store?.getAccess(accessId as string)
-      const updatedData = getAccessControlUpdate(ctx, entityData)
+    if (updatedAccessControl && !isEqual(currentAccessControl, updatedAccessControl)) {
+      const accessId = method === 'create' ? ctx.result._id : id
+      ctx.params[PreviousAccessControl] = currentAccessControl
 
-      console.log(entityData, updatedData)
-      if (updatedData && !isEqual(entityData, updatedData)) {
-        ctx.params[PreviousAccessControl] = entityData
-        if (method !== 'create') {
-          const hasManagePermission = await strategy.authorize({
-            action: 'manage-access', user, entityData,
-          })
-          if (!hasManagePermission) {
-            throw new Forbidden(`Manage access denied to ${path}/${accessId ?? ''} for method ${method}`)
-          }
+      strategy.store.dataValidator(updatedAccessControl)
+      if (method !== 'create') {
+        const hasManagePermission = await strategy.authorize({
+          action: 'manage-access', user, entityData: currentAccessControl,
+        })
+        if (!hasManagePermission) {
+          throw new Forbidden(`Manage access denied to ${path}/${accessId} for method ${method}`)
         }
-        strategy.store.dataValidator(updatedData)
-        await strategy.store.setAccess(accessId as string, updatedData)
-        accessService.emit('updated', { service: path, id, accessData: updatedData })
-        entityData = updatedData
       }
-      ctx.result = addAccessData(ctx.result, entityData)
+      await strategy.store.setAccess(accessId as string, updatedAccessControl)
+      accessService.emit('updated', { service: path, id, accessData: updatedAccessControl })
+      currentAccessControl = updatedAccessControl
     }
+
+    ctx.result = addAccessData(ctx.result, currentAccessControl)
   })
 }
 
@@ -113,7 +114,7 @@ function addAccessData<T>(result: T, data: unknown): T {
   return { ...result, accessControl: data } as T
 }
 
-function getAccessControlUpdate<T>(ctx: HookContext, entityData: T): T | undefined {
+function getAccessControlUpdate(ctx: HookContext, previousData?: unknown): unknown {
   const { data } = ctx
   if (!data) return undefined
 
@@ -122,10 +123,10 @@ function getAccessControlUpdate<T>(ctx: HookContext, entityData: T): T | undefin
     delete data.accessControl
     return accessControlData
   }
-  if (isJsonPatch(ctx)) {
+  if (previousData && isJsonPatch(ctx)) {
     const patch = data.filter((op: any) => op.path.startsWith('/accessControl'))
     ctx.data = data.filter((op: any) => !op.path.startsWith('/accessControl'))
-    return getPatched({ accessControl: entityData }, patch).accessControl
+    return getPatched({ accessControl: previousData }, patch).accessControl
   }
   return undefined
 }

@@ -189,11 +189,11 @@ export const eventsExternalResolver = resolve<Events, HookContext>({})
 export const eventsPartialDataSchema = Type.Intersect(
   [
     Type.Pick(eventsSchema, ['name', 'beginDate', 'endDate']),
-    Type.Partial(Type.Omit(eventsSchema, [...computedProperties, 'name', 'beginDate', 'endDate'])),
+    Type.Partial(Type.Omit(eventsSchema, [...computedProperties, 'accessControl', 'name', 'beginDate', 'endDate'])),
   ], {
     $id: 'PartialEventsData',
   })
-export const eventsDataSchema = Type.Omit(eventsSchema, ['_id'], {
+export const eventsDataSchema = Type.Omit(eventsSchema, ['_id', 'accessControl'], {
   $id: 'EventsData',
 })
 export type EventsData = Static<typeof eventsDataSchema>
@@ -202,7 +202,7 @@ export const eventsDataResolver = resolve<Events, HookContext>({})
 
 // Schema for updating existing entries
 export const eventsPatchSchema = Type.Partial(
-  Type.Omit(eventsSchema, ['_id']),
+  Type.Omit(eventsSchema, ['_id', 'accessControl']),
   {
     $id: 'EventsPatch',
   },
