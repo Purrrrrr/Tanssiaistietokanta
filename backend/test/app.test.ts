@@ -20,13 +20,13 @@ describe('Feathers application tests', () => {
   it('starts and shows the index page', async () => {
     const data = await fetch(appUrl).then(response => response.text())
 
-    assert.ok(data.indexOf('<html lang="en">') !== -1)
+    assert.ok(!data.includes('<html lang="en">'))
   })
 
   it('shows a 404 JSON error', async () => {
     const response = await fetch(`${appUrl}/path/to/nowhere`, {
       headers: {
-        'Response-Type': 'json'
+        'Response-Type': 'json',
       },
     })
     assert.strictEqual(response?.status, 404)

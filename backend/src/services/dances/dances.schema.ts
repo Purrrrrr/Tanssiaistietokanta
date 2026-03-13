@@ -65,7 +65,7 @@ export const dancesPartialDataSchema = Type.Intersect(
     $id: 'DancesData',
   },
 )
-export const dancesDataSchema = Type.Omit(dancesSchema, ['_id'])
+export const dancesDataSchema = Type.Omit(dancesSchema, ['_id', ...computedProperties])
 export type DancesData = Static<typeof dancesDataSchema>
 export const dancesDataValidator = castAfterValidating(dancesDataSchema, getValidator(dancesPartialDataSchema, dataValidator))
 export const dancesDataResolver = resolve<Dances, HookContext>({})

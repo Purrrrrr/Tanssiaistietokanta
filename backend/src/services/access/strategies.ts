@@ -24,7 +24,7 @@ export interface AccessStrategy<Service extends ServiceName, EntityAccessData = 
 export type RequestData<Service extends ServiceName> = RequestDataCommon<Service> & (
   | { method: 'find', id?: never, data?: never }
   | { method: 'get', id: Id, data?: never }
-  | { method: 'create', id: Id, data: ServiceCreateData<Service> }
+  | { method: 'create', id?: never, data: ServiceCreateData<Service> }
   | { method: 'update', id: Id, data: ServiceUpdateData<Service> }
   | { method: 'patch', id: Id, data: ServicePatchData<Service> }
   | { method: 'remove', id: Id, data?: never }

@@ -51,6 +51,8 @@ export function defaultRequestToActions(request: RequestData<ServiceName>): Acti
       return ['list']
     case 'get':
       return ['read']
+    case 'create':
+      return ['create']
     case 'update':
     case 'patch':
       return ['modify']

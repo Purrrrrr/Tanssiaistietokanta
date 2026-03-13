@@ -6,7 +6,7 @@ import { apiFetch, cookieJar } from './test-utils/apiFetch'
 
 const port = app.get('port')
 
-describe.only('application client tests', () => {
+describe('application client tests', () => {
   before(async () => {
     await app.listen(port)
   })

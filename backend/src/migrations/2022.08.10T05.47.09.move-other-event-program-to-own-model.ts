@@ -7,8 +7,6 @@ export const up: MigrationFn = async params => {
   const eventsDb = params.context.getModel('events')
   const eventProgramDb = params.context.getModel('event-program')
 
-  console.log(L)
-
   const events = await eventsDb.findAsync({})
 
   for (const event of events) {

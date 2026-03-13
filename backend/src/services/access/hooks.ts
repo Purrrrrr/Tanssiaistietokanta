@@ -157,6 +157,7 @@ function toRequestData(ctx: HookContext): RequestData<ServiceName> {
       }
       return { path: path as ServiceName, method, id, params }
     case 'create':
+      return { path: path as ServiceName, method, params, data }
     case 'update':
     case 'patch':
       if (!id) {

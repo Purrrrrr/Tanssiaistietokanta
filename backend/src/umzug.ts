@@ -30,10 +30,11 @@ export function createMigration(name: string, type: 'production' | 'test' = 'pro
 function getUmzug<Ctx extends MigrationContext>(context: Ctx, extension: string = 'ts') {
   const rawStorage = new JSONStorage({ path: path.join(context.dbPath, 'executed-migrations.json') })
   const replaceExtension = (name: string) => name.replace(/\.ts$/, '.js')
+  const isTest = process.env.NODE_ENV === 'test'
   return new Umzug<Ctx>({
     migrations: {
       glob: [
-        process.env.NODE_ENV === 'test'
+        isTest
           ? `@(src|test)/migrations/*.${extension}`
           : `src/migrations/*.${extension}`,
         { cwd: context.rootPath },
@@ -51,6 +52,6 @@ function getUmzug<Ctx extends MigrationContext>(context: Ctx, extension: string 
         return (await rawStorage.executed()).map(name => name.replace(/\.js$/, `.${extension}`))
       },
     },
-    logger: console,
+    logger: isTest ? undefined : console,
   })
 }
