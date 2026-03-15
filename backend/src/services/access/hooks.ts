@@ -111,6 +111,9 @@ async function authorizeList<T, R>(list: T[], authorizer: (item: T) => Promise<{
 }
 
 function addAccessData<T>(result: T, data: unknown): T {
+  if (data === undefined) {
+    return result
+  }
   return { ...result, accessControl: data } as T
 }
 

@@ -29,3 +29,8 @@ export const testUsers = [
   normalUser,
   disabledUser,
 ] as const
+
+export const enabledTestUsers = [
+  adminUser,
+  normalUser,
+] as const
