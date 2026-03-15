@@ -3,6 +3,7 @@ import stylistic from '@stylistic/eslint-plugin'
 import importPlugin from 'eslint-plugin-import'
 import importSort from 'eslint-plugin-simple-import-sort'
 import tseslint from 'typescript-eslint'
+import pluginChaiFriendly from 'eslint-plugin-chai-friendly';
 
 const importSortGroups = [
   [
@@ -38,6 +39,7 @@ export default tseslint.config(
     plugins: {
       'simple-import-sort': importSort,
       import: importPlugin,
+      'chai-friendly': pluginChaiFriendly,
     },
     languageOptions: {
       parserOptions: {
@@ -49,6 +51,9 @@ export default tseslint.config(
       },
     },
     rules: {
+      /* Do not flag chai assertions as unused expressions */
+      "chai-friendly/no-unused-expressions": 2,
+      "@typescript-eslint/no-unused-expressions": 0,
       // TODO: Maybe re-enable some day
       '@typescript-eslint/no-explicit-any': 0,
       '@typescript-eslint/prefer-nullish-coalescing': 1,
