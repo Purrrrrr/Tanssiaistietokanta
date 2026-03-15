@@ -34,7 +34,7 @@ export function stripLinks(text: string): string {
   return text.replace(INTERNAL_LINK_REGEX, (_, linkText) => {
     return linkText
   }).replace(EXTERNAL_LINK_REGEX, (_, linkText, link) => {
-    return linkText || link
+    return linkText !== '' ? linkText : link
   })
 }
 

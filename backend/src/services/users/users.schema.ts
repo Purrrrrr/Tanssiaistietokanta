@@ -28,7 +28,7 @@ export type User = Static<typeof userSchema>
 export const userValidator = getValidator(userSchema, dataValidator)
 export const userResolver = resolve<User, HookContext<UserService>>({
   sessionId: async (_: string | undefined, user: User, ctx) => {
-    if (!ctx.params.user || ctx.params.user._id !== user._id) {
+    if (!ctx.params.user || ctx.params.user?._id !== user._id) {
       return undefined
     }
     return ctx.params.sessionId

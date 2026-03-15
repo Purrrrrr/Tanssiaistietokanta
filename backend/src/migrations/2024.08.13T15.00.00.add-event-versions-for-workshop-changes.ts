@@ -132,6 +132,7 @@ function groupIntoVersionGroups(items: Item[]): VersionGroup[] {
         currentGroup.workshops[item.workshopId] = item.workshopVersionId
       } else {
         // console.log(`workshop ${item.workshopId} = null !`)
+        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
         delete currentGroup.workshops[item.workshopId]
       }
     }

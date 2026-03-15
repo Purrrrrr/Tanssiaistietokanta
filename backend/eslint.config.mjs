@@ -33,7 +33,7 @@ export default tseslint.config(
   eslint.configs.recommended,
   ...tseslint.configs.strict,
   ...tseslint.configs.stylisticTypeChecked,
-  stylistic.configs['recommended-flat'],
+  stylistic.configs.recommended,
   {
     plugins: {
       'simple-import-sort': importSort,
