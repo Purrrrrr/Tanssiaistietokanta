@@ -1,5 +1,5 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/client.test.html
-import assert from 'assert'
+import { expect } from 'chai'
 
 import rest from '@feathersjs/rest-client'
 import { app } from '../src/app'
@@ -21,7 +21,7 @@ describe('application client tests', () => {
   })
 
   it('initialized the client', () => {
-    assert.ok(client)
+    expect(client).to.be.an('object')
   })
 
   it('creates and authenticates a user with username and password', async () => {
@@ -31,9 +31,9 @@ describe('application client tests', () => {
       password: normalUser.password,
     })
 
-    assert.ok(accessToken, 'Created access token for user')
-    assert.ok(user, 'Includes user in authentication data')
-    assert.strictEqual(user.password, undefined, 'Password is hidden to clients')
+    expect(accessToken, 'Created access token for user').to.be.a('string')
+    expect(user, 'Includes user in authentication data').to.be.an('object')
+    expect(user.password, 'Password is hidden to clients').to.be.undefined
 
     await client.logout()
   })

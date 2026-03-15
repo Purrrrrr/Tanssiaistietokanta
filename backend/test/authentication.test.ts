@@ -1,4 +1,4 @@
-import assert from 'assert'
+import { expect } from 'chai'
 
 import { app } from '../src/app'
 import { normalUser } from './fixtures/test-users'
@@ -27,14 +27,14 @@ describe('application client tests', () => {
     })
     const { user, accessToken } = res.data
 
-    assert.strictEqual(res.status, 201, 'Authentication request successful')
-    assert.ok(user, 'Includes user in authentication data')
-    assert.strictEqual(user.username, normalUser.username, 'Usernames match')
-    assert.strictEqual(user.password, undefined, 'Password is hidden to clients')
+    expect(res.status, 'Authentication request successful').to.equal(201)
+    expect(user, 'Includes user in authentication data').to.be.an('object')
+    expect(user.username, 'Usernames match').to.equal(normalUser.username)
+    expect(user.password, 'Password is hidden to clients').to.be.undefined
 
     const cookie = await cookieJar.store.findCookie(app.get('host'), '/', 'refreshToken')
-    assert.ok(cookie, 'Refresh token cookie is set')
-    assert.ok(accessToken, 'Created access token for user')
+    expect(cookie, 'Refresh token cookie is set').to.exist
+    expect(accessToken, 'Created access token for user').to.be.a('string')
   })
 
   it('refreshes access token with refresh token cookie', async () => {
@@ -45,6 +45,6 @@ describe('application client tests', () => {
       },
     })
 
-    assert.strictEqual(res.status, 201, 'Authentication request successful')
+    expect(res.status, 'Authentication request successful').to.equal(201)
   })
 })
