@@ -16,6 +16,13 @@ export const normalUser: User = {
   name: 'Test User',
   groups: ['file-access', 'users'],
 }
+export const teacherUser: User = {
+  _id: '',
+  username: 'teacher@example.com',
+  password: 'supersecret',
+  name: 'Teacher User',
+  groups: ['users'],
+}
 export const disabledUser: User = {
   _id: '',
   username: 'disabled@example.com',
@@ -27,10 +34,12 @@ export const disabledUser: User = {
 export const testUsers = [
   adminUser,
   normalUser,
+  teacherUser,
   disabledUser,
 ] as const
 
 export const enabledTestUsers = [
   adminUser,
   normalUser,
+  teacherUser,
 ] as const
