@@ -14,6 +14,7 @@
   "uploadTmp": "./data/uploads/tmp",
   "uploadDir": "./data/uploads/ready",
   "clamav": {
+    "enabled": false,
     "socket": "/var/run/clamav/clamd.ctl"
   },
   "authentication": {

@@ -15,7 +15,7 @@ export class ClamScanner {
 
   async init() {
     const options = this.options
-    if (options) {
+    if (options?.enabled) {
       const type = 'socket' in options ? 'socket' : 'TCP'
       logger.info(`ClamAV: configuring with ${type}`)
       const scanner = new ClamScan()
@@ -35,7 +35,7 @@ export class ClamScanner {
       }
     } else {
       this.initialized = true
-      logger.warn('ClamAV: not configured')
+      logger.warn(options ? 'ClamAV: not configured' : 'ClamAV: disabled in configuration')
     }
   }
 

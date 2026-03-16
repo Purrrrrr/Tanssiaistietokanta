@@ -13,9 +13,11 @@ export const configurationSchema = Type.Intersect([
     uploadDir: Type.String(),
     clamav: Type.Optional(Type.Union([
       Type.Object({
+        enabled: Type.Boolean(),
         socket: Type.Optional(Type.String()),
       }),
       Type.Object({
+        enabled: Type.Boolean(),
         host: Type.Optional(Type.String()),
         port: Type.Optional(Type.Number()),
       }),
