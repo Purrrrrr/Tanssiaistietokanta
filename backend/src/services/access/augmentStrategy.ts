@@ -26,32 +26,33 @@ export function augmentStrategy<Service extends ServiceName, EntityAccessData, E
     }
   }
   const originalAuthorize = strategy.authorize.bind(strategy)
-  const authorize = (params: AugmentedAuthParams<EntityAccessData, ExtraAction>) => {
-    if (params.skipAuth) {
-      return true
-    }
-    return originalAuthorize(params)
-  }
 
   const augmented: AugmentedAccessStrategy<Service, EntityAccessData, ExtraAction> = Object.assign(strategy, {
     authorizeRequest: async (request: RequestData<Service>, user: User | undefined, skipAuth = false) => {
+      if (skipAuth) {
+        return true
+      }
       const actions = strategy.requestToActions?.(request) ?? defaultRequestToActions(request)
       const requestOwnerData = await ownerDataFromRequest(request)
       const entityData = request.id
         ? await strategy.store?.getAccess(request.id)
         : undefined
       const results = await Promise.all(actions.map(action => {
-        return authorize({
+        return originalAuthorize({
           action,
           user,
           entityData,
           ...requestOwnerData,
-          skipAuth,
         })
       }))
       return results.every(result => result === true)
     },
-    authorize,
+    authorize: (params: AugmentedAuthParams<EntityAccessData, ExtraAction>) => {
+      if (params.skipAuth) {
+        return true
+      }
+      return originalAuthorize(params)
+    },
     authTarget: typeof authTarget === 'function'
       ? authTarget
       : () => authTarget,
