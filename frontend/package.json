@@ -10,6 +10,7 @@
     "@httpx/plain-object": "^2.1.7",
     "@n8tb1t/use-scroll-position": "^2.0.3",
     "@react-aria/focus": "^3.19.1",
+    "@rolldown/plugin-babel": "^0.2.1",
     "@tailwindcss/vite": "^4.1.11",
     "@wojtekmaj/react-daterange-picker": "^6.0.0",
     "array-move": "4.0.0",
@@ -73,6 +74,9 @@
     },
     "react-infinite-scroller": {
       "react": "^19"
+    },
+    "@tailwindcss/vite": {
+      "vite": "^8.0.0"
     }
   },
   "devDependencies": {
@@ -89,9 +93,9 @@
     "@types/node": "^20.11.5",
     "@types/react": "19.2.8",
     "@types/react-dom": "19.2.3",
-    "@vitejs/plugin-react": "^5.1.2",
+    "@vitejs/plugin-react": "^6.0.1",
     "babel-jest": "^29.7.0",
-    "babel-plugin-react-compiler": "^19.0.0-beta-27714ef-20250124",
+    "babel-plugin-react-compiler": "^1.0.0",
     "eslint": "^9.38.0",
     "eslint-import-resolver-typescript": "^4.4.4",
     "eslint-plugin-import": "^2.32.0",
@@ -106,7 +110,7 @@
     "source-map-explorer": "2.5.3",
     "typescript": "5.7",
     "typescript-eslint": "^8.46.2",
-    "vite": "^7.1.12",
+    "vite": "^8.0.0",
     "vite-bundle-analyzer": "^0.21.0",
     "vite-plugin-checker": "^0.6.4",
     "vite-tsconfig-paths": "^4.3.1"

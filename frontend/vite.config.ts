@@ -1,33 +1,26 @@
-import react from '@vitejs/plugin-react'
+import react, { reactCompilerPreset } from '@vitejs/plugin-react'
+import babelPlugin from '@rolldown/plugin-babel'
 import tailwindcss from '@tailwindcss/vite'
 import { defineConfig, loadEnv, Plugin } from 'vite'
 import { analyzer } from 'vite-bundle-analyzer'
 import checker from 'vite-plugin-checker'
-import tsconfigPaths from 'vite-tsconfig-paths'
 import { jsSizeReporter } from './vite-plugin-js-size'
 
 import backendConfig from './src/backendConfig.json'
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode, command }) => {
-  const babelPlugins = [['babel-plugin-react-compiler', { target: '18' }]]
-  if (command === 'serve') {
-    babelPlugins.push(['@babel/plugin-transform-react-jsx-development', {}])
-  }
+export default defineConfig(({ mode }) => {
   const { PUBLIC_URL } = loadEnv(mode, '.', ['PUBLIC_URL'])
 
   setEnv(mode)
   return {
     plugins: [
-      react({
-        babel: {
-          plugins: babelPlugins,
-        },
+      react(),
+      babelPlugin({
+        presets: [reactCompilerPreset()],
       }),
-      tsconfigPaths(),
       envPlugin(),
       htmlPlugin(mode),
-      // setupProxyPlugin(),
       checker({
         typescript: true,
       }),
@@ -42,17 +35,8 @@ export default defineConfig(({ mode, command }) => {
     ],
     base: PUBLIC_URL || '/',
     resolve: {
+      tsconfigPaths: true,
       alias: [{ find: /^~([^/])/, replacement: '$1' }],
-    },
-    css: {
-      preprocessorOptions: {
-        sass: {
-          api: 'modern',
-        },
-        scss: {
-          api: 'modern',
-        },
-      },
     },
     build: {
       outDir: 'build',
