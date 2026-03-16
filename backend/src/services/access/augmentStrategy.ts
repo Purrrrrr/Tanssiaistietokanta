@@ -1,10 +1,15 @@
 import { AuthTarget, ServiceName } from './access.schema'
-import { ServiceCreateData, User } from './types'
-import { AccessStrategy, Action, AuthResponse, RequestData } from './strategies'
+import { MaybePromise, ServiceCreateData, User } from './types'
+import { AccessStrategy, Action, AuthParams, AuthResponse, RequestData } from './strategies'
 
 export interface AugmentedAccessStrategy<Service extends ServiceName = ServiceName, EntityAccessData = unknown, ExtraAction extends string = never> extends AccessStrategy<Service, EntityAccessData, ExtraAction> {
   authTarget: (action: Action) => AuthTarget
-  authorizeRequest(request: RequestData<Service>, user: User | undefined): Promise<AuthResponse>
+  authorizeRequest(request: RequestData<Service>, user: User | undefined, skipAuth?: boolean): Promise<AuthResponse>
+  authorize(params: AugmentedAuthParams<EntityAccessData, ExtraAction>): MaybePromise<AuthResponse | undefined>
+}
+
+interface AugmentedAuthParams<EntityAccessData, ExtraAction extends string = never> extends AuthParams<EntityAccessData, ExtraAction> {
+  skipAuth?: boolean
 }
 
 export function augmentStrategy<Service extends ServiceName, EntityAccessData, ExtraAction extends string>(
@@ -20,24 +25,33 @@ export function augmentStrategy<Service extends ServiceName, EntityAccessData, E
       return strategy.getEntityOwner?.(request.id)
     }
   }
+  const originalAuthorize = strategy.authorize.bind(strategy)
+  const authorize = (params: AugmentedAuthParams<EntityAccessData, ExtraAction>) => {
+    if (params.skipAuth) {
+      return true
+    }
+    return originalAuthorize(params)
+  }
 
   const augmented: AugmentedAccessStrategy<Service, EntityAccessData, ExtraAction> = Object.assign(strategy, {
-    authorizeRequest: async (request: RequestData<Service>, user: User | undefined) => {
+    authorizeRequest: async (request: RequestData<Service>, user: User | undefined, skipAuth = false) => {
       const actions = strategy.requestToActions?.(request) ?? defaultRequestToActions(request)
       const requestOwnerData = await ownerDataFromRequest(request)
       const entityData = request.id
         ? await strategy.store?.getAccess(request.id)
         : undefined
       const results = await Promise.all(actions.map(action => {
-        return strategy.authorize({
+        return authorize({
           action,
           user,
           entityData,
           ...requestOwnerData,
+          skipAuth,
         })
       }))
       return results.every(result => result === true)
     },
+    authorize,
     authTarget: typeof authTarget === 'function'
       ? authTarget
       : () => authTarget,

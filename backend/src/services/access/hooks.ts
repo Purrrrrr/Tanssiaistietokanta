@@ -25,10 +25,8 @@ const paramStorage = new AsyncLocalStorage<AccessParamContext>()
 export async function checkAccess(ctx: HookContext, next: NextFunction) {
   const { path, method, id } = ctx
   const accessService = ctx.app.service('access')
-  if (ctx.params[SkipAccessControl]) {
-    // Some internal service calls need to have full access, eg. the dependecy graph
-    return next()
-  }
+  // Some internal service calls need to have full access, eg. the dependecy graph
+  const skipAuth = ctx.params[SkipAccessControl] === true
   const strategy = accessService.getAccessStrategy(path as ServiceName)
   if (!strategy) {
     return next()
@@ -41,7 +39,7 @@ export async function checkAccess(ctx: HookContext, next: NextFunction) {
   }
 
   return withAccessParams({ user: ctx.params.user }, async ({ user }) => {
-    if (!await strategy.authorizeRequest(toRequestData(ctx), user)) {
+    if (!await strategy.authorizeRequest(toRequestData(ctx), user, skipAuth)) {
       throw new Forbidden(`Access denied to ${path}/${id ?? ''} for method ${method}`)
     }
 
@@ -57,6 +55,7 @@ export async function checkAccess(ctx: HookContext, next: NextFunction) {
           ? await strategy.getEntityOwner?.(entity._id)
           : undefined
         const hasPermission = await strategy.authorize({
+          skipAuth,
           action: 'read',
           entityData,
           user,
@@ -71,7 +70,7 @@ export async function checkAccess(ctx: HookContext, next: NextFunction) {
       return next()
     }
 
-    let currentAccessControl = id ? strategy.store.getAccess(id as string) : undefined
+    let currentAccessControl = id ? await strategy.store.getAccess(id as string) : undefined
     const updatedAccessControl = getAccessControlUpdate(ctx, strategy)
 
     await next()
@@ -83,7 +82,7 @@ export async function checkAccess(ctx: HookContext, next: NextFunction) {
       strategy.store.dataValidator(updatedAccessControl)
       if (method !== 'create') {
         const hasManagePermission = await strategy.authorize({
-          action: 'manage-access', user, entityData: currentAccessControl,
+          action: 'manage-access', user, entityData: currentAccessControl, skipAuth,
         })
         if (!hasManagePermission) {
           throw new Forbidden(`Manage access denied to ${path}/${accessId} for method ${method}`)
