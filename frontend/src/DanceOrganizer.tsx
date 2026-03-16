@@ -16,11 +16,11 @@ function DanceOrganizer() {
       <RightsContext>
         <BrowserRouter>
           <ToastContainer />
-          <NavigationLayout>
-            <AlertContext>
+          <AlertContext>
+            <NavigationLayout>
               <AppRoutes />
-            </AlertContext>
-          </NavigationLayout>
+            </NavigationLayout>
+          </AlertContext>
         </BrowserRouter>
       </RightsContext>
     </BackendProvider>

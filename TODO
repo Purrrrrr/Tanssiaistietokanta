@@ -286,6 +286,7 @@
   * Manage rights check for event ui
   * Fix updating of rights
   * Allow settings rights when creating events
+  * Fix "No alert system"
     Fix updating of file lists
     Ensure this thing actually works all the time
     Some own component or system for auth needing pages
