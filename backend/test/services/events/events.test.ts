@@ -267,7 +267,7 @@ describe('events service', () => {
       // Restore
       await app.service('events').patch(
         limitedTestEvent._id,
-        { accessControl: { viewAccess: 'limited', grants: [{ _id: 'grant-organizer-1', principal: `user:${normalUser._id}`, role: 'organizer' }] } } as any,
+        { accessControl: limitedTestEvent.accessControl } as any,
         { user: adminUser },
       )
     })

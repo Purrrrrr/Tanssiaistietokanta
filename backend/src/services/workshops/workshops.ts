@@ -142,7 +142,8 @@ export const workshops = (app: Application) => {
     },
     authTarget: 'owner',
     authorize({ action, user, owningId: eventId }) {
-      return accessService.hasAccess('events', action, user, eventId)
+      const effectiveAction = action === 'create' ? 'modify' : action
+      return accessService.hasAccess('events', effectiveAction, user, eventId)
     },
   })
 }

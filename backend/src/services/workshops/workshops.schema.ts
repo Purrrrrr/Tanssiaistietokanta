@@ -53,7 +53,7 @@ export const workshopsPartialDataSchema = Type.Intersect(
     $id: 'PartialWorkshopsData',
   },
 )
-export const workshopsDataSchema = Type.Omit(workshopsSchema, ['_id'], {
+export const workshopsDataSchema = Type.Omit(workshopsSchema, ['_id', ...computedProperties], {
   $id: 'WorkshopsData',
 })
 export type WorkshopsData = Static<typeof workshopsDataSchema>
