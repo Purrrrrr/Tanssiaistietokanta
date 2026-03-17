@@ -23,11 +23,11 @@ export const channels = (app: Application) => {
   }) */
 
   app.publish((data: any, context: HookContext) => {
+    // console.log('Publishing event to channels. Path: ', context.path, ' Event: ', context.event, 'Data: ', data)
     // Here you can add event publishers to channels set up in `channels.js`
     // To publish only for a specific event use `app.publish(eventname, () => {})`
 
     // e.g. to publish all service events to all authenticated users use
-    //
     return app.service('access')
       .handlePublish(data, defaultChannels(app, context), context)
   })

@@ -75,7 +75,7 @@ const cliJson = format((info) => {
 const isTest = process.env.NODE_ENV === 'test'
 export const logger = createLogger({
   // To see more detailed errors, change this to 'debug'
-  level: 'debug',
+  level: 'info',
   exitOnError: false,
   transports: isTest
     ? [

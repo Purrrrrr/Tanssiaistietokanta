@@ -28,7 +28,8 @@ class RequestMessageTransport extends Transport {
   log(info: any, callback: () => void) {
     const requestLogger = loggerStorage.getStore()
     if (!requestLogger) {
-      throw new Error('No active request to log message to')
+      console.log('No active request logger found, skipping message log. Message: ', info.message)
+      return
     }
     const now = new Date()
     info.timestamp = now.toISOString()

@@ -7,7 +7,7 @@ import { Channel } from '@feathersjs/transport-commons'
 import { AccessStrategy, Action } from './strategies'
 import { AugmentedAccessStrategy, augmentStrategy } from './augmentStrategy'
 import { AccessDataStoreFactory } from './accessDataStore'
-import { logger } from '../../requestLogger'
+import { logger } from '../../logger'
 import { PreviousAccessControl } from './hooks'
 import { User } from './types'
 
@@ -122,6 +122,7 @@ implements ServiceInterface<Access, never, ServiceParams, never> {
     }
     const service = context.path as ServiceName
     const strategy = this.getAccessStrategy(service)
+    logger.debug('AccessService.handlePublish called.', { path: context.path, event: context.event, hasStrategy: !!strategy })
     if (!strategy) {
       return channels
     }
@@ -141,29 +142,42 @@ implements ServiceInterface<Access, never, ServiceParams, never> {
         data: channel.data,
       })),
     )
+    logger.debug('Checking permissions for connections', { entityId, entityData, numConnections: channelConnections.length })
+    const id = getId(data)
+    const ownerData = id ? await strategy.getEntityOwner?.(id) : undefined
 
     return Promise.all(
       channelConnections.map(async (c) => {
         const { user } = c.connection
-        const hasPermission = await strategy.authorize({ action: 'read', user, entityData })
+        const hasPermission = await strategy.authorize({ action: 'read', user, entityData, ...ownerData })
 
         if (hasPermission) {
-          logger.info('Has permission to access entity', { entityId, user: user?._id })
+          logger.debug('Has permission to access entity', { entityId, user })
           return new Channel([c.connection], c.data)
         }
         if (previousAccessData) {
-          logger.info('Had permission to access entity', { entityId, user: user?._id })
-          const hadPermission = await strategy.authorize({ action: 'read', user, entityData: previousAccessData })
+          logger.debug('Had permission to access entity', { entityId, user })
+          const hadPermission = await strategy.authorize({ action: 'read', user, entityData: previousAccessData, ...ownerData })
           if (hadPermission) {
             // Send minimal data to indicate that the entity is now inaccessible
             return new Channel([c.connection], { _id: entityId, inaccessible: true })
           }
         }
-        logger.info('No permission to access entity', { entityId, user: user?._id })
+        logger.debug('No permission to access entity', { entityId, user })
         return EMPTY_CHANNEL
       }),
     )
   }
+}
+
+function getId(data: unknown): Id | undefined {
+  if (typeof data === 'object' && data !== null && '_id' in data) {
+    const id = data._id
+    if (typeof id === 'string' || typeof id === 'number') {
+      return id
+    }
+  }
+  return undefined
 }
 
 function hasPermissionToGrant(hasPermission: boolean | undefined): 'GRANT' | 'DENY' | 'UNKNOWN' {
