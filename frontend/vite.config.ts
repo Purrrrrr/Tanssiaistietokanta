@@ -33,6 +33,7 @@ export default defineConfig(({ mode }) => {
       }),
       jsSizeReporter({ watchBranches: ['origin/main', 'main', 'release'] }),
     ],
+    devtools: true,
     base: PUBLIC_URL || '/',
     resolve: {
       tsconfigPaths: true,
