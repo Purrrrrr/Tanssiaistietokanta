@@ -43,8 +43,9 @@ export default defineConfig(({ mode }) => {
       sourcemap: true,
     },
     server: {
-      host: 'localhost',
-      port: 3000,
+      host: process.env.ALLOW_ALL_HOSTS ? true : 'localhost',
+      port: 3001,
+      forwardConsole: true,
       open: false,
       proxy: {
         '/api/socket.io': {
