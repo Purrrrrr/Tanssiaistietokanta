@@ -15,7 +15,8 @@ export async function setAccessToken(token: string | null) {
   debug('Setting backend connection accessToken to %s, with socket %s', token, socket.connected ? 'connected' : 'disconnected')
 
   if (socket.connected) {
-    await setSocketAccessToken(token)
+    const result = await setSocketAccessToken(token)
+    debug('Socket accessToken set, result:', result)
   }
   accessToken = token
 }
@@ -25,6 +26,18 @@ socket.on('connect', () => {
     setSocketAccessToken(accessToken)
   }
 })
+
+export function waitForSocketConnection(): Promise<void> {
+  return new Promise((resolve) => {
+    if (socket.connected) {
+      debug('Waiting for socket connection: Already connected to socket')
+      resolve()
+    } else {
+      debug('Waiting for socket connection...')
+      socket.once('connect', () => resolve())
+    }
+  })
+}
 
 export async function socketRequest<T>(
   service: string,

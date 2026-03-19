@@ -1,6 +1,6 @@
 import { AuthResponse } from './types'
 
-import { restRequest, setAccessToken } from 'backend/connection'
+import { restRequest, setAccessToken, waitForSocketConnection } from 'backend/connection'
 
 import { AuthState } from './state'
 import { debug, RefreshScheduler } from './utils'
@@ -35,8 +35,10 @@ export const initializeAuthentication = async () => {
     try {
       await auth('refreshToken')
       if (authState.currentAccessToken) {
+        await waitForSocketConnection()
         debug('setting initial token to %s', authState.currentAccessToken)
         await setAccessToken(authState.currentAccessToken)
+        debug('Access token set successfully on initialization')
       }
     } catch (error) {
       console.error('Failed to refresh token on initialization', error)
