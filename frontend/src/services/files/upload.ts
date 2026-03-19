@@ -1,6 +1,7 @@
 import { FileOwner, FileOwningId } from 'types/files'
 
 import { restRequestWithProgress, RestRequestWithProgressOptions } from 'backend'
+import { apolloClient } from 'backend/apollo'
 
 export const MAX_UPLOAD_SIZE = 20 * 1024 ** 2
 
@@ -64,6 +65,7 @@ export async function doUpload({ owner, owningId, path, file, filename, fileId, 
   switch (response.status) {
     case 200:
     case 201:
+      apolloClient.refetchQueries({ include: ['getFiles'] })
       return JSON.parse(response.data) as UploadedFile
     case 409:
       throw new UploadError('already_exists')

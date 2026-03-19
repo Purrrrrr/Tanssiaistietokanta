@@ -22,6 +22,9 @@ const cache = new InMemoryCache({
         events: {
           merge: (_, incoming) => incoming,
         },
+        files: {
+          merge: (_, incoming) => incoming,
+        },
       },
     },
     Event: {
