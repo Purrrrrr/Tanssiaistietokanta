@@ -9,7 +9,7 @@ import { AugmentedAccessStrategy, augmentStrategy } from './augmentStrategy'
 import { AccessDataStoreFactory } from './accessDataStore'
 import { logger } from '../../logger'
 import { PreviousAccessControl } from './hooks'
-import { User } from './types'
+import { ServiceCreateData, User } from './types'
 
 export type { Access, AccessQuery }
 
@@ -143,8 +143,7 @@ implements ServiceInterface<Access, never, ServiceParams, never> {
       })),
     )
     logger.debug('Checking permissions for connections', { entityId, entityData, numConnections: channelConnections.length })
-    const id = getId(data)
-    const ownerData = id ? await strategy.getEntityOwner?.(id) : undefined
+    const ownerData = strategy.getOwnerFromData?.(data as ServiceCreateData<ServiceName>)
 
     return Promise.all(
       channelConnections.map(async (c) => {
@@ -168,16 +167,6 @@ implements ServiceInterface<Access, never, ServiceParams, never> {
       }),
     )
   }
-}
-
-function getId(data: unknown): Id | undefined {
-  if (typeof data === 'object' && data !== null && '_id' in data) {
-    const id = data._id
-    if (typeof id === 'string' || typeof id === 'number') {
-      return id
-    }
-  }
-  return undefined
 }
 
 function hasPermissionToGrant(hasPermission: boolean | undefined): 'GRANT' | 'DENY' | 'UNKNOWN' {

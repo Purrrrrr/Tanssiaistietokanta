@@ -8,6 +8,7 @@ import { isEqual } from 'es-toolkit'
 import { Forbidden } from '@feathersjs/errors'
 
 export const SkipAccessControl = Symbol('SkipAccessControl')
+export const AddAccessControlData = Symbol('AddAccessControlData')
 export const PreviousAccessControl = Symbol('PreviousAccessControl')
 
 interface AccessParamContext {
@@ -17,6 +18,7 @@ interface AccessParamContext {
 declare module '@feathersjs/feathers' {
   interface Params {
     [SkipAccessControl]?: boolean
+    [AddAccessControlData]?: boolean
   }
 }
 
@@ -27,6 +29,7 @@ export async function checkAccess(ctx: HookContext, next: NextFunction) {
   const accessService = ctx.app.service('access')
   // Some internal service calls need to have full access, eg. the dependecy graph
   const skipAuth = ctx.params[SkipAccessControl] === true
+  const shouldAddAccessData = ctx.params[AddAccessControlData] !== false
   const strategy = accessService.getAccessStrategy(path as ServiceName)
   if (!strategy) {
     return next()
@@ -49,7 +52,7 @@ export async function checkAccess(ctx: HookContext, next: NextFunction) {
       if (!Array.isArray(result)) {
         return
       }
-      ctx.result = authorizeList(result, async entity => {
+      ctx.result = authorizeList(result, shouldAddAccessData, async entity => {
         const entityData = await strategy.store?.getAccess(entity._id)
         const ownerData = entity._id // Sometimes entities are queried without an id, eg. in some grahpql resolvers
           ? await strategy.getEntityOwner?.(entity._id)
@@ -93,17 +96,20 @@ export async function checkAccess(ctx: HookContext, next: NextFunction) {
       currentAccessControl = updatedAccessControl
     }
 
-    ctx.result = addAccessData(ctx.result, currentAccessControl)
+    if (shouldAddAccessData) ctx.result = addAccessData(ctx.result, currentAccessControl)
   })
 }
 
-async function authorizeList<T, R>(list: T[], authorizer: (item: T) => Promise<{ hasPermission?: boolean, entityData: R }>): Promise<T[]> {
+async function authorizeList<T, R>(list: T[], shouldAddAccessData: boolean, authorizer: (item: T) => Promise<{ hasPermission?: boolean, entityData: R }>): Promise<T[]> {
   const authorized = await Promise.all(
     list.map(async item => {
       const { entityData, hasPermission } = await authorizer(item)
-      return hasPermission
+      if (!hasPermission) {
+        return null
+      }
+      return shouldAddAccessData
         ? addAccessData(item, entityData)
-        : null
+        : item
     }),
   )
   return authorized.filter(item => item !== null)
@@ -125,10 +131,10 @@ function getAccessControlUpdate(ctx: HookContext, previousData?: unknown): unkno
     delete data.accessControl
     return accessControlData
   }
-  if (previousData && isJsonPatch(ctx)) {
+  if (previousData && typeof previousData === 'object' && 'accessControl' in previousData && isJsonPatch(ctx)) {
     const patch = data.filter((op: any) => op.path.startsWith('/accessControl'))
     ctx.data = data.filter((op: any) => !op.path.startsWith('/accessControl'))
-    return getPatched({ accessControl: previousData }, patch).accessControl
+    return getPatched({ accessControl: previousData.accessControl }, patch).accessControl
   }
   return undefined
 }

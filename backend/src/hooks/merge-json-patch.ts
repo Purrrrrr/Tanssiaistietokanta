@@ -2,6 +2,7 @@
 import type { HookContext } from '../declarations'
 import type { NullableId, ServiceInterface } from '@feathersjs/feathers'
 import { applyPatch, Operation } from 'fast-json-patch'
+import { AddAccessControlData } from '../services/access/hooks'
 
 export const mergeJsonPatch = (cleanup?: (data: unknown) => unknown) => {
   return async (context: HookContext) => {
@@ -17,7 +18,7 @@ export const mergeJsonPatch = (cleanup?: (data: unknown) => unknown) => {
       context.data = {}
       return
     }
-    const original = await service.get(id)
+    const original = await service.get(id, { [AddAccessControlData]: false })
     context.data = getPatched(original, data)
     if (cleanup) context.data = cleanup(context.data)
   }
