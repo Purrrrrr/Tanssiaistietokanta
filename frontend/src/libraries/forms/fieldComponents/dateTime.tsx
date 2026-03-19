@@ -1,3 +1,6 @@
+import 'react-datetime-picker/dist/DateTimePicker.css'
+import 'react-calendar/dist/Calendar.css'
+
 import { Conflict, Deleted, FieldComponentProps, FieldPropsWithoutComponent, Version } from '../types'
 
 import { DateInput, DateRangeInput, DateTimeInput } from 'libraries/formsV2/components/inputs'
