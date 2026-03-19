@@ -290,7 +290,8 @@
   * Allow settings rights when creating events
   * Fix "No alert system"
   * Fix updating of file lists
-    Fix delete of file propagating
+  * Fix delete of file propagating
+  * Fix file rename propagating
     Ensure this thing actually works all the time
     Some own component or system for auth needing pages
     Test that versions still work
