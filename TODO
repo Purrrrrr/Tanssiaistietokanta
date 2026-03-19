@@ -258,6 +258,8 @@
 * Clearly indicate prod/dev in frontend to prevent accidents
 * No results text for selectors other than Autocomplete
 * Use FeathersError to set statuses
+* Upgrade to vite 8
+* Fix calendar CSS in create event page
   Auth Part 2
   * Entity specific rights: events public/private
   * Ability to query all rights for service or service & entity
@@ -287,7 +289,8 @@
   * Fix updating of rights
   * Allow settings rights when creating events
   * Fix "No alert system"
-    Fix updating of file lists
+  * Fix updating of file lists
+    Fix delete of file propagating
     Ensure this thing actually works all the time
     Some own component or system for auth needing pages
     Test that versions still work
