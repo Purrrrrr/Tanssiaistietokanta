@@ -260,6 +260,21 @@
 * Use FeathersError to set statuses
 * Upgrade to vite 8
 * Fix calendar CSS in create event page
+  Migrate to Tanstack router
+  * Add all routes to tanstack
+  * Fix breadcrumbs not having urls
+  * Remove react router
+  * Fix dances page search params
+  * Provide redirect from old version urls
+    Fix broken links
+    * Plain links
+    * NavigateButton
+    * Other link using -components
+      Version urls
+    Type safety for Tab links?
+    Fix data loading for events
+  Fix dance form in slideshow editor not showing
+    Form inside form error related to this?
   Auth Part 2
   * Entity specific rights: events public/private
   * Ability to query all rights for service or service & entity
@@ -294,7 +309,7 @@
   * Fix file rename propagating
     Ensure this thing actually works all the time
     Some own component or system for auth needing pages
-    Test that versions still work
+    Fix event version getting
     Profile page
     Changing passwords
     Admin role/group for users

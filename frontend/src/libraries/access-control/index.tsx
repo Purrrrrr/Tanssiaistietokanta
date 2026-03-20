@@ -9,7 +9,7 @@ export type PermissionCheckedProps = Partial<RightsQueryProps>
 
 export function withPermissionChecking<Props>(
   Component: React.ComponentType<Props>,
-): React.ComponentType<Props & PermissionCheckedProps> {
+) {
   return ({ requireRight, ...props }: Props & PermissionCheckedProps) => (
     <RequirePermissions requireRight={requireRight ?? []} {...props}>
       <Component {...props as Props} requireRight={requireRight} />

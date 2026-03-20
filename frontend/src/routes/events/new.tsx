@@ -1,5 +1,5 @@
+import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 
 import { EventInput } from 'types'
 import { GrantRole, ViewAccess } from 'types/gql/graphql'
@@ -21,12 +21,16 @@ const {
   Input,
 } = formFor<EventInput>()
 
-export default function CreateEventForm() {
+export const Route = createFileRoute('/events/new')({
+  component: CreateEventForm,
+})
+
+function CreateEventForm() {
   const t = useT('pages.events.createEvent')
-  const navigate = useNavigate()
+  const navigate = Route.useNavigate()
   const currentUser = useCurrentUser()
   const [createEvent] = useCreateEvent({
-    onCompleted: (data) => navigate('/events/' + data.createEvent._id),
+    onCompleted: (data) => navigate({ to: '/events/$eventId/{-$eventVersionId}', params: { eventId: data.createEvent._id } }),
     refetchQueries: ['getEvents'],
   })
 
@@ -42,7 +46,7 @@ export default function CreateEventForm() {
   })
 
   return <>
-    <Breadcrumb text={t('newEventBreadcrumb')} />
+    <Breadcrumb to={Route.to} text={t('newEventBreadcrumb')} />
     <PageTitle>{t('newEvent')}</PageTitle>
     <RequirePermissions requireRight="events:create" fallback="loginPage">
       <Form labelStyle="above" value={event} onChange={setEvent} onSubmit={() => addGlobalLoadingAnimation(createEvent({ event }))} errorDisplay="onSubmit">

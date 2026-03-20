@@ -1,5 +1,5 @@
+import { useNavigate, useParams } from '@tanstack/react-router'
 import React, { UIEvent, useDeferredValue, useEffect, useRef, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
 import classNames from 'classnames'
 
 import { Card, Link } from 'libraries/ui'
@@ -14,20 +14,18 @@ import { useT } from 'i18n'
 
 import { MissingDanceInstructionsWarning } from './components'
 import { SlideChooser } from './components/SlideChooser'
-import { useLinkToSlide } from './useLinkToSlide'
 
 import 'components/Slide/slideStyles.scss'
 
 export function SlideshowEditor({ program }: { program: EventProgramSettings }) {
   const t = useT('components.eventProgramEditor')
   const navigate = useNavigate()
-  const linkToSlide = useLinkToSlide()
   const slides = useEventSlides(program)
-  const { slideId = startSlideId } = useParams()
+  const { slideId = startSlideId } = useParams({ strict: false })
   const currentSlide = slides.find(slide => slide.id === slideId) ?? slides[0]
   const { swipeHandlers, slideIndex } = useSlideshowNavigation({
     slides, currentSlideId: currentSlide.id,
-    onChangeSlide: (slide) => navigate(linkToSlide(slide.id)),
+    onChangeSlide: (slide) => navigate({ to: '.', params: { slideId: slide.id } }),
   })
   const deferredCurrentSlide = useDeferredValue(currentSlide)
   const isStale = deferredCurrentSlide.id !== currentSlide.id
@@ -38,7 +36,7 @@ export function SlideshowEditor({ program }: { program: EventProgramSettings }) 
       <SlideChooser
         slides={slides}
         currentSlide={deferredCurrentSlide}
-        onChoose={id => navigate(linkToSlide(id))}
+        onChoose={id => navigate({ to: '.', params: { slideId: id } })}
       />
       <Field label="" inline path="slideStyleId" component={SlideStyleSelector} componentProps={{ text: t('fields.eventDefaultStyle') }} />
     </div>
@@ -56,16 +54,25 @@ interface SlideNavigationProps { slideIndex: number, currentSlide: EventSlidePro
 
 function SlideNavigation(props: SlideNavigationProps) {
   const { slides, slideIndex } = props
-  const linkToSlide = useLinkToSlide()
 
   return <>
     <nav className="slideNavigation">
       {slideIndex > 0 &&
-        <NavigateButton icon={<ChevronLeft />} href={linkToSlide(slides[slideIndex - 1].id)} className="previous-slide-link" />
+        <NavigateButton
+          icon={<ChevronLeft />}
+          to="."
+          params={{ slideId: slides[slideIndex - 1].id }}
+          className="previous-slide-link"
+        />
       }
       <SlidePreviews {...props} />
       {slideIndex < slides.length - 1 &&
-        <NavigateButton icon={<ChevronRight />} href={linkToSlide(slides[slideIndex + 1].id)} className="next-slide-link" />
+        <NavigateButton
+          icon={<ChevronRight />}
+          to="."
+          params={{ slideId: slides[slideIndex + 1].id }}
+          className="next-slide-link"
+        />
       }
     </nav>
   </>
@@ -142,9 +149,7 @@ function useDebouncedScrollPositionListener(callBack: (scrollPosition: number) =
 function SlideLink(
   { slide, eventProgram, current, placeholder }: { slide: EventSlideProps, eventProgram: EventProgramSettings, current: boolean, placeholder: boolean },
 ) {
-  const linkToSlide = useLinkToSlide()
-
-  return <Link to={linkToSlide(slide.id)} id={`slide-link-${slide.id}`} className={classNames('slide-link', { current })}>
+  return <Link to="." params={{ slideId: slide.id }} id={`slide-link-${slide.id}`} className={classNames('slide-link', { current })}>
     <SlideContainer className="grow inert" color="#eee">
       {placeholder
         ? <EventSlidePreview {...slide} eventProgram={eventProgram} />

@@ -110,5 +110,5 @@ function LinkToSlide({ title, id, isPlaceholder, component: LinkComponent }: Lin
   if (LinkComponent) {
     return <LinkComponent href={id} className={classNames}>{title}</LinkComponent>
   }
-  return <Link className={classNames} relative="path" to={`../${id}`}>{title}</Link>
+  return <Link className={classNames} to="." params={{ slideId: id }}>{title}</Link>
 }

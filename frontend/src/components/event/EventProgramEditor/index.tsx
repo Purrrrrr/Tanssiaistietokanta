@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom'
+import { useParams } from '@tanstack/react-router'
 
 import { Event } from 'types'
 
@@ -38,11 +38,11 @@ interface EventProgramEditorProps {
 
 export function EventProgramEditor({ event }: EventProgramEditorProps) {
   const { formProps, formProps: { value }, state } = useEventProgramEditorForm(event._id, event._versionId ?? undefined, event.program)
-  const { tabId } = useParams()
+  const { tabId } = useParams({ from: '/events/$eventId/{-$eventVersionId}/program/{-$tabId}/{-$slideId}' })
   const t = useT('pages.events.eventProgramPage')
 
   return <Form {...formProps} className="eventProgramEditor">
-    <BackLink to="../..">{t('backToEvent')}</BackLink>
+    <BackLink from="/events/$eventId/{-$eventVersionId}/program/{-$tabId}/{-$slideId}" to="../../..">{t('backToEvent')}</BackLink>
     <h1>
       {t('pageTitle')}
       <SyncStatus style={{ marginLeft: '1ch', top: '3px' }} className="grow" state={state} />
@@ -50,10 +50,10 @@ export function EventProgramEditor({ event }: EventProgramEditorProps) {
 
     <EventMetadataContext program={value} workshops={event.workshops}>
       <Tabs id="programEditorTabs" renderActiveTabPanelOnly selectedTabId={tabId ?? 'main'}>
-        <Tab id="main" href="../main" title={t('tabs.main')} panel={<MainEditor program={value} />} />
+        <Tab id="main" href="../../main" title={t('tabs.main')} panel={<MainEditor program={value} />} />
         <Tab
           id="slides"
-          href="../slides"
+          href="../../slides"
           title={<>
             {t('tabs.slides')}
             <MissingDanceInstructionsCounterTag />

@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from '@tanstack/react-router'
 
 import { DanceInput } from 'types'
 
@@ -17,10 +17,10 @@ export function CreateDanceButtons({ danceCount }: { danceCount: number }) {
 
   async function doCreateDance(dance: DanceInput) {
     const result = await addGlobalLoadingAnimation(createDance({ dance }))
-    const id = result.data?.createDance?._id
+    const danceId = result.data?.createDance?._id
 
-    if (id) {
-      navigate(id)
+    if (danceId) {
+      navigate({ to: '/dances/$danceId', params: { danceId } })
       showToast({
         color: 'primary',
         message: t('danceCreated', { name: dance.name }),

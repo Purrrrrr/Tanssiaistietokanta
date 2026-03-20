@@ -1,3 +1,4 @@
+import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 
 import { backendQueryHook, graphql } from 'backend'
@@ -12,7 +13,14 @@ import { useT } from 'i18n'
 
 import './DanceList.sass'
 
-function DanceList({ eventId }) {
+export const Route = createFileRoute(
+  '/events/$eventId/{-$eventVersionId}/print/ball-dancelist',
+)({
+  component: RouteComponent,
+})
+
+function RouteComponent() {
+  const eventId = Route.useParams().eventId
   const t = useT('pages.events.danceList')
   const { program, workshops, loadingState } = useBallProgram(eventId)
   const [style, setStyle] = useState('default')
@@ -155,5 +163,3 @@ function useBallProgram(eventId: string) {
 
 type BallProgram = ReturnType<typeof useBallProgram>
 type BallProgramRow = Exclude<BallProgram['program'], null>['danceSets'][number]['program'][number]
-
-export default DanceList

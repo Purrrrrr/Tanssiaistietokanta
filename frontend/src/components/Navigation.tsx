@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { createLink } from '@tanstack/react-router'
 
 import { logout } from 'backend/authentication'
 import { useCurrentUser } from 'services/users'
@@ -16,19 +16,14 @@ function Navigation() {
       <Breadcrumbs label={useTranslation('navigation.breadcrumbs')} />
     </div>
     <div className="flex items-center">
-      <NavButton requireRight="dances:list" icon={<span className="mr-0.5">💃</span>} href="/dances" text={useTranslation('navigation.dances')} />
+      <NavButton requireRight="dances:list" icon={<span className="mr-0.5">💃</span>} to="/dances" text={useTranslation('navigation.dances')} />
       <div className="mx-1 self-stretch w-[1px] bg-stone-300" />
       <LoginStatus />
     </div>
   </nav>
 }
 
-function NavButton({ href, ...props }) {
-  const navigate = useNavigate()
-  return <AnchorButton minimal {...props} href={href}
-    onClick={(e) => { e.preventDefault(); navigate(href) }}
-  />
-}
+const NavButton = createLink((props: React.ComponentProps<typeof AnchorButton>) => <AnchorButton minimal {...props} />)
 
 function LoginStatus() {
   const user = useCurrentUser()
@@ -37,7 +32,7 @@ function LoginStatus() {
   if (user) {
     return <span>
       <MenuButton text={user.name} buttonRenderer={props => <Button minimal icon={<User className="mt-[1px] mr-0.5 text-amber-600" />} {...props} />}>
-        <NavigateButton minimal href="/users">{t('userSettings')}</NavigateButton>
+        <NavigateButton minimal to="/users">{t('userSettings')}</NavigateButton>
         <Button minimal onClick={logout}>{t('logout')}</Button>
       </MenuButton>
     </span>
@@ -45,7 +40,7 @@ function LoginStatus() {
 
   return <NavigateButton
     minimal
-    href="/login"
+    to="/login"
     icon={<User className="mt-[1px] text-orange-500" />}
     text={t('login')}
   />

@@ -1,5 +1,5 @@
+import { createLink } from '@tanstack/react-router'
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react'
-import { useHref } from 'react-router-dom'
 
 import { sortedPaths } from './sortedPaths'
 
@@ -38,8 +38,7 @@ function remove(array: Path[], value: Path) {
   return index === -1 ? array : array.filter(item => item !== value)
 }
 
-export const Breadcrumb = React.memo(function ({ text }: { text: Path['text'] }) {
-  const href = useHref('.')
+export const Breadcrumb = createLink(function ({ href, text }: { href: string, text: Path['text'] }) {
   const paths = useContext(RegisterContext)
   useEffect(() => {
     const route = { text, href }

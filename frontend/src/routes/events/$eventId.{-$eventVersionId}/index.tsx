@@ -1,5 +1,5 @@
+import { createFileRoute } from '@tanstack/react-router'
 import React, { useCallback, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 
 import { Event } from 'types'
 
@@ -21,7 +21,13 @@ import { NavigateButton } from 'components/widgets/NavigateButton'
 import { newInstance, WorkshopEditor } from 'components/WorkshopEditor'
 import { useFormatDate, useFormatDateTime, useT, useTranslation } from 'i18n'
 
+import { useCurrentEvent } from './-context'
+
 type Workshop = Event['workshops'][0]
+
+export const Route = createFileRoute('/events/$eventId/{-$eventVersionId}/')({
+  component: RouteComponent,
+})
 
 const {
   Input,
@@ -32,7 +38,8 @@ const eventVersionLink = (id: string, versionId?: null | string) => versionId
   ? `/events/${id}/version/${versionId}`
   : `/events/${id}`
 
-export default function EventPage({ event }: { event: Event }) {
+function RouteComponent() {
+  const event = useCurrentEvent()
   const t = useT('pages.events.eventPage')
   const { _versionId, _versionNumber } = event
   const readOnly = _versionId != undefined
@@ -56,10 +63,10 @@ function EventDetails({ event, readOnly }: { event: Event, readOnly: boolean }) 
   const [showEditor, setShowEditor] = useState(false)
   const t = useT('pages.events.eventPage')
   const formatDate = useFormatDate()
-  const navigate = useNavigate()
+  const navigate = Route.useNavigate()
   const [deleteEvent] = useDeleteEvent({
     refetchQueries: ['getEvents'],
-    onCompleted: () => navigate('/'),
+    onCompleted: () => navigate({ to: '/' }),
   })
 
   return <>
@@ -70,7 +77,7 @@ function EventDetails({ event, readOnly }: { event: Event, readOnly: boolean }) 
           <RequirePermissions
             requireRight="events:modify"
             entityId={event._id}
-            fallback={<Link to={`/login?redirectTo=${encodeURIComponent(window.location.pathname)}`}>{t('loginToEdit')}</Link>}
+            fallback={<Link to="/login" params={{ redirectTo: encodeURIComponent(window.location.pathname) }}>{t('loginToEdit')}</Link>}
           >
             <Button
               onClick={() => setShowEditor(!showEditor)}
@@ -136,7 +143,15 @@ function EventProgram({ event, readOnly }: { event: Event, readOnly: boolean }) 
   if (!program || program.danceSets.length === 0) {
     return <>
       <p>{t('noProgram')}</p>
-      {readOnly || <NavigateButton requireRight="events:modify" entityId={event._id} color="primary" href="program" text={t('addProgram')} />}
+      {readOnly ||
+        <NavigateButton
+          requireRight="events:modify"
+          entityId={event._id}
+          color="primary"
+          from={Route.id}
+          to="./program/{-$tabId}/{-$slideId}"
+          text={t('addProgram')}
+        />}
     </>
   }
 
@@ -153,13 +168,14 @@ function EventProgram({ event, readOnly }: { event: Event, readOnly: boolean }) 
       <NavigateButton
         requireRight="events:modify"
         entityId={event._id}
-        href="program/main"
+        from={Route.id}
+        to="./program/{-$tabId}/{-$slideId}"
         color={readOnly ? undefined : 'primary'}
         text={readOnly ? t('viewProgram') : t('editProgram')}
       />
-      <NavigateButton href="print/ball-dancelist" target="_blank"
+      <NavigateButton from={Route.id} to="./print/ball-dancelist" target="_blank"
         text={t('printBallDanceList')} />
-      <NavigateButton href="ball-program" target="_blank"
+      <NavigateButton from={Route.id} to="./ball-program/{-$slideId}" target="_blank"
         text={t('ballProgramSlideshow')} />
     </p>
   </>
@@ -200,9 +216,15 @@ function EventWorkshops({ event, readOnly }: { event: Event, readOnly: boolean }
     </div>
     <p>
       {readOnly || <CreateWorkshopButton eventId={eventId} startDate={beginDate} />}
-      <NavigateButton href="print/dance-cheatlist" target="_blank"
+      <NavigateButton
+        from={Route.id}
+        to="./print/dance-cheatlist"
+        target="_blank"
         text={t('danceCheatlist')} />
-      <NavigateButton href="print/dance-instructions" target="_blank"
+      <NavigateButton
+        from={Route.id}
+        href="./print/dance-instructions"
+        target="_blank"
         text={t('danceInstructions')} />
     </p>
   </>

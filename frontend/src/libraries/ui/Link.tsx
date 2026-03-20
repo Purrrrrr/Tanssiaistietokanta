@@ -1,5 +1,5 @@
+import { createLink } from '@tanstack/react-router'
 import { ComponentProps } from 'react'
-import { Link as RouterLink } from 'react-router-dom'
 import classNames from 'classnames'
 
 const className = 'cursor-pointer hover:underline text-link'
@@ -16,12 +16,4 @@ export function RegularLink({ unstyled = false, children, ...props }: ComponentP
   </a>
 }
 
-export function Link({ unstyled = false, ...props }: ComponentProps<typeof RouterLink> & { unstyled?: boolean }) {
-  return <RouterLink
-    {...props}
-    className={classNames(
-      props.className,
-      unstyled || className,
-    )}
-  />
-}
+export const Link = createLink(RegularLink)

@@ -13,10 +13,12 @@ type DanceLinkProps = {
 })
 
 export function DanceLink(props: DanceLinkProps) {
-  const link = 'id' in props
-    ? danceVersionLink(props.id, props.versionId) : danceVersionLink(props.dance._id, props.dance._versionId)
+  const danceId = 'id' in props ? props.id : props.dance._id
+  const versionId = ('id' in props ? props.versionId : props.dance._versionId) ?? undefined
 
-  return <Link to={link}>{props.children ?? ('dance' in props && props.dance.name)}</Link>
+  return <Link to="/dances/$danceId" params={{ danceId }} search={{ versionId }}>
+    {props.children ?? ('dance' in props && props.dance.name)}
+  </Link>
 }
 
 export function danceVersionLink(id: ID, versionId?: ID | null) {

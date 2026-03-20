@@ -13,7 +13,10 @@ export function DanceIsUsedIn({ events, minimal, wikipageName }: Pick<DanceWithE
   if (events.length === 0 && !wikipageName) return null
 
   const buttonText = t(wikipageName ? 'danceEditor.danceUsedInEventsAndWiki' : 'danceEditor.danceUsedInEvents', { count: events.length })
-  const eventLinks = events.map(event => ({ text: event.name, link: `/events/${event._id}` }))
+  const eventLinks = events.map(event => ({
+    text: event.name,
+    eventId: event._id,
+  }))
   const links = wikipageName
     ? {
       categories: [
@@ -32,7 +35,7 @@ export function DanceIsUsedIn({ events, minimal, wikipageName }: Pick<DanceWithE
     }
     : eventLinks
 
-  return <Select
+  return <Select<{ text: string, link?: never, eventId: string } | { text: string, link: string, eventId?: never }>
     id={id}
     items={links}
     value={{ text: 'dummy', link: '' }}
@@ -57,11 +60,13 @@ export function DanceIsUsedIn({ events, minimal, wikipageName }: Pick<DanceWithE
         aria-label={buttonText}
       />
     }
-    itemRenderer={link =>
-      <Link to={link.link} className="flex gap-2 py-1.5 px-2 hover:no-underline">
-        <LinkIcon />
-        <span className="whitespace-nowrap">{link.text}</span>
-      </Link>
-    }
+    itemRenderer={({ link, eventId, text }) => {
+      const children = <><LinkIcon /><span className="whitespace-nowrap">{text}</span></>
+      const className = 'flex gap-2 py-1.5 px-2 hover:no-underline'
+      if (eventId) {
+        return <Link to="/events/$eventId/{-$eventVersionId}" params={{ eventId }} className={className}>{children}</Link>
+      }
+      return <Link to={link} className={className}>{children}</Link>
+    }}
   />
 }

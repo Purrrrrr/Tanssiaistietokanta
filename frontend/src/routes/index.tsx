@@ -1,3 +1,5 @@
+import { createFileRoute } from '@tanstack/react-router'
+
 import { useEvents } from 'services/events'
 import { useCurrentUser } from 'services/users'
 
@@ -9,7 +11,11 @@ import { RequirePermissions } from 'components/rights/RequirePermissions'
 import { NavigateButton } from 'components/widgets/NavigateButton'
 import { useT } from 'i18n'
 
-export default function EventList() {
+export const Route = createFileRoute('/')({
+  component: EventList,
+})
+
+function EventList() {
   const t = useT('pages.events.eventList')
   const [events, requestState] = useEvents()
   const formatDate = useFormatDate()
@@ -41,7 +47,7 @@ export default function EventList() {
         </ItemList.Header>
         {events.map(event =>
           <ItemList.Row key={event._id}>
-            <Link to={'events/' + event._id}>{event.name}</Link>
+            <Link to="/events/$eventId/{-$eventVersionId}" params={{ eventId: event._id }}>{event.name}</Link>
             <div>
               {formatDate(event.beginDate)} - {formatDate(event.endDate)}
             </div>
@@ -49,6 +55,6 @@ export default function EventList() {
         )}
       </ItemList>
     </RequirePermissions>
-    <NavigateButton requireRight="events:create" color="primary" href="events/new" text={t('createEvent')} />
+    <NavigateButton requireRight="events:create" color="primary" to="/events/new" text={t('createEvent')} />
   </>
 }

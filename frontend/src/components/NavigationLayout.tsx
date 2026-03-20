@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 
-import { BreadcrumbContext, ColorClass, Link, RegularLink } from 'libraries/ui'
+import { Breadcrumb, BreadcrumbContext, ColorClass, Link, RegularLink } from 'libraries/ui'
 import { T, useTranslation } from 'i18n'
 
 import DebugManager from './DebugManager'
@@ -24,6 +24,7 @@ function NavigationLayout({ children }) {
 
   return <BreadcrumbContext>
     <SidebarContext>
+      <Breadcrumb to="/" text={<><img className="mr-2" src="/fan32.png" alt="" />{' '}<T msg="app.title" /></>} />
       <SupportedBrowserChecker />
       <SkipToMainContent />
       <div id="layout">

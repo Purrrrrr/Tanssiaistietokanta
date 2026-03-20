@@ -1,3 +1,5 @@
+import { createFileRoute } from '@tanstack/react-router'
+
 import { useUsers } from 'services/users'
 
 import { ItemList } from 'libraries/ui'
@@ -5,6 +7,10 @@ import { LoadingState } from 'components/LoadingState'
 import { PageTitle } from 'components/PageTitle'
 import { RequirePermissions } from 'components/rights/RequirePermissions'
 import { useT } from 'i18n'
+
+export const Route = createFileRoute('/users')({
+  component: UsersPage,
+})
 
 function UsersPage() {
   const t = useT('pages.users.userList')
@@ -30,5 +36,3 @@ function UsersPage() {
     </RequirePermissions>
   </>
 }
-
-export default UsersPage

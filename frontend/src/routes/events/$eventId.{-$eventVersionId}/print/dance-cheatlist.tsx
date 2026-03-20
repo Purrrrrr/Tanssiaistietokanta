@@ -1,3 +1,4 @@
+import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 
 import { DanceCheatListQuery } from 'types/gql/graphql'
@@ -14,6 +15,12 @@ import { useT } from 'i18n'
 import { uniq } from 'utils/uniq'
 
 import './DanceCheatList.sass'
+
+export const Route = createFileRoute(
+  '/events/$eventId/{-$eventVersionId}/print/dance-cheatlist',
+)({
+  component: RouteComponent,
+})
 
 type Workshop = NonNullable<DanceCheatListQuery['event']>['workshops'][0]
 
@@ -38,7 +45,8 @@ query DanceCheatList($eventId: ID!) {
   useCallbackOnEventChanges(variables.eventId, refetch)
 })
 
-export default function DanceCheatList({ eventId }) {
+function RouteComponent() {
+  const eventId = Route.useParams().eventId
   const t = useT('pages.events.danceCheatlist')
   const [cols, setCols] = useState(2)
   const [rows, setRows] = useState(2)

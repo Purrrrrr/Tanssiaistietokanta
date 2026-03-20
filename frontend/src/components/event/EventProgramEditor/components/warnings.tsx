@@ -12,8 +12,6 @@ import { useT } from 'i18n'
 import { compareBy } from 'utils/sorted'
 import { uniq } from 'utils/uniq'
 
-import { useLinkToSlide } from '../useLinkToSlide'
-
 export function MissingDanceInstructionsCounterTag() {
   const count = useDancesWithMissingInstructions().length
   const t = useT('components.eventProgramEditor.missingDanceInstructionsWarning')
@@ -26,7 +24,6 @@ export function MissingDanceInstructionsCounterTag() {
 
 export function MissingDanceInstructionsWarning({ program }: { program: EventProgramSettings }) {
   const t = useT('components.eventProgramEditor.missingDanceInstructionsWarning')
-  const linkToSlide = useLinkToSlide()
   const missing = program.danceSets
     .flatMap(danceSet => {
       return danceSet.program
@@ -48,7 +45,8 @@ export function MissingDanceInstructionsWarning({ program }: { program: EventPro
       {missing.map(({ id, danceSet, dance }) =>
         <li key={id} className="my-1 list-disc list-item">
           <Link
-            to={linkToSlide(id)}
+            to="."
+            params={{ slideId: id }}
             onClick={() => document.querySelector('.slideEditors')?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' })}
           >
             {dance.name}

@@ -1,3 +1,4 @@
+import { createFileRoute } from '@tanstack/react-router'
 import { MarkdownToJSX } from 'markdown-to-jsx/react'
 import React, { useCallback, useRef, useState } from 'react'
 import classNames from 'classnames'
@@ -22,11 +23,18 @@ import { uniq } from 'utils/uniq'
 
 import './DanceInstructions.sass'
 
+export const Route = createFileRoute(
+  '/events/$eventId/{-$eventVersionId}/print/dance-instructions',
+)({
+  component: RouteComponent,
+})
+
 type Workshop = NonNullable<DanceInstructionsQuery['event']>['workshops'][0]
 
 const { Form, Field } = formFor<Dance>()
 
-export default function DanceInstructions({ eventId }) {
+function RouteComponent() {
+  const eventId = Route.useParams().eventId
   const t = useT('pages.events.danceInstructions')
   const dancesEl = useRef<HTMLElement>(null)
   const [showWorkshops, setShowWorkshops] = useState(true)

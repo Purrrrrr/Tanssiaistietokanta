@@ -1,5 +1,5 @@
+import { createFileRoute, useNavigate, useParams } from '@tanstack/react-router'
 import { useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
 import classNames from 'classnames'
 
 import { useRight } from 'libraries/access-control'
@@ -11,26 +11,33 @@ import { RequirePermissions } from 'components/rights/RequirePermissions'
 import { SlideContainer, useSlideshowNavigation } from 'components/Slide'
 import { useOnKeydown } from 'utils/useOnKeydown'
 
-import { ProgramTitleSelector } from './ProgramTitleSelector'
-import { SlideEditor } from './SlideEditor'
-import { Event, useBallProgramQuery } from './useBallProgramQuery'
+import { ProgramTitleSelector } from './_components/ProgramTitleSelector'
+import { SlideEditor } from './_components/SlideEditor'
+import { Event, useBallProgramQuery } from './_components/useBallProgramQuery'
 
 import './BallProgram.scss'
 
-export default function BallProgram({ eventId, eventVersionId }) {
+export const Route = createFileRoute(
+  '/events/$eventId/{-$eventVersionId}/ball-program/{-$slideId}',
+)({
+  component: RouteComponent,
+})
+
+function RouteComponent() {
+  const { eventId, eventVersionId } = Route.useParams()
   return <RequirePermissions requireRight="events:read" entityId={eventId}>
     <BallProgramView eventId={eventId} eventVersionId={eventVersionId} />
   </RequirePermissions>
 }
 
-function BallProgramView({ eventId, eventVersionId }) {
+export function BallProgramView({ eventId, eventVersionId }) {
   const { event, slides, refetch, loadingState } = useBallProgram(eventId, eventVersionId)
 
   const [isEditing, setEditing] = useState(false)
   const onToggleEditing = () => setEditing(e => !e && canEdit)
   const canEdit = useRight('events:modify', { entityId: eventId })
 
-  const { slideId: currentSlideId = startSlideId } = useParams()
+  const { slideId: currentSlideId = startSlideId } = useParams({ from: '/events/$eventId/{-$eventVersionId}/ball-program/{-$slideId}' })
 
   useOnKeydown({
     r: refetch as () => unknown,
@@ -59,7 +66,15 @@ function BallProgramView({ eventId, eventVersionId }) {
   </div>
 }
 
-function BallProgramSlideView(
+function useBallProgram(eventId: string, _eventVersionId?: string | null) {
+  const { data, refetch, ...loadingState } = useBallProgramQuery({ eventId })
+  const event = data?.event
+  const slides = useEventSlides(event?.program)
+
+  return { event, slides, loadingState, refetch }
+}
+
+export function BallProgramSlideView(
   { slides, currentSlide: slide, event, isEditing, onToggleEditing }: {
     slides: EventSlideProps[]
     currentSlide: EventSlideProps
@@ -69,28 +84,21 @@ function BallProgramSlideView(
   },
 ) {
   const navigate = useNavigate()
-  const baseUrl = event._versionId
-    ? `/events/${event._id}/version/${event._versionId}/ball-program/`
-    : `/events/${event._id}/ball-program/`
+  const goToSlide = (slideId: string) => navigate({
+    to: '/events/$eventId/{-$eventVersionId}/ball-program/{-$slideId}',
+    params: { eventId: event._id, eventVersionId: event._versionId ?? undefined, slideId },
+  })
   const { swipeHandlers } = useSlideshowNavigation({
-    slides, currentSlideId: slide.id, onChangeSlide: slide => navigate(baseUrl + slide.id),
+    slides, currentSlideId: slide.id, onChangeSlide: slide => goToSlide(slide.id),
   })
   const canEdit = useRight('events:modify', { entityId: event._id })
 
   return <SlideContainer fullscreen={!isEditing || !canEdit} {...swipeHandlers}>
     <div className="controls">
-      <ProgramTitleSelector value={slide.parentId ?? slide.id} onChange={id => navigate(baseUrl + id)}
+      <ProgramTitleSelector value={slide.parentId ?? slide.id} onChange={id => goToSlide(id)}
         program={event.program} />
       <Button requireRight="events:modify" entityId={event._id} minimal icon={<Edit />} onClick={onToggleEditing} />
     </div>
     <EventSlide {...slide} eventProgram={event.program} />
   </SlideContainer>
-}
-
-function useBallProgram(eventId: string, _eventVersionId?: string | null) {
-  const { data, refetch, ...loadingState } = useBallProgramQuery({ eventId })
-  const event = data?.event
-  const slides = useEventSlides(event?.program)
-
-  return { event, slides, loadingState, refetch }
 }

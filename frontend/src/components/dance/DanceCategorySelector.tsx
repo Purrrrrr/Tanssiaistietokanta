@@ -39,7 +39,7 @@ export function DanceCategoryChooser({
   />
 }
 
-export const anyCategory = Symbol()
+export const anyCategory = null
 export type AnyCategory = typeof anyCategory
 
 interface DanceViewCategorySelectorProps {

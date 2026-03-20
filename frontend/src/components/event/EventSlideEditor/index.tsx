@@ -1,5 +1,4 @@
 import React, { ReactNode } from 'react'
-import { useParams } from 'react-router-dom'
 
 import { Dance } from 'types'
 
@@ -272,7 +271,7 @@ function DanceEditorForm({ dance }: { dance: Dance }) {
         <LinkToDanceWiki page={dance.wikipageName} />
       </p>
     }
-    <Link target="_blank" to={`/dances/${dance._id}`}><LinkIcon /> {useTranslation('pages.events.ballProgram.linkToCompleteDance')}</Link>
+    <Link target="_blank" to="/dances/$danceId" params={{ danceId: dance._id }}><LinkIcon /> {useTranslation('pages.events.ballProgram.linkToCompleteDance')}</Link>
   </DanceForm>
 }
 
@@ -282,8 +281,7 @@ interface LinkToSlideProps {
 }
 
 function LinkToSlide({ children, id }: LinkToSlideProps) {
-  const { slideId } = useParams()
-  return <Link relative="path" to={slideId ? `../${id}` : id}>{children}</Link>
+  return <Link to="." params={{ slideId: id }}>{children}</Link>
 }
 
 function SectionCard({ children }: { children: ReactNode }) {

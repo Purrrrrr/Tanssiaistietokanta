@@ -1,5 +1,5 @@
+import { useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 
 import { login } from 'services/users'
 
@@ -28,7 +28,7 @@ export function LoginForm({ redirectTo, defaultRedirectTo }: { redirectTo?: stri
       return
     }
     const target = redirectTo ?? new URLSearchParams(window.location.search).get('redirectTo') ?? defaultRedirectTo
-    if (target) navigate(target)
+    if (target) navigate({ to: target })
   }
 
   return <Form value={value} onChange={setValue} onSubmit={onSubmit} errorDisplay="onSubmit">

@@ -5,6 +5,7 @@ import { defineConfig, loadEnv, Plugin } from 'vite'
 import { analyzer } from 'vite-bundle-analyzer'
 import checker from 'vite-plugin-checker'
 import { jsSizeReporter } from './vite-plugin-js-size'
+import { tanstackRouter } from '@tanstack/router-plugin/vite'
 
 import backendConfig from './src/backendConfig.json'
 
@@ -15,6 +16,10 @@ export default defineConfig(({ mode }) => {
   setEnv(mode)
   return {
     plugins: [
+      tanstackRouter({
+        target: 'react',
+        autoCodeSplitting: true,
+      }),
       react(),
       babelPlugin({
         presets: [reactCompilerPreset()],

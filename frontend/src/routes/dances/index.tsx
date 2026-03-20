@@ -1,4 +1,4 @@
-import { useSearchParams } from 'react-router-dom'
+import { createFileRoute } from '@tanstack/react-router'
 
 import { filterDances, useDances } from 'services/dances'
 
@@ -10,6 +10,21 @@ import { LoadingState } from 'components/LoadingState'
 import { PageTitle } from 'components/PageTitle'
 import { RequirePermissions } from 'components/rights/RequirePermissions'
 import { useT, useTranslation } from 'i18n'
+
+interface DanceSearchParams {
+  search?: string
+  category?: string | AnyCategory
+}
+
+export const Route = createFileRoute('/dances/')({
+  component: DancesPage,
+  validateSearch: (search: Record<string, unknown>): DanceSearchParams => {
+    return {
+      search: typeof search.search === 'string' ? search.search : '',
+      category: typeof search.category === 'string' ? search.category : anyCategory,
+    }
+  },
+})
 
 function DancesPage() {
   const t = useT('pages.dances.danceList')
@@ -45,22 +60,19 @@ interface DanceListState {
 }
 
 function useDanceListState() {
-  const [searchParams, setSearchParams] = useSearchParams()
+  const { search = '', category = anyCategory } = Route.useSearch()
+  const navigate = Route.useNavigate()
 
   return {
-    search: searchParams.get('search') ?? '',
-    setSearch: (newSearch: string) => setSearchParams(p => {
-      if (newSearch) p.set('search', newSearch)
-      else p.delete('search')
-      return p
+    search,
+    setSearch: (newSearch: string) => navigate({
+      to: '.',
+      search: { search: newSearch, category },
     }),
-    category: searchParams.has('category') ? (searchParams.get('category') ?? '') : anyCategory,
-    setCategory: (newCategory: string | AnyCategory) => setSearchParams(p => {
-      if (newCategory !== anyCategory) p.set('category', newCategory)
-      else p.delete('category')
-      return p
+    category,
+    setCategory: (newCategory: string | AnyCategory) => navigate({
+      to: '.',
+      search: { category: newCategory, search },
     }),
   } satisfies DanceListState & Record<string, unknown>
 }
-
-export default DancesPage
