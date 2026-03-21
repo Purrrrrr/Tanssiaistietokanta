@@ -1,11 +1,13 @@
 import MarkdownToJsx from 'markdown-to-jsx/react'
 import type { ComponentPropsWithoutRef, CSSProperties } from 'react'
-import QRCode from 'react-qr-code'
+import QRCode_import from 'react-qr-code'
 import classNames from 'classnames'
 
 import { RegularLink } from './Link'
 
 import './Markdown.css'
+
+const QRCode = (QRCode_import as unknown as { default: typeof QRCode_import }).default
 
 export default function Markdown({ options, className, ...props }: ComponentPropsWithoutRef<typeof MarkdownToJsx>) {
   return <MarkdownToJsx
