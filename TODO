@@ -266,12 +266,12 @@
   * Remove react router
   * Fix dances page search params
   * Provide redirect from old version urls
+  * Type safety for Tab links
     Fix broken links
     * Plain links
     * NavigateButton
     * Other link using -components
       Version urls
-    Type safety for Tab links?
     Fix data loading for events
   Fix dance form in slideshow editor not showing
     Form inside form error related to this?

@@ -3,7 +3,7 @@ import { useParams } from '@tanstack/react-router'
 import { Event } from 'types'
 
 import { ListEditorContext, SyncStatus } from 'libraries/forms'
-import { Tab, Tabs } from 'libraries/ui'
+import { Tab, TabLink, Tabs } from 'libraries/ui'
 import {
   DanceSet,
   EventProgramSettings,
@@ -50,15 +50,23 @@ export function EventProgramEditor({ event }: EventProgramEditorProps) {
 
     <EventMetadataContext program={value} workshops={event.workshops}>
       <Tabs id="programEditorTabs" renderActiveTabPanelOnly selectedTabId={tabId ?? 'main'}>
-        <Tab id="main" href="../../main" title={t('tabs.main')} panel={<MainEditor program={value} />} />
-        <Tab
+        <TabLink
+          id="main"
+          to="."
+          params={{ tabId: 'main' }}
+          title={t('tabs.main')}
+          panel={<MainEditor program={value} />}
+        />
+        <TabLink
           id="slides"
-          href="../../slides"
+          to="."
+          params={{ tabId: 'slides' }}
           title={<>
             {t('tabs.slides')}
             <MissingDanceInstructionsCounterTag />
           </>}
-          panel={<SlideshowEditor program={value} />} />
+          panel={<SlideshowEditor program={value} />}
+        />
       </Tabs>
     </EventMetadataContext>
   </Form>

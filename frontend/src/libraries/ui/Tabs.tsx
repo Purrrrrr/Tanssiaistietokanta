@@ -1,57 +1,19 @@
-import { Link } from '@tanstack/react-router'
-import { Children, ComponentProps, KeyboardEventHandler, useId, useRef, useState } from 'react'
+import { createLink } from '@tanstack/react-router'
+import { Children, cloneElement, KeyboardEventHandler, useRef, useState } from 'react'
 import classNames from 'classnames'
-
-type TabId = string | number
-
-export interface TabProps extends Omit<ComponentProps<'div'>, 'id' | 'title' | 'onClick'> {
-  disabled?: boolean
-  /**
-     * Unique identifier used to control which tab is selected
-     * and to generate ARIA attributes for accessibility.
-     */
-  id: TabId
-  /**
-     * Panel content, rendered by the parent `Tabs` when this tab is active.
-     * If omitted, no panel will be rendered for this tab.
-     * Can either be an element or a renderer.
-     */
-  panel?: React.ReactNode | ((props: {
-    tabTitleId: string
-    tabPanelId: string
-  }) => React.ReactNode)
-  title?: React.ReactNode
-  href?: string
-  /** An icon element to render before the children. */
-  icon?: React.ReactElement
-}
-
-export function Tab(_: TabProps) {
-  return null
-}
 
 export interface TabsProps {
   className?: string
   children?: React.ReactNode
   id?: string
-  defaultSelectedTabId?: TabId
+  defaultSelectedTabId?: string
   renderActiveTabPanelOnly?: boolean
-  selectedTabId?: TabId
-  /**
-   * Whether to show tabs stacked vertically on the left side.
-   *
-   * @default false
-   */
-  vertical?: boolean
-  /**
-   * A callback function that is invoked when a tab in the tab list is clicked.
-   */
-  onChange?(newTabId: TabId, prevTabId: TabId | undefined, event: React.MouseEvent<HTMLElement>): void
+  selectedTabId?: string
+  /** A callback function that is invoked when a tab in the tab list is clicked. */
+  onChange?(newTabId: string): void
 }
 
 export function Tabs(props: TabsProps) {
-  const id = useId()
-  const tabContainer = useRef<HTMLDivElement>(null)
   const { className, children, renderActiveTabPanelOnly } = props
   const [selectedTabId, onChange] = useSelectedTabId(props)
   const tabs = Children.map(children, child => {
@@ -61,80 +23,35 @@ export function Tabs(props: TabsProps) {
     return child.props as TabProps
   })?.filter(tab => tab) ?? []
 
-  const onKeyDown: KeyboardEventHandler = (e) => {
-    if (!tabContainer.current) return
-    const { activeElement } = document
-    if (!activeElement) return
-    if (!tabContainer.current.contains(document.activeElement)) return
-
-    const direction = getEventDirection(e.key)
-    if (direction !== 0) {
-      const { children } = tabContainer.current
-      const index = Array.from(tabContainer.current.children).findIndex(child => child.id === activeElement.id)
-      const next = index + direction
-      const count = tabs.length
-      const nextElement = children.item(next < 0 ? count - 1 : (next % count)) as HTMLElement | null
-      nextElement?.focus()
-    }
-  }
-
   return <>
-    {/* eslint-disable-next-line jsx-a11y/interactive-supports-focus */ /* This is good enough for now */}
-    <div ref={tabContainer} className={classNames(className, 'flex flex-wrap gap-5 py-3')} role="tablist" onKeyDown={onKeyDown}>
-      {tabs.map((tab, index) => {
-        const selected = tab.id === selectedTabId
-        const { title, icon, disabled } = tab
-
-        const commonProps = {
-          role: 'tab',
-          className: classNames('cursor-pointer pb-1', selected && 'border-b-3 border-b-blue-400'),
-          id: tabId(id, tab, index),
-          'aria-expanded': selected,
-          'aria-controls': panelId(id, tab, index),
-          tabIndex: selected ? 0 : -1,
-          onClick: (e) => onChange(tab.id, selectedTabId, e),
+    <TabButtonContainer className={className}>
+      {Children.map(children, child => {
+        if (typeof child !== 'object' || child === null || !('props' in child)) {
+          return null
         }
-
-        if (tab.href && !disabled) {
-          return <Link key={tab.id} to={tab.href} {...commonProps}>
-            {icon}
-            {title}
-          </Link>
-        }
-
-        return <button key={tab.id} {...commonProps} disabled={disabled}>
-          {icon}
-          {title}
-        </button>
+        const { id: childId } = child.props as TabProps
+        return cloneElement(child, {
+          panelId: panelId(childId),
+          selected: childId === selectedTabId,
+          onClick: () => onChange(childId),
+        } as Partial<TabProps>)
       })}
-    </div>
-    {tabs.map((tab, index) => {
+    </TabButtonContainer>
+    {tabs.map(tab => {
       const selected = tab.id === selectedTabId
       if (renderActiveTabPanelOnly && !selected) return null
 
-      const tabPanelId = panelId(id, tab, index)
-      return <div
-        key={tab.id}
-        role="tabpanel"
-        id={tabPanelId}
-        className={selected ? '' : 'hidden'}
-        aria-hidden={!selected}
-        inert={!selected}
-      >
-        {
-          typeof tab.panel === 'function'
-            ? tab.panel({ tabTitleId: tabId(id, tab, index), tabPanelId })
-            : tab.panel
-        }
-      </div>
+      const tabPanelId = panelId(tab.id)
+      return <TabPanel key={tab.id} id={tabPanelId} selected={selected}>
+        {tab.panel}
+      </TabPanel>
     })}
   </>
 }
 
-const tabId = (id: string, tab: TabProps, index: number) => `tabs-${id}-tab-${tab.id}-tab${index}`
-const panelId = (id: string, tab: TabProps, index: number) => `tabs-${id}-panel-${tab.id}-tab${index}`
+const panelId = (id: string) => `tabs-${id}-panel`
 
-function useSelectedTabId(props: TabsProps): [TabId | undefined, Exclude<TabsProps['onChange'], undefined>] {
+function useSelectedTabId(props: TabsProps): [string | undefined, Exclude<TabsProps['onChange'], undefined>] {
   const [tab, setTab] = useState(props.defaultSelectedTabId)
 
   return [
@@ -156,4 +73,82 @@ function getEventDirection(key: string) {
       return 1
   }
   return 0
+}
+
+function TabButtonContainer({ className, children }: { className?: string, children: React.ReactNode }) {
+  const tabContainer = useRef<HTMLDivElement>(null)
+  const onKeyDown: KeyboardEventHandler = (e) => {
+    if (!tabContainer.current) return
+    const { activeElement } = document
+    if (!activeElement) return
+    if (!tabContainer.current.contains(document.activeElement)) return
+
+    const direction = getEventDirection(e.key)
+    if (direction !== 0) {
+      const { children, childElementCount: count } = tabContainer.current
+      const index = Array.from(children).findIndex(child => child.id === activeElement.id)
+      const next = index + direction
+      const nextElement = children.item(next < 0 ? count - 1 : (next % count)) as HTMLElement | null
+      nextElement?.focus()
+    }
+  }
+
+  /* eslint-disable-next-line jsx-a11y/interactive-supports-focus */ /* This is good enough for now */
+  return <div ref={tabContainer} className={classNames(className, 'flex flex-wrap gap-5 py-3')} role="tablist" onKeyDown={onKeyDown}>
+    {children}
+  </div>
+}
+
+export interface TabProps {
+  disabled?: boolean
+  /**
+     * Unique identifier used to control which tab is selected
+     * and to generate ARIA attributes for accessibility.
+     */
+  id: string
+  panelId?: string
+  selected?: boolean
+  title?: React.ReactNode
+  href?: string
+  /** An icon element to render before the children. */
+  icon?: React.ReactElement
+  onClick?: () => void
+  panel?: React.ReactNode
+}
+
+export function Tab({ title, href, icon, disabled, selected, panelId, panel: _panel, ...rest }: TabProps) {
+  const commonProps = {
+    ...rest,
+    role: 'tab',
+    className: classNames('cursor-pointer pb-1', selected && 'border-b-3 border-b-blue-400'),
+    'aria-expanded': selected,
+    'aria-controls': panelId,
+    tabIndex: selected ? 0 : -1,
+  }
+
+  if (href && !disabled) {
+    return <a href={href} {...commonProps}>
+      {icon}
+      {title}
+    </a>
+  }
+
+  return <button {...commonProps} disabled={disabled}>
+    {icon}
+    {title}
+  </button>
+}
+
+export const TabLink = createLink(Tab)
+
+export function TabPanel({ children, id, selected }: { children: React.ReactNode, id: string, selected: boolean }) {
+  return <div
+    role="tabpanel"
+    id={id}
+    className={selected ? '' : 'hidden'}
+    aria-hidden={!selected}
+    inert={!selected}
+  >
+    {children}
+  </div>
 }
