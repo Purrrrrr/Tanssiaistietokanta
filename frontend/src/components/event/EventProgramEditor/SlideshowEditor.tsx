@@ -4,7 +4,7 @@ import classNames from 'classnames'
 
 import { Card, Link } from 'libraries/ui'
 import { ChevronLeft, ChevronRight } from 'libraries/ui/icons'
-import { EventProgramSettings, Field } from 'components/event/EventProgramForm'
+import { EventProgramSettings, Field, useValueAt } from 'components/event/EventProgramForm'
 import { EventSlide, EventSlidePreview, EventSlideProps, startSlideId, useEventSlides } from 'components/event/EventSlide'
 import { EventSlideEditor } from 'components/event/EventSlideEditor'
 import { SlideContainer, useSlideshowNavigation } from 'components/Slide'
@@ -17,7 +17,8 @@ import { SlideChooser } from './components/SlideChooser'
 
 import 'components/Slide/slideStyles.scss'
 
-export function SlideshowEditor({ program }: { program: EventProgramSettings }) {
+export function SlideshowEditor() {
+  const program = useValueAt('')
   const t = useT('components.eventProgramEditor')
   const navigate = useNavigate()
   const slides = useEventSlides(program)

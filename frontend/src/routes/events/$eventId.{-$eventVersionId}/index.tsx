@@ -149,7 +149,7 @@ function EventProgram({ event, readOnly }: { event: Event, readOnly: boolean }) 
           entityId={event._id}
           color="primary"
           from={Route.id}
-          to="./program/{-$tabId}/{-$slideId}"
+          to="./program/main"
           text={t('addProgram')}
         />}
     </>
@@ -169,7 +169,7 @@ function EventProgram({ event, readOnly }: { event: Event, readOnly: boolean }) 
         requireRight="events:modify"
         entityId={event._id}
         from={Route.id}
-        to="./program/{-$tabId}/{-$slideId}"
+        to="./program/main"
         color={readOnly ? undefined : 'primary'}
         text={readOnly ? t('viewProgram') : t('editProgram')}
       />

@@ -31,7 +31,6 @@ export function Tabs(props: TabsProps) {
         }
         const { id: childId } = child.props as TabProps
         return cloneElement(child, {
-          panelId: panelId(childId),
           selected: childId === selectedTabId,
           onClick: () => onChange(childId),
         } as Partial<TabProps>)
@@ -41,15 +40,14 @@ export function Tabs(props: TabsProps) {
       const selected = tab.id === selectedTabId
       if (renderActiveTabPanelOnly && !selected) return null
 
-      const tabPanelId = panelId(tab.id)
-      return <TabPanel key={tab.id} id={tabPanelId} selected={selected}>
+      return <TabPanel key={tab.id} tabId={tab.id} selected={selected}>
         {tab.panel}
       </TabPanel>
     })}
   </>
 }
 
-const panelId = (id: string) => `tabs-${id}-panel`
+const tabIdToPanelId = (id: string) => `tabs-${id}-panel`
 
 function useSelectedTabId(props: TabsProps): [string | undefined, Exclude<TabsProps['onChange'], undefined>] {
   const [tab, setTab] = useState(props.defaultSelectedTabId)
@@ -75,7 +73,7 @@ function getEventDirection(key: string) {
   return 0
 }
 
-function TabButtonContainer({ className, children }: { className?: string, children: React.ReactNode }) {
+export function TabButtonContainer({ className, children }: { className?: string, children: React.ReactNode }) {
   const tabContainer = useRef<HTMLDivElement>(null)
   const onKeyDown: KeyboardEventHandler = (e) => {
     if (!tabContainer.current) return
@@ -116,13 +114,14 @@ export interface TabProps {
   panel?: React.ReactNode
 }
 
-export function Tab({ title, href, icon, disabled, selected, panelId, panel: _panel, ...rest }: TabProps) {
+export function Tab({ title, href, icon, disabled, selected = false, panelId, panel: _panel, ...rest }: TabProps) {
+  const isActiveLink = (rest as { className?: string }).className === 'active'
   const commonProps = {
     ...rest,
     role: 'tab',
     className: classNames('cursor-pointer pb-1', selected && 'border-b-3 border-b-blue-400'),
-    'aria-expanded': selected,
-    'aria-controls': panelId,
+    'aria-expanded': selected || isActiveLink,
+    'aria-controls': panelId ?? tabIdToPanelId(rest.id),
     tabIndex: selected ? 0 : -1,
   }
 
@@ -141,10 +140,10 @@ export function Tab({ title, href, icon, disabled, selected, panelId, panel: _pa
 
 export const TabLink = createLink(Tab)
 
-export function TabPanel({ children, id, selected }: { children: React.ReactNode, id: string, selected: boolean }) {
+export function TabPanel({ tabId, children, id, selected }: { tabId: string, children: React.ReactNode, id?: string, selected: boolean }) {
   return <div
     role="tabpanel"
-    id={id}
+    id={id ?? tabIdToPanelId(tabId)}
     className={selected ? '' : 'hidden'}
     aria-hidden={!selected}
     inert={!selected}

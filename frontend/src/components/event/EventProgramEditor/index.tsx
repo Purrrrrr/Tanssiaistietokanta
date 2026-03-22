@@ -1,20 +1,11 @@
-import { useParams } from '@tanstack/react-router'
-
-import { Event } from 'types'
-
-import { ListEditorContext, SyncStatus } from 'libraries/forms'
-import { Tab, TabLink, Tabs } from 'libraries/ui'
+import { ListEditorContext } from 'libraries/forms'
 import {
   DanceSet,
-  EventProgramSettings,
   Field,
-  Form,
   ListField,
   T,
-  useEventProgramEditorForm,
+  useValueAt,
 } from 'components/event/EventProgramForm'
-import { EventMetadataContext } from 'components/event/EventProgramForm/eventMetadata'
-import { BackLink } from 'components/widgets/BackLink'
 import { DurationField } from 'components/widgets/DurationField'
 import { useT } from 'i18n'
 
@@ -23,56 +14,15 @@ import {
   AddDanceSetButton,
   AddIntroductionButton,
   DuplicateDancesWarning,
-  MissingDanceInstructionsCounterTag,
   MissingDancesWarning,
 } from './components'
 import { DanceSetEditor, IntroductoryInformation } from './components/setEditors'
 import { DanceCategoryStats } from './components/stats'
-import { SlideshowEditor } from './SlideshowEditor'
 
 import './EventProgramEditor.sass'
 
-interface EventProgramEditorProps {
-  event: Event
-}
-
-export function EventProgramEditor({ event }: EventProgramEditorProps) {
-  const { formProps, formProps: { value }, state } = useEventProgramEditorForm(event._id, event._versionId ?? undefined, event.program)
-  const { tabId } = useParams({ from: '/events/$eventId/{-$eventVersionId}/program/{-$tabId}/{-$slideId}' })
-  const t = useT('pages.events.eventProgramPage')
-
-  return <Form {...formProps} className="eventProgramEditor">
-    <BackLink from="/events/$eventId/{-$eventVersionId}/program/{-$tabId}/{-$slideId}" to="../../..">{t('backToEvent')}</BackLink>
-    <h1>
-      {t('pageTitle')}
-      <SyncStatus style={{ marginLeft: '1ch', top: '3px' }} className="grow" state={state} />
-    </h1>
-
-    <EventMetadataContext program={value} workshops={event.workshops}>
-      <Tabs id="programEditorTabs" renderActiveTabPanelOnly selectedTabId={tabId ?? 'main'}>
-        <TabLink
-          id="main"
-          to="."
-          params={{ tabId: 'main' }}
-          title={t('tabs.main')}
-          panel={<MainEditor program={value} />}
-        />
-        <TabLink
-          id="slides"
-          to="."
-          params={{ tabId: 'slides' }}
-          title={<>
-            {t('tabs.slides')}
-            <MissingDanceInstructionsCounterTag />
-          </>}
-          panel={<SlideshowEditor program={value} />}
-        />
-      </Tabs>
-    </EventMetadataContext>
-  </Form>
-}
-
-function MainEditor({ program }: { program: EventProgramSettings }) {
+export function MainEditor() {
+  const program = useValueAt('')
   const t = useT('components.eventProgramEditor')
   const { danceSets, introductions } = program
 
