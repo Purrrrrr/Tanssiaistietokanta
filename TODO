@@ -15,9 +15,8 @@
 * Toivetanssit, requested dances
 * Do something to these property editors everywhere
 * Workshop editor page
-  Do something to hairy details in mutation query usage
+* Do something to hairy details in mutation query usage
   * Navigation after query
-    Maybe use apollo hook
 * Dance set list workshop and other info
   * Make these print out nicely. Hopefully done
   * Make the non print version show footer only once
@@ -246,7 +245,6 @@
   * Nicer timestamps
   * Fix async logging somehow -> https://nodejs.org/api/async_context.html#class-asynclocalstorage
   * Log all scheduled functions
-    Maybe some log query tool?
 * Log login attempts somehow
   * Log username with local
   * Log token cookie value
@@ -260,7 +258,7 @@
 * Use FeathersError to set statuses
 * Upgrade to vite 8
 * Fix calendar CSS in create event page
-  Migrate to Tanstack router
+* Migrate to Tanstack router
   * Add all routes to tanstack
   * Fix breadcrumbs not having urls
   * Remove react router
@@ -270,16 +268,10 @@
   * Access control mechanism
   * Error mechanism
   * Breadcrumb mechanism
-    Page title mechanism
-    Fix broken links
+  * Fix broken links
     * Plain links
     * NavigateButton
     * Other link using -components
-      Version urls
-    Fix data loading for events
-  Nicer login/error page
-  Fix dance form in slideshow editor not showing
-    Form inside form error related to this?
   Auth Part 2
   * Entity specific rights: events public/private
   * Ability to query all rights for service or service & entity
@@ -312,8 +304,8 @@
   * Fix updating of file lists
   * Fix delete of file propagating
   * Fix file rename propagating
+  * Some own component or system for auth needing pages
     Ensure this thing actually works all the time
-    Some own component or system for auth needing pages
     Fix event version getting
     Profile page
     Changing passwords
@@ -321,6 +313,17 @@
     Allow creating users
     Nicer logout menu keyboard a11y
     Allow creating users with some token? Invite functionality?
+
+  Fix dance form in slideshow editor not showing
+    Form inside form error related to this?
+  Tanstack query nice to haves
+    Page title mechanism
+    Version urls
+    Fix data loading for events
+  Nicer login/error page
+    With image
+    And maybe reason for login
+  Maybe do some log query tool?
 
   Make some sense of names in event program: rows, items...
   Prefetch dances somehow in eventprogram slide editor
@@ -341,6 +344,7 @@
       Variables?
       Make slides some kind of grid with defined areas
     Use file service for images
+  Styles also for prints
 
   Bundle size reducing
     Replace Apollo
