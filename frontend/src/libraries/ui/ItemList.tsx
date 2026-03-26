@@ -53,7 +53,7 @@ const commonRowClasses = classNames(
 const rowColorClassname = 'nth-of-type-[even]:bg-gray-100 border-x-1 border-gray-200'
 const rowClasses = classNames(
   'first:border-t-1 p-2',
-  'gap-4 group-[.wrap-md]:max-md:gap-x-1 group-[.wrap-sm]:max-sm:gap-x-1 group-[.wrap-none]:gap-x-1',
+  'gap-4 group-[.wrap-md]:max-md:gap-1 group-[.wrap-sm]:max-sm:gap-1 group-[.wrap-none]:gap-1',
   rowColorClassname,
   commonRowClasses,
 )

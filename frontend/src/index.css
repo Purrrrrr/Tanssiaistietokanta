@@ -16,6 +16,8 @@
       transform: scale(.55);
     }
   }
+
+  --breakpoint-xs: 560px;
 }
 
 body {

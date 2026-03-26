@@ -530,6 +530,7 @@ export const fi = {
   },
   common: {
     emptySearch: 'Tyhjennä haku',
+    actions: 'Toiminnot',
     search: 'Hae...',
     delete: 'Poista',
     edit: 'Muokkaa',

@@ -1,11 +1,12 @@
 import { useState } from 'react'
+import classNames from 'classnames'
 
 import { DanceListItem, ID } from 'types'
 
 import { useDance } from 'services/dances'
 
 import { Button, ColorClass, ItemList, type Sort } from 'libraries/ui'
-import { ChevronDown, ChevronUp, Edit } from 'libraries/ui/icons'
+import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Edit } from 'libraries/ui/icons'
 import { InfiniteItemLoader } from 'components/InfiniteItemLoader'
 import { ColoredTag } from 'components/widgets/ColoredTag'
 import { useT, useTranslation } from 'i18n'
@@ -69,16 +70,16 @@ function DanceListRow({ dance }: { dance: DanceListItem }) {
     expandableContentLoadingMessage={t('loadingEditor')}
     isOpen={showEditor}
   >
-    <div className="max-md:basis-35 grow">
+    <div className="">
       <DanceLink dance={dance} />
     </div>
-    <div className="max-md:basis-35 grow">
+    <div className="">
       {dance.category
         ? <ColoredTag title={dance.category} />
         : <span className={ColorClass.textMuted}>{t('noCategory')}</span>
       }
     </div>
-    <div className="text-right max-sm:w-full">
+    <Toolbar>
       <DanceIsUsedIn minimal events={dance.events} wikipageName={dance.wikipageName} />
       <DeleteDanceButton minimal dance={dance} />
       <Button
@@ -92,8 +93,34 @@ function DanceListRow({ dance }: { dance: DanceListItem }) {
         onClick={() => setShowEditor(!showEditor)}
         rightIcon={showEditor ? <ChevronUp /> : <ChevronDown />}
       />
-    </div>
+    </Toolbar>
   </ItemList.Row>
+}
+
+function Toolbar({ children }: { children: React.ReactNode }) {
+  const [open, setOpen] = useState(false)
+  return <div className={classNames(
+    'relative grow min-w-8 min-h-6 text-right',
+  )}>
+    <div className={classNames(
+      'w-max max-xs:absolute inline-flex',
+      !open && 'right-0 top-0',
+      open && '-top-1 -right-1 max-xs:bg-white max-xs:rounded-md max-xs:p-1 max-xs:z-10 max-xs:shadow-md max-xs:shadow-stone-600/30',
+    )}>
+      <div className={classNames(
+        !open && 'max-xs:hidden',
+      )}>
+        {children}
+      </div>
+      <Button
+        className="xs:hidden"
+        minimal
+        icon={open ? <ChevronRight /> : <ChevronLeft />}
+        title={useTranslation('common.actions')}
+        onClick={() => setOpen(!open)}
+      />
+    </div>
+  </div>
 }
 
 function DanceListRowEditor({ danceId }: { danceId: ID }) {
