@@ -14,6 +14,7 @@ export class ClamScanner {
   }
 
   async init() {
+    if (this.initialized) return
     const options = this.options
     if (options?.enabled) {
       const type = 'socket' in options ? 'socket' : 'TCP'
