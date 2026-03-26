@@ -30,7 +30,7 @@ export const Route = createFileRoute(
 
 function RouteBreadcrumb() {
   const { eventId, eventVersionId } = Route.useParams()
-  const event = Route.useLoaderData().event
+  const event = Route.useLoaderData()?.event
 
   return <Breadcrumb
     to="/events/$eventId/{-$eventVersionId}"
