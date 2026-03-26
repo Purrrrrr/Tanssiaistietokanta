@@ -305,8 +305,9 @@
   * Fix delete of file propagating
   * Fix file rename propagating
   * Some own component or system for auth needing pages
+  * Fix event version getting
+    Tests for channels and publishing
     Ensure this thing actually works all the time
-    Fix event version getting
     Profile page
     Changing passwords
     Admin role/group for users

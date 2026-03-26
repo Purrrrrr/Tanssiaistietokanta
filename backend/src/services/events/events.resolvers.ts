@@ -29,7 +29,7 @@ export default (app: Application) => {
     Query: {
       events: (_: any, __: any, params: EventsParams | undefined) => service.find({ ...params, query: { $sort } }),
       event: (_: any, { id, versionId }: any, params: EventsParams | undefined) => versionId
-        ? service.getVersion(id, versionId, params)
+        ? service.get(id, { ...params, query: { _versionId: versionId } })
         : service.get(id, params),
     },
     Mutation: {

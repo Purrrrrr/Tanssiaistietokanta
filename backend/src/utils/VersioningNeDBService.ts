@@ -57,8 +57,11 @@ export default class VersioningNeDBService<Result extends Versionable, Data, Ser
     }
   }
 
-  async getVersion(id: Id, versionId: Id, _params?: ServiceParams): Promise<Result> {
-    return await this.versionService.get(versionId, _params)
+  async get(id: Id, _params?: ServiceParams): Promise<Result> {
+    if (typeof _params?.query?._versionId === 'string') {
+      return this.mapToResult(await this.versionService.get(_params.query._versionId, _params))
+    }
+    return super.get(id, _params)
   }
 
   async getLatestVersion(id: Id): Promise<Result | null> {

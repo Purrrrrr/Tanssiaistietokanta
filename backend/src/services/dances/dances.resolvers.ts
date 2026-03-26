@@ -67,7 +67,7 @@ export default (app: Application) => {
     VersionHistory: versionHistoryFieldResolvers(),
     Query: {
       dance: (_: any, { id, versionId }: any, params: DancesParams | undefined) => versionId
-        ? service.getVersion(id, versionId, params)
+        ? service.get(id, { ...params, query: { _versionId: versionId } })
         : service.get(id, params),
       dances: (_: any, __: any, params: DancesParams | undefined) => service.find(params),
       danceCategories: async (_: any, __: any, params: DancesParams | undefined) =>
