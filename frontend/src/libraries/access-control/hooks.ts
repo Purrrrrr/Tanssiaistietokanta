@@ -6,8 +6,6 @@ import { parseRightsQuery, resolveRightsQuery } from './accessChecker'
 import { useRightsContext } from './context'
 import { replaceEqualDeep } from './utils'
 
-const PENDING_RESULT = [false]
-
 export function useHasRights() {
   const { hasRight } = useRightsContext()
   return useCallback(
@@ -21,17 +19,22 @@ export function useRight(right: SingleRightQueryString, context?: RightQueryCont
 }
 
 export function useRights(rights: RightsList, context?: RightQueryContext): boolean[] {
-  const { hasRight: queryFn, subscribe } = useRightsContext()
+  const { hasRight, hasCachedRight, subscribe } = useRightsContext()
   const parsedRights = useParsedRights({ rights, ...context })
 
   const idRef = useRef(0)
-  const [result, setResult] = useState(PENDING_RESULT)
+  const [result, setResult] = useState(() => {
+    return parsedRights.map(hasCachedRight)
+  })
 
   useEffect(() => {
     const loadRightsResult = () => {
+      if (parsedRights.every(r => r !== undefined)) {
+        return
+      }
       idRef.current += 1
       const id = idRef.current
-      Promise.all(parsedRights.map(queryFn)).then(newestResult => {
+      Promise.all(parsedRights.map(hasRight)).then(newestResult => {
         if (id !== idRef.current) return
         setResult(newestResult)
       })
@@ -39,9 +42,9 @@ export function useRights(rights: RightsList, context?: RightQueryContext): bool
 
     loadRightsResult()
     return subscribe(loadRightsResult)
-  }, [parsedRights, queryFn, subscribe])
+  }, [parsedRights, hasRight, subscribe])
 
-  return result
+  return result.map(r => r === true)
 }
 
 type RightsList = RightsQuery['rights']

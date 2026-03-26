@@ -24,6 +24,11 @@ export const Route = createFileRoute(
       rights: 'events:read',
       entityId: eventId,
     }),
+    usesRights: ({ eventId }) => ({
+      rights: ['events:modify', 'events:delete', 'events:manage-access', 'workshops:create', 'workshops:modify', 'workshops:delete', 'files:list', 'files:read', 'files:create', 'files:modify', 'files:delete'],
+      context: 'events',
+      contextId: eventId,
+    }),
     breadcrumb: RouteBreadcrumb,
   },
 })

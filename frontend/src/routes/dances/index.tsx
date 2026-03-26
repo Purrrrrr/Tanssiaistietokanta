@@ -20,6 +20,7 @@ export const Route = createFileRoute('/dances/')({
   component: DancesPage,
   staticData: {
     requireRights: 'dances:list',
+    usesRights: ['dances:modify', 'dances:create', 'dances:delete'],
   },
   validateSearch: (search: Record<string, unknown>): DanceSearchParams => {
     return {

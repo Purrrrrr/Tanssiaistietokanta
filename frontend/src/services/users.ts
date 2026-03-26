@@ -5,7 +5,7 @@ import { RightQuery } from 'libraries/access-control/types'
 import { getCurrentUser, subscribeToAuthChanges } from 'backend/authentication'
 
 import { backendQueryHook, entityListQueryHook, graphql, setupServiceUpdateFragment } from '../backend'
-import { clearAccessCache, hasAccess } from './access'
+import { clearAccessCache, hasAccess, hasCachedAccess } from './access'
 
 export { login, logout } from 'backend/authentication'
 
@@ -44,4 +44,8 @@ subscribeToAuthChanges(clearAccessCache)
 export async function hasRight(query: RightQuery) {
   const { right, service, ...rest } = query
   return await hasAccess({ action: right, ...rest, service })
+}
+export function hasCachedRight(query: RightQuery) {
+  const { right, service, ...rest } = query
+  return hasCachedAccess({ action: right, ...rest, service })
 }

@@ -12,6 +12,7 @@ import { type DanceOrganizerRootRouteContext } from 'utils/routeUtils'
 declare module '@tanstack/react-router' {
   interface StaticDataRouteOption {
     requireRights?: RouteRequireRights
+    usesRights?: RouteRequireRights
     breadcrumb?: TranslationKey | (() => React.ReactNode)
   }
 }
@@ -27,10 +28,16 @@ interface Params {
 export const Route = createRootRouteWithContext<DanceOrganizerRootRouteContext>()({
   component: RootComponent,
   beforeLoad: async ({ matches, context }) => {
-    const rights = matches
+    const requiredRights = matches
       .map(({ staticData: { requireRights }, params }) => toRightsQuery(requireRights, params))
       .filter(r => r !== undefined)
-    await Promise.all(rights.map(context.requireAccess))
+    const usedRights = matches
+      .map(({ staticData: { usesRights }, params }) => toRightsQuery(usesRights, params))
+      .filter(r => r !== undefined)
+    await Promise.all([
+      ...requiredRights.map(context.requireAccess),
+      ...usedRights.map(context.hasAccess),
+    ])
   },
   notFoundComponent: () =>
     <div className="flex flex-col items-center gap-4">
@@ -39,6 +46,7 @@ export const Route = createRootRouteWithContext<DanceOrganizerRootRouteContext>(
     </div>,
   staticData: {
     breadcrumb: () => <Breadcrumb to="/"><img className="mr-2" src="/fan32.png" alt="" /><T msg="app.title" /></Breadcrumb>,
+    usesRights: ['dances:list'],
   },
 })
 

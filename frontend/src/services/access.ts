@@ -9,7 +9,10 @@ import createDebug from 'utils/debug'
 
 const debug = createDebug('access')
 
-const globalAccess = new Map<`${ServiceName}:${string}`, AccessAllowed>()
+const globalAccess = {
+  cache: new Map<`${ServiceName}:${string}`, AccessAllowed>(),
+  promise: null as Promise<void> | null,
+}
 let accessCache: Access[] = []
 const eventEmitter = new EventEmitter()
 eventEmitter.setMaxListeners(100)
@@ -20,7 +23,8 @@ export function subscribeToAccessUpdates(callback: () => unknown) {
 }
 
 export function clearAccessCache() {
-  globalAccess.clear()
+  globalAccess.cache.clear()
+  globalAccess.promise = null
   accessCache.length = 0
   eventEmitter.emit('update')
   debug('Cleared access cache')
@@ -61,37 +65,57 @@ export async function hasAccess(query: SpecificAccessQuery): Promise<boolean> {
   return access === AccessAllowed.Grant
 }
 
+export function hasCachedAccess(query: SpecificAccessQuery): boolean | undefined {
+  const access = checkCachedAccess(query)
+  if (access === AccessAllowed.Unknown) {
+    return undefined
+  }
+  return access === AccessAllowed.Grant
+}
+
 async function checkAccess(query: SpecificAccessQuery): Promise<AccessAllowed> {
-  const globalResult = await checkGlobalAccess(query)
-  if (globalResult !== AccessAllowed.Unknown) {
-    return globalResult
+  if (globalAccess.cache.size === 0) {
+    await fetchGlobalAccesses()
+  }
+  const cachedAccess = checkCachedAccess(query)
+  if (cachedAccess !== AccessAllowed.Unknown) {
+    return cachedAccess
   }
 
-  const cachedAccess = accessCache.find(access => hasEqualAccessQuery(access, query))
-  if (cachedAccess) {
-    return cachedAccess.allowed
-  }
   const accesses = await fetchAccess(query)
   const matchingAccess = accesses.find(access => hasEqualAccessQuery(access, query))
   return matchingAccess ? matchingAccess.allowed : AccessAllowed.Deny
 }
 
-async function checkGlobalAccess(query: SpecificAccessQuery): Promise<AccessAllowed> {
-  if (globalAccess.size === 0) {
-    await fetchGlobalAccesses()
+function checkCachedAccess(query: SpecificAccessQuery): AccessAllowed {
+  const globalResult = checkGlobalAccess(query)
+  if (globalResult !== AccessAllowed.Unknown) {
+    return globalResult
   }
+
+  const cachedAccess = accessCache.find(access => hasEqualAccessQuery(access, query))
+  return cachedAccess ? cachedAccess.allowed : AccessAllowed.Unknown
+}
+
+function checkGlobalAccess(query: SpecificAccessQuery): AccessAllowed {
   const key = `${query.service}:${query.action}` as const
-  return globalAccess.get(key) ?? AccessAllowed.Unknown
+  return globalAccess.cache.get(key) ?? AccessAllowed.Unknown
 }
 
 async function fetchGlobalAccesses(): Promise<void> {
+  if (globalAccess.promise) {
+    return globalAccess.promise
+  }
+  const { promise, resolve } = Promise.withResolvers<undefined>()
+  globalAccess.promise = promise
   const accesses = await socketRequest<Access[]>('access', 'find', { })
+  resolve(undefined)
   debug('Fetched global accesses: %t', accesses)
 
-  globalAccess.clear()
+  globalAccess.cache.clear()
   accesses.forEach(access => {
     const key = `${access.service}:${access.action}` as `${ServiceName}:${string}`
-    globalAccess.set(key, access.allowed)
+    globalAccess.cache.set(key, access.allowed)
   })
 }
 

@@ -13,6 +13,9 @@ import { useT } from 'i18n'
 
 export const Route = createFileRoute('/')({
   component: EventList,
+  staticData: {
+    usesRights: ['dances:list', 'events:list', 'events:create'],
+  },
 })
 
 function EventList() {
