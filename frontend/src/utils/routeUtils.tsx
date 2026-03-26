@@ -7,6 +7,7 @@ import { ApolloClient, useShowGlobalLoadingAnimation } from 'backend'
 
 import { useHasRights } from 'libraries/access-control'
 import { Button } from 'libraries/ui'
+import NavigationLayout from 'components/NavigationLayout'
 import LoginForm from 'components/rights/LoginForm'
 import { Translator, useT } from 'i18n'
 
@@ -51,12 +52,14 @@ export function LoadingComponent() {
 export function ErrorComponent(props: ErrorComponentProps) {
   const { error, reset } = props
   if (error instanceof AccessDeniedError) {
-    return <LoginForm onSuccess={reset} />
+    return <NavigationLayout>
+      <LoginForm onSuccess={reset} />
+    </NavigationLayout>
   }
-  return <div>
+  return <NavigationLayout>
     <DefaultErrorComponent {...props} />
     <Button onClick={reset}>Try again</Button>
-  </div>
+  </NavigationLayout>
 }
 
 export class AccessDeniedError extends Error {}

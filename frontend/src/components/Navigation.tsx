@@ -23,7 +23,7 @@ function Navigation() {
       <BreadcrumbsContainer label={useTranslation('navigation.breadcrumbs')}>
         {breadcrumbs.map(({ route, breadcrumb }) =>
           typeof breadcrumb === 'function'
-            ? renderComponent(breadcrumb)
+            ? renderComponent(breadcrumb, route.id)
             : (
               <Breadcrumb
                 key={route.id}
@@ -43,7 +43,7 @@ function Navigation() {
   </nav>
 }
 
-const renderComponent = (Crumb: () => React.ReactNode) => <Crumb />
+const renderComponent = (Crumb: () => React.ReactNode, key: string) => <Crumb key={key} />
 
 const NavButton = createLink((props: React.ComponentProps<typeof AnchorButton>) => <AnchorButton minimal {...props} className="" />)
 
