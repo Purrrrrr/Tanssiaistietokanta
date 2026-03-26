@@ -12,7 +12,7 @@ export const up: MigrationFn = async params => {
   initTestWorkshops()
   await Promise.all(
     testWorkshops.map(async workshop => {
-      const created = await workshopService.create(omit(workshop, ['_id']), { [SkipAccessControl]: true })
+      const created = await workshopService.create?.(omit(workshop, ['_id']), { [SkipAccessControl]: true })
       workshop._id = created._id
     }),
   )
