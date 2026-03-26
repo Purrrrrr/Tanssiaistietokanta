@@ -74,7 +74,7 @@ export async function checkAccess(ctx: HookContext, next: NextFunction) {
     }
 
     let currentAccessControl = id ? await strategy.store.getAccess(id as string) : undefined
-    const updatedAccessControl = getAccessControlUpdate(ctx, strategy)
+    const updatedAccessControl = getAccessControlUpdate(ctx, currentAccessControl)
 
     await next()
 
@@ -131,10 +131,10 @@ function getAccessControlUpdate(ctx: HookContext, previousData?: unknown): unkno
     delete data.accessControl
     return accessControlData
   }
-  if (previousData && typeof previousData === 'object' && 'accessControl' in previousData && isJsonPatch(ctx)) {
+  if (previousData && isJsonPatch(ctx)) {
     const patch = data.filter((op: any) => op.path.startsWith('/accessControl'))
     ctx.data = data.filter((op: any) => !op.path.startsWith('/accessControl'))
-    return getPatched({ accessControl: previousData.accessControl }, patch).accessControl
+    return getPatched({ accessControl: previousData }, patch).accessControl
   }
   return undefined
 }
