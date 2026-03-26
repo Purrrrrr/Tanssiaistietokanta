@@ -7,7 +7,7 @@ import { AlertContext } from 'libraries/overlays/AlertContext'
 import { ToastContainer } from 'libraries/ui'
 import { RightsContext } from 'components/rights/RightsContext'
 import { TranslationContext, translations } from 'i18n'
-import { defaultContext, ErrorComponent, useAppRootContext } from 'utils/routeUtils'
+import { defaultContext, ErrorComponent, LoadingComponent, useAppRootContext } from 'utils/routeUtils'
 
 function DanceOrganizer() {
   return <TranslationContext languages={translations} defaultLanguage="fi">
@@ -25,6 +25,8 @@ const router = createRouter({
   routeTree,
   context: defaultContext,
   defaultErrorComponent: ErrorComponent,
+  defaultPendingComponent: LoadingComponent,
+  defaultPendingMs: 50,
 })
 
 function Routes() {

@@ -3,7 +3,7 @@ import { useApolloClient } from '@apollo/client'
 
 import { RightsQuery } from 'libraries/access-control/types'
 
-import { ApolloClient } from 'backend'
+import { ApolloClient, useShowGlobalLoadingAnimation } from 'backend'
 
 import { useHasRights } from 'libraries/access-control'
 import { Button } from 'libraries/ui'
@@ -41,6 +41,11 @@ export function useAppRootContext(): DanceOrganizerRootRouteContext {
     T,
     queryClient,
   }
+}
+
+export function LoadingComponent() {
+  useShowGlobalLoadingAnimation(true)
+  return null
 }
 
 export function ErrorComponent(props: ErrorComponentProps) {

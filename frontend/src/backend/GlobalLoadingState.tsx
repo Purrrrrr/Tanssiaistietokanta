@@ -47,10 +47,6 @@ const subscribeToGlobalLoadingState = (callback: () => void) => {
   return () => stateListeners.delete(callback)
 }
 
-export function lazyLoadComponent<T>(loadComponent: () => Promise<{ default: ComponentType<T> }>) {
-  return lazy(() => addGlobalLoadingAnimation(loadComponent()))
-}
-
 export function addGlobalLoadingAnimation<T>(promise: Promise<T>): Promise<T> {
   addLoadingObject(promise)
   promise.finally(() => removeLoadingObject(promise))
