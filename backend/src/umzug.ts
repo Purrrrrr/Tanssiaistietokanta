@@ -35,9 +35,9 @@ function getUmzug<Ctx extends MigrationContext>(context: Ctx, extension: string 
     migrations: {
       glob: [
         isTest
-          ? `@(src|test)/migrations/*.${extension}`
-          : `src/migrations/*.${extension}`,
-        { cwd: context.rootPath },
+          ? `../@(src|test)/migrations/*.${extension}`
+          : `./migrations/*.${extension}`,
+        { cwd: __dirname },
       ],
     },
     context,

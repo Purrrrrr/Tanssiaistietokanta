@@ -7,14 +7,14 @@
     "target": "ESNext",
     "module": "commonjs",
     "outDir": "./lib",
+    "rootDir": "src",
     "rootDirs": ["src", "test"],
     "declaration": true,
     "strict": true,
     "esModuleInterop": true
   },
   "include": [
-    "src",
-    "test"
+    "src"
   ],
   "exclude": [
   ]
