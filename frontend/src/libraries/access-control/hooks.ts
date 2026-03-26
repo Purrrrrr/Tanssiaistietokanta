@@ -1,11 +1,20 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
-import { RightQuery, RightQueryContext, RightsQuery, ServiceName, ServiceRight, SingleRightQueryString } from './types'
+import { RightQuery, RightQueryContext, RightsQuery, ServiceName, SingleRightQueryString } from './types'
 
+import { parseRightsQuery, resolveRightsQuery } from './accessChecker'
 import { useRightsContext } from './context'
 import { replaceEqualDeep } from './utils'
 
 const PENDING_RESULT = [false]
+
+export function useHasRights() {
+  const { hasRight } = useRightsContext()
+  return useCallback(
+    (query: RightsQuery) => resolveRightsQuery(hasRight, query),
+    [hasRight],
+  )
+}
 
 export function useRight(right: SingleRightQueryString, context?: RightQueryContext): boolean {
   return useRights(right, context).every(Boolean)
@@ -41,25 +50,13 @@ function useParsedRights({ rights, context, contextId, entityId, owner, owningId
   const stableRights = useStableRightsProp(rights)
 
   return useMemo(() => {
-    const rightsList = Array.isArray(stableRights) ? stableRights : [stableRights]
-
-    return rightsList.flatMap((right) => {
-      const [service, rightsPart] = right.split(':') as [ServiceName, string]
-      const rights = rightsPart.split(',') as ServiceRight<ServiceName>[]
-      return rights.map(right => {
-        // Apply the defaulting logic for context and owner based on the query parameters
-        // If context is provided and matches the service
-        // => use contextId as entityId if it is not explicitly provided
-        // If context is provided and does not match the service
-        // => use context as owner and contextId as owningId if it is not explicitly provided
-        return {
-          service,
-          right,
-          entityId: entityId ?? (context === service ? contextId : undefined),
-          owner: owner ?? (context !== service ? context : undefined),
-          owningId: owningId ?? (context !== service ? contextId : undefined),
-        }
-      })
+    return parseRightsQuery({
+      rights: stableRights,
+      context,
+      contextId,
+      entityId,
+      owner,
+      owningId,
     })
   }, [stableRights, context, contextId, entityId, owner, owningId])
 }

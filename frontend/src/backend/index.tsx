@@ -4,6 +4,7 @@ import { apolloClient, ApolloProvider } from './apollo'
 import { initializeAuthentication } from './authentication'
 import { GlobalLoadingState } from './GlobalLoadingState'
 
+export { type ApolloClientType as ApolloClient } from './apollo'
 export { updateEntityFragment } from './apolloCache'
 export { type FetchRequestProgress, restRequestWithProgress, type RestRequestWithProgressOptions, socketRequest } from './connection'
 export { addGlobalLoadingAnimation, lazyLoadComponent, useShowGlobalLoadingAnimation } from './GlobalLoadingState'

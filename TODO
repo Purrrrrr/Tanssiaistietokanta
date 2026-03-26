@@ -267,12 +267,17 @@
   * Fix dances page search params
   * Provide redirect from old version urls
   * Type safety for Tab links
+  * Access control mechanism
+  * Error mechanism
+  * Breadcrumb mechanism
+    Page title mechanism
     Fix broken links
     * Plain links
     * NavigateButton
     * Other link using -components
       Version urls
     Fix data loading for events
+  Nicer login/error page
   Fix dance form in slideshow editor not showing
     Form inside form error related to this?
   Auth Part 2

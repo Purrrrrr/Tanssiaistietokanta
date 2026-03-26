@@ -1,19 +1,39 @@
-import { createLink } from '@tanstack/react-router'
+import { createLink, useMatches } from '@tanstack/react-router'
 
 import { logout } from 'backend/authentication'
 import { useCurrentUser } from 'services/users'
 
 import MenuButton from 'libraries/formsV2/components/MenuButton'
-import { AnchorButton, Breadcrumbs, Button } from 'libraries/ui'
+import { AnchorButton, Button } from 'libraries/ui'
+import { Breadcrumb, BreadcrumbsContainer } from 'libraries/ui/Breadcrumbs'
 import { Person as User } from 'libraries/ui/icons'
 import { useT, useTranslation } from 'i18n'
 
 import { NavigateButton } from './widgets/NavigateButton'
 
 function Navigation() {
+  const T = useT('')
+  const matches = useMatches()
+  const breadcrumbs = matches
+    .map(route => route.staticData?.breadcrumb ? ({ route, breadcrumb: route.staticData.breadcrumb }) : null)
+    .filter(r => r !== null)
+
   return <nav className="flex relative z-10 flex-wrap justify-between items-center px-3.5 h-auto bg-white shadow-sm min-h-12.5 shadow-stone-600/30">
     <div className="grow">
-      <Breadcrumbs label={useTranslation('navigation.breadcrumbs')} />
+      <BreadcrumbsContainer label={useTranslation('navigation.breadcrumbs')}>
+        {breadcrumbs.map(({ route, breadcrumb }) =>
+          typeof breadcrumb === 'function'
+            ? renderComponent(breadcrumb)
+            : (
+              <Breadcrumb
+                key={route.id}
+                to={route.pathname}
+                params={route.params}
+                text={T(breadcrumb)}
+              />
+            ),
+        )}
+      </BreadcrumbsContainer>
     </div>
     <div className="flex items-center">
       <NavButton requireRight="dances:list" icon={<span className="mr-0.5">💃</span>} to="/dances" text={useTranslation('navigation.dances')} />
@@ -23,7 +43,9 @@ function Navigation() {
   </nav>
 }
 
-const NavButton = createLink((props: React.ComponentProps<typeof AnchorButton>) => <AnchorButton minimal {...props} />)
+const renderComponent = (Crumb: () => React.ReactNode) => <Crumb />
+
+const NavButton = createLink((props: React.ComponentProps<typeof AnchorButton>) => <AnchorButton minimal {...props} className="" />)
 
 function LoginStatus() {
   const user = useCurrentUser()

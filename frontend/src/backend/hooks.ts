@@ -121,10 +121,17 @@ export function makeMutationHook<T, V>(
 export function backendQueryHook<T, V extends OperationVariables>(
   query: TypedDocumentNode<T, V>,
   additionalCode?: (res: QueryResult<T, V>) => unknown,
-): ((v: V, o?: QueryHookOptions<T, V>) => QueryResult<T, V>) {
-  return (variables: V, options: QueryHookOptions<T, V> = {}) => {
+): BackendQueryHook<T, V> {
+  const useHook = (variables: V, options: QueryHookOptions<T, V> = {}) => {
     const queryResult = useQuery<T, V>(query, { variables, fetchPolicy: 'cache-and-network', ...options })
     if (additionalCode) additionalCode(queryResult)
     return queryResult
   }
+  useHook.query = query
+  return useHook
+}
+
+interface BackendQueryHook<T, V extends OperationVariables> {
+  (variables: V, options?: QueryHookOptions<T, V>): QueryResult<T, V>
+  query: TypedDocumentNode<T, V>
 }

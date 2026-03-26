@@ -5,9 +5,8 @@ import createDebug from 'utils/debug'
 
 import { socketRequest } from './connection'
 
-export { ApolloProvider, gql, useMutation, useQuery } from '@apollo/client'
-export { ApolloClient }
 export type { DocumentNode, FetchResult, MutationResult } from '@apollo/client'
+export { ApolloProvider, gql, useMutation, useQuery } from '@apollo/client'
 
 const debug = createDebug('graphql')
 
@@ -44,6 +43,8 @@ export const apolloClient = new ApolloClient({
   link: socketLink,
   cache,
 })
+
+export type ApolloClientType = typeof apolloClient
 
 type R = FetchResult<Record<string, unknown>, Record<string, unknown>, Record<string, unknown>>
 

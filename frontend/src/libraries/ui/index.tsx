@@ -6,7 +6,7 @@ import { ColorClass, CssClass } from './classes'
 import './ui.css'
 
 export * from './AutosizedSection'
-export { Breadcrumb, BreadcrumbContext, Breadcrumbs } from './Breadcrumbs'
+export { Breadcrumb, BreadcrumbsContainer } from './Breadcrumbs'
 export { AnchorButton, type AnchorButtonProps, Button, buttonClass, type ButtonProps } from './Button'
 export { Callout } from './Callout'
 export { default as Collapse } from './Collapse'

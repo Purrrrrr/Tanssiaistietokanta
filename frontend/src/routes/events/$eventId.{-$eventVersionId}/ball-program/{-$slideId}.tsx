@@ -2,18 +2,17 @@ import { createFileRoute, useNavigate, useParams } from '@tanstack/react-router'
 import { useState } from 'react'
 import classNames from 'classnames'
 
-import { useRight } from 'libraries/access-control'
+import { RequirePermissions, useRight } from 'libraries/access-control'
 import { Button } from 'libraries/ui'
 import { Cross, Edit } from 'libraries/ui/icons'
 import { EventSlide, EventSlideProps, startSlideId, useEventSlides } from 'components/event/EventSlide'
 import { LoadingState } from 'components/LoadingState'
-import { RequirePermissions } from 'components/rights/RequirePermissions'
 import { SlideContainer, useSlideshowNavigation } from 'components/Slide'
 import { useOnKeydown } from 'utils/useOnKeydown'
 
-import { ProgramTitleSelector } from './_components/ProgramTitleSelector'
-import { SlideEditor } from './_components/SlideEditor'
-import { Event, useBallProgramQuery } from './_components/useBallProgramQuery'
+import { ProgramTitleSelector } from './-components/ProgramTitleSelector'
+import { SlideEditor } from './-components/SlideEditor'
+import { Event, useBallProgramQuery } from './-components/useBallProgramQuery'
 
 import './BallProgram.scss'
 
@@ -25,12 +24,6 @@ export const Route = createFileRoute(
 
 function RouteComponent() {
   const { eventId, eventVersionId } = Route.useParams()
-  return <RequirePermissions requireRight="events:read" entityId={eventId}>
-    <BallProgramView eventId={eventId} eventVersionId={eventVersionId} />
-  </RequirePermissions>
-}
-
-export function BallProgramView({ eventId, eventVersionId }) {
   const { event, slides, refetch, loadingState } = useBallProgram(eventId, eventVersionId)
 
   const [isEditing, setEditing] = useState(false)

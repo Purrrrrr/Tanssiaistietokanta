@@ -7,13 +7,13 @@ import { addGlobalLoadingAnimation } from 'backend'
 import { useDeleteEvent, usePatchEvent } from 'services/events'
 import { useCreateWorkshop, useDeleteWorkshop } from 'services/workshops'
 
+import { RequirePermissions } from 'libraries/access-control'
 import { DateField, DateRangeField, formFor, patchStrategy, SyncStatus, useAutosavingState } from 'libraries/forms'
 import { Button, Card, Collapse, H2, Link } from 'libraries/ui'
 import { DanceSet, EventProgramRow } from 'components/event/EventProgramForm'
 import { JSONPatch } from 'components/event/EventProgramForm/patchStrategy'
 import { FileList } from 'components/files/FileList'
 import { EventGrantsEditor } from 'components/rights/EventGrantsEditor'
-import { RequirePermissions } from 'components/rights/RequirePermissions'
 import { VersionedPageTitle } from 'components/versioning/VersionedPageTitle'
 import { VersionSidebarToggle } from 'components/versioning/VersionSidebarToggle'
 import { DeleteButton } from 'components/widgets/DeleteButton'
@@ -43,7 +43,7 @@ function RouteComponent() {
   const t = useT('pages.events.eventPage')
   const { _versionId, _versionNumber } = event
   const readOnly = _versionId != undefined
-  return <RequirePermissions requireRight="events:read" entityId={event._id}>
+  return <>
     <div className="flex justify-between items-center">
       <VersionedPageTitle showVersion={readOnly} versionNumber={_versionNumber}>
         {event.name}
@@ -56,7 +56,7 @@ function RouteComponent() {
     <H2>{t('workshops')}</H2>
     <EventWorkshops event={event} readOnly={readOnly} />
     <FileList title={t('files')} owner="events" owningId={event._id} />
-  </RequirePermissions>
+  </>
 }
 
 function EventDetails({ event, readOnly }: { event: Event, readOnly: boolean }) {

@@ -1,7 +1,7 @@
 import { RequirePermissions, type RightsQueryProps } from './RequirePermissions'
 
 export { AccessControlProvider } from './context'
-export { useRight, useRights } from './hooks'
+export { useHasRights, useRight, useRights } from './hooks'
 export { RequirePermissions, type RightsQueryProps, useRequirePermissions } from './RequirePermissions'
 export type { RightQuery, ServiceName } from './types'
 

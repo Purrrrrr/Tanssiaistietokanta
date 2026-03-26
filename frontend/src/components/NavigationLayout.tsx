@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 
-import { Breadcrumb, BreadcrumbContext, ColorClass, Link, RegularLink } from 'libraries/ui'
+import { ColorClass, Link, RegularLink } from 'libraries/ui'
 import { T, useTranslation } from 'i18n'
 
 import DebugManager from './DebugManager'
@@ -16,37 +16,34 @@ if (process.env.NODE_ENV === 'development') {
 
 function NavigationLayout({ children }) {
   if (navigationHidden()) {
-    return <BreadcrumbContext>
+    return <>
       <SupportedBrowserChecker />
       {children}
-    </BreadcrumbContext>
+    </>
   }
 
-  return <BreadcrumbContext>
-    <SidebarContext>
-      <Breadcrumb to="/" text={<><img className="mr-2" src="/fan32.png" alt="" />{' '}<T msg="app.title" /></>} />
-      <SupportedBrowserChecker />
-      <SkipToMainContent />
-      <div id="layout">
-        <Navigation />
-        <main id="main-content">
-          {children}
-        </main>
-        <aside>
-          <SidebarContainer />
-        </aside>
-        <footer className={classNames(ColorClass.textMuted, 'text-right p-1')}>
-          {process.env.NODE_ENV === 'development' &&
-            <Link className="px-1 mr-1 border-gray-400 border-e" to="/ui-showcase">UI Showcase</Link>}
-          <T msg="app.title" /> v. {process.env.REACT_APP_BUILD_TIME ?? 'DEV'}-{process.env.REACT_APP_COMMIT_REV ?? 'HEAD'}
-          {' '}
-          <LicenceLink />
-          {process.env.NODE_ENV === 'development' &&
-            <DebugManager />}
-        </footer>
-      </div>
-    </SidebarContext>
-  </BreadcrumbContext>
+  return <SidebarContext>
+    <SupportedBrowserChecker />
+    <SkipToMainContent />
+    <div id="layout">
+      <Navigation />
+      <main id="main-content">
+        {children}
+      </main>
+      <aside>
+        <SidebarContainer />
+      </aside>
+      <footer className={classNames(ColorClass.textMuted, 'text-right p-1')}>
+        {process.env.NODE_ENV === 'development' &&
+          <Link className="px-1 mr-1 border-gray-400 border-e" to="/ui-showcase">UI Showcase</Link>}
+        <T msg="app.title" /> v. {process.env.REACT_APP_BUILD_TIME ?? 'DEV'}-{process.env.REACT_APP_COMMIT_REV ?? 'HEAD'}
+        {' '}
+        <LicenceLink />
+        {process.env.NODE_ENV === 'development' &&
+          <DebugManager />}
+      </footer>
+    </div>
+  </SidebarContext>
 }
 
 function navigationHidden() {

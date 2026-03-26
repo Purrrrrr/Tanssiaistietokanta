@@ -7,6 +7,7 @@ import { AlertContext } from 'libraries/overlays/AlertContext'
 import { ToastContainer } from 'libraries/ui'
 import { RightsContext } from 'components/rights/RightsContext'
 import { TranslationContext, translations } from 'i18n'
+import { defaultContext, ErrorComponent, useAppRootContext } from 'utils/routeUtils'
 
 function DanceOrganizer() {
   return <TranslationContext languages={translations} defaultLanguage="fi">
@@ -14,13 +15,21 @@ function DanceOrganizer() {
       <RightsContext>
         <ToastContainer />
         <AlertContext>
-          <RouterProvider router={router} />
+          <Routes />
         </AlertContext>
       </RightsContext>
     </BackendProvider>
   </TranslationContext>
 }
-const router = createRouter({ routeTree })
+const router = createRouter({
+  routeTree,
+  context: defaultContext,
+  defaultErrorComponent: ErrorComponent,
+})
+
+function Routes() {
+  return <RouterProvider router={router} context={useAppRootContext()} />
+}
 
 // Register the router instance for type safety
 declare module '@tanstack/react-router' {

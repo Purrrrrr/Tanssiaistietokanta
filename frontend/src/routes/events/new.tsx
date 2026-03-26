@@ -9,10 +9,8 @@ import { useCreateEvent } from 'services/events'
 import { useCurrentUser } from 'services/users'
 
 import { DateRangeField, formFor, SubmitButton } from 'libraries/forms'
-import { Breadcrumb } from 'libraries/ui'
 import { PageTitle } from 'components/PageTitle'
 import { EventGrantsEditor } from 'components/rights/EventGrantsEditor'
-import { RequirePermissions } from 'components/rights/RequirePermissions'
 import { useT } from 'i18n'
 import { guid } from 'utils/guid'
 
@@ -23,6 +21,10 @@ const {
 
 export const Route = createFileRoute('/events/new')({
   component: CreateEventForm,
+  staticData: {
+    requireRights: 'events:create',
+    breadcrumb: 'pages.events.createEvent.newEventBreadcrumb',
+  },
 })
 
 function CreateEventForm() {
@@ -46,23 +48,20 @@ function CreateEventForm() {
   })
 
   return <>
-    <Breadcrumb to={Route.to} text={t('newEventBreadcrumb')} />
     <PageTitle>{t('newEvent')}</PageTitle>
-    <RequirePermissions requireRight="events:create" fallback="loginPage">
-      <Form labelStyle="above" value={event} onChange={setEvent} onSubmit={() => addGlobalLoadingAnimation(createEvent({ event }))} errorDisplay="onSubmit">
-        <div className="flex gap-3">
-          <Input label={t('name')} path="name" required containerClassName="w-60" />
-          <DateRangeField<EventInput>
-            id="eventDate"
-            label={t('eventDate')}
-            beginPath="beginDate"
-            endPath="endDate"
-            required
-          />
-          <EventGrantsEditor />
-        </div>
-        <SubmitButton text={t('create')} />
-      </Form>
-    </RequirePermissions>
+    <Form labelStyle="above" value={event} onChange={setEvent} onSubmit={() => addGlobalLoadingAnimation(createEvent({ event }))} errorDisplay="onSubmit">
+      <div className="flex gap-3">
+        <Input label={t('name')} path="name" required containerClassName="w-60" />
+        <DateRangeField<EventInput>
+          id="eventDate"
+          label={t('eventDate')}
+          beginPath="beginDate"
+          endPath="endDate"
+          required
+        />
+        <EventGrantsEditor />
+      </div>
+      <SubmitButton text={t('create')} />
+    </Form>
   </>
 }

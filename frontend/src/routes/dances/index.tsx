@@ -2,13 +2,13 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { filterDances, useDances } from 'services/dances'
 
+import { RequirePermissions } from 'libraries/access-control'
 import { FormGroup, SearchBar } from 'libraries/ui'
 import { CreateDanceButtons } from 'components/dance/CreateDanceButtons'
 import { AnyCategory, anyCategory, DanceViewCategorySelector } from 'components/dance/DanceCategorySelector'
 import { DanceList } from 'components/dance/DanceList'
 import { LoadingState } from 'components/LoadingState'
 import { PageTitle } from 'components/PageTitle'
-import { RequirePermissions } from 'components/rights/RequirePermissions'
 import { useT, useTranslation } from 'i18n'
 
 interface DanceSearchParams {
@@ -18,6 +18,9 @@ interface DanceSearchParams {
 
 export const Route = createFileRoute('/dances/')({
   component: DancesPage,
+  staticData: {
+    requireRights: 'dances:list',
+  },
   validateSearch: (search: Record<string, unknown>): DanceSearchParams => {
     return {
       search: typeof search.search === 'string' ? search.search : '',
@@ -35,22 +38,20 @@ function DancesPage() {
 
   return <>
     <PageTitle>{t('pageTitle')}</PageTitle>
-    <RequirePermissions requireRight="dances:list">
-      <LoadingState {...requestState} />
-      <div className="flex flex-wrap gap-2 mb-2.5">
-        <SearchBar id="search-dances" value={search} onChange={setSearch} placeholder={useTranslation('common.search')} emptySearchText={useTranslation('common.emptySearch')} />
-        <RequirePermissions requireRight="dances:create">
-          <div>
-            <CreateDanceButtons danceCount={dances.length} />
-          </div>
-        </RequirePermissions>
-        <div className="grow" />
-        <FormGroup inline label={useTranslation('domain.dance.category')} labelFor="dancecategory">
-          <DanceViewCategorySelector id="dancecategory" value={category} onChange={setCategory} dances={dances} />
-        </FormGroup>
-      </div>
-      <DanceList key={search} dances={filteredDances} />
-    </RequirePermissions>
+    <LoadingState {...requestState} />
+    <div className="flex flex-wrap gap-2 mb-2.5">
+      <SearchBar id="search-dances" value={search} onChange={setSearch} placeholder={useTranslation('common.search')} emptySearchText={useTranslation('common.emptySearch')} />
+      <RequirePermissions requireRight="dances:create">
+        <div>
+          <CreateDanceButtons danceCount={dances.length} />
+        </div>
+      </RequirePermissions>
+      <div className="grow" />
+      <FormGroup inline label={useTranslation('domain.dance.category')} labelFor="dancecategory">
+        <DanceViewCategorySelector id="dancecategory" value={category} onChange={setCategory} dances={dances} />
+      </FormGroup>
+    </div>
+    <DanceList key={search} dances={filteredDances} />
   </>
 }
 

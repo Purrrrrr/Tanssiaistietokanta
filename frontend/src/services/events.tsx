@@ -214,6 +214,7 @@ export function useEvent(id: string, versionId?: string) {
   const res = useEventInternal({ id, versionId })
   return [res?.data?.event, res] as const
 }
+useEvent.query = useEventInternal.query
 
 export const useEvents = entityListQueryHook('events', graphql(`
 query getEvents {

@@ -5,7 +5,7 @@ import { PrefixPath, Translator } from './types'
 
 import { DateLike, useFormatDate, useFormatDateTime, useFormatDuration, useFormatTime } from './dateTime'
 
-export type { PrefixPath, Translator } from './types'
+export type { KeyForPath, PrefixPath, Translator } from './types'
 
 export interface TranlationSystem<Translations> {
   useT: <P extends PrefixPath<Translations> | ''>(prefix: P) => Translator<Translations, P>

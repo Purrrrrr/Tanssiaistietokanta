@@ -15,7 +15,7 @@ export interface LoginFields {
 
 const { Form, Input } = formFor<LoginFields>()
 
-export function LoginForm({ redirectTo, defaultRedirectTo }: { redirectTo?: string, defaultRedirectTo?: string }) {
+export function LoginForm({ redirectTo, defaultRedirectTo, onSuccess }: { redirectTo?: string, defaultRedirectTo?: string, onSuccess?: () => void }) {
   const [value, setValue] = useState<LoginFields>({ username: '', password: '' })
   const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
@@ -27,6 +27,7 @@ export function LoginForm({ redirectTo, defaultRedirectTo }: { redirectTo?: stri
       setError(t('invalidCredentials'))
       return
     }
+    onSuccess?.()
     const target = redirectTo ?? new URLSearchParams(window.location.search).get('redirectTo') ?? defaultRedirectTo
     if (target) navigate({ to: target })
   }

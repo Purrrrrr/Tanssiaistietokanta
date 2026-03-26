@@ -3,11 +3,11 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useEvents } from 'services/events'
 import { useCurrentUser } from 'services/users'
 
+import { RequirePermissions } from 'libraries/access-control'
 import { useFormatDate } from 'libraries/i18n/dateTime'
 import { H2, ItemList, Link } from 'libraries/ui'
 import { LoadingState } from 'components/LoadingState'
 import { PageTitle } from 'components/PageTitle'
-import { RequirePermissions } from 'components/rights/RequirePermissions'
 import { NavigateButton } from 'components/widgets/NavigateButton'
 import { useT } from 'i18n'
 
