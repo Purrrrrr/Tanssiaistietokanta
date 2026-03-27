@@ -32,6 +32,7 @@ query BallProgram($eventId: ID!) {
             duration
             showInLists
           }
+          danceId
           dance {
             _id
             name
@@ -68,6 +69,7 @@ query BallProgram($eventId: ID!) {
             duration
             showInLists
           }
+          danceId
           dance {
             _id
             name
