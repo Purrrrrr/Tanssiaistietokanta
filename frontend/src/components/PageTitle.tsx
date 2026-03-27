@@ -1,5 +1,7 @@
 import { useEffect } from 'react'
 
+import { H1 } from 'libraries/ui'
+
 export function PageTitle({ children, noRender }: { children: string, noRender?: boolean }) {
   useEffect(
     () => {
@@ -8,7 +10,7 @@ export function PageTitle({ children, noRender }: { children: string, noRender?:
     [children],
   )
 
-  return noRender ? null : <h1>{children}</h1>
+  return noRender ? null : <H1>{children}</H1>
 }
 
 function setPageSubtitle(title: string) {

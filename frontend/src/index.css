@@ -41,7 +41,7 @@ strong{
   font-weight:600;
 }
 
-h1:not(.reset) {
+.h1 {
   font-size: 2em;
   font-weight: bold;
   margin-block: .67em;

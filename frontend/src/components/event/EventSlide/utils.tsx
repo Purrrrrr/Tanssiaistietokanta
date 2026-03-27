@@ -14,7 +14,7 @@ export function TeachedIn({ teachedIn }: { teachedIn: Workshop[] }) {
 }
 
 export function markdown(md?: string | null) {
-  return <Markdown className="slide-program-description-content">
+  return <Markdown>
     {md ?? ''}
   </Markdown>
 }

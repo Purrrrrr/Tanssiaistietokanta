@@ -51,7 +51,9 @@ export function SlideStyleSelector({
 function SlideStyleBox({ value: { styleName, color }, size = 20, aspectRatio = 1 }) {
   return <span
     style={{ height: size, width: size * aspectRatio, lineHeight: `${size - 4}px`, borderColor: color }}
-    className={`slide-style-${styleName} text-center border inline-block`}>
-    <Style size={12} color={color} />
+    className="border inline-block [container:slide/size]">
+    <div className={`slide-style-${styleName} text-center`}>
+      <Style size={12} color={color} />
+    </div>
   </span>
 }

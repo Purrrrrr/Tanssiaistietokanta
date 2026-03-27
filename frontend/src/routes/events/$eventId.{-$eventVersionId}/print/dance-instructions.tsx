@@ -11,7 +11,7 @@ import { sortDances, usePatchDance } from 'services/dances'
 import { useCallbackOnEventChanges } from 'services/events'
 
 import { formFor, patchStrategy, Switch, SyncStatus, useAutosavingState } from 'libraries/forms'
-import { Button, H2, Markdown, showToast } from 'libraries/ui'
+import { Button, H1, H2, Markdown, showToast } from 'libraries/ui'
 import { Edit } from 'libraries/ui/icons'
 import { InstructionEditor } from 'components/dance/DanceEditor'
 import { WikipageSelector } from 'components/dance/WikipageSelector'
@@ -90,7 +90,7 @@ function DanceInstructionsView({ eventId, showWorkshops, showDances, hilightEmpt
   return <section className={classNames('dance-instructions', { 'hilight-empty': hilightEmpty, showShortInstructions })} ref={elementRef}>
     {showWorkshops &&
       <section className="workshops">
-        <h1>{t('workshops')}</h1>
+        <H1>{t('workshops')}</H1>
         {workshops.map(workshop => <WorkshopDetails key={workshop._id} workshop={workshop} />)}
         {program.dateTime && <>
           <H2>

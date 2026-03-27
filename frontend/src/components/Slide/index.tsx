@@ -4,7 +4,7 @@ import classnames from 'classnames'
 import { AutosizedSection, Link } from 'libraries/ui'
 import { useT } from 'i18n'
 
-import './Slide.scss'
+import './Slide.css'
 import './slideStyles.scss'
 
 export * from './SlideContainer'
@@ -31,7 +31,6 @@ export interface SlideLink {
   title: string | React.ReactElement
   url?: string | undefined
   hidden?: boolean
-  isPlaceholder?: boolean
 }
 
 export function Slide({ id, title, type, children, footer, next, navigation, slideStyleId, linkComponent }: SlideProps) {
@@ -43,15 +42,15 @@ export function Slide({ id, title, type, children, footer, next, navigation, sli
   return <section className={className}>
     <h1 className="slide-title">{title}</h1>
     <section className="slide-main-content">
-      <AutosizedSection className="slide-program-description">
+      <AutosizedSection>
         <div className="slide-content-area">{children}</div>
       </AutosizedSection>
-      {footer &&
-        <AutosizedSection className="slide-program-footer">
-          <div className="slide-content-area">{footer}</div>
-        </AutosizedSection>
-      }
     </section>
+    {footer &&
+      <AutosizedSection className="slide-program-footer">
+        <div className="slide-content-area">{footer}</div>
+      </AutosizedSection>
+    }
     {next && <NextSlide next={next} linkComponent={linkComponent} />}
     {navigation && <SlideSidebar currentItem={id} navigation={navigation} linkComponent={linkComponent} />}
   </section>
@@ -105,10 +104,9 @@ interface LinkToSlideProps extends SlideLink {
   component?: LinkComponentType
 }
 
-function LinkToSlide({ title, id, isPlaceholder, component: LinkComponent }: LinkToSlideProps) {
-  const classNames = classnames({ placeholder: isPlaceholder })
+function LinkToSlide({ title, id, component: LinkComponent }: LinkToSlideProps) {
   if (LinkComponent) {
-    return <LinkComponent href={id} className={classNames}>{title}</LinkComponent>
+    return <LinkComponent href={id}>{title}</LinkComponent>
   }
-  return <Link className={classNames} to="." params={{ slideId: id }}>{title}</Link>
+  return <Link unstyled to="." params={{ slideId: id }}>{title}</Link>
 }

@@ -7,6 +7,7 @@ import FormUiShowcase from 'libraries/formsV2/UiShowcase'
 import { Alert, Dialog } from 'libraries/overlays'
 import { AutosizedSection, Button, Callout, RegularLink, showToast, Tab, Tabs } from 'libraries/ui'
 import { Trash } from 'libraries/ui/icons'
+import { PageTitle } from 'components/PageTitle'
 import { ColoredTag, TAG_COLOR_COUNT } from 'components/widgets/ColoredTag'
 
 import { ShowcaseContainer } from './ShowcaseContainer'
@@ -21,7 +22,7 @@ export default function UiShowcase() {
     return showcases.find(scase => scase.title === hash) ?? showcases[0]
   })
   return <section>
-    <h1>UI Showcase</h1>
+    <PageTitle>UI Showcase</PageTitle>
 
     <p className="flex flex-wrap gap-[0.7ch]">
       <span>Available showcases:</span>

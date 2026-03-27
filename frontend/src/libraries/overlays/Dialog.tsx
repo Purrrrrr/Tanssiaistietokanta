@@ -60,7 +60,7 @@ export function Dialog({ isOpen, onClose, children, title, className, showCloseB
     {(isOpen || shouldrender) &&
       <>
         <div className="flex justify-between items-center p-2 mb-3 bg-gray-50 border-gray-300 border-b-1">
-          <h1 className="text-base reset">{title}</h1>
+          <h1 className="text-base">{title}</h1>
           {showCloseButton && <Button aria-label={closeButtonLabel} minimal onClick={onClose} ref={closeButton}><Cross /></Button>}
         </div>
         <div className="overflow-auto max-h-[90dvh]">

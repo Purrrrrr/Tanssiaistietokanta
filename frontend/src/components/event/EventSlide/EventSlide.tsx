@@ -72,7 +72,7 @@ function IntervalMusicSlide(props: WithCommonProps<IntervalMusicSlideProps>) {
     id={id}
     title={title}
     children={markdown(
-      intervalMusic?.description ?? defaultIntervalMusic?.description ?? '',
+      intervalMusic?.description ?? defaultIntervalMusic?.description,
     )}
     slideStyleId={intervalMusic?.slideStyleId ?? defaultSlideStyleId}
     next={next}
@@ -90,7 +90,7 @@ function DanceProgramItemSlide(props: WithCommonProps<DanceProgramItemSlideProps
       children: '',
     }
     : {
-      children: markdown(dance?.description ?? program?.description ?? ''),
+      children: markdown(dance?.description ?? program?.description),
       footer: dance?.teachedIn?.length
         ? <TeachedIn teachedIn={dance.teachedIn} />
         : undefined,

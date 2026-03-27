@@ -5,17 +5,19 @@
 .slide-style-dark {
   background: black;
   color: white;
+  --separator-color: white;
 }
 
 // Flower background styles
 @mixin flower($image-name) {
   font-family: 'Charm', cursive;
-  font-weight: 100;
   background-size: 100% 100%;
   background-position: center;
   background-color: #fbf5e6;
   background-image: url('./backgrounds/' + $image-name);
   color: #58370e;
+  --separator-color: #58370e48;
+
   .slide-title,
   .slide-navigation-title {
     font-family: 'Tangerine', cursive;
@@ -24,16 +26,12 @@
     font-size: 2.2em;
   }
   .slide-content-area {
-    font-size: 100%;
     background: rgba(251,245,230,0.7);
     border-radius: 1em;
     padding: 0.3em 0.3em;
   }
   .slide-navigation-title {
     font-size: 2.1em;
-  }
-  .slide-navigation {
-    font-size: 90%;
   }
   .slide-next-slide {
     justify-self: center;
@@ -47,88 +45,61 @@
 
 .slide-style-flower-title1 {
   @include flower('flower-title1.jpg');
-  .slide-next-slide {
-    align-self: end;
-  }
 }
 
 .slide-style-flower-title2 {
   @include flower('flower-title2.jpg');
-  .slide-next-slide {
-    align-self: end;
-  }
 }
 
 .slide-style-flower-title3 {
   @include flower('flower-title3.jpg');
-  .slide {
-    padding-left: 40cqw;
-    padding-right: 1cqw;
-  }
+  padding-left: 40cqw;
+  padding-right: 1cqw;
 }
 
 .slide-style-flower-title4 {
   @include flower('flower-title4.jpg');
-  .slide {
-    padding-left: 40cqw;
-    padding-right: 1cqw;
-  }
+  padding-left: 40cqw;
+  padding-right: 1cqw;
 }
 
 .slide-style-flower-title5 {
   @include flower('flower-title5.jpg');
-  .slide-next-slide {
-    align-self: end;
-  }
 }
 
 .slide-style-flower-title6 {
   @include flower('flower-title6.jpg');
-  .slide {
-    padding-left: 30cqw;
-  }
+  padding-left: 30cqw;
 }
 
 .slide-style-flower-frame1 {
   @include flower('flower-frame1.jpg');
-  .slide {
-    padding-bottom: 5.6cqh;
-  }
+  padding-bottom: 5.6cqh;
 }
 
 .slide-style-flower-frame2 {
   @include flower('flower-frame2.jpg');
-  .slide {
-    padding-bottom: 5.6cqh;
-  }
+  padding-bottom: 5.6cqh;
 }
 
 .slide-style-flower-frame3 {
   @include flower('flower-frame3.jpg');
-  .slide {
-    padding-bottom: 5.6cqh;
-  }
+  padding-bottom: 5.6cqh;
 }
 
 .slide-style-flower-frame4 {
   @include flower('flower-frame4.jpg');
-  .slide {
-    padding-bottom: 21cqh;
-  }
+  padding-bottom: 21cqh;
 }
 
 .slide-style-flower-frame5 {
   @include flower('flower-frame5.jpg');
-  .slide {
-    padding-bottom: 20cqh;
-  }
+  padding-bottom: 20cqh;
 }
 
 .slide-style-flower-frame6 {
   @include flower('flower-frame6.jpg');
-  .slide {
-    padding-bottom: 27cqh;
-  }
+  padding-bottom: 27cqh;
 }
 .slide-style-flower-frame7 {
   @include flower('flower-frame7.jpg');
