@@ -47,7 +47,7 @@ export function EventSlideEditor({ syncStatus, ...props }: EventSlideEditorProps
 
   return <div className="p-5">
     {syncStatus && <SyncStatus className="mb-2" state={syncStatus} />}
-    <div className="flex flex-wrap justify-between gap-x-3.5">
+    <div className="flex justify-between gap-3.5">
       <div>
         <ParentLink {...props} />
         <H2 className="mb-4">{props.title}</H2>
