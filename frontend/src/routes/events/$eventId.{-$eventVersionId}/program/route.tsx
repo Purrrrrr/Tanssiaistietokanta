@@ -36,7 +36,7 @@ function RouteComponent() {
   const { formProps, formProps: { value }, state } = useEventProgramEditorForm(event._id, event._versionId ?? undefined, event.program)
 
   const [child] = useChildMatches()
-  const tabId = child.id.endsWith('main') ? 'main' : 'slides'
+  const tabId = child.id.endsWith('main/') ? 'main' : 'slides'
 
   return <Form {...formProps} className="eventProgramEditor">
     <PageTitle noRender>{t('pageTitle')}</PageTitle>
