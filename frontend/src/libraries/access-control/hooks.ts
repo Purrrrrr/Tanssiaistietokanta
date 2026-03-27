@@ -29,9 +29,6 @@ export function useRights(rights: RightsList, context?: RightQueryContext): bool
 
   useEffect(() => {
     const loadRightsResult = () => {
-      if (parsedRights.every(r => r !== undefined)) {
-        return
-      }
       idRef.current += 1
       const id = idRef.current
       Promise.all(parsedRights.map(hasRight)).then(newestResult => {
@@ -40,7 +37,9 @@ export function useRights(rights: RightsList, context?: RightQueryContext): bool
       })
     }
 
-    loadRightsResult()
+    if (parsedRights.some(r => r === undefined)) {
+      loadRightsResult()
+    }
     return subscribe(loadRightsResult)
   }, [parsedRights, hasRight, subscribe])
 

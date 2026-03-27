@@ -34,20 +34,11 @@ export const initializeAuthentication = async () => {
   if (isLoggedIn) {
     try {
       await auth('refreshToken')
-      if (authState.currentAccessToken) {
-        await waitForSocketConnection()
-        debug('setting initial token to %s', authState.currentAccessToken)
-        await setAccessToken(authState.currentAccessToken)
-        debug('Access token set successfully on initialization')
-      }
     } catch (error) {
       console.error('Failed to refresh token on initialization', error)
       authState.setState(null)
     }
     debug('Subscribing access token to auth changes')
-    subscribeToAuthChanges(authState => {
-      setAccessToken(authState?.accessToken ?? null)
-    })
   } else {
     authState.setState(null)
   }
@@ -73,6 +64,7 @@ export async function logout() {
   refreshScheduler.clearRefresh()
   debug('Logging out user')
   await restRequest('authentication', 'DELETE')
+  await ensureAccessTokenUpdate(null)
   authState.setState(null)
 }
 
@@ -88,6 +80,13 @@ async function auth(strategy: string, body?: Record<string, unknown>) {
   const result = response.data
   debug('Authentication succeeded for user: %O', result.user)
 
+  await ensureAccessTokenUpdate(result?.accessToken ?? null)
   authState.setState(result)
   return result?.user
+}
+
+async function ensureAccessTokenUpdate(token: string | null) {
+  await waitForSocketConnection()
+  debug('setting socket access token to %s', token)
+  await setAccessToken(token)
 }

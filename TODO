@@ -309,10 +309,10 @@
 * Fix dance form in slideshow editor not showing
 * Better slide show editor layout
 * Fix horrible event permission layout in create new event page
+* Re-render permission dependent stuff when logged in/out
 
   Ability to have two column dance instructions
-  Re-render permission dependent stuff when logged in/out
-  Don't make ball program view "log out" whenever updated
+  Don't make ball program view "log out" whenever fast refresh occurs
   Fix form inside form error in slide show dance editor
   Auth Part 3
     Tests for channels and publishing

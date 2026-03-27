@@ -2,6 +2,7 @@ import { createRouter, RouterProvider } from '@tanstack/react-router'
 import { routeTree } from 'routeTree.gen'
 
 import { BackendProvider } from 'backend'
+import { subscribeToAuthChanges } from 'backend/authentication'
 
 import { AlertContext } from 'libraries/overlays/AlertContext'
 import { ToastContainer } from 'libraries/ui'
@@ -28,6 +29,7 @@ const router = createRouter({
   defaultPendingComponent: LoadingComponent,
   defaultPendingMs: 50,
 })
+subscribeToAuthChanges(() => router.invalidate())
 
 function Routes() {
   return <RouterProvider router={router} context={useAppRootContext()} />
