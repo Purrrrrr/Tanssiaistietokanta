@@ -307,9 +307,10 @@
   * Some own component or system for auth needing pages
   * Fix event version getting
 * Fix dance form in slideshow editor not showing
+* Better slide show editor layout
 
-  Better slide show editor layout
   Re-render permission dependent stuff when logged in/out
+  Don't make ball program view "log out" whenever updated
   Fix form inside form error in slide show dance editor
   Auth Part 3
     Tests for channels and publishing

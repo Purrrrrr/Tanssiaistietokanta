@@ -6,7 +6,7 @@ import { useDance } from 'services/dances'
 
 import { DragHandle, MarkdownEditor, SyncState, SyncStatus } from 'libraries/forms'
 import { Callout, H2, Link } from 'libraries/ui'
-import { Cross, Link as LinkIcon } from 'libraries/ui/icons'
+import { ArrowLeft, Cross, Link as LinkIcon } from 'libraries/ui/icons'
 import { InstructionEditor } from 'components/dance/DanceEditor'
 import { Field as DanceField, Form as DanceForm, Input as DanceInput, useDanceEditorState } from 'components/dance/DanceForm'
 import { LinkToDanceWiki } from 'components/dance/DanceWikiPreview'
@@ -45,26 +45,21 @@ type EventSlideEditorProps = WithEventProgram<EventSlideProps>
 export function EventSlideEditor({ syncStatus, ...props }: EventSlideEditorProps) {
   const slideStylePath = getSlideStylePath(props)
 
-  return <>
-    <SectionCard>
-      <H2>
-        <T msg="pages.events.ballProgram.slideProperties" />
-        {' '}
-        {syncStatus && <SyncStatus state={syncStatus} />}
-      </H2>
-      <p>
+  return <div className="p-5">
+    {syncStatus && <SyncStatus className="mb-2" state={syncStatus} />}
+    <div className="flex flex-wrap justify-between gap-x-3.5">
+      <div>
         <ParentLink {...props} />
-      </p>
-      <div className="flex flex-wrap gap-3.5">
-        <DanceSelector {...props} />
-        <InheritedSlideStyleSelector
-          path={slideStylePath}
-          text={useTranslation('components.eventProgramEditor.fields.style')}
-        />
+        <H2 className="mb-4">{props.title}</H2>
       </div>
-    </SectionCard>
+      <InheritedSlideStyleSelector
+        path={slideStylePath}
+        text={useTranslation('components.eventProgramEditor.fields.style')}
+      />
+    </div>
+    <DanceSelector {...props} />
     <EventSlideContentEditor {...props} />
-  </>
+  </div>
 }
 
 function DanceSelector(props: WithEventProgram<EventSlideProps>) {
@@ -76,7 +71,7 @@ function DanceSelector(props: WithEventProgram<EventSlideProps>) {
   const row = props.eventProgram.danceSets[props.danceSetIndex].program[props.itemIndex]
   const rowType = row.type
   if ((rowType === 'Dance' || rowType === 'RequestedDance')) {
-    return <Field label={t('dance')} path={rowPath} component={DanceProgramChooser} labelStyle="beside" />
+    return <Field label={t('chooseDance')} path={rowPath} component={DanceProgramChooser} />
   }
   return null
 }
@@ -95,8 +90,8 @@ function ParentLink(props: WithEventProgram<EventSlideProps>) {
       title = props.eventProgram.danceSets[props.danceSetIndex].title
     }
   }
-  return <LinkToSlide id={props.parentId}>
-    <LinkIcon />{' '}{title}
+  return <LinkToSlide unstyled className="cursor-pointer hover:underline mb-2 block" id={props.parentId}>
+    <ArrowLeft size={10} className="pb-0.5" /> {title}
   </LinkToSlide>
 }
 
@@ -124,7 +119,7 @@ export function EventSlideContentEditor(props: WithEventProgram<EventSlideProps>
 
   switch (props.type) {
     case 'title':
-      return <SectionCard>
+      return <>
         <Input labelStyle="above" label={t('fields.programTitle')} path="introductions.title" inline />
         <ListField
           label={t('titles.introductoryInformation')}
@@ -133,15 +128,14 @@ export function EventSlideContentEditor(props: WithEventProgram<EventSlideProps>
           renderConflictItem={item => getProgramName(item, t)}
         />
         <AddIntroductionButton />
-      </SectionCard>
+      </>
     case 'introduction': {
       const itemPath = `introductions.program.${props.itemIndex}` as const
       return <ProgramItemEditor path={itemPath} />
     }
     case 'danceSet': {
       const itemPath = `danceSets.${props.danceSetIndex}` as const
-      return <SectionCard>
-        <H2><T msg="pages.events.ballProgram.danceSetTitle" /></H2>
+      return <>
         <Input labelStyle="above" label={t('fields.danceSetName')} path={`${itemPath}.title`} />
         <ListField
           label=""
@@ -150,13 +144,10 @@ export function EventSlideContentEditor(props: WithEventProgram<EventSlideProps>
           renderConflictItem={item => getProgramName(item, t)}
         />
         <DanceSetItemButtons path={itemPath} />
-      </SectionCard>
+      </>
     }
     case 'intervalMusic': {
-      return <SectionCard>
-        <H2><T msg="pages.events.ballProgram.intervalMusicTitle" /></H2>
-        <IntervalMusicDescriptionEditor danceSetIndex={props.danceSetIndex} />
-      </SectionCard>
+      return <IntervalMusicDescriptionEditor danceSetIndex={props.danceSetIndex} />
     }
     case 'programItem': {
       const rowPath = `danceSets.${props.danceSetIndex}.program.${props.itemIndex}` as const
@@ -224,21 +215,18 @@ function ProgramItemEditor({ path }: { path: ProgramItemPath }) {
   if ('danceId' in row && row.type === 'Dance') {
     const { danceId, dance } = row
     if (!danceId) return null
-    return <SectionCard>
-      <DanceEditor id={danceId} initialDance={dance as Dance} />
-    </SectionCard>
+    return <DanceEditor id={danceId} initialDance={dance as Dance} />
   }
   switch (row.type) {
     case 'RequestedDance':
       return null
     case 'EventProgram':
-      return <SectionCard>
-        <H2><T msg="pages.events.ballProgram.infoTitle" /></H2>
+      return <>
         <Input label={t('fields.eventProgram.name')} path={`${path}.eventProgram.name`} required />
         <Field label={t('fields.eventProgram.description')} path={`${path}.eventProgram.description`} component={MarkdownEditor} componentProps={markdownEditorProps} />
         <Switch label={t('fields.eventProgram.showInLists')} path={`${path}.eventProgram.showInLists`} inline />
         <Callout><T msg="pages.events.ballProgram.currentItemAlwaysShownInLists" /></Callout>
-      </SectionCard>
+      </>
   }
 }
 const emptyDance: Dance = {
@@ -257,32 +245,33 @@ function DanceEditor({ id, initialDance }: { id: string, initialDance?: Pick<Dan
   const { formProps, state } = useDanceEditorState(dance)
 
   return <DanceForm {...formProps} readOnly={!result.data}>
-    <div className="flex flex-wrap gap-3.5 items-center mb-2">
-      <H2 className="m-0">{dance.name}</H2>
+    <div className="flex flex-wrap gap-3.5 items-center mb-3">
+      <H2 className=""><T msg="pages.events.ballProgram.danceTitle" /></H2>
       <SyncStatus className="top-[3px] grow" state={state} />
     </div>
     <DanceInput label={label('name')} path="name" />
     <DanceField label={label('description')} path="description" component={InstructionEditor} componentProps={{ danceId: dance._id, wikipage: dance.wikipage, ...markdownEditorProps }} />
 
-    {dance.wikipageName &&
-      <p>
-        {t('danceInDanceWiki')}{' '}
-        <LinkToDanceWiki page={dance.wikipageName} />
-      </p>
-    }
-    <Link target="_blank" to="/dances/$danceId" params={{ danceId: dance._id }}><LinkIcon /> {useTranslation('pages.events.ballProgram.linkToCompleteDance')}</Link>
+    <p className="flex gap-3.5">
+      {dance.wikipageName &&
+        <LinkToDanceWiki page={dance.wikipageName}>
+          <LinkIcon size={12} />{t('danceInDanceWiki')}
+        </LinkToDanceWiki>
+      }
+      <Link target="_blank" to="/dances/$danceId" params={{ danceId: dance._id }}>
+        <LinkIcon size={12} /> {useTranslation('pages.events.ballProgram.linkToCompleteDance')}
+      </Link>
+    </p>
   </DanceForm>
 }
 
 interface LinkToSlideProps {
   children: ReactNode
+  unstyled?: boolean
+  className?: string
   id: string
 }
 
-function LinkToSlide({ children, id }: LinkToSlideProps) {
-  return <Link to="." params={{ slideId: id }}>{children}</Link>
-}
-
-function SectionCard({ children }: { children: ReactNode }) {
-  return <div className="p-5 border-gray-300 not-last:border-b-1">{children}</div>
+function LinkToSlide({ id, ...rest }: LinkToSlideProps) {
+  return <Link to="." params={{ slideId: id }} {...rest} />
 }

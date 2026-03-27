@@ -244,6 +244,7 @@ export const fi = {
         IntervalMusic: 'Taukomusiikki',
       },
       dance: 'Tanssi',
+      chooseDance: 'Valitse tanssi',
       duration: {
         pausesIncluded: '(taukoineen)',
         dances: '(tanssit)',
@@ -479,12 +480,9 @@ export const fi = {
         teachedInSet: 'Opetettu setissä',
         requestedDance: 'Toivetanssi',
         intervalMusic: 'Taukomusiikkia',
-        linkToCompleteDance: 'Avaa tanssi tanssitietokannassa',
-        slideProperties: 'Dian tiedot',
+        linkToCompleteDance: 'Tanssi tanssitietokannassa',
         currentItemAlwaysShownInLists: 'Huomaathan, että ollessaan tämänhetkinen dia näkyy tämä ohjelma settilistassa riippumatta näkyvyysasetuksesta.',
-        intervalMusicTitle: 'Taukomusiikki',
-        infoTitle: 'Ohjelmanumero',
-        danceSetTitle: 'Tanssisetti',
+        danceTitle: 'Tanssin tiedot',
       },
     },
     dances: {

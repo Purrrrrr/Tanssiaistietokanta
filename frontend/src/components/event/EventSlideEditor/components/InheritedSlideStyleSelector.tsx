@@ -15,7 +15,7 @@ export function InheritedSlideStyleSelector(
 
   return <Field
     label={text}
-    labelStyle="beside"
+    labelStyle="hidden"
     inline
     path={path}
     component={SlideStyleSelector}
