@@ -41,11 +41,9 @@ export function Slide({ id, title, type, children, footer, next, navigation, sli
   )
   return <section className={className}>
     <h1 className="slide-title">{title}</h1>
-    <section className="slide-main-content">
-      <AutosizedSection>
-        <div className="slide-content-area">{children}</div>
-      </AutosizedSection>
-    </section>
+    <AutosizedSection className="slide-main-content">
+      <div className="slide-content-area">{children}</div>
+    </AutosizedSection>
     {footer &&
       <AutosizedSection className="slide-program-footer">
         <div className="slide-content-area">{footer}</div>
