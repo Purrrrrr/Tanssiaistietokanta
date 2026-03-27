@@ -2,7 +2,7 @@ import type { Params } from '@feathersjs/feathers'
 
 import type { Application } from '../../declarations'
 import type { Volunteers, VolunteersData, VolunteersPatch, VolunteersQuery } from './volunteers.schema'
-import { NeDBService } from '../../utils/NeDBService'
+import VersioningNeDBService from '../../utils/VersioningNeDBService'
 
 export type { Volunteers, VolunteersData, VolunteersPatch, VolunteersQuery }
 
@@ -13,7 +13,7 @@ export interface VolunteersServiceOptions {
 export interface VolunteersParams extends Params<VolunteersQuery> {}
 
 export class VolunteersService<ServiceParams extends VolunteersParams = VolunteersParams>
-  extends NeDBService<Volunteers, VolunteersData, ServiceParams, VolunteersPatch> {
+  extends VersioningNeDBService<Volunteers, VolunteersData, ServiceParams, VolunteersPatch> {
   constructor(public options: VolunteersServiceOptions) {
     super({
       ...options,

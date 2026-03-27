@@ -1,17 +1,25 @@
 type Query {
-  volunteer(id: ID!): Volunteer!
+  volunteer(id: ID!, versionId: ID): Volunteer!
   volunteers: [Volunteer!]!
 }
 
-type Volunteer {
+type Volunteer implements Versionable {
   _id: ID!
+  _versionId: String
+  _versionNumber: String
+  _updatedAt: String!
+  versionHistory: VersionHistory!
   name: String!
   email: String
   phone: String
-  contact_details: [JSON]!
+  gdpr_consent_date: String
+  contact_details: [ContactDetail!]!
 }
 
-scalar JSON
+type ContactDetail {
+  type: String!
+  value: String!
+}
 
 type Mutation {
   createVolunteer(volunteer: VolunteerInput!): Volunteer!
@@ -24,12 +32,19 @@ input VolunteerInput {
   name: String!
   email: String
   phone: String
-  contact_details: [JSON]
+  gdpr_consent_date: String
+  contact_details: [ContactDetailInput!]
 }
 
 input VolunteerPatchInput {
   name: String
   email: String
   phone: String
-  contact_details: [JSON]
+  gdpr_consent_date: String
+  contact_details: [ContactDetailInput!]
+}
+
+input ContactDetailInput {
+  type: String!
+  value: String!
 }

@@ -5,16 +5,30 @@ import type { Static } from '@feathersjs/typebox'
 
 import type { HookContext } from '../../declarations'
 import { dataValidator, queryValidator } from '../../validators'
-import { Id, Name } from '../../utils/common-types'
+import { computedProperties, Id, Name } from '../../utils/common-types'
+
+export const contactDetailSchema = Type.Object(
+  {
+    type: Type.String(),
+    value: Type.String(),
+  },
+  { $id: 'ContactDetail', additionalProperties: false },
+)
+export type ContactDetail = Static<typeof contactDetailSchema>
 
 // Main data model schema
 export const volunteersSchema = Type.Object(
   {
     _id: Id(),
+    _versionNumber: Type.Number(),
+    _versionId: Id(),
+    _updatedAt: Type.String(),
+    _createdAt: Type.String(),
     name: Name(),
     email: Type.Optional(Type.String()),
     phone: Type.Optional(Type.String()),
-    contact_details: Type.Array(Type.Any()),
+    gdpr_consent_date: Type.Optional(Type.String()),
+    contact_details: Type.Array(contactDetailSchema),
   },
   { $id: 'Volunteers', additionalProperties: false },
 )
@@ -30,7 +44,7 @@ export const volunteersExternalResolver = resolve<Volunteers, HookContext>({})
 export const volunteersDataSchema = Type.Intersect(
   [
     Type.Pick(volunteersSchema, ['name']),
-    Type.Partial(Type.Omit(volunteersSchema, ['_id', 'name'])),
+    Type.Partial(Type.Omit(volunteersSchema, [...computedProperties, 'name'])),
   ],
   { $id: 'VolunteersData' },
 )
@@ -51,7 +65,10 @@ export const volunteersQueryProperties = Type.Pick(volunteersSchema, ['_id', 'na
 export const volunteersQuerySchema = Type.Intersect(
   [
     querySyntax(volunteersQueryProperties),
-    Type.Object({}, { additionalProperties: false }),
+    Type.Object({
+      searchVersions: Type.Optional(Type.Boolean()),
+      _versionId: Type.Optional(Id()),
+    }, { additionalProperties: false }),
   ],
   { additionalProperties: false },
 )
