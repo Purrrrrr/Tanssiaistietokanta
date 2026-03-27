@@ -1,4 +1,5 @@
 import { useId } from 'react'
+import classNames from 'classnames'
 
 import { SlideStyle, useEventSlideStyles } from 'services/events'
 
@@ -35,7 +36,7 @@ export function SlideStyleSelector({
     items={styles}
     itemToString={style => style.name}
     onChange={style => onChange(style.id)}
-    itemIcon={style => style && <SlideStyleBox value={style} size={50} aspectRatio={16 / 9} />}
+    itemIcon={style => style && <SlideStyleBox value={style} size={50} aspectRatio={16 / 9} className="my-1" />}
     buttonRenderer={(style, props) =>
       <Button
         {...props}
@@ -48,12 +49,12 @@ export function SlideStyleSelector({
   />
 }
 
-function SlideStyleBox({ value: { styleName, color }, size = 20, aspectRatio = 1 }) {
+function SlideStyleBox({ value: { styleName }, size = 20, aspectRatio = 1, className = '' }) {
   return <span
-    style={{ height: size, width: size * aspectRatio, lineHeight: `${size - 4}px`, borderColor: color }}
-    className="border inline-block [container:slide/size]">
+    style={{ height: size, width: size * aspectRatio, lineHeight: `${size - 4}px` }}
+    className={classNames(className, 'border border-black inline-block [container:slide/size]')}>
     <div className={`slide-style-${styleName} text-center`}>
-      <Style size={12} color={color} />
+      <Style size={12} color="currentColor" />
     </div>
   </span>
 }
