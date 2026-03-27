@@ -306,9 +306,11 @@
   * Fix file rename propagating
   * Some own component or system for auth needing pages
   * Fix event version getting
+* Fix dance form in slideshow editor not showing
 
-  Fix dance form in slideshow editor not showing
-    Form inside form error related to this?
+  Better slide show editor layout
+  Re-render permission dependent stuff when logged in/out
+  Fix form inside form error in slide show dance editor
   Auth Part 3
     Tests for channels and publishing
     Tests for updating access control (existing and new)
