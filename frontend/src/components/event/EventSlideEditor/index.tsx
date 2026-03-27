@@ -221,16 +221,14 @@ function ProgramItemEditor({ path }: { path: ProgramItemPath }) {
   const t = useT('components.eventProgramEditor')
   const row = useValueAt(path)
 
+  if ('danceId' in row && row.type === 'Dance') {
+    const { danceId, dance } = row
+    if (!danceId) return null
+    return <SectionCard>
+      <DanceEditor id={danceId} initialDance={dance as Dance} />
+    </SectionCard>
+  }
   switch (row.type) {
-    case 'Dance':
-    {
-      // TODO fix type
-      const { danceId } = row as any
-      if (!danceId) return null
-      return <SectionCard>
-        <DanceEditor id={danceId} />
-      </SectionCard>
-    }
     case 'RequestedDance':
       return null
     case 'EventProgram':
@@ -243,27 +241,28 @@ function ProgramItemEditor({ path }: { path: ProgramItemPath }) {
       </SectionCard>
   }
 }
-
-function DanceEditor({ id }: { id: string }) {
-  const result = useDance({ id })
-  if (!result.data?.dance) return null
-
-  return <DanceEditorForm dance={result.data.dance} />
+const emptyDance: Dance = {
+  _id: '',
+  name: '-',
+  wikipage: null,
+  wikipageName: null,
 }
 
-function DanceEditorForm({ dance }: { dance: Dance }) {
+function DanceEditor({ id, initialDance }: { id: string, initialDance?: Pick<Dance, '_id' | 'name' | 'wikipage' | 'wikipageName'> | null }) {
+  const result = useDance({ id })
+  const dance = result.data?.dance ?? initialDance ?? emptyDance
+
   const t = useT('components.danceWikiPreview')
   const label = useT('domain.dance')
   const { formProps, state } = useDanceEditorState(dance)
 
-  return <DanceForm {...formProps}>
+  return <DanceForm {...formProps} readOnly={!result.data}>
     <div className="flex flex-wrap gap-3.5 items-center mb-2">
       <H2 className="m-0">{dance.name}</H2>
       <SyncStatus className="top-[3px] grow" state={state} />
     </div>
     <DanceInput label={label('name')} path="name" />
     <DanceField label={label('description')} path="description" component={InstructionEditor} componentProps={{ danceId: dance._id, wikipage: dance.wikipage, ...markdownEditorProps }} />
-    <DanceInput label={label('source')} labelInfo={label('sourceInfo')} path="source" />
 
     {dance.wikipageName &&
       <p>

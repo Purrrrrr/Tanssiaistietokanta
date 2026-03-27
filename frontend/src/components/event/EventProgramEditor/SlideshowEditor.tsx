@@ -56,27 +56,25 @@ interface SlideNavigationProps { slideIndex: number, currentSlide: EventSlidePro
 function SlideNavigation(props: SlideNavigationProps) {
   const { slides, slideIndex } = props
 
-  return <>
-    <nav className="slideNavigation">
-      {slideIndex > 0 &&
-        <NavigateButton
-          icon={<ChevronLeft />}
-          to="."
-          params={{ slideId: slides[slideIndex - 1].id }}
-          className="previous-slide-link"
-        />
-      }
-      <SlidePreviews {...props} />
-      {slideIndex < slides.length - 1 &&
-        <NavigateButton
-          icon={<ChevronRight />}
-          to="."
-          params={{ slideId: slides[slideIndex + 1].id }}
-          className="next-slide-link"
-        />
-      }
-    </nav>
-  </>
+  return <nav className="slideNavigation">
+    {slideIndex > 0 &&
+      <NavigateButton
+        icon={<ChevronLeft />}
+        to="."
+        params={{ slideId: slides[slideIndex - 1].id }}
+        className="previous-slide-link"
+      />
+    }
+    <SlidePreviews {...props} />
+    {slideIndex < slides.length - 1 &&
+      <NavigateButton
+        icon={<ChevronRight />}
+        to="."
+        params={{ slideId: slides[slideIndex + 1].id }}
+        className="next-slide-link"
+      />
+    }
+  </nav>
 }
 
 function SlidePreviews({ slides, currentSlide, eventProgram }: SlideNavigationProps) {
@@ -151,7 +149,7 @@ function SlideLink(
   { slide, eventProgram, current, placeholder }: { slide: EventSlideProps, eventProgram: EventProgramSettings, current: boolean, placeholder: boolean },
 ) {
   return <Link to="." params={{ slideId: slide.id }} id={`slide-link-${slide.id}`} className={classNames('slide-link', { current })}>
-    <SlideContainer className="grow inert" color="#eee">
+    <SlideContainer className="grow" color="#eee">
       {placeholder
         ? <EventSlidePreview {...slide} eventProgram={eventProgram} />
         : <EventSlide {...slide} eventProgram={eventProgram} linkComponent={PreviewLink} />
@@ -174,7 +172,7 @@ function SlideBox({ eventProgram, slide }: SlideBoxProps) {
       <SlideContainer className="grow inert" size="auto" color="#eee">
         <EventSlide {...slide} eventProgram={eventProgram} linkComponent="a" />
       </SlideContainer>
-      <div className="eventSlideEditor">
+      <div className="w-[min(35dvw,500px)] max-md:w-full">
         <EventSlideEditor {...slide} eventProgram={eventProgram} />
       </div>
     </div>
