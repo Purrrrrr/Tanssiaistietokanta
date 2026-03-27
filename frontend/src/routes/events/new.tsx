@@ -59,8 +59,8 @@ function CreateEventForm() {
           endPath="endDate"
           required
         />
-        <EventGrantsEditor />
       </div>
+      <EventGrantsEditor />
       <SubmitButton text={t('create')} />
     </Form>
   </>
