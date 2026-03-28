@@ -306,10 +306,29 @@
   * Fix file rename propagating
   * Some own component or system for auth needing pages
   * Fix event version getting
+  * Admin role/group for users
 * Fix dance form in slideshow editor not showing
 * Better slide show editor layout
 * Fix horrible event permission layout in create new event page
 * Re-render permission dependent stuff when logged in/out
+* Prevent event program slide editor from scrolling to the top when changing slides. Mostly done
+* UI Showcase
+  * Add formV2 stuff
+  * Showcase component
+  * Clean up
+  * Add libraries/ui stuff
+    * AutosizedSection
+    * Dialog + alert
+    * Global loading indicator
+    * Collapse
+    * AnchorButton
+    * Breadcrumbs
+
+  Teacher/people database
+  * Apuopettajat / assistant teachers
+    Event signed up volunteers list
+      Notes
+    Check GDPR stuff
 
   Add tests to check that used dances are not deletable
   Add test that workshops are deleted when the event is
@@ -323,7 +342,6 @@
     Ensure this thing actually works all the time
     Profile page
     Changing passwords
-    Admin role/group for users
     Allow creating users
     Nicer logout menu keyboard a11y
     Allow creating users with some token? Invite functionality?
@@ -339,7 +357,6 @@
 
   Make some sense of names in event program: rows, items...
   Prefetch dances somehow in eventprogram slide editor
-  Prevent event program slide editor from scrolling to the top when changing slides
   Forms:
     Structural sharing for form data
     Prevent callbacks running for out of bounds array data
@@ -354,7 +371,7 @@
     Store slide styles in own service/db
       CSS in db
       Variables?
-      Make slides some kind of grid with defined areas
+    * Make slides some kind of grid with defined areas
     Use file service for images
   Styles also for prints
 
@@ -406,20 +423,6 @@
   Better create dance dialog
     Ask name first /w autocomplete from dance wiki, then maybe upload file
 
-  UI Showcase
-  * Add formV2 stuff
-  * Showcase component
-  * Clean up
-    Add libraries/ui stuff
-    * AutosizedSection
-    * Dialog + alert
-      NonIdealState
-      Global loading indicator
-      Collapse
-      TagButton
-      AnchorButton
-      Breadcrumbs?
-
   Blueprintjs migration - Part 2
   * Input
   * FormGroup
@@ -427,8 +430,6 @@
     Proper CSS for FormGroup
     Check todo markings in Button.tsx or other
 
-  Teacher/people database
-  Apuopettajat / assistant teachers
   Typed backend queries
   Character count for dance instructions
     Maximum?
