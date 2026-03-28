@@ -311,6 +311,9 @@
 * Fix horrible event permission layout in create new event page
 * Re-render permission dependent stuff when logged in/out
 
+  Add tests to check that used dances are not deletable
+  Add test that workshops are deleted when the event is
+  Same for files (need to impl)
   Ability to have two column dance instructions
   Don't make ball program view "log out" whenever fast refresh occurs
   Fix form inside form error in slide show dance editor
