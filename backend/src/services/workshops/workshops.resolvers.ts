@@ -5,6 +5,7 @@ import { WorkshopsParams } from './workshops.class'
 export default (app: Application) => {
   const eventService = app.service('events')
   const danceService = app.service('dances')
+  const volunteerService = app.service('volunteers')
   function getDance(id: string) {
     return id ? danceService.get(id) : null
   }
@@ -15,6 +16,10 @@ export default (app: Application) => {
       danceIds: (obj: { instances: { danceIds: string[] }[] }) => obj.instances.flatMap(i => i.danceIds ?? []),
       dances: (obj: { instances: { danceIds: string[] }[] }) => obj.instances.flatMap(i => i.danceIds ?? []).map(getDance),
       event: (obj: { eventId: Id }) => eventService.get(obj.eventId),
+      teachers: (obj: { teacherIds?: string[] }) =>
+        Promise.all((obj.teacherIds ?? []).map(id =>
+          volunteerService.get(id, { query: { $select: ['_id', 'name'] } }),
+        )),
     },
     WorkshopInstance: {
       dances: (obj: { danceIds: string[] }) => obj.danceIds?.map(getDance),

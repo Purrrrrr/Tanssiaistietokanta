@@ -29,7 +29,7 @@ export const workshopsSchema = Type.Object(
     eventId: Id(),
     abbreviation: Type.String(),
     description: Type.String(),
-    teachers: Type.String(),
+    teacherIds: Type.Array(Id()),
     instances: Type.Array(WorkshopInstanceSchema()),
     instanceSpecificDances: Type.Boolean(),
   },

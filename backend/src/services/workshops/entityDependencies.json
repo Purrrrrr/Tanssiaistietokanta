@@ -8,5 +8,10 @@
     "type": "uses",
     "service": "dances",
     "path": "instances.danceIds"
+  },
+  {
+    "type": "uses",
+    "service": "volunteers",
+    "path": "teacherIds"
   }
 ]

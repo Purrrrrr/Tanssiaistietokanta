@@ -34,9 +34,7 @@ export const volunteersSchema = Type.Object(
 )
 export type Volunteers = Static<typeof volunteersSchema>
 export const volunteersValidator = getValidator(volunteersSchema, dataValidator)
-export const volunteersResolver = resolve<Volunteers, HookContext>({
-  contact_details: value => value ?? [],
-})
+export const volunteersResolver = resolve<Volunteers, HookContext>({})
 
 export const volunteersExternalResolver = resolve<Volunteers, HookContext>({})
 
@@ -50,7 +48,9 @@ export const volunteersDataSchema = Type.Intersect(
 )
 export type VolunteersData = Static<typeof volunteersDataSchema>
 export const volunteersDataValidator = getValidator(volunteersDataSchema, dataValidator)
-export const volunteersDataResolver = resolve<Volunteers, HookContext>({})
+export const volunteersDataResolver = resolve<Volunteers, HookContext>({
+  contact_details: value => value ?? [],
+})
 
 // Schema for updating existing entries
 export const volunteersPatchSchema = Type.Partial(volunteersSchema, {
