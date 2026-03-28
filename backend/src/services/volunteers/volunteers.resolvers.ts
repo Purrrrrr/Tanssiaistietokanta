@@ -2,12 +2,39 @@ import { Application } from '../../declarations'
 import { VolunteersParams } from './volunteers.class'
 import { versionHistoryFieldResolvers, versionHistoryResolver } from '../../utils/version-history-resolvers'
 
+async function findVolunteeredIn(workshopService: any, volunteerId: string, eventId?: string) {
+  const query: any = {
+    $or: [
+      { teacherIds: volunteerId },
+      { assistantTeacherIds: volunteerId },
+    ],
+  }
+  if (eventId) {
+    query.eventId = eventId
+  }
+  const workshops = await workshopService.find({ query })
+
+  return workshops.map((workshop: any) => {
+    const roles: string[] = []
+    if (workshop.teacherIds?.includes(volunteerId)) roles.push('teacher')
+    if (workshop.assistantTeacherIds?.includes(volunteerId)) roles.push('assistant_teacher')
+    return {
+      _id: `${volunteerId}-${workshop._id}`,
+      workshop,
+      roles,
+    }
+  })
+}
+
 export default (app: Application) => {
   const service = app.service('volunteers')
+  const workshopService = app.service('workshops')
 
   return {
     Volunteer: {
       versionHistory: versionHistoryResolver(service),
+      volunteeredIn: (volunteer: { _id: string }, { eventId }: { eventId?: string }) =>
+        findVolunteeredIn(workshopService, volunteer._id, eventId),
     },
     VersionHistory: versionHistoryFieldResolvers(),
     Query: {

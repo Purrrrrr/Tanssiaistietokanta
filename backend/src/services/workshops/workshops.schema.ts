@@ -30,6 +30,7 @@ export const workshopsSchema = Type.Object(
     abbreviation: Type.String(),
     description: Type.String(),
     teacherIds: Type.Array(Id()),
+    assistantTeacherIds: Type.Array(Id()),
     instances: Type.Array(WorkshopInstanceSchema()),
     instanceSpecificDances: Type.Boolean(),
   },
@@ -58,7 +59,10 @@ export const workshopsDataSchema = Type.Omit(workshopsSchema, ['_id', ...compute
 })
 export type WorkshopsData = Static<typeof workshopsDataSchema>
 export const workshopsDataValidator = castAfterValidating(workshopsDataSchema, getValidator(workshopsPartialDataSchema, dataValidator))
-export const workshopsDataResolver = resolve<Workshops, HookContext>({})
+export const workshopsDataResolver = resolve<Workshops, HookContext>({
+  teacherIds: value => value ?? [],
+  assistantTeacherIds: value => value ?? [],
+})
 
 // Schema for updating existing entries
 export const workshopsPatchSchema = Type.Partial(workshopsSchema, {

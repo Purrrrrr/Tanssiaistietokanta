@@ -14,6 +14,13 @@ type Volunteer implements Versionable {
   phone: String
   gdpr_consent_date: String
   contact_details: [ContactDetail!]!
+  volunteeredIn(eventId: ID): [VolunteeredInWorkshop!]!
+}
+
+type VolunteeredInWorkshop {
+  _id: ID!
+  workshop: Workshop!
+  roles: [String!]!
 }
 
 type ContactDetail {

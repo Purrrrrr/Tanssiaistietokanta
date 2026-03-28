@@ -25,7 +25,7 @@ export const up: MigrationFn = async params => {
         return volunteer._id
       }),
     )
-    return { ...rest, teacherIds }
+    return { ...rest, teacherIds, assistantTeacherIds: [] }
   })
 }
 

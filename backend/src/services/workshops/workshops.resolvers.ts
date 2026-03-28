@@ -20,6 +20,10 @@ export default (app: Application) => {
         Promise.all((obj.teacherIds ?? []).map(id =>
           volunteerService.get(id, { query: { $select: ['_id', 'name'] } }),
         )),
+      assistant_teachers: (obj: { assistantTeacherIds?: string[] }) =>
+        Promise.all((obj.assistantTeacherIds ?? []).map(id =>
+          volunteerService.get(id, { query: { $select: ['_id', 'name'] } }),
+        )),
     },
     WorkshopInstance: {
       dances: (obj: { danceIds: string[] }) => obj.danceIds?.map(getDance),

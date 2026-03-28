@@ -13,5 +13,10 @@
     "type": "uses",
     "service": "volunteers",
     "path": "teacherIds"
+  },
+  {
+    "type": "uses",
+    "service": "volunteers",
+    "path": "assistantTeacherIds"
   }
 ]
