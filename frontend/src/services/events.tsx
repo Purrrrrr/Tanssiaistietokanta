@@ -193,7 +193,8 @@ query getEvent($id: ID!, $versionId: ID) {
       name
       abbreviation
       description
-      teachers
+      teachers { _id name }
+      assistant_teachers { _id name }
       instanceSpecificDances
       instances {
         _id
@@ -350,7 +351,8 @@ mutation patchEventProgram($id: ID!, $program: JSONPatch!) {
       name
       abbreviation
       description
-      teachers
+      teachers { _id name }
+      assistant_teachers { _id name }
       instanceSpecificDances
       instances {
         _id

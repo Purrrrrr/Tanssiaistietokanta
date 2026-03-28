@@ -315,7 +315,7 @@ function WorkshopSummary({ workshop }: { workshop: Workshop }) {
 
   return <>
     <p>{description}</p>
-    <p>{useTranslation('components.workshopEditor.teachers')}: {teachers}</p>
+    <p>{useTranslation('components.workshopEditor.teachers')}: {teachers.map(teacher => teacher.name).join(', ')}</p>
     {instanceSpecificDances
       ? instances.map(instance =>
         <React.Fragment key={instance._id}>

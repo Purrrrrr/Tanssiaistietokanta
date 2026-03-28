@@ -23,7 +23,6 @@ export default function AutocompleteMultipleInput<T>({
     value={null}
     itemHidden={item => value.includes(item)}
     onChange={item => {
-      console.log(item)
       if (!value.includes(item)) {
         onChange([...value, item])
       }

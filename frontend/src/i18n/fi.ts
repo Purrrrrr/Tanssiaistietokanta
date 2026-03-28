@@ -174,6 +174,11 @@ export const fi = {
       dateTime: 'Ajankohta',
       duration: 'Kesto minuuteissa',
     },
+    volunteerSelector: {
+      createNewVolunteer: 'Luo uusi vapaaehtoinen',
+      noVolunteers: 'Ei vapaaehtoisia',
+      addVolunteer: 'Lisää vapaaehtoinen',
+    },
     eventProgramEditor: {
       fields: {
         eventProgram: {

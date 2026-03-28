@@ -10,6 +10,7 @@ import { ColorClass, FormGroup } from 'libraries/ui'
 import { DanceChooser } from 'components/widgets/DanceChooser'
 import { useT, useTranslation } from 'i18n'
 import { guid } from 'utils/guid'
+import TeacherSelector from './volunteers/TeacherSelector'
 
 type Workshop = Event['workshops'][0]
 type Instance = Workshop['instances'][number]
@@ -46,7 +47,7 @@ export function WorkshopEditor({ workshop: workshopInDatabase, reservedAbbreviat
         name,
         abbreviation,
         description,
-        teachers,
+        teacherIds: teachers?.map(t => t._id),
         instanceSpecificDances,
         instances: instances?.map(({ dances, __typename, ...i }) => ({ ...i, danceIds: dances ? dances.map(d => d._id) : null })),
       },
@@ -64,7 +65,7 @@ export function WorkshopEditor({ workshop: workshopInDatabase, reservedAbbreviat
         <Input path="name" required label={t('name')} labelInfo={t('required')} />
         <AbbreviationField path="abbreviation" label={t('abbreviation')} reservedAbbreviations={reservedAbbreviations} />
         <Field path="description" component={TextArea} label={t('description')} />
-        <Input path="teachers" label={t('teachers')} />
+        <Field path="teachers" label={t('teachers')} component={TeacherSelector} />
         <Switch path="instanceSpecificDances" label={t('instanceSpecificDances')} />
       </div>
       <div className="grow basis-75">
