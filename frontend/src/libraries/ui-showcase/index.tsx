@@ -5,7 +5,7 @@ import { booleanProp, numberProp, type Showcase, showcase } from './types'
 import { Switch } from 'libraries/forms'
 import FormUiShowcase from 'libraries/formsV2/UiShowcase'
 import { Alert, Dialog } from 'libraries/overlays'
-import { AutosizedSection, Button, Callout, RegularLink, showToast, Tab, Tabs } from 'libraries/ui'
+import { AnchorButton, AutosizedSection, Breadcrumb, BreadcrumbsContainer, Button, Callout, Collapse, GlobalSpinner, RegularLink, showToast, Tab, Tabs } from 'libraries/ui'
 import { Trash } from 'libraries/ui/icons'
 import { PageTitle } from 'components/PageTitle'
 import { ColoredTag, TAG_COLOR_COUNT } from 'components/widgets/ColoredTag'
@@ -132,6 +132,51 @@ const showcases: Showcase<Record<string, unknown>>[] = [
     props: {},
     render: () => <OverlayShowcase />,
   }),
+  showcase({
+    title: 'Collapse',
+    props: {
+      isOpen: booleanProp(),
+      keepChildrenMounted: booleanProp(),
+    },
+    render: ({ isOpen, keepChildrenMounted }) =>
+      <Collapse isOpen={isOpen} keepChildrenMounted={keepChildrenMounted}>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+      </Collapse>,
+  }),
+  showcase({
+    title: 'Global loading indicator',
+    props: {
+      loading: booleanProp(),
+      timeout: booleanProp(),
+    },
+    render: ({ loading, timeout }) =>
+      <GlobalSpinner
+        loading={loading}
+        timeout={timeout}
+        loadingMessage="Loading..."
+        connectionTimeoutMessage="Connection timed out"
+      />,
+  }),
+  showcase({
+    title: 'AnchorButton',
+    props: {
+      disabled: booleanProp(),
+      minimal: booleanProp(),
+      active: booleanProp(),
+      icon: booleanProp({ default: true }),
+    },
+    render: ({ disabled, icon, minimal, active }) =>
+      <div className="flex gap-2 flex-wrap">
+        {colors.map(color =>
+          <AnchorButton key={color} href="#" color={color} minimal={minimal} icon={icon ? <Trash /> : undefined} active={active} aria-disabled={disabled}>{titleCase(color)}</AnchorButton>,
+        )}
+      </div>,
+  }),
+  showcase({
+    title: 'Breadcrumbs',
+    props: {},
+    render: () => <BreadcrumbsShowcase />,
+  }),
 ]
 
 function range(count: number): number[] {
@@ -190,4 +235,12 @@ function Lorem() {
   return <p>
     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
   </p>
+}
+
+function BreadcrumbsShowcase() {
+  return <BreadcrumbsContainer label="Example breadcrumbs">
+    <Breadcrumb to="/" text="Home" />
+    <Breadcrumb to="/dances" text="Dances" />
+    <Breadcrumb to="/dances/$danceId" params={{ danceId: '1' }} text="Example dance" />
+  </BreadcrumbsContainer>
 }
