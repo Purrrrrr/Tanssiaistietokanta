@@ -1,27 +1,44 @@
-#layout {
-  &:before {
-    content: "";
-    position: fixed;
-    inset: -100%;
-    transform: rotate(-30deg);
-    z-index: -1;
-    background-image: url("data:image/svg+xml;utf8,\
-<svg xmlns='http://www.w3.org/2000/svg' width='330' height='100'>\
-<text x='0' y='100' font-size='42' font-family='Arial' fill='rgba(228,0,0,0.08)'>DEV VERSION</text>\
-</svg>");
-    background-repeat: repeat;
-  }
+#layout:before {
+  content: "";
+  position: fixed;
+  inset: -100%;
+  transform: rotate(-30deg);
+  z-index: -2;
+  background-image: url('./dev.svg');
+}
+main:after{
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  --dev-w: 50px;
+  --dev-fade-w: 170px;
+  background: linear-gradient(90deg, #fff0 var(--dev-w), #ffff var(--dev-fade-w), #ffff calc(100dvw - var(--dev-fade-w)), #fff0 calc(100dvw - var(--dev-w)));
+  pointer-events: none;
+}
+main {
+  background: #fff;
+  box-shadow: 0px 0px 150px 100px #fff;
+}
 
-  main, footer {
-    background: #fff;
-    box-shadow: 0px 0px 10px rgba(0,0,0, 0.1);
-  }
-
-  #breadcrumbs li:first-child a::after {
-    content: "DEV";
-    font-weight: 900;
-    font-size: 1.1em;
-    margin-left: 5px;
-    color: black;
-  }
+nav {
+  position: relative;
+  background: #fff8;
+}
+nav:before {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  padding-inline: 100px;
+  height: 50px;
+  z-index: -1;
+  text-align: center;
+  line-height: 50px;
+  content: "DEVELOPMENT VERSION";
+  font-weight: 900;
+  font-size: 1.4em;
+  color: #b20;
+  background-repeat: no-repeat;
+  background-image: linear-gradient(90deg, #fff0 0%, #fb03 50%, #fff0 100%);
 }
