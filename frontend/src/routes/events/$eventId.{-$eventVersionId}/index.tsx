@@ -223,7 +223,7 @@ function EventWorkshops({ event, readOnly }: { event: Event, readOnly: boolean }
         text={t('danceCheatlist')} />
       <NavigateButton
         from={Route.id}
-        href="./print/dance-instructions"
+        to="./print/dance-instructions"
         target="_blank"
         text={t('danceInstructions')} />
     </p>
