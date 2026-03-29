@@ -11,7 +11,7 @@ import { sortDances, usePatchDance } from 'services/dances'
 import { useCallbackOnEventChanges } from 'services/events'
 
 import { formFor, patchStrategy, Switch, SyncStatus, useAutosavingState } from 'libraries/forms'
-import { Button, H1, H2, Markdown, showToast } from 'libraries/ui'
+import { Button, H2, Markdown, showToast } from 'libraries/ui'
 import { Edit } from 'libraries/ui/icons'
 import { InstructionEditor } from 'components/dance/DanceEditor'
 import { WikipageSelector } from 'components/dance/WikipageSelector'
@@ -90,7 +90,7 @@ function DanceInstructionsView({ eventId, showWorkshops, showDances, hilightEmpt
   return <section className={classNames('dance-instructions', { 'hilight-empty': hilightEmpty, showShortInstructions })} ref={elementRef}>
     {showWorkshops &&
       <section className="workshops">
-        <H1>{t('workshops')}</H1>
+        <h1 className={h1Class}>{t('workshops')}</h1>
         {workshops.map(workshop => <WorkshopDetails key={workshop._id} workshop={workshop} />)}
         {program.dateTime && <>
           <H2>
@@ -102,12 +102,14 @@ function DanceInstructionsView({ eventId, showWorkshops, showDances, hilightEmpt
     }
     {showDances &&
       <section className="dances">
-        <h1>{t('danceInstructions')}</h1>
+        <h1 className={h1Class}>{t('danceInstructions')}</h1>
         {dances.map(dance => <InstructionsForDance key={dance._id} dance={dance} showShortInstructions={showShortInstructions} />)}
       </section>
     }
   </section>
 }
+
+const h1Class = 'font-bold my-2 text-3xl'
 
 const useDanceInstructions = backendQueryHook(graphql(`
 query DanceInstructions($eventId: ID!) {

@@ -32,10 +32,6 @@ interface CardProps extends Omit<HTMLDivProps, 'onClick'> {
   marginClass?: string
 }
 
-export function H1({ children, className }: { children: React.ReactNode, className?: string }) {
-  return <h1 className={classNames(className, 'h1')}>{children}</h1>
-}
-
 export function H2({ children, className }: { children: React.ReactNode, className?: string }) {
   return <h2 className={classNames(className ?? 'my-4', 'font-bold text-lg')}>{children}</h2>
 }

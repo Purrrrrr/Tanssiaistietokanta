@@ -1,15 +1,14 @@
-import { ComponentPropsWithoutRef } from 'react'
-
 import { PageTitle } from 'components/PageTitle'
 import { useT } from 'i18n'
 
-interface VersionedPageTitleProps extends ComponentPropsWithoutRef<typeof PageTitle> {
+interface VersionedPageTitleProps {
+  children: string
   showVersion?: boolean // True by default
   versionNumber?: number | string | null
 }
 
-export function VersionedPageTitle({ children, showVersion = true, versionNumber, ...props }: VersionedPageTitleProps) {
-  return <PageTitle {...props}>
+export function VersionedPageTitle({ children, showVersion = true, versionNumber }: VersionedPageTitleProps) {
+  return <PageTitle>
     {useVersionedName(children, showVersion ? versionNumber : null)}
   </PageTitle>
 }

@@ -1,16 +1,24 @@
 import { useEffect } from 'react'
 
-import { H1 } from 'libraries/ui'
+type PagetTitleProps = {
+  children: string
+  text?: never
+  noRender?: boolean
+} | {
+  children: Exclude<React.ReactNode, string | number>
+  text: string
+  noRender?: boolean
+}
 
-export function PageTitle({ children, noRender }: { children: string, noRender?: boolean }) {
+export function PageTitle({ text, children, noRender }: PagetTitleProps) {
   useEffect(
     () => {
-      setPageSubtitle(children)
+      setPageSubtitle(text ?? children)
     },
-    [children],
+    [text, children],
   )
 
-  return noRender ? null : <H1>{children}</H1>
+  return noRender ? null : <h1 className="h1">{children}</h1>
 }
 
 function setPageSubtitle(title: string) {

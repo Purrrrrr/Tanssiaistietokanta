@@ -1,7 +1,7 @@
 import { createFileRoute, Outlet, useChildMatches } from '@tanstack/react-router'
 
 import { SyncStatus } from 'libraries/forms'
-import { H1, TabLink, Tabs } from 'libraries/ui'
+import { TabLink, Tabs } from 'libraries/ui'
 import {
   MissingDanceInstructionsCounterTag,
 } from 'components/event/EventProgramEditor/components'
@@ -39,12 +39,11 @@ function RouteComponent() {
   const tabId = child.id.endsWith('main/') ? 'main' : 'slides'
 
   return <Form {...formProps} className="eventProgramEditor">
-    <PageTitle noRender>{t('pageTitle')}</PageTitle>
     <BackLink from="/events/$eventId/{-$eventVersionId}/program" to="..">{t('backToEvent')}</BackLink>
-    <H1>
+    <PageTitle text={t('pageTitle')}>
       {t('pageTitle')}
       <SyncStatus style={{ marginLeft: '1ch', top: '3px' }} className="grow" state={state} />
-    </H1>
+    </PageTitle>
     <EventMetadataContext program={value} workshops={event.workshops}>
       <Tabs id="programEditorTabs" renderActiveTabPanelOnly selectedTabId={tabId ?? 'main'}>
         <TabLink
