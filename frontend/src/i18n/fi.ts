@@ -400,6 +400,18 @@ export const fi = {
         endDate: 'Loppuu',
       },
       eventPage: {
+        menu: {
+          title: 'Tapahtuman tiedot',
+          basicInfo: 'Yhteenveto',
+          editBasicInfo: 'Tapahtuman tiedot',
+          ball: {
+            title: 'Tanssiaiset',
+            ballProgram: 'Suunnittele tanssiaisohjelmaa',
+            openSlideShow: 'Tanssiaisten diashow',
+            editSlideShow: 'Muokkaa diashowta',
+          },
+          print: 'Tulosta',
+        },
         loginToEdit: 'Kirjaudu muokataksesi tapahtumaa',
         ballProgram: 'Tanssiaisohjelma',
         noProgram: 'Ei ohjelmaa',
@@ -409,7 +421,6 @@ export const fi = {
         eventDeleteConfirmation: 'Haluatko varmasti poistaa tapahtuman __eventName__?',
         eventName: 'Tapahtuman nimi',
         editProgram: 'Muokkaa ohjelmaa',
-        viewProgram: 'Ohjelman tiedot',
         addProgram: 'Luo ohjelma',
         workshops: 'Työpajat',
         printBallDanceList: 'Tulosta settilista',
@@ -432,11 +443,9 @@ export const fi = {
       },
       eventProgramPage: {
         pageTitle: 'Tanssiaisohjelma',
-        backToEvent: 'Takaisin tapahtuman tietoihin',
+        slideShowPageTitle: 'Tanssiaisten diashow',
         loginRequired: 'Sinun täytyy olla kirjautunut käyttääksesi tätä sivua',
         tabs: {
-          main: 'Tanssiohjelma',
-          slides: 'Diashow',
           missingInstructions: 'Puuttuvat tanssiohjeet',
         },
       },
@@ -511,7 +520,6 @@ export const fi = {
       },
       dancePage: {
         backToDanceList: 'Takaisin tanssilistaan',
-        backToEventProgram: 'Takaisin ohjelman tietoihin',
       },
     },
     users: {

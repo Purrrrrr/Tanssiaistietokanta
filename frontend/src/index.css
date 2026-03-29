@@ -46,7 +46,7 @@ h1, h2 {
   font-size: 6em;
   font-weight: 500;
   font-style: normal;
-  margin-block: 0.1em;
+  line-height: 1;
 }
 
 ::-moz-selection{

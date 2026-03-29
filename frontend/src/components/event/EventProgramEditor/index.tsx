@@ -1,4 +1,5 @@
 import { ListEditorContext } from 'libraries/forms'
+import { H2 } from 'libraries/ui'
 import {
   DanceSet,
   Field,
@@ -7,7 +8,7 @@ import {
   useValueAt,
 } from 'components/event/EventProgramForm'
 import { DurationField } from 'components/widgets/DurationField'
-import { useT } from 'i18n'
+import { useT, useTranslation } from 'i18n'
 
 import { getProgramName } from '../utils'
 import {
@@ -27,6 +28,7 @@ export function MainEditor() {
   const { danceSets, introductions } = program
 
   return <section>
+    <H2>{useTranslation('pages.events.eventProgramPage.pageTitle')}</H2>
     <div className="flex flex-wrap gap-2 justify-between items-start">
       <Field label={t('fields.pauseDuration')} inline path="pauseBetweenDances" component={DurationField} />
       {introductions.program.length === 0 && <AddIntroductionButton />}

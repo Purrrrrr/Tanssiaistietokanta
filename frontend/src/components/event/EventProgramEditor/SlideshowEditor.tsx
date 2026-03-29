@@ -2,7 +2,7 @@ import { useNavigate, useParams } from '@tanstack/react-router'
 import React, { UIEvent, useDeferredValue, useEffect, useRef, useState } from 'react'
 import classNames from 'classnames'
 
-import { Card, Link } from 'libraries/ui'
+import { Card, H2, Link } from 'libraries/ui'
 import { ChevronLeft, ChevronRight } from 'libraries/ui/icons'
 import { EventProgramSettings, Field, useValueAt } from 'components/event/EventProgramForm'
 import { EventSlide, EventSlidePreview, EventSlideProps, startSlideId, useEventSlides } from 'components/event/EventSlide'
@@ -10,7 +10,7 @@ import { EventSlideEditor } from 'components/event/EventSlideEditor'
 import { SlideContainer, useSlideshowNavigation } from 'components/Slide'
 import { NavigateButton } from 'components/widgets/NavigateButton'
 import { SlideStyleSelector } from 'components/widgets/SlideStyleSelector'
-import { useT } from 'i18n'
+import { useT, useTranslation } from 'i18n'
 
 import { MissingDanceInstructionsWarning } from './components'
 import { SlideChooser } from './components/SlideChooser'
@@ -32,6 +32,7 @@ export function SlideshowEditor() {
   const isStale = deferredCurrentSlide.id !== currentSlide.id
 
   return <section className="slideshowEditor">
+    <H2>{useTranslation('pages.events.eventProgramPage.slideShowPageTitle')}</H2>
     <MissingDanceInstructionsWarning program={program} />
     <div className="flex justify-between">
       <SlideChooser

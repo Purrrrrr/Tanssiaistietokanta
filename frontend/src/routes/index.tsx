@@ -7,7 +7,7 @@ import { RequirePermissions } from 'libraries/access-control'
 import { useFormatDate } from 'libraries/i18n/dateTime'
 import { H2, ItemList, Link } from 'libraries/ui'
 import { LoadingState } from 'components/LoadingState'
-import { PageTitle } from 'components/PageTitle'
+import { Page } from 'components/Page'
 import { NavigateButton } from 'components/widgets/NavigateButton'
 import { useT } from 'i18n'
 
@@ -24,8 +24,7 @@ function EventList() {
   const formatDate = useFormatDate()
   const user = useCurrentUser()
 
-  return <>
-    <PageTitle>{t('pageTitle')}</PageTitle>
+  return <Page title={t('pageTitle')}>
     <LoadingState {...requestState} />
     <p>
       {t('welcomeMessage.message')}
@@ -59,5 +58,5 @@ function EventList() {
       </ItemList>
     </RequirePermissions>
     <NavigateButton requireRight="events:create" color="primary" to="/events/new" text={t('createEvent')} />
-  </>
+  </Page>
 }

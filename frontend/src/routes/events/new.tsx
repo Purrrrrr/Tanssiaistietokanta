@@ -13,6 +13,7 @@ import { PageTitle } from 'components/PageTitle'
 import { EventGrantsEditor } from 'components/rights/EventGrantsEditor'
 import { useT } from 'i18n'
 import { guid } from 'utils/guid'
+import { Page } from 'components/Page'
 
 const {
   Form,
@@ -47,8 +48,7 @@ function CreateEventForm() {
     accessControl: { viewAccess: ViewAccess.Public, grants: initialGrants },
   })
 
-  return <>
-    <PageTitle>{t('newEvent')}</PageTitle>
+  return <Page title={t('newEvent')}>
     <Form labelStyle="above" value={event} onChange={setEvent} onSubmit={() => addGlobalLoadingAnimation(createEvent({ event }))} errorDisplay="onSubmit">
       <div className="flex gap-3">
         <Input label={t('name')} path="name" required containerClassName="w-60" />
@@ -63,5 +63,5 @@ function CreateEventForm() {
       <EventGrantsEditor />
       <SubmitButton text={t('create')} />
     </Form>
-  </>
+  </Page>
 }

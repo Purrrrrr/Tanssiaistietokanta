@@ -6,6 +6,7 @@ import { cleanMetadataValues } from 'backend'
 import { usePatchDance } from 'services/dances'
 
 import { formFor, patchStrategy, useAutosavingState } from 'libraries/forms'
+import { useRight } from 'libraries/access-control'
 
 const {
   Form,
@@ -18,7 +19,8 @@ const {
 export { Field, Form, Input, useOnChangeFor, useValueAt }
 
 export function useDanceEditorState(dance: Dance) {
-  const readOnly = dance._versionId != null
+  const canEdit = useRight('dances:modify', { entityId: dance._id })
+  const readOnly = dance._versionId != null || !canEdit
   const [modifyDance] = usePatchDance()
   const patchDance = useCallback(
     async (patches: Partial<DanceWithEvents>) => {

@@ -4,7 +4,7 @@ import { useUsers } from 'services/users'
 
 import { ItemList } from 'libraries/ui'
 import { LoadingState } from 'components/LoadingState'
-import { PageTitle } from 'components/PageTitle'
+import { Page } from 'components/Page'
 import { useT } from 'i18n'
 
 export const Route = createFileRoute('/users')({
@@ -18,8 +18,7 @@ function UsersPage() {
   const t = useT('pages.users.userList')
   const [users, requestState] = useUsers()
 
-  return <>
-    <PageTitle>{t('pageTitle')}</PageTitle>
+  return <Page title={t('pageTitle')}>
     <LoadingState {...requestState} />
     <ItemList columns="grid-cols-[1fr_1fr_1fr] gap-x-4" items={users} emptyText={t('noUsers')} className="max-w-200">
       <ItemList.Header>
@@ -34,5 +33,5 @@ function UsersPage() {
         </ItemList.Row>,
       )}
     </ItemList>
-  </>
+  </Page>
 }

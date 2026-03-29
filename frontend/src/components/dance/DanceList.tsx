@@ -12,7 +12,7 @@ import { ColoredTag } from 'components/widgets/ColoredTag'
 import { useT, useTranslation } from 'i18n'
 import { sortedBy } from 'utils/sorted'
 
-import { PlainDanceEditor } from './DanceEditor'
+import { DanceEditor } from './DanceEditor'
 import { DanceIsUsedIn } from './DanceIsUsedIn'
 import { DanceLink } from './DanceLink'
 import { DeleteDanceButton } from './DeleteDanceButton'
@@ -127,5 +127,5 @@ function DanceListRowEditor({ danceId }: { danceId: ID }) {
   const result = useDance({ id: danceId })
   if (!result.data?.dance) return null
 
-  return <PlainDanceEditor dance={result.data.dance} />
+  return <DanceEditor dance={result.data.dance} className="p-2 border-gray-200 border-t-1" />
 }

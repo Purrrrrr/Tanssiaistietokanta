@@ -1,62 +1,31 @@
 import { Dance, DanceWithEvents, ID } from 'types'
 
-import { useRight } from 'libraries/access-control'
 import { MarkdownEditorProps, SyncStatus } from 'libraries/forms'
-import { Button, H2 } from 'libraries/ui'
+import { Button } from 'libraries/ui'
 import { MarkdownInput } from 'components/files/MarkdownInput'
-import { useVersionedName } from 'components/versioning/VersionedPageTitle'
-import { VersionSidebarToggle } from 'components/versioning/VersionSidebarToggle'
 import { ColoredTag } from 'components/widgets/ColoredTag'
 import { DurationField } from 'components/widgets/DurationField'
 import { useT } from 'i18n'
 
 import { Field, Form, Input, useDanceEditorState, useOnChangeFor } from './DanceForm'
-import { DanceIsUsedIn } from './DanceIsUsedIn'
-import { danceVersionLink } from './DanceLink'
 import DanceWikiPreview from './DanceWikiPreview'
-import { DeleteDanceButton } from './DeleteDanceButton'
 import { WikipageSelector } from './WikipageSelector'
 
 interface DanceEditorProps {
   dance: DanceWithEvents
-  titleComponent?: 'h2' | 'h1'
-  onDelete?: () => unknown
-  showVersionHistory?: boolean
+  className?: string
 }
 
-export function DanceEditor({ dance, onDelete, showVersionHistory, titleComponent = 'h2' }: DanceEditorProps) {
+export function DanceEditor({ dance, className }: DanceEditorProps) {
   const { formProps, state } = useDanceEditorState(dance)
-  const Title = titleComponent === 'h2' ? H2 : 'h1'
-  const canEdit = useRight('dances:modify', { entityId: dance._id })
 
-  return <Form {...formProps} readOnly={!canEdit || formProps.readOnly}>
-    <div className="flex flex-wrap gap-3.5 items-center mb-2">
-      <Title className="m-0">
-        {useVersionedName(dance.name, dance._versionId ? dance._versionNumber : null)}
-      </Title>
-      <SyncStatus className="top-[3px] grow" state={state} />
-      <div className="flex items-center mt-2.5">
-        {showVersionHistory && <VersionSidebarToggle entityType="dance" entityId={dance._id} versionId={dance._versionId ?? undefined} toVersionLink={danceVersionLink} />}
-        <DanceIsUsedIn events={dance.events} />
-        <div>
-          <DeleteDanceButton dance={dance} onDelete={onDelete} />
-        </div>
-      </div>
-    </div>
+  return <Form {...formProps} className={className}>
+    <SyncStatus className="mt-2" floatRight state={state} />
     <FullDanceEditorFields dance={dance} />
   </Form>
 }
 
-export function PlainDanceEditor({ dance }: { dance: DanceWithEvents }) {
-  const { formProps, state } = useDanceEditorState(dance)
-  const canEdit = useRight('dances:modify', { entityId: dance._id })
-  return <Form className="p-2 border-gray-200 border-t-1"{...formProps} readOnly={!canEdit}>
-    <SyncStatus floatRight state={state} />
-    <FullDanceEditorFields dance={dance} />
-  </Form>
-}
-
-function FullDanceEditorFields({ dance }: { dance: DanceWithEvents }) {
+export function FullDanceEditorFields({ dance }: { dance: DanceWithEvents }) {
   const label = useT('domain.dance')
   const { wikipage } = dance
   return <>

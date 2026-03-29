@@ -44,6 +44,11 @@ export function useAppRootContext(): DanceOrganizerRootRouteContext {
   }
 }
 
+export function navigationHidden() {
+  const isPrintPage = window.location.pathname.match(/\/(ball-program|print)(\/|$)/)
+  return isPrintPage
+}
+
 export function LoadingComponent() {
   useShowGlobalLoadingAnimation(true)
   return null

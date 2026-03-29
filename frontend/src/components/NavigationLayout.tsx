@@ -2,6 +2,7 @@ import classNames from 'classnames'
 
 import { ColorClass, Link, RegularLink } from 'libraries/ui'
 import { T, useTranslation } from 'i18n'
+import { navigationHidden } from 'utils/routeUtils'
 
 import DebugManager from './DebugManager'
 import Navigation from './Navigation'
@@ -36,11 +37,6 @@ function NavigationLayout({ children }) {
       <Footer />
     </div>
   </SidebarContext>
-}
-
-function navigationHidden() {
-  const isPrintPage = window.location.pathname.match(/\/(ball-program|print)(\/|$)/)
-  return isPrintPage
 }
 
 function SkipToMainContent() {

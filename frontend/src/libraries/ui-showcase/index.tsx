@@ -7,7 +7,7 @@ import FormUiShowcase from 'libraries/formsV2/UiShowcase'
 import { Alert, Dialog } from 'libraries/overlays'
 import { AnchorButton, AutosizedSection, Breadcrumb, BreadcrumbsContainer, Button, Callout, Collapse, GlobalSpinner, RegularLink, showToast, Tab, Tabs } from 'libraries/ui'
 import { Trash } from 'libraries/ui/icons'
-import { PageTitle } from 'components/PageTitle'
+import { MenuLink, MenuSection, Page } from 'components/Page'
 import { ColoredTag, TAG_COLOR_COUNT } from 'components/widgets/ColoredTag'
 
 import { ShowcaseContainer } from './ShowcaseContainer'
@@ -21,19 +21,25 @@ export default function UiShowcase() {
 
     return showcases.find(scase => scase.title === hash) ?? showcases[0]
   })
-  return <section>
-    <PageTitle>UI Showcase</PageTitle>
-
-    <p className="flex flex-wrap gap-[0.7ch]">
-      <span>Available showcases:</span>
+  return <Page title="UI Showcase" menu={
+    <MenuSection title="Available showcases">
       {showcases.map(scase =>
-        <RegularLink key={scase.title} href={`#${scase.title}`} onClick={() => setSelectedShowcase(scase)}>{scase.title}</RegularLink>,
+        <MenuLink
+          key={scase.title}
+          to="."
+          hash={scase.title}
+          activeOptions={{
+            includeHash: true,
+          }}
+          onClick={() => setSelectedShowcase(scase)} className={selectedShowcase === scase ? 'font-bold' : ''}
+        >
+          {scase.title}
+        </MenuLink>,
       )}
-    </p>
-
+    </MenuSection>
+  }>
     <ShowcaseContainer {...selectedShowcase} />
-
-  </section>
+  </Page>
 }
 
 const showcases: Showcase<Record<string, unknown>>[] = [

@@ -1,25 +1,18 @@
 import { createFileRoute } from '@tanstack/react-router'
-import React, { useCallback, useState } from 'react'
+import React, { useState } from 'react'
 
 import { Event } from 'types'
 
 import { addGlobalLoadingAnimation } from 'backend'
-import { useDeleteEvent, usePatchEvent } from 'services/events'
 import { useCreateWorkshop, useDeleteWorkshop } from 'services/workshops'
 
-import { RequirePermissions } from 'libraries/access-control'
-import { DateField, DateRangeField, formFor, patchStrategy, SyncStatus, useAutosavingState } from 'libraries/forms'
-import { Button, Card, Collapse, H2, Link } from 'libraries/ui'
+import { Button, Card, Collapse, H2 } from 'libraries/ui'
 import { DanceSet, EventProgramRow } from 'components/event/EventProgramForm'
-import { JSONPatch } from 'components/event/EventProgramForm/patchStrategy'
 import { FileList } from 'components/files/FileList'
-import { EventGrantsEditor } from 'components/rights/EventGrantsEditor'
-import { VersionedPageTitle } from 'components/versioning/VersionedPageTitle'
-import { VersionSidebarToggle } from 'components/versioning/VersionSidebarToggle'
 import { DeleteButton } from 'components/widgets/DeleteButton'
 import { NavigateButton } from 'components/widgets/NavigateButton'
 import { newInstance, WorkshopEditor } from 'components/WorkshopEditor'
-import { useFormatDate, useFormatDateTime, useT, useTranslation } from 'i18n'
+import { useFormatDateTime, useT, useTranslation } from 'i18n'
 
 import { useCurrentEvent } from './-context'
 
@@ -29,156 +22,35 @@ export const Route = createFileRoute('/events/$eventId/{-$eventVersionId}/')({
   component: RouteComponent,
 })
 
-const {
-  Input,
-  Form,
-} = formFor<Event>()
-
-const eventVersionLink = (id: string, versionId?: null | string) => versionId
-  ? `/events/${id}/version/${versionId}`
-  : `/events/${id}`
-
 function RouteComponent() {
   const event = useCurrentEvent()
   const t = useT('pages.events.eventPage')
-  const { _versionId, _versionNumber } = event
-  const readOnly = _versionId != undefined
+  const readOnly = event._versionId != undefined
   return <>
-    <div className="flex justify-between items-center">
-      <VersionedPageTitle showVersion={readOnly} versionNumber={_versionNumber}>
-        {event.name}
-      </VersionedPageTitle>
-      <VersionSidebarToggle entityType="event" entityId={event._id} versionId={event._versionId ?? undefined} toVersionLink={eventVersionLink} />
-    </div>
-    <EventDetails event={event} readOnly={readOnly} />
     <H2>{t('ballProgram')}</H2>
-    <EventProgram event={event} readOnly={readOnly} />
+    <EventProgram event={event} />
     <H2>{t('workshops')}</H2>
     <EventWorkshops event={event} readOnly={readOnly} />
     <FileList title={t('files')} owner="events" owningId={event._id} />
   </>
 }
 
-function EventDetails({ event, readOnly }: { event: Event, readOnly: boolean }) {
-  const [showEditor, setShowEditor] = useState(false)
-  const t = useT('pages.events.eventPage')
-  const formatDate = useFormatDate()
-  const navigate = Route.useNavigate()
-  const [deleteEvent] = useDeleteEvent({
-    refetchQueries: ['getEvents'],
-    onCompleted: () => navigate({ to: '/' }),
-  })
-
-  return <>
-    <div className="flex clear-both justify-between mt-3">
-      {t('eventDate')}: {formatDate(event.beginDate)} - {formatDate(event.endDate)}
-      { readOnly ||
-        <div>
-          <RequirePermissions
-            requireRight="events:modify"
-            entityId={event._id}
-            fallback={<Link to="/login" params={{ redirectTo: encodeURIComponent(window.location.pathname) }}>{t('loginToEdit')}</Link>}
-          >
-            <Button
-              onClick={() => setShowEditor(!showEditor)}
-              text={showEditor ? t('closeEditor') : t('openBasicDetailsEditor')}
-            />
-          </RequirePermissions>
-          <DeleteButton
-            requireRight="events:delete"
-            entityId={event._id}
-            onDelete={() => deleteEvent({ id: event._id })}
-            text={t('deleteEvent')}
-            confirmText={t('eventDeleteConfirmation', { eventName: event.name })}
-          />
-        </div>
-      }
-    </div>
-    <RequirePermissions requireRight="events:modify" entityId={event._id}>
-      <Collapse isOpen={showEditor} loadingMessage={t('loadingEditor')}>
-        <EventDetailsForm event={event} />
-      </Collapse>
-    </RequirePermissions>
-  </>
-}
-
-function EventDetailsForm({ event }: { event: Event }) {
-  const t = useT('pages.events.eventPage')
-  const [patchEvent] = usePatchEvent()
-  const patch = useCallback(
-    (eventPatch: JSONPatch) => patchEvent({ id: event._id, event: eventPatch }),
-    [event._id, patchEvent],
-  )
-  const { state, formProps } = useAutosavingState<Event, JSONPatch>(event, patch, patchStrategy.jsonPatch)
-
-  return <Form {...formProps}>
-    <Card>
-      <SyncStatus state={state} floatRight />
-      <Input label={t('eventName')} path="name" required containerClassName="w-100" />
-      <div className="flex gap-6">
-        <DateRangeField<Event>
-          id="eventDate"
-          label={t('eventDate')}
-          beginPath="beginDate"
-          endPath="endDate"
-          required
-        />
-        <DateField<Event>
-          label={(t('ballDateTime'))}
-          path="program.dateTime"
-          showTime
-          minDate={formProps.value.beginDate}
-          maxDate={formProps.value.endDate}
-        />
-      </div>
-      <EventGrantsEditor eventId={event._id} />
-    </Card>
-  </Form>
-}
-
-function EventProgram({ event, readOnly }: { event: Event, readOnly: boolean }) {
+function EventProgram({ event }: { event: Event }) {
   const { program } = event
 
   const t = useT('pages.events.eventPage')
   if (!program || program.danceSets.length === 0) {
-    return <>
-      <p>{t('noProgram')}</p>
-      {readOnly ||
-        <NavigateButton
-          requireRight="events:modify"
-          entityId={event._id}
-          color="primary"
-          from={Route.id}
-          to="./program/main"
-          text={t('addProgram')}
-        />}
-    </>
+    return <p>{t('noProgram')}</p>
   }
 
-  return <>
-    <Card>
-      {program.danceSets.map((danceSet, index) =>
-        <p key={index}>
-          <strong>{danceSet.title}</strong>:{' '}
-          {formatDances(danceSet.program)}
-        </p>,
-      )}
-    </Card>
-    <p>
-      <NavigateButton
-        requireRight="events:modify"
-        entityId={event._id}
-        from={Route.id}
-        to="./program/main"
-        color={readOnly ? undefined : 'primary'}
-        text={readOnly ? t('viewProgram') : t('editProgram')}
-      />
-      <NavigateButton from={Route.id} to="./print/ball-dancelist" target="_blank"
-        text={t('printBallDanceList')} />
-      <NavigateButton from={Route.id} to="./ball-program/{-$slideId}" target="_blank"
-        text={t('ballProgramSlideshow')} />
-    </p>
-  </>
+  return <Card>
+    {program.danceSets.map((danceSet, index) =>
+      <p key={index}>
+        <strong>{danceSet.title}</strong>:{' '}
+        {formatDances(danceSet.program)}
+      </p>,
+    )}
+  </Card>
 
   function formatDances(program: DanceSet['program']) {
     const danceNames = program
@@ -199,7 +71,6 @@ const isRequestedDance = (row: EventProgramRow) => row.type === 'RequestedDance'
 
 function EventWorkshops({ event, readOnly }: { event: Event, readOnly: boolean }) {
   const { workshops, _id: eventId, beginDate, endDate } = event
-  const t = useT('pages.events.eventPage')
   return <>
     <div className="my-4">
       {workshops.map(workshop =>
@@ -216,16 +87,6 @@ function EventWorkshops({ event, readOnly }: { event: Event, readOnly: boolean }
     </div>
     <p>
       {readOnly || <CreateWorkshopButton eventId={eventId} startDate={beginDate} />}
-      <NavigateButton
-        from={Route.id}
-        to="./print/dance-cheatlist"
-        target="_blank"
-        text={t('danceCheatlist')} />
-      <NavigateButton
-        from={Route.id}
-        to="./print/dance-instructions"
-        target="_blank"
-        text={t('danceInstructions')} />
     </p>
   </>
 }

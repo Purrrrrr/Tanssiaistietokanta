@@ -4,9 +4,13 @@ import { useDance } from 'services/dances'
 
 import { Breadcrumb } from 'libraries/ui'
 import { DanceEditor } from 'components/dance/DanceEditor'
+import { DanceIsUsedIn } from 'components/dance/DanceIsUsedIn'
+import { danceVersionLink } from 'components/dance/DanceLink'
+import { DeleteDanceButton } from 'components/dance/DeleteDanceButton'
 import { LoadingState } from 'components/LoadingState'
-import { PageTitle } from 'components/PageTitle'
+import { Page } from 'components/Page'
 import VersionableContentContainer from 'components/versioning/VersionableContentContainer'
+import { VersionSidebarToggle } from 'components/versioning/VersionSidebarToggle'
 import { BackLink } from 'components/widgets/BackLink'
 import { useT } from 'i18n'
 
@@ -55,11 +59,7 @@ function RouteComponent() {
   </VersionableContentContainer>
 }
 
-interface DancePageProps {
-  parentType?: 'eventProgram' | 'dances'
-}
-
-function DancePage({ parentType = 'dances' }: DancePageProps) {
+function DancePage() {
   const navigate = useNavigate()
   const { danceId } = useParams({ from: Route.id })
   const { versionId } = useSearch({ from: Route.id })
@@ -70,14 +70,23 @@ function DancePage({ parentType = 'dances' }: DancePageProps) {
 
   const { dance } = result.data
 
-  return <>
-    <PageTitle noRender>{dance.name}</PageTitle>
-    <BackLink to="..">{t(parentType === 'dances' ? 'backToDanceList' : 'backToEventProgram')}</BackLink>
-    <DanceEditor
-      titleComponent="h1"
-      dance={dance}
-      showVersionHistory
-      onDelete={() => { navigate({ to: '/dances' }) }}
-    />
-  </>
+  return <Page
+    title={dance.name}
+    showVersion={!!versionId}
+    versionNumber={dance._versionNumber}
+    backLink={
+      <BackLink to="..">{t('backToDanceList')}</BackLink>
+    }
+    toolbar={
+      <div className="flex items-center">
+        <VersionSidebarToggle entityType="dance" entityId={dance._id} versionId={dance._versionId ?? undefined} toVersionLink={danceVersionLink} />
+        <DanceIsUsedIn events={dance.events} />
+        <div>
+          <DeleteDanceButton dance={dance} onDelete={() => { navigate({ to: '/dances' }) }} />
+        </div>
+      </div>
+    }
+  >
+    <DanceEditor dance={dance} />
+  </Page>
 }

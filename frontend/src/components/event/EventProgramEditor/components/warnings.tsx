@@ -17,8 +17,9 @@ export function MissingDanceInstructionsCounterTag() {
   const t = useT('components.eventProgramEditor.missingDanceInstructionsWarning')
   if (!count) return null
 
-  return <span className="inline-block px-2 -mt-0.5 h-5 font-bold text-white align-middle bg-red-600 rounded-full ms-2">
-    {count} {t('missingDancesCount', { count })}
+  const title = `${count} ${t('missingDancesCount', { count })}`
+  return <span className="inline-block px-2 -mt-0.5 h-5 font-bold text-white align-middle bg-red-600 rounded-full ms-2" title={title}>
+    {count}
   </span>
 }
 
