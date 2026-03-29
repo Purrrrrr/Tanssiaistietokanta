@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 
-import './PrintTable.sass'
+import './PrintTable.css'
 
 interface PrintTableProps {
   children: React.ReactNode
@@ -9,7 +9,7 @@ interface PrintTableProps {
 }
 
 export function PrintTable({ children, headings, className }: PrintTableProps) {
-  return <table className={classNames(className, 'printTable')}>
+  return <table className={classNames(className, 'printTable table-fixed border-collapse')}>
     {headings && <thead>
       <tr>
         {headings.map((heading, i) => <th key={i}>{heading}</th>)}

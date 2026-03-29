@@ -1,0 +1,6 @@
+table.printTable {
+  td, th {
+    border: 1px solid black;
+    text-align: left;
+  }
+}

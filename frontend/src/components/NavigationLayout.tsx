@@ -8,7 +8,7 @@ import Navigation from './Navigation'
 import { SidebarContainer, SidebarContext } from './SideBar'
 import { SupportedBrowserChecker } from './SupportedBrowserWarning'
 
-import './NavigationLayout.sass'
+import './SkipToMainContent.css'
 
 if (process.env.NODE_ENV === 'development') {
   import('./dev.css')
