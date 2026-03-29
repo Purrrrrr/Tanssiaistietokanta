@@ -4,6 +4,7 @@ import { useApolloClient } from '@apollo/client'
 import { RightsQuery } from 'libraries/access-control/types'
 
 import { ApolloClient, useShowGlobalLoadingAnimation } from 'backend'
+import { apolloClient } from 'backend/apollo'
 
 import { useHasRights } from 'libraries/access-control'
 import { Button } from 'libraries/ui'
@@ -22,7 +23,7 @@ export const defaultContext: DanceOrganizerRootRouteContext = {
   hasAccess: async () => [false],
   requireAccess: async () => {},
   T: () => '',
-  queryClient: null as unknown as ApolloClient,
+  queryClient: apolloClient,
 }
 
 export function useAppRootContext(): DanceOrganizerRootRouteContext {
