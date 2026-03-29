@@ -7,7 +7,7 @@ import { Breadcrumb } from 'libraries/ui'
 import NavigationLayout from 'components/NavigationLayout'
 import { PageTitle } from 'components/PageTitle'
 import { T, TranslationKey } from 'i18n'
-import { type DanceOrganizerRootRouteContext } from 'utils/routeUtils'
+import { type DanceOrganizerRootRouteContext, ErrorComponent } from 'utils/routeUtils'
 
 declare module '@tanstack/react-router' {
   interface StaticDataRouteOption {
@@ -27,6 +27,7 @@ interface Params {
 
 export const Route = createRootRouteWithContext<DanceOrganizerRootRouteContext>()({
   component: RootComponent,
+  errorComponent: ErrorComponent,
   beforeLoad: async ({ matches, context }) => {
     const requiredRights = matches
       .map(({ staticData: { requireRights }, params }) => toRightsQuery(requireRights, params))
