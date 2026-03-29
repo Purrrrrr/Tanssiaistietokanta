@@ -27,21 +27,13 @@ function NavigationLayout({ children }) {
     <SkipToMainContent />
     <div id="layout">
       <Navigation />
-      <main id="main-content">
-        {children}
-      </main>
-      <aside>
-        <SidebarContainer />
-      </aside>
-      <footer className={classNames(ColorClass.textMuted, 'text-right p-1')}>
-        {process.env.NODE_ENV === 'development' &&
-          <Link className="px-1 mr-1 border-gray-400 border-e" to="/ui-showcase">UI Showcase</Link>}
-        <T msg="app.title" /> v. {process.env.REACT_APP_BUILD_TIME ?? 'DEV'}-{process.env.REACT_APP_COMMIT_REV ?? 'HEAD'}
-        {' '}
-        <LicenceLink />
-        {process.env.NODE_ENV === 'development' &&
-          <DebugManager />}
-      </footer>
+      <div id="main-content">
+        <main>{children}</main>
+        <aside>
+          <SidebarContainer />
+        </aside>
+      </div>
+      <Footer />
     </div>
   </SidebarContext>
 }
@@ -54,6 +46,18 @@ function navigationHidden() {
 function SkipToMainContent() {
   // TODO style with tailwind
   return <RegularLink unstyled id="skip-to-main-content" href="#main-content"><T msg="navigation.moveToContent" /></RegularLink>
+}
+
+function Footer() {
+  return <footer className={classNames(ColorClass.textMuted, 'text-right p-1')}>
+    {process.env.NODE_ENV === 'development' &&
+      <Link className="px-1 mr-1 border-gray-400 border-e" to="/ui-showcase">UI Showcase</Link>}
+    <T msg="app.title" /> v. {process.env.REACT_APP_BUILD_TIME ?? 'DEV'}-{process.env.REACT_APP_COMMIT_REV ?? 'HEAD'}
+    {' '}
+    <LicenceLink />
+    {process.env.NODE_ENV === 'development' &&
+      <DebugManager />}
+  </footer>
 }
 
 function LicenceLink() {
