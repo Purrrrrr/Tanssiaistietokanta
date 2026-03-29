@@ -3,22 +3,17 @@
   position: fixed;
   inset: -100%;
   transform: rotate(-30deg);
-  z-index: -2;
+  z-index: -1;
   background-image: url('./dev.svg');
 }
-main:after{
+main:before {
   content: "";
   position: fixed;
   inset: 0;
   z-index: -1;
-  --dev-w: 50px;
-  --dev-fade-w: 170px;
-  background: linear-gradient(90deg, #fff0 var(--dev-w), #ffff var(--dev-fade-w), #ffff calc(100dvw - var(--dev-fade-w)), #fff0 calc(100dvw - var(--dev-w)));
+  --dev-h: 200px;
+  background: linear-gradient(180deg, #fff0 0, #ffff var(--dev-h));
   pointer-events: none;
-}
-main {
-  background: #fff;
-  box-shadow: 0px 0px 150px 100px #fff;
 }
 
 nav {
