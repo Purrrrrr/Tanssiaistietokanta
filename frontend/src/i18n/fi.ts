@@ -365,6 +365,7 @@ export const fi = {
   pages: {
     notFound: {
       pageNotFound: 'Sivua ei löytynyt',
+      returnToHome: 'Palaa etusivulle',
     },
     events: {
       eventList: {

@@ -3,7 +3,7 @@ import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 
 import { RightsQuery } from 'libraries/access-control/types'
 
-import { Breadcrumb } from 'libraries/ui'
+import { Breadcrumb, Link } from 'libraries/ui'
 import NavigationLayout from 'components/NavigationLayout'
 import { Page } from 'components/Page'
 import { T, TranslationKey, useT } from 'i18n'
@@ -68,7 +68,7 @@ function RootComponent() {
 
 function NotFound() {
   const t = useT('pages.notFound')
-  return <Page title={t('pageNotFound')}>
-    <img alt="404" src="/404.png" />
+  return <Page title={t('pageNotFound')} logo={<img alt="404" src="/404.png" />}>
+    <Link to="/">{t('returnToHome')}</Link>
   </Page>
 }
