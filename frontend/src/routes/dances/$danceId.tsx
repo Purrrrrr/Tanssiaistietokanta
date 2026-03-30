@@ -2,8 +2,10 @@ import { createFileRoute, useNavigate, useParams, useSearch } from '@tanstack/re
 
 import { useDance } from 'services/dances'
 
+import { SyncStatus } from 'libraries/forms'
 import { Breadcrumb } from 'libraries/ui'
-import { DanceEditor } from 'components/dance/DanceEditor'
+import { FullDanceEditorFields } from 'components/dance/DanceEditor'
+import { Form, useDanceEditorState } from 'components/dance/DanceForm'
 import { DanceIsUsedIn } from 'components/dance/DanceIsUsedIn'
 import { danceVersionLink } from 'components/dance/DanceLink'
 import { DeleteDanceButton } from 'components/dance/DeleteDanceButton'
@@ -23,11 +25,11 @@ export const Route = createFileRoute(
   },
   loaderDeps: ({ search: { versionId } }) => ({ versionId }),
   loader: async ({ params: { danceId }, deps: { versionId }, context: { queryClient } }) => {
-    const dance = await queryClient.query({
+    const result = await queryClient.query({
       query: useDance.query,
       variables: { id: danceId, versionId },
     })
-    return { dance }
+    return { dance: result.data.dance }
   },
   staticData: {
     requireRights: ({ danceId }) => ({
@@ -60,11 +62,13 @@ function RouteComponent() {
 }
 
 function DancePage() {
+  const loadedDance = Route.useLoaderData().dance
   const navigate = useNavigate()
   const { danceId } = useParams({ from: Route.id })
   const { versionId } = useSearch({ from: Route.id })
   const result = useDance({ id: danceId ?? '', versionId })
   const t = useT('pages.dances.dancePage')
+  const { formProps, state } = useDanceEditorState(result.data?.dance ?? loadedDance)
 
   if (!result.data?.dance) return <LoadingState {...result} />
 
@@ -77,6 +81,7 @@ function DancePage() {
     backLink={
       <BackLink to="/dances">{t('backToDanceList')}</BackLink>
     }
+    info={<SyncStatus state={state} />}
     toolbar={
       <Toolbar>
         <VersionSidebarToggle entityType="dance" entityId={dance._id} versionId={dance._versionId ?? undefined} toVersionLink={danceVersionLink} />
@@ -87,6 +92,8 @@ function DancePage() {
       </Toolbar>
     }
   >
-    <DanceEditor dance={dance} />
+    <Form {...formProps}>
+      <FullDanceEditorFields dance={dance} />
+    </Form>
   </Page>
 }
