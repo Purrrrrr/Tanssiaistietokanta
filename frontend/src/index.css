@@ -101,7 +101,6 @@ h1, h2 {
   }
   --sidebar-anim-speed: 0.5s;
 
-  min-height: 100vh;
   display: grid;
   grid-template: "main sidebar" 1fr
     / 1fr var(--sidebar-size);
