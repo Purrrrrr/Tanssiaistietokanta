@@ -6,6 +6,8 @@ import { Dances, DancesData } from './dances.schema'
 import { adminUser, enabledTestUsers as testUsers } from '../../fixtures/test-users'
 import chaiAsPromised from 'chai-as-promised'
 import { testDances } from '../../fixtures/test-dances'
+import type { Events, EventsData } from '../events/events.schema'
+import type { Workshops, WorkshopsData } from '../workshops/workshops.schema'
 
 use(chaiAsPromised)
 
@@ -93,6 +95,108 @@ describe('dances service', () => {
         expect(dancesAfterRemove, 'One dance remoed').to.have.length(testDances.length)
         expect(dancesAfterRemove.map(prop('_id')), 'Removed dance is not in list anymore').to.not.include(created._id)
       })
+    })
+  })
+
+  describe('delete when in use', () => {
+    let dance: Dances
+    // The dependency graph registers dependencies asynchronously via event listeners.
+    // A short wait ensures those async operations complete before we test deletion.
+    const waitForDependencyRegistration = () => new Promise(resolve => setTimeout(resolve, 100))
+
+    beforeEach(async () => {
+      dance = await app.service('dances').create(danceToCreate, { user: adminUser }) as Dances
+    })
+
+    afterEach(async () => {
+      await app.service('dances').remove(dance._id, { user: adminUser }).catch(() => {/* already removed */})
+    })
+
+    it('fails to delete a dance used in a workshop', async () => {
+      const events = await app.service('events').find({ user: adminUser }) as Events[]
+      const workshop = await app.service('workshops').create(
+        {
+          name: 'Workshop using dance',
+          abbreviation: 'WUD',
+          description: 'A workshop that references the dance',
+          teachers: 'Test Teacher',
+          instanceSpecificDances: false,
+          eventId: events[0]._id,
+          instances: [
+            {
+              _id: 'inst-1',
+              description: 'Instance 1',
+              abbreviation: 'I1',
+              dateTime: '2026-01-01T10:00:00.000Z',
+              durationInMinutes: 60,
+              danceIds: [dance._id],
+            },
+          ],
+        } as WorkshopsData,
+        { user: adminUser },
+      ) as Workshops
+
+      await waitForDependencyRegistration()
+
+      try {
+        await expect(
+          app.service('dances').remove(dance._id, { user: adminUser }),
+        ).to.be.rejectedWith('still in use')
+      } finally {
+        await app.service('workshops').remove(workshop._id, { user: adminUser })
+      }
+    })
+
+    it('fails to delete a dance used in an event program', async () => {
+      const event = await app.service('events').create(
+        {
+          name: 'Event using dance',
+          beginDate: '2026-06-01',
+          endDate: '2026-06-01',
+        } as EventsData,
+        { user: adminUser },
+      ) as Events
+
+      await app.service('events').patch(
+        event._id,
+        {
+          program: {
+            dateTime: '2000-01-01T00:00:00',
+            introductions: { title: '', titleSlideStyleId: null, program: [] },
+            slideStyleId: null,
+            pauseBetweenDances: 0,
+            defaultIntervalMusic: { name: null, description: null, showInLists: false },
+            danceSets: [
+              {
+                _id: 'ds-1',
+                title: 'Dance Set 1',
+                titleSlideStyleId: null,
+                intervalMusic: null,
+                program: [
+                  {
+                    _id: 'pi-1',
+                    slideStyleId: null,
+                    type: 'Dance' as const,
+                    danceId: dance._id,
+                    eventProgram: null,
+                  },
+                ],
+              },
+            ],
+          },
+        } as any,
+        { user: adminUser },
+      )
+
+      await waitForDependencyRegistration()
+
+      try {
+        await expect(
+          app.service('dances').remove(dance._id, { user: adminUser }),
+        ).to.be.rejectedWith('still in use')
+      } finally {
+        await app.service('events').remove(event._id, { user: adminUser })
+      }
     })
   })
 
