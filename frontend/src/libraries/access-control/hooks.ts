@@ -27,21 +27,23 @@ export function useRights(rights: RightsList, context?: RightQueryContext): bool
     return parsedRights.map(hasCachedRight)
   })
 
+  const loadRightsResult = useCallback(() => {
+    idRef.current += 1
+    const id = idRef.current
+    Promise.all(parsedRights.map(hasRight)).then(newestResult => {
+      if (id !== idRef.current) return
+      console.log('Loaded rights result:', { query: parsedRights, result: newestResult })
+      setResult(newestResult)
+    })
+  }, [parsedRights, hasRight])
   useEffect(() => {
-    const loadRightsResult = () => {
-      idRef.current += 1
-      const id = idRef.current
-      Promise.all(parsedRights.map(hasRight)).then(newestResult => {
-        if (id !== idRef.current) return
-        setResult(newestResult)
-      })
-    }
-
-    if (parsedRights.some(r => r === undefined)) {
+    return subscribe(loadRightsResult)
+  }, [loadRightsResult, subscribe])
+  useEffect(() => {
+    if (result.some(r => r === undefined)) {
       loadRightsResult()
     }
-    return subscribe(loadRightsResult)
-  }, [parsedRights, hasRight, subscribe])
+  }, [result, loadRightsResult])
 
   return result.map(r => r === true)
 }
