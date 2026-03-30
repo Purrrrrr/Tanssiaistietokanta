@@ -8,7 +8,7 @@ import { DanceIsUsedIn } from 'components/dance/DanceIsUsedIn'
 import { danceVersionLink } from 'components/dance/DanceLink'
 import { DeleteDanceButton } from 'components/dance/DeleteDanceButton'
 import { LoadingState } from 'components/LoadingState'
-import { Page } from 'components/Page'
+import { Page, Toolbar } from 'components/Page'
 import VersionableContentContainer from 'components/versioning/VersionableContentContainer'
 import { VersionSidebarToggle } from 'components/versioning/VersionSidebarToggle'
 import { BackLink } from 'components/widgets/BackLink'
@@ -78,13 +78,13 @@ function DancePage() {
       <BackLink to="/dances">{t('backToDanceList')}</BackLink>
     }
     toolbar={
-      <div className="flex items-center">
+      <Toolbar>
         <VersionSidebarToggle entityType="dance" entityId={dance._id} versionId={dance._versionId ?? undefined} toVersionLink={danceVersionLink} />
         <DanceIsUsedIn events={dance.events} />
         <div>
           <DeleteDanceButton dance={dance} onDelete={() => { navigate({ to: '/dances' }) }} />
         </div>
-      </div>
+      </Toolbar>
     }
   >
     <DanceEditor dance={dance} />

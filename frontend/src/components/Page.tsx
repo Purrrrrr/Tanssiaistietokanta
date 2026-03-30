@@ -55,6 +55,12 @@ function shouldMenuBeOpen() {
   return true || window.innerWidth > 768
 }
 
+export function Toolbar({ children }: { children: React.ReactNode }) {
+  return <div className="flex flex-wrap items-center gap-2">
+    {children}
+  </div>
+}
+
 function Menu({ children, open }: { children: React.ReactNode, open?: boolean }) {
   if (navigationHidden()) {
     return null

@@ -9,7 +9,7 @@ import { Cog, Presentation } from 'libraries/ui/icons'
 import { MissingDanceInstructionsCounterTag } from 'components/event/EventProgramEditor/components'
 import { EventMetadataContext } from 'components/event/EventProgramForm/eventMetadata'
 import { LoadingState } from 'components/LoadingState'
-import { MenuLink, MenuSection, Page } from 'components/Page'
+import { MenuLink, MenuSection, Page, Toolbar } from 'components/Page'
 import VersionableContentContainer from 'components/versioning/VersionableContentContainer'
 import { VersionSidebarToggle } from 'components/versioning/VersionSidebarToggle'
 import { NavigateButton } from 'components/widgets/NavigateButton'
@@ -74,7 +74,7 @@ function RouteComponent() {
           showVersion={!!eventVersionId}
           versionNumber={event._versionNumber}
           toolbar={
-            <>
+            <Toolbar>
               <NavigateButton
                 minimal
                 to="/events/$eventId/{-$eventVersionId}/ball-program/{-$slideId}"
@@ -84,7 +84,7 @@ function RouteComponent() {
                 icon={<Presentation />}
               />
               <VersionSidebarToggle entityType="event" entityId={event._id} versionId={event._versionId ?? undefined} toVersionLink={eventVersionLink} />
-            </>
+            </Toolbar>
           }
           menu={canEdit &&
           <>

@@ -8,7 +8,7 @@ import { CreateDanceButtons } from 'components/dance/CreateDanceButtons'
 import { AnyCategory, anyCategory, DanceViewCategorySelector } from 'components/dance/DanceCategorySelector'
 import { DanceList } from 'components/dance/DanceList'
 import { LoadingState } from 'components/LoadingState'
-import { Page } from 'components/Page'
+import { Page, Toolbar } from 'components/Page'
 import { useT, useTranslation } from 'i18n'
 
 interface DanceSearchParams {
@@ -40,7 +40,7 @@ function DancesPage() {
   return <Page
     title={t('pageTitle')}
     toolbar={
-      <div className="flex flex-wrap gap-2">
+      <Toolbar>
         <SearchBar id="search-dances" value={search} onChange={setSearch} placeholder={useTranslation('common.search')} emptySearchText={useTranslation('common.emptySearch')} />
         <RequirePermissions requireRight="dances:create">
           <div>
@@ -51,7 +51,7 @@ function DancesPage() {
         <FormGroup inline label={useTranslation('domain.dance.category')} labelFor="dancecategory">
           <DanceViewCategorySelector id="dancecategory" value={category} onChange={setCategory} dances={dances} />
         </FormGroup>
-      </div>
+      </Toolbar>
     }
   >
     <LoadingState {...requestState} />
