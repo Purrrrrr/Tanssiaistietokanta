@@ -5,17 +5,17 @@ import { useEvent } from 'services/events'
 import { useRight } from 'libraries/access-control'
 import { useFormatDate } from 'libraries/i18n/dateTime'
 import { Breadcrumb } from 'libraries/ui'
-import { Edit, Link as LinkIcon, Presentation } from 'libraries/ui/icons'
+import { Edit, Presentation } from 'libraries/ui/icons'
 import { MissingDanceInstructionsCounterTag } from 'components/event/EventProgramEditor/components'
 import { EventMetadataContext } from 'components/event/EventProgramForm/eventMetadata'
 import { LoadingState } from 'components/LoadingState'
 import { MenuLink, MenuSection, Page } from 'components/Page'
 import VersionableContentContainer from 'components/versioning/VersionableContentContainer'
 import { VersionSidebarToggle } from 'components/versioning/VersionSidebarToggle'
+import { NavigateButton } from 'components/widgets/NavigateButton'
 import { useT } from 'i18n'
 
 import { EventContext } from './-context'
-import { NavigateButton } from 'components/widgets/NavigateButton'
 
 export const Route = createFileRoute(
   '/events/$eventId/{-$eventVersionId}',

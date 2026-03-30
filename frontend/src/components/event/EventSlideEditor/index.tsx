@@ -47,7 +47,7 @@ export function EventSlideEditor({ syncStatus, ...props }: EventSlideEditorProps
 
   return <div className="p-5">
     {syncStatus && <SyncStatus className="mb-2" state={syncStatus} />}
-    <div className="flex justify-between gap-3.5">
+    <div className="flex gap-3.5 justify-between">
       <div>
         <ParentLink {...props} />
         <H2 className="mb-4">{props.title}</H2>
@@ -90,7 +90,7 @@ function ParentLink(props: WithEventProgram<EventSlideProps>) {
       title = props.eventProgram.danceSets[props.danceSetIndex].title
     }
   }
-  return <LinkToSlide unstyled className="cursor-pointer hover:underline mb-2 block" id={props.parentId}>
+  return <LinkToSlide unstyled className="block mb-2 cursor-pointer hover:underline" id={props.parentId}>
     <ArrowLeft size={10} className="pb-0.5" /> {title}
   </LinkToSlide>
 }

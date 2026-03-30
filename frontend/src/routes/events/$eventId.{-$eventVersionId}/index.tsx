@@ -10,7 +10,6 @@ import { Button, Card, Collapse, H2 } from 'libraries/ui'
 import { DanceSet, EventProgramRow } from 'components/event/EventProgramForm'
 import { FileList } from 'components/files/FileList'
 import { DeleteButton } from 'components/widgets/DeleteButton'
-import { NavigateButton } from 'components/widgets/NavigateButton'
 import { newInstance, WorkshopEditor } from 'components/WorkshopEditor'
 import { useFormatDateTime, useT, useTranslation } from 'i18n'
 
@@ -91,7 +90,7 @@ function EventWorkshops({ event, readOnly }: { event: Event, readOnly: boolean }
   </>
 }
 
-function CreateWorkshopButton({ eventId, startDate }) {
+function CreateWorkshopButton({ eventId, startDate }: { eventId: string, startDate: string }) {
   const t = useT('pages.events.eventPage')
   const [createWorkshop] = useCreateWorkshop()
 
@@ -105,7 +104,7 @@ function CreateWorkshopButton({ eventId, startDate }) {
   />
 }
 
-function newWorkshop({ eventId, name }, startDate) {
+function newWorkshop({ eventId, name }, startDate: string) {
   const { dances: _, ...instance } = newInstance(undefined, startDate)
   return {
     eventId: eventId,

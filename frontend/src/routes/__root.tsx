@@ -41,7 +41,7 @@ export const Route = createRootRouteWithContext<DanceOrganizerRootRouteContext>(
     ])
   },
   notFoundComponent: () =>
-    <div className="flex flex-col items-center gap-4">
+    <div className="flex flex-col gap-4 items-center">
       <img alt="404" src="/404.png" />
       <PageTitle>Page not found</PageTitle>
     </div>,

@@ -172,7 +172,7 @@ const showcases: Showcase<Record<string, unknown>>[] = [
       icon: booleanProp({ default: true }),
     },
     render: ({ disabled, icon, minimal, active }) =>
-      <div className="flex gap-2 flex-wrap">
+      <div className="flex flex-wrap gap-2">
         {colors.map(color =>
           <AnchorButton key={color} href="#" color={color} minimal={minimal} icon={icon ? <Trash /> : undefined} active={active} aria-disabled={disabled}>{titleCase(color)}</AnchorButton>,
         )}
@@ -192,7 +192,7 @@ function range(count: number): number[] {
 
 function SwitchShowcase() {
   const [on, setOn] = useState(false)
-  return <div className="grid grid-flow-row grid-cols-2 grid-rows-2">
+  return <div className="grid grid-cols-2 grid-rows-2 grid-flow-row">
     <Switch id="demo-switch1" value={on} onChange={setOn} label="Switch" />
     <Switch id="demo-switch2" value={!on} onChange={(v) => setOn(!v)} label="Opposite switch" />
     <Switch id="demo-switch3" value={on} readOnly label="Readonly switch" onChange={() => {}} />

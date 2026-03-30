@@ -9,11 +9,10 @@ import { useCreateEvent } from 'services/events'
 import { useCurrentUser } from 'services/users'
 
 import { DateRangeField, formFor, SubmitButton } from 'libraries/forms'
-import { PageTitle } from 'components/PageTitle'
+import { Page } from 'components/Page'
 import { EventGrantsEditor } from 'components/rights/EventGrantsEditor'
 import { useT } from 'i18n'
 import { guid } from 'utils/guid'
-import { Page } from 'components/Page'
 
 const {
   Form,

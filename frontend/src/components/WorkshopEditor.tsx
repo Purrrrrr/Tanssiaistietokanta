@@ -10,6 +10,7 @@ import { ColorClass, FormGroup } from 'libraries/ui'
 import { DanceChooser } from 'components/widgets/DanceChooser'
 import { useT, useTranslation } from 'i18n'
 import { guid } from 'utils/guid'
+
 import TeacherSelector from './volunteers/TeacherSelector'
 
 type Workshop = Event['workshops'][0]

@@ -1,4 +1,4 @@
-import { ComponentType, lazy, useEffect, useId, useSyncExternalStore } from 'react'
+import { useEffect, useId, useSyncExternalStore } from 'react'
 
 import { useDelayedValue } from 'libraries/common/useDelayedValue'
 import { GlobalSpinner } from 'libraries/ui'

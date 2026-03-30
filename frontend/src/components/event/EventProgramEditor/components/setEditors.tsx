@@ -108,7 +108,7 @@ function ProgramListEditor({ path }: { path: ProgramSectionPath }) {
       />
       {intervalMusicDuration > 0 && <IntervalMusicEditor danceSetPath={path as DanceSetPath} />}
       <div>
-        <div className="p-1.5 col-span-2">
+        <div className="col-span-2 p-1.5">
           <ProgramItemCounters program={programRow.program} />
           {isIntroductionsSection
             ? <AddIntroductionButton />
@@ -120,7 +120,7 @@ function ProgramListEditor({ path }: { path: ProgramSectionPath }) {
             </span>
           }
         </div>
-        <div className="p-1.5 col-span-2">
+        <div className="col-span-2 p-1.5">
           <DanceSetDuration program={program} intervalMusicDuration={intervalMusicDuration} />
         </div>
       </div>

@@ -1,5 +1,6 @@
 import { createLink } from '@tanstack/react-router'
 import { ComponentProps } from 'react'
+import { Share } from '@blueprintjs/icons'
 import classNames from 'classnames'
 
 import { omitPermissionCheckingProps, withPermissionChecking } from 'libraries/access-control'
@@ -8,7 +9,6 @@ import { navigationHidden } from 'utils/routeUtils'
 
 import { PageTitle } from './PageTitle'
 import { VersionedPageTitle } from './versioning/VersionedPageTitle'
-import { Share } from '@blueprintjs/icons'
 
 export interface PageContentProps {
   title: string
@@ -27,16 +27,16 @@ export function Page({ children, title, info, showVersion, versionNumber, toolba
     return children
   }
 
-  return <div className="grid grid-cols-[auto_1fr] grid-rows-[auto_auto_1fr] gap-4">
+  return <div className="grid gap-4 grid-cols-[auto_1fr] grid-rows-[auto_auto_1fr]">
     <div className="col-span-full">
       {backLink}
     </div>
-    <div className="col-span-full -mb-4 flex items-end gap-4">
+    <div className="flex flex-wrap col-span-full gap-4 items-end -mb-4">
       {showVersion && versionNumber
         ? <VersionedPageTitle versionNumber={versionNumber}>{title}</VersionedPageTitle>
         : <PageTitle>{title}</PageTitle>
       }
-      <div className="grow text-lg ps-3 pb-3">{info}</div>
+      <div className="pb-3 text-lg grow ps-3">{info}</div>
       {toolbar}
     </div>
     {menu && <Menu>{menu}</Menu>}
@@ -49,14 +49,14 @@ function Menu({ children }: { children: React.ReactNode }) {
     return null
   }
 
-  return <div className="min-w-52 bg-gray-50 rounded flex flex-col">
+  return <div className="flex flex-col bg-gray-50 rounded min-w-52">
     {children}
   </div>
 }
 
 export function MenuSection({ children, title }: { children: React.ReactNode, title: React.ReactNode }) {
   return <>
-    <h2 className="px-4 font-bold my-3 text-lg">{title}</h2>
+    <h2 className="px-4 my-3 text-lg font-bold">{title}</h2>
     <ul className="mb-3">
       {children}
     </ul>

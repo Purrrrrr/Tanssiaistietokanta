@@ -21,8 +21,8 @@ export function DurationField({ value: maybeValue, onChange, readOnly, className
 
   useDelayedEffect(10, useCallback(() => {
     const { value, text, fromEvent } = params
-    const newVal = parseDuration(text)
     if (!fromEvent) return
+    const newVal = parseDuration(text)
     if (newVal === value) { // Text has changed but value hasn't. Reset text!
       setParams({ value, text: durationToString(value) })
     } else { // Propagate changed value

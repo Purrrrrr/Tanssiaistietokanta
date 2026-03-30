@@ -143,7 +143,7 @@ function SortButton({ sortKey, currentSort, onSort, children }: SortButtonProps)
     }}
     aria-sort={isCurrent ? (isAscending ? 'ascending' : 'descending') : undefined}
     minimal
-    className="flex items-center gap-1 first:rounded-tl-md last:rounded-tr-md"
+    className="flex gap-1 items-center first:rounded-tl-md last:rounded-tr-md"
   >
     {children}
     {isCurrent && <CaretDown className={classNames('transition-transform', isAscending && 'rotate-180')} />}

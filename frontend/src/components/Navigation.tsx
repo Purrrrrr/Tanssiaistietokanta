@@ -37,7 +37,7 @@ function Navigation() {
     </div>
     <div className="flex items-center">
       <NavButton requireRight="dances:list" icon={<span className="mr-0.5">💃</span>} to="/dances" text={useTranslation('navigation.dances')} />
-      <div className="mx-1 self-stretch w-[1px] bg-stone-300" />
+      <div className="self-stretch mx-1 w-[1px] bg-stone-300" />
       <LoginStatus />
     </div>
   </nav>
@@ -53,7 +53,7 @@ function LoginStatus() {
 
   if (user) {
     return <span>
-      <MenuButton text={user.name} buttonRenderer={props => <Button minimal icon={<User className="mt-[1px] mr-0.5 text-amber-600" />} {...props} />}>
+      <MenuButton text={user.name} buttonRenderer={props => <Button minimal icon={<User className="mr-0.5 text-amber-600 mt-[1px]" />} {...props} />}>
         <NavigateButton minimal to="/users">{t('userSettings')}</NavigateButton>
         <Button minimal onClick={logout}>{t('logout')}</Button>
       </MenuButton>
@@ -63,7 +63,7 @@ function LoginStatus() {
   return <NavigateButton
     minimal
     to="/login"
-    icon={<User className="mt-[1px] text-orange-500" />}
+    icon={<User className="text-orange-500 mt-[1px]" />}
     text={t('login')}
   />
 }

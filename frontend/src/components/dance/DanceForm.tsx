@@ -5,8 +5,8 @@ import { Dance, DanceWithEvents, EditableDance } from 'types'
 import { cleanMetadataValues } from 'backend'
 import { usePatchDance } from 'services/dances'
 
-import { formFor, patchStrategy, useAutosavingState } from 'libraries/forms'
 import { useRight } from 'libraries/access-control'
+import { formFor, patchStrategy, useAutosavingState } from 'libraries/forms'
 
 const {
   Form,

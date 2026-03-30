@@ -31,7 +31,7 @@ export default function AutocompleteMultipleInput<T>({
       <ul className={'flex flex-wrap items-center gap-x-1 p-1 rounded-sm ' + CssClass.inputBox}>
         {value.map((item, index) =>
           <li
-            className="inline-flex items-center bg-neutral border-1 border-stone-300 ps-2 rounded-sm overflow-clip"
+            className="inline-flex items-center rounded-sm bg-neutral border-1 border-stone-300 ps-2 overflow-clip"
             key={`${itemToString(item)}${index}}`}
           >
             {renderItem(item)}
