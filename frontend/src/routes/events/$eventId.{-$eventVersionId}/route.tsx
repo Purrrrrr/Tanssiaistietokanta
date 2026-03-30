@@ -5,7 +5,7 @@ import { useEvent } from 'services/events'
 import { useRight } from 'libraries/access-control'
 import { useFormatDate } from 'libraries/i18n/dateTime'
 import { Breadcrumb } from 'libraries/ui'
-import { Edit, Presentation } from 'libraries/ui/icons'
+import { Cog, Presentation } from 'libraries/ui/icons'
 import { MissingDanceInstructionsCounterTag } from 'components/event/EventProgramEditor/components'
 import { EventMetadataContext } from 'components/event/EventProgramForm/eventMetadata'
 import { LoadingState } from 'components/LoadingState'
@@ -89,7 +89,7 @@ function RouteComponent() {
           <>
             <MenuSection title={t('menu.title')}>
               <MenuLink from={Route.id} to="." activeOptions={{ exact: true }} text={t('menu.basicInfo')} />
-              <MenuLink from={Route.id} to="./edit" text={t('menu.editBasicInfo')} icon={<Edit />} />
+              <MenuLink from={Route.id} to="./edit" text={t('menu.editBasicInfo')} icon={<Cog />} />
             </MenuSection>
             <MenuSection title={t('menu.ball.title')}>
               <MenuLink from={Route.id} to="./program/main" text={t('menu.ball.ballProgram')} />

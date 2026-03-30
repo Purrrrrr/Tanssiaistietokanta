@@ -6,6 +6,7 @@ export {
   ChevronLeft,
   ChevronRight,
   ChevronUp,
+  Cog,
   Cross,
   DocumentOpen,
   DoubleCaretVertical,
