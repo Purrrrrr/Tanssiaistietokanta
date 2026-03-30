@@ -26,7 +26,7 @@ export default function UiShowcase() {
       {showcases.map(scase =>
         <MenuLink
           key={scase.title}
-          to="."
+          to="/ui-showcase"
           hash={scase.title}
           activeOptions={{
             includeHash: true,

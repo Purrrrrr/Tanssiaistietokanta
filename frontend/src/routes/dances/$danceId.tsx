@@ -75,7 +75,7 @@ function DancePage() {
     showVersion={!!versionId}
     versionNumber={dance._versionNumber}
     backLink={
-      <BackLink to="..">{t('backToDanceList')}</BackLink>
+      <BackLink to="/dances">{t('backToDanceList')}</BackLink>
     }
     toolbar={
       <div className="flex items-center">

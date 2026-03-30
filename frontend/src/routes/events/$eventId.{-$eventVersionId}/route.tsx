@@ -63,6 +63,7 @@ function RouteComponent() {
   const formatDate = useFormatDate()
   const canEdit = useRight('events:modify', { entityId: eventId })
   const t = useT('pages.events.eventPage')
+  const params = { eventId, eventVersionId }
 
   return <VersionableContentContainer>
     {event
@@ -76,8 +77,8 @@ function RouteComponent() {
             <>
               <NavigateButton
                 minimal
-                from={Route.id}
-                to="./ball-program/{-$slideId}"
+                to="/events/$eventId/{-$eventVersionId}/ball-program/{-$slideId}"
+                params={params}
                 target="_blank"
                 text={t('menu.ball.openSlideShow')}
                 icon={<Presentation />}
@@ -88,12 +89,12 @@ function RouteComponent() {
           menu={canEdit &&
           <>
             <MenuSection title={t('menu.title')}>
-              <MenuLink from={Route.id} to="." activeOptions={{ exact: true }} text={t('menu.basicInfo')} />
-              <MenuLink from={Route.id} to="./edit" text={t('menu.editBasicInfo')} icon={<Cog />} />
+              <MenuLink to="/events/$eventId/{-$eventVersionId}" params={params} activeOptions={{ exact: true }} text={t('menu.basicInfo')} />
+              <MenuLink to="/events/$eventId/{-$eventVersionId}/edit" params={params} text={t('menu.editBasicInfo')} icon={<Cog />} />
             </MenuSection>
             <MenuSection title={t('menu.ball.title')}>
-              <MenuLink from={Route.id} to="./program/main" text={t('menu.ball.ballProgram')} />
-              <MenuLink from={Route.id} to="./program/slides/{-$slideId}">
+              <MenuLink to="/events/$eventId/{-$eventVersionId}/program/main" params={params} text={t('menu.ball.ballProgram')} />
+              <MenuLink to="/events/$eventId/{-$eventVersionId}/program/slides/{-$slideId}" params={params}>
                 {t('menu.ball.editSlideShow')}
                 <EventMetadataContext program={event.program} workshops={event.workshops}>
                   <MissingDanceInstructionsCounterTag />
@@ -102,18 +103,18 @@ function RouteComponent() {
             </MenuSection>
             <MenuSection title={t('menu.print')}>
               <MenuLink
-                from={Route.id}
-                to="./print/ball-dancelist"
+                to="/events/$eventId/{-$eventVersionId}/print/ball-dancelist"
+                params={params}
                 target="_blank"
                 text={t('printBallDanceList')} />
               <MenuLink
-                from={Route.id}
-                to="./print/dance-cheatlist"
+                to="/events/$eventId/{-$eventVersionId}/print/dance-cheatlist"
+                params={params}
                 target="_blank"
                 text={t('danceCheatlist')} />
               <MenuLink
-                from={Route.id}
-                to="./print/dance-instructions"
+                to="/events/$eventId/{-$eventVersionId}/print/dance-instructions"
+                params={params}
                 target="_blank"
                 text={t('danceInstructions')} />
             </MenuSection>
