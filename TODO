@@ -323,6 +323,7 @@
     * Collapse
     * AnchorButton
     * Breadcrumbs
+* Fix: Logged out users do not see events
   Better layout
   * Full width
   * Side menu
@@ -330,11 +331,12 @@
   * Event side menu contents
   * Titles on event subpages
   * Make menu hideable, mobile layout for menu
-    Common toolbar style
+  * Common toolbar style
+  * Migrate 3 component page title code into one file
+  * Find a way to show syncstatus nicely
     Provide some links between pages without the menu for redundancy
-    Find a way to show syncstatus nicely
     Change translation keys to somewhat match new structure
-    Migrate 3 component page title code into one file
+
 
   Teacher/people database
   * Apuopettajat / assistant teachers
