@@ -363,6 +363,9 @@ export const fi = {
     },
   },
   pages: {
+    notFound: {
+      pageNotFound: 'Sivua ei löytynyt',
+    },
     events: {
       eventList: {
         pageTitle: 'Tanssiaistietokanta',

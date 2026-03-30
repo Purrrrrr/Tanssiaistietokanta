@@ -5,8 +5,8 @@ import { RightsQuery } from 'libraries/access-control/types'
 
 import { Breadcrumb } from 'libraries/ui'
 import NavigationLayout from 'components/NavigationLayout'
-import { PageTitle } from 'components/PageTitle'
-import { T, TranslationKey } from 'i18n'
+import { Page } from 'components/Page'
+import { T, TranslationKey, useT } from 'i18n'
 import { type DanceOrganizerRootRouteContext, ErrorComponent } from 'utils/routeUtils'
 
 declare module '@tanstack/react-router' {
@@ -40,11 +40,7 @@ export const Route = createRootRouteWithContext<DanceOrganizerRootRouteContext>(
       ...usedRights.map(context.hasAccess),
     ])
   },
-  notFoundComponent: () =>
-    <div className="flex flex-col gap-4 items-center">
-      <img alt="404" src="/404.png" />
-      <PageTitle>Page not found</PageTitle>
-    </div>,
+  notFoundComponent: NotFound,
   staticData: {
     breadcrumb: () => <Breadcrumb to="/"><img className="mr-2" src="/fan32.png" alt="" /><T msg="app.title" /></Breadcrumb>,
     usesRights: ['dances:list'],
@@ -68,4 +64,11 @@ function RootComponent() {
       <TanStackRouterDevtools />
     </NavigationLayout>
   )
+}
+
+function NotFound() {
+  const t = useT('pages.notFound')
+  return <Page title={t('pageNotFound')}>
+    <img alt="404" src="/404.png" />
+  </Page>
 }

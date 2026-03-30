@@ -99,7 +99,6 @@ h1, h2 {
   &:has(> aside > :not(:empty)) {
     --sidebar-size: min(25%, 400px);
   }
-  --sidebar-anim-speed: 0.5s;
 
   display: grid;
   grid-template: "main sidebar" 1fr
@@ -131,12 +130,11 @@ h1, h2 {
   & > aside {
     position: relative;
     grid-area: sidebar;
-    background: #f8f8f8;
-    box-shadow: 0px 0px 10px rgba(0,0,0, 0.5);
   }
   & > aside > :not(:empty) {
     display: flex;
     flex-direction: column;
+    @apply bg-gray-50 rounded m-2;
     padding: 10px 20px;
     position: sticky;
     top: 0;
