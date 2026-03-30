@@ -57,14 +57,6 @@
 }
 
 @layer components {
-  .formgroup-inline {
-    display: inline-flex;
-    margin-bottom: 0
-  }
-  .formgroup-inline-fill > div {
-    flex: 1 1 auto;
-  }
-
   .interactive-control-filled {
     color: oklch(
       from var(--bg-mix-base)
@@ -182,7 +174,7 @@
   .bp5-form-group{
     display:flex;
     flex-direction:column;
-    margin:0 0 15px;
+    margin-bottom: 15px;
     & label.bp5-label{
       margin-bottom:5px;
     }
@@ -200,6 +192,14 @@
       }
     }
   }
+  .formgroup-inline {
+    display: inline-flex;
+    margin-bottom: 0
+  }
+  .formgroup-inline-fill > div {
+    flex: 1 1 auto;
+  }
+
   label.bp5-label{
     display:block;
     margin-top:0;

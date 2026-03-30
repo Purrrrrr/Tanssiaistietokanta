@@ -33,7 +33,7 @@ interface CardProps extends Omit<HTMLDivProps, 'onClick'> {
 }
 
 export function H2({ children, className }: { children: React.ReactNode, className?: string }) {
-  return <h2 className={classNames(className ?? 'my-4', 'font-bold text-lg')}>{children}</h2>
+  return <h2 className={classNames(className ?? 'mb-4', 'font-bold text-lg')}>{children}</h2>
 }
 
 export function Card({ className, noPadding = false, marginClass, ...props }: CardProps) {
@@ -42,7 +42,7 @@ export function Card({ className, noPadding = false, marginClass, ...props }: Ca
     className={classNames(
       'border-1 border-gray-200 shadow-gray-300 shadow-xs',
       noPadding || 'p-6',
-      marginClass ?? 'my-2',
+      marginClass ?? 'mb-4',
       className,
     )}
   />

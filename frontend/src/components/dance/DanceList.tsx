@@ -26,9 +26,9 @@ export function DanceList({ dances: unsortedDances }: DanceListProps) {
   const [sort, setSort] = useState<Sort>({ key: 'name', direction: 'asc' })
   const dances = sortedBy(unsortedDances, danceSorter(sort.key), sort.direction === 'desc')
 
-  return <div className="mt-6">
+  return <div>
     {dances.length > 0 &&
-      <p className="my-3">{t('showingNDances', { count: dances.length })}</p>
+      <p>{t('showingNDances', { count: dances.length })}</p>
     }
     <InfiniteItemLoader items={dances}>
       {dances =>

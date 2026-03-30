@@ -16,6 +16,7 @@ export {
   History,
   InfoSign,
   Link,
+  Menu,
   Move,
   Music,
   Outdated,

@@ -21,11 +21,16 @@
     position: relative;
     background: #fff8;
     &:before {
-      position: fixed;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      padding-inline: 100px;
+      display: block;
+      width: 100%;
+      @media (min-width: 400px) {
+        position: fixed;
+        top: 0px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: max-content;
+      }
+      padding-inline: min(100px, 10vw);
       height: 50px;
       z-index: -1;
       text-align: center;
@@ -36,6 +41,9 @@
       color: #b20;
       background-repeat: no-repeat;
       background-image: linear-gradient(90deg, #fff0 0%, #fb03 50%, #fff0 100%);
+      @media (max-width: 800px) {
+        font-size: 1em;
+      }
     }
   }
 }

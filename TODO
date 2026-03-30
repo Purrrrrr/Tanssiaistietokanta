@@ -329,7 +329,9 @@
   * Better side menu styles
   * Event side menu contents
   * Titles on event subpages
-    Make menu expandable, mobile layout for menu
+  * Make menu hideable, mobile layout for menu
+    Common toolbar style
+    Provide some links between pages without the menu for redundancy
     Find a way to show syncstatus nicely
     Change translation keys to somewhat match new structure
     Migrate 3 component page title code into one file

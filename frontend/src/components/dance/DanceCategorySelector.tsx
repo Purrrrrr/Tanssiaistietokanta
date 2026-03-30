@@ -69,6 +69,7 @@ export function DanceViewCategorySelector({ id, value, onChange, dances }: Dance
   }
 
   return <Select<DanceViewCategory>
+    inline
     filterable
     id={id}
     value={value}

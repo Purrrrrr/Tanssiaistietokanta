@@ -50,7 +50,7 @@ function RouteComponent() {
   return <Form {...formProps}>
     <SyncStatus state={state} floatRight />
     <H2>{t('menu.editBasicInfo')}</H2>
-    <div className="flex gap-6">
+    <div className="flex flex-wrap gap-6">
       <Input label={t('eventName')} path="name" required containerClassName="w-100" />
       <DateRangeField<Event>
         id="eventDate"

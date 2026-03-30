@@ -47,6 +47,9 @@ h1, h2 {
   font-weight: 500;
   font-style: normal;
   line-height: 1;
+  @media (max-width: 800px) {
+    font-size: 4em;
+  }
 }
 
 ::-moz-selection{

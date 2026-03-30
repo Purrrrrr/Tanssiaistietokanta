@@ -1,14 +1,17 @@
 import { createLink } from '@tanstack/react-router'
-import { ComponentProps } from 'react'
-import { Share } from '@blueprintjs/icons'
+import { ComponentProps, useState } from 'react'
+import { Menu as MenuHamburger, Share } from '@blueprintjs/icons'
 import classNames from 'classnames'
 
 import { omitPermissionCheckingProps, withPermissionChecking } from 'libraries/access-control'
 import { SyncState } from 'libraries/forms'
+import { Button } from 'libraries/ui'
 import { navigationHidden } from 'utils/routeUtils'
 
 import { PageTitle } from './PageTitle'
 import { VersionedPageTitle } from './versioning/VersionedPageTitle'
+
+import './Page.css'
 
 export interface PageContentProps {
   title: string
@@ -23,41 +26,54 @@ export interface PageContentProps {
 }
 
 export function Page({ children, title, info, showVersion, versionNumber, toolbar, backLink, menu }: PageContentProps) {
+  const [menuOpen, setMenuOpen] = useState<boolean>(shouldMenuBeOpen)
   if (navigationHidden()) {
     return children
   }
 
-  return <div className="grid gap-4 grid-cols-[auto_1fr] grid-rows-[auto_auto_1fr]">
-    <div className="col-span-full">
-      {backLink}
+  return <>
+    {backLink}
+    <div className={classNames('page', (!!menu && menuOpen) && 'menu-open')}>
+      <div className="title flex flex-wrap items-end gap-4">
+        {showVersion && versionNumber
+          ? <VersionedPageTitle versionNumber={versionNumber}>{title}</VersionedPageTitle>
+          : <PageTitle>{title}</PageTitle>
+        }
+        <div className="pb-3 text-lg ps-3">{info}</div>
+      </div>
+      {menu && <div className="menu-toggle col-span-full">
+        <Button minimal icon={<MenuHamburger />} className="" onClick={() => setMenuOpen(!menuOpen)} />
+      </div>}
+      {toolbar && <div className="toolbar">{toolbar}</div>}
+      {menu && <Menu open={menuOpen}>{menu}</Menu>}
+      <PageContent>{children}</PageContent>
     </div>
-    <div className="flex flex-wrap col-span-full gap-4 items-end -mb-4">
-      {showVersion && versionNumber
-        ? <VersionedPageTitle versionNumber={versionNumber}>{title}</VersionedPageTitle>
-        : <PageTitle>{title}</PageTitle>
-      }
-      <div className="pb-3 text-lg grow ps-3">{info}</div>
-      {toolbar}
-    </div>
-    {menu && <Menu>{menu}</Menu>}
-    <PageContent>{children}</PageContent>
-  </div>
+  </>
 }
 
-function Menu({ children }: { children: React.ReactNode }) {
+function shouldMenuBeOpen() {
+  return true || window.innerWidth > 768
+}
+
+function Menu({ children, open }: { children: React.ReactNode, open?: boolean }) {
   if (navigationHidden()) {
     return null
   }
 
-  return <div className="flex flex-col bg-gray-50 rounded min-w-52">
+  const classes = classNames(
+    'menu flex-col bg-gray-50 rounded min-w-52 py-3',
+    open && 'open',
+  )
+
+  return <div className={classes}>
     {children}
   </div>
 }
 
 export function MenuSection({ children, title }: { children: React.ReactNode, title: React.ReactNode }) {
   return <>
-    <h2 className="px-4 my-3 text-lg font-bold">{title}</h2>
-    <ul className="mb-3">
+    <h2 className="px-4 min-[800px]:my-3 text-lg font-bold">{title}</h2>
+    <ul className="max-[800px]:flex flex-wrap">
       {children}
     </ul>
   </>
@@ -98,7 +114,7 @@ function PageContent({ children }: { children: React.ReactNode }) {
     return children
   }
 
-  return <div className="col-start-2 min-w-0">
+  return <div className="content min-w-0">
     {children}
   </div>
 }
