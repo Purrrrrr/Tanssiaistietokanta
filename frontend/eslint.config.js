@@ -2,6 +2,7 @@ import react from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
 import eslint from '@eslint/js'
 import stylistic from '@stylistic/eslint-plugin'
+import pluginRouter from '@tanstack/eslint-plugin-router'
 import { defineConfig } from 'eslint/config'
 import importPlugin from 'eslint-plugin-import'
 import reactA11y from 'eslint-plugin-jsx-a11y'
@@ -42,6 +43,7 @@ const importSortGroups = [
 
 export default defineConfig(
   { ignores: ['dist', '.vite', 'src/types/gql/*.ts'] },
+  pluginRouter.configs['flat/recommended'],
   eslint.configs.recommended,
   tseslint.configs.strict,
   tseslint.configs.stylisticTypeChecked,
