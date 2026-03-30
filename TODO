@@ -323,12 +323,23 @@
     * Collapse
     * AnchorButton
     * Breadcrumbs
+  Better layout
+  * Full width
+  * Side menu
+  * Better side menu styles
+  * Event side menu contents
+  * Titles on event subpages
+    Make menu expandable, mobile layout for menu
+    Find a way to show syncstatus nicely
+    Change translation keys to somewhat match new structure
+    Migrate 3 component page title code into one file
 
   Teacher/people database
   * Apuopettajat / assistant teachers
     Event signed up volunteers list
       Notes
     Check GDPR stuff
+    Separate workshop pages for events
 
   Add tests to check that used dances are not deletable
   Add test that workshops are deleted when the event is
