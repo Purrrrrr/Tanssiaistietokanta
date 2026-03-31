@@ -8,7 +8,7 @@ import { dataValidator, queryValidator } from '../../validators'
 import type { AccessService } from './access.class'
 import { Id } from '../../utils/common-types'
 
-const serviceNames = ['events', 'workshops', 'dances', 'users', 'files', 'volunteers', 'eventVolunteers'] as const
+const serviceNames = ['events', 'workshops', 'dances', 'users', 'files', 'volunteers', 'eventVolunteers', 'eventRoles'] as const
 const serviceNameLiterals = serviceNames.map(name => Type.Literal(name))
 
 export const serviceNameSchema = Type.Union(serviceNameLiterals, { $id: 'ServiceName' })

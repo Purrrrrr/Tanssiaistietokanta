@@ -11,6 +11,7 @@ import { events } from './events/events'
 import { dances } from './dances/dances'
 import { volunteers } from './volunteers/volunteers'
 import { eventVolunteers } from './eventVolunteers/eventVolunteers'
+import { eventRoles } from './eventRoles/eventRoles'
 // For more information about this file see https://dove.feathersjs.com/guides/cli/application.html#configure-functions
 import type { Application } from '../declarations'
 
@@ -28,5 +29,6 @@ export const services = (app: Application) => {
   app.configure(dances)
   app.configure(volunteers)
   app.configure(eventVolunteers)
+  app.configure(eventRoles)
   // All services will be registered here
 }

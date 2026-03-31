@@ -1,0 +1,34 @@
+type Query {
+  eventRole(id: ID!, versionId: ID): EventRole!
+  eventRoles(appliesToWorkshops: Boolean): [EventRole!]!
+}
+
+type EventRole implements Versionable {
+  _id: ID!
+  _versionId: String
+  _versionNumber: String
+  _updatedAt: String!
+  versionHistory: VersionHistory!
+  name: String!
+  description: String!
+  appliesToWorkshops: Boolean!
+}
+
+type Mutation {
+  createEventRole(eventRole: EventRoleInput!): EventRole!
+  modifyEventRole(id: ID!, eventRole: EventRoleInput!): EventRole!
+  patchEventRole(id: ID!, eventRole: EventRolePatchInput!): EventRole!
+  deleteEventRole(id: ID!): EventRole!
+}
+
+input EventRoleInput {
+  name: String!
+  description: String
+  appliesToWorkshops: Boolean
+}
+
+input EventRolePatchInput {
+  name: String
+  description: String
+  appliesToWorkshops: Boolean
+}
