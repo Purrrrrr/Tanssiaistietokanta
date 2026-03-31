@@ -1,11 +1,13 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { useState } from 'react'
 
-import { useEventVolunteers } from 'services/eventVolunteers'
+import { addGlobalLoadingAnimation } from 'backend'
+import { useCreateEventVolunteer, useEventVolunteers } from 'services/eventVolunteers'
 
 import { H2 } from 'libraries/ui'
 import { ItemList } from 'libraries/ui/ItemList'
 import { DeleteEventVolunteerButton } from 'components/eventVolunteers/DeleteEventVolunteerButton'
-import { EventVolunteerForm } from 'components/eventVolunteers/EventVolunteerForm'
+import { emptyEventVolunteerForm, EventVolunteerForm, EventVolunteerFormData } from 'components/eventVolunteers/EventVolunteerForm'
 import { useT } from 'i18n'
 
 import { useCurrentEvent } from './-context'
@@ -19,7 +21,6 @@ export const Route = createFileRoute(
 function RouteComponent() {
   const event = useCurrentEvent()
   const t = useT('pages.events.volunteersPage')
-
   const [eventVolunteers] = useEventVolunteers({ eventId: event._id })
 
   return <>
@@ -46,6 +47,27 @@ function RouteComponent() {
         </ItemList.Row>,
       )}
     </ItemList>
-    <EventVolunteerForm eventId={event._id} />
+    <H2>{t('addVolunteer')}</H2>
+    <CreateEventVolunteerForm eventId={event._id} />
   </>
+}
+
+function CreateEventVolunteerForm({ eventId }: { eventId: string }) {
+  const [formData, setFormData] = useState<EventVolunteerFormData>(emptyEventVolunteerForm)
+  const [createEventVolunteer] = useCreateEventVolunteer({ refetchQueries: ['getEventVolunteers'] })
+
+  const handleSubmit = async (data: EventVolunteerFormData) => {
+    if (!data.volunteer) return
+    await addGlobalLoadingAnimation(createEventVolunteer({
+      eventVolunteer: {
+        eventId,
+        volunteerId: data.volunteer._id,
+        wishes: data.wishes,
+        notes: data.notes,
+      },
+    }))
+    setFormData(emptyEventVolunteerForm())
+  }
+
+  return <EventVolunteerForm value={formData} onChange={setFormData} onSubmit={handleSubmit} />
 }

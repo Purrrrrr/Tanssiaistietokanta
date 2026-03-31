@@ -1,22 +1,19 @@
-import { useState } from 'react'
+import { NewValue } from 'libraries/forms/types'
 
-import { useCreateEventVolunteer } from 'services/eventVolunteers'
-
-import { formFor, SubmitButton } from 'libraries/forms'
-import { H2 } from 'libraries/ui'
+import { formFor, SubmitButton, SyncState, SyncStatus } from 'libraries/forms'
 import { useT } from 'i18n'
 
 import { VolunteerChooser } from './VolunteerChooser'
 
-interface VolunteerItem { _id: string, name: string }
+export interface VolunteerItem { _id: string, name: string }
 
-interface EventVolunteerFormData {
+export interface EventVolunteerFormData {
   volunteer: VolunteerItem | null
   wishes: string
   notes: string
 }
 
-const emptyForm = (): EventVolunteerFormData => ({
+export const emptyEventVolunteerForm = (): EventVolunteerFormData => ({
   volunteer: null,
   wishes: '',
   notes: '',
@@ -29,43 +26,29 @@ const {
 } = formFor<EventVolunteerFormData>()
 
 interface EventVolunteerFormProps {
-  eventId: string
+  value: EventVolunteerFormData
+  onChange: (v: NewValue<EventVolunteerFormData>) => void
+  onSubmit: (v: EventVolunteerFormData) => unknown | Promise<unknown>
+  syncState?: SyncState
 }
 
-export function EventVolunteerForm({ eventId }: EventVolunteerFormProps) {
-  const t = useT('pages.events.volunteersPage')
+export function EventVolunteerForm({ value, onChange, onSubmit, syncState }: EventVolunteerFormProps) {
   const tDomain = useT('domain.eventVolunteer')
-  const [formData, setFormData] = useState<EventVolunteerFormData>(emptyForm)
-  const [createEventVolunteer] = useCreateEventVolunteer({ refetchQueries: ['getEventVolunteers'] })
+  const t = useT('pages.events.volunteersPage')
 
-  const handleSubmit = async (data: EventVolunteerFormData) => {
-    if (!data.volunteer) return
-    await createEventVolunteer({
-      eventVolunteer: {
-        eventId,
-        volunteerId: data.volunteer._id,
-        wishes: data.wishes,
-        notes: data.notes,
-      },
-    })
-    setFormData(emptyForm())
-  }
-
-  return <>
-    <H2>{t('addVolunteer')}</H2>
-    <Form value={formData} onChange={setFormData} onSubmit={handleSubmit} labelStyle="above" errorDisplay="onSubmit">
-      <div className="flex flex-wrap gap-4">
-        <Field
-          path="volunteer"
-          label={tDomain('volunteer')}
-          component={VolunteerChooser}
-          required
-          containerClassName="w-60"
-        />
-        <Input path="wishes" label={tDomain('wishes')} containerClassName="w-60" />
-        <Input path="notes" label={tDomain('notes')} containerClassName="w-60" />
-      </div>
-      <SubmitButton text={t('form.submit')} />
-    </Form>
-  </>
+  return <Form value={value} onChange={onChange} onSubmit={onSubmit} labelStyle="above" errorDisplay="onSubmit">
+    {syncState && <SyncStatus state={syncState} />}
+    <div className="flex flex-wrap gap-4">
+      <Field
+        path="volunteer"
+        label={tDomain('volunteer')}
+        component={VolunteerChooser}
+        required
+        containerClassName="w-60"
+      />
+      <Input path="wishes" label={tDomain('wishes')} containerClassName="w-60" />
+      <Input path="notes" label={tDomain('notes')} containerClassName="w-60" />
+    </div>
+    <SubmitButton text={t('form.submit')} />
+  </Form>
 }
