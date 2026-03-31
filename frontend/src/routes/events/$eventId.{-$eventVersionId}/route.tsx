@@ -91,6 +91,7 @@ function RouteComponent() {
             <MenuSection title={t('menu.title')}>
               <MenuLink to="/events/$eventId/{-$eventVersionId}" params={params} activeOptions={{ exact: true }} text={t('menu.basicInfo')} />
               <MenuLink to="/events/$eventId/{-$eventVersionId}/edit" params={params} text={t('menu.editBasicInfo')} icon={<Cog />} />
+              <MenuLink to="/events/$eventId/{-$eventVersionId}/volunteers" params={params} text={t('menu.volunteers')} />
             </MenuSection>
             <MenuSection title={t('menu.ball.title')}>
               <MenuLink to="/events/$eventId/{-$eventVersionId}/program/main" params={params} text={t('menu.ball.ballProgram')} />

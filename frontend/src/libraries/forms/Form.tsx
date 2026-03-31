@@ -45,13 +45,15 @@ export function Form<T>({
     if (onValidityChange) onValidityChange({ hasErrors })
   }, [onValidityChange, hasErrors])
 
-  const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+  const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     // Sometimes forms from dialogs end up propagating into our form and we should not submit then
     if (e.target !== form.current) return
     e.preventDefault()
     setHasSubmitted(true)
     if (hasErrors) return
-    onSubmit?.(value, e)
+    await onSubmit?.(value, e)
+    // We reset the submitted state after onSubmit to hide errors again
+    setHasSubmitted(false)
   }
   const showErrors = errorDisplay === 'always' || hasSubmitted
 

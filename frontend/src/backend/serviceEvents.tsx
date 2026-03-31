@@ -21,6 +21,7 @@ const serviceTypeNameMap: Record<ServiceName, string> = {
   files: 'File',
   users: 'User',
   volunteers: 'Volunteer',
+  eventVolunteers: 'EventVolunteer',
 }
 const serviceUpdateFragmentMap: Partial<Record<ServiceName, DocumentNode>> = {}
 

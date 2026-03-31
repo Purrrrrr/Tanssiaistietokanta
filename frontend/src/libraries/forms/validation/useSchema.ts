@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { array, number, Schema, string } from 'yup'
+import { array, mixed, number, Schema, string } from 'yup'
 
 import { useFormStrings } from '../formContext'
 
@@ -39,7 +39,8 @@ function baseValidator(type?: Type) {
     case 'email':
       return string().email()
     case 'text':
-    default:
       return string()
+    default:
+      return mixed()
   }
 }

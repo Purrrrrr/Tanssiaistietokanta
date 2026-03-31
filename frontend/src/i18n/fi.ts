@@ -59,6 +59,11 @@ export const fi = {
       flowerBig: 'Kukka iso __number__',
       flowerFramed: 'Kukka reunus __number__',
     },
+    eventVolunteer: {
+      volunteer: 'Vapaaehtoinen',
+      wishes: 'Toiveet',
+      notes: 'Muistiinpanot',
+    },
   },
   components: {
     viewAccessSelector: {
@@ -178,6 +183,10 @@ export const fi = {
       createNewVolunteer: 'Luo uusi vapaaehtoinen',
       noVolunteers: 'Ei vapaaehtoisia',
       addVolunteer: 'Lisää vapaaehtoinen',
+    },
+    volunteerChooser: {
+      searchVolunteer: 'Etsi vapaaehtoista...',
+      noVolunteers: 'Ei vapaaehtoisia',
     },
     eventProgramEditor: {
       fields: {
@@ -415,6 +424,7 @@ export const fi = {
             editSlideShow: 'Muokkaa diashowta',
           },
           print: 'Tulosta',
+          volunteers: 'Vapaaehtoiset',
         },
         loginToEdit: 'Kirjaudu muokataksesi tapahtumaa',
         ballProgram: 'Tanssiaisohjelma',
@@ -444,6 +454,20 @@ export const fi = {
         eventDate: 'Tapahtuman ajankohta',
         ballDateTime: 'Tanssiaisten ajankohta',
         files: 'Tapahtumaan liittyvät tiedostot',
+      },
+      volunteersPage: {
+        title: 'Vapaaehtoiset',
+        noVolunteers: 'Ei vapaaehtoisia',
+        addVolunteer: 'Lisää vapaaehtoinen',
+        form: {
+          submit: 'Lisää',
+        },
+        columns: {
+          name: 'Nimi',
+          interestedIn: 'Kiinnostuksen kohteet',
+          wishes: 'Toiveet',
+          notes: 'Muistiinpanot',
+        },
       },
       eventProgramPage: {
         pageTitle: 'Tanssiaisohjelma',
