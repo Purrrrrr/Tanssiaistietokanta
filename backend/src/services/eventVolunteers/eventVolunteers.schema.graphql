@@ -1,0 +1,40 @@
+type Query {
+  eventVolunteer(id: ID!, versionId: ID): EventVolunteer!
+  eventVolunteers(eventId: ID, volunteerId: ID): [EventVolunteer!]!
+}
+
+type EventVolunteer implements Versionable {
+  _id: ID!
+  _versionId: String
+  _versionNumber: String
+  _updatedAt: String!
+  versionHistory: VersionHistory!
+  eventId: ID!
+  volunteerId: ID!
+  interestedIn: [String!]!
+  wishes: String!
+  notes: String!
+}
+
+type Mutation {
+  createEventVolunteer(eventVolunteer: EventVolunteerInput!): EventVolunteer!
+  modifyEventVolunteer(id: ID!, eventVolunteer: EventVolunteerInput!): EventVolunteer!
+  patchEventVolunteer(id: ID!, eventVolunteer: EventVolunteerPatchInput!): EventVolunteer!
+  deleteEventVolunteer(id: ID!): EventVolunteer!
+}
+
+input EventVolunteerInput {
+  eventId: ID!
+  volunteerId: ID!
+  interestedIn: [String!]
+  wishes: String
+  notes: String
+}
+
+input EventVolunteerPatchInput {
+  eventId: ID
+  volunteerId: ID
+  interestedIn: [String!]
+  wishes: String
+  notes: String
+}
