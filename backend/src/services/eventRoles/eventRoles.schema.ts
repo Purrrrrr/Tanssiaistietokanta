@@ -18,6 +18,7 @@ export const eventRolesSchema = Type.Object(
     name: Name(),
     description: Type.String(),
     appliesToWorkshops: Type.Boolean(),
+    order: Type.Number(),
   },
   { $id: 'EventRoles', additionalProperties: false },
 )
@@ -26,6 +27,7 @@ export const eventRolesValidator = getValidator(eventRolesSchema, dataValidator)
 export const eventRolesResolver = resolve<EventRoles, HookContext>({
   description: value => value ?? '',
   appliesToWorkshops: value => value ?? false,
+  order: value => value ?? 0,
 })
 
 export const eventRolesExternalResolver = resolve<EventRoles, HookContext>({})
@@ -51,7 +53,7 @@ export const eventRolesPatchValidator = getValidator(eventRolesPatchSchema, data
 export const eventRolesPatchResolver = resolve<EventRoles, HookContext>({})
 
 // Schema for allowed query properties
-export const eventRolesQueryProperties = Type.Pick(eventRolesSchema, ['_id', 'name', 'appliesToWorkshops'])
+export const eventRolesQueryProperties = Type.Pick(eventRolesSchema, ['_id', 'name', 'appliesToWorkshops', 'order'])
 export const eventRolesQuerySchema = Type.Intersect(
   [
     querySyntax(eventRolesQueryProperties),

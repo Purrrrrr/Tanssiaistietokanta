@@ -12,6 +12,7 @@ type EventRole implements Versionable {
   name: String!
   description: String!
   appliesToWorkshops: Boolean!
+  order: Float!
 }
 
 type Mutation {
@@ -25,10 +26,12 @@ input EventRoleInput {
   name: String!
   description: String
   appliesToWorkshops: Boolean
+  order: Float
 }
 
 input EventRolePatchInput {
   name: String
   description: String
   appliesToWorkshops: Boolean
+  order: Float
 }

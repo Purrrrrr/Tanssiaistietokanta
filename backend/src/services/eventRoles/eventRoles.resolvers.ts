@@ -18,6 +18,7 @@ export default (app: Application) => {
         service.find({
           ...params,
           query: {
+            $sort: { order: 1 },
             ...params?.query,
             ...(appliesToWorkshops !== undefined ? { appliesToWorkshops } : {}),
           },
