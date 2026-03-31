@@ -188,6 +188,7 @@ export const fi = {
     volunteerChooser: {
       searchVolunteer: 'Etsi vapaaehtoista...',
       noVolunteers: 'Ei vapaaehtoisia',
+      createNewVolunteer: 'Luo uusi vapaaehtoinen',
     },
     eventRoleSelector: {
       workshopRoles: 'Työpajaroolit',
