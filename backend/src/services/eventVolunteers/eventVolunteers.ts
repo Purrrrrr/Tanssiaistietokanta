@@ -17,6 +17,7 @@ import type { Application } from '../../declarations'
 import { EventVolunteersService, getOptions } from './eventVolunteers.class'
 import { eventVolunteersPath, eventVolunteersMethods } from './eventVolunteers.shared'
 import { defaultChannels } from '../../utils/defaultChannels'
+import { SkipAccessControl } from '../access/hooks'
 
 export * from './eventVolunteers.class'
 export * from './eventVolunteers.schema'
@@ -51,14 +52,20 @@ export const eventVolunteers = (app: Application) => {
     },
   }).publish((_data, context) => defaultChannels(app, context))
 
-  app.service('access').setAccessStrategy('eventVolunteers', {
-    authTarget: 'everything',
-    authorize({ user, action }) {
-      if (action === 'read' || action === 'list') {
-        return true
-      }
+  const service = app.service(eventVolunteersPath)
+  const accessService = app.service('access')
 
-      return !!user
+  accessService.setAccessStrategy('eventVolunteers', {
+    authTarget: 'owner',
+    getOwnerFromData(data) {
+      return data ? { owningId: data.eventId } : undefined
+    },
+    async getEntityOwner(entityId) {
+      const result = await service.get(entityId, { [SkipAccessControl]: true, query: { $select: ['eventId'] } })
+      return { owner: 'events', owningId: result.eventId }
+    },
+    authorize({ user, owningId: eventId }) {
+      return accessService.hasAccess('events', 'modify-volunteers', user, eventId)
     },
   })
 }

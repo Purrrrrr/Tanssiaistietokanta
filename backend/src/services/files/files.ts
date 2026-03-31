@@ -142,3 +142,9 @@ declare module '../../declarations' {
     [filePath]: FileService
   }
 }
+
+declare module '../access/access.class' {
+  interface ServiceExtraActions {
+    files: 'modify-unused'
+  }
+}

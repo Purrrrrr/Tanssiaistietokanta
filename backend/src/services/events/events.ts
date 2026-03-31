@@ -71,7 +71,7 @@ export const events = (app: Application) => {
 
   const roleHierarchy: Record<GrantRole, number> = { viewer: 1, teacher: 2, organizer: 3 }
 
-  class EventAccessStrategy implements AccessStrategy<'events', EventAccessData> {
+  class EventAccessStrategy implements AccessStrategy<'events', EventAccessData, 'modify-volunteers'> {
     store = app.service('access').getStore('events', eventAccessDataSchema, {
       viewAccess: 'limited',
       grants: [],
@@ -79,7 +79,8 @@ export const events = (app: Application) => {
 
     authTarget = 'entity' as const
 
-    async authorize({ action, entityData, user }: AuthParams<EventAccessData>) {
+    extraActions = ['modify-volunteers' as const]
+    async authorize({ action, entityData, user }: AuthParams<EventAccessData, 'modify-volunteers'>) {
       if (user?.groups.includes('admins')) {
         return true
       }
@@ -99,7 +100,7 @@ export const events = (app: Application) => {
       if (action === 'read') {
         return viewAccess === 'public' || userRole !== null
       }
-      if (action === 'manage-access' || action === 'delete') {
+      if (action === 'manage-access' || action === 'modify-volunteers' || action === 'delete') {
         return userRole === 'organizer'
       }
       // action === 'modify'
@@ -135,5 +136,11 @@ export const events = (app: Application) => {
 declare module '../../declarations' {
   interface ServiceTypes {
     [eventsPath]: SupportsJsonPatch<EventsService>
+  }
+}
+
+declare module '../access/access.class' {
+  interface ServiceExtraActions {
+    events: 'modify-volunteers'
   }
 }

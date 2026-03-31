@@ -13,6 +13,16 @@ import { ServiceCreateData, User } from './types'
 
 export type { Access, AccessQuery }
 
+// Extendable interface for declaring extra actions per service, via declaration merging.
+// Example (in events.ts):
+//   declare module '../access/access.class' {
+//     interface ServiceExtraActions { events: 'modify-volunteers' }
+//   }
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface ServiceExtraActions {}
+export type ServiceExtraActionsFor<S extends ServiceName> = S extends keyof ServiceExtraActions ? ServiceExtraActions[S] : never
+export type ServiceAllActions<S extends ServiceName> = Action | ServiceExtraActionsFor<S>
+
 export interface AccessServiceOptions {
   app: Application
 }
@@ -32,7 +42,7 @@ implements ServiceInterface<Access, never, ServiceParams, never> {
     this.getStore = this.storeFactory.getStore.bind(this.storeFactory)
   }
 
-  setAccessStrategy<Service extends ServiceName, Data, ExtraActions extends string = never>(
+  setAccessStrategy<Service extends ServiceName, Data, ExtraActions extends ServiceExtraActionsFor<Service> = never>(
     service: Service,
     strategy: AccessStrategy<Service, Data, ExtraActions>,
   ) {
@@ -95,10 +105,10 @@ implements ServiceInterface<Access, never, ServiceParams, never> {
     )
   }
 
-  async hasAccess(serviceName: ServiceName, action: Action, user?: User, entityId?: Id, owner?: ServiceName, owningId?: Id): Promise<boolean | undefined> {
+  async hasAccess<S extends ServiceName>(serviceName: S, action: ServiceAllActions<S>, user?: User, entityId?: Id, owner?: ServiceName, owningId?: Id): Promise<boolean | undefined> {
     const strategy = this.getAccessStrategy(serviceName)
     return strategy
-      ? this.getAccess(strategy, action, user, entityId, owner, owningId)
+      ? this.getAccess(strategy, action as Action, user, entityId, owner, owningId)
       : true
   }
 
@@ -107,7 +117,7 @@ implements ServiceInterface<Access, never, ServiceParams, never> {
       ? await strategy.store?.getAccess(entityId)
       : undefined
     return strategy.authorize({
-      action, user, entityData, owner, owningId,
+      action: action as Action, user, entityData, owner, owningId,
     })
   }
 
