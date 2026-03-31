@@ -4,10 +4,12 @@ import { versionHistoryFieldResolvers, versionHistoryResolver } from '../../util
 
 export default (app: Application) => {
   const service = app.service('eventVolunteers')
+  const volunteerService = app.service('volunteers')
 
   return {
     EventVolunteer: {
       versionHistory: versionHistoryResolver(service),
+      volunteer: (eventVolunteer: { volunteerId: string }) => volunteerService.get(eventVolunteer.volunteerId),
     },
     VersionHistory: versionHistoryFieldResolvers(),
     Query: {

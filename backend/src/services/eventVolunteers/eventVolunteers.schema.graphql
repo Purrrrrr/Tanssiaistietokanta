@@ -11,6 +11,7 @@ type EventVolunteer implements Versionable {
   versionHistory: VersionHistory!
   eventId: ID!
   volunteerId: ID!
+  volunteer: Volunteer!
   interestedIn: [String!]!
   wishes: String!
   notes: String!
