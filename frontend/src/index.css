@@ -52,6 +52,15 @@ h1, h2 {
   }
 }
 
+@utility comma-separated-list {
+  & > * {
+    display: inline;
+    &:not(:last-child)::after {
+      content: ", ";
+    }
+  }
+}
+
 ::-moz-selection{
   background:rgba(125, 188, 255, 0.6);
 }

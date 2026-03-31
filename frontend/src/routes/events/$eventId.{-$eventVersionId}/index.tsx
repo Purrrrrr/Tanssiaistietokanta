@@ -36,33 +36,39 @@ function RouteComponent() {
 
 function EventProgram({ event }: { event: Event }) {
   const { program } = event
+  const formatDateTime = useFormatDateTime()
 
   const t = useT('pages.events.eventPage')
   if (!program || program.danceSets.length === 0) {
     return <p>{t('noProgram')}</p>
   }
 
-  return <Card>
-    {program.danceSets.map((danceSet, index) =>
-      <p key={index}>
-        <strong>{danceSet.title}</strong>:{' '}
-        {formatDances(danceSet.program)}
-      </p>,
-    )}
-  </Card>
+  return <section className="@container">
+    <p>{t('ballDateTime')}: {formatDateTime(event.program.dateTime)}</p>
+    <div className="@3xl:grid grid-cols-[repeat(auto-fit,minmax(auto,16rem))] gap-2 mb-4 @3xl:text-center">
+      {program.danceSets.map((danceSet, index) =>
+        <Card key={index} className="@3xl:px-2 py-2 @max-3xl:border-0 @max-3xl:shadow-none" noPadding marginClass="">
+          <strong>{danceSet.title}</strong>:{' '}
+          <ul className="mt-1 @max-3xl:comma-separated-list @max-3xl:inline">
+            {formatDances(danceSet.program)}
+          </ul>
+        </Card>,
+      )}
+    </div>
+  </section>
 
   function formatDances(program: DanceSet['program']) {
     const danceNames = program
       .filter(row => row.type === 'Dance' || row.eventProgram?.showInLists)
       .map(row => row.dance ?? row.eventProgram)
-      .filter(item => item != null)
-      .map(item => item.name)
+      .filter(item => item != null && '_id' in item)
+      .map(item => ({ name: item.name, id: item._id }))
     const requestedDanceCount = program.filter(isRequestedDance).length
     if (requestedDanceCount) {
-      danceNames.push(t('requestedDance', { count: requestedDanceCount }))
+      danceNames.push({ name: t('requestedDance', { count: requestedDanceCount }), id: 'requestedDances' })
     }
 
-    return danceNames.join(', ')
+    return danceNames.map(({ name, id }) => <li key={id} className="py-0.5">{name}</li>)
   }
 }
 
