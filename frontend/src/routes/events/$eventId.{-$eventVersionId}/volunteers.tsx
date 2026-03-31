@@ -40,7 +40,7 @@ function RouteComponent() {
       {(eventVolunteers ?? []).map(ev =>
         <ItemList.Row key={ev._id}>
           <span>{ev.volunteer.name}</span>
-          <span>{ev.interestedIn.join(', ')}</span>
+          <span>{ev.interestedIn.map(role => role.name).join(', ')}</span>
           <span>{ev.wishes}</span>
           <span>{ev.notes}</span>
           <DeleteEventVolunteerButton minimal eventVolunteerId={ev._id} />
@@ -62,6 +62,7 @@ function CreateEventVolunteerForm({ eventId }: { eventId: string }) {
       eventVolunteer: {
         eventId,
         volunteerId: data.volunteer._id,
+        interestedIn: data.interestedIn.map(r => r._id),
         wishes: data.wishes,
         notes: data.notes,
       },

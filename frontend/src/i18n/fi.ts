@@ -61,6 +61,7 @@ export const fi = {
     },
     eventVolunteer: {
       volunteer: 'Vapaaehtoinen',
+      interestedIn: 'Kiinnostuksen kohteet',
       wishes: 'Toiveet',
       notes: 'Muistiinpanot',
     },
@@ -187,6 +188,10 @@ export const fi = {
     volunteerChooser: {
       searchVolunteer: 'Etsi vapaaehtoista...',
       noVolunteers: 'Ei vapaaehtoisia',
+    },
+    eventRoleSelector: {
+      workshopRoles: 'Työpajaroolit',
+      eventRoles: 'Tapahtumaroolit',
     },
     eventProgramEditor: {
       fields: {
