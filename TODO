@@ -337,13 +337,16 @@
     Provide some links between pages without the menu for redundancy
     Change translation keys to somewhat match new structure
 
-
   Teacher/people database
   * Apuopettajat / assistant teachers
-    Event signed up volunteers list
-      Notes
+  * Event signed up volunteers list
+    * Notes
     Check GDPR stuff
     Separate workshop pages for events
+
+  General notes/documents to event
+  Deadline support?
+  Update Apollo server to v5
 
   Add tests to check that used dances are not deletable
   Add test that workshops are deleted when the event is
@@ -360,7 +363,9 @@
     Allow creating users
     Nicer logout menu keyboard a11y
     Allow creating users with some token? Invite functionality?
-
+  
+  Put version history field resolvers into just one place
+  
   Tanstack query nice to haves
     Page title mechanism
     Version urls
