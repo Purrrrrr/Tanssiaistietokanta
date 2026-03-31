@@ -5,11 +5,14 @@ import { versionHistoryFieldResolvers, versionHistoryResolver } from '../../util
 export default (app: Application) => {
   const service = app.service('eventVolunteers')
   const volunteerService = app.service('volunteers')
+  const eventRolesService = app.service('eventRoles')
 
   return {
     EventVolunteer: {
       versionHistory: versionHistoryResolver(service),
       volunteer: (eventVolunteer: { volunteerId: string }) => volunteerService.get(eventVolunteer.volunteerId),
+      interestedIn: (eventVolunteer: { interestedIn: string[] }) =>
+        Promise.all(eventVolunteer.interestedIn.map(id => eventRolesService.get(id))),
     },
     VersionHistory: versionHistoryFieldResolvers(),
     Query: {

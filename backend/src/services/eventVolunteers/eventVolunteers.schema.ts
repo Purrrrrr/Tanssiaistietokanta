@@ -17,7 +17,7 @@ export const eventVolunteersSchema = Type.Object(
     _createdAt: Type.String(),
     eventId: Id(),
     volunteerId: Id(),
-    interestedIn: Type.Array(Type.String()),
+    interestedIn: Type.Array(Id()),
     wishes: Type.String(),
     notes: Type.String(),
   },

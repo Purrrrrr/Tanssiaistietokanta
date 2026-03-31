@@ -8,5 +8,10 @@
     "type": "uses",
     "service": "volunteers",
     "path": "volunteerId"
+  },
+  {
+    "type": "uses",
+    "service": "eventRoles",
+    "path": "interestedIn"
   }
 ]
