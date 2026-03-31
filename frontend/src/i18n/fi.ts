@@ -459,6 +459,8 @@ export const fi = {
         title: 'Vapaaehtoiset',
         noVolunteers: 'Ei vapaaehtoisia',
         addVolunteer: 'Lisää vapaaehtoinen',
+        deleteVolunteer: 'Poista vapaaehtoinen',
+        deleteConfirmation: 'Haluatko varmasti poistaa tämän vapaaehtoisen tapahtumasta?',
         form: {
           submit: 'Lisää',
         },
