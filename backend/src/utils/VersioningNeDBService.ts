@@ -33,7 +33,10 @@ export default class VersioningNeDBService<Result extends Versionable, Data, Ser
 
   constructor(public params: NeDBServiceOptions) {
     super(params)
-    this.versionService = new VersionService(params)
+    this.versionService = new VersionService({
+      ...params,
+      indexes: params.indexes?.map(index => ({ ...index, unique: false })) ?? [],
+    })
   }
 
   getVersionModel() {
