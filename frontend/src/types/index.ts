@@ -5,6 +5,9 @@ export interface Entity {
 }
 
 export * from './dances'
+export * from './eventRoles'
 export * from './events'
+export * from './eventVolunteers'
 export * from './users'
+export * from './volunteers'
 export * from './workshops'

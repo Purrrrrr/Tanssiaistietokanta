@@ -7,20 +7,22 @@ import { useT } from 'i18n'
 interface VolunteerItem { _id: string, name: string }
 type VolunteerOption = (VolunteerItem & { __typename?: 'Volunteer' }) | { __typename: 'createVolunteer', name: string }
 
-export type VolunteerChooserProps = FieldComponentProps<VolunteerItem | null>
+export interface VolunteerChooserProps extends FieldComponentProps<VolunteerItem | null> {
+  excludeVolunteers?: VolunteerItem[]
+}
 
 export function VolunteerChooser({ value, onChange, readOnly, ...rest }: VolunteerChooserProps) {
   const t = useT('components.volunteerChooser')
-  const [volunteers] = useVolunteers()
+  const [volunteers = []] = useVolunteers()
   const [createVolunteer] = useCreateVolunteer()
 
   const getItems = (query: string): VolunteerOption[] => {
     const q = query.trim().toLowerCase()
-    const filtered = q
-      ? (volunteers ?? []).filter(v => v.name.toLowerCase().includes(q))
-      : (volunteers ?? [])
+    const filtered = volunteers
+      .filter(v => !(rest.excludeVolunteers ?? []).some(ev => ev._id === v._id))
+      .filter(v => !q || v.name.toLowerCase().includes(q))
     const showCreate = query.trim().length > 0
-      && !(volunteers ?? []).some(v => v.name.toLowerCase() === query.trim().toLowerCase())
+      && !volunteers.some(v => v.name.toLowerCase() === query.trim().toLowerCase())
     return showCreate
       ? [...filtered, { __typename: 'createVolunteer', name: query.trim() }]
       : filtered

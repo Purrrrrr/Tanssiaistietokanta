@@ -1,3 +1,5 @@
+import { EventRole, EventVolunteerInput, Volunteer } from 'types'
+
 import { formFor, SubmitButton, SyncState, SyncStatus } from 'libraries/forms'
 import { TextArea } from 'libraries/forms/fieldComponents/basicComponents'
 import { FormProps } from 'libraries/forms/Form'
@@ -6,22 +8,13 @@ import { useT } from 'i18n'
 import { EventVolunteerRolePicker } from './EventVolunteerRolePicker'
 import { VolunteerChooser } from './VolunteerChooser'
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
-export type VolunteerItem = { _id: string, name: string }
-
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
-export type EventRoleItem = { _id: string, name: string, description: string, appliesToWorkshops: boolean, order: number }
-
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
-export type EventVolunteerFormData = {
-  volunteer: VolunteerItem | null
-  interestedIn: EventRoleItem[]
-  wishes: string | null
-  notes: string | null
+export type EventVolunteerFormValues = Omit<EventVolunteerInput, 'volunteerId' | 'eventId' | 'interestedIn'> & {
+  volunteer?: Volunteer
+  interestedIn: EventRole[]
 }
 
-export const emptyEventVolunteerForm = (): EventVolunteerFormData => ({
-  volunteer: null,
+export const emptyEventVolunteerForm = (): EventVolunteerFormValues => ({
+  volunteer: undefined,
   interestedIn: [],
   wishes: '',
   notes: '',
@@ -30,13 +23,15 @@ export const emptyEventVolunteerForm = (): EventVolunteerFormData => ({
 const {
   Form,
   Field,
-} = formFor<EventVolunteerFormData>()
+} = formFor<EventVolunteerFormValues>()
 
-interface EventVolunteerFormProps extends FormProps<EventVolunteerFormData> {
+interface EventVolunteerFormProps extends FormProps<EventVolunteerFormValues> {
   syncState?: SyncState
+  excludeVolunteers?: Volunteer[]
+  isNew?: boolean
 }
 
-export function EventVolunteerForm({ syncState, onSubmit, ...rest }: EventVolunteerFormProps) {
+export function EventVolunteerForm({ syncState, onSubmit, excludeVolunteers = [], isNew, ...rest }: EventVolunteerFormProps) {
   const tDomain = useT('domain.eventVolunteer')
   const t = useT('pages.events.volunteersPage')
 
@@ -47,6 +42,9 @@ export function EventVolunteerForm({ syncState, onSubmit, ...rest }: EventVolunt
         path="volunteer"
         label={tDomain('volunteer')}
         component={VolunteerChooser}
+        componentProps={{
+          excludeVolunteers: isNew ? excludeVolunteers : excludeVolunteers.filter(v => v._id !== rest.value.volunteer?._id),
+        }}
         required
       />
       <Field

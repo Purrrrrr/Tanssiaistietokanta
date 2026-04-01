@@ -1,6 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 
+import { EventRole, EventVolunteer, Volunteer } from 'types'
+
 import { addGlobalLoadingAnimation } from 'backend'
 import { useCreateEventVolunteer, useEventVolunteers, usePatchEventVolunteer } from 'services/eventVolunteers'
 
@@ -9,7 +11,7 @@ import { Button, Card, H2 } from 'libraries/ui'
 import { ChevronDown, ChevronUp, Edit } from 'libraries/ui/icons'
 import { ItemList, Sort } from 'libraries/ui/ItemList'
 import { DeleteEventVolunteerButton } from 'components/eventVolunteers/DeleteEventVolunteerButton'
-import { emptyEventVolunteerForm, EventRoleItem, EventVolunteerForm, EventVolunteerFormData, VolunteerItem } from 'components/eventVolunteers/EventVolunteerForm'
+import { emptyEventVolunteerForm, EventVolunteerForm, EventVolunteerFormValues } from 'components/eventVolunteers/EventVolunteerForm'
 import { useT, useTranslation } from 'i18n'
 import { sortedBy } from 'utils/sorted'
 
@@ -21,22 +23,13 @@ export const Route = createFileRoute(
   component: RouteComponent,
 })
 
-interface EventVolunteerItem {
-  _id: string
-  eventId: string
-  volunteerId: string
-  volunteer: VolunteerItem
-  interestedIn: EventRoleItem[]
-  wishes: string | null
-  notes: string | null
-}
-
 function RouteComponent() {
   const event = useCurrentEvent()
   const t = useT('pages.events.volunteersPage')
   const [unsortedEventVolunteers] = useEventVolunteers({ eventId: event._id })
   const [sort, setSort] = useState<Sort>({ key: 'interestedIn', direction: 'asc' })
   const eventVolunteers = sortedBy(unsortedEventVolunteers ?? [], volunteerSorter(sort.key), sort.direction === 'desc')
+  const addedVolunteers = unsortedEventVolunteers.map(ev => ev.volunteer)
 
   return <>
     <H2>{t('title')}</H2>
@@ -58,10 +51,10 @@ function RouteComponent() {
         { key: 'notes', label: t('columns.notes') },
       ]} />
       {(eventVolunteers ?? []).map(ev =>
-        <EventVolunteerListRow key={ev._id} ev={ev as EventVolunteerItem} />,
+        <EventVolunteerListRow key={ev._id} ev={ev as EventVolunteer} addedVolunteers={addedVolunteers} />,
       )}
     </ItemList>
-    <CreateEventVolunteerForm eventId={event._id} />
+    <CreateEventVolunteerForm eventId={event._id} addedVolunteers={addedVolunteers} />
   </>
 }
 
@@ -69,13 +62,13 @@ function volunteerSorter(key: string) {
   switch (key) {
     default:
     case 'name':
-      return (ev: EventVolunteerItem) => ev.volunteer.name
+      return (ev: EventVolunteer) => ev.volunteer.name
     case 'interestedIn':
-      return (ev: EventVolunteerItem) => ev.interestedIn.map(role => role.order * 100 - ev.interestedIn.length).map(nr => String(nr).padStart(5, '0')).join('.')
+      return (ev: EventVolunteer) => ev.interestedIn.map(role => role.order * 100 - ev.interestedIn.length).map(nr => String(nr).padStart(5, '0')).join('.')
     case 'wishes':
-      return (ev: EventVolunteerItem) => ev.wishes ?? ''
+      return (ev: EventVolunteer) => ev.wishes ?? ''
     case 'notes':
-      return (ev: EventVolunteerItem) => ev.notes ?? ''
+      return (ev: EventVolunteer) => ev.notes ?? ''
   }
 }
 
@@ -99,11 +92,11 @@ function EventVolunteerRoleCounts({ volunteers }: { volunteers: EventVolunteer[]
   </span>
 }
 
-function EventVolunteerListRow({ ev }: { ev: EventVolunteerItem }) {
+function EventVolunteerListRow({ ev, addedVolunteers }: { ev: EventVolunteer, addedVolunteers: Volunteer[] }) {
   const [showEditor, setShowEditor] = useState(false)
 
   return <ItemList.Row
-    expandableContent={<EventVolunteerRowEditor item={ev} />}
+    expandableContent={<EventVolunteerRowEditor item={ev} addedVolunteers={addedVolunteers} />}
     isOpen={showEditor}
   >
     <span>{ev.volunteer.name}</span>
@@ -127,10 +120,10 @@ function EventVolunteerListRow({ ev }: { ev: EventVolunteerItem }) {
   </ItemList.Row>
 }
 
-function EventVolunteerRowEditor({ item }: { item: EventVolunteerItem }) {
+function EventVolunteerRowEditor({ item, addedVolunteers }: { item: EventVolunteer, addedVolunteers: Volunteer[] }) {
   const [patchEventVolunteer] = usePatchEventVolunteer()
 
-  const { formProps, state } = useAutosavingState<EventVolunteerFormData, Partial<EventVolunteerFormData>>(
+  const { formProps, state } = useAutosavingState<EventVolunteerFormValues, Partial<EventVolunteerFormValues>>(
     item,
     async (data) => {
       await patchEventVolunteer({
@@ -145,14 +138,14 @@ function EventVolunteerRowEditor({ item }: { item: EventVolunteerItem }) {
     patchStrategy.partial,
   )
 
-  return <EventVolunteerForm {...formProps} syncState={state} className="px-4" />
+  return <EventVolunteerForm {...formProps} syncState={state} excludeVolunteers={addedVolunteers} className="px-4" />
 }
 
-function CreateEventVolunteerForm({ eventId }: { eventId: string }) {
-  const [formData, setFormData] = useState<EventVolunteerFormData>(emptyEventVolunteerForm)
+function CreateEventVolunteerForm({ eventId, addedVolunteers }: { eventId: string, addedVolunteers: Volunteer[] }) {
+  const [formData, setFormData] = useState<EventVolunteerFormValues>(emptyEventVolunteerForm)
   const [createEventVolunteer] = useCreateEventVolunteer({ refetchQueries: ['getEventVolunteers'] })
 
-  const handleSubmit = async (data: EventVolunteerFormData) => {
+  const handleSubmit = async (data: EventVolunteerFormValues) => {
     if (!data.volunteer) return
     await addGlobalLoadingAnimation(createEventVolunteer({
       eventVolunteer: {
@@ -168,6 +161,6 @@ function CreateEventVolunteerForm({ eventId }: { eventId: string }) {
 
   return <Card>
     <H2>{useTranslation('pages.events.volunteersPage.addVolunteer')}</H2>
-    <EventVolunteerForm value={formData} onChange={setFormData} onSubmit={handleSubmit} />
+    <EventVolunteerForm value={formData} onChange={setFormData} onSubmit={handleSubmit} excludeVolunteers={addedVolunteers} isNew />
   </Card>
 }
