@@ -62,7 +62,9 @@ export const fi = {
     eventVolunteer: {
       volunteer: 'Vapaaehtoinen',
       interestedIn: 'Kiinnostuksen kohteet',
+      noInterests: 'Ei kiinnostuksen kohteita',
       wishes: 'Toiveet',
+      noWishes: 'Ei erityisiä toiveita',
       notes: 'Muistiinpanot',
     },
   },

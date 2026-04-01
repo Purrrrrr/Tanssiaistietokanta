@@ -58,16 +58,17 @@ const colors = [
 ]
 export const TAG_COLOR_COUNT = colors.length
 
-interface ColoredTagProps {
+export interface ColoredTagProps {
   tag?: string | number
   title: string
-  hashSource?: string
+  hashSource?: string | number
   color?: number
   small?: boolean
   onClick?: MouseEventHandler
+  children?: React.ReactNode
 }
 
-export function ColoredTag({ tag, title, hashSource, color, small, onClick }: ColoredTagProps) {
+export function ColoredTag({ tag, title, children, hashSource, color, small, onClick }: ColoredTagProps) {
   const colorIndex = Math.abs(color ?? hash(hashSource ?? title)) % TAG_COLOR_COUNT
   const className = colors[colorIndex]
   const Element = onClick ? 'button' : 'span'
@@ -91,11 +92,15 @@ export function ColoredTag({ tag, title, hashSource, color, small, onClick }: Co
         {tag}
       </span>}
     {title}
+    {children}
   </Element>
 }
 
-function hash(title: string): number {
-  return title
+function hash(source: string | number): number {
+  if (typeof source === 'number') {
+    return source
+  }
+  return source
     .split('')
     .map(s => s.codePointAt(0) ?? 0)
     .reduce((acc, code) => code + (acc << 5) - acc, 0)

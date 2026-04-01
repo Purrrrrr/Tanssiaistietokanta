@@ -10,8 +10,10 @@ import { patchStrategy, useAutosavingState } from 'libraries/forms'
 import { Button, Card, H2 } from 'libraries/ui'
 import { ChevronDown, ChevronUp, Edit } from 'libraries/ui/icons'
 import { ItemList, Sort } from 'libraries/ui/ItemList'
+import { titleCase } from 'libraries/ui-showcase/utils/titleCase'
 import { DeleteEventVolunteerButton } from 'components/eventVolunteers/DeleteEventVolunteerButton'
 import { emptyEventVolunteerForm, EventVolunteerForm, EventVolunteerFormValues } from 'components/eventVolunteers/EventVolunteerForm'
+import { ColoredTag, ColoredTagProps } from 'components/widgets/ColoredTag'
 import { useT, useTranslation } from 'i18n'
 import { sortedBy } from 'utils/sorted'
 
@@ -34,11 +36,9 @@ function RouteComponent() {
   return <>
     <H2>{t('title')}</H2>
     {eventVolunteers?.length > 0 &&
-      <p>
-        {t('Nvolunteers', { count: eventVolunteers?.length })}:{' '}
-        <EventVolunteerRoleCounts volunteers={unsortedEventVolunteers ?? []} />
-      </p>
+      <p>{t('Nvolunteers', { count: eventVolunteers?.length })}</p>
     }
+    <EventVolunteerRoleCounts volunteers={unsortedEventVolunteers ?? []} />
     <ItemList
       items={eventVolunteers ?? []}
       emptyText={t('noVolunteers')}
@@ -85,24 +85,34 @@ function EventVolunteerRoleCounts({ volunteers }: { volunteers: EventVolunteer[]
     ([role]) => role.order,
   )
 
-  return <span className="comma-separated-list">
+  return <div className="flex gap-1 flex-wrap my-2">
     {roles.map(([role, count]) => (
-      <div key={role._id}>{count} {count === 1 ? role.name.toLowerCase() : role.plural}</div>
+      <RoleTag key={role._id} role={role} tag={count} title={count === 1 ? role.name : titleCase(role.plural)} />
     ))}
-  </span>
+  </div>
+}
+
+function RoleTag({ role, title, ...props }: { role: EventRole, title?: string } & Omit<ColoredTagProps, 'hashSource' | 'title'>) {
+  return <ColoredTag hashSource={role.order * 2 - 1} title={title ?? role.name} {...props} />
 }
 
 function EventVolunteerListRow({ ev, addedVolunteers }: { ev: EventVolunteer, addedVolunteers: Volunteer[] }) {
   const [showEditor, setShowEditor] = useState(false)
+  const t = useT('')
 
   return <ItemList.Row
     expandableContent={<EventVolunteerRowEditor item={ev} addedVolunteers={addedVolunteers} />}
     isOpen={showEditor}
   >
     <span>{ev.volunteer.name}</span>
-    <span>{sortedBy(ev.interestedIn, item => item.order).map(role => role.name).join(', ')}</span>
-    <span>{ev.wishes}</span>
-    <span>{ev.notes}</span>
+    <span>
+      {sortedBy(ev.interestedIn, item => item.order).map(role => <RoleTag key={role._id} role={role} />)}
+      {ev.interestedIn.length === 0 &&
+        <span className="italic text-gray-500">{t('domain.eventVolunteer.noInterests')}</span>
+      }
+    </span>
+    <span>{ev.wishes ? ev.wishes : <span className="italic text-gray-500">{t('domain.eventVolunteer.noWishes')}</span>}</span>
+    <span>{ev.notes || '-'}</span>
     <div className="flex items-center gap-1">
       <DeleteEventVolunteerButton minimal eventVolunteerId={ev._id} />
       <Button
@@ -110,8 +120,8 @@ function EventVolunteerListRow({ ev, addedVolunteers }: { ev: EventVolunteer, ad
         entityId={ev._id}
         minimal
         icon={<Edit />}
-        aria-label={useTranslation('common.edit')}
-        tooltip={useTranslation('common.edit')}
+        aria-label={t('common.edit')}
+        tooltip={t('common.edit')}
         color="primary"
         onClick={() => setShowEditor(!showEditor)}
         rightIcon={showEditor ? <ChevronUp /> : <ChevronDown />}
@@ -129,7 +139,8 @@ function EventVolunteerRowEditor({ item, addedVolunteers }: { item: EventVolunte
       await patchEventVolunteer({
         id: item._id,
         eventVolunteer: {
-          ...data,
+          wishes: data.wishes,
+          notes: data.notes,
           volunteerId: data.volunteer?._id,
           interestedIn: data.interestedIn?.map(r => r._id),
         },
