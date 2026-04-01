@@ -1,6 +1,6 @@
 .page {
   --navbar-size: var(--page-navbar-height, 50px);
-  --titlebar-size: min(250px, max(20dvw, 20vh));
+  --titlebar-size: min(250px, max(20dvw, 35vh));
   --page-gap: 1rem;
   --background-image: url("/Hieronymus_Janssens_-_Figures_dancing_in_an_elegant_interior-tiled.jpg");
   padding-inline: 25px;
@@ -73,6 +73,7 @@
     background-image: var(--background-image);
     background-repeat: repeat-x;
     background-size: auto 100%;
+    background-position: center;
     margin-top: calc(-1 * var(--navbar-size) - 16px);
     margin-inline: -25px;
   }
@@ -80,6 +81,7 @@
   & > .title {
     grid-area: title;
     min-height: var(--titlebar-size);
+    padding-block: 2rem;
 
     .h1 {
       font-family: "Tangerine", cursive;
