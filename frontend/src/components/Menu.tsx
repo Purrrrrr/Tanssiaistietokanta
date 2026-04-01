@@ -1,10 +1,10 @@
 import { createLink } from '@tanstack/react-router'
-import { ComponentProps, useCallback, useRef } from 'react'
+import { ComponentProps } from 'react'
 import { Share } from '@blueprintjs/icons'
 import classNames from 'classnames'
 
 import { omitPermissionCheckingProps, withPermissionChecking } from 'libraries/access-control'
-import { useResizeObserver } from 'libraries/ui'
+import { useDimensionCssVariables } from 'utils/useDimensionCssVariables'
 
 interface MenuProps {
   className?: string
@@ -13,20 +13,7 @@ interface MenuProps {
 }
 
 export function Menu({ className, children, cssDimensionVariablePrefix }: MenuProps) {
-  const ref = useRef<HTMLDivElement>(null)
-
-  useResizeObserver(ref, useCallback(entries => {
-    if (!cssDimensionVariablePrefix) return
-    const [{ target }] = entries
-    const h = target?.scrollHeight ?? 0
-    const w = target?.scrollWidth ?? 0
-    if (h > 0) {
-      document.body.style.setProperty(`--${cssDimensionVariablePrefix}-height`, `${h}px`)
-    }
-    if (w > 0) {
-      document.body.style.setProperty(`--${cssDimensionVariablePrefix}-width`, `${w}px`)
-    }
-  }, [cssDimensionVariablePrefix]))
+  const ref = useDimensionCssVariables(cssDimensionVariablePrefix)
 
   return <menu className={className}>
     <div className="menu-measure-container flex-col bg-gray-50 rounded min-w-52 py-3" ref={ref}>{children}</div>

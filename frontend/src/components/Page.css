@@ -1,6 +1,6 @@
 .page {
-  --navbar-size: 50px;
-  --titlebar-size: max(min(250px, 20dvw), min(15vh));
+  --navbar-size: var(--page-navbar-height, 50px);
+  --titlebar-size: min(250px, max(20dvw, 20vh));
   --page-gap: 1rem;
   --background-image: url("/Hieronymus_Janssens_-_Figures_dancing_in_an_elegant_interior-tiled.jpg");
   padding-inline: 25px;

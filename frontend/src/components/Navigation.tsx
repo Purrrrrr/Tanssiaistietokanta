@@ -8,17 +8,19 @@ import { AnchorButton, Button } from 'libraries/ui'
 import { Breadcrumb, BreadcrumbsContainer } from 'libraries/ui/Breadcrumbs'
 import { Person as User } from 'libraries/ui/icons'
 import { useT, useTranslation } from 'i18n'
+import { useDimensionCssVariables } from 'utils/useDimensionCssVariables'
 
 import { NavigateButton } from './widgets/NavigateButton'
 
 function Navigation() {
+  const ref = useDimensionCssVariables('page-navbar')
   const T = useT('')
   const matches = useMatches()
   const breadcrumbs = matches
     .map(route => route.staticData?.breadcrumb ? ({ route, breadcrumb: route.staticData.breadcrumb }) : null)
     .filter(r => r !== null)
 
-  return <nav className="flex relative z-10 flex-wrap justify-between items-center px-3.5 h-auto bg-white shadow-sm min-h-12.5 shadow-stone-600/30">
+  return <nav ref={ref} className="flex relative z-10 flex-wrap justify-between items-center px-3.5 h-auto bg-white shadow-sm min-h-12.5 shadow-stone-600/30">
     <div className="grow">
       <BreadcrumbsContainer label={useTranslation('navigation.breadcrumbs')}>
         {breadcrumbs.map(({ route, breadcrumb }) =>
