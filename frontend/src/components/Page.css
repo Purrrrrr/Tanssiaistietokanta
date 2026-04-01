@@ -1,19 +1,73 @@
 .page {
   --navbar-size: 50px;
-  --titlebar-size: min(250px, 15vh);
+  --titlebar-size: max(min(250px, 20dvw), min(15vh));
   --page-gap: 1rem;
   --background-image: url("/Hieronymus_Janssens_-_Figures_dancing_in_an_elegant_interior-tiled.jpg");
   padding-inline: 25px;
   display: grid;
+  --menu-size: 0rem;
+  &.menu-open {
+    --menu-size: var(--page-menu-height, auto);
+  }
   grid-template:
-    "title toolbar" auto
+    "title title" auto
+    "toggle toolbar" auto
+    "menu menu" var(--menu-size)
     "content content" 1fr
     / auto 1fr;
   gap: var(--page-gap);
   transition: grid-template 0.3s ease-in;
 
-  .page-background {
-    /* content: ""; */
+  @media (min-width: 800px)  {
+    .menu-measure-container {
+      width: max-content;
+    }
+  }
+  @media (min-width: 800px) and (max-width: 1000px) {
+    --toggle-size: 0rem;
+    &:has(> .menu) {
+    --toggle-size: 2rem;
+    }
+    column-gap: 0px;
+    &.menu-open {
+      --menu-size: calc(var(--page-menu-width, auto) - var(--toggle-size) + var(--page-gap));
+    }
+
+    grid-template:
+      "title title title" auto
+      "toggle toolbar toolbar" auto
+      "menu menu content" 1fr
+      / var(--toggle-size) var(--menu-size) 1fr;
+    & > .menu-toggle {
+      width: 0;
+    }
+    & > .toolbar {
+      padding-left: var(--toggle-size);
+    }
+    &:not(.menu-open) > .content {
+      margin-left: calc(-1 * var(--toggle-size));
+    }
+  }
+
+  @media (min-width: 1000px) {
+    --menu-size: 0rem;
+    &:has(> .menu) {
+      --menu-size: 2rem;
+    }
+    grid-template:
+      "title title toolbar" auto
+      "toggle content content" auto
+      "menu content content" 1fr
+      / var(--menu-size) 1fr;
+
+    &.menu-open {
+      --menu-size: var(--page-menu-width, auto);
+    }    & > .toolbar {
+      margin-bottom: 1rem;
+    }
+  }
+
+  & > .page-background {
     grid-row: 1 / 2;
     grid-column: 1 / -1;
     background-image: var(--background-image);
@@ -45,83 +99,20 @@
     grid-area: toolbar;
     justify-self: end;
     align-self: end;
-    margin-bottom: 1rem;
   }
   & > .content {
     grid-area: content;
   }
-
-  &:has(> .menu) {
-    display: grid;
-
-    & > .menu-toggle {
-      grid-area: toggle;
-    }
-    & > .menu {
-      grid-area: menu;
-      z-index: 1;
-    }
-    &:not(.menu-open) > .menu {
-      display: none;
-    }
-
-    --menu-size: 0rem;
-    grid-template:
-      "title title" auto
-      "toggle toolbar" auto
-      "menu menu" var(--menu-size)
-      "content content" 1fr
-      / auto 1fr;
-
-    &.menu-open {
-      --menu-size: var(--page-menu-height, auto);
-    }
-
-    @media (min-width: 800px)  {
-      .menu-measure-container {
-        width: max-content;
-      }
-    }
-    @media (max-width: 1000px) {
-      & > .toolbar {
-        margin-bottom: 0;
-      }
-    }
-    @media (min-width: 800px) and (max-width: 1000px) {
-      --toggle-size: 2rem;
-      column-gap: 0px;
-      &.menu-open {
-        --menu-size: calc(var(--page-menu-width, auto) - var(--toggle-size) + var(--page-gap));
-      }
-
-      grid-template:
-        "title title title" auto
-        "toggle toolbar toolbar" auto
-        "menu menu content" 1fr
-        / var(--toggle-size) var(--menu-size) 1fr;
-      & > .menu-toggle {
-        width: 0;
-      }
-      & > .toolbar {
-        padding-left: var(--toggle-size);
-      }
-      &:not(.menu-open) > .content {
-        margin-left: calc(-1 * var(--toggle-size));
-      }
-    }
-
-    @media (min-width: 1000px) {
-      --menu-size: 2rem;
-      grid-template:
-        "title title toolbar" auto
-        "toggle content content" auto
-        "menu content content" 1fr
-        / var(--menu-size) 1fr;
-
-      &.menu-open {
-        --menu-size: var(--page-menu-width, auto);
-      }
-    }
+  & > .menu-toggle {
+    grid-area: toggle;
   }
+  & > .menu {
+    grid-area: menu;
+    z-index: 1;
+  }
+  &:not(.menu-open) > .menu {
+    display: none;
+  }
+
 
 }
