@@ -66,7 +66,7 @@ function volunteerSorter(key: string) {
     case 'name':
       return (ev: EventVolunteerItem) => ev.volunteer.name
     case 'interestedIn':
-      return (ev: EventVolunteerItem) => ev.interestedIn[0]?.order ?? Number.POSITIVE_INFINITY
+      return (ev: EventVolunteerItem) => ev.interestedIn.map(role => role.order * 100 - ev.interestedIn.length).map(nr => String(nr).padStart(5, '0')).join('.')
     case 'wishes':
       return (ev: EventVolunteerItem) => ev.wishes ?? ''
     case 'notes':
