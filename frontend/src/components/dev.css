@@ -1,49 +1,57 @@
-#layout {
-  &:before {
-    content: "";
-    position: fixed;
-    inset: -100%;
-    transform: rotate(-30deg);
-    z-index: -1;
-    background-image: url('./dev.svg');
-  }
-  & main:before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    --dev-h: 200px;
-    background: linear-gradient(180deg, #fff0 0, #ffff var(--dev-h));
-    pointer-events: none;
-  }
-
+#layout:has(#debug_styles:checked) {
   & > nav {
-    position: relative;
-    background: #fff8;
     &:before {
       display: block;
       width: 100%;
       @media (min-width: 400px) {
         position: fixed;
-        top: 0px;
+        top: 50px;
         left: 50%;
         transform: translateX(-50%);
         width: max-content;
       }
-      padding-inline: min(100px, 10vw);
-      height: 50px;
+      padding-inline: min(300px, 10vw);
+      height: 40px;
       z-index: -1;
       text-align: center;
-      line-height: 50px;
+      line-height: 40px;
       content: "DEVELOPMENT VERSION";
       font-weight: 900;
       font-size: 1.4em;
       color: #b20;
       background-repeat: no-repeat;
-      background-image: linear-gradient(90deg, #fff0 0%, #fb03 50%, #fff0 100%);
+      background-image: linear-gradient(90deg, #fff0 0%, #fb0f 50%, #fff0 100%);
       @media (max-width: 800px) {
         font-size: 1em;
       }
     }
   }
+
+  .page {
+    &:before {
+      content: "";
+      position: fixed;
+      z-index: -2;
+      inset: -100%;
+      transform: rotate(-30deg);
+      background-image: url('./dev.svg');
+      pointer-events: none;
+    }
+    .page-background {
+      background-image: linear-gradient(to bottom, #a505, #a504), repeating-conic-gradient(#c882 0 25%, #0000 0 50%), var(--background-image);
+      background-size: auto, 70px 70px, auto 100%;
+      background-repeat: repeat, repeat, repeat-x;
+      background-blend-mode: screen;
+    }
+    &:after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      --dev-h: 300px;
+      background: linear-gradient(180deg, #fff0 var(--titlebar-size), #ffff calc(var(--titlebar-size) + var(--dev-h)));
+    }
+  }
+
 }

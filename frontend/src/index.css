@@ -41,16 +41,6 @@ strong{
 
 h1, h2 {
 }
-.h1 {
-  font-family: "Tangerine", cursive;
-  font-size: 6em;
-  font-weight: 500;
-  font-style: normal;
-  line-height: 1;
-  @media (max-width: 800px) {
-    font-size: 4em;
-  }
-}
 
 @utility comma-separated-list {
   & > * {
@@ -94,6 +84,7 @@ h1, h2 {
 
 #layout > nav {
   grid-area: header;
+  background: #fffc;
 }
 
 #layout > footer {
@@ -103,7 +94,6 @@ h1, h2 {
 #main-content {
   grid-area: main;
 
-  --main-margin-size: 25px;
   --sidebar-size: 0px;
   &:has(> aside > :not(:empty)) {
     --sidebar-size: min(25%, 400px);
@@ -133,8 +123,6 @@ h1, h2 {
 
   & > main {
     grid-area: main;
-    padding-top: 16px;
-    padding-inline: var(--main-margin-size);
   }
   & > aside {
     position: relative;

@@ -33,9 +33,9 @@ export function Page({ children, info, toolbar, backLink, menu, logo, ...props }
   }
 
   return <>
-    {backLink}
     <div className={classNames('page', (!!menu && menuOpen) && 'menu-open')}>
-      <div className="title flex flex-wrap items-end gap-4">
+      <div className="page-background" />
+      <div className="title flex flex-wrap items-center gap-4 text-amber-100 text-shadow-stone-600 text-shadow-lg">
         {logo}
         <h1 className="h1">{title}</h1>
         <div className="pb-3 text-lg ps-3">{info}</div>
@@ -43,9 +43,12 @@ export function Page({ children, info, toolbar, backLink, menu, logo, ...props }
       {menu && <div className="menu-toggle">
         <Button minimal icon={<MenuHamburger />} className="" onClick={() => setMenuOpen(!menuOpen)} />
       </div>}
-      {toolbar && <div className="toolbar">{toolbar}</div>}
+      {toolbar && <div className="toolbar bg-white/60 backdrop-blur-md p-2 rounded-xl">{toolbar}</div>}
       {menu && <Menu className="menu" cssDimensionVariablePrefix="page-menu">{menu}</Menu>}
-      <PageContent>{children}</PageContent>
+      <PageContent>
+        <div className="backlink">{backLink}</div>
+        {children}
+      </PageContent>
     </div>
   </>
 }
