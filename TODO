@@ -334,6 +334,8 @@
   * Common toolbar style
   * Migrate 3 component page title code into one file
   * Find a way to show syncstatus nicely
+  * Nice background
+  * Prevent nav from overflowing on mobile
     Provide some links between pages without the menu for redundancy
     Change translation keys to somewhat match new structure
 
@@ -341,6 +343,12 @@
   * Apuopettajat / assistant teachers
   * Event signed up volunteers list
     * Notes
+    Event volunteers page
+    * Editing of volunteers
+    * Ordering of volunteer list
+    * Make the form nicer to look at
+      Prevent inserting/setting same volunteer twice
+      Filtering of volunteer list
     Check GDPR stuff
     Separate workshop pages for events
 
