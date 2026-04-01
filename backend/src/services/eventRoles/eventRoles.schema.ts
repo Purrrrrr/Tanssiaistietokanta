@@ -17,6 +17,7 @@ export const eventRolesSchema = Type.Object(
     _createdAt: Type.String(),
     name: Name(),
     description: Type.String(),
+    plural: Type.String(),
     appliesToWorkshops: Type.Boolean(),
     order: Type.Number(),
   },
@@ -26,6 +27,7 @@ export type EventRoles = Static<typeof eventRolesSchema>
 export const eventRolesValidator = getValidator(eventRolesSchema, dataValidator)
 export const eventRolesResolver = resolve<EventRoles, HookContext>({
   description: value => value ?? '',
+  plural: value => value ?? '',
   appliesToWorkshops: value => value ?? false,
   order: value => value ?? 0,
 })
