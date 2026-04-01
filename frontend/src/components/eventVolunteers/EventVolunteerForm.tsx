@@ -3,7 +3,7 @@ import { TextArea } from 'libraries/forms/fieldComponents/basicComponents'
 import { FormProps } from 'libraries/forms/Form'
 import { useT } from 'i18n'
 
-import { EventRoleSelector } from './EventRoleSelector'
+import { EventVolunteerRolePicker } from './EventVolunteerRolePicker'
 import { VolunteerChooser } from './VolunteerChooser'
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
@@ -36,27 +36,27 @@ interface EventVolunteerFormProps extends FormProps<EventVolunteerFormData> {
   syncState?: SyncState
 }
 
-export function EventVolunteerForm({ value, onChange, onSubmit, syncState, onValidityChange, onResolveConflict, conflicts }: EventVolunteerFormProps) {
+export function EventVolunteerForm({ syncState, onSubmit, ...rest }: EventVolunteerFormProps) {
   const tDomain = useT('domain.eventVolunteer')
   const t = useT('pages.events.volunteersPage')
 
-  return <Form value={value} onChange={onChange} onSubmit={onSubmit} onValidityChange={onValidityChange} onResolveConflict={onResolveConflict} conflicts={conflicts} labelStyle="above" errorDisplay="onSubmit">
+  return <Form {...rest} onSubmit={onSubmit} errorDisplay={onSubmit ? 'onSubmit' : 'always'}>
     {syncState && <SyncStatus floatRight state={syncState} />}
-    <div className="flex flex-wrap gap-4">
+    <div className="grid grid-cols-2 gap-x-4">
       <Field
         path="volunteer"
         label={tDomain('volunteer')}
         component={VolunteerChooser}
         required
-        containerClassName="w-60"
       />
       <Field
         path="interestedIn"
         label={tDomain('interestedIn')}
-        component={EventRoleSelector}
+        component={EventVolunteerRolePicker}
+        containerClassName="col-span-full"
       />
-      <Field path="wishes" label={tDomain('wishes')} component={TextArea} containerClassName="w-60" />
-      <Field path="notes" label={tDomain('notes')} component={TextArea} containerClassName="w-60" />
+      <Field path="wishes" label={tDomain('wishes')} component={TextArea} />
+      <Field path="notes" label={tDomain('notes')} component={TextArea} />
     </div>
     { onSubmit && <SubmitButton text={t('form.submit')} />}
   </Form>

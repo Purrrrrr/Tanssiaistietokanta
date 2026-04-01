@@ -7,10 +7,11 @@ import { useCreateEventVolunteer, useEventVolunteers, usePatchEventVolunteer } f
 import { patchStrategy, useAutosavingState } from 'libraries/forms'
 import { Button, Card, H2 } from 'libraries/ui'
 import { ChevronDown, ChevronUp, Edit } from 'libraries/ui/icons'
-import { ItemList } from 'libraries/ui/ItemList'
+import { ItemList, Sort } from 'libraries/ui/ItemList'
 import { DeleteEventVolunteerButton } from 'components/eventVolunteers/DeleteEventVolunteerButton'
 import { emptyEventVolunteerForm, EventRoleItem, EventVolunteerForm, EventVolunteerFormData, VolunteerItem } from 'components/eventVolunteers/EventVolunteerForm'
 import { useT, useTranslation } from 'i18n'
+import { sortedBy } from 'utils/sorted'
 
 import { useCurrentEvent } from './-context'
 
@@ -33,28 +34,44 @@ interface EventVolunteerItem {
 function RouteComponent() {
   const event = useCurrentEvent()
   const t = useT('pages.events.volunteersPage')
-  const [eventVolunteers] = useEventVolunteers({ eventId: event._id })
+  const [unsortedEventVolunteers] = useEventVolunteers({ eventId: event._id })
+  const [sort, setSort] = useState<Sort>({ key: 'interestedIn', direction: 'asc' })
+  const eventVolunteers = sortedBy(unsortedEventVolunteers ?? [], volunteerSorter(sort.key), sort.direction === 'desc')
 
   return <>
     <H2>{t('title')}</H2>
+    {eventVolunteers?.length > 0 && <p>{t('Nvolunteers', { count: eventVolunteers?.length })}</p>}
     <ItemList
       items={eventVolunteers ?? []}
       emptyText={t('noVolunteers')}
       columns="grid-cols-[1fr_1fr_1fr_1fr_max-content]"
     >
-      <ItemList.Header>
-        <span>{t('columns.name')}</span>
-        <span>{t('columns.interestedIn')}</span>
-        <span>{t('columns.wishes')}</span>
-        <span>{t('columns.notes')}</span>
-        <span />
-      </ItemList.Header>
+      <ItemList.SortableHeader currentSort={sort} onSort={setSort} columns={[
+        { key: 'name', label: t('columns.name') },
+        { key: 'interestedIn', label: t('columns.interestedIn') },
+        { key: 'wishes', label: t('columns.wishes') },
+        { key: 'notes', label: t('columns.notes') },
+      ]} />
       {(eventVolunteers ?? []).map(ev =>
         <EventVolunteerListRow key={ev._id} ev={ev as EventVolunteerItem} />,
       )}
     </ItemList>
     <CreateEventVolunteerForm eventId={event._id} />
   </>
+}
+
+function volunteerSorter(key: string) {
+  switch (key) {
+    default:
+    case 'name':
+      return (ev: EventVolunteerItem) => ev.volunteer.name
+    case 'interestedIn':
+      return (ev: EventVolunteerItem) => ev.interestedIn[0]?.order ?? Number.POSITIVE_INFINITY
+    case 'wishes':
+      return (ev: EventVolunteerItem) => ev.wishes ?? ''
+    case 'notes':
+      return (ev: EventVolunteerItem) => ev.notes ?? ''
+  }
 }
 
 function EventVolunteerListRow({ ev }: { ev: EventVolunteerItem }) {
@@ -65,7 +82,7 @@ function EventVolunteerListRow({ ev }: { ev: EventVolunteerItem }) {
     isOpen={showEditor}
   >
     <span>{ev.volunteer.name}</span>
-    <span>{ev.interestedIn.map(role => role.name).join(', ')}</span>
+    <span>{sortedBy(ev.interestedIn, item => item.order).map(role => role.name).join(', ')}</span>
     <span>{ev.wishes}</span>
     <span>{ev.notes}</span>
     <div className="flex items-center gap-1">
@@ -103,7 +120,7 @@ function EventVolunteerRowEditor({ item }: { item: EventVolunteerItem }) {
     patchStrategy.partial,
   )
 
-  return <EventVolunteerForm {...formProps} syncState={state} />
+  return <EventVolunteerForm {...formProps} syncState={state} className="px-4" />
 }
 
 function CreateEventVolunteerForm({ eventId }: { eventId: string }) {

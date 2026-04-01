@@ -464,6 +464,10 @@ export const fi = {
       volunteersPage: {
         title: 'Vapaaehtoiset',
         noVolunteers: 'Ei vapaaehtoisia',
+        Nvolunteers: {
+          one: '1 vapaaehtoinen',
+          many: '__count__ vapaaehtoista',
+        },
         addVolunteer: 'Lisää vapaaehtoinen',
         deleteVolunteer: 'Poista vapaaehtoinen',
         deleteConfirmation: 'Haluatko varmasti poistaa tämän vapaaehtoisen tapahtumasta?',

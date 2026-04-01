@@ -7,7 +7,7 @@ interface EventRoleItem { _id: string, name: string, description: string, applie
 
 export type EventRoleSelectorProps = FieldComponentProps<EventRoleItem[]>
 
-export function EventRoleSelector({
+export function EventVolunteerRolePicker({
   value, onChange, readOnly, 'aria-label': ariaLabel, 'aria-describedby': ariaDescribedby,
 }: EventRoleSelectorProps) {
   const t = useT('components.eventRoleSelector')
@@ -18,7 +18,7 @@ export function EventRoleSelector({
     const next = isSelected
       ? (value ?? []).filter(r => r._id !== role._id)
       : [...(value ?? []), role]
-    onChange(next.sort((a, b) => a.order - b.order))
+    onChange(next.sort((a, b) => a._id.localeCompare(b._id)))
   }
 
   const workshopRoles = (roles ?? []).filter(r => r.appliesToWorkshops)
@@ -26,25 +26,27 @@ export function EventRoleSelector({
 
   const renderGroup = (groupRoles: EventRoleItem[], title: string) => {
     if (groupRoles.length === 0) return null
-    return <>
+    return <div>
       <h3 className="font-semibold mt-2 mb-1">{title}</h3>
-      {groupRoles.map(role =>
-        <label key={role._id} className="flex items-center gap-2 cursor-pointer">
-          <input
-            type="checkbox"
-            checked={(value ?? []).some(r => r._id === role._id)}
-            onChange={() => toggle(role)}
-            disabled={readOnly}
-            aria-label={`${ariaLabel ?? ''} ${role.name}`}
-            aria-describedby={ariaDescribedby}
-          />
-          {role.name}
-        </label>,
-      )}
-    </>
+      <div className="flex gap-3">
+        {groupRoles.map(role =>
+          <label key={role._id} className="inline-flex items-center gap-1 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={(value ?? []).some(r => r._id === role._id)}
+              onChange={() => toggle(role)}
+              disabled={readOnly}
+              aria-label={`${ariaLabel ?? ''} ${role.name}`}
+              aria-describedby={ariaDescribedby}
+            />
+            {role.name}
+          </label>,
+        )}
+      </div>
+    </div>
   }
 
-  return <div className="flex flex-col gap-1">
+  return <div className="flex gap-4">
     {renderGroup(workshopRoles, t('workshopRoles'))}
     {renderGroup(eventRoles, t('eventRoles'))}
   </div>

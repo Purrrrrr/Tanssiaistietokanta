@@ -68,7 +68,7 @@ export function TextArea({ value, onChange, inline: _ignored, className, ...prop
     {...props}
     className={classNames(
       className,
-      'w-full p-2.5 resize-y',
+      'w-full min-h-24 p-2.5 resize-y',
       CssClass.inputBox,
     )}
   />
