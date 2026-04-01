@@ -40,7 +40,12 @@ function RouteComponent() {
 
   return <>
     <H2>{t('title')}</H2>
-    {eventVolunteers?.length > 0 && <p>{t('Nvolunteers', { count: eventVolunteers?.length })}</p>}
+    {eventVolunteers?.length > 0 &&
+      <p>
+        {t('Nvolunteers', { count: eventVolunteers?.length })}:{' '}
+        <EventVolunteerRoleCounts volunteers={unsortedEventVolunteers ?? []} />
+      </p>
+    }
     <ItemList
       items={eventVolunteers ?? []}
       emptyText={t('noVolunteers')}
@@ -72,6 +77,26 @@ function volunteerSorter(key: string) {
     case 'notes':
       return (ev: EventVolunteerItem) => ev.notes ?? ''
   }
+}
+
+function EventVolunteerRoleCounts({ volunteers }: { volunteers: EventVolunteer[] }) {
+  const roleCounts = new Map<EventRole, number>()
+  volunteers.forEach(ev => {
+    ev.interestedIn.forEach(role => {
+      roleCounts.set(role, (roleCounts.get(role) ?? 0) + 1)
+    })
+  })
+
+  const roles = sortedBy(
+    Array.from(roleCounts.entries()),
+    ([role]) => role.order,
+  )
+
+  return <span className="comma-separated-list">
+    {roles.map(([role, count]) => (
+      <div key={role._id}>{count} {count === 1 ? role.name.toLowerCase() : role.plural}</div>
+    ))}
+  </span>
 }
 
 function EventVolunteerListRow({ ev }: { ev: EventVolunteerItem }) {

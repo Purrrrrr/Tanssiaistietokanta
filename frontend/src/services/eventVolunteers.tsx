@@ -10,7 +10,7 @@ setupServiceUpdateFragment(
     eventId
     volunteerId
     volunteer { _id name }
-    interestedIn { _id name description appliesToWorkshops order }
+    interestedIn { _id name plural description appliesToWorkshops order }
     wishes
     notes
   }`,
@@ -26,7 +26,7 @@ query getEventVolunteers($eventId: ID, $volunteerId: ID) {
     eventId
     volunteerId
     volunteer { _id name }
-    interestedIn { _id name description appliesToWorkshops order }
+    interestedIn { _id name plural description appliesToWorkshops order }
     wishes
     notes
   }
@@ -42,7 +42,7 @@ query getEventVolunteer($id: ID!, $versionId: ID) {
     eventId
     volunteerId
     volunteer { _id name }
-    interestedIn { _id name description appliesToWorkshops order }
+    interestedIn { _id name plural description appliesToWorkshops order }
     wishes
     notes
   }
@@ -58,7 +58,7 @@ mutation createEventVolunteer($eventVolunteer: EventVolunteerInput!) {
     eventId
     volunteerId
     volunteer { _id name }
-    interestedIn { _id name description appliesToWorkshops order }
+    interestedIn { _id name plural description appliesToWorkshops order }
     wishes
     notes
   }
@@ -74,7 +74,7 @@ mutation modifyEventVolunteer($id: ID!, $eventVolunteer: EventVolunteerInput!) {
     eventId
     volunteerId
     volunteer { _id name }
-    interestedIn { _id name description appliesToWorkshops order }
+    interestedIn { _id name plural description appliesToWorkshops order }
     wishes
     notes
   }
@@ -90,7 +90,7 @@ mutation patchEventVolunteer($id: ID!, $eventVolunteer: EventVolunteerPatchInput
     eventId
     volunteerId
     volunteer { _id name }
-    interestedIn { _id name description appliesToWorkshops order }
+    interestedIn { _id name plural description appliesToWorkshops order }
     wishes
     notes
   }
@@ -106,7 +106,7 @@ mutation deleteEventVolunteer($id: ID!) {
     eventId
     volunteerId
     volunteer { _id name }
-    interestedIn { _id name description appliesToWorkshops order }
+    interestedIn { _id name plural description appliesToWorkshops order }
     wishes
     notes
   }

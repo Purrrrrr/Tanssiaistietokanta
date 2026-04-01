@@ -5,6 +5,7 @@ setupServiceUpdateFragment(
   `fragment EventRoleFragment on EventRole {
     _id
     name
+    plural
     description
     appliesToWorkshops
     order
@@ -16,6 +17,7 @@ query getEventRoles {
   eventRoles {
     _id
     name
+    plural
     description
     appliesToWorkshops
     order
