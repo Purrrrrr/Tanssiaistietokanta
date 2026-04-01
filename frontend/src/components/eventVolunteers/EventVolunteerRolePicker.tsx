@@ -28,7 +28,7 @@ export function EventVolunteerRolePicker({
     if (groupRoles.length === 0) return null
     return <div>
       <h3 className="font-semibold mt-2 mb-1">{title}</h3>
-      <div className="flex gap-3">
+      <div className="flex flex-wrap gap-3">
         {groupRoles.map(role =>
           <label key={role._id} className="inline-flex items-center gap-1 cursor-pointer">
             <input
@@ -46,7 +46,7 @@ export function EventVolunteerRolePicker({
     </div>
   }
 
-  return <div className="flex gap-4">
+  return <div className="flex flex-wrap gap-4">
     {renderGroup(workshopRoles, t('workshopRoles'))}
     {renderGroup(eventRoles, t('eventRoles'))}
   </div>
