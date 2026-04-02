@@ -7,38 +7,74 @@ import { addGlobalLoadingAnimation } from 'backend'
 import { useCreateEventVolunteer, useEventVolunteers, usePatchEventVolunteer } from 'services/eventVolunteers'
 
 import { patchStrategy, useAutosavingState } from 'libraries/forms'
-import { Button, Card, H2 } from 'libraries/ui'
+import { Button, Card, FormGroup, H2, SearchBar } from 'libraries/ui'
 import { ChevronDown, ChevronUp, Edit } from 'libraries/ui/icons'
 import { ItemList, Sort } from 'libraries/ui/ItemList'
 import { titleCase } from 'libraries/ui-showcase/utils/titleCase'
 import { DeleteEventVolunteerButton } from 'components/eventVolunteers/DeleteEventVolunteerButton'
 import { emptyEventVolunteerForm, EventVolunteerForm, EventVolunteerFormValues } from 'components/eventVolunteers/EventVolunteerForm'
-import { ColoredTag, ColoredTagProps } from 'components/widgets/ColoredTag'
+import { EventVolunteerRoleSelector } from 'components/eventVolunteers/EventVolunteerRoleSelect'
+import { RoleTag } from 'components/eventVolunteers/RoleTag'
 import { useT, useTranslation } from 'i18n'
 import { sortedBy } from 'utils/sorted'
 
 import { useCurrentEvent } from './-context'
 
+interface EventVolunteerSearchParams {
+  search?: string
+  role?: string
+}
+
 export const Route = createFileRoute(
   '/events/$eventId/{-$eventVersionId}/volunteers',
 )({
   component: RouteComponent,
+  validateSearch: (search: Record<string, unknown>): EventVolunteerSearchParams => {
+    return {
+      search: typeof search.search === 'string' ? search.search : '',
+      role: typeof search.role === 'string' ? search.role : undefined,
+    }
+  },
 })
 
 function RouteComponent() {
   const event = useCurrentEvent()
   const t = useT('pages.events.volunteersPage')
-  const [unsortedEventVolunteers] = useEventVolunteers({ eventId: event._id })
+  const { search, role, setSearch, setRole } = useEventVolunteerSearchParams()
   const [sort, setSort] = useState<Sort>({ key: 'interestedIn', direction: 'asc' })
-  const eventVolunteers = sortedBy(unsortedEventVolunteers ?? [], volunteerSorter(sort.key), sort.direction === 'desc')
+
+  const [unsortedEventVolunteers] = useEventVolunteers({ eventId: event._id })
   const addedVolunteers = unsortedEventVolunteers.map(ev => ev.volunteer)
+
+  const eventVolunteers = sortedBy(unsortedEventVolunteers ?? [], volunteerSorter(sort.key), sort.direction === 'desc')
+    .filter(ev => {
+      if (search && !ev.volunteer.name.toLowerCase().includes(search.toLowerCase())) {
+        return false
+      }
+      if (role) {
+        return ev.interestedIn.some(r => r._id === role)
+      }
+      return true
+    })
 
   return <>
     <H2>{t('title')}</H2>
-    {eventVolunteers?.length > 0 &&
-      <p>{t('Nvolunteers', { count: eventVolunteers?.length })}</p>
-    }
-    <EventVolunteerRoleCounts volunteers={unsortedEventVolunteers ?? []} />
+    <div className="flex gap-4 flex-wrap items-center justify-between mb- mb-4">
+      <EventVolunteerRoleCounts volunteers={unsortedEventVolunteers ?? []} currentRole={role} onSetRole={setRole} />
+      <div className="flex gap-4">
+        <SearchBar
+          id="search-volunteers"
+          value={search}
+          onChange={setSearch}
+          placeholder={useTranslation('common.search')}
+          emptySearchText={useTranslation('common.emptySearch')}
+        />
+        <FormGroup inline label={t('filterByRole')} labelFor="role-filter">
+          <EventVolunteerRoleSelector id="role-filter" value={role} onChange={setRole} aria-label={t('filterByRole')} />
+        </FormGroup>
+      </div>
+    </div>
+    <p>{eventVolunteers?.length > 0 && t('Nvolunteers', { count: eventVolunteers?.length })}</p>
     <ItemList
       items={eventVolunteers ?? []}
       emptyText={t('noVolunteers')}
@@ -51,11 +87,42 @@ function RouteComponent() {
         { key: 'notes', label: t('columns.notes') },
       ]} />
       {(eventVolunteers ?? []).map(ev =>
-        <EventVolunteerListRow key={ev._id} ev={ev as EventVolunteer} addedVolunteers={addedVolunteers} />,
+        <EventVolunteerListRow
+          key={ev._id}
+          eventVolunteer={ev}
+          addedVolunteers={addedVolunteers}
+          currentRole={role}
+          onSetRole={setRole}
+        />,
       )}
     </ItemList>
     <CreateEventVolunteerForm eventId={event._id} addedVolunteers={addedVolunteers} />
   </>
+}
+
+function useEventVolunteerSearchParams() {
+  const search = Route.useSearch()
+  const params = Route.useParams()
+  const navigate = Route.useNavigate()
+
+  return {
+    search: '',
+    ...search,
+    setSearch(newSearch: string) {
+      navigate({
+        to: Route.id,
+        params,
+        search: { ...search, search: newSearch },
+      })
+    },
+    setRole(roleId: string | undefined) {
+      navigate({
+        to: Route.id,
+        params,
+        search: roleId ? { ...search, role: roleId } : { ...search, role: undefined },
+      })
+    },
+  }
 }
 
 function volunteerSorter(key: string) {
@@ -72,7 +139,7 @@ function volunteerSorter(key: string) {
   }
 }
 
-function EventVolunteerRoleCounts({ volunteers }: { volunteers: EventVolunteer[] }) {
+function EventVolunteerRoleCounts({ volunteers, currentRole, onSetRole }: { volunteers: EventVolunteer[], currentRole?: string, onSetRole: (roleId: string | undefined) => void }) {
   const roleCounts = new Map<EventRole, number>()
   volunteers.forEach(ev => {
     ev.interestedIn.forEach(role => {
@@ -87,16 +154,26 @@ function EventVolunteerRoleCounts({ volunteers }: { volunteers: EventVolunteer[]
 
   return <div className="flex gap-1 flex-wrap my-2">
     {roles.map(([role, count]) => (
-      <RoleTag key={role._id} role={role} tag={count} title={count === 1 ? role.name : titleCase(role.plural)} />
+      <RoleTag
+        key={role._id}
+        role={role}
+        tag={count}
+        selected={currentRole ? currentRole === role._id : undefined}
+        onSetRole={onSetRole}
+        title={count === 1 ? role.name : titleCase(role.plural)}
+      />
     ))}
   </div>
 }
 
-function RoleTag({ role, title, ...props }: { role: EventRole, title?: string } & Omit<ColoredTagProps, 'hashSource' | 'title'>) {
-  return <ColoredTag hashSource={role.order * 2 - 1} title={title ?? role.name} {...props} />
+interface EventVolunteerListRowProps {
+  eventVolunteer: EventVolunteer
+  addedVolunteers: Volunteer[]
+  currentRole?: string
+  onSetRole: (roleId: string | undefined) => void
 }
 
-function EventVolunteerListRow({ ev, addedVolunteers }: { ev: EventVolunteer, addedVolunteers: Volunteer[] }) {
+function EventVolunteerListRow({ eventVolunteer: ev, addedVolunteers, currentRole, onSetRole }: EventVolunteerListRowProps) {
   const [showEditor, setShowEditor] = useState(false)
   const t = useT('')
 
@@ -106,7 +183,15 @@ function EventVolunteerListRow({ ev, addedVolunteers }: { ev: EventVolunteer, ad
   >
     <span>{ev.volunteer.name}</span>
     <span>
-      {sortedBy(ev.interestedIn, item => item.order).map(role => <RoleTag key={role._id} role={role} />)}
+      {sortedBy(ev.interestedIn, item => item.order)
+        .map(role =>
+          <RoleTag
+            key={role._id}
+            role={role}
+            selected={currentRole ? currentRole === role._id : undefined}
+            onSetRole={onSetRole}
+          />,
+        )}
       {ev.interestedIn.length === 0 &&
         <span className="italic text-gray-500">{t('domain.eventVolunteer.noInterests')}</span>
       }

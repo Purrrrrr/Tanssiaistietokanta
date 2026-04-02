@@ -1,11 +1,11 @@
+import { EventRole } from 'types'
+
 import { useEventRoles } from 'services/eventRoles'
 
 import { FieldComponentProps } from 'libraries/forms'
 import { useT } from 'i18n'
 
-interface EventRoleItem { _id: string, name: string, description: string, appliesToWorkshops: boolean, order: number }
-
-export type EventRoleSelectorProps = FieldComponentProps<EventRoleItem[]>
+export type EventRoleSelectorProps = FieldComponentProps<EventRole[]>
 
 export function EventVolunteerRolePicker({
   value, onChange, readOnly, 'aria-label': ariaLabel, 'aria-describedby': ariaDescribedby,
@@ -13,7 +13,7 @@ export function EventVolunteerRolePicker({
   const t = useT('components.eventRoleSelector')
   const [roles] = useEventRoles()
 
-  const toggle = (role: EventRoleItem) => {
+  const toggle = (role: EventRole) => {
     const isSelected = (value ?? []).some(r => r._id === role._id)
     const next = isSelected
       ? (value ?? []).filter(r => r._id !== role._id)
@@ -24,7 +24,7 @@ export function EventVolunteerRolePicker({
   const workshopRoles = (roles ?? []).filter(r => r.appliesToWorkshops)
   const eventRoles = (roles ?? []).filter(r => !r.appliesToWorkshops)
 
-  const renderGroup = (groupRoles: EventRoleItem[], title: string) => {
+  const renderGroup = (groupRoles: EventRole[], title: string) => {
     if (groupRoles.length === 0) return null
     return <div>
       <h3 className="font-semibold mt-2 mb-1">{title}</h3>

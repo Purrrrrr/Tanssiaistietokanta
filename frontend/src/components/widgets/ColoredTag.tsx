@@ -66,9 +66,10 @@ export interface ColoredTagProps {
   small?: boolean
   onClick?: MouseEventHandler
   children?: React.ReactNode
+  selected?: boolean
 }
 
-export function ColoredTag({ tag, title, children, hashSource, color, small, onClick }: ColoredTagProps) {
+export function ColoredTag({ tag, title, children, hashSource, color, small, selected, onClick }: ColoredTagProps) {
   const colorIndex = Math.abs(color ?? hash(hashSource ?? title)) % TAG_COLOR_COUNT
   const className = colors[colorIndex]
   const Element = onClick ? 'button' : 'span'
@@ -76,8 +77,11 @@ export function ColoredTag({ tag, title, children, hashSource, color, small, onC
     onClick={onClick}
     className={classNames(
       className,
-      'align-middle inline-block px-2 mx-0.5 font-bold rounded-full overflow-hidden saturate-60',
+      'align-middle inline-block px-2 mx-0.5 font-bold rounded-full overflow-hidden',
       onClick && 'cursor-pointer hover:brightness-95 active:brightness-85',
+      selected === undefined && 'saturate-60',
+      selected === true && 'saturate-90',
+      selected === false && 'saturate-30',
       small
         ? 'my-0.5 text-xs inset-ring-2'
         : 'leading-5.5 h-6 inset-ring-2',

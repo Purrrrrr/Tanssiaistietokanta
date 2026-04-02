@@ -465,6 +465,8 @@ export const fi = {
       },
       volunteersPage: {
         title: 'Vapaaehtoiset',
+        filterByRole: 'Rooli',
+        allRoles: 'Kaikki roolit',
         noVolunteers: 'Ei vapaaehtoisia',
         Nvolunteers: {
           one: '1 vapaaehtoinen',

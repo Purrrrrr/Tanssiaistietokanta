@@ -59,11 +59,6 @@ function DancesPage() {
   </Page>
 }
 
-interface DanceListState {
-  search: string
-  category?: string | AnyCategory
-}
-
 function useDanceListState() {
   const { search = '', category = anyCategory } = Route.useSearch()
   const navigate = Route.useNavigate()
@@ -79,5 +74,5 @@ function useDanceListState() {
       to: '.',
       search: { category: newCategory, search },
     }),
-  } satisfies DanceListState & Record<string, unknown>
+  }
 }
