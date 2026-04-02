@@ -343,13 +343,20 @@
   * Apuopettajat / assistant teachers
   * Event signed up volunteers list
     * Notes
-    Event volunteers page
+  * Event volunteers page
     * Editing of volunteers
     * Ordering of volunteer list
     * Make the form nicer to look at
-      Prevent inserting/setting same volunteer twice
-      Filtering of volunteer list
-    Check GDPR stuff
+    * Prevent inserting/setting same volunteer twice
+    * Make list mobile layout readable
+    * Filtering of volunteer list
+    General volunteers pages
+      Editing names
+      Combining duplicate volunteers
+    Check GDPR stuff for names
+    Volunteer contact details page?
+      Add contact details
+      GDPR compliance
     Separate workshop pages for events
 
   General notes/documents to event
