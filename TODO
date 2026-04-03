@@ -336,8 +336,13 @@
   * Find a way to show syncstatus nicely
   * Nice background
   * Prevent nav from overflowing on mobile
+  * Change translation keys to somewhat match new structure
+  * Make the menu more prominent on mobile
+    Store the toggled state of the menu?
     Provide some links between pages without the menu for redundancy
-    Change translation keys to somewhat match new structure
+
+  Move event program editors near their usage sites
+  Move DeleteEventVolunteerButton and EventVolunteerRoleSelect near the route
 
   Teacher/people database
   * Apuopettajat / assistant teachers
@@ -353,12 +358,19 @@
     General volunteers pages
       Editing names
       Combining duplicate volunteers
+      Volunteering history
     Check GDPR stuff for names
     Volunteer contact details page?
       Add contact details
       GDPR compliance
     Separate workshop pages for events
 
+  Per component translations?
+    Load async in loaders
+    Files like component.i18n.fi.ts or -route.i18n.fi.ts
+    Register with a special function + augmented interface
+    Where do we get keys?
+    Support multiple locales
   General notes/documents to event
   Deadline support?
   Update Apollo server to v5
