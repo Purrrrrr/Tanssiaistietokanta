@@ -9,6 +9,7 @@ export const fi = {
     breadcrumbs: 'Murupolku',
     moveToContent: 'Siirry pääsisältöön',
     userSettings: 'Käyttäjäasetukset',
+    menu: 'Valikko',
     login: 'Kirjaudu',
     logout: 'Kirjaudu ulos',
   },

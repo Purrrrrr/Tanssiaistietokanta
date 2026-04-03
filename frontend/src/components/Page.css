@@ -65,6 +65,14 @@
     }    & > .toolbar {
       margin-bottom: 1rem;
     }
+
+    .menu-toggle {
+      padding: 0;
+      span.toggle-text {
+        /* Hide toggle button text, since it would take a lot of space */
+        display: none;
+      }
+    }
   }
 
   & > .page-background {
