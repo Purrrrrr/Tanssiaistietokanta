@@ -9,8 +9,9 @@ interface DeleteEventVolunteerButtonProps {
   eventVolunteerId: string
 }
 
+// TODO: move to volunteers route
 export function DeleteEventVolunteerButton({ minimal, eventVolunteerId }: DeleteEventVolunteerButtonProps) {
-  const t = useT('pages.events.volunteersPage')
+  const t = useT('routes.events.event.volunteers')
   const [deleteEventVolunteer] = useDeleteEventVolunteer({ refetchQueries: ['getEventVolunteers'] })
 
   const handleDelete = () => {

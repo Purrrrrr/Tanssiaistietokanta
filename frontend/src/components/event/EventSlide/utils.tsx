@@ -10,7 +10,7 @@ export function TeachedIn({ teachedIn }: { teachedIn: Workshop[] }) {
       : workshop.name,
   ).join(', ')
 
-  return `${useTranslation('pages.events.ballProgram.teachedInSet')} ${teachedInStr}`
+  return `${useTranslation('components.slide.teachedInSet')} ${teachedInStr}`
 }
 
 export function markdown(md?: string | null) {

@@ -19,7 +19,7 @@ type Event implements Versionable {
 
 type EventAccessControl {
   viewAccess: ViewAccess!
-  grants: [Grant!]!
+  grants: [EventGrant!]!
 }
 
 enum ViewAccess {
@@ -27,13 +27,13 @@ enum ViewAccess {
   limited
 }
 
-type Grant {
+type EventGrant {
   _id: ID!
   principal: String!
-  role: GrantRole!
+  role: EventGrantRole!
 }
 
-enum GrantRole {
+enum EventGrantRole {
   viewer
   teacher
   organizer
@@ -117,11 +117,11 @@ input EventInput {
 
 input EventAccessControlInput {
   viewAccess: ViewAccess
-  grants: [GrantInput!]
+  grants: [EventGrantInput!]
 }
 
-input GrantInput {
+input EventGrantInput {
   _id: ID!
   principal: String!
-  role: GrantRole!
+  role: EventGrantRole!
 }

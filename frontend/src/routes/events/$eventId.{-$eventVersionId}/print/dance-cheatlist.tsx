@@ -14,7 +14,7 @@ import { PrintTable } from 'components/PrintTable'
 import { useT } from 'i18n'
 import { uniq } from 'utils/uniq'
 
-import './DanceCheatList.sass'
+import './dance-cheatList.sass'
 
 export const Route = createFileRoute(
   '/events/$eventId/{-$eventVersionId}/print/dance-cheatlist',
@@ -47,7 +47,7 @@ query DanceCheatList($eventId: ID!) {
 
 function RouteComponent() {
   const eventId = Route.useParams().eventId
-  const t = useT('pages.events.danceCheatlist')
+  const t = useT('routes.events.event.print.danceCheatlist')
   const [cols, setCols] = useState(2)
   const [rows, setRows] = useState(2)
   const [landscape, setLandscape] = useState(true)
@@ -101,7 +101,7 @@ const normalize = (n: number) => isNaN(n)
     ? 1 : n
 
 function DanceCheatListView({ workshops, helpText }) {
-  const t = useT('pages.events.danceCheatlist')
+  const t = useT('routes.events.event.print.danceCheatlist')
   return <div className="dance-cheatsheet">
     {helpText && <p>{t('helpText')}</p>}
     {workshops.map(workshop =>
@@ -110,7 +110,7 @@ function DanceCheatListView({ workshops, helpText }) {
 }
 
 function WorkshopDances({ workshop }: { workshop: Workshop }) {
-  const t = useT('pages.events.danceCheatlist')
+  const t = useT('routes.events.event.print.danceCheatlist')
   const { name, instances } = workshop
   const dances = uniq(instances.flatMap(i => i.dances ?? []))
   return <>

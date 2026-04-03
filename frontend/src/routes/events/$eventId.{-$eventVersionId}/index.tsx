@@ -23,7 +23,7 @@ export const Route = createFileRoute('/events/$eventId/{-$eventVersionId}/')({
 
 function RouteComponent() {
   const event = useCurrentEvent()
-  const t = useT('pages.events.eventPage')
+  const t = useT('routes.events.event.index')
   const readOnly = event._versionId != undefined
   return <>
     <H2>{t('ballProgram')}</H2>
@@ -38,13 +38,14 @@ function EventProgram({ event }: { event: Event }) {
   const { program } = event
   const formatDateTime = useFormatDateTime()
 
-  const t = useT('pages.events.eventPage')
+  const t = useT('routes.events.event.index')
+  const label = useT('domain.event')
   if (!program || program.danceSets.length === 0) {
     return <p>{t('noProgram')}</p>
   }
 
   return <section className="@container">
-    <p>{t('ballDateTime')}: {formatDateTime(event.program.dateTime)}</p>
+    <p>{label('ballDateTime')}: {formatDateTime(event.program.dateTime)}</p>
     <div className="@3xl:grid grid-cols-[repeat(auto-fit,minmax(auto,16rem))] gap-2 mb-4 @3xl:text-center">
       {program.danceSets.map((danceSet, index) =>
         <Card key={index} className="@3xl:px-2 py-2 @max-3xl:border-0 @max-3xl:shadow-none" noPadding marginClass="">
@@ -97,6 +98,7 @@ function EventWorkshops({ event, readOnly }: { event: Event, readOnly: boolean }
 }
 
 function CreateWorkshopButton({ eventId, startDate }: { eventId: string, startDate: string }) {
+  // TODO: use correct keys
   const t = useT('pages.events.eventPage')
   const [createWorkshop] = useCreateWorkshop()
 
@@ -136,6 +138,7 @@ function WorkshopCard(
     endDate: string
   },
 ) {
+  // TODO: use correct keys
   const t = useT('pages.events.eventPage')
   const [showEditor, setShowEditor] = useState(false)
   const [deleteWorkshop] = useDeleteWorkshop({ refetchQueries: ['getEvent'] })

@@ -28,7 +28,7 @@ export function MainEditor() {
   const { danceSets, introductions } = program
 
   return <section>
-    <H2>{useTranslation('pages.events.eventProgramPage.pageTitle')}</H2>
+    <H2>{useTranslation('routes.events.event.program.main.pageTitle')}</H2>
     <div className="flex flex-wrap gap-2 justify-between items-start">
       <Field label={t('fields.pauseDuration')} inline path="pauseBetweenDances" component={DurationField} />
       {introductions.program.length === 0 && <AddIntroductionButton />}

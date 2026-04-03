@@ -6,10 +6,11 @@ import { RequirePermissions } from 'libraries/access-control'
 import { FormGroup, SearchBar } from 'libraries/ui'
 import { CreateDanceButtons } from 'components/dance/CreateDanceButtons'
 import { AnyCategory, anyCategory, DanceViewCategorySelector } from 'components/dance/DanceCategorySelector'
-import { DanceList } from 'components/dance/DanceList'
 import { LoadingState } from 'components/LoadingState'
 import { Page, Toolbar } from 'components/Page'
 import { useT, useTranslation } from 'i18n'
+
+import { DanceList } from './-components/DanceList'
 
 interface DanceSearchParams {
   search?: string
@@ -31,7 +32,7 @@ export const Route = createFileRoute('/dances/')({
 })
 
 function DancesPage() {
-  const t = useT('pages.dances.danceList')
+  const t = useT('routes.dances.list')
   const { search, setSearch, category, setCategory } = useDanceListState()
   const [dances, requestState] = useDances()
 

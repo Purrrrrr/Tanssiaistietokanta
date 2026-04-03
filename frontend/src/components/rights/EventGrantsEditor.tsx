@@ -1,5 +1,5 @@
 import { Event, EventInput } from 'types'
-import { GrantRole } from 'types/gql/graphql'
+import { EventGrantRole } from 'types/gql/graphql'
 
 import { useCurrentUser, useUsers } from 'services/users'
 
@@ -27,7 +27,7 @@ export function EventGrantsEditor({ eventId }: { eventId?: string }) {
 
   const grants = useValueAt('accessControl.grants')
   const addGrant = useAppendToList('accessControl.grants')
-  const organizerCount = grants.filter(g => g.role === GrantRole.Organizer).length
+  const organizerCount = grants.filter(g => g.role === EventGrantRole.Organizer).length
 
   const excludedUserIds = grants
     .filter(g => g.principal.startsWith('user:'))
@@ -55,7 +55,7 @@ export function EventGrantsEditor({ eventId }: { eventId?: string }) {
             onChange={user => user && addGrant({
               _id: guid(),
               principal: `user:${user._id}`,
-              role: GrantRole.Viewer,
+              role: EventGrantRole.Viewer,
             })}
             placeholder={t('addGrant')}
             excludeFromSearch={excludedUserIds}
@@ -89,7 +89,7 @@ function GrantEditor({ index, organizerCount, disabled }: { index: number, organ
   const principal = formatPrincipal(grant.principal)
 
   const rowDisabled = disabled
-    || (!currentUser?.groups.includes('admins') && grant.role === GrantRole.Organizer && (grant.principal === `user:${currentUser?._id}` || organizerCount <= 1))
+    || (!currentUser?.groups.includes('admins') && grant.role === EventGrantRole.Organizer && (grant.principal === `user:${currentUser?._id}` || organizerCount <= 1))
 
   return <ItemList.Row>
     <span className="min-w-60">{principal}</span>

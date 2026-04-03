@@ -19,7 +19,7 @@ export const Route = createFileRoute('/')({
 })
 
 function EventList() {
-  const t = useT('pages.events.eventList')
+  const t = useT('routes.events.list')
   const [events, requestState] = useEvents()
   const formatDate = useFormatDate()
   const user = useCurrentUser()

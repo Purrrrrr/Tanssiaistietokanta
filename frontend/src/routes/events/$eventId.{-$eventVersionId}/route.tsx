@@ -62,7 +62,7 @@ function RouteComponent() {
   const [event, loadingState] = useEvent(eventId, eventVersionId)
   const formatDate = useFormatDate()
   const canEdit = useRight('events:modify', { entityId: eventId })
-  const t = useT('pages.events.eventPage')
+  const t = useT('routes.events.event.menu')
   const params = { eventId, eventVersionId }
 
   return <VersionableContentContainer>
@@ -80,7 +80,7 @@ function RouteComponent() {
                 to="/events/$eventId/{-$eventVersionId}/ball-program/{-$slideId}"
                 params={params}
                 target="_blank"
-                text={t('menu.ball.openSlideShow')}
+                text={t('ball.openSlideShow')}
                 icon={<Presentation />}
               />
               <VersionSidebarToggle entityType="event" entityId={event._id} versionId={event._versionId ?? undefined} toVersionLink={eventVersionLink} />
@@ -88,36 +88,36 @@ function RouteComponent() {
           }
           menu={canEdit &&
           <>
-            <MenuSection title={t('menu.title')}>
-              <MenuLink to="/events/$eventId/{-$eventVersionId}" params={params} activeOptions={{ exact: true }} text={t('menu.basicInfo')} />
-              <MenuLink to="/events/$eventId/{-$eventVersionId}/edit" params={params} text={t('menu.editBasicInfo')} icon={<Cog />} />
-              <MenuLink to="/events/$eventId/{-$eventVersionId}/volunteers" params={params} text={t('menu.volunteers')} />
+            <MenuSection title={t('title')}>
+              <MenuLink to="/events/$eventId/{-$eventVersionId}" params={params} activeOptions={{ exact: true }} text={t('basicInfo')} />
+              <MenuLink to="/events/$eventId/{-$eventVersionId}/edit" params={params} text={t('editBasicInfo')} icon={<Cog />} />
+              <MenuLink to="/events/$eventId/{-$eventVersionId}/volunteers" params={params} text={t('volunteers')} />
             </MenuSection>
-            <MenuSection title={t('menu.ball.title')}>
-              <MenuLink to="/events/$eventId/{-$eventVersionId}/program/main" params={params} text={t('menu.ball.ballProgram')} />
+            <MenuSection title={t('ball.title')}>
+              <MenuLink to="/events/$eventId/{-$eventVersionId}/program/main" params={params} text={t('ball.ballProgram')} />
               <MenuLink to="/events/$eventId/{-$eventVersionId}/program/slides/{-$slideId}" params={params}>
-                {t('menu.ball.editSlideShow')}
+                {t('ball.editSlideShow')}
                 <EventMetadataContext program={event.program} workshops={event.workshops}>
                   <MissingDanceInstructionsCounterTag />
                 </EventMetadataContext>
               </MenuLink>
             </MenuSection>
-            <MenuSection title={t('menu.print')}>
+            <MenuSection title={t('print.title')}>
               <MenuLink
                 to="/events/$eventId/{-$eventVersionId}/print/ball-dancelist"
                 params={params}
                 target="_blank"
-                text={t('printBallDanceList')} />
+                text={t('print.printBallDanceList')} />
               <MenuLink
                 to="/events/$eventId/{-$eventVersionId}/print/dance-cheatlist"
                 params={params}
                 target="_blank"
-                text={t('danceCheatlist')} />
+                text={t('print.danceCheatlist')} />
               <MenuLink
                 to="/events/$eventId/{-$eventVersionId}/print/dance-instructions"
                 params={params}
                 target="_blank"
-                text={t('danceInstructions')} />
+                text={t('print.danceInstructions')} />
             </MenuSection>
           </>
           }

@@ -32,7 +32,7 @@ export function SlideshowEditor() {
   const isStale = deferredCurrentSlide.id !== currentSlide.id
 
   return <section className="slideshowEditor">
-    <H2>{useTranslation('pages.events.eventProgramPage.slideShowPageTitle')}</H2>
+    <H2>{useTranslation('routes.events.event.program.slides.pageTitle')}</H2>
     <MissingDanceInstructionsWarning program={program} />
     <div className="flex justify-between">
       <SlideChooser

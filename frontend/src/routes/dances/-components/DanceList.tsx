@@ -7,12 +7,12 @@ import { useDance } from 'services/dances'
 
 import { Button, ColorClass, ItemList, type Sort } from 'libraries/ui'
 import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Edit } from 'libraries/ui/icons'
+import { DanceEditor } from 'components/dance/DanceEditor'
 import { InfiniteItemLoader } from 'components/InfiniteItemLoader'
 import { ColoredTag } from 'components/widgets/ColoredTag'
 import { useT, useTranslation } from 'i18n'
 import { sortedBy } from 'utils/sorted'
 
-import { DanceEditor } from './DanceEditor'
 import { DanceIsUsedIn } from './DanceIsUsedIn'
 import { DanceLink } from './DanceLink'
 import { DeleteDanceButton } from './DeleteDanceButton'
@@ -22,7 +22,8 @@ interface DanceListProps {
 }
 
 export function DanceList({ dances: unsortedDances }: DanceListProps) {
-  const t = useT('pages.dances.danceList')
+  const t = useT('routes.dances.list')
+  const label = useT('domain.dance')
   const [sort, setSort] = useState<Sort>({ key: 'name', direction: 'asc' })
   const dances = sortedBy(unsortedDances, danceSorter(sort.key), sort.direction === 'desc')
 
@@ -38,9 +39,9 @@ export function DanceList({ dances: unsortedDances }: DanceListProps) {
           columns="grid-cols-[1fr_minmax(min(300px,30%),max-content)_max-content]"
         >
           <ItemList.SortableHeader currentSort={sort} onSort={setSort} columns={[
-            { key: 'name', label: t('name') },
-            { key: 'category', label: t('category') },
-            { key: 'popularity', label: t('danceUsage') },
+            { key: 'name', label: label('name') },
+            { key: 'category', label: label('category') },
+            { key: 'popularity', label: label('danceUsage') },
           ]} />
           {dances.map((dance: DanceListItem) => <DanceListRow key={dance._id} dance={dance} />) }
         </ItemList>
@@ -62,12 +63,12 @@ function danceSorter(key: string) {
 }
 
 function DanceListRow({ dance }: { dance: DanceListItem }) {
-  const t = useT('pages.dances.danceList')
+  const t = useT('routes.dances.list')
   const [showEditor, setShowEditor] = useState(false)
 
   return <ItemList.Row
     expandableContent={<DanceListRowEditor danceId={dance._id} />}
-    expandableContentLoadingMessage={t('loadingEditor')}
+    expandableContentLoadingMessage={useTranslation('common.loadingEditor')}
     isOpen={showEditor}
   >
     <div className="">

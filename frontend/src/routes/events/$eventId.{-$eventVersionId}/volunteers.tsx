@@ -39,7 +39,8 @@ export const Route = createFileRoute(
 
 function RouteComponent() {
   const event = useCurrentEvent()
-  const t = useT('pages.events.volunteersPage')
+  const t = useT('routes.events.event.volunteers')
+  const label = useT('domain.eventVolunteer')
   const { search, role, setSearch, setRole } = useEventVolunteerSearchParams()
   const [sort, setSort] = useState<Sort>({ key: 'interestedIn', direction: 'asc' })
 
@@ -81,10 +82,10 @@ function RouteComponent() {
       columns="grid-cols-[1fr_1fr_1fr_1fr_max-content]"
     >
       <ItemList.SortableHeader currentSort={sort} onSort={setSort} columns={[
-        { key: 'name', label: t('columns.name') },
-        { key: 'interestedIn', label: t('columns.interestedIn') },
-        { key: 'wishes', label: t('columns.wishes') },
-        { key: 'notes', label: t('columns.notes') },
+        { key: 'name', label: label('name') },
+        { key: 'interestedIn', label: label('interestedIn') },
+        { key: 'wishes', label: label('wishes') },
+        { key: 'notes', label: label('notes') },
       ]} />
       {(eventVolunteers ?? []).map(ev =>
         <EventVolunteerListRow
@@ -240,6 +241,7 @@ function EventVolunteerRowEditor({ item, addedVolunteers }: { item: EventVolunte
 function CreateEventVolunteerForm({ eventId, addedVolunteers }: { eventId: string, addedVolunteers: Volunteer[] }) {
   const [formData, setFormData] = useState<EventVolunteerFormValues>(emptyEventVolunteerForm)
   const [createEventVolunteer] = useCreateEventVolunteer({ refetchQueries: ['getEventVolunteers'] })
+  const t = useT('routes.events.event.volunteers')
 
   const handleSubmit = async (data: EventVolunteerFormValues) => {
     if (!data.volunteer) return
@@ -256,7 +258,13 @@ function CreateEventVolunteerForm({ eventId, addedVolunteers }: { eventId: strin
   }
 
   return <Card>
-    <H2>{useTranslation('pages.events.volunteersPage.addVolunteer')}</H2>
-    <EventVolunteerForm value={formData} onChange={setFormData} onSubmit={handleSubmit} excludeVolunteers={addedVolunteers} isNew />
+    <H2>{t('addVolunteer')}</H2>
+    <EventVolunteerForm
+      value={formData}
+      onChange={setFormData}
+      onSubmit={handleSubmit}
+      submitText={t('addVolunteer')}
+      excludeVolunteers={addedVolunteers}
+      isNew />
   </Card>
 }

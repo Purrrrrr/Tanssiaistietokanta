@@ -30,7 +30,19 @@ export const fi = {
   },
   dateFormat: 'dd.MM.yyyy',
   dateTimeFormat: 'dd.MM.yyyy HH:mm',
+  // Field names and enum translations go here
   domain: {
+    event: {
+      name: 'Nimi',
+      eventDate: 'Tapahtuman ajankohta',
+      ballDateTime: 'Tanssiaisten ajankohta',
+      accessControl: {
+        viewAccess: {
+          public: 'Julkinen',
+          limited: 'Rajoitettu',
+        },
+      },
+    },
     allowedViewers: {
       everyone: 'Kaikki käyttäjät',
       loggedIn: 'Kirjautuneet käyttäjät',
@@ -52,6 +64,7 @@ export const fi = {
       instructions: 'Pidemmät tanssiohjeet printtiin',
       slideStyleId: 'Tanssiaisten diatyyli',
       wikipageName: 'Tanssiwikin sivun nimi',
+      danceUsage: 'Käyttökohteet',
     },
     slideStyles: {
       default: 'Valkoinen',
@@ -61,18 +74,19 @@ export const fi = {
     },
     eventVolunteer: {
       volunteer: 'Vapaaehtoinen',
+      name: 'Nimi',
       interestedIn: 'Kiinnostuksen kohteet',
-      noInterests: 'Ei kiinnostuksen kohteita',
       wishes: 'Toiveet',
-      noWishes: 'Ei erityisiä toiveita',
       notes: 'Muistiinpanot',
+      noInterests: 'Ei kiinnostuksen kohteita',
+      noWishes: 'Ei erityisiä toiveita',
+    },
+    user: {
+      name: 'Nimi',
+      username: 'Käyttäjätunnus',
     },
   },
   components: {
-    viewAccessSelector: {
-      public: 'Julkinen',
-      limited: 'Rajoitettu',
-    },
     grantEditor: {
       accessRights: 'Pääsyoikeudet',
       allowedViewers: 'Näkyvyys',
@@ -93,6 +107,7 @@ export const fi = {
     },
     slide: {
       afterThis: 'Tämän jälkeen',
+      teachedInSet: 'Opetettu setissä',
     },
     loginForm: {
       login: 'Kirjaudu sisään',
@@ -307,6 +322,11 @@ export const fi = {
         title: 'Tanssien määrät tanssiaisissa kategorioittain:',
       },
     },
+    eventSlideEditor: {
+      linkToCompleteDance: 'Tanssi tanssitietokannassa',
+      currentItemAlwaysShownInLists: 'Huomaathan, että ollessaan tämänhetkinen dia näkyy tämä ohjelma settilistassa riippumatta näkyvyysasetuksesta.',
+      danceTitle: 'Tanssin tiedot',
+    },
     supportedBrowserWarning: {
       unsupportedBrowser: 'Selaimesi ei ole tuettu',
       continueAnyWay: 'Jatka sivustolle',
@@ -379,13 +399,32 @@ export const fi = {
       },
     },
   },
-  pages: {
+  routes: {
     notFound: {
       pageNotFound: 'Sivua ei löytynyt',
       returnToHome: 'Palaa etusivulle',
     },
+    dances: {
+      list: {
+        pageTitle: 'Tanssit',
+        view: 'Näkymä',
+        viewMode: {
+          tight: 'Tiivis',
+          extended: 'Laaja',
+        },
+        noCategory: 'Ei kategoriaa',
+        showingNDances: {
+          one: 'Näytetään 1 tanssi',
+          many: 'Näytetään __count__ tanssia',
+        },
+        noDances: 'Ei tansseja',
+      },
+      dance: {
+        backToDanceList: 'Takaisin tanssilistaan',
+      }
+    },
     events: {
-      eventList: {
+      list: {
         pageTitle: 'Tanssiaistietokanta',
         welcomeMessage: {
           message: 'Tervetuloa Tanssiaistietokantaan! Tälle sivustolle on koottu joitakin Suomessa järjestettäviä historiallisen tanssin tapahtumia',
@@ -411,167 +450,131 @@ export const fi = {
         name: 'Nimi',
         date: 'Tapahtuman päivämäärä',
       },
-      createEvent: {
+      new: {
         newEventBreadcrumb: 'Uusi tapahtuma',
         newEvent: 'Luo uusi tapahtuma',
         create: 'Luo tapahtuma',
-        name: 'Nimi',
-        eventDate: 'Tapahtuman ajankohta',
-        beginDate: 'Alkaa',
-        endDate: 'Loppuu',
       },
-      eventPage: {
+      event: {
         menu: {
           title: 'Tapahtuman tiedot',
           basicInfo: 'Yhteenveto',
           editBasicInfo: 'Tapahtuman tiedot',
+          volunteers: 'Vapaaehtoiset',
           ball: {
             title: 'Tanssiaiset',
             ballProgram: 'Suunnittele tanssiaisohjelmaa',
             openSlideShow: 'Tanssiaisten diashow',
             editSlideShow: 'Muokkaa diashowta',
           },
-          print: 'Tulosta',
-          volunteers: 'Vapaaehtoiset',
+          print: {
+            title: 'Tulosta',
+            printBallDanceList: 'Tulosta settilista',
+            danceCheatlist: 'Osaan tanssin -lunttilappu',
+            danceInstructions: 'Työpajojen ohjelma ja tanssiohjeet',
+          },
         },
-        loginToEdit: 'Kirjaudu muokataksesi tapahtumaa',
-        ballProgram: 'Tanssiaisohjelma',
-        noProgram: 'Ei ohjelmaa',
-        eventDetails: 'Tapahtuman tiedot',
+        index: {
+          ballProgram: 'Tanssiaisohjelma',
+          noProgram: 'Ei ohjelmaa',
+          requestedDance: {
+            one: 'Toivetanssi',
+            many: '__count__ toivetanssia',
+          },
+          workshops: 'Työpajat',
+          files: 'Tapahtumaan liittyvät tiedostot',
+        },
+        edit: {
+          title: 'Muokkaa tapahtuman tietoja',
+          deleteEvent: 'Poista tämä tapahtuma',
+          eventDeleteConfirmation: 'Haluatko varmasti poistaa tapahtuman __eventName__?',
+        },
+        volunteers: {
+          title: 'Vapaaehtoiset',
+          filterByRole: 'Rooli',
+          allRoles: 'Kaikki roolit',
+          noVolunteers: 'Ei vapaaehtoisia',
+          Nvolunteers: {
+            one: '1 vapaaehtoinen',
+            many: '__count__ vapaaehtoista',
+          },
+          addVolunteer: 'Lisää vapaaehtoinen',
+          deleteVolunteer: 'Poista vapaaehtoinen',
+          deleteConfirmation: 'Haluatko varmasti poistaa tämän vapaaehtoisen tapahtumasta?',
+        },
+        ballProgram: {
+
+        },
+        program: {
+          main: {
+            pageTitle: 'Tanssiaisohjelma',
+          },
+          slides: {
+            pageTitle: 'Tanssiaisten diashow',
+          },
+        },
+        print: {
+          ballDanceList: {
+            showLinks: 'Linkit tanssiwikiin',
+            style: {
+              default: 'Oletus',
+              'three-columns': 'Rinnakkaiset setit',
+              large: 'Yksi setti per arkki',
+            },
+            print: 'Tulosta',
+            emptyLinesAreRequestedDances: 'Tyhjät rivit ovat toivetansseja.',
+            workshopNameIsInParenthesis: 'Suluissa opetussetti',
+          },
+          danceCheatlist: {
+            rows: 'Rivien määrä',
+            cols: 'Sarakkeiden määrä',
+            landscape: 'Tulosta vaakasuunnassa',
+            nrOfCopies: {
+              one: '1 kopio per sivu',
+              many: '__count__ kopiota per sivu',
+            },
+            showHelpText: 'Näytä luntin ohjeteksti',
+            print: 'Tulosta',
+            helpText: 'Rastita tähän, jos osaat tanssin. Näin ei tanssiaisissa tarvitse miettiä, mikä tanssi on kyseessä.',
+            noDances: 'Ei tansseja',
+            iCanDanceThis: 'Osaan tanssin',
+            danceName: 'Nimi',
+          },
+          danceInstructions: {
+            clickInstructionsToEdit: 'Klikkaa ohjetta muokataksesi sitä, voit myös hakea tietoja tanssiwikistä klikkaamalla nappeja, jotka avautuvat kun tuot hiiren tanssin päälle. Kun ohjeet ovat mieleisesi, voit joko tulostaa tämän sivun tai valita ohjetekstit ja kopioida ne haluamaasi tekstinkäsittelyohjelmaan.',
+            defaultStylingDescription: 'Pitkissä ohjeissa on oletustyyli, jossa ensimmäinen kappale on kursivoitu. Tämän tarkoituksena on eritellä tanssin ja tanssikuvion lyhyt kuvaus lopusta ohjeesta ilman tilaa vievää otsikointia.',
+            showWorkshops: 'Näytä työpajojen ja tanssiaisten kuvaukset',
+            showDances: 'Näytä tanssiohjeet',
+            showShortInstructions: 'Näytä lyhyet ohjeet',
+            hilightEmpty: 'Korosta tanssit ilman ohjeita',
+            selectAndCopy: 'Kopioi ohjeet leikepöydälle',
+            instructionsCopied: 'Ohjeet kopioitu',
+            print: 'Tulosta',
+            workshopsAndBall: 'Työpajat ja tanssiaiset',
+            ball: 'Tanssiaiset',
+            dances: 'Tanssit',
+            danceInstructions: 'Tanssiohjeet',
+          },
+        },
+      },
+    },
+    users: {
+      list: {
+        pageTitle: 'Käyttäjät',
+        noUsers: 'Ei käyttäjiä',
+      },
+    },
+  },
+  pages: {
+    events: {
+      eventPage: {
+        // TODO migrate to workshop page
         loadingEditor: 'Ladataan lomaketta...',
-        deleteEvent: 'Poista tämä tapahtuma',
-        eventDeleteConfirmation: 'Haluatko varmasti poistaa tapahtuman __eventName__?',
-        eventName: 'Tapahtuman nimi',
-        editProgram: 'Muokkaa ohjelmaa',
-        addProgram: 'Luo ohjelma',
-        workshops: 'Työpajat',
-        printBallDanceList: 'Tulosta settilista',
-        ballProgramSlideshow: 'Tanssiaisten diashow',
         dances: 'Tanssit',
-        openBasicDetailsEditor: 'Muokkaa tapahtuman tietoja',
         openEditor: 'Muokkaa',
         closeEditor: 'Sulje muokkaus',
         createWorkshop: 'Uusi työpaja',
         newWorkshop: 'Uusi työpaja',
-        danceCheatlist: 'Osaan tanssin -lunttilappu',
-        danceInstructions: 'Työpajojen ohjelma ja tanssiohjeet',
-        requestedDance: {
-          one: 'Toivetanssi',
-          many: '__count__ toivetanssia',
-        },
-        eventDate: 'Tapahtuman ajankohta',
-        ballDateTime: 'Tanssiaisten ajankohta',
-        files: 'Tapahtumaan liittyvät tiedostot',
-      },
-      volunteersPage: {
-        title: 'Vapaaehtoiset',
-        filterByRole: 'Rooli',
-        allRoles: 'Kaikki roolit',
-        noVolunteers: 'Ei vapaaehtoisia',
-        Nvolunteers: {
-          one: '1 vapaaehtoinen',
-          many: '__count__ vapaaehtoista',
-        },
-        addVolunteer: 'Lisää vapaaehtoinen',
-        deleteVolunteer: 'Poista vapaaehtoinen',
-        deleteConfirmation: 'Haluatko varmasti poistaa tämän vapaaehtoisen tapahtumasta?',
-        form: {
-          submit: 'Lisää',
-        },
-        columns: {
-          name: 'Nimi',
-          interestedIn: 'Kiinnostuksen kohteet',
-          wishes: 'Toiveet',
-          notes: 'Muistiinpanot',
-        },
-      },
-      eventProgramPage: {
-        pageTitle: 'Tanssiaisohjelma',
-        slideShowPageTitle: 'Tanssiaisten diashow',
-        loginRequired: 'Sinun täytyy olla kirjautunut käyttääksesi tätä sivua',
-        tabs: {
-          missingInstructions: 'Puuttuvat tanssiohjeet',
-        },
-      },
-      danceCheatlist: {
-        helpText: 'Rastita tähän, jos osaat tanssin. Näin ei tanssiaisissa tarvitse miettiä, mikä tanssi on kyseessä.',
-        rows: 'Rivien määrä',
-        cols: 'Sarakkeiden määrä',
-        landscape: 'Tulosta vaakasuunnassa',
-        nrOfCopies: {
-          one: '1 kopio per sivu',
-          many: '__count__ kopiota per sivu',
-        },
-        showHelpText: 'Näytä luntin ohjeteksti',
-        print: 'Tulosta',
-        noDances: 'Ei tansseja',
-        iCanDanceThis: 'Osaan tanssin',
-        danceName: 'Nimi',
-      },
-      danceList: {
-        style: {
-          default: 'Oletus',
-          'three-columns': 'Rinnakkaiset setit',
-          large: 'Yksi setti per arkki',
-        },
-        showLinks: 'Linkit tanssiwikiin',
-        print: 'Tulosta',
-        emptyLinesAreRequestedDances: 'Tyhjät rivit ovat toivetansseja.',
-        workshopNameIsInParenthesis: 'Suluissa opetussetti',
-      },
-      danceInstructions: {
-        clickInstructionsToEdit: 'Klikkaa ohjetta muokataksesi sitä, voit myös hakea tietoja tanssiwikistä klikkaamalla nappeja, jotka avautuvat kun tuot hiiren tanssin päälle. Kun ohjeet ovat mieleisesi, voit joko tulostaa tämän sivun tai valita ohjetekstit ja kopioida ne haluamaasi tekstinkäsittelyohjelmaan.',
-        defaultStylingDescription: 'Pitkissä ohjeissa on oletustyyli, jossa ensimmäinen kappale on kursivoitu. Tämän tarkoituksena on eritellä tanssin ja tanssikuvion lyhyt kuvaus lopusta ohjeesta ilman tilaa vievää otsikointia.',
-        selectAndCopy: 'Kopioi ohjeet leikepöydälle',
-        instructionsCopied: 'Ohjeet kopioitu',
-        print: 'Tulosta',
-        showWorkshops: 'Näytä työpajojen ja tanssiaisten kuvaukset',
-        showDances: 'Näytä tanssiohjeet',
-        hilightEmpty: 'Korosta tanssit ilman ohjeita',
-        showShortInstructions: 'Näytä lyhyet ohjeet',
-        workshops: 'Työpajat ja tanssiaiset',
-        ball: 'Tanssiaiset',
-        dances: 'Tanssit',
-        danceInstructions: 'Tanssiohjeet',
-      },
-      ballProgram: {
-        teachedInSet: 'Opetettu setissä',
-        requestedDance: 'Toivetanssi',
-        intervalMusic: 'Taukomusiikkia',
-        linkToCompleteDance: 'Tanssi tanssitietokannassa',
-        currentItemAlwaysShownInLists: 'Huomaathan, että ollessaan tämänhetkinen dia näkyy tämä ohjelma settilistassa riippumatta näkyvyysasetuksesta.',
-        danceTitle: 'Tanssin tiedot',
-      },
-    },
-    dances: {
-      danceList: {
-        pageTitle: 'Tanssit',
-        view: 'Näkymä',
-        viewMode: {
-          tight: 'Tiivis',
-          extended: 'Laaja',
-        },
-        noCategory: 'Ei kategoriaa',
-        showingNDances: {
-          one: 'Näytetään 1 tanssi',
-          many: 'Näytetään __count__ tanssia',
-        },
-        noDances: 'Ei tansseja',
-        name: 'Nimi',
-        category: 'Kategoria',
-        danceUsage: 'Käyttökohteet',
-        loadingEditor: 'Ladataan lomaketta...',
-      },
-      dancePage: {
-        backToDanceList: 'Takaisin tanssilistaan',
-      },
-    },
-    users: {
-      userList: {
-        pageTitle: 'Käyttäjät',
-        noUsers: 'Ei käyttäjiä',
-        name: 'Nimi',
-        username: 'Käyttäjätunnus',
       },
     },
   },
@@ -595,6 +598,7 @@ export const fi = {
     save: 'Tallenna',
     move: 'Siirrä',
     operationFailed: 'Tietojen tallennus epäonnistui :(',
+    loadingEditor: 'Ladataan lomaketta...',
     version: 'versio __version__',
   },
 }

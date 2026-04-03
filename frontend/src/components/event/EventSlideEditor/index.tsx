@@ -225,7 +225,7 @@ function ProgramItemEditor({ path }: { path: ProgramItemPath }) {
         <Input label={t('fields.eventProgram.name')} path={`${path}.eventProgram.name`} required />
         <Field label={t('fields.eventProgram.description')} path={`${path}.eventProgram.description`} component={MarkdownEditor} componentProps={markdownEditorProps} />
         <Switch label={t('fields.eventProgram.showInLists')} path={`${path}.eventProgram.showInLists`} inline />
-        <Callout><T msg="pages.events.ballProgram.currentItemAlwaysShownInLists" /></Callout>
+        <Callout><T msg="components.eventSlideEditor.currentItemAlwaysShownInLists" /></Callout>
       </>
   }
 }
@@ -246,7 +246,7 @@ function DanceEditor({ id, initialDance }: { id: string, initialDance?: Pick<Dan
 
   return <DanceForm {...formProps} readOnly={!result.data}>
     <div className="flex flex-wrap gap-3.5 items-center mb-3">
-      <H2 className=""><T msg="pages.events.ballProgram.danceTitle" /></H2>
+      <H2 className=""><T msg="components.eventSlideEditor.danceTitle" /></H2>
       <SyncStatus className="top-[3px] grow" state={state} />
     </div>
     <DanceInput label={label('name')} path="name" />
@@ -259,7 +259,7 @@ function DanceEditor({ id, initialDance }: { id: string, initialDance?: Pick<Dan
         </LinkToDanceWiki>
       }
       <Link target="_blank" to="/dances/$danceId" params={{ danceId: dance._id }}>
-        <LinkIcon size={12} /> {useTranslation('pages.events.ballProgram.linkToCompleteDance')}
+        <LinkIcon size={12} /> {useTranslation('components.eventSlideEditor.linkToCompleteDance')}
       </Link>
     </p>
   </DanceForm>

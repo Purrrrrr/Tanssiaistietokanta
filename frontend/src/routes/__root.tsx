@@ -67,7 +67,7 @@ function RootComponent() {
 }
 
 function NotFound() {
-  const t = useT('pages.notFound')
+  const t = useT('routes.notFound')
   return <Page
     title={t('pageNotFound')}
     logo={

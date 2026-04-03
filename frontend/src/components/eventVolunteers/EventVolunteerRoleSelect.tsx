@@ -12,7 +12,7 @@ export function EventVolunteerRoleSelector({
   value, onChange, ...rest
 }: EventRoleSelectorProps) {
   const [roles] = useEventRoles()
-  const allRoles = useTranslation('pages.events.volunteersPage.allRoles')
+  const allRoles = useTranslation('routes.events.event.volunteers.allRoles')
 
   return <Select<EventRole | null>
     {...rest}

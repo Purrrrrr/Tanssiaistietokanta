@@ -15,7 +15,7 @@ import {
   eventsQueryResolver,
   eventAccessDataSchema,
   EventAccessData,
-  GrantRole,
+  EventGrantRole,
 } from './events.schema'
 
 import type { Application } from '../../declarations'
@@ -69,7 +69,7 @@ export const events = (app: Application) => {
     },
   })
 
-  const roleHierarchy: Record<GrantRole, number> = { viewer: 1, teacher: 2, organizer: 3 }
+  const roleHierarchy: Record<EventGrantRole, number> = { viewer: 1, teacher: 2, organizer: 3 }
 
   class EventAccessStrategy implements AccessStrategy<'events', EventAccessData, 'modify-volunteers'> {
     store = app.service('access').getStore('events', eventAccessDataSchema, {
@@ -107,7 +107,7 @@ export const events = (app: Application) => {
       return userRole === 'teacher' || userRole === 'organizer'
     }
 
-    getUserRole(grants: EventAccessData['grants'], user?: User | null): GrantRole | null {
+    getUserRole(grants: EventAccessData['grants'], user?: User | null): EventGrantRole | null {
       if (!user) {
         return null
       }
@@ -115,7 +115,7 @@ export const events = (app: Application) => {
       const userPrincipal = `user:${user._id}`
       const groupPrincipals = user.groups.map(group => `group:${group}`)
 
-      let highestRole: GrantRole | null = null
+      let highestRole: EventGrantRole | null = null
 
       for (const grant of grants) {
         if (grant.principal === userPrincipal || groupPrincipals.includes(grant.principal)) {

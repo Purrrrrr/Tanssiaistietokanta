@@ -14,7 +14,7 @@ import { findTeachedIn, findWikipage } from '../dances/dances.resolvers'
 const DEFAULT_PAUSE_BETWEEN_DANCES = 3 * 60
 
 export const grantRoleSchema = Type.Union([Type.Literal('viewer'), Type.Literal('teacher'), Type.Literal('organizer')])
-export type GrantRole = Static<typeof grantRoleSchema>
+export type EventGrantRole = Static<typeof grantRoleSchema>
 
 export const eventAccessDataSchema = EventAccessData()
 export type EventAccessData = Static<typeof eventAccessDataSchema>

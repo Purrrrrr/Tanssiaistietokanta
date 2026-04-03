@@ -11,7 +11,7 @@ import { LoadingState } from 'components/LoadingState'
 import { A4Page, PrintPageContainer, PrintViewToolbar } from 'components/print'
 import { useT } from 'i18n'
 
-import './DanceList.sass'
+import './ball-danceList.sass'
 
 export const Route = createFileRoute(
   '/events/$eventId/{-$eventVersionId}/print/ball-dancelist',
@@ -21,7 +21,7 @@ export const Route = createFileRoute(
 
 function RouteComponent() {
   const eventId = Route.useParams().eventId
-  const t = useT('pages.events.danceList')
+  const t = useT('routes.events.event.print.ballDanceList')
   const { program, workshops, loadingState } = useBallProgram(eventId)
   const [style, setStyle] = useState('default')
   const [showLinks, setShowLinks] = useState(true)
@@ -67,7 +67,7 @@ function RouteComponent() {
 }
 
 function Footer({ workshops }) {
-  const t = useT('pages.events.danceList')
+  const t = useT('routes.events.event.print.ballDanceList')
   if (!workshops.length) return <>{t('emptyLinesAreRequestedDances')}</>
   return <>
     {t('workshopNameIsInParenthesis')}

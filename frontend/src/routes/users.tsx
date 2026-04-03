@@ -15,15 +15,16 @@ export const Route = createFileRoute('/users')({
 })
 
 function UsersPage() {
-  const t = useT('pages.users.userList')
+  const t = useT('routes.users.list')
+  const label = useT('domain.user')
   const [users, requestState] = useUsers()
 
   return <Page title={t('pageTitle')}>
     <LoadingState {...requestState} />
     <ItemList columns="grid-cols-[1fr_1fr_1fr] gap-x-4" items={users} emptyText={t('noUsers')} className="max-w-200">
       <ItemList.Header>
-        <span>{t('name')}</span>
-        <span>{t('username')}</span>
+        <span>{label('name')}</span>
+        <span>{label('username')}</span>
       </ItemList.Header>
       {users.map(user =>
         <ItemList.Row key={user._id}>

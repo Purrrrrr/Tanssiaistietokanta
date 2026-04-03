@@ -21,7 +21,7 @@ import { useFormatDateTime, useT, useTranslation } from 'i18n'
 import { selectElement } from 'utils/selectElement'
 import { uniq } from 'utils/uniq'
 
-import './DanceInstructions.sass'
+import './dance-instructions.sass'
 
 export const Route = createFileRoute(
   '/events/$eventId/{-$eventVersionId}/print/dance-instructions',
@@ -35,7 +35,7 @@ const { Form, Field } = formFor<Dance>()
 
 function RouteComponent() {
   const eventId = Route.useParams().eventId
-  const t = useT('pages.events.danceInstructions')
+  const t = useT('routes.events.event.print.danceInstructions')
   const dancesEl = useRef<HTMLElement>(null)
   const [showWorkshops, setShowWorkshops] = useState(true)
   const [showDances, setShowDances] = useState(true)
@@ -78,7 +78,7 @@ function RouteComponent() {
 }
 
 function DanceInstructionsView({ eventId, showWorkshops, showDances, hilightEmpty, showShortInstructions, elementRef }) {
-  const t = useT('pages.events.danceInstructions')
+  const t = useT('routes.events.event.print.danceInstructions')
   const { data, refetch, ...loadingState } = useDanceInstructions({ eventId })
   const formatDateTime = useFormatDateTime()
 
@@ -90,7 +90,7 @@ function DanceInstructionsView({ eventId, showWorkshops, showDances, hilightEmpt
   return <section className={classNames('dance-instructions', { 'hilight-empty': hilightEmpty, showShortInstructions })} ref={elementRef}>
     {showWorkshops &&
       <section className="workshops">
-        <h1 className={h1Class}>{t('workshops')}</h1>
+        <h1 className={h1Class}>{t('workshopsAndBall')}</h1>
         {workshops.map(workshop => <WorkshopDetails key={workshop._id} workshop={workshop} />)}
         {program.dateTime && <>
           <H2>
@@ -218,7 +218,7 @@ const markdownOverrides = {
 } as MarkdownToJSX.Overrides
 
 function WorkshopDetails({ workshop }: { workshop: Workshop }) {
-  const t = useT('pages.events.danceInstructions')
+  const t = useT('routes.events.event.print.danceInstructions')
   const { name, description, instanceSpecificDances, instances } = workshop
   const formatDateTime = useFormatDateTime()
 

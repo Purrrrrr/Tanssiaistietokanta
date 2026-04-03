@@ -33,7 +33,8 @@ const {
 
 function RouteComponent() {
   const event = useCurrentEvent()
-  const t = useT('pages.events.eventPage')
+  const t = useT('routes.events.event.edit')
+  const label = useT('domain.event')
   const navigate = Route.useNavigate()
   const [deleteEvent] = useDeleteEvent({
     refetchQueries: ['getEvents'],
@@ -49,18 +50,18 @@ function RouteComponent() {
 
   return <Form {...formProps}>
     <SyncStatus state={state} floatRight />
-    <H2>{t('menu.editBasicInfo')}</H2>
+    <H2>{t('title')}</H2>
     <div className="flex flex-wrap gap-6">
-      <Input label={t('eventName')} path="name" required containerClassName="w-100" />
+      <Input label={label('name')} path="name" required containerClassName="w-100" />
       <DateRangeField<Event>
         id="eventDate"
-        label={t('eventDate')}
+        label={label('eventDate')}
         beginPath="beginDate"
         endPath="endDate"
         required
       />
       <DateField<Event>
-        label={(t('ballDateTime'))}
+        label={(label('ballDateTime'))}
         path="program.dateTime"
         showTime
         minDate={formProps.value.beginDate}

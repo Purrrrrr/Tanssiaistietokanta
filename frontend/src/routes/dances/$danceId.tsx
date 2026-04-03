@@ -6,15 +6,16 @@ import { SyncStatus } from 'libraries/forms'
 import { Breadcrumb } from 'libraries/ui'
 import { FullDanceEditorFields } from 'components/dance/DanceEditor'
 import { Form, useDanceEditorState } from 'components/dance/DanceForm'
-import { DanceIsUsedIn } from 'components/dance/DanceIsUsedIn'
-import { danceVersionLink } from 'components/dance/DanceLink'
-import { DeleteDanceButton } from 'components/dance/DeleteDanceButton'
 import { LoadingState } from 'components/LoadingState'
 import { Page, Toolbar } from 'components/Page'
 import VersionableContentContainer from 'components/versioning/VersionableContentContainer'
 import { VersionSidebarToggle } from 'components/versioning/VersionSidebarToggle'
 import { BackLink } from 'components/widgets/BackLink'
 import { useT } from 'i18n'
+
+import { DanceIsUsedIn } from './-components/DanceIsUsedIn'
+import { danceVersionLink } from './-components/DanceLink'
+import { DeleteDanceButton } from './-components/DeleteDanceButton'
 
 export const Route = createFileRoute(
   '/dances/$danceId',
@@ -67,7 +68,7 @@ function DancePage() {
   const { danceId } = useParams({ from: Route.id })
   const { versionId } = useSearch({ from: Route.id })
   const result = useDance({ id: danceId ?? '', versionId })
-  const t = useT('pages.dances.dancePage')
+  const t = useT('routes.dances.dance')
   const { formProps, state } = useDanceEditorState(result.data?.dance ?? loadedDance)
 
   if (!result.data?.dance) return <LoadingState {...result} />

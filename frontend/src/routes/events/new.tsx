@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 
 import { EventInput } from 'types'
-import { GrantRole, ViewAccess } from 'types/gql/graphql'
+import { EventGrantRole, ViewAccess } from 'types/gql/graphql'
 
 import { addGlobalLoadingAnimation } from 'backend'
 import { useCreateEvent } from 'services/events'
@@ -23,12 +23,13 @@ export const Route = createFileRoute('/events/new')({
   component: CreateEventForm,
   staticData: {
     requireRights: 'events:create',
-    breadcrumb: 'pages.events.createEvent.newEventBreadcrumb',
+    breadcrumb: 'routes.events.new.newEventBreadcrumb',
   },
 })
 
 function CreateEventForm() {
-  const t = useT('pages.events.createEvent')
+  const t = useT('routes.events.new')
+  const label = useT('domain.event')
   const navigate = Route.useNavigate()
   const currentUser = useCurrentUser()
   const [createEvent] = useCreateEvent({
@@ -37,7 +38,7 @@ function CreateEventForm() {
   })
 
   const initialGrants = currentUser
-    ? [{ _id: guid(), principal: `user:${currentUser._id}`, role: GrantRole.Organizer }]
+    ? [{ _id: guid(), principal: `user:${currentUser._id}`, role: EventGrantRole.Organizer }]
     : []
 
   const [event, setEvent] = useState<EventInput>({
@@ -50,10 +51,10 @@ function CreateEventForm() {
   return <Page title={t('newEvent')}>
     <Form labelStyle="above" value={event} onChange={setEvent} onSubmit={() => addGlobalLoadingAnimation(createEvent({ event }))} errorDisplay="onSubmit">
       <div className="flex gap-3">
-        <Input label={t('name')} path="name" required containerClassName="w-60" />
+        <Input label={label('name')} path="name" required containerClassName="w-60" />
         <DateRangeField<EventInput>
           id="eventDate"
-          label={t('eventDate')}
+          label={label('eventDate')}
           beginPath="beginDate"
           endPath="endDate"
           required
