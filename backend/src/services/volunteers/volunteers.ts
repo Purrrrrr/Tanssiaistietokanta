@@ -1,6 +1,7 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/service.html
 
 import { hooks as schemaHooks } from '@feathersjs/schema'
+import type { HookContext, Application } from '../../declarations'
 
 import {
   volunteersDataValidator,
@@ -13,13 +14,25 @@ import {
   volunteersQueryResolver,
 } from './volunteers.schema'
 
-import type { Application } from '../../declarations'
 import { VolunteersService, getOptions } from './volunteers.class'
 import { volunteersPath, volunteersMethods } from './volunteers.shared'
 import { defaultChannels } from '../../utils/defaultChannels'
 
 export * from './volunteers.class'
 export * from './volunteers.schema'
+
+async function followDuplicatedBy(context: HookContext) {
+  const result = context.result
+  if (!result?.duplicatedBy || context.params?.query?._versionId || context.params?._skipDuplicatedByFollow) return
+  // Follow the chain, guarding against cycles
+  const visited = new Set<string>([result._id])
+  let current = result
+  while (current.duplicatedBy && !visited.has(current.duplicatedBy)) {
+    visited.add(current.duplicatedBy)
+    current = await context.service.get(current.duplicatedBy, { ...context.params, _skipDuplicatedByFollow: true })
+  }
+  context.result = current
+}
 
 // A configure function that registers the service and its hooks via `app.configure`
 export const volunteers = (app: Application) => {
@@ -45,6 +58,7 @@ export const volunteers = (app: Application) => {
     },
     after: {
       all: [],
+      get: [followDuplicatedBy],
     },
     error: {
       all: [],

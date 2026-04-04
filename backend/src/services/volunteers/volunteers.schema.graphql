@@ -10,6 +10,7 @@ type Volunteer implements Versionable {
   _updatedAt: String!
   versionHistory: VersionHistory!
   name: String!
+  duplicatedBy: ID
   volunteeredIn(eventId: ID): [VolunteeredInWorkshop!]!
 }
 
@@ -28,8 +29,10 @@ type Mutation {
 
 input VolunteerInput {
   name: String!
+  duplicatedBy: ID
 }
 
 input VolunteerPatchInput {
   name: String
+  duplicatedBy: ID
 }

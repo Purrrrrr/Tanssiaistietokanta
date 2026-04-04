@@ -5,7 +5,7 @@ import type { Static } from '@feathersjs/typebox'
 
 import type { HookContext } from '../../declarations'
 import { dataValidator, queryValidator } from '../../validators'
-import { computedProperties, Id, Name } from '../../utils/common-types'
+import { computedProperties, Id, Name, Nullable } from '../../utils/common-types'
 
 // Main data model schema
 export const volunteersSchema = Type.Object(
@@ -16,6 +16,7 @@ export const volunteersSchema = Type.Object(
     _updatedAt: Type.String(),
     _createdAt: Type.String(),
     name: Name(),
+    duplicatedBy: Nullable(Id()),
   },
   { $id: 'Volunteers', additionalProperties: false },
 )
@@ -46,7 +47,7 @@ export const volunteersPatchValidator = getValidator(volunteersPatchSchema, data
 export const volunteersPatchResolver = resolve<Volunteers, HookContext>({})
 
 // Schema for allowed query properties
-export const volunteersQueryProperties = Type.Pick(volunteersSchema, ['_id', 'name'])
+export const volunteersQueryProperties = Type.Pick(volunteersSchema, ['_id', 'name', 'duplicatedBy'])
 export const volunteersQuerySchema = Type.Intersect(
   [
     querySyntax(volunteersQueryProperties),
@@ -59,4 +60,10 @@ export const volunteersQuerySchema = Type.Intersect(
 )
 export type VolunteersQuery = Static<typeof volunteersQuerySchema>
 export const volunteersQueryValidator = getValidator(volunteersQuerySchema, queryValidator)
-export const volunteersQueryResolver = resolve<VolunteersQuery, HookContext>({})
+export const volunteersQueryResolver = resolve<VolunteersQuery, HookContext>({
+  duplicatedBy: async (value, _, ctx) => {
+    if (ctx.method !== 'find') return value
+    // Hide duplicates by default
+    return value ?? null
+  },
+})
