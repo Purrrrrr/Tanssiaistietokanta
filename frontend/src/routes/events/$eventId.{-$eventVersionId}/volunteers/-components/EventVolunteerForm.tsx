@@ -3,10 +3,10 @@ import { EventRole, EventVolunteerInput, Volunteer } from 'types'
 import { formFor, SubmitButton, SyncState, SyncStatus } from 'libraries/forms'
 import { TextArea } from 'libraries/forms/fieldComponents/basicComponents'
 import { FormProps } from 'libraries/forms/Form'
+import { VolunteerChooser } from 'components/volunteers/VolunteerChooser'
 import { useT } from 'i18n'
 
 import { EventVolunteerRolePicker } from './EventVolunteerRolePicker'
-import { VolunteerChooser } from './VolunteerChooser'
 
 export type EventVolunteerFormValues = Omit<EventVolunteerInput, 'volunteerId' | 'eventId' | 'interestedIn'> & {
   volunteer?: Volunteer

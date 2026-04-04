@@ -11,13 +11,13 @@ import { Button, Card, FormGroup, H2, SearchBar } from 'libraries/ui'
 import { ChevronDown, ChevronUp, Edit } from 'libraries/ui/icons'
 import { ItemList, Sort } from 'libraries/ui/ItemList'
 import { titleCase } from 'libraries/ui-showcase/utils/titleCase'
-import { emptyEventVolunteerForm, EventVolunteerForm, EventVolunteerFormValues } from 'components/eventVolunteers/EventVolunteerForm'
 import { RoleTag } from 'components/eventVolunteers/RoleTag'
 import { useT, useTranslation } from 'i18n'
 import { sortedBy } from 'utils/sorted'
 
 import { useCurrentEvent } from '../-context'
 import { DeleteEventVolunteerButton } from './-components/DeleteEventVolunteerButton'
+import { emptyEventVolunteerForm, EventVolunteerForm, EventVolunteerFormValues } from './-components/EventVolunteerForm'
 import { EventVolunteerRoleSelector } from './-components/EventVolunteerRoleSelect'
 
 interface EventVolunteerSearchParams {

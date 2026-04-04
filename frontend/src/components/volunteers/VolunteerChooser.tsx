@@ -1,19 +1,20 @@
-import { useCreateVolunteer, useVolunteers } from 'services/volunteers'
+import { VolunteerListItem } from 'types'
+
+import { useCreateVolunteer, useVolunteerNames } from 'services/volunteers'
 
 import { FieldComponentProps } from 'libraries/forms'
 import { AutocompleteInput } from 'libraries/formsV2/components/inputs'
 import { useT } from 'i18n'
 
-interface VolunteerItem { _id: string, name: string }
-type VolunteerOption = (VolunteerItem & { __typename?: 'Volunteer' }) | { __typename: 'createVolunteer', name: string }
+type VolunteerOption = (VolunteerListItem & { __typename?: 'Volunteer' }) | { __typename: 'createVolunteer', name: string }
 
-export interface VolunteerChooserProps extends FieldComponentProps<VolunteerItem | null> {
-  excludeVolunteers?: VolunteerItem[]
+export interface VolunteerChooserProps extends FieldComponentProps<VolunteerListItem | null> {
+  excludeVolunteers?: VolunteerListItem[]
 }
 
 export function VolunteerChooser({ value, onChange, readOnly, ...rest }: VolunteerChooserProps) {
   const t = useT('components.volunteerChooser')
-  const [volunteers = []] = useVolunteers()
+  const [volunteers = []] = useVolunteerNames()
   const [createVolunteer] = useCreateVolunteer()
 
   const getItems = (query: string): VolunteerOption[] => {
