@@ -7,6 +7,7 @@
     "@apollo/client": "^3.12.7",
     "@blueprintjs/icons": "^6.7.0",
     "@dnd-kit/sortable": "^10.0.0",
+    "@doeixd/scoped-focusgroup-polyfill": "^0.0.2",
     "@httpx/plain-object": "^2.1.7",
     "@n8tb1t/use-scroll-position": "^2.0.3",
     "@react-aria/focus": "^3.19.1",

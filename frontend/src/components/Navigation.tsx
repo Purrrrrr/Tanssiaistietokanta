@@ -55,9 +55,14 @@ function LoginStatus() {
 
   if (user) {
     return <span>
-      <MenuButton text={user.name} buttonRenderer={props => <Button minimal icon={<User className="mr-0.5 text-amber-600 mt-[1px]" />} {...props} />}>
-        <NavigateButton minimal to="/users">{t('userSettings')}</NavigateButton>
-        <Button minimal onClick={logout}>{t('logout')}</Button>
+      <MenuButton
+        text={user.name}
+        buttonRenderer={props =>
+          <Button minimal icon={<User className="mr-0.5 text-amber-600 mt-[1px]" />} {...props} />
+        }
+      >
+        <MenuButton.ItemLink to="/users" text={t('userSettings')} />
+        <MenuButton.ItemButton onClick={logout} text={t('logout')} />
       </MenuButton>
     </span>
   }

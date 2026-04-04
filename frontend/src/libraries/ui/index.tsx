@@ -3,6 +3,7 @@ import classNames from 'classnames'
 
 import { ColorClass, CssClass } from './classes'
 
+import './focusgroup'
 import './ui.css'
 
 export * from './AutosizedSection'

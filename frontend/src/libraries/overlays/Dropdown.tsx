@@ -25,9 +25,10 @@ interface DropdrownProps {
   onClick?: MouseEventHandler
   tabIndex?: number
   alwaysRenderChildren?: boolean
+  focusgroup?: true | string
 }
 
-export const Dropdown = ({ id, anchorElement, auto, arrow, children, open, onToggle, onClick, tabIndex, alwaysRenderChildren }: DropdrownProps) => {
+export const Dropdown = ({ id, anchorElement, auto, arrow, children, open, onToggle, onClick, tabIndex, alwaysRenderChildren, focusgroup }: DropdrownProps) => {
   const element = useRef<HTMLDivElement>(null)
   const arrowTriangle = useRef<SVGSVGElement>(null)
   const parent = anchorElement
@@ -45,6 +46,7 @@ export const Dropdown = ({ id, anchorElement, auto, arrow, children, open, onTog
     type={auto ? 'auto' : 'manual'}
     onClick={onClick}
     ref={element}
+    focusgroup={focusgroup === true ? 'menu' : focusgroup}
     className="flex overflow-hidden absolute flex-col p-2.5 bg-transparent duration-300 w-fit max-w-dvw max-h-dvh transition-[scale,opacity]"
     hideDelay={301}
     closedClassname="scale-y-0 scale-x-0 opacity-0"

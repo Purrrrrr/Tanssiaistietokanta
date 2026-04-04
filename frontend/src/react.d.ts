@@ -1,5 +1,6 @@
 declare module 'react' {
   import * as ReactTypings from '@types/react'
+  import { HTMLAttributes as ReactHTMLAttributes } from '@types/react'
 
   export = ReactTypings
 
@@ -8,4 +9,9 @@ declare module 'react' {
   export function lazy<T extends ComponentType<any>>(
     factory: () => Promise<{ default: T }>,
   ): T
+
+  export interface HTMLAttributes<T> extends ReactHTMLAttributes<T> {
+    focusgroup?: string
+  }
+
 }

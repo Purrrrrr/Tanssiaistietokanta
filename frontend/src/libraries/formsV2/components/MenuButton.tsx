@@ -1,5 +1,7 @@
+import { createLink } from '@tanstack/react-router'
 import { MouseEvent, ReactNode, useEffect, useId, useRef, useState } from 'react'
 
+import { omitPermissionCheckingProps, withPermissionChecking } from 'libraries/access-control'
 import { Dropdown, DropdownContainer, getFocusableElements } from 'libraries/overlays'
 import { Button, ButtonProps } from 'libraries/ui'
 import { DoubleCaretVertical } from 'libraries/ui/icons'
@@ -46,8 +48,39 @@ export default function MenuButton({ children, buttonRenderer, text, buttonProps
         />
       )
     }
-    <Dropdown auto arrow id={dropdownId} open={open} onClick={onClick} onToggle={setOpen}>
+    <Dropdown focusgroup="menu" auto arrow id={dropdownId} open={open} onClick={onClick} onToggle={setOpen}>
       {children}
     </Dropdown>
   </DropdownContainer>
 }
+
+const menuItemClass = 'flex gap-2 items-center px-2 min-h-7.5 transition-colors hover:bg-blue-200 focus:bg-blue-200 focus-visible:outline-none!'
+
+interface MenuItemLinkProps extends React.ComponentProps<'a'> {
+  text?: React.ReactNode
+  icon?: React.ReactNode
+}
+
+const MenuItemLink = createLink(withPermissionChecking(({ children, href, text, icon, ...props }: MenuItemLinkProps) => {
+  return <a {...omitPermissionCheckingProps(props)} className={menuItemClass} href={href}>
+    {icon}
+    {text}
+    {children}
+  </a>
+}))
+
+interface MenuItemButtonProps extends Omit<React.ComponentProps<'button'>, 'text'> {
+  text?: React.ReactNode
+  icon?: React.ReactNode
+}
+
+const MenuItemButton = withPermissionChecking(({ children, text, icon, ...props }: MenuItemButtonProps) => {
+  return <button {...omitPermissionCheckingProps(props)} className={menuItemClass}>
+    {icon}
+    {text}
+    {children}
+  </button>
+})
+
+MenuButton.ItemLink = MenuItemLink
+MenuButton.ItemButton = MenuItemButton
