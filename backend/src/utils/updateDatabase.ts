@@ -1,6 +1,6 @@
 import NeDB from '@seald-io/nedb'
 
-export default async function updateDatabase(service: NeDB, updater: (i: unknown) => unknown) {
+export default async function updateDatabase(service: NeDB, updater: (i: Record<string, unknown>) => unknown) {
   const items = await service.findAsync({})
 
   for (const item of items) {

@@ -15,7 +15,7 @@ export interface MigrationContext {
   getModel(name: string): NeDB
   getVersionModel(name: string): NeDB
   getService(name: string): ServiceInterface
-  updateDatabase(name: string, modificator: (i: unknown) => unknown): Promise<void>
+  updateDatabase(name: string, modificator: (i: Record<string, unknown>) => unknown): Promise<void>
 }
 
 export function getContext(app: Application): MigrationContext {
@@ -48,7 +48,7 @@ export function getContext(app: Application): MigrationContext {
     getModel,
     getVersionModel,
     getService,
-    updateDatabase: async (name: string, modificator: (i: unknown) => unknown) => {
+    updateDatabase: async (name: string, modificator: (i: Record<string, unknown>) => unknown) => {
       await updateDatabase(getModel(name), modificator)
       await updateDatabase(getVersionModel(name), modificator)
     },

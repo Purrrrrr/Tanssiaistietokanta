@@ -7,15 +7,6 @@ import type { HookContext } from '../../declarations'
 import { dataValidator, queryValidator } from '../../validators'
 import { computedProperties, Id, Name } from '../../utils/common-types'
 
-export const contactDetailSchema = Type.Object(
-  {
-    type: Type.String(),
-    value: Type.String(),
-  },
-  { $id: 'ContactDetail', additionalProperties: false },
-)
-export type ContactDetail = Static<typeof contactDetailSchema>
-
 // Main data model schema
 export const volunteersSchema = Type.Object(
   {
@@ -25,10 +16,6 @@ export const volunteersSchema = Type.Object(
     _updatedAt: Type.String(),
     _createdAt: Type.String(),
     name: Name(),
-    email: Type.Optional(Type.String()),
-    phone: Type.Optional(Type.String()),
-    gdpr_consent_date: Type.Optional(Type.String()),
-    contact_details: Type.Array(contactDetailSchema),
   },
   { $id: 'Volunteers', additionalProperties: false },
 )
@@ -48,9 +35,7 @@ export const volunteersDataSchema = Type.Intersect(
 )
 export type VolunteersData = Static<typeof volunteersDataSchema>
 export const volunteersDataValidator = getValidator(volunteersDataSchema, dataValidator)
-export const volunteersDataResolver = resolve<Volunteers, HookContext>({
-  contact_details: value => value ?? [],
-})
+export const volunteersDataResolver = resolve<Volunteers, HookContext>({})
 
 // Schema for updating existing entries
 export const volunteersPatchSchema = Type.Partial(volunteersSchema, {
@@ -61,7 +46,7 @@ export const volunteersPatchValidator = getValidator(volunteersPatchSchema, data
 export const volunteersPatchResolver = resolve<Volunteers, HookContext>({})
 
 // Schema for allowed query properties
-export const volunteersQueryProperties = Type.Pick(volunteersSchema, ['_id', 'name', 'email', 'phone'])
+export const volunteersQueryProperties = Type.Pick(volunteersSchema, ['_id', 'name'])
 export const volunteersQuerySchema = Type.Intersect(
   [
     querySyntax(volunteersQueryProperties),

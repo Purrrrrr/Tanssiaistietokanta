@@ -10,10 +10,6 @@ type Volunteer implements Versionable {
   _updatedAt: String!
   versionHistory: VersionHistory!
   name: String!
-  email: String
-  phone: String
-  gdpr_consent_date: String
-  contact_details: [ContactDetail!]!
   volunteeredIn(eventId: ID): [VolunteeredInWorkshop!]!
 }
 
@@ -21,11 +17,6 @@ type VolunteeredInWorkshop {
   _id: ID!
   workshop: Workshop!
   roles: [String!]!
-}
-
-type ContactDetail {
-  type: String!
-  value: String!
 }
 
 type Mutation {
@@ -37,21 +28,8 @@ type Mutation {
 
 input VolunteerInput {
   name: String!
-  email: String
-  phone: String
-  gdpr_consent_date: String
-  contact_details: [ContactDetailInput!]
 }
 
 input VolunteerPatchInput {
   name: String
-  email: String
-  phone: String
-  gdpr_consent_date: String
-  contact_details: [ContactDetailInput!]
-}
-
-input ContactDetailInput {
-  type: String!
-  value: String!
 }
