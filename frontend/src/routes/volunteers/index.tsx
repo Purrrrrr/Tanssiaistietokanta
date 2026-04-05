@@ -16,6 +16,7 @@ import { sortedBy } from 'utils/sorted'
 
 import { DeleteVolunteerButton } from './-components/DeleteVolunteerButton'
 import { emptyVolunteerForm, VolunteerForm, VolunteerFormValues } from './-components/VolunteerForm'
+import { VolunteeredIn } from 'components/volunteers/VolunteeredIn'
 
 interface VolunteerSearchParams {
   search?: string
@@ -69,6 +70,7 @@ function RouteComponent() {
     >
       <ItemList.SortableHeader currentSort={sort} onSort={setSort} columns={[
         { key: 'name', label: label('name') },
+        { key: 'volunteeredIn', label: label('volunteeredIn') },
       ]} />
       {(volunteers ?? []).map(volunteer =>
         <VolunteerListRow key={volunteer._id} volunteer={volunteer}
@@ -102,6 +104,8 @@ function volunteerSorter(key: string) {
     default:
     case 'name':
       return (volunteer: Volunteer) => volunteer.name
+    case 'volunteeredIn':
+      return (volunteer: Volunteer) => volunteer.volunteeredIn.length
   }
 }
 
@@ -118,7 +122,7 @@ function VolunteerListRow({ volunteer }: VolunteerListRowProps) {
     isOpen={showEditor}
   >
     <span>{volunteer.name}</span>
-    <pre>{volunteer.volunteeredIn.map(v => `${v.workshop.name} (${v.workshop.event.name})`).join('\n')}</pre>
+    <VolunteeredIn volunteer={volunteer} />
     <div className="flex items-center gap-1">
       <DeleteVolunteerButton minimal volunteer={volunteer} />
       <Button

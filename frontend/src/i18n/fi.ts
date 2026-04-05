@@ -85,6 +85,7 @@ export const fi = {
     },
     volunteer: {
       name: 'Nimi',
+      volunteeredIn: 'Työskennellyt työpajoissa',
     },
     user: {
       name: 'Nimi',
