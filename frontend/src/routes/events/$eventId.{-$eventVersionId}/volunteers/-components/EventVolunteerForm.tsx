@@ -1,15 +1,14 @@
-import { EventRole, EventVolunteerInput, Volunteer } from 'types'
+import { EventRole, EventVolunteerInput, VolunteerListItem } from 'types'
 
-import { formFor, SubmitButton, SyncState, SyncStatus } from 'libraries/forms'
+import { formFor, type FormProps, SubmitButton, type SyncState, SyncStatus } from 'libraries/forms'
 import { TextArea } from 'libraries/forms/fieldComponents/basicComponents'
-import { FormProps } from 'libraries/forms/Form'
 import { VolunteerChooser } from 'components/volunteers/VolunteerChooser'
 import { useT } from 'i18n'
 
 import { EventVolunteerRolePicker } from './EventVolunteerRolePicker'
 
 export type EventVolunteerFormValues = Omit<EventVolunteerInput, 'volunteerId' | 'eventId' | 'interestedIn'> & {
-  volunteer?: Volunteer
+  volunteer?: VolunteerListItem
   interestedIn: EventRole[]
 }
 
@@ -27,7 +26,7 @@ const {
 
 interface EventVolunteerFormProps extends FormProps<EventVolunteerFormValues> {
   syncState?: SyncState
-  excludeVolunteers?: Volunteer[]
+  excludeVolunteers?: VolunteerListItem[]
   isNew?: boolean
   submitText?: string
 }

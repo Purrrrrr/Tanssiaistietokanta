@@ -11,6 +11,8 @@ import { RemoveItemButton, RemoveItemButtonProps } from './formControls'
 import { FormHooksFor, formHooksFor } from './hooks'
 import { Entity, ListField, UntypedListFieldProps } from './ListEditor'
 
+export { type FormProps } from './Form'
+
 export type MarkdownEditorProps = MarkdownInputProps
 export * from './fieldComponents/basicComponents'
 export * from './fieldComponents/dateTime'

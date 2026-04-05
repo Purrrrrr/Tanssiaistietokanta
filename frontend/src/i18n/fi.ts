@@ -8,6 +8,7 @@ export const fi = {
     dances: 'Tanssit',
     breadcrumbs: 'Murupolku',
     moveToContent: 'Siirry pääsisältöön',
+    volunteers: 'Vapaaehtoiset',
     userSettings: 'Käyttäjäasetukset',
     menu: 'Valikko',
     login: 'Kirjaudu',
@@ -81,6 +82,9 @@ export const fi = {
       notes: 'Muistiinpanot',
       noInterests: 'Ei kiinnostuksen kohteita',
       noWishes: 'Ei erityisiä toiveita',
+    },
+    volunteer: {
+      name: 'Nimi',
     },
     user: {
       name: 'Nimi',
@@ -564,6 +568,17 @@ export const fi = {
         pageTitle: 'Käyttäjät',
         noUsers: 'Ei käyttäjiä',
       },
+    },
+    volunteers: {
+      pageTitle: 'Vapaaehtoiset',
+      Nvolunteers: {
+        one: '1 vapaaehtoinen',
+        many: '__count__ vapaaehtoista',
+      },
+      noVolunteers: 'Ei vapaaehtoisia',
+      addVolunteer: 'Lisää vapaaehtoinen',
+      deleteVolunteer: 'Poista vapaaehtoinen',
+      deleteConfirmation: 'Haluatko varmasti poistaa tämän vapaaehtoisen tietokannasta?',
     },
   },
   pages: {

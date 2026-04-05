@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 
-import { EventRole, EventVolunteer, Volunteer } from 'types'
+import { EventRole, EventVolunteer, VolunteerListItem } from 'types'
 
 import { addGlobalLoadingAnimation } from 'backend'
 import { useCreateEventVolunteer, useEventVolunteers, usePatchEventVolunteer } from 'services/eventVolunteers'
@@ -111,14 +111,14 @@ function useEventVolunteerSearchParams() {
     ...search,
     setSearch(newSearch: string) {
       navigate({
-        to: Route.id,
+        to: Route.to,
         params,
         search: { ...search, search: newSearch },
       })
     },
     setRole(roleId: string | undefined) {
       navigate({
-        to: Route.id,
+        to: Route.to,
         params,
         search: roleId ? { ...search, role: roleId } : { ...search, role: undefined },
       })
@@ -169,7 +169,7 @@ function EventVolunteerRoleCounts({ volunteers, currentRole, onSetRole }: { volu
 
 interface EventVolunteerListRowProps {
   eventVolunteer: EventVolunteer
-  addedVolunteers: Volunteer[]
+  addedVolunteers: VolunteerListItem[]
   currentRole?: string
   onSetRole: (roleId: string | undefined) => void
 }
@@ -216,7 +216,10 @@ function EventVolunteerListRow({ eventVolunteer: ev, addedVolunteers, currentRol
   </ItemList.Row>
 }
 
-function EventVolunteerRowEditor({ item, addedVolunteers }: { item: EventVolunteer, addedVolunteers: Volunteer[] }) {
+function EventVolunteerRowEditor({ item, addedVolunteers }: {
+  item: EventVolunteer
+  addedVolunteers: VolunteerListItem[]
+}) {
   const [patchEventVolunteer] = usePatchEventVolunteer()
 
   const { formProps, state } = useAutosavingState<EventVolunteerFormValues, Partial<EventVolunteerFormValues>>(
@@ -238,7 +241,7 @@ function EventVolunteerRowEditor({ item, addedVolunteers }: { item: EventVolunte
   return <EventVolunteerForm {...formProps} syncState={state} excludeVolunteers={addedVolunteers} className="px-4" />
 }
 
-function CreateEventVolunteerForm({ eventId, addedVolunteers }: { eventId: string, addedVolunteers: Volunteer[] }) {
+function CreateEventVolunteerForm({ eventId, addedVolunteers }: { eventId: string, addedVolunteers: VolunteerListItem[] }) {
   const [formData, setFormData] = useState<EventVolunteerFormValues>(emptyEventVolunteerForm)
   const [createEventVolunteer] = useCreateEventVolunteer({ refetchQueries: ['getEventVolunteers'] })
   const t = useT('routes.events.event.volunteers')

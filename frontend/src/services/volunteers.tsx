@@ -5,11 +5,41 @@ setupServiceUpdateFragment(
   `fragment VolunteerFragment on Volunteer {
     _id
     name
+    volunteeredIn {
+      workshop {
+        _id
+        name
+        event {
+          _id
+          _versionId
+          name
+        }
+      }
+    }
   }`,
 )
 
 export const useVolunteers = entityListQueryHook('volunteers', graphql(`
 query getVolunteers {
+  volunteers {
+    _id
+    name
+    volunteeredIn {
+      workshop {
+        _id
+        name
+        event {
+          _id
+          _versionId
+          name
+        }
+      }
+    }
+  }
+}`))
+
+export const useVolunteerNames = entityListQueryHook('volunteers', graphql(`
+query getVolunteerNames {
   volunteers {
     _id
     name
@@ -21,6 +51,17 @@ mutation createVolunteer($volunteer: VolunteerInput!) {
   createVolunteer(volunteer: $volunteer) {
     _id
     name
+    volunteeredIn {
+      workshop {
+        _id
+        name
+        event {
+          _id
+          _versionId
+          name
+        }
+      }
+    }
   }
 }`))
 
@@ -29,6 +70,18 @@ mutation patchVolunteer($id: ID!, $volunteer: VolunteerPatchInput!) {
   patchVolunteer(id: $id, volunteer: $volunteer) {
     _id
     name
+    volunteeredIn {
+      workshop {
+        _id
+        name
+        event {
+          _id
+          _versionId
+          name
+        }
+      }
+    }
+
   }
 }`))
 
@@ -37,5 +90,16 @@ mutation deleteVolunteer($id: ID!) {
   deleteVolunteer(id: $id) {
     _id
     name
+    volunteeredIn {
+      workshop {
+        _id
+        name
+        event {
+          _id
+          _versionId
+          name
+        }
+      }
+    }
   }
 }`))

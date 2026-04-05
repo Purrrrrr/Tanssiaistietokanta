@@ -79,6 +79,7 @@ export const workshopsQuerySchema = Type.Intersect(
     querySyntax(workshopsQueryProperties),
     // Add additional query properties here
     Type.Object({
+      teacherIds: Type.Optional(Id()),
       'instances.danceIds': Type.Optional(Id()),
       searchVersions: Type.Optional(Type.Boolean()),
     }, { additionalProperties: false }),

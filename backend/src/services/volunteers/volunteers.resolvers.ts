@@ -1,13 +1,14 @@
 import { Application } from '../../declarations'
 import { VolunteersParams } from './volunteers.class'
 import { versionHistoryFieldResolvers, versionHistoryResolver } from '../../utils/version-history-resolvers'
+import { WorkshopsQuery, WorkshopsService } from '../workshops/workshops.class'
 
-async function findVolunteeredIn(workshopService: any, volunteerId: string, eventId?: string) {
-  const query: any = {
-    $or: [
-      { teacherIds: volunteerId },
-      { assistantTeacherIds: volunteerId },
-    ],
+async function findVolunteeredIn(workshopService: WorkshopsService, volunteerId: string, eventId?: string) {
+  const query: WorkshopsQuery = {
+    teacherIds: volunteerId,
+    // $or: [
+    //   { assistantTeacherIds: volunteerId },
+    // ],
   }
   if (eventId) {
     query.eventId = eventId
