@@ -24,6 +24,7 @@ export function DeleteVolunteerButton({ minimal, volunteer }: DeleteVolunteerBut
     requireRight="volunteers:delete"
     entityId={volunteer._id}
     minimal={minimal}
+    disabled={volunteer.volunteeredIn.length > 0}
     onDelete={handleDelete}
     iconOnly={minimal}
     text={t('deleteVolunteer')}

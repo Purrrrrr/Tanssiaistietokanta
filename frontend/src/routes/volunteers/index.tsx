@@ -105,7 +105,13 @@ function volunteerSorter(key: string) {
     case 'name':
       return (volunteer: Volunteer) => volunteer.name
     case 'volunteeredIn':
-      return (volunteer: Volunteer) => volunteer.volunteeredIn.length
+      return (volunteer: Volunteer) => {
+        const sortedVolunteeredIn = sortedBy(
+          volunteer.volunteeredIn,
+          v => v.workshop.event.beginDate,
+        )
+        return sortedVolunteeredIn[0]?.workshop.event.beginDate
+      }
   }
 }
 

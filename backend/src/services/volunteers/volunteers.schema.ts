@@ -36,7 +36,9 @@ export const volunteersDataSchema = Type.Intersect(
 )
 export type VolunteersData = Static<typeof volunteersDataSchema>
 export const volunteersDataValidator = getValidator(volunteersDataSchema, dataValidator)
-export const volunteersDataResolver = resolve<Volunteers, HookContext>({})
+export const volunteersDataResolver = resolve<Volunteers, HookContext>({
+  duplicatedBy: async value => value ?? null,
+})
 
 // Schema for updating existing entries
 export const volunteersPatchSchema = Type.Partial(volunteersSchema, {

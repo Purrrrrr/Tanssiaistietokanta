@@ -12,6 +12,7 @@ setupServiceUpdateFragment(
         event {
           _id
           _versionId
+          beginDate
           name
         }
       }
@@ -31,6 +32,7 @@ query getVolunteers {
         event {
           _id
           _versionId
+          beginDate
           name
         }
       }
@@ -58,6 +60,7 @@ mutation createVolunteer($volunteer: VolunteerInput!) {
         event {
           _id
           _versionId
+          beginDate
           name
         }
       }
@@ -77,6 +80,7 @@ mutation patchVolunteer($id: ID!, $volunteer: VolunteerPatchInput!) {
         event {
           _id
           _versionId
+          beginDate
           name
         }
       }
