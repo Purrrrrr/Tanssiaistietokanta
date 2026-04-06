@@ -11,9 +11,18 @@ type EventRole implements Versionable {
   versionHistory: VersionHistory!
   name: String!
   description: String!
+  type: EventRoleType!
   plural: String!
   appliesToWorkshops: Boolean!
   order: Float!
+}
+
+enum EventRoleType {
+  TEACHER
+  ORGANIZER
+  ASSISTANT_ORGANIZER
+  BALL_HOST
+  OTHER
 }
 
 type Mutation {

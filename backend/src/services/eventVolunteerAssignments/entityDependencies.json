@@ -1,0 +1,22 @@
+[
+  {
+    "type": "childOf",
+    "service": "events",
+    "path": "eventId"
+  },
+  {
+    "type": "childOf",
+    "service": "workshops",
+    "path": "workshopId"
+  },
+  {
+    "type": "uses",
+    "service": "eventRoles",
+    "path": "roleId"
+  },
+  {
+    "type": "uses",
+    "service": "volunteers",
+    "path": "volunteerId"
+  }
+]
