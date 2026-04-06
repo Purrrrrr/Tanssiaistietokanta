@@ -427,7 +427,7 @@ export const fi = {
       },
       dance: {
         backToDanceList: 'Takaisin tanssilistaan',
-      }
+      },
     },
     events: {
       list: {
@@ -462,9 +462,10 @@ export const fi = {
         create: 'Luo tapahtuma',
       },
       event: {
+        backToFrontPage: 'Takaisin tapahtuman etusivulle',
         menu: {
           title: 'Tapahtuman tiedot',
-          basicInfo: 'Yhteenveto',
+          basicInfo: 'Etusivu',
           editBasicInfo: 'Tapahtuman tiedot',
           volunteers: 'Vapaaehtoiset',
           workshops: 'Työpajat',
@@ -483,6 +484,11 @@ export const fi = {
         },
         index: {
           ballProgram: 'Tanssiaisohjelma',
+          ballDateTime: 'Tanssiaiset järjestetään __dateTime__.',
+          youCanEditProgramOnPages: 'Voit myös muokata tanssiaisohjelmaa sivuilla',
+          editProgram: 'Muokkaa tanssiaisohjelmaa',
+          and: 'ja',
+          editSlideShow: 'Muokkaa diashowta',
           noProgram: 'Ei ohjelmaa',
           requestedDance: {
             one: 'Toivetanssi',

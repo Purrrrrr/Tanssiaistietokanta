@@ -3,6 +3,7 @@ import { useState } from 'react'
 
 import { Event } from 'types'
 
+import { RequirePermissions } from 'libraries/access-control'
 import { Button, Card, H2, Link } from 'libraries/ui'
 import { DanceSet, EventProgramRow } from 'components/event/EventProgramForm'
 import { FileList } from 'components/files/FileList'
@@ -34,13 +35,35 @@ function EventProgram({ event }: { event: Event }) {
   const formatDateTime = useFormatDateTime()
 
   const t = useT('routes.events.event.index')
-  const label = useT('domain.event')
   if (!program || program.danceSets.length === 0) {
     return <p>{t('noProgram')}</p>
   }
 
   return <section className="@container">
-    <p>{label('ballDateTime')}: {formatDateTime(event.program.dateTime)}</p>
+    <p>
+      {t('ballDateTime', { dateTime: formatDateTime(event.program.dateTime) })}
+      <RequirePermissions requireRight="events:modify" entityId={event._id}>
+        {' '}
+        {t('youCanEditProgramOnPages')}
+        {' '}
+        <Link
+          to="/events/$eventId/{-$eventVersionId}/program/main"
+          params={{ eventId: event._id, eventVersionId: event._versionId ?? undefined }}
+        >
+          {t('editProgram')}
+        </Link>
+        {' '}
+        {t('and')}
+        {' '}
+        <Link
+          to="/events/$eventId/{-$eventVersionId}/program/slides/{-$slideId}"
+          params={{ eventId: event._id, eventVersionId: event._versionId ?? undefined }}
+        >
+          {t('editSlideShow')}
+        </Link>
+        .
+      </RequirePermissions>
+    </p>
     <div className="@3xl:grid grid-cols-[repeat(auto-fit,minmax(auto,16rem))] gap-2 mb-4 @3xl:text-center">
       {program.danceSets.map((danceSet, index) =>
         <Card key={index} className="@3xl:px-2 py-2 @max-3xl:border-0 @max-3xl:shadow-none" noPadding marginClass="">
@@ -75,7 +98,7 @@ function EventWorkshops({ event, readOnly }: { event: Event, readOnly: boolean }
   const t = useT('routes.events.event.index')
   const { workshops, _id: eventId, beginDate } = event
   return <div className="w-auto grid grid-cols-2 items-center">
-    <H2>{t('workshops')}</H2>
+    <H2 className="">{t('workshops')}</H2>
     {readOnly ||
       <Button
         className="justify-self-end"
