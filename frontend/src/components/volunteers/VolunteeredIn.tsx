@@ -10,15 +10,15 @@ export interface VolunteeredInProps {
 export function VolunteeredIn({ volunteer }: VolunteeredInProps) {
   const sortedVolunteeredIn = sortedBy(
     volunteer.volunteeredIn,
-    v => v.workshop.event.beginDate,
+    v => v.event.beginDate,
   )
   return <div className="flex flex-wrap gap-0.5">
     {sortedVolunteeredIn.map(v =>
       <ColoredTag
-        key={v.workshop._id}
-        hashSource={v.workshop.event._id}
-        tag={v.workshop.event.name}
-        title={v.workshop.name}
+        key={v._id}
+        hashSource={v.event._id}
+        tag={v.event.name}
+        title={v.workshop?.name ?? v.role.name}
       />,
     )}
   </div>

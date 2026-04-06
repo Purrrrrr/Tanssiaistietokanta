@@ -11,13 +11,7 @@ type Volunteer implements Versionable {
   versionHistory: VersionHistory!
   name: String!
   duplicatedBy: ID
-  volunteeredIn(eventId: ID): [VolunteeredInWorkshop!]!
-}
-
-type VolunteeredInWorkshop {
-  _id: ID!
-  workshop: Workshop!
-  roles: [String!]!
+  volunteeredIn(eventId: ID): [EventVolunteerAssignment!]!
 }
 
 type Mutation {

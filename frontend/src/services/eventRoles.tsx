@@ -7,6 +7,7 @@ setupServiceUpdateFragment(
     name
     plural
     description
+    type
     appliesToWorkshops
     order
   }`,
@@ -19,6 +20,7 @@ query getEventRoles {
     name
     plural
     description
+    type
     appliesToWorkshops
     order
   }

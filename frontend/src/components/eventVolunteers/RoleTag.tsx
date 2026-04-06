@@ -3,7 +3,7 @@ import { EventRole } from 'types'
 import { ColoredTag, ColoredTagProps } from 'components/widgets/ColoredTag'
 
 export interface RoleTagProps extends Omit<ColoredTagProps, 'hashSource' | 'title'> {
-  role: EventRole
+  role: Pick<EventRole, '_id' | 'name' | 'order'>
   title?: string
   onSetRole?: (roleId: string | undefined) => void
 }

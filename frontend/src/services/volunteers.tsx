@@ -6,15 +6,20 @@ setupServiceUpdateFragment(
     _id
     name
     volunteeredIn {
+      _id
+      event {
+        _id
+        _versionId
+        beginDate
+        name
+      }
       workshop {
         _id
         name
-        event {
-          _id
-          _versionId
-          beginDate
-          name
-        }
+      }
+      role {
+        _id
+        name
       }
     }
   }`,
@@ -26,15 +31,20 @@ query getVolunteers {
     _id
     name
     volunteeredIn {
+      _id
+      event {
+        _id
+        _versionId
+        beginDate
+        name
+      }
       workshop {
         _id
         name
-        event {
-          _id
-          _versionId
-          beginDate
-          name
-        }
+      }
+      role {
+        _id
+        name
       }
     }
   }
@@ -54,15 +64,20 @@ mutation createVolunteer($volunteer: VolunteerInput!) {
     _id
     name
     volunteeredIn {
+      _id
+      event {
+        _id
+        _versionId
+        beginDate
+        name
+      }
       workshop {
         _id
         name
-        event {
-          _id
-          _versionId
-          beginDate
-          name
-        }
+      }
+      role {
+        _id
+        name
       }
     }
   }
@@ -74,18 +89,22 @@ mutation patchVolunteer($id: ID!, $volunteer: VolunteerPatchInput!) {
     _id
     name
     volunteeredIn {
+      _id
+      event {
+        _id
+        _versionId
+        beginDate
+        name
+      }
       workshop {
         _id
         name
-        event {
-          _id
-          _versionId
-          beginDate
-          name
-        }
+      }
+      role {
+        _id
+        name
       }
     }
-
   }
 }`))
 
@@ -95,14 +114,20 @@ mutation deleteVolunteer($id: ID!) {
     _id
     name
     volunteeredIn {
+      _id
+      event {
+        _id
+        _versionId
+        beginDate
+        name
+      }
       workshop {
         _id
         name
-        event {
-          _id
-          _versionId
-          name
-        }
+      }
+      role {
+        _id
+        name
       }
     }
   }

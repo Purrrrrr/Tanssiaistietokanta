@@ -10,6 +10,7 @@ type EventVolunteerAssignment implements Versionable {
   _updatedAt: String!
   versionHistory: VersionHistory!
   eventId: ID!
+  event: Event!
   workshopId: ID
   workshop: Workshop
   roleId: ID!

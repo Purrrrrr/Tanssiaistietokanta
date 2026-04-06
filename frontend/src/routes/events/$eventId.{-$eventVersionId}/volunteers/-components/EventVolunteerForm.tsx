@@ -9,7 +9,7 @@ import { EventVolunteerRolePicker } from './EventVolunteerRolePicker'
 
 export type EventVolunteerFormValues = Omit<EventVolunteerInput, 'volunteerId' | 'eventId' | 'interestedIn'> & {
   volunteer?: VolunteerListItem
-  interestedIn: EventRole[]
+  interestedIn: Pick<EventRole, '_id'>[]
 }
 
 export const emptyEventVolunteerForm = (): EventVolunteerFormValues => ({

@@ -1,38 +1,20 @@
 import { Application } from '../../declarations'
 import { VolunteersParams } from './volunteers.class'
 import { versionHistoryFieldResolvers, versionHistoryResolver } from '../../utils/version-history-resolvers'
-import { WorkshopsQuery, WorkshopsService } from '../workshops/workshops.class'
-
-async function findVolunteeredIn(workshopService: WorkshopsService, volunteerId: string, eventId?: string) {
-  const query: WorkshopsQuery = {
-    teacherIds: volunteerId,
-  }
-  if (eventId) {
-    query.eventId = eventId
-  }
-  const workshops = await workshopService.find({ query })
-
-  return workshops.map((workshop: any) => {
-    const roles: string[] = []
-    if (workshop.teacherIds?.includes(volunteerId)) roles.push('teacher')
-    if (workshop.assistantTeacherIds?.includes(volunteerId)) roles.push('assistant_teacher')
-    return {
-      _id: `${volunteerId}-${workshop._id}`,
-      workshop,
-      roles,
-    }
-  })
-}
+import { EventVolunteerAssignmentsParams } from '../eventVolunteerAssignments/eventVolunteerAssignments.class'
 
 export default (app: Application) => {
   const service = app.service('volunteers')
-  const workshopService = app.service('workshops')
+  const assignmentsService = app.service('eventVolunteerAssignments')
 
   return {
     Volunteer: {
       versionHistory: versionHistoryResolver(service),
-      volunteeredIn: (volunteer: { _id: string }, { eventId }: { eventId?: string }) =>
-        findVolunteeredIn(workshopService, volunteer._id, eventId),
+      volunteeredIn: (volunteer: { _id: string }, { eventId }: { eventId?: string }, params: EventVolunteerAssignmentsParams | undefined) => {
+        const query: Record<string, string> = { volunteerId: volunteer._id }
+        if (eventId) query.eventId = eventId
+        return assignmentsService.find({ ...params, query })
+      },
     },
     VersionHistory: versionHistoryFieldResolvers(),
     Query: {

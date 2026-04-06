@@ -11,12 +11,12 @@ import { Button, Card, H2, SearchBar } from 'libraries/ui'
 import { ChevronDown, ChevronUp, Edit } from 'libraries/ui/icons'
 import { ItemList, Sort } from 'libraries/ui/ItemList'
 import { Page } from 'components/Page'
+import { VolunteeredIn } from 'components/volunteers/VolunteeredIn'
 import { useT, useTranslation } from 'i18n'
 import { sortedBy } from 'utils/sorted'
 
 import { DeleteVolunteerButton } from './-components/DeleteVolunteerButton'
 import { emptyVolunteerForm, VolunteerForm, VolunteerFormValues } from './-components/VolunteerForm'
-import { VolunteeredIn } from 'components/volunteers/VolunteeredIn'
 
 interface VolunteerSearchParams {
   search?: string
@@ -108,9 +108,9 @@ function volunteerSorter(key: string) {
       return (volunteer: Volunteer) => {
         const sortedVolunteeredIn = sortedBy(
           volunteer.volunteeredIn,
-          v => v.workshop.event.beginDate,
+          v => v.event.beginDate,
         )
-        return sortedVolunteeredIn[0]?.workshop.event.beginDate
+        return sortedVolunteeredIn[0]?.event.beginDate
       }
   }
 }

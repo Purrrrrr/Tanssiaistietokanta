@@ -4,6 +4,7 @@ import { versionHistoryFieldResolvers, versionHistoryResolver } from '../../util
 
 export default (app: Application) => {
   const service = app.service('eventVolunteerAssignments')
+  const eventsService = app.service('events')
   const workshopsService = app.service('workshops')
   const eventRolesService = app.service('eventRoles')
   const volunteerService = app.service('volunteers')
@@ -11,6 +12,7 @@ export default (app: Application) => {
   return {
     EventVolunteerAssignment: {
       versionHistory: versionHistoryResolver(service),
+      event: (assignment: { eventId: string }) => eventsService.get(assignment.eventId),
       workshop: (assignment: { workshopId: string | null }) =>
         assignment.workshopId ? workshopsService.get(assignment.workshopId) : null,
       role: (assignment: { roleId: string }) => eventRolesService.get(assignment.roleId),

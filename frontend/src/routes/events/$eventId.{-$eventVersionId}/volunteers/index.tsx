@@ -141,7 +141,7 @@ function volunteerSorter(key: string) {
 }
 
 function EventVolunteerRoleCounts({ volunteers, currentRole, onSetRole }: { volunteers: EventVolunteer[], currentRole?: string, onSetRole: (roleId: string | undefined) => void }) {
-  const roleCounts = new Map<EventRole, number>()
+  const roleCounts = new Map<Omit<EventRole, 'type'>, number>()
   volunteers.forEach(ev => {
     ev.interestedIn.forEach(role => {
       roleCounts.set(role, (roleCounts.get(role) ?? 0) + 1)
