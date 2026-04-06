@@ -35,6 +35,12 @@ export const Route = createFileRoute(
       role: typeof search.role === 'string' ? search.role : undefined,
     }
   },
+  staticData: {
+    requireRights: ({ eventId }) => ({
+      rights: 'events:modify-volunteers',
+      entityId: eventId,
+    }),
+  },
 })
 
 function RouteComponent() {

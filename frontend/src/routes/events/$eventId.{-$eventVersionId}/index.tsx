@@ -1,18 +1,14 @@
 import { createFileRoute } from '@tanstack/react-router'
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 import { Event } from 'types'
 
-import { addGlobalLoadingAnimation } from 'backend'
-import { useCreateWorkshop, useDeleteWorkshop } from 'services/workshops'
-
-import { Button, Card, Collapse, H2 } from 'libraries/ui'
+import { Button, Card, H2, Link } from 'libraries/ui'
 import { DanceSet, EventProgramRow } from 'components/event/EventProgramForm'
 import { FileList } from 'components/files/FileList'
-import { DeleteButton } from 'components/widgets/DeleteButton'
-import { newInstance, WorkshopEditor } from 'components/WorkshopEditor'
-import { useFormatDateTime, useT, useTranslation } from 'i18n'
+import { useFormatDateTime, useT } from 'i18n'
 
+import { CreateWorkshopCard } from './-components/CreateWorkshopCard'
 import { useCurrentEvent } from './-context'
 
 type Workshop = Event['workshops'][0]
@@ -28,7 +24,6 @@ function RouteComponent() {
   return <>
     <H2>{t('ballProgram')}</H2>
     <EventProgram event={event} />
-    <H2>{t('workshops')}</H2>
     <EventWorkshops event={event} readOnly={readOnly} />
     <FileList title={t('files')} owner="events" owningId={event._id} />
   </>
@@ -49,7 +44,7 @@ function EventProgram({ event }: { event: Event }) {
     <div className="@3xl:grid grid-cols-[repeat(auto-fit,minmax(auto,16rem))] gap-2 mb-4 @3xl:text-center">
       {program.danceSets.map((danceSet, index) =>
         <Card key={index} className="@3xl:px-2 py-2 @max-3xl:border-0 @max-3xl:shadow-none" noPadding marginClass="">
-          <strong>{danceSet.title}</strong>:{' '}
+          <strong className="text-lg">{danceSet.title}</strong>:{' '}
           <ul className="mt-1 @max-3xl:comma-separated-list @max-3xl:inline">
             {formatDances(danceSet.program)}
           </ul>
@@ -76,128 +71,71 @@ function EventProgram({ event }: { event: Event }) {
 const isRequestedDance = (row: EventProgramRow) => row.type === 'RequestedDance'
 
 function EventWorkshops({ event, readOnly }: { event: Event, readOnly: boolean }) {
-  const { workshops, _id: eventId, beginDate, endDate } = event
-  return <>
-    <div className="my-4">
-      {workshops.map(workshop =>
-        <WorkshopCard
-          workshop={workshop}
-          eventId={eventId}
-          readOnly={readOnly}
-          key={workshop._id}
-          reservedAbbreviations={workshops.filter(w => w._id !== workshop._id).map(w => w.abbreviation).filter(a => a) as string[]}
-          beginDate={beginDate}
-          endDate={endDate}
-        />,
-      )}
-    </div>
-    <p>
-      {readOnly || <CreateWorkshopButton eventId={eventId} startDate={beginDate} />}
-    </p>
-  </>
-}
-
-function CreateWorkshopButton({ eventId, startDate }: { eventId: string, startDate: string }) {
-  // TODO: use correct keys
-  const t = useT('pages.events.eventPage')
-  const [createWorkshop] = useCreateWorkshop()
-
-  return <Button
-    requireRight="workshops:create"
-    owner="events"
-    owningId={eventId}
-    onClick={() => addGlobalLoadingAnimation(createWorkshop(newWorkshop({ eventId, name: t('newWorkshop') }, startDate)))}
-    color="primary"
-    text={t('createWorkshop')}
-  />
-}
-
-function newWorkshop({ eventId, name }, startDate: string) {
-  const { dances: _, ...instance } = newInstance(undefined, startDate)
-  return {
-    eventId: eventId,
-    workshop: {
-      name,
-      instanceSpecificDances: false,
-      instances: [
-        { danceIds: [], description: '', ...instance },
-      ],
-    },
-  }
-}
-
-function WorkshopCard(
-  {
-    workshop, reservedAbbreviations, beginDate, endDate, readOnly, eventId,
-  }: {
-    workshop: Workshop
-    eventId: string
-    reservedAbbreviations: string[]
-    readOnly: boolean
-    beginDate: string
-    endDate: string
-  },
-) {
-  // TODO: use correct keys
-  const t = useT('pages.events.eventPage')
-  const [showEditor, setShowEditor] = useState(false)
-  const [deleteWorkshop] = useDeleteWorkshop({ refetchQueries: ['getEvent'] })
-  const { _id, abbreviation, name } = workshop
-
-  return <Card marginClass="" style={{ clear: 'right' }}>
-    { readOnly ||
-      <>
-        <DeleteButton
-          requireRight="workshops:delete"
-          owner="events"
-          owningId={eventId}
-          onDelete={() => addGlobalLoadingAnimation(deleteWorkshop({ id: _id }))}
-          className="float-right" text="Poista"
-          confirmText={'Haluatko varmasti poistaa työpajan ' + name + '?'}
-        />
-        <Button
-          requireRight="workshops:modify"
-          owner="events"
-          owningId={eventId}
-          onClick={() => setShowEditor(!showEditor)}
-          className="float-right" text={showEditor ? t('closeEditor') : t('openEditor')}
-        />
-      </>
+  const [showCreate, setShowCreate] = useState(false)
+  const t = useT('routes.events.event.index')
+  const { workshops, _id: eventId, beginDate } = event
+  return <div className="w-auto grid grid-cols-2 items-center">
+    <H2>{t('workshops')}</H2>
+    {readOnly ||
+      <Button
+        className="justify-self-end"
+        requireRight="workshops:create"
+        owner="events"
+        owningId={eventId}
+        onClick={() => setShowCreate(true)}
+        color="primary"
+        text={t('createWorkshop')}
+      />
     }
-    <H2>
-      {name}
-      {abbreviation &&
-            <> ({abbreviation})</>
+    <div className="col-span-full my-4 sm:grid grid-cols-[repeat(auto-fill,minmax(32rem,1fr))] gap-4 items-stretch">
+      {workshops.map(workshop =>
+        <WorkshopCard key={workshop._id} workshop={workshop} />,
+      )}
+      {showCreate && <CreateWorkshopCard eventId={eventId} startDate={beginDate} onClose={() => setShowCreate(false)} />}
+    </div>
+  </div>
+}
+
+function WorkshopCard({ workshop }: { workshop: Workshop }) {
+  const params = Route.useParams()
+  const formatDateTime = useFormatDateTime()
+  const { abbreviation, name } = workshop
+  const { instanceSpecificDances, instances, description, teachers } = workshop
+
+  return <Card className="flex flex-col" marginClass="" noPadding>
+    <div className="p-6 pb-2">
+      <h2 className="font-bold text-xl">
+        <Link to="/events/$eventId/{-$eventVersionId}/workshops/$workshopId" params={{ ...params, workshopId: workshop._id }}>
+          {name}
+        </Link>
+        {abbreviation &&
+          <> ({abbreviation})</>
+        }
+      </h2>
+      <div className="text-lg">{teachers.map(teacher => teacher.name).join(', ')}</div>
+    </div>
+    <p className="px-6 not-empty:py-2">{description}</p>
+    <div className="grow flex flex-wrap items-stretch justify-stretch gap-[1px] bg-gray-200 pt-[1px]">
+      {instanceSpecificDances
+        ? instances.map(instance =>
+          <>
+            <div key={instance._id} className="p-6 grow bg-white">
+              <h3 className="mb-3 text-base font-bold">{formatDateTime(new Date(instance.dateTime))}</h3>
+              <DanceList dances={instance.dances ?? []} />
+            </div>
+          </>,
+        )
+        : <div className="p-6 grow bg-white">
+          <h3 className="mb-3 text-base font-bold">{instances.map(instance => formatDateTime(new Date(instance.dateTime))).join(', ')}</h3>
+          <DanceList dances={instances[0].dances ?? []} />
+        </div>
       }
-    </H2>
-    {showEditor || <WorkshopSummary workshop={workshop} />}
-    <Collapse isOpen={showEditor} loadingMessage={t('loadingEditor')}>
-      <WorkshopEditor workshop={workshop} reservedAbbreviations={reservedAbbreviations} beginDate={beginDate} endDate={endDate} />
-    </Collapse>
+    </div>
   </Card>
 }
 
-function WorkshopSummary({ workshop }: { workshop: Workshop }) {
-  const t = useT('pages.events.eventPage')
-  const formatDateTime = useFormatDateTime()
-  const { instanceSpecificDances, instances, description, teachers } = workshop
-
-  return <>
-    <p>{description}</p>
-    <p>{useTranslation('components.workshopEditor.teachers')}: {teachers.map(teacher => teacher.name).join(', ')}</p>
-    {instanceSpecificDances
-      ? instances.map(instance =>
-        <React.Fragment key={instance._id}>
-          <h3 className="my-1 text-base font-bold">{formatDateTime(new Date(instance.dateTime))}</h3>
-          <p>
-            {t('dances')} : {instance?.dances?.map(d => d.name)?.join(', ')}
-          </p>
-        </React.Fragment>,
-      )
-      : <>
-        <h3 className="my-1 text-base font-bold">{instances.map(instance => formatDateTime(new Date(instance.dateTime))).join(', ')}</h3>
-        <p>{t('dances') + ': '}{instances[0]?.dances?.map(d => d.name)?.join(', ')}</p>
-      </>
-    }
-  </>
+function DanceList({ dances }: { dances: { _id: string, name: string }[] }) {
+  return <ul>
+    {dances.map(d => <li key={d._id}>{d.name}</li>)}
+  </ul>
 }

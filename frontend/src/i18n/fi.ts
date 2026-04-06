@@ -467,6 +467,7 @@ export const fi = {
           basicInfo: 'Yhteenveto',
           editBasicInfo: 'Tapahtuman tiedot',
           volunteers: 'Vapaaehtoiset',
+          workshops: 'Työpajat',
           ball: {
             title: 'Tanssiaiset',
             ballProgram: 'Suunnittele tanssiaisohjelmaa',
@@ -488,6 +489,12 @@ export const fi = {
             many: '__count__ toivetanssia',
           },
           workshops: 'Työpajat',
+          createWorkshop: 'Uusi työpaja',
+          createWorkshopForm: {
+            title: 'Uusi työpaja',
+            workshopName: 'Työpajan nimi',
+            createWorkshop: 'Luo työpaja',
+          },
           files: 'Tapahtumaan liittyvät tiedostot',
         },
         edit: {
@@ -507,6 +514,10 @@ export const fi = {
           addVolunteer: 'Lisää vapaaehtoinen',
           deleteVolunteer: 'Poista vapaaehtoinen',
           deleteConfirmation: 'Haluatko varmasti poistaa tämän vapaaehtoisen tapahtumasta?',
+        },
+        workshop: {
+          delete: 'Poista työpaja',
+          deleteConfirmation: 'Haluatko varmasti poistaa tämän työpajan?',
         },
         ballProgram: {
 
@@ -580,19 +591,6 @@ export const fi = {
       addVolunteer: 'Lisää vapaaehtoinen',
       deleteVolunteer: 'Poista vapaaehtoinen',
       deleteConfirmation: 'Haluatko varmasti poistaa tämän vapaaehtoisen tietokannasta?',
-    },
-  },
-  pages: {
-    events: {
-      eventPage: {
-        // TODO migrate to workshop page
-        loadingEditor: 'Ladataan lomaketta...',
-        dances: 'Tanssit',
-        openEditor: 'Muokkaa',
-        closeEditor: 'Sulje muokkaus',
-        createWorkshop: 'Uusi työpaja',
-        newWorkshop: 'Uusi työpaja',
-      },
     },
   },
   versioning: {

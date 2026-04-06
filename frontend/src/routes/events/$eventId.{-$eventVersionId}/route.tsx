@@ -1,8 +1,10 @@
 import { createFileRoute, Outlet } from '@tanstack/react-router'
 
+import { Event } from 'types'
+
 import { useEvent } from 'services/events'
 
-import { useRight } from 'libraries/access-control'
+import { RequirePermissions, useRight } from 'libraries/access-control'
 import { useFormatDate } from 'libraries/i18n/dateTime'
 import { Breadcrumb } from 'libraries/ui'
 import { Cog, Presentation } from 'libraries/ui/icons'
@@ -86,41 +88,7 @@ function RouteComponent() {
               <VersionSidebarToggle entityType="event" entityId={event._id} versionId={event._versionId ?? undefined} toVersionLink={eventVersionLink} />
             </Toolbar>
           }
-          menu={canEdit &&
-          <>
-            <MenuSection title={t('title')}>
-              <MenuLink to="/events/$eventId/{-$eventVersionId}" params={params} activeOptions={{ exact: true }} text={t('basicInfo')} />
-              <MenuLink to="/events/$eventId/{-$eventVersionId}/edit" params={params} text={t('editBasicInfo')} icon={<Cog />} />
-              <MenuLink to="/events/$eventId/{-$eventVersionId}/volunteers" params={params} text={t('volunteers')} />
-            </MenuSection>
-            <MenuSection title={t('ball.title')}>
-              <MenuLink to="/events/$eventId/{-$eventVersionId}/program/main" params={params} text={t('ball.ballProgram')} />
-              <MenuLink to="/events/$eventId/{-$eventVersionId}/program/slides/{-$slideId}" params={params}>
-                {t('ball.editSlideShow')}
-                <EventMetadataContext program={event.program} workshops={event.workshops}>
-                  <MissingDanceInstructionsCounterTag />
-                </EventMetadataContext>
-              </MenuLink>
-            </MenuSection>
-            <MenuSection title={t('print.title')}>
-              <MenuLink
-                to="/events/$eventId/{-$eventVersionId}/print/ball-dancelist"
-                params={params}
-                target="_blank"
-                text={t('print.printBallDanceList')} />
-              <MenuLink
-                to="/events/$eventId/{-$eventVersionId}/print/dance-cheatlist"
-                params={params}
-                target="_blank"
-                text={t('print.danceCheatlist')} />
-              <MenuLink
-                to="/events/$eventId/{-$eventVersionId}/print/dance-instructions"
-                params={params}
-                target="_blank"
-                text={t('print.danceInstructions')} />
-            </MenuSection>
-          </>
-          }
+          menu={canEdit && <EventsMenu event={event} />}
         >
           <Outlet />
         </Page>
@@ -128,4 +96,56 @@ function RouteComponent() {
       : <LoadingState {...loadingState} />
     }
   </VersionableContentContainer>
+}
+
+function EventsMenu({ event }: { event: Event }) {
+  const { eventId, eventVersionId } = Route.useParams()
+  const t = useT('routes.events.event.menu')
+  const params = { eventId, eventVersionId }
+
+  return <>
+    <MenuSection title={t('title')}>
+      <MenuLink to="/events/$eventId/{-$eventVersionId}" params={params} activeOptions={{ exact: true }} text={t('basicInfo')} />
+      <MenuLink to="/events/$eventId/{-$eventVersionId}/edit" params={params} text={t('editBasicInfo')} icon={<Cog />} />
+      <MenuLink to="/events/$eventId/{-$eventVersionId}/volunteers" params={params} text={t('volunteers')} />
+    </MenuSection>
+    <MenuSection title={t('ball.title')}>
+      <MenuLink to="/events/$eventId/{-$eventVersionId}/program/main" params={params} text={t('ball.ballProgram')} />
+      <MenuLink to="/events/$eventId/{-$eventVersionId}/program/slides/{-$slideId}" params={params}>
+        {t('ball.editSlideShow')}
+        <EventMetadataContext program={event.program} workshops={event.workshops}>
+          <MissingDanceInstructionsCounterTag />
+        </EventMetadataContext>
+      </MenuLink>
+    </MenuSection>
+    <RequirePermissions requireRight="workshops:modify" context="events" contextId={event._id}>
+      <MenuSection title={t('workshops')}>
+        {event.workshops.map(workshop =>
+          <MenuLink
+            key={workshop._id}
+            to="/events/$eventId/{-$eventVersionId}/workshops/$workshopId"
+            params={{ ...params, workshopId: workshop._id }}
+            text={workshop.name}
+          />,
+        )}
+      </MenuSection>
+    </RequirePermissions>
+    <MenuSection title={t('print.title')}>
+      <MenuLink
+        to="/events/$eventId/{-$eventVersionId}/print/ball-dancelist"
+        params={params}
+        target="_blank"
+        text={t('print.printBallDanceList')} />
+      <MenuLink
+        to="/events/$eventId/{-$eventVersionId}/print/dance-cheatlist"
+        params={params}
+        target="_blank"
+        text={t('print.danceCheatlist')} />
+      <MenuLink
+        to="/events/$eventId/{-$eventVersionId}/print/dance-instructions"
+        params={params}
+        target="_blank"
+        text={t('print.danceInstructions')} />
+    </MenuSection>
+  </>
 }
