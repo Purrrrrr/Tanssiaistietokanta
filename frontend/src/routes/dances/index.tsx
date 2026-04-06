@@ -39,6 +39,7 @@ function DancesPage() {
   const filteredDances = filterDances(dances, search, category !== anyCategory ? category : undefined)
 
   return <Page
+    background="dances"
     title={t('pageTitle')}
     toolbar={
       <Toolbar>

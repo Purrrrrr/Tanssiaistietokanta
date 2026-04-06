@@ -76,6 +76,7 @@ function DancePage() {
   const { dance } = result.data
 
   return <Page
+    background="dances"
     title={dance.name}
     showVersion={!!versionId}
     versionNumber={dance._versionNumber}

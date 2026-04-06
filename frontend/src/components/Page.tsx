@@ -14,6 +14,7 @@ import './Page.css'
 export * from './Menu'
 
 export interface PageContentProps extends VersionedPageTitleProps {
+  background?: 'default' | 'dances'
   logo?: React.ReactNode
   info?: React.ReactNode
   children?: React.ReactNode
@@ -23,7 +24,7 @@ export interface PageContentProps extends VersionedPageTitleProps {
   menu?: React.ReactNode
 }
 
-export function Page({ children, info, toolbar, backLink, menu, logo, ...props }: PageContentProps) {
+export function Page({ children, info, toolbar, backLink, menu, logo, background, ...props }: PageContentProps) {
   const [menuOpen, setMenuOpen] = useState<boolean>(true)
   const title = useVersionedName(props)
   useSetPageTitle(title)
@@ -33,7 +34,7 @@ export function Page({ children, info, toolbar, backLink, menu, logo, ...props }
   }
 
   return <>
-    <div className={classNames('page', (!!menu && menuOpen) && 'menu-open')}>
+    <div className={classNames('page', (!!menu && menuOpen) && 'menu-open', background && `background-${background}`)}>
       <div className="page-background" />
       <div className="title flex flex-wrap items-center gap-4 text-amber-100 text-shadow-stone-600 text-shadow-lg">
         {logo}
