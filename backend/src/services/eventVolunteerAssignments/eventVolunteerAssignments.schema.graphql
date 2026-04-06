@@ -20,7 +20,6 @@ type EventVolunteerAssignment implements Versionable {
 
 type Mutation {
   createEventVolunteerAssignment(eventVolunteerAssignment: EventVolunteerAssignmentInput!): EventVolunteerAssignment!
-  # modifyEventVolunteerAssignment(id: ID!, eventVolunteerAssignment: EventVolunteerAssignmentInput!): EventVolunteerAssignment!
   # patchEventVolunteerAssignment(id: ID!, eventVolunteerAssignment: EventVolunteerAssignmentPatchInput!): EventVolunteerAssignment!
   deleteEventVolunteerAssignment(id: ID!): EventVolunteerAssignment!
 }

@@ -27,7 +27,6 @@ enum EventRoleType {
 
 type Mutation {
   createEventRole(eventRole: EventRoleInput!): EventRole!
-  modifyEventRole(id: ID!, eventRole: EventRoleInput!): EventRole!
   patchEventRole(id: ID!, eventRole: EventRolePatchInput!): EventRole!
   deleteEventRole(id: ID!): EventRole!
 }

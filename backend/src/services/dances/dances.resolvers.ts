@@ -75,7 +75,6 @@ export default (app: Application) => {
     },
     Mutation: {
       createDance: (_: any, { dance }: any, params: DancesParams | undefined) => service.create(dance, params),
-      modifyDance: (_: any, { id, dance }: any, params: DancesParams | undefined) => service.update(id, dance, params),
       patchDance: (_: any, { id, dance }: any, params: DancesParams | undefined) => service.patch(id, dance, params),
       deleteDance: (_: any, { id }: any, params: DancesParams | undefined) => service.remove(id, params),
     },

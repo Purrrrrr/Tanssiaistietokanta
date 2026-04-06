@@ -34,7 +34,6 @@ type WorkshopInstance {
 
 type Mutation {
   createWorkshop(eventId: ID!, workshop: WorkshopInput!): Workshop!
-  modifyWorkshop(id: ID!, workshop: WorkshopInput!): Workshop!
   patchWorkshop(id: ID!, workshop: WorkshopPatchInput!): Workshop!
   deleteWorkshop(id: ID!): Workshop!
 }

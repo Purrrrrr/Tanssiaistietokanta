@@ -19,7 +19,6 @@ type EventVolunteer implements Versionable {
 
 type Mutation {
   createEventVolunteer(eventVolunteer: EventVolunteerInput!): EventVolunteer!
-  modifyEventVolunteer(id: ID!, eventVolunteer: EventVolunteerInput!): EventVolunteer!
   patchEventVolunteer(id: ID!, eventVolunteer: EventVolunteerPatchInput!): EventVolunteer!
   deleteEventVolunteer(id: ID!): EventVolunteer!
 }

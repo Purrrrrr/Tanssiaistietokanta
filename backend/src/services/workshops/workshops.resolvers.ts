@@ -33,7 +33,6 @@ export default (app: Application) => {
     },
     Mutation: {
       createWorkshop: (_: any, { eventId, workshop }: any, params: WorkshopsParams | undefined) => service.create({ eventId, ...workshop }, params),
-      modifyWorkshop: (_: any, { id, workshop }: any, params: WorkshopsParams | undefined) => service.update(id, workshop, params),
       patchWorkshop: (_: any, { id, workshop }: any, params: WorkshopsParams | undefined) => service.patch(id, workshop, params),
       deleteWorkshop: (_: any, { id }: any, params: WorkshopsParams | undefined) => service.remove(id, params),
     },

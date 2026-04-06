@@ -28,7 +28,6 @@ export default (app: Application) => {
     },
     Mutation: {
       createEventVolunteer: (_: any, { eventVolunteer }: any, params: EventVolunteersParams | undefined) => service.create(eventVolunteer, params),
-      modifyEventVolunteer: (_: any, { id, eventVolunteer }: any, params: EventVolunteersParams | undefined) => service.update(id, eventVolunteer, params),
       patchEventVolunteer: (_: any, { id, eventVolunteer }: any, params: EventVolunteersParams | undefined) => service.patch(id, eventVolunteer, params),
       deleteEventVolunteer: (_: any, { id }: any, params: EventVolunteersParams | undefined) => service.remove(id, params),
     },

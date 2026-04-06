@@ -22,7 +22,6 @@ type VolunteeredInWorkshop {
 
 type Mutation {
   createVolunteer(volunteer: VolunteerInput!): Volunteer!
-  modifyVolunteer(id: ID!, volunteer: VolunteerInput!): Volunteer!
   patchVolunteer(id: ID!, volunteer: VolunteerPatchInput!): Volunteer!
   deleteVolunteer(id: ID!): Volunteer!
 }

@@ -6,9 +6,6 @@ import { WorkshopsQuery, WorkshopsService } from '../workshops/workshops.class'
 async function findVolunteeredIn(workshopService: WorkshopsService, volunteerId: string, eventId?: string) {
   const query: WorkshopsQuery = {
     teacherIds: volunteerId,
-    // $or: [
-    //   { assistantTeacherIds: volunteerId },
-    // ],
   }
   if (eventId) {
     query.eventId = eventId
@@ -46,7 +43,6 @@ export default (app: Application) => {
     },
     Mutation: {
       createVolunteer: (_: any, { volunteer }: any, params: VolunteersParams | undefined) => service.create(volunteer, params),
-      modifyVolunteer: (_: any, { id, volunteer }: any, params: VolunteersParams | undefined) => service.update(id, volunteer, params),
       patchVolunteer: (_: any, { id, volunteer }: any, params: VolunteersParams | undefined) => service.patch(id, volunteer, params),
       deleteVolunteer: (_: any, { id }: any, params: VolunteersParams | undefined) => service.remove(id, params),
     },

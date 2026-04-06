@@ -37,7 +37,6 @@ type TeachedInWorkshop {
 
 type Mutation {
   createDance(dance: DanceInput!): Dance!
-  modifyDance(id: ID!, dance: DanceInput!): Dance!
   patchDance(id: ID!, dance: DancePatchInput!): Dance!
   deleteDance(id: ID!): Dance!
 }

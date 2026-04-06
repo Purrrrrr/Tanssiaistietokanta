@@ -26,7 +26,6 @@ export default (app: Application) => {
     },
     Mutation: {
       createEventRole: (_: any, { eventRole }: any, params: EventRolesParams | undefined) => service.create(eventRole, params),
-      modifyEventRole: (_: any, { id, eventRole }: any, params: EventRolesParams | undefined) => service.update(id, eventRole, params),
       patchEventRole: (_: any, { id, eventRole }: any, params: EventRolesParams | undefined) => service.patch(id, eventRole, params),
       deleteEventRole: (_: any, { id }: any, params: EventRolesParams | undefined) => service.remove(id, params),
     },

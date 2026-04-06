@@ -64,22 +64,6 @@ mutation createEventVolunteer($eventVolunteer: EventVolunteerInput!) {
   }
 }`))
 
-export const useModifyEventVolunteer = entityUpdateHook('eventVolunteers', graphql(`
-mutation modifyEventVolunteer($id: ID!, $eventVolunteer: EventVolunteerInput!) {
-  modifyEventVolunteer(id: $id, eventVolunteer: $eventVolunteer) {
-    _id
-    _versionId
-    _versionNumber
-    _updatedAt
-    eventId
-    volunteerId
-    volunteer { _id name }
-    interestedIn { _id name plural description appliesToWorkshops order }
-    wishes
-    notes
-  }
-}`))
-
 export const usePatchEventVolunteer = entityUpdateHook('eventVolunteers', graphql(`
 mutation patchEventVolunteer($id: ID!, $eventVolunteer: EventVolunteerPatchInput!) {
   patchEventVolunteer(id: $id, eventVolunteer: $eventVolunteer) {
