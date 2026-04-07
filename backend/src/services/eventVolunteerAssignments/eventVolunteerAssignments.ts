@@ -64,7 +64,8 @@ export const eventVolunteerAssignments = (app: Application) => {
       const result = await service.get(entityId, { [SkipAccessControl]: true, query: { $select: ['eventId'] } })
       return { owner: 'events', owningId: result.eventId }
     },
-    authorize({ user, owningId: eventId }) {
+    authorize({ user, action, owningId: eventId }) {
+      if (action === 'list') return true
       return accessService.hasAccess('events', 'modify-volunteers', user, eventId)
     },
   })
