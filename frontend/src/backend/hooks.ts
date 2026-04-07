@@ -17,6 +17,7 @@ type ItemOf<T> = T extends (infer U)[] ? U : never
 export function entityListQueryHook<T extends Record<number, Entity[]>, V extends OperationVariables>(
   service: ServiceName, compiledQuery: TypedDocumentNode<T, V>,
   options?: {
+    filterCreated?: (data: ItemOf<ValueOf<T>>, variables: V | undefined) => boolean
     refetchOnUpdate?: (old: ItemOf<ValueOf<T>> | undefined, updated: ItemOf<ValueOf<T>>, variables?: V) => boolean
   },
 ): (...args: OptionalIfEmptyObject<V>) => [
@@ -34,7 +35,10 @@ export function entityListQueryHook<T extends Record<number, Entity[]>, V extend
       }
     })
     const callbacks = useMemo(() => ({
-      created: (data) => appendToListQuery(compiledQuery, data, variables),
+      created: (data: Entity) => {
+        if (options?.filterCreated && !options.filterCreated(data as ItemOf<ValueOf<T>>, variables)) return
+        appendToListQuery(compiledQuery, data, variables)
+      },
       updated: onUpdate,
       removed: () => filterRemovedFromListQuery(compiledQuery, variables),
     }), [variables])
