@@ -16,6 +16,7 @@ export {
   History,
   InfoSign,
   Link,
+  ManyToOne,
   Menu,
   Move,
   Music,

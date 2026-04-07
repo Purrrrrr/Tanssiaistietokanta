@@ -52,7 +52,6 @@ function RouteComponent() {
         />
       </div>
     </div>
-    <p>{volunteers?.length > 0 && t('Nvolunteers', { count: volunteers?.length })}</p>
     <VolunteerList volunteers={volunteers} />
     <CreateVolunteerForm />
   </Page>

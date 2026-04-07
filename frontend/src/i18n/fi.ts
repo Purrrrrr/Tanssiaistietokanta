@@ -597,6 +597,19 @@ export const fi = {
       addVolunteer: 'Lisää vapaaehtoinen',
       deleteVolunteer: 'Poista vapaaehtoinen',
       deleteConfirmation: 'Haluatko varmasti poistaa tämän vapaaehtoisen tietokannasta?',
+      selectedVolunteers: {
+        one: '1 valittu',
+        many: '__count__ valittu',
+      },
+      keepVolunteer: 'Säilytetään',
+      mergeVolunteers: 'Yhdistä __count__ vapaaehtoista',
+      mergeVolunteersDialog: {
+        title: 'Yhdistä vapaaehtoiset',
+        keepVolunteerLabel: 'Valitse säilytettävä vapaaehtoinen. Muut vapaaehtoiset yhdistetään tähän henkilöön.',
+        choose: 'Valitse',
+        name: 'Vapaaehtoisen nimi',
+        merge: 'Yhdistä',
+      },
     },
   },
   versioning: {

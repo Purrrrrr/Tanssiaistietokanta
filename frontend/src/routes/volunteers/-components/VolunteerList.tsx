@@ -8,11 +8,14 @@ import { patchStrategy, useAutosavingState } from 'libraries/forms'
 import { Button } from 'libraries/ui'
 import { ChevronDown, ChevronUp, Edit } from 'libraries/ui/icons'
 import { ItemList, Sort } from 'libraries/ui/ItemList'
+import { SelectionBox } from 'components/files/SelectionBox'
 import { VolunteeredIn } from 'components/volunteers/VolunteeredIn'
 import { useT } from 'i18n'
 import { sortedBy } from 'utils/sorted'
+import { useMultipleSelection } from 'utils/useMultipleSelection'
 
 import { DeleteVolunteerButton } from './DeleteVolunteerButton'
+import { MergeVolunteersButton } from './MergeVolunteersButton'
 import { VolunteerForm, VolunteerFormValues } from './VolunteerForm'
 
 export interface VolunteerListProps {
@@ -23,21 +26,39 @@ export function VolunteerList({ volunteers: unsortedVolunteers }: VolunteerListP
   const label = useT('domain.volunteer')
   const [sort, setSort] = useState<Sort>({ key: 'interestedIn', direction: 'asc' })
   const volunteers = sortedBy(unsortedVolunteers ?? [], volunteerSorter(sort.key), sort.direction === 'desc')
+  const selector = useMultipleSelection(volunteers)
 
-  return <ItemList
-    items={volunteers ?? []}
-    emptyText={t('noVolunteers')}
-    columns="grid-cols-[1fr_1fr_max-content]"
-  >
-    <ItemList.SortableHeader currentSort={sort} onSort={setSort} columns={[
-      { key: 'name', label: label('name') },
-      { key: 'volunteeredIn', label: label('volunteeredIn') },
-    ]} />
-    {(volunteers ?? []).map(volunteer =>
-      <VolunteerListRow key={volunteer._id} volunteer={volunteer}
-      />,
-    )}
-  </ItemList>
+  return <>
+    <div className="flex items-center justify-between gap-2 mb-2">
+      <div>
+        {volunteers?.length > 0 && t('Nvolunteers', { count: volunteers?.length })}
+        {selector.selected.length > 0 && ', ' + t('selectedVolunteers', { count: selector.selected.length })}
+      </div>
+      {selector.selected.length >= 2 &&
+        <MergeVolunteersButton selectedVolunteers={selector.selected} onMerge={selector.clearSelection} />
+      }
+    </div>
+    <ItemList
+      items={volunteers ?? []}
+      emptyText={t('noVolunteers')}
+      columns="grid-cols-[auto_1fr_1fr_max-content]"
+    >
+      <ItemList.SortableHeader
+        currentSort={sort}
+        onSort={setSort}
+        columns={[
+          { key: 'selectbox', label: <SelectionBox {...selector.selectAllProps} />, sortable: false },
+          { key: 'name', label: label('name') },
+          { key: 'volunteeredIn', label: label('volunteeredIn') },
+        ]}
+      />
+      {(volunteers ?? []).map(volunteer =>
+        <VolunteerListRow key={volunteer._id} volunteer={volunteer}
+          selectionProps={selector.selectItemProps(volunteer)}
+        />,
+      )}
+    </ItemList>
+  </>
 }
 
 function volunteerSorter(key: string) {
@@ -58,9 +79,10 @@ function volunteerSorter(key: string) {
 
 interface VolunteerListRowProps {
   volunteer: Volunteer
+  selectionProps: { checked: boolean, onChange: () => void }
 }
 
-function VolunteerListRow({ volunteer }: VolunteerListRowProps) {
+function VolunteerListRow({ volunteer, selectionProps }: VolunteerListRowProps) {
   const [showEditor, setShowEditor] = useState(false)
   const t = useT('')
 
@@ -68,6 +90,7 @@ function VolunteerListRow({ volunteer }: VolunteerListRowProps) {
     expandableContent={<VolunteerRowEditor item={volunteer} />}
     isOpen={showEditor}
   >
+    <SelectionBox {...selectionProps} />
     <span>{volunteer.name}</span>
     <VolunteeredIn volunteer={volunteer} />
     <div className="flex items-center gap-1">

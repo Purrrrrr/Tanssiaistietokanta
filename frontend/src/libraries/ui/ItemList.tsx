@@ -97,25 +97,27 @@ function EmptyList({ text }: { text: React.ReactNode }) {
 }
 
 interface SortableItemListHeaderProps {
-  columns: {
-    key: string
-    label: React.ReactNode
-  }[]
+  columns: SortableItemListHeaderColumn[]
   currentSort: Sort
   onSort: (key: Sort) => void
+}
+
+interface SortableItemListHeaderColumn {
+  sortable?: boolean
+  key: string
+  label: React.ReactNode
 }
 
 function SortableItemListHeader({ columns, currentSort, onSort }: SortableItemListHeaderProps) {
   return <ItemListHeader paddingClass="">
     {columns.map(column => (
-      <SortButton
-        key={column.key}
-        sortKey={column.key}
-        currentSort={currentSort}
-        onSort={onSort}
-      >
-        {column.label}
-      </SortButton>
+      column.sortable === false
+        ? <span key={column.key}>{column.label}</span>
+        : (
+          <SortButton key={column.key} sortKey={column.key} currentSort={currentSort} onSort={onSort}>
+            {column.label}
+          </SortButton>
+        )
     ))}
   </ItemListHeader>
 }
@@ -143,7 +145,7 @@ function SortButton({ sortKey, currentSort, onSort, children }: SortButtonProps)
     }}
     aria-sort={isCurrent ? (isAscending ? 'ascending' : 'descending') : undefined}
     minimal
-    className="flex gap-1 items-center first:rounded-tl-md last:rounded-tr-md"
+    className="flex gap-1 items-center first-of-type:rounded-tl-md last-of-type::rounded-tr-md"
   >
     {children}
     {isCurrent && <CaretDown className={classNames('transition-transform', isAscending && 'rotate-180')} />}
