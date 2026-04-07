@@ -40,7 +40,7 @@ function RouteComponent() {
       return true
     })
 
-  return <Page title={t('pageTitle')}>
+  return <Page title={t('pageTitle')} background="volunteers">
     <div className="flex gap-4 flex-wrap items-center justify-between mb- mb-4">
       <div className="flex gap-4">
         <SearchBar

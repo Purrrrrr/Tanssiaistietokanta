@@ -7,6 +7,9 @@
   &.background-dances {
     --background-image: url("/Hieronymus_Janssens_-_Ball_on_the_terrace_of_a_palace,_sometimes_called__Ball_at_the_court_of_John_of_Austria-tiled.jpg");
   }
+  &.background-volunteers {
+    --background-image: url("/Ilia_Efimovich_Repin_Volga_Boatmen-tiled.webp");
+  }
   padding-inline: 25px;
   display: grid;
   --menu-size: 0rem;
