@@ -1,4 +1,3 @@
-import fetch from 'node-fetch'
 import fetchCookie from 'fetch-cookie'
 import { CookieJar } from 'tough-cookie'
 import { app } from '../../src/app'
