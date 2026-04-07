@@ -81,6 +81,6 @@ function WorkshopCard(
             <> ({abbreviation})</>
       }
     </H2>
-    { readOnly || <WorkshopEditor workshop={workshop} reservedAbbreviations={reservedAbbreviations} beginDate={beginDate} endDate={endDate} />}
+    { readOnly || <WorkshopEditor eventId={eventId} workshop={workshop} reservedAbbreviations={reservedAbbreviations} beginDate={beginDate} endDate={endDate} />}
   </>
 }

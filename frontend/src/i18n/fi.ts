@@ -213,6 +213,12 @@ export const fi = {
       noVolunteers: 'Ei vapaaehtoisia',
       createNewVolunteer: 'Luo uusi vapaaehtoinen',
     },
+    volunteerAssignmentSelector: {
+      addVolunteer: 'Lisää vapaaehtoinen',
+      noVolunteers: 'Ei vapaaehtoisia',
+      eventVolunteers: 'Kiinnostuneet vapaaehtoiset',
+      allVolunteers: 'Kaikki vapaaehtoiset',
+    },
     eventRoleSelector: {
       workshopRoles: 'Työpajaroolit',
       eventRoles: 'Tapahtumaroolit',

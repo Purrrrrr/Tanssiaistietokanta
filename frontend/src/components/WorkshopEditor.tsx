@@ -12,6 +12,8 @@ import { useT, useTranslation } from 'i18n'
 import { guid } from 'utils/guid'
 
 import TeacherSelector from './volunteers/TeacherSelector'
+import { useEventRoles } from 'services/eventRoles'
+import { VolunteerAssignmentSelector } from './volunteers/VolunteerAssignmentSelector'
 
 type Workshop = Event['workshops'][0]
 type Instance = Workshop['instances'][number]
@@ -28,17 +30,20 @@ const {
 } = formFor<Workshop>()
 
 interface WorkshopEditorProps {
+  eventId: string
   workshop: Workshop
   reservedAbbreviations: string[]
   beginDate: string
   endDate: string
 }
 
-export function WorkshopEditor({ workshop: workshopInDatabase, reservedAbbreviations, beginDate, endDate }: WorkshopEditorProps) {
+export function WorkshopEditor({ eventId, workshop: workshopInDatabase, reservedAbbreviations, beginDate, endDate }: WorkshopEditorProps) {
   const t = useT('components.workshopEditor')
   const [modifyWorkshop] = usePatchWorkshop({
     refetchQueries: ['getEvent'],
   })
+  const [roles = []] = useEventRoles()
+  const workshopRoles = roles.filter(r => r.appliesToWorkshops)
   const workshopId = workshopInDatabase._id
   const saveWorkshop = (data: Partial<Workshop>) => {
     const { instances, name, abbreviation, description, teachers, instanceSpecificDances } = data
@@ -66,6 +71,16 @@ export function WorkshopEditor({ workshop: workshopInDatabase, reservedAbbreviat
         <Input path="name" required label={t('name')} labelInfo={t('required')} />
         <AbbreviationField path="abbreviation" label={t('abbreviation')} reservedAbbreviations={reservedAbbreviations} />
         <Field path="description" component={TextArea} label={t('description')} />
+        {workshopRoles.map(role =>
+          <FormGroup key={role._id} label={role.name} labelFor={`workshop-${workshopId}-role-${role._id}`} labelStyle="above">
+            <VolunteerAssignmentSelector
+              id={`workshop-${workshopId}-role-${role._id}`}
+              eventId={eventId}
+              roleId={role._id}
+              workshopId={workshopInDatabase._id}
+            />
+          </FormGroup>,
+        )}
         <Field path="teachers" label={t('teachers')} component={TeacherSelector} />
         <Switch path="instanceSpecificDances" label={t('instanceSpecificDances')} />
       </div>
