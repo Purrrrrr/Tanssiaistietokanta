@@ -1,7 +1,7 @@
 import { Application } from '../../declarations'
 import { VolunteersParams } from './volunteers.class'
 import { versionHistoryFieldResolvers, versionHistoryResolver } from '../../utils/version-history-resolvers'
-import { EventVolunteerAssignmentsParams } from '../eventVolunteerAssignments/eventVolunteerAssignments.class'
+import { EventVolunteerAssignmentsParams, EventVolunteerAssignmentsQuery } from '../eventVolunteerAssignments/eventVolunteerAssignments.class'
 
 export default (app: Application) => {
   const service = app.service('volunteers')
@@ -10,9 +10,16 @@ export default (app: Application) => {
   return {
     Volunteer: {
       versionHistory: versionHistoryResolver(service),
-      volunteeredIn: (volunteer: { _id: string }, { eventId }: { eventId?: string }, params: EventVolunteerAssignmentsParams | undefined) => {
-        const query: Record<string, string> = { volunteerId: volunteer._id }
-        if (eventId) query.eventId = eventId
+      volunteeredIn: async (volunteer: { _id: string }, { eventId }: { eventId?: string }, params: EventVolunteerAssignmentsParams | undefined) => {
+        const duplicates = await service.find({ query: { duplicatedBy: volunteer._id, $select: ['_id'] } })
+        const query: EventVolunteerAssignmentsQuery = {
+          volunteerId: duplicates.length > 0
+            ? { $in: [volunteer._id, ...duplicates.map(v => v._id)] }
+            : volunteer._id,
+        }
+        if (eventId) {
+          query.eventId = eventId
+        }
         return assignmentsService.find({ ...params, query })
       },
     },
