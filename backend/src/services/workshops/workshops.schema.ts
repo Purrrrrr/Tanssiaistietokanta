@@ -33,6 +33,7 @@ export const workshopsSchema = Type.Object(
     assistantTeacherIds: Type.Array(Id()),
     instances: Type.Array(WorkshopInstanceSchema()),
     instanceSpecificDances: Type.Boolean(),
+    _childEventVolunteerAssignmentsUpdatedAt: Type.Optional(Type.String()),
   },
   { $id: 'Workshops', additionalProperties: false },
 )
@@ -48,7 +49,7 @@ export const workshopsPartialDataSchema = Type.Intersect(
   [
     Type.Pick(workshopsSchema, ['name']),
     Type.Partial(
-      Type.Omit(workshopsSchema, [...computedProperties, 'name']),
+      Type.Omit(workshopsSchema, [...computedProperties, 'name', '_childEventVolunteerAssignmentsUpdatedAt']),
     ),
   ], {
     $id: 'PartialWorkshopsData',

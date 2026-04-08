@@ -14,6 +14,7 @@ import { services } from './services/index'
 import { graphqlServiceMiddleware } from './services/graphql/graphql.class'
 import initDependencyGraph from './dependencyGraph'
 import { preventRemovingOfUsedItems } from './hooks/prevent-removing-of-used-items'
+import { updateParentTimestamps } from './hooks/update-parent-timestamps'
 import { migrateDb } from './umzug'
 import { channels } from './channels'
 import { MaxFileSize } from './services/files/files.class'
@@ -88,7 +89,9 @@ app.hooks({
   before: {
     remove: [preventRemovingOfUsedItems],
   },
-  after: {},
+  after: {
+    all: [updateParentTimestamps],
+  },
   error: {},
 })
 // Register application setup and teardown hooks here

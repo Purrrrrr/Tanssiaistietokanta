@@ -55,6 +55,9 @@ export const eventsSchema = Type.Object(
       }),
     }),
     workshopVersions: Type.Record(Id(), Id()),
+    _childWorkshopsUpdatedAt: Type.Optional(Type.String()),
+    _childEventVolunteerAssignmentsUpdatedAt: Type.Optional(Type.String()),
+    _childEventVolunteersUpdatedAt: Type.Optional(Type.String()),
   },
   { $id: 'Events', additionalProperties: false },
 )
@@ -189,7 +192,7 @@ export const eventsExternalResolver = resolve<Events, HookContext>({})
 export const eventsPartialDataSchema = Type.Intersect(
   [
     Type.Pick(eventsSchema, ['name', 'beginDate', 'endDate']),
-    Type.Partial(Type.Omit(eventsSchema, [...computedProperties, 'accessControl', 'name', 'beginDate', 'endDate'])),
+    Type.Partial(Type.Omit(eventsSchema, [...computedProperties, 'accessControl', 'name', 'beginDate', 'endDate', '_childWorkshopsUpdatedAt', '_childEventVolunteerAssignmentsUpdatedAt', '_childEventVolunteersUpdatedAt'])),
   ], {
     $id: 'PartialEventsData',
   })
