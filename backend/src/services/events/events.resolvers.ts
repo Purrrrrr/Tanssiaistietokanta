@@ -5,19 +5,19 @@ import { versionHistoryFieldResolvers, versionHistoryResolver } from '../../util
 
 export default (app: Application) => {
   const workshopService = app.service('workshops')
-
-  function getWorkshops(workshopVersions: Record<string, string>) {
-    const versionIds = Object.values(workshopVersions)
-    return workshopService.find({ query: { _versionId: { $in: versionIds }, $sort: { name: 1 } } })
-  }
-
   const service = app.service('events')
 
   const $sort = { beginDate: -1, name: 1 }
 
   return {
     Event: {
-      workshops: (obj: { workshopVersions: Record<string, string> }) => getWorkshops(obj.workshopVersions),
+      workshops: (obj: {
+        _id: string
+        _versionId?: string
+        _updatedAt: string
+      }) => workshopService.find({ query: {
+        eventId: obj._id, atDate: obj._versionId ? obj._updatedAt : undefined,
+      } }),
       program: (event: { name?: any, program?: any }) => {
         const { program } = event
         if (!program.introductions.title) return L.set(['introductions', 'title'], event.name, program)

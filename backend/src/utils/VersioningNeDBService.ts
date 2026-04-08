@@ -1,4 +1,5 @@
 import type { Id, Params } from '@feathersjs/feathers'
+import { NotFound } from '@feathersjs/errors'
 import { Type, querySyntax } from '@feathersjs/typebox'
 import type { Static } from '@feathersjs/typebox'
 
@@ -11,7 +12,7 @@ const _versionableQuerySchema = querySyntax(Type.Object({
   _createdAt: Type.String(),
   _updatedAt: Type.String(),
 }))
-export type VersionSearchQuery = Omit<Static<typeof _versionableQuerySchema>, '$select'> & { searchVersions?: boolean, $select?: string[] }
+export type VersionSearchQuery = Omit<Static<typeof _versionableQuerySchema>, '$select'> & { searchVersions?: boolean, atDate?: string, $select?: string[] }
 
 export interface Versionable {
   _id: Id
@@ -44,8 +45,18 @@ export default class VersioningNeDBService<Result extends Versionable, Data, Ser
   }
 
   async find(_params?: ServiceParams): Promise<Result[]> {
+    if (_params?.query?.atDate) {
+      return this.findAtDate(_params, _params.query.atDate)
+    }
+    if (_params?.query) {
+      delete _params.query.atDate
+    }
     if (_params?.query?.searchVersions || _params?.query?._versionId) {
       return this.mapToResults(await this.versionService.find(_params)) as Result[]
+    }
+    if (_params?.query) {
+      delete _params.query.searchVersions
+      delete _params.query._versionId
     }
     return this.mapToResults(await this.currentService.find(this.mapParams(_params))) as Result[]
   }
@@ -61,10 +72,59 @@ export default class VersioningNeDBService<Result extends Versionable, Data, Ser
   }
 
   async get(id: Id, _params?: ServiceParams): Promise<Result> {
+    if (typeof _params?.query?.atDate === 'string') {
+      return this.getAtDate(id, _params.query.atDate)
+    }
     if (typeof _params?.query?._versionId === 'string') {
       return this.mapToResult(await this.versionService.get(_params.query._versionId, _params))
     }
     return super.get(id, _params)
+  }
+
+  private async getAtDate(id: Id, atDate: string): Promise<Result> {
+    const versions = await this.versionService.find({
+      query: {
+        _id: id,
+        _updatedAt: { $lte: atDate },
+        $sort: { _updatedAt: -1 },
+        $limit: 1,
+      },
+    })
+    if (!versions.length) {
+      throw new NotFound(`No record ${id} found at or before ${atDate}`)
+    }
+    const version = versions[0]
+    const deletedAt = (version as any)._recordDeletedAt
+    if (deletedAt && deletedAt <= atDate) {
+      throw new NotFound(`Record ${id} was deleted before ${atDate}`)
+    }
+    return this.mapToResult(version as unknown as Result)
+  }
+
+  private async findAtDate(params: ServiceParams, atDate: string): Promise<Result[]> {
+    const { atDate: _ignored, searchVersions: _ignored2, ...query } = params.query ?? {}
+    const allVersions = await this.versionService.find({
+      query: {
+        ...query,
+        _updatedAt: { $lte: atDate },
+        $sort: { _updatedAt: -1 },
+      },
+    })
+    // Pick the latest version per record (sorted desc so first occurrence = latest)
+    const seenRecords = new Set<Id>()
+    const latestVersions: typeof allVersions = []
+    for (const version of allVersions) {
+      if (!seenRecords.has(version._id)) {
+        seenRecords.add(version._id)
+        latestVersions.push(version)
+      }
+    }
+    // Exclude records that were already deleted at atDate
+    const activeVersions = latestVersions.filter(v => {
+      const deletedAt = (v as any)._recordDeletedAt
+      return !deletedAt || deletedAt > atDate
+    })
+    return this.mapToResults(activeVersions as unknown as Result[]) as Result[]
   }
 
   async getLatestVersion(id: Id): Promise<Result | null> {

@@ -61,6 +61,7 @@ export const eventVolunteersQuerySchema = Type.Intersect(
     Type.Object({
       searchVersions: Type.Optional(Type.Boolean()),
       _versionId: Type.Optional(Id()),
+      atDate: Type.Optional(Type.String()),
     }, { additionalProperties: false }),
   ],
   { additionalProperties: false },

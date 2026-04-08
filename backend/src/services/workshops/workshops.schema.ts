@@ -82,6 +82,7 @@ export const workshopsQuerySchema = Type.Intersect(
       teacherIds: Type.Optional(Id()),
       'instances.danceIds': Type.Optional(Id()),
       searchVersions: Type.Optional(Type.Boolean()),
+      atDate: Type.Optional(Type.String()),
     }, { additionalProperties: false }),
   ],
   { additionalProperties: false },

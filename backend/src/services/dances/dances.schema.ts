@@ -86,6 +86,7 @@ export const dancesQuerySchema = Type.Intersect(
     // Add additional query properties here
     Type.Object({
       searchVersions: Type.Optional(Type.Boolean()),
+      atDate: Type.Optional(Type.String()),
     }, { additionalProperties: false }),
   ],
   { additionalProperties: false },
