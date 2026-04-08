@@ -19,7 +19,6 @@ export interface VolunteerAssignmentSelectorProps {
 export function VolunteerAssignmentSelector({ id, eventId, roleId, workshopId }: VolunteerAssignmentSelectorProps) {
   const t = useT('components.volunteerAssignmentSelector')
   const [currentAssignments = []] = useEventVolunteerAssignments({ eventId, roleId, workshopId })
-  console.log(currentAssignments)
   const [eventVolunteers = []] = useEventVolunteers({ eventId })
   const [allVolunteers = []] = useVolunteerNames()
   const [createAssignment] = useCreateEventVolunteerAssignment()

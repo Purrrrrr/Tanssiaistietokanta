@@ -193,8 +193,18 @@ query getEvent($id: ID!, $versionId: ID) {
       name
       abbreviation
       description
-      teachers { _id name }
-      assistant_teachers { _id name }
+      volunteerAssignments {
+        _id
+        _eventId
+        _workshopId
+        volunteers { _id name }
+        role { _id name type }
+      }
+      volunteerAssignments {
+        _id _eventId _workshopId
+        volunteers { _id name }
+        role { _id name type }
+      }
       instanceSpecificDances
       instances {
         _id
@@ -351,8 +361,18 @@ mutation patchEventProgram($id: ID!, $program: JSONPatch!) {
       name
       abbreviation
       description
-      teachers { _id name }
-      assistant_teachers { _id name }
+      volunteerAssignments {
+        _id
+        _eventId
+        _workshopId
+        volunteers { _id name }
+        role { _id name type }
+      }
+      volunteerAssignments {
+        _id _eventId _workshopId
+        volunteers { _id name }
+        role { _id name type }
+      }
       instanceSpecificDances
       instances {
         _id
@@ -388,4 +408,5 @@ export function useCallbackOnEventChanges(eventId, callback) {
   useServiceEvents('events', `events/${eventId}`, callbacks)
   useServiceEvents('workshops', `events/${eventId}/workshops`, callbacks)
   useServiceEvents('dances', `events/${eventId}/dances`, callbacks)
+  useServiceEvents('eventVolunteerAssignments', `events/${eventId}/eventVolunteerAssignments`, callbacks)
 }

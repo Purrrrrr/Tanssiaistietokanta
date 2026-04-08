@@ -15,6 +15,7 @@ type Workshop {
   dances: [Dance!]!
   instances: [WorkshopInstance!]!
   instanceSpecificDances: Boolean!
+  volunteerAssignments: [VolunteersByRole!]!
 }
 
 type Teacher {

@@ -122,8 +122,11 @@ function EventWorkshops({ event, readOnly }: { event: Event, readOnly: boolean }
 function WorkshopCard({ workshop }: { workshop: Workshop }) {
   const params = Route.useParams()
   const formatDateTime = useFormatDateTime()
-  const { abbreviation, name } = workshop
-  const { instanceSpecificDances, instances, description, teachers } = workshop
+  const { abbreviation, name, instanceSpecificDances, instances, description, volunteerAssignments } = workshop
+
+  const teachers = volunteerAssignments
+    .filter(a => a.role.type === 'TEACHER')
+    .flatMap(a => a.volunteers)
 
   return <Card className="flex flex-col" marginClass="" noPadding>
     <div className="p-6 pb-2">

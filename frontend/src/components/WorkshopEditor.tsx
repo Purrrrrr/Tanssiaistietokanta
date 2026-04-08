@@ -3,6 +3,7 @@ import { string } from 'yup'
 
 import { Event } from 'types'
 
+import { useEventRoles } from 'services/eventRoles'
 import { usePatchWorkshop } from 'services/workshops'
 
 import { ActionButton as Button, DateField, DragHandle, formFor, NumberInput, patchStrategy, SyncStatus, TextArea, useAutosavingState } from 'libraries/forms'
@@ -11,8 +12,6 @@ import { DanceChooser } from 'components/widgets/DanceChooser'
 import { useT, useTranslation } from 'i18n'
 import { guid } from 'utils/guid'
 
-import TeacherSelector from './volunteers/TeacherSelector'
-import { useEventRoles } from 'services/eventRoles'
 import { VolunteerAssignmentSelector } from './volunteers/VolunteerAssignmentSelector'
 
 type Workshop = Event['workshops'][0]
@@ -46,14 +45,13 @@ export function WorkshopEditor({ eventId, workshop: workshopInDatabase, reserved
   const workshopRoles = roles.filter(r => r.appliesToWorkshops)
   const workshopId = workshopInDatabase._id
   const saveWorkshop = (data: Partial<Workshop>) => {
-    const { instances, name, abbreviation, description, teachers, instanceSpecificDances } = data
+    const { instances, name, abbreviation, description, instanceSpecificDances } = data
     return modifyWorkshop({
       id: workshopId,
       workshop: {
         name,
         abbreviation,
         description,
-        teacherIds: teachers?.map(t => t._id),
         instanceSpecificDances,
         instances: instances?.map(({ dances, __typename, ...i }) => ({ ...i, danceIds: dances ? dances.map(d => d._id) : null })),
       },
@@ -81,7 +79,6 @@ export function WorkshopEditor({ eventId, workshop: workshopInDatabase, reserved
             />
           </FormGroup>,
         )}
-        <Field path="teachers" label={t('teachers')} component={TeacherSelector} />
         <Switch path="instanceSpecificDances" label={t('instanceSpecificDances')} />
       </div>
       <div className="grow basis-75">

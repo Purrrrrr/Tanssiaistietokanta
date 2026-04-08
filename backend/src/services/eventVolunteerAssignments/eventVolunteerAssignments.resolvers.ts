@@ -1,5 +1,5 @@
 import { Application } from '../../declarations'
-import { EventVolunteerAssignmentsParams } from './eventVolunteerAssignments.class'
+import { EventVolunteerAssignments, EventVolunteerAssignmentsParams } from './eventVolunteerAssignments.class'
 import { versionHistoryFieldResolvers, versionHistoryResolver } from '../../utils/version-history-resolvers'
 
 export default (app: Application) => {
@@ -7,7 +7,29 @@ export default (app: Application) => {
   const eventsService = app.service('events')
   const workshopsService = app.service('workshops')
   const eventRolesService = app.service('eventRoles')
-  const volunteerService = app.service('volunteers')
+
+  async function groupByRole(
+    assignments: EventVolunteerAssignments[],
+    ids: { _eventId: string, _workshopId: string | null },
+  ) {
+    const byRole = new Map<string, string[]>()
+    for (const a of assignments) {
+      const roleAssignments = byRole.get(a.roleId)
+      if (!roleAssignments) {
+        byRole.set(a.roleId, [a.volunteerId])
+      } else {
+        roleAssignments.push(a.volunteerId)
+      }
+    }
+    return Promise.all(
+      byRole.entries().map(async ([roleId, roleAssignments]) => ({
+        _id: roleId,
+        ...ids,
+        role: await eventRolesService.get(roleId),
+        volunteers: await Promise.all(roleAssignments.map(id => volunteerService.get(id))),
+      })),
+    )
+  } const volunteerService = app.service('volunteers')
 
   return {
     EventVolunteerAssignment: {
@@ -17,6 +39,17 @@ export default (app: Application) => {
         assignment.workshopId ? workshopsService.get(assignment.workshopId) : null,
       role: (assignment: { roleId: string }) => eventRolesService.get(assignment.roleId),
       volunteer: (assignment: { volunteerId: string }) => volunteerService.get(assignment.volunteerId),
+    },
+    Event: {
+      volunteerAssignments: (event: { _id: string }, _: unknown, params: EventVolunteerAssignmentsParams | undefined) =>
+        service.find({ ...params, query: { ...params?.query, eventId: event._id, workshopId: null } })
+          .then(assignments => groupByRole(assignments, { _eventId: event._id, _workshopId: null })),
+    },
+    Workshop: {
+      volunteerAssignments: (workshop: { eventId: string, _id: string }, _: unknown, params: EventVolunteerAssignmentsParams | undefined) =>
+        service.find({ ...params, query: { ...params?.query, workshopId: workshop._id } })
+          .then(assignments =>
+            groupByRole(assignments, { _eventId: workshop.eventId, _workshopId: workshop._id })),
     },
     VersionHistory: versionHistoryFieldResolvers(),
     Query: {

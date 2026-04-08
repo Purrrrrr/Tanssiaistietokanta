@@ -16,8 +16,9 @@ import {
 import type { Application } from '../../declarations'
 import { EventVolunteerAssignmentsService, getOptions } from './eventVolunteerAssignments.class'
 import { eventVolunteerAssignmentsPath, eventVolunteerAssignmentsMethods } from './eventVolunteerAssignments.shared'
-import { defaultChannels } from '../../utils/defaultChannels'
+import { defaultChannels, withoutCurrentConnection } from '../../utils/defaultChannels'
 import { SkipAccessControl } from '../access/hooks'
+import getFromData from '../../utils/getFromData'
 
 export * from './eventVolunteerAssignments.class'
 export * from './eventVolunteerAssignments.schema'
@@ -50,7 +51,17 @@ export const eventVolunteerAssignments = (app: Application) => {
     error: {
       all: [],
     },
-  }).publish((_data, context) => defaultChannels(app, context))
+  }).publish((data, context) => {
+    const eventIds = getFromData(data, item => item.eventId)
+    const channels = [
+      ...eventIds.map(id => app.channel(`events/${id}/eventVolunteerAssignments`)),
+    ]
+
+    return [
+      ...withoutCurrentConnection(channels, context),
+      ...defaultChannels(app, context),
+    ]
+  })
 
   const service = app.service(eventVolunteerAssignmentsPath)
   const accessService = app.service('access')

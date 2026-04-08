@@ -1,4 +1,4 @@
-import { Teacher } from 'types'
+// import { Teacher } from 'types'
 
 import { useCreateVolunteer, useVolunteers } from 'services/volunteers'
 
@@ -6,7 +6,7 @@ import { FieldComponentProps } from 'libraries/forms'
 import { AutocompleteMultipleInput } from 'libraries/formsV2/components/inputs/selectors'
 import { useT } from 'i18n'
 
-type Volunteer = Omit<Teacher, '__typename'>
+interface Volunteer { _id: string, name: string } // Omit<Teacher, '__typename'>
 type SelectableValue = (Volunteer & { __typename?: 'Volunteer' })
   | { __typename: 'createVolunteer', name: string }
 

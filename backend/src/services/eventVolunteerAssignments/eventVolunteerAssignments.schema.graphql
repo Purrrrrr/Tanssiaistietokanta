@@ -1,3 +1,11 @@
+type VolunteersByRole {
+  _id: ID!
+  _eventId: ID!
+  _workshopId: ID
+  role: EventRole!
+  volunteers: [Volunteer!]!
+}
+
 type Query {
   eventVolunteerAssignment(id: ID!, versionId: ID): EventVolunteerAssignment!
   eventVolunteerAssignments(eventId: ID, workshopId: ID, roleId: ID): [EventVolunteerAssignment!]!

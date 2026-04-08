@@ -15,6 +15,7 @@ type Event implements Versionable {
   endDate: String!
   program: EventProgramSettings!
   workshops: [Workshop!]!
+  volunteerAssignments: [VolunteersByRole!]!
 }
 
 type EventAccessControl {
