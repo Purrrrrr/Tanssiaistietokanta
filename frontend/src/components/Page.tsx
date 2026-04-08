@@ -14,7 +14,7 @@ import './Page.css'
 export * from './Menu'
 
 export interface PageContentProps extends VersionedPageTitleProps {
-  background?: 'default' | 'dances' | 'volunteers'
+  background?: 'default' | 'dances' | 'volunteers' | 'ball'
   logo?: React.ReactNode
   info?: React.ReactNode
   children?: React.ReactNode

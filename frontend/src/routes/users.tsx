@@ -19,7 +19,7 @@ function UsersPage() {
   const label = useT('domain.user')
   const [users, requestState] = useUsers()
 
-  return <Page title={t('pageTitle')}>
+  return <Page title={t('pageTitle')} background="ball">
     <LoadingState {...requestState} />
     <ItemList columns="grid-cols-[1fr_1fr_1fr] gap-x-4" items={users} emptyText={t('noUsers')} className="max-w-200">
       <ItemList.Header>

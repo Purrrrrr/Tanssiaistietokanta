@@ -10,6 +10,9 @@
   &.background-volunteers {
     --background-image: url("/Ilia_Efimovich_Repin_Volga_Boatmen-tiled.webp");
   }
+  &.background-ball {
+    --background-image: url("/Hieronymus_Janssens,_efterfølger,_17._årh._eller_senere_-_Et_bal-tiled.webp?v=4");
+  }
   padding-inline: 25px;
   display: grid;
   --menu-size: 0rem;
