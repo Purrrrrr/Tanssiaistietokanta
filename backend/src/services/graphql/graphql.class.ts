@@ -3,7 +3,7 @@ import { Middleware } from '@feathersjs/koa'
 import { ApolloServer } from '@apollo/server'
 import { unwrapResolverError } from '@apollo/server/errors'
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer'
-import { koaMiddleware } from '@thedadi/as-integration-koa'
+// import { koaMiddleware } from '@thedadi/as-integration-koa'
 import { loadFilesSync } from '@graphql-tools/load-files'
 import { mergeResolvers } from '@graphql-tools/merge'
 import { logger } from '../../logger'
@@ -12,6 +12,7 @@ import type { Application } from '../../declarations'
 import { addLogData } from '../../requestLogger'
 import { withAccessParams } from '../access/hooks'
 import { FeathersError } from '@feathersjs/errors'
+import { koaMiddleware } from './middleware'
 
 type Graphql = any
 type GraphqlData = any
