@@ -5,6 +5,43 @@ from PIL import Image, ImageDraw, ImageFilter
 import os
 import sys
 
+def trim_vertical_percentage(img, trim_top=0.0, trim_bottom=0.0):
+    if trim_top == 0 and trim_bottom == 0:
+        return img
+
+    w, h = img.size
+
+    top_px = int(h * trim_top)
+    bottom_px = int(h * trim_bottom)
+
+    # Clamp to valid range
+    top_px = max(0, min(top_px, h - 1))
+    bottom_px = max(0, min(bottom_px, h - 1))
+
+    # Prevent invalid crop
+    if top_px + bottom_px >= h:
+        raise ValueError("Trim percentages remove entire image height.")
+
+    return img.crop((0, top_px, w, h - bottom_px))
+
+def trim_horizontal_percentage(img, trim_left=0.0, trim_right=0.0):
+    if trim_left == 0 and trim_right == 0:
+        return img
+
+    w, h = img.size
+
+    left_px = int(w * trim_left)
+    right_px = int(w * trim_right)
+
+    # Clamp to valid range
+    left_px = max(0, min(left_px, w - 1))
+    right_px = max(0, min(right_px, w - 1))
+
+    # Prevent invalid crop
+    if left_px + right_px >= w:
+        raise ValueError("Trim percentages remove entire image width.")
+
+    return img.crop((left_px, 0, w - right_px, h))
 
 def create_gradient_mask(width, height, horizontal=True, reverse=False, blur=0):
     mask = Image.new("L", (width, height))
@@ -77,8 +114,10 @@ def scale_to_height(img, target_height):
 
     return img.resize((new_width, target_height), Image.LANCZOS)
 
-def process_image(input_path, output_path, blend, blur, horizontal, vertical, target_height):
+def process_image(input_path, output_path, blend, blur, horizontal, vertical, target_height, trim_top, trim_bottom, trim_left, trim_right):
     img = Image.open(input_path)
+    img = trim_vertical_percentage(img, trim_top, trim_bottom)
+    img = trim_horizontal_percentage(img, trim_left, trim_right)
 
     if horizontal:
         img = seamless_horizontal(img, blend, blur)
@@ -106,11 +145,16 @@ def main():
                         help="Make seamless horizontally")
     parser.add_argument("--vertical", action="store_true",
                         help="Make seamless vertically")
-    parser.add_argument(
-            "--height",
-            type=int,
-            help="Resize output to this height (keeps aspect ratio)"
-            )
+    parser.add_argument("--height", type=int,
+                        help="Resize output to this height (keeps aspect ratio)")
+    parser.add_argument("--trim-top", type=float, default=0.0,
+                        help="Trim percentage from top (0.0–1.0)")
+    parser.add_argument( "--trim-bottom", type=float, default=0.0,
+                        help="Trim percentage from bottom (0.0–1.0)")
+    parser.add_argument( "--trim-left", type=float, default=0.0,
+                        help="Trim percentage from left (0.0–1.0)")
+    parser.add_argument( "--trim-right", type=float, default=0.0,
+                        help="Trim percentage from right (0.0–1.0)")
 
     args = parser.parse_args()
 
@@ -134,9 +178,12 @@ def main():
         args.blur,
         args.horizontal,
         args.vertical,
-        args.height
+        args.height,
+        args.trim_top,
+        args.trim_bottom,
+        args.trim_left,
+        args.trim_right,
     )
-
 
 if __name__ == "__main__":
     main()
