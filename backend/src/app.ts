@@ -14,6 +14,7 @@ import { services } from './services/index'
 import { graphqlServiceMiddleware } from './services/graphql/graphql.class'
 import initDependencyGraph from './dependencyGraph'
 import { preventRemovingOfUsedItems } from './hooks/prevent-removing-of-used-items'
+import { deleteOrphans } from './hooks/delete-orphans'
 import { updateParentTimestamps } from './hooks/update-parent-timestamps'
 import { migrateDb } from './umzug'
 import { channels } from './channels'
@@ -91,6 +92,7 @@ app.hooks({
   },
   after: {
     all: [updateParentTimestamps],
+    remove: [deleteOrphans],
   },
   error: {},
 })
