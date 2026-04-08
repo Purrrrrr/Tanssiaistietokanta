@@ -237,6 +237,34 @@ export const up: MigrationFn = async params => {
       })
     }
   }
+
+  // === Part 3: Renumber _versionNumber to be sequential after new records were inserted ===
+
+  await renumberVersions(eventVersionModel, eventModel)
+  await renumberVersions(workshopVersionModel, workshopModel)
+}
+
+async function renumberVersions(
+  versionModel: Nedb<AnyVersion>,
+  currentModel: Nedb<AnyVersion>,
+) {
+  const allVersions = await versionModel.findAsync({})
+  const byRecord = Map.groupBy(allVersions, v => v._recordId)
+
+  for (const [recordId, versions] of byRecord) {
+    const sorted = sortBy(versions, ['_updatedAt'])
+    let changed = false
+    for (let i = 0; i < sorted.length; i++) {
+      if (sorted[i]._versionNumber !== i) {
+        await versionModel.updateAsync({ _id: sorted[i]._id }, { $set: { _versionNumber: i } })
+        changed = true
+      }
+    }
+    if (changed) {
+      const finalVersionNumber = sorted.length - 1
+      await currentModel.updateAsync({ _id: recordId }, { $set: { _versionNumber: finalVersionNumber } })
+    }
+  }
 }
 
 export const down: MigrationFn = async () => {}
