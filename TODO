@@ -326,7 +326,7 @@
 * Fix: Logged out users do not see events
 * Move DeleteEventVolunteerButton and EventVolunteerRoleSelect near the route
 * Nicer logout menu keyboard a11y
-  Better layout
+* Better layout
   * Full width
   * Side menu
   * Better side menu styles
@@ -340,13 +340,17 @@
   * Prevent nav from overflowing on mobile
   * Change translation keys to somewhat match new structure
   * Make the menu more prominent on mobile
-    Add backlinks where needed
-    Store the toggled state of the menu?
-    Provide some links between pages without the menu for redundancy
-
-  Move event program editors near their usage sites
-
-  Teacher/people database
+  * Separate workshop pages for events
+  * Provide some links between pages without the menu for redundancy
+* Blueprintjs migration - Part 2
+  * Input
+  * FormGroup
+  * Check todo markings in Button.tsx or other
+  * Proper CSS for inputs
+  * Proper CSS for FormGroup
+* Update Apollo server to v5
+* Add channels for event specific volunteer assignments
+  Teacher/people database PART 1
   * Apuopettajat / assistant teachers
   * Event signed up volunteers list
     * Notes
@@ -357,31 +361,30 @@
     * Prevent inserting/setting same volunteer twice
     * Make list mobile layout readable
     * Filtering of volunteer list
-    General volunteers pages
-      Editing names
-      Combining duplicate volunteers
-      Volunteering history
-    Check GDPR stuff for names
-    Volunteer contact details page?
-      Add contact details
-      GDPR compliance
-    Separate workshop pages for events
-    Show versions for eventVolunteers
-    Check how deleted volunteers affect versioning
+  * EventVolunteerAssignment db
+    * Show values in workshops
+    * Make editable
+      Migrate old data with versioning
+  * General volunteers pages
+    * Editing names
+    * Volunteering history
+    * Combining duplicate volunteers
 
-  Per component translations?
-    Load async in loaders
-    Files like component.i18n.fi.ts or -route.i18n.fi.ts
-    Register with a special function + augmented interface
-    Where do we get keys?
-    Support multiple locales
-  General notes/documents to event
+  Check GDPR stuff for volunteer names
+  Event volunteer kompassi status
+  Show versions for eventVolunteers
+  Check how deleted volunteers affect versioning
+
+  Fix duplicate file upload?
+  Multiple slides per dance: formation slide / instructions slide / some other?
+
+  General notes/documents/wikipages to event/other
   Deadline support?
-  Update Apollo server to v5
 
-  Add tests to check that used dances are not deletable
-  Add test that workshops are deleted when the event is
-  Same for files (need to impl)
+  Volunteer contact details page?
+    Add contact details
+    GDPR compliance
+
   Ability to have two column dance instructions
   Don't make ball program view "log out" whenever fast refresh occurs
   Fix form inside form error in slide show dance editor
@@ -394,92 +397,83 @@
     Allow creating users
     Allow creating users with some token? Invite functionality?
   
-  Put version history field resolvers into just one place
-  
-  Tanstack query nice to haves
-    Page title mechanism
-    Version urls
-    Fix data loading for events
-  Nicer login/error page
-    With image
-    And maybe reason for login
-  Maybe do some log query tool?
-
-  Make some sense of names in event program: rows, items...
-  Prefetch dances somehow in eventprogram slide editor
-  Forms:
-    Structural sharing for form data
-    Prevent callbacks running for out of bounds array data
-
-  Use ItemList in setEditors
-
   File linking/copying
     Ability to copy a file to different location/name
     Ability to replace file contents with contents of another
     Ability to download folders of files
-  Event slide rework
-    Store slide styles in own service/db
-      CSS in db
-      Variables?
-    * Make slides some kind of grid with defined areas
-    Use file service for images
   Styles also for prints
-
-  Bundle size reducing
-    Replace Apollo
-    Load translations async as json
-    Load translations in parts as-needed
-    Lazy load
-      Icons?
-      Workshop edit form
-      Delete button?
-  
   Login icon?
-
-  Forms
-    Check a11y for form field readOnly vs disabled vs some other rendering method
-    Render readOnly selectors more lightly
-
-  Test websocket performance with something. Gatling?
-
-  Tooltips with https://github.com/doeixd/invokers?
 
   Ropecon 2025 post todo - Part 2
     Edit and link to interval music in dance set slide editor ??
     Maybe ability to set separate list name for items
       Support for showing it
-    Add support for dance tags (fast, switching couples, stealing, etc.)
     Better drag and drop somehow?
     Image support? Better stock slides??
     Show dance in interval music
-    Showing of dance tags
-    Icons for dance tags
 
   Templates for event/interval music slides?
-  Documents?
-  Notes for files?
-
-  Take anchor positioning into use once Firefox 149 releases
-
-  Implement event program item editor using ItemList?
-    Minimal buttons (in event program)
-    Ability to see more info about program item in editor
-
-  Dance list category suggestions
-  Miksi voltati in ca rosina ei kategorisoidu automaattisesti?
-
-  Fix: Pressing tab when focused on select button loses all focus
-
-  Better create dance dialog
-    Ask name first /w autocomplete from dance wiki, then maybe upload file
-
-  Blueprintjs migration - Part 2
-  * Input
-  * FormGroup
-    Proper CSS for inputs
-    Proper CSS for FormGroup
-    Check todo markings in Button.tsx or other
-
-  Typed backend queries
-  Character count for dance instructions
-    Maximum?
+  
+  Nice to have
+    Check that event + workshop + role match is valid in EventVolunteerAssignment
+    Tests
+      Add tests to check that used dances are not deletable
+      Add test that workshops are deleted when the event is
+      Same for files (need to impl)
+    Add support for dance tags (fast, switching couples, stealing, etc.)
+      Showing of dance tags
+      Icons for dance tags
+    Move event program editors near their usage sites
+    Put version history field resolvers into just one place
+    Prefetch dances somehow in eventprogram slide editor
+    Event slide rework
+      Store slide styles in own service/db
+        CSS in db
+        Variables?
+      * Make slides some kind of grid with defined areas
+      Use file service for images
+    Tanstack query nice to haves
+      Page title mechanism
+      Version urls
+      Fix data loading for events
+    Nicer login/error page
+      With image
+      And maybe reason for login
+    Maybe do some log query tool?
+    Per component translations?
+      Load async in loaders
+      Files like component.i18n.fi.ts or -route.i18n.fi.ts
+      Register with a special function + augmented interface
+      Where do we get keys?
+      Support multiple locales
+    Layout revisited
+      Show breadcrumbs below header?
+      Store the toggled state of the menu?
+    Make some sense of names in event program: rows, items...
+    Forms:
+      Structural sharing for form data
+      Prevent callbacks running for out of bounds array data
+    Implement event program item editor using ItemList?
+      Minimal buttons (in event program)
+      Ability to see more info about program item in editor
+    Bundle size reducing
+      Replace Apollo
+      Load translations async as json
+      Load translations in parts as-needed
+      Lazy load
+        Icons?
+        Workshop edit form
+        Delete button?
+    Forms
+      Check a11y for form field readOnly vs disabled vs some other rendering method
+      Render readOnly selectors more lightly
+    Test websocket performance with something. Gatling?
+    Tooltips with https://github.com/doeixd/invokers?
+    Typed backend queries
+    Take anchor positioning into use once support is +95%
+    Fix: Pressing tab when focused on select button loses all focus
+    Better create dance dialog
+      Ask name first /w autocomplete from dance wiki, then maybe upload file
+    Dance list category suggestions
+    Miksi voltati in ca rosina ei kategorisoidu automaattisesti?
+    Notes for files?

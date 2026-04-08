@@ -11,7 +11,6 @@ interface DeleteVolunteerButtonProps {
   volunteer: Volunteer
 }
 
-// TODO: move to volunteers route
 export function DeleteVolunteerButton({ minimal, volunteer }: DeleteVolunteerButtonProps) {
   const t = useT('routes.volunteers')
   const [deleteVolunteer] = useDeleteVolunteer({ refetchQueries: ['getVolunteers'] })
