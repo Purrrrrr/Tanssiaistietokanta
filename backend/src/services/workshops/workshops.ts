@@ -13,7 +13,7 @@ import {
   workshopsQueryResolver,
 } from './workshops.schema'
 
-import type { Application, HookContext } from '../../declarations'
+import type { Application } from '../../declarations'
 import type { WorkshopInstance } from './workshops.schema'
 import { WorkshopsService, getOptions } from './workshops.class'
 import { workshopsPath, workshopsMethods } from './workshops.shared'
@@ -34,32 +34,6 @@ export const workshops = (app: Application) => {
     // You can add additional custom events to be sent to clients here
     events: [],
   })
-
-  const workshopService = app.service(workshopsPath)
-
-  const updateEventWorkshopVersions = async (context: HookContext<WorkshopsService>) => {
-    const { result } = context
-    if (!result) return
-
-    const eventService = app.service('events')
-    const results = Array.isArray(result) ? result : [result]
-
-    await Promise.all(
-      results.map(async workshop => {
-        const workshops = await workshopService.find({ query: { eventId: workshop.eventId } })
-
-        const workshopVersions = Object.fromEntries(
-          (await Promise.all(
-            workshops.map(async w =>
-              [w._id, (await workshopService.getLatestVersion(w._id))?._versionId] as const,
-            ),
-          )).filter(entry => entry[1] != undefined) as [string, string][],
-        )
-
-        eventService.patch(workshop.eventId, { workshopVersions })
-      }),
-    )
-  }
 
   // Initialize hooks
   app.service(workshopsPath).hooks({
@@ -101,10 +75,10 @@ export const workshops = (app: Application) => {
     },
     after: {
       all: [],
-      create: [updateEventWorkshopVersions],
-      update: [updateEventWorkshopVersions],
-      patch: [updateEventWorkshopVersions],
-      remove: [updateEventWorkshopVersions],
+      create: [],
+      update: [],
+      patch: [],
+      remove: [],
     },
     error: {
       all: [],

@@ -54,7 +54,6 @@ export const eventsSchema = Type.Object(
         showInLists: Type.Boolean(),
       }),
     }),
-    workshopVersions: Type.Record(Id(), Id()),
     _childWorkshopsUpdatedAt: Type.Optional(Type.String()),
     _childEventVolunteerAssignmentsUpdatedAt: Type.Optional(Type.String()),
     _childEventVolunteersUpdatedAt: Type.Optional(Type.String()),
