@@ -15,9 +15,7 @@ export default (app: Application) => {
         _id: string
         _versionId?: string
         _updatedAt: string
-      }) => workshopService.find({ query: {
-        eventId: obj._id, atDate: obj._versionId ? obj._updatedAt : undefined,
-      } }),
+      }) => workshopService.find({ query: { eventId: obj._id } }),
       program: (event: { name?: any, program?: any }) => {
         const { program } = event
         if (!program.introductions.title) return L.set(['introductions', 'title'], event.name, program)

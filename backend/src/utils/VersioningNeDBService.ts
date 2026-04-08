@@ -5,6 +5,7 @@ import type { Static } from '@feathersjs/typebox'
 
 import { NeDBService, NeDBServiceOptions } from './NeDBService'
 import { Id as IdType } from './common-types'
+import { getAtDateParam, setAtDateParam } from '../hooks/versioning-params-ctx'
 
 const _versionableQuerySchema = querySyntax(Type.Object({
   _id: Type.Union([IdType(), Type.Number()]),
@@ -58,6 +59,10 @@ export default class VersioningNeDBService<Result extends Versionable, Data, Ser
       delete _params.query.searchVersions
       delete _params.query._versionId
     }
+    const contextAtDate = getAtDateParam()
+    if (contextAtDate) {
+      return this.findAtDate(_params ?? {} as ServiceParams, contextAtDate)
+    }
     return this.mapToResults(await this.currentService.find(this.mapParams(_params))) as Result[]
   }
 
@@ -76,12 +81,19 @@ export default class VersioningNeDBService<Result extends Versionable, Data, Ser
       return this.getAtDate(id, _params.query.atDate)
     }
     if (typeof _params?.query?._versionId === 'string') {
-      return this.mapToResult(await this.versionService.get(_params.query._versionId, _params))
+      const version = await this.versionService.get(_params.query._versionId, _params)
+      setAtDateParam(version._updatedAt)
+      return this.mapToResult(version)
+    }
+    const contextAtDate = getAtDateParam()
+    if (contextAtDate) {
+      return this.getAtDate(id, contextAtDate)
     }
     return super.get(id, _params)
   }
 
   private async getAtDate(id: Id, atDate: string): Promise<Result> {
+    setAtDateParam(atDate)
     const versions = await this.versionService.find({
       query: {
         _id: id,
@@ -102,6 +114,7 @@ export default class VersioningNeDBService<Result extends Versionable, Data, Ser
   }
 
   private async findAtDate(params: ServiceParams, atDate: string): Promise<Result[]> {
+    setAtDateParam(atDate)
     const { atDate: _ignored, searchVersions: _ignored2, ...query } = params.query ?? {}
     const allVersions = await this.versionService.find({
       query: {

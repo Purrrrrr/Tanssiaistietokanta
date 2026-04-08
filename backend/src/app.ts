@@ -23,6 +23,7 @@ import { logger, withRequestLogger } from './requestLogger'
 import sessions, { restSessionCookieMiddleware, socketIOSessionCookieMiddleware } from './internal-services/sessions'
 import { checkAccess } from './services/access/hooks'
 import { channelAccessControl } from './services/access/access'
+import { initVersioningParamsCtx } from './hooks/versioning-params-ctx'
 
 const app: Application = koa(feathers())
 
@@ -86,6 +87,8 @@ app.configure(sessions)
 app.hooks({
   around: {
     all: [logRequest({ ignoredPaths: ['channel-connections'] }), checkAccess],
+    find: [initVersioningParamsCtx],
+    get: [initVersioningParamsCtx],
   },
   before: {
     remove: [preventRemovingOfUsedItems],

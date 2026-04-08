@@ -41,9 +41,13 @@ export default (app: Application) => {
       volunteer: (assignment: { volunteerId: string }) => volunteerService.get(assignment.volunteerId),
     },
     Event: {
-      volunteerAssignments: (event: { _id: string }, _: unknown, params: EventVolunteerAssignmentsParams | undefined) =>
-        service.find({ ...params, query: { ...params?.query, eventId: event._id, workshopId: null } })
-          .then(assignments => groupByRole(assignments, { _eventId: event._id, _workshopId: null })),
+      volunteerAssignments: async (event: { _id: string, _versionId?: string | null, _updatedAt: string }, _: unknown, params: EventVolunteerAssignmentsParams | undefined) => {
+        const assignments = await service.find({
+          ...params,
+          query: { ...params?.query, eventId: event._id, workshopId: null },
+        })
+        return groupByRole(assignments, { _eventId: event._id, _workshopId: null })
+      },
     },
     Workshop: {
       volunteerAssignments: (workshop: { eventId: string, _id: string }, _: unknown, params: EventVolunteerAssignmentsParams | undefined) =>

@@ -13,6 +13,7 @@ import { addLogData } from '../../requestLogger'
 import { withAccessParams } from '../access/hooks'
 import { FeathersError } from '@feathersjs/errors'
 import { koaMiddleware } from './middleware'
+import { runWithAtDateParam } from '../../hooks/versioning-params-ctx'
 
 type Graphql = any
 type GraphqlData = any
@@ -73,7 +74,11 @@ implements ServiceInterface<Graphql, GraphqlData, ServiceParams, GraphqlPatch> {
     addLogData('graphqlQuery', this.getQueryName(query))
     addLogData('variables', query.variables)
     const server = await this.apolloServerPromise
-    const res = await withAccessParams({ user: _params.user }, () => server.executeOperation(query, { contextValue }))
+    const res = await withAccessParams({ user: _params.user },
+      () => runWithAtDateParam(
+        () => server.executeOperation(query, { contextValue }),
+      ),
+    )
     const { body } = res
     if (body.kind === 'single') {
       if (body.singleResult.errors) {
