@@ -350,7 +350,7 @@
   * Proper CSS for FormGroup
 * Update Apollo server to v5
 * Add channels for event specific volunteer assignments
-  Teacher/people database PART 1
+* Teacher/people database PART 1
   * Apuopettajat / assistant teachers
   * Event signed up volunteers list
     * Notes
@@ -364,15 +364,28 @@
   * EventVolunteerAssignment db
     * Show values in workshops
     * Make editable
-      Migrate old data with versioning
+    * Migrate old data with versioning
   * General volunteers pages
     * Editing names
     * Volunteering history
     * Combining duplicate volunteers
-
+  * Add hook to update parents of parent-child relationships when child updates
+  * Ensure eventVolunteer changes are present in event version history
+* Get rid of workshop versions field
+* Some way to load all data for a graphql query with atDate
+* Fix update fragments sometimes not being available when needed
+* Show versions for eventVolunteers
+  
+* Readonly mode for volunteers page when versioned
+  Fix workshops when viewing event versions
+  * Show workshops when viewing event versions
+    Fix dances not showing
+    Fix teachers and other not showing
+  Make dance editor read only when viewing event version slides
+  Make ball slideshow not navigate away from versions
+    Check slide editor page for this
   Check GDPR stuff for volunteer names
   Event volunteer kompassi status
-  Show versions for eventVolunteers
   Check how deleted volunteers affect versioning
 
   Fix duplicate file upload?
