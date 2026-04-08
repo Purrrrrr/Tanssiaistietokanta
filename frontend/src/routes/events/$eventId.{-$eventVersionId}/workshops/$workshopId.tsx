@@ -29,7 +29,6 @@ export const Route = createFileRoute(
 
 function RouteComponent() {
   const event = useCurrentEvent()
-  const readOnly = event._versionId != undefined
   const { workshopId } = Route.useParams()
   const workshop = event.workshops.find(w => w._id === workshopId)
   if (!workshop) {
@@ -39,7 +38,6 @@ function RouteComponent() {
   return <WorkshopCard
     workshop={workshop}
     eventId={event._id}
-    readOnly={readOnly}
     reservedAbbreviations={event.workshops.filter(w => w._id !== workshop._id).map(w => w.abbreviation).filter(a => a) as string[]}
     beginDate={event.beginDate}
     endDate={event.endDate}
@@ -48,12 +46,11 @@ function RouteComponent() {
 
 function WorkshopCard(
   {
-    workshop, reservedAbbreviations, readOnly, beginDate, endDate, eventId,
+    workshop, reservedAbbreviations, beginDate, endDate, eventId,
   }: {
     workshop: Workshop
     eventId: string
     reservedAbbreviations: string[]
-    readOnly: boolean
     beginDate: string
     endDate: string
   },
@@ -81,6 +78,6 @@ function WorkshopCard(
             <> ({abbreviation})</>
       }
     </H2>
-    { readOnly || <WorkshopEditor eventId={eventId} workshop={workshop} reservedAbbreviations={reservedAbbreviations} beginDate={beginDate} endDate={endDate} />}
+    <WorkshopEditor eventId={eventId} workshop={workshop} reservedAbbreviations={reservedAbbreviations} beginDate={beginDate} endDate={endDate} />
   </>
 }

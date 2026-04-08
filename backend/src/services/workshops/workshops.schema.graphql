@@ -1,9 +1,10 @@
 type Query {
-  workshop(id: ID!): Workshop!
+  workshop(id: ID!, eventVersionId: ID): Workshop!
 }
 
 type Workshop {
   _id: ID!
+  _versionId: ID
   eventId: ID!
   event: Event!
   name: String!

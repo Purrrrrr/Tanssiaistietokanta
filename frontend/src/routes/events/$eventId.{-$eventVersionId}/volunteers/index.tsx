@@ -49,8 +49,9 @@ function RouteComponent() {
   const label = useT('domain.eventVolunteer')
   const { search, role, setSearch, setRole } = useEventVolunteerSearchParams()
   const [sort, setSort] = useState<Sort>({ key: 'interestedIn', direction: 'asc' })
+  const readOnly = event._versionId != null
 
-  const [unsortedEventVolunteers] = useEventVolunteers({ eventId: event._id })
+  const [unsortedEventVolunteers] = useEventVolunteers({ eventId: event._id, eventVersionId: event._versionId })
   const addedVolunteers = unsortedEventVolunteers.map(ev => ev.volunteer)
 
   const eventVolunteers = sortedBy(unsortedEventVolunteers ?? [], volunteerSorter(sort.key), sort.direction === 'desc')
@@ -100,10 +101,11 @@ function RouteComponent() {
           addedVolunteers={addedVolunteers}
           currentRole={role}
           onSetRole={setRole}
+          readOnly={readOnly}
         />,
       )}
     </ItemList>
-    <CreateEventVolunteerForm eventId={event._id} addedVolunteers={addedVolunteers} />
+    {!readOnly && <CreateEventVolunteerForm eventId={event._id} addedVolunteers={addedVolunteers} />}
   </>
 }
 
@@ -178,14 +180,15 @@ interface EventVolunteerListRowProps {
   addedVolunteers: VolunteerListItem[]
   currentRole?: string
   onSetRole: (roleId: string | undefined) => void
+  readOnly?: boolean
 }
 
-function EventVolunteerListRow({ eventVolunteer: ev, addedVolunteers, currentRole, onSetRole }: EventVolunteerListRowProps) {
+function EventVolunteerListRow({ eventVolunteer: ev, addedVolunteers, currentRole, onSetRole, readOnly }: EventVolunteerListRowProps) {
   const [showEditor, setShowEditor] = useState(false)
   const t = useT('')
 
   return <ItemList.Row
-    expandableContent={<EventVolunteerRowEditor item={ev} addedVolunteers={addedVolunteers} />}
+    expandableContent={<EventVolunteerRowEditor item={ev} addedVolunteers={addedVolunteers} readOnly={readOnly} />}
     isOpen={showEditor}
   >
     <span>{ev.volunteer.name}</span>
@@ -206,12 +209,12 @@ function EventVolunteerListRow({ eventVolunteer: ev, addedVolunteers, currentRol
     <span>{ev.wishes ? ev.wishes : <span className="italic text-gray-500">{t('domain.eventVolunteer.noWishes')}</span>}</span>
     <span>{ev.notes || '-'}</span>
     <div className="flex items-center gap-1">
-      <DeleteEventVolunteerButton minimal eventVolunteerId={ev._id} />
+      {!readOnly && <DeleteEventVolunteerButton minimal eventVolunteerId={ev._id} />}
       <Button
         requireRight="eventVolunteers:modify"
         entityId={ev._id}
         minimal
-        icon={<Edit />}
+        icon={readOnly ? undefined : <Edit />}
         aria-label={t('common.edit')}
         tooltip={t('common.edit')}
         color="primary"
@@ -222,9 +225,10 @@ function EventVolunteerListRow({ eventVolunteer: ev, addedVolunteers, currentRol
   </ItemList.Row>
 }
 
-function EventVolunteerRowEditor({ item, addedVolunteers }: {
+function EventVolunteerRowEditor({ item, addedVolunteers, readOnly }: {
   item: EventVolunteer
   addedVolunteers: VolunteerListItem[]
+  readOnly?: boolean
 }) {
   const [patchEventVolunteer] = usePatchEventVolunteer()
 
@@ -244,7 +248,7 @@ function EventVolunteerRowEditor({ item, addedVolunteers }: {
     patchStrategy.partial,
   )
 
-  return <EventVolunteerForm {...formProps} syncState={state} excludeVolunteers={addedVolunteers} className="px-4" />
+  return <EventVolunteerForm {...formProps} readOnly={readOnly} syncState={state} excludeVolunteers={addedVolunteers} className="px-4" />
 }
 
 function CreateEventVolunteerForm({ eventId, addedVolunteers }: { eventId: string, addedVolunteers: VolunteerListItem[] }) {

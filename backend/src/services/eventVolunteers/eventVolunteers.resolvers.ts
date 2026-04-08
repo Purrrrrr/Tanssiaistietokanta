@@ -6,6 +6,7 @@ export default (app: Application) => {
   const service = app.service('eventVolunteers')
   const volunteerService = app.service('volunteers')
   const eventRolesService = app.service('eventRoles')
+  const eventsService = app.service('events')
 
   return {
     EventVolunteer: {
@@ -19,9 +20,15 @@ export default (app: Application) => {
       eventVolunteer: (_: any, { id, versionId }: any, params: EventVolunteersParams | undefined) => versionId
         ? service.get(id, { ...params, query: { _versionId: versionId } })
         : service.get(id, params),
-      eventVolunteers: (_: any, { eventId, volunteerId }: { eventId?: string, volunteerId?: string }, params: EventVolunteersParams | undefined) => {
+      eventVolunteers: async (_: any, { eventId, eventVersionId, volunteerId }: { eventId?: string, eventVersionId?: string, volunteerId?: string }, params: EventVolunteersParams | undefined) => {
         const query: Record<string, string> = {}
-        if (eventId) query.eventId = eventId
+        if (eventId) {
+          query.eventId = eventId
+          if (eventVersionId) {
+            // Trigger searching of versions of event volunteers by event version id
+            await eventsService.get(eventId, { query: { _versionId: eventVersionId } })
+          }
+        }
         if (volunteerId) query.volunteerId = volunteerId
         return service.find({ ...params, query: { ...params?.query, ...query } })
       },

@@ -8,7 +8,7 @@ type VolunteersByRole {
 
 type Query {
   eventVolunteerAssignment(id: ID!, versionId: ID): EventVolunteerAssignment!
-  eventVolunteerAssignments(eventId: ID, workshopId: ID, roleId: ID): [EventVolunteerAssignment!]!
+  eventVolunteerAssignments(eventId: ID, eventVersionId: ID, workshopId: ID, workshopVersionId: ID, roleId: ID): [EventVolunteerAssignment!]!
 }
 
 type EventVolunteerAssignment implements Versionable {

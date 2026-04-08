@@ -62,7 +62,7 @@ export function WorkshopEditor({ eventId, workshop: workshopInDatabase, reserved
 
   const addInstance = (instance: Instance) => formProps.onChange(w => ({ ...w, instances: [...w.instances, instance] }), 'instances')
 
-  return <Form className="workshopEditor" {...formProps}>
+  return <Form className="workshopEditor" {...formProps} readOnly={workshopInDatabase._versionId != null}>
     <SyncStatus state={state} floatRight />
     <div className="flex flex-wrap gap-3.5">
       <div className="grow basis-75 max-w-[50ch]">
@@ -76,6 +76,7 @@ export function WorkshopEditor({ eventId, workshop: workshopInDatabase, reserved
               eventId={eventId}
               roleId={role._id}
               workshopId={workshopInDatabase._id}
+              workshopVersionId={workshopInDatabase._versionId ?? undefined}
             />
           </FormGroup>,
         )}

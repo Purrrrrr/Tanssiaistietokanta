@@ -60,10 +60,32 @@ export default (app: Application) => {
       eventVolunteerAssignment: (_: any, { id, versionId }: any, params: EventVolunteerAssignmentsParams | undefined) => versionId
         ? service.get(id, { ...params, query: { _versionId: versionId } })
         : service.get(id, params),
-      eventVolunteerAssignments: (_: any, { eventId, workshopId, roleId }: { eventId?: string, workshopId?: string, roleId?: string }, params: EventVolunteerAssignmentsParams | undefined) => {
+      eventVolunteerAssignments: async (
+        _: any,
+        { eventId, eventVersionId, workshopId, workshopVersionId, roleId }: {
+          eventId?: string
+          eventVersionId?: string
+          workshopId?: string
+          workshopVersionId?: string
+          roleId?: string
+        },
+        params: EventVolunteerAssignmentsParams | undefined,
+      ) => {
         const query: Record<string, string> = {}
-        if (eventId) query.eventId = eventId
-        if (workshopId) query.workshopId = workshopId
+        if (eventId) {
+          query.eventId = eventId
+          if (eventVersionId) {
+            // Trigger searching of versions of event volunteer assignments by event version id
+            await eventsService.get(eventId, { query: { _versionId: eventVersionId } })
+          }
+        }
+        if (workshopId) {
+          query.workshopId = workshopId
+          if (eventVersionId) {
+            // Trigger searching of versions of event volunteer assignments by event version id
+            await workshopsService.get(workshopId, { query: { _versionId: workshopVersionId } })
+          }
+        }
         if (roleId) query.roleId = roleId
         return service.find({ ...params, query: { ...params?.query, ...query } })
       },

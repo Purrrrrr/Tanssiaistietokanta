@@ -29,6 +29,12 @@ const cache = new InMemoryCache({
     Event: {
       keyFields: ['_id', '_versionId'],
     },
+    Workshop: {
+      keyFields: ['_id', '_versionId'],
+    },
+    VolunteersByRole: {
+      keyFields: ['_id', '_eventId', '_workshopId'],
+    },
   },
 })
 

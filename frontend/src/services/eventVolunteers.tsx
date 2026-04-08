@@ -17,8 +17,8 @@ setupServiceUpdateFragment(
 )
 
 export const useEventVolunteers = entityListQueryHook('eventVolunteers', graphql(`
-query getEventVolunteers($eventId: ID, $volunteerId: ID) {
-  eventVolunteers(eventId: $eventId, volunteerId: $volunteerId) {
+query getEventVolunteers($eventId: ID, $eventVersionId: ID, $volunteerId: ID) {
+  eventVolunteers(eventId: $eventId, eventVersionId: $eventVersionId, volunteerId: $volunteerId) {
     _id
     _versionId
     _versionNumber

@@ -3,7 +3,7 @@ import { entityCreateHook, entityDeleteHook, entityUpdateHook, graphql, setupSer
 setupServiceUpdateFragment(
   'workshops',
   `fragment WorkshopFragment on Workshop {
-    _id, eventId
+    _id, _versionId, eventId
     name
     abbreviation
     description
@@ -24,7 +24,7 @@ setupServiceUpdateFragment(
 export const useCreateWorkshop = entityCreateHook('workshops', graphql(`
 mutation createWorkshop($eventId: ID!, $workshop: WorkshopInput!) {
   createWorkshop(eventId: $eventId, workshop: $workshop) {
-    _id, eventId
+    _id, _versionId, eventId
     name
     abbreviation
     description
@@ -45,7 +45,7 @@ mutation createWorkshop($eventId: ID!, $workshop: WorkshopInput!) {
 export const usePatchWorkshop = entityUpdateHook('workshops', graphql(`
 mutation patchWorkshop($id: ID!, $workshop: WorkshopPatchInput!) {
   patchWorkshop(id: $id, workshop: $workshop) {
-    _id, eventId
+    _id, _versionId, eventId
     name
     abbreviation
     description
@@ -66,7 +66,7 @@ mutation patchWorkshop($id: ID!, $workshop: WorkshopPatchInput!) {
 export const useDeleteWorkshop = entityDeleteHook('workshops', graphql(`
 mutation deleteWorkshop($id: ID!) {
   deleteWorkshop(id: $id) {
-    _id, eventId
+    _id, _versionId, eventId
     name
     abbreviation
     description

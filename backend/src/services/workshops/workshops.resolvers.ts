@@ -29,7 +29,13 @@ export default (app: Application) => {
       dances: (obj: { danceIds: string[] }) => obj.danceIds?.map(getDance),
     },
     Query: {
-      workshop: (_: any, { id }: any, params: WorkshopsParams | undefined) => service.get(id, params),
+      workshop: async (_: any, { id, eventVersionId }: any, params: WorkshopsParams | undefined) => {
+        if (eventVersionId) {
+          // Trigger searching of versions of workshops by event version id
+          await eventService.find({ query: { _versionId: eventVersionId } })
+        }
+        return service.get(id, params)
+      },
     },
     Mutation: {
       createWorkshop: (_: any, { eventId, workshop }: any, params: WorkshopsParams | undefined) => service.create({ eventId, ...workshop }, params),

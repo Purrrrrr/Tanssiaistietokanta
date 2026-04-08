@@ -12,13 +12,15 @@ interface VolunteerOption { _id: string, name: string }
 export interface VolunteerAssignmentSelectorProps {
   id: string
   eventId: ID
+  eventVersionId?: ID
   roleId: ID
   workshopId?: ID
+  workshopVersionId?: ID
 }
 
-export function VolunteerAssignmentSelector({ id, eventId, roleId, workshopId }: VolunteerAssignmentSelectorProps) {
+export function VolunteerAssignmentSelector({ id, eventId, eventVersionId, roleId, workshopId, workshopVersionId }: VolunteerAssignmentSelectorProps) {
   const t = useT('components.volunteerAssignmentSelector')
-  const [currentAssignments = []] = useEventVolunteerAssignments({ eventId, roleId, workshopId })
+  const [currentAssignments = []] = useEventVolunteerAssignments({ eventId, eventVersionId, roleId, workshopId, workshopVersionId })
   const [eventVolunteers = []] = useEventVolunteers({ eventId })
   const [allVolunteers = []] = useVolunteerNames()
   const [createAssignment] = useCreateEventVolunteerAssignment()
@@ -62,14 +64,16 @@ export function VolunteerAssignmentSelector({ id, eventId, roleId, workshopId }:
         .map(a => deleteAssignment({ id: a._id })),
     ])
   }
+  const readOnly = eventVersionId != null || workshopVersionId != null
 
   return <AutocompleteMultipleInput<VolunteerOption>
     id={id}
     value={value}
     onChange={onChange}
+    readOnly={readOnly}
     items={getItems}
     itemToString={v => v.name}
-    placeholder={t('addVolunteer')}
+    placeholder={readOnly ? '' : t('addVolunteer')}
     noResultsText={t('noVolunteers')}
   />
 }

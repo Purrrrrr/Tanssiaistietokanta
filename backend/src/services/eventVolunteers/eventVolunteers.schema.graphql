@@ -1,6 +1,6 @@
 type Query {
   eventVolunteer(id: ID!, versionId: ID): EventVolunteer!
-  eventVolunteers(eventId: ID, volunteerId: ID): [EventVolunteer!]!
+  eventVolunteers(eventId: ID, eventVersionId: ID, volunteerId: ID): [EventVolunteer!]!
 }
 
 type EventVolunteer implements Versionable {

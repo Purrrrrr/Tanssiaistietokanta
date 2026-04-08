@@ -41,7 +41,7 @@ query BallProgram($eventId: ID!) {
             source
             teachedIn(eventId: $eventId) { 
               _id
-              workshop { name }
+              workshop { _id, _versionId, name }
               instances { _id, abbreviation }
             }
           }
@@ -78,7 +78,7 @@ query BallProgram($eventId: ID!) {
             source
             teachedIn(eventId: $eventId) { 
               _id
-              workshop { name }
+              workshop { _id, _versionId, name }
               instances { _id, abbreviation }
             }
           }

@@ -68,7 +68,7 @@ setupServiceUpdateFragment(
             }
             teachedIn(eventId: $id) {
               _id
-              workshop { name, abbreviation }
+              workshop { _id, _versionId, name, abbreviation }
               instances { _id, abbreviation }
             }
           }
@@ -169,7 +169,7 @@ query getEvent($id: ID!, $versionId: ID) {
             }
             teachedIn(eventId: $id) {
               _id
-              workshop { name, abbreviation }
+              workshop { _id, _versionId, name, abbreviation }
               instances { _id, abbreviation }
             }
           }
@@ -190,6 +190,7 @@ query getEvent($id: ID!, $versionId: ID) {
     }
     workshops {
       _id
+      _versionId
       name
       abbreviation
       description
@@ -337,7 +338,7 @@ mutation patchEventProgram($id: ID!, $program: JSONPatch!) {
             }
             teachedIn(eventId: $id) {
               _id
-              workshop { name, abbreviation }
+              workshop { _id, _versionId, name, abbreviation }
               instances { _id, abbreviation }
             }
           }
@@ -358,6 +359,7 @@ mutation patchEventProgram($id: ID!, $program: JSONPatch!) {
     }
     workshops {
       _id
+      _versionId
       name
       abbreviation
       description
