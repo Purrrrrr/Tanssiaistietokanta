@@ -377,16 +377,21 @@
 * Show versions for eventVolunteers
   
 * Readonly mode for volunteers page when versioned
+* Make ball slideshow not navigate away from versions
+* Make dance editor read only when viewing event version slides
+  * Check slide editor page for this
+* Render readOnly selectors more lightly
   Fix workshops when viewing event versions
   * Show workshops when viewing event versions
-    Fix dances not showing
+  * Fix dances not showing
+  * Fix add dance selector to read only
     Fix teachers and other not showing
-  Make dance editor read only when viewing event version slides
-  Make ball slideshow not navigate away from versions
-    Check slide editor page for this
+
   Check GDPR stuff for volunteer names
   Event volunteer kompassi status
   Check how deleted volunteers affect versioning
+
+  Find a way to not show syncstatus on readOnly forms
 
   Fix duplicate file upload?
   Multiple slides per dance: formation slide / instructions slide / some other?
@@ -479,7 +484,6 @@
         Delete button?
     Forms
       Check a11y for form field readOnly vs disabled vs some other rendering method
-      Render readOnly selectors more lightly
     Test websocket performance with something. Gatling?
     Tooltips with https://github.com/doeixd/invokers?
     Typed backend queries

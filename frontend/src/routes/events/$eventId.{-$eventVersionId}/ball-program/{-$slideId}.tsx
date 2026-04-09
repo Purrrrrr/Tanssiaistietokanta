@@ -59,8 +59,8 @@ function RouteComponent() {
   </div>
 }
 
-function useBallProgram(eventId: string, _eventVersionId?: string | null) {
-  const { data, refetch, ...loadingState } = useBallProgramQuery({ eventId })
+function useBallProgram(eventId: string, eventVersionId?: string | null) {
+  const { data, refetch, ...loadingState } = useBallProgramQuery({ eventId, eventVersionId })
   const event = data?.event
   const slides = useEventSlides(event?.program)
 

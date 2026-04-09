@@ -6,9 +6,16 @@ import { Dropdown, DropdownContainer } from 'libraries/overlays'
 
 import { DropdownButton } from './DropdownButton'
 import { Menu, MenuItem, renderMenuItems, toMenuItemProps } from './Menu'
+import { ReadOnlySelect } from './ReadOnlySelect'
 import { acceptNulls, preventDownshiftDefaultWhen, useItems } from './utils'
 
 export default function RegularSelect<T>(props: SelectorProps<T>) {
+  return props.readOnly
+    ? <ReadOnlySelect {...props} />
+    : <InteractiveRegularSelect {...props} />
+}
+
+function InteractiveRegularSelect<T>(props: SelectorProps<T>) {
   'use no memo'
   const {
     itemToString = String, categoryTitleRenderer, noResultsText,

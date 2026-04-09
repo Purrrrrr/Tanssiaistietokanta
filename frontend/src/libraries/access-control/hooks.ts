@@ -32,7 +32,6 @@ export function useRights(rights: RightsList, context?: RightQueryContext): bool
     const id = idRef.current
     Promise.all(parsedRights.map(hasRight)).then(newestResult => {
       if (id !== idRef.current) return
-      console.log('Loaded rights result:', { query: parsedRights, result: newestResult })
       setResult(newestResult)
     })
   }, [parsedRights, hasRight])

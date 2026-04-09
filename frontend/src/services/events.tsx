@@ -4,6 +4,7 @@ import { backendQueryHook, entityCreateHook, entityDeleteHook, entityListQueryHo
 
 import './dances'
 import './workshops'
+import './eventVolunteerAssignments'
 
 export * from './slideStyles'
 
@@ -59,6 +60,7 @@ setupServiceUpdateFragment(
           danceId
           dance {
             _id
+            _versionId
             name
             duration
             description
@@ -81,7 +83,7 @@ setupServiceUpdateFragment(
           slideStyleId
           danceId
           dance {
-            _id, name
+            _id, _versionId, name
           }
           showInLists
         }
@@ -160,6 +162,7 @@ query getEvent($id: ID!, $versionId: ID) {
           danceId
           dance {
             _id
+            _versionId
             name
             duration
             description
@@ -182,7 +185,7 @@ query getEvent($id: ID!, $versionId: ID) {
           slideStyleId
           danceId
           dance {
-            _id, name
+            _id, _versionId, name
           }
           showInLists
         }
@@ -213,7 +216,7 @@ query getEvent($id: ID!, $versionId: ID) {
         durationInMinutes
         abbreviation
         dances {
-          _id, name
+          _id, _versionId, name
         }
       }
     }
@@ -329,6 +332,7 @@ mutation patchEventProgram($id: ID!, $program: JSONPatch!) {
           danceId
           dance {
             _id
+            _versionId
             name
             duration
             description
@@ -351,7 +355,7 @@ mutation patchEventProgram($id: ID!, $program: JSONPatch!) {
           slideStyleId
           danceId
           dance {
-            _id, name
+            _id, _versionId, name
           }
           showInLists
         }
@@ -382,7 +386,7 @@ mutation patchEventProgram($id: ID!, $program: JSONPatch!) {
         durationInMinutes
         abbreviation
         dances {
-          _id, name
+          _id, _versionId, name
         }
       }
     }

@@ -8,9 +8,16 @@ import { CssClass } from 'libraries/ui'
 
 import { DropdownButton } from './DropdownButton'
 import { Menu, MenuItem, renderMenuItems, toMenuItemProps } from './Menu'
+import { ReadOnlySelect } from './ReadOnlySelect'
 import { acceptNulls, preventDownshiftDefaultWhen, useFilteredItems } from './utils'
 
 export default function FilterableSelect<T>(props: SelectorProps<T>) {
+  return props.readOnly
+    ? <ReadOnlySelect {...props} />
+    : <InteractiveFilterableSelect {...props} />
+}
+
+function InteractiveFilterableSelect<T>(props: SelectorProps<T>) {
   'use no memo'
   const {
     itemToString = String, categoryTitleRenderer, noResultsText,

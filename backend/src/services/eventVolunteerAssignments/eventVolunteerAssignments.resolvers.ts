@@ -81,7 +81,7 @@ export default (app: Application) => {
         }
         if (workshopId) {
           query.workshopId = workshopId
-          if (eventVersionId) {
+          if (workshopVersionId) {
             // Trigger searching of versions of event volunteer assignments by event version id
             await workshopsService.get(workshopId, { query: { _versionId: workshopVersionId } })
           }

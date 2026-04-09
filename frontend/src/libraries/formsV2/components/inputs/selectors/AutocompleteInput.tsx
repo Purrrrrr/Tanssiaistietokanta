@@ -24,6 +24,29 @@ interface InputProps extends Omit<UseComboboxGetInputPropsOptions, 'onChange'> {
 }
 
 export default function AutocompleteInput<T>(props: AutocompleteInputProps<T>) {
+  return props.readOnly
+    ? <ReadOnlyAutocompleteInput {...props} />
+    : <InteractiveAutocompleteInput {...props} />
+}
+
+function ReadOnlyAutocompleteInput<T>({
+  itemToString = String, value = null, placeholder = '',
+  containerClassname, inline, inputRenderer,
+}: AutocompleteInputProps<T>) {
+  const inputProps: InputProps = {
+    placeholder,
+    readOnly: true,
+    value: value ? itemToString(value) : '',
+  }
+  return <DropdownContainer className={containerClassname ?? (inline ? undefined : 'grow f-full')}>
+    {inputRenderer
+      ? inputRenderer(inputProps)
+      : <input className={CssClass.input + ' w-full'} {...inputProps} />
+    }
+  </DropdownContainer>
+}
+
+function InteractiveAutocompleteInput<T>(props: AutocompleteInputProps<T>) {
   'use no memo'
   const {
     itemToString = String, emptyInputByDefault, categoryTitleRenderer, noResultsText, inputRenderer,

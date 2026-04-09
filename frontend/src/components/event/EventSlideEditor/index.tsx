@@ -236,15 +236,15 @@ const emptyDance: Dance = {
   wikipageName: null,
 }
 
-function DanceEditor({ id, initialDance }: { id: string, initialDance?: Pick<Dance, '_id' | 'name' | 'wikipage' | 'wikipageName'> | null }) {
-  const result = useDance({ id })
+function DanceEditor({ id, initialDance }: { id: string, initialDance?: Pick<Dance, '_id' | '_versionId' | 'name' | 'wikipage' | 'wikipageName'> | null }) {
+  const result = useDance({ id, versionId: initialDance?._versionId })
   const dance = result.data?.dance ?? initialDance ?? emptyDance
 
   const t = useT('components.danceWikiPreview')
   const label = useT('domain.dance')
   const { formProps, state } = useDanceEditorState(dance)
 
-  return <DanceForm {...formProps} readOnly={!result.data}>
+  return <DanceForm {...formProps} readOnly={!result.data || formProps.readOnly}>
     <div className="flex flex-wrap gap-3.5 items-center mb-3">
       <H2 className=""><T msg="components.eventSlideEditor.danceTitle" /></H2>
       <SyncStatus className="top-[3px] grow" state={state} />

@@ -5,8 +5,8 @@ type BallProgramData = ReturnType<typeof useBallProgramQuery>
 export type Event = NonNullable<NonNullable<BallProgramData['data']>['event']>
 
 export const useBallProgramQuery = backendQueryHook(graphql(`
-query BallProgram($eventId: ID!) {
-  event(id: $eventId) {
+query BallProgram($eventId: ID!, $eventVersionId: ID) {
+  event(id: $eventId, versionId: $eventVersionId) {
     _id
     _versionId
     name
@@ -35,6 +35,7 @@ query BallProgram($eventId: ID!) {
           danceId
           dance {
             _id
+            _versionId
             name
             description
             duration
@@ -72,6 +73,7 @@ query BallProgram($eventId: ID!) {
           danceId
           dance {
             _id
+            _versionId
             name
             description
             duration

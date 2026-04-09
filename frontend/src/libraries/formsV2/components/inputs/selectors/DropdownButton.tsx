@@ -8,9 +8,9 @@ import { DoubleCaretVertical } from 'libraries/ui/icons'
 import { useFormTranslation } from '../../../localization'
 
 export function DropdownButton<T>(
-  props: { selectorProps: SelectorProps<T>, buttonProps: DropdownButtonDownshiftProps },
+  props: { selectorProps: SelectorProps<T>, buttonProps?: Partial<DropdownButtonDownshiftProps> },
 ): ReactNode {
-  const { buttonProps, selectorProps } = props
+  const { buttonProps = {}, selectorProps } = props
   const {
     'aria-label': label, readOnly,
     itemIcon, itemToString = String,
@@ -23,7 +23,7 @@ export function DropdownButton<T>(
       disabled: readOnly,
       'aria-label': ariaLabel,
       ...buttonProps,
-    })
+    } as DropdownButtonDownshiftProps)
   }
 
   return <Button

@@ -59,10 +59,10 @@ export function WorkshopEditor({ eventId, workshop: workshopInDatabase, reserved
   }
 
   const { formProps, state } = useAutosavingState<Workshop, Partial<Workshop>>(workshopInDatabase, saveWorkshop, patchStrategy.partial)
-
+  const readOnly = workshopInDatabase._versionId != null
   const addInstance = (instance: Instance) => formProps.onChange(w => ({ ...w, instances: [...w.instances, instance] }), 'instances')
 
-  return <Form className="workshopEditor" {...formProps} readOnly={workshopInDatabase._versionId != null}>
+  return <Form className="workshopEditor" {...formProps} readOnly={readOnly}>
     <SyncStatus state={state} floatRight />
     <div className="flex flex-wrap gap-3.5">
       <div className="grow basis-75 max-w-[50ch]">
@@ -83,13 +83,13 @@ export function WorkshopEditor({ eventId, workshop: workshopInDatabase, reserved
         <Switch path="instanceSpecificDances" label={t('instanceSpecificDances')} />
       </div>
       <div className="grow basis-75">
-        {formProps.value.instanceSpecificDances || <DanceList instanceIndex={0} bigTitle />}
+        {formProps.value.instanceSpecificDances || <DanceList instanceIndex={0} bigTitle readOnly={readOnly} />}
         <h3 className="my-2 text-base font-bold">{t('instances')}</h3>
-        <ListField<'instances', Instance[], { beginDate: string, endDate: string }>
+        <ListField
           label={t('instances')}
           labelStyle="hidden"
           path="instances"
-          componentProps={{ beginDate, endDate }}
+          componentProps={{ beginDate, endDate, readOnly }}
           component={WorkshopInstanceEditor}
           renderConflictItem={item => item?.dances?.map(d => d.name)?.join(', ') ?? ''}
         />
@@ -138,7 +138,7 @@ function AbbreviationField({ label, path, reservedAbbreviations }) {
 }
 
 function WorkshopInstanceEditor(
-  { itemIndex, dragHandle, beginDate, endDate }: { itemIndex: number, dragHandle: DragHandle, beginDate: string, endDate: string },
+  { itemIndex, dragHandle, beginDate, endDate, readOnly }: { itemIndex: number, dragHandle: DragHandle, beginDate: string, endDate: string, readOnly: boolean },
 ) {
   const t = useT('components.workshopEditor')
   const instances = useValueAt('instances')
@@ -160,11 +160,11 @@ function WorkshopInstanceEditor(
       </div>
     </div>
     {showDances && <Input path={`instances.${itemIndex}.abbreviation`} label={t('instanceAbbreviation')} helperText={t('instanceAbbreviationHelp')} />}
-    {showDances && <DanceList instanceIndex={itemIndex} />}
+    {showDances && <DanceList instanceIndex={itemIndex} readOnly={readOnly} />}
   </div>
 }
 
-function DanceList({ instanceIndex, bigTitle }: { instanceIndex: number, bigTitle?: boolean }) {
+function DanceList({ instanceIndex, bigTitle, readOnly }: { instanceIndex: number, bigTitle?: boolean, readOnly: boolean }) {
   const t = useT('components.workshopEditor')
   const dances = useValueAt(`instances.${instanceIndex}.dances`)
   return <>
@@ -177,7 +177,7 @@ function DanceList({ instanceIndex, bigTitle }: { instanceIndex: number, bigTitl
       renderConflictItem={item => item.name}
     />
     {!dances?.length && <p className={`my-2 ${ColorClass.textMuted}`}>{t('noDances')}</p>}
-    <AddDanceChooser instance={instanceIndex} />
+    {!readOnly && <AddDanceChooser instance={instanceIndex} />}
   </>
 }
 
