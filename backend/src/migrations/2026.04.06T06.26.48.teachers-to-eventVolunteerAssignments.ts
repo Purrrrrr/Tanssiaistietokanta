@@ -77,7 +77,7 @@ export const up: MigrationFn = async params => {
     let prevAssistantKeys = new Set<string>()
 
     for (const version of versions) {
-      const { eventId, teacherIds = [], assistantTeacherIds = [], _updatedAt } = version
+      const { eventId, teacherIds = [], assistantTeacherIds = [], _updatedAt, _recordDeletedAt } = version
 
       const teacherKeys = new Set(teacherIds.map(id => `${id}:${teacherRole._id}`))
       const assistantKeys = new Set(assistantTeacherIds.map(id => `${id}:${assistantTeacherRole._id}`))
@@ -119,7 +119,7 @@ export const up: MigrationFn = async params => {
 
       // Handle removed assignments
       for (const key of prevKeys) {
-        if (!currentKeys.has(key)) {
+        if (_recordDeletedAt || !currentKeys.has(key)) {
           const active = activeAssignments.get(key)
           if (active) {
             await assignmentsVersionModel.updateAsync(
