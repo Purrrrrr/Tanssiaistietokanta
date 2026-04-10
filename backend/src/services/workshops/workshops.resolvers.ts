@@ -1,11 +1,9 @@
-import { Id } from '@feathersjs/feathers/lib'
-import { Application } from '../../declarations'
-import { WorkshopsParams } from './workshops.class'
+import { Application, Resolvers } from '../../declarations'
+import { removeNulls } from '../../utils/common-types'
 
-export default (app: Application) => {
+export default (app: Application): Resolvers => {
   const eventService = app.service('events')
   const danceService = app.service('dances')
-  const volunteerService = app.service('volunteers')
   function getDance(id: string) {
     return id ? danceService.get(id) : null
   }
@@ -13,23 +11,15 @@ export default (app: Application) => {
 
   return {
     Workshop: {
-      danceIds: (obj: { instances: { danceIds: string[] }[] }) => obj.instances.flatMap(i => i.danceIds ?? []),
-      dances: (obj: { instances: { danceIds: string[] }[] }) => obj.instances.flatMap(i => i.danceIds ?? []).map(getDance),
-      event: (obj: { eventId: Id }) => eventService.get(obj.eventId),
-      teachers: (obj: { teacherIds?: string[] }) =>
-        Promise.all((obj.teacherIds ?? []).map(id =>
-          volunteerService.get(id, { query: { $select: ['_id', 'name'] } }),
-        )),
-      assistant_teachers: (obj: { assistantTeacherIds?: string[] }) =>
-        Promise.all((obj.assistantTeacherIds ?? []).map(id =>
-          volunteerService.get(id, { query: { $select: ['_id', 'name'] } }),
-        )),
+      danceIds: workshop => workshop.instances.flatMap(i => i.danceIds ?? []),
+      dances: workshop => workshop.instances.flatMap(i => i.danceIds ?? []).map(getDance).filter(dance => dance !== null),
+      event: workshop => eventService.get(workshop.eventId),
     },
     WorkshopInstance: {
-      dances: (obj: { danceIds: string[] }) => obj.danceIds?.map(getDance),
+      dances: workshop => workshop.danceIds?.map(getDance).filter(dance => dance !== null) ?? [],
     },
     Query: {
-      workshop: async (_: any, { id, eventVersionId }: any, params: WorkshopsParams | undefined) => {
+      workshop: async (_, { id, eventVersionId }, params) => {
         if (eventVersionId) {
           // Trigger searching of versions of workshops by event version id
           await eventService.find({ query: { _versionId: eventVersionId } })
@@ -38,9 +28,28 @@ export default (app: Application) => {
       },
     },
     Mutation: {
-      createWorkshop: (_: any, { eventId, workshop }: any, params: WorkshopsParams | undefined) => service.create({ eventId, ...workshop }, params),
-      patchWorkshop: (_: any, { id, workshop }: any, params: WorkshopsParams | undefined) => service.patch(id, workshop, params),
-      deleteWorkshop: (_: any, { id }: any, params: WorkshopsParams | undefined) => service.remove(id, params),
+      createWorkshop: (_, { eventId, workshop }, params) => {
+        const { instances, ...workshopData } = workshop
+        return service.create({
+          eventId,
+          ...removeNulls(workshopData),
+          instances: instances?.map(instance => removeNulls(instance)),
+        }, params)
+      },
+      patchWorkshop: (_, { id, workshop }, params) => {
+        const { instances, ...workshopData } = workshop
+        const patch = {
+          ...removeNulls(workshopData),
+          ...(instances
+            ? {
+              instances: instances.map(({ danceIds = null, ...instance }) => ({ danceIds, ...removeNulls(instance) })),
+            }
+            : {}
+          ),
+        }
+        return service.patch(id, patch, params)
+      },
+      deleteWorkshop: (_, { id }, params) => service.remove(id, params),
     },
   }
 }

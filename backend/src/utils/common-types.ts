@@ -1,4 +1,4 @@
-import type { ObjectPropertyKeys, TObject, TOmit, TSchema } from '@feathersjs/typebox'
+import type { ObjectPropertyKeys, TNull, TObject, TOmit, TPartial, TProperties, TSchema, TUnion } from '@feathersjs/typebox'
 import { Kind, Type } from '@feathersjs/typebox'
 
 export function Name() {
@@ -19,6 +19,21 @@ export function Nullable<T extends TSchema>(t: T) {
 }
 export function NullableString() {
   return Type.Union([Type.Null(), Type.String()])
+}
+
+export function NullablePartial<T extends TProperties>(schema: TObject<T>): TPartial<TObject<{
+  [K in keyof T]: TUnion<[T[K], TNull]>
+}>> {
+  const nullableProps: Record<string, unknown> = {}
+
+  for (const [key, value] of Object.entries(schema.properties)) {
+    nullableProps[key] = Type.Union([value as any, Type.Null()])
+  }
+
+  return Type.Partial({
+    ...schema,
+    properties: nullableProps,
+  } as any)
 }
 
 export function Date() {
@@ -50,4 +65,12 @@ export function omitComputedPropertiesFromObject<T extends TObject>(schema: T): 
 
 function isObjectSchema(schema: TSchema): schema is TObject {
   return schema[Kind] === 'Object'
+}
+
+export function removeNulls<T extends object>(obj: T): ExcludeNulls<T> {
+  return Object.fromEntries(Object.entries(obj).filter(([_, v]) => v != null)) as ExcludeNulls<T>
+}
+
+type ExcludeNulls<T extends object> = {
+  [K in keyof T]: Exclude<T[K], null>
 }

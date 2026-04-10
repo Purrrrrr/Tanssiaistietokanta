@@ -1,8 +1,9 @@
-import { Application } from '../../declarations'
-import { EventVolunteerAssignments, EventVolunteerAssignmentsParams } from './eventVolunteerAssignments.class'
-import { versionHistoryFieldResolvers, versionHistoryResolver } from '../../utils/version-history-resolvers'
+import { Application, Resolvers } from '../../declarations'
+import { EventVolunteerAssignments } from './eventVolunteerAssignments.class'
+import { eventsSchema } from '../events/events.schema'
+import { removeNulls } from '../../utils/common-types'
 
-export default (app: Application) => {
+export default (app: Application): Resolvers => {
   const service = app.service('eventVolunteerAssignments')
   const eventsService = app.service('events')
   const workshopsService = app.service('workshops')
@@ -33,68 +34,51 @@ export default (app: Application) => {
 
   return {
     EventVolunteerAssignment: {
-      versionHistory: versionHistoryResolver(service),
-      event: (assignment: { eventId: string }) => eventsService.get(assignment.eventId),
-      workshop: (assignment: { workshopId: string | null }) =>
-        assignment.workshopId ? workshopsService.get(assignment.workshopId) : null,
-      role: (assignment: { roleId: string }) => eventRolesService.get(assignment.roleId),
-      volunteer: (assignment: { volunteerId: string }) => volunteerService.get(assignment.volunteerId),
+      event: (assignment, _, __, ctx) => eventsService.get(assignment.eventId),
+      workshop: (assignment) => assignment.workshopId ? workshopsService.get(assignment.workshopId) : null,
+      role: (assignment) => eventRolesService.get(assignment.roleId),
+      volunteer: (assignment) => volunteerService.get(assignment.volunteerId),
     },
     Event: {
-      volunteerAssignments: async (event: { _id: string, _versionId?: string | null, _updatedAt: string }, _: unknown, params: EventVolunteerAssignmentsParams | undefined) => {
+      volunteerAssignments: async (event, _args, params) => {
         const assignments = await service.find({
           ...params,
-          query: { ...params?.query, eventId: event._id, workshopId: null },
+          query: { eventId: event._id, workshopId: null },
         })
         return groupByRole(assignments, { _eventId: event._id, _workshopId: null })
       },
     },
     Workshop: {
-      volunteerAssignments: (workshop: { eventId: string, _id: string }, _: unknown, params: EventVolunteerAssignmentsParams | undefined) =>
-        service.find({ ...params, query: { ...params?.query, workshopId: workshop._id } })
+      volunteerAssignments: (workshop, _args, params) =>
+        service.find({ ...params, query: { workshopId: workshop._id } })
           .then(assignments =>
             groupByRole(assignments, { _eventId: workshop.eventId, _workshopId: workshop._id })),
     },
-    VersionHistory: versionHistoryFieldResolvers(),
     Query: {
-      eventVolunteerAssignment: (_: any, { id, versionId }: any, params: EventVolunteerAssignmentsParams | undefined) => versionId
+      eventVolunteerAssignment: (_, { id, versionId }, params) => versionId
         ? service.get(id, { ...params, query: { _versionId: versionId } })
         : service.get(id, params),
       eventVolunteerAssignments: async (
-        _: any,
-        { eventId, eventVersionId, workshopId, workshopVersionId, roleId }: {
-          eventId?: string
-          eventVersionId?: string
-          workshopId?: string
-          workshopVersionId?: string
-          roleId?: string
-        },
-        params: EventVolunteerAssignmentsParams | undefined,
+        _,
+        { eventVersionId, workshopVersionId, ...query },
+        params,
       ) => {
-        const query: Record<string, string> = {}
-        if (eventId) {
-          query.eventId = eventId
-          if (eventVersionId) {
-            // Trigger searching of versions of event volunteer assignments by event version id
-            await eventsService.get(eventId, { query: { _versionId: eventVersionId } })
-          }
+        if (eventVersionId) {
+          // Trigger searching of versions of event volunteer assignments by event version id
+          await eventsService.find({ query: { _versionId: eventVersionId } })
         }
-        if (workshopId) {
-          query.workshopId = workshopId
-          if (workshopVersionId) {
-            // Trigger searching of versions of event volunteer assignments by event version id
-            await workshopsService.get(workshopId, { query: { _versionId: workshopVersionId } })
-          }
+        if (workshopVersionId) {
+          // Trigger searching of versions of event volunteer assignments by event version id
+          await workshopsService.find({ query: { _versionId: workshopVersionId } })
         }
-        if (roleId) query.roleId = roleId
-        return service.find({ ...params, query: { ...params?.query, ...query } })
+        return service.find({ ...params, query: removeNulls(query) })
       },
     },
     Mutation: {
-      createEventVolunteerAssignment: (_: any, { eventVolunteerAssignment }: any, params: EventVolunteerAssignmentsParams | undefined) => service.create(eventVolunteerAssignment, params),
-      // modifyEventVolunteerAssignment: (_: any, { id, eventVolunteerAssignment }: any, params: EventVolunteerAssignmentsParams | undefined) => service.update(id, eventVolunteerAssignment, params),
-      // patchEventVolunteerAssignment: (_: any, { id, eventVolunteerAssignment }: any, params: EventVolunteerAssignmentsParams | undefined) => service.patch(id, eventVolunteerAssignment, params),
-      deleteEventVolunteerAssignment: (_: any, { id }: any, params: EventVolunteerAssignmentsParams | undefined) => service.remove(id, params),
+      createEventVolunteerAssignment: (_, { eventVolunteerAssignment }, params) => service.create(eventVolunteerAssignment, params),
+      // modifyEventVolunteerAssignment: (_, { id, eventVolunteerAssignment }, params) => service.update(id, eventVolunteerAssignment, params),
+      // patchEventVolunteerAssignment: (_, { id, eventVolunteerAssignment }, params) => service.patch(id, eventVolunteerAssignment, params),
+      deleteEventVolunteerAssignment: (_, { id }, params) => service.remove(id, params),
     },
   }
 }

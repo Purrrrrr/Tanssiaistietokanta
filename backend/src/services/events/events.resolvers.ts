@@ -1,9 +1,8 @@
 import * as L from 'partial.lenses'
-import { Application } from '../../declarations'
-import { EventsParams } from './events.class'
-import { versionHistoryFieldResolvers, versionHistoryResolver } from '../../utils/version-history-resolvers'
+import { Application, Resolvers } from '../../declarations'
+import { JSONPatch } from '../../hooks/merge-json-patch'
 
-export default (app: Application) => {
+export default (app: Application): Resolvers => {
   const workshopService = app.service('workshops')
   const service = app.service('events')
 
@@ -11,31 +10,25 @@ export default (app: Application) => {
 
   return {
     Event: {
-      workshops: (obj: {
-        _id: string
-        _versionId?: string
-        _updatedAt: string
-      }) => workshopService.find({ query: { eventId: obj._id } }),
-      program: (event: { name?: any, program?: any }) => {
+      workshops: (event) => workshopService.find({ query: { eventId: event._id } }),
+      program: (event) => {
         const { program } = event
         if (!program.introductions.title) return L.set(['introductions', 'title'], event.name, program)
         return program
       },
-      versionHistory: versionHistoryResolver(service),
     },
-    VersionHistory: versionHistoryFieldResolvers(),
     Query: {
-      events: (_: any, __: any, params: EventsParams | undefined) => service.find({ ...params, query: { $sort } }),
-      event: (_: any, { id, versionId }: any, params: EventsParams | undefined) => versionId
+      events: (_, __, params) => service.find({ ...params, query: { $sort } }),
+      event: (_, { id, versionId }, params) => versionId
         ? service.get(id, { ...params, query: { _versionId: versionId } })
         : service.get(id, params),
     },
     Mutation: {
-      createEvent: (_: any, { event }: any, params: EventsParams | undefined) => service.create(event, params),
-      patchEvent: (_: any, { id, event }: any, params: EventsParams | undefined) =>
-        service.patch(id, event, { ...params, jsonPatch: true }),
-      patchEventProgram: async (_: any, { id, program }: any, params: EventsParams | undefined) => {
-        const data = program.map(({ path, ...rest }: any) => {
+      createEvent: (_, { event }, params) => service.create(event, params),
+      patchEvent: (_, { id, event }, params) =>
+        service.patch(id, event as JSONPatch, { ...params, jsonPatch: true }),
+      patchEventProgram: async (_, { id, program }, params) => {
+        const data = (program as JSONPatch).map(({ path, ...rest }) => {
           const line = { ...rest, path: '/program' + path }
           if ('from' in line) {
             line.from = '/program' + line.from
@@ -44,7 +37,7 @@ export default (app: Application) => {
         })
         return service.patch(id, data, { ...params, jsonPatch: true })
       },
-      deleteEvent: (_: any, { id }: any, params: EventsParams | undefined) => service.remove(id, params),
+      deleteEvent: (_, { id }, params) => service.remove(id, params),
     },
   }
 }

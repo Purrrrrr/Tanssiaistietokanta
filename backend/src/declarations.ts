@@ -1,9 +1,13 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/typescript.html
-import { HookContext as FeathersHookContext, NextFunction } from '@feathersjs/feathers'
+import { HookContext as FeathersHookContext, NextFunction, Params } from '@feathersjs/feathers'
 import { Application as FeathersApplication } from '@feathersjs/koa'
 import { ApplicationConfiguration } from './configuration'
 
 import { User } from './services/users/users'
+
+import { Resolvers as R } from './graphql-types'
+
+export type Resolvers = R<Omit<Params<{}>, 'query'>>
 
 export { NextFunction }
 

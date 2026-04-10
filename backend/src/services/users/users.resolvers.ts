@@ -1,7 +1,7 @@
-import { Application } from '../../declarations'
+import { Application, Resolvers } from '../../declarations'
 import { UserParams } from './users.class'
 
-export default (app: Application) => {
+export default (app: Application): Resolvers => {
   const service = app.service('users')
 
   return {

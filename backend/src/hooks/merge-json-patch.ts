@@ -1,8 +1,10 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/hook.html
 import type { HookContext } from '../declarations'
-import type { NullableId, ServiceInterface } from '@feathersjs/feathers'
+import type { Id, ServiceInterface } from '@feathersjs/feathers'
 import { applyPatch, Operation } from 'fast-json-patch'
 import { AddAccessControlData } from '../services/access/hooks'
+
+export type JSONPatch = Operation[]
 
 export const mergeJsonPatch = (cleanup?: (data: unknown) => unknown) => {
   return async (context: HookContext) => {
@@ -36,10 +38,10 @@ export function getPatched<T>(original: T, patch: Operation[]): T {
   return applyPatch(original, patch ?? [], true, false).newDocument
 }
 
-export type SupportsJsonPatch<S extends ServiceInterface> = S & {
-  patch: S['patch'] extends (...args: any[]) => unknown ? (
-    (
-      (id: NullableId, data: Operation[], _params?: Parameters<S['patch']>[2] & { jsonPatch: true }) => ReturnType<S['patch']>)
-    )
+export type SupportsJsonPatch<S extends { patch?: (...args: any[]) => any }> = S & {
+  patch: S extends ServiceInterface<infer Result, any, infer Params>
+  ? (
+    (id: Id, data: Operation[], params?: Params & { jsonPatch: true }) => Promise<Result>
+  )
   : undefined
 }

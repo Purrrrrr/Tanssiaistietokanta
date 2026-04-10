@@ -34,6 +34,7 @@ export const fileSchema = Type.Object(
 )
 
 export type File = Static<typeof fileSchema> & { buffer?: Buffer | Stream }
+export type FileDB = File // This is for graphQL resolver types so that no conflict occur with the File graphQL type
 export const fileValidator = getValidator(fileSchema, dataValidator)
 export const fileResolver = resolve<File, HookContext<FileService>>({})
 

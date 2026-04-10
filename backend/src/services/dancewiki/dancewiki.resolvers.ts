@@ -1,12 +1,11 @@
-import { Application } from '../../declarations'
-import { DancewikiParams } from './dancewiki.class'
+import { Application, Resolvers } from '../../declarations'
 
-export default (app: Application) => {
+export default (app: Application): Resolvers => {
   const service = app.service('dancewiki')
 
   return {
     Query: {
-      searchWikiTitles: async (_: any, { search, maxSpamScore}: { search: string, maxSpamScore?: number }) => {
+      searchWikiTitles: async (_, { search, maxSpamScore }) => {
         const entries = await service.find({
           query: {
             $sort: { name: 1 },
@@ -21,7 +20,7 @@ export default (app: Application) => {
         const searchLower = search.toLowerCase()
         return names.filter(name => name.toLowerCase().includes(searchLower))
       },
-      searchWiki: async (_: any, { search, maxSpamScore}: { search: string, maxSpamScore?: number }) => {
+      searchWiki: async (_, { search, maxSpamScore }) => {
         const entries = await service.find({
           query: {
             $sort: { name: 1 },
@@ -34,10 +33,10 @@ export default (app: Application) => {
         const searchLower = search.toLowerCase()
         return entries.filter(entry => entry.name.toLowerCase().includes(searchLower))
       },
-      wikipage: async (_: any, { name }: { name: string }) => service.get(name, { noThrowOnNotFound: true }),
+      wikipage: async (_, { name }) => service.get(name, { noThrowOnNotFound: true }),
     },
     Mutation: {
-      fetchWikipage: (_: any, { name }: any, params: DancewikiParams | undefined) => service.update(name, { name }, params),
+      fetchWikipage: (_, { name }, params) => service.update(name, { name }, params),
     },
   }
 }

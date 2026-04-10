@@ -6,7 +6,7 @@ import type { Static } from '@feathersjs/typebox'
 import type { HookContext } from '../../declarations'
 import { dataValidator, queryValidator } from '../../validators'
 import { castAfterValidating } from '../../utils/cast-after-validating'
-import { computedProperties, SlideStyleId, Id, Name, Nullable } from '../../utils/common-types'
+import { computedProperties, SlideStyleId, Id, Name, Nullable, NullablePartial } from '../../utils/common-types'
 
 // Main data model schema
 export const dancesSchema = Type.Object(
@@ -57,17 +57,17 @@ export const dancesResolver = resolve<Dances, HookContext>({
 export const dancesExternalResolver = resolve<Dances, HookContext>({})
 
 // Schema for creating new entries
-export const dancesPartialDataSchema = Type.Intersect(
+export const dancesDataSchema = Type.Intersect(
   [
     Type.Pick(dancesSchema, ['name']),
-    Type.Partial(Type.Omit(dancesSchema, [...computedProperties, 'name'])),
+    NullablePartial(Type.Omit(dancesSchema, [...computedProperties, 'name'])),
   ], {
     $id: 'DancesData',
   },
 )
-export const dancesDataSchema = Type.Omit(dancesSchema, ['_id', ...computedProperties])
+export const fullDancesDataSchema = Type.Omit(dancesSchema, ['_id', ...computedProperties])
 export type DancesData = Static<typeof dancesDataSchema>
-export const dancesDataValidator = castAfterValidating(dancesDataSchema, getValidator(dancesPartialDataSchema, dataValidator))
+export const dancesDataValidator = castAfterValidating(fullDancesDataSchema, getValidator(dancesDataSchema, dataValidator))
 export const dancesDataResolver = resolve<Dances, HookContext>({})
 
 // Schema for updating existing entries

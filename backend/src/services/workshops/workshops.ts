@@ -14,7 +14,7 @@ import {
 } from './workshops.schema'
 
 import type { Application } from '../../declarations'
-import type { WorkshopInstance } from './workshops.schema'
+import type { WorkshopInstance, Workshops } from './workshops.schema'
 import { WorkshopsService, getOptions } from './workshops.class'
 import { workshopsPath, workshopsMethods } from './workshops.shared'
 import { defaultChannels, withoutCurrentConnection } from '../../utils/defaultChannels'
@@ -83,7 +83,7 @@ export const workshops = (app: Application) => {
     error: {
       all: [],
     },
-  }).publish((data, context) => {
+  }).publish((data: Workshops | Workshops[], context) => {
     const eventIds = getFromData(data, item => item.eventId)
     // The dependency graph is not updated yet. We can get our previous dances from there in case some were removed
     const previousDanceIds = getDependenciesFor('workshops', data, 'uses', 'dances')

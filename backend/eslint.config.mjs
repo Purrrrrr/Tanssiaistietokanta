@@ -30,7 +30,7 @@ const importSortGroups = [
 ]
 
 export default tseslint.config(
-  { ignores: ['lib', 'node_modules', 'public'] },
+  { ignores: ['lib', 'node_modules', 'public', 'src/graphql-types.ts'] },
   eslint.configs.recommended,
   ...tseslint.configs.strict,
   ...tseslint.configs.stylisticTypeChecked,

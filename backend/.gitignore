@@ -2,3 +2,4 @@ data/
 logs/
 lib/
 data-test/
+src/graphql-types.ts

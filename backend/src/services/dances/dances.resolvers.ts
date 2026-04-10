@@ -1,16 +1,15 @@
-import { Application } from '../../declarations'
-import { DancesParams } from './dances.class'
+import { Application, Resolvers } from '../../declarations'
 import { getDependencyLinks } from '../../internal-services/dependencies'
 
 import type { Dances } from './dances.schema'
 import type { Events } from '../events/events.schema'
-import { versionHistoryFieldResolvers, versionHistoryResolver } from '../../utils/version-history-resolvers'
 import { uniq } from 'ramda'
 import { WorkshopsService } from '../workshops/workshops.class'
 import { DancewikiService } from '../dancewiki/dancewiki.class'
 import { SkipAccessControl } from '../access/hooks'
+import { removeNulls } from '../../utils/common-types'
 
-export async function findTeachedIn(workshopService: WorkshopsService, danceId: string, eventId: string) {
+export async function findTeachedIn(workshopService: WorkshopsService, danceId: string, eventId?: string | null) {
   const workshops = await workshopService.find({
     query: eventId ?
       { 'instances.danceIds': danceId, eventId } :
@@ -37,7 +36,7 @@ export function findWikipage(wikiService: DancewikiService, dance: Dances) {
   return wikiService.get(name, { noThrowOnNotFound: true })
 }
 
-export default (app: Application) => {
+export default (app: Application): Resolvers => {
   const service = app.service('dances')
   const workshopService = app.service('workshops')
   const eventService = app.service('events')
@@ -58,25 +57,26 @@ export default (app: Application) => {
 
   return {
     Dance: {
-      teachedIn: (dance: { _id: string }, { eventId}: { eventId: string }) =>
+      teachedIn: (dance, { eventId }) =>
         findTeachedIn(workshopService, dance._id, eventId),
       events: findEvents,
-      versionHistory: versionHistoryResolver(service),
-      wikipage: (dance: Dances) => findWikipage(wikiService, dance),
+      wikipage: (dance) => findWikipage(wikiService, dance),
     },
-    VersionHistory: versionHistoryFieldResolvers(),
     Query: {
-      dance: (_: any, { id, versionId }: any, params: DancesParams | undefined) => versionId
+      dance: (_, { id, versionId }, params) => versionId
         ? service.get(id, { ...params, query: { _versionId: versionId } })
         : service.get(id, params),
-      dances: (_: any, __: any, params: DancesParams | undefined) => service.find(params),
-      danceCategories: async (_: any, __: any, params: DancesParams | undefined) =>
+      dances: (_, __, params) => service.find(params),
+      danceCategories: async (_, __, params) =>
         uniq((await service.find(params)).map(dance => dance.category)).filter(Boolean).sort(),
     },
     Mutation: {
-      createDance: (_: any, { dance }: any, params: DancesParams | undefined) => service.create(dance, params),
-      patchDance: (_: any, { id, dance }: any, params: DancesParams | undefined) => service.patch(id, dance, params),
-      deleteDance: (_: any, { id }: any, params: DancesParams | undefined) => service.remove(id, params),
+      createDance: (_, { dance }, params) => service.create(dance, params),
+      patchDance: (_, { id, dance }, params) => {
+        const { wikipageName, ...rest } = dance
+        return service.patch(id, { wikipageName, ...removeNulls(rest) }, params)
+      },
+      deleteDance: (_, { id }, params) => service.remove(id, params),
     },
   }
 }

@@ -66,12 +66,16 @@ export class NeDBService<Result extends BaseRecord, Data, ServiceParams extends 
     return this.mapToResult(record)
   }
 
+  async update(id: Id, data: Data, _params?: ServiceParams): Promise<Result>
+  async update(id: null, data: Data, _params?: ServiceParams): Promise<Result[]>
   async update(id: NullableId, data: Data, _params?: ServiceParams): Promise<Result | Result[]> {
     return this.updateItems(id, _params, async original =>
       this.currentService.update(original._id, await this.mapData(original, data)),
     )
   }
 
+  async patch(id: Id, data: Patch, _params?: ServiceParams): Promise<Result>
+  async patch(id: null, data: Patch, _params?: ServiceParams): Promise<Result[]>
   async patch(id: NullableId, data: Patch, _params?: ServiceParams): Promise<Result | Result[]> {
     if (isEmptyObject(data)) {
       return this.get(id as Id, _params)
@@ -95,6 +99,8 @@ export class NeDBService<Result extends BaseRecord, Data, ServiceParams extends 
     })
   }
 
+  async remove(id: Id, _params?: ServiceParams): Promise<Result>
+  async remove(id: null, _params?: ServiceParams): Promise<Result[]>
   async remove(id: NullableId, _params?: ServiceParams): Promise<Result | Result[]> {
     return mapAsync(
       await this.currentService.remove(id, this.mapParams(_params)),

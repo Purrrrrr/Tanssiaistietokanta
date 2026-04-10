@@ -1,8 +1,7 @@
-import { Application } from '../../declarations'
-import { EventVolunteersParams } from './eventVolunteers.class'
-import { versionHistoryFieldResolvers, versionHistoryResolver } from '../../utils/version-history-resolvers'
+import { Application, Resolvers } from '../../declarations'
+import { removeNulls } from '../../utils/common-types'
 
-export default (app: Application) => {
+export default (app: Application): Resolvers => {
   const service = app.service('eventVolunteers')
   const volunteerService = app.service('volunteers')
   const eventRolesService = app.service('eventRoles')
@@ -10,17 +9,15 @@ export default (app: Application) => {
 
   return {
     EventVolunteer: {
-      versionHistory: versionHistoryResolver(service),
       volunteer: (eventVolunteer: { volunteerId: string }) => volunteerService.get(eventVolunteer.volunteerId),
       interestedIn: (eventVolunteer: { interestedIn: string[] }) =>
         Promise.all(eventVolunteer.interestedIn.map(id => eventRolesService.get(id))),
     },
-    VersionHistory: versionHistoryFieldResolvers(),
     Query: {
-      eventVolunteer: (_: any, { id, versionId }: any, params: EventVolunteersParams | undefined) => versionId
+      eventVolunteer: (_, { id, versionId }, params) => versionId
         ? service.get(id, { ...params, query: { _versionId: versionId } })
         : service.get(id, params),
-      eventVolunteers: async (_: any, { eventId, eventVersionId, volunteerId }: { eventId?: string, eventVersionId?: string, volunteerId?: string }, params: EventVolunteersParams | undefined) => {
+      eventVolunteers: async (_, { eventId, eventVersionId, volunteerId }, params) => {
         const query: Record<string, string> = {}
         if (eventId) {
           query.eventId = eventId
@@ -30,13 +27,13 @@ export default (app: Application) => {
           }
         }
         if (volunteerId) query.volunteerId = volunteerId
-        return service.find({ ...params, query: { ...params?.query, ...query } })
+        return service.find({ ...params, query })
       },
     },
     Mutation: {
-      createEventVolunteer: (_: any, { eventVolunteer }: any, params: EventVolunteersParams | undefined) => service.create(eventVolunteer, params),
-      patchEventVolunteer: (_: any, { id, eventVolunteer }: any, params: EventVolunteersParams | undefined) => service.patch(id, eventVolunteer, params),
-      deleteEventVolunteer: (_: any, { id }: any, params: EventVolunteersParams | undefined) => service.remove(id, params),
+      createEventVolunteer: (_, { eventVolunteer }, params) => service.create(removeNulls(eventVolunteer), params),
+      patchEventVolunteer: (_, { id, eventVolunteer }, params) => service.patch(id, removeNulls(eventVolunteer), params),
+      deleteEventVolunteer: (_, { id }, params) => service.remove(id, params),
     },
   }
 }

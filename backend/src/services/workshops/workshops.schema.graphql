@@ -10,8 +10,6 @@ type Workshop {
   name: String!
   abbreviation: String
   description: String
-  teachers: [Teacher!]!
-  assistant_teachers: [Teacher!]!
   danceIds: [ID!]!
   dances: [Dance!]!
   instances: [WorkshopInstance!]!
@@ -51,6 +49,15 @@ input WorkshopInput {
   instanceSpecificDances: Boolean!
 }
 
+input WorkshopInstanceInput {
+  _id: ID!
+  abbreviation: String
+  description: String
+  dateTime: String
+  durationInMinutes: Float
+  danceIds: [ID!]
+}
+
 input WorkshopPatchInput {
   name: String
   abbreviation: String
@@ -58,15 +65,15 @@ input WorkshopPatchInput {
   teacherIds: [ID!]
   assistantTeacherIds: [ID!]
   ocurrences: [String!]
-  instances: [WorkshopInstanceInput!]
+  instances: [WorkshopInstanceFullInput!]!
   instanceSpecificDances: Boolean
 }
 
-input WorkshopInstanceInput {
+input WorkshopInstanceFullInput {
   _id: ID!
-  abbreviation: String
-  description: String
-  dateTime: String
-  durationInMinutes: Float
+  abbreviation: String!
+  description: String!
+  dateTime: String!
+  durationInMinutes: Float!
   danceIds: [ID!]
 }

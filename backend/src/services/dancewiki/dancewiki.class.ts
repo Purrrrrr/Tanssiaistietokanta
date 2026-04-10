@@ -184,6 +184,8 @@ implements ServiceInterface<Dancewiki, DancewikiData, DancewikiParams, never> {
     }
   }
 
+  async update(id: string, data: DancewikiData, params?: ServiceParams): Promise<Dancewiki>
+  async update(id: null, data: DancewikiData, params?: ServiceParams): Promise<Dancewiki[]>
   async update(id: string | null, data: DancewikiData, params?: ServiceParams): Promise<Dancewiki | Dancewiki[]> {
     if (id) {
       return this.create({ name: id }, params)

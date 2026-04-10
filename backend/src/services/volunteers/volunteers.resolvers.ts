@@ -1,16 +1,14 @@
-import { Application } from '../../declarations'
-import { VolunteersParams } from './volunteers.class'
-import { versionHistoryFieldResolvers, versionHistoryResolver } from '../../utils/version-history-resolvers'
-import { EventVolunteerAssignmentsParams, EventVolunteerAssignmentsQuery } from '../eventVolunteerAssignments/eventVolunteerAssignments.class'
+import { Application, Resolvers } from '../../declarations'
+import { EventVolunteerAssignmentsQuery } from '../eventVolunteerAssignments/eventVolunteerAssignments.class'
+import { removeNulls } from '../../utils/common-types'
 
-export default (app: Application) => {
+export default (app: Application): Resolvers => {
   const service = app.service('volunteers')
   const assignmentsService = app.service('eventVolunteerAssignments')
 
   return {
     Volunteer: {
-      versionHistory: versionHistoryResolver(service),
-      volunteeredIn: async (volunteer: { _id: string }, { eventId }: { eventId?: string }, params: EventVolunteerAssignmentsParams | undefined) => {
+      volunteeredIn: async (volunteer, { eventId }, params) => {
         const duplicates = await service.find({ query: { duplicatedBy: volunteer._id, $select: ['_id'] } })
         const query: EventVolunteerAssignmentsQuery = {
           volunteerId: duplicates.length > 0
@@ -23,17 +21,19 @@ export default (app: Application) => {
         return assignmentsService.find({ ...params, query })
       },
     },
-    VersionHistory: versionHistoryFieldResolvers(),
     Query: {
-      volunteer: (_: any, { id, versionId }: any, params: VolunteersParams | undefined) => versionId
+      volunteer: (_, { id, versionId }, params) => versionId
         ? service.get(id, { ...params, query: { _versionId: versionId } })
         : service.get(id, params),
-      volunteers: (_: any, __: any, params: VolunteersParams | undefined) => service.find(params),
+      volunteers: (_, __, params) => service.find(params),
     },
     Mutation: {
-      createVolunteer: (_: any, { volunteer }: any, params: VolunteersParams | undefined) => service.create(volunteer, params),
-      patchVolunteer: (_: any, { id, volunteer }: any, params: VolunteersParams | undefined) => service.patch(id, volunteer, params),
-      deleteVolunteer: (_: any, { id }: any, params: VolunteersParams | undefined) => service.remove(id, params),
+      createVolunteer: (_, { volunteer }, params) => service.create(volunteer, params),
+      patchVolunteer: (_, { id, volunteer }, params) => {
+        const { duplicatedBy, ...rest } = volunteer
+        return service.patch(id, { duplicatedBy, ...removeNulls(rest) }, params)
+      },
+      deleteVolunteer: (_, { id }, params) => service.remove(id, params),
     },
   }
 }

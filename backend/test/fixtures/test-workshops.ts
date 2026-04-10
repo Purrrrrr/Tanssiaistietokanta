@@ -9,7 +9,6 @@ export const publicEventWorkshop: WorkshopFixture = {
   eventId: '',
   abbreviation: 'PEW',
   description: 'A workshop for the public event',
-  teachers: 'Test Teacher',
   instances: [],
   instanceSpecificDances: false,
 }
@@ -20,7 +19,6 @@ export const limitedEventWorkshop: WorkshopFixture = {
   eventId: '',
   abbreviation: 'LEW',
   description: 'A workshop for the limited event',
-  teachers: 'Test Teacher',
   instances: [],
   instanceSpecificDances: false,
 }

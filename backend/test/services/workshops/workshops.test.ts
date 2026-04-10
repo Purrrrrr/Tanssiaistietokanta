@@ -13,7 +13,6 @@ const workshopToCreate = {
   name: 'Temp Workshop',
   abbreviation: 'TW',
   description: 'A temporary workshop',
-  teachers: 'Someone',
   instances: [],
   instanceSpecificDances: false,
 } as Omit<WorkshopsData, 'eventId'>

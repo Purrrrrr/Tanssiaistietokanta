@@ -25,11 +25,11 @@ enum EventRoleType {
   OTHER
 }
 
-type Mutation {
-  createEventRole(eventRole: EventRoleInput!): EventRole!
-  patchEventRole(id: ID!, eventRole: EventRolePatchInput!): EventRole!
-  deleteEventRole(id: ID!): EventRole!
-}
+# type Mutation {
+#   createEventRole(eventRole: EventRoleInput!): EventRole!
+#   patchEventRole(id: ID!, eventRole: EventRolePatchInput!): EventRole!
+#   deleteEventRole(id: ID!): EventRole!
+# }
 
 input EventRoleInput {
   name: String!

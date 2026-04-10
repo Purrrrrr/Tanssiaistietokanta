@@ -29,8 +29,6 @@ export const workshopsSchema = Type.Object(
     eventId: Id(),
     abbreviation: Type.String(),
     description: Type.String(),
-    teacherIds: Type.Array(Id()),
-    assistantTeacherIds: Type.Array(Id()),
     instances: Type.Array(WorkshopInstanceSchema()),
     instanceSpecificDances: Type.Boolean(),
     _childEventVolunteerAssignmentsUpdatedAt: Type.Optional(Type.String()),
@@ -45,25 +43,27 @@ export const workshopsResolver = resolve<Workshops, HookContext>({})
 export const workshopsExternalResolver = resolve<Workshops, HookContext>({})
 
 // Schema for creating new entries
-export const workshopsPartialDataSchema = Type.Intersect(
+export const workshopsDataSchema = Type.Intersect(
   [
     Type.Pick(workshopsSchema, ['name']),
     Type.Partial(
-      Type.Omit(workshopsSchema, [...computedProperties, 'name', '_childEventVolunteerAssignmentsUpdatedAt']),
+      Type.Omit(workshopsSchema, [...computedProperties, 'name', 'instances', '_childEventVolunteerAssignmentsUpdatedAt']),
     ),
+    Type.Object({
+      instances: Type.Optional(Type.Array(
+        Type.Partial(WorkshopInstanceSchema()),
+      )),
+    }),
   ], {
     $id: 'PartialWorkshopsData',
   },
 )
-export const workshopsDataSchema = Type.Omit(workshopsSchema, ['_id', ...computedProperties], {
+export const workshopsFullDataSchema = Type.Omit(workshopsSchema, ['_id', ...computedProperties], {
   $id: 'WorkshopsData',
 })
 export type WorkshopsData = Static<typeof workshopsDataSchema>
-export const workshopsDataValidator = castAfterValidating(workshopsDataSchema, getValidator(workshopsPartialDataSchema, dataValidator))
-export const workshopsDataResolver = resolve<Workshops, HookContext>({
-  teacherIds: value => value ?? [],
-  assistantTeacherIds: value => value ?? [],
-})
+export const workshopsDataValidator = castAfterValidating(workshopsFullDataSchema, getValidator(workshopsDataSchema, dataValidator))
+export const workshopsDataResolver = resolve<Workshops, HookContext>({})
 
 // Schema for updating existing entries
 export const workshopsPatchSchema = Type.Partial(workshopsSchema, {

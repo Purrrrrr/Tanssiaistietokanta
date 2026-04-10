@@ -119,7 +119,6 @@ describe('dances service', () => {
           name: 'Workshop using dance',
           abbreviation: 'WUD',
           description: 'A workshop that references the dance',
-          teachers: 'Test Teacher',
           instanceSpecificDances: false,
           eventId: events[0]._id,
           instances: [
