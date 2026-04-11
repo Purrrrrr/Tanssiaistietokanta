@@ -15,6 +15,7 @@ setupServiceUpdateFragment(
       }
       workshop {
         _id
+        _versionId
         name
       }
       role {
@@ -40,6 +41,7 @@ query getVolunteers {
       }
       workshop {
         _id
+        _versionId
         name
       }
       role {
@@ -73,6 +75,7 @@ mutation createVolunteer($volunteer: VolunteerInput!) {
       }
       workshop {
         _id
+        _versionId
         name
       }
       role {
@@ -98,6 +101,7 @@ mutation patchVolunteer($id: ID!, $volunteer: VolunteerPatchInput!) {
       }
       workshop {
         _id
+        _versionId
         name
       }
       role {
@@ -123,6 +127,7 @@ mutation deleteVolunteer($id: ID!) {
       }
       workshop {
         _id
+        _versionId
         name
       }
       role {

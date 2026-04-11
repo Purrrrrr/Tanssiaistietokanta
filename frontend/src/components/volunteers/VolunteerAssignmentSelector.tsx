@@ -1,5 +1,6 @@
 import { ID } from 'types'
 
+import { useShowGlobalLoadingAnimation } from 'backend'
 import { useCreateEventVolunteerAssignment, useDeleteEventVolunteerAssignment, useEventVolunteerAssignments } from 'services/eventVolunteerAssignments'
 import { useEventVolunteers } from 'services/eventVolunteers'
 import { useVolunteerNames } from 'services/volunteers'
@@ -20,11 +21,14 @@ export interface VolunteerAssignmentSelectorProps {
 
 export function VolunteerAssignmentSelector({ id, eventId, eventVersionId, roleId, workshopId, workshopVersionId }: VolunteerAssignmentSelectorProps) {
   const t = useT('components.volunteerAssignmentSelector')
-  const [currentAssignments = []] = useEventVolunteerAssignments({ eventId, eventVersionId, roleId, workshopId, workshopVersionId })
-  const [eventVolunteers = []] = useEventVolunteers({ eventId })
-  const [allVolunteers = []] = useVolunteerNames()
+  const [currentAssignments = [], requestState1] = useEventVolunteerAssignments({ eventId, eventVersionId, roleId, workshopId, workshopVersionId })
+  const [eventVolunteers = [], requestState2] = useEventVolunteers({ eventId })
+  const [allVolunteers = [], requestState3] = useVolunteerNames()
   const [createAssignment] = useCreateEventVolunteerAssignment()
   const [deleteAssignment] = useDeleteEventVolunteerAssignment()
+
+  useShowGlobalLoadingAnimation(requestState1.loading || requestState2.loading || requestState3.loading)
+  const errors = [requestState1.error, requestState2.error, requestState3.error].filter(e => e != null)
 
   const assignedIds = new Set(currentAssignments.map(a => a.volunteer._id))
   const eventVolunteerIds = new Set(eventVolunteers.map(ev => ev.volunteer._id))
@@ -66,14 +70,17 @@ export function VolunteerAssignmentSelector({ id, eventId, eventVersionId, roleI
   }
   const readOnly = eventVersionId != null || workshopVersionId != null
 
-  return <AutocompleteMultipleInput<VolunteerOption>
-    id={id}
-    value={value}
-    onChange={onChange}
-    readOnly={readOnly}
-    items={getItems}
-    itemToString={v => v.name}
-    placeholder={readOnly ? '' : t('addVolunteer')}
-    noResultsText={t('noVolunteers')}
-  />
+  return <>
+    <AutocompleteMultipleInput<VolunteerOption>
+      id={id}
+      value={value}
+      onChange={onChange}
+      readOnly={readOnly}
+      items={getItems}
+      itemToString={v => v.name}
+      placeholder={readOnly ? '' : t('addVolunteer')}
+      noResultsText={t('noVolunteers')}
+    />
+    {errors.map((error, i) => <div key={i} className="text-red-500">{error.message}</div>)}
+  </>
 }

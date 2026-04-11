@@ -5,6 +5,7 @@ import { addGlobalLoadingAnimation } from 'backend'
 import { useCreateVolunteer, useVolunteers } from 'services/volunteers'
 
 import { Card, H2, SearchBar } from 'libraries/ui'
+import { LoadingState } from 'components/LoadingState'
 import { Page } from 'components/Page'
 import { useT, useTranslation } from 'i18n'
 
@@ -31,7 +32,7 @@ function RouteComponent() {
   const t = useT('routes.volunteers')
   const { search, setSearch } = useVolunteerSearchParams()
 
-  const [allVolunteers] = useVolunteers()
+  const [allVolunteers, requestState] = useVolunteers()
   const volunteers = allVolunteers
     .filter(volunteer => {
       if (search && !volunteer.name.toLowerCase().includes(search.toLowerCase())) {
@@ -53,6 +54,7 @@ function RouteComponent() {
       </div>
     </div>
     <VolunteerList volunteers={volunteers} />
+    <LoadingState {...requestState} />
     <CreateVolunteerForm />
   </Page>
 }

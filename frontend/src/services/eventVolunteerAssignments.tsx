@@ -5,9 +5,9 @@ setupServiceUpdateFragment(
   `fragment EventVolunteerAssignmentFragment on EventVolunteerAssignment {
     _id
     event { _id _versionId name }
-    workshop { _id name }
-    volunteer { _id name }
-    role { _id name }
+    workshop { _id _versionId name }
+    volunteer { _id _versionId name }
+    role { _id _versionId name }
   }`,
 )
 
@@ -16,9 +16,9 @@ query getEventVolunteerAssignments($eventId: ID, $eventVersionId: ID, $workshopI
   eventVolunteerAssignments(eventId: $eventId, eventVersionId: $eventVersionId, workshopId: $workshopId, workshopVersionId: $workshopVersionId, roleId: $roleId) {
     _id
     event { _id _versionId name }
-    workshop { _id name }
-    volunteer { _id name }
-    role { _id name }
+    workshop { _id _versionId name }
+    volunteer { _id _versionId name }
+    role { _id _versionId name }
   }
 }`), {
   filterCreated: (data, variables) => {
@@ -43,9 +43,9 @@ mutation createEventVolunteerAssignment($eventVolunteerAssignment: EventVoluntee
   createEventVolunteerAssignment(eventVolunteerAssignment: $eventVolunteerAssignment) {
     _id
     event { _id _versionId name }
-    workshop { _id name }
-    volunteer { _id name }
-    role { _id name }
+    workshop { _id _versionId name }
+    volunteer { _id _versionId name }
+    role { _id _versionId name }
   }
 }`))
 
@@ -54,8 +54,8 @@ mutation deleteEventVolunteerAssignment($id: ID!) {
   deleteEventVolunteerAssignment(id: $id) {
     _id
     event { _id _versionId name }
-    workshop { _id name }
-    volunteer { _id name }
-    role { _id name }
+    workshop { _id _versionId name }
+    volunteer { _id _versionId name }
+    role { _id _versionId name }
   }
 }`))
