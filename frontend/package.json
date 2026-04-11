@@ -51,7 +51,8 @@
     "build": "REACT_APP_BUILD_TIME=$(date -I) REACT_APP_COMMIT_REV=$(git rev-parse --short HEAD) vite build",
     "pretest": "npm run codegen",
     "test": "jest --watchAll",
-    "codegen": "graphql-codegen --config codegen.ts",
+    "typecheck": "tsc --noEmit",
+    "codegen": "graphql-codegen",
     "dev": "NODE_OPTIONS=--max-old-space-size=8192 vite",
     "poistinstall": "patch-package"
   },
