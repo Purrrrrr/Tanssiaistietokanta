@@ -65,7 +65,7 @@ input WorkshopPatchInput {
   teacherIds: [ID!]
   assistantTeacherIds: [ID!]
   ocurrences: [String!]
-  instances: [WorkshopInstanceFullInput!]!
+  instances: [WorkshopInstanceFullInput!]
   instanceSpecificDances: Boolean
 }
 
