@@ -375,29 +375,30 @@
 * Some way to load all data for a graphql query with atDate
 * Fix update fragments sometimes not being available when needed
 * Show versions for eventVolunteers
-  
 * Readonly mode for volunteers page when versioned
 * Make ball slideshow not navigate away from versions
 * Make dance editor read only when viewing event version slides
   * Check slide editor page for this
 * Render readOnly selectors more lightly
-  Fix workshops when viewing event versions
+* Fix volunteers not loading
+* Add loading animation to volunteers page?
+* Make getVolunteers query faster (currently 8 seconds!)
+* Fix workshops when viewing event versions
   * Show workshops when viewing event versions
   * Fix dances not showing
   * Fix add dance selector to read only
-    Fix teachers and other not showing
+  * Fix teachers and other not showing
+
+  Fix duplicate file upload?
+  General notes/documents/wikipages to event/other
+  Support checklists
+  Deadline support?
 
   Check GDPR stuff for volunteer names
   Event volunteer kompassi status
   Check how deleted volunteers affect versioning
 
-  Find a way to not show syncstatus on readOnly forms
-
-  Fix duplicate file upload?
   Multiple slides per dance: formation slide / instructions slide / some other?
-
-  General notes/documents/wikipages to event/other
-  Deadline support?
 
   Volunteer contact details page?
     Add contact details
@@ -433,6 +434,7 @@
   Templates for event/interval music slides?
   
   Nice to have
+    Find a way to not show syncstatus on readOnly forms
     Check that event + workshop + role match is valid in EventVolunteerAssignment
     Tests
       Add tests to check that used dances are not deletable
