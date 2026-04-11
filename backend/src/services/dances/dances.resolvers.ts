@@ -2,12 +2,13 @@ import { Application, Resolvers } from '../../declarations'
 import { getDependencyLinks } from '../../internal-services/dependencies'
 
 import type { Dances } from './dances.schema'
-import type { Events } from '../events/events.schema'
+import { eventsSchema, type Events } from '../events/events.schema'
 import { uniq } from 'ramda'
 import { WorkshopsService } from '../workshops/workshops.class'
 import { DancewikiService } from '../dancewiki/dancewiki.class'
 import { SkipAccessControl } from '../access/hooks'
 import { removeNulls } from '../../utils/common-types'
+import { toSelect } from '../../utils/resolvers'
 
 export async function findTeachedIn(workshopService: WorkshopsService, danceId: string, eventId?: string | null) {
   const workshops = await workshopService.find({
@@ -42,24 +43,22 @@ export default (app: Application): Resolvers => {
   const eventService = app.service('events')
   const wikiService = app.service('dancewiki')
 
-  async function findEvents(obj: Dances): Promise<Events[]> {
-    const links = getDependencyLinks('dances', obj._id, 'usedBy')
-
-    const workshopIds = Array.from(links.get('workshops') ?? [])
-    const workshops = await workshopService.find({ [SkipAccessControl]: true, query: { _id: { $in: workshopIds as string[] }, $select: ['eventId'] } })
-    const ids = [
-      ...Array.from(links.get('events') ?? []) as string[],
-      ...workshops.map(workshop => workshop.eventId),
-    ]
-
-    return eventService.find({ query: { _id: { $in: ids }, $sort: { beginDate: 1 } } })
-  }
-
   return {
     Dance: {
       teachedIn: (dance, { eventId }) =>
         findTeachedIn(workshopService, dance._id, eventId),
-      events: findEvents,
+      events: async (dance, _, __, info): Promise<Events[]> => {
+        const links = getDependencyLinks('dances', dance._id, 'usedBy')
+
+        const workshopIds = Array.from(links.get('workshops') ?? [])
+        const workshops = await workshopService.find({ [SkipAccessControl]: true, query: { _id: { $in: workshopIds as string[] }, $select: ['eventId'] } })
+        const ids = [
+          ...Array.from(links.get('events') ?? []) as string[],
+          ...workshops.map(workshop => workshop.eventId),
+        ]
+
+        return eventService.find({ query: { _id: { $in: ids }, $sort: { beginDate: 1 }, $select: toSelect(info, eventsSchema) } })
+      },
       wikipage: (dance) => findWikipage(wikiService, dance),
     },
     Query: {

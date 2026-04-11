@@ -1,6 +1,5 @@
 import { Application, Resolvers } from '../../declarations'
 import { EventVolunteerAssignments } from './eventVolunteerAssignments.class'
-import { eventsSchema } from '../events/events.schema'
 import { removeNulls } from '../../utils/common-types'
 
 export default (app: Application): Resolvers => {
@@ -34,7 +33,6 @@ export default (app: Application): Resolvers => {
 
   return {
     EventVolunteerAssignment: {
-      event: (assignment, _, __, ctx) => eventsService.get(assignment.eventId),
       workshop: (assignment) => assignment.workshopId ? workshopsService.get(assignment.workshopId) : null,
       role: (assignment) => eventRolesService.get(assignment.roleId),
       volunteer: (assignment) => volunteerService.get(assignment.volunteerId),

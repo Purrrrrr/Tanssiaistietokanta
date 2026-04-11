@@ -1,6 +1,8 @@
 import * as L from 'partial.lenses'
 import { Application, Resolvers } from '../../declarations'
 import { JSONPatch } from '../../hooks/merge-json-patch'
+import { toSelect } from '../../utils/resolvers'
+import { eventsSchema } from './events.schema'
 
 export default (app: Application): Resolvers => {
   const workshopService = app.service('workshops')
@@ -16,6 +18,13 @@ export default (app: Application): Resolvers => {
         if (!program.introductions.title) return L.set(['introductions', 'title'], event.name, program)
         return program
       },
+    },
+    EventVolunteerAssignment: {
+      event: (assignment, _, __, info) =>
+        service.get(assignment.eventId, { query: { $select: toSelect(info, eventsSchema) } }),
+    },
+    Workshop: {
+      event: (workshop, _, __, info) => service.get(workshop.eventId, { query: { $select: toSelect(info, eventsSchema) } }),
     },
     Query: {
       events: (_, __, params) => service.find({ ...params, query: { $sort } }),

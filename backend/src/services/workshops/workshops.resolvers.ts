@@ -11,9 +11,9 @@ export default (app: Application): Resolvers => {
 
   return {
     Workshop: {
+      _versionId: workshop => workshop._versionId ?? null,
       danceIds: workshop => workshop.instances.flatMap(i => i.danceIds ?? []),
       dances: workshop => workshop.instances.flatMap(i => i.danceIds ?? []).map(getDance).filter(dance => dance !== null),
-      event: workshop => eventService.get(workshop.eventId),
     },
     WorkshopInstance: {
       dances: workshop => workshop.danceIds?.map(getDance).filter(dance => dance !== null) ?? [],
