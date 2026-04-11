@@ -5,7 +5,7 @@ export default (app: Application): Resolvers => {
   const service = app.service('eventVolunteers')
   const volunteerService = app.service('volunteers')
   const eventRolesService = app.service('eventRoles')
-  const eventsService = app.service('events')
+  const eventService = app.service('events')
 
   return {
     EventVolunteer: {
@@ -22,8 +22,7 @@ export default (app: Application): Resolvers => {
         if (eventId) {
           query.eventId = eventId
           if (eventVersionId) {
-            // Trigger searching of versions of event volunteers by event version id
-            await eventsService.get(eventId, { query: { _versionId: eventVersionId } })
+            await eventService.startVersionedSearchFrom(eventVersionId)
           }
         }
         if (volunteerId) query.volunteerId = volunteerId

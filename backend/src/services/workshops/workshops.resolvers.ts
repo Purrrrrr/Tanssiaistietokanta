@@ -21,8 +21,7 @@ export default (app: Application): Resolvers => {
     Query: {
       workshop: async (_, { id, eventVersionId }, params) => {
         if (eventVersionId) {
-          // Trigger searching of versions of workshops by event version id
-          await eventService.find({ query: { _versionId: eventVersionId } })
+          await eventService.startVersionedSearchFrom(eventVersionId)
         }
         return service.get(id, params)
       },

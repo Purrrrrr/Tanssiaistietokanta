@@ -92,6 +92,13 @@ export default class VersioningNeDBService<Result extends Versionable, Data, Ser
     return super.get(id, _params)
   }
 
+  async startVersionedSearchFrom(versionId: Id): Promise<void> {
+    const { _updatedAt } = await this.versionService.get(
+      versionId, { query: { $select: ['_updatedAt'] } },
+    )
+    setAtDateParam(_updatedAt)
+  }
+
   private async getAtDate(id: Id, atDate: string): Promise<Result> {
     setAtDateParam(atDate)
     const versions = await this.versionService.find({

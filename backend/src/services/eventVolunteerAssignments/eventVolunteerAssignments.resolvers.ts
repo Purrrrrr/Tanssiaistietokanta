@@ -4,7 +4,7 @@ import { removeNulls } from '../../utils/common-types'
 
 export default (app: Application): Resolvers => {
   const service = app.service('eventVolunteerAssignments')
-  const eventsService = app.service('events')
+  const eventService = app.service('events')
   const workshopsService = app.service('workshops')
   const eventRolesService = app.service('eventRoles')
 
@@ -62,12 +62,9 @@ export default (app: Application): Resolvers => {
         params,
       ) => {
         if (eventVersionId) {
-          // Trigger searching of versions of event volunteer assignments by event version id
-          await eventsService.find({ query: { _versionId: eventVersionId } })
-        }
-        if (workshopVersionId) {
-          // Trigger searching of versions of event volunteer assignments by event version id
-          await workshopsService.find({ query: { _versionId: workshopVersionId } })
+          await eventService.startVersionedSearchFrom(eventVersionId)
+        } else if (workshopVersionId) {
+          await workshopsService.startVersionedSearchFrom(workshopVersionId)
         }
         return service.find({ ...params, query: removeNulls(query) })
       },
