@@ -4,6 +4,7 @@ import { booleanProp, numberProp, type Showcase, showcase } from './types'
 
 import { Switch } from 'libraries/forms'
 import FormUiShowcase from 'libraries/formsV2/UiShowcase'
+import { Editor } from 'libraries/lexical'
 import { Alert, Dialog } from 'libraries/overlays'
 import { AnchorButton, AutosizedSection, Breadcrumb, BreadcrumbsContainer, Button, Callout, Collapse, GlobalSpinner, RegularLink, showToast, Tab, Tabs } from 'libraries/ui'
 import { Trash } from 'libraries/ui/icons'
@@ -43,6 +44,11 @@ export default function UiShowcase() {
 }
 
 const showcases: Showcase<Record<string, unknown>>[] = [
+  showcase({
+    title: 'Editor',
+    props: {},
+    render: () => <Editor />,
+  }),
   showcase({
     title: 'Link',
     props: {},
