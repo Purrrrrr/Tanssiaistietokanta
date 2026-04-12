@@ -34,6 +34,8 @@ import {
   Undo,
 } from 'libraries/ui/icons'
 
+import { INSERT_LAYOUT_COMMAND } from './plugins/LayoutPlugin'
+
 import '../ui/Markdown.css'
 
 type BlockType = 'paragraph' | HeadingTagType | 'bullet' | 'number' | 'check'
@@ -60,13 +62,11 @@ function Divider() {
 }
 
 /*
-Heading levels
-List (ordered, unordered, checkboxes)
-Images
-Tables
-QR codes
-Links
+-Images
+-Tables
+-QR codes
 */
+
 
 export default function ToolbarPlugin() {
   const [editor] = useLexicalComposerContext()
@@ -302,6 +302,12 @@ export default function ToolbarPlugin() {
           onClick={() => editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'justify')}
           aria-label="Justify Align">
           <AlignJustify />
+        </ToolbarButton>
+        <ToolbarButton
+          onClick={() => editor.dispatchCommand(INSERT_LAYOUT_COMMAND, '1fr 1fr')}
+          active={isItalic}
+          aria-label="Format Subscript">
+          L
         </ToolbarButton>
       </div>
       {isLinkEditMode && (

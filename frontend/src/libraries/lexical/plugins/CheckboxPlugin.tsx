@@ -1,22 +1,12 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
 import { useEffect } from 'react'
 import { ListItemNode } from '@lexical/list'
-import { $getNodeByKey, SELECTION_CHANGE_COMMAND, COMMAND_PRIORITY_LOW, $getSelection } from 'lexical'
+import { $getNodeByKey } from 'lexical'
 
 export function CheckboxUIPlugin() {
   const [editor] = useLexicalComposerContext()
 
   useEffect(() => {
-    editor.registerCommand(
-      SELECTION_CHANGE_COMMAND,
-      () => {
-        const selection = $getSelection();
-        console.log('Selection changed:', selection);
-        return true
-      },
-      COMMAND_PRIORITY_LOW,
-    )
-
     return editor.registerMutationListener(ListItemNode, (mutations) => {
       for (const [nodeKey, mutation] of mutations) {
         if (mutation === 'destroyed') continue
@@ -40,3 +30,5 @@ export function CheckboxUIPlugin() {
 
   return null
 }
+
+export { ChecklistItemNode } from './nodes/ChecklistItemNode'

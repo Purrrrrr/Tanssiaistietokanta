@@ -12,9 +12,8 @@ export class ChecklistItemNode extends ListItemNode {
 
   createDOM(config: EditorConfig): HTMLElement {
     const dom = super.createDOM(config)
-    console.log(dom.childNodes)
     if (isChecklistItem(this)) {
-      dom.prepend(createCheckboxInput(this.getChecked() ?? false))
+      dom.prepend(createCheckboxWrapper(this.getChecked() ?? false))
     }
     return dom
   }
@@ -24,13 +23,13 @@ export class ChecklistItemNode extends ListItemNode {
     if (recreated) return true
 
     const checklist = isChecklistItem(this)
-    let checkbox = dom.querySelector('input[type="checkbox"]') as HTMLInputElement | null
+    const wrapper = dom.querySelector('span[data-lexical-checkbox]') as HTMLSpanElement | null
+    const checkbox = wrapper?.querySelector('input[type="checkbox"]') as HTMLInputElement | null
 
-    if (checklist && !checkbox) {
-      checkbox = createCheckboxInput(this.getChecked() ?? false)
-      dom.prepend(checkbox)
-    } else if (!checklist && checkbox) {
-      checkbox.remove()
+    if (checklist && !wrapper) {
+      dom.prepend(createCheckboxWrapper(this.getChecked() ?? false))
+    } else if (!checklist && wrapper) {
+      wrapper.remove()
     } else if (checkbox) {
       checkbox.checked = this.getChecked() ?? false
     }
@@ -44,9 +43,14 @@ function isChecklistItem(node: ListItemNode): boolean {
   return parent instanceof ListNode && parent.getListType() === 'check'
 }
 
-function createCheckboxInput(checked: boolean): HTMLInputElement {
+function createCheckboxWrapper(checked: boolean): HTMLSpanElement {
+  const span = document.createElement('span')
+  span.contentEditable = 'false'
+  span.dataset.lexicalCheckbox = ''
   const input = document.createElement('input')
   input.type = 'checkbox'
   input.checked = checked
-  return input
+  input.tabIndex = -1
+  span.appendChild(input)
+  return span
 }

@@ -13,8 +13,10 @@ import { HeadingNode } from '@lexical/rich-text'
 import { $getRoot } from 'lexical'
 import { minify } from 'lexical-minifier'
 
-import { ChecklistItemNode } from './ChecklistItemNode'
-import { CheckboxUIPlugin } from './plugins/Checkbox'
+import { CheckboxUIPlugin, ChecklistItemNode } from './plugins/CheckboxPlugin'
+import { LayoutPlugin } from './plugins/LayoutPlugin'
+import { LayoutContainerNode } from './plugins/nodes/LayoutContainerNode'
+import { LayoutItemNode } from './plugins/nodes/LayoutItemNode'
 import ToolbarPlugin from './Toolbar'
 
 const theme = {
@@ -50,6 +52,8 @@ const theme = {
     underline: 'underline',
     underlineStrikethrough: '[text-decoration:underline_line-through]',
   },
+  layoutContainer: 'grid',
+  layoutItem: 'p-2 border-1 border-gray-200 rounded-md',
 }
 
 // Catch any errors that occur during Lexical updates and log them
@@ -64,11 +68,15 @@ export function Editor() {
     namespace: 'MyEditor',
     theme,
     onError,
-    nodes: [HeadingNode, ListNode, ListItemNode, LinkNode, ChecklistItemNode, {
-      replace: ListItemNode,
-      with: (node: ListItemNode) => new ChecklistItemNode(node.getValue(), node.getChecked()),
-      withKlass: ChecklistItemNode,
-    }],
+    nodes: [
+      HeadingNode, LinkNode,
+      LayoutContainerNode, LayoutItemNode,
+      ListNode, ListItemNode, ChecklistItemNode, {
+        replace: ListItemNode,
+        with: (node: ListItemNode) => new ChecklistItemNode(node.getValue(), node.getChecked()),
+        withKlass: ChecklistItemNode,
+      },
+    ],
   }
 
   return (
@@ -88,6 +96,7 @@ export function Editor() {
       <ListPlugin />
       <CheckListPlugin />
       <LinkPlugin />
+      <LayoutPlugin />
       <CheckboxUIPlugin />
       <OnChangePlugin onChange={(editorState) => {
         editorState.read(() => {

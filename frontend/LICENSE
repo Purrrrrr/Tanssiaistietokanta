@@ -4,6 +4,7 @@ Copyright (c) 2026 Purr Consuegra
 Flower stylesheet Copyright (c) 2022 Sampo Juustinen
 See public/backgrounds/flower/licenses.txt for flower background image copyrights
 Structural object sharing code (replaceEqualDeep) Copyright (c) 2021-present Tanner Linsley
+Lexical layout plugin code Copyright (c) Meta Platforms, Inc. and affiliates.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
