@@ -17,6 +17,8 @@ import { CheckboxUIPlugin, ChecklistItemNode } from './plugins/CheckboxPlugin'
 import { LayoutPlugin } from './plugins/LayoutPlugin'
 import { LayoutContainerNode } from './plugins/nodes/LayoutContainerNode'
 import { LayoutItemNode } from './plugins/nodes/LayoutItemNode'
+import { QRCodeNode } from './plugins/nodes/QRCodeNode'
+import { QRCodePlugin } from './plugins/QRCodePlugin'
 import ToolbarPlugin from './Toolbar'
 
 const theme = {
@@ -71,6 +73,7 @@ export function Editor() {
     nodes: [
       HeadingNode, LinkNode,
       LayoutContainerNode, LayoutItemNode,
+      QRCodeNode,
       ListNode, ListItemNode, ChecklistItemNode, {
         replace: ListItemNode,
         with: (node: ListItemNode) => new ChecklistItemNode(node.getValue(), node.getChecked()),
@@ -97,6 +100,7 @@ export function Editor() {
       <CheckListPlugin />
       <LinkPlugin />
       <LayoutPlugin />
+      <QRCodePlugin />
       <CheckboxUIPlugin />
       <OnChangePlugin onChange={(editorState) => {
         editorState.read(() => {

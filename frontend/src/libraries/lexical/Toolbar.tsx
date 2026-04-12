@@ -35,6 +35,7 @@ import {
 } from 'libraries/ui/icons'
 
 import { INSERT_LAYOUT_COMMAND } from './plugins/LayoutPlugin'
+import { INSERT_QR_CODE_COMMAND } from './plugins/QRCodePlugin'
 
 import '../ui/Markdown.css'
 
@@ -67,7 +68,6 @@ function Divider() {
 -QR codes
 */
 
-
 export default function ToolbarPlugin() {
   const [editor] = useLexicalComposerContext()
   const toolbarRef = useRef(null)
@@ -82,6 +82,8 @@ export default function ToolbarPlugin() {
   const [linkUrl, setLinkUrl] = useState('')
   const [isLinkEditMode, setIsLinkEditMode] = useState(false)
   const [editingLinkUrl, setEditingLinkUrl] = useState('')
+  const [isQREditMode, setIsQREditMode] = useState(false)
+  const [qrInputValue, setQRInputValue] = useState('')
 
   const $updateToolbar = useCallback(() => {
     const selection = $getSelection()
@@ -193,6 +195,14 @@ export default function ToolbarPlugin() {
     const url = editingLinkUrl.trim()
     editor.dispatchCommand(TOGGLE_LINK_COMMAND, url || null)
     setIsLinkEditMode(false)
+  }
+
+  function insertQRCode() {
+    const value = qrInputValue.trim()
+    if (!value) return
+    editor.dispatchCommand(INSERT_QR_CODE_COMMAND, value)
+    setQRInputValue('')
+    setIsQREditMode(false)
   }
 
   function removeLink() {
@@ -309,6 +319,12 @@ export default function ToolbarPlugin() {
           aria-label="Format Subscript">
           L
         </ToolbarButton>
+        <ToolbarButton
+          onClick={() => { setIsQREditMode(true); setIsLinkEditMode(false) }}
+          active={isQREditMode}
+          aria-label="Insert QR code">
+          <QRCodeIcon />
+        </ToolbarButton>
       </div>
       {isLinkEditMode && (
         <div className="flex gap-2 items-center px-2 py-1 border-t-1 border-black">
@@ -327,6 +343,25 @@ export default function ToolbarPlugin() {
           <Button minimal onClick={applyLink} aria-label="Apply link">OK</Button>
           {isLink && <Button minimal onClick={removeLink} aria-label="Remove link">Remove</Button>}
           <Button minimal onClick={() => setIsLinkEditMode(false)} aria-label="Cancel">Cancel</Button>
+        </div>
+      )}
+      {isQREditMode && (
+        <div className="flex gap-2 items-center px-2 py-1 border-t-1 border-black">
+          <input
+            className="flex-1 px-2 py-0.5 border-1 border-gray-400 rounded text-sm"
+            type="text"
+            placeholder="Enter URL or text for QR code…"
+            value={qrInputValue}
+            onChange={(e) => setQRInputValue(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') insertQRCode()
+              if (e.key === 'Escape') setIsQREditMode(false)
+            }}
+            // eslint-disable-next-line jsx-a11y/no-autofocus
+            autoFocus
+          />
+          <Button minimal onClick={insertQRCode} aria-label="Insert QR code">Insert</Button>
+          <Button minimal onClick={() => setIsQREditMode(false)} aria-label="Cancel">Cancel</Button>
         </div>
       )}
     </div>
@@ -373,6 +408,30 @@ function CheckListIcon() {
       <rect x="5" y="7" width="10" height="2" rx="1" />
       <rect x="0.5" y="10.5" width="3" height="3" rx="0.5" stroke="currentColor" strokeWidth="1" fill="none" />
       <rect x="5" y="11" width="10" height="2" rx="1" />
+    </svg>
+  )
+}
+
+function QRCodeIcon() {
+  return (
+    <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true">
+      {/* top-left finder */}
+      <rect x="1" y="1" width="5" height="5" rx="0.5" fill="none" stroke="currentColor" strokeWidth="1" />
+      <rect x="2.5" y="2.5" width="2" height="2" />
+      {/* top-right finder */}
+      <rect x="10" y="1" width="5" height="5" rx="0.5" fill="none" stroke="currentColor" strokeWidth="1" />
+      <rect x="11.5" y="2.5" width="2" height="2" />
+      {/* bottom-left finder */}
+      <rect x="1" y="10" width="5" height="5" rx="0.5" fill="none" stroke="currentColor" strokeWidth="1" />
+      <rect x="2.5" y="11.5" width="2" height="2" />
+      {/* data dots */}
+      <rect x="8" y="8" width="1.5" height="1.5" />
+      <rect x="10.5" y="8" width="1.5" height="1.5" />
+      <rect x="13" y="8" width="1.5" height="1.5" />
+      <rect x="8" y="10.5" width="1.5" height="1.5" />
+      <rect x="8" y="13" width="1.5" height="1.5" />
+      <rect x="10.5" y="13" width="1.5" height="1.5" />
+      <rect x="13" y="13" width="1.5" height="1.5" />
     </svg>
   )
 }
