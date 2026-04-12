@@ -11,6 +11,7 @@ import { LinkNode } from '@lexical/link'
 import { ListItemNode, ListNode } from '@lexical/list'
 import { HeadingNode } from '@lexical/rich-text'
 import { TableCellNode, TableNode, TableRowNode } from '@lexical/table'
+import type { SerializedEditorState } from 'lexical'
 import { $getRoot } from 'lexical'
 import { minify } from 'lexical-minifier'
 
@@ -27,6 +28,8 @@ import { QRCodePlugin } from './plugins/QRCodePlugin'
 import { TablePlugin } from './plugins/TablePlugin'
 import ToolbarPlugin from './Toolbar'
 
+export type { SerializedEditorState }
+
 export interface ImageUploadConfig {
   owner: FileOwner
   owningId: FileOwningId
@@ -35,6 +38,7 @@ export interface ImageUploadConfig {
 
 export interface EditorProps {
   imageUpload?: ImageUploadConfig
+  onChange?: (state: SerializedEditorState) => void
 }
 
 const theme = {
@@ -81,7 +85,7 @@ function onError(error) {
   console.error(error)
 }
 
-export function Editor({ imageUpload }: EditorProps = {}) {
+export function Editor({ imageUpload, onChange }: EditorProps = {}) {
   const initialConfig = {
     namespace: 'MyEditor',
     theme,
@@ -123,11 +127,7 @@ export function Editor({ imageUpload }: EditorProps = {}) {
       <QRCodePlugin />
       <CheckboxUIPlugin />
       <OnChangePlugin onChange={(editorState) => {
-        editorState.read(() => {
-          console.log(editorState.toJSON())
-          // const json = minify($getRoot())
-          // console.log(json, JSON.stringify(editorState.toJSON()).length, JSON.stringify(json).length)
-        })
+        onChange?.(editorState.toJSON())
       }} />
     </LexicalComposer>
   )

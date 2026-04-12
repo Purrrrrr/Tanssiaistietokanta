@@ -4,7 +4,8 @@ import { booleanProp, numberProp, type Showcase, showcase } from './types'
 
 import { Switch } from 'libraries/forms'
 import FormUiShowcase from 'libraries/formsV2/UiShowcase'
-import { Editor } from 'libraries/lexical'
+import { Editor, type SerializedEditorState } from 'libraries/lexical'
+import { DocumentViewer } from 'libraries/lexical/DocumentViewer'
 import { Alert, Dialog } from 'libraries/overlays'
 import { AnchorButton, AutosizedSection, Breadcrumb, BreadcrumbsContainer, Button, Callout, Collapse, GlobalSpinner, RegularLink, showToast, Tab, Tabs } from 'libraries/ui'
 import { Trash } from 'libraries/ui/icons'
@@ -47,7 +48,7 @@ const showcases: Showcase<Record<string, unknown>>[] = [
   showcase({
     title: 'Editor',
     props: {},
-    render: () => <Editor imageUpload={{ owner: 'dances', owningId: 'fuu' }} />,
+    render: () => <EditorShowcase />,
   }),
   showcase({
     title: 'Link',
@@ -190,6 +191,19 @@ const showcases: Showcase<Record<string, unknown>>[] = [
     render: () => <BreadcrumbsShowcase />,
   }),
 ]
+
+function EditorShowcase() {
+  const [state, setState] = useState<SerializedEditorState | null>(null)
+  return (
+    <div className="flex flex-col gap-4">
+      <Editor imageUpload={{ owner: 'dances', owningId: 'fuu' }} onChange={setState} />
+      <div className="border-1 border-dashed border-gray-400 rounded p-2">
+        <p className="text-xs text-gray-500 mb-2">Document Viewer (read-only, no Lexical runtime)</p>
+        <DocumentViewer document={state} />
+      </div>
+    </div>
+  )
+}
 
 function range(count: number): number[] {
   console.log(Array(count).fill(0).map((_, index) => index))
