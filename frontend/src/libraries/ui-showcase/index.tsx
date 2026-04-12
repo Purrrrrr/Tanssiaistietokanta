@@ -47,7 +47,7 @@ const showcases: Showcase<Record<string, unknown>>[] = [
   showcase({
     title: 'Editor',
     props: {},
-    render: () => <Editor />,
+    render: () => <Editor imageUpload={{ owner: 'dances', owningId: 'fuu' }} />,
   }),
   showcase({
     title: 'Link',

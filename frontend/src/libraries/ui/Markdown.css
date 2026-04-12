@@ -67,7 +67,13 @@
   del {
     text-decoration: line-through;
   }
-  tr + tr, td + td {
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin-block: 0.5em;
+  }
+  th + th, td + td {
     padding-left: 0.5em;
   }
 }

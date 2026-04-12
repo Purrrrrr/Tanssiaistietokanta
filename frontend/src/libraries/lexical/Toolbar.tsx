@@ -26,6 +26,8 @@ import {
   UNDO_COMMAND,
 } from 'lexical'
 
+import { doUpload } from 'services/files'
+
 import RegularSelect from 'libraries/formsV2/components/inputs/selectors/RegularSelect'
 import { Button, ButtonProps } from 'libraries/ui'
 import {
@@ -34,6 +36,8 @@ import {
   Undo,
 } from 'libraries/ui/icons'
 
+import type { ImageUploadConfig } from '.'
+import { INSERT_IMAGE_COMMAND } from './plugins/ImagePlugin'
 import { INSERT_LAYOUT_COMMAND } from './plugins/LayoutPlugin'
 import { INSERT_QR_CODE_COMMAND } from './plugins/QRCodePlugin'
 import { INSERT_TABLE_COMMAND } from './plugins/TablePlugin'
@@ -69,7 +73,7 @@ function Divider() {
 -QR codes
 */
 
-export default function ToolbarPlugin() {
+export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUploadConfig } = {}) {
   const [editor] = useLexicalComposerContext()
   const toolbarRef = useRef(null)
   const [canUndo, setCanUndo] = useState(false)
@@ -88,6 +92,11 @@ export default function ToolbarPlugin() {
   const [isTableInsertMode, setIsTableInsertMode] = useState(false)
   const [tableRows, setTableRows] = useState('3')
   const [tableCols, setTableCols] = useState('3')
+  const [isImageInsertMode, setIsImageInsertMode] = useState(false)
+  const [imageUrl, setImageUrl] = useState('')
+  const [imageAlt, setImageAlt] = useState('')
+  const [isUploading, setIsUploading] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const $updateToolbar = useCallback(() => {
     const selection = $getSelection()
@@ -193,6 +202,9 @@ export default function ToolbarPlugin() {
   function openLinkEditor() {
     setEditingLinkUrl(linkUrl)
     setIsLinkEditMode(true)
+    setIsQREditMode(false)
+    setIsTableInsertMode(false)
+    setIsImageInsertMode(false)
   }
 
   function applyLink() {
@@ -210,6 +222,38 @@ export default function ToolbarPlugin() {
       includeHeaders: { rows: true, columns: false },
     })
     setIsTableInsertMode(false)
+  }
+
+  function insertImageFromUrl() {
+    const src = imageUrl.trim()
+    if (!src) return
+    editor.dispatchCommand(INSERT_IMAGE_COMMAND, { src, altText: imageAlt.trim() })
+    setImageUrl('')
+    setImageAlt('')
+    setIsImageInsertMode(false)
+  }
+
+  async function handleImageFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file || !imageUpload) return
+    setIsUploading(true)
+    try {
+      const uploaded = await doUpload({
+        owner: imageUpload.owner,
+        owningId: imageUpload.owningId,
+        path: imageUpload.path,
+        file,
+        autoRename: true,
+      })
+      editor.dispatchCommand(INSERT_IMAGE_COMMAND, {
+        src: `/api/files/${uploaded._id}?download=true`,
+        altText: file.name.replace(/\.[^.]+$/, ''),
+      })
+      setIsImageInsertMode(false)
+    } finally {
+      setIsUploading(false)
+      if (fileInputRef.current) fileInputRef.current.value = ''
+    }
   }
 
   function insertQRCode() {
@@ -335,16 +379,22 @@ export default function ToolbarPlugin() {
           L
         </ToolbarButton>
         <ToolbarButton
-          onClick={() => { setIsQREditMode(true); setIsLinkEditMode(false); setIsTableInsertMode(false) }}
+          onClick={() => { setIsQREditMode(true); setIsLinkEditMode(false); setIsTableInsertMode(false); setIsImageInsertMode(false) }}
           active={isQREditMode}
           aria-label="Insert QR code">
           <QRCodeIcon />
         </ToolbarButton>
         <ToolbarButton
-          onClick={() => { setIsTableInsertMode(true); setIsLinkEditMode(false); setIsQREditMode(false) }}
+          onClick={() => { setIsTableInsertMode(true); setIsLinkEditMode(false); setIsQREditMode(false); setIsImageInsertMode(false) }}
           active={isTableInsertMode}
           aria-label="Insert table">
           <TableIcon />
+        </ToolbarButton>
+        <ToolbarButton
+          onClick={() => { setIsImageInsertMode(true); setIsLinkEditMode(false); setIsQREditMode(false); setIsTableInsertMode(false) }}
+          active={isImageInsertMode}
+          aria-label="Insert image">
+          <ImageIcon />
         </ToolbarButton>
       </div>
       {isLinkEditMode && (
@@ -412,6 +462,44 @@ export default function ToolbarPlugin() {
           />
           <Button minimal onClick={insertTable} aria-label="Insert table">Insert</Button>
           <Button minimal onClick={() => setIsTableInsertMode(false)} aria-label="Cancel">Cancel</Button>
+        </div>
+      )}
+      {isImageInsertMode && (
+        <div className="flex flex-wrap gap-2 items-center px-2 py-1 border-t-1 border-black">
+          <input
+            className="flex-1 min-w-40 px-2 py-0.5 border-1 border-gray-400 rounded text-sm"
+            type="url"
+            placeholder="Image URL (https://…)"
+            value={imageUrl}
+            onChange={(e) => setImageUrl(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter') insertImageFromUrl(); if (e.key === 'Escape') setIsImageInsertMode(false) }}
+          />
+          <input
+            className="w-32 px-2 py-0.5 border-1 border-gray-400 rounded text-sm"
+            type="text"
+            placeholder="Alt text"
+            value={imageAlt}
+            onChange={(e) => setImageAlt(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter') insertImageFromUrl(); if (e.key === 'Escape') setIsImageInsertMode(false) }}
+          />
+          <Button minimal onClick={insertImageFromUrl} aria-label="Insert image from URL">Insert URL</Button>
+          {imageUpload && (
+            <>
+              <span className="text-sm text-gray-500">or</span>
+              <label className="px-2 py-0.5 text-xs border-1 border-gray-400 rounded bg-white hover:bg-gray-50 cursor-pointer">
+                {isUploading ? 'Uploading…' : 'Upload file'}
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="sr-only"
+                  disabled={isUploading}
+                  onChange={handleImageFileChange}
+                />
+              </label>
+            </>
+          )}
+          <Button minimal onClick={() => setIsImageInsertMode(false)} aria-label="Cancel">Cancel</Button>
         </div>
       )}
     </div>
@@ -498,6 +586,16 @@ function TableIcon() {
       <line x1="6" y1="1" x2="6" y2="15" stroke="currentColor" strokeWidth="1" />
       {/* second column divider */}
       <line x1="11" y1="1" x2="11" y2="15" stroke="currentColor" strokeWidth="1" />
+    </svg>
+  )
+}
+
+function ImageIcon() {
+  return (
+    <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true">
+      <rect x="1" y="2" width="14" height="12" rx="1" fill="none" stroke="currentColor" strokeWidth="1" />
+      <circle cx="5" cy="6" r="1.5" />
+      <polyline points="1,11 5,7 8,10 11,7 15,11" stroke="currentColor" strokeWidth="1" fill="none" />
     </svg>
   )
 }

@@ -14,14 +14,28 @@ import { TableCellNode, TableNode, TableRowNode } from '@lexical/table'
 import { $getRoot } from 'lexical'
 import { minify } from 'lexical-minifier'
 
+import type { FileOwner, FileOwningId } from 'types/files'
+
 import { CheckboxUIPlugin, ChecklistItemNode } from './plugins/CheckboxPlugin'
+import { ImagePlugin } from './plugins/ImagePlugin'
 import { LayoutPlugin } from './plugins/LayoutPlugin'
+import { ImageNode } from './plugins/nodes/ImageNode'
 import { LayoutContainerNode } from './plugins/nodes/LayoutContainerNode'
 import { LayoutItemNode } from './plugins/nodes/LayoutItemNode'
 import { QRCodeNode } from './plugins/nodes/QRCodeNode'
 import { QRCodePlugin } from './plugins/QRCodePlugin'
 import { TablePlugin } from './plugins/TablePlugin'
 import ToolbarPlugin from './Toolbar'
+
+export interface ImageUploadConfig {
+  owner: FileOwner
+  owningId: FileOwningId
+  path?: string
+}
+
+export interface EditorProps {
+  imageUpload?: ImageUploadConfig
+}
 
 const theme = {
   // TODO
@@ -67,7 +81,7 @@ function onError(error) {
   console.error(error)
 }
 
-export function Editor() {
+export function Editor({ imageUpload }: EditorProps = {}) {
   const initialConfig = {
     namespace: 'MyEditor',
     theme,
@@ -75,6 +89,7 @@ export function Editor() {
     nodes: [
       HeadingNode, LinkNode,
       TableNode, TableCellNode, TableRowNode,
+      ImageNode,
       LayoutContainerNode, LayoutItemNode,
       QRCodeNode,
       ListNode, ListItemNode, ChecklistItemNode, {
@@ -88,7 +103,7 @@ export function Editor() {
   return (
     <LexicalComposer initialConfig={initialConfig}>
       <div className="border-1 border-black min-w-200">
-        <ToolbarPlugin />
+        <ToolbarPlugin imageUpload={imageUpload} />
         <div className="p-2 border-t-1 border-black **:focus:outline-none! markdown-content">
           <RichTextPlugin
             contentEditable={
@@ -103,6 +118,7 @@ export function Editor() {
       <CheckListPlugin />
       <LinkPlugin />
       <TablePlugin />
+      <ImagePlugin />
       <LayoutPlugin />
       <QRCodePlugin />
       <CheckboxUIPlugin />
