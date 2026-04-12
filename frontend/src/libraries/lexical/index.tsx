@@ -10,6 +10,7 @@ import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin'
 import { LinkNode } from '@lexical/link'
 import { ListItemNode, ListNode } from '@lexical/list'
 import { HeadingNode } from '@lexical/rich-text'
+import { TableCellNode, TableNode, TableRowNode } from '@lexical/table'
 import { $getRoot } from 'lexical'
 import { minify } from 'lexical-minifier'
 
@@ -19,6 +20,7 @@ import { LayoutContainerNode } from './plugins/nodes/LayoutContainerNode'
 import { LayoutItemNode } from './plugins/nodes/LayoutItemNode'
 import { QRCodeNode } from './plugins/nodes/QRCodeNode'
 import { QRCodePlugin } from './plugins/QRCodePlugin'
+import { TablePlugin } from './plugins/TablePlugin'
 import ToolbarPlugin from './Toolbar'
 
 const theme = {
@@ -72,6 +74,7 @@ export function Editor() {
     onError,
     nodes: [
       HeadingNode, LinkNode,
+      TableNode, TableCellNode, TableRowNode,
       LayoutContainerNode, LayoutItemNode,
       QRCodeNode,
       ListNode, ListItemNode, ChecklistItemNode, {
@@ -99,6 +102,7 @@ export function Editor() {
       <ListPlugin />
       <CheckListPlugin />
       <LinkPlugin />
+      <TablePlugin />
       <LayoutPlugin />
       <QRCodePlugin />
       <CheckboxUIPlugin />

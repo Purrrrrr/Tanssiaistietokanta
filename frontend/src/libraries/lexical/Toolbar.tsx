@@ -36,6 +36,7 @@ import {
 
 import { INSERT_LAYOUT_COMMAND } from './plugins/LayoutPlugin'
 import { INSERT_QR_CODE_COMMAND } from './plugins/QRCodePlugin'
+import { INSERT_TABLE_COMMAND } from './plugins/TablePlugin'
 
 import '../ui/Markdown.css'
 
@@ -84,6 +85,9 @@ export default function ToolbarPlugin() {
   const [editingLinkUrl, setEditingLinkUrl] = useState('')
   const [isQREditMode, setIsQREditMode] = useState(false)
   const [qrInputValue, setQRInputValue] = useState('')
+  const [isTableInsertMode, setIsTableInsertMode] = useState(false)
+  const [tableRows, setTableRows] = useState('3')
+  const [tableCols, setTableCols] = useState('3')
 
   const $updateToolbar = useCallback(() => {
     const selection = $getSelection()
@@ -195,6 +199,17 @@ export default function ToolbarPlugin() {
     const url = editingLinkUrl.trim()
     editor.dispatchCommand(TOGGLE_LINK_COMMAND, url || null)
     setIsLinkEditMode(false)
+  }
+
+  function insertTable() {
+    const rows = Math.max(1, parseInt(tableRows, 10) || 1).toString()
+    const columns = Math.max(1, parseInt(tableCols, 10) || 1).toString()
+    editor.dispatchCommand(INSERT_TABLE_COMMAND, {
+      rows,
+      columns,
+      includeHeaders: { rows: true, columns: false },
+    })
+    setIsTableInsertMode(false)
   }
 
   function insertQRCode() {
@@ -320,10 +335,16 @@ export default function ToolbarPlugin() {
           L
         </ToolbarButton>
         <ToolbarButton
-          onClick={() => { setIsQREditMode(true); setIsLinkEditMode(false) }}
+          onClick={() => { setIsQREditMode(true); setIsLinkEditMode(false); setIsTableInsertMode(false) }}
           active={isQREditMode}
           aria-label="Insert QR code">
           <QRCodeIcon />
+        </ToolbarButton>
+        <ToolbarButton
+          onClick={() => { setIsTableInsertMode(true); setIsLinkEditMode(false); setIsQREditMode(false) }}
+          active={isTableInsertMode}
+          aria-label="Insert table">
+          <TableIcon />
         </ToolbarButton>
       </div>
       {isLinkEditMode && (
@@ -338,6 +359,7 @@ export default function ToolbarPlugin() {
               if (e.key === 'Enter') applyLink()
               if (e.key === 'Escape') setIsLinkEditMode(false)
             }}
+            // eslint-disable-next-line jsx-a11y/no-autofocus
             autoFocus
           />
           <Button minimal onClick={applyLink} aria-label="Apply link">OK</Button>
@@ -362,6 +384,34 @@ export default function ToolbarPlugin() {
           />
           <Button minimal onClick={insertQRCode} aria-label="Insert QR code">Insert</Button>
           <Button minimal onClick={() => setIsQREditMode(false)} aria-label="Cancel">Cancel</Button>
+        </div>
+      )}
+      {isTableInsertMode && (
+        <div className="flex gap-2 items-center px-2 py-1 border-t-1 border-black">
+          <label htmlFor="table-rows-input" className="text-sm">Rows</label>
+          <input
+            id="table-rows-input"
+            className="w-12 px-2 py-0.5 border-1 border-gray-400 rounded text-sm"
+            type="number"
+            min="1"
+            max="50"
+            value={tableRows}
+            onChange={(e) => setTableRows(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter') insertTable(); if (e.key === 'Escape') setIsTableInsertMode(false) }}
+          />
+          <label htmlFor="table-cols-input" className="text-sm">Cols</label>
+          <input
+            id="table-cols-input"
+            className="w-12 px-2 py-0.5 border-1 border-gray-400 rounded text-sm"
+            type="number"
+            min="1"
+            max="50"
+            value={tableCols}
+            onChange={(e) => setTableCols(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter') insertTable(); if (e.key === 'Escape') setIsTableInsertMode(false) }}
+          />
+          <Button minimal onClick={insertTable} aria-label="Insert table">Insert</Button>
+          <Button minimal onClick={() => setIsTableInsertMode(false)} aria-label="Cancel">Cancel</Button>
         </div>
       )}
     </div>
@@ -432,6 +482,22 @@ function QRCodeIcon() {
       <rect x="8" y="13" width="1.5" height="1.5" />
       <rect x="10.5" y="13" width="1.5" height="1.5" />
       <rect x="13" y="13" width="1.5" height="1.5" />
+    </svg>
+  )
+}
+
+function TableIcon() {
+  return (
+    <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true">
+      <rect x="1" y="1" width="14" height="14" rx="1" fill="none" stroke="currentColor" strokeWidth="1" />
+      {/* header row bottom border */}
+      <line x1="1" y1="5" x2="15" y2="5" stroke="currentColor" strokeWidth="1" />
+      {/* middle row bottom border */}
+      <line x1="1" y1="9" x2="15" y2="9" stroke="currentColor" strokeWidth="1" />
+      {/* column divider */}
+      <line x1="6" y1="1" x2="6" y2="15" stroke="currentColor" strokeWidth="1" />
+      {/* second column divider */}
+      <line x1="11" y1="1" x2="11" y2="15" stroke="currentColor" strokeWidth="1" />
     </svg>
   )
 }
