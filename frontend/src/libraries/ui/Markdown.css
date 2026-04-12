@@ -47,6 +47,15 @@
   }
   ul {
     list-style: disc;
+    &:has(.checked, .unchecked) {
+      list-style: none;
+      padding-left: 0;
+    }
+    .checked, .unchecked {
+      input {
+        margin-right: 0.7em;
+      }
+    }
   }
   ol {
     list-style: decimal;
