@@ -25,6 +25,7 @@ import { LayoutContainerNode } from './plugins/nodes/LayoutContainerNode'
 import { LayoutItemNode } from './plugins/nodes/LayoutItemNode'
 import { QRCodeNode } from './plugins/nodes/QRCodeNode'
 import { QRCodePlugin } from './plugins/QRCodePlugin'
+import { EXTERNAL_UPDATE_TAG, SyncValuePlugin } from './plugins/SyncValuePlugin'
 import { TablePlugin } from './plugins/TablePlugin'
 import ToolbarPlugin from './Toolbar'
 
@@ -39,6 +40,10 @@ export interface ImageUploadConfig {
 export interface EditorProps {
   imageUpload?: ImageUploadConfig
   onChange?: (state: SerializedEditorState) => void
+  /** Latest serialized editor state from the server.
+   *  On first render this becomes the initial content.
+   *  When the reference changes, the editor state is replaced (server wins). */
+  value?: SerializedEditorState | null
 }
 
 const theme = {
@@ -86,11 +91,14 @@ function onError(error) {
   console.error(error)
 }
 
-export function Editor({ imageUpload, onChange }: EditorProps = {}) {
+export function Editor({ imageUpload, onChange, value }: EditorProps = {}) {
   const initialConfig = {
     namespace: 'MyEditor',
     theme,
     onError,
+    // Use value as initial content when provided (only read once by LexicalComposer).
+    // Subsequent changes are handled by SyncValuePlugin.
+    editorState: value ? JSON.stringify(value) : undefined,
     nodes: [
       HeadingNode, LinkNode,
       TableNode, TableCellNode, TableRowNode,
@@ -127,7 +135,9 @@ export function Editor({ imageUpload, onChange }: EditorProps = {}) {
       <LayoutPlugin />
       <QRCodePlugin />
       <CheckboxUIPlugin />
-      <OnChangePlugin onChange={(editorState) => {
+      <SyncValuePlugin value={value} />
+      <OnChangePlugin onChange={(editorState, _editor, tags) => {
+        if (tags.has(EXTERNAL_UPDATE_TAG)) return
         onChange?.(editorState.toJSON())
       }} />
     </LexicalComposer>
