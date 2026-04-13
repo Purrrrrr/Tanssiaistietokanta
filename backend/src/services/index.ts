@@ -13,6 +13,7 @@ import { volunteers } from './volunteers/volunteers'
 import { eventVolunteers } from './eventVolunteers/eventVolunteers'
 import { eventVolunteerAssignments } from './eventVolunteerAssignments/eventVolunteerAssignments'
 import { eventRoles } from './eventRoles/eventRoles'
+import { documents } from './documents/documents'
 // For more information about this file see https://dove.feathersjs.com/guides/cli/application.html#configure-functions
 import type { Application } from '../declarations'
 
@@ -21,6 +22,7 @@ export const services = (app: Application) => {
   app.configure(sessions)
   app.configure(user)
   app.configure(file)
+  app.configure(documents)
   app.configure(dancewiki)
   app.configure(graphql)
   app.configure(channelConnections)

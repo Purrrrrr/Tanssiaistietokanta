@@ -1,0 +1,20 @@
+[
+  {
+    "type": "childOf",
+    "service": "events",
+    "path": "owner = 'events' ? owningId",
+    "skipVersionUpdate": true
+  },
+  {
+    "type": "childOf",
+    "service": "workshops",
+    "path": "owner = 'workshops' ? owningId",
+    "skipVersionUpdate": true
+  },
+  {
+    "type": "childOf",
+    "service": "dances",
+    "path": "owner = 'dances' ? owningId",
+    "skipVersionUpdate": true
+  }
+]

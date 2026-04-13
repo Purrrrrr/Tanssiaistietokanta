@@ -1,0 +1,26 @@
+scalar DocumentContent
+
+type Query {
+  document(id: ID!, versionId: ID): Document!
+  documents(owner: Service!, owningId: ID!, path: String): [Document!]!
+}
+
+type Document implements Versionable {
+  _id: ID!
+  _versionId: String
+  _versionNumber: String
+  _updatedAt: String!
+  _createdAt: String!
+  title: String!
+  content: DocumentContent
+  owner: Service!
+  owningId: ID!
+  path: String!
+  versionHistory: VersionHistory!
+}
+
+type Mutation {
+  createDocument(owner: Service!, owningId: ID!, path: String, title: String!, content: DocumentContent): Document!
+  patchDocument(id: ID!, document: JSONPatch!): Document!
+  deleteDocument(id: ID!): Document!
+}
