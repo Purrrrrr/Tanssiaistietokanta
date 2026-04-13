@@ -33,7 +33,8 @@ import RegularSelect from 'libraries/formsV2/components/inputs/selectors/Regular
 import { Button, ButtonProps } from 'libraries/ui'
 import {
   AlignCenter, AlignJustify, AlignLeft, AlignRight,
-  Bold, Italic, Link, Redo, Strikethrough, Underline,
+  Bold, Italic, LayoutTwoColumns,
+  Link, Redo, Strikethrough, Underline,
   Undo,
 } from 'libraries/ui/icons'
 
@@ -388,7 +389,7 @@ export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUplo
           onClick={() => editor.dispatchCommand(INSERT_LAYOUT_COMMAND, '1fr 1fr')}
           active={isItalic}
           aria-label="Format Subscript">
-          L
+          <LayoutTwoColumns />
         </ToolbarButton>
         <ToolbarButton
           onClick={() => editor.dispatchCommand(INSERT_QR_CODE_COMMAND, '')}
