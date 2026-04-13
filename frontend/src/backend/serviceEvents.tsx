@@ -19,6 +19,7 @@ const serviceTypeNameMap: Record<ServiceName, string> = {
   workshops: 'Workshop',
   dancewiki: 'Dancewiki',
   files: 'File',
+  documents: 'Document',
   users: 'User',
   volunteers: 'Volunteer',
   eventVolunteers: 'EventVolunteer',

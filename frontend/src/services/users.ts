@@ -36,6 +36,7 @@ declare global {
     events: ['create', 'list', 'read', 'modify', 'modify-volunteers', 'delete', 'manage-access']
     workshops: ['create', 'list', 'read', 'modify', 'delete']
     files: ['create', 'list', 'read', 'modify', 'delete']
+    documents: ['create', 'list', 'read', 'modify', 'delete']
     volunteers: ['create', 'list', 'read', 'modify', 'delete']
     eventVolunteers: ['create', 'list', 'read', 'modify', 'delete']
   }
