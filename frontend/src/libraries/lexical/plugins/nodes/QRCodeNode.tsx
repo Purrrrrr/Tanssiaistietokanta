@@ -1,6 +1,6 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
 import { useLexicalNodeSelection } from '@lexical/react/useLexicalNodeSelection'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect } from 'react'
 import QRCode_import from 'react-qr-code'
 import { mergeRegister } from '@lexical/utils'
 import type {
@@ -110,9 +110,6 @@ export class QRCodeNode extends DecoratorNode<React.ReactNode> {
 function QRCodeComponent({ nodeKey, value }: { nodeKey: NodeKey, value: string }) {
   const [editor] = useLexicalComposerContext()
   const [isSelected, setSelected, clearSelection] = useLexicalNodeSelection(nodeKey)
-  const [isEditing, setIsEditing] = useState(false)
-  const [editValue, setEditValue] = useState(value)
-  const inputRef = useRef<HTMLInputElement>(null)
 
   const onDelete = useCallback(
     (event: KeyboardEvent) => {
@@ -148,92 +145,12 @@ function QRCodeComponent({ nodeKey, value }: { nodeKey: NodeKey, value: string }
     )
   }, [editor, nodeKey, clearSelection, setSelected, onDelete])
 
-  // Keep editValue in sync when node value changes externally
-  useEffect(() => {
-    setEditValue(value)
-  }, [value])
-
-  // Deselect on outside click
-  useEffect(() => {
-    if (!isSelected) setIsEditing(false)
-  }, [isSelected])
-
-  useEffect(() => {
-    if (isEditing) {
-      inputRef.current?.focus()
-      inputRef.current?.select()
-    }
-  }, [isEditing])
-
-  function openEdit() {
-    setIsEditing(true)
-  }
-
-  function applyEdit() {
-    const trimmed = editValue.trim()
-    if (!trimmed) return
-    editor.update(() => {
-      const node = $getNodeByKey(nodeKey)
-      if ($isQRCodeNode(node)) node.setValue(trimmed)
-    })
-    setIsEditing(false)
-  }
-
-  function removeNode() {
-    editor.update(() => {
-      const node = $getNodeByKey(nodeKey)
-      node?.remove()
-    })
-  }
-
   return (
     <span
-      className={`inline-block my-2 ${isSelected ? 'outline-2 outline-blue-500' : ''}`}
+      className="inline-block my-2"
       data-qr-node-key={nodeKey}
     >
       <QRCode value={value || ' '} size={128} />
-      {isSelected && !isEditing && (
-        <span className="flex gap-1 mt-1">
-          <button
-            className="px-2 py-0.5 text-xs border-1 border-gray-400 rounded bg-white hover:bg-gray-50"
-            onMouseDown={(e) => { e.preventDefault(); openEdit() }}
-          >
-            Edit
-          </button>
-          <button
-            className="px-2 py-0.5 text-xs border-1 border-gray-400 rounded bg-white hover:bg-gray-50 text-red-600"
-            onMouseDown={(e) => { e.preventDefault(); removeNode() }}
-          >
-            Remove
-          </button>
-        </span>
-      )}
-      {isEditing && (
-        <span className="flex gap-1 mt-1 items-center">
-          <input
-            ref={inputRef}
-            className="flex-1 px-2 py-0.5 text-xs border-1 border-gray-400 rounded"
-            value={editValue}
-            onChange={(e) => setEditValue(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') applyEdit()
-              if (e.key === 'Escape') setIsEditing(false)
-            }}
-          />
-          <button
-            className="px-2 py-0.5 text-xs border-1 border-gray-400 rounded bg-white hover:bg-gray-50"
-            onMouseDown={(e) => { e.preventDefault(); applyEdit() }}
-          >
-            OK
-          </button>
-          <button
-            className="px-2 py-0.5 text-xs border-1 border-gray-400 rounded bg-white hover:bg-gray-50"
-            onMouseDown={(e) => { e.preventDefault(); setIsEditing(false) }}
-          >
-            Cancel
-          </button>
-        </span>
-      )}
     </span>
   )
 }

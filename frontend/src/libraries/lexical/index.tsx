@@ -63,6 +63,7 @@ const theme = {
     listitemChecked: 'checked',
     listitemUnchecked: 'unchecked',
   },
+  link: 'cursor-pointer text-link hover:underline',
   //
   text: {
     bold: 'font-bold',

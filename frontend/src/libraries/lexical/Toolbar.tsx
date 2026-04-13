@@ -1,10 +1,3 @@
-/**
- * Copyright (c) Meta Platforms, Inc. and affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- *
- */
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { $isLinkNode, TOGGLE_LINK_COMMAND } from '@lexical/link'
@@ -12,17 +5,25 @@ import { $isListNode, INSERT_CHECK_LIST_COMMAND, INSERT_ORDERED_LIST_COMMAND, IN
 import { $createHeadingNode, $isHeadingNode, HeadingTagType } from '@lexical/rich-text'
 import { $setBlocksType } from '@lexical/selection'
 import { mergeRegister } from '@lexical/utils'
+import classNames from 'classnames'
 import {
+  $addUpdateTag,
   $createParagraphNode,
   $getSelection,
+  $isNodeSelection,
   $isRangeSelection,
+  BaseSelection,
+  BLUR_COMMAND,
   CAN_REDO_COMMAND,
   CAN_UNDO_COMMAND,
   COMMAND_PRIORITY_LOW,
+  FOCUS_COMMAND,
   FORMAT_ELEMENT_COMMAND,
   FORMAT_TEXT_COMMAND,
+  LexicalEditor,
   REDO_COMMAND,
   SELECTION_CHANGE_COMMAND,
+  SKIP_DOM_SELECTION_TAG,
   UNDO_COMMAND,
 } from 'lexical'
 
@@ -37,8 +38,10 @@ import {
 } from 'libraries/ui/icons'
 
 import type { ImageUploadConfig } from '.'
+import { CheckListIcon, ImageIcon, OrderedListIcon, QRCodeIcon, TableIcon, UnorderedListIcon } from './icons'
 import { INSERT_IMAGE_COMMAND } from './plugins/ImagePlugin'
 import { INSERT_LAYOUT_COMMAND } from './plugins/LayoutPlugin'
+import { $isQRCodeNode, QRCodeNode } from './plugins/nodes/QRCodeNode'
 import { INSERT_QR_CODE_COMMAND } from './plugins/QRCodePlugin'
 import { INSERT_TABLE_COMMAND } from './plugins/TablePlugin'
 
@@ -67,12 +70,6 @@ function Divider() {
   return <div className="border-l-1 border-black" />
 }
 
-/*
--Images
--Tables
--QR codes
-*/
-
 export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUploadConfig } = {}) {
   const [editor] = useLexicalComposerContext()
   const toolbarRef = useRef(null)
@@ -84,11 +81,6 @@ export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUplo
   const [isStrikethrough, setIsStrikethrough] = useState(false)
   const [blockType, setBlockType] = useState<BlockType>('paragraph')
   const [isLink, setIsLink] = useState(false)
-  const [linkUrl, setLinkUrl] = useState('')
-  const [isLinkEditMode, setIsLinkEditMode] = useState(false)
-  const [editingLinkUrl, setEditingLinkUrl] = useState('')
-  const [isQREditMode, setIsQREditMode] = useState(false)
-  const [qrInputValue, setQRInputValue] = useState('')
   const [isTableInsertMode, setIsTableInsertMode] = useState(false)
   const [tableRows, setTableRows] = useState('3')
   const [tableCols, setTableCols] = useState('3')
@@ -97,9 +89,32 @@ export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUplo
   const [imageAlt, setImageAlt] = useState('')
   const [isUploading, setIsUploading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const focusedRef = useRef(false)
+  const anchorRef = useRef<HTMLElement | null>(null)
+
+  const [url, setUrl] = useState<string | null>(null)
+  const [qrValue, setQRValue] = useState<string | null>(null)
+  const [qrNode, setQRNode] = useState<QRCodeNode | null>(null)
+
+  function updateAnchor(newDom?: HTMLElement | null) {
+    const dom = newDom === undefined ? anchorRef.current : newDom
+    if (dom) {
+      // TODO fix types
+      (dom.style as any).anchorName = '--lexical-toolbar-anchor'
+    }
+    if (anchorRef.current !== dom) {
+      if (anchorRef.current) {
+        (anchorRef.current.style as any).anchorName = null
+      }
+      anchorRef.current = dom
+    }
+  }
 
   const $updateToolbar = useCallback(() => {
     const selection = $getSelection()
+    setUrl(getLinkUrl(selection))
+    setQRValue(getQRCodeValue(selection))
+    setQRNode(getQRCodeNode(selection))
     if ($isRangeSelection(selection)) {
       setIsBold(selection.hasFormat('bold'))
       setIsItalic(selection.hasFormat('italic'))
@@ -125,14 +140,14 @@ export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUplo
       const parent = node.getParent()
       if ($isLinkNode(parent)) {
         setIsLink(true)
-        setLinkUrl(parent.getURL())
       } else if ($isLinkNode(node)) {
         setIsLink(true)
-        setLinkUrl((node as Parameters<typeof $isLinkNode>[0] & { getURL(): string }).getURL())
       } else {
         setIsLink(false)
-        setLinkUrl('')
       }
+
+      const dom = editor.getElementByKey(node.getKey())
+      updateAnchor(dom)
     }
   }, [])
 
@@ -146,6 +161,24 @@ export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUplo
           { editor },
         )
       }),
+      editor.registerCommand(
+        BLUR_COMMAND,
+        () => {
+          focusedRef.current = false
+          // updateAnchor(null)
+          return false
+        },
+        COMMAND_PRIORITY_LOW,
+      ),
+      editor.registerCommand(
+        FOCUS_COMMAND,
+        () => {
+          focusedRef.current = true
+          // updateAnchor()
+          return false
+        },
+        COMMAND_PRIORITY_LOW,
+      ),
       editor.registerCommand(
         SELECTION_CHANGE_COMMAND,
         (_payload, _newEditor) => {
@@ -200,17 +233,9 @@ export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUplo
   }
 
   function openLinkEditor() {
-    setEditingLinkUrl(linkUrl)
-    setIsLinkEditMode(true)
-    setIsQREditMode(false)
-    setIsTableInsertMode(false)
-    setIsImageInsertMode(false)
-  }
-
-  function applyLink() {
-    const url = editingLinkUrl.trim()
-    editor.dispatchCommand(TOGGLE_LINK_COMMAND, url || null)
-    setIsLinkEditMode(false)
+    if (!isLink) {
+      editor.dispatchCommand(TOGGLE_LINK_COMMAND, 'https://')
+    }
   }
 
   function insertTable() {
@@ -254,19 +279,6 @@ export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUplo
       setIsUploading(false)
       if (fileInputRef.current) fileInputRef.current.value = ''
     }
-  }
-
-  function insertQRCode() {
-    const value = qrInputValue.trim()
-    if (!value) return
-    editor.dispatchCommand(INSERT_QR_CODE_COMMAND, value)
-    setQRInputValue('')
-    setIsQREditMode(false)
-  }
-
-  function removeLink() {
-    editor.dispatchCommand(TOGGLE_LINK_COMMAND, null)
-    setIsLinkEditMode(false)
   }
 
   const headingValue: BlockType = HEADING_OPTIONS.includes(blockType) ? blockType : 'paragraph'
@@ -379,63 +391,24 @@ export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUplo
           L
         </ToolbarButton>
         <ToolbarButton
-          onClick={() => { setIsQREditMode(true); setIsLinkEditMode(false); setIsTableInsertMode(false); setIsImageInsertMode(false) }}
-          active={isQREditMode}
+          onClick={() => editor.dispatchCommand(INSERT_QR_CODE_COMMAND, '')}
           aria-label="Insert QR code">
           <QRCodeIcon />
         </ToolbarButton>
         <ToolbarButton
-          onClick={() => { setIsTableInsertMode(true); setIsLinkEditMode(false); setIsQREditMode(false); setIsImageInsertMode(false) }}
+          onClick={() => { setIsTableInsertMode(true); setIsImageInsertMode(false) }}
           active={isTableInsertMode}
           aria-label="Insert table">
           <TableIcon />
         </ToolbarButton>
         <ToolbarButton
-          onClick={() => { setIsImageInsertMode(true); setIsLinkEditMode(false); setIsQREditMode(false); setIsTableInsertMode(false) }}
+          onClick={() => { setIsImageInsertMode(true); setIsTableInsertMode(false) }}
           active={isImageInsertMode}
           aria-label="Insert image">
           <ImageIcon />
         </ToolbarButton>
       </div>
-      {isLinkEditMode && (
-        <div className="flex gap-2 items-center px-2 py-1 border-t-1 border-black">
-          <input
-            className="flex-1 px-2 py-0.5 border-1 border-gray-400 rounded text-sm"
-            type="url"
-            placeholder="https://…"
-            value={editingLinkUrl}
-            onChange={(e) => setEditingLinkUrl(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') applyLink()
-              if (e.key === 'Escape') setIsLinkEditMode(false)
-            }}
-            // eslint-disable-next-line jsx-a11y/no-autofocus
-            autoFocus
-          />
-          <Button minimal onClick={applyLink} aria-label="Apply link">OK</Button>
-          {isLink && <Button minimal onClick={removeLink} aria-label="Remove link">Remove</Button>}
-          <Button minimal onClick={() => setIsLinkEditMode(false)} aria-label="Cancel">Cancel</Button>
-        </div>
-      )}
-      {isQREditMode && (
-        <div className="flex gap-2 items-center px-2 py-1 border-t-1 border-black">
-          <input
-            className="flex-1 px-2 py-0.5 border-1 border-gray-400 rounded text-sm"
-            type="text"
-            placeholder="Enter URL or text for QR code…"
-            value={qrInputValue}
-            onChange={(e) => setQRInputValue(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') insertQRCode()
-              if (e.key === 'Escape') setIsQREditMode(false)
-            }}
-            // eslint-disable-next-line jsx-a11y/no-autofocus
-            autoFocus
-          />
-          <Button minimal onClick={insertQRCode} aria-label="Insert QR code">Insert</Button>
-          <Button minimal onClick={() => setIsQREditMode(false)} aria-label="Cancel">Cancel</Button>
-        </div>
-      )}
+
       {isTableInsertMode && (
         <div className="flex gap-2 items-center px-2 py-1 border-t-1 border-black">
           <label htmlFor="table-rows-input" className="text-sm">Rows</label>
@@ -502,100 +475,117 @@ export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUplo
           <Button minimal onClick={() => setIsImageInsertMode(false)} aria-label="Cancel">Cancel</Button>
         </div>
       )}
+      <div
+        className={classNames(
+          '[position-anchor:--lexical-toolbar-anchor] absolute mt-2 top-[anchor(bottom,-1000px)] left-[anchor(left)] bg-white border-1 border-gray-400 rounded-md z-10 shadow-md empty:hidden',
+        )}
+      >
+        <LinkEditor editor={editor} url={url} />
+        <QRCodeEditor editor={editor} node={qrNode} value={qrValue} />
+      </div>
     </div>
   )
 }
 
+interface LinkEditorProps {
+  editor: LexicalEditor
+  url: string | null
+}
+
+function LinkEditor({ editor, url }: LinkEditorProps) {
+  if (url === null) {
+    return null
+  }
+
+  function applyLink(value: string) {
+    const url = value.trim()
+    editor.dispatchCommand(TOGGLE_LINK_COMMAND, url || null)
+    editor.update(() => {
+      $addUpdateTag(SKIP_DOM_SELECTION_TAG)
+    })
+  }
+
+  return <div className="flex gap-2 items-center px-2 py-1">
+    <input
+      className="flex-1 px-2 py-0.5 border-1 border-gray-400 rounded text-sm"
+      type="url"
+      placeholder="https://…"
+      value={url}
+      onChange={(e) => applyLink(e.target.value)}
+    />
+    <Button minimal onClick={() => applyLink('')} aria-label="Remove link">Remove link</Button>
+  </div>
+}
+
+function getLinkUrl(selection: BaseSelection | null): string | null {
+  if (!$isRangeSelection(selection)) return null
+  const anchorNode = selection.anchor.getNode()
+  const parent = anchorNode.getParent()
+  if ($isLinkNode(parent)) {
+    return parent.getURL()
+  } else if ($isLinkNode(anchorNode)) {
+    return (anchorNode as Parameters<typeof $isLinkNode>[0] & { getURL(): string }).getURL()
+  }
+  return null
+}
+
+interface QRCodeEditorProps {
+  editor: LexicalEditor
+  node: QRCodeNode | null
+  value: string | null
+}
+
+function QRCodeEditor({ editor, node, value }: QRCodeEditorProps) {
+  if (node === null) {
+    return null
+  }
+
+  function applyQRCode(value: string) {
+    const trimmed = value.trim()
+    editor.update(() => {
+      if ($isQRCodeNode(node)) node.setValue(trimmed)
+      $addUpdateTag(SKIP_DOM_SELECTION_TAG)
+    })
+  }
+
+  function removeQRCode() {
+    editor.update(() => {
+      node?.remove()
+    })
+  }
+
+  return <div className="flex gap-2 items-center px-2 py-1">
+    <input
+      className="flex-1 px-2 py-0.5 border-1 border-gray-400 rounded text-sm"
+      type="text"
+      placeholder="Enter URL or text for QR code…"
+      value={value ?? ''}
+      onChange={(e) => applyQRCode(e.target.value)}
+    />
+    <Button minimal onClick={removeQRCode} aria-label="Remove QR code">Remove QR code</Button>
+  </div>
+}
+
+function getQRCodeValue(selection: BaseSelection | null): string | null {
+  if ($isNodeSelection(selection)) {
+    const node = selection.getNodes()[0]
+    if (node.getType() === 'qr-code') {
+      return (node as unknown as QRCodeNode).getValue()
+    }
+  }
+  return null
+}
+
+function getQRCodeNode(selection: BaseSelection | null): QRCodeNode | null {
+  if ($isNodeSelection(selection)) {
+    const node = selection.getNodes()[0]
+    if ($isQRCodeNode(node)) {
+      return node
+    }
+  }
+  return null
+}
+
 function ToolbarButton({ ...props }: ButtonProps) {
   return <Button minimal {...props} className="align-sub" />
-}
-
-function UnorderedListIcon() {
-  return (
-    <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true">
-      <circle cx="2" cy="4" r="1.5" />
-      <rect x="5" y="3" width="10" height="2" rx="1" />
-      <circle cx="2" cy="8" r="1.5" />
-      <rect x="5" y="7" width="10" height="2" rx="1" />
-      <circle cx="2" cy="12" r="1.5" />
-      <rect x="5" y="11" width="10" height="2" rx="1" />
-    </svg>
-  )
-}
-
-function OrderedListIcon() {
-  return (
-    <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true">
-      <text x="0" y="5" fontSize="5" fontFamily="monospace">1.</text>
-      <rect x="5" y="3" width="10" height="2" rx="1" />
-      <text x="0" y="9" fontSize="5" fontFamily="monospace">2.</text>
-      <rect x="5" y="7" width="10" height="2" rx="1" />
-      <text x="0" y="13" fontSize="5" fontFamily="monospace">3.</text>
-      <rect x="5" y="11" width="10" height="2" rx="1" />
-    </svg>
-  )
-}
-
-function CheckListIcon() {
-  return (
-    <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true">
-      <rect x="0.5" y="2.5" width="3" height="3" rx="0.5" stroke="currentColor" strokeWidth="1" fill="none" />
-      <polyline points="1,4 2,5 3.5,3" stroke="currentColor" strokeWidth="1" fill="none" />
-      <rect x="5" y="3" width="10" height="2" rx="1" />
-      <rect x="0.5" y="6.5" width="3" height="3" rx="0.5" stroke="currentColor" strokeWidth="1" fill="none" />
-      <rect x="5" y="7" width="10" height="2" rx="1" />
-      <rect x="0.5" y="10.5" width="3" height="3" rx="0.5" stroke="currentColor" strokeWidth="1" fill="none" />
-      <rect x="5" y="11" width="10" height="2" rx="1" />
-    </svg>
-  )
-}
-
-function QRCodeIcon() {
-  return (
-    <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true">
-      {/* top-left finder */}
-      <rect x="1" y="1" width="5" height="5" rx="0.5" fill="none" stroke="currentColor" strokeWidth="1" />
-      <rect x="2.5" y="2.5" width="2" height="2" />
-      {/* top-right finder */}
-      <rect x="10" y="1" width="5" height="5" rx="0.5" fill="none" stroke="currentColor" strokeWidth="1" />
-      <rect x="11.5" y="2.5" width="2" height="2" />
-      {/* bottom-left finder */}
-      <rect x="1" y="10" width="5" height="5" rx="0.5" fill="none" stroke="currentColor" strokeWidth="1" />
-      <rect x="2.5" y="11.5" width="2" height="2" />
-      {/* data dots */}
-      <rect x="8" y="8" width="1.5" height="1.5" />
-      <rect x="10.5" y="8" width="1.5" height="1.5" />
-      <rect x="13" y="8" width="1.5" height="1.5" />
-      <rect x="8" y="10.5" width="1.5" height="1.5" />
-      <rect x="8" y="13" width="1.5" height="1.5" />
-      <rect x="10.5" y="13" width="1.5" height="1.5" />
-      <rect x="13" y="13" width="1.5" height="1.5" />
-    </svg>
-  )
-}
-
-function TableIcon() {
-  return (
-    <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true">
-      <rect x="1" y="1" width="14" height="14" rx="1" fill="none" stroke="currentColor" strokeWidth="1" />
-      {/* header row bottom border */}
-      <line x1="1" y1="5" x2="15" y2="5" stroke="currentColor" strokeWidth="1" />
-      {/* middle row bottom border */}
-      <line x1="1" y1="9" x2="15" y2="9" stroke="currentColor" strokeWidth="1" />
-      {/* column divider */}
-      <line x1="6" y1="1" x2="6" y2="15" stroke="currentColor" strokeWidth="1" />
-      {/* second column divider */}
-      <line x1="11" y1="1" x2="11" y2="15" stroke="currentColor" strokeWidth="1" />
-    </svg>
-  )
-}
-
-function ImageIcon() {
-  return (
-    <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true">
-      <rect x="1" y="2" width="14" height="12" rx="1" fill="none" stroke="currentColor" strokeWidth="1" />
-      <circle cx="5" cy="6" r="1.5" />
-      <polyline points="1,11 5,7 8,10 11,7 15,11" stroke="currentColor" strokeWidth="1" fill="none" />
-    </svg>
-  )
 }
