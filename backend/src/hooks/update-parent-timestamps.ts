@@ -26,6 +26,7 @@ export const updateParentTimestamps = async (context: HookContext) => {
   const timestamp = new Date().toISOString()
 
   for (const relation of childOfRelations) {
+    if (relation.skipVersionUpdate) continue
     const parentIds = new Set<string>()
     for (const item of results) {
       const ids = await relation.getLinkedIds(item)

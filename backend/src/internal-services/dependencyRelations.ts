@@ -15,6 +15,7 @@ const _entityDependenciesSchema = Type.Object({
   ]),
   service: Type.String(),
   path: Type.String(),
+  skipVersionUpdate: Type.Optional(Type.Boolean()),
 })
 
 type EntityDependencyJson = Static<typeof _entityDependenciesSchema>

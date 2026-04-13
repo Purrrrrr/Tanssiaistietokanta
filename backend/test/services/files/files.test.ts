@@ -2,11 +2,14 @@ import { expect, use } from 'chai'
 import { prop } from 'ramda'
 import { app } from '../../../src/app'
 import type { File as FileRecord, FileData } from './files.schema'
+import type { Events, EventsData } from '../../../src/services/events/events.schema'
+import type { Dances, DancesData } from '../../../src/services/dances/dances.schema'
 import { adminUser, normalUser, teacherUser } from '../../fixtures/test-users'
 import { publicTestEvent, limitedTestEvent } from '../../fixtures/test-events'
 import { testDances } from '../../fixtures/test-dances'
 import { danceFileFixture, publicEventFileFixture, limitedEventFileFixture, createTestUpload } from '../../fixtures/test-files'
 import chaiAsPromised from 'chai-as-promised'
+import { loadDependencyTypes } from '../../../src/internal-services/dependencyRelations'
 
 use(chaiAsPromised)
 
@@ -617,6 +620,148 @@ describe('files service', () => {
       expect(patched.name).to.equal('self-rename.txt')
 
       await app.service('files').remove(file._id, { user: adminUser })
+    })
+  })
+
+  // ─── Entity dependencies ────────────────────────────────────────────────────
+
+  describe('entity dependencies', () => {
+    const deps = loadDependencyTypes('files')
+    const childOfDeps = deps.filter(d => d.type === 'childOf')
+
+    it('defines childOf relations for events, workshops and dances', () => {
+      const services = childOfDeps.map(d => d.service).sort()
+      expect(services).to.deep.equal(['dances', 'events', 'workshops'])
+    })
+
+    it('marks all childOf relations with skipVersionUpdate: true', () => {
+      expect(childOfDeps.every(d => d.skipVersionUpdate === true)).to.equal(true)
+    })
+
+    for (const ownerService of ['events', 'workshops', 'dances'] as const) {
+      describe(`${ownerService} childOf relation`, () => {
+        const dep = childOfDeps.find(d => d.service === ownerService)!
+
+        it('resolves owningId when owner matches', async () => {
+          const ids = await dep.getLinkedIds({ owner: ownerService, owningId: 'abc123' })
+          expect(ids).to.deep.equal(['abc123'])
+        })
+
+        it('resolves nothing when owner does not match', async () => {
+          const otherOwner = ownerService === 'events' ? 'dances' : 'events'
+          const ids = await dep.getLinkedIds({ owner: otherOwner, owningId: 'abc123' })
+          expect(ids).to.deep.equal([])
+        })
+      })
+    }
+  })
+
+  // ─── Parent version isolation ───────────────────────────────────────────────
+  // Creating/patching/removing a file must NOT update the parent entity's
+  // _updatedAt or _versionNumber (skipVersionUpdate: true on all childOf deps).
+
+  describe('parent version isolation', () => {
+    it('does not change event _updatedAt when a file is created', async () => {
+      const eventBefore = await app.service('events').get(limitedTestEvent._id, { user: adminUser })
+
+      const file = await app.service('files').create({
+        owner: 'events',
+        owningId: limitedTestEvent._id,
+        path: '',
+        upload: createTestUpload('version-isolation-create.txt'),
+      } as unknown as FileData, { user: normalUser }) as FileRecord
+
+      const eventAfter = await app.service('events').get(limitedTestEvent._id, { user: adminUser })
+
+      expect(eventAfter._updatedAt, 'event _updatedAt unchanged after file create').to.equal(eventBefore._updatedAt)
+      expect(eventAfter._versionNumber, 'event _versionNumber unchanged after file create').to.equal(eventBefore._versionNumber)
+
+      await app.service('files').remove(file._id, { user: adminUser })
+    })
+
+    it('does not change event _updatedAt when a file is patched', async () => {
+      const eventBefore = await app.service('events').get(limitedTestEvent._id, { user: adminUser })
+
+      await app.service('files').patch(limitedEventFileFixture._id, { notes: 'version test' }, { user: normalUser })
+
+      const eventAfter = await app.service('events').get(limitedTestEvent._id, { user: adminUser })
+
+      expect(eventAfter._updatedAt, 'event _updatedAt unchanged after file patch').to.equal(eventBefore._updatedAt)
+      expect(eventAfter._versionNumber, 'event _versionNumber unchanged after file patch').to.equal(eventBefore._versionNumber)
+
+      // Restore
+      await app.service('files').patch(limitedEventFileFixture._id, { notes: '' }, { user: adminUser })
+    })
+
+    it('does not change event _updatedAt when a file is removed', async () => {
+      const file = await app.service('files').create({
+        owner: 'events',
+        owningId: limitedTestEvent._id,
+        path: '',
+        upload: createTestUpload('version-isolation-remove.txt'),
+      } as unknown as FileData, { user: normalUser }) as FileRecord
+
+      const eventBefore = await app.service('events').get(limitedTestEvent._id, { user: adminUser })
+
+      await app.service('files').remove(file._id, { user: normalUser })
+
+      const eventAfter = await app.service('events').get(limitedTestEvent._id, { user: adminUser })
+
+      expect(eventAfter._updatedAt, 'event _updatedAt unchanged after file remove').to.equal(eventBefore._updatedAt)
+      expect(eventAfter._versionNumber, 'event _versionNumber unchanged after file remove').to.equal(eventBefore._versionNumber)
+    })
+  })
+
+  // ─── Cascade deletion ───────────────────────────────────────────────────────
+  // Deleting a parent entity (event, dance, etc.) must cascade-delete its files
+  // via the deleteOrphans hook + in-memory dependency graph.
+
+  describe('cascade deletion', () => {
+    it('deletes files when their owner event is deleted', async () => {
+      const event = await app.service('events').create({
+        name: 'Cascade Deletion Test Ball',
+        beginDate: '2030-01-01',
+        endDate: '2030-01-01',
+      } as EventsData, { user: adminUser }) as Events
+
+      const file = await app.service('files').create({
+        owner: 'events',
+        owningId: event._id,
+        path: '',
+        upload: createTestUpload('cascade-event-file.txt'),
+      } as unknown as FileData, { user: adminUser }) as FileRecord
+
+      await app.service('events').remove(event._id, { user: adminUser })
+
+      await expect(
+        app.service('files').get(file._id),
+      ).to.be.rejectedWith('No record found')
+    })
+
+    it('deletes files when their owner dance is deleted', async () => {
+      const dance = await app.service('dances').create({
+        name: 'Cascade Deletion Test Dance',
+        description: '',
+        duration: 0,
+        prelude: '',
+        formation: '',
+        source: '',
+        category: '',
+        instructions: '',
+      } as DancesData, { user: adminUser }) as Dances
+
+      const file = await app.service('files').create({
+        owner: 'dances',
+        owningId: dance._id,
+        path: '',
+        upload: createTestUpload('cascade-dance-file.txt'),
+      } as unknown as FileData, { user: adminUser }) as FileRecord
+
+      await app.service('dances').remove(dance._id, { user: adminUser })
+
+      await expect(
+        app.service('files').get(file._id),
+      ).to.be.rejectedWith('No record found')
     })
   })
 })
