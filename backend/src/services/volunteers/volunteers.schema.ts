@@ -66,6 +66,7 @@ export const volunteersQueryValidator = getValidator(volunteersQuerySchema, quer
 export const volunteersQueryResolver = resolve<VolunteersQuery, HookContext>({
   duplicatedBy: async (value, _, ctx) => {
     if (ctx.method !== 'find') return value
+    if (ctx.params?.query?.searchVersions || ctx.params?.query?._versionId) return value
     // Hide duplicates by default
     return value ?? null
   },
