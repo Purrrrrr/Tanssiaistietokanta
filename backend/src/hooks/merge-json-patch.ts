@@ -10,7 +10,7 @@ export const mergeJsonPatch = (cleanup?: (data: unknown) => unknown) => {
   return async (context: HookContext) => {
     const { data, params, service, id } = context
     if (!isJsonPatch(context)) return
-    delete params.query.jsonPatch
+    if (params.query) delete params.query.jsonPatch
 
     if (id === undefined) throw new Error('Cannot patch multiple documents')
     if (!Array.isArray(data)) throw new Error('JSON Patch should be an array')
