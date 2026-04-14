@@ -1,5 +1,6 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
 import { useEffect, useRef } from 'react'
+import equal from 'fast-deep-equal'
 import type { SerializedEditorState } from 'lexical'
 
 /** Tag applied to setEditorState calls from external value syncs.
@@ -25,7 +26,9 @@ export function SyncValuePlugin({ value }: Props) {
     // Skip null/undefined and values we already applied (guards against
     // re-renders where the prop identity didn't change).
     if (value == null) return
-    if (value === lastApplied.current) return
+    if (equal(value, lastApplied.current)) return
+    const editorValue = editor.getEditorState().toJSON()
+    if (equal(value, editorValue)) return
 
     lastApplied.current = value
     const nextState = editor.parseEditorState(value)
