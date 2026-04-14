@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { booleanProp, numberProp, type Showcase, showcase } from './types'
 
@@ -7,7 +7,7 @@ import FormUiShowcase from 'libraries/formsV2/UiShowcase'
 import { Editor, type SerializedEditorState } from 'libraries/lexical'
 import { DocumentViewer } from 'libraries/lexical/DocumentViewer'
 import { Alert, Dialog } from 'libraries/overlays'
-import { AnchorButton, AutosizedSection, Breadcrumb, BreadcrumbsContainer, Button, Callout, Collapse, GlobalSpinner, RegularLink, showToast, Tab, Tabs } from 'libraries/ui'
+import { AnchorButton, AutosizedSection, Breadcrumb, BreadcrumbsContainer, Button, Callout, Collapse, GlobalSpinner, H2, RegularLink, showToast, Tab, Tabs } from 'libraries/ui'
 import { Trash } from 'libraries/ui/icons'
 import { MenuLink, MenuSection, Page } from 'components/Page'
 import { ColoredTag, TAG_COLOR_COUNT } from 'components/widgets/ColoredTag'
@@ -193,14 +193,22 @@ const showcases: Showcase<Record<string, unknown>>[] = [
 ]
 
 function EditorShowcase() {
-  const [state, setState] = useState<SerializedEditorState | null>(null)
+  const [state, setState] = useState<SerializedEditorState | null>(() => {
+    const saved = window.localStorage.getItem('editorShowcaseState')
+    return saved ? JSON.parse(saved) : null
+  })
+  useEffect(() => {
+    window.localStorage.setItem('editorShowcaseState', JSON.stringify(state))
+  }, [state])
   return (
     <div className="flex flex-col gap-4">
-      <Editor imageUpload={{ owner: 'dances', owningId: 'fuu' }} onChange={setState} />
+      <Editor value={state} imageUpload={{ owner: 'dances', owningId: 'fuu' }} onChange={setState} />
       <div className="border-1 border-dashed border-gray-400 rounded p-2">
         <p className="text-xs text-gray-500 mb-2">Document Viewer (read-only, no Lexical runtime)</p>
         <DocumentViewer document={state} />
       </div>
+      <H2>Another editor instance with the same state</H2>
+      <Editor value={state} imageUpload={{ owner: 'dances', owningId: 'fuu' }} onChange={setState} />
     </div>
   )
 }
