@@ -57,7 +57,7 @@
     "typecheck": "tsc --noEmit",
     "codegen": "graphql-codegen",
     "dev": "NODE_OPTIONS=--max-old-space-size=8192 vite",
-    "poistinstall": "patch-package"
+    "postinstall": "patch-package"
   },
   "browserslist": {
     "production": [
