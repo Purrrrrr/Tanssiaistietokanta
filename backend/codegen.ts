@@ -14,6 +14,7 @@ const config: CodegenConfig = {
           Dance: './services/dances/dances.schema#Dances',
           Wikipage: './services/dancewiki/dancewiki.schema#Dancewiki',
           File: './services/files/files.schema#FileDB',
+          Document: './services/documents/documents.schema#DocumentRecord',
           Event: './services/events/events.schema#Events',
           EventRole: './services/eventRoles/eventRoles.schema#EventRoles',
           EventVolunteer: './services/eventVolunteers/eventVolunteers.schema#EventVolunteers',
