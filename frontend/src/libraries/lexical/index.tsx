@@ -12,8 +12,6 @@ import { ListItemNode, ListNode } from '@lexical/list'
 import { HeadingNode } from '@lexical/rich-text'
 import { TableCellNode, TableNode, TableRowNode } from '@lexical/table'
 import type { SerializedEditorState } from 'lexical'
-import { $getRoot } from 'lexical'
-import { minify } from 'lexical-minifier'
 
 import type { FileOwner, FileOwningId } from 'types/files'
 
