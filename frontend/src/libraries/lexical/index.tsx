@@ -28,6 +28,8 @@ import { TablePlugin } from './plugins/TablePlugin'
 import ToolbarPlugin from './Toolbar'
 
 export type { SerializedEditorState }
+export type { MinifiedEditorState } from './utils/minify'
+export { expand, isMinified, minify } from './utils/minify'
 
 export interface ImageUploadConfig {
   owner: FileOwner
