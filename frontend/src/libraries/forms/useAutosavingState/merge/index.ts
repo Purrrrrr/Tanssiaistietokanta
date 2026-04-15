@@ -9,10 +9,10 @@ import { mergeConflictingStrings } from './mergeStrings'
 export default function merge<T extends Mergeable<unknown>>(data: MergeData<T>): PartialMergeResult<T> {
   if (nonNullData(data)) {
     if (isMergeableAsArray(data)) {
-      return mergeArrays(asCompleteMergeData<MergeableList<any>>(data, []), merge) as unknown as PartialMergeResult<T>
+      return mergeArrays(asCompleteMergeData<MergeableList<T>>(data, [] as unknown as MergeableList<T>), merge) as unknown as PartialMergeResult<T>
     }
     if (isMergeableAsObjects(data)) {
-      return mergeObjects(asCompleteMergeData<MergeableObject<any>>(data, {} as any), merge) as unknown as PartialMergeResult<T>
+      return mergeObjects(asCompleteMergeData<MergeableObject<unknown>>(data, {} as unknown as MergeableObject<T>), merge) as unknown as PartialMergeResult<T>
     }
   }
 
@@ -49,11 +49,11 @@ function nonNullData(data: MergeData<Mergeable<unknown>>): boolean {
   return /* data.original != null && */ data.server != null && data.local != null
 }
 
-function isMergeableAsArray(data: MergeData<Mergeable<unknown>>): data is MergeableAs<MergeableList<any>> {
+function isMergeableAsArray<T>(data: MergeData<Mergeable<T>>): data is MergeableAs<MergeableList<T>> {
   return isMergeableAs(Array.isArray, data)
 }
 
-function isMergeableAsObjects(data: MergeData<Mergeable<unknown>>): data is MergeableAs<MergeableObject<any>> {
+function isMergeableAsObjects<T>(data: MergeData<Mergeable<T>>): data is MergeableAs<MergeableObject<T>> {
   return isMergeableAs(value => typeof value === 'object' && !Array.isArray(value), data)
 }
 

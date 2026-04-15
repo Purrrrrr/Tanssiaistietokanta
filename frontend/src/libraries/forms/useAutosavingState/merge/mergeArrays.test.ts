@@ -669,7 +669,7 @@ describe('mergeArrays', () => {
     [3],
     [4],
   ])('random stability tests (seed = %i)', (seed) => {
-    let random
+    let random: () => number
     beforeEach(() => {
       random = randomGeneratorWithSeed(seed)
     })
