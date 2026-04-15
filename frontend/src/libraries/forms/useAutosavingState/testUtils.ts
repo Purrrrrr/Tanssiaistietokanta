@@ -1,6 +1,6 @@
-import { Entity } from './types'
+import { MergeableListItem } from './types'
 
-export const toEntity = (item: Entity | number | string) => typeof item !== 'object' ? { _id: item, value: item } : item
+export const toEntity = (item: MergeableListItem<unknown> | number | string) => typeof item !== 'object' ? { _id: item, value: item } : item
 
 // mulberry32
 export function randomGeneratorWithSeed(seed: number) {
@@ -14,7 +14,7 @@ export function randomGeneratorWithSeed(seed: number) {
 }
 
 export function changedVersion(
-  original: Entity[],
+  original: MergeableListItem<unknown>[],
   random: () => number,
   amounts: { add?: number, remove?: number, move?: number, addKeys?: number, removeKeys?: number, modifyValues?: number },
 
@@ -31,7 +31,7 @@ export function changedVersion(
     const [val] = arr.splice(from, 1)
     arr.splice(randomIndex(arr), 0, val)
   }
-  const addKey = (arr: Entity[]) => {
+  const addKey = (arr: MergeableListItem<unknown>[]) => {
     modifySomeObject(arr, obj => {
       const key = 'key-' + random()
       return {
@@ -40,7 +40,7 @@ export function changedVersion(
       }
     })
   }
-  const removeKey = (arr: Entity[]) => {
+  const removeKey = (arr: MergeableListItem<unknown>[]) => {
     modifySomeObject(arr, obj => {
       const res = { ...obj }
       // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
@@ -48,18 +48,18 @@ export function changedVersion(
       return res
     })
   }
-  const modifyKey = (arr: Entity[]) => {
+  const modifyKey = (arr: MergeableListItem<unknown>[]) => {
     modifySomeObject(arr, obj => {
       const res = { ...obj }
       res[randomKey(res)] = random()
       return res
     })
   }
-  const randomKey = (obj: Entity) => {
+  const randomKey = (obj: MergeableListItem<unknown>) => {
     const keys = Object.keys(obj).filter(key => key !== '_id')
     return keys[randomIndex(keys)]
   }
-  const modifySomeObject = (arr: Entity[], modifier: (e: Entity) => Entity) => {
+  const modifySomeObject = (arr: MergeableListItem<unknown>[], modifier: (e: MergeableListItem<unknown>) => MergeableListItem<unknown>) => {
     const at = randomIndex(arr)
     arr[at] = modifier(arr[at])
   }

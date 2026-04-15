@@ -1,5 +1,5 @@
 import { Operation } from './types'
-import { Entity } from '../types'
+import { MergeableList } from '../types'
 
 import { arrayPatch } from './arrayPatch'
 
@@ -9,7 +9,7 @@ export function toJSONPatch<T>(original: T, changed: T, pathBase = ''): Operatio
   const commonType = getCommonType(original, changed)
 
   if (commonType === 'array') {
-    return arrayPatch(original as Entity[], changed as Entity[], toJSONPatch, pathBase)
+    return arrayPatch(original as MergeableList<T>, changed as MergeableList<T>, toJSONPatch, pathBase)
   }
   if (commonType === 'object') {
     return objectPatch(original as object, changed as object, pathBase)

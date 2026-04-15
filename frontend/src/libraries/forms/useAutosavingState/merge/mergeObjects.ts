@@ -1,6 +1,6 @@
 import { Conflict, Deleted, mapMergeData, MergeableObject, MergeData, MergeFunction, PartialMergeResult, scalarConflict, scopeConflicts, SyncState } from '../types'
 
-export function mergeObjects<T extends MergeableObject>(
+export function mergeObjects<T extends MergeableObject<any>>(
   data: MergeData<T>,
   merge: MergeFunction,
 ): PartialMergeResult<T> {
@@ -64,7 +64,7 @@ export function mergeObjects<T extends MergeableObject>(
   }
 }
 
-function indexMergeData<T extends MergeableObject>(data: MergeData<T>, key: keyof T): MergeData<T[typeof key]> {
+function indexMergeData<T extends MergeableObject<any>>(data: MergeData<T>, key: keyof T): MergeData<T[typeof key]> {
   return {
     server: get(data.server, key),
     original: get(data.original, key),
@@ -75,7 +75,7 @@ function get(o, k) {
   return o !== undefined ? o[k] : undefined
 }
 
-function getAllKeys<T extends MergeableObject>(data: MergeData<T>): (keyof T)[] {
+function getAllKeys<T extends MergeableObject<any>>(data: MergeData<T>): (keyof T)[] {
   return Array.from(new Set([
     ...[data.server, data.original, data.local]
       .map(value => Object.keys(value ?? {}))

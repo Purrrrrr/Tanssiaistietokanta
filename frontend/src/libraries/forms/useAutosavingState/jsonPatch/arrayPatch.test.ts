@@ -1,6 +1,6 @@
 import { applyPatch, Operation } from 'rfc6902'
 
-import { Entity } from '../types'
+import { MergeableListItem } from '../types'
 
 import { changedVersion, randomGeneratorWithSeed, toEntity } from '../testUtils'
 import { arrayPatch } from './arrayPatch'
@@ -107,7 +107,7 @@ describe('arrayPatch', () => {
   })
 })
 
-function testPatch(original: Entity[], version: Entity[]) {
+function testPatch(original: MergeableListItem<unknown>[], version: MergeableListItem<unknown>[]) {
   const patch = arrayPatch(original, version, toJSONPatch)
 
   const patched = [...original]

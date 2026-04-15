@@ -1,11 +1,11 @@
 import deepEquals from 'fast-deep-equal'
 
-import { arrayConflict, Conflict, Deleted, Entity, ID, mapMergeData, MergeData, MergeFunction, PartialMergeResult, removedArrayItemConflict, scopeConflicts, SyncState } from '../types'
+import { arrayConflict, Conflict, Deleted, ID, mapMergeData, MergeableListItem, MergeData, MergeFunction, PartialMergeResult, removedArrayItemConflict, scopeConflicts, SyncState } from '../types'
 
 import { areEqualWithoutId, mapToIds } from '../idUtils'
 import { GTSort } from './GTSort'
 
-export function mergeArrays<T extends Entity>(
+export function mergeArrays<T extends MergeableListItem<unknown>>(
   mergeData: MergeData<T[]>,
   merge: MergeFunction,
 ): PartialMergeResult<T[]> {

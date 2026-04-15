@@ -18,7 +18,7 @@ export type { PatchStrategy } from './patchStrategies'
 export * as patchStrategy from './patchStrategies'
 export type { SyncState } from './types'
 
-export interface UseAutosavingStateReturn<T extends MergeableObject> {
+export interface UseAutosavingStateReturn<T extends MergeableObject<T>> {
   value: T
   onChange: OnFormChangeHandler<T>
   formProps: AutosavingFormProps<T>
@@ -32,7 +32,7 @@ const DISABLE_CONFLICT_OVERRIDE_DELAY = 1000 * 60 * 5 // Disable saving and over
 export const USE_BACKEND_VALUE = Symbol('useBackendValue')
 export const USE_LOCAL_VALUE = Symbol('useLocalValue')
 
-export function useAutosavingState<T extends MergeableObject, Patch>(
+export function useAutosavingState<T extends MergeableObject<T>, Patch>(
   serverState: T,
   onPatch: (patch: Patch) => Promise<unknown>,
   patchStrategy: PatchStrategy<T, Patch>,

@@ -4,15 +4,16 @@ export type { Conflict } from '../types'
 export { Deleted } from '../types'
 
 export type ID = string | number
-export interface MergeableObject {
-  [key: string]: Mergeable
-}
-export interface Entity {
+export type MergeableObject<T> = Exclude<{ [K in keyof T]: Mergeable<T[K]> }, unknown[]>
+export type MergeableListItem<T> = MergeableObject<T> & {
   _id: ID
-  [key: string]: Mergeable
 }
+export type MergeableList<T> = T extends (infer I)[]
+  ? MergeableListItem<I>[]
+  : never
+
 export type MergeableScalar = undefined | null | string | number | boolean
-export type Mergeable = MergeableScalar | MergeableObject | Entity[] | string[] | number[]
+export type Mergeable<T> = MergeableScalar | MergeableObject<T> | MergeableList<T> | string[] | number[]
 
 export type SyncState = 'IN_SYNC' | 'MODIFIED_LOCALLY' | 'CONFLICT' | 'INVALID'
 export interface PartialMergeResult<T> {
@@ -123,4 +124,4 @@ export function mapMergeData<T, R>(data: MergeData<T>, mapper: (t: T) => R): Mer
   }
 }
 
-export type MergeFunction = <T extends Mergeable>(data: MergeData<T>) => PartialMergeResult<T>
+export type MergeFunction = <T extends Mergeable<unknown>>(data: MergeData<T>) => PartialMergeResult<T>

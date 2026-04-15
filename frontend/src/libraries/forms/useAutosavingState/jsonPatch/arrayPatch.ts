@@ -1,9 +1,9 @@
 import { ID, Operation, PatchGenerator } from './types'
-import { Entity } from '../types'
+import { MergeableListItem } from '../types'
 
 import { mapToIds } from '../idUtils'
 
-export function arrayPatch<T extends Entity>(original: T[], changed: T[], toJSONPatch: PatchGenerator, pathBase = ''): Operation[] {
+export function arrayPatch<T extends MergeableListItem<unknown>>(original: T[], changed: T[], toJSONPatch: PatchGenerator, pathBase = ''): Operation[] {
   const patch: Operation[] = []
   const originalIds = mapToIds(original)
   const modifiedIds = mapToIds(changed)

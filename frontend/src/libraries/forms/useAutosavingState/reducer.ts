@@ -36,11 +36,11 @@ export type SyncAction<T> = {
   version: Version
 }
 
-export function useAutosavingStateReducer<T extends MergeableObject>(serverState: T) {
+export function useAutosavingStateReducer<T extends MergeableObject<T>>(serverState: T) {
   return useReducer<SyncStore<T>, T, [SyncAction<T>]>(reducer, serverState, getInitialState)
 }
 
-function getInitialState<T extends MergeableObject>(serverState: T): SyncStore<T> {
+function getInitialState<T extends MergeableObject<T>>(serverState: T): SyncStore<T> {
   return {
     patchPending: false,
     serverState,
@@ -55,7 +55,7 @@ function getInitialState<T extends MergeableObject>(serverState: T): SyncStore<T
   }
 }
 
-function reducer<T extends MergeableObject>(reducerState: SyncStore<T>, action: SyncAction<T>): SyncStore<T> {
+function reducer<T extends MergeableObject<T>>(reducerState: SyncStore<T>, action: SyncAction<T>): SyncStore<T> {
   const { mergeResult: { modifications, nonConflictingModifications }, serverState } = reducerState
   debug(action.type)
   switch (action.type) {
@@ -99,7 +99,7 @@ function reducer<T extends MergeableObject>(reducerState: SyncStore<T>, action: 
       )
   }
 }
-function resolveConflict<T extends MergeableObject>(reducerState: SyncStore<T>, path: StringPath<T>, version: Version): SyncStore<T> {
+function resolveConflict<T extends MergeableObject<T>>(reducerState: SyncStore<T>, path: StringPath<T>, version: Version): SyncStore<T> {
   const { mergeResult: { modifications, conflicts }, serverState } = reducerState
   const conflict = conflicts.get(String(path))
   if (!conflict) return reducerState
@@ -138,7 +138,7 @@ function resolveConflict<T extends MergeableObject>(reducerState: SyncStore<T>, 
   }
 }
 
-function merge<T extends MergeableObject>(mergeData: MergeData<T>, serverStateTime: number, patchPending: boolean): SyncStore<T> {
+function merge<T extends MergeableObject<T>>(mergeData: MergeData<T>, serverStateTime: number, patchPending: boolean): SyncStore<T> {
   const mergeResult = toFinalMergeResult(mergeValues(mergeData))
   const hasConflicts = mergeResult.state === 'CONFLICT'
 

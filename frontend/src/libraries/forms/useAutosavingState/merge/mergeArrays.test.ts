@@ -1,25 +1,25 @@
-import { arrayConflict, Deleted, Entity, mapMergeData, MergeData, PartialMergeResult, removedArrayItemConflict, scalarConflict } from '../types'
+import { arrayConflict, Deleted, mapMergeData, MergeableListItem, MergeData, PartialMergeResult, removedArrayItemConflict, scalarConflict } from '../types'
 
 import { changedVersion, randomGeneratorWithSeed, toEntity } from '../testUtils'
 import merge from './index'
 import { mergeArrays } from './mergeArrays'
 
-type DummyEntity = Entity | number
+type DummyEntity = MergeableListItem<any> | number
 type DummyEntityList = DummyEntity[] | string
 
-function toEntityList(data: DummyEntityList): Entity[] {
+function toEntityList(data: DummyEntityList): MergeableListItem<unknown>[] {
   if (typeof data === 'string') return data.split('').map(toEntity)
 
   return data.map(toEntity)
 }
-function doMerge(mergeData: MergeData<DummyEntityList>): PartialMergeResult<Entity[]> {
+function doMerge(mergeData: MergeData<DummyEntityList>): PartialMergeResult<MergeableListItem<unknown>[]> {
   return mergeArrays(
     mapMergeData(mergeData, toEntityList),
     merge,
   )
 }
 
-function mergeResult(res: Omit<PartialMergeResult<DummyEntityList>, 'changes'>): Partial<PartialMergeResult<Entity[]>> {
+function mergeResult(res: Omit<PartialMergeResult<DummyEntityList>, 'changes'>): Partial<PartialMergeResult<MergeableListItem<unknown>[]>> {
   return {
     ...res,
     modifications: toEntityList(res.modifications),
@@ -674,7 +674,7 @@ describe('mergeArrays', () => {
       random = randomGeneratorWithSeed(seed)
     })
 
-    function testStability(original: Entity[], v1: Entity[], v2: Entity[]) {
+    function testStability(original: MergeableListItem<unknown>[], v1: MergeableListItem<unknown>[], v2: MergeableListItem<unknown>[]) {
       mergeArrays({ original, server: v2, local: v1 }, merge)
     }
 

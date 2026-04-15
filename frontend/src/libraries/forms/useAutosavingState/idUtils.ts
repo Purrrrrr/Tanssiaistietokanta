@@ -1,12 +1,12 @@
 import deepEquals from 'fast-deep-equal'
 
-import { Entity, ID, Mergeable } from './types'
+import { ID, Mergeable, MergeableListItem } from './types'
 
-export function mapToIds(items: Entity[]): ID[] {
+export function mapToIds(items: MergeableListItem<unknown>[]): ID[] {
   return items.map(getId)
 }
 
-export function getId(item: Entity): ID {
+export function getId(item: MergeableListItem<unknown>): ID {
   if (typeof item === 'string' || typeof item === 'number') {
     return item
   }
@@ -16,7 +16,7 @@ export function getId(item: Entity): ID {
   throw new Error('No object id found')
 }
 
-export function areEqualWithoutId(a: Mergeable, b: Mergeable): boolean {
+export function areEqualWithoutId(a: Mergeable<unknown>, b: Mergeable<unknown>): boolean {
   if (typeof a !== 'object' || a === null || typeof b !== 'object' || b === null) return deepEquals(a, b)
 
   // Both are objects
