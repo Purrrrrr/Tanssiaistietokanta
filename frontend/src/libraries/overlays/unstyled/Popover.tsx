@@ -1,4 +1,4 @@
-import { type ComponentProps, Ref, type RefObject, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { type ComponentProps, Ref, type RefObject, useEffect, useEffectEvent, useLayoutEffect, useRef, useState } from 'react'
 import classNames from 'classnames'
 
 import { useShouldRender } from 'libraries/common/useShouldRender'
@@ -77,12 +77,11 @@ function handleRefs<T>(...refs: (Ref<T> | undefined)[]) {
 }
 
 function useToggleEventHandler(element: RefObject<HTMLDivElement | null>, handler: (e: ToggleEvent) => unknown) {
-  const handlerRef = useRef(handler)
-  handlerRef.current = handler
+  const handlerFun = useEffectEvent(handler)
   useEffect(
     () => {
       const node = element.current
-      const h = (e: Event) => handlerRef.current(e as ToggleEvent)
+      const h = (e: Event) => handlerFun(e as ToggleEvent)
       node?.addEventListener('toggle', h)
       return () => node?.removeEventListener('toggle', h)
     },

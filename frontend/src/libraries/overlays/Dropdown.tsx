@@ -29,15 +29,10 @@ interface DropdrownProps {
 }
 
 export const Dropdown = ({ id, anchorElement, auto, arrow, children, open, onToggle, onClick, tabIndex, alwaysRenderChildren, focusgroup }: DropdrownProps) => {
-  const element = useRef<HTMLDivElement>(null)
   const arrowTriangle = useRef<SVGSVGElement>(null)
-  const parent = anchorElement
-    ? typeof anchorElement === 'string'
-      ? document.getElementById(anchorElement)
-      : anchorElement
-    : element.current?.closest('[data-dropdown-container]')
-
-  useAnchorToElement(element.current, parent, arrow ? 10 : 0, arrow ? updateTriangle : undefined)
+  const element = useAnchorToElement<HTMLDivElement>(
+    anchorElement, arrow ? 10 : 0, arrow ? updateTriangle : undefined,
+  )
 
   return <Popover
     id={id}

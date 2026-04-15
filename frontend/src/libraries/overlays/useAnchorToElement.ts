@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect } from 'react'
+import { useCallback, useLayoutEffect, useRef } from 'react'
 import { useScrollPosition } from '@n8tb1t/use-scroll-position'
 
 import { useResizeObserver } from 'libraries/ui'
@@ -11,21 +11,30 @@ export interface AnchoringCallbackProps {
   pointDown: boolean
 }
 
-export function useAnchorToElement(
-  element?: HTMLElement | null,
-  anchorElement?: Element | null,
+export function useAnchorToElement<TargetElement extends HTMLElement>(
+  anchorElementParam?: string | HTMLElement,
   spacing?: number,
   callback?: (props: AnchoringCallbackProps) => void,
 ) {
+  const elementRef = useRef<TargetElement>(null)
+
   const updateDirection = useCallback(() => {
-    if (!element || !anchorElement) return
-    updateElementPosition(element, anchorElement, spacing ?? 0, callback)
-  }, [element, anchorElement, spacing, callback])
+    const anchorElement = toElement(anchorElementParam)
+      ?? elementRef.current?.closest('[data-dropdown-container]')
+
+    if (!elementRef.current || !anchorElement) return
+    updateElementPosition(elementRef.current, anchorElement, spacing ?? 0, callback)
+  }, [anchorElementParam, spacing, callback])
 
   useLayoutEffect(updateDirection, [updateDirection])
-  useResizeObserver({ current: element ?? null }, updateDirection)
+  useResizeObserver(elementRef, updateDirection)
   useScrollPosition(updateDirection, [updateDirection], undefined, true, 100)
+  return elementRef
 }
+
+const toElement = (element?: string | HTMLElement) => typeof element === 'string'
+  ? document.getElementById(element)
+  : element
 
 function updateElementPosition(
   element: HTMLElement,
