@@ -24,6 +24,8 @@ export const DateTimeInput = ({ readOnly, ...props }: DateTimeInputProps) => {
       onCalendarClose={() => setOpen(false)}
       onClockOpen={() => setOpen(true)}
       onClockClose={() => setOpen(false)}
+      // This is a horrible hack. When we manage to replace this with another date range picker, we should remove the dropdown ref.
+      /* eslint-disable-next-line react-hooks/refs */
       portalContainer={dropdown.current}
     />
     <Dropdown open={open} onToggle={setOpen} alwaysRenderChildren>

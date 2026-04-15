@@ -11,8 +11,10 @@ const debuggingCommonReducer = debugReducer(commonReducer)
 const debuggingValueReducer = debugReducer(valueReducer)
 
 export function useFormReducer<Data>(externalValue: Data, onChange: (changed: Data) => unknown): FormReducerResult<Data> {
-  const latestValue = useRef(externalValue)
-  latestValue.current = externalValue
+  const latestValueRef = useRef(externalValue)
+  // TODO: Implement a proper store or something
+  // eslint-disable-next-line react-hooks/refs
+  latestValueRef.current = externalValue
   const [state, dispatch_rest] = useReducer<CommonFormState, [CommonReducerAction]>(debuggingCommonReducer, initialState)
   const compositeState = useMemo(() => ({
     ...state, data: externalValue,
@@ -22,9 +24,9 @@ export function useFormReducer<Data>(externalValue: Data, onChange: (changed: Da
   const dispatch = useCallback(
     (action: FormAction<Data>) => {
       if (isValueAction(action)) {
-        const newValue = debuggingValueReducer(latestValue.current, action)
+        const newValue = debuggingValueReducer(latestValueRef.current, action)
         onChange(newValue)
-        latestValue.current = newValue
+        latestValueRef.current = newValue
       } else {
         dispatch_rest(action)
       }
@@ -33,7 +35,7 @@ export function useFormReducer<Data>(externalValue: Data, onChange: (changed: Da
   )
 
   return {
-    state: { data: latestValue.current, ...state },
+    state: { data: externalValue, ...state },
     dispatch, subscribe,
   }
 }

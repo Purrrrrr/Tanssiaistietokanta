@@ -30,6 +30,8 @@ export function useFormContextValue<D>(
 ): FormStateContext<D> {
   const { state, dispatch, subscribe } = formReducer
   const stateRef = useRef<FormState<D>>(state)
+  // TODO: Implement a proper store or something
+  // eslint-disable-next-line react-hooks/refs
   stateRef.current = state
 
   return useMemo(

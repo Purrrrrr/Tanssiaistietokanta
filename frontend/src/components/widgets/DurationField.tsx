@@ -29,6 +29,7 @@ export function DurationField({ value: maybeValue, onChange, readOnly, className
       onChange?.(newVal)
     }
   }, [params, onChange]))
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => setParams({ text: durationToString(value), value }), [value])
 
   return <Input

@@ -60,13 +60,12 @@ function InteractiveFilterableSelect<T>(props: SelectorProps<T>) {
     },
     stateReducer: clearInputOnBlurReducer,
   })
-  const buttonProps = getToggleButtonProps({
-    ref: buttonRef,
-    tabIndex: isOpen ? -1 : 0,
-  })
 
   return <DropdownContainer className={containerClassname}>
-    <DropdownButton selectorProps={props} buttonProps={buttonProps} />
+    <DropdownButton
+      selectorProps={props}
+      buttonProps={{ ref: buttonRef, ...getToggleButtonProps({ tabIndex: isOpen ? -1 : 0 }) }}
+    />
     <Dropdown open={isOpen} arrow tabIndex={-1}>
       <input
         tabIndex={isOpen ? 0 : -1}

@@ -101,6 +101,7 @@ function ProgramListEditor({ path }: { path: ProgramSectionPath }) {
         label=""
         itemType={getType}
         acceptsTypes={accepts}
+        // eslint-disable-next-line react-hooks/refs
         droppableElement={tableRef.current}
         path={programPath}
         component={ProgramItemEditor}
