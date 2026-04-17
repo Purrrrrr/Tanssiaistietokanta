@@ -56,7 +56,8 @@ export function jsSizeReporter(options: Options = {}) {
         JSON.stringify(reports, null, 2)
       )
 
-      const branches = [...watchBranches]
+      const branches = [...watchBranches, ...getVersionTags()]
+
       const origin = 'origin/' + getCurrentBranch()
       if (!branches.includes(origin)) {
         branches.push(origin)
@@ -180,6 +181,18 @@ function createSizeReport(bundle: OutputBundle): SizeReport {
     total: totalBytes,
     biggestChunk: biggestChunk,
     chunks,
+  }
+}
+
+function getVersionTags(): string[] {
+  try {
+    const tags = execSync('git tag')
+      .toString()
+      .trim()
+      .split('\n')
+    return tags
+  } catch {
+    return []
   }
 }
 
