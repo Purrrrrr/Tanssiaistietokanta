@@ -388,10 +388,43 @@
   * Fix dances not showing
   * Fix add dance selector to read only
   * Fix teachers and other not showing
+* Better editor
+  * Lexical base
+  * Support checklists
+  * Support column layout
+  * Support tables
+  * Render-only mode
+  * Support images from URL
+  * Support images from Files
+  * Support saving and loading
+  * Change tables to layouts? No, table support is necessary sometimes
+  * Minify json properly
 
   Fix duplicate file upload?
+
+  Better editor Part 2
+    Clean up icons and toolbar
+    QR code size and title
+    Support turning text into QR code
+    Neater plugin system with
+      readOnlyRenderer
+      nodeTypes
+      plugin component
+      toolbar hook
+    Fix editor toolbar not positioning correctly in layout columns
+    Find a way to import current markdown
+    Support for editing tables
+    Fix markdown.css filename to something else
+    Add editor styles
   General notes/documents/wikipages to event/other
-  Support checklists
+  * Document service
+  * Documents in events
+    Different doc types: slide, checklist, plain doc, wiki?
+    Document templates
+  
+  Should files be versioned too?
+  Support for workshop instance specific assistants?
+
   Deadline support?
 
   Check GDPR stuff for volunteer names
@@ -416,6 +449,7 @@
     Allow creating users
     Allow creating users with some token? Invite functionality?
   
+  File metadata: image size
   File linking/copying
     Ability to copy a file to different location/name
     Ability to replace file contents with contents of another
