@@ -12,11 +12,12 @@ interface NavigateButtonProps extends React.ComponentProps<typeof Link>, Permiss
   disabled?: boolean
   minimal?: boolean
   color?: Color
+  paddingClass?: string
 }
 
 const _NavigateButton = withPermissionChecking((props: NavigateButtonProps) => {
-  const { text, children, icon, disabled, minimal, color, className, ...rest } = omitPermissionCheckingProps(props)
-  const classes = buttonClass(color ?? 'none', { className, disabled, minimal })
+  const { text, children, icon, disabled, minimal, color, className, paddingClass, ...rest } = omitPermissionCheckingProps(props)
+  const classes = buttonClass(color ?? 'none', { className, disabled, minimal, paddingClass })
 
   return <Link {...rest} unstyled className={classes} role="button" tabIndex={0} activeProps={{}}>
     {icon}

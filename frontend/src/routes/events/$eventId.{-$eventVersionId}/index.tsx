@@ -5,8 +5,10 @@ import { Event } from 'types'
 
 import { RequirePermissions } from 'libraries/access-control'
 import { Button, Card, H2, Link } from 'libraries/ui'
+import { Edit } from 'libraries/ui/icons'
 import { DanceSet, EventProgramRow } from 'components/event/EventProgramForm'
 import { FileList } from 'components/files/FileList'
+import { NavigateButton } from 'components/widgets/NavigateButton'
 import { useFormatDateTime, useT } from 'i18n'
 
 import { CreateWorkshopCard } from './-components/CreateWorkshopCard'
@@ -129,15 +131,14 @@ function WorkshopCard({ workshop }: { workshop: Workshop }) {
     .flatMap(a => a.volunteers)
 
   return <Card className="flex flex-col" marginClass="" noPadding>
-    <div className="p-6 pb-2">
+    <div className="grid grid-cols-[1fr_auto] grid-rows-2 px-6 pt-4 pb-2">
       <h2 className="font-bold text-xl">
-        <Link to="/events/$eventId/{-$eventVersionId}/workshops/$workshopId" params={{ ...params, workshopId: workshop._id }}>
-          {name}
-        </Link>
+        {name}
         {abbreviation &&
           <> ({abbreviation})</>
         }
       </h2>
+      <NavigateButton className="-mt-2 -mr-4" paddingClass="p-3" minimal color="primary" icon={<Edit size={20} />} to="/events/$eventId/{-$eventVersionId}/workshops/$workshopId" params={{ ...params, workshopId: workshop._id }} />
       <div className="text-lg">{teachers.map(teacher => teacher.name).join(', ')}</div>
     </div>
     <p className="px-6 not-empty:py-2">{description}</p>

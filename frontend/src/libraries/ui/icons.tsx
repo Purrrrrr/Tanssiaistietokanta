@@ -18,6 +18,7 @@ export {
   DoubleChevronUp,
   Edit,
   Error,
+  EyeOpen,
   History,
   InfoSign,
   Italic,

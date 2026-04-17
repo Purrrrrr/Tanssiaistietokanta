@@ -34,6 +34,10 @@ export const fi = {
   dateTimeFormat: 'dd.MM.yyyy HH:mm',
   // Field names and enum translations go here
   domain: {
+    document: {
+      title: 'Otsikko',
+      content: 'Sisältö',
+    },
     event: {
       name: 'Nimi',
       eventDate: 'Tapahtuman ajankohta',
@@ -410,6 +414,22 @@ export const fi = {
         },
       },
     },
+    documents: {
+      DocumentList: {
+        noDocuments: 'Ei asiakirjoja',
+        editDocument: 'Muokkaa asiakirjaa',
+        previewDocument: 'Esikatsele asiakirjaa',
+        closePreview: 'Sulje esikatselu',
+      },
+      CreateDocumenButton: {
+        createDocument: 'Uusi asiakirja',
+        untitledDocument: 'Nimetön asiakirja',
+      },
+      DeleteDocumenButton: {
+        deleteDocument: 'Poista asiakirja',
+        deleteConfirmation: 'Haluatko varmasti poistaa tämän asiakirjan?',
+      },
+    },
   },
   routes: {
     notFound: {
@@ -512,13 +532,13 @@ export const fi = {
         },
         documents: {
           title: 'Asiakirjat',
-          createDocument: 'Uusi asiakirja',
-          untitledDocument: 'Nimetön asiakirja',
-          noDocuments: 'Ei asiakirjoja',
-          titleLabel: 'Otsikko',
-          contentLabel: 'Sisältö',
-          deleteDocument: 'Poista asiakirja',
-          deleteConfirmation: 'Haluatko varmasti poistaa tämän asiakirjan?',
+          document: {
+            editDocument: 'Muokkaa asiakirjaa',
+            edit: {
+              breadcrumb: 'Asiakirjan muokkaus',
+              viewDocument: 'Palaa lukutilaan',
+            },
+          },
         },
         edit: {
           title: 'Muokkaa tapahtuman tietoja',

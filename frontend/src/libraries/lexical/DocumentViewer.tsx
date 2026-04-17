@@ -8,6 +8,7 @@
 import QRCode_import from 'react-qr-code'
 import type { SerializedEditorState as LexicalSerializedEditorState } from 'lexical'
 import { expand, MinifiedEditorState } from './utils/minify'
+import classNames from 'classnames'
 
 const QRCode = (QRCode_import as unknown as { default: typeof QRCode_import }).default
 
@@ -386,7 +387,7 @@ export function DocumentViewer({ document: minified, className }: DocumentViewer
   const root = document.root as unknown as SerializedElementNode
 
   return (
-    <div className={['markdown-content', className].filter(Boolean).join(' ')}>
+    <div className={classNames('markdown-content p-4 bg-white border-1 border-black', className)}>
       {renderChildren(root)}
     </div>
   )

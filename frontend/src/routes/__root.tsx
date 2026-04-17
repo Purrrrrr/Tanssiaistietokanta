@@ -23,6 +23,9 @@ type RouteRequireRights = RightsQuery['rights'] | RightsQuery | ((params: Params
 interface Params {
   danceId?: string
   eventId?: string
+  eventVersionId?: string
+  documentId?: string
+  workshopId?: string
 }
 
 export const Route = createRootRouteWithContext<DanceOrganizerRootRouteContext>()({

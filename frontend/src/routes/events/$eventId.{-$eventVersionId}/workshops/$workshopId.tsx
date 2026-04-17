@@ -1,11 +1,11 @@
-import { createFileRoute, notFound } from '@tanstack/react-router'
+import { createFileRoute, getRouteApi, notFound } from '@tanstack/react-router'
 
 import { Event } from 'types'
 
 import { addGlobalLoadingAnimation } from 'backend'
 import { useDeleteWorkshop } from 'services/workshops'
 
-import { H2 } from 'libraries/ui'
+import { Breadcrumb, H2 } from 'libraries/ui'
 import { DeleteButton } from 'components/widgets/DeleteButton'
 import { WorkshopEditor } from 'components/WorkshopEditor'
 import { useT } from 'i18n'
@@ -24,8 +24,21 @@ export const Route = createFileRoute(
       owner: 'events',
       owningId: eventId,
     }),
+    breadcrumb: BreadcrumbComponent,
   },
 })
+
+function BreadcrumbComponent() {
+  const event = getRouteApi('/events/$eventId/{-$eventVersionId}').useLoaderData()?.event
+  const params = Route.useParams()
+  const workshop = event?.workshops.find(w => w._id === params.workshopId)
+
+  return <Breadcrumb
+    to="/events/$eventId/{-$eventVersionId}/workshops/$workshopId"
+    params={params}
+    text={workshop?.name ?? '-'}
+  />
+}
 
 function RouteComponent() {
   const event = useCurrentEvent()
@@ -62,6 +75,7 @@ function WorkshopCard(
 
   return <>
     <DeleteButton
+      minimal
       requireRight="workshops:delete"
       owner="events"
       owningId={eventId}
