@@ -17,6 +17,7 @@ RUN npm install
 COPY config config
 COPY public public
 COPY tsconfig.json tsconfig.json
+COPY codegen.ts codegen.ts
 COPY src src
 
 RUN npm run compile
