@@ -116,6 +116,11 @@ implements ServiceInterface<Access, never, ServiceParams, never> {
     const entityData = entityId
       ? await strategy.store?.getAccess(entityId)
       : undefined
+    if (strategy.getEntityOwner && entityId && (owner === undefined || owningId === undefined)) {
+      const entityOwnerData = await strategy.getEntityOwner(entityId)
+      owner = owner ?? entityOwnerData?.owner
+      owningId = owningId ?? entityOwnerData?.owningId
+    }
     return strategy.authorize({
       action: action as Action, user, entityData, owner, owningId,
     })
