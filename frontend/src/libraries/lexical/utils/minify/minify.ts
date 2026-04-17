@@ -75,13 +75,13 @@ function expandNode(node: AnyNode): AnyNode {
 export function expandIds(state: AnyNode, editor: LexicalEditor, idMap: Map<string, string>): void {
   idMap.clear()
   editor.read(() => {
-    expandNodeIds(state, $getRoot(), idMap)
+    expandNodeIds({ ...state, _id: 'root' }, $getRoot(), idMap)
   })
 }
 
 function expandNodeIds(state: AnyNode, node: LexicalNode, idMap: Map<string, string>): void {
   const id = state._id
-  console.log(`expanding node with id ${id} for key ${node.getKey()}`)
+  // console.log(`expanding node with id ${id} for key ${node.getKey()}`)
   if (typeof id === 'string') {
     idMap.set(id, node.getKey())
   }

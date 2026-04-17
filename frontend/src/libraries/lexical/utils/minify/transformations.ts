@@ -76,10 +76,10 @@ const transformations: Transformation[] = [
     minify: node => Object.fromEntries(Object.entries(node).filter(([_, value]) => value !== undefined)),
     expand: node => node,
   },
-  // forTypes(['root'], {
-  //   minify: ({ _id: _ignored, node }) => node as AnyNode,
-  //   expand: node => ({ ...node, _id: 'root' }),
-  // }),
+  forTypes(['root'], {
+    minify: ({ _id: _ignored, ...node }) => node as AnyNode,
+    expand: node => node,
+  }),
 ]
 
 export const runMinifyTransformations = (node: AnyNode): AnyNode => {
