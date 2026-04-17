@@ -31,7 +31,7 @@ export const documents = (app: Application) => {
     },
     before: {
       all: [
-        mergeJsonPatch(omit(['_id', '_versionId', '_createdAt', '_updatedAt']) as (data: unknown) => unknown),
+        mergeJsonPatch(omit(['_id', '_versionId', '_versionNumber', '_createdAt', '_updatedAt', 'root']) as (data: unknown) => unknown),
         schemaHooks.validateQuery(documentQueryValidator),
         schemaHooks.resolveQuery(documentQueryResolver),
       ],

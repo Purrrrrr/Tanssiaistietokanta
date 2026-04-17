@@ -47,7 +47,7 @@ export const events = (app: Application) => {
       all: [
         mergeJsonPatch(
           compose(
-            omit(['_id', '_versionId', '_createdAt', '_updatedAt']) as (data: unknown) => unknown,
+            omit(['_id', '_versionId', '_versionNumber', '_createdAt', '_updatedAt']) as (data: unknown) => unknown,
             L.remove(['program', 'introductions', 'program', L.elems, 'dance']),
             L.remove(['program', 'danceSets', L.elems, 'program', L.elems, 'dance']),
             L.remove(['program', 'danceSets', L.elems, 'intervalMusic', L.when(R.isNotNil), 'dance']),

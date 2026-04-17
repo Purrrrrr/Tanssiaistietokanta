@@ -108,6 +108,7 @@ function EventsMenu({ event }: { event: Event }) {
       <MenuLink to="/events/$eventId/{-$eventVersionId}" params={params} activeOptions={{ exact: true }} text={t('basicInfo')} />
       <MenuLink to="/events/$eventId/{-$eventVersionId}/edit" params={params} text={t('editBasicInfo')} icon={<Cog />} />
       <MenuLink to="/events/$eventId/{-$eventVersionId}/volunteers" params={params} text={t('volunteers')} />
+      <MenuLink to="/events/$eventId/{-$eventVersionId}/documents" params={params} text={t('documents')} />
     </MenuSection>
     <MenuSection title={t('ball.title')}>
       <MenuLink to="/events/$eventId/{-$eventVersionId}/program/main" params={params} text={t('ball.ballProgram')} />

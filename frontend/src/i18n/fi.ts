@@ -487,6 +487,7 @@ export const fi = {
             danceCheatlist: 'Osaan tanssin -lunttilappu',
             danceInstructions: 'Työpajojen ohjelma ja tanssiohjeet',
           },
+          documents: 'Asiakirjat',
         },
         index: {
           ballProgram: 'Tanssiaisohjelma',
@@ -508,6 +509,16 @@ export const fi = {
             createWorkshop: 'Luo työpaja',
           },
           files: 'Tapahtumaan liittyvät tiedostot',
+        },
+        documents: {
+          title: 'Asiakirjat',
+          createDocument: 'Uusi asiakirja',
+          untitledDocument: 'Nimetön asiakirja',
+          noDocuments: 'Ei asiakirjoja',
+          titleLabel: 'Otsikko',
+          contentLabel: 'Sisältö',
+          deleteDocument: 'Poista asiakirja',
+          deleteConfirmation: 'Haluatko varmasti poistaa tämän asiakirjan?',
         },
         edit: {
           title: 'Muokkaa tapahtuman tietoja',
