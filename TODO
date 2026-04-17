@@ -399,8 +399,10 @@
   * Support saving and loading
   * Change tables to layouts? No, table support is necessary sometimes
   * Minify json properly
-
-  Fix duplicate file upload?
+* Fix: Teachers are not shown when logged out
+  
+  Hide note fields etc. from volunteers when not event admin
+  Fix duplicate file upload? Is this only buggy in dev mode?
 
   Better editor Part 2
     Clean up icons and toolbar
