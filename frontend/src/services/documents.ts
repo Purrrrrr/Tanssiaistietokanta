@@ -17,7 +17,7 @@ setupServiceUpdateFragment(
 )
 
 export const useDocuments = entityListQueryHook('documents', graphql(`
-query getDocuments($owner: Service!, $owningId: ID!, $path: String) {
+query getDocuments($owner: DocumentOwner!, $owningId: ID!, $path: String) {
   documents(owner: $owner, owningId: $owningId, path: $path) {
     _id
     _versionId
@@ -48,7 +48,7 @@ query getDocument($id: ID!, $versionId: ID) {
 }`))
 
 export const useCreateDocument = entityCreateHook('documents', graphql(`
-mutation createDocument($owner: Service!, $owningId: ID!, $path: String, $title: String!, $content: DocumentContent) {
+mutation createDocument($owner: DocumentOwner!, $owningId: ID!, $path: String, $title: String!, $content: DocumentContent) {
   createDocument(owner: $owner, owningId: $owningId, path: $path, title: $title, content: $content) {
     _id
     _versionId

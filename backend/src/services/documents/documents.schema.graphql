@@ -2,7 +2,7 @@ scalar DocumentContent
 
 type Query {
   document(id: ID!, versionId: ID): Document!
-  documents(owner: Service!, owningId: ID!, path: String): [Document!]!
+  documents(owner: DocumentOwner!, owningId: ID!, path: String): [Document!]!
 }
 
 type Document implements Versionable {
@@ -13,14 +13,20 @@ type Document implements Versionable {
   _createdAt: String!
   title: String!
   content: DocumentContent
-  owner: Service!
+  owner: DocumentOwner!
   owningId: ID!
   path: String!
   versionHistory: VersionHistory!
 }
 
+enum DocumentOwner {
+  dances
+  events
+  workshops
+}
+
 type Mutation {
-  createDocument(owner: Service!, owningId: ID!, path: String, title: String!, content: DocumentContent): Document!
+  createDocument(owner: DocumentOwner!, owningId: ID!, path: String, title: String!, content: DocumentContent): Document!
   patchDocument(id: ID!, document: JSONPatch!): Document!
   deleteDocument(id: ID!): Document!
 }

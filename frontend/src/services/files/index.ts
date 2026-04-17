@@ -23,7 +23,7 @@ setupServiceUpdateFragment(
 )
 
 export const useFiles = entityListQueryHook('files', graphql(`
-  query getFiles($owner: Service!, $owningId: ID!, $path: String) {
+  query getFiles($owner: FileOwner!, $owningId: ID!, $path: String) {
     files(owner: $owner, owningId: $owningId, path: $path) {
       _id
       _updatedAt
