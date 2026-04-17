@@ -12,7 +12,7 @@ import { DateRangeField, formFor, SubmitButton } from 'libraries/forms'
 import { Page } from 'components/Page'
 import { EventGrantsEditor } from 'components/rights/EventGrantsEditor'
 import { useT } from 'i18n'
-import { guid } from 'utils/guid'
+import randomId from 'utils/randomId'
 
 const {
   Form,
@@ -38,7 +38,7 @@ function CreateEventForm() {
   })
 
   const initialGrants = currentUser
-    ? [{ _id: guid(), principal: `user:${currentUser._id}`, role: EventGrantRole.Organizer }]
+    ? [{ _id: randomId(), principal: `user:${currentUser._id}`, role: EventGrantRole.Organizer }]
     : []
 
   const [event, setEvent] = useState<EventInput>({

@@ -9,7 +9,7 @@ import { Fieldset } from 'libraries/formsV2/components/containers/Fieldset'
 import { H2, ItemList } from 'libraries/ui'
 import { DeleteButton } from 'components/widgets/DeleteButton'
 import { useT } from 'i18n'
-import { guid } from 'utils/guid'
+import randomId from 'utils/randomId'
 
 import { EventRoleSelector } from './EventRoleSelector'
 import { UserSelector } from './UserSelector'
@@ -53,7 +53,7 @@ export function EventGrantsEditor({ eventId }: { eventId?: string }) {
             aria-label={t('addGrant')}
             value={null}
             onChange={user => user && addGrant({
-              _id: guid(),
+              _id: randomId(),
               principal: `user:${user._id}`,
               role: EventGrantRole.Viewer,
             })}

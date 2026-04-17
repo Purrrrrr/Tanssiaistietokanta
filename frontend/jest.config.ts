@@ -6,6 +6,9 @@ const config: Config = {
     '<rootDir>/cypress/',
     '<rootDir>/node_modules/',
   ],
+  moduleNameMapper: {
+    '^utils/(.*)$': '<rootDir>/src/utils/$1',
+  },
 }
 
 export default config

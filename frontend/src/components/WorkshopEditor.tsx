@@ -10,7 +10,7 @@ import { ActionButton as Button, DateField, DragHandle, formFor, NumberInput, pa
 import { ColorClass, FormGroup } from 'libraries/ui'
 import { DanceChooser } from 'components/widgets/DanceChooser'
 import { useT, useTranslation } from 'i18n'
-import { guid } from 'utils/guid'
+import randomId from 'utils/randomId'
 
 import { VolunteerAssignmentSelector } from './volunteers/VolunteerAssignmentSelector'
 
@@ -105,7 +105,7 @@ export function WorkshopEditor({ eventId, workshop: workshopInDatabase, reserved
 
 export function newInstance(reference?: Instance, date?: string): Instance {
   return {
-    _id: guid(),
+    _id: randomId(),
     abbreviation: '',
     dateTime: reference?.dateTime ?? `${date ?? new Date().toISOString().slice(0, 10)}T12:00:00.000`,
     durationInMinutes: reference?.durationInMinutes ?? 105,
