@@ -77,7 +77,8 @@ export const eventVolunteerAssignments = (app: Application) => {
     },
     authorize({ user, action, owningId: eventId }) {
       if (action === 'list') return true
-      return accessService.hasAccess('events', 'modify-volunteers', user, eventId)
+      const effectiveAction = action === 'read' ? 'read' : 'modify-volunteers'
+      return accessService.hasAccess('events', effectiveAction, user, eventId)
     },
   })
 }
