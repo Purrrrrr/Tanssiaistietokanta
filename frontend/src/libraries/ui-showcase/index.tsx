@@ -4,7 +4,7 @@ import { booleanProp, numberProp, type Showcase, showcase } from './types'
 
 import { Switch } from 'libraries/forms'
 import FormUiShowcase from 'libraries/formsV2/UiShowcase'
-import { Editor, type SerializedEditorState } from 'libraries/lexical'
+import { Editor, type MinifiedEditorState } from 'libraries/lexical'
 import { DocumentViewer } from 'libraries/lexical/DocumentViewer'
 import { Alert, Dialog } from 'libraries/overlays'
 import { AnchorButton, AutosizedSection, Breadcrumb, BreadcrumbsContainer, Button, Callout, Collapse, GlobalSpinner, H2, RegularLink, showToast, Tab, Tabs } from 'libraries/ui'
@@ -193,7 +193,7 @@ const showcases: Showcase<Record<string, unknown>>[] = [
 ]
 
 function EditorShowcase() {
-  const [state, setState] = useState<SerializedEditorState | null>(() => {
+  const [state, setState] = useState<MinifiedEditorState | null>(() => {
     const saved = window.localStorage.getItem('editorShowcaseState')
     return saved ? JSON.parse(saved) : null
   })
@@ -207,6 +207,8 @@ function EditorShowcase() {
         <p className="text-xs text-gray-500 mb-2">Document Viewer (read-only, no Lexical runtime)</p>
         <DocumentViewer document={state} />
       </div>
+      <H2>Minified state ({JSON.stringify(state).length} bytes)</H2>
+      <pre className="bg-gray-100 p-2 rounded max-h-200 overflow-auto"><code>{JSON.stringify(state, null, 2)}</code></pre>
       <H2>Another editor instance with the same state</H2>
       <Editor value={state} imageUpload={{ owner: 'dances', owningId: 'fuu' }} onChange={setState} />
     </div>

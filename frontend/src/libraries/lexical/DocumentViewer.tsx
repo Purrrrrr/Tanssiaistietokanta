@@ -7,6 +7,7 @@
 // Type-only import — stripped at compile time, zero runtime cost
 import QRCode_import from 'react-qr-code'
 import type { SerializedEditorState as LexicalSerializedEditorState } from 'lexical'
+import { expand, MinifiedEditorState } from './utils/minify'
 
 const QRCode = (QRCode_import as unknown as { default: typeof QRCode_import }).default
 
@@ -327,7 +328,7 @@ function renderNode(node: SerializedNode, index: number): React.ReactNode {
 }
 
 function renderChildren(node: SerializedElementNode): React.ReactNode {
-  return node.children.map((child, i) => renderNode(child as SerializedNode, i))
+  return node.children?.map((child, i) => renderNode(child as SerializedNode, i))
 }
 
 function renderText(node: SerializedTextNode, index: number): React.ReactNode {
@@ -375,11 +376,12 @@ function renderText(node: SerializedTextNode, index: number): React.ReactNode {
 // ---------------------------------------------------------------------------
 
 export interface DocumentViewerProps {
-  document: LexicalSerializedEditorState | null | undefined
+  document: MinifiedEditorState | null | undefined
   className?: string
 }
 
-export function DocumentViewer({ document, className }: DocumentViewerProps) {
+export function DocumentViewer({ document: minified, className }: DocumentViewerProps) {
+  const document = minified ? expand(minified) : null
   if (!document?.root) return null
   const root = document.root as unknown as SerializedElementNode
 

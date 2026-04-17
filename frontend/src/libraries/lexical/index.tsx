@@ -5,31 +5,22 @@ import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary'
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin'
 import { LinkPlugin } from '@lexical/react/LexicalLinkPlugin'
 import { ListPlugin } from '@lexical/react/LexicalListPlugin'
-import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin'
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin'
-import { LinkNode } from '@lexical/link'
-import { ListItemNode, ListNode } from '@lexical/list'
-import { HeadingNode } from '@lexical/rich-text'
-import { TableCellNode, TableNode, TableRowNode } from '@lexical/table'
-import type { SerializedEditorState } from 'lexical'
 
 import type { FileOwner, FileOwningId } from 'types/files'
 
-import { CheckboxUIPlugin, ChecklistItemNode } from './plugins/CheckboxPlugin'
+import { nodes } from './nodes'
+import { CheckboxUIPlugin } from './plugins/CheckboxPlugin'
 import { ImagePlugin } from './plugins/ImagePlugin'
 import { LayoutPlugin } from './plugins/LayoutPlugin'
-import { ImageNode } from './plugins/nodes/ImageNode'
-import { LayoutContainerNode } from './plugins/nodes/LayoutContainerNode'
-import { LayoutItemNode } from './plugins/nodes/LayoutItemNode'
-import { QRCodeNode } from './plugins/nodes/QRCodeNode'
 import { QRCodePlugin } from './plugins/QRCodePlugin'
-import { EXTERNAL_UPDATE_TAG, SyncValuePlugin } from './plugins/SyncValuePlugin'
+import { SyncValuePlugin } from './plugins/SyncValuePlugin'
 import { TablePlugin } from './plugins/TablePlugin'
 import ToolbarPlugin from './Toolbar'
+import type { MinifiedEditorState } from './utils/minify'
+import { expand } from './utils/minify'
 
-export type { SerializedEditorState }
 export type { MinifiedEditorState } from './utils/minify'
-export { expand, isMinified, minify } from './utils/minify'
 
 export interface ImageUploadConfig {
   owner: FileOwner
@@ -39,11 +30,11 @@ export interface ImageUploadConfig {
 
 export interface EditorProps {
   imageUpload?: ImageUploadConfig
-  onChange?: (state: SerializedEditorState) => void
-  /** Latest serialized editor state from the server.
+  onChange?: (state: MinifiedEditorState) => void
+  /** Latest minified editor state from the server.
    *  On first render this becomes the initial content.
    *  When the reference changes, the editor state is replaced (server wins). */
-  value?: SerializedEditorState | null
+  value?: MinifiedEditorState | null
 }
 
 const theme = {
@@ -96,26 +87,15 @@ export function Editor({ imageUpload, onChange, value }: EditorProps = {}) {
     namespace: 'MyEditor',
     theme,
     onError,
-    // Use value as initial content when provided (only read once by LexicalComposer).
+    // Expand minified value to SerializedEditorState for LexicalComposer's initial parse.
     // Subsequent changes are handled by SyncValuePlugin.
-    editorState: value ? JSON.stringify(value) : undefined,
-    nodes: [
-      HeadingNode, LinkNode,
-      TableNode, TableCellNode, TableRowNode,
-      ImageNode,
-      LayoutContainerNode, LayoutItemNode,
-      QRCodeNode,
-      ListNode, ListItemNode, ChecklistItemNode, {
-        replace: ListItemNode,
-        with: (node: ListItemNode) => new ChecklistItemNode(node.getValue(), node.getChecked()),
-        withKlass: ChecklistItemNode,
-      },
-    ],
+    editorState: value ? JSON.stringify(expand(value)) : undefined,
+    nodes,
   }
 
   return (
     <LexicalComposer initialConfig={initialConfig}>
-      <div className="border-1 border-black min-w-200">
+      <div className="border-1 border-black min-w-200 bg-white">
         <ToolbarPlugin imageUpload={imageUpload} />
         <div className="p-2 border-t-1 border-black **:focus:outline-none! markdown-content">
           <RichTextPlugin
@@ -135,11 +115,7 @@ export function Editor({ imageUpload, onChange, value }: EditorProps = {}) {
       <LayoutPlugin />
       <QRCodePlugin />
       <CheckboxUIPlugin />
-      <SyncValuePlugin value={value} />
-      <OnChangePlugin onChange={(editorState, _editor, tags) => {
-        if (tags.has(EXTERNAL_UPDATE_TAG)) return
-        onChange?.(editorState.toJSON())
-      }} />
+      <SyncValuePlugin value={value} onChange={onChange} />
     </LexicalComposer>
   )
 }
