@@ -12,7 +12,12 @@ export const Route = createFileRoute(
       query: useDocument.query,
       variables: { id: documentId },
     })
-    if (document?.owningId !== eventId || document?.owner !== 'events') {
+    if (
+      (document?.owningId !== eventId || document?.owner !== 'events')
+      &&
+      // TODO: we should probably also check that the workshop belongs to the event, but that would require fetching the workshop here, which is a bit more work. For now we can just rely on the fact that the UI won't show links to documents that don't belong to the event
+      (document?.owner !== 'workshops')
+    ) {
       throw new Response('Document not found', { status: 404 })
     }
     return { document }

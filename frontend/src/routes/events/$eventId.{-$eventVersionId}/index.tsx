@@ -6,14 +6,13 @@ import { Event } from 'types'
 import { RequirePermissions } from 'libraries/access-control'
 import { Button, Card, H2, Link } from 'libraries/ui'
 import { Edit } from 'libraries/ui/icons'
-import { CreateDocumentButton } from 'components/document/CreateDocumentButton'
-import { DocumentList } from 'components/document/DocumentList'
 import { DanceSet, EventProgramRow } from 'components/event/EventProgramForm'
 import { FileList } from 'components/files/FileList'
 import { NavigateButton } from 'components/widgets/NavigateButton'
 import { useFormatDateTime, useT } from 'i18n'
 
 import { CreateWorkshopCard } from './-components/CreateWorkshopCard'
+import { EventDocumentList } from './-components/EventDocumentList'
 import { useCurrentEvent } from './-context'
 
 type Workshop = Event['workshops'][0]
@@ -30,7 +29,7 @@ function RouteComponent() {
     <H2>{t('ballProgram')}</H2>
     <EventProgram event={event} />
     <EventWorkshops event={event} readOnly={readOnly} />
-    <Documents />
+    <EventDocumentList />
     <FileList title={t('files')} owner="events" owningId={event._id} />
   </>
 }
@@ -168,32 +167,4 @@ function DanceList({ dances }: { dances: { _id: string, name: string }[] }) {
   return <ul>
     {dances.map(d => <li key={d._id}>{d.name}</li>)}
   </ul>
-}
-
-function Documents() {
-  const params = Route.useParams()
-  const t = useT('routes.events.event.documents')
-
-  return <>
-    <div className="flex items-start justify-between">
-      <H2>{t('title')}</H2>
-      <CreateDocumentButton minimal owner="events" owningId={params.eventId} />
-    </div>
-    <DocumentList
-      owner="events"
-      owningId={params.eventId}
-      renderName={doc =>
-        <Link to="/events/$eventId/{-$eventVersionId}/documents/$documentId" params={{ documentId: doc._id, ...params }}>
-          {doc.title}
-        </Link>
-      }
-      renderEditLink={({ document, ...buttonProps }) =>
-        <NavigateButton
-          to="/events/$eventId/{-$eventVersionId}/documents/$documentId/edit"
-          params={{ documentId: document._id, ...params }}
-          {...buttonProps}
-        />
-      }
-    />
-  </>
 }

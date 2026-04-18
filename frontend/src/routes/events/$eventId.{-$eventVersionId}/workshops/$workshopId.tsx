@@ -11,6 +11,7 @@ import { WorkshopEditor } from 'components/WorkshopEditor'
 import { useT } from 'i18n'
 
 import { useCurrentEvent } from '../-context'
+import { WorkshopDocumentList } from '../-components/WorkshopDocumentList'
 
 type Workshop = Event['workshops'][0]
 
@@ -93,5 +94,6 @@ function WorkshopCard(
       }
     </H2>
     <WorkshopEditor eventId={eventId} workshop={workshop} reservedAbbreviations={reservedAbbreviations} beginDate={beginDate} endDate={endDate} />
+    <WorkshopDocumentList />
   </>
 }
