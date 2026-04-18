@@ -72,6 +72,18 @@ const transformations: Transformation[] = [
     style: '',
     version: 1,
   })),
+  forTypes(['image', 'tablecell'], defaultValues({
+    width: undefined,
+  })),
+  forTypes(['table'], defaultValues({
+    colWidths: undefined,
+    frozenColumnCount: undefined,
+    frozenRowCount: undefined,
+    rowStriping: undefined,
+  })),
+  forTypes(['checklist-item', 'listitem'], defaultValues({
+    checked: undefined,
+  })),
   {
     minify: node => Object.fromEntries(Object.entries(node).filter(([_, value]) => value !== undefined)),
     expand: node => node,
