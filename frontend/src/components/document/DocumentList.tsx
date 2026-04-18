@@ -4,6 +4,7 @@ import { DocumentListItem as Document, DocumentOwner } from 'types'
 
 import { useDocuments } from 'services/documents'
 
+import { useRight } from 'libraries/access-control'
 import { DocumentViewer } from 'libraries/lexical/DocumentViewer'
 import { Button, ButtonProps, ItemList } from 'libraries/ui'
 import { ChevronDown, ChevronUp, Edit } from 'libraries/ui/icons'
@@ -37,6 +38,7 @@ interface DocumentRowProps extends Pick<DocumentListProps, 'renderName' | 'rende
 function DocumentRow({ document, renderName, renderEditLink }: DocumentRowProps) {
   const t = useT('components.documents.DocumentList')
   const [isOpen, setIsOpen] = useState(false)
+  const canEdit = useRight('documents:modify', { entityId: document._id })
 
   return <ItemList.Row
     expandableContent={<DocumentViewer document={document.content} />}
@@ -46,7 +48,7 @@ function DocumentRow({ document, renderName, renderEditLink }: DocumentRowProps)
     {renderName ? renderName(document) : <span className="py-1">{document.title}</span>}
     <div className="flex gap-1">
       <DeleteDocumentButton documentId={document._id} minimal iconOnly />
-      {renderEditLink?.({
+      {canEdit && renderEditLink?.({
         document,
         minimal: true,
         icon: <Edit />,

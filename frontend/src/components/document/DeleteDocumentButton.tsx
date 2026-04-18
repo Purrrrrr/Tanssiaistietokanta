@@ -19,7 +19,7 @@ export function DeleteDocumentButton({ documentId, ...props }: DeleteDocumentBut
   return <DeleteButton
     text={t('deleteDocument')}
     {...props}
-    requireRight="documents:list"
+    requireRight="documents:delete"
     entityId={documentId}
     confirmText={t('deleteConfirmation')}
     onDelete={() => addGlobalLoadingAnimation(deleteDocument({ id: documentId })).then(props.onDelete)}
