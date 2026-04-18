@@ -19,6 +19,7 @@ export const Route = createFileRoute(
 )({
   component: RouteComponent,
   staticData: {
+    breadcrumb: 'routes.events.event.edit.title',
     requireRights: ({ eventId }) => ({
       rights: 'events:read',
       entityId: eventId,

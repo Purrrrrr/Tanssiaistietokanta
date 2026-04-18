@@ -6,4 +6,7 @@ export const Route = createFileRoute(
   '/events/$eventId/{-$eventVersionId}/program/slides/{-$slideId}',
 )({
   component: SlideshowEditor,
+  staticData: {
+    breadcrumb: 'routes.events.event.program.slides.pageTitle',
+  },
 })

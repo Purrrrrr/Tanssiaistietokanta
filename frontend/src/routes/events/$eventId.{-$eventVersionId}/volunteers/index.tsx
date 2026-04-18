@@ -36,6 +36,7 @@ export const Route = createFileRoute(
     }
   },
   staticData: {
+    breadcrumb: 'routes.events.event.volunteers.title',
     requireRights: ({ eventId }) => ({
       rights: 'events:modify-volunteers',
       entityId: eventId,

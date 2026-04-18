@@ -6,4 +6,7 @@ export const Route = createFileRoute(
   '/events/$eventId/{-$eventVersionId}/program/main/',
 )({
   component: MainEditor,
+  staticData: {
+    breadcrumb: 'routes.events.event.program.main.pageTitle',
+  },
 })
