@@ -4,6 +4,7 @@ import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import { RightsQuery } from 'libraries/access-control/types'
 
 import { Breadcrumb, Link } from 'libraries/ui'
+import { Home } from 'libraries/ui/icons'
 import NavigationLayout from 'components/NavigationLayout'
 import { Page } from 'components/Page'
 import { T, TranslationKey, useT } from 'i18n'
@@ -45,7 +46,7 @@ export const Route = createRootRouteWithContext<DanceOrganizerRootRouteContext>(
   },
   notFoundComponent: NotFound,
   staticData: {
-    breadcrumb: () => <Breadcrumb to="/"><img className="mr-2" src="/fan32.png" alt="" /><T msg="app.title" /></Breadcrumb>,
+    breadcrumb: () => <Breadcrumb to="/"><Home /><span className="sr-only"><T msg="app.title" /></span></Breadcrumb>,
     usesRights: ['dances:list'],
   },
 })

@@ -10,7 +10,6 @@ import { LoadingState } from 'components/LoadingState'
 import { Page, Toolbar } from 'components/Page'
 import VersionableContentContainer from 'components/versioning/VersionableContentContainer'
 import { VersionSidebarToggle } from 'components/versioning/VersionSidebarToggle'
-import { BackLink } from 'components/widgets/BackLink'
 import { useT } from 'i18n'
 
 import { DanceIsUsedIn } from './-components/DanceIsUsedIn'
@@ -68,7 +67,6 @@ function DancePage() {
   const { danceId } = useParams({ from: Route.id })
   const { versionId } = useSearch({ from: Route.id })
   const result = useDance({ id: danceId ?? '', versionId })
-  const t = useT('routes.dances.dance')
   const { formProps, state } = useDanceEditorState(result.data?.dance ?? loadedDance)
 
   if (!result.data?.dance) return <LoadingState {...result} />
@@ -80,9 +78,6 @@ function DancePage() {
     title={dance.name}
     showVersion={!!versionId}
     versionNumber={dance._versionNumber}
-    backLink={
-      <BackLink to="/dances">{t('backToDanceList')}</BackLink>
-    }
     info={<SyncStatus state={state} />}
     toolbar={
       <Toolbar>

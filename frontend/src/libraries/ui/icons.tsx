@@ -20,6 +20,7 @@ export {
   Error,
   EyeOpen,
   History,
+  Home,
   InfoSign,
   Italic,
   LayoutTwoColumns,

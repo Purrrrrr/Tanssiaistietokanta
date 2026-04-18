@@ -1,9 +1,11 @@
+import { useMatches } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { Menu as MenuHamburger } from '@blueprintjs/icons'
 import classNames from 'classnames'
 
 import { SyncState } from 'libraries/forms'
 import { Button } from 'libraries/ui'
+import { Breadcrumb, BreadcrumbsContainer } from 'libraries/ui/Breadcrumbs'
 import { useT, useTranslation } from 'i18n'
 import { navigationHidden } from 'utils/routeUtils'
 
@@ -18,13 +20,12 @@ export interface PageContentProps extends VersionedPageTitleProps {
   logo?: React.ReactNode
   info?: React.ReactNode
   children?: React.ReactNode
-  backLink?: React.ReactNode
   syncStatus?: SyncState
   toolbar?: React.ReactNode
   menu?: React.ReactNode
 }
 
-export function Page({ children, info, toolbar, backLink, menu, logo, background, ...props }: PageContentProps) {
+export function Page({ children, info, toolbar, menu, logo, background, ...props }: PageContentProps) {
   const [menuOpen, setMenuOpen] = useState<boolean>(true)
   const title = useVersionedName(props)
   useSetPageTitle(title)
@@ -36,26 +37,53 @@ export function Page({ children, info, toolbar, backLink, menu, logo, background
   return <>
     <div className={classNames('page', (!!menu && menuOpen) && 'menu-open', background && `background-${background}`)}>
       <div className="page-background" />
-      <div className="title flex flex-wrap items-center gap-4 text-amber-100 text-shadow-stone-600 text-shadow-lg">
+      <div className="title flex flex-wrap items-center gap-x-4">
         {logo}
-        <h1 className="h1">{title}</h1>
-        <div className="pb-3 text-lg ps-3">{info}</div>
+        <h1 className="h1 text-amber-100 text-shadow-stone-600 text-shadow-lg">{title}</h1>
+        <div className="pb-3 text-lg ps-3 text-amber-100 text-shadow-stone-600 text-shadow-lg">{info}</div>
+        {toolbar && <div className="toolbar bg-white/60 backdrop-blur-md p-2 rounded-xl">{toolbar}</div>}
       </div>
-      {menu && <MenuToggle onClick={() => setMenuOpen(!menuOpen)} />}
-      {toolbar && <div className="toolbar bg-white/60 backdrop-blur-md p-2 rounded-xl">{toolbar}</div>}
+      <div className="navigation flex">
+        {menu && <MenuToggle onClick={() => setMenuOpen(!menuOpen)} />}
+        <Breadcrumbs />
+      </div>
       {menu && <Menu className="menu" cssDimensionVariablePrefix="page-menu">{menu}</Menu>}
       <PageContent>
-        <div className="backlink">{backLink}</div>
         {children}
       </PageContent>
     </div>
   </>
 }
 
+function Breadcrumbs() {
+  const T = useT('')
+  const matches = useMatches()
+  const breadcrumbs = matches
+    .map(route => route.staticData?.breadcrumb ? ({ route, breadcrumb: route.staticData.breadcrumb }) : null)
+    .filter(r => r !== null)
+
+  return <BreadcrumbsContainer label={useTranslation('navigation.breadcrumbs')}>
+    {breadcrumbs.length > 1 && breadcrumbs.map(({ route, breadcrumb }) =>
+      typeof breadcrumb === 'function'
+        ? renderComponent(breadcrumb, route.id)
+        : (
+          <Breadcrumb
+            key={route.id}
+            to={route.pathname}
+            params={route.params}
+            text={T(breadcrumb)}
+          />
+        ),
+    )}
+  </BreadcrumbsContainer>
+}
+
+const renderComponent = (Crumb: () => React.ReactNode, key: string) => <Crumb key={key} />
+
 function MenuToggle({ onClick }: { onClick: () => void }) {
-  return <div className="menu-toggle flex flex-col justify-end p-2">
+  return <div className="flex flex-col justify-end p-2">
     <Button minimal icon={<MenuHamburger />} onClick={onClick}>
-      <span className="toggle-text font-bold">{useTranslation('navigation.menu')}</span>
+      <span className="sr-only">{useTranslation('navigation.menu')}</span>
     </Button>
   </div>
 }
