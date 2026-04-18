@@ -400,7 +400,22 @@
   * Change tables to layouts? No, table support is necessary sometimes
   * Minify json properly
 * Fix: Teachers are not shown when logged out
-  
+* Deadline support? Not doing, handled in docs
+* Add docs to workshops
+* Add files to workshop
+* Fix editor focus issues with lists, tables and images
+
+  Add add workshop button to side nav
+  Nicer workshop editor
+
+  More fine-grained document access control
+  Event volunteer kompassi status
+    RegisteredToEventSystem
+    AcceptedRegistration
+    Make it an enum?
+    Prevent delete if registered
+    Select boxes & mark all selected as registered/accepted -buttons
+
   Hide note fields etc. from volunteers when not event admin
   Fix duplicate file upload? Is this only buggy in dev mode?
 
@@ -418,19 +433,21 @@
     Support for editing tables
     Fix markdown.css filename to something else
     Add editor styles
+    Document-specific files?
+    Allow choosing images from existing files
   General notes/documents/wikipages to event/other
   * Document service
   * Documents in events
+  * Show read-only mode of doc by default
+  * Show docs in event frontpage?
+    How to show docs in side nav
     Different doc types: slide, checklist, plain doc, wiki?
     Document templates
   
   Should files be versioned too?
   Support for workshop instance specific assistants?
 
-  Deadline support?
-
   Check GDPR stuff for volunteer names
-  Event volunteer kompassi status
   Check how deleted volunteers affect versioning
 
   Multiple slides per dance: formation slide / instructions slide / some other?
