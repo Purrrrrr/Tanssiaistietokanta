@@ -27,6 +27,8 @@ import {
   UNDO_COMMAND,
 } from 'lexical'
 
+import type { FileOwner, FileOwningId } from 'types/files'
+
 import { doUpload } from 'services/files'
 
 import RegularSelect from 'libraries/formsV2/components/inputs/selectors/RegularSelect'
@@ -38,15 +40,12 @@ import {
   Undo,
 } from 'libraries/ui/icons'
 
-import type { ImageUploadConfig } from '.'
 import { CheckListIcon, ImageIcon, OrderedListIcon, QRCodeIcon, TableIcon, UnorderedListIcon } from './icons'
 import { INSERT_IMAGE_COMMAND } from './plugins/ImagePlugin'
 import { INSERT_LAYOUT_COMMAND } from './plugins/LayoutPlugin'
 import { $isQRCodeNode, QRCodeNode } from './plugins/nodes/QRCodeNode'
 import { INSERT_QR_CODE_COMMAND } from './plugins/QRCodePlugin'
 import { INSERT_TABLE_COMMAND } from './plugins/TablePlugin'
-
-import '../ui/Markdown.css'
 
 type BlockType = 'paragraph' | HeadingTagType | 'bullet' | 'number' | 'check'
 
@@ -69,6 +68,12 @@ function H(type: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6', children: React.ReactN
 
 function Divider() {
   return <div className="border-l-1 border-black" />
+}
+
+export interface ImageUploadConfig {
+  owner: FileOwner
+  owningId: FileOwningId
+  path?: string
 }
 
 export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUploadConfig } = {}) {

@@ -4,13 +4,43 @@
  * Walks the serialized Lexical JSON state tree and renders React elements
 /* runtime packages.
  */
-// Type-only import — stripped at compile time, zero runtime cost
 import QRCode_import from 'react-qr-code'
-import type { SerializedEditorState as LexicalSerializedEditorState } from 'lexical'
-import { expand, MinifiedEditorState } from './utils/minify'
+import type { SerializedAutoLinkNode, SerializedLinkNode } from '@lexical/link'
+import type { SerializedListItemNode, SerializedListNode } from '@lexical/list'
+import type { SerializedHeadingNode, SerializedQuoteNode } from '@lexical/rich-text'
+import type { SerializedTableCellNode, SerializedTableNode, SerializedTableRowNode } from '@lexical/table'
 import classNames from 'classnames'
+import type { SerializedElementNode, SerializedParagraphNode, SerializedTextNode } from 'lexical'
+
+import type { SerializedImageNode } from './plugins/nodes/ImageNode'
+import type { SerializedLayoutContainerNode } from './plugins/nodes/LayoutContainerNode'
+import type { SerializedLayoutItemNode } from './plugins/nodes/LayoutItemNode'
+import type { SerializedQRCodeNode } from './plugins/nodes/QRCodeNode'
+import { theme } from './theme'
+import { expand, MinifiedEditorState } from './utils/minify'
 
 const QRCode = (QRCode_import as unknown as { default: typeof QRCode_import }).default
+
+// ---------------------------------------------------------------------------
+// Public component
+// ---------------------------------------------------------------------------
+
+export interface DocumentViewerProps {
+  document: MinifiedEditorState | null | undefined
+  className?: string
+}
+
+export function DocumentViewer({ document: minified, className }: DocumentViewerProps) {
+  const document = minified ? expand(minified) : null
+  if (!document?.root) return null
+  const root = document.root as unknown as SerializedElementNode
+
+  return (
+    <div className={classNames('markdown-content p-4 bg-white border-1 border-black', className)}>
+      {renderChildren(root)}
+    </div>
+  )
+}
 
 // ---------------------------------------------------------------------------
 // Serialized node types (mirrors @lexical types but defined locally so we
@@ -22,105 +52,13 @@ interface SerializedBaseNode {
   version: number
 }
 
-interface SerializedElementNode extends SerializedBaseNode {
-  children: SerializedNode[]
-  direction: 'ltr' | 'rtl' | null
-  format: number | string
-  indent: number
-}
-
-export interface SerializedEditorState {
-  root: SerializedElementNode & { type: 'root' }
-}
-
-interface SerializedTextNode extends SerializedBaseNode {
-  type: 'text'
-  text: string
-  /** Bit flags: 1=bold, 2=italic, 4=strikethrough, 8=underline, 16=code, 32=subscript, 64=superscript */
-  format: number
-  detail: number
-  mode: string
-  style: string
-}
-
-interface SerializedParagraphNode extends SerializedElementNode {
-  type: 'paragraph'
-  textFormat: number
-}
-
-interface SerializedHeadingNode extends SerializedElementNode {
-  type: 'heading'
-  tag: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
-}
-
-interface SerializedQuoteNode extends SerializedElementNode {
-  type: 'quote'
-}
-
-interface SerializedLinkNode extends SerializedElementNode {
-  type: 'autolink' | 'link'
-  url: string
-  target?: string | null
-  rel?: string | null
-  title?: string | null
-}
-
-interface SerializedListNode extends SerializedElementNode {
-  type: 'list'
-  listType: 'bullet' | 'number' | 'check'
-  start: number
-  tag: 'ul' | 'ol'
-}
-
-interface SerializedListItemNode extends SerializedElementNode {
-  type: 'listitem' | 'checklist-item'
-  checked?: boolean
-  value: number
-}
-
-interface SerializedTableNode extends SerializedElementNode {
-  type: 'table'
-}
-
-interface SerializedTableRowNode extends SerializedElementNode {
-  type: 'tablerow'
-}
-
-interface SerializedTableCellNode extends SerializedElementNode {
-  type: 'tablecell'
-  headerState: number
-  colSpan?: number
-  rowSpan?: number
-  width?: number | null
-}
-
-interface SerializedImageNode extends SerializedBaseNode {
-  type: 'image'
-  src: string
-  altText: string
-  width?: number
-}
-
-interface SerializedLayoutContainerNode extends SerializedElementNode {
-  type: 'layout-container'
-  templateColumns: string
-}
-
-interface SerializedLayoutItemNode extends SerializedElementNode {
-  type: 'layout-item'
-}
-
-interface SerializedQRCodeNode extends SerializedBaseNode {
-  type: 'qr-code'
-  value: string
-}
-
 type SerializedNode =
   | SerializedTextNode
   | SerializedParagraphNode
   | SerializedHeadingNode
   | SerializedQuoteNode
   | SerializedLinkNode
+  | SerializedAutoLinkNode
   | SerializedListNode
   | SerializedListItemNode
   | SerializedTableNode
@@ -130,31 +68,8 @@ type SerializedNode =
   | SerializedLayoutContainerNode
   | SerializedLayoutItemNode
   | SerializedQRCodeNode
+  | SerializedBaseNode
   | (SerializedElementNode & { type: string })
-  | (SerializedBaseNode & { type: string })
-
-// ---------------------------------------------------------------------------
-// Theme classes — must match the Editor config in index.tsx
-// ---------------------------------------------------------------------------
-
-const theme = {
-  text: {
-    bold: 'font-bold',
-    italic: 'italic',
-    strikethrough: 'line-through',
-    underline: 'underline',
-    underlineStrikethrough: '[text-decoration:underline_line-through]',
-    code: 'font-mono',
-    subscript: 'align-sub',
-    superscript: 'align-super',
-  },
-  list: {
-    listitemChecked: 'checked',
-    listitemUnchecked: 'unchecked',
-  },
-  layoutContainer: 'grid',
-  layoutItem: 'p-2 border-1 border-gray-200 rounded-md',
-}
 
 // ---------------------------------------------------------------------------
 // Text format bit flags
@@ -369,26 +284,5 @@ function renderText(node: SerializedTextNode, index: number): React.ReactNode {
     <span key={index} className={classes || undefined}>
       {content}
     </span>
-  )
-}
-
-// ---------------------------------------------------------------------------
-// Public component
-// ---------------------------------------------------------------------------
-
-export interface DocumentViewerProps {
-  document: MinifiedEditorState | null | undefined
-  className?: string
-}
-
-export function DocumentViewer({ document: minified, className }: DocumentViewerProps) {
-  const document = minified ? expand(minified) : null
-  if (!document?.root) return null
-  const root = document.root as unknown as SerializedElementNode
-
-  return (
-    <div className={classNames('markdown-content p-4 bg-white border-1 border-black', className)}>
-      {renderChildren(root)}
-    </div>
   )
 }
