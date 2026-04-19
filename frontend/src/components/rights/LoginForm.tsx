@@ -5,7 +5,7 @@ import { login } from 'services/users'
 
 import { formFor } from 'libraries/forms'
 import { ErrorMessage } from 'libraries/forms/validation'
-import { Button, H2 } from 'libraries/ui'
+import { Button } from 'libraries/ui'
 import { useT } from 'i18n'
 
 export interface LoginFields {
@@ -33,7 +33,6 @@ export function LoginForm({ redirectTo, defaultRedirectTo, onSuccess }: { redire
   }
 
   return <Form value={value} onChange={setValue} onSubmit={onSubmit} errorDisplay="onSubmit">
-    <H2>{t('login')}</H2>
     {error && <ErrorMessage error={{ errors: [error] }} />}
     <div className="flex gap-3">
       <Input path="username" label={t('username')} required />

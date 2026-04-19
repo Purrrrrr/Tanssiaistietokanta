@@ -9,6 +9,7 @@ import { apolloClient } from 'backend/apollo'
 import { useHasRights } from 'libraries/access-control'
 import { Button } from 'libraries/ui'
 import NavigationLayout from 'components/NavigationLayout'
+import { Page } from 'components/Page'
 import LoginForm from 'components/rights/LoginForm'
 import { Translator, useT } from 'i18n'
 
@@ -57,9 +58,12 @@ export function LoadingComponent() {
 
 export function ErrorComponent(props: ErrorComponentProps) {
   const { error, reset } = props
+  const t = useT('')
   if (error instanceof AccessDeniedError) {
     return <NavigationLayout>
-      <LoginForm onSuccess={reset} />
+      <Page title={t('components.loginForm.login')}>
+        <LoginForm onSuccess={reset} />
+      </Page>
     </NavigationLayout>
   }
   return <NavigationLayout>

@@ -1,6 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
 
+import { Page } from 'components/Page'
 import LoginForm from 'components/rights/LoginForm'
+import { useTranslation } from 'i18n'
 
 export const Route = createFileRoute('/login')({
   component: RouteComponent,
@@ -12,5 +14,7 @@ export const Route = createFileRoute('/login')({
 })
 
 function RouteComponent() {
-  return <LoginForm defaultRedirectTo="/" />
+  return <Page title={useTranslation('components.loginForm.login')}>
+    <LoginForm defaultRedirectTo="/" />
+  </Page>
 }
