@@ -68,7 +68,7 @@ function RouteComponent() {
     })
 
   return <PageSection title={t('title')} toolbar={
-    <div className="flex gap-4 flex-wrap items-center justify-between mb- mb-4">
+    <div className="grow flex gap-4 flex-wrap items-center justify-between mb- mb-4">
       <EventVolunteerRoleCounts volunteers={unsortedEventVolunteers ?? []} currentRole={role} onSetRole={setRole} />
       <div className="flex gap-4">
         <SearchBar
@@ -163,7 +163,7 @@ function EventVolunteerRoleCounts({ volunteers, currentRole, onSetRole }: { volu
     ([role]) => role.order,
   )
 
-  return <div className="flex gap-1 flex-wrap my-2">
+  return <div className="flex gap-1 flex-wrap">
     {roles.map(([role, count]) => (
       <RoleTag
         key={role._id}

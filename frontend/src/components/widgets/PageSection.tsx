@@ -17,11 +17,11 @@ interface PageSectionProps {
 
 export function PageSection({ title, syncStatus, toolbar, children }: PageSectionProps) {
   return <section className="mb-10">
-    <div className="flex flex-wrap items-start gap-x-4 gap-y-1">
+    <div className="@container flex flex-wrap items-start gap-x-4 gap-y-1">
       <H2>{title}</H2>
       {syncStatus && <SyncStatus state={syncStatus} className="mt-[6px]" />}
       {toolbar &&
-        <div className="ml-auto flex">
+        <div className="@min-[50cqw]:justify-end grow flex">
           {toolbar}
         </div>
       }
