@@ -5,7 +5,7 @@ import { DocumentListItem as Document, DocumentOwner } from 'types'
 import { useDocuments } from 'services/documents'
 
 import { useRight } from 'libraries/access-control'
-import { DocumentViewer } from 'libraries/lexical/DocumentViewer'
+import { DocumentViewer } from 'libraries/lexical'
 import { Button, ButtonProps, ItemList } from 'libraries/ui'
 import { ChevronDown, ChevronUp, Edit } from 'libraries/ui/icons'
 import { DeleteDocumentButton } from 'components/document/DeleteDocumentButton'

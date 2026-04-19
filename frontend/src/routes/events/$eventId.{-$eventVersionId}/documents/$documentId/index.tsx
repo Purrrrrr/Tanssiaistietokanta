@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { useDocument } from 'services/documents'
 
-import { DocumentViewer } from 'libraries/lexical/DocumentViewer'
+import { DocumentViewer } from 'libraries/lexical'
 import { Edit } from 'libraries/ui/icons'
 import { DeleteDocumentButton } from 'components/document/DeleteDocumentButton'
 import { NavigateButton } from 'components/widgets/NavigateButton'

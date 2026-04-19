@@ -35,9 +35,7 @@ import RegularSelect from 'libraries/formsV2/components/inputs/selectors/Regular
 import { Button, ButtonProps } from 'libraries/ui'
 import {
   AlignCenter, AlignJustify, AlignLeft, AlignRight,
-  Bold, Italic, LayoutTwoColumns,
-  Link, Redo, Strikethrough, Underline,
-  Undo,
+  LayoutTwoColumns, Link, Redo, Undo,
 } from 'libraries/ui/icons'
 
 import { CheckListIcon, ImageIcon, OrderedListIcon, QRCodeIcon, TableIcon, UnorderedListIcon } from './icons'
@@ -308,7 +306,7 @@ export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUplo
           <span className="text-xl relative -left-1 size-4 leading-[16px]">H1</span>
         </ToolbarButton>
         <ToolbarButton active={blockType === 'h2'} onClick={() => applyHeading('h2')} aria-label={HEADING_LABELS.h2}>
-          <span className="text-lg relative -left-1 size-4 leading-[16px]">H2</span>
+          <span className="text-base relative -left-1 size-4 leading-[16px]">H2</span>
         </ToolbarButton>
         <RegularSelect<BlockType>
           id="heading-select"
@@ -348,25 +346,25 @@ export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUplo
           onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'bold')}
           active={isBold}
           aria-label="Format Bold">
-          <Bold />
+          <span className="font-bold">B</span>
         </ToolbarButton>
         <ToolbarButton
           onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'italic')}
           active={isItalic}
           aria-label="Format Italics">
-          <Italic />
+          <span className="italic -skew-6">i</span>
         </ToolbarButton>
         <ToolbarButton
           onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'underline')}
           active={isUnderline}
           aria-label="Format Underline">
-          <Underline />
+          <span className="underline decoration-2">U</span>
         </ToolbarButton>
         <ToolbarButton
           onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'strikethrough')}
           active={isStrikethrough}
           aria-label="Format Strikethrough">
-          <Strikethrough />
+          <span className="relative after:block after:h-[3px] after:absolute after:top-[10px] after:-left-0.5 after:w-3.5 after:bg-black">S</span>
         </ToolbarButton>
         <Divider />
         <ToolbarButton
@@ -402,6 +400,7 @@ export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUplo
           aria-label="Format Subscript">
           <LayoutTwoColumns />
         </ToolbarButton>
+        <Divider />
         <ToolbarButton
           onClick={() => editor.dispatchCommand(INSERT_QR_CODE_COMMAND, '')}
           aria-label="Insert QR code">
@@ -599,5 +598,5 @@ function getQRCodeNode(selection: BaseSelection | null): QRCodeNode | null {
 }
 
 function ToolbarButton({ ...props }: ButtonProps) {
-  return <Button minimal {...props} className="align-sub" />
+  return <Button minimal {...props} paddingClass="" className="align-sub size-[30px] grid items-center justify-center [font-size:18px]" />
 }
