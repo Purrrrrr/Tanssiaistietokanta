@@ -15,6 +15,7 @@ export function DropdownButton<T>(
     'aria-label': label, readOnly,
     itemIcon, itemToString = String,
     value, buttonRenderer, placeholder,
+    minimal,
   } = selectorProps
   const ariaLabel = useDropdownButtonLabel(itemToString(value), label)
 
@@ -28,6 +29,7 @@ export function DropdownButton<T>(
 
   return <Button
     {...buttonProps}
+    minimal={minimal}
     active={buttonProps['aria-expanded']}
     aria-label={ariaLabel}
     disabled={readOnly}

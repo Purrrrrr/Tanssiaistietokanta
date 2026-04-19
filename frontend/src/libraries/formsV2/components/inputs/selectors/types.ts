@@ -10,6 +10,7 @@ export interface SelectorProps<T> extends FieldInputComponentProps<T, T> {
   itemHidden?: (item: T) => boolean
   itemToString?: (item: T) => string
   buttonRenderer?: (selectedItem: T, props: DropdownButtonDownshiftProps) => ReactNode
+  minimal?: boolean
   itemCategory?: (item: T) => string
   categoryTitleRenderer?: (category: string) => ReactNode
   itemRenderer?: (item: T) => ReactNode

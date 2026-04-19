@@ -52,13 +52,13 @@ type BlockType = 'paragraph' | HeadingTagType | 'bullet' | 'number' | 'check'
 const HEADING_OPTIONS: BlockType[] = ['paragraph', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']
 
 const HEADING_LABELS: Record<string, string> = {
-  paragraph: 'Paragraph',
-  h1: 'Heading 1',
-  h2: 'Heading 2',
-  h3: 'Heading 3',
-  h4: 'Heading 4',
-  h5: 'Heading 5',
-  h6: 'Heading 6',
+  paragraph: 'Leipäteksti',
+  h1: 'Otsikko 1',
+  h2: 'Otsikko 2',
+  h3: 'Otsikko 3',
+  h4: 'Otsikko 4',
+  h5: 'Otsikko 5',
+  h6: 'Otsikko 6',
 }
 
 function H(type: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6', children: React.ReactNode) {
@@ -67,7 +67,7 @@ function H(type: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6', children: React.ReactN
 }
 
 function Divider() {
-  return <div className="border-l-1 border-black" />
+  return <div className="bg-gray-400 w-px self-stretch" />
 }
 
 export interface ImageUploadConfig {
@@ -78,7 +78,6 @@ export interface ImageUploadConfig {
 
 export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUploadConfig } = {}) {
   const [editor] = useLexicalComposerContext()
-  const toolbarRef = useRef(null)
   const [canUndo, setCanUndo] = useState(false)
   const [canRedo, setCanRedo] = useState(false)
   const [isBold, setIsBold] = useState(false)
@@ -290,8 +289,8 @@ export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUplo
   const headingValue: BlockType = HEADING_OPTIONS.includes(blockType) ? blockType : 'paragraph'
 
   return (
-    <div ref={toolbarRef}>
-      <div className="flex flex-wrap gap-2 p-1">
+    <>
+      <div className="flex flex-wrap items-center gap-2 p-1">
         <ToolbarButton
           disabled={!canUndo}
           onClick={() => editor.dispatchCommand(UNDO_COMMAND, undefined)}
@@ -305,8 +304,15 @@ export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUplo
           <Redo />
         </ToolbarButton>
         <Divider />
+        <ToolbarButton active={blockType === 'h1'} onClick={() => applyHeading('h1')} aria-label={HEADING_LABELS.h1}>
+          <span className="text-xl relative -left-1 size-4 leading-[16px]">H1</span>
+        </ToolbarButton>
+        <ToolbarButton active={blockType === 'h2'} onClick={() => applyHeading('h2')} aria-label={HEADING_LABELS.h2}>
+          <span className="text-lg relative -left-1 size-4 leading-[16px]">H2</span>
+        </ToolbarButton>
         <RegularSelect<BlockType>
           id="heading-select"
+          minimal
           value={headingValue}
           onChange={applyHeading}
           items={HEADING_OPTIONS}
@@ -489,7 +495,7 @@ export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUplo
         <LinkEditor editor={editor} url={url} />
         <QRCodeEditor editor={editor} node={qrNode} value={qrValue} />
       </div>
-    </div>
+    </>
   )
 }
 

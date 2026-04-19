@@ -9,6 +9,8 @@ import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPl
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin'
 import { HEADING, ORDERED_LIST, TEXT_FORMAT_TRANSFORMERS, UNORDERED_LIST } from '@lexical/markdown'
 
+import { CssClass } from 'libraries/ui'
+
 import { nodes } from './nodes'
 import { AutoLinkPlugin, MATCHERS } from './plugins/AutoLinkPlugin'
 import { CheckboxUIPlugin } from './plugins/CheckboxPlugin'
@@ -44,9 +46,9 @@ export function Editor({ imageUpload, onChange, value }: EditorProps = {}) {
 
   return (
     <LexicalComposer initialConfig={initialConfig}>
-      <div className="border-1 border-black min-w-200 bg-white">
+      <div className={`bg-stone-100 min-w-200 ${CssClass.inputBox} p-[2px]`}>
         <ToolbarPlugin imageUpload={imageUpload} />
-        <div className="p-2 border-t-1 border-black **:focus:outline-none! markdown-content">
+        <div className="bg-white p-2 **:focus:outline-none! markdown-content border-t-1 border-stone-400">
           <RichTextPlugin
             contentEditable={
               <ContentEditable />
