@@ -1,4 +1,4 @@
-import { LinkNode } from '@lexical/link'
+import { AutoLinkNode, LinkNode } from '@lexical/link'
 import { ListItemNode, ListNode } from '@lexical/list'
 import { HeadingNode } from '@lexical/rich-text'
 import { TableCellNode, TableNode, TableRowNode } from '@lexical/table'
@@ -10,7 +10,7 @@ import { LayoutItemNode } from './plugins/nodes/LayoutItemNode'
 import { QRCodeNode } from './plugins/nodes/QRCodeNode'
 
 export const nodes = [
-  HeadingNode, LinkNode,
+  HeadingNode, AutoLinkNode, LinkNode,
   TableNode, TableCellNode, TableRowNode,
   ImageNode,
   LayoutContainerNode, LayoutItemNode,

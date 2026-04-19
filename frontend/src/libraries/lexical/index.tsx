@@ -5,11 +5,14 @@ import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary'
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin'
 import { LinkPlugin } from '@lexical/react/LexicalLinkPlugin'
 import { ListPlugin } from '@lexical/react/LexicalListPlugin'
+import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPlugin'
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin'
+import { HEADING, ORDERED_LIST, TEXT_FORMAT_TRANSFORMERS, UNORDERED_LIST } from '@lexical/markdown'
 
 import type { FileOwner, FileOwningId } from 'types/files'
 
 import { nodes } from './nodes'
+import { AutoLinkPlugin, MATCHERS } from './plugins/AutoLinkPlugin'
 import { CheckboxUIPlugin } from './plugins/CheckboxPlugin'
 import { ImagePlugin } from './plugins/ImagePlugin'
 import { LayoutPlugin } from './plugins/LayoutPlugin'
@@ -115,6 +118,11 @@ export function Editor({ imageUpload, onChange, value }: EditorProps = {}) {
       <LayoutPlugin />
       <QRCodePlugin />
       <CheckboxUIPlugin />
+      <AutoLinkPlugin matchers={MATCHERS} />
+      <MarkdownShortcutPlugin transformers={[
+        HEADING, ORDERED_LIST, UNORDERED_LIST,
+        ...TEXT_FORMAT_TRANSFORMERS,
+      ]} />
       <SyncValuePlugin value={value} onChange={onChange} />
     </LexicalComposer>
   )
