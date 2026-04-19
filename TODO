@@ -404,9 +404,16 @@
 * Add docs to workshops
 * Add files to workshop
 * Fix editor focus issues with lists, tables and images
+* AddButton
+* Standardized list view: title, toolbar on the right.
 
   Add add workshop button to side nav
+  Document routes for workshops
   Nicer workshop editor
+  Migrate dance descriptions/instructions to lexical
+  Lexical
+    H1, H2 buttons
+    Write ## title or * item to make headings and lists
 
   More fine-grained document access control
   Event volunteer kompassi status
@@ -444,6 +451,7 @@
     Different doc types: slide, checklist, plain doc, wiki?
     Document templates
   
+  Make document viewer import markdown.css too
   Should files be versioned too?
   Support for workshop instance specific assistants?
 
