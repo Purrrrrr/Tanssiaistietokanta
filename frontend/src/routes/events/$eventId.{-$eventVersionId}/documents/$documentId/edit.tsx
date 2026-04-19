@@ -9,6 +9,7 @@ import { H2 } from 'libraries/ui'
 import { EyeOpen } from 'libraries/ui/icons'
 import { DeleteDocumentButton } from 'components/document/DeleteDocumentButton'
 import { NavigateButton } from 'components/widgets/NavigateButton'
+import { PageSection } from 'components/widgets/PageSection'
 import { useT } from 'i18n'
 
 export const Route = createFileRoute(
@@ -53,11 +54,11 @@ function DocumentEditorInner({ document }: { document: DocumentRecord }) {
   )
   const { formProps, state } = useAutosavingState<DocumentData, unknown[]>(document, save, patchStrategy.jsonPatch)
 
-  return <>
-    <div className="flex items-start gap-4">
-      <H2>{document.title}</H2>
-      <SyncStatus className="mt-1.5" state={state} />
-      <div className="ml-auto">
+  return <PageSection
+    title={document.title}
+    syncStatus={state}
+    toolbar={
+      <>
         <NavigateButton
           minimal
           to="/events/$eventId/{-$eventVersionId}/documents/$documentId"
@@ -66,12 +67,12 @@ function DocumentEditorInner({ document }: { document: DocumentRecord }) {
           text={t('viewDocument')}
         />
         <DeleteDocumentButton minimal documentId={document._id} />
-      </div>
-    </div>
-
+      </>
+    }
+  >
     <Form {...formProps}>
       <Input path="title" label={label('title')} />
       <Field path="content" label={label('content')} component={Editor} />
     </Form>
-  </>
+  </PageSection>
 }

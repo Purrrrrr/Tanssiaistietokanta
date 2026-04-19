@@ -6,13 +6,13 @@ import { addGlobalLoadingAnimation } from 'backend'
 import { useDeleteWorkshop } from 'services/workshops'
 
 import { Breadcrumb, H2 } from 'libraries/ui'
+import { FileList } from 'components/files/FileList'
 import { DeleteButton } from 'components/widgets/DeleteButton'
 import { WorkshopEditor } from 'components/WorkshopEditor'
 import { useT } from 'i18n'
 
-import { useCurrentEvent } from '../-context'
 import { WorkshopDocumentList } from '../-components/WorkshopDocumentList'
-import { FileList } from 'components/files/FileList'
+import { useCurrentEvent } from '../-context'
 
 type Workshop = Event['workshops'][0]
 

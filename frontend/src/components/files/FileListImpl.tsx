@@ -7,8 +7,9 @@ import { useFiles } from 'services/files'
 import { useRights } from 'libraries/access-control'
 import { useFormatDateTime } from 'libraries/i18n/dateTime'
 import { useAlerts } from 'libraries/overlays'
-import { Button, H2, ItemList, RegularLink } from 'libraries/ui'
-import { Add } from 'libraries/ui/icons'
+import { H2, ItemList, RegularLink } from 'libraries/ui'
+import { AddButton } from 'components/widgets/AddButton'
+import { PageSection } from 'components/widgets/PageSection'
 import { useT } from 'i18n'
 import { useMultipleSelection } from 'utils/useMultipleSelection'
 
@@ -23,7 +24,7 @@ import useFilesize from './useFilesize'
 import { useUploadQueue } from './useUploadQueue'
 
 export interface FileListProps {
-  title?: string
+  title: string
   owner: FileOwner
   owningId: FileOwningId
   path?: string
@@ -89,8 +90,25 @@ export default function FileList({ title, owner, owningId, path }: FileListProps
     return null
   }
 
-  return <div>
-    {title && <H2>{title}</H2>}
+  return <PageSection
+    title={title}
+    toolbar={<>
+      {canUpload && <AddButton onClick={() => input.current?.click()} text={T('addFile')} />}
+      {selector.selected.length > 0 &&
+        <div className="flex items-center gap-2">
+          <span className="ms-3">
+            {T('filesSelected', {
+              count: selector.selected.length,
+              sizeTotal: filesize(selector.selected.map(file => file.size).reduce((a, b) => a + b)),
+            })}
+          </span>
+          {canDelete && <DeleteSelectionButton files={selector.selected} />}
+          <DownloadSelectionButton files={selector.selected} />
+        </div>
+      }
+
+    </>}
+  >
     <FileDropZone enabled={canUpload} onDrop={onDragAndDrop}>
       <ItemList
         items={files}
@@ -127,19 +145,6 @@ export default function FileList({ title, owner, owningId, path }: FileListProps
         onChange={e => e.target.files && startUploads([...e.target.files])}
       />
     </FileDropZone>
-    <div className="flex gap-3 items-start my-5">
-      {canUpload && <Button icon={<Add />} onClick={() => input.current?.click()} text={T('addFile')} />}
-      {selector.selected.length > 0 &&
-        <div className="flex gap-3 items-center">
-          {T('filesSelected', {
-            count: selector.selected.length,
-            sizeTotal: filesize(selector.selected.map(file => file.size).reduce((a, b) => a + b)),
-          })}
-          {canDelete && <DeleteSelectionButton files={selector.selected} />}
-          <DownloadSelectionButton files={selector.selected} />
-        </div>
-      }
-      <UploadProgressList uploads={uploads} />
-    </div>
-  </div>
+    <UploadProgressList uploads={uploads} />
+  </PageSection>
 }

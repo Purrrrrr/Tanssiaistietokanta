@@ -14,6 +14,7 @@ import { useFormatDateTime, useT } from 'i18n'
 import { CreateWorkshopCard } from './-components/CreateWorkshopCard'
 import { EventDocumentList } from './-components/EventDocumentList'
 import { useCurrentEvent } from './-context'
+import { AddButton } from 'components/widgets/AddButton'
 
 type Workshop = Event['workshops'][0]
 
@@ -101,16 +102,15 @@ function EventWorkshops({ event, readOnly }: { event: Event, readOnly: boolean }
   const [showCreate, setShowCreate] = useState(false)
   const t = useT('routes.events.event.index')
   const { workshops, _id: eventId, beginDate } = event
-  return <div className="w-auto grid grid-cols-2 items-center">
+  return <div className="w-auto grid grid-cols-2 items-center mb-10">
     <H2 className="">{t('workshops')}</H2>
     {readOnly ||
-      <Button
+      <AddButton
         className="justify-self-end"
         requireRight="workshops:create"
         owner="events"
         owningId={eventId}
         onClick={() => setShowCreate(true)}
-        color="primary"
         text={t('createWorkshop')}
       />
     }

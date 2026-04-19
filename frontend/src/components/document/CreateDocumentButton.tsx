@@ -3,8 +3,8 @@ import { DocumentOwner } from 'types'
 import { addGlobalLoadingAnimation } from 'backend'
 import { useCreateDocument } from 'services/documents'
 
-import { Button, ButtonProps } from 'libraries/ui'
-import { Add } from 'libraries/ui/icons'
+import { ButtonProps } from 'libraries/ui'
+import { AddButton } from 'components/widgets/AddButton'
 import { useT } from 'i18n'
 
 interface CreateDocumentButtonProps extends ButtonProps {
@@ -22,12 +22,11 @@ export function CreateDocumentButton({ owner, owningId, onCreate, ...props }: Cr
     onCreate?.()
   }
 
-  return <Button
+  return <AddButton
     requireRight="documents:create"
     owner={owner}
     owningId={owningId}
     onClick={handleCreate}
-    icon={<Add />}
     text={t('createDocument')}
     {...props}
   />

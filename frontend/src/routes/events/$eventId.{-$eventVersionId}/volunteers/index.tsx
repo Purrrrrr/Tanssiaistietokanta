@@ -19,6 +19,7 @@ import { useCurrentEvent } from '../-context'
 import { DeleteEventVolunteerButton } from './-components/DeleteEventVolunteerButton'
 import { emptyEventVolunteerForm, EventVolunteerForm, EventVolunteerFormValues } from './-components/EventVolunteerForm'
 import { EventVolunteerRoleSelector } from './-components/EventVolunteerRoleSelect'
+import { PageSection } from 'components/widgets/PageSection'
 
 interface EventVolunteerSearchParams {
   search?: string
@@ -66,8 +67,7 @@ function RouteComponent() {
       return true
     })
 
-  return <>
-    <H2>{t('title')}</H2>
+  return <PageSection title={t('title')} toolbar={
     <div className="flex gap-4 flex-wrap items-center justify-between mb- mb-4">
       <EventVolunteerRoleCounts volunteers={unsortedEventVolunteers ?? []} currentRole={role} onSetRole={setRole} />
       <div className="flex gap-4">
@@ -83,6 +83,7 @@ function RouteComponent() {
         </FormGroup>
       </div>
     </div>
+  }>
     <p>{eventVolunteers?.length > 0 && t('Nvolunteers', { count: eventVolunteers?.length })}</p>
     <ItemList
       items={eventVolunteers ?? []}
@@ -107,7 +108,7 @@ function RouteComponent() {
       )}
     </ItemList>
     {!readOnly && <CreateEventVolunteerForm eventId={event._id} addedVolunteers={addedVolunteers} />}
-  </>
+  </PageSection>
 }
 
 function useEventVolunteerSearchParams() {

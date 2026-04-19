@@ -9,26 +9,35 @@ import { DocumentViewer } from 'libraries/lexical/DocumentViewer'
 import { Button, ButtonProps, ItemList } from 'libraries/ui'
 import { ChevronDown, ChevronUp, Edit } from 'libraries/ui/icons'
 import { DeleteDocumentButton } from 'components/document/DeleteDocumentButton'
+import { PageSection } from 'components/widgets/PageSection'
 import { useT, useTranslation } from 'i18n'
 
+import { CreateDocumentButton } from './CreateDocumentButton'
+
 interface DocumentListProps {
+  title: string
   owner: DocumentOwner
   owningId: string
   renderName?: (document: Document) => React.ReactNode
   renderEditLink?: (props: { document: Document } & Pick<ButtonProps, 'minimal' | 'color' | 'icon' | 'aria-label'>) => React.ReactNode
 }
 
-export function DocumentList({ owner, owningId, ...rest }: DocumentListProps) {
+export function DocumentList({ title, owner, owningId, ...rest }: DocumentListProps) {
   const t = useT('components.documents.DocumentList')
   const [documents = []] = useDocuments({ owner, owningId })
 
-  return <ItemList
-    items={documents}
-    emptyText={t('noDocuments')}
-    columns="grid-cols-[1fr_max-content]"
+  return <PageSection
+    title={title}
+    toolbar={<CreateDocumentButton owner={owner} owningId={owningId} />}
   >
-    {documents.map(doc => <DocumentRow key={doc._id} document={doc} {...rest} />)}
-  </ItemList>
+    <ItemList
+      items={documents}
+      emptyText={t('noDocuments')}
+      columns="grid-cols-[1fr_max-content]"
+    >
+      {documents.map(doc => <DocumentRow key={doc._id} document={doc} {...rest} />)}
+    </ItemList>
+  </PageSection>
 }
 
 interface DocumentRowProps extends Pick<DocumentListProps, 'renderName' | 'renderEditLink'> {

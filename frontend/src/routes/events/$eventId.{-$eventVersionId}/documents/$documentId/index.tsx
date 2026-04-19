@@ -3,10 +3,10 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useDocument } from 'services/documents'
 
 import { DocumentViewer } from 'libraries/lexical/DocumentViewer'
-import { H2 } from 'libraries/ui'
 import { Edit } from 'libraries/ui/icons'
 import { DeleteDocumentButton } from 'components/document/DeleteDocumentButton'
 import { NavigateButton } from 'components/widgets/NavigateButton'
+import { PageSection } from 'components/widgets/PageSection'
 import { useT } from 'i18n'
 
 export const Route = createFileRoute(
@@ -22,10 +22,10 @@ function RouteComponent() {
   if (!result.data?.document) return null
   const { document } = result.data
 
-  return <>
-    <div className="flex items-start justify-between">
-      <H2>{document.title}</H2>
-      <div>
+  return <PageSection
+    title={document.title}
+    toolbar={
+      <>
         <NavigateButton
           minimal
           color="primary"
@@ -35,8 +35,9 @@ function RouteComponent() {
           text={t('editDocument')}
         />
         <DeleteDocumentButton minimal documentId={document._id} />
-      </div>
-    </div>
+      </>
+    }
+  >
     <DocumentViewer document={document.content} />
-  </>
+  </PageSection>
 }

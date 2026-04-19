@@ -13,6 +13,7 @@ import { DeleteButton } from 'components/widgets/DeleteButton'
 import { useT } from 'i18n'
 
 import { useCurrentEvent } from './-context'
+import { PageSection } from 'components/widgets/PageSection'
 
 export const Route = createFileRoute(
   '/events/$eventId/{-$eventVersionId}/edit',
@@ -49,33 +50,35 @@ function RouteComponent() {
   )
   const { state, formProps } = useAutosavingState<Event, JSONPatch>(event, patch, patchStrategy.jsonPatch)
 
-  return <Form {...formProps}>
-    <SyncStatus state={state} floatRight />
-    <H2>{t('title')}</H2>
-    <div className="flex flex-wrap gap-6">
-      <Input label={label('name')} path="name" required containerClassName="w-100" />
-      <DateRangeField<Event>
-        id="eventDate"
-        label={label('eventDate')}
-        beginPath="beginDate"
-        endPath="endDate"
-        required
-      />
-      <DateField<Event>
-        label={(label('ballDateTime'))}
-        path="program.dateTime"
-        showTime
-        minDate={formProps.value.beginDate}
-        maxDate={formProps.value.endDate}
-      />
-    </div>
-    <EventGrantsEditor eventId={event._id} />
+  return <PageSection title={t('title')} syncStatus={state} toolbar={
     <DeleteButton
+      minimal
       requireRight="events:delete"
       entityId={event._id}
       onDelete={() => deleteEvent({ id: event._id })}
       text={t('deleteEvent')}
       confirmText={t('eventDeleteConfirmation', { eventName: event.name })}
     />
-  </Form>
+  }>
+    <Form {...formProps}>
+      <div className="flex flex-wrap gap-6">
+        <Input label={label('name')} path="name" required containerClassName="w-100" />
+        <DateRangeField<Event>
+          id="eventDate"
+          label={label('eventDate')}
+          beginPath="beginDate"
+          endPath="endDate"
+          required
+        />
+        <DateField<Event>
+          label={(label('ballDateTime'))}
+          path="program.dateTime"
+          showTime
+          minDate={formProps.value.beginDate}
+          maxDate={formProps.value.endDate}
+        />
+      </div>
+      <EventGrantsEditor eventId={event._id} />
+    </Form>
+  </PageSection>
 }
