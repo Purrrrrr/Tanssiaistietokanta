@@ -15,6 +15,7 @@ const config: CodegenConfig = {
         nonOptionalTypename: false,
         scalars: {
           Tags: 'Record<string, boolean>',
+          DocumentContent: 'import(\'libraries/lexical/utils/minify\').MinifiedDocumentContent',
         },
       },
     }
