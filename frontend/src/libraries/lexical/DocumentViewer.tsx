@@ -230,6 +230,9 @@ function renderNode(node: SerializedNode, index: number): React.ReactNode {
       return <QRCode key={index} value={qr.value || ' '} size={128} />
     }
 
+    case 'linebreak':
+      return <br />
+
     default:
       // Attempt to render children for unknown element nodes
       if ('children' in node) {
