@@ -4,10 +4,10 @@ import { $insertNodeToNearestRoot } from '@lexical/utils'
 import type { LexicalCommand } from 'lexical'
 import { COMMAND_PRIORITY_EDITOR, createCommand } from 'lexical'
 
-import { $createQRCodeNode, QRCodeNode } from './nodes/QRCodeNode'
+import { $createQRCodeNode, QRCodeNode, QRCodePayload } from './nodes/QRCodeNode'
 
-export const INSERT_QR_CODE_COMMAND: LexicalCommand<string> =
-  createCommand<string>('INSERT_QR_CODE_COMMAND')
+export const INSERT_QR_CODE_COMMAND: LexicalCommand<QRCodePayload> =
+  createCommand<QRCodePayload>('INSERT_QR_CODE_COMMAND')
 
 export function QRCodePlugin(): null {
   const [editor] = useLexicalComposerContext()
@@ -19,9 +19,9 @@ export function QRCodePlugin(): null {
 
     return editor.registerCommand(
       INSERT_QR_CODE_COMMAND,
-      (value) => {
+      ({ value, title, size }) => {
         editor.update(() => {
-          $insertNodeToNearestRoot($createQRCodeNode(value))
+          $insertNodeToNearestRoot($createQRCodeNode(value, title, size))
         })
         return true
       },

@@ -4,7 +4,6 @@
  * Walks the serialized Lexical JSON state tree and renders React elements
 /* runtime packages.
  */
-import QRCode_import from 'react-qr-code'
 import type { SerializedAutoLinkNode, SerializedLinkNode } from '@lexical/link'
 import type { SerializedListItemNode, SerializedListNode } from '@lexical/list'
 import type { SerializedHeadingNode, SerializedQuoteNode } from '@lexical/rich-text'
@@ -12,14 +11,13 @@ import type { SerializedTableCellNode, SerializedTableNode, SerializedTableRowNo
 import classNames from 'classnames'
 import type { SerializedElementNode, SerializedParagraphNode, SerializedTextNode } from 'lexical'
 
+import { QRCode } from './plugins/components/QRCode'
 import type { SerializedImageNode } from './plugins/nodes/ImageNode'
 import type { SerializedLayoutContainerNode } from './plugins/nodes/LayoutContainerNode'
 import type { SerializedLayoutItemNode } from './plugins/nodes/LayoutItemNode'
 import type { SerializedQRCodeNode } from './plugins/nodes/QRCodeNode'
 import { theme } from './theme'
 import { expand, MinifiedDocumentContent } from './utils/minify'
-
-const QRCode = (QRCode_import as unknown as { default: typeof QRCode_import }).default
 
 // ---------------------------------------------------------------------------
 // Public component
@@ -36,7 +34,7 @@ export function DocumentViewer({ document: minified, className }: DocumentViewer
   const root = document.root as unknown as SerializedElementNode
 
   return (
-    <div className={classNames('markdown-content', className ?? ' p-4 bg-white')}>
+    <div className={classNames('lexical-content', className ?? ' p-4 bg-white')}>
       {renderChildren(root)}
     </div>
   )
@@ -226,8 +224,8 @@ function renderNode(node: SerializedNode, index: number): React.ReactNode {
       )
 
     case 'qr-code': {
-      const qr = node as SerializedQRCodeNode
-      return <QRCode key={index} value={qr.value || ' '} size={128} />
+      const { value, title, size } = node as SerializedQRCodeNode
+      return <QRCode key={index} value={value || ' '} title={title} size={size ?? 128} />
     }
 
     case 'linebreak':

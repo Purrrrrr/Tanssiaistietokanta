@@ -49,7 +49,7 @@ export function Editor({ imageUpload, onChange, value, className }: EditorProps 
     <LexicalComposer initialConfig={initialConfig}>
       <div data-lexical-editor className={`flex flex-col bg-stone-100 min-w-200 ${CssClass.inputBox} p-[2px] ${className}`}>
         <ToolbarPlugin imageUpload={imageUpload} />
-        <div className="overflow-auto bg-white p-2 **:focus:outline-none! markdown-content border-t-1 border-stone-400">
+        <div className="overflow-auto bg-white p-2 **:focus:outline-none! lexical-content border-t-1 border-stone-400">
           <RichTextPlugin
             contentEditable={
               <ContentEditable />

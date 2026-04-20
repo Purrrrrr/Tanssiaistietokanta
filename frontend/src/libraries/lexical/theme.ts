@@ -1,4 +1,4 @@
-import '../ui/Markdown.css'
+import './lexical.css'
 
 export const theme = {
   link: 'cursor-pointer text-link hover:underline',

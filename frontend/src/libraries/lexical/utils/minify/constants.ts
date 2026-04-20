@@ -31,6 +31,7 @@ export const KEY_MAP: Record<string, string> = {
   mode: 'm',
   rel: 'rl',
   rowSpan: 'rs',
+  size: 'sz',
   src: 'sr',
   start: 'st',
   style: 's',

@@ -41,7 +41,7 @@ import {
 import { CheckListIcon, ImageIcon, OrderedListIcon, QRCodeIcon, TableIcon, UnorderedListIcon } from './icons'
 import { INSERT_IMAGE_COMMAND } from './plugins/ImagePlugin'
 import { INSERT_LAYOUT_COMMAND } from './plugins/LayoutPlugin'
-import { $isQRCodeNode, QRCodeNode } from './plugins/nodes/QRCodeNode'
+import { $isQRCodeNode, QRCodeNode, QRCodePayload } from './plugins/nodes/QRCodeNode'
 import { INSERT_QR_CODE_COMMAND } from './plugins/QRCodePlugin'
 import { INSERT_TABLE_COMMAND } from './plugins/TablePlugin'
 
@@ -61,7 +61,7 @@ const HEADING_LABELS: Record<string, string> = {
 
 function H(type: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6', children: React.ReactNode) {
   const Tag = type
-  return <div className="markdown-content"><Tag>{children}</Tag></div>
+  return <div className="lexical-content"><Tag>{children}</Tag></div>
 }
 
 function Divider() {
@@ -96,7 +96,7 @@ export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUplo
   const anchorRef = useRef<HTMLElement | null>(null)
 
   const [url, setUrl] = useState<string | null>(null)
-  const [qrValue, setQRValue] = useState<string | null>(null)
+  const [qrValue, setQRValue] = useState<QRCodePayload | null>(null)
   const [qrNode, setQRNode] = useState<QRCodeNode | null>(null)
 
   function updateAnchor(newDom?: HTMLElement | null) {
@@ -402,7 +402,7 @@ export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUplo
         </ToolbarButton>
         <Divider />
         <ToolbarButton
-          onClick={() => editor.dispatchCommand(INSERT_QR_CODE_COMMAND, '')}
+          onClick={() => editor.dispatchCommand(INSERT_QR_CODE_COMMAND, { value: '', title: '', size: 128 })}
           aria-label="Insert QR code">
           <QRCodeIcon />
         </ToolbarButton>
@@ -492,7 +492,7 @@ export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUplo
         )}
       >
         <LinkEditor editor={editor} url={url} />
-        <QRCodeEditor editor={editor} node={qrNode} value={qrValue} />
+        <QRCodeEditor editor={editor} node={qrNode} data={qrValue} />
       </div>
     </>
   )
@@ -543,18 +543,22 @@ function getLinkUrl(selection: BaseSelection | null): string | null {
 interface QRCodeEditorProps {
   editor: LexicalEditor
   node: QRCodeNode | null
-  value: string | null
+  data: QRCodePayload | null
 }
 
-function QRCodeEditor({ editor, node, value }: QRCodeEditorProps) {
-  if (node === null) {
+function QRCodeEditor({ editor, node, data }: QRCodeEditorProps) {
+  if (node === null || data === null) {
     return null
   }
+  const { value, title, size } = data
 
-  function applyQRCode(value: string) {
-    const trimmed = value.trim()
+  function updateQRCodePayload(payload: Partial<QRCodePayload>) {
     editor.update(() => {
-      if ($isQRCodeNode(node)) node.setValue(trimmed)
+      if ($isQRCodeNode(node)) {
+        if (payload.value !== undefined) node.setValue(payload.value.trim())
+        if (payload.title !== undefined) node.setTitle(payload.title.trim())
+        if (payload.size !== undefined) node.setSize(payload.size > 0 ? payload.size : 128)
+      }
       $addUpdateTag(SKIP_DOM_SELECTION_TAG)
     })
   }
@@ -571,17 +575,36 @@ function QRCodeEditor({ editor, node, value }: QRCodeEditorProps) {
       type="text"
       placeholder="Enter URL or text for QR code…"
       value={value ?? ''}
-      onChange={(e) => applyQRCode(e.target.value)}
+      onChange={(e) => updateQRCodePayload({ value: e.target.value })}
+    />
+    <input
+      className="flex-1 px-2 py-0.5 border-1 border-gray-400 rounded text-sm"
+      type="text"
+      placeholder="Enter title for QR code (optional)…"
+      value={title ?? ''}
+      onChange={(e) => updateQRCodePayload({ title: e.target.value })}
+    />
+    <input
+      className="flex-1 px-2 py-0.5 border-1 border-gray-400 rounded text-sm"
+      type="number"
+      placeholder="Enter title for QR code (optional)…"
+      value={size ?? '128'}
+      onChange={(e) => updateQRCodePayload({ size: parseInt(e.target.value, 10) })}
     />
     <Button minimal onClick={removeQRCode} aria-label="Remove QR code">Remove QR code</Button>
   </div>
 }
 
-function getQRCodeValue(selection: BaseSelection | null): string | null {
+function getQRCodeValue(selection: BaseSelection | null): QRCodePayload | null {
   if ($isNodeSelection(selection)) {
     const node = selection.getNodes()[0]
     if (node.getType() === 'qr-code') {
-      return (node as unknown as QRCodeNode).getValue()
+      const qrNode = node as unknown as QRCodeNode
+      return {
+        value: qrNode.getValue(),
+        title: qrNode.getTitle(),
+        size: qrNode.getSize(),
+      }
     }
   }
   return null
