@@ -429,6 +429,12 @@ export const fi = {
         deleteDocument: 'Poista asiakirja',
         deleteConfirmation: 'Haluatko varmasti poistaa tämän asiakirjan?',
       },
+      DocumentViewPage: {
+        editDocument: 'Muokkaa asiakirjaa',
+      },
+      DocumentEditPage: {
+        viewDocument: 'Palaa lukutilaan',
+      },
     },
   },
   routes: {
@@ -533,10 +539,8 @@ export const fi = {
         },
         documents: {
           document: {
-            editDocument: 'Muokkaa asiakirjaa',
             edit: {
               breadcrumb: 'Asiakirjan muokkaus',
-              viewDocument: 'Palaa lukutilaan',
             },
           },
         },

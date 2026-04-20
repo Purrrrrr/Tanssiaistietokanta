@@ -31,7 +31,7 @@ export function DocumentEditPage({ documentId }: { documentId: string }) {
 }
 
 function DocumentEditorInner({ document }: { document: Document }) {
-  const t = useT('routes.events.event.documents.document.edit')
+  const t = useT('components.documents.DocumentEditPage')
   const label = useT('domain.document')
   const [patchDocument] = usePatchDocument()
   const save = useCallback(

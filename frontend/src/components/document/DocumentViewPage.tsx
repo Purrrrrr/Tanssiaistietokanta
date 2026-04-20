@@ -23,7 +23,7 @@ export function DocumenViewPage({ documentId }: { documentId: string }) {
 function DocumentViewPageInner({ document }: { document: Document }) {
   const route = documentViewRoute(document)
   const params = getRouteApi(route).useParams()
-  const t = useT('routes.events.event.documents.document')
+  const t = useT('components.documents.DocumentViewPage')
 
   return <PageSection
     title={document.title}
