@@ -121,6 +121,7 @@ query DanceInstructions($eventId: ID!) {
     }
     workshops {
       _id
+      _versionId
       name
       description
       instanceSpecificDances
