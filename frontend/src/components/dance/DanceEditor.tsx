@@ -1,8 +1,7 @@
 import { Dance, DanceWithEvents, ID } from 'types'
 
-import { MarkdownEditorProps, SyncStatus } from 'libraries/forms'
-import { Button } from 'libraries/ui'
-import { MarkdownInput } from 'components/files/MarkdownInput'
+import { SyncStatus } from 'libraries/forms'
+import { DocumentContentEditor, DocumentContentEditorProps, isEmptyDocument } from 'libraries/lexical'
 import { ColoredTag } from 'components/widgets/ColoredTag'
 import { DurationField } from 'components/widgets/DurationField'
 import { useT } from 'i18n'
@@ -52,24 +51,32 @@ export function FullDanceEditorFields({ dance }: { dance: DanceWithEvents }) {
       </div>
     </div>
     <DanceWikiPreview dance={dance} />
-    <Field label={label('description')} path="description" component={InstructionEditor} componentProps={{ danceId: dance._id, wikipage, className: 'max-h-150' }} />
-    <Field label={label('instructions')} path="instructions" component={InstructionEditor} componentProps={{ danceId: dance._id, wikipage, className: 'max-h-150' }} />
+    <Field
+      label={label('description')}
+      path="description"
+      component={InstructionEditor}
+      componentProps={{ danceId: dance._id, wikipage, className: 'max-h-150' }} />
+    <Field
+      label={label('instructions')}
+      path="instructions"
+      component={InstructionEditor}
+      componentProps={{ danceId: dance._id, wikipage, className: 'max-h-150' }} />
   </>
 }
 
-export interface InstructionEditorProps extends MarkdownEditorProps {
+export interface InstructionEditorProps extends DocumentContentEditorProps {
   danceId: ID
   wikipage?: Dance['wikipage']
 }
 
 export function InstructionEditor({ danceId, wikipage, ...props }: InstructionEditorProps) {
-  const t = useT('components.danceEditor')
-  const isMissingvalue = (props.value ?? '').trim().length < 10
-  const canCopyFromWiki = isMissingvalue && wikipage && !props.readOnly
-  const copyInstructionsFromWiki = () => props.onChange(wikipage?.instructions ?? '')
+  // const t = useT('components.danceEditor')
+  // const isMissingvalue = isEmptyDocument(props.value)
+  // const canCopyFromWiki = false // isMissingvalue && wikipage && !props.readOnly
+  // const copyInstructionsFromWiki = () => props.onChange(wikipage?.instructions ?? '')
   return <>
-    <MarkdownInput {...props} fileOwner="dances" fileOwningId={danceId} filePath="instructions" />
-    {canCopyFromWiki && <p className="pt-2"><Button color="primary" text={t('copyFromDancewiki')} onClick={copyInstructionsFromWiki} /></p>}
+    <DocumentContentEditor {...props} imageUpload={{ owner: 'dances', owningId: danceId, path: 'instructions' }} />
+    {/* {canCopyFromWiki && <p className="pt-2"><Button color="primary" text={t('copyFromDancewiki')} onClick={copyInstructionsFromWiki} /></p>} */}
   </>
 }
 

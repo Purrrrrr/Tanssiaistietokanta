@@ -6,7 +6,7 @@ import { Document } from 'types'
 import { useDocument, usePatchDocument } from 'services/documents'
 
 import { formFor, patchStrategy, useAutosavingState } from 'libraries/forms'
-import { Editor, MinifiedDocumentContent } from 'libraries/lexical'
+import { DocumentContentEditor } from 'libraries/lexical'
 import { EyeOpen } from 'libraries/ui/icons'
 import { DeleteDocumentButton } from 'components/document/DeleteDocumentButton'
 import { NavigateButton } from 'components/widgets/NavigateButton'
@@ -15,12 +15,7 @@ import { useT } from 'i18n'
 
 import { documentViewRoute } from './linkUtils'
 
-interface DocumentData {
-  title: string
-  content?: MinifiedDocumentContent | null
-}
-
-const { Form, Input, Field } = formFor<DocumentData>()
+const { Form, Input, Field } = formFor<Document>()
 
 export function DocumentEditPage({ documentId }: { documentId: string }) {
   const result = useDocument({ id: documentId })
@@ -38,7 +33,7 @@ function DocumentEditorInner({ document }: { document: Document }) {
     (patch: unknown[]) => patchDocument({ id: document._id, document: patch }),
     [patchDocument, document._id],
   )
-  const { formProps, state } = useAutosavingState<DocumentData, unknown[]>(document, save, patchStrategy.jsonPatch)
+  const { formProps, state } = useAutosavingState<Document, unknown[]>(document, save, patchStrategy.jsonPatch)
   const viewRoute = documentViewRoute(document)
   const params = getRouteApi(viewRoute).useParams()
 
@@ -60,7 +55,7 @@ function DocumentEditorInner({ document }: { document: Document }) {
   >
     <Form {...formProps}>
       <Input path="title" label={label('title')} />
-      <Field path="content" label={label('content')} component={Editor} />
+      <Field path="content" label={label('content')} component={DocumentContentEditor} />
     </Form>
   </PageSection>
 }

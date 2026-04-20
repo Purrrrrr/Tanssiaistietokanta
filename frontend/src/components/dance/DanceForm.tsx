@@ -1,8 +1,7 @@
 import { useCallback } from 'react'
 
-import { Dance, DanceWithEvents, EditableDance } from 'types'
+import { Dance, EditableDance } from 'types'
 
-import { cleanMetadataValues } from 'backend'
 import { usePatchDance } from 'services/dances'
 
 import { useRight } from 'libraries/access-control'
@@ -23,15 +22,15 @@ export function useDanceEditorState(dance: Dance) {
   const readOnly = dance._versionId != null || !canEdit
   const [modifyDance] = usePatchDance()
   const patchDance = useCallback(
-    async (patches: Partial<DanceWithEvents>) => {
+    async (patches: unknown[]) => {
       if (readOnly) return
-      return modifyDance({ id: dance._id, dance: cleanMetadataValues(patches) })
+      return modifyDance({ id: dance._id, dance: patches })
     },
     [modifyDance, dance._id, readOnly],
   )
   const { wikipage: _ignored, ...editedDance } = dance
 
-  const { formProps, ...rest } = useAutosavingState<EditableDance, Partial<EditableDance>>(editedDance, patchDance, patchStrategy.partial)
+  const { formProps, ...rest } = useAutosavingState<EditableDance, unknown[]>(editedDance, patchDance, patchStrategy.jsonPatch)
 
   return {
     formProps: {

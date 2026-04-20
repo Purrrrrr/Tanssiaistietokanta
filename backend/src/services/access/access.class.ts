@@ -18,7 +18,7 @@ export type { Access, AccessQuery }
 //   declare module '../access/access.class' {
 //     interface ServiceExtraActions { events: 'modify-volunteers' }
 //   }
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+
 export interface ServiceExtraActions {}
 export type ServiceExtraActionsFor<S extends ServiceName> = S extends keyof ServiceExtraActions ? ServiceExtraActions[S] : never
 export type ServiceAllActions<S extends ServiceName> = Action | ServiceExtraActionsFor<S>

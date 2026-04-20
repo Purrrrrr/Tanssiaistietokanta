@@ -5,6 +5,7 @@ import { DanceSet, EventProgramSettings } from 'components/event/EventProgramFor
 
 import { entityListQueryHook, graphql } from 'backend'
 
+import { isEmptyDocument, MinifiedDocumentContent } from 'libraries/lexical'
 import { Callout, Link, RegularLink } from 'libraries/ui'
 import { useChosenDanceIds, useWorkshops } from 'components/event/EventProgramForm/eventMetadata'
 import { ColoredTag } from 'components/widgets/ColoredTag'
@@ -87,9 +88,8 @@ query getDancesWithMissingInstructions {
   }
 }`))
 
-function isMissingInstruction(dance: { description?: string | null }) {
-  const instructionLength = dance.description?.trim()?.length ?? 0
-  return instructionLength < 10
+function isMissingInstruction(dance: { description?: MinifiedDocumentContent | null }) {
+  return isEmptyDocument(dance.description)
 }
 
 export function MissingDancesWarning() {

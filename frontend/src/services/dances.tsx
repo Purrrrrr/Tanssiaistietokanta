@@ -117,7 +117,7 @@ mutation createDance($dance: DanceInput!) {
 }`))
 
 export const usePatchDance = entityUpdateHook('dances', graphql(`
-mutation patchDance($id: ID!, $dance: DancePatchInput!) {
+mutation patchDance($id: ID!, $dance: JSONPatch!) {
   patchDance(id: $id, dance: $dance) {
     _id, _versionId, _versionNumber, name, description, remarks, duration, prelude, formation, source, category, instructions, slideStyleId, tags
     wikipageName

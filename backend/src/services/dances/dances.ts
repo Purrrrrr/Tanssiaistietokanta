@@ -18,6 +18,8 @@ import { DancesService, getOptions } from './dances.class'
 import { dancesPath, dancesMethods } from './dances.shared'
 import { defaultChannels, withoutCurrentConnection } from '../../utils/defaultChannels'
 import { getDependenciesFor } from '../../internal-services/dependencies'
+import { mergeJsonPatch, SupportsJsonPatch } from '../../hooks/merge-json-patch'
+import { omit } from 'ramda'
 
 export * from './dances.class'
 export * from './dances.schema'
@@ -37,7 +39,11 @@ export const dances = (app: Application) => {
       all: [schemaHooks.resolveExternal(dancesExternalResolver), schemaHooks.resolveResult(dancesResolver)],
     },
     before: {
-      all: [schemaHooks.validateQuery(dancesQueryValidator), schemaHooks.resolveQuery(dancesQueryResolver)],
+      all: [
+        mergeJsonPatch(omit(['_id', '_versionId', '_versionNumber', '_createdAt', '_updatedAt', 'wikipageName']) as (data: unknown) => unknown),
+        schemaHooks.validateQuery(dancesQueryValidator),
+        schemaHooks.resolveQuery(dancesQueryResolver),
+      ],
       find: [],
       get: [],
       create: [schemaHooks.validateData(dancesDataValidator), schemaHooks.resolveData(dancesDataResolver)],
@@ -80,6 +86,6 @@ export const dances = (app: Application) => {
 // Add this service to the service type index
 declare module '../../declarations' {
   interface ServiceTypes {
-    [dancesPath]: DancesService
+    [dancesPath]: SupportsJsonPatch<DancesService>
   }
 }

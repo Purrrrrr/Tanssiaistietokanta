@@ -36,7 +36,7 @@ export function DocumentViewer({ document: minified, className }: DocumentViewer
   const root = document.root as unknown as SerializedElementNode
 
   return (
-    <div className={classNames('markdown-content p-4 bg-white border-1 border-black', className)}>
+    <div className={classNames('markdown-content', className ?? ' p-4 bg-white')}>
       {renderChildren(root)}
     </div>
   )

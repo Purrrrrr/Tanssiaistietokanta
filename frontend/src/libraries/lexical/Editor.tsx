@@ -31,9 +31,10 @@ export interface EditorProps {
    *  On first render this becomes the initial content.
    *  When the reference changes, the editor state is replaced (server wins). */
   value?: MinifiedDocumentContent | null
+  className?: string
 }
 
-export function Editor({ imageUpload, onChange, value }: EditorProps = {}) {
+export function Editor({ imageUpload, onChange, value, className }: EditorProps = {}) {
   const initialConfig = {
     namespace: 'MyEditor',
     theme,
@@ -46,9 +47,9 @@ export function Editor({ imageUpload, onChange, value }: EditorProps = {}) {
 
   return (
     <LexicalComposer initialConfig={initialConfig}>
-      <div className={`bg-stone-100 min-w-200 ${CssClass.inputBox} p-[2px]`}>
+      <div className={`flex flex-col bg-stone-100 min-w-200 ${CssClass.inputBox} p-[2px] ${className}`}>
         <ToolbarPlugin imageUpload={imageUpload} />
-        <div className="bg-white p-2 **:focus:outline-none! markdown-content border-t-1 border-stone-400">
+        <div className="overflow-auto bg-white p-2 **:focus:outline-none! markdown-content border-t-1 border-stone-400">
           <RichTextPlugin
             contentEditable={
               <ContentEditable />

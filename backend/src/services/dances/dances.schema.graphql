@@ -11,13 +11,13 @@ type Dance implements Versionable {
   _updatedAt: String!
   versionHistory: VersionHistory!
   name: String!
-  description: String
+  description: DocumentContent
   duration: Float
   prelude: String
   formation: String
   source: String
   category: String
-  instructions: String
+  instructions: DocumentContent
   remarks: String
   teachedIn(eventId: ID): [TeachedInWorkshop!]!
   slideStyleId: ID
@@ -37,7 +37,7 @@ type TeachedInWorkshop {
 
 type Mutation {
   createDance(dance: DanceInput!): Dance!
-  patchDance(id: ID!, dance: DancePatchInput!): Dance!
+  patchDance(id: ID!, dance: JSONPatch!): Dance!
   deleteDance(id: ID!): Dance!
 }
 

@@ -11,7 +11,9 @@ import { sortDances, usePatchDance } from 'services/dances'
 import { useCallbackOnEventChanges } from 'services/events'
 
 import { formFor, patchStrategy, Switch, SyncStatus, useAutosavingState } from 'libraries/forms'
-import { Button, H2, Markdown, showToast } from 'libraries/ui'
+import { isEmptyDocument } from 'libraries/lexical'
+import { DocumentViewer } from 'libraries/lexical/DocumentViewer'
+import { Button, H2, showToast } from 'libraries/ui'
 import { Edit } from 'libraries/ui/icons'
 import { InstructionEditor } from 'components/dance/DanceEditor'
 import { WikipageSelector } from 'components/dance/WikipageSelector'
@@ -161,9 +163,9 @@ function getDances(workshops: { instances: Instance[] }[]) {
 function InstructionsForDance({ dance, showShortInstructions }: { dance: Dance, showShortInstructions: boolean }) {
   const [editorOpen, setEditorOpen] = useState(false)
   const field = showShortInstructions ? 'description' : 'instructions' as const
-  const value = dance[field] ?? ''
+  const value = dance[field] ?? null
 
-  return <div className={`dance-instructions-dance ${value.trim() !== '' ? 'not-empty' : 'empty'}`}>
+  return <div className={`dance-instructions-dance ${isEmptyDocument(value) ? 'empty' : 'not-empty'}`}>
     <H2>
       {dance.name}
       <Button
@@ -179,7 +181,7 @@ function InstructionsForDance({ dance, showShortInstructions }: { dance: Dance, 
     <div className={field}>
       {editorOpen
         ? <DanceFieldEditor dance={dance} field={field} />
-        : <Markdown options={{ overrides: markdownOverrides }} children={dance[field] ?? ''} />
+        : <DocumentViewer document={value} />
       }
     </div>
   </div>
@@ -189,13 +191,13 @@ function DanceFieldEditor({ dance: danceInDatabase, field }: { dance: Dance, fie
   const t = useT('domain.dance')
   const [patchDance] = usePatchDance()
   const onPatch = useCallback(
-    (dance) => patchDance({
+    (dance: unknown[]) => patchDance({
       id: danceInDatabase._id,
-      dance: cleanMetadataValues(dance),
+      dance,
     }),
     [danceInDatabase, patchDance],
   )
-  const { value, onChange, state } = useAutosavingState<EditableDance, Partial<EditableDance>>(danceInDatabase, onPatch, patchStrategy.partial)
+  const { value, onChange, state } = useAutosavingState<EditableDance, unknown[]>(danceInDatabase, onPatch, patchStrategy.jsonPatch)
 
   return <Form value={value} onChange={onChange}>
     <SyncStatus state={state} floatRight />
@@ -203,12 +205,13 @@ function DanceFieldEditor({ dance: danceInDatabase, field }: { dance: Dance, fie
       label={t(field)}
       path={field}
       component={InstructionEditor}
-      componentProps={{ danceId: danceInDatabase._id, wikipage: danceInDatabase.wikipage, markdownOverrides }}
+      componentProps={{ danceId: danceInDatabase._id, wikipage: danceInDatabase.wikipage }}
     />
     <Field label={t('wikipageName')} path="wikipageName" component={WikipageSelector} componentProps={{ possibleName: danceInDatabase.name }} />
   </Form>
 }
 
+// TODO What to do with these ??
 const markdownOverrides = {
   h1: { component: 'h3' },
   h2: { component: 'h4' },

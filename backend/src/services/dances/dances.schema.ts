@@ -17,13 +17,15 @@ export const dancesSchema = Type.Object(
     _updatedAt: Type.String(),
     _createdAt: Type.String(),
     name: Name(),
-    description: Type.String(),
+    description: Type.Any(),
+    oldDescription: Type.String(),
     duration: Type.Number(),
     prelude: Type.String(),
     formation: Type.String(),
     source: Type.String(),
     category: Type.String(),
-    instructions: Type.String(),
+    instructions: Type.Any(),
+    oldInstructions: Type.String(),
     remarks: Type.String(),
     slideStyleId: SlideStyleId(),
     wikipage: Nullable(Type.Any()),
@@ -34,13 +36,15 @@ export const dancesSchema = Type.Object(
 )
 export type Dances = Static<typeof dancesSchema>
 export const dancesValidator = getValidator(dancesSchema, dataValidator)
+const emptyLexicalDocument = () => ({ V: 1, t: 'ro', c: [{ _id: '00000000', t: 'p', c: [] }] })
+
 export const dancesResolver = resolve<Dances, HookContext>({
-  description: value => value ?? '',
+  description: value => value ?? emptyLexicalDocument(),
   prelude: value => value ?? '',
   formation: value => value ?? '',
   source: value => value ?? '',
   category: value => value ?? '',
-  instructions: value => value ?? '',
+  instructions: value => value ?? emptyLexicalDocument(),
   remarks: value => value ?? '',
   wikipageName: async (wikipageName, dance, ctx) => {
     if (wikipageName != null) {

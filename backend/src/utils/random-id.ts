@@ -1,5 +1,5 @@
-export default function randomId() {
-  const array = crypto.getRandomValues(new Uint8Array(12))
+export default function randomId(len = 12) {
+  const array = crypto.getRandomValues(new Uint8Array(len))
   // Arr to base64
   const base64 = btoa(String.fromCharCode(...array))
 

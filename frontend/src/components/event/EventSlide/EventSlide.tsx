@@ -1,5 +1,6 @@
 import type { DanceProgramItemSlideProps, DanceSetSlideProps, EventParentSlideProps, EventProgram, EventSlideProps, IntervalMusicSlideProps } from './types'
 
+import { DocumentViewer } from 'libraries/lexical/DocumentViewer'
 import { LinkComponentType, Slide, SlideNavigation, SlideNavigationList } from 'components/Slide'
 
 import { markdown, TeachedIn } from './utils'
@@ -90,7 +91,9 @@ function DanceProgramItemSlide(props: WithCommonProps<DanceProgramItemSlideProps
       children: '',
     }
     : {
-      children: markdown(dance?.description ?? program?.description),
+      children: dance?.description
+        ? <DocumentViewer document={dance.description} />
+        : markdown(program?.description),
       footer: dance?.teachedIn?.length
         ? <TeachedIn teachedIn={dance.teachedIn} />
         : undefined,
