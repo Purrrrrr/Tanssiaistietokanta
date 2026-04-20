@@ -54,7 +54,7 @@ function DocumentEditorInner({ document }: { document: Document }) {
           icon={<EyeOpen />}
           text={t('viewDocument')}
         />
-        <DeleteDocumentButton minimal documentId={document._id} />
+        <DeleteDocumentButton minimal document={document} />
       </>
     }
   >

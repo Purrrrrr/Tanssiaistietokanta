@@ -1,6 +1,6 @@
 import { Document } from 'types'
 
-export function documentListRoute(document: Document) {
+export function documentListRoute(document: Pick<Document, 'owner'>) {
   switch (document.owner) {
     case 'events':
       return '/events/$eventId/{-$eventVersionId}' as const
@@ -12,7 +12,7 @@ export function documentListRoute(document: Document) {
   }
 }
 
-export function documentViewRoute(document: Document) {
+export function documentViewRoute(document: Pick<Document, 'owner'>) {
   switch (document.owner) {
     case 'events':
       return '/events/$eventId/{-$eventVersionId}/documents/$documentId' as const

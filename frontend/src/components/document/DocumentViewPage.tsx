@@ -37,7 +37,7 @@ function DocumentViewPageInner({ document }: { document: Document }) {
           icon={<Edit />}
           text={t('editDocument')}
         />
-        <DeleteDocumentButton minimal documentId={document._id} />
+        <DeleteDocumentButton minimal document={document} />
       </>
     }
   >

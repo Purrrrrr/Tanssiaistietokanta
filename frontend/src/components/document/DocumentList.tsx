@@ -62,7 +62,7 @@ function DocumentRow({ document }: DocumentRowProps) {
       {document.title}
     </Link>
     <div className="flex gap-1">
-      <DeleteDocumentButton documentId={document._id} minimal iconOnly />
+      <DeleteDocumentButton document={document} minimal iconOnly />
       <NavigateButton
         requireRight="documents:modify"
         entityId={document._id}

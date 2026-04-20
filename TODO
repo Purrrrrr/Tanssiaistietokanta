@@ -410,7 +410,7 @@
   * H1, H2 buttons
   * Write ## title or * item to make headings and lists
 * Document routes for workshops
-  Ensure deleting workshop or document in event/workshop returns the user to the proper list route
+* Ensure deleting workshop or document in event/workshop returns the user to the proper list route
 
   Add add workshop button to side nav
   Nicer workshop editor
