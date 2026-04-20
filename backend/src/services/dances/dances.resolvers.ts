@@ -7,7 +7,6 @@ import { uniq } from 'ramda'
 import { WorkshopsService } from '../workshops/workshops.class'
 import { DancewikiService } from '../dancewiki/dancewiki.class'
 import { SkipAccessControl } from '../access/hooks'
-import { removeNulls } from '../../utils/common-types'
 import { toSelect } from '../../utils/resolvers'
 import { JSONPatch } from '../../hooks/merge-json-patch'
 
@@ -72,9 +71,8 @@ export default (app: Application): Resolvers => {
     },
     Mutation: {
       createDance: (_, { dance }, params) => service.create(dance, params),
-      patchDance: (_, { id, dance }, params) => {
-        return service.patch(id, dance as JSONPatch, { ...params, jsonPatch: true })
-      },
+      patchDance: (_, { id, dance }, params) =>
+        service.patch(id, dance as JSONPatch, { ...params, jsonPatch: true }),
       deleteDance: (_, { id }, params) => service.remove(id, params),
     },
   }
