@@ -11,6 +11,7 @@ import { DanceSet, EventProgramRow } from 'components/event/EventProgramForm'
 import { FileList } from 'components/files/FileList'
 import { AddButton } from 'components/widgets/AddButton'
 import { NavigateButton } from 'components/widgets/NavigateButton'
+import { PageSection } from 'components/widgets/PageSection'
 import { useFormatDateTime, useT } from 'i18n'
 
 import { CreateWorkshopCard } from './-components/CreateWorkshopCard'
@@ -106,9 +107,9 @@ function EventWorkshops({ event, readOnly }: { event: Event, readOnly: boolean }
   const [showCreate, setShowCreate] = useState(false)
   const t = useT('routes.events.event.index')
   const { workshops, _id: eventId, beginDate } = event
-  return <div className="w-auto grid grid-cols-2 items-center mb-10">
-    <H2 className="">{t('workshops')}</H2>
-    {readOnly ||
+  return <PageSection
+    title={t('workshops')}
+    toolbar={readOnly ||
       <AddButton
         className="justify-self-end"
         requireRight="workshops:create"
@@ -117,14 +118,17 @@ function EventWorkshops({ event, readOnly }: { event: Event, readOnly: boolean }
         onClick={() => setShowCreate(true)}
         text={t('createWorkshop')}
       />
+    }>
+    {workshops.length === 0 && <p>{t('noWorkshops')}</p>}
+    {workshops.length > 0 &&
+      <div className="col-span-full my-4 sm:grid grid-cols-[repeat(auto-fill,minmax(32rem,1fr))] gap-4 items-stretch">
+        {workshops.map(workshop =>
+          <WorkshopCard key={workshop._id} workshop={workshop} />,
+        )}
+        {showCreate && <CreateWorkshopCard eventId={eventId} startDate={beginDate} onClose={() => setShowCreate(false)} />}
+      </div>
     }
-    <div className="col-span-full my-4 sm:grid grid-cols-[repeat(auto-fill,minmax(32rem,1fr))] gap-4 items-stretch">
-      {workshops.map(workshop =>
-        <WorkshopCard key={workshop._id} workshop={workshop} />,
-      )}
-      {showCreate && <CreateWorkshopCard eventId={eventId} startDate={beginDate} onClose={() => setShowCreate(false)} />}
-    </div>
-  </div>
+  </PageSection>
 }
 
 function WorkshopCard({ workshop }: { workshop: Workshop }) {

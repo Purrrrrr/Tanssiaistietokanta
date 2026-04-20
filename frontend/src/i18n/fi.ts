@@ -528,6 +528,7 @@ export const fi = {
             many: '__count__ toivetanssia',
           },
           workshops: 'Työpajat',
+          noWorkshops: 'Ei työpajoja',
           createWorkshop: 'Uusi työpaja',
           createWorkshopForm: {
             title: 'Uusi työpaja',
