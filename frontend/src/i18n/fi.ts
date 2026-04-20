@@ -528,10 +528,10 @@ export const fi = {
             workshopName: 'Työpajan nimi',
             createWorkshop: 'Luo työpaja',
           },
+          documents: 'Tapahtuman asiakirjat',
           files: 'Tapahtumaan liittyvät tiedostot',
         },
         documents: {
-          title: 'Asiakirjat',
           document: {
             editDocument: 'Muokkaa asiakirjaa',
             edit: {
@@ -561,6 +561,7 @@ export const fi = {
         workshop: {
           delete: 'Poista työpaja',
           deleteConfirmation: 'Haluatko varmasti poistaa tämän työpajan?',
+          documents: 'Työpajan asiakirjat',
           files: 'Työpajaan liittyvät tiedostot',
         },
         ballProgram: {

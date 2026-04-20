@@ -4,17 +4,17 @@ import { useState } from 'react'
 import { Event } from 'types'
 
 import { RequirePermissions } from 'libraries/access-control'
-import { Button, Card, H2, Link } from 'libraries/ui'
+import { Card, H2, Link } from 'libraries/ui'
 import { Edit } from 'libraries/ui/icons'
+import { DocumentList } from 'components/document/DocumentList'
 import { DanceSet, EventProgramRow } from 'components/event/EventProgramForm'
 import { FileList } from 'components/files/FileList'
+import { AddButton } from 'components/widgets/AddButton'
 import { NavigateButton } from 'components/widgets/NavigateButton'
 import { useFormatDateTime, useT } from 'i18n'
 
 import { CreateWorkshopCard } from './-components/CreateWorkshopCard'
-import { EventDocumentList } from './-components/EventDocumentList'
 import { useCurrentEvent } from './-context'
-import { AddButton } from 'components/widgets/AddButton'
 
 type Workshop = Event['workshops'][0]
 
@@ -30,7 +30,11 @@ function RouteComponent() {
     <H2>{t('ballProgram')}</H2>
     <EventProgram event={event} />
     <EventWorkshops event={event} readOnly={readOnly} />
-    <EventDocumentList />
+    <DocumentList
+      title={t('documents')}
+      owner="events"
+      owningId={event._id}
+    />
     <FileList title={t('files')} owner="events" owningId={event._id} />
   </>
 }

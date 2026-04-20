@@ -3,7 +3,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { DocumentEditPage } from 'components/document/DocumentEditPage'
 
 export const Route = createFileRoute(
-  '/events/$eventId/{-$eventVersionId}/documents/$documentId/edit',
+  '/events/$eventId/{-$eventVersionId}/workshops/$workshopId/documents/$documentId/edit',
 )({
   component: RouteComponent,
   staticData: {
@@ -13,5 +13,6 @@ export const Route = createFileRoute(
 
 function RouteComponent() {
   const { documentId } = Route.useParams()
+
   return <DocumentEditPage documentId={documentId} />
 }

@@ -1,46 +1,26 @@
-import { createFileRoute, getRouteApi, notFound } from '@tanstack/react-router'
+import { createFileRoute, notFound } from '@tanstack/react-router'
 
 import { Event } from 'types'
 
 import { addGlobalLoadingAnimation } from 'backend'
 import { useDeleteWorkshop } from 'services/workshops'
 
-import { Breadcrumb, H2 } from 'libraries/ui'
+import { H2 } from 'libraries/ui'
+import { DocumentList } from 'components/document/DocumentList'
 import { FileList } from 'components/files/FileList'
 import { DeleteButton } from 'components/widgets/DeleteButton'
 import { WorkshopEditor } from 'components/WorkshopEditor'
 import { useT } from 'i18n'
 
-import { WorkshopDocumentList } from '../-components/WorkshopDocumentList'
 import { useCurrentEvent } from '../-context'
 
 type Workshop = Event['workshops'][0]
 
 export const Route = createFileRoute(
-  '/events/$eventId/{-$eventVersionId}/workshops/$workshopId',
+  '/events/$eventId/{-$eventVersionId}/workshops/$workshopId/',
 )({
   component: RouteComponent,
-  staticData: {
-    requireRights: ({ eventId }) => ({
-      rights: 'workshops:modify',
-      owner: 'events',
-      owningId: eventId,
-    }),
-    breadcrumb: BreadcrumbComponent,
-  },
 })
-
-function BreadcrumbComponent() {
-  const event = getRouteApi('/events/$eventId/{-$eventVersionId}').useLoaderData()?.event
-  const params = Route.useParams()
-  const workshop = event?.workshops.find(w => w._id === params.workshopId)
-
-  return <Breadcrumb
-    to="/events/$eventId/{-$eventVersionId}/workshops/$workshopId"
-    params={params}
-    text={workshop?.name ?? '-'}
-  />
-}
 
 function RouteComponent() {
   const event = useCurrentEvent()
@@ -95,7 +75,11 @@ function WorkshopCard(
       }
     </H2>
     <WorkshopEditor eventId={eventId} workshop={workshop} reservedAbbreviations={reservedAbbreviations} beginDate={beginDate} endDate={endDate} />
-    <WorkshopDocumentList />
+    <DocumentList
+      title={t('documents')}
+      owner="workshops"
+      owningId={_id}
+    />
     <FileList title={t('files')} owner="workshops" owningId={workshop._id} />
   </>
 }
