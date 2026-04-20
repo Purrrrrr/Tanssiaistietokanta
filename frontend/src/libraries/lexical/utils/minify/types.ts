@@ -7,7 +7,7 @@ export interface MinifiedNode {
   [key: string]: MinifiedValue
 }
 
-export interface MinifiedEditorState extends MinifiedNode {
+export interface MinifiedDocumentContent extends MinifiedNode {
   /** Format version marker */
   V: number
 }

@@ -4,7 +4,7 @@ import { booleanProp, numberProp, type Showcase, showcase } from './types'
 
 import { Switch } from 'libraries/forms'
 import FormUiShowcase from 'libraries/formsV2/UiShowcase'
-import { DocumentViewer, Editor, type MinifiedEditorState } from 'libraries/lexical'
+import { DocumentViewer, Editor, type MinifiedDocumentContent } from 'libraries/lexical'
 import { Alert, Dialog } from 'libraries/overlays'
 import { AnchorButton, AutosizedSection, Breadcrumb, BreadcrumbsContainer, Button, Callout, Collapse, GlobalSpinner, H2, RegularLink, showToast, Tab, Tabs } from 'libraries/ui'
 import { Trash } from 'libraries/ui/icons'
@@ -192,7 +192,7 @@ const showcases: Showcase<Record<string, unknown>>[] = [
 ]
 
 function EditorShowcase() {
-  const [state, setState] = useState<MinifiedEditorState | null>(() => {
+  const [state, setState] = useState<MinifiedDocumentContent | null>(() => {
     const saved = window.localStorage.getItem('editorShowcaseState')
     return saved ? JSON.parse(saved) : null
   })

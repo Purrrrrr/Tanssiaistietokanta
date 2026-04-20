@@ -1,7 +1,7 @@
 import type { EditorState, LexicalEditor, LexicalNode, SerializedEditorState } from 'lexical'
 import { $getRoot, $isElementNode } from 'lexical'
 
-import type { AnyNode, MinifiedEditorState, MinifiedNode } from './types'
+import type { AnyNode, MinifiedDocumentContent, MinifiedNode } from './types'
 
 import randomId from 'utils/randomId'
 
@@ -12,7 +12,7 @@ import { runExpandTransformations, runMinifyTransformations } from './transforma
 /** Walks the live `EditorState` tree, embeds a stable `_id` on every node
  *  (generating new UUIDs for nodes not yet in `idMap`), and returns a fully
  *  minified representation. */
-export function minifyLiveState(editorState: EditorState, idMap = new Map<string, string>()): MinifiedEditorState {
+export function minifyLiveState(editorState: EditorState, idMap = new Map<string, string>()): MinifiedDocumentContent {
   return editorState.read(() => ({
     V: FORMAT_VERSION,
     ...minifyLiveNode($getRoot(), idMap),
@@ -47,7 +47,7 @@ function minifyLiveNode(node: LexicalNode, idMap: Map<string, string>): Minified
 }
 
 /** Expands a minified editor state back to a full `SerializedEditorState`. */
-export function expand({ V, ...state }: MinifiedEditorState): SerializedEditorState {
+export function expand({ V, ...state }: MinifiedDocumentContent): SerializedEditorState {
   if (V !== FORMAT_VERSION) {
     throw new Error(`Unsupported minified state version: ${V}`)
   }

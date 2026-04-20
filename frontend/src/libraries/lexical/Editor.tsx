@@ -21,16 +21,16 @@ import { SyncValuePlugin } from './plugins/SyncValuePlugin'
 import { TablePlugin } from './plugins/TablePlugin'
 import { theme } from './theme'
 import ToolbarPlugin, { type ImageUploadConfig } from './Toolbar'
-import type { MinifiedEditorState } from './utils/minify'
+import type { MinifiedDocumentContent } from './utils/minify'
 import { expand } from './utils/minify'
 
 export interface EditorProps {
   imageUpload?: ImageUploadConfig
-  onChange?: (state: MinifiedEditorState) => void
+  onChange?: (state: MinifiedDocumentContent) => void
   /** Latest minified editor state from the server.
    *  On first render this becomes the initial content.
    *  When the reference changes, the editor state is replaced (server wins). */
-  value?: MinifiedEditorState | null
+  value?: MinifiedDocumentContent | null
 }
 
 export function Editor({ imageUpload, onChange, value }: EditorProps = {}) {

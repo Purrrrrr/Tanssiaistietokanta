@@ -3,7 +3,7 @@ import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin'
 import { useEffect, useRef } from 'react'
 import equal from 'fast-deep-equal'
 
-import type { MinifiedEditorState } from '../utils/minify'
+import type { MinifiedDocumentContent } from '../utils/minify'
 import { expand, expandIds, minifyLiveState } from '../utils/minify'
 
 /** Tag applied to setEditorState calls from external value syncs.
@@ -11,8 +11,8 @@ import { expand, expandIds, minifyLiveState } from '../utils/minify'
 const EXTERNAL_UPDATE_TAG = 'external-update'
 
 interface Props {
-  value?: MinifiedEditorState | null
-  onChange?: (state: MinifiedEditorState) => void
+  value?: MinifiedDocumentContent | null
+  onChange?: (state: MinifiedDocumentContent) => void
 }
 
 /**
@@ -26,7 +26,7 @@ interface Props {
 export function SyncValuePlugin({ value, onChange }: Props) {
   const nodeIdMapRef = useRef(new Map<string, string>())
   const [editor] = useLexicalComposerContext()
-  const lastApplied = useRef<MinifiedEditorState | null | undefined>(undefined)
+  const lastApplied = useRef<MinifiedDocumentContent | null | undefined>(undefined)
   const isFirst = useRef(true)
 
   useEffect(() => {

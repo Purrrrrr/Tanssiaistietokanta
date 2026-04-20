@@ -17,7 +17,7 @@ import type { SerializedLayoutContainerNode } from './plugins/nodes/LayoutContai
 import type { SerializedLayoutItemNode } from './plugins/nodes/LayoutItemNode'
 import type { SerializedQRCodeNode } from './plugins/nodes/QRCodeNode'
 import { theme } from './theme'
-import { expand, MinifiedEditorState } from './utils/minify'
+import { expand, MinifiedDocumentContent } from './utils/minify'
 
 const QRCode = (QRCode_import as unknown as { default: typeof QRCode_import }).default
 
@@ -26,7 +26,7 @@ const QRCode = (QRCode_import as unknown as { default: typeof QRCode_import }).d
 // ---------------------------------------------------------------------------
 
 export interface DocumentViewerProps {
-  document: MinifiedEditorState | null | undefined
+  document: MinifiedDocumentContent | null | undefined
   className?: string
 }
 
