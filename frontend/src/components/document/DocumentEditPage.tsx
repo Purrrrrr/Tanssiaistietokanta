@@ -6,7 +6,7 @@ import { Document } from 'types'
 import { useDocument, usePatchDocument } from 'services/documents'
 
 import { formFor, patchStrategy, useAutosavingState } from 'libraries/forms'
-import { Editor, MinifiedEditorState } from 'libraries/lexical'
+import { Editor, MinifiedDocumentContent } from 'libraries/lexical'
 import { EyeOpen } from 'libraries/ui/icons'
 import { DeleteDocumentButton } from 'components/document/DeleteDocumentButton'
 import { NavigateButton } from 'components/widgets/NavigateButton'
@@ -17,7 +17,7 @@ import { documentViewRoute } from './linkUtils'
 
 interface DocumentData {
   title: string
-  content?: MinifiedEditorState | null
+  content?: MinifiedDocumentContent | null
 }
 
 const { Form, Input, Field } = formFor<DocumentData>()
