@@ -406,14 +406,17 @@
 * Fix editor focus issues with lists, tables and images
 * AddButton
 * Standardized list view: title, toolbar on the right.
+* Lexical tuning
+  * H1, H2 buttons
+  * Write ## title or * item to make headings and lists
+* Document routes for workshops
+  Ensure deleting workshop or document in event/workshop returns the user to the proper list route
 
   Add add workshop button to side nav
-  Document routes for workshops
   Nicer workshop editor
   Migrate dance descriptions/instructions to lexical
-  Lexical
-    H1, H2 buttons
-    Write ## title or * item to make headings and lists
+
+  Use PageSection in program/slide editor pages
 
   More fine-grained document access control
   Event volunteer kompassi status
