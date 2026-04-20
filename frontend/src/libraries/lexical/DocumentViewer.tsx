@@ -23,19 +23,19 @@ import { expand, MinifiedDocumentContent } from './utils/minify'
 // Public component
 // ---------------------------------------------------------------------------
 
-export interface DocumentViewerProps {
+export interface DocumentViewerProps extends ViewOptions {
   document: MinifiedDocumentContent | null | undefined
   className?: string
 }
 
-export function DocumentViewer({ document: minified, className }: DocumentViewerProps) {
+export function DocumentViewer({ document: minified, className, skipHeadingLevels }: DocumentViewerProps) {
   const document = minified ? expand(minified) : null
   if (!document?.root) return null
   const root = document.root as unknown as SerializedElementNode
 
   return (
-    <div className={classNames('lexical-content', className ?? ' p-4 bg-white')}>
-      {renderChildren(root)}
+    <div className={classNames('lexical-content read-only', className ?? ' p-4 bg-white')}>
+      {renderChildren(root, { skipHeadingLevels })}
     </div>
   )
 }
@@ -81,6 +81,8 @@ const FORMAT_CODE = 16
 const FORMAT_SUBSCRIPT = 32
 const FORMAT_SUPERSCRIPT = 64
 
+const headingTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p'] as const
+
 /** Returns a style object with textAlign when the element has a non-default alignment. */
 function alignStyle(format: number | string): React.CSSProperties | undefined {
   if (!format || format === 'left' || format === 'start') return undefined
@@ -91,30 +93,31 @@ function alignStyle(format: number | string): React.CSSProperties | undefined {
 // Node renderer
 // ---------------------------------------------------------------------------
 
-function renderNode(node: SerializedNode, index: number): React.ReactNode {
+function renderNode(node: SerializedNode, index: number, options: ViewOptions): React.ReactNode {
   switch (node.type) {
     case 'text':
-      return renderText(node as SerializedTextNode, index)
+      return renderText(node as SerializedTextNode, index, options)
 
     case 'paragraph': {
       const para = node as SerializedElementNode
       return (
         <p key={index} style={alignStyle(para.format)}>
-          {renderChildren(para)}
+          {renderChildren(para, options)}
         </p>
       )
     }
 
     case 'heading': {
       const heading = node as SerializedHeadingNode
-      const Tag = heading.tag
-      return <Tag key={index} style={alignStyle(heading.format)}>{renderChildren(heading)}</Tag>
+      const headingLevel = parseInt(heading.tag.slice(1), 10) + (options.skipHeadingLevels ?? 0) - 1
+      const Tag = headingTags[Math.min(6, headingLevel)]
+      return <Tag key={index} style={alignStyle(heading.format)}>{renderChildren(heading, options)}</Tag>
     }
 
     case 'quote':
       return (
         <blockquote key={index} style={alignStyle((node as SerializedElementNode).format)}>
-          {renderChildren(node as SerializedElementNode)}
+          {renderChildren(node as SerializedElementNode, options)}
         </blockquote>
       )
 
@@ -129,7 +132,7 @@ function renderNode(node: SerializedNode, index: number): React.ReactNode {
           rel={link.rel ?? undefined}
           title={link.title ?? undefined}
         >
-          {renderChildren(link)}
+          {renderChildren(link, options)}
         </a>
       )
     }
@@ -139,7 +142,7 @@ function renderNode(node: SerializedNode, index: number): React.ReactNode {
       const Tag = list.listType === 'number' ? 'ol' : 'ul'
       return (
         <Tag key={index} style={alignStyle(list.format)} start={list.listType === 'number' ? list.start : undefined}>
-          {renderChildren(list)}
+          {renderChildren(list, options)}
         </Tag>
       )
     }
@@ -156,7 +159,7 @@ function renderNode(node: SerializedNode, index: number): React.ReactNode {
           {isCheckItem && (
             <input type="checkbox" checked={item.checked} readOnly tabIndex={-1} />
           )}
-          {renderChildren(item)}
+          {renderChildren(item, options)}
         </li>
       )
     }
@@ -164,14 +167,14 @@ function renderNode(node: SerializedNode, index: number): React.ReactNode {
     case 'table':
       return (
         <table key={index}>
-          <tbody>{renderChildren(node as SerializedElementNode)}</tbody>
+          <tbody>{renderChildren(node as SerializedElementNode, options)}</tbody>
         </table>
       )
 
     case 'tablerow':
       return (
         <tr key={index}>
-          {renderChildren(node as SerializedElementNode)}
+          {renderChildren(node as SerializedElementNode, options)}
         </tr>
       )
 
@@ -185,7 +188,7 @@ function renderNode(node: SerializedNode, index: number): React.ReactNode {
           rowSpan={cell.rowSpan}
           style={cell.width != null ? { width: cell.width } : undefined}
         >
-          {renderChildren(cell)}
+          {renderChildren(cell, options)}
         </Tag>
       )
     }
@@ -211,7 +214,7 @@ function renderNode(node: SerializedNode, index: number): React.ReactNode {
           className={theme.layoutContainer}
           style={{ gridTemplateColumns: layout.templateColumns }}
         >
-          {renderChildren(layout)}
+          {renderChildren(layout, options)}
         </div>
       )
     }
@@ -219,7 +222,7 @@ function renderNode(node: SerializedNode, index: number): React.ReactNode {
     case 'layout-item':
       return (
         <div key={index} className={theme.layoutItem}>
-          {renderChildren(node as SerializedElementNode)}
+          {renderChildren(node as SerializedElementNode, options)}
         </div>
       )
 
@@ -232,11 +235,12 @@ function renderNode(node: SerializedNode, index: number): React.ReactNode {
       return <br />
 
     default:
+      console.log(node.type)
       // Attempt to render children for unknown element nodes
       if ('children' in node) {
         return (
           <span key={index}>
-            {renderChildren(node as SerializedElementNode)}
+            {renderChildren(node as SerializedElementNode, options)}
           </span>
         )
       }
@@ -244,11 +248,15 @@ function renderNode(node: SerializedNode, index: number): React.ReactNode {
   }
 }
 
-function renderChildren(node: SerializedElementNode): React.ReactNode {
-  return node.children?.map((child, i) => renderNode(child as SerializedNode, i))
+interface ViewOptions {
+  skipHeadingLevels?: 0 | 1 | 2 | 3 | 4 | 5
 }
 
-function renderText(node: SerializedTextNode, index: number): React.ReactNode {
+function renderChildren(node: SerializedElementNode, options: ViewOptions): React.ReactNode {
+  return node.children?.map((child, i) => renderNode(child as SerializedNode, i, options))
+}
+
+function renderText(node: SerializedTextNode, index: number, _options: ViewOptions): React.ReactNode {
   const { text, format } = node
   if (!text) return null
 

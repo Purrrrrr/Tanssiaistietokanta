@@ -1,12 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { MarkdownToJSX } from 'markdown-to-jsx/react'
 import React, { useCallback, useRef, useState } from 'react'
 import classNames from 'classnames'
 
 import { Dance, EditableDance } from 'types'
 import { DanceInstructionsQuery } from 'types/gql/graphql'
 
-import { backendQueryHook, cleanMetadataValues, graphql } from 'backend'
+import { backendQueryHook, graphql } from 'backend'
 import { sortDances, usePatchDance } from 'services/dances'
 import { useCallbackOnEventChanges } from 'services/events'
 
@@ -181,7 +180,7 @@ function InstructionsForDance({ dance, showShortInstructions }: { dance: Dance, 
     <div className={field}>
       {editorOpen
         ? <DanceFieldEditor dance={dance} field={field} />
-        : <DocumentViewer document={value} />
+        : <DocumentViewer document={value} skipHeadingLevels={2} />
       }
     </div>
   </div>
@@ -210,16 +209,6 @@ function DanceFieldEditor({ dance: danceInDatabase, field }: { dance: Dance, fie
     <Field label={t('wikipageName')} path="wikipageName" component={WikipageSelector} componentProps={{ possibleName: danceInDatabase.name }} />
   </Form>
 }
-
-// TODO What to do with these ??
-const markdownOverrides = {
-  h1: { component: 'h3' },
-  h2: { component: 'h4' },
-  h3: { component: 'h5' },
-  h4: { component: 'h6' },
-  h5: { component: 'span' },
-  a: { component: 'span' },
-} as MarkdownToJSX.Overrides
 
 function WorkshopDetails({ workshop }: { workshop: Workshop }) {
   const t = useT('routes.events.event.print.danceInstructions')
