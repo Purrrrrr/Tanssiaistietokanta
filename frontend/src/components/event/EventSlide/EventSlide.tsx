@@ -1,9 +1,8 @@
 import type { DanceProgramItemSlideProps, DanceSetSlideProps, EventParentSlideProps, EventProgram, EventSlideProps, IntervalMusicSlideProps } from './types'
 
-import { DocumentViewer } from 'libraries/lexical/DocumentViewer'
 import { LinkComponentType, Slide, SlideNavigation, SlideNavigationList } from 'components/Slide'
 
-import { markdown, TeachedIn } from './utils'
+import { renderDoc, TeachedIn } from './utils'
 
 export type WithCommonProps<X> = {
   eventProgram: EventProgram
@@ -32,7 +31,7 @@ export function EventSlide(props: WithCommonProps<EventSlideProps>) {
         title={props.title}
         slideStyleId={slideStyleId ?? eventProgram.slideStyleId}
         linkComponent={linkComponent}
-        children={markdown(program.description)}
+        children={renderDoc(program.description)}
       />
     }
     case 'danceSet':
@@ -72,7 +71,7 @@ function IntervalMusicSlide(props: WithCommonProps<IntervalMusicSlideProps>) {
   return <Slide
     id={id}
     title={title}
-    children={markdown(
+    children={renderDoc(
       intervalMusic?.description ?? defaultIntervalMusic?.description,
     )}
     slideStyleId={intervalMusic?.slideStyleId ?? defaultSlideStyleId}
@@ -91,9 +90,7 @@ function DanceProgramItemSlide(props: WithCommonProps<DanceProgramItemSlideProps
       children: '',
     }
     : {
-      children: dance?.description
-        ? <DocumentViewer document={dance.description} />
-        : markdown(program?.description),
+      children: renderDoc(dance?.description ?? program?.description),
       footer: dance?.teachedIn?.length
         ? <TeachedIn teachedIn={dance.teachedIn} />
         : undefined,

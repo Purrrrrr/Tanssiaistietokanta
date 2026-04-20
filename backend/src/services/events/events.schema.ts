@@ -7,7 +7,7 @@ import type { Static, TObject, TProperties } from '@feathersjs/typebox'
 import type { Application, HookContext } from '../../declarations'
 import { dataValidator, queryValidator } from '../../validators'
 import { castAfterValidating } from '../../utils/cast-after-validating'
-import { computedProperties, SlideStyleId, Id, Name, Date, NullableString, Nullable, DateTime } from '../../utils/common-types'
+import { computedProperties, SlideStyleId, Id, Name, Date, NullableString, Nullable, DateTime, DocumentContent } from '../../utils/common-types'
 import { Dances } from '../dances/dances.schema'
 import { findTeachedIn, findWikipage } from '../dances/dances.resolvers'
 
@@ -50,7 +50,7 @@ export const eventsSchema = Type.Object(
       pauseBetweenDances: Type.Number({ default: DEFAULT_PAUSE_BETWEEN_DANCES }),
       defaultIntervalMusic: ClosedObject({
         name: NullableString(),
-        description: NullableString(),
+        description: Nullable(DocumentContent()),
         showInLists: Type.Boolean(),
       }),
     }),
@@ -83,7 +83,7 @@ function DanceSet() {
     program: Type.Array(EventProgramRow()),
     intervalMusic: Nullable(ClosedObject({
       name: Nullable(Type.String()),
-      description: Nullable(Type.String()),
+      description: Nullable(DocumentContent()),
       duration: Type.Number(),
       slideStyleId: SlideStyleId(),
       danceId: Nullable(Id()),
@@ -122,7 +122,7 @@ function EventProgram() {
   return ClosedObject({
     name: Type.String(),
     nameInLists: Nullable(Type.String()),
-    description: Type.String(),
+    description: DocumentContent(),
     duration: Type.Number(),
     showInLists: Type.Boolean(),
   })

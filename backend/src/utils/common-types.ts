@@ -14,6 +14,11 @@ export function Id() {
 export function SlideStyleId() {
   return Type.Union([Type.Null(), Type.String()])
 }
+export function DocumentContent() {
+  // TODO: define more explicitly
+  return Type.Any()
+}
+
 export function Nullable<T extends TSchema>(t: T) {
   return Type.Union([Type.Null(), t])
 }

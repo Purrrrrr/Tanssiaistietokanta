@@ -51,7 +51,7 @@ type EventProgramSettings {
 
 type DefaultIntervalMusic {
   name: String
-  description: String
+  description: DocumentContent
   showInLists: Boolean!
 }
 
@@ -87,14 +87,14 @@ enum EventProgramRowType {
 type EventProgram {
   name: String! 
   nameInLists: String
-  description: String
+  description: DocumentContent
   duration: Float
   showInLists: Boolean!
 }
 
 type IntervalMusic {
   name: String
-  description: String
+  description: DocumentContent
   duration: Float!
   slideStyleId: ID
   danceId: ID

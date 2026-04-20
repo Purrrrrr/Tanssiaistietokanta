@@ -105,6 +105,7 @@
     display: none;
   }
   .svg-container {
+    display: block;
     width: var(--qr-size);
     height: var(--qr-size);
   }
@@ -113,6 +114,7 @@
     height: 100%;
   }
   .url {
+    display: block;
     max-width: calc(var(--qr-size) * 1.2);
     font-size: calc(var(--qr-size) / 14);
     overflow-wrap: anywhere;

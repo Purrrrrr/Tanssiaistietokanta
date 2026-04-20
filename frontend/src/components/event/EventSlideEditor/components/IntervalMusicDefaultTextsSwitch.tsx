@@ -1,3 +1,4 @@
+import { emptyDocument } from 'libraries/lexical'
 import { IntervalMusic, switchFor } from 'components/event/EventProgramForm'
 import { DEFAULT_INTERVAL_MUSIC } from 'components/event/utils'
 
@@ -12,6 +13,6 @@ export const IntervalMusicDefaultTextsSwitch = switchFor<IntervalMusic>({
     const defaults = intervalMusic ?? DEFAULT_INTERVAL_MUSIC
     return checked
       ? { ...defaults, name: null, description: null }
-      : { ...defaults, name: '', description: ' ' }
+      : { ...defaults, name: '', description: emptyDocument() }
   },
 })

@@ -1,6 +1,7 @@
 import { Workshop } from './types'
 
-import { Markdown } from 'libraries/ui'
+import { MinifiedDocumentContent } from 'libraries/lexical'
+import { DocumentViewer } from 'libraries/lexical/DocumentViewer'
 import { useTranslation } from 'i18n'
 
 export function TeachedIn({ teachedIn }: { teachedIn: Workshop[] }) {
@@ -13,8 +14,6 @@ export function TeachedIn({ teachedIn }: { teachedIn: Workshop[] }) {
   return `${useTranslation('components.slide.teachedInSet')} ${teachedInStr}`
 }
 
-export function markdown(md?: string | null) {
-  return <Markdown>
-    {md ?? ''}
-  </Markdown>
+export function renderDoc(doc?: MinifiedDocumentContent | null) {
+  return <DocumentViewer document={doc} />
 }

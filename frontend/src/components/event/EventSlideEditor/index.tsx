@@ -4,7 +4,8 @@ import { Dance } from 'types'
 
 import { useDance } from 'services/dances'
 
-import { DragHandle, MarkdownEditor, SyncState, SyncStatus } from 'libraries/forms'
+import { DragHandle, SyncState, SyncStatus } from 'libraries/forms'
+import { DocumentContentEditor } from 'libraries/lexical'
 import { Callout, H2, Link } from 'libraries/ui'
 import { ArrowLeft, Cross, Link as LinkIcon } from 'libraries/ui/icons'
 import { InstructionEditor } from 'components/dance/DanceEditor'
@@ -32,11 +33,8 @@ import { InheritedSlideStyleSelector, IntervalMusicDefaultTextsSwitch } from './
 
 import './EventSlideEditor.scss'
 
-const markdownEditorProps = {
-  noPreview: true,
-  style: {
-    minHeight: 'max(30dvh, 300px)',
-  },
+const docEditorProps = {
+  className: 'min-h-[max(30dvh,300px)]',
 }
 
 type EventSlideEditorProps = WithEventProgram<EventSlideProps>
@@ -195,13 +193,13 @@ function IntervalMusicDescriptionEditor({ danceSetIndex }: { danceSetIndex: numb
       ? <>
         <H2>{t('titles.customIntervalMusicTexts')}</H2>
         <Input label={t('fields.intervalMusic.name')} path={`${path}.name`} required />
-        <Field label={t('fields.intervalMusic.description')} path={`${path}.description`} component={MarkdownEditor} componentProps={markdownEditorProps} />
+        <Field label={t('fields.intervalMusic.description')} path={`${path}.description`} component={DocumentContentEditor} componentProps={docEditorProps} />
         <Switch label={t('fields.intervalMusic.showInLists')} path={`${path}.showInLists`} inline />
       </>
       : <>
         <H2>{t('titles.defaultIntervalMusicTexts')}</H2>
         <Input label={t('fields.intervalMusic.name')} path="defaultIntervalMusic.name" componentProps={{ placeholder: t('programTypes.IntervalMusic') }} />
-        <Field label={t('fields.intervalMusic.description')} path="defaultIntervalMusic.description" component={MarkdownEditor} componentProps={markdownEditorProps} />
+        <Field label={t('fields.intervalMusic.description')} path="defaultIntervalMusic.description" component={DocumentContentEditor} componentProps={docEditorProps} />
         <Switch label={t('fields.intervalMusic.showInLists')} path="defaultIntervalMusic.showInLists" inline />
       </>
     }
@@ -223,7 +221,7 @@ function ProgramItemEditor({ path }: { path: ProgramItemPath }) {
     case 'EventProgram':
       return <>
         <Input label={t('fields.eventProgram.name')} path={`${path}.eventProgram.name`} required />
-        <Field label={t('fields.eventProgram.description')} path={`${path}.eventProgram.description`} component={MarkdownEditor} componentProps={markdownEditorProps} />
+        <Field label={t('fields.eventProgram.description')} path={`${path}.eventProgram.description`} component={DocumentContentEditor} componentProps={docEditorProps} />
         <Switch label={t('fields.eventProgram.showInLists')} path={`${path}.eventProgram.showInLists`} inline />
         <Callout><T msg="components.eventSlideEditor.currentItemAlwaysShownInLists" /></Callout>
       </>
@@ -250,7 +248,7 @@ function DanceEditor({ id, initialDance }: { id: string, initialDance?: Pick<Dan
       <SyncStatus className="top-[3px] grow" state={state} />
     </div>
     <DanceInput label={label('name')} path="name" />
-    <DanceField label={label('description')} path="description" component={InstructionEditor} componentProps={{ danceId: dance._id, wikipage: dance.wikipage, ...markdownEditorProps }} />
+    <DanceField label={label('description')} path="description" component={InstructionEditor} componentProps={{ danceId: dance._id, wikipage: dance.wikipage, ...docEditorProps }} />
 
     <p className="flex gap-3.5">
       {dance.wikipageName &&

@@ -1,5 +1,7 @@
 import { lazy } from 'react'
 
+import randomId from 'utils/randomId'
+
 import type { MinifiedDocumentContent } from './utils/minify'
 
 export { type EditorProps as DocumentContentEditorProps } from './Editor'
@@ -24,3 +26,9 @@ export function isEmptyDocument(root: MinifiedDocumentContent | null | undefined
   }
   return false
 }
+
+export const emptyDocument = () => ({
+  V: 1, t: 'ro', c: [
+    { _id: randomId(8), t: 'p', c: [] },
+  ],
+})

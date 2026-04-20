@@ -8,15 +8,15 @@ const QRImage = (QRCode_import as unknown as { default: typeof QRCode_import }).
 
 export function QRCode({ size, value, title, nodeKey }: QRCodePayload & { nodeKey?: NodeKey }) {
   const pxSize = `${size / 14}em`
-  return <div
+  return <span
     className="qr-container"
     style={{ '--qr-size': pxSize } as CSSProperties}
     data-qr-node-key={nodeKey}
   >
-    {title && <p>{title}</p>}
-    <div className="svg-container">
+    {title && <span>{title}</span>}
+    <span className="svg-container">
       <QRImage value={value ?? ''} size={size} />
-    </div>
-    <p className="url">{value}</p>
-  </div>
+    </span>
+    <span className="url">{value}</span>
+  </span>
 }

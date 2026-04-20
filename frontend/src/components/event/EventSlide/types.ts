@@ -1,3 +1,4 @@
+import { MinifiedDocumentContent } from 'libraries/lexical'
 import { Dance } from 'types'
 
 export type EventSlideProps = TitleSlideProps | IntroductionSlideProps | DanceSetSlideProps | DanceProgramItemSlideProps | IntervalMusicSlideProps
@@ -69,14 +70,16 @@ export interface DanceSet {
   titleSlideStyleId?: SlideStyleID
   program: EventProgramRow[]
   intervalMusic?: {
-    description?: string | null
+    description?: MinifiedDocumentContent | null
     name?: string | null
     slideStyleId?: SlideStyleID
     showInLists?: boolean
   } | null
 }
 
-export interface DefaultIntervalMusic extends NameAndDescription {
+export interface DefaultIntervalMusic {
+  name?: string | null
+  description?: MinifiedDocumentContent | null
   showInLists?: boolean
 }
 
@@ -90,7 +93,7 @@ export interface EventProgramRow {
 
 interface EventProgramData {
   name: string
-  description?: string | null
+  description?: MinifiedDocumentContent | null
   showInLists: boolean
 }
 
@@ -101,9 +104,4 @@ export interface Workshop {
 
 export interface RequestedDance {
   __typename: 'RequestedDance'
-}
-
-export interface NameAndDescription {
-  name?: string | null
-  description?: string | null
 }

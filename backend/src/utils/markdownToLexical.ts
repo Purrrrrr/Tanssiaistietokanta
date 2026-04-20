@@ -33,7 +33,7 @@ export function convertMarkdownToLexical(markdown: string): object {
 function convertBlock(node: Content): MinifiedNode[] {
   switch (node.type) {
     case 'paragraph':
-      return inlineToBlocks(node.children)
+      return [paragraphNode(convertInline(node.children))]
 
     case 'heading': {
       const tag = `h${Math.min(node.depth, 3)}`
@@ -164,32 +164,6 @@ function convertInline(nodes: PhrasingContent[], format = 0): MinifiedNode[] {
   return result
 }
 
-/**
- * Convert inline phrasing content, then hoist any non-inline QR code nodes
- * out of the paragraph and return them as separate top-level block items.
- */
-function inlineToBlocks(nodes: PhrasingContent[]): MinifiedNode[] {
-  const inlineNodes = convertInline(nodes)
-  const blocks: MinifiedNode[] = []
-  let pendingText: MinifiedNode[] = []
-
-  for (const child of inlineNodes) {
-    if (child.t === 'qr') {
-      if (pendingText.length > 0) {
-        blocks.push(paragraphNode(pendingText))
-        pendingText = []
-      }
-      blocks.push(child)
-    } else {
-      pendingText.push(child)
-    }
-  }
-
-  // Always emit at least one paragraph (even empty), or flush remaining text
-  blocks.push(paragraphNode(pendingText))
-  return blocks
-}
-
 // ── Node constructors ─────────────────────────────────────────────────────────
 
 /** Split a text value on hard newlines, interleaving linebreak nodes. */
@@ -209,8 +183,11 @@ function textNodes(value: string, format: number): MinifiedNode[] {
   return result
 }
 
-function qrNode(value: string): MinifiedNode {
-  return { _id: randomId(), t: 'qr', va: value, v: 1 }
+function qrNode(tag: string): MinifiedNode {
+  const value = tag.match(/value="([^"]*)"/)?.[1] ?? ''
+  const title = tag.match(/title="([^"]*)"/)?.[1] ?? ''
+  const size = parseInt(tag.match(/size={([0-9]*)}/)?.[1] ?? '128', 10)
+  return { _id: randomId(), t: 'qr', va: value, ti: title, sz: size > 0 ? size : 128, v: 1 }
 }
 
 function paragraphNode(children: MinifiedNode[]): MinifiedNode {
@@ -220,7 +197,7 @@ function paragraphNode(children: MinifiedNode[]): MinifiedNode {
 }
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
-const QR_VALUE_REGEX = /<QR\s[^>]*\bvalue="([^"]*)"[^>]*\/>/i
+const QR_VALUE_REGEX = /<QR\s([^>]*)\/>/i
 
 const randomId = () => randomIdWithLength(8)
 
