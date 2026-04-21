@@ -27,10 +27,10 @@ export function EventVolunteerRolePicker({
   const renderGroup = (groupRoles: EventRole[], title: string) => {
     if (groupRoles.length === 0) return null
     return <div>
-      <h3 className="font-semibold mt-2 mb-1">{title}</h3>
+      <h3 className="mt-2 mb-1 font-semibold">{title}</h3>
       <div className="flex flex-wrap gap-3">
         {groupRoles.map(role =>
-          <label key={role._id} className="inline-flex items-center gap-1 cursor-pointer">
+          <label key={role._id} className="inline-flex gap-1 items-center cursor-pointer">
             <input
               type="checkbox"
               checked={(value ?? []).some(r => r._id === role._id)}

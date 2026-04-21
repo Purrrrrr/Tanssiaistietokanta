@@ -14,7 +14,7 @@ export function CreateWorkshopCard({ eventId, startDate, onClose }: { eventId: s
   const [createWorkshop] = useCreateWorkshop()
 
   return <Card marginClass="">
-    <h2 className="font-bold text-lg mb-4">{t('createWorkshopForm.title')}</h2>
+    <h2 className="mb-4 text-lg font-bold">{t('createWorkshopForm.title')}</h2>
     <form onSubmit={async e => {
       e.preventDefault()
       if (name) {

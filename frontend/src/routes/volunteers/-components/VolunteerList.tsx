@@ -29,7 +29,7 @@ export function VolunteerList({ volunteers: unsortedVolunteers }: VolunteerListP
   const selector = useMultipleSelection(volunteers)
 
   return <>
-    <div className="flex items-center justify-between gap-2 mb-2">
+    <div className="flex gap-2 justify-between items-center mb-2">
       <div>
         {volunteers?.length > 0 && t('Nvolunteers', { count: volunteers?.length })}
         {selector.selected.length > 0 && ', ' + t('selectedVolunteers', { count: selector.selected.length })}
@@ -93,7 +93,7 @@ function VolunteerListRow({ volunteer, selectionProps }: VolunteerListRowProps) 
     <SelectionBox {...selectionProps} />
     <span>{volunteer.name}</span>
     <VolunteeredIn volunteer={volunteer} />
-    <div className="flex items-center gap-1">
+    <div className="flex gap-1 items-center">
       <DeleteVolunteerButton minimal volunteer={volunteer} />
       <Button
         requireRight="volunteers:modify"

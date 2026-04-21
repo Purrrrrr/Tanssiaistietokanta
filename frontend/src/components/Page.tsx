@@ -37,13 +37,13 @@ export function Page({ children, info, toolbar, menu, logo, background, ...props
   return <>
     <div className={classNames('page', (!!menu && menuOpen) && 'menu-open', background && `background-${background}`)}>
       <div className="page-background" />
-      <div className="title flex flex-wrap items-center gap-x-4">
+      <div className="flex flex-wrap gap-x-4 items-center title">
         {logo}
-        <h1 className="h1 text-amber-100 text-shadow-stone-600 text-shadow-lg">{title}</h1>
-        <div className="pb-3 text-lg ps-3 text-amber-100 text-shadow-stone-600 text-shadow-lg">{info}</div>
-        {toolbar && <div className="toolbar bg-white/60 backdrop-blur-md p-2 rounded-xl">{toolbar}</div>}
+        <h1 className="text-amber-100 h1 text-shadow-stone-600 text-shadow-lg">{title}</h1>
+        <div className="pb-3 text-lg text-amber-100 ps-3 text-shadow-stone-600 text-shadow-lg">{info}</div>
+        {toolbar && <div className="p-2 rounded-xl toolbar bg-white/60 backdrop-blur-md">{toolbar}</div>}
       </div>
-      <div className="navigation flex">
+      <div className="flex navigation">
         {menu && <MenuToggle onClick={() => setMenuOpen(!menuOpen)} />}
         <Breadcrumbs />
       </div>
@@ -89,13 +89,13 @@ function MenuToggle({ onClick }: { onClick: () => void }) {
 }
 
 export function Toolbar({ children }: { children: React.ReactNode }) {
-  return <div className="flex flex-wrap items-center gap-2">
+  return <div className="flex flex-wrap gap-2 items-center">
     {children}
   </div>
 }
 
 function PageContent({ children }: { children: React.ReactNode }) {
-  return <div className="content min-w-0">
+  return <div className="min-w-0 content">
     {children}
   </div>
 }

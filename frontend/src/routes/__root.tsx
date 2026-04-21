@@ -75,7 +75,7 @@ function NotFound() {
   return <Page
     title={t('pageNotFound')}
     logo={
-      <div className="bg-amber-100/65 backdrop-blur-md rounded-2xl">
+      <div className="rounded-2xl bg-amber-100/65 backdrop-blur-md">
         <img alt="404" src="/404.png?v=2" className="h-36" />
       </div>
     }>

@@ -95,7 +95,7 @@ export default function FileList({ title, owner, owningId, path }: FileListProps
     toolbar={<>
       {canUpload && <AddButton onClick={() => input.current?.click()} text={T('addFile')} />}
       {selector.selected.length > 0 &&
-        <div className="flex items-center gap-2">
+        <div className="flex gap-2 items-center">
           <span className="ms-3">
             {T('filesSelected', {
               count: selector.selected.length,

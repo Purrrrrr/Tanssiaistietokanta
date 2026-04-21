@@ -202,12 +202,12 @@ function EditorShowcase() {
   return (
     <div className="flex flex-col gap-4">
       <Editor value={state} imageUpload={{ owner: 'dances', owningId: 'fuu' }} onChange={setState} />
-      <div className="border-1 border-dashed border-gray-400 rounded p-2">
-        <p className="text-xs text-gray-500 mb-2">Document Viewer (read-only, no Lexical runtime)</p>
+      <div className="p-2 rounded border-gray-400 border-dashed border-1">
+        <p className="mb-2 text-xs text-gray-500">Document Viewer (read-only, no Lexical runtime)</p>
         <DocumentViewer document={state} />
       </div>
       <H2>Minified state ({JSON.stringify(state).length} bytes)</H2>
-      <pre className="bg-gray-100 p-2 rounded max-h-200 overflow-auto"><code>{JSON.stringify(state, null, 2)}</code></pre>
+      <pre className="overflow-auto p-2 bg-gray-100 rounded max-h-200"><code>{JSON.stringify(state, null, 2)}</code></pre>
       <H2>Another editor instance with the same state</H2>
       <Editor value={state} imageUpload={{ owner: 'dances', owningId: 'fuu' }} onChange={setState} />
     </div>

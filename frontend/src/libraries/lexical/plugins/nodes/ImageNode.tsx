@@ -242,13 +242,13 @@ function ImageComponent({
       {isSelected && !isEditing && (
         <span className="flex gap-1 mt-1">
           <button
-            className="px-2 py-0.5 text-xs border-1 border-gray-400 rounded bg-white hover:bg-gray-50"
+            className="py-0.5 px-2 text-xs bg-white rounded border-gray-400 hover:bg-gray-50 border-1"
             onMouseDown={(e) => { e.preventDefault(); setIsEditing(true) }}
           >
             Edit
           </button>
           <button
-            className="px-2 py-0.5 text-xs border-1 border-gray-400 rounded bg-white hover:bg-gray-50 text-red-600"
+            className="py-0.5 px-2 text-xs text-red-600 bg-white rounded border-gray-400 hover:bg-gray-50 border-1"
             onMouseDown={(e) => { e.preventDefault(); removeNode() }}
           >
             Remove
@@ -256,12 +256,12 @@ function ImageComponent({
         </span>
       )}
       {isEditing && (
-        <span className="flex flex-wrap gap-1 mt-1 items-center">
+        <span className="flex flex-wrap gap-1 items-center mt-1">
           <label className="text-xs text-gray-600" htmlFor={`img-alt-${nodeKey}`}>Alt</label>
           <input
             id={`img-alt-${nodeKey}`}
             ref={altInputRef}
-            className="flex-1 min-w-20 px-2 py-0.5 text-xs border-1 border-gray-400 rounded"
+            className="flex-1 py-0.5 px-2 text-xs rounded border-gray-400 min-w-20 border-1"
             value={editAlt}
             onChange={(e) => setEditAlt(e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Enter') applyEdit(); if (e.key === 'Escape') setIsEditing(false) }}
@@ -269,7 +269,7 @@ function ImageComponent({
           <label className="text-xs text-gray-600" htmlFor={`img-width-${nodeKey}`}>Width</label>
           <input
             id={`img-width-${nodeKey}`}
-            className="w-16 px-2 py-0.5 text-xs border-1 border-gray-400 rounded"
+            className="py-0.5 px-2 w-16 text-xs rounded border-gray-400 border-1"
             type="number"
             min="1"
             placeholder="auto"
@@ -278,13 +278,13 @@ function ImageComponent({
             onKeyDown={(e) => { if (e.key === 'Enter') applyEdit(); if (e.key === 'Escape') setIsEditing(false) }}
           />
           <button
-            className="px-2 py-0.5 text-xs border-1 border-gray-400 rounded bg-white hover:bg-gray-50"
+            className="py-0.5 px-2 text-xs bg-white rounded border-gray-400 hover:bg-gray-50 border-1"
             onMouseDown={(e) => { e.preventDefault(); applyEdit() }}
           >
             OK
           </button>
           <button
-            className="px-2 py-0.5 text-xs border-1 border-gray-400 rounded bg-white hover:bg-gray-50"
+            className="py-0.5 px-2 text-xs bg-white rounded border-gray-400 hover:bg-gray-50 border-1"
             onMouseDown={(e) => { e.preventDefault(); setIsEditing(false) }}
           >
             Cancel

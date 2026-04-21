@@ -122,7 +122,7 @@ function EventWorkshops({ event, readOnly }: { event: Event, readOnly: boolean }
     }>
     {workshops.length === 0 && <p>{t('noWorkshops')}</p>}
     {workshops.length > 0 &&
-      <div className="col-span-full my-4 sm:grid grid-cols-[repeat(auto-fill,minmax(32rem,1fr))] gap-4 items-stretch">
+      <div className="col-span-full gap-4 items-stretch my-4 sm:grid grid-cols-[repeat(auto-fill,minmax(32rem,1fr))]">
         {workshops.map(workshop =>
           <WorkshopCard key={workshop._id} workshop={workshop} />,
         )}
@@ -142,8 +142,8 @@ function WorkshopCard({ workshop }: { workshop: Workshop }) {
     .flatMap(a => a.volunteers)
 
   return <Card className="flex flex-col" marginClass="" noPadding>
-    <div className="grid grid-cols-[1fr_auto] grid-rows-2 px-6 pt-4 pb-2">
-      <h2 className="font-bold text-xl">
+    <div className="grid grid-rows-2 px-6 pt-4 pb-2 grid-cols-[1fr_auto]">
+      <h2 className="text-xl font-bold">
         {name}
         {abbreviation &&
           <> ({abbreviation})</>
@@ -153,17 +153,17 @@ function WorkshopCard({ workshop }: { workshop: Workshop }) {
       <div className="text-lg">{teachers.map(teacher => teacher.name).join(', ')}</div>
     </div>
     <p className="px-6 not-empty:py-2"><DocumentViewer document={description} skipRenderOnEmpty /></p>
-    <div className="grow flex flex-wrap items-stretch justify-stretch gap-[1px] bg-gray-200 pt-[1px]">
+    <div className="flex flex-wrap items-stretch bg-gray-200 grow justify-stretch gap-[1px] pt-[1px]">
       {instanceSpecificDances
         ? instances.map(instance =>
           <>
-            <div key={instance._id} className="p-6 grow bg-white">
+            <div key={instance._id} className="p-6 bg-white grow">
               <h3 className="mb-3 text-base font-bold">{formatDateTime(new Date(instance.dateTime))}</h3>
               <DanceList dances={instance.dances ?? []} />
             </div>
           </>,
         )
-        : <div className="p-6 grow bg-white">
+        : <div className="p-6 bg-white grow">
           <h3 className="mb-3 text-base font-bold">{instances.map(instance => formatDateTime(new Date(instance.dateTime))).join(', ')}</h3>
           <DanceList dances={instances[0].dances ?? []} />
         </div>

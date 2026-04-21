@@ -65,7 +65,7 @@ function H(type: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6', children: React.ReactN
 }
 
 function Divider() {
-  return <div className="bg-gray-400 w-px self-stretch" />
+  return <div className="self-stretch w-px bg-gray-400" />
 }
 
 export interface ImageUploadConfig {
@@ -288,7 +288,7 @@ export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUplo
 
   return (
     <>
-      <div className="flex flex-wrap items-center gap-2 p-1">
+      <div className="flex flex-wrap gap-2 items-center p-1">
         <ToolbarButton
           disabled={!canUndo}
           onClick={() => editor.dispatchCommand(UNDO_COMMAND, undefined)}
@@ -303,10 +303,10 @@ export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUplo
         </ToolbarButton>
         <Divider />
         <ToolbarButton active={blockType === 'h1'} onClick={() => applyHeading('h1')} aria-label={HEADING_LABELS.h1}>
-          <span className="text-xl relative -left-1 size-4 leading-[16px]">H1</span>
+          <span className="relative -left-1 text-xl size-4 leading-[16px]">H1</span>
         </ToolbarButton>
         <ToolbarButton active={blockType === 'h2'} onClick={() => applyHeading('h2')} aria-label={HEADING_LABELS.h2}>
-          <span className="text-base relative -left-1 size-4 leading-[16px]">H2</span>
+          <span className="relative -left-1 text-base size-4 leading-[16px]">H2</span>
         </ToolbarButton>
         <RegularSelect<BlockType>
           id="heading-select"
@@ -421,11 +421,11 @@ export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUplo
       </div>
 
       {isTableInsertMode && (
-        <div className="flex gap-2 items-center px-2 py-1 border-t-1 border-black">
+        <div className="flex gap-2 items-center py-1 px-2 border-black border-t-1">
           <label htmlFor="table-rows-input" className="text-sm">Rows</label>
           <input
             id="table-rows-input"
-            className="w-12 px-2 py-0.5 border-1 border-gray-400 rounded text-sm"
+            className="py-0.5 px-2 w-12 text-sm rounded border-gray-400 border-1"
             type="number"
             min="1"
             max="50"
@@ -436,7 +436,7 @@ export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUplo
           <label htmlFor="table-cols-input" className="text-sm">Cols</label>
           <input
             id="table-cols-input"
-            className="w-12 px-2 py-0.5 border-1 border-gray-400 rounded text-sm"
+            className="py-0.5 px-2 w-12 text-sm rounded border-gray-400 border-1"
             type="number"
             min="1"
             max="50"
@@ -449,9 +449,9 @@ export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUplo
         </div>
       )}
       {isImageInsertMode && (
-        <div className="flex flex-wrap gap-2 items-center px-2 py-1 border-t-1 border-black">
+        <div className="flex flex-wrap gap-2 items-center py-1 px-2 border-black border-t-1">
           <input
-            className="flex-1 min-w-40 px-2 py-0.5 border-1 border-gray-400 rounded text-sm"
+            className="flex-1 py-0.5 px-2 text-sm rounded border-gray-400 min-w-40 border-1"
             type="url"
             placeholder="Image URL (https://…)"
             value={imageUrl}
@@ -459,7 +459,7 @@ export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUplo
             onKeyDown={(e) => { if (e.key === 'Enter') insertImageFromUrl(); if (e.key === 'Escape') setIsImageInsertMode(false) }}
           />
           <input
-            className="w-32 px-2 py-0.5 border-1 border-gray-400 rounded text-sm"
+            className="py-0.5 px-2 w-32 text-sm rounded border-gray-400 border-1"
             type="text"
             placeholder="Alt text"
             value={imageAlt}
@@ -470,7 +470,7 @@ export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUplo
           {imageUpload && (
             <>
               <span className="text-sm text-gray-500">or</span>
-              <label className="px-2 py-0.5 text-xs border-1 border-gray-400 rounded bg-white hover:bg-gray-50 cursor-pointer">
+              <label className="py-0.5 px-2 text-xs bg-white rounded border-gray-400 cursor-pointer hover:bg-gray-50 border-1">
                 {isUploading ? 'Uploading…' : 'Upload file'}
                 <input
                   ref={fileInputRef}
@@ -516,9 +516,9 @@ function LinkEditor({ editor, url }: LinkEditorProps) {
     })
   }
 
-  return <div className="flex gap-2 items-center px-2 py-1">
+  return <div className="flex gap-2 items-center py-1 px-2">
     <input
-      className="flex-1 px-2 py-0.5 border-1 border-gray-400 rounded text-sm"
+      className="flex-1 py-0.5 px-2 text-sm rounded border-gray-400 border-1"
       type="url"
       placeholder="https://…"
       value={url}
@@ -569,23 +569,23 @@ function QRCodeEditor({ editor, node, data }: QRCodeEditorProps) {
     })
   }
 
-  return <div className="flex gap-2 items-center px-2 py-1">
+  return <div className="flex gap-2 items-center py-1 px-2">
     <input
-      className="flex-1 px-2 py-0.5 border-1 border-gray-400 rounded text-sm"
+      className="flex-1 py-0.5 px-2 text-sm rounded border-gray-400 border-1"
       type="text"
       placeholder="Enter URL or text for QR code…"
       value={value ?? ''}
       onChange={(e) => updateQRCodePayload({ value: e.target.value })}
     />
     <input
-      className="flex-1 px-2 py-0.5 border-1 border-gray-400 rounded text-sm"
+      className="flex-1 py-0.5 px-2 text-sm rounded border-gray-400 border-1"
       type="text"
       placeholder="Enter title for QR code (optional)…"
       value={title ?? ''}
       onChange={(e) => updateQRCodePayload({ title: e.target.value })}
     />
     <input
-      className="flex-1 px-2 py-0.5 border-1 border-gray-400 rounded text-sm"
+      className="flex-1 py-0.5 px-2 text-sm rounded border-gray-400 border-1"
       type="number"
       placeholder="Enter title for QR code (optional)…"
       value={size ?? '128'}
@@ -621,5 +621,5 @@ function getQRCodeNode(selection: BaseSelection | null): QRCodeNode | null {
 }
 
 function ToolbarButton({ ...props }: ButtonProps) {
-  return <Button minimal {...props} paddingClass="" className="align-sub size-[30px] grid items-center justify-center [font-size:18px]" />
+  return <Button minimal {...props} paddingClass="" className="grid justify-center items-center align-sub size-[30px] [font-size:18px]" />
 }

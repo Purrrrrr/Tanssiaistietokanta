@@ -16,14 +16,14 @@ export function Menu({ className, children, cssDimensionVariablePrefix }: MenuPr
   const ref = useDimensionCssVariables(cssDimensionVariablePrefix)
 
   return <menu className={className}>
-    <div className="menu-measure-container flex-col bg-gray-50 rounded min-w-52 py-3" ref={ref}>{children}</div>
+    <div className="flex-col py-3 bg-gray-50 rounded menu-measure-container min-w-52" ref={ref}>{children}</div>
   </menu>
 }
 
 export function MenuSection({ children, title }: { children: React.ReactNode, title: React.ReactNode }) {
   return <>
-    <h2 className="px-4 min-[800px]:my-3 text-lg font-bold">{title}</h2>
-    <ul className="max-[800px]:flex flex-wrap">
+    <h2 className="px-4 text-lg font-bold min-[800px]:my-3">{title}</h2>
+    <ul className="flex-wrap max-[800px]:flex">
       {children}
     </ul>
   </>

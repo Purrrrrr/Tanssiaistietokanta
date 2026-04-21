@@ -68,7 +68,7 @@ function RouteComponent() {
     })
 
   return <PageSection title={t('title')} toolbar={
-    <div className="grow flex gap-4 flex-wrap items-center justify-between mb- mb-4">
+    <div className="flex flex-wrap gap-4 justify-between items-center mb-4 grow mb-">
       <EventVolunteerRoleCounts volunteers={unsortedEventVolunteers ?? []} currentRole={role} onSetRole={setRole} />
       <div className="flex gap-4">
         <SearchBar
@@ -163,7 +163,7 @@ function EventVolunteerRoleCounts({ volunteers, currentRole, onSetRole }: { volu
     ([role]) => role.order,
   )
 
-  return <div className="flex gap-1 flex-wrap">
+  return <div className="flex flex-wrap gap-1">
     {roles.map(([role, count]) => (
       <RoleTag
         key={role._id}
@@ -210,7 +210,7 @@ function EventVolunteerListRow({ eventVolunteer: ev, addedVolunteers, currentRol
     </span>
     <span>{ev.wishes ? ev.wishes : <span className="italic text-gray-500">{t('domain.eventVolunteer.noWishes')}</span>}</span>
     <span>{ev.notes || '-'}</span>
-    <div className="flex items-center gap-1">
+    <div className="flex gap-1 items-center">
       {!readOnly && <DeleteEventVolunteerButton minimal eventVolunteerId={ev._id} />}
       <Button
         requireRight="eventVolunteers:modify"

@@ -11,7 +11,7 @@ export default function DebugManager() {
     <Button minimal className="p-2" onClick={() => setVisible(!visible)}>⚙</Button>
     <div className={`fixed bottom-7.5 right-1.5  text-left bg-white border-stone-500 border-1 shadow-sm shadow-stone-600/50 p-2 transition-opacity ${visible ? '' : 'opacity-0 pointer-events-none'} p-2`}>
       <label><input id="debug_styles" type="checkbox" defaultChecked /> Debug styles</label>
-      <fieldset className="items-start flex flex-col mt-2">
+      <fieldset className="flex flex-col items-start mt-2">
         <legend>Debug namespaces</legend>
         <Button minimal className="absolute top-0 right-1.5 p-2" onClick={() => setVisible(false)}>x</Button>
         {state.map(([namespace, enabled]) =>
