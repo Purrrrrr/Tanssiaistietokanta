@@ -14,15 +14,15 @@ export const dancewikiSchema = Type.Object(
     _id: Type.String(),
     _fetchedAt: Nullable(Type.String()),
     status: Type.Union([
-      Type.Literal('UNFETCHED'), // _fetchedAt == null && instructions == null
-      Type.Literal('NOT_FOUND'), // _fetchedAt != null && instructions == null
-      Type.Literal('FETCHED'), // _fetchedAt != null && instructions != null
+      Type.Literal('UNFETCHED'), // _fetchedAt == null && content == null
+      Type.Literal('NOT_FOUND'), // _fetchedAt != null && content == null
+      Type.Literal('FETCHED'), // _fetchedAt != null && content != null
 
     ]),
     spamScore: Type.Number(),
     name: Type.String(),
-    instructions: Nullable(Type.String()),
     content: Nullable(DocumentContent()),
+    contentAsMarkdown: Nullable(Type.String()),
     formations: Type.Array(Type.String()),
     categories: Type.Array(Type.String()),
     sources: Type.Array(Type.String()),
@@ -51,7 +51,7 @@ export const dancewikiDataValidator = getValidator(dancewikiDataSchema, dataVali
 export const dancewikiDataResolver = resolve<Dancewiki, HookContext<DancewikiService>>({})
 
 // Schema for allowed query properties
-export const dancewikiQueryProperties = Type.Pick(dancewikiSchema, ['_id', '_fetchedAt', 'status', 'spamScore', 'name', 'instructions', 'formations', 'categories', 'sources', 'metadataVersion'])
+export const dancewikiQueryProperties = Type.Pick(dancewikiSchema, ['_id', '_fetchedAt', 'status', 'spamScore', 'name', 'contentAsMarkdown', 'formations', 'categories', 'sources', 'metadataVersion'])
 export const dancewikiQuerySchema = Type.Intersect(
   [
     querySyntax(dancewikiQueryProperties),

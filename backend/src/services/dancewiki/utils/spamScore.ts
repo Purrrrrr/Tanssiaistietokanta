@@ -43,15 +43,15 @@ const suscpiciousWords = new RegExp(
 
 interface PageToScore {
   name: string
-  instructions: string | null
+  contentAsMarkdown: string | null
   revision?: ParsedPage['revision'] | null
 }
 
 export function spamScore(page: PageToScore): number {
-  const { name, instructions, revision } = page
+  const { name, contentAsMarkdown, revision } = page
   const onlyOneRevision = revision?.parent === 0
 
-  const text = (name + '\n\n' + (instructions ?? ''))
+  const text = (name + '\n\n' + (contentAsMarkdown ?? ''))
   const parts = text.split(/\n\n/)
   const headingCount = parts.filter(getHeaderData).length
 
@@ -63,7 +63,7 @@ export function spamScore(page: PageToScore): number {
     score += 0.2
   }
   const countsInTitle = countSuspicious(name)
-  const countsInContents = countSuspicious(instructions ?? '')
+  const countsInContents = countSuspicious(contentAsMarkdown ?? '')
 
   score += countsInTitle.quotinent * 50
   score += countsInContents.quotinent * 50

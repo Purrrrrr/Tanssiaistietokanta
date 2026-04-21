@@ -20,12 +20,12 @@ export const up: MigrationFn = async params => {
     ),
   )
   const wiki = params.context.getModel('dancewiki')
-  await updateDatabase(wiki, (wikiPage: Record<string, unknown>) => {
-    const content = wikiPage.instructions ? convertMarkdownToLexical(wikiPage.instructions as string) : null
-    // console.log(wikiPage.name, wikiPage.instructions?.length > 0 ? 'has instructions' : 'no instructions', content)
+  await updateDatabase(wiki, ({ instructions, ...wikiPage }: Record<string, unknown>) => {
+    const content = instructions ? convertMarkdownToLexical(instructions as string) : null
     return ({
       ...wikiPage,
       content,
+      contentAsMarkdown: instructions,
     })
   })
   await params.context.updateDatabase('workshops', (workshop: Record<string, unknown>) => ({

@@ -37,7 +37,8 @@ const UNFETCHED_DANCE = {
   status: 'UNFETCHED' as const,
   spamScore: 0,
   _fetchedAt: null,
-  instructions: null,
+  content: null,
+  contentAsMarkdown: null,
   categories: [],
   formations: [],
   sources: [],
@@ -67,7 +68,7 @@ implements ServiceInterface<Dancewiki, DancewikiData, DancewikiParams, never> {
         ? await this.get(categoriesPageName)
         : await this.create({ name: categoriesPageName })
 
-      return getDanceCategorization(page.instructions ?? '')
+      return getDanceCategorization(page.contentAsMarkdown ?? '')
     }, DAY)
 
     // Update list of pages hourly
@@ -227,14 +228,14 @@ implements ServiceInterface<Dancewiki, DancewikiData, DancewikiParams, never> {
     const now = new Date().toISOString()
     const hasContents = page.revision !== null
     const contents = page.revision?.contents ?? ''
-    const instructions = hasContents ? cleanupInstructions(await convertToMarkdown(contents)) : null
+    const contentAsMarkdown = hasContents ? cleanupInstructions(await convertToMarkdown(contents)) : null
     const dataToCreate: StoredDanceWiki = this.computeMetadata({
       _id: page.title,
       name: page.title,
       status: hasContents ? 'FETCHED' : 'NOT_FOUND',
       _fetchedAt: now,
-      instructions,
-      content: instructions ? convertMarkdownToLexical(instructions ?? '') : null,
+      contentAsMarkdown,
+      content: contentAsMarkdown ? convertMarkdownToLexical(contentAsMarkdown ?? '') : null,
       revision: page.revision ?? null,
     })
 
@@ -248,9 +249,9 @@ implements ServiceInterface<Dancewiki, DancewikiData, DancewikiParams, never> {
     const result = {
       ...page,
       spamScore: 0,
-      formations: getFormations(page.instructions),
-      categories: this.getCategories(page.name, page.instructions),
-      sources: getSources(page.instructions),
+      formations: getFormations(page.contentAsMarkdown),
+      categories: this.getCategories(page.name, page.contentAsMarkdown),
+      sources: getSources(page.contentAsMarkdown),
       metadataVersion: CURRENT_METADATA_VERSION,
     }
     result.spamScore = spamScore(result)
@@ -261,11 +262,11 @@ implements ServiceInterface<Dancewiki, DancewikiData, DancewikiParams, never> {
     return data
   }
 
-  private getCategories(name: string, instructions: string | null) {
+  private getCategories(name: string, contentAsMarkdown: string | null) {
     const categoryCache = this.categories.getIfExists() ?? {}
 
     return uniq([
-      ...getCategoriesFromContent(instructions),
+      ...getCategoriesFromContent(contentAsMarkdown),
       ...(categoryCache[name] ?? []),
     ])
   }
