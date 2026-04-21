@@ -12,7 +12,7 @@ setupServiceUpdateFragment(
     status
     categories
     formations
-    instructions
+    content
   }`,
 )
 
@@ -42,7 +42,7 @@ mutation fetchFromDanceWiki($name: String!) {
     _fetchedAt
     name
     status
-    instructions
+    content
     spamScore
     categories
     formations

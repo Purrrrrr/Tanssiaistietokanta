@@ -5,6 +5,7 @@ type Wikipage {
   status: WikipageStatus!
   spamScore: Float!
   instructions: String
+  content: DocumentContent
   formations: [String!]!
   categories: [String!]!
   sources: [String!]!

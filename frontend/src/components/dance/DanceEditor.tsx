@@ -1,7 +1,8 @@
 import { Dance, DanceWithEvents, ID } from 'types'
 
 import { SyncStatus } from 'libraries/forms'
-import { DocumentContentEditor, DocumentContentEditorProps, isEmptyDocument } from 'libraries/lexical'
+import { DocumentContentEditor, DocumentContentEditorProps, emptyDocument, isEmptyDocument } from 'libraries/lexical'
+import { Button } from 'libraries/ui'
 import { ColoredTag } from 'components/widgets/ColoredTag'
 import { DurationField } from 'components/widgets/DurationField'
 import { useT } from 'i18n'
@@ -70,13 +71,13 @@ export interface InstructionEditorProps extends DocumentContentEditorProps {
 }
 
 export function InstructionEditor({ danceId, wikipage, ...props }: InstructionEditorProps) {
-  // const t = useT('components.danceEditor')
-  // const isMissingvalue = isEmptyDocument(props.value)
-  // const canCopyFromWiki = false // isMissingvalue && wikipage && !props.readOnly
-  // const copyInstructionsFromWiki = () => props.onChange(wikipage?.instructions ?? '')
+  const t = useT('components.danceEditor')
+  const isMissingvalue = isEmptyDocument(props.value)
+  const canCopyFromWiki = isMissingvalue && wikipage && !props.readOnly
+  const copyInstructionsFromWiki = () => props.onChange(wikipage?.content ?? emptyDocument())
   return <>
     <DocumentContentEditor {...props} imageUpload={{ owner: 'dances', owningId: danceId, path: 'instructions' }} />
-    {/* {canCopyFromWiki && <p className="pt-2"><Button color="primary" text={t('copyFromDancewiki')} onClick={copyInstructionsFromWiki} /></p>} */}
+    {canCopyFromWiki && <p className="pt-2"><Button color="primary" text={t('copyFromDancewiki')} onClick={copyInstructionsFromWiki} /></p>}
   </>
 }
 

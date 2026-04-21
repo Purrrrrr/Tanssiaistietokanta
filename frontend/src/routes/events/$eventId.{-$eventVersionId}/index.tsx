@@ -16,6 +16,7 @@ import { useFormatDateTime, useT } from 'i18n'
 
 import { CreateWorkshopCard } from './-components/CreateWorkshopCard'
 import { useCurrentEvent } from './-context'
+import { DocumentViewer } from 'libraries/lexical/DocumentViewer'
 
 type Workshop = Event['workshops'][0]
 
@@ -151,7 +152,7 @@ function WorkshopCard({ workshop }: { workshop: Workshop }) {
       <NavigateButton className="-mt-2 -mr-4" paddingClass="p-3" minimal color="primary" icon={<Edit size={20} />} to="/events/$eventId/{-$eventVersionId}/workshops/$workshopId" params={{ ...params, workshopId: workshop._id }} />
       <div className="text-lg">{teachers.map(teacher => teacher.name).join(', ')}</div>
     </div>
-    <p className="px-6 not-empty:py-2">{description}</p>
+    <p className="px-6 not-empty:py-2"><DocumentViewer document={description} skipRenderOnEmpty /></p>
     <div className="grow flex flex-wrap items-stretch justify-stretch gap-[1px] bg-gray-200 pt-[1px]">
       {instanceSpecificDances
         ? instances.map(instance =>

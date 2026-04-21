@@ -6,7 +6,7 @@ import type { Static } from '@feathersjs/typebox'
 import type { HookContext } from '../../declarations'
 import { dataValidator, queryValidator } from '../../validators'
 import type { DancewikiService } from './dancewiki.class'
-import { Nullable } from '../../utils/common-types'
+import { DocumentContent, Nullable } from '../../utils/common-types'
 
 // Main data model schema
 export const dancewikiSchema = Type.Object(
@@ -22,6 +22,7 @@ export const dancewikiSchema = Type.Object(
     spamScore: Type.Number(),
     name: Type.String(),
     instructions: Nullable(Type.String()),
+    content: Nullable(DocumentContent()),
     formations: Type.Array(Type.String()),
     categories: Type.Array(Type.String()),
     sources: Type.Array(Type.String()),

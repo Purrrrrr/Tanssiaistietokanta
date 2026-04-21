@@ -5,9 +5,9 @@ import { Dance } from 'types'
 import { useFetchDanceFromWiki } from 'services/dancewiki'
 
 import { useFormatDateTime } from 'libraries/i18n/dateTime'
+import { DocumentViewer, isEmptyDocument } from 'libraries/lexical'
 import { Button, Collapse, RegularLink } from 'libraries/ui'
 import { ChevronDown, ChevronUp, Link as LinkIcon } from 'libraries/ui/icons'
-import Markdown from 'libraries/ui/Markdown'
 import { useT } from 'i18n'
 
 interface DanceWikiPreviewProps {
@@ -23,7 +23,7 @@ export default function DanceWikiPreview({ dance }: DanceWikiPreviewProps) {
 
   const { wikipageName, wikipage } = dance
   if (!wikipageName || !wikipage) return null
-  const hasInstructions = wikipage._fetchedAt && wikipage.instructions
+  const hasInstructions = wikipage._fetchedAt && !isEmptyDocument(wikipage.content)
 
   return <div className="p-2 mb-5 rounded-sm bg-gray-200/80">
     <div className="flex gap-10 items-center">
@@ -44,15 +44,15 @@ export default function DanceWikiPreview({ dance }: DanceWikiPreviewProps) {
 
     </div>
     {hasInstructions && <Collapse isOpen={open}>
-
       <div className="overflow-auto p-2 mt-2 bg-white border-gray-300 border-1 max-h-120">
-        <Markdown children={dance.wikipage?.instructions ?? ''} options={options} />
+        <DocumentViewer document={wikipage.content} />
       </div>
     </Collapse>
     }
   </div>
 }
 
+// TODO: wikilink support
 const options = {
   overrides: {
     a: WikiLink,

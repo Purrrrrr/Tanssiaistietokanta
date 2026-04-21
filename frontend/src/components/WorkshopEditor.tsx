@@ -6,7 +6,8 @@ import { Event } from 'types'
 import { useEventRoles } from 'services/eventRoles'
 import { usePatchWorkshop } from 'services/workshops'
 
-import { ActionButton as Button, DateField, DragHandle, formFor, NumberInput, patchStrategy, SyncStatus, TextArea, useAutosavingState } from 'libraries/forms'
+import { ActionButton as Button, DateField, DragHandle, formFor, NumberInput, patchStrategy, SyncStatus, useAutosavingState } from 'libraries/forms'
+import { DocumentContentEditor } from 'libraries/lexical'
 import { ColorClass, FormGroup } from 'libraries/ui'
 import { DanceChooser } from 'components/widgets/DanceChooser'
 import { useT, useTranslation } from 'i18n'
@@ -72,7 +73,7 @@ export function WorkshopEditor({ eventId, workshop: workshopInDatabase, reserved
       <div className="grow basis-75 max-w-[50ch]">
         <Input path="name" required label={t('name')} labelInfo={t('required')} />
         <AbbreviationField path="abbreviation" label={t('abbreviation')} reservedAbbreviations={reservedAbbreviations} />
-        <Field path="description" component={TextArea} label={t('description')} />
+        <Field path="description" component={DocumentContentEditor} label={t('description')} />
         {workshopRoles.map(role =>
           <FormGroup key={role._id} label={role.name} labelFor={`workshop-${workshopId}-role-${role._id}`} labelStyle="above">
             <VolunteerAssignmentSelector

@@ -66,7 +66,7 @@ setupServiceUpdateFragment(
             description
             wikipageName
             wikipage {
-              instructions
+              content
             }
             teachedIn(eventId: $id) {
               _id
@@ -168,7 +168,7 @@ query getEvent($id: ID!, $versionId: ID) {
             description
             wikipageName
             wikipage {
-              instructions
+              content
             }
             teachedIn(eventId: $id) {
               _id
@@ -338,7 +338,7 @@ mutation patchEventProgram($id: ID!, $program: JSONPatch!) {
             description
             wikipageName
             wikipage {
-              instructions
+              content
             }
             teachedIn(eventId: $id) {
               _id

@@ -14,6 +14,8 @@ import { Cache, createCache } from './utils/cache'
 import { spamScore } from './utils/spamScore'
 import { getSources } from './utils/getSources'
 import { logger, withRequestLogging } from '../../requestLogger'
+import { convertMarkdownToLexical } from '../../utils/markdownToLexical'
+import type Nedb from '@seald-io/nedb'
 
 export type { Dancewiki, DancewikiData, DancewikiQuery }
 
@@ -79,6 +81,10 @@ implements ServiceInterface<Dancewiki, DancewikiData, DancewikiParams, never> {
   async teardown(): Promise<void> {
     this.cronjobs.forEach(job => job.stop())
     clearTimeout(this.timer)
+  }
+
+  getModel(): Nedb {
+    return this.storageService.getModel()
   }
 
   backgroundFetch = withRequestLogging('dancewikis', 'backgroundFetch', async (): Promise<void> => {
@@ -228,6 +234,7 @@ implements ServiceInterface<Dancewiki, DancewikiData, DancewikiParams, never> {
       status: hasContents ? 'FETCHED' : 'NOT_FOUND',
       _fetchedAt: now,
       instructions,
+      content: instructions ? convertMarkdownToLexical(instructions ?? '') : null,
       revision: page.revision ?? null,
     })
 

@@ -2,8 +2,7 @@ import * as L from 'partial.lenses'
 import R from 'ramda'
 import { MigrationFn } from '../umzug.context'
 import { convertMarkdownToLexical } from '../utils/markdownToLexical'
-
-// ── Migration ─────────────────────────────────────────────────────────────────
+import updateDatabase from '../utils/updateDatabase'
 
 export const up: MigrationFn = async params => {
   await params.context.updateDatabase('dances', (dance: Record<string, unknown>) => ({
@@ -20,10 +19,20 @@ export const up: MigrationFn = async params => {
       L.modify(['program', 'defaultIntervalMusic', 'description'], toLexical),
     ),
   )
-  // await params.context.updateDatabase('workshops', (workshop: Record<string, unknown>) => ({
-  //   ...workshop,
-  //   description: convertMarkdownToLexical((workshop.description as string) ?? ''),
-  // }))
+  const wiki = params.context.getModel('dancewiki')
+  await updateDatabase(wiki, (wikiPage: Record<string, unknown>) => {
+    const content = wikiPage.instructions ? convertMarkdownToLexical(wikiPage.instructions as string) : null
+    // console.log(wikiPage.name, wikiPage.instructions?.length > 0 ? 'has instructions' : 'no instructions', content)
+    return ({
+      ...wikiPage,
+      content,
+    })
+  })
+  await params.context.updateDatabase('workshops', (workshop: Record<string, unknown>) => ({
+    ...workshop,
+    description: convertMarkdownToLexical((workshop.description as string) ?? ''),
+    instances: (workshop.instances as { description: string }[]).map(R.omit(['description'])),
+  }))
 }
 
 export const down: MigrationFn = async () => {}

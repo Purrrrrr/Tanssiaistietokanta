@@ -6,6 +6,7 @@ import NeDB from '@seald-io/nedb'
 import updateDatabase from './utils/updateDatabase'
 import VersioningNeDBService from './utils/VersioningNeDBService'
 import type { Application } from './declarations'
+import { logger } from './logger'
 
 export type MigrationFn = UmzugMigrationFn<MigrationContext>
 
@@ -31,12 +32,13 @@ export function getContext(app: Application): MigrationContext {
       : new VersioningNeDBService({ app, dbname: name })
   }
   function getVersionModel(name: string) {
-    return versionModels[name] ?? getDb(name)
+    return versionModels[name] ?? getDb(name + '-versions')
   }
   function getModel(name: string) {
     return models[name] ?? getDb(name)
   }
   const getDb = memoize(function getDb(name: string) {
+    logger.warn(`No service found for ${name}, using direct database access. This is not recommended and may cause issues with caching and versioning.`)
     return new NeDB({
       filename: path.join(dbPath, name + '.db'),
       autoload: true,

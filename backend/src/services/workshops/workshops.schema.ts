@@ -6,11 +6,10 @@ import type { Static } from '@feathersjs/typebox'
 import type { HookContext } from '../../declarations'
 import { dataValidator, queryValidator } from '../../validators'
 import { castAfterValidating } from '../../utils/cast-after-validating'
-import { computedProperties, DateTime, Id, Name, Nullable } from '../../utils/common-types'
+import { computedProperties, DateTime, DocumentContent, Id, Name, Nullable } from '../../utils/common-types'
 
 const WorkshopInstanceSchema = () => Type.Object({
   _id: Id(),
-  description: Type.String(),
   abbreviation: Type.String(),
   dateTime: DateTime(),
   durationInMinutes: Type.Integer(),
@@ -28,7 +27,7 @@ export const workshopsSchema = Type.Object(
     name: Name(),
     eventId: Id(),
     abbreviation: Type.String(),
-    description: Type.String(),
+    description: DocumentContent(),
     instances: Type.Array(WorkshopInstanceSchema()),
     instanceSpecificDances: Type.Boolean(),
     _childEventVolunteerAssignmentsUpdatedAt: Type.Optional(Type.String()),

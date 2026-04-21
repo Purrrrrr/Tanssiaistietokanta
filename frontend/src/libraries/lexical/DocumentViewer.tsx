@@ -24,18 +24,22 @@ import { expand, MinifiedDocumentContent } from './utils/minify'
 // ---------------------------------------------------------------------------
 
 export interface DocumentViewerProps extends ViewOptions {
+  id?: string
   document: MinifiedDocumentContent | null | undefined
   className?: string
 }
 
-export function DocumentViewer({ document: minified, className, skipHeadingLevels }: DocumentViewerProps) {
+export function DocumentViewer({ id, document: minified, className, ...viewOptions }: DocumentViewerProps) {
   const document = minified ? expand(minified) : null
   if (!document?.root) return null
   const root = document.root as unknown as SerializedElementNode
+  const children = renderChildren(root, viewOptions)
+
+  if (children == null && viewOptions.skipRenderOnEmpty) return null
 
   return (
-    <div className={classNames('lexical-content read-only', className ?? ' p-4 bg-white')}>
-      {renderChildren(root, { skipHeadingLevels })}
+    <div id={id} className={classNames('lexical-content', className ?? ' p-4 bg-white')}>
+      {children}
     </div>
   )
 }
@@ -100,6 +104,8 @@ function renderNode(node: SerializedNode, index: number, options: ViewOptions): 
 
     case 'paragraph': {
       const para = node as SerializedElementNode
+      const children = renderChildren(para, options)
+      if (children == null && options.skipRenderOnEmpty) return null
       return (
         <p key={index} style={alignStyle(para.format)}>
           {renderChildren(para, options)}
@@ -232,7 +238,7 @@ function renderNode(node: SerializedNode, index: number, options: ViewOptions): 
     }
 
     case 'linebreak':
-      return <br />
+      return <br key={index} />
 
     default:
       console.log(node.type)
@@ -250,10 +256,15 @@ function renderNode(node: SerializedNode, index: number, options: ViewOptions): 
 
 interface ViewOptions {
   skipHeadingLevels?: 0 | 1 | 2 | 3 | 4 | 5
+  skipRenderOnEmpty?: boolean
 }
 
 function renderChildren(node: SerializedElementNode, options: ViewOptions): React.ReactNode {
-  return node.children?.map((child, i) => renderNode(child as SerializedNode, i, options))
+  const children = node.children?.map((child, i) => renderNode(child as SerializedNode, i, options))
+  if (options.skipRenderOnEmpty && (!children || children.every(c => c == null))) {
+    return null
+  }
+  return children
 }
 
 function renderText(node: SerializedTextNode, index: number, _options: ViewOptions): React.ReactNode {

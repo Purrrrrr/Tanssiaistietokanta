@@ -9,7 +9,7 @@ type Workshop {
   event: Event!
   name: String!
   abbreviation: String
-  description: String
+  description: DocumentContent
   danceIds: [ID!]!
   dances: [Dance!]!
   instances: [WorkshopInstance!]!
@@ -25,7 +25,6 @@ type Teacher {
 type WorkshopInstance {
   _id: ID!
   abbreviation: String!
-  description: String!
   dateTime: String!
   durationInMinutes: Float!
   danceIds: [ID!]
@@ -41,7 +40,7 @@ type Mutation {
 input WorkshopInput {
   name: String!
   abbreviation: String
-  description: String
+  description: DocumentContent 
   teacherIds: [ID!]
   assistantTeacherIds: [ID!]
   ocurrences: [String!]
@@ -52,7 +51,6 @@ input WorkshopInput {
 input WorkshopInstanceInput {
   _id: ID!
   abbreviation: String
-  description: String
   dateTime: String
   durationInMinutes: Float
   danceIds: [ID!]
@@ -61,7 +59,7 @@ input WorkshopInstanceInput {
 input WorkshopPatchInput {
   name: String
   abbreviation: String
-  description: String
+  description: DocumentContent
   teacherIds: [ID!]
   assistantTeacherIds: [ID!]
   ocurrences: [String!]
@@ -72,7 +70,6 @@ input WorkshopPatchInput {
 input WorkshopInstanceFullInput {
   _id: ID!
   abbreviation: String!
-  description: String!
   dateTime: String!
   durationInMinutes: Float!
   danceIds: [ID!]

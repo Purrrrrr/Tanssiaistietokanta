@@ -139,7 +139,7 @@ query DanceInstructions($eventId: ID!) {
           source
           wikipageName
           wikipage {
-            instructions
+            content
           }
         }
       }
@@ -219,7 +219,7 @@ function WorkshopDetails({ workshop }: { workshop: Workshop }) {
     <H2>
       {name}
     </H2>
-    <p className="description">{description}</p>
+    <p className="description"><DocumentViewer document={description} /></p>
     {instanceSpecificDances
       ? instances.map(instance =>
         <React.Fragment key={instance._id}>
