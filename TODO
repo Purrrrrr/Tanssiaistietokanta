@@ -411,10 +411,39 @@
   * Write ## title or * item to make headings and lists
 * Document routes for workshops
 * Ensure deleting workshop or document in event/workshop returns the user to the proper list route
+* PageSection: add an intro text prop. If it exists, move the toolbar beside it
 
-  Add add workshop button to side nav
-  Nicer workshop editor
   Migrate dance descriptions/instructions to lexical
+  * Migration script
+  * Respect editor max-h
+  * Migrate dance input to json patch
+  * Check that migration is succesfull
+    * ***text *** -> Remove spaces 
+    * ##HEADING without spaces before text should convert
+  * Fix markdown.css filename to something else
+  * Do something to dance instructions page broken heading styles
+  * QR code size and title (Note: No QR codes exist in dances currently)
+    * Fix QR code import
+  * Migrate event docs too
+  * Migrate dancewiki content
+    * Add conversion to dancewiki
+    * Re-enable copying instructions from dancewiki
+    * Rename instructions field to contentAsMarkdown
+      Support link to wiki in preview
+    Column layout read styles
+    Remove markdown support
+
+  Dance page syncstatus is hard to see -> fix to be above form
+  Add an 'add workshop' button to event side nav
+  Nicer workshop editor
+
+  Make a DocumentContentEditor with proper form input props
+  * Lazily load viewer or editor depending on readonly flag
+    Show placeholder on empty document
+
+  Form field does not type check properly
+
+  Breadcrumb arrow opening to a menu providing links to other pages on the same level?
 
   Use PageSection in program/slide editor pages
 
@@ -431,7 +460,6 @@
 
   Better editor Part 2
     Clean up icons and toolbar
-    QR code size and title
     Support turning text into QR code
     Neater plugin system with
       readOnlyRenderer
@@ -439,10 +467,9 @@
       plugin component
       toolbar hook
     Fix editor toolbar not positioning correctly in layout columns
-    Find a way to import current markdown
+  * Find a way to import current markdown
     Support for editing tables
-    Fix markdown.css filename to something else
-    Add editor styles
+  * Add editor styles
     Document-specific files?
     Allow choosing images from existing files
   General notes/documents/wikipages to event/other
