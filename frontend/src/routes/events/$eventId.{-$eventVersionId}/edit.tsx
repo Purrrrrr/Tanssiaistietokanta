@@ -5,15 +5,14 @@ import { Event } from 'types'
 
 import { useDeleteEvent, usePatchEvent } from 'services/events'
 
-import { DateField, DateRangeField, formFor, patchStrategy, SyncStatus, useAutosavingState } from 'libraries/forms'
-import { H2 } from 'libraries/ui'
+import { DateField, DateRangeField, formFor, patchStrategy, useAutosavingState } from 'libraries/forms'
 import { JSONPatch } from 'components/event/EventProgramForm/patchStrategy'
 import { EventGrantsEditor } from 'components/rights/EventGrantsEditor'
 import { DeleteButton } from 'components/widgets/DeleteButton'
+import { PageSection } from 'components/widgets/PageSection'
 import { useT } from 'i18n'
 
 import { useCurrentEvent } from './-context'
-import { PageSection } from 'components/widgets/PageSection'
 
 export const Route = createFileRoute(
   '/events/$eventId/{-$eventVersionId}/edit',

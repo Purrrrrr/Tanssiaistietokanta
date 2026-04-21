@@ -102,12 +102,11 @@ export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUplo
   function updateAnchor(newDom?: HTMLElement | null) {
     const dom = newDom === undefined ? anchorRef.current : newDom
     if (dom) {
-      // TODO fix types
-      (dom.style as any).anchorName = '--lexical-toolbar-anchor'
+      dom.style.anchorName = '--lexical-toolbar-anchor'
     }
     if (anchorRef.current !== dom) {
       if (anchorRef.current) {
-        (anchorRef.current.style as any).anchorName = null
+        anchorRef.current.style.anchorName = null
       }
       anchorRef.current = dom
     }

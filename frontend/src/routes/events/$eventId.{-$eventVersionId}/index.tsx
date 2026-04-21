@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Event } from 'types'
 
 import { RequirePermissions } from 'libraries/access-control'
+import { DocumentViewer } from 'libraries/lexical/DocumentViewer'
 import { Card, H2, Link } from 'libraries/ui'
 import { Edit } from 'libraries/ui/icons'
 import { DocumentList } from 'components/document/DocumentList'
@@ -16,7 +17,6 @@ import { useFormatDateTime, useT } from 'i18n'
 
 import { CreateWorkshopCard } from './-components/CreateWorkshopCard'
 import { useCurrentEvent } from './-context'
-import { DocumentViewer } from 'libraries/lexical/DocumentViewer'
 
 type Workshop = Event['workshops'][0]
 

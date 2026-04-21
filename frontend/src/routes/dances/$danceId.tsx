@@ -10,7 +10,6 @@ import { LoadingState } from 'components/LoadingState'
 import { Page, Toolbar } from 'components/Page'
 import VersionableContentContainer from 'components/versioning/VersionableContentContainer'
 import { VersionSidebarToggle } from 'components/versioning/VersionSidebarToggle'
-import { useT } from 'i18n'
 
 import { DanceIsUsedIn } from './-components/DanceIsUsedIn'
 import { danceVersionLink } from './-components/DanceLink'

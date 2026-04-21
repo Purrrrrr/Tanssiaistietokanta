@@ -1,5 +1,6 @@
-import { MinifiedDocumentContent } from 'libraries/lexical'
 import { Dance } from 'types'
+
+import { MinifiedDocumentContent } from 'libraries/lexical'
 
 export type EventSlideProps = TitleSlideProps | IntroductionSlideProps | DanceSetSlideProps | DanceProgramItemSlideProps | IntervalMusicSlideProps
 export type EventParentSlideProps = TitleSlideProps | DanceSetSlideProps

@@ -19,7 +19,8 @@ export const up: MigrationFn = async params => {
     const names = parseTeachers(teachers)
     const teacherIds = await Promise.all(
       names.map(async name => {
-        if (nameToId.has(name)) return nameToId.get(name)!
+        const id = nameToId.get(name)
+        if (id) return id
         const volunteer = await volunteerService.create({ name }, { [SkipAccessControl]: true })
         nameToId.set(name, volunteer._id)
         return volunteer._id
