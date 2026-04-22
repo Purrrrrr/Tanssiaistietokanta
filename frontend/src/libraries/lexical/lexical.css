@@ -88,6 +88,13 @@
   th, td {
     padding: 0.25em 0.5em;
   }
+
+  .layout-item {
+    @apply border-gray-600 not-last:border-r-1 not-last:pr-2 not-first:pl-2 py-2;
+  }
+  &:not(.editable-lexical-content) .layout-item {
+    @apply border-gray-200;
+  }
 }
 
 .slide .qr-container {

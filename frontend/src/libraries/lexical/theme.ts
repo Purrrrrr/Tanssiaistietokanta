@@ -17,5 +17,5 @@ export const theme = {
     listitemUnchecked: 'unchecked',
   },
   layoutContainer: 'grid',
-  layoutItem: 'p-2 border-1 border-gray-200 rounded-md',
+  layoutItem: 'layout-item',
 }
