@@ -6,6 +6,7 @@ import randomId from 'utils/randomId'
 import { type EditorProps } from './Editor'
 import type { MinifiedDocumentContent } from './utils/minify'
 
+export type { LinkNode, NodeRenderer, NodeRendererProps } from './DocumentViewer'
 export { isEmptyDocument } from './utils/isEmptyDocument'
 export type { MinifiedDocumentContent } from './utils/minify'
 

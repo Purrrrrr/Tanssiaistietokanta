@@ -104,12 +104,24 @@ function alignStyle(format: number | string): React.CSSProperties | undefined {
 // Node renderer
 // ---------------------------------------------------------------------------
 
+interface ViewOptions {
+  skipHeadingLevels?: 0 | 1 | 2 | 3 | 4 | 5
+  skipRenderOnEmpty?: boolean
+  customRenderers?: {
+    link: NodeRenderer<SerializedLinkNode | SerializedAutoLinkNode>
+  }
+}
+
+export type LinkNode = SerializedLinkNode | SerializedAutoLinkNode
+export type NodeRenderer<NodeType> = (props: NodeRendererProps<NodeType>) => React.ReactNode
+export type NodeRendererProps<NodeType> = { node: NodeType, children: React.ReactNode }
+
 interface RenderResult {
   content: React.ReactNode
   hasContent: boolean
 }
 
-const content = (content: React.ReactNode): RenderResult => ({ content, hasContent: true })
+const content = (content: React.ReactNode): RenderResult => ({ content, hasContent: content !== null })
 const empty = { content: null, hasContent: false }
 
 function renderNode(node: SerializedNode, index: number, options: ViewOptions): RenderResult {
@@ -169,6 +181,9 @@ function renderNode(node: SerializedNode, index: number, options: ViewOptions): 
     case 'link':
     case 'autolink': {
       const link = node as SerializedLinkNode
+      if (options.customRenderers?.link) {
+        return content(options.customRenderers.link({ node: link, children }))
+      }
       return content(
         <a
           key={index}
@@ -267,11 +282,6 @@ function renderNode(node: SerializedNode, index: number, options: ViewOptions): 
         </span>,
       )
   }
-}
-
-interface ViewOptions {
-  skipHeadingLevels?: 0 | 1 | 2 | 3 | 4 | 5
-  skipRenderOnEmpty?: boolean
 }
 
 function renderChildren(node: SerializedElementNode, options: ViewOptions): RenderResult {

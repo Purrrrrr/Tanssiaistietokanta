@@ -5,7 +5,7 @@ import { Dance } from 'types'
 import { useFetchDanceFromWiki } from 'services/dancewiki'
 
 import { useFormatDateTime } from 'libraries/i18n/dateTime'
-import { DocumentViewer, isEmptyDocument } from 'libraries/lexical'
+import { DocumentViewer, isEmptyDocument, LinkNode, NodeRendererProps } from 'libraries/lexical'
 import { Button, Collapse, RegularLink } from 'libraries/ui'
 import { ChevronDown, ChevronUp, Link as LinkIcon } from 'libraries/ui/icons'
 import { useT } from 'i18n'
@@ -45,18 +45,26 @@ export default function DanceWikiPreview({ dance }: DanceWikiPreviewProps) {
     </div>
     {hasInstructions && <Collapse isOpen={open}>
       <div className="overflow-auto p-2 mt-2 bg-white border-gray-300 border-1 max-h-120">
-        <DocumentViewer document={wikipage.content} />
+        <DocumentViewer document={wikipage.content} customRenderers={{ link: WikiLink }} />
       </div>
     </Collapse>
     }
   </div>
 }
 
-// TODO: wikilink support
-const options = {
-  overrides: {
-    a: WikiLink,
-  },
+export function WikiLink({ node: { url, title, rel }, children }: NodeRendererProps<LinkNode>) {
+  const isInternalWikiLink = url && !url?.match(/^(\w+:\/\/|#)/)
+  const link = isInternalWikiLink
+    ? `${danceWikiUrl}${url}`
+    : url
+
+  return <RegularLink
+    title={title ?? undefined}
+    rel={rel ?? undefined}
+    href={link}
+    target="_blank">
+    {children}
+  </RegularLink>
 }
 
 export function LinkToDanceWiki({ className, page, children }: {
@@ -82,13 +90,4 @@ function FetchWikipageButton({ page }: { page: string }) {
     text={t(loading ? 'fetching' : 'fetchInstructions')}
     onClick={() => fetch(page)}
   />
-}
-
-export function WikiLink({ href, ...props }: React.ComponentProps<'a'>) {
-  const isInternalWikiLink = href && !href?.match(/^(\w+:\/\/|#)/)
-  const link = isInternalWikiLink
-    ? `${danceWikiUrl}${href}`
-    : href
-
-  return <RegularLink {...props} href={link} target="_blank" />
 }
