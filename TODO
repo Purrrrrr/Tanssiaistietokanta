@@ -412,6 +412,9 @@
 * Document routes for workshops
 * Ensure deleting workshop or document in event/workshop returns the user to the proper list route
 * PageSection: add an intro text prop. If it exists, move the toolbar beside it
+* Make a DocumentContentEditor with proper form input props
+  * Lazily load viewer or editor depending on readonly flag
+  * Show placeholder on empty document
 
   Migrate dance descriptions/instructions to lexical
   * Migration script
@@ -425,22 +428,20 @@
   * QR code size and title (Note: No QR codes exist in dances currently)
     * Fix QR code import
   * Migrate event docs too
+  * Column layout read styles
   * Migrate dancewiki content
     * Add conversion to dancewiki
     * Re-enable copying instructions from dancewiki
     * Rename instructions field to contentAsMarkdown
-      Support link to wiki in preview
-    Column layout read styles
+    * Support link to wiki in preview
     Remove markdown support
 
   Dance page syncstatus is hard to see -> fix to be above form
   Add an 'add workshop' button to event side nav
   Nicer workshop editor
-
-  Make a DocumentContentEditor with proper form input props
-  * Lazily load viewer or editor depending on readonly flag
-    Show placeholder on empty document
-
+  Add translations to lexical editor elements
+    Empty placeholder
+    Toolbar titles
   Form field does not type check properly
 
   Breadcrumb arrow opening to a menu providing links to other pages on the same level?
