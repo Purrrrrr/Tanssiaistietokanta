@@ -3,8 +3,8 @@ import { type ComponentType, lazy, type ReactElement } from 'react'
 import { type ListItem } from './components/dnd'
 import { asFormField, Field, type FieldComponent, type FieldProps } from './components/Field'
 import { Form, type FormProps } from './components/Form'
-import type { AutocompleteInputProps, DateInputProps, DateRangeInputProps, FieldInputComponent, FieldInputComponentProps, MarkdownInputProps, SelectProps, SwitchProps, TextInputExtraProps } from './components/inputs'
-import { AutocompleteInput, DateInput, DateRangeInput, MarkdownInput, Select, Switch, TextInput } from './components/inputs'
+import type { AutocompleteInputProps, DateInputProps, DateRangeInputProps, FieldInputComponent, FieldInputComponentProps, SelectProps, SwitchProps, TextInputExtraProps } from './components/inputs'
+import { AutocompleteInput, DateInput, DateRangeInput, Select, Switch, TextInput } from './components/inputs'
 import { asRangeField, type Range, RangeField, type RangeFieldComponent, type RangeFieldProps } from './components/RangeField'
 import { type RepeatingSectionProps } from './components/RepeatingSection'
 import { asSelfLabeledFormField, type SelfLabeledFieldComponent } from './components/SelflabeledField'
@@ -28,7 +28,6 @@ interface FieldsFor<Data, _AcceptedDroppableTypes = null> {
   withRangeComponent: <Output extends Input, Extra, Input>(c: FieldInputComponent<Range<Output>, Extra, Range<Input>>) => RangeFieldComponent<Data, Output, Extra, Input>
   Date: FieldComponent<Data, Date | null, DateInputProps>
   DateRange: RangeFieldComponent<Data, Date | null, DateRangeInputProps>
-  Markdown: FieldComponent<Data, string, MarkdownInputProps>
   Text: FieldComponent<Data, string, TextInputExtraProps>
   Switch: SelfLabeledFieldComponent<Data, boolean, SwitchProps>
   // Repeating: <O extends I & ListItem, E, I>(t: RepeatingFieldProps<O, E, I, Data, AcceptedDroppableTypes>) => ReactElement
@@ -45,7 +44,6 @@ interface FieldsFor<Data, _AcceptedDroppableTypes = null> {
     .withComponent
   DateSelector: asFormField(DateInput),
   DateRangeSelector : asRangeField(DateRangeInput),
-  MarkdownInput: asFormField(MarkdownInput),
   TextInput: asFormField(TextInput),
   Switch: asSelfLabeledFormField(Switch),
     .for
@@ -66,7 +64,6 @@ const form = {
     withRangeComponent: asRangeField,
     Date: asFormField(DateInput),
     DateRange: asRangeField(DateRangeInput),
-    Markdown: asFormField(MarkdownInput),
     Text: asFormField(TextInput),
     Switch: asSelfLabeledFormField(Switch),
     // Repeating: RepeatingField,

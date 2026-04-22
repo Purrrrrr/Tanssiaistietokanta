@@ -15,11 +15,6 @@ export const formStringDefaults = {
   local: 'Omat muokkauksesi',
   server: 'Palvelimen versio',
   chooseThis: 'Valitse tämä versio',
-  markdownEditor: {
-    insertQRCode: 'Syötä QR-koodi',
-    helpUrl: 'https://github.com/akx/markdown-cheatsheet-fi/blob/master/Markdown-Ohje.md',
-    help: 'Ohjeita',
-  },
   syncState: {
     IN_SYNC: 'Tallennettu',
     MODIFIED_LOCALLY: 'Tallennetaan...',

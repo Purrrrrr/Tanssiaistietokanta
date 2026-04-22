@@ -2,8 +2,6 @@ import React from 'react'
 
 import { PropertyAtPath, StringPath } from './types'
 
-import { MarkdownInput, type MarkdownInputProps } from 'libraries/formsV2/components/inputs'
-
 import { Field, UntypedFieldProps } from './Field'
 import { InputField, InputFieldProps, SwitchField, SwitchFieldForValueProps, SwitchFieldProps, switchFor, SwitchForProps } from './fieldComponents/basicComponents'
 import { Form, FormProps } from './Form'
@@ -11,11 +9,9 @@ import { RemoveItemButton, RemoveItemButtonProps } from './formControls'
 import { FormHooksFor, formHooksFor } from './hooks'
 import { Entity, ListField, UntypedListFieldProps } from './ListEditor'
 
-export { type FormProps } from './Form'
-
-export type MarkdownEditorProps = MarkdownInputProps
 export * from './fieldComponents/basicComponents'
 export * from './fieldComponents/dateTime'
+export { type FormProps } from './Form'
 export { ActionButton, asFormControl, FormControl, SubmitButton } from './formControls'
 export type { DragHandle } from './ListEditor'
 export { ListEditorContext } from './ListEditor'
@@ -24,8 +20,6 @@ export type { FieldComponentProps, OnChangeHandler, TypedStringPath } from './ty
 export { toArrayPath } from './types'
 export * from './useAutosavingState'
 export { Validate } from './validation'
-
-export const MarkdownEditor = MarkdownInput
 
 interface FormFor<T> extends FormHooksFor<T> {
   Form: React.JSXElementConstructor<FormProps<T>>

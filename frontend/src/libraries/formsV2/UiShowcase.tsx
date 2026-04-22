@@ -115,7 +115,6 @@ function ShowcaseContents() {
     <Field.Custom label="aaa" path="a" required component={TextInput} />
     <Field.Text label="aaa" path="b" />
     <Field.Switch path="bo" label="Is it on?" />
-    <Field.Markdown path="d" label="markdooown" />
     <RepeatingSection<L> path="l" label="l" accepts="l" itemType="l">
       {({ dragHandle, path, index, onRemove }) =>
         <div className="flex">

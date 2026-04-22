@@ -1,4 +1,3 @@
-import { MarkdownToJSX, parser, RuleType } from 'markdown-to-jsx/react'
 import { useEffect, useRef } from 'react'
 
 import { ID } from 'types'
@@ -6,13 +5,12 @@ import { FileOwner, FileOwningId } from 'types/files'
 
 import { useMarkFileUsage } from 'services/files'
 
-import {
-  MarkdownInput as MarkdownInputOriginal,
-  type MarkdownInputProps as MarkdownInputPropsOriginal,
-} from 'libraries/formsV2/components/inputs'
+import { FieldInputComponentProps } from 'libraries/formsV2'
 
 import { UploadProgressList } from './UploadProgres'
 import { useUploadQueue } from './useUploadQueue'
+
+type MarkdownInputPropsOriginal = FieldInputComponentProps<string>
 
 export interface MarkdownInputProps extends Omit<MarkdownInputPropsOriginal, 'onImageUpload'> {
   fileOwner: FileOwner
@@ -27,8 +25,7 @@ export function MarkdownInput({ fileOwner, fileOwningId, filePath, ...props }: M
     const result = await doUpload(file, undefined, true)
     return getMarkdownUrl(result._id)
   }
-  const ast = parser(props.value ?? '')
-  const imageIds = getImages(ast).map(getUploadedFileId).filter(id => id !== null)
+  const imageIds = getImages(props.value).map(getUploadedFileId).filter(id => id !== null)
   const previousIds = useRef<string[]>([])
 
   useEffect(
@@ -51,35 +48,18 @@ export function MarkdownInput({ fileOwner, fileOwningId, filePath, ...props }: M
   )
 
   return <>
-    <MarkdownInputOriginal
-      {...props}
-      markdownOverrides={{ img: Image }}
-      onImageUpload={onImageUpload}
-      imageAccept="image/*"
-    />
+    {/* <MarkdownInputOriginal */}
+    {/*   {...props} */}
+    {/*   markdownOverrides={{ img: Image }} */}
+    {/*   onImageUpload={onImageUpload} */}
+    {/*   imageAccept="image/*" */}
+    {/* /> */}
     <UploadProgressList uploads={uploads} />
   </>
 }
 
-function getImages(ast: MarkdownToJSX.ASTNode[]): string[] {
-  return ast.flatMap(node => {
-    if (node.type === RuleType.image) {
-      return [node.target]
-    }
-    if (node.type === RuleType.table) {
-      return getImages([
-        ...(node.cells.flat(2) ?? []),
-        ...(node.header.flat(2) ?? []),
-      ])
-    }
-    if ('items' in node) {
-      return getImages(node.items.flat() ?? [])
-    }
-    if ('children' in node) {
-      return getImages(node.children ?? [])
-    }
-    return []
-  })
+function getImages(value: string | null | undefined): string[] {
+  return []
 }
 
 function Image(props: React.ComponentProps<'img'>) {

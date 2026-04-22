@@ -22,8 +22,6 @@ export * from './toaster'
 export type { Color } from './types'
 export { useResizeObserver } from './utils/useResizeObserver'
 
-export const Markdown = React.lazy(() => import('./Markdown'))
-
 export { ColorClass, CssClass }
 
 type HTMLDivProps = React.HTMLAttributes<HTMLDivElement>
