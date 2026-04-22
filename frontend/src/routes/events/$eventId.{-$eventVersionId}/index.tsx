@@ -142,7 +142,7 @@ function WorkshopCard({ workshop }: { workshop: Workshop }) {
     .flatMap(a => a.volunteers)
 
   return <Card className="flex flex-col" marginClass="" noPadding>
-    <div className="grid grid-rows-2 px-6 pt-4 pb-2 grid-cols-[1fr_auto]">
+    <div className="grid grid-rows-2 px-6 pt-4 mb-2 grid-cols-[1fr_auto]">
       <h2 className="text-xl font-bold">
         {name}
         {abbreviation &&
@@ -152,7 +152,7 @@ function WorkshopCard({ workshop }: { workshop: Workshop }) {
       <NavigateButton className="-mt-2 -mr-4" paddingClass="p-3" minimal color="primary" icon={<Edit size={20} />} to="/events/$eventId/{-$eventVersionId}/workshops/$workshopId" params={{ ...params, workshopId: workshop._id }} />
       <div className="text-lg">{teachers.map(teacher => teacher.name).join(', ')}</div>
     </div>
-    <p className="px-6 not-empty:py-2"><DocumentViewer document={description} skipRenderOnEmpty /></p>
+    <DocumentViewer className="px-6 mb-4" document={description} placeholder={null} />
     <div className="flex flex-wrap items-stretch bg-gray-200 grow justify-stretch gap-[1px] pt-[1px]">
       {instanceSpecificDances
         ? instances.map(instance =>

@@ -54,7 +54,7 @@ function DocumentRow({ document }: DocumentRowProps) {
   const [isOpen, setIsOpen] = useState(false)
 
   return <ItemList.Row
-    expandableContent={<DocumentViewer document={document.content} />}
+    expandableContent={<DocumentViewer document={document.content} className="border-t-1 border-stone-300 p-4 bg-white" />}
     expandableContentLoadingMessage={useTranslation('common.loadingEditor')}
     isOpen={isOpen}
   >

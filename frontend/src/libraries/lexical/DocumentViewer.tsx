@@ -2,7 +2,6 @@
  * Lightweight read-only renderer for Lexical editor documents.
  *
  * Walks the serialized Lexical JSON state tree and renders React elements
-/* runtime packages.
  */
 import type { SerializedAutoLinkNode, SerializedLinkNode } from '@lexical/link'
 import type { SerializedListItemNode, SerializedListNode } from '@lexical/list'
@@ -27,19 +26,27 @@ export interface DocumentViewerProps extends ViewOptions {
   id?: string
   document: MinifiedDocumentContent | null | undefined
   className?: string
+  placeholder?: React.ReactNode
 }
 
-export function DocumentViewer({ id, document: minified, className, ...viewOptions }: DocumentViewerProps) {
+export function DocumentViewer({ id, document: minified, className, placeholder, ...viewOptions }: DocumentViewerProps) {
   const document = minified ? expand(minified) : null
-  if (!document?.root) return null
-  const root = document.root as unknown as SerializedElementNode
-  const children = renderChildren(root, viewOptions)
+  const root = document?.root as unknown as SerializedElementNode ?? { type: 'root', children: [] }
+  const { content, hasContent } = renderChildren(root, viewOptions)
 
-  if (children == null && viewOptions.skipRenderOnEmpty) return null
+  if (!hasContent && viewOptions.skipRenderOnEmpty) return null
 
   return (
     <div id={id} className={classNames('lexical-content', className ?? ' p-4 bg-white')}>
-      {children}
+      {hasContent ? content : (placeholder ?? <Placeholder />)}
+    </div>
+  )
+}
+
+function Placeholder() {
+  return (
+    <div className="text-center text-gray-500">
+      <p>Tyhjä asiakirja</p>
     </div>
   )
 }
@@ -97,19 +104,51 @@ function alignStyle(format: number | string): React.CSSProperties | undefined {
 // Node renderer
 // ---------------------------------------------------------------------------
 
-function renderNode(node: SerializedNode, index: number, options: ViewOptions): React.ReactNode {
-  switch (node.type) {
-    case 'text':
-      return renderText(node as SerializedTextNode, index, options)
+interface RenderResult {
+  content: React.ReactNode
+  hasContent: boolean
+}
 
+const content = (content: React.ReactNode): RenderResult => ({ content, hasContent: true })
+const empty = { content: null, hasContent: false }
+
+function renderNode(node: SerializedNode, index: number, options: ViewOptions): RenderResult {
+  switch (node.type) {
+    case 'text': {
+      const text = renderText(node as SerializedTextNode, index, options)
+      return { content: text, hasContent: text != null }
+    }
+    case 'image': {
+      const img = node as SerializedImageNode
+      return content(
+        <img
+          key={index}
+          src={img.src}
+          alt={img.altText}
+          width={img.width}
+          style={{ maxWidth: '100%', height: 'auto' }}
+        />,
+      )
+    }
+    case 'qr-code': {
+      const { value, title, size } = node as SerializedQRCodeNode
+      return content(<QRCode key={index} value={value || ' '} title={title} size={size ?? 128} />)
+    }
+
+    case 'linebreak':
+      return content(<br key={index} />)
+  }
+
+  const { content: children, hasContent } = renderChildren(node as SerializedElementNode, options)
+  if (!hasContent) return empty
+
+  switch (node.type) {
     case 'paragraph': {
       const para = node as SerializedElementNode
-      const children = renderChildren(para, options)
-      if (children == null && options.skipRenderOnEmpty) return null
-      return (
+      return content(
         <p key={index} style={alignStyle(para.format)}>
-          {renderChildren(para, options)}
-        </p>
+          {children}
+        </p>,
       )
     }
 
@@ -117,20 +156,20 @@ function renderNode(node: SerializedNode, index: number, options: ViewOptions): 
       const heading = node as SerializedHeadingNode
       const headingLevel = parseInt(heading.tag.slice(1), 10) + (options.skipHeadingLevels ?? 0) - 1
       const Tag = headingTags[Math.min(6, headingLevel)]
-      return <Tag key={index} style={alignStyle(heading.format)}>{renderChildren(heading, options)}</Tag>
+      return content(<Tag key={index} style={alignStyle(heading.format)}>{children}</Tag>)
     }
 
     case 'quote':
-      return (
+      return content(
         <blockquote key={index} style={alignStyle((node as SerializedElementNode).format)}>
-          {renderChildren(node as SerializedElementNode, options)}
-        </blockquote>
+          {children}
+        </blockquote>,
       )
 
     case 'link':
     case 'autolink': {
       const link = node as SerializedLinkNode
-      return (
+      return content(
         <a
           key={index}
           href={link.url}
@@ -138,18 +177,18 @@ function renderNode(node: SerializedNode, index: number, options: ViewOptions): 
           rel={link.rel ?? undefined}
           title={link.title ?? undefined}
         >
-          {renderChildren(link, options)}
-        </a>
+          {children}
+        </a>,
       )
     }
 
     case 'list': {
       const list = node as SerializedListNode
       const Tag = list.listType === 'number' ? 'ol' : 'ul'
-      return (
+      return content(
         <Tag key={index} style={alignStyle(list.format)} start={list.listType === 'number' ? list.start : undefined}>
-          {renderChildren(list, options)}
-        </Tag>
+          {children}
+        </Tag>,
       )
     }
 
@@ -160,97 +199,73 @@ function renderNode(node: SerializedNode, index: number, options: ViewOptions): 
       const checkClass = isCheckItem
         ? (item.checked ? theme.list.listitemChecked : theme.list.listitemUnchecked)
         : undefined
-      return (
+      return content(
         <li key={index} className={checkClass} style={alignStyle(item.format)} value={item.value}>
           {isCheckItem && (
             <input type="checkbox" checked={item.checked} readOnly tabIndex={-1} />
           )}
-          {renderChildren(item, options)}
-        </li>
+          {children}
+        </li>,
       )
     }
 
     case 'table':
-      return (
+      return content(
         <table key={index}>
-          <tbody>{renderChildren(node as SerializedElementNode, options)}</tbody>
-        </table>
+          <tbody>{children}</tbody>
+        </table>,
       )
 
     case 'tablerow':
-      return (
+      return content(
         <tr key={index}>
-          {renderChildren(node as SerializedElementNode, options)}
-        </tr>
+          {children}
+        </tr>,
       )
 
     case 'tablecell': {
       const cell = node as SerializedTableCellNode
       const Tag = cell.headerState ? 'th' : 'td'
-      return (
+      return content(
         <Tag
           key={index}
           colSpan={cell.colSpan}
           rowSpan={cell.rowSpan}
           style={cell.width != null ? { width: cell.width } : undefined}
         >
-          {renderChildren(cell, options)}
-        </Tag>
-      )
-    }
-
-    case 'image': {
-      const img = node as SerializedImageNode
-      return (
-        <img
-          key={index}
-          src={img.src}
-          alt={img.altText}
-          width={img.width}
-          style={{ maxWidth: '100%', height: 'auto' }}
-        />
+          {children}
+        </Tag>,
       )
     }
 
     case 'layout-container': {
       const layout = node as SerializedLayoutContainerNode
-      return (
+      return content(
         <div
           key={index}
           className={theme.layoutContainer}
           style={{ gridTemplateColumns: layout.templateColumns }}
         >
-          {renderChildren(layout, options)}
-        </div>
+          {children}
+        </div>,
       )
     }
 
     case 'layout-item':
-      return (
+      return content(
         <div key={index} className={theme.layoutItem}>
-          {renderChildren(node as SerializedElementNode, options)}
-        </div>
+          {children}
+        </div>,
       )
-
-    case 'qr-code': {
-      const { value, title, size } = node as SerializedQRCodeNode
-      return <QRCode key={index} value={value || ' '} title={title} size={size ?? 128} />
-    }
-
-    case 'linebreak':
-      return <br key={index} />
 
     default:
       console.log(node.type)
       // Attempt to render children for unknown element nodes
-      if ('children' in node) {
-        return (
-          <span key={index}>
-            {renderChildren(node as SerializedElementNode, options)}
-          </span>
-        )
-      }
-      return null
+      return content(
+        <span key={index}>
+          {children}
+        </span>,
+      )
   }
 }
 
@@ -259,17 +274,18 @@ interface ViewOptions {
   skipRenderOnEmpty?: boolean
 }
 
-function renderChildren(node: SerializedElementNode, options: ViewOptions): React.ReactNode {
+function renderChildren(node: SerializedElementNode, options: ViewOptions): RenderResult {
   const children = node.children?.map((child, i) => renderNode(child as SerializedNode, i, options))
-  if (options.skipRenderOnEmpty && (!children || children.every(c => c == null))) {
-    return null
+
+  return {
+    content: children.map(c => c.content),
+    hasContent: children.some(c => c.hasContent),
   }
-  return children
 }
 
 function renderText(node: SerializedTextNode, index: number, _options: ViewOptions): React.ReactNode {
   const { text, format } = node
-  if (!text) return null
+  if (!text || text === '') null
 
   const bold = !!(format & FORMAT_BOLD)
   const italic = !!(format & FORMAT_ITALIC)
