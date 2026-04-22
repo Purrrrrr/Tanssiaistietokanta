@@ -59,11 +59,14 @@ function Breadcrumbs() {
   const T = useT('')
   const matches = useMatches()
   const breadcrumbs = matches
-    .map(route => route.staticData?.breadcrumb ? ({ route, breadcrumb: route.staticData.breadcrumb }) : null)
+    .map(route => route.staticData?.breadcrumb
+      ? ({ route, breadcrumb: route.staticData.breadcrumb, menu: route.staticData.breadcrumbMenu })
+      : null,
+    )
     .filter(r => r !== null)
 
   return <BreadcrumbsContainer label={useTranslation('navigation.breadcrumbs')}>
-    {breadcrumbs.length > 1 && breadcrumbs.map(({ route, breadcrumb }) =>
+    {breadcrumbs.length > 1 && breadcrumbs.map(({ route, breadcrumb, menu }) =>
       typeof breadcrumb === 'function'
         ? renderComponent(breadcrumb, route.id)
         : (
@@ -72,6 +75,7 @@ function Breadcrumbs() {
             to={route.pathname}
             params={route.params}
             text={T(breadcrumb)}
+            menu={menu ? renderComponent(menu, '') : undefined}
           />
         ),
     )}

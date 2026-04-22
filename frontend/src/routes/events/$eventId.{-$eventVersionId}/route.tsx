@@ -52,6 +52,7 @@ function RouteBreadcrumb() {
     to="/events/$eventId/{-$eventVersionId}"
     params={{ eventId, eventVersionId }}
     text={event?.name ?? '-'}
+    menu={event ? <EventsMenu event={event} /> : undefined}
   />
 }
 

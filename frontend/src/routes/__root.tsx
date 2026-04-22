@@ -3,10 +3,12 @@ import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 
 import { RightsQuery } from 'libraries/access-control/types'
 
+import { useEvents } from 'services/events'
+
 import { Breadcrumb, Link } from 'libraries/ui'
 import { Home } from 'libraries/ui/icons'
 import NavigationLayout from 'components/NavigationLayout'
-import { Page } from 'components/Page'
+import { MenuLink, Page } from 'components/Page'
 import { T, TranslationKey, useT } from 'i18n'
 import { type DanceOrganizerRootRouteContext, ErrorComponent } from 'utils/routeUtils'
 
@@ -15,6 +17,7 @@ declare module '@tanstack/react-router' {
     requireRights?: RouteRequireRights
     usesRights?: RouteRequireRights
     breadcrumb?: TranslationKey | (() => React.ReactNode)
+    breadcrumbMenu?: () => React.ReactNode
   }
 }
 
@@ -46,7 +49,11 @@ export const Route = createRootRouteWithContext<DanceOrganizerRootRouteContext>(
   },
   notFoundComponent: NotFound,
   staticData: {
-    breadcrumb: () => <Breadcrumb to="/"><Home /><span className="sr-only"><T msg="app.title" /></span></Breadcrumb>,
+    breadcrumb: () => (
+      <Breadcrumb to="/" menu={<Menu />}>
+        <Home /><span className="sr-only"><T msg="app.title" /></span>
+      </Breadcrumb>
+    ),
     usesRights: ['dances:list'],
   },
 })
@@ -81,4 +88,15 @@ function NotFound() {
     }>
     <Link to="/">{t('returnToHome')}</Link>
   </Page>
+}
+
+function Menu() {
+  const [events] = useEvents()
+
+  return <>
+    <MenuLink to="/dances" text={<><span className="mr-0.5">💃</span><T msg="navigation.dances" /></>} />
+    {events.map(event =>
+      <MenuLink key={event._id} to="/events/$eventId/{-$eventVersionId}" params={{ eventId: event._id }} text={event.name} />,
+    )}
+  </>
 }
