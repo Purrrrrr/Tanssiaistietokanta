@@ -415,8 +415,7 @@
 * Make a DocumentContentEditor with proper form input props
   * Lazily load viewer or editor depending on readonly flag
   * Show placeholder on empty document
-
-  Migrate dance descriptions/instructions to lexical
+* Migrate dance descriptions/instructions to lexical
   * Migration script
   * Respect editor max-h
   * Migrate dance input to json patch
@@ -434,7 +433,7 @@
     * Re-enable copying instructions from dancewiki
     * Rename instructions field to contentAsMarkdown
     * Support link to wiki in preview
-    Remove markdown support
+  * Remove markdown support
 
   Dance page syncstatus is hard to see -> fix to be above form
   Add an 'add workshop' button to event side nav
