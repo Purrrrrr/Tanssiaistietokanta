@@ -437,7 +437,13 @@
 * Breadcrumb arrow opening to a menu providing links to other pages on the same level?
 * Dance page syncstatus is hard to see -> fix to be above form
 * Nicer workshop editor
+* Ability to have two column dance instructions
+* Put version history field resolvers into just one place
   
+  Ensure all documents can upload images somewhere
+    Plain documents
+    Dance documents
+    Workshop docs
   Add an 'add workshop' button to event side nav
   Add translations to lexical editor elements
     Empty placeholder
@@ -456,19 +462,18 @@
   Fix duplicate file upload? Is this only buggy in dev mode?
 
   Better editor Part 2
-    Clean up icons and toolbar
-    Support turning text into QR code
-    Neater plugin system with
-      readOnlyRenderer
-      nodeTypes
-      plugin component
-      toolbar hook
-    Fix editor toolbar not positioning correctly in layout columns
   * Find a way to import current markdown
-    Support for editing tables
   * Add editor styles
+  * Neater plugin system with toolbar hook
+  * Image toolbar plugin
+  * Table toolbar plugin
+      Support for editing tables (add/remove cols/rows and remove table)
+    Layout columns plugin?
+    Clean up icons and toolbar
+    Fix editor toolbar not positioning correctly in layout columns
     Document-specific files?
     Allow choosing images from existing files
+    Support turning text into QR code
   General notes/documents/wikipages to event/other
   * Document service
   * Documents in events
@@ -477,8 +482,8 @@
     How to show docs in side nav
     Different doc types: slide, checklist, plain doc, wiki?
     Document templates
+      Templates for event/interval music slides?
   
-  Make document viewer import markdown.css too
   Should files be versioned too?
   Support for workshop instance specific assistants?
 
@@ -491,7 +496,6 @@
     Add contact details
     GDPR compliance
 
-  Ability to have two column dance instructions
   Don't make ball program view "log out" whenever fast refresh occurs
   Fix form inside form error in slide show dance editor
   Auth Part 3
@@ -519,7 +523,6 @@
     Image support? Better stock slides??
     Show dance in interval music
 
-  Templates for event/interval music slides?
   
   Nice to have
     Find a way to not show syncstatus on readOnly forms
@@ -532,7 +535,6 @@
       Showing of dance tags
       Icons for dance tags
     Move event program editors near their usage sites
-    Put version history field resolvers into just one place
     Prefetch dances somehow in eventprogram slide editor
     Event slide rework
       Store slide styles in own service/db
@@ -540,7 +542,7 @@
         Variables?
       * Make slides some kind of grid with defined areas
       Use file service for images
-    Tanstack query nice to haves
+    Tanstack router nice to haves
       Page title mechanism
       Version urls
       Fix data loading for events
@@ -555,7 +557,7 @@
       Where do we get keys?
       Support multiple locales
     Layout revisited
-      Show breadcrumbs below header?
+    * Show breadcrumbs below header?
       Store the toggled state of the menu?
     Make some sense of names in event program: rows, items...
     Forms:
