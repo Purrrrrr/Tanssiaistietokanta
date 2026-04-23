@@ -434,19 +434,16 @@
     * Rename instructions field to contentAsMarkdown
     * Support link to wiki in preview
   * Remove markdown support
-
-  Dance page syncstatus is hard to see -> fix to be above form
+* Breadcrumb arrow opening to a menu providing links to other pages on the same level?
+* Dance page syncstatus is hard to see -> fix to be above form
+* Nicer workshop editor
+  
   Add an 'add workshop' button to event side nav
-  Nicer workshop editor
   Add translations to lexical editor elements
     Empty placeholder
     Toolbar titles
   Form field does not type check properly
-
-  Breadcrumb arrow opening to a menu providing links to other pages on the same level?
-
   Use PageSection in program/slide editor pages
-
   More fine-grained document access control
   Event volunteer kompassi status
     RegisteredToEventSystem
