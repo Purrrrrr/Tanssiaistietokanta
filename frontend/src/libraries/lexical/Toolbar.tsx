@@ -299,10 +299,10 @@ export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUplo
       </div>
       <div
         className={classNames(
-          '[position-anchor:--lexical-toolbar-anchor] absolute mt-2 top-[anchor(bottom,-1000px)] left-[anchor(left)] bg-white border-1 border-gray-400 rounded-md z-10 shadow-md empty:hidden',
+          '[position-anchor:--lexical-toolbar-anchor] absolute mt-3 top-[anchor(bottom,-1000px)] left-[anchor(left)] bg-white border-1 border-gray-400 rounded-md z-10 shadow-md empty:hidden',
         )}
       >
-        {tools.map((tool, index) => tool.editor && <div key={index}>{tool.editor}</div>)}
+        {tools.map((tool, index) => tool.floatingEditor && <div key={index}>{tool.floatingEditor}</div>)}
       </div>
     </>
   )

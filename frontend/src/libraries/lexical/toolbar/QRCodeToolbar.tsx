@@ -15,6 +15,7 @@ import { $isQRCodeNode, QRCodeNode, QRCodePayload } from '../plugins/nodes/QRCod
 import { INSERT_QR_CODE_COMMAND } from '../plugins/QRCodePlugin'
 import { QRCodeIcon } from './icons'
 import { ToolbarButton } from './ToolbarButton'
+import { ToolbarTitle } from './ToolbarTitle'
 
 export function useQRCodeToolbar(editor: LexicalEditor): ToolbarHookReturn {
   const [qrValue, setQRValue] = useState<QRCodePayload | null>(null)
@@ -31,7 +32,7 @@ export function useQRCodeToolbar(editor: LexicalEditor): ToolbarHookReturn {
       setQRValue(getQRCodeValue(selection))
       setQRNode(getQRCodeNode(selection))
     },
-    editor: <QRCodeEditor editor={editor} node={qrNode} data={qrValue} />,
+    floatingEditor: <QRCodeEditor editor={editor} node={qrNode} data={qrValue} />,
   }
 }
 
@@ -90,6 +91,7 @@ function QRCodeEditor({ editor, node, data }: QRCodeEditorProps) {
   }
 
   return <div className="flex gap-2 items-center py-1 px-2">
+    <ToolbarTitle text="QR code" />
     <input
       className="flex-1 py-0.5 px-2 text-sm rounded border-gray-400 border-1"
       type="text"

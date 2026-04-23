@@ -33,7 +33,7 @@ export function SyncValuePlugin({ value, onChange }: Props) {
     if (nodeIdMapRef.current == null) {
       throw new Error('SyncValuePlugin: nodeIdMapRef is null')
     }
-    console.log('SyncValuePlugin: checking for value changes', { value, lastApplied: lastApplied.current, isFirst: isFirst.current })
+    // console.log('SyncValuePlugin: checking for value changes', { value, lastApplied: lastApplied.current, isFirst: isFirst.current })
     if (isFirst.current && value != null) {
       lastApplied.current = value
       isFirst.current = false
@@ -45,7 +45,7 @@ export function SyncValuePlugin({ value, onChange }: Props) {
     if (equal(value, lastApplied.current)) return
 
     const expanded = expand(value)
-    console.log('SyncValuePlugin: expanded value', { expanded })
+    // console.log('SyncValuePlugin: expanded value', { expanded })
     const currentJson = editor.getEditorState().toJSON()
     if (equal(expanded, currentJson)) return
     lastApplied.current = value

@@ -67,7 +67,7 @@ export function useImageToolbar(editor: LexicalEditor, imageUpload?: ImageUpload
         <ImageIcon />
       </ToolbarButton>
     ),
-    editor: isImageInsertMode && (
+    floatingEditor: isImageInsertMode && (
       <div className="flex flex-wrap gap-2 items-center py-1 px-2 border-black border-t-1">
         <input
           className="flex-1 py-0.5 px-2 text-sm rounded border-gray-400 min-w-40 border-1"

@@ -14,6 +14,7 @@ import { Button } from 'libraries/ui'
 import { Link } from 'libraries/ui/icons'
 
 import { ToolbarButton } from './ToolbarButton'
+import { ToolbarTitle } from './ToolbarTitle'
 
 export function useLinkToolbar(editor: LexicalEditor): ToolbarHookReturn {
   const [isLink, setIsLink] = useState(false)
@@ -49,7 +50,7 @@ export function useLinkToolbar(editor: LexicalEditor): ToolbarHookReturn {
         <Link />
       </ToolbarButton>
     ),
-    editor: <LinkEditor editor={editor} url={url} />,
+    floatingEditor: <LinkEditor editor={editor} url={url} />,
   }
 }
 
@@ -72,7 +73,10 @@ function LinkEditor({ editor, url }: LinkEditorProps) {
   }
 
   return <div className="flex gap-2 items-center py-1 px-2">
+    <ToolbarTitle text="Link options" />
+    <label htmlFor="link-url">URL</label>
     <input
+      id="link-url"
       className="flex-1 py-0.5 px-2 text-sm rounded border-gray-400 border-1"
       type="url"
       placeholder="https://…"
