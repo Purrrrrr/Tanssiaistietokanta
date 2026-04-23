@@ -1,18 +1,14 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { $isLinkNode, TOGGLE_LINK_COMMAND } from '@lexical/link'
+import { useEffect, useEffectEvent, useRef, useState } from 'react'
 import { $isListNode, INSERT_CHECK_LIST_COMMAND, INSERT_ORDERED_LIST_COMMAND, INSERT_UNORDERED_LIST_COMMAND, ListNode, REMOVE_LIST_COMMAND } from '@lexical/list'
 import { $createHeadingNode, $isHeadingNode, HeadingTagType } from '@lexical/rich-text'
 import { $setBlocksType } from '@lexical/selection'
 import { mergeRegister } from '@lexical/utils'
 import classNames from 'classnames'
 import {
-  $addUpdateTag,
   $createParagraphNode,
   $getSelection,
-  $isNodeSelection,
   $isRangeSelection,
-  BaseSelection,
   BLUR_COMMAND,
   CAN_REDO_COMMAND,
   CAN_UNDO_COMMAND,
@@ -20,10 +16,8 @@ import {
   FOCUS_COMMAND,
   FORMAT_ELEMENT_COMMAND,
   FORMAT_TEXT_COMMAND,
-  LexicalEditor,
   REDO_COMMAND,
   SELECTION_CHANGE_COMMAND,
-  SKIP_DOM_SELECTION_TAG,
   UNDO_COMMAND,
 } from 'lexical'
 
@@ -32,18 +26,19 @@ import type { FileOwner, FileOwningId } from 'types/files'
 import { doUpload } from 'services/files'
 
 import RegularSelect from 'libraries/formsV2/components/inputs/selectors/RegularSelect'
-import { Button, ButtonProps } from 'libraries/ui'
+import { Button } from 'libraries/ui'
 import {
   AlignCenter, AlignJustify, AlignLeft, AlignRight,
-  LayoutTwoColumns, Link, Redo, Undo,
+  LayoutTwoColumns, Redo, Undo,
 } from 'libraries/ui/icons'
 
-import { CheckListIcon, ImageIcon, OrderedListIcon, QRCodeIcon, TableIcon, UnorderedListIcon } from './icons'
 import { INSERT_IMAGE_COMMAND } from './plugins/ImagePlugin'
 import { INSERT_LAYOUT_COMMAND } from './plugins/LayoutPlugin'
-import { $isQRCodeNode, QRCodeNode, QRCodePayload } from './plugins/nodes/QRCodeNode'
-import { INSERT_QR_CODE_COMMAND } from './plugins/QRCodePlugin'
 import { INSERT_TABLE_COMMAND } from './plugins/TablePlugin'
+import { CheckListIcon, ImageIcon, OrderedListIcon, TableIcon, UnorderedListIcon } from './toolbar/icons'
+import { useLinkToolbar } from './toolbar/LinkToolbar'
+import { useQRCodeToolbar } from './toolbar/QRCodeToolbar'
+import { ToolbarButton } from './toolbar/ToolbarButton'
 
 type BlockType = 'paragraph' | HeadingTagType | 'bullet' | 'number' | 'check'
 
@@ -83,7 +78,6 @@ export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUplo
   const [isUnderline, setIsUnderline] = useState(false)
   const [isStrikethrough, setIsStrikethrough] = useState(false)
   const [blockType, setBlockType] = useState<BlockType>('paragraph')
-  const [isLink, setIsLink] = useState(false)
   const [isTableInsertMode, setIsTableInsertMode] = useState(false)
   const [tableRows, setTableRows] = useState('3')
   const [tableCols, setTableCols] = useState('3')
@@ -95,9 +89,10 @@ export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUplo
   const focusedRef = useRef(false)
   const anchorRef = useRef<HTMLElement | null>(null)
 
-  const [url, setUrl] = useState<string | null>(null)
-  const [qrValue, setQRValue] = useState<QRCodePayload | null>(null)
-  const [qrNode, setQRNode] = useState<QRCodeNode | null>(null)
+  const hookData = [
+    useLinkToolbar(editor),
+    useQRCodeToolbar(editor),
+  ]
 
   function updateAnchor(newDom?: HTMLElement | null) {
     const dom = newDom === undefined ? anchorRef.current : newDom
@@ -112,11 +107,9 @@ export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUplo
     }
   }
 
-  const $updateToolbar = useCallback(() => {
+  const $updateToolbar = useEffectEvent(() => {
     const selection = $getSelection()
-    setUrl(getLinkUrl(selection))
-    setQRValue(getQRCodeValue(selection))
-    setQRNode(getQRCodeNode(selection))
+    hookData.forEach(hook => hook.onUpdate?.(selection))
     if ($isRangeSelection(selection)) {
       setIsBold(selection.hasFormat('bold'))
       setIsItalic(selection.hasFormat('italic'))
@@ -137,76 +130,43 @@ export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUplo
         setBlockType('paragraph')
       }
 
-      // Detect link in selection
-      const node = anchorNode
-      const parent = node.getParent()
-      if ($isLinkNode(parent)) {
-        setIsLink(true)
-      } else if ($isLinkNode(node)) {
-        setIsLink(true)
-      } else {
-        setIsLink(false)
-      }
-
-      const dom = editor.getElementByKey(node.getKey())
+      const dom = editor.getElementByKey(anchorNode.getKey())
       updateAnchor(dom)
     }
-  }, [])
+  })
 
   useEffect(() => {
     return mergeRegister(
       editor.registerUpdateListener(({ editorState }) => {
-        editorState.read(
-          () => {
-            $updateToolbar()
-          },
-          { editor },
-        )
+        editorState.read(() => { $updateToolbar() }, { editor })
       }),
       editor.registerCommand(
         BLUR_COMMAND,
-        () => {
-          focusedRef.current = false
-          // updateAnchor(null)
-          return false
-        },
+        () => { focusedRef.current = false; return false },
         COMMAND_PRIORITY_LOW,
       ),
       editor.registerCommand(
         FOCUS_COMMAND,
-        () => {
-          focusedRef.current = true
-          // updateAnchor()
-          return false
-        },
+        () => { focusedRef.current = true; return false },
         COMMAND_PRIORITY_LOW,
       ),
       editor.registerCommand(
         SELECTION_CHANGE_COMMAND,
-        (_payload, _newEditor) => {
-          $updateToolbar()
-          return false
-        },
+        () => { $updateToolbar(); return false },
         COMMAND_PRIORITY_LOW,
       ),
       editor.registerCommand(
         CAN_UNDO_COMMAND,
-        (payload) => {
-          setCanUndo(payload)
-          return false
-        },
+        (payload) => { setCanUndo(payload); return false },
         COMMAND_PRIORITY_LOW,
       ),
       editor.registerCommand(
         CAN_REDO_COMMAND,
-        (payload) => {
-          setCanRedo(payload)
-          return false
-        },
+        (payload) => { setCanRedo(payload); return false },
         COMMAND_PRIORITY_LOW,
       ),
     )
-  }, [editor, $updateToolbar])
+  }, [editor])
 
   function applyHeading(type: BlockType | null | undefined) {
     if (!type) return
@@ -231,12 +191,6 @@ export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUplo
           ? INSERT_ORDERED_LIST_COMMAND
           : INSERT_CHECK_LIST_COMMAND
       editor.dispatchCommand(command, undefined)
-    }
-  }
-
-  function openLinkEditor() {
-    if (!isLink) {
-      editor.dispatchCommand(TOGGLE_LINK_COMMAND, 'https://')
     }
   }
 
@@ -287,7 +241,7 @@ export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUplo
 
   return (
     <>
-      <div className="flex flex-wrap gap-2 items-center p-1">
+      <div className="flex flex-wrap gap-2 items-center p-1 border-b-1 border-stone-400">
         <ToolbarButton
           disabled={!canUndo}
           onClick={() => editor.dispatchCommand(UNDO_COMMAND, undefined)}
@@ -367,13 +321,6 @@ export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUplo
         </ToolbarButton>
         <Divider />
         <ToolbarButton
-          onClick={openLinkEditor}
-          active={isLink}
-          aria-label="Insert or edit link">
-          <Link />
-        </ToolbarButton>
-        <Divider />
-        <ToolbarButton
           onClick={() => editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'left')}
           aria-label="Left Align">
           <AlignLeft />
@@ -400,11 +347,7 @@ export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUplo
           <LayoutTwoColumns />
         </ToolbarButton>
         <Divider />
-        <ToolbarButton
-          onClick={() => editor.dispatchCommand(INSERT_QR_CODE_COMMAND, { value: '', title: '', size: 128 })}
-          aria-label="Insert QR code">
-          <QRCodeIcon />
-        </ToolbarButton>
+        {hookData.map(hook => hook.button)}
         <ToolbarButton
           onClick={() => { setIsTableInsertMode(true); setIsImageInsertMode(false) }}
           active={isTableInsertMode}
@@ -490,135 +433,8 @@ export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUplo
           '[position-anchor:--lexical-toolbar-anchor] absolute mt-2 top-[anchor(bottom,-1000px)] left-[anchor(left)] bg-white border-1 border-gray-400 rounded-md z-10 shadow-md empty:hidden',
         )}
       >
-        <LinkEditor editor={editor} url={url} />
-        <QRCodeEditor editor={editor} node={qrNode} data={qrValue} />
+        {hookData.map((hook, index) => hook.editor && <div key={index}>{hook.editor}</div>)}
       </div>
     </>
   )
-}
-
-interface LinkEditorProps {
-  editor: LexicalEditor
-  url: string | null
-}
-
-function LinkEditor({ editor, url }: LinkEditorProps) {
-  if (url === null) {
-    return null
-  }
-
-  function applyLink(value: string) {
-    const url = value.trim()
-    editor.dispatchCommand(TOGGLE_LINK_COMMAND, url || null)
-    editor.update(() => {
-      $addUpdateTag(SKIP_DOM_SELECTION_TAG)
-    })
-  }
-
-  return <div className="flex gap-2 items-center py-1 px-2">
-    <input
-      className="flex-1 py-0.5 px-2 text-sm rounded border-gray-400 border-1"
-      type="url"
-      placeholder="https://…"
-      value={url}
-      onChange={(e) => applyLink(e.target.value)}
-    />
-    <Button minimal onClick={() => applyLink('')} aria-label="Remove link">Remove link</Button>
-  </div>
-}
-
-function getLinkUrl(selection: BaseSelection | null): string | null {
-  if (!$isRangeSelection(selection)) return null
-  const anchorNode = selection.anchor.getNode()
-  const parent = anchorNode.getParent()
-  if ($isLinkNode(parent)) {
-    return parent.getURL()
-  } else if ($isLinkNode(anchorNode)) {
-    return (anchorNode as Parameters<typeof $isLinkNode>[0] & { getURL(): string }).getURL()
-  }
-  return null
-}
-
-interface QRCodeEditorProps {
-  editor: LexicalEditor
-  node: QRCodeNode | null
-  data: QRCodePayload | null
-}
-
-function QRCodeEditor({ editor, node, data }: QRCodeEditorProps) {
-  if (node === null || data === null) {
-    return null
-  }
-  const { value, title, size } = data
-
-  function updateQRCodePayload(payload: Partial<QRCodePayload>) {
-    editor.update(() => {
-      if ($isQRCodeNode(node)) {
-        if (payload.value !== undefined) node.setValue(payload.value.trim())
-        if (payload.title !== undefined) node.setTitle(payload.title.trim())
-        if (payload.size !== undefined) node.setSize(payload.size > 0 ? payload.size : 128)
-      }
-      $addUpdateTag(SKIP_DOM_SELECTION_TAG)
-    })
-  }
-
-  function removeQRCode() {
-    editor.update(() => {
-      node?.remove()
-    })
-  }
-
-  return <div className="flex gap-2 items-center py-1 px-2">
-    <input
-      className="flex-1 py-0.5 px-2 text-sm rounded border-gray-400 border-1"
-      type="text"
-      placeholder="Enter URL or text for QR code…"
-      value={value ?? ''}
-      onChange={(e) => updateQRCodePayload({ value: e.target.value })}
-    />
-    <input
-      className="flex-1 py-0.5 px-2 text-sm rounded border-gray-400 border-1"
-      type="text"
-      placeholder="Enter title for QR code (optional)…"
-      value={title ?? ''}
-      onChange={(e) => updateQRCodePayload({ title: e.target.value })}
-    />
-    <input
-      className="flex-1 py-0.5 px-2 text-sm rounded border-gray-400 border-1"
-      type="number"
-      placeholder="Enter title for QR code (optional)…"
-      value={size ?? '128'}
-      onChange={(e) => updateQRCodePayload({ size: parseInt(e.target.value, 10) })}
-    />
-    <Button minimal onClick={removeQRCode} aria-label="Remove QR code">Remove QR code</Button>
-  </div>
-}
-
-function getQRCodeValue(selection: BaseSelection | null): QRCodePayload | null {
-  if ($isNodeSelection(selection)) {
-    const node = selection.getNodes()[0]
-    if (node.getType() === 'qr-code') {
-      const qrNode = node as unknown as QRCodeNode
-      return {
-        value: qrNode.getValue(),
-        title: qrNode.getTitle(),
-        size: qrNode.getSize(),
-      }
-    }
-  }
-  return null
-}
-
-function getQRCodeNode(selection: BaseSelection | null): QRCodeNode | null {
-  if ($isNodeSelection(selection)) {
-    const node = selection.getNodes()[0]
-    if ($isQRCodeNode(node)) {
-      return node
-    }
-  }
-  return null
-}
-
-function ToolbarButton({ ...props }: ButtonProps) {
-  return <Button minimal {...props} paddingClass="" className="grid justify-center items-center align-sub size-[30px] [font-size:18px]" />
 }
