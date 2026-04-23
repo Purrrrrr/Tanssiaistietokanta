@@ -14,6 +14,8 @@ import { useT, useTranslation } from 'i18n'
 import randomId from 'utils/randomId'
 
 import { VolunteerAssignmentSelector } from './volunteers/VolunteerAssignmentSelector'
+import { PageSection } from './widgets/PageSection'
+import { AddButton } from './widgets/AddButton'
 
 type Workshop = Event['workshops'][0]
 type Instance = Workshop['instances'][number]
@@ -69,38 +71,43 @@ export function WorkshopEditor({ eventId, workshop: workshopInDatabase, reserved
 
   return <Form className="workshopEditor" {...formProps} readOnly={readOnly}>
     <SyncStatus state={state} floatRight />
-    <div className="flex flex-wrap gap-3.5">
-      <div className="grow basis-75 max-w-[50ch]">
-        <Input path="name" required label={t('name')} labelInfo={t('required')} />
-        <AbbreviationField path="abbreviation" label={t('abbreviation')} reservedAbbreviations={reservedAbbreviations} />
-        <Field path="description" component={DocumentContentEditor} label={t('description')} />
-        {workshopRoles.map(role =>
-          <FormGroup key={role._id} label={role.name} labelFor={`workshop-${workshopId}-role-${role._id}`} labelStyle="above">
-            <VolunteerAssignmentSelector
-              id={`workshop-${workshopId}-role-${role._id}`}
-              eventId={eventId}
-              roleId={role._id}
-              workshopId={workshopInDatabase._id}
-              workshopVersionId={workshopInDatabase._versionId ?? undefined}
-            />
-          </FormGroup>,
-        )}
-        <Switch path="instanceSpecificDances" label={t('instanceSpecificDances')} />
-      </div>
-      <div className="grow basis-75">
-        {formProps.value.instanceSpecificDances || <DanceList instanceIndex={0} bigTitle readOnly={readOnly} />}
-        <h3 className="my-2 text-base font-bold">{t('instances')}</h3>
-        <ListField
-          label={t('instances')}
-          labelStyle="hidden"
-          path="instances"
-          componentProps={{ beginDate, endDate, readOnly }}
-          component={WorkshopInstanceEditor}
-          renderConflictItem={item => item?.dances?.map(d => d.name)?.join(', ') ?? ''}
-        />
-        <Button text={t('addInstance')} onClick={() => addInstance(newInstance(formProps.value.instances[0]))} />
-      </div>
+    <div className="grid grid-cols-2 gap-3.5">
+      <Input path="name" required label={t('name')} labelInfo={t('required')} />
+      <AbbreviationField path="abbreviation" label={t('abbreviation')} reservedAbbreviations={reservedAbbreviations} />
     </div>
+    <div className="grid grid-cols-2 gap-3.5">
+      {workshopRoles.map(role =>
+        <FormGroup key={role._id} label={role.name} labelFor={`workshop-${workshopId}-role-${role._id}`} labelStyle="above">
+          <VolunteerAssignmentSelector
+            id={`workshop-${workshopId}-role-${role._id}`}
+            eventId={eventId}
+            roleId={role._id}
+            workshopId={workshopInDatabase._id}
+            workshopVersionId={workshopInDatabase._versionId ?? undefined}
+          />
+        </FormGroup>,
+      )}
+    </div>
+    <Field path="description" component={DocumentContentEditor} label={t('description')} componentProps={{ className: 'min-h-50' }} />
+    <PageSection
+      title={t('instances')}
+      toolbar={
+        <div className="flex items-center gap-3">
+          <Switch path="instanceSpecificDances" label={t('instanceSpecificDances')} inline />
+          <AddButton text={t('addInstance')} onClick={() => addInstance(newInstance(formProps.value.instances[0]))} />
+        </div>
+      }
+    >
+      {formProps.value.instanceSpecificDances || <DanceList instanceIndex={0} bigTitle readOnly={readOnly} />}
+      <ListField
+        label={t('instances')}
+        labelStyle="hidden"
+        path="instances"
+        componentProps={{ beginDate, endDate, readOnly }}
+        component={WorkshopInstanceEditor}
+        renderConflictItem={item => item?.dances?.map(d => d.name)?.join(', ') ?? ''}
+      />
+    </PageSection>
   </Form>
 }
 
@@ -148,7 +155,7 @@ function WorkshopInstanceEditor(
   const t = useT('components.workshopEditor')
   const instances = useValueAt('instances')
   const showDances = useValueAt('instanceSpecificDances')
-  return <div className="px-4 pt-1 pb-4 mb-5 bg-white border-b-1 border-black/15">
+  return <div className="pt-1 pb-4 mb-5 bg-white border-b-1 border-black/15">
     <div className="flex flex-wrap gap-3.5 items-center">
       <DateField<Workshop>
         path={`instances.${itemIndex}.dateTime`}

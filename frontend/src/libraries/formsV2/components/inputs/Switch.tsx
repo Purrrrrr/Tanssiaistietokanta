@@ -15,7 +15,7 @@ export const Switch: FieldInputComponent<boolean, SwitchProps> = function Switch
   return <label
     className={classNames(
       Classes.SWITCH,
-      inline && 'inline-block mr-5',
+      inline ? 'inline-block mr-5' : 'mb-2.5',
     )}
   >
     <input
