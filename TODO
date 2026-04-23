@@ -467,7 +467,9 @@
   * Neater plugin system with toolbar hook
   * Image toolbar plugin
   * Table toolbar plugin
-      Support for editing tables (add/remove cols/rows and remove table)
+    * Support for editing tables (add/remove cols/rows and remove table)
+    Floating image editor
+    Use FormGroup in editors
     Layout columns plugin?
     Clean up icons and toolbar
     Fix editor toolbar not positioning correctly in layout columns
