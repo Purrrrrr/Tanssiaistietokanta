@@ -5,9 +5,10 @@ import { DocumentContentEditor, DocumentContentEditorProps, emptyDocument, isEmp
 import { Button } from 'libraries/ui'
 import { ColoredTag } from 'components/widgets/ColoredTag'
 import { DurationField } from 'components/widgets/DurationField'
-import { useT } from 'i18n'
+import { useT, useTranslation } from 'i18n'
 
 import { Field, Form, Input, useDanceEditorState, useOnChangeFor } from './DanceForm'
+import { DanceSlidePreview } from './DanceSlidePreview'
 import DanceWikiPreview from './DanceWikiPreview'
 import { WikipageSelector } from './WikipageSelector'
 
@@ -52,17 +53,33 @@ export function FullDanceEditorFields({ dance }: { dance: DanceWithEvents }) {
       </div>
     </div>
     <DanceWikiPreview dance={dance} />
-    <Field
-      label={label('description')}
-      path="description"
-      component={InstructionEditor}
-      componentProps={{ danceId: dance._id, wikipage, className: 'max-h-150' }} />
+    <SlideWrapper dance={dance}>
+      <Field
+        label={label('description')}
+        path="description"
+        component={InstructionEditor}
+        containerClassName="grow"
+        componentProps={{
+          danceId: dance._id, wikipage,
+          className: 'h-full',
+        }} />
+    </SlideWrapper>
     <Field
       label={label('instructions')}
       path="instructions"
       component={InstructionEditor}
       componentProps={{ danceId: dance._id, wikipage, className: 'max-h-150' }} />
   </>
+}
+
+function SlideWrapper({ dance, children }: { dance: Dance, children: React.ReactNode }) {
+  return <div className="min-lg:grid grid-cols-2 grid-flow-col gap-3.5 items-stretch">
+    <div className="flex flex-col">{children}</div>
+    <div className="min-h-100 mb-[15px]">
+      <div className="mb-[5px]">{useTranslation('domain.dance.descriptionPreview')}</div>
+      <DanceSlidePreview dance={dance} />
+    </div>
+  </div>
 }
 
 export interface InstructionEditorProps extends DocumentContentEditorProps {

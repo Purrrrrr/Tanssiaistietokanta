@@ -60,6 +60,7 @@ export const fi = {
     dance: {
       name: 'Nimi',
       description: 'Kuvaus ja lyhyt ohje',
+      descriptionPreview: 'Kuvauksen diashow-esikatselu',
       remarks: 'Huomautuksia',
       duration: 'Kesto',
       prelude: 'Alkusoitto',

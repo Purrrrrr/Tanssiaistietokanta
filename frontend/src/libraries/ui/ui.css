@@ -191,6 +191,9 @@
         margin:0 10px 0 0;
       }
     }
+    .bp5-form-content {
+      flex:1 1 auto;
+    }
   }
   .formgroup-inline {
     display: inline-flex;

@@ -14,7 +14,7 @@ export interface SlideProps {
   id: string
   title: string | React.ReactElement
   type?: string
-  children?: React.ReactElement | React.ReactElement[] | string
+  children?: React.ReactNode
   footer?: string | React.ReactElement
   next?: SlideLink
   navigation?: SlideNavigation
