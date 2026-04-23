@@ -2,7 +2,6 @@ import { createFileRoute, useNavigate, useParams, useSearch } from '@tanstack/re
 
 import { useDance } from 'services/dances'
 
-import { SyncStatus } from 'libraries/forms'
 import { Breadcrumb } from 'libraries/ui'
 import { FullDanceEditorFields } from 'components/dance/DanceEditor'
 import { Form, useDanceEditorState } from 'components/dance/DanceForm'
@@ -77,7 +76,7 @@ function DancePage() {
     title={dance.name}
     showVersion={!!versionId}
     versionNumber={dance._versionNumber}
-    info={<SyncStatus state={state} />}
+    syncStatus={state}
     toolbar={
       <Toolbar>
         <VersionSidebarToggle entityType="dance" entityId={dance._id} versionId={dance._versionId ?? undefined} toVersionLink={danceVersionLink} />

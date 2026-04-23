@@ -1,5 +1,5 @@
 import { useMatches } from '@tanstack/react-router'
-import { useEffect, useState } from 'react'
+import { lazy, useEffect, useState } from 'react'
 import { Menu as MenuHamburger } from '@blueprintjs/icons'
 import classNames from 'classnames'
 
@@ -13,6 +13,11 @@ import { Menu } from './Menu'
 
 import './Page.css'
 
+const SyncStatus = lazy(
+  () => import('libraries/forms/SyncStatus')
+    .then(m => ({ default: m.SyncStatus })),
+)
+
 export * from './Menu'
 
 export interface PageContentProps extends VersionedPageTitleProps {
@@ -25,7 +30,7 @@ export interface PageContentProps extends VersionedPageTitleProps {
   menu?: React.ReactNode
 }
 
-export function Page({ children, info, toolbar, menu, logo, background, ...props }: PageContentProps) {
+export function Page({ children, info, toolbar, menu, logo, syncStatus, background, ...props }: PageContentProps) {
   const [menuOpen, setMenuOpen] = useState<boolean>(true)
   const title = useVersionedName(props)
   useSetPageTitle(title)
@@ -46,6 +51,7 @@ export function Page({ children, info, toolbar, menu, logo, background, ...props
       <div className="flex navigation">
         {menu && <MenuToggle onClick={() => setMenuOpen(!menuOpen)} />}
         <Breadcrumbs />
+        {syncStatus && <SyncStatus state={syncStatus} className="ml-auto pt-2" floatRight />}
       </div>
       {menu && <Menu className="menu" cssDimensionVariablePrefix="page-menu">{menu}</Menu>}
       <PageContent>
