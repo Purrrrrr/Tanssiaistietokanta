@@ -189,7 +189,8 @@ export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUplo
 
   return (
     <>
-      <div className="flex flex-wrap gap-2 items-center p-1 border-b-1 border-stone-400">
+      {/* eslint-disable-next-line react/no-unknown-property */}
+      <div focusgroup="toolbar" className="flex flex-wrap gap-2 items-center p-1 border-b-1 border-stone-400">
         <ToolbarButton
           disabled={!canUndo}
           onClick={() => editor.dispatchCommand(UNDO_COMMAND, undefined)}
