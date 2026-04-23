@@ -20,7 +20,6 @@ export function useQRCodeToolbar(editor: LexicalEditor): ToolbarHookReturn {
   const [qrValue, setQRValue] = useState<QRCodePayload | null>(null)
   const [qrNode, setQRNode] = useState<QRCodeNode | null>(null)
   return {
-    name: 'qr-code',
     button: (
       <ToolbarButton
         onClick={() => editor.dispatchCommand(INSERT_QR_CODE_COMMAND, { value: '', title: '', size: 128 })}

@@ -23,21 +23,18 @@ import {
 
 import type { FileOwner, FileOwningId } from 'types/files'
 
-import { doUpload } from 'services/files'
-
 import RegularSelect from 'libraries/formsV2/components/inputs/selectors/RegularSelect'
-import { Button } from 'libraries/ui'
 import {
   AlignCenter, AlignJustify, AlignLeft, AlignRight,
   LayoutTwoColumns, Redo, Undo,
 } from 'libraries/ui/icons'
 
-import { INSERT_IMAGE_COMMAND } from './plugins/ImagePlugin'
 import { INSERT_LAYOUT_COMMAND } from './plugins/LayoutPlugin'
-import { INSERT_TABLE_COMMAND } from './plugins/TablePlugin'
-import { CheckListIcon, ImageIcon, OrderedListIcon, TableIcon, UnorderedListIcon } from './toolbar/icons'
+import { CheckListIcon, OrderedListIcon, UnorderedListIcon } from './toolbar/icons'
+import { useImageToolbar } from './toolbar/ImageToolbar'
 import { useLinkToolbar } from './toolbar/LinkToolbar'
 import { useQRCodeToolbar } from './toolbar/QRCodeToolbar'
+import { useTableToolbar } from './toolbar/TableToolbar'
 import { ToolbarButton } from './toolbar/ToolbarButton'
 
 type BlockType = 'paragraph' | HeadingTagType | 'bullet' | 'number' | 'check'
@@ -78,20 +75,14 @@ export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUplo
   const [isUnderline, setIsUnderline] = useState(false)
   const [isStrikethrough, setIsStrikethrough] = useState(false)
   const [blockType, setBlockType] = useState<BlockType>('paragraph')
-  const [isTableInsertMode, setIsTableInsertMode] = useState(false)
-  const [tableRows, setTableRows] = useState('3')
-  const [tableCols, setTableCols] = useState('3')
-  const [isImageInsertMode, setIsImageInsertMode] = useState(false)
-  const [imageUrl, setImageUrl] = useState('')
-  const [imageAlt, setImageAlt] = useState('')
-  const [isUploading, setIsUploading] = useState(false)
-  const fileInputRef = useRef<HTMLInputElement>(null)
   const focusedRef = useRef(false)
   const anchorRef = useRef<HTMLElement | null>(null)
 
-  const hookData = [
+  const tools = [
     useLinkToolbar(editor),
+    useImageToolbar(editor, imageUpload),
     useQRCodeToolbar(editor),
+    useTableToolbar(editor),
   ]
 
   function updateAnchor(newDom?: HTMLElement | null) {
@@ -109,7 +100,7 @@ export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUplo
 
   const $updateToolbar = useEffectEvent(() => {
     const selection = $getSelection()
-    hookData.forEach(hook => hook.onUpdate?.(selection))
+    tools.forEach(tool => tool.onUpdate?.(selection))
     if ($isRangeSelection(selection)) {
       setIsBold(selection.hasFormat('bold'))
       setIsItalic(selection.hasFormat('italic'))
@@ -191,49 +182,6 @@ export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUplo
           ? INSERT_ORDERED_LIST_COMMAND
           : INSERT_CHECK_LIST_COMMAND
       editor.dispatchCommand(command, undefined)
-    }
-  }
-
-  function insertTable() {
-    const rows = Math.max(1, parseInt(tableRows, 10) || 1).toString()
-    const columns = Math.max(1, parseInt(tableCols, 10) || 1).toString()
-    editor.dispatchCommand(INSERT_TABLE_COMMAND, {
-      rows,
-      columns,
-      includeHeaders: { rows: true, columns: false },
-    })
-    setIsTableInsertMode(false)
-  }
-
-  function insertImageFromUrl() {
-    const src = imageUrl.trim()
-    if (!src) return
-    editor.dispatchCommand(INSERT_IMAGE_COMMAND, { src, altText: imageAlt.trim() })
-    setImageUrl('')
-    setImageAlt('')
-    setIsImageInsertMode(false)
-  }
-
-  async function handleImageFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0]
-    if (!file || !imageUpload) return
-    setIsUploading(true)
-    try {
-      const uploaded = await doUpload({
-        owner: imageUpload.owner,
-        owningId: imageUpload.owningId,
-        path: imageUpload.path,
-        file,
-        autoRename: true,
-      })
-      editor.dispatchCommand(INSERT_IMAGE_COMMAND, {
-        src: `/api/files/${uploaded._id}?download=true`,
-        altText: file.name.replace(/\.[^.]+$/, ''),
-      })
-      setIsImageInsertMode(false)
-    } finally {
-      setIsUploading(false)
-      if (fileInputRef.current) fileInputRef.current.value = ''
     }
   }
 
@@ -347,93 +295,14 @@ export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUplo
           <LayoutTwoColumns />
         </ToolbarButton>
         <Divider />
-        {hookData.map(hook => hook.button)}
-        <ToolbarButton
-          onClick={() => { setIsTableInsertMode(true); setIsImageInsertMode(false) }}
-          active={isTableInsertMode}
-          aria-label="Insert table">
-          <TableIcon />
-        </ToolbarButton>
-        <ToolbarButton
-          onClick={() => { setIsImageInsertMode(true); setIsTableInsertMode(false) }}
-          active={isImageInsertMode}
-          aria-label="Insert image">
-          <ImageIcon />
-        </ToolbarButton>
+        {tools.map(tool => tool.button)}
       </div>
-
-      {isTableInsertMode && (
-        <div className="flex gap-2 items-center py-1 px-2 border-black border-t-1">
-          <label htmlFor="table-rows-input" className="text-sm">Rows</label>
-          <input
-            id="table-rows-input"
-            className="py-0.5 px-2 w-12 text-sm rounded border-gray-400 border-1"
-            type="number"
-            min="1"
-            max="50"
-            value={tableRows}
-            onChange={(e) => setTableRows(e.target.value)}
-            onKeyDown={(e) => { if (e.key === 'Enter') insertTable(); if (e.key === 'Escape') setIsTableInsertMode(false) }}
-          />
-          <label htmlFor="table-cols-input" className="text-sm">Cols</label>
-          <input
-            id="table-cols-input"
-            className="py-0.5 px-2 w-12 text-sm rounded border-gray-400 border-1"
-            type="number"
-            min="1"
-            max="50"
-            value={tableCols}
-            onChange={(e) => setTableCols(e.target.value)}
-            onKeyDown={(e) => { if (e.key === 'Enter') insertTable(); if (e.key === 'Escape') setIsTableInsertMode(false) }}
-          />
-          <Button minimal onClick={insertTable} aria-label="Insert table">Insert</Button>
-          <Button minimal onClick={() => setIsTableInsertMode(false)} aria-label="Cancel">Cancel</Button>
-        </div>
-      )}
-      {isImageInsertMode && (
-        <div className="flex flex-wrap gap-2 items-center py-1 px-2 border-black border-t-1">
-          <input
-            className="flex-1 py-0.5 px-2 text-sm rounded border-gray-400 min-w-40 border-1"
-            type="url"
-            placeholder="Image URL (https://…)"
-            value={imageUrl}
-            onChange={(e) => setImageUrl(e.target.value)}
-            onKeyDown={(e) => { if (e.key === 'Enter') insertImageFromUrl(); if (e.key === 'Escape') setIsImageInsertMode(false) }}
-          />
-          <input
-            className="py-0.5 px-2 w-32 text-sm rounded border-gray-400 border-1"
-            type="text"
-            placeholder="Alt text"
-            value={imageAlt}
-            onChange={(e) => setImageAlt(e.target.value)}
-            onKeyDown={(e) => { if (e.key === 'Enter') insertImageFromUrl(); if (e.key === 'Escape') setIsImageInsertMode(false) }}
-          />
-          <Button minimal onClick={insertImageFromUrl} aria-label="Insert image from URL">Insert URL</Button>
-          {imageUpload && (
-            <>
-              <span className="text-sm text-gray-500">or</span>
-              <label className="py-0.5 px-2 text-xs bg-white rounded border-gray-400 cursor-pointer hover:bg-gray-50 border-1">
-                {isUploading ? 'Uploading…' : 'Upload file'}
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  className="sr-only"
-                  disabled={isUploading}
-                  onChange={handleImageFileChange}
-                />
-              </label>
-            </>
-          )}
-          <Button minimal onClick={() => setIsImageInsertMode(false)} aria-label="Cancel">Cancel</Button>
-        </div>
-      )}
       <div
         className={classNames(
           '[position-anchor:--lexical-toolbar-anchor] absolute mt-2 top-[anchor(bottom,-1000px)] left-[anchor(left)] bg-white border-1 border-gray-400 rounded-md z-10 shadow-md empty:hidden',
         )}
       >
-        {hookData.map((hook, index) => hook.editor && <div key={index}>{hook.editor}</div>)}
+        {tools.map((tool, index) => tool.editor && <div key={index}>{tool.editor}</div>)}
       </div>
     </>
   )

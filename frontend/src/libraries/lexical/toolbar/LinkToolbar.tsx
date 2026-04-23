@@ -26,7 +26,6 @@ export function useLinkToolbar(editor: LexicalEditor): ToolbarHookReturn {
   }
 
   return {
-    name: 'link',
     onUpdate: (selection) => {
       setUrl(getLinkUrl(selection))
       if ($isRangeSelection(selection)) {
