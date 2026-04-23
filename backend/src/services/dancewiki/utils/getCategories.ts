@@ -4,7 +4,7 @@ const categoryTagRegex = /<Luokka:([^>]+)>/g
 const categoryLinkRegex = /\[[^\]]+\]\(Luokka: ([^)]*) "wikilink"\)/g
 
 export function getCategoriesFromContent(content: string | null) {
-  if (content === null) return []
+  if (content == null) return []
   const categoryTags = content.matchAll(categoryTagRegex)
   const categoryLinks = content.matchAll(categoryLinkRegex)
 
