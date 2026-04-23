@@ -43,6 +43,11 @@ export const KEY_MAP: Record<string, string> = {
   textStyle: 'ts',
   title: 'ti',
   url: 'u',
+  isUnlinked: 'ul',
+  colWidths: 'cw',
+  frozenColumnCount: 'fc',
+  frozenRowCount: 'fr',
+  rowStriping: 'r=',
   value: 'va',
   width: 'w',
 }
