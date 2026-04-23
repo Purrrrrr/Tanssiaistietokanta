@@ -40,7 +40,7 @@ export const dances = (app: Application) => {
     },
     before: {
       all: [
-        mergeJsonPatch(omit(['_id', '_versionId', '_versionNumber', '_createdAt', '_updatedAt', 'wikipageName']) as (data: unknown) => unknown),
+        mergeJsonPatch(omit(['_id', '_versionId', '_versionNumber', '_createdAt', '_updatedAt', 'wikipage']) as (data: unknown) => unknown),
         schemaHooks.validateQuery(dancesQueryValidator),
         schemaHooks.resolveQuery(dancesQueryResolver),
       ],
