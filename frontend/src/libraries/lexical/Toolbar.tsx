@@ -22,8 +22,6 @@ import {
   UNDO_COMMAND,
 } from 'lexical'
 
-import type { FileOwner, FileOwningId } from 'types/files'
-
 import RegularSelect from 'libraries/formsV2/components/inputs/selectors/RegularSelect'
 import {
   AlignCenter, AlignJustify, AlignLeft, AlignRight,
@@ -32,11 +30,13 @@ import {
 
 import { INSERT_LAYOUT_COMMAND } from './plugins/LayoutPlugin'
 import { CheckListIcon, OrderedListIcon, UnorderedListIcon } from './toolbar/icons'
-import { useImageToolbar } from './toolbar/ImageToolbar'
+import { ImageUploadConfig, useImageToolbar } from './toolbar/ImageToolbar'
 import { useLinkToolbar } from './toolbar/LinkToolbar'
 import { useQRCodeToolbar } from './toolbar/QRCodeToolbar'
 import { useTableToolbar } from './toolbar/TableToolbar'
 import { ToolbarButton } from './toolbar/ToolbarButton'
+
+export type { ImageUploadConfig } from './toolbar/ImageToolbar'
 
 type BlockType = 'paragraph' | HeadingTagType | 'bullet' | 'number' | 'check'
 
@@ -61,13 +61,12 @@ function Divider() {
   return <div className="self-stretch w-px bg-gray-400" />
 }
 
-export interface ImageUploadConfig {
-  owner: FileOwner
-  owningId: FileOwningId
-  path?: string
+interface ToolbarPluginProps {
+  children: React.ReactNode
+  imageUpload?: ImageUploadConfig
 }
 
-export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUploadConfig } = {}) {
+export default function ToolbarPlugin({ children, imageUpload }: ToolbarPluginProps) {
   const [editor] = useLexicalComposerContext()
   const [canUndo, setCanUndo] = useState(false)
   const [canRedo, setCanRedo] = useState(false)
@@ -303,6 +302,7 @@ export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUplo
         <Divider />
         {tools.map(tool => tool.button)}
       </div>
+      {children}
       <div
         className={classNames(
           '[position-anchor:--lexical-toolbar-anchor] absolute mt-3 top-[anchor(bottom,-1000px)] left-[anchor(left)] bg-white border-1 border-gray-400 rounded-md z-10 shadow-md empty:hidden',
