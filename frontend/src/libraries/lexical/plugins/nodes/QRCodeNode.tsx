@@ -182,7 +182,7 @@ function QRCodeComponent({ nodeKey, value, title, size }: { nodeKey: NodeKey, va
     )
   }, [editor, nodeKey, clearSelection, setSelected, onDelete])
 
-  return <QRCode value={value} title={title} size={size} nodeKey={nodeKey} />
+  return <QRCode value={value} title={title} size={size} nodeKey={nodeKey} selected={isSelected} />
 }
 
 export function $createQRCodeNode(value: string, title: string, size: number = 128): QRCodeNode {

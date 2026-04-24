@@ -111,6 +111,9 @@
   & + .qr-container:before {
     display: none;
   }
+  .title, .url {
+    user-select: none;
+  }
   .svg-container {
     display: block;
     width: var(--qr-size);

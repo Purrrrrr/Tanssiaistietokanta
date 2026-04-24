@@ -18,6 +18,7 @@
   }
 
   --breakpoint-xs: 560px;
+  --color-selection: #7dbcff99
 }
 
 body {
@@ -51,11 +52,11 @@ h1, h2 {
   }
 }
 
-::-moz-selection{
-  background:rgba(125, 188, 255, 0.6);
+::-moz-selection {
+  @apply bg-selection;
 }
 ::selection{
-  background:rgba(125, 188, 255, 0.6);
+  @apply bg-selection;
 }
 
 :focus{

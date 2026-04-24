@@ -65,7 +65,7 @@ export function Editor({ inline, readOnly, imageUpload, onChange, value, classNa
           contentEditable={
             <ContentEditable
               {...rest}
-              className="grow overflow-auto bg-white p-2 **:focus:outline-none! lexical-content editable-lexical-content"
+              className="grow overflow-auto bg-white p-2 focus:outline-none! lexical-content editable-lexical-content"
             />
           }
           ErrorBoundary={LexicalErrorBoundary}
