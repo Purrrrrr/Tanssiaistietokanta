@@ -8,6 +8,7 @@ import classNames from 'classnames'
 import {
   $createParagraphNode,
   $getSelection,
+  $isNodeSelection,
   $isRangeSelection,
   BLUR_COMMAND,
   CAN_REDO_COMMAND,
@@ -122,6 +123,10 @@ export default function ToolbarPlugin({ imageUpload }: { imageUpload?: ImageUplo
       }
 
       const dom = editor.getElementByKey(anchorNode.getKey())
+      updateAnchor(dom)
+    } else if ($isNodeSelection(selection)) {
+      const [node] = selection.getNodes()
+      const dom = editor.getElementByKey(node.getKey())
       updateAnchor(dom)
     }
   })
