@@ -445,8 +445,8 @@
   * Workshop documents
   * Event program documents
 * Add an 'add workshop' button to event side nav
+* Remove empty document placeholder from workshop descriptions
   
-  Remove empty document placeholder from workshop descriptions
   Add translations to lexical editor elements
     Empty placeholder
     Toolbar titles

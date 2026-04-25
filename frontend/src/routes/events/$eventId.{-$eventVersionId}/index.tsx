@@ -145,7 +145,7 @@ function WorkshopCard({ workshop }: { workshop: Workshop }) {
       <NavigateButton className="-mt-2 -mr-4" paddingClass="p-3" minimal color="primary" icon={<Edit size={20} />} to="/events/$eventId/{-$eventVersionId}/workshops/$workshopId" params={{ ...params, workshopId: workshop._id }} />
       <div className="text-lg">{teachers.map(teacher => teacher.name).join(', ')}</div>
     </div>
-    <DocumentViewer className="px-6 mb-4" document={description} placeholder={null} />
+    <DocumentViewer className="px-6 mb-4" document={description} skipRenderOnEmpty />
     <div className="flex flex-wrap items-stretch bg-gray-200 grow justify-stretch gap-[1px] pt-[1px]">
       {instanceSpecificDances
         ? instances.map(instance =>
