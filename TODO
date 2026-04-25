@@ -439,12 +439,14 @@
 * Nicer workshop editor
 * Ability to have two column dance instructions
 * Put version history field resolvers into just one place
+* Ensure all documents can upload images somewhere
+  * Dance documents
+  * Event documents
+  * Workshop documents
+  * Event program documents
+* Add an 'add workshop' button to event side nav
   
-  Ensure all documents can upload images somewhere
-    Plain documents
-    Dance documents
-    Workshop docs
-  Add an 'add workshop' button to event side nav
+  Remove empty document placeholder from workshop descriptions
   Add translations to lexical editor elements
     Empty placeholder
     Toolbar titles
@@ -469,12 +471,13 @@
   * Table toolbar plugin
     * Support for editing tables (add/remove cols/rows and remove table)
   * Fix unexpected key in node: isUnlinked colWidths frozenColumnCount frozenRowCount rowStriping
+  * Fix editor toolbar not positioning correctly in layout columns
+    Floating delete node cross buttons
     Floating image editor
     Use FormGroup in editors
     Better and less obtrusive table editing
     Layout columns plugin?
     Clean up icons and toolbar
-    Fix editor toolbar not positioning correctly in layout columns
     Document-specific files?
     Allow choosing images from existing files
     Support turning text into QR code
