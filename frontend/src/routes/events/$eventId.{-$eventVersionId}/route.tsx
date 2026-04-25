@@ -17,6 +17,7 @@ import { VersionSidebarToggle } from 'components/versioning/VersionSidebarToggle
 import { NavigateButton } from 'components/widgets/NavigateButton'
 import { useT } from 'i18n'
 
+import { AddWorkshopButton } from './-components/AddworkshopButton'
 import { EventContext } from './-context'
 
 export const Route = createFileRoute(
@@ -89,7 +90,7 @@ function RouteComponent() {
               <VersionSidebarToggle entityType="event" entityId={event._id} versionId={event._versionId ?? undefined} toVersionLink={eventVersionLink} />
             </Toolbar>
           }
-          menu={canEdit && <EventsMenu event={event} />}
+          menu={canEdit && <EventsMenu event={event} showPopups />}
         >
           <Outlet />
         </Page>
@@ -99,7 +100,7 @@ function RouteComponent() {
   </VersionableContentContainer>
 }
 
-function EventsMenu({ event }: { event: Event }) {
+function EventsMenu({ event, showPopups }: { event: Event, showPopups?: boolean }) {
   const { eventId, eventVersionId } = Route.useParams()
   const t = useT('routes.events.event.menu')
   const params = { eventId, eventVersionId }
@@ -120,7 +121,10 @@ function EventsMenu({ event }: { event: Event }) {
       </MenuLink>
     </MenuSection>
     <RequirePermissions requireRight="workshops:modify" context="events" contextId={event._id}>
-      <MenuSection title={t('workshops')}>
+      <MenuSection
+        title={t('workshops')}
+        titleButton={showPopups && <AddWorkshopButton minimal event={event} tooltip={t('addWorkshop')} />}
+      >
         {event.workshops.map(workshop =>
           <MenuLink
             key={workshop._id}

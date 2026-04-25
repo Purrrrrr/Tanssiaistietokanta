@@ -1,5 +1,5 @@
 import { createLink } from '@tanstack/react-router'
-import { MouseEvent, ReactNode, useEffect, useId, useRef, useState } from 'react'
+import { MouseEvent, ReactNode, Suspense, useEffect, useId, useRef, useState } from 'react'
 
 import { omitPermissionCheckingProps, withPermissionChecking } from 'libraries/access-control'
 import { Dropdown, DropdownContainer, getFocusableElements } from 'libraries/overlays'
@@ -49,7 +49,9 @@ export default function MenuButton({ children, buttonRenderer, text, buttonProps
       )
     }
     <Dropdown focusgroup="menu" auto arrow id={dropdownId} open={open} onClick={onClick} onToggle={setOpen}>
-      {children}
+      <Suspense>
+        {children}
+      </Suspense>
     </Dropdown>
   </DropdownContainer>
 }

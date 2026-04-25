@@ -20,9 +20,22 @@ export function Menu({ className, children, cssDimensionVariablePrefix }: MenuPr
   </menu>
 }
 
-export function MenuSection({ children, title }: { children: React.ReactNode, title: React.ReactNode }) {
+interface MenuSectionProps {
+  title: React.ReactNode
+  titleButton?: React.ReactNode
+  children: React.ReactNode
+}
+
+export function MenuSection({ children, title, titleButton }: MenuSectionProps) {
+  const heading = <h2 className="px-4 text-lg font-bold min-[800px]:my-3">{title}</h2>
   return <>
-    <h2 className="px-4 text-lg font-bold min-[800px]:my-3">{title}</h2>
+    {titleButton
+      ? <div className="flex items-center">
+        {heading}
+        <div className="pe-4">{titleButton}</div>
+      </div>
+      : heading
+    }
     <ul className="flex-wrap max-[800px]:flex">
       {children}
     </ul>

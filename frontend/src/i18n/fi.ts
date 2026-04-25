@@ -502,6 +502,7 @@ export const fi = {
           editBasicInfo: 'Tapahtuman tiedot',
           volunteers: 'Vapaaehtoiset',
           workshops: 'Työpajat',
+          addWorkshop: 'Lisää työpaja',
           ball: {
             title: 'Tanssiaiset',
             ballProgram: 'Suunnittele tanssiaisohjelmaa',
@@ -532,7 +533,7 @@ export const fi = {
           noWorkshops: 'Ei työpajoja',
           createWorkshop: 'Uusi työpaja',
           createWorkshopForm: {
-            title: 'Uusi työpaja',
+            title: 'Lisää uusi työpaja',
             workshopName: 'Työpajan nimi',
             createWorkshop: 'Luo työpaja',
           },

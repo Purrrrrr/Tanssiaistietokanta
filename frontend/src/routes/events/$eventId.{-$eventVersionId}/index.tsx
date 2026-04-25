@@ -1,5 +1,4 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useState } from 'react'
 
 import { Event } from 'types'
 
@@ -10,12 +9,11 @@ import { Edit } from 'libraries/ui/icons'
 import { DocumentList } from 'components/document/DocumentList'
 import { DanceSet, EventProgramRow } from 'components/event/EventProgramForm'
 import { FileList } from 'components/files/FileList'
-import { AddButton } from 'components/widgets/AddButton'
 import { NavigateButton } from 'components/widgets/NavigateButton'
 import { PageSection } from 'components/widgets/PageSection'
 import { useFormatDateTime, useT } from 'i18n'
 
-import { CreateWorkshopCard } from './-components/CreateWorkshopCard'
+import { AddWorkshopButton } from './-components/AddworkshopButton'
 import { useCurrentEvent } from './-context'
 
 type Workshop = Event['workshops'][0]
@@ -105,18 +103,14 @@ function EventProgram({ event }: { event: Event }) {
 const isRequestedDance = (row: EventProgramRow) => row.type === 'RequestedDance'
 
 function EventWorkshops({ event, readOnly }: { event: Event, readOnly: boolean }) {
-  const [showCreate, setShowCreate] = useState(false)
   const t = useT('routes.events.event.index')
-  const { workshops, _id: eventId, beginDate } = event
+  const { workshops } = event
   return <PageSection
     title={t('workshops')}
     toolbar={readOnly ||
-      <AddButton
+      <AddWorkshopButton
+        event={event}
         className="justify-self-end"
-        requireRight="workshops:create"
-        owner="events"
-        owningId={eventId}
-        onClick={() => setShowCreate(true)}
         text={t('createWorkshop')}
       />
     }>
@@ -126,7 +120,6 @@ function EventWorkshops({ event, readOnly }: { event: Event, readOnly: boolean }
         {workshops.map(workshop =>
           <WorkshopCard key={workshop._id} workshop={workshop} />,
         )}
-        {showCreate && <CreateWorkshopCard eventId={eventId} startDate={beginDate} onClose={() => setShowCreate(false)} />}
       </div>
     }
   </PageSection>
