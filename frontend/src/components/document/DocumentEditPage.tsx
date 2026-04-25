@@ -55,7 +55,12 @@ function DocumentEditorInner({ document }: { document: Document }) {
   >
     <Form {...formProps}>
       <Input path="title" label={label('title')} />
-      <Field path="content" label={label('content')} component={DocumentContentEditor} />
+      <Field
+        path="content"
+        label={label('content')}
+        component={DocumentContentEditor}
+        componentProps={{ imageUpload: { owner: 'documents', owningId: document._id } }}
+      />
     </Form>
   </PageSection>
 }

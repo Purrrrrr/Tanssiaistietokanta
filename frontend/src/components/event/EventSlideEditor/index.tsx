@@ -33,12 +33,13 @@ import { InheritedSlideStyleSelector, IntervalMusicDefaultTextsSwitch } from './
 
 import './EventSlideEditor.scss'
 
-const docEditorProps = {
+const docEditorProps = (eventId: string) => ({
   className: 'min-h-[max(30dvh,300px)]',
-}
+  imageUpload: { owner: 'events', owningId: eventId } as const,
+})
 
 type EventSlideEditorProps = WithEventProgram<EventSlideProps>
-  & { syncStatus?: SyncState }
+  & { syncStatus?: SyncState, eventId: string }
 
 export function EventSlideEditor({ syncStatus, ...props }: EventSlideEditorProps) {
   const slideStylePath = getSlideStylePath(props)
@@ -112,7 +113,7 @@ function getSlideStylePath(props: EventSlideProps) {
   }
 }
 
-export function EventSlideContentEditor(props: WithEventProgram<EventSlideProps>) {
+export function EventSlideContentEditor({ eventId, ...props }: WithEventProgram<EventSlideProps> & { eventId: string }) {
   const t = useT('components.eventProgramEditor')
 
   switch (props.type) {
@@ -129,7 +130,7 @@ export function EventSlideContentEditor(props: WithEventProgram<EventSlideProps>
       </>
     case 'introduction': {
       const itemPath = `introductions.program.${props.itemIndex}` as const
-      return <ProgramItemEditor path={itemPath} />
+      return <ProgramItemEditor path={itemPath} eventId={eventId} />
     }
     case 'danceSet': {
       const itemPath = `danceSets.${props.danceSetIndex}` as const
@@ -145,11 +146,11 @@ export function EventSlideContentEditor(props: WithEventProgram<EventSlideProps>
       </>
     }
     case 'intervalMusic': {
-      return <IntervalMusicDescriptionEditor danceSetIndex={props.danceSetIndex} />
+      return <IntervalMusicDescriptionEditor danceSetIndex={props.danceSetIndex} eventId={eventId} />
     }
     case 'programItem': {
       const rowPath = `danceSets.${props.danceSetIndex}.program.${props.itemIndex}` as const
-      return <ProgramItemEditor path={rowPath} />
+      return <ProgramItemEditor path={rowPath} eventId={eventId} />
     }
   }
 }
@@ -181,7 +182,7 @@ const ProgramItem = React.memo(function ProgramEditor({ dragHandle, path, itemIn
   </div>
 })
 
-function IntervalMusicDescriptionEditor({ danceSetIndex }: { danceSetIndex: number }) {
+function IntervalMusicDescriptionEditor({ danceSetIndex, eventId }: { danceSetIndex: number, eventId: string }) {
   const path = `danceSets.${danceSetIndex}.intervalMusic` as const
   const t = useT('components.eventProgramEditor')
   const intervalMusic = useValueAt(path)
@@ -193,20 +194,28 @@ function IntervalMusicDescriptionEditor({ danceSetIndex }: { danceSetIndex: numb
       ? <>
         <H2>{t('titles.customIntervalMusicTexts')}</H2>
         <Input label={t('fields.intervalMusic.name')} path={`${path}.name`} required />
-        <Field label={t('fields.intervalMusic.description')} path={`${path}.description`} component={DocumentContentEditor} componentProps={docEditorProps} />
+        <Field
+          label={t('fields.intervalMusic.description')}
+          path={`${path}.description`}
+          component={DocumentContentEditor}
+          componentProps={docEditorProps(eventId)} />
         <Switch label={t('fields.intervalMusic.showInLists')} path={`${path}.showInLists`} inline />
       </>
       : <>
         <H2>{t('titles.defaultIntervalMusicTexts')}</H2>
         <Input label={t('fields.intervalMusic.name')} path="defaultIntervalMusic.name" componentProps={{ placeholder: t('programTypes.IntervalMusic') }} />
-        <Field label={t('fields.intervalMusic.description')} path="defaultIntervalMusic.description" component={DocumentContentEditor} componentProps={docEditorProps} />
+        <Field
+          label={t('fields.intervalMusic.description')}
+          path="defaultIntervalMusic.description"
+          component={DocumentContentEditor}
+          componentProps={docEditorProps(eventId)} />
         <Switch label={t('fields.intervalMusic.showInLists')} path="defaultIntervalMusic.showInLists" inline />
       </>
     }
   </>
 }
 
-function ProgramItemEditor({ path }: { path: ProgramItemPath }) {
+function ProgramItemEditor({ path, eventId }: { path: ProgramItemPath, eventId: string }) {
   const t = useT('components.eventProgramEditor')
   const row = useValueAt(path)
 
@@ -221,7 +230,7 @@ function ProgramItemEditor({ path }: { path: ProgramItemPath }) {
     case 'EventProgram':
       return <>
         <Input label={t('fields.eventProgram.name')} path={`${path}.eventProgram.name`} required />
-        <Field label={t('fields.eventProgram.description')} path={`${path}.eventProgram.description`} component={DocumentContentEditor} componentProps={docEditorProps} />
+        <Field label={t('fields.eventProgram.description')} path={`${path}.eventProgram.description`} component={DocumentContentEditor} componentProps={docEditorProps(eventId)} />
         <Switch label={t('fields.eventProgram.showInLists')} path={`${path}.eventProgram.showInLists`} inline />
         <Callout><T msg="components.eventSlideEditor.currentItemAlwaysShownInLists" /></Callout>
       </>

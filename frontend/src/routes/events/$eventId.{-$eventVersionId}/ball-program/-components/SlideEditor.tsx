@@ -18,7 +18,7 @@ export function SlideEditor({ slide, eventId, eventVersionId, eventProgram }: Sl
 
   return <div>
     <Form {...formProps}>
-      <EventSlideEditor {...slide} eventProgram={eventProgram} syncStatus={state} />
+      <EventSlideEditor {...slide} eventProgram={eventProgram} syncStatus={state} eventId={eventId} />
     </Form>
   </div>
 }

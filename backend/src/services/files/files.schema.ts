@@ -9,7 +9,7 @@ import type { FileService } from './files.class'
 import { Id } from '../../utils/common-types'
 import { Stream } from 'stream'
 
-const owningServiceSchema = Type.Union([Type.Literal('dances'), Type.Literal('events'), Type.Literal('workshops')])
+const owningServiceSchema = Type.Union([Type.Literal('dances'), Type.Literal('events'), Type.Literal('workshops'), Type.Literal('documents')])
 const owningIdSchema = Type.String({ minLength: 1, pattern: '^[^/]+$' })
 
 // Main data model schema

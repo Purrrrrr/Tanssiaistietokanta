@@ -21,6 +21,7 @@ enum FileOwner {
   dances
   events
   workshops
+  documents
 }
 
 type Mutation {

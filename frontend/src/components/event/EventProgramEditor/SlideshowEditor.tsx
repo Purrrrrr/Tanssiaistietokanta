@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from '@tanstack/react-router'
+import { getRouteApi, useNavigate, useParams } from '@tanstack/react-router'
 import React, { UIEvent, useDeferredValue, useEffect, useRef, useState } from 'react'
 import classNames from 'classnames'
 
@@ -22,7 +22,7 @@ export function SlideshowEditor() {
   const t = useT('components.eventProgramEditor')
   const navigate = useNavigate()
   const slides = useEventSlides(program)
-  const { slideId = startSlideId } = useParams({ strict: false })
+  const { eventId, slideId = startSlideId } = getRouteApi('/events/$eventId/{-$eventVersionId}/program/slides/{-$slideId}').useParams()
   const currentSlide = slides.find(slide => slide.id === slideId) ?? slides[0]
   const { swipeHandlers, slideIndex } = useSlideshowNavigation({
     slides, currentSlideId: currentSlide.id,
@@ -47,7 +47,7 @@ export function SlideshowEditor() {
       opacity: isStale ? 0 : 1,
       transition: 'opacity 0.1s linear',
     }}>
-      <SlideBox eventProgram={program} slide={deferredCurrentSlide} />
+      <SlideBox eventProgram={program} slide={deferredCurrentSlide} eventId={eventId} />
     </div>
   </section>
 }
@@ -163,18 +163,19 @@ function SlideLink(
 const PreviewLink = ({ children }: { children: React.ReactNode }) => <span>{children}</span>
 
 interface SlideBoxProps {
+  eventId: string
   eventProgram: EventProgramSettings
   slide: EventSlideProps
 }
 
-function SlideBox({ eventProgram, slide }: SlideBoxProps) {
+function SlideBox({ eventProgram, eventId, slide }: SlideBoxProps) {
   return <Card noPadding id={slide.id}>
     <div className="flex flex-wrap">
       <SlideContainer className="grow inert" size="auto" color="#eee">
         <EventSlide {...slide} eventProgram={eventProgram} linkComponent="a" />
       </SlideContainer>
       <div className="w-[min(35dvw,500px)] max-md:w-full">
-        <EventSlideEditor {...slide} eventProgram={eventProgram} />
+        <EventSlideEditor {...slide} eventProgram={eventProgram} eventId={eventId} />
       </div>
     </div>
   </Card>
