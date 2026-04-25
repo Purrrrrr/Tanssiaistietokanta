@@ -6,7 +6,7 @@ import { Event } from 'types'
 import { useEventRoles } from 'services/eventRoles'
 import { usePatchWorkshop } from 'services/workshops'
 
-import { ActionButton as Button, DateField, DragHandle, formFor, NumberInput, patchStrategy, SyncStatus, useAutosavingState } from 'libraries/forms'
+import { DateField, DragHandle, formFor, NumberInput, patchStrategy, SyncStatus, useAutosavingState } from 'libraries/forms'
 import { DocumentContentEditor } from 'libraries/lexical'
 import { ColorClass, FormGroup } from 'libraries/ui'
 import { DanceChooser } from 'components/widgets/DanceChooser'
@@ -14,8 +14,8 @@ import { useT, useTranslation } from 'i18n'
 import randomId from 'utils/randomId'
 
 import { VolunteerAssignmentSelector } from './volunteers/VolunteerAssignmentSelector'
-import { PageSection } from './widgets/PageSection'
 import { AddButton } from './widgets/AddButton'
+import { PageSection } from './widgets/PageSection'
 
 type Workshop = Event['workshops'][0]
 type Instance = Workshop['instances'][number]

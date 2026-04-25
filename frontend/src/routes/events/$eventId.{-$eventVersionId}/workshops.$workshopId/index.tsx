@@ -63,7 +63,10 @@ function WorkshopCard(
       owningId={eventId}
       onDelete={async () => {
         await addGlobalLoadingAnimation(deleteWorkshop({ id: _id }))
-        navigate({ to: Route.parentRoute.to })
+        navigate({
+          to: '/events/$eventId/{-$eventVersionId}',
+          params: { eventId },
+        })
       }}
       className="float-right" text={t('delete')}
       confirmText={t('deleteConfirmation')}
