@@ -446,24 +446,10 @@
   * Event program documents
 * Add an 'add workshop' button to event side nav
 * Remove empty document placeholder from workshop descriptions
-  
-  Add translations to lexical editor elements
-    Empty placeholder
-    Toolbar titles
-  Form field does not type check properly
-  Use PageSection in program/slide editor pages
-  More fine-grained document access control
-  Event volunteer kompassi status
-    RegisteredToEventSystem
-    AcceptedRegistration
-    Make it an enum?
-    Prevent delete if registered
-    Select boxes & mark all selected as registered/accepted -buttons
-
-  Hide note fields etc. from volunteers when not event admin
-  Fix duplicate file upload? Is this only buggy in dev mode?
-
-  Better editor Part 2
+* Add translations to lexical editor elements
+  * Empty placeholder
+  * Toolbar titles
+* Better editor Part 2
   * Find a way to import current markdown
   * Add editor styles
   * Neater plugin system with toolbar hook
@@ -472,39 +458,55 @@
     * Support for editing tables (add/remove cols/rows and remove table)
   * Fix unexpected key in node: isUnlinked colWidths frozenColumnCount frozenRowCount rowStriping
   * Fix editor toolbar not positioning correctly in layout columns
+  * Document-specific files?
+* General notes/documents/wikipages to event/other
+  * Document service
+  * Documents in events
+  * Show read-only mode of doc by default
+  * Show docs in event frontpage?
+* Login icon
+
+  Support for workshop instance specific assistants
+  * Backend support
+  * Editor support
+    Multiple instance support
+    Prevent removing instance when assignments exist
+  Check GDPR stuff for volunteer names
+  Check how deleted volunteers affect versioning
+  More fine-grained document access control
+  Hide note fields etc. from volunteers when not event admin
+  
+  Multiple slides per dance: formation slide / instructions slide / some other?
+
+  Event volunteer kompassi status
+    RegisteredToEventSystem
+    AcceptedRegistration
+    Make it an enum?
+    Prevent delete if registered
+    Select boxes & mark all selected as registered/accepted -buttons
+
+  How to show docs in side nav?
+  Fix duplicate file upload? Is this only buggy in dev mode?
+  Document templates
+    Templates for event/interval music slides?
+  
+  Should files be versioned too?
+
+  Better editor Part 3
     Floating delete node cross buttons
     Floating image editor
     Use FormGroup in editors
     Better and less obtrusive table editing
     Layout columns plugin?
     Clean up icons and toolbar
-    Document-specific files?
     Allow choosing images from existing files
     Support turning text into QR code
-  General notes/documents/wikipages to event/other
-  * Document service
-  * Documents in events
-  * Show read-only mode of doc by default
-  * Show docs in event frontpage?
-    How to show docs in side nav
-    Different doc types: slide, checklist, plain doc, wiki?
-    Document templates
-      Templates for event/interval music slides?
-  
-  Should files be versioned too?
-  Support for workshop instance specific assistants?
-
-  Check GDPR stuff for volunteer names
-  Check how deleted volunteers affect versioning
-
-  Multiple slides per dance: formation slide / instructions slide / some other?
 
   Volunteer contact details page?
     Add contact details
     GDPR compliance
 
   Don't make ball program view "log out" whenever fast refresh occurs
-  Fix form inside form error in slide show dance editor
   Auth Part 3
     Tests for channels and publishing
     Tests for updating access control (existing and new)
@@ -520,18 +522,19 @@
     Ability to replace file contents with contents of another
     Ability to download folders of files
   Styles also for prints
-  Login icon?
 
   Ropecon 2025 post todo - Part 2
     Edit and link to interval music in dance set slide editor ??
     Maybe ability to set separate list name for items
       Support for showing it
     Better drag and drop somehow?
-    Image support? Better stock slides??
+    Better stock slides??
     Show dance in interval music
-
   
   Nice to have
+    Fix form inside form error in slide show dance editor
+    Form field does not type check properly
+    Use PageSection in program/slide editor pages
     Find a way to not show syncstatus on readOnly forms
     Check that event + workshop + role match is valid in EventVolunteerAssignment
     Tests
