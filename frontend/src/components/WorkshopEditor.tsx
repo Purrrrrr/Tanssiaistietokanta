@@ -56,7 +56,7 @@ export function WorkshopEditor({ eventId, workshop: workshopInDatabase, reserved
         abbreviation,
         description,
         instanceSpecificDances,
-        instances: instances?.map(({ dances, __typename, ...i }) => ({
+        instances: instances?.map(({ dances, __typename, hasVolunteerAssignments: _ignore, ...i }) => ({
           ...i,
           danceIds: dances ? dances.map(d => d._id) : null,
         })),
