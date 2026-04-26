@@ -20,6 +20,8 @@ import {
   KEY_DELETE_COMMAND,
 } from 'lexical'
 
+import { useEditorT } from 'libraries/lexical/i18n'
+
 export type SerializedImageNode = Spread<
   { src: string, altText: string, width?: number },
   SerializedLexicalNode
@@ -155,6 +157,7 @@ function ImageComponent({
   altText: string
   width: number | undefined
 }) {
+  const t = useEditorT('image')
   const [editor] = useLexicalComposerContext()
   const [isSelected, setSelected, clearSelection] = useLexicalNodeSelection(nodeKey)
   const [isEditing, setIsEditing] = useState(false)
@@ -245,19 +248,19 @@ function ImageComponent({
             className="py-0.5 px-2 text-xs bg-white rounded border-gray-400 hover:bg-gray-50 border-1"
             onMouseDown={(e) => { e.preventDefault(); setIsEditing(true) }}
           >
-            Edit
+            {t('edit')}
           </button>
           <button
             className="py-0.5 px-2 text-xs text-red-600 bg-white rounded border-gray-400 hover:bg-gray-50 border-1"
             onMouseDown={(e) => { e.preventDefault(); removeNode() }}
           >
-            Remove
+            {t('remove')}
           </button>
         </span>
       )}
       {isEditing && (
         <span className="flex flex-wrap gap-1 items-center mt-1">
-          <label className="text-xs text-gray-600" htmlFor={`img-alt-${nodeKey}`}>Alt</label>
+          <label className="text-xs text-gray-600" htmlFor={`img-alt-${nodeKey}`}>{t('altText')}</label>
           <input
             id={`img-alt-${nodeKey}`}
             ref={altInputRef}
@@ -266,7 +269,7 @@ function ImageComponent({
             onChange={(e) => setEditAlt(e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Enter') applyEdit(); if (e.key === 'Escape') setIsEditing(false) }}
           />
-          <label className="text-xs text-gray-600" htmlFor={`img-width-${nodeKey}`}>Width</label>
+          <label className="text-xs text-gray-600" htmlFor={`img-width-${nodeKey}`}>{t('width')}</label>
           <input
             id={`img-width-${nodeKey}`}
             className="py-0.5 px-2 w-16 text-xs rounded border-gray-400 border-1"
@@ -281,13 +284,13 @@ function ImageComponent({
             className="py-0.5 px-2 text-xs bg-white rounded border-gray-400 hover:bg-gray-50 border-1"
             onMouseDown={(e) => { e.preventDefault(); applyEdit() }}
           >
-            OK
+            {t('ok')}
           </button>
           <button
             className="py-0.5 px-2 text-xs bg-white rounded border-gray-400 hover:bg-gray-50 border-1"
             onMouseDown={(e) => { e.preventDefault(); setIsEditing(false) }}
           >
-            Cancel
+            {t('cancel')}
           </button>
         </span>
       )}

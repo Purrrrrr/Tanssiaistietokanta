@@ -11,6 +11,7 @@ import { ToolbarHookReturn } from './types'
 
 import { Button } from 'libraries/ui'
 
+import { useEditorT, useEditorTranslation } from '../i18n'
 import { $isQRCodeNode, QRCodeNode, QRCodePayload } from '../plugins/nodes/QRCodeNode'
 import { INSERT_QR_CODE_COMMAND } from '../plugins/QRCodePlugin'
 import { QRCodeIcon } from './icons'
@@ -24,7 +25,7 @@ export function useQRCodeToolbar(editor: LexicalEditor): ToolbarHookReturn {
     button: (
       <ToolbarButton
         onClick={() => editor.dispatchCommand(INSERT_QR_CODE_COMMAND, { value: '', title: '', size: 128 })}
-        aria-label="Insert QR code">
+        tooltip={useEditorTranslation('qrCode.insertQRCode')}>
         <QRCodeIcon />
       </ToolbarButton>
     ),
@@ -68,6 +69,7 @@ interface QRCodeEditorProps {
 }
 
 function QRCodeEditor({ editor, node, data }: QRCodeEditorProps) {
+  const t = useEditorT('qrCode')
   if (node === null || data === null) {
     return null
   }
@@ -91,28 +93,32 @@ function QRCodeEditor({ editor, node, data }: QRCodeEditorProps) {
   }
 
   return <div className="flex gap-2 items-center py-1 px-2">
-    <ToolbarTitle text="QR code" />
+    <ToolbarTitle text={t('QRCode')} />
+    <label htmlFor="qr-code-url-input" className="text-sm">{t('url')}</label>
     <input
+      id="qr-code-url-input"
       className="flex-1 py-0.5 px-2 text-sm rounded border-gray-400 border-1"
       type="text"
-      placeholder="Enter URL or text for QR code…"
       value={value ?? ''}
       onChange={(e) => updateQRCodePayload({ value: e.target.value })}
     />
+    <label htmlFor="qr-code-title-input" className="text-sm">{t('title')}</label>
     <input
+      id="qr-code-title-input"
       className="flex-1 py-0.5 px-2 text-sm rounded border-gray-400 border-1"
       type="text"
-      placeholder="Enter title for QR code (optional)…"
       value={title ?? ''}
       onChange={(e) => updateQRCodePayload({ title: e.target.value })}
     />
+    <label htmlFor="qr-code-size-input" className="text-sm">{t('size')}</label>
     <input
+      id="qr-code-size-input"
       className="flex-1 py-0.5 px-2 text-sm rounded border-gray-400 border-1"
       type="number"
-      placeholder="Enter title for QR code (optional)…"
+      size={4}
       value={size ?? '128'}
       onChange={(e) => updateQRCodePayload({ size: parseInt(e.target.value, 10) })}
     />
-    <Button minimal onClick={removeQRCode} aria-label="Remove QR code">Remove QR code</Button>
+    <Button minimal onClick={removeQRCode}>{t('remove')}</Button>
   </div>
 }

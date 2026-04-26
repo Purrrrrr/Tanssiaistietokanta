@@ -12,11 +12,13 @@ import { ToolbarHookReturn } from './types'
 
 import { Button } from 'libraries/ui'
 
+import { useEditorT } from '../i18n'
 import { TableIcon } from './icons'
 import { ToolbarButton } from './ToolbarButton'
 import { ToolbarTitle } from './ToolbarTitle'
 
 export function useTableToolbar(editor: LexicalEditor): ToolbarHookReturn {
+  const t = useEditorT('table')
   const [isTableInsertMode, setIsTableInsertMode] = useState(false)
   const [currentCell, setCurrentCell] = useState<TableCellNode | null>(null)
   const isInTable = currentCell !== null
@@ -62,24 +64,24 @@ export function useTableToolbar(editor: LexicalEditor): ToolbarHookReturn {
       <ToolbarButton
         onClick={() => { setIsTableInsertMode(true) }}
         active={isTableInsertMode}
-        aria-label="Insert table">
+        tooltip={t('insertTable')}>
         <TableIcon />
       </ToolbarButton>
     ),
     floatingEditor: <>
       {isInTable && (
         <div className="flex flex-col">
-          <ToolbarTitle text="Table options" />
-          <Button minimal onClick={insertRow} aria-label="Insert row below">Insert row below</Button>
-          <Button minimal onClick={insertColumn} aria-label="Insert column right">Insert column right</Button>
-          <Button minimal onClick={deleteRow} aria-label="Remove this row">Remove this row</Button>
-          <Button minimal onClick={deleteColumn} aria-label="Remove this column">Remove this column</Button>
-          <Button minimal onClick={removeTable} aria-label="Remove this table">Remove this table</Button>
+          <ToolbarTitle text={t('tableOptions')} />
+          <Button minimal onClick={insertRow}>{t('insertRow')}</Button>
+          <Button minimal onClick={insertColumn}>{t('insertColumn')}</Button>
+          <Button minimal onClick={deleteRow}>{t('deleteRow')}</Button>
+          <Button minimal onClick={deleteColumn}>{t('deleteColumn')}</Button>
+          <Button minimal onClick={removeTable}>{t('deleteTable')}</Button>
         </div>
       )}
       {isTableInsertMode && (
         <div className="flex gap-2 items-center py-1 px-2 border-black border-t-1">
-          <label htmlFor="table-rows-input" className="text-sm">Rows</label>
+          <label htmlFor="table-rows-input" className="text-sm">{t('rows')}</label>
           <input
             id="table-rows-input"
             className="py-0.5 px-2 w-12 text-sm rounded border-gray-400 border-1"
@@ -90,7 +92,7 @@ export function useTableToolbar(editor: LexicalEditor): ToolbarHookReturn {
             onChange={(e) => setTableRows(e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Enter') insertTable(); if (e.key === 'Escape') setIsTableInsertMode(false) }}
           />
-          <label htmlFor="table-cols-input" className="text-sm">Cols</label>
+          <label htmlFor="table-cols-input" className="text-sm">{t('cols')}</label>
           <input
             id="table-cols-input"
             className="py-0.5 px-2 w-12 text-sm rounded border-gray-400 border-1"
@@ -101,8 +103,8 @@ export function useTableToolbar(editor: LexicalEditor): ToolbarHookReturn {
             onChange={(e) => setTableCols(e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Enter') insertTable(); if (e.key === 'Escape') setIsTableInsertMode(false) }}
           />
-          <Button minimal onClick={insertTable} aria-label="Insert table">Insert</Button>
-          <Button minimal onClick={() => setIsTableInsertMode(false)} aria-label="Cancel">Cancel</Button>
+          <Button minimal onClick={insertTable}>{t('insertTable')}</Button>
+          <Button minimal onClick={() => setIsTableInsertMode(false)}>{t('cancel')}</Button>
         </div>
       )}
     </>,

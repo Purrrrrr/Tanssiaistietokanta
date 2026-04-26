@@ -39,7 +39,7 @@ export interface EditorProps extends Partial<FieldComponentDisplayProps> {
 
 export function Editor({ inline, readOnly, imageUpload, onChange, value, className, ...rest }: EditorProps = {}) {
   const initialConfig = {
-    namespace: 'MyEditor',
+    namespace: 'editor',
     theme,
     onError: (error: unknown) => console.error(error),
     // Expand minified value to SerializedEditorState for LexicalComposer's initial parse.

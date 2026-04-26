@@ -10,6 +10,7 @@ import type { SerializedTableCellNode, SerializedTableNode, SerializedTableRowNo
 import classNames from 'classnames'
 import type { SerializedElementNode, SerializedParagraphNode, SerializedTextNode } from 'lexical'
 
+import { useEditorTranslation } from './i18n'
 import { QRCode } from './plugins/components/QRCode'
 import type { SerializedImageNode } from './plugins/nodes/ImageNode'
 import type { SerializedLayoutContainerNode } from './plugins/nodes/LayoutContainerNode'
@@ -46,7 +47,7 @@ export function DocumentViewer({ id, document: minified, className, placeholder,
 function Placeholder() {
   return (
     <div className="text-center text-gray-500">
-      <p>Tyhjä asiakirja</p>
+      <p>{useEditorTranslation('emptyDocument')}</p>
     </div>
   )
 }
@@ -114,7 +115,7 @@ interface ViewOptions {
 
 export type LinkNode = SerializedLinkNode | SerializedAutoLinkNode
 export type NodeRenderer<NodeType> = (props: NodeRendererProps<NodeType>) => React.ReactNode
-export type NodeRendererProps<NodeType> = { node: NodeType, children: React.ReactNode }
+export interface NodeRendererProps<NodeType> { node: NodeType, children: React.ReactNode }
 
 interface RenderResult {
   content: React.ReactNode

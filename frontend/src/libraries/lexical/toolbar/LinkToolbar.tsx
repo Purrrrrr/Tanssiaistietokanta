@@ -13,10 +13,12 @@ import { ToolbarHookReturn } from './types'
 import { Button } from 'libraries/ui'
 import { Link } from 'libraries/ui/icons'
 
+import { useEditorT } from '../i18n'
 import { ToolbarButton } from './ToolbarButton'
 import { ToolbarTitle } from './ToolbarTitle'
 
 export function useLinkToolbar(editor: LexicalEditor): ToolbarHookReturn {
+  const t = useEditorT('link')
   const [isLink, setIsLink] = useState(false)
   const [url, setUrl] = useState<string | null>(null)
 
@@ -46,7 +48,7 @@ export function useLinkToolbar(editor: LexicalEditor): ToolbarHookReturn {
       <ToolbarButton
         onClick={openLinkEditor}
         active={isLink}
-        aria-label="Insert or edit link">
+        tooltip={t('insertLink')}>
         <Link />
       </ToolbarButton>
     ),
@@ -60,6 +62,7 @@ interface LinkEditorProps {
 }
 
 function LinkEditor({ editor, url }: LinkEditorProps) {
+  const t = useEditorT('link')
   if (url === null) {
     return null
   }
@@ -73,8 +76,8 @@ function LinkEditor({ editor, url }: LinkEditorProps) {
   }
 
   return <div className="flex gap-2 items-center py-1 px-2">
-    <ToolbarTitle text="Link options" />
-    <label htmlFor="link-url">URL</label>
+    <ToolbarTitle text={t('linkOptions')} />
+    <label htmlFor="link-url">{t('url')}</label>
     <input
       id="link-url"
       className="flex-1 py-0.5 px-2 text-sm rounded border-gray-400 border-1"
@@ -83,7 +86,7 @@ function LinkEditor({ editor, url }: LinkEditorProps) {
       value={url}
       onChange={(e) => applyLink(e.target.value)}
     />
-    <Button minimal onClick={() => applyLink('')} aria-label="Remove link">Remove link</Button>
+    <Button minimal onClick={() => applyLink('')}>{t('remove')}</Button>
   </div>
 }
 

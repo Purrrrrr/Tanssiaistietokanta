@@ -28,6 +28,7 @@ import {
   LayoutTwoColumns, Redo, Undo,
 } from 'libraries/ui/icons'
 
+import { useEditorT } from './i18n'
 import { INSERT_LAYOUT_COMMAND } from './plugins/LayoutPlugin'
 import { CheckListIcon, OrderedListIcon, UnorderedListIcon } from './toolbar/icons'
 import { ImageUploadConfig, useImageToolbar } from './toolbar/ImageToolbar'
@@ -37,25 +38,6 @@ import { useTableToolbar } from './toolbar/TableToolbar'
 import { ToolbarButton } from './toolbar/ToolbarButton'
 
 export type { ImageUploadConfig } from './toolbar/ImageToolbar'
-
-type BlockType = 'paragraph' | HeadingTagType | 'bullet' | 'number' | 'check'
-
-const HEADING_OPTIONS: BlockType[] = ['paragraph', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']
-
-const HEADING_LABELS: Record<string, string> = {
-  paragraph: 'Leipäteksti',
-  h1: 'Otsikko 1',
-  h2: 'Otsikko 2',
-  h3: 'Otsikko 3',
-  h4: 'Otsikko 4',
-  h5: 'Otsikko 5',
-  h6: 'Otsikko 6',
-}
-
-function H(type: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6', children: React.ReactNode) {
-  const Tag = type
-  return <div className="lexical-content"><Tag>{children}</Tag></div>
-}
 
 function Divider() {
   return <div className="self-stretch w-px bg-gray-400" />
@@ -67,6 +49,7 @@ interface ToolbarPluginProps {
 }
 
 export default function ToolbarPlugin({ children, imageUpload }: ToolbarPluginProps) {
+  const t = useEditorT('toolbar')
   const [editor] = useLexicalComposerContext()
   const [canUndo, setCanUndo] = useState(false)
   const [canRedo, setCanRedo] = useState(false)
@@ -163,19 +146,6 @@ export default function ToolbarPlugin({ children, imageUpload }: ToolbarPluginPr
     )
   }, [editor])
 
-  function applyHeading(type: BlockType | null | undefined) {
-    if (!type) return
-    editor.update(() => {
-      const selection = $getSelection()
-      if (!$isRangeSelection(selection)) return
-      if (type === 'paragraph') {
-        $setBlocksType(selection, () => $createParagraphNode())
-      } else if (type.startsWith('h')) {
-        $setBlocksType(selection, () => $createHeadingNode(type as HeadingTagType))
-      }
-    })
-  }
-
   function toggleList(listType: 'bullet' | 'number' | 'check') {
     if (blockType === listType) {
       editor.dispatchCommand(REMOVE_LIST_COMMAND, undefined)
@@ -189,8 +159,6 @@ export default function ToolbarPlugin({ children, imageUpload }: ToolbarPluginPr
     }
   }
 
-  const headingValue: BlockType = HEADING_OPTIONS.includes(blockType) ? blockType : 'paragraph'
-
   return (
     <>
       {/* eslint-disable-next-line react/no-unknown-property */}
@@ -198,105 +166,86 @@ export default function ToolbarPlugin({ children, imageUpload }: ToolbarPluginPr
         <ToolbarButton
           disabled={!canUndo}
           onClick={() => editor.dispatchCommand(UNDO_COMMAND, undefined)}
-          aria-label="Undo">
+          tooltip={t('undo')}>
           <Undo />
         </ToolbarButton>
         <ToolbarButton
           disabled={!canRedo}
           onClick={() => editor.dispatchCommand(REDO_COMMAND, undefined)}
-          aria-label="Redo">
+          tooltip={t('redo')}>
           <Redo />
         </ToolbarButton>
         <Divider />
-        <ToolbarButton active={blockType === 'h1'} onClick={() => applyHeading('h1')} aria-label={HEADING_LABELS.h1}>
-          <span className="relative -left-1 text-xl size-4 leading-[16px]">H1</span>
-        </ToolbarButton>
-        <ToolbarButton active={blockType === 'h2'} onClick={() => applyHeading('h2')} aria-label={HEADING_LABELS.h2}>
-          <span className="relative -left-1 text-base size-4 leading-[16px]">H2</span>
-        </ToolbarButton>
-        <RegularSelect<BlockType>
-          id="heading-select"
-          minimal
-          value={headingValue}
-          onChange={applyHeading}
-          items={HEADING_OPTIONS}
-          itemToString={item => HEADING_LABELS[item] ?? item}
-          itemRenderer={item => item === 'paragraph'
-            ? 'Paragraph'
-            : H(item as any, HEADING_LABELS[item] ?? item)
-          }
-          aria-label="Block type"
-          placeholder="Paragraph"
-        />
+        <BlockTypeSelector blockType={blockType} />
         <Divider />
         <ToolbarButton
           onClick={() => toggleList('bullet')}
           active={blockType === 'bullet'}
-          aria-label="Unordered list">
+          tooltip={t('bulletList')}>
           <UnorderedListIcon />
         </ToolbarButton>
         <ToolbarButton
           onClick={() => toggleList('number')}
           active={blockType === 'number'}
-          aria-label="Ordered list">
+          tooltip={t('numberedList')}>
           <OrderedListIcon />
         </ToolbarButton>
         <ToolbarButton
           onClick={() => toggleList('check')}
           active={blockType === 'check'}
-          aria-label="Checkbox list">
+          tooltip={t('checkboxList')}>
           <CheckListIcon />
         </ToolbarButton>
         <Divider />
         <ToolbarButton
           onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'bold')}
           active={isBold}
-          aria-label="Format Bold">
+          tooltip={t('bold')}>
           <span className="font-bold">B</span>
         </ToolbarButton>
         <ToolbarButton
           onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'italic')}
           active={isItalic}
-          aria-label="Format Italics">
+          tooltip={t('italic')}>
           <span className="italic -skew-6">i</span>
         </ToolbarButton>
         <ToolbarButton
           onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'underline')}
           active={isUnderline}
-          aria-label="Format Underline">
+          tooltip={t('underline')}>
           <span className="underline decoration-2">U</span>
         </ToolbarButton>
         <ToolbarButton
           onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'strikethrough')}
           active={isStrikethrough}
-          aria-label="Format Strikethrough">
+          tooltip={t('strikethrough')}>
           <span className="relative after:block after:h-[3px] after:absolute after:top-[10px] after:-left-0.5 after:w-3.5 after:bg-black">S</span>
         </ToolbarButton>
         <Divider />
         <ToolbarButton
           onClick={() => editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'left')}
-          aria-label="Left Align">
+          tooltip={t('leftAlign')}>
           <AlignLeft />
         </ToolbarButton>
         <ToolbarButton
           onClick={() => editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'center')}
-          aria-label="Center Align">
+          tooltip={t('centerAlign')}>
           <AlignCenter />
         </ToolbarButton>
         <ToolbarButton
           onClick={() => editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'right')}
-          aria-label="Right Align">
+          tooltip={t('rightAlign')}>
           <AlignRight />
         </ToolbarButton>
         <ToolbarButton
           onClick={() => editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'justify')}
-          aria-label="Justify Align">
+          tooltip={t('justifyAlign')}>
           <AlignJustify />
         </ToolbarButton>
         <ToolbarButton
           onClick={() => editor.dispatchCommand(INSERT_LAYOUT_COMMAND, '1fr 1fr')}
           active={isItalic}
-          aria-label="Format Subscript">
+          tooltip={t('insertTwoColumnLayout')}>
           <LayoutTwoColumns />
         </ToolbarButton>
         <Divider />
@@ -312,4 +261,66 @@ export default function ToolbarPlugin({ children, imageUpload }: ToolbarPluginPr
       </div>
     </>
   )
+}
+
+function BlockTypeSelector({ blockType }: { blockType: BlockType }) {
+  const [editor] = useLexicalComposerContext()
+  const t = useEditorT('toolbar')
+  const headingValue: BlockType = HEADING_OPTIONS.includes(blockType) ? blockType : 'paragraph'
+
+  function applyHeading(type: BlockType | null | undefined) {
+    if (!type) return
+    editor.update(() => {
+      const selection = $getSelection()
+      if (!$isRangeSelection(selection)) return
+      if (type === 'paragraph') {
+        $setBlocksType(selection, () => $createParagraphNode())
+      } else if (type.startsWith('h')) {
+        $setBlocksType(selection, () => $createHeadingNode(type as HeadingTagType))
+      }
+    })
+  }
+
+  function blockTypeLabel(type: BlockType) {
+    if (type === 'bullet') return t('bulletList')
+    if (type === 'number') return t('numberedList')
+    if (type === 'check') return t('checkboxList')
+    return t(type)
+  }
+
+  return <>
+    <ToolbarButton active={blockType === 'h1'} onClick={() => applyHeading('h1')} tooltip={t('h1')}>
+      <span className="relative -left-1 text-xl size-4 leading-[16px]">H1</span>
+    </ToolbarButton>
+    <ToolbarButton active={blockType === 'h2'} onClick={() => applyHeading('h2')} tooltip={t('h2')}>
+      <span className="relative -left-1 text-base size-4 leading-[16px]">H2</span>
+    </ToolbarButton>
+    <RegularSelect<BlockType>
+      id="heading-select"
+      minimal
+      value={headingValue}
+      onChange={applyHeading}
+      items={HEADING_OPTIONS}
+      itemToString={blockTypeLabel}
+      itemRenderer={item => <BlockTypeOption type={item}>{blockTypeLabel(item)}</BlockTypeOption>}
+      aria-label={t('blocktype')}
+      placeholder={t('paragraph')}
+    />
+  </>
+}
+
+type BlockType = 'paragraph' | HeadingTagType | 'bullet' | 'number' | 'check'
+
+const HEADING_OPTIONS: BlockType[] = ['paragraph', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']
+
+function BlockTypeOption({ type, children }: { type: BlockType, children: React.ReactNode }) {
+  switch (type) {
+    case 'bullet':
+    case 'number':
+    case 'check':
+    case 'paragraph':
+      return <div>{children}</div>
+  }
+  const Heading = type
+  return <div className="lexical-content"><Heading>{children}</Heading></div>
 }

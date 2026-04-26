@@ -8,6 +8,7 @@ import { doUpload } from 'services/files'
 
 import { Button } from 'libraries/ui'
 
+import { useEditorT } from '../i18n'
 import { INSERT_IMAGE_COMMAND } from '../plugins/ImagePlugin'
 import { ImageIcon } from './icons'
 import { ToolbarButton } from './ToolbarButton'
@@ -19,6 +20,7 @@ export interface ImageUploadConfig {
 }
 
 export function useImageToolbar(editor: LexicalEditor, imageUpload?: ImageUploadConfig): ToolbarHookReturn {
+  const t = useEditorT('image')
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [isImageInsertMode, setIsImageInsertMode] = useState(false)
   const [imageUrl, setImageUrl] = useState('')
@@ -63,7 +65,7 @@ export function useImageToolbar(editor: LexicalEditor, imageUpload?: ImageUpload
       <ToolbarButton
         onClick={() => { setIsImageInsertMode(true) }}
         active={isImageInsertMode}
-        aria-label="Insert image">
+        tooltip={t('insertImage')}>
         <ImageIcon />
       </ToolbarButton>
     ),
@@ -72,7 +74,7 @@ export function useImageToolbar(editor: LexicalEditor, imageUpload?: ImageUpload
         <input
           className="flex-1 py-0.5 px-2 text-sm rounded border-gray-400 min-w-40 border-1"
           type="url"
-          placeholder="Image URL (https://…)"
+          placeholder={t('urlPlaceholder')}
           value={imageUrl}
           onChange={(e) => setImageUrl(e.target.value)}
           onKeyDown={(e) => { if (e.key === 'Enter') insertImageFromUrl(); if (e.key === 'Escape') setIsImageInsertMode(false) }}
@@ -80,17 +82,17 @@ export function useImageToolbar(editor: LexicalEditor, imageUpload?: ImageUpload
         <input
           className="py-0.5 px-2 w-32 text-sm rounded border-gray-400 border-1"
           type="text"
-          placeholder="Alt text"
+          placeholder={t('altText')}
           value={imageAlt}
           onChange={(e) => setImageAlt(e.target.value)}
           onKeyDown={(e) => { if (e.key === 'Enter') insertImageFromUrl(); if (e.key === 'Escape') setIsImageInsertMode(false) }}
         />
-        <Button minimal onClick={insertImageFromUrl} aria-label="Insert image from URL">Insert URL</Button>
+        <Button minimal onClick={insertImageFromUrl}>{t('insertFromUrl')}</Button>
         {imageUpload && (
           <>
-            <span className="text-sm text-gray-500">or</span>
+            <span className="text-sm text-gray-500">{t('or')}</span>
             <label className="py-0.5 px-2 text-xs bg-white rounded border-gray-400 cursor-pointer hover:bg-gray-50 border-1">
-              {isUploading ? 'Uploading…' : 'Upload file'}
+              {isUploading ? t('uploading') : t('uploadFile')}
               <input
                 ref={fileInputRef}
                 type="file"
@@ -102,7 +104,7 @@ export function useImageToolbar(editor: LexicalEditor, imageUpload?: ImageUpload
             </label>
           </>
         )}
-        <Button minimal onClick={() => setIsImageInsertMode(false)} aria-label="Cancel">Cancel</Button>
+        <Button minimal onClick={() => setIsImageInsertMode(false)}>{t('cancel')}</Button>
       </div>
     ),
   }
