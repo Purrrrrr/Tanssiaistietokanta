@@ -24,6 +24,7 @@ export function useQRCodeToolbar(editor: LexicalEditor): ToolbarHookReturn {
   return {
     button: (
       <ToolbarButton
+        key="insertQRCode"
         onClick={() => editor.dispatchCommand(INSERT_QR_CODE_COMMAND, { value: '', title: '', size: 128 })}
         tooltip={useEditorTranslation('qrCode.insertQRCode')}>
         <QRCodeIcon />

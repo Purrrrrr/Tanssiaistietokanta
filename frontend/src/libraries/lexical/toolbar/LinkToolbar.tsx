@@ -46,6 +46,7 @@ export function useLinkToolbar(editor: LexicalEditor): ToolbarHookReturn {
     },
     button: (
       <ToolbarButton
+        key="insertLink"
         onClick={openLinkEditor}
         active={isLink}
         tooltip={t('insertLink')}>

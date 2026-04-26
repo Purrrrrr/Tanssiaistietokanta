@@ -62,6 +62,7 @@ export function useTableToolbar(editor: LexicalEditor): ToolbarHookReturn {
     },
     button: (
       <ToolbarButton
+        key="insertTable"
         onClick={() => { setIsTableInsertMode(true) }}
         active={isTableInsertMode}
         tooltip={t('insertTable')}>

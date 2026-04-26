@@ -61,8 +61,8 @@ export function useImageToolbar(editor: LexicalEditor, imageUpload?: ImageUpload
 
   return {
     button: (
-
       <ToolbarButton
+        key="insertImage"
         onClick={() => { setIsImageInsertMode(true) }}
         active={isImageInsertMode}
         tooltip={t('insertImage')}>
