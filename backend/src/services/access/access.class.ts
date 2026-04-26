@@ -167,7 +167,7 @@ implements ServiceInterface<Access, never, ServiceParams, never> {
 
         if (hasPermission) {
           logger.debug('Has permission to access entity', { entityId, user })
-          return new Channel([c.connection], c.data)
+          return new Channel([c.connection], { accessData: entityData, ...(c.data ?? data) })
         }
         if (previousAccessData) {
           logger.debug('Had permission to access entity', { entityId, user })

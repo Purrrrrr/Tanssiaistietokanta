@@ -32,6 +32,9 @@ const cache = new InMemoryCache({
     Workshop: {
       keyFields: ['_id', '_versionId'],
     },
+    EventAccessControl: {
+      merge: (_, incoming) => incoming,
+    },
     VolunteersByRole: {
       keyFields: ['_id', '_eventId', '_workshopId'],
     },

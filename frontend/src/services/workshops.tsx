@@ -13,11 +13,6 @@ setupServiceUpdateFragment(
       dateTime
       durationInMinutes
       abbreviation
-      hasVolunteerAssignments
-      dances {
-        _id
-        name
-      }
     }
   }`,
 )
