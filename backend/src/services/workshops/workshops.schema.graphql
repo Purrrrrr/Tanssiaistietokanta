@@ -29,6 +29,7 @@ type WorkshopInstance {
   durationInMinutes: Float!
   danceIds: [ID!]
   dances: [Dance!]
+  hasVolunteerAssignments: Boolean!
 }
 
 type Mutation {

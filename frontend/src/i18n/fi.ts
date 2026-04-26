@@ -203,6 +203,7 @@ export const fi = {
       instances: 'Opetuskerrat',
       instance: 'Opetuskerta',
       addInstance: 'Lisää opetuskerta',
+      cannotRemoveInstanceWithVolunteers: 'Tällä opetuskerralla on vapaaehtoisia, joten sitä ei voi poistaa.',
       instanceAbbreviation: 'Kerran lyhenne',
       instanceAbbreviationHelp: 'Lyhennemerkintä näytetään työpajan lyhennemerkinnän rinnalla niiden tanssien kohdalla, jotka on opetettu ainoastaan tällä opetuskerralla.',
       instanceAbbreviationExample: 'Tämä lyhenne näytetään muodossa __abbreviation__',

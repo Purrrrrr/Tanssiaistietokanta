@@ -13,6 +13,7 @@ setupServiceUpdateFragment(
       dateTime
       durationInMinutes
       abbreviation
+      hasVolunteerAssignments
       dances {
         _id
         name
@@ -34,6 +35,7 @@ mutation createWorkshop($eventId: ID!, $workshop: WorkshopInput!) {
       dateTime
       durationInMinutes
       abbreviation
+      hasVolunteerAssignments
       dances {
         _id
         name
@@ -55,6 +57,7 @@ mutation patchWorkshop($id: ID!, $workshop: WorkshopPatchInput!) {
       dateTime
       durationInMinutes
       abbreviation
+      hasVolunteerAssignments
       dances {
         _id
         name
@@ -76,6 +79,7 @@ mutation deleteWorkshop($id: ID!) {
       dateTime
       durationInMinutes
       abbreviation
+      hasVolunteerAssignments
       dances {
         _id
         name

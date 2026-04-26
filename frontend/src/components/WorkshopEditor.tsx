@@ -118,6 +118,7 @@ export function newInstance(reference?: Instance, date?: string): Instance {
     dateTime: reference?.dateTime ?? `${date ?? new Date().toISOString().slice(0, 10)}T12:00:00.000`,
     durationInMinutes: reference?.durationInMinutes ?? 105,
     dances: null,
+    hasVolunteerAssignments: false,
   }
 }
 
@@ -154,13 +155,21 @@ function WorkshopInstanceEditor(
 ) {
   const t = useT('components.workshopEditor')
   const instances = useValueAt('instances')
+  const instance = instances[itemIndex]
   const showDances = useValueAt('instanceSpecificDances')
   return <div className="pt-1 pb-4 mb-5 bg-white border-b-1 border-black/15">
     <div className="flex flex-wrap gap-3.5 justify-between items-center">
-      <h3 className="font-bold">{t('instance')} {workshopInstanceName(itemIndex, instances[itemIndex])}</h3>
+      <h3 className="font-bold">{t('instance')} {workshopInstanceName(itemIndex, instance)}</h3>
       <div>
         {dragHandle}
-        {instances.length > 1 && <RemoveItemButton path="instances" index={itemIndex} text="X" />}
+        {instances.length > 1 &&
+          <RemoveItemButton
+            path="instances"
+            index={itemIndex}
+            text="X"
+            tooltip={instance.hasVolunteerAssignments ? t('cannotRemoveInstanceWithVolunteers') : undefined}
+            disabled={instance.hasVolunteerAssignments} />
+        }
       </div>
     </div>
     <div className="flex flex-wrap gap-3.5 items-center">

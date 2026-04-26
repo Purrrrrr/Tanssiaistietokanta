@@ -52,7 +52,7 @@ export const eventVolunteerAssignmentsPatchValidator = getValidator(eventVolunte
 export const eventVolunteerAssignmentsPatchResolver = resolve<EventVolunteerAssignments, HookContext>({})
 
 // Schema for allowed query properties
-export const eventVolunteerAssignmentsQueryProperties = Type.Pick(eventVolunteerAssignmentsSchema, ['_id', 'eventId', 'workshopId', 'roleId', 'volunteerId'])
+export const eventVolunteerAssignmentsQueryProperties = Type.Pick(eventVolunteerAssignmentsSchema, ['_id', 'eventId', 'workshopId', 'workshopInstanceId', 'roleId', 'volunteerId'])
 export const eventVolunteerAssignmentsQuerySchema = Type.Intersect(
   [
     querySyntax(eventVolunteerAssignmentsQueryProperties),

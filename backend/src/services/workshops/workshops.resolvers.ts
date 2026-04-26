@@ -1,5 +1,6 @@
 import { Application, Resolvers } from '../../declarations'
 import { removeNulls } from '../../utils/common-types'
+import { getSelections } from '../../utils/resolvers'
 
 export default (app: Application): Resolvers => {
   const eventService = app.service('events')
@@ -8,12 +9,31 @@ export default (app: Application): Resolvers => {
     return id ? danceService.get(id) : null
   }
   const service = app.service('workshops')
+  const assignmentsService = app.service('eventVolunteerAssignments')
 
   return {
     Workshop: {
       _versionId: workshop => workshop._versionId ?? null,
       danceIds: workshop => workshop.instances.flatMap(i => i.danceIds ?? []),
       dances: workshop => workshop.instances.flatMap(i => i.danceIds ?? []).map(getDance).filter(dance => dance !== null),
+      instances: async (workshop, _, _params, info) => {
+        const fetchedFields = getSelections(info)
+        const assignments = fetchedFields?.includes('hasVolunteerAssignments')
+          ? await Promise.all(
+            workshop.instances.flatMap(
+              i => assignmentsService.find({ query: {
+                workshopId: workshop._id,
+                workshopInstanceId: i._id,
+                $limit: 1,
+              } }),
+            ),
+          )
+          : []
+        return workshop.instances.map((instance, index) => ({
+          ...instance,
+          hasVolunteerAssignments: assignments[index]?.length > 0,
+        }))
+      },
     },
     WorkshopInstance: {
       dances: workshop => workshop.danceIds?.map(getDance).filter(dance => dance !== null) ?? [],

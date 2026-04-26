@@ -215,6 +215,7 @@ query getEvent($id: ID!, $versionId: ID) {
         dateTime
         durationInMinutes
         abbreviation
+        hasVolunteerAssignments
         dances {
           _id, _versionId, name
         }
@@ -385,6 +386,7 @@ mutation patchEventProgram($id: ID!, $program: JSONPatch!) {
         dateTime
         durationInMinutes
         abbreviation
+        hasVolunteerAssignments
         dances {
           _id, _versionId, name
         }
