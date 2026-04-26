@@ -73,6 +73,8 @@ export default (app: Application): Resolvers => {
       createEventVolunteerAssignment: (_, { eventVolunteerAssignment }, params) => service.create(eventVolunteerAssignment, params),
       // modifyEventVolunteerAssignment: (_, { id, eventVolunteerAssignment }, params) => service.update(id, eventVolunteerAssignment, params),
       // patchEventVolunteerAssignment: (_, { id, eventVolunteerAssignment }, params) => service.patch(id, eventVolunteerAssignment, params),
+      setEventVolunteerAssignmentWorkshopInstance: async (_, { id, workshopInstanceId }, params) =>
+        service.patch(id, { workshopInstanceId }, params),
       deleteEventVolunteerAssignment: (_, { id }, params) => service.remove(id, params),
     },
   }

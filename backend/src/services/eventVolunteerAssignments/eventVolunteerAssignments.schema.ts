@@ -17,6 +17,7 @@ export const eventVolunteerAssignmentsSchema = Type.Object(
     _createdAt: Type.String(),
     eventId: Id(),
     workshopId: Type.Union([Id(), Type.Null()]),
+    workshopInstanceId: Type.Union([Id(), Type.Null()]),
     roleId: Id(),
     volunteerId: Id(),
   },

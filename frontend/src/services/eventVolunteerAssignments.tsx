@@ -1,4 +1,4 @@
-import { entityCreateHook, entityDeleteHook, entityListQueryHook, graphql, setupServiceUpdateFragment } from '../backend'
+import { entityCreateHook, entityDeleteHook, entityListQueryHook, entityUpdateHook, graphql, setupServiceUpdateFragment } from '../backend'
 
 setupServiceUpdateFragment(
   'eventVolunteerAssignments',
@@ -6,6 +6,7 @@ setupServiceUpdateFragment(
     _id
     event { _id _versionId name }
     workshop { _id _versionId name }
+    workshopInstanceId
     volunteer { _id _versionId name }
     role { _id _versionId name }
   }`,
@@ -17,6 +18,7 @@ query getEventVolunteerAssignments($eventId: ID, $eventVersionId: ID, $workshopI
     _id
     event { _id _versionId name }
     workshop { _id _versionId name }
+    workshopInstanceId
     volunteer { _id _versionId name }
     role { _id _versionId name }
   }
@@ -44,6 +46,7 @@ mutation createEventVolunteerAssignment($eventVolunteerAssignment: EventVoluntee
     _id
     event { _id _versionId name }
     workshop { _id _versionId name }
+    workshopInstanceId
     volunteer { _id _versionId name }
     role { _id _versionId name }
   }
@@ -55,6 +58,19 @@ mutation deleteEventVolunteerAssignment($id: ID!) {
     _id
     event { _id _versionId name }
     workshop { _id _versionId name }
+    workshopInstanceId
+    volunteer { _id _versionId name }
+    role { _id _versionId name }
+  }
+}`))
+
+export const useSetEventVolunteerAssignmentWorkshopInstance = entityUpdateHook('eventVolunteerAssignments', graphql(`
+mutation setEventVolunteerAssignmentWorkshopInstance($id: ID!, $workshopInstanceId: ID) {
+  setEventVolunteerAssignmentWorkshopInstance(id: $id, workshopInstanceId: $workshopInstanceId) {
+    _id
+    event { _id _versionId name }
+    workshop { _id _versionId name }
+    workshopInstanceId
     volunteer { _id _versionId name }
     role { _id _versionId name }
   }

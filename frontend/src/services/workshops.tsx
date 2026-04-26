@@ -83,3 +83,9 @@ mutation deleteWorkshop($id: ID!) {
     }
   }
 }`))
+
+export function workshopInstanceName(index: number, { abbreviation }: { abbreviation?: string | null }) {
+  return abbreviation?.length
+    ? abbreviation
+    : index + 1
+}

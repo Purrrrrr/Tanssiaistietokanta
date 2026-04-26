@@ -4,7 +4,7 @@ import { string } from 'yup'
 import { Event } from 'types'
 
 import { useEventRoles } from 'services/eventRoles'
-import { usePatchWorkshop } from 'services/workshops'
+import { usePatchWorkshop, workshopInstanceName } from 'services/workshops'
 
 import { DateField, DragHandle, formFor, NumberInput, patchStrategy, SyncStatus, useAutosavingState } from 'libraries/forms'
 import { DocumentContentEditor } from 'libraries/lexical'
@@ -13,7 +13,7 @@ import { DanceChooser } from 'components/widgets/DanceChooser'
 import { useT, useTranslation } from 'i18n'
 import randomId from 'utils/randomId'
 
-import { VolunteerAssignmentSelector } from './volunteers/VolunteerAssignmentSelector'
+import { VolunteerAssignmentEditor as VolunteerAssignmentSelector } from './volunteers/VolunteerAssignmentEditor'
 import { AddButton } from './widgets/AddButton'
 import { PageSection } from './widgets/PageSection'
 
@@ -57,7 +57,6 @@ export function WorkshopEditor({ eventId, workshop: workshopInDatabase, reserved
         description,
         instanceSpecificDances,
         instances: instances?.map(({ dances, __typename, ...i }) => ({
-          description: '',
           ...i,
           danceIds: dances ? dances.map(d => d._id) : null,
         })),
@@ -75,19 +74,20 @@ export function WorkshopEditor({ eventId, workshop: workshopInDatabase, reserved
       <Input path="name" required label={t('name')} labelInfo={t('required')} />
       <AbbreviationField path="abbreviation" label={t('abbreviation')} reservedAbbreviations={reservedAbbreviations} />
     </div>
-    <div className="grid grid-cols-2 gap-3.5">
-      {workshopRoles.map(role =>
-        <FormGroup key={role._id} label={role.name} labelFor={`workshop-${workshopId}-role-${role._id}`} labelStyle="above">
-          <VolunteerAssignmentSelector
-            id={`workshop-${workshopId}-role-${role._id}`}
-            eventId={eventId}
-            roleId={role._id}
-            workshopId={workshopInDatabase._id}
-            workshopVersionId={workshopInDatabase._versionId ?? undefined}
-          />
-        </FormGroup>,
-      )}
-    </div>
+    {workshopRoles.map(role =>
+      <FormGroup key={role._id} label={role.name} labelFor={`workshop-${workshopId}-role-${role._id}`} labelStyle="above">
+        <VolunteerAssignmentSelector
+          id={`workshop-${workshopId}-role-${role._id}`}
+          eventId={eventId}
+          roleId={role._id}
+          workshopId={workshopInDatabase._id}
+          workshopVersionId={workshopInDatabase._versionId ?? undefined}
+          workshopInstances={
+            role.type !== 'TEACHER' ? workshopInDatabase.instances : undefined
+          }
+        />
+      </FormGroup>,
+    )}
     <Field path="description" component={DocumentContentEditor} label={t('description')} componentProps={{ className: 'min-h-50' }} />
     <PageSection
       title={t('instances')}
@@ -156,7 +156,21 @@ function WorkshopInstanceEditor(
   const instances = useValueAt('instances')
   const showDances = useValueAt('instanceSpecificDances')
   return <div className="pt-1 pb-4 mb-5 bg-white border-b-1 border-black/15">
+    <div className="flex flex-wrap gap-3.5 justify-between items-center">
+      <h3 className="font-bold">{t('instance')} {workshopInstanceName(itemIndex, instances[itemIndex])}</h3>
+      <div>
+        {dragHandle}
+        {instances.length > 1 && <RemoveItemButton path="instances" index={itemIndex} text="X" />}
+      </div>
+    </div>
     <div className="flex flex-wrap gap-3.5 items-center">
+      {showDances &&
+        <Input
+          containerClassName="basis-40"
+          path={`instances.${itemIndex}.abbreviation`}
+          label={t('instanceAbbreviation')}
+          componentProps={{ size: 5 }} />
+      }
       <DateField<Workshop>
         path={`instances.${itemIndex}.dateTime`}
         label={t('dateTime')}
@@ -166,12 +180,8 @@ function WorkshopInstanceEditor(
         maxDate={endDate}
       />
       <Field component={NumberInput} path={`instances.${itemIndex}.durationInMinutes`} label={t('duration')} containerClassName="grow" />
-      <div>
-        {dragHandle}
-        {instances.length > 1 && <RemoveItemButton path="instances" index={itemIndex} text="X" />}
-      </div>
     </div>
-    {showDances && <Input path={`instances.${itemIndex}.abbreviation`} label={t('instanceAbbreviation')} helperText={t('instanceAbbreviationHelp')} />}
+    {showDances && <p className={`mt-2 ${ColorClass.textMuted}`}>{t('instanceAbbreviationHelp')}</p>}
     {showDances && <DanceList instanceIndex={itemIndex} readOnly={readOnly} />}
   </div>
 }

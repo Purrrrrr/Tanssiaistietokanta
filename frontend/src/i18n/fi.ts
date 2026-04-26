@@ -201,6 +201,7 @@ export const fi = {
       teachers: 'Opettaja(t)',
       instanceSpecificDances: 'Joka opetuskerralla on omat tanssinsa',
       instances: 'Opetuskerrat',
+      instance: 'Opetuskerta',
       addInstance: 'Lisää opetuskerta',
       instanceAbbreviation: 'Kerran lyhenne',
       instanceAbbreviationHelp: 'Lyhennemerkintä näytetään työpajan lyhennemerkinnän rinnalla niiden tanssien kohdalla, jotka on opetettu ainoastaan tällä opetuskerralla.',
@@ -221,8 +222,16 @@ export const fi = {
     volunteerAssignmentSelector: {
       addVolunteer: 'Lisää vapaaehtoinen',
       noVolunteers: 'Ei vapaaehtoisia',
+      removeVolunteer: 'Poista vapaaehtoinen',
+      removeVolunteerConfirmation: {
+        title: 'Poistetaanko vapaaehtoinen?',
+        text: 'haluatko varmasti poistaa vapaaehtoisen __name__?',
+      },
       eventVolunteers: 'Kiinnostuneet vapaaehtoiset',
       allVolunteers: 'Kaikki vapaaehtoiset',
+      name: 'Nimi',
+      instance: 'Opetuskerta',
+      allInstances: 'Kaikki',
     },
     eventRoleSelector: {
       workshopRoles: 'Työpajaroolit',

@@ -8,7 +8,7 @@ type VolunteersByRole {
 
 type Query {
   eventVolunteerAssignment(id: ID!, versionId: ID): EventVolunteerAssignment!
-  eventVolunteerAssignments(eventId: ID, eventVersionId: ID, workshopId: ID, workshopVersionId: ID, roleId: ID): [EventVolunteerAssignment!]!
+  eventVolunteerAssignments(eventId: ID, eventVersionId: ID, workshopId: ID, workshopVersionId: ID, workshopInstanceId: ID, roleId: ID): [EventVolunteerAssignment!]!
 }
 
 type EventVolunteerAssignment implements Versionable {
@@ -21,6 +21,8 @@ type EventVolunteerAssignment implements Versionable {
   event: Event!
   workshopId: ID
   workshop: Workshop
+  workshopInstanceId: ID
+  workshopInstance: WorkshopInstance
   roleId: ID!
   role: EventRole!
   volunteerId: ID!
@@ -29,6 +31,7 @@ type EventVolunteerAssignment implements Versionable {
 
 type Mutation {
   createEventVolunteerAssignment(eventVolunteerAssignment: EventVolunteerAssignmentInput!): EventVolunteerAssignment!
+  setEventVolunteerAssignmentWorkshopInstance(id: ID!, workshopInstanceId: ID): EventVolunteerAssignment!
   # patchEventVolunteerAssignment(id: ID!, eventVolunteerAssignment: EventVolunteerAssignmentPatchInput!): EventVolunteerAssignment!
   deleteEventVolunteerAssignment(id: ID!): EventVolunteerAssignment!
 }
@@ -36,6 +39,7 @@ type Mutation {
 input EventVolunteerAssignmentInput {
   eventId: ID!
   workshopId: ID
+  workshopInstanceId: ID
   roleId: ID!
   volunteerId: ID!
 }
@@ -43,6 +47,7 @@ input EventVolunteerAssignmentInput {
 input EventVolunteerAssignmentPatchInput {
   eventId: ID
   workshopId: ID
+  workshopInstanceId: ID
   roleId: ID
   volunteerId: ID
 }
