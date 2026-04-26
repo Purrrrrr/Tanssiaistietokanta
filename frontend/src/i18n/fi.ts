@@ -13,6 +13,7 @@ export const fi = {
     menu: 'Valikko',
     login: 'Kirjaudu',
     logout: 'Kirjaudu ulos',
+    privacyPolicy: 'Tietosuojaseloste',
   },
   breadcrumbs: {
     app: 'Tanssiaistietokanta',
