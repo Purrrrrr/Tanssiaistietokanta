@@ -2,7 +2,7 @@ import { assoc } from 'ramda'
 import { MigrationFn } from '../umzug.context'
 
 export const up: MigrationFn = async params => {
-  await params.context.updateDatabase('eventVolunteerAssignments', assoc('workshopInstanceId', null))
+  await params.context.updateDatabase('eventVolunteerAssignments', assoc('workshopInstanceIds', null))
 }
 
 export const down: MigrationFn = async _params => {}

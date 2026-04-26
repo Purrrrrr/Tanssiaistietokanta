@@ -4,13 +4,13 @@ import { useShowGlobalLoadingAnimation } from 'backend'
 import { useCreateEventVolunteerAssignment, useDeleteEventVolunteerAssignment, useEventVolunteerAssignments, useSetEventVolunteerAssignmentWorkshopInstance } from 'services/eventVolunteerAssignments'
 import { useEventVolunteers } from 'services/eventVolunteers'
 import { useVolunteerNames } from 'services/volunteers'
+import { workshopInstanceName } from 'services/workshops'
 
 import { AutocompleteInput } from 'libraries/formsV2/components/inputs/selectors'
 import { ItemList } from 'libraries/ui'
 import { ModeButton, ModeSelector } from 'libraries/ui/ModeSelector'
 import { DeleteButton } from 'components/widgets/DeleteButton'
 import { useT } from 'i18n'
-import { workshopInstanceName } from 'services/workshops'
 
 export interface VolunteerAssignmentEditorProps {
   id: string
@@ -56,8 +56,13 @@ export function VolunteerAssignmentEditor({ id, eventId, eventVersionId, roleId,
     }
   }
 
-  const setInstanceId = async (assignmentId: ID, instanceId: ID | null) => {
-    await setAssignmentWorkshopInstance({ id: assignmentId, workshopInstanceId: instanceId })
+  const setInstanceIds = async (assignmentId: ID, instanceIds: ID[] | null) => {
+    const workshopInstanceIds = !instanceIds?.length
+      ? null
+      : instanceIds.length === workshopInstances?.length
+        ? null
+        : instanceIds
+    await setAssignmentWorkshopInstance({ id: assignmentId, workshopInstanceIds })
   }
 
   const onChange = async (newVolunteer: VolunteerOption) => {
@@ -76,34 +81,42 @@ export function VolunteerAssignmentEditor({ id, eventId, eventVersionId, roleId,
         <span>{t('name')}</span>
         {workshopInstances && <span>{t('instance')}</span>}
       </ItemList.Header>
-      {currentAssignments.map(a => (
-        <ItemList.Row key={a._id}>
-          <span>{a.volunteer.name}</span>
+      {currentAssignments.map(assignment => (
+        <ItemList.Row key={assignment._id}>
+          <span>{assignment.volunteer.name}</span>
           {workshopInstances && <ModeSelector>
             <ModeButton
-              selected={a.workshopInstanceId == null}
-              onClick={() => setInstanceId(a._id, null)}
+              selected={assignment.workshopInstanceIds == null}
+              onClick={() => setInstanceIds(assignment._id, null)}
             >
               {t('allInstances')}
             </ModeButton>
-            {workshopInstances.map((instance, index) => (
-              <ModeButton
-                key={instance._id}
-                selected={a.workshopInstanceId === instance._id}
-                onClick={() => setInstanceId(a._id, instance._id)}
-              >
-                {workshopInstanceName(index, instance)}
-              </ModeButton>
-            ))}
+            {workshopInstances.map((instance, index) => {
+              const selected = assignment.workshopInstanceIds?.includes(instance._id) ?? false
+              return (
+                <ModeButton
+                  key={instance._id}
+                  selected={selected}
+                  onClick={() => setInstanceIds(
+                    assignment._id,
+                    selected
+                      ? assignment.workshopInstanceIds?.filter(id => id !== instance._id) ?? null
+                      : [...(assignment.workshopInstanceIds ?? []), instance._id],
+                  )}
+                >
+                  {workshopInstanceName(index, instance)}
+                </ModeButton>
+              )
+            })}
           </ModeSelector>}
           {!readOnly &&
             <DeleteButton
               minimal
               iconOnly
               text={t('removeVolunteer')}
-              onDelete={() => deleteAssignment({ id: a._id })}
+              onDelete={() => deleteAssignment({ id: assignment._id })}
               confirmTitle={t('removeVolunteerConfirmation.title')}
-              confirmText={t('removeVolunteerConfirmation.text', { name: a.volunteer.name })}
+              confirmText={t('removeVolunteerConfirmation.text', { name: assignment.volunteer.name })}
             />
           }
         </ItemList.Row>

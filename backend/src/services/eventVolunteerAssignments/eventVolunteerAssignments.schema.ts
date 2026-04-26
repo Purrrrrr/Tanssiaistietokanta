@@ -17,7 +17,7 @@ export const eventVolunteerAssignmentsSchema = Type.Object(
     _createdAt: Type.String(),
     eventId: Id(),
     workshopId: Type.Union([Id(), Type.Null()]),
-    workshopInstanceId: Type.Union([Id(), Type.Null()]),
+    workshopInstanceIds: Type.Union([Type.Array(Id()), Type.Null()]),
     roleId: Id(),
     volunteerId: Id(),
   },
@@ -52,11 +52,12 @@ export const eventVolunteerAssignmentsPatchValidator = getValidator(eventVolunte
 export const eventVolunteerAssignmentsPatchResolver = resolve<EventVolunteerAssignments, HookContext>({})
 
 // Schema for allowed query properties
-export const eventVolunteerAssignmentsQueryProperties = Type.Pick(eventVolunteerAssignmentsSchema, ['_id', 'eventId', 'workshopId', 'workshopInstanceId', 'roleId', 'volunteerId'])
+export const eventVolunteerAssignmentsQueryProperties = Type.Pick(eventVolunteerAssignmentsSchema, ['_id', 'eventId', 'workshopId', 'workshopInstanceIds', 'roleId', 'volunteerId'])
 export const eventVolunteerAssignmentsQuerySchema = Type.Intersect(
   [
     querySyntax(eventVolunteerAssignmentsQueryProperties),
     Type.Object({
+      workshopInstanceIds: Type.Optional(Id()),
       searchVersions: Type.Optional(Type.Boolean()),
       _versionId: Type.Optional(Id()),
       atDate: Type.Optional(Type.String()),

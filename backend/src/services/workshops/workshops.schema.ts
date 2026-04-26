@@ -36,6 +36,8 @@ export const workshopsSchema = Type.Object(
 )
 export type Workshops = Static<typeof workshopsSchema>
 export type WorkshopInstance = Workshops['instances'][number]
+// This is only for graphql resolver types
+export type WorkshopInstanceType = Workshops['instances'][number]
 export const workshopsValidator = getValidator(workshopsSchema, dataValidator)
 export const workshopsResolver = resolve<Workshops, HookContext>({})
 

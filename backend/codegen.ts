@@ -22,6 +22,7 @@ const config: CodegenConfig = {
           VersionHistory: './services/graphql/versionHistory.resolvers#BaseVersionHistory',
           Volunteer: './services/volunteers/volunteers.schema#Volunteers',
           Workshop: './services/workshops/workshops.schema#Workshops',
+          WorkshopInstance: './services/workshops/workshops.schema#WorkshopInstanceType',
         },
       },
     }

@@ -18,17 +18,18 @@ export default (app: Application): Resolvers => {
       dances: workshop => workshop.instances.flatMap(i => i.danceIds ?? []).map(getDance).filter(dance => dance !== null),
       instances: async (workshop, _, _params, info) => {
         const fetchedFields = getSelections(info)
-        const assignments = fetchedFields?.includes('hasVolunteerAssignments')
-          ? await Promise.all(
-            workshop.instances.flatMap(
-              i => assignmentsService.find({ query: {
-                workshopId: workshop._id,
-                workshopInstanceId: i._id,
-                $limit: 1,
-              } }),
-            ),
-          )
-          : []
+        if (!fetchedFields?.includes('hasVolunteerAssignments')) {
+          return workshop.instances
+        }
+        const assignments = await Promise.all(
+          workshop.instances.flatMap(
+            i => assignmentsService.find({ query: {
+              workshopId: workshop._id,
+              workshopInstanceIds: i._id,
+              $limit: 1,
+            } }),
+          ),
+        )
         return workshop.instances.map((instance, index) => ({
           ...instance,
           hasVolunteerAssignments: assignments[index]?.length > 0,
