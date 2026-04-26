@@ -2,20 +2,13 @@ import { KeyForPath, makeTranslator, PrefixPath, Translator as Tr } from 'librar
 
 import { fi } from './fi'
 
-export const translations = {
+export { useFormatDate, useFormatDateTime, useFormatDuration, useFormatTime } from 'libraries/i18n'
+
+const translations = {
   fi,
 }
 type Translations = typeof fi
 export type Translator<P extends PrefixPath<Translations> | ''> = Tr<Translations, P>
 export type TranslationKey<P extends PrefixPath<Translations> | '' = ''> = KeyForPath<P, Translations>
 
-export const {
-  useT,
-  useTranslation,
-  T,
-  useLocalization,
-  TranslationContext,
-  useFormatDate,
-  useFormatDateTime,
-  useFormatDuration,
-} = makeTranslator<Translations>()
+export const { useT, useTranslation, T } = makeTranslator(translations)

@@ -1,8 +1,9 @@
-const locale = 'FI-fi'
+import { useLocale } from './context'
 
 export type DateLike = Date | number | string
 
 export function useFormatDate() {
+  const locale = useLocale()
   const formatter = new Intl.DateTimeFormat(locale, {
     dateStyle: 'short',
   })
@@ -11,7 +12,8 @@ export function useFormatDate() {
 }
 
 export function useFormatDateTime() {
-  const formatter = new Intl.DateTimeFormat('fi', {
+  const locale = useLocale()
+  const formatter = new Intl.DateTimeFormat(locale, {
     weekday: 'short',
     year: 'numeric',
     month: 'numeric',
@@ -24,6 +26,7 @@ export function useFormatDateTime() {
 }
 
 export function useFormatTime() {
+  const locale = useLocale()
   const formatter = new Intl.DateTimeFormat(locale, {
     hour: '2-digit',
     minute: '2-digit',
@@ -37,6 +40,7 @@ export function useFormatTime() {
 const toDate = (date: DateLike) => date instanceof Date ? date : new Date(date)
 
 export function useFormatDuration() {
+  const locale = useLocale()
   const formatter = new Intl.DurationFormat(locale, { style: 'long' })
 
   return (seconds: number) => formatter.format(toAproximateDuration(seconds))

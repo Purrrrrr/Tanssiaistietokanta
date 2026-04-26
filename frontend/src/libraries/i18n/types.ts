@@ -1,5 +1,20 @@
 import { Autocomplete, TParams } from 'talkr'
 
+export type DeepCommonStructure<U> = {
+  [K in CommonKeys<U>]:
+    ValueOf<U, K> extends object
+      ? DeepCommonStructure<ValueOf<U, K>>
+      : ValueOf<U, K>;
+}
+
+type CommonKeys<U> = {
+  [K in keyof U]-?:
+    U extends Record<K, unknown> ? K : never
+}[keyof U]
+
+type ValueOf<U, K extends PropertyKey> =
+  U extends Record<K, infer V> ? V : never
+
 export type PrefixPath<T> = (T extends object
   ? ('' | {
     [K in Exclude<keyof T, symbol>]: `${K}${KeyPrefix<PrefixPath<T[K]>>}`

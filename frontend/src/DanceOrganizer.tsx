@@ -4,14 +4,14 @@ import { routeTree } from 'routeTree.gen'
 import { BackendProvider } from 'backend'
 import { subscribeToAuthChanges } from 'backend/authentication'
 
+import { TranslationProvider } from 'libraries/i18n'
 import { AlertContext } from 'libraries/overlays/AlertContext'
 import { ToastContainer } from 'libraries/ui'
 import { RightsContext } from 'components/rights/RightsContext'
-import { TranslationContext, translations } from 'i18n'
 import { defaultContext, LoadingComponent, useAppRootContext } from 'utils/routeUtils'
 
 function DanceOrganizer() {
-  return <TranslationContext languages={translations} defaultLanguage="fi">
+  return <TranslationProvider defaultLanguage="fi">
     <BackendProvider>
       <RightsContext>
         <ToastContainer />
@@ -20,7 +20,7 @@ function DanceOrganizer() {
         </AlertContext>
       </RightsContext>
     </BackendProvider>
-  </TranslationContext>
+  </TranslationProvider>
 }
 const router = createRouter({
   routeTree,

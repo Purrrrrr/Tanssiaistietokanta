@@ -1,4 +1,4 @@
-import { useLocalization } from 'i18n'
+import { useLocale } from 'libraries/i18n'
 
 const K = 1024
 const UNIT_SWITCH_THRESHOLD = 1.1 * K
@@ -12,7 +12,7 @@ const units = [
 const formatterCache: Record<string, Intl.NumberFormat[]> = {}
 
 export default function useFilesize() {
-  const { locale } = useLocalization()
+  const locale = useLocale()
 
   const formatters = locale in formatterCache
     ? formatterCache[locale]
