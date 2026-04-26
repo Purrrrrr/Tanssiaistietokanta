@@ -49,7 +49,7 @@ function LoginStatus() {
   return <NavigateButton
     minimal
     to="/login"
-    icon={<User className="text-orange-500 mt-[1px]" />}
+    icon={<User className="text-stone-500 mt-[1px]" />}
     text={t('login')}
   />
 }
