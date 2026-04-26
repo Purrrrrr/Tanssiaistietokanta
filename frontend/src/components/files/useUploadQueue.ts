@@ -2,7 +2,7 @@ import type { FetchRequestProgress, FileOwner, FileOwningId } from 'types/files'
 
 import { doUpload, UploadedFile } from 'services/files'
 
-import { useQueue } from 'libraries/i18n/useQueue'
+import { useQueue } from 'libraries/common/useQueue'
 
 import { useGetUploadErrorMessage } from './useGetUploadErrorMessage'
 

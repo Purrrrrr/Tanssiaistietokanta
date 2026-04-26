@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext } from 'react'
 
-import { useQueue } from 'libraries/i18n/useQueue'
+import { useQueue } from 'libraries/common/useQueue'
 
 import { Alert, AlertAction, AlertProps } from './Alert'
 
