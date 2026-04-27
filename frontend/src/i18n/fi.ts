@@ -201,6 +201,7 @@ export const fi = {
       description: 'Työpajan kuvaus',
       teachers: 'Opettaja(t)',
       instanceSpecificDances: 'Joka opetuskerralla on omat tanssinsa',
+      instancesAndDances: 'Opetuskerrat ja tanssit',
       instances: 'Opetuskerrat',
       instance: 'Opetuskerta',
       addInstance: 'Lisää opetuskerta',

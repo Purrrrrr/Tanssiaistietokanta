@@ -124,6 +124,7 @@ export function VolunteerAssignmentEditor({ id, eventId, eventVersionId, roleId,
     </ItemList>
     <AutocompleteInput<VolunteerOption>
       id={id}
+      containerClassname="mb-6"
       value={null}
       onChange={onChange}
       readOnly={readOnly}

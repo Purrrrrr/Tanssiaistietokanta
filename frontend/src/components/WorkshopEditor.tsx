@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { Fragment, useMemo } from 'react'
 import { string } from 'yup'
 
 import { Event } from 'types'
@@ -8,7 +8,7 @@ import { usePatchWorkshop, workshopInstanceName } from 'services/workshops'
 
 import { DateField, DragHandle, formFor, NumberInput, patchStrategy, SyncStatus, useAutosavingState } from 'libraries/forms'
 import { DocumentContentEditor } from 'libraries/lexical'
-import { ColorClass, FormGroup } from 'libraries/ui'
+import { ColorClass, FormGroup, H2 } from 'libraries/ui'
 import { DanceChooser } from 'components/widgets/DanceChooser'
 import { useT, useTranslation } from 'i18n'
 import randomId from 'utils/randomId'
@@ -74,8 +74,10 @@ export function WorkshopEditor({ eventId, workshop: workshopInDatabase, reserved
       <Input path="name" required label={t('name')} labelInfo={t('required')} />
       <AbbreviationField path="abbreviation" label={t('abbreviation')} reservedAbbreviations={reservedAbbreviations} />
     </div>
+    <Field path="description" component={DocumentContentEditor} label={t('description')} componentProps={{ className: 'min-h-50' }} />
     {workshopRoles.map(role =>
-      <FormGroup key={role._id} label={role.name} labelFor={`workshop-${workshopId}-role-${role._id}`} labelStyle="above">
+      <Fragment key={role._id}>
+        <H2>{role.plural}</H2>
         <VolunteerAssignmentSelector
           id={`workshop-${workshopId}-role-${role._id}`}
           eventId={eventId}
@@ -86,11 +88,10 @@ export function WorkshopEditor({ eventId, workshop: workshopInDatabase, reserved
             role.type !== 'TEACHER' ? workshopInDatabase.instances : undefined
           }
         />
-      </FormGroup>,
+      </Fragment>,
     )}
-    <Field path="description" component={DocumentContentEditor} label={t('description')} componentProps={{ className: 'min-h-50' }} />
     <PageSection
-      title={t('instances')}
+      title={t('instancesAndDances')}
       toolbar={
         <div className="flex items-center gap-3">
           <Switch path="instanceSpecificDances" label={t('instanceSpecificDances')} inline />
