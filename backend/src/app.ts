@@ -102,13 +102,9 @@ app.hooks({
 // Register application setup and teardown hooks here
 app.hooks({
   setup: [
-    async (context: HookContext<Application>, next: NextFunction) => {
+    async (_: HookContext<Application>, next: NextFunction) => {
       await withRequestLogger({ path: 'app', method: 'setup' }, async () => {
-        logger.info('Migrating DB')
-        await migrateDb(context.app)
-        logger.info('Initializing dependency graph')
-        await initDependencyGraph(context.app)
-        logger.info('Running rest of setup calls')
+        logger.info('Setting up Feathers application and services')
         await next()
         const port = app.get('port')
         const host = app.get('host')
@@ -119,5 +115,15 @@ app.hooks({
   ],
   teardown: [],
 })
+
+export async function initializeAppDependencies() {
+  await withRequestLogger({ path: 'app', method: 'initialize-dependencies' }, async () => {
+    logger.info('Migrating DB')
+    await migrateDb(app)
+    logger.info('Initializing dependency graph')
+    await initDependencyGraph(app)
+    logger.info('App dependencies initialized')
+  })
+}
 
 export { app }

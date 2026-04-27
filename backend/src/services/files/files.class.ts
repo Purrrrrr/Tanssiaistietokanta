@@ -46,12 +46,14 @@ export class FileService
       ],
     })
     this.scanner = new ClamScanner(options.app)
-    cron.schedule('0 0 * * *', () => Promise.all([
-      this.cleanUpUnused(), this.cleanUpTmp(),
-    ]))
   }
 
   async setup(): Promise<void> {
+    logger.info('Starting file cleanup cron job')
+    cron.schedule('0 0 * * *', () => Promise.all([
+      this.cleanUpUnused(), this.cleanUpTmp(),
+    ]))
+    logger.info('Initializing virus scanner')
     return this.scanner.init()
   }
 

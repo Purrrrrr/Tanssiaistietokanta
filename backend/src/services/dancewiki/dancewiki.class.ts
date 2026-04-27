@@ -70,7 +70,10 @@ implements ServiceInterface<Dancewiki, DancewikiData, DancewikiParams, never> {
 
       return getDanceCategorization(page.contentAsMarkdown ?? '')
     }, DAY)
+  }
 
+  async setup(): Promise<void> {
+    logger.info('Starting dance wiki cron jobs')
     // Update list of pages hourly
     this.cronjobs = [
       cron.schedule('0 * * * *', () => this.updatePageList()),

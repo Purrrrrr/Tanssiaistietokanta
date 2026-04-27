@@ -1,4 +1,4 @@
-import { app } from './app'
+import { app, initializeAppDependencies } from './app'
 import { logger } from './logger'
 
 console.log('')
@@ -15,4 +15,6 @@ const port = app.get('port')
 
 process.on('unhandledRejection', (reason) => logger.error('Unhandled Rejection %O', reason))
 
-app.listen(port).then(() => {})
+initializeAppDependencies().then(() => {
+  app.listen(port).then(() => {})
+})
