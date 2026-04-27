@@ -19,6 +19,7 @@ export const eventRolesSchema = Type.Object(
     description: Type.String(),
     type: Type.Optional(Type.Union([Type.Literal('TEACHER'), Type.Literal('ORGANIZER'), Type.Literal('ASSISTANT_ORGANIZER'), Type.Literal('BALLHOST'), Type.Literal('OTHER')])),
     plural: Type.String(),
+    pluralCount: Type.String(),
     appliesToWorkshops: Type.Boolean(),
     order: Type.Number(),
   },

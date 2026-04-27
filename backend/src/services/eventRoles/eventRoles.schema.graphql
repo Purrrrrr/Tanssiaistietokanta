@@ -13,6 +13,7 @@ type EventRole implements Versionable {
   description: String!
   type: EventRoleType!
   plural: String!
+  pluralCount: String!
   appliesToWorkshops: Boolean!
   order: Float!
 }

@@ -6,6 +6,7 @@ setupServiceUpdateFragment(
     _id
     name
     plural
+    pluralCount
     description
     type
     appliesToWorkshops
@@ -19,6 +20,7 @@ query getEventRoles {
     _id
     name
     plural
+    pluralCount
     description
     type
     appliesToWorkshops

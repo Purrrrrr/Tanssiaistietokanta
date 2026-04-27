@@ -171,7 +171,7 @@ function EventVolunteerRoleCounts({ volunteers, currentRole, onSetRole }: { volu
         tag={count}
         selected={currentRole ? currentRole === role._id : undefined}
         onSetRole={onSetRole}
-        title={count === 1 ? role.name : titleCase(role.plural)}
+        title={count === 1 ? role.name : titleCase(role.pluralCount)}
       />
     ))}
   </div>
