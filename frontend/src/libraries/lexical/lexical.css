@@ -95,6 +95,12 @@
   &:not(.editable-lexical-content) .layout-item {
     @apply border-gray-200;
   }
+
+  #layout:has(#lexical_debug_styles:checked) & {
+    [data-toolbar-anchor] {
+      outline: 2px solid red;
+    }
+  }
 }
 
 .slide .qr-container {

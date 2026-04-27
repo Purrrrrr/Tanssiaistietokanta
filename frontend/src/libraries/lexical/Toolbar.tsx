@@ -72,10 +72,12 @@ export default function ToolbarPlugin({ children, imageUpload }: ToolbarPluginPr
     const dom = newDom === undefined ? anchorRef.current : newDom
     if (dom) {
       dom.style.anchorName = '--lexical-toolbar-anchor'
+      dom.dataset.toolbarAnchor = 'true'
     }
     if (anchorRef.current !== dom) {
       if (anchorRef.current) {
         anchorRef.current.style.anchorName = null
+        delete anchorRef.current.dataset.toolbarAnchor
       }
       anchorRef.current = dom
     }
