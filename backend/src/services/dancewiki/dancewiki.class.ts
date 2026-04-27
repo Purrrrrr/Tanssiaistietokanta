@@ -50,7 +50,7 @@ export class DancewikiService<ServiceParams extends DancewikiParams = DancewikiP
 implements ServiceInterface<Dancewiki, DancewikiData, DancewikiParams, never> {
   storageService: NeDBService<StoredDanceWiki, StoredDanceWiki, DancewikiParams, never>
   categories: Cache<DanceCategorization>
-  timer: NodeJS.Timeout
+  timer?: NodeJS.Timeout
   cronjobs: ScheduledTask[] = []
 
   constructor(public options: DancewikiServiceOptions) {
