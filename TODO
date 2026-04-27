@@ -474,6 +474,8 @@
 * Fix missing event access control in event when changing workshop
 * Check GDPR stuff for volunteer names
 * Prevent dance wiki fetching while migrating
+* Better layout and wording in WorkshopEditor
+  Make VolunteerAssignmentEditor less jumpy. Some way to load things in advance
 
   Check how deleted volunteers affect versioning
   More fine-grained document access control
