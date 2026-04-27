@@ -84,7 +84,7 @@ export function VolunteerAssignmentEditor({ id, eventId, eventVersionId, roleId,
       {currentAssignments.map(assignment => (
         <ItemList.Row key={assignment._id}>
           <span>{assignment.volunteer.name}</span>
-          {workshopInstances && <ModeSelector>
+          {workshopInstances && workshopInstances.length > 1 && <ModeSelector>
             <ModeButton
               selected={assignment.workshopInstanceIds == null}
               onClick={() => setInstanceIds(assignment._id, null)}
