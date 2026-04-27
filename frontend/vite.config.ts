@@ -51,7 +51,7 @@ export default defineConfig(({ mode }) => {
     server: {
       host: process.env.ALLOW_ALL_HOSTS ? true : 'localhost',
       port: 3001,
-      forwardConsole: true,
+      // forwardConsole: true,
       open: false,
       proxy: {
         '/api/socket.io': {
