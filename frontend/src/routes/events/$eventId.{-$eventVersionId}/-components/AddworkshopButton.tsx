@@ -49,7 +49,7 @@ export function CreateWorkshopForm({ eventId, startDate }: { eventId: string, st
 }
 
 function newWorkshop({ eventId, name }, startDate: string) {
-  const { dances: _, ...instance } = newInstance(undefined, startDate)
+  const { dances: _ignored1, hasVolunteerAssignments: _ignored2, ...instance } = newInstance(undefined, startDate)
   return {
     eventId: eventId,
     workshop: {
