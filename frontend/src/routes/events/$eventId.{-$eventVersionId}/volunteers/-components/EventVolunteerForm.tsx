@@ -7,14 +7,16 @@ import { useT } from 'i18n'
 
 import { EventVolunteerRolePicker } from './EventVolunteerRolePicker'
 
-export type EventVolunteerFormValues = Omit<EventVolunteerInput, 'volunteerId' | 'eventId' | 'interestedIn'> & {
+export type EventVolunteerFormValues = Omit<EventVolunteerInput, 'volunteerId' | 'eventId' | 'interestedIn' | 'acceptedRoles'> & {
   volunteer?: VolunteerListItem
   interestedIn: Pick<EventRole, '_id'>[]
+  acceptedRoles: Pick<EventRole, '_id'>[]
 }
 
 export const emptyEventVolunteerForm = (): EventVolunteerFormValues => ({
   volunteer: undefined,
   interestedIn: [],
+  acceptedRoles: [],
   wishes: '',
   notes: '',
 })

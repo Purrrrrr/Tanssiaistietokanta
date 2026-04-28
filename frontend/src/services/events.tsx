@@ -12,6 +12,7 @@ setupServiceUpdateFragment(
   'events',
   `fragment EventFragment on Event {
     _id, _versionId, _versionNumber, _updatedAt, name, beginDate, endDate,
+    eventRegistrationSystem,
     accessControl {
       viewAccess
       grants {
@@ -114,6 +115,7 @@ const useEventInternal = backendQueryHook(graphql(`
 query getEvent($id: ID!, $versionId: ID) {
   event(id: $id, versionId: $versionId) {
     _id, _versionId, _versionNumber, _updatedAt, name, beginDate, endDate,
+    eventRegistrationSystem,
     accessControl {
       viewAccess
       grants {
@@ -255,6 +257,7 @@ export const useCreateEvent = entityCreateHook('events', graphql(`
 mutation createEvent($event: EventInput!) {
   createEvent(event: $event) {
     _id, _versionId, name, beginDate, endDate,
+    eventRegistrationSystem,
     accessControl {
       viewAccess
       grants {
@@ -270,6 +273,7 @@ export const usePatchEvent = entityUpdateHook('events', graphql(`
 mutation patchEvent($id: ID!, $event: JSONPatch!) {
   patchEvent(id: $id, event: $event) {
     _id, _versionId, name, beginDate, endDate,
+    eventRegistrationSystem,
     accessControl {
       viewAccess
       grants {

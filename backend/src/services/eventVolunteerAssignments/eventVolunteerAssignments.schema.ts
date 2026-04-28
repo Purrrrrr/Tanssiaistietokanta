@@ -7,6 +7,14 @@ import type { HookContext } from '../../declarations'
 import { dataValidator, queryValidator } from '../../validators'
 import { computedProperties, Id } from '../../utils/common-types'
 
+export const eventVolunteerRegistrationStatusSchema = Type.Union([
+  Type.Literal('None'),
+  Type.Literal('RegisteredToEventSystem'),
+  Type.Literal('AcceptedRegistration'),
+  Type.Literal('InformedToOrganizers'),
+])
+export type EventVolunteerRegistrationStatus = Static<typeof eventVolunteerRegistrationStatusSchema>
+
 // Main data model schema
 export const eventVolunteerAssignmentsSchema = Type.Object(
   {
@@ -20,6 +28,7 @@ export const eventVolunteerAssignmentsSchema = Type.Object(
     workshopInstanceIds: Type.Union([Type.Array(Id()), Type.Null()]),
     roleId: Id(),
     volunteerId: Id(),
+    registrationStatus: eventVolunteerRegistrationStatusSchema,
   },
   { $id: 'EventVolunteerAssignments', additionalProperties: false },
 )
@@ -41,6 +50,7 @@ export type EventVolunteerAssignmentsData = Static<typeof eventVolunteerAssignme
 export const eventVolunteerAssignmentsDataValidator = getValidator(eventVolunteerAssignmentsDataSchema, dataValidator)
 export const eventVolunteerAssignmentsDataResolver = resolve<EventVolunteerAssignments, HookContext>({
   workshopId: value => value ?? null,
+  registrationStatus: value => value ?? 'None',
 })
 
 // Schema for updating existing entries

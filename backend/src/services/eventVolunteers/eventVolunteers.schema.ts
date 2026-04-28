@@ -7,6 +7,15 @@ import type { HookContext } from '../../declarations'
 import { dataValidator, queryValidator } from '../../validators'
 import { computedProperties, Id } from '../../utils/common-types'
 
+export const eventVolunteerStatusSchema = Type.Union([
+  Type.Literal('Interested'),
+  Type.Literal('Accepted'),
+  Type.Literal('CanWorkAsBackup'),
+  Type.Literal('Rejected'),
+  Type.Literal('Cancelled'),
+])
+export type EventVolunteerStatus = Static<typeof eventVolunteerStatusSchema>
+
 // Main data model schema
 export const eventVolunteersSchema = Type.Object(
   {
@@ -17,7 +26,9 @@ export const eventVolunteersSchema = Type.Object(
     _createdAt: Type.String(),
     eventId: Id(),
     volunteerId: Id(),
+    status: eventVolunteerStatusSchema,
     interestedIn: Type.Array(Id()),
+    acceptedRoles: Type.Array(Id()),
     wishes: Type.String(),
     notes: Type.String(),
   },
@@ -40,7 +51,13 @@ export const eventVolunteersDataSchema = Type.Intersect(
 export type EventVolunteersData = Static<typeof eventVolunteersDataSchema>
 export const eventVolunteersDataValidator = getValidator(eventVolunteersDataSchema, dataValidator)
 export const eventVolunteersDataResolver = resolve<EventVolunteers, HookContext>({
+  status: value => value ?? 'Interested',
   interestedIn: value => value ?? [],
+  acceptedRoles: (value, record) => {
+    const status = record.status ?? 'Interested'
+    if (status === 'Accepted' || status === 'Cancelled') return value ?? []
+    return []
+  },
   wishes: value => value ?? '',
   notes: value => value ?? '',
 })
@@ -51,7 +68,13 @@ export const eventVolunteersPatchSchema = Type.Partial(eventVolunteersSchema, {
 })
 export type EventVolunteersPatch = Static<typeof eventVolunteersPatchSchema>
 export const eventVolunteersPatchValidator = getValidator(eventVolunteersPatchSchema, dataValidator)
-export const eventVolunteersPatchResolver = resolve<EventVolunteers, HookContext>({})
+export const eventVolunteersPatchResolver = resolve<EventVolunteers, HookContext>({
+  acceptedRoles: (value, record) => {
+    if (record.status === undefined) return value
+    if (record.status === 'Accepted' || record.status === 'Cancelled') return value
+    return []
+  },
+})
 
 // Schema for allowed query properties
 export const eventVolunteersQueryProperties = Type.Pick(eventVolunteersSchema, ['_id', 'eventId', 'volunteerId'])

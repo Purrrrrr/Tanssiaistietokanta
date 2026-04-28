@@ -10,7 +10,9 @@ setupServiceUpdateFragment(
     eventId
     volunteerId
     volunteer { _id name }
+    status
     interestedIn { _id name plural pluralCount description appliesToWorkshops order }
+    acceptedRoles { _id name plural pluralCount description appliesToWorkshops order }
     wishes
     notes
   }`,
@@ -26,7 +28,9 @@ query getEventVolunteers($eventId: ID, $eventVersionId: ID, $volunteerId: ID) {
     eventId
     volunteerId
     volunteer { _id name }
+    status
     interestedIn { _id name plural pluralCount description appliesToWorkshops order }
+    acceptedRoles { _id name plural pluralCount description appliesToWorkshops order }
     wishes
     notes
   }
@@ -42,7 +46,9 @@ query getEventVolunteer($id: ID!, $versionId: ID) {
     eventId
     volunteerId
     volunteer { _id name }
+    status
     interestedIn { _id name plural pluralCount description appliesToWorkshops order }
+    acceptedRoles { _id name plural pluralCount description appliesToWorkshops order }
     wishes
     notes
   }
@@ -58,7 +64,9 @@ mutation createEventVolunteer($eventVolunteer: EventVolunteerInput!) {
     eventId
     volunteerId
     volunteer { _id name }
+    status
     interestedIn { _id name plural pluralCount description appliesToWorkshops order }
+    acceptedRoles { _id name plural pluralCount description appliesToWorkshops order }
     wishes
     notes
   }
@@ -74,7 +82,9 @@ mutation patchEventVolunteer($id: ID!, $eventVolunteer: EventVolunteerPatchInput
     eventId
     volunteerId
     volunteer { _id name }
+    status
     interestedIn { _id name plural pluralCount description appliesToWorkshops order }
+    acceptedRoles { _id name plural pluralCount description appliesToWorkshops order }
     wishes
     notes
   }
@@ -90,7 +100,9 @@ mutation deleteEventVolunteer($id: ID!) {
     eventId
     volunteerId
     volunteer { _id name }
+    status
     interestedIn { _id name plural pluralCount description appliesToWorkshops order }
+    acceptedRoles { _id name plural pluralCount description appliesToWorkshops order }
     wishes
     notes
   }

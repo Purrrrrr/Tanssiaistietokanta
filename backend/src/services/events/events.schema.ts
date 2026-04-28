@@ -30,6 +30,12 @@ function EventAccessData() {
   }, { additionalProperties: false })
 }
 
+export const eventRegistrationSystemSchema = Type.Union([
+  Type.Literal('None'),
+  Type.Literal('Kompassi'),
+])
+export type EventRegistrationSystem = Static<typeof eventRegistrationSystemSchema>
+
 // Main data model schema
 export const eventsSchema = Type.Object(
   {
@@ -42,6 +48,7 @@ export const eventsSchema = Type.Object(
     name: Name(),
     beginDate: Date(),
     endDate: Date(),
+    eventRegistrationSystem: eventRegistrationSystemSchema,
     program: ClosedObject({
       dateTime: DateTime(),
       introductions: Introductions(),
@@ -200,7 +207,9 @@ export const eventsFullDataSchema = Type.Omit(eventsSchema, ['_id', 'accessContr
 })
 export type EventsData = Static<typeof eventsDataSchema>
 export const eventsDataValidator = castAfterValidating(eventsFullDataSchema, getValidator(eventsDataSchema, dataValidator))
-export const eventsDataResolver = resolve<Events, HookContext>({})
+export const eventsDataResolver = resolve<Events, HookContext>({
+  eventRegistrationSystem: value => value ?? 'None',
+})
 
 // Schema for updating existing entries
 export const eventsPatchSchema = Type.Partial(

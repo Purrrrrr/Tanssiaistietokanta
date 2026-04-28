@@ -12,6 +12,8 @@ export default (app: Application): Resolvers => {
       volunteer: (eventVolunteer: { volunteerId: string }) => volunteerService.get(eventVolunteer.volunteerId),
       interestedIn: (eventVolunteer: { interestedIn: string[] }) =>
         Promise.all(eventVolunteer.interestedIn.map(id => eventRolesService.get(id))),
+      acceptedRoles: (eventVolunteer: { acceptedRoles: string[] }) =>
+        Promise.all((eventVolunteer.acceptedRoles ?? []).map(id => eventRolesService.get(id))),
     },
     Query: {
       eventVolunteer: (_, { id, versionId }, params) => versionId

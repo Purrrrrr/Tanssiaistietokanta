@@ -3,6 +3,14 @@ type Query {
   eventVolunteers(eventId: ID, eventVersionId: ID, volunteerId: ID): [EventVolunteer!]!
 }
 
+enum EventVolunteerStatus {
+  Interested
+  Accepted
+  CanWorkAsBackup
+  Rejected
+  Cancelled
+}
+
 type EventVolunteer implements Versionable {
   _id: ID!
   _versionId: String
@@ -12,7 +20,9 @@ type EventVolunteer implements Versionable {
   eventId: ID!
   volunteerId: ID!
   volunteer: Volunteer!
+  status: EventVolunteerStatus!
   interestedIn: [EventRole!]!
+  acceptedRoles: [EventRole!]!
   wishes: String!
   notes: String!
 }
@@ -26,7 +36,9 @@ type Mutation {
 input EventVolunteerInput {
   eventId: ID!
   volunteerId: ID!
+  status: EventVolunteerStatus
   interestedIn: [ID!]
+  acceptedRoles: [ID!]
   wishes: String
   notes: String
 }
@@ -34,7 +46,9 @@ input EventVolunteerInput {
 input EventVolunteerPatchInput {
   eventId: ID
   volunteerId: ID
+  status: EventVolunteerStatus
   interestedIn: [ID!]
+  acceptedRoles: [ID!]
   wishes: String
   notes: String
 }

@@ -11,6 +11,13 @@ type Query {
   eventVolunteerAssignments(eventId: ID, eventVersionId: ID, workshopId: ID, workshopVersionId: ID, workshopInstanceId: ID, roleId: ID): [EventVolunteerAssignment!]!
 }
 
+enum EventVolunteerRegistrationStatus {
+  None
+  RegisteredToEventSystem
+  AcceptedRegistration
+  InformedToOrganizers
+}
+
 type EventVolunteerAssignment implements Versionable {
   _id: ID!
   _versionId: String
@@ -27,6 +34,7 @@ type EventVolunteerAssignment implements Versionable {
   role: EventRole!
   volunteerId: ID!
   volunteer: Volunteer!
+  registrationStatus: EventVolunteerRegistrationStatus!
 }
 
 type Mutation {
@@ -42,6 +50,7 @@ input EventVolunteerAssignmentInput {
   workshopInstanceIds: [ID!]
   roleId: ID!
   volunteerId: ID!
+  registrationStatus: EventVolunteerRegistrationStatus!
 }
 
 input EventVolunteerAssignmentPatchInput {
@@ -50,4 +59,5 @@ input EventVolunteerAssignmentPatchInput {
   workshopInstanceIds: [ID!]
   roleId: ID
   volunteerId: ID
+  registrationStatus: EventVolunteerRegistrationStatus
 }

@@ -13,9 +13,15 @@ type Event implements Versionable {
   name: String!
   beginDate: String!
   endDate: String!
+  eventRegistrationSystem: EventRegistrationSystem!
   program: EventProgramSettings!
   workshops: [Workshop!]!
   volunteerAssignments: [VolunteersByRole!]!
+}
+
+enum EventRegistrationSystem {
+  None
+  Kompassi
 }
 
 type EventAccessControl {
@@ -113,6 +119,7 @@ input EventInput {
   name: String!
   beginDate: String!
   endDate: String!
+  eventRegistrationSystem: EventRegistrationSystem!
   accessControl: EventAccessControlInput
 }
 
