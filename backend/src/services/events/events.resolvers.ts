@@ -12,7 +12,7 @@ export default (app: Application): Resolvers => {
 
   return {
     Event: {
-      workshops: (event) => workshopService.find({ query: { eventId: event._id } }),
+      workshops: (event) => workshopService.find({ query: { eventId: event._id, $sort: { 'instances.dateTime': 1, abbreviation: 1, name: 1 } } }),
       program: (event) => {
         const { program } = event
         if (!program.introductions.title) return L.set(['introductions', 'title'], event.name, program)

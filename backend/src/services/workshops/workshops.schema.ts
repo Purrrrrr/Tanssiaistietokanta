@@ -76,11 +76,17 @@ export const workshopsPatchResolver = resolve<Workshops, HookContext>({})
 
 // Schema for allowed query properties
 export const workshopsQueryProperties = Type.Omit(workshopsSchema, ['instances'])
+
+const baseQuery = querySyntax(workshopsQueryProperties)
 export const workshopsQuerySchema = Type.Intersect(
   [
-    querySyntax(workshopsQueryProperties),
+    Type.Omit(baseQuery, ['$sort']),
     // Add additional query properties here
     Type.Object({
+      $sort: Type.Optional(Type.Intersect([
+        Type.Object({ 'instances.dateTime': Type.Optional(Type.Number()) }),
+        baseQuery.properties.$sort,
+      ])),
       teacherIds: Type.Optional(Id()),
       'instances.danceIds': Type.Optional(Id()),
       searchVersions: Type.Optional(Type.Boolean()),
