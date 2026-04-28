@@ -25,6 +25,8 @@ function minifyLiveNode(node: LexicalNode, idMap: Map<string, string>): Minified
   const key = node.getKey()
   let id = idMap.entries().find(([_, key]) => key === node.getKey())?.[0]
   if (id == null) {
+    // console.log(`assigning new id to node with key ${key} of type ${node.getType()}`)
+    // If the node doesn't have an ID in the map yet, generate a new one and add it
     id = randomId(8)
     idMap.set(key, id)
   }
@@ -72,16 +74,17 @@ function expandNode(node: AnyNode): AnyNode {
   return runExpandTransformations(result)
 }
 
-export function expandIds(state: AnyNode, editor: LexicalEditor, idMap: Map<string, string>): void {
-  idMap.clear()
+export function expandIds(state: AnyNode, editor: EditorState | LexicalEditor): Map<string, string> {
+  const idMap = new Map<string, string>()
   editor.read(() => {
     expandNodeIds({ ...state, _id: 'root' }, $getRoot(), idMap)
   })
+  return idMap
 }
 
 function expandNodeIds(state: AnyNode, node: LexicalNode, idMap: Map<string, string>): void {
   const id = state._id
-  // console.log(`expanding node with id ${id} for key ${node.getKey()}`)
+  // console.log(`expanding node with id ${id} for key ${node.getKey()} of type ${node.getType()}`)
   if (typeof id === 'string') {
     idMap.set(id, node.getKey())
   }
