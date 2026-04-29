@@ -3,7 +3,7 @@ import { MigrationFn } from '../umzug.context'
 export const up: MigrationFn = async params => {
   await params.context.updateDatabase('events', (record: any) => ({
     ...record,
-    eventRegistrationSystem: 'None',
+    eventRegistrationSystem: (record.name as string).includes('Ropecon') ? 'Kompassi' : 'None',
   }))
 }
 
