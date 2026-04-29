@@ -18,4 +18,5 @@ export const theme = {
   },
   layoutContainer: 'grid',
   layoutItem: 'layout-item',
+  tableCellSelected: 'outline-2 outline-primary',
 }
