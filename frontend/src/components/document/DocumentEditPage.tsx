@@ -15,7 +15,9 @@ import { useT } from 'i18n'
 
 import { documentViewRoute } from './linkUtils'
 
-const { Form, Input, Field } = formFor<Document>()
+type EditableDocument = Pick<Document, 'title' | 'content'>
+
+const { Form, Input, Field } = formFor<EditableDocument>()
 
 export function DocumentEditPage({ documentId }: { documentId: string }) {
   const result = useDocument({ id: documentId })
@@ -33,7 +35,8 @@ function DocumentEditorInner({ document }: { document: Document }) {
     (patch: unknown[]) => patchDocument({ id: document._id, document: patch }),
     [patchDocument, document._id],
   )
-  const { formProps, state } = useAutosavingState<Document, unknown[]>(document, save, patchStrategy.jsonPatch)
+  const documentFormValue = { title: document.title, content: document.content }
+  const { formProps, state } = useAutosavingState<EditableDocument, unknown[]>(documentFormValue, save, patchStrategy.jsonPatch)
   const viewRoute = documentViewRoute(document)
   const params = getRouteApi(viewRoute).useParams()
 
