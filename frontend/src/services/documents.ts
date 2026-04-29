@@ -1,4 +1,6 @@
-import { backendQueryHook, entityCreateHook, entityDeleteHook, entityListQueryHook, entityUpdateHook, graphql, setupServiceUpdateFragment } from 'backend'
+import { useMemo } from 'react'
+
+import { backendQueryHook, entityCreateHook, entityDeleteHook, entityListQueryHook, entityUpdateHook, graphql, setupServiceUpdateFragment, useServiceEvents } from 'backend'
 
 setupServiceUpdateFragment(
   'documents',
@@ -45,7 +47,25 @@ query getDocument($id: ID!, $versionId: ID) {
     title
     content
   }
-}`))
+}`), ({ refetch, variables }) => {
+  if (variables === undefined) return
+  useCallbackOnDocumentChanges(variables.id, refetch)
+})
+
+function useCallbackOnDocumentChanges(documentId, callback) {
+  const callbacks = useMemo(() => {
+    const updateFn = () => {
+      // console.log('Dance has changed, running callback')
+      callback()
+    }
+    return {
+      created: updateFn,
+      updated: updateFn,
+      removed: updateFn,
+    }
+  }, [callback])
+  useServiceEvents('documents', `documents/${documentId}`, callbacks)
+}
 
 export const useCreateDocument = entityCreateHook('documents', graphql(`
 mutation createDocument($owner: DocumentOwner!, $owningId: ID!, $path: String, $title: String!, $content: DocumentContent) {
