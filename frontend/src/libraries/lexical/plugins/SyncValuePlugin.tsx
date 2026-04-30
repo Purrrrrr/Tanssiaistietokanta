@@ -32,7 +32,7 @@ export function SyncValuePlugin({ value, onChange }: Props) {
 
   useEffect(() => {
     if (value == null) return
-    console.log('SyncValuePlugin applying new value', value)
+    // console.log('SyncValuePlugin applying new value', value)
     if (lastApplied.current === undefined) {
       lastApplied.current = value
       nodeIdMapRef.current = expandIds(value, editor.getEditorState())
