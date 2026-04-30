@@ -21,18 +21,17 @@ export default (app: Application): Resolvers => {
         if (!fetchedFields?.includes('hasVolunteerAssignments')) {
           return workshop.instances
         }
-        const assignments = await Promise.all(
+        const hasAssignments = await Promise.all(
           workshop.instances.flatMap(
-            i => assignmentsService.find({ query: {
+            i => assignmentsService.exists({ query: {
               workshopId: workshop._id,
               workshopInstanceIds: i._id,
-              $limit: 1,
             } }),
           ),
         )
         return workshop.instances.map((instance, index) => ({
           ...instance,
-          hasVolunteerAssignments: assignments[index]?.length > 0,
+          hasVolunteerAssignments: hasAssignments[index],
         }))
       },
     },

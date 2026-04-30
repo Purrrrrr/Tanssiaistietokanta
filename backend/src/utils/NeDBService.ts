@@ -51,6 +51,23 @@ export class NeDBService<Result extends BaseRecord, Data, ServiceParams extends 
     return this.currentService.getModel()
   }
 
+  async exists(params: ServiceParams): Promise<boolean> {
+    const { query, ...rest } = params
+    const result = await this.currentService.find(this.mapParams({
+      query: {
+        ...query,
+        $limit: 1,
+      },
+      ...rest,
+    } as unknown as ServiceParams))
+    return result.length > 0
+  }
+
+  async count(_params?: ServiceParams): Promise<number> {
+    const result = await this.currentService.find(this.mapParams(_params))
+    return result.length
+  }
+
   async find(_params?: ServiceParams): Promise<Result[]> {
     return this.mapToResults(await this.currentService.find(this.mapParams(_params))) as Result[]
   }

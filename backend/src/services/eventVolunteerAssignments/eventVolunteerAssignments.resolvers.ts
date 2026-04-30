@@ -71,10 +71,10 @@ export default (app: Application): Resolvers => {
     },
     Mutation: {
       createEventVolunteerAssignment: (_, { eventVolunteerAssignment }, params) => service.create(eventVolunteerAssignment, params),
-      // modifyEventVolunteerAssignment: (_, { id, eventVolunteerAssignment }, params) => service.update(id, eventVolunteerAssignment, params),
-      // patchEventVolunteerAssignment: (_, { id, eventVolunteerAssignment }, params) => service.patch(id, eventVolunteerAssignment, params),
       setEventVolunteerAssignmentWorkshopInstances: async (_, { id, workshopInstanceIds }, params) =>
         service.patch(id, { workshopInstanceIds }, params),
+      setEventVolunteerAssignmentRegistrationStatus: async (_, { id, registrationStatus }, params) =>
+        service.patch(id, { registrationStatus }, params),
       deleteEventVolunteerAssignment: (_, { id }, params) => service.remove(id, params),
     },
   }

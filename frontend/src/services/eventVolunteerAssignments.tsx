@@ -80,3 +80,16 @@ mutation setEventVolunteerAssignmentWorkshopInstances($id: ID!, $workshopInstanc
     registrationStatus
   }
 }`))
+
+export const useSetEventVolunteerAssignmentRegistrationStatus = entityUpdateHook('eventVolunteerAssignments', graphql(`
+mutation setEventVolunteerAssignmentRegistrationStatus($id: ID!, $registrationStatus: EventVolunteerRegistrationStatus!) {
+  setEventVolunteerAssignmentRegistrationStatus(id: $id, registrationStatus: $registrationStatus) {
+    _id
+    event { _id _versionId name }
+    workshop { _id _versionId name }
+    workshopInstanceIds
+    volunteer { _id _versionId name }
+    role { _id _versionId name }
+    registrationStatus
+  }
+}`))

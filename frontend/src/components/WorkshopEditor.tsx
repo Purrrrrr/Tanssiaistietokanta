@@ -1,7 +1,7 @@
 import { Fragment, useMemo } from 'react'
 import { string } from 'yup'
 
-import { Event } from 'types'
+import { Event, EventRegistrationSystem } from 'types'
 
 import { cleanMetadataValues, WithoutMetadata } from 'backend'
 import { useEventRoles } from 'services/eventRoles'
@@ -14,7 +14,7 @@ import { DanceChooser } from 'components/widgets/DanceChooser'
 import { useT, useTranslation } from 'i18n'
 import randomId from 'utils/randomId'
 
-import { VolunteerAssignmentEditor as VolunteerAssignmentSelector } from './volunteers/VolunteerAssignmentEditor'
+import { VolunteerAssignmentEditor } from './volunteers/VolunteerAssignmentEditor'
 import { AddButton } from './widgets/AddButton'
 import { PageSection } from './widgets/PageSection'
 
@@ -35,13 +35,14 @@ const {
 
 interface WorkshopEditorProps {
   eventId: string
+  eventRegistrationSystem: EventRegistrationSystem
   workshop: Workshop
   reservedAbbreviations: string[]
   beginDate: string
   endDate: string
 }
 
-export function WorkshopEditor({ eventId, workshop: workshopInDatabase, reservedAbbreviations, beginDate, endDate }: WorkshopEditorProps) {
+export function WorkshopEditor({ eventId, eventRegistrationSystem, workshop: workshopInDatabase, reservedAbbreviations, beginDate, endDate }: WorkshopEditorProps) {
   const t = useT('components.workshopEditor')
   const [modifyWorkshop] = usePatchWorkshop({
     refetchQueries: ['getEvent'],
@@ -80,7 +81,7 @@ export function WorkshopEditor({ eventId, workshop: workshopInDatabase, reserved
     {workshopRoles.map(role =>
       <Fragment key={role._id}>
         <H2>{role.plural}</H2>
-        <VolunteerAssignmentSelector
+        <VolunteerAssignmentEditor
           id={`workshop-${workshopId}-role-${role._id}`}
           eventId={eventId}
           roleId={role._id}
@@ -89,6 +90,7 @@ export function WorkshopEditor({ eventId, workshop: workshopInDatabase, reserved
           workshopInstances={
             role.type !== 'TEACHER' ? workshopInDatabase.instances : undefined
           }
+          eventRegistrationSystem={eventRegistrationSystem}
         />
       </Fragment>,
     )}

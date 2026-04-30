@@ -32,7 +32,7 @@ function RouteComponent() {
 
   return <WorkshopCard
     workshop={workshop}
-    eventId={event._id}
+    event={event}
     reservedAbbreviations={event.workshops.filter(w => w._id !== workshop._id).map(w => w.abbreviation).filter(a => a) as string[]}
     beginDate={event.beginDate}
     endDate={event.endDate}
@@ -41,15 +41,16 @@ function RouteComponent() {
 
 function WorkshopCard(
   {
-    workshop, reservedAbbreviations, beginDate, endDate, eventId,
+    workshop, reservedAbbreviations, beginDate, endDate, event,
   }: {
     workshop: Workshop
-    eventId: string
+    event: Event
     reservedAbbreviations: string[]
     beginDate: string
     endDate: string
   },
 ) {
+  const eventId = event._id
   const t = useT('routes.events.event.workshop')
   const [deleteWorkshop] = useDeleteWorkshop({ refetchQueries: ['getEvent'] })
   const { _id, abbreviation, name } = workshop
@@ -77,7 +78,14 @@ function WorkshopCard(
             <> ({abbreviation})</>
       }
     </H2>
-    <WorkshopEditor eventId={eventId} workshop={workshop} reservedAbbreviations={reservedAbbreviations} beginDate={beginDate} endDate={endDate} />
+    <WorkshopEditor
+      eventId={eventId}
+      workshop={workshop}
+      reservedAbbreviations={reservedAbbreviations}
+      beginDate={beginDate}
+      endDate={endDate}
+      eventRegistrationSystem={event.eventRegistrationSystem}
+    />
     <DocumentList
       title={t('documents')}
       owner="workshops"

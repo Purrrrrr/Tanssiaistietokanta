@@ -40,7 +40,7 @@ type EventVolunteerAssignment implements Versionable {
 type Mutation {
   createEventVolunteerAssignment(eventVolunteerAssignment: EventVolunteerAssignmentInput!): EventVolunteerAssignment!
   setEventVolunteerAssignmentWorkshopInstances(id: ID!, workshopInstanceIds: [ID!]): EventVolunteerAssignment!
-  # patchEventVolunteerAssignment(id: ID!, eventVolunteerAssignment: EventVolunteerAssignmentPatchInput!): EventVolunteerAssignment!
+  setEventVolunteerAssignmentRegistrationStatus(id: ID!, registrationStatus: EventVolunteerRegistrationStatus!): EventVolunteerAssignment!
   deleteEventVolunteerAssignment(id: ID!): EventVolunteerAssignment!
 }
 
@@ -51,13 +51,4 @@ input EventVolunteerAssignmentInput {
   roleId: ID!
   volunteerId: ID!
   registrationStatus: EventVolunteerRegistrationStatus!
-}
-
-input EventVolunteerAssignmentPatchInput {
-  eventId: ID
-  workshopId: ID
-  workshopInstanceIds: [ID!]
-  roleId: ID
-  volunteerId: ID
-  registrationStatus: EventVolunteerRegistrationStatus
 }

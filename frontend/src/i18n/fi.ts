@@ -49,6 +49,11 @@ export const fi = {
           limited: 'Rajoitettu',
         },
       },
+      eventRegistrationSystem: 'Tapahtuman ilmoittautumisjärjestelmä',
+    },
+    EventRegistrationSystem: {
+      None: 'Ei käytössä',
+      Kompassi: 'Kompassi',
     },
     allowedViewers: {
       everyone: 'Kaikki käyttäjät',
@@ -563,6 +568,7 @@ export const fi = {
           title: 'Muokkaa tapahtuman tietoja',
           deleteEvent: 'Poista tämä tapahtuma',
           eventDeleteConfirmation: 'Haluatko varmasti poistaa tapahtuman __eventName__?',
+          cannotChangeEventRegistrationSystem: 'Tapahtuman ilmoittautumisjärjestelmää ei voi muuttaa, koska tapahtumalla on jo järjestelmään ilmoitettuja vapaaehtoisia.',
         },
         volunteers: {
           title: 'Vapaaehtoiset',

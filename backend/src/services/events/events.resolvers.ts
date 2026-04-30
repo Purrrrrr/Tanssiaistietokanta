@@ -6,6 +6,7 @@ import { eventsSchema } from './events.schema'
 
 export default (app: Application): Resolvers => {
   const workshopService = app.service('workshops')
+  const volunteerAssignmentService = app.service('eventVolunteerAssignments')
   const service = app.service('events')
 
   const $sort = { beginDate: -1, name: 1 }
@@ -18,6 +19,9 @@ export default (app: Application): Resolvers => {
         if (!program.introductions.title) return L.set(['introductions', 'title'], event.name, program)
         return program
       },
+      hasRegisteredVolunteers: (event) => volunteerAssignmentService.exists({
+        query: { eventId: event._id, registrationStatus: { $in: ['RegisteredToEventSystem', 'AcceptedRegistration'] } },
+      }),
     },
     EventVolunteerAssignment: {
       event: (assignment, _, __, info) =>

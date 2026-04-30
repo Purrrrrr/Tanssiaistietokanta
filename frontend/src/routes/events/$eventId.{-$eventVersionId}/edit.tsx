@@ -8,6 +8,7 @@ import { useDeleteEvent, usePatchEvent } from 'services/events'
 
 import { DateField, DateRangeField, formFor, patchStrategy, useAutosavingState } from 'libraries/forms'
 import { JSONPatch } from 'components/event/EventProgramForm/patchStrategy'
+import { EventRegistrationSystemSelector } from 'components/event/EventRegistrationSystemSelector'
 import { EventGrantsEditor } from 'components/rights/EventGrantsEditor'
 import { DeleteButton } from 'components/widgets/DeleteButton'
 import { PageSection } from 'components/widgets/PageSection'
@@ -31,6 +32,7 @@ export const Route = createFileRoute(
 const {
   Input,
   Form,
+  Field,
 } = formFor<WithoutMetadata<Event>>()
 
 function RouteComponent() {
@@ -49,6 +51,7 @@ function RouteComponent() {
     [event._id, patchEvent],
   )
   const { state, formProps } = useAutosavingState<WithoutMetadata<Event>, JSONPatch>(cleanMetadataValues<Event>(event), patch, patchStrategy.jsonPatch)
+  const registrationSystemReadOnly = event.eventRegistrationSystem === 'Kompassi' && event.hasRegisteredVolunteers
 
   return <PageSection title={t('title')} syncStatus={state} toolbar={
     <DeleteButton
@@ -71,11 +74,23 @@ function RouteComponent() {
           required
         />
         <DateField<Event>
+          required
           label={(label('ballDateTime'))}
           path="program.dateTime"
           showTime
           minDate={formProps.value.beginDate}
           maxDate={formProps.value.endDate}
+        />
+        <Field
+          readOnly={registrationSystemReadOnly}
+          label={label('eventRegistrationSystem')}
+          path="eventRegistrationSystem"
+          component={EventRegistrationSystemSelector}
+          helperText={
+            registrationSystemReadOnly
+              ? t('cannotChangeEventRegistrationSystem')
+              : undefined
+          }
         />
       </div>
       <EventGrantsEditor eventId={event._id} />

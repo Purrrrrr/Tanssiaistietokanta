@@ -9,6 +9,7 @@ import { useCreateEvent } from 'services/events'
 import { useCurrentUser } from 'services/users'
 
 import { DateRangeField, formFor, SubmitButton } from 'libraries/forms'
+import { EventRegistrationSystemSelector } from 'components/event/EventRegistrationSystemSelector'
 import { Page } from 'components/Page'
 import { EventGrantsEditor } from 'components/rights/EventGrantsEditor'
 import { useT } from 'i18n'
@@ -17,6 +18,7 @@ import randomId from 'utils/randomId'
 const {
   Form,
   Input,
+  Field,
 } = formFor<EventInput>()
 
 export const Route = createFileRoute('/events/new')({
@@ -59,6 +61,11 @@ function CreateEventForm() {
           beginPath="beginDate"
           endPath="endDate"
           required
+        />
+        <Field
+          label={label('eventRegistrationSystem')}
+          path="eventRegistrationSystem"
+          component={EventRegistrationSystemSelector}
         />
       </div>
       <EventGrantsEditor />
