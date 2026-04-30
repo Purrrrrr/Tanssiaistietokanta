@@ -34,6 +34,7 @@ export const BackendProvider = ({ children }) => {
 
 type MetadataKey = '_id' | '_versionId' | '_versionNumber' | '_updatedAt'
 type MetadataObject = Partial<Record<MetadataKey, unknown>>
+export type WithoutMetadata<T> = Omit<T, MetadataKey>
 
 export function cleanMetadataValues<T extends MetadataObject>(value: MetadataObject): Omit<T, MetadataKey> {
   const { _id, _versionId, _versionNumber, _updatedAt, ...rest } = value

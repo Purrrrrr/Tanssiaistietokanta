@@ -2,6 +2,7 @@ import { useState } from 'react'
 
 import { Volunteer } from 'types'
 
+import { cleanMetadataValues } from 'backend'
 import { usePatchVolunteer } from 'services/volunteers'
 
 import { patchStrategy, useAutosavingState } from 'libraries/forms'
@@ -114,7 +115,7 @@ function VolunteerRowEditor({ item }: { item: Volunteer }) {
   const [patchEventVolunteer] = usePatchVolunteer()
 
   const { formProps, state } = useAutosavingState<VolunteerFormValues, Partial<VolunteerFormValues>>(
-    item,
+    cleanMetadataValues<Volunteer>(item),
     async ({ name }) => {
       await patchEventVolunteer({
         id: item._id,

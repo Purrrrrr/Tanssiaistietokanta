@@ -1,9 +1,11 @@
 import { Volunteer } from 'types'
 
+import { WithoutMetadata } from 'backend'
+
 import { formFor, type FormProps, SubmitButton, type SyncState, SyncStatus } from 'libraries/forms'
 import { useT } from 'i18n'
 
-export type VolunteerFormValues = Pick<Volunteer, 'name'>
+export type VolunteerFormValues = WithoutMetadata<Pick<Volunteer, 'name'>>
 
 export const emptyVolunteerForm: VolunteerFormValues = {
   name: '',

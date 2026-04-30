@@ -3,6 +3,7 @@ import { useCallback } from 'react'
 
 import { Event } from 'types'
 
+import { cleanMetadataValues, WithoutMetadata } from 'backend'
 import { useDeleteEvent, usePatchEvent } from 'services/events'
 
 import { DateField, DateRangeField, formFor, patchStrategy, useAutosavingState } from 'libraries/forms'
@@ -30,7 +31,7 @@ export const Route = createFileRoute(
 const {
   Input,
   Form,
-} = formFor<Event>()
+} = formFor<WithoutMetadata<Event>>()
 
 function RouteComponent() {
   const event = useCurrentEvent()
@@ -47,7 +48,7 @@ function RouteComponent() {
     (eventPatch: JSONPatch) => patchEvent({ id: event._id, event: eventPatch }),
     [event._id, patchEvent],
   )
-  const { state, formProps } = useAutosavingState<Event, JSONPatch>(event, patch, patchStrategy.jsonPatch)
+  const { state, formProps } = useAutosavingState<WithoutMetadata<Event>, JSONPatch>(cleanMetadataValues<Event>(event), patch, patchStrategy.jsonPatch)
 
   return <PageSection title={t('title')} syncStatus={state} toolbar={
     <DeleteButton

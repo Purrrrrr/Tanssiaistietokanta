@@ -2,6 +2,7 @@ import { useCallback } from 'react'
 
 import { Dance, EditableDance } from 'types'
 
+import { cleanMetadataValues } from 'backend'
 import { usePatchDance } from 'services/dances'
 
 import { useRight } from 'libraries/access-control'
@@ -28,7 +29,7 @@ export function useDanceEditorState(dance: Dance) {
     },
     [modifyDance, dance._id, readOnly],
   )
-  const { wikipage: _ignored, ...editedDance } = dance
+  const { wikipage: _ignored, ...editedDance } = cleanMetadataValues<Dance>(dance)
 
   const { formProps, ...rest } = useAutosavingState<EditableDance, unknown[]>(editedDance, patchDance, patchStrategy.jsonPatch)
 

@@ -5,7 +5,7 @@ import classNames from 'classnames'
 import { Dance, EditableDance } from 'types'
 import { DanceInstructionsQuery } from 'types/gql/graphql'
 
-import { backendQueryHook, graphql } from 'backend'
+import { backendQueryHook, cleanMetadataValues, graphql } from 'backend'
 import { sortDances, usePatchDance } from 'services/dances'
 import { useCallbackOnEventChanges } from 'services/events'
 
@@ -32,7 +32,7 @@ export const Route = createFileRoute(
 
 type Workshop = NonNullable<DanceInstructionsQuery['event']>['workshops'][0]
 
-const { Form, Field } = formFor<Dance>()
+const { Form, Field } = formFor<EditableDance>()
 
 function RouteComponent() {
   const eventId = Route.useParams().eventId
@@ -196,7 +196,7 @@ function DanceFieldEditor({ dance: danceInDatabase, field }: { dance: Dance, fie
     }),
     [danceInDatabase, patchDance],
   )
-  const { value, onChange, state } = useAutosavingState<EditableDance, unknown[]>(danceInDatabase, onPatch, patchStrategy.jsonPatch)
+  const { value, onChange, state } = useAutosavingState<EditableDance, unknown[]>(cleanMetadataValues<Dance>(danceInDatabase), onPatch, patchStrategy.jsonPatch)
 
   return <Form value={value} onChange={onChange}>
     <SyncStatus state={state} floatRight />

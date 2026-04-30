@@ -3,6 +3,7 @@ import { useCallback } from 'react'
 
 import { Document } from 'types'
 
+import { cleanMetadataValues } from 'backend'
 import { useDocument, usePatchDocument } from 'services/documents'
 
 import { formFor, patchStrategy, useAutosavingState } from 'libraries/forms'
@@ -35,8 +36,7 @@ function DocumentEditorInner({ document }: { document: Document }) {
     (patch: unknown[]) => patchDocument({ id: document._id, document: patch }),
     [patchDocument, document._id],
   )
-  const documentFormValue = { title: document.title, content: document.content }
-  const { formProps, state } = useAutosavingState<EditableDocument, unknown[]>(documentFormValue, save, patchStrategy.jsonPatch)
+  const { formProps, state } = useAutosavingState<EditableDocument, unknown[]>(cleanMetadataValues<Document>(document), save, patchStrategy.jsonPatch)
   const viewRoute = documentViewRoute(document)
   const params = getRouteApi(viewRoute).useParams()
 

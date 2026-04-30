@@ -3,6 +3,7 @@ import { string } from 'yup'
 
 import { Event } from 'types'
 
+import { cleanMetadataValues, WithoutMetadata } from 'backend'
 import { useEventRoles } from 'services/eventRoles'
 import { usePatchWorkshop, workshopInstanceName } from 'services/workshops'
 
@@ -18,6 +19,7 @@ import { AddButton } from './widgets/AddButton'
 import { PageSection } from './widgets/PageSection'
 
 type Workshop = Event['workshops'][0]
+type EditableWorkshop = WithoutMetadata<Workshop>
 type Instance = Workshop['instances'][number]
 
 const {
@@ -29,7 +31,7 @@ const {
   Switch,
   useValueAt,
   useAppendToList,
-} = formFor<Workshop>()
+} = formFor<EditableWorkshop>()
 
 interface WorkshopEditorProps {
   eventId: string
@@ -64,7 +66,7 @@ export function WorkshopEditor({ eventId, workshop: workshopInDatabase, reserved
     })
   }
 
-  const { formProps, state } = useAutosavingState<Workshop, Partial<Workshop>>(workshopInDatabase, saveWorkshop, patchStrategy.partial)
+  const { formProps, state } = useAutosavingState<EditableWorkshop, Partial<EditableWorkshop>>(cleanMetadataValues<Workshop>(workshopInDatabase), saveWorkshop, patchStrategy.partial)
   const readOnly = workshopInDatabase._versionId != null
   const addInstance = (instance: Instance) => formProps.onChange(w => ({ ...w, instances: [...w.instances, instance] }), 'instances')
 
