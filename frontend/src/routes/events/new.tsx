@@ -46,6 +46,7 @@ function CreateEventForm() {
     beginDate: '',
     endDate: '',
     accessControl: { viewAccess: ViewAccess.Public, grants: initialGrants },
+    eventRegistrationSystem: 'None',
   })
 
   return <Page title={t('newEvent')}>

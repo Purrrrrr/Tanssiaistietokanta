@@ -67,7 +67,7 @@ export function VolunteerAssignmentEditor({ id, eventId, eventVersionId, roleId,
 
   const onChange = async (newVolunteer: VolunteerOption) => {
     await createAssignment({
-      eventVolunteerAssignment: { eventId, roleId, volunteerId: newVolunteer._id, workshopId },
+      eventVolunteerAssignment: { eventId, roleId, volunteerId: newVolunteer._id, workshopId, registrationStatus: 'None' },
     })
   }
   const readOnly = eventVersionId != null || workshopVersionId != null
