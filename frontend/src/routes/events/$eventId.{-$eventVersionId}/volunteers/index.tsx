@@ -244,6 +244,7 @@ function EventVolunteerRowEditor({ item, addedVolunteers, readOnly }: {
           notes: data.notes,
           volunteerId: data.volunteer?._id,
           interestedIn: data.interestedIn?.map(r => r._id),
+          acceptedRoles: data.interestedIn?.map(r => r._id),
         },
       })
     },
