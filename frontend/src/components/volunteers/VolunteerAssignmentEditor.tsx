@@ -1,3 +1,5 @@
+import { useId } from 'react'
+
 import { EventRegistrationSystem, EventVolunteerAssignment, EventVolunteerRegistrationStatus, ID } from 'types'
 
 import { useShowGlobalLoadingAnimation } from 'backend'
@@ -6,8 +8,8 @@ import { useEventVolunteers } from 'services/eventVolunteers'
 import { useVolunteerNames } from 'services/volunteers'
 import { workshopInstanceName } from 'services/workshops'
 
-import { AutocompleteInput } from 'libraries/formsV2/components/inputs/selectors'
-import { Button, ItemList } from 'libraries/ui'
+import { AutocompleteInput, Select } from 'libraries/formsV2/components/inputs/selectors'
+import { ItemList } from 'libraries/ui'
 import { ModeButton, ModeSelector } from 'libraries/ui/ModeSelector'
 import { DeleteButton } from 'components/widgets/DeleteButton'
 import { useT } from 'i18n'
@@ -78,10 +80,11 @@ export function VolunteerAssignmentEditor({ id, eventId, eventVersionId, roleId,
     <ItemList
       items={currentAssignments}
       emptyText={t('noVolunteers')}
-      columns={workshopInstances ? 'grid-cols-[1fr_max-content_auto]' : 'grid-cols-[1fr_auto]'}>
+      columns="grid-cols-[1fr_max-content_max-content_auto]">
       <ItemList.Header>
         <span>{t('name')}</span>
         {workshopInstances && <span>{t('instance')}</span>}
+        {eventRegistrationSystem !== 'None' && <span>{t('registrationStatus')}</span>}
       </ItemList.Header>
       {currentAssignments.map(assignment => (
         <ItemList.Row key={assignment._id}>
@@ -103,6 +106,7 @@ export function VolunteerAssignmentEditor({ id, eventId, eventVersionId, roleId,
           }
           {!readOnly &&
             <DeleteButton
+              className="col-start-4"
               minimal
               iconOnly
               text={t('removeVolunteer')}
@@ -176,12 +180,16 @@ function RegistrationStatusSelector({ registrationStatus, setRegistrationStatus,
   setRegistrationStatus: (registrationStatus: EventVolunteerRegistrationStatus) => void
   disabled?: boolean
 }) {
-  return <span>
-    { registrationStatus }
-    <Button disabled={disabled} onClick={() => setRegistrationStatus('None')}>Not registered</Button>
-    <Button disabled={disabled} onClick={() => setRegistrationStatus('RegisteredToEventSystem')}>Registered</Button>
-    <Button disabled={disabled} onClick={() => setRegistrationStatus('AcceptedRegistration')}>Accepted</Button>
-  </span>
+  const t = useT('domain.EventVolunteerAssignmentRegistrationStatus')
+  return <Select<EventVolunteerRegistrationStatus>
+    minimal
+    id={useId()}
+    readOnly={disabled}
+    value={registrationStatus}
+    onChange={setRegistrationStatus}
+    items={['None', 'RegisteredToEventSystem', 'AcceptedRegistration', 'InformedToOrganizers']}
+    itemToString={t}
+  />
 }
 
 interface VolunteerOption { _id: string, name: string }

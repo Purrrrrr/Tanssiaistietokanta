@@ -55,6 +55,12 @@ export const fi = {
       None: 'Ei käytössä',
       Kompassi: 'Kompassi',
     },
+    EventVolunteerAssignmentRegistrationStatus: {
+      None: 'Ei ilmoitettu',
+      RegisteredToEventSystem: 'Ilmoitettu Kompassiin',
+      AcceptedRegistration: 'Hyväksynyt kompassi-kutsun',
+      InformedToOrganizers: 'Ilmoitettu muuta kautta',
+    },
     allowedViewers: {
       everyone: 'Kaikki käyttäjät',
       loggedIn: 'Kirjautuneet käyttäjät',
@@ -240,6 +246,7 @@ export const fi = {
       name: 'Nimi',
       instance: 'Opetuskerta',
       allInstances: 'Kaikki',
+      registrationStatus: 'Ilmoittautumistilanne',
     },
     eventRoleSelector: {
       workshopRoles: 'Työpajaroolit',
