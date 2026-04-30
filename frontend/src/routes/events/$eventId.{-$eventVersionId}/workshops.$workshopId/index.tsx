@@ -34,20 +34,16 @@ function RouteComponent() {
     workshop={workshop}
     event={event}
     reservedAbbreviations={event.workshops.filter(w => w._id !== workshop._id).map(w => w.abbreviation).filter(a => a) as string[]}
-    beginDate={event.beginDate}
-    endDate={event.endDate}
   />
 }
 
 function WorkshopCard(
   {
-    workshop, reservedAbbreviations, beginDate, endDate, event,
+    workshop, reservedAbbreviations, event,
   }: {
     workshop: Workshop
     event: Event
     reservedAbbreviations: string[]
-    beginDate: string
-    endDate: string
   },
 ) {
   const eventId = event._id
@@ -78,14 +74,7 @@ function WorkshopCard(
             <> ({abbreviation})</>
       }
     </H2>
-    <WorkshopEditor
-      eventId={eventId}
-      workshop={workshop}
-      reservedAbbreviations={reservedAbbreviations}
-      beginDate={beginDate}
-      endDate={endDate}
-      eventRegistrationSystem={event.eventRegistrationSystem}
-    />
+    <WorkshopEditor event={event} workshop={workshop} reservedAbbreviations={reservedAbbreviations} />
     <DocumentList
       title={t('documents')}
       owner="workshops"

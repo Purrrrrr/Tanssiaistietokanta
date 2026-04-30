@@ -1,7 +1,7 @@
-import { Fragment, useMemo } from 'react'
+import { useMemo } from 'react'
 import { string } from 'yup'
 
-import { Event, EventRegistrationSystem } from 'types'
+import { Event } from 'types'
 
 import { cleanMetadataValues, WithoutMetadata } from 'backend'
 import { useEventRoles } from 'services/eventRoles'
@@ -9,7 +9,7 @@ import { usePatchWorkshop, workshopInstanceName } from 'services/workshops'
 
 import { DateField, DragHandle, formFor, NumberInput, patchStrategy, SyncStatus, useAutosavingState } from 'libraries/forms'
 import { DocumentContentEditor } from 'libraries/lexical'
-import { ColorClass, FormGroup, H2 } from 'libraries/ui'
+import { ColorClass, FormGroup } from 'libraries/ui'
 import { DanceChooser } from 'components/widgets/DanceChooser'
 import { useT, useTranslation } from 'i18n'
 import randomId from 'utils/randomId'
@@ -34,15 +34,13 @@ const {
 } = formFor<EditableWorkshop>()
 
 interface WorkshopEditorProps {
-  eventId: string
-  eventRegistrationSystem: EventRegistrationSystem
+  event: Event
   workshop: Workshop
   reservedAbbreviations: string[]
-  beginDate: string
-  endDate: string
 }
 
-export function WorkshopEditor({ eventId, eventRegistrationSystem, workshop: workshopInDatabase, reservedAbbreviations, beginDate, endDate }: WorkshopEditorProps) {
+export function WorkshopEditor({ event, workshop: workshopInDatabase, reservedAbbreviations }: WorkshopEditorProps) {
+  const { beginDate, endDate } = event
   const t = useT('components.workshopEditor')
   const [modifyWorkshop] = usePatchWorkshop({
     refetchQueries: ['getEvent'],
@@ -79,20 +77,18 @@ export function WorkshopEditor({ eventId, eventRegistrationSystem, workshop: wor
     </div>
     <Field path="description" component={DocumentContentEditor} label={t('description')} componentProps={{ className: 'min-h-50' }} />
     {workshopRoles.map(role =>
-      <Fragment key={role._id}>
-        <H2>{role.plural}</H2>
-        <VolunteerAssignmentEditor
-          id={`workshop-${workshopId}-role-${role._id}`}
-          eventId={eventId}
-          roleId={role._id}
-          workshopId={workshopInDatabase._id}
-          workshopVersionId={workshopInDatabase._versionId ?? undefined}
-          workshopInstances={
-            role.type !== 'TEACHER' ? workshopInDatabase.instances : undefined
-          }
-          eventRegistrationSystem={eventRegistrationSystem}
-        />
-      </Fragment>,
+      <VolunteerAssignmentEditor
+        key={role._id}
+        id={`workshop-${workshopId}-role-${role._id}`}
+        title={role.plural}
+        event={event}
+        roleId={role._id}
+        workshopId={workshopInDatabase._id}
+        workshopVersionId={workshopInDatabase._versionId ?? undefined}
+        workshopInstances={
+          role.type !== 'TEACHER' ? workshopInDatabase.instances : undefined
+        }
+      />,
     )}
     <PageSection
       title={t('instancesAndDances')}

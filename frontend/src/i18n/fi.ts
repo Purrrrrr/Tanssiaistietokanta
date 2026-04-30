@@ -233,13 +233,26 @@ export const fi = {
       noVolunteers: 'Ei vapaaehtoisia',
       createNewVolunteer: 'Luo uusi vapaaehtoinen',
     },
-    volunteerAssignmentSelector: {
+    volunteerAssignmentEditor: {
       addVolunteer: 'Lisää vapaaehtoinen',
       noVolunteers: 'Ei vapaaehtoisia',
+      selectedVolunteers: {
+        one: 'Valittu 1 vapaaehtoinen',
+        many: 'Valittu __count__ vapaaehtoista',
+      },
+      setRegistrationStatus: 'Aseta ilmoittautumistilanne',
       removeVolunteer: 'Poista vapaaehtoinen',
       removeVolunteerConfirmation: {
         title: 'Poistetaanko vapaaehtoinen?',
-        text: 'haluatko varmasti poistaa vapaaehtoisen __name__?',
+        text: 'Haluatko varmasti poistaa vapaaehtoisen __name__?',
+      },
+      removeVolunteers: {
+        one: 'Poista valittu',
+        many: 'Poista valitut',
+      },
+      removeVolunteersConfirmation: {
+        title: 'Poistetaanko vapaaehtoiset?',
+        text: 'Haluatko varmasti poistaa vapaaehtoiset: __name__?',
       },
       eventVolunteers: 'Kiinnostuneet vapaaehtoiset',
       allVolunteers: 'Kaikki vapaaehtoiset',
@@ -247,6 +260,7 @@ export const fi = {
       instance: 'Opetuskerta',
       allInstances: 'Kaikki',
       registrationStatus: 'Ilmoittautumistilanne',
+      chooseStatus: 'Valitse',
     },
     eventRoleSelector: {
       workshopRoles: 'Työpajaroolit',

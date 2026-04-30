@@ -1,6 +1,4 @@
-import { useId } from 'react'
-
-import { EventRegistrationSystem, EventVolunteerAssignment, EventVolunteerRegistrationStatus, ID } from 'types'
+import { Event, EventVolunteerAssignment, EventVolunteerRegistrationStatus, ID } from 'types'
 
 import { useShowGlobalLoadingAnimation } from 'backend'
 import { useCreateEventVolunteerAssignment, useDeleteEventVolunteerAssignment, useEventVolunteerAssignments, useSetEventVolunteerAssignmentRegistrationStatus, useSetEventVolunteerAssignmentWorkshopInstance } from 'services/eventVolunteerAssignments'
@@ -9,24 +7,27 @@ import { useVolunteerNames } from 'services/volunteers'
 import { workshopInstanceName } from 'services/workshops'
 
 import { AutocompleteInput, Select } from 'libraries/formsV2/components/inputs/selectors'
-import { ItemList } from 'libraries/ui'
+import { FormGroup, ItemList } from 'libraries/ui'
 import { ModeButton, ModeSelector } from 'libraries/ui/ModeSelector'
 import { DeleteButton } from 'components/widgets/DeleteButton'
-import { useT } from 'i18n'
+import { PageSection } from 'components/widgets/PageSection'
+import { SelectionBox } from 'components/widgets/SelectionBox'
+import { useT, useTranslation } from 'i18n'
+import { useMultipleSelection } from 'utils/useMultipleSelection'
 
 export interface VolunteerAssignmentEditorProps {
   id: string
-  eventId: ID
-  eventVersionId?: ID
+  title: string
+  event: Pick<Event, '_id' | '_versionId' | 'eventRegistrationSystem'>
   roleId: ID
   workshopId?: ID
   workshopVersionId?: ID
   workshopInstances?: { _id: ID, abbreviation?: string | null }[]
-  eventRegistrationSystem?: EventRegistrationSystem
 }
 
-export function VolunteerAssignmentEditor({ id, eventId, eventVersionId, roleId, workshopId, workshopVersionId, workshopInstances, eventRegistrationSystem = 'None' }: VolunteerAssignmentEditorProps) {
-  const t = useT('components.volunteerAssignmentSelector')
+export function VolunteerAssignmentEditor({ title, id, event, roleId, workshopId, workshopVersionId, workshopInstances }: VolunteerAssignmentEditorProps) {
+  const { _id: eventId, _versionId: eventVersionId, eventRegistrationSystem } = event
+  const t = useT('components.volunteerAssignmentEditor')
   const [currentAssignments = [], requestState1] = useEventVolunteerAssignments({ eventId, eventVersionId, roleId, workshopId, workshopVersionId })
   const [eventVolunteers = [], requestState2] = useEventVolunteers({ eventId })
   const [allVolunteers = [], requestState3] = useVolunteerNames()
@@ -34,6 +35,7 @@ export function VolunteerAssignmentEditor({ id, eventId, eventVersionId, roleId,
   const [setAssignmentWorkshopInstance] = useSetEventVolunteerAssignmentWorkshopInstance()
   const [setAssignmentRegistrationStatus] = useSetEventVolunteerAssignmentRegistrationStatus()
   const [deleteAssignment] = useDeleteEventVolunteerAssignment()
+  const { selected, ...selector } = useMultipleSelection(currentAssignments)
 
   useShowGlobalLoadingAnimation(requestState1.loading || requestState2.loading || requestState3.loading)
   const errors = [requestState1.error, requestState2.error, requestState3.error].filter(e => e != null)
@@ -76,18 +78,42 @@ export function VolunteerAssignmentEditor({ id, eventId, eventVersionId, roleId,
   }
   const readOnly = eventVersionId != null || workshopVersionId != null
 
-  return <>
+  return <PageSection
+    title={title}
+    introText={selected.length > 0 ? t('selectedVolunteers', { count: selected.length }) : undefined}
+    toolbar={selected.length > 0 && !readOnly && <>
+      {eventRegistrationSystem !== 'None' && (
+        <FormGroup inline label={t('setRegistrationStatus')} labelStyle="beside" labelFor={`${id}-registrationStatus-bulk`}>
+          <RegistrationStatusSelector
+            id={`${id}-registrationStatus-bulk`}
+            onChange={status => Promise.all(selected.map(a => setAssignmentRegistrationStatus({ id: a._id, registrationStatus: status })))}
+          />
+        </FormGroup>
+      ) }
+      <DeleteButton
+        minimal
+        text={t('removeVolunteers', { count: selected.length })}
+        onDelete={() => Promise.all([
+          selected.map(assignment => deleteAssignment({ id: assignment._id })),
+        ])}
+        confirmTitle={t('removeVolunteersConfirmation.title')}
+        confirmText={t('removeVolunteersConfirmation.text', { name: selected.map(a => a.volunteer.name).join(', ') })}
+      />
+    </>}
+  >
     <ItemList
       items={currentAssignments}
       emptyText={t('noVolunteers')}
-      columns="grid-cols-[1fr_max-content_max-content_auto]">
+      columns="grid-cols-[auto_1fr_max-content_max-content_auto]">
       <ItemList.Header>
+        <SelectionBox {...selector.selectAllProps} />
         <span>{t('name')}</span>
         {workshopInstances && <span>{t('instance')}</span>}
         {eventRegistrationSystem !== 'None' && <span>{t('registrationStatus')}</span>}
       </ItemList.Header>
       {currentAssignments.map(assignment => (
         <ItemList.Row key={assignment._id}>
+          <SelectionBox {...selector.selectItemProps(assignment)} />
           <span>{assignment.volunteer.name}</span>
           <WorkshopInstanceSelector
             workshopInstances={workshopInstances ?? []}
@@ -97,8 +123,9 @@ export function VolunteerAssignmentEditor({ id, eventId, eventVersionId, roleId,
           />
           {eventRegistrationSystem !== 'None' &&
             <RegistrationStatusSelector
-              registrationStatus={assignment.registrationStatus}
-              setRegistrationStatus={registrationStatus =>
+              id={`${id}-registrationStatus-${assignment._id}`}
+              value={assignment.registrationStatus}
+              onChange={registrationStatus =>
                 setAssignmentRegistrationStatus({ id: assignment._id, registrationStatus })
               }
               disabled={readOnly}
@@ -106,7 +133,7 @@ export function VolunteerAssignmentEditor({ id, eventId, eventVersionId, roleId,
           }
           {!readOnly &&
             <DeleteButton
-              className="col-start-4"
+              className="col-start-5"
               minimal
               iconOnly
               text={t('removeVolunteer')}
@@ -130,7 +157,7 @@ export function VolunteerAssignmentEditor({ id, eventId, eventVersionId, roleId,
       noResultsText={t('noVolunteers')}
     />
     {errors.map((error, i) => <div key={i} className="text-red-500">{error.message}</div>)}
-  </>
+  </PageSection>
 }
 
 function WorkshopInstanceSelector({ workshopInstances, readOnly, assignment, setInstanceIds }: {
@@ -145,7 +172,7 @@ function WorkshopInstanceSelector({ workshopInstances, readOnly, assignment, set
   const disabled = readOnly === true
     || assignment.registrationStatus === 'RegisteredToEventSystem'
     || assignment.registrationStatus === 'AcceptedRegistration'
-  const t = useT('components.volunteerAssignmentSelector')
+  const t = useT('components.volunteerAssignmentEditor')
   return workshopInstances && workshopInstances.length > 1 && <ModeSelector>
     <ModeButton
       disabled={disabled}
@@ -175,20 +202,24 @@ function WorkshopInstanceSelector({ workshopInstances, readOnly, assignment, set
   </ModeSelector>
 }
 
-function RegistrationStatusSelector({ registrationStatus, setRegistrationStatus, disabled }: {
-  registrationStatus: EventVolunteerRegistrationStatus
-  setRegistrationStatus: (registrationStatus: EventVolunteerRegistrationStatus) => void
+const statuses: EventVolunteerRegistrationStatus[] = ['None', 'RegisteredToEventSystem', 'AcceptedRegistration', 'InformedToOrganizers']
+
+function RegistrationStatusSelector({ id, value, onChange, disabled }: {
+  id: string
+  value?: EventVolunteerRegistrationStatus
+  onChange: (registrationStatus: EventVolunteerRegistrationStatus) => void
   disabled?: boolean
 }) {
   const t = useT('domain.EventVolunteerAssignmentRegistrationStatus')
-  return <Select<EventVolunteerRegistrationStatus>
+  const choose = useTranslation('components.volunteerAssignmentEditor.chooseStatus')
+  return <Select<EventVolunteerRegistrationStatus | null>
     minimal
-    id={useId()}
+    id={id}
     readOnly={disabled}
-    value={registrationStatus}
-    onChange={setRegistrationStatus}
-    items={['None', 'RegisteredToEventSystem', 'AcceptedRegistration', 'InformedToOrganizers']}
-    itemToString={t}
+    value={value ?? null}
+    onChange={status => status && onChange(status)}
+    items={value ? statuses : [null, ...statuses]}
+    itemToString={status => status ? t(status) : choose}
   />
 }
 
