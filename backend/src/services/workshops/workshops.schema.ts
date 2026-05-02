@@ -30,6 +30,7 @@ export const workshopsSchema = Type.Object(
     description: DocumentContent(),
     instances: Type.Array(WorkshopInstanceSchema()),
     instanceSpecificDances: Type.Boolean(),
+    registrationStatus: Type.Union([Type.Literal('None'), Type.Literal('RegisteredToEventSystem'), Type.Literal('InformedToOrganizers')]),
     _childEventVolunteerAssignmentsUpdatedAt: Type.Optional(Type.String()),
   },
   { $id: 'Workshops', additionalProperties: false },

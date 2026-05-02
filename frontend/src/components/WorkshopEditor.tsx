@@ -17,6 +17,7 @@ import randomId from 'utils/randomId'
 import { VolunteerAssignmentEditor } from './volunteers/VolunteerAssignmentEditor'
 import { AddButton } from './widgets/AddButton'
 import { PageSection } from './widgets/PageSection'
+import { WorkshopRegistrationStatusSelector } from './workshops/WorkshopRegistrationStatusSelector'
 
 type Workshop = Event['workshops'][0]
 type EditableWorkshop = WithoutMetadata<Workshop>
@@ -49,13 +50,14 @@ export function WorkshopEditor({ event, workshop: workshopInDatabase, reservedAb
   const workshopRoles = roles.filter(r => r.appliesToWorkshops)
   const workshopId = workshopInDatabase._id
   const saveWorkshop = (data: Partial<Workshop>) => {
-    const { instances, name, abbreviation, description, instanceSpecificDances } = data
+    const { instances, name, abbreviation, description, registrationStatus, instanceSpecificDances } = data
     return modifyWorkshop({
       id: workshopId,
       workshop: {
         name,
         abbreviation,
         description,
+        registrationStatus,
         instanceSpecificDances,
         instances: instances?.map(({ dances, __typename, hasVolunteerAssignments: _ignore, ...i }) => ({
           ...i,
@@ -75,6 +77,13 @@ export function WorkshopEditor({ event, workshop: workshopInDatabase, reservedAb
       <Input path="name" required label={t('name')} labelInfo={t('required')} />
       <AbbreviationField path="abbreviation" label={t('abbreviation')} reservedAbbreviations={reservedAbbreviations} />
     </div>
+    {event.eventRegistrationSystem !== 'None' &&
+      <Field
+        path="registrationStatus"
+        component={WorkshopRegistrationStatusSelector}
+        label={t('registrationStatus')}
+      />
+    }
     <Field path="description" component={DocumentContentEditor} label={t('description')} componentProps={{ className: 'min-h-50' }} />
     {workshopRoles.map(role =>
       <VolunteerAssignmentEditor

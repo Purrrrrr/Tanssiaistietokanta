@@ -201,6 +201,7 @@ query getEvent($id: ID!, $versionId: ID) {
       name
       abbreviation
       description
+      registrationStatus
       volunteerAssignments {
         _id
         _eventId
@@ -376,6 +377,7 @@ mutation patchEventProgram($id: ID!, $program: JSONPatch!) {
       name
       abbreviation
       description
+      registrationStatus
       volunteerAssignments {
         _id
         _eventId

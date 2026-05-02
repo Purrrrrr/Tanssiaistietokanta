@@ -209,6 +209,12 @@ export const fi = {
       abbreviation: 'Lyhennemerkintä',
       abbreviationHelp: 'Lyhennemerkintä näytetään settilistassa työpajassa opetettujen tanssien kohdalla',
       abbreviationTaken: 'Lyhenne __abbreviation__ on jo käytössä toisessa pajassa. Tässä tapahtumassa ovat jo käytössä seuraavat lyhenteet: __abbreviations',
+      registrationStatus: 'Ilmoittautumistilanne',
+      WorkshopRegistrationStatus: {
+        None: 'Ei ilmoitettu',
+        RegisteredToEventSystem: 'Ilmoitettu ohjelmaksi Kompassiin',
+        InformedToOrganizers: 'Ilmoitettu muuta kautta',
+      },
       description: 'Työpajan kuvaus',
       teachers: 'Opettaja(t)',
       instanceSpecificDances: 'Joka opetuskerralla on omat tanssinsa',

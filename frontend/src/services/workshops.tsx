@@ -7,6 +7,7 @@ setupServiceUpdateFragment(
     name
     abbreviation
     description
+    registrationStatus
     instanceSpecificDances
     instances {
       _id
@@ -24,6 +25,7 @@ mutation createWorkshop($eventId: ID!, $workshop: WorkshopInput!) {
     name
     abbreviation
     description
+    registrationStatus
     instanceSpecificDances
     instances {
       _id
@@ -46,6 +48,7 @@ mutation patchWorkshop($id: ID!, $workshop: WorkshopPatchInput!) {
     name
     abbreviation
     description
+    registrationStatus
     instanceSpecificDances
     instances {
       _id
@@ -68,6 +71,7 @@ mutation deleteWorkshop($id: ID!) {
     name
     abbreviation
     description
+    registrationStatus
     instanceSpecificDances
     instances {
       _id

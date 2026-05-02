@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { Event } from 'types'
+import { Event, WorkshopInput } from 'types'
 
 import { addGlobalLoadingAnimation } from 'backend'
 import { useCreateWorkshop } from 'services/workshops'
@@ -48,13 +48,14 @@ export function CreateWorkshopForm({ eventId, startDate }: { eventId: string, st
   </div>
 }
 
-function newWorkshop({ eventId, name }, startDate: string) {
+function newWorkshop({ eventId, name }, startDate: string): { eventId: string, workshop: WorkshopInput } {
   const { dances: _ignored1, hasVolunteerAssignments: _ignored2, ...instance } = newInstance(undefined, startDate)
   return {
     eventId: eventId,
     workshop: {
       name,
       instanceSpecificDances: false,
+      registrationStatus: 'None',
       instances: [
         { danceIds: [], ...instance },
       ],

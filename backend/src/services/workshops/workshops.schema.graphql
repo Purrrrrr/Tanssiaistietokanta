@@ -15,6 +15,13 @@ type Workshop {
   instances: [WorkshopInstance!]!
   instanceSpecificDances: Boolean!
   volunteerAssignments: [VolunteersByRole!]!
+  registrationStatus: WorkshopRegistrationStatus!
+}
+
+enum WorkshopRegistrationStatus {
+  None
+  RegisteredToEventSystem
+  InformedToOrganizers
 }
 
 type Teacher {
@@ -42,6 +49,7 @@ input WorkshopInput {
   name: String!
   abbreviation: String
   description: DocumentContent 
+  registrationStatus: WorkshopRegistrationStatus!
   teacherIds: [ID!]
   assistantTeacherIds: [ID!]
   ocurrences: [String!]
@@ -61,6 +69,7 @@ input WorkshopPatchInput {
   name: String
   abbreviation: String
   description: DocumentContent
+  registrationStatus: WorkshopRegistrationStatus
   teacherIds: [ID!]
   assistantTeacherIds: [ID!]
   ocurrences: [String!]

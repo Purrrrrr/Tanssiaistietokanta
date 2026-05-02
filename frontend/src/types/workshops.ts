@@ -1,1 +1,1 @@
-export type { WorkshopInput } from './gql/graphql'
+export type { WorkshopInput, WorkshopRegistrationStatus } from './gql/graphql'
