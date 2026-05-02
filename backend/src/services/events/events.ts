@@ -59,7 +59,15 @@ export const events = (app: Application) => {
       get: [],
       create: [schemaHooks.validateData(eventsDataValidator), schemaHooks.resolveData(eventsDataResolver)],
       patch: [schemaHooks.validateData(eventsPatchValidator), schemaHooks.resolveData(eventsPatchResolver)],
-      remove: [],
+      remove: [async ({ id }) => {
+        if (!id) {
+          throw new Error('Event ID is required for deletion')
+        }
+        const event = await app.service('events').get(id, { query: { $select: ['_id', '_hasRegisteredVolunteers', '_hasRegisteredWorkshops'] } })
+        if (event._hasRegisteredVolunteers || event._hasRegisteredWorkshops) {
+          throw new Error('Cannot delete event with registered volunteers or workshops')
+        }
+      }],
     },
     after: {
       all: [],

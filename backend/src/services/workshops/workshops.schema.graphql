@@ -5,6 +5,7 @@ type Query {
 type Workshop {
   _id: ID!
   _versionId: ID
+  _hasRegisteredVolunteers: Boolean!
   eventId: ID!
   event: Event!
   name: String!

@@ -237,6 +237,7 @@ export const fi = {
       instances: 'Opetuskerrat',
       instance: 'Opetuskerta',
       addInstance: 'Lisää opetuskerta',
+      cannotRemoveWithRegisteredVolunteers: 'Tällä pajalla on ilmoitettuja vapaaehtoisia, joten sitä ei voi poistaa.',
       cannotRemoveInstanceWithVolunteers: 'Tällä opetuskerralla on vapaaehtoisia, joten sitä ei voi poistaa.',
       instanceAbbreviation: 'Kerran lyhenne',
       instanceAbbreviationHelp: 'Lyhennemerkintä näytetään työpajan lyhennemerkinnän rinnalla niiden tanssien kohdalla, jotka on opetettu ainoastaan tällä opetuskerralla.',
@@ -611,6 +612,8 @@ export const fi = {
           deleteEvent: 'Poista tämä tapahtuma',
           eventDeleteConfirmation: 'Haluatko varmasti poistaa tapahtuman __eventName__?',
           cannotChangeEventRegistrationSystem: 'Tapahtuman ilmoittautumisjärjestelmää ei voi muuttaa, koska tapahtumalla on jo järjestelmään ilmoitettuja vapaaehtoisia.',
+          cannotRemoveWithRegisteredVolunteers: 'Tapahtumassa on ilmoitettuja vapaaehtoisia, joten sitä ei voi poistaa.',
+          cannotRemoveWithRegisteredWorkshops: 'Tapahtumassa on ilmoitettuja pajoja, joten sitä ei voi poistaa.',
         },
         volunteers: {
           title: 'Vapaaehtoiset',

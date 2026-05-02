@@ -14,7 +14,8 @@ type Event implements Versionable {
   beginDate: String!
   endDate: String!
   eventRegistrationSystem: EventRegistrationSystem!
-  hasRegisteredVolunteers: Boolean!
+  _hasRegisteredVolunteers: Boolean!
+  _hasRegisteredWorkshops: Boolean!
   program: EventProgramSettings!
   workshops: [Workshop!]!
   volunteerAssignments: [VolunteersByRole!]!

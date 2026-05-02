@@ -64,6 +64,8 @@ export const eventsSchema = Type.Object(
     _childWorkshopsUpdatedAt: Type.Optional(Type.String()),
     _childEventVolunteerAssignmentsUpdatedAt: Type.Optional(Type.String()),
     _childEventVolunteersUpdatedAt: Type.Optional(Type.String()),
+    _hasRegisteredVolunteers: Type.Boolean(),
+    _hasRegisteredWorkshops: Type.Boolean(),
   },
   { $id: 'Events', additionalProperties: false },
 )
@@ -209,6 +211,8 @@ export type EventsData = Static<typeof eventsDataSchema>
 export const eventsDataValidator = castAfterValidating(eventsFullDataSchema, getValidator(eventsDataSchema, dataValidator))
 export const eventsDataResolver = resolve<Events, HookContext>({
   eventRegistrationSystem: value => value ?? 'None',
+  _hasRegisteredVolunteers: () => false,
+  _hasRegisteredWorkshops: () => false,
 })
 
 // Schema for updating existing entries
@@ -220,7 +224,16 @@ export const eventsPatchSchema = Type.Partial(
 )
 export type EventsPatch = Static<typeof eventsPatchSchema>
 export const eventsPatchValidator = getValidator(eventsPatchSchema, dataValidator)
-export const eventsPatchResolver = resolve<Events, HookContext>({})
+export const eventsPatchResolver = resolve<Events, HookContext>({
+  _hasRegisteredVolunteers: (_, __, ctx) => {
+    if (!ctx.id) throw new Error('Event ID is required to check registered workshops')
+    return ctx.app.service('eventVolunteerAssignments').exists({ query: { eventId: ctx.id as string, registrationStatus: { $ne: 'None' } } })
+  },
+  _hasRegisteredWorkshops: (_, __, ctx) => {
+    if (!ctx.id) throw new Error('Event ID is required to check registered workshops')
+    return ctx.app.service('workshops').exists({ query: { eventId: ctx.id as string, registrationStatus: { $ne: 'None' } } })
+  },
+})
 
 // Schema for allowed query properties
 export const eventsQueryProperties = eventsSchema

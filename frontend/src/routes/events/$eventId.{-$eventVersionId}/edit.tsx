@@ -51,13 +51,20 @@ function RouteComponent() {
     [event._id, patchEvent],
   )
   const { state, formProps } = useAutosavingState<WithoutMetadata<Event>, JSONPatch>(cleanMetadataValues<Event>(event), patch, patchStrategy.jsonPatch)
-  const registrationSystemReadOnly = event.eventRegistrationSystem === 'Kompassi' && event.hasRegisteredVolunteers
+  const registrationSystemReadOnly = event.eventRegistrationSystem === 'Kompassi' && event._hasRegisteredVolunteers
 
   return <PageSection title={t('title')} syncStatus={state} toolbar={
     <DeleteButton
       minimal
       requireRight="events:delete"
       entityId={event._id}
+      disabled={event._hasRegisteredVolunteers || event._hasRegisteredWorkshops}
+      tooltip={
+        [
+          event._hasRegisteredVolunteers && t('cannotRemoveWithRegisteredVolunteers'),
+          event._hasRegisteredWorkshops && t('cannotRemoveWithRegisteredWorkshops'),
+        ].filter(Boolean).join('\n') || undefined
+      }
       onDelete={() => deleteEvent({ id: event._id })}
       text={t('deleteEvent')}
       confirmText={t('eventDeleteConfirmation', { eventName: event.name })}

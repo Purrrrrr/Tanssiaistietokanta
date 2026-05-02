@@ -31,6 +31,7 @@ export const workshopsSchema = Type.Object(
     instances: Type.Array(WorkshopInstanceSchema()),
     instanceSpecificDances: Type.Boolean(),
     registrationStatus: Type.Union([Type.Literal('None'), Type.Literal('RegisteredToEventSystem'), Type.Literal('InformedToOrganizers')]),
+    _hasRegisteredVolunteers: Type.Boolean(),
     _childEventVolunteerAssignmentsUpdatedAt: Type.Optional(Type.String()),
   },
   { $id: 'Workshops', additionalProperties: false },
@@ -65,7 +66,9 @@ export const workshopsFullDataSchema = Type.Omit(workshopsSchema, ['_id', ...com
 })
 export type WorkshopsData = Static<typeof workshopsDataSchema>
 export const workshopsDataValidator = castAfterValidating(workshopsFullDataSchema, getValidator(workshopsDataSchema, dataValidator))
-export const workshopsDataResolver = resolve<Workshops, HookContext>({})
+export const workshopsDataResolver = resolve<Workshops, HookContext>({
+  _hasRegisteredVolunteers: () => false,
+})
 
 // Schema for updating existing entries
 export const workshopsPatchSchema = Type.Partial(workshopsSchema, {
@@ -73,7 +76,12 @@ export const workshopsPatchSchema = Type.Partial(workshopsSchema, {
 })
 export type WorkshopsPatch = Static<typeof workshopsPatchSchema>
 export const workshopsPatchValidator = getValidator(workshopsPatchSchema, dataValidator)
-export const workshopsPatchResolver = resolve<Workshops, HookContext>({})
+export const workshopsPatchResolver = resolve<Workshops, HookContext>({
+  _hasRegisteredVolunteers: (_, __, ctx) => {
+    if (!ctx.id) throw new Error('Workshop ID is required to check registered volunteers')
+    return ctx.app.service('eventVolunteerAssignments').exists({ query: { workshopId: ctx.id as string, registrationStatus: { $ne: 'None' } } })
+  },
+})
 
 // Schema for allowed query properties
 export const workshopsQueryProperties = Type.Omit(workshopsSchema, ['instances'])

@@ -71,7 +71,15 @@ export const workshops = (app: Application) => {
         schemaHooks.validateData(workshopsPatchValidator),
         schemaHooks.resolveData(workshopsPatchResolver),
       ],
-      remove: [],
+      remove: [async ({ id }) => {
+        if (!id) {
+          throw new Error('ID is required for deletion')
+        }
+        const event = await app.service('workshops').get(id, { query: { $select: ['_id', '_hasRegisteredVolunteers'] } })
+        if (event._hasRegisteredVolunteers) {
+          throw new Error('Cannot delete workshop with registered volunteers')
+        }
+      }],
     },
     after: {
       all: [],
