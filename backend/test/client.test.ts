@@ -2,7 +2,7 @@
 import { expect } from 'chai'
 
 import rest from '@feathersjs/rest-client'
-import { app } from '../src/app'
+import { app, initializeApp } from '../src/app'
 import { createClient } from '../src/client'
 import { normalUser } from './fixtures/test-users'
 
@@ -13,7 +13,7 @@ describe('application client tests', () => {
   const client = createClient(rest(appUrl).fetch(fetch))
 
   before(async () => {
-    await app.listen(port)
+    await initializeApp()
   })
 
   after(async () => {

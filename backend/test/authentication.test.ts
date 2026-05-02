@@ -1,14 +1,12 @@
 import { expect } from 'chai'
 
-import { app } from '../src/app'
+import { app, initializeApp } from '../src/app'
 import { normalUser } from './fixtures/test-users'
 import { apiFetch, cookieJar } from './test-utils/apiFetch'
 
-const port = app.get('port')
-
-describe('application client tests', () => {
+describe('application auth tests', () => {
   before(async () => {
-    await app.listen(port)
+    await initializeApp()
   })
 
   after(async () => {

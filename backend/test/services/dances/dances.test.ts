@@ -1,7 +1,7 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/service.test.html
 import { expect, use } from 'chai'
 import { omit, pick, prop } from 'ramda'
-import { app } from '../../../src/app'
+import { app, initializeApp } from '../../../src/app'
 import { Dances, DancesData } from './dances.schema'
 import { adminUser, enabledTestUsers as testUsers } from '../../fixtures/test-users'
 import chaiAsPromised from 'chai-as-promised'
@@ -29,7 +29,7 @@ const danceToCreate = {
 
 describe('dances service', () => {
   before(async () => {
-    await app.listen(app.get('port'))
+    await initializeApp()
   })
 
   after(async () => {

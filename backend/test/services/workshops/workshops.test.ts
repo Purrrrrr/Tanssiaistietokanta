@@ -1,6 +1,6 @@
 import { expect, use } from 'chai'
 import { prop } from 'ramda'
-import { app } from '../../../src/app'
+import { app, initializeApp } from '../../../src/app'
 import type { Workshops, WorkshopsData } from './workshops.schema'
 import { adminUser, normalUser, teacherUser } from '../../fixtures/test-users'
 import { publicTestEvent, limitedTestEvent } from '../../fixtures/test-events'
@@ -19,7 +19,7 @@ const workshopToCreate = {
 
 describe('workshops service', () => {
   before(async () => {
-    await app.listen(app.get('port'))
+    await initializeApp()
   })
 
   after(async () => {

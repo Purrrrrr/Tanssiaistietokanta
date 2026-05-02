@@ -1,6 +1,6 @@
 import { expect, use } from 'chai'
 import { prop } from 'ramda'
-import { app } from '../../../src/app'
+import { app, initializeApp } from '../../../src/app'
 import type { File as FileRecord, FileData } from './files.schema'
 import type { Events, EventsData } from '../../../src/services/events/events.schema'
 import type { Dances, DancesData } from '../../../src/services/dances/dances.schema'
@@ -15,7 +15,7 @@ use(chaiAsPromised)
 
 describe('files service', () => {
   before(async () => {
-    await app.listen(app.get('port'))
+    await initializeApp()
   })
 
   after(async () => {

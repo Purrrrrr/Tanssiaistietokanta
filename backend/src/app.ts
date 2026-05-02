@@ -126,4 +126,10 @@ export async function initializeAppDependencies() {
   })
 }
 
+export async function initializeApp() {
+  await initializeAppDependencies()
+  const port = app.get('port')
+  return app.listen(port)
+}
+
 export { app }

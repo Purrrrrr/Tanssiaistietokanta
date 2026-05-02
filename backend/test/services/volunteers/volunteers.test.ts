@@ -1,6 +1,6 @@
 import { expect, use } from 'chai'
 import { prop } from 'ramda'
-import { app } from '../../../src/app'
+import { app, initializeApp } from '../../../src/app'
 import type { Volunteers, VolunteersData } from './volunteers.schema'
 import { adminUser, normalUser } from '../../fixtures/test-users'
 import { canonicalVolunteer, duplicateVolunteer } from '../../fixtures/test-volunteers'
@@ -11,7 +11,7 @@ use(chaiAsPromised)
 
 describe('volunteers service', () => {
   before(async () => {
-    await app.listen(app.get('port'))
+    await initializeApp()
   })
 
   after(async () => {

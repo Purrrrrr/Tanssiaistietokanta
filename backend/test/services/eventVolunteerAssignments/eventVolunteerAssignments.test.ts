@@ -1,12 +1,12 @@
 import { expect, use } from 'chai'
 import { prop } from 'ramda'
-import { app } from '../../../src/app'
+import { app, initializeApp } from '../../../src/app'
 import type { EventVolunteerAssignments, EventVolunteerAssignmentsData } from './eventVolunteerAssignments.schema'
 import { adminUser, normalUser, teacherUser } from '../../fixtures/test-users'
 import { publicTestEvent, limitedTestEvent } from '../../fixtures/test-events'
 import { canonicalVolunteer } from '../../fixtures/test-volunteers'
 import { testTeacherRole } from '../../fixtures/test-event-roles'
-import { publicEventWorkshop, limitedEventWorkshop } from '../../fixtures/test-workshops'
+import { limitedEventWorkshop } from '../../fixtures/test-workshops'
 import chaiAsPromised from 'chai-as-promised'
 import { SkipAccessControl } from '../../../src/services/access/hooks'
 
@@ -24,7 +24,7 @@ function assignmentData(overrides: Partial<EventVolunteerAssignmentsData> = {}):
 
 describe('eventVolunteerAssignments service', () => {
   before(async () => {
-    await app.listen(app.get('port'))
+    await initializeApp()
   })
 
   after(async () => {

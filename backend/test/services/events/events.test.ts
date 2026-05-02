@@ -1,6 +1,6 @@
 import { expect, use } from 'chai'
 import { prop } from 'ramda'
-import { app } from '../../../src/app'
+import { app, initializeApp } from '../../../src/app'
 import type { Events, EventsData } from './events.schema'
 import { adminUser, normalUser, teacherUser } from '../../fixtures/test-users'
 import { publicTestEvent, limitedTestEvent } from '../../fixtures/test-events'
@@ -17,7 +17,7 @@ const eventToCreate = {
 
 describe('events service', () => {
   before(async () => {
-    await app.listen(app.get('port'))
+    await initializeApp()
   })
 
   after(async () => {
