@@ -296,7 +296,7 @@ function renderChildren(node: SerializedElementNode, options: ViewOptions): Rend
 
 function renderText(node: SerializedTextNode, index: number, _options: ViewOptions): React.ReactNode {
   const { text, format } = node
-  if (!text || text === '') null
+  if (!text || text === '') return null
 
   const bold = !!(format & FORMAT_BOLD)
   const italic = !!(format & FORMAT_ITALIC)
