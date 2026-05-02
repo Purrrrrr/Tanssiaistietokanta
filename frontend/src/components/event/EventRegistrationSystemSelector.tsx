@@ -7,10 +7,8 @@ export function EventRegistrationSystemSelector(props: FieldComponentProps<Event
   const t = useT('domain.EventRegistrationSystem')
   return (
     <RadioGroup<EventRegistrationSystem>
-      options={[
-        { value: 'None', label: t('None') },
-        { value: 'Kompassi', label: t('Kompassi') },
-      ]}
+      options={['None', 'Kompassi']}
+      optionToString={t}
       {...props}
     />
   )

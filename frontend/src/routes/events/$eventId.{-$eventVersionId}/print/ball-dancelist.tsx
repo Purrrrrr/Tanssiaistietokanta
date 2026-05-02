@@ -19,11 +19,14 @@ export const Route = createFileRoute(
   component: RouteComponent,
 })
 
+const listStyles = ['default', 'three-columns', 'large'] as const
+type ListStyle = typeof listStyles[number]
+
 function RouteComponent() {
   const eventId = Route.useParams().eventId
   const t = useT('routes.events.event.print.ballDanceList')
   const { program, workshops, loadingState } = useBallProgram(eventId)
-  const [style, setStyle] = useState('default')
+  const [style, setStyle] = useState<ListStyle>('default')
   const [showLinks, setShowLinks] = useState(true)
 
   if (!program) return <LoadingState {...loadingState} />
@@ -33,14 +36,11 @@ function RouteComponent() {
       <PrintViewToolbar>
         <div className="flex gap-2 items-center">
           <Switch id="showlinks" value={showLinks} onChange={setShowLinks} label={t('showLinks')} />
-          <RadioGroup
+          <RadioGroup<ListStyle>
             id="style"
             inline
-            options={[
-              { value: 'default', label: t('style.default') },
-              { value: 'three-columns', label: t('style.three-columns') },
-              { value: 'large', label: t('style.large') },
-            ]}
+            options={listStyles}
+            optionToString={option => t(`style.${option}`)}
             value={style}
             onChange={setStyle}
           />

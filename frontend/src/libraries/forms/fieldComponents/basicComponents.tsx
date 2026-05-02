@@ -75,15 +75,13 @@ export function TextArea({ value, onChange, inline: _ignored, className, ...prop
 }
 
 interface RadioGroupProps<E extends string | null> extends FieldComponentProps<E> {
-  options: {
-    value: E
-    label: string
-  }[]
+  options: readonly E[]
+  optionToString: (option: E) => string
 }
 
-export function RadioGroup<E extends string>({ options, readOnly, id, value, onChange, ...rest }: RadioGroupProps<E>) {
-  return options.map(({ value: optionValue, label }) =>
-    <label key={optionValue} className="mx-2">
+export function RadioGroup<E extends string>({ options, optionToString, readOnly, id, value, onChange, ...rest }: RadioGroupProps<E>) {
+  return options.map(optionValue =>
+    <label key={optionValue} className="inline-flex h-7.5 items-center mx-2">
       <input
         className="me-1"
         type="radio"
@@ -95,7 +93,7 @@ export function RadioGroup<E extends string>({ options, readOnly, id, value, onC
         disabled={readOnly}
         {...rest}
       />
-      {label}
+      {optionToString(optionValue)}
     </label>,
   )
 }
