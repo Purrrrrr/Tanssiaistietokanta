@@ -2,13 +2,14 @@ import type { EventsData } from '../../src/client'
 import type { EventAccessData } from '../../src/services/events/events.schema'
 import { normalUser, teacherUser } from './test-users'
 
-type EventFixture = { _id: string } & Pick<EventsData, 'name' | 'beginDate' | 'endDate'> & { accessControl: EventAccessData }
+type EventFixture = { _id: string } & Pick<EventsData, 'name' | 'beginDate' | 'endDate' | 'eventRegistrationSystem'> & { accessControl: EventAccessData }
 
 export const publicTestEvent: EventFixture = {
   _id: '',
   name: 'Public Test Ball',
   beginDate: '2026-01-01',
   endDate: '2026-01-01',
+  eventRegistrationSystem: 'None',
   accessControl: {
     viewAccess: 'public',
     grants: [],
@@ -20,6 +21,7 @@ export const limitedTestEvent: EventFixture = {
   name: 'Limited Test Ball',
   beginDate: '2026-06-01',
   endDate: '2026-06-01',
+  eventRegistrationSystem: 'None',
   accessControl: {
     viewAccess: 'limited',
     grants: [],
