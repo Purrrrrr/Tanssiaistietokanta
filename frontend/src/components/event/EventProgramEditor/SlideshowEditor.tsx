@@ -1,4 +1,4 @@
-import { getRouteApi, useNavigate, useParams } from '@tanstack/react-router'
+import { getRouteApi, useNavigate } from '@tanstack/react-router'
 import React, { UIEvent, useDeferredValue, useEffect, useRef, useState } from 'react'
 import classNames from 'classnames'
 
