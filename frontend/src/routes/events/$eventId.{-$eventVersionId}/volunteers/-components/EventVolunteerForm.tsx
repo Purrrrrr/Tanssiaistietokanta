@@ -2,6 +2,7 @@ import { EventRole, EventVolunteerInput, VolunteerListItem } from 'types'
 
 import { formFor, type FormProps, SubmitButton, type SyncState, SyncStatus } from 'libraries/forms'
 import { TextArea } from 'libraries/forms/fieldComponents/basicComponents'
+import { VolunteerStatusSelector } from 'components/eventVolunteers/VolunteerStatusSelector'
 import { VolunteerChooser } from 'components/volunteers/VolunteerChooser'
 import { useT } from 'i18n'
 
@@ -15,6 +16,7 @@ export type EventVolunteerFormValues = Omit<EventVolunteerInput, 'volunteerId' |
 
 export const emptyEventVolunteerForm = (): EventVolunteerFormValues => ({
   volunteer: undefined,
+  status: 'Interested',
   interestedIn: [],
   acceptedRoles: [],
   wishes: '',
@@ -47,6 +49,12 @@ export function EventVolunteerForm({ syncState, onSubmit, excludeVolunteers = []
           excludeVolunteers: isNew ? excludeVolunteers : excludeVolunteers.filter(v => v._id !== rest.value.volunteer?._id),
         }}
         required
+      />
+      <Field
+        path="status"
+        label={t('status')}
+        component={VolunteerStatusSelector}
+        containerClassName="col-span-full"
       />
       <Field
         path="interestedIn"

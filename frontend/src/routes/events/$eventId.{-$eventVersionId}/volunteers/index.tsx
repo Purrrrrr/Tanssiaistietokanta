@@ -68,7 +68,7 @@ function RouteComponent() {
     })
 
   return <PageSection title={t('title')} toolbar={
-    <div className="flex flex-wrap gap-4 justify-between items-center mb-4 grow mb-">
+    <div className="flex flex-wrap gap-4 justify-between items-center grow">
       <EventVolunteerRoleCounts volunteers={unsortedEventVolunteers ?? []} currentRole={role} onSetRole={setRole} />
       <div className="flex gap-4">
         <SearchBar
@@ -88,10 +88,11 @@ function RouteComponent() {
     <ItemList
       items={eventVolunteers ?? []}
       emptyText={t('noVolunteers')}
-      columns="grid-cols-[1fr_1fr_1fr_1fr_max-content]"
+      columns="grid-cols-[max-content_auto_auto_1fr_1fr_max-content]"
     >
       <ItemList.SortableHeader currentSort={sort} onSort={setSort} columns={[
         { key: 'name', label: label('name') },
+        { key: 'status', label: label('status') },
         { key: 'interestedIn', label: label('interestedIn') },
         { key: 'wishes', label: label('wishes') },
         { key: 'notes', label: label('notes') },
@@ -139,6 +140,8 @@ function useEventVolunteerSearchParams() {
 function volunteerSorter(key: string) {
   switch (key) {
     default:
+    case 'status':
+      return (ev: EventVolunteer) => ev.status
     case 'name':
       return (ev: EventVolunteer) => ev.volunteer.name
     case 'interestedIn':
@@ -194,6 +197,7 @@ function EventVolunteerListRow({ eventVolunteer: ev, addedVolunteers, currentRol
     isOpen={showEditor}
   >
     <span>{ev.volunteer.name}</span>
+    <span>{t(`domain.eventVolunteer.shortEventVolunteerStatus.${ev.status}`)}</span>
     <span>
       {sortedBy(ev.interestedIn, item => item.order)
         .map(role =>
