@@ -7,7 +7,7 @@ export function VolunteerStatusSelector(props: FieldComponentProps<EventVoluntee
   const t = useT('domain.eventVolunteer.EventVolunteerStatus')
   return (
     <RadioGroup<EventVolunteerStatus>
-      options={['Interested', 'Accepted', 'CanWorkAsBackup', 'Rejected', 'Cancelled']}
+      options={Object.values(EventVolunteerStatus)}
       optionToString={t}
       {...props}
     />

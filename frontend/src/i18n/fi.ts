@@ -262,7 +262,10 @@ export const fi = {
         one: 'Valittu 1 vapaaehtoinen',
         many: 'Valittu __count__ vapaaehtoista',
       },
-      setRegistrationStatus: 'Aseta ilmoittautumistilanne',
+      setRegistrationStatus: {
+        one: 'Aseta valitun ilmoittautumistilanne',
+        many: 'Aseta valittujen ilmoittautumistilanne',
+      },
       removeVolunteer: 'Poista vapaaehtoinen',
       removeVolunteerConfirmation: {
         title: 'Poistetaanko vapaaehtoinen?',
@@ -621,9 +624,14 @@ export const fi = {
           allRoles: 'Kaikki roolit',
           noVolunteers: 'Ei vapaaehtoisia',
           Nvolunteers: {
-            one: '1 vapaaehtoinen',
+            one: 'yksi vapaaehtoinen',
             many: '__count__ vapaaehtoista',
           },
+          selectedVolunteers: {
+            one: 'yksi valittu',
+            many: '__count__ valittu',
+          },
+          setStatus: 'Aseta ilmoittautumistilanne',
           addVolunteer: 'Lisää vapaaehtoinen',
           deleteVolunteer: 'Poista vapaaehtoinen',
           deleteConfirmation: 'Haluatko varmasti poistaa tämän vapaaehtoisen tapahtumasta?',
@@ -738,6 +746,7 @@ export const fi = {
     close: 'Sulje',
     closeEditor: 'Sulje muokkaus',
     cancel: 'Peruuta',
+    choose: 'Valitse',
     save: 'Tallenna',
     move: 'Siirrä',
     operationFailed: 'Tietojen tallennus epäonnistui :(',

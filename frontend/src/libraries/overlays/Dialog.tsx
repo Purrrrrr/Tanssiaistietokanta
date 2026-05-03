@@ -2,7 +2,7 @@ import React, { useEffect, useLayoutEffect, useRef } from 'react'
 import classNames from 'classnames'
 
 import { useShouldRender } from 'libraries/common/useShouldRender'
-import { Button } from 'libraries/ui'
+import { Button, ButtonProps } from 'libraries/ui'
 import { Cross } from 'libraries/ui/icons'
 
 export type DialogProps = {
@@ -61,7 +61,7 @@ export function Dialog({ isOpen, onClose, children, title, className, showCloseB
       <>
         <div className="flex justify-between items-center p-2 mb-3 bg-gray-50 border-gray-300 border-b-1">
           <h1 className="text-base">{title}</h1>
-          {showCloseButton && <Button aria-label={closeButtonLabel} minimal onClick={onClose} ref={closeButton}><Cross /></Button>}
+          {showCloseButton && <DialogCloseButton aria-label={closeButtonLabel as string} onClick={onClose} ref={closeButton} />}
         </div>
         <div className="overflow-auto max-h-[90dvh]">
           {children}
@@ -69,6 +69,10 @@ export function Dialog({ isOpen, onClose, children, title, className, showCloseB
       </>
     }
   </dialog>
+}
+
+export function DialogCloseButton(props: Omit<ButtonProps, 'children' | 'text' | 'minimal'> & { 'aria-label': string }) {
+  return <Button {...props} minimal><Cross /></Button>
 }
 
 Dialog.Body = function DialogBody({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {

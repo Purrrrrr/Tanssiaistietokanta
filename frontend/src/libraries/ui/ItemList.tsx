@@ -112,7 +112,7 @@ function SortableItemListHeader({ columns, currentSort, onSort }: SortableItemLi
   return <ItemListHeader paddingClass="">
     {columns.map(column => (
       column.sortable === false
-        ? <span key={column.key}>{column.label}</span>
+        ? <span className="flex justify-center" key={column.key}>{column.label}</span>
         : (
           <SortButton key={column.key} sortKey={column.key} currentSort={currentSort} onSort={onSort}>
             {column.label}
