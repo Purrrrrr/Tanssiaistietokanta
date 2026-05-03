@@ -19,6 +19,7 @@ import { eventVolunteerAssignmentsPath, eventVolunteerAssignmentsMethods } from 
 import { defaultChannels, withoutCurrentConnection } from '../../utils/defaultChannels'
 import { SkipAccessControl } from '../access/hooks'
 import getFromData from '../../utils/getFromData'
+import { withEntity } from '../../hooks/withEntity'
 
 export * from './eventVolunteerAssignments.class'
 export * from './eventVolunteerAssignments.schema'
@@ -43,7 +44,13 @@ export const eventVolunteerAssignments = (app: Application) => {
       get: [],
       create: [schemaHooks.validateData(eventVolunteerAssignmentsDataValidator), schemaHooks.resolveData(eventVolunteerAssignmentsDataResolver)],
       patch: [schemaHooks.validateData(eventVolunteerAssignmentsPatchValidator), schemaHooks.resolveData(eventVolunteerAssignmentsPatchResolver)],
-      remove: [],
+      remove: [
+        withEntity('eventVolunteerAssignments', { query: { $select: ['registrationStatus'] } }, assignment => {
+          if (assignment.registrationStatus !== 'None') {
+            throw new Error('Cannot remove a volunteer assignment with a registration status set')
+          }
+        }),
+      ],
     },
     after: {
       all: [],

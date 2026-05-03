@@ -24,6 +24,7 @@ import { eventsPath, eventsMethods } from './events.shared'
 import { mergeJsonPatch, SupportsJsonPatch } from '../../hooks/merge-json-patch'
 import { AccessStrategy, AuthParams } from '../access/strategies'
 import { User } from '../users/users.class'
+import { withEntity } from '../../hooks/withEntity'
 
 export * from './events.class'
 export * from './events.schema'
@@ -59,15 +60,13 @@ export const events = (app: Application) => {
       get: [],
       create: [schemaHooks.validateData(eventsDataValidator), schemaHooks.resolveData(eventsDataResolver)],
       patch: [schemaHooks.validateData(eventsPatchValidator), schemaHooks.resolveData(eventsPatchResolver)],
-      remove: [async ({ id }) => {
-        if (!id) {
-          throw new Error('Event ID is required for deletion')
-        }
-        const event = await app.service('events').get(id, { query: { $select: ['_id', '_hasRegisteredVolunteers', '_hasRegisteredWorkshops'] } })
-        if (event._hasRegisteredVolunteers || event._hasRegisteredWorkshops) {
-          throw new Error('Cannot delete event with registered volunteers or workshops')
-        }
-      }],
+      remove: [
+        withEntity('events', { query: { $select: ['_id', '_hasRegisteredVolunteers', '_hasRegisteredWorkshops'] } }, event => {
+          if (event._hasRegisteredVolunteers || event._hasRegisteredWorkshops) {
+            throw new Error('Cannot delete event with registered volunteers or workshops')
+          }
+        }),
+      ],
     },
     after: {
       all: [],
