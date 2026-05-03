@@ -495,17 +495,28 @@
   * Show new fields in volunteers page
   * Edit new fields in volunteers page
   * Prevent workshop delete if it has volunteers that are registered
-    Prevent eventVolunteer/assignment delete if registered
-    Show some kompassi status info on event volunteers page when available
-    Select boxes & mark all selected as registered/accepted -buttons
-      For EventVolunteers
+  * Select boxes & mark all selected as registered/accepted -buttons
+    * For EventVolunteers
     * For EventVolunteerAssignments
+    Prevent eventVolunteer/assignment delete if registered
+      Assignment delete
+      Add _isRegistered to eventVolunteer
+      Prevent volunteer delete if has registered assignments?
+      Delete assignments when event volunteer is deleted?
+      Ensure eventVolunteer exists when assignment is added. Add if not.
+        Migration
+    canDelete functions to services
+      events
+      workshops
+      eventVolunteers
+      EventVolunteerAssignments
+    canChangeStatus to eventVolunteer?
+    Is registered the right word for these?
+    Show some kompassi status info on event volunteers page when available
   
   Hook to check id references when creating/modifying
   Kompassi status page?
-
-  Ensure eventVolunteer exists when assignment is added. Add if not.
-    Migration
+  Fix button tooltip alignment when button is on the right border of page
 
   Lexical Debug: node id display?
   Make VolunteerAssignmentEditor less jumpy. Some way to load things in advance
