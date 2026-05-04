@@ -24,6 +24,7 @@ import sessions, { restSessionCookieMiddleware, socketIOSessionCookieMiddleware 
 import { checkAccess } from './services/access/hooks'
 import { channelAccessControl } from './services/access/access'
 import { initVersioningParamsCtx } from './hooks/versioning-params-ctx'
+import { checkReferenceIntegrity } from './hooks/check-reference-integrity'
 
 const app: Application = koa(feathers())
 
@@ -91,6 +92,7 @@ app.hooks({
     get: [initVersioningParamsCtx],
   },
   before: {
+    all: [checkReferenceIntegrity],
     remove: [preventRemovingOfUsedItems],
   },
   after: {

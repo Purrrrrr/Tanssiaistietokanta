@@ -38,10 +38,10 @@ const dependencyTypePairs: Record<RelationType, RelationType> = {
 
 export async function registerDependencies(sourceService: ServiceName, item: Entity, relations: EntityDependency[]) {
   if (Array.isArray(item)) {
-    item.forEach(i => registerDependencies(sourceService, i, relations))
+    await Promise.all(item.map(i => registerDependencies(sourceService, i, relations)))
     return
   }
-  relations.forEach(
+  await Promise.all(relations.map(
     async (relation) => {
       const { getLinkedIds } = relation
       const ids = await getLinkedIds(item)
@@ -53,7 +53,7 @@ export async function registerDependencies(sourceService: ServiceName, item: Ent
         })
       })
     },
-  )
+  ))
 }
 
 function registerDepedency(
