@@ -28,6 +28,7 @@ export const eventVolunteerAssignmentsSchema = Type.Object(
     workshopInstanceIds: Type.Union([Type.Array(Id()), Type.Null()]),
     roleId: Id(),
     volunteerId: Id(),
+    eventVolunteerId: Id(),
     registrationStatus: eventVolunteerRegistrationStatusSchema,
   },
   { $id: 'EventVolunteerAssignments', additionalProperties: false },
@@ -51,6 +52,20 @@ export const eventVolunteerAssignmentsDataValidator = getValidator(eventVoluntee
 export const eventVolunteerAssignmentsDataResolver = resolve<EventVolunteerAssignments, HookContext>({
   workshopId: value => value ?? null,
   registrationStatus: value => value ?? 'None',
+  eventVolunteerId: async (_, { eventId, volunteerId }, ctx) => {
+    const service = ctx.app.service('eventVolunteers')
+    const [ev] = await service.find({ query: { eventId, volunteerId, $select: ['_id'], $limit: 1 } })
+    if (!ev) {
+      const created = await service.create({
+        eventId,
+        volunteerId,
+        interestedIn: [],
+      })
+      return created._id
+    }
+
+    return ev._id
+  },
 })
 
 // Schema for updating existing entries
@@ -62,7 +77,7 @@ export const eventVolunteerAssignmentsPatchValidator = getValidator(eventVolunte
 export const eventVolunteerAssignmentsPatchResolver = resolve<EventVolunteerAssignments, HookContext>({})
 
 // Schema for allowed query properties
-export const eventVolunteerAssignmentsQueryProperties = Type.Pick(eventVolunteerAssignmentsSchema, ['_id', 'eventId', 'workshopId', 'workshopInstanceIds', 'roleId', 'volunteerId', 'registrationStatus'])
+export const eventVolunteerAssignmentsQueryProperties = Type.Pick(eventVolunteerAssignmentsSchema, ['_id', 'eventId', 'workshopId', 'workshopInstanceIds', 'roleId', 'volunteerId', 'eventVolunteerId', 'registrationStatus'])
 export const eventVolunteerAssignmentsQuerySchema = Type.Intersect(
   [
     querySyntax(eventVolunteerAssignmentsQueryProperties),

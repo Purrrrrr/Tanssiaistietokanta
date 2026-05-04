@@ -24,6 +24,8 @@ export const eventVolunteersSchema = Type.Object(
     _versionId: Id(),
     _updatedAt: Type.String(),
     _createdAt: Type.String(),
+    _isRegistered: Type.Boolean(),
+    _childEventVolunteerAssignmentsUpdatedAt: Type.Optional(Type.String()),
     eventId: Id(),
     volunteerId: Id(),
     status: eventVolunteerStatusSchema,
@@ -60,6 +62,7 @@ export const eventVolunteersDataResolver = resolve<EventVolunteers, HookContext>
   },
   wishes: value => value ?? '',
   notes: value => value ?? '',
+  _isRegistered: () => false,
 })
 
 // Schema for updating existing entries
@@ -74,10 +77,14 @@ export const eventVolunteersPatchResolver = resolve<EventVolunteers, HookContext
     if (record.status === 'Accepted' || record.status === 'Cancelled') return value
     return []
   },
+  _isRegistered: (_, __, ctx) => {
+    if (!ctx.id) throw new Error('Workshop ID is required to check registered volunteers')
+    return ctx.app.service('eventVolunteerAssignments').exists({ query: { eventVolunteerId: ctx.id as string, registrationStatus: { $ne: 'None' } } })
+  },
 })
 
 // Schema for allowed query properties
-export const eventVolunteersQueryProperties = Type.Pick(eventVolunteersSchema, ['_id', 'eventId', 'volunteerId'])
+export const eventVolunteersQueryProperties = Type.Pick(eventVolunteersSchema, ['_id', 'eventId', 'volunteerId', 'status', '_isRegistered'])
 export const eventVolunteersQuerySchema = Type.Intersect(
   [
     querySyntax(eventVolunteersQueryProperties),

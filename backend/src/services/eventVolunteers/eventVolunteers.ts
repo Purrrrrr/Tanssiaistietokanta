@@ -18,6 +18,7 @@ import { EventVolunteersService, getOptions } from './eventVolunteers.class'
 import { eventVolunteersPath, eventVolunteersMethods } from './eventVolunteers.shared'
 import { defaultChannels } from '../../utils/defaultChannels'
 import { SkipAccessControl } from '../access/hooks'
+import { withEntity } from '../../hooks/withEntity'
 
 export * from './eventVolunteers.class'
 export * from './eventVolunteers.schema'
@@ -42,7 +43,16 @@ export const eventVolunteers = (app: Application) => {
       get: [],
       create: [schemaHooks.validateData(eventVolunteersDataValidator), schemaHooks.resolveData(eventVolunteersDataResolver)],
       patch: [schemaHooks.validateData(eventVolunteersPatchValidator), schemaHooks.resolveData(eventVolunteersPatchResolver)],
-      remove: [],
+      remove: [
+        withEntity('eventVolunteers', { query: { $select: ['status', '_isRegistered'] } }, volunteer => {
+          if (volunteer.status !== 'Interested') {
+            throw new Error('Cannot remove a volunteer with status other than Interested')
+          }
+          if (volunteer._isRegistered) {
+            throw new Error('Cannot remove a volunteer with registered assignment(s)')
+          }
+        }),
+      ],
     },
     after: {
       all: [],

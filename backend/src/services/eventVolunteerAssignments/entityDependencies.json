@@ -18,5 +18,10 @@
     "type": "uses",
     "service": "volunteers",
     "path": "volunteerId"
+  },
+  {
+    "type": "childOf",
+    "service": "eventVolunteers",
+    "path": "eventVolunteerId"
   }
 ]

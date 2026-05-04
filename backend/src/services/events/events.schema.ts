@@ -64,6 +64,7 @@ export const eventsSchema = Type.Object(
     _childWorkshopsUpdatedAt: Type.Optional(Type.String()),
     _childEventVolunteerAssignmentsUpdatedAt: Type.Optional(Type.String()),
     _childEventVolunteersUpdatedAt: Type.Optional(Type.String()),
+    _hasAcceptedVolunteers: Type.Boolean(),
     _hasRegisteredVolunteers: Type.Boolean(),
     _hasRegisteredWorkshops: Type.Boolean(),
   },
@@ -211,6 +212,7 @@ export type EventsData = Static<typeof eventsDataSchema>
 export const eventsDataValidator = castAfterValidating(eventsFullDataSchema, getValidator(eventsDataSchema, dataValidator))
 export const eventsDataResolver = resolve<Events, HookContext>({
   eventRegistrationSystem: value => value ?? 'None',
+  _hasAcceptedVolunteers: () => false,
   _hasRegisteredVolunteers: () => false,
   _hasRegisteredWorkshops: () => false,
 })
@@ -225,9 +227,15 @@ export const eventsPatchSchema = Type.Partial(
 export type EventsPatch = Static<typeof eventsPatchSchema>
 export const eventsPatchValidator = getValidator(eventsPatchSchema, dataValidator)
 export const eventsPatchResolver = resolve<Events, HookContext>({
-  _hasRegisteredVolunteers: (_, __, ctx) => {
+  _hasAcceptedVolunteers: async (_, __, ctx) => {
     if (!ctx.id) throw new Error('Event ID is required to check registered workshops')
-    return ctx.app.service('eventVolunteerAssignments').exists({ query: { eventId: ctx.id as string, registrationStatus: { $ne: 'None' } } })
+    const evService = ctx.app.service('eventVolunteers')
+    return await evService.exists({ query: { eventId: ctx.id as string, status: { $ne: 'Interested' } } })
+  },
+  _hasRegisteredVolunteers: async (_, __, ctx) => {
+    if (!ctx.id) throw new Error('Event ID is required to check registered workshops')
+    const evaService = ctx.app.service('eventVolunteerAssignments')
+    return await evaService.exists({ query: { eventId: ctx.id as string, registrationStatus: { $ne: 'None' } } })
   },
   _hasRegisteredWorkshops: (_, __, ctx) => {
     if (!ctx.id) throw new Error('Event ID is required to check registered workshops')
