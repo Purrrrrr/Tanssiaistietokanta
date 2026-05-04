@@ -10,9 +10,8 @@ interface VolunteerStatusBulkSelectorProps {
   eventVolunteers: EventVolunteer[]
 }
 
-const items = [
-  null,
-  ...Object.values(EventVolunteerStatus),
+const items: (EventVolunteerStatus | null)[] = [
+  null, 'Interested', 'Accepted', 'CanWorkAsBackup', 'Rejected', 'Cancelled',
 ]
 
 export function VolunteerStatusBulkSelector({ id, eventVolunteers }: VolunteerStatusBulkSelectorProps) {
