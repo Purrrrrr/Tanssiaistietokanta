@@ -4,6 +4,8 @@ import type { HookContext } from '../declarations'
 import { loadDependencyTypes } from '../internal-services/dependencyRelations'
 import { SkipAccessControl } from '../services/access/hooks'
 
+export const SkipParentVersionUpdate = Symbol('SkipParentVersionUpdate')
+
 const getChildOfRelations = memoize((serviceName: string) =>
   loadDependencyTypes(serviceName).filter(dep => dep.type === 'childOf'),
 )
@@ -14,6 +16,7 @@ function capitalize(s: string) {
 
 export const updateParentTimestamps = async (context: HookContext) => {
   if (!['create', 'update', 'patch', 'remove'].includes(context.method)) return
+  if (context.params?.[SkipParentVersionUpdate]) return
   const childOfRelations = getChildOfRelations(context.path)
   if (childOfRelations.length === 0) return
 

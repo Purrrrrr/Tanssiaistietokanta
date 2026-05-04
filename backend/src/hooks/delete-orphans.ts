@@ -2,6 +2,7 @@
 import type { HookContext } from '../declarations'
 import { getDependencyLinks } from '../internal-services/dependencies'
 import { SkipAccessControl } from '../services/access/hooks'
+import { SkipParentVersionUpdate } from './update-parent-timestamps'
 
 export const deleteOrphans = async (context: HookContext) => {
   const results = Array.isArray(context.result)
@@ -12,7 +13,7 @@ export const deleteOrphans = async (context: HookContext) => {
     const childLinks = getDependencyLinks(context.path, item._id, 'parentOf')
     for (const [childService, childIds] of childLinks) {
       for (const childId of childIds) {
-        await context.app.service(childService as any).remove(childId, { [SkipAccessControl]: true })
+        await context.app.service(childService as any).remove(childId, { [SkipAccessControl]: true, [SkipParentVersionUpdate]: true })
       }
     }
   }
