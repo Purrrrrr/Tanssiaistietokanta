@@ -9,7 +9,7 @@ import { H2 } from 'libraries/ui'
 import { DocumentList } from 'components/document/DocumentList'
 import { FileList } from 'components/files/FileList'
 import { DeleteButton } from 'components/widgets/DeleteButton'
-import { WorkshopEditor } from 'components/WorkshopEditor'
+import { WorkshopEditor } from 'components/workshops/WorkshopEditor'
 import { useT } from 'i18n'
 
 import { useCurrentEvent } from '../-context'

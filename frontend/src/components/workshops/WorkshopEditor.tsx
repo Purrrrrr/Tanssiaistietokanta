@@ -10,14 +10,14 @@ import { usePatchWorkshop, workshopInstanceName } from 'services/workshops'
 import { DateField, DragHandle, formFor, NumberInput, patchStrategy, SyncStatus, useAutosavingState } from 'libraries/forms'
 import { DocumentContentEditor } from 'libraries/lexical'
 import { ColorClass, FormGroup } from 'libraries/ui'
+import { VolunteerAssignmentEditor } from 'components/volunteers/VolunteerAssignmentEditor'
+import { AddButton } from 'components/widgets/AddButton'
 import { DanceChooser } from 'components/widgets/DanceChooser'
+import { PageSection } from 'components/widgets/PageSection'
 import { useT, useTranslation } from 'i18n'
 import randomId from 'utils/randomId'
 
-import { VolunteerAssignmentEditor } from './volunteers/VolunteerAssignmentEditor'
-import { AddButton } from './widgets/AddButton'
-import { PageSection } from './widgets/PageSection'
-import { WorkshopRegistrationStatusSelector } from './workshops/WorkshopRegistrationStatusSelector'
+import { WorkshopRegistrationStatusSelector } from './WorkshopRegistrationStatusSelector'
 
 type Workshop = Event['workshops'][0]
 type EditableWorkshop = WithoutMetadata<Workshop>

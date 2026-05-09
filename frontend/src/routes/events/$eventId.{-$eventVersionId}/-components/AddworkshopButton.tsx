@@ -10,7 +10,7 @@ import { TextInput } from 'libraries/formsV2/components/inputs'
 import MenuButton from 'libraries/formsV2/components/MenuButton'
 import { Button, ButtonProps, FormGroup } from 'libraries/ui'
 import { AddButton } from 'components/widgets/AddButton'
-import { newInstance } from 'components/WorkshopEditor'
+import { newInstance } from 'components/workshops/WorkshopEditor'
 import { useT, useTranslation } from 'i18n'
 
 export function AddWorkshopButton({ event, ...rest }: { event: Event } & ButtonProps) {
