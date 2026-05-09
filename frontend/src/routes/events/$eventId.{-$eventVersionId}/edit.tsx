@@ -4,7 +4,7 @@ import { useCallback } from 'react'
 import { Event } from 'types'
 
 import { cleanMetadataValues, WithoutMetadata } from 'backend'
-import { useDeleteEvent, usePatchEvent } from 'services/events'
+import { getEventRemoveBlockers, useDeleteEvent, usePatchEvent } from 'services/events'
 
 import { DateField, DateRangeField, formFor, patchStrategy, useAutosavingState } from 'libraries/forms'
 import { JSONPatch } from 'components/event/EventProgramForm/patchStrategy'
@@ -52,18 +52,16 @@ function RouteComponent() {
   )
   const { state, formProps } = useAutosavingState<WithoutMetadata<Event>, JSONPatch>(cleanMetadataValues<Event>(event), patch, patchStrategy.jsonPatch)
   const registrationSystemReadOnly = event.eventRegistrationSystem === 'Kompassi' && event._hasRegisteredVolunteers
+  const deleteBlockers = getEventRemoveBlockers(event)
 
   return <PageSection title={t('title')} syncStatus={state} toolbar={
     <DeleteButton
       minimal
       requireRight="events:delete"
       entityId={event._id}
-      disabled={event._hasRegisteredVolunteers || event._hasRegisteredWorkshops}
+      disabled={deleteBlockers.length > 0}
       tooltip={
-        [
-          event._hasRegisteredVolunteers && t('cannotRemoveWithRegisteredVolunteers'),
-          event._hasRegisteredWorkshops && t('cannotRemoveWithRegisteredWorkshops'),
-        ].filter(Boolean).join('\n') || undefined
+        deleteBlockers.map(blocker => label(`EventRemoveBlocker.${blocker}`)).join('\n') || undefined
       }
       onDelete={() => deleteEvent({ id: event._id })}
       text={t('deleteEvent')}

@@ -1,5 +1,7 @@
 import { useMemo } from 'react'
 
+import { Event } from 'types'
+
 import { backendQueryHook, entityCreateHook, entityDeleteHook, entityListQueryHook, entityUpdateHook, graphql, setupServiceUpdateFragment, useServiceEvents } from '../backend'
 
 import './dances'
@@ -427,4 +429,13 @@ export function useCallbackOnEventChanges(eventId, callback) {
   useServiceEvents('workshops', `events/${eventId}/workshops`, callbacks)
   useServiceEvents('dances', `events/${eventId}/dances`, callbacks)
   useServiceEvents('eventVolunteerAssignments', `events/${eventId}/eventVolunteerAssignments`, callbacks)
+}
+
+export type EventRemoveBlocker = 'HasRegisteredVolunteers' | 'HasRegisteredWorkshops'
+
+export function getEventRemoveBlockers(event: Event): EventRemoveBlocker[] {
+  return [
+    event._hasRegisteredVolunteers && 'HasRegisteredVolunteers' as const,
+    event._hasRegisteredWorkshops && 'HasRegisteredWorkshops' as const,
+  ].filter(i => i !== false)
 }
