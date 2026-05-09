@@ -1,9 +1,8 @@
 import { Event, EventVolunteerAssignment, EventVolunteerRegistrationStatus, ID } from 'types'
 
 import { useShowGlobalLoadingAnimation } from 'backend'
-import { useCreateEventVolunteerAssignment, useDeleteEventVolunteerAssignment, useEventVolunteerAssignments, useSetEventVolunteerAssignmentRegistrationStatus, useSetEventVolunteerAssignmentWorkshopInstance } from 'services/eventVolunteerAssignments'
+import { canDeleteEventVolunteerAssignment, useCreateEventVolunteerAssignment, useDeleteEventVolunteerAssignment, useEventVolunteerAssignments, useSetEventVolunteerAssignmentRegistrationStatus, useSetEventVolunteerAssignmentWorkshopInstance } from 'services/eventVolunteerAssignments'
 import { useEventVolunteers } from 'services/eventVolunteers'
-import { useVolunteerNames } from 'services/volunteers'
 import { workshopInstanceName } from 'services/workshops'
 
 import { AutocompleteInput, Select } from 'libraries/formsV2/components/inputs/selectors'
@@ -30,36 +29,26 @@ export function VolunteerAssignmentEditor({ title, id, event, roleId, workshopId
   const t = useT('components.volunteerAssignmentEditor')
   const [currentAssignments = [], requestState1] = useEventVolunteerAssignments({ eventId, eventVersionId, roleId, workshopId, workshopVersionId })
   const [eventVolunteers = [], requestState2] = useEventVolunteers({ eventId })
-  const [allVolunteers = [], requestState3] = useVolunteerNames()
   const [createAssignment] = useCreateEventVolunteerAssignment()
   const [setAssignmentWorkshopInstance] = useSetEventVolunteerAssignmentWorkshopInstance()
   const [setAssignmentRegistrationStatus] = useSetEventVolunteerAssignmentRegistrationStatus()
   const [deleteAssignment] = useDeleteEventVolunteerAssignment()
   const { selected, ...selector } = useMultipleSelection(currentAssignments)
 
-  useShowGlobalLoadingAnimation(requestState1.loading || requestState2.loading || requestState3.loading)
-  const errors = [requestState1.error, requestState2.error, requestState3.error].filter(e => e != null)
+  useShowGlobalLoadingAnimation(requestState1.loading || requestState2.loading)
+  const errors = [requestState1.error, requestState2.error].filter(e => e != null)
 
   const assignedIds = new Set(currentAssignments.map(a => a.volunteer._id))
-  const eventVolunteerIds = new Set(eventVolunteers.map(ev => ev.volunteer._id))
 
   const eventVolunteerOptions: VolunteerOption[] = eventVolunteers
-    .filter(v => v.interestedIn.find(r => r._id === roleId))
+    .filter(v => v.interestedIn.find(r => r._id === roleId) && v.status === 'Accepted')
     .map(ev => ev.volunteer)
     .filter(v => !assignedIds.has(v._id))
-
-  const otherVolunteerOptions: VolunteerOption[] = allVolunteers
-    .filter(v => !assignedIds.has(v._id) && !eventVolunteerIds.has(v._id))
 
   const getItems = (query: string) => {
     const q = query.trim().toLowerCase()
     const matches = (v: VolunteerOption) => !q || v.name.toLowerCase().includes(q)
-    return {
-      categories: [
-        { title: t('eventVolunteers'), items: eventVolunteerOptions.filter(matches) },
-        { title: t('allVolunteers'), items: otherVolunteerOptions.filter(matches) },
-      ],
-    }
+    return eventVolunteerOptions.filter(matches)
   }
 
   const setInstanceIds = async (assignmentId: ID, instanceIds: ID[] | null) => {
@@ -83,7 +72,7 @@ export function VolunteerAssignmentEditor({ title, id, event, roleId, workshopId
     introText={selected.length > 0 ? t('selectedVolunteers', { count: selected.length }) : undefined}
     toolbar={selected.length > 0 && !readOnly && <>
       {eventRegistrationSystem !== 'None' && (
-        <FormGroup inline label={t('setRegistrationStatus')} labelStyle="beside" labelFor={`${id}-registrationStatus-bulk`}>
+        <FormGroup inline label={t('setRegistrationStatus', { count: selected.length })} labelStyle="beside" labelFor={`${id}-registrationStatus-bulk`}>
           <RegistrationStatusSelector
             id={`${id}-registrationStatus-bulk`}
             onChange={status => Promise.all(selected.map(a => setAssignmentRegistrationStatus({ id: a._id, registrationStatus: status })))}
