@@ -270,6 +270,7 @@ export const fi = {
         one: 'Aseta valitun ilmoittautumistilanne',
         many: 'Aseta valittujen ilmoittautumistilanne',
       },
+      cannotRemoveRegisteredAssignment: 'Tapahtumaan ilmoitettuja vapaaehtoisia ei voi poistaa ilman ilmoittautumisen perumista.',
       removeVolunteer: 'Poista vapaaehtoinen',
       removeVolunteerConfirmation: {
         title: 'Poistetaanko vapaaehtoinen?',

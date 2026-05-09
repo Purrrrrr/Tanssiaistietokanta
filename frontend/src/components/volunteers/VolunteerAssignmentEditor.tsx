@@ -1,7 +1,7 @@
 import { Event, EventVolunteerAssignment, EventVolunteerRegistrationStatus, ID } from 'types'
 
 import { useShowGlobalLoadingAnimation } from 'backend'
-import { canDeleteEventVolunteerAssignment, useCreateEventVolunteerAssignment, useDeleteEventVolunteerAssignment, useEventVolunteerAssignments, useSetEventVolunteerAssignmentRegistrationStatus, useSetEventVolunteerAssignmentWorkshopInstance } from 'services/eventVolunteerAssignments'
+import { useCreateEventVolunteerAssignment, useDeleteEventVolunteerAssignment, useEventVolunteerAssignments, useSetEventVolunteerAssignmentRegistrationStatus, useSetEventVolunteerAssignmentWorkshopInstance } from 'services/eventVolunteerAssignments'
 import { useEventVolunteers } from 'services/eventVolunteers'
 import { workshopInstanceName } from 'services/workshops'
 
@@ -79,15 +79,7 @@ export function VolunteerAssignmentEditor({ title, id, event, roleId, workshopId
           />
         </FormGroup>
       ) }
-      <DeleteButton
-        minimal
-        text={t('removeVolunteers', { count: selected.length })}
-        onDelete={() => Promise.all([
-          selected.map(assignment => deleteAssignment({ id: assignment._id })),
-        ])}
-        confirmTitle={t('removeVolunteersConfirmation.title')}
-        confirmText={t('removeVolunteersConfirmation.text', { name: selected.map(a => a.volunteer.name).join(', ') })}
-      />
+      <RemoveSelectedAssignmentsButton selected={selected} deleteAssignment={deleteAssignment} />
     </>}
   >
     <ItemList
@@ -121,15 +113,7 @@ export function VolunteerAssignmentEditor({ title, id, event, roleId, workshopId
             />
           }
           {!readOnly &&
-            <DeleteButton
-              className="col-start-5"
-              minimal
-              iconOnly
-              text={t('removeVolunteer')}
-              onDelete={() => deleteAssignment({ id: assignment._id })}
-              confirmTitle={t('removeVolunteerConfirmation.title')}
-              confirmText={t('removeVolunteerConfirmation.text', { name: assignment.volunteer.name })}
-            />
+            <DeleteAssignmentButton assignment={assignment} deleteAssignment={deleteAssignment} />
           }
         </ItemList.Row>
       ))}
@@ -211,5 +195,48 @@ function RegistrationStatusSelector({ id, value, onChange, disabled }: {
     itemToString={status => status ? t(status) : choose}
   />
 }
+
+function RemoveSelectedAssignmentsButton({ selected, deleteAssignment }: {
+  selected: EventVolunteerAssignment[]
+  deleteAssignment: (vars: { id: string }) => unknown
+}) {
+  const t = useT('components.volunteerAssignmentEditor')
+  const disabled = !selected.every(canDeleteEventVolunteerAssignment)
+
+  return <DeleteButton
+    minimal
+    text={t('removeVolunteers', { count: selected.length })}
+    disabled={disabled}
+    tooltip={disabled ? t('cannotRemoveRegisteredAssignment') : undefined}
+    onDelete={() => Promise.all([
+      selected.map(assignment => deleteAssignment({ id: assignment._id })),
+    ])}
+    confirmTitle={t('removeVolunteersConfirmation.title')}
+    confirmText={t('removeVolunteersConfirmation.text', { name: selected.map(a => a.volunteer.name).join(', ') })}
+  />
+}
+
+function DeleteAssignmentButton({ assignment, deleteAssignment }: {
+  assignment: EventVolunteerAssignment
+  deleteAssignment: (vars: { id: string }) => unknown
+}) {
+  const t = useT('components.volunteerAssignmentEditor')
+  const disabled = !canDeleteEventVolunteerAssignment(assignment)
+
+  return <DeleteButton
+    className="col-start-5"
+    minimal
+    iconOnly
+    disabled={disabled}
+    tooltip={disabled ? t('cannotRemoveRegisteredAssignment') : undefined}
+    text={t('removeVolunteer')}
+    onDelete={() => deleteAssignment({ id: assignment._id })}
+    confirmTitle={t('removeVolunteerConfirmation.title')}
+    confirmText={t('removeVolunteerConfirmation.text', { name: assignment.volunteer.name })}
+  />
+}
+
+const canDeleteEventVolunteerAssignment = (assignment: Pick<EventVolunteerAssignment, 'registrationStatus'>) =>
+  assignment.registrationStatus === 'None'
 
 interface VolunteerOption { _id: string, name: string }
