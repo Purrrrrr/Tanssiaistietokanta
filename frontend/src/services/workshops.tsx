@@ -1,3 +1,5 @@
+import { Workshop } from 'types'
+
 import { entityCreateHook, entityDeleteHook, entityUpdateHook, graphql, setupServiceUpdateFragment } from '../backend'
 
 setupServiceUpdateFragment(
@@ -91,4 +93,8 @@ export function workshopInstanceName(index: number, { abbreviation }: { abbrevia
   return abbreviation?.length
     ? abbreviation
     : index + 1
+}
+
+export function canDeleteWorkshop(workshop: Workshop) {
+  return workshop.registrationStatus === 'None' && workshop.instances.every(i => !i.hasVolunteerAssignments)
 }

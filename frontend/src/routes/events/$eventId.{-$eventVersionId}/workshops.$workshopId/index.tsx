@@ -2,13 +2,10 @@ import { createFileRoute, notFound } from '@tanstack/react-router'
 
 import { Event } from 'types'
 
-import { addGlobalLoadingAnimation } from 'backend'
-import { useDeleteWorkshop } from 'services/workshops'
-
 import { H2 } from 'libraries/ui'
 import { DocumentList } from 'components/document/DocumentList'
 import { FileList } from 'components/files/FileList'
-import { DeleteButton } from 'components/widgets/DeleteButton'
+import { DeleteWorkshopButton } from 'components/workshops/DeleteWorkshopButton'
 import { WorkshopEditor } from 'components/workshops/WorkshopEditor'
 import { useT } from 'i18n'
 
@@ -46,28 +43,16 @@ function WorkshopCard(
     reservedAbbreviations: string[]
   },
 ) {
-  const eventId = event._id
+  const params = Route.useParams()
   const t = useT('routes.events.event.workshop')
-  const [deleteWorkshop] = useDeleteWorkshop({ refetchQueries: ['getEvent'] })
   const { _id, abbreviation, name } = workshop
   const navigate = Route.useNavigate()
 
   return <>
-    <DeleteButton
-      minimal
-      requireRight="workshops:delete"
-      owner="events"
-      owningId={eventId}
-      onDelete={async () => {
-        await addGlobalLoadingAnimation(deleteWorkshop({ id: _id }))
-        navigate({
-          to: '/events/$eventId/{-$eventVersionId}',
-          params: { eventId },
-        })
-      }}
-      className="float-right" text={t('delete')}
-      confirmText={t('deleteConfirmation')}
-    />
+    <DeleteWorkshopButton
+      workshop={workshop}
+      eventId={params.eventId}
+      onDelete={() => navigate({ to: '/events/$eventId/{-$eventVersionId}', params })} />
     <H2>
       {name}
       {abbreviation &&
