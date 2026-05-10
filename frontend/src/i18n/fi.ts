@@ -272,17 +272,19 @@ export const fi = {
       },
       cannotRemoveRegisteredAssignment: 'Tapahtumaan ilmoitettuja vapaaehtoisia ei voi poistaa ilman ilmoittautumisen perumista.',
       removeVolunteer: 'Poista vapaaehtoinen',
-      removeVolunteerConfirmation: {
-        title: 'Poistetaanko vapaaehtoinen?',
-        text: 'Haluatko varmasti poistaa vapaaehtoisen __name__?',
-      },
-      removeVolunteers: {
+      removeSelectedVolunteers: {
         one: 'Poista valittu',
         many: 'Poista valitut',
       },
       removeVolunteersConfirmation: {
-        title: 'Poistetaanko vapaaehtoiset?',
-        text: 'Haluatko varmasti poistaa vapaaehtoiset: __name__?',
+        title: {
+          one: 'Poistetaanko vapaaehtoinen?',
+          many: 'Poistetaanko vapaaehtoiset?',
+        },
+        text: {
+          one: 'Haluatko varmasti poistaa vapaaehtoisen __name__?',
+          many: 'Haluatko varmasti poistaa vapaaehtoiset: __name__?',
+        },
       },
       eventVolunteers: 'Kiinnostuneet vapaaehtoiset',
       allVolunteers: 'Kaikki vapaaehtoiset',

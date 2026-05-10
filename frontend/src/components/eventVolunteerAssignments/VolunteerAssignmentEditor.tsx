@@ -1,18 +1,19 @@
 import { Event, EventVolunteerAssignment, EventVolunteerRegistrationStatus, ID } from 'types'
 
 import { useShowGlobalLoadingAnimation } from 'backend'
-import { useCreateEventVolunteerAssignment, useDeleteEventVolunteerAssignment, useEventVolunteerAssignments, useSetEventVolunteerAssignmentRegistrationStatus, useSetEventVolunteerAssignmentWorkshopInstance } from 'services/eventVolunteerAssignments'
+import { useCreateEventVolunteerAssignment, useEventVolunteerAssignments, useSetEventVolunteerAssignmentRegistrationStatus, useSetEventVolunteerAssignmentWorkshopInstance } from 'services/eventVolunteerAssignments'
 import { useEventVolunteers } from 'services/eventVolunteers'
 import { workshopInstanceName } from 'services/workshops'
 
 import { AutocompleteInput, Select } from 'libraries/formsV2/components/inputs/selectors'
 import { FormGroup, ItemList } from 'libraries/ui'
 import { ModeButton, ModeSelector } from 'libraries/ui/ModeSelector'
-import { DeleteButton } from 'components/widgets/DeleteButton'
 import { PageSection } from 'components/widgets/PageSection'
 import { SelectionBox } from 'components/widgets/SelectionBox'
 import { useT, useTranslation } from 'i18n'
 import { useMultipleSelection } from 'utils/useMultipleSelection'
+
+import { RemoveAssignmentsButton } from './RemoveVolunteerAssignmentButton'
 
 export interface VolunteerAssignmentEditorProps {
   id: string
@@ -32,7 +33,6 @@ export function VolunteerAssignmentEditor({ title, id, event, roleId, workshopId
   const [createAssignment] = useCreateEventVolunteerAssignment()
   const [setAssignmentWorkshopInstance] = useSetEventVolunteerAssignmentWorkshopInstance()
   const [setAssignmentRegistrationStatus] = useSetEventVolunteerAssignmentRegistrationStatus()
-  const [deleteAssignment] = useDeleteEventVolunteerAssignment()
   const { selected, ...selector } = useMultipleSelection(currentAssignments)
 
   useShowGlobalLoadingAnimation(requestState1.loading || requestState2.loading)
@@ -79,7 +79,10 @@ export function VolunteerAssignmentEditor({ title, id, event, roleId, workshopId
           />
         </FormGroup>
       ) }
-      <RemoveSelectedAssignmentsButton selected={selected} deleteAssignment={deleteAssignment} />
+      <RemoveAssignmentsButton
+        text={t('removeSelectedVolunteers', { count: selected.length })}
+        assignments={selected}
+      />
     </>}
   >
     <ItemList
@@ -113,7 +116,12 @@ export function VolunteerAssignmentEditor({ title, id, event, roleId, workshopId
             />
           }
           {!readOnly &&
-            <DeleteAssignmentButton assignment={assignment} deleteAssignment={deleteAssignment} />
+            <RemoveAssignmentsButton
+              text={t('removeVolunteer')}
+              className="col-start-5"
+              iconOnly
+              assignments={[assignment]}
+            />
           }
         </ItemList.Row>
       ))}
@@ -195,48 +203,5 @@ function RegistrationStatusSelector({ id, value, onChange, disabled }: {
     itemToString={status => status ? t(status) : choose}
   />
 }
-
-function RemoveSelectedAssignmentsButton({ selected, deleteAssignment }: {
-  selected: EventVolunteerAssignment[]
-  deleteAssignment: (vars: { id: string }) => unknown
-}) {
-  const t = useT('components.volunteerAssignmentEditor')
-  const disabled = !selected.every(canDeleteEventVolunteerAssignment)
-
-  return <DeleteButton
-    minimal
-    text={t('removeVolunteers', { count: selected.length })}
-    disabled={disabled}
-    tooltip={disabled ? t('cannotRemoveRegisteredAssignment') : undefined}
-    onDelete={() => Promise.all([
-      selected.map(assignment => deleteAssignment({ id: assignment._id })),
-    ])}
-    confirmTitle={t('removeVolunteersConfirmation.title')}
-    confirmText={t('removeVolunteersConfirmation.text', { name: selected.map(a => a.volunteer.name).join(', ') })}
-  />
-}
-
-function DeleteAssignmentButton({ assignment, deleteAssignment }: {
-  assignment: EventVolunteerAssignment
-  deleteAssignment: (vars: { id: string }) => unknown
-}) {
-  const t = useT('components.volunteerAssignmentEditor')
-  const disabled = !canDeleteEventVolunteerAssignment(assignment)
-
-  return <DeleteButton
-    className="col-start-5"
-    minimal
-    iconOnly
-    disabled={disabled}
-    tooltip={disabled ? t('cannotRemoveRegisteredAssignment') : undefined}
-    text={t('removeVolunteer')}
-    onDelete={() => deleteAssignment({ id: assignment._id })}
-    confirmTitle={t('removeVolunteerConfirmation.title')}
-    confirmText={t('removeVolunteerConfirmation.text', { name: assignment.volunteer.name })}
-  />
-}
-
-const canDeleteEventVolunteerAssignment = (assignment: Pick<EventVolunteerAssignment, 'registrationStatus'>) =>
-  assignment.registrationStatus === 'None'
 
 interface VolunteerOption { _id: string, name: string }
