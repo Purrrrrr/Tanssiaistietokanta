@@ -30,7 +30,6 @@ export const eventVolunteersSchema = Type.Object(
     volunteerId: Id(),
     status: eventVolunteerStatusSchema,
     interestedIn: Type.Array(Id()),
-    acceptedRoles: Type.Array(Id()),
     wishes: Type.String(),
     notes: Type.String(),
   },
@@ -47,6 +46,9 @@ export const eventVolunteersDataSchema = Type.Intersect(
   [
     Type.Pick(eventVolunteersSchema, ['eventId', 'volunteerId']),
     Type.Partial(Type.Omit(eventVolunteersSchema, [...computedProperties, 'eventId', 'volunteerId'])),
+    Type.Object({
+      acceptedRoles: Type.Optional(Type.Array(Id())),
+    }),
   ],
   { $id: 'EventVolunteersData' },
 )
@@ -55,28 +57,23 @@ export const eventVolunteersDataValidator = getValidator(eventVolunteersDataSche
 export const eventVolunteersDataResolver = resolve<EventVolunteers, HookContext>({
   status: value => value ?? 'Interested',
   interestedIn: value => value ?? [],
-  acceptedRoles: (value, record) => {
-    const status = record.status ?? 'Interested'
-    if (status === 'Accepted' || status === 'Cancelled') return value ?? []
-    return []
-  },
   wishes: value => value ?? '',
   notes: value => value ?? '',
   _isRegistered: () => false,
 })
 
 // Schema for updating existing entries
-export const eventVolunteersPatchSchema = Type.Partial(eventVolunteersSchema, {
-  $id: 'EventVolunteersPatch',
-})
+export const eventVolunteersPatchSchema = Type.Intersect([
+  Type.Partial(eventVolunteersSchema, {
+    $id: 'EventVolunteersPatch',
+  }),
+  Type.Object({
+    acceptedRoles: Type.Optional(Type.Array(Id())),
+  }),
+])
 export type EventVolunteersPatch = Static<typeof eventVolunteersPatchSchema>
 export const eventVolunteersPatchValidator = getValidator(eventVolunteersPatchSchema, dataValidator)
 export const eventVolunteersPatchResolver = resolve<EventVolunteers, HookContext>({
-  acceptedRoles: (value, record) => {
-    if (record.status === undefined) return value
-    if (record.status === 'Accepted' || record.status === 'Cancelled') return value
-    return []
-  },
   _isRegistered: (_, __, ctx) => {
     if (!ctx.id) throw new Error('Workshop ID is required to check registered volunteers')
     return ctx.app.service('eventVolunteerAssignments').exists({ query: { eventVolunteerId: ctx.id as string, registrationStatus: { $ne: 'None' } } })

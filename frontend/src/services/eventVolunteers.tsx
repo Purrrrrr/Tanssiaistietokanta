@@ -12,7 +12,6 @@ setupServiceUpdateFragment(
     volunteer { _id name }
     status
     interestedIn { _id name plural pluralCount description appliesToWorkshops order }
-    acceptedRoles { _id name plural pluralCount description appliesToWorkshops order }
     wishes
     notes
   }`,
@@ -30,7 +29,6 @@ query getEventVolunteers($eventId: ID, $eventVersionId: ID, $volunteerId: ID) {
     volunteer { _id name }
     status
     interestedIn { _id name plural pluralCount description appliesToWorkshops order }
-    acceptedRoles { _id name plural pluralCount description appliesToWorkshops order }
     wishes
     notes
   }
@@ -48,7 +46,6 @@ query getEventVolunteer($id: ID!, $versionId: ID) {
     volunteer { _id name }
     status
     interestedIn { _id name plural pluralCount description appliesToWorkshops order }
-    acceptedRoles { _id name plural pluralCount description appliesToWorkshops order }
     wishes
     notes
   }
@@ -66,7 +63,6 @@ mutation createEventVolunteer($eventVolunteer: EventVolunteerInput!) {
     volunteer { _id name }
     status
     interestedIn { _id name plural pluralCount description appliesToWorkshops order }
-    acceptedRoles { _id name plural pluralCount description appliesToWorkshops order }
     wishes
     notes
   }
@@ -84,7 +80,6 @@ mutation patchEventVolunteer($id: ID!, $eventVolunteer: EventVolunteerPatchInput
     volunteer { _id name }
     status
     interestedIn { _id name plural pluralCount description appliesToWorkshops order }
-    acceptedRoles { _id name plural pluralCount description appliesToWorkshops order }
     wishes
     notes
   }
@@ -102,7 +97,6 @@ mutation deleteEventVolunteer($id: ID!) {
     volunteer { _id name }
     status
     interestedIn { _id name plural pluralCount description appliesToWorkshops order }
-    acceptedRoles { _id name plural pluralCount description appliesToWorkshops order }
     wishes
     notes
   }

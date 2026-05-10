@@ -1,6 +1,7 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/service.html
 
 import { hooks as schemaHooks } from '@feathersjs/schema'
+import { BadRequest } from '@feathersjs/errors'
 
 import {
   eventVolunteersDataValidator,
@@ -13,15 +14,87 @@ import {
   eventVolunteersQueryResolver,
 } from './eventVolunteers.schema'
 
-import type { Application } from '../../declarations'
+import type { Application, HookContext } from '../../declarations'
 import { EventVolunteersService, getOptions } from './eventVolunteers.class'
 import { eventVolunteersPath, eventVolunteersMethods } from './eventVolunteers.shared'
 import { defaultChannels } from '../../utils/defaultChannels'
 import { SkipAccessControl } from '../access/hooks'
 import { withEntity } from '../../hooks/withEntity'
+import type { EventVolunteers } from './eventVolunteers.schema'
 
 export * from './eventVolunteers.class'
 export * from './eventVolunteers.schema'
+
+function captureAcceptedRoles() {
+  return (context: HookContext) => {
+    if (Array.isArray(context.data?.acceptedRoles)) {
+      context.params._acceptedRoles = context.data.acceptedRoles as string[]
+    }
+  }
+}
+
+function validateStatusTransition(app: Application) {
+  return async (context: HookContext) => {
+    const newStatus = context.data?.status
+    if (!newStatus || newStatus === 'Accepted' || newStatus === 'Cancelled') return
+    if (!context.id) return
+
+    const hasRegisteredAssignments = await app.service('eventVolunteerAssignments').exists({
+      query: { eventVolunteerId: context.id as string, registrationStatus: { $ne: 'None' } },
+      [SkipAccessControl]: true,
+    } as any)
+    if (hasRegisteredAssignments) {
+      throw new BadRequest('Cannot change volunteer status: there are assignments with active registration')
+    }
+  }
+}
+
+function syncAssignments(app: Application) {
+  return async (context: HookContext) => {
+    const volunteer = context.result as EventVolunteers
+    const { status, _id: eventVolunteerId, eventId, volunteerId } = volunteer
+    const acceptedRoles: string[] | undefined = context.params._acceptedRoles
+
+    if (status === 'Cancelled') return
+
+    const assignmentsService = app.service('eventVolunteerAssignments')
+    const rolesService = app.service('eventRoles')
+
+    const allRoles = await rolesService.find({ [SkipAccessControl]: true } as any)
+    const nonWorkshopRoleIds = new Set(allRoles.filter(r => !r.appliesToWorkshops).map(r => r._id as string))
+
+    const existingAssignments = await assignmentsService.find({
+      query: { eventVolunteerId },
+      [SkipAccessControl]: true,
+    } as any)
+    const existingNonWorkshop = existingAssignments.filter(a => nonWorkshopRoleIds.has(a.roleId))
+
+    if (status === 'Accepted' && acceptedRoles !== undefined) {
+      const wantedNonWorkshop = acceptedRoles.filter(id => nonWorkshopRoleIds.has(id))
+      const wantedSet = new Set(wantedNonWorkshop)
+
+      for (const assignment of existingNonWorkshop) {
+        if (!wantedSet.has(assignment.roleId)) {
+          await assignmentsService.remove(assignment._id, { [SkipAccessControl]: true } as any)
+        }
+      }
+
+      const existingRoleIds = new Set(existingNonWorkshop.map(a => a.roleId))
+      for (const roleId of wantedNonWorkshop) {
+        if (!existingRoleIds.has(roleId)) {
+          await assignmentsService.create(
+            { eventId, volunteerId, roleId, workshopId: null, workshopInstanceIds: null },
+            { [SkipAccessControl]: true } as any,
+          )
+        }
+      }
+    } else if (status !== 'Accepted') {
+      for (const assignment of existingNonWorkshop) {
+        await assignmentsService.remove(assignment._id, { [SkipAccessControl]: true } as any)
+      }
+    }
+  }
+}
 
 // A configure function that registers the service and its hooks via `app.configure`
 export const eventVolunteers = (app: Application) => {
@@ -41,8 +114,8 @@ export const eventVolunteers = (app: Application) => {
       all: [schemaHooks.validateQuery(eventVolunteersQueryValidator), schemaHooks.resolveQuery(eventVolunteersQueryResolver)],
       find: [],
       get: [],
-      create: [schemaHooks.validateData(eventVolunteersDataValidator), schemaHooks.resolveData(eventVolunteersDataResolver)],
-      patch: [schemaHooks.validateData(eventVolunteersPatchValidator), schemaHooks.resolveData(eventVolunteersPatchResolver)],
+      create: [captureAcceptedRoles(), schemaHooks.validateData(eventVolunteersDataValidator), schemaHooks.resolveData(eventVolunteersDataResolver)],
+      patch: [captureAcceptedRoles(), validateStatusTransition(app), schemaHooks.validateData(eventVolunteersPatchValidator), schemaHooks.resolveData(eventVolunteersPatchResolver)],
       remove: [
         withEntity('eventVolunteers', { query: { $select: ['status', '_isRegistered'] } }, volunteer => {
           if (volunteer.status !== 'Interested') {
@@ -56,6 +129,8 @@ export const eventVolunteers = (app: Application) => {
     },
     after: {
       all: [],
+      create: [syncAssignments(app)],
+      patch: [syncAssignments(app)],
     },
     error: {
       all: [],

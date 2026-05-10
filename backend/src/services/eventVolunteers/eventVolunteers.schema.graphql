@@ -22,7 +22,6 @@ type EventVolunteer implements Versionable {
   volunteer: Volunteer!
   status: EventVolunteerStatus!
   interestedIn: [EventRole!]!
-  acceptedRoles: [EventRole!]!
   wishes: String!
   notes: String!
 }
