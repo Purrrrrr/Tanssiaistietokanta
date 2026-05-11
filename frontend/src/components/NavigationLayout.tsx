@@ -13,6 +13,7 @@ import './SkipToMainContent.css'
 
 if (process.env.NODE_ENV === 'development') {
   import('./dev.css')
+  import('utils/devBadge').then(({ addFaviconDevBadge }) => addFaviconDevBadge())
 }
 
 function NavigationLayout({ children }) {
