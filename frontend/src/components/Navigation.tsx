@@ -16,7 +16,10 @@ function Navigation() {
   const T = useT('')
 
   return <nav ref={ref} className="flex relative z-10 flex-wrap justify-between items-center px-3.5 h-auto bg-white shadow-sm min-h-12.5 shadow-stone-600/30">
-    <NavButton to="/"><img className="mr-2" src="/fan32.png" alt="" />{T('app.title')}</NavButton>
+    <NavButton to="/">
+      <img className="mr-1 size-8" src="/fan48.webp" alt="" />
+      <span className="">{T('app.title')}</span>
+    </NavButton>
     <div className="flex items-center">
       <NavButton requireRight="dances:list" icon={<span className="mr-0.5">💃</span>} to="/dances" text={useTranslation('navigation.dances')} />
       <div className="self-stretch mx-1 w-[1px] bg-stone-300" />
