@@ -104,6 +104,7 @@ export const fi = {
       notes: 'Muistiinpanot',
       noInterests: 'Ei kiinnostuksen kohteita',
       noWishes: 'Ei erityisiä toiveita',
+      assignments: 'Tehtävät',
       EventVolunteerStatus: {
         Accepted: 'Mukana työvoimassa',
         Cancelled: 'Perunut osallistumisensa',
@@ -260,8 +261,14 @@ export const fi = {
       createNewVolunteer: 'Luo uusi vapaaehtoinen',
     },
     volunteerAssignmentEditor: {
+      addRole: 'Lisää rooli',
+      noRoles: 'Ei rooleja',
       addVolunteer: 'Lisää vapaaehtoinen',
       noVolunteers: 'Ei vapaaehtoisia',
+      selectedRoles: {
+        one: 'Valittu 1 rooli',
+        many: 'Valittu __count__ roolia',
+      },
       selectedVolunteers: {
         one: 'Valittu 1 vapaaehtoinen',
         many: 'Valittu __count__ vapaaehtoista',
@@ -272,7 +279,8 @@ export const fi = {
       },
       cannotRemoveRegisteredAssignment: 'Tapahtumaan ilmoitettuja vapaaehtoisia ei voi poistaa ilman ilmoittautumisen perumista.',
       removeVolunteer: 'Poista vapaaehtoinen',
-      removeSelectedVolunteers: {
+      removeRole: 'Poista rooli',
+      removeSelected: {
         one: 'Poista valittu',
         many: 'Poista valitut',
       },
@@ -286,9 +294,18 @@ export const fi = {
           many: 'Haluatko varmasti poistaa vapaaehtoiset: __name__?',
         },
       },
-      eventVolunteers: 'Kiinnostuneet vapaaehtoiset',
-      allVolunteers: 'Kaikki vapaaehtoiset',
+      removeRolesConfirmation: {
+        title: {
+          one: 'Poistetaanko rooli?',
+          many: 'Poistetaanko roolit?',
+        },
+        text: {
+          one: 'Haluatko varmasti poistaa roolin __name__?',
+          many: 'Haluatko varmasti poistaa seuraavat roolit: __name__?',
+        },
+      },
       name: 'Nimi',
+      role: 'Rooli',
       instance: 'Opetuskerta',
       allInstances: 'Kaikki',
       registrationStatus: 'Ilmoittautumistilanne',

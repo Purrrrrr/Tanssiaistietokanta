@@ -15,8 +15,9 @@ import { useMultipleSelection } from 'utils/useMultipleSelection'
 
 import { RemoveAssignmentsButton } from './RemoveVolunteerAssignmentButton'
 
-export interface VolunteerAssignmentEditorProps {
+export interface VolunteerAssignmentListProps {
   title: string
+  mainColumn: 'role' | 'name'
   event: Pick<Event, '_id' | '_versionId' | 'eventRegistrationSystem'>
   assignments: EventVolunteerAssignment[]
   readOnly?: boolean
@@ -24,7 +25,7 @@ export interface VolunteerAssignmentEditorProps {
   children?: React.ReactNode
 }
 
-export function VolunteerAssignmentList({ title, event, assignments, readOnly, workshopInstances, children }: VolunteerAssignmentEditorProps) {
+export function VolunteerAssignmentList({ title, mainColumn, event, assignments, readOnly, workshopInstances, children }: VolunteerAssignmentListProps) {
   const id = useId()
   const { eventRegistrationSystem } = event
   const t = useT('components.volunteerAssignmentEditor')
@@ -43,7 +44,7 @@ export function VolunteerAssignmentList({ title, event, assignments, readOnly, w
 
   return <PageSection
     title={title}
-    introText={selected.length > 0 ? t('selectedVolunteers', { count: selected.length }) : undefined}
+    introText={selected.length > 0 ? t(mainColumn == 'name' ? 'selectedVolunteers' : 'selectedRoles', { count: selected.length }) : undefined}
     toolbar={selected.length > 0 && !readOnly && <>
       {eventRegistrationSystem !== 'None' && (
         <FormGroup inline label={t('setRegistrationStatus', { count: selected.length })} labelStyle="beside" labelFor={`${id}-registrationStatus-bulk`}>
@@ -54,25 +55,29 @@ export function VolunteerAssignmentList({ title, event, assignments, readOnly, w
         </FormGroup>
       ) }
       <RemoveAssignmentsButton
-        text={t('removeSelectedVolunteers', { count: selected.length })}
+        confirmationType={mainColumn}
+        text={t('removeSelected', { count: selected.length })}
         assignments={selected}
       />
     </>}
   >
     <ItemList
       items={assignments}
-      emptyText={t('noVolunteers')}
+      emptyText={mainColumn === 'name' ? t('noVolunteers') : t('noRoles')}
       columns="grid-cols-[auto_1fr_max-content_max-content_auto]">
       <ItemList.Header>
         <SelectionBox {...selector.selectAllProps} />
-        <span>{t('name')}</span>
+        <span>{t(mainColumn)}</span>
         {workshopInstances && <span>{t('instance')}</span>}
         {eventRegistrationSystem !== 'None' && <span>{t('registrationStatus')}</span>}
       </ItemList.Header>
       {assignments.map(assignment => (
         <ItemList.Row key={assignment._id}>
           <SelectionBox {...selector.selectItemProps(assignment)} />
-          <span>{assignment.volunteer.name}</span>
+          {mainColumn === 'name'
+            ? <span>{assignment.volunteer.name}</span>
+            : <span>{assignment.role.name}{assignment.workshop && ` (${assignment.workshop.name})`}</span>
+          }
           <WorkshopInstanceSelector
             workshopInstances={workshopInstances ?? []}
             assignment={assignment}
@@ -91,6 +96,7 @@ export function VolunteerAssignmentList({ title, event, assignments, readOnly, w
           }
           {!readOnly &&
             <RemoveAssignmentsButton
+              confirmationType={mainColumn}
               text={t('removeVolunteer')}
               className="col-start-5"
               iconOnly

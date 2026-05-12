@@ -1,8 +1,8 @@
 import { Event, EventVolunteerAssignment, ID } from 'types'
 
 import { useShowGlobalLoadingAnimation } from 'backend'
+import { useEventRoles } from 'services/eventRoles'
 import { useCreateEventVolunteerAssignment, useEventVolunteerAssignments } from 'services/eventVolunteerAssignments'
-import { useEventVolunteers } from 'services/eventVolunteers'
 
 import { AutocompleteInput } from 'libraries/formsV2/components/inputs/selectors'
 import { useT } from 'i18n'
@@ -13,86 +13,78 @@ export interface VolunteerAssignmentEditorProps {
   id: string
   title: string
   event: Pick<Event, '_id' | '_versionId' | 'eventRegistrationSystem'>
-  roleId: ID
-  workshopId?: ID
-  workshopVersionId?: ID
-  workshopInstances?: { _id: ID, abbreviation?: string | null }[]
+  volunteerId: ID
 }
 
-export function VolunteerAssignmentEditor({ title, id, event, roleId, workshopId, workshopVersionId, workshopInstances }: VolunteerAssignmentEditorProps) {
+export function VolunteerAssignmentEditor({ title, id, event, volunteerId }: VolunteerAssignmentEditorProps) {
   const { _id: eventId, _versionId: eventVersionId } = event
-  const [currentAssignments = [], requestState] = useEventVolunteerAssignments({ eventId, eventVersionId, roleId, workshopId, workshopVersionId })
+  const [currentAssignments = [], requestState] = useEventVolunteerAssignments({ eventId, eventVersionId, volunteerId })
 
   useShowGlobalLoadingAnimation(requestState.loading)
-  const readOnly = eventVersionId != null || workshopVersionId != null
+  const readOnly = eventVersionId != null
 
   return <VolunteerAssignmentList
+    mainColumn="role"
     assignments={currentAssignments}
     title={title}
     readOnly={readOnly}
     event={event}
-    workshopInstances={workshopInstances}
   >
-    <AddVolunteerSelect
-      id={id}
-      readOnly={readOnly}
-      currentAssignments={currentAssignments}
-      eventId={eventId}
-      roleId={roleId}
-      workshopId={workshopId}
-    />
+    {!readOnly &&
+      <AddRoleSelect
+        id={id}
+        currentAssignments={currentAssignments}
+        eventId={eventId}
+        volunteerId={volunteerId}
+      />
+    }
     {requestState.error && <div className="text-red-500">{requestState.error.message}</div>}
   </VolunteerAssignmentList>
 }
 
 interface VolunteerSelectorProps {
   id: string
-  readOnly: boolean
   currentAssignments: EventVolunteerAssignment[]
   eventId: ID
-  roleId: ID
-  workshopId?: ID
+  volunteerId: ID
 }
 
-function AddVolunteerSelect({ id, readOnly, currentAssignments, eventId, roleId, workshopId }: VolunteerSelectorProps) {
+function AddRoleSelect({ id, currentAssignments, eventId, volunteerId }: VolunteerSelectorProps) {
   const t = useT('components.volunteerAssignmentEditor')
-  const [eventVolunteers = [], requestState] = useEventVolunteers({ eventId })
+  const [roles = [], requestState] = useEventRoles()
   const [createAssignment] = useCreateEventVolunteerAssignment()
 
   useShowGlobalLoadingAnimation(requestState.loading)
 
-  const assignedIds = new Set(currentAssignments.map(a => a.volunteer._id))
-  const eventVolunteerOptions: VolunteerOption[] = eventVolunteers
-    .filter(v => v.interestedIn.find(r => r._id === roleId) && v.status === 'Accepted')
-    .map(ev => ev.volunteer)
-    .filter(v => !assignedIds.has(v._id))
+  const assignedIds = new Set(currentAssignments.map(a => a.role._id))
+  const roleOptions: RoleOption[] = roles
+    .filter(v => !assignedIds.has(v._id) && !v.appliesToWorkshops)
 
   const getItems = (query: string) => {
     const q = query.trim().toLowerCase()
-    const matches = (v: VolunteerOption) => !q || v.name.toLowerCase().includes(q)
-    return eventVolunteerOptions.filter(matches)
+    const matches = (v: RoleOption) => !q || v.name.toLowerCase().includes(q)
+    return roleOptions.filter(matches)
   }
 
-  const onChange = async (newVolunteer: VolunteerOption) => {
+  const onChange = async (newRole: RoleOption) => {
     await createAssignment({
-      eventVolunteerAssignment: { eventId, roleId, volunteerId: newVolunteer._id, workshopId, registrationStatus: 'None' },
+      eventVolunteerAssignment: { eventId, roleId: newRole._id, volunteerId, registrationStatus: 'None' },
     })
   }
 
   return <>
-    <AutocompleteInput<VolunteerOption>
+    <AutocompleteInput<RoleOption>
       id={id}
       containerClassname="mb-6"
       value={null}
       onChange={onChange}
-      readOnly={readOnly}
       items={getItems}
       itemToString={v => v.name}
-      placeholder={readOnly ? '' : t('addVolunteer')}
-      noResultsText={t('noVolunteers')}
+      placeholder={t('addRole')}
+      noResultsText={t('noRoles')}
     />
     {requestState.error && <div className="text-red-500">{requestState.error.message}</div>}
   </>
 }
 
-interface VolunteerOption { _id: string, name: string }
+interface RoleOption { _id: string, name: string }

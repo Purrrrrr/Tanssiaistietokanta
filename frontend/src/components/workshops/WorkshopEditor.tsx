@@ -10,7 +10,7 @@ import { usePatchWorkshop, workshopInstanceName } from 'services/workshops'
 import { DateField, DragHandle, formFor, NumberInput, patchStrategy, SyncStatus, useAutosavingState } from 'libraries/forms'
 import { DocumentContentEditor } from 'libraries/lexical'
 import { ColorClass, FormGroup } from 'libraries/ui'
-import { VolunteerAssignmentEditor } from 'components/eventVolunteerAssignments/VolunteerAssignmentEditor'
+import { WorkshopVolunteerAssignmentEditor } from 'components/eventVolunteerAssignments/WorkshopVolunteerAssignmentEditor'
 import { AddButton } from 'components/widgets/AddButton'
 import { DanceChooser } from 'components/widgets/DanceChooser'
 import { PageSection } from 'components/widgets/PageSection'
@@ -86,7 +86,7 @@ export function WorkshopEditor({ event, workshop: workshopInDatabase, reservedAb
     }
     <Field path="description" component={DocumentContentEditor} label={t('description')} componentProps={{ className: 'min-h-50' }} />
     {workshopRoles.map(role =>
-      <VolunteerAssignmentEditor
+      <WorkshopVolunteerAssignmentEditor
         key={role._id}
         id={`workshop-${workshopId}-role-${role._id}`}
         title={role.plural}

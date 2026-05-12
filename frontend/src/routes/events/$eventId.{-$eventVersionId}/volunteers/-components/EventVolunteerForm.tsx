@@ -29,11 +29,12 @@ const {
 interface EventVolunteerFormProps extends FormProps<EventVolunteerFormValues> {
   syncState?: SyncState
   excludeVolunteers?: VolunteerListItem[]
+  assignmentsEditor?: React.ReactNode
   isNew?: boolean
   submitText?: string
 }
 
-export function EventVolunteerForm({ syncState, onSubmit, excludeVolunteers = [], isNew, submitText, ...rest }: EventVolunteerFormProps) {
+export function EventVolunteerForm({ syncState, onSubmit, excludeVolunteers = [], assignmentsEditor, isNew, submitText, ...rest }: EventVolunteerFormProps) {
   const t = useT('domain.eventVolunteer')
 
   return <Form {...rest} onSubmit={onSubmit} errorDisplay={onSubmit ? 'onSubmit' : 'always'}>
@@ -60,6 +61,7 @@ export function EventVolunteerForm({ syncState, onSubmit, excludeVolunteers = []
         component={EventVolunteerRolePicker}
         containerClassName="col-span-full"
       />
+      {assignmentsEditor && <div className="col-span-full">{assignmentsEditor}</div>}
       <Field path="wishes" label={t('wishes')} component={TextArea} />
       <Field path="notes" label={t('notes')} component={TextArea} />
     </div>
