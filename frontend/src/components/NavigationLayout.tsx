@@ -15,6 +15,9 @@ if (process.env.NODE_ENV === 'development') {
   import('./dev.css')
   import('utils/devBadge').then(({ addFaviconDevBadge }) => addFaviconDevBadge())
 }
+if (window.location.hostname.match(/\bbeta\b/)) {
+  import('utils/devBadge').then(({ addFaviconDevBadge }) => addFaviconDevBadge('beta'))
+}
 
 function NavigationLayout({ children }) {
   if (navigationHidden()) {
