@@ -26,7 +26,7 @@ export function VolunteerList({ volunteers: unsortedVolunteers }: VolunteerListP
   const t = useT('routes.volunteers')
   const label = useT('domain.volunteer')
   const [sort, setSort] = useState<Sort>({ key: 'interestedIn', direction: 'asc' })
-  const volunteers = sortedBy(unsortedVolunteers ?? [], volunteerSorter(sort.key), sort.direction === 'desc')
+  const volunteers = sortedBy(unsortedVolunteers, { key: volunteerSorter(sort.key), direction: sort.direction }, 'name')
   const selector = useMultipleSelection(volunteers)
 
   return <>

@@ -25,7 +25,7 @@ export function DanceList({ dances: unsortedDances }: DanceListProps) {
   const t = useT('routes.dances.list')
   const label = useT('domain.dance')
   const [sort, setSort] = useState<Sort>({ key: 'name', direction: 'asc' })
-  const dances = sortedBy(unsortedDances, danceSorter(sort.key), sort.direction === 'desc')
+  const dances = sortedBy(unsortedDances, { key: danceSorter(sort.key), direction: sort.direction }, 'name')
 
   return <div>
     {dances.length > 0 &&

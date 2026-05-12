@@ -30,7 +30,7 @@ export function EventVolunteerList({ eventVolunteers: unsorted, readOnly, curren
   const label = useT('domain.eventVolunteer')
   const [sort, setSort] = useState<Sort>({ key: 'interestedIn', direction: 'asc' })
 
-  const eventVolunteers = sortedBy(unsorted ?? [], volunteerSorter(sort.key), sort.direction === 'desc')
+  const eventVolunteers = sortedBy(unsorted, { key: volunteerSorter(sort.key), direction: sort.direction }, volunteer => volunteer.volunteer.name)
   const addedVolunteers = eventVolunteers.map(ev => ev.volunteer)
   const { selected, ...selector } = useMultipleSelection(eventVolunteers)
 
