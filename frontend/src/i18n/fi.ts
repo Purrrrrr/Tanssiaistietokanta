@@ -660,6 +660,7 @@ export const fi = {
           },
           setStatus: 'Aseta ilmoittautumistilanne',
           addVolunteer: 'Lisää vapaaehtoinen',
+          cannotDeleteRegisteredVolunteer: 'Tapahtumaan ilmoitettuja vapaaehtoisia ei voi poistaa ilman ilmoittautumisen perumista.',
           deleteVolunteer: 'Poista vapaaehtoinen',
           deleteConfirmation: 'Haluatko varmasti poistaa tämän vapaaehtoisen tapahtumasta?',
         },

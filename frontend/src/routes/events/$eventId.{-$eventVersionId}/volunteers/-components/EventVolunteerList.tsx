@@ -166,7 +166,7 @@ function EventVolunteerListRow({ eventVolunteer: ev, addedVolunteers, readOnly, 
   >
     {children}
     <div className="flex gap-1 items-center">
-      {!readOnly && <DeleteEventVolunteerButton minimal eventVolunteerId={ev._id} />}
+      {!readOnly && <DeleteEventVolunteerButton minimal eventVolunteer={ev} />}
       <Button
         requireRight="eventVolunteers:modify"
         entityId={ev._id}

@@ -1,3 +1,5 @@
+import { EventVolunteer } from 'types'
+
 import { addGlobalLoadingAnimation } from 'backend'
 import { useDeleteEventVolunteer } from 'services/eventVolunteers'
 
@@ -6,25 +8,26 @@ import { useT } from 'i18n'
 
 interface DeleteEventVolunteerButtonProps {
   minimal?: boolean
-  eventVolunteerId: string
+  eventVolunteer: EventVolunteer
 }
 
-export function DeleteEventVolunteerButton({ minimal, eventVolunteerId }: DeleteEventVolunteerButtonProps) {
+export function DeleteEventVolunteerButton({ minimal, eventVolunteer }: DeleteEventVolunteerButtonProps) {
   const t = useT('routes.events.event.volunteers')
   const [deleteEventVolunteer] = useDeleteEventVolunteer({ refetchQueries: ['getEventVolunteers'] })
 
   const handleDelete = () => {
-    addGlobalLoadingAnimation(deleteEventVolunteer({ id: eventVolunteerId }))
+    addGlobalLoadingAnimation(deleteEventVolunteer({ id: eventVolunteer._id }))
   }
 
   return <DeleteButton
     requireRight="eventVolunteers:delete"
-    entityId={eventVolunteerId}
+    entityId={eventVolunteer._id}
     minimal={minimal}
     onDelete={handleDelete}
     iconOnly={minimal}
+    disabled={eventVolunteer._isRegistered}
     text={t('deleteVolunteer')}
-    tooltip={t('deleteVolunteer')}
+    tooltip={t(eventVolunteer._isRegistered ? 'cannotDeleteRegisteredVolunteer' : 'deleteVolunteer')}
     confirmText={t('deleteConfirmation')}
   />
 }

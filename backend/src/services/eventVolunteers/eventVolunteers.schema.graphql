@@ -16,6 +16,7 @@ type EventVolunteer implements Versionable {
   _versionId: String
   _versionNumber: String
   _updatedAt: String!
+  _isRegistered: Boolean!
   versionHistory: VersionHistory!
   eventId: ID!
   volunteerId: ID!
