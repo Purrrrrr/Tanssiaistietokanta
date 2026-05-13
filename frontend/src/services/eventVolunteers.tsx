@@ -7,6 +7,7 @@ setupServiceUpdateFragment(
     _versionId
     _versionNumber
     _updatedAt
+    _isRegistered
     eventId
     volunteerId
     volunteer { _id name }
@@ -24,11 +25,13 @@ query getEventVolunteers($eventId: ID, $eventVersionId: ID, $volunteerId: ID) {
     _versionId
     _versionNumber
     _updatedAt
+    _isRegistered
     eventId
     volunteerId
     volunteer { _id name }
     status
     interestedIn { _id name plural pluralCount description appliesToWorkshops order }
+    assignments { _id role { _id name order } workshop { _id _versionId name abbreviation } }
     wishes
     notes
   }
@@ -41,11 +44,13 @@ query getEventVolunteer($id: ID!, $versionId: ID) {
     _versionId
     _versionNumber
     _updatedAt
+    _isRegistered
     eventId
     volunteerId
     volunteer { _id name }
     status
     interestedIn { _id name plural pluralCount description appliesToWorkshops order }
+    assignments { _id role { _id name order } workshop { _id _versionId name abbreviation } }
     wishes
     notes
   }
@@ -58,11 +63,13 @@ mutation createEventVolunteer($eventVolunteer: EventVolunteerInput!) {
     _versionId
     _versionNumber
     _updatedAt
+    _isRegistered
     eventId
     volunteerId
     volunteer { _id name }
     status
     interestedIn { _id name plural pluralCount description appliesToWorkshops order }
+    assignments { _id role { _id name order } workshop { _id _versionId name abbreviation } }
     wishes
     notes
   }
@@ -75,11 +82,13 @@ mutation patchEventVolunteer($id: ID!, $eventVolunteer: EventVolunteerPatchInput
     _versionId
     _versionNumber
     _updatedAt
+    _isRegistered
     eventId
     volunteerId
     volunteer { _id name }
     status
     interestedIn { _id name plural pluralCount description appliesToWorkshops order }
+    assignments { _id role { _id name order } workshop { _id _versionId name abbreviation } }
     wishes
     notes
   }
@@ -92,11 +101,13 @@ mutation deleteEventVolunteer($id: ID!) {
     _versionId
     _versionNumber
     _updatedAt
+    _isRegistered
     eventId
     volunteerId
     volunteer { _id name }
     status
     interestedIn { _id name plural pluralCount description appliesToWorkshops order }
+    assignments { _id role { _id name order } workshop { _id _versionId name abbreviation } }
     wishes
     notes
   }

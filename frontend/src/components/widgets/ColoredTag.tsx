@@ -59,7 +59,7 @@ const colors = [
 export const TAG_COLOR_COUNT = colors.length
 
 export interface ColoredTagProps {
-  tag?: string | number
+  tag?: React.ReactNode
   title: string
   hashSource?: string | number
   color?: number

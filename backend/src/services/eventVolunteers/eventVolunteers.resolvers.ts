@@ -6,12 +6,14 @@ export default (app: Application): Resolvers => {
   const volunteerService = app.service('volunteers')
   const eventRolesService = app.service('eventRoles')
   const eventService = app.service('events')
+  const evaService = app.service('eventVolunteerAssignments')
 
   return {
     EventVolunteer: {
       volunteer: (eventVolunteer: { volunteerId: string }) => volunteerService.get(eventVolunteer.volunteerId),
       interestedIn: (eventVolunteer: { interestedIn: string[] }) =>
         Promise.all(eventVolunteer.interestedIn.map(id => eventRolesService.get(id))),
+      assignments: (eventVolunteer: { _id: string }) => evaService.find({ query: { eventVolunteerId: eventVolunteer._id } }),
     },
     Query: {
       eventVolunteer: (_, { id, versionId }, params) => versionId

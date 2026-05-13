@@ -29,6 +29,7 @@ export {
   Music,
   Outdated,
   Person,
+  Pin,
   Presentation,
   Redo,
   Refresh,
