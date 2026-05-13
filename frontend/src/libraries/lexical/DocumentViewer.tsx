@@ -153,10 +153,10 @@ function renderNode(node: SerializedNode, index: number, options: ViewOptions): 
   }
 
   const { content: children, hasContent } = renderChildren(node as SerializedElementNode, options)
-  if (!hasContent) return empty
 
   switch (node.type) {
     case 'paragraph': {
+      if (!hasContent) return empty
       const para = node as SerializedElementNode
       return content(
         <p key={index} style={alignStyle(para.format)}>
@@ -166,6 +166,7 @@ function renderNode(node: SerializedNode, index: number, options: ViewOptions): 
     }
 
     case 'heading': {
+      if (!hasContent) return empty
       const heading = node as SerializedHeadingNode
       const headingLevel = parseInt(heading.tag.slice(1), 10) + (options.skipHeadingLevels ?? 0) - 1
       const Tag = headingTags[Math.min(6, headingLevel)]
@@ -173,6 +174,7 @@ function renderNode(node: SerializedNode, index: number, options: ViewOptions): 
     }
 
     case 'quote':
+      if (!hasContent) return empty
       return content(
         <blockquote key={index} style={alignStyle((node as SerializedElementNode).format)}>
           {children}
@@ -181,6 +183,7 @@ function renderNode(node: SerializedNode, index: number, options: ViewOptions): 
 
     case 'link':
     case 'autolink': {
+      if (!hasContent) return empty
       const link = node as SerializedLinkNode
       if (options.customRenderers?.link) {
         return content(options.customRenderers.link({ node: link, children }))

@@ -517,7 +517,9 @@
 * Sort add volunteer dropdown by name!
 * Is the role dropdown sorted? Yes
 * Sort volunteer lists too secondarily by name
+* Document viewer does not empty table cells correctly
 
+  Make status selector in eventVolunteerForm work
   Show some kompassi status info on event volunteers page when available
   ItemList expanding content background and bottom border
   A way to assign to and edit non-workshop roles statuses
