@@ -1,19 +1,18 @@
 import { useId } from 'react'
 
-import { Event, EventVolunteerAssignment, EventVolunteerRegistrationStatus, ID } from 'types'
+import { Event, EventVolunteerAssignment, ID } from 'types'
 
 import { useSetEventVolunteerAssignmentRegistrationStatus, useSetEventVolunteerAssignmentWorkshopInstance } from 'services/eventVolunteerAssignments'
-import { workshopInstanceName } from 'services/workshops'
 
-import { Select } from 'libraries/formsV2/components/inputs/selectors'
 import { FormGroup, ItemList } from 'libraries/ui'
-import { ModeButton, ModeSelector } from 'libraries/ui/ModeSelector'
 import { PageSection } from 'components/widgets/PageSection'
 import { SelectionBox } from 'components/widgets/SelectionBox'
-import { useT, useTranslation } from 'i18n'
+import { useT } from 'i18n'
 import { useMultipleSelection } from 'utils/useMultipleSelection'
 
+import { RegistrationStatusSelector } from './RegistrationStatusSelector'
 import { RemoveAssignmentsButton } from './RemoveVolunteerAssignmentButton'
+import { WorkshopInstanceSelector } from './WorkshopInstanceSelector'
 
 export interface VolunteerAssignmentListProps {
   title: string
@@ -108,67 +107,4 @@ export function VolunteerAssignmentList({ title, mainColumn, event, assignments,
     </ItemList>
     {children}
   </PageSection>
-}
-
-function WorkshopInstanceSelector({ workshopInstances, readOnly, assignment, setInstanceIds }: {
-  workshopInstances: {
-    _id: ID
-    abbreviation?: string | null
-  }[]
-  readOnly?: boolean
-  assignment: EventVolunteerAssignment
-  setInstanceIds: (id: ID, instanceIds: ID[] | null) => void
-}) {
-  const disabled = readOnly === true
-    || assignment.registrationStatus === 'RegisteredToEventSystem'
-    || assignment.registrationStatus === 'AcceptedRegistration'
-  const t = useT('components.volunteerAssignmentEditor')
-  return workshopInstances && workshopInstances.length > 1 && <ModeSelector>
-    <ModeButton
-      disabled={disabled}
-      selected={assignment.workshopInstanceIds == null}
-      onClick={() => setInstanceIds(assignment._id, null)}
-    >
-      {t('allInstances')}
-    </ModeButton>
-    {workshopInstances.map((instance, index) => {
-      const selected = assignment.workshopInstanceIds?.includes(instance._id) ?? false
-      return (
-        <ModeButton
-          key={instance._id}
-          disabled={disabled}
-          selected={selected}
-          onClick={() => setInstanceIds(
-            assignment._id,
-            selected
-              ? assignment.workshopInstanceIds?.filter(id => id !== instance._id) ?? null
-              : [...(assignment.workshopInstanceIds ?? []), instance._id],
-          )}
-        >
-          {workshopInstanceName(index, instance)}
-        </ModeButton>
-      )
-    })}
-  </ModeSelector>
-}
-
-const statuses: EventVolunteerRegistrationStatus[] = ['None', 'RegisteredToEventSystem', 'AcceptedRegistration', 'InformedToOrganizers']
-
-function RegistrationStatusSelector({ id, value, onChange, disabled }: {
-  id: string
-  value?: EventVolunteerRegistrationStatus
-  onChange: (registrationStatus: EventVolunteerRegistrationStatus) => void
-  disabled?: boolean
-}) {
-  const t = useT('domain.EventVolunteerAssignmentRegistrationStatus')
-  const choose = useTranslation('components.volunteerAssignmentEditor.chooseStatus')
-  return <Select<EventVolunteerRegistrationStatus | null>
-    minimal
-    id={id}
-    readOnly={disabled}
-    value={value ?? null}
-    onChange={status => status && onChange(status)}
-    items={value ? statuses : [null, ...statuses]}
-    itemToString={status => status ? t(status) : choose}
-  />
 }
