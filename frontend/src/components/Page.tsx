@@ -1,11 +1,11 @@
 import { useMatches } from '@tanstack/react-router'
 import { lazy, useEffect, useState } from 'react'
-import { Menu as MenuHamburger } from '@blueprintjs/icons'
 import classNames from 'classnames'
 
 import { SyncState } from 'libraries/forms'
 import { Button } from 'libraries/ui'
 import { Breadcrumb, BreadcrumbsContainer } from 'libraries/ui/Breadcrumbs'
+import { Menu as MenuHamburger } from 'libraries/ui/icons'
 import { useT, useTranslation } from 'i18n'
 import { navigationHidden } from 'utils/routeUtils'
 

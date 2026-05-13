@@ -1,9 +1,9 @@
 import { createLink } from '@tanstack/react-router'
 import { ComponentProps } from 'react'
-import { Share } from '@blueprintjs/icons'
 import classNames from 'classnames'
 
 import { omitPermissionCheckingProps, withPermissionChecking } from 'libraries/access-control'
+import { Share } from 'libraries/ui/icons'
 import { useDimensionCssVariables } from 'utils/useDimensionCssVariables'
 
 interface MenuProps {
