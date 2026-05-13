@@ -195,6 +195,7 @@ function EventVolunteerRowEditor({ item, addedVolunteers, readOnly }: {
       await patchEventVolunteer({
         id: item._id,
         eventVolunteer: {
+          status: data.status,
           wishes: data.wishes,
           notes: data.notes,
           volunteerId: data.volunteer?._id,
