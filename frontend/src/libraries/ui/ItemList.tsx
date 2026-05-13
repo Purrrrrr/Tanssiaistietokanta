@@ -50,7 +50,7 @@ const commonRowClasses = classNames(
   'flex flex-wrap items-center grid-cols-subgrid col-span-full',
   'group-[.wrap-md]:md:grid group-[.wrap-sm]:sm:grid group-[.wrap-none]:grid',
 )
-const rowColorClassname = 'nth-of-type-[even]:bg-gray-100 border-x-1 border-gray-200'
+const rowColorClassname = 'nth-of-type-[even]:bg-gray-100 border-x border-b border-gray-200'
 const rowClasses = classNames(
   'first:border-t-1 p-2',
   'gap-4 group-[.wrap-md]:max-md:gap-1 group-[.wrap-sm]:max-sm:gap-1 group-[.wrap-none]:gap-1',
@@ -83,7 +83,9 @@ function ItemListRow({ children, expandableContent, expandableContentLoadingMess
     </li>
     {expandableContent &&
       <div className={classNames('col-span-full', rowColorClassname)}>
-        <Collapse isOpen={isOpen} loadingMessage={expandableContentLoadingMessage}>{expandableContent}</Collapse>
+        <Collapse className="bg-white" isOpen={isOpen} loadingMessage={expandableContentLoadingMessage}>
+          {expandableContent}
+        </Collapse>
       </div>
     }
   </>
