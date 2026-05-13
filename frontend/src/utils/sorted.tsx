@@ -57,18 +57,32 @@ export function compareBy<Item>(
     const keyA = sortKey(a)
     const keyB = sortKey(b)
 
-    if (keyA == null && keyB == null) {
-      return 0
-    }
-    if (keyA == null) {
-      return nullsLast ? 1 : -1
-    }
-    if (keyB == null) {
-      return nullsLast ? -1 : 1
-    }
-    if (typeof keyA === 'string' && typeof keyB === 'string') return keyA.localeCompare(keyB)
-    if (keyA < keyB) return -1
-    if (keyA > keyB) return 1
+    return compareValues(keyA, keyB, nullsLast)
+  }
+}
+
+function compareValues(a: unknown, b: unknown, nullsLast: boolean): number {
+  if (a == null && b == null) {
     return 0
   }
+  if (a == null) {
+    return nullsLast ? 1 : -1
+  }
+  if (b == null) {
+    return nullsLast ? -1 : 1
+  }
+  if (Array.isArray(a) && Array.isArray(b)) {
+    const length = Math.min(a.length, b.length)
+    for (let i = 0; i < length; i++) {
+      const result = compareValues(a[i], b[i], nullsLast)
+      if (result !== 0) {
+        return result
+      }
+    }
+    return a.length - b.length
+  }
+  if (typeof a === 'string' && typeof b === 'string') return a.localeCompare(b)
+  if (a < b) return -1
+  if (a > b) return 1
+  return 0
 }
