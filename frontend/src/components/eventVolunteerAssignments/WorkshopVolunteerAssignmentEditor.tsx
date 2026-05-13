@@ -8,6 +8,7 @@ import { AutocompleteInput } from 'libraries/formsV2/components/inputs/selectors
 import { useT } from 'i18n'
 
 import { VolunteerAssignmentList } from './VolunteerAssignmentList'
+import { sortedBy } from 'utils/sorted'
 
 export interface WorkshopVolunteerAssignmentEditorProps {
   id: string
@@ -71,7 +72,7 @@ function AddVolunteerSelect({ id, currentAssignments, eventId, roleId, workshopI
   const getItems = (query: string) => {
     const q = query.trim().toLowerCase()
     const matches = (v: VolunteerOption) => !q || v.name.toLowerCase().includes(q)
-    return eventVolunteerOptions.filter(matches)
+    return sortedBy(eventVolunteerOptions.filter(matches), 'name')
   }
 
   const onChange = async (newVolunteer: VolunteerOption) => {
