@@ -5,7 +5,7 @@
   "type": "module",
   "dependencies": {
     "@apollo/client": "^3.12.7",
-    "@blueprintjs/icons": "^6.7.0",
+    "@blueprintjs/icons": "^6.9.1",
     "@dnd-kit/sortable": "^10.0.0",
     "@doeixd/scoped-focusgroup-polyfill": "^0.0.2",
     "@httpx/plain-object": "^2.1.7",
