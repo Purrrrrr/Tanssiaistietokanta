@@ -6,9 +6,9 @@ import { usePatchEventVolunteer } from 'services/eventVolunteers'
 
 import { patchStrategy, useAutosavingState } from 'libraries/forms'
 import { Button, FormGroup } from 'libraries/ui'
-import { ChevronDown, ChevronUp, Edit, EyeOpen, Pin, Search } from 'libraries/ui/icons'
+import { ChevronDown, ChevronUp, Edit, Pin, Search } from 'libraries/ui/icons'
 import { ItemList, Sort } from 'libraries/ui/ItemList'
-import { VolunteerAssignmentEditor } from 'components/eventVolunteerAssignments/VolunteerAssignmentEditor'
+import { VolunteerRoleAssignmentEditor } from 'components/eventVolunteerAssignments/VolunteerRoleAssignmentEditor'
 import { RoleTag } from 'components/eventVolunteers/RoleTag'
 import { VolunteerStatusBulkSelector } from 'components/eventVolunteers/VolunteerStatusBulkSelector'
 import { SelectionBox } from 'components/widgets/SelectionBox'
@@ -213,7 +213,7 @@ function EventVolunteerRowEditor({ item, addedVolunteers, readOnly }: {
     excludeVolunteers={addedVolunteers}
     className="px-4"
     assignmentsEditor={
-      <VolunteerAssignmentEditor
+      <VolunteerRoleAssignmentEditor
         title={useTranslation('domain.eventVolunteer.assignments')}
         id={`volunteerAssignmentEditor-${item._id}`}
         event={{ _id: item.eventId, _versionId: item._versionId, eventRegistrationSystem: 'Kompassi' }}

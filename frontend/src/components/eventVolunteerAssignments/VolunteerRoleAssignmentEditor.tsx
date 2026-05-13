@@ -9,14 +9,14 @@ import { useT } from 'i18n'
 
 import { VolunteerAssignmentList } from './VolunteerAssignmentList'
 
-export interface VolunteerAssignmentEditorProps {
+export interface VolunteerRoleAssignmentEditorProps {
   id: string
   title: string
   event: Pick<Event, '_id' | '_versionId' | 'eventRegistrationSystem'>
   volunteerId: ID
 }
 
-export function VolunteerAssignmentEditor({ title, id, event, volunteerId }: VolunteerAssignmentEditorProps) {
+export function VolunteerRoleAssignmentEditor({ title, id, event, volunteerId }: VolunteerRoleAssignmentEditorProps) {
   const { _id: eventId, _versionId: eventVersionId } = event
   const [currentAssignments = [], requestState] = useEventVolunteerAssignments({ eventId, eventVersionId, volunteerId })
 
