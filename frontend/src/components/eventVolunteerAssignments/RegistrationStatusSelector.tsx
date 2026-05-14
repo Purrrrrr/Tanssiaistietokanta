@@ -5,7 +5,8 @@ import { useT, useTranslation } from 'i18n'
 
 const statuses: EventVolunteerRegistrationStatus[] = ['None', 'RegisteredToEventSystem', 'AcceptedRegistration', 'InformedToOrganizers']
 
-export function RegistrationStatusSelector({ id, value, onChange, disabled }: {
+export function RegistrationStatusSelector({ id, className, value, onChange, disabled }: {
+  className?: string
   id: string
   value?: EventVolunteerRegistrationStatus
   onChange: (registrationStatus: EventVolunteerRegistrationStatus) => void
@@ -16,6 +17,7 @@ export function RegistrationStatusSelector({ id, value, onChange, disabled }: {
   return <Select<EventVolunteerRegistrationStatus | null>
     minimal
     id={id}
+    containerClassname={className}
     readOnly={disabled}
     value={value ?? null}
     onChange={status => status && onChange(status)}

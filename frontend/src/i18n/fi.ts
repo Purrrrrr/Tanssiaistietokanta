@@ -270,13 +270,10 @@ export const fi = {
       noRoles: 'Ei rooleja',
       addVolunteer: 'Lisää vapaaehtoinen',
       noVolunteers: 'Ei vapaaehtoisia',
-      selectedRoles: {
-        one: 'Valittu 1 rooli',
-        many: 'Valittu __count__ roolia',
-      },
-      selectedVolunteers: {
-        one: 'Valittu 1 vapaaehtoinen',
-        many: 'Valittu __count__ vapaaehtoista',
+      noAssignments: 'Ei annettuja työtehtäviä',
+      selectedAssignments: {
+        one: 'Valittu 1 työtehtävä',
+        many: 'Valittu __count__ työtehtäväää',
       },
       setRegistrationStatus: {
         one: 'Aseta valitun ilmoittautumistilanne',
@@ -289,28 +286,19 @@ export const fi = {
         one: 'Poista valittu',
         many: 'Poista valitut',
       },
-      removeVolunteersConfirmation: {
+      removeAssignmentsConfirmation: {
         title: {
-          one: 'Poistetaanko vapaaehtoinen?',
-          many: 'Poistetaanko vapaaehtoiset?',
+          one: 'Poistetaanko työtehtävä?',
+          many: 'Poistetaanko työtehtävät?',
         },
         text: {
-          one: 'Haluatko varmasti poistaa vapaaehtoisen __name__?',
-          many: 'Haluatko varmasti poistaa vapaaehtoiset: __name__?',
-        },
-      },
-      removeRolesConfirmation: {
-        title: {
-          one: 'Poistetaanko rooli?',
-          many: 'Poistetaanko roolit?',
-        },
-        text: {
-          one: 'Haluatko varmasti poistaa roolin __name__?',
-          many: 'Haluatko varmasti poistaa seuraavat roolit: __name__?',
+          one: 'Haluatko varmasti poistaa seuraavan vapaaehtoisen työtehtävän?',
+          many: 'Haluatko varmasti poistaa seuraavat vapaaehtoisten työtehtävät?',
         },
       },
       name: 'Nimi',
       role: 'Rooli',
+      workshop: 'Työpaja',
       instance: 'Opetuskerta',
       allInstances: 'Kaikki',
       registrationStatus: 'Ilmoittautumistilanne',
@@ -593,6 +581,8 @@ export const fi = {
           basicInfo: 'Etusivu',
           editBasicInfo: 'Tapahtuman tiedot',
           volunteers: 'Vapaaehtoiset',
+          assignments: 'Työtehtävät',
+          assignmentsAndRegistrationStatus: 'Työtehtävät ja ilmoittautumistilanne',
           workshops: 'Työpajat',
           addWorkshop: 'Lisää työpaja',
           ball: {
@@ -663,6 +653,10 @@ export const fi = {
           cannotDeleteRegisteredVolunteer: 'Tapahtumaan ilmoitettuja vapaaehtoisia ei voi poistaa ilman ilmoittautumisen perumista.',
           deleteVolunteer: 'Poista vapaaehtoinen',
           deleteConfirmation: 'Haluatko varmasti poistaa tämän vapaaehtoisen tapahtumasta?',
+        },
+        assignments: {
+          assignments: 'Työtehtävät',
+          assignmentsAndRegistrationStatus: 'Työtehtävät ja Kompassi-ilmoittautumistilanne',
         },
         workshop: {
           delete: 'Poista työpaja',

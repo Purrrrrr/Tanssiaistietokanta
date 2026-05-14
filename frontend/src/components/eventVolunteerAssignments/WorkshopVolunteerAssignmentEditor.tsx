@@ -6,9 +6,9 @@ import { useEventVolunteers } from 'services/eventVolunteers'
 
 import { AutocompleteInput } from 'libraries/formsV2/components/inputs/selectors'
 import { useT } from 'i18n'
+import { sortedBy } from 'utils/sorted'
 
 import { VolunteerAssignmentList } from './VolunteerAssignmentList'
-import { sortedBy } from 'utils/sorted'
 
 export interface WorkshopVolunteerAssignmentEditorProps {
   id: string
@@ -28,7 +28,7 @@ export function WorkshopVolunteerAssignmentEditor({ title, id, event, roleId, wo
   const readOnly = eventVersionId != null || workshopVersionId != null
 
   return <VolunteerAssignmentList
-    mainColumn="name"
+    showName
     assignments={currentAssignments}
     title={title}
     readOnly={readOnly}

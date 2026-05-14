@@ -110,6 +110,11 @@ function EventsMenu({ event, showPopups }: { event: Event, showPopups?: boolean 
       <MenuLink to="/events/$eventId/{-$eventVersionId}" params={params} activeOptions={{ exact: true }} text={t('basicInfo')} />
       <MenuLink to="/events/$eventId/{-$eventVersionId}/edit" params={params} text={t('editBasicInfo')} icon={<Cog />} />
       <MenuLink to="/events/$eventId/{-$eventVersionId}/volunteers" params={params} text={t('volunteers')} />
+      <MenuLink
+        to="/events/$eventId/{-$eventVersionId}/assignments"
+        params={params}
+        text={t(event.eventRegistrationSystem === 'Kompassi' ? 'assignmentsAndRegistrationStatus' : 'assignments')}
+      />
     </MenuSection>
     <MenuSection title={t('ball.title')}>
       <MenuLink to="/events/$eventId/{-$eventVersionId}/program/main" params={params} text={t('ball.ballProgram')} />

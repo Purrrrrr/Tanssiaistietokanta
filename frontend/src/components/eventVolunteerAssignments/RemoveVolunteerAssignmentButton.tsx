@@ -6,8 +6,7 @@ import { ButtonProps } from 'libraries/ui'
 import { DeleteButton } from 'components/widgets/DeleteButton'
 import { useT } from 'i18n'
 
-export function RemoveAssignmentsButton({ assignments, confirmationType, ...rest }: Omit<ButtonProps, 'text'> & {
-  confirmationType: 'name' | 'role'
+export function RemoveAssignmentsButton({ assignments, ...rest }: Omit<ButtonProps, 'text'> & {
   iconOnly?: boolean
   text: string
   assignments: EventVolunteerAssignment[]
@@ -16,10 +15,6 @@ export function RemoveAssignmentsButton({ assignments, confirmationType, ...rest
   const t = useT('components.volunteerAssignmentEditor')
   const disabled = !assignments.every(canDeleteEventVolunteerAssignment)
   const count = assignments.length
-  const getName = confirmationType === 'name'
-    ? (a: EventVolunteerAssignment) => a.volunteer.name
-    : (a: EventVolunteerAssignment) => a.role.name
-  const name = assignments.map(getName).join(', ')
 
   return <DeleteButton
     minimal
@@ -29,14 +24,17 @@ export function RemoveAssignmentsButton({ assignments, confirmationType, ...rest
     onDelete={() => Promise.all([
       assignments.map(assignment => deleteAssignment({ id: assignment._id })),
     ])}
-    confirmTitle={t(
-      confirmationType === 'name' ? 'removeVolunteersConfirmation.title' : 'removeRolesConfirmation.title',
-      { count },
-    )}
-    confirmText={t(
-      confirmationType === 'name' ? 'removeVolunteersConfirmation.text' : 'removeRolesConfirmation.text',
-      { name, count },
-    )}
+    confirmTitle={t('removeAssignmentsConfirmation.title', { count })}
+    confirmText={<>
+      <p>{t('removeAssignmentsConfirmation.text', { count })}</p>
+      <ul className={count > 1 ? 'list-disc list-inside' : undefined}>
+        {assignments.map(a =>
+          <li key={a._id}>
+            {a.volunteer.name}, <span className="italic">{a.role.name.toLowerCase()} {a.workshop && `(${a.workshop.name})`}</span>
+          </li>,
+        )}
+      </ul>
+    </>}
   />
 }
 

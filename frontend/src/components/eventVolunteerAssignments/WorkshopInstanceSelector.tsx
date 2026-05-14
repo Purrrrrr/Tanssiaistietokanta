@@ -5,7 +5,7 @@ import { workshopInstanceName } from 'services/workshops'
 import { ModeButton, ModeSelector } from 'libraries/ui/ModeSelector'
 import { useT } from 'i18n'
 
-export function WorkshopInstanceSelector({ workshopInstances, readOnly, assignment, setInstanceIds }: {
+export function WorkshopInstanceSelector({ workshopInstances, readOnly, assignment, setInstanceIds, className }: {
   workshopInstances: {
     _id: ID
     abbreviation?: string | null
@@ -13,12 +13,13 @@ export function WorkshopInstanceSelector({ workshopInstances, readOnly, assignme
   readOnly?: boolean
   assignment: EventVolunteerAssignment
   setInstanceIds: (id: ID, instanceIds: ID[] | null) => void
+  className?: string
 }) {
   const disabled = readOnly === true
     || assignment.registrationStatus === 'RegisteredToEventSystem'
     || assignment.registrationStatus === 'AcceptedRegistration'
   const t = useT('components.volunteerAssignmentEditor')
-  return workshopInstances && workshopInstances.length > 1 && <ModeSelector>
+  return workshopInstances && workshopInstances.length > 1 && <ModeSelector className={className}>
     <ModeButton
       disabled={disabled}
       selected={assignment.workshopInstanceIds == null}

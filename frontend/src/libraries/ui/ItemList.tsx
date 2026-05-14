@@ -108,15 +108,16 @@ interface SortableItemListHeaderColumn {
   sortable?: boolean
   key: string
   label: React.ReactNode
+  className?: string
 }
 
 function SortableItemListHeader({ columns, currentSort, onSort }: SortableItemListHeaderProps) {
   return <ItemListHeader paddingClass="">
     {columns.map(column => (
       column.sortable === false
-        ? <span className="flex justify-center" key={column.key}>{column.label}</span>
+        ? <span className={classNames(column.className, 'flex justify-center')} key={column.key}>{column.label}</span>
         : (
-          <SortButton key={column.key} sortKey={column.key} currentSort={currentSort} onSort={onSort}>
+          <SortButton key={column.key} sortKey={column.key} currentSort={currentSort} onSort={onSort} className={column.className}>
             {column.label}
           </SortButton>
         )
@@ -129,6 +130,7 @@ interface SortButtonProps {
   currentSort: Sort
   onSort: (key: Sort) => void
   children: React.ReactNode
+  className?: string
 }
 
 export interface Sort {
@@ -136,7 +138,7 @@ export interface Sort {
   direction: 'asc' | 'desc'
 }
 
-function SortButton({ sortKey, currentSort, onSort, children }: SortButtonProps) {
+function SortButton({ sortKey, currentSort, onSort, className, children }: SortButtonProps) {
   const isCurrent = currentSort.key === sortKey
   const isAscending = currentSort.direction === 'asc'
 
@@ -147,7 +149,7 @@ function SortButton({ sortKey, currentSort, onSort, children }: SortButtonProps)
     }}
     aria-sort={isCurrent ? (isAscending ? 'ascending' : 'descending') : undefined}
     minimal
-    className="flex gap-1 items-center first-of-type:rounded-tl-md last-of-type::rounded-tr-md"
+    className={classNames(className, 'flex gap-1 items-center first-of-type:rounded-tl-md last-of-type::rounded-tr-md')}
   >
     {children}
     {isCurrent && <CaretDown className={classNames('transition-transform', isAscending && 'rotate-180')} />}

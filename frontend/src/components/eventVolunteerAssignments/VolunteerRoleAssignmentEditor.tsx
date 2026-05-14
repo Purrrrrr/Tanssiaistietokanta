@@ -24,7 +24,7 @@ export function VolunteerRoleAssignmentEditor({ title, id, event, volunteerId }:
   const readOnly = eventVersionId != null
 
   return <VolunteerAssignmentList
-    mainColumn="role"
+    showRole
     assignments={currentAssignments}
     title={title}
     readOnly={readOnly}
