@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { EventVolunteer } from 'types'
+import { Event, EventVolunteer } from 'types'
 
 import { addGlobalLoadingAnimation } from 'backend'
 import { useCreateEventVolunteer } from 'services/eventVolunteers'
@@ -12,12 +12,12 @@ import { useT, useTranslation } from 'i18n'
 import { emptyEventVolunteerForm, EventVolunteerForm, EventVolunteerFormValues } from './EventVolunteerForm'
 
 interface CreateEventVolunteerFormProps {
-  eventId: string
+  event: Pick<Event, '_id' | '_versionId' | 'eventRegistrationSystem' | 'workshops'>
   eventVolunteers: EventVolunteer[]
   onClose: () => void
 }
 
-export function CreateEventVolunteerForm({ eventId, eventVolunteers, onClose }: CreateEventVolunteerFormProps) {
+export function CreateEventVolunteerForm({ event, eventVolunteers, onClose }: CreateEventVolunteerFormProps) {
   const [formData, setFormData] = useState<EventVolunteerFormValues>(emptyEventVolunteerForm)
   const [createEventVolunteer] = useCreateEventVolunteer({ refetchQueries: ['getEventVolunteers'] })
   const t = useT('routes.events.event.volunteers')
@@ -27,9 +27,11 @@ export function CreateEventVolunteerForm({ eventId, eventVolunteers, onClose }: 
     if (!data.volunteer) return
     await addGlobalLoadingAnimation(createEventVolunteer({
       eventVolunteer: {
-        eventId,
+        eventId: event._id,
+        status: data.status,
         volunteerId: data.volunteer._id,
         interestedIn: data.interestedIn.map(r => r._id),
+        acceptedRoles: data.acceptedRoles?.map(r => r._id) ?? [],
         wishes: data.wishes,
         notes: data.notes,
       },
@@ -50,6 +52,7 @@ export function CreateEventVolunteerForm({ eventId, eventVolunteers, onClose }: 
       onSubmit={handleSubmit}
       submitText={t('addVolunteer')}
       excludeVolunteers={addedVolunteers}
-      isNew />
+      event={event}
+    />
   </Card>
 }

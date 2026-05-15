@@ -1,22 +1,25 @@
-import { EventRole, EventVolunteerInput, VolunteerListItem } from 'types'
+import { Event, EventRole, EventVolunteerInput, VolunteerListItem } from 'types'
 
 import { formFor, type FormProps, SubmitButton, type SyncState, SyncStatus } from 'libraries/forms'
 import { TextArea } from 'libraries/forms/fieldComponents/basicComponents'
+import { VolunteerRoleAssignmentEditor } from 'components/eventVolunteerAssignments/VolunteerRoleAssignmentEditor'
 import { VolunteerStatusSelector } from 'components/eventVolunteers/VolunteerStatusSelector'
 import { VolunteerChooser } from 'components/volunteers/VolunteerChooser'
 import { useT } from 'i18n'
 
 import { EventVolunteerRolePicker } from './EventVolunteerRolePicker'
 
-export type EventVolunteerFormValues = Omit<EventVolunteerInput, 'volunteerId' | 'eventId' | 'interestedIn'> & {
+export type EventVolunteerFormValues = Omit<EventVolunteerInput, 'volunteerId' | 'eventId' | 'interestedIn' | 'acceptedRoles'> & {
   volunteer?: VolunteerListItem
   interestedIn: Pick<EventRole, '_id'>[]
+  acceptedRoles?: Pick<EventRole, '_id'>[]
 }
 
 export const emptyEventVolunteerForm = (): EventVolunteerFormValues => ({
   volunteer: undefined,
   status: 'Interested',
   interestedIn: [],
+  acceptedRoles: [],
   wishes: '',
   notes: '',
 })
@@ -24,18 +27,20 @@ export const emptyEventVolunteerForm = (): EventVolunteerFormValues => ({
 const {
   Form,
   Field,
+  useValueAt,
 } = formFor<EventVolunteerFormValues>()
 
 interface EventVolunteerFormProps extends FormProps<EventVolunteerFormValues> {
   syncState?: SyncState
   excludeVolunteers?: VolunteerListItem[]
-  assignmentsEditor?: React.ReactNode
-  isNew?: boolean
+  volunteerId?: string
+  event: Pick<Event, '_id' | '_versionId' | 'eventRegistrationSystem' | 'workshops'>
   submitText?: string
 }
 
-export function EventVolunteerForm({ syncState, onSubmit, excludeVolunteers = [], assignmentsEditor, isNew, submitText, ...rest }: EventVolunteerFormProps) {
+export function EventVolunteerForm({ syncState, onSubmit, excludeVolunteers = [], event, volunteerId, submitText, ...rest }: EventVolunteerFormProps) {
   const t = useT('domain.eventVolunteer')
+  const isNew = volunteerId === undefined
 
   return <Form {...rest} onSubmit={onSubmit} errorDisplay={onSubmit ? 'onSubmit' : 'always'}>
     {syncState && <SyncStatus floatRight state={syncState} />}
@@ -45,7 +50,9 @@ export function EventVolunteerForm({ syncState, onSubmit, excludeVolunteers = []
         label={t('volunteer')}
         component={VolunteerChooser}
         componentProps={{
-          excludeVolunteers: isNew ? excludeVolunteers : excludeVolunteers.filter(v => v._id !== rest.value.volunteer?._id),
+          excludeVolunteers: isNew
+            ? excludeVolunteers
+            : excludeVolunteers.filter(v => v._id !== rest.value.volunteer?._id),
         }}
         required
       />
@@ -61,10 +68,36 @@ export function EventVolunteerForm({ syncState, onSubmit, excludeVolunteers = []
         component={EventVolunteerRolePicker}
         containerClassName="col-span-full"
       />
-      {assignmentsEditor && <div className="col-span-full">{assignmentsEditor}</div>}
+      {isNew
+        ? <AcceptedRolesField label={t('assignments')} />
+        : (
+          <div className="col-span-full">
+            <VolunteerRoleAssignmentEditor
+              title={t('assignments')}
+              id={`volunteerAssignmentEditor-${volunteerId}`}
+              event={event}
+              volunteerId={volunteerId}
+            />
+          </div>
+        )
+      }
       <Field path="wishes" label={t('wishes')} component={TextArea} />
       <Field path="notes" label={t('notes')} component={TextArea} />
     </div>
     { onSubmit && <SubmitButton text={submitText} />}
   </Form>
+}
+
+function AcceptedRolesField({ label }: { label: string }) {
+  const status = useValueAt('status')
+
+  if (status !== 'Accepted') return null
+
+  return <Field
+    path="acceptedRoles"
+    label={label}
+    component={EventVolunteerRolePicker}
+    componentProps={{ noWorkshopRoles: true }}
+    containerClassName="col-span-full"
+  />
 }

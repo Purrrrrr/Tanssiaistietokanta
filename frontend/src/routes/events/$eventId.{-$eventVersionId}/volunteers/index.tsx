@@ -60,7 +60,7 @@ function RouteComponent() {
     </div>
   }>
     {!readOnly && <Collapse isOpen={showAddForm}>
-      <CreateEventVolunteerForm eventId={event._id} eventVolunteers={eventVolunteers} onClose={() => setShowAddForm(false)} />
+      <CreateEventVolunteerForm event={event} eventVolunteers={eventVolunteers} onClose={() => setShowAddForm(false)} />
     </Collapse>}
     <EventVolunteerList eventVolunteers={eventVolunteers ?? []} currentRole={role} onSetRole={setRole} readOnly={readOnly} />
   </PageSection>

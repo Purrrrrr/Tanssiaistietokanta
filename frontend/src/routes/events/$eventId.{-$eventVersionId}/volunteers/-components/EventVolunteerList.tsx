@@ -8,7 +8,6 @@ import { patchStrategy, useAutosavingState } from 'libraries/forms'
 import { Button, FormGroup } from 'libraries/ui'
 import { ChevronDown, ChevronUp, Edit, Pin, Search } from 'libraries/ui/icons'
 import { ItemList, Sort } from 'libraries/ui/ItemList'
-import { VolunteerRoleAssignmentEditor } from 'components/eventVolunteerAssignments/VolunteerRoleAssignmentEditor'
 import { RoleTag } from 'components/eventVolunteers/RoleTag'
 import { VolunteerStatusBulkSelector } from 'components/eventVolunteers/VolunteerStatusBulkSelector'
 import { SelectionBox } from 'components/widgets/SelectionBox'
@@ -16,9 +15,9 @@ import { useT, useTranslation } from 'i18n'
 import { sortedBy } from 'utils/sorted'
 import { useMultipleSelection } from 'utils/useMultipleSelection'
 
+import { useCurrentEvent } from '../../-context'
 import { DeleteEventVolunteerButton } from './DeleteEventVolunteerButton'
 import { EventVolunteerForm, EventVolunteerFormValues } from './EventVolunteerForm'
-import { useCurrentEvent } from '../../-context'
 
 export interface EventVolunteerListProps {
   eventVolunteers: EventVolunteer[]
@@ -196,15 +195,9 @@ function EventVolunteerRowEditor({ item, addedVolunteers, readOnly }: {
     {...formProps}
     readOnly={readOnly}
     syncState={state}
+    volunteerId={item.volunteer._id}
+    event={event}
     excludeVolunteers={addedVolunteers}
     className="px-4"
-    assignmentsEditor={
-      <VolunteerRoleAssignmentEditor
-        title={useTranslation('domain.eventVolunteer.assignments')}
-        id={`volunteerAssignmentEditor-${item._id}`}
-        event={event}
-        volunteerId={item.volunteer._id}
-      />
-    }
   />
 }

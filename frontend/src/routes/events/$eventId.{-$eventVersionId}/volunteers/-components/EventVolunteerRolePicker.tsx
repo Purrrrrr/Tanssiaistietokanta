@@ -5,10 +5,12 @@ import { useEventRoles } from 'services/eventRoles'
 import { FieldComponentProps } from 'libraries/forms'
 import { useT } from 'i18n'
 
-export type EventRoleSelectorProps = FieldComponentProps<EventRole[]>
+export type EventRoleSelectorProps = FieldComponentProps<EventRole[]> & {
+  noWorkshopRoles?: boolean
+}
 
 export function EventVolunteerRolePicker({
-  value, onChange, readOnly, 'aria-label': ariaLabel, 'aria-describedby': ariaDescribedby,
+  value, onChange, readOnly, 'aria-label': ariaLabel, 'aria-describedby': ariaDescribedby, noWorkshopRoles,
 }: EventRoleSelectorProps) {
   const t = useT('components.eventRoleSelector')
   const [roles] = useEventRoles()
@@ -21,7 +23,9 @@ export function EventVolunteerRolePicker({
     onChange(next.sort((a, b) => a._id.localeCompare(b._id)))
   }
 
-  const workshopRoles = (roles ?? []).filter(r => r.appliesToWorkshops)
+  const workshopRoles = noWorkshopRoles
+    ? []
+    : (roles ?? []).filter(r => r.appliesToWorkshops)
   const eventRoles = (roles ?? []).filter(r => !r.appliesToWorkshops)
 
   const renderGroup = (groupRoles: EventRole[], title: string) => {
