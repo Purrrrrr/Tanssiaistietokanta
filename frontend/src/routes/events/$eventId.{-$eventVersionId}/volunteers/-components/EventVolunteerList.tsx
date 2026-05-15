@@ -18,6 +18,7 @@ import { useMultipleSelection } from 'utils/useMultipleSelection'
 
 import { DeleteEventVolunteerButton } from './DeleteEventVolunteerButton'
 import { EventVolunteerForm, EventVolunteerFormValues } from './EventVolunteerForm'
+import { useCurrentEvent } from '../../-context'
 
 export interface EventVolunteerListProps {
   eventVolunteers: EventVolunteer[]
@@ -172,6 +173,7 @@ function EventVolunteerRowEditor({ item, addedVolunteers, readOnly }: {
   readOnly?: boolean
 }) {
   const [patchEventVolunteer] = usePatchEventVolunteer()
+  const event = useCurrentEvent()
 
   const { formProps, state } = useAutosavingState<EventVolunteerFormValues, Partial<EventVolunteerFormValues>>(
     item,
@@ -200,7 +202,7 @@ function EventVolunteerRowEditor({ item, addedVolunteers, readOnly }: {
       <VolunteerRoleAssignmentEditor
         title={useTranslation('domain.eventVolunteer.assignments')}
         id={`volunteerAssignmentEditor-${item._id}`}
-        event={{ _id: item.eventId, _versionId: item._versionId, eventRegistrationSystem: 'Kompassi' }}
+        event={event}
         volunteerId={item.volunteer._id}
       />
     }
