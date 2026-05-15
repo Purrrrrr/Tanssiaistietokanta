@@ -5,8 +5,8 @@ import { useEventVolunteerAssignments } from 'services/eventVolunteerAssignments
 
 import { PageSection } from 'libraries/ui'
 
+import { AddVolunteerRoleSelect } from './AddVolunteerRoleSelect'
 import { VolunteerAssignmentList } from './VolunteerAssignmentList'
-import { VolunteerRoleSelect } from './VolunteerRoleSelect'
 
 export interface VolunteerRoleAssignmentEditorProps {
   id: string
@@ -30,8 +30,9 @@ export function VolunteerRoleAssignmentEditor({ title, id, event, volunteerId }:
       event={event}
     />
     {!readOnly &&
-      <VolunteerRoleSelect
+      <AddVolunteerRoleSelect
         id={id}
+        className="mb-6"
         currentAssignments={currentAssignments}
         event={event}
         volunteerId={volunteerId}

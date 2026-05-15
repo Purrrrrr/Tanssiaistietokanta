@@ -265,6 +265,7 @@ export const fi = {
       createNewVolunteer: 'Luo uusi vapaaehtoinen',
     },
     volunteerAssignmentEditor: {
+      addAssignment: 'Lisää työtehtävä',
       addRole: 'Lisää rooli',
       noRoles: 'Ei rooleja',
       addVolunteer: 'Lisää vapaaehtoinen',
@@ -302,6 +303,12 @@ export const fi = {
       allInstances: 'Kaikki',
       registrationStatus: 'Ilmoittautumistilanne',
       chooseStatus: 'Valitse',
+    },
+    addVolunteerAssignmentForm: {
+      title: 'Lisää työtehtäviä',
+      chooseAnotherVolunteer: 'Valitse toinen vapaaehtoinen',
+      volunteer: 'Vapaaehtoinen, jolle tehtäviä lisätään',
+      rolesToAdd: 'Lisättävät roolit',
     },
     assignmentsWarnings: {
       volunteersWithoutAssignments: {

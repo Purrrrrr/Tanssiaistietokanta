@@ -7,14 +7,15 @@ import { useCreateEventVolunteerAssignment } from 'services/eventVolunteerAssign
 import { AutocompleteInput } from 'libraries/formsV2/components/inputs/selectors'
 import { useT } from 'i18n'
 
-interface VolunteerRoleSelectProps {
+interface AddVolunteerRoleSelectProps {
   id: string
+  className?: string
   currentAssignments: EventVolunteerAssignment[]
   event: Pick<Event, '_id' | 'workshops'>
   volunteerId: ID
 }
 
-export function VolunteerRoleSelect({ id, currentAssignments, event, volunteerId }: VolunteerRoleSelectProps) {
+export function AddVolunteerRoleSelect({ id, currentAssignments, event, volunteerId, className }: AddVolunteerRoleSelectProps) {
   const { _id: eventId, workshops } = event
   const t = useT('components.volunteerAssignmentEditor')
   const [roles = [], requestState] = useEventRoles()
@@ -59,7 +60,7 @@ export function VolunteerRoleSelect({ id, currentAssignments, event, volunteerId
   return <>
     <AutocompleteInput<RoleOption>
       id={id}
-      containerClassname="mb-6"
+      containerClassname={className}
       value={null}
       onChange={onChange}
       items={getItems}
