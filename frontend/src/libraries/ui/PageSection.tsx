@@ -20,7 +20,7 @@ interface PageSectionProps {
 
 export function PageSection({ title, syncStatus, introText, toolbar, children, className }: PageSectionProps) {
   return <section className={classNames('mb-10', className)}>
-    <div className="@container flex flex-wrap items-center gap-x-4 gap-y-2 mb-4">
+    <ToolbarContainer>
       <H2 className="">{title}</H2>
       {syncStatus && <SyncStatus state={syncStatus} className="mt-[6px]" />}
       {introText && <>
@@ -32,7 +32,13 @@ export function PageSection({ title, syncStatus, introText, toolbar, children, c
           {toolbar}
         </div>
       }
-    </div>
+    </ToolbarContainer>
     {children}
   </section>
+}
+
+export function ToolbarContainer({ children, className }: { children: React.ReactNode, className?: string }) {
+  return <div className={classNames(className, '@container flex flex-wrap items-center gap-x-4 gap-y-2 mb-4')}>
+    {children}
+  </div>
 }

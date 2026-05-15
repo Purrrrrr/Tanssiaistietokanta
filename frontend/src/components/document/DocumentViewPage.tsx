@@ -5,10 +5,10 @@ import { Document } from 'types'
 import { useDocument } from 'services/documents'
 
 import { DocumentViewer } from 'libraries/lexical'
+import { PageSection } from 'libraries/ui'
 import { Edit } from 'libraries/ui/icons'
 import { DeleteDocumentButton } from 'components/document/DeleteDocumentButton'
 import { NavigateButton } from 'components/widgets/NavigateButton'
-import { PageSection } from 'components/widgets/PageSection'
 import { useT } from 'i18n'
 
 import { documentViewRoute } from './linkUtils'

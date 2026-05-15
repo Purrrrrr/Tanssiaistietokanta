@@ -7,10 +7,10 @@ import { RequirePermissions } from 'libraries/access-control'
 import { useFormatDate } from 'libraries/i18n/dateTime'
 import { ItemList, Link } from 'libraries/ui'
 import { Add } from 'libraries/ui/icons'
+import { PageSection } from 'libraries/ui/PageSection'
 import { LoadingState } from 'components/LoadingState'
 import { Page } from 'components/Page'
 import { NavigateButton } from 'components/widgets/NavigateButton'
-import { PageSection } from 'components/widgets/PageSection'
 import { useT } from 'i18n'
 
 export const Route = createFileRoute('/')({

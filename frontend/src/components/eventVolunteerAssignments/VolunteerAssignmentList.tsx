@@ -5,9 +5,8 @@ import { Event, EventVolunteerAssignment, ID } from 'types'
 
 import { useSetEventVolunteerAssignmentRegistrationStatus, useSetEventVolunteerAssignmentWorkshopInstance } from 'services/eventVolunteerAssignments'
 
-import { FormGroup, ItemList, Sort } from 'libraries/ui'
+import { FormGroup, ItemList, PageSection, Sort, ToolbarContainer } from 'libraries/ui'
 import { RoleTag } from 'components/eventVolunteers/RoleTag'
-import { PageSection } from 'components/widgets/PageSection'
 import { SelectionBox } from 'components/widgets/SelectionBox'
 import { useT } from 'i18n'
 import { sortedBy } from 'utils/sorted'
@@ -49,24 +48,27 @@ export function VolunteerAssignmentList({ title, showName = false, showRole = fa
   }
   const showWorkshops = showRole && assignments.some(a => a.workshop)
 
-  return <PageSection
-    title={title}
-    introText={selected.length > 0 ? t('selectedAssignments', { count: selected.length }) : undefined}
-    toolbar={selected.length > 0 && !readOnly && <>
-      {eventRegistrationSystem !== 'None' && (
-        <FormGroup inline label={t('setRegistrationStatus', { count: selected.length })} labelStyle="beside" labelFor={`${id}-registrationStatus-bulk`}>
-          <RegistrationStatusSelector
-            id={`${id}-registrationStatus-bulk`}
-            onChange={status => Promise.all(selected.map(a => setAssignmentRegistrationStatus({ id: a._id, registrationStatus: status })))}
+  return <PageSection title={title}>
+    {selected.length > 0 && (
+      <ToolbarContainer className="justify-between">
+        {t('selectedAssignments', { count: selected.length })}
+        {!readOnly && <span>
+          {eventRegistrationSystem !== 'None' && (
+            <FormGroup inline label={t('setRegistrationStatus', { count: selected.length })} labelStyle="beside" labelFor={`${id}-registrationStatus-bulk`}>
+              <RegistrationStatusSelector
+                id={`${id}-registrationStatus-bulk`}
+                onChange={status => Promise.all(selected.map(a => setAssignmentRegistrationStatus({ id: a._id, registrationStatus: status })))}
+              />
+            </FormGroup>
+          ) }
+          <RemoveAssignmentsButton
+            text={t('removeSelected', { count: selected.length })}
+            assignments={selected}
           />
-        </FormGroup>
-      ) }
-      <RemoveAssignmentsButton
-        text={t('removeSelected', { count: selected.length })}
-        assignments={selected}
-      />
-    </>}
-  >
+        </span>
+        }
+      </ToolbarContainer>
+    )}
     <ItemList
       items={assignments}
       emptyText={t('noAssignments')}

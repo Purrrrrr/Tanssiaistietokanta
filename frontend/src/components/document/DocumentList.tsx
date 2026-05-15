@@ -6,11 +6,10 @@ import { DocumentListItem as Document, DocumentOwner } from 'types'
 import { useDocuments } from 'services/documents'
 
 import { DocumentViewer } from 'libraries/lexical'
-import { Button, ButtonProps, ItemList, Link } from 'libraries/ui'
+import { Button, ButtonProps, ItemList, Link, PageSection } from 'libraries/ui'
 import { ChevronDown, ChevronUp, Edit } from 'libraries/ui/icons'
 import { DeleteDocumentButton } from 'components/document/DeleteDocumentButton'
 import { NavigateButton } from 'components/widgets/NavigateButton'
-import { PageSection } from 'components/widgets/PageSection'
 import { useT, useTranslation } from 'i18n'
 
 import { CreateDocumentButton } from './CreateDocumentButton'

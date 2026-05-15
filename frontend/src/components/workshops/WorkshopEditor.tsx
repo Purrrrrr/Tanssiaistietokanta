@@ -9,11 +9,10 @@ import { usePatchWorkshop, workshopInstanceName } from 'services/workshops'
 
 import { DateField, DragHandle, formFor, NumberInput, patchStrategy, SyncStatus, useAutosavingState } from 'libraries/forms'
 import { DocumentContentEditor } from 'libraries/lexical'
-import { ColorClass, FormGroup } from 'libraries/ui'
+import { ColorClass, FormGroup, PageSection } from 'libraries/ui'
 import { WorkshopVolunteerAssignmentEditor } from 'components/eventVolunteerAssignments/WorkshopVolunteerAssignmentEditor'
 import { AddButton } from 'components/widgets/AddButton'
 import { DanceChooser } from 'components/widgets/DanceChooser'
-import { PageSection } from 'components/widgets/PageSection'
 import { useT, useTranslation } from 'i18n'
 import randomId from 'utils/randomId'
 

@@ -7,11 +7,11 @@ import { cleanMetadataValues, WithoutMetadata } from 'backend'
 import { getEventRemoveBlockers, useDeleteEvent, usePatchEvent } from 'services/events'
 
 import { DateField, DateRangeField, formFor, patchStrategy, useAutosavingState } from 'libraries/forms'
+import { PageSection } from 'libraries/ui'
 import { JSONPatch } from 'components/event/EventProgramForm/patchStrategy'
 import { EventRegistrationSystemSelector } from 'components/event/EventRegistrationSystemSelector'
 import { EventGrantsEditor } from 'components/rights/EventGrantsEditor'
 import { DeleteButton } from 'components/widgets/DeleteButton'
-import { PageSection } from 'components/widgets/PageSection'
 import { useT } from 'i18n'
 
 import { useCurrentEvent } from './-context'

@@ -3,11 +3,10 @@ import { useState } from 'react'
 
 import { EventRole, EventVolunteer } from 'types'
 
-import { Collapse, FormGroup, SearchBar } from 'libraries/ui'
+import { Collapse, FormGroup, PageSection, SearchBar } from 'libraries/ui'
 import { titleCase } from 'libraries/ui-showcase/utils/titleCase'
 import { RoleTag } from 'components/eventVolunteers/RoleTag'
 import { AddButton } from 'components/widgets/AddButton'
-import { PageSection } from 'components/widgets/PageSection'
 import { useT, useTranslation } from 'i18n'
 import { sortedBy } from 'utils/sorted'
 
