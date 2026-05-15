@@ -27,7 +27,7 @@ export function Callout({ children, icon, title, color, className, ...rest }: Ca
     ? undefined
     : icon ?? defaultIcons[color ?? 'none']
   return <>
-    <div className={classNames('flex gap-2 p-4 pb-3 items-start', ColorClass.lightBoxColors[color ?? 'none'], className)} {...rest}>
+    <div className={classNames('flex gap-2 p-4 mb-1 pb-3 items-start', ColorClass.lightBoxColors[color ?? 'none'], className)} {...rest}>
       {iconToRender}
       <div>
         {title && <h5 className="mb-1.5 font-bold mt-[-3px]">{title}</h5>}

@@ -6,6 +6,7 @@ import { useEventVolunteerAssignments } from 'services/eventVolunteerAssignments
 import { PageSection, SearchBar } from 'libraries/ui'
 import { useTranslation } from 'i18n'
 
+import { AssignmentWarnings } from './AssignmentWarnings'
 import { VolunteerAssignmentList } from './VolunteerAssignmentList'
 
 export interface VolunteerAssignmentEditorProps {
@@ -42,6 +43,7 @@ export function VolunteerAssignmentEditor({ title, id, event, search, onSetSearc
       emptySearchText={useTranslation('common.emptySearch')}
     />}
   >
+    <AssignmentWarnings event={event} />
     <VolunteerAssignmentList
       showName
       showRole

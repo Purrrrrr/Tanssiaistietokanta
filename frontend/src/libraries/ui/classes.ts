@@ -15,7 +15,7 @@ export const ColorClass = {
     primary: 'bg-primary text-white',
     success: 'bg-success text-white',
     danger: ' bg-danger text-white',
-    warning: ' bg-warning',
+    warning: ' bg-warning text-red-900',
   } satisfies Record<Color, string>,
   lightBoxColors: {
     none: 'bg-gray-100 text-stone-700',

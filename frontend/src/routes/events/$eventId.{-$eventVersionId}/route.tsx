@@ -10,6 +10,7 @@ import { Breadcrumb, CounterTag } from 'libraries/ui'
 import { Cog, Presentation } from 'libraries/ui/icons'
 import { MissingDanceInstructionsCounterTag } from 'components/event/EventProgramEditor/components'
 import { EventMetadataContext } from 'components/event/EventProgramForm/eventMetadata'
+import { AssignmentWarningsCounterTag } from 'components/eventVolunteerAssignments/AssignmentWarnings'
 import { LoadingState } from 'components/LoadingState'
 import { MenuLink, MenuSection, Page, Toolbar } from 'components/Page'
 import VersionableContentContainer from 'components/versioning/VersionableContentContainer'
@@ -121,7 +122,11 @@ function EventsMenu({ event, showPopups }: { event: Event, showPopups?: boolean 
       <MenuLink
         to="/events/$eventId/{-$eventVersionId}/assignments"
         params={params}
-        text={t(event.eventRegistrationSystem === 'Kompassi' ? 'assignmentsAndRegistrationStatus' : 'assignments')}
+        text={
+          event.eventRegistrationSystem === 'Kompassi'
+            ? <>{t('assignmentsAndRegistrationStatus')} {event.volunteerCount && <AssignmentWarningsCounterTag event={event} />}</>
+            : t('assignments')
+        }
       />
     </MenuSection>
     <MenuSection title={t('ball.title')}>

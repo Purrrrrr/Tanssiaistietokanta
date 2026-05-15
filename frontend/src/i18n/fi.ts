@@ -305,6 +305,24 @@ export const fi = {
       registrationStatus: 'Ilmoittautumistilanne',
       chooseStatus: 'Valitse',
     },
+    assignmentsWarnings: {
+      volunteersWithoutAssignments: {
+        one: 'Yhdellä vapaaehtoisella ei ole työtehtäviä',
+        many: '__count__ vapaaehtoisella ei ole työtehtäviä',
+      },
+      nonRegisteredAssignments: {
+        one: 'Yksi työtehtävä ilmoittamatta kompassiin.',
+        many: '__count__ työtehtävää ilmoittamatta kompassiin.',
+      },
+      nonAcceptedAssignments: {
+        one: 'Yksi hyväksymätön kompassi-kutsu',
+        many: '__count__ hyväksymätöntä kompassi-kutsua',
+      },
+      cancelledAssignments: {
+        one: 'Tapahtumassa on yksi perumaton työtehtävä, jonka vapaaehtoinen on perunut osallistumisensa',
+        many: 'Tapahtumassa on __count__ perumatonta työtehtävää, joiden vapaaehtoiset ovat peruneet osallistumisensa',
+      },
+    },
     eventRoleSelector: {
       workshopRoles: 'Työpajaroolit',
       eventRoles: 'Tapahtumaroolit',
