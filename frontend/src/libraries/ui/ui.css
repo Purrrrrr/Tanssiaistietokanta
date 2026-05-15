@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  --color-muted: var(--color-gray-500);
+  --color-muted: var(--color-gray-600);
   --color-muted-hover: var(--color-gray-700);
   --color-link: var(--color-sky-700); /* oklch(51.8% 0.158 264.376); */
 
