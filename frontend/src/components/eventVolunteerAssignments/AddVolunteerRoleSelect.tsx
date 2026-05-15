@@ -36,7 +36,7 @@ export function AddVolunteerRoleSelect({ id, currentAssignments, event, voluntee
       }],
     )
     .filter((role: RoleOption) => !currentAssignments.some(
-      a => a.role._id === role._id && (!role.workshopId || a.workshop?._id === role.workshopId),
+      a => a.volunteer._id === volunteerId && a.role._id === role._id && (!role.workshopId || a.workshop?._id === role.workshopId),
     ))
 
   const getItems = (query: string) => {
