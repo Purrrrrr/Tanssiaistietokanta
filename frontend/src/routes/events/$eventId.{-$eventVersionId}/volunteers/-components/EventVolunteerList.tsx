@@ -16,7 +16,6 @@ import { useT, useTranslation } from 'i18n'
 import { sortedBy } from 'utils/sorted'
 import { useMultipleSelection } from 'utils/useMultipleSelection'
 
-import { WorkshopLink } from '../../-components/WorkshopLink'
 import { DeleteEventVolunteerButton } from './DeleteEventVolunteerButton'
 import { EventVolunteerForm, EventVolunteerFormValues } from './EventVolunteerForm'
 
@@ -63,42 +62,33 @@ export function EventVolunteerList({ eventVolunteers: unsorted, readOnly, curren
           {label('taskRoles')}{' '}
           <span aria-hidden>(<AssignedRoleIcon /> = {label('assigned')} / <InterestedRoleIcon /> = {label('interested')})</span>
         </> },
-        { key: 'workshops', label: label('workshops') },
         { key: 'wishes', label: label('wishes') },
         { key: 'notes', label: label('notes') },
       ]} />
-      {(eventVolunteers).map(ev => {
-        const taskRoles = getTasksRoles(ev)
-        const workshops = taskRoles.flatMap(r => r.workshops ?? [])
-        return <EventVolunteerListRow
-          key={ev._id}
-          eventVolunteer={ev}
-          addedVolunteers={addedVolunteers}
-          readOnly={readOnly}
-        >
-          <SelectionBox {...selector.selectItemProps(ev)} />
-          <span>{ev.volunteer.name}</span>
-          <span>{label(`shortEventVolunteerStatus.${ev.status}`)}</span>
-          <span>
-            {taskRoles.map(role => (
-              <RoleTag
-                key={role._id}
-                icon={role.assigned ? <AssignedRoleIcon label={label('assigned')} /> : <InterestedRoleIcon label={label('interested')} />}
-                role={role}
-                selected={currentRole ? currentRole === role._id : undefined}
-                onSetRole={onSetRole}
-              />
-            ))}
-          </span>
-          {workshops
-            ? <span className="*:not-last:after:content-[',_']">
-              {workshops.map(w => <WorkshopLink workshop={w} key={w._id} />)}
-            </span>
-            : <span className="italic text-gray-500">{label('noWorkshops')}</span>}
-          <span>{ev.wishes ? ev.wishes : <span className="italic text-gray-500">{label('noWishes')}</span>}</span>
-          <span>{ev.notes || '-'}</span>
-        </EventVolunteerListRow>
-      })}
+      {(eventVolunteers).map(ev => <EventVolunteerListRow
+        key={ev._id}
+        eventVolunteer={ev}
+        addedVolunteers={addedVolunteers}
+        readOnly={readOnly}
+      >
+        <SelectionBox {...selector.selectItemProps(ev)} />
+        <span>{ev.volunteer.name}</span>
+        <span>{label(`shortEventVolunteerStatus.${ev.status}`)}</span>
+        <span>
+          {(getTasksRoles(ev)).map(role => (
+            <RoleTag
+              key={role._id}
+              icon={role.assigned ? <AssignedRoleIcon label={label('assigned')} /> : <InterestedRoleIcon label={label('interested')} />}
+              role={role}
+              selected={currentRole ? currentRole === role._id : undefined}
+              onSetRole={onSetRole}
+            />
+          ))}
+        </span>
+        <span>{ev.wishes ? ev.wishes : <span className="italic text-muted">{label('noWishes')}</span>}</span>
+        <span>{ev.notes || '-'}</span>
+      </EventVolunteerListRow>,
+      )}
     </ItemList>
   </>
 }
@@ -108,7 +98,6 @@ const InterestedRoleIcon = ({ label }: { label?: string }) => <Search title={lab
 
 interface TaskRole extends Pick<EventRole, '_id' | 'name' | 'order'> {
   assigned: boolean
-  workshops?: { _id: string, name: string }[]
 }
 
 function getTasksRoles(ev: EventVolunteer): TaskRole[] {
@@ -118,7 +107,6 @@ function getTasksRoles(ev: EventVolunteer): TaskRole[] {
     .map(assignments => ({
       ...assignments[0].role,
       assigned: true,
-      workshops: assignments.map(a => a.workshop).filter(w => w != null),
     }))
   const interestedInRoles = ev.interestedIn
     .filter(role => !assignmentsByRole.has(role._id))
@@ -139,11 +127,6 @@ function volunteerSorter(key: string) {
       return (ev: EventVolunteer) => ev.volunteer.name
     case 'taskRoles':
       return (ev: EventVolunteer) => getTasksRoles(ev).map(role => [role.order, role.assigned])
-    case 'workshops':
-      return (ev: EventVolunteer) => {
-        const names = ev.assignments.map(a => a.workshop).filter(w => w != null).map(w => w.abbreviation ?? w.name).sort()
-        return names.length > 0 ? names : null
-      }
     case 'wishes':
       return (ev: EventVolunteer) => ev.wishes ?? ''
     case 'notes':

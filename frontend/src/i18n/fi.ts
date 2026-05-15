@@ -105,8 +105,6 @@ export const fi = {
       taskRoles: 'Tehtävät',
       interested: 'Kiinnostunut',
       assigned: 'Valittu',
-      workshops: 'Työpajat',
-      noWorkshops: 'Ei työpajoja',
       wishes: 'Toiveet',
       notes: 'Muistiinpanot',
       noInterests: 'Ei kiinnostuksen kohteita',
