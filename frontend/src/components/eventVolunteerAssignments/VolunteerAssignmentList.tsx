@@ -19,10 +19,9 @@ import { WorkshopInstanceSelector } from './WorkshopInstanceSelector'
 export interface VolunteerAssignmentListProps {
   showName?: boolean
   showRole?: boolean
-  event: Pick<Event, '_id' | '_versionId' | 'eventRegistrationSystem'>
+  event: Pick<Event, '_id' | '_versionId' | 'eventRegistrationSystem' | 'workshops'>
   assignments: EventVolunteerAssignment[]
   readOnly?: boolean
-  workshopInstances?: { _id: ID, abbreviation?: string | null }[]
   children?: React.ReactNode
 }
 
@@ -32,7 +31,6 @@ export function VolunteerAssignmentList({
   event,
   assignments: unsortedAssignments,
   readOnly,
-  workshopInstances,
   children,
 }: VolunteerAssignmentListProps) {
   const id = useId()
@@ -45,15 +43,17 @@ export function VolunteerAssignmentList({
   const assignments = sortedBy(unsortedAssignments, { key: assignmentSorter(sort.key), direction: sort.direction }, a => a.volunteer.name)
   const { selected, ...selector } = useMultipleSelection(assignments)
 
-  const setInstanceIds = async (assignmentId: ID, instanceIds: ID[] | null) => {
+  const setInstanceIds = async (assignment: EventVolunteerAssignment, instanceIds: ID[] | null) => {
+    const workshopInstances = event.workshops.find(w => w._id === assignment.workshop?._id)?.instances ?? []
     const workshopInstanceIds = !instanceIds?.length
       ? null
-      : instanceIds.length === workshopInstances?.length
+      : instanceIds.length === workshopInstances.length
         ? null
         : instanceIds
-    await setAssignmentWorkshopInstance({ id: assignmentId, workshopInstanceIds })
+    await setAssignmentWorkshopInstance({ id: assignment._id, workshopInstanceIds })
   }
-  const showWorkshops = showRole && assignments.some(a => a.workshop)
+  const hasWorkshops = assignments.some(a => a.workshop)
+  const showWorkshops = showRole && hasWorkshops
 
   return <>
     {selected.length > 0 && (
@@ -88,7 +88,7 @@ export function VolunteerAssignmentList({
           showName && { key: 'name', label: t('name') },
           showRole && { key: 'role', label: t('role') },
           showWorkshops && { key: 'workshop', label: t('workshop') },
-          workshopInstances !== undefined && { key: 'instance', className: 'col-start-5', label: t('instance') },
+          hasWorkshops && { key: 'instance', className: 'col-start-5', label: t('instance') },
           eventRegistrationSystem !== 'None' && { key: 'registrationStatus', className: 'col-start-6', label: t('registrationStatus') },
         ].filter(col => col !== false)}
       />
@@ -103,7 +103,7 @@ export function VolunteerAssignmentList({
           {showWorkshops && (assignment.workshop ? <WorkshopLink workshop={assignment.workshop} /> : <span />)}
           <WorkshopInstanceSelector
             className="col-start-5"
-            workshopInstances={workshopInstances ?? []}
+            workshopInstances={event.workshops.find(w => w._id === assignment.workshop?._id)?.instances ?? []}
             assignment={assignment}
             readOnly={readOnly}
             setInstanceIds={setInstanceIds}

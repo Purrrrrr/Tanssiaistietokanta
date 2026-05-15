@@ -11,14 +11,13 @@ import { VolunteerAssignmentList } from './VolunteerAssignmentList'
 export interface WorkshopVolunteerAssignmentEditorProps {
   id: string
   title: string
-  event: Pick<Event, '_id' | '_versionId' | 'eventRegistrationSystem'>
+  event: Pick<Event, '_id' | '_versionId' | 'eventRegistrationSystem' | 'workshops'>
   roleId: ID
   workshopId: ID
   workshopVersionId?: ID
-  workshopInstances?: { _id: ID, abbreviation?: string | null }[]
 }
 
-export function WorkshopVolunteerAssignmentEditor({ title, id, event, roleId, workshopId, workshopVersionId, workshopInstances }: WorkshopVolunteerAssignmentEditorProps) {
+export function WorkshopVolunteerAssignmentEditor({ title, id, event, roleId, workshopId, workshopVersionId }: WorkshopVolunteerAssignmentEditorProps) {
   const { _id: eventId, _versionId: eventVersionId } = event
   const [currentAssignments = [], requestState] = useEventVolunteerAssignments({ eventId, eventVersionId, roleId, workshopId, workshopVersionId })
 
@@ -31,7 +30,6 @@ export function WorkshopVolunteerAssignmentEditor({ title, id, event, roleId, wo
       assignments={currentAssignments}
       readOnly={readOnly}
       event={event}
-      workshopInstances={workshopInstances}
     />
     {!readOnly &&
       <AddVolunteerSelect

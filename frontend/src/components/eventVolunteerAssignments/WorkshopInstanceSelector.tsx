@@ -12,7 +12,7 @@ export function WorkshopInstanceSelector({ workshopInstances, readOnly, assignme
   }[]
   readOnly?: boolean
   assignment: EventVolunteerAssignment
-  setInstanceIds: (id: ID, instanceIds: ID[] | null) => void
+  setInstanceIds: (assignment: EventVolunteerAssignment, instanceIds: ID[] | null) => void
   className?: string
 }) {
   const disabled = readOnly === true
@@ -23,7 +23,7 @@ export function WorkshopInstanceSelector({ workshopInstances, readOnly, assignme
     <ModeButton
       disabled={disabled}
       selected={assignment.workshopInstanceIds == null}
-      onClick={() => setInstanceIds(assignment._id, null)}
+      onClick={() => setInstanceIds(assignment, null)}
     >
       {t('allInstances')}
     </ModeButton>
@@ -35,7 +35,7 @@ export function WorkshopInstanceSelector({ workshopInstances, readOnly, assignme
           disabled={disabled}
           selected={selected}
           onClick={() => setInstanceIds(
-            assignment._id,
+            assignment,
             selected
               ? assignment.workshopInstanceIds?.filter(id => id !== instance._id) ?? null
               : [...(assignment.workshopInstanceIds ?? []), instance._id],

@@ -93,9 +93,6 @@ export function WorkshopEditor({ event, workshop: workshopInDatabase, reservedAb
         roleId={role._id}
         workshopId={workshopInDatabase._id}
         workshopVersionId={workshopInDatabase._versionId ?? undefined}
-        workshopInstances={
-          role.type !== 'TEACHER' ? workshopInDatabase.instances : undefined
-        }
       />,
     )}
     <PageSection
