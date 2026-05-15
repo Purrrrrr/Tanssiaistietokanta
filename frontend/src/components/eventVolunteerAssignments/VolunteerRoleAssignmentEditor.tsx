@@ -5,6 +5,7 @@ import { useEventRoles } from 'services/eventRoles'
 import { useCreateEventVolunteerAssignment, useEventVolunteerAssignments } from 'services/eventVolunteerAssignments'
 
 import { AutocompleteInput } from 'libraries/formsV2/components/inputs/selectors'
+import { PageSection } from 'libraries/ui'
 import { useT } from 'i18n'
 
 import { VolunteerAssignmentList } from './VolunteerAssignmentList'
@@ -23,13 +24,13 @@ export function VolunteerRoleAssignmentEditor({ title, id, event, volunteerId }:
   useShowGlobalLoadingAnimation(requestState.loading)
   const readOnly = eventVersionId != null
 
-  return <VolunteerAssignmentList
-    showRole
-    assignments={currentAssignments}
-    title={title}
-    readOnly={readOnly}
-    event={event}
-  >
+  return <PageSection title={title}>
+    <VolunteerAssignmentList
+      showRole
+      assignments={currentAssignments}
+      readOnly={readOnly}
+      event={event}
+    />
     {!readOnly &&
       <AddRoleSelect
         id={id}
@@ -39,7 +40,7 @@ export function VolunteerRoleAssignmentEditor({ title, id, event, volunteerId }:
       />
     }
     {requestState.error && <div className="text-red-500">{requestState.error.message}</div>}
-  </VolunteerAssignmentList>
+  </PageSection>
 }
 
 interface VolunteerSelectorProps {

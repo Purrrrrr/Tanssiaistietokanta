@@ -5,7 +5,7 @@ import { Event, EventVolunteerAssignment, ID } from 'types'
 
 import { useSetEventVolunteerAssignmentRegistrationStatus, useSetEventVolunteerAssignmentWorkshopInstance } from 'services/eventVolunteerAssignments'
 
-import { FormGroup, ItemList, PageSection, Sort, ToolbarContainer } from 'libraries/ui'
+import { FormGroup, ItemList, Sort, ToolbarContainer } from 'libraries/ui'
 import { RoleTag } from 'components/eventVolunteers/RoleTag'
 import { SelectionBox } from 'components/widgets/SelectionBox'
 import { useT } from 'i18n'
@@ -17,7 +17,6 @@ import { RemoveAssignmentsButton } from './RemoveVolunteerAssignmentButton'
 import { WorkshopInstanceSelector } from './WorkshopInstanceSelector'
 
 export interface VolunteerAssignmentListProps {
-  title: string
   showName?: boolean
   showRole?: boolean
   event: Pick<Event, '_id' | '_versionId' | 'eventRegistrationSystem'>
@@ -27,7 +26,15 @@ export interface VolunteerAssignmentListProps {
   children?: React.ReactNode
 }
 
-export function VolunteerAssignmentList({ title, showName = false, showRole = false, event, assignments: unsortedAssignments, readOnly, workshopInstances, children }: VolunteerAssignmentListProps) {
+export function VolunteerAssignmentList({
+  showName = false,
+  showRole = false,
+  event,
+  assignments: unsortedAssignments,
+  readOnly,
+  workshopInstances,
+  children,
+}: VolunteerAssignmentListProps) {
   const id = useId()
   const { eventRegistrationSystem } = event
   const t = useT('components.volunteerAssignmentEditor')
@@ -48,7 +55,7 @@ export function VolunteerAssignmentList({ title, showName = false, showRole = fa
   }
   const showWorkshops = showRole && assignments.some(a => a.workshop)
 
-  return <PageSection title={title}>
+  return <>
     {selected.length > 0 && (
       <ToolbarContainer className="justify-between">
         {t('selectedAssignments', { count: selected.length })}
@@ -124,7 +131,7 @@ export function VolunteerAssignmentList({ title, showName = false, showRole = fa
       ))}
     </ItemList>
     {children}
-  </PageSection>
+  </>
 }
 
 function assignmentSorter(key: string) {

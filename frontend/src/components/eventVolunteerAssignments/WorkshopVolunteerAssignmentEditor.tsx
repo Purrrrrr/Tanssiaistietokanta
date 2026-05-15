@@ -5,6 +5,7 @@ import { useCreateEventVolunteerAssignment, useEventVolunteerAssignments } from 
 import { useEventVolunteers } from 'services/eventVolunteers'
 
 import { AutocompleteInput } from 'libraries/formsV2/components/inputs/selectors'
+import { PageSection } from 'libraries/ui'
 import { useT } from 'i18n'
 import { sortedBy } from 'utils/sorted'
 
@@ -27,14 +28,14 @@ export function WorkshopVolunteerAssignmentEditor({ title, id, event, roleId, wo
   useShowGlobalLoadingAnimation(requestState.loading)
   const readOnly = eventVersionId != null || workshopVersionId != null
 
-  return <VolunteerAssignmentList
-    showName
-    assignments={currentAssignments}
-    title={title}
-    readOnly={readOnly}
-    event={event}
-    workshopInstances={workshopInstances}
-  >
+  return <PageSection title={title}>
+    <VolunteerAssignmentList
+      showName
+      assignments={currentAssignments}
+      readOnly={readOnly}
+      event={event}
+      workshopInstances={workshopInstances}
+    />
     {!readOnly &&
       <AddVolunteerSelect
         id={id}
@@ -45,7 +46,7 @@ export function WorkshopVolunteerAssignmentEditor({ title, id, event, roleId, wo
       />
     }
     {requestState.error && <div className="text-red-500">{requestState.error.message}</div>}
-  </VolunteerAssignmentList>
+  </PageSection>
 }
 
 interface VolunteerSelectorProps {
