@@ -8,6 +8,7 @@ setupServiceUpdateFragment(
     workshop { _id _versionId name }
     workshopInstanceIds
     volunteer { _id _versionId name }
+    eventVolunteer { status }
     role { _id _versionId name order }
     registrationStatus
   }`,
@@ -21,6 +22,7 @@ query getEventVolunteerAssignments($eventId: ID, $eventVersionId: ID, $workshopI
     workshop { _id _versionId name }
     workshopInstanceIds
     volunteer { _id _versionId name }
+    eventVolunteer { status }
     role { _id _versionId name order }
     registrationStatus
   }
@@ -50,6 +52,7 @@ mutation createEventVolunteerAssignment($eventVolunteerAssignment: EventVoluntee
     workshop { _id _versionId name }
     workshopInstanceIds
     volunteer { _id _versionId name }
+    eventVolunteer { status }
     role { _id _versionId name order }
     registrationStatus
   }
@@ -63,6 +66,7 @@ mutation deleteEventVolunteerAssignment($id: ID!) {
     workshop { _id _versionId name }
     workshopInstanceIds
     volunteer { _id _versionId name }
+    eventVolunteer { status }
     role { _id _versionId name order }
     registrationStatus
   }
@@ -76,6 +80,7 @@ mutation setEventVolunteerAssignmentWorkshopInstances($id: ID!, $workshopInstanc
     workshop { _id _versionId name }
     workshopInstanceIds
     volunteer { _id _versionId name }
+    eventVolunteer { status }
     role { _id _versionId name order }
     registrationStatus
   }
@@ -89,6 +94,7 @@ mutation setEventVolunteerAssignmentRegistrationStatus($id: ID!, $registrationSt
     workshop { _id _versionId name }
     workshopInstanceIds
     volunteer { _id _versionId name }
+    eventVolunteer { status }
     role { _id _versionId name order }
     registrationStatus
   }

@@ -32,6 +32,7 @@ export function VolunteerAssignmentList({ title, showName = false, showRole = fa
   const id = useId()
   const { eventRegistrationSystem } = event
   const t = useT('components.volunteerAssignmentEditor')
+  const status = useT('domain.eventVolunteer.shortEventVolunteerStatus')
   const [setAssignmentWorkshopInstance] = useSetEventVolunteerAssignmentWorkshopInstance()
   const [setAssignmentRegistrationStatus] = useSetEventVolunteerAssignmentRegistrationStatus()
   const [sort, setSort] = useState<Sort>({ key: showName ? 'name' : 'role', direction: 'asc' })
@@ -85,7 +86,10 @@ export function VolunteerAssignmentList({ title, showName = false, showRole = fa
       {assignments.map(assignment => (
         <ItemList.Row key={assignment._id}>
           <SelectionBox {...selector.selectItemProps(assignment)} />
-          {showName && <span>{assignment.volunteer.name}</span>}
+          {showName && <span>
+            {assignment.volunteer.name}
+            {assignment.eventVolunteer.status !== 'Accepted' && ` (${status(assignment.eventVolunteer.status)})`}
+          </span>}
           {showRole && <span><RoleTag role={assignment.role} /></span>}
           {showWorkshops && (assignment.workshop ? <WorkshopLink workshop={assignment.workshop} /> : <span />)}
           <WorkshopInstanceSelector

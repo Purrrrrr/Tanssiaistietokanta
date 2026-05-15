@@ -7,6 +7,7 @@ export default (app: Application): Resolvers => {
   const eventService = app.service('events')
   const workshopsService = app.service('workshops')
   const eventRolesService = app.service('eventRoles')
+  const eventVolunteersService = app.service('eventVolunteers')
 
   async function groupByRole(
     assignments: EventVolunteerAssignments[],
@@ -36,6 +37,7 @@ export default (app: Application): Resolvers => {
       workshop: (assignment) => assignment.workshopId ? workshopsService.get(assignment.workshopId) : null,
       role: (assignment) => eventRolesService.get(assignment.roleId),
       volunteer: (assignment) => volunteerService.get(assignment.volunteerId),
+      eventVolunteer: (assignment) => eventVolunteersService.get(assignment.eventVolunteerId),
     },
     Event: {
       volunteerAssignments: async (event, _args, params) => {

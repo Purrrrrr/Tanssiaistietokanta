@@ -34,6 +34,7 @@ type EventVolunteerAssignment implements Versionable {
   role: EventRole!
   volunteerId: ID!
   volunteer: Volunteer!
+  eventVolunteer: EventVolunteer!
   registrationStatus: EventVolunteerRegistrationStatus!
 }
 
