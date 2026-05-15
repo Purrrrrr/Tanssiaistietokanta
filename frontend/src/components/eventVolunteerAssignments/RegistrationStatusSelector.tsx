@@ -3,7 +3,7 @@ import { EventVolunteerRegistrationStatus } from 'types'
 import { Select } from 'libraries/formsV2/components/inputs/selectors'
 import { useT, useTranslation } from 'i18n'
 
-const statuses: EventVolunteerRegistrationStatus[] = ['None', 'RegisteredToEventSystem', 'AcceptedRegistration', 'InformedToOrganizers']
+const statuses: EventVolunteerRegistrationStatus[] = ['None', 'RegisteredToEventSystem', 'AcceptedRegistration', 'InformedToOrganizers', 'RegistrationCancelled']
 
 export function RegistrationStatusSelector({ id, className, value, onChange, disabled }: {
   className?: string

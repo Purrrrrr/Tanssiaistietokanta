@@ -64,6 +64,7 @@ export const fi = {
       RegisteredToEventSystem: 'Ilmoitettu Kompassiin',
       AcceptedRegistration: 'Hyväksynyt kompassi-kutsun',
       InformedToOrganizers: 'Ilmoitettu muuta kautta',
+      RegistrationCancelled: 'Ilmoittautuminen peruttu',
     },
     allowedViewers: {
       everyone: 'Kaikki käyttäjät',

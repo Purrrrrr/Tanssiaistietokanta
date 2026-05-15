@@ -16,6 +16,7 @@ enum EventVolunteerRegistrationStatus {
   RegisteredToEventSystem
   AcceptedRegistration
   InformedToOrganizers
+  RegistrationCancelled
 }
 
 type EventVolunteerAssignment implements Versionable {

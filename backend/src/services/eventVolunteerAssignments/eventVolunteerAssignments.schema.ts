@@ -12,6 +12,7 @@ export const eventVolunteerRegistrationStatusSchema = Type.Union([
   Type.Literal('RegisteredToEventSystem'),
   Type.Literal('AcceptedRegistration'),
   Type.Literal('InformedToOrganizers'),
+  Type.Literal('RegistrationCancelled'),
 ])
 export type EventVolunteerRegistrationStatus = Static<typeof eventVolunteerRegistrationStatusSchema>
 
