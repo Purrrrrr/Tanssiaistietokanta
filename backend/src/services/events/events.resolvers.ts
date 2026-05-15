@@ -6,6 +6,7 @@ import { eventsSchema } from './events.schema'
 
 export default (app: Application): Resolvers => {
   const workshopService = app.service('workshops')
+  const volunteerService = app.service('eventVolunteers')
   const service = app.service('events')
 
   const $sort = { beginDate: -1, name: 1 }
@@ -18,6 +19,7 @@ export default (app: Application): Resolvers => {
         if (!program.introductions.title) return L.set(['introductions', 'title'], event.name, program)
         return program
       },
+      volunteerCount: (event) => volunteerService.count({ query: { eventId: event._id } }),
     },
     EventVolunteerAssignment: {
       event: (assignment, _, __, info) =>

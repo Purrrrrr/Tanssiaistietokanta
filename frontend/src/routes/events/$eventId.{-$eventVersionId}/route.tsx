@@ -6,7 +6,7 @@ import { useEvent } from 'services/events'
 
 import { RequirePermissions, useRight } from 'libraries/access-control'
 import { useFormatDate } from 'libraries/i18n/dateTime'
-import { Breadcrumb } from 'libraries/ui'
+import { Breadcrumb, CounterTag } from 'libraries/ui'
 import { Cog, Presentation } from 'libraries/ui/icons'
 import { MissingDanceInstructionsCounterTag } from 'components/event/EventProgramEditor/components'
 import { EventMetadataContext } from 'components/event/EventProgramForm/eventMetadata'
@@ -109,7 +109,15 @@ function EventsMenu({ event, showPopups }: { event: Event, showPopups?: boolean 
     <MenuSection title={t('title')}>
       <MenuLink to="/events/$eventId/{-$eventVersionId}" params={params} activeOptions={{ exact: true }} text={t('basicInfo')} />
       <MenuLink to="/events/$eventId/{-$eventVersionId}/edit" params={params} text={t('editBasicInfo')} icon={<Cog />} />
-      <MenuLink to="/events/$eventId/{-$eventVersionId}/volunteers" params={params} text={t('volunteers')} />
+    </MenuSection>
+    <MenuSection title={t('volunteers')}>
+      <MenuLink
+        to="/events/$eventId/{-$eventVersionId}/volunteers"
+        params={params}
+      >
+        {t('volunteers')}
+        <CounterTag color="primary" count={event.volunteerCount} />
+      </MenuLink>
       <MenuLink
         to="/events/$eventId/{-$eventVersionId}/assignments"
         params={params}

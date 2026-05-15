@@ -6,7 +6,7 @@ import { DanceSet, EventProgramSettings } from 'components/event/EventProgramFor
 import { entityListQueryHook, graphql } from 'backend'
 
 import { isEmptyDocument, MinifiedDocumentContent } from 'libraries/lexical'
-import { Callout, Link, RegularLink } from 'libraries/ui'
+import { Callout, CounterTag, Link, RegularLink } from 'libraries/ui'
 import { useChosenDanceIds, useWorkshops } from 'components/event/EventProgramForm/eventMetadata'
 import { ColoredTag } from 'components/widgets/ColoredTag'
 import { useT } from 'i18n'
@@ -19,9 +19,7 @@ export function MissingDanceInstructionsCounterTag() {
   if (!count) return null
 
   const title = `${count} ${t('missingDancesCount', { count })}`
-  return <span className="inline-block px-2 -mt-0.5 h-5 font-bold text-white align-middle bg-red-600 rounded-full ms-2" title={title}>
-    {count}
-  </span>
+  return <CounterTag count={count} title={title} />
 }
 
 export function MissingDanceInstructionsWarning({ program }: { program: EventProgramSettings }) {

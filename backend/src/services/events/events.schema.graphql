@@ -18,6 +18,7 @@ type Event implements Versionable {
   _hasRegisteredWorkshops: Boolean!
   program: EventProgramSettings!
   workshops: [Workshop!]!
+  volunteerCount: Int!
   volunteerAssignments: [VolunteersByRole!]!
 }
 

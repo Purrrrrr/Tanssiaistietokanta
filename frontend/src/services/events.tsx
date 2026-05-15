@@ -120,6 +120,7 @@ query getEvent($id: ID!, $versionId: ID) {
     _id, _versionId, _versionNumber, _updatedAt, name, beginDate, endDate,
     _hasRegisteredVolunteers, _hasRegisteredWorkshops
     eventRegistrationSystem
+    volunteerCount
     accessControl {
       viewAccess
       grants {
