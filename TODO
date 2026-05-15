@@ -520,26 +520,41 @@
 * Document viewer does not empty table cells correctly
 * Make status selector in eventVolunteerForm work
 * ItemList expanding content background and bottom border
+* Larger favicon for share previews
+* Volunteers: Pin/search icons to separate components + add aria-label
+* Add a cancelled kompassi status to represent those that were cancelled from the event
+* Volunteer details: Workshop role assignment adding: Selector with role/workshop
+  Kompassi status and assignments page
+  * Basic page
+  * Add volunteer status to list?
+  * Filtering and searching
+  * Warnings about:
+    * accepted volunteers without assignments
+    * non-registered assignments
+    * non-accepted assignments
+    * cancelled volunteers with registered/accepted assignments
+  * Show exclamation mark in menu if any warnings
+  * Adding assignments: Form with volunteer+role+workshop
+    Workshop instance support
 
-  Show some kompassi status info on event volunteers page when available
-  A way to assign to and edit non-workshop roles statuses
-    Fetch event registration system details beside volunteers?
-    Fetch workshops too?
-    Buttons to change status
-      Accepted -> ask roles
-  Workshop role assignment edit too
+  Allow adding ev:s from eva-editor (pop up dialog when need to accept)
+  Turn eventVolunteer accepted if adding assignments to it
+
+  Icons for statuses?
+    EventVolunteerAssignment
+    EventVolunteer
+  When changing volunteer to accepted -> ask roles to assign in a modal
+
+  Show some kompassi status info on event volunteers page when available?
 
   Button to remove multiple event volunteers
-  Check if exists and count methods use access control
 
-  Kompassi status page?
   Separate sections in Workshop editor for clarity
   Teaching duration for dance
   Copy time counting ball planning view to workshop dances
-  Larger favicon for share previews
   Fix button tooltip alignment when button is on the right border of page
 
-  Lexical Debug: node id display?
+  Check if exists and count methods use access control
   Make VolunteerAssignmentEditor less jumpy. Some way to load things in advance
   Check how deleted volunteers affect versioning
     Fix dependency graph not updating properly on delete
@@ -557,6 +572,7 @@
   Should files be versioned too?
 
   Better editor Part 3
+    Lexical Debug: node id display?
     Floating delete node cross buttons
     Floating image editor
     Use FormGroup in editors
