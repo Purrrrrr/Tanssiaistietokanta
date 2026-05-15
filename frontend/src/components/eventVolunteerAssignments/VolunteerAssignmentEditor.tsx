@@ -47,8 +47,6 @@ export function VolunteerAssignmentEditor({ title, id, event, search, onSetSearc
     <VolunteerAssignmentList
       showName
       showRole
-      search={search}
-      onSetSearch={onSetSearch}
       assignments={assignments}
       readOnly={readOnly}
       event={event}
