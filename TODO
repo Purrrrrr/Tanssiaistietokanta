@@ -524,7 +524,7 @@
 * Volunteers: Pin/search icons to separate components + add aria-label
 * Add a cancelled kompassi status to represent those that were cancelled from the event
 * Volunteer details: Workshop role assignment adding: Selector with role/workshop
-  Kompassi status and assignments page
+* Kompassi status and assignments page
   * Basic page
   * Add volunteer status to list?
   * Filtering and searching
@@ -535,8 +535,9 @@
     * cancelled volunteers with registered/accepted assignments
   * Show exclamation mark in menu if any warnings
   * Adding assignments: Form with volunteer+role+workshop
-    Workshop instance support
+  * Workshop instance support
 
+  Only show roles that volunteer is interested_in in selector
   Allow adding ev:s from eva-editor (pop up dialog when need to accept)
   Turn eventVolunteer accepted if adding assignments to it
 
