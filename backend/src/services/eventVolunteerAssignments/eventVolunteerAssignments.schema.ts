@@ -59,6 +59,7 @@ export const eventVolunteerAssignmentsDataResolver = resolve<EventVolunteerAssig
       const created = await service.create({
         eventId,
         volunteerId,
+        status: 'Accepted',
         interestedIn: [],
       })
       return created._id
