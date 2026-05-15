@@ -61,7 +61,7 @@ export function EventVolunteerList({ eventVolunteers: unsorted, readOnly, curren
         { key: 'status', label: label('status') },
         { key: 'taskRoles', label: <>
           {label('taskRoles')}{' '}
-          (<Pin className="align-text-top" size={14} /> = {label('assigned')} / <Search className="align-text-top" size={12} /> = {label('interested')})
+          <span aria-hidden>(<AssignedRoleIcon /> = {label('assigned')} / <InterestedRoleIcon /> = {label('interested')})</span>
         </> },
         { key: 'workshops', label: label('workshops') },
         { key: 'wishes', label: label('wishes') },
@@ -83,9 +83,7 @@ export function EventVolunteerList({ eventVolunteers: unsorted, readOnly, curren
             {taskRoles.map(role => (
               <RoleTag
                 key={role._id}
-                icon={role.assigned
-                  ? <Pin className="align-text-top" size={14} />
-                  : <Search className="align-text-top" size={12} />}
+                icon={role.assigned ? <AssignedRoleIcon label={label('assigned')} /> : <InterestedRoleIcon label={label('interested')} />}
                 role={role}
                 selected={currentRole ? currentRole === role._id : undefined}
                 onSetRole={onSetRole}
@@ -104,6 +102,9 @@ export function EventVolunteerList({ eventVolunteers: unsorted, readOnly, curren
     </ItemList>
   </>
 }
+
+const AssignedRoleIcon = ({ label }: { label?: string }) => <Pin title={label} aria-label={label} className="align-text-top" size={14} />
+const InterestedRoleIcon = ({ label }: { label?: string }) => <Search title={label} aria-label={label} className="align-text-top" size={12} />
 
 interface TaskRole extends Pick<EventRole, '_id' | 'name' | 'order'> {
   assigned: boolean
