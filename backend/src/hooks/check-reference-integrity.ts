@@ -14,6 +14,7 @@ export const checkReferenceIntegrity = async (context: HookContext) => {
   for (const relation of referencedByRelations) {
     const linkedIds = await relation.getLinkedIds(data)
     await Promise.all(linkedIds.map(async linkedId => {
+      if (linkedId == null) return
       await context.app.service(relation.service as any)
         .get(linkedId, { [SkipAccessControl]: true, query: { $select: ['_id'] } })
     }))
