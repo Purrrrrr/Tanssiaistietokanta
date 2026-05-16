@@ -30,6 +30,7 @@ import {
 
 import { useEditorT } from './i18n'
 import { INSERT_LAYOUT_COMMAND } from './plugins/LayoutPlugin'
+import { useFabricToolbar } from './toolbar/FabricToolbar'
 import { CheckListIcon, OrderedListIcon, UnorderedListIcon } from './toolbar/icons'
 import { ImageUploadConfig, useImageToolbar } from './toolbar/ImageToolbar'
 import { useLinkToolbar } from './toolbar/LinkToolbar'
@@ -66,6 +67,7 @@ export default function ToolbarPlugin({ children, imageUpload }: ToolbarPluginPr
     useImageToolbar(editor, imageUpload),
     useQRCodeToolbar(editor),
     useTableToolbar(editor),
+    useFabricToolbar(editor),
   ]
 
   function updateAnchor(newDom?: HTMLElement | null) {
