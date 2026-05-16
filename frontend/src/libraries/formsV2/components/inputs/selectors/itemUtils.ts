@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import type { InternalItemData, ItemCategory, Items, ItemToString, SelectorProps, SyncItems } from './types'
 
-import { filterList } from 'libraries/common/filterList'
+import { searchList } from 'libraries/common/listSearch'
 
 const emptyResult: InternalItemData<unknown> = {
   showCategories: false,
@@ -47,14 +47,14 @@ async function getItems<T>(items: Items<T>, filter: string, itemToString: ItemTo
     return await items(filter)
   }
   if (Array.isArray(items)) {
-    return filterList(items, filter, itemToString)
+    return searchList(items, filter, itemToString)
   }
 
   return {
     categories: items.categories
       .map(category => ({
         ...category,
-        items: filterList(category.items, filter, itemToString),
+        items: searchList(category.items, filter, itemToString),
       }))
       .filter(categoryHasItems),
   }

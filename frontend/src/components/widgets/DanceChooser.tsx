@@ -4,6 +4,7 @@ import { DanceListItem, Workshop } from 'types'
 
 import { filterDances, useCreateDance, useDances } from 'services/dances'
 
+import { canCreateUniqueItemFromQuery } from 'libraries/common/listSearch'
 import { AutocompleteInput } from 'libraries/formsV2/components/inputs'
 import { CssClass } from 'libraries/ui'
 import { DanceIdSet } from 'components/event/EventProgramForm/eventMetadata'
@@ -40,8 +41,7 @@ export function DanceChooser({
   const dancesInWorkshops = workshops.flatMap(w => w.instances).flatMap(i => i.dances).map(d => d?._id)
   const getItems = (query: string) => {
     const danceList = filterDances(items, query)
-    const showCreateDance = query.trim().length > 0
-      && !dances.some(dance => danceNameEquals(dance, query))
+    const showCreateDance = canCreateUniqueItemFromQuery(items, query, 'name')
     const extraItems: DanceChooserOption[] = []
     if (allowEmpty) extraItems.push(null)
     if (showCreateDance) extraItems.push({ __typename: 'createDance', name: query.trim() })
@@ -131,8 +131,4 @@ type DanceChooserOption = DanceChooserItem | CreateDance | null
 interface CreateDance {
  __typename: 'createDance'
   name: string
-}
-
-function danceNameEquals(a: DanceChooserItem, name: string) {
-  return a.name.trim().toLowerCase() === name.trim().toLowerCase()
 }

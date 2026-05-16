@@ -5,6 +5,7 @@ import { Event } from 'types'
 import { useShowGlobalLoadingAnimation } from 'backend'
 import { useEventVolunteerAssignments } from 'services/eventVolunteerAssignments'
 
+import { searchList } from 'libraries/common/listSearch'
 import { Collapse, PageSection, SearchBar } from 'libraries/ui'
 import { AddButton } from 'components/widgets/AddButton'
 import { useTranslation } from 'i18n'
@@ -25,15 +26,7 @@ export function VolunteerAssignmentEditor({ title, id, event, search, onSetSearc
   const [showCreateForm, setShowCreateForm] = useState(false)
   const { _id: eventId, _versionId: eventVersionId } = event
   const [unfilteredAssignments = [], requestState] = useEventVolunteerAssignments({ eventId, eventVersionId })
-  const assignments = search
-    ? unfilteredAssignments.filter(a => {
-      const searchLower = search.toLowerCase()
-      const names = [a.volunteer.name, a.role.name, a.workshop?.name]
-        .filter(name => name !== undefined)
-        .map(s => s.toLowerCase())
-      return names.some(name => name.includes(searchLower))
-    })
-    : unfilteredAssignments
+  const assignments = searchList(unfilteredAssignments, search, a => a.volunteer.name, a => a.role.name, a => a.workshop?.name ?? '')
 
   useShowGlobalLoadingAnimation(requestState.loading)
   const readOnly = eventVersionId != null

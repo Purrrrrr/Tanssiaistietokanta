@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 
 import { Dance, DanceWithEvents } from 'types'
 
-import { filterList } from 'libraries/common/filterList'
+import { searchList } from 'libraries/common/listSearch'
 import { compareBy, sorted } from 'utils/sorted'
 
 import { backendQueryHook, entityCreateHook, entityDeleteHook, entityListQueryHook, entityUpdateHook, graphql, setupServiceUpdateFragment, useServiceEvents } from '../backend'
@@ -159,7 +159,7 @@ mutation deleteDance($id: ID!) {
 }`))
 
 export function filterDances<T extends Pick<DanceWithEvents, 'name' | 'category' | 'events'>>(dances: T[], searchString: string, categoryFilter?: string): T[] {
-  const filtered = filterList(
+  const filtered = searchList(
     sortDances(dances),
     searchString,
     dance => dance.name,

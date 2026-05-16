@@ -2,6 +2,7 @@
 
 import { useCreateVolunteer, useVolunteers } from 'services/volunteers'
 
+import { canCreateUniqueItemFromQuery, searchList } from 'libraries/common/listSearch'
 import { FieldComponentProps } from 'libraries/forms'
 import { AutocompleteMultipleInput } from 'libraries/formsV2/components/inputs/selectors'
 import { useT } from 'i18n'
@@ -16,12 +17,10 @@ export default function TeacherSelector(props: FieldComponentProps<Volunteer[]>)
   const [createVolunteer] = useCreateVolunteer()
 
   const getItems = (query: string) => {
-    const volunteerList = volunteers.filter(volunteer => volunteer.name.toLowerCase().includes(query.toLowerCase()))
-    const showCreateVolunteer = query.trim().length > 0
-      && !volunteers.some(volunteer => volunteer.name.toLowerCase() === query.trim().toLowerCase())
-    const extraItems: SelectableValue[] = []
-    if (showCreateVolunteer) extraItems.push({ __typename: 'createVolunteer', name: query.trim() })
-    return [...volunteerList, ...extraItems]
+    const volunteerList = searchList(volunteers, query, 'name')
+    return canCreateUniqueItemFromQuery(volunteerList, query, 'name')
+      ? [...volunteerList, { __typename: 'createVolunteer', name: query.trim() } satisfies SelectableValue]
+      : volunteerList
   }
 
   const chooseOrCreateVolunteer = async (option: SelectableValue) => {

@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { addGlobalLoadingAnimation } from 'backend'
 import { useCreateVolunteer, useVolunteers } from 'services/volunteers'
 
+import { searchList } from 'libraries/common/listSearch'
 import { Card, H2, SearchBar } from 'libraries/ui'
 import { LoadingState } from 'components/LoadingState'
 import { Page } from 'components/Page'
@@ -33,13 +34,7 @@ function RouteComponent() {
   const { search, setSearch } = useVolunteerSearchParams()
 
   const [allVolunteers, requestState] = useVolunteers()
-  const volunteers = allVolunteers
-    .filter(volunteer => {
-      if (search && !volunteer.name.toLowerCase().includes(search.toLowerCase())) {
-        return false
-      }
-      return true
-    })
+  const volunteers = searchList(allVolunteers, search, 'name', volunteer => volunteer.volunteeredIn.map(e => e.event.name).join(' '))
 
   return <Page title={t('pageTitle')} background="volunteers">
     <div className="flex flex-wrap gap-4 justify-between items-center mb-4 mb-">

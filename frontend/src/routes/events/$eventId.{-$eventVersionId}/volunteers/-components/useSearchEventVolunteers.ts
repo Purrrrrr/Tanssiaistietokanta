@@ -2,6 +2,8 @@ import { getRouteApi } from '@tanstack/react-router'
 
 import { useEventVolunteers } from 'services/eventVolunteers'
 
+import { searchList } from 'libraries/common/listSearch'
+
 import { useCurrentEvent } from '../../-context'
 
 interface EventVolunteerSearchParams {
@@ -22,16 +24,8 @@ export function useSearchEventVolunteers() {
 
   const [unsortedEventVolunteers] = useEventVolunteers({ eventId: event._id, eventVersionId: event._versionId })
 
-  const eventVolunteers = unsortedEventVolunteers
-    .filter(ev => {
-      if (search && !ev.volunteer.name.toLowerCase().includes(search.toLowerCase())) {
-        return false
-      }
-      if (role) {
-        return ev.interestedIn.some(r => r._id === role)
-      }
-      return true
-    })
+  const eventVolunteers = searchList(unsortedEventVolunteers, search, v => v.volunteer.name)
+    .filter(ev => !role || ev.interestedIn.some(r => r._id === role))
 
   return {
     eventVolunteers,

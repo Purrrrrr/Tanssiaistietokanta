@@ -2,6 +2,7 @@ import { VolunteerListItem } from 'types'
 
 import { useCreateVolunteer, useVolunteerNames } from 'services/volunteers'
 
+import { canCreateUniqueItemFromQuery, searchList } from 'libraries/common/listSearch'
 import { FieldComponentProps } from 'libraries/forms'
 import { AutocompleteInput } from 'libraries/formsV2/components/inputs'
 import { useT } from 'i18n'
@@ -18,13 +19,12 @@ export function VolunteerChooser({ value, onChange, readOnly, ...rest }: Volunte
   const [createVolunteer] = useCreateVolunteer()
 
   const getItems = (query: string): VolunteerOption[] => {
-    const q = query.trim().toLowerCase()
-    const filtered = volunteers
-      .filter(v => !(rest.excludeVolunteers ?? []).some(ev => ev._id === v._id))
-      .filter(v => !q || v.name.toLowerCase().includes(q))
-    const showCreate = query.trim().length > 0
-      && !volunteers.some(v => v.name.toLowerCase() === query.trim().toLowerCase())
-    return showCreate
+    const filtered = searchList(
+      volunteers.filter(v => !(rest.excludeVolunteers ?? []).some(ev => ev._id === v._id)),
+      query,
+      'name',
+    )
+    return canCreateUniqueItemFromQuery(filtered, query, 'name')
       ? [...filtered, { __typename: 'createVolunteer', name: query.trim() }]
       : filtered
   }

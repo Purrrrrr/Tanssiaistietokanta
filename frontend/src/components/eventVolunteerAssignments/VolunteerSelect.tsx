@@ -32,19 +32,13 @@ export function VolunteerSelect({ id, currentAssignments, eventId, roleId, onCha
     .map(ev => ev.volunteer)
     .filter(v => !assignedIds.has(v._id))
 
-  const getItems = (query: string) => {
-    const q = query.trim().toLowerCase()
-    const matches = (v: VolunteerOption) => !q || v.name.toLowerCase().includes(q)
-    return sortedBy(eventVolunteerOptions.filter(matches), 'name')
-  }
-
   return <>
     <AutocompleteInput<VolunteerOption>
       id={id}
       containerClassname={className}
       value={null}
       onChange={onChange}
-      items={getItems}
+      items={sortedBy(eventVolunteerOptions, 'name')}
       itemToString={v => v.name}
       placeholder={t('addVolunteer')}
       noResultsText={t('noVolunteers')}

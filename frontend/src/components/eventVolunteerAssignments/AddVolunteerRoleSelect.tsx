@@ -39,12 +39,6 @@ export function AddVolunteerRoleSelect({ id, currentAssignments, event, voluntee
       a => a.volunteer._id === volunteerId && a.role._id === role._id && (!role.workshopId || a.workshop?._id === role.workshopId),
     ))
 
-  const getItems = (query: string) => {
-    const q = query.trim().toLowerCase()
-    const matches = (v: RoleOption) => !q || v.name.toLowerCase().includes(q)
-    return roleOptions.filter(matches)
-  }
-
   const onChange = async (newRole: RoleOption) => {
     await createAssignment({
       eventVolunteerAssignment: {
@@ -63,7 +57,7 @@ export function AddVolunteerRoleSelect({ id, currentAssignments, event, voluntee
       containerClassname={className}
       value={null}
       onChange={onChange}
-      items={getItems}
+      items={roleOptions}
       itemToString={v => v.name}
       placeholder={t('addRole')}
       noResultsText={t('noRoles')}
