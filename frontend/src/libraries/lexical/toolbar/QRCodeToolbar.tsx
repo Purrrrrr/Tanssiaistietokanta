@@ -41,7 +41,7 @@ export function useQRCodeToolbar(editor: LexicalEditor): ToolbarHookReturn {
 function getQRCodeValue(selection: BaseSelection | null): QRCodePayload | null {
   if ($isNodeSelection(selection)) {
     const node = selection.getNodes()[0]
-    if (node.getType() === 'qr-code') {
+    if (node?.getType() === 'qr-code') {
       const qrNode = node as unknown as QRCodeNode
       return {
         value: qrNode.getValue(),

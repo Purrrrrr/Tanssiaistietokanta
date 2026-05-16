@@ -289,7 +289,7 @@ function renderNode(node: SerializedNode, index: number, options: ViewOptions): 
 }
 
 function renderChildren(node: SerializedElementNode, options: ViewOptions): RenderResult {
-  const children = node.children?.map((child, i) => renderNode(child as SerializedNode, i, options))
+  const children = node.children?.map((child, i) => renderNode(child as SerializedNode, i, options)) ?? []
 
   return {
     content: children.map(c => c.content),

@@ -110,6 +110,10 @@ export default function ToolbarPlugin({ children, imageUpload }: ToolbarPluginPr
       updateAnchor(dom)
     } else if ($isNodeSelection(selection)) {
       const [node] = selection.getNodes()
+      if (!node) {
+        updateAnchor(null)
+        return
+      }
       const dom = editor.getElementByKey(node.getKey())
       updateAnchor(dom)
     }
