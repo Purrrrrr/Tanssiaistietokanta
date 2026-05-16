@@ -5,8 +5,12 @@ export { type DateRangeInputProps } from './DateRangeInput'
 export { type DateTimeInputProps } from './DateTimeInput'
 export { type SegmentedInputProps } from './SegmentedInput'
 export {
-  AutocompleteInput, type AutocompleteInputProps,
-  filterItemList, Select, type SelectorProps, type SelectProps } from './selectors'
+  AutocompleteInput,
+  type AutocompleteInputProps,
+  Select,
+  type SelectorProps,
+  type SelectProps,
+} from './selectors'
 export { Switch, type SwitchProps } from './Switch'
 export { type TextInputExtraProps } from './TextInput'
 export type { FieldInputComponent, FieldInputComponentProps, Nullable, OmitInputProps } from './types'
