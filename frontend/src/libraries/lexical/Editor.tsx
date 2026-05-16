@@ -17,6 +17,7 @@ import { CssClass } from 'libraries/ui'
 import { nodes } from './nodes'
 import { AutoLinkPlugin, MATCHERS } from './plugins/AutoLinkPlugin'
 import { CheckboxUIPlugin } from './plugins/CheckboxPlugin'
+import { FabricPlugin } from './plugins/FabricPlugin'
 import { ImagePlugin } from './plugins/ImagePlugin'
 import { LayoutPlugin } from './plugins/LayoutPlugin'
 import { QRCodePlugin } from './plugins/QRCodePlugin'
@@ -80,6 +81,7 @@ export function Editor({ inline, readOnly, imageUpload, onChange, value, classNa
       <ImagePlugin />
       <LayoutPlugin />
       <QRCodePlugin />
+      <FabricPlugin />
       <CheckboxUIPlugin />
       <AutoLinkPlugin matchers={MATCHERS} />
       <MarkdownShortcutPlugin transformers={[

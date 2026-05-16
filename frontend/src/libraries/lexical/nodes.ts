@@ -4,6 +4,7 @@ import { HeadingNode } from '@lexical/rich-text'
 import { TableCellNode, TableNode, TableRowNode } from '@lexical/table'
 
 import { ChecklistItemNode } from './plugins/CheckboxPlugin'
+import { FabricNode } from './plugins/nodes/FabricNode'
 import { ImageNode } from './plugins/nodes/ImageNode'
 import { LayoutContainerNode } from './plugins/nodes/LayoutContainerNode'
 import { LayoutItemNode } from './plugins/nodes/LayoutItemNode'
@@ -15,6 +16,7 @@ export const nodes = [
   ImageNode,
   LayoutContainerNode, LayoutItemNode,
   QRCodeNode,
+  FabricNode,
   ListNode, ListItemNode, ChecklistItemNode, {
     replace: ListItemNode,
     with: (node: ListItemNode) => new ChecklistItemNode(node.getValue(), node.getChecked()),

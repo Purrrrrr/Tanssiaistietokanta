@@ -68,6 +68,23 @@ const translations = {
       rows: 'Rivit',
       cancel: 'Peruuta',
     },
+    diagram: {
+      insertDiagram: 'Lisää kaavio',
+      addRect: 'Lisää suorakulmio',
+      addEllipse: 'Lisää ellipsi',
+      addCircle: 'Lisää ympyrä',
+      addTriangle: 'Lisää kolmio',
+      addPentagon: 'Lisää viisikulmio',
+      addHexagon: 'Lisää kuusikulmio',
+      addText: 'Lisää teksti',
+      bringForward: 'Tuo eteen',
+      sendBackward: 'Lähetä taakse',
+      fill: 'Täyttö',
+      stroke: 'Reunaviiva',
+      deleteShape: 'Poista muoto',
+      removeDiagram: 'Poista kaavio',
+      resize: 'Muuta kokoa',
+    },
   },
 }
 
