@@ -536,17 +536,17 @@
   * Show exclamation mark in menu if any warnings
   * Adding assignments: Form with volunteer+role+workshop
   * Workshop instance support
+* Adding accepted does not work
+* Make dances searchable categories or event names (not implementing description since not available in list)
 
-  Only show roles that volunteer is interested_in in selector
-  Allow adding ev:s from eva-editor (pop up dialog when need to accept)
-  Turn eventVolunteer accepted if adding assignments to it
+  EVA-editor
+    Only show roles that volunteer is interested_in in selector
+    Allow adding ev:s from eva-editor (pop up dialog when need to accept)
+    Turn eventVolunteer accepted if adding assignments to it
 
-  Icons for statuses?
-    EventVolunteerAssignment
-    EventVolunteer
+  Prevent status change in VolunteerStatusBulkEditor when it is not legal
+
   When changing volunteer to accepted -> ask roles to assign in a modal
-
-  Show some kompassi status info on event volunteers page when available?
 
   Button to remove multiple event volunteers
 
@@ -562,7 +562,6 @@
   More fine-grained document access control
   Hide note fields etc. from volunteers when not event admin
 
-  Make dances searchable by descriptions, categories or event names
   Multiple slides per dance: formation slide / instructions slide / some other?
 
   How to show docs in side nav?
@@ -570,6 +569,10 @@
   Document templates
     Templates for event/interval music slides?
 
+  Workshop not in kompassi warning
+  Icons for statuses?
+    EventVolunteerAssignment
+    EventVolunteer
   Should files be versioned too?
 
   Better editor Part 3
