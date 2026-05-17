@@ -50,6 +50,8 @@ export const KEY_MAP: Record<string, string> = {
   rowStriping: 'r=',
   value: 'va',
   width: 'w',
+  height: 'h',
+  data: 'da',
 }
 export const KEY_UNMAP: Record<string, string> = toUnmap(KEY_MAP)
 
