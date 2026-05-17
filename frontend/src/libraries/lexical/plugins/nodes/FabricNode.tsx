@@ -22,6 +22,19 @@ import {
 } from 'lexical'
 
 import { useEditorT } from 'libraries/lexical/i18n'
+import randomId from 'utils/randomId'
+
+declare module 'fabric' {
+  // to have the properties recognized on the instance and in the constructor
+  interface FabricObject {
+    _id?: string
+  }
+  // to have the properties typed in the exported object
+  interface SerializedObjectProps {
+    _id?: string
+  }
+}
+FabricObject.customProperties = ['_id']
 
 export type SerializedFabricNode = Spread<
   { width: number, height: number, data: string },
@@ -332,6 +345,7 @@ function FabricComponent({ nodeKey, width, height, data }: FabricComponentProps)
   const addObject = (obj: FabricObject) => modifyCanvas(canvas => canvas.add(obj))
 
   const addRect = () => addObject(new Rect({
+    _id: randomId(),
     left: localWidth / 2 - 50,
     top: localHeight / 2 - 30,
     width: 100,
@@ -341,6 +355,7 @@ function FabricComponent({ nodeKey, width, height, data }: FabricComponentProps)
     strokeWidth: 2,
   }))
   const addEllipse = () => addObject(new Ellipse({
+    _id: randomId(),
     left: localWidth / 2,
     top: localHeight / 2,
     originX: 'center',
@@ -352,6 +367,7 @@ function FabricComponent({ nodeKey, width, height, data }: FabricComponentProps)
     strokeWidth: 2,
   }))
   const addCircle = () => addObject(new Circle({
+    _id: randomId(),
     left: localWidth / 2,
     top: localHeight / 2,
     originX: 'center',
@@ -362,6 +378,7 @@ function FabricComponent({ nodeKey, width, height, data }: FabricComponentProps)
     strokeWidth: 2,
   }))
   const addPolygon = (sides: number) => addObject(new Polygon(regularPolygonPoints(sides, 50), {
+    _id: randomId(),
     left: localWidth / 2,
     top: localHeight / 2,
     originX: 'center',
@@ -371,6 +388,7 @@ function FabricComponent({ nodeKey, width, height, data }: FabricComponentProps)
     strokeWidth: 2,
   }))
   const addText = () => addObject(new Textbox('Text', {
+    _id: randomId(),
     left: localWidth / 2,
     top: localHeight / 2,
     originX: 'center',
