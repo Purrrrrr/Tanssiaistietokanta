@@ -2,7 +2,7 @@ import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext
 import { useLexicalNodeSelection } from '@lexical/react/useLexicalNodeSelection'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { mergeRegister } from '@lexical/utils'
-import { Canvas, Circle, Ellipse, FabricObject, Polygon, Rect, Textbox } from 'fabric'
+import { Canvas, Circle, Ellipse, FabricObject, Polygon, Rect, Textbox, TFiller } from 'fabric'
 import type {
   DOMConversionMap,
   DOMConversionOutput,
@@ -142,7 +142,7 @@ export class FabricNode extends DecoratorNode<React.ReactNode> {
   }
 }
 
-// ─── Shape helpers ───────────────────────────────────────────────────────────
+// ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function regularPolygonPoints(sides: number, radius: number) {
   return Array.from({ length: sides }, (_, i) => {
@@ -150,6 +150,9 @@ function regularPolygonPoints(sides: number, radius: number) {
     return { x: radius * Math.cos(angle), y: radius * Math.sin(angle) }
   })
 }
+
+const toColor = (value: string | TFiller | null): string =>
+  typeof value === 'string' ? value : 'black'
 
 // ─── React component ─────────────────────────────────────────────────────────
 
@@ -168,12 +171,7 @@ function FabricComponent({ nodeKey, width, height, data }: FabricComponentProps)
   const fabricRef = useRef<Canvas | null>(null)
   const isLoadingRef = useRef(false)
   const lastDataRef = useRef(data)
-  const [activeObject, setActiveObject] = useState<FabricObject | null>(null)
-  const [fillColor, setFillColor] = useState('#93c5fd')
-  const [strokeColor, setStrokeColor] = useState('#1d4ed8')
-  const [localWidth, setLocalWidth] = useState(width)
-  const [localHeight, setLocalHeight] = useState(height)
-
+  const [activeObjects, setActiveObjects] = useState<FabricObject[]>([])
   const isEditable = editor.isEditable()
 
   // ── Serialize canvas to node ──────────────────────────────────────────────
@@ -226,9 +224,9 @@ function FabricComponent({ nodeKey, width, height, data }: FabricComponentProps)
     canvas.on('object:modified', handleModified)
     canvas.on('object:removed', handleModified)
 
-    canvas.on('selection:created', (e) => setActiveObject(e.selected?.[0] ?? null))
-    canvas.on('selection:updated', (e) => setActiveObject(e.selected?.[0] ?? null))
-    canvas.on('selection:cleared', () => setActiveObject(null))
+    canvas.on('selection:created', (e) => setActiveObjects(e.selected ?? []))
+    canvas.on('selection:updated', (e) => setActiveObjects(e.selected ?? []))
+    canvas.on('selection:cleared', () => setActiveObjects([]))
 
     return () => {
       cancelled = true
@@ -266,8 +264,6 @@ function FabricComponent({ nodeKey, width, height, data }: FabricComponentProps)
     if (!canvas) return
     if (canvas.width !== width || canvas.height !== height) {
       canvas.setDimensions({ width, height })
-      setLocalWidth(width)
-      setLocalHeight(height)
     }
   }, [width, height])
 
@@ -284,32 +280,21 @@ function FabricComponent({ nodeKey, width, height, data }: FabricComponentProps)
     canvas.renderAll()
   }, [isEditable])
 
-  // ── Sync active object color state ───────────────────────────────────────
-
-  useEffect(() => {
-    if (!activeObject) return
-    const fill = activeObject.fill
-    const stroke = activeObject.stroke
-    if (typeof fill === 'string') setFillColor(fill)
-    if (typeof stroke === 'string') setStrokeColor(stroke)
-  }, [activeObject])
-
   // ── Lexical click selection ───────────────────────────────────────────────
 
   const onDelete = useCallback((event: KeyboardEvent) => {
     if (!isSelected) return false
     const canvas = fabricRef.current
+    event.preventDefault()
     if (canvas) {
-      const active = canvas.getActiveObject()
-      if (active) {
-        canvas.remove(active)
+      const active = canvas.getActiveObjects()
+      if (active.length > 0) {
+        active.forEach(obj => canvas.remove(obj))
         canvas.discardActiveObject()
         canvas.renderAll()
-        event.preventDefault()
         return true
       }
     }
-    event.preventDefault()
     editor.update(() => { $getNodeByKey(nodeKey)?.remove() })
     return true
   }, [editor, isSelected, nodeKey])
@@ -343,60 +328,41 @@ function FabricComponent({ nodeKey, width, height, data }: FabricComponentProps)
     canvas.renderAll()
   }
   const addObject = (obj: FabricObject) => modifyCanvas(canvas => canvas.add(obj))
+  const defaultProps = () => {
+    const hue = Math.floor(Math.random() * 360)
+    return {
+      _id: randomId(),
+      left: width / 2,
+      top: height / 2,
+      originX: 'center',
+      originY: 'center',
+      strokeWidth: 2,
+      fill: `hsl(${hue}, 70%, 80%)`,
+      stroke: `hsl(${hue}, 70%, 50%)`,
+    } as const
+  }
 
   const addRect = () => addObject(new Rect({
-    _id: randomId(),
-    left: localWidth / 2 - 50,
-    top: localHeight / 2 - 30,
+    ...defaultProps(),
     width: 100,
     height: 60,
-    fill: '#93c5fd',
-    stroke: '#1d4ed8',
-    strokeWidth: 2,
   }))
   const addEllipse = () => addObject(new Ellipse({
-    _id: randomId(),
-    left: localWidth / 2,
-    top: localHeight / 2,
-    originX: 'center',
-    originY: 'center',
+    ...defaultProps(),
     rx: 60,
     ry: 40,
-    fill: '#86efac',
-    stroke: '#15803d',
-    strokeWidth: 2,
   }))
   const addCircle = () => addObject(new Circle({
-    _id: randomId(),
-    left: localWidth / 2,
-    top: localHeight / 2,
-    originX: 'center',
-    originY: 'center',
+    ...defaultProps(),
     radius: 40,
-    fill: '#fde68a',
-    stroke: '#d97706',
-    strokeWidth: 2,
   }))
   const addPolygon = (sides: number) => addObject(new Polygon(regularPolygonPoints(sides, 50), {
-    _id: randomId(),
-    left: localWidth / 2,
-    top: localHeight / 2,
-    originX: 'center',
-    originY: 'center',
-    fill: '#c4b5fd',
-    stroke: '#6d28d9',
-    strokeWidth: 2,
+    ...defaultProps(),
   }))
   const addText = () => addObject(new Textbox('Text', {
-    _id: randomId(),
-    left: localWidth / 2,
-    top: localHeight / 2,
-    originX: 'center',
-    originY: 'center',
+    ...defaultProps(),
     width: 120,
     fontSize: 20,
-    fill: '#fca5a5',
-    stroke: '#b91c1c',
     strokeWidth: 1,
   }))
 
@@ -427,40 +393,55 @@ function FabricComponent({ nodeKey, width, height, data }: FabricComponentProps)
   const sendBackward = () => modifyActiveObjects(
     (objs, canvas) => sortedByZIndex(objs, canvas).forEach(obj => canvas.sendObjectBackwards(obj, true)))
 
+  const deleteActiveObjects = () => modifyActiveObjects(
+    (objs, canvas) => {
+      objs.forEach(obj => canvas.remove(obj))
+      canvas.discardActiveObject()
+    },
+  )
   // ── Canvas resize handle ──────────────────────────────────────────────────
 
-  function handleResizeStart(e: React.MouseEvent) {
+  function handleResizeStart(e: React.MouseEvent | React.TouchEvent) {
     e.preventDefault()
     e.stopPropagation()
-    const startX = e.clientX
-    const startY = e.clientY
-    const startW = localWidth
-    const startH = localHeight
 
-    function onMove(me: MouseEvent) {
-      const newW = Math.max(200, startW + me.clientX - startX)
-      const newH = Math.max(100, startH + me.clientY - startY)
-      fabricRef.current?.setDimensions({ width: newW, height: newH })
-      setLocalWidth(newW)
-      setLocalHeight(newH)
+    const { clientX: startX, clientY: startY } = toCoordinates(e)
+    const startW = width
+    const startH = height
+
+    function toCoordinates(e: MouseEvent | TouchEvent | React.MouseEvent | React.TouchEvent) {
+      return 'touches' in e
+        ? e.touches[0] ?? e.changedTouches[0]
+        : e
+    }
+    function getDimensions(e: MouseEvent | TouchEvent | React.MouseEvent | React.TouchEvent) {
+      const { clientX, clientY } = toCoordinates(e)
+      return {
+        width: Math.max(200, startW + clientX - startX),
+        height: Math.max(100, startH + clientY - startY),
+      }
     }
 
-    function onUp(me: MouseEvent) {
-      const newW = Math.max(200, startW + me.clientX - startX)
-      const newH = Math.max(100, startH + me.clientY - startY)
-      fabricRef.current?.setDimensions({ width: newW, height: newH })
-      setLocalWidth(newW)
-      setLocalHeight(newH)
+    function onMove(me: MouseEvent | TouchEvent) {
+      fabricRef.current?.setDimensions(getDimensions(me))
+    }
+
+    function onUp() {
       editor.update(() => {
+        if (!fabricRef.current) return
         const node = $getNodeByKey(nodeKey)
-        if ($isFabricNode(node)) node.setDimensions(newW, newH)
+        if ($isFabricNode(node)) node.setDimensions(fabricRef.current.width, fabricRef.current.height)
       })
       window.removeEventListener('mousemove', onMove)
+      window.removeEventListener('touchmove', onMove)
+      window.removeEventListener('mouseup', onUp)
       window.removeEventListener('mouseup', onUp)
     }
 
     window.addEventListener('mousemove', onMove)
+    window.addEventListener('touchmove', onMove)
     window.addEventListener('mouseup', onUp)
+    window.addEventListener('touchend', onUp)
   }
 
   // ── Remove node ───────────────────────────────────────────────────────────
@@ -476,7 +457,7 @@ function FabricComponent({ nodeKey, width, height, data }: FabricComponentProps)
   return (
     <div className="my-2 relative" data-fabric-node-key={nodeKey}>
       {isSelected && isEditable && (
-        <div className="flex flex-wrap gap-1 items-center absolute top-0 left-0 -translate-y-full bg-white p-1 rounded border border-gray-300 z-10 max-w-dvw">
+        <div className="flex flex-wrap gap-1 items-center absolute top-full left-0 bg-white p-1 rounded border border-gray-300 z-10 max-w-dvw">
           <button className={shapeButtonClass} onMouseDown={(e) => { e.preventDefault(); addRect() }} title={t('addRect')}>▭</button>
           <button className={shapeButtonClass} onMouseDown={(e) => { e.preventDefault(); addEllipse() }} title={t('addEllipse')}>⬭</button>
           <button className={shapeButtonClass} onMouseDown={(e) => { e.preventDefault(); addCircle() }} title={t('addCircle')}>○</button>
@@ -484,7 +465,7 @@ function FabricComponent({ nodeKey, width, height, data }: FabricComponentProps)
           <button className={shapeButtonClass} onMouseDown={(e) => { e.preventDefault(); addPolygon(5) }} title={t('addPentagon')}>⬠</button>
           <button className={shapeButtonClass} onMouseDown={(e) => { e.preventDefault(); addPolygon(6) }} title={t('addHexagon')}>⬡</button>
           <button className={shapeButtonClass} onMouseDown={(e) => { e.preventDefault(); addText() }} title={t('addText')}>T</button>
-          {activeObject && (
+          {activeObjects.length > 0 && (
             <>
               <span className="w-px self-stretch bg-gray-300 mx-1" />
               <button className={shapeButtonClass} onMouseDown={(e) => { e.preventDefault(); bringForward() }} title={t('bringForward')}>Y</button>
@@ -493,7 +474,7 @@ function FabricComponent({ nodeKey, width, height, data }: FabricComponentProps)
                 {t('fill')}
                 <input
                   type="color"
-                  value={fillColor}
+                  value={toColor(activeObjects[0].fill)}
                   className="w-6 h-5 cursor-pointer rounded border-0 p-0"
                   onChange={(e) => applyFill(e.target.value)}
                 />
@@ -502,22 +483,14 @@ function FabricComponent({ nodeKey, width, height, data }: FabricComponentProps)
                 {t('stroke')}
                 <input
                   type="color"
-                  value={strokeColor}
+                  value={toColor(activeObjects[0].stroke)}
                   className="w-6 h-5 cursor-pointer rounded border-0 p-0"
                   onChange={(e) => applyStroke(e.target.value)}
                 />
               </label>
               <button
                 className="py-0.5 px-2 text-xs text-red-600 bg-white rounded border-gray-300 hover:bg-gray-50 border cursor-pointer"
-                onMouseDown={(e) => {
-                  e.preventDefault()
-                  const canvas = fabricRef.current
-                  if (canvas && activeObject) {
-                    canvas.remove(activeObject)
-                    canvas.discardActiveObject()
-                    canvas.renderAll()
-                  }
-                }}
+                onMouseDown={deleteActiveObjects}
               >
                 {t('deleteShape')}
               </button>
@@ -527,21 +500,20 @@ function FabricComponent({ nodeKey, width, height, data }: FabricComponentProps)
             <button
               className="py-0.5 px-2 text-xs text-red-600 bg-white rounded border-gray-300 hover:bg-gray-50 border cursor-pointer"
               onMouseDown={(e) => { e.preventDefault(); removeNode() }}
+              onTouchMove={e => e.preventDefault()}
             >
               {t('removeDiagram')}
             </button>
           </span>
         </div>
       )}
-      <div
-        className={`relative inline-block border-2 ${isSelected ? 'border-blue-500' : 'border-gray-300'}`}
-        style={{ width: localWidth + 4, height: localHeight + 4 }}
-      >
+      <div className={`relative w-max border-2 ${isSelected ? 'border-blue-500' : 'border-gray-300'}`}>
         <canvas ref={canvasElRef} />
         {isSelected && isEditable && (
           <button
-            className="absolute bottom-0 right-0 w-4 h-4 bg-blue-500 cursor-se-resize z-10 rounded-tl"
+            className="absolute -bottom-2 -right-2 size-4 border-2 border-blue-500 cursor-se-resize z-10 touch-none"
             onMouseDown={handleResizeStart}
+            onTouchStart={handleResizeStart}
             title={t('resize')}
           />
         )}
