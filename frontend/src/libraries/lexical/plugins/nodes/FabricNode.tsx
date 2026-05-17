@@ -323,123 +323,91 @@ function FabricComponent({ nodeKey, width, height, data }: FabricComponentProps)
 
   // ── Shape insertion ───────────────────────────────────────────────────────
 
-  function addRect() {
+  function modifyCanvas(modifier: (canvas: Canvas) => void) {
     const canvas = fabricRef.current
     if (!canvas) return
-    canvas.add(new Rect({
-      left: localWidth / 2 - 50,
-      top: localHeight / 2 - 30,
-      width: 100,
-      height: 60,
-      fill: '#93c5fd',
-      stroke: '#1d4ed8',
-      strokeWidth: 2,
-    }))
+    modifier(canvas)
     canvas.renderAll()
   }
+  const addObject = (obj: FabricObject) => modifyCanvas(canvas => canvas.add(obj))
 
-  function addEllipse() {
-    const canvas = fabricRef.current
-    if (!canvas) return
-    canvas.add(new Ellipse({
-      left: localWidth / 2,
-      top: localHeight / 2,
-      originX: 'center',
-      originY: 'center',
-      rx: 60,
-      ry: 40,
-      fill: '#86efac',
-      stroke: '#15803d',
-      strokeWidth: 2,
-    }))
-    canvas.renderAll()
-  }
-
-  function addCircle() {
-    const canvas = fabricRef.current
-    if (!canvas) return
-    canvas.add(new Circle({
-      left: localWidth / 2,
-      top: localHeight / 2,
-      originX: 'center',
-      originY: 'center',
-      radius: 40,
-      fill: '#fde68a',
-      stroke: '#d97706',
-      strokeWidth: 2,
-    }))
-    canvas.renderAll()
-  }
-
-  function addPolygon(sides: number) {
-    const canvas = fabricRef.current
-    if (!canvas) return
-    canvas.add(new Polygon(regularPolygonPoints(sides, 50), {
-      left: localWidth / 2,
-      top: localHeight / 2,
-      originX: 'center',
-      originY: 'center',
-      fill: '#c4b5fd',
-      stroke: '#6d28d9',
-      strokeWidth: 2,
-    }))
-    canvas.renderAll()
-  }
-
-  function addText() {
-    const canvas = fabricRef.current
-    if (!canvas) return
-    canvas.add(new Textbox('Text', {
-      left: localWidth / 2,
-      top: localHeight / 2,
-      originX: 'center',
-      originY: 'center',
-      width: 120,
-      fontSize: 20,
-      fill: '#fca5a5',
-      stroke: '#b91c1c',
-      strokeWidth: 1,
-    }))
-    canvas.renderAll()
-  }
+  const addRect = () => addObject(new Rect({
+    left: localWidth / 2 - 50,
+    top: localHeight / 2 - 30,
+    width: 100,
+    height: 60,
+    fill: '#93c5fd',
+    stroke: '#1d4ed8',
+    strokeWidth: 2,
+  }))
+  const addEllipse = () => addObject(new Ellipse({
+    left: localWidth / 2,
+    top: localHeight / 2,
+    originX: 'center',
+    originY: 'center',
+    rx: 60,
+    ry: 40,
+    fill: '#86efac',
+    stroke: '#15803d',
+    strokeWidth: 2,
+  }))
+  const addCircle = () => addObject(new Circle({
+    left: localWidth / 2,
+    top: localHeight / 2,
+    originX: 'center',
+    originY: 'center',
+    radius: 40,
+    fill: '#fde68a',
+    stroke: '#d97706',
+    strokeWidth: 2,
+  }))
+  const addPolygon = (sides: number) => addObject(new Polygon(regularPolygonPoints(sides, 50), {
+    left: localWidth / 2,
+    top: localHeight / 2,
+    originX: 'center',
+    originY: 'center',
+    fill: '#c4b5fd',
+    stroke: '#6d28d9',
+    strokeWidth: 2,
+  }))
+  const addText = () => addObject(new Textbox('Text', {
+    left: localWidth / 2,
+    top: localHeight / 2,
+    originX: 'center',
+    originY: 'center',
+    width: 120,
+    fontSize: 20,
+    fill: '#fca5a5',
+    stroke: '#b91c1c',
+    strokeWidth: 1,
+  }))
 
   // ── Object color editing ──────────────────────────────────────────────────
-
-  function applyFill(color: string) {
-    const canvas = fabricRef.current
-    if (!canvas || !activeObject) return
-    setFillColor(color)
-    activeObject.set('fill', color)
-    canvas.renderAll()
-    saveCanvasData()
+  const modifyActiveObjects = (modifier: (obj: FabricObject[], canvas: Canvas) => void) => {
+    modifyCanvas(canvas => {
+      const active = canvas.getActiveObjects()
+      if (active.length > 0) {
+        modifier(active, canvas)
+        saveCanvasData()
+      }
+    })
   }
+  const modifyActiveObject = (modifier: (obj: FabricObject) => void) =>
+    modifyActiveObjects(objs => objs.forEach(modifier))
 
-  function applyStroke(color: string) {
-    const canvas = fabricRef.current
-    if (!canvas || !activeObject) return
-    setStrokeColor(color)
-    activeObject.set('stroke', color)
-    canvas.renderAll()
-    saveCanvasData()
-  }
+  const applyFill = (color: string) => modifyActiveObject(obj => obj.set('fill', color))
+  const applyStroke = (color: string) => modifyActiveObject(obj => obj.set('stroke', color))
 
   // Object z-indexing (bring forward/send backward)
-
-  function bringForward() {
-    const canvas = fabricRef.current
-    if (!canvas || !activeObject) return
-    canvas.bringObjectForward(activeObject, true)
-    canvas.renderAll()
-    saveCanvasData()
+  const sortedByZIndex = (objects: FabricObject[], canvas: Canvas) => {
+    const allObjects = canvas.getObjects()
+    return objects.slice().sort((a, b) => allObjects.indexOf(a) - allObjects.indexOf(b))
   }
-
-  function sendBackward() {
-    const canvas = fabricRef.current
-    if (!canvas || !activeObject) return
-    canvas.sendObjectBackwards(activeObject, true)
-    canvas.renderAll()
-    saveCanvasData()
-  }
+  const bringForward = () => modifyActiveObjects(
+    (objs, canvas) => sortedByZIndex(objs, canvas).reverse().forEach(obj => canvas.bringObjectForward(obj, true)),
+  )
+  const sendBackward = () => modifyActiveObjects(
+    (objs, canvas) => sortedByZIndex(objs, canvas).forEach(obj => canvas.sendObjectBackwards(obj, true)))
 
   // ── Canvas resize handle ──────────────────────────────────────────────────
 
