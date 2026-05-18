@@ -77,6 +77,7 @@ const translations = {
       addPentagon: 'Lisää viisikulmio',
       addHexagon: 'Lisää kuusikulmio',
       addText: 'Lisää teksti',
+      freeDraw: 'Piirrä',
       bringForward: 'Tuo eteen',
       sendBackward: 'Lähetä taakse',
       fill: 'Täyttö',
