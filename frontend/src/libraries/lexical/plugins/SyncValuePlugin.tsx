@@ -49,11 +49,13 @@ export function SyncValuePlugin({ value, onChange }: Props) {
     // Fix selection to match the old selection as closely as possible, so that the editor doesn't lose focus or move the cursor unexpectedly when the content changes externally.
     const currentSelection = getSelectionToRestore(editor.getEditorState(), nodeIdMapRef.current)
     const nextIdMap = expandIds(value, nextState)
-    editor.setEditorState(
-      restoreSelection(nextState, currentSelection, nextIdMap),
-      { tag: EXTERNAL_UPDATE_TAG },
-    )
-    nodeIdMapRef.current = nextIdMap
+    queueMicrotask(() => {
+      editor.setEditorState(
+        restoreSelection(nextState, currentSelection, nextIdMap),
+        { tag: EXTERNAL_UPDATE_TAG },
+      )
+      nodeIdMapRef.current = nextIdMap
+    })
   }, [editor, value])
 
   return <OnChangePlugin onChange={(editorState, _editor, tags) => {
