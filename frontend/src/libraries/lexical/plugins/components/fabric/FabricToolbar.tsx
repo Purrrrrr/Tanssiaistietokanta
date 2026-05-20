@@ -28,20 +28,12 @@ interface FabricComponentProps {
 
 export function FabricToolbar({ canvas, activeObjects, onSaveCanvas: saveCanvasData, onRemoveNode: removeNode }: FabricComponentProps) {
   const t = useEditorT('diagram')
-
-  // ── Initialize fabric canvas (once on mount) ──────────────────────────────
-
-  useEffect(() => {
-    const brush = new PencilBrush(canvas)
-    brush.color = '#f00'
-    brush.width = 2
-    // eslint-disable-next-line react-hooks/immutability
-    canvas.freeDrawingBrush = brush
-  }, [canvas])
+  const [, forceUpdate] = useReducer(x => x + 1, 0) // for force re-render on tool state changes
 
   const toggleDrawingMode = () => {
     // eslint-disable-next-line react-hooks/immutability
     canvas.isDrawingMode = !canvas.isDrawingMode
+    forceUpdate()
   }
 
   // ── Shape insertion ───────────────────────────────────────────────────────
@@ -79,9 +71,8 @@ export function FabricToolbar({ canvas, activeObjects, onSaveCanvas: saveCanvasD
     ...defaultProps(),
     radius: 40,
   }))
-  const addPolygon = (sides: number) => addObject(new Polygon(regularPolygonPoints(sides, 50), {
-    ...defaultProps(),
-  }))
+  const addPolygon = (sides: number) => addObject(new Polygon(regularPolygonPoints(sides, 50), defaultProps()))
+
   const addText = () => addObject(new Textbox('Text', {
     ...defaultProps(),
     width: 120,
@@ -160,20 +151,20 @@ export function FabricToolbar({ canvas, activeObjects, onSaveCanvas: saveCanvasD
   return (
     <FloatingToolbar anchorName="--fabric-editor">
       <ToolbarRow>
-        <ToolbarButton onMouseDown={(e) => { e.preventDefault(); addRect() }} tooltip={t('addRect')} icon="▭" />
-        <ToolbarButton onMouseDown={(e) => { e.preventDefault(); addEllipse() }} tooltip={t('addEllipse')} icon="⬭" />
-        <ToolbarButton onMouseDown={(e) => { e.preventDefault(); addCircle() }} tooltip={t('addCircle')} icon="○" />
-        <ToolbarButton onMouseDown={(e) => { e.preventDefault(); addPolygon(3) }} tooltip={t('addTriangle')} icon="△" />
-        <ToolbarButton onMouseDown={(e) => { e.preventDefault(); addPolygon(5) }} tooltip={t('addPentagon')} icon="⬠" />
-        <ToolbarButton onMouseDown={(e) => { e.preventDefault(); addPolygon(6) }} tooltip={t('addHexagon')} icon="⬡" />
-        <ToolbarButton onMouseDown={(e) => { e.preventDefault(); addText() }} tooltip={t('addText')} icon="T" />
-        <ToolbarButton onMouseDown={(e) => { e.preventDefault(); toggleDrawingMode() }} tooltip={t('freeDraw')} icon="🖌" />
+        <ToolbarButton onMouseDown={addRect} tooltip={t('addRect')} icon="▭" />
+        <ToolbarButton onMouseDown={addEllipse} tooltip={t('addEllipse')} icon="⬭" />
+        <ToolbarButton onMouseDown={addCircle} tooltip={t('addCircle')} icon="○" />
+        <ToolbarButton onMouseDown={() => { addPolygon(3) }} tooltip={t('addTriangle')} icon="△" />
+        <ToolbarButton onMouseDown={() => { addPolygon(5) }} tooltip={t('addPentagon')} icon="⬠" />
+        <ToolbarButton onMouseDown={() => { addPolygon(6) }} tooltip={t('addHexagon')} icon="⬡" />
+        <ToolbarButton onMouseDown={addText} tooltip={t('addText')} icon="T" />
+        <ToolbarButton onMouseDown={toggleDrawingMode} active={canvas.isDrawingMode} tooltip={t('freeDraw')} icon="🖌" />
         {activeObjects.length > 0 && (
           <>
             <span className="w-px self-stretch bg-gray-300 mx-1" />
-            <ToolbarButton onMouseDown={(e) => { e.preventDefault(); toggleControls() }} tooltip={t('freeDraw')} icon="E" />
-            <ToolbarButton onMouseDown={(e) => { e.preventDefault(); bringForward() }} tooltip={t('bringForward')} icon="Y" />
-            <ToolbarButton onMouseDown={(e) => { e.preventDefault(); sendBackward() }} tooltip={t('sendBackward')} icon="A" />
+            <ToolbarButton onMouseDown={toggleControls} tooltip={t('editPolygon')} icon="E" />
+            <ToolbarButton onMouseDown={bringForward} tooltip={t('bringForward')} icon="Y" />
+            <ToolbarButton onMouseDown={sendBackward} tooltip={t('sendBackward')} icon="A" />
             <label className="flex items-center gap-1 text-xs text-gray-600">
               {t('fill')}
               <input

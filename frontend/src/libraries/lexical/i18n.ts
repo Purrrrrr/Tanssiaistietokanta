@@ -78,6 +78,7 @@ const translations = {
       addHexagon: 'Lisää kuusikulmio',
       addText: 'Lisää teksti',
       freeDraw: 'Piirrä',
+      editPolygon: 'Muokkaa muotoa',
       bringForward: 'Tuo eteen',
       sendBackward: 'Lähetä taakse',
       fill: 'Täyttö',
