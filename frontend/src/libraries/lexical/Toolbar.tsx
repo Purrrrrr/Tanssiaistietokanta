@@ -4,7 +4,6 @@ import { $isListNode, INSERT_CHECK_LIST_COMMAND, INSERT_ORDERED_LIST_COMMAND, IN
 import { $createHeadingNode, $isHeadingNode, HeadingTagType } from '@lexical/rich-text'
 import { $setBlocksType } from '@lexical/selection'
 import { mergeRegister } from '@lexical/utils'
-import classNames from 'classnames'
 import {
   $createParagraphNode,
   $getSelection,
@@ -36,7 +35,7 @@ import { ImageUploadConfig, useImageToolbar } from './toolbar/ImageToolbar'
 import { useLinkToolbar } from './toolbar/LinkToolbar'
 import { useQRCodeToolbar } from './toolbar/QRCodeToolbar'
 import { useTableToolbar } from './toolbar/TableToolbar'
-import { ToolbarButton } from './toolbar/ToolbarButton'
+import { FloatingToolbar, ToolbarButton } from './toolbar/widgets'
 
 export type { ImageUploadConfig } from './toolbar/ImageToolbar'
 
@@ -48,6 +47,8 @@ interface ToolbarPluginProps {
   children: React.ReactNode
   imageUpload?: ImageUploadConfig
 }
+
+export const toolbarAnchorName = '--lexical-toolbar-anchor'
 
 export default function ToolbarPlugin({ children, imageUpload }: ToolbarPluginProps) {
   const t = useEditorT('toolbar')
@@ -73,7 +74,7 @@ export default function ToolbarPlugin({ children, imageUpload }: ToolbarPluginPr
   function updateAnchor(newDom?: HTMLElement | null) {
     const dom = newDom === undefined ? anchorRef.current : newDom
     if (dom) {
-      dom.style.anchorName = '--lexical-toolbar-anchor'
+      dom.style.anchorName = toolbarAnchorName
       dom.dataset.toolbarAnchor = 'true'
     }
     if (anchorRef.current !== dom) {
@@ -260,13 +261,9 @@ export default function ToolbarPlugin({ children, imageUpload }: ToolbarPluginPr
         {tools.map(tool => tool.button)}
       </div>
       {children}
-      <div
-        className={classNames(
-          '[position-anchor:--lexical-toolbar-anchor] absolute mt-3 top-[anchor(bottom,-1000px)] left-[anchor(left)] bg-white border-1 border-gray-400 rounded-md z-10 shadow-md empty:hidden',
-        )}
-      >
+      <FloatingToolbar anchorName={toolbarAnchorName}>
         {tools.map((tool, index) => tool.floatingEditor && <div key={index}>{tool.floatingEditor}</div>)}
-      </div>
+      </FloatingToolbar>
     </>
   )
 }

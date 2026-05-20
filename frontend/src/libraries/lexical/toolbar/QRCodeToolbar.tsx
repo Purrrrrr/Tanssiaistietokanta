@@ -15,8 +15,7 @@ import { useEditorT, useEditorTranslation } from '../i18n'
 import { $isQRCodeNode, QRCodeNode, QRCodePayload } from '../plugins/nodes/QRCodeNode'
 import { INSERT_QR_CODE_COMMAND } from '../plugins/QRCodePlugin'
 import { QRCodeIcon } from './icons'
-import { ToolbarButton } from './ToolbarButton'
-import { ToolbarTitle } from './ToolbarTitle'
+import { ToolbarButton, ToolbarRow, ToolbarTitle } from './widgets'
 
 export function useQRCodeToolbar(editor: LexicalEditor): ToolbarHookReturn {
   const [qrValue, setQRValue] = useState<QRCodePayload | null>(null)
@@ -93,7 +92,7 @@ function QRCodeEditor({ editor, node, data }: QRCodeEditorProps) {
     })
   }
 
-  return <div className="flex gap-2 items-center py-1 px-2">
+  return <ToolbarRow>
     <ToolbarTitle text={t('QRCode')} />
     <label htmlFor="qr-code-url-input" className="text-sm">{t('url')}</label>
     <input
@@ -121,5 +120,5 @@ function QRCodeEditor({ editor, node, data }: QRCodeEditorProps) {
       onChange={(e) => updateQRCodePayload({ size: parseInt(e.target.value, 10) })}
     />
     <Button minimal onClick={removeQRCode}>{t('remove')}</Button>
-  </div>
+  </ToolbarRow>
 }

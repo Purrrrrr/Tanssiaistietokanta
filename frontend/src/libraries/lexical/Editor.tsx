@@ -58,7 +58,7 @@ export function Editor({ inline, readOnly, imageUpload, onChange, value, classNa
           inline ? 'inline-flex' : 'flex',
           className,
           CssClass.inputBox,
-          'flex-col bg-stone-100 p-[2px]',
+          'flex-col bg-stone-100 p-[2px] [anchor-scope:all]',
         )}
       >
         <ToolbarPlugin imageUpload={imageUpload}>
