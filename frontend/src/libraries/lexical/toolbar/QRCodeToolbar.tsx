@@ -116,6 +116,6 @@ function QRCodeEditor({ editor, node, data }: QRCodeEditorProps) {
       value={size ?? '128'}
       onChange={(e) => updateQRCodePayload({ size: parseInt(e.target.value, 10) })}
     />
-    <ToolbarButton onClick={removeQRCode} text={t('remove')} />
+    <ToolbarButton color="danger" onClick={removeQRCode} text={t('remove')} />
   </ToolbarRow>
 }
