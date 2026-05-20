@@ -199,6 +199,8 @@ export function FabricEditor({ nodeKey, width, height, data, onChangeData, onCha
   function handleResizeStart(e: React.MouseEvent | React.TouchEvent) {
     e.preventDefault()
     e.stopPropagation()
+    const controller = new AbortController()
+    const { signal } = controller
 
     const { clientX: startX, clientY: startY } = toCoordinates(e)
     const startW = width
@@ -209,31 +211,25 @@ export function FabricEditor({ nodeKey, width, height, data, onChangeData, onCha
         ? e.touches[0] ?? e.changedTouches[0]
         : e
     }
-    function getDimensions(e: MouseEvent | TouchEvent | React.MouseEvent | React.TouchEvent) {
+
+    function onMove(e: MouseEvent | TouchEvent) {
       const { clientX, clientY } = toCoordinates(e)
-      return {
+      fabricRef.current?.setDimensions({
         width: Math.max(200, startW + clientX - startX),
         height: Math.max(100, startH + clientY - startY),
-      }
-    }
-
-    function onMove(me: MouseEvent | TouchEvent) {
-      fabricRef.current?.setDimensions(getDimensions(me))
+      })
     }
 
     function onUp() {
       if (!fabricRef.current) return
       onChangeDimensions(fabricRef.current.width, fabricRef.current.height)
-      window.removeEventListener('mousemove', onMove)
-      window.removeEventListener('touchmove', onMove)
-      window.removeEventListener('mouseup', onUp)
-      window.removeEventListener('mouseup', onUp)
+      controller.abort()
     }
 
-    window.addEventListener('mousemove', onMove)
-    window.addEventListener('touchmove', onMove)
-    window.addEventListener('mouseup', onUp)
-    window.addEventListener('touchend', onUp)
+    window.addEventListener('mousemove', onMove, { signal })
+    window.addEventListener('touchmove', onMove, { signal })
+    window.addEventListener('mouseup', onUp, { signal })
+    window.addEventListener('touchend', onUp, { signal })
   }
 
   // ── Remove node ───────────────────────────────────────────────────────────
