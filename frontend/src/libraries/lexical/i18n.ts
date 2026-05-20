@@ -69,6 +69,11 @@ const translations = {
       cancel: 'Peruuta',
     },
     diagram: {
+      diagram: 'Kaavio',
+      chosenObject: {
+        one: 'Valittu elementti',
+        many: 'Valitut elementit',
+      },
       insertDiagram: 'Lisää kaavio',
       addRect: 'Lisää suorakulmio',
       addEllipse: 'Lisää ellipsi',

@@ -241,7 +241,7 @@ export function FabricEditor({ nodeKey, width, height, data, onChangeData, onCha
   return (
     <div className="[anchor-name:--fabric-editor] my-2" data-fabric-node-key={nodeKey}>
       {isSelected && isEditable && fabricRef.current && (
-        <FabricToolbar activeObjects={activeObjects} canvas={fabricRef.current} onRemoveNode={removeNode} onSaveCanvas={saveCanvasData} />
+        <FabricToolbar anchorName="--fabric-editor" activeObjects={activeObjects} canvas={fabricRef.current} onRemoveNode={removeNode} onSaveCanvas={saveCanvasData} />
       )}
       <div className={`relative w-max border-2 ${isSelected ? 'border-blue-500' : 'border-gray-300'}`}>
         <canvas ref={canvasElRef} />

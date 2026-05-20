@@ -80,7 +80,7 @@ export function useTableToolbar(editor: LexicalEditor): ToolbarHookReturn {
         </div>
       )}
       {isTableInsertMode && (
-        <ToolbarRow>
+        <ToolbarRow title={t('insertTable')}>
           <label htmlFor="table-rows-input" className="text-sm">{t('rows')}</label>
           <input
             id="table-rows-input"

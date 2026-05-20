@@ -20,13 +20,14 @@ const toColor = (value: string | TFiller | null): string =>
 // ─── React component ─────────────────────────────────────────────────────────
 
 interface FabricComponentProps {
+  anchorName: string
   onSaveCanvas: () => void
   onRemoveNode: () => void
   canvas: Canvas
   activeObjects: FabricObject[]
 }
 
-export function FabricToolbar({ canvas, activeObjects, onSaveCanvas: saveCanvasData, onRemoveNode: removeNode }: FabricComponentProps) {
+export function FabricToolbar({ anchorName, canvas, activeObjects, onSaveCanvas: saveCanvasData, onRemoveNode: removeNode }: FabricComponentProps) {
   const t = useEditorT('diagram')
   const [, forceUpdate] = useReducer(x => x + 1, 0) // for force re-render on tool state changes
 
@@ -148,9 +149,9 @@ export function FabricToolbar({ canvas, activeObjects, onSaveCanvas: saveCanvasD
 
   // ── Render ────────────────────────────────────────────────────────────────
 
-  return (
-    <FloatingToolbar anchorName="--fabric-editor">
-      <ToolbarRow>
+  return <>
+    <FloatingToolbar anchorName={anchorName} side="top">
+      <ToolbarRow title={t('diagram')}>
         <ToolbarButton onMouseDown={addRect} tooltip={t('addRect')} icon="▭" />
         <ToolbarButton onMouseDown={addEllipse} tooltip={t('addEllipse')} icon="⬭" />
         <ToolbarButton onMouseDown={addCircle} tooltip={t('addCircle')} icon="○" />
@@ -159,43 +160,40 @@ export function FabricToolbar({ canvas, activeObjects, onSaveCanvas: saveCanvasD
         <ToolbarButton onMouseDown={() => { addPolygon(6) }} tooltip={t('addHexagon')} icon="⬡" />
         <ToolbarButton onMouseDown={addText} tooltip={t('addText')} icon="T" />
         <ToolbarButton onMouseDown={toggleDrawingMode} active={canvas.isDrawingMode} tooltip={t('freeDraw')} icon="🖌" />
-        {activeObjects.length > 0 && (
-          <>
-            <span className="w-px self-stretch bg-gray-300 mx-1" />
-            <ToolbarButton onMouseDown={toggleControls} tooltip={t('editPolygon')} icon="E" />
-            <ToolbarButton onMouseDown={bringForward} tooltip={t('bringForward')} icon="Y" />
-            <ToolbarButton onMouseDown={sendBackward} tooltip={t('sendBackward')} icon="A" />
-            <label className="flex items-center gap-1 text-xs text-gray-600">
-              {t('fill')}
-              <input
-                type="color"
-                value={toColor(activeObjects[0].fill)}
-                className="w-6 h-5 cursor-pointer rounded border-0 p-0"
-                onChange={(e) => applyFill(e.target.value)}
-              />
-            </label>
-            <label className="flex items-center gap-1 text-xs text-gray-600">
-              {t('stroke')}
-              <input
-                type="color"
-                value={toColor(activeObjects[0].stroke)}
-                className="w-6 h-5 cursor-pointer rounded border-0 p-0"
-                onChange={(e) => applyStroke(e.target.value)}
-              />
-            </label>
-            <ToolbarButton
-              color="danger"
-              onMouseDown={deleteActiveObjects}
-              text={t('deleteShape')}
-            />
-          </>
-        )}
-        <ToolbarButton
-          color="danger"
-          onMouseDown={(e) => { e.preventDefault(); removeNode() }}
-          text={t('removeDiagram')}
-        />
+        <ToolbarButton color="danger" onMouseDown={removeNode} text={t('removeDiagram')} />
       </ToolbarRow>
     </FloatingToolbar>
-  )
+    {activeObjects.length > 0 && (
+      <FloatingToolbar anchorName={anchorName}>
+        <ToolbarRow title={t('chosenObject', { count: activeObjects.length })}>
+          <ToolbarButton onMouseDown={toggleControls} tooltip={t('editPolygon')} icon="E" />
+          <ToolbarButton onMouseDown={bringForward} tooltip={t('bringForward')} icon="Y" />
+          <ToolbarButton onMouseDown={sendBackward} tooltip={t('sendBackward')} icon="A" />
+          <label className="flex items-center gap-1 text-xs text-gray-600">
+            {t('fill')}
+            <input
+              type="color"
+              value={toColor(activeObjects[0].fill)}
+              className="w-6 h-5 cursor-pointer rounded border-0 p-0"
+              onChange={(e) => applyFill(e.target.value)}
+            />
+          </label>
+          <label className="flex items-center gap-1 text-xs text-gray-600">
+            {t('stroke')}
+            <input
+              type="color"
+              value={toColor(activeObjects[0].stroke)}
+              className="w-6 h-5 cursor-pointer rounded border-0 p-0"
+              onChange={(e) => applyStroke(e.target.value)}
+            />
+          </label>
+          <ToolbarButton
+            color="danger"
+            onMouseDown={deleteActiveObjects}
+            text={t('deleteShape')}
+          />
+        </ToolbarRow>
+      </FloatingToolbar>
+    )}
+  </>
 }
