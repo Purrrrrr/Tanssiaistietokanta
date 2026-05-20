@@ -1,5 +1,7 @@
-import { CSSProperties } from 'react'
+import { CSSProperties, useId } from 'react'
 import classNames from 'classnames'
+
+import { CssClass, FormGroup } from 'libraries/ui'
 
 export { ToolbarButton } from './ToolbarButton'
 
@@ -34,4 +36,24 @@ export function ToolbarTitle({ text }: { text: React.ReactNode }) {
       {text}
     </div>
   )
+}
+
+interface ToolbarInputProps extends Omit<React.ComponentProps<'input'>, 'value' | 'onChange'> {
+  value: string | number
+  onChange: (value: string) => void
+  label: string
+}
+
+export function ToolbarInput({ value, onChange, label, ...props }: ToolbarInputProps) {
+  const id = useId()
+  return <FormGroup inline label={label} labelFor={props.id ?? id}>
+    <input
+      id={id}
+      className={CssClass.input}
+      type="text"
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      {...props}
+    />
+  </FormGroup>
 }

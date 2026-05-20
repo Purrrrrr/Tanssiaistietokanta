@@ -13,7 +13,7 @@ import { useEditorT, useEditorTranslation } from '../i18n'
 import { $isQRCodeNode, QRCodeNode, QRCodePayload } from '../plugins/nodes/QRCodeNode'
 import { INSERT_QR_CODE_COMMAND } from '../plugins/QRCodePlugin'
 import { QRCodeIcon } from './icons'
-import { ToolbarButton, ToolbarRow } from './widgets'
+import { ToolbarButton, ToolbarInput, ToolbarRow } from './widgets'
 
 export function useQRCodeToolbar(editor: LexicalEditor): ToolbarHookReturn {
   const [qrValue, setQRValue] = useState<QRCodePayload | null>(null)
@@ -91,31 +91,9 @@ function QRCodeEditor({ editor, node, data }: QRCodeEditorProps) {
   }
 
   return <ToolbarRow title={t('QRCode')}>
-    <label htmlFor="qr-code-url-input" className="text-sm">{t('url')}</label>
-    <input
-      id="qr-code-url-input"
-      className="flex-1 py-0.5 px-2 text-sm rounded border-gray-400 border-1"
-      type="text"
-      value={value ?? ''}
-      onChange={(e) => updateQRCodePayload({ value: e.target.value })}
-    />
-    <label htmlFor="qr-code-title-input" className="text-sm">{t('title')}</label>
-    <input
-      id="qr-code-title-input"
-      className="flex-1 py-0.5 px-2 text-sm rounded border-gray-400 border-1"
-      type="text"
-      value={title ?? ''}
-      onChange={(e) => updateQRCodePayload({ title: e.target.value })}
-    />
-    <label htmlFor="qr-code-size-input" className="text-sm">{t('size')}</label>
-    <input
-      id="qr-code-size-input"
-      className="flex-1 py-0.5 px-2 text-sm rounded border-gray-400 border-1"
-      type="number"
-      size={4}
-      value={size ?? '128'}
-      onChange={(e) => updateQRCodePayload({ size: parseInt(e.target.value, 10) })}
-    />
+    <ToolbarInput label={t('url')} type="url" value={value ?? ''} onChange={value => updateQRCodePayload({ value })} />
+    <ToolbarInput label={t('title')} value={title ?? ''} onChange={title => updateQRCodePayload({ title })} />
+    <ToolbarInput label={t('size')} value={size ?? '128'} onChange={size => updateQRCodePayload({ size: parseInt(size, 10) })} />
     <ToolbarButton color="danger" onClick={removeQRCode} text={t('remove')} />
   </ToolbarRow>
 }

@@ -14,7 +14,7 @@ import { Button } from 'libraries/ui'
 
 import { useEditorT } from '../i18n'
 import { TableIcon } from './icons'
-import { ToolbarButton, ToolbarRow, ToolbarTitle } from './widgets'
+import { ToolbarButton, ToolbarInput, ToolbarRow, ToolbarTitle } from './widgets'
 
 export function useTableToolbar(editor: LexicalEditor): ToolbarHookReturn {
   const t = useEditorT('table')
@@ -81,26 +81,22 @@ export function useTableToolbar(editor: LexicalEditor): ToolbarHookReturn {
       )}
       {isTableInsertMode && (
         <ToolbarRow title={t('insertTable')}>
-          <label htmlFor="table-rows-input" className="text-sm">{t('rows')}</label>
-          <input
-            id="table-rows-input"
-            className="py-0.5 px-2 w-12 text-sm rounded border-gray-400 border-1"
+          <ToolbarInput
+            label={t('rows')}
             type="number"
             min="1"
             max="50"
             value={tableRows}
-            onChange={(e) => setTableRows(e.target.value)}
+            onChange={setTableRows}
             onKeyDown={(e) => { if (e.key === 'Enter') insertTable(); if (e.key === 'Escape') setIsTableInsertMode(false) }}
           />
-          <label htmlFor="table-cols-input" className="text-sm">{t('cols')}</label>
-          <input
-            id="table-cols-input"
-            className="py-0.5 px-2 w-12 text-sm rounded border-gray-400 border-1"
+          <ToolbarInput
+            label={t('cols')}
             type="number"
             min="1"
             max="50"
             value={tableCols}
-            onChange={(e) => setTableCols(e.target.value)}
+            onChange={setTableCols}
             onKeyDown={(e) => { if (e.key === 'Enter') insertTable(); if (e.key === 'Escape') setIsTableInsertMode(false) }}
           />
           <ToolbarButton onClick={insertTable} text={t('insertTable')} />

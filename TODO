@@ -546,7 +546,7 @@
   * Free drawing
     * Draw button with selected state
   * Floating image editor
-    Use FormGroup in editors
+  * Use FormGroup in editors
     Arrows
     Stroke selector
     Color selectors for creating new objects

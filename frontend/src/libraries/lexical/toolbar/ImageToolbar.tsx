@@ -10,7 +10,7 @@ import { useEditorT } from '../i18n'
 import { INSERT_IMAGE_COMMAND } from '../plugins/ImagePlugin'
 import { $isImageNode } from '../plugins/nodes/ImageNode'
 import { ImageIcon } from './icons'
-import { ToolbarButton, ToolbarRow } from './widgets'
+import { ToolbarButton, ToolbarInput, ToolbarRow } from './widgets'
 
 export interface ImageUploadConfig {
   owner: FileOwner
@@ -88,23 +88,19 @@ export function useImageToolbar(editor: LexicalEditor, imageUpload?: ImageUpload
     floatingEditor: <>
       {selectedImage && (
         <ToolbarRow title={t('imageProperties')}>
-          <label htmlFor="qr-code-url-input" className="text-sm">{t('altText')}</label>
-          <input
-            id="qr-code-url-input"
-            className="flex-1 py-0.5 px-2 text-sm rounded border-gray-400 border-1"
-            type="text"
+          <ToolbarInput
+            label={t('altText')}
             value={selectedImage.alt}
-            onChange={(e) => updateAltText(e.target.value)}
+            onChange={updateAltText}
           />
-          <label htmlFor="qr-code-url-input" className="text-sm">{t('width')}</label>
-          <input
-            id={`img-width`}
-            className="py-0.5 px-2 w-16 text-xs rounded border-gray-400 border-1"
+          <ToolbarInput
+            label={t('width')}
             type="number"
             min="1"
+            size={4}
             placeholder="auto"
             value={selectedImage.width ?? ''}
-            onChange={(e) => updateWidth(e.target.value)}
+            onChange={updateWidth}
           />
           <ToolbarButton color="danger" onClick={removeNode} text={t('remove')} />
         </ToolbarRow>
@@ -122,15 +118,13 @@ function InsertImageToolbar({ editor, imageUpload, onClose }: {
   const t = useEditorT('image')
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [imageUrl, setImageUrl] = useState('')
-  const [imageAlt, setImageAlt] = useState('')
   const [isUploading, setIsUploading] = useState(false)
 
   function insertImageFromUrl() {
     const src = imageUrl.trim()
     if (!src) return
-    editor.dispatchCommand(INSERT_IMAGE_COMMAND, { src, altText: imageAlt.trim() })
+    editor.dispatchCommand(INSERT_IMAGE_COMMAND, { src, altText: '' })
     setImageUrl('')
-    setImageAlt('')
     onClose()
   }
 
@@ -158,37 +152,30 @@ function InsertImageToolbar({ editor, imageUpload, onClose }: {
   }
 
   return <ToolbarRow title={t('insertImage')}>
-    <input
-      className="flex-1 py-0.5 px-2 text-sm rounded border-gray-400 min-w-40 border-1"
-      type="url"
+    <ToolbarInput
+      label={t('url')}
       placeholder={t('urlPlaceholder')}
       value={imageUrl}
-      onChange={(e) => setImageUrl(e.target.value)}
-      onKeyDown={(e) => { if (e.key === 'Enter') insertImageFromUrl(); if (e.key === 'Escape') onClose() }}
-    />
-    <input
-      className="py-0.5 px-2 w-32 text-sm rounded border-gray-400 border-1"
-      type="text"
-      placeholder={t('altText')}
-      value={imageAlt}
-      onChange={(e) => setImageAlt(e.target.value)}
+      onChange={setImageUrl}
       onKeyDown={(e) => { if (e.key === 'Enter') insertImageFromUrl(); if (e.key === 'Escape') onClose() }}
     />
     <ToolbarButton minimal onClick={insertImageFromUrl} text={t('insertFromUrl')} />
     {imageUpload && (
       <>
         <span className="text-sm text-gray-500">{t('or')}</span>
-        <label className="py-0.5 px-2 text-xs bg-white rounded border-gray-400 cursor-pointer hover:bg-gray-50 border-1">
-          {isUploading ? t('uploading') : t('uploadFile')}
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            className="sr-only"
-            disabled={isUploading}
-            onChange={handleImageFileChange}
-          />
-        </label>
+        <ToolbarButton
+          text={isUploading ? t('uploading') : t('uploadFile')}
+          onClick={() => fileInputRef.current?.click()}
+          disabled={isUploading}
+        />
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          disabled={isUploading}
+          onChange={handleImageFileChange}
+        />
       </>
     )}
     <ToolbarButton onClick={() => onClose()} text={t('cancel')} />
