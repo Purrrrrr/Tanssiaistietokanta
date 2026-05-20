@@ -103,8 +103,8 @@ export function useTableToolbar(editor: LexicalEditor): ToolbarHookReturn {
             onChange={(e) => setTableCols(e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Enter') insertTable(); if (e.key === 'Escape') setIsTableInsertMode(false) }}
           />
-          <Button minimal onClick={insertTable}>{t('insertTable')}</Button>
-          <Button minimal onClick={() => setIsTableInsertMode(false)}>{t('cancel')}</Button>
+          <ToolbarButton onClick={insertTable} text={t('insertTable')} />
+          <ToolbarButton onClick={() => setIsTableInsertMode(false)} text={t('cancel')} />
         </ToolbarRow>
       )}
     </>,

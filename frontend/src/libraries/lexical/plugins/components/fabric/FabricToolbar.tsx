@@ -160,20 +160,20 @@ export function FabricToolbar({ canvas, activeObjects, onSaveCanvas: saveCanvasD
   return (
     <FloatingToolbar anchorName="--fabric-editor">
       <ToolbarRow>
-        <ToolbarButton onMouseDown={(e) => { e.preventDefault(); addRect() }} tooltip={t('addRect')}>▭</ToolbarButton>
-        <ToolbarButton onMouseDown={(e) => { e.preventDefault(); addEllipse() }} tooltip={t('addEllipse')}>⬭</ToolbarButton>
-        <ToolbarButton onMouseDown={(e) => { e.preventDefault(); addCircle() }} tooltip={t('addCircle')}>○</ToolbarButton>
-        <ToolbarButton onMouseDown={(e) => { e.preventDefault(); addPolygon(3) }} tooltip={t('addTriangle')}>△</ToolbarButton>
-        <ToolbarButton onMouseDown={(e) => { e.preventDefault(); addPolygon(5) }} tooltip={t('addPentagon')}>⬠</ToolbarButton>
-        <ToolbarButton onMouseDown={(e) => { e.preventDefault(); addPolygon(6) }} tooltip={t('addHexagon')}>⬡</ToolbarButton>
-        <ToolbarButton onMouseDown={(e) => { e.preventDefault(); addText() }} tooltip={t('addText')}>T</ToolbarButton>
-        <ToolbarButton onMouseDown={(e) => { e.preventDefault(); toggleDrawingMode() }} tooltip={t('freeDraw')}>🖌</ToolbarButton>
+        <ToolbarButton onMouseDown={(e) => { e.preventDefault(); addRect() }} tooltip={t('addRect')} icon="▭" />
+        <ToolbarButton onMouseDown={(e) => { e.preventDefault(); addEllipse() }} tooltip={t('addEllipse')} icon="⬭" />
+        <ToolbarButton onMouseDown={(e) => { e.preventDefault(); addCircle() }} tooltip={t('addCircle')} icon="○" />
+        <ToolbarButton onMouseDown={(e) => { e.preventDefault(); addPolygon(3) }} tooltip={t('addTriangle')} icon="△" />
+        <ToolbarButton onMouseDown={(e) => { e.preventDefault(); addPolygon(5) }} tooltip={t('addPentagon')} icon="⬠" />
+        <ToolbarButton onMouseDown={(e) => { e.preventDefault(); addPolygon(6) }} tooltip={t('addHexagon')} icon="⬡" />
+        <ToolbarButton onMouseDown={(e) => { e.preventDefault(); addText() }} tooltip={t('addText')} icon="T" />
+        <ToolbarButton onMouseDown={(e) => { e.preventDefault(); toggleDrawingMode() }} tooltip={t('freeDraw')} icon="🖌" />
         {activeObjects.length > 0 && (
           <>
             <span className="w-px self-stretch bg-gray-300 mx-1" />
-            <ToolbarButton onMouseDown={(e) => { e.preventDefault(); toggleControls() }} tooltip={t('freeDraw')}>E</ToolbarButton>
-            <ToolbarButton onMouseDown={(e) => { e.preventDefault(); bringForward() }} tooltip={t('bringForward')}>Y</ToolbarButton>
-            <ToolbarButton onMouseDown={(e) => { e.preventDefault(); sendBackward() }} tooltip={t('sendBackward')}>A</ToolbarButton>
+            <ToolbarButton onMouseDown={(e) => { e.preventDefault(); toggleControls() }} tooltip={t('freeDraw')} icon="E" />
+            <ToolbarButton onMouseDown={(e) => { e.preventDefault(); bringForward() }} tooltip={t('bringForward')} icon="Y" />
+            <ToolbarButton onMouseDown={(e) => { e.preventDefault(); sendBackward() }} tooltip={t('sendBackward')} icon="A" />
             <label className="flex items-center gap-1 text-xs text-gray-600">
               {t('fill')}
               <input

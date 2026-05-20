@@ -6,8 +6,6 @@ import { ToolbarHookReturn } from './types'
 
 import { doUpload } from 'services/files'
 
-import { Button } from 'libraries/ui'
-
 import { useEditorT } from '../i18n'
 import { INSERT_IMAGE_COMMAND } from '../plugins/ImagePlugin'
 import { ImageIcon } from './icons'
@@ -65,9 +63,9 @@ export function useImageToolbar(editor: LexicalEditor, imageUpload?: ImageUpload
         key="insertImage"
         onClick={() => { setIsImageInsertMode(true) }}
         active={isImageInsertMode}
-        tooltip={t('insertImage')}>
-        <ImageIcon />
-      </ToolbarButton>
+        tooltip={t('insertImage')}
+        icon={<ImageIcon />}
+      />
     ),
     floatingEditor: isImageInsertMode && (
       <ToolbarRow>
@@ -87,7 +85,7 @@ export function useImageToolbar(editor: LexicalEditor, imageUpload?: ImageUpload
           onChange={(e) => setImageAlt(e.target.value)}
           onKeyDown={(e) => { if (e.key === 'Enter') insertImageFromUrl(); if (e.key === 'Escape') setIsImageInsertMode(false) }}
         />
-        <Button minimal onClick={insertImageFromUrl}>{t('insertFromUrl')}</Button>
+        <ToolbarButton minimal onClick={insertImageFromUrl} text={t('insertFromUrl')} />
         {imageUpload && (
           <>
             <span className="text-sm text-gray-500">{t('or')}</span>
@@ -104,7 +102,7 @@ export function useImageToolbar(editor: LexicalEditor, imageUpload?: ImageUpload
             </label>
           </>
         )}
-        <Button minimal onClick={() => setIsImageInsertMode(false)}>{t('cancel')}</Button>
+        <ToolbarButton onClick={() => setIsImageInsertMode(false)} text={t('cancel')} />
       </ToolbarRow>
     ),
   }
