@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useReducer } from 'react'
 import { Canvas, Circle, Ellipse, FabricObject, PencilBrush, Polygon, Rect, Textbox, TFiller } from 'fabric'
 
 import { useEditorT } from 'libraries/lexical/i18n'
