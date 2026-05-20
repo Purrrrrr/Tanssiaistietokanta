@@ -34,8 +34,8 @@ export const buttonClass = (
 
 export interface ButtonProps extends PermissionCheckedProps, ComponentProps<'button'> {
   text?: React.ReactNode
-  icon?: React.ReactElement
-  rightIcon?: React.ReactElement
+  icon?: React.ReactNode
+  rightIcon?: React.ReactNode
   color?: Color
   minimal?: boolean
   active?: boolean

@@ -9,8 +9,6 @@ import {
 
 import { ToolbarHookReturn } from './types'
 
-import { Button } from 'libraries/ui'
-
 import { useEditorT, useEditorTranslation } from '../i18n'
 import { $isQRCodeNode, QRCodeNode, QRCodePayload } from '../plugins/nodes/QRCodeNode'
 import { INSERT_QR_CODE_COMMAND } from '../plugins/QRCodePlugin'
@@ -25,9 +23,9 @@ export function useQRCodeToolbar(editor: LexicalEditor): ToolbarHookReturn {
       <ToolbarButton
         key="insertQRCode"
         onClick={() => editor.dispatchCommand(INSERT_QR_CODE_COMMAND, { value: '', title: '', size: 128 })}
-        tooltip={useEditorTranslation('qrCode.insertQRCode')}>
-        <QRCodeIcon />
-      </ToolbarButton>
+        tooltip={useEditorTranslation('qrCode.insertQRCode')}
+        icon={<QRCodeIcon />}
+      />
     ),
     onUpdate: (selection) => {
       setQRValue(getQRCodeValue(selection))
@@ -119,6 +117,6 @@ function QRCodeEditor({ editor, node, data }: QRCodeEditorProps) {
       value={size ?? '128'}
       onChange={(e) => updateQRCodePayload({ size: parseInt(e.target.value, 10) })}
     />
-    <Button minimal onClick={removeQRCode}>{t('remove')}</Button>
+    <ToolbarButton onClick={removeQRCode} text={t('remove')} />
   </ToolbarRow>
 }

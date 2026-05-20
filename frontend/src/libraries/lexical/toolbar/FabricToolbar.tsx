@@ -27,9 +27,8 @@ export function useFabricToolbar(editor: LexicalEditor): ToolbarHookReturn {
         key="insertDiagram"
         onClick={() => editor.dispatchCommand(INSERT_FABRIC_COMMAND, {})}
         tooltip={t('insertDiagram')}
-      >
-        <DiagramIcon />
-      </ToolbarButton>
+        icon={<DiagramIcon />}
+      />
     ),
   }
 }
