@@ -14,8 +14,7 @@ import { Button } from 'libraries/ui'
 
 import { useEditorT } from '../i18n'
 import { TableIcon } from './icons'
-import { ToolbarButton } from './ToolbarButton'
-import { ToolbarTitle } from './ToolbarTitle'
+import { ToolbarButton, ToolbarRow, ToolbarTitle } from './widgets'
 
 export function useTableToolbar(editor: LexicalEditor): ToolbarHookReturn {
   const t = useEditorT('table')
@@ -81,7 +80,7 @@ export function useTableToolbar(editor: LexicalEditor): ToolbarHookReturn {
         </div>
       )}
       {isTableInsertMode && (
-        <div className="flex gap-2 items-center py-1 px-2 border-black border-t-1">
+        <ToolbarRow>
           <label htmlFor="table-rows-input" className="text-sm">{t('rows')}</label>
           <input
             id="table-rows-input"
@@ -106,7 +105,7 @@ export function useTableToolbar(editor: LexicalEditor): ToolbarHookReturn {
           />
           <Button minimal onClick={insertTable}>{t('insertTable')}</Button>
           <Button minimal onClick={() => setIsTableInsertMode(false)}>{t('cancel')}</Button>
-        </div>
+        </ToolbarRow>
       )}
     </>,
   }

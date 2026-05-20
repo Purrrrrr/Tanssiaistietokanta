@@ -364,7 +364,7 @@ function FabricComponent({ nodeKey, width, height, data }: FabricComponentProps)
   }
 
   return (
-    <div className="my-2 relative" data-fabric-node-key={nodeKey}>
+    <div className="[anchor-name:--fabric-editor] my-2" data-fabric-node-key={nodeKey}>
       {isSelected && isEditable && fabricRef.current && (
         <FabricToolbar activeObjects={activeObjects} canvas={fabricRef.current} onRemoveNode={removeNode} onSaveCanvas={saveCanvasData} />
       )}

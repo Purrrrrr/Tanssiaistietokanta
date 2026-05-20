@@ -11,7 +11,7 @@ import { Button } from 'libraries/ui'
 import { useEditorT } from '../i18n'
 import { INSERT_IMAGE_COMMAND } from '../plugins/ImagePlugin'
 import { ImageIcon } from './icons'
-import { ToolbarButton } from './ToolbarButton'
+import { ToolbarButton, ToolbarRow } from './widgets'
 
 export interface ImageUploadConfig {
   owner: FileOwner
@@ -70,7 +70,7 @@ export function useImageToolbar(editor: LexicalEditor, imageUpload?: ImageUpload
       </ToolbarButton>
     ),
     floatingEditor: isImageInsertMode && (
-      <div className="flex flex-wrap gap-2 items-center py-1 px-2 border-black border-t-1">
+      <ToolbarRow>
         <input
           className="flex-1 py-0.5 px-2 text-sm rounded border-gray-400 min-w-40 border-1"
           type="url"
@@ -105,7 +105,7 @@ export function useImageToolbar(editor: LexicalEditor, imageUpload?: ImageUpload
           </>
         )}
         <Button minimal onClick={() => setIsImageInsertMode(false)}>{t('cancel')}</Button>
-      </div>
+      </ToolbarRow>
     ),
   }
 }

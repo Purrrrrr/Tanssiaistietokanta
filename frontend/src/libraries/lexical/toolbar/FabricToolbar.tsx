@@ -4,7 +4,7 @@ import { ToolbarHookReturn } from './types'
 
 import { useEditorT } from '../i18n'
 import { INSERT_FABRIC_COMMAND } from '../plugins/FabricPlugin'
-import { ToolbarButton } from './ToolbarButton'
+import { ToolbarButton } from './widgets'
 
 function DiagramIcon() {
   return (
