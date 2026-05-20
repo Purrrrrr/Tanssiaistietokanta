@@ -32,6 +32,7 @@ const translations = {
       imageProperties: 'Kuva',
       edit: 'Muokkaa',
       remove: 'Poista',
+      url: 'URL-osoite',
       urlPlaceholder: 'Kuvan URL-osoite (https://…)',
       altText: 'Alt-teksti',
       width: 'Leveys',

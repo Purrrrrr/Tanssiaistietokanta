@@ -13,7 +13,7 @@ import { ToolbarHookReturn } from './types'
 import { Link } from 'libraries/ui/icons'
 
 import { useEditorT } from '../i18n'
-import { ToolbarButton, ToolbarRow } from './widgets'
+import { ToolbarButton, ToolbarInput, ToolbarRow } from './widgets'
 
 export function useLinkToolbar(editor: LexicalEditor): ToolbarHookReturn {
   const t = useEditorT('link')
@@ -75,15 +75,7 @@ function LinkEditor({ editor, url }: LinkEditorProps) {
   }
 
   return <ToolbarRow title={t('linkOptions')}>
-    <label htmlFor="link-url">{t('url')}</label>
-    <input
-      id="link-url"
-      className="flex-1 py-0.5 px-2 text-sm rounded border-gray-400 border-1"
-      type="url"
-      placeholder="https://…"
-      value={url}
-      onChange={(e) => applyLink(e.target.value)}
-    />
+    <ToolbarInput label={t('url')} type="url" value={url} onChange={applyLink} placeholder="https://…" />
     <ToolbarButton color="danger" onClick={() => applyLink('')} text={t('remove')} />
   </ToolbarRow>
 }
