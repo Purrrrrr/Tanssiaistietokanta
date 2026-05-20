@@ -68,7 +68,7 @@ export function useImageToolbar(editor: LexicalEditor, imageUpload?: ImageUpload
       />
     ),
     floatingEditor: isImageInsertMode && (
-      <ToolbarRow>
+      <ToolbarRow title={t('insertImage')}>
         <input
           className="flex-1 py-0.5 px-2 text-sm rounded border-gray-400 min-w-40 border-1"
           type="url"
