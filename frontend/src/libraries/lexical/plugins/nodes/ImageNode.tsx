@@ -1,6 +1,6 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
 import { useLexicalNodeSelection } from '@lexical/react/useLexicalNodeSelection'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect } from 'react'
 import { mergeRegister } from '@lexical/utils'
 import type {
   DOMConversionMap,
@@ -19,8 +19,6 @@ import {
   KEY_BACKSPACE_COMMAND,
   KEY_DELETE_COMMAND,
 } from 'lexical'
-
-import { useEditorT } from 'libraries/lexical/i18n'
 
 export type SerializedImageNode = Spread<
   { src: string, altText: string, width?: number },
@@ -157,13 +155,8 @@ function ImageComponent({
   altText: string
   width: number | undefined
 }) {
-  const t = useEditorT('image')
   const [editor] = useLexicalComposerContext()
   const [isSelected, setSelected, clearSelection] = useLexicalNodeSelection(nodeKey)
-  const [isEditing, setIsEditing] = useState(false)
-  const [editAlt, setEditAlt] = useState(altText)
-  const [editWidth, setEditWidth] = useState(width ? String(width) : '')
-  const altInputRef = useRef<HTMLInputElement>(null)
 
   const onDelete = useCallback(
     (event: KeyboardEvent) => {
@@ -199,38 +192,9 @@ function ImageComponent({
     )
   }, [editor, nodeKey, clearSelection, setSelected, onDelete])
 
-  // Keep edit values in sync with node changes
-  useEffect(() => { setEditAlt(altText) }, [altText])
-  useEffect(() => { setEditWidth(width ? String(width) : '') }, [width])
-
-  // Close edit mode when deselected
-  useEffect(() => {
-    if (!isSelected) setIsEditing(false)
-  }, [isSelected])
-
-  useEffect(() => {
-    if (isEditing) altInputRef.current?.focus()
-  }, [isEditing])
-
-  function applyEdit() {
-    const parsedWidth = editWidth ? parseInt(editWidth, 10) : undefined
-    editor.update(() => {
-      const node = $getNodeByKey(nodeKey)
-      if ($isImageNode(node)) {
-        node.setAltText(editAlt)
-        node.setWidth(parsedWidth && parsedWidth > 0 ? parsedWidth : undefined)
-      }
-    })
-    setIsEditing(false)
-  }
-
-  function removeNode() {
-    editor.update(() => { $getNodeByKey(nodeKey)?.remove() })
-  }
-
   return (
     <span
-      className={`inline-block my-2 ${isSelected ? 'outline outline-2 outline-blue-500' : ''}`}
+      className={`inline-block my-2 ${isSelected ? 'outline-2 outline-blue-500' : ''}`}
       data-image-node-key={nodeKey}
     >
       {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
@@ -242,58 +206,6 @@ function ImageComponent({
         draggable={false}
         onKeyDown={() => { /* handled by lexical commands */ }}
       />
-      {isSelected && !isEditing && (
-        <span className="flex gap-1 mt-1">
-          <button
-            className="py-0.5 px-2 text-xs bg-white rounded border-gray-400 hover:bg-gray-50 border-1"
-            onMouseDown={(e) => { e.preventDefault(); setIsEditing(true) }}
-          >
-            {t('edit')}
-          </button>
-          <button
-            className="py-0.5 px-2 text-xs text-red-600 bg-white rounded border-gray-400 hover:bg-gray-50 border-1"
-            onMouseDown={(e) => { e.preventDefault(); removeNode() }}
-          >
-            {t('remove')}
-          </button>
-        </span>
-      )}
-      {isEditing && (
-        <span className="flex flex-wrap gap-1 items-center mt-1">
-          <label className="text-xs text-gray-600" htmlFor={`img-alt-${nodeKey}`}>{t('altText')}</label>
-          <input
-            id={`img-alt-${nodeKey}`}
-            ref={altInputRef}
-            className="flex-1 py-0.5 px-2 text-xs rounded border-gray-400 min-w-20 border-1"
-            value={editAlt}
-            onChange={(e) => setEditAlt(e.target.value)}
-            onKeyDown={(e) => { if (e.key === 'Enter') applyEdit(); if (e.key === 'Escape') setIsEditing(false) }}
-          />
-          <label className="text-xs text-gray-600" htmlFor={`img-width-${nodeKey}`}>{t('width')}</label>
-          <input
-            id={`img-width-${nodeKey}`}
-            className="py-0.5 px-2 w-16 text-xs rounded border-gray-400 border-1"
-            type="number"
-            min="1"
-            placeholder="auto"
-            value={editWidth}
-            onChange={(e) => setEditWidth(e.target.value)}
-            onKeyDown={(e) => { if (e.key === 'Enter') applyEdit(); if (e.key === 'Escape') setIsEditing(false) }}
-          />
-          <button
-            className="py-0.5 px-2 text-xs bg-white rounded border-gray-400 hover:bg-gray-50 border-1"
-            onMouseDown={(e) => { e.preventDefault(); applyEdit() }}
-          >
-            {t('ok')}
-          </button>
-          <button
-            className="py-0.5 px-2 text-xs bg-white rounded border-gray-400 hover:bg-gray-50 border-1"
-            onMouseDown={(e) => { e.preventDefault(); setIsEditing(false) }}
-          >
-            {t('cancel')}
-          </button>
-        </span>
-      )}
     </span>
   )
 }

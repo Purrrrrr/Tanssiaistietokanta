@@ -76,7 +76,7 @@ export function useTableToolbar(editor: LexicalEditor): ToolbarHookReturn {
           <Button minimal onClick={insertColumn}>{t('insertColumn')}</Button>
           <Button minimal onClick={deleteRow}>{t('deleteRow')}</Button>
           <Button minimal onClick={deleteColumn}>{t('deleteColumn')}</Button>
-          <Button minimal onClick={removeTable}>{t('deleteTable')}</Button>
+          <Button minimal color="danger" onClick={removeTable}>{t('deleteTable')}</Button>
         </div>
       )}
       {isTableInsertMode && (

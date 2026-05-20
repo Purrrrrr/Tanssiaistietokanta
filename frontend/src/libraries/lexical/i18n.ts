@@ -29,6 +29,7 @@ const translations = {
     },
     image: {
       insertImage: 'Lisää kuva',
+      imageProperties: 'Kuva',
       edit: 'Muokkaa',
       remove: 'Poista',
       urlPlaceholder: 'Kuvan URL-osoite (https://…)',

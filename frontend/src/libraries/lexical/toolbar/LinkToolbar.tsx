@@ -84,7 +84,7 @@ function LinkEditor({ editor, url }: LinkEditorProps) {
       value={url}
       onChange={(e) => applyLink(e.target.value)}
     />
-    <ToolbarButton onClick={() => applyLink('')} text={t('remove')} />
+    <ToolbarButton color="danger" onClick={() => applyLink('')} text={t('remove')} />
   </ToolbarRow>
 }
 
