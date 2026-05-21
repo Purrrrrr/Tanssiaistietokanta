@@ -1,58 +1,18 @@
-import equal from 'fast-deep-equal'
+import type { AnyNode, MinifiedValue, Transformation } from './types'
 
-import { AnyNode, MinifiedValue } from './types'
+import { LEXICAL_KEY_MAPPING, TYPE_UNMAP } from './constants'
+import { applyMinifyKey } from './keyMap'
+import { expandFabricDiagram, minifyFabricDiagram } from './minifyFabric'
+import { applyReverseTransformations, applyTransformations, createDefaultValues, createForTypes } from './transformationUtils'
 
-import { TYPE_UNMAP } from './constants'
-import { minifyKey } from './keys'
+const minifyKey = (key: string) => applyMinifyKey(LEXICAL_KEY_MAPPING, key)
+const typeKey = minifyKey('type')
 
-interface Transformation {
-  minify: (node: AnyNode) => AnyNode
-  expand: (node: AnyNode) => AnyNode
-}
+const forTypes = (types: string[], transformation: Transformation) =>
+  createForTypes(types, transformation, { typeKey, typeUnmap: TYPE_UNMAP })
 
-const forTypes = (types: string[], transformation: Transformation): Transformation => ({
-  minify: (node: AnyNode) => {
-    const minifiedType = node[minifyKey('type')] as string
-    const type = TYPE_UNMAP[minifiedType] ?? minifiedType
-    if (types.includes(type as string)) {
-      return transformation.minify(node)
-    }
-    return node
-  },
-  expand: (node: AnyNode) => {
-    if (types.includes(node.type as string)) {
-      return transformation.expand(node)
-    }
-    return node
-  },
-})
-
-const defaultValues = (defaults: Record<string, MinifiedValue>): Transformation => ({
-  minify: (node: AnyNode) => {
-    let changed = false
-    const result = { ...node }
-    for (const [key, defaultValue] of Object.entries(defaults)) {
-      const minKey = minifyKey(key)
-      if (equal(result[minKey], defaultValue)) {
-        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-        delete result[minKey]
-        changed = true
-      }
-    }
-    return changed ? result : node
-  },
-  expand: (node: AnyNode) => {
-    let changed = false
-    const newFields = {}
-    for (const [key, defaultValue] of Object.entries(defaults)) {
-      if (node[key] === undefined) {
-        newFields[key] = defaultValue
-        changed = true
-      }
-    }
-    return changed ? { ...node, ...newFields } : node
-  },
-})
+const defaultValues = (defaults: Record<string, MinifiedValue>) =>
+  createDefaultValues(defaults, minifyKey)
 
 const transformations: Transformation[] = [
   forTypes(['root', 'paragraph', 'heading', 'list', 'listitem', 'checklist-item', 'layout-container', 'layout-item', 'table', 'tablerow', 'tablecell'], defaultValues({
@@ -92,20 +52,14 @@ const transformations: Transformation[] = [
     minify: ({ _id: _ignored, ...node }) => node as AnyNode,
     expand: node => node,
   }),
+  forTypes(['fabric-diagram'], {
+    minify: minifyFabricDiagram,
+    expand: expandFabricDiagram,
+  }),
 ]
 
-export const runMinifyTransformations = (node: AnyNode): AnyNode => {
-  let result = node
-  for (const transformation of transformations) {
-    result = transformation.minify(result)
-  }
-  return result
-}
+export const runMinifyTransformations = (node: AnyNode): AnyNode =>
+  applyTransformations(transformations, node)
 
-export const runExpandTransformations = (node: AnyNode): AnyNode => {
-  let result = node
-  for (const transformation of transformations.slice().reverse()) {
-    result = transformation.expand(result)
-  }
-  return result
-}
+export const runExpandTransformations = (node: AnyNode): AnyNode =>
+  applyReverseTransformations(transformations, node)
