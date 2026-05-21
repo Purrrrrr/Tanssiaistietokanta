@@ -14,6 +14,7 @@ import {
 
 import { useEditorT } from 'libraries/lexical/i18n'
 
+import { FabricCanvas } from './FabricCanvas'
 import { FabricToolbar } from './FabricToolbar'
 
 declare module 'fabric' {
@@ -41,125 +42,32 @@ export function FabricEditor({ nodeKey, width, height, data, onChangeData, onCha
   const t = useEditorT('diagram')
   const [editor] = useLexicalComposerContext()
   const [isSelected, setSelected, clearSelection] = useLexicalNodeSelection(nodeKey)
-  const canvasElRef = useRef<HTMLCanvasElement>(null)
-  const fabricRef = useRef<Canvas | null>(null)
-  const isLoadingRef = useRef(false)
-  const lastDataRef = useRef(data)
+  const canvasRef = useRef<Canvas | null>(null)
   const [activeObjects, setActiveObjects] = useState<FabricObject[]>([])
   const isEditable = editor.isEditable()
 
   // ── Serialize canvas to node ──────────────────────────────────────────────
 
   function saveCanvasData() {
-    const canvas = fabricRef.current
-    if (!canvas || isLoadingRef.current) return
+    const canvas = canvasRef.current
+    if (!canvas) return
     const json = canvas.toJSON()
-    if (json === lastDataRef.current) return
-    lastDataRef.current = json
     onChangeData(json)
   }
 
-  // ── Initialize fabric canvas (once on mount) ──────────────────────────────
-
-  useEffect(() => {
-    const el = canvasElRef.current
-    if (!el) return
-    let cancelled = false
-
-    const canvas = new Canvas(el, {
-      width,
-      height,
-      backgroundColor: '#ffffff',
-      selection: isEditable,
-    })
-    fabricRef.current = canvas
-    lastDataRef.current = data
-
-    if (data) {
-      isLoadingRef.current = true
-      canvas.loadFromJSON(data).then(() => {
-        if (cancelled) return
-        isLoadingRef.current = false
-        if (!isEditable) {
-          canvas.getObjects().forEach(obj => {
-            obj.selectable = false
-            obj.evented = false
-          })
-        }
-        canvas.renderAll()
-      })
-    }
-
-    const handleModified = () => saveCanvasData()
+  function onCanvasCreated(canvas: Canvas) {
+    canvasRef.current = canvas
     canvas.on('mouse:down', () => {
       clearSelection()
       setSelected(true)
     })
-    canvas.on('object:added', handleModified)
-    canvas.on('object:modified', handleModified)
-    canvas.on('object:removed', handleModified)
-
-    canvas.on('selection:created', (e) => setActiveObjects(e.selected ?? []))
-    canvas.on('selection:updated', (e) => setActiveObjects(e.selected ?? []))
-    canvas.on('selection:cleared', () => setActiveObjects([]))
-
-    return () => {
-      cancelled = true
-      canvas.dispose()
-      fabricRef.current = null
-    }
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
-
-  // ── Sync data from external changes (undo/redo) ───────────────────────────
-
-  useEffect(() => {
-    const canvas = fabricRef.current
-    if (!canvas || data === lastDataRef.current) return
-    lastDataRef.current = data
-    isLoadingRef.current = true
-    const load = data
-      ? canvas.loadFromJSON(data)
-      : Promise.resolve(canvas.clear())
-    load.then(() => {
-      isLoadingRef.current = false
-      if (!isEditable) {
-        canvas.getObjects().forEach(obj => {
-          obj.selectable = false
-          obj.evented = false
-        })
-      }
-      canvas.renderAll()
-    })
-  }, [data]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  // ── Sync dimensions from external changes ────────────────────────────────
-
-  useEffect(() => {
-    const canvas = fabricRef.current
-    if (!canvas) return
-    if (canvas.width !== width || canvas.height !== height) {
-      canvas.setDimensions({ width, height })
-    }
-  }, [width, height])
-
-  // ── Sync editable state ───────────────────────────────────────────────────
-
-  useEffect(() => {
-    const canvas = fabricRef.current
-    if (!canvas) return
-    canvas.selection = isEditable
-    canvas.getObjects().forEach(obj => {
-      obj.selectable = isEditable
-      obj.evented = isEditable
-    })
-    canvas.renderAll()
-  }, [isEditable])
+  }
 
   // ── Lexical node delete handling selection ───────────────────────────────────────────────
 
   const onDelete = useCallback((event: KeyboardEvent) => {
     if (!isSelected) return false
-    const canvas = fabricRef.current
+    const canvas = canvasRef.current
     event.preventDefault()
     if (canvas) {
       const active = canvas.getActiveObjects()
@@ -214,15 +122,15 @@ export function FabricEditor({ nodeKey, width, height, data, onChangeData, onCha
 
     function onMove(e: MouseEvent | TouchEvent) {
       const { clientX, clientY } = toCoordinates(e)
-      fabricRef.current?.setDimensions({
+      canvasRef.current?.setDimensions({
         width: Math.max(200, startW + clientX - startX),
         height: Math.max(100, startH + clientY - startY),
       })
     }
 
     function onUp() {
-      if (!fabricRef.current) return
-      onChangeDimensions(fabricRef.current.width, fabricRef.current.height)
+      if (!canvasRef.current) return
+      onChangeDimensions(canvasRef.current.width, canvasRef.current.height)
       controller.abort()
     }
 
@@ -240,11 +148,19 @@ export function FabricEditor({ nodeKey, width, height, data, onChangeData, onCha
 
   return (
     <div className="[anchor-name:--fabric-editor] my-2" data-fabric-node-key={nodeKey}>
-      {isSelected && isEditable && fabricRef.current && (
-        <FabricToolbar anchorName="--fabric-editor" activeObjects={activeObjects} canvas={fabricRef.current} onRemoveNode={removeNode} onSaveCanvas={saveCanvasData} />
+      {isSelected && isEditable && canvasRef.current && (
+        <FabricToolbar anchorName="--fabric-editor" activeObjects={activeObjects} canvas={canvasRef.current} onRemoveNode={removeNode} onSaveCanvas={saveCanvasData} />
       )}
       <div className={`relative w-max border-2 ${isSelected ? 'border-blue-500' : 'border-gray-300'}`}>
-        <canvas ref={canvasElRef} />
+        <FabricCanvas
+          width={width}
+          height={height}
+          data={data}
+          editable={isEditable}
+          onCanvasCreated={onCanvasCreated}
+          onUpdate={saveCanvasData}
+          onSelect={setActiveObjects}
+        />
         {isSelected && isEditable && (
           <button
             className="absolute -bottom-2 -right-2 size-4 border-2 border-blue-500 cursor-se-resize z-10 touch-none"
