@@ -13,3 +13,17 @@ export interface MinifiedDocumentContent extends Omit<MinifiedNode, '_id'> {
 }
 
 export type AnyNode = Record<string, unknown>
+
+/** A bidirectional key abbreviation mapping. */
+export interface KeyMapping {
+  /** Maps original (long) key names to their minified short codes. */
+  map: Record<string, string>
+  /** Maps minified short codes back to original key names. */
+  unmap: Record<string, string>
+}
+
+/** A paired minify/expand transformation applied to a serialized node. */
+export interface Transformation {
+  minify: (node: AnyNode) => AnyNode
+  expand: (node: AnyNode) => AnyNode
+}
