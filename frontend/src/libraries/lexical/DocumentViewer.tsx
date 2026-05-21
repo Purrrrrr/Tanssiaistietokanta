@@ -18,6 +18,8 @@ import type { SerializedLayoutItemNode } from './plugins/nodes/LayoutItemNode'
 import type { SerializedQRCodeNode } from './plugins/nodes/QRCodeNode'
 import { theme } from './theme'
 import { expand, MinifiedDocumentContent } from './utils/minify'
+import { SerializedFabricNode } from './plugins/nodes/FabricNode'
+import { FabricCanvas } from './plugins/components/fabric/FabricCanvas'
 
 // ---------------------------------------------------------------------------
 // Public component
@@ -142,6 +144,11 @@ function renderNode(node: SerializedNode, index: number, options: ViewOptions): 
           style={{ maxWidth: '100%', height: 'auto' }}
         />,
       )
+    }
+    case 'fabric-diagram': {
+      const { width, height, data } = node as SerializedFabricNode
+
+      return content(<FabricCanvas key={index} width={width} height={height} data={data} />)
     }
     case 'qr-code': {
       const { value, title, size } = node as SerializedQRCodeNode
