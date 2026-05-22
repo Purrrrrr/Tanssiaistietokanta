@@ -35,40 +35,40 @@ const fabricObjectTransformations = [
     backgroundColor: '',
   }),
   forTypes(['Circle', 'Ellipse', 'Polygon', 'Textbox'], defaultValues({
-    // strokeMiterLimit: 4,
-    // strokeLineCap: 'butt',
-    // strokeLineJoin: 'miter',
+    strokeMiterLimit: 4,
+    strokeLineCap: 'butt',
+    strokeLineJoin: 'miter',
   })),
   forTypes(['Path'], defaultValues({
-    // strokeMiterLimit: 10,
-    // strokeLineCap: 'round',
-    // strokeLineJoin: 'round',
+    strokeMiterLimit: 10,
+    strokeLineCap: 'round',
+    strokeLineJoin: 'round',
   })),
   forTypes(['Circle'], defaultValues({
-    // startAngle: 0,
-    // endAngle: 360,
-    // counterClockwise: false,
+    startAngle: 0,
+    endAngle: 360,
+    counterClockwise: false,
   })),
   forTypes(['Textbox'], defaultValues({
-    // fontSize: 20,
-    // fontWeight: 'normal',
-    // fontFamily: 'Times New Roman',
-    // fontStyle: 'normal',
-    // lineHeight: 1.16,
-    // charSpacing: 0,
-    // textAlign: 'left',
-    // styles: [],
-    // pathStartOffset: 0,
-    // pathSide: 'left',
-    // pathAlign: 'baseline',
-    // underline: false,
-    // overline: false,
-    // linethrough: false,
-    // textBackgroundColor: '',
-    // direction: 'ltr',
-    // textDecorationThickness: 66.667,
-    // minWidth: 20,
-    // splitByGrapheme: false,
+    fontSize: 20,
+    fontWeight: 'normal',
+    fontFamily: 'Times New Roman',
+    fontStyle: 'normal',
+    lineHeight: 1.16,
+    charSpacing: 0,
+    textAlign: 'left',
+    styles: [],
+    pathStartOffset: 0,
+    pathSide: 'left',
+    pathAlign: 'baseline',
+    underline: false,
+    overline: false,
+    linethrough: false,
+    textBackgroundColor: '',
+    direction: 'ltr',
+    textDecorationThickness: 66.667,
+    minWidth: 20,
+    splitByGrapheme: false,
   })),
 ]
 
@@ -87,8 +87,7 @@ function minifyFabricObject(obj: AnyNode): AnyNode {
 }
 
 function expandFabricObject(obj: AnyNode): AnyNode {
-  const restored = applyReverseTransformations(fabricObjectTransformations, obj)
-  const expanded = expandObjectKeys(FABRIC_KEY_MAPPING, restored)
+  const expanded = expandObjectKeys(FABRIC_KEY_MAPPING, obj)
   // Recursively expand nested groups
   if (Array.isArray(expanded.objects)) {
     return {
@@ -96,7 +95,9 @@ function expandFabricObject(obj: AnyNode): AnyNode {
       objects: (expanded.objects as AnyNode[]).map(expandFabricObject),
     }
   }
-  return expanded
+  const restored = applyReverseTransformations(fabricObjectTransformations, expanded)
+  // console.log('Expanded object:', obj, restored)
+  return restored
 }
 
 function parseFabricData(raw: unknown): AnyNode | null {
