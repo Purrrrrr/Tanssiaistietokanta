@@ -1,5 +1,5 @@
 import { useEffect, useReducer } from 'react'
-import { Canvas, Circle, Ellipse, FabricObject, PencilBrush, Polygon, Rect, Textbox, TFiller } from 'fabric'
+import { Canvas, Circle, controlsUtils, Ellipse, FabricObject, PencilBrush, Polygon, Rect, Textbox, TFiller } from 'fabric'
 
 import { useEditorT } from 'libraries/lexical/i18n'
 import { FloatingToolbar, ToolbarButton, ToolbarRow } from 'libraries/lexical/toolbar/widgets'
@@ -21,13 +21,12 @@ const toColor = (value: string | TFiller | null): string =>
 
 interface FabricComponentProps {
   anchorName: string
-  onSaveCanvas: () => void
   onRemoveNode: () => void
   canvas: Canvas
   activeObjects: FabricObject[]
 }
 
-export function FabricToolbar({ anchorName, canvas, activeObjects, onSaveCanvas: saveCanvasData, onRemoveNode: removeNode }: FabricComponentProps) {
+export function FabricToolbar({ anchorName, canvas, activeObjects, onRemoveNode: removeNode }: FabricComponentProps) {
   const t = useEditorT('diagram')
   const [, forceUpdate] = useReducer(x => x + 1, 0) // for force re-render on tool state changes
 
@@ -87,17 +86,14 @@ export function FabricToolbar({ anchorName, canvas, activeObjects, onSaveCanvas:
       const active = canvas.getActiveObjects()
       if (active.length > 0) {
         modifier(active, canvas)
-        saveCanvasData()
+        canvas.fire('object:modified', { target: active[0] })
       }
     })
   }
   const modifyActiveObject = (modifier: (obj: FabricObject) => void) =>
     modifyActiveObjects(objs => objs.forEach(modifier))
 
-  const applyFill = (color: string) => modifyActiveObject(obj => {
-    obj.set('fill', color)
-    console.log(color)
-  })
+  const applyFill = (color: string) => modifyActiveObject(obj => obj.set('fill', color))
   const applyStroke = (color: string) => modifyActiveObject(obj => obj.set('stroke', color))
 
   // Object z-indexing (bring forward/send backward)
@@ -129,7 +125,7 @@ export function FabricToolbar({ anchorName, canvas, activeObjects, onSaveCanvas:
         } else {
           obj.cornerStyle = 'circle'
           obj.hasBorders = false
-          obj.controls = createPolygonControls(obj)
+          obj.controls = controlsUtils.createPolyControls(obj) // createPolygonControls(obj)
         }
         obj.setCoords()
       }

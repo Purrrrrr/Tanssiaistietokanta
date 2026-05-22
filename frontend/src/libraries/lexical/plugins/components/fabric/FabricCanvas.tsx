@@ -1,5 +1,6 @@
 import { useEffect, useEffectEvent, useRef } from 'react'
 import { Canvas, FabricObject } from 'fabric'
+import equal from 'fast-deep-equal'
 
 interface FabricCanvasProps {
   width: number
@@ -21,7 +22,7 @@ export function FabricCanvas({ width, height, data, editable = false, onCanvasCr
 
   const loadData = useEffectEvent(() => {
     if (!data || !canvasRef.current) return
-    if (data === lastDataRef.current) return
+    if (equal(data, lastDataRef.current)) return
     lastDataRef.current = data
     isLoadingRef.current = true
     canvasRef.current.loadFromJSON(data).then(() => {
@@ -32,7 +33,11 @@ export function FabricCanvas({ width, height, data, editable = false, onCanvasCr
   })
   const createHandler = useEffectEvent(onCanvasCreated ?? nop)
   const onUpdateHandler = useEffectEvent(() => {
-    if (canvasRef.current && !isLoadingRef.current) onUpdate?.(canvasRef.current)
+    if (canvasRef.current && !isLoadingRef.current) {
+      // console.log('Canvas updated')
+      lastDataRef.current = canvasRef.current.toJSON()
+      onUpdate?.(canvasRef.current)
+    }
   })
   const onSelectHandler = useEffectEvent(onSelect ?? nop)
 
