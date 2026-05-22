@@ -58,7 +58,7 @@ export function SyncValuePlugin({ value, onChange }: Props) {
     })
   }, [editor, value])
 
-  return <OnChangePlugin onChange={(editorState, _editor, tags) => {
+  return <OnChangePlugin ignoreSelectionChange onChange={(editorState, _editor, tags) => {
     if (tags.has(EXTERNAL_UPDATE_TAG)) return
     onChange?.(minifyLiveState(editorState, nodeIdMapRef.current))
   }} />
