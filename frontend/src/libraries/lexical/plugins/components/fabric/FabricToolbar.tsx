@@ -10,7 +10,7 @@ import randomId from 'utils/randomId'
 function regularPolygonPoints(sides: number, radius: number) {
   return Array.from({ length: sides }, (_, i) => {
     const angle = (2 * Math.PI * i / sides) - Math.PI / 2
-    return { x: radius * Math.cos(angle), y: radius * Math.sin(angle) }
+    return { x: Math.round(radius * Math.cos(angle)), y: Math.round(radius * Math.sin(angle)) }
   })
 }
 
