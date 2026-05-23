@@ -1,8 +1,8 @@
-import { useEffect, useReducer } from 'react'
+import { useEffect, useReducer, useState } from 'react'
 import { Canvas, Circle, controlsUtils, Ellipse, FabricObject, PencilBrush, Polygon, Rect, Textbox, TFiller } from 'fabric'
 
 import { useEditorT } from 'libraries/lexical/i18n'
-import { FloatingToolbar, ToolbarButton, ToolbarRow } from 'libraries/lexical/toolbar/widgets'
+import { FloatingToolbar, ToolbarButton, ToolbarColorPicker, ToolbarRow } from 'libraries/lexical/toolbar/widgets'
 import randomId from 'utils/randomId'
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -29,6 +29,8 @@ interface FabricComponentProps {
 export function FabricToolbar({ anchorName, canvas, activeObjects, onRemoveNode: removeNode }: FabricComponentProps) {
   const t = useEditorT('diagram')
   const [, forceUpdate] = useReducer(x => x + 1, 0) // for force re-render on tool state changes
+  const [fill, setFill] = useState('#fff')
+  const [stroke, setStroke] = useState('#000')
 
   const toggleDrawingMode = () => {
     // eslint-disable-next-line react-hooks/immutability
@@ -43,19 +45,17 @@ export function FabricToolbar({ anchorName, canvas, activeObjects, onRemoveNode:
     canvas.renderAll()
   }
   const addObject = (obj: FabricObject) => modifyCanvas(canvas => canvas.add(obj))
-  const defaultProps = () => {
-    const hue = Math.floor(Math.random() * 360)
-    return {
-      _id: randomId(),
-      left: canvas.width / 2,
-      top: canvas.height / 2,
-      originX: 'center',
-      originY: 'center',
-      strokeWidth: 2,
-      fill: `hsl(${hue}, 70%, 80%)`,
-      stroke: `hsl(${hue}, 70%, 50%)`,
-    } as const
-  }
+  const defaultProps = () => ({
+    _id: randomId(),
+    left: canvas.width / 2,
+    top: canvas.height / 2,
+    originX: 'center',
+    originY: 'center',
+    strokeWidth: 2,
+    fill,
+    stroke,
+    strokeUniform: true,
+  } as const)
 
   const addRect = () => addObject(new Rect({
     ...defaultProps(),
@@ -136,18 +136,25 @@ export function FabricToolbar({ anchorName, canvas, activeObjects, onRemoveNode:
 
   useEffect(() => {
     const brush = new PencilBrush(canvas)
-    brush.color = '#f00'
+    brush.color = stroke
     brush.width = 2
     // eslint-disable-next-line react-hooks/immutability
     canvas.freeDrawingBrush = brush
     canvas.on('mouse:dblclick', toggleControls)
   }, [canvas])
+  useEffect(() => {
+    const brush = canvas.freeDrawingBrush as PencilBrush
+    // eslint-disable-next-line react-hooks/immutability
+    brush.color = stroke
+  }, [stroke, canvas])
 
   // ── Render ────────────────────────────────────────────────────────────────
 
   return <>
     <FloatingToolbar anchorName={anchorName} side="top">
       <ToolbarRow title={t('diagram')}>
+        <ToolbarColorPicker label={t('fill')} value={fill} onChange={setFill} />
+        <ToolbarColorPicker label={t('stroke')} value={stroke} onChange={setStroke} />
         <ToolbarButton onMouseDown={addRect} tooltip={t('addRect')} icon="▭" />
         <ToolbarButton onMouseDown={addEllipse} tooltip={t('addEllipse')} icon="⬭" />
         <ToolbarButton onMouseDown={addCircle} tooltip={t('addCircle')} icon="○" />
@@ -165,24 +172,8 @@ export function FabricToolbar({ anchorName, canvas, activeObjects, onRemoveNode:
           <ToolbarButton onMouseDown={toggleControls} tooltip={t('editPolygon')} icon="E" />
           <ToolbarButton onMouseDown={bringForward} tooltip={t('bringForward')} icon="Y" />
           <ToolbarButton onMouseDown={sendBackward} tooltip={t('sendBackward')} icon="A" />
-          <label className="flex items-center gap-1 text-xs text-gray-600">
-            {t('fill')}
-            <input
-              type="color"
-              value={toColor(activeObjects[0].fill)}
-              className="w-6 h-5 cursor-pointer rounded border-0 p-0"
-              onChange={(e) => applyFill(e.target.value)}
-            />
-          </label>
-          <label className="flex items-center gap-1 text-xs text-gray-600">
-            {t('stroke')}
-            <input
-              type="color"
-              value={toColor(activeObjects[0].stroke)}
-              className="w-6 h-5 cursor-pointer rounded border-0 p-0"
-              onChange={(e) => applyStroke(e.target.value)}
-            />
-          </label>
+          <ToolbarColorPicker label={t('fill')} value={toColor(activeObjects[0]?.fill)} onChange={applyFill} />
+          <ToolbarColorPicker label={t('stroke')} value={toColor(activeObjects[0]?.stroke)} onChange={applyStroke} />
           <ToolbarButton
             color="danger"
             onMouseDown={deleteActiveObjects}
