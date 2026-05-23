@@ -4,6 +4,7 @@ import classNames from 'classnames'
 import { CssClass, FormGroup } from 'libraries/ui'
 
 export { ToolbarButton } from './ToolbarButton'
+export { ToolbarColorPicker } from './ToolColorPicker'
 
 export function FloatingToolbar({ children, anchorName, side = 'bottom' }: {
   anchorName: string
