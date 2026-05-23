@@ -49,6 +49,8 @@ export function FabricCanvas({ width, height, data, editable = false, onCanvasCr
 
     const canvas = new Canvas(el, {
       backgroundColor: '#ffffff',
+      stopContextMenu: false,
+      targetFindTolerance: 5,
     })
     createHandler(canvas)
     canvasRef.current = canvas

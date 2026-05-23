@@ -83,6 +83,7 @@ const translations = {
       addTriangle: 'Lisää kolmio',
       addPentagon: 'Lisää viisikulmio',
       addHexagon: 'Lisää kuusikulmio',
+      addArrow: 'Lisää nuoli',
       addText: 'Lisää teksti',
       freeDraw: 'Piirrä',
       editPolygon: 'Muokkaa muotoa',
