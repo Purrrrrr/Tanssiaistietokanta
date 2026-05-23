@@ -1,9 +1,11 @@
 import { useEffect, useReducer, useState } from 'react'
-import { Canvas, Circle, controlsUtils, Ellipse, FabricObject, PencilBrush, Polygon, Rect, Textbox, TFiller } from 'fabric'
+import { Canvas, Circle, classRegistry, controlsUtils, Ellipse, FabricObject, PencilBrush, Polygon, Rect, Textbox, TFiller } from 'fabric'
 
 import { useEditorT } from 'libraries/lexical/i18n'
 import { FloatingToolbar, ToolbarButton, ToolbarColorPicker, ToolbarRow } from 'libraries/lexical/toolbar/widgets'
 import randomId from 'utils/randomId'
+
+import { Arrowline } from './Arrowline'
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -17,6 +19,7 @@ function regularPolygonPoints(sides: number, radius: number) {
 const toColor = (value: string | TFiller | null): string =>
   typeof value === 'string' ? value : 'black'
 
+classRegistry.setClass(Arrowline)
 // ─── React component ─────────────────────────────────────────────────────────
 
 interface FabricComponentProps {
@@ -72,6 +75,12 @@ export function FabricToolbar({ anchorName, canvas, activeObjects, onRemoveNode:
     radius: 40,
   }))
   const addPolygon = (sides: number) => addObject(new Polygon(regularPolygonPoints(sides, 50), defaultProps()))
+  const addArrow = () => addObject(new Arrowline(
+    [{ x: -50, y: 0 }, { x: 50, y: 0 }],
+    {
+      ...defaultProps(),
+    },
+  ))
 
   const addText = () => addObject(new Textbox('Text', {
     ...defaultProps(),
@@ -161,6 +170,7 @@ export function FabricToolbar({ anchorName, canvas, activeObjects, onRemoveNode:
         <ToolbarButton onMouseDown={() => { addPolygon(3) }} tooltip={t('addTriangle')} icon="△" />
         <ToolbarButton onMouseDown={() => { addPolygon(5) }} tooltip={t('addPentagon')} icon="⬠" />
         <ToolbarButton onMouseDown={() => { addPolygon(6) }} tooltip={t('addHexagon')} icon="⬡" />
+        <ToolbarButton onMouseDown={addArrow} tooltip={t('addArrow')} icon="->" />
         <ToolbarButton onMouseDown={addText} tooltip={t('addText')} icon="T" />
         <ToolbarButton onMouseDown={toggleDrawingMode} active={canvas.isDrawingMode} tooltip={t('freeDraw')} icon="🖌" />
         <ToolbarButton color="danger" onMouseDown={removeNode} text={t('removeDiagram')} />
