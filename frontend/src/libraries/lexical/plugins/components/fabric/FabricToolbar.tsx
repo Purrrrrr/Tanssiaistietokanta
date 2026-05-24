@@ -6,6 +6,7 @@ import { FloatingToolbar, ToolbarButton, ToolbarColorPicker, ToolbarRow } from '
 import randomId from 'utils/randomId'
 
 import { Arrowline } from './Arrowline'
+import { EditPolygon, RectangleIcon, EllipseIcon, CircleIcon, TriangleIcon, PentagonIcon, HexagonIcon, ArrowIcon, DrawIcon, BringToTopIcon, SendToBottomIcon } from './icons'
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -164,24 +165,24 @@ export function FabricToolbar({ anchorName, canvas, activeObjects, onRemoveNode:
       <ToolbarRow title={t('diagram')}>
         <ToolbarColorPicker label={t('fill')} value={fill} onChange={setFill} />
         <ToolbarColorPicker label={t('stroke')} value={stroke} onChange={setStroke} />
-        <ToolbarButton onMouseDown={addRect} tooltip={t('addRect')} icon="▭" />
-        <ToolbarButton onMouseDown={addEllipse} tooltip={t('addEllipse')} icon="⬭" />
-        <ToolbarButton onMouseDown={addCircle} tooltip={t('addCircle')} icon="○" />
-        <ToolbarButton onMouseDown={() => { addPolygon(3) }} tooltip={t('addTriangle')} icon="△" />
-        <ToolbarButton onMouseDown={() => { addPolygon(5) }} tooltip={t('addPentagon')} icon="⬠" />
-        <ToolbarButton onMouseDown={() => { addPolygon(6) }} tooltip={t('addHexagon')} icon="⬡" />
-        <ToolbarButton onMouseDown={addArrow} tooltip={t('addArrow')} icon="->" />
+        <ToolbarButton onMouseDown={addRect} tooltip={t('addRect')} icon={<RectangleIcon />} />
+        <ToolbarButton onMouseDown={addEllipse} tooltip={t('addEllipse')} icon={<EllipseIcon />} />
+        <ToolbarButton onMouseDown={addCircle} tooltip={t('addCircle')} icon={<CircleIcon />} />
+        <ToolbarButton onMouseDown={() => { addPolygon(3) }} tooltip={t('addTriangle')} icon={<TriangleIcon />} />
+        <ToolbarButton onMouseDown={() => { addPolygon(5) }} tooltip={t('addPentagon')} icon={<PentagonIcon />} />
+        <ToolbarButton onMouseDown={() => { addPolygon(6) }} tooltip={t('addHexagon')} icon={<HexagonIcon />} />
+        <ToolbarButton onMouseDown={addArrow} tooltip={t('addArrow')} icon={<ArrowIcon />} />
         <ToolbarButton onMouseDown={addText} tooltip={t('addText')} icon="T" />
-        <ToolbarButton onMouseDown={toggleDrawingMode} active={canvas.isDrawingMode} tooltip={t('freeDraw')} icon="🖌" />
+        <ToolbarButton onMouseDown={toggleDrawingMode} active={canvas.isDrawingMode} tooltip={t('freeDraw')} icon={<DrawIcon />} />
         <ToolbarButton color="danger" onMouseDown={removeNode} text={t('removeDiagram')} />
       </ToolbarRow>
     </FloatingToolbar>
     {activeObjects.length > 0 && (
       <FloatingToolbar anchorName={anchorName}>
         <ToolbarRow title={t('chosenObject', { count: activeObjects.length })}>
-          <ToolbarButton onMouseDown={toggleControls} tooltip={t('editPolygon')} icon="E" />
-          <ToolbarButton onMouseDown={bringForward} tooltip={t('bringForward')} icon="Y" />
-          <ToolbarButton onMouseDown={sendBackward} tooltip={t('sendBackward')} icon="A" />
+          <ToolbarButton onMouseDown={toggleControls} tooltip={t('editPolygon')} icon={<EditPolygon size={18} className="text-stone-400" />} />
+          <ToolbarButton onMouseDown={bringForward} tooltip={t('bringForward')} icon={<BringToTopIcon />} />
+          <ToolbarButton onMouseDown={sendBackward} tooltip={t('sendBackward')} icon={<SendToBottomIcon />} />
           <ToolbarColorPicker label={t('fill')} value={toColor(activeObjects[0]?.fill)} onChange={applyFill} />
           <ToolbarColorPicker label={t('stroke')} value={toColor(activeObjects[0]?.stroke)} onChange={applyStroke} />
           <ToolbarButton
