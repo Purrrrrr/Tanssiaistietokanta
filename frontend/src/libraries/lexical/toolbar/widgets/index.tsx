@@ -11,8 +11,10 @@ export function FloatingToolbar({ children, anchorName, side = 'bottom' }: {
   side?: 'bottom' | 'top'
   children: React.ReactNode
 }) {
+  // eslint-disable-next-line jsx-a11y/no-static-element-interactions
   return <div
     style={{ '--toolbarAnchorName': anchorName } as CSSProperties}
+    onKeyDown={e => e.stopPropagation() /* Prevent input interactions from leaking into lexical */}
     className={classNames(
       'absolute [position-anchor:var(--toolbarAnchorName)]',
       side === 'bottom' && '[position-area:bottom_span-right] translate-y-1',
