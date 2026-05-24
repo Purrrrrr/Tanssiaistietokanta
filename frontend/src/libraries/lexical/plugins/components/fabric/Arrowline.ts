@@ -25,16 +25,17 @@ export class Arrowline extends Polyline {
     const xDiff = x2 - x1
 
     const angle = Math.atan2(yDiff, xDiff)
-    const headLength = this.strokeWidth * 8 // length of the arrowhead, proportional to stroke width
-    const headWidth = this.strokeWidth * 4 // width of the arrowhead, proportional to stroke width
+    const base = this.strokeWidth
+    const headLength = base * 4 // length of the arrowhead, proportional to stroke width
+    const headWidth = base * 3 // width of the arrowhead, proportional to stroke width
 
     ctx.save()
     ctx.translate(xDiff / 2, yDiff / 2) // move to line midpoint for better arrowhead positioning
     ctx.rotate(angle) // rotate to line angle
     ctx.beginPath()
-    ctx.moveTo(1, 0)
-    ctx.lineTo(-headLength, headWidth)
-    ctx.lineTo(-headLength, -headWidth)
+    ctx.moveTo(base, 0)
+    ctx.lineTo(base - headLength, headWidth)
+    ctx.lineTo(base - headLength, -headWidth)
     ctx.closePath()
     ctx.fillStyle = this.stroke as string
     ctx.fill()
