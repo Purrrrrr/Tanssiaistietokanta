@@ -91,6 +91,7 @@ const translations = {
       sendBackward: 'Lähetä taakse',
       fill: 'Täyttö',
       stroke: 'Reunaviiva',
+      strokeWidth: 'Viivan leveys',
       deleteShape: 'Poista muoto',
       removeDiagram: 'Poista kaavio',
       resize: 'Muuta kokoa',
