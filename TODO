@@ -538,9 +538,7 @@
   * Workshop instance support
 * Adding accepted does not work
 * Make dances searchable categories or event names (not implementing description since not available in list)
-
-
-  Fabric-editor
+* Fabric-editor
   * Use existing toolbar code
   * Move toolbar widgets to one file/folder
   * Make all delete buttons use color=danger
@@ -548,19 +546,31 @@
     * Draw button with selected state
   * Floating image editor
   * Use FormGroup in editors
-    Arrows
-    Stroke selector
-    Color selectors for creating new objects
-    Color dropdown
-    Separate the two FabricToolbar components by renaming one of them
-    Minify -> ids for objects?
-    Minifying state
+  * Minify -> ids for objects?
+  * Minifying state
+  * Color dropdown
+  * Color selectors for creating new objects
+  * Minify numbers with less precision? (Solved by rounding polygon points)
+  * Arrows
+  * Separate the two FabricToolbar components by renaming one of them
+  * Stroke selector
 
-  Add notes to assignments
   Check lists/pages layout on mobile
     Assignments list
     Volunteers list
     Workshop page?
+
+  Volunteer assignments page
+    Filter by role, filter by status
+
+  Ability to add emails
+    Ability to list (unadded) volunteer emails by workshop
+  Icons for statuses, open editor only when needed
+  Ability for volunteers to register interest in specific jobs
+    Separate workshop instances and work shifts in them
+    Each shift -> one EVA (this replaces notes?)
+
+  EVA does not allow registering different kompassi statuses for two workshop instances
   
   Is fabric/image/whatever document content pasteable/copyable from Google Docs or Word?
   Do links render correctly styled in DocumentViewer?
