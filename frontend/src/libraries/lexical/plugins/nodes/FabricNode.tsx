@@ -1,6 +1,8 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
-import type {
-  DOMConversionMap,
+import { useLexicalNodeSelection } from '@lexical/react/useLexicalNodeSelection'
+import { useCallback, useEffect, useRef } from 'react'
+import { mergeRegister } from '@lexical/utils'
+import type { DOMConversionMap,
   DOMConversionOutput,
   DOMExportOutput,
   LexicalNode,
@@ -10,7 +12,10 @@ import type {
 } from 'lexical'
 import {
   $getNodeByKey,
-  DecoratorNode,
+  CLICK_COMMAND,
+  COMMAND_PRIORITY_LOW,
+  DecoratorNode, KEY_BACKSPACE_COMMAND,
+  KEY_DELETE_COMMAND,
 } from 'lexical'
 
 import { FabricEditor } from '../components/fabric/FabricEditor'
@@ -132,6 +137,8 @@ interface FabricComponentProps {
 
 function FabricComponent({ nodeKey, width, height, data }: FabricComponentProps) {
   const [editor] = useLexicalComposerContext()
+  const [isSelected, setSelected, clearSelection] = useLexicalNodeSelection(nodeKey)
+  const ref = useRef<{ deleteSelectedObjects: () => boolean }>(null)
 
   function saveCanvasData(json: string) {
     editor.update(() => {
@@ -147,13 +154,51 @@ function FabricComponent({ nodeKey, width, height, data }: FabricComponentProps)
     })
   }
 
+  const onDelete = useCallback((event: KeyboardEvent) => {
+    if (!isSelected) return false
+    event.preventDefault()
+    if (ref.current?.deleteSelectedObjects()) {
+      return true
+    }
+    editor.update(() => { $getNodeByKey(nodeKey)?.remove() })
+    return true
+  }, [editor, isSelected, nodeKey])
+
+  useEffect(() => {
+    return mergeRegister(
+      editor.registerCommand<MouseEvent>(
+        CLICK_COMMAND,
+        (event) => {
+          const target = event.target as HTMLElement
+          if (target.closest(`[data-fabric-node-key="${nodeKey}"]`)) {
+            clearSelection()
+            setSelected(true)
+            return true
+          }
+          return false
+        },
+        COMMAND_PRIORITY_LOW,
+      ),
+      editor.registerCommand(KEY_DELETE_COMMAND, onDelete, COMMAND_PRIORITY_LOW),
+      editor.registerCommand(KEY_BACKSPACE_COMMAND, onDelete, COMMAND_PRIORITY_LOW),
+    )
+  }, [editor, nodeKey, clearSelection, setSelected, onDelete])
+
+  function removeNode() {
+    editor.update(() => { $getNodeByKey(nodeKey)?.remove() })
+  }
+
   return <FabricEditor
+    ref={ref}
+    editable={editor.isEditable()}
+    isSelected={isSelected}
     nodeKey={nodeKey}
     data={data}
     width={width}
     height={height}
     onChangeDimensions={onResize}
     onChangeData={saveCanvasData}
+    onRemoveEditor={removeNode}
   />
 }
 

@@ -1,16 +1,6 @@
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
-import { useLexicalNodeSelection } from '@lexical/react/useLexicalNodeSelection'
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { mergeRegister } from '@lexical/utils'
+import { useImperativeHandle, useRef, useState } from 'react'
 import { Canvas, FabricObject } from 'fabric'
 import type { NodeKey } from 'lexical'
-import {
-  $getNodeByKey,
-  CLICK_COMMAND,
-  COMMAND_PRIORITY_LOW,
-  KEY_BACKSPACE_COMMAND,
-  KEY_DELETE_COMMAND,
-} from 'lexical'
 
 import { useEditorT } from 'libraries/lexical/i18n'
 
@@ -34,17 +24,20 @@ interface FabricComponentProps {
   width: number
   height: number
   data: string
+  editable?: boolean
+  isSelected?: boolean
+  onRemoveEditor: () => void
   onChangeData: (data: string) => void
   onChangeDimensions: (width: number, height: number) => void
+  ref?: React.Ref<{ deleteSelectedObjects: () => boolean }>
 }
 
-export function FabricEditor({ nodeKey, width, height, data, onChangeData, onChangeDimensions }: FabricComponentProps) {
+export function FabricEditor({ editable, isSelected, nodeKey, width, height, data, onChangeData, onChangeDimensions, onRemoveEditor, ref }: FabricComponentProps) {
   const t = useEditorT('diagram')
-  const [editor] = useLexicalComposerContext()
-  const [isSelected, setSelected, clearSelection] = useLexicalNodeSelection(nodeKey)
+  const [canvas, setCanvas] = useState<Canvas | null>(null)
   const canvasRef = useRef<Canvas | null>(null)
   const [activeObjects, setActiveObjects] = useState<FabricObject[]>([])
-  const isEditable = editor.isEditable()
+  const showControls = editable && isSelected
 
   // ── Serialize canvas to node ──────────────────────────────────────────────
 
@@ -55,52 +48,22 @@ export function FabricEditor({ nodeKey, width, height, data, onChangeData, onCha
     onChangeData(json)
   }
 
-  function onCanvasCreated(canvas: Canvas) {
-    canvasRef.current = canvas
-    canvas.on('mouse:down', () => {
-      clearSelection()
-      setSelected(true)
-    })
-  }
-
-  // ── Lexical node delete handling selection ───────────────────────────────────────────────
-
-  const onDelete = useCallback((event: KeyboardEvent) => {
-    if (!isSelected) return false
-    const canvas = canvasRef.current
-    event.preventDefault()
-    if (canvas) {
-      const active = canvas.getActiveObjects()
-      if (active.length > 0) {
-        active.forEach(obj => canvas.remove(obj))
-        canvas.discardActiveObject()
-        canvas.renderAll()
-        return true
+  useImperativeHandle(ref, () => ({
+    /** Delete selected objects on canvas, returns true if any objects were deleted */
+    deleteSelectedObjects() {
+      const canvas = canvasRef.current
+      if (canvas) {
+        const active = canvas.getActiveObjects()
+        if (active.length > 0) {
+          active.forEach(obj => canvas.remove(obj))
+          canvas.discardActiveObject()
+          canvas.renderAll()
+          return true
+        }
       }
-    }
-    editor.update(() => { $getNodeByKey(nodeKey)?.remove() })
-    return true
-  }, [editor, isSelected, nodeKey])
-
-  useEffect(() => {
-    return mergeRegister(
-      editor.registerCommand<MouseEvent>(
-        CLICK_COMMAND,
-        (event) => {
-          const target = event.target as HTMLElement
-          if (target.closest(`[data-fabric-node-key="${nodeKey}"]`)) {
-            // clearSelection()
-            // setSelected(true)
-            return true
-          }
-          return false
-        },
-        COMMAND_PRIORITY_LOW,
-      ),
-      editor.registerCommand(KEY_DELETE_COMMAND, onDelete, COMMAND_PRIORITY_LOW),
-      editor.registerCommand(KEY_BACKSPACE_COMMAND, onDelete, COMMAND_PRIORITY_LOW),
-    )
-  }, [editor, nodeKey, clearSelection, setSelected, onDelete])
+      return false
+    },
+  }))
 
   // ── Canvas resize handle ──────────────────────────────────────────────────
 
@@ -140,28 +103,22 @@ export function FabricEditor({ nodeKey, width, height, data, onChangeData, onCha
     window.addEventListener('touchend', onUp, { signal })
   }
 
-  // ── Remove node ───────────────────────────────────────────────────────────
-
-  function removeNode() {
-    editor.update(() => { $getNodeByKey(nodeKey)?.remove() })
-  }
-
   return (
     <div className="[anchor-name:--fabric-editor] my-2" data-fabric-node-key={nodeKey}>
-      {isSelected && isEditable && canvasRef.current && (
-        <FabricToolbar anchorName="--fabric-editor" activeObjects={activeObjects} canvas={canvasRef.current} onRemoveNode={removeNode} />
+      {showControls && canvas && (
+        <FabricToolbar anchorName="--fabric-editor" activeObjects={activeObjects} canvas={canvas} onRemoveNode={onRemoveEditor} />
       )}
       <div className={`relative w-max border-2 ${isSelected ? 'border-blue-500' : 'border-gray-300'}`}>
         <FabricCanvas
           width={width}
           height={height}
           data={data}
-          editable={isEditable}
-          onCanvasCreated={onCanvasCreated}
+          editable={editable}
+          onCanvasCreated={setCanvas}
           onUpdate={saveCanvasData}
           onSelect={setActiveObjects}
         />
-        {isSelected && isEditable && (
+        {showControls && (
           <button
             className="absolute -bottom-2 -right-2 size-4 border-2 border-blue-500 cursor-se-resize z-10 touch-none"
             onMouseDown={handleResizeStart}

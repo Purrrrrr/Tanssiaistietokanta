@@ -6,7 +6,7 @@ import { FloatingToolbar, ToolbarButton, ToolbarColorPicker, ToolbarInput, Toolb
 import randomId from 'utils/randomId'
 
 import { Arrowline } from './Arrowline'
-import { EditPolygon, RectangleIcon, EllipseIcon, CircleIcon, TriangleIcon, PentagonIcon, HexagonIcon, ArrowIcon, DrawIcon, BringToTopIcon, SendToBottomIcon } from './icons'
+import { ArrowIcon, BringToTopIcon, CircleIcon, DrawIcon, EditPolygon, EllipseIcon, HexagonIcon, PentagonIcon, RectangleIcon, SendToBottomIcon, TriangleIcon } from './icons'
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
