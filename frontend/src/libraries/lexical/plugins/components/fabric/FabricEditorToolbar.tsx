@@ -2,7 +2,7 @@ import { useEffect, useReducer, useState } from 'react'
 import { Canvas, Circle, classRegistry, controlsUtils, Ellipse, FabricObject, PencilBrush, Polygon, Rect, Textbox, TFiller } from 'fabric'
 
 import { useEditorT } from 'libraries/lexical/i18n'
-import { FloatingToolbar, ToolbarButton, ToolbarColorPicker, ToolbarRow } from 'libraries/lexical/toolbar/widgets'
+import { FloatingToolbar, ToolbarButton, ToolbarColorPicker, ToolbarInput, ToolbarRow } from 'libraries/lexical/toolbar/widgets'
 import randomId from 'utils/randomId'
 
 import { Arrowline } from './Arrowline'
@@ -98,6 +98,7 @@ export function FabricToolbar({ anchorName, canvas, activeObjects, onRemoveNode:
         modifier(active, canvas)
         canvas.fire('object:modified', { target: active[0] })
       }
+      forceUpdate()
     })
   }
   const modifyActiveObject = (modifier: (obj: FabricObject) => void) =>
@@ -105,6 +106,7 @@ export function FabricToolbar({ anchorName, canvas, activeObjects, onRemoveNode:
 
   const applyFill = (color: string) => modifyActiveObject(obj => obj.set('fill', color))
   const applyStroke = (color: string) => modifyActiveObject(obj => obj.set('stroke', color))
+  const applyStrokeWidth = (width: number) => modifyActiveObject(obj => obj.set('strokeWidth', width))
 
   // Object z-indexing (bring forward/send backward)
   const sortedByZIndex = (objects: FabricObject[], canvas: Canvas) => {
@@ -185,6 +187,14 @@ export function FabricToolbar({ anchorName, canvas, activeObjects, onRemoveNode:
           <ToolbarButton onMouseDown={sendBackward} tooltip={t('sendBackward')} icon={<SendToBottomIcon />} />
           <ToolbarColorPicker label={t('fill')} value={toColor(activeObjects[0]?.fill)} onChange={applyFill} />
           <ToolbarColorPicker label={t('stroke')} value={toColor(activeObjects[0]?.stroke)} onChange={applyStroke} />
+          <ToolbarInput
+            label={t('strokeWidth')}
+            type="number"
+            size={2}
+            value={activeObjects[0]?.strokeWidth || 1}
+            onChange={value => applyStrokeWidth(Number(value))}
+            min={0}
+          />
           <ToolbarButton
             color="danger"
             onMouseDown={deleteActiveObjects}
