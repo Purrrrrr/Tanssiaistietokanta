@@ -15,7 +15,7 @@ import {
 import { useEditorT } from 'libraries/lexical/i18n'
 
 import { FabricCanvas } from './FabricCanvas'
-import { FabricToolbar } from './FabricToolbar'
+import { FabricToolbar } from './FabricEditorToolbar'
 
 declare module 'fabric' {
   // to have the properties recognized on the instance and in the constructor
