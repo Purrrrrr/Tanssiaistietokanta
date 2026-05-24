@@ -538,8 +538,7 @@
   * Workshop instance support
 * Adding accepted does not work
 * Make dances searchable categories or event names (not implementing description since not available in list)
-
-  Fabric-editor
+* Fabric-editor
   * Use existing toolbar code
   * Move toolbar widgets to one file/folder
   * Make all delete buttons use color=danger
@@ -547,13 +546,14 @@
     * Draw button with selected state
   * Floating image editor
   * Use FormGroup in editors
-    Arrows
-    Stroke selector
-    Color selectors for creating new objects
-    Color dropdown
-    Separate the two FabricToolbar components by renaming one of them
-    Minify -> ids for objects?
-    Minifying state
+  * Minify -> ids for objects?
+  * Minifying state
+  * Color dropdown
+  * Color selectors for creating new objects
+  * Minify numbers with less precision? (Solved by rounding polygon points)
+  * Arrows
+  * Separate the two FabricToolbar components by renaming one of them
+  * Stroke selector
 
   Is fabric/image/whatever document content pasteable/copyable from Google Docs or Word?
 
