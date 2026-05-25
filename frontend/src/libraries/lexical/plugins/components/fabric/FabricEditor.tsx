@@ -1,4 +1,4 @@
-import { useImperativeHandle, useRef, useState } from 'react'
+import { useImperativeHandle, useState } from 'react'
 import { Canvas, FabricObject } from 'fabric'
 import type { NodeKey } from 'lexical'
 
@@ -35,14 +35,12 @@ interface FabricComponentProps {
 export function FabricEditor({ editable, isSelected, nodeKey, width, height, data, onChangeData, onChangeDimensions, onRemoveEditor, ref }: FabricComponentProps) {
   const t = useEditorT('diagram')
   const [canvas, setCanvas] = useState<Canvas | null>(null)
-  const canvasRef = useRef<Canvas | null>(null)
   const [activeObjects, setActiveObjects] = useState<FabricObject[]>([])
   const showControls = editable && isSelected
 
   // ── Serialize canvas to node ──────────────────────────────────────────────
 
   function saveCanvasData() {
-    const canvas = canvasRef.current
     if (!canvas) return
     const json = canvas.toJSON()
     onChangeData(json)
@@ -51,7 +49,6 @@ export function FabricEditor({ editable, isSelected, nodeKey, width, height, dat
   useImperativeHandle(ref, () => ({
     /** Delete selected objects on canvas, returns true if any objects were deleted */
     deleteSelectedObjects() {
-      const canvas = canvasRef.current
       if (canvas) {
         const active = canvas.getActiveObjects()
         if (active.length > 0) {
@@ -85,15 +82,15 @@ export function FabricEditor({ editable, isSelected, nodeKey, width, height, dat
 
     function onMove(e: MouseEvent | TouchEvent) {
       const { clientX, clientY } = toCoordinates(e)
-      canvasRef.current?.setDimensions({
+      canvas?.setDimensions({
         width: Math.max(200, startW + clientX - startX),
         height: Math.max(100, startH + clientY - startY),
       })
     }
 
     function onUp() {
-      if (!canvasRef.current) return
-      onChangeDimensions(canvasRef.current.width, canvasRef.current.height)
+      if (!canvas) return
+      onChangeDimensions(canvas.width, canvas.height)
       controller.abort()
     }
 
