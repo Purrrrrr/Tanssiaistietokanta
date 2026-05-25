@@ -11,15 +11,15 @@ import classNames from 'classnames'
 import type { SerializedElementNode, SerializedParagraphNode, SerializedTextNode } from 'lexical'
 
 import { useEditorTranslation } from './i18n'
+import { FabricCanvas } from './plugins/components/fabric/FabricCanvas'
 import { QRCode } from './plugins/components/QRCode'
+import { SerializedFabricNode } from './plugins/nodes/FabricNode'
 import type { SerializedImageNode } from './plugins/nodes/ImageNode'
 import type { SerializedLayoutContainerNode } from './plugins/nodes/LayoutContainerNode'
 import type { SerializedLayoutItemNode } from './plugins/nodes/LayoutItemNode'
 import type { SerializedQRCodeNode } from './plugins/nodes/QRCodeNode'
 import { theme } from './theme'
 import { expand, MinifiedDocumentContent } from './utils/minify'
-import { SerializedFabricNode } from './plugins/nodes/FabricNode'
-import { FabricCanvas } from './plugins/components/fabric/FabricCanvas'
 
 // ---------------------------------------------------------------------------
 // Public component
@@ -33,7 +33,7 @@ export interface DocumentViewerProps extends ViewOptions {
 }
 
 export function DocumentViewer({ id, document: minified, className, placeholder, ...viewOptions }: DocumentViewerProps) {
-  const document = minified ? expand(minified) : null
+  const document = minified ? expand(minified, true) : null
   const root = document?.root as unknown as SerializedElementNode ?? { type: 'root', children: [] }
   const { content, hasContent } = renderChildren(root, viewOptions)
 
@@ -128,16 +128,17 @@ const content = (content: React.ReactNode): RenderResult => ({ content, hasConte
 const empty = { content: null, hasContent: false }
 
 function renderNode(node: SerializedNode, index: number, options: ViewOptions): RenderResult {
+  const key = (node as unknown as { _id: string })._id ?? index
   switch (node.type) {
     case 'text': {
-      const text = renderText(node as SerializedTextNode, index, options)
+      const text = renderText(node as SerializedTextNode, key, options)
       return { content: text, hasContent: text != null }
     }
     case 'image': {
       const img = node as SerializedImageNode
       return content(
         <img
-          key={index}
+          key={key}
           src={img.src}
           alt={img.altText}
           width={img.width}
@@ -148,15 +149,15 @@ function renderNode(node: SerializedNode, index: number, options: ViewOptions): 
     case 'fabric-diagram': {
       const { width, height, data } = node as SerializedFabricNode
 
-      return content(<FabricCanvas key={index} width={width} height={height} data={data} />)
+      return content(<FabricCanvas key={key} width={width} height={height} data={data} />)
     }
     case 'qr-code': {
       const { value, title, size } = node as SerializedQRCodeNode
-      return content(<QRCode key={index} value={value || ' '} title={title} size={size ?? 128} />)
+      return content(<QRCode key={key} value={value || ' '} title={title} size={size ?? 128} />)
     }
 
     case 'linebreak':
-      return content(<br key={index} />)
+      return content(<br key={key} />)
   }
 
   const { content: children, hasContent } = renderChildren(node as SerializedElementNode, options)
@@ -166,7 +167,7 @@ function renderNode(node: SerializedNode, index: number, options: ViewOptions): 
       if (!hasContent) return empty
       const para = node as SerializedElementNode
       return content(
-        <p key={index} style={alignStyle(para.format)}>
+        <p key={key} style={alignStyle(para.format)}>
           {children}
         </p>,
       )
@@ -177,13 +178,13 @@ function renderNode(node: SerializedNode, index: number, options: ViewOptions): 
       const heading = node as SerializedHeadingNode
       const headingLevel = parseInt(heading.tag.slice(1), 10) + (options.skipHeadingLevels ?? 0) - 1
       const Tag = headingTags[Math.min(6, headingLevel)]
-      return content(<Tag key={index} style={alignStyle(heading.format)}>{children}</Tag>)
+      return content(<Tag key={key} style={alignStyle(heading.format)}>{children}</Tag>)
     }
 
     case 'quote':
       if (!hasContent) return empty
       return content(
-        <blockquote key={index} style={alignStyle((node as SerializedElementNode).format)}>
+        <blockquote key={key} style={alignStyle((node as SerializedElementNode).format)}>
           {children}
         </blockquote>,
       )
@@ -197,7 +198,7 @@ function renderNode(node: SerializedNode, index: number, options: ViewOptions): 
       }
       return content(
         <a
-          key={index}
+          key={key}
           href={link.url}
           target={link.target ?? undefined}
           rel={link.rel ?? undefined}
@@ -212,7 +213,7 @@ function renderNode(node: SerializedNode, index: number, options: ViewOptions): 
       const list = node as SerializedListNode
       const Tag = list.listType === 'number' ? 'ol' : 'ul'
       return content(
-        <Tag key={index} style={alignStyle(list.format)} start={list.listType === 'number' ? list.start : undefined}>
+        <Tag key={key} style={alignStyle(list.format)} start={list.listType === 'number' ? list.start : undefined}>
           {children}
         </Tag>,
       )
@@ -226,7 +227,7 @@ function renderNode(node: SerializedNode, index: number, options: ViewOptions): 
         ? (item.checked ? theme.list.listitemChecked : theme.list.listitemUnchecked)
         : undefined
       return content(
-        <li key={index} className={checkClass} style={alignStyle(item.format)} value={item.value}>
+        <li key={key} className={checkClass} style={alignStyle(item.format)} value={item.value}>
           {isCheckItem && (
             <input type="checkbox" checked={item.checked} readOnly tabIndex={-1} />
           )}
@@ -237,14 +238,14 @@ function renderNode(node: SerializedNode, index: number, options: ViewOptions): 
 
     case 'table':
       return content(
-        <table key={index}>
+        <table key={key}>
           <tbody>{children}</tbody>
         </table>,
       )
 
     case 'tablerow':
       return content(
-        <tr key={index}>
+        <tr key={key}>
           {children}
         </tr>,
       )
@@ -254,7 +255,7 @@ function renderNode(node: SerializedNode, index: number, options: ViewOptions): 
       const Tag = cell.headerState ? 'th' : 'td'
       return content(
         <Tag
-          key={index}
+          key={key}
           colSpan={cell.colSpan}
           rowSpan={cell.rowSpan}
           style={cell.width != null ? { width: cell.width } : undefined}
@@ -268,7 +269,7 @@ function renderNode(node: SerializedNode, index: number, options: ViewOptions): 
       const layout = node as SerializedLayoutContainerNode
       return content(
         <div
-          key={index}
+          key={key}
           className={theme.layoutContainer}
           style={{ gridTemplateColumns: layout.templateColumns }}
         >
@@ -279,7 +280,7 @@ function renderNode(node: SerializedNode, index: number, options: ViewOptions): 
 
     case 'layout-item':
       return content(
-        <div key={index} className={theme.layoutItem}>
+        <div key={key} className={theme.layoutItem}>
           {children}
         </div>,
       )
@@ -288,7 +289,7 @@ function renderNode(node: SerializedNode, index: number, options: ViewOptions): 
       console.log(node.type)
       // Attempt to render children for unknown element nodes
       return content(
-        <span key={index}>
+        <span key={key}>
           {children}
         </span>,
       )
@@ -304,7 +305,7 @@ function renderChildren(node: SerializedElementNode, options: ViewOptions): Rend
   }
 }
 
-function renderText(node: SerializedTextNode, index: number, _options: ViewOptions): React.ReactNode {
+function renderText(node: SerializedTextNode, key: number | string, _options: ViewOptions): React.ReactNode {
   const { text, format } = node
   if (!text || text === '') return null
 
@@ -317,7 +318,7 @@ function renderText(node: SerializedTextNode, index: number, _options: ViewOptio
   const superscript = !!(format & FORMAT_SUPERSCRIPT)
 
   if (code) {
-    return <code key={index} className={theme.text.code}>{text}</code>
+    return <code key={key} className={theme.text.code}>{text}</code>
   }
 
   const underlineAndStrike = underline && strikethrough
@@ -338,7 +339,7 @@ function renderText(node: SerializedTextNode, index: number, _options: ViewOptio
   if (!classes && !subscript && !superscript) return text
 
   return (
-    <span key={index} className={classes || undefined}>
+    <span key={key} className={classes || undefined}>
       {content}
     </span>
   )

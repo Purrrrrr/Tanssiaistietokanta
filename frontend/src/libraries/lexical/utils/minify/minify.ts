@@ -49,24 +49,24 @@ function minifyLiveNode(node: LexicalNode, idMap: Map<string, string>): Minified
 }
 
 /** Expands a minified editor state back to a full `SerializedEditorState`. */
-export function expand({ V, ...state }: MinifiedDocumentContent): SerializedEditorState {
+export function expand({ V, ...state }: MinifiedDocumentContent, expandIds?: boolean): SerializedEditorState {
   if (V !== FORMAT_VERSION) {
     throw new Error(`Unsupported minified state version: ${V}`)
   }
   return {
-    root: expandNode(state as AnyNode) as SerializedEditorState['root'],
+    root: expandNode(state as AnyNode, expandIds) as SerializedEditorState['root'],
   }
 }
 
-function expandNode(node: AnyNode): AnyNode {
+function expandNode(node: AnyNode, expandIds?: boolean): AnyNode {
   const result: AnyNode = {}
   for (const [key, value] of Object.entries(node)) {
-    if (key === '_id') continue
+    if (key === '_id' && !expandIds) continue
     const origKey = expandKey(key)
     if (origKey === 'type' && typeof value === 'string') {
       result[origKey] = TYPE_UNMAP[value] ?? value
     } else if (origKey === 'children' && Array.isArray(value)) {
-      result[origKey] = value.map(child => expandNode(child as AnyNode))
+      result[origKey] = value.map(child => expandNode(child as AnyNode, expandIds))
     } else {
       result[origKey] = value
     }
