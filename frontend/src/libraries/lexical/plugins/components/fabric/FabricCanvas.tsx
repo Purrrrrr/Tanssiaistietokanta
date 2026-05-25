@@ -82,7 +82,9 @@ export function FabricCanvas({ width, height, data, editable = false, onCanvasCr
     if (canvas) setEditable(canvas, editable)
   }, [editable])
 
-  return (<canvas ref={canvasElRef} />)
+  // Wrap the canvas in a div to prevent React erroring on unmount
+  // when trying to remove the canvas that fabric has modified
+  return (<div><canvas ref={canvasElRef} /></div>)
 }
 
 function setEditable(canvas: Canvas, editable: boolean) {
