@@ -35,6 +35,7 @@ export function FabricToolbar({ anchorName, canvas, activeObjects, onRemoveNode:
   const [, forceUpdate] = useReducer(x => x + 1, 0) // for force re-render on tool state changes
   const [fill, setFill] = useState('#fff')
   const [stroke, setStroke] = useState('#000')
+  const [strokeWidth, setStrokeWidth] = useState(2)
 
   const toggleDrawingMode = () => {
     // eslint-disable-next-line react-hooks/immutability
@@ -55,7 +56,7 @@ export function FabricToolbar({ anchorName, canvas, activeObjects, onRemoveNode:
     top: canvas.height / 2,
     originX: 'center',
     originY: 'center',
-    strokeWidth: 2,
+    strokeWidth,
     fill,
     stroke,
     strokeUniform: true,
@@ -167,6 +168,14 @@ export function FabricToolbar({ anchorName, canvas, activeObjects, onRemoveNode:
       <ToolbarRow title={t('diagram')}>
         <ToolbarColorPicker label={t('fill')} value={fill} onChange={setFill} />
         <ToolbarColorPicker label={t('stroke')} value={stroke} onChange={setStroke} />
+        <ToolbarInput
+          label={t('strokeWidth')}
+          type="number"
+          size={2}
+          value={strokeWidth}
+          onChange={value => setStrokeWidth(Number(value))}
+          min={0}
+        />
         <ToolbarButton onMouseDown={addRect} tooltip={t('addRect')} icon={<RectangleIcon />} />
         <ToolbarButton onMouseDown={addEllipse} tooltip={t('addEllipse')} icon={<EllipseIcon />} />
         <ToolbarButton onMouseDown={addCircle} tooltip={t('addCircle')} icon={<CircleIcon />} />
