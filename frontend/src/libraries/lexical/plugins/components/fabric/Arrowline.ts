@@ -17,8 +17,7 @@ export class Arrowline extends Polyline {
 
   _render(ctx: CanvasRenderingContext2D) {
     super._render(ctx)
-
-    if (this.width === 0 || this.height === 0 || !this.visible) return // skip rendering arrowhead for zero-length lines
+    if (!this.visible) return // skip rendering arrowhead for zero-length lines
 
     const { x1, y1, x2, y2 } = this.calcLinePoints()
     const yDiff = y2 - y1
