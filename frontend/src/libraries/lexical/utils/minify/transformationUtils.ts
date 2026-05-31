@@ -1,22 +1,21 @@
 import equal from 'fast-deep-equal'
 
-import type { AnyNode, MinifiedValue, Transformation } from './types'
+import type { AnyNode, KeyMapping, MinifiedValue, Transformation } from './types'
+
+import { applyExpandKey, applyMinifyKey, expandObjectKeys, minifyObjectKeys } from './keyMap'
 
 /** Creates a `Transformation` that only applies when the node's `type` field
  *  (at its original, expanded value) matches one of the given `types`.
  *
  *  @param typeKey - The key name used to look up the type in a *minified* node (e.g. `'t'`).
  *  @param typeUnmap - A map from minified type values back to their original names. */
-export function createForTypes(
+export function forTypes(
   types: string[],
   transformation: Transformation,
-  { typeKey, typeUnmap }: { typeKey: string, typeUnmap: Record<string, string> },
 ): Transformation {
   return {
     minify: (node: AnyNode) => {
-      const minifiedTypeValue = node[typeKey] as string
-      const type = typeUnmap[minifiedTypeValue] ?? minifiedTypeValue
-      return types.includes(type) ? transformation.minify(node) : node
+      return types.includes(node.type as string) ? transformation.minify(node) : node
     },
     expand: (node: AnyNode) => {
       return types.includes(node.type as string) ? transformation.expand(node) : node
@@ -28,19 +27,17 @@ export function createForTypes(
  *  during minification and restores them during expansion.
  *
  *  @param minifyKeyFn - A function that maps an original key name to its minified form. */
-export function createDefaultValues(
+export function defaultValues(
   defaults: Record<string, MinifiedValue>,
-  minifyKeyFn: (key: string) => string,
 ): Transformation {
   return {
     minify: (node: AnyNode) => {
       let changed = false
       const result = { ...node }
       for (const [key, defaultValue] of Object.entries(defaults)) {
-        const minKey = minifyKeyFn(key)
-        if (equal(result[minKey], defaultValue)) {
+        if (equal(result[key], defaultValue)) {
           // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-          delete result[minKey]
+          delete result[key]
           changed = true
         }
       }
@@ -60,9 +57,34 @@ export function createDefaultValues(
   }
 }
 
+export function keyMapper(mapping: KeyMapping): Transformation {
+  return {
+    minify: minifyObjectKeys.bind(null, mapping),
+    expand: expandObjectKeys.bind(null, mapping),
+  }
+}
+
+export function typeMapper(mapping: KeyMapping, key: string = 'type'): Transformation {
+  return mapKey<string>(key, {
+    minify: applyMinifyKey.bind(null, mapping),
+    expand: applyExpandKey.bind(null, mapping),
+  })
+}
+
+export function mapKey<T, M = T>(key: string, transformation: Transformation<T, M>): Transformation {
+  return {
+    minify: (node: AnyNode) => key in node
+      ? ({ ...node, [key]: transformation.minify(node[key] as T) })
+      : node,
+    expand: (node: AnyNode) => key in node
+      ? ({ ...node, [key]: transformation.expand(node[key] as M) })
+      : node,
+  }
+}
+
 /** Runs all transformations forward (minify direction) in order. */
 export function applyTransformations(transformations: Transformation[], node: AnyNode): AnyNode {
-  let result = node
+  let result = { ...node }
   for (const transformation of transformations) {
     result = transformation.minify(result)
   }
@@ -71,7 +93,7 @@ export function applyTransformations(transformations: Transformation[], node: An
 
 /** Runs all transformations in reverse (expand direction). */
 export function applyReverseTransformations(transformations: Transformation[], node: AnyNode): AnyNode {
-  let result = node
+  let result = { ...node }
   for (const transformation of [...transformations].reverse()) {
     result = transformation.expand(result)
   }

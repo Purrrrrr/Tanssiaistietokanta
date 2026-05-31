@@ -1,18 +1,11 @@
-import type { AnyNode, MinifiedValue, Transformation } from './types'
+import type { AnyNode } from './types'
 
-import { FABRIC_KEY_MAPPING, KEY_MAP } from './constants'
-import { applyMinifyKey, expandObjectKeys, minifyObjectKeys } from './keyMap'
-import { applyReverseTransformations, applyTransformations, createDefaultValues, createForTypes } from './transformationUtils'
-
-const fabricMinifyKey = (key: string) => applyMinifyKey(FABRIC_KEY_MAPPING, key)
-const forTypes = (types: string[], transformation: Transformation) =>
-  createForTypes(types, transformation, { typeKey: fabricMinifyKey('type'), typeUnmap: {} })
-const defaultValues = (defaults: Record<string, MinifiedValue>) =>
-  createDefaultValues(defaults, fabricMinifyKey)
+import { FABRIC_KEY_MAPPING } from './constants'
+import { applyReverseTransformations, applyTransformations, defaultValues, forTypes, keyMapper, mapKey } from './transformationUtils'
 
 /** Default values to strip from every fabric object during minification. */
 const fabricObjectTransformations = [
-  defaultValues({
+  forTypes(['Circle', 'Ellipse', 'Polygon', 'Textbox', 'Path'], defaultValues({
     angle: 0,
     opacity: 1,
     visible: true,
@@ -33,7 +26,7 @@ const fabricObjectTransformations = [
     globalCompositeOperation: 'source-over',
     fillRule: 'nonzero',
     backgroundColor: '',
-  }),
+  })),
   forTypes(['Circle', 'Ellipse', 'Polygon', 'Textbox'], defaultValues({
     strokeMiterLimit: 4,
     strokeLineCap: 'butt',
@@ -43,6 +36,10 @@ const fabricObjectTransformations = [
     strokeMiterLimit: 10,
     strokeLineCap: 'round',
     strokeLineJoin: 'round',
+  })),
+  forTypes(['Path'], mapKey<(string | number)[][], string>('path', {
+    minify: path => path.map(segment => segment.join(' ')).join(','),
+    expand: path => path.split(',').map(segment => segment.split(' ').map(value => isNaN(Number(value)) ? value : Number(value))),
   })),
   forTypes(['Circle'], defaultValues({
     startAngle: 0,
@@ -70,74 +67,17 @@ const fabricObjectTransformations = [
     minWidth: 20,
     splitByGrapheme: false,
   })),
+  mapKey<AnyNode[] | undefined>('objects', {
+    minify: objects => objects?.map(minifyFabricObject),
+    expand: objects => objects?.map(expandFabricObject),
+  }),
+  keyMapper(FABRIC_KEY_MAPPING),
 ]
 
-function minifyFabricObject(obj: AnyNode): AnyNode {
-  const keyed = minifyObjectKeys(FABRIC_KEY_MAPPING, obj)
-  const transformed = applyTransformations(fabricObjectTransformations, keyed)
-  // Recursively minify nested groups
-  const objectsKey = fabricMinifyKey('objects')
-  if (Array.isArray(transformed[objectsKey])) {
-    return {
-      ...transformed,
-      [objectsKey]: (transformed[objectsKey] as AnyNode[]).map(minifyFabricObject),
-    }
-  }
-  return transformed
+export function minifyFabricObject(obj: AnyNode): AnyNode {
+  return applyTransformations(fabricObjectTransformations, obj)
 }
 
-function expandFabricObject(obj: AnyNode): AnyNode {
-  const expanded = expandObjectKeys(FABRIC_KEY_MAPPING, obj)
-  // Recursively expand nested groups
-  if (Array.isArray(expanded.objects)) {
-    return {
-      ...expanded,
-      objects: (expanded.objects as AnyNode[]).map(expandFabricObject),
-    }
-  }
-  const restored = applyReverseTransformations(fabricObjectTransformations, expanded)
-  // console.log('Expanded object:', obj, restored)
-  return restored
-}
-
-function parseFabricData(raw: unknown): AnyNode | null {
-  if (!raw) return null
-  if (typeof raw === 'object') return raw as AnyNode
-  if (typeof raw === 'string') {
-    try {
-      return JSON.parse(raw) as AnyNode
-    } catch {
-      return null
-    }
-  }
-  return null
-}
-
-const dataKey = KEY_MAP.data
-
-/** Minifies the fabric canvas JSON stored in the `da` (data) field of a fabric-diagram node. */
-export function minifyFabricDiagram(node: AnyNode): AnyNode {
-  const canvasData = parseFabricData(node[dataKey])
-  if (!canvasData) return node
-
-  const minifiedCanvas: AnyNode = minifyObjectKeys(FABRIC_KEY_MAPPING, canvasData)
-  const objectsKey = fabricMinifyKey('objects')
-  if (Array.isArray(minifiedCanvas[objectsKey])) {
-    minifiedCanvas[objectsKey] = (minifiedCanvas[objectsKey] as AnyNode[]).map(minifyFabricObject)
-  }
-
-  return { ...node, [dataKey]: minifiedCanvas }
-}
-
-/** Expands a minified fabric canvas JSON in the `da` (data) field back to full Fabric.js format. */
-export function expandFabricDiagram(node: AnyNode): AnyNode {
-  const canvasData = parseFabricData(node.data)
-  if (!canvasData) return node
-
-  const expandedCanvas = expandObjectKeys(FABRIC_KEY_MAPPING, canvasData)
-  if (Array.isArray(expandedCanvas.objects)) {
-    expandedCanvas.objects = (expandedCanvas.objects as AnyNode[]).map(expandFabricObject)
-  }
-
-  return { ...node, data: expandedCanvas }
+export function expandFabricObject(obj: AnyNode): AnyNode {
+  return applyReverseTransformations(fabricObjectTransformations, obj)
 }
