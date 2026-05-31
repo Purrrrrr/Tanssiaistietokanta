@@ -6,6 +6,7 @@ export const FORMAT_VERSION = 1
 
 /** Maps original key names to their minified short codes. */
 export const KEY_MAP: Record<string, string> = {
+  _id: '_id',
   type: 't',
   version: 'v',
   children: 'c',
@@ -55,7 +56,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 /** Maps known node type strings to their minified short codes. */
-export const TYPE_MAP: Record<string, string> = {
+export const TYPE_MAPPING = createKeyMapping({
   root: 'ro',
   autolink: 'al',
   'checklist-item': 'ci',
@@ -75,10 +76,7 @@ export const TYPE_MAP: Record<string, string> = {
   table: 'ta',
   text: 'tx',
   'fabric-diagram': 'fd',
-}
-export const TYPE_UNMAP: Record<string, string> = Object.fromEntries(
-  Object.entries(TYPE_MAP).map(([k, v]) => [v, k]),
-)
+})
 
 /** Maps Fabric.js canvas/object property names to their minified short codes.
  *  Covers: shared object properties, Text/IText, Path, Polygon, Group, and canvas root. */

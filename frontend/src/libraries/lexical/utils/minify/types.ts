@@ -23,7 +23,7 @@ export interface KeyMapping {
 }
 
 /** A paired minify/expand transformation applied to a serialized node. */
-export interface Transformation {
-  minify: (node: AnyNode) => AnyNode
-  expand: (node: AnyNode) => AnyNode
+export interface Transformation<T = AnyNode, M = T> {
+  minify: (node: T) => M
+  expand: (node: M) => T
 }

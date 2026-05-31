@@ -1,20 +1,16 @@
-import type { AnyNode, MinifiedValue, Transformation } from './types'
+import type { AnyNode, Transformation } from './types'
 
-import { LEXICAL_KEY_MAPPING, TYPE_UNMAP } from './constants'
-import { applyMinifyKey } from './keyMap'
-import { expandFabricDiagram, minifyFabricDiagram } from './minifyFabric'
-import { applyReverseTransformations, applyTransformations, createDefaultValues, createForTypes } from './transformationUtils'
-
-const minifyKey = (key: string) => applyMinifyKey(LEXICAL_KEY_MAPPING, key)
-const typeKey = minifyKey('type')
-
-const forTypes = (types: string[], transformation: Transformation) =>
-  createForTypes(types, transformation, { typeKey, typeUnmap: TYPE_UNMAP })
-
-const defaultValues = (defaults: Record<string, MinifiedValue>) =>
-  createDefaultValues(defaults, minifyKey)
+import { LEXICAL_KEY_MAPPING, TYPE_MAPPING } from './constants'
+import { expandFabricObject, minifyFabricObject } from './minifyFabric'
+import { applyReverseTransformations, applyTransformations, defaultValues, forTypes, keyMapper, mapKey, typeMapper } from './transformationUtils'
 
 const transformations: Transformation[] = [
+  {
+    minify: node => node,
+    expand: node => node.type === 'root'
+      ? ({ root: node })
+      : node,
+  },
   forTypes(['root', 'paragraph', 'heading', 'list', 'listitem', 'checklist-item', 'layout-container', 'layout-item', 'table', 'tablerow', 'tablecell'], defaultValues({
     indent: 0,
     direction: null,
@@ -52,10 +48,16 @@ const transformations: Transformation[] = [
     minify: ({ _id: _ignored, ...node }) => node as AnyNode,
     expand: node => node,
   }),
-  forTypes(['fabric-diagram'], {
-    minify: minifyFabricDiagram,
-    expand: expandFabricDiagram,
+  forTypes(['fabric-diagram'], mapKey('data', {
+    minify: minifyFabricObject,
+    expand: expandFabricObject,
+  })),
+  mapKey<AnyNode[] | null>('children', {
+    minify: objects => objects?.map(runMinifyTransformations) ?? null,
+    expand: objects => objects?.map(runExpandTransformations) ?? null,
   }),
+  typeMapper(TYPE_MAPPING),
+  keyMapper(LEXICAL_KEY_MAPPING),
 ]
 
 export const runMinifyTransformations = (node: AnyNode): AnyNode =>
