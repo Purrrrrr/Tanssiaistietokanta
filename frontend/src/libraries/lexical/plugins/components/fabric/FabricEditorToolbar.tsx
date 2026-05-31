@@ -1,5 +1,5 @@
 import { useEffect, useReducer, useState } from 'react'
-import { Canvas, Circle, classRegistry, controlsUtils, Ellipse, FabricObject, PencilBrush, Polygon, Rect, Textbox, TFiller } from 'fabric'
+import { Canvas, Circle, controlsUtils, Ellipse, FabricObject, PencilBrush, Polygon, Rect, Textbox, TFiller } from 'fabric'
 
 import { useEditorT } from 'libraries/lexical/i18n'
 import { FloatingToolbar, ToolbarButton, ToolbarColorPicker, ToolbarInput, ToolbarRow } from 'libraries/lexical/toolbar/widgets'
@@ -20,7 +20,6 @@ function regularPolygonPoints(sides: number, radius: number) {
 const toColor = (value: string | TFiller | null): string =>
   typeof value === 'string' ? value : 'black'
 
-classRegistry.setClass(Arrowline)
 // ─── React component ─────────────────────────────────────────────────────────
 
 interface FabricComponentProps {

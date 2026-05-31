@@ -1,6 +1,12 @@
 import { useEffect, useEffectEvent, useRef } from 'react'
-import { Canvas, FabricObject } from 'fabric'
+import { Canvas, classRegistry, FabricObject } from 'fabric'
 import equal from 'fast-deep-equal'
+
+import { Arrowline } from './Arrowline'
+
+import './patchPolylineExport'
+
+classRegistry.setClass(Arrowline)
 
 interface FabricCanvasProps {
   width: number
