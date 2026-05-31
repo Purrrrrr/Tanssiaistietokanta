@@ -3,6 +3,7 @@ import { Canvas, FabricObject } from 'fabric'
 import type { NodeKey } from 'lexical'
 
 import { useEditorT } from 'libraries/lexical/i18n'
+import randomId from 'utils/randomId'
 
 import { FabricCanvas } from './FabricCanvas'
 import { FabricToolbar } from './FabricEditorToolbar'
@@ -42,6 +43,9 @@ export function FabricEditor({ editable, isSelected, nodeKey, width, height, dat
 
   function saveCanvasData() {
     if (!canvas) return
+    canvas.getObjects().forEach(obj => {
+      obj._id ??= randomId()
+    })
     const json = canvas.toJSON()
     onChangeData(json)
   }
