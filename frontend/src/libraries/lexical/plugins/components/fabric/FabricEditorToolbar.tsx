@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState } from 'react'
+import { useCallback, useEffect, useReducer, useState } from 'react'
 import { Canvas, Circle, controlsUtils, Ellipse, FabricObject, PencilBrush, Polygon, Rect, Textbox, TFiller } from 'fabric'
 
 import { useEditorT } from 'libraries/lexical/i18n'
@@ -36,9 +36,24 @@ export function FabricToolbar({ anchorName, canvas, activeObjects, onRemoveNode:
   const [stroke, setStroke] = useState('#000')
   const [strokeWidth, setStrokeWidth] = useState(2)
 
+  const stopDrawingMode = useCallback(() => {
+    if (canvas.isDrawingMode) {
+      // eslint-disable-next-line react-hooks/immutability
+      canvas.isDrawingMode = false
+      forceUpdate()
+    }
+  }, [canvas])
+
   const toggleDrawingMode = () => {
     // eslint-disable-next-line react-hooks/immutability
     canvas.isDrawingMode = !canvas.isDrawingMode
+    if (canvas.isDrawingMode) {
+      canvas.discardActiveObject() // deselect any active objects when entering drawing modifier
+      canvas.requestRenderAll()
+      canvas.once('object:added', stopDrawingMode) // turn off drawing mode after one shape is drawn
+    } else {
+      canvas.off('object:added', stopDrawingMode)
+    }
     forceUpdate()
   }
 
