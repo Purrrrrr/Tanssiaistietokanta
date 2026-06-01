@@ -92,7 +92,7 @@ mutation deleteWorkshop($id: ID!) {
 export function workshopInstanceName(index: number, { abbreviation }: { abbreviation?: string | null }) {
   return abbreviation?.length
     ? abbreviation
-    : index + 1
+    : String(index + 1)
 }
 
 export function canDeleteWorkshop(workshop: Workshop) {

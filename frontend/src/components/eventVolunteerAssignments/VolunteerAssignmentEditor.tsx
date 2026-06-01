@@ -34,7 +34,13 @@ export function VolunteerAssignmentEditor({ title, id, event, search = [], onSet
   return <PageSection
     title={title}
     toolbar={<>
-      <VolunteerAssignmentSearch id={`${id}-search`} value={search} onChange={onSetSearch} workshops={event.workshops} />
+      <VolunteerAssignmentSearch
+        id={`${id}-search`}
+        value={search}
+        onChange={onSetSearch}
+        eventId={eventId}
+        eventVersionId={eventVersionId}
+        workshops={event.workshops} />
       <AddButton
         className="ms-2"
         text={useTranslation('components.volunteerAssignmentEditor.addAssignment')}

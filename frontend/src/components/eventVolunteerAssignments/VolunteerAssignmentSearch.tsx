@@ -1,7 +1,9 @@
-import { EventVolunteerAssignment, EventVolunteerRegistrationStatus } from 'types'
+import { EventVolunteerAssignment, EventVolunteerRegistrationStatus, Workshop } from 'types'
 import { SyncItems } from 'libraries/formsV2/components/inputs/selectors/types'
 
 import { useEventRoles } from 'services/eventRoles'
+import { useEventVolunteers } from 'services/eventVolunteers'
+import { workshopInstanceName } from 'services/workshops'
 
 import { searchList } from 'libraries/common/listSearch'
 import { AutocompleteMultipleInput } from 'libraries/formsV2/components/inputs/selectors'
@@ -15,6 +17,7 @@ export type AssignmentSearchTerm = {
 } | {
   type: 'workshop'
   query: string | null
+  instance?: string | null
 }
 
 export function parseSearch(json: unknown): AssignmentSearchTerm[] {
@@ -23,11 +26,18 @@ export function parseSearch(json: unknown): AssignmentSearchTerm[] {
     if (typeof item !== 'object' || item === null) return null
     if (item.type === 'workshop') {
       if (typeof item.query !== 'string' && item.query !== null) return null
-      return { type: 'workshop', query: item.query }
+      return {
+        type: 'workshop',
+        query: item.query,
+        instance: typeof item.instance === 'string' ? item.instance : null,
+      }
     }
     if (item.type === 'role' || item.type === 'name' || item.type === 'registrationStatus') {
       if (typeof item.query !== 'string') return null
-      return { type: item.type, query: item.query }
+      return {
+        type: item.type,
+        query: item.query,
+      }
     }
     return null
   }).filter((item): item is AssignmentSearchTerm => item !== null)
@@ -41,7 +51,11 @@ export function searchAssignments(assignments: EventVolunteerAssignment[], searc
     a => a.volunteer.name,
   ).filter(a =>
     (!searchGroups.role || searchGroups.role.some(term => a.role.name === term.query)) &&
-    (!searchGroups.workshop || searchGroups.workshop.some(term => (term.query === null ? a.workshop == null : a.workshop?.name === term.query))) &&
+    (!searchGroups.workshop || searchGroups.workshop.some(term => {
+      if (term.query === null) return a.workshop == null
+      return a.workshop?.name === term.query &&
+        ('instance' in term && (term.instance == null || !a.workshopInstanceIds || a.workshopInstanceIds.includes(term.instance)))
+    })) &&
     (!searchGroups.registrationStatus || searchGroups.registrationStatus.some(term => a.registrationStatus === term.query)),
   )
 }
@@ -50,15 +64,25 @@ interface VolunteerAssignmentSearchProps {
   id: string
   value: AssignmentSearchTerm[]
   onChange: (value: AssignmentSearchTerm[]) => void
-  workshops: { _id: string, name: string }[]
+  eventId: string
+  eventVersionId?: string | null
+  workshops: Pick<Workshop, '_id' | 'name' | 'instances'>[]
 }
 
-export function VolunteerAssignmentSearch({ id, value, onChange, workshops }: VolunteerAssignmentSearchProps) {
+export function VolunteerAssignmentSearch({ id, value, onChange, eventId, eventVersionId, workshops }: VolunteerAssignmentSearchProps) {
   const [roles] = useEventRoles()
+  const [eventVolunteers] = useEventVolunteers({ eventId, eventVersionId })
   const t = useT('components.volunteerAssignmentEditor')
   const statusT = useT('domain.EventVolunteerAssignmentRegistrationStatus')
 
   const items = (query: string): SyncItems<AssignmentSearchTerm> => {
+    const instances = workshops.flatMap(
+      ({ _id, name, instances }): { _id: string, name: string, instance: string | null }[] => {
+        const allWorkshops = { _id, name, instance: null }
+        return instances.length === 1
+          ? [allWorkshops]
+          : [allWorkshops, ...instances.map(i => ({ _id, name, instance: i._id }))]
+      })
     return {
       categories: [
         {
@@ -67,10 +91,13 @@ export function VolunteerAssignmentSearch({ id, value, onChange, workshops }: Vo
         },
         {
           title: t('workshop'),
-          items: searchList(
-            [...workshops, { _id: null, name: t('noWorkshop') }],
-            query, 'name',
-          ).map(workshop => ({ type: 'workshop', query: workshop._id ? workshop.name : null })),
+          items: [
+            ...searchList([t('noWorkshop')], query, (x: string) => x).map(() => ({ type: 'workshop' as const, query: null })),
+            ...searchList(
+              instances,
+              query, 'name',
+            ).map(({ name, instance }) => ({ type: 'workshop' as const, query: name, instance })),
+          ],
         },
         {
           title: t('registrationStatus'),
@@ -82,17 +109,27 @@ export function VolunteerAssignmentSearch({ id, value, onChange, workshops }: Vo
         },
         {
           title: t('name'),
-          items: query
-            ? [
-              { type: 'name', query },
-            ]
-            : [],
+          items: searchList(eventVolunteers, query, ev => ev.volunteer.name).map(ev => ({ type: 'name', query: ev.volunteer.name })),
         },
       ],
     }
   }
+  const instanceToName = (instanceId?: string | null) => {
+    if (!instanceId) return null
+    const instanceWorkshop = workshops.find(w => w.instances.some(i => i._id === instanceId))
+    if (!instanceWorkshop) return null
+    const instanceIdx = instanceWorkshop.instances.findIndex(i => i._id === instanceId)
+
+    return workshopInstanceName(instanceIdx, instanceWorkshop.instances[instanceIdx])
+  }
   const itemToString = (item: AssignmentSearchTerm) => {
-    if (item.type === 'workshop') return item.query ?? t('noWorkshop')
+    if (item.type === 'workshop') {
+      const name = item.query ?? t('noWorkshop')
+      const instanceName = instanceToName(item.instance)
+      if (!instanceName) return name
+
+      return `${name} (${instanceName})`
+    }
     if (item.type === 'registrationStatus') return statusT(item.query as EventVolunteerRegistrationStatus)
     return item.query
   }
@@ -107,11 +144,7 @@ export function VolunteerAssignmentSearch({ id, value, onChange, workshops }: Vo
         minimal
         aria-label={useTranslation('common.emptySearch')}
         icon={<Cross className="text-gray-600" />}
-        onClick={e => {
-          onChange([])
-          console.log(id, document.getElementById(id))
-          document.getElementById(id)?.querySelector('input')?.focus()
-        }}
+        onClick={() => onChange([])}
       />
     }
     placeholder={useTranslation('common.search')}
