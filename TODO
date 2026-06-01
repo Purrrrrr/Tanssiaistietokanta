@@ -538,22 +538,38 @@
   * Workshop instance support
 * Adding accepted does not work
 * Make dances searchable categories or event names (not implementing description since not available in list)
-* Volunteer assignments page search
-  * Filter by role, filter by status, filter by workshop/instance
-  * Pick names from volunteer list
-  * Allow picking workshop instances
+* Volunteer assignments page
+  * Search
+    * Filter by role, filter by status, filter by workshop/instance
+    * Pick names from volunteer list
+    * Allow picking workshop instances
+    registrationStatusSelector -> show choices as actions (state flowchart style, only the actions that make sense)
+    Adding jobs:
+      Only show roles that volunteer is interested_in in selector
+      Allow adding ev:s from eva-editor (pop up dialog when need to accept)
+      Turn eventVolunteer accepted if adding assignments to it
 
-  registrationStatusSelector -> show choices as actions (state flowchart style, only the actions that make sense)
+  Check lists/pages layout on mobile
+    Assignments list
+    Volunteers list
+    Workshop page?
 
-  EVA-editor
-    Only show roles that volunteer is interested_in in selector
-    Allow adding ev:s from eva-editor (pop up dialog when need to accept)
-    Turn eventVolunteer accepted if adding assignments to it
+  Introduce shifts for jobs
+    Shift has
+      workshop/instance
+      start/end datetimes
+      role
+      required number of people
+    Each EVA references one shift
+    Separate EVAs referencing multiple instances to multiple records that reference one shift
+    Planner:
+      Store which shifts a volunteer can or wants to handle and allow entering that info
+      Use this to fill shifts?
+  
+  Do links render correctly styled in DocumentViewer?
 
   Prevent status change in VolunteerStatusBulkEditor when it is not legal
-
   When changing volunteer to accepted -> ask roles to assign in a modal
-
   Button to remove multiple event volunteers
 
   Separate sections in Workshop editor for clarity
@@ -593,9 +609,10 @@
     Support turning text into QR code
 
   Volunteer contact details page?
-    Add contact details
+    Add contact details (at least emails)
     GDPR compliance
     https://2026.tracon.fi/tietosuoja/
+    Ability to list (unregistered/all) volunteer emails by workshop
 
   Don't make ball program view "log out" whenever fast refresh occurs
   Auth Part 3
