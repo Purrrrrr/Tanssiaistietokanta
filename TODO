@@ -538,6 +538,12 @@
   * Workshop instance support
 * Adding accepted does not work
 * Make dances searchable categories or event names (not implementing description since not available in list)
+* Volunteer assignments page search
+  * Filter by role, filter by status, filter by workshop/instance
+  * Pick names from volunteer list
+  * Allow picking workshop instances
+
+  registrationStatusSelector -> show choices as actions (state flowchart style, only the actions that make sense)
 
   EVA-editor
     Only show roles that volunteer is interested_in in selector
