@@ -10,10 +10,12 @@ interface AutocompleteMultipleInputProps<T> extends Omit<AutocompleteInputProps<
   // selectedItemClassname?: (item: T) => string | undefined
   selectedItemRenderer?: (item: T) => React.ReactNode
   removeRenderer?: (item: T, onRemove: () => void) => React.ReactNode
+  icon?: React.ReactNode
+  rightIcon?: React.ReactNode
 }
 
 export default function AutocompleteMultipleInput<T>({
-  value, onChange, itemToString = String, selectedItemRenderer, removeRenderer, ...props
+  value, onChange, itemToString = String, selectedItemRenderer, removeRenderer, icon, rightIcon, ...props
 }: AutocompleteMultipleInputProps<T>) {
   const renderItem = selectedItemRenderer ?? itemToString
   const renderRemove = removeRenderer ?? defaultRemoveRenderer
@@ -27,8 +29,9 @@ export default function AutocompleteMultipleInput<T>({
         onChange([...value, item])
       }
     }}
-    inputRenderer={props =>
+    inputRenderer={({ onKeyDown, ...inputProps }) =>
       <ul className={'flex flex-wrap items-center gap-x-1 p-1 rounded-sm ' + CssClass.inputBox}>
+        {icon}
         {value.map((item, index) =>
           <li
             className="inline-flex items-center rounded-sm bg-neutral border-1 border-stone-300 ps-2 overflow-clip"
@@ -38,7 +41,17 @@ export default function AutocompleteMultipleInput<T>({
             {renderRemove(item, () => onChange(value.filter(v => v !== item)))}
           </li>,
         )}
-        <input className={CssClass.inputElement + ' basis-10 grow ms-1'} {...props} />
+        <input
+          className={CssClass.inputElement + ' basis-10 grow ms-1'}
+          onKeyDown={e => {
+            if (e.key === 'Backspace' && !e.currentTarget.value && value.length > 0) {
+              onChange(value.slice(0, -1))
+            }
+            onKeyDown?.(e)
+          }}
+          {...inputProps}
+        />
+        {rightIcon}
       </ul>
     }
     {...props}

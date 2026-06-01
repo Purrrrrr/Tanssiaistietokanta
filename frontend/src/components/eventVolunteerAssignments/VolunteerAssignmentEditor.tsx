@@ -5,28 +5,28 @@ import { Event } from 'types'
 import { useShowGlobalLoadingAnimation } from 'backend'
 import { useEventVolunteerAssignments } from 'services/eventVolunteerAssignments'
 
-import { searchList } from 'libraries/common/listSearch'
-import { Collapse, PageSection, SearchBar } from 'libraries/ui'
+import { Collapse, PageSection } from 'libraries/ui'
 import { AddButton } from 'components/widgets/AddButton'
 import { useTranslation } from 'i18n'
 
 import { AddVolunteerAssignmentForm } from './AddVolunteerAssignmentForm'
 import { AssignmentWarnings } from './AssignmentWarnings'
 import { VolunteerAssignmentList } from './VolunteerAssignmentList'
+import { AssignmentSearchTerm, searchAssignments, VolunteerAssignmentSearch } from './VolunteerAssignmentSearch'
 
 export interface VolunteerAssignmentEditorProps {
   id: string
   title: string
   event: Pick<Event, '_id' | '_versionId' | 'eventRegistrationSystem' | 'workshops'>
-  search?: string
-  onSetSearch: (search: string) => void
+  search?: AssignmentSearchTerm[]
+  onSetSearch: (search: AssignmentSearchTerm[]) => void
 }
 
-export function VolunteerAssignmentEditor({ title, id, event, search, onSetSearch }: VolunteerAssignmentEditorProps) {
+export function VolunteerAssignmentEditor({ title, id, event, search = [], onSetSearch }: VolunteerAssignmentEditorProps) {
   const [showCreateForm, setShowCreateForm] = useState(false)
   const { _id: eventId, _versionId: eventVersionId } = event
   const [unfilteredAssignments = [], requestState] = useEventVolunteerAssignments({ eventId, eventVersionId })
-  const assignments = searchList(unfilteredAssignments, search, a => a.volunteer.name, a => a.role.name, a => a.workshop?.name ?? '')
+  const assignments = searchAssignments(unfilteredAssignments, search)
 
   useShowGlobalLoadingAnimation(requestState.loading)
   const readOnly = eventVersionId != null
@@ -34,13 +34,7 @@ export function VolunteerAssignmentEditor({ title, id, event, search, onSetSearc
   return <PageSection
     title={title}
     toolbar={<>
-      <SearchBar
-        id={`${id}-search`}
-        value={search ?? ''}
-        onChange={onSetSearch}
-        placeholder={useTranslation('common.search')}
-        emptySearchText={useTranslation('common.emptySearch')}
-      />
+      <VolunteerAssignmentSearch id={`${id}-search`} value={search} onChange={onSetSearch} workshops={event.workshops} />
       <AddButton
         className="ms-2"
         text={useTranslation('components.volunteerAssignmentEditor.addAssignment')}

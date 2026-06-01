@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 
 import { VolunteerAssignmentEditor } from 'components/eventVolunteerAssignments/VolunteerAssignmentEditor'
+import { AssignmentSearchTerm, parseSearch } from 'components/eventVolunteerAssignments/VolunteerAssignmentSearch'
 import { useT } from 'i18n'
 
 import { useCurrentEvent } from '../-context'
@@ -9,9 +10,9 @@ export const Route = createFileRoute(
   '/events/$eventId/{-$eventVersionId}/assignments/',
 )({
   component: RouteComponent,
-  validateSearch(search: Record<string, unknown>): { search?: string } {
+  validateSearch(search: Record<string, unknown>): { search?: AssignmentSearchTerm[] } {
     return {
-      search: typeof search.search === 'string' ? search.search : '',
+      search: parseSearch(search.search),
     }
   },
 })
@@ -21,7 +22,7 @@ function RouteComponent() {
   const t = useT('routes.events.event.assignments')
   const { search } = Route.useSearch()
   const navigate = Route.useNavigate()
-  const setSearch = (newSearch: string) => {
+  const setSearch = (newSearch: AssignmentSearchTerm[]) => {
     navigate({
       search: { search: newSearch },
     })

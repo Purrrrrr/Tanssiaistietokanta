@@ -299,6 +299,7 @@ export const fi = {
       name: 'Nimi',
       role: 'Rooli',
       workshop: 'Työpaja',
+      noWorkshop: 'Ei työpajaa',
       instance: 'Opetuskerta',
       allInstances: 'Kaikki',
       registrationStatus: 'Ilmoittautumistilanne',
