@@ -554,6 +554,18 @@
   * Arrows
   * Separate the two FabricToolbar components by renaming one of them
   * Stroke selector
+  * Fix crash when deleting node
+  * Fix arrows not appearing on first render
+  * Stop drawing after object created
+  * _id for points arrays?
+  * Fix selection dissapearing on useAutosavingState
+
+  Fabric editor 2
+    Selection restoring on external modifications
+    Duplicating objects or object copy-paste
+    Stand-alone diagram document type?
+    Icons for fill/stroke/strokeWidth or more compact selector for those
+    Shapes dropdown menu
 
   Is fabric/image/whatever document content pasteable/copyable from Google Docs or Word?
 
