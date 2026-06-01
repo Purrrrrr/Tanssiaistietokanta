@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react'
 import { booleanProp, numberProp, type Showcase, showcase } from './types'
 
 import { Switch } from 'libraries/forms'
-import FormUiShowcase from 'libraries/formsV2/UiShowcase'
 import { DocumentViewer, Editor, type MinifiedDocumentContent } from 'libraries/lexical'
 import { Alert, Dialog } from 'libraries/overlays'
 import { AnchorButton, AutosizedSection, Breadcrumb, BreadcrumbsContainer, Button, Callout, Collapse, GlobalSpinner, H2, RegularLink, showToast, Tab, Tabs } from 'libraries/ui'
@@ -11,6 +10,7 @@ import { Trash } from 'libraries/ui/icons'
 import { MenuLink, MenuSection, Page } from 'components/Page'
 import { ColoredTag, TAG_COLOR_COUNT } from 'components/widgets/ColoredTag'
 
+import FormUiShowcase from './formShowcase'
 import { ShowcaseContainer } from './ShowcaseContainer'
 import { titleCase } from './utils/titleCase'
 

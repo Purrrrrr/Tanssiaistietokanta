@@ -2,10 +2,9 @@ import { useState } from 'react'
 
 import { ConflictHandler } from 'libraries/forms/ConflictHandler'
 import { formFor, withDefaults } from 'libraries/formsV2'
+import { AutocompleteInput, SegmentedInput, Select, TextInput } from 'libraries/formsV2/components/inputs'
 import { Button } from 'libraries/ui'
 import { Cross, Edit } from 'libraries/ui/icons'
-
-import { AutocompleteInput, SegmentedInput, Select, TextInput } from './components/inputs'
 
 interface Data {
   a: string
