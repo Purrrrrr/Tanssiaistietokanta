@@ -13,6 +13,12 @@ export default (app: Application): Resolvers => {
           owner, owningId, path: path ?? '',
         },
       }),
+      filesCount: (_, { owner, owningId, path }, params) => service.count({
+        ...params,
+        query: {
+          owner, owningId, path: path ?? '',
+        },
+      }),
     },
     Mutation: {
       renameFile: (_, { id, name }, params) => service.patch(id, { name }, params),

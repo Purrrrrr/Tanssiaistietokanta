@@ -25,6 +25,10 @@ export default (app: Application): Resolvers => {
         ...params,
         query: { owner, owningId, path: path ?? '' },
       }),
+      documentsCount: (_, { owner, owningId, path }, params) => service.count({
+        ...params,
+        query: { owner, owningId, path: path ?? '' },
+      }),
     },
     Mutation: {
       createDocument: (_, { owner, owningId, path, title, content }, params) =>

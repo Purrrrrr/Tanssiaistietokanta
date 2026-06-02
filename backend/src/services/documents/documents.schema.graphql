@@ -3,6 +3,7 @@ scalar DocumentContent
 type Query {
   document(id: ID!, versionId: ID): Document!
   documents(owner: DocumentOwner!, owningId: ID!, path: String): [Document!]!
+  documentsCount(owner: DocumentOwner!, owningId: ID!, path: String): Int!
 }
 
 type Document implements Versionable {
