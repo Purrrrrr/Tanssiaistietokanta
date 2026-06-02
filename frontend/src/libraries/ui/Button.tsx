@@ -111,9 +111,9 @@ function TooltipContainer({ children, tooltip }: TooltipContainerProps) {
     return children
   }
 
-  return <div className="inline relative">
+  return <div className="tooltip-container inline">
     {children}
-    <div aria-hidden className="absolute right-1/2 z-40 w-max bg-gray-50 border-gray-500 shadow-md opacity-0 transition-opacity origin-top scale-0 translate-x-1/2 p-[3px] border-1 shadow-black/10 peer-hover:delay-1000 peer-focus-within:delay-1000 peer-hover:opacity-100 top-12/10 peer-focus-within:opacity-100 peer-hover:scale-100 peer-focus-within:scale-100">
+    <div aria-hidden className="tooltip w-max bg-gray-50 border-gray-500 shadow-md p-[3px] border-1 shadow-black/10">
       {tooltip}
     </div>
   </div>
