@@ -18,6 +18,7 @@ import type { SerializedLayoutItemNode } from './plugins/nodes/LayoutItemNode'
 import type { SerializedQRCodeNode } from './plugins/nodes/QRCodeNode'
 import { theme } from './theme'
 import { expand, MinifiedDocumentContent } from './utils/minify'
+import { RegularLink } from 'libraries/ui'
 
 // ---------------------------------------------------------------------------
 // Public component
@@ -189,7 +190,7 @@ function renderNode(node: SerializedNode, index: number, options: ViewOptions): 
         return content(options.customRenderers.link({ node: link, children }))
       }
       return content(
-        <a
+        <RegularLink
           key={index}
           href={link.url}
           target={link.target ?? undefined}
@@ -197,7 +198,7 @@ function renderNode(node: SerializedNode, index: number, options: ViewOptions): 
           title={link.title ?? undefined}
         >
           {children}
-        </a>,
+        </RegularLink>,
       )
     }
 
