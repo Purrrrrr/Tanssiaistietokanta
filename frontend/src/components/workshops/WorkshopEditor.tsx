@@ -45,8 +45,6 @@ export function WorkshopEditor({ event, workshop: workshopInDatabase, reservedAb
   const [modifyWorkshop] = usePatchWorkshop({
     refetchQueries: ['getEvent'],
   })
-  const [roles = []] = useEventRoles()
-  const workshopRoles = roles.filter(r => r.appliesToWorkshops)
   const workshopId = workshopInDatabase._id
   const saveWorkshop = (data: Partial<Workshop>) => {
     const { instances, name, abbreviation, description, registrationStatus, instanceSpecificDances } = data
@@ -84,17 +82,6 @@ export function WorkshopEditor({ event, workshop: workshopInDatabase, reservedAb
       />
     }
     <Field path="description" component={DocumentContentEditor} label={t('description')} componentProps={{ className: 'min-h-50' }} />
-    {workshopRoles.map(role =>
-      <WorkshopVolunteerAssignmentEditor
-        key={role._id}
-        id={`workshop-${workshopId}-role-${role._id}`}
-        title={role.plural}
-        event={event}
-        roleId={role._id}
-        workshopId={workshopInDatabase._id}
-        workshopVersionId={workshopInDatabase._versionId ?? undefined}
-      />,
-    )}
     <PageSection
       title={t('instancesAndDances')}
       toolbar={
@@ -115,6 +102,26 @@ export function WorkshopEditor({ event, workshop: workshopInDatabase, reservedAb
       />
     </PageSection>
   </Form>
+}
+
+export function WorkshopVolunteers({ event, workshop }: { event: Event, workshop: Workshop }) {
+  const [roles = []] = useEventRoles()
+  const workshopRoles = roles.filter(r => r.appliesToWorkshops)
+  const workshopId = workshop._id
+
+  return <>
+    {workshopRoles.map(role =>
+      <WorkshopVolunteerAssignmentEditor
+        key={role._id}
+        id={`workshop-${workshopId}-role-${role._id}`}
+        title={role.plural}
+        event={event}
+        roleId={role._id}
+        workshopId={workshop._id}
+        workshopVersionId={workshop._versionId ?? undefined}
+      />,
+    )}
+  </>
 }
 
 export function newInstance(reference?: Instance, date?: string): Instance {
