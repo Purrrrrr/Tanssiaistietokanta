@@ -538,6 +538,12 @@
   * Workshop instance support
 * Adding accepted does not work
 * Make dances searchable categories or event names (not implementing description since not available in list)
+* Do links render correctly styled in DocumentViewer?
+* Fix button tooltip alignment when button is on the right border of page
+  Separate sections in Workshop editor for clarity
+  * Make VolunteerAssignmentEditor less jumpy. Some way to load things in advance. Not doing, separation makes it less needed
+  * Document+file counts
+    Volunteer counts
 * Volunteer assignments page
   * Search
     * Filter by role, filter by status, filter by workshop/instance
@@ -553,6 +559,8 @@
     Assignments list
     Volunteers list
     Workshop page?
+    Show sorting columns as one dropdown on mobile?
+    Separate support for selectable rows
 
   Introduce shifts for jobs
     Shift has
@@ -565,20 +573,15 @@
     Planner:
       Store which shifts a volunteer can or wants to handle and allow entering that info
       Use this to fill shifts?
-  
-  Do links render correctly styled in DocumentViewer?
 
   Prevent status change in VolunteerStatusBulkEditor when it is not legal
   When changing volunteer to accepted -> ask roles to assign in a modal
   Button to remove multiple event volunteers
 
-  Separate sections in Workshop editor for clarity
   Teaching duration for dance
   Copy time counting ball planning view to workshop dances
-  Fix button tooltip alignment when button is on the right border of page
 
   Check if exists and count methods use access control
-  Make VolunteerAssignmentEditor less jumpy. Some way to load things in advance
   Check how deleted volunteers affect versioning
     Fix dependency graph not updating properly on delete
   More fine-grained document access control
