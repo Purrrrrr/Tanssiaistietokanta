@@ -686,6 +686,9 @@ export const fi = {
         workshop: {
           delete: 'Poista työpaja',
           deleteConfirmation: 'Haluatko varmasti poistaa tämän työpajan?',
+          infoAndDances: 'Tiedot ja tanssit',
+          volunteersAndAssignments: 'Vapaaehtoiset ja työvuorot',
+          documentsAndFIles: 'Asiakirjat ja tiedostot',
           documents: 'Työpajan asiakirjat',
           files: 'Työpajaan liittyvät tiedostot',
         },

@@ -68,17 +68,17 @@ function WorkshopPage(
     <Tabs defaultSelectedTabId="editor">
       <Tab
         id="editor"
-        title="Tiedot ja tanssit"
+        title={t('infoAndDances')}
         panel={<WorkshopEditor event={event} workshop={workshop} reservedAbbreviations={reservedAbbreviations} />}
       />
       <Tab
         id="volunteers"
-        title="Vapaaehtoiset"
+        title={<>{t('volunteersAndAssignments')}<CounterTag showZero count={workshop.volunteerAssignments.length} /></>}
         panel={<WorkshopVolunteers event={event} workshop={workshop} />}
       />
       <Tab
         id="documents"
-        title={<>Dokumentit ja tiedostot<CounterTag showZero count={attachmentCount} /></>}
+        title={<>{t('documentsAndFIles')}<CounterTag showZero count={attachmentCount} /></>}
         panel={<>
           <DocumentList
             title={t('documents')}
