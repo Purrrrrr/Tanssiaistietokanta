@@ -3,10 +3,5 @@
     "type": "uses",
     "service": "dancewiki",
     "path": "wikipageName"
-  },
-  {
-    "type": "uses",
-    "service": "dancewiki",
-    "path": "name"
   }
 ]
