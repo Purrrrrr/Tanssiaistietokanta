@@ -206,7 +206,7 @@ query getEvent($id: ID!, $versionId: ID) {
       description
       registrationStatus
       volunteerAssignments {
-        _id
+        _id _eventId _workshopId
         volunteers { _id name }
         role { _id name type }
       }
