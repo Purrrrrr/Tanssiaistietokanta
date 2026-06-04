@@ -540,16 +540,19 @@
 * Make dances searchable categories or event names (not implementing description since not available in list)
 * Do links render correctly styled in DocumentViewer?
 * Fix button tooltip alignment when button is on the right border of page
-  Separate sections in Workshop editor for clarity
+* Separate sections in Workshop editor for clarity
   * Make VolunteerAssignmentEditor less jumpy. Some way to load things in advance. Not doing, separation makes it less needed
   * Document+file counts
-    Volunteer counts
+  * Volunteer counts
+* Icons for statuses
+  * EventVolunteerAssignment
+  * EventVolunteer
 * Volunteer assignments page
   * Search
     * Filter by role, filter by status, filter by workshop/instance
     * Pick names from volunteer list
     * Allow picking workshop instances
-    registrationStatusSelector -> show choices as actions (state flowchart style, only the actions that make sense)
+  * registrationStatusSelector -> show only the actions that make sense)
     Adding jobs:
       Only show roles that volunteer is interested_in in selector
       Allow adding ev:s from eva-editor (pop up dialog when need to accept)
@@ -595,9 +598,6 @@
     Templates for event/interval music slides?
 
   Workshop not in kompassi warning
-  Icons for statuses?
-    EventVolunteerAssignment
-    EventVolunteer
   Should files be versioned too?
 
   Better editor Part 3
