@@ -8,8 +8,9 @@ import { workshopInstanceName } from 'services/workshops'
 import { searchList } from 'libraries/common/listSearch'
 import { AutocompleteMultipleInput } from 'libraries/formsV2/components/inputs/selectors'
 import { Button } from 'libraries/ui'
-import { Cross, Search } from 'libraries/ui/icons'
+import { Build, Cross, Hat, Person, Search } from 'libraries/ui/icons'
 import { useT, useTranslation } from 'i18n'
+import { statusIcons } from './RegistrationStatusSelector'
 
 export type AssignmentSearchTerm = {
   type: 'role' | 'name' | 'registrationStatus'
@@ -133,6 +134,18 @@ export function VolunteerAssignmentSearch({ id, value, onChange, eventId, eventV
     if (item.type === 'registrationStatus') return statusT(item.query as EventVolunteerRegistrationStatus)
     return item.query
   }
+  const itemIcon = (item: AssignmentSearchTerm) => {
+    switch (item.type) {
+      case 'role':
+        return <Hat className="text-lime-600" />
+      case 'name':
+        return <Person className="text-blue-300" />
+      case 'workshop':
+        return <Build className="text-red-700" />
+      case 'registrationStatus':
+        return statusIcons[item.query as EventVolunteerRegistrationStatus]
+    }
+  }
 
   return <AutocompleteMultipleInput<AssignmentSearchTerm>
     id={id}
@@ -149,9 +162,10 @@ export function VolunteerAssignmentSearch({ id, value, onChange, eventId, eventV
     }
     placeholder={useTranslation('common.search')}
     itemToString={itemToString}
-    selectedItemRenderer={item => <>
-      <strong>{t(item.type)}</strong>: {itemToString(item)}
-    </>}
+    itemIcon={itemIcon}
+    selectedItemRenderer={item => <span className="flex items-center gap-2">
+      {itemIcon(item)}{itemToString(item)}
+    </span>}
     itemHidden={item => item.type === 'name'
       ? value.some(v => v.type === 'name')
       : value.some(v => v.type === item.type && v.query === item.query)}

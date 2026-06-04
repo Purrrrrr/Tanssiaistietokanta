@@ -266,6 +266,7 @@ export const fi = {
     },
     volunteerAssignmentEditor: {
       addAssignment: 'Lisää työtehtävä',
+      legend: 'Merkkien selitykset',
       addRole: 'Lisää rooli',
       noRoles: 'Ei rooleja',
       addVolunteer: 'Lisää vapaaehtoinen',
@@ -302,7 +303,7 @@ export const fi = {
       noWorkshop: 'Ei työpajaa',
       instance: 'Opetuskerta',
       allInstances: 'Kaikki',
-      registrationStatus: 'Ilmoittautumistilanne',
+      registrationStatus: 'Tilanne',
       chooseStatus: 'Valitse',
     },
     addVolunteerAssignmentForm: {

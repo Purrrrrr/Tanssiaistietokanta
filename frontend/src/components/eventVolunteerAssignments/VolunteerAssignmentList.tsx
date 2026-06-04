@@ -5,14 +5,14 @@ import { Event, EventVolunteerAssignment, ID } from 'types'
 
 import { useSetEventVolunteerAssignmentRegistrationStatus, useSetEventVolunteerAssignmentWorkshopInstance } from 'services/eventVolunteerAssignments'
 
-import { FormGroup, ItemList, Sort, ToolbarContainer } from 'libraries/ui'
+import { Callout, FormGroup, ItemList, Sort, ToolbarContainer } from 'libraries/ui'
 import { RoleTag } from 'components/eventVolunteers/RoleTag'
 import { SelectionBox } from 'components/widgets/SelectionBox'
 import { useT } from 'i18n'
 import { sortedBy } from 'utils/sorted'
 import { useMultipleSelection } from 'utils/useMultipleSelection'
 
-import { RegistrationStatusSelector } from './RegistrationStatusSelector'
+import { RegistrationStatusLegend, RegistrationStatusSelector } from './RegistrationStatusSelector'
 import { RemoveAssignmentsButton } from './RemoveVolunteerAssignmentButton'
 import { WorkshopInstanceSelector } from './WorkshopInstanceSelector'
 
@@ -64,7 +64,9 @@ export function VolunteerAssignmentList({
             <FormGroup inline label={t('setRegistrationStatus', { count: selected.length })} labelStyle="beside" labelFor={`${id}-registrationStatus-bulk`}>
               <RegistrationStatusSelector
                 id={`${id}-registrationStatus-bulk`}
+                value={selected.map(a => a.registrationStatus)}
                 onChange={status => Promise.all(selected.map(a => setAssignmentRegistrationStatus({ id: a._id, registrationStatus: status })))}
+                showText
               />
             </FormGroup>
           ) }
@@ -79,7 +81,7 @@ export function VolunteerAssignmentList({
     <ItemList
       items={assignments}
       emptyText={t('noAssignments')}
-      columns="grid-cols-[auto_1fr_max-content_1fr_max-content_max-content_auto]">
+      columns="grid-cols-[auto_1fr_max-content_1fr_max-content_auto]">
       <ItemList.SortableHeader
         currentSort={sort}
         onSort={setSort}
@@ -108,28 +110,31 @@ export function VolunteerAssignmentList({
             readOnly={readOnly}
             setInstanceIds={setInstanceIds}
           />
-          {eventRegistrationSystem !== 'None' &&
-            <RegistrationStatusSelector
-              id={`${id}-registrationStatus-${assignment._id}`}
-              className="col-start-6"
-              value={assignment.registrationStatus}
-              onChange={registrationStatus =>
-                setAssignmentRegistrationStatus({ id: assignment._id, registrationStatus })
-              }
-              disabled={readOnly}
-            />
-          }
-          {!readOnly &&
-            <RemoveAssignmentsButton
-              text={t('removeVolunteer')}
-              className="col-start-7"
-              iconOnly
-              assignments={[assignment]}
-            />
-          }
+          <span className="col-start-6 flex">
+            {eventRegistrationSystem !== 'None' &&
+              <RegistrationStatusSelector
+                id={`${id}-registrationStatus-${assignment._id}`}
+                value={assignment.registrationStatus}
+                onChange={registrationStatus =>
+                  setAssignmentRegistrationStatus({ id: assignment._id, registrationStatus })
+                }
+                disabled={readOnly}
+              />
+            }
+            {!readOnly &&
+              <RemoveAssignmentsButton
+                text={t('removeVolunteer')}
+                iconOnly
+                assignments={[assignment]}
+              />
+            }
+          </span>
         </ItemList.Row>
       ))}
     </ItemList>
+    <Callout title={t('legend')}>
+      <RegistrationStatusLegend />
+    </Callout>
     {children}
   </>
 }
