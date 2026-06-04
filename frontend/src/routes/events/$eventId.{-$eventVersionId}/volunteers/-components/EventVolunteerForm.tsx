@@ -3,7 +3,7 @@ import { Event, EventRole, EventVolunteerInput, VolunteerListItem } from 'types'
 import { formFor, type FormProps, SubmitButton, type SyncState, SyncStatus } from 'libraries/forms'
 import { TextArea } from 'libraries/forms/fieldComponents/basicComponents'
 import { VolunteerRoleAssignmentEditor } from 'components/eventVolunteerAssignments/VolunteerRoleAssignmentEditor'
-import { VolunteerStatusSelector } from 'components/eventVolunteers/VolunteerStatusSelector'
+import { VolunteerStatusRadioGroup } from 'components/eventVolunteers/VolunteerStatusRadioGroup'
 import { VolunteerChooser } from 'components/volunteers/VolunteerChooser'
 import { useT } from 'i18n'
 
@@ -59,7 +59,7 @@ export function EventVolunteerForm({ syncState, onSubmit, excludeVolunteers = []
       <Field
         path="status"
         label={t('status')}
-        component={VolunteerStatusSelector}
+        component={VolunteerStatusRadioGroup}
         containerClassName="col-span-full"
       />
       <Field
