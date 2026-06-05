@@ -12,7 +12,6 @@
     "@lexical/markdown": "^0.42.0",
     "@lexical/react": "^0.42.0",
     "@n8tb1t/use-scroll-position": "^2.0.3",
-    "@react-aria/focus": "^3.19.1",
     "@rolldown/plugin-babel": "^0.2.3",
     "@tailwindcss/vite": "^4.1.11",
     "@tanstack/react-router": "^1.167.5",
