@@ -10,6 +10,7 @@ import { AutocompleteMultipleInput } from 'libraries/formsV2/components/inputs/s
 import { Button } from 'libraries/ui'
 import { Build, Cross, Hat, Person, Search } from 'libraries/ui/icons'
 import { useT, useTranslation } from 'i18n'
+
 import { statusIcons } from './RegistrationStatusSelector'
 
 export type AssignmentSearchTerm = {

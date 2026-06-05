@@ -10,6 +10,8 @@ import type { SerializedTableCellNode, SerializedTableNode, SerializedTableRowNo
 import classNames from 'classnames'
 import type { SerializedElementNode, SerializedParagraphNode, SerializedTextNode } from 'lexical'
 
+import { RegularLink } from 'libraries/ui'
+
 import { useEditorTranslation } from './i18n'
 import { QRCode } from './plugins/components/QRCode'
 import type { SerializedImageNode } from './plugins/nodes/ImageNode'
@@ -18,7 +20,6 @@ import type { SerializedLayoutItemNode } from './plugins/nodes/LayoutItemNode'
 import type { SerializedQRCodeNode } from './plugins/nodes/QRCodeNode'
 import { theme } from './theme'
 import { expand, MinifiedDocumentContent } from './utils/minify'
-import { RegularLink } from 'libraries/ui'
 
 // ---------------------------------------------------------------------------
 // Public component
