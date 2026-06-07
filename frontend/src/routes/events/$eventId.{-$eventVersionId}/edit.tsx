@@ -1,9 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useCallback } from 'react'
 
-import { Event } from 'types'
+import { Event, WithoutMetadata } from 'types'
 
-import { cleanMetadataValues, WithoutMetadata } from 'backend'
+import { cleanMetadataValues } from 'backend'
 import { getEventRemoveBlockers, useDeleteEvent, usePatchEvent } from 'services/events'
 
 import { DateField, DateRangeField, formFor, patchStrategy, useAutosavingState } from 'libraries/forms'

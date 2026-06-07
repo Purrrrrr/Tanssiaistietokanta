@@ -4,6 +4,7 @@ export interface Entity {
   _id: ID
 }
 
+export * from './backend'
 export * from './dances'
 export * from './documents'
 export * from './eventRoles'

@@ -7,8 +7,9 @@ import { subscribeToAuthChanges } from 'backend/authentication'
 import { TranslationProvider } from 'libraries/i18n'
 import { AlertContext } from 'libraries/overlays/AlertContext'
 import { ToastContainer } from 'libraries/ui'
+import LoadingComponent from 'components/LoadingComponent'
 import { RightsContext } from 'components/rights/RightsContext'
-import { defaultContext, LoadingComponent, useAppRootContext } from 'utils/routeUtils'
+import { defaultContext, useAppRootContext } from 'utils/routeUtils'
 
 function DanceOrganizer() {
   return <TranslationProvider defaultLanguage="fi">

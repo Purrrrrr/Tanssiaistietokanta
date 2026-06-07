@@ -1,6 +1,4 @@
-import { Volunteer } from 'types'
-
-import { WithoutMetadata } from 'backend'
+import { Volunteer, WithoutMetadata } from 'types'
 
 import { formFor, type FormProps, SubmitButton, type SyncState, SyncStatus } from 'libraries/forms'
 import { useT } from 'i18n'

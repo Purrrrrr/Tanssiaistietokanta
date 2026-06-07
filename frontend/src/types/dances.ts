@@ -1,5 +1,4 @@
-import { WithoutMetadata } from 'backend'
-
+import { WithoutMetadata } from './backend'
 import { GetDanceQuery, GetDancesQuery, SearchDancewikiQuery } from './gql/graphql'
 
 export type DanceListItem = GetDancesQuery['dances'][0]

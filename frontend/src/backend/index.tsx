@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 
+import type { MetadataKey, MetadataObject } from 'types'
+
 import { apolloClient, ApolloProvider } from './apollo'
 import { initializeAuthentication } from './authentication'
 import { GlobalLoadingState } from './GlobalLoadingState'
@@ -31,10 +33,6 @@ export const BackendProvider = ({ children }) => {
     </GlobalLoadingState>
   </ApolloProvider>
 }
-
-type MetadataKey = '_id' | '_versionId' | '_versionNumber' | '_updatedAt'
-type MetadataObject = Partial<Record<MetadataKey, unknown>>
-export type WithoutMetadata<T> = Omit<T, MetadataKey>
 
 export function cleanMetadataValues<T extends MetadataObject>(value: MetadataObject): Omit<T, MetadataKey> {
   const { _id, _versionId, _versionNumber, _updatedAt, ...rest } = value

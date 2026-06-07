@@ -1,9 +1,9 @@
 import { useMemo } from 'react'
 import { string } from 'yup'
 
-import { Event } from 'types'
+import { Event, WithoutMetadata } from 'types'
 
-import { cleanMetadataValues, WithoutMetadata } from 'backend'
+import { cleanMetadataValues } from 'backend'
 import { useEventRoles } from 'services/eventRoles'
 import { usePatchWorkshop, workshopInstanceName } from 'services/workshops'
 
