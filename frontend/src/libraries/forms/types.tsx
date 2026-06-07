@@ -1,11 +1,10 @@
-import React from 'react'
-
 import type { NewValue } from './types/fieldComponent'
 import type { StringPath } from './types/path'
 
-export * from './types/field'
-export * from './types/fieldComponent'
-export * from './types/path'
+export type * from './types/field'
+export type * from './types/fieldComponent'
+export type * from './types/path'
+export { toArrayPath } from './types/path'
 
 export type OnFormChangeHandler<T> = (t: NewValue<T>, path: StringPath<T>) => unknown
 

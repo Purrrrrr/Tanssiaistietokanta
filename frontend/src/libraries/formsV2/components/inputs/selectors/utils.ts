@@ -1,5 +1,3 @@
-export * from './itemUtils'
-
 export function acceptNulls<T>(
   itemToString: (item: T) => string,
   nullDefault: string = '',

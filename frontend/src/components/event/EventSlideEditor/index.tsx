@@ -29,7 +29,8 @@ import { T, useT, useTranslation } from 'i18n'
 
 import { AddIntroductionButton, DanceSetItemButtons } from '../EventProgramEditor/components'
 import { getProgramDuration, getProgramName } from '../utils'
-import { InheritedSlideStyleSelector, IntervalMusicDefaultTextsSwitch } from './components'
+import { InheritedSlideStyleSelector } from './components/InheritedSlideStyleSelector'
+import { IntervalMusicDefaultTextsSwitch } from './components/IntervalMusicDefaultTextsSwitch'
 
 import './EventSlideEditor.scss'
 

@@ -8,7 +8,7 @@ import './dances'
 import './workshops'
 import './eventVolunteerAssignments'
 
-export * from './slideStyles'
+export { type SlideStyle, useEventSlideStyles } from './slideStyles'
 
 setupServiceUpdateFragment(
   'events',

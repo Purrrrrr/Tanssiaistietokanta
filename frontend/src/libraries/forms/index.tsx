@@ -9,17 +9,39 @@ import { RemoveItemButton, RemoveItemButtonProps } from './formControls'
 import { FormHooksFor, formHooksFor } from './hooks'
 import { Entity, ListField, UntypedListFieldProps } from './ListEditor'
 
-export * from './fieldComponents/basicComponents'
-export * from './fieldComponents/dateTime'
+export {
+  Input,
+  InputField,
+  type InputFieldProps,
+  type InputProps,
+  type NumberInputProps,
+  RadioGroup,
+  SwitchField,
+  type SwitchFieldForValueProps,
+  type SwitchFieldProps,
+  switchFor,
+  type SwitchForProps,
+  TextArea,
+} from './fieldComponents/basicComponents'
+export {
+  DateField,
+  DateFieldInput,
+  type DateFieldInputProps,
+  type DateFieldProps,
+  DateRangeField,
+  type DateRangeFieldProps,
+} from './fieldComponents/dateTime'
 export { type FormProps } from './Form'
 export { ActionButton, asFormControl, FormControl, SubmitButton } from './formControls'
 export type { DragHandle } from './ListEditor'
 export { ListEditorContext } from './ListEditor'
-export * from './SyncStatus'
+export { SyncStatus } from './SyncStatus'
 export type { FieldComponentProps, OnChangeHandler, TypedStringPath } from './types'
 export { toArrayPath } from './types'
-export * from './useAutosavingState'
+export type * from './useAutosavingState'
+export { patchStrategy, USE_BACKEND_VALUE, USE_LOCAL_VALUE, useAutosavingState } from './useAutosavingState'
 export { Validate } from './validation'
+export { NumberInput, Switch } from 'libraries/formsV2/components/inputs'
 
 interface FormFor<T> extends FormHooksFor<T> {
   Form: React.JSXElementConstructor<FormProps<T>>

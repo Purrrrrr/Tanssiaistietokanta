@@ -31,3 +31,9 @@ export function jsonPatch<T>(original: T, modifications: T): Operation[] | undef
   const patch = toJSONPatch(original, modifications)
   return patch.length > 0 ? patch : undefined
 }
+
+export default {
+  noPatch,
+  partial,
+  jsonPatch,
+}

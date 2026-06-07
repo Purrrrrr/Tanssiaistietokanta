@@ -7,8 +7,9 @@ import type { FieldInputComponent } from '../types'
 import { Dropdown, DropdownContainer } from 'libraries/overlays'
 import { CssClass } from 'libraries/ui'
 
+import { useFilteredItems } from './itemUtils'
 import { Menu, MenuItem, renderMenuItems, toMenuItemProps } from './Menu'
-import { acceptNulls, preventDownshiftDefaultWhen, useFilteredItems } from './utils'
+import { acceptNulls, preventDownshiftDefaultWhen } from './utils'
 
 export interface AutocompleteInputProps<T> extends Omit<SelectorProps<T>, 'buttonRenderer' | 'value' | 'minimal'> {
   value?: T | null

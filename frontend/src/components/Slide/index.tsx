@@ -7,8 +7,8 @@ import { useT } from 'i18n'
 import './Slide.css'
 import './slideStyles.scss'
 
-export * from './SlideContainer'
-export * from './useSlideshowNavigation'
+export { SlideContainer, type SlideContainerProps } from './SlideContainer'
+export { useSlideshowNavigation } from './useSlideshowNavigation'
 
 export interface SlideProps {
   id: string

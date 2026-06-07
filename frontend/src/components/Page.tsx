@@ -18,7 +18,7 @@ const SyncStatus = lazy(
     .then(m => ({ default: m.SyncStatus })),
 )
 
-export * from './Menu'
+export { Menu, MenuItem, MenuLink, MenuSection } from './Menu'
 
 export interface PageContentProps extends VersionedPageTitleProps {
   background?: 'default' | 'dances' | 'volunteers' | 'ball'

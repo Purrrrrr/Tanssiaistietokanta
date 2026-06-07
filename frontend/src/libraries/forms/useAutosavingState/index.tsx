@@ -15,7 +15,7 @@ const debug = createDebug('useAutoSavingState')
 const AUTOSAVE_DELAY = 50
 
 export type { PatchStrategy } from './patchStrategies'
-export * as patchStrategy from './patchStrategies'
+export { default as patchStrategy } from './patchStrategies'
 export type { SyncState } from './types'
 
 export interface UseAutosavingStateReturn<T extends MergeableObject<T>> {

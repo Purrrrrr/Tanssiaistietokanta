@@ -5,9 +5,10 @@ import { SelectorProps } from './types'
 import { Dropdown, DropdownContainer } from 'libraries/overlays'
 
 import { DropdownButton } from './DropdownButton'
+import { useItems } from './itemUtils'
 import { Menu, MenuItem, renderMenuItems, toMenuItemProps } from './Menu'
 import { ReadOnlySelect } from './ReadOnlySelect'
-import { acceptNulls, preventDownshiftDefaultWhen, useItems } from './utils'
+import { acceptNulls, preventDownshiftDefaultWhen } from './utils'
 
 export default function RegularSelect<T>(props: SelectorProps<T>) {
   return props.readOnly

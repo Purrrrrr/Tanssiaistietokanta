@@ -10,8 +10,6 @@ import { Field, useFieldData } from '../Field'
 import { FieldContainer } from '../FieldContainer'
 import { useFieldValueProps } from '../hooks'
 
-export { NumberInput, Switch } from 'libraries/formsV2/components/inputs'
-
 export type NumberInputProps = ExtendedFieldComponentProps<number, ComponentProps<'input'>>
 export type InputProps = ExtendedFieldComponentProps<string, ComponentProps<'input'>>
 export const Input = TextInput
