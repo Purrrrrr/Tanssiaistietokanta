@@ -12,7 +12,8 @@ import { useT } from 'i18n'
 import { sortedBy } from 'utils/sorted'
 import { useMultipleSelection } from 'utils/useMultipleSelection'
 
-import { RegistrationStatusLegend, RegistrationStatusSelector } from './RegistrationStatusSelector'
+import RegistrationStatusLegend from './RegistrationStatusLegend'
+import RegistrationStatusSelector from './RegistrationStatusSelector'
 import { RemoveAssignmentsButton } from './RemoveVolunteerAssignmentButton'
 import { WorkshopInstanceSelector } from './WorkshopInstanceSelector'
 

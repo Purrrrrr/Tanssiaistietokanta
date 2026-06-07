@@ -11,7 +11,7 @@ import { Button } from 'libraries/ui'
 import { Build, Cross, Hat, Person, Search } from 'libraries/ui/icons'
 import { useT, useTranslation } from 'i18n'
 
-import { statusIcons } from './RegistrationStatusSelector'
+import RegistrationStatusIcon from './RegistrationStatusIcon'
 
 export type AssignmentSearchTerm = {
   type: 'role' | 'name' | 'registrationStatus'
@@ -144,7 +144,7 @@ export function VolunteerAssignmentSearch({ id, value, onChange, eventId, eventV
       case 'workshop':
         return <Build className="text-red-700" />
       case 'registrationStatus':
-        return statusIcons[item.query as EventVolunteerRegistrationStatus]
+        return <RegistrationStatusIcon status={item.query as EventVolunteerRegistrationStatus} />
     }
   }
 
