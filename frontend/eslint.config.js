@@ -1,6 +1,6 @@
 import react from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
+import { reactRefresh } from 'eslint-plugin-react-refresh'
 import eslint from '@eslint/js'
 import stylistic from '@stylistic/eslint-plugin'
 import pluginRouter from '@tanstack/eslint-plugin-router'
@@ -59,12 +59,12 @@ export default defineConfig(
     },
   },
   reactHooks.configs.flat['recommended-latest'],
-  reactRefresh.configs.vite,
   reactA11y.flatConfigs.recommended,
   {
     plugins: {
       'simple-import-sort': importSort,
       import: importPlugin,
+      'react-refresh': reactRefresh.plugin,
     },
     languageOptions: {
       parserOptions: {
@@ -76,6 +76,17 @@ export default defineConfig(
       },
     },
     rules: {
+      'react-refresh/only-export-components': ['error',
+        {
+          extraHOCs: [
+            'createRootRouteWithContext',
+            'createFileRoute',
+            'createLink',
+            'switchFor',
+          ],
+          allowConstantExport: true,
+        },
+      ],
       // --- TODO Fix these eventually somehow
       'react-hooks/refs': 1,
       'react-hooks/set-state-in-effect': 1,

@@ -5,7 +5,7 @@ import {
   Form,
   useEventProgramEditorForm,
 } from 'components/event/EventProgramForm'
-import { EventMetadataContext } from 'components/event/EventProgramForm/eventMetadata'
+import EventMetadataContext from 'components/event/EventProgramForm/EventMetadataContext'
 
 import { useCurrentEvent } from '../-context'
 

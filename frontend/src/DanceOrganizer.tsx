@@ -1,8 +1,8 @@
 import { createRouter, RouterProvider } from '@tanstack/react-router'
 import { routeTree } from 'routeTree.gen'
 
-import { BackendProvider } from 'backend'
 import { subscribeToAuthChanges } from 'backend/authentication'
+import { BackendProvider } from 'backend/components'
 
 import { TranslationProvider } from 'libraries/i18n'
 import { AlertContext } from 'libraries/overlays/AlertContext'

@@ -1,15 +1,9 @@
-import { useEffect, useState } from 'react'
-
 import type { MetadataKey, MetadataObject } from 'types'
 
-import { apolloClient, ApolloProvider } from './apollo'
-import { initializeAuthentication } from './authentication'
-import { GlobalLoadingState } from './GlobalLoadingState'
-
-export { type ApolloClientType as ApolloClient } from './apollo'
 export { updateEntityFragment } from './apolloCache'
-export { type FetchRequestProgress, restRequestWithProgress, type RestRequestWithProgressOptions, socketRequest } from './connection'
-export { addGlobalLoadingAnimation, useShowGlobalLoadingAnimation } from './GlobalLoadingState'
+export type { FetchRequestProgress, RestRequestWithProgressOptions } from './connection'
+export { restRequestWithProgress, socketRequest } from './connection'
+export { addGlobalLoadingAnimation, useShowGlobalLoadingAnimation } from './globalLoadingState'
 export {
   backendQueryHook,
   entityCreateHook,
@@ -20,19 +14,6 @@ export {
 } from './hooks'
 export { setupServiceUpdateFragment, useServiceEvents } from './serviceEvents'
 export { graphql } from 'types/gql'
-
-export const BackendProvider = ({ children }) => {
-  const [initialized, setInitialized] = useState(false)
-  useEffect(() => {
-    initializeAuthentication().then(() => setInitialized(true))
-  }, [])
-
-  return <ApolloProvider client={apolloClient}>
-    <GlobalLoadingState appInitialized={initialized}>
-      {initialized && children}
-    </GlobalLoadingState>
-  </ApolloProvider>
-}
 
 export function cleanMetadataValues<T extends MetadataObject>(value: MetadataObject): Omit<T, MetadataKey> {
   const { _id, _versionId, _versionNumber, _updatedAt, ...rest } = value

@@ -8,7 +8,6 @@ import './Slide.css'
 import './slideStyles.scss'
 
 export { SlideContainer, type SlideContainerProps } from './SlideContainer'
-export { useSlideshowNavigation } from './useSlideshowNavigation'
 
 export interface SlideProps {
   id: string

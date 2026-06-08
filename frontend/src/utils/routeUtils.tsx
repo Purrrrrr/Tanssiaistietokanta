@@ -2,11 +2,12 @@ import { useApolloClient } from '@apollo/client'
 
 import { RightsQuery } from 'libraries/access-control/types'
 
-import { ApolloClient } from 'backend'
 import { apolloClient } from 'backend/apollo'
 
 import { useHasRights } from 'libraries/access-control'
 import { Translator, useT } from 'i18n'
+
+type ApolloClient = typeof apolloClient
 
 export interface DanceOrganizerRootRouteContext {
   hasAccess: (query: RightsQuery) => Promise<boolean[]>
