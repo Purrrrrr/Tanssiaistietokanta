@@ -1,6 +1,6 @@
 import { UploadedFile, useDeleteFile } from 'services/files'
 
-import { showToast } from 'libraries/ui'
+import { showToast } from 'libraries/ui/toaster/context'
 import { DeleteButton } from 'components/widgets/DeleteButton'
 import { useT } from 'i18n'
 

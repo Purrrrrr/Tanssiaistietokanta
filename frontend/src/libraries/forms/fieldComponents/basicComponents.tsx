@@ -4,7 +4,7 @@ import classNames from 'classnames'
 import { ExtendedFieldComponentProps, FieldComponentProps, FieldPropsWithoutComponent } from '../types'
 
 import { Switch, TextInput } from 'libraries/formsV2/components/inputs'
-import { CssClass } from 'libraries/ui'
+import { CssClass } from 'libraries/ui/classes'
 
 import { Field, useFieldData } from '../Field'
 import { FieldContainer } from '../FieldContainer'

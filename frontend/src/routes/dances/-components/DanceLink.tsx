@@ -20,9 +20,3 @@ export function DanceLink(props: DanceLinkProps) {
     {props.children ?? ('dance' in props && props.dance.name)}
   </Link>
 }
-
-export function danceVersionLink(id: ID, versionId?: ID | null) {
-  return versionId
-    ? `/dances/${id}/version/${versionId}`
-    : `/dances/${id}`
-}

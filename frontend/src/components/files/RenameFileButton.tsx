@@ -4,8 +4,9 @@ import { UploadedFile, useRenameFile } from 'services/files'
 
 import { TextInput } from 'libraries/formsV2/components/inputs'
 import { Dialog, useAlerts } from 'libraries/overlays'
-import { Button, showToast } from 'libraries/ui'
+import { Button } from 'libraries/ui'
 import { Edit } from 'libraries/ui/icons'
+import { showToast } from 'libraries/ui/toaster/context'
 import { Translator, useT } from 'i18n'
 
 export function RenameFileButton({ file }: {

@@ -11,6 +11,8 @@ import LoadingComponent from 'components/LoadingComponent'
 import { RightsContext } from 'components/rights/RightsContext'
 import { defaultContext, useAppRootContext } from 'utils/routeUtils'
 
+import 'libraries/ui/init'
+
 function DanceOrganizer() {
   return <TranslationProvider defaultLanguage="fi">
     <BackendProvider>

@@ -4,7 +4,7 @@ import { TypedDocumentNode } from '@graphql-typed-document-node/core'
 
 import { Entity, ServiceName } from 'types'
 
-import { showErrorToast } from 'libraries/ui'
+import { showErrorToast } from 'libraries/ui/toaster/context'
 import { useTranslation } from 'i18n'
 
 import { FetchResult, MutationResult, useMutation, useQuery } from './apollo'

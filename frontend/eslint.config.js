@@ -83,6 +83,7 @@ export default defineConfig(
             'createFileRoute',
             'createLink',
             'switchFor',
+            'withPermissionChecking',
           ],
           allowConstantExport: true,
         },

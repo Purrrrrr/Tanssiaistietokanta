@@ -1,7 +1,7 @@
 import { useCallback, useLayoutEffect, useRef } from 'react'
 import { useScrollPosition } from '@n8tb1t/use-scroll-position'
 
-import { useResizeObserver } from 'libraries/ui'
+import { useResizeObserver } from 'libraries/common/useResizeObserver'
 
 export interface AnchoringCallbackProps {
   element: HTMLElement

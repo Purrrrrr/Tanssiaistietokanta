@@ -2,7 +2,8 @@ import { ApolloError, ApolloQueryResult } from '@apollo/client'
 
 import { useShowGlobalLoadingAnimation } from 'backend'
 
-import { Button, ColorClass, H2 } from 'libraries/ui'
+import { Button, H2 } from 'libraries/ui'
+import { ColorClass } from 'libraries/ui/classes'
 import { Error } from 'libraries/ui/icons'
 import { useT } from 'i18n'
 
