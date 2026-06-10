@@ -12,6 +12,7 @@ interface SizeReport {
   commit: string
   total: number
   biggestChunk: number
+  biggestChunkName: string
   chunks: Chunk[]
 }
 
@@ -78,7 +79,7 @@ export function jsSizeReporter(options: Options = {}) {
       }).filter(r => r != null)
 
       if (branchReport.length > 0) {
-        console.log(frame('JS Bundle Size Change From', padColumns(branchReport)))
+        console.log(frame('Branch and tag bundle sizes', padColumns(branchReport)))
       }
 
       const lastRuns = reports.slice(-5).map((r, index) => {
@@ -102,15 +103,20 @@ function formatSize(bytes: number): string {
 }
 
 function formatReport(title: string, previousReport: SizeReport, currentReport: SizeReport): string[] {
-  const sign = currentReport.total - previousReport.total >= 0 ? "+" : ""
+  const biggestChunkName = previousReport.biggestChunkName ?? previousReport.chunks.reduce((largest, chunk) => {
+    return chunk.size > largest.size ? chunk : largest
+  }, { name: "unknown", size: 0 }).name
   return [
     title,
     `🕒 ${timeDelta(previousReport.timestamp)}`,
     `📝 ${shortenCommitSha(previousReport.commit)}`,
-    `📅 ${previousReport.timestamp}`,
-    `📦 ${formatSize(previousReport.total)} (${sign}${formatSize((currentReport.total - previousReport.total))})`,
-    `Biggest chunk ${formatSize(previousReport.biggestChunk)} (${formatDelta((currentReport.biggestChunk - previousReport.biggestChunk))})`,
+    `📅 ${formatDateTime(previousReport.timestamp)}`,
+    `📦 ${formatSize(previousReport.total)} (${formatDelta((previousReport.total - currentReport.total))})`,
+    `Biggest chunk ${formatChunkName(biggestChunkName)} ${formatSize(previousReport.biggestChunk)} (${formatDelta((previousReport.biggestChunk - currentReport.biggestChunk))})`,
   ]
+}
+function formatChunkName(name: string): string {
+  return name.replace(/^assets\//, '').replace(/\.js$/, '').replace(/-[a-zA-Z0-9]+$/, '')
 }
 
 function timeDelta(previous: string): string {
@@ -130,6 +136,10 @@ function timeDelta(previous: string): string {
   } else {
     return `just now`
   }
+}
+
+function formatDateTime(isoString: string): string {
+  return isoString.replace('T', ' ').replace(/\.\d+Z$/, '')
 }
 
 function padColumns(rows: string[][]): string {
@@ -164,12 +174,16 @@ function frame(title: string, body: string):string {
 function createSizeReport(bundle: OutputBundle): SizeReport {
   let totalBytes = 0
   let biggestChunk = 0
+  let biggestChunkName = ""
   const chunks: Chunk[] = []
 
   for (const chunk of Object.values(bundle)) {
     if (chunk.type === "chunk") {
       const size = Buffer.byteLength(chunk.code)
-      biggestChunk = Math.max(biggestChunk, size)
+      if (size > biggestChunk) {
+        biggestChunk = size
+        biggestChunkName = chunk.fileName
+      }
       totalBytes += size
       chunks.push({ name: chunk.fileName, size })
     }
@@ -179,7 +193,8 @@ function createSizeReport(bundle: OutputBundle): SizeReport {
     timestamp: new Date().toISOString(),
     commit: getGitCommitSha('HEAD'),
     total: totalBytes,
-    biggestChunk: biggestChunk,
+    biggestChunk,
+    biggestChunkName,
     chunks,
   }
 }
