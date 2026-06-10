@@ -1,5 +1,5 @@
-import { useAlerts } from 'libraries/overlays'
 import { Button, ButtonProps } from 'libraries/ui'
+import { useShowAlert } from 'libraries/ui/hooks'
 import { Trash } from 'libraries/ui/icons'
 import { useT } from 'i18n'
 
@@ -15,7 +15,7 @@ interface DeleteButtonProps extends ButtonProps {
 
 export function DeleteButton({ onDelete, iconOnly, text, confirmTitle, confirmText, ...props }: DeleteButtonProps) {
   const t = useT('components.deleteButton')
-  const showAlert = useAlerts()
+  const showAlert = useShowAlert()
 
   return <Button
     {...props}

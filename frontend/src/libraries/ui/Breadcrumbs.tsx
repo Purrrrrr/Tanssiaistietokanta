@@ -1,10 +1,9 @@
 import { Link, LinkComponent } from '@tanstack/react-router'
 import classNames from 'classnames'
 
-import MenuButton from 'libraries/formsV2/components/MenuButton'
-
 import { Button } from './Button'
 import { ColorClass } from './classes'
+import { MenuButton } from './MenuButton'
 
 export function BreadcrumbsContainer({ label, children }: { label: string, children: React.ReactNode }) {
   return <ul id="breadcrumbs" className="@container grow flex flex-wrap items-center" aria-label={label}>

@@ -2,9 +2,11 @@ import { createLink } from '@tanstack/react-router'
 import { MouseEvent, ReactNode, Suspense, useEffect, useId, useRef, useState } from 'react'
 
 import { omitPermissionCheckingProps, withPermissionChecking } from 'libraries/access-control'
-import { Dropdown, DropdownContainer, getFocusableElements } from 'libraries/overlays'
-import { Button, ButtonProps } from 'libraries/ui'
-import { DoubleCaretVertical } from 'libraries/ui/icons'
+import { getFocusableElements } from 'libraries/common/getFocusableElements'
+
+import { Button, type ButtonProps } from './Button'
+import { DoubleCaretVertical } from './icons'
+import { Dropdown, DropdownContainer } from './overlays/Dropdown'
 
 interface MenuButtonProps {
   children: ReactNode
@@ -14,7 +16,7 @@ interface MenuButtonProps {
   buttonProps?: ButtonProps
 }
 
-export default function MenuButton({ children, buttonRenderer, text, buttonProps, containerClassname }: MenuButtonProps) {
+export function MenuButton({ children, buttonRenderer, text, buttonProps, containerClassname }: MenuButtonProps) {
   'use no memo'
   const dropdownId = useId()
   const [open, setOpen] = useState(false)

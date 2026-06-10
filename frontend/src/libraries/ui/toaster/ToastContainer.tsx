@@ -1,8 +1,8 @@
 import classNames from 'classnames'
 
-import { Popover } from 'libraries/overlays'
+import { ColorClass } from 'libraries/ui/classes'
 
-import { ColorClass } from '../classes'
+import { Popover } from '../overlays/unstyled/Popover'
 import { type ToastData, useToastStore } from './context'
 
 export function ToastContainer() {

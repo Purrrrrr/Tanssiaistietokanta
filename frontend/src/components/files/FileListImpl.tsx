@@ -6,8 +6,8 @@ import { useFiles } from 'services/files'
 
 import { useRights } from 'libraries/access-control'
 import { useFormatDateTime } from 'libraries/i18n/dateTime'
-import { useAlerts } from 'libraries/overlays'
 import { ItemList, PageSection, RegularLink } from 'libraries/ui'
+import { useShowAlert } from 'libraries/ui/hooks'
 import { AddButton } from 'components/widgets/AddButton'
 import { SelectionBox } from 'components/widgets/SelectionBox'
 import { useT } from 'i18n'
@@ -38,7 +38,7 @@ export default function FileList({ title, owner, owningId, path }: FileListProps
   const filesize = useFilesize()
   const T = useT('components.files')
   const formatDate = useFormatDateTime()
-  const showAlert = useAlerts()
+  const showAlert = useShowAlert()
   const selector = useMultipleSelection(files)
   const [canUseFiles, canUpload, canModify, canDelete] = useRights([
     'files:read', 'files:create', 'files:modify', 'files:delete',

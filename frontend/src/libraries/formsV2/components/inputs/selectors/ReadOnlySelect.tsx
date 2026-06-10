@@ -1,6 +1,6 @@
 import { SelectorProps } from './types'
 
-import { DropdownContainer } from 'libraries/overlays'
+import { DropdownContainer } from 'libraries/ui'
 
 import { DropdownButton } from './DropdownButton'
 

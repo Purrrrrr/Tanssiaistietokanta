@@ -2,8 +2,7 @@ import { useState } from 'react'
 
 import { Event, EventVolunteerAssignment } from 'types'
 
-import { DialogCloseButton } from 'libraries/overlays'
-import { Button, Card, FormGroup, H2 } from 'libraries/ui'
+import { Button, Card, DialogCloseButton, FormGroup, H2 } from 'libraries/ui'
 import { Cross } from 'libraries/ui/icons'
 import { useT, useTranslation } from 'i18n'
 

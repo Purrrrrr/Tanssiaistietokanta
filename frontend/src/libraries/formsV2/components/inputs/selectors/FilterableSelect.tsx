@@ -3,7 +3,7 @@ import { useCombobox, UseComboboxState, UseComboboxStateChangeOptions } from 'do
 
 import { SelectorProps } from './types'
 
-import { Dropdown, DropdownContainer } from 'libraries/overlays'
+import { Dropdown, DropdownContainer } from 'libraries/ui'
 import { CssClass } from 'libraries/ui/classes'
 
 import { DropdownButton } from './DropdownButton'

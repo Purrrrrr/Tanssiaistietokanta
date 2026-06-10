@@ -6,7 +6,7 @@ import { addGlobalLoadingAnimation } from 'backend'
 import { useCreateDance } from 'services/dances'
 
 import { Button } from 'libraries/ui'
-import { showToast } from 'libraries/ui/toaster/context'
+import { showToast } from 'libraries/ui/hooks'
 import { useT, useTranslation } from 'i18n'
 
 import { uploadDanceFile } from './uploadDanceFile'

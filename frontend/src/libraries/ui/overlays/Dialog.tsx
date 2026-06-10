@@ -1,9 +1,11 @@
 import React, { useEffect, useLayoutEffect, useRef } from 'react'
 import classNames from 'classnames'
 
+import { getFocusableElements } from 'libraries/common/getFocusableElements'
 import { useShouldRender } from 'libraries/common/useShouldRender'
-import { Button, ButtonProps } from 'libraries/ui'
-import { Cross } from 'libraries/ui/icons'
+
+import { Button, ButtonProps } from '../Button'
+import { Cross } from '../icons'
 
 export type DialogProps = {
   isOpen: boolean
@@ -81,11 +83,3 @@ Dialog.Body = function DialogBody({ className, ...props }: React.HTMLAttributes<
 Dialog.Footer = function DialogFooter({ className = 'flex gap-3 justify-between items-center', ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return <div className={classNames(className, 'bg-gray-50 mt-3 px-3 py-2 border-t-1 border-gray-300')} {...props} />
 }
-
-export function getFocusableElements(container: HTMLElement) {
-  return [
-    ...container.querySelectorAll(focusableSelector) as NodeListOf<HTMLElement>,
-  ].filter(el => !el.getAttribute('aria-hidden') && el.style.display !== 'none')
-}
-
-const focusableSelector = 'a[href], area[href], input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), details, iframe, object, embed, [contenteditable], [tabindex]:not([tabindex="-1"])'

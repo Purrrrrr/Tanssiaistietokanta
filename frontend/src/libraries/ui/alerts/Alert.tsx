@@ -1,26 +1,7 @@
-import React from 'react'
+import { AlertProps } from './types'
 
-import { Button, ButtonProps } from 'libraries/ui'
-
-import { Dialog } from './Dialog'
-
-export interface AlertProps {
-  title: string
-  children: React.ReactNode
-  button?: AlertAction
-  buttons?: AlertAction[]
-  isOpen: boolean
-  onClose(): void
-  onChoose?(action: AlertAction): void
-}
-
-export type AlertAction = string | ActionProps
-
-interface ActionProps extends Pick<ButtonProps, 'icon' | 'color'> {
-  id?: string
-  text: string
-  action?(): unknown
-}
+import { Button, ButtonProps } from '../Button'
+import { Dialog } from '../overlays/Dialog'
 
 interface KeyedButtonProps extends ButtonProps {
   key: string | number

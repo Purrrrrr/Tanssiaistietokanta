@@ -1,15 +1,11 @@
-import { createContext, useCallback, useContext } from 'react'
+import { useCallback } from 'react'
+
+import type { AlertAction, AlertProps, ShowAlertProps } from './types'
 
 import { useQueue } from 'libraries/common/useQueue'
 
-import { Alert, AlertAction, AlertProps } from './Alert'
-
-const AlertContextInner = createContext<ShowAlert>(async () => {
-  throw new Error('No alert system')
-})
-
-type ShowAlertProps = Pick<AlertProps, 'title' | 'children' | 'button' | 'buttons'>
-type ShowAlert = (alert: ShowAlertProps) => Promise<AlertAction>
+import { Alert } from './Alert'
+import { AlertContextInner } from './context'
 
 export function AlertContext({ children }: { children: React.ReactNode }) {
   const [alerts, alertQueue] = useQueue<AlertProps>()
@@ -30,8 +26,4 @@ export function AlertContext({ children }: { children: React.ReactNode }) {
       <Alert key={alert.id} {...alert} />,
     )}
   </AlertContextInner.Provider>
-}
-
-export function useAlerts() {
-  return useContext(AlertContextInner)
 }

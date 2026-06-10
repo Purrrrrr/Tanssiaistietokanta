@@ -3,10 +3,9 @@ import { useState } from 'react'
 import { UploadedFile, useRenameFile } from 'services/files'
 
 import { TextInput } from 'libraries/formsV2/components/inputs'
-import { Dialog, useAlerts } from 'libraries/overlays'
-import { Button } from 'libraries/ui'
+import { Button, Dialog } from 'libraries/ui'
+import { showToast, useShowAlert } from 'libraries/ui/hooks'
 import { Edit } from 'libraries/ui/icons'
-import { showToast } from 'libraries/ui/toaster/context'
 import { Translator, useT } from 'i18n'
 
 export function RenameFileButton({ file }: {
@@ -30,7 +29,7 @@ export function RenameFileButton({ file }: {
       })
     },
   })
-  const showAlert = useAlerts()
+  const showAlert = useShowAlert()
 
   return <>
     <Button

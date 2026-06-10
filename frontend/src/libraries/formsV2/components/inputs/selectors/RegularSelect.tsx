@@ -2,7 +2,7 @@ import { useSelect } from 'downshift'
 
 import { SelectorProps } from './types'
 
-import { Dropdown, DropdownContainer } from 'libraries/overlays'
+import { Dropdown, DropdownContainer } from 'libraries/ui'
 
 import { DropdownButton } from './DropdownButton'
 import { useItems } from './itemUtils'
