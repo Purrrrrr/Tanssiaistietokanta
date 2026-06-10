@@ -1,6 +1,5 @@
 import { useEffectEvent, useMemo } from 'react'
-import { MutationHookOptions, OperationVariables, QueryHookOptions, QueryResult } from '@apollo/client'
-import { TypedDocumentNode } from '@graphql-typed-document-node/core'
+import { MutationHookOptions, OperationVariables, QueryHookOptions, QueryResult, TypedDocumentNode } from '@apollo/client'
 
 import { Entity, ServiceName } from 'types'
 
