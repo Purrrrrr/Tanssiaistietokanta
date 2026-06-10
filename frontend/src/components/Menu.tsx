@@ -42,15 +42,6 @@ export function MenuSection({ children, title, titleButton }: MenuSectionProps) 
   </>
 }
 
-export function MenuItem({ children, selected }: { children: React.ReactNode, selected?: boolean }) {
-  return <li className={classNames(
-    'py-1.5 px-4 hover:bg-stone-200',
-    selected && 'font-bold',
-  )}>
-    {children}
-  </li>
-}
-
 interface MenuLinkProps extends ComponentProps<'a'> {
   text?: React.ReactNode
   icon?: React.ReactNode
@@ -71,3 +62,12 @@ export const MenuLink = createLink(withPermissionChecking(({ children, href, tex
     </a>
   </MenuItem>
 }))
+
+function MenuItem({ children, selected }: { children: React.ReactNode, selected?: boolean }) {
+  return <li className={classNames(
+    'py-1.5 px-4 hover:bg-stone-200',
+    selected && 'font-bold',
+  )}>
+    {children}
+  </li>
+}

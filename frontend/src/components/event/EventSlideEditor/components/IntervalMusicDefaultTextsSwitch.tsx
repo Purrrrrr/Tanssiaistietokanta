@@ -2,11 +2,6 @@ import { emptyDocument } from 'libraries/lexical'
 import { IntervalMusic, switchFor } from 'components/event/EventProgramForm'
 import { DEFAULT_INTERVAL_MUSIC } from 'components/event/utils'
 
-export const IntervalMusicSwitch = switchFor<IntervalMusic>({
-  isChecked: intervalMusic => (intervalMusic?.duration ?? 0) > 0,
-  toValue: checked => checked ? DEFAULT_INTERVAL_MUSIC : null,
-})
-
 export const IntervalMusicDefaultTextsSwitch = switchFor<IntervalMusic>({
   isChecked: intervalMusic => (intervalMusic?.name ?? null) === null,
   toValue: (checked, intervalMusic) => {

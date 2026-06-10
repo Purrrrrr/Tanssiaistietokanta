@@ -2,7 +2,7 @@ import { EventVolunteerAssignment, ID } from 'types'
 
 import { workshopInstanceName } from 'services/workshops'
 
-import { ModeButton, ModeSelector } from 'libraries/ui/ModeSelector'
+import { ModeButton, ModeSelector } from 'libraries/ui'
 import { useT } from 'i18n'
 
 export function WorkshopInstanceSelector({ workshopInstances, readOnly, assignment, setInstanceIds, className }: {
