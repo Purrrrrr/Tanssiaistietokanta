@@ -3,8 +3,6 @@
 /// <reference types="node" />
 /// <reference types="react-dom" />
 
-import 'React'
-
 declare module '*.avif' {
   const src: string
   export default src
