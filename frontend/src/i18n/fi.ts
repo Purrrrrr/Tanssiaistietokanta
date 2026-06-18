@@ -308,9 +308,17 @@ export const fi = {
     },
     addVolunteerAssignmentForm: {
       title: 'Lisää työtehtäviä',
-      chooseAnotherVolunteer: 'Valitse toinen vapaaehtoinen',
-      volunteer: 'Vapaaehtoinen, jolle tehtäviä lisätään',
-      rolesToAdd: 'Lisättävät roolit',
+      chooseAssignmentTarget: 'Rooli tai vapaaehtoinen, jolle tehtäviä lisätään',
+      roleOrVolunteer: 'Roolin tai vapaaehtoisen nimi',
+      role: 'Rooli',
+      volunteer: 'Vapaaehtoinen',
+      empty: 'Tyhjennä valinta',
+      workshop: 'Työpaja',
+      chooseWorkshop: 'Valitse työpaja',
+      noResults: 'Ei tuloksia',
+      assignmentsToAdd: 'Lisättävät työtehtävät',
+      noAssignmentsAdded: 'Ei lisättyjä työtehtäviä',
+      deleteAssignment: 'Poista lisättävä työtehtävä',
     },
     assignmentsWarnings: {
       volunteersWithoutAssignments: {
