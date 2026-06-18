@@ -547,6 +547,7 @@
 * Icons for statuses
   * EventVolunteerAssignment
   * EventVolunteer
+* Fix creating dances
 * Volunteer assignments page
   * Search
     * Filter by role, filter by status, filter by workshop/instance
@@ -554,10 +555,16 @@
     * Allow picking workshop instances
   * registrationStatusSelector -> show only the actions that make sense)
     Adding jobs:
-      Only show roles that volunteer is interested_in in selector
+    * Allow adding by role or volunteer
+    * Only show roles that volunteer is interested_in in selector
+    * Only show volunteers that are insterested in role
+      Allow selecting workshop instances
+      Allow selecting non-interested parties but show them grayed out or something
       Allow adding ev:s from eva-editor (pop up dialog when need to accept)
       Turn eventVolunteer accepted if adding assignments to it
 
+  Page to list all files and documents of event?
+  Some way to handle music?
   Check lists/pages layout on mobile
     Assignments list
     Volunteers list
