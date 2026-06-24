@@ -314,11 +314,17 @@ export const fi = {
       volunteer: 'Vapaaehtoinen',
       empty: 'Tyhjennä valinta',
       workshop: 'Työpaja',
+      instance: 'Opetuskerta',
       chooseWorkshop: 'Valitse työpaja',
       noResults: 'Ei tuloksia',
       assignmentsToAdd: 'Lisättävät työtehtävät',
       noAssignmentsAdded: 'Ei lisättyjä työtehtäviä',
       deleteAssignment: 'Poista lisättävä työtehtävä',
+      addAssignments: {
+        zero: 'Lisää työtehtävä',
+        one: 'Lisää työtehtävä',
+        many: 'Lisää työtehtävät',
+      },
     },
     assignmentsWarnings: {
       volunteersWithoutAssignments: {

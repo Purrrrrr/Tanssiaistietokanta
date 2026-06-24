@@ -107,9 +107,13 @@ export function VolunteerAssignmentList({
           <WorkshopInstanceSelector
             className="col-start-5"
             workshopInstances={event.workshops.find(w => w._id === assignment.workshop?._id)?.instances ?? []}
-            assignment={assignment}
-            readOnly={readOnly}
-            setInstanceIds={setInstanceIds}
+            value={assignment.workshopInstanceIds}
+            readOnly={
+              readOnly === true
+                || assignment.registrationStatus === 'RegisteredToEventSystem'
+                || assignment.registrationStatus === 'AcceptedRegistration'
+            }
+            onChange={ids => setInstanceIds(assignment, ids)}
           />
           <span className="col-start-6 flex">
             {eventRegistrationSystem !== 'None' &&

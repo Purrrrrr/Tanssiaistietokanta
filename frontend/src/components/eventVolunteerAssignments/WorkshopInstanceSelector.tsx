@@ -1,44 +1,40 @@
-import { EventVolunteerAssignment, ID } from 'types'
+import { ID } from 'types'
 
 import { workshopInstanceName } from 'services/workshops'
 
 import { ModeButton, ModeSelector } from 'libraries/ui'
 import { useT } from 'i18n'
 
-export function WorkshopInstanceSelector({ workshopInstances, readOnly, assignment, setInstanceIds, className }: {
+export function WorkshopInstanceSelector({ workshopInstances, readOnly, value, onChange, className }: {
   workshopInstances: {
     _id: ID
     abbreviation?: string | null
   }[]
   readOnly?: boolean
-  assignment: EventVolunteerAssignment
-  setInstanceIds: (assignment: EventVolunteerAssignment, instanceIds: ID[] | null) => void
+  value: ID[] | null | undefined
+  onChange: (instanceIds: ID[] | null) => void
   className?: string
 }) {
-  const disabled = readOnly === true
-    || assignment.registrationStatus === 'RegisteredToEventSystem'
-    || assignment.registrationStatus === 'AcceptedRegistration'
   const t = useT('components.volunteerAssignmentEditor')
   return workshopInstances && workshopInstances.length > 1 && <ModeSelector className={className}>
     <ModeButton
-      disabled={disabled}
-      selected={assignment.workshopInstanceIds == null}
-      onClick={() => setInstanceIds(assignment, null)}
+      disabled={readOnly}
+      selected={value == null}
+      onClick={() => onChange(null)}
     >
       {t('allInstances')}
     </ModeButton>
     {workshopInstances.map((instance, index) => {
-      const selected = assignment.workshopInstanceIds?.includes(instance._id) ?? false
+      const selected = value?.includes(instance._id) ?? false
       return (
         <ModeButton
           key={instance._id}
-          disabled={disabled}
+          disabled={readOnly}
           selected={selected}
-          onClick={() => setInstanceIds(
-            assignment,
+          onClick={() => onChange(
             selected
-              ? assignment.workshopInstanceIds?.filter(id => id !== instance._id) ?? null
-              : [...(assignment.workshopInstanceIds ?? []), instance._id],
+              ? value?.filter(id => id !== instance._id) ?? null
+              : [...(value ?? []), instance._id],
           )}
         >
           {workshopInstanceName(index, instance)}

@@ -1,18 +1,22 @@
 import { useState } from 'react'
+import { WorkshopLink } from 'routes/events/$eventId.{-$eventVersionId}/-components/WorkshopLink'
 
 import { Event, EventVolunteerAssignment, Workshop } from 'types'
 import { NewValue } from 'libraries/forms/types'
 
-import { formFor } from 'libraries/forms'
+import { useCreateEventVolunteerAssignment } from 'services/eventVolunteerAssignments'
+
+import { formFor, SubmitButton, Validate } from 'libraries/forms'
 import { Card, DialogCloseButton, FormGroup, H2, ItemList } from 'libraries/ui'
 import { Trash } from 'libraries/ui/icons'
+import { RoleTag } from 'components/eventVolunteers/RoleTag'
 import { useT, useTranslation } from 'i18n'
 
 import { AddAssignmentTargetSelector, AssignmentTarget } from './AddAssignmentTargetSelector'
 import { AddAssignmentWorkshopSelector } from './AddAssignmentWorkshopSelector'
 import { VolunteerRoleSelect } from './VolunteerRoleSelect'
 import { VolunteerSelect } from './VolunteerSelect'
-// import { WorkshopInstanceSelector } from './WorkshopInstanceSelector'
+import { WorkshopInstanceSelector } from './WorkshopInstanceSelector'
 
 interface FormData {
   target: AssignmentTarget | null
@@ -35,8 +39,13 @@ export function AddVolunteerAssignmentForm({ event, currentAssignments, onClose 
   onClose: () => void
 }) {
   const t = useT('components.addVolunteerAssignmentForm')
+  const [createAssignment] = useCreateEventVolunteerAssignment()
   const [data, setData] = useState<FormData>(emptyFormData)
-  const { target } = data
+  const { target, assignments } = data
+  const closeForm = () => {
+    setData(emptyFormData)
+    onClose()
+  }
 
   const onDataChange = (newData: NewValue<FormData>) => {
     const updatedData = typeof newData === 'function' ? newData(data) : newData
@@ -50,20 +59,35 @@ export function AddVolunteerAssignmentForm({ event, currentAssignments, onClose 
     })
   }
 
+  const addAssignments = async () => {
+    closeForm()
+    await Promise.all(assignments.map(assignment => {
+      createAssignment({
+        eventVolunteerAssignment: {
+          eventId: event._id,
+          roleId: assignment.role._id,
+          workshopId: assignment.workshop?._id,
+          volunteerId: assignment.volunteer._id,
+          registrationStatus: 'None',
+        },
+      })
+    }))
+  }
+
   return <Card className="relative">
     <H2>{t('title')}</H2>
     <DialogCloseButton
       className="absolute top-3 right-3"
       aria-label={useTranslation('common.close')}
-      onClick={() => { setData(emptyFormData); onClose() }}
+      onClick={closeForm}
     />
-    {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
-    <Form value={data} onChange={onDataChange}>
+    <Form value={data} onChange={onDataChange} onSubmit={addAssignments} errorDisplay="onSubmit">
       <div className="flex gap-3">
         <Field
           containerClassName="grow max-w-1/2"
           path="target"
           label={t('chooseAssignmentTarget')}
+          required
           component={AddAssignmentTargetSelector}
           componentProps={{ eventId: event._id, eventVersionId: event._versionId }} />
         {target?.__typename === 'EventRole' && target.appliesToWorkshops && (
@@ -71,11 +95,13 @@ export function AddVolunteerAssignmentForm({ event, currentAssignments, onClose 
             containerClassName="grow"
             label={t('workshop')}
             path="workshop"
+            required
             component={AddAssignmentWorkshopSelector}
             componentProps={{ workshops: event.workshops }} />
         )}
       </div>
       <AssignmentList formData={data} currentAssignments={currentAssignments} event={event} />
+      <SubmitButton text={t('addAssignments', { count: assignments.length })} />
     </Form>
   </Card>
 }
@@ -93,18 +119,35 @@ function AssignmentList({ formData, currentAssignments, event }: {
   if (target.__typename === 'EventRole' && target.appliesToWorkshops && !workshop) return null
 
   const allAssignments = [...currentAssignments, ...assignments]
+  const hasWorkshops = assignments.some(a => a.workshop)
   return <FormGroup label={t('assignmentsToAdd')} labelFor="add-volunteer-role">
-    <ItemList items={assignments} emptyText={t('noAssignmentsAdded')} columns="grid-cols-[auto_max-content_max-content]">
+    <ItemList items={assignments} emptyText={t('noAssignmentsAdded')} columns="grid-cols-[max-content_max-content_auto_max-content]">
+      <ItemList.Header>
+        <span>{t(target.__typename === 'EventRole' ? 'volunteer' : 'role')}</span>
+        {hasWorkshops && <span>{t('workshop')}</span>}
+        {hasWorkshops && <span>{t('instance')}</span>}
+      </ItemList.Header>
       {assignments.map((a, i) => <ItemList.Row key={i}>
         <span>
-          {target.__typename === 'EventRole' // TODO: nicer formatting
+          {target.__typename === 'EventRole'
             ? a.volunteer.name
-            : (a.workshop ? `${a.role.name} - ${a.workshop.name}` : a.role.name)
+            : <span><RoleTag role={a.role} /></span>
           }
         </span>
+        <span>{a.workshop && <WorkshopLink workshop={a.workshop} />}</span>
+        {a.workshop &&
+          <Field
+            path={`assignments.${i}.workshopInstanceIds`}
+            labelStyle="hidden"
+            label={t('instance')} component={WorkshopInstanceSelector}
+            componentProps={{
+              workshopInstances: event.workshops.find(w => w._id === a.workshop?._id)?.instances ?? [],
+            }} />
+        }
         <RemoveItemButton minimal icon={<Trash />} path="assignments" index={i} tooltip={t('deleteAssignment')} />
       </ItemList.Row>)}
     </ItemList>
+    <Validate value={assignments} type="list" required />
     {target.__typename === 'Volunteer' && (
       <VolunteerRoleSelect
         id="add-volunteer-role"
