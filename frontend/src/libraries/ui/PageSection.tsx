@@ -2,7 +2,8 @@ import { lazy } from 'react'
 import classNames from 'classnames'
 
 import type { SyncState } from 'libraries/forms'
-import { H2 } from 'libraries/ui'
+
+import { H2 } from './H2'
 
 const SyncStatus = lazy(
   () => import('libraries/forms/SyncStatus')

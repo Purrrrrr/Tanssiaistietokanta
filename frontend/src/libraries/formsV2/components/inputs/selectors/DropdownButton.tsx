@@ -3,7 +3,7 @@ import { type ReactNode } from 'react'
 import { DropdownButtonDownshiftProps, SelectorProps } from './types'
 
 import { Button } from 'libraries/ui'
-import { DoubleCaretVertical } from 'libraries/ui/icons'
+import { CaretDown } from 'libraries/ui/icons'
 
 import { useFormTranslation } from '../../../localization'
 
@@ -13,7 +13,7 @@ export function DropdownButton<T>(
   const { buttonProps = {}, selectorProps } = props
   const {
     'aria-label': label, readOnly,
-    itemIcon, itemToString = String,
+    itemIcon, itemToString = String, selectedItemRenderer = itemToString,
     value, buttonRenderer, placeholder,
     minimal,
   } = selectorProps
@@ -33,10 +33,10 @@ export function DropdownButton<T>(
     active={buttonProps['aria-expanded']}
     aria-label={ariaLabel}
     disabled={readOnly}
-    rightIcon={<DoubleCaretVertical />}
+    rightIcon={<CaretDown />}
   >
     {itemIcon?.(value)}
-    {itemToString(value) || placeholder}
+    {selectedItemRenderer(value) ?? placeholder}
   </Button>
 }
 

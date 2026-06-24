@@ -9,7 +9,7 @@ import { Button, FormGroup } from 'libraries/ui'
 import { ChevronDown, ChevronUp, Edit, Pin, Search } from 'libraries/ui/icons'
 import { ItemList, Sort } from 'libraries/ui/ItemList'
 import { RoleTag } from 'components/eventVolunteers/RoleTag'
-import { VolunteerStatusBulkSelector } from 'components/eventVolunteers/VolunteerStatusBulkSelector'
+import { VolunteerStatusSelector } from 'components/eventVolunteers/VolunteerStatusSelector'
 import { SelectionBox } from 'components/widgets/SelectionBox'
 import { useT, useTranslation } from 'i18n'
 import { sortedBy } from 'utils/sorted'
@@ -44,7 +44,7 @@ export function EventVolunteerList({ eventVolunteers: unsorted, readOnly, curren
       <div>
         {selected.length > 0 &&
           <FormGroup label={t('setStatus', { count: selected.length })} inline labelFor="statusBulkSelector">
-            <VolunteerStatusBulkSelector id="statusBulkSelector" eventVolunteers={selected} />
+            <VolunteerStatusSelector id="statusBulkSelector" eventVolunteers={selected} />
           </FormGroup>
         }
       </div>
@@ -73,7 +73,7 @@ export function EventVolunteerList({ eventVolunteers: unsorted, readOnly, curren
       >
         <SelectionBox {...selector.selectItemProps(ev)} />
         <span>{ev.volunteer.name}</span>
-        <span>{label(`shortEventVolunteerStatus.${ev.status}`)}</span>
+        <VolunteerStatusSelector id={`status-${ev._id}`} eventVolunteers={[ev]} iconOnly />
         <span>
           {(getTasksRoles(ev)).map(role => (
             <RoleTag

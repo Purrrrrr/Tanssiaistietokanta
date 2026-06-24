@@ -1,7 +1,6 @@
 import { useId, useRef } from 'react'
 
-import MenuButton from 'libraries/formsV2/components/MenuButton'
-import { Button, FormGroup } from 'libraries/ui'
+import { Button, FormGroup, MenuButton } from 'libraries/ui'
 
 interface ToolbarColorPickerProps {
   value: string

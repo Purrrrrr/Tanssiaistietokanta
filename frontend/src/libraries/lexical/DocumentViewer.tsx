@@ -10,6 +10,8 @@ import type { SerializedTableCellNode, SerializedTableNode, SerializedTableRowNo
 import classNames from 'classnames'
 import type { SerializedElementNode, SerializedParagraphNode, SerializedTextNode } from 'lexical'
 
+import { RegularLink } from 'libraries/ui'
+
 import { useEditorTranslation } from './i18n'
 import { FabricCanvas } from './plugins/components/fabric/FabricCanvas'
 import { QRCode } from './plugins/components/QRCode'
@@ -197,7 +199,7 @@ function renderNode(node: SerializedNode, index: number, options: ViewOptions): 
         return content(options.customRenderers.link({ node: link, children }))
       }
       return content(
-        <a
+        <RegularLink
           key={key}
           href={link.url}
           target={link.target ?? undefined}
@@ -205,7 +207,7 @@ function renderNode(node: SerializedNode, index: number, options: ViewOptions): 
           title={link.title ?? undefined}
         >
           {children}
-        </a>,
+        </RegularLink>,
       )
     }
 

@@ -3,7 +3,7 @@ import React from 'react'
 
 import { omitPermissionCheckingProps, PermissionCheckedProps, withPermissionChecking } from 'libraries/access-control'
 import { type Color, Link } from 'libraries/ui'
-import { buttonClass } from 'libraries/ui/Button'
+import { buttonClass } from 'libraries/ui/buttonClass'
 
 interface NavigateButtonProps extends React.ComponentProps<typeof Link>, PermissionCheckedProps {
   text?: string | React.ReactElement | React.ReactElement[]

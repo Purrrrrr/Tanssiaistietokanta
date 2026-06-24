@@ -7,7 +7,7 @@ import { NewValue, OnFormChangeHandler, StringPath, TypedStringPath, Version } f
 import createDebug from 'utils/debug'
 
 import { FormProps } from '../Form'
-import { jsonPatch, PatchStrategy } from './patchStrategies'
+import patchStrategies, { PatchStrategy } from './patchStrategies'
 import { useAutosavingStateReducer } from './reducer'
 
 const debug = createDebug('useAutoSavingState')
@@ -15,7 +15,7 @@ const debug = createDebug('useAutoSavingState')
 const AUTOSAVE_DELAY = 50
 
 export type { PatchStrategy } from './patchStrategies'
-export * as patchStrategy from './patchStrategies'
+export { default as patchStrategy } from './patchStrategies'
 export type { SyncState } from './types'
 
 export interface UseAutosavingStateReturn<T extends MergeableObject<T>> {
@@ -48,7 +48,7 @@ export function useAutosavingState<T extends MergeableObject<T>, Patch>(
   useEffect(() => {
     if (equal(serverState, lastServerState.current)) return
     if (debug.enabled) {
-      debug('external modification diff', jsonPatch(lastServerState.current, serverState))
+      debug('external modification diff', patchStrategies.jsonPatch(lastServerState.current, serverState))
     }
     dispatch({ type: 'EXTERNAL_MODIFICATION', serverState })
     lastServerState.current = serverState

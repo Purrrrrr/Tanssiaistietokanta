@@ -4,13 +4,11 @@ import classNames from 'classnames'
 import { ExtendedFieldComponentProps, FieldComponentProps, FieldPropsWithoutComponent } from '../types'
 
 import { Switch, TextInput } from 'libraries/formsV2/components/inputs'
-import { CssClass } from 'libraries/ui'
+import { CssClass } from 'libraries/ui/classes'
 
 import { Field, useFieldData } from '../Field'
 import { FieldContainer } from '../FieldContainer'
 import { useFieldValueProps } from '../hooks'
-
-export { NumberInput, Switch } from 'libraries/formsV2/components/inputs'
 
 export type NumberInputProps = ExtendedFieldComponentProps<number, ComponentProps<'input'>>
 export type InputProps = ExtendedFieldComponentProps<string, ComponentProps<'input'>>
@@ -76,12 +74,14 @@ export function TextArea({ value, onChange, inline: _ignored, className, ...prop
 
 interface RadioGroupProps<E extends string | null> extends FieldComponentProps<E> {
   options: readonly E[]
+  optionIcon?: (option: E) => React.ReactNode
   optionToString: (option: E) => string
+  vertical?: boolean
 }
 
-export function RadioGroup<E extends string>({ options, optionToString, readOnly, id, value, onChange, ...rest }: RadioGroupProps<E>) {
+export function RadioGroup<E extends string>({ vertical, options, optionToString, optionIcon, readOnly, id, value, onChange, ...rest }: RadioGroupProps<E>) {
   return options.map(optionValue =>
-    <label key={optionValue} className="inline-flex h-7.5 items-center mx-2">
+    <label key={optionValue} className={classNames(vertical ? 'flex' : 'inline-flex', 'h-7.5 items-center mx-2 hover:bg-gray-100 cursor-pointer')}>
       <input
         className="me-1"
         type="radio"
@@ -93,6 +93,9 @@ export function RadioGroup<E extends string>({ options, optionToString, readOnly
         disabled={readOnly}
         {...rest}
       />
+      {optionIcon
+        ? <span className="ms-1.5 me-1">{optionIcon(optionValue)}</span>
+        : null}
       {optionToString(optionValue)}
     </label>,
   )

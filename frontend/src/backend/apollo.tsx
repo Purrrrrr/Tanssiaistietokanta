@@ -6,7 +6,7 @@ import createDebug from 'utils/debug'
 import { socketRequest } from './connection'
 
 export type { DocumentNode, FetchResult, MutationResult } from '@apollo/client'
-export { ApolloProvider, gql, useMutation, useQuery } from '@apollo/client'
+export { gql, useMutation, useQuery } from '@apollo/client'
 
 const debug = createDebug('graphql')
 

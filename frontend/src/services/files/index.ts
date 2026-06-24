@@ -1,6 +1,6 @@
-import { entityDeleteHook, entityListQueryHook, entityUpdateHook, graphql, makeMutationHook, setupServiceUpdateFragment } from 'backend'
+import { backendQueryHook, entityDeleteHook, entityListQueryHook, entityUpdateHook, graphql, makeMutationHook, setupServiceUpdateFragment } from 'backend'
 
-export * from './upload'
+export { doUpload, getUploadError, MAX_UPLOAD_SIZE, type UploadedFile } from './upload'
 
 export const useDeleteFile = entityDeleteHook('files', graphql(`
 mutation deleteFile($id: ID!) {
@@ -30,6 +30,12 @@ export const useFiles = entityListQueryHook('files', graphql(`
       name
       size
     }
+  }
+`))
+
+export const useFilesCount = backendQueryHook(graphql(`
+  query getFilesCount($owner: FileOwner!, $owningId: ID!, $path: String) {
+    filesCount(owner: $owner, owningId: $owningId, path: $path)
   }
 `))
 

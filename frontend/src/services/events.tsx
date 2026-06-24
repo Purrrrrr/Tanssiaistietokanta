@@ -8,7 +8,8 @@ import './dances'
 import './workshops'
 import './eventVolunteerAssignments'
 
-export * from './slideStyles'
+export type { SlideStyle } from './slideStyles'
+export { useEventSlideStyles } from './slideStyles'
 
 setupServiceUpdateFragment(
   'events',
@@ -205,13 +206,6 @@ query getEvent($id: ID!, $versionId: ID) {
       abbreviation
       description
       registrationStatus
-      volunteerAssignments {
-        _id
-        _eventId
-        _workshopId
-        volunteers { _id name }
-        role { _id name type }
-      }
       volunteerAssignments {
         _id _eventId _workshopId
         volunteers { _id name }

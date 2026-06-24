@@ -1,4 +1,4 @@
-import { SyncState } from './useAutosavingState'
+import type { SyncState } from './useAutosavingState/types'
 
 export const formStringDefaults = {
   dateTime: {

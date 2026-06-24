@@ -4,8 +4,7 @@ import { Volunteer } from 'types'
 
 import { usePatchVolunteer } from 'services/volunteers'
 
-import { Dialog } from 'libraries/overlays'
-import { Button, FormGroup, ItemList } from 'libraries/ui'
+import { Button, Dialog, FormGroup, ItemList } from 'libraries/ui'
 import { ManyToOne } from 'libraries/ui/icons'
 import { useT, useTranslation } from 'i18n'
 

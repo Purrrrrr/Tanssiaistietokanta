@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { Alert } from 'libraries/overlays'
+import { Alert } from 'libraries/ui'
 import { useT } from 'i18n'
 
 const browsersLinks = {

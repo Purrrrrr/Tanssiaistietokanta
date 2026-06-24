@@ -3,13 +3,14 @@ import { useCombobox, UseComboboxState, UseComboboxStateChangeOptions } from 'do
 
 import { SelectorProps } from './types'
 
-import { Dropdown, DropdownContainer } from 'libraries/overlays'
-import { CssClass } from 'libraries/ui'
+import { Dropdown, DropdownContainer } from 'libraries/ui'
+import { CssClass } from 'libraries/ui/classes'
 
 import { DropdownButton } from './DropdownButton'
+import { useFilteredItems } from './itemUtils'
 import { Menu, MenuItem, renderMenuItems, toMenuItemProps } from './Menu'
 import { ReadOnlySelect } from './ReadOnlySelect'
-import { acceptNulls, preventDownshiftDefaultWhen, useFilteredItems } from './utils'
+import { acceptNulls, preventDownshiftDefaultWhen } from './utils'
 
 export default function FilterableSelect<T>(props: SelectorProps<T>) {
   return props.readOnly

@@ -5,7 +5,8 @@ import { DanceListItem, ID } from 'types'
 
 import { useDance } from 'services/dances'
 
-import { Button, ColorClass, ItemList, type Sort } from 'libraries/ui'
+import { Button, ItemList, type Sort } from 'libraries/ui'
+import { ColorClass } from 'libraries/ui/classes'
 import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Edit } from 'libraries/ui/icons'
 import { DanceEditor } from 'components/dance/DanceEditor'
 import { InfiniteItemLoader } from 'components/InfiniteItemLoader'

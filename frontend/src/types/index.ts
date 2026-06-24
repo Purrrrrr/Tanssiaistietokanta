@@ -4,12 +4,14 @@ export interface Entity {
   _id: ID
 }
 
-export * from './dances'
-export * from './documents'
-export * from './eventRoles'
-export * from './events'
-export * from './eventVolunteerAssignments'
-export * from './eventVolunteers'
-export * from './users'
-export * from './volunteers'
-export * from './workshops'
+export type * from './backend'
+export type * from './dances'
+export type * from './documents'
+export type * from './eventRoles'
+export type * from './events'
+export type * from './eventVolunteerAssignments'
+export { EventVolunteerRegistrationStatus } from './eventVolunteerAssignments'
+export type * from './eventVolunteers'
+export type * from './users'
+export type * from './volunteers'
+export type * from './workshops'

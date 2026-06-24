@@ -1,6 +1,6 @@
 import React, { ReactNode, useCallback, useContext, useEffect, useId, useRef, useState } from 'react'
 
-import { useResizeObserver } from 'libraries/ui'
+import { useResizeObserver } from 'libraries/common/useResizeObserver'
 
 type SidebarRegisterContextType = (id: string, content: ReactNode) => () => void
 const SidebarRegisterContext = React.createContext<SidebarRegisterContextType>(() => () => {})

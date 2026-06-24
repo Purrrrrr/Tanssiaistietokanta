@@ -1,4 +1,4 @@
-export * from './keyMap'
-export * from './minify'
-export * from './transformationUtils'
+// export * from './keyMap'
+// export * from './transformationUtils'
+export { expand, expandIds, minifyLiveState } from './minify'
 export type * from './types'

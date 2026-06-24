@@ -1,4 +1,5 @@
-import { Button, CssClass } from 'libraries/ui'
+import { Button } from 'libraries/ui'
+import { CssClass } from 'libraries/ui/classes'
 import { Cross } from 'libraries/ui/icons'
 
 import AutocompleteInput, { AutocompleteInputProps } from './AutocompleteInput'

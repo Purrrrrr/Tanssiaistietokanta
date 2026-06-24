@@ -6,7 +6,7 @@ import { filterDances, useCreateDance, useDances } from 'services/dances'
 
 import { canCreateUniqueItemFromQuery } from 'libraries/common/listSearch'
 import { AutocompleteInput } from 'libraries/formsV2/components/inputs'
-import { CssClass } from 'libraries/ui'
+import { CssClass } from 'libraries/ui/classes'
 import { DanceIdSet } from 'components/event/EventProgramForm/eventMetadata'
 import { useT } from 'i18n'
 

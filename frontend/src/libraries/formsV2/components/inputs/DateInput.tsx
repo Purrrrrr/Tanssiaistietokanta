@@ -3,7 +3,7 @@ import 'react-calendar/dist/Calendar.css'
 import { useRef, useState } from 'react'
 import DatePicker, { DatePickerProps } from 'react-date-picker'
 
-import { Dropdown, DropdownContainer } from 'libraries/overlays'
+import { Dropdown, DropdownContainer } from 'libraries/ui'
 
 export interface DateInputProps extends Omit<DatePickerProps, 'onChange'> {
   readOnly?: boolean

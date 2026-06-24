@@ -1,7 +1,8 @@
 import { CSSProperties, useId } from 'react'
 import classNames from 'classnames'
 
-import { CssClass, FormGroup } from 'libraries/ui'
+import { FormGroup } from 'libraries/ui'
+import { CssClass } from 'libraries/ui/classes'
 
 export { ToolbarButton } from './ToolbarButton'
 export { ToolbarColorPicker } from './ToolColorPicker'
@@ -19,7 +20,7 @@ export function FloatingToolbar({ children, anchorName, side = 'bottom' }: {
       'absolute [position-anchor:var(--toolbarAnchorName)]',
       side === 'bottom' && '[position-area:bottom_span-right] translate-y-1',
       side === 'top' && '[position-area:top_span-right] -translate-y-1',
-      'bg-white border-1 border-gray-400 rounded-md z-20 shadow-md empty:hidden max-w-dvw',
+      'bg-white border border-gray-400 rounded-md z-20 shadow-md empty:hidden max-w-dvw',
     )}
   >
     {children}

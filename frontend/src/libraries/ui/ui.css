@@ -57,6 +57,37 @@
 }
 
 @layer components {
+  .tooltip-container {
+    position: relative;
+    anchor-name: --tooltip-container;
+    anchor-scope: --tooltip-container;
+
+    & > .tooltip {
+      @apply transition-opacity z-40;
+      opacity: 0;
+      scale: 0;
+      position: absolute;
+      top: 100%;
+      right: 0;
+
+      @supports (position-area: bottom) {
+        position: fixed;
+        top: unset;
+        right: unset;
+        position-anchor: --tooltip-container;
+        position-area: bottom;
+        margin-block: 5px;
+        margin-inline: 10px;
+      }
+    }
+
+    &:is(:hover, :focus-within) > .tooltip {
+      opacity: 1;
+      scale: 1;
+      transition-delay: 500ms;
+    }
+  }
+
   .interactive-control-filled {
     color: oklch(
       from var(--bg-mix-base)

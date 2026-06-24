@@ -1,36 +1,10 @@
 import { ComponentProps } from 'react'
-import classNames from 'classnames'
 
 import type { Color } from './types'
 
 import { omitPermissionCheckingProps, PermissionCheckedProps, withPermissionChecking } from 'libraries/access-control'
 
-export const buttonClass = (
-  color: Color,
-  { active, disabled, className, minimal, paddingClass }: {
-    active?: boolean
-    disabled?: boolean
-    minimal?: boolean
-    className?: string
-    paddingClass?: string
-  },
-) => classNames(
-  'interactive-control text-center inline-flex gap-1.5 items-center peer',
-  minimal
-    ? 'interactive-control-minimal'
-    : 'interactive-control-filled rounded-xs shadow-xs hover:shadow-xs active:shadow-md shadow-stone-800/30 border-stone-400/40 border-1',
-  ({
-    none: minimal ? 'bg-mix-base-stone-800' : 'bg-mix-base-neutral',
-    primary: 'bg-mix-base-primary',
-    success: 'bg-mix-base-success',
-    danger: 'bg-mix-base-danger',
-    warning: 'bg-mix-base-warning',
-  } satisfies Record<Color, string>)[color],
-  paddingClass ?? 'py-[5px] px-2',
-  active && 'active',
-  disabled && 'disabled',
-  className,
-)
+import { buttonClass } from './buttonClass'
 
 export interface ButtonProps extends PermissionCheckedProps, ComponentProps<'button'> {
   text?: React.ReactNode
@@ -111,9 +85,9 @@ function TooltipContainer({ children, tooltip }: TooltipContainerProps) {
     return children
   }
 
-  return <div className="inline relative">
+  return <div className="tooltip-container inline">
     {children}
-    <div aria-hidden className="absolute right-1/2 z-40 w-max bg-gray-50 border-gray-500 shadow-md opacity-0 transition-opacity origin-top scale-0 translate-x-1/2 p-[3px] border-1 shadow-black/10 peer-hover:delay-1000 peer-focus-within:delay-1000 peer-hover:opacity-100 top-12/10 peer-focus-within:opacity-100 peer-hover:scale-100 peer-focus-within:scale-100">
+    <div aria-hidden className="tooltip w-max bg-gray-50 border-gray-500 shadow-md p-[3px] border-1 shadow-black/10">
       {tooltip}
     </div>
   </div>

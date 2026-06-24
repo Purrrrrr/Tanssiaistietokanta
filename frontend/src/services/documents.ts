@@ -99,6 +99,11 @@ mutation patchDocument($id: ID!, $document: JSONPatch!) {
   }
 }`))
 
+export const useDocumentsCount = backendQueryHook(graphql(`
+query getDocumentsCount($owner: DocumentOwner!, $owningId: ID!, $path: String) {
+  documentsCount(owner: $owner, owningId: $owningId, path: $path)
+}`))
+
 export const useDeleteDocument = entityDeleteHook('documents', graphql(`
 mutation deleteDocument($id: ID!) {
   deleteDocument(id: $id) {

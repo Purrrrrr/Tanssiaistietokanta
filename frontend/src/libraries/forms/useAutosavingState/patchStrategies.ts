@@ -4,11 +4,7 @@ import { Operation, toJSONPatch } from './jsonPatch'
 
 export type PatchStrategy<T, Patch> = (original: T, modifications: T) => Patch | undefined
 
-export function noPatch<T>(_: T, modifications: T): T {
-  return modifications
-}
-
-export function partial<T>(original: T, modifications: T): Partial<T> | undefined {
+function partial<T>(original: T, modifications: T): Partial<T> | undefined {
   if (typeof modifications !== 'object' || modifications === null) {
     if (modifications === original) return undefined
     return modifications
@@ -27,7 +23,12 @@ export function partial<T>(original: T, modifications: T): Partial<T> | undefine
   return modified ? partial : undefined
 }
 
-export function jsonPatch<T>(original: T, modifications: T): Operation[] | undefined {
+function jsonPatch<T>(original: T, modifications: T): Operation[] | undefined {
   const patch = toJSONPatch(original, modifications)
   return patch.length > 0 ? patch : undefined
+}
+
+export default {
+  partial,
+  jsonPatch,
 }

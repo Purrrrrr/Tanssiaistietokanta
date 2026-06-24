@@ -4,7 +4,7 @@ import { LinkComponentType, Slide, SlideNavigation, SlideNavigationList } from '
 
 import { renderDoc, TeachedIn } from './utils'
 
-export type WithCommonProps<X> = {
+type WithCommonProps<X> = {
   eventProgram: EventProgram
   linkComponent?: LinkComponentType
 } & X

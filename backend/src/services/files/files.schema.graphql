@@ -1,6 +1,7 @@
 type Query {
   file(id: ID!): File!
   files(owner: FileOwner!, owningId: ID!, path: String): [File!]!
+  filesCount(owner: FileOwner!, owningId: ID!, path: String): Int!
 }
 
 type File {

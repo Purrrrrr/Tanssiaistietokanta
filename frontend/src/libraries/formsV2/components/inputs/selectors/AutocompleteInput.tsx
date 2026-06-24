@@ -4,17 +4,19 @@ import { useCombobox, type UseComboboxGetInputPropsOptions } from 'downshift'
 import type { SelectorProps } from './types'
 import type { FieldInputComponent } from '../types'
 
-import { Dropdown, DropdownContainer } from 'libraries/overlays'
-import { CssClass } from 'libraries/ui'
+import { Dropdown, DropdownContainer } from 'libraries/ui'
+import { CssClass } from 'libraries/ui/classes'
 
+import { useFilteredItems } from './itemUtils'
 import { Menu, MenuItem, renderMenuItems, toMenuItemProps } from './Menu'
-import { acceptNulls, preventDownshiftDefaultWhen, useFilteredItems } from './utils'
+import { acceptNulls, preventDownshiftDefaultWhen } from './utils'
 
 export interface AutocompleteInputProps<T> extends Omit<SelectorProps<T>, 'buttonRenderer' | 'value' | 'minimal'> {
   value?: T | null
   placeholder?: string
   inputRenderer?: (props: InputProps) => ReactNode
   emptyInputByDefault?: boolean
+  rightIcon?: React.ReactNode
 }
 
 interface InputProps extends Omit<UseComboboxGetInputPropsOptions, 'onChange'> {
@@ -50,7 +52,7 @@ function InteractiveAutocompleteInput<T>(props: AutocompleteInputProps<T>) {
   'use no memo'
   const {
     itemToString = String, emptyInputByDefault, categoryTitleRenderer, noResultsText, inputRenderer,
-    value = null, onChange, id, readOnly,
+    value = null, onChange, id, readOnly, rightIcon,
     placeholder = '', containerClassname, inline,
   } = props
   const valueToString = acceptNulls(itemToString)
@@ -126,7 +128,11 @@ function InteractiveAutocompleteInput<T>(props: AutocompleteInputProps<T>) {
   return <DropdownContainer className={containerClassname ?? (inline ? undefined : 'grow f-full')}>
     {inputRenderer
       ? inputRenderer(inputProps)
-      : <input className={CssClass.input + ' w-full'} {...inputProps} />
+      : <div className={'flex items-center gap-1 ' + CssClass.inputBox}>
+        {value && props.itemIcon?.(value)}
+        <input className={CssClass.inputElement + ' w-full'} {...inputProps} />
+        {rightIcon}
+      </div>
     }
     <Dropdown open={isOpen} tabIndex={-1}>
       <Menu {...getMenuProps({}, { suppressRefError: true })} tabIndex={-1}>

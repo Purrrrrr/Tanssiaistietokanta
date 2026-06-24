@@ -1,6 +1,7 @@
 import classNames from 'classnames'
 
-import { ColorClass, Link, RegularLink } from 'libraries/ui'
+import { Link, RegularLink } from 'libraries/ui'
+import { ColorClass } from 'libraries/ui/classes'
 import { T, useTranslation } from 'i18n'
 import { navigationHidden } from 'utils/routeUtils'
 

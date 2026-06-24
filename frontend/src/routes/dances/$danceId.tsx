@@ -11,8 +11,8 @@ import VersionableContentContainer from 'components/versioning/VersionableConten
 import { VersionSidebarToggle } from 'components/versioning/VersionSidebarToggle'
 
 import { DanceIsUsedIn } from './-components/DanceIsUsedIn'
-import { danceVersionLink } from './-components/DanceLink'
 import { DeleteDanceButton } from './-components/DeleteDanceButton'
+import { danceVersionLink } from './-components/utils'
 
 export const Route = createFileRoute(
   '/dances/$danceId',

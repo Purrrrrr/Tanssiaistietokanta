@@ -1,14 +1,16 @@
 import { createRouter, RouterProvider } from '@tanstack/react-router'
 import { routeTree } from 'routeTree.gen'
 
-import { BackendProvider } from 'backend'
 import { subscribeToAuthChanges } from 'backend/authentication'
+import { BackendProvider } from 'backend/components'
 
 import { TranslationProvider } from 'libraries/i18n'
-import { AlertContext } from 'libraries/overlays/AlertContext'
-import { ToastContainer } from 'libraries/ui'
+import { AlertContext, ToastContainer } from 'libraries/ui'
+import LoadingComponent from 'components/LoadingComponent'
 import { RightsContext } from 'components/rights/RightsContext'
-import { defaultContext, LoadingComponent, useAppRootContext } from 'utils/routeUtils'
+import { defaultContext, useAppRootContext } from 'utils/routeUtils'
+
+import 'libraries/ui/init'
 
 function DanceOrganizer() {
   return <TranslationProvider defaultLanguage="fi">

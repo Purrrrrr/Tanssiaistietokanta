@@ -3,7 +3,7 @@ import { Dance } from 'types'
 import { useDanceCategories } from 'services/dances'
 
 import { Select } from 'libraries/formsV2/components/inputs'
-import { ColorClass } from 'libraries/ui'
+import { ColorClass } from 'libraries/ui/classes'
 import { useT } from 'i18n'
 
 interface DanceCategoryChooserProps {

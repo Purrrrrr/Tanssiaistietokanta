@@ -5,8 +5,7 @@ import { Event, EventVolunteer } from 'types'
 import { addGlobalLoadingAnimation } from 'backend'
 import { useCreateEventVolunteer } from 'services/eventVolunteers'
 
-import { DialogCloseButton } from 'libraries/overlays'
-import { Card, H2 } from 'libraries/ui'
+import { Card, DialogCloseButton, H2 } from 'libraries/ui'
 import { useT, useTranslation } from 'i18n'
 
 import { emptyEventVolunteerForm, EventVolunteerForm, EventVolunteerFormValues } from './EventVolunteerForm'

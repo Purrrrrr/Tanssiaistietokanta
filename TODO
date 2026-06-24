@@ -569,21 +569,39 @@
 
   Is fabric/image/whatever document content pasteable/copyable from Google Docs or Word?
 
+* Do links render correctly styled in DocumentViewer?
+* Fix button tooltip alignment when button is on the right border of page
+* Separate sections in Workshop editor for clarity
+  * Make VolunteerAssignmentEditor less jumpy. Some way to load things in advance. Not doing, separation makes it less needed
+  * Document+file counts
+  * Volunteer counts
+* Icons for statuses
+  * EventVolunteerAssignment
+  * EventVolunteer
+* Fix creating dances
 * Volunteer assignments page
   * Search
     * Filter by role, filter by status, filter by workshop/instance
     * Pick names from volunteer list
     * Allow picking workshop instances
-    registrationStatusSelector -> show choices as actions (state flowchart style, only the actions that make sense)
+  * registrationStatusSelector -> show only the actions that make sense)
     Adding jobs:
-      Only show roles that volunteer is interested_in in selector
+    * Allow adding by role or volunteer
+    * Only show roles that volunteer is interested_in in selector
+    * Only show volunteers that are insterested in role
+    * Allow selecting workshop instances
+      Allow selecting non-interested parties but show them grayed out or something
       Allow adding ev:s from eva-editor (pop up dialog when need to accept)
       Turn eventVolunteer accepted if adding assignments to it
 
+  Page to list all files and documents of event?
+  Some way to handle music?
   Check lists/pages layout on mobile
     Assignments list
     Volunteers list
     Workshop page?
+    Show sorting columns as one dropdown on mobile?
+    Separate support for selectable rows
 
   Introduce shifts for jobs
     Shift has
@@ -596,20 +614,15 @@
     Planner:
       Store which shifts a volunteer can or wants to handle and allow entering that info
       Use this to fill shifts?
-  
-  Do links render correctly styled in DocumentViewer?
 
   Prevent status change in VolunteerStatusBulkEditor when it is not legal
   When changing volunteer to accepted -> ask roles to assign in a modal
   Button to remove multiple event volunteers
 
-  Separate sections in Workshop editor for clarity
   Teaching duration for dance
   Copy time counting ball planning view to workshop dances
-  Fix button tooltip alignment when button is on the right border of page
 
   Check if exists and count methods use access control
-  Make VolunteerAssignmentEditor less jumpy. Some way to load things in advance
   Check how deleted volunteers affect versioning
     Fix dependency graph not updating properly on delete
   More fine-grained document access control
@@ -623,9 +636,6 @@
     Templates for event/interval music slides?
 
   Workshop not in kompassi warning
-  Icons for statuses?
-    EventVolunteerAssignment
-    EventVolunteer
   Should files be versioned too?
 
   Better editor Part 3

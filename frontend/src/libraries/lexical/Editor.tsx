@@ -12,7 +12,7 @@ import classNames from 'classnames'
 
 import { FieldComponentDisplayProps } from 'libraries/forms/types'
 
-import { CssClass } from 'libraries/ui'
+import { CssClass } from 'libraries/ui/classes'
 
 import { nodes } from './nodes'
 import { AutoLinkPlugin, MATCHERS } from './plugins/AutoLinkPlugin'

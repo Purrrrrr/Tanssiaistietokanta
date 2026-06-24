@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 
-import { useResizeObserver } from './utils/useResizeObserver'
+import { useResizeObserver } from 'libraries/common/useResizeObserver'
 
 export function AutosizedSection({ children, className = '', ...props }) {
   const container = useRef<HTMLElement>(null)
