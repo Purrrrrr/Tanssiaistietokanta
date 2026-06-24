@@ -19,12 +19,16 @@ export function useSchema(schemaDef: ValidationProps) {
       if (schema) return schema
       if (!type && !required) return null
 
-      return required
-        ? baseValidator(type).required(value => Array.isArray(value)
-          ? messages.requiredList
-          : messages.required,
-        )
-        : baseValidator(type).nullable()
+      if (required) {
+        if (type === 'list') {
+          return array().required(value => Array.isArray(value)
+            ? messages.requiredList
+            : messages.required,
+          ).min(1, messages.requiredList)
+        }
+        return baseValidator(type).required(messages.required)
+      }
+      return baseValidator(type).nullable()
     },
     [type, required, schema, messages.required, messages.requiredList],
   )
