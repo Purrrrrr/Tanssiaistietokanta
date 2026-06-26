@@ -29,11 +29,12 @@ interface FabricComponentProps {
   isSelected?: boolean
   onRemoveEditor: () => void
   onChangeData: (data: string) => void
+  onExportSvg?: (svg: string) => void
   onChangeDimensions: (width: number, height: number) => void
   ref?: React.Ref<{ deleteSelectedObjects: () => boolean }>
 }
 
-export function FabricEditor({ editable, isSelected, nodeKey, width, height, data, onChangeData, onChangeDimensions, onRemoveEditor, ref }: FabricComponentProps) {
+export function FabricEditor({ editable, isSelected, nodeKey, width, height, data, onChangeData, onExportSvg, onChangeDimensions, onRemoveEditor, ref }: FabricComponentProps) {
   const t = useEditorT('diagram')
   const [canvas, setCanvas] = useState<Canvas | null>(null)
   const [activeObjects, setActiveObjects] = useState<FabricObject[]>([])
@@ -48,6 +49,7 @@ export function FabricEditor({ editable, isSelected, nodeKey, width, height, dat
     })
     const json = canvas.toJSON()
     onChangeData(json)
+    onExportSvg?.(canvas.toSVG())
   }
 
   useImperativeHandle(ref, () => ({
@@ -95,6 +97,7 @@ export function FabricEditor({ editable, isSelected, nodeKey, width, height, dat
     function onUp() {
       if (!canvas) return
       onChangeDimensions(canvas.width, canvas.height)
+      onExportSvg?.(canvas.toSVG())
       controller.abort()
     }
 
