@@ -1,6 +1,23 @@
 @import "tailwindcss";
+@layer theme, base, components, utilities;
 
 @theme {
+  --animate-appear: appear 0.2s ease-in-out forwards;
+  --animate-dissapear: dissapear 0.2s ease-in-out forwards;
+
+  @keyframes dissapear {
+    to {
+      transform: scale(.25);
+    }
+  }
+  @keyframes appear {
+    from {
+      transform: scale(.55);
+    }
+  }
+
+  --breakpoint-xs: 560px;
+  --color-selection: #7dbcff99
   --color-muted: var(--color-gray-600);
   --color-muted-hover: var(--color-gray-700);
   --color-link: var(--color-sky-700); /* oklch(51.8% 0.158 264.376); */
@@ -46,7 +63,55 @@
 @utility bg-mix-alpha-* {
   --bg-mix-alpha: --value(integer);
 }
+@utility comma-separated-list {
+  & > * {
+    display: inline;
+    &:not(:last-child)::after {
+      content: ", ";
+    }
+  }
+}
 
+body {
+  font-family: "Lato", sans-serif;
+  font-size:14px;
+  font-weight:400;
+  letter-spacing:0;
+  line-height:1.28581;
+  text-transform:none;
+  color:#1c2127;
+}
+
+p{
+  margin-bottom:10px;
+  margin-top:0;
+}
+
+strong{
+  font-weight:600;
+}
+
+::-moz-selection {
+  @apply bg-selection;
+}
+::selection{
+  @apply bg-selection;
+}
+
+:focus{
+  outline:rgba(45, 114, 210, 0.6) solid 2px;
+  outline-offset:2px;
+  -moz-outline-radius:6px;
+}
+@supports selector(:focus-visible) {
+  :focus {
+    outline:none;
+  }
+  :focus-visible:not(.bp5-input) {
+    outline:rgba(45, 114, 210, 0.6) solid 2px !important;
+    outline-offset:2px;
+  }
+}
 
 .interactive-control {
   @apply transition-colors bg-color-mix;

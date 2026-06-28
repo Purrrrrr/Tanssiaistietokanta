@@ -1,4 +1,5 @@
-@import "tailwindcss";
+@reference "tailwindcss";
+@layer theme, base, components, utilities;
 
 .lexical-content {
   text-align: left;
