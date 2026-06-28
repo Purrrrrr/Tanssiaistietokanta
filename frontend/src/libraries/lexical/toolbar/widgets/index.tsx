@@ -18,8 +18,8 @@ export function FloatingToolbar({ children, anchorName, side = 'bottom' }: {
     onKeyDown={e => e.stopPropagation() /* Prevent input interactions from leaking into lexical */}
     className={classNames(
       'absolute [position-anchor:var(--toolbarAnchorName)]',
-      side === 'bottom' && '[position-area:bottom_span-right] translate-y-1',
-      side === 'top' && '[position-area:top_span-right] -translate-y-1',
+      side === 'bottom' && '[position-area:bottom_span-right] mt-1',
+      side === 'top' && '[position-area:top_span-right] mb-1',
       'bg-white border border-gray-400 rounded-md z-20 shadow-md empty:hidden max-w-dvw',
     )}
   >
