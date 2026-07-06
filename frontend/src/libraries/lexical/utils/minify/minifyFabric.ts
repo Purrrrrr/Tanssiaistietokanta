@@ -5,7 +5,10 @@ import { applyReverseTransformations, applyTransformations, defaultValues, forTy
 
 /** Default values to strip from every fabric object during minification. */
 const fabricObjectTransformations = [
-  forTypes(['Circle', 'Ellipse', 'Polygon', 'Textbox', 'Path'], defaultValues({
+  defaultValues({
+    version: '7.4.0',
+  }),
+  forTypes(['Rect', 'Circle', 'Ellipse', 'Polygon', 'Textbox', 'Path', 'Arrowline'], defaultValues({
     angle: 0,
     opacity: 1,
     visible: true,
@@ -27,7 +30,7 @@ const fabricObjectTransformations = [
     fillRule: 'nonzero',
     backgroundColor: '',
   })),
-  forTypes(['Circle', 'Ellipse', 'Polygon', 'Textbox'], defaultValues({
+  forTypes(['Rect', 'Circle', 'Ellipse', 'Polygon', 'Textbox', 'Arrowline'], defaultValues({
     strokeMiterLimit: 4,
     strokeLineCap: 'butt',
     strokeLineJoin: 'miter',
@@ -38,7 +41,9 @@ const fabricObjectTransformations = [
     strokeLineJoin: 'round',
   })),
   forTypes(['Path'], mapKey<(string | number)[][], string>('path', {
-    minify: path => path.map(segment => segment.join(' ')).join(','),
+    minify: path => path
+      .map(segment => segment.map(value => typeof value == 'number' ? value.toFixed(2) : value).join(' '))
+      .join(','),
     expand: path => path.split(',').map(segment => segment.split(' ').map(value => isNaN(Number(value)) ? value : Number(value))),
   })),
   forTypes(['Circle'], defaultValues({
