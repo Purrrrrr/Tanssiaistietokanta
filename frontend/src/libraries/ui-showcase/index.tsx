@@ -1,16 +1,16 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import { booleanProp, numberProp, type Showcase, showcase } from './types'
 
 import { Switch } from 'libraries/forms'
-import { DocumentViewer, Editor, type MinifiedDocumentContent } from 'libraries/lexical'
-import { Alert, AnchorButton, AutosizedSection, Breadcrumb, BreadcrumbsContainer, Button, Callout, Collapse, Dialog, GlobalSpinner, H2, RegularLink, Tab, Tabs } from 'libraries/ui'
+import { Alert, AnchorButton, AutosizedSection, Breadcrumb, BreadcrumbsContainer, Button, Callout, Collapse, Dialog, GlobalSpinner, RegularLink, Tab, Tabs } from 'libraries/ui'
 import { showToast } from 'libraries/ui/hooks'
 import { Trash } from 'libraries/ui/icons'
 import { MenuLink, MenuSection, Page } from 'components/Page'
 import { ColoredTag, TAG_COLOR_COUNT } from 'components/widgets/ColoredTag'
 
 import FormUiShowcase from './formShowcase'
+import { EditorShowcase } from './lexicalShowCase'
 import { ShowcaseContainer } from './ShowcaseContainer'
 import { titleCase } from './utils/titleCase'
 
@@ -203,39 +203,6 @@ const showcases: Showcase<Record<string, unknown>>[] = [
     render: () => <BreadcrumbsShowcase />,
   }),
 ]
-
-function EditorShowcase({ twoEditors, showMinified, showViewer }: { twoEditors: boolean, showMinified: boolean, showViewer: boolean }) {
-  const [state, setState] = useState<MinifiedDocumentContent | null>(() => {
-    const saved = window.localStorage.getItem('editorShowcaseState')
-    return saved ? JSON.parse(saved) : null
-  })
-  useEffect(() => {
-    window.localStorage.setItem('editorShowcaseState', JSON.stringify(state))
-  }, [state])
-  return (
-    <div className="flex flex-col gap-4">
-      <Editor value={state} imageUpload={{ owner: 'dances', owningId: 'fuu' }} onChange={setState} />
-      {showViewer &&
-        <div className="p-2 rounded border-gray-400 border-dashed border-1">
-          <p className="mb-2 text-xs text-gray-500">Document Viewer (read-only, no Lexical runtime)</p>
-          <DocumentViewer document={state} />
-        </div>
-      }
-      {showMinified &&
-        <>
-          <H2>Minified state ({JSON.stringify(state).length} bytes)</H2>
-          <pre className="overflow-auto p-2 bg-gray-100 rounded max-h-200"><code>{JSON.stringify(state, null, 2)}</code></pre>
-        </>
-      }
-      {twoEditors &&
-        <>
-          <H2>Another editor instance with the same state</H2>
-          <Editor value={state} imageUpload={{ owner: 'dances', owningId: 'fuu' }} onChange={setState} />
-        </>
-      }
-    </div>
-  )
-}
 
 function range(count: number): number[] {
   console.log(Array(count).fill(0).map((_, index) => index))
