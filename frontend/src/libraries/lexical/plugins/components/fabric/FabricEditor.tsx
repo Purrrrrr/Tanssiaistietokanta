@@ -1,5 +1,5 @@
 import { useImperativeHandle, useState } from 'react'
-import { Canvas, config, FabricObject } from 'fabric'
+import { Canvas, Circle, config, Ellipse, FabricObject } from 'fabric'
 import type { NodeKey } from 'lexical'
 
 import { useEditorT } from 'libraries/lexical/i18n'
@@ -19,6 +19,7 @@ declare module 'fabric' {
   }
 }
 FabricObject.customProperties = ['_id']
+FabricObject.ownDefaults.includeDefaultValues = false
 config.NUM_FRACTION_DIGITS = 2
 
 export interface FabricDiagramData {
@@ -47,6 +48,7 @@ export function FabricEditor({ editable, isSelected, nodeKey, width, height, dat
 
   // ── Serialize canvas to node ──────────────────────────────────────────────
   async function saveCanvas(canvas: Canvas) {
+    normalizeObjectScales(canvas)
     const json = canvas.toJSON()
     onChange({ data: json, width: canvas.width, height: canvas.height })
   }
@@ -139,4 +141,41 @@ export function FabricEditor({ editable, isSelected, nodeKey, width, height, dat
       </div>
     </div>
   )
+}
+
+const round = (value: number) => Number(value.toFixed(config.NUM_FRACTION_DIGITS))
+
+function normalizeObjectScales(canvas: Canvas) {
+  canvas.getObjects().forEach(obj => {
+    if (obj.scaleX === 1 && obj.scaleY === 1) return
+    switch (obj.type) {
+      case 'rect':
+        obj.set({
+          width: round(obj.width * obj.scaleX),
+          height: round(obj.height * obj.scaleY),
+          scaleX: 1,
+          scaleY: 1,
+        })
+        break
+      case 'circle': {
+        const minScale = Math.min(obj.scaleX, obj.scaleY)
+        obj.set({
+          radius: round((obj as Circle).radius * minScale),
+          scaleX: round(obj.scaleX / minScale),
+          scaleY: round(obj.scaleY / minScale),
+        })
+        break
+      }
+      case 'ellipse':
+        obj.set({
+          rx: round((obj as Ellipse).rx * obj.scaleX),
+          ry: round((obj as Ellipse).ry * obj.scaleY),
+          scaleX: 1,
+          scaleY: 1,
+        })
+        break
+      default:
+        return
+    }
+  })
 }

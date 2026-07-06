@@ -14,6 +14,10 @@ Polyline.prototype.toObject = function (propertiesToInclude) {
   })
   return {
     ...original,
-    points: points.map(({ x, y, _id }) => ({ x, y, _id })),
+    points: points.map(({ x, y, _id }) => ({
+      x: Number(x.toFixed(2)),
+      y: Number(y.toFixed(2)),
+      _id,
+    })),
   }
 }

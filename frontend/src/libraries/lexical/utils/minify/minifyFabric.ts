@@ -1,4 +1,4 @@
-import type { AnyNode } from './types'
+import type { AnyNode, Transformation } from './types'
 
 import { FABRIC_KEY_MAPPING } from './constants'
 import { applyReverseTransformations, applyTransformations, defaultValues, forTypes, keyMapper, mapKey } from './transformationUtils'
@@ -8,32 +8,34 @@ const fabricObjectTransformations = [
   defaultValues({
     version: '7.4.0',
   }),
+  forTypes(['Circle'], {
+    minify: ({ width: _, height: __, ...rest }: AnyNode) => rest,
+    expand: ({ radius, ...rest }: AnyNode) => ({
+      ...rest,
+      radius,
+      width: radius as number * 2,
+      height: radius as number * 2,
+    }),
+  }),
+  forTypes(['Ellipse'], {
+    minify: ({ width: _, height: __, ...rest }: AnyNode) => rest,
+    expand: ({ rx, ry, ...rest }: AnyNode) => ({
+      ...rest,
+      rx, ry,
+      width: rx as number * 2,
+      height: ry as number * 2,
+    }),
+  }),
+  forTypes(['Circle'], transformDimensionsProps(['left', 'top', 'radius'], 'dimensions')),
+  forTypes(['Ellipse'], transformDimensionsProps(['left', 'top', 'rx', 'ry'], 'dimensions')),
+  forTypes(['Rect', 'Polygon', 'Textbox', 'Path'], transformDimensionsProps(['left', 'top', 'width', 'height'], 'dimensions')),
   forTypes(['Rect', 'Circle', 'Ellipse', 'Polygon', 'Textbox', 'Path', 'Arrowline'], defaultValues({
-    angle: 0,
-    opacity: 1,
-    visible: true,
-    shadow: null,
-    flipX: false,
-    flipY: false,
-    scaleX: 1,
-    scaleY: 1,
-    skewX: 0,
-    skewY: 0,
-    originX: 'center',
-    originY: 'center',
+    fill: '#fff',
+    stroke: '#000',
     strokeWidth: 2,
-    strokeDashArray: null,
-    strokeDashOffset: 0,
-    strokeUniform: false,
-    paintFirst: 'fill',
-    globalCompositeOperation: 'source-over',
-    fillRule: 'nonzero',
-    backgroundColor: '',
   })),
   forTypes(['Rect', 'Circle', 'Ellipse', 'Polygon', 'Textbox', 'Arrowline'], defaultValues({
-    strokeMiterLimit: 4,
-    strokeLineCap: 'butt',
-    strokeLineJoin: 'miter',
+    strokeUniform: true,
   })),
   forTypes(['Path'], defaultValues({
     strokeMiterLimit: 10,
@@ -46,38 +48,37 @@ const fabricObjectTransformations = [
       .join(','),
     expand: path => path.split(',').map(segment => segment.split(' ').map(value => isNaN(Number(value)) ? value : Number(value))),
   })),
-  forTypes(['Circle'], defaultValues({
-    startAngle: 0,
-    endAngle: 360,
-    counterClockwise: false,
-  })),
-  forTypes(['Textbox'], defaultValues({
-    fontSize: 20,
-    fontWeight: 'normal',
-    fontFamily: 'Times New Roman',
-    fontStyle: 'normal',
-    lineHeight: 1.16,
-    charSpacing: 0,
-    textAlign: 'left',
-    styles: [],
-    pathStartOffset: 0,
-    pathSide: 'left',
-    pathAlign: 'baseline',
-    underline: false,
-    overline: false,
-    linethrough: false,
-    textBackgroundColor: '',
-    direction: 'ltr',
-    textDecorationThickness: 66.667,
-    minWidth: 20,
-    splitByGrapheme: false,
-  })),
   mapKey<AnyNode[] | undefined>('objects', {
     minify: objects => objects?.map(minifyFabricObject),
     expand: objects => objects?.map(expandFabricObject),
   }),
   keyMapper(FABRIC_KEY_MAPPING),
 ]
+
+function transformDimensionsProps(props: string[], resultProp: string): Transformation {
+  return {
+    minify: (obj: AnyNode) => {
+      const values = props.map(prop => obj[prop]) as number[]
+      obj[resultProp] = values.map(value => Number(value.toFixed(2))).join(',')
+      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+      props.forEach(prop => delete obj[prop])
+      return obj
+    },
+    expand: (obj: AnyNode) => {
+      const { [resultProp]: minified, ...rest } = obj
+      if (typeof minified === 'string') {
+        const values = minified.split(',').map(value => Number(value))
+        if (values.length === props.length) {
+          props.forEach((prop, index) => {
+            rest[prop] = values[index]
+          })
+        }
+        return rest
+      }
+      return obj
+    },
+  }
+}
 
 export function minifyFabricObject(obj: AnyNode): AnyNode {
   return applyTransformations(fabricObjectTransformations, obj)

@@ -44,6 +44,7 @@ export const KEY_MAP: Record<string, string> = {
   width: 'w',
   height: 'h',
   data: 'da',
+  hash: 'sh',
 }
 
 export const LEXICAL_KEY_MAPPING: KeyMapping = createKeyMapping(KEY_MAP)
@@ -83,12 +84,13 @@ export const TYPE_MAPPING = createKeyMapping({
 export const FABRIC_KEY_MAP: Record<string, string> = {
   // Shared object properties
   _id: '_id',
+  dimensions: 'd',
   type: 't',
   version: 'v',
   originX: 'ox',
   originY: 'oy',
   left: 'l',
-  top: 'tp',
+  top: 'x',
   width: 'w',
   height: 'h',
   ry: 'ry',
@@ -108,17 +110,6 @@ export const FABRIC_KEY_MAP: Record<string, string> = {
   flipX: 'fx',
   flipY: 'fy',
   visible: 'vi',
-  // clipPath: 'cp',
-  // hasBorders: 'hb',
-  // perPixelTargetFind: 'ppt',
-  // lockMovementX: 'lmx',
-  // lockMovementY: 'lmy',
-  // lockRotation: 'lr',
-  // lockScalingX: 'lsx',
-  // lockScalingY: 'lsy',
-  // lockSkewingX: 'lkx',
-  // lockSkewingY: 'lky',
-  // lockScalingFlip: 'lsf',
   scaleX: 'sx',
   scaleY: 'sy',
   skewX: 'kx',
@@ -127,7 +118,6 @@ export const FABRIC_KEY_MAP: Record<string, string> = {
   paintFirst: 'pf',
   globalCompositeOperation: 'gco',
   backgroundColor: 'bgc',
-  // selectionBackgroundColor: 'sbc',
   // // Circle
   radius: 'r',
   startAngle: 'sa',
@@ -159,12 +149,7 @@ export const FABRIC_KEY_MAP: Record<string, string> = {
   points: 'pts',
   // // Group + canvas root
   objects: 'o',
-  // subTargetCheck: 'stc',
-  // interactive: 'ir',
   background: 'bg',
-  // backgroundImage: 'bgi',
-  // overlayColor: 'oc',
-  // overlayImage: 'oi',
 }
 
 export const FABRIC_KEY_MAPPING: KeyMapping = createKeyMapping(FABRIC_KEY_MAP)
