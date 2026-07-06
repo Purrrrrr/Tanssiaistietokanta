@@ -77,12 +77,21 @@ const showcases: Showcase<Record<string, unknown>>[] = [
     props: {
       disabled: booleanProp(),
       minimal: booleanProp(),
+      tooltip: booleanProp({ default: true }),
       icon: booleanProp({ default: true }),
     },
-    render: ({ disabled, icon, minimal }) =>
+    render: ({ disabled, icon, minimal, tooltip }) =>
       <div className="flex gap-2">
         {colors.map(color =>
-          <Button key={color} color={color} minimal={minimal} icon={icon ? <Trash /> : undefined} disabled={disabled}>{titleCase(color)}</Button>,
+          <Button
+            key={color}
+            color={color}
+            minimal={minimal}
+            icon={icon ? <Trash /> : undefined}
+            tooltip={tooltip ? 'A long tooltip' : undefined}
+            disabled={disabled}>
+            {titleCase(color)}
+          </Button>,
         )}
       </div>,
   }),
