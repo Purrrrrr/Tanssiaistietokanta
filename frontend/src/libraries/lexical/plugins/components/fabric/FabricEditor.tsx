@@ -1,5 +1,5 @@
 import { useImperativeHandle, useState } from 'react'
-import { Canvas, FabricObject } from 'fabric'
+import { Canvas, config, FabricObject } from 'fabric'
 import type { NodeKey } from 'lexical'
 
 import { useEditorT } from 'libraries/lexical/i18n'
@@ -19,6 +19,7 @@ declare module 'fabric' {
   }
 }
 FabricObject.customProperties = ['_id']
+config.NUM_FRACTION_DIGITS = 2
 
 interface FabricComponentProps {
   nodeKey: NodeKey
