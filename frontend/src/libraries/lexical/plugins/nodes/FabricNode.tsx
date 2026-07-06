@@ -18,7 +18,7 @@ import {
   KEY_DELETE_COMMAND,
 } from 'lexical'
 
-import { FabricEditor } from '../components/fabric/FabricEditor'
+import { FabricDiagramData, FabricEditor } from '../components/fabric/FabricEditor'
 
 export type SerializedFabricNode = Spread<
   { width: number, height: number, data: string },
@@ -140,17 +140,13 @@ function FabricComponent({ nodeKey, width, height, data }: FabricComponentProps)
   const [isSelected, setSelected, clearSelection] = useLexicalNodeSelection(nodeKey)
   const ref = useRef<{ deleteSelectedObjects: () => boolean }>(null)
 
-  function saveCanvasData(json: string) {
+  const onChange = (data: FabricDiagramData) => {
     editor.update(() => {
       const node = $getNodeByKey(nodeKey)
-      if ($isFabricNode(node)) node.setData(json)
-    })
-  }
-
-  const onResize = (width: number, height: number) => {
-    editor.update(() => {
-      const node = $getNodeByKey(nodeKey)
-      if ($isFabricNode(node)) node.setDimensions(width, height)
+      if ($isFabricNode(node)) {
+        node.setDimensions(data.width, data.height)
+        node.setData(data.data as unknown as string)
+      }
     })
   }
 
@@ -196,8 +192,7 @@ function FabricComponent({ nodeKey, width, height, data }: FabricComponentProps)
     data={data}
     width={width}
     height={height}
-    onChangeDimensions={onResize}
-    onChangeData={saveCanvasData}
+    onChange={onChange}
     onRemoveEditor={removeNode}
   />
 }

@@ -21,6 +21,12 @@ declare module 'fabric' {
 FabricObject.customProperties = ['_id']
 config.NUM_FRACTION_DIGITS = 2
 
+export interface FabricDiagramData {
+  data: object
+  width: number
+  height: number
+}
+
 interface FabricComponentProps {
   nodeKey: NodeKey
   width: number
@@ -29,28 +35,28 @@ interface FabricComponentProps {
   editable?: boolean
   isSelected?: boolean
   onRemoveEditor: () => void
-  onChangeData: (data: string) => void
-  onExportSvg?: (svg: string) => void
-  onChangeDimensions: (width: number, height: number) => void
+  onChange: (data: FabricDiagramData) => void
   ref?: React.Ref<{ deleteSelectedObjects: () => boolean }>
 }
 
-export function FabricEditor({ editable, isSelected, nodeKey, width, height, data, onChangeData, onExportSvg, onChangeDimensions, onRemoveEditor, ref }: FabricComponentProps) {
+export function FabricEditor({ editable, isSelected, nodeKey, width, height, data, onChange, onRemoveEditor, ref }: FabricComponentProps) {
   const t = useEditorT('diagram')
   const [canvas, setCanvas] = useState<Canvas | null>(null)
   const [activeObjects, setActiveObjects] = useState<FabricObject[]>([])
   const showControls = editable && isSelected
 
   // ── Serialize canvas to node ──────────────────────────────────────────────
+  function saveCanvas(canvas: Canvas) {
+    const json = canvas.toJSON()
+    onChange({ data: json, width: canvas.width, height: canvas.height })
+  }
 
-  function saveCanvasData() {
+  function onUpdate() {
     if (!canvas) return
     canvas.getObjects().forEach(obj => {
       obj._id ??= randomId()
     })
-    const json = canvas.toJSON()
-    onChangeData(json)
-    onExportSvg?.(canvas.toSVG())
+    saveCanvas(canvas)
   }
 
   useImperativeHandle(ref, () => ({
@@ -97,8 +103,7 @@ export function FabricEditor({ editable, isSelected, nodeKey, width, height, dat
 
     function onUp() {
       if (!canvas) return
-      onChangeDimensions(canvas.width, canvas.height)
-      onExportSvg?.(canvas.toSVG())
+      saveCanvas(canvas)
       controller.abort()
     }
 
@@ -120,7 +125,7 @@ export function FabricEditor({ editable, isSelected, nodeKey, width, height, dat
           data={data}
           editable={editable}
           onCanvasCreated={setCanvas}
-          onUpdate={saveCanvasData}
+          onUpdate={onUpdate}
           onSelect={setActiveObjects}
         />
         {showControls && (
