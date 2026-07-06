@@ -65,7 +65,7 @@ export function FabricToolbar({ anchorName, canvas, activeObjects, onRemoveNode:
   }
   const addObject = (obj: FabricObject) => modifyCanvas(canvas => canvas.add(obj))
   const defaultProps = () => ({
-    _id: randomId(),
+    _id: randomId(9),
     left: canvas.width / 2,
     top: canvas.height / 2,
     originX: 'center',

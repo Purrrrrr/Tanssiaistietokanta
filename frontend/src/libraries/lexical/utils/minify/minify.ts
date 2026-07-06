@@ -37,7 +37,7 @@ function getLiveId(node: LexicalNode, idMap: Map<string, string>): string {
   if (id == null) {
     // console.log(`assigning new id to node with key ${key} of type ${node.getType()}`)
     // If the node doesn't have an ID in the map yet, generate a new one and add it
-    id = randomId(8)
+    id = randomId(9)
     idMap.set(key, id)
   }
   return id

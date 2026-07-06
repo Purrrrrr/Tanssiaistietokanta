@@ -54,7 +54,7 @@ export function FabricEditor({ editable, isSelected, nodeKey, width, height, dat
   function onUpdate() {
     if (!canvas) return
     canvas.getObjects().forEach(obj => {
-      obj._id ??= randomId()
+      obj._id ??= randomId(9)
     })
     saveCanvas(canvas)
   }
