@@ -46,7 +46,7 @@ export function FabricEditor({ editable, isSelected, nodeKey, width, height, dat
   const showControls = editable && isSelected
 
   // ── Serialize canvas to node ──────────────────────────────────────────────
-  function saveCanvas(canvas: Canvas) {
+  async function saveCanvas(canvas: Canvas) {
     const json = canvas.toJSON()
     onChange({ data: json, width: canvas.width, height: canvas.height })
   }
