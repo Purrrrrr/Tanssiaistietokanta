@@ -1,3 +1,4 @@
+import { diagram } from './diagrams/diagrams'
 import { access } from './access/access'
 import { sessions } from './sessions/sessions'
 import { user } from './users/users'
@@ -18,6 +19,7 @@ import { documents } from './documents/documents'
 import type { Application } from '../declarations'
 
 export const services = (app: Application) => {
+  app.configure(diagram)
   app.configure(access)
   app.configure(sessions)
   app.configure(user)

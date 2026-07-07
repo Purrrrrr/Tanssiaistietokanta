@@ -5,7 +5,8 @@
   "compilerOptions": {
     "types": ["node", "mocha"],
     "target": "ESNext",
-    "module": "commonjs",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "outDir": "./lib",
     "rootDir": "src",
     "rootDirs": ["src", "test"],

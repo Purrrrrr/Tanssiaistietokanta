@@ -4,6 +4,9 @@ import type { TransportConnection, Application } from '@feathersjs/feathers'
 import authenticationClient from '@feathersjs/authentication-client'
 import type { AuthenticationClientOptions } from '@feathersjs/authentication-client'
 
+import { diagramClient } from './services/diagrams/diagrams.shared'
+export type { Diagram, DiagramData, DiagramQuery } from './services/diagrams/diagrams.shared'
+
 import { accessClient } from './services/access/access.shared'
 
 import { sessionsClient } from './services/sessions/sessions.shared'
@@ -30,7 +33,7 @@ export type { Access, AccessQuery } from './services/access/access.shared'
 export type {
   ChannelConnections,
   ChannelConnectionsData,
-  ChannelConnectionsQuery,
+  ChannelConnectionsQuery
 } from './services/channel-connections/channel-connections.shared'
 export type { Convert, ConvertData, ConvertQuery } from './services/convert/convert.shared'
 export type { Dances, DancesData, DancesPatch, DancesQuery } from './services/dances/dances.shared'
@@ -42,13 +45,15 @@ export type {
   Sessions,
   SessionsData,
   SessionsPatch,
-  SessionsQuery } from './services/sessions/sessions.shared'
+  SessionsQuery
+} from './services/sessions/sessions.shared'
 export type { User, UserData, UserPatch, UserQuery } from './services/users/users.shared'
 export type {
   Workshops,
   WorkshopsData,
   WorkshopsPatch,
-  WorkshopsQuery } from './services/workshops/workshops.shared'
+  WorkshopsQuery
+} from './services/workshops/workshops.shared'
 
 export interface Configuration {
   connection: TransportConnection<ServiceTypes>
@@ -66,9 +71,9 @@ export type ClientApplication = Application<ServiceTypes, Configuration>
  * @see https://dove.feathersjs.com/api/client.html
  * @returns The Feathers client application
  */
-export const createClient = <_Configuration = any>(
+export const createClient = <_Configuration = any,>(
   connection: TransportConnection<ServiceTypes>,
-  authenticationOptions: Partial<AuthenticationClientOptions> = {},
+  authenticationOptions: Partial<AuthenticationClientOptions> = {}
 ) => {
   const client: ClientApplication = feathers()
 
@@ -87,5 +92,6 @@ export const createClient = <_Configuration = any>(
   client.configure(userClient)
   client.configure(sessionsClient)
   client.configure(accessClient)
+  client.configure(diagramClient)
   return client
 }
