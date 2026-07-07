@@ -561,7 +561,10 @@
   * Fix selection dissapearing on useAutosavingState
 
   Fabric editor 2
-    Selection restoring on external modifications
+  * Selection restoring on external modifications
+  * SVG support
+    Deduplicate ArrowLine code somewhere
+    Store global toolbar state somewhere
     Duplicating objects or object copy-paste
     Stand-alone diagram document type?
     Icons for fill/stroke/strokeWidth or more compact selector for those
@@ -679,6 +682,7 @@
     Show dance in interval music
 
   Nice to have
+    Use map getOrInsert where possible
     Fix form inside form error in slide show dance editor
     Form field does not type check properly
     Use PageSection in program/slide editor pages
