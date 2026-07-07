@@ -1,5 +1,5 @@
 import { useEffect, useEffectEvent, useRef } from 'react'
-import { Canvas, classRegistry, FabricObject } from 'fabric'
+import { ActiveSelection, Canvas, classRegistry, FabricObject } from 'fabric'
 import equal from 'fast-deep-equal'
 
 import { Arrowline } from './Arrowline'
@@ -31,10 +31,23 @@ export function FabricCanvas({ width, height, data, editable = false, onCanvasCr
     if (equal(data, lastDataRef.current)) return
     lastDataRef.current = data
     isLoadingRef.current = true
+
+    // scale normalization breaks the selection, so we store it to restore it after loading
+    const selectedIds = canvasRef.current.getActiveObjects().map(obj => obj._id)
+
     canvasRef.current.loadFromJSON(data).then(() => {
       if (!canvasRef.current) return
       isLoadingRef.current = false
       setEditable(canvasRef.current, editable)
+
+      if (selectedIds.length > 0) {
+        const selectedObjs = canvasRef.current.getObjects().filter(obj => selectedIds.includes(obj._id))
+        if (selectedObjs.length > 0) {
+          const sel = new ActiveSelection(selectedObjs, { canvas: canvasRef.current })
+          canvasRef.current.setActiveObject(sel)
+        }
+        canvasRef.current.renderAll()
+      }
     })
   })
   const createHandler = useEffectEvent(onCanvasCreated ?? nop)
