@@ -559,18 +559,20 @@
   * Stop drawing after object created
   * _id for points arrays?
   * Fix selection dissapearing on useAutosavingState
+* Remove "empty document" string from slide content
 
   Fabric editor 2
   * Selection restoring on external modifications
   * SVG support
+  * Store global toolbar state somehow
     Deduplicate ArrowLine code somewhere
-    Store global toolbar state somewhere
     Duplicating objects or object copy-paste
     Stand-alone diagram document type?
     Icons for fill/stroke/strokeWidth or more compact selector for those
     Shapes dropdown menu
 
   Is fabric/image/whatever document content pasteable/copyable from Google Docs or Word?
+
 
 * Do links render correctly styled in DocumentViewer?
 * Fix button tooltip alignment when button is on the right border of page
