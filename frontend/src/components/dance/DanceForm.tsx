@@ -2,7 +2,6 @@ import { useCallback } from 'react'
 
 import { Dance, EditableDance } from 'types'
 
-import { cleanMetadataValues } from 'backend'
 import { usePatchDance } from 'services/dances'
 
 import { useRight } from 'libraries/access-control'
@@ -18,6 +17,20 @@ const {
 
 export { Field, Form, Input, useOnChangeFor, useValueAt }
 
+const editableDanceFields: (keyof EditableDance)[] = [
+  'name',
+  'description',
+  'remarks',
+  'duration',
+  'prelude',
+  'formation',
+  'source',
+  'category',
+  'instructions',
+  'slideStyleId',
+  'tags',
+]
+
 export function useDanceEditorState(dance: Dance) {
   const canEdit = useRight('dances:modify', { entityId: dance._id })
   const readOnly = dance._versionId != null || !canEdit
@@ -29,9 +42,8 @@ export function useDanceEditorState(dance: Dance) {
     },
     [modifyDance, dance._id, readOnly],
   )
-  const { wikipage: _ignored, ...editedDance } = cleanMetadataValues<Dance>(dance)
 
-  const { formProps, ...rest } = useAutosavingState<EditableDance, unknown[]>(editedDance, patchDance, patchStrategy.jsonPatch)
+  const { formProps, ...rest } = useAutosavingState<EditableDance, unknown[]>(dance, patchDance, patchStrategy.jsonPatchWithFields(editableDanceFields))
 
   return {
     formProps: {

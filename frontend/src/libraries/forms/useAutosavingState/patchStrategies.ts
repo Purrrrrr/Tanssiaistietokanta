@@ -28,7 +28,27 @@ function jsonPatch<T>(original: T, modifications: T): Operation[] | undefined {
   return patch.length > 0 ? patch : undefined
 }
 
+function jsonPatchWithFields<T extends object>(fields: readonly (keyof T)[]): PatchStrategy<T, Operation[]> {
+  return (original: T, modifications: T) => {
+    return toJSONPatch(
+      pick(original, fields),
+      pick(modifications, fields),
+    )
+  }
+}
+
+function pick<T extends object, K extends keyof T>(obj: T, keys: readonly K[]): Pick<T, K> {
+  const result = {} as Pick<T, K>
+  for (const key of keys) {
+    if (key in obj) {
+      result[key] = obj[key]
+    }
+  }
+  return result
+}
+
 export default {
   partial,
   jsonPatch,
+  jsonPatchWithFields,
 }
