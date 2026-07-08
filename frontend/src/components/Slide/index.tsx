@@ -40,7 +40,7 @@ export function Slide({ id, title, type, children, footer, next, navigation, sli
   )
   return <section className={className}>
     <h1 className="slide-title">{title}</h1>
-    <AutosizedSection className="slide-main-content">
+    <AutosizedSection key={id} className="slide-main-content">
       <div className="slide-content-area">{children}</div>
     </AutosizedSection>
     {footer &&
