@@ -22,14 +22,15 @@ const toColor = (value: string | TFiller | null): string =>
 
 // ─── React component ─────────────────────────────────────────────────────────
 
-interface FabricComponentProps {
+interface FabricToolbarProps {
   anchorName: string
   onRemoveNode: () => void
   canvas: Canvas
+  visible: boolean
   activeObjects: FabricObject[]
 }
 
-export function FabricToolbar({ anchorName, canvas, activeObjects, onRemoveNode: removeNode }: FabricComponentProps) {
+export function FabricToolbar({ anchorName, canvas, visible, activeObjects, onRemoveNode: removeNode }: FabricToolbarProps) {
   const t = useEditorT('diagram')
   const [, forceUpdate] = useReducer(x => x + 1, 0) // for force re-render on tool state changes
   const [fill, setFill] = useState('#fff')
@@ -176,6 +177,8 @@ export function FabricToolbar({ anchorName, canvas, activeObjects, onRemoveNode:
   }, [stroke, canvas])
 
   // ── Render ────────────────────────────────────────────────────────────────
+
+  if (!visible) return null
 
   return <>
     <FloatingToolbar anchorName={anchorName} side="top">

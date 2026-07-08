@@ -30,7 +30,6 @@ export function FabricEditor({ editable, isSelected, nodeKey, width, height, dat
   const t = useEditorT('diagram')
   const [canvas, setCanvas] = useState<Canvas | null>(null)
   const [activeObjects, setActiveObjects] = useState<FabricObject[]>([])
-  const showControls = editable && isSelected
 
   // ── Serialize canvas to node ──────────────────────────────────────────────
   async function saveCanvas(canvas: Canvas) {
@@ -103,8 +102,8 @@ export function FabricEditor({ editable, isSelected, nodeKey, width, height, dat
 
   return (
     <div className="[anchor-name:--fabric-editor] my-2" data-fabric-node-key={nodeKey}>
-      {showControls && canvas && (
-        <FabricToolbar anchorName="--fabric-editor" activeObjects={activeObjects} canvas={canvas} onRemoveNode={onRemoveEditor} />
+      {canvas && editable && (
+        <FabricToolbar visible={!!isSelected} anchorName="--fabric-editor" activeObjects={activeObjects} canvas={canvas} onRemoveNode={onRemoveEditor} />
       )}
       <div className={`relative w-max border-2 ${isSelected ? 'border-blue-500' : 'border-gray-300'}`}>
         <FabricCanvas
@@ -116,7 +115,7 @@ export function FabricEditor({ editable, isSelected, nodeKey, width, height, dat
           onUpdate={onUpdate}
           onSelect={setActiveObjects}
         />
-        {showControls && (
+        {editable && isSelected && (
           <button
             className="absolute -bottom-2 -right-2 size-4 border-2 border-blue-500 cursor-se-resize z-10 touch-none"
             onMouseDown={handleResizeStart}
