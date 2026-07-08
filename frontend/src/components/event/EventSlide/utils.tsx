@@ -15,5 +15,5 @@ export function TeachedIn({ teachedIn }: { teachedIn: Workshop[] }) {
 }
 
 export function renderDoc(doc?: MinifiedDocumentContent | null) {
-  return <DocumentViewer document={doc} />
+  return <DocumentViewer document={doc} placeholder={false} />
 }
