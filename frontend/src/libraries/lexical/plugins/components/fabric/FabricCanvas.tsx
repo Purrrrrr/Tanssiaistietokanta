@@ -22,6 +22,7 @@ export function FabricCanvas({ width, height, data, editable = false, onCanvasCr
   const canvasRef = useRef<Canvas | null>(null)
   const lastDataRef = useRef<string | null>(null)
   const isLoadingRef = useRef(false)
+  const timerRef = useRef<NodeJS.Timeout | null>(null)
 
   const loadData = useEffectEvent(() => {
     if (!data || !canvasRef.current) return
@@ -49,10 +50,18 @@ export function FabricCanvas({ width, height, data, editable = false, onCanvasCr
   })
   const createHandler = useEffectEvent(onCanvasCreated ?? nop)
   const onUpdateHandler = useEffectEvent(() => {
+    // Apply a small delay to avoid calling onUpdate too often when multiple objects are being modified at once
     if (canvasRef.current && !isLoadingRef.current) {
       // console.log('Canvas updated')
       lastDataRef.current = canvasRef.current.toJSON()
-      onUpdate?.(canvasRef.current)
+      if (timerRef.current) clearTimeout(timerRef.current)
+      timerRef.current = setTimeout(() => {
+        if (canvasRef.current) {
+          lastDataRef.current = canvasRef.current.toJSON()
+          onUpdate?.(canvasRef.current)
+        }
+        timerRef.current = null
+      }, 50)
     }
   })
   const onSelectHandler = useEffectEvent(onSelect ?? nop)
