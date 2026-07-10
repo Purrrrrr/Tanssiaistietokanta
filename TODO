@@ -560,20 +560,14 @@
   * _id for points arrays?
   * Fix selection dissapearing on useAutosavingState
 * Remove "empty document" string from slide content
-
-  Fabric editor 2
+* Fabric editor 2
   * Selection restoring on external modifications
   * SVG support
   * Store global toolbar state somehow
-    Deduplicate ArrowLine code somewhere
-    Duplicating objects or object copy-paste
-    Stand-alone diagram document type?
-    Icons for fill/stroke/strokeWidth or more compact selector for those
-    Shapes dropdown menu
-
-  Is fabric/image/whatever document content pasteable/copyable from Google Docs or Word?
-
-
+  * Deduplicate ArrowLine code somewhere
+  * Icons for fill/stroke/strokeWidth or more compact selector for those
+  * Shapes dropdown menu
+  * Duplicating objects or object copy-paste
 * Do links render correctly styled in DocumentViewer?
 * Fix button tooltip alignment when button is on the right border of page
 * Separate sections in Workshop editor for clarity
@@ -590,58 +584,83 @@
     * Pick names from volunteer list
     * Allow picking workshop instances
   * registrationStatusSelector -> show only the actions that make sense)
-    Adding jobs:
+  * Adding jobs:
     * Allow adding by role or volunteer
     * Only show roles that volunteer is interested_in in selector
     * Only show volunteers that are insterested in role
     * Allow selecting workshop instances
+
+  DB to store event locations and ballrooms
+    Diagrams for ball rooms
+    Stand-alone diagram document type
+      Editor and field component
+      Ability to have another diagram as background
+
+  Multiple slides per dance: formation slide / instructions slide / some other?
+    Formation slide support using ball-rooms
+
+  File metadata: image size, audio duration, media type
+  Some way to handle music?
+
+  File linking/copying
+    Ability to copy a file to different location/name
+    Ability to replace file contents with contents of another
+    Ability to download folders of files
+
+  Document templates
+    Templates for event/interval music slides?
+
+  Workshop not in kompassi warning
+
+  Volunteer rework
+    Add volunteer assignments form nice-to-haves
       Allow selecting non-interested parties but show them grayed out or something
       Allow adding ev:s from eva-editor (pop up dialog when need to accept)
       Turn eventVolunteer accepted if adding assignments to it
+    Introduce shifts for jobs
+      Shift has
+        workshop/instance
+        start/end datetimes
+        role
+        required number of people
+      Each EVA references one shift
+      Separate EVAs referencing multiple instances to multiple records that reference one shift
+      Planner:
+        Store which shifts a volunteer can or wants to handle and allow entering that info
+        Use this to fill shifts?
+    Prevent status change in VolunteerStatusBulkEditor when it is not legal
+    When changing volunteer to accepted -> ask roles to assign in a modal
+    Button to remove multiple event volunteers
+    Volunteer contact details page?
+      Add contact details (at least emails)
+      GDPR compliance
+      https://2026.tracon.fi/tietosuoja/
+      Ability to list (unregistered/all) volunteer emails by workshop
+
+  Is fabric/image/whatever document content pasteable/copyable from Google Docs or Word?
 
   Page to list all files and documents of event?
-  Some way to handle music?
   Check lists/pages layout on mobile
     Assignments list
     Volunteers list
     Workshop page?
     Show sorting columns as one dropdown on mobile?
     Separate support for selectable rows
-
-  Introduce shifts for jobs
-    Shift has
-      workshop/instance
-      start/end datetimes
-      role
-      required number of people
-    Each EVA references one shift
-    Separate EVAs referencing multiple instances to multiple records that reference one shift
-    Planner:
-      Store which shifts a volunteer can or wants to handle and allow entering that info
-      Use this to fill shifts?
-
-  Prevent status change in VolunteerStatusBulkEditor when it is not legal
-  When changing volunteer to accepted -> ask roles to assign in a modal
-  Button to remove multiple event volunteers
-
-  Teaching duration for dance
-  Copy time counting ball planning view to workshop dances
-
-  Check if exists and count methods use access control
-  Check how deleted volunteers affect versioning
-    Fix dependency graph not updating properly on delete
-  More fine-grained document access control
-  Hide note fields etc. from volunteers when not event admin
-
-  Multiple slides per dance: formation slide / instructions slide / some other?
+  
+  Workshop planning work
+    Teaching duration for dance
+    Copy time counting ball planning view to workshop dances
+  
+  Misc technical work
+    Check if exists and count methods use access control
+    Check how deleted volunteers affect versioning
+      Fix dependency graph not updating properly on delete
+    More fine-grained document access control
+    Hide note fields etc. from volunteers when not event admin
+    Fix duplicate file upload? Is this only buggy in dev mode?
+    Don't make ball program view "log out" whenever fast refresh occurs
 
   How to show docs in side nav?
-  Fix duplicate file upload? Is this only buggy in dev mode?
-  Document templates
-    Templates for event/interval music slides?
-
-  Workshop not in kompassi warning
-  Should files be versioned too?
 
   Better editor Part 3
     Lexical Debug: node id display?
@@ -652,13 +671,6 @@
     Allow choosing images from existing files
     Support turning text into QR code
 
-  Volunteer contact details page?
-    Add contact details (at least emails)
-    GDPR compliance
-    https://2026.tracon.fi/tietosuoja/
-    Ability to list (unregistered/all) volunteer emails by workshop
-
-  Don't make ball program view "log out" whenever fast refresh occurs
   Auth Part 3
     Tests for channels and publishing
     Tests for updating access control (existing and new)
@@ -668,11 +680,6 @@
     Allow creating users
     Allow creating users with some token? Invite functionality?
 
-  File metadata: image size
-  File linking/copying
-    Ability to copy a file to different location/name
-    Ability to replace file contents with contents of another
-    Ability to download folders of files
   Styles also for prints
 
   Ropecon 2025 post todo - Part 2
@@ -684,6 +691,7 @@
     Show dance in interval music
 
   Nice to have
+    Should files be versioned too?
     Use map getOrInsert where possible
     Fix form inside form error in slide show dance editor
     Form field does not type check properly
