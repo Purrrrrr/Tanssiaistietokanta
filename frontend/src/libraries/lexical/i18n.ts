@@ -94,6 +94,7 @@ const translations = {
       fill: 'Täyttö',
       stroke: 'Reunaviiva',
       strokeWidth: 'Reunan leveys',
+      duplicate: 'Kopioi',
       deleteShape: 'Poista muoto',
       removeDiagram: 'Poista kaavio',
       resize: 'Muuta kokoa',

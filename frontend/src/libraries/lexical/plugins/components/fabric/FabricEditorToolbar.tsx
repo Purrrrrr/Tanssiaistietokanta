@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useReducer, useState } from 'react'
-import { Canvas, Circle, controlsUtils, Ellipse, FabricObject, PencilBrush, Polygon, Rect, Textbox, TFiller } from 'fabric'
+import { ActiveSelection, Canvas, Circle, controlsUtils, Ellipse, FabricObject, PencilBrush, Polygon, Rect, Textbox, TFiller } from 'fabric'
 
 import { useEditorT } from 'libraries/lexical/i18n'
 import { FloatingToolbar, ToolbarButton, ToolbarColorPicker, ToolbarInput, ToolbarRow } from 'libraries/lexical/toolbar/widgets'
@@ -246,6 +246,11 @@ export function FabricToolbar({ anchorName, canvas, visible, activeObjects, onRe
             min={0}
           />
           <ToolbarButton
+            onMouseDown={() => duplidateActiveObjects(canvas)}
+            tooltip={t('duplicate')}
+            icon="⎘"
+          />
+          <ToolbarButton
             color="danger"
             onMouseDown={deleteActiveObjects}
             text={t('deleteShape')}
@@ -254,4 +259,28 @@ export function FabricToolbar({ anchorName, canvas, visible, activeObjects, onRe
       </FloatingToolbar>
     )}
   </>
+}
+
+async function duplidateActiveObjects(canvas: Canvas) {
+  const activeObject = canvas.getActiveObject()
+  if (!activeObject) return
+
+  const clone = await activeObject.clone()
+  canvas.discardActiveObject()
+  clone.set({
+    left: clone.left + 10,
+    top: clone.top + 10,
+    _id: randomId(9),
+  })
+  if (clone instanceof ActiveSelection) {
+    clone.canvas = canvas
+    clone.forEachObject((obj) => {
+      canvas.add(obj)
+    })
+    clone.setCoords()
+  } else {
+    canvas.add(clone)
+  }
+  canvas.setActiveObject(clone)
+  canvas.requestRenderAll()
 }
