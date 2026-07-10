@@ -26,6 +26,7 @@ RUN apt-get update && apt-get install -y \
     libjpeg62-turbo \
     libgif7 \
     librsvg2-2 \
+    ffmpeg \
     && rm -rf /var/lib/apt/lists/*
 
 # Set the working directory inside the container

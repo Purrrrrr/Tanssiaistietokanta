@@ -15,7 +15,18 @@ type File {
   notes: String!
   mimetype: String!
   size: Int!
+  mediaType: FileMediaType
+  mediaFormat: String
+  mediaDurationMs: Int
+  mediaWidth: Int
+  mediaHeight: Int
   unused: Boolean!
+}
+
+enum FileMediaType {
+  image
+  audio
+  video
 }
 
 enum FileOwner {

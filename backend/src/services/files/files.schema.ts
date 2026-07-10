@@ -11,6 +11,7 @@ import { Stream } from 'stream'
 
 const owningServiceSchema = Type.Union([Type.Literal('dances'), Type.Literal('events'), Type.Literal('workshops'), Type.Literal('documents')])
 const owningIdSchema = Type.String({ minLength: 1, pattern: '^[^/]+$' })
+const mediaTypeSchema = Type.Union([Type.Literal('image'), Type.Literal('audio'), Type.Literal('video')])
 
 // Main data model schema
 export const fileSchema = Type.Object(
@@ -27,6 +28,11 @@ export const fileSchema = Type.Object(
     fileId: Type.String(),
     mimetype: Type.String(),
     size: Type.Number(),
+    mediaType: Type.Optional(mediaTypeSchema),
+    mediaFormat: Type.Optional(Type.String()),
+    mediaDurationMs: Type.Optional(Type.Integer({ minimum: 0 })),
+    mediaWidth: Type.Optional(Type.Integer({ minimum: 0 })),
+    mediaHeight: Type.Optional(Type.Integer({ minimum: 0 })),
     unused: Type.Boolean({ description: 'If true, the file will be removed eventually by a scheduled job' }),
     buffer: Type.Optional(Type.Unknown()),
   },

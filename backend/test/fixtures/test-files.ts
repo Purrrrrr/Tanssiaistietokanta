@@ -47,16 +47,18 @@ export const testFileFixtures = [danceFileFixture, publicEventFileFixture, limit
 
 // Creates a real temp file and returns a PersistentFile instance suitable for upload.
 // The file is written to the upload tmp dir so fs.rename works (no cross-device move).
-export function createTestUpload(filename: string, content = 'test file content') {
+export function createTestUpload(filename: string, content: string | Buffer = 'test file content', mimetype = 'text/plain') {
   const dir = join(process.cwd(), 'data-test', 'uploads', 'tmp')
   mkdirSync(dir, { recursive: true })
   const filepath = join(dir, `test-upload-${Date.now()}-${Math.random().toString(36).slice(2)}.tmp`)
-  const buffer = Buffer.from(content)
+  const buffer = typeof content === 'string'
+    ? Buffer.from(content)
+    : content
   writeFileSync(filepath, buffer)
   return new PersistentFile({
     filepath,
     originalFilename: filename,
-    mimetype: 'text/plain',
+    mimetype,
     size: buffer.byteLength,
   } as any)
 }

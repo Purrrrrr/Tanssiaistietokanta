@@ -13,6 +13,38 @@ import { loadDependencyTypes } from '../../../src/internal-services/dependencyRe
 
 use(chaiAsPromised)
 
+const tinyPng = Buffer.from(
+  'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO5oWQ0AAAAASUVORK5CYII=',
+  'base64',
+)
+
+function createSilentWav(durationSeconds: number) {
+  const channels = 1
+  const sampleRate = 8000
+  const bitsPerSample = 16
+  const bytesPerSample = bitsPerSample / 8
+  const sampleCount = Math.max(1, Math.floor(sampleRate * durationSeconds))
+  const dataSize = sampleCount * channels * bytesPerSample
+  const byteRate = sampleRate * channels * bytesPerSample
+  const blockAlign = channels * bytesPerSample
+
+  const buffer = Buffer.alloc(44 + dataSize)
+  buffer.write('RIFF', 0, 'ascii')
+  buffer.writeUInt32LE(36 + dataSize, 4)
+  buffer.write('WAVE', 8, 'ascii')
+  buffer.write('fmt ', 12, 'ascii')
+  buffer.writeUInt32LE(16, 16)
+  buffer.writeUInt16LE(1, 20) // PCM
+  buffer.writeUInt16LE(channels, 22)
+  buffer.writeUInt32LE(sampleRate, 24)
+  buffer.writeUInt32LE(byteRate, 28)
+  buffer.writeUInt16LE(blockAlign, 32)
+  buffer.writeUInt16LE(bitsPerSample, 34)
+  buffer.write('data', 36, 'ascii')
+  buffer.writeUInt32LE(dataSize, 40)
+  return buffer
+}
+
 describe('files service', () => {
   before(async () => {
     await initializeApp()
@@ -506,6 +538,68 @@ describe('files service', () => {
 
     before(() => {
       uniquenessBase.owningId = testDances[0]._id
+    })
+
+    describe('media metadata extraction', () => {
+      const owner = 'dances' as const
+      const path = 'metadata-tests'
+      let owningId = ''
+
+      before(() => {
+        owningId = testDances[0]._id
+      })
+
+      it('stores image dimensions and format metadata', async () => {
+        const file = await app.service('files').create({
+          owner,
+          owningId,
+          path,
+          upload: createTestUpload('pixel.png', tinyPng, 'image/png'),
+        } as unknown as FileData, { user: adminUser }) as FileRecord
+
+        expect(file.mediaType).to.equal('image')
+        expect(file.mediaFormat).to.equal('png')
+        expect(file.mediaWidth).to.equal(1)
+        expect(file.mediaHeight).to.equal(1)
+        expect(file.mediaDurationMs).to.equal(undefined)
+
+        await app.service('files').remove(file._id, { user: adminUser })
+      })
+
+      it('stores audio duration and format metadata', async () => {
+        const wav = createSilentWav(1)
+        const file = await app.service('files').create({
+          owner,
+          owningId,
+          path,
+          upload: createTestUpload('tone.wav', wav, 'audio/wav'),
+        } as unknown as FileData, { user: adminUser }) as FileRecord
+
+        expect(file.mediaType).to.equal('audio')
+        expect(file.mediaFormat).to.equal('wav')
+        expect(file.mediaDurationMs).to.be.within(900, 1100)
+        expect(file.mediaWidth).to.equal(undefined)
+        expect(file.mediaHeight).to.equal(undefined)
+
+        await app.service('files').remove(file._id, { user: adminUser })
+      })
+
+      it('keeps upload successful when probing fails', async () => {
+        const file = await app.service('files').create({
+          owner,
+          owningId,
+          path,
+          upload: createTestUpload('broken.mp4', 'not-a-real-video', 'video/mp4'),
+        } as unknown as FileData, { user: adminUser }) as FileRecord
+
+        expect(file.mediaType).to.equal(undefined)
+        expect(file.mediaFormat).to.equal(undefined)
+        expect(file.mediaDurationMs).to.equal(undefined)
+        expect(file.mediaWidth).to.equal(undefined)
+        expect(file.mediaHeight).to.equal(undefined)
+
+        await app.service('files').remove(file._id, { user: adminUser })
+      })
     })
 
     it('fails to create a file with a duplicate name in the same path', async () => {

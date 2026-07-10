@@ -14,6 +14,7 @@ import { PassThrough } from 'stream'
 import { logger, withRequestLogging } from '../../requestLogger'
 import { Conflict, NotFound, Unprocessable } from '@feathersjs/errors'
 import { SkipAccessControl } from '../access/hooks'
+import { deduceMediaMetadata } from './mediaMetadata'
 
 export type { File, FileData, FilePatch, FileQuery }
 
@@ -192,6 +193,13 @@ export class FileService
     await mkdir(dirname(fileStoragePath), { recursive: true })
     await rename(filepath, fileStoragePath)
     const _updatedAt = now()
+    let mediaMetadata: Pick<File, 'mediaType' | 'mediaFormat' | 'mediaDurationMs' | 'mediaWidth' | 'mediaHeight'> | {} = {}
+
+    try {
+      mediaMetadata = await deduceMediaMetadata(fileStoragePath, mimetype)
+    } catch (error) {
+      logger.warn(`Unable to deduce metadata for file '${name}' (${mimetype}): ${error}`)
+    }
 
     if (_existing?.fileId) {
       await unlink(this.idToPath({ fileId: _existing.fileId, owner, owningId }))
@@ -208,6 +216,7 @@ export class FileService
       notes,
       mimetype,
       unused,
+      ...mediaMetadata,
       _createdAt: _existing?._createdAt ?? _updatedAt,
       _updatedAt,
     } satisfies Omit<File, '_id'> as File
