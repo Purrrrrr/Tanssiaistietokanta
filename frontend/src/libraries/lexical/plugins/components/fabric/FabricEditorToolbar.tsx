@@ -6,13 +6,20 @@ import { FloatingToolbar, ToolbarButton, ToolbarColorPicker, ToolbarInput, Toolb
 import randomId from 'utils/randomId'
 
 import { Arrowline } from './Arrowline'
-import { ArrowIcon, BringToTopIcon, CircleIcon, DrawIcon, EditPolygon, EllipseIcon, HexagonIcon, PentagonIcon, RectangleIcon, SendToBottomIcon, TriangleIcon } from './icons'
+import { ArrowIcon, BringToTopIcon, CircleIcon, DrawIcon, EditPolygon, EllipseIcon, HexagonIcon, PentagonIcon, RectangleIcon, SendToBottomIcon, StarIcon, TriangleIcon } from './icons'
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function regularPolygonPoints(sides: number, radius: number) {
   return Array.from({ length: sides }, (_, i) => {
     const angle = (2 * Math.PI * i / sides) - Math.PI / 2
+    return { x: Math.round(radius * Math.cos(angle)), y: Math.round(radius * Math.sin(angle)) }
+  })
+}
+function starPolygonPoints(spikes: number, outerRadius: number, innerRadius: number) {
+  return Array.from({ length: spikes * 2 }, (_, i) => {
+    const angle = (Math.PI * i / spikes) - Math.PI / 2
+    const radius = i % 2 === 0 ? outerRadius : innerRadius
     return { x: Math.round(radius * Math.cos(angle)), y: Math.round(radius * Math.sin(angle)) }
   })
 }
@@ -92,6 +99,7 @@ export function FabricToolbar({ anchorName, canvas, visible, activeObjects, onRe
     radius: 40,
   }))
   const addPolygon = (sides: number) => addObject(new Polygon(regularPolygonPoints(sides, 50), defaultProps()))
+  const addStar = () => addObject(new Polygon(starPolygonPoints(5, 50, 22), defaultProps()))
   const addArrow = () => addObject(new Arrowline(
     [{ x: -50, y: 0 }, { x: 50, y: 0 }],
     {
@@ -199,6 +207,7 @@ export function FabricToolbar({ anchorName, canvas, visible, activeObjects, onRe
         <ToolbarButton onMouseDown={() => { addPolygon(3) }} tooltip={t('addTriangle')} icon={<TriangleIcon />} />
         <ToolbarButton onMouseDown={() => { addPolygon(5) }} tooltip={t('addPentagon')} icon={<PentagonIcon />} />
         <ToolbarButton onMouseDown={() => { addPolygon(6) }} tooltip={t('addHexagon')} icon={<HexagonIcon />} />
+        <ToolbarButton onMouseDown={addStar} tooltip={t('addStar')} icon={<StarIcon />} />
         <ToolbarButton onMouseDown={addArrow} tooltip={t('addArrow')} icon={<ArrowIcon />} />
         <ToolbarButton onMouseDown={addText} tooltip={t('addText')} icon="T" />
         <ToolbarButton onMouseDown={toggleDrawingMode} active={canvas.isDrawingMode} tooltip={t('freeDraw')} icon={<DrawIcon />} />

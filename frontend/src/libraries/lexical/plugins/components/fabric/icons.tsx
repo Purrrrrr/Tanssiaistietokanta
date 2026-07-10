@@ -40,6 +40,13 @@ export function HexagonIcon() {
     </svg>
   )
 }
+export function StarIcon() {
+  return (
+    <svg viewBox="0 0 16 16" width="16" height="16" fill="transparent" stroke="currentColor" aria-hidden="true">
+      <polygon points="8,1 10,6 15,6 11,9 12,14 8,11 4,14 5,9 1,6 6,6" />
+    </svg>
+  )
+}
 export function ArrowIcon() {
   return (
     <svg viewBox="0 0 16 16" width="16" height="16" fill="transparent" stroke="currentColor" aria-hidden="true">
