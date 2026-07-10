@@ -191,8 +191,8 @@ export function FabricToolbar({ anchorName, canvas, visible, activeObjects, onRe
   return <>
     <FloatingToolbar anchorName={anchorName} side="top">
       <ToolbarRow title={t('diagram')}>
-        <ToolbarColorPicker label={t('fill')} value={fill} onChange={setFill} />
-        <ToolbarColorPicker label={t('stroke')} value={stroke} onChange={setStroke} />
+        <ToolbarColorPicker label={t('fill')} value={fill} onChange={setFill} type="fill" />
+        <ToolbarColorPicker label={t('stroke')} value={stroke} onChange={setStroke} type="stroke" />
         <ToolbarInput
           label={t('strokeWidth')}
           type="number"
@@ -220,8 +220,8 @@ export function FabricToolbar({ anchorName, canvas, visible, activeObjects, onRe
           <ToolbarButton onMouseDown={toggleControls} tooltip={t('editPolygon')} icon={<EditPolygon size={18} className="text-stone-400" />} />
           <ToolbarButton onMouseDown={bringForward} tooltip={t('bringForward')} icon={<BringToTopIcon />} />
           <ToolbarButton onMouseDown={sendBackward} tooltip={t('sendBackward')} icon={<SendToBottomIcon />} />
-          <ToolbarColorPicker label={t('fill')} value={toColor(activeObjects[0]?.fill)} onChange={applyFill} />
-          <ToolbarColorPicker label={t('stroke')} value={toColor(activeObjects[0]?.stroke)} onChange={applyStroke} />
+          <ToolbarColorPicker label={t('fill')} value={toColor(activeObjects[0]?.fill)} onChange={applyFill} type="fill" />
+          <ToolbarColorPicker label={t('stroke')} value={toColor(activeObjects[0]?.stroke)} onChange={applyStroke} type="stroke" />
           <ToolbarInput
             label={t('strokeWidth')}
             type="number"

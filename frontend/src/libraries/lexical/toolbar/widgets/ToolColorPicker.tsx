@@ -1,11 +1,12 @@
-import { useId, useRef } from 'react'
+import { CSSProperties, useId, useRef } from 'react'
 
-import { Button, FormGroup, MenuButton } from 'libraries/ui'
+import { Button, MenuButton } from 'libraries/ui'
 
 interface ToolbarColorPickerProps {
   value: string
   onChange: (value: string) => void
   label: string
+  type: 'fill' | 'stroke'
 }
 
 // Nice big set of presentable colors with good contrast and variety, but not too many to be overwhelming
@@ -18,13 +19,21 @@ const colorOptions = [
   '#CC0000', '#CC7300', '#CC9A00', '#8ACC00', '#00CC66', '#00AACC', '#0073CC', '#7300CC', '#CC0099',
 ]
 
-export function ToolbarColorPicker({ value, onChange, label }: ToolbarColorPickerProps) {
+export function ToolbarColorPicker({ value, onChange, label, type }: ToolbarColorPickerProps) {
   const id = useId()
   const input = useRef<HTMLInputElement>(null)
-  return <FormGroup inline label={label} labelFor={id}>
+  return <>
     <input type="color" ref={input} value={value} className="hidden" onChange={(e) => onChange(e.target.value)} />
     <MenuButton buttonRenderer={props =>
-      <Button id={id} minimal {...props} paddingClass="p-2 -mx-2" children={<span className="size-4 rounded-sm border border-stone-400" style={colorStyle(value)} />} />
+      <Button
+        id={id}
+        minimal
+        {...props}
+        paddingClass="p-2 -mx-1"
+        tooltip={label}
+      >
+        <span className="size-4 rounded-sm border border-stone-400" style={colorStyle(value, type === 'stroke')} />
+      </Button>
     }>
       <div className="grid sm:grid-cols-6 grid-cols-3 gap-1 p-1">
         <button
@@ -47,22 +56,24 @@ export function ToolbarColorPicker({ value, onChange, label }: ToolbarColorPicke
         ))}
       </div>
     </MenuButton>
-  </FormGroup>
+  </>
 }
 
-function colorStyle(color: string) {
+function colorStyle(color: string, stroke = false): CSSProperties {
+  const prop = stroke ? 'borderColor' : 'background'
   if (color === 'custom') {
     return {
-      background: 'conic-gradient(in hsl longer hue from 45deg at center, red 0deg 360deg)',
+      [prop]: 'conic-gradient(in hsl longer hue from 45deg at center, red 0deg 360deg)',
     }
   }
   if (color === 'transparent') {
     return {
-      background: 'repeating-conic-gradient(#808080 0 25%, #0000 0 50%) 50% / 18px 18px',
+      [prop]: 'repeating-conic-gradient(#808080 0 25%, #0000 0 50%) 50% / 18px 18px',
     }
   }
   return {
-    backgroundColor: color,
-    outlineColor: color,
+    [prop]: color,
+    borderWidth: stroke ? '3px' : undefined,
+    boxSizing: 'border-box',
   }
 }
