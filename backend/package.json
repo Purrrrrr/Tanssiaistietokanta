@@ -40,9 +40,9 @@
     "create-user": "ts-node src/create-user.ts",
     "create-migration": "ts-node src/create-migration.ts",
     "dev": "cross-env CORS_ALLOW_LOCALHOST=true tsx watch --include \"src/**/*.graphql\" --clear-screen=false src/index.ts",
-    "typecheck": "nodemon --watch src -e ts -x tsc --noEmit",
+    "typecheck": "nodemon --watch src -e ts -x node_modules/typescript-7/bin/tsc --noEmit",
     "codegen": "graphql-codegen",
-    "compile": "shx rm -rf lib/ && graphql-codegen && copyfiles -u 1 src/**/*.graphql lib && copyfiles -u 1 src/**/*.json lib && tsc -p tsconfig.build.json",
+    "compile": "shx rm -rf lib/ && graphql-codegen && copyfiles -u 1 src/**/*.graphql lib && copyfiles -u 1 src/**/*.json lib && node_modules/typescript-7/bin/tsc -p tsconfig.build.json",
     "start": "node lib/",
     "start-dev": "cross-env CORS_ALLOW_LOCALHOST=true node lib/",
     "mocha": "cross-env NODE_ENV=test mocha test/ --recursive --exit",
@@ -131,7 +131,8 @@
     "tough-cookie": "^6.0.0",
     "ts-node": "^10.9.1",
     "tsx": "^4.20.6",
-    "typescript": "^6.0.3",
+    "typescript": "npm:@typescript/typescript6@^6.0.0",
+    "typescript-7": "npm:typescript@^7.0.2",
     "typescript-eslint": "^8.62.0"
   }
 }
