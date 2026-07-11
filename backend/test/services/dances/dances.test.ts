@@ -124,7 +124,6 @@ describe('dances service', () => {
           instances: [
             {
               _id: 'inst-1',
-              description: 'Instance 1',
               abbreviation: 'I1',
               dateTime: '2026-01-01T10:00:00.000Z',
               durationInMinutes: 60,

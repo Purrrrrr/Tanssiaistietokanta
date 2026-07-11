@@ -3,19 +3,17 @@
     "files": true
   },
   "compilerOptions": {
-    "types": ["node", "mocha"],
     "target": "ESNext",
     "module": "nodenext",
     "moduleResolution": "nodenext",
-    "outDir": "./lib",
-    "rootDir": "src",
-    "rootDirs": ["src", "test"],
-    "declaration": true,
     "strict": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "noEmit": true,
+    "rootDirs": ["src", "test"],
+    "types": ["node", "mocha"]
   },
   "include": [
-    "src"
+    "src", "test"
   ],
   "exclude": [
   ]
