@@ -6,6 +6,7 @@ import type { Static } from '@feathersjs/typebox'
 import type { HookContext } from '../../declarations'
 import { dataValidator, queryValidator } from '../../validators'
 import { computedProperties, Id } from '../../utils/common-types'
+import { SkipAccessControl } from '../access/hooks'
 
 export const eventVolunteerRegistrationStatusSchema = Type.Union([
   Type.Literal('None'),
@@ -55,14 +56,14 @@ export const eventVolunteerAssignmentsDataResolver = resolve<EventVolunteerAssig
   registrationStatus: value => value ?? 'None',
   eventVolunteerId: async (_, { eventId, volunteerId }, ctx) => {
     const service = ctx.app.service('eventVolunteers')
-    const [ev] = await service.find({ query: { eventId, volunteerId, $select: ['_id'], $limit: 1 } })
+    const [ev] = await service.find({ query: { eventId, volunteerId, $select: ['_id'], $limit: 1 }, [SkipAccessControl]: true })
     if (!ev) {
       const created = await service.create({
         eventId,
         volunteerId,
         status: 'Accepted',
         interestedIn: [],
-      })
+      }, { [SkipAccessControl]: ctx.params[SkipAccessControl] })
       return created._id
     }
 

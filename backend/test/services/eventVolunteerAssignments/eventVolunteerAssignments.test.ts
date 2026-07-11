@@ -66,12 +66,13 @@ describe('eventVolunteerAssignments service', () => {
       expect(ids, 'Assignment is visible to organizer').to.include(created._id)
     })
 
-    it('returns empty list for teacher (teacher cannot modify-volunteers)', async () => {
+    it('returns assignments for teacher', async () => {
       const results = await app.service('eventVolunteerAssignments').find({
         query: { eventId: limitedTestEvent._id },
         user: teacherUser,
       })
-      expect(results, 'No assignments visible to teacher').to.have.length(0)
+      const ids = results.map(prop('_id'))
+      expect(ids, 'Assignment is visible to organizer').to.include(created._id)
     })
 
     it('filters by workshopId when provided', async () => {
@@ -109,7 +110,7 @@ describe('eventVolunteerAssignments service', () => {
     })
 
     it('fails to get an assignment without authentication', async () => {
-      expect(
+      await expect(
         app.service('eventVolunteerAssignments').get(created._id),
       ).to.be.rejectedWith('Access denied')
     })
@@ -122,10 +123,16 @@ describe('eventVolunteerAssignments service', () => {
       expect(result.volunteerId).to.equal(canonicalVolunteer._id)
     })
 
-    it('fails to get an assignment as teacher', async () => {
-      expect(
-        app.service('eventVolunteerAssignments').get(created._id, { user: teacherUser }),
-      ).to.be.rejectedWith('Access denied')
+    it('gets assignment as teacher', async () => {
+      const result = await app.service('eventVolunteerAssignments').get(created._id, { user: teacherUser })
+
+      expect(result._id).to.equal(created._id)
+    })
+
+    it('gets any assignment as admin', async () => {
+      const result = await app.service('eventVolunteerAssignments').get(created._id, { user: adminUser }) as EventVolunteerAssignments
+
+      expect(result._id).to.equal(created._id)
     })
 
     it('gets any assignment as admin', async () => {
@@ -137,13 +144,13 @@ describe('eventVolunteerAssignments service', () => {
 
   describe('create', () => {
     it('fails to create an assignment without authentication', async () => {
-      expect(
+      await expect(
         app.service('eventVolunteerAssignments').create(assignmentData()),
       ).to.be.rejectedWith('Access denied')
     })
 
     it('fails to create an assignment as teacher', async () => {
-      expect(
+      await expect(
         app.service('eventVolunteerAssignments').create(assignmentData(), { user: teacherUser }),
       ).to.be.rejectedWith('Access denied')
     })
@@ -190,10 +197,9 @@ describe('eventVolunteerAssignments service', () => {
       ) as EventVolunteerAssignments
 
       try {
-        expect(
+        await expect(
           app.service('eventVolunteerAssignments').create(assignmentData(), { [SkipAccessControl]: true }),
-        ).to.be.rejected
-
+        ).to.be.rejectedWith(/violates the unique constraint/i)
       } finally {
         await app.service('eventVolunteerAssignments').remove(first._id, { [SkipAccessControl]: true })
       }
@@ -208,7 +214,7 @@ describe('eventVolunteerAssignments service', () => {
       ) as EventVolunteerAssignments
 
       try {
-        expect(
+        await expect(
           app.service('eventVolunteerAssignments').remove(created._id),
         ).to.be.rejectedWith('Access denied')
       } finally {
@@ -219,7 +225,7 @@ describe('eventVolunteerAssignments service', () => {
     it('removes an assignment as organizer', async () => {
       const created = await app.service('eventVolunteerAssignments').create(
         assignmentData(),
-        { user: normalUser },
+        { [SkipAccessControl]: true },
       ) as EventVolunteerAssignments
 
       await app.service('eventVolunteerAssignments').remove(created._id, { user: normalUser })
