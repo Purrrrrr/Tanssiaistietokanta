@@ -84,7 +84,7 @@ describe('volunteers service', () => {
 
   describe('create', () => {
     it('fails to create a volunteer without authentication', async () => {
-      expect(
+      await expect(
         app.service('volunteers').create({ name: 'Unauthorized Volunteer' } as VolunteersData),
       ).to.be.rejectedWith('Access denied')
     })
@@ -115,7 +115,7 @@ describe('volunteers service', () => {
 
   describe('patch', () => {
     it('fails to patch a volunteer without authentication', async () => {
-      expect(
+      await expect(
         app.service('volunteers').patch(canonicalVolunteer._id, { name: 'Hacked' }),
       ).to.be.rejectedWith('Access denied')
     })
@@ -136,7 +136,7 @@ describe('volunteers service', () => {
 
   describe('remove', () => {
     it('fails to remove a volunteer without authentication', async () => {
-      expect(
+      await expect(
         app.service('volunteers').remove(canonicalVolunteer._id),
       ).to.be.rejectedWith('Access denied')
     })

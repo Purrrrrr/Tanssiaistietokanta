@@ -73,7 +73,7 @@ describe('events service', () => {
     })
 
     it('fails to get limited event without authentication', async () => {
-      expect(
+      await expect(
         app.service('events').get(limitedTestEvent._id),
       ).to.be.rejectedWith('Access denied')
     })
@@ -101,7 +101,7 @@ describe('events service', () => {
 
   describe('create', () => {
     it('fails to create an event without authentication', async () => {
-      expect(
+      await expect(
         app.service('events').create(eventToCreate),
       ).to.be.rejectedWith('Access denied')
     })
@@ -127,21 +127,21 @@ describe('events service', () => {
 
   describe('patch', () => {
     it('fails to patch an event without authentication', async () => {
-      expect(
+      await expect(
         app.service('events').patch(publicTestEvent._id, { name: 'Hacked' }),
       ).to.be.rejectedWith('Access denied')
     })
 
     it('fails to patch an event as user without a role on the event', async () => {
       // normalUser has no role on the public event (only on the limited event)
-      expect(
+      await expect(
         app.service('events').patch(publicTestEvent._id, { name: 'Hacked' }, { user: normalUser }),
       ).to.be.rejectedWith('Access denied')
     })
 
     it('fails to patch an event as teacher without a role on the event', async () => {
       // teacherUser has no role on the public event (only on the limited event)
-      expect(
+      await expect(
         app.service('events').patch(publicTestEvent._id, { name: 'Hacked' }, { user: teacherUser }),
       ).to.be.rejectedWith('Access denied')
     })
@@ -188,20 +188,20 @@ describe('events service', () => {
 
   describe('remove', () => {
     it('fails to remove an event without authentication', async () => {
-      expect(
+      await expect(
         app.service('events').remove(publicTestEvent._id),
       ).to.be.rejectedWith('Access denied')
     })
 
     it('fails to remove an event as user without organizer role', async () => {
       // normalUser has no role on the public event
-      expect(
+      await expect(
         app.service('events').remove(publicTestEvent._id, { user: normalUser }),
       ).to.be.rejectedWith('Access denied')
     })
 
     it('fails to remove an event as teacher (teacher role cannot delete)', async () => {
-      expect(
+      await expect(
         app.service('events').remove(limitedTestEvent._id, { user: teacherUser }),
       ).to.be.rejectedWith('Access denied')
     })

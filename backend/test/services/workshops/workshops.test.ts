@@ -79,7 +79,7 @@ describe('workshops service', () => {
     })
 
     it('fails to get workshop from limited event without authentication', async () => {
-      expect(
+      await expect(
         app.service('workshops').get(limitedEventWorkshop._id),
       ).to.be.rejectedWith('Access denied')
     })
@@ -107,14 +107,14 @@ describe('workshops service', () => {
 
   describe('create', () => {
     it('fails to create a workshop without authentication', async () => {
-      expect(
+      await expect(
         app.service('workshops').create({ ...workshopToCreate, eventId: limitedTestEvent._id } as WorkshopsData),
       ).to.be.rejectedWith('Access denied')
     })
 
     it('fails to create a workshop without a role on the event', async () => {
       // normalUser has no role on the public event
-      expect(
+      await expect(
         app.service('workshops').create({ ...workshopToCreate, eventId: publicTestEvent._id } as WorkshopsData, { user: normalUser }),
       ).to.be.rejectedWith('Access denied')
     })
@@ -156,14 +156,14 @@ describe('workshops service', () => {
 
   describe('patch', () => {
     it('fails to patch a workshop without authentication', async () => {
-      expect(
+      await expect(
         app.service('workshops').patch(limitedEventWorkshop._id, { name: 'Hacked' }),
       ).to.be.rejectedWith('Access denied')
     })
 
     it('fails to patch a workshop without a role on the event', async () => {
       // normalUser has no role on the public event
-      expect(
+      await expect(
         app.service('workshops').patch(publicEventWorkshop._id, { name: 'Hacked' }, { user: normalUser }),
       ).to.be.rejectedWith('Access denied')
     })
@@ -210,13 +210,13 @@ describe('workshops service', () => {
 
   describe('remove', () => {
     it('fails to remove a workshop without authentication', async () => {
-      expect(
+      await expect(
         app.service('workshops').remove(limitedEventWorkshop._id),
       ).to.be.rejectedWith('Access denied')
     })
 
     it('fails to remove a workshop as teacher (teacher role cannot delete)', async () => {
-      expect(
+      await expect(
         app.service('workshops').remove(limitedEventWorkshop._id, { user: teacherUser }),
       ).to.be.rejectedWith('Access denied')
     })

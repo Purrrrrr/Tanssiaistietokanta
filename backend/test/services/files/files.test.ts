@@ -67,13 +67,13 @@ describe('files service', () => {
   describe('dance-owned files', () => {
     describe('find', () => {
       it('fails to find dance files without authentication (find requires file-access group)', async () => {
-        expect(
+        await expect(
           app.service('files').find({ query: { owner: 'dances', owningId: testDances[0]._id } }),
         ).to.be.rejectedWith('Access denied')
       })
 
       it('fails to find dance files as teacherUser (no file-access group)', async () => {
-        expect(
+        await expect(
           app.service('files').find({ query: { owner: 'dances', owningId: testDances[0]._id }, user: teacherUser }),
         ).to.be.rejectedWith('Access denied')
       })
@@ -163,13 +163,13 @@ describe('files service', () => {
 
     describe('patch', () => {
       it('fails to patch a dance file without authentication', async () => {
-        expect(
+        await expect(
           app.service('files').patch(danceFileFixture._id, { notes: 'Hacked' }),
         ).to.be.rejectedWith('Access denied')
       })
 
       it('fails to patch a dance file without file-access group (teacherUser)', async () => {
-        expect(
+        await expect(
           app.service('files').patch(danceFileFixture._id, { notes: 'Hacked' }, { user: teacherUser }),
         ).to.be.rejectedWith('Access denied')
       })
@@ -199,13 +199,13 @@ describe('files service', () => {
 
     describe('remove', () => {
       it('fails to remove a dance file without authentication', async () => {
-        expect(
+        await expect(
           app.service('files').remove(danceFileFixture._id),
         ).to.be.rejectedWith('Access denied')
       })
 
       it('fails to remove a dance file without file-access group (teacherUser)', async () => {
-        expect(
+        await expect(
           app.service('files').remove(danceFileFixture._id, { user: teacherUser }),
         ).to.be.rejectedWith('Access denied')
       })
@@ -247,7 +247,7 @@ describe('files service', () => {
   describe('event-owned files (public event)', () => {
     describe('find', () => {
       it('fails to find public event files without authentication (find requires file-access group)', async () => {
-        expect(
+        await expect(
           app.service('files').find({ query: { owner: 'events', owningId: publicTestEvent._id } }),
         ).to.be.rejectedWith('Access denied')
       })
@@ -340,13 +340,13 @@ describe('files service', () => {
   describe('event-owned files (limited event)', () => {
     describe('find', () => {
       it('fails to find limited event files without authentication (find requires file-access group)', async () => {
-        expect(
+        await expect(
           app.service('files').find({ query: { owner: 'events', owningId: limitedTestEvent._id } }),
         ).to.be.rejectedWith('Access denied')
       })
 
       it('fails to find limited event files as teacherUser (no file-access group, even with teacher role)', async () => {
-        expect(
+        await expect(
           app.service('files').find({ query: { owner: 'events', owningId: limitedTestEvent._id }, user: teacherUser }),
         ).to.be.rejectedWith('Access denied')
       })
@@ -368,7 +368,7 @@ describe('files service', () => {
 
     describe('get', () => {
       it('fails to get a limited event file without authentication', async () => {
-        expect(
+        await expect(
           app.service('files').get(limitedEventFileFixture._id),
         ).to.be.rejectedWith('Access denied')
       })
@@ -449,13 +449,13 @@ describe('files service', () => {
 
     describe('patch', () => {
       it('fails to patch a limited event file without authentication', async () => {
-        expect(
+        await expect(
           app.service('files').patch(limitedEventFileFixture._id, { notes: 'Hacked' }),
         ).to.be.rejectedWith('Access denied')
       })
 
       it('fails to patch a limited event file without file-access group (teacherUser)', async () => {
-        expect(
+        await expect(
           app.service('files').patch(limitedEventFileFixture._id, { notes: 'Hacked' }, { user: teacherUser }),
         ).to.be.rejectedWith('Access denied')
       })
@@ -485,13 +485,13 @@ describe('files service', () => {
 
     describe('remove', () => {
       it('fails to remove a limited event file without authentication', async () => {
-        expect(
+        await expect(
           app.service('files').remove(limitedEventFileFixture._id),
         ).to.be.rejectedWith('Access denied')
       })
 
       it('fails to remove a limited event file without file-access group (teacherUser)', async () => {
-        expect(
+        await expect(
           app.service('files').remove(limitedEventFileFixture._id, { user: teacherUser }),
         ).to.be.rejectedWith('Access denied')
       })
