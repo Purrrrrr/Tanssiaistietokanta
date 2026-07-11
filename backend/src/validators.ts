@@ -30,5 +30,9 @@ export const queryValidator: Ajv = addFormats(
   }),
   formats,
 )
-TypeSystem.CreateFormat('date', dataValidator.compile(Date()))
-TypeSystem.CreateFormat('iso-date-time', dataValidator.compile(DateTime()))
+if (!('__typeInitializedHack' in TypeSystem)) {
+  // Hack-fix: This code crashes if ran twice, and mocha watch can run it many times.
+  ;(TypeSystem as any).__typeInitializedHack = true
+  TypeSystem.CreateFormat('date', dataValidator.compile(Date()))
+  TypeSystem.CreateFormat('iso-date-time', dataValidator.compile(DateTime()))
+}

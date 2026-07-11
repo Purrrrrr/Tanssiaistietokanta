@@ -84,7 +84,9 @@ implements ServiceInterface<Dancewiki, DancewikiData, DancewikiParams, never> {
 
   async teardown(): Promise<void> {
     this.cronjobs.forEach(job => job.stop())
+    this.cronjobs = []
     clearTimeout(this.timer)
+    this.timer = undefined
   }
 
   getModel(): Nedb {

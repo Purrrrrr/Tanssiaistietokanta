@@ -3,7 +3,7 @@ import archiver from 'archiver'
 import { join, dirname, basename, parse } from 'path'
 import { rename, readdir, readFile, stat, unlink, mkdir } from 'fs/promises'
 import type { Id, Params } from '@feathersjs/feathers'
-import cron from 'node-cron'
+import cron, { ScheduledTask } from 'node-cron'
 
 import { NeDBService } from '../../utils/NeDBService'
 import type { Application } from '../../declarations'
@@ -36,6 +36,7 @@ export const MaxFileSize = 30 * MB
 export class FileService
   extends NeDBService<File, FileData, FileParams, FilePatch> {
   scanner: ClamScanner
+  cronjobs: ScheduledTask[] = []
 
   constructor(public options: FileServiceOptions) {
     super({
@@ -51,11 +52,17 @@ export class FileService
 
   async setup(): Promise<void> {
     logger.info('Starting file cleanup cron job')
-    cron.schedule('0 0 * * *', () => Promise.all([
-      this.cleanUpUnused(), this.cleanUpTmp(),
-    ]))
+    this.cronjobs = [
+      cron.schedule('0 0 * * *', () => this.cleanUpUnused()),
+      cron.schedule('0 0 * * *', () => this.cleanUpTmp()),
+    ]
     logger.info('Initializing virus scanner')
     return this.scanner.init()
+  }
+
+  async teardown(): Promise<void> {
+    this.cronjobs.forEach(job => job.stop())
+    this.cronjobs = []
   }
 
   cleanUpUnused = withRequestLogging('files', 'cleanUpUnused', async () => {
