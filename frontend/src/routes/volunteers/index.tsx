@@ -5,9 +5,9 @@ import { addGlobalLoadingAnimation } from 'backend'
 import { useCreateVolunteer, useVolunteers } from 'services/volunteers'
 
 import { searchList } from 'libraries/common/listSearch'
-import { Card, H2, SearchBar } from 'libraries/ui'
+import { Button, Card, Collapse, DialogCloseButton, H2, SearchBar } from 'libraries/ui'
 import { LoadingState } from 'components/LoadingState'
-import { Page } from 'components/Page'
+import { Page, Toolbar } from 'components/Page'
 import { useT, useTranslation } from 'i18n'
 
 import { emptyVolunteerForm, VolunteerForm, VolunteerFormValues } from './-components/VolunteerForm'
@@ -32,13 +32,16 @@ export const Route = createFileRoute('/volunteers/')({
 function RouteComponent() {
   const t = useT('routes.volunteers')
   const { search, setSearch } = useVolunteerSearchParams()
+  const [createOpen, setCreateOpen] = useState(false)
 
   const [allVolunteers, requestState] = useVolunteers()
   const volunteers = searchList(allVolunteers, search, 'name', volunteer => volunteer.volunteeredIn.map(e => e.event.name).join(' '))
 
-  return <Page title={t('pageTitle')} background="volunteers">
-    <div className="flex flex-wrap gap-4 justify-between items-center mb-4 mb-">
-      <div className="flex gap-4">
+  return <Page
+    title={t('pageTitle')}
+    background="volunteers"
+    toolbar={
+      <Toolbar>
         <SearchBar
           id="search-volunteers"
           value={search}
@@ -46,11 +49,19 @@ function RouteComponent() {
           placeholder={useTranslation('common.search')}
           emptySearchText={useTranslation('common.emptySearch')}
         />
-      </div>
-    </div>
+        <Button
+          text={t('addVolunteer')}
+          onClick={() => setCreateOpen(!createOpen)}
+          requireRight="volunteers:create"
+        />
+      </Toolbar>
+    }
+  >
+    <Collapse isOpen={createOpen}>
+      <CreateVolunteerForm onClose={() => setCreateOpen(false)} />
+    </Collapse>
     <VolunteerList volunteers={volunteers} />
     <LoadingState {...requestState} />
-    <CreateVolunteerForm />
   </Page>
 }
 
@@ -72,7 +83,7 @@ function useVolunteerSearchParams() {
   }
 }
 
-function CreateVolunteerForm() {
+function CreateVolunteerForm({ onClose }: { onClose: () => void }) {
   const [formData, setFormData] = useState<VolunteerFormValues>(emptyVolunteerForm)
   const [createVolunteer] = useCreateVolunteer({ refetchQueries: ['getVolunteers'] })
   const t = useT('routes.volunteers')
@@ -84,10 +95,16 @@ function CreateVolunteerForm() {
       },
     }))
     setFormData(emptyVolunteerForm)
+    onClose()
   }
 
-  return <Card>
+  return <Card className="relative">
     <H2>{t('addVolunteer')}</H2>
+    <DialogCloseButton
+      className="absolute top-3 right-3"
+      aria-label={useTranslation('common.close')}
+      onClick={() => { setFormData(emptyVolunteerForm); onClose() }}
+    />
     <VolunteerForm
       value={formData}
       onChange={setFormData}
