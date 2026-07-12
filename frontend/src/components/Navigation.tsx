@@ -43,6 +43,7 @@ function LoginStatus() {
       >
         <MenuButton.ItemLink to="/users" text={t('userSettings')} />
         <MenuButton.ItemLink to="/volunteers" text={t('volunteers')} />
+        <MenuButton.ItemLink to="/ballrooms" text={t('ballrooms')} />
         <MenuButton.ItemButton onClick={logout} text={t('logout')} />
       </MenuButton>
     </span>

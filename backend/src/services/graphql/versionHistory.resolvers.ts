@@ -30,6 +30,9 @@ export default (app: Application): Resolvers => {
     Dance: {
       versionHistory: versionHistoryResolver(app.service('dances')),
     },
+    Ballroom: {
+      versionHistory: versionHistoryResolver(app.service('ballrooms')),
+    },
     Event: {
       versionHistory: versionHistoryResolver(app.service('events')),
     },

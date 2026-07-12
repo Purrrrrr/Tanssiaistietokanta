@@ -10,6 +10,7 @@ import { convert } from './convert/convert'
 import { workshops } from './workshops/workshops'
 import { events } from './events/events'
 import { dances } from './dances/dances'
+import { ballrooms } from './ballrooms/ballrooms'
 import { volunteers } from './volunteers/volunteers'
 import { eventVolunteers } from './eventVolunteers/eventVolunteers'
 import { eventVolunteerAssignments } from './eventVolunteerAssignments/eventVolunteerAssignments'
@@ -32,6 +33,7 @@ export const services = (app: Application) => {
   app.configure(workshops)
   app.configure(events)
   app.configure(dances)
+  app.configure(ballrooms)
   app.configure(volunteers)
   app.configure(eventVolunteers)
   app.configure(eventVolunteerAssignments)

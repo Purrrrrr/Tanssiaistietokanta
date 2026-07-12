@@ -1,10 +1,11 @@
 export type ID = string
-export type ServiceName = 'dances' | 'events' | 'workshops' | 'dancewiki' | 'files' | 'documents' | 'users' | 'volunteers' | 'eventVolunteers' | 'eventRoles' | 'eventVolunteerAssignments'
+export type ServiceName = 'dances' | 'events' | 'workshops' | 'dancewiki' | 'files' | 'documents' | 'users' | 'volunteers' | 'eventVolunteers' | 'eventRoles' | 'eventVolunteerAssignments' | 'ballrooms'
 export interface Entity {
   _id: ID
 }
 
 export type * from './backend'
+export type * from './ballrooms'
 export type * from './dances'
 export type * from './documents'
 export type * from './eventRoles'

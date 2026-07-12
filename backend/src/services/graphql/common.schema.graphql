@@ -21,3 +21,5 @@ type VersionDayInfo {
 }
 
 scalar JSONPatch
+scalar DocumentContent
+scalar Diagram

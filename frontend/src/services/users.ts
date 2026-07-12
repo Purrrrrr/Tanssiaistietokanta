@@ -38,6 +38,7 @@ declare global {
     files: ['create', 'list', 'read', 'modify', 'delete']
     documents: ['create', 'list', 'read', 'modify', 'delete']
     volunteers: ['create', 'list', 'read', 'modify', 'delete']
+    ballrooms: ['create', 'list', 'read', 'modify', 'delete']
     eventVolunteers: ['create', 'list', 'read', 'modify', 'delete']
   }
 }

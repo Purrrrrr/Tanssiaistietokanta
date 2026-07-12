@@ -1,0 +1,27 @@
+type Query {
+  ballroom(id: ID!, versionId: ID): Ballroom!
+  ballrooms: [Ballroom!]!
+}
+
+type Ballroom implements Versionable {
+  _id: ID!
+  _versionId: String
+  _versionNumber: String
+  _updatedAt: String!
+  versionHistory: VersionHistory!
+  venueName: String!
+  roomName: String
+  map: Diagram
+}
+
+type Mutation {
+  createBallroom(ballroom: BallroomInput!): Ballroom!
+  patchBallroom(id: ID!, ballroom: JSONPatch!): Ballroom!
+  deleteBallroom(id: ID!): Ballroom!
+}
+
+input BallroomInput {
+  venueName: String!
+  roomName: String
+  map: Diagram
+}

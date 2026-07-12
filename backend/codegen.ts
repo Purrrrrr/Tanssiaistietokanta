@@ -11,6 +11,7 @@ const config: CodegenConfig = {
       config: {
         enumsAsTypes: true,
         mappers: {
+          Ballroom: './services/ballrooms/ballrooms.schema#Ballrooms',
           Dance: './services/dances/dances.schema#Dances',
           Wikipage: './services/dancewiki/dancewiki.schema#Dancewiki',
           File: './services/files/files.schema#FileDB',

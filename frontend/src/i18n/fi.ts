@@ -9,6 +9,7 @@ export const fi = {
     breadcrumbs: 'Murupolku',
     moveToContent: 'Siirry pääsisältöön',
     volunteers: 'Vapaaehtoiset',
+    ballrooms: 'Tanssisalit',
     userSettings: 'Käyttäjäasetukset',
     menu: 'Valikko',
     login: 'Kirjaudu',
@@ -89,6 +90,10 @@ export const fi = {
       slideStyleId: 'Tanssiaisten diatyyli',
       wikipageName: 'Tanssiwikin sivun nimi',
       danceUsage: 'Käyttökohteet',
+    },
+    ballroom: {
+      venueName: 'Tapahtumapaikka',
+      roomName: 'Sali',
     },
     slideStyles: {
       default: 'Valkoinen',
@@ -792,6 +797,17 @@ export const fi = {
         name: 'Vapaaehtoisen nimi',
         merge: 'Yhdistä',
       },
+    },
+    ballrooms: {
+      pageTitle: 'Tanssisalit',
+      Nballrooms: {
+        one: '1 tanssisali',
+        many: '__count__ tanssisalia',
+      },
+      noBallrooms: 'Ei tanssisaleja',
+      addBallroom: 'Lisää tanssisali',
+      deleteBallroom: 'Poista tanssisali',
+      deleteConfirmation: 'Haluatko varmasti poistaa tämän tanssisalin tietokannasta?',
     },
   },
   versioning: {

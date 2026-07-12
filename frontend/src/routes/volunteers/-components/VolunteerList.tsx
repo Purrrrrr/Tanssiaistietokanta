@@ -125,5 +125,5 @@ function VolunteerRowEditor({ item }: { item: Volunteer }) {
     patchStrategy.partial,
   )
 
-  return <VolunteerForm {...formProps} syncState={state} className="px-4" />
+  return <VolunteerForm {...formProps} syncState={state} className="p-4" />
 }
