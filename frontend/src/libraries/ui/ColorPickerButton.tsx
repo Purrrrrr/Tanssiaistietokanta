@@ -1,6 +1,7 @@
 import { CSSProperties, useId, useRef } from 'react'
 
-import { Button, MenuButton } from 'libraries/ui'
+import { Button } from './Button'
+import { MenuButton } from './MenuButton'
 
 interface ToolbarColorPickerProps {
   value: string
@@ -19,7 +20,7 @@ const colorOptions = [
   '#CC0000', '#CC7300', '#CC9A00', '#8ACC00', '#00CC66', '#00AACC', '#0073CC', '#7300CC', '#CC0099',
 ]
 
-export function ToolbarColorPicker({ value, onChange, label, type }: ToolbarColorPickerProps) {
+export function ColorPickerButton({ value, onChange, label, type }: ToolbarColorPickerProps) {
   const id = useId()
   const input = useRef<HTMLInputElement>(null)
   return <>

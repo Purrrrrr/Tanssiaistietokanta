@@ -2,8 +2,8 @@ import { useCallback, useEffect, useReducer, useState } from 'react'
 import { ActiveSelection, Canvas, Circle, controlsUtils, Ellipse, FabricObject, PencilBrush, Polygon, Rect, Textbox, TFiller } from 'fabric'
 
 import { useEditorT } from 'libraries/lexical/i18n'
-import { FloatingToolbar, ToolbarButton, ToolbarColorPicker, ToolbarInput, ToolbarRow } from 'libraries/lexical/toolbar/widgets'
-import { MenuButton } from 'libraries/ui'
+import { FloatingToolbar, ToolbarButton, ToolbarInput, ToolbarRow } from 'libraries/lexical/toolbar/widgets'
+import { ColorPickerButton as ToolbarColorPicker, MenuButton } from 'libraries/ui'
 import randomId from 'utils/randomId'
 
 import { Arrowline } from './Arrowline'
