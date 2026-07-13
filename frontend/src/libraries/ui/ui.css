@@ -107,7 +107,7 @@ strong{
   :focus {
     outline:none;
   }
-  :focus-visible:not(.bp5-input) {
+  :focus-visible:not(.bp5-input, .bp5-input-appearance) {
     outline:rgba(45, 114, 210, 0.6) solid 2px !important;
     outline-offset:2px;
   }
@@ -303,9 +303,11 @@ strong{
     margin-top:0;
   }
 
-  .bp5-input{
+  .bp5-input {
     height:30px;
     line-height:30px;
+  }
+  .bp5-input, .bp5-input-appearance {
     vertical-align:middle;
     &::placeholder{
       color:#5f6b7c;
@@ -330,8 +332,7 @@ strong{
       -webkit-text-fill-color:rgba(95, 107, 124, 0.6);
     }
   }
-  .bp5-input-box {
-    padding-inline:10px;
+  .bp5-input-box, .bp5-input-box-appearance {
     font-size:14px;
     font-weight:400;
     appearance:none;
@@ -352,5 +353,16 @@ strong{
     &:disabled{
       box-shadow:none;
     }
+  }
+  .bp5-input-box {
+    padding-inline:10px;
+  }
+  input[type="number"].hide-arrows {
+    &::-webkit-inner-spin-button,
+    &::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    -moz-appearance: textfield;
   }
 }

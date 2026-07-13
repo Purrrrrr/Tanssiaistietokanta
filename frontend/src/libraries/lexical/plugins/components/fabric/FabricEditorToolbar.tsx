@@ -1,13 +1,14 @@
-import { useCallback, useEffect, useReducer, useState } from 'react'
+import { useCallback, useEffect, useId, useReducer, useRef, useState } from 'react'
+import classNames from 'classnames'
 import { ActiveSelection, Canvas, Circle, controlsUtils, Ellipse, FabricObject, PencilBrush, Polygon, Rect, Textbox, TFiller } from 'fabric'
 
 import { useEditorT } from 'libraries/lexical/i18n'
-import { FloatingToolbar, ToolbarButton, ToolbarInput, ToolbarRow } from 'libraries/lexical/toolbar/widgets'
-import { ColorPickerButton as ToolbarColorPicker, MenuButton } from 'libraries/ui'
+import { Button, ColorPickerButton as ToolbarColorPicker, FloatingToolbar, MenuButton, ToolbarButton, ToolbarRow, TooltipContainer } from 'libraries/ui'
+import { CssClass } from 'libraries/ui/classes'
 import randomId from 'utils/randomId'
 
 import { Arrowline } from './Arrowline'
-import { ArrowIcon, BringToTopIcon, CircleIcon, DrawIcon, EditPolygon, EllipseIcon, HexagonIcon, PentagonIcon, RectangleIcon, SendToBottomIcon, StarIcon, TriangleIcon } from './icons'
+import { ArrowIcon, BringToTopIcon, CircleIcon, DrawIcon, EditPolygon, EllipseIcon, HexagonIcon, PentagonIcon, RectangleIcon, SendToBottomIcon, StarIcon, StrokeWidthIcon, TriangleIcon } from './icons'
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -196,14 +197,9 @@ export function FabricToolbar({ anchorName, canvas, visible, activeObjects, onRe
       <ToolbarRow title={t('diagram')}>
         <ToolbarColorPicker label={t('fill')} value={fill} onChange={setFill} type="fill" />
         <ToolbarColorPicker label={t('stroke')} value={stroke} onChange={setStroke} type="stroke" />
-        <ToolbarInput
-          label={t('strokeWidth')}
-          type="number"
-          size={2}
-          value={strokeWidth}
-          onChange={value => setStrokeWidth(Number(value))}
-          min={0}
-        />
+        <StrokeWidthInput label={t('strokeWidth')} value={strokeWidth} onChange={setStrokeWidth} />
+        <ToolbarButton onMouseDown={addRect} tooltip={t('addRect')} icon={<RectangleIcon />} />
+        <ToolbarButton onMouseDown={addEllipse} tooltip={t('addEllipse')} icon={<EllipseIcon />} />
         <MenuButton buttonRenderer={props =>
           <ToolbarButton
             {...props}
@@ -212,8 +208,6 @@ export function FabricToolbar({ anchorName, canvas, visible, activeObjects, onRe
           />
         }>
           <div className="grid sm:grid-cols-3 grid-cols-3 gap-1 p-1">
-            <ToolbarButton onMouseDown={addRect} tooltip={t('addRect')} icon={<RectangleIcon />} />
-            <ToolbarButton onMouseDown={addEllipse} tooltip={t('addEllipse')} icon={<EllipseIcon />} />
             <ToolbarButton onMouseDown={addCircle} tooltip={t('addCircle')} icon={<CircleIcon />} />
             <ToolbarButton onMouseDown={() => { addPolygon(3) }} tooltip={t('addTriangle')} icon={<TriangleIcon />} />
             <ToolbarButton onMouseDown={() => { addPolygon(5) }} tooltip={t('addPentagon')} icon={<PentagonIcon />} />
@@ -237,14 +231,7 @@ export function FabricToolbar({ anchorName, canvas, visible, activeObjects, onRe
           <ToolbarButton onMouseDown={sendBackward} tooltip={t('sendBackward')} icon={<SendToBottomIcon />} />
           <ToolbarColorPicker label={t('fill')} value={toColor(activeObjects[0]?.fill)} onChange={applyFill} type="fill" />
           <ToolbarColorPicker label={t('stroke')} value={toColor(activeObjects[0]?.stroke)} onChange={applyStroke} type="stroke" />
-          <ToolbarInput
-            label={t('strokeWidth')}
-            type="number"
-            size={2}
-            value={activeObjects[0]?.strokeWidth || 1}
-            onChange={value => applyStrokeWidth(Number(value))}
-            min={0}
-          />
+          <StrokeWidthInput label={t('strokeWidth')} value={activeObjects[0]?.strokeWidth || 1} onChange={applyStrokeWidth} />
           <ToolbarButton
             onMouseDown={() => duplidateActiveObjects(canvas)}
             tooltip={t('duplicate')}
@@ -259,6 +246,36 @@ export function FabricToolbar({ anchorName, canvas, visible, activeObjects, onRe
       </FloatingToolbar>
     )}
   </>
+}
+
+function StrokeWidthInput({ value, onChange, label }: { value: number, onChange: (value: number) => void, label: string }) {
+  const inputRef = useRef<HTMLInputElement>(null)
+  const id = useId()
+
+  return <TooltipContainer tooltip={label}>
+    <div className={CssClass.inputBoxAppearance + ' rounded-full overflow-hidden flex items-center ps-2'}>
+      <label htmlFor={id}>
+        <StrokeWidthIcon />
+      </label>
+      <Button minimal onClick={() => { onChange(Math.max(0, value - 1)); inputRef.current?.focus() }}>-</Button>
+      <input
+        ref={inputRef}
+        id={id}
+        type="number"
+        aria-label={label}
+        value={value}
+        min={0}
+        onChange={e => {
+          const num = Number(e.target.value)
+          onChange(isNaN(num) ? 0 : num)
+        }}
+        className={classNames(CssClass.inputAppearance, 'text-center p-1 field-sizing-content align-baseline hide-arrows')}
+      />
+      <Button minimal onClick={() => { onChange(value + 1); inputRef.current?.focus() }}>
+              +
+      </Button>
+    </div>
+  </TooltipContainer>
 }
 
 async function duplidateActiveObjects(canvas: Canvas) {

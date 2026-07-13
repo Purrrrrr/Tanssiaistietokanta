@@ -1,3 +1,13 @@
+export function StrokeWidthIcon() {
+  return (
+    <svg viewBox="0 0 16 16" width="16" height="16" fill="transparent" stroke="currentColor" aria-hidden="true">
+      <line x1="2" y1="8" x2="14" y2="8" strokeWidth="2" />
+      <line x1="2" y1="4" x2="14" y2="4" strokeWidth="1" />
+      <line x1="2" y1="12" x2="14" y2="12" strokeWidth="3" />
+    </svg>
+  )
+}
+
 export function RectangleIcon() {
   return (
     <svg viewBox="0 0 16 16" width="16" height="16" fill="transparent" stroke="currentColor" aria-hidden="true">
