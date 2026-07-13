@@ -2,13 +2,13 @@ import { useEffect, useEffectEvent, useRef } from 'react'
 import { ActiveSelection, Canvas, FabricObject } from 'fabric'
 import equal from 'fast-deep-equal'
 
-import './canvasSetup'
-import './patchPolylineExport'
+import './canvas/canvasSetup'
+import './canvas/patchPolylineExport'
 
 interface FabricCanvasProps {
   width: number
   height: number
-  data: string
+  data: object
   editable?: boolean
   onCanvasCreated?: (canvas: Canvas) => void
   onUpdate?: (canvas: Canvas) => void
@@ -20,7 +20,7 @@ const nop = () => {}
 export function FabricCanvas({ width, height, data, editable = false, onCanvasCreated, onUpdate, onSelect }: FabricCanvasProps) {
   const canvasElRef = useRef<HTMLCanvasElement>(null)
   const canvasRef = useRef<Canvas | null>(null)
-  const lastDataRef = useRef<string | null>(null)
+  const lastDataRef = useRef<object | null>(null)
   const isLoadingRef = useRef(false)
   const timerRef = useRef<NodeJS.Timeout | null>(null)
 

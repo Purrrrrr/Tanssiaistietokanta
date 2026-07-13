@@ -45,7 +45,7 @@ export default function UiShowcase() {
 
 const showcases: Showcase<Record<string, unknown>>[] = [
   showcase({
-    title: 'Editor',
+    title: 'Lexical editor',
     props: {
       twoEditors: booleanProp({ default: true }),
       showMinified: booleanProp({ default: true }),

@@ -19,28 +19,27 @@ import {
 } from 'lexical'
 
 import { hashString } from 'libraries/common/hashString'
-
-import { FabricDiagramData, FabricEditor } from '../components/fabric/FabricEditor'
+import { FabricDiagramData, FabricEditor } from 'libraries/fabric/FabricEditor'
 
 export type SerializedFabricNode = Spread<
-  { width: number, height: number, data: string, hash: string },
+  { width: number, height: number, data: object, hash: string },
   SerializedLexicalNode
 >
 
 function $convertFabricElement(domNode: HTMLElement): DOMConversionOutput | null {
   const width = parseInt(domNode.getAttribute('data-fabric-width') ?? '600', 10)
   const height = parseInt(domNode.getAttribute('data-fabric-height') ?? '400', 10)
-  const data = domNode.getAttribute('data-fabric-data') ?? ''
+  const data = JSON.stringify(domNode.getAttribute('data-fabric-data') ?? '{}')
   return { node: $createFabricNode(width, height, data) }
 }
 
 export class FabricNode extends DecoratorNode<React.ReactNode> {
   __width: number
   __height: number
-  __data: string
+  __data: object
   __hash: string
 
-  constructor(width: number, height: number, data: string, hash: string, key?: NodeKey) {
+  constructor(width: number, height: number, data: object, hash: string, key?: NodeKey) {
     super(key)
     this.__width = width
     this.__height = height
@@ -84,7 +83,7 @@ export class FabricNode extends DecoratorNode<React.ReactNode> {
     element.setAttribute('data-fabric-diagram', 'true')
     element.setAttribute('data-fabric-width', String(this.__width))
     element.setAttribute('data-fabric-height', String(this.__height))
-    element.setAttribute('data-fabric-data', this.__data)
+    element.setAttribute('data-fabric-data', JSON.stringify(this.__data))
     element.setAttribute('data-fabric-hash', this.__hash)
     return { element }
   }
@@ -105,7 +104,7 @@ export class FabricNode extends DecoratorNode<React.ReactNode> {
 
   getWidth(): number { return this.getLatest().__width }
   getHeight(): number { return this.getLatest().__height }
-  getData(): string { return this.getLatest().__data }
+  getData(): object { return this.getLatest().__data }
   getHash(): string { return this.getLatest().__hash }
 
   setDimensions(width: number, height: number): this {
@@ -115,7 +114,7 @@ export class FabricNode extends DecoratorNode<React.ReactNode> {
     return self
   }
 
-  setData(data: string): this {
+  setData(data: object): this {
     const self = this.getWritable()
     self.__data = data
     return self
@@ -145,7 +144,7 @@ interface FabricComponentProps {
   nodeKey: NodeKey
   width: number
   height: number
-  data: string
+  data: object
 }
 
 function FabricComponent({ nodeKey, width, height, data }: FabricComponentProps) {
@@ -159,7 +158,7 @@ function FabricComponent({ nodeKey, width, height, data }: FabricComponentProps)
       const node = $getNodeByKey(nodeKey)
       if ($isFabricNode(node)) {
         node.setDimensions(data.width, data.height)
-        node.setData(data.data as unknown as string)
+        node.setData(data.data)
         node.setHash(hash)
       }
     })
@@ -214,7 +213,7 @@ function FabricComponent({ nodeKey, width, height, data }: FabricComponentProps)
 
 // ─── Public API ───────────────────────────────────────────────────────────────
 
-export function $createFabricNode(width = 600, height = 400, data = '', hash = ''): FabricNode {
+export function $createFabricNode(width = 600, height = 400, data = {}, hash = ''): FabricNode {
   return new FabricNode(width, height, data, hash)
 }
 

@@ -2,11 +2,11 @@ import { useImperativeHandle, useState } from 'react'
 import { Canvas, Circle, config, Ellipse, FabricObject } from 'fabric'
 import type { NodeKey } from 'lexical'
 
-import { useEditorT } from 'libraries/lexical/i18n'
 import randomId from 'utils/randomId'
 
 import { FabricCanvas } from './FabricCanvas'
 import { FabricToolbar } from './FabricEditorToolbar'
+import { useFabricT as useEditorT } from './i18n'
 
 export interface FabricDiagramData {
   data: object
@@ -14,11 +14,8 @@ export interface FabricDiagramData {
   height: number
 }
 
-interface FabricComponentProps {
-  nodeKey: NodeKey
-  width: number
-  height: number
-  data: string
+interface FabricComponentProps extends FabricDiagramData {
+  nodeKey?: NodeKey
   editable?: boolean
   isSelected?: boolean
   onRemoveEditor: () => void
@@ -27,7 +24,7 @@ interface FabricComponentProps {
 }
 
 export function FabricEditor({ editable, isSelected, nodeKey, width, height, data, onChange, onRemoveEditor, ref }: FabricComponentProps) {
-  const t = useEditorT('diagram')
+  const t = useEditorT('')
   const [canvas, setCanvas] = useState<Canvas | null>(null)
   const [activeObjects, setActiveObjects] = useState<FabricObject[]>([])
 

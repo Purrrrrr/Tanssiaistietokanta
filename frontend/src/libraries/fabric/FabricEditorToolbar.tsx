@@ -2,12 +2,12 @@ import { useCallback, useEffect, useId, useReducer, useRef, useState } from 'rea
 import classNames from 'classnames'
 import { ActiveSelection, Canvas, Circle, controlsUtils, Ellipse, FabricObject, PencilBrush, Polygon, Rect, Textbox, TFiller } from 'fabric'
 
-import { useEditorT } from 'libraries/lexical/i18n'
 import { Button, ColorPickerButton as ToolbarColorPicker, FloatingToolbar, MenuButton, ToolbarButton, ToolbarRow, TooltipContainer } from 'libraries/ui'
 import { CssClass } from 'libraries/ui/classes'
 import randomId from 'utils/randomId'
 
-import { Arrowline } from './Arrowline'
+import { Arrowline } from './canvas/Arrowline'
+import { useFabricT as useEditorT } from './i18n'
 import { ArrowIcon, BringToTopIcon, CircleIcon, DrawIcon, EditPolygon, EllipseIcon, HexagonIcon, PentagonIcon, RectangleIcon, SendToBottomIcon, StarIcon, StrokeWidthIcon, TriangleIcon } from './icons'
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -40,7 +40,7 @@ interface FabricToolbarProps {
 }
 
 export function FabricToolbar({ anchorName, canvas, visible, activeObjects, onRemoveNode: removeNode }: FabricToolbarProps) {
-  const t = useEditorT('diagram')
+  const t = useEditorT('')
   const [, forceUpdate] = useReducer(x => x + 1, 0) // for force re-render on tool state changes
   const [fill, setFill] = useState('#fff')
   const [stroke, setStroke] = useState('#000')
@@ -48,14 +48,12 @@ export function FabricToolbar({ anchorName, canvas, visible, activeObjects, onRe
 
   const stopDrawingMode = useCallback(() => {
     if (canvas.isDrawingMode) {
-      // eslint-disable-next-line react-hooks/immutability
       canvas.isDrawingMode = false
       forceUpdate()
     }
   }, [canvas])
 
   const toggleDrawingMode = () => {
-    // eslint-disable-next-line react-hooks/immutability
     canvas.isDrawingMode = !canvas.isDrawingMode
     if (canvas.isDrawingMode) {
       canvas.discardActiveObject() // deselect any active objects when entering drawing modifier
@@ -176,13 +174,13 @@ export function FabricToolbar({ anchorName, canvas, visible, activeObjects, onRe
     const brush = new PencilBrush(canvas)
     brush.color = stroke
     brush.width = 2
-    // eslint-disable-next-line react-hooks/immutability
+
     canvas.freeDrawingBrush = brush
     canvas.on('mouse:dblclick', toggleControls)
   }, [canvas])
   useEffect(() => {
     const brush = canvas.freeDrawingBrush as PencilBrush
-    // eslint-disable-next-line react-hooks/immutability
+
     brush.color = stroke
   }, [stroke, canvas])
 
