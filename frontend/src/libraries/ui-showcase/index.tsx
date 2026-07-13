@@ -9,6 +9,7 @@ import { Trash } from 'libraries/ui/icons'
 import { MenuLink, MenuSection, Page } from 'components/Page'
 import { ColoredTag, TAG_COLOR_COUNT } from 'components/widgets/ColoredTag'
 
+import { FabricShowcase } from './fabricShowCase'
 import FormUiShowcase from './formShowcase'
 import { EditorShowcase } from './lexicalShowCase'
 import { ShowcaseContainer } from './ShowcaseContainer'
@@ -44,6 +45,15 @@ export default function UiShowcase() {
 }
 
 const showcases: Showcase<Record<string, unknown>>[] = [
+  showcase({
+    title: 'Fabric editor',
+    props: {
+      twoEditors: booleanProp({ default: true }),
+      showMinified: booleanProp({ default: true }),
+      showViewer: booleanProp({ default: true }),
+    },
+    render: (props) => <FabricShowcase {...props} />,
+  }),
   showcase({
     title: 'Lexical editor',
     props: {
