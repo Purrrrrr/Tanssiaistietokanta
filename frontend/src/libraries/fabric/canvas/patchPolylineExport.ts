@@ -2,6 +2,8 @@ import { Polyline } from 'fabric'
 
 import randomId from 'utils/randomId'
 
+import { round } from './util'
+
 interface XYI { x: number, y: number, _id: string }
 
 const originalToObject = Polyline.prototype.toObject
@@ -15,8 +17,8 @@ Polyline.prototype.toObject = function (propertiesToInclude) {
   return {
     ...original,
     points: points.map(({ x, y, _id }) => ({
-      x: Number(x.toFixed(2)),
-      y: Number(y.toFixed(2)),
+      x: round(x),
+      y: round(y),
       _id,
     })),
   }

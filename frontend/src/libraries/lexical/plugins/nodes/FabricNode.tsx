@@ -1,6 +1,6 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
 import { useLexicalNodeSelection } from '@lexical/react/useLexicalNodeSelection'
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect } from 'react'
 import { mergeRegister } from '@lexical/utils'
 import type { DOMConversionMap,
   DOMConversionOutput,
@@ -150,7 +150,6 @@ interface FabricComponentProps {
 function FabricComponent({ nodeKey, width, height, data }: FabricComponentProps) {
   const [editor] = useLexicalComposerContext()
   const [isSelected, setSelected, clearSelection] = useLexicalNodeSelection(nodeKey)
-  const ref = useRef<{ deleteSelectedObjects: () => boolean }>(null)
 
   const onChange = async (data: FabricDiagramData) => {
     const hash = await hashString(JSON.stringify(data))
@@ -167,9 +166,6 @@ function FabricComponent({ nodeKey, width, height, data }: FabricComponentProps)
   const onDelete = useCallback((event: KeyboardEvent) => {
     if (!isSelected) return false
     event.preventDefault()
-    if (ref.current?.deleteSelectedObjects()) {
-      return true
-    }
     editor.update(() => { $getNodeByKey(nodeKey)?.remove() })
     return true
   }, [editor, isSelected, nodeKey])
@@ -199,7 +195,6 @@ function FabricComponent({ nodeKey, width, height, data }: FabricComponentProps)
   }
 
   return <FabricEditor
-    ref={ref}
     editable={editor.isEditable()}
     isSelected={isSelected}
     nodeKey={nodeKey}

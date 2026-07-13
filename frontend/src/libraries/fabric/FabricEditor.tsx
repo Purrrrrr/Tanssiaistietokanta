@@ -1,12 +1,12 @@
-import { useImperativeHandle, useState } from 'react'
-import { Canvas, Circle, config, Ellipse, FabricObject } from 'fabric'
-import type { NodeKey } from 'lexical'
+import { useState } from 'react'
+import { Canvas, FabricObject } from 'fabric'
 
 import randomId from 'utils/randomId'
 
+import { normalizeObjectScales } from './canvas/util'
+import { CanvasResizeButton } from './components/CanvasResizeButton'
 import { FabricCanvas } from './FabricCanvas'
 import { FabricToolbar } from './FabricEditorToolbar'
-import { useFabricT as useEditorT } from './i18n'
 
 export interface FabricDiagramData {
   data: object
@@ -15,90 +15,48 @@ export interface FabricDiagramData {
 }
 
 interface FabricComponentProps extends FabricDiagramData {
-  nodeKey?: NodeKey
+  nodeKey?: string
   editable?: boolean
   isSelected?: boolean
-  onRemoveEditor: () => void
+  onRemoveEditor?: () => void
   onChange: (data: FabricDiagramData) => void
-  ref?: React.Ref<{ deleteSelectedObjects: () => boolean }>
 }
 
-export function FabricEditor({ editable, isSelected, nodeKey, width, height, data, onChange, onRemoveEditor, ref }: FabricComponentProps) {
-  const t = useEditorT('')
+export function FabricEditor({ editable, isSelected, nodeKey, width, height, data, onChange, onRemoveEditor }: FabricComponentProps) {
   const [canvas, setCanvas] = useState<Canvas | null>(null)
   const [activeObjects, setActiveObjects] = useState<FabricObject[]>([])
 
-  // ── Serialize canvas to node ──────────────────────────────────────────────
-  async function saveCanvas(canvas: Canvas) {
+  // ── Serialize canvas data ──
+  async function saveCanvas() {
+    if (!canvas) return
+    canvas.getObjects().forEach(obj => {
+      obj._id ??= randomId(9)
+    })
     normalizeObjectScales(canvas)
     const json = canvas.toJSON()
     onChange({ data: json, width: canvas.width, height: canvas.height })
   }
 
-  function onUpdate() {
-    if (!canvas) return
-    canvas.getObjects().forEach(obj => {
-      obj._id ??= randomId(9)
-    })
-    saveCanvas(canvas)
-  }
-
-  useImperativeHandle(ref, () => ({
-    /** Delete selected objects on canvas, returns true if any objects were deleted */
-    deleteSelectedObjects() {
-      if (canvas) {
-        const active = canvas.getActiveObjects()
-        if (active.length > 0) {
-          active.forEach(obj => canvas.remove(obj))
-          canvas.discardActiveObject()
-          canvas.renderAll()
-          return true
-        }
-      }
-      return false
-    },
-  }))
-
-  // ── Canvas resize handle ──────────────────────────────────────────────────
-
-  function handleResizeStart(e: React.MouseEvent | React.TouchEvent) {
-    e.preventDefault()
-    e.stopPropagation()
-    const controller = new AbortController()
-    const { signal } = controller
-
-    const { clientX: startX, clientY: startY } = toCoordinates(e)
-    const startW = width
-    const startH = height
-
-    function toCoordinates(e: MouseEvent | TouchEvent | React.MouseEvent | React.TouchEvent) {
-      return 'touches' in e
-        ? e.touches[0] ?? e.changedTouches[0]
-        : e
-    }
-
-    function onMove(e: MouseEvent | TouchEvent) {
-      const { clientX, clientY } = toCoordinates(e)
-      canvas?.setDimensions({
-        width: Math.max(200, startW + clientX - startX),
-        height: Math.max(100, startH + clientY - startY),
-      })
-    }
-
-    function onUp() {
-      if (!canvas) return
-      saveCanvas(canvas)
-      controller.abort()
-    }
-
-    window.addEventListener('mousemove', onMove, { signal })
-    window.addEventListener('touchmove', onMove, { signal })
-    window.addEventListener('mouseup', onUp, { signal })
-    window.addEventListener('touchend', onUp, { signal })
-  }
-
   return (
-    <div className="[anchor-name:--fabric-editor] my-2" data-fabric-node-key={nodeKey}>
+    // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
+    <div
+      className="[anchor-name:--fabric-editor] [anchor-scope:all] my-2"
+      data-fabric-node-key={nodeKey}
+      role="application"
+      onKeyDown={e => {
+        if (!canvas || !editable) return
+        if (e.key === 'Delete' || e.key === 'Backspace') {
+          const active = canvas.getActiveObjects()
+          if (active.length > 0) {
+            active.forEach(obj => canvas.remove(obj))
+            canvas.discardActiveObject()
+            canvas.renderAll()
+            e.preventDefault()
+            e.stopPropagation()
+          }
+        }
+      }}
+      tabIndex={-1}>
       {canvas && editable && (
         <FabricToolbar visible={!!isSelected} anchorName="--fabric-editor" activeObjects={activeObjects} canvas={canvas} onRemoveNode={onRemoveEditor} />
       )}
@@ -109,55 +67,11 @@ export function FabricEditor({ editable, isSelected, nodeKey, width, height, dat
           data={data}
           editable={editable}
           onCanvasCreated={setCanvas}
-          onUpdate={onUpdate}
+          onUpdate={saveCanvas}
           onSelect={setActiveObjects}
         />
-        {editable && isSelected && (
-          <button
-            className="absolute -bottom-2 -right-2 size-4 border-2 border-blue-500 cursor-se-resize z-10 touch-none"
-            onMouseDown={handleResizeStart}
-            onTouchStart={handleResizeStart}
-            title={t('resize')}
-          />
-        )}
+        {editable && isSelected && canvas && <CanvasResizeButton canvas={canvas} onResized={saveCanvas} />}
       </div>
     </div>
   )
-}
-
-const round = (value: number) => Number(value.toFixed(config.NUM_FRACTION_DIGITS))
-
-function normalizeObjectScales(canvas: Canvas) {
-  canvas.getObjects().forEach(obj => {
-    if (obj.scaleX === 1 && obj.scaleY === 1) return
-    switch (obj.type) {
-      case 'rect':
-        obj.set({
-          width: round(obj.width * obj.scaleX),
-          height: round(obj.height * obj.scaleY),
-          scaleX: 1,
-          scaleY: 1,
-        })
-        break
-      case 'circle': {
-        const minScale = Math.min(obj.scaleX, obj.scaleY)
-        obj.set({
-          radius: round((obj as Circle).radius * minScale),
-          scaleX: round(obj.scaleX / minScale),
-          scaleY: round(obj.scaleY / minScale),
-        })
-        break
-      }
-      case 'ellipse':
-        obj.set({
-          rx: round((obj as Ellipse).rx * obj.scaleX),
-          ry: round((obj as Ellipse).ry * obj.scaleY),
-          scaleX: 1,
-          scaleY: 1,
-        })
-        break
-      default:
-        return
-    }
-  })
 }
