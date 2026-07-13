@@ -59,7 +59,6 @@ const translations = {
     },
     table: {
       insertTable: 'Lisää taulukko',
-      tableOptions: 'Taulukkoasetukset',
       removeTable: 'Poista taulukko',
       insertRow: 'Lisää rivi',
       deleteRow: 'Poista rivi',

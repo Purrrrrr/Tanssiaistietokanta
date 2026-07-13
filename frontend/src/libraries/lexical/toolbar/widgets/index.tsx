@@ -5,21 +5,23 @@ import { FormGroup } from 'libraries/ui'
 import { CssClass } from 'libraries/ui/classes'
 
 export { ToolbarButton } from './ToolbarButton'
-export { ToolbarColorPicker } from './ToolColorPicker'
 
-export function FloatingToolbar({ children, anchorName, side = 'bottom' }: {
+export function FloatingToolbar({ children, className, anchorName, side = 'bottom' }: {
   anchorName: string
-  side?: 'bottom' | 'top'
+  side?: string
+  className?: string
   children: React.ReactNode
 }) {
   // eslint-disable-next-line jsx-a11y/no-static-element-interactions
   return <div
-    style={{ '--toolbarAnchorName': anchorName } as CSSProperties}
+    style={{
+      '--toolbarAnchorName': anchorName,
+      '--toolbarPositionArea': side,
+    } as CSSProperties}
     onKeyDown={e => e.stopPropagation() /* Prevent input interactions from leaking into lexical */}
     className={classNames(
-      'absolute [position-anchor:var(--toolbarAnchorName)]',
-      side === 'bottom' && '[position-area:bottom_span-right] mt-1',
-      side === 'top' && '[position-area:top_span-right] mb-1',
+      'absolute [position-anchor:var(--toolbarAnchorName)] [position-area:var(--toolbarPositionArea)]',
+      className,
       'bg-white border border-gray-400 rounded-md z-20 shadow-md empty:hidden max-w-dvw',
     )}
   >

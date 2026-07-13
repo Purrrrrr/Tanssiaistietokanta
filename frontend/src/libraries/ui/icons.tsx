@@ -1,5 +1,7 @@
 export {
   Add,
+  AddColumnRight,
+  AddRowBottom,
   AlignCenter,
   AlignJustify,
   AlignLeft,
@@ -38,6 +40,8 @@ export {
   Presentation,
   Redo,
   Refresh,
+  RemoveColumn,
+  RemoveRowBottom,
   Saved,
   Search,
   Settings,

@@ -36,6 +36,7 @@ import { useLinkToolbar } from './toolbar/LinkToolbar'
 import { useQRCodeToolbar } from './toolbar/QRCodeToolbar'
 import { useTableToolbar } from './toolbar/TableToolbar'
 import { FloatingToolbar, ToolbarButton } from './toolbar/widgets'
+import { useSetAnchorElement } from './utils/useSetAnchorElement'
 
 export type { ImageUploadConfig } from './toolbar/ImageToolbar'
 
@@ -61,7 +62,7 @@ export default function ToolbarPlugin({ children, imageUpload }: ToolbarPluginPr
   const [isStrikethrough, setIsStrikethrough] = useState(false)
   const [blockType, setBlockType] = useState<BlockType>('paragraph')
   const focusedRef = useRef(false)
-  const anchorRef = useRef<HTMLElement | null>(null)
+  const updateAnchor = useSetAnchorElement(toolbarAnchorName)
 
   const tools = [
     useLinkToolbar(editor),
@@ -70,21 +71,6 @@ export default function ToolbarPlugin({ children, imageUpload }: ToolbarPluginPr
     useTableToolbar(editor),
     useFabricToolbar(editor),
   ]
-
-  function updateAnchor(newDom?: HTMLElement | null) {
-    const dom = newDom === undefined ? anchorRef.current : newDom
-    if (dom) {
-      dom.style.anchorName = toolbarAnchorName
-      dom.dataset.toolbarAnchor = 'true'
-    }
-    if (anchorRef.current !== dom) {
-      if (anchorRef.current) {
-        anchorRef.current.style.anchorName = null
-        delete anchorRef.current.dataset.toolbarAnchor
-      }
-      anchorRef.current = dom
-    }
-  }
 
   const $updateToolbar = useEffectEvent(() => {
     const selection = $getSelection()
@@ -261,9 +247,10 @@ export default function ToolbarPlugin({ children, imageUpload }: ToolbarPluginPr
         {tools.map(tool => tool.button)}
       </div>
       {children}
-      <FloatingToolbar anchorName={toolbarAnchorName}>
+      <FloatingToolbar anchorName={toolbarAnchorName} side="bottom" className="mt-1">
         {tools.map((tool, index) => tool.floatingEditor && <div key={index}>{tool.floatingEditor}</div>)}
       </FloatingToolbar>
+      {tools.map((tool, index) => tool.otherElements && <div key={index}>{tool.otherElements}</div>)}
     </>
   )
 }

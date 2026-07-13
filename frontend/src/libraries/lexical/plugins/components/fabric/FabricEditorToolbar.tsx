@@ -192,7 +192,7 @@ export function FabricToolbar({ anchorName, canvas, visible, activeObjects, onRe
   const polygonSelected = activeObjects.length === 1 && activeObjects[0] instanceof Polygon
 
   return <>
-    <FloatingToolbar anchorName={anchorName} side="top">
+    <FloatingToolbar anchorName={anchorName} side="top span-right" className="mb-1">
       <ToolbarRow title={t('diagram')}>
         <ToolbarColorPicker label={t('fill')} value={fill} onChange={setFill} type="fill" />
         <ToolbarColorPicker label={t('stroke')} value={stroke} onChange={setStroke} type="stroke" />
@@ -228,7 +228,7 @@ export function FabricToolbar({ anchorName, canvas, visible, activeObjects, onRe
       </ToolbarRow>
     </FloatingToolbar>
     {activeObjects.length > 0 && (
-      <FloatingToolbar anchorName={anchorName}>
+      <FloatingToolbar anchorName={anchorName} className="mt-1" side="bottom span-right">
         <ToolbarRow title={t('chosenObject', { count: activeObjects.length })}>
           {polygonSelected &&
             <ToolbarButton onMouseDown={toggleControls} tooltip={t('editPolygon')} icon={<EditPolygon size={18} className="text-stone-400" />} />
