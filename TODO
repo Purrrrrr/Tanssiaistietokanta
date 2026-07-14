@@ -589,12 +589,20 @@
     * Only show roles that volunteer is interested_in in selector
     * Only show volunteers that are insterested in role
     * Allow selecting workshop instances
+* Better and less obtrusive table editing in lexical
 
   DB to store event locations and ballrooms
-    Diagrams for ball rooms
+  * Basic page and backend db
     Stand-alone diagram document type
-      Editor and field component
+    * Separate editor code from lexical
+    * Minification
+    * Move diagram viewer
+    * Handle fabric editor keyboard input (at least for deleting nodes)
+      Two toolbar modes: floating and non-floating
+      Field component
       Ability to have another diagram as background
+    Frontend validation for duplicate names
+    Diagrams for ball rooms
 
   Multiple slides per dance: formation slide / instructions slide / some other?
     Formation slide support using ball-rooms
@@ -665,7 +673,6 @@
   Better editor Part 3
     Lexical Debug: node id display?
     Floating delete node cross buttons
-    Better and less obtrusive table editing
     Layout columns plugin?
     Clean up icons and toolbar
     Allow choosing images from existing files
