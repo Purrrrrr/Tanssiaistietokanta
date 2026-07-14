@@ -1,7 +1,7 @@
-import type { AnyNode, Transformation } from './types'
+import type { AnyNode, Transformation } from 'libraries/common/minificationUtils'
+import { applyReverseTransformations, applyTransformations, defaultValues, forTypes, keyMapper, mapKey } from 'libraries/common/minificationUtils'
 
 import { FABRIC_KEY_MAPPING } from './constants'
-import { applyReverseTransformations, applyTransformations, defaultValues, forTypes, keyMapper, mapKey } from './transformationUtils'
 
 /** Default values to strip from every fabric object during minification. */
 const fabricObjectTransformations = [

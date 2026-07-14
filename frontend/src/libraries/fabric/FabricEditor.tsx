@@ -1,15 +1,23 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
+import classNames from 'classnames'
 import { Canvas, FabricObject } from 'fabric'
 
+import { AnyNode } from 'libraries/common/minificationUtils'
+import { FloatingToolbar } from 'libraries/ui'
 import randomId from 'utils/randomId'
 
+import { onCanvasKeydown } from './canvas/keydownHandler'
 import { normalizeObjectScales } from './canvas/util'
 import { CanvasResizeButton } from './components/CanvasResizeButton'
+import { FabricMainToolbar } from './components/MainToolbar'
+import { SelectedObjectToolbar } from './components/SelectedObjectToolbar'
 import { FabricCanvas } from './FabricCanvas'
-import { FabricToolbar } from './FabricEditorToolbar'
+import { expandFabricObject, minifyFabricObject } from './minify'
+
+export type MinfiedFabricData = AnyNode // Opaque minified data type
 
 export interface FabricDiagramData {
-  data: object
+  data: MinfiedFabricData
   width: number
   height: number
 }
@@ -25,15 +33,15 @@ interface FabricComponentProps extends FabricDiagramData {
 export function FabricEditor({ editable, isSelected, nodeKey, width, height, data, onChange, onRemoveEditor }: FabricComponentProps) {
   const [canvas, setCanvas] = useState<Canvas | null>(null)
   const [activeObjects, setActiveObjects] = useState<FabricObject[]>([])
+  const expandedData = useMemo(() => expandFabricObject(data), [data])
 
-  // ── Serialize canvas data ──
   async function saveCanvas() {
     if (!canvas) return
     canvas.getObjects().forEach(obj => {
       obj._id ??= randomId(9)
     })
     normalizeObjectScales(canvas)
-    const json = canvas.toJSON()
+    const json = minifyFabricObject(canvas.toJSON())
     onChange({ data: json, width: canvas.width, height: canvas.height })
   }
 
@@ -44,17 +52,7 @@ export function FabricEditor({ editable, isSelected, nodeKey, width, height, dat
       data-fabric-node-key={nodeKey}
       role="application"
       onKeyDown={e => {
-        if (!canvas || !editable) return
-        if (e.key === 'Delete' || e.key === 'Backspace') {
-          const active = canvas.getActiveObjects()
-          if (active.length > 0) {
-            active.forEach(obj => canvas.remove(obj))
-            canvas.discardActiveObject()
-            canvas.renderAll()
-            e.preventDefault()
-            e.stopPropagation()
-          }
-        }
+        if (canvas && editable) onCanvasKeydown(e, canvas)
       }}
       tabIndex={-1}>
       {canvas && editable && (
@@ -64,7 +62,7 @@ export function FabricEditor({ editable, isSelected, nodeKey, width, height, dat
         <FabricCanvas
           width={width}
           height={height}
-          data={data}
+          data={expandedData}
           editable={editable}
           onCanvasCreated={setCanvas}
           onUpdate={saveCanvas}
@@ -74,4 +72,25 @@ export function FabricEditor({ editable, isSelected, nodeKey, width, height, dat
       </div>
     </div>
   )
+}
+
+interface FabricToolbarProps {
+  anchorName: string
+  onRemoveNode?: () => void
+  canvas: Canvas
+  visible: boolean
+  activeObjects: FabricObject[]
+}
+
+export function FabricToolbar({ anchorName, canvas, visible, activeObjects, onRemoveNode }: FabricToolbarProps) {
+  return <>
+    <FloatingToolbar className={classNames('mb-1', visible || 'hidden')} anchorName={anchorName} side="top span-right">
+      <FabricMainToolbar canvas={canvas} visible={visible} onRemoveNode={onRemoveNode} />
+    </FloatingToolbar>
+    {activeObjects.length > 0 && (
+      <FloatingToolbar anchorName={anchorName} className="mt-1" side="bottom span-right">
+        <SelectedObjectToolbar activeObjects={activeObjects} canvas={canvas} />
+      </FloatingToolbar>
+    )}
+  </>
 }

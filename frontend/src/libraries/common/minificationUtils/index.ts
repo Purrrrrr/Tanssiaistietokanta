@@ -4,6 +4,9 @@ import type { AnyNode, KeyMapping, MinifiedValue, Transformation } from './types
 
 import { applyExpandKey, applyMinifyKey, expandObjectKeys, minifyObjectKeys } from './keyMap'
 
+export { applyMinifyKey, createKeyMapping } from './keyMap'
+export type * from './types'
+
 /** Creates a `Transformation` that only applies when the node's `type` field
  *  (at its original, expanded value) matches one of the given `types`.
  *

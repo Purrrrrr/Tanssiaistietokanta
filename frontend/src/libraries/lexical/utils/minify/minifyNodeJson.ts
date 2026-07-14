@@ -1,8 +1,7 @@
-import type { AnyNode, Transformation } from './types'
+import type { AnyNode, Transformation } from 'libraries/common/minificationUtils'
+import { applyReverseTransformations, applyTransformations, defaultValues, forTypes, keyMapper, mapKey, typeMapper } from 'libraries/common/minificationUtils'
 
 import { LEXICAL_KEY_MAPPING, TYPE_MAPPING } from './constants'
-import { expandFabricObject, minifyFabricObject } from './minifyFabric'
-import { applyReverseTransformations, applyTransformations, defaultValues, forTypes, keyMapper, mapKey, typeMapper } from './transformationUtils'
 
 const transformations: Transformation[] = [
   {
@@ -48,10 +47,6 @@ const transformations: Transformation[] = [
     minify: ({ _id: _ignored, ...node }) => node as AnyNode,
     expand: node => node,
   }),
-  forTypes(['fabric-diagram'], mapKey('data', {
-    minify: minifyFabricObject,
-    expand: expandFabricObject,
-  })),
   mapKey<AnyNode[] | null>('children', {
     minify: objects => objects?.map(runMinifyTransformations) ?? null,
     expand: objects => objects?.map(runExpandTransformations) ?? null,

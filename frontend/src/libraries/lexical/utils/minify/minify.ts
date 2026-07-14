@@ -3,10 +3,10 @@ import { $getRoot, $isElementNode } from 'lexical'
 
 import type { AnyNode, MinifiedDocumentContent, MinifiedNode } from './types'
 
+import { applyMinifyKey } from 'libraries/common/minificationUtils'
 import randomId from 'utils/randomId'
 
 import { FORMAT_VERSION, LEXICAL_KEY_MAPPING } from './constants'
-import { applyMinifyKey } from './keyMap'
 import { runExpandTransformations, runMinifyTransformations } from './minifyNodeJson'
 
 /** Walks the live `EditorState` tree, embeds a stable `_id` on every node

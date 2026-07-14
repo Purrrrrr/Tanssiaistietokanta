@@ -19,10 +19,10 @@ import {
 } from 'lexical'
 
 import { hashString } from 'libraries/common/hashString'
-import { FabricDiagramData, FabricEditor } from 'libraries/fabric/FabricEditor'
+import { FabricDiagramData, FabricEditor, type MinfiedFabricData } from 'libraries/fabric/FabricEditor'
 
 export type SerializedFabricNode = Spread<
-  { width: number, height: number, data: object, hash: string },
+  { width: number, height: number, data: MinfiedFabricData, hash: string },
   SerializedLexicalNode
 >
 
@@ -36,10 +36,10 @@ function $convertFabricElement(domNode: HTMLElement): DOMConversionOutput | null
 export class FabricNode extends DecoratorNode<React.ReactNode> {
   __width: number
   __height: number
-  __data: object
+  __data: MinfiedFabricData
   __hash: string
 
-  constructor(width: number, height: number, data: object, hash: string, key?: NodeKey) {
+  constructor(width: number, height: number, data: MinfiedFabricData, hash: string, key?: NodeKey) {
     super(key)
     this.__width = width
     this.__height = height
@@ -104,7 +104,7 @@ export class FabricNode extends DecoratorNode<React.ReactNode> {
 
   getWidth(): number { return this.getLatest().__width }
   getHeight(): number { return this.getLatest().__height }
-  getData(): object { return this.getLatest().__data }
+  getData(): MinfiedFabricData { return this.getLatest().__data }
   getHash(): string { return this.getLatest().__hash }
 
   setDimensions(width: number, height: number): this {
@@ -114,7 +114,7 @@ export class FabricNode extends DecoratorNode<React.ReactNode> {
     return self
   }
 
-  setData(data: object): this {
+  setData(data: MinfiedFabricData): this {
     const self = this.getWritable()
     self.__data = data
     return self
@@ -144,7 +144,7 @@ interface FabricComponentProps {
   nodeKey: NodeKey
   width: number
   height: number
-  data: object
+  data: MinfiedFabricData
 }
 
 function FabricComponent({ nodeKey, width, height, data }: FabricComponentProps) {
