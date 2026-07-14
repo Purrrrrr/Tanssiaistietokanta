@@ -2,9 +2,9 @@ import { useCallback, useEffect, useState } from 'react'
 import { Canvas, Circle, Ellipse, FabricObject, PencilBrush, Polygon, Rect, Textbox } from 'fabric'
 
 import { ColorPickerButton as ToolbarColorPicker, MenuButton, ToolbarButton, ToolbarRow } from 'libraries/ui'
-import randomId from 'utils/randomId'
 
 import { Arrowline } from '../canvas/Arrowline'
+import { randomId } from '../canvas/util'
 import { useFabricT as useEditorT } from '../i18n'
 import { ArrowIcon, CircleIcon, DrawIcon, EllipseIcon, HexagonIcon, PentagonIcon, RectangleIcon, StarIcon, TriangleIcon } from './icons'
 import { StrokeWidthInput } from './StrokeWidthInput'
@@ -66,7 +66,7 @@ export function FabricMainToolbar({ canvas, visible, onRemoveNode: removeNode }:
   }
   const addObject = (obj: FabricObject) => modifyCanvas(canvas => canvas.add(obj))
   const defaultProps = () => ({
-    _id: randomId(9),
+    _id: randomId(),
     left: canvas.width / 2,
     top: canvas.height / 2,
     originX: 'center',

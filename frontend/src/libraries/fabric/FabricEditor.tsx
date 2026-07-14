@@ -2,27 +2,21 @@ import { useMemo, useState } from 'react'
 import classNames from 'classnames'
 import { Canvas, FabricObject } from 'fabric'
 
-import { AnyNode } from 'libraries/common/minificationUtils'
+import { FabricDiagramData } from './types'
+
 import { FloatingToolbar } from 'libraries/ui'
-import randomId from 'utils/randomId'
 
 import { onCanvasKeydown } from './canvas/keydownHandler'
-import { normalizeObjectScales } from './canvas/util'
+import { saveCanvasToJson } from './canvas/util'
 import { CanvasResizeButton } from './components/CanvasResizeButton'
 import { FabricMainToolbar } from './components/MainToolbar'
 import { SelectedObjectToolbar } from './components/SelectedObjectToolbar'
 import { FabricCanvas } from './FabricCanvas'
-import { expandFabricObject, minifyFabricObject } from './minify'
+import { expandFabricObject } from './minify'
 
-export type MinfiedFabricData = AnyNode // Opaque minified data type
+export type { FabricDiagramData, MinifiedFabricData } from './types'
 
-export interface FabricDiagramData {
-  data: MinfiedFabricData
-  width: number
-  height: number
-}
-
-interface FabricComponentProps extends FabricDiagramData {
+interface FabricComponentProps extends Omit<FabricDiagramData, 'hash'> {
   nodeKey?: string
   editable?: boolean
   isSelected?: boolean
@@ -37,12 +31,7 @@ export function FabricEditor({ editable, isSelected, nodeKey, width, height, dat
 
   async function saveCanvas() {
     if (!canvas) return
-    canvas.getObjects().forEach(obj => {
-      obj._id ??= randomId(9)
-    })
-    normalizeObjectScales(canvas)
-    const json = minifyFabricObject(canvas.toJSON())
-    onChange({ data: json, width: canvas.width, height: canvas.height })
+    onChange(await saveCanvasToJson(canvas))
   }
 
   return (

@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
 
 import { type FabricDiagramData, FabricEditor } from 'libraries/fabric/FabricEditor'
+import FabricImageViewer from 'libraries/fabric/FabricImageViewer'
 import { H2 } from 'libraries/ui'
 
-const defaultData: FabricDiagramData = { data: {}, width: 300, height: 300 }
+const defaultData: FabricDiagramData = { data: {}, width: 300, height: 300, hash: '' }
 
 export function FabricShowcase({ twoEditors, showMinified, showViewer }: { twoEditors: boolean, showMinified: boolean, showViewer: boolean }) {
   const [state, setState] = useState<FabricDiagramData>(() => {
@@ -16,6 +17,12 @@ export function FabricShowcase({ twoEditors, showMinified, showViewer }: { twoEd
   return (
     <div className="flex flex-col gap-4">
       <FabricEditor {...state} onChange={setState} editable isSelected />
+      {showViewer &&
+        <div className="p-2 rounded border-gray-400 border-dashed border">
+          <p className="mb-2 text-xs text-gray-500">Document Viewer (read-only, no Fabric runtime)</p>
+          <FabricImageViewer node={state} />
+        </div>
+      }
       {showMinified &&
         <>
           <H2>Minified state ({JSON.stringify(state).length} bytes)</H2>

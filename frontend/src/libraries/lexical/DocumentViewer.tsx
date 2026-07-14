@@ -3,7 +3,6 @@
  *
  * Walks the serialized Lexical JSON state tree and renders React elements
  */
-import { useEffect, useMemo, useState } from 'react'
 import type { SerializedAutoLinkNode, SerializedLinkNode } from '@lexical/link'
 import type { SerializedListItemNode, SerializedListNode } from '@lexical/list'
 import type { SerializedHeadingNode, SerializedQuoteNode } from '@lexical/rich-text'
@@ -11,8 +10,7 @@ import type { SerializedTableCellNode, SerializedTableNode, SerializedTableRowNo
 import classNames from 'classnames'
 import type { SerializedElementNode, SerializedParagraphNode, SerializedTextNode } from 'lexical'
 
-import { socketRequest } from 'backend'
-
+import FabricImageViewer from 'libraries/fabric/FabricImageViewer'
 import { RegularLink } from 'libraries/ui'
 
 import { useEditorTranslation } from './i18n'
@@ -151,7 +149,7 @@ function renderNode(node: SerializedNode, index: number, options: ViewOptions): 
       )
     }
     case 'fabric-diagram': {
-      return content(<SvgImage key={key} node={node as SerializedFabricNode} />)
+      return content(<FabricImageViewer key={key} node={node as SerializedFabricNode} />)
     }
     case 'qr-code': {
       const { value, title, size } = node as SerializedQRCodeNode
@@ -345,32 +343,4 @@ function renderText(node: SerializedTextNode, key: number | string, _options: Vi
       {content}
     </span>
   )
-}
-
-export default function SvgImage({ node }: {
-  node: SerializedFabricNode
-}) {
-  const { data, width, height } = node
-  const [svg, setSvg] = useState<string | null>(null)
-
-  useEffect(() => {
-    socketRequest('diagrams', 'create', { width, height, data }).then(svg => setSvg(svg as string))
-  }, [width, height, data])
-
-  const src = useMemo(() => {
-    if (!svg) return null
-
-    const blob = new Blob([svg], { type: 'image/svg+xml' })
-    return URL.createObjectURL(blob)
-  }, [svg])
-
-  useEffect(() => {
-    return () => {
-      if (src) {
-        URL.revokeObjectURL(src)
-      }
-    }
-  }, [src])
-
-  return <img src={src as string} alt="" height={height} width={width} />
 }

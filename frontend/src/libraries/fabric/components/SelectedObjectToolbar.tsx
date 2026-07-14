@@ -2,8 +2,8 @@ import { useEffect, useReducer } from 'react'
 import { ActiveSelection, Canvas, controlsUtils, FabricObject, Polygon, TFiller } from 'fabric'
 
 import { ColorPickerButton as ToolbarColorPicker, ToolbarButton, ToolbarRow } from 'libraries/ui'
-import randomId from 'utils/randomId'
 
+import { randomId } from '../canvas/util'
 import { useFabricT as useEditorT } from '../i18n'
 import { BringToTopIcon, EditPolygon, SendToBottomIcon } from './icons'
 import { StrokeWidthInput } from './StrokeWidthInput'
@@ -114,7 +114,7 @@ async function duplidateActiveObjects(canvas: Canvas) {
   clone.set({
     left: clone.left + 10,
     top: clone.top + 10,
-    _id: randomId(9),
+    _id: randomId(),
   })
   if (clone instanceof ActiveSelection) {
     clone.canvas = canvas

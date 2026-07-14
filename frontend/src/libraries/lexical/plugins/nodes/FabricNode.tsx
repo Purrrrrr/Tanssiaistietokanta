@@ -19,10 +19,10 @@ import {
 } from 'lexical'
 
 import { hashString } from 'libraries/common/hashString'
-import { FabricDiagramData, FabricEditor, type MinfiedFabricData } from 'libraries/fabric/FabricEditor'
+import { FabricDiagramData, FabricEditor, type MinifiedFabricData } from 'libraries/fabric/FabricEditor'
 
 export type SerializedFabricNode = Spread<
-  { width: number, height: number, data: MinfiedFabricData, hash: string },
+  FabricDiagramData,
   SerializedLexicalNode
 >
 
@@ -36,10 +36,10 @@ function $convertFabricElement(domNode: HTMLElement): DOMConversionOutput | null
 export class FabricNode extends DecoratorNode<React.ReactNode> {
   __width: number
   __height: number
-  __data: MinfiedFabricData
+  __data: MinifiedFabricData
   __hash: string
 
-  constructor(width: number, height: number, data: MinfiedFabricData, hash: string, key?: NodeKey) {
+  constructor(width: number, height: number, data: MinifiedFabricData, hash: string, key?: NodeKey) {
     super(key)
     this.__width = width
     this.__height = height
@@ -104,7 +104,7 @@ export class FabricNode extends DecoratorNode<React.ReactNode> {
 
   getWidth(): number { return this.getLatest().__width }
   getHeight(): number { return this.getLatest().__height }
-  getData(): MinfiedFabricData { return this.getLatest().__data }
+  getData(): MinifiedFabricData { return this.getLatest().__data }
   getHash(): string { return this.getLatest().__hash }
 
   setDimensions(width: number, height: number): this {
@@ -114,7 +114,7 @@ export class FabricNode extends DecoratorNode<React.ReactNode> {
     return self
   }
 
-  setData(data: MinfiedFabricData): this {
+  setData(data: MinifiedFabricData): this {
     const self = this.getWritable()
     self.__data = data
     return self
@@ -144,21 +144,20 @@ interface FabricComponentProps {
   nodeKey: NodeKey
   width: number
   height: number
-  data: MinfiedFabricData
+  data: MinifiedFabricData
 }
 
 function FabricComponent({ nodeKey, width, height, data }: FabricComponentProps) {
   const [editor] = useLexicalComposerContext()
   const [isSelected, setSelected, clearSelection] = useLexicalNodeSelection(nodeKey)
 
-  const onChange = async (data: FabricDiagramData) => {
-    const hash = await hashString(JSON.stringify(data))
+  const onChange = (data: FabricDiagramData) => {
     editor.update(() => {
       const node = $getNodeByKey(nodeKey)
       if ($isFabricNode(node)) {
         node.setDimensions(data.width, data.height)
         node.setData(data.data)
-        node.setHash(hash)
+        node.setHash(data.hash)
       }
     })
   }

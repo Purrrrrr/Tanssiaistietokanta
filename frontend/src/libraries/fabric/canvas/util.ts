@@ -1,8 +1,26 @@
 import { Canvas, Circle, config, Ellipse } from 'fabric'
 
+import { hashValue } from 'libraries/common/hashValue'
+import randomIdWithLen from 'utils/randomId'
+
+import { minifyFabricObject } from '../minify'
+
+export const randomId = () => randomIdWithLen(9)
+
+export async function saveCanvasToJson(canvas: Canvas) {
+  canvas.getObjects().forEach(obj => {
+    obj._id ??= randomId()
+  })
+  normalizeObjectScales(canvas)
+  const json = minifyFabricObject(canvas.toJSON())
+  const data = { data: json, width: canvas.width, height: canvas.height }
+  const hash = await hashValue(data)
+  return { ...data, hash }
+}
+
 export const round = (value: number) => Number(value.toFixed(config.NUM_FRACTION_DIGITS))
 
-export function normalizeObjectScales(canvas: Canvas) {
+function normalizeObjectScales(canvas: Canvas) {
   canvas.getObjects().forEach(obj => {
     if (obj.scaleX === 1 && obj.scaleY === 1) return
     switch (obj.type) {
