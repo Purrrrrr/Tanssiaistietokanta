@@ -8,6 +8,8 @@ const translations = {
       one: 'Valittu elementti',
       many: 'Valitut elementit',
     },
+    undo: 'Kumoa',
+    redo: 'Tee uudelleen',
     insertDiagram: 'Lisää kaavio',
     addShape: 'Lisää muoto',
     addRect: 'Lisää suorakulmio',

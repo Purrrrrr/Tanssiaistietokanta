@@ -2,11 +2,10 @@ import { useEffect, useReducer } from 'react'
 import { ActiveSelection, Canvas, controlsUtils, FabricObject, Polygon, TFiller } from 'fabric'
 
 import { ColorPickerButton as ToolbarColorPicker, ToolbarButton, ToolbarRow } from 'libraries/ui'
-import { Trash } from 'libraries/ui/icons'
 
 import { randomId } from '../canvas/util'
 import { useFabricT as useEditorT } from '../i18n'
-import { BringToTopIcon, EditPolygon, SendToBottomIcon } from './icons'
+import { BringToTopIcon, EditPolygon, SendToBottomIcon, Trash } from './icons'
 import { StrokeWidthInput } from './StrokeWidthInput'
 
 const toColor = (value: string | TFiller | null): string =>

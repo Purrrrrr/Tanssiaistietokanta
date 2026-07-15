@@ -157,7 +157,7 @@ strong{
 
   .interactive-control-minimal {
     color: oklch(from var(--bg-mix-base) min(l, 0.75) c h);
-   @apply bg-mix-alpha-0 hover:bg-mix-alpha-10 active:bg-mix-alpha-20 disabled:saturate-65 disabled:opacity-60;
+   @apply bg-mix-alpha-0 hover:bg-mix-alpha-10 active:bg-mix-alpha-20 disabled:saturate-55 disabled:opacity-55;
   }
 
   .switch {

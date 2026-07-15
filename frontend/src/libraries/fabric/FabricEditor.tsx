@@ -14,12 +14,12 @@ import { expandFabricObject } from './minify'
 
 export type { FabricDiagramData, MinifiedFabricData } from './types'
 
-interface FabricComponentProps extends Omit<FabricDiagramData, 'hash'> {
+interface FabricComponentProps extends FabricDiagramData {
   editable?: boolean
   onChange: (data: FabricDiagramData) => void
 }
 
-export function FabricEditor({ editable, width, height, data, onChange }: FabricComponentProps) {
+export function FabricEditor({ editable, width, height, data, hash, onChange }: FabricComponentProps) {
   const [canvas, setCanvas] = useState<Canvas | null>(null)
   const [activeObjects, setActiveObjects] = useState<FabricObject[]>([])
   const expandedData = useMemo(() => expandFabricObject(data), [data])
@@ -31,7 +31,12 @@ export function FabricEditor({ editable, width, height, data, onChange }: Fabric
 
   return (
     <div className={`${CssClass.inputBoxAppearance} flex flex-col my-2 bg-stone-100`}>
-      {canvas && editable && <FabricMainToolbar canvas={canvas} visible />}
+      {canvas && editable &&
+        <FabricMainToolbar
+          canvas={canvas}
+          undoState={{ data: { width, height, data, hash }, onChange }}
+          visible />
+      }
       <div className="bg-stone-300 p-2">
         <div className="relative w-max border-2 border-blue-500">
           <FabricCanvas

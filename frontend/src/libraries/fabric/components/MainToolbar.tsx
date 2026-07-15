@@ -1,12 +1,15 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Canvas, Circle, Ellipse, FabricObject, PencilBrush, Polygon, Rect, Textbox } from 'fabric'
 
+import { FabricDiagramData } from '../types'
+
+import { useUndoHistory } from 'libraries/common/useUndoHistory'
 import { ColorPickerButton as ToolbarColorPicker, MenuButton, ToolbarButton, ToolbarRow } from 'libraries/ui'
 
 import { Arrowline } from '../canvas/Arrowline'
 import { randomId } from '../canvas/util'
 import { useFabricT as useEditorT } from '../i18n'
-import { ArrowIcon, CircleIcon, DrawIcon, EllipseIcon, HexagonIcon, PentagonIcon, RectangleIcon, StarIcon, TriangleIcon } from './icons'
+import { ArrowIcon, CircleIcon, DrawIcon, EllipseIcon, HexagonIcon, PentagonIcon, RectangleIcon, Redo, StarIcon, TriangleIcon, Undo } from './icons'
 import { StrokeWidthInput } from './StrokeWidthInput'
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -31,9 +34,10 @@ interface FabricMainToolbarProps {
   onRemoveNode?: () => void
   canvas: Canvas
   visible: boolean
+  undoState?: UndoState
 }
 
-export function FabricMainToolbar({ canvas, visible, onRemoveNode: removeNode }: FabricMainToolbarProps) {
+export function FabricMainToolbar({ canvas, visible, undoState, onRemoveNode: removeNode }: FabricMainToolbarProps) {
   const t = useEditorT('')
   const [fill, setFill] = useState('#fff')
   const [stroke, setStroke] = useState('#000')
@@ -128,6 +132,7 @@ export function FabricMainToolbar({ canvas, visible, onRemoveNode: removeNode }:
   if (!visible) return null
 
   return <ToolbarRow title={t('diagram')}>
+    {undoState && <UndoButtons {...undoState} />}
     <ToolbarColorPicker label={t('fill')} value={fill} onChange={setFill} type="fill" />
     <ToolbarColorPicker label={t('stroke')} value={stroke} onChange={setStroke} type="stroke" />
     <StrokeWidthInput label={t('strokeWidth')} value={strokeWidth} onChange={setStrokeWidth} />
@@ -153,4 +158,19 @@ export function FabricMainToolbar({ canvas, visible, onRemoveNode: removeNode }:
     <ToolbarButton onMouseDown={toggleDrawingMode} active={canvas.isDrawingMode} tooltip={t('freeDraw')} icon={<DrawIcon />} />
     {removeNode && <ToolbarButton color="danger" onMouseDown={removeNode} text={t('removeDiagram')} />}
   </ToolbarRow>
+}
+
+interface UndoState {
+  data: FabricDiagramData
+  onChange: (data: FabricDiagramData) => void
+}
+
+function UndoButtons({ data, onChange }: UndoState) {
+  const t = useEditorT('')
+  const { undo, redo, canUndo, canRedo } = useUndoHistory(data, onChange)
+
+  return <>
+    <ToolbarButton onMouseDown={undo} disabled={!canUndo} tooltip={t('undo')} icon={<Undo />} />
+    <ToolbarButton onMouseDown={redo} disabled={!canRedo} tooltip={t('redo')} icon={<Redo />} />
+  </>
 }
