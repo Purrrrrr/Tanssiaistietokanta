@@ -2,6 +2,8 @@ import { useEffect, useEffectEvent, useRef } from 'react'
 import { ActiveSelection, Canvas, FabricObject } from 'fabric'
 import equal from 'fast-deep-equal'
 
+import { onCanvasKeydown } from './canvas/keydownHandler'
+
 import './canvas/canvasSetup'
 import './canvas/patchPolylineExport'
 
@@ -109,7 +111,20 @@ export function FabricCanvas({ width, height, data, editable = false, onCanvasCr
 
   // Wrap the canvas in a div to prevent React erroring on unmount
   // when trying to remove the canvas that fabric has modified
-  return (<div><canvas ref={canvasElRef} /></div>)
+  return (
+    // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
+    <div
+      role="application"
+      onKeyDown={e => {
+        // Without an editable canvas, we don't want to handle keydown events
+        // we use selection to determine if the canvas is editable, since it is only set when the canvas is editable
+        if (!canvasRef.current || !editable) return
+        onCanvasKeydown(e, canvasRef.current)
+      }}
+      tabIndex={-1}>
+      <canvas ref={canvasElRef} />
+    </div>
+  )
 }
 
 function setEditable(canvas: Canvas, editable: boolean) {

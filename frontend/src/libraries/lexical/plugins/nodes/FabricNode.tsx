@@ -18,8 +18,7 @@ import {
   KEY_DELETE_COMMAND,
 } from 'lexical'
 
-import { hashString } from 'libraries/common/hashString'
-import { FabricDiagramData, FabricEditor, type MinifiedFabricData } from 'libraries/fabric/FabricEditor'
+import { FabricDiagramData, FabricEditor, type MinifiedFabricData } from 'libraries/fabric/EmbeddedFabricEditor'
 
 export type SerializedFabricNode = Spread<
   FabricDiagramData,

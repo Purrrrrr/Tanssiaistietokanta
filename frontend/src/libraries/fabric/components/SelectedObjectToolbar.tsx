@@ -2,6 +2,7 @@ import { useEffect, useReducer } from 'react'
 import { ActiveSelection, Canvas, controlsUtils, FabricObject, Polygon, TFiller } from 'fabric'
 
 import { ColorPickerButton as ToolbarColorPicker, ToolbarButton, ToolbarRow } from 'libraries/ui'
+import { Trash } from 'libraries/ui/icons'
 
 import { randomId } from '../canvas/util'
 import { useFabricT as useEditorT } from '../i18n'
@@ -13,10 +14,11 @@ const toColor = (value: string | TFiller | null): string =>
 
 interface SelectedObjectToolbarProps {
   canvas: Canvas
+  alwaysVisible?: boolean
   activeObjects: FabricObject[]
 }
 
-export function SelectedObjectToolbar({ canvas, activeObjects }: SelectedObjectToolbarProps) {
+export function SelectedObjectToolbar({ canvas, activeObjects, alwaysVisible }: SelectedObjectToolbarProps) {
   const t = useEditorT('')
   const [, forceUpdate] = useReducer(x => x + 1, 0) // for force re-render on tool state changes
 
@@ -81,26 +83,31 @@ export function SelectedObjectToolbar({ canvas, activeObjects }: SelectedObjectT
 
   const polygonSelected = activeObjects.length === 1 && activeObjects[0] instanceof Polygon
 
-  return activeObjects.length > 0 && (
+  return (activeObjects.length > 0 || alwaysVisible) && (
     <ToolbarRow title={t('chosenObject', { count: activeObjects.length })}>
       {polygonSelected &&
             <ToolbarButton onMouseDown={toggleControls} tooltip={t('editPolygon')} icon={<EditPolygon size={18} className="text-stone-400" />} />
       }
-      <ToolbarButton onMouseDown={bringForward} tooltip={t('bringForward')} icon={<BringToTopIcon />} />
-      <ToolbarButton onMouseDown={sendBackward} tooltip={t('sendBackward')} icon={<SendToBottomIcon />} />
-      <ToolbarColorPicker label={t('fill')} value={toColor(activeObjects[0]?.fill)} onChange={applyFill} type="fill" />
-      <ToolbarColorPicker label={t('stroke')} value={toColor(activeObjects[0]?.stroke)} onChange={applyStroke} type="stroke" />
-      <StrokeWidthInput label={t('strokeWidth')} value={activeObjects[0]?.strokeWidth || 1} onChange={applyStrokeWidth} />
-      <ToolbarButton
-        onMouseDown={() => duplidateActiveObjects(canvas)}
-        tooltip={t('duplicate')}
-        icon="⎘"
-      />
-      <ToolbarButton
-        color="danger"
-        onMouseDown={deleteActiveObjects}
-        text={t('deleteShape')}
-      />
+      {activeObjects.length > 0 &&
+        <>
+          <ToolbarButton onMouseDown={bringForward} tooltip={t('bringForward')} icon={<BringToTopIcon />} />
+          <ToolbarButton onMouseDown={sendBackward} tooltip={t('sendBackward')} icon={<SendToBottomIcon />} />
+          <ToolbarColorPicker label={t('fill')} value={toColor(activeObjects[0]?.fill)} onChange={applyFill} type="fill" />
+          <ToolbarColorPicker label={t('stroke')} value={toColor(activeObjects[0]?.stroke)} onChange={applyStroke} type="stroke" />
+          <StrokeWidthInput label={t('strokeWidth')} value={activeObjects[0]?.strokeWidth || 1} onChange={applyStrokeWidth} />
+          <ToolbarButton
+            onMouseDown={() => duplidateActiveObjects(canvas)}
+            tooltip={t('duplicate')}
+            icon="⎘"
+          />
+          <ToolbarButton
+            tooltip={t('deleteShape')}
+            icon={<Trash />}
+            color="danger"
+            onMouseDown={deleteActiveObjects}
+          />
+        </>
+      }
     </ToolbarRow>
   )
 }

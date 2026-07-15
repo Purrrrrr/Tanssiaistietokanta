@@ -4,6 +4,7 @@ const translations = {
   fi: {
     diagram: 'Kaavio',
     chosenObject: {
+      zero: 'Valittu elementti',
       one: 'Valittu elementti',
       many: 'Valitut elementit',
     },
