@@ -63,14 +63,6 @@
 @utility bg-mix-alpha-* {
   --bg-mix-alpha: --value(integer);
 }
-@utility comma-separated-list {
-  & > * {
-    display: inline;
-    &:not(:last-child)::after {
-      content: ", ";
-    }
-  }
-}
 
 body {
   font-family: "Lato", sans-serif;

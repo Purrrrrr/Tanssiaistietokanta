@@ -76,7 +76,7 @@ function EventProgram({ event }: { event: Event }) {
       {program.danceSets.map((danceSet, index) =>
         <Card key={index} className="@3xl:px-2 py-2 @max-3xl:border-0 @max-3xl:shadow-none" noPadding marginClass="">
           <strong className="text-lg">{danceSet.title}</strong>:{' '}
-          <ul className="mt-1 @max-3xl:comma-separated-list @max-3xl:inline">
+          <ul className="mt-1 @max-3xl:inline">
             {formatDances(danceSet.program)}
           </ul>
         </Card>,
@@ -95,7 +95,11 @@ function EventProgram({ event }: { event: Event }) {
       danceNames.push({ name: t('requestedDance', { count: requestedDanceCount }), id: 'requestedDances' })
     }
 
-    return danceNames.map(({ name, id }) => <li key={id} className="py-0.5">{name}</li>)
+    return danceNames.map(({ name, id }, idx) =>
+      <li key={id} className="py-0.5 @max-3xl:inline">
+        {name}
+        {idx < danceNames.length - 1 && <span className="@min-3xl:hidden">, </span>}
+      </li>)
   }
 }
 
