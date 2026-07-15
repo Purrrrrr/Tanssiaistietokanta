@@ -590,6 +590,7 @@
     * Only show volunteers that are insterested in role
     * Allow selecting workshop instances
 * Better and less obtrusive table editing in lexical
+* Comma-separated-list does not copy-paste well. Fix
 
   DB to store event locations and ballrooms
   * Basic page and backend db
@@ -598,12 +599,16 @@
     * Minification
     * Move diagram viewer
     * Handle fabric editor keyboard input (at least for deleting nodes)
-      Two toolbar modes: floating and non-floating
+    * Two toolbar modes: floating and non-floating
+      Undo + redo
+      Copy and paste
       Field component
       Ability to have another diagram as background
+      Image upload support?
     Frontend validation for duplicate names
     Diagrams for ball rooms
 
+  Set editor: move teachedIn and category into the grid from dance selector
   Multiple slides per dance: formation slide / instructions slide / some other?
     Formation slide support using ball-rooms
 
