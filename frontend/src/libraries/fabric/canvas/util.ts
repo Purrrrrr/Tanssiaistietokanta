@@ -12,7 +12,7 @@ export async function saveCanvasToJson(canvas: Canvas) {
     obj._id ??= randomId()
   })
   normalizeObjectScales(canvas)
-  const json = minifyFabricObject(canvas.toJSON())
+  const { backgroundImage: _ignored, ...json } = minifyFabricObject(canvas.toJSON())
   const data = { data: json, width: canvas.width, height: canvas.height }
   const hash = await hashValue(data)
   return { ...data, hash }

@@ -39,7 +39,7 @@ export function FabricEditor({ editable, width, height, data, backgroundImage, f
           undoState={{ data: { width, height, data, hash }, onChange }}
           visible />
       }
-      <div className="bg-stone-300 p-2">
+      <div className="bg-stone-300 p-2 mx-px">
         <div className="relative w-max border-2 border-blue-500">
           <FabricCanvas
             backgroundImage={backgroundImage}
