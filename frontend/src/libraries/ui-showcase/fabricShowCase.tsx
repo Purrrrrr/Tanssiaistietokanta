@@ -6,32 +6,23 @@ import { H2 } from 'libraries/ui'
 
 const defaultData: FabricDiagramData = { data: {}, width: 300, height: 300, hash: '' }
 
-export function FabricShowcase({ twoEditors, showMinified, showViewer, fixedSize, backgroundImage }: {
+export function FabricShowcase({ twoEditors, showMinified, showViewer, backgroundDiagram }: {
   twoEditors: boolean
   showMinified: boolean
   showViewer: boolean
-  fixedSize: boolean
-  backgroundImage: boolean
+  backgroundDiagram: boolean
 }) {
-  const [state, setState] = useState<FabricDiagramData>(() => {
-    const saved = window.localStorage.getItem('diagramShowcaseState')
-    return saved ? JSON.parse(saved) : defaultData
-  })
-  const props = {
-    editable: true,
-    fixedSize,
-    backgroundImage: backgroundImage ? '/404.png' : undefined,
-  }
-  useEffect(() => {
-    window.localStorage.setItem('diagramShowcaseState', JSON.stringify(state))
-  }, [state])
+  const [state, setState] = useLocalStorageState<FabricDiagramData>('diagramShowcaseState', defaultData)
+  const [bgState, setBgState] = useLocalStorageState<FabricDiagramData>('diagramBgShowcaseState', defaultData)
+
+  const bg = backgroundDiagram ? bgState : undefined
   return (
     <div className="flex flex-col gap-4">
-      <FabricEditor {...state} onChange={setState} {...props} />
+      <FabricEditor {...state} onChange={setState} baseDiagram={bg} />
       {showViewer &&
         <div className="p-2 rounded border-gray-400 border-dashed border">
           <p className="mb-2 text-xs text-gray-500">Document Viewer (read-only, no Fabric runtime)</p>
-          <FabricImageViewer node={state} />
+          <FabricImageViewer diagram={state} backgroundDiagram={bg} />
         </div>
       }
       {showMinified &&
@@ -43,9 +34,26 @@ export function FabricShowcase({ twoEditors, showMinified, showViewer, fixedSize
       {twoEditors &&
         <>
           <H2>Another editor instance with the same state</H2>
-          <FabricEditor {...state} onChange={setState} {...props} />
+          <FabricEditor {...state} onChange={setState} baseDiagram={bg} />
+        </>
+      }
+      {backgroundDiagram &&
+        <>
+          <H2>Editor for the background diagram</H2>
+          <FabricEditor {...bgState} onChange={setBgState} />
         </>
       }
     </div>
   )
+}
+
+function useLocalStorageState<T>(key: string, defaultValue: T): [T, (value: T) => void] {
+  const [state, setState] = useState<T>(() => {
+    const saved = window.localStorage.getItem(key)
+    return saved ? JSON.parse(saved) : defaultValue
+  })
+  useEffect(() => {
+    window.localStorage.setItem(key, JSON.stringify(state))
+  }, [key, state])
+  return [state, setState]
 }

@@ -11,20 +11,22 @@ import { FabricMainToolbar } from './components/MainToolbar'
 import { SelectedObjectToolbar } from './components/SelectedObjectToolbar'
 import { FabricCanvas } from './FabricCanvas'
 import { expandFabricObject } from './minify'
+import { useFabricImageUrl } from './useFabricImageUrl'
 
 export type { FabricDiagramData, MinifiedFabricData } from './types'
 
 interface FabricComponentProps extends FabricDiagramData {
-  editable?: boolean
+  readOnly?: boolean
   onChange: (data: FabricDiagramData) => void
-  backgroundImage?: string | null
-  fixedSize?: boolean
+  baseDiagram?: FabricDiagramData
 }
 
-export function FabricEditor({ editable, width, height, data, backgroundImage, fixedSize, hash, onChange }: FabricComponentProps) {
+export function FabricEditor({ readOnly, width, height, data, baseDiagram, hash, onChange }: FabricComponentProps) {
   const [canvas, setCanvas] = useState<Canvas | null>(null)
   const [activeObjects, setActiveObjects] = useState<FabricObject[]>([])
   const expandedData = useMemo(() => expandFabricObject(data), [data])
+  const backgroundImage = useFabricImageUrl(baseDiagram)
+  const editable = !readOnly
 
   async function saveCanvas() {
     if (!canvas) return
@@ -40,18 +42,18 @@ export function FabricEditor({ editable, width, height, data, backgroundImage, f
           visible />
       }
       <div className="bg-stone-300 p-2 mx-px">
-        <div className="relative w-max border-2 border-blue-500">
+        <div className="bg-white relative w-max border-2 border-blue-500">
           <FabricCanvas
             backgroundImage={backgroundImage}
-            width={width}
-            height={height}
+            width={baseDiagram?.width ?? width}
+            height={baseDiagram?.height ?? height}
             data={expandedData}
-            editable={editable}
+            editable={!readOnly}
             onCanvasCreated={setCanvas}
             onUpdate={saveCanvas}
             onSelect={setActiveObjects}
           />
-          {editable && canvas && !fixedSize && <CanvasResizeButton canvas={canvas} onResized={saveCanvas} />}
+          {editable && canvas && !baseDiagram && <CanvasResizeButton canvas={canvas} onResized={saveCanvas} />}
         </div>
       </div>
       {canvas && editable && <SelectedObjectToolbar activeObjects={activeObjects} canvas={canvas} alwaysVisible />}

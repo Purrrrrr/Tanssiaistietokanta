@@ -40,6 +40,7 @@ export function FabricCanvas({ width, height, data, backgroundImage, editable = 
       if (!canvasRef.current) return
       isLoadingRef.current = false
       setEditable(canvasRef.current, editable)
+      setBackgroundImage(canvasRef.current, backgroundImage)
 
       if (selectedIds.length > 0) {
         const selectedObjs = canvasRef.current.getObjects().filter(obj => selectedIds.includes(obj._id))
@@ -76,7 +77,7 @@ export function FabricCanvas({ width, height, data, backgroundImage, editable = 
     if (!el) return
 
     const canvas = new Canvas(el, {
-      backgroundColor: '#ffffff',
+      // backgroundColor: 'transparent',
       stopContextMenu: false,
       targetFindTolerance: 5,
     })
