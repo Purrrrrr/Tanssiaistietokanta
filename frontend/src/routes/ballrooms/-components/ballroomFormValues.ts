@@ -5,5 +5,5 @@ export type BallroomFormValues = Pick<EditableBallroom, 'venueName' | 'roomName'
 export const emptyBallroomForm: BallroomFormValues = {
   venueName: '',
   roomName: '',
-  map: undefined,
+  map: null,
 }

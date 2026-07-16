@@ -8,6 +8,9 @@ import './canvas/canvasSetup'
 import './canvas/patchPolylineExport'
 
 interface FabricCanvasProps {
+  id?: string
+  'aria-describedby'?: string
+  'aria-label'?: string
   backgroundImage?: string | null
   width: number
   height: number
@@ -20,7 +23,7 @@ interface FabricCanvasProps {
 
 const nop = () => {}
 
-export function FabricCanvas({ width, height, data, backgroundImage, editable = false, onCanvasCreated, onUpdate, onSelect }: FabricCanvasProps) {
+export function FabricCanvas({ width, height, data, backgroundImage, editable = false, onCanvasCreated, onUpdate, onSelect, ...rest }: FabricCanvasProps) {
   const canvasElRef = useRef<HTMLCanvasElement>(null)
   const canvasRef = useRef<Canvas | null>(null)
   const lastDataRef = useRef<object | null>(null)
@@ -123,6 +126,7 @@ export function FabricCanvas({ width, height, data, backgroundImage, editable = 
   return (
     // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
     <div
+      {...rest}
       role="application"
       onKeyDown={e => {
         // Without an editable canvas, we don't want to handle keydown events

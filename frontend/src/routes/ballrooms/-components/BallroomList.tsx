@@ -15,7 +15,7 @@ import { BallroomForm } from './BallroomForm'
 import { BallroomFormValues } from './ballroomFormValues'
 import { DeleteBallroomButton } from './DeleteBallroomButton'
 
-const editableBallroomFields: (keyof BallroomFormValues)[] = ['venueName', 'roomName']
+const editableBallroomFields: (keyof BallroomFormValues)[] = ['venueName', 'roomName', 'map']
 
 interface BallroomListProps {
   ballrooms?: Ballroom[]

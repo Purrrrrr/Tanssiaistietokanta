@@ -1,6 +1,13 @@
-import { AnyNode } from 'libraries/common/minificationUtils'
+export type MinifiedValue =
+  | string | number | boolean | null | undefined
+  | MinifiedNode | MinifiedNode[]
 
-export type MinifiedFabricData = AnyNode // Opaque minified data type
+export interface MinifiedNode {
+  _id: string
+  [key: string]: MinifiedValue
+}
+
+export type MinifiedFabricData = Record<string, MinifiedValue>
 
 export interface FabricDiagramData {
   data: MinifiedFabricData

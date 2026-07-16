@@ -18,7 +18,7 @@ export function FabricShowcase({ twoEditors, showMinified, showViewer, backgroun
   const bg = backgroundDiagram ? bgState : undefined
   return (
     <div className="flex flex-col gap-4">
-      <FabricEditor {...state} onChange={setState} baseDiagram={bg} />
+      <FabricEditor value={state} onChange={setState} baseDiagram={bg} />
       {showViewer &&
         <div className="p-2 rounded border-gray-400 border-dashed border">
           <p className="mb-2 text-xs text-gray-500">Document Viewer (read-only, no Fabric runtime)</p>
@@ -34,13 +34,13 @@ export function FabricShowcase({ twoEditors, showMinified, showViewer, backgroun
       {twoEditors &&
         <>
           <H2>Another editor instance with the same state</H2>
-          <FabricEditor {...state} onChange={setState} baseDiagram={bg} />
+          <FabricEditor value={state} onChange={setState} baseDiagram={bg} />
         </>
       }
       {backgroundDiagram &&
         <>
           <H2>Editor for the background diagram</H2>
-          <FabricEditor {...bgState} onChange={setBgState} />
+          <FabricEditor value={bgState} onChange={setBgState} />
         </>
       }
     </div>

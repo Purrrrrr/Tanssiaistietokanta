@@ -16,6 +16,7 @@ const config: CodegenConfig = {
         scalars: {
           Tags: 'Record<string, boolean>',
           DocumentContent: 'import(\'libraries/lexical/utils/minify\').MinifiedDocumentContent',
+          Diagram: 'import(\'libraries/fabric/types\').FabricDiagramData',
         },
       },
     }

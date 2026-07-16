@@ -94,6 +94,7 @@ export const fi = {
     ballroom: {
       venueName: 'Tapahtumapaikka',
       roomName: 'Sali',
+      map: 'Salin kartta',
     },
     slideStyles: {
       default: 'Valkoinen',

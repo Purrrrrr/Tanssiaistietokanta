@@ -45,6 +45,7 @@ export function CanvasResizeButton({ canvas, onResized }: CanvasResizeButtonProp
 
   return (
     <button
+      type="button"
       className="absolute -bottom-2 -right-2 size-4 border-2 border-blue-500 cursor-se-resize z-10 touch-none"
       onMouseDown={handleResizeStart}
       onTouchStart={handleResizeStart}

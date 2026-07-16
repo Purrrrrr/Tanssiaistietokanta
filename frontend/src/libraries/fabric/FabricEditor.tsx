@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { Canvas, FabricObject } from 'fabric'
 
 import { FabricDiagramData } from './types'
+import { FieldComponentDisplayProps } from 'libraries/forms/types'
 
 import { CssClass } from 'libraries/ui/classes'
 
@@ -15,13 +16,20 @@ import { useFabricImageUrl } from './useFabricImageUrl'
 
 export type { FabricDiagramData, MinifiedFabricData } from './types'
 
-interface FabricComponentProps extends FabricDiagramData {
-  readOnly?: boolean
+interface FabricComponentProps extends Omit<FieldComponentDisplayProps, 'id'> {
+  id?: string
+  value: FabricDiagramData | undefined | null
   onChange: (data: FabricDiagramData) => void
   baseDiagram?: FabricDiagramData
 }
 
-export function FabricEditor({ readOnly, width, height, data, baseDiagram, hash, onChange }: FabricComponentProps) {
+const emptyData = {}
+
+export function FabricEditor({ readOnly, value, baseDiagram, onChange, inline, ...rest }: FabricComponentProps) {
+  const data = value?.data ?? emptyData
+  const width = baseDiagram?.width ?? value?.width ?? 300
+  const height = baseDiagram?.height ?? value?.height ?? 300
+  const hash = value?.hash ?? ''
   const [canvas, setCanvas] = useState<Canvas | null>(null)
   const [activeObjects, setActiveObjects] = useState<FabricObject[]>([])
   const expandedData = useMemo(() => expandFabricObject(data), [data])
@@ -34,7 +42,7 @@ export function FabricEditor({ readOnly, width, height, data, baseDiagram, hash,
   }
 
   return (
-    <div className={`${CssClass.inputBoxAppearance} [anchor-scope:all] flex flex-col my-2 bg-stone-100`}>
+    <div className={`${CssClass.inputBoxAppearance} ${inline ? 'inline-block' : ''} [anchor-scope:all] flex flex-col my-2 bg-stone-100`}>
       {canvas && editable &&
         <FabricMainToolbar
           canvas={canvas}
@@ -44,9 +52,10 @@ export function FabricEditor({ readOnly, width, height, data, baseDiagram, hash,
       <div className="bg-stone-300 p-2 mx-px">
         <div className="bg-white relative w-max border-2 border-blue-500">
           <FabricCanvas
+            {...rest}
             backgroundImage={backgroundImage}
-            width={baseDiagram?.width ?? width}
-            height={baseDiagram?.height ?? height}
+            width={width}
+            height={height}
             data={expandedData}
             editable={!readOnly}
             onCanvasCreated={setCanvas}

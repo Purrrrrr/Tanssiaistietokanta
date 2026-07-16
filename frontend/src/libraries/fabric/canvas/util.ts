@@ -1,5 +1,7 @@
 import { Canvas, Circle, config, Ellipse } from 'fabric'
 
+import { FabricDiagramData } from '../types'
+
 import { hashValue } from 'libraries/common/hashValue'
 import randomIdWithLen from 'utils/randomId'
 
@@ -7,7 +9,7 @@ import { minifyFabricObject } from '../minify'
 
 export const randomId = () => randomIdWithLen(9)
 
-export async function saveCanvasToJson(canvas: Canvas) {
+export async function saveCanvasToJson(canvas: Canvas): Promise<FabricDiagramData> {
   canvas.getObjects().forEach(obj => {
     obj._id ??= randomId()
   })
@@ -15,8 +17,9 @@ export async function saveCanvasToJson(canvas: Canvas) {
   const { backgroundImage: _ignored, ...json } = canvas.toJSON()
   const minified = minifyFabricObject(json)
   const data = { data: minified, width: canvas.width, height: canvas.height }
+  console.log(data)
   const hash = await hashValue(data)
-  return { ...data, hash }
+  return { ...data, hash } as FabricDiagramData
 }
 
 export const round = (value: number) => Number(value.toFixed(config.NUM_FRACTION_DIGITS))

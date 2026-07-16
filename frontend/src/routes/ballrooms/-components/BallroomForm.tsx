@@ -1,3 +1,4 @@
+import { FabricEditor } from 'libraries/fabric/FabricEditor'
 import { formFor, FormProps, SubmitButton, SyncState, SyncStatus } from 'libraries/forms'
 import { useT } from 'i18n'
 
@@ -6,6 +7,7 @@ import { BallroomFormValues } from './ballroomFormValues'
 const {
   Form,
   Input,
+  Field,
 } = formFor<BallroomFormValues>()
 
 interface BallroomFormProps extends FormProps<BallroomFormValues> {
@@ -30,11 +32,8 @@ export function BallroomForm({ syncState, onSubmit, submitText, ...rest }: Ballr
         path="roomName"
         label={t('roomName')}
       />
-      {onSubmit &&
-        <div>
-          <SubmitButton text={submitText} />
-        </div>
-      }
     </div>
+    <Field path="map" label={t('map')} component={FabricEditor} />
+    {onSubmit && <SubmitButton text={submitText} />}
   </Form>
 }
