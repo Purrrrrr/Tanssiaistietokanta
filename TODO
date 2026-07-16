@@ -592,21 +592,25 @@
 * Better and less obtrusive table editing in lexical
 * Comma-separated-list does not copy-paste well. Fix
 
-  DB to store event locations and ballrooms
+* DB to store event locations and ballrooms
   * Basic page and backend db
-    Stand-alone diagram document type
+  * Stand-alone diagram document type
     * Separate editor code from lexical
     * Minification
     * Move diagram viewer
     * Handle fabric editor keyboard input (at least for deleting nodes)
     * Two toolbar modes: floating and non-floating
-      Undo + redo
-      Copy and paste
-      Field component
-      Ability to have another diagram as background
-      Image upload support?
-    Frontend validation for duplicate names
-    Diagrams for ball rooms
+    * Undo + redo
+    * Ability to have another diagram as background
+    * Field component
+  * Diagrams for ball rooms
+
+  Frontend validation for duplicate ballroom names
+  FabricEditor improvements
+    Copy and paste
+      Change format to enable better paste positioning
+      Use same format lexical uses?
+    Image upload support?
 
   Set editor: move teachedIn and category into the grid from dance selector
   Multiple slides per dance: formation slide / instructions slide / some other?
