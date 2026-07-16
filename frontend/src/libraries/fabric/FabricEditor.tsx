@@ -17,9 +17,11 @@ export type { FabricDiagramData, MinifiedFabricData } from './types'
 interface FabricComponentProps extends FabricDiagramData {
   editable?: boolean
   onChange: (data: FabricDiagramData) => void
+  backgroundImage?: string | null
+  fixedSize?: boolean
 }
 
-export function FabricEditor({ editable, width, height, data, hash, onChange }: FabricComponentProps) {
+export function FabricEditor({ editable, width, height, data, backgroundImage, fixedSize, hash, onChange }: FabricComponentProps) {
   const [canvas, setCanvas] = useState<Canvas | null>(null)
   const [activeObjects, setActiveObjects] = useState<FabricObject[]>([])
   const expandedData = useMemo(() => expandFabricObject(data), [data])
@@ -30,7 +32,7 @@ export function FabricEditor({ editable, width, height, data, hash, onChange }: 
   }
 
   return (
-    <div className={`${CssClass.inputBoxAppearance} flex flex-col my-2 bg-stone-100`}>
+    <div className={`${CssClass.inputBoxAppearance} [anchor-scope:all] flex flex-col my-2 bg-stone-100`}>
       {canvas && editable &&
         <FabricMainToolbar
           canvas={canvas}
@@ -40,6 +42,7 @@ export function FabricEditor({ editable, width, height, data, hash, onChange }: 
       <div className="bg-stone-300 p-2">
         <div className="relative w-max border-2 border-blue-500">
           <FabricCanvas
+            backgroundImage={backgroundImage}
             width={width}
             height={height}
             data={expandedData}
@@ -48,7 +51,7 @@ export function FabricEditor({ editable, width, height, data, hash, onChange }: 
             onUpdate={saveCanvas}
             onSelect={setActiveObjects}
           />
-          {editable && canvas && <CanvasResizeButton canvas={canvas} onResized={saveCanvas} />}
+          {editable && canvas && !fixedSize && <CanvasResizeButton canvas={canvas} onResized={saveCanvas} />}
         </div>
       </div>
       {canvas && editable && <SelectedObjectToolbar activeObjects={activeObjects} canvas={canvas} alwaysVisible />}

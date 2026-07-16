@@ -1,5 +1,5 @@
 import { useEffect, useEffectEvent, useRef } from 'react'
-import { ActiveSelection, Canvas, FabricObject } from 'fabric'
+import { ActiveSelection, Canvas, FabricImage, FabricObject } from 'fabric'
 import equal from 'fast-deep-equal'
 
 import { onCanvasKeydown } from './canvas/keydownHandler'
@@ -8,6 +8,7 @@ import './canvas/canvasSetup'
 import './canvas/patchPolylineExport'
 
 interface FabricCanvasProps {
+  backgroundImage?: string | null
   width: number
   height: number
   data: object
@@ -19,7 +20,7 @@ interface FabricCanvasProps {
 
 const nop = () => {}
 
-export function FabricCanvas({ width, height, data, editable = false, onCanvasCreated, onUpdate, onSelect }: FabricCanvasProps) {
+export function FabricCanvas({ width, height, data, backgroundImage, editable = false, onCanvasCreated, onUpdate, onSelect }: FabricCanvasProps) {
   const canvasElRef = useRef<HTMLCanvasElement>(null)
   const canvasRef = useRef<Canvas | null>(null)
   const lastDataRef = useRef<object | null>(null)
@@ -94,7 +95,7 @@ export function FabricCanvas({ width, height, data, editable = false, onCanvasCr
     }
   }, [])
 
-  // Sync data from external changes (undo/redo)
+  // Sync data from external changes (eg. undo/redo/server)
   useEffect(() => loadData(), [data])
 
   useEffect(() => { // Sync dimensions from external changes
@@ -103,6 +104,13 @@ export function FabricCanvas({ width, height, data, editable = false, onCanvasCr
       canvas.setDimensions({ width, height })
     }
   }, [width, height])
+
+  useEffect(() => { // Sync background image from external changes
+    const canvas = canvasRef.current
+    if (canvas) {
+      setBackgroundImage(canvas, backgroundImage)
+    }
+  }, [backgroundImage])
 
   useEffect(() => { // Sync editable state
     const canvas = canvasRef.current
@@ -134,4 +142,16 @@ function setEditable(canvas: Canvas, editable: boolean) {
     obj.evented = editable
   })
   canvas.renderAll()
+}
+
+async function setBackgroundImage(canvas: Canvas, backgroundImage: string | null | undefined) {
+  if (backgroundImage) {
+    const image = await FabricImage.fromURL(backgroundImage)
+    image.left = image.width / 2
+    image.top = image.height / 2
+    canvas.backgroundImage = image
+  } else {
+    canvas.backgroundImage = undefined
+  }
+  canvas.requestRenderAll()
 }

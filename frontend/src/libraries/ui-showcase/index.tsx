@@ -51,6 +51,8 @@ const showcases: Showcase<Record<string, unknown>>[] = [
       twoEditors: booleanProp({ default: true }),
       showMinified: booleanProp({ default: true }),
       showViewer: booleanProp({ default: true }),
+      fixedSize: booleanProp(),
+      backgroundImage: booleanProp(),
     },
     render: (props) => <FabricShowcase {...props} />,
   }),

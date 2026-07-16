@@ -6,17 +6,28 @@ import { H2 } from 'libraries/ui'
 
 const defaultData: FabricDiagramData = { data: {}, width: 300, height: 300, hash: '' }
 
-export function FabricShowcase({ twoEditors, showMinified, showViewer }: { twoEditors: boolean, showMinified: boolean, showViewer: boolean }) {
+export function FabricShowcase({ twoEditors, showMinified, showViewer, fixedSize, backgroundImage }: {
+  twoEditors: boolean
+  showMinified: boolean
+  showViewer: boolean
+  fixedSize: boolean
+  backgroundImage: boolean
+}) {
   const [state, setState] = useState<FabricDiagramData>(() => {
     const saved = window.localStorage.getItem('diagramShowcaseState')
     return saved ? JSON.parse(saved) : defaultData
   })
+  const props = {
+    editable: true,
+    fixedSize,
+    backgroundImage: backgroundImage ? '/404.png' : undefined,
+  }
   useEffect(() => {
     window.localStorage.setItem('diagramShowcaseState', JSON.stringify(state))
   }, [state])
   return (
     <div className="flex flex-col gap-4">
-      <FabricEditor {...state} onChange={setState} editable />
+      <FabricEditor {...state} onChange={setState} {...props} />
       {showViewer &&
         <div className="p-2 rounded border-gray-400 border-dashed border">
           <p className="mb-2 text-xs text-gray-500">Document Viewer (read-only, no Fabric runtime)</p>
@@ -32,7 +43,7 @@ export function FabricShowcase({ twoEditors, showMinified, showViewer }: { twoEd
       {twoEditors &&
         <>
           <H2>Another editor instance with the same state</H2>
-          <FabricEditor {...state} onChange={setState} editable />
+          <FabricEditor {...state} onChange={setState} {...props} />
         </>
       }
     </div>
