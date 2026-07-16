@@ -66,4 +66,14 @@ export function ArrowIcon() {
   )
 }
 
-export { BringForward as BringToTopIcon, Edit as DrawIcon, PolygonFilter as EditPolygon, Redo, SendBackward as SendToBottomIcon, Trash, Undo } from '@blueprintjs/icons'
+export {
+  BringForward as BringToTopIcon,
+  Duplicate as CopyIcon,
+  Edit as DrawIcon,
+  PolygonFilter as EditPolygon,
+  Clipboard as PasteIcon,
+  Redo,
+  SendBackward as SendToBottomIcon,
+  Trash,
+  Undo,
+} from '@blueprintjs/icons'

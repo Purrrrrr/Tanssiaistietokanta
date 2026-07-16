@@ -7,9 +7,10 @@ import { useUndoHistory } from 'libraries/common/useUndoHistory'
 import { ColorPickerButton as ToolbarColorPicker, MenuButton, ToolbarButton, ToolbarRow } from 'libraries/ui'
 
 import { Arrowline } from '../canvas/Arrowline'
+import { copySelectionToClipboard, pasteFromClipboard } from '../canvas/clipboard'
 import { randomId } from '../canvas/util'
 import { useFabricT as useEditorT } from '../i18n'
-import { ArrowIcon, CircleIcon, DrawIcon, EllipseIcon, HexagonIcon, PentagonIcon, RectangleIcon, Redo, StarIcon, TriangleIcon, Undo } from './icons'
+import { ArrowIcon, CircleIcon, CopyIcon, DrawIcon, EllipseIcon, HexagonIcon, PasteIcon, PentagonIcon, RectangleIcon, Redo, StarIcon, TriangleIcon, Undo } from './icons'
 import { StrokeWidthInput } from './StrokeWidthInput'
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -110,6 +111,8 @@ export function FabricMainToolbar({ canvas, visible, undoState, onRemoveNode: re
     fontSize: 20,
     strokeWidth: 1,
   }))
+  const copySelection = () => { void copySelectionToClipboard(canvas) }
+  const pasteSelection = () => { void pasteFromClipboard(canvas) }
 
   // ── Initialize fabric canvas (once on mount) ──────────────────────────────
 
@@ -133,6 +136,8 @@ export function FabricMainToolbar({ canvas, visible, undoState, onRemoveNode: re
 
   return <ToolbarRow title={t('diagram')}>
     {undoState && <UndoButtons {...undoState} />}
+    <ToolbarButton onMouseDown={copySelection} tooltip={t('copyToClipboard')} icon={<CopyIcon />} />
+    <ToolbarButton onMouseDown={pasteSelection} tooltip={t('pasteFromClipboard')} icon={<PasteIcon />} />
     <ToolbarColorPicker label={t('fill')} value={fill} onChange={setFill} type="fill" />
     <ToolbarColorPicker label={t('stroke')} value={stroke} onChange={setStroke} type="stroke" />
     <StrokeWidthInput label={t('strokeWidth')} value={strokeWidth} onChange={setStrokeWidth} />

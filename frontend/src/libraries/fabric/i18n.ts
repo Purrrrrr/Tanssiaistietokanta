@@ -21,6 +21,8 @@ const translations = {
     addStar: 'Lisää tähti',
     addArrow: 'Lisää nuoli',
     addText: 'Lisää teksti',
+    copyToClipboard: 'Kopioi leikepöydälle',
+    pasteFromClipboard: 'Liitä leikepöydältä',
     freeDraw: 'Piirrä',
     editPolygon: 'Muokkaa muotoa',
     bringForward: 'Tuo eteen',
