@@ -25,6 +25,7 @@ const danceToCreate = {
   wikipageName: null,
   slideStyleId: null,
   tags: {},
+  formationInstructions: [],
 }
 
 describe('dances service', () => {

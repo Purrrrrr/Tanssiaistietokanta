@@ -74,6 +74,11 @@ query getDance($id: ID!, $versionId: ID) {
       _versionId
       name
     }
+    formationInstructions {
+      _id
+      description
+      diagram
+    }
   }
 }`), ({ refetch, variables }) => {
   if (variables === undefined) throw new Error('Unknown dance id')
@@ -113,6 +118,11 @@ mutation createDance($dance: DanceInput!) {
       _versionId
       name
     }
+    formationInstructions {
+      _id
+      description
+      diagram
+    }
   }
 }`))
 
@@ -134,6 +144,11 @@ mutation patchDance($id: ID!, $dance: JSONPatch!) {
       _versionId
       name
     }
+    formationInstructions {
+      _id
+      description
+      diagram
+    }
   }
 }`))
 
@@ -154,6 +169,11 @@ mutation deleteDance($id: ID!) {
       _id
       _versionId
       name
+    }
+    formationInstructions {
+      _id
+      description
+      diagram
     }
   }
 }`))

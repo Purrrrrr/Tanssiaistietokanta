@@ -9,6 +9,7 @@ import { DancewikiService } from '../dancewiki/dancewiki.class'
 import { SkipAccessControl } from '../access/hooks'
 import { toSelect } from '../../utils/resolvers'
 import { JSONPatch } from '../../hooks/merge-json-patch'
+import { ballroomsSchema } from '../ballrooms/ballrooms.schema'
 
 export async function findTeachedIn(workshopService: WorkshopsService, danceId: string, eventId?: string | null) {
   const workshops = await workshopService.find({
@@ -42,6 +43,7 @@ export default (app: Application): Resolvers => {
   const workshopService = app.service('workshops')
   const eventService = app.service('events')
   const wikiService = app.service('dancewiki')
+  const ballroomService = app.service('ballrooms')
 
   return {
     Dance: {
@@ -60,6 +62,12 @@ export default (app: Application): Resolvers => {
         return eventService.find({ query: { _id: { $in: ids }, $sort: { beginDate: 1 }, $select: toSelect(info, eventsSchema) } })
       },
       wikipage: (dance) => findWikipage(wikiService, dance),
+    },
+    FormationInstructions: {
+      ballroom: (formationInstruction, _, __, info) => {
+        if (!formationInstruction.ballroomId) return null
+        return ballroomService.get(formationInstruction.ballroomId, { [SkipAccessControl]: true, query: { $select: toSelect(info, ballroomsSchema) } })
+      },
     },
     Query: {
       dance: (_, { id, versionId }, params) => versionId

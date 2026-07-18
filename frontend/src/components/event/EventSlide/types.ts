@@ -87,7 +87,7 @@ export interface DefaultIntervalMusic {
 export interface EventProgramRow {
   _id: ID
   type: 'Dance' | 'EventProgram' | 'RequestedDance'
-  dance?: (Omit<Dance, 'wikipage'> & { teachedIn?: Workshop[] }) | null
+  dance?: (Omit<Dance, 'wikipage' | 'formationInstructions'> & { teachedIn?: Workshop[] }) | null
   eventProgram?: EventProgramData | null
   slideStyleId?: SlideStyleID
 }

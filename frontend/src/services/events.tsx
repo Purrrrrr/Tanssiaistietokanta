@@ -78,6 +78,11 @@ setupServiceUpdateFragment(
               workshop { _id, _versionId, name, abbreviation }
               instances { _id, abbreviation }
             }
+            formationInstructions {
+              _id
+              description
+              diagram
+            }
           }
           slideStyleId
         }
@@ -182,6 +187,11 @@ query getEvent($id: ID!, $versionId: ID) {
               _id
               workshop { _id, _versionId, name, abbreviation }
               instances { _id, abbreviation }
+            }
+            formationInstructions {
+              _id
+              description
+              diagram
             }
           }
           slideStyleId
@@ -351,6 +361,11 @@ mutation patchEventProgram($id: ID!, $program: JSONPatch!) {
               _id
               workshop { _id, _versionId, name, abbreviation }
               instances { _id, abbreviation }
+            }
+            formationInstructions {
+              _id
+              description
+              diagram
             }
           }
           slideStyleId

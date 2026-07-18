@@ -25,6 +25,7 @@ type Dance implements Versionable {
   wikipageName: String
   wikipage: Wikipage
   tags: Tags
+  formationInstructions: [FormationInstructions!]!
 }
 
 scalar Tags
@@ -33,6 +34,13 @@ type TeachedInWorkshop {
   _id: ID!
   workshop: Workshop!
   instances: [WorkshopInstance!]
+}
+
+type FormationInstructions {
+  _id: ID!
+  ballroom: Ballroom
+  description: String
+  diagram: Diagram
 }
 
 type Mutation {
@@ -52,7 +60,15 @@ input DanceInput {
   category: String
   instructions: String
   wikipageName: String
+  formationInstructions: [FormationInstructionsInput!]
 }
+
+input FormationInstructionsInput {
+  ballroomId: ID
+  description: String
+  diagram: Diagram
+}
+
 input DancePatchInput {
   name: String
   description: String

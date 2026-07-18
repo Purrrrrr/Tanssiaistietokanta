@@ -45,6 +45,11 @@ query BallProgram($eventId: ID!, $eventVersionId: ID) {
               workshop { _id, _versionId, name }
               instances { _id, abbreviation }
             }
+            formationInstructions {
+              _id
+              description
+              diagram
+            }
           }
         }
       }
@@ -82,6 +87,11 @@ query BallProgram($eventId: ID!, $eventVersionId: ID) {
               _id
               workshop { _id, _versionId, name }
               instances { _id, abbreviation }
+            }
+            formationInstructions {
+              _id
+              description
+              diagram
             }
           }
         }

@@ -84,7 +84,7 @@ function SlideWrapper({ dance, children }: { dance: Dance, children: React.React
 
 export interface InstructionEditorProps extends DocumentContentEditorProps {
   danceId: ID
-  wikipage?: Dance['wikipage']
+  wikipage?: Pick<NonNullable<Dance['wikipage']>, 'content'> | null
 }
 
 export function InstructionEditor({ danceId, wikipage, ...props }: InstructionEditorProps) {

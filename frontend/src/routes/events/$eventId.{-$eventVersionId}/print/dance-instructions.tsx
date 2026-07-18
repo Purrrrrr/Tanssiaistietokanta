@@ -2,7 +2,6 @@ import { createFileRoute } from '@tanstack/react-router'
 import React, { useCallback, useRef, useState } from 'react'
 import classNames from 'classnames'
 
-import { Dance, EditableDance } from 'types'
 import { DanceInstructionsQuery } from 'types/gql/graphql'
 
 import { backendQueryHook, cleanMetadataValues, graphql } from 'backend'
@@ -32,6 +31,8 @@ export const Route = createFileRoute(
 })
 
 type Workshop = NonNullable<DanceInstructionsQuery['event']>['workshops'][0]
+type Dance = NonNullable<Workshop['instances'][0]['dances']>[0]
+type EditableDance = Pick<Dance, 'description' | 'instructions' | 'wikipageName'>
 
 const { Form, Field } = formFor<EditableDance>()
 
@@ -135,9 +136,6 @@ query DanceInstructions($eventId: ID!) {
           name
           description
           instructions
-          formation
-          category
-          source
           wikipageName
           wikipage {
             content

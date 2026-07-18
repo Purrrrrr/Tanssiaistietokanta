@@ -8,6 +8,17 @@ import { dataValidator, queryValidator } from '../../validators'
 import { castAfterValidating } from '../../utils/cast-after-validating'
 import { computedProperties, SlideStyleId, Id, Name, Nullable, NullablePartial, DocumentContent } from '../../utils/common-types'
 
+const formationInstructionsSchema = Type.Object(
+  {
+    _id: Id(),
+    ballroomId: Nullable(Id()),
+    description: Type.String(),
+    diagram: Type.Object({}, { additionalProperties: true }),
+  }, { additionalProperties: false },
+)
+
+export type FormationInstructionsType = Static<typeof formationInstructionsSchema>
+
 // Main data model schema
 export const dancesSchema = Type.Object(
   {
@@ -29,6 +40,7 @@ export const dancesSchema = Type.Object(
     wikipage: Nullable(Type.Any()),
     wikipageName: Nullable(Type.String()),
     tags: Type.Record(Type.String(), Type.Boolean()),
+    formationInstructions: Type.Array(formationInstructionsSchema),
   },
   { $id: 'Dances', additionalProperties: false },
 )

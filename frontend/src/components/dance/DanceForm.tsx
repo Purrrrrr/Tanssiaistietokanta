@@ -29,6 +29,7 @@ const editableDanceFields: (keyof EditableDance)[] = [
   'instructions',
   'slideStyleId',
   'tags',
+  'formationInstructions',
 ]
 
 export function useDanceEditorState(dance: Dance) {

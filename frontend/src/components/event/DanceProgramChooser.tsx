@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Workshop } from 'types'
+import { Dance, Workshop } from 'types'
 
 import { FieldComponentProps } from 'libraries/forms'
 import { DanceChooser, type DanceChooserItem } from 'components/widgets/DanceChooser'
@@ -76,7 +76,8 @@ function addWorkshops(
   }).filter(workshop => workshop !== null)
 
   return {
-    ...dance,
+    // A bit of a hack to make the type system happy. TODO: fix somehow
+    ...dance as Dance,
     teachedIn,
   }
 }
