@@ -13,9 +13,11 @@ const {
   Input,
   useValueAt,
   useOnChangeFor,
+  useAppendToList,
+  RemoveItemButton,
 } = formFor<EditableDance>()
 
-export { Field, Form, Input, useOnChangeFor, useValueAt }
+export { Field, Form, Input, useAppendToList, useOnChangeFor, useValueAt, RemoveItemButton }
 
 const editableDanceFields: (keyof EditableDance)[] = [
   'name',

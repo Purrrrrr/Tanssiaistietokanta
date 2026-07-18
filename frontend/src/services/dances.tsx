@@ -12,6 +12,9 @@ setupServiceUpdateFragment(
   `fragment DanceFragment on Dance {
     _id, name, description, remarks, duration, prelude, formation, category, instructions, slideStyleId
     wikipageName
+    formationInstructions {
+      _id, ballroomId, description, diagram
+    }
   }`,
 )
 
@@ -76,6 +79,7 @@ query getDance($id: ID!, $versionId: ID) {
     }
     formationInstructions {
       _id
+      ballroomId
       description
       diagram
     }
@@ -120,6 +124,7 @@ mutation createDance($dance: DanceInput!) {
     }
     formationInstructions {
       _id
+      ballroomId
       description
       diagram
     }
@@ -146,6 +151,7 @@ mutation patchDance($id: ID!, $dance: JSONPatch!) {
     }
     formationInstructions {
       _id
+      ballroomId
       description
       diagram
     }
@@ -172,6 +178,7 @@ mutation deleteDance($id: ID!) {
     }
     formationInstructions {
       _id
+      ballroomId
       description
       diagram
     }

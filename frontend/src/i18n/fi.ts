@@ -90,6 +90,12 @@ export const fi = {
       slideStyleId: 'Tanssiaisten diatyyli',
       wikipageName: 'Tanssiwikin sivun nimi',
       danceUsage: 'Käyttökohteet',
+      formationInstructions: 'Kuvioonjärjestäytymisohjeet',
+    },
+    formationInstructions: {
+      ballroom: 'Tanssisali',
+      description: 'Nimi',
+      diagram: 'Kuvio',
     },
     ballroom: {
       venueName: 'Tapahtumapaikka',
@@ -222,6 +228,7 @@ export const fi = {
       copyFromDancewiki: 'Kopioi ohjeet tanssiwikistä',
       suggestions: 'Ehdotuksia',
       editInstructions: 'Muokkaa tanssiohjeita',
+      noFormationInstructions: 'Ei kuvioonjärjestäytymisohjeita',
     },
     danceWikiPreview: {
       danceInDanceWiki: 'Tanssi tanssiwikissä',

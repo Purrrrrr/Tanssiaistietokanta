@@ -1,16 +1,22 @@
+import { useState } from 'react'
+
 import { Dance, DanceWithEvents, ID } from 'types'
 
 import { SyncStatus } from 'libraries/forms'
 import { DocumentContentEditor, DocumentContentEditorProps, emptyDocument, isEmptyDocument } from 'libraries/lexical'
-import { Button } from 'libraries/ui'
+import { Button, ItemList, PageSection } from 'libraries/ui'
+import { Edit } from 'libraries/ui/icons'
+import { AddButton } from 'components/widgets/AddButton'
 import { ColoredTag } from 'components/widgets/ColoredTag'
 import { DurationField } from 'components/widgets/DurationField'
 import { useT, useTranslation } from 'i18n'
+import randomId from 'utils/randomId'
 
-import { Field, Form, Input, useDanceEditorState, useOnChangeFor } from './DanceForm'
+import { Field, Form, Input, useAppendToList, useDanceEditorState, useOnChangeFor, RemoveItemButton } from './DanceForm'
 import { DanceSlidePreview } from './DanceSlidePreview'
 import DanceWikiPreview from './DanceWikiPreview'
 import { WikipageSelector } from './WikipageSelector'
+import { FabricEditor } from 'libraries/fabric/FabricEditor'
 
 interface DanceEditorProps {
   dance: DanceWithEvents
@@ -69,6 +75,7 @@ export function FullDanceEditorFields({ dance }: { dance: DanceWithEvents }) {
       path="instructions"
       component={InstructionEditor}
       componentProps={{ danceId: dance._id, wikipage, className: 'max-h-150' }} />
+    <FormationInstructionsSection dance={dance} />
   </>
 }
 
@@ -112,4 +119,44 @@ function Suggestions(
       <ColoredTag key={suggestion} small title={suggestion} onClick={() => onChange(suggestion)} />,
     )}
   </div>
+}
+
+function FormationInstructionsSection({ dance }: { dance: DanceWithEvents }) {
+  const label = useT('domain.dance')
+  const t = useT('components.danceEditor')
+  const addFormationInstruction = useAppendToList('formationInstructions')
+
+  return <PageSection
+    title={label('formationInstructions')}
+    toolbar={<AddButton onClick={() => addFormationInstruction({
+      _id: randomId(),
+      ballroomId: null,
+      description: '',
+      diagram: { data: {}, width: 300, height: 300, hash: '' },
+    })} />}
+  >
+    <ItemList items={dance.formationInstructions} emptyText={t('noFormationInstructions')} columns="grid-cols-[1fr_max-content]">
+      {dance.formationInstructions.map((formationInstruction, index) =>
+        <FormationInstructionRow key={formationInstruction._id} formationInstruction={formationInstruction} index={index} />,
+      )}
+    </ItemList>
+  </PageSection>
+}
+
+function FormationInstructionRow({ formationInstruction, index }: {
+  formationInstruction: DanceWithEvents['formationInstructions'][number]
+  index: number
+}) {
+  const label = useT('domain.formationInstructions')
+  const [open, setOpen] = useState(false)
+  return <ItemList.Row isOpen={open} expandableContent={<div className="p-4">
+    <Input label={label('description')} path={`formationInstructions.${index}.description`} />
+    <Field label={label('diagram')} path={`formationInstructions.${index}.diagram`} component={FabricEditor} />
+  </div>}>
+    <span>{formationInstruction.description ?? '-'}</span>
+    <span>
+      <Button minimal icon={<Edit />} tooltip={useTranslation('common.edit')} onClick={() => setOpen(!open)} />
+      <RemoveItemButton minimal path="formationInstructions" index={index} text={useTranslation('common.delete')} />
+    </span>
+  </ItemList.Row>
 }
