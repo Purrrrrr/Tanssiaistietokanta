@@ -37,6 +37,7 @@ export function useSlideshowNavigation(
   useOnKeydown({
     ArrowLeft: () => changeSlide(-1),
     ArrowRight: () => changeSlide(1),
+    f: () => document.getElementById('formation-instructions-viewer')?.click(),
   })
 
   const swipeHandlers = useSwipeable({

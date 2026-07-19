@@ -123,13 +123,15 @@ function FormationInstructionsViewer({ formationInstructions }: { formationInstr
 
   const toggle = () => document.startViewTransition(() => setFullScreen(!fullScreen))
 
-  return <div className={`flex items-stretch justify-center [view-transition-name:photo] ${fullScreen ? 'absolute inset-[15cqh_4cqw_6cqh] z-50' : 'mt-4'}`}>
+  return <button
+    id="formation-instructions-viewer"
+    onClick={toggle}
+    className={`flex items-stretch justify-center [view-transition-name:photo] hover:*:outline-2 ${fullScreen ? 'absolute inset-[15cqh_4cqw_6cqh] z-50' : 'mt-4'}`}>
     <FabricImageViewer
-      onClick={toggle}
-      className={ `${fullScreen ? 'w-auto' : 'w-full'} border bg-white cursor-pointer` }
+      className={`${fullScreen ? 'w-auto' : 'w-full'} border bg-white cursor-pointer`}
       diagram={formationInstructions.diagram}
       backgroundDiagram={formationInstructions.ballroom?.map ?? undefined} />
-  </div>
+  </button>
 }
 
 function danceSetNavigation(parent?: EventParentSlideProps): SlideNavigation | undefined {
