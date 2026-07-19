@@ -2,21 +2,22 @@ import { useState } from 'react'
 
 import { Dance, DanceWithEvents, ID } from 'types'
 
+import { FabricEditor } from 'libraries/fabric/FabricEditor'
 import { SyncStatus } from 'libraries/forms'
 import { DocumentContentEditor, DocumentContentEditorProps, emptyDocument, isEmptyDocument } from 'libraries/lexical'
 import { Button, ItemList, PageSection } from 'libraries/ui'
 import { Edit } from 'libraries/ui/icons'
+import { BallroomSelect } from 'components/ballroom/BallroomSelect'
 import { AddButton } from 'components/widgets/AddButton'
 import { ColoredTag } from 'components/widgets/ColoredTag'
 import { DurationField } from 'components/widgets/DurationField'
 import { useT, useTranslation } from 'i18n'
 import randomId from 'utils/randomId'
 
-import { Field, Form, Input, useAppendToList, useDanceEditorState, useOnChangeFor, RemoveItemButton } from './DanceForm'
+import { Field, Form, Input, RemoveItemButton, useAppendToList, useDanceEditorState, useOnChangeFor } from './DanceForm'
 import { DanceSlidePreview } from './DanceSlidePreview'
 import DanceWikiPreview from './DanceWikiPreview'
 import { WikipageSelector } from './WikipageSelector'
-import { FabricEditor } from 'libraries/fabric/FabricEditor'
 
 interface DanceEditorProps {
   dance: DanceWithEvents
@@ -130,12 +131,12 @@ function FormationInstructionsSection({ dance }: { dance: DanceWithEvents }) {
     title={label('formationInstructions')}
     toolbar={<AddButton onClick={() => addFormationInstruction({
       _id: randomId(),
-      ballroomId: null,
+      ballroom: null,
       description: '',
       diagram: { data: {}, width: 300, height: 300, hash: '' },
     })} />}
   >
-    <ItemList items={dance.formationInstructions} emptyText={t('noFormationInstructions')} columns="grid-cols-[1fr_max-content]">
+    <ItemList items={dance.formationInstructions} emptyText={t('noFormationInstructions')} columns="grid-cols-[max-content_1fr_max-content]">
       {dance.formationInstructions.map((formationInstruction, index) =>
         <FormationInstructionRow key={formationInstruction._id} formationInstruction={formationInstruction} index={index} />,
       )}
@@ -148,12 +149,28 @@ function FormationInstructionRow({ formationInstruction, index }: {
   index: number
 }) {
   const label = useT('domain.formationInstructions')
+  const t = useT('components.danceEditor')
   const [open, setOpen] = useState(false)
   return <ItemList.Row isOpen={open} expandableContent={<div className="p-4">
     <Input label={label('description')} path={`formationInstructions.${index}.description`} />
-    <Field label={label('diagram')} path={`formationInstructions.${index}.diagram`} component={FabricEditor} />
+    <Field label={label('ballroom')} path={`formationInstructions.${index}.ballroom`} component={BallroomSelect} />
+    <Field
+      label={label('diagram')}
+      path={`formationInstructions.${index}.diagram`}
+      component={FabricEditor}
+      componentProps={{ baseDiagram: formationInstruction.ballroom?.map ?? undefined }}
+    />
   </div>}>
-    <span>{formationInstruction.description ?? '-'}</span>
+    <span>
+      {formationInstruction.ballroom
+        ? formationInstruction.ballroom.roomName
+          ? `${formationInstruction.ballroom.venueName} - ${formationInstruction.ballroom.roomName}`
+          : formationInstruction.ballroom.venueName
+        : t('noBallroom')}
+    </span>
+    <span>
+      {formationInstruction.description?.trim() ? formationInstruction.description : '-'}
+    </span>
     <span>
       <Button minimal icon={<Edit />} tooltip={useTranslation('common.edit')} onClick={() => setOpen(!open)} />
       <RemoveItemButton minimal path="formationInstructions" index={index} text={useTranslation('common.delete')} />

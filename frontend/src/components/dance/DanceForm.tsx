@@ -1,4 +1,5 @@
 import { useCallback } from 'react'
+import * as L from 'partial.lenses'
 
 import { Dance, EditableDance } from 'types'
 
@@ -17,7 +18,7 @@ const {
   RemoveItemButton,
 } = formFor<EditableDance>()
 
-export { Field, Form, Input, useAppendToList, useOnChangeFor, useValueAt, RemoveItemButton }
+export { Field, Form, Input, RemoveItemButton, useAppendToList, useOnChangeFor, useValueAt }
 
 const editableDanceFields: (keyof EditableDance)[] = [
   'name',
@@ -46,7 +47,19 @@ export function useDanceEditorState(dance: Dance) {
     [modifyDance, dance._id, readOnly],
   )
 
-  const { formProps, ...rest } = useAutosavingState<EditableDance, unknown[]>(dance, patchDance, patchStrategy.jsonPatchWithFields(editableDanceFields))
+  const { formProps, ...rest } = useAutosavingState<EditableDance, unknown[]>(
+    dance,
+    patchDance,
+    patchStrategy.jsonPatchWithFields(
+      editableDanceFields,
+      L.modify(['formationInstructions', L.elems],
+        ({ ballroom, ...rest }) => ({
+          ...rest,
+          ballroomId: ballroom?._id ?? null,
+        }),
+      ),
+    ),
+  )
 
   return {
     formProps: {

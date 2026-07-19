@@ -38,6 +38,7 @@ type TeachedInWorkshop {
 
 type FormationInstructions {
   _id: ID!
+  ballroomId: ID
   ballroom: Ballroom
   description: String
   diagram: Diagram
