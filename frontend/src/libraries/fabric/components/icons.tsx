@@ -67,6 +67,8 @@ export function ArrowIcon({ style }: { style?: React.CSSProperties }) {
 }
 
 export {
+  AlignmentHorizontalCenter,
+  AlignmentVerticalCenter,
   BringForward as BringToTopIcon,
   Duplicate as CopyIcon,
   Edit as DrawIcon,

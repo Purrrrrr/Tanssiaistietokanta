@@ -6,7 +6,7 @@ import { ColorPickerButton as ToolbarColorPicker, ToolbarButton, ToolbarRow } fr
 import { Arrowline } from '../canvas/Arrowline'
 import { randomId } from '../canvas/util'
 import { useFabricT as useEditorT } from '../i18n'
-import { BringToTopIcon, EditPolygon, SendToBottomIcon, Trash } from './icons'
+import { AlignmentHorizontalCenter, AlignmentVerticalCenter, BringToTopIcon, EditPolygon, SendToBottomIcon, Trash } from './icons'
 import { StrokeWidthInput } from './StrokeWidthInput'
 
 const toColor = (value: string | TFiller | null): string =>
@@ -26,8 +26,16 @@ export function SelectedObjectToolbar({ canvas, activeObjects, alwaysVisible }: 
   const modifyActiveObjects = (modifier: (obj: FabricObject[], canvas: Canvas) => void) => {
     const active = canvas.getActiveObjects()
     if (active.length > 0) {
+      const shouldDiscardSelection = canvas.getActiveObject() instanceof ActiveSelection
+      if (shouldDiscardSelection) {
+        canvas.discardActiveObject()
+      }
       modifier(active, canvas)
       canvas.fire('object:modified', { target: active[0] })
+      if (shouldDiscardSelection) {
+        const selection = new ActiveSelection(active, { canvas })
+        canvas.setActiveObject(selection)
+      }
     }
     forceUpdate()
     canvas.renderAll()
@@ -56,6 +64,15 @@ export function SelectedObjectToolbar({ canvas, activeObjects, alwaysVisible }: 
       canvas.discardActiveObject()
     },
   )
+
+  const centerVertically = () => modifyActiveObject(obj => {
+    obj.set('top', canvas.getHeight() / 2)
+    obj.setCoords()
+  })
+  const centerHorizontally = () => modifyActiveObject(obj => {
+    obj.set('left', canvas.getWidth() / 2)
+    obj.setCoords()
+  })
 
   const toggleControls = () => modifyActiveObject(
     obj => {
@@ -113,6 +130,16 @@ export function SelectedObjectToolbar({ canvas, activeObjects, alwaysVisible }: 
             onMouseDown={() => duplidateActiveObjects(canvas)}
             tooltip={t('duplicate')}
             icon="⎘"
+          />
+          <ToolbarButton
+            onMouseDown={centerVertically}
+            tooltip={t('centerVertically')}
+            icon={<AlignmentHorizontalCenter />}
+          />
+          <ToolbarButton
+            onMouseDown={centerHorizontally}
+            tooltip={t('centerHorizontally')}
+            icon={<AlignmentVerticalCenter />}
           />
           <ToolbarButton
             tooltip={t('deleteShape')}

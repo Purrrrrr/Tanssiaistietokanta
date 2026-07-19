@@ -31,6 +31,8 @@ const translations = {
     stroke: 'Reunaviiva',
     strokeWidth: 'Reunan leveys',
     duplicate: 'Kopioi',
+    centerVertically: 'Keskitä pystyssuunnassa',
+    centerHorizontally: 'Keskitä vaakasuunnassa',
     deleteShape: 'Poista muoto',
     removeDiagram: 'Poista kaavio',
     resize: 'Muuta kokoa',
