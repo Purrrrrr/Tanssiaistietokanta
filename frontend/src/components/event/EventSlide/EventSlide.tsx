@@ -1,3 +1,6 @@
+import { useState } from 'react'
+
+import { Dance } from 'types'
 import type { DanceProgramItemSlideProps, DanceSetSlideProps, EventParentSlideProps, EventProgram, EventSlideProps, IntervalMusicSlideProps } from './types'
 
 import FabricImageViewer from 'libraries/fabric/FabricImageViewer'
@@ -98,13 +101,7 @@ function DanceProgramItemSlide(props: WithCommonProps<DanceProgramItemSlideProps
         ? <TeachedIn teachedIn={dance.teachedIn} />
         : undefined,
       additionalContent: formationInstructions?.diagram
-        ? (
-          <div className="mt-4 border">
-            <FabricImageViewer
-              diagram={formationInstructions.diagram}
-              backgroundDiagram={formationInstructions.ballroom?.map ?? undefined} />
-          </div>
-        )
+        ? <FormationInstructionsViewer formationInstructions={formationInstructions} />
         : null,
     }
 
@@ -117,6 +114,22 @@ function DanceProgramItemSlide(props: WithCommonProps<DanceProgramItemSlideProps
     next={next}
     {...content}
   />
+}
+
+function FormationInstructionsViewer({ formationInstructions }: { formationInstructions: Dance['formationInstructions'][0] }) {
+  const [fullScreen, setFullScreen] = useState(false)
+
+  if (!formationInstructions.diagram) return null
+
+  const toggle = () => document.startViewTransition(() => setFullScreen(!fullScreen))
+
+  return <div className={`flex items-stretch justify-center [view-transition-name:photo] ${fullScreen ? 'absolute inset-[15cqh_4cqw_6cqh] z-50' : 'mt-4'}`}>
+    <FabricImageViewer
+      onClick={toggle}
+      className={ `${fullScreen ? 'w-auto' : 'w-full'} border bg-white cursor-pointer` }
+      diagram={formationInstructions.diagram}
+      backgroundDiagram={formationInstructions.ballroom?.map ?? undefined} />
+  </div>
 }
 
 function danceSetNavigation(parent?: EventParentSlideProps): SlideNavigation | undefined {

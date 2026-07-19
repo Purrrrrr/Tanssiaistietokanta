@@ -36,6 +36,7 @@
   grid-template:
     "title separator navigation-title" auto
     "main separator navigation" 1fr
+    "main separator additional-content" auto
     "footer separator additional-content" auto
     "next-slide separator additional-content" auto
     / 2fr var(--separator-size) var(--navigation-width, 0);
