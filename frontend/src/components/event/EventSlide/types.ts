@@ -1,4 +1,4 @@
-import { Dance } from 'types'
+import { Ballroom, Dance } from 'types'
 
 import { MinifiedDocumentContent } from 'libraries/lexical'
 
@@ -54,6 +54,7 @@ type SlideStyleID = string | null
 
 export interface EventProgram {
   introductions: Introductions
+  ballroom?: Pick<Ballroom, '_id' | 'venueName' | 'roomName' | 'map'> | null
   danceSets: DanceSet[]
   slideStyleId?: SlideStyleID
   defaultIntervalMusic: DefaultIntervalMusic
@@ -87,7 +88,7 @@ export interface DefaultIntervalMusic {
 export interface EventProgramRow {
   _id: ID
   type: 'Dance' | 'EventProgram' | 'RequestedDance'
-  dance?: (Omit<Dance, 'wikipage' | 'formationInstructions'> & { teachedIn?: Workshop[] }) | null
+  dance?: (Omit<Dance, 'wikipage'> & { teachedIn?: Workshop[] }) | null
   eventProgram?: EventProgramData | null
   slideStyleId?: SlideStyleID
 }

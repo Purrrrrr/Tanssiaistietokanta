@@ -49,9 +49,9 @@ export const eventsSchema = Type.Object(
     beginDate: Date(),
     endDate: Date(),
     eventRegistrationSystem: eventRegistrationSystemSchema,
-    ballroomId: Type.Optional(Nullable(Id())),
     program: ClosedObject({
       dateTime: DateTime(),
+      ballroomId: Type.Optional(Nullable(Id())),
       introductions: Introductions(),
       danceSets: Type.Array(DanceSet()),
       slideStyleId: SlideStyleId(),

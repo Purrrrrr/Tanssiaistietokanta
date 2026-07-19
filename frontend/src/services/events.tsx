@@ -17,9 +17,6 @@ setupServiceUpdateFragment(
     _id, _versionId, _versionNumber, _updatedAt, name, beginDate, endDate,
     _hasRegisteredVolunteers, _hasRegisteredWorkshops
     eventRegistrationSystem
-    ballroom {
-      _id, _versionId, venueName, roomName, map
-    }
     accessControl {
       viewAccess
       grants {
@@ -30,6 +27,9 @@ setupServiceUpdateFragment(
     }
     program {
       dateTime
+      ballroom {
+        _id, _versionId, venueName, roomName, map
+      }
       slideStyleId
       pauseBetweenDances
       defaultIntervalMusic {
@@ -85,6 +85,12 @@ setupServiceUpdateFragment(
               _id
               description
               diagram
+              ballroom {
+                _id
+                venueName
+                roomName
+                map
+              }
             }
           }
           formationInstructionsId
@@ -130,9 +136,6 @@ query getEvent($id: ID!, $versionId: ID) {
     _id, _versionId, _versionNumber, _updatedAt, name, beginDate, endDate,
     _hasRegisteredVolunteers, _hasRegisteredWorkshops
     eventRegistrationSystem
-    ballroom {
-      _id, _versionId, venueName, roomName, map
-    }
     volunteerCount
     accessControl {
       viewAccess
@@ -144,6 +147,9 @@ query getEvent($id: ID!, $versionId: ID) {
     }
     program {
       dateTime
+      ballroom {
+        _id, _versionId, venueName, roomName, map
+      }
       slideStyleId
       pauseBetweenDances
       defaultIntervalMusic {
@@ -199,6 +205,12 @@ query getEvent($id: ID!, $versionId: ID) {
               _id
               description
               diagram
+              ballroom {
+                _id
+                venueName
+                roomName
+                map
+              }
             }
           }
           formationInstructionsId
@@ -317,11 +329,11 @@ mutation patchEventProgram($id: ID!, $program: JSONPatch!) {
         role
       }
     }
-    ballroom {
-      _id, _versionId, venueName, roomName, map
-    }
     program {
       dateTime
+      ballroom {
+        _id, _versionId, venueName, roomName, map
+      }
       slideStyleId
       pauseBetweenDances
       defaultIntervalMusic {
@@ -377,6 +389,12 @@ mutation patchEventProgram($id: ID!, $program: JSONPatch!) {
               _id
               description
               diagram
+              ballroom {
+                _id
+                venueName
+                roomName
+                map
+              }
             }
           }
           formationInstructionsId

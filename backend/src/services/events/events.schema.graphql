@@ -14,8 +14,6 @@ type Event implements Versionable {
   beginDate: String!
   endDate: String!
   eventRegistrationSystem: EventRegistrationSystem!
-  ballroomId: ID
-  ballroom: Ballroom
   _hasRegisteredVolunteers: Boolean!
   _hasRegisteredWorkshops: Boolean!
   program: EventProgramSettings!
@@ -53,6 +51,8 @@ enum EventGrantRole {
 
 type EventProgramSettings {
   dateTime: String!
+  ballroomId: ID
+  ballroom: Ballroom
   introductions: Introductions!
   danceSets: [DanceSet!]!
   slideStyleId: ID
@@ -127,7 +127,6 @@ input EventInput {
   endDate: String!
   eventRegistrationSystem: EventRegistrationSystem!
   accessControl: EventAccessControlInput
-  ballroomId: ID
 }
 
 input EventAccessControlInput {

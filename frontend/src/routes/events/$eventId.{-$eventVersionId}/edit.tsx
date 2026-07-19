@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useCallback } from 'react'
+import * as L from 'partial.lenses'
 
 import { Event, WithoutMetadata } from 'types'
 
@@ -60,11 +61,12 @@ function RouteComponent() {
       'endDate',
       'program',
       'eventRegistrationSystem',
-      'ballroom',
-    ], ({ ballroom, ...rest }) => ({
-      ...rest,
-      ballroomId: ballroom?._id ?? null,
-    })),
+    ], L.modify(['program'],
+      ({ ballroom, ...rest }) => ({
+        ...rest,
+        ballroomId: ballroom?._id ?? null,
+      })),
+    ),
   )
   const registrationSystemReadOnly = event.eventRegistrationSystem === 'Kompassi' && event._hasRegisteredVolunteers
   const deleteBlockers = getEventRemoveBlockers(event)
@@ -105,7 +107,7 @@ function RouteComponent() {
         />
         <Field
           label={label('ballroom')}
-          path="ballroom"
+          path="program.ballroom"
           component={BallroomSelect}
         />
       </div>

@@ -36,7 +36,7 @@ export function AutosizedSection({ children, className = '', ...props }) {
   }
   useResizeObserver(innerContainer, onResize)
   const isReady = size === delayedSize && lastAspectRatio !== 0
-  console.log({ isReady, size, delayedSize, lastAspectRatio })
+  // console.log({ isReady, size, delayedSize, lastAspectRatio })
 
   return <section className={'max-w-full overflow-hidden ' + className} ref={container} {...props}>
     <div

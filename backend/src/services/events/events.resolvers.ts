@@ -22,9 +22,11 @@ export default (app: Application): Resolvers => {
         return program
       },
       volunteerCount: (event) => volunteerService.count({ query: { eventId: event._id } }),
-      ballroom: (event, _, __, info) => {
-        if (!event.ballroomId) return null
-        return ballroomService.get(event.ballroomId, { query: { $select: toSelect(info, ballroomsSchema) } })
+    },
+    EventProgramSettings: {
+      ballroom: (program, _, __, info) => {
+        if (!program.ballroomId) return null
+        return ballroomService.get(program.ballroomId, { query: { $select: toSelect(info, ballroomsSchema) } })
       },
     },
     EventVolunteerAssignment: {

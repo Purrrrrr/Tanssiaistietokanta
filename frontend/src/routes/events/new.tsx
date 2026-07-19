@@ -9,7 +9,6 @@ import { useCreateEvent } from 'services/events'
 import { useCurrentUser } from 'services/users'
 
 import { DateRangeField, formFor, SubmitButton } from 'libraries/forms'
-import { BallroomSelect } from 'components/ballroom/BallroomSelect'
 import { EventRegistrationSystemSelector } from 'components/event/EventRegistrationSystemSelector'
 import { Page } from 'components/Page'
 import { EventGrantsEditor } from 'components/rights/EventGrantsEditor'
@@ -62,15 +61,7 @@ function CreateEventForm() {
       labelStyle="above"
       value={event}
       onChange={setEvent}
-      onSubmit={() => {
-        const { ballroom, ...eventWithoutBallroom } = event
-        addGlobalLoadingAnimation(createEvent({
-          event: {
-            ...eventWithoutBallroom,
-            ballroomId: ballroom?._id ?? null,
-          },
-        }))
-      }}
+      onSubmit={() => addGlobalLoadingAnimation(createEvent({ event }))}
       errorDisplay="onSubmit">
       <div className="flex gap-3">
         <Input label={label('name')} path="name" required containerClassName="w-60" />
@@ -82,11 +73,6 @@ function CreateEventForm() {
           required
         />
       </div>
-      <Field
-        label={label('ballroom')}
-        path="ballroom"
-        component={BallroomSelect}
-      />
       <Field
         label={label('eventRegistrationSystem')}
         path="eventRegistrationSystem"

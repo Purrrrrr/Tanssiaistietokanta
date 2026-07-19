@@ -1,5 +1,6 @@
 import type { DanceProgramItemSlideProps, DanceSetSlideProps, EventParentSlideProps, EventProgram, EventSlideProps, IntervalMusicSlideProps } from './types'
 
+import FabricImageViewer from 'libraries/fabric/FabricImageViewer'
 import { LinkComponentType, Slide, SlideNavigation, SlideNavigationList } from 'components/Slide'
 
 import { renderDoc, TeachedIn } from './utils'
@@ -85,6 +86,8 @@ function DanceProgramItemSlide(props: WithCommonProps<DanceProgramItemSlideProps
   const { id, next, title, linkComponent, eventProgram, danceSetIndex, itemIndex } = props
   const { type, dance, eventProgram: program, slideStyleId } = eventProgram.danceSets[danceSetIndex].program[itemIndex]
 
+  const formationInstructions = dance?.formationInstructions?.find(fi => fi.ballroom?._id === eventProgram.ballroom?._id)
+  console.log(eventProgram.ballroom?._id, dance?.formationInstructions, formationInstructions)
   const content = type === 'RequestedDance'
     ? {
       children: '',
@@ -94,6 +97,15 @@ function DanceProgramItemSlide(props: WithCommonProps<DanceProgramItemSlideProps
       footer: dance?.teachedIn?.length
         ? <TeachedIn teachedIn={dance.teachedIn} />
         : undefined,
+      additionalContent: formationInstructions?.diagram
+        ? (
+          <div className="mt-4 border">
+            <FabricImageViewer
+              diagram={formationInstructions.diagram}
+              backgroundDiagram={formationInstructions.ballroom?.map ?? undefined} />
+          </div>
+        )
+        : null,
     }
 
   return <Slide

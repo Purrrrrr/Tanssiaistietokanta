@@ -17,6 +17,7 @@ export interface SlideProps {
   footer?: string | React.ReactElement
   next?: SlideLink
   navigation?: SlideNavigation
+  additionalContent?: React.ReactNode
   slideStyleId?: string | null | undefined
   linkComponent?: LinkComponentType
 }
@@ -32,7 +33,7 @@ export interface SlideLink {
   hidden?: boolean
 }
 
-export function Slide({ id, title, type, children, footer, next, navigation, slideStyleId, linkComponent }: SlideProps) {
+export function Slide({ id, title, type, children, footer, next, navigation, slideStyleId, linkComponent, additionalContent }: SlideProps) {
   const className = classnames(
     'slide',
     `slide-style-${slideStyleId ?? 'default'}`,
@@ -49,7 +50,13 @@ export function Slide({ id, title, type, children, footer, next, navigation, sli
       </AutosizedSection>
     }
     {next && <NextSlide next={next} linkComponent={linkComponent} />}
-    {navigation && <SlideSidebar currentItem={id} navigation={navigation} linkComponent={linkComponent} />}
+    {(!!navigation || !!additionalContent) && (
+      <SlideSidebar
+        currentItem={id}
+        navigation={navigation}
+        additionalContent={additionalContent}
+        linkComponent={linkComponent} />
+    )}
   </section>
 }
 
@@ -64,12 +71,18 @@ function NextSlide({ next, linkComponent }: { next: SlideLink, linkComponent?: L
 }
 
 function SlideSidebar(
-  { currentItem, navigation, linkComponent }: { currentItem: string, navigation: SlideNavigation, linkComponent?: LinkComponentType },
+  { currentItem, navigation, linkComponent, additionalContent }: {
+    currentItem: string
+    navigation?: SlideNavigation
+    linkComponent?: LinkComponentType
+    additionalContent?: React.ReactNode
+  },
 ) {
   return <>
-    <h2 className="slide-navigation-title">{navigation.title}</h2>
+    <h2 className="slide-navigation-title">{navigation?.title}</h2>
     <AutosizedSection className="slide-navigation">
-      <SlideNavigationList currentItem={currentItem} {...navigation} linkComponent={linkComponent} />
+      {navigation && <SlideNavigationList currentItem={currentItem} {...navigation} linkComponent={linkComponent} />}
+      {additionalContent}
     </AutosizedSection>
   </>
 }

@@ -12,6 +12,12 @@ query BallProgram($eventId: ID!, $eventVersionId: ID) {
     name
     program {
       dateTime
+      ballroom {
+        _id
+        venueName
+        roomName
+        map
+      }
       slideStyleId
       pauseBetweenDances
       defaultIntervalMusic {
@@ -49,6 +55,12 @@ query BallProgram($eventId: ID!, $eventVersionId: ID) {
               _id
               description
               diagram
+              ballroom {
+                _id
+                venueName
+                roomName
+                map
+              }
             }
           }
         }
@@ -92,6 +104,12 @@ query BallProgram($eventId: ID!, $eventVersionId: ID) {
               _id
               description
               diagram
+              ballroom {
+                _id
+                venueName
+                roomName
+                map
+              }
             }
           }
         }
