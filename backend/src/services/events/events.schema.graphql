@@ -14,6 +14,8 @@ type Event implements Versionable {
   beginDate: String!
   endDate: String!
   eventRegistrationSystem: EventRegistrationSystem!
+  ballroomId: ID
+  ballroom: Ballroom
   _hasRegisteredVolunteers: Boolean!
   _hasRegisteredWorkshops: Boolean!
   program: EventProgramSettings!
@@ -84,6 +86,7 @@ type EventProgramRow {
   type: EventProgramRowType!
   danceId: ID
   dance: Dance
+  formationInstructionsId: ID
   eventProgram: EventProgram
 }
 
@@ -124,6 +127,7 @@ input EventInput {
   endDate: String!
   eventRegistrationSystem: EventRegistrationSystem!
   accessControl: EventAccessControlInput
+  ballroomId: ID
 }
 
 input EventAccessControlInput {

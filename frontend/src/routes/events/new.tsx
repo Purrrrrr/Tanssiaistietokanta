@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 
-import { EventInput } from 'types'
+import { Ballroom, EventInput } from 'types'
 import { EventGrantRole, ViewAccess } from 'types/gql/graphql'
 
 import { addGlobalLoadingAnimation } from 'backend'
@@ -9,17 +9,22 @@ import { useCreateEvent } from 'services/events'
 import { useCurrentUser } from 'services/users'
 
 import { DateRangeField, formFor, SubmitButton } from 'libraries/forms'
+import { BallroomSelect } from 'components/ballroom/BallroomSelect'
 import { EventRegistrationSystemSelector } from 'components/event/EventRegistrationSystemSelector'
 import { Page } from 'components/Page'
 import { EventGrantsEditor } from 'components/rights/EventGrantsEditor'
 import { useT } from 'i18n'
 import randomId from 'utils/randomId'
 
+interface FormData extends EventInput {
+  ballroom: Ballroom | null
+}
+
 const {
   Form,
   Input,
   Field,
-} = formFor<EventInput>()
+} = formFor<FormData>()
 
 export const Route = createFileRoute('/events/new')({
   component: CreateEventForm,
@@ -43,16 +48,30 @@ function CreateEventForm() {
     ? [{ _id: randomId(), principal: `user:${currentUser._id}`, role: EventGrantRole.Organizer }]
     : []
 
-  const [event, setEvent] = useState<EventInput>({
+  const [event, setEvent] = useState<FormData>({
     name: '',
     beginDate: '',
     endDate: '',
     accessControl: { viewAccess: ViewAccess.Public, grants: initialGrants },
     eventRegistrationSystem: 'None',
+    ballroom: null,
   })
 
   return <Page title={t('newEvent')}>
-    <Form labelStyle="above" value={event} onChange={setEvent} onSubmit={() => addGlobalLoadingAnimation(createEvent({ event }))} errorDisplay="onSubmit">
+    <Form
+      labelStyle="above"
+      value={event}
+      onChange={setEvent}
+      onSubmit={() => {
+        const { ballroom, ...eventWithoutBallroom } = event
+        addGlobalLoadingAnimation(createEvent({
+          event: {
+            ...eventWithoutBallroom,
+            ballroomId: ballroom?._id ?? null,
+          },
+        }))
+      }}
+      errorDisplay="onSubmit">
       <div className="flex gap-3">
         <Input label={label('name')} path="name" required containerClassName="w-60" />
         <DateRangeField<EventInput>
@@ -62,12 +81,17 @@ function CreateEventForm() {
           endPath="endDate"
           required
         />
-        <Field
-          label={label('eventRegistrationSystem')}
-          path="eventRegistrationSystem"
-          component={EventRegistrationSystemSelector}
-        />
       </div>
+      <Field
+        label={label('ballroom')}
+        path="ballroom"
+        component={BallroomSelect}
+      />
+      <Field
+        label={label('eventRegistrationSystem')}
+        path="eventRegistrationSystem"
+        component={EventRegistrationSystemSelector}
+      />
       <EventGrantsEditor />
       <SubmitButton text={t('create')} />
     </Form>

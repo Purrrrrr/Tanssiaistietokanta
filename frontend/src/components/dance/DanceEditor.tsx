@@ -6,7 +6,7 @@ import { FabricEditor } from 'libraries/fabric/FabricEditor'
 import { SyncStatus } from 'libraries/forms'
 import { DocumentContentEditor, DocumentContentEditorProps, emptyDocument, isEmptyDocument } from 'libraries/lexical'
 import { Button, ItemList, PageSection } from 'libraries/ui'
-import { Edit } from 'libraries/ui/icons'
+import { Cross, Edit } from 'libraries/ui/icons'
 import { BallroomSelect } from 'components/ballroom/BallroomSelect'
 import { AddButton } from 'components/widgets/AddButton'
 import { ColoredTag } from 'components/widgets/ColoredTag'
@@ -124,6 +124,7 @@ function Suggestions(
 
 function FormationInstructionsSection({ dance }: { dance: DanceWithEvents }) {
   const label = useT('domain.dance')
+  const itemLabel = useT('domain.formationInstructions')
   const t = useT('components.danceEditor')
   const addFormationInstruction = useAppendToList('formationInstructions')
 
@@ -137,6 +138,11 @@ function FormationInstructionsSection({ dance }: { dance: DanceWithEvents }) {
     })} />}
   >
     <ItemList items={dance.formationInstructions} emptyText={t('noFormationInstructions')} columns="grid-cols-[max-content_1fr_max-content]">
+      <ItemList.Header>
+        <span>{itemLabel('ballroom')}</span>
+        <span>{itemLabel('description')}</span>
+        <span></span>
+      </ItemList.Header>
       {dance.formationInstructions.map((formationInstruction, index) =>
         <FormationInstructionRow key={formationInstruction._id} formationInstruction={formationInstruction} index={index} />,
       )}
@@ -173,7 +179,7 @@ function FormationInstructionRow({ formationInstruction, index }: {
     </span>
     <span>
       <Button minimal icon={<Edit />} tooltip={useTranslation('common.edit')} onClick={() => setOpen(!open)} />
-      <RemoveItemButton minimal path="formationInstructions" index={index} text={useTranslation('common.delete')} />
+      <RemoveItemButton minimal path="formationInstructions" index={index} icon={<Cross />} tooltip={useTranslation('common.delete')} />
     </span>
   </ItemList.Row>
 }

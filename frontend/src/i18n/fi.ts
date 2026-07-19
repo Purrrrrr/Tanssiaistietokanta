@@ -51,6 +51,7 @@ export const fi = {
         },
       },
       eventRegistrationSystem: 'Tapahtuman ilmoittautumisjärjestelmä',
+      ballroom: 'Tanssiaisten sali',
       EventRemoveBlocker: {
         HasRegisteredVolunteers: 'Tällä pajalla on ilmoitettuja vapaaehtoisia, joten sitä ei voi poistaa.',
         HasRegisteredWorkshops: 'Tällä opetuskerralla on vapaaehtoisia, joten sitä ei voi poistaa.',
@@ -94,7 +95,7 @@ export const fi = {
     },
     formationInstructions: {
       ballroom: 'Tanssisali',
-      description: 'Nimi',
+      description: 'Kuvaus',
       diagram: 'Kuvio',
     },
     ballroom: {

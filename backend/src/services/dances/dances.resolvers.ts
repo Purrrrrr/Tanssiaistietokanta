@@ -66,7 +66,7 @@ export default (app: Application): Resolvers => {
     FormationInstructions: {
       ballroom: (formationInstruction, _, __, info) => {
         if (!formationInstruction.ballroomId) return null
-        return ballroomService.get(formationInstruction.ballroomId, { [SkipAccessControl]: true, query: { $select: toSelect(info, ballroomsSchema) } })
+        return ballroomService.get(formationInstruction.ballroomId, { query: { $select: toSelect(info, ballroomsSchema) } })
       },
     },
     Query: {

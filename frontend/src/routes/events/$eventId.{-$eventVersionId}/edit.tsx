@@ -8,6 +8,7 @@ import { getEventRemoveBlockers, useDeleteEvent, usePatchEvent } from 'services/
 
 import { DateField, DateRangeField, formFor, patchStrategy, useAutosavingState } from 'libraries/forms'
 import { PageSection } from 'libraries/ui'
+import { BallroomSelect } from 'components/ballroom/BallroomSelect'
 import { JSONPatch } from 'components/event/EventProgramForm/patchStrategy'
 import { EventRegistrationSystemSelector } from 'components/event/EventRegistrationSystemSelector'
 import { EventGrantsEditor } from 'components/rights/EventGrantsEditor'
@@ -50,7 +51,21 @@ function RouteComponent() {
     (eventPatch: JSONPatch) => patchEvent({ id: event._id, event: eventPatch }),
     [event._id, patchEvent],
   )
-  const { state, formProps } = useAutosavingState<WithoutMetadata<Event>, JSONPatch>(cleanMetadataValues<Event>(event), patch, patchStrategy.jsonPatch)
+  const { state, formProps } = useAutosavingState<WithoutMetadata<Event>, JSONPatch>(
+    cleanMetadataValues<Event>(event),
+    patch,
+    patchStrategy.jsonPatchWithFields([
+      'name',
+      'beginDate',
+      'endDate',
+      'program',
+      'eventRegistrationSystem',
+      'ballroom',
+    ], ({ ballroom, ...rest }) => ({
+      ...rest,
+      ballroomId: ballroom?._id ?? null,
+    })),
+  )
   const registrationSystemReadOnly = event.eventRegistrationSystem === 'Kompassi' && event._hasRegisteredVolunteers
   const deleteBlockers = getEventRemoveBlockers(event)
 
@@ -78,6 +93,8 @@ function RouteComponent() {
           endPath="endDate"
           required
         />
+      </div>
+      <div className="flex flex-wrap gap-6">
         <DateField<Event>
           required
           label={(label('ballDateTime'))}
@@ -87,17 +104,22 @@ function RouteComponent() {
           maxDate={formProps.value.endDate}
         />
         <Field
-          readOnly={registrationSystemReadOnly}
-          label={label('eventRegistrationSystem')}
-          path="eventRegistrationSystem"
-          component={EventRegistrationSystemSelector}
-          helperText={
-            registrationSystemReadOnly
-              ? t('cannotChangeEventRegistrationSystem')
-              : undefined
-          }
+          label={label('ballroom')}
+          path="ballroom"
+          component={BallroomSelect}
         />
       </div>
+      <Field
+        readOnly={registrationSystemReadOnly}
+        label={label('eventRegistrationSystem')}
+        path="eventRegistrationSystem"
+        component={EventRegistrationSystemSelector}
+        helperText={
+          registrationSystemReadOnly
+            ? t('cannotChangeEventRegistrationSystem')
+            : undefined
+        }
+      />
       <EventGrantsEditor eventId={event._id} />
     </Form>
   </PageSection>

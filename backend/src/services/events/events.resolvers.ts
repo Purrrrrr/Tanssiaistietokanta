@@ -3,10 +3,12 @@ import { Application, Resolvers } from '../../declarations'
 import { JSONPatch } from '../../hooks/merge-json-patch'
 import { toSelect } from '../../utils/resolvers'
 import { eventsSchema } from './events.schema'
+import { ballroomsSchema } from '../ballrooms/ballrooms.schema'
 
 export default (app: Application): Resolvers => {
   const workshopService = app.service('workshops')
   const volunteerService = app.service('eventVolunteers')
+  const ballroomService = app.service('ballrooms')
   const service = app.service('events')
 
   const $sort = { beginDate: -1, name: 1 }
@@ -20,6 +22,10 @@ export default (app: Application): Resolvers => {
         return program
       },
       volunteerCount: (event) => volunteerService.count({ query: { eventId: event._id } }),
+      ballroom: (event, _, __, info) => {
+        if (!event.ballroomId) return null
+        return ballroomService.get(event.ballroomId, { query: { $select: toSelect(info, ballroomsSchema) } })
+      },
     },
     EventVolunteerAssignment: {
       event: (assignment, _, __, info) =>

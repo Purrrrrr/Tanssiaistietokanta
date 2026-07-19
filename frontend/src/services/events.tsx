@@ -17,6 +17,9 @@ setupServiceUpdateFragment(
     _id, _versionId, _versionNumber, _updatedAt, name, beginDate, endDate,
     _hasRegisteredVolunteers, _hasRegisteredWorkshops
     eventRegistrationSystem
+    ballroom {
+      _id, _versionId, venueName, roomName, map
+    }
     accessControl {
       viewAccess
       grants {
@@ -84,6 +87,7 @@ setupServiceUpdateFragment(
               diagram
             }
           }
+          formationInstructionsId
           slideStyleId
         }
         intervalMusic {
@@ -126,6 +130,9 @@ query getEvent($id: ID!, $versionId: ID) {
     _id, _versionId, _versionNumber, _updatedAt, name, beginDate, endDate,
     _hasRegisteredVolunteers, _hasRegisteredWorkshops
     eventRegistrationSystem
+    ballroom {
+      _id, _versionId, venueName, roomName, map
+    }
     volunteerCount
     accessControl {
       viewAccess
@@ -194,6 +201,7 @@ query getEvent($id: ID!, $versionId: ID) {
               diagram
             }
           }
+          formationInstructionsId
           slideStyleId
         }
         intervalMusic {
@@ -309,6 +317,9 @@ mutation patchEventProgram($id: ID!, $program: JSONPatch!) {
         role
       }
     }
+    ballroom {
+      _id, _versionId, venueName, roomName, map
+    }
     program {
       dateTime
       slideStyleId
@@ -368,6 +379,7 @@ mutation patchEventProgram($id: ID!, $program: JSONPatch!) {
               diagram
             }
           }
+          formationInstructionsId
           slideStyleId
         }
         intervalMusic {
