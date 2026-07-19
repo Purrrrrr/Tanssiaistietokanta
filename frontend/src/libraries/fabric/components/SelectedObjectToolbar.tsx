@@ -7,6 +7,7 @@ import { randomId } from '../canvas/util'
 import { useFabricT as useEditorT } from '../i18n'
 import { BringToTopIcon, EditPolygon, SendToBottomIcon, Trash } from './icons'
 import { StrokeWidthInput } from './StrokeWidthInput'
+import { Arrowline } from '../canvas/Arrowline'
 
 const toColor = (value: string | TFiller | null): string =>
   typeof value === 'string' ? value : 'black'
@@ -58,6 +59,19 @@ export function SelectedObjectToolbar({ canvas, activeObjects, alwaysVisible }: 
 
   const toggleControls = () => modifyActiveObject(
     obj => {
+      if (obj instanceof Arrowline) {
+        const isEditing = obj.cornerStyle === 'circle'
+        if (isEditing) {
+          obj.cornerStyle = 'rect'
+          obj.hasBorders = true
+          obj.controls = controlsUtils.createObjectDefaultControls()
+        } else {
+          obj.cornerStyle = 'circle'
+          obj.hasBorders = false
+          obj.controls = controlsUtils.createPolyControls(2)
+        }
+        obj.setCoords()
+      }
       if (obj instanceof Polygon) {
         const isEditing = obj.cornerStyle === 'circle'
         if (isEditing) {
@@ -80,7 +94,8 @@ export function SelectedObjectToolbar({ canvas, activeObjects, alwaysVisible }: 
 
   // ── Render ────────────────────────────────────────────────────────────────
 
-  const polygonSelected = activeObjects.length === 1 && activeObjects[0] instanceof Polygon
+  const polygonSelected = activeObjects.length === 1 &&
+    (activeObjects[0] instanceof Polygon || activeObjects[0] instanceof Arrowline)
 
   return (activeObjects.length > 0 || alwaysVisible) && (
     <ToolbarRow title={t('chosenObject', { count: activeObjects.length })}>

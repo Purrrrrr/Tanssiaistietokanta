@@ -1,13 +1,13 @@
-import { controlsUtils, FabricObjectProps, ObjectEvents, Polygon, Polyline, SerializedPolylineProps, TClassProperties, TSVGReviver } from 'fabric'
+import { FabricObjectProps, ObjectEvents, Polygon, Polyline, SerializedPolylineProps, TClassProperties, TSVGReviver } from 'fabric'
 
 export class Arrowline extends Polyline {
   static type = 'Arrowline'
   static ownDefaults: Partial<TClassProperties<Polyline<Partial<FabricObjectProps>, SerializedPolylineProps, ObjectEvents>>> = {
-    controls: controlsUtils.createPolyControls(2),
     hasBorders: false,
     cornerStyle: 'circle',
     cornerSize: 15,
     perPixelTargetFind: true,
+    padding: 10,
   }
 
   get type(): string {
