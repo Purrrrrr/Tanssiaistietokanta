@@ -36,8 +36,8 @@
   grid-template:
     "title separator navigation-title" auto
     "main separator navigation" 1fr
-    "footer separator navigation" auto
-    "next-slide separator navigation" auto
+    "footer separator additional-content" auto
+    "next-slide separator additional-content" auto
     / 2fr var(--separator-size) var(--navigation-width, 0);
   --navigation-width: 0;
 
@@ -76,6 +76,10 @@
   .slide-navigation {
     grid-area: navigation;
     padding-inline: 4cqw;
+  }
+  .slide-additional-content {
+    grid-area: additional-content;
+    padding-inline: 1cqw;
   }
   .slide-program-footer {
     grid-area: footer;

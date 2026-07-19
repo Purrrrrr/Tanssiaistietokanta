@@ -50,13 +50,13 @@ export function Slide({ id, title, type, children, footer, next, navigation, sli
       </AutosizedSection>
     }
     {next && <NextSlide next={next} linkComponent={linkComponent} />}
-    {(!!navigation || !!additionalContent) && (
+    {navigation && (
       <SlideSidebar
         currentItem={id}
         navigation={navigation}
-        additionalContent={additionalContent}
         linkComponent={linkComponent} />
     )}
+    {additionalContent && <div className="slide-additional-content">{additionalContent}</div>}
   </section>
 }
 
@@ -71,18 +71,16 @@ function NextSlide({ next, linkComponent }: { next: SlideLink, linkComponent?: L
 }
 
 function SlideSidebar(
-  { currentItem, navigation, linkComponent, additionalContent }: {
+  { currentItem, navigation, linkComponent }: {
     currentItem: string
-    navigation?: SlideNavigation
+    navigation: SlideNavigation
     linkComponent?: LinkComponentType
-    additionalContent?: React.ReactNode
   },
 ) {
   return <>
     <h2 className="slide-navigation-title">{navigation?.title}</h2>
     <AutosizedSection className="slide-navigation">
-      {navigation && <SlideNavigationList currentItem={currentItem} {...navigation} linkComponent={linkComponent} />}
-      {additionalContent}
+      <SlideNavigationList currentItem={currentItem} {...navigation} linkComponent={linkComponent} />
     </AutosizedSection>
   </>
 }
