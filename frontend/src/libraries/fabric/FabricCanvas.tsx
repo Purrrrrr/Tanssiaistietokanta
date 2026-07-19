@@ -3,6 +3,7 @@ import { ActiveSelection, Canvas, FabricImage, FabricObject } from 'fabric'
 import equal from 'fast-deep-equal'
 
 import { onCanvasKeydown } from './canvas/keydownHandler'
+import { getCanvasJson } from './canvas/util'
 
 import './canvas/canvasSetup'
 import './canvas/patchPolylineExport'
@@ -62,11 +63,11 @@ export function FabricCanvas({ width, height, data, backgroundImage, editable = 
     // Apply a small delay to avoid calling onUpdate too often when multiple objects are being modified at once
     if (canvasRef.current && !isLoadingRef.current) {
       // console.log('Canvas updated')
-      lastDataRef.current = canvasRef.current.toJSON()
+      lastDataRef.current = getCanvasJson(canvasRef.current)
       if (timerRef.current) clearTimeout(timerRef.current)
       timerRef.current = setTimeout(() => {
         if (canvasRef.current) {
-          lastDataRef.current = canvasRef.current.toJSON()
+          lastDataRef.current = getCanvasJson(canvasRef.current)
           onUpdate?.(canvasRef.current)
         }
         timerRef.current = null

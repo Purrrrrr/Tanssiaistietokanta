@@ -14,12 +14,16 @@ export async function saveCanvasToJson(canvas: Canvas): Promise<FabricDiagramDat
     obj._id ??= randomId()
   })
   normalizeObjectScales(canvas)
-  const { backgroundImage: _ignored, ...json } = canvas.toJSON()
-  const minified = minifyFabricObject(json)
+  const minified = minifyFabricObject(getCanvasJson(canvas))
   const data = { data: minified, width: canvas.width, height: canvas.height }
   console.log(data)
   const hash = await hashValue(data)
   return { ...data, hash } as FabricDiagramData
+}
+
+export function getCanvasJson(canvas: Canvas) {
+  const { backgroundImage: _ignored, ...json } = canvas.toJSON()
+  return json
 }
 
 export const round = (value: number) => Number(value.toFixed(config.NUM_FRACTION_DIGITS))
