@@ -90,7 +90,6 @@ function DanceProgramItemSlide(props: WithCommonProps<DanceProgramItemSlideProps
   const { type, dance, eventProgram: program, slideStyleId } = eventProgram.danceSets[danceSetIndex].program[itemIndex]
 
   const formationInstructions = dance?.formationInstructions?.find(fi => fi.ballroom?._id === eventProgram.ballroom?._id)
-  console.log(eventProgram.ballroom?._id, dance?.formationInstructions, formationInstructions)
   const content = type === 'RequestedDance'
     ? {
       children: '',
@@ -126,7 +125,7 @@ function FormationInstructionsViewer({ formationInstructions }: { formationInstr
   return <button
     id="formation-instructions-viewer"
     onClick={toggle}
-    className={`flex items-stretch justify-center [view-transition-name:photo] hover:*:outline-2 ${fullScreen ? 'absolute inset-[15cqh_4cqw_6cqh] z-50' : 'mt-4'}`}>
+    className={`flex items-stretch justify-center [view-transition-name:photo] hover:outline-2 ${fullScreen ? 'absolute inset-[15cqh_4cqw_6cqh] z-50' : 'w-full mt-4'}`}>
     <FabricImageViewer
       className={`${fullScreen ? 'w-auto' : 'w-full'} border bg-white cursor-pointer`}
       diagram={formationInstructions.diagram}
