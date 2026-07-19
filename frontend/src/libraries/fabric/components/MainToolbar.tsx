@@ -98,9 +98,10 @@ export function FabricMainToolbar({ canvas, visible, undoState, onRemoveNode: re
   }))
   const addPolygon = (sides: number) => addObject(new Polygon(regularPolygonPoints(sides, 50), defaultProps()))
   const addStar = () => addObject(new Polygon(starPolygonPoints(5, 50, 22), defaultProps()))
-  const addArrow = () => addObject(new Arrowline(
+  const addArrow = (angle: number) => addObject(new Arrowline(
     [{ x: -50, y: 0 }, { x: 50, y: 0 }],
     {
+      angle,
       ...defaultProps(),
     },
   ))
@@ -150,7 +151,7 @@ export function FabricMainToolbar({ canvas, visible, undoState, onRemoveNode: re
         icon={<StarIcon />}
       />
     }>
-      <div className="grid sm:grid-cols-3 grid-cols-3 gap-1 p-1">
+      <div className="grid grid-cols-3 gap-1 p-1">
         <ToolbarButton onMouseDown={addCircle} tooltip={t('addCircle')} icon={<CircleIcon />} />
         <ToolbarButton onMouseDown={() => { addPolygon(3) }} tooltip={t('addTriangle')} icon={<TriangleIcon />} />
         <ToolbarButton onMouseDown={() => { addPolygon(5) }} tooltip={t('addPentagon')} icon={<PentagonIcon />} />
@@ -158,7 +159,26 @@ export function FabricMainToolbar({ canvas, visible, undoState, onRemoveNode: re
         <ToolbarButton onMouseDown={addStar} tooltip={t('addStar')} icon={<StarIcon />} />
       </div>
     </MenuButton>
-    <ToolbarButton onMouseDown={addArrow} tooltip={t('addArrow')} icon={<ArrowIcon />} />
+    <MenuButton buttonRenderer={props =>
+      <ToolbarButton
+        {...props}
+        tooltip={t('addArrow')}
+        icon={<ArrowIcon style={{ rotate: '-45deg' }} />}
+      />
+    }>
+      <div className="grid grid-cols-2 gap-1 p-1">
+        {[
+          180, 0, 90, 270,
+          225, 315, 135, 45,
+        ].map(angle =>
+          <ToolbarButton
+            key={angle}
+            onMouseDown={() => addArrow(angle)}
+            tooltip={t('addArrow')}
+            icon={<ArrowIcon style={{ rotate: `${angle}deg` }} />} />,
+        )}
+      </div>
+    </MenuButton>
     <ToolbarButton onMouseDown={addText} tooltip={t('addText')} icon="T" />
     <ToolbarButton onMouseDown={toggleDrawingMode} active={canvas.isDrawingMode} tooltip={t('freeDraw')} icon={<DrawIcon />} />
     {removeNode && <ToolbarButton color="danger" onMouseDown={removeNode} text={t('removeDiagram')} />}

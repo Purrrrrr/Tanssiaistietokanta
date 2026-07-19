@@ -47,7 +47,9 @@ export function FabricCanvas({ width, height, data, backgroundImage, editable = 
 
       if (selectedIds.length > 0) {
         const selectedObjs = canvasRef.current.getObjects().filter(obj => selectedIds.includes(obj._id))
-        if (selectedObjs.length > 0) {
+        if (selectedObjs.length === 1) {
+          canvasRef.current.setActiveObject(selectedObjs[0])
+        } else if (selectedObjs.length > 0) {
           const sel = new ActiveSelection(selectedObjs, { canvas: canvasRef.current })
           canvasRef.current.setActiveObject(sel)
         }

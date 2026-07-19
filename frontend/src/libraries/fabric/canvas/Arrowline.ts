@@ -3,9 +3,6 @@ import { FabricObjectProps, ObjectEvents, Polygon, Polyline, SerializedPolylineP
 export class Arrowline extends Polyline {
   static type = 'Arrowline'
   static ownDefaults: Partial<TClassProperties<Polyline<Partial<FabricObjectProps>, SerializedPolylineProps, ObjectEvents>>> = {
-    hasBorders: false,
-    cornerStyle: 'circle',
-    cornerSize: 15,
     perPixelTargetFind: true,
     padding: 10,
   }

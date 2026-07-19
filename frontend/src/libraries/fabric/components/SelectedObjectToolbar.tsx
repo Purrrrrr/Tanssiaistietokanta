@@ -3,11 +3,11 @@ import { ActiveSelection, Canvas, controlsUtils, FabricObject, Polygon, TFiller 
 
 import { ColorPickerButton as ToolbarColorPicker, ToolbarButton, ToolbarRow } from 'libraries/ui'
 
+import { Arrowline } from '../canvas/Arrowline'
 import { randomId } from '../canvas/util'
 import { useFabricT as useEditorT } from '../i18n'
 import { BringToTopIcon, EditPolygon, SendToBottomIcon, Trash } from './icons'
 import { StrokeWidthInput } from './StrokeWidthInput'
-import { Arrowline } from '../canvas/Arrowline'
 
 const toColor = (value: string | TFiller | null): string =>
   typeof value === 'string' ? value : 'black'

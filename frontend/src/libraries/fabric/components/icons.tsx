@@ -57,9 +57,9 @@ export function StarIcon() {
     </svg>
   )
 }
-export function ArrowIcon() {
+export function ArrowIcon({ style }: { style?: React.CSSProperties }) {
   return (
-    <svg viewBox="0 0 16 16" width="16" height="16" fill="transparent" stroke="currentColor" aria-hidden="true">
+    <svg style={style} viewBox="0 0 16 16" width="16" height="16" fill="transparent" stroke="currentColor" aria-hidden="true">
       <line x1="2" y1="8" x2="14" y2="8" />
       <polygon points="12,6 14,8 12,10" />
     </svg>
