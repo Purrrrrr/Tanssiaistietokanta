@@ -65,6 +65,7 @@ input DanceInput {
 }
 
 input FormationInstructionsInput {
+  _id: ID!
   ballroomId: ID
   description: String
   diagram: Diagram

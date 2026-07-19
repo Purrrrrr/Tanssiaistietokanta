@@ -78,7 +78,17 @@ export default (app: Application): Resolvers => {
         uniq((await service.find(params)).map(dance => dance.category)).filter(Boolean).sort(),
     },
     Mutation: {
-      createDance: (_, { dance }, params) => service.create(dance, params),
+      createDance: (_, { dance }, params) => {
+        const { formationInstructions, ...rest } = dance
+        return service.create({
+          ...rest,
+          formationInstructions: formationInstructions?.map(fi => ({
+            ...fi,
+            description: fi.description ?? '',
+            diagram: fi.diagram ?? null,
+          })) ?? [],
+        }, params)
+      },
       patchDance: (_, { id, dance }, params) =>
         service.patch(id, dance as JSONPatch, { ...params, jsonPatch: true }),
       deleteDance: (_, { id }, params) => service.remove(id, params),

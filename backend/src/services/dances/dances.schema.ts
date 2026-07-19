@@ -11,7 +11,7 @@ import { computedProperties, SlideStyleId, Id, Name, Nullable, NullablePartial, 
 const formationInstructionsSchema = Type.Object(
   {
     _id: Id(),
-    ballroomId: Nullable(Id()),
+    ballroomId: Type.Optional(Nullable(Id())),
     description: Type.String(),
     diagram: Type.Object({}, { additionalProperties: true }),
   }, { additionalProperties: false },
