@@ -41,6 +41,7 @@ COPY --from=pandoc/minimal:latest /pandoc /bin/pandoc
 COPY config config
 COPY public public
 COPY tsconfig.json tsconfig.json
+COPY tsconfig.build.json tsconfig.build.json
 COPY codegen.ts codegen.ts
 COPY src src
 
