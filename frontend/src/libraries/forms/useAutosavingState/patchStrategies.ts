@@ -28,12 +28,15 @@ function jsonPatch<T>(original: T, modifications: T): Operation[] | undefined {
   return patch.length > 0 ? patch : undefined
 }
 
-function jsonPatchWithFields<T extends object>(fields: readonly (keyof T)[]): PatchStrategy<T, Operation[]> {
+const identity = item => item
+
+function jsonPatchWithFields<T extends object>(fields: readonly (keyof T)[], patchFunction: (item: T) => object = identity): PatchStrategy<T, Operation[]> {
   return (original: T, modifications: T) => {
-    return toJSONPatch(
-      pick(original, fields),
-      pick(modifications, fields),
+    const patch = toJSONPatch(
+      patchFunction(pick(original, fields)),
+      patchFunction(pick(modifications, fields)),
     )
+    return patch.length > 0 ? patch : undefined
   }
 }
 
