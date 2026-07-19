@@ -64,3 +64,9 @@ mutation deleteBallroom($id: ID!) {
     map
   }
 }`))
+
+export function formatBallroom(ballroom: { venueName: string, roomName?: string | null }) {
+  return ballroom.roomName?.trim()
+    ? `${ballroom.venueName} ${ballroom.roomName}`
+    : ballroom.venueName
+}

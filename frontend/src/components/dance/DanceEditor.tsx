@@ -18,6 +18,7 @@ import { Field, Form, Input, RemoveItemButton, useAppendToList, useDanceEditorSt
 import { DanceSlidePreview } from './DanceSlidePreview'
 import DanceWikiPreview from './DanceWikiPreview'
 import { WikipageSelector } from './WikipageSelector'
+import { formatBallroom } from 'services/ballrooms'
 
 interface DanceEditorProps {
   dance: DanceWithEvents
@@ -169,9 +170,7 @@ function FormationInstructionRow({ formationInstruction, index }: {
   </div>}>
     <span>
       {formationInstruction.ballroom
-        ? formationInstruction.ballroom.roomName
-          ? `${formationInstruction.ballroom.venueName} - ${formationInstruction.ballroom.roomName}`
-          : formationInstruction.ballroom.venueName
+        ? formatBallroom(formationInstruction.ballroom)
         : t('noBallroom')}
     </span>
     <span>
