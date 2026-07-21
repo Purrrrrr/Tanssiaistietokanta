@@ -183,7 +183,7 @@ export function FormationDiagramsSection({ dance, onModifyFormationDiagrams }: {
           {(open, setOpen) =>
             <>
               <span>
-                {formatBallroom(formationDiagram.ballroom)}
+                {formationDiagram.ballroom ? formatBallroom(formationDiagram.ballroom) : '-'}
               </span>
               <span>
                 {formationDiagram.description?.trim() ? formationDiagram.description : '-'}

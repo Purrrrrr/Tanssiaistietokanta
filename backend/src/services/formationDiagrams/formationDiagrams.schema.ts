@@ -6,7 +6,7 @@ import type { Static } from '@feathersjs/typebox'
 import type { HookContext } from '../../declarations'
 import { dataValidator, queryValidator } from '../../validators'
 import type { FormationDiagramService } from './formationDiagrams.class'
-import { Id } from '../../utils/common-types'
+import { Id, Nullable } from '../../utils/common-types'
 
 // Main data model schema
 export const formationDiagramSchema = Type.Object(
@@ -16,7 +16,7 @@ export const formationDiagramSchema = Type.Object(
     _versionId: Id(),
     _updatedAt: Type.String(),
     _createdAt: Type.String(),
-    ballroomId: Id(),
+    ballroomId: Nullable(Id()),
     description: Type.String(),
     diagram: Type.Object({}, { additionalProperties: true }),
   },

@@ -11,7 +11,7 @@ export default (app: Application): Resolvers => {
   return {
     FormationDiagram: {
       ballroom: (formationDiagram, _, __, info) => {
-        console.log('formationDiagram.ballroomId', formationDiagram)
+        if (!formationDiagram.ballroomId) return null
         return ballroomService.get(formationDiagram.ballroomId, { query: { $select: toSelect(info, ballroomsSchema) } })
       },
     },
@@ -22,7 +22,10 @@ export default (app: Application): Resolvers => {
       formationDiagrams: (_, __, params) => service.find(params),
     },
     Mutation: {
-      createFormationDiagram: async (_, { formationDiagram }, params) => await service.create(formationDiagram, params),
+      createFormationDiagram: async (_, { formationDiagram: { ballroomId, ...rest } }, params) => await service.create({
+        ...rest,
+        ballroomId: ballroomId ?? null,
+      }, params),
       patchFormationDiagram: (_, { id, formationDiagram }, params) =>
         service.patch(id, formationDiagram as JSONPatch, { ...params, jsonPatch: true }),
       deleteFormationDiagram: (_, { id }, params) => service.remove(id, params),

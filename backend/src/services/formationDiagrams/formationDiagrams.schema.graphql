@@ -8,8 +8,8 @@ type FormationDiagram {
   _versionId: String
   _versionNumber: String
   _updatedAt: String!
-  ballroomId: ID!
-  ballroom: Ballroom!
+  ballroomId: ID
+  ballroom: Ballroom
   description: String!
   diagram: Diagram!
 }
@@ -21,7 +21,7 @@ type Mutation {
 }
 
 input FormationDiagramInput {
-  ballroomId: ID!
+  ballroomId: ID
   description: String!
   diagram: Diagram!
 }
