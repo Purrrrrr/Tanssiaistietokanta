@@ -108,10 +108,13 @@ export function FabricMainToolbar({ canvas, visible, undoState, onRemoveNode: re
 
   const addText = () => addObject(new Textbox('Text', {
     ...defaultProps(),
+    fill: stroke,
+    stroke: 'transparent',
     width: 120,
     fontSize: 20,
     strokeWidth: 1,
   }))
+
   const copySelection = () => { void copySelectionToClipboard(canvas) }
   const pasteSelection = () => { void pasteFromClipboard(canvas) }
 
