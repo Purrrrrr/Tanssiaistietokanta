@@ -64,7 +64,7 @@ function DanceSetSlide(props: WithCommonProps<DanceSetSlideProps>) {
 function IntervalMusicSlide(props: WithCommonProps<IntervalMusicSlideProps>) {
   const {
     eventProgram: {
-      danceSets, defaultIntervalMusic, slideStyleId: defaultSlideStyleId,
+      danceSets, defaultIntervalMusic, slideStyleId: defaultSlideStyleId, ballroom,
     },
     danceSetIndex,
     id, title, linkComponent, next, parent,
@@ -81,6 +81,7 @@ function IntervalMusicSlide(props: WithCommonProps<IntervalMusicSlideProps>) {
     slideStyleId={intervalMusic?.slideStyleId ?? defaultSlideStyleId}
     next={next}
     navigation={danceSetNavigation((next as DanceSetSlideProps | undefined) ?? parent)}
+    additionalContent={<FormationDiagramsViewer formationDiagrams={getFormationDiagramsForBallroom(intervalMusic?.dance, ballroom?._id)} />}
     linkComponent={linkComponent}
   />
 }
@@ -89,7 +90,6 @@ function DanceProgramItemSlide(props: WithCommonProps<DanceProgramItemSlideProps
   const { id, next, title, linkComponent, eventProgram, danceSetIndex, itemIndex } = props
   const { type, dance, eventProgram: program, slideStyleId } = eventProgram.danceSets[danceSetIndex].program[itemIndex]
 
-  const formationDiagrams = dance?.formationDiagrams?.find(fi => fi.ballroom?._id === eventProgram.ballroom?._id)
   const content = type === 'RequestedDance'
     ? {
       children: '',
@@ -99,9 +99,7 @@ function DanceProgramItemSlide(props: WithCommonProps<DanceProgramItemSlideProps
       footer: dance?.teachedIn?.length
         ? <TeachedIn teachedIn={dance.teachedIn} />
         : undefined,
-      additionalContent: formationDiagrams?.diagram
-        ? <FormationDiagramsViewer formationDiagrams={formationDiagrams} />
-        : null,
+      additionalContent: <FormationDiagramsViewer formationDiagrams={getFormationDiagramsForBallroom(dance, eventProgram.ballroom?._id)} />,
     }
 
   return <Slide
@@ -115,10 +113,15 @@ function DanceProgramItemSlide(props: WithCommonProps<DanceProgramItemSlideProps
   />
 }
 
-function FormationDiagramsViewer({ formationDiagrams }: { formationDiagrams: Dance['formationDiagrams'][0] }) {
+function getFormationDiagramsForBallroom(dance?: Dance | null, ballroomId?: string | null) {
+  if (!ballroomId) return undefined
+  return dance?.formationDiagrams?.find(fd => fd.ballroom?._id === ballroomId)
+}
+
+function FormationDiagramsViewer({ formationDiagrams }: { formationDiagrams?: Dance['formationDiagrams'][0] }) {
   const [fullScreen, setFullScreen] = useState(false)
 
-  if (!formationDiagrams.diagram) return null
+  if (!formationDiagrams?.diagram) return null
 
   const toggle = () => document.startViewTransition(() => setFullScreen(!fullScreen))
 

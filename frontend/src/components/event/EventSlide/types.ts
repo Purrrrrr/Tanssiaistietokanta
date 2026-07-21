@@ -73,6 +73,7 @@ export interface DanceSet {
   program: EventProgramRow[]
   intervalMusic?: {
     description?: MinifiedDocumentContent | null
+    dance?: (Pick<Dance, '_id' | 'name' | 'formationDiagrams'>) | null
     name?: string | null
     slideStyleId?: SlideStyleID
     showInLists?: boolean

@@ -92,17 +92,6 @@ setupServiceUpdateFragment(
                 map
               }
             }
-            formationDiagrams {
-              _id
-              description
-              diagram
-              ballroom {
-                _id
-                venueName
-                roomName
-                map
-              }
-            }
           }
           formationDiagramId
           slideStyleId
@@ -115,6 +104,17 @@ setupServiceUpdateFragment(
           danceId
           dance {
             _id, _versionId, name
+            formationDiagrams {
+              _id
+              description
+              diagram
+              ballroom {
+                _id
+                venueName
+                roomName
+                map
+              }
+            }
           }
           showInLists
         }
@@ -235,6 +235,17 @@ query getEvent($id: ID!, $versionId: ID) {
           danceId
           dance {
             _id, _versionId, name
+            formationDiagrams {
+              _id
+              description
+              diagram
+              ballroom {
+                _id
+                venueName
+                roomName
+                map
+              }
+            }
           }
           showInLists
         }
@@ -419,6 +430,17 @@ mutation patchEventProgram($id: ID!, $program: JSONPatch!) {
           danceId
           dance {
             _id, _versionId, name
+            formationDiagrams {
+              _id
+              description
+              diagram
+              ballroom {
+                _id
+                venueName
+                roomName
+                map
+              }
+            }
           }
           showInLists
         }

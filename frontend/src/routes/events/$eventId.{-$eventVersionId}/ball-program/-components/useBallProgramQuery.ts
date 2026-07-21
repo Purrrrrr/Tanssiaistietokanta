@@ -76,6 +76,30 @@ query BallProgram($eventId: ID!, $eventVersionId: ID) {
           duration
           slideStyleId
           showInLists
+          dance {
+            _id
+            _versionId
+            name
+            description
+            duration
+            source
+            teachedIn(eventId: $eventId) { 
+              _id
+              workshop { _id, _versionId, name }
+              instances { _id, abbreviation }
+            }
+            formationDiagrams {
+              _id
+              description
+              diagram
+              ballroom {
+                _id
+                venueName
+                roomName
+                map
+              }
+            }
+          }
         }
         program {
           _id

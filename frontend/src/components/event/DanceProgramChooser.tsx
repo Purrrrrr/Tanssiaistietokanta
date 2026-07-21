@@ -50,7 +50,7 @@ function getValue(
   }
   return {
     ...originalValue,
-    dance: dance,
+    dance: dance as EventProgramRow['dance'], // TODO: fix types
     danceId,
   }
 }
