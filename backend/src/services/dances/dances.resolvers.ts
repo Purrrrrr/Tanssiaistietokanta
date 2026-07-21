@@ -10,6 +10,7 @@ import { SkipAccessControl } from '../access/hooks'
 import { toSelect } from '../../utils/resolvers'
 import { JSONPatch } from '../../hooks/merge-json-patch'
 import { ballroomsSchema } from '../ballrooms/ballrooms.schema'
+import { formationDiagramSchema } from '../formationDiagrams/formationDiagrams.schema'
 
 export async function findTeachedIn(workshopService: WorkshopsService, danceId: string, eventId?: string | null) {
   const workshops = await workshopService.find({
@@ -44,6 +45,7 @@ export default (app: Application): Resolvers => {
   const eventService = app.service('events')
   const wikiService = app.service('dancewiki')
   const ballroomService = app.service('ballrooms')
+  const formationDiagramService = app.service('formationDiagrams')
 
   return {
     Dance: {
@@ -62,6 +64,15 @@ export default (app: Application): Resolvers => {
         return eventService.find({ query: { _id: { $in: ids }, $sort: { beginDate: 1 }, $select: toSelect(info, eventsSchema) } })
       },
       wikipage: (dance) => findWikipage(wikiService, dance),
+      formationDiagrams: (dance, _, __, info) => {
+        if (!dance.formationDiagramIds?.length) return []
+        return formationDiagramService.find({
+          query: {
+            _id: { $in: dance.formationDiagramIds },
+            $select: toSelect(info, formationDiagramSchema, ['ballroomId']),
+          },
+        })
+      },
     },
     FormationInstructions: {
       ballroom: (formationInstruction, _, __, info) => {

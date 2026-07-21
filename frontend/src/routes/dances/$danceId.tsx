@@ -3,7 +3,7 @@ import { createFileRoute, useNavigate, useParams, useSearch } from '@tanstack/re
 import { useDance } from 'services/dances'
 
 import { Breadcrumb } from 'libraries/ui'
-import { FullDanceEditorFields } from 'components/dance/DanceEditor'
+import { FormationDiagramsSection, FullDanceEditorFields } from 'components/dance/DanceEditor'
 import { Form, useDanceEditorState } from 'components/dance/DanceForm'
 import { LoadingState } from 'components/LoadingState'
 import { Page, Toolbar } from 'components/Page'
@@ -90,5 +90,8 @@ function DancePage() {
     <Form {...formProps}>
       <FullDanceEditorFields dance={dance} />
     </Form>
+    <FormationDiagramsSection dance={dance} onModifyFormationDiagrams={diagrams => formProps.onChange({
+      ...formProps.value, formationDiagrams: diagrams,
+    }, 'formationDiagrams')} />
   </Page>
 }

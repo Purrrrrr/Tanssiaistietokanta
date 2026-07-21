@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 
-import { type FabricDiagramData, FabricEditor } from 'libraries/fabric/FabricEditor'
+import { defaultDiagram, type FabricDiagramData, FabricEditor } from 'libraries/fabric/FabricEditor'
 import FabricImageViewer from 'libraries/fabric/FabricImageViewer'
 import { H2 } from 'libraries/ui'
 
-const defaultData: FabricDiagramData = { data: {}, width: 300, height: 300, hash: '' }
+const defaultData: FabricDiagramData = defaultDiagram
 
 export function FabricShowcase({ twoEditors, showMinified, showViewer, backgroundDiagram }: {
   twoEditors: boolean

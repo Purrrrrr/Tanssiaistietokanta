@@ -1,5 +1,4 @@
 import { useCallback } from 'react'
-import * as L from 'partial.lenses'
 
 import { Dance, EditableDance } from 'types'
 
@@ -33,9 +32,10 @@ const editableDanceFields: (keyof EditableDance)[] = [
   'slideStyleId',
   'tags',
   'formationInstructions',
+  'formationDiagrams',
 ]
 
-export function useDanceEditorState(dance: Dance) {
+export function useDanceEditorState(dance: Omit<Dance, 'formationDiagrams'> & { formationDiagrams?: Dance['formationDiagrams'] }) {
   const canEdit = useRight('dances:modify', { entityId: dance._id })
   const readOnly = dance._versionId != null || !canEdit
   const [modifyDance] = usePatchDance()
@@ -48,16 +48,18 @@ export function useDanceEditorState(dance: Dance) {
   )
 
   const { formProps, ...rest } = useAutosavingState<EditableDance, unknown[]>(
-    dance,
+    { formationDiagrams: [], ...dance },
     patchDance,
     patchStrategy.jsonPatchWithFields(
       editableDanceFields,
-      L.modify(['formationInstructions', L.elems],
-        ({ ballroom, ...rest }) => ({
+      ({ formationDiagrams, ...dance }) => ({
+        ...dance,
+        formationInstructions: dance.formationInstructions.map(({ ballroom, ...rest }) => ({
           ...rest,
           ballroomId: ballroom?._id ?? null,
-        }),
-      ),
+        })),
+        formationDiagramIds: formationDiagrams.map(d => d._id),
+      }),
     ),
   )
 

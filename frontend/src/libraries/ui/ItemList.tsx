@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import classNames from 'classnames'
 
 import { CaretDown, InfoSign } from 'libraries/ui/icons'
@@ -91,8 +91,23 @@ function ItemListRow({ children, expandableContent, expandableContentLoadingMess
   </>
 }
 
+interface ExpandingItemListRowProps extends Pick<ItemListRowProps, 'paddingClass' | 'expandableContentLoadingMessage'> {
+  expandableContent: React.ReactNode | ((close: () => void) => React.ReactNode)
+  children: React.ReactNode | ((isOpen: boolean, setIsOpen: (open: boolean) => void) => React.ReactNode)
+}
+
+function ExpandingItemListRow({ children, expandableContent, ...rest }: ExpandingItemListRowProps) {
+  const [isOpen, setIsOpen] = useState(false)
+  return <ItemListRow
+    {...rest}
+    isOpen={isOpen}
+    expandableContent={typeof expandableContent === 'function' ? expandableContent(() => setIsOpen(false)) : expandableContent}
+    children={typeof children === 'function' ? children(isOpen, setIsOpen) : children}
+  />
+}
+
 function EmptyList({ text }: { text: React.ReactNode }) {
-  return <div className="col-span-full p-4 text-base text-center border-b-0 border-gray-200 text-muted border-1">
+  return <div className="col-span-full p-4 text-base text-center border-b-0 border-gray-200 text-muted border">
     <InfoSign size={20} className="mr-2" />
     {text}
   </div>
@@ -160,3 +175,4 @@ ItemList.Header = ItemListHeader
 ItemList.SortableHeader = SortableItemListHeader
 ItemList.SortButton = SortButton
 ItemList.Row = ItemListRow
+ItemList.ExpandingRow = ExpandingItemListRow

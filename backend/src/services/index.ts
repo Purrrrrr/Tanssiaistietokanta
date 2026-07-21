@@ -1,3 +1,4 @@
+import { formationDiagram } from './formationDiagrams/formationDiagrams'
 import { diagram } from './diagrams/diagrams'
 import { access } from './access/access'
 import { sessions } from './sessions/sessions'
@@ -20,8 +21,9 @@ import { documents } from './documents/documents'
 import type { Application } from '../declarations'
 
 export const services = (app: Application) => {
-  app.configure(diagram)
   app.configure(access)
+  app.configure(formationDiagram)
+  app.configure(diagram)
   app.configure(sessions)
   app.configure(user)
   app.configure(file)

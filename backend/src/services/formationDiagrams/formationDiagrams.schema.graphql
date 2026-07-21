@@ -1,0 +1,27 @@
+type Query {
+  formationDiagram(id: ID!, versionId: ID): FormationDiagram!
+  formationDiagrams: [FormationDiagram!]!
+}
+
+type FormationDiagram {
+  _id: ID!
+  _versionId: String
+  _versionNumber: String
+  _updatedAt: String!
+  ballroomId: ID!
+  ballroom: Ballroom!
+  description: String!
+  diagram: Diagram!
+}
+
+type Mutation {
+  createFormationDiagram(formationDiagram: FormationDiagramInput!): FormationDiagram!
+  patchFormationDiagram(id: ID!, formationDiagram: JSONPatch!): FormationDiagram!
+  deleteFormationDiagram(id: ID!): FormationDiagram!
+}
+
+input FormationDiagramInput {
+  ballroomId: ID!
+  description: String!
+  diagram: Diagram!
+}

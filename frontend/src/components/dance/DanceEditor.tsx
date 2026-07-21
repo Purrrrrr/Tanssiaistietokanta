@@ -1,13 +1,20 @@
 import { useState } from 'react'
 
 import { Dance, DanceWithEvents, ID } from 'types'
+import { FormationDiagram } from 'types/formationDiagrams'
 
-import { FabricEditor } from 'libraries/fabric/FabricEditor'
+import { formatBallroom } from 'services/ballrooms'
+
+import { defaultDiagram, FabricEditor } from 'libraries/fabric/FabricEditor'
 import { SyncStatus } from 'libraries/forms'
 import { DocumentContentEditor, DocumentContentEditorProps, emptyDocument, isEmptyDocument } from 'libraries/lexical'
-import { Button, ItemList, PageSection } from 'libraries/ui'
+import { Button, Collapse, ItemList, PageSection } from 'libraries/ui'
 import { Cross, Edit } from 'libraries/ui/icons'
 import { BallroomSelect } from 'components/ballroom/BallroomSelect'
+import { AddFormationDiagramForm } from 'components/formationDiagram/AddFormationDiagramForm'
+import { FormationDiagramChooser } from 'components/formationDiagram/FormationDiagramChooser'
+import { FormationDiagramEditor } from 'components/formationDiagram/FormationDiagramEditor'
+import { FormationDiagramForm } from 'components/formationDiagram/FormationDiagramForm'
 import { AddButton } from 'components/widgets/AddButton'
 import { ColoredTag } from 'components/widgets/ColoredTag'
 import { DurationField } from 'components/widgets/DurationField'
@@ -18,7 +25,6 @@ import { Field, Form, Input, RemoveItemButton, useAppendToList, useDanceEditorSt
 import { DanceSlidePreview } from './DanceSlidePreview'
 import DanceWikiPreview from './DanceWikiPreview'
 import { WikipageSelector } from './WikipageSelector'
-import { formatBallroom } from 'services/ballrooms'
 
 interface DanceEditorProps {
   dance: DanceWithEvents
@@ -28,10 +34,15 @@ interface DanceEditorProps {
 export function DanceEditor({ dance, className }: DanceEditorProps) {
   const { formProps, state } = useDanceEditorState(dance)
 
-  return <Form {...formProps} className={className}>
-    <SyncStatus className="mt-2" floatRight state={state} />
-    <FullDanceEditorFields dance={dance} />
-  </Form>
+  return <>
+    <Form {...formProps} className={className}>
+      <SyncStatus className="mt-2" floatRight state={state} />
+      <FullDanceEditorFields dance={dance} />
+    </Form>
+    <FormationDiagramsSection dance={dance} onModifyFormationDiagrams={diagrams => formProps.onChange({
+      ...formProps.value, formationDiagrams: diagrams,
+    }, 'formationDiagrams')} />
+  </>
 }
 
 export function FullDanceEditorFields({ dance }: { dance: DanceWithEvents }) {
@@ -123,7 +134,84 @@ function Suggestions(
   </div>
 }
 
-function FormationInstructionsSection({ dance }: { dance: DanceWithEvents }) {
+export function FormationDiagramsSection({ dance, onModifyFormationDiagrams }: {
+  dance: DanceWithEvents
+  onModifyFormationDiagrams: (diagrams: Dance['formationDiagrams']) => void
+}) {
+  const [showAddForm, setShowAddForm] = useState(false)
+  const label = useT('domain.dance')
+  const itemLabel = useT('domain.formationDiagram')
+  const t = useT('components.danceEditor')
+  const commonT = useT('common')
+
+  return <PageSection
+    title={label('formationDiagrams')}
+    toolbar={<>
+      <FormationDiagramChooser
+        id="select-formation-diagram"
+        emptyText={t('addFormationDiagram')}
+        value={null}
+        excludeItems={dance.formationDiagrams.map(fd => fd._id)}
+        allowCreate
+        createText={t('createFormationDiagram')}
+        onChange={formationDiagram => {
+          if (!formationDiagram) return
+          if ('createNew' in formationDiagram) {
+            setShowAddForm(true)
+          } else if (formationDiagram) {
+            onModifyFormationDiagrams([...dance.formationDiagrams, formationDiagram])
+          }
+        }}
+      />
+    </>}
+  >
+    <Collapse isOpen={showAddForm}>
+      <AddFormationDiagramForm
+        onClose={() => setShowAddForm(false)}
+        onSubmit={formationDiagram => onModifyFormationDiagrams([...dance.formationDiagrams, formationDiagram])}
+      />
+    </Collapse>
+    <ItemList items={dance.formationDiagrams} emptyText={t('noFormationDiagrams')} columns="grid-cols-[max-content_1fr_max-content]">
+      <ItemList.Header>
+        <span>{itemLabel('ballroom')}</span>
+        <span>{itemLabel('description')}</span>
+        <span></span>
+      </ItemList.Header>
+      {dance.formationDiagrams.map((formationDiagram) =>
+        <ItemList.ExpandingRow key={formationDiagram._id} expandableContent={
+          <FormationDiagramEditor formationDiagram={formationDiagram} />
+        }>
+          {(open, setOpen) =>
+            <>
+              <span>
+                {formatBallroom(formationDiagram.ballroom)}
+              </span>
+              <span>
+                {formationDiagram.description?.trim() ? formationDiagram.description : '-'}
+              </span>
+              <span>
+                <Button
+                  minimal
+                  icon={<Edit />}
+                  tooltip={commonT('edit')}
+                  onClick={() => setOpen(!open)} />
+                <Button
+                  minimal
+                  icon={<Cross />}
+                  tooltip={commonT('delete')}
+                  color="danger"
+                  onClick={() => onModifyFormationDiagrams(dance.formationDiagrams.filter(fd => fd._id !== formationDiagram._id))}
+                />
+              </span>
+            </>
+          }
+        </ItemList.ExpandingRow>,
+      )}
+    </ItemList>
+  </PageSection>
+}
+
+export function FormationInstructionsSection({ dance }: { dance: DanceWithEvents }) {
   const label = useT('domain.dance')
   const itemLabel = useT('domain.formationInstructions')
   const t = useT('components.danceEditor')
@@ -135,7 +223,7 @@ function FormationInstructionsSection({ dance }: { dance: DanceWithEvents }) {
       _id: randomId(),
       ballroom: null,
       description: '',
-      diagram: { data: {}, width: 300, height: 300, hash: '' },
+      diagram: defaultDiagram,
     })} />}
   >
     <ItemList items={dance.formationInstructions} emptyText={t('noFormationInstructions')} columns="grid-cols-[max-content_1fr_max-content]">

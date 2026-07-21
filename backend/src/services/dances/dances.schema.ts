@@ -40,6 +40,7 @@ export const dancesSchema = Type.Object(
     wikipage: Nullable(Type.Any()),
     wikipageName: Nullable(Type.String()),
     tags: Type.Record(Type.String(), Type.Boolean()),
+    formationDiagramIds: Type.Optional(Type.Array(Id())),
     formationInstructions: Type.Array(formationInstructionsSchema),
   },
   { $id: 'Dances', additionalProperties: false },
@@ -66,6 +67,7 @@ export const dancesResolver = resolve<Dances, HookContext>({
     return null
   },
   tags: value => value ?? {},
+  formationDiagramIds: value => value ?? [],
 })
 
 export const dancesExternalResolver = resolve<Dances, HookContext>({})

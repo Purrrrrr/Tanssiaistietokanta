@@ -23,7 +23,7 @@ export function useItems<T>({ items, itemHidden }: ItemProps<T>) {
   }
 
   return [
-    toItemData(items),
+    toItemData(items, itemHidden),
     async () => { /* nop */ },
   ] as const
 }

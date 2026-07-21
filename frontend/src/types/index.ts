@@ -1,5 +1,5 @@
 export type ID = string
-export type ServiceName = 'dances' | 'events' | 'workshops' | 'dancewiki' | 'files' | 'documents' | 'users' | 'volunteers' | 'eventVolunteers' | 'eventRoles' | 'eventVolunteerAssignments' | 'ballrooms'
+export type ServiceName = 'dances' | 'formationDiagrams' | 'events' | 'workshops' | 'dancewiki' | 'files' | 'documents' | 'users' | 'volunteers' | 'eventVolunteers' | 'eventRoles' | 'eventVolunteerAssignments' | 'ballrooms'
 export interface Entity {
   _id: ID
 }

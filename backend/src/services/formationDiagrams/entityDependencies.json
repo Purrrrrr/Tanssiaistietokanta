@@ -1,0 +1,7 @@
+[
+  {
+    "type": "uses",
+    "service": "ballrooms",
+    "path": "ballroomId"
+  }
+]

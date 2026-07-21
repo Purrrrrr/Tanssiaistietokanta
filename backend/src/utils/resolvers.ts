@@ -1,9 +1,12 @@
 import { TObject, TProperties } from '@feathersjs/typebox'
 import { GraphQLResolveInfo } from 'graphql'
 
-export function toSelect<E extends TProperties>(info: GraphQLResolveInfo, schema: TObject<E>) {
-  return getSelections(info)
+export function toSelect<E extends TProperties>(info: GraphQLResolveInfo, schema: TObject<E>, extraKeys?: ( keyof E )[]) {
+  const selections = getSelections(info)
     ?.filter(f => f in schema.properties) as unknown as (keyof E)[]
+  return extraKeys
+    ? [...new Set([...selections, ...extraKeys])]
+    : selections
 }
 
 export function getSelections(info: GraphQLResolveInfo) {

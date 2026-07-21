@@ -15,6 +15,7 @@ const debug = createDebug('serviceEvents')
 
 const serviceTypeNameMap: Record<ServiceName, string> = {
   dances: 'Dance',
+  formationDiagrams: 'FormationDiagram',
   events: 'Event',
   workshops: 'Workshop',
   dancewiki: 'Dancewiki',

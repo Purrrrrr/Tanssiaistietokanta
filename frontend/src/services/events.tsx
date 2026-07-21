@@ -81,6 +81,28 @@ setupServiceUpdateFragment(
               workshop { _id, _versionId, name, abbreviation }
               instances { _id, abbreviation }
             }
+            formationDiagrams {
+              _id
+              description
+              diagram
+              ballroom {
+                _id
+                venueName
+                roomName
+                map
+              }
+            }
+            formationDiagrams {
+              _id
+              description
+              diagram
+              ballroom {
+                _id
+                venueName
+                roomName
+                map
+              }
+            }
             formationInstructions {
               _id
               description
@@ -200,6 +222,17 @@ query getEvent($id: ID!, $versionId: ID) {
               _id
               workshop { _id, _versionId, name, abbreviation }
               instances { _id, abbreviation }
+            }
+            formationDiagrams {
+              _id
+              description
+              diagram
+              ballroom {
+                _id
+                venueName
+                roomName
+                map
+              }
             }
             formationInstructions {
               _id
@@ -384,6 +417,17 @@ mutation patchEventProgram($id: ID!, $program: JSONPatch!) {
               _id
               workshop { _id, _versionId, name, abbreviation }
               instances { _id, abbreviation }
+            }
+            formationDiagrams {
+              _id
+              description
+              diagram
+              ballroom {
+                _id
+                venueName
+                roomName
+                map
+              }
             }
             formationInstructions {
               _id

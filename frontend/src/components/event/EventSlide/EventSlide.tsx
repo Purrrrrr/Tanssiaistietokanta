@@ -89,7 +89,7 @@ function DanceProgramItemSlide(props: WithCommonProps<DanceProgramItemSlideProps
   const { id, next, title, linkComponent, eventProgram, danceSetIndex, itemIndex } = props
   const { type, dance, eventProgram: program, slideStyleId } = eventProgram.danceSets[danceSetIndex].program[itemIndex]
 
-  const formationInstructions = dance?.formationInstructions?.find(fi => fi.ballroom?._id === eventProgram.ballroom?._id)
+  const formationDiagrams = dance?.formationDiagrams?.find(fi => fi.ballroom?._id === eventProgram.ballroom?._id)
   const content = type === 'RequestedDance'
     ? {
       children: '',
@@ -99,8 +99,8 @@ function DanceProgramItemSlide(props: WithCommonProps<DanceProgramItemSlideProps
       footer: dance?.teachedIn?.length
         ? <TeachedIn teachedIn={dance.teachedIn} />
         : undefined,
-      additionalContent: formationInstructions?.diagram
-        ? <FormationInstructionsViewer formationInstructions={formationInstructions} />
+      additionalContent: formationDiagrams?.diagram
+        ? <FormationDiagramsViewer formationDiagrams={formationDiagrams} />
         : null,
     }
 
@@ -115,10 +115,10 @@ function DanceProgramItemSlide(props: WithCommonProps<DanceProgramItemSlideProps
   />
 }
 
-function FormationInstructionsViewer({ formationInstructions }: { formationInstructions: Dance['formationInstructions'][0] }) {
+function FormationDiagramsViewer({ formationDiagrams }: { formationDiagrams: Dance['formationDiagrams'][0] }) {
   const [fullScreen, setFullScreen] = useState(false)
 
-  if (!formationInstructions.diagram) return null
+  if (!formationDiagrams.diagram) return null
 
   const toggle = () => document.startViewTransition(() => setFullScreen(!fullScreen))
 
@@ -128,8 +128,8 @@ function FormationInstructionsViewer({ formationInstructions }: { formationInstr
     className={`flex items-stretch justify-center [view-transition-name:photo] hover:outline-2 ${fullScreen ? 'absolute inset-[15cqh_4cqw_6cqh] z-50' : 'w-full mt-4'}`}>
     <FabricImageViewer
       className={`${fullScreen ? 'w-auto' : 'w-full'} border bg-white cursor-pointer`}
-      diagram={formationInstructions.diagram}
-      backgroundDiagram={formationInstructions.ballroom?.map ?? undefined} />
+      diagram={formationDiagrams.diagram}
+      backgroundDiagram={formationDiagrams.ballroom?.map ?? undefined} />
   </button>
 }
 

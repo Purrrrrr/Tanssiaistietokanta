@@ -1,3 +1,5 @@
+import { AddFormationDiagramForm } from "components/formationDiagram/AddFormationDiagramForm";
+
 export const fi = {
   app: {
     title: 'Tanssiaistietokanta',
@@ -91,7 +93,13 @@ export const fi = {
       slideStyleId: 'Tanssiaisten diatyyli',
       wikipageName: 'Tanssiwikin sivun nimi',
       danceUsage: 'Käyttökohteet',
+      formationDiagrams: 'Kuvionmuodostusohjeet',
       formationInstructions: 'Kuvionmuodostusohjeet',
+    },
+    formationDiagram: {
+      ballroom: 'Tanssisali',
+      description: 'Kuvaus',
+      diagram: 'Kuvio',
     },
     formationInstructions: {
       ballroom: 'Tanssisali',
@@ -230,7 +238,13 @@ export const fi = {
       suggestions: 'Ehdotuksia',
       editInstructions: 'Muokkaa tanssiohjeita',
       noFormationInstructions: 'Ei kuvioonmuodostussohjeita',
+      noFormationDiagrams: 'Ei kuvioonmuodostussohjeita',
+      addFormationDiagram: 'Lisää kuvionmuodostusohje',
+      createFormationDiagram: 'Luo uusi kuvionmuodostusohje',
       noBallroom: 'Ei tanssisalia',
+    },
+    AddFormationDiagramForm: {
+      createFormationDiagram: 'Luo kuvionmuodostusohje',
     },
     danceWikiPreview: {
       danceInDanceWiki: 'Tanssi tanssiwikissä',

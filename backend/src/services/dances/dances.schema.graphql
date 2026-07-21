@@ -26,6 +26,7 @@ type Dance implements Versionable {
   wikipage: Wikipage
   tags: Tags
   formationInstructions: [FormationInstructions!]!
+  formationDiagrams: [FormationDiagram!]!
 }
 
 scalar Tags

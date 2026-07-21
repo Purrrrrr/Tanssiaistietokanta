@@ -23,6 +23,13 @@ interface FabricComponentProps extends Omit<FieldComponentDisplayProps, 'id'> {
   baseDiagram?: FabricDiagramData
 }
 
+export const defaultDiagram: FabricDiagramData = {
+  width: 300,
+  height: 300,
+  data: {},
+  hash: '',
+}
+
 const emptyData = {}
 
 export function FabricEditor({ readOnly, value, baseDiagram, onChange, inline, ...rest }: FabricComponentProps) {

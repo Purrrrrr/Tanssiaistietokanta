@@ -243,6 +243,7 @@ const emptyDance: Dance = {
   wikipage: null,
   wikipageName: null,
   formationInstructions: [],
+  formationDiagrams: [],
 }
 
 function DanceEditor({ id, initialDance }: { id: string, initialDance?: Pick<Dance, '_id' | '_versionId' | 'name' | 'wikipage' | 'wikipageName' | 'formationInstructions'> | null }) {

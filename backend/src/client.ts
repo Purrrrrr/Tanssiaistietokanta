@@ -4,6 +4,8 @@ import type { TransportConnection, Application } from '@feathersjs/feathers'
 import authenticationClient from '@feathersjs/authentication-client'
 import type { AuthenticationClientOptions } from '@feathersjs/authentication-client'
 
+import { formationDiagramClient } from './services/formationDiagrams/formationDiagrams.shared'
+
 import { diagramClient } from './services/diagrams/diagrams.shared'
 
 import { accessClient } from './services/access/access.shared'
@@ -30,7 +32,12 @@ import { dancesClient } from './services/dances/dances.shared'
 import { ballroomsClient } from './services/ballrooms/ballrooms.shared'
 
 export type { Access, AccessQuery } from './services/access/access.shared'
-export type { Ballrooms, BallroomsData, BallroomsPatch, BallroomsQuery } from './services/ballrooms/ballrooms.shared'
+export type {
+  Ballrooms,
+  BallroomsData,
+  BallroomsPatch,
+  BallroomsQuery,
+} from './services/ballrooms/ballrooms.shared'
 export type {
   ChannelConnections,
   ChannelConnectionsData,
@@ -42,6 +49,11 @@ export type { Dancewiki, DancewikiData, DancewikiQuery } from './services/dancew
 export type { Diagram, DiagramData, DiagramQuery } from './services/diagrams/diagrams.shared'
 export type { Events, EventsData, EventsPatch, EventsQuery } from './services/events/events.shared'
 export type { File, FileData, FilePatch, FileQuery } from './services/files/files.shared'
+export type {
+  FormationDiagram,
+  FormationDiagramData,
+  FormationDiagramPatch,
+  FormationDiagramQuery } from './services/formationDiagrams/formationDiagrams.shared'
 export type { Graphql, GraphqlData, GraphqlPatch, GraphqlQuery } from './services/graphql/graphql.shared'
 export type {
   Sessions,
@@ -96,5 +108,6 @@ export const createClient = <_Configuration = any>(
   client.configure(sessionsClient)
   client.configure(accessClient)
   client.configure(diagramClient)
+  client.configure(formationDiagramClient)
   return client
 }

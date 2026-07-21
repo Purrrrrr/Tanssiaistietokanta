@@ -14,7 +14,6 @@ setupServiceUpdateFragment(
     wikipageName
     formationInstructions {
       _id, description, diagram
-
     }
   }`,
 )
@@ -89,6 +88,17 @@ query getDance($id: ID!, $versionId: ID) {
       description
       diagram
     }
+    formationDiagrams {
+      _id
+      ballroom {
+        _id
+        venueName
+        roomName
+        map
+      }
+      description
+      diagram
+    }
   }
 }`), ({ refetch, variables }) => {
   if (variables === undefined) throw new Error('Unknown dance id')
@@ -139,6 +149,17 @@ mutation createDance($dance: DanceInput!) {
       description
       diagram
     }
+    formationDiagrams {
+      _id
+      ballroom {
+        _id
+        venueName
+        roomName
+        map
+      }
+      description
+      diagram
+    }
   }
 }`))
 
@@ -171,6 +192,17 @@ mutation patchDance($id: ID!, $dance: JSONPatch!) {
       description
       diagram
     }
+    formationDiagrams {
+      _id
+      ballroom {
+        _id
+        venueName
+        roomName
+        map
+      }
+      description
+      diagram
+    }
   }
 }`))
 
@@ -193,6 +225,17 @@ mutation deleteDance($id: ID!) {
       name
     }
     formationInstructions {
+      _id
+      ballroom {
+        _id
+        venueName
+        roomName
+        map
+      }
+      description
+      diagram
+    }
+    formationDiagrams {
       _id
       ballroom {
         _id
