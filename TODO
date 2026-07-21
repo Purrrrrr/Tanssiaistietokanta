@@ -591,7 +591,6 @@
     * Allow selecting workshop instances
 * Better and less obtrusive table editing in lexical
 * Comma-separated-list does not copy-paste well. Fix
-
 * DB to store event locations and ballrooms
   * Basic page and backend db
   * Stand-alone diagram document type
@@ -604,17 +603,47 @@
     * Ability to have another diagram as background
     * Field component
   * Diagrams for ball rooms
+* Multiple slides per dance: formation slide / instructions slide / some other?
+  * Formation slide support
+    * Initial editor
+    * Ballroom selector
+    * Use ball-rooms for diagram bg
+    * Event ballroom field
+    * Show in slides!
+      Sharing diagrams between dances
+      * Own service and forms
+      * Migration
+        Show diagram list in ballrooms
+        Show dances sharing this diagram in dance editor
+      Copy diagram function?
+      Diagrams in interval music!
+  
 
-  Frontend validation for duplicate ballroom names
+  Let choose formationDiagram in slides
+  * Selector
+    Choosing logic
+      allow choosing none/automatically
+
+  Fabric: make text use stroke color for fill if fill is transparent
+  nice-to-haves
+    Tooltips don't work in chrome/edge on second fabric editor on page
+    Sortable headers for formationDiagram
+    Frontend validation for duplicate ballroom names
+    Versioning views
+      Ballroom versioning
+      Volunteer versioning
+
   FabricEditor improvements
+  * Allow just moving arrows (not their vertices)
+  * Move objects with keyboards
+  * Different arrows
+  * Centering of objects
     Copy and paste
       Change format to enable better paste positioning
       Use same format lexical uses?
     Image upload support?
 
   Set editor: move teachedIn and category into the grid from dance selector
-  Multiple slides per dance: formation slide / instructions slide / some other?
-    Formation slide support using ball-rooms
 
   File metadata: image size, audio duration, media type
   Some way to handle music?
