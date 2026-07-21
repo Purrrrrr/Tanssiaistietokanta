@@ -110,7 +110,7 @@ function EventProgramRow() {
       slideStyleId: SlideStyleId(),
       type: Type.Literal('Dance'),
       danceId: Id(),
-      formationInstructionId: Type.Optional(Id()),
+      formationDiagramId: Type.Optional(Id()),
       eventProgram: Type.Null(),
     }),
     ClosedObject({

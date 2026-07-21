@@ -62,17 +62,6 @@ query BallProgram($eventId: ID!, $eventVersionId: ID) {
                 map
               }
             }
-            formationInstructions {
-              _id
-              description
-              diagram
-              ballroom {
-                _id
-                venueName
-                roomName
-                map
-              }
-            }
           }
         }
       }
@@ -112,17 +101,6 @@ query BallProgram($eventId: ID!, $eventVersionId: ID) {
               instances { _id, abbreviation }
             }
             formationDiagrams {
-              _id
-              description
-              diagram
-              ballroom {
-                _id
-                venueName
-                roomName
-                map
-              }
-            }
-            formationInstructions {
               _id
               description
               diagram

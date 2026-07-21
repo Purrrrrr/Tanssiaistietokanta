@@ -94,14 +94,8 @@ export const fi = {
       wikipageName: 'Tanssiwikin sivun nimi',
       danceUsage: 'Käyttökohteet',
       formationDiagrams: 'Kuvionmuodostusohjeet',
-      formationInstructions: 'Kuvionmuodostusohjeet',
     },
     formationDiagram: {
-      ballroom: 'Tanssisali',
-      description: 'Kuvaus',
-      diagram: 'Kuvio',
-    },
-    formationInstructions: {
       ballroom: 'Tanssisali',
       description: 'Kuvaus',
       diagram: 'Kuvio',

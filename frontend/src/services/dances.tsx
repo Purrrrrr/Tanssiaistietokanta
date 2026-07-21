@@ -12,9 +12,6 @@ setupServiceUpdateFragment(
   `fragment DanceFragment on Dance {
     _id, name, description, remarks, duration, prelude, formation, category, instructions, slideStyleId
     wikipageName
-    formationInstructions {
-      _id, description, diagram
-    }
   }`,
 )
 
@@ -77,17 +74,6 @@ query getDance($id: ID!, $versionId: ID) {
       _versionId
       name
     }
-    formationInstructions {
-      _id
-      ballroom {
-        _id
-        venueName
-        roomName
-        map
-      }
-      description
-      diagram
-    }
     formationDiagrams {
       _id
       ballroom {
@@ -138,17 +124,6 @@ mutation createDance($dance: DanceInput!) {
       _versionId
       name
     }
-    formationInstructions {
-      _id
-      ballroom {
-        _id
-        venueName
-        roomName
-        map
-      }
-      description
-      diagram
-    }
     formationDiagrams {
       _id
       ballroom {
@@ -181,17 +156,6 @@ mutation patchDance($id: ID!, $dance: JSONPatch!) {
       _versionId
       name
     }
-    formationInstructions {
-      _id
-      ballroom {
-        _id
-        venueName
-        roomName
-        map
-      }
-      description
-      diagram
-    }
     formationDiagrams {
       _id
       ballroom {
@@ -223,17 +187,6 @@ mutation deleteDance($id: ID!) {
       _id
       _versionId
       name
-    }
-    formationInstructions {
-      _id
-      ballroom {
-        _id
-        venueName
-        roomName
-        map
-      }
-      description
-      diagram
     }
     formationDiagrams {
       _id

@@ -23,6 +23,7 @@ export const formationDiagramSchema = Type.Object(
   { $id: 'FormationDiagram', additionalProperties: false },
 )
 export type FormationDiagram = Static<typeof formationDiagramSchema>
+export type FormationDiagramType = Static<typeof formationDiagramSchema>
 export const formationDiagramValidator = getValidator(formationDiagramSchema, dataValidator)
 export const formationDiagramResolver = resolve<FormationDiagram, HookContext<FormationDiagramService>>({})
 

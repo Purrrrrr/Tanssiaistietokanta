@@ -13,8 +13,7 @@ const config: CodegenConfig = {
         mappers: {
           Ballroom: './services/ballrooms/ballrooms.schema#Ballrooms',
           Dance: './services/dances/dances.schema#Dances',
-          FormationInstructions: './services/dances/dances.schema#FormationInstructionsType',
-          FormationDiagram: './services/formationDiagrams/formationDiagrams.schema#FormationDiagram',
+          FormationDiagram: './services/formationDiagrams/formationDiagrams.schema#FormationDiagramType',
           Wikipage: './services/dancewiki/dancewiki.schema#Dancewiki',
           File: './services/files/files.schema#FileDB',
           Document: './services/documents/documents.schema#DocumentRecord',

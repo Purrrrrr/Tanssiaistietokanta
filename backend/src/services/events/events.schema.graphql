@@ -86,7 +86,7 @@ type EventProgramRow {
   type: EventProgramRowType!
   danceId: ID
   dance: Dance
-  formationInstructionsId: ID
+  formationDiagramId: ID
   eventProgram: EventProgram
 }
 

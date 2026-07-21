@@ -9,7 +9,6 @@ import { DancewikiService } from '../dancewiki/dancewiki.class'
 import { SkipAccessControl } from '../access/hooks'
 import { toSelect } from '../../utils/resolvers'
 import { JSONPatch } from '../../hooks/merge-json-patch'
-import { ballroomsSchema } from '../ballrooms/ballrooms.schema'
 import { formationDiagramSchema } from '../formationDiagrams/formationDiagrams.schema'
 
 export async function findTeachedIn(workshopService: WorkshopsService, danceId: string, eventId?: string | null) {
@@ -44,7 +43,6 @@ export default (app: Application): Resolvers => {
   const workshopService = app.service('workshops')
   const eventService = app.service('events')
   const wikiService = app.service('dancewiki')
-  const ballroomService = app.service('ballrooms')
   const formationDiagramService = app.service('formationDiagrams')
 
   return {
@@ -74,12 +72,6 @@ export default (app: Application): Resolvers => {
         })
       },
     },
-    FormationInstructions: {
-      ballroom: (formationInstruction, _, __, info) => {
-        if (!formationInstruction.ballroomId) return null
-        return ballroomService.get(formationInstruction.ballroomId, { query: { $select: toSelect(info, ballroomsSchema) } })
-      },
-    },
     Query: {
       dance: (_, { id, versionId }, params) => versionId
         ? service.get(id, { ...params, query: { _versionId: versionId } })
@@ -89,17 +81,7 @@ export default (app: Application): Resolvers => {
         uniq((await service.find(params)).map(dance => dance.category)).filter(Boolean).sort(),
     },
     Mutation: {
-      createDance: (_, { dance }, params) => {
-        const { formationInstructions, ...rest } = dance
-        return service.create({
-          ...rest,
-          formationInstructions: formationInstructions?.map(fi => ({
-            ...fi,
-            description: fi.description ?? '',
-            diagram: fi.diagram ?? null,
-          })) ?? [],
-        }, params)
-      },
+      createDance: (_, { dance }, params) => service.create(dance, params),
       patchDance: (_, { id, dance }, params) =>
         service.patch(id, dance as JSONPatch, { ...params, jsonPatch: true }),
       deleteDance: (_, { id }, params) => service.remove(id, params),

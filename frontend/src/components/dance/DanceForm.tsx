@@ -31,7 +31,6 @@ const editableDanceFields: (keyof EditableDance)[] = [
   'instructions',
   'slideStyleId',
   'tags',
-  'formationInstructions',
   'formationDiagrams',
 ]
 
@@ -54,10 +53,6 @@ export function useDanceEditorState(dance: Omit<Dance, 'formationDiagrams'> & { 
       editableDanceFields,
       ({ formationDiagrams, ...dance }) => ({
         ...dance,
-        formationInstructions: dance.formationInstructions.map(({ ballroom, ...rest }) => ({
-          ...rest,
-          ballroomId: ballroom?._id ?? null,
-        })),
         formationDiagramIds: formationDiagrams.map(d => d._id),
       }),
     ),

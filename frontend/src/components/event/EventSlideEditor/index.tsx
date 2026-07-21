@@ -242,11 +242,10 @@ const emptyDance: Dance = {
   name: '-',
   wikipage: null,
   wikipageName: null,
-  formationInstructions: [],
   formationDiagrams: [],
 }
 
-function DanceEditor({ id, initialDance }: { id: string, initialDance?: Pick<Dance, '_id' | '_versionId' | 'name' | 'wikipage' | 'wikipageName' | 'formationInstructions'> | null }) {
+function DanceEditor({ id, initialDance }: { id: string, initialDance?: Pick<Dance, '_id' | '_versionId' | 'name' | 'wikipage' | 'wikipageName'> | null }) {
   const result = useDance({ id, versionId: initialDance?._versionId })
   const dance = result.data?.dance ?? initialDance ?? emptyDance
 

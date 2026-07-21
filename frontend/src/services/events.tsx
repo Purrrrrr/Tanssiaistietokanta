@@ -103,19 +103,8 @@ setupServiceUpdateFragment(
                 map
               }
             }
-            formationInstructions {
-              _id
-              description
-              diagram
-              ballroom {
-                _id
-                venueName
-                roomName
-                map
-              }
-            }
           }
-          formationInstructionsId
+          formationDiagramId
           slideStyleId
         }
         intervalMusic {
@@ -234,19 +223,8 @@ query getEvent($id: ID!, $versionId: ID) {
                 map
               }
             }
-            formationInstructions {
-              _id
-              description
-              diagram
-              ballroom {
-                _id
-                venueName
-                roomName
-                map
-              }
-            }
           }
-          formationInstructionsId
+          formationDiagramId
           slideStyleId
         }
         intervalMusic {
@@ -429,19 +407,8 @@ mutation patchEventProgram($id: ID!, $program: JSONPatch!) {
                 map
               }
             }
-            formationInstructions {
-              _id
-              description
-              diagram
-              ballroom {
-                _id
-                venueName
-                roomName
-                map
-              }
-            }
           }
-          formationInstructionsId
+          formationDiagramId
           slideStyleId
         }
         intervalMusic {

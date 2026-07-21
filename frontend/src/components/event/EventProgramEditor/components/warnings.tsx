@@ -123,7 +123,7 @@ export function MissingDancesWarning() {
 export function DuplicateDancesWarning({ program }: { program: EventProgramSettings }) {
   const t = useT('components.eventProgramEditor.duplicateDancesWarning')
 
-  const duplicateMap: Record<string, { dance: Omit<Dance, 'wikipage' | 'formationInstructions' | 'formationDiagrams'>, danceSets: DanceSet[] }> = {}
+  const duplicateMap: Record<string, { dance: Omit<Dance, 'wikipage' | 'formationDiagrams'>, danceSets: DanceSet[] }> = {}
 
   for (const danceSet of program.danceSets.values()) {
     danceSet.program

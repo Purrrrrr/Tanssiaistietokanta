@@ -88,7 +88,6 @@ export function FullDanceEditorFields({ dance }: { dance: DanceWithEvents }) {
       path="instructions"
       component={InstructionEditor}
       componentProps={{ danceId: dance._id, wikipage, className: 'max-h-150' }} />
-    <FormationInstructionsSection dance={dance} />
   </>
 }
 
@@ -209,64 +208,4 @@ export function FormationDiagramsSection({ dance, onModifyFormationDiagrams }: {
       )}
     </ItemList>
   </PageSection>
-}
-
-export function FormationInstructionsSection({ dance }: { dance: DanceWithEvents }) {
-  const label = useT('domain.dance')
-  const itemLabel = useT('domain.formationInstructions')
-  const t = useT('components.danceEditor')
-  const addFormationInstruction = useAppendToList('formationInstructions')
-
-  return <PageSection
-    title={label('formationInstructions')}
-    toolbar={<AddButton onClick={() => addFormationInstruction({
-      _id: randomId(),
-      ballroom: null,
-      description: '',
-      diagram: defaultDiagram,
-    })} />}
-  >
-    <ItemList items={dance.formationInstructions} emptyText={t('noFormationInstructions')} columns="grid-cols-[max-content_1fr_max-content]">
-      <ItemList.Header>
-        <span>{itemLabel('ballroom')}</span>
-        <span>{itemLabel('description')}</span>
-        <span></span>
-      </ItemList.Header>
-      {dance.formationInstructions.map((formationInstruction, index) =>
-        <FormationInstructionRow key={formationInstruction._id} formationInstruction={formationInstruction} index={index} />,
-      )}
-    </ItemList>
-  </PageSection>
-}
-
-function FormationInstructionRow({ formationInstruction, index }: {
-  formationInstruction: DanceWithEvents['formationInstructions'][number]
-  index: number
-}) {
-  const label = useT('domain.formationInstructions')
-  const t = useT('components.danceEditor')
-  const [open, setOpen] = useState(false)
-  return <ItemList.Row isOpen={open} expandableContent={<div className="p-4">
-    <Input label={label('description')} path={`formationInstructions.${index}.description`} />
-    <Field label={label('ballroom')} path={`formationInstructions.${index}.ballroom`} component={BallroomSelect} />
-    <Field
-      label={label('diagram')}
-      path={`formationInstructions.${index}.diagram`}
-      component={FabricEditor}
-      componentProps={{ baseDiagram: formationInstruction.ballroom?.map ?? undefined }}
-    />
-  </div>}>
-    <span>
-      {formationInstruction.ballroom
-        ? formatBallroom(formationInstruction.ballroom)
-        : t('noBallroom')}
-    </span>
-    <span>
-      {formationInstruction.description?.trim() ? formationInstruction.description : '-'}
-    </span>
-    <span>
-      <Button minimal icon={<Edit />} tooltip={useTranslation('common.edit')} onClick={() => setOpen(!open)} />
-      <RemoveItemButton minimal path="formationInstructions" index={index} icon={<Cross />} tooltip={useTranslation('common.delete')} />
-    </span>
-  </ItemList.Row>
 }

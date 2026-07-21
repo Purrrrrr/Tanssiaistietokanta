@@ -25,7 +25,6 @@ type Dance implements Versionable {
   wikipageName: String
   wikipage: Wikipage
   tags: Tags
-  formationInstructions: [FormationInstructions!]!
   formationDiagrams: [FormationDiagram!]!
 }
 
@@ -62,7 +61,7 @@ input DanceInput {
   category: String
   instructions: String
   wikipageName: String
-  formationInstructions: [FormationInstructionsInput!]
+  formationDiagramIds: [ID!]
 }
 
 input FormationInstructionsInput {

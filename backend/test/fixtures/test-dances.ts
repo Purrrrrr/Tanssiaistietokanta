@@ -18,7 +18,7 @@ export const testDances: Dance[] = [
     wikipageName: null,
     slideStyleId: null,
     tags: {},
-    formationInstructions: [],
+    formationDiagramIds: [],
   }, {
     _id: '',
     name: 'Tester\'s Fancy',
@@ -34,6 +34,6 @@ export const testDances: Dance[] = [
     wikipageName: null,
     slideStyleId: null,
     tags: {},
-    formationInstructions: [],
+    formationDiagramIds: [],
   },
 ]
