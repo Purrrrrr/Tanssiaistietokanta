@@ -223,7 +223,7 @@ function WorkshopDetails({ workshop }: { workshop: Workshop }) {
       ? instances.map(instance =>
         <React.Fragment key={instance._id}>
           <h3 className="font-bold">{formatDateTime(new Date(instance.dateTime))}</h3>
-          {instance?.dances?.length &&
+          {!!instance?.dances?.length &&
             <p>
               {t('dances')}: {instance?.dances?.map(d => d.name)?.join(', ')}
             </p>
@@ -232,7 +232,7 @@ function WorkshopDetails({ workshop }: { workshop: Workshop }) {
       )
       : <>
         <h3 className="font-bold">{instances.map(instance => formatDateTime(new Date(instance.dateTime))).join(', ')}</h3>
-        {instances[0]?.dances?.length &&
+        {!!instances[0]?.dances?.length &&
           <p>{t('dances') + ': '}{instances[0]?.dances?.map(d => d.name)?.join(', ')}</p>
         }
       </>
