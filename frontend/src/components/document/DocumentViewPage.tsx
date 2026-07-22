@@ -26,7 +26,7 @@ function DocumentViewPageInner({ document }: { document: Document }) {
   const t = useT('components.documents.DocumentViewPage')
 
   return <PageSection
-    title={document.title}
+    title={<span className="print:hidden">{document.title}</span>}
     toolbar={
       <>
         <NavigateButton
