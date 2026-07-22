@@ -764,7 +764,6 @@ export const fi = {
             showHelpText: 'Näytä luntin ohjeteksti',
             print: 'Tulosta',
             helpText: 'Rastita tähän, jos osaat tanssin. Näin ei tanssiaisissa tarvitse miettiä, mikä tanssi on kyseessä.',
-            noDances: 'Ei tansseja',
             iCanDanceThis: 'Osaan tanssin',
             danceName: 'Nimi',
           },

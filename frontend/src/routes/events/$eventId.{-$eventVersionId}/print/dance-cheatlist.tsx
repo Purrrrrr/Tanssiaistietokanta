@@ -113,20 +113,19 @@ function WorkshopDances({ workshop }: { workshop: Workshop }) {
   const t = useT('routes.events.event.print.danceCheatlist')
   const { name, instances } = workshop
   const dances = uniq(instances.flatMap(i => i.dances ?? []))
+  if (dances.length === 0) return null
+
   return <>
     <h2>{name}</h2>
-    {dances.length === 0 ?
-      <p>{t('noDances')}</p> :
-      <PrintTable className="w-full" headings={[t('danceName'), t('iCanDanceThis')]}>
-        {dances.map(dance =>
-          <tr key={dance._id}>
-            <td>
-              {dance.name}
-            </td>
-            <td />
-          </tr>,
-        )}
-      </PrintTable>
-    }
+    <PrintTable className="w-full" headings={[t('danceName'), t('iCanDanceThis')]}>
+      {dances.map(dance =>
+        <tr key={dance._id}>
+          <td>
+            {dance.name}
+          </td>
+          <td />
+        </tr>,
+      )}
+    </PrintTable>
   </>
 }
