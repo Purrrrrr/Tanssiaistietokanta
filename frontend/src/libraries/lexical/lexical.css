@@ -125,6 +125,7 @@
     display: block;
     width: var(--qr-size);
     height: var(--qr-size);
+    margin: calc(var(--qr-size) / 40) auto;
   }
   svg {
     width: 100%;
