@@ -179,7 +179,7 @@ function InstructionsForDance({ dance, showShortInstructions }: { dance: Dance, 
     <div className={field}>
       {editorOpen
         ? <DanceFieldEditor dance={dance} field={field} />
-        : <DocumentViewer document={value} skipHeadingLevels={2} />
+        : <DocumentViewer document={value} skipHeadingLevels={2} placeholder="" />
       }
     </div>
   </div>
@@ -218,19 +218,23 @@ function WorkshopDetails({ workshop }: { workshop: Workshop }) {
     <H2>
       {name}
     </H2>
-    <p className="description"><DocumentViewer document={description} /></p>
+    <p className="description"><DocumentViewer document={description} placeholder="" /></p>
     {instanceSpecificDances
       ? instances.map(instance =>
         <React.Fragment key={instance._id}>
           <h3 className="font-bold">{formatDateTime(new Date(instance.dateTime))}</h3>
-          <p>
-            {t('dances')} : {instance?.dances?.map(d => d.name)?.join(', ')}
-          </p>
+          {instance?.dances?.length &&
+            <p>
+              {t('dances')}: {instance?.dances?.map(d => d.name)?.join(', ')}
+            </p>
+          }
         </React.Fragment>,
       )
       : <>
         <h3 className="font-bold">{instances.map(instance => formatDateTime(new Date(instance.dateTime))).join(', ')}</h3>
-        <p>{t('dances') + ': '}{instances[0]?.dances?.map(d => d.name)?.join(', ')}</p>
+        {instances[0]?.dances?.length &&
+          <p>{t('dances') + ': '}{instances[0]?.dances?.map(d => d.name)?.join(', ')}</p>
+        }
       </>
     }
   </div>

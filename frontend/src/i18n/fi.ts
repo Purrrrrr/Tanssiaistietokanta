@@ -1,5 +1,3 @@
-import { AddFormationDiagramForm } from "components/formationDiagram/AddFormationDiagramForm";
-
 export const fi = {
   app: {
     title: 'Tanssiaistietokanta',
