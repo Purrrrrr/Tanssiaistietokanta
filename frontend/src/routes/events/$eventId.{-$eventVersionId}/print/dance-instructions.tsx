@@ -179,7 +179,7 @@ function InstructionsForDance({ dance, showShortInstructions }: { dance: Dance, 
     <div className={field}>
       {editorOpen
         ? <DanceFieldEditor dance={dance} field={field} />
-        : <DocumentViewer document={value} skipHeadingLevels={2} placeholder="" />
+        : <DocumentViewer document={value} skipHeadingLevels={2} />
       }
     </div>
   </div>
@@ -218,7 +218,7 @@ function WorkshopDetails({ workshop }: { workshop: Workshop }) {
     <H2>
       {name}
     </H2>
-    <p className="description"><DocumentViewer document={description} placeholder="" /></p>
+    <p className="description"><DocumentViewer document={description} skipRenderOnEmpty /></p>
     {instanceSpecificDances
       ? instances.map(instance =>
         <React.Fragment key={instance._id}>
