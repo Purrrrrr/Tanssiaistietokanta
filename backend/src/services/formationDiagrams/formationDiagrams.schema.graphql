@@ -12,6 +12,7 @@ type FormationDiagram {
   ballroom: Ballroom
   description: String!
   diagram: Diagram!
+  dances: [Dance!]!
 }
 
 type Mutation {

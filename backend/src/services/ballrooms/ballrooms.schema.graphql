@@ -12,6 +12,7 @@ type Ballroom implements Versionable {
   venueName: String!
   roomName: String
   map: Diagram
+  formationDiagrams: [FormationDiagram!]!
 }
 
 type Mutation {

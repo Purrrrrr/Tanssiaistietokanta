@@ -3,6 +3,7 @@ import { Application, Resolvers } from '../../declarations'
 import { toSelect } from '../../utils/resolvers'
 import { JSONPatch } from '../../hooks/merge-json-patch'
 import { ballroomsSchema } from '../ballrooms/ballrooms.schema'
+import { dancesSchema } from '../dances/dances.schema'
 
 export default (app: Application): Resolvers => {
   const service = app.service('formationDiagrams')
@@ -13,6 +14,14 @@ export default (app: Application): Resolvers => {
       ballroom: (formationDiagram, _, __, info) => {
         if (!formationDiagram.ballroomId) return null
         return ballroomService.get(formationDiagram.ballroomId, { query: { $select: toSelect(info, ballroomsSchema) } })
+      },
+      dances: (formationDiagram, _, __, info) => {
+        return app.service('dances').find({
+          query: {
+            formationDiagramIds: formationDiagram._id,
+            $select: toSelect(info, dancesSchema),
+          },
+        })
       },
     },
     Query: {

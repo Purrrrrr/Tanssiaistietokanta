@@ -83,12 +83,16 @@ export const dancesPatchValidator = getValidator(dancesPatchSchema, dataValidato
 export const dancesPatchResolver = resolve<Dances, HookContext>({})
 
 // Schema for allowed query properties
-export const dancesQueryProperties = dancesSchema
+export const dancesQueryProperties = Type.Omit(dancesSchema, ['formationDiagramIds'])
+
+const baseQuery = querySyntax(Type.Omit(dancesSchema, ['formationDiagramIds']))
 export const dancesQuerySchema = Type.Intersect(
   [
-    querySyntax(dancesQueryProperties),
+    Type.Omit(baseQuery, ['$select']),
     // Add additional query properties here
     Type.Object({
+      $select: querySyntax((dancesSchema)).properties.$select,
+      formationDiagramIds: Type.Optional(Id()),
       searchVersions: Type.Optional(Type.Boolean()),
       atDate: Type.Optional(Type.String()),
     }, { additionalProperties: false }),
