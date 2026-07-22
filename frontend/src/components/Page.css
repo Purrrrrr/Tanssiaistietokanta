@@ -14,6 +14,14 @@
   }
   padding-inline: 25px;
   display: grid;
+  @media print {
+    display: block;
+
+    & > .menu, & > .navigation, & > .page-background, & > .title, & > .toolbar {
+      display: none;
+    }
+  }
+
   --menu-size: 0rem;
   &.menu-open {
     --menu-size: var(--page-menu-height, auto);

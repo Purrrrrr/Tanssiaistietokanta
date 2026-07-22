@@ -4,6 +4,11 @@
 #layout {
   min-height: 100vh;
   display: grid;
+
+  @media print {
+    display: block;
+  }
+
   grid-template: "header" min-content
     "main" 1fr
     "footer" min-content
@@ -66,4 +71,8 @@
     height: calc(100dvh - 50px);
     overflow: auto;
   }
+}
+
+.TanStackRouterDevtools {
+  @apply print:hidden;
 }

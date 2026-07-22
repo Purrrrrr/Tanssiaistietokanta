@@ -14,7 +14,7 @@ function Navigation() {
   const ref = useDimensionCssVariables('page-navbar')
   const T = useT('')
 
-  return <nav ref={ref} className="flex relative z-10 flex-wrap justify-between items-center px-3.5 h-auto bg-white shadow-sm min-h-12.5 shadow-stone-600/30">
+  return <nav ref={ref} className="flex relative z-10 flex-wrap justify-between items-center px-3.5 h-auto bg-white shadow-sm min-h-12.5 shadow-stone-600/30 print:hidden">
     <NavButton to="/">
       <img className="mr-1 size-8" src="/fan48.webp" alt="" />
       <span className="">{T('app.title')}</span>

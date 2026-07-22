@@ -73,7 +73,7 @@ function RootComponent() {
   return (
     <NavigationLayout>
       <Outlet />
-      <TanStackRouterDevtools />
+      <TanStackRouterDevtools toggleButtonProps={{ className: 'print:hidden' }} />
     </NavigationLayout>
   )
 }

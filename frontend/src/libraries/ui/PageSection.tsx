@@ -29,7 +29,7 @@ export function PageSection({ title, syncStatus, introText, toolbar, children, c
         <div>{introText}</div>
       </>}
       {toolbar &&
-        <div className={classNames(introText ? 'justify-end' : '@min-[50cqw]:justify-end', 'grow flex')}>
+        <div className={classNames(introText ? 'justify-end' : '@min-[50cqw]:justify-end', 'grow flex print:hidden')}>
           {toolbar}
         </div>
       }
