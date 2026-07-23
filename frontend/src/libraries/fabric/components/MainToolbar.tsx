@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { Canvas, Circle, Ellipse, FabricObject, PencilBrush, Polygon, Rect, Textbox } from 'fabric'
+import { Canvas, Circle, Ellipse, FabricObject, PencilBrush, Polygon, Polyline, Rect, Textbox } from 'fabric'
 
 import { FabricDiagramData } from '../types'
 
@@ -10,7 +10,7 @@ import { Arrowline } from '../canvas/Arrowline'
 import { copySelectionToClipboard, pasteFromClipboard } from '../canvas/clipboard'
 import { randomId } from '../canvas/util'
 import { useFabricT as useEditorT } from '../i18n'
-import { ArrowIcon, CircleIcon, CopyIcon, DrawIcon, EllipseIcon, HexagonIcon, PasteIcon, PentagonIcon, RectangleIcon, Redo, StarIcon, TriangleIcon, Undo } from './icons'
+import { ArrowIcon, CircleIcon, CopyIcon, DrawIcon, EllipseIcon, HexagonIcon, LineIcon, PasteIcon, PentagonIcon, RectangleIcon, Redo, StarIcon, TriangleIcon, Undo } from './icons'
 import { StrokeWidthInput } from './StrokeWidthInput'
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -105,6 +105,13 @@ export function FabricMainToolbar({ canvas, visible, undoState, onRemoveNode: re
       ...defaultProps(),
     },
   ))
+  const addLine = (angle: number) => addObject(new Polyline(
+    [{ x: -50, y: 0 }, { x: 50, y: 0 }],
+    {
+      angle,
+      ...defaultProps(),
+    },
+  ))
 
   const addText = () => addObject(new Textbox('Text', {
     ...defaultProps(),
@@ -160,6 +167,26 @@ export function FabricMainToolbar({ canvas, visible, undoState, onRemoveNode: re
         <ToolbarButton onMouseDown={() => { addPolygon(5) }} tooltip={t('addPentagon')} icon={<PentagonIcon />} />
         <ToolbarButton onMouseDown={() => { addPolygon(6) }} tooltip={t('addHexagon')} icon={<HexagonIcon />} />
         <ToolbarButton onMouseDown={addStar} tooltip={t('addStar')} icon={<StarIcon />} />
+      </div>
+    </MenuButton>
+    <MenuButton buttonRenderer={props =>
+      <ToolbarButton
+        {...props}
+        tooltip={t('addLine')}
+        icon={<LineIcon style={{ rotate: '-45deg' }} />}
+      />
+    }>
+      <div className="grid grid-cols-2 gap-1 p-1">
+        {[
+          0, 90,
+          45, 135,
+        ].map(angle =>
+          <ToolbarButton
+            key={angle}
+            onMouseDown={() => addLine(angle)}
+            tooltip={t('addLine')}
+            icon={<LineIcon style={{ rotate: `${angle}deg` }} />} />,
+        )}
       </div>
     </MenuButton>
     <MenuButton buttonRenderer={props =>

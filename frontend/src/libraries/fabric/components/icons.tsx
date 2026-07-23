@@ -65,6 +65,13 @@ export function ArrowIcon({ style }: { style?: React.CSSProperties }) {
     </svg>
   )
 }
+export function LineIcon({ style }: { style?: React.CSSProperties }) {
+  return (
+    <svg style={style} viewBox="0 0 16 16" width="16" height="16" fill="transparent" stroke="currentColor" aria-hidden="true">
+      <line x1="2" y1="8" x2="14" y2="8" />
+    </svg>
+  )
+}
 
 export {
   AlignmentHorizontalCenter,

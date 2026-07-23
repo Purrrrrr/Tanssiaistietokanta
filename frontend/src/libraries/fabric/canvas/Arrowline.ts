@@ -1,11 +1,10 @@
-import { FabricObjectProps, ObjectEvents, Polygon, Polyline, SerializedPolylineProps, TClassProperties, TSVGReviver } from 'fabric'
+import { FabricObjectProps, Polygon, Polyline, TSVGReviver } from 'fabric'
+
+Polyline.ownDefaults.padding = 10 // add padding to polyline to ease editing
+Polyline.ownDefaults.perPixelTargetFind = true // enable per-pixel target finding for polyline to improve selection accuracy
 
 export class Arrowline extends Polyline {
   static type = 'Arrowline'
-  static ownDefaults: Partial<TClassProperties<Polyline<Partial<FabricObjectProps>, SerializedPolylineProps, ObjectEvents>>> = {
-    perPixelTargetFind: true,
-    padding: 10,
-  }
 
   get type(): string {
     return Arrowline.type

@@ -20,6 +20,7 @@ const translations = {
     addHexagon: 'Lisää kuusikulmio',
     addStar: 'Lisää tähti',
     addArrow: 'Lisää nuoli',
+    addLine: 'Lisää viiva',
     addText: 'Lisää teksti',
     copyToClipboard: 'Kopioi leikepöydälle',
     pasteFromClipboard: 'Liitä leikepöydältä',

@@ -29,12 +29,12 @@ const fabricObjectTransformations = [
   forTypes(['Circle'], transformDimensionsProps(['left', 'top', 'radius'], 'dimensions')),
   forTypes(['Ellipse'], transformDimensionsProps(['left', 'top', 'rx', 'ry'], 'dimensions')),
   forTypes(['Rect', 'Polygon', 'Textbox', 'Path'], transformDimensionsProps(['left', 'top', 'width', 'height'], 'dimensions')),
-  forTypes(['Rect', 'Circle', 'Ellipse', 'Polygon', 'Textbox', 'Path', 'Arrowline'], defaultValues({
+  forTypes(['Rect', 'Circle', 'Ellipse', 'Polygon', 'Textbox', 'Path', 'Arrowline', 'Polyline'], defaultValues({
     fill: '#fff',
     stroke: '#000',
     strokeWidth: 2,
   })),
-  forTypes(['Rect', 'Circle', 'Ellipse', 'Polygon', 'Textbox', 'Arrowline'], defaultValues({
+  forTypes(['Rect', 'Circle', 'Ellipse', 'Polygon', 'Textbox', 'Arrowline', 'Polyline'], defaultValues({
     strokeUniform: true,
   })),
   forTypes(['Path'], defaultValues({
