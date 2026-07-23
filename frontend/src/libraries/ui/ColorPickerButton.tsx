@@ -25,6 +25,12 @@ const colorOptions = [
 export function ColorPickerButton({ value, onChange, label, type }: ToolbarColorPickerProps) {
   const id = useId()
   const input = useRef<HTMLInputElement>(null)
+  const chosenColor = colorOptions.includes(value)
+    ? value
+    : value === 'transparent'
+      ? 'transparent'
+      : 'custom'
+  console.log('ColorPickerButton', { value, chosenColor, type })
   return <>
     <input type="color" ref={input} value={value} className="hidden" onChange={(e) => onChange(e.target.value)} />
     <MenuButton buttonRenderer={props =>
@@ -39,30 +45,36 @@ export function ColorPickerButton({ value, onChange, label, type }: ToolbarColor
       </Button>
     }>
       <div className="grid sm:grid-cols-7 grid-cols-3 gap-1 p-1">
-        <button
-          type="button"
-          className="size-6 rounded-sm border border-stone-400 hover:outline"
-          style={colorStyle('transparent')}
+        <ColorButton
+          color="transparent"
+          chosenColor={chosenColor}
           onClick={() => onChange('transparent')}
         />
         {colorOptions.map(color => (
-          <button
-            type="button"
+          <ColorButton
             key={color}
-            className="size-6 rounded-sm border border-stone-400 hover:outline"
-            style={colorStyle(color)}
+            color={(color)}
+            chosenColor={chosenColor}
             onClick={() => onChange(color)}
           />
         ))}
-        <button
-          type="button"
-          className="size-6 rounded-sm border border-stone-400 hover:outline"
-          style={colorStyle('custom')}
+        <ColorButton
+          color="custom"
+          chosenColor={chosenColor}
           onClick={() => input.current?.click()}
         />
       </div>
     </MenuButton>
   </>
+}
+
+function ColorButton({ color, onClick, chosenColor }: { color: string, chosenColor: string, onClick: () => void }) {
+  return <button
+    type="button"
+    className={`size-6 rounded-sm border border-stone-400 hover:outline ${chosenColor === color ? 'outline-2! outline-offset-1! outline-blue-500!' : ''}`}
+    style={colorStyle(color)}
+    onClick={onClick}
+  />
 }
 
 function colorStyle(color: string, stroke = false): CSSProperties {
