@@ -603,6 +603,9 @@
     * Ability to have another diagram as background
     * Field component
   * Diagrams for ball rooms
+* Fabric: make text use stroke color for fill if fill is transparent
+* Interval music dance selector does not work in slide editor!
+* Center lexical QR codes
 * Multiple slides per dance: formation slide / instructions slide / some other?
   * Formation slide support
     * Initial editor
@@ -610,22 +613,22 @@
     * Use ball-rooms for diagram bg
     * Event ballroom field
     * Show in slides!
-      Sharing diagrams between dances
+    * Sharing diagrams between dances
       * Own service and forms
       * Migration
-        Show diagram list in ballrooms
-        Show dances sharing this diagram in dance editor
+    * Diagrams in interval music!
+      Show diagram list in ballrooms
+      Show dances sharing this diagram in dance editor
       Copy diagram function?
-      Diagrams in interval music!
   
   Way to print documents
-  Center lexical QR codes
+  Support simple lines in fabric
+
   Let choose formationDiagram in slides
   * Selector
     Choosing logic
       allow choosing none/automatically
 
-  Fabric: make text use stroke color for fill if fill is transparent
   nice-to-haves
     Tooltips don't work in chrome/edge on second fabric editor on page
     Sortable headers for formationDiagram
@@ -647,6 +650,8 @@
   Set editor: move teachedIn and category into the grid from dance selector
 
   File metadata: image size, audio duration, media type
+  * Backend support
+    Show in frontend
   Some way to handle music?
 
   File linking/copying
