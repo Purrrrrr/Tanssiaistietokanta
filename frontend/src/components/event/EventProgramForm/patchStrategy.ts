@@ -24,9 +24,7 @@ function toProgramInput({ introductions, danceSets, ...rest }: EventProgramSetti
     danceSets: L.modify(
       L.elems,
       compose(
-        (danceSet) => (
-          L.modify(['intervalMusic', L.when(val => val != null), 'dance'], (dance) => dance?._id, danceSet)
-        ),
+        L.modify(['intervalMusic', L.when((val: unknown) => val != null)], ({ dance, ...rest }) => ({ ...rest, danceId: dance?._id ?? null })),
         L.modify(['program', L.elems], toProgramItemInput),
       ),
       danceSets,

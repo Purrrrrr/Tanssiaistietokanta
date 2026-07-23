@@ -24,6 +24,7 @@ import {
 } from 'components/event/EventProgramForm'
 import { EventSlideProps, WithEventProgram } from 'components/event/EventSlide'
 import { ProgramTypeIcon } from 'components/event/ProgramTypeIcon'
+import { DanceChooser } from 'components/widgets/DanceChooser'
 import { Duration } from 'components/widgets/Duration'
 import { T, useT, useTranslation } from 'i18n'
 
@@ -189,7 +190,7 @@ function IntervalMusicDescriptionEditor({ danceSetIndex, eventId }: { danceSetIn
   const intervalMusic = useValueAt(path)
   const hasCustomTexts = typeof intervalMusic?.name === 'string'
   return <>
-    <Field label={t('dance')} path={`${path}.dance`} component={DanceProgramChooser} labelStyle="beside" />
+    <Field label={t('dance')} path={`${path}.dance`} component={DanceChooser} labelStyle="beside" />
     <IntervalMusicDefaultTextsSwitch label={t('fields.intervalMusic.useDefaultTexts')} path={path} />
     {hasCustomTexts
       ? <>
