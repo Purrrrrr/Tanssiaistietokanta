@@ -1,27 +1,21 @@
 import { useState } from 'react'
 
 import { Dance, DanceWithEvents, ID } from 'types'
-import { FormationDiagram } from 'types/formationDiagrams'
 
 import { formatBallroom } from 'services/ballrooms'
 
-import { defaultDiagram, FabricEditor } from 'libraries/fabric/FabricEditor'
 import { SyncStatus } from 'libraries/forms'
 import { DocumentContentEditor, DocumentContentEditorProps, emptyDocument, isEmptyDocument } from 'libraries/lexical'
 import { Button, Collapse, ItemList, PageSection } from 'libraries/ui'
 import { Cross, Edit } from 'libraries/ui/icons'
-import { BallroomSelect } from 'components/ballroom/BallroomSelect'
 import { AddFormationDiagramForm } from 'components/formationDiagram/AddFormationDiagramForm'
 import { FormationDiagramChooser } from 'components/formationDiagram/FormationDiagramChooser'
 import { FormationDiagramEditor } from 'components/formationDiagram/FormationDiagramEditor'
-import { FormationDiagramForm } from 'components/formationDiagram/FormationDiagramForm'
-import { AddButton } from 'components/widgets/AddButton'
 import { ColoredTag } from 'components/widgets/ColoredTag'
 import { DurationField } from 'components/widgets/DurationField'
 import { useT, useTranslation } from 'i18n'
-import randomId from 'utils/randomId'
 
-import { Field, Form, Input, RemoveItemButton, useAppendToList, useDanceEditorState, useOnChangeFor } from './DanceForm'
+import { Field, Form, Input, useDanceEditorState, useOnChangeFor } from './DanceForm'
 import { DanceSlidePreview } from './DanceSlidePreview'
 import DanceWikiPreview from './DanceWikiPreview'
 import { WikipageSelector } from './WikipageSelector'
@@ -92,7 +86,7 @@ export function FullDanceEditorFields({ dance }: { dance: DanceWithEvents }) {
 }
 
 function SlideWrapper({ dance, children }: { dance: Dance, children: React.ReactNode }) {
-  return <div className="min-lg:grid grid-cols-2 grid-flow-col gap-3.5 items-stretch">
+  return <div className="lg:grid grid-cols-2 grid-flow-col gap-3.5 items-stretch">
     <div className="flex flex-col">{children}</div>
     <div className="min-h-100 mb-[15px]">
       <div className="mb-[5px]">{useTranslation('domain.dance.descriptionPreview')}</div>
@@ -134,7 +128,7 @@ function Suggestions(
 }
 
 export function FormationDiagramsSection({ dance, onModifyFormationDiagrams }: {
-  dance: DanceWithEvents
+  dance: Pick<Dance, 'formationDiagrams'>
   onModifyFormationDiagrams: (diagrams: Dance['formationDiagrams']) => void
 }) {
   const [showAddForm, setShowAddForm] = useState(false)

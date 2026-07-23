@@ -8,7 +8,7 @@ import { DragHandle, SyncState, SyncStatus } from 'libraries/forms'
 import { DocumentContentEditor } from 'libraries/lexical'
 import { Callout, H2, Link } from 'libraries/ui'
 import { ArrowLeft, Cross, Link as LinkIcon } from 'libraries/ui/icons'
-import { InstructionEditor } from 'components/dance/DanceEditor'
+import { FormationDiagramsSection, InstructionEditor } from 'components/dance/DanceEditor'
 import { Field as DanceField, Form as DanceForm, Input as DanceInput, useDanceEditorState } from 'components/dance/DanceForm'
 import { LinkToDanceWiki } from 'components/dance/DanceWikiPreview'
 import { DanceProgramChooser } from 'components/event/DanceProgramChooser'
@@ -246,7 +246,7 @@ const emptyDance: Dance = {
   formationDiagrams: [],
 }
 
-function DanceEditor({ id, initialDance }: { id: string, initialDance?: Pick<Dance, '_id' | '_versionId' | 'name' | 'wikipage' | 'wikipageName'> | null }) {
+function DanceEditor({ id, initialDance }: { id: string, initialDance?: Pick<Dance, '_id' | '_versionId' | 'name' | 'wikipage' | 'wikipageName' | 'formationDiagrams'> | null }) {
   const result = useDance({ id, versionId: initialDance?._versionId })
   const dance = result.data?.dance ?? initialDance ?? emptyDance
 
@@ -254,25 +254,30 @@ function DanceEditor({ id, initialDance }: { id: string, initialDance?: Pick<Dan
   const label = useT('domain.dance')
   const { formProps, state } = useDanceEditorState(dance)
 
-  return <DanceForm {...formProps} readOnly={!result.data || formProps.readOnly}>
-    <div className="flex flex-wrap gap-3.5 items-center mb-3">
-      <H2 className=""><T msg="components.eventSlideEditor.danceTitle" /></H2>
-      <SyncStatus className="top-[3px] grow" state={state} />
-    </div>
-    <DanceInput label={label('name')} path="name" />
-    <DanceField label={label('description')} path="description" component={InstructionEditor} componentProps={{ danceId: dance._id, wikipage: dance.wikipage, ...docEditorProps }} />
+  return <>
+    <DanceForm {...formProps} readOnly={!result.data || formProps.readOnly}>
+      <div className="flex flex-wrap gap-3.5 items-center mb-3">
+        <H2 className=""><T msg="components.eventSlideEditor.danceTitle" /></H2>
+        <SyncStatus className="top-[3px] grow" state={state} />
+      </div>
+      <DanceInput label={label('name')} path="name" />
+      <DanceField label={label('description')} path="description" component={InstructionEditor} componentProps={{ danceId: dance._id, wikipage: dance.wikipage, ...docEditorProps }} />
 
-    <p className="flex gap-3.5">
-      {dance.wikipageName &&
+      <p className="flex gap-3.5">
+        {dance.wikipageName &&
         <LinkToDanceWiki page={dance.wikipageName}>
           <LinkIcon size={12} />{t('danceInDanceWiki')}
         </LinkToDanceWiki>
-      }
-      <Link target="_blank" to="/dances/$danceId" params={{ danceId: dance._id }}>
-        <LinkIcon size={12} /> {useTranslation('components.eventSlideEditor.linkToCompleteDance')}
-      </Link>
-    </p>
-  </DanceForm>
+        }
+        <Link target="_blank" to="/dances/$danceId" params={{ danceId: dance._id }}>
+          <LinkIcon size={12} /> {useTranslation('components.eventSlideEditor.linkToCompleteDance')}
+        </Link>
+      </p>
+    </DanceForm>
+    <FormationDiagramsSection dance={dance} onModifyFormationDiagrams={diagrams => formProps.onChange({
+      ...formProps.value, formationDiagrams: diagrams,
+    }, 'formationDiagrams')} />
+  </>
 }
 
 interface LinkToSlideProps {
