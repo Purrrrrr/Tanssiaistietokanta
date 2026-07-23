@@ -13,7 +13,9 @@ interface ToolbarColorPickerProps {
 // Nice big set of presentable colors with good contrast and variety, but not too many to be overwhelming
 const colorOptions = [
   // Grayscale
-  '#000000', '#555555', '#AAAAAA', '#FFFFFF',
+  '#000000', '#555555', '#AAAAAA', '#DDDDDD', '#EEEEEE', '#FFFFFF',
+  // Light tones for the colors below
+  '#FF9999', '#FFCC99', '#FFFF99', '#CCFF99', '#99FFCC', '#99E6FF', '#99B3FF', '#CC99FF', '#FF99CC',
   // Rose, orange, amber, lime, green, cyan, sky, blue, violet, fuchsia
   '#FF4D4D', '#FF944D', '#FFD24D', '#B6FF4D', '#4DFF88', '#4DD2FF', '#4DA6FF', '#944DFF', '#FF4DD2',
   // Darker tones for the above colors
@@ -36,25 +38,28 @@ export function ColorPickerButton({ value, onChange, label, type }: ToolbarColor
         <span className="size-4 rounded-sm border border-stone-400" style={colorStyle(value, type === 'stroke')} />
       </Button>
     }>
-      <div className="grid sm:grid-cols-6 grid-cols-3 gap-1 p-1">
+      <div className="grid sm:grid-cols-7 grid-cols-3 gap-1 p-1">
         <button
+          type="button"
           className="size-6 rounded-sm border border-stone-400 hover:outline"
           style={colorStyle('transparent')}
           onClick={() => onChange('transparent')}
         />
-        <button
-          className="size-6 rounded-sm border border-stone-400 hover:outline"
-          style={colorStyle('custom')}
-          onClick={() => input.current?.click()}
-        />
         {colorOptions.map(color => (
           <button
+            type="button"
             key={color}
             className="size-6 rounded-sm border border-stone-400 hover:outline"
             style={colorStyle(color)}
             onClick={() => onChange(color)}
           />
         ))}
+        <button
+          type="button"
+          className="size-6 rounded-sm border border-stone-400 hover:outline"
+          style={colorStyle('custom')}
+          onClick={() => input.current?.click()}
+        />
       </div>
     </MenuButton>
   </>
