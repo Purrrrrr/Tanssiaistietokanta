@@ -29,6 +29,7 @@ const editableDanceFields: (keyof EditableDance)[] = [
   'source',
   'category',
   'instructions',
+  'wikipageName',
   'slideStyleId',
   'tags',
   'formationDiagrams',
