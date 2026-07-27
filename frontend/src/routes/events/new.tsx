@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 
-import { Ballroom, EventInput } from 'types'
+import { EventInput } from 'types'
 import { EventGrantRole, ViewAccess } from 'types/gql/graphql'
 
 import { addGlobalLoadingAnimation } from 'backend'
@@ -15,15 +15,11 @@ import { EventGrantsEditor } from 'components/rights/EventGrantsEditor'
 import { useT } from 'i18n'
 import randomId from 'utils/randomId'
 
-interface FormData extends EventInput {
-  ballroom: Ballroom | null
-}
-
 const {
   Form,
   Input,
   Field,
-} = formFor<FormData>()
+} = formFor<EventInput>()
 
 export const Route = createFileRoute('/events/new')({
   component: CreateEventForm,
@@ -47,13 +43,12 @@ function CreateEventForm() {
     ? [{ _id: randomId(), principal: `user:${currentUser._id}`, role: EventGrantRole.Organizer }]
     : []
 
-  const [event, setEvent] = useState<FormData>({
+  const [event, setEvent] = useState<EventInput>({
     name: '',
     beginDate: '',
     endDate: '',
     accessControl: { viewAccess: ViewAccess.Public, grants: initialGrants },
     eventRegistrationSystem: 'None',
-    ballroom: null,
   })
 
   return <Page title={t('newEvent')}>
