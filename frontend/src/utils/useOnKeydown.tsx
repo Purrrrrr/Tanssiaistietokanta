@@ -6,7 +6,7 @@ type KeyDownHandlerParam = KeyDownHandler | Record<string, KeyDownHandler>
 export function useOnKeydown(onKeydown: KeyDownHandlerParam, key?: string) {
   useEffect(() => {
     function onPress(event: KeyboardEvent) {
-      if (isInputTag(event.target)) return
+      if (isInputTag(event.target as HTMLElement)) return
       if (key && event.key !== key) return
 
       if (typeof onKeydown === 'object') {
@@ -24,6 +24,11 @@ export function useOnKeydown(onKeydown: KeyDownHandlerParam, key?: string) {
 }
 
 const inputTags = ['INPUT', 'TEXTAREA', 'SELECT', 'BUTTON']
-export function isInputTag(target) {
-  return target && inputTags.includes(target.tagName)
+export function isInputTag(target: HTMLElement) {
+  console.log('isInputTag', target.tagName, target.isContentEditable)
+  if (!target) return false
+  if (inputTags.includes(target.tagName)) return true
+  if (target.role === 'application') return true
+  if (target.isContentEditable) return true
+  if (target.parentElement) return isInputTag(target.parentElement)
 }
