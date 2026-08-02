@@ -77,7 +77,7 @@ function QRCodeEditor({ editor, node, data }: QRCodeEditorProps) {
     editor.update(() => {
       if ($isQRCodeNode(node)) {
         if (payload.value !== undefined) node.setValue(payload.value.trim())
-        if (payload.title !== undefined) node.setTitle(payload.title.trim())
+        if (payload.title !== undefined) node.setTitle(payload.title)
         if (payload.size !== undefined) node.setSize(payload.size > 0 ? payload.size : 128)
       }
       $addUpdateTag(SKIP_DOM_SELECTION_TAG)
