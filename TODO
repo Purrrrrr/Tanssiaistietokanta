@@ -619,26 +619,32 @@
       * Migration
     * Diagrams in interval music!
     * Editing diagram in slide show editor
-
-  Remove trim in lexical QR code text
-  Warning for dances in event without a link to dance wiki
-  Add ending times of workshops to print
-  Add stopPropagation to all lexical and fabric keyboard events
-
+* Ropecon 2026 post todo
+* Remove trim in lexical QR code text
+* Add stopPropagation to all lexical and fabric keyboard events
+  Wider lexical editor in slide editor
 
   Formation slide part two
-      Show diagram list in ballrooms
-      Show dances sharing this diagram in dance editor
-      Copy diagram function?
-      Diagrams without ballroom
-        Allow usage
+    Show diagram list in ballrooms
+    Show dances sharing this diagram in dance editor
+    Copy diagram function?
+    Diagrams without ballroom
+      Allow usage
   
   Dance difficulty tags
-  QR code login maybe?
-
+    Tag service
+      groups: difficulty or property of dance
+      color?
+      icon?
+      Could be readonly for now?
   Fix zipping and downloading files with non latin filenames
-  Look for ways to implement better spam filter
+
+  Add ending times of workshops to print and editor
   Allow adding custom content to dance set footer? Or just a QR code?
+  Warning for dances in event without a link to dance wiki
+
+  QR code login maybe?
+  Look for ways to implement better spam filter
   
   Diagrams:
     Default black border color
@@ -647,14 +653,14 @@
       Better default width?
       Diagram alignment options
     Support image uploads
-    Render diagram svg faster, allow prerendering
+    Render diagram svg faster, allow prerendering or render somehow on frontend?
     More accurate text svg rendering
     Floating Diagrams, floating images?
     Shapes for:
       sola, piiri
 
   Printing straight to pdf file in files service?
-  File syncing: directory sync
+  File syncing: directory sync? Not possible in firefox
   Stop lexical documents from saving files into event files?
     Document file list?
   
@@ -665,7 +671,6 @@
     General instructions field
     Current time
     Timetable, how late it is
-
 
   Let choose formationDiagram in slides
   * Selector
