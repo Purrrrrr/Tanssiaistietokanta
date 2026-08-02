@@ -606,6 +606,7 @@
 * Fabric: make text use stroke color for fill if fill is transparent
 * Interval music dance selector does not work in slide editor!
 * Center lexical QR codes
+* Support simple lines in fabric
 * Multiple slides per dance: formation slide / instructions slide / some other?
   * Formation slide support
     * Initial editor
@@ -617,12 +618,54 @@
       * Own service and forms
       * Migration
     * Diagrams in interval music!
+    * Editing diagram in slide show editor
+
+  Remove trim in lexical QR code text
+  Warning for dances in event without a link to dance wiki
+  Add ending times of workshops to print
+  Add stopPropagation to all lexical and fabric keyboard events
+
+
+  Formation slide part two
       Show diagram list in ballrooms
       Show dances sharing this diagram in dance editor
       Copy diagram function?
+      Diagrams without ballroom
+        Allow usage
   
-  Way to print documents
-  Support simple lines in fabric
+  Dance difficulty tags
+  QR code login maybe?
+
+  Fix zipping and downloading files with non latin filenames
+  Look for ways to implement better spam filter
+  Allow adding custom content to dance set footer? Or just a QR code?
+  
+  Diagrams:
+    Default black border color
+    Allow setting border color
+    Make creating full width diagrams in slides easier
+      Better default width?
+      Diagram alignment options
+    Support image uploads
+    Render diagram svg faster, allow prerendering
+    More accurate text svg rendering
+    Floating Diagrams, floating images?
+    Shapes for:
+      sola, piiri
+
+  Printing straight to pdf file in files service?
+  File syncing: directory sync
+  Stop lexical documents from saving files into event files?
+    Document file list?
+  
+  Allow controlling slideshow from a control view
+    Show all slides and hilight current
+    Allow editing
+    Slide notes
+    General instructions field
+    Current time
+    Timetable, how late it is
+
 
   Let choose formationDiagram in slides
   * Selector
@@ -642,10 +685,12 @@
   * Move objects with keyboards
   * Different arrows
   * Centering of objects
+  * Hilight selected color properly
     Copy and paste
       Change format to enable better paste positioning
       Use same format lexical uses?
     Image upload support?
+      support in SVG render?
 
   Set editor: move teachedIn and category into the grid from dance selector
 
