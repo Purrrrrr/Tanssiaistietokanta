@@ -3,14 +3,16 @@ import { $getNodeByKey, $isNodeSelection, LexicalEditor, NodeKey } from 'lexical
 
 import type { FileOwner, FileOwningId } from 'types/files'
 import { ToolbarHookReturn } from './types'
+import { NodeAlignment } from '../plugins/nodes/types'
 
 import { doUpload } from 'services/files'
 
 import { useEditorT } from '../i18n'
 import { INSERT_IMAGE_COMMAND } from '../plugins/ImagePlugin'
 import { $isImageNode } from '../plugins/nodes/ImageNode'
-import { ImageIcon } from './icons'
 import { ToolbarButton, ToolbarInput, ToolbarRow } from './widgets'
+import { ImageIcon } from './icons'
+import { AlignSelector } from './widgets/AlignSelector'
 
 export interface ImageUploadConfig {
   owner: FileOwner
@@ -22,6 +24,7 @@ interface ImageInfo {
   nodeKey: NodeKey
   alt: string
   width?: number
+  align: NodeAlignment
 }
 
 export function useImageToolbar(editor: LexicalEditor, imageUpload?: ImageUploadConfig): ToolbarHookReturn {
@@ -47,6 +50,17 @@ export function useImageToolbar(editor: LexicalEditor, imageUpload?: ImageUpload
         const w = newWidth ? parseInt(newWidth) : undefined
         node.setWidth(w)
         setSelectedImage({ ...selectedImage, width: w })
+      }
+    })
+  }
+
+  function updateAlign(align: NodeAlignment) {
+    if (!selectedImage) return
+    editor.update(() => {
+      const node = $getNodeByKey(selectedImage.nodeKey)
+      if ($isImageNode(node)) {
+        node.setAlign(align)
+        setSelectedImage({ ...selectedImage, align })
       }
     })
   }
@@ -79,6 +93,7 @@ export function useImageToolbar(editor: LexicalEditor, imageUpload?: ImageUpload
             nodeKey: node.getKey(),
             alt: node.getAltText(),
             width: node.getWidth(),
+            align: node.getAlign(),
           })
           return
         }
@@ -102,6 +117,7 @@ export function useImageToolbar(editor: LexicalEditor, imageUpload?: ImageUpload
             value={selectedImage.width ?? ''}
             onChange={updateWidth}
           />
+          <AlignSelector align={selectedImage.align} onChange={updateAlign} />
           <ToolbarButton color="danger" onClick={removeNode} text={t('remove')} />
         </ToolbarRow>
       )}

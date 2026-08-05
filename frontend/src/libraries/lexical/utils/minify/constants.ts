@@ -43,6 +43,7 @@ export const KEY_MAP: Record<string, string> = {
   height: 'h',
   data: 'da',
   hash: 'sh',
+  align: 'al',
 }
 
 export const LEXICAL_KEY_MAPPING: KeyMapping = createKeyMapping(KEY_MAP)

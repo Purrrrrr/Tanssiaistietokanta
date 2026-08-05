@@ -21,6 +21,7 @@ import type { SerializedLayoutContainerNode } from './plugins/nodes/LayoutContai
 import type { SerializedLayoutItemNode } from './plugins/nodes/LayoutItemNode'
 import type { SerializedQRCodeNode } from './plugins/nodes/QRCodeNode'
 import { theme } from './theme'
+import { alignClassname } from './utils/alignClassname'
 import { expand, MinifiedDocumentContent } from './utils/minify'
 
 // ---------------------------------------------------------------------------
@@ -139,13 +140,14 @@ function renderNode(node: SerializedNode, index: number, options: ViewOptions): 
     case 'image': {
       const img = node as SerializedImageNode
       return content(
-        <img
-          key={key}
-          src={img.src}
-          alt={img.altText}
-          width={img.width}
-          style={{ maxWidth: '100%', height: 'auto' }}
-        />,
+        <div key={key} className={alignClassname(img.align)}>
+          <img
+            src={img.src}
+            alt={img.altText}
+            width={img.width}
+            style={{ maxWidth: '100%', height: 'auto' }}
+          />
+        </div>,
       )
     }
     case 'fabric-diagram': {

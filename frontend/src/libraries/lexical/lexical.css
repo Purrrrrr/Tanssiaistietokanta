@@ -63,7 +63,7 @@
   ol {
     list-style: decimal;
   }
-  p {
+  p, .paragraph-margin {
     margin-top: 0.75em;
     margin-bottom: 0.25em;
   }
@@ -73,8 +73,7 @@
   img {
     max-width: 100%;
     height: auto;
-    display: block;
-    margin-block: 0.5em;
+    display: inline-block;
   }
   table {
     border-collapse: collapse;

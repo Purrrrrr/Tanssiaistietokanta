@@ -87,3 +87,27 @@ export function ImageIcon() {
     </svg>
   )
 }
+
+export function ImageFloatLeftIcon() {
+  return (
+    <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true">
+      <rect x="1" y="2" width="7" height="7" rx="1" fill="none" stroke="currentColor" strokeWidth="1" />
+      <line x1="10" y1="3.75" x2="16" y2="3.75" stroke="currentColor" strokeWidth="1.85" />
+      <line x1="10" y1="7.25" x2="16" y2="7.25" stroke="currentColor" strokeWidth="1.85" />
+      <line x1="0" y1="11.75" x2="16" y2="11.75" stroke="currentColor" strokeWidth="1.85" />
+      <line x1="0" y1="15.25" x2="16" y2="15.5" stroke="currentColor" strokeWidth="1.85" />
+    </svg>
+  )
+}
+
+export function ImageFloatRightIcon() {
+  return (
+    <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true">
+      <rect x="8" y="2" width="7" height="7" rx="1" fill="none" stroke="currentColor" strokeWidth="1" />
+      <line x1="0" y1="3.75" x2="6" y2="3.75" stroke="currentColor" strokeWidth="1.85" />
+      <line x1="0" y1="7.25" x2="6" y2="7.25" stroke="currentColor" strokeWidth="1.85" />
+      <line x1="0" y1="11.75" x2="16" y2="11.75" stroke="currentColor" strokeWidth="1.85" />
+      <line x1="0" y1="15.25" x2="16" y2="15.5" stroke="currentColor" strokeWidth="1.85" />
+    </svg>
+  )
+}

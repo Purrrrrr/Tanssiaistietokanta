@@ -72,6 +72,15 @@ const translations = {
     diagram: {
       insertDiagram: 'Lisää kaavio',
     },
+    alignSelector: {
+      align: 'Tasaus',
+      left: 'Vasen',
+      center: 'Keski',
+      right: 'Oikea',
+      fullWidth: 'Koko leveys',
+      floatLeft: 'Kellu vasemmalla',
+      floatRight: 'Kellu oikealla',
+    },
   },
 }
 
