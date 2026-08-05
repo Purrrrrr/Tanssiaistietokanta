@@ -23,7 +23,7 @@ export function EditorShowcase({ twoEditors, showMinified, showViewer }: { twoEd
       {showMinified &&
         <>
           <H2>Minified state ({JSON.stringify(state).length} bytes)</H2>
-          <pre className="overflow-auto p-2 bg-gray-100 rounded max-h-200"><code>{JSON.stringify(state, null, 2)}</code></pre>
+          <pre className="overflow-auto p-2 bg-gray-100 rounded max-h-200 max-w-200"><code>{JSON.stringify(state, null, 2)}</code></pre>
         </>
       }
       {twoEditors &&
