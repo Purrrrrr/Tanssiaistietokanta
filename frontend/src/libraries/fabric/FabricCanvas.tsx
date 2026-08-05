@@ -15,6 +15,7 @@ interface FabricCanvasProps {
   backgroundImage?: string | null
   width: number
   height: number
+  scale?: number
   data: object
   editable?: boolean
   onCanvasCreated?: (canvas: Canvas) => void
@@ -24,7 +25,7 @@ interface FabricCanvasProps {
 
 const nop = () => {}
 
-export function FabricCanvas({ width, height, data, backgroundImage, editable = false, onCanvasCreated, onUpdate, onSelect, ...rest }: FabricCanvasProps) {
+export function FabricCanvas({ width, height, scale = 1, data, backgroundImage, editable = false, onCanvasCreated, onUpdate, onSelect, ...rest }: FabricCanvasProps) {
   const canvasElRef = useRef<HTMLCanvasElement>(null)
   const canvasRef = useRef<Canvas | null>(null)
   const lastDataRef = useRef<object | null>(null)
@@ -108,9 +109,10 @@ export function FabricCanvas({ width, height, data, backgroundImage, editable = 
   useEffect(() => { // Sync dimensions from external changes
     const canvas = canvasRef.current
     if (canvas) {
-      canvas.setDimensions({ width, height })
+      canvas.setDimensions({ width: width * scale, height: height * scale })
+      canvas.setZoom(scale)
     }
-  }, [width, height])
+  }, [width, height, scale])
 
   useEffect(() => { // Sync background image from external changes
     const canvas = canvasRef.current

@@ -65,7 +65,7 @@ export class FabricNode extends DecoratorNode<React.ReactNode> {
   }
 
   static importJSON(json: SerializedFabricNode): FabricNode {
-    return $createFabricNode(json.width, json.height, json.data, json.hash)
+    return $createFabricNode(json.width, json.height, json.data, json.hash, json.align)
   }
 
   static importDOM(): DOMConversionMap | null {
@@ -232,6 +232,7 @@ function FabricComponent({ nodeKey, width, height, data, align }: FabricComponen
     height={height}
     onChange={onChange}
     onRemoveEditor={removeNode}
+    fillContainerWidth={align === 'fullWidth'}
     additionalToolbarButtons={
       <AlignSelector align={align} onChange={setAlign} />
     }

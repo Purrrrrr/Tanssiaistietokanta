@@ -1,9 +1,10 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import classNames from 'classnames'
 import { Canvas, FabricObject } from 'fabric'
 
 import { FabricDiagramData } from './types'
 
+import { useResizeObserver } from 'libraries/common/useResizeObserver'
 import { FloatingToolbar } from 'libraries/ui'
 
 import { saveCanvasToJson } from './canvas/util'
@@ -22,10 +23,24 @@ interface EmbeddedFabricEditorProps extends Omit<FabricDiagramData, 'hash'> {
   onRemoveEditor?: () => void
   onChange: (data: FabricDiagramData) => void
   additionalToolbarButtons?: React.ReactNode
+  fillContainerWidth?: boolean
 }
 
-export function EmbeddedFabricEditor({ editable, isSelected, nodeKey, width, height, data, onChange, onRemoveEditor, additionalToolbarButtons }: EmbeddedFabricEditorProps) {
+export function EmbeddedFabricEditor({
+  editable,
+  isSelected,
+  nodeKey,
+  width,
+  height,
+  data,
+  onChange,
+  onRemoveEditor,
+  additionalToolbarButtons,
+  fillContainerWidth,
+}: EmbeddedFabricEditorProps) {
+  const container = useRef<HTMLDivElement>(null)
   const [canvas, setCanvas] = useState<Canvas | null>(null)
+  const [scale, setScale] = useState(1)
   const [activeObjects, setActiveObjects] = useState<FabricObject[]>([])
   const expandedData = useMemo(() => expandFabricObject(data), [data])
 
@@ -34,8 +49,21 @@ export function EmbeddedFabricEditor({ editable, isSelected, nodeKey, width, hei
     onChange(await saveCanvasToJson(canvas))
   }
 
+  const onResize: ResizeObserverCallback = ([e]) => {
+    if (!e.contentBoxSize) {
+      setScale(1)
+      return
+    }
+    const containerWidth = e.contentBoxSize[0].inlineSize - 4
+    setScale(fillContainerWidth ? (containerWidth / width) : 1)
+  }
+  useResizeObserver(container, onResize)
+
   return (
-    <div className="[anchor-name:--fabric-editor] [anchor-scope:all] my-2" data-fabric-node-key={nodeKey}>
+    <div
+      ref={container}
+      className="[anchor-name:--fabric-editor] [anchor-scope:all] my-2"
+      data-fabric-node-key={nodeKey}>
       {canvas && editable && (
         <FabricToolbar
           visible={!!isSelected}
@@ -46,17 +74,23 @@ export function EmbeddedFabricEditor({ editable, isSelected, nodeKey, width, hei
           additionalButtons={additionalToolbarButtons}
         />
       )}
-      <div className={`relative w-max border-2 ${isSelected ? 'border-blue-500' : 'border-gray-300'}`}>
+      <div
+        className={`relative w-max border-2 ${isSelected ? 'border-blue-500' : 'border-gray-300'}`}
+        // style={{ width: width * scale, height: height * scale }}
+      >
         <FabricCanvas
           width={width}
           height={height}
+          scale={scale}
           data={expandedData}
           editable={editable}
           onCanvasCreated={setCanvas}
           onUpdate={saveCanvas}
           onSelect={setActiveObjects}
         />
-        {editable && isSelected && canvas && <CanvasResizeButton canvas={canvas} onResized={saveCanvas} />}
+        {editable && isSelected && canvas && (
+          <CanvasResizeButton canvas={canvas} onResized={saveCanvas} onlyHeight={fillContainerWidth} />
+        )}
       </div>
     </div>
   )

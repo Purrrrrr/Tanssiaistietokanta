@@ -5,9 +5,10 @@ import { useFabricTranslation } from '../i18n'
 interface CanvasResizeButtonProps {
   canvas: Canvas
   onResized: () => void
+  onlyHeight?: boolean
 }
 
-export function CanvasResizeButton({ canvas, onResized }: CanvasResizeButtonProps) {
+export function CanvasResizeButton({ canvas, onResized, onlyHeight }: CanvasResizeButtonProps) {
   function handleResizeStart(e: React.MouseEvent | React.TouchEvent) {
     e.preventDefault()
     e.stopPropagation()
@@ -27,7 +28,9 @@ export function CanvasResizeButton({ canvas, onResized }: CanvasResizeButtonProp
     function onMove(e: MouseEvent | TouchEvent) {
       const { clientX, clientY } = toCoordinates(e)
       canvas?.setDimensions({
-        width: Math.max(200, startW + clientX - startX),
+        width: onlyHeight
+          ? canvas.width
+          : Math.max(200, startW + clientX - startX),
         height: Math.max(100, startH + clientY - startY),
       })
     }

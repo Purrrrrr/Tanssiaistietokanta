@@ -15,7 +15,7 @@ export async function saveCanvasToJson(canvas: Canvas): Promise<FabricDiagramDat
   })
   normalizeObjectScales(canvas)
   const minified = minifyFabricObject(getCanvasJson(canvas))
-  const data = { data: minified, width: canvas.width, height: canvas.height }
+  const data = { data: minified, width: canvas.width / canvas.getZoom(), height: canvas.height / canvas.getZoom() }
   console.log(data)
   const hash = await hashValue(data)
   return { ...data, hash } as FabricDiagramData
