@@ -21,14 +21,16 @@ export function AlignSelector({ align, onChange }: { align: NodeAlignment, onCha
     />
 
   }>
-    {alignments.map(a =>
-      <ToolbarButton
-        key={a}
-        onMouseDown={() => onChange(a)}
-        tooltip={t(a)}
-        icon={<AlignIcon align={a} />}
-      />,
-    )}
+    <div>
+      {alignments.map(a =>
+        <ToolbarButton
+          key={a}
+          onMouseDown={() => onChange(a)}
+          tooltip={t(a)}
+          icon={<AlignIcon align={a} />}
+        />,
+      )}
+    </div>
   </MenuButton>
 }
 

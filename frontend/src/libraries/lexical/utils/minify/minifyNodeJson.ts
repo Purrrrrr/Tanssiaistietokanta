@@ -27,6 +27,9 @@ const transformations: Transformation[] = [
     style: '',
     version: 1,
   })),
+  forTypes(['image', 'fabric-diagram'], defaultValues({
+    align: 'left',
+  })),
   forTypes(['image', 'tablecell'], defaultValues({
     width: undefined,
   })),

@@ -15,15 +15,16 @@ import { expandFabricObject } from './minify'
 
 export type { FabricDiagramData, MinifiedFabricData } from './types'
 
-interface FabricComponentProps extends Omit<FabricDiagramData, 'hash'> {
+interface EmbeddedFabricEditorProps extends Omit<FabricDiagramData, 'hash'> {
   nodeKey?: string
   editable?: boolean
   isSelected?: boolean
   onRemoveEditor?: () => void
   onChange: (data: FabricDiagramData) => void
+  additionalToolbarButtons?: React.ReactNode
 }
 
-export function FabricEditor({ editable, isSelected, nodeKey, width, height, data, onChange, onRemoveEditor }: FabricComponentProps) {
+export function EmbeddedFabricEditor({ editable, isSelected, nodeKey, width, height, data, onChange, onRemoveEditor, additionalToolbarButtons }: EmbeddedFabricEditorProps) {
   const [canvas, setCanvas] = useState<Canvas | null>(null)
   const [activeObjects, setActiveObjects] = useState<FabricObject[]>([])
   const expandedData = useMemo(() => expandFabricObject(data), [data])
@@ -36,7 +37,14 @@ export function FabricEditor({ editable, isSelected, nodeKey, width, height, dat
   return (
     <div className="[anchor-name:--fabric-editor] [anchor-scope:all] my-2" data-fabric-node-key={nodeKey}>
       {canvas && editable && (
-        <FabricToolbar visible={!!isSelected} anchorName="--fabric-editor" activeObjects={activeObjects} canvas={canvas} onRemoveNode={onRemoveEditor} />
+        <FabricToolbar
+          visible={!!isSelected}
+          anchorName="--fabric-editor"
+          activeObjects={activeObjects}
+          canvas={canvas}
+          onRemoveNode={onRemoveEditor}
+          additionalButtons={additionalToolbarButtons}
+        />
       )}
       <div className={`relative w-max border-2 ${isSelected ? 'border-blue-500' : 'border-gray-300'}`}>
         <FabricCanvas
@@ -60,12 +68,18 @@ interface FabricToolbarProps {
   canvas: Canvas
   visible: boolean
   activeObjects: FabricObject[]
+  additionalButtons?: React.ReactNode
 }
 
-export function FabricToolbar({ anchorName, canvas, visible, activeObjects, onRemoveNode }: FabricToolbarProps) {
+export function FabricToolbar({ anchorName, canvas, visible, activeObjects, onRemoveNode, additionalButtons }: FabricToolbarProps) {
   return <>
     <FloatingToolbar className={classNames('mb-1', visible || 'hidden')} anchorName={anchorName} side="top span-right">
-      <FabricMainToolbar canvas={canvas} visible={visible} onRemoveNode={onRemoveNode} />
+      <FabricMainToolbar
+        canvas={canvas}
+        visible={visible}
+        onRemoveNode={onRemoveNode}
+        additionalButtons={additionalButtons}
+      />
     </FloatingToolbar>
     {activeObjects.length > 0 && (
       <FloatingToolbar anchorName={anchorName} className="mt-1" side="bottom span-right">

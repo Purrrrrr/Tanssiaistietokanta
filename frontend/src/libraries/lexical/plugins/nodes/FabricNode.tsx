@@ -18,10 +18,18 @@ import {
   KEY_DELETE_COMMAND,
 } from 'lexical'
 
-import { FabricDiagramData, FabricEditor, type MinifiedFabricData } from 'libraries/fabric/EmbeddedFabricEditor'
+import { NodeAlignment } from './types'
+
+import { EmbeddedFabricEditor, FabricDiagramData, type MinifiedFabricData } from 'libraries/fabric/EmbeddedFabricEditor'
+import { AlignSelector } from 'libraries/lexical/toolbar/widgets/AlignSelector'
+import { alignClassname } from 'libraries/lexical/utils/alignClassname'
+
+interface FabricNodeData extends FabricDiagramData {
+  align: NodeAlignment
+}
 
 export type SerializedFabricNode = Spread<
-  FabricDiagramData,
+  FabricNodeData,
   SerializedLexicalNode
 >
 
@@ -37,13 +45,15 @@ export class FabricNode extends DecoratorNode<React.ReactNode> {
   __height: number
   __data: MinifiedFabricData
   __hash: string
+  __align: NodeAlignment
 
-  constructor(width: number, height: number, data: MinifiedFabricData, hash: string, key?: NodeKey) {
+  constructor(width: number, height: number, data: MinifiedFabricData, hash: string, align: NodeAlignment, key?: NodeKey) {
     super(key)
     this.__width = width
     this.__height = height
     this.__data = data
     this.__hash = hash
+    this.__align = align
   }
 
   static getType(): string {
@@ -51,7 +61,7 @@ export class FabricNode extends DecoratorNode<React.ReactNode> {
   }
 
   static clone(node: FabricNode): FabricNode {
-    return new FabricNode(node.__width, node.__height, node.__data, node.__hash, node.__key)
+    return new FabricNode(node.__width, node.__height, node.__data, node.__hash, node.__align, node.__key)
   }
 
   static importJSON(json: SerializedFabricNode): FabricNode {
@@ -74,6 +84,7 @@ export class FabricNode extends DecoratorNode<React.ReactNode> {
       height: this.__height,
       data: this.__data,
       hash: this.__hash,
+      align: this.__align,
     }
   }
 
@@ -84,16 +95,19 @@ export class FabricNode extends DecoratorNode<React.ReactNode> {
     element.setAttribute('data-fabric-height', String(this.__height))
     element.setAttribute('data-fabric-data', JSON.stringify(this.__data))
     element.setAttribute('data-fabric-hash', this.__hash)
+    element.className = alignClassname(this.__align)
     return { element }
   }
 
   createDOM(): HTMLElement {
     const div = document.createElement('div')
     div.style.display = 'block'
+    div.className = alignClassname(this.__align)
     return div
   }
 
-  updateDOM(): boolean {
+  updateDOM(_prevNode: this, dom: HTMLElement): boolean {
+    dom.className = alignClassname(this.__align)
     return false
   }
 
@@ -105,6 +119,7 @@ export class FabricNode extends DecoratorNode<React.ReactNode> {
   getHeight(): number { return this.getLatest().__height }
   getData(): MinifiedFabricData { return this.getLatest().__data }
   getHash(): string { return this.getLatest().__hash }
+  getAlign(): NodeAlignment { return this.getLatest().__align }
 
   setDimensions(width: number, height: number): this {
     const self = this.getWritable()
@@ -125,6 +140,12 @@ export class FabricNode extends DecoratorNode<React.ReactNode> {
     return self
   }
 
+  setAlign(align: NodeAlignment): this {
+    const self = this.getWritable()
+    self.__align = align
+    return self
+  }
+
   decorate(): React.ReactNode {
     return (
       <FabricComponent
@@ -132,6 +153,7 @@ export class FabricNode extends DecoratorNode<React.ReactNode> {
         width={this.__width}
         height={this.__height}
         data={this.__data}
+        align={this.__align}
       />
     )
   }
@@ -144,9 +166,10 @@ interface FabricComponentProps {
   width: number
   height: number
   data: MinifiedFabricData
+  align: NodeAlignment
 }
 
-function FabricComponent({ nodeKey, width, height, data }: FabricComponentProps) {
+function FabricComponent({ nodeKey, width, height, data, align }: FabricComponentProps) {
   const [editor] = useLexicalComposerContext()
   const [isSelected, setSelected, clearSelection] = useLexicalNodeSelection(nodeKey)
 
@@ -157,6 +180,14 @@ function FabricComponent({ nodeKey, width, height, data }: FabricComponentProps)
         node.setDimensions(data.width, data.height)
         node.setData(data.data)
         node.setHash(data.hash)
+      }
+    })
+  }
+  const setAlign = (align: NodeAlignment) => {
+    editor.update(() => {
+      const node = $getNodeByKey(nodeKey)
+      if ($isFabricNode(node)) {
+        node.setAlign(align)
       }
     })
   }
@@ -192,7 +223,7 @@ function FabricComponent({ nodeKey, width, height, data }: FabricComponentProps)
     editor.update(() => { $getNodeByKey(nodeKey)?.remove() })
   }
 
-  return <FabricEditor
+  return <EmbeddedFabricEditor
     editable={editor.isEditable()}
     isSelected={isSelected}
     nodeKey={nodeKey}
@@ -201,13 +232,16 @@ function FabricComponent({ nodeKey, width, height, data }: FabricComponentProps)
     height={height}
     onChange={onChange}
     onRemoveEditor={removeNode}
+    additionalToolbarButtons={
+      <AlignSelector align={align} onChange={setAlign} />
+    }
   />
 }
 
 // ─── Public API ───────────────────────────────────────────────────────────────
 
-export function $createFabricNode(width = 600, height = 400, data = {}, hash = ''): FabricNode {
-  return new FabricNode(width, height, data, hash)
+export function $createFabricNode(width = 600, height = 400, data = {}, hash = '', align: NodeAlignment = 'left'): FabricNode {
+  return new FabricNode(width, height, data, hash, align)
 }
 
 export function $isFabricNode(node: LexicalNode | null | undefined): node is FabricNode {

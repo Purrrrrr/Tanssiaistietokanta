@@ -3,11 +3,11 @@ import { NodeAlignment } from '../plugins/nodes/types'
 export function alignClassname(align: NodeAlignment): string {
   switch (align) {
     case 'left':
-      return 'text-left'
+      return 'text-left *:inline-block'
     case 'center':
-      return 'text-center'
+      return 'text-center *:inline-block'
     case 'right':
-      return 'text-right'
+      return 'text-right *:inline-block'
     case 'fullWidth':
       return '*:w-full'
     case 'floatLeft':

@@ -151,7 +151,12 @@ function renderNode(node: SerializedNode, index: number, options: ViewOptions): 
       )
     }
     case 'fabric-diagram': {
-      return content(<FabricImageViewer key={key} diagram={node as SerializedFabricNode} />)
+      const diagram = node as SerializedFabricNode
+      return content(
+        <div key={key} className={alignClassname(diagram.align)}>
+          <FabricImageViewer diagram={diagram} />
+        </div>,
+      )
     }
     case 'qr-code': {
       const { value, title, size } = node as SerializedQRCodeNode

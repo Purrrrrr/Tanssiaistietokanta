@@ -36,9 +36,10 @@ interface FabricMainToolbarProps {
   canvas: Canvas
   visible: boolean
   undoState?: UndoState
+  additionalButtons?: React.ReactNode
 }
 
-export function FabricMainToolbar({ canvas, visible, undoState, onRemoveNode: removeNode }: FabricMainToolbarProps) {
+export function FabricMainToolbar({ canvas, visible, undoState, onRemoveNode: removeNode, additionalButtons }: FabricMainToolbarProps) {
   const t = useEditorT('')
   const [fill, setFill] = useState('#fff')
   const [stroke, setStroke] = useState('#000')
@@ -211,6 +212,7 @@ export function FabricMainToolbar({ canvas, visible, undoState, onRemoveNode: re
     </MenuButton>
     <ToolbarButton onMouseDown={addText} tooltip={t('addText')} icon="T" />
     <ToolbarButton onMouseDown={toggleDrawingMode} active={canvas.isDrawingMode} tooltip={t('freeDraw')} icon={<DrawIcon />} />
+    {additionalButtons}
     {removeNode && <ToolbarButton color="danger" onMouseDown={removeNode} text={t('removeDiagram')} />}
   </ToolbarRow>
 }
