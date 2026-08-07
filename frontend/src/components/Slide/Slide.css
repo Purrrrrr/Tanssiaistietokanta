@@ -6,7 +6,7 @@
     font-weight: bold;
     font-size: 1.4em;
   }
-  .slide-navigation-title {
+  .slide-sidebar-title {
     font-weight: bold;
     font-size: 1em;
   }
@@ -34,16 +34,13 @@
   padding-block: 5cqh;
   row-gap: var(--row-gap);
   grid-template:
-    "title separator navigation-title" auto
-    "main separator navigation" 1fr
-    "main separator additional-content" auto
-    "footer separator additional-content" auto
-    "next-slide separator additional-content" auto
-    / 2fr var(--separator-size) var(--navigation-width, 0);
-  --navigation-width: 0;
+    "title separator sidebar-title" auto
+    "content separator sidebar" 1fr
+    / 2fr var(--separator-size) var(--sidebar-width, 0);
+  --sidebar-width: 0;
 
-  &:has(.slide-navigation) {
-    --navigation-width: 1fr;
+  &:has(.slide-sidebar-content) {
+    --sidebar-width: 1fr;
 
     &:after { /* Vertical separator between content and nav */
       content: '';
@@ -60,27 +57,38 @@
   .slide-title {
     grid-area: title;
   }
+  .slide-content {
+    display: flex;
+    flex-direction: column;
+    grid-area: content;
+    padding-inline: 1cqw;
+  }
   .slide-main-content {
-    grid-area: main;
-    padding-inline: 4cqw;
+    flex-grow: 1;
+  }
+  .slide-program-footer {
+    margin-top: var(--row-gap);
+    flex-shrink: 0;
   }
   .slide-next-slide {
-    grid-area: next-slide;
-    padding-top: var(--row-gap);
+    --gap: var(--row-gap);
+    margin-top: var(--gap);
+    padding-top: var(--gap);
     border-top: var(--separator-size) solid var(--separator-color);
     text-align: center;
     margin-inline: 1.5em;
   }
-  .slide-navigation-title {
-    grid-area: navigation-title;
+  .slide-sidebar-title {
+    grid-area: sidebar-title;
   }
-  .slide-navigation {
-    grid-area: navigation;
-    padding-inline: 4cqw;
-  }
-  .slide-additional-content {
-    grid-area: additional-content;
+  .slide-sidebar-content {
+    grid-area: sidebar;
+    display: flex;
+    flex-direction: column;
     padding-inline: 1cqw;
+  }
+  .slide-navigation{
+    flex-grow: 1;
   }
   .slide-program-footer {
     grid-area: footer;

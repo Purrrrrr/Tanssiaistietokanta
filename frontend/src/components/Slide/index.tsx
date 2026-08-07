@@ -41,22 +41,23 @@ export function Slide({ id, title, type, children, footer, next, navigation, sli
   )
   return <section className={className}>
     <h1 className="slide-title">{title}</h1>
-    <AutosizedSection key={id} className="slide-main-content">
-      <div className="slide-content-area">{children}</div>
-    </AutosizedSection>
-    {footer &&
+    <div className="slide-content">
+      <AutosizedSection key={id} className="slide-main-content">
+        <div className="slide-content-area">{children}</div>
+      </AutosizedSection>
+      {footer &&
       <AutosizedSection className="slide-program-footer">
         <div className="slide-content-area">{footer}</div>
       </AutosizedSection>
-    }
-    {next && <NextSlide next={next} linkComponent={linkComponent} />}
-    {navigation && (
-      <SlideSidebar
-        currentItem={id}
-        navigation={navigation}
-        linkComponent={linkComponent} />
-    )}
-    {additionalContent && <div className="slide-additional-content">{additionalContent}</div>}
+      }
+      {next && <NextSlide next={next} linkComponent={linkComponent} />}
+    </div>
+    <SlideSidebar
+      currentItem={id}
+      navigation={navigation}
+      linkComponent={linkComponent}
+      additionalContent={additionalContent}
+    />
   </section>
 }
 
@@ -71,17 +72,23 @@ function NextSlide({ next, linkComponent }: { next: SlideLink, linkComponent?: L
 }
 
 function SlideSidebar(
-  { currentItem, navigation, linkComponent }: {
+  { currentItem, navigation, linkComponent, additionalContent }: {
     currentItem: string
-    navigation: SlideNavigation
+    navigation?: SlideNavigation
     linkComponent?: LinkComponentType
+    additionalContent?: React.ReactNode
   },
 ) {
+  if (!navigation) return null
+
   return <>
-    <h2 className="slide-navigation-title">{navigation?.title}</h2>
-    <AutosizedSection className="slide-navigation">
-      <SlideNavigationList currentItem={currentItem} {...navigation} linkComponent={linkComponent} />
-    </AutosizedSection>
+    <h2 className="slide-sidebar-title">{navigation?.title}</h2>
+    <div className="slide-sidebar-content">
+      <AutosizedSection className="slide-navigation">
+        <SlideNavigationList currentItem={currentItem} {...navigation} linkComponent={linkComponent} />
+      </AutosizedSection>
+      {additionalContent && <div className="slide-additional-content">{additionalContent}</div>}
+    </div>
   </>
 }
 

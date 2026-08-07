@@ -41,8 +41,9 @@ export function AutosizedSection({ children, className = '', ...props }) {
   return <section className={'max-w-full overflow-hidden ' + className} ref={container} {...props}>
     <div
       ref={innerContainer}
-      className="relative left-1/2 p-px origin-top -translate-x-1/2 w-fit h-fit"
-      style={{ scale: `${size}`, minWidth, opacity: isReady ? 1 : 0 }}>
+      className="relative left-1/2 p-px origin-top -translate-x-1/2"
+      style={{ scale: `${size}`, minWidth, opacity: isReady ? 1 : 0 }}
+    >
       {children}
     </div>
   </section>
