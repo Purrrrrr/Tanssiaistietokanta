@@ -622,7 +622,12 @@
 * Ropecon 2026 post todo
 * Remove trim in lexical QR code text
 * Add stopPropagation to all lexical and fabric keyboard events
-  Wider lexical editor in slide editor
+* Wider lexical editor in slide editor
+* Make creating full width diagrams in slides easier
+  * Better slide spacing and rendering
+  * Add alignment: left, right, float left/right, center
+    * Floating toolbar buttons
+  * Same for images
 
   Formation slide part two
     Show diagram list in ballrooms
@@ -633,10 +638,12 @@
   
   Dance difficulty tags
     Tag service
-      groups: difficulty or property of dance
+      groups: difficulty or property of dance (fast, switching couples, stealing, etc.)
       color?
       icon?
       Could be readonly for now?
+    Field for setting dance's tags
+    Showing of dance tags
   Fix zipping and downloading files with non latin filenames
 
   Add ending times of workshops to print and editor
@@ -649,15 +656,19 @@
   Diagrams:
     Default black border color
     Allow setting border color
-    Make creating full width diagrams in slides easier
-      Better default width?
-      Diagram alignment options
     Support image uploads
     Render diagram svg faster, allow prerendering or render somehow on frontend?
     More accurate text svg rendering
-    Floating Diagrams, floating images?
     Shapes for:
       sola, piiri
+
+  Update main toolbar buttons to set diagram/image alignment
+  Image and diagram width customization
+    Create toggleable diagram options pane? Or dialog? Or Dropdown?
+    Allow changing diagram width in pixels
+    Add display width: auto or percentage
+      For images
+      For diagrams
 
   Printing straight to pdf file in files service?
   File syncing: directory sync? Not possible in firefox
@@ -762,7 +773,7 @@
     Fix duplicate file upload? Is this only buggy in dev mode?
     Don't make ball program view "log out" whenever fast refresh occurs
 
-  How to show docs in side nav?
+  How to show docs in event page side nav?
 
   Better editor Part 3
     Lexical Debug: node id display?
@@ -803,9 +814,6 @@
       Add tests to check that used dances are not deletable
       Add test that workshops are deleted when the event is
       Same for files (need to impl)
-    Add support for dance tags (fast, switching couples, stealing, etc.)
-      Showing of dance tags
-      Icons for dance tags
     Move event program editors near their usage sites
     Prefetch dances somehow in eventprogram slide editor
     Event slide rework
@@ -822,12 +830,7 @@
       With image
       And maybe reason for login
     Maybe do some log query tool?
-    Per component translations?
-      Load async in loaders
-      Files like component.i18n.fi.ts or -route.i18n.fi.ts
-      Register with a special function + augmented interface
-      Where do we get keys?
-      Support multiple locales
+  * Per component translations?
     Layout revisited
     * Show breadcrumbs below header?
       Store the toggled state of the menu?
