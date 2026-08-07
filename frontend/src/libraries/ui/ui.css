@@ -357,4 +357,10 @@ strong{
     }
     -moz-appearance: textfield;
   }
+
+  .autosized-section-content {
+    &:not(:has(.\*\:w-full, w-full)) {
+      width: fit-content;
+    }
+  }
 }
