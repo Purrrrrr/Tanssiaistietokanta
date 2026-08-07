@@ -12,7 +12,7 @@ export interface SlideContainerProps extends Omit<React.HTMLAttributes<HTMLDivEl
 }
 
 export function SlideContainer({ children, color, size, fullscreen, className, ...props }: SlideContainerProps) {
-  const allClassNames = classnames(
+  const backdropClassNames = classnames(
     'slide-backdrop',
     {
       full: fullscreen,
@@ -25,7 +25,7 @@ export function SlideContainer({ children, color, size, fullscreen, className, .
     width: fullscreen ? undefined : size,
   }
 
-  return <div className={allClassNames} style={style} {...props}>
+  return <div className={backdropClassNames} style={style} {...props}>
     <div className="slide-container">
       {children}
     </div>

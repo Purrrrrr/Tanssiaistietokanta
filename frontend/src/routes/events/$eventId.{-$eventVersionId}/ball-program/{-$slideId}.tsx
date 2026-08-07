@@ -46,7 +46,7 @@ function RouteComponent() {
   return <div className={classNames('ball-program-container', { 'is-editing': isEditing })}>
     <BallProgramSlideView
       slides={slides}
-      currentSlide={slide}
+      currentSlideIndex={slideIndex}
       event={event}
       isEditing={isEditing}
       onToggleEditing={onToggleEditing}
@@ -69,9 +69,9 @@ function useBallProgram(eventId: string, eventVersionId?: string | null) {
 }
 
 export function BallProgramSlideView(
-  { slides, currentSlide: slide, event, isEditing, onToggleEditing }: {
+  { slides, currentSlideIndex, event, isEditing, onToggleEditing }: {
     slides: EventSlideProps[]
-    currentSlide: EventSlideProps
+    currentSlideIndex: number
     event: Event
     onToggleEditing: () => unknown
     isEditing: boolean
@@ -82,6 +82,9 @@ export function BallProgramSlideView(
     to: '/events/$eventId/{-$eventVersionId}/ball-program/{-$slideId}',
     params: { eventId: event._id, eventVersionId: event._versionId ?? undefined, slideId },
   })
+  const slide = slides[currentSlideIndex]
+  const previousSlide = slides[currentSlideIndex - 1]
+  const nextSlide = slides[currentSlideIndex + 1]
   const { swipeHandlers } = useSlideshowNavigation({
     slides, currentSlideId: slide.id, onChangeSlide: slide => goToSlide(slide.id),
   })
@@ -93,6 +96,8 @@ export function BallProgramSlideView(
         program={event.program} />
       <Button requireRight="events:modify" entityId={event._id} minimal icon={<Edit />} onClick={onToggleEditing} />
     </div>
-    <EventSlide {...slide} eventProgram={event.program} />
+    <EventSlide {...slide} key={slide.id} eventProgram={event.program} />
+    {nextSlide && <EventSlide {...nextSlide} key={nextSlide.id} eventProgram={event.program} invisible />}
+    {previousSlide && <EventSlide {...previousSlide} key={previousSlide.id} eventProgram={event.program} invisible />}
   </SlideContainer>
 }

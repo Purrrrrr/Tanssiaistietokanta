@@ -39,6 +39,12 @@
     / 2fr var(--separator-size) var(--sidebar-width, 0);
   --sidebar-width: 0;
 
+  &.invisible {
+    position: absolute;
+    top: -100cqh;
+    left: -100cqw;
+  }
+
   &:has(.slide-sidebar-content) {
     --sidebar-width: 1fr;
 

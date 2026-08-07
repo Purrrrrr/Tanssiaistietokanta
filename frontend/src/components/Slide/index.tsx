@@ -11,6 +11,7 @@ export { SlideContainer, type SlideContainerProps } from './SlideContainer'
 
 export interface SlideProps {
   id: string
+  invisible?: boolean // For pre-rendering slides so that autosizing and image loading is done before the slide is shown
   title: string | React.ReactElement
   type?: string
   children?: React.ReactNode
@@ -33,13 +34,14 @@ export interface SlideLink {
   hidden?: boolean
 }
 
-export function Slide({ id, title, type, children, footer, next, navigation, slideStyleId, linkComponent, additionalContent }: SlideProps) {
-  const className = classnames(
+export function Slide({ id, invisible, title, type, children, footer, next, navigation, slideStyleId, linkComponent, additionalContent }: SlideProps) {
+  const slideClassName = classnames(
     'slide',
     `slide-style-${slideStyleId ?? 'default'}`,
     type && 'slide-type-' + type,
+    { invisible },
   )
-  return <section className={className}>
+  return <section className={slideClassName}>
     <h1 className="slide-title">{title}</h1>
     <div className="slide-content">
       <AutosizedSection key={id} className="slide-main-content">

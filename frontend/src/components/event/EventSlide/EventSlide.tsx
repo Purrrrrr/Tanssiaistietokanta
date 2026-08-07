@@ -14,7 +14,7 @@ type WithCommonProps<X> = {
 } & X
 
 export function EventSlide(props: WithCommonProps<EventSlideProps>) {
-  const { id, eventProgram, linkComponent } = props
+  const { id, eventProgram, linkComponent, invisible } = props
   switch (props.type) {
     case 'title':
       return <Slide
@@ -23,6 +23,7 @@ export function EventSlide(props: WithCommonProps<EventSlideProps>) {
         title={props.title}
         slideStyleId={eventProgram.introductions.titleSlideStyleId ?? eventProgram.slideStyleId}
         linkComponent={linkComponent}
+        invisible={invisible}
       />
     case 'introduction': {
       const { eventProgram: program, slideStyleId } = eventProgram.introductions.program[props.itemIndex]
@@ -36,6 +37,7 @@ export function EventSlide(props: WithCommonProps<EventSlideProps>) {
         slideStyleId={slideStyleId ?? eventProgram.slideStyleId}
         linkComponent={linkComponent}
         children={renderDoc(program.description)}
+        invisible={invisible}
       />
     }
     case 'danceSet':
@@ -48,7 +50,7 @@ export function EventSlide(props: WithCommonProps<EventSlideProps>) {
 }
 
 function DanceSetSlide(props: WithCommonProps<DanceSetSlideProps>) {
-  const { id, title, eventProgram, danceSetIndex, linkComponent } = props
+  const { id, title, eventProgram, danceSetIndex, linkComponent, invisible } = props
   const danceSet = eventProgram.danceSets[danceSetIndex]
   return <Slide
     id={id}
@@ -58,6 +60,7 @@ function DanceSetSlide(props: WithCommonProps<DanceSetSlideProps>) {
       />
     }
     slideStyleId={danceSet.titleSlideStyleId ?? eventProgram.slideStyleId}
+    invisible={invisible}
   />
 }
 
@@ -67,7 +70,7 @@ function IntervalMusicSlide(props: WithCommonProps<IntervalMusicSlideProps>) {
       danceSets, defaultIntervalMusic, slideStyleId: defaultSlideStyleId, ballroom,
     },
     danceSetIndex,
-    id, title, linkComponent, next, parent,
+    id, title, linkComponent, next, parent, invisible,
   } = props
 
   const { intervalMusic } = danceSets[danceSetIndex]
@@ -83,11 +86,12 @@ function IntervalMusicSlide(props: WithCommonProps<IntervalMusicSlideProps>) {
     navigation={danceSetNavigation((next as DanceSetSlideProps | undefined) ?? parent)}
     additionalContent={<FormationDiagramsViewer formationDiagrams={getFormationDiagramsForBallroom(intervalMusic?.dance, ballroom?._id)} />}
     linkComponent={linkComponent}
+    invisible={invisible}
   />
 }
 
 function DanceProgramItemSlide(props: WithCommonProps<DanceProgramItemSlideProps>) {
-  const { id, next, title, linkComponent, eventProgram, danceSetIndex, itemIndex } = props
+  const { id, next, title, linkComponent, eventProgram, danceSetIndex, itemIndex, invisible } = props
   const { type, dance, eventProgram: program, slideStyleId } = eventProgram.danceSets[danceSetIndex].program[itemIndex]
 
   const content = type === 'RequestedDance'
@@ -109,6 +113,7 @@ function DanceProgramItemSlide(props: WithCommonProps<DanceProgramItemSlideProps
     slideStyleId={slideStyleId ?? eventProgram.slideStyleId}
     navigation={danceSetNavigation(next?.parent)}
     next={next}
+    invisible={invisible}
     {...content}
   />
 }

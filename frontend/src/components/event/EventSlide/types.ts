@@ -42,6 +42,7 @@ export interface IntervalMusicSlideProps extends CommonSlideProps {
 
 interface CommonSlideProps {
   id: ID
+  invisible?: boolean
   title: string
   next?: EventSlideProps
   parent?: EventParentSlideProps
