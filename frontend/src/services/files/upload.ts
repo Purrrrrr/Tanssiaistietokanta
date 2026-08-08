@@ -3,7 +3,7 @@ import { FileOwner, FileOwningId } from 'types/files'
 import { restRequestWithProgress, RestRequestWithProgressOptions } from 'backend'
 import { apolloClient } from 'backend/apollo'
 
-export const MAX_UPLOAD_SIZE = 20 * 1024 ** 2
+export const MAX_UPLOAD_SIZE = 50 * 1024 ** 2
 
 export type UploadFailureReason = 'aborted' | 'too_big' | 'already_exists' | 'server' | 'unknown' | 'file_is_infected'
 

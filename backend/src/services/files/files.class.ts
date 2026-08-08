@@ -30,8 +30,8 @@ const MB = 1024 ** 2
 const RootSizeCleanUpTreshold = 5 * MB
 const DAY = 24 * 60 * 60 * 1000
 const MaxTmpFileAge = 3 * DAY
-const MaxZipSize = 50 * MB
-export const MaxFileSize = 30 * MB
+const MaxZipSize = 1024 * MB
+export const MaxFileSize = 50 * MB
 
 export class FileService
   extends NeDBService<File, FileData, FileParams, FilePatch> {
