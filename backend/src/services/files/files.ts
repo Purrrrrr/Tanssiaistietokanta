@@ -1,6 +1,6 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/service.html
 import { hooks as schemaHooks } from '@feathersjs/schema'
-import contentDisposition from 'content-disposition'
+import { create as contentDisposition } from 'content-disposition'
 
 import {
   fileDataValidator,
@@ -130,9 +130,7 @@ function addDownloadHeaders(ctx: HookContext, { name, mimetype }: Pick<File, 'na
   ctx.http ??= {}
   ctx.http.headers = {
     'content-type': mimetype,
-    'content-disposition': isInline
-      ? 'inline'
-      : contentDisposition(name),
+    'content-disposition': contentDisposition(name, { type: isInline ? 'inline' : 'attachment' }),
   }
 }
 

@@ -1,5 +1,5 @@
 import { PersistentFile } from 'formidable'
-import archiver from 'archiver'
+import { ZipArchive } from 'archiver'
 import { join, dirname, basename, parse } from 'path'
 import { rename, readdir, readFile, stat, unlink, mkdir } from 'fs/promises'
 import type { Id, Params } from '@feathersjs/feathers'
@@ -139,13 +139,12 @@ export class FileService
         {
           const size = sum(result.map(file => file.size))
           if (size > MaxZipSize) {
-            throw new Unprocessable(`Combined file size ${size / 1024} kb exceeds the limit of ${MaxZipSize / 1024} kb`)
+            throw new Unprocessable(`Combined file size ${size / MB } Mb exceeds the limit of ${MaxZipSize / MB} Mb`)
           }
-          const archiveProgress = Promise.withResolvers()
           const stream = new PassThrough()
-          const archive = archiver('zip', { zlib: { level: 9 } })
-          archive.on('error', e => archiveProgress.reject(e))
-          archive.on('finish', () => archiveProgress.resolve(true))
+          const archive = new ZipArchive({ zlib: { level: 6 } })
+          archive.on('warning', e => console.log('warning', e))
+          archive.on('error', e => console.log('error', e))
           archive.pipe(stream)
 
           for (const file of result) {
@@ -154,7 +153,6 @@ export class FileService
 
           archive.finalize()
 
-          await archiveProgress.promise
           result[0].buffer = stream
           result[0].name = 'download.zip'
           result[0].mimetype = 'application/zip'
