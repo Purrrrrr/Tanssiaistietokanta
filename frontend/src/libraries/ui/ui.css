@@ -363,4 +363,48 @@ strong{
       width: fit-content;
     }
   }
+
+  .itemlist {
+    display: grid;
+    grid-template-columns: var(--itemlist-columns);
+    @apply w-full;
+
+    & > li, & > thead, & > tbody, & > :is(tbody, thead) > tr {
+      display: grid;
+      grid-template-columns: subgrid;
+      grid-column: 1 / -1;
+    }
+    & > tbody > tr > td, & > thead > tr > th {
+      display: block;
+      text-align: left;
+    }
+
+    .itemlist-sortable-header button {
+      @apply rounded-t-md;
+    }
+    .itemlist-sortable-header + .itemlist-sortable-header {
+      button {
+        @apply rounded-tl-none;
+      }
+    }
+    .itemlist-sortable-header:has(+ .itemlist-sortable-header) {
+      button {
+        @apply rounded-tr-none;
+      }
+    }
+
+    .itemlist-row {
+      @apply gap-4 flex-wrap items-center nth-of-type-[even]:bg-gray-100;
+    }
+    &.wrap-sm {
+      .itemlist-row {
+        @apply max-sm:flex max-sm:gap-1;
+      }
+    }
+    &.wrap-md {
+      .itemlist-row {
+        @apply max-md:flex max-sm:gap-1;
+      }
+    }
+  }
 }

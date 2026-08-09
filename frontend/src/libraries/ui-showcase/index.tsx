@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { booleanProp, numberProp, type Showcase, showcase } from './types'
 
 import { Switch } from 'libraries/forms'
-import { Alert, AnchorButton, AutosizedSection, Breadcrumb, BreadcrumbsContainer, Button, Callout, Collapse, Dialog, GlobalSpinner, RegularLink, Tab, Tabs } from 'libraries/ui'
+import { Alert, AnchorButton, AutosizedSection, Breadcrumb, BreadcrumbsContainer, Button, Callout, Collapse, Dialog, GlobalSpinner, ItemList2, RegularLink, Tab, Tabs } from 'libraries/ui'
 import { showToast } from 'libraries/ui/hooks'
 import { Trash } from 'libraries/ui/icons'
 import { MenuLink, MenuSection, Page } from 'components/Page'
@@ -45,6 +45,51 @@ export default function UiShowcase() {
 }
 
 const showcases: Showcase<Record<string, unknown>>[] = [
+  showcase({
+    title: 'ItemList',
+    props: {
+      isTable: booleanProp({ default: true }),
+      empty: booleanProp({ default: false }),
+    },
+    render: ({ isTable, empty }) => {
+      const items = Array(20).fill(0).map((_, i) => ({
+        _id: String(i),
+        name: `Item ${i}`,
+        letter: String.fromCharCode(90 - i),
+        description: `This is item ${i}`,
+      }))
+
+      return <ItemList2
+        id="ui-showcase-itemlist"
+        isTable={isTable}
+        items={empty ? [] : items}
+        emptyText="No items"
+        columns={[
+          {
+            label: 'Name',
+            content: (item) => item.name,
+            sortBy: (item) => item.name,
+          },
+          {
+            label: 'Letter',
+            content: (item) => item.letter,
+            sortBy: (item) => item.letter,
+          },
+          {
+            label: 'Description',
+            width: '1fr',
+            content: (item) => item.description,
+          },
+          {
+            content: (_, state) => <Button text={state.expanded ? 'Hide' : 'Show'} onClick={() => state.setExpanded(!state.expanded)} />,
+          },
+        ]}
+        expandableContent={(item, close) => <div className="flex items-center gap-2 p-2">
+          {item.description} <Button text="Close" onClick={close} />
+        </div>}
+      />
+    },
+  }),
   showcase({
     title: 'Fabric editor',
     props: {

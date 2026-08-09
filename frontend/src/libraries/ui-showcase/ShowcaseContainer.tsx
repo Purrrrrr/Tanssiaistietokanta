@@ -24,7 +24,7 @@ export function ShowcaseContainer<P extends Record<string, unknown>>({ title, pr
   return <Card>
     <H2>{title}</H2>
     <div className="flex justify-between items-center">
-      <div className="p-2">{render(propsValue)}</div>
+      <div className="p-2 grow">{render(propsValue)}</div>
       {fields.length > 0 && <div className="p-2 pl-7 border-l-1 border-stone-300">{fields}</div>}
     </div>
   </Card>
