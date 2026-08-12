@@ -1,42 +1,28 @@
 import { useState } from 'react'
 import classNames from 'classnames'
 
-import { Sort } from './types'
+import { type SortState } from './types'
 
 import { InfoSign } from 'libraries/ui/icons'
-import { sortedBy } from 'utils/sorted'
+import { type Sort, sortedBy } from 'utils/sorted'
 
 import Collapse from '../Collapse'
+import { Column, ColumnInput, normalizeColumnInput } from './column'
 import { SortButton } from './SortButton'
 import { useStoredState } from './useStoredState'
 
-interface ItemListProps<T extends { _id: string | number }> {
+interface ItemListProps<T> {
   id?: string
   isTable?: boolean
   wrapBreakpoint?: 'md' | 'sm' | 'none'
   marginClass?: string
   items: T[]
-  columns: Column<T>[]
+  columns: ColumnInput<T>[]
   expandableContent: (item: T, close: () => void) => React.ReactNode
   expandableContentLoadingMessage?: string
-  defaultSortColumn?: number
-  alwaysSortBy?: (item: T) => unknown
+  defaultSort?: string | null
+  alwaysSortBy?: Sort<T> | Sort<T>[] | null
   emptyText: React.ReactNode
-}
-
-interface Column<T> {
-  label?: React.ReactNode
-  width?: string
-  hidable?: boolean // Can the user choose to hide this column? False by default.
-  hiddenByDefault?: boolean // Should this column be hidden by default? False by default. Used in conjunction with hidable to hide columns by default but allow the user to show them.
-  visible?: boolean // Should this column exist in this table? True by default. Used to exclude columns in certain tables without removing them from the column list
-  content: (item: T, state: RowState) => React.ReactNode
-  sortBy?: (a: T) => unknown
-}
-
-interface RowState {
-  expanded: boolean | undefined
-  setExpanded: (expanded: boolean) => void
 }
 
 export function ItemList2<T extends { _id: string | number }>({
@@ -44,8 +30,8 @@ export function ItemList2<T extends { _id: string | number }>({
   isTable,
   wrapBreakpoint = 'sm',
   items,
-  columns,
-  defaultSortColumn,
+  columns: columnInputs,
+  defaultSort,
   alwaysSortBy,
   marginClass,
   emptyText,
@@ -53,19 +39,15 @@ export function ItemList2<T extends { _id: string | number }>({
   expandableContentLoadingMessage,
 }: ItemListProps<T>) {
   const Container = isTable ? 'table' : 'ul'
-  const [sort, setSort] = useStoredState<Sort | null>(id, 'sort', defaultSortColumn !== undefined
-    ? { key: defaultSortColumn, direction: 'asc' }
-    : null,
-  )
+  const columns = columnInputs.map(normalizeColumnInput)
+  const [sort, setSort] = useStoredState<SortState | null>(id, 'sort', defaultSort ? { key: defaultSort, direction: 'asc' } : null)
+  console.log(sort, columns)
 
   if (items.length === 0) {
     return <EmptyList text={emptyText} />
   }
 
-  const sortColumn = sort !== null ? columns[sort.key] : null
-  const sortedItems = sort && sortColumn?.sortBy
-    ? sortedBy(items, { key: sortColumn.sortBy, direction: sort.direction }, ...(alwaysSortBy ? [alwaysSortBy] : []))
-    : items
+  const sortedItems = getSortedItems({ items, columns, sort, alwaysSortBy })
 
   return <Container
     id={id}
@@ -97,6 +79,28 @@ export function ItemList2<T extends { _id: string | number }>({
   </Container>
 }
 
+function getSortedItems<T>({ items, columns, sort, alwaysSortBy }: Pick<ItemListProps<T>, 'items' | 'alwaysSortBy'> & {
+  sort: SortState | null
+  columns: Column<T>[]
+}) {
+  const additionalSorts = toArray(alwaysSortBy ?? [])
+  if (sort) {
+    const sortBy = columns.find(c => c.sortBy?.sortName === sort.key)?.sortBy?.value
+    if (sortBy) {
+      const sorting: Sort<T> = { key: sortBy, direction: sort.direction }
+      return sortedBy(items, sorting, ...additionalSorts)
+    }
+  }
+  if (additionalSorts.length > 0) {
+    return sortedBy(items, ...additionalSorts)
+  }
+  return items
+}
+
+function toArray<T>(value: T | T[]): T[] {
+  return Array.isArray(value) ? value : [value]
+}
+
 function EmptyList({ text }: { text: React.ReactNode }) {
   return <div className="p-4 text-base text-center border-gray-200 text-muted border">
     <InfoSign size={20} className="mr-2" />
@@ -116,24 +120,32 @@ function SectionWrapper({ children, element: Element }: {
 function Header<T>({ isTable, columns, sort, onSort }: {
   isTable: boolean
   columns: Column<T>[]
-  sort: Sort | null
-  onSort: (sort: Sort) => void
+  sort: SortState | null
+  onSort: (sort: SortState) => void
 }) {
   const Container = isTable ? 'tr' : 'li'
   const Cell = isTable ? 'th' : 'span'
 
   return <Container className="font-bold items-end border-b border-gray-400">
-    {columns.map((column, index) => (
-      <Cell key={index} className={column.sortBy ? 'itemlist-sortable-header first-of-type:*:rounded-tl-md last-of-type:*:rounded-tr-md' : 'px-2 py-[5px]'}>
+    {columns.map((column, index) => {
+      const label = typeof column.label === 'object' && column.label !== null && 'content' in column.label
+        ? column.label.content
+        : column.label
+
+      return <Cell key={index} className={classNames(
+        column.sortBy && 'itemlist-sortable-header first-of-type:*:rounded-tl-md last-of-type:*:rounded-tr-md',
+        column.headerClassName,
+        'px-2 py-[5px]',
+      )}>
         {column.sortBy
           ? (
-            <SortButton sortKey={index} currentSort={sort} onSort={onSort}>
-              {column.label}
+            <SortButton sortKey={column.sortBy.sortName} currentSort={sort} onSort={onSort}>
+              {label}
             </SortButton>
           )
-          : column.label}
+          : label}
       </Cell>
-    ))}
+    })}
   </Container>
 }
 
@@ -157,7 +169,7 @@ function Row<T>({ item, isTable, columns, expandableContent, expandableContentLo
         : 'nth-of-type-[even]:bg-gray-100',
     )}>
       {columns.map((column, index) => (
-        <Cell key={index}>{column.content(item, { expanded, setExpanded })}</Cell>
+        <Cell className={column.className} key={index}>{column.content(item, { expanded, setExpanded })}</Cell>
       ))}
     </Container>
     {expandableContent &&

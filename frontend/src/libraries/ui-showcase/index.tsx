@@ -51,44 +51,7 @@ const showcases: Showcase<Record<string, unknown>>[] = [
       isTable: booleanProp({ default: true }),
       empty: booleanProp({ default: false }),
     },
-    render: ({ isTable, empty }) => {
-      const items = Array(20).fill(0).map((_, i) => ({
-        _id: String(i),
-        name: `Item ${i}`,
-        letter: String.fromCharCode(90 - i),
-        description: `This is item ${i}`,
-      }))
-
-      return <ItemList2
-        id="ui-showcase-itemlist"
-        isTable={isTable}
-        items={empty ? [] : items}
-        emptyText="No items"
-        columns={[
-          {
-            label: 'Name',
-            content: (item) => item.name,
-            sortBy: (item) => item.name,
-          },
-          {
-            label: 'Letter',
-            content: (item) => item.letter,
-            sortBy: (item) => item.letter,
-          },
-          {
-            label: 'Description',
-            width: '1fr',
-            content: (item) => item.description,
-          },
-          {
-            content: (_, state) => <Button text={state.expanded ? 'Hide' : 'Show'} onClick={() => state.setExpanded(!state.expanded)} />,
-          },
-        ]}
-        expandableContent={(item, close) => <div className="flex items-center gap-2 p-2">
-          {item.description} <Button text="Close" onClick={close} />
-        </div>}
-      />
-    },
+    render: props => <ItemListShowcase {...props} />,
   }),
   showcase({
     title: 'Fabric editor',
@@ -263,6 +226,53 @@ const showcases: Showcase<Record<string, unknown>>[] = [
 function range(count: number): number[] {
   console.log(Array(count).fill(0).map((_, index) => index))
   return Array(count).fill(0).map((_, index) => index)
+}
+
+function ItemListShowcase({ isTable, empty }: { isTable: boolean, empty: boolean }) {
+  const items = Array(20).fill(0).map((_, i) => ({
+    _id: String(i),
+    name: `Item ${i}`,
+    letter: String.fromCharCode(90 - i),
+    description: `This is item ${i}`,
+  }))
+
+  return <ItemList2
+    id="ui-showcase-itemlist"
+    isTable={isTable}
+    items={empty ? [] : items}
+    emptyText="No items"
+    wrapBreakpoint="none"
+    columns={[
+      {
+        label: 'Name',
+        content: (item) => item.name,
+        sortName: 'name',
+      },
+      {
+        label: 'Letter',
+        content: (item) => item.letter,
+        sortName: 'letter',
+      },
+      {
+        label: 'Description',
+        width: 'minmax(min-content, 1fr)',
+        content: (item) => item.description,
+        sortName: 'description',
+      },
+      {
+        // TODO: separate support for action buttons that can be folded into a menu
+        width: 'minmax(0, auto)',
+        className: 'flex gap-2',
+        content: (_, state) => <>
+          <Button text={state.expanded ? 'Hide' : 'Show'} onClick={() => state.setExpanded(!state.expanded)} />
+        </>,
+        sortName: null,
+      },
+    ]}
+    expandableContent={(item, close) => <div className="flex items-center gap-2 p-2">
+      {item.description} <Button text="Close" onClick={close} />
+    </div>}
+  />
 }
 
 function SwitchShowcase() {

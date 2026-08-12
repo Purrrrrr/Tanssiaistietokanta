@@ -5,9 +5,9 @@ export function sorted<Item>(
   return [...items].sort(comparator)
 }
 
-type SortKey<Item> = keyof Item | ((item: Item) => unknown)
-type SortDirection = 'asc' | 'desc'
-type Sort<Item> = SortKey<Item> | { key: SortKey<Item>, direction: SortDirection, nullsLast?: boolean }
+export type SortKey<Item> = keyof Item | ((item: Item) => unknown)
+export type SortDirection = 'asc' | 'desc'
+export type Sort<Item> = SortKey<Item> | { key: SortKey<Item>, direction: SortDirection, nullsLast?: boolean }
 
 export function sortedBy<Item>(
   items: Item[] | null | undefined,

@@ -1,21 +1,22 @@
 import React from 'react'
 import classNames from 'classnames'
 
-import { Sort } from './types'
+import { SortState } from './types'
 
 import { CaretDown } from 'libraries/ui/icons'
 
 import { Button } from '../Button'
 
 interface SortButtonProps {
-  sortKey: number
-  currentSort: Sort | null
-  onSort: (key: Sort) => void
+  sortKey: string
+  currentSort: SortState | null
+  onSort: (key: SortState) => void
   children: React.ReactNode
   className?: string
+  tooltip?: React.ReactNode
 }
 
-export function SortButton({ sortKey, currentSort, onSort, className, children }: SortButtonProps) {
+export function SortButton({ sortKey, currentSort, onSort, className, children, tooltip }: SortButtonProps) {
   const isCurrent = currentSort?.key === sortKey
   const isAscending = currentSort?.direction === 'asc'
 
@@ -27,6 +28,7 @@ export function SortButton({ sortKey, currentSort, onSort, className, children }
     aria-sort={isCurrent ? (isAscending ? 'ascending' : 'descending') : undefined}
     minimal
     className={classNames(className, 'flex gap-1 items-center w-full')}
+    tooltip={tooltip}
   >
     {children}
     {isCurrent && <CaretDown className={classNames('transition-transform', isAscending && 'rotate-180')} />}
