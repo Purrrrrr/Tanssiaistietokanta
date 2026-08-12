@@ -628,7 +628,33 @@
   * Add alignment: left, right, float left/right, center
     * Floating toolbar buttons
   * Same for images
+* Render diagram svg faster, allow prerendering or render somehow on frontend: render this and the next/previous slide to pre-render
+* Fix zipping many files
+* Fix downloading files with non latin filenames
+  Show upload progress at the top of file list (it's not visible on long lists otherwise)
+  ItemList 2.0
+  * Basic functionality
+  * Make sortable columns easier to implement
+    Migrate lists to 2.0
+    Hidable columns
+    Easier and nicer layouting for small screen "cards"
+    Actions column
+      Basic support
+      Expand action
+      Overflow menu
+    Selection improvements
+      Take selection state as prop?
+      Allow selecting ranges with shift?
+  File list
+    Sortable columns
+    Better small screen layout
+    Do we need to show file dates at all?
+    Actions inside sub-menu
+      Component for action menus that folds when screen is small?
+  Formatter for date ranges
+    Use in front page
 
+  Fix read-only dance form dance instructions overflowing
   Formation slide part two
     Show diagram list in ballrooms
     Show dances sharing this diagram in dance editor
@@ -644,7 +670,6 @@
       Could be readonly for now?
     Field for setting dance's tags
     Showing of dance tags
-  Fix zipping and downloading files with non latin filenames
 
   Add ending times of workshops to print and editor
   Allow adding custom content to dance set footer? Or just a QR code?
@@ -657,7 +682,6 @@
     Default black border color
     Allow setting border color
     Support image uploads
-    Render diagram svg faster, allow prerendering or render somehow on frontend?
     More accurate text svg rendering
     Shapes for:
       sola, piiri
