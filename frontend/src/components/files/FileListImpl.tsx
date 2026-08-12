@@ -108,6 +108,7 @@ export default function FileList({ title, owner, owningId, path }: FileListProps
 
     </>}
   >
+    <UploadProgressList uploads={uploads} />
     <FileDropZone enabled={canUpload} onDrop={onDragAndDrop}>
       <ItemList
         items={files}
@@ -144,6 +145,5 @@ export default function FileList({ title, owner, owningId, path }: FileListProps
         onChange={e => e.target.files && startUploads([...e.target.files])}
       />
     </FileDropZone>
-    <UploadProgressList uploads={uploads} />
   </PageSection>
 }
