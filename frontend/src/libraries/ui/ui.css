@@ -403,7 +403,7 @@ strong{
     }
     &.wrap-md {
       .itemlist-row {
-        @apply max-md:flex max-sm:gap-1;
+        @apply max-md:flex max-md:gap-1;
       }
     }
   }

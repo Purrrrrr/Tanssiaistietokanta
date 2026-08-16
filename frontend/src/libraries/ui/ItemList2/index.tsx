@@ -2,46 +2,65 @@ import { useState } from 'react'
 import classNames from 'classnames'
 
 import { type SortState } from './types'
+import { SelectionApi } from 'libraries/common/selection/types'
 
 import { InfoSign } from 'libraries/ui/icons'
+import { SelectionBox } from 'components/widgets/SelectionBox'
 import { type Sort, sortedBy } from 'utils/sorted'
 
 import Collapse from '../Collapse'
 import { Column, ColumnInput, normalizeColumnInput } from './column'
 import { SortButton } from './SortButton'
-import { useStoredState } from './useStoredState'
 
 interface ItemListProps<T> {
   id?: string
   isTable?: boolean
   wrapBreakpoint?: 'md' | 'sm' | 'none'
+  className?: string
   marginClass?: string
   items: T[]
+  selection?: Pick<SelectionApi<T>, 'selectAllProps' | 'selectItemProps'> | null
   columns: ColumnInput<T>[]
-  expandableContent: (item: T, close: () => void) => React.ReactNode
+  expandableContent?: (item: T, close: () => void) => React.ReactNode
   expandableContentLoadingMessage?: string
-  defaultSort?: string | null
+  defaultSort?: SortState | string | null
   alwaysSortBy?: Sort<T> | Sort<T>[] | null
   emptyText: React.ReactNode
 }
 
-export function ItemList2<T extends { _id: string | number }>({
-  id,
-  isTable,
-  wrapBreakpoint = 'sm',
-  items,
-  columns: columnInputs,
-  defaultSort,
-  alwaysSortBy,
-  marginClass,
-  emptyText,
-  expandableContent,
-  expandableContentLoadingMessage,
-}: ItemListProps<T>) {
+export function ItemList2<T extends { _id: string | number }>(props: ItemListProps<T>) {
+  const {
+    id,
+    isTable,
+    wrapBreakpoint = 'sm',
+    items,
+    defaultSort,
+    alwaysSortBy,
+    className,
+    marginClass,
+    emptyText,
+    expandableContent,
+    expandableContentLoadingMessage,
+  } = props
   const Container = isTable ? 'table' : 'ul'
-  const columns = columnInputs.map(normalizeColumnInput)
-  const [sort, setSort] = useStoredState<SortState | null>(id, 'sort', defaultSort ? { key: defaultSort, direction: 'asc' } : null)
-  console.log(sort, columns)
+  const columns = getColumns(props)
+  const [sort, setSort] = useState<SortState | null>(() => {
+    if (defaultSort === undefined) {
+      const firstSortableColumn = columns.find(c => c.sortBy)
+      if (firstSortableColumn?.sortBy) {
+        return { key: firstSortableColumn.sortBy.name, direction: 'asc' }
+      }
+      return null
+    }
+    if (typeof defaultSort === 'object') {
+      return defaultSort
+    }
+    const column = columns.find(c => c.sortBy?.name === defaultSort)
+    if (column?.sortBy) {
+      return { key: column.sortBy.name, direction: 'asc' }
+    }
+    return null
+  })
 
   if (items.length === 0) {
     return <EmptyList text={emptyText} />
@@ -52,7 +71,12 @@ export function ItemList2<T extends { _id: string | number }>({
 
   return <Container
     id={id}
-    className={`itemlist wrap-${wrapBreakpoint} ${marginClass ?? 'mb-4'} border-b border-gray-200`}
+    className={classNames(
+      `itemlist wrap-${wrapBreakpoint}  border-b border-gray-200`,
+      className,
+      marginClass ?? 'mb-4',
+    )}
+
     style={{
       '--itemlist-columns': columns.map(c => c.width ?? 'auto').join(' '),
     } as React.CSSProperties}
@@ -80,13 +104,32 @@ export function ItemList2<T extends { _id: string | number }>({
   </Container>
 }
 
+function getColumns<T>({ columns: columnInputs, selection }: ItemListProps<T>): Column<T>[] {
+  const columns = columnInputs.map(normalizeColumnInput)
+  if (selection) {
+    const selectColumn: Column<T> = {
+      id: 'itemlist-selection',
+      label: {
+        content: <SelectionBox {...selection.selectAllProps} />,
+      },
+      content: item => <SelectionBox {...selection.selectItemProps(item)} />,
+      sortBy: null,
+      width: 'max-content',
+      enabled: true,
+    }
+    return [selectColumn, ...columns]
+  }
+
+  return columns
+}
+
 function getSortedItems<T>({ items, columns, sort, alwaysSortBy }: Pick<ItemListProps<T>, 'items' | 'alwaysSortBy'> & {
   sort: SortState | null
   columns: Column<T>[]
 }) {
   const additionalSorts = toArray(alwaysSortBy ?? [])
   if (sort) {
-    const sortBy = columns.find(c => c.sortBy?.sortName === sort.key)?.sortBy?.value
+    const sortBy = columns.find(c => c.sortBy?.name === sort.key)?.sortBy?.value
     if (sortBy) {
       const sorting: Sort<T> = { key: sortBy, direction: sort.direction }
       return sortedBy(items, sorting, ...additionalSorts)
@@ -134,13 +177,14 @@ function Header<T>({ isTable, columns, sort, onSort }: {
         : column.label
 
       return <Cell key={index} className={classNames(
-        column.sortBy && 'itemlist-sortable-header first-of-type:*:rounded-tl-md last-of-type:*:rounded-tr-md',
+        column.sortBy
+          ? 'itemlist-sortable-header first-of-type:*:rounded-tl-md last-of-type:*:rounded-tr-md'
+          : 'px-2 py-[5px]',
         column.headerClassName,
-        'px-2 py-[5px]',
       )}>
         {column.sortBy
           ? (
-            <SortButton sortKey={column.sortBy.sortName} currentSort={sort} onSort={onSort}>
+            <SortButton sortKey={column.sortBy.name} currentSort={sort} onSort={onSort}>
               {label}
             </SortButton>
           )

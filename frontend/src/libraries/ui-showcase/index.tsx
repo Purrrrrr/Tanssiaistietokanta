@@ -14,6 +14,7 @@ import FormUiShowcase from './formShowcase'
 import { EditorShowcase } from './lexicalShowCase'
 import { ShowcaseContainer } from './ShowcaseContainer'
 import { titleCase } from './utils/titleCase'
+import { useMultipleSelection } from 'libraries/common/selection/useMultipleSelection'
 
 const colors = ['none', 'primary', 'success', 'danger', 'warning'] as const
 
@@ -233,31 +234,29 @@ function ItemListShowcase({ isTable, empty }: { isTable: boolean, empty: boolean
     _id: String(i),
     name: `Item ${i}`,
     letter: String.fromCharCode(90 - i),
-    description: `This is item ${i}`,
   }))
+  const selection = useMultipleSelection(items)
 
   return <ItemList2
     id="ui-showcase-itemlist"
     isTable={isTable}
+    selection={selection}
     items={empty ? [] : items}
     emptyText="No items"
     wrapBreakpoint="none"
     columns={[
       {
         label: 'Name',
-        content: (item) => item.name,
-        sortName: 'name',
+        content: 'name',
       },
       {
         label: 'Letter',
-        content: (item) => item.letter,
-        sortName: 'letter',
+        content: 'letter',
       },
       {
         label: 'Description',
-        width: 'minmax(min-content, 1fr)',
-        content: (item) => item.description,
-        sortName: 'description',
+        content: item => `This is a description for ${item.name}`,
+        sortBy: { name: 'description', value: item => item.name },
       },
       {
         // TODO: separate support for action buttons that can be folded into a menu
@@ -266,11 +265,11 @@ function ItemListShowcase({ isTable, empty }: { isTable: boolean, empty: boolean
         content: (_, state) => <>
           <Button text={state.expanded ? 'Hide' : 'Show'} onClick={() => state.setExpanded(!state.expanded)} />
         </>,
-        sortName: null,
+        sortBy: null,
       },
     ]}
     expandableContent={(item, close) => <div className="flex items-center gap-2 p-2">
-      {item.description} <Button text="Close" onClick={close} />
+      More content goes here for {item.name} <Button text="Close" onClick={close} />
     </div>}
   />
 }

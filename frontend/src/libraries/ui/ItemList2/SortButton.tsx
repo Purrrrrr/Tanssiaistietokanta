@@ -8,7 +8,7 @@ import { CaretDown } from 'libraries/ui/icons'
 import { Button } from '../Button'
 
 interface SortButtonProps {
-  sortKey: string
+  sortKey: string | number
   currentSort: SortState | null
   onSort: (key: SortState) => void
   children: React.ReactNode

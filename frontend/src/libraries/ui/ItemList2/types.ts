@@ -1,6 +1,6 @@
 import { SortDirection } from 'utils/sorted'
 
 export interface SortState {
-  key: string
+  key: string | number
   direction: SortDirection
 }
