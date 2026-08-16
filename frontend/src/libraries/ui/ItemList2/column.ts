@@ -48,9 +48,9 @@ interface CommonProps {
   className?: string
   headerClassName?: string
   // TODO: controls for column layout on small screens, e.g. hide on mobile, full width on mobile, etc
-  // TODO: Add these back in when we implement column visibility and enabled state
+  // TODO: Add these back in when we implement column visibility
   // visibility: 'always' | 'hidable' | 'hiddenByDefault' // Is the column always visible or can the user choose to hide this column? 'always' by default
-  // enabled: boolean // Should this column exist in this table? True by default. Used to exclude columns in certain tables without removing them from the column list
+  enabled: boolean // Should this column exist in this table? True by default. Used to exclude columns in certain tables without removing them from the column list
 }
 
 const defaults: CommonProps = {
@@ -58,7 +58,7 @@ const defaults: CommonProps = {
   className: '',
   headerClassName: '',
   // visibility: 'always',
-  // enabled: true,
+  enabled: true,
 }
 
 export function normalizeColumnInput<T>(input: ColumnInput<T>, index: number): Column<T> {

@@ -4,6 +4,7 @@ import { EventRole, EventVolunteer, VolunteerListItem } from 'types'
 
 import { usePatchEventVolunteer } from 'services/eventVolunteers'
 
+import { useMultipleSelection } from 'libraries/common/selection/useMultipleSelection'
 import { patchStrategy, useAutosavingState } from 'libraries/forms'
 import { Button, FormGroup } from 'libraries/ui'
 import { ChevronDown, ChevronUp, Edit, Pin, Search } from 'libraries/ui/icons'
@@ -13,7 +14,6 @@ import { VolunteerStatusSelector } from 'components/eventVolunteers/VolunteerSta
 import { SelectionBox } from 'components/widgets/SelectionBox'
 import { useT, useTranslation } from 'i18n'
 import { sortedBy } from 'utils/sorted'
-import { useMultipleSelection } from 'utils/useMultipleSelection'
 
 import { useCurrentEvent } from '../../-context'
 import { DeleteEventVolunteerButton } from './DeleteEventVolunteerButton'

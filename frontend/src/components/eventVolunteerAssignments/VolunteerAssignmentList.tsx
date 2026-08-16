@@ -5,12 +5,12 @@ import { Event, EventVolunteerAssignment, ID } from 'types'
 
 import { useSetEventVolunteerAssignmentRegistrationStatus, useSetEventVolunteerAssignmentWorkshopInstance } from 'services/eventVolunteerAssignments'
 
+import { useMultipleSelection } from 'libraries/common/selection/useMultipleSelection'
 import { Callout, FormGroup, ItemList, Sort, ToolbarContainer } from 'libraries/ui'
 import { RoleTag } from 'components/eventVolunteers/RoleTag'
 import { SelectionBox } from 'components/widgets/SelectionBox'
 import { useT } from 'i18n'
 import { sortedBy } from 'utils/sorted'
-import { useMultipleSelection } from 'utils/useMultipleSelection'
 
 import RegistrationStatusLegend from './RegistrationStatusLegend'
 import RegistrationStatusSelector from './RegistrationStatusSelector'

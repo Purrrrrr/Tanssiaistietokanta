@@ -48,6 +48,7 @@ export function ItemList2<T extends { _id: string | number }>({
   }
 
   const sortedItems = getSortedItems({ items, columns, sort, alwaysSortBy })
+  const visibleColumns = columns.filter(c => c.enabled)
 
   return <Container
     id={id}
@@ -59,7 +60,7 @@ export function ItemList2<T extends { _id: string | number }>({
     <SectionWrapper element={isTable ? 'thead' : null}>
       <Header
         isTable={isTable ?? false}
-        columns={columns}
+        columns={visibleColumns}
         sort={sort}
         onSort={setSort} />
     </SectionWrapper>
@@ -69,7 +70,7 @@ export function ItemList2<T extends { _id: string | number }>({
           key={item._id}
           item={item}
           isTable={isTable ?? false}
-          columns={columns}
+          columns={visibleColumns}
           expandableContent={expandableContent}
           expandableContentLoadingMessage={expandableContentLoadingMessage}
         />
