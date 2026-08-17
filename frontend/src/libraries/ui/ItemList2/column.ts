@@ -19,7 +19,7 @@ type GetData<T> = {
   content: (item: T, state: RowState) => SortableNode
   sortBy: Sorting<T> | { name: string, value?: never }
 } | {
-  content: (item: T, state: RowState) => UnsortableNode | PathAccessor<T, UnsortableNode>
+  content: (item: T, state: RowState) => React.ReactNode | PathAccessor<T, UnsortableNode>
   sortBy: Sorting<T>
 }
 
@@ -32,6 +32,7 @@ type SortableNode = Exclude<React.ReactNode, object>
 type UnsortableNode = Extract<React.ReactNode, object>
 
 interface RowState {
+  index: number
   expanded: boolean | undefined
   setExpanded: (expanded: boolean) => void
 }

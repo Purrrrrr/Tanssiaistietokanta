@@ -18,7 +18,7 @@ interface ItemListProps<T> {
   wrapBreakpoint?: 'md' | 'sm' | 'none'
   className?: string
   marginClass?: string
-  items: T[]
+  items: T[] | null | undefined
   selection?: Pick<SelectionApi<T>, 'selectAllProps' | 'selectItemProps'> | null
   columns: ColumnInput<T>[]
   expandableContent?: (item: T, close: () => void) => React.ReactNode
@@ -62,7 +62,7 @@ export function ItemList2<T extends { _id: string | number }>(props: ItemListPro
     return null
   })
 
-  if (items.length === 0) {
+  if (!items || items.length === 0) {
     return <EmptyList text={emptyText} />
   }
 
@@ -78,7 +78,7 @@ export function ItemList2<T extends { _id: string | number }>(props: ItemListPro
     )}
 
     style={{
-      '--itemlist-columns': columns.map(c => c.width ?? 'auto').join(' '),
+      '--itemlist-columns': visibleColumns.map(c => c.width ?? 'auto').join(' '),
     } as React.CSSProperties}
   >
     <SectionWrapper element={isTable ? 'thead' : null}>
@@ -89,10 +89,11 @@ export function ItemList2<T extends { _id: string | number }>(props: ItemListPro
         onSort={setSort} />
     </SectionWrapper>
     <SectionWrapper element={isTable ? 'tbody' : null}>
-      {sortedItems.map(item => (
+      {sortedItems.map((item, index) => (
         <Row
           key={item._id}
           item={item}
+          index={index}
           isTable={isTable ?? false}
           columns={visibleColumns}
           expandableContent={expandableContent}
@@ -123,10 +124,11 @@ function getColumns<T>({ columns: columnInputs, selection }: ItemListProps<T>): 
   return columns
 }
 
-function getSortedItems<T>({ items, columns, sort, alwaysSortBy }: Pick<ItemListProps<T>, 'items' | 'alwaysSortBy'> & {
+function getSortedItems<T>({ items: maybeItems, columns, sort, alwaysSortBy }: Pick<ItemListProps<T>, 'items' | 'alwaysSortBy'> & {
   sort: SortState | null
   columns: Column<T>[]
 }) {
+  const items = maybeItems ?? []
   const additionalSorts = toArray(alwaysSortBy ?? [])
   if (sort) {
     const sortBy = columns.find(c => c.sortBy?.name === sort.key)?.sortBy?.value
@@ -171,12 +173,12 @@ function Header<T>({ isTable, columns, sort, onSort }: {
   const Cell = isTable ? 'th' : 'span'
 
   return <Container className="font-bold items-end border-b border-gray-400">
-    {columns.map((column, index) => {
+    {columns.map(column => {
       const label = typeof column.label === 'object' && column.label !== null && 'content' in column.label
         ? column.label.content
         : column.label
 
-      return <Cell key={index} className={classNames(
+      return <Cell key={column.id} className={classNames(
         column.sortBy
           ? 'itemlist-sortable-header first-of-type:*:rounded-tl-md last-of-type:*:rounded-tr-md'
           : 'px-2 py-[5px]',
@@ -194,9 +196,10 @@ function Header<T>({ isTable, columns, sort, onSort }: {
   </Container>
 }
 
-function Row<T>({ item, isTable, columns, expandableContent, expandableContentLoadingMessage }: {
+function Row<T>({ item, index, isTable, columns, expandableContent, expandableContentLoadingMessage }: {
   isTable: boolean
   item: T
+  index: number
   columns: Column<T>[]
   expandableContent?: (item: T, close: () => void) => React.ReactNode
   expandableContentLoadingMessage?: string
@@ -213,8 +216,8 @@ function Row<T>({ item, isTable, columns, expandableContent, expandableContentLo
         ? 'nth-of-type-[4n+1]:bg-gray-100'
         : 'nth-of-type-[even]:bg-gray-100',
     )}>
-      {columns.map((column, index) => (
-        <Cell className={column.className} key={index}>{column.content(item, { expanded, setExpanded })}</Cell>
+      {columns.map(column => (
+        <Cell className={column.className} key={column.id}>{column.content(item, { index, expanded, setExpanded })}</Cell>
       ))}
     </Container>
     {expandableContent &&
