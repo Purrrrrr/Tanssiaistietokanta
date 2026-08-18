@@ -4,7 +4,7 @@ import { Volunteer } from 'types'
 
 import { usePatchVolunteer } from 'services/volunteers'
 
-import { Button, Dialog, FormGroup, ItemList } from 'libraries/ui'
+import { Button, Dialog, FormGroup, ItemList2 } from 'libraries/ui'
 import { ManyToOne } from 'libraries/ui/icons'
 import { useT, useTranslation } from 'i18n'
 
@@ -67,25 +67,29 @@ function MergeVolunteersDialog({ selectedVolunteers, isOpen, onClose, onMergeSuc
     <form onSubmit={e => { e.preventDefault(); mergeVolunteers() }}>
       <Dialog.Body>
         <FormGroup label={t('mergeVolunteersDialog.keepVolunteerLabel')} labelFor="canonical-volunteer">
-          <ItemList items={selectedVolunteers} emptyText="" columns="grid-cols-[auto_1fr]" className="bg-white rounded-lg">
-            <ItemList.Header>
-              <span>{t('mergeVolunteersDialog.choose')}</span>
-              <span>{t('mergeVolunteersDialog.name')}</span>
-            </ItemList.Header>
-            {selectedVolunteers.map(volunteer =>
-              <ItemList.Row key={volunteer._id}>
-                <input
-                  id={`canonical-volunteer-${volunteer._id}`}
-                  type="radio"
-                  name="canonical-volunteer"
-                  value={volunteer._id}
-                  checked={canonicalVolunteer?._id === volunteer._id}
-                  onChange={() => setCanonicalVolunteer(volunteer)}
-                />
-                <label htmlFor={`canonical-volunteer-${volunteer._id}`}>{volunteer.name}</label>
-              </ItemList.Row>,
-            )}
-          </ItemList>
+          <ItemList2
+            items={selectedVolunteers}
+            emptyText=""
+            className="bg-white rounded-lg"
+            columns={[{
+              label: t('mergeVolunteersDialog.choose'),
+              width: 'max-content',
+              sortBy: null,
+              content: volunteer => <input
+                id={`canonical-volunteer-${volunteer._id}`}
+                type="radio"
+                name="canonical-volunteer"
+                className="w-full"
+                value={volunteer._id}
+                checked={canonicalVolunteer?._id === volunteer._id}
+                onChange={() => setCanonicalVolunteer(volunteer)}
+              />,
+            }, {
+              label: t('mergeVolunteersDialog.name'),
+              content: volunteer => <label htmlFor={`canonical-volunteer-${volunteer._id}`}>{volunteer.name}</label>,
+              sortBy: 'name',
+            }]}
+          />
         </FormGroup>
       </Dialog.Body>
       <Dialog.Footer className="flex flex-row-reverse">

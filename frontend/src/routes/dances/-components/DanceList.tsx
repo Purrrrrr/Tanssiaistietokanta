@@ -1,18 +1,14 @@
-import { useState } from 'react'
-import classNames from 'classnames'
-
 import { DanceListItem, ID } from 'types'
 
 import { useDance } from 'services/dances'
 
-import { Button, ItemList, type Sort } from 'libraries/ui'
+import { ItemList2 } from 'libraries/ui'
 import { ColorClass } from 'libraries/ui/classes'
-import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Edit } from 'libraries/ui/icons'
+import { Edit } from 'libraries/ui/icons'
 import { DanceEditor } from 'components/dance/DanceEditor'
 import { InfiniteItemLoader } from 'components/InfiniteItemLoader'
 import { ColoredTag } from 'components/widgets/ColoredTag'
 import { useT, useTranslation } from 'i18n'
-import { sortedBy } from 'utils/sorted'
 
 import { DanceIsUsedIn } from './DanceIsUsedIn'
 import { DanceLink } from './DanceLink'
@@ -22,11 +18,11 @@ interface DanceListProps {
   dances: DanceListItem[]
 }
 
-export function DanceList({ dances: unsortedDances }: DanceListProps) {
+export function DanceList({ dances }: DanceListProps) {
   const t = useT('routes.dances.list')
   const label = useT('domain.dance')
-  const [sort, setSort] = useState<Sort>({ key: 'name', direction: 'asc' })
-  const dances = sortedBy(unsortedDances, { key: danceSorter(sort.key), direction: sort.direction }, 'name')
+  const editStr = useTranslation('common.edit')
+  const loadingStr = useTranslation('common.loadingEditor')
 
   return <div>
     {dances.length > 0 &&
@@ -34,94 +30,50 @@ export function DanceList({ dances: unsortedDances }: DanceListProps) {
     }
     <InfiniteItemLoader items={dances}>
       {dances =>
-        <ItemList
+        <ItemList2
           items={dances}
           emptyText={t('noDances')}
-          columns="grid-cols-[1fr_minmax(min(300px,30%),max-content)_max-content]"
-        >
-          <ItemList.SortableHeader currentSort={sort} onSort={setSort} columns={[
-            { key: 'name', label: label('name') },
-            { key: 'category', label: label('category') },
-            { key: 'popularity', label: label('danceUsage') },
-          ]} />
-          {dances.map((dance: DanceListItem) => <DanceListRow key={dance._id} dance={dance} />) }
-        </ItemList>
+          columns={[
+            {
+              label: label('name'),
+              width: '1fr',
+              content: dance => <DanceLink dance={dance} />,
+              sortBy: 'name',
+            }, {
+              label: label('category'),
+              width: 'minmax(min(300px,30%), max-content)',
+              sortBy: {
+                name: 'category',
+                value: dance => dance.category?.trim() === '' ? null : dance.category,
+              },
+              content: dance => dance.category
+                ? <ColoredTag title={dance.category} />
+                : <span className={ColorClass.textMuted}>{t('noCategory')}</span>,
+            }, {
+              label: label('danceUsage'),
+              width: 'max-content',
+              className: 'grow text-right -me-4',
+              sortBy: {
+                name: 'popularity',
+                value: (dance: DanceListItem) => dance.events.length + (dance.wikipageName ? 0.5 : 0),
+              },
+              content: dance => <DanceIsUsedIn minimal events={dance.events} wikipageName={dance.wikipageName} />,
+            },
+          ]}
+          actions={dance => <DeleteDanceButton minimal dance={dance} />}
+          expandableContent={dance => <DanceListRowEditor danceId={dance._id} />}
+          expandButtonProps={dance => ({
+            icon: <Edit />,
+            color: 'primary',
+            requireRight: 'dances:modify',
+            entityId: dance._id,
+            'aria-label': editStr,
+            tooltip: editStr,
+          })}
+          expandableContentLoadingMessage={loadingStr}
+        />
       }
     </InfiniteItemLoader>
-  </div>
-}
-
-function danceSorter(key: string) {
-  switch (key) {
-    default:
-    case 'name':
-      return (dance: DanceListItem) => dance.name
-    case 'category':
-      return (dance: DanceListItem) => dance.category?.trim() === '' ? null : dance.category
-    case 'popularity':
-      return (dance: DanceListItem) => dance.events.length + (dance.wikipageName ? 0.5 : 0)
-  }
-}
-
-function DanceListRow({ dance }: { dance: DanceListItem }) {
-  const t = useT('routes.dances.list')
-  const [showEditor, setShowEditor] = useState(false)
-
-  return <ItemList.Row
-    expandableContent={<DanceListRowEditor danceId={dance._id} />}
-    expandableContentLoadingMessage={useTranslation('common.loadingEditor')}
-    isOpen={showEditor}
-  >
-    <div className="">
-      <DanceLink dance={dance} />
-    </div>
-    <div className="">
-      {dance.category
-        ? <ColoredTag title={dance.category} />
-        : <span className={ColorClass.textMuted}>{t('noCategory')}</span>
-      }
-    </div>
-    <Toolbar>
-      <DanceIsUsedIn minimal events={dance.events} wikipageName={dance.wikipageName} />
-      <DeleteDanceButton minimal dance={dance} />
-      <Button
-        requireRight="dances:modify"
-        entityId={dance._id}
-        minimal
-        icon={<Edit />}
-        aria-label={useTranslation('common.edit')}
-        tooltip={useTranslation('common.edit')}
-        color="primary"
-        onClick={() => setShowEditor(!showEditor)}
-        rightIcon={showEditor ? <ChevronUp /> : <ChevronDown />}
-      />
-    </Toolbar>
-  </ItemList.Row>
-}
-
-function Toolbar({ children }: { children: React.ReactNode }) {
-  const [open, setOpen] = useState(false)
-  return <div className={classNames(
-    'relative grow min-w-8 min-h-6 text-right',
-  )}>
-    <div className={classNames(
-      'w-max max-xs:absolute inline-flex',
-      !open && 'right-0 top-0',
-      open && '-top-1 -right-1 max-xs:bg-white max-xs:rounded-md max-xs:p-1 max-xs:z-10 max-xs:shadow-md max-xs:shadow-stone-600/30',
-    )}>
-      <div className={classNames(
-        !open && 'max-xs:hidden',
-      )}>
-        {children}
-      </div>
-      <Button
-        className="xs:hidden"
-        minimal
-        icon={open ? <ChevronRight /> : <ChevronLeft />}
-        title={useTranslation('common.actions')}
-        onClick={() => setOpen(!open)}
-      />
-    </div>
   </div>
 }
 
@@ -129,5 +81,5 @@ function DanceListRowEditor({ danceId }: { danceId: ID }) {
   const result = useDance({ id: danceId })
   if (!result.data?.dance) return null
 
-  return <DanceEditor dance={result.data.dance} className="p-2 border-gray-200 border-t-1" />
+  return <DanceEditor dance={result.data.dance} className="p-2 border-gray-200 border-t" />
 }

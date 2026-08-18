@@ -6,7 +6,7 @@ import { formatBallroom } from 'services/ballrooms'
 
 import { SyncStatus } from 'libraries/forms'
 import { DocumentContentEditor, DocumentContentEditorProps, emptyDocument, isEmptyDocument } from 'libraries/lexical'
-import { Button, Collapse, ItemList, PageSection } from 'libraries/ui'
+import { Button, Collapse, ItemList2, PageSection } from 'libraries/ui'
 import { Cross, Edit } from 'libraries/ui/icons'
 import { AddFormationDiagramForm } from 'components/formationDiagram/AddFormationDiagramForm'
 import { FormationDiagramChooser } from 'components/formationDiagram/FormationDiagramChooser'
@@ -164,42 +164,32 @@ export function FormationDiagramsSection({ dance, onModifyFormationDiagrams }: {
         onSubmit={formationDiagram => onModifyFormationDiagrams([...dance.formationDiagrams, formationDiagram])}
       />
     </Collapse>
-    <ItemList items={dance.formationDiagrams} emptyText={t('noFormationDiagrams')} columns="grid-cols-[max-content_1fr_max-content]">
-      <ItemList.Header>
-        <span>{itemLabel('ballroom')}</span>
-        <span>{itemLabel('description')}</span>
-        <span></span>
-      </ItemList.Header>
-      {dance.formationDiagrams.map((formationDiagram) =>
-        <ItemList.ExpandingRow key={formationDiagram._id} expandableContent={
-          <FormationDiagramEditor formationDiagram={formationDiagram} />
-        }>
-          {(open, setOpen) =>
-            <>
-              <span>
-                {formationDiagram.ballroom ? formatBallroom(formationDiagram.ballroom) : '-'}
-              </span>
-              <span>
-                {formationDiagram.description?.trim() ? formationDiagram.description : '-'}
-              </span>
-              <span>
-                <Button
-                  minimal
-                  icon={<Edit />}
-                  tooltip={commonT('edit')}
-                  onClick={() => setOpen(!open)} />
-                <Button
-                  minimal
-                  icon={<Cross />}
-                  tooltip={commonT('delete')}
-                  color="danger"
-                  onClick={() => onModifyFormationDiagrams(dance.formationDiagrams.filter(fd => fd._id !== formationDiagram._id))}
-                />
-              </span>
-            </>
-          }
-        </ItemList.ExpandingRow>,
-      )}
-    </ItemList>
+    <ItemList2
+      items={dance.formationDiagrams}
+      emptyText={t('noFormationDiagrams')}
+      expandableContent={diagram => <FormationDiagramEditor formationDiagram={diagram} />}
+      expandButtonProps={{ tooltip: commonT('edit'), icon: <Edit /> }}
+      columns={[
+        {
+          label: itemLabel('ballroom'),
+          sortBy: 'ballroom',
+          content: formationDiagram => formationDiagram.ballroom ? formatBallroom(formationDiagram.ballroom) : '-',
+        }, {
+          label: itemLabel('description'),
+          width: '1fr',
+          sortBy: 'description',
+          content: formationDiagram => formationDiagram.description?.trim() ? formationDiagram.description : '-',
+        },
+      ]}
+      actions={formationDiagram =>
+        <Button
+          minimal
+          icon={<Cross />}
+          tooltip={commonT('delete')}
+          color="danger"
+          onClick={() => onModifyFormationDiagrams(dance.formationDiagrams.filter(fd => fd._id !== formationDiagram._id))}
+        />
+      }
+    />
   </PageSection>
 }

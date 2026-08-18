@@ -7,7 +7,7 @@ import { NewValue } from 'libraries/forms/types'
 import { useCreateEventVolunteerAssignment } from 'services/eventVolunteerAssignments'
 
 import { formFor, SubmitButton, Validate } from 'libraries/forms'
-import { Card, DialogCloseButton, FormGroup, H2, ItemList } from 'libraries/ui'
+import { Card, DialogCloseButton, FormGroup, H2, ItemList2 } from 'libraries/ui'
 import { Trash } from 'libraries/ui/icons'
 import { RoleTag } from 'components/eventVolunteers/RoleTag'
 import { useT, useTranslation } from 'i18n'
@@ -23,7 +23,7 @@ interface FormData {
   workshop: Workshop | null
   assignments: AssignmentData[]
 }
-type AssignmentData = Pick<EventVolunteerAssignment, 'volunteer' | 'workshop' | 'role' | 'workshopInstanceIds'>
+type AssignmentData = Pick<EventVolunteerAssignment, '_id' | 'volunteer' | 'workshop' | 'role' | 'workshopInstanceIds'>
 
 const emptyFormData: FormData = {
   target: null,
@@ -121,32 +121,39 @@ function AssignmentList({ formData, currentAssignments, event }: {
   const allAssignments = [...currentAssignments, ...assignments]
   const hasWorkshops = assignments.some(a => a.workshop)
   return <FormGroup label={t('assignmentsToAdd')} labelFor="add-volunteer-role">
-    <ItemList items={assignments} emptyText={t('noAssignmentsAdded')} columns="grid-cols-[max-content_max-content_auto_max-content]">
-      <ItemList.Header>
-        <span>{t(target.__typename === 'EventRole' ? 'volunteer' : 'role')}</span>
-        {hasWorkshops && <span>{t('workshop')}</span>}
-        {hasWorkshops && <span>{t('instance')}</span>}
-      </ItemList.Header>
-      {assignments.map((a, i) => <ItemList.Row key={i}>
-        <span>
-          {target.__typename === 'EventRole'
-            ? a.volunteer.name
-            : <span><RoleTag role={a.role} /></span>
-          }
-        </span>
-        <span>{a.workshop && <WorkshopLink workshop={a.workshop} />}</span>
-        {a.workshop &&
+    <ItemList2 items={assignments} emptyText={t('noAssignmentsAdded')} defaultSort={null}
+      columns={[
+        {
+          label: t('volunteer'),
+          content: a => a.volunteer.name,
+          sortBy: { name: 'volunteer' },
+          enabled: target.__typename === 'EventRole',
+        }, {
+          label: t('role'),
+          content: a => <RoleTag role={a.role} />,
+          sortBy: { name: 'role', value: a => a.role.name },
+          enabled: target.__typename === 'Volunteer',
+        }, {
+          label: t('workshop'),
+          content: a => a.workshop && <WorkshopLink workshop={a.workshop} />,
+          sortBy: { name: 'workshop', value: a => a.workshop?.name },
+          enabled: hasWorkshops,
+        }, {
+          label: t('instance'),
+          content: (a, { index }) => a.workshop &&
           <Field
-            path={`assignments.${i}.workshopInstanceIds`}
+            path={`assignments.${index}.workshopInstanceIds`}
             labelStyle="hidden"
             label={t('instance')} component={WorkshopInstanceSelector}
             componentProps={{
               workshopInstances: event.workshops.find(w => w._id === a.workshop?._id)?.instances ?? [],
-            }} />
-        }
-        <RemoveItemButton minimal icon={<Trash />} path="assignments" index={i} tooltip={t('deleteAssignment')} />
-      </ItemList.Row>)}
-    </ItemList>
+            }} />,
+          sortBy: null,
+          enabled: hasWorkshops,
+        },
+      ]}
+      actions={(_, index) => <RemoveItemButton minimal icon={<Trash />} path="assignments" index={index} tooltip={t('deleteAssignment')} />}
+    />
     <Validate value={assignments} type="list" required />
     {target.__typename === 'Volunteer' && (
       <VolunteerRoleSelect
@@ -154,6 +161,7 @@ function AssignmentList({ formData, currentAssignments, event }: {
         currentAssignments={allAssignments}
         workshops={event.workshops}
         onChange={({ workshop, ...role }) => add({
+          _id: role._id,
           role,
           workshop,
           volunteer: target,
@@ -169,6 +177,7 @@ function AssignmentList({ formData, currentAssignments, event }: {
         workshopId={workshop?._id}
         currentAssignments={allAssignments}
         onChange={volunteer => add({
+          _id: volunteer._id,
           volunteer,
           role: target,
           workshop,

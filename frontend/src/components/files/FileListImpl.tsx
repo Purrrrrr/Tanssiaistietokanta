@@ -7,10 +7,9 @@ import { useFiles } from 'services/files'
 import { useRights } from 'libraries/access-control'
 import { useMultipleSelection } from 'libraries/common/selection/useMultipleSelection'
 import { useFormatDateTime } from 'libraries/i18n/dateTime'
-import { ItemList, PageSection, RegularLink } from 'libraries/ui'
+import { ItemList2, PageSection, RegularLink } from 'libraries/ui'
 import { useShowAlert } from 'libraries/ui/hooks'
 import { AddButton } from 'components/widgets/AddButton'
-import { SelectionBox } from 'components/widgets/SelectionBox'
 import { useT } from 'i18n'
 
 import { DeleteFileButton } from './DeleteFileButton'
@@ -110,33 +109,35 @@ export default function FileList({ title, owner, owningId, path }: FileListProps
   >
     <UploadProgressList uploads={uploads} />
     <FileDropZone enabled={canUpload} onDrop={onDragAndDrop}>
-      <ItemList
+      <ItemList2
         items={files}
         emptyText={T('noFiles')}
-        columns="grid-cols-[auto_1fr_minmax(200px,auto)_minmax(100px,auto)_max-content]">
-        {files.length > 0 &&
-          <ItemList.Header>
-            <SelectionBox {...selector.selectAllProps} />
-            <span>{T('name')}</span>
-            <span>{T('date')}</span>
-            <span>{T('size')}</span>
-          </ItemList.Header>
-        }
-        {files.map(file =>
-          <ItemList.Row key={file._id}>
-            <SelectionBox {...selector.selectItemProps(file)} />
-            <RegularLink href={`/api/files/${file._id}?download=true`} target="_blank" title={file.name} className="overflow-hidden overflow-ellipsis">
+        selection={selector}
+        columns={[
+          {
+            label: T('name'),
+            width: '1fr',
+            content: file => <RegularLink href={`/api/files/${file._id}?download=true`} target="_blank" title={file.name} className="overflow-hidden text-ellipsis">
               {file.name}
-            </RegularLink>
-            <span>{formatDate(file._updatedAt)}</span>
-            <span>{filesize(file.size)}</span>
-            <div>
-              {canModify && <RenameFileButton file={file} />}
-              {canDelete && <DeleteFileButton file={file} />}
-            </div>
-          </ItemList.Row>,
-        )}
-      </ItemList>
+            </RegularLink>,
+            sortBy: 'name',
+          }, {
+            label: T('date'),
+            width: 'minmax(200px, auto)',
+            content: file => formatDate(file._updatedAt),
+            sortBy: '_updatedAt',
+          }, {
+            label: T('size'),
+            width: 'minmax(100px, auto)',
+            content: file => filesize(file.size),
+            sortBy: 'size',
+          },
+        ]}
+        actions={file => <>
+          {canModify && <RenameFileButton file={file} />}
+          {canDelete && <DeleteFileButton file={file} />}
+        </>}
+      />
       <input
         className="hidden"
         ref={input}

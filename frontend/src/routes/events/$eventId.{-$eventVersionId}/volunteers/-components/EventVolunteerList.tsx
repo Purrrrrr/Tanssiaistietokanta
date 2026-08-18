@@ -1,17 +1,13 @@
-import { useState } from 'react'
-
 import { EventRole, EventVolunteer, VolunteerListItem } from 'types'
 
 import { usePatchEventVolunteer } from 'services/eventVolunteers'
 
 import { useMultipleSelection } from 'libraries/common/selection/useMultipleSelection'
 import { patchStrategy, useAutosavingState } from 'libraries/forms'
-import { Button, FormGroup } from 'libraries/ui'
-import { ChevronDown, ChevronUp, Edit, Pin, Search } from 'libraries/ui/icons'
-import { ItemList, Sort } from 'libraries/ui/ItemList'
+import { FormGroup, ItemList2 } from 'libraries/ui'
+import { Edit, Pin, Search } from 'libraries/ui/icons'
 import { RoleTag } from 'components/eventVolunteers/RoleTag'
 import { VolunteerStatusSelector } from 'components/eventVolunteers/VolunteerStatusSelector'
-import { SelectionBox } from 'components/widgets/SelectionBox'
 import { useT, useTranslation } from 'i18n'
 import { sortedBy } from 'utils/sorted'
 
@@ -26,12 +22,11 @@ export interface EventVolunteerListProps {
   onSetRole: (roleId: string | undefined) => void
 }
 
-export function EventVolunteerList({ eventVolunteers: unsorted, readOnly, currentRole, onSetRole }: EventVolunteerListProps) {
+export function EventVolunteerList({ eventVolunteers, readOnly, currentRole, onSetRole }: EventVolunteerListProps) {
   const t = useT('routes.events.event.volunteers')
+  const editStr = useTranslation('common.edit')
   const label = useT('domain.eventVolunteer')
-  const [sort, setSort] = useState<Sort>({ key: 'taskRoles', direction: 'asc' })
 
-  const eventVolunteers = sortedBy(unsorted, { key: volunteerSorter(sort.key), direction: sort.direction }, volunteer => volunteer.volunteer.name)
   const addedVolunteers = eventVolunteers.map(ev => ev.volunteer)
   const { selected, ...selector } = useMultipleSelection(eventVolunteers)
 
@@ -49,47 +44,64 @@ export function EventVolunteerList({ eventVolunteers: unsorted, readOnly, curren
         }
       </div>
     </div>
-    <ItemList
+    <ItemList2
       items={eventVolunteers}
       emptyText={t('noVolunteers')}
-      columns="grid-cols-[auto_max-content_auto_auto_auto_1fr_1fr_max-content]"
-    >
-      <ItemList.SortableHeader currentSort={sort} onSort={setSort} columns={[
-        { key: 'select', sortable: false, label: <SelectionBox {...selector.selectAllProps} /> },
-        { key: 'name', label: label('name') },
-        { key: 'status', label: label('status') },
-        { key: 'taskRoles', label: <>
-          {label('taskRoles')}{' '}
-          <span aria-hidden>(<AssignedRoleIcon /> = {label('assigned')} / <InterestedRoleIcon /> = {label('interested')})</span>
-        </> },
-        { key: 'wishes', label: label('wishes') },
-        { key: 'notes', label: label('notes') },
-      ]} />
-      {(eventVolunteers).map(ev => <EventVolunteerListRow
-        key={ev._id}
-        eventVolunteer={ev}
-        addedVolunteers={addedVolunteers}
-        readOnly={readOnly}
-      >
-        <SelectionBox {...selector.selectItemProps(ev)} />
-        <span>{ev.volunteer.name}</span>
-        <VolunteerStatusSelector id={`status-${ev._id}`} eventVolunteers={[ev]} iconOnly />
-        <span>
-          {(getTasksRoles(ev)).map(role => (
-            <RoleTag
-              key={role._id}
-              icon={role.assigned ? <AssignedRoleIcon label={label('assigned')} /> : <InterestedRoleIcon label={label('interested')} />}
-              role={role}
-              selected={currentRole ? currentRole === role._id : undefined}
-              onSetRole={onSetRole}
-            />
-          ))}
-        </span>
-        <span>{ev.wishes ? ev.wishes : <span className="italic text-muted">{label('noWishes')}</span>}</span>
-        <span>{ev.notes || '-'}</span>
-      </EventVolunteerListRow>,
-      )}
-    </ItemList>
+      selection={selector}
+      defaultSort="taskRoles"
+      alwaysSortBy={ev => ev.volunteer.name}
+      expandableContent={ev => <EventVolunteerRowEditor item={ev} addedVolunteers={addedVolunteers} readOnly={readOnly} />}
+      expandButtonProps={ev => ({
+        requireRight: 'eventVolunteers:modify',
+        entityId: ev._id,
+        icon: readOnly ? undefined : <Edit />,
+        ariaLabel: editStr,
+        tooltip: editStr,
+        color: 'primary',
+      })}
+      columns={[
+        {
+          label: label('name'),
+          content: ev => ev.volunteer.name,
+          sortBy: { name: 'name' },
+        }, {
+          label: label('status'),
+          content: ev => <VolunteerStatusSelector id={`status-${ev._id}`} eventVolunteers={[ev]} iconOnly />,
+          sortBy: 'status',
+          width: 'max-content',
+        }, {
+          label: <>
+            {label('taskRoles')}{' '}
+            <span aria-hidden>(<AssignedRoleIcon /> = {label('assigned')} / <InterestedRoleIcon /> = {label('interested')})</span>
+          </>,
+          content: ev => <>
+            {(getTasksRoles(ev)).map(role => (
+              <RoleTag
+                key={role._id}
+                icon={role.assigned ? <AssignedRoleIcon label={label('assigned')} /> : <InterestedRoleIcon label={label('interested')} />}
+                role={role}
+                selected={currentRole ? currentRole === role._id : undefined}
+                onSetRole={onSetRole}
+              />
+            ))}
+          </>,
+          sortBy: {
+            name: 'taskRoles',
+            value: ev => getTasksRoles(ev).map(role => [role.order, role.assigned]),
+          },
+        }, {
+          label: label('wishes'),
+          content: ev => ev.wishes ? ev.wishes : <span className="italic text-muted">{label('noWishes')}</span>,
+          sortBy: 'wishes',
+        }, {
+          label: label('notes'),
+          content: ev => ev.notes ?? '-',
+          sortBy: 'notes',
+          width: '1fr',
+        },
+      ]}
+      actions={ev => !readOnly && <DeleteEventVolunteerButton minimal eventVolunteer={ev} />}
+    />
   </>
 }
 
@@ -116,54 +128,6 @@ function getTasksRoles(ev: EventVolunteer): TaskRole[] {
     }))
 
   return sortedBy([...assignmentRoles, ...interestedInRoles], 'order')
-}
-
-function volunteerSorter(key: string) {
-  switch (key) {
-    default:
-    case 'status':
-      return (ev: EventVolunteer) => ev.status
-    case 'name':
-      return (ev: EventVolunteer) => ev.volunteer.name
-    case 'taskRoles':
-      return (ev: EventVolunteer) => getTasksRoles(ev).map(role => [role.order, role.assigned])
-    case 'wishes':
-      return (ev: EventVolunteer) => ev.wishes ?? ''
-    case 'notes':
-      return (ev: EventVolunteer) => ev.notes ?? ''
-  }
-}
-
-interface EventVolunteerListRowProps {
-  eventVolunteer: EventVolunteer
-  addedVolunteers: VolunteerListItem[]
-  readOnly?: boolean
-  children: React.ReactNode
-}
-
-function EventVolunteerListRow({ eventVolunteer: ev, addedVolunteers, readOnly, children }: EventVolunteerListRowProps) {
-  const [showEditor, setShowEditor] = useState(false)
-
-  return <ItemList.Row
-    expandableContent={<EventVolunteerRowEditor item={ev} addedVolunteers={addedVolunteers} readOnly={readOnly} />}
-    isOpen={showEditor}
-  >
-    {children}
-    <div className="flex gap-1 items-center">
-      {!readOnly && <DeleteEventVolunteerButton minimal eventVolunteer={ev} />}
-      <Button
-        requireRight="eventVolunteers:modify"
-        entityId={ev._id}
-        minimal
-        icon={readOnly ? undefined : <Edit />}
-        aria-label={useTranslation('common.edit')}
-        tooltip={useTranslation('common.edit')}
-        color="primary"
-        onClick={() => setShowEditor(!showEditor)}
-        rightIcon={showEditor ? <ChevronUp /> : <ChevronDown />}
-      />
-    </div>
-  </ItemList.Row>
 }
 
 function EventVolunteerRowEditor({ item, addedVolunteers, readOnly }: {

@@ -1,5 +1,3 @@
-import { useState } from 'react'
-
 import { Volunteer } from 'types'
 
 import { cleanMetadataValues } from 'backend'
@@ -7,11 +5,9 @@ import { usePatchVolunteer } from 'services/volunteers'
 
 import { useMultipleSelection } from 'libraries/common/selection/useMultipleSelection'
 import { patchStrategy, useAutosavingState } from 'libraries/forms'
-import { Button } from 'libraries/ui'
-import { ChevronDown, ChevronUp, Edit } from 'libraries/ui/icons'
-import { ItemList, Sort } from 'libraries/ui/ItemList'
+import { ItemList2 } from 'libraries/ui'
+import { Edit } from 'libraries/ui/icons'
 import { VolunteeredIn } from 'components/volunteers/VolunteeredIn'
-import { SelectionBox } from 'components/widgets/SelectionBox'
 import { useT } from 'i18n'
 import { sortedBy } from 'utils/sorted'
 
@@ -22,93 +18,59 @@ import { VolunteerForm, VolunteerFormValues } from './VolunteerForm'
 export interface VolunteerListProps {
   volunteers?: Volunteer[]
 }
-export function VolunteerList({ volunteers: unsortedVolunteers }: VolunteerListProps) {
-  const t = useT('routes.volunteers')
+export function VolunteerList({ volunteers = [] }: VolunteerListProps) {
+  const t = useT('')
   const label = useT('domain.volunteer')
-  const [sort, setSort] = useState<Sort>({ key: 'interestedIn', direction: 'asc' })
-  const volunteers = sortedBy(unsortedVolunteers, { key: volunteerSorter(sort.key), direction: sort.direction }, 'name')
   const selector = useMultipleSelection(volunteers)
 
   return <>
     <div className="flex gap-2 justify-between items-center mb-2">
       <div>
-        {volunteers?.length > 0 && t('Nvolunteers', { count: volunteers?.length })}
-        {selector.selected.length > 0 && ', ' + t('selectedVolunteers', { count: selector.selected.length })}
+        {volunteers?.length > 0 && t('routes.volunteers.Nvolunteers', { count: volunteers?.length })}
+        {selector.selected.length > 0 && ', ' + t('routes.volunteers.selectedVolunteers', { count: selector.selected.length })}
       </div>
       {selector.selected.length >= 2 &&
         <MergeVolunteersButton selectedVolunteers={selector.selected} onMerge={selector.clearSelection} />
       }
     </div>
-    <ItemList
-      items={volunteers ?? []}
-      emptyText={t('noVolunteers')}
-      columns="grid-cols-[auto_1fr_1fr_max-content]"
-    >
-      <ItemList.SortableHeader
-        currentSort={sort}
-        onSort={setSort}
-        columns={[
-          { key: 'selectbox', label: <SelectionBox {...selector.selectAllProps} />, sortable: false },
-          { key: 'name', label: label('name') },
-          { key: 'volunteeredIn', label: label('volunteeredIn') },
-        ]}
-      />
-      {(volunteers ?? []).map(volunteer =>
-        <VolunteerListRow key={volunteer._id} volunteer={volunteer}
-          selectionProps={selector.selectItemProps(volunteer)}
-        />,
-      )}
-    </ItemList>
+    <ItemList2
+      id="volunteer-list"
+      items={volunteers}
+      emptyText={t('routes.volunteers.noVolunteers')}
+      selection={selector}
+      columns={[
+        {
+          label: label('name'),
+          width: '1fr',
+          content: 'name',
+        }, {
+          label: label('volunteeredIn'),
+          width: '1fr',
+          sortBy: {
+            name: 'volunteeredIn',
+            value: (volunteer: Volunteer) => {
+              const sortedVolunteeredIn = sortedBy(
+                volunteer.volunteeredIn,
+                v => v.event.beginDate,
+              )
+              return sortedVolunteeredIn[0]?.event.beginDate
+            },
+          },
+          content: volunteer => <VolunteeredIn volunteer={volunteer} />,
+        },
+      ]}
+      actions={volunteer => <DeleteVolunteerButton minimal volunteer={volunteer} />}
+      expandableContent={(volunteer) => <VolunteerRowEditor item={volunteer} />}
+      expandButtonProps={volunteer => ({
+        requireRight: 'volunteers:modify',
+        entityId: volunteer._id,
+        icon: <Edit />,
+        ariaLabel: t('common.edit'),
+        tooltip: t('common.edit'),
+        color: 'primary',
+      })}
+    />
   </>
-}
-
-function volunteerSorter(key: string) {
-  switch (key) {
-    default:
-    case 'name':
-      return (volunteer: Volunteer) => volunteer.name
-    case 'volunteeredIn':
-      return (volunteer: Volunteer) => {
-        const sortedVolunteeredIn = sortedBy(
-          volunteer.volunteeredIn,
-          v => v.event.beginDate,
-        )
-        return sortedVolunteeredIn[0]?.event.beginDate
-      }
-  }
-}
-
-interface VolunteerListRowProps {
-  volunteer: Volunteer
-  selectionProps: { checked: boolean, onChange: () => void }
-}
-
-function VolunteerListRow({ volunteer, selectionProps }: VolunteerListRowProps) {
-  const [showEditor, setShowEditor] = useState(false)
-  const t = useT('')
-
-  return <ItemList.Row
-    expandableContent={<VolunteerRowEditor item={volunteer} />}
-    isOpen={showEditor}
-  >
-    <SelectionBox {...selectionProps} />
-    <span>{volunteer.name}</span>
-    <VolunteeredIn volunteer={volunteer} />
-    <div className="flex gap-1 items-center">
-      <DeleteVolunteerButton minimal volunteer={volunteer} />
-      <Button
-        requireRight="volunteers:modify"
-        entityId={volunteer._id}
-        minimal
-        icon={<Edit />}
-        aria-label={t('common.edit')}
-        tooltip={t('common.edit')}
-        color="primary"
-        onClick={() => setShowEditor(!showEditor)}
-        rightIcon={showEditor ? <ChevronUp /> : <ChevronDown />}
-      />
-    </div>
-  </ItemList.Row>
 }
 
 function VolunteerRowEditor({ item }: { item: Volunteer }) {

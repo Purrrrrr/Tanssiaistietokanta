@@ -1,13 +1,12 @@
 import { getRouteApi } from '@tanstack/react-router'
-import { useState } from 'react'
 
 import { DocumentListItem as Document, DocumentOwner } from 'types'
 
 import { useDocuments } from 'services/documents'
 
 import { DocumentViewer } from 'libraries/lexical'
-import { Button, ButtonProps, ItemList, Link, PageSection } from 'libraries/ui'
-import { ChevronDown, ChevronUp, Edit } from 'libraries/ui/icons'
+import { ButtonProps, ItemList2, Link, PageSection } from 'libraries/ui'
+import { Edit } from 'libraries/ui/icons'
 import { DeleteDocumentButton } from 'components/document/DeleteDocumentButton'
 import { NavigateButton } from 'components/widgets/NavigateButton'
 import { useT, useTranslation } from 'i18n'
@@ -25,61 +24,47 @@ interface DocumentListProps {
 
 export function DocumentList({ title, owner, owningId }: DocumentListProps) {
   const t = useT('components.documents.DocumentList')
-  const [documents = []] = useDocuments({ owner, owningId })
+  const [documents] = useDocuments({ owner, owningId })
+  const viewRoute = documentViewRoute({ owner })
+  const route = documentListRoute({ owner })
+  const params = getRouteApi(route).useParams()
 
   return <PageSection
     title={title}
     toolbar={<CreateDocumentButton owner={owner} owningId={owningId} />}
   >
-    <ItemList
+    <ItemList2
       items={documents}
       emptyText={t('noDocuments')}
-      columns="grid-cols-[1fr_max-content]"
-    >
-      {documents.map(doc => <DocumentRow key={doc._id} document={doc} />)}
-    </ItemList>
+      expandableContent={document => <DocumentViewer document={document.content} className="border-t border-stone-300 p-4 bg-white" />}
+      expandButtonProps={(_, { expanded }) => ({
+        'aria-label': t(expanded ? 'closePreview' : 'previewDocument'),
+        tooltip: t(expanded ? 'closePreview' : 'previewDocument'),
+        color: 'primary',
+      })}
+      columns={[
+        {
+          label: useTranslation('domain.document.title'),
+          width: '1fr',
+          content: document => <Link to={viewRoute} params={{ documentId: document._id, ...params }}>
+            {document.title}
+          </Link>,
+          sortBy: 'title',
+        },
+      ]}
+      actions={document => <>
+        <DeleteDocumentButton document={document} minimal iconOnly />
+        <NavigateButton
+          requireRight="documents:modify"
+          entityId={document._id}
+          minimal
+          icon={<Edit />}
+          to={`${viewRoute}/edit`}
+          params={{ ...params, documentId: document._id }}
+          aria-label={t('editDocument')}
+          color="primary"
+        />
+      </>}
+    />
   </PageSection>
-}
-
-interface DocumentRowProps {
-  document: Document
-}
-
-function DocumentRow({ document }: DocumentRowProps) {
-  const route = documentListRoute(document)
-  const viewRoute = documentViewRoute(document)
-  const params = getRouteApi(route).useParams()
-  const t = useT('components.documents.DocumentList')
-  const [isOpen, setIsOpen] = useState(false)
-
-  return <ItemList.Row
-    expandableContent={<DocumentViewer document={document.content} className="border-t-1 border-stone-300 p-4 bg-white" />}
-    expandableContentLoadingMessage={useTranslation('common.loadingEditor')}
-    isOpen={isOpen}
-  >
-    <Link to={viewRoute} params={{ documentId: document._id, ...params }}>
-      {document.title}
-    </Link>
-    <div className="flex gap-1">
-      <DeleteDocumentButton document={document} minimal iconOnly />
-      <NavigateButton
-        requireRight="documents:modify"
-        entityId={document._id}
-        minimal
-        icon={<Edit />}
-        to={`${viewRoute}/edit`}
-        params={{ ...params, documentId: document._id }}
-        aria-label={t('editDocument')}
-        color="primary"
-      />
-      <Button
-        minimal
-        aria-label={t(isOpen ? 'closePreview' : 'previewDocument')}
-        tooltip={t(isOpen ? 'closePreview' : 'previewDocument')}
-        color="primary"
-        onClick={() => setIsOpen(!isOpen)}
-        rightIcon={isOpen ? <ChevronUp /> : <ChevronDown />}
-      />
-    </div>
-  </ItemList.Row>
 }

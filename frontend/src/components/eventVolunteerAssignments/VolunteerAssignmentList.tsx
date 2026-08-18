@@ -1,4 +1,4 @@
-import { useId, useState } from 'react'
+import { useId } from 'react'
 import { WorkshopLink } from 'routes/events/$eventId.{-$eventVersionId}/-components/WorkshopLink'
 
 import { Event, EventVolunteerAssignment, ID } from 'types'
@@ -6,11 +6,9 @@ import { Event, EventVolunteerAssignment, ID } from 'types'
 import { useSetEventVolunteerAssignmentRegistrationStatus, useSetEventVolunteerAssignmentWorkshopInstance } from 'services/eventVolunteerAssignments'
 
 import { useMultipleSelection } from 'libraries/common/selection/useMultipleSelection'
-import { Callout, FormGroup, ItemList, Sort, ToolbarContainer } from 'libraries/ui'
+import { Callout, FormGroup, ItemList2, ToolbarContainer } from 'libraries/ui'
 import { RoleTag } from 'components/eventVolunteers/RoleTag'
-import { SelectionBox } from 'components/widgets/SelectionBox'
 import { useT } from 'i18n'
-import { sortedBy } from 'utils/sorted'
 
 import RegistrationStatusLegend from './RegistrationStatusLegend'
 import RegistrationStatusSelector from './RegistrationStatusSelector'
@@ -30,7 +28,7 @@ export function VolunteerAssignmentList({
   showName = false,
   showRole = false,
   event,
-  assignments: unsortedAssignments,
+  assignments,
   readOnly,
   children,
 }: VolunteerAssignmentListProps) {
@@ -40,8 +38,6 @@ export function VolunteerAssignmentList({
   const status = useT('domain.eventVolunteer.shortEventVolunteerStatus')
   const [setAssignmentWorkshopInstance] = useSetEventVolunteerAssignmentWorkshopInstance()
   const [setAssignmentRegistrationStatus] = useSetEventVolunteerAssignmentRegistrationStatus()
-  const [sort, setSort] = useState<Sort>({ key: showName ? 'name' : 'role', direction: 'asc' })
-  const assignments = sortedBy(unsortedAssignments, { key: assignmentSorter(sort.key), direction: sort.direction }, a => a.volunteer.name)
   const { selected, ...selector } = useMultipleSelection(assignments)
 
   const setInstanceIds = async (assignment: EventVolunteerAssignment, instanceIds: ID[] | null) => {
@@ -79,33 +75,35 @@ export function VolunteerAssignmentList({
         }
       </ToolbarContainer>
     )}
-    <ItemList
+    <ItemList2
       items={assignments}
       emptyText={t('noAssignments')}
-      columns="grid-cols-[auto_1fr_max-content_1fr_max-content_auto]">
-      <ItemList.SortableHeader
-        currentSort={sort}
-        onSort={setSort}
-        columns={[
-          { key: 'selectbox', label: <SelectionBox {...selector.selectAllProps} />, sortable: false },
-          showName && { key: 'name', label: t('name') },
-          showRole && { key: 'role', label: t('role') },
-          showWorkshops && { key: 'workshop', label: t('workshop') },
-          hasWorkshops && { key: 'instance', className: 'col-start-5', label: t('instance') },
-          eventRegistrationSystem !== 'None' && { key: 'registrationStatus', className: 'col-start-6', label: t('registrationStatus') },
-        ].filter(col => col !== false)}
-      />
-      {assignments.map(assignment => (
-        <ItemList.Row key={assignment._id}>
-          <SelectionBox {...selector.selectItemProps(assignment)} />
-          {showName && <span>
+      selection={selector}
+      columns={[
+        {
+          label: t('name'),
+          content: assignment => <span>
             {assignment.volunteer.name}
             {assignment.eventVolunteer.status !== 'Accepted' && ` (${status(assignment.eventVolunteer.status)})`}
-          </span>}
-          {showRole && <span><RoleTag role={assignment.role} /></span>}
-          {showWorkshops && (assignment.workshop ? <WorkshopLink workshop={assignment.workshop} /> : <span />)}
-          <WorkshopInstanceSelector
-            className="col-start-5"
+          </span>,
+          sortBy: { name: 'name', value: a => a.volunteer.name },
+          enabled: showName,
+        }, {
+          label: t('role'),
+          width: '1fr',
+          content: assignment => <RoleTag role={assignment.role} />,
+          sortBy: { name: 'role', value: a => a.role.name },
+          enabled: showRole,
+        }, {
+          label: t('workshop'),
+          width: '1fr',
+          content: assignment => assignment.workshop && <WorkshopLink workshop={assignment.workshop} />,
+          sortBy: { name: 'workshop', value: a => a.workshop?.name },
+          enabled: showWorkshops,
+        }, {
+          label: t('instance'),
+          width: 'max-content',
+          content: assignment => <WorkshopInstanceSelector
             workshopInstances={event.workshops.find(w => w._id === assignment.workshop?._id)?.instances ?? []}
             value={assignment.workshopInstanceIds}
             readOnly={
@@ -114,48 +112,36 @@ export function VolunteerAssignmentList({
                 || assignment.registrationStatus === 'AcceptedRegistration'
             }
             onChange={ids => setInstanceIds(assignment, ids)}
-          />
-          <span className="col-start-6 flex">
-            {eventRegistrationSystem !== 'None' &&
-              <RegistrationStatusSelector
-                id={`${id}-registrationStatus-${assignment._id}`}
-                value={assignment.registrationStatus}
-                onChange={registrationStatus =>
-                  setAssignmentRegistrationStatus({ id: assignment._id, registrationStatus })
-                }
-                disabled={readOnly}
-              />
-            }
-            {!readOnly &&
-              <RemoveAssignmentsButton
-                text={t('removeVolunteer')}
-                iconOnly
-                assignments={[assignment]}
-              />
-            }
-          </span>
-        </ItemList.Row>
-      ))}
-    </ItemList>
+          />,
+          sortBy: { name: 'instance', value: a => [a.workshop?.name, a.workshopInstanceIds] },
+          enabled: hasWorkshops,
+        }, {
+          label: t('registrationStatus'),
+          width: 'max-content',
+          content: assignment => <>
+            <RegistrationStatusSelector
+              id={`${id}-registrationStatus-${assignment._id}`}
+              value={assignment.registrationStatus}
+              onChange={registrationStatus =>
+                setAssignmentRegistrationStatus({ id: assignment._id, registrationStatus })
+              }
+              disabled={readOnly}
+            />
+          </>,
+          className: '-me-2',
+          sortBy: { name: 'registrationStatus', value: a => a.registrationStatus },
+          enabled: eventRegistrationSystem !== 'None',
+        },
+      ]}
+      actions={assignment => !readOnly && <RemoveAssignmentsButton
+        text={t('removeVolunteer')}
+        iconOnly
+        assignments={[assignment]}
+      />}
+    />
     <Callout title={t('legend')}>
       <RegistrationStatusLegend />
     </Callout>
     {children}
   </>
-}
-
-function assignmentSorter(key: string) {
-  switch (key) {
-    default:
-    case 'name':
-      return (assignment: EventVolunteerAssignment) => assignment.volunteer.name
-    case 'role':
-      return (assignment: EventVolunteerAssignment) => assignment.role.name
-    case 'workshop':
-      return (assignment: EventVolunteerAssignment) => assignment.workshop?.name
-    case 'instance':
-      return (assignment: EventVolunteerAssignment) => assignment.workshopInstanceIds
-    case 'registrationStatus':
-      return (assignment: EventVolunteerAssignment) => assignment.registrationStatus
-  }
 }

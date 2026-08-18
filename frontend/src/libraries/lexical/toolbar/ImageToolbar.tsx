@@ -10,8 +10,8 @@ import { doUpload } from 'services/files'
 import { useEditorT } from '../i18n'
 import { INSERT_IMAGE_COMMAND } from '../plugins/ImagePlugin'
 import { $isImageNode } from '../plugins/nodes/ImageNode'
-import { ToolbarButton, ToolbarInput, ToolbarRow } from './widgets'
 import { ImageIcon } from './icons'
+import { ToolbarButton, ToolbarInput, ToolbarRow } from './widgets'
 import { AlignSelector } from './widgets/AlignSelector'
 
 export interface ImageUploadConfig {
