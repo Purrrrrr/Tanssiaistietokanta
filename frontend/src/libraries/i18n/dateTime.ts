@@ -11,6 +11,19 @@ export function useFormatDate() {
   return (date: DateLike) => formatter.format(toDate(date))
 }
 
+export function useFormatDateRange() {
+  const locale = useLocale()
+  const formatter = new Intl.DateTimeFormat(locale, {
+    dateStyle: 'short',
+  })
+
+  return (start: DateLike, end: DateLike) => {
+    const startDate = toDate(start)
+    const endDate = toDate(end)
+    return formatter.formatRange(startDate, endDate)
+  }
+}
+
 export function useFormatDateTime() {
   const locale = useLocale()
   const formatter = new Intl.DateTimeFormat(locale, {

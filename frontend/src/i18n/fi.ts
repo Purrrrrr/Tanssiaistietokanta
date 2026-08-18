@@ -628,7 +628,7 @@ export const fi = {
         noEvents: 'Ei tapahtumia',
         createEvent: 'Uusi tapahtuma',
         name: 'Nimi',
-        date: 'Tapahtuman päivämäärä',
+        date: 'Päivämäärä',
       },
       new: {
         newEventBreadcrumb: 'Uusi tapahtuma',

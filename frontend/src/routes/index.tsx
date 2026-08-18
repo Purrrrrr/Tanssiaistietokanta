@@ -4,8 +4,8 @@ import { useEvents } from 'services/events'
 import { useCurrentUser } from 'services/users'
 
 import { RequirePermissions } from 'libraries/access-control'
-import { useFormatDate } from 'libraries/i18n/dateTime'
-import { ItemList, Link } from 'libraries/ui'
+import { useFormatDateRange } from 'libraries/i18n/dateTime'
+import { ItemList2, Link } from 'libraries/ui'
 import { Add } from 'libraries/ui/icons'
 import { PageSection } from 'libraries/ui/PageSection'
 import { LoadingState } from 'components/LoadingState'
@@ -40,13 +40,13 @@ function RouteComponent() {
 function EventList() {
   const [events, requestState] = useEvents()
   const t = useT('routes.events.list')
-  const formatDate = useFormatDate()
+  const formatDateRange = useFormatDateRange()
   const user = useCurrentUser()
 
   return <RequirePermissions requireRight="events:list">
     <PageSection
       title={t('danceEvents')}
-      className="max-w-230"
+      className="max-w-200"
       introText={t('weHaveXEvents', { count: events.length })}
       toolbar={
         <NavigateButton requireRight="events:create" to="/events/new" icon={<Add />} text={t('createEvent')} />
@@ -60,20 +60,21 @@ function EventList() {
           {t('loginToEdit.toEdit')}
         </p>
       }
-      <ItemList columns="grid-cols-[1fr_max-content] gap-x-4" items={events} emptyText={t('noEvents')} wrap-breakpoint="none">
-        <ItemList.Header>
-          <span>{t('name')}</span>
-          <span>{t('date')}</span>
-        </ItemList.Header>
-        {events.map(event =>
-          <ItemList.Row key={event._id}>
-            <Link to="/events/$eventId/{-$eventVersionId}" params={{ eventId: event._id }}>{event.name}</Link>
-            <div>
-              {formatDate(event.beginDate)} - {formatDate(event.endDate)}
-            </div>
-          </ItemList.Row>,
-        )}
-      </ItemList>
+      <ItemList2 items={events} emptyText={t('noEvents')} defaultSort={{ key: 'beginDate', direction: 'desc' }} wrapBreakpoint="none" columns={[
+        {
+          label: t('name'),
+          content: event =>
+            <Link to="/events/$eventId/{-$eventVersionId}" params={{ eventId: event._id }}>{event.name}</Link>,
+          sortBy: 'name',
+          width: '1fr',
+        },
+        {
+          label: t('date'),
+          content: event => formatDateRange(event.beginDate, event.endDate),
+          className: 'text-right',
+          sortBy: 'beginDate',
+        },
+      ]} />
     </PageSection>
   </RequirePermissions>
 }
