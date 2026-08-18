@@ -46,6 +46,7 @@ export {
   Search,
   Settings,
   Share,
+  Sort,
   Star,
   Style,
   Tick,

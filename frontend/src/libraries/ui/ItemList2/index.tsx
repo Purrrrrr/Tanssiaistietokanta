@@ -4,12 +4,14 @@ import classNames from 'classnames'
 import { type SortState } from './types'
 import { SelectionApi } from 'libraries/common/selection/types'
 
-import { InfoSign } from 'libraries/ui/icons'
+import { ChevronDown, ChevronUp, InfoSign, Menu, Sort as SortIcon } from 'libraries/ui/icons'
 import { SelectionBox } from 'components/widgets/SelectionBox'
 import { type Sort, sortedBy } from 'utils/sorted'
 
+import { Button, ButtonProps } from '../Button'
 import Collapse from '../Collapse'
-import { Column, ColumnInput, normalizeColumnInput } from './column'
+import { MenuButton } from '../MenuButton'
+import { Column, ColumnInput, normalizeColumnInput, RowState } from './column'
 import { SortButton } from './SortButton'
 
 interface ItemListProps<T> {
@@ -21,7 +23,10 @@ interface ItemListProps<T> {
   items: T[] | null | undefined
   selection?: Pick<SelectionApi<T>, 'selectAllProps' | 'selectItemProps'> | null
   columns: ColumnInput<T>[]
+  actions?: false | ((item: T, index: number) => React.ReactNode)
+  defaultColumnWidth?: string
   expandableContent?: (item: T, close: () => void) => React.ReactNode
+  expandButtonProps?: ButtonProps | ((item: T, state: RowState) => ButtonProps)
   expandableContentLoadingMessage?: string
   defaultSort?: SortState | string | null
   alwaysSortBy?: Sort<T> | Sort<T>[] | null
@@ -31,36 +36,40 @@ interface ItemListProps<T> {
 export function ItemList2<T extends { _id: string | number }>(props: ItemListProps<T>) {
   const {
     id,
-    isTable,
+    isTable = true,
     wrapBreakpoint = 'sm',
     items,
     defaultSort,
     alwaysSortBy,
     className,
     marginClass,
+    defaultColumnWidth = 'auto',
     emptyText,
+    actions,
     expandableContent,
+    expandButtonProps,
     expandableContentLoadingMessage,
   } = props
   const Container = isTable ? 'table' : 'ul'
   const columns = getColumns(props)
+  const sortableColumns = columns.filter(c => c.sortBy)
   const [sort, setSort] = useState<SortState | null>(() => {
     if (defaultSort === undefined) {
-      const firstSortableColumn = columns.find(c => c.sortBy)
-      if (firstSortableColumn?.sortBy) {
-        return { key: firstSortableColumn.sortBy.name, direction: 'asc' }
+      if (sortableColumns[0]?.sortBy) {
+        return { key: sortableColumns[0].sortBy.name, direction: 'asc' }
       }
       return null
     }
     if (typeof defaultSort === 'object') {
       return defaultSort
     }
-    const column = columns.find(c => c.sortBy?.name === defaultSort)
+    const column = sortableColumns.find(c => c.sortBy?.name === defaultSort)
     if (column?.sortBy) {
       return { key: column.sortBy.name, direction: 'asc' }
     }
     return null
   })
+  const hasActionsColumn = actions != null || sortableColumns.length > 1 || expandableContent != null
 
   if (!items || items.length === 0) {
     return <EmptyList text={emptyText} />
@@ -68,6 +77,8 @@ export function ItemList2<T extends { _id: string | number }>(props: ItemListPro
 
   const sortedItems = getSortedItems({ items, columns, sort, alwaysSortBy })
   const visibleColumns = columns.filter(c => c.enabled)
+  const columnWidths = visibleColumns.map(c => c.width ?? defaultColumnWidth)
+  if (hasActionsColumn) columnWidths.push('max-content')
 
   return <Container
     id={id}
@@ -78,7 +89,7 @@ export function ItemList2<T extends { _id: string | number }>(props: ItemListPro
     )}
 
     style={{
-      '--itemlist-columns': visibleColumns.map(c => c.width ?? 'auto').join(' '),
+      '--itemlist-columns': columnWidths.join(' '),
     } as React.CSSProperties}
   >
     <SectionWrapper element={isTable ? 'thead' : null}>
@@ -86,7 +97,9 @@ export function ItemList2<T extends { _id: string | number }>(props: ItemListPro
         isTable={isTable ?? false}
         columns={visibleColumns}
         sort={sort}
-        onSort={setSort} />
+        onSort={setSort}
+        hasActionsColumn={hasActionsColumn}
+      />
     </SectionWrapper>
     <SectionWrapper element={isTable ? 'tbody' : null}>
       {sortedItems.map((item, index) => (
@@ -96,7 +109,9 @@ export function ItemList2<T extends { _id: string | number }>(props: ItemListPro
           index={index}
           isTable={isTable ?? false}
           columns={visibleColumns}
+          actions={actions !== false ? actions : undefined}
           expandableContent={expandableContent}
+          expandButtonProps={expandButtonProps}
           expandableContentLoadingMessage={expandableContentLoadingMessage}
         />
       ))
@@ -105,7 +120,9 @@ export function ItemList2<T extends { _id: string | number }>(props: ItemListPro
   </Container>
 }
 
-function getColumns<T>({ columns: columnInputs, selection }: ItemListProps<T>): Column<T>[] {
+function getColumns<T>(
+  { columns: columnInputs, selection }: ItemListProps<T>,
+): Column<T>[] {
   const columns = columnInputs.map(normalizeColumnInput)
   if (selection) {
     const selectColumn: Column<T> = {
@@ -122,6 +139,28 @@ function getColumns<T>({ columns: columnInputs, selection }: ItemListProps<T>): 
   }
 
   return columns
+}
+
+function ColumnOptionsMenu<T>({ columns, sort, setSort }: {
+  columns: Column<T>[]
+  sort: SortState | null
+  setSort: (sort: SortState) => void
+}) {
+  const hasSortableColumns = columns.some(c => c.sortBy)
+  return <MenuButton containerClassname="font-normal" buttonProps={{ className: 'w-full justify-end pe-4', minimal: true, rightIcon: <Menu /> }}>
+    {hasSortableColumns && <div className="px-2 py-1 text-sm text-gray-500">Sort by</div>}
+    {columns.map(({ id, sortBy, label }) => {
+      if (!sortBy) return null
+      const selected = sort?.key === sortBy.name
+      return <Button
+        key={id}
+        minimal
+        icon={selected ? <SortIcon /> : <span className="w-4" />}
+        onClick={() => setSort({ key: sortBy.name, direction: selected && sort?.direction === 'asc' ? 'desc' : 'asc' })}
+        text={label.content}
+      />
+    })}
+  </MenuButton>
 }
 
 function getSortedItems<T>({ items: maybeItems, columns, sort, alwaysSortBy }: Pick<ItemListProps<T>, 'items' | 'alwaysSortBy'> & {
@@ -163,16 +202,17 @@ function SectionWrapper({ children, element: Element }: {
   return <Element>{children}</Element>
 }
 
-function Header<T>({ isTable, columns, sort, onSort }: {
+function Header<T>({ isTable, columns, sort, onSort, hasActionsColumn }: {
   isTable: boolean
   columns: Column<T>[]
+  hasActionsColumn?: boolean
   sort: SortState | null
   onSort: (sort: SortState) => void
 }) {
   const Container = isTable ? 'tr' : 'li'
   const Cell = isTable ? 'th' : 'span'
 
-  return <Container className="font-bold items-end border-b border-gray-400">
+  return <Container className="itemlist-header font-bold items-end border-b border-gray-400">
     {columns.map(column => {
       const label = typeof column.label === 'object' && column.label !== null && 'content' in column.label
         ? column.label.content
@@ -180,9 +220,10 @@ function Header<T>({ isTable, columns, sort, onSort }: {
 
       return <Cell key={column.id} className={classNames(
         column.sortBy
-          ? 'itemlist-sortable-header first-of-type:*:rounded-tl-md last-of-type:*:rounded-tr-md'
+          ? 'itemlist-sortable-header'
           : 'px-2 py-[5px]',
         column.headerClassName,
+        sort?.key === column.sortBy?.name && 'itemlist-sorted-header',
       )}>
         {column.sortBy
           ? (
@@ -193,32 +234,49 @@ function Header<T>({ isTable, columns, sort, onSort }: {
           : label}
       </Cell>
     })}
+    {hasActionsColumn && <Cell className="itemlist-sortable-header itemlist-sort-menu">
+      <ColumnOptionsMenu columns={columns} sort={sort} setSort={onSort} />
+    </Cell>}
   </Container>
 }
 
-function Row<T>({ item, index, isTable, columns, expandableContent, expandableContentLoadingMessage }: {
+function Row<T>({ item, index, isTable, columns, actions, expandableContent, expandButtonProps, expandableContentLoadingMessage }: {
   isTable: boolean
   item: T
   index: number
   columns: Column<T>[]
+  actions?: (item: T, index: number) => React.ReactNode
   expandableContent?: (item: T, close: () => void) => React.ReactNode
+  expandButtonProps?: ButtonProps | ((item: T, state: RowState) => ButtonProps)
   expandableContentLoadingMessage?: string
 }) {
   const Container = isTable ? 'tr' : 'li'
   const Cell = isTable ? 'td' : 'span'
   const [expanded, setExpanded] = useState(false)
   const close = () => setExpanded(false)
+  const rowState = { index, expanded, setExpanded }
 
   return <>
     <Container className={classNames(
-      'itemlist-row border-x first:border border-b border-gray-200 p-2',
+      'itemlist-row border-x first:border border-b border-gray-200 p-2 hover:bg-hover-odd',
       isTable && expandableContent
-        ? 'nth-of-type-[4n+1]:bg-gray-100'
-        : 'nth-of-type-[even]:bg-gray-100',
+        ? 'nth-of-type-[4n+1]:bg-gray-100 nth-of-type-[4n+1]:hover:bg-hover'
+        : 'nth-of-type-[even]:bg-gray-100 nth-of-type-[even]:hover:bg-hover',
     )}>
       {columns.map(column => (
-        <Cell className={column.className} key={column.id}>{column.content(item, { index, expanded, setExpanded })}</Cell>
+        <Cell className={column.className} key={column.id}>{column.content(item, rowState)}</Cell>
       ))}
+      {(actions != null || expandableContent != null) &&
+        <Cell className="itemlist-actions-column">
+          {actions?.(item, index)}
+          {expandableContent && <Button
+            {...(typeof expandButtonProps === 'function' ? expandButtonProps(item, rowState) : expandButtonProps)}
+            minimal
+            rightIcon={expanded ? <ChevronUp /> : <ChevronDown />}
+            onClick={() => setExpanded(!expanded)}
+          />}
+        </Cell>
+      }
     </Container>
     {expandableContent &&
       <ExpandableRow isTable={isTable} colSpan={columns.length} expanded={expanded} expandableContentLoadingMessage={expandableContentLoadingMessage}>

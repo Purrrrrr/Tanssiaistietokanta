@@ -31,7 +31,7 @@ type Sorting<T> = Exclude<keyof T, symbol> | null | {
 type SortableNode = Exclude<React.ReactNode, object>
 type UnsortableNode = Extract<React.ReactNode, object>
 
-interface RowState {
+export interface RowState {
   index: number
   expanded: boolean | undefined
   setExpanded: (expanded: boolean) => void

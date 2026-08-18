@@ -2,6 +2,7 @@ import { useState } from 'react'
 
 import { booleanProp, numberProp, type Showcase, showcase } from './types'
 
+import { useMultipleSelection } from 'libraries/common/selection/useMultipleSelection'
 import { Switch } from 'libraries/forms'
 import { Alert, AnchorButton, AutosizedSection, Breadcrumb, BreadcrumbsContainer, Button, Callout, Collapse, Dialog, GlobalSpinner, ItemList2, RegularLink, Tab, Tabs } from 'libraries/ui'
 import { showToast } from 'libraries/ui/hooks'
@@ -14,7 +15,6 @@ import FormUiShowcase from './formShowcase'
 import { EditorShowcase } from './lexicalShowCase'
 import { ShowcaseContainer } from './ShowcaseContainer'
 import { titleCase } from './utils/titleCase'
-import { useMultipleSelection } from 'libraries/common/selection/useMultipleSelection'
 
 const colors = ['none', 'primary', 'success', 'danger', 'warning'] as const
 
@@ -257,15 +257,6 @@ function ItemListShowcase({ isTable, empty }: { isTable: boolean, empty: boolean
         label: 'Description',
         content: item => `This is a description for ${item.name}`,
         sortBy: { name: 'description', value: item => item.name },
-      },
-      {
-        // TODO: separate support for action buttons that can be folded into a menu
-        width: 'minmax(0, auto)',
-        className: 'flex gap-2',
-        content: (_, state) => <>
-          <Button text={state.expanded ? 'Hide' : 'Show'} onClick={() => state.setExpanded(!state.expanded)} />
-        </>,
-        sortBy: null,
       },
     ]}
     expandableContent={(item, close) => <div className="flex items-center gap-2 p-2">
