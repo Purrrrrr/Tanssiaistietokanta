@@ -68,6 +68,7 @@ interface CommonProps {
   labelInfo?: React.ReactNode
   className?: string
   headerClassName?: string
+  headerPaddingClassName?: string
   // TODO: controls for column layout on small screens, e.g. hide on mobile, full width on mobile, etc
   // TODO: Add these back in when we implement column visibility
   // visibility: 'always' | 'hidable' | 'hiddenByDefault' // Is the column always visible or can the user choose to hide this column? 'always' by default

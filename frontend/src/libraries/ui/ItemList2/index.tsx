@@ -25,6 +25,7 @@ interface ItemListProps<T, Key = never> extends RowProps<T> {
   selection?: Pick<SelectionApi<T>, 'selectAllProps' | 'selectItemProps'> | null
   columns: ColumnInput<T, Key>[]
   actions?: false | ((item: T, index: number) => React.ReactNode)
+  expandButtonProps?: ButtonProps | ((item: T, state: RowState) => ButtonProps)
   defaultColumnWidth?: string
   defaultSort?: SortState | string | null
   alwaysSortBy?: Sort<T> | null
@@ -32,48 +33,38 @@ interface ItemListProps<T, Key = never> extends RowProps<T> {
 }
 
 interface RowProps<T> {
-  actions?: false | ((item: T, index: number) => React.ReactNode)
   expandableContent?: (item: T, close: () => void) => React.ReactNode
-  expandButtonProps?: ButtonProps | ((item: T, state: RowState) => ButtonProps)
   expandableContentLoadingMessage?: string
 }
 
-export function ItemList2<T extends { _id: string | number }, Key>(props: ItemListProps<T, Key>) {
-  const {
-    id,
-    isTable = true,
-    wrapBreakpoint = 'sm',
-    items,
-    defaultSort,
-    alwaysSortBy,
-    className,
-    marginClass,
-    defaultColumnWidth = 'auto',
-    emptyText,
-    actions,
-    expandableContent,
-    ...rowProps
-  } = props
-  const Container = isTable ? 'table' : 'ul'
-  const columns = getColumns(props)
+export function ItemList2<T extends { _id: string | number }, Key>({
+  id,
+  isTable = true,
+  wrapBreakpoint = 'sm',
+  emptyText,
+  columns: columnInputs,
+  labelTranslator,
+  items,
+  defaultSort,
+  alwaysSortBy,
+  className,
+  marginClass,
+  defaultColumnWidth = 'auto',
+  selection,
+  actions,
+  expandableContent,
+  expandButtonProps,
+  expandableContentLoadingMessage,
+}: ItemListProps<T, Key>) {
+  const columns = columnInputs.map(col => normalizeColumnInput(col, labelTranslator))
   const sortableColumns = columns.filter(c => c.sortBy)
   const [sort, setSort] = useState<SortState | null>(() => {
-    if (defaultSort === undefined) {
-      if (sortableColumns[0]?.sortBy) {
-        return { key: sortableColumns[0].id, direction: 'asc' }
-      }
-      return null
-    }
     if (typeof defaultSort === 'object') {
       return defaultSort
     }
-    const column = sortableColumns.find(c => c.id === defaultSort)
-    if (column?.sortBy) {
-      return { key: column.id, direction: 'asc' }
-    }
-    return null
+    const column = defaultSort ? sortableColumns.find(c => c.id === defaultSort) : sortableColumns[0]
+    return column ? { key: column.id, direction: 'asc' as const } : null
   })
-  const hasActionsColumn = actions != null || sortableColumns.length > 1 || expandableContent != null
 
   if (!items || items.length === 0) {
     return <EmptyList text={emptyText} />
@@ -81,49 +72,8 @@ export function ItemList2<T extends { _id: string | number }, Key>(props: ItemLi
 
   const sortedItems = getSortedItems({ items, columns, sort, alwaysSortBy })
   const visibleColumns = columns.filter(c => c.enabled)
-  const columnWidths = visibleColumns.map(c => c.width ?? defaultColumnWidth)
-  if (hasActionsColumn) columnWidths.push('max-content')
-
-  return <Container
-    id={id}
-    className={classNames(
-      `itemlist wrap-${wrapBreakpoint}  border-b border-gray-200`,
-      className,
-      marginClass ?? 'mb-4',
-    )}
-    style={{ '--itemlist-columns': columnWidths.join(' ') } as React.CSSProperties}
-  >
-    <SectionWrapper element={isTable ? 'thead' : null}>
-      <Header
-        isTable={isTable ?? false}
-        columns={visibleColumns}
-        sort={sort}
-        onSort={setSort}
-        hasActionsColumn={hasActionsColumn}
-      />
-    </SectionWrapper>
-    <SectionWrapper element={isTable ? 'tbody' : null}>
-      {sortedItems.map((item, index) => (
-        <Row
-          {...rowProps}
-          key={item._id}
-          item={item}
-          index={index}
-          isTable={isTable ?? false}
-          columns={visibleColumns}
-        />
-      ))
-      }
-    </SectionWrapper>
-  </Container>
-}
-
-function getColumns<T, Key>(
-  { columns: columnInputs, selection, labelTranslator }: ItemListProps<T, Key>,
-): Column<T>[] {
-  const columns = columnInputs.map(col => normalizeColumnInput(col, labelTranslator))
   if (selection) {
-    const selectColumn: Column<T> = {
+    return visibleColumns.unshift({
       id: 'itemlist-selection',
       label: <SelectionBox {...selection.selectAllProps} />,
       content: item => <SelectionBox {...selection.selectItemProps(item)} />,
@@ -131,11 +81,62 @@ function getColumns<T, Key>(
       width: 'max-content',
       wrappedStyle: 'small',
       enabled: true,
-    }
-    return [selectColumn, ...columns]
+    })
+  }
+  const hasActionsColumn = actions != null || sortableColumns.length > 1 || expandableContent != null
+  if (hasActionsColumn) {
+    visibleColumns.push({
+      id: 'itemlist-actions',
+      label: <ColumnOptionsMenu columns={columns} sort={sort} setSort={setSort} />,
+      content: (item, rowState) => <>
+        {actions && actions(item, rowState.index)}
+        {expandableContent && <Button
+          {...(typeof expandButtonProps === 'function' ? expandButtonProps(item, rowState) : expandButtonProps)}
+          minimal
+          rightIcon={rowState.expanded ? <ChevronUp /> : <ChevronDown />}
+          onClick={() => rowState.setExpanded(!rowState.expanded)}
+        />}
+      </>,
+      sortBy: null,
+      width: 'max-content',
+      headerClassName: 'itemlist-sortable-header itemlist-sort-menu',
+      headerPaddingClassName: '',
+      className: 'itemlist-actions-column',
+      wrappedStyle: 'small',
+      enabled: true,
+    })
   }
 
-  return columns
+  const Container = isTable ? 'table' : 'ul'
+  return <Container
+    id={id}
+    className={classNames(
+      `itemlist wrap-${wrapBreakpoint}  border-b border-gray-200`,
+      className,
+      marginClass ?? 'mb-4',
+    )}
+    style={{ '--itemlist-columns': (visibleColumns.map(c => c.width ?? defaultColumnWidth)).join(' ') } as React.CSSProperties}
+  >
+    {wrap(isTable ? 'thead' : null,
+      <Header
+        isTable={isTable ?? false}
+        columns={visibleColumns}
+        sort={sort}
+        onSort={setSort}
+      />,
+    )}
+    {wrap(isTable ? 'tbody' : null, sortedItems.map((item, index) => (
+      <Row
+        key={item._id}
+        item={item}
+        index={index}
+        isTable={isTable ?? false}
+        columns={visibleColumns}
+        expandableContent={expandableContent}
+        expandableContentLoadingMessage={expandableContentLoadingMessage}
+      />
+    )))}
+  </Container>
 }
 
 function ColumnOptionsMenu<T>({ columns, sort, setSort }: {
@@ -179,6 +180,10 @@ function getSortedItems<T, Key>({ items: maybeItems, columns, sort, alwaysSortBy
   return items
 }
 
+const wrap = (Elem: null | 'tbody' | 'thead', children: React.ReactNode) => Elem
+  ? <Elem>{children}</Elem>
+  : children
+
 function EmptyList({ text }: { text: React.ReactNode }) {
   return <div className="p-4 text-base text-center border-gray-200 text-muted border">
     <InfoSign size={20} className="mr-2" />
@@ -186,19 +191,9 @@ function EmptyList({ text }: { text: React.ReactNode }) {
   </div>
 }
 
-function SectionWrapper({ children, element: Element }: {
-  children: React.ReactNode
-  element: null | 'tbody' | 'thead'
-}) {
-  if (Element === null) return <>{children}</>
-
-  return <Element>{children}</Element>
-}
-
-function Header<T>({ isTable, columns, sort, onSort, hasActionsColumn }: {
+function Header<T>({ isTable, columns, sort, onSort }: {
   isTable: boolean
   columns: Column<T>[]
-  hasActionsColumn?: boolean
   sort: SortState | null
   onSort: (sort: SortState) => void
 }) {
@@ -208,9 +203,8 @@ function Header<T>({ isTable, columns, sort, onSort, hasActionsColumn }: {
   return <Container className="itemlist-header font-bold items-end border-b border-gray-400">
     {columns.map(column => {
       return <Cell key={column.id} className={classNames(
-        column.sortBy
-          ? 'itemlist-sortable-header'
-          : 'px-2 py-[5px]',
+        column.sortBy && 'itemlist-sortable-header',
+        column.headerPaddingClassName ?? (!column.sortBy && 'px-2 py-[5px]'),
         column.headerClassName,
         sort?.key === column.id && 'itemlist-sorted-header',
       )}>
@@ -225,13 +219,10 @@ function Header<T>({ isTable, columns, sort, onSort, hasActionsColumn }: {
             : column.label}
       </Cell>
     })}
-    {hasActionsColumn && <Cell className="itemlist-sortable-header itemlist-sort-menu">
-      <ColumnOptionsMenu columns={columns} sort={sort} setSort={onSort} />
-    </Cell>}
   </Container>
 }
 
-function Row<T>({ item, index, isTable, columns, actions, expandableContent, expandButtonProps, expandableContentLoadingMessage }: {
+function Row<T>({ item, index, isTable, columns, expandableContent, expandableContentLoadingMessage }: {
   isTable: boolean
   item: T
   index: number
@@ -253,17 +244,6 @@ function Row<T>({ item, index, isTable, columns, actions, expandableContent, exp
       {columns.map(column => (
         <Cell className={column.className} key={column.id}>{column.content(item, rowState)}</Cell>
       ))}
-      {(actions != null || expandableContent != null) &&
-        <Cell className="itemlist-actions-column">
-          {actions && actions(item, index)}
-          {expandableContent && <Button
-            {...(typeof expandButtonProps === 'function' ? expandButtonProps(item, rowState) : expandButtonProps)}
-            minimal
-            rightIcon={expanded ? <ChevronUp /> : <ChevronDown />}
-            onClick={() => setExpanded(!expanded)}
-          />}
-        </Cell>
-      }
     </Container>
     {expandableContent &&
       <ExpandableRow isTable={isTable} colSpan={columns.length} expanded={expanded} expandableContentLoadingMessage={expandableContentLoadingMessage}>
