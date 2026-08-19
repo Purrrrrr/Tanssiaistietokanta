@@ -38,23 +38,20 @@ export function VolunteerList({ volunteers = [] }: VolunteerListProps) {
       items={volunteers}
       emptyText={t('routes.volunteers.noVolunteers')}
       selection={selector}
+      labelTranslator={label}
       columns={[
         {
-          label: label('name'),
+          key: 'name',
           width: '1fr',
-          content: 'name',
         }, {
-          label: label('volunteeredIn'),
+          key: 'volunteeredIn',
           width: '1fr',
-          sortBy: {
-            name: 'volunteeredIn',
-            value: (volunteer: Volunteer) => {
-              const sortedVolunteeredIn = sortedBy(
-                volunteer.volunteeredIn,
-                v => v.event.beginDate,
-              )
-              return sortedVolunteeredIn[0]?.event.beginDate
-            },
+          sortBy: (volunteer: Volunteer) => {
+            const sortedVolunteeredIn = sortedBy(
+              volunteer.volunteeredIn,
+              v => v.event.beginDate,
+            )
+            return sortedVolunteeredIn[0]?.event.beginDate
           },
           content: volunteer => <VolunteeredIn volunteer={volunteer} />,
         },

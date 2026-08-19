@@ -43,7 +43,7 @@ interface MergeVolunteersDialogProps {
 }
 
 function MergeVolunteersDialog({ selectedVolunteers, isOpen, onClose, onMergeSuccess }: MergeVolunteersDialogProps) {
-  const t = useT('routes.volunteers')
+  const t = useT('routes.volunteers.mergeVolunteersDialog')
   const [patchVolunteer] = usePatchVolunteer({
     refetchQueries: ['getVolunteers'],
   })
@@ -61,18 +61,19 @@ function MergeVolunteersDialog({ selectedVolunteers, isOpen, onClose, onMergeSuc
   return <Dialog
     isOpen={isOpen}
     onClose={onClose}
-    title={t('mergeVolunteersDialog.title')}
+    title={t('title')}
     closeButtonLabel={useTranslation('common.close')}
   >
     <form onSubmit={e => { e.preventDefault(); mergeVolunteers() }}>
       <Dialog.Body>
-        <FormGroup label={t('mergeVolunteersDialog.keepVolunteerLabel')} labelFor="canonical-volunteer">
+        <FormGroup label={t('keepVolunteerLabel')} labelFor="canonical-volunteer">
           <ItemList2
             items={selectedVolunteers}
             emptyText=""
             className="bg-white rounded-lg"
+            labelTranslator={t}
             columns={[{
-              label: t('mergeVolunteersDialog.choose'),
+              key: 'choose',
               width: 'max-content',
               sortBy: null,
               content: volunteer => <input
@@ -85,15 +86,14 @@ function MergeVolunteersDialog({ selectedVolunteers, isOpen, onClose, onMergeSuc
                 onChange={() => setCanonicalVolunteer(volunteer)}
               />,
             }, {
-              label: t('mergeVolunteersDialog.name'),
+              key: 'name',
               content: volunteer => <label htmlFor={`canonical-volunteer-${volunteer._id}`}>{volunteer.name}</label>,
-              sortBy: 'name',
             }]}
           />
         </FormGroup>
       </Dialog.Body>
       <Dialog.Footer className="flex flex-row-reverse">
-        <Button color="primary" type="submit" text={t('mergeVolunteersDialog.merge')} />
+        <Button color="primary" type="submit" text={t('merge')} />
         <Button text={useTranslation('common.cancel')} onClick={onClose} />
       </Dialog.Footer>
     </form>

@@ -5,7 +5,8 @@ export function sorted<Item>(
   return [...items].sort(comparator)
 }
 
-export type SortKey<Item> = keyof Item | ((item: Item) => unknown)
+export type SingleSortKey<Item> = keyof Item | ((item: Item) => unknown)
+export type SortKey<Item> = SingleSortKey<Item> | SingleSortKey<Item>[]
 export type SortDirection = 'asc' | 'desc'
 export type Sort<Item> = SortKey<Item> | { key: SortKey<Item>, direction: SortDirection, nullsLast?: boolean }
 
@@ -23,7 +24,13 @@ function compositeComparator<Item>(
     if (typeof sort === 'function' || typeof sort !== 'object') {
       return compareBy(sort)
     }
+    if (Array.isArray(sort)) {
+      return compositeComparator(...sort)
+    }
     const { key, direction, nullsLast } = sort
+    if (Array.isArray(key)) {
+      return compositeComparator(...key.map(subKey => ({ key: subKey, direction, nullsLast })))
+    }
     return compareBy(key, direction, nullsLast !== false)
   })
   if (comparators.length === 1) {
@@ -42,7 +49,7 @@ function compositeComparator<Item>(
 }
 
 export function compareBy<Item>(
-  sortKey: SortKey<Item>,
+  sortKey: SingleSortKey<Item>,
   direction: SortDirection = 'asc',
   nullsLast = true,
 ): (a: Item, b: Item) => number {

@@ -60,19 +60,18 @@ function EventList() {
           {t('loginToEdit.toEdit')}
         </p>
       }
-      <ItemList2 items={events} emptyText={t('noEvents')} defaultSort={{ key: 'beginDate', direction: 'desc' }} wrapBreakpoint="none" columns={[
+      <ItemList2 items={events} emptyText={t('noEvents')} defaultSort={{ key: 'beginDate', direction: 'desc' }} wrapBreakpoint="none" labelTranslator={t} columns={[
         {
-          label: t('name'),
+          key: 'name',
           content: event =>
             <Link to="/events/$eventId/{-$eventVersionId}" params={{ eventId: event._id }}>{event.name}</Link>,
-          sortBy: 'name',
           width: '1fr',
         },
         {
-          label: t('date'),
+          key: 'date',
           content: event => formatDateRange(event.beginDate, event.endDate),
+          sortBy: ['beginDate', 'endDate'],
           className: 'text-right',
-          sortBy: 'beginDate',
         },
       ]} />
     </PageSection>

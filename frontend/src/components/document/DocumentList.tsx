@@ -9,7 +9,7 @@ import { ButtonProps, ItemList2, Link, PageSection } from 'libraries/ui'
 import { Edit } from 'libraries/ui/icons'
 import { DeleteDocumentButton } from 'components/document/DeleteDocumentButton'
 import { NavigateButton } from 'components/widgets/NavigateButton'
-import { useT, useTranslation } from 'i18n'
+import { useT } from 'i18n'
 
 import { CreateDocumentButton } from './CreateDocumentButton'
 import { documentListRoute, documentViewRoute } from './linkUtils'
@@ -42,14 +42,14 @@ export function DocumentList({ title, owner, owningId }: DocumentListProps) {
         tooltip: t(expanded ? 'closePreview' : 'previewDocument'),
         color: 'primary',
       })}
+      labelTranslator={useT('domain.document')}
       columns={[
         {
-          label: useTranslation('domain.document.title'),
+          key: 'title',
           width: '1fr',
           content: document => <Link to={viewRoute} params={{ documentId: document._id, ...params }}>
             {document.title}
           </Link>,
-          sortBy: 'title',
         },
       ]}
       actions={document => <>

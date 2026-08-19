@@ -113,24 +113,23 @@ export default function FileList({ title, owner, owningId, path }: FileListProps
         items={files}
         emptyText={T('noFiles')}
         selection={selector}
+        labelTranslator={T}
         columns={[
           {
-            label: T('name'),
+            key: 'name',
             width: '1fr',
             content: file => <RegularLink href={`/api/files/${file._id}?download=true`} target="_blank" title={file.name} className="overflow-hidden text-ellipsis">
               {file.name}
             </RegularLink>,
-            sortBy: 'name',
           }, {
-            label: T('date'),
+            key: 'date',
             width: 'minmax(200px, auto)',
             content: file => formatDate(file._updatedAt),
             sortBy: '_updatedAt',
           }, {
-            label: T('size'),
+            key: 'size',
             width: 'minmax(100px, auto)',
             content: file => filesize(file.size),
-            sortBy: 'size',
           },
         ]}
         actions={file => <>

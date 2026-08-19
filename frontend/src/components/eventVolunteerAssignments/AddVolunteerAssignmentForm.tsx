@@ -121,25 +121,24 @@ function AssignmentList({ formData, currentAssignments, event }: {
   const allAssignments = [...currentAssignments, ...assignments]
   const hasWorkshops = assignments.some(a => a.workshop)
   return <FormGroup label={t('assignmentsToAdd')} labelFor="add-volunteer-role">
-    <ItemList2 items={assignments} emptyText={t('noAssignmentsAdded')} defaultSort={null}
+    <ItemList2 items={assignments} emptyText={t('noAssignmentsAdded')} defaultSort={null} labelTranslator={t}
       columns={[
         {
-          label: t('volunteer'),
-          content: a => a.volunteer.name,
-          sortBy: { name: 'volunteer' },
+          key: 'volunteer',
+          sortableContent: 'volunteer.name',
           enabled: target.__typename === 'EventRole',
         }, {
-          label: t('role'),
+          key: 'role',
           content: a => <RoleTag role={a.role} />,
-          sortBy: { name: 'role', value: a => a.role.name },
+          sortBy: a => a.role.name,
           enabled: target.__typename === 'Volunteer',
         }, {
-          label: t('workshop'),
+          key: 'workshop',
           content: a => a.workshop && <WorkshopLink workshop={a.workshop} />,
-          sortBy: { name: 'workshop', value: a => a.workshop?.name },
+          sortBy: a => a.workshop?.name,
           enabled: hasWorkshops,
         }, {
-          label: t('instance'),
+          key: 'instance',
           content: (a, { index }) => a.workshop &&
           <Field
             path={`assignments.${index}.workshopInstanceIds`}

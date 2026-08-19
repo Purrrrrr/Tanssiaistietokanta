@@ -1,35 +1,60 @@
-import { PathAccessor, toAccessorFn } from 'libraries/common/accessor'
+import { ReactNode } from 'react'
+
+import { Accessor, PathAccessor, toAccessorFn } from 'libraries/common/accessor'
 import { SortKey } from 'utils/sorted'
 
 export interface Column<T> extends CommonProps {
   id: number | string
-  label: LabelProps
+  label: ReactNode
   content: (item: T, state: RowState) => React.ReactNode
-  sortBy: null | SortProps<T>
+  sortBy: null | SortKey<T>
 }
 
-export type ColumnInput<T> = GetData<T> & Partial<CommonProps> & {
-  label?: LabelProps | React.ReactNode
-}
+export type ColumnInput<T, Key> = Partial<CommonProps> & (
+  | {
+    /** Defines the translation key for the column label. If not provided, the label will be derived from the key. */
+    key: Key
+    /** Label content override */
+    label?: string
+  }
+  | {
+    /** No translation happens when the key is a string or number, so the label must be provided. */
+    key: string | number
+    label: string
+  }
+) & (
+  | {
+    /** The key doubles as the content accessor when sortableContent and content are not provided. It's also the default for the sort value */
+    key: PathAccessor<T, SortableNode>
+    sortableContent?: never
+    content?: Content<T, ReactNode>
+    sortBy?: SortKey<T> | null
+  }
+  | {
+    /** If the key value is renderable, but not sortable, you can provide a separate accessor for the sort value. */
+    key: PathAccessor<T, ReactNode>
+    sortableContent?: never
+    content?: never
+    sortBy: SortKey<T> | null
+  }
+  | {
+    /** If the key value is not sortable, you can provide an accessor for both rendered content and sort value. */
+    key: string | number
+    sortableContent: Content<T, SortableNode>
+    content?: never
+    sortBy?: never
+  }
+  | {
+    /** You can also provide an accessor for the rendered content and a separate accessor for the sort value. */
+    key: string | number
+    sortableContent?: never
+    content: Content<T, ReactNode>
+    sortBy: SortKey<T> | null
+  }
+)
 
-type GetData<T> = {
-  content: PathAccessor<T, SortableNode>
-  sortBy?: Sorting<T>
-} | {
-  content: (item: T, state: RowState) => SortableNode
-  sortBy: Sorting<T> | { name: string, value?: never }
-} | {
-  content: (item: T, state: RowState) => React.ReactNode | PathAccessor<T, UnsortableNode>
-  sortBy: Sorting<T>
-}
-
-type Sorting<T> = Exclude<keyof T, symbol> | null | {
-  value: SortKey<T>
-  name: string
-}
-
+type Content<T, Result> = ((item: T, state: RowState) => Result) | PathAccessor<T, Result>
 type SortableNode = Exclude<React.ReactNode, object>
-type UnsortableNode = Extract<React.ReactNode, object>
 
 export interface RowState {
   index: number
@@ -37,18 +62,10 @@ export interface RowState {
   setExpanded: (expanded: boolean) => void
 }
 
-interface LabelProps {
-  tooltip?: React.ReactNode
-  content: React.ReactNode
-}
-
-interface SortProps<T> {
-  name: string | number
-  value: SortKey<T>
-}
-
 interface CommonProps {
   width: string
+  wrappedStyle: 'title' | 'full' | 'labeled-full' | 'small' | 'labeled-small'
+  labelInfo?: React.ReactNode
   className?: string
   headerClassName?: string
   // TODO: controls for column layout on small screens, e.g. hide on mobile, full width on mobile, etc
@@ -59,61 +76,23 @@ interface CommonProps {
 
 const defaults: CommonProps = {
   width: 'auto',
+  wrappedStyle: 'full',
   className: '',
   headerClassName: '',
   // visibility: 'always',
   enabled: true,
 }
 
-export function normalizeColumnInput<T>(input: ColumnInput<T>, index: number): Column<T> {
-  const {
-    label = '',
-    content,
-    sortBy: sortByInput,
-    ...rest
-  } = input
-  const getValue: ((item: T, s: RowState) => React.ReactNode) = typeof content === 'function'
-    ? content
-    : toAccessorFn(content)
-  const sortName = getSortName(input)
-  const sortValue = getSortValue(sortByInput, getValue as (item: T) => unknown)
-
+export function normalizeColumnInput<T, Key>(input: ColumnInput<T, Key>, labelTranslator: ((key: Key) => string) | undefined): Column<T> {
+  const { key, label, sortableContent, content, sortBy, ...rest } = input
   return {
-    id: sortName ?? index,
-    label: (label !== null && typeof label === 'object' && 'content' in label) ? label : { content: label },
-    content: getValue,
-    sortBy: sortValue && sortName !== null
-      ? {
-        name: sortName,
-        value: sortValue,
-      }
-      : null,
+    id: key,
+    label: label ?? labelTranslator?.(key as Key) ?? null,
+    content: toAccessorFn((sortableContent ?? content ?? key) as Accessor<T, ReactNode>),
+    sortBy: sortBy === null
+      ? null
+      : (sortBy ?? toAccessorFn((sortableContent ?? key) as Accessor<T, ReactNode>)) as SortKey<T>,
     ...defaults,
     ...rest,
   }
-}
-
-function getSortName<T>(column: ColumnInput<T>): string | number | null {
-  if (column.sortBy === null) return null
-  if (typeof column.sortBy === 'object') {
-    return column.sortBy.name
-  }
-  if (typeof column.sortBy === 'string' || typeof column.sortBy === 'number') {
-    return column.sortBy
-  }
-  if (typeof column.content !== 'function') {
-    return column.content as string | number
-  }
-  return null
-}
-
-function getSortValue<T>(sortBy: ColumnInput<T>['sortBy'], content: (item: T) => unknown): SortKey<T> | null {
-  if (sortBy === null) return null
-  if (typeof sortBy === 'string' || typeof sortBy === 'number') {
-    return sortBy as SortKey<T>
-  }
-  if (typeof sortBy === 'object') {
-    return sortBy.value ?? content
-  }
-  return content
 }

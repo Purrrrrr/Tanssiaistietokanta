@@ -14,15 +14,16 @@ import { MenuButton } from '../MenuButton'
 import { Column, ColumnInput, normalizeColumnInput, RowState } from './column'
 import { SortButton } from './SortButton'
 
-interface ItemListProps<T> {
+interface ItemListProps<T, Key = never> {
   id?: string
   isTable?: boolean
   wrapBreakpoint?: 'md' | 'sm' | 'none'
   className?: string
   marginClass?: string
   items: T[] | null | undefined
+  labelTranslator?: (key: Key) => string
   selection?: Pick<SelectionApi<T>, 'selectAllProps' | 'selectItemProps'> | null
-  columns: ColumnInput<T>[]
+  columns: ColumnInput<T, Key>[]
   actions?: false | ((item: T, index: number) => React.ReactNode)
   defaultColumnWidth?: string
   expandableContent?: (item: T, close: () => void) => React.ReactNode
@@ -33,7 +34,7 @@ interface ItemListProps<T> {
   emptyText: React.ReactNode
 }
 
-export function ItemList2<T extends { _id: string | number }>(props: ItemListProps<T>) {
+export function ItemList2<T extends { _id: string | number }, Key>(props: ItemListProps<T, Key>) {
   const {
     id,
     isTable = true,
@@ -56,16 +57,16 @@ export function ItemList2<T extends { _id: string | number }>(props: ItemListPro
   const [sort, setSort] = useState<SortState | null>(() => {
     if (defaultSort === undefined) {
       if (sortableColumns[0]?.sortBy) {
-        return { key: sortableColumns[0].sortBy.name, direction: 'asc' }
+        return { key: sortableColumns[0].id, direction: 'asc' }
       }
       return null
     }
     if (typeof defaultSort === 'object') {
       return defaultSort
     }
-    const column = sortableColumns.find(c => c.sortBy?.name === defaultSort)
+    const column = sortableColumns.find(c => c.id === defaultSort)
     if (column?.sortBy) {
-      return { key: column.sortBy.name, direction: 'asc' }
+      return { key: column.id, direction: 'asc' }
     }
     return null
   })
@@ -120,19 +121,18 @@ export function ItemList2<T extends { _id: string | number }>(props: ItemListPro
   </Container>
 }
 
-function getColumns<T>(
-  { columns: columnInputs, selection }: ItemListProps<T>,
+function getColumns<T, Key>(
+  { columns: columnInputs, selection, labelTranslator }: ItemListProps<T, Key>,
 ): Column<T>[] {
-  const columns = columnInputs.map(normalizeColumnInput)
+  const columns = columnInputs.map(col => normalizeColumnInput(col, labelTranslator))
   if (selection) {
     const selectColumn: Column<T> = {
       id: 'itemlist-selection',
-      label: {
-        content: <SelectionBox {...selection.selectAllProps} />,
-      },
+      label: <SelectionBox {...selection.selectAllProps} />,
       content: item => <SelectionBox {...selection.selectItemProps(item)} />,
       sortBy: null,
       width: 'max-content',
+      wrappedStyle: 'small',
       enabled: true,
     }
     return [selectColumn, ...columns]
@@ -151,26 +151,26 @@ function ColumnOptionsMenu<T>({ columns, sort, setSort }: {
     {hasSortableColumns && <div className="px-2 py-1 text-sm text-gray-500">Sort by</div>}
     {columns.map(({ id, sortBy, label }) => {
       if (!sortBy) return null
-      const selected = sort?.key === sortBy.name
+      const selected = sort?.key === id
       return <Button
         key={id}
         minimal
         icon={selected ? <SortIcon /> : <span className="w-4" />}
-        onClick={() => setSort({ key: sortBy.name, direction: selected && sort?.direction === 'asc' ? 'desc' : 'asc' })}
-        text={label.content}
+        onClick={() => setSort({ key: id, direction: selected && sort?.direction === 'asc' ? 'desc' : 'asc' })}
+        text={label}
       />
     })}
   </MenuButton>
 }
 
-function getSortedItems<T>({ items: maybeItems, columns, sort, alwaysSortBy }: Pick<ItemListProps<T>, 'items' | 'alwaysSortBy'> & {
+function getSortedItems<T, Key>({ items: maybeItems, columns, sort, alwaysSortBy }: Pick<ItemListProps<T, Key>, 'items' | 'alwaysSortBy'> & {
   sort: SortState | null
   columns: Column<T>[]
 }) {
   const items = maybeItems ?? []
   const additionalSorts = toArray(alwaysSortBy ?? [])
   if (sort) {
-    const sortBy = columns.find(c => c.sortBy?.name === sort.key)?.sortBy?.value
+    const sortBy = columns.find(c => c.id === sort.key)?.sortBy
     if (sortBy) {
       const sorting: Sort<T> = { key: sortBy, direction: sort.direction }
       return sortedBy(items, sorting, ...additionalSorts)
@@ -214,24 +214,22 @@ function Header<T>({ isTable, columns, sort, onSort, hasActionsColumn }: {
 
   return <Container className="itemlist-header font-bold items-end border-b border-gray-400">
     {columns.map(column => {
-      const label = typeof column.label === 'object' && column.label !== null && 'content' in column.label
-        ? column.label.content
-        : column.label
-
       return <Cell key={column.id} className={classNames(
         column.sortBy
           ? 'itemlist-sortable-header'
           : 'px-2 py-[5px]',
         column.headerClassName,
-        sort?.key === column.sortBy?.name && 'itemlist-sorted-header',
+        sort?.key === column.id && 'itemlist-sorted-header',
       )}>
         {column.sortBy
           ? (
-            <SortButton sortKey={column.sortBy.name} currentSort={sort} onSort={onSort}>
-              {label}
+            <SortButton sortKey={column.id} currentSort={sort} onSort={onSort}>
+              {column.label} {column.labelInfo}
             </SortButton>
           )
-          : label}
+          : column.labelInfo
+            ? <>{column.label} {column.labelInfo}</>
+            : column.label}
       </Cell>
     })}
     {hasActionsColumn && <Cell className="itemlist-sortable-header itemlist-sort-menu">

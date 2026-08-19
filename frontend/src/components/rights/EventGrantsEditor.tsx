@@ -63,14 +63,15 @@ export function EventGrantsEditor({ eventId }: { eventId?: string }) {
           items={grantRows}
           emptyText={t('noGrants')}
           wrapBreakpoint="none"
+          labelTranslator={t}
           columns={[
             {
+              key: 'principalText',
               label: t('principal'),
               width: 'minmax(240px, max-content)',
-              content: 'principalText',
             },
             {
-              label: t('role'),
+              key: 'role',
               width: 'max-content',
               content: (grant, { index }) => <Field
                 path={`accessControl.grants.${index}.role`}

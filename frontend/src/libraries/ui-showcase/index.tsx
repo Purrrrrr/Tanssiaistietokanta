@@ -225,7 +225,6 @@ const showcases: Showcase<Record<string, unknown>>[] = [
 ]
 
 function range(count: number): number[] {
-  console.log(Array(count).fill(0).map((_, index) => index))
   return Array(count).fill(0).map((_, index) => index)
 }
 
@@ -244,19 +243,18 @@ function ItemListShowcase({ isTable, empty }: { isTable: boolean, empty: boolean
     items={empty ? [] : items}
     emptyText="No items"
     wrapBreakpoint="none"
+    labelTranslator={(id: string) => id.slice(0, 1).toUpperCase() + id.slice(1)}
     columns={[
       {
-        label: 'Name',
-        content: 'name',
+        key: 'name',
       },
       {
-        label: 'Letter',
-        content: 'letter',
+        key: 'letter',
       },
       {
-        label: 'Description',
+        key: 'description',
         content: item => `This is a description for ${item.name}`,
-        sortBy: { name: 'description', value: item => item.name },
+        sortBy: 'name',
       },
     ]}
     expandableContent={(item, close) => <div className="flex items-center gap-2 p-2">

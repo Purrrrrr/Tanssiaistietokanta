@@ -59,21 +59,18 @@ export function EventVolunteerList({ eventVolunteers, readOnly, currentRole, onS
         tooltip: editStr,
         color: 'primary',
       })}
+      labelTranslator={label}
       columns={[
         {
-          label: label('name'),
-          content: ev => ev.volunteer.name,
-          sortBy: { name: 'name' },
+          key: 'name',
+          sortableContent: 'volunteer.name',
         }, {
-          label: label('status'),
+          key: 'status',
           content: ev => <VolunteerStatusSelector id={`status-${ev._id}`} eventVolunteers={[ev]} iconOnly />,
-          sortBy: 'status',
           width: 'max-content',
         }, {
-          label: <>
-            {label('taskRoles')}{' '}
-            <span aria-hidden>(<AssignedRoleIcon /> = {label('assigned')} / <InterestedRoleIcon /> = {label('interested')})</span>
-          </>,
+          key: 'taskRoles',
+          labelInfo: <span aria-hidden>(<AssignedRoleIcon /> = {label('assigned')} / <InterestedRoleIcon /> = {label('interested')})</span>,
           content: ev => <>
             {(getTasksRoles(ev)).map(role => (
               <RoleTag
@@ -85,18 +82,13 @@ export function EventVolunteerList({ eventVolunteers, readOnly, currentRole, onS
               />
             ))}
           </>,
-          sortBy: {
-            name: 'taskRoles',
-            value: ev => getTasksRoles(ev).map(role => [role.order, role.assigned]),
-          },
+          sortBy: ev => getTasksRoles(ev).map(role => [role.order, role.assigned]),
         }, {
-          label: label('wishes'),
+          key: 'wishes',
           content: ev => ev.wishes ? ev.wishes : <span className="italic text-muted">{label('noWishes')}</span>,
-          sortBy: 'wishes',
         }, {
-          label: label('notes'),
+          key: 'notes',
           content: ev => ev.notes ?? '-',
-          sortBy: 'notes',
           width: '1fr',
         },
       ]}

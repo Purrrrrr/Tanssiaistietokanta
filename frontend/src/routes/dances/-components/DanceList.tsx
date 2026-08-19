@@ -33,30 +33,24 @@ export function DanceList({ dances }: DanceListProps) {
         <ItemList2
           items={dances}
           emptyText={t('noDances')}
+          labelTranslator={label}
           columns={[
             {
-              label: label('name'),
+              key: 'name',
               width: '1fr',
               content: dance => <DanceLink dance={dance} />,
-              sortBy: 'name',
             }, {
-              label: label('category'),
+              key: 'category',
               width: 'minmax(min(300px,30%), max-content)',
-              sortBy: {
-                name: 'category',
-                value: dance => dance.category?.trim() === '' ? null : dance.category,
-              },
+              sortBy: dance => dance.category?.trim() === '' ? null : dance.category,
               content: dance => dance.category
                 ? <ColoredTag title={dance.category} />
                 : <span className={ColorClass.textMuted}>{t('noCategory')}</span>,
             }, {
-              label: label('danceUsage'),
+              key: 'danceUsage',
               width: 'max-content',
               className: 'grow text-right -me-4',
-              sortBy: {
-                name: 'popularity',
-                value: (dance: DanceListItem) => dance.events.length + (dance.wikipageName ? 0.5 : 0),
-              },
+              sortBy: (dance: DanceListItem) => [dance.events.length, !!dance.wikipageName],
               content: dance => <DanceIsUsedIn minimal events={dance.events} wikipageName={dance.wikipageName} />,
             },
           ]}

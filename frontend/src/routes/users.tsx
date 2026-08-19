@@ -26,17 +26,13 @@ function UsersPage() {
       emptyText={t('noUsers')}
       className="max-w-200"
       defaultSort="name"
+      labelTranslator={label}
       columns={[
+        { key: 'name' },
+        { key: 'username' },
         {
-          label: label('name'),
-          content: 'name',
-        },
-        {
-          label: label('username'),
-          content: 'username',
-        },
-        {
-          content: 'sessionId',
+          key: 'sessionId',
+          label: '',
         },
       ]}
     />

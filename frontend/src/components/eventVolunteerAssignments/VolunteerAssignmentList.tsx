@@ -79,29 +79,30 @@ export function VolunteerAssignmentList({
       items={assignments}
       emptyText={t('noAssignments')}
       selection={selector}
+      labelTranslator={t}
       columns={[
         {
-          label: t('name'),
+          key: 'name',
           content: assignment => <span>
             {assignment.volunteer.name}
             {assignment.eventVolunteer.status !== 'Accepted' && ` (${status(assignment.eventVolunteer.status)})`}
           </span>,
-          sortBy: { name: 'name', value: a => a.volunteer.name },
+          sortBy: a => a.volunteer.name,
           enabled: showName,
         }, {
-          label: t('role'),
+          key: 'role',
           width: '1fr',
           content: assignment => <RoleTag role={assignment.role} />,
-          sortBy: { name: 'role', value: a => a.role.name },
+          sortBy: a => a.role.name,
           enabled: showRole,
         }, {
-          label: t('workshop'),
+          key: 'workshop',
           width: '1fr',
           content: assignment => assignment.workshop && <WorkshopLink workshop={assignment.workshop} />,
-          sortBy: { name: 'workshop', value: a => a.workshop?.name },
+          sortBy: a => a.workshop?.name,
           enabled: showWorkshops,
         }, {
-          label: t('instance'),
+          key: 'instance',
           width: 'max-content',
           content: assignment => <WorkshopInstanceSelector
             workshopInstances={event.workshops.find(w => w._id === assignment.workshop?._id)?.instances ?? []}
@@ -113,10 +114,10 @@ export function VolunteerAssignmentList({
             }
             onChange={ids => setInstanceIds(assignment, ids)}
           />,
-          sortBy: { name: 'instance', value: a => [a.workshop?.name, a.workshopInstanceIds] },
+          sortBy: a => [a.workshop?.name, a.workshopInstanceIds],
           enabled: hasWorkshops,
         }, {
-          label: t('registrationStatus'),
+          key: 'registrationStatus',
           width: 'max-content',
           content: assignment => <>
             <RegistrationStatusSelector
@@ -129,7 +130,6 @@ export function VolunteerAssignmentList({
             />
           </>,
           className: '-me-2',
-          sortBy: { name: 'registrationStatus', value: a => a.registrationStatus },
           enabled: eventRegistrationSystem !== 'None',
         },
       ]}

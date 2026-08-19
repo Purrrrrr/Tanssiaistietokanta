@@ -169,15 +169,14 @@ export function FormationDiagramsSection({ dance, onModifyFormationDiagrams }: {
       emptyText={t('noFormationDiagrams')}
       expandableContent={diagram => <FormationDiagramEditor formationDiagram={diagram} />}
       expandButtonProps={{ tooltip: commonT('edit'), icon: <Edit /> }}
+      labelTranslator={itemLabel}
       columns={[
         {
-          label: itemLabel('ballroom'),
-          sortBy: 'ballroom',
-          content: formationDiagram => formationDiagram.ballroom ? formatBallroom(formationDiagram.ballroom) : '-',
+          key: 'ballroom',
+          sortableContent: formationDiagram => formationDiagram.ballroom ? formatBallroom(formationDiagram.ballroom) : '-',
         }, {
-          label: itemLabel('description'),
+          key: 'description',
           width: '1fr',
-          sortBy: 'description',
           content: formationDiagram => formationDiagram.description?.trim() ? formationDiagram.description : '-',
         },
       ]}

@@ -19,7 +19,6 @@ interface BallroomListProps {
 
 export function BallroomList({ ballrooms }: BallroomListProps) {
   const t = useT('routes.ballrooms')
-  const label = useT('domain.ballroom')
   const editStr = useTranslation('common.edit')
 
   return <>
@@ -38,16 +37,15 @@ export function BallroomList({ ballrooms }: BallroomListProps) {
         icon: <Edit />,
         color: 'primary',
       })}
+      labelTranslator={useT('domain.ballroom')}
       columns={[
         {
-          label: label('venueName'),
-          content: 'venueName',
-          sortBy: { name: 'venueName', value: ballroom => [ballroom.venueName, ballroom.roomName] },
+          key: 'venueName',
+          sortBy: ['venueName', 'roomName'],
           width: '1fr',
         },
         {
-          label: label('roomName'),
-          content: 'roomName',
+          key: 'roomName',
           width: '1fr',
         },
       ]}
