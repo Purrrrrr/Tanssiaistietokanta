@@ -14,7 +14,7 @@ import { MenuButton } from '../MenuButton'
 import { Column, ColumnInput, normalizeColumnInput, RowState } from './column'
 import { SortButton } from './SortButton'
 
-interface ItemListProps<T, Key = never> {
+interface ItemListProps<T, Key = never> extends RowProps<T> {
   id?: string
   isTable?: boolean
   wrapBreakpoint?: 'md' | 'sm' | 'none'
@@ -26,12 +26,16 @@ interface ItemListProps<T, Key = never> {
   columns: ColumnInput<T, Key>[]
   actions?: false | ((item: T, index: number) => React.ReactNode)
   defaultColumnWidth?: string
+  defaultSort?: SortState | string | null
+  alwaysSortBy?: Sort<T> | null
+  emptyText: React.ReactNode
+}
+
+interface RowProps<T> {
+  actions?: false | ((item: T, index: number) => React.ReactNode)
   expandableContent?: (item: T, close: () => void) => React.ReactNode
   expandButtonProps?: ButtonProps | ((item: T, state: RowState) => ButtonProps)
   expandableContentLoadingMessage?: string
-  defaultSort?: SortState | string | null
-  alwaysSortBy?: Sort<T> | Sort<T>[] | null
-  emptyText: React.ReactNode
 }
 
 export function ItemList2<T extends { _id: string | number }, Key>(props: ItemListProps<T, Key>) {
@@ -48,8 +52,7 @@ export function ItemList2<T extends { _id: string | number }, Key>(props: ItemLi
     emptyText,
     actions,
     expandableContent,
-    expandButtonProps,
-    expandableContentLoadingMessage,
+    ...rowProps
   } = props
   const Container = isTable ? 'table' : 'ul'
   const columns = getColumns(props)
@@ -88,10 +91,7 @@ export function ItemList2<T extends { _id: string | number }, Key>(props: ItemLi
       className,
       marginClass ?? 'mb-4',
     )}
-
-    style={{
-      '--itemlist-columns': columnWidths.join(' '),
-    } as React.CSSProperties}
+    style={{ '--itemlist-columns': columnWidths.join(' ') } as React.CSSProperties}
   >
     <SectionWrapper element={isTable ? 'thead' : null}>
       <Header
@@ -105,15 +105,12 @@ export function ItemList2<T extends { _id: string | number }, Key>(props: ItemLi
     <SectionWrapper element={isTable ? 'tbody' : null}>
       {sortedItems.map((item, index) => (
         <Row
+          {...rowProps}
           key={item._id}
           item={item}
           index={index}
           isTable={isTable ?? false}
           columns={visibleColumns}
-          actions={actions !== false ? actions : undefined}
-          expandableContent={expandableContent}
-          expandButtonProps={expandButtonProps}
-          expandableContentLoadingMessage={expandableContentLoadingMessage}
         />
       ))
       }
@@ -146,21 +143,22 @@ function ColumnOptionsMenu<T>({ columns, sort, setSort }: {
   sort: SortState | null
   setSort: (sort: SortState) => void
 }) {
-  const hasSortableColumns = columns.some(c => c.sortBy)
-  return <MenuButton containerClassname="font-normal" buttonProps={{ className: 'w-full justify-end pe-4', minimal: true, rightIcon: <Menu /> }}>
-    {hasSortableColumns && <div className="px-2 py-1 text-sm text-gray-500">Sort by</div>}
-    {columns.map(({ id, sortBy, label }) => {
-      if (!sortBy) return null
-      const selected = sort?.key === id
-      return <Button
-        key={id}
-        minimal
-        icon={selected ? <SortIcon /> : <span className="w-4" />}
-        onClick={() => setSort({ key: id, direction: selected && sort?.direction === 'asc' ? 'desc' : 'asc' })}
-        text={label}
-      />
-    })}
-  </MenuButton>
+  const hasSortableColumns = columns.filter(c => c.sortBy).length > 1
+  return hasSortableColumns &&
+    <MenuButton containerClassname="font-normal" buttonProps={{ className: 'w-full justify-end pe-4', minimal: true, rightIcon: <Menu /> }}>
+      <div className="px-2 py-1 text-sm text-gray-500">Sort by</div>
+      {columns.map(({ id, sortBy, label }) => {
+        if (!sortBy) return null
+        const selected = sort?.key === id
+        return <Button
+          key={id}
+          minimal
+          icon={selected ? <SortIcon /> : <span className="w-4" />}
+          onClick={() => setSort({ key: id, direction: selected && sort?.direction === 'asc' ? 'desc' : 'asc' })}
+          text={label}
+        />
+      })}
+    </MenuButton>
 }
 
 function getSortedItems<T, Key>({ items: maybeItems, columns, sort, alwaysSortBy }: Pick<ItemListProps<T, Key>, 'items' | 'alwaysSortBy'> & {
@@ -168,22 +166,17 @@ function getSortedItems<T, Key>({ items: maybeItems, columns, sort, alwaysSortBy
   columns: Column<T>[]
 }) {
   const items = maybeItems ?? []
-  const additionalSorts = toArray(alwaysSortBy ?? [])
   if (sort) {
     const sortBy = columns.find(c => c.id === sort.key)?.sortBy
     if (sortBy) {
       const sorting: Sort<T> = { key: sortBy, direction: sort.direction }
-      return sortedBy(items, sorting, ...additionalSorts)
+      return sortedBy(items, sorting, alwaysSortBy ?? [])
     }
   }
-  if (additionalSorts.length > 0) {
-    return sortedBy(items, ...additionalSorts)
+  if (alwaysSortBy != null) {
+    return sortedBy(items, alwaysSortBy)
   }
   return items
-}
-
-function toArray<T>(value: T | T[]): T[] {
-  return Array.isArray(value) ? value : [value]
 }
 
 function EmptyList({ text }: { text: React.ReactNode }) {
@@ -243,11 +236,7 @@ function Row<T>({ item, index, isTable, columns, actions, expandableContent, exp
   item: T
   index: number
   columns: Column<T>[]
-  actions?: (item: T, index: number) => React.ReactNode
-  expandableContent?: (item: T, close: () => void) => React.ReactNode
-  expandButtonProps?: ButtonProps | ((item: T, state: RowState) => ButtonProps)
-  expandableContentLoadingMessage?: string
-}) {
+} & RowProps<T>) {
   const Container = isTable ? 'tr' : 'li'
   const Cell = isTable ? 'td' : 'span'
   const [expanded, setExpanded] = useState(false)
@@ -266,7 +255,7 @@ function Row<T>({ item, index, isTable, columns, actions, expandableContent, exp
       ))}
       {(actions != null || expandableContent != null) &&
         <Cell className="itemlist-actions-column">
-          {actions?.(item, index)}
+          {actions && actions(item, index)}
           {expandableContent && <Button
             {...(typeof expandButtonProps === 'function' ? expandButtonProps(item, rowState) : expandButtonProps)}
             minimal
