@@ -34,14 +34,17 @@ export function DanceList({ dances }: DanceListProps) {
           items={dances}
           emptyText={t('noDances')}
           labelTranslator={label}
+          rowClassName="wrapped:grid wrapped:grid-cols-2 wrapped:grid-rows-2 wrapped:grid-flow-col"
           columns={[
             {
               key: 'name',
               width: '1fr',
+              className: 'wrapped:grow',
               content: dance => <DanceLink dance={dance} />,
             }, {
               key: 'category',
               width: 'minmax(min(300px,30%), max-content)',
+              className: '',
               sortBy: dance => dance.category?.trim() === '' ? null : dance.category,
               content: dance => dance.category
                 ? <ColoredTag title={dance.category} />
@@ -49,12 +52,13 @@ export function DanceList({ dances }: DanceListProps) {
             }, {
               key: 'danceUsage',
               width: 'max-content',
-              className: 'grow text-right -me-4',
+              className: 'wrapped:text-right :not:wrapped:-me-4',
               sortBy: (dance: DanceListItem) => [dance.events.length, !!dance.wikipageName],
               content: dance => <DanceIsUsedIn minimal events={dance.events} wikipageName={dance.wikipageName} />,
             },
           ]}
           actions={dance => <DeleteDanceButton minimal dance={dance} />}
+          actionsColumnClassName="wrapped:text-right"
           expandableContent={dance => <DanceListRowEditor danceId={dance._id} />}
           expandButtonProps={dance => ({
             icon: <Edit />,

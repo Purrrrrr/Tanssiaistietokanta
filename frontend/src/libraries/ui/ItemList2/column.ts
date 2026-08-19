@@ -7,7 +7,7 @@ export interface Column<T> extends CommonProps {
   id: number | string
   label: ReactNode
   content: (item: T, state: RowState) => React.ReactNode
-  sortBy: null | SortKey<T>
+  sortBy?: null | SortKey<T>
 }
 
 export type ColumnInput<T, Key> = Partial<CommonProps> & (
@@ -64,9 +64,10 @@ export interface RowState {
 
 interface CommonProps {
   width: string
-  wrappedStyle: 'title' | 'full' | 'labeled-full' | 'small' | 'labeled-small'
   labelInfo?: React.ReactNode
   className?: string
+  wrapLabeled: boolean
+  wrappedBreakAfter: boolean
   headerClassName?: string
   headerPaddingClassName?: string
   // TODO: controls for column layout on small screens, e.g. hide on mobile, full width on mobile, etc
@@ -75,11 +76,12 @@ interface CommonProps {
   enabled: boolean // Should this column exist in this table? True by default. Used to exclude columns in certain tables without removing them from the column list
 }
 
-const defaults: CommonProps = {
+export const columnDefaults: CommonProps = {
   width: 'auto',
-  wrappedStyle: 'full',
   className: '',
   headerClassName: '',
+  wrapLabeled: false,
+  wrappedBreakAfter: false,
   // visibility: 'always',
   enabled: true,
 }
@@ -87,13 +89,13 @@ const defaults: CommonProps = {
 export function normalizeColumnInput<T, Key>(input: ColumnInput<T, Key>, labelTranslator: ((key: Key) => string) | undefined): Column<T> {
   const { key, label, sortableContent, content, sortBy, ...rest } = input
   return {
+    ...columnDefaults,
+    ...rest,
     id: key,
     label: label ?? labelTranslator?.(key as Key) ?? null,
     content: toAccessorFn((sortableContent ?? content ?? key) as Accessor<T, ReactNode>),
     sortBy: sortBy === null
       ? null
       : (sortBy ?? toAccessorFn((sortableContent ?? key) as Accessor<T, ReactNode>)) as SortKey<T>,
-    ...defaults,
-    ...rest,
   }
 }

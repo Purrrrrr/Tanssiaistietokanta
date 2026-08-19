@@ -23,8 +23,10 @@ interface ItemListProps<T, Key = never> extends RowProps<T> {
   items: T[] | null | undefined
   labelTranslator?: (key: Key) => string
   selection?: Pick<SelectionApi<T>, 'selectAllProps' | 'selectItemProps'> | null
+  selectorColumnClassName?: string
   columns: ColumnInput<T, Key>[]
   actions?: false | ((item: T, index: number) => React.ReactNode)
+  actionsColumnClassName?: string
   expandButtonProps?: ButtonProps | ((item: T, state: RowState) => ButtonProps)
   defaultColumnWidth?: string
   defaultSort?: SortState | string | null
@@ -33,9 +35,18 @@ interface ItemListProps<T, Key = never> extends RowProps<T> {
 }
 
 interface RowProps<T> {
+  rowClassName?: string
   expandableContent?: (item: T, close: () => void) => React.ReactNode
   expandableContentLoadingMessage?: string
 }
+
+const specialColumnDefaults = {
+  width: 'max-content',
+  wrappedStyle: 'small',
+  wrapLabeled: false,
+  wrappedBreakAfter: false,
+  enabled: true,
+} as const
 
 export function ItemList2<T extends { _id: string | number }, Key>({
   id,
@@ -51,7 +62,10 @@ export function ItemList2<T extends { _id: string | number }, Key>({
   marginClass,
   defaultColumnWidth = 'auto',
   selection,
+  selectorColumnClassName,
   actions,
+  actionsColumnClassName,
+  rowClassName,
   expandableContent,
   expandButtonProps,
   expandableContentLoadingMessage,
@@ -73,14 +87,14 @@ export function ItemList2<T extends { _id: string | number }, Key>({
   const sortedItems = getSortedItems({ items, columns, sort, alwaysSortBy })
   const visibleColumns = columns.filter(c => c.enabled)
   if (selection) {
-    return visibleColumns.unshift({
+    visibleColumns.unshift({
       id: 'itemlist-selection',
       label: <SelectionBox {...selection.selectAllProps} />,
       content: item => <SelectionBox {...selection.selectItemProps(item)} />,
-      sortBy: null,
-      width: 'max-content',
-      wrappedStyle: 'small',
-      enabled: true,
+      headerClassName: 'selector',
+      headerPaddingClassName: '',
+      className: selectorColumnClassName ?? 'selector',
+      ...specialColumnDefaults,
     })
   }
   const hasActionsColumn = actions != null || sortableColumns.length > 1 || expandableContent != null
@@ -97,13 +111,10 @@ export function ItemList2<T extends { _id: string | number }, Key>({
           onClick={() => rowState.setExpanded(!rowState.expanded)}
         />}
       </>,
-      sortBy: null,
-      width: 'max-content',
       headerClassName: 'itemlist-sortable-header itemlist-sort-menu',
       headerPaddingClassName: '',
-      className: 'itemlist-actions-column',
-      wrappedStyle: 'small',
-      enabled: true,
+      className: actionsColumnClassName ?? 'actions',
+      ...specialColumnDefaults,
     })
   }
 
@@ -132,6 +143,7 @@ export function ItemList2<T extends { _id: string | number }, Key>({
         index={index}
         isTable={isTable ?? false}
         columns={visibleColumns}
+        rowClassName={rowClassName}
         expandableContent={expandableContent}
         expandableContentLoadingMessage={expandableContentLoadingMessage}
       />
@@ -222,7 +234,7 @@ function Header<T>({ isTable, columns, sort, onSort }: {
   </Container>
 }
 
-function Row<T>({ item, index, isTable, columns, expandableContent, expandableContentLoadingMessage }: {
+function Row<T>({ item, index, isTable, columns, rowClassName, expandableContent, expandableContentLoadingMessage }: {
   isTable: boolean
   item: T
   index: number
@@ -236,13 +248,20 @@ function Row<T>({ item, index, isTable, columns, expandableContent, expandableCo
 
   return <>
     <Container className={classNames(
-      'itemlist-row border-x first:border border-b border-gray-200 p-2 hover:bg-hover-odd',
+      'itemlist-row border-x first:border border-b border-gray-200 hover:bg-hover-odd',
+      rowClassName,
       isTable && expandableContent
         ? 'nth-of-type-[4n+1]:bg-gray-100 nth-of-type-[4n+1]:hover:bg-hover'
         : 'nth-of-type-[even]:bg-gray-100 nth-of-type-[even]:hover:bg-hover',
     )}>
       {columns.map(column => (
-        <Cell className={column.className} key={column.id}>{column.content(item, rowState)}</Cell>
+        <>
+          <Cell className={column.className} key={column.id}>
+            {column.wrapLabeled && <span className="wrapped-label">{column.label}: </span>}
+            {column.content(item, rowState)}
+          </Cell>
+          {column.wrappedBreakAfter && <Cell className="wrapped-breaker" key={`${column.id}-break`} />}
+        </>
       ))}
     </Container>
     {expandableContent &&
