@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { booleanProp, numberProp, type Showcase, showcase } from './types'
+import { booleanProp, numberProp, selectorProp, type Showcase, showcase } from './types'
 
 import { useMultipleSelection } from 'libraries/common/selection/useMultipleSelection'
 import { Switch } from 'libraries/forms'
@@ -14,6 +14,8 @@ import { FabricShowcase } from './fabricShowCase'
 import FormUiShowcase from './formShowcase'
 import { EditorShowcase } from './lexicalShowCase'
 import { ShowcaseContainer } from './ShowcaseContainer'
+import { tagSchemes, TagShowcase } from './TagShowcase'
+import { range } from './utils'
 import { titleCase } from './utils/titleCase'
 
 const colors = ['none', 'primary', 'success', 'danger', 'warning'] as const
@@ -173,6 +175,17 @@ const showcases: Showcase<Record<string, unknown>>[] = [
     ),
   }),
   showcase({
+    title: 'Colored tag 2',
+    props: {
+      small: booleanProp(),
+      tag: booleanProp(),
+      contrastDebug: booleanProp(),
+      colors: selectorProp(tagSchemes),
+      nrColors: numberProp({ default: 22, min: 1, max: 100 }),
+    },
+    render: props => <TagShowcase {...props} />,
+  }),
+  showcase({
     title: 'Overlays',
     props: {},
     render: () => <OverlayShowcase />,
@@ -223,10 +236,6 @@ const showcases: Showcase<Record<string, unknown>>[] = [
     render: () => <BreadcrumbsShowcase />,
   }),
 ]
-
-function range(count: number): number[] {
-  return Array(count).fill(0).map((_, index) => index)
-}
 
 function ItemListShowcase({ isTable, empty }: { isTable: boolean, empty: boolean }) {
   const items = Array(20).fill(0).map((_, i) => ({

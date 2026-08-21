@@ -1,5 +1,6 @@
-import { MouseEventHandler } from 'react'
 import classNames from 'classnames'
+
+import { quickNumberHash } from 'libraries/common/hashString'
 
 const colors = [
   classNames('bg-red-100 text-red-950 inset-ring-red-600'),
@@ -64,7 +65,7 @@ export interface ColoredTagProps {
   hashSource?: string | number
   color?: number
   small?: boolean
-  onClick?: MouseEventHandler
+  onClick?: React.MouseEventHandler
   children?: React.ReactNode
   selected?: boolean
 }
@@ -104,8 +105,5 @@ function hash(source: string | number): number {
   if (typeof source === 'number') {
     return source
   }
-  return source
-    .split('')
-    .map(s => s.codePointAt(0) ?? 0)
-    .reduce((acc, code) => code + (acc << 5) - acc, 0)
+  return quickNumberHash(source)
 }

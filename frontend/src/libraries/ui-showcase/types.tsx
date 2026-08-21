@@ -37,7 +37,7 @@ interface UnknownPropDef<T> extends GenericPropDef<T> {
 
 interface GenericPropDef<out T> {
   default: T
-  choices?: T[]
+  choices?: readonly T[]
 }
 
 export function showcase<P extends Record<string, unknown>>(value: Showcase<P>): Showcase<P> {
@@ -54,4 +54,21 @@ export function numberProp(props?: Omit<NumberPropDef, 'type'>): NumberPropDef {
 
 export function booleanProp(props?: Omit<BooleanPropDef, 'type'>): BooleanPropDef {
   return { type: 'boolean', default: false, ...props }
+}
+
+export function selectorProp<T extends string>(options: readonly T[]): UnknownPropDef<T> {
+  return {
+    type: 'other',
+    default: options[0],
+    choices: options,
+    renderControl(value, onChange) {
+      return <select
+        className="border rounded p-1"
+        value={value}
+        onChange={e => onChange(e.target.value as T)}
+      >
+        {options.map(option => <option key={option} value={option}>{option}</option>)}
+      </select>
+    },
+  }
 }
