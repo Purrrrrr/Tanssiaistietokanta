@@ -8,7 +8,7 @@ import { entityListQueryHook, graphql } from 'backend'
 import { isEmptyDocument, MinifiedDocumentContent } from 'libraries/lexical'
 import { Callout, CounterTag, Link, RegularLink } from 'libraries/ui'
 import { useChosenDanceIds, useWorkshops } from 'components/event/EventProgramForm/eventMetadata'
-import { ColoredTag } from 'components/widgets/ColoredTag'
+import { WorkshopTag } from 'components/workshops/WorkshopTag'
 import { useT } from 'i18n'
 import { compareBy } from 'utils/sorted'
 import { uniq } from 'utils/uniq'
@@ -59,7 +59,7 @@ export function MissingDanceInstructionsWarning({ program }: { program: EventPro
             <span>
               {' '}(
               {t('teachedInSet')}
-              {dance.teachedIn.map(workshop => <ColoredTag key={workshop._id} tag={workshop.workshop.abbreviation ?? undefined} title={workshop.workshop.name} />)}
+              {dance.teachedIn.map(workshop => <WorkshopTag key={workshop._id} tag={workshop.workshop.abbreviation ?? undefined} title={workshop.workshop.name} />)}
               )
             </span>
           }

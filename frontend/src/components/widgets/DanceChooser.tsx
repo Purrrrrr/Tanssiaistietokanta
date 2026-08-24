@@ -7,11 +7,10 @@ import { filterDances, useCreateDance, useDances } from 'services/dances'
 import { canCreateUniqueItemFromQuery } from 'libraries/common/listSearch'
 import { AutocompleteInput } from 'libraries/formsV2/components/inputs'
 import { CssClass } from 'libraries/ui/classes'
-import { DanceIdSet } from 'components/event/EventProgramForm/eventMetadata'
-import { useT } from 'i18n'
-
-import { ColoredTag } from './ColoredTag'
 import { DanceCategoryTag } from 'components/dance/DanceCategoryTag'
+import { DanceIdSet } from 'components/event/EventProgramForm/eventMetadata'
+import { WorkshopTag } from 'components/workshops/WorkshopTag'
+import { useT } from 'i18n'
 
 export type DanceChooserItem = Omit<DanceListItem, 'events'>
 
@@ -93,7 +92,7 @@ export function DanceChooser({
         <input className={CssClass.inputElement + ' grow'} {...props} />
         <span>
           {category && <DanceCategoryTag small {...category} />}
-          {workshop && <ColoredTag small tag={workshop.abbreviation ?? undefined} title={workshop.name} />}
+          {workshop && <WorkshopTag small tag={workshop.abbreviation ?? undefined} title={workshop.name} />}
         </span>
       </div>
     }}

@@ -11,7 +11,6 @@ import { BreadcrumbsShowcase } from './showcases/BreadcrumbsShowcase'
 import { buttonShowcase } from './showcases/ButtonShowcase'
 import { calloutShowcase } from './showcases/CalloutShowcase'
 import { collapseShowcase } from './showcases/CollapseShowcase'
-import { coloredTagShowcase } from './showcases/ColoredTagShowcase'
 import { FabricShowcase } from './showcases/FabricShowcase'
 import { FormsShowcase } from './showcases/FormsShowcase'
 import { globalSpinnerShowcase } from './showcases/GlobalSpinnerShowcase'
@@ -63,7 +62,6 @@ const showcases: Showcase<Record<string, unknown>>[] = [
   autosizedSectionShowcase,
   calloutShowcase,
   tabsShowcase,
-  coloredTagShowcase,
   TagShowcase.showCase,
   OverlayShowcase.showCase,
   collapseShowcase,
