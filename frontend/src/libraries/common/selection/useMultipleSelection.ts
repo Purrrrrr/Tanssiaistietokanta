@@ -1,7 +1,8 @@
 import { useState } from 'react'
 
-import { ID } from 'types'
 import { SelectionApi } from './types'
+
+type ID = string | number
 
 export function useMultipleSelection<T extends { _id: ID }>(
   allItems: T[],

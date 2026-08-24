@@ -5,7 +5,7 @@ import { useContrastCheck } from 'libraries/common/useContrastRatio'
 
 import { type ColorScheme, defaultScheme } from './tagColorSchemes'
 
-export interface TagProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'color'> {
+export interface TagProps extends Omit<React.HTMLAttributes<HTMLSpanElement> & React.HTMLAttributes<HTMLButtonElement>, 'color'> {
   tag?: React.ReactNode
   title: string
   hashSource?: string | number
@@ -23,9 +23,10 @@ export function Tag({
   color,
   colorScheme = defaultScheme,
   small = false,
-  selected = false,
+  selected,
   debugContrast = false,
   children,
+  className,
   ...props
 }: TagProps) {
   const colorIndex = Math.abs(
@@ -35,11 +36,16 @@ export function Tag({
         : quickNumberHash(hashSource ?? title)),
   ) % colorScheme.colorCount
   const colors = colorScheme(colorIndex, selected)
-  const [ref, contrast] = useContrastCheck<HTMLDivElement>()
-  return <div
+  const [ref, contrast] = useContrastCheck<HTMLSpanElement & HTMLButtonElement>()
+  const Element = props.onClick ? 'button' : 'span'
+
+  return <Element
     ref={ref}
     className={classNames(
-      'tag inline-block px-1.5 rounded-lg overflow-hidden',
+      className,
+      colors.className ?? 'tag',
+      'inline-block px-1.5 rounded-lg overflow-hidden',
+      props.onClick && 'cursor-pointer hover:brightness-95 active:brightness-85',
       small
         ? 'my-0.5 text-xs'
         : 'leading-5.5',
@@ -55,7 +61,7 @@ export function Tag({
   >
     {tag &&
       <span className={classNames(
-        'counter',
+        colors.counterClassName ?? 'counter',
         'text-center font-bold inline-block h-full rounded-lg -ms-1.5',
         small ? 'px-1 me-0.5' : 'min-w-5.5 px-1.5 me-1',
       )}>
@@ -65,7 +71,7 @@ export function Tag({
     {children}
     {debugContrast && contrastDebug(contrast)}
     {debugContrast && colors.debug}
-  </div>
+  </Element>
 }
 
 function contrastDebug(contrast: number) {
