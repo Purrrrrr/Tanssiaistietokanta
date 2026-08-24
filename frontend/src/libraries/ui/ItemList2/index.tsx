@@ -6,7 +6,6 @@ import { type SortState } from './types'
 import { SelectionApi } from 'libraries/common/selection/types'
 
 import { ChevronDown, ChevronUp, InfoSign, Menu, Sort as SortIcon } from 'libraries/ui/icons'
-import { SelectionBox } from 'components/widgets/SelectionBox'
 import { type Sort, sortedBy } from 'utils/sorted'
 import { isInputTag } from 'utils/useOnKeydown'
 
@@ -15,6 +14,7 @@ import Collapse from '../Collapse'
 import { Link } from '../Link'
 import { MenuButton } from '../MenuButton'
 import { Column, columnDefaults, ColumnInput, LinkGetter, normalizeColumnInput, RowState } from './column'
+import { SelectionBox } from './SelectionBox'
 import { SortButton } from './SortButton'
 
 interface ItemListProps<T, Key = never> extends RowProps<T> {
