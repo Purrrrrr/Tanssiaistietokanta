@@ -44,7 +44,7 @@ export function Tag({
     className={classNames(
       className,
       colors.className ?? 'tag',
-      'inline-block px-1.5 rounded-lg overflow-hidden',
+      'inline-block align-middle px-1.5 rounded-lg overflow-hidden',
       props.onClick && 'cursor-pointer hover:brightness-95 active:brightness-85',
       small
         ? 'my-0.5 text-xs'
