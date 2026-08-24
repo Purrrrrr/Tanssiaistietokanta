@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 
+import { booleanProp, showcase } from '../types'
+
 import { DocumentViewer, Editor, type MinifiedDocumentContent } from 'libraries/lexical'
 import { H2 } from 'libraries/ui'
 
@@ -35,3 +37,13 @@ export function EditorShowcase({ twoEditors, showMinified, showViewer }: { twoEd
     </div>
   )
 }
+
+EditorShowcase.showCase = showcase({
+  title: 'Lexical editor',
+  props: {
+    twoEditors: booleanProp({ default: true }),
+    showMinified: booleanProp({ default: true }),
+    showViewer: booleanProp({ default: true }),
+  },
+  render: (props) => <EditorShowcase {...props} />,
+})

@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 
+import { booleanProp, showcase } from '../types'
+
 import { defaultDiagram, type FabricDiagramData, FabricEditor } from 'libraries/fabric/FabricEditor'
 import FabricImageViewer from 'libraries/fabric/FabricImageViewer'
 import { H2 } from 'libraries/ui'
@@ -46,6 +48,17 @@ export function FabricShowcase({ twoEditors, showMinified, showViewer, backgroun
     </div>
   )
 }
+
+FabricShowcase.showCase = showcase({
+  title: 'Fabric editor',
+  props: {
+    twoEditors: booleanProp({ default: true }),
+    showMinified: booleanProp({ default: true }),
+    showViewer: booleanProp({ default: true }),
+    backgroundDiagram: booleanProp(),
+  },
+  render: (props) => <FabricShowcase {...props} />,
+})
 
 function useLocalStorageState<T>(key: string, defaultValue: T): [T, (value: T) => void] {
   const [state, setState] = useState<T>(() => {

@@ -1,24 +1,28 @@
 import { useState } from 'react'
 
-import { booleanProp, numberProp, type Showcase, showcase } from './types'
+import { type Showcase } from './types'
 
-import { useMultipleSelection } from 'libraries/common/selection/useMultipleSelection'
-import { Switch } from 'libraries/forms'
-import { Alert, AnchorButton, AutosizedSection, Breadcrumb, BreadcrumbsContainer, Button, Callout, Collapse, Dialog, GlobalSpinner, ItemList2, RegularLink, Tab, Tabs } from 'libraries/ui'
-import { showToast } from 'libraries/ui/hooks'
-import { Trash } from 'libraries/ui/icons'
 import { MenuLink, MenuSection, Page } from 'components/Page'
-import { ColoredTag, TAG_COLOR_COUNT } from 'components/widgets/ColoredTag'
 
-import { FabricShowcase } from './fabricShowCase'
-import FormUiShowcase from './formShowcase'
-import { EditorShowcase } from './lexicalShowCase'
 import { ShowcaseContainer } from './ShowcaseContainer'
-import { TagShowcase } from './TagShowcase'
-import { range } from './utils'
-import { titleCase } from './utils/titleCase'
-
-const colors = ['none', 'primary', 'success', 'danger', 'warning'] as const
+import { anchorButtonShowcase } from './showcases/AnchorButtonShowcase'
+import { autosizedSectionShowcase } from './showcases/AutosizedSectionShowcase'
+import { BreadcrumbsShowcase } from './showcases/BreadcrumbsShowcase'
+import { buttonShowcase } from './showcases/ButtonShowcase'
+import { calloutShowcase } from './showcases/CalloutShowcase'
+import { collapseShowcase } from './showcases/CollapseShowcase'
+import { coloredTagShowcase } from './showcases/ColoredTagShowcase'
+import { FabricShowcase } from './showcases/FabricShowcase'
+import { FormsShowcase } from './showcases/FormsShowcase'
+import { globalSpinnerShowcase } from './showcases/GlobalSpinnerShowcase'
+import { ItemListShowcase } from './showcases/ItemListShowcase'
+import { EditorShowcase } from './showcases/LexicalShowcase'
+import { LinkShowcase } from './showcases/LinkShowcase'
+import { OverlayShowcase } from './showcases/OverlayShowcase'
+import { SwitchShowcase } from './showcases/SwitchShowcase'
+import { tabsShowcase } from './showcases/TabsShowcase'
+import { TagShowcase } from './showcases/TagShowcase'
+import { toastsShowcase } from './showcases/ToastsShowcase'
 
 export default function UiShowcase() {
   const [selectedShowcase, setSelectedShowcase] = useState(() => {
@@ -48,277 +52,22 @@ export default function UiShowcase() {
 }
 
 const showcases: Showcase<Record<string, unknown>>[] = [
-  showcase({
-    title: 'ItemList',
-    props: {
-      isTable: booleanProp({ default: true }),
-      empty: booleanProp({ default: false }),
-    },
-    render: props => <ItemListShowcase {...props} />,
-  }),
-  showcase({
-    title: 'Fabric editor',
-    props: {
-      twoEditors: booleanProp({ default: true }),
-      showMinified: booleanProp({ default: true }),
-      showViewer: booleanProp({ default: true }),
-      backgroundDiagram: booleanProp(),
-    },
-    render: (props) => <FabricShowcase {...props} />,
-  }),
-  showcase({
-    title: 'Lexical editor',
-    props: {
-      twoEditors: booleanProp({ default: true }),
-      showMinified: booleanProp({ default: true }),
-      showViewer: booleanProp({ default: true }),
-    },
-    render: (props) => <EditorShowcase {...props} />,
-  }),
-  showcase({
-    title: 'Link',
-    props: {},
-    render: () => <RegularLink href="#">Link</RegularLink>,
-  }),
-  showcase({
-    title: 'Toasts',
-    props: {},
-    render: () => <div className="flex gap-2">
-      {colors.map(color =>
-        <Button key={color} color={color} onClick={() => showToast({ message: 'This is toast', color })}>Show toast</Button>,
-      )}
-    </div>,
-  }),
-  showcase({
-    title: 'Forms',
-    props: {},
-    render: () => <FormUiShowcase />,
-  }),
-  showcase({
-    title: 'Button',
-    props: {
-      disabled: booleanProp(),
-      minimal: booleanProp(),
-      tooltip: booleanProp({ default: true }),
-      icon: booleanProp({ default: true }),
-    },
-    render: ({ disabled, icon, minimal, tooltip }) =>
-      <div className="flex gap-2">
-        {colors.map(color =>
-          <Button
-            key={color}
-            color={color}
-            minimal={minimal}
-            icon={icon ? <Trash /> : undefined}
-            tooltip={tooltip ? 'A long tooltip' : undefined}
-            disabled={disabled}>
-            {titleCase(color)}
-          </Button>,
-        )}
-      </div>,
-  }),
-  showcase({
-    title: 'Switch',
-    props: {},
-    render: () => <SwitchShowcase />,
-  }),
-  showcase({
-    title: 'Autosized section',
-    props: {
-      lines: numberProp({ default: 1, min: 0 }),
-      cols: numberProp({ default: 1, min: 0 }),
-    },
-    render: ({ cols, lines }) =>
-      <AutosizedSection className="bg-gray-200 size-50">
-        <div className="flex">
-          {Array(cols).fill(0).map((_, i) =>
-            <div key={i}>
-              {Array(lines).fill(0).map((_, i) => <p key={i}>Lorem ipsum lorem ipsum</p>)}
-
-            </div>,
-          )}
-        </div>
-      </AutosizedSection>,
-  }),
-  showcase({
-    title: 'Callout',
-    props: {
-      title: booleanProp({ default: true }),
-    },
-    render: ({ title }) =>
-      <div className="flex flex-col gap-2">
-        {colors.map(color =>
-          <Callout key={color} color={color} title={title ? titleCase(color) : undefined}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-          </Callout>,
-        )}
-      </div>,
-  }),
-  showcase({
-    title: 'Tabs',
-    props: { },
-    render: () =>
-      <Tabs defaultSelectedTabId="tab2">
-        <Tab id="tab1" title="Tab1" panel={<p>Panel 1</p>} />
-        <Tab id="tab2" title="Tab2" panel={<p>Panel 2</p>} />
-        <Tab id="tab3" title="Tab3" panel={<p>Panel 3</p>} />
-      </Tabs>,
-  }),
-  showcase({
-    title: 'Colored tag',
-    props: {
-      small: booleanProp(),
-      tag: booleanProp(),
-    },
-    render: ({ small, tag }) => range(TAG_COLOR_COUNT).map(color =>
-      <ColoredTag small={small} tag={tag ? String(color) : undefined} key={color} title={`Tag color ${color}`} color={color} />,
-    ),
-  }),
+  ItemListShowcase.showCase,
+  FabricShowcase.showCase,
+  EditorShowcase.showCase,
+  LinkShowcase.showCase,
+  toastsShowcase,
+  FormsShowcase.showCase,
+  buttonShowcase,
+  SwitchShowcase.showCase,
+  autosizedSectionShowcase,
+  calloutShowcase,
+  tabsShowcase,
+  coloredTagShowcase,
   TagShowcase.showCase,
-  showcase({
-    title: 'Overlays',
-    props: {},
-    render: () => <OverlayShowcase />,
-  }),
-  showcase({
-    title: 'Collapse',
-    props: {
-      isOpen: booleanProp(),
-      keepChildrenMounted: booleanProp(),
-    },
-    render: ({ isOpen, keepChildrenMounted }) =>
-      <Collapse isOpen={isOpen} keepChildrenMounted={keepChildrenMounted}>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-      </Collapse>,
-  }),
-  showcase({
-    title: 'Global loading indicator',
-    props: {
-      loading: booleanProp(),
-      timeout: booleanProp(),
-    },
-    render: ({ loading, timeout }) =>
-      <GlobalSpinner
-        loading={loading}
-        timeout={timeout}
-        loadingMessage="Loading..."
-        connectionTimeoutMessage="Connection timed out"
-      />,
-  }),
-  showcase({
-    title: 'AnchorButton',
-    props: {
-      disabled: booleanProp(),
-      minimal: booleanProp(),
-      active: booleanProp(),
-      icon: booleanProp({ default: true }),
-    },
-    render: ({ disabled, icon, minimal, active }) =>
-      <div className="flex flex-wrap gap-2">
-        {colors.map(color =>
-          <AnchorButton key={color} href="#" color={color} minimal={minimal} icon={icon ? <Trash /> : undefined} active={active} aria-disabled={disabled}>{titleCase(color)}</AnchorButton>,
-        )}
-      </div>,
-  }),
-  showcase({
-    title: 'Breadcrumbs',
-    props: {},
-    render: () => <BreadcrumbsShowcase />,
-  }),
+  OverlayShowcase.showCase,
+  collapseShowcase,
+  globalSpinnerShowcase,
+  anchorButtonShowcase,
+  BreadcrumbsShowcase.showCase,
 ]
-
-function ItemListShowcase({ isTable, empty }: { isTable: boolean, empty: boolean }) {
-  const items = Array(20).fill(0).map((_, i) => ({
-    _id: String(i),
-    name: `Item ${i}`,
-    letter: String.fromCharCode(90 - i),
-  }))
-  const selection = useMultipleSelection(items)
-
-  return <ItemList2
-    id="ui-showcase-itemlist"
-    isTable={isTable}
-    selection={selection}
-    items={empty ? [] : items}
-    emptyText="No items"
-    wrapBreakpoint="none"
-    labelTranslator={(id: string) => id.slice(0, 1).toUpperCase() + id.slice(1)}
-    columns={[
-      {
-        key: 'name',
-      },
-      {
-        key: 'letter',
-      },
-      {
-        key: 'description',
-        content: item => `This is a description for ${item.name}`,
-        sortBy: 'name',
-      },
-    ]}
-    expandableContent={(item, close) => <div className="flex items-center gap-2 p-2">
-      More content goes here for {item.name} <Button text="Close" onClick={close} />
-    </div>}
-  />
-}
-
-function SwitchShowcase() {
-  const [on, setOn] = useState(false)
-  return <div className="grid grid-cols-2 grid-rows-2 grid-flow-row">
-    <Switch id="demo-switch1" value={on} onChange={setOn} label="Switch" />
-    <Switch id="demo-switch2" value={!on} onChange={(v) => setOn(!v)} label="Opposite switch" />
-    <Switch id="demo-switch3" value={on} readOnly label="Readonly switch" onChange={() => {}} />
-    <Switch id="demo-switch4" value={!on} readOnly label="Opposite readonly switch" onChange={() => {}} />
-  </div>
-}
-
-function OverlayShowcase() {
-  const [modal, setModal] = useState<'alert' | 'dialog' | null>(null)
-  return <div>
-    <Button text="Open alert" onClick={() => setModal('alert')} />
-    <Button text="Open dialog" onClick={() => setModal('dialog')} />
-    <Dialog
-      className="max-w-100"
-      onClose={() => setModal(null)}
-      isOpen={modal === 'dialog'}
-      title="This is a dialog"
-      closeButtonLabel="close dialog"
-    >
-      <Dialog.Body>
-        <Lorem />
-      </Dialog.Body>
-      <Dialog.Footer>
-        A footer
-        <Button text="Some action" onClick={() => setModal(null)} />
-      </Dialog.Footer>
-    </Dialog>
-    <Alert
-      onClose={() => setModal(null)}
-      isOpen={modal === 'alert'}
-      title="This is an alert"
-      buttons={[
-        {
-          text: 'Ok',
-          color: 'danger',
-        },
-        'Cancel',
-      ]}
-    >
-      <p>Some children go here</p>
-    </Alert>
-  </div>
-}
-
-function Lorem() {
-  return <p>
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-  </p>
-}
-
-function BreadcrumbsShowcase() {
-  return <BreadcrumbsContainer label="Example breadcrumbs">
-    <Breadcrumb to="/" text="Home" />
-    <Breadcrumb to="/dances" text="Dances" />
-    <Breadcrumb to="/dances/$danceId" params={{ danceId: '1' }} text="Example dance" />
-  </BreadcrumbsContainer>
-}

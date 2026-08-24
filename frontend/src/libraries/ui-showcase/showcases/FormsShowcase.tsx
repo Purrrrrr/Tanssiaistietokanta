@@ -1,5 +1,7 @@
 import { useState } from 'react'
 
+import { showcase } from '../types'
+
 import { ConflictHandler } from 'libraries/forms/ConflictHandler'
 import { formFor, withDefaults } from 'libraries/formsV2'
 import { AutocompleteInput, SegmentedInput, Select, TextInput } from 'libraries/formsV2/components/inputs'
@@ -39,7 +41,7 @@ const defaultData: Data = {
   rangeEnd: new Date(),
 }
 
-export default function UiShowcase() {
+export function FormsShowcase() {
   const [key, setKey] = useState<number>(0)
   const [value, onChange] = useState<Data>(defaultData)
 
@@ -157,3 +159,9 @@ function Ball({ name }: { name?: string | null }) {
     {(name ?? 'X').slice(0, 1)}
   </span>
 }
+
+FormsShowcase.showCase = showcase({
+  title: 'Forms',
+  props: {},
+  render: () => <FormsShowcase />,
+})

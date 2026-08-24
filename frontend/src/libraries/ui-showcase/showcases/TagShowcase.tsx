@@ -1,10 +1,10 @@
-import { booleanProp, numberProp, selectorProp, showcase } from './types'
+import { booleanProp, numberProp, selectorProp, showcase } from '../types'
 
 import { ItemList2 } from 'libraries/ui/ItemList2'
 import { Tag } from 'libraries/ui/Tag'
 import { defaultScheme, lightRainbow, rainbow } from 'libraries/ui/tagColorSchemes'
 
-import { range } from './utils'
+import { range } from '../utils'
 
 const tagSchemes = ['lightRainbow', 'rainbow', 'default'] as const
 export function TagShowcase({ small, tag, colors, nrColors, contrastDebug }: {
