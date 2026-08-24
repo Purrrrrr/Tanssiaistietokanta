@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { booleanProp, numberProp, selectorProp, type Showcase, showcase } from './types'
+import { booleanProp, numberProp, type Showcase, showcase } from './types'
 
 import { useMultipleSelection } from 'libraries/common/selection/useMultipleSelection'
 import { Switch } from 'libraries/forms'
@@ -14,7 +14,7 @@ import { FabricShowcase } from './fabricShowCase'
 import FormUiShowcase from './formShowcase'
 import { EditorShowcase } from './lexicalShowCase'
 import { ShowcaseContainer } from './ShowcaseContainer'
-import { tagSchemes, TagShowcase } from './TagShowcase'
+import { TagShowcase } from './TagShowcase'
 import { range } from './utils'
 import { titleCase } from './utils/titleCase'
 
@@ -174,17 +174,7 @@ const showcases: Showcase<Record<string, unknown>>[] = [
       <ColoredTag small={small} tag={tag ? String(color) : undefined} key={color} title={`Tag color ${color}`} color={color} />,
     ),
   }),
-  showcase({
-    title: 'Colored tag 2',
-    props: {
-      small: booleanProp(),
-      tag: booleanProp(),
-      contrastDebug: booleanProp(),
-      colors: selectorProp(tagSchemes),
-      nrColors: numberProp({ default: 22, min: 1, max: 100 }),
-    },
-    render: props => <TagShowcase {...props} />,
-  }),
+  TagShowcase.showCase,
   showcase({
     title: 'Overlays',
     props: {},

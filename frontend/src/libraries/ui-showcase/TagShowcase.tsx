@@ -1,10 +1,12 @@
+import { booleanProp, numberProp, selectorProp, showcase } from './types'
+
 import { ItemList2 } from 'libraries/ui/ItemList2'
 import { Tag } from 'libraries/ui/Tag'
 import { defaultScheme, lightRainbow, rainbow } from 'libraries/ui/tagColorSchemes'
 
 import { range } from './utils'
 
-export const tagSchemes = ['lightRainbow', 'rainbow', 'default'] as const
+const tagSchemes = ['lightRainbow', 'rainbow', 'default'] as const
 export function TagShowcase({ small, tag, colors, nrColors, contrastDebug }: {
   small: boolean
   tag: boolean
@@ -30,10 +32,12 @@ export function TagShowcase({ small, tag, colors, nrColors, contrastDebug }: {
           key: '_id',
           width: 'max-content',
           label: 'Color number',
+          wrapLabeled: true,
         }, {
           key: 'Random number',
           width: 'max-content',
           label: 'Random number',
+          wrapLabeled: true,
           sortableContent: () => Math.random().toFixed(3),
         }, {
           key: 'tag',
@@ -52,3 +56,15 @@ export function TagShowcase({ small, tag, colors, nrColors, contrastDebug }: {
     />
   </div>
 }
+
+TagShowcase.showCase = showcase({
+  title: 'Colored tag 2',
+  props: {
+    small: booleanProp(),
+    tag: booleanProp(),
+    contrastDebug: booleanProp(),
+    colors: selectorProp(tagSchemes),
+    nrColors: numberProp({ default: 22, min: 1, max: 100 }),
+  },
+  render: props => <TagShowcase {...props} />,
+})
