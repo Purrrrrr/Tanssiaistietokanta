@@ -5,8 +5,19 @@ export function useContrastCheck<E extends HTMLElement>() {
   const [constrast, setContrast] = useState(0)
 
   useEffect(() => {
-    if (!elem.current) return
-    setContrast(getElementContrast(elem.current))
+    const element = elem.current
+    if (!element) return
+
+    const updateContrast = () => setContrast(getElementContrast(element))
+    updateContrast()
+
+    const observer = new MutationObserver(updateContrast)
+    observer.observe(element, {
+      attributes: true,
+      attributeFilter: ['style'],
+    })
+
+    return () => observer.disconnect()
   }, [])
 
   return [elem, constrast] as const
