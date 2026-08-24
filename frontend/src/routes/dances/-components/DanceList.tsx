@@ -2,21 +2,22 @@ import { DanceListItem, ID } from 'types'
 
 import { useDance } from 'services/dances'
 
-import { ItemList2 } from 'libraries/ui'
+import { ItemList2, Tag } from 'libraries/ui'
 import { ColorClass } from 'libraries/ui/classes'
 import { Edit } from 'libraries/ui/icons'
+import { lightRainbow } from 'libraries/ui/tagColorSchemes'
 import { DanceEditor } from 'components/dance/DanceEditor'
 import { InfiniteItemLoader } from 'components/InfiniteItemLoader'
-import { ColoredTag } from 'components/widgets/ColoredTag'
 import { useT, useTranslation } from 'i18n'
 
 import { DanceIsUsedIn } from './DanceIsUsedIn'
-import { DanceLink } from './DanceLink'
 import { DeleteDanceButton } from './DeleteDanceButton'
 
 interface DanceListProps {
   dances: DanceListItem[]
 }
+
+const danceColorScheme = lightRainbow(16)
 
 export function DanceList({ dances }: DanceListProps) {
   const t = useT('routes.dances.list')
@@ -34,25 +35,29 @@ export function DanceList({ dances }: DanceListProps) {
           items={dances}
           emptyText={t('noDances')}
           labelTranslator={label}
-          rowClassName="wrapped:grid wrapped:grid-cols-2 wrapped:grid-rows-2 wrapped:grid-flow-col"
+          wrapType="grid"
+          rowClassName="wrapped:grid-cols-[1fr_max-content_max-content] wrapped:grid-rows-2 wrapped:grid-flow-col"
           columns={[
             {
               key: 'name',
               width: '1fr',
-              className: 'wrapped:grow',
-              content: dance => <DanceLink dance={dance} />,
+              className: 'wrapped:font-bold wrapped:text-lg wrapped:p-2 text-ellipsis basis-0 grow',
+              link: dance => ({ to: '/dances/$danceId', params: { danceId: dance._id } }),
+              isRowLink: true,
             }, {
               key: 'category',
               width: 'minmax(min(300px,30%), max-content)',
-              className: '',
+              className: 'self-start mt-3',
+              wrappedBreakAfter: true,
               sortBy: dance => dance.category?.trim() === '' ? null : dance.category,
               content: dance => dance.category
-                ? <ColoredTag title={dance.category} />
+                ? <Tag title={dance.category} colorScheme={danceColorScheme} />
                 : <span className={ColorClass.textMuted}>{t('noCategory')}</span>,
             }, {
               key: 'danceUsage',
               width: 'max-content',
-              className: 'wrapped:text-right :not:wrapped:-me-4',
+              className: 'grow wrapped:text-right :not:wrapped:-me-4',
+              link: null,
               sortBy: (dance: DanceListItem) => [dance.events.length, !!dance.wikipageName],
               content: dance => <DanceIsUsedIn minimal events={dance.events} wikipageName={dance.wikipageName} />,
             },
