@@ -74,7 +74,7 @@ export function ItemList2<T extends { _id: string | number }, Key>({
   expandableContentLoadingMessage,
 }: ItemListProps<T, Key>) {
   const columns = columnInputs.map(col => normalizeColumnInput(col, labelTranslator))
-  const sortableColumns = columns.filter(c => c.sortBy)
+  const sortableColumns = columns.filter(c => c.enabled && c.sortBy)
   const [sort, setSort] = useState<SortState | null>(() => {
     if (typeof defaultSort === 'object') {
       return defaultSort
