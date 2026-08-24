@@ -631,28 +631,50 @@
 * Render diagram svg faster, allow prerendering or render somehow on frontend: render this and the next/previous slide to pre-render
 * Fix zipping many files
 * Fix downloading files with non latin filenames
-  Show upload progress at the top of file list (it's not visible on long lists otherwise)
+* Show upload progress at the top of file list (it's not visible on long lists otherwise)
+* Formatter for date ranges
+  * Use in front page
   ItemList 2.0
   * Basic functionality
   * Make sortable columns easier to implement
-    Migrate lists to 2.0
+  * Migrate lists to 2.0
+  * Use first sortable as default sort
+  * isTable by default?
+  * defaultColumnWidth
+  * Small screen sorting: single column and separate sort menu and options button
+  * Hover style for rows
+  * Actions column
+    * Basic support
+    * Expand action
+  * Auto-translate labels, use id as key for translation and sorting
+  * Row link support
+    wrapStyle: { grid/flex cols/rows: string | number }
+    Style row link hover?
+    Style row link focus?
+    Translation for "Sort by" in sort menu
+    Separate container components
     Hidable columns
     Easier and nicer layouting for small screen "cards"
-    Actions column
-      Basic support
-      Expand action
-      Overflow menu
+    Actions overflow menu?
     Selection improvements
-      Take selection state as prop?
+    * Take selection state as prop
       Allow selecting ranges with shift?
+* Refactor ui-showcases to own files each
   File list
-    Sortable columns
+  * Sortable columns
     Better small screen layout
     Do we need to show file dates at all?
     Actions inside sub-menu
       Component for action menus that folds when screen is small?
-  Formatter for date ranges
-    Use in front page
+* DanceCategoryTag component
+* Tag 2.0
+  * Basic functionality
+  * tag prop
+  * Selected state
+  * Clickable state
+  * Tailwind color scheme?
+  Separate color schemes for stuff defined inside the components using them?
+  Migrate rest of tags to new tag component
 
   Fix read-only dance form dance instructions overflowing
   Formation slide part two
@@ -661,6 +683,13 @@
     Copy diagram function?
     Diagrams without ballroom
       Allow usage
+
+  Add volunteers, users, ballrooms to breadcrumb submenu
+  Add gap between workshop cards in event frontpage
+  Open newly created document when create button pushed
+  Document date column
+  Is infinite loader necessary in dances any more. It prevents sorting working properly
+  Use in slides: https://developer.mozilla.org/en-US/docs/Web/API/WakeLock
   
   Dance difficulty tags
     Tag service
@@ -713,8 +742,8 @@
       allow choosing none/automatically
 
   nice-to-haves
+  * Sortable headers for formationDiagram
     Tooltips don't work in chrome/edge on second fabric editor on page
-    Sortable headers for formationDiagram
     Frontend validation for duplicate ballroom names
     Versioning views
       Ballroom versioning
