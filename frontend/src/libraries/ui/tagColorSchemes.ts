@@ -19,7 +19,7 @@ const toStyle = (space: string, colors: (number | string)[] | undefined) => colo
   ? `${space}(${colors.join(' ')})`
   : undefined
 
-function colorScheme(colorCount: number, fun: (i: number, selected: boolean | undefined) => TagColors): ColorScheme {
+export function colorScheme(colorCount: number, fun: (i: number, selected: boolean | undefined) => TagColors): ColorScheme {
   const scheme = (i: number, selected: boolean | undefined) => fun(i % colorCount, selected)
   scheme.colorCount = colorCount
   return scheme

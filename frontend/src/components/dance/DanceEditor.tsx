@@ -11,10 +11,10 @@ import { Cross, Edit } from 'libraries/ui/icons'
 import { AddFormationDiagramForm } from 'components/formationDiagram/AddFormationDiagramForm'
 import { FormationDiagramChooser } from 'components/formationDiagram/FormationDiagramChooser'
 import { FormationDiagramEditor } from 'components/formationDiagram/FormationDiagramEditor'
-import { ColoredTag } from 'components/widgets/ColoredTag'
 import { DurationField } from 'components/widgets/DurationField'
 import { useT, useTranslation } from 'i18n'
 
+import { DanceCategoryTag } from './DanceCategoryTag'
 import { Field, Form, Input, useDanceEditorState, useOnChangeFor } from './DanceForm'
 import { DanceSlidePreview } from './DanceSlidePreview'
 import DanceWikiPreview from './DanceWikiPreview'
@@ -122,7 +122,7 @@ function Suggestions(
   return <div>
     {t('suggestions')}:
     {suggestions.map(suggestion =>
-      <ColoredTag key={suggestion} small title={suggestion} onClick={() => onChange(suggestion)} />,
+      <DanceCategoryTag key={suggestion} small title={suggestion} onClick={() => onChange(suggestion)} />,
     )}
   </div>
 }

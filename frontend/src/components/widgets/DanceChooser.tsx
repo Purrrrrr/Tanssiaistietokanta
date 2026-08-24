@@ -11,6 +11,7 @@ import { DanceIdSet } from 'components/event/EventProgramForm/eventMetadata'
 import { useT } from 'i18n'
 
 import { ColoredTag } from './ColoredTag'
+import { DanceCategoryTag } from 'components/dance/DanceCategoryTag'
 
 export type DanceChooserItem = Omit<DanceListItem, 'events'>
 
@@ -91,7 +92,7 @@ export function DanceChooser({
       return <div className={'flex flex-wrap items-center grow ' + CssClass.inputBox}>
         <input className={CssClass.inputElement + ' grow'} {...props} />
         <span>
-          {category && <ColoredTag small {...category} />}
+          {category && <DanceCategoryTag small {...category} />}
           {workshop && <ColoredTag small tag={workshop.abbreviation ?? undefined} title={workshop.name} />}
         </span>
       </div>
@@ -104,7 +105,7 @@ export function DanceChooser({
       const category = getCategory(item)
       return <div className="flex justify-between items-center grow">
         <span>{item.name}</span>
-        {category && <ColoredTag small {...category} />}
+        {category && <DanceCategoryTag small {...category} />}
       </div>
     }}
   />

@@ -1,8 +1,8 @@
 import { useDances } from 'services/dances'
 
 import { Callout } from 'libraries/ui'
+import { DanceCategoryTag } from 'components/dance/DanceCategoryTag'
 import { useChosenDanceIds } from 'components/event/EventProgramForm/eventMetadata'
-import { ColoredTag } from 'components/widgets/ColoredTag'
 import { useT } from 'i18n'
 import { sortedBy } from 'utils/sorted'
 
@@ -27,7 +27,7 @@ export function DanceCategoryStats() {
 
   return <Callout title={t('title')}>
     {categories.map(category =>
-      <ColoredTag key={category.name} tag={category.count} title={category.name} />,
+      <DanceCategoryTag key={category.name} tag={category.count} title={category.name} className="me-1" />,
     )}
   </Callout>
 }

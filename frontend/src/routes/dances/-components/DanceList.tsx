@@ -2,10 +2,10 @@ import { DanceListItem, ID } from 'types'
 
 import { useDance } from 'services/dances'
 
-import { ItemList2, Tag } from 'libraries/ui'
+import { ItemList2 } from 'libraries/ui'
 import { ColorClass } from 'libraries/ui/classes'
 import { Edit } from 'libraries/ui/icons'
-import { lightRainbow } from 'libraries/ui/tagColorSchemes'
+import { DanceCategoryTag } from 'components/dance/DanceCategoryTag'
 import { DanceEditor } from 'components/dance/DanceEditor'
 import { InfiniteItemLoader } from 'components/InfiniteItemLoader'
 import { useT, useTranslation } from 'i18n'
@@ -16,8 +16,6 @@ import { DeleteDanceButton } from './DeleteDanceButton'
 interface DanceListProps {
   dances: DanceListItem[]
 }
-
-const danceColorScheme = lightRainbow(16)
 
 export function DanceList({ dances }: DanceListProps) {
   const t = useT('routes.dances.list')
@@ -51,7 +49,7 @@ export function DanceList({ dances }: DanceListProps) {
               wrappedBreakAfter: true,
               sortBy: dance => dance.category?.trim() === '' ? null : dance.category,
               content: dance => dance.category
-                ? <Tag title={dance.category} colorScheme={danceColorScheme} />
+                ? <DanceCategoryTag title={dance.category} />
                 : <span className={ColorClass.textMuted}>{t('noCategory')}</span>,
             }, {
               key: 'danceUsage',

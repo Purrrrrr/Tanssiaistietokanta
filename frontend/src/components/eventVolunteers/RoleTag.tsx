@@ -1,8 +1,9 @@
 import { EventRole } from 'types'
 
-import { ColoredTag, ColoredTagProps } from 'components/widgets/ColoredTag'
+import { Tag, TagProps } from 'libraries/ui'
+import { tailwindLight } from 'libraries/ui/tagColorSchemes'
 
-export interface RoleTagProps extends Omit<ColoredTagProps, 'hashSource' | 'title'> {
+export interface RoleTagProps extends Omit<TagProps, 'hashSource' | 'title' | 'role'> {
   role: Pick<EventRole, '_id' | 'name' | 'order'>
   icon?: React.ReactNode
   title?: string
@@ -10,8 +11,9 @@ export interface RoleTagProps extends Omit<ColoredTagProps, 'hashSource' | 'titl
 }
 
 export function RoleTag({ role, icon, title, onSetRole, ...props }: RoleTagProps) {
-  return <ColoredTag
+  return <Tag
     {...props}
+    colorScheme={tailwindLight}
     hashSource={role.order * 2 - 1}
     title=""
     onClick={onSetRole
@@ -21,5 +23,5 @@ export function RoleTag({ role, icon, title, onSetRole, ...props }: RoleTagProps
   >
     {title ?? role.name}
     {icon && <span className="ms-1 opacity-70">{icon}</span>}
-  </ColoredTag>
+  </Tag>
 }
