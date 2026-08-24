@@ -82,33 +82,29 @@ body {
   color:#1c2127;
 }
 
-p{
-  margin-bottom:10px;
-  margin-top:0;
-}
+@layer base {
+  p{
+    margin-bottom:10px;
+    margin-top:0;
+  }
 
-strong{
-  font-weight:600;
-}
+  strong{
+    font-weight:600;
+  }
 
-::-moz-selection {
-  @apply bg-selection;
-}
-::selection{
-  @apply bg-selection;
-}
+  ::-moz-selection {
+    @apply bg-selection;
+  }
+  ::selection{
+    @apply bg-selection;
+  }
 
-:focus{
-  outline:rgba(45, 114, 210, 0.6) solid 2px;
-  outline-offset:2px;
-  -moz-outline-radius:6px;
-}
-@supports selector(:focus-visible) {
   :focus {
+    -moz-outline-radius:6px;
     outline:none;
   }
-  :focus-visible:not(.bp5-input, .bp5-input-appearance) {
-    outline:rgba(45, 114, 210, 0.6) solid 2px !important;
+  :focus-visible:is(:not(.bp5-input, .bp5-input-appearance)) {
+    outline:rgba(45, 114, 210, 0.6) solid 2px;
     outline-offset:2px;
   }
 }
@@ -400,9 +396,18 @@ strong{
         @apply rounded-tr-none;
       }
     }
+    .itemlist-header .selector {
+      @apply px-2 h-6;
+    }
 
     .itemlist-row {
-      @apply p-2 gap-4 flex-wrap items-center nth-of-type-[even]:bg-gray-100;
+      @apply p-2 gap-4 flex-wrap items-center;
+    }
+    .itemlist-link {
+      @apply flex items-center;
+      &:focus-visible[tabindex="0"] {
+        outline: none;
+      }
     }
     .wrapped-label, .wrapped-breaker {
       display: none;
@@ -415,9 +420,11 @@ strong{
       @apply max-md:[--wrapped:1];
     }
     @container style(--wrapped) {
+      &.wrap-type-flex .itemlist-row {
+        @apply flex;
+      }
       .itemlist-row {
-        @apply flex gap-1;
-
+        @apply gap-1;
         &:has(> .selector) {
           padding-left: 40px;
           position: relative;
@@ -449,9 +456,6 @@ strong{
         }
         .itemlist-sorted-header, .itemlist-sort-menu, .selector {
           display: block;
-        }
-        .selector {
-          padding: 10px;
         }
         .itemlist-sorted-header {
           flex: 1 1 auto;

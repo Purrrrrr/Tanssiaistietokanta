@@ -1,16 +1,17 @@
+import { LinkProps } from '@tanstack/react-router'
 import { ReactNode } from 'react'
 
 import { Accessor, PathAccessor, toAccessorFn } from 'libraries/common/accessor'
 import { SortKey } from 'utils/sorted'
 
-export interface Column<T> extends CommonProps {
+export interface Column<T> extends CommonProps<T> {
   id: number | string
   label: ReactNode
   content: (item: T, state: RowState) => React.ReactNode
   sortBy?: null | SortKey<T>
 }
 
-export type ColumnInput<T, Key> = Partial<CommonProps> & (
+export type ColumnInput<T, Key> = Partial<CommonProps<T>> & (
   | {
     /** Defines the translation key for the column label. If not provided, the label will be derived from the key. */
     key: Key
@@ -62,10 +63,12 @@ export interface RowState {
   setExpanded: (expanded: boolean) => void
 }
 
-interface CommonProps {
+interface CommonProps<T> {
   width: string
   labelInfo?: React.ReactNode
   className?: string
+  link: LinkGetter<T> | null | undefined
+  isRowLink: boolean
   wrapLabeled: boolean
   wrappedBreakAfter: boolean
   headerClassName?: string
@@ -76,9 +79,13 @@ interface CommonProps {
   enabled: boolean // Should this column exist in this table? True by default. Used to exclude columns in certain tables without removing them from the column list
 }
 
-export const columnDefaults: CommonProps = {
+export type LinkGetter<T> = (item: T, index: number) => LinkProps
+
+export const columnDefaults: CommonProps<unknown> = {
   width: 'auto',
   className: '',
+  link: undefined,
+  isRowLink: false,
   headerClassName: '',
   wrapLabeled: false,
   wrappedBreakAfter: false,

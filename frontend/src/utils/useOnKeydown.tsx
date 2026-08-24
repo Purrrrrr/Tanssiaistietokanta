@@ -29,6 +29,7 @@ export function isInputTag(target: HTMLElement) {
   if (!target) return false
   if (inputTags.includes(target.tagName)) return true
   if (target.role === 'application') return true
+  if (target.popover) return true
   if (target.isContentEditable) return true
   if (target.parentElement) return isInputTag(target.parentElement)
 }
