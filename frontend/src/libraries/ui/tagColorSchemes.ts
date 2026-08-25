@@ -52,7 +52,7 @@ export const rainbow = (count: number, hueCorrection: number = 0.03) => colorSch
         : 70 + correctionAround(position, 0.07, 0.12) * 8 + selectedValue(selected, 0, 0, 15),
     ]),
     text: toStyle('hsl', [hue, 0, isWhite ? 100 : 0]),
-    border: toStyle('hsl', [hue, 20, 65]),
+    border: toStyle('hsl', [hue, 20, 45]),
     counterBackground: toStyle('hsl', [hue, 90, 92 + selectedValue(selected, 0, -5, 0)]),
     counterText: toStyle('hsl', [hue, 90, 22]),
   } satisfies TagColors
