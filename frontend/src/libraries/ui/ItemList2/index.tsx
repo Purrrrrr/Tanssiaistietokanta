@@ -290,14 +290,17 @@ function Cell<T>({ isTable, column, item, rowState }: {
   const label = column.wrapLabeled ? <span className="wrapped-label me-1">{column.label}:{' '}</span> : null
   let children = label ? <>{label}{content}</> : content
   if (column.link) {
-    children = <Link {...column.link(item, rowState.index)} className="w-full h-full block -m-2 p-2 itemlist-row-link">
+    children = <Link
+      {...column.link(item, rowState.index)}
+      className={classNames('w-full h-full block -m-2 p-2', column.isRowLink && 'itemlist-row-link')}
+    >
       {children}
     </Link>
   }
   const CellElement = isTable ? 'td' : 'span'
 
   return <>
-    <CellElement className={column.className}>{children}</CellElement>
+    <CellElement className={classNames(column.className, column.isRowLink && 'itemlist-row-link-cell')}>{children}</CellElement>
     {column.wrappedBreakAfter && <CellElement className="wrapped-breaker" />}
   </>
 }

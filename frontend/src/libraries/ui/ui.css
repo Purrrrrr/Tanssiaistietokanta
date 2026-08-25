@@ -71,6 +71,10 @@
 @utility bg-mix-alpha-* {
   --bg-mix-alpha: --value(integer);
 }
+@utility focus-outline {
+  outline:rgba(45, 114, 210, 0.6) solid 2px;
+  outline-offset:2px;
+}
 
 body {
   font-family: "Lato", sans-serif;
@@ -104,8 +108,7 @@ body {
     outline:none;
   }
   :focus-visible:is(:not(.bp5-input, .bp5-input-appearance)) {
-    outline:rgba(45, 114, 210, 0.6) solid 2px;
-    outline-offset:2px;
+    @apply focus-outline;
   }
 }
 
@@ -402,6 +405,16 @@ body {
 
     .itemlist-row {
       @apply p-2 gap-4 flex-wrap items-center;
+
+      &:hover:not(:has(:is(button,a):hover)) > .itemlist-row-link-cell > .itemlist-row-link {
+        @apply underline;
+      }
+      &:has(> .itemlist-row-link-cell > .itemlist-row-link:focus-visible) {
+        @apply focus-outline z-1;
+      }
+      .itemlist-row-link:focus-visible {
+        outline: none;
+      }
     }
     .itemlist-link {
       @apply flex items-center;
