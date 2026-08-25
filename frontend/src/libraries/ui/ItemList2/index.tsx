@@ -14,6 +14,7 @@ import Collapse from '../Collapse'
 import { Link } from '../Link'
 import { MenuButton } from '../MenuButton'
 import { Column, columnDefaults, ColumnInput, LinkGetter, normalizeColumnInput, RowState } from './column'
+import { useT } from './i18n'
 import { SelectionBox } from './SelectionBox'
 import { SortButton } from './SortButton'
 
@@ -161,9 +162,10 @@ function ColumnOptionsMenu<T>({ columns, sort, setSort }: {
   setSort: (sort: SortState) => void
 }) {
   const hasSortableColumns = columns.filter(c => c.sortBy).length > 1
+  const t = useT('')
   return hasSortableColumns &&
     <MenuButton containerClassname="font-normal" buttonProps={{ className: 'w-full justify-end pe-4', minimal: true, rightIcon: <Menu /> }}>
-      <div className="px-2 py-1 text-sm text-gray-500">Sort by</div>
+      <div className="px-2 py-1 text-sm text-gray-500">{t('sortBy')}</div>
       {columns.map(({ id, sortBy, label }) => {
         if (!sortBy) return null
         const selected = sort?.key === id
