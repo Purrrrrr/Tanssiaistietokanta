@@ -5,7 +5,7 @@ import { useCurrentUser } from 'services/users'
 
 import { RequirePermissions } from 'libraries/access-control'
 import { useFormatDateRange } from 'libraries/i18n/dateTime'
-import { ItemList2, Link } from 'libraries/ui'
+import { ItemList, Link } from 'libraries/ui'
 import { Add } from 'libraries/ui/icons'
 import { PageSection } from 'libraries/ui/PageSection'
 import { LoadingState } from 'components/LoadingState'
@@ -60,7 +60,7 @@ function EventList() {
           {t('loginToEdit.toEdit')}
         </p>
       }
-      <ItemList2 items={events} emptyText={t('noEvents')} defaultSort={{ key: 'beginDate', direction: 'desc' }} wrapBreakpoint="none" labelTranslator={t} columns={[
+      <ItemList items={events} emptyText={t('noEvents')} defaultSort={{ key: 'beginDate', direction: 'desc' }} wrapBreakpoint="none" labelTranslator={t} columns={[
         {
           key: 'name',
           content: event =>

@@ -5,7 +5,7 @@ import { DocumentListItem as Document, DocumentOwner } from 'types'
 import { useDocuments } from 'services/documents'
 
 import { DocumentViewer } from 'libraries/lexical'
-import { ButtonProps, ItemList2, Link, PageSection } from 'libraries/ui'
+import { ButtonProps, ItemList, Link, PageSection } from 'libraries/ui'
 import { Edit } from 'libraries/ui/icons'
 import { DeleteDocumentButton } from 'components/document/DeleteDocumentButton'
 import { NavigateButton } from 'components/widgets/NavigateButton'
@@ -33,7 +33,7 @@ export function DocumentList({ title, owner, owningId }: DocumentListProps) {
     title={title}
     toolbar={<CreateDocumentButton owner={owner} owningId={owningId} />}
   >
-    <ItemList2
+    <ItemList
       items={documents}
       emptyText={t('noDocuments')}
       expandableContent={document => <DocumentViewer document={document.content} className="border-t border-stone-300 p-4 bg-white" />}

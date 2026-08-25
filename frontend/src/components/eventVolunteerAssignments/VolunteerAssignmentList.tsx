@@ -6,7 +6,7 @@ import { Event, EventVolunteerAssignment, ID } from 'types'
 import { useSetEventVolunteerAssignmentRegistrationStatus, useSetEventVolunteerAssignmentWorkshopInstance } from 'services/eventVolunteerAssignments'
 
 import { useMultipleSelection } from 'libraries/common/selection/useMultipleSelection'
-import { Callout, FormGroup, ItemList2, ToolbarContainer } from 'libraries/ui'
+import { Callout, FormGroup, ItemList, ToolbarContainer } from 'libraries/ui'
 import { RoleTag } from 'components/eventVolunteers/RoleTag'
 import { useT } from 'i18n'
 
@@ -75,7 +75,7 @@ export function VolunteerAssignmentList({
         }
       </ToolbarContainer>
     )}
-    <ItemList2
+    <ItemList
       items={assignments}
       emptyText={t('noAssignments')}
       selection={selector}

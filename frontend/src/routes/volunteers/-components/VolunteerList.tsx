@@ -5,7 +5,7 @@ import { usePatchVolunteer } from 'services/volunteers'
 
 import { useMultipleSelection } from 'libraries/common/selection/useMultipleSelection'
 import { patchStrategy, useAutosavingState } from 'libraries/forms'
-import { ItemList2 } from 'libraries/ui'
+import { ItemList } from 'libraries/ui'
 import { Edit } from 'libraries/ui/icons'
 import { VolunteeredIn } from 'components/volunteers/VolunteeredIn'
 import { useT } from 'i18n'
@@ -33,7 +33,7 @@ export function VolunteerList({ volunteers = [] }: VolunteerListProps) {
         <MergeVolunteersButton selectedVolunteers={selector.selected} onMerge={selector.clearSelection} />
       }
     </div>
-    <ItemList2
+    <ItemList
       id="volunteer-list"
       items={volunteers}
       emptyText={t('routes.volunteers.noVolunteers')}

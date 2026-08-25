@@ -3,7 +3,7 @@ import { useMemo } from 'react'
 import { booleanProp, numberProp, selectorProp, showcase } from '../types'
 
 import { useMultipleSelection } from 'libraries/common/selection/useMultipleSelection'
-import { ItemList2 } from 'libraries/ui/ItemList2'
+import { ItemList } from 'libraries/ui'
 import { Tag } from 'libraries/ui/Tag'
 import { ColorScheme, defaultScheme, lightRainbow, rainbow, tailwindLight } from 'libraries/ui/tagColorSchemes'
 
@@ -37,7 +37,7 @@ export function TagShowcase({ selectable, small, tag, randomSorting, colors, nrC
 
   return <div>
     <p>Tags presented in a list to show the color scheme. Sort by random number for a more realistic distribution of values.</p>
-    <ItemList2
+    <ItemList
       selection={selectable ? selection : undefined}
       items={items}
       emptyText="No colors"

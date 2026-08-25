@@ -4,7 +4,7 @@ import { usePatchEventVolunteer } from 'services/eventVolunteers'
 
 import { useMultipleSelection } from 'libraries/common/selection/useMultipleSelection'
 import { patchStrategy, useAutosavingState } from 'libraries/forms'
-import { FormGroup, ItemList2 } from 'libraries/ui'
+import { FormGroup, ItemList } from 'libraries/ui'
 import { Edit, Pin, Search } from 'libraries/ui/icons'
 import { RoleTag } from 'components/eventVolunteers/RoleTag'
 import { VolunteerStatusSelector } from 'components/eventVolunteers/VolunteerStatusSelector'
@@ -44,7 +44,7 @@ export function EventVolunteerList({ eventVolunteers, readOnly, currentRole, onS
         }
       </div>
     </div>
-    <ItemList2
+    <ItemList
       items={eventVolunteers}
       emptyText={t('noVolunteers')}
       selection={selector}

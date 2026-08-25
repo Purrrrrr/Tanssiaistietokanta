@@ -7,7 +7,7 @@ import { useFiles } from 'services/files'
 import { useRights } from 'libraries/access-control'
 import { useMultipleSelection } from 'libraries/common/selection/useMultipleSelection'
 import { useFormatDateTime } from 'libraries/i18n/dateTime'
-import { ItemList2, PageSection, RegularLink } from 'libraries/ui'
+import { ItemList, PageSection, RegularLink } from 'libraries/ui'
 import { useShowAlert } from 'libraries/ui/hooks'
 import { AddButton } from 'components/widgets/AddButton'
 import { useT } from 'i18n'
@@ -109,7 +109,7 @@ export default function FileList({ title, owner, owningId, path }: FileListProps
   >
     <UploadProgressList uploads={uploads} />
     <FileDropZone enabled={canUpload} onDrop={onDragAndDrop}>
-      <ItemList2
+      <ItemList
         items={files}
         emptyText={T('noFiles')}
         selection={selector}

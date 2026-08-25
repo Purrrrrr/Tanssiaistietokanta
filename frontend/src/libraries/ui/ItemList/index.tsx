@@ -51,7 +51,7 @@ const specialColumnDefaults = {
   link: null,
 } as const
 
-export function ItemList2<T extends { _id: string | number }, Key>({
+export function ItemList<T extends { _id: string | number }, Key>({
   id,
   isTable = true,
   wrapBreakpoint = 'sm',

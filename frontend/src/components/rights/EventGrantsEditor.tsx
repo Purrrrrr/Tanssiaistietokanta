@@ -6,7 +6,7 @@ import { useCurrentUser, useUsers } from 'services/users'
 import { useRight } from 'libraries/access-control'
 import { formFor } from 'libraries/forms'
 import { Fieldset } from 'libraries/formsV2/components/containers/Fieldset'
-import { H2, ItemList2 } from 'libraries/ui'
+import { H2, ItemList } from 'libraries/ui'
 import { DeleteButton } from 'components/widgets/DeleteButton'
 import { useT } from 'i18n'
 import randomId from 'utils/randomId'
@@ -58,7 +58,7 @@ export function EventGrantsEditor({ eventId }: { eventId?: string }) {
       <H2 className="mb-4">{t('accessRights')}</H2>
       <Field path="accessControl.viewAccess" label={t('allowedViewers')} labelStyle="beside" component={ViewAccessSelector} readOnly={!canEdit} />
       <Fieldset label={t('grants')} className="w-max">
-        <ItemList2
+        <ItemList
           marginClass=""
           items={grantRows}
           emptyText={t('noGrants')}

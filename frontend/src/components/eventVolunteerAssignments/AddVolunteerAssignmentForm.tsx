@@ -7,7 +7,7 @@ import { NewValue } from 'libraries/forms/types'
 import { useCreateEventVolunteerAssignment } from 'services/eventVolunteerAssignments'
 
 import { formFor, SubmitButton, Validate } from 'libraries/forms'
-import { Card, DialogCloseButton, FormGroup, H2, ItemList2 } from 'libraries/ui'
+import { Card, DialogCloseButton, FormGroup, H2, ItemList } from 'libraries/ui'
 import { Trash } from 'libraries/ui/icons'
 import { RoleTag } from 'components/eventVolunteers/RoleTag'
 import { useT, useTranslation } from 'i18n'
@@ -121,7 +121,7 @@ function AssignmentList({ formData, currentAssignments, event }: {
   const allAssignments = [...currentAssignments, ...assignments]
   const hasWorkshops = assignments.some(a => a.workshop)
   return <FormGroup label={t('assignmentsToAdd')} labelFor="add-volunteer-role">
-    <ItemList2 items={assignments} emptyText={t('noAssignmentsAdded')} defaultSort={null} labelTranslator={t}
+    <ItemList items={assignments} emptyText={t('noAssignmentsAdded')} defaultSort={null} labelTranslator={t}
       columns={[
         {
           key: 'volunteer',

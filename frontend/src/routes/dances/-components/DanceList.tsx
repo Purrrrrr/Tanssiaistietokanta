@@ -2,7 +2,7 @@ import { DanceListItem, ID } from 'types'
 
 import { useDance } from 'services/dances'
 
-import { ItemList2 } from 'libraries/ui'
+import { ItemList } from 'libraries/ui'
 import { ColorClass } from 'libraries/ui/classes'
 import { Edit } from 'libraries/ui/icons'
 import { DanceCategoryTag } from 'components/dance/DanceCategoryTag'
@@ -29,7 +29,7 @@ export function DanceList({ dances }: DanceListProps) {
     }
     <InfiniteItemLoader items={dances}>
       {dances =>
-        <ItemList2
+        <ItemList
           items={dances}
           emptyText={t('noDances')}
           labelTranslator={label}

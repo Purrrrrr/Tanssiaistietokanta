@@ -3,7 +3,7 @@ import { Ballroom } from 'types'
 import { usePatchBallroom } from 'services/ballrooms'
 
 import { patchStrategy, useAutosavingState } from 'libraries/forms'
-import { ItemList2 } from 'libraries/ui'
+import { ItemList } from 'libraries/ui'
 import { Edit } from 'libraries/ui/icons'
 import { useT, useTranslation } from 'i18n'
 
@@ -25,7 +25,7 @@ export function BallroomList({ ballrooms }: BallroomListProps) {
     <div className="mb-4">
       {ballrooms && ballrooms?.length > 0 && t('Nballrooms', { count: ballrooms.length })}
     </div>
-    <ItemList2
+    <ItemList
       items={ballrooms}
       emptyText={t('noBallrooms')}
       expandableContent={ballroom => <BallroomRowEditor item={ballroom} />}

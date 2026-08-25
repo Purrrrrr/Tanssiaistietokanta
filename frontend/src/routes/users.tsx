@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { useUsers } from 'services/users'
 
-import { ItemList2 } from 'libraries/ui'
+import { ItemList } from 'libraries/ui'
 import { LoadingState } from 'components/LoadingState'
 import { Page } from 'components/Page'
 import { useT } from 'i18n'
@@ -21,7 +21,7 @@ function UsersPage() {
 
   return <Page title={t('pageTitle')} background="ball">
     <LoadingState {...requestState} />
-    <ItemList2
+    <ItemList
       items={users}
       emptyText={t('noUsers')}
       className="max-w-200"

@@ -6,7 +6,7 @@ import { formatBallroom } from 'services/ballrooms'
 
 import { SyncStatus } from 'libraries/forms'
 import { DocumentContentEditor, DocumentContentEditorProps, emptyDocument, isEmptyDocument } from 'libraries/lexical'
-import { Button, Collapse, ItemList2, PageSection } from 'libraries/ui'
+import { Button, Collapse, ItemList, PageSection } from 'libraries/ui'
 import { Cross, Edit } from 'libraries/ui/icons'
 import { AddFormationDiagramForm } from 'components/formationDiagram/AddFormationDiagramForm'
 import { FormationDiagramChooser } from 'components/formationDiagram/FormationDiagramChooser'
@@ -164,7 +164,7 @@ export function FormationDiagramsSection({ dance, onModifyFormationDiagrams }: {
         onSubmit={formationDiagram => onModifyFormationDiagrams([...dance.formationDiagrams, formationDiagram])}
       />
     </Collapse>
-    <ItemList2
+    <ItemList
       items={dance.formationDiagrams}
       emptyText={t('noFormationDiagrams')}
       expandableContent={diagram => <FormationDiagramEditor formationDiagram={diagram} />}

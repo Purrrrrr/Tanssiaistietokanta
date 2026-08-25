@@ -4,7 +4,7 @@ import { Volunteer } from 'types'
 
 import { usePatchVolunteer } from 'services/volunteers'
 
-import { Button, Dialog, FormGroup, ItemList2 } from 'libraries/ui'
+import { Button, Dialog, FormGroup, ItemList } from 'libraries/ui'
 import { ManyToOne } from 'libraries/ui/icons'
 import { useT, useTranslation } from 'i18n'
 
@@ -67,7 +67,7 @@ function MergeVolunteersDialog({ selectedVolunteers, isOpen, onClose, onMergeSuc
     <form onSubmit={e => { e.preventDefault(); mergeVolunteers() }}>
       <Dialog.Body>
         <FormGroup label={t('keepVolunteerLabel')} labelFor="canonical-volunteer">
-          <ItemList2
+          <ItemList
             items={selectedVolunteers}
             emptyText=""
             className="bg-white rounded-lg"
