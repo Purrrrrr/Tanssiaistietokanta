@@ -634,6 +634,15 @@
 * Show upload progress at the top of file list (it's not visible on long lists otherwise)
 * Formatter for date ranges
   * Use in front page
+* Refactor ui-showcases to own files each
+* DanceCategoryTag component
+* Tag 2.0
+  * Basic functionality
+  * tag prop
+  * Selected state
+  * Clickable state
+  * Tailwind color scheme?
+  * Migrate rest of tags to new tag component
   ItemList 2.0
   * Basic functionality
   * Make sortable columns easier to implement
@@ -648,33 +657,24 @@
     * Expand action
   * Auto-translate labels, use id as key for translation and sorting
   * Row link support
+  * Style row link hover?
+  * Style row link focus?
+  * Translation for "Sort by" in sort menu
+  * Drop 2 from name
     wrapStyle: { grid/flex cols/rows: string | number }
-    Style row link hover?
-    Style row link focus?
-    Translation for "Sort by" in sort menu
-    Separate container components
     Hidable columns
     Easier and nicer layouting for small screen "cards"
     Actions overflow menu?
     Selection improvements
     * Take selection state as prop
       Allow selecting ranges with shift?
-* Refactor ui-showcases to own files each
   File list
   * Sortable columns
     Better small screen layout
     Do we need to show file dates at all?
     Actions inside sub-menu
       Component for action menus that folds when screen is small?
-* DanceCategoryTag component
-* Tag 2.0
-  * Basic functionality
-  * tag prop
-  * Selected state
-  * Clickable state
-  * Tailwind color scheme?
-  Separate color schemes for stuff defined inside the components using them?
-  Migrate rest of tags to new tag component
+  Separate tag color schemes for stuff defined inside the components using them?
 
   Fix read-only dance form dance instructions overflowing
   Formation slide part two
