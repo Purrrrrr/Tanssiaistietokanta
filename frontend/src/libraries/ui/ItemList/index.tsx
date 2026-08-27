@@ -110,7 +110,7 @@ export function ItemList<T extends { _id: string | number }, Key>({
     visibleColumns.push({
       ...specialColumnDefaults,
       id: 'itemlist-actions',
-      label: <ColumnOptionsMenu columns={columns} sort={sort} setSort={setSort} />,
+      label: <ColumnOptionsMenu columns={columns} sort={sort} setSort={setSort} hasActions={actions != null} />,
       content: (item, rowState) => <>
         {actions && actions(item, rowState.index)}
         {expandableContent && <Button
@@ -168,15 +168,16 @@ export function ItemList<T extends { _id: string | number }, Key>({
 
 const toGridSizes = (sizes: number | string) => typeof sizes === 'number' ? `repeat(${sizes}, minmax(0, 1fr))` : sizes
 
-function ColumnOptionsMenu<T>({ columns, sort, setSort }: {
+function ColumnOptionsMenu<T>({ columns, sort, setSort, hasActions }: {
   columns: Column<T>[]
   sort: SortState | null
   setSort: (sort: SortState) => void
+  hasActions: boolean
 }) {
   const hasSortableColumns = columns.filter(c => c.sortBy).length > 1
   const t = useT('')
   return hasSortableColumns &&
-    <MenuButton containerClassname="font-normal" buttonProps={{ className: 'w-full justify-end pe-4', minimal: true, rightIcon: <Menu /> }}>
+    <MenuButton containerClassname="font-normal" buttonProps={{ className: classNames('w-full justify-end pe-4', hasActions || 'not-reflowed:hidden'), minimal: true, rightIcon: <Menu /> }}>
       <div className="px-2 py-1 text-sm text-gray-500">{t('sortBy')}</div>
       {columns.map(({ id, sortBy, label }) => {
         if (!sortBy) return null
