@@ -13,6 +13,7 @@ export function useMultipleSelection<T extends { _id: ID }>(
 
   return {
     selected: allItems.filter(isSelected),
+    setSelectedItems: (newSelected: T[]) => setSelected(newSelected.map(item => item._id)),
     clearSelection: () => setSelected([]),
     selectAllProps: {
       checked: allSelected,

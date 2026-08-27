@@ -38,7 +38,8 @@ export function VolunteerAssignmentList({
   const status = useT('domain.eventVolunteer.shortEventVolunteerStatus')
   const [setAssignmentWorkshopInstance] = useSetEventVolunteerAssignmentWorkshopInstance()
   const [setAssignmentRegistrationStatus] = useSetEventVolunteerAssignmentRegistrationStatus()
-  const { selected, ...selector } = useMultipleSelection(assignments)
+  const selector = useMultipleSelection(assignments)
+  const { selected } = selector
 
   const setInstanceIds = async (assignment: EventVolunteerAssignment, instanceIds: ID[] | null) => {
     const workshopInstances = event.workshops.find(w => w._id === assignment.workshop?._id)?.instances ?? []

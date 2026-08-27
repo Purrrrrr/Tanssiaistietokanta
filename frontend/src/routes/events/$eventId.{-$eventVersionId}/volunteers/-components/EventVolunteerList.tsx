@@ -28,7 +28,8 @@ export function EventVolunteerList({ eventVolunteers, readOnly, currentRole, onS
   const label = useT('domain.eventVolunteer')
 
   const addedVolunteers = eventVolunteers.map(ev => ev.volunteer)
-  const { selected, ...selector } = useMultipleSelection(eventVolunteers)
+  const selector = useMultipleSelection(eventVolunteers)
+  const { selected } = selector
 
   return <>
     <div className="flex gap-2 justify-between items-center mb-2">

@@ -1,5 +1,6 @@
 export interface SelectionApi<T> {
   selected: T[]
+  setSelectedItems: (selected: T[]) => void
   clearSelection: () => void
   selectAllProps: SelectorProps
   selectItemProps: (item: T) => SelectorProps
