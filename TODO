@@ -668,7 +668,9 @@
     Actions overflow menu?
     Selection improvements
     * Take selection state as prop
-      Allow selecting ranges with shift?
+    * Allow selecting ranges with shift?
+    * Selected row style?
+      Make shift click work when selector checkbox label is clicked
   File list
   * Sortable columns
     Better small screen layout
