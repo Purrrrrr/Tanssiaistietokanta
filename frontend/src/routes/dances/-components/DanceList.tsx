@@ -84,5 +84,5 @@ function DanceListRowEditor({ danceId }: { danceId: ID }) {
   const result = useDance({ id: danceId })
   if (!result.data?.dance) return null
 
-  return <DanceEditor dance={result.data.dance} className="p-2 border-gray-200 border-t" />
+  return <DanceEditor dance={result.data.dance} className="p-2" />
 }

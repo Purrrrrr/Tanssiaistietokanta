@@ -33,7 +33,7 @@ export function DanceEditor({ dance, className }: DanceEditorProps) {
       <SyncStatus className="mt-2" floatRight state={state} />
       <FullDanceEditorFields dance={dance} />
     </Form>
-    <FormationDiagramsSection dance={dance} onModifyFormationDiagrams={diagrams => formProps.onChange({
+    <FormationDiagramsSection className={className} dance={dance} onModifyFormationDiagrams={diagrams => formProps.onChange({
       ...formProps.value, formationDiagrams: diagrams,
     }, 'formationDiagrams')} />
   </>
@@ -127,9 +127,10 @@ function Suggestions(
   </div>
 }
 
-export function FormationDiagramsSection({ dance, onModifyFormationDiagrams }: {
+export function FormationDiagramsSection({ dance, onModifyFormationDiagrams, className }: {
   dance: Pick<Dance, 'formationDiagrams'>
   onModifyFormationDiagrams: (diagrams: Dance['formationDiagrams']) => void
+  className?: string
 }) {
   const [showAddForm, setShowAddForm] = useState(false)
   const label = useT('domain.dance')
@@ -139,6 +140,7 @@ export function FormationDiagramsSection({ dance, onModifyFormationDiagrams }: {
 
   return <PageSection
     title={label('formationDiagrams')}
+    className={className}
     toolbar={<>
       <FormationDiagramChooser
         id="select-formation-diagram"
