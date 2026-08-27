@@ -19,6 +19,9 @@
   --breakpoint-xs: 560px;
   --color-hover: #7dbcff20;
   --color-hover-odd: #7dbcff10;
+  --color-selected: #7dbcff30;
+  --color-selected-odd: #7dbcff20;
+  --color-selected-hover: #7dbcff80;
   --color-selection: #7dbcff99;
   --color-muted: var(--color-gray-600);
   --color-muted-hover: var(--color-gray-700);

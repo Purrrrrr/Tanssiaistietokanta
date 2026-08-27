@@ -65,6 +65,7 @@ export function ItemList<T extends { _id: string | number }, Key>(props: ItemLis
         key={item._id}
         item={item}
         index={index}
+        selected={props.selection?.selected.includes(item)}
         isTable={isTable ?? false}
         columns={columns}
         rowClassName={rowClassName}
@@ -119,18 +120,20 @@ function Header<T>({ isTable, columns, sort, onSort }: {
   </Container>
 }
 
-function Row<T>({ item, index, isTable, columns, rowLink, rowClassName, expandableContent, expandableContentLoadingMessage }: {
+function Row<T>({ item, index, isTable, columns, rowLink, rowClassName, expandableContent, expandableContentLoadingMessage, selected }: {
   isTable: boolean
   item: T
   index: number
   columns: Column<T>[]
   rowLink?: LinkGetter<T> | null
+  selected?: boolean
 } & RowProps<T>) {
   const Container = isTable ? 'tr' : 'li'
   const [expanded, setExpanded] = useState(false)
   const close = () => setExpanded(false)
   const rowState = { index, expanded, setExpanded }
   const navigate = useNavigate()
+  const hasExtraRows = expandableContent && isTable
 
   return <>
     <Container
@@ -139,9 +142,14 @@ function Row<T>({ item, index, isTable, columns, rowLink, rowClassName, expandab
         'itemlist-row border-x first:border border-b border-gray-200 hover:bg-hover-odd',
         rowLink && 'cursor-pointer',
         rowClassName,
-        isTable && expandableContent
-          ? 'nth-of-type-[4n+1]:bg-gray-100 nth-of-type-[4n+1]:hover:bg-hover'
-          : 'nth-of-type-[even]:bg-gray-100 nth-of-type-[even]:hover:bg-hover',
+        selected && 'bg-selected hover:bg-selected-hover',
+        selected
+          ? hasExtraRows
+            ? 'nth-of-type-[4n+1]:bg-selected-odd nth-of-type-[4n+1]:hover:bg-selected-hover'
+            : 'nth-of-type-[even]:bg-selected-odd nth-of-type-[even]:hover:bg-selected-hover'
+          : hasExtraRows
+            ? 'nth-of-type-[4n+1]:bg-gray-100 nth-of-type-[4n+1]:hover:bg-hover'
+            : 'nth-of-type-[even]:bg-gray-100 nth-of-type-[even]:hover:bg-hover',
       )}>
       {columns.map(column => (
         <Cell
