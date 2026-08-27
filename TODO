@@ -661,9 +661,10 @@
   * Style row link focus?
   * Translation for "Sort by" in sort menu
   * Drop 2 from name
-    wrapStyle: { grid/flex cols/rows: string | number }
-    Hidable columns
     Easier and nicer layouting for small screen "cards"
+    * wrapStyle: { grid/flex cols/rows: string | number }
+      Column wrapStyle?
+    Hidable columns
     Actions overflow menu?
     Selection improvements
     * Take selection state as prop
@@ -674,6 +675,7 @@
     Do we need to show file dates at all?
     Actions inside sub-menu
       Component for action menus that folds when screen is small?
+  Make wiki page a separate but optional column in dance list
   Separate tag color schemes for stuff defined inside the components using them?
 
   Fix read-only dance form dance instructions overflowing
