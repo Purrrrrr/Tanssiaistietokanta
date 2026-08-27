@@ -46,13 +46,13 @@ export function TagShowcase({ selectable, small, tag, randomSorting, colors, nrC
           key: 'randomValue',
           width: 'max-content',
           label: 'Random number',
-          wrapLabeled: true,
+          reflowLabel: true,
           enabled: randomSorting,
         }, {
           key: '_id',
           width: 'max-content',
           label: 'Color number',
-          wrapLabeled: true,
+          reflowLabel: true,
         }, {
           key: 'tag',
           label: 'Tag',

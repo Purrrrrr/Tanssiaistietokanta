@@ -69,8 +69,8 @@ interface CommonProps<T> {
   className?: string
   link: LinkGetter<T> | null | undefined
   isRowLink: boolean
-  wrapLabeled: boolean
-  wrappedBreakAfter: boolean
+  reflowLabel: boolean
+  reflowBreakAfter: boolean
   headerClassName?: string
   headerPaddingClassName?: string
   // TODO: controls for column layout on small screens, e.g. hide on mobile, full width on mobile, etc
@@ -87,8 +87,8 @@ export const columnDefaults: CommonProps<unknown> = {
   link: undefined,
   isRowLink: false,
   headerClassName: '',
-  wrapLabeled: false,
-  wrappedBreakAfter: false,
+  reflowLabel: false,
+  reflowBreakAfter: false,
   // visibility: 'always',
   enabled: true,
 }

@@ -60,12 +60,13 @@ function EventList() {
           {t('loginToEdit.toEdit')}
         </p>
       }
-      <ItemList items={events} emptyText={t('noEvents')} defaultSort={{ key: 'beginDate', direction: 'desc' }} wrapBreakpoint="none" labelTranslator={t} columns={[
+      <ItemList reflowAt={false} items={events} emptyText={t('noEvents')} defaultSort={{ key: 'date', direction: 'desc' }} labelTranslator={t} columns={[
         {
           key: 'name',
           content: event =>
             <Link to="/events/$eventId/{-$eventVersionId}" params={{ eventId: event._id }}>{event.name}</Link>,
           width: '1fr',
+          className: 'grow',
         },
         {
           key: 'date',

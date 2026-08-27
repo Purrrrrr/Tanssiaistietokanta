@@ -49,8 +49,13 @@
   }
 }
 
-@custom-variant wrapped {
-  @container style(--wrapped) {
+@custom-variant reflowed {
+  @container style(--itemlist-reflowed: 1) {
+    @slot;
+  }
+}
+@custom-variant not-reflowed {
+  @container style(--itemlist-reflowed: 0) {
     @slot;
   }
 }
@@ -371,12 +376,26 @@ body {
     }
   }
 
+  @property --itemlist-inline-size {
+    syntax: "<length-percentage>";
+    inherits: true;
+    initial-value: 100cqw;
+  }
+
   .itemlist {
     display: grid;
     grid-template-columns: var(--itemlist-columns);
-    @apply w-full;
+    @apply w-full @container;
+    --itemlist-breakpoint: 0;
+    --itemlist-inline-size: max(var(--itemlist-breakpoint), 100cqw);
+    --itemlist-reflowed: 0;
+    > * {
+      @container style(--itemlist-inline-size: var(--itemlist-breakpoint)) {
+        --itemlist-reflowed: 1;
+      }
+    }
 
-    & > li, & > thead, & > tbody, & > :is(tbody, thead) > tr {
+    & > thead, & > tbody, .itemlist-row, .itemlist-header, .itemlist-expanding-row {
       display: grid;
       grid-template-columns: subgrid;
       grid-column: 1 / -1;
@@ -422,22 +441,19 @@ body {
         outline: none;
       }
     }
-    .wrapped-label, .wrapped-breaker {
+    .reflowed-label, .reflowed-breaker {
       display: none;
     }
 
-    &.wrap-sm {
-      @apply max-sm:[--wrapped:1];
-    }
-    &.wrap-md {
-      @apply max-md:[--wrapped:1];
-    }
-    @container style(--wrapped) {
-      &.wrap-type-flex .itemlist-row {
+    @container style(--itemlist-reflowed: 1) {
+      &.reflow-type-flex .itemlist-row {
         @apply flex;
       }
       .itemlist-row {
+        grid-template-columns: var(--itemlist-reflow-columns);
+        grid-template-rows: var(--itemlist-reflow-rows);
         @apply gap-1;
+
         &:has(> .selector) {
           padding-left: 40px;
           position: relative;
@@ -454,10 +470,10 @@ body {
           justify-content: stretch
         }
       }
-      .wrapped-label {
+      .reflowed-label {
         display: inline-block;
       }
-      .wrapped-breaker {
+      .reflowed-breaker {
         display: block;
         flex: 1 1 100%;
         height: 0;

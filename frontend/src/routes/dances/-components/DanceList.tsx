@@ -33,20 +33,21 @@ export function DanceList({ dances }: DanceListProps) {
           items={dances}
           emptyText={t('noDances')}
           labelTranslator={label}
-          wrapType="grid"
-          rowClassName="wrapped:grid-cols-[1fr_max-content_max-content] wrapped:grid-rows-2 wrapped:grid-flow-col"
+          reflowType="grid"
+          reflowColumns="1fr max-content"
+          reflowRows={2}
+          rowClassName="reflowed:grid-flow-col"
           columns={[
             {
               key: 'name',
-              width: '1fr',
-              className: 'wrapped:font-bold wrapped:text-lg wrapped:p-2 text-ellipsis basis-0 grow',
+              width: 'minmax(min(300px,30%), max-content)',
+              className: 'reflowed:font-bold reflowed:text-lg',
               link: dance => ({ to: '/dances/$danceId', params: { danceId: dance._id } }),
               isRowLink: true,
             }, {
               key: 'category',
-              width: 'minmax(min(300px,30%), max-content)',
-              className: 'self-start mt-3',
-              wrappedBreakAfter: true,
+              width: 'minmax(min(200px,20%), 1fr)',
+              className: 'self-start mt-2',
               sortBy: dance => dance.category?.trim() === '' ? null : dance.category,
               content: dance => dance.category
                 ? <DanceCategoryTag title={dance.category} />
@@ -54,14 +55,15 @@ export function DanceList({ dances }: DanceListProps) {
             }, {
               key: 'danceUsage',
               width: 'max-content',
-              className: 'grow wrapped:text-right :not:wrapped:-me-4',
+              className: 'reflowed:text-right not-reflowed:-me-4',
+              headerClassName: 'not-reflowed:-me-4',
               link: null,
               sortBy: (dance: DanceListItem) => [dance.events.length, !!dance.wikipageName],
               content: dance => <DanceIsUsedIn minimal events={dance.events} wikipageName={dance.wikipageName} />,
             },
           ]}
           actions={dance => <DeleteDanceButton minimal dance={dance} />}
-          actionsColumnClassName="wrapped:text-right"
+          actionsColumnClassName="reflowed:text-right"
           expandableContent={dance => <DanceListRowEditor danceId={dance._id} />}
           expandButtonProps={dance => ({
             icon: <Edit />,

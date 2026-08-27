@@ -21,8 +21,10 @@ import { SortButton } from './SortButton'
 interface ItemListProps<T, Key = never> extends RowProps<T> {
   id?: string
   isTable?: boolean
-  wrapBreakpoint?: 'md' | 'sm' | 'none'
-  wrapType?: 'grid' | 'flex'
+  reflowAt?: `${number}px` | false
+  reflowType?: 'flex' | 'grid'
+  reflowColumns?: number | string
+  reflowRows?: number | string
   className?: string
   marginClass?: string
   items: T[] | null | undefined
@@ -54,8 +56,10 @@ const specialColumnDefaults = {
 export function ItemList<T extends { _id: string | number }, Key>({
   id,
   isTable = true,
-  wrapBreakpoint = 'sm',
-  wrapType = 'flex',
+  reflowAt = '600px',
+  reflowType = 'flex',
+  reflowColumns,
+  reflowRows,
   emptyText,
   columns: columnInputs,
   labelTranslator,
@@ -121,16 +125,22 @@ export function ItemList<T extends { _id: string | number }, Key>({
       className: actionsColumnClassName ?? 'actions',
     })
   }
+  const columnDefinitions = visibleColumns.map(c => c.width ?? defaultColumnWidth).join(' ')
 
   const Container = isTable ? 'table' : 'ul'
   return <Container
     id={id}
     className={classNames(
-      `itemlist wrap-${wrapBreakpoint} wrap-type-${wrapType} border-b border-gray-200`,
+      `itemlist reflow-type-${reflowType} border-b border-gray-200`,
       className,
       marginClass ?? 'mb-4',
     )}
-    style={{ '--itemlist-columns': (visibleColumns.map(c => c.width ?? defaultColumnWidth)).join(' ') } as React.CSSProperties}
+    style={{
+      '--itemlist-breakpoint': reflowAt === false ? undefined : reflowAt,
+      '--itemlist-reflow-columns': toGridSizes(reflowColumns ?? columnDefinitions),
+      '--itemlist-reflow-rows': toGridSizes(reflowRows ?? 1),
+      '--itemlist-columns': columnDefinitions,
+    } as React.CSSProperties}
   >
     {wrap(isTable ? 'thead' : null,
       <Header
@@ -155,6 +165,8 @@ export function ItemList<T extends { _id: string | number }, Key>({
     )))}
   </Container>
 }
+
+const toGridSizes = (sizes: number | string) => typeof sizes === 'number' ? `repeat(${sizes}, minmax(0, 1fr))` : sizes
 
 function ColumnOptionsMenu<T>({ columns, sort, setSort }: {
   columns: Column<T>[]
@@ -289,7 +301,7 @@ function Cell<T>({ isTable, column, item, rowState }: {
   rowState: RowState
 }) {
   const content = column.content(item, rowState)
-  const label = column.wrapLabeled ? <span className="wrapped-label me-1">{column.label}:{' '}</span> : null
+  const label = column.reflowLabel ? <span className="reflowed-label me-1">{column.label}:{' '}</span> : null
   let children = label ? <>{label}{content}</> : content
   if (column.link) {
     children = <Link
@@ -303,7 +315,7 @@ function Cell<T>({ isTable, column, item, rowState }: {
 
   return <>
     <CellElement className={classNames(column.className, column.isRowLink && 'itemlist-row-link-cell')}>{children}</CellElement>
-    {column.wrappedBreakAfter && <CellElement className="wrapped-breaker" />}
+    {column.reflowBreakAfter && <CellElement className="reflowed-breaker" />}
   </>
 }
 
@@ -315,7 +327,7 @@ function ExpandableRow({ isTable, colSpan, children, expanded, expandableContent
   expandableContentLoadingMessage?: string
 }) {
   if (isTable) {
-    return <tr className="border-x border-b border-gray-200">
+    return <tr className={classNames('itemlist-expanding-row border-x border-gray-200', expanded && 'border-b')}>
       <td colSpan={colSpan} className="col-span-full">
         <Collapse className="bg-white" isOpen={expanded} loadingMessage={expandableContentLoadingMessage}>
           {children}
@@ -324,7 +336,7 @@ function ExpandableRow({ isTable, colSpan, children, expanded, expandableContent
     </tr>
   }
 
-  return <div className="col-span-full border-x border-b border-gray-200">
+  return <div className={classNames('itemlist-expanding-row border-x border-gray-200', expanded && 'border-b')}>
     <Collapse className="bg-white" isOpen={expanded} loadingMessage={expandableContentLoadingMessage}>
       {children}
     </Collapse>

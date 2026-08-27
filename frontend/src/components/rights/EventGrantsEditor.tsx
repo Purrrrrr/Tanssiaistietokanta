@@ -62,7 +62,7 @@ export function EventGrantsEditor({ eventId }: { eventId?: string }) {
           marginClass=""
           items={grantRows}
           emptyText={t('noGrants')}
-          wrapBreakpoint="none"
+          reflowAt={false}
           labelTranslator={t}
           columns={[
             {

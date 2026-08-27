@@ -17,7 +17,6 @@ export function ItemListShowcase({ isTable, empty }: { isTable: boolean, empty: 
     selection={selection}
     items={empty ? [] : items}
     emptyText="No items"
-    // wrapBreakpoint="none"
     labelTranslator={(id: string) => id.slice(0, 1).toUpperCase() + id.slice(1)}
     columns={[
       {
