@@ -93,10 +93,15 @@ export const columnDefaults: CommonProps<unknown> = {
   enabled: true,
 }
 
-export function normalizeColumnInput<T, Key>(input: ColumnInput<T, Key>, labelTranslator: ((key: Key) => string) | undefined): Column<T> {
+export function normalizeColumnInput<T, Key>(
+  input: ColumnInput<T, Key>,
+  labelTranslator: ((key: Key) => string) | undefined,
+  defaultWidth: string | undefined,
+): Column<T> {
   const { key, label, sortableContent, content, sortBy, ...rest } = input
   return {
     ...columnDefaults,
+    width: defaultWidth ?? columnDefaults.width,
     ...rest,
     id: key,
     label: label ?? labelTranslator?.(key as Key) ?? null,
