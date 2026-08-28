@@ -1,12 +1,10 @@
+import { SelectionBoxProps } from 'libraries/ui/ItemList/SelectionBox'
+
 export interface SelectionApi<T> {
   selected: T[]
   setSelectedItems: (selected: T[]) => void
   clearSelection: () => void
-  selectAllProps: SelectorProps
-  selectItemProps: (item: T) => SelectorProps
-}
-
-export interface SelectorProps {
-  checked: boolean
-  onChange: () => void
+  isSelected: (item: T) => boolean
+  selectAllProps: SelectionBoxProps
+  selectItemProps: (item: T, orderedItems?: T[]) => Required<SelectionBoxProps>
 }

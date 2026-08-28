@@ -59,7 +59,7 @@ export function TagShowcase({ selectable, small, tag, randomSorting, colors, nrC
           sortBy: '_id',
           content: item =>
             <Tag
-              selected={selectable ? selection.selected.includes(item) : undefined}
+              selected={selectable ? selection.isSelected(item) : undefined}
               debugContrast={contrastDebug}
               small={small}
               colorScheme={colorScheme}

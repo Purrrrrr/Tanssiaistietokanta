@@ -23,9 +23,9 @@ export function useOnKeydown(onKeydown: KeyDownHandlerParam, key?: string) {
   }, [onKeydown, key])
 }
 
-const inputTags = ['INPUT', 'TEXTAREA', 'SELECT', 'BUTTON']
-export function isInputTag(target: HTMLElement) {
-  console.log('isInputTag', target.tagName, target.isContentEditable)
+const inputTags = ['A', 'LABEL', 'INPUT', 'TEXTAREA', 'SELECT', 'BUTTON']
+export function isInputTag(target: HTMLElement | EventTarget) {
+  if (!(target instanceof HTMLElement)) return false
   if (!target) return false
   if (inputTags.includes(target.tagName)) return true
   if (target.role === 'application') return true

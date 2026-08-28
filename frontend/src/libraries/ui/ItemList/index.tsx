@@ -9,7 +9,8 @@ import { isInputTag } from 'utils/useOnKeydown'
 
 import Collapse from '../Collapse'
 import { Link } from '../Link'
-import { Column, LinkGetter, RowState } from './column'
+import type { Column, LinkGetter, RowState } from './column'
+import type { Selector } from './hooks/useSelectionColumn'
 import { SortButton } from './SortButton'
 import { useItemList } from './useItemList'
 
@@ -63,9 +64,9 @@ export function ItemList<T extends { _id: string | number }, Key>(props: ItemLis
     {wrap(isTable ? 'tbody' : null, items.map((item, index) => (
       <Row
         key={item._id}
-        item={item}
+        items={items}
         index={index}
-        selected={props.selection?.selected.includes(item)}
+        selector={props.selection}
         isTable={isTable ?? false}
         columns={columns}
         rowClassName={rowClassName}
@@ -120,27 +121,44 @@ function Header<T>({ isTable, columns, sort, onSort }: {
   </Container>
 }
 
-function Row<T>({ item, index, isTable, columns, rowLink, rowClassName, expandableContent, expandableContentLoadingMessage, selected }: {
+function Row<T>({ items, index, isTable, columns, rowLink, rowClassName, expandableContent, expandableContentLoadingMessage, selector }: {
   isTable: boolean
-  item: T
+  items: T[]
   index: number
   columns: Column<T>[]
   rowLink?: LinkGetter<T> | null
-  selected?: boolean
+  selector?: Selector<T> | null
 } & RowProps<T>) {
   const Container = isTable ? 'tr' : 'li'
+  const item = items[index]
   const [expanded, setExpanded] = useState(false)
   const close = () => setExpanded(false)
   const rowState = { index, expanded, setExpanded }
   const navigate = useNavigate()
   const hasExtraRows = expandableContent && isTable
+  const selected = selector?.selected.includes(item)
+  const onClick: React.MouseEventHandler | undefined = rowLink
+    ? (e) => { if (!isInputTag(e.target)) navigate(rowLink(item, index)) }
+    : selector
+      ? (e) => {
+        if (isInputTag(e.target)) return
+        const props = selector.selectItemProps(item, items)
+        if (e.shiftKey) {
+          e.preventDefault()
+          window.getSelection()?.removeAllRanges()
+          props.onChangeMultiple(!selected)
+        } else {
+          props.onChange(!selected)
+        }
+      }
+      : undefined
 
   return <>
     <Container
-      onClick={rowLink ? (e) => { if (!isInputTag(e.target)) navigate(rowLink(item, index)) } : undefined}
+      onClick={onClick}
       className={classNames(
         'itemlist-row border-x first:border border-b border-gray-200 hover:bg-hover-odd',
-        rowLink && 'cursor-pointer',
+        (rowLink ?? selector) && 'cursor-pointer',
         rowClassName,
         selected && 'bg-selected hover:bg-selected-hover',
         selected
