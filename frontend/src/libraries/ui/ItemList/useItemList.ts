@@ -1,19 +1,13 @@
 import { BaseItem, ItemListProps } from './types'
 
-import { type Column, normalizeColumnInput } from './column'
+import { Column, normalizeColumnInput } from './column'
 import { useActionsColumn } from './hooks/useActionsColumn'
+import { useColumnVisibility } from './hooks/useColumnVisibility'
 import { ItemListSortState, useItemSorting } from './hooks/useItemSorting'
 import { useSelectionColumn } from './hooks/useSelectionColumn'
 
-type ColumnId = string
-
-interface ItemListData<T> extends ItemListState, ItemListSortState<T> {
+interface ItemListData<T> extends ItemListSortState<T> {
   columns: Column<T>[]
-}
-
-interface ItemListState {
-  lastToggledItemId: string | null
-  columnVisibility: Record<ColumnId, boolean>[]
 }
 
 export function useItemList<T extends BaseItem, Key>(props: ItemListProps<T, Key>): ItemListData<T> {
@@ -22,18 +16,19 @@ export function useItemList<T extends BaseItem, Key>(props: ItemListProps<T, Key
     labelTranslator,
     defaultColumnWidth,
   } = props
-  let columns = columnInputs
+  const baseColumns = columnInputs
     .map(col => normalizeColumnInput(col, labelTranslator, defaultColumnWidth))
     .filter(c => c.enabled)
-  const itemSorting = useItemSorting(columns, props)
-  columns = addNonNullAt(columns, 0, useSelectionColumn(itemSorting.items, props))
-  columns = addNonNullAt(columns, columns.length, useActionsColumn(itemSorting, props))
+
+  const itemSorting = useItemSorting(baseColumns, props)
+  const columnVisibilityApi = useColumnVisibility(props.id, baseColumns)
+
+  let columns = addNonNullAt(columnVisibilityApi.visibleColumns, 0, useSelectionColumn(itemSorting.items, props))
+  columns = addNonNullAt(columns, columns.length, useActionsColumn(itemSorting, columnVisibilityApi, props))
 
   return {
     ...itemSorting,
     columns,
-    lastToggledItemId: null,
-    columnVisibility: [],
   }
 }
 

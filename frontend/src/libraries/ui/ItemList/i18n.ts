@@ -4,6 +4,7 @@ const translations = {
   fi: {
     selectRow: 'Valitse rivi',
     sortBy: 'Lajittele',
+    toggleColumnVisibility: 'Näytä/piilota sarake',
   },
 }
 

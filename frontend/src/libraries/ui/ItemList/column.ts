@@ -4,8 +4,10 @@ import { ReactNode } from 'react'
 import { Accessor, PathAccessor, toAccessorFn } from 'libraries/common/accessor'
 import { SortKey } from 'utils/sorted'
 
+export type ColumnId = number | string
+
 export interface Column<T> extends CommonProps<T> {
-  id: number | string
+  id: ColumnId
   label: ReactNode
   content: (item: T, state: RowState) => React.ReactNode
   sortBy?: null | SortKey<T>
@@ -74,8 +76,7 @@ interface CommonProps<T> {
   headerClassName?: string
   headerPaddingClassName?: string
   // TODO: controls for column layout on small screens, e.g. hide on mobile, full width on mobile, etc
-  // TODO: Add these back in when we implement column visibility
-  // visibility: 'always' | 'hidable' | 'hiddenByDefault' // Is the column always visible or can the user choose to hide this column? 'always' by default
+  visibility: 'always' | 'shown' | 'hidden' // Is the column always visible or can the user choose to hide this column? 'always' by default
   enabled: boolean // Should this column exist in this table? True by default. Used to exclude columns in certain tables without removing them from the column list
 }
 
@@ -89,7 +90,7 @@ export const columnDefaults: CommonProps<unknown> = {
   headerClassName: '',
   reflowLabel: false,
   reflowBreakAfter: false,
-  // visibility: 'always',
+  visibility: 'always',
   enabled: true,
 }
 

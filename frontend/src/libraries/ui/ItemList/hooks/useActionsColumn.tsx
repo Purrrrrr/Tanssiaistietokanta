@@ -5,10 +5,12 @@ import { ChevronDown, ChevronUp } from 'libraries/ui/icons'
 import { Button } from '../../Button'
 import { Column, columnDefaults } from '../column'
 import { ColumnOptionsMenu } from '../ColumnOptionsMenu'
+import { ColumnVisibilityApi } from './useColumnVisibility'
 import { ItemListSortState } from './useItemSorting'
 
 export function useActionsColumn<T extends { _id: string | number }>(
-  { sort, setSort, sortableColumns }: ItemListSortState<T>,
+  sortApi: ItemListSortState<T>,
+  visibilityApi: ColumnVisibilityApi<T>,
   {
     actions,
     actionsColumnClassName,
@@ -17,7 +19,7 @@ export function useActionsColumn<T extends { _id: string | number }>(
   }: ActionsColumnProps<T> & { expandableContent?: unknown },
 ): Column<T> | null {
   const hasExpandableContent = expandableContent != null
-  const hasActionsColumn = actions != null || sortableColumns.length > 1 || hasExpandableContent
+  const hasActionsColumn = actions != null || sortApi.sortableColumns.length > 1 || hasExpandableContent
 
   if (!hasActionsColumn) return null
   return {
@@ -25,7 +27,7 @@ export function useActionsColumn<T extends { _id: string | number }>(
     id: 'itemlist-actions',
     width: 'max-content',
     link: null,
-    label: <ColumnOptionsMenu columns={sortableColumns} sort={sort} setSort={setSort} hasActions={actions != null} />,
+    label: <ColumnOptionsMenu {...sortApi} visibilityApi={visibilityApi} hasActions={actions != null} />,
     content: (item, rowState) => <>
       {actions && actions(item, rowState.index)}
       {hasExpandableContent && <Button
