@@ -1,8 +1,8 @@
-import type { Id, NullableId, Params, ServiceInterface } from '@feathersjs/feathers'
+import type { Id, NullableId, Params } from '@feathersjs/feathers'
 import { isEmptyObject } from 'es-toolkit'
 import type { Application } from '../declarations'
 
-import createNedbService from 'feathers-nedb'
+import { NeDBService as BaseService } from 'feathers-nedb'
 import NeDB from '@seald-io/nedb'
 import path from 'path'
 import { map, mapAsync } from './map'
@@ -24,10 +24,11 @@ interface BaseRecord {
 
 export class NeDBService<Result extends BaseRecord, Data, ServiceParams extends Params<{}>, Patch = Data, Record extends BaseRecord = Result> implements ServiceInterface<Result, Data, ServiceParams, Patch> {
   currentService: any
+  model: NeDB
 
   constructor(public params: NeDBServiceOptions) {
-    const Model = NeDBService.createNedb(params)
-    this.currentService = createNedbService({ Model })
+    this.model = NeDBService.createNedb(params)
+    this.currentService = new BaseService({ Model: this.model })
   }
 
   static createNedb(params: NeDBServiceOptions) {
@@ -48,7 +49,7 @@ export class NeDBService<Result extends BaseRecord, Data, ServiceParams extends 
   }
 
   getModel(): NeDB {
-    return this.currentService.getModel()
+    return this.model
   }
 
   async exists(params: ServiceParams): Promise<boolean> {
