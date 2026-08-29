@@ -382,7 +382,7 @@ body {
   @property --itemlist-inline-size {
     syntax: "<length-percentage>";
     inherits: true;
-    initial-value: 100cqw;
+    initial-value: 100%;
   }
 
   .itemlist {
