@@ -1,6 +1,6 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/service.html
 import { hooks as schemaHooks } from '@feathersjs/schema'
-import { create as contentDisposition } from 'content-disposition'
+import { create as contentDisposition } from 'content-disposition-3'
 
 import {
   fileDataValidator,

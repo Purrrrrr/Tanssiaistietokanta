@@ -75,7 +75,7 @@
     "canvas": "^3.2.3",
     "clamscan": "^2.4.0",
     "colorette": "^2.0.20",
-    "content-disposition": "^2.0.1",
+    "content-disposition-3": "npm:content-disposition@^3.0.0",
     "cookie": "^1.0.2",
     "es-toolkit": "^1.44.0",
     "fabric": "^7.4.0",
