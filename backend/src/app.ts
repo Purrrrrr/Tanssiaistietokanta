@@ -53,7 +53,7 @@ app.use(bodyParser({
 
 app.use(async (ctx, next) => {
   const { body, files } = ctx.request
-  Object.assign(body, files)
+  if (body && files) Object.assign(body, files)
   await next()
   const filesToCleanup = Object.values(files ?? {})
     .flat()

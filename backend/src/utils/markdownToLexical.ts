@@ -1,7 +1,7 @@
-import unified from 'unified'
+import { unified } from 'unified'
 import remarkParse from 'remark-parse'
 import remarkGfm from 'remark-gfm'
-import type { Root, Content, BlockContent, PhrasingContent, ListItem, TableRow, TableCell } from 'mdast'
+import type { Root, RootContent, BlockContent, PhrasingContent, ListItem, TableRow, TableCell } from 'mdast'
 
 import randomIdWithLength from '../utils/random-id'
 
@@ -30,7 +30,7 @@ export function convertMarkdownToLexical(markdown: string): object {
 
 // ── Block content converter ───────────────────────────────────────────────────
 
-function convertBlock(node: Content): MinifiedNode[] {
+function convertBlock(node: RootContent): MinifiedNode[] {
   switch (node.type) {
     case 'paragraph':
       return [paragraphNode(convertInline(node.children))]

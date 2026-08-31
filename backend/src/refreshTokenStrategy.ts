@@ -1,5 +1,5 @@
 import { AuthenticationParams, AuthenticationRequest, AuthenticationService, AuthenticationStrategy } from '@feathersjs/authentication'
-import { parse, serialize } from 'cookie'
+import { parseCookie, stringifySetCookie } from 'cookie'
 import { IncomingMessage, ServerResponse } from 'http'
 
 import type { Application, HookContext } from './declarations'
@@ -34,7 +34,7 @@ export class RefreshTokenStrategy implements AuthenticationStrategy {
       // Don't attempt to authenticate socket.io requests with this strategy
       return null
     }
-    const cookies = parse(req.headers.cookie ?? '')
+    const cookies = parseCookie(req.headers.cookie ?? '')
     if (cookies.refreshToken) {
       return { strategy: 'refreshToken', refreshToken: cookies.refreshToken }
     }
@@ -133,9 +133,10 @@ function setTokenCookie(
   maxAge?: number,
 ) {
   http.headers ??= {}
-  http.headers['Set-Cookie'] = serialize(
-    'refreshToken',
+  http.headers['Set-Cookie'] = stringifySetCookie({
+    name: 'refreshToken',
     value,
-    { ...cookieOpts, maxAge },
-  )
+    ...cookieOpts,
+    maxAge,
+  })
 }

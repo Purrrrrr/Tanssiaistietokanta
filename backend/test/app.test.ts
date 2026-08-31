@@ -6,7 +6,6 @@ const port = app.get('port')
 const appUrl = `http://${app.get('host')}:${port}`
 
 describe('Feathers application tests', () => {
-
   before(async () => {
     await initializeApp()
   })

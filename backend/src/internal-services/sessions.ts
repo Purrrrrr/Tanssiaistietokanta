@@ -1,5 +1,5 @@
 import { Application, HookContext } from '../declarations'
-import { parse, serialize } from 'cookie'
+import { parseCookie, stringifySetCookie } from 'cookie'
 import { Middleware } from 'koa'
 import createId from '../utils/random-id'
 
@@ -21,14 +21,14 @@ const YEAR = 60 * 60 * 24 * 365
 type Headers = Record<string, string | undefined>
 
 export function socketIOSessionCookieMiddleware(headers: any, request: { headers: Headers }) {
-  const cookies = parse(request.headers.cookie ?? '')
+  const cookies = parseCookie(request.headers.cookie ?? '')
   let sessionId = cookies[SESSION_COOKIE_NAME]
   if (!sessionId) {
     sessionId = createId()
     headers['Set-Cookie'] = getNewSessionCookies(sessionId)
     request.headers.cookie = [
       request.headers.cookie,
-      serialize(SESSION_COOKIE_NAME, sessionId),
+      stringifySetCookie({ name: SESSION_COOKIE_NAME, value: sessionId }),
     ].filter(Boolean).join('; ')
   }
 }
@@ -36,7 +36,7 @@ export function socketIOSessionCookieMiddleware(headers: any, request: { headers
 export const restSessionCookieMiddleware: Middleware = async (ctx, next) => {
   const { request, res } = ctx
   const cookie = request.headers.cookie ?? ''
-  const cookies = parse(cookie)
+  const cookies = parseCookie(cookie)
   let sessionId = cookies[SESSION_COOKIE_NAME]
   if (!sessionId) {
     sessionId = createId()
@@ -64,7 +64,7 @@ export default function setupSessions(app: Application) {
     ])
   })
   app.on('connection', (connection) => {
-    const cookies = parse(connection.headers?.cookie ?? '')
+    const cookies = parseCookie(connection.headers?.cookie ?? '')
     connection.id = createId()
     connection.sessionId = cookies[SESSION_COOKIE_NAME] ?? ''
   })
@@ -93,13 +93,12 @@ function setCookies(ctx: HookContext, cookies: string | string[]) {
 }
 
 function makeCookie(name: string, value: string, httpOnly = true) {
-  return serialize(
+  return stringifySetCookie({
     name,
-    value, {
-      path: '/',
-      secure: process.env.CORS_ALLOW_LOCALHOST !== 'true',
-      httpOnly,
-      maxAge: YEAR,
-    },
-  )
+    value,
+    path: '/',
+    secure: process.env.CORS_ALLOW_LOCALHOST !== 'true',
+    httpOnly,
+    maxAge: YEAR,
+  })
 }

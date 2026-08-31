@@ -1,4 +1,4 @@
-import type { Id, NullableId, Params } from '@feathersjs/feathers'
+import type { Id, NullableId, Params, ServiceInterface } from '@feathersjs/feathers'
 import { isEmptyObject } from 'es-toolkit'
 import type { Application } from '../declarations'
 
