@@ -1,5 +1,7 @@
-import type { File } from 'types/gql/graphql'
+import { GetFilesQuery, GetFilesQueryVariables } from 'types/gql/graphql'
+
+export type File = GetFilesQuery['files'][0]
 
 export type { FetchRequestProgress } from 'backend'
 export type { FileOwner } from 'types/gql/graphql'
-export type FileOwningId = File['owningId']
+export type FileOwningId = GetFilesQueryVariables['owningId']
