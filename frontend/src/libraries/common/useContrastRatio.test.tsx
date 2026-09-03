@@ -30,7 +30,7 @@ describe('useContrastCheck', () => {
   })
 
   it('recalculates contrast when the element style changes', async () => {
-    const onContrast = jest.fn()
+    const onContrast = vi.fn()
 
     await act(async () => {
       root.render(<ContrastCheck onContrast={onContrast} />)
@@ -48,11 +48,11 @@ describe('useContrastCheck', () => {
   })
 
   it('disconnects the observer when unmounted', () => {
-    const disconnect = jest.fn()
+    const disconnect = vi.fn()
     const RealMutationObserver = globalThis.MutationObserver
 
     class TestMutationObserver {
-      observe = jest.fn()
+      observe = vi.fn()
       disconnect = disconnect
     }
 

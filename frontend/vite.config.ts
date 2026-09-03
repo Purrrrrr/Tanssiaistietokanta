@@ -1,13 +1,12 @@
-import react, { reactCompilerPreset } from '@vitejs/plugin-react'
-import babelPlugin from '@rolldown/plugin-babel'
+import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { defineConfig, loadEnv, Plugin } from 'vite'
 import { analyzer } from 'vite-bundle-analyzer'
 import checker from 'vite-plugin-checker'
-import { jsSizeReporter } from './vite-plugin-js-size'
+import { jsSizeReporter } from './vite-plugin-js-size.js'
 import { tanstackRouter } from '@tanstack/router-plugin/vite'
 
-import backendConfig from './src/backendConfig.json'
+import backendConfig from './src/backendConfig.json' with { type: 'json' }
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
@@ -20,10 +19,7 @@ export default defineConfig(({ mode }) => {
         target: 'react',
         autoCodeSplitting: true,
       }),
-      react(),
-      babelPlugin({
-        presets: [reactCompilerPreset()],
-      }),
+      react({ compiler: true }),
       envPlugin(),
       htmlPlugin(mode),
       checker({
