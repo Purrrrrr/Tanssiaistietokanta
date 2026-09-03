@@ -1,5 +1,5 @@
 import { useCallback, useLayoutEffect, useRef } from 'react'
-import { useScrollPosition } from '@n8tb1t/use-scroll-position'
+import { useWindowScrollPosition } from '@n8tb1t/use-scroll-position'
 
 import { useResizeObserver } from 'libraries/common/useResizeObserver'
 
@@ -28,7 +28,7 @@ export function useAnchorToElement<TargetElement extends HTMLElement>(
 
   useLayoutEffect(updateDirection, [updateDirection])
   useResizeObserver(elementRef, updateDirection)
-  useScrollPosition(updateDirection, [updateDirection], undefined, true, 100)
+  useWindowScrollPosition(updateDirection, { wait: 100 })
   return elementRef
 }
 

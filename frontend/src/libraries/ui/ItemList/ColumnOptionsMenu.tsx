@@ -3,11 +3,11 @@ import classNames from 'classnames'
 import { Menu, Sort as SortIcon } from 'libraries/ui/icons'
 
 import { Button } from '../Button'
+import { buttonClass } from '../buttonClass'
 import { MenuButton } from '../MenuButton'
 import { ColumnVisibilityApi } from './hooks/useColumnVisibility'
 import { ItemListSortState } from './hooks/useItemSorting'
 import { useT } from './i18n'
-import { buttonClass } from '../buttonClass'
 
 export function ColumnOptionsMenu<T>({ sortableColumns, sort, setSort, hasActions, visibilityApi }: {
   visibilityApi: ColumnVisibilityApi<T>
