@@ -2,7 +2,6 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 
 import { EventInput } from 'types'
-import { EventGrantRole, ViewAccess } from 'types/gql/graphql'
 
 import { addGlobalLoadingAnimation } from 'backend'
 import { useCreateEvent } from 'services/events'
@@ -40,14 +39,14 @@ function CreateEventForm() {
   })
 
   const initialGrants = currentUser
-    ? [{ _id: randomId(), principal: `user:${currentUser._id}`, role: EventGrantRole.Organizer }]
+    ? [{ _id: randomId(), principal: `user:${currentUser._id}`, role: 'organizer' as const }]
     : []
 
   const [event, setEvent] = useState<EventInput>({
     name: '',
     beginDate: '',
     endDate: '',
-    accessControl: { viewAccess: ViewAccess.Public, grants: initialGrants },
+    accessControl: { viewAccess: 'public', grants: initialGrants },
     eventRegistrationSystem: 'None',
   })
 

@@ -6,9 +6,9 @@ import { Edit, Search, Star } from 'libraries/ui/icons'
 import { useT } from 'i18n'
 
 const eventRoleIcons: Record<EventGrantRole, React.ReactNode> = {
-  [EventGrantRole.Organizer]: <Star className="text-amber-400 drop-shadow-stone-800/30 drop-shadow-xs" />,
-  [EventGrantRole.Teacher]: <Edit className="text-red-600 drop-shadow-stone-800/30 drop-shadow-xs" />,
-  [EventGrantRole.Viewer]: <Search className="text-blue-500 drop-shadow-stone-800/30 drop-shadow-xs" />,
+  organizer: <Star className="text-amber-400 drop-shadow-stone-800/30 drop-shadow-xs" />,
+  teacher: <Edit className="text-red-600 drop-shadow-stone-800/30 drop-shadow-xs" />,
+  viewer: <Search className="text-blue-500 drop-shadow-stone-800/30 drop-shadow-xs" />,
 }
 
 export function EventRoleSelector({ value, readOnly, ...props }: FieldComponentProps<EventGrantRole>) {
@@ -21,9 +21,9 @@ export function EventRoleSelector({ value, readOnly, ...props }: FieldComponentP
 
   return (
     <Select<EventGrantRole>
-      value={value ?? EventGrantRole.Viewer}
+      value={value ?? 'viewer'}
       items={[
-        EventGrantRole.Organizer, EventGrantRole.Teacher, EventGrantRole.Viewer,
+        'organizer', 'teacher', 'viewer',
       ]}
       itemToString={t}
       itemIcon={role => eventRoleIcons[role]}

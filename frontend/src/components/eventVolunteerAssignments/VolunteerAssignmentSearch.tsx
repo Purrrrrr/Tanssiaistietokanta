@@ -104,7 +104,13 @@ export function VolunteerAssignmentSearch({ id, value, onChange, eventId, eventV
         {
           title: t('registrationStatus'),
           items: searchList(
-            Object.keys(EventVolunteerRegistrationStatus) as EventVolunteerRegistrationStatus[],
+            [
+              'AcceptedRegistration',
+              'InformedToOrganizers',
+              'None',
+              'RegisteredToEventSystem',
+              'RegistrationCancelled',
+            ] satisfies EventVolunteerRegistrationStatus[],
             query,
             statusT,
           ).map(status => ({ type: 'registrationStatus', query: status })),

@@ -1,5 +1,4 @@
 import { Event, EventInput } from 'types'
-import { EventGrantRole } from 'types/gql/graphql'
 
 import { useCurrentUser, useUsers } from 'services/users'
 
@@ -30,7 +29,7 @@ export function EventGrantsEditor({ eventId }: { eventId?: string }) {
 
   const grants = useValueAt('accessControl.grants')
   const addGrant = useAppendToList('accessControl.grants')
-  const organizerCount = grants.filter(g => g.role === EventGrantRole.Organizer).length
+  const organizerCount = grants.filter(g => g.role === 'organizer').length
 
   const excludedUserIds = grants
     .filter(g => g.principal.startsWith('user:'))
@@ -50,7 +49,7 @@ export function EventGrantsEditor({ eventId }: { eventId?: string }) {
     ...grant,
     principalText: formatPrincipal(grant.principal),
     readOnly: !canEdit
-      || (!isAdmin && grant.role === EventGrantRole.Organizer && (grant.principal === `user:${currentUser?._id}` || organizerCount <= 1)),
+      || (!isAdmin && grant.role === 'organizer' && (grant.principal === `user:${currentUser?._id}` || organizerCount <= 1)),
   }))
 
   return (
@@ -97,7 +96,7 @@ export function EventGrantsEditor({ eventId }: { eventId?: string }) {
             onChange={user => user && addGrant({
               _id: randomId(),
               principal: `user:${user._id}`,
-              role: EventGrantRole.Viewer,
+              role: 'viewer',
             })}
             placeholder={t('addGrant')}
             excludeFromSearch={excludedUserIds}

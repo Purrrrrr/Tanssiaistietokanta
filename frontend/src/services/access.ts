@@ -55,22 +55,22 @@ interface SpecificAccessQuery extends AccessQuery {
 
 export async function hasAccess(query: SpecificAccessQuery): Promise<boolean> {
   const access = await checkAccess(query)
-  if (access === AccessAllowed.Unknown) {
+  if (access === 'UNKNOWN') {
     console.warn(
       'Access for query %O is unknown, defaulting to deny',
       // Try to filter out undefined values from the query for better logging
       Object.fromEntries(Object.entries(query).filter(([_, value]) => value !== undefined)),
     )
   }
-  return access === AccessAllowed.Grant
+  return access === 'GRANT'
 }
 
 export function hasCachedAccess(query: SpecificAccessQuery): boolean | undefined {
   const access = checkCachedAccess(query)
-  if (access === AccessAllowed.Unknown) {
+  if (access === 'UNKNOWN') {
     return undefined
   }
-  return access === AccessAllowed.Grant
+  return access === 'GRANT'
 }
 
 async function checkAccess(query: SpecificAccessQuery): Promise<AccessAllowed> {
@@ -78,28 +78,28 @@ async function checkAccess(query: SpecificAccessQuery): Promise<AccessAllowed> {
     await fetchGlobalAccesses()
   }
   const cachedAccess = checkCachedAccess(query)
-  if (cachedAccess !== AccessAllowed.Unknown) {
+  if (cachedAccess !== 'UNKNOWN') {
     return cachedAccess
   }
 
   const accesses = await fetchAccess(query)
   const matchingAccess = accesses.find(access => hasEqualAccessQuery(access, query))
-  return matchingAccess ? matchingAccess.allowed : AccessAllowed.Deny
+  return matchingAccess ? matchingAccess.allowed : 'DENY'
 }
 
 function checkCachedAccess(query: SpecificAccessQuery): AccessAllowed {
   const globalResult = checkGlobalAccess(query)
-  if (globalResult !== AccessAllowed.Unknown) {
+  if (globalResult !== 'UNKNOWN') {
     return globalResult
   }
 
   const cachedAccess = accessCache.find(access => hasEqualAccessQuery(access, query))
-  return cachedAccess ? cachedAccess.allowed : AccessAllowed.Unknown
+  return cachedAccess ? cachedAccess.allowed : 'UNKNOWN'
 }
 
 function checkGlobalAccess(query: SpecificAccessQuery): AccessAllowed {
   const key = `${query.service}:${query.action}` as const
-  return globalAccess.cache.get(key) ?? AccessAllowed.Unknown
+  return globalAccess.cache.get(key) ?? 'UNKNOWN'
 }
 
 async function fetchGlobalAccesses(): Promise<void> {

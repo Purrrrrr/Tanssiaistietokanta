@@ -6,5 +6,5 @@ import { useT } from 'i18n'
 
 export function ViewAccessSelector(props: FieldComponentProps<ViewAccess>) {
   const t = useT('domain.event.accessControl.viewAccess')
-  return <RadioGroup options={[ViewAccess.Public, ViewAccess.Limited]} optionToString={t} {...props} />
+  return <RadioGroup options={['public', 'limited']} optionToString={t} {...props} />
 }
