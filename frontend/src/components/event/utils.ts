@@ -14,7 +14,7 @@ export const DEFAULT_INTERVAL_MUSIC = {
   dance: null,
 } satisfies IntervalMusic
 
-interface SimpleEventProgramRow {
+export interface SimpleEventProgramRow {
   type: EventProgramRow['type']
   dance?: { name: string, duration?: number | null } | null
   eventProgram?: { name: string, duration?: number | null } | null

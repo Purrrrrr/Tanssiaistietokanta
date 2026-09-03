@@ -171,7 +171,7 @@ function WorkshopInstanceEditor(
   const instances = useValueAt('instances')
   const instance = instances[itemIndex]
   const showDances = useValueAt('instanceSpecificDances')
-  return <div className="pt-1 pb-4 mb-5 bg-white border-b-1 border-black/15">
+  return <div className="pt-1 pb-4 mb-5 bg-white border-b border-black/15">
     <div className="flex flex-wrap gap-3.5 justify-between items-center">
       <h3 className="font-bold">{t('instance')} {workshopInstanceName(itemIndex, instance)}</h3>
       <div>

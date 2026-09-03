@@ -9,8 +9,8 @@ import { useT } from 'i18n'
 
 import { EventVolunteerRolePicker } from './EventVolunteerRolePicker'
 
-export type EventVolunteerFormValues = Omit<EventVolunteerInput, 'volunteerId' | 'eventId' | 'interestedIn' | 'acceptedRoles'> & {
-  volunteer?: VolunteerListItem
+export type EventVolunteerFormValues = Pick<EventVolunteerInput, 'status' | 'wishes' | 'notes'> & {
+  volunteer?: Pick<VolunteerListItem, '_id' | 'name' | '__typename'>
   interestedIn: Pick<EventRole, '_id'>[]
   acceptedRoles?: Pick<EventRole, '_id'>[]
 }
@@ -32,7 +32,7 @@ const {
 
 interface EventVolunteerFormProps extends FormProps<EventVolunteerFormValues> {
   syncState?: SyncState
-  excludeVolunteers?: VolunteerListItem[]
+  excludeVolunteers?: Pick<VolunteerListItem, '_id'>[]
   volunteerId?: string
   event: Pick<Event, '_id' | '_versionId' | 'eventRegistrationSystem' | 'workshops'>
   submitText?: string

@@ -67,7 +67,7 @@ function RouteComponent() {
 }
 
 export function EventVolunteerRoleCounts({ volunteers, currentRole, onSetRole }: { volunteers: EventVolunteer[], currentRole?: string, onSetRole: (roleId: string | undefined) => void }) {
-  const roleCounts = new Map<Omit<EventRole, 'type'>, number>()
+  const roleCounts = new Map<Pick<EventRole, '_id' | 'name' | 'order' | 'pluralCount'>, number>()
   volunteers.forEach(ev => {
     ev.interestedIn.forEach(role => {
       roleCounts.set(role, (roleCounts.get(role) ?? 0) + 1)

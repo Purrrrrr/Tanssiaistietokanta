@@ -69,7 +69,7 @@ export function WikipageSelector({ value, onChange, readOnly, placeholder, possi
     }
   }
 
-  return <AutocompleteInput<DanceWikiSearchResult | null>
+  return <AutocompleteInput<Pick<DanceWikiSearchResult, 'name' | 'spamScore'> | null>
     placeholder={placeholder ?? t('searchPage')}
     id={id}
     items={getItems}

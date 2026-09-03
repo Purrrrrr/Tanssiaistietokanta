@@ -125,7 +125,7 @@ function getTasksRoles(ev: EventVolunteer): TaskRole[] {
 
 function EventVolunteerRowEditor({ item, addedVolunteers, readOnly }: {
   item: EventVolunteer
-  addedVolunteers: VolunteerListItem[]
+  addedVolunteers: Pick<VolunteerListItem, '_id'>[]
   readOnly?: boolean
 }) {
   const [patchEventVolunteer] = usePatchEventVolunteer()

@@ -15,7 +15,7 @@ import { useT } from 'i18n'
 export type DanceChooserItem = Omit<DanceListItem, 'events'>
 
 interface DanceChooserProps {
-  value: DanceChooserItem | null
+  value: Pick<DanceChooserItem, '_id'> | null
   excludeFromSearch?: Pick<DanceChooserItem, '_id'>[]
   onChange: (dance: DanceChooserItem | null) => unknown
   readOnly?: boolean
@@ -80,7 +80,7 @@ export function DanceChooser({
     placeholder={placeholder ?? t('searchDance')}
     id={id}
     items={getItems}
-    value={value}
+    value={dances.find(dance => dance._id === value?._id)}
     onChange={chooseOrCreateDance}
     readOnly={readOnly}
     inputRenderer={props => {

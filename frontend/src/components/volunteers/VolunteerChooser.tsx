@@ -10,7 +10,7 @@ import { useT } from 'i18n'
 type VolunteerOption = (VolunteerListItem & { __typename?: 'Volunteer' }) | { __typename: 'createVolunteer', name: string }
 
 export interface VolunteerChooserProps extends FieldComponentProps<VolunteerListItem | null> {
-  excludeVolunteers?: VolunteerListItem[]
+  excludeVolunteers?: Pick<VolunteerListItem, '_id'>[]
 }
 
 export function VolunteerChooser({ value, onChange, readOnly, ...rest }: VolunteerChooserProps) {

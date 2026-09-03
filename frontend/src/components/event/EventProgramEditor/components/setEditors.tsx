@@ -8,7 +8,6 @@ import { DanceProgramChooser } from 'components/event/DanceProgramChooser'
 import {
   DanceSet,
   DanceSetPath,
-  EventProgramRow,
   Field,
   Input,
   ListField,
@@ -19,7 +18,7 @@ import {
   useValueAt,
 } from 'components/event/EventProgramForm'
 import { ProgramTypeIcon } from 'components/event/ProgramTypeIcon'
-import { getProgramDuration, getProgramName } from 'components/event/utils'
+import { getProgramDuration, getProgramName, SimpleEventProgramRow } from 'components/event/utils'
 import { Duration } from 'components/widgets/Duration'
 import { DurationField } from 'components/widgets/DurationField'
 import { useT, useTranslation } from 'i18n'
@@ -79,7 +78,7 @@ function ProgramListEditor({ path }: { path: ProgramSectionPath }) {
   const programPath = `${path}.program` as const
   const accessibilityContainer = useRef<HTMLDivElement>(null)
   const programRow = useValueAt(path)
-  const getType = useCallback((row: EventProgramRow) => row.type, [])
+  const getType = useCallback((row: SimpleEventProgramRow) => row.type, [])
   const isIntroductionsSection = path.startsWith('introductions')
   const accepts = useMemo(() => isIntroductionsSection ? ['EventProgram'] : ['Dance', 'RequestedDance', 'EventProgram'], [isIntroductionsSection])
   if (!programRow) return null
@@ -90,10 +89,10 @@ function ProgramListEditor({ path }: { path: ProgramSectionPath }) {
 
   return <>
     <div ref={accessibilityContainer} />
-    <div ref={tableRef} className="grid grid-cols-[min-content_1fr_min-content_min-content] *:even:not-last:bg-gray-100/80 *:border-t-1 *:border-gray-200 *:grid *:grid-cols-subgrid *:col-span-full *:*:not-first:border-s-1 *:*:border-gray-200">
+    <div ref={tableRef} className="grid grid-cols-[min-content_1fr_min-content_min-content] *:even:not-last:bg-gray-100/80 *:border-t *:border-gray-200 *:grid *:grid-cols-subgrid *:col-span-full *:*:not-first:border-s-1 *:*:border-gray-200">
       {(program.length + intervalMusicDuration) > 0 ?
         <div className="font-bold *:p-1.5">
-          <div className="col-start-2 border-s-1">{t('columnTitles.name')}</div><div className="col-span-2">{t('columnTitles.duration')}</div>
+          <div className="col-start-2 border-s">{t('columnTitles.name')}</div><div className="col-span-2">{t('columnTitles.duration')}</div>
         </div>
         : <div className={`${ColorClass.textMuted} p-0 col-span-full`}>{t('programListIsEmpty')}</div>
       }
@@ -130,7 +129,7 @@ function ProgramListEditor({ path }: { path: ProgramSectionPath }) {
   </>
 }
 
-function ProgramItemCounters({ program }: { program: EventProgramRow[] }) {
+function ProgramItemCounters({ program }: { program: SimpleEventProgramRow[] }) {
   const t = useT('components.eventProgramEditor')
   const itemsByType = Object.groupBy(
     program,
@@ -229,7 +228,7 @@ function IntervalMusicEditor({ danceSetPath }: { danceSetPath: DanceSetPath }) {
   </div>
 }
 
-function DanceSetDuration({ program, intervalMusicDuration }: { program: EventProgramRow[], intervalMusicDuration: number }) {
+function DanceSetDuration({ program, intervalMusicDuration }: { program: SimpleEventProgramRow[], intervalMusicDuration: number }) {
   const t = useT('components.eventProgramEditor')
   const pause = useValueAt('pauseBetweenDances')
   const duration = program
