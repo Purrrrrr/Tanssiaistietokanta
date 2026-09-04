@@ -1,6 +1,6 @@
 import EventEmitter from 'events'
 
-import { type Access, AccessAllowed, type AccessQuery, ServiceName } from 'types/gql/graphql'
+import { type Access, type AccessAllowed, type AccessQuery, type ServiceName } from 'types/gql/base-types'
 
 import { socketRequest } from 'backend'
 import { socket } from 'backend/connection'
