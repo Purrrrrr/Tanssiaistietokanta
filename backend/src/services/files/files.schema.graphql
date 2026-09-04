@@ -1,7 +1,7 @@
 type Query {
   file(id: ID!): File!
-  files(owner: FileOwner!, owningId: ID!, path: String): [File!]!
-  filesCount(owner: FileOwner!, owningId: ID!, path: String): Int!
+  files(owner: FileOwner!, owningId: String!, path: String): [File!]!
+  filesCount(owner: FileOwner!, owningId: String!, path: String): Int!
 }
 
 type File {
@@ -9,7 +9,7 @@ type File {
   _createdAt: String!
   _updatedAt: String!
   owner: FileOwner!
-  owningId: ID!
+  owningId: String!
   path: String!
   name: String!
   notes: String!

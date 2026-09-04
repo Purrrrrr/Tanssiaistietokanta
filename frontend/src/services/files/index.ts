@@ -23,7 +23,7 @@ setupServiceUpdateFragment(
 )
 
 export const useFiles = entityListQueryHook('files', graphql(`
-  query getFiles($owner: FileOwner!, $owningId: ID!, $path: String) {
+  query getFiles($owner: FileOwner!, $owningId: String!, $path: String) {
     files(owner: $owner, owningId: $owningId, path: $path) {
       _id
       _updatedAt
@@ -34,7 +34,7 @@ export const useFiles = entityListQueryHook('files', graphql(`
 `))
 
 export const useFilesCount = backendQueryHook(graphql(`
-  query getFilesCount($owner: FileOwner!, $owningId: ID!, $path: String) {
+  query getFilesCount($owner: FileOwner!, $owningId: String!, $path: String) {
     filesCount(owner: $owner, owningId: $owningId, path: $path)
   }
 `))
