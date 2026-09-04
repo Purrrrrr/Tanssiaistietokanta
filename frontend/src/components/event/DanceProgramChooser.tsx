@@ -69,6 +69,7 @@ function addWorkshops(
     const danceInAllInstances = instancesWithDance?.length === workshop.instances.length
 
     return {
+      __typename: 'TeachedInWorkshop' as const,
       _id: `${dance._id}-${workshop._id}`,
       workshop,
       instances: danceInAllInstances ? null : instancesWithDance,
@@ -76,8 +77,8 @@ function addWorkshops(
   }).filter(workshop => workshop !== null)
 
   return {
-    // A bit of a hack to make the type system happy. TODO: fix somehow
     ...dance as Dance,
+    __typename: 'Dance',
     teachedIn,
-  }
+  } as EventProgramRow['dance'] // A bit of a hack to make the type system happy. TODO: fix somehow
 }

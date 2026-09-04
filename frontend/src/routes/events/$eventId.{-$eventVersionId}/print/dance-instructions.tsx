@@ -158,7 +158,7 @@ function getDances(workshops: { instances: Instance[] }[]) {
   return sortDances(dances)
 }
 
-function InstructionsForDance({ dance, showShortInstructions }: { dance: Dance, showShortInstructions: boolean }) {
+function InstructionsForDance({ dance, showShortInstructions }: { dance: Pick<Dance, '_id' | 'name' | 'description' | 'instructions' | 'wikipageName'>, showShortInstructions: boolean }) {
   const [editorOpen, setEditorOpen] = useState(false)
   const field = showShortInstructions ? 'description' : 'instructions' as const
   const value = dance[field] ?? null
@@ -185,7 +185,7 @@ function InstructionsForDance({ dance, showShortInstructions }: { dance: Dance, 
   </div>
 }
 
-function DanceFieldEditor({ dance: danceInDatabase, field }: { dance: Dance, field: 'description' | 'instructions' }) {
+function DanceFieldEditor({ dance: danceInDatabase, field }: { dance: Pick<Dance, '_id' | 'name' | 'description' | 'instructions' | 'wikipageName' | 'wikipage'>, field: 'description' | 'instructions' }) {
   const t = useT('domain.dance')
   const [patchDance] = usePatchDance()
   const onPatch = useCallback(

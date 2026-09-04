@@ -127,6 +127,7 @@ export function WorkshopVolunteers({ event, workshop }: { event: Event, workshop
 
 export function newInstance(reference?: Instance, date?: string): Instance {
   return {
+    __typename: 'WorkshopInstance',
     _id: randomId(),
     abbreviation: '',
     dateTime: reference?.dateTime ?? `${date ?? new Date().toISOString().slice(0, 10)}T12:00:00.000`,

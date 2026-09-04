@@ -118,7 +118,7 @@ function DanceProgramItemSlide(props: WithCommonProps<DanceProgramItemSlideProps
   />
 }
 
-function getFormationDiagramsForBallroom(dance?: Dance | null, ballroomId?: string | null) {
+function getFormationDiagramsForBallroom(dance?: Pick<Dance, 'formationDiagrams'> | null, ballroomId?: string | null) {
   if (!ballroomId) return undefined
   return dance?.formationDiagrams?.find(fd => fd.ballroom?._id === ballroomId)
 }

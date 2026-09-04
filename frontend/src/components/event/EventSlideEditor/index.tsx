@@ -239,6 +239,7 @@ function ProgramItemEditor({ path, eventId }: { path: ProgramItemPath, eventId: 
   }
 }
 const emptyDance: Dance = {
+  __typename: 'Dance',
   _id: '',
   name: '-',
   wikipage: null,

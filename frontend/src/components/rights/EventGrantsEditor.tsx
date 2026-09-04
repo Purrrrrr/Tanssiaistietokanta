@@ -94,6 +94,7 @@ export function EventGrantsEditor({ eventId }: { eventId?: string }) {
             aria-label={t('addGrant')}
             value={null}
             onChange={user => user && addGrant({
+              __typename: 'EventGrant',
               _id: randomId(),
               principal: `user:${user._id}`,
               role: 'viewer',

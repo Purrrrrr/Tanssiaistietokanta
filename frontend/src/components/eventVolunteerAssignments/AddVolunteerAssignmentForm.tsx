@@ -177,7 +177,10 @@ function AssignmentList({ formData, currentAssignments, event }: {
         currentAssignments={allAssignments}
         onChange={volunteer => add({
           _id: volunteer._id,
-          volunteer,
+          volunteer: {
+            __typename: 'Volunteer',
+            ...volunteer,
+          },
           role: target,
           workshop,
         })} />

@@ -112,6 +112,7 @@ query BallProgram($eventId: ID!, $eventVersionId: ID) {
             showInLists
           }
           danceId
+          formationDiagramId
           dance {
             _id
             _versionId

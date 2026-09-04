@@ -5,6 +5,7 @@ import randomId from 'utils/randomId'
 
 export const DEFAULT_INTERVAL_MUSIC_DURATION = 15 * 60
 export const DEFAULT_INTERVAL_MUSIC = {
+  __typename: 'IntervalMusic',
   name: null,
   description: null,
   duration: DEFAULT_INTERVAL_MUSIC_DURATION,
@@ -23,6 +24,7 @@ export interface SimpleEventProgramRow {
 export function newDanceSet(title: string): DanceSet {
   const dances = Array.from({ length: 6 }, newRequestedDanceEventProgramRow)
   return {
+    __typename: 'DanceSet',
     _id: randomId(),
     title,
     program: dances,
@@ -54,11 +56,13 @@ export function newEventProgramEventProgramRow(program: Partial<EventProgramRow[
 
 export function newEventProgramRow(program: Pick<EventProgramRow, 'type'> & Partial<Pick<EventProgramRow, 'dance' | 'danceId' | 'eventProgram'>>): EventProgramRow {
   return {
+    __typename: 'EventProgramRow',
     _id: randomId(),
     slideStyleId: null,
     eventProgram: null,
     dance: null,
     danceId: null,
+    formationDiagramId: null,
     ...program,
   }
 }

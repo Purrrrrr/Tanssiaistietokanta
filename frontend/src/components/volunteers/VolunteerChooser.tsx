@@ -7,7 +7,7 @@ import { FieldComponentProps } from 'libraries/forms'
 import { AutocompleteInput } from 'libraries/formsV2/components/inputs'
 import { useT } from 'i18n'
 
-type VolunteerOption = (VolunteerListItem & { __typename?: 'Volunteer' }) | { __typename: 'createVolunteer', name: string }
+type VolunteerOption = VolunteerListItem | { __typename: 'createVolunteer', name: string }
 
 export interface VolunteerChooserProps extends FieldComponentProps<VolunteerListItem | null> {
   excludeVolunteers?: Pick<VolunteerListItem, '_id'>[]

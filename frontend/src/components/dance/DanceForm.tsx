@@ -35,7 +35,7 @@ const editableDanceFields: (keyof EditableDance)[] = [
   'formationDiagrams',
 ]
 
-export function useDanceEditorState(dance: Omit<Dance, 'formationDiagrams'> & { formationDiagrams?: Dance['formationDiagrams'] }) {
+export function useDanceEditorState(dance: Omit<Dance, '__typename' | 'formationDiagrams'> & { formationDiagrams?: Dance['formationDiagrams'] }) {
   const canEdit = useRight('dances:modify', { entityId: dance._id })
   const readOnly = dance._versionId != null || !canEdit
   const [modifyDance] = usePatchDance()
