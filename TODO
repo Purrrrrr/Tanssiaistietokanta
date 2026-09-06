@@ -643,7 +643,7 @@
   * Clickable state
   * Tailwind color scheme?
   * Migrate rest of tags to new tag component
-  ItemList 2.0
+* ItemList 2.0
   * Basic functionality
   * Make sortable columns easier to implement
   * Migrate lists to 2.0
@@ -661,26 +661,36 @@
   * Style row link focus?
   * Translation for "Sort by" in sort menu
   * Drop 2 from name
-    Easier and nicer layouting for small screen "cards"
+  * Easier and nicer layouting for small screen "cards"
     * wrapStyle: { grid/flex cols/rows: string | number }
-      Column wrapStyle?
-    Hidable columns
-    Actions overflow menu?
-    Selection improvements
+  * Selection improvements
     * Take selection state as prop
     * Allow selecting ranges with shift?
     * Selected row style?
-      Make shift click work when selector checkbox label is clicked
+    * Make shift click work when selector checkbox label is clicked
+  * Hidable columns
+* Update backend dependencies
+  Make wiki page a separate but optional column in dance list
+  Fix read-only dance form dance instructions overflowing
+  Make changing existing event to public work
+  Add volunteers, users, ballrooms to breadcrumb submenu
+  Add gap between workshop cards in event frontpage
+  Open newly created document when create button pushed
+  Document date column
+  Is infinite loader necessary in dances any more. It prevents sorting working properly
+
   File list
   * Sortable columns
     Better small screen layout
     Do we need to show file dates at all?
+    Shorter file date formatting
     Actions inside sub-menu
       Component for action menus that folds when screen is small?
-  Make wiki page a separate but optional column in dance list
+  Update backend to use mocha 12
   Separate tag color schemes for stuff defined inside the components using them?
+  ItemList actions overflow menu?
+  ItemList column wrapStyle?
 
-  Fix read-only dance form dance instructions overflowing
   Formation slide part two
     Show diagram list in ballrooms
     Show dances sharing this diagram in dance editor
@@ -688,11 +698,6 @@
     Diagrams without ballroom
       Allow usage
 
-  Add volunteers, users, ballrooms to breadcrumb submenu
-  Add gap between workshop cards in event frontpage
-  Open newly created document when create button pushed
-  Document date column
-  Is infinite loader necessary in dances any more. It prevents sorting working properly
   Use in slides: https://developer.mozilla.org/en-US/docs/Web/API/WakeLock
   
   Dance difficulty tags
