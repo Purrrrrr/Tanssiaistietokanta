@@ -80,7 +80,7 @@ interface CommonProps<T> {
   enabled: boolean // Should this column exist in this table? True by default. Used to exclude columns in certain tables without removing them from the column list
 }
 
-export type LinkGetter<T> = (item: T, index: number) => LinkProps
+export type LinkGetter<T> = (item: T, index: number) => LinkProps | null
 
 export const columnDefaults: CommonProps<unknown> = {
   width: 'auto',

@@ -137,8 +137,14 @@ function Row<T>({ items, index, isTable, columns, rowLink, rowClassName, expanda
   const navigate = useNavigate()
   const hasExtraRows = expandableContent && isTable
   const selected = selector?.selected.includes(item)
-  const onClick: React.MouseEventHandler | undefined = rowLink
-    ? (e) => { if (!isInputTag(e.target)) navigate(rowLink(item, index)) }
+  const link = rowLink?.(item, index)
+  const onClick: React.MouseEventHandler | undefined = link
+    ? (e) => {
+      if (!isInputTag(e.target)) {
+        console.log('navigating to', link)
+        navigate(link)
+      }
+    }
     : selector
       ? (e) => {
         if (isInputTag(e.target)) return
@@ -158,7 +164,7 @@ function Row<T>({ items, index, isTable, columns, rowLink, rowClassName, expanda
       onClick={onClick}
       className={classNames(
         'itemlist-row border-x first:border border-b border-gray-200 hover:bg-hover-odd',
-        (rowLink ?? selector) && 'cursor-pointer',
+        (link ?? selector) && 'cursor-pointer',
         rowClassName,
         selected && 'bg-selected hover:bg-selected-hover',
         selected
@@ -196,9 +202,10 @@ function Cell<T>({ isTable, column, item, rowState }: {
   const content = column.content(item, rowState)
   const label = column.reflowLabel ? <span className="reflowed-label me-1">{column.label}:{' '}</span> : null
   let children = label ? <>{label}{content}</> : content
-  if (column.link) {
+  const link = column.link?.(item, rowState.index)
+  if (link) {
     children = <Link
-      {...column.link(item, rowState.index)}
+      {...link}
       className={classNames('w-full h-full block -m-2 p-2', column.isRowLink && 'itemlist-row-link')}
     >
       {children}
