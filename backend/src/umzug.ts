@@ -39,6 +39,7 @@ function getUmzug<Ctx extends MigrationContext>(context: Ctx, extension: string 
           : `./migrations/*.${extension}`,
         { cwd: __dirname },
       ],
+      resolve: isTest ? resolve : undefined,
     },
     context,
     storage: {
@@ -54,4 +55,27 @@ function getUmzug<Ctx extends MigrationContext>(context: Ctx, extension: string 
     },
     logger: isTest ? undefined : console,
   })
+}
+
+// Something in the ts->js transpilation ends up mangling the exports in a way that makes up/down end up inside a default export instead of top-level exports.
+// We work around that by always using require() to load the migration module.
+function resolve<Ctx extends MigrationContext>({ name, path: filepath }: { name: string, path?: string, context: Ctx }) {
+  if (!filepath) {
+    throw new Error(`Can't resolve migration ${name} without a file path`)
+  }
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const loadModule = () => require(filepath)
+  return {
+    name,
+    path: filepath,
+    up: async ({ context }: { context: Ctx }) => {
+      const { up } = await loadModule()
+      if (up === undefined) throw new Error(`Migration ${name} does not export an "up" function`)
+      return up({ path: filepath, name, context })
+    },
+    down: async ({ context }: { context: Ctx }) => {
+      const { down } = await loadModule()
+      return down?.({ path: filepath, name, context })
+    },
+  }
 }
