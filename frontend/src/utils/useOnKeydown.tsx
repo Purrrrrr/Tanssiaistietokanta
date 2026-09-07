@@ -25,6 +25,7 @@ export function useOnKeydown(onKeydown: KeyDownHandlerParam, key?: string) {
 
 const inputTags = ['A', 'LABEL', 'INPUT', 'TEXTAREA', 'SELECT', 'BUTTON']
 export function isInputTag(target: HTMLElement | EventTarget) {
+  if (target instanceof SVGElement && target.parentElement) return isInputTag(target.parentElement)
   if (!(target instanceof HTMLElement)) return false
   if (!target) return false
   if (inputTags.includes(target.tagName)) return true
