@@ -73,6 +73,7 @@ interface CommonProps<T> {
   isRowLink: boolean
   reflowLabel: boolean
   reflowBreakAfter: boolean
+  reflowArea: string
   headerClassName?: string
   headerPaddingClassName?: string
   // TODO: controls for column layout on small screens, e.g. hide on mobile, full width on mobile, etc
@@ -89,6 +90,7 @@ export const columnDefaults: CommonProps<unknown> = {
   isRowLink: false,
   headerClassName: '',
   reflowLabel: false,
+  reflowArea: '',
   reflowBreakAfter: false,
   visibility: 'always',
   enabled: true,
@@ -103,6 +105,7 @@ export function normalizeColumnInput<T, Key>(
   return {
     ...columnDefaults,
     width: defaultWidth ?? columnDefaults.width,
+    reflowArea: key.toString(),
     ...rest,
     id: key,
     label: label ?? labelTranslator?.(key as Key) ?? null,

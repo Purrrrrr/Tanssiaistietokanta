@@ -9,13 +9,14 @@ export interface BaseItem {
   _id: string | number
 }
 
-export interface ItemListProps<T, Key = never> extends RowProps<T>, SelectorColumnProps<T>, ItemListSortingProps<T>, ActionsColumnProps<T> {
+export interface ItemListProps<T, Key = never> extends RowProps<T>, SelectorColumnProps<T>, ItemListSortingProps<T>, ActionsColumnProps<T>, ReflowProps {
   id?: string
   isTable?: boolean
   reflowAt?: `${number}px` | false
   reflowType?: 'flex' | 'grid'
   reflowColumns?: number | string
   reflowRows?: number | string
+  reflowAreas?: string[]
   className?: string
   marginClass?: string
   labelTranslator?: (key: Key) => string
@@ -25,9 +26,28 @@ export interface ItemListProps<T, Key = never> extends RowProps<T>, SelectorColu
 }
 
 export interface ActionsColumnProps<T> {
-  actions?: false | ((item: T, index: number) => React.ReactNode)
-  actionsColumnClassName?: string
+  actions?: false | ActionsColumnOptions<T>['content'] | ActionsColumnOptions<T>
   expandButtonProps?: ButtonProps | ((item: T, state: RowState) => ButtonProps)
+}
+
+export interface ActionsColumnOptions<T> {
+  content: ((item: T, index: number) => React.ReactNode) | null
+  reflowArea?: string
+  className?: string
+}
+
+export type ReflowProps = {
+  [K in keyof ReflowOptions as `reflow${Capitalize<K>}`]?: ReflowOptions[K]
+} & {
+  reflowAt?: `${number}px` | false
+  reflow?: ReflowOptions
+}
+export interface ReflowOptions {
+  at?: `${number}px` | false
+  type: 'flex' | 'grid'
+  columns?: number | string
+  rows?: number | string
+  areas?: string[]
 }
 
 export interface RowProps<T> {

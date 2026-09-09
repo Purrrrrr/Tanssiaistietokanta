@@ -62,8 +62,10 @@ export function DanceList({ dances }: DanceListProps) {
               content: dance => <DanceIsUsedIn minimal events={dance.events} wikipageName={dance.wikipageName} />,
             },
           ]}
-          actions={dance => <DeleteDanceButton minimal dance={dance} />}
-          actionsColumnClassName="reflowed:text-right"
+          actions={{
+            content: dance => <DeleteDanceButton minimal dance={dance} />,
+            className: 'reflowed:text-right',
+          }}
           expandableContent={dance => <DanceListRowEditor danceId={dance._id} />}
           expandButtonProps={dance => ({
             icon: <Edit />,

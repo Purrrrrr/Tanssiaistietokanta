@@ -455,6 +455,7 @@ body {
       .itemlist-row {
         grid-template-columns: var(--itemlist-reflow-columns);
         grid-template-rows: var(--itemlist-reflow-rows);
+        grid-template-areas: var(--itemlist-reflow-areas);
         @apply gap-1;
 
         &:has(> .selector) {
@@ -492,6 +493,11 @@ body {
         .itemlist-sorted-header {
           flex: 1 1 auto;
         }
+      }
+    }
+    @container style(--itemlist-reflowed: 1) and style(--itemlist-reflow-areas) {
+      .itemlist-cell {
+        grid-area: var(--itemlist-reflow-area);
       }
     }
   }

@@ -1,4 +1,4 @@
-import type { ActionsColumnProps } from '../types'
+import type { ActionsColumnOptions, ActionsColumnProps } from '../types'
 
 import { ChevronDown, ChevronUp } from 'libraries/ui/icons'
 
@@ -11,25 +11,23 @@ import { ItemListSortState } from './useItemSorting'
 export function useActionsColumn<T extends { _id: string | number }>(
   sortApi: ItemListSortState<T>,
   visibilityApi: ColumnVisibilityApi<T>,
-  {
-    actions,
-    actionsColumnClassName,
-    expandButtonProps,
-    expandableContent,
-  }: ActionsColumnProps<T> & { expandableContent?: unknown },
+  { expandButtonProps, expandableContent, actions }: ActionsColumnProps<T> & { expandableContent?: unknown },
 ): Column<T> | null {
   const hasExpandableContent = expandableContent != null
-  const hasActionsColumn = actions != null || sortApi.sortableColumns.length > 1 || hasExpandableContent
+  const hasActionsColumn = !!actions || sortApi.sortableColumns.length > 1 || hasExpandableContent
 
   if (!hasActionsColumn) return null
+  const { content, className: actionsColumnClassName, reflowArea } = getActionOptions(actions)
+
   return {
     ...columnDefaults,
     id: 'itemlist-actions',
+    reflowArea,
     width: 'max-content',
     link: null,
-    label: <ColumnOptionsMenu {...sortApi} visibilityApi={visibilityApi} hasActions={actions != null} />,
+    label: <ColumnOptionsMenu {...sortApi} visibilityApi={visibilityApi} hasActions={content !== null} />,
     content: (item, rowState) => <>
-      {actions && actions(item, rowState.index)}
+      {content?.(item, rowState.index)}
       {hasExpandableContent && <Button
         {...(typeof expandButtonProps === 'function' ? expandButtonProps(item, rowState) : expandButtonProps)}
         minimal
@@ -39,6 +37,21 @@ export function useActionsColumn<T extends { _id: string | number }>(
     </>,
     headerClassName: 'itemlist-sortable-header itemlist-sort-menu',
     headerPaddingClassName: '',
-    className: actionsColumnClassName ?? 'actions',
+    className: actionsColumnClassName,
   }
+}
+
+function getActionOptions<T extends { _id: string | number }>(actions: ActionsColumnProps<T>['actions']): Required<ActionsColumnOptions<T>> {
+  const defaults = {
+    content: null,
+    className: 'actions',
+    reflowArea: 'actions',
+  }
+  if (actions === false || actions === undefined) {
+    return defaults
+  }
+  if (typeof actions === 'function') {
+    return { ...defaults, content: actions }
+  }
+  return { ...defaults, ...actions }
 }

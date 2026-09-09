@@ -2,7 +2,7 @@ import { useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 import classNames from 'classnames'
 
-import type { ItemListProps, RowProps, SortState } from './types'
+import type { ItemListProps, ReflowOptions, RowProps, SortState } from './types'
 
 import { InfoSign } from 'libraries/ui/icons'
 import { isInputTag } from 'utils/useOnKeydown'
@@ -19,10 +19,6 @@ export function ItemList<T extends { _id: string | number }, Key>(props: ItemLis
   const {
     id,
     isTable = true,
-    reflowAt = '600px',
-    reflowType = 'flex',
-    reflowColumns,
-    reflowRows,
     emptyText,
     className,
     marginClass,
@@ -30,6 +26,7 @@ export function ItemList<T extends { _id: string | number }, Key>(props: ItemLis
     expandableContent,
     expandableContentLoadingMessage,
   } = props
+  const reflow = useReflowOptions(props)
 
   if (!items || items.length === 0) {
     return <EmptyList text={emptyText} />
@@ -42,14 +39,15 @@ export function ItemList<T extends { _id: string | number }, Key>(props: ItemLis
   return <Container
     id={id}
     className={classNames(
-      `itemlist reflow-type-${reflowType} border-b border-gray-200`,
+      `itemlist reflow-type-${reflow.type} border-b border-gray-200`,
       className,
       marginClass ?? 'mb-4',
     )}
     style={{
-      '--itemlist-breakpoint': reflowAt === false ? undefined : reflowAt,
-      '--itemlist-reflow-columns': toGridSizes(reflowColumns ?? columnDefinitions),
-      '--itemlist-reflow-rows': toGridSizes(reflowRows ?? 1),
+      '--itemlist-breakpoint': reflow.at === false ? undefined : reflow.at,
+      '--itemlist-reflow-columns': toGridSizes(reflow.columns ?? columnDefinitions),
+      '--itemlist-reflow-rows': toGridSizes(reflow.rows ?? 1),
+      '--itemlist-reflow-areas': reflow.areas?.map(row => `"${row}"`).join(' '),
       '--itemlist-columns': columnDefinitions,
     } as React.CSSProperties}
   >
@@ -76,6 +74,17 @@ export function ItemList<T extends { _id: string | number }, Key>(props: ItemLis
       />
     )))}
   </Container>
+}
+
+function useReflowOptions<T, K>(props: ItemListProps<T, K>): ReflowOptions {
+  const { reflowAt, reflowType, reflowColumns, reflowRows, reflowAreas, reflow } = props
+  return {
+    at: reflowAt ?? reflow?.at ?? '600px',
+    type: reflowType ?? reflow?.type ?? 'flex',
+    columns: reflowColumns ?? reflow?.columns,
+    rows: reflowRows ?? reflow?.rows,
+    areas: reflowAreas ?? reflow?.areas,
+  }
 }
 
 const toGridSizes = (sizes: number | string) => typeof sizes === 'number' ? `repeat(${sizes}, minmax(0, 1fr))` : sizes
@@ -214,7 +223,12 @@ function Cell<T>({ isTable, column, item, rowState }: {
   const CellElement = isTable ? 'td' : 'span'
 
   return <>
-    <CellElement className={classNames(column.className, column.isRowLink && 'itemlist-row-link-cell')}>{children}</CellElement>
+    <CellElement
+      style={{ '--itemlist-reflow-area': column.reflowArea } as React.CSSProperties}
+      className={classNames(column.className, column.isRowLink && 'itemlist-row-link-cell', 'itemlist-cell')}
+    >
+      {children}
+    </CellElement>
     {column.reflowBreakAfter && <CellElement className="reflowed-breaker" />}
   </>
 }
