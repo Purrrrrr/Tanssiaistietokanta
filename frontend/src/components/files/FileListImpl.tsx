@@ -87,7 +87,7 @@ export default function FileList({ title, owner, owningId, path }: FileListProps
   if (!canUseFiles) {
     return null
   }
-
+  const id = `file-list-${owner}-${owningId}${path ? `-${path}` : ''}`
   return <PageSection
     title={title}
     toolbar={<>
@@ -110,6 +110,7 @@ export default function FileList({ title, owner, owningId, path }: FileListProps
     <UploadProgressList uploads={uploads} />
     <FileDropZone enabled={canUpload} onDrop={onDragAndDrop}>
       <ItemList
+        id={id}
         items={files}
         emptyText={T('noFiles')}
         selection={selector}
@@ -124,6 +125,7 @@ export default function FileList({ title, owner, owningId, path }: FileListProps
           }, {
             key: 'date',
             width: 'minmax(200px, auto)',
+            visibility: 'shown',
             content: file => formatDate(file._updatedAt),
             sortBy: '_updatedAt',
           }, {
