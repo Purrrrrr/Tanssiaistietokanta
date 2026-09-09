@@ -31,7 +31,7 @@ interface DropdrownProps {
 export const Dropdown = ({ id, anchorElement, auto, arrow, children, open, onToggle, onClick, tabIndex, alwaysRenderChildren, focusgroup }: DropdrownProps) => {
   const arrowTriangle = useRef<SVGSVGElement>(null)
   const element = useAnchorToElement<HTMLDivElement>(
-    anchorElement, arrow ? 10 : 0, arrow ? updateTriangle : undefined,
+    anchorElement, arrow ? 10 : 0, arrow ? updateTriangle : undefined, open,
   )
 
   return <Popover

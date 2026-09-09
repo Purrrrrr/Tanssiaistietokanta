@@ -15,6 +15,7 @@ export function useAnchorToElement<TargetElement extends HTMLElement>(
   anchorElementParam?: string | HTMLElement,
   spacing?: number,
   callback?: (props: AnchoringCallbackProps) => void,
+  enabled = true,
 ) {
   const elementRef = useRef<TargetElement>(null)
 
@@ -22,9 +23,9 @@ export function useAnchorToElement<TargetElement extends HTMLElement>(
     const anchorElement = toElement(anchorElementParam)
       ?? elementRef.current?.closest('[data-dropdown-container]')
 
-    if (!elementRef.current || !anchorElement) return
+    if (!elementRef.current || !anchorElement || !enabled) return
     updateElementPosition(elementRef.current, anchorElement, spacing ?? 0, callback)
-  }, [anchorElementParam, spacing, callback])
+  }, [anchorElementParam, spacing, callback, enabled])
 
   useLayoutEffect(updateDirection, [updateDirection])
   useResizeObserver(elementRef, updateDirection)
