@@ -513,5 +513,15 @@ body {
       box-shadow: inset 0 0 0 1px var(--tag-border, currentcolor);
     }
   }
+
+  .bg-itemlist-loading{
+    background: repeating-linear-gradient(
+      0deg,
+      var(--color-gray-50),
+      var(--color-gray-50) var(--itemlist-loading-row-height, 30px),
+      var(--color-gray-200) var(--itemlist-loading-row-height, 30px),
+      var(--color-gray-200) calc(var(--itemlist-loading-row-height, 30px) * 2)
+    );
+  }
 }
 

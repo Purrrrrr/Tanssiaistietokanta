@@ -10,7 +10,9 @@ export default function ItemLoadingIndicator(
     const elem = ref.current
     const updateHeight = () => {
       if (!elem?.parentElement) return
-      elem.style.height = `${getAverageRowHeight(elem.parentElement) * unloadedCount}px`
+      const averageRowHeight = getAverageRowHeight(elem.parentElement)
+      elem.style.height = `${averageRowHeight * unloadedCount}px`
+      elem.style.setProperty('--itemlist-loading-row-height', `${averageRowHeight}px`)
     }
     elem?.parentElement?.addEventListener('resize', updateHeight)
 
@@ -45,7 +47,7 @@ export default function ItemLoadingIndicator(
   }, [unloadedCount, onLoadMore])
 
   const Elem = isTable ? 'tr' : 'div'
-  return <Elem className="animate-pulse bg-gray-300 col-span-full" ref={ref} />
+  return <Elem className="animate-pulse bg-itemlist-loading col-span-full" ref={ref} />
 }
 
 function getAverageRowHeight(elem: HTMLElement) {
