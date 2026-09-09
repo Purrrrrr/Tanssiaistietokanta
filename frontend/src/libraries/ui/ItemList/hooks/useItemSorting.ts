@@ -11,12 +11,14 @@ export interface SortState {
 
 export interface ItemListSortingProps<T> {
   items: T[] | null | undefined
+  loadedItemCount?: number
   defaultSort?: SortState | string | null
   alwaysSortBy?: Sort<T> | null
 }
 
 export interface ItemListSortState<T> {
   items: T[]
+  unloadedItemCount: number
   sortableColumns: Column<T>[]
   sort: SortState | null
   setSort: (sort: SortState | null) => void
@@ -24,7 +26,7 @@ export interface ItemListSortState<T> {
 
 export function useItemSorting<T>(
   columns: Column<T>[],
-  { items, defaultSort, alwaysSortBy }: ItemListSortingProps<T>,
+  { items, loadedItemCount, defaultSort, alwaysSortBy }: ItemListSortingProps<T>,
 ): ItemListSortState<T> {
   const sortableColumns = columns.filter(c => c.enabled && c.sortBy)
 
@@ -36,8 +38,15 @@ export function useItemSorting<T>(
     return column ? { key: column.id, direction: 'asc' as const } : null
   })
   const sortedItems = getSortedItems({ items, columns, sort, alwaysSortBy })
+  const visibleItems = loadedItemCount != null ? sortedItems.slice(0, loadedItemCount) : sortedItems
 
-  return { items: sortedItems, sortableColumns, sort, setSort }
+  return {
+    items: visibleItems,
+    unloadedItemCount: sortedItems.length - visibleItems.length,
+    sortableColumns,
+    sort,
+    setSort,
+  }
 }
 
 function getSortedItems<T>({ items: maybeItems, columns, sort, alwaysSortBy }: Pick<ItemListSortingProps<T>, 'items' | 'alwaysSortBy'> & {

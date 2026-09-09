@@ -1,5 +1,5 @@
 import { useNavigate } from '@tanstack/react-router'
-import { useState } from 'react'
+import { lazy, useState } from 'react'
 import classNames from 'classnames'
 
 import type { ItemListProps, ReflowOptions, RowProps, SortState } from './types'
@@ -14,8 +14,10 @@ import type { Selector } from './hooks/useSelectionColumn'
 import { SortButton } from './SortButton'
 import { useItemList } from './useItemList'
 
+const ItemLoadingIndicator = lazy(() => import('./ItemLoadingIndicator'))
+
 export function ItemList<T extends { _id: string | number }, Key>(props: ItemListProps<T, Key>) {
-  const { sort, setSort, columns, items } = useItemList(props)
+  const { sort, setSort, columns, items, unloadedItemCount } = useItemList(props)
   const {
     id,
     isTable = true,
@@ -25,6 +27,7 @@ export function ItemList<T extends { _id: string | number }, Key>(props: ItemLis
     rowClassName,
     expandableContent,
     expandableContentLoadingMessage,
+    onLoadMore,
   } = props
   const reflow = useReflowOptions(props)
 
@@ -59,20 +62,25 @@ export function ItemList<T extends { _id: string | number }, Key>(props: ItemLis
         onSort={setSort}
       />,
     )}
-    {wrap(isTable ? 'tbody' : null, items.map((item, index) => (
-      <Row
-        key={item._id}
-        items={items}
-        index={index}
-        selector={props.selection}
-        isTable={isTable ?? false}
-        columns={columns}
-        rowClassName={rowClassName}
-        rowLink={rowLink}
-        expandableContent={expandableContent}
-        expandableContentLoadingMessage={expandableContentLoadingMessage}
-      />
-    )))}
+    {wrap(isTable ? 'tbody' : null,
+      <>
+        {items.map((item, index) => (
+          <Row
+            key={item._id}
+            items={items}
+            index={index}
+            selector={props.selection}
+            isTable={isTable ?? false}
+            columns={columns}
+            rowClassName={rowClassName}
+            rowLink={rowLink}
+            expandableContent={expandableContent}
+            expandableContentLoadingMessage={expandableContentLoadingMessage}
+          />
+        ))}
+        {unloadedItemCount > 0 && <ItemLoadingIndicator unloadedCount={unloadedItemCount} isTable={isTable} onLoadMore={onLoadMore} />}
+      </>,
+    )}
   </Container>
 }
 

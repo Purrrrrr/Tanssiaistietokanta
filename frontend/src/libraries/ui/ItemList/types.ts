@@ -12,17 +12,13 @@ export interface BaseItem {
 export interface ItemListProps<T, Key = never> extends RowProps<T>, SelectorColumnProps<T>, ItemListSortingProps<T>, ActionsColumnProps<T>, ReflowProps {
   id?: string
   isTable?: boolean
-  reflowAt?: `${number}px` | false
-  reflowType?: 'flex' | 'grid'
-  reflowColumns?: number | string
-  reflowRows?: number | string
-  reflowAreas?: string[]
   className?: string
   marginClass?: string
   labelTranslator?: (key: Key) => string
   columns: ColumnInput<T, Key>[]
   defaultColumnWidth?: string
   emptyText: React.ReactNode
+  onLoadMore?: (itemsToLoad: number) => void
 }
 
 export interface ActionsColumnProps<T> {
