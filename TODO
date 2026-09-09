@@ -670,14 +670,17 @@
     * Make shift click work when selector checkbox label is clicked
   * Hidable columns
 * Update backend dependencies
-  Make wiki page a separate but optional column in dance list
+* Update backend to use mocha 12
+* Make wiki page a separate but optional column in dance list
+* Is infinite loader necessary in dances any more. It prevents sorting working properly
+  * Fix loading
+  * Implement infinite loader in ItemList 2.0
   Fix read-only dance form dance instructions overflowing
   Make changing existing event to public work
   Add volunteers, users, ballrooms to breadcrumb submenu
   Add gap between workshop cards in event frontpage
   Open newly created document when create button pushed
   Document date column
-  Is infinite loader necessary in dances any more. It prevents sorting working properly
 
   File list
   * Sortable columns
@@ -686,7 +689,6 @@
     Shorter file date formatting
     Actions inside sub-menu
       Component for action menus that folds when screen is small?
-  Update backend to use mocha 12
   Separate tag color schemes for stuff defined inside the components using them?
   ItemList actions overflow menu?
   ItemList column wrapStyle?
