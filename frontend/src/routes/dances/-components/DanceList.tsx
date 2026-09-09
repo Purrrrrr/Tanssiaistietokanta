@@ -2,9 +2,10 @@ import { DanceListItem, ID } from 'types'
 
 import { useDance } from 'services/dances'
 
-import { ItemList } from 'libraries/ui'
+import { ItemList, TooltipContainer } from 'libraries/ui'
+import { buttonClass } from 'libraries/ui/buttonClass'
 import { ColorClass } from 'libraries/ui/classes'
-import { Edit } from 'libraries/ui/icons'
+import { DocumentOpen, Edit } from 'libraries/ui/icons'
 import { DanceCategoryTag } from 'components/dance/DanceCategoryTag'
 import { DanceEditor } from 'components/dance/DanceEditor'
 import { InfiniteItemLoader } from 'components/InfiniteItemLoader'
@@ -34,9 +35,9 @@ export function DanceList({ dances }: DanceListProps) {
           emptyText={t('noDances')}
           labelTranslator={label}
           reflowType="grid"
-          reflowColumns="1fr max-content"
+          reflowColumns="1fr max-content max-content"
           reflowRows={2}
-          rowClassName="reflowed:grid-flow-col"
+          reflowAreas={['name wikipageName events', 'category actions actions']}
           columns={[
             {
               key: 'name',
@@ -53,13 +54,18 @@ export function DanceList({ dances }: DanceListProps) {
                 ? <DanceCategoryTag title={dance.category} />
                 : <span className={ColorClass.textMuted}>{t('noCategory')}</span>,
             }, {
-              key: 'danceUsage',
+              key: 'wikipageName',
+              width: 'max-content',
+              visibility: 'shown',
+              content: dance => <DancewikiLink wikipageName={dance.wikipageName} />,
+            }, {
+              key: 'events',
               width: 'max-content',
               className: 'reflowed:text-right not-reflowed:-me-4',
               headerClassName: 'not-reflowed:-me-4',
               link: null,
-              sortBy: (dance: DanceListItem) => [dance.events.length, !!dance.wikipageName],
-              content: dance => <DanceIsUsedIn minimal events={dance.events} wikipageName={dance.wikipageName} />,
+              sortBy: (dance: DanceListItem) => dance.events.length,
+              content: dance => <DanceIsUsedIn minimal events={dance.events} />,
             },
           ]}
           actions={{
@@ -80,6 +86,23 @@ export function DanceList({ dances }: DanceListProps) {
       }
     </InfiniteItemLoader>
   </div>
+}
+
+function DancewikiLink({ wikipageName }: { wikipageName?: string | null }) {
+  if (!wikipageName || wikipageName.trim() === '') return null
+
+  const className = buttonClass('none', { minimal: true, paddingClass: 'px-2 py-1.5 -me-2' })
+  return <TooltipContainer tooltip={wikipageName}>
+    <a
+      href={`https://tanssi.dy.fi/${wikipageName.replaceAll(' ', '_')}`}
+      className={className}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <DocumentOpen size={15} />
+      <span className="reflowed:sr-only">{wikipageName}</span>
+    </a>
+  </TooltipContainer>
 }
 
 function DanceListRowEditor({ danceId }: { danceId: ID }) {

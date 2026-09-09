@@ -89,8 +89,8 @@ export const fi = {
       category: 'Kategoria',
       instructions: 'Pidemmät tanssiohjeet printtiin',
       slideStyleId: 'Tanssiaisten diatyyli',
-      wikipageName: 'Tanssiwikin sivun nimi',
-      danceUsage: 'Käyttökohteet',
+      wikipageName: 'Tanssiwikin sivu',
+      events: 'Tapahtumat',
       formationDiagrams: 'Kuvionmuodostusohjeet',
     },
     formationDiagram: {
@@ -219,11 +219,6 @@ export const fi = {
       danceUsedInEvents: {
         one: 'Yksi tanssitapahtuma',
         many: '__count__ tanssitapahtumaa',
-      },
-      danceUsedInEventsAndWiki: {
-        zero: 'Wikisivu, Ei tanssitapahtumia',
-        one: 'Yksi tanssitapahtuma ja wikisivu',
-        many: '__count__ tanssitapahtumaa ja wikisivu',
       },
       danceEvents: 'Tanssitapahtumat',
       copyFromDancewiki: 'Kopioi ohjeet tanssiwikistä',
