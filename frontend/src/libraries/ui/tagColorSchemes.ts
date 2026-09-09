@@ -96,7 +96,6 @@ const correctionAround = (value: number, around: number, wideness: number) => {
 }
 
 function selectedValue<T>(selected: boolean | undefined, notSelectableValue: T, trueValue: T, falseValue: T) {
-  console.log(selected)
   if (selected === undefined) return notSelectableValue
   if (selected === false) return falseValue
   return trueValue
