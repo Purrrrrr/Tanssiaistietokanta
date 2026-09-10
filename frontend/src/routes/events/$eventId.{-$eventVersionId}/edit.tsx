@@ -61,6 +61,7 @@ function RouteComponent() {
       'endDate',
       'program',
       'eventRegistrationSystem',
+      'accessControl',
     ], L.modify(['program'],
       ({ ballroom, ...rest }) => ({
         ...rest,
