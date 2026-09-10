@@ -119,7 +119,7 @@ function EventWorkshops({ event, readOnly }: { event: Event, readOnly: boolean }
     }>
     {workshops.length === 0 && <p>{t('noWorkshops')}</p>}
     {workshops.length > 0 &&
-      <div className="col-span-full gap-4 items-stretch my-4 sm:grid grid-cols-[repeat(auto-fill,minmax(32rem,1fr))]">
+      <div className="gap-4 items-stretch my-4 grid sm:grid-cols-[repeat(auto-fill,minmax(32rem,1fr))]">
         {workshops.map(workshop =>
           <WorkshopCard key={workshop._id} workshop={workshop} />,
         )}
