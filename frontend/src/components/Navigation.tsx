@@ -5,7 +5,7 @@ import { useCurrentUser } from 'services/users'
 
 import { AnchorButton, Button, MenuButton } from 'libraries/ui'
 import { Person as User } from 'libraries/ui/icons'
-import { useT, useTranslation } from 'i18n'
+import { useT } from 'i18n'
 import { useDimensionCssVariables } from 'utils/useDimensionCssVariables'
 
 import { NavigateButton } from './widgets/NavigateButton'
@@ -20,7 +20,13 @@ function Navigation() {
       <span className="">{T('app.title')}</span>
     </NavButton>
     <div className="flex items-center">
-      <NavButton requireRight="dances:list" icon={<span className="mr-0.5">💃</span>} to="/dances" text={useTranslation('navigation.dances')} />
+      <NavButton
+        requireRight="dances:list"
+        icon={<span className="mr-0.5">💃</span>}
+        to="/dances"
+        text={<span className="max-[450px]:sr-only">{T('navigation.dances')}</span>}
+        tooltip={T('navigation.dances')}
+      />
       <div className="self-stretch mx-1 w-[1px] bg-stone-300" />
       <LoginStatus />
     </div>
@@ -36,9 +42,10 @@ function LoginStatus() {
   if (user) {
     return <span>
       <MenuButton
-        text={user.name}
         buttonRenderer={props =>
-          <Button minimal icon={<User className="mr-0.5 text-amber-600 mt-[1px]" />} {...props} />
+          <Button minimal icon={<User className="mr-0.5 text-amber-600 mt-px" />} tooltip={user.name} {...props}>
+            <span className="max-[450px]:sr-only">{user.name}</span>
+          </Button>
         }
       >
         <MenuButton.ItemLink to="/users" text={t('userSettings')} />
@@ -52,8 +59,8 @@ function LoginStatus() {
   return <NavigateButton
     minimal
     to="/login"
-    icon={<User className="text-stone-500 mt-[1px]" />}
-    text={t('login')}
+    icon={<User className="text-stone-500 mt-px" />}
+    text={<span className="max-[450px]:sr-only">{t('login')}</span>}
   />
 }
 

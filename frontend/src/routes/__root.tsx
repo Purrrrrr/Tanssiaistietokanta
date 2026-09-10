@@ -9,7 +9,7 @@ import { Breadcrumb, Link } from 'libraries/ui'
 import { Home } from 'libraries/ui/icons'
 import ErrorComponent from 'components/ErrorComponent'
 import NavigationLayout from 'components/NavigationLayout'
-import { MenuLink, Page } from 'components/Page'
+import { MenuLink, MenuSection, Page } from 'components/Page'
 import { T, TranslationKey, useT } from 'i18n'
 import { type DanceOrganizerRootRouteContext } from 'utils/routeUtils'
 
@@ -93,11 +93,17 @@ function NotFound() {
 
 function Menu() {
   const [events] = useEvents()
+  const t = useT('navigation')
 
   return <>
-    <MenuLink to="/dances" text={<><span className="mr-0.5">💃</span><T msg="navigation.dances" /></>} />
-    {events.map(event =>
-      <MenuLink key={event._id} to="/events/$eventId/{-$eventVersionId}" params={{ eventId: event._id }} text={event.name} />,
-    )}
+    <MenuLink to="/dances" text={t('dances')} />
+    <MenuLink to="/users" text={t('userSettings')} />
+    <MenuLink to="/volunteers" text={t('volunteers')} />
+    <MenuLink to="/ballrooms" text={t('ballrooms')} />
+    <MenuSection smallTitle title={t('events')}>
+      {events.map(event =>
+        <MenuLink key={event._id} to="/events/$eventId/{-$eventVersionId}" params={{ eventId: event._id }} text={event.name} />,
+      )}
+    </MenuSection>
   </>
 }

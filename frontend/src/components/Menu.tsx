@@ -24,10 +24,11 @@ interface MenuSectionProps {
   title: React.ReactNode
   titleButton?: React.ReactNode
   children: React.ReactNode
+  smallTitle?: boolean
 }
 
-export function MenuSection({ children, title, titleButton }: MenuSectionProps) {
-  const heading = <h2 className="px-4 text-lg font-bold min-[800px]:my-3">{title}</h2>
+export function MenuSection({ children, title, titleButton, smallTitle }: MenuSectionProps) {
+  const heading = <h2 className={`px-4 ${smallTitle ? 'text-sm my-1.5' : 'text-lg min-[800px]:my-3'} font-bold`}>{title}</h2>
   return <>
     {titleButton
       ? <div className="flex items-center">
