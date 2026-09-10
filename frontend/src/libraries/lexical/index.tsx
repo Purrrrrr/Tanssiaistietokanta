@@ -20,7 +20,7 @@ export interface DocumentContentEditorProps extends Omit<EditorProps, 'onChange'
 
 export function DocumentContentEditor(props: DocumentContentEditorProps) {
   if (props.readOnly) {
-    return <DocumentViewer document={props.value} className={props.className} />
+    return <DocumentViewer document={props.value} className={`${props.className ?? ''} overflow-auto border border-stone-200 p-4 bg-white`} />
   }
   return <Editor {...props} />
 }
