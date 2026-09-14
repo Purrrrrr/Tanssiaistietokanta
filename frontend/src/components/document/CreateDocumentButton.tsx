@@ -10,7 +10,7 @@ import { useT } from 'i18n'
 interface CreateDocumentButtonProps extends ButtonProps {
   owner: DocumentOwner
   owningId: string
-  onCreate?: () => void
+  onCreate?: (documentId: string) => void
 }
 
 export function CreateDocumentButton({ owner, owningId, onCreate, ...props }: CreateDocumentButtonProps) {
@@ -18,8 +18,10 @@ export function CreateDocumentButton({ owner, owningId, onCreate, ...props }: Cr
   const [createDocument] = useCreateDocument()
 
   const handleCreate = async () => {
-    await addGlobalLoadingAnimation(createDocument({ owner, owningId, title: t('untitledDocument') }))
-    onCreate?.()
+    const doc = await addGlobalLoadingAnimation(createDocument({ owner, owningId, title: t('untitledDocument') }))
+    if (doc.data) {
+      onCreate?.(doc.data.createDocument._id)
+    }
   }
 
   return <AddButton

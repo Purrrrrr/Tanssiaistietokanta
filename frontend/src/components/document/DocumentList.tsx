@@ -1,4 +1,4 @@
-import { getRouteApi } from '@tanstack/react-router'
+import { getRouteApi, useNavigate } from '@tanstack/react-router'
 
 import { DocumentListItem as Document, DocumentOwner } from 'types'
 
@@ -26,12 +26,20 @@ export function DocumentList({ title, owner, owningId }: DocumentListProps) {
   const t = useT('components.documents.DocumentList')
   const [documents] = useDocuments({ owner, owningId })
   const viewRoute = documentViewRoute({ owner })
+  const editRoute = `${viewRoute}/edit`
   const route = documentListRoute({ owner })
+  const navigate = useNavigate()
   const params = getRouteApi(route).useParams()
 
   return <PageSection
     title={title}
-    toolbar={<CreateDocumentButton owner={owner} owningId={owningId} />}
+    toolbar={
+      <CreateDocumentButton
+        owner={owner}
+        owningId={owningId}
+        onCreate={documentId => navigate({ to: editRoute, params: { documentId, ...params } })}
+      />
+    }
   >
     <ItemList
       items={documents}
@@ -59,7 +67,7 @@ export function DocumentList({ title, owner, owningId }: DocumentListProps) {
           entityId={document._id}
           minimal
           icon={<Edit />}
-          to={`${viewRoute}/edit`}
+          to={editRoute}
           params={{ ...params, documentId: document._id }}
           aria-label={t('editDocument')}
           color="primary"
