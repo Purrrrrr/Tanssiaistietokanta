@@ -113,7 +113,11 @@ body {
 
   :focus {
     -moz-outline-radius:6px;
-    outline:none;
+    /* Effectively transparent but animates nicely to the default color */
+    outline-color: rgba(45, 114, 210, 0);
+  }
+  * {
+    outline-color: rgba(45, 114, 210, 0);
   }
   :focus-visible:is(:not(.bp5-input, .bp5-input-appearance)) {
     @apply focus-outline;
@@ -226,10 +230,10 @@ body {
     &:has(input:not(:disabled)) {
       &:hover {
         @apply bg-mix-lightness-85
-      } 
+      }
       &:has(input:active) {
         @apply bg-mix-lightness-80
-      } 
+      }
 
       .switch-indicator ::before {
         box-shadow:0 0 0 1px rgba(17, 20, 24, 0.5);
