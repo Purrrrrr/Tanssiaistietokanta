@@ -1,0 +1,13 @@
+diff --git a/node_modules/@types/express-serve-static-core/index.d.ts b/node_modules/@types/express-serve-static-core/index.d.ts
+index 9914659..82e6e8a 100644
+--- a/node_modules/@types/express-serve-static-core/index.d.ts
++++ b/node_modules/@types/express-serve-static-core/index.d.ts
+@@ -410,7 +410,7 @@ export interface Request<
+     ReqBody = any,
+     ReqQuery = ParsedQs,
+     LocalsObj extends Record<string, any> = Record<string, any>,
+-> extends http.IncomingMessage, Express.Request {
++> extends Omit<http.IncomingMessage, 'body'>, Express.Request {
+     /**
+      * Return request header.
+      *
