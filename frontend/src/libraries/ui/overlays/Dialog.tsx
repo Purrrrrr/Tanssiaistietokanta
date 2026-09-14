@@ -50,6 +50,7 @@ export function Dialog({ isOpen, onClose, children, title, className, showCloseB
   )
 
   return <dialog
+    inert={!isOpen}
     ref={modal}
     className={classNames(
       className,
@@ -61,7 +62,7 @@ export function Dialog({ isOpen, onClose, children, title, className, showCloseB
   >
     {(isOpen || shouldrender) &&
       <>
-        <div className="flex justify-between items-center p-2 mb-3 bg-gray-50 border-gray-300 border-b-1">
+        <div className="flex justify-between items-center p-2 mb-3 bg-gray-50 border-gray-300 border-b">
           <h1 className="text-base">{title}</h1>
           {showCloseButton && <DialogCloseButton aria-label={closeButtonLabel as string} onClick={onClose} ref={closeButton} />}
         </div>
@@ -78,8 +79,8 @@ export function DialogCloseButton(props: Omit<ButtonProps, 'children' | 'text' |
 }
 
 Dialog.Body = function DialogBody({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={classNames(className, 'px-3 break-words')} {...props} />
+  return <div className={classNames(className, 'px-3 wrap-break-word')} {...props} />
 }
 Dialog.Footer = function DialogFooter({ className = 'flex gap-3 justify-between items-center', ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={classNames(className, 'bg-gray-50 mt-3 px-3 py-2 border-t-1 border-gray-300')} {...props} />
+  return <div className={classNames(className, 'bg-gray-50 mt-3 px-3 py-2 border-t border-gray-300')} {...props} />
 }
