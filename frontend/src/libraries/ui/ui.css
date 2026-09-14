@@ -157,7 +157,7 @@ body {
       }
     }
 
-    &:is(:hover, :has(:focus-visible)) > .tooltip {
+    &:is(:hover:not(:has(:active, .active)), :has(:focus-visible)) > .tooltip {
       opacity: 1;
       scale: 1;
       transition-delay: 500ms;
