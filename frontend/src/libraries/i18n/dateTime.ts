@@ -24,6 +24,36 @@ export function useFormatDateRange() {
   }
 }
 
+const MS_PER_DAY = 1000 * 60 * 60 * 24
+
+export function useFormatCompactDateTime() {
+  const locale = useLocale()
+  const timeFormatter = new Intl.DateTimeFormat(locale, { timeStyle: 'short' })
+  const relativeFormatter = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' })
+  const shortDateFormatter = new Intl.DateTimeFormat(locale, { weekday: 'short', day: 'numeric', month: 'narrow' })
+  const longDateFormatter = new Intl.DateTimeFormat(locale, { weekday: 'short', day: 'numeric', month: 'narrow', year: 'numeric' })
+
+  return (timestamp: DateLike) => {
+    const date = toDate(timestamp)
+    const now = new Date()
+    const diffInDays = dateDiff(date, now)
+    if (Math.abs(diffInDays) <= 1) {
+      const relativeDate = relativeFormatter.format(diffInDays, 'day')
+      return `${relativeDate} ${timeFormatter.format(date)}`
+    }
+    if (date.getFullYear() === now.getFullYear()) {
+      return shortDateFormatter.format(date)
+    }
+    return longDateFormatter.format(date)
+  }
+}
+
+export function dateDiff(date1: Date, date2: Date) {
+  const justDate = (date: Date) => new Date(date.getFullYear(), date.getMonth(), date.getDate())
+  const diffInMs = justDate(date1).getTime() - justDate(date2).getTime()
+  return Math.round(diffInMs / MS_PER_DAY)
+}
+
 export function useFormatDateTime() {
   const locale = useLocale()
   const formatter = new Intl.DateTimeFormat(locale, {

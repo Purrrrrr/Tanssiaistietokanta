@@ -39,6 +39,7 @@ export const fi = {
   domain: {
     document: {
       title: 'Otsikko',
+      _updatedAt: 'Muokattu',
       content: 'Sisältö',
     },
     event: {
@@ -491,7 +492,7 @@ export const fi = {
     files: {
       name: 'Nimi',
       size: 'Koko',
-      date: 'Päivämäärä',
+      _updatedAt: 'Muokattu',
       noFiles: 'Ei tiedostoja',
       addFile: 'Lisää tiedosto',
       filesSelected: {

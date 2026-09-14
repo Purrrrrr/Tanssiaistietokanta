@@ -6,7 +6,7 @@ import { DeepCommonStructure, PrefixPath, Translator } from './types'
 import { useLocale } from './context'
 
 export { TranslationProvider, useLocale } from './context'
-export { useFormatDate, useFormatDateTime, useFormatDuration, useFormatTime } from './dateTime'
+export { useFormatCompactDateTime, useFormatDate, useFormatDateTime, useFormatDuration, useFormatTime } from './dateTime'
 export type { KeyForPath, PrefixPath, Translator } from './types'
 
 export interface TranlationSystem<Translations> {

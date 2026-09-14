@@ -6,9 +6,9 @@ import { useFiles } from 'services/files'
 
 import { useRights } from 'libraries/access-control'
 import { useMultipleSelection } from 'libraries/common/selection/useMultipleSelection'
-import { useFormatDateTime } from 'libraries/i18n/dateTime'
 import { ItemList, PageSection, RegularLink } from 'libraries/ui'
 import { useShowAlert } from 'libraries/ui/hooks'
+import { useDisplayTimestamp } from 'libraries/ui/useDisplayTimestamp'
 import { AddButton } from 'components/widgets/AddButton'
 import { useT } from 'i18n'
 
@@ -36,7 +36,7 @@ export default function FileList({ title, owner, owningId, path }: FileListProps
   const [doUpload, uploads] = useUploadQueue(owner, owningId, path)
   const filesize = useFilesize()
   const T = useT('components.files')
-  const formatDate = useFormatDateTime()
+  const timestamp = useDisplayTimestamp()
   const showAlert = useShowAlert()
   const selector = useMultipleSelection(files)
   const [canUseFiles, canUpload, canModify, canDelete] = useRights([
@@ -123,11 +123,10 @@ export default function FileList({ title, owner, owningId, path }: FileListProps
               {file.name}
             </RegularLink>,
           }, {
-            key: 'date',
+            key: '_updatedAt',
             width: 'minmax(200px, auto)',
             visibility: 'shown',
-            content: file => formatDate(file._updatedAt),
-            sortBy: '_updatedAt',
+            content: file => timestamp(file._updatedAt),
           }, {
             key: 'size',
             width: 'minmax(100px, auto)',

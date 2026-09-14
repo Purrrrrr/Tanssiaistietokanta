@@ -7,6 +7,7 @@ import { useDocuments } from 'services/documents'
 import { DocumentViewer } from 'libraries/lexical'
 import { ButtonProps, ItemList, Link, PageSection } from 'libraries/ui'
 import { Edit } from 'libraries/ui/icons'
+import { useDisplayTimestamp } from 'libraries/ui/useDisplayTimestamp'
 import { DeleteDocumentButton } from 'components/document/DeleteDocumentButton'
 import { NavigateButton } from 'components/widgets/NavigateButton'
 import { useT } from 'i18n'
@@ -30,6 +31,7 @@ export function DocumentList({ title, owner, owningId }: DocumentListProps) {
   const route = documentListRoute({ owner })
   const navigate = useNavigate()
   const params = getRouteApi(route).useParams()
+  const timestamp = useDisplayTimestamp()
 
   return <PageSection
     title={title}
@@ -58,6 +60,12 @@ export function DocumentList({ title, owner, owningId }: DocumentListProps) {
           content: document => <Link to={viewRoute} params={{ documentId: document._id, ...params }}>
             {document.title}
           </Link>,
+        }, {
+          key: '_updatedAt',
+          width: 'minmax(200px, auto)',
+          visibility: 'shown',
+          content: document => timestamp(document._updatedAt),
+          sortBy: '_updatedAt',
         },
       ]}
       actions={document => <>
