@@ -136,7 +136,7 @@ implements ServiceInterface<Graphql, GraphqlData, ServiceParams, GraphqlPatch> {
     this.resolveApolloServer(server)
   }
 
-  getResolvers(app: any) {
+  getResolvers(app: any): any {
     const extension = app.get('importExtension')
     const resolvers = loadFilesSync(`${__dirname}/../**/*.resolvers.${extension}`)
     function applyContext(importedResolvers: any) {
