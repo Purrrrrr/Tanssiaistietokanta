@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 
-import { AutosizedSection } from 'libraries/ui'
+import { AutosizedSection } from '@/libraries/ui'
 
 import PrintViewToolbar from './PrintViewToolbar'
 

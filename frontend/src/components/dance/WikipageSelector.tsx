@@ -1,11 +1,11 @@
 import { useId } from 'react'
 
-import { DanceWikiSearchResult } from 'types'
+import { DanceWikiSearchResult } from '@/types'
 
-import { useSearchWikiTitles } from 'services/dancewiki'
+import { useSearchWikiTitles } from '@/services/dancewiki'
 
-import { AutocompleteInput } from 'libraries/formsV2/components/inputs'
-import { useT } from 'i18n'
+import { AutocompleteInput } from '@/libraries/formsV2/components/inputs'
+import { useT } from '@/i18n'
 
 interface WikipageSelectorProps {
   value: string | null

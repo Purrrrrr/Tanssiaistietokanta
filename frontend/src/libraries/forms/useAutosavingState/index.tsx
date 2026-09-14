@@ -4,7 +4,7 @@ import equal from 'fast-deep-equal'
 import { MergeableObject, SyncState } from './types'
 import { NewValue, OnFormChangeHandler, StringPath, TypedStringPath, Version } from '../types'
 
-import createDebug from 'utils/debug'
+import createDebug from '@/utils/debug'
 
 import { FormProps } from '../Form'
 import patchStrategies, { PatchStrategy } from './patchStrategies'

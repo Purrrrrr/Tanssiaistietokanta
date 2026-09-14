@@ -3,7 +3,7 @@ import classNames from 'classnames'
 
 import type { FieldInputComponent } from './types'
 
-import { CssClass } from 'libraries/ui/classes'
+import { CssClass } from '@/libraries/ui/classes'
 
 export type NumberInputExtraProps = Omit<ComponentProps<'input'>, 'type'>
 

@@ -2,8 +2,8 @@ import { Canvas, Circle, config, Ellipse } from 'fabric'
 
 import { FabricDiagramData } from '../types'
 
-import { hashValue } from 'libraries/common/hashValue'
-import randomIdWithLen from 'utils/randomId'
+import { hashValue } from '@/libraries/common/hashValue'
+import randomIdWithLen from '@/utils/randomId'
 
 import { minifyFabricObject } from '../minify'
 

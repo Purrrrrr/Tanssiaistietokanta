@@ -1,10 +1,10 @@
-import { EventVolunteer, EventVolunteerStatus } from 'types'
+import { EventVolunteer, EventVolunteerStatus } from '@/types'
 
-import { usePatchEventVolunteer } from 'services/eventVolunteers'
+import { usePatchEventVolunteer } from '@/services/eventVolunteers'
 
-import { Select } from 'libraries/formsV2/components/inputs'
-import { BlockedPerson, Cross, Envelope, Pin, Search } from 'libraries/ui/icons'
-import { useT, useTranslation } from 'i18n'
+import { Select } from '@/libraries/formsV2/components/inputs'
+import { BlockedPerson, Cross, Envelope, Pin, Search } from '@/libraries/ui/icons'
+import { useT, useTranslation } from '@/i18n'
 
 interface VolunteerStatusSelectorProps {
   id: string

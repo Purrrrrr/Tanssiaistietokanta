@@ -1,9 +1,9 @@
-import { Event, ID } from 'types'
+import { Event, ID } from '@/types'
 
-import { useShowGlobalLoadingAnimation } from 'backend'
-import { useEventVolunteerAssignments } from 'services/eventVolunteerAssignments'
+import { useShowGlobalLoadingAnimation } from '@/backend'
+import { useEventVolunteerAssignments } from '@/services/eventVolunteerAssignments'
 
-import { PageSection } from 'libraries/ui'
+import { PageSection } from '@/libraries/ui'
 
 import { AddVolunteerSelect } from './AddVolunteerSelect'
 import { VolunteerAssignmentList } from './VolunteerAssignmentList'

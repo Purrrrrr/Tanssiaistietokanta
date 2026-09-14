@@ -1,4 +1,4 @@
-import { createKeyMapping, type KeyMapping } from 'libraries/common/minificationUtils'
+import { createKeyMapping, type KeyMapping } from '@/libraries/common/minificationUtils'
 
 /** Maps Fabric.js canvas/object property names to their minified short codes.
  *  Covers: shared object properties, Text/IText, Path, Polygon, Group, and canvas root. */

@@ -1,18 +1,18 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 
-import { DanceCheatListQuery } from 'types/gql/graphql'
+import { DanceCheatListQuery } from '@/types/gql/graphql'
 
-import { backendQueryHook, graphql } from 'backend'
-import { useCallbackOnEventChanges } from 'services/events'
+import { backendQueryHook, graphql } from '@/backend'
+import { useCallbackOnEventChanges } from '@/services/events'
 
-import { NumberInput, Switch } from 'libraries/forms'
-import { Button } from 'libraries/ui'
-import { LoadingState } from 'components/LoadingState'
-import { A4Page, PrintPageContainer, PrintViewToolbar, RepeatingGrid } from 'components/print'
-import { PrintTable } from 'components/PrintTable'
-import { useT } from 'i18n'
-import { uniq } from 'utils/uniq'
+import { NumberInput, Switch } from '@/libraries/forms'
+import { Button } from '@/libraries/ui'
+import { LoadingState } from '@/components/LoadingState'
+import { A4Page, PrintPageContainer, PrintViewToolbar, RepeatingGrid } from '@/components/print'
+import { PrintTable } from '@/components/PrintTable'
+import { useT } from '@/i18n'
+import { uniq } from '@/utils/uniq'
 
 import './dance-cheatList.sass'
 

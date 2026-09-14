@@ -1,13 +1,13 @@
 import { getRouteApi, useMatch, useNavigate } from '@tanstack/react-router'
 
-import { Document } from 'types'
+import { Document } from '@/types'
 
-import { addGlobalLoadingAnimation } from 'backend'
-import { useDeleteDocument } from 'services/documents'
+import { addGlobalLoadingAnimation } from '@/backend'
+import { useDeleteDocument } from '@/services/documents'
 
-import { ButtonProps } from 'libraries/ui'
-import { DeleteButton } from 'components/widgets/DeleteButton'
-import { useT } from 'i18n'
+import { ButtonProps } from '@/libraries/ui'
+import { DeleteButton } from '@/components/widgets/DeleteButton'
+import { useT } from '@/i18n'
 
 import { documentListRoute } from './linkUtils'
 

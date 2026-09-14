@@ -1,13 +1,13 @@
 import { useState } from 'react'
 
-import { Ballroom } from 'types'
-import { EditableFormationDiagram, FormationDiagram } from 'types/formationDiagrams'
+import { Ballroom } from '@/types'
+import { EditableFormationDiagram, FormationDiagram } from '@/types/formationDiagrams'
 
-import { useCreateFormationDiagram } from 'services/formationDiagrams'
+import { useCreateFormationDiagram } from '@/services/formationDiagrams'
 
-import { defaultDiagram } from 'libraries/fabric/FabricEditor'
-import { Card, DialogCloseButton, H2 } from 'libraries/ui'
-import { useT, useTranslation } from 'i18n'
+import { defaultDiagram } from '@/libraries/fabric/FabricEditor'
+import { Card, DialogCloseButton, H2 } from '@/libraries/ui'
+import { useT, useTranslation } from '@/i18n'
 
 import { FormationDiagramForm } from './FormationDiagramForm'
 

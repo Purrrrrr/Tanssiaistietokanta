@@ -2,10 +2,10 @@ import { useMemo } from 'react'
 
 import { booleanProp, numberProp, selectorProp, showcase } from '../types'
 
-import { useMultipleSelection } from 'libraries/common/selection/useMultipleSelection'
-import { ItemList } from 'libraries/ui'
-import { Tag } from 'libraries/ui/Tag'
-import { ColorScheme, defaultScheme, lightRainbow, rainbow, tailwindLight } from 'libraries/ui/tagColorSchemes'
+import { useMultipleSelection } from '@/libraries/common/selection/useMultipleSelection'
+import { ItemList } from '@/libraries/ui'
+import { Tag } from '@/libraries/ui/Tag'
+import { ColorScheme, defaultScheme, lightRainbow, rainbow, tailwindLight } from '@/libraries/ui/tagColorSchemes'
 
 import { range } from '../utils'
 

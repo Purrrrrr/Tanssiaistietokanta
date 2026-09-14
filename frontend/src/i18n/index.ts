@@ -1,8 +1,8 @@
-import { KeyForPath, makeTranslator, PrefixPath, Translator as Tr } from 'libraries/i18n'
+import { KeyForPath, makeTranslator, PrefixPath, Translator as Tr } from '@/libraries/i18n'
 
 import { fi } from './fi'
 
-export { useFormatDate, useFormatDateTime, useFormatDuration, useFormatTime } from 'libraries/i18n'
+export { useFormatDate, useFormatDateTime, useFormatDuration, useFormatTime } from '@/libraries/i18n'
 
 const translations = {
   fi,

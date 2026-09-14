@@ -1,11 +1,11 @@
 import { useId } from 'react'
 
-import { UserListItem as User } from 'types'
+import { UserListItem as User } from '@/types'
 
-import { useUsers } from 'services/users'
+import { useUsers } from '@/services/users'
 
-import { FieldComponentProps } from 'libraries/forms'
-import { AutocompleteInput } from 'libraries/formsV2/components/inputs'
+import { FieldComponentProps } from '@/libraries/forms'
+import { AutocompleteInput } from '@/libraries/formsV2/components/inputs'
 
 export interface UserSelectorProps extends FieldComponentProps<User | null> {
   className?: string

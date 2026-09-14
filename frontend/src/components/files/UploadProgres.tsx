@@ -1,9 +1,9 @@
 import { useRef } from 'react'
 
-import { type FetchRequestProgress } from 'types/files'
+import { type FetchRequestProgress } from '@/types/files'
 
-import { Button } from 'libraries/ui'
-import { useFormatDuration, useT, useTranslation } from 'i18n'
+import { Button } from '@/libraries/ui'
+import { useFormatDuration, useT, useTranslation } from '@/i18n'
 
 import useFilesize from './useFilesize'
 import { Upload } from './useUploadQueue'

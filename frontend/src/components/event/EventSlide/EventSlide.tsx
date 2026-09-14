@@ -1,10 +1,10 @@
 import { useState } from 'react'
 
-import { Dance } from 'types'
+import { Dance } from '@/types'
 import type { DanceProgramItemSlideProps, DanceSetSlideProps, EventParentSlideProps, EventProgram, EventSlideProps, IntervalMusicSlideProps } from './types'
 
-import FabricImageViewer from 'libraries/fabric/FabricImageViewer'
-import { LinkComponentType, Slide, SlideNavigation, SlideNavigationList } from 'components/Slide'
+import FabricImageViewer from '@/libraries/fabric/FabricImageViewer'
+import { LinkComponentType, Slide, SlideNavigation, SlideNavigationList } from '@/components/Slide'
 
 import { renderDoc, TeachedIn } from './utils'
 

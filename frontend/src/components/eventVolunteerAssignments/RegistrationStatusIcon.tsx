@@ -1,6 +1,6 @@
-import { EventVolunteerRegistrationStatus } from 'types'
+import { EventVolunteerRegistrationStatus } from '@/types'
 
-import { Cross, Envelope, NewPerson, TickCircle } from 'libraries/ui/icons'
+import { Cross, Envelope, NewPerson, TickCircle } from '@/libraries/ui/icons'
 
 const statusIcons: Record<EventVolunteerRegistrationStatus, React.ReactNode> = {
   None: <NewPerson className="text-gray-400" />,

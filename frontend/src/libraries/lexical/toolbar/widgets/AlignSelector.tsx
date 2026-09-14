@@ -1,11 +1,11 @@
 import { NodeAlignment } from '../../plugins/nodes/types'
 
-import { useEditorT } from 'libraries/lexical/i18n'
-import { ToolbarButton } from 'libraries/lexical/toolbar/widgets/ToolbarButton'
-import { MenuButton } from 'libraries/ui'
+import { useEditorT } from '@/libraries/lexical/i18n'
+import { ToolbarButton } from '@/libraries/lexical/toolbar/widgets/ToolbarButton'
+import { MenuButton } from '@/libraries/ui'
 import {
   AlignCenter, AlignJustify, AlignLeft, AlignRight,
-} from 'libraries/ui/icons'
+} from '@/libraries/ui/icons'
 
 import { ImageFloatLeftIcon, ImageFloatRightIcon } from '../icons'
 

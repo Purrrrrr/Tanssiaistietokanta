@@ -1,7 +1,7 @@
 import { lazy } from 'react'
 
-import { FieldComponentProps } from 'libraries/forms'
-import randomId from 'utils/randomId'
+import { FieldComponentProps } from '@/libraries/forms'
+import randomId from '@/utils/randomId'
 
 import { type EditorProps } from './Editor'
 import type { MinifiedDocumentContent } from './utils/minify'

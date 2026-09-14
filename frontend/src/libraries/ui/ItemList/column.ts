@@ -1,8 +1,8 @@
 import { LinkProps } from '@tanstack/react-router'
 import { ReactNode } from 'react'
 
-import { Accessor, PathAccessor, toAccessorFn } from 'libraries/common/accessor'
-import { SortKey } from 'utils/sorted'
+import { Accessor, PathAccessor, toAccessorFn } from '@/libraries/common/accessor'
+import { SortKey } from '@/utils/sorted'
 
 export type ColumnId = number | string
 

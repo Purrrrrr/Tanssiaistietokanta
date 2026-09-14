@@ -1,7 +1,7 @@
 import { useEffect, useReducer } from 'react'
 import { ActiveSelection, Canvas, controlsUtils, FabricObject, Polygon, TFiller } from 'fabric'
 
-import { ColorPickerButton as ToolbarColorPicker, ToolbarButton, ToolbarRow } from 'libraries/ui'
+import { ColorPickerButton as ToolbarColorPicker, ToolbarButton, ToolbarRow } from '@/libraries/ui'
 
 import { Arrowline } from '../canvas/Arrowline'
 import { randomId } from '../canvas/util'

@@ -20,9 +20,9 @@ import {
 
 import { NodeAlignment } from './types'
 
-import { EmbeddedFabricEditor, FabricDiagramData, type MinifiedFabricData } from 'libraries/fabric/EmbeddedFabricEditor'
-import { AlignSelector } from 'libraries/lexical/toolbar/widgets/AlignSelector'
-import { alignClassname } from 'libraries/lexical/utils/alignClassname'
+import { EmbeddedFabricEditor, FabricDiagramData, type MinifiedFabricData } from '@/libraries/fabric/EmbeddedFabricEditor'
+import { AlignSelector } from '@/libraries/lexical/toolbar/widgets/AlignSelector'
+import { alignClassname } from '@/libraries/lexical/utils/alignClassname'
 
 interface FabricNodeData extends FabricDiagramData {
   align: NodeAlignment

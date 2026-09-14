@@ -1,7 +1,7 @@
-import { TypedStringPath } from 'libraries/forms'
-import { EventProgramSettings, Field, useValueAt } from 'components/event/EventProgramForm'
-import { SlideStyleSelector } from 'components/widgets/SlideStyleSelector'
-import { useT } from 'i18n'
+import { TypedStringPath } from '@/libraries/forms'
+import { EventProgramSettings, Field, useValueAt } from '@/components/event/EventProgramForm'
+import { SlideStyleSelector } from '@/components/widgets/SlideStyleSelector'
+import { useT } from '@/i18n'
 
 export function InheritedSlideStyleSelector(
   { path, text }:

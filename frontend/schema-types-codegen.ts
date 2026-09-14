@@ -18,8 +18,8 @@ const config: CodegenConfig = {
         maybeValue: 'T | null | undefined',
         scalars: {
           Tags: 'Record<string, boolean>',
-          DocumentContent: 'import(\'libraries/lexical/utils/minify\').MinifiedDocumentContent',
-          Diagram: 'import(\'libraries/fabric/types\').FabricDiagramData',
+          DocumentContent: 'import(\'@/libraries/lexical/utils/minify\').MinifiedDocumentContent',
+          Diagram: 'import(\'@/libraries/fabric/types\').FabricDiagramData',
         },
       },
     }

@@ -1,6 +1,6 @@
 import { numberProp, showcase } from '../types'
 
-import { AutosizedSection } from 'libraries/ui'
+import { AutosizedSection } from '@/libraries/ui'
 
 export const autosizedSectionShowcase = showcase({
   title: 'Autosized section',

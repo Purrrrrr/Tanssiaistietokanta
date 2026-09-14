@@ -1,17 +1,17 @@
 import { createRootRouteWithContext, Outlet } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 
-import { RightsQuery } from 'libraries/access-control/types'
+import { RightsQuery } from '@/libraries/access-control/types'
 
-import { useEvents } from 'services/events'
+import { useEvents } from '@/services/events'
 
-import { Breadcrumb, Link } from 'libraries/ui'
-import { Home } from 'libraries/ui/icons'
-import ErrorComponent from 'components/ErrorComponent'
-import NavigationLayout from 'components/NavigationLayout'
-import { MenuLink, MenuSection, Page } from 'components/Page'
-import { T, TranslationKey, useT } from 'i18n'
-import { type DanceOrganizerRootRouteContext } from 'utils/routeUtils'
+import { Breadcrumb, Link } from '@/libraries/ui'
+import { Home } from '@/libraries/ui/icons'
+import ErrorComponent from '@/components/ErrorComponent'
+import NavigationLayout from '@/components/NavigationLayout'
+import { MenuLink, MenuSection, Page } from '@/components/Page'
+import { T, TranslationKey, useT } from '@/i18n'
+import { type DanceOrganizerRootRouteContext } from '@/utils/routeUtils'
 
 declare module '@tanstack/react-router' {
   interface StaticDataRouteOption {

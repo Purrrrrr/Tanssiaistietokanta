@@ -1,8 +1,8 @@
 import { useId, useRef } from 'react'
 import classNames from 'classnames'
 
-import { Button, TooltipContainer } from 'libraries/ui'
-import { CssClass } from 'libraries/ui/classes'
+import { Button, TooltipContainer } from '@/libraries/ui'
+import { CssClass } from '@/libraries/ui/classes'
 
 import { StrokeWidthIcon } from './icons'
 

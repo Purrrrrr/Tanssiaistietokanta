@@ -1,10 +1,10 @@
-import { Event } from 'types'
+import { Event } from '@/types'
 
-import { addGlobalLoadingAnimation } from 'backend'
-import { canDeleteWorkshop, useDeleteWorkshop } from 'services/workshops'
+import { addGlobalLoadingAnimation } from '@/backend'
+import { canDeleteWorkshop, useDeleteWorkshop } from '@/services/workshops'
 
-import { DeleteButton } from 'components/widgets/DeleteButton'
-import { useT } from 'i18n'
+import { DeleteButton } from '@/components/widgets/DeleteButton'
+import { useT } from '@/i18n'
 
 type Workshop = Event['workshops'][0]
 

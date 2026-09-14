@@ -1,12 +1,12 @@
 import { useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 
-import { login } from 'services/users'
+import { login } from '@/services/users'
 
-import { formFor } from 'libraries/forms'
-import { ErrorMessage } from 'libraries/forms/validation'
-import { Button } from 'libraries/ui'
-import { useT } from 'i18n'
+import { formFor } from '@/libraries/forms'
+import { ErrorMessage } from '@/libraries/forms/validation'
+import { Button } from '@/libraries/ui'
+import { useT } from '@/i18n'
 
 export interface LoginFields {
   username: string

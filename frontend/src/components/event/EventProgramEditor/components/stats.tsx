@@ -1,10 +1,10 @@
-import { useDances } from 'services/dances'
+import { useDances } from '@/services/dances'
 
-import { Callout } from 'libraries/ui'
-import { DanceCategoryTag } from 'components/dance/DanceCategoryTag'
-import { useChosenDanceIds } from 'components/event/EventProgramForm/eventMetadata'
-import { useT } from 'i18n'
-import { sortedBy } from 'utils/sorted'
+import { Callout } from '@/libraries/ui'
+import { DanceCategoryTag } from '@/components/dance/DanceCategoryTag'
+import { useChosenDanceIds } from '@/components/event/EventProgramForm/eventMetadata'
+import { useT } from '@/i18n'
+import { sortedBy } from '@/utils/sorted'
 
 export function DanceCategoryStats() {
   const t = useT('components.eventProgramEditor.danceCategoryStats')

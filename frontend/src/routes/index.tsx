@@ -1,17 +1,17 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-import { useEvents } from 'services/events'
-import { useCurrentUser } from 'services/users'
+import { useEvents } from '@/services/events'
+import { useCurrentUser } from '@/services/users'
 
-import { RequirePermissions } from 'libraries/access-control'
-import { useFormatDateRange } from 'libraries/i18n/dateTime'
-import { ItemList, Link } from 'libraries/ui'
-import { Add } from 'libraries/ui/icons'
-import { PageSection } from 'libraries/ui/PageSection'
-import { LoadingState } from 'components/LoadingState'
-import { Page } from 'components/Page'
-import { NavigateButton } from 'components/widgets/NavigateButton'
-import { useT } from 'i18n'
+import { RequirePermissions } from '@/libraries/access-control'
+import { useFormatDateRange } from '@/libraries/i18n/dateTime'
+import { ItemList, Link } from '@/libraries/ui'
+import { Add } from '@/libraries/ui/icons'
+import { PageSection } from '@/libraries/ui/PageSection'
+import { LoadingState } from '@/components/LoadingState'
+import { Page } from '@/components/Page'
+import { NavigateButton } from '@/components/widgets/NavigateButton'
+import { useT } from '@/i18n'
 
 export const Route = createFileRoute('/')({
   component: RouteComponent,

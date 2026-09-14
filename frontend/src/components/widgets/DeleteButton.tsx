@@ -1,7 +1,7 @@
-import { Button, ButtonProps } from 'libraries/ui'
-import { useShowAlert } from 'libraries/ui/hooks'
-import { Trash } from 'libraries/ui/icons'
-import { useT } from 'i18n'
+import { Button, ButtonProps } from '@/libraries/ui'
+import { useShowAlert } from '@/libraries/ui/hooks'
+import { Trash } from '@/libraries/ui/icons'
+import { useT } from '@/i18n'
 
 interface DeleteButtonProps extends ButtonProps {
   text: string

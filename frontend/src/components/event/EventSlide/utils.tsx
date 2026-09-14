@@ -1,8 +1,8 @@
 import { Workshop } from './types'
 
-import { MinifiedDocumentContent } from 'libraries/lexical'
-import { DocumentViewer } from 'libraries/lexical/DocumentViewer'
-import { useTranslation } from 'i18n'
+import { MinifiedDocumentContent } from '@/libraries/lexical'
+import { DocumentViewer } from '@/libraries/lexical/DocumentViewer'
+import { useTranslation } from '@/i18n'
 
 export function TeachedIn({ teachedIn }: { teachedIn: Workshop[] }) {
   const teachedInStr = teachedIn.map(

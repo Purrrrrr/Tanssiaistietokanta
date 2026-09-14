@@ -1,14 +1,14 @@
 import { createFileRoute, useNavigate, useParams, useSearch } from '@tanstack/react-router'
 
-import { useDance } from 'services/dances'
+import { useDance } from '@/services/dances'
 
-import { Breadcrumb } from 'libraries/ui'
-import { FormationDiagramsSection, FullDanceEditorFields } from 'components/dance/DanceEditor'
-import { Form, useDanceEditorState } from 'components/dance/DanceForm'
-import { LoadingState } from 'components/LoadingState'
-import { Page, Toolbar } from 'components/Page'
-import VersionableContentContainer from 'components/versioning/VersionableContentContainer'
-import { VersionSidebarToggle } from 'components/versioning/VersionSidebarToggle'
+import { Breadcrumb } from '@/libraries/ui'
+import { FormationDiagramsSection, FullDanceEditorFields } from '@/components/dance/DanceEditor'
+import { Form, useDanceEditorState } from '@/components/dance/DanceForm'
+import { LoadingState } from '@/components/LoadingState'
+import { Page, Toolbar } from '@/components/Page'
+import VersionableContentContainer from '@/components/versioning/VersionableContentContainer'
+import { VersionSidebarToggle } from '@/components/versioning/VersionSidebarToggle'
 
 import { DanceIsUsedIn } from './-components/DanceIsUsedIn'
 import { DeleteDanceButton } from './-components/DeleteDanceButton'

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
-import { Alert } from 'libraries/ui'
-import { useT } from 'i18n'
+import { Alert } from '@/libraries/ui'
+import { useT } from '@/i18n'
 
 const browsersLinks = {
   Firefox: 'https://www.mozilla.org/firefox/browsers/',

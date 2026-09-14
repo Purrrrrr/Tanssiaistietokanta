@@ -1,17 +1,17 @@
 import { Fragment } from 'react'
 
-import { Dance } from 'types'
-import { DanceSet, EventProgramSettings } from 'components/event/EventProgramForm/types'
+import { Dance } from '@/types'
+import { DanceSet, EventProgramSettings } from '@/components/event/EventProgramForm/types'
 
-import { entityListQueryHook, graphql } from 'backend'
+import { entityListQueryHook, graphql } from '@/backend'
 
-import { isEmptyDocument, MinifiedDocumentContent } from 'libraries/lexical'
-import { Callout, CounterTag, Link, RegularLink } from 'libraries/ui'
-import { useChosenDanceIds, useWorkshops } from 'components/event/EventProgramForm/eventMetadata'
-import { WorkshopTag } from 'components/workshops/WorkshopTag'
-import { useT } from 'i18n'
-import { compareBy } from 'utils/sorted'
-import { uniq } from 'utils/uniq'
+import { isEmptyDocument, MinifiedDocumentContent } from '@/libraries/lexical'
+import { Callout, CounterTag, Link, RegularLink } from '@/libraries/ui'
+import { useChosenDanceIds, useWorkshops } from '@/components/event/EventProgramForm/eventMetadata'
+import { WorkshopTag } from '@/components/workshops/WorkshopTag'
+import { useT } from '@/i18n'
+import { compareBy } from '@/utils/sorted'
+import { uniq } from '@/utils/uniq'
 
 export function MissingDanceInstructionsCounterTag() {
   const count = useDancesWithMissingInstructions().length

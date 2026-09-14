@@ -1,6 +1,6 @@
 import { showcase } from '../types'
 
-import { Tab, Tabs } from 'libraries/ui'
+import { Tab, Tabs } from '@/libraries/ui'
 
 export const tabsShowcase = showcase({
   title: 'Tabs',

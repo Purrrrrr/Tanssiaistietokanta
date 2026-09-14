@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
 
-import { Event } from 'types'
+import { Event } from '@/types'
 
-import { backendQueryHook, entityCreateHook, entityDeleteHook, entityListQueryHook, entityUpdateHook, graphql, setupServiceUpdateFragment, useServiceEvents } from '../backend'
+import { backendQueryHook, entityCreateHook, entityDeleteHook, entityListQueryHook, entityUpdateHook, graphql, setupServiceUpdateFragment, useServiceEvents } from '@/backend'
 
 import './dances'
 import './workshops'

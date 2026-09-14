@@ -1,4 +1,4 @@
-import { Button, ButtonProps } from 'libraries/ui'
+import { Button, ButtonProps } from '@/libraries/ui'
 
 type ToolbarButtonProps = ButtonProps & (
   { tooltip: string, text?: never } | { text: string, tooltip?: string }

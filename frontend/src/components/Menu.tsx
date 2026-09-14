@@ -2,9 +2,9 @@ import { createLink } from '@tanstack/react-router'
 import { ComponentProps } from 'react'
 import classNames from 'classnames'
 
-import { omitPermissionCheckingProps, withPermissionChecking } from 'libraries/access-control'
-import { Share } from 'libraries/ui/icons'
-import { useDimensionCssVariables } from 'utils/useDimensionCssVariables'
+import { omitPermissionCheckingProps, withPermissionChecking } from '@/libraries/access-control'
+import { Share } from '@/libraries/ui/icons'
+import { useDimensionCssVariables } from '@/utils/useDimensionCssVariables'
 
 interface MenuProps {
   className?: string

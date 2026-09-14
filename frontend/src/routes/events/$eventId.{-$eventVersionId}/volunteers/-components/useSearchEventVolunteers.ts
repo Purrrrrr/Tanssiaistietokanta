@@ -1,8 +1,8 @@
 import { getRouteApi } from '@tanstack/react-router'
 
-import { useEventVolunteers } from 'services/eventVolunteers'
+import { useEventVolunteers } from '@/services/eventVolunteers'
 
-import { searchList } from 'libraries/common/listSearch'
+import { searchList } from '@/libraries/common/listSearch'
 
 import { useCurrentEvent } from '../../-context'
 

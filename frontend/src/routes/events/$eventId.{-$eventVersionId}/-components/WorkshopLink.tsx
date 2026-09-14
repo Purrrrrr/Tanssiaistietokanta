@@ -1,6 +1,6 @@
 import { getRouteApi } from '@tanstack/react-router'
 
-import { Link } from 'libraries/ui'
+import { Link } from '@/libraries/ui'
 
 interface WorkshopLinkProps {
   workshop: { _id: string, name: string }

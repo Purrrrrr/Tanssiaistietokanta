@@ -1,6 +1,6 @@
-import { FabricEditor } from 'libraries/fabric/FabricEditor'
-import { formFor, FormProps, SubmitButton, SyncState, SyncStatus } from 'libraries/forms'
-import { useT } from 'i18n'
+import { FabricEditor } from '@/libraries/fabric/FabricEditor'
+import { formFor, FormProps, SubmitButton, SyncState, SyncStatus } from '@/libraries/forms'
+import { useT } from '@/i18n'
 
 import { BallroomFormValues } from './ballroomFormValues'
 

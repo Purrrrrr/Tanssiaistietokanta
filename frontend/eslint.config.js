@@ -19,17 +19,17 @@ const importSortGroups = [
     '^@?\\w',
   ],
   [
-    '^types(/.*)?\\u0000?$',
+    '^@/types(/.*)?\\u0000?$',
     '^\\./types(/.*)?\\u0000?$',
     '^\\.\\./types(/.*)?\\u0000?$',
     '^.*/types(/.*)?\\u0000?$',
   ],
   [
-    '^(backend|services)(/.*|$)',
+    '^@/(backend|services)(/.*|$)',
   ],
   [
-    '^(libraries)(/.*|$)',
-    '^(components|pages|utils|i18n)(/.*|$)',
+    '^@/(libraries)(/.*|$)',
+    '^@/(components|pages|utils|i18n)(/.*|$)',
   ],
   [
     '^',

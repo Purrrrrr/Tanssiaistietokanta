@@ -10,7 +10,7 @@ import {
 
 import { ToolbarHookReturn } from './types'
 
-import { Link } from 'libraries/ui/icons'
+import { Link } from '@/libraries/ui/icons'
 
 import { useEditorT } from '../i18n'
 import { ToolbarButton, ToolbarInput, ToolbarRow } from './widgets'

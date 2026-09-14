@@ -1,5 +1,5 @@
-import type { AnyNode, Transformation } from 'libraries/common/minificationUtils'
-import { applyReverseTransformations, applyTransformations, defaultValues, forTypes, keyMapper, mapKey, typeMapper } from 'libraries/common/minificationUtils'
+import type { AnyNode, Transformation } from '@/libraries/common/minificationUtils'
+import { applyReverseTransformations, applyTransformations, defaultValues, forTypes, keyMapper, mapKey, typeMapper } from '@/libraries/common/minificationUtils'
 
 import { LEXICAL_KEY_MAPPING, TYPE_MAPPING } from './constants'
 

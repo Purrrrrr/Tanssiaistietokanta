@@ -1,15 +1,15 @@
-import { EventVolunteerAssignment, EventVolunteerRegistrationStatus, Workshop } from 'types'
-import { SyncItems } from 'libraries/formsV2/components/inputs/selectors/types'
+import { EventVolunteerAssignment, EventVolunteerRegistrationStatus, Workshop } from '@/types'
+import { SyncItems } from '@/libraries/formsV2/components/inputs/selectors/types'
 
-import { useEventRoles } from 'services/eventRoles'
-import { useEventVolunteers } from 'services/eventVolunteers'
-import { workshopInstanceName } from 'services/workshops'
+import { useEventRoles } from '@/services/eventRoles'
+import { useEventVolunteers } from '@/services/eventVolunteers'
+import { workshopInstanceName } from '@/services/workshops'
 
-import { searchList } from 'libraries/common/listSearch'
-import { AutocompleteMultipleInput } from 'libraries/formsV2/components/inputs/selectors'
-import { Button } from 'libraries/ui'
-import { Build, Cross, Hat, Person, Search } from 'libraries/ui/icons'
-import { useT, useTranslation } from 'i18n'
+import { searchList } from '@/libraries/common/listSearch'
+import { AutocompleteMultipleInput } from '@/libraries/formsV2/components/inputs/selectors'
+import { Button } from '@/libraries/ui'
+import { Build, Cross, Hat, Person, Search } from '@/libraries/ui/icons'
+import { useT, useTranslation } from '@/i18n'
 
 import RegistrationStatusIcon from './RegistrationStatusIcon'
 

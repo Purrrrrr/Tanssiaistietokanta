@@ -1,7 +1,7 @@
 import { showcase } from '../types'
 
-import { Button } from 'libraries/ui'
-import { showToast } from 'libraries/ui/hooks'
+import { Button } from '@/libraries/ui'
+import { showToast } from '@/libraries/ui/hooks'
 
 import { colors } from '../utils'
 

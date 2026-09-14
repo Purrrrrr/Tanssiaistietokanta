@@ -41,7 +41,7 @@ export { toArrayPath } from './types'
 export type * from './useAutosavingState'
 export { patchStrategy, USE_BACKEND_VALUE, USE_LOCAL_VALUE, useAutosavingState } from './useAutosavingState'
 export { Validate } from './validation'
-export { NumberInput, Switch } from 'libraries/formsV2/components/inputs'
+export { NumberInput, Switch } from '@/libraries/formsV2/components/inputs'
 
 interface FormFor<T> extends FormHooksFor<T> {
   Form: React.JSXElementConstructor<FormProps<T>>

@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
 import { EventEmitter } from 'events'
 
-import { Entity, ID, ServiceName } from 'types'
+import { Entity, ID, ServiceName } from '@/types'
 
-import createDebug from 'utils/debug'
-import { getOrComputeDefault } from 'utils/map'
+import createDebug from '@/utils/debug'
+import { getOrComputeDefault } from '@/utils/map'
 
 import { DocumentNode, gql } from './apollo'
 import { markDeleted, updateEntityFragment } from './apolloCache'

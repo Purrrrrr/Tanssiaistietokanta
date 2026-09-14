@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 
 import { booleanProp, showcase } from '../types'
 
-import { DocumentViewer, Editor, type MinifiedDocumentContent } from 'libraries/lexical'
-import { H2 } from 'libraries/ui'
+import { DocumentViewer, Editor, type MinifiedDocumentContent } from '@/libraries/lexical'
+import { H2 } from '@/libraries/ui'
 
 export function EditorShowcase({ twoEditors, showMinified, showViewer }: { twoEditors: boolean, showMinified: boolean, showViewer: boolean }) {
   const [state, setState] = useState<MinifiedDocumentContent | null>(() => {

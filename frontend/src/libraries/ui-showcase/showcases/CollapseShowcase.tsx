@@ -1,6 +1,6 @@
 import { booleanProp, showcase } from '../types'
 
-import { Collapse } from 'libraries/ui'
+import { Collapse } from '@/libraries/ui'
 
 export const collapseShowcase = showcase({
   title: 'Collapse',

@@ -1,14 +1,15 @@
 import { useId } from 'react'
-import { WorkshopLink } from 'routes/events/$eventId.{-$eventVersionId}/-components/WorkshopLink'
 
-import { Event, EventVolunteerAssignment, ID } from 'types'
+import { Event, EventVolunteerAssignment, ID } from '@/types'
 
-import { useSetEventVolunteerAssignmentRegistrationStatus, useSetEventVolunteerAssignmentWorkshopInstance } from 'services/eventVolunteerAssignments'
+import { useSetEventVolunteerAssignmentRegistrationStatus, useSetEventVolunteerAssignmentWorkshopInstance } from '@/services/eventVolunteerAssignments'
 
-import { useMultipleSelection } from 'libraries/common/selection/useMultipleSelection'
-import { Callout, FormGroup, ItemList, ToolbarContainer } from 'libraries/ui'
-import { RoleTag } from 'components/eventVolunteers/RoleTag'
-import { useT } from 'i18n'
+import { useMultipleSelection } from '@/libraries/common/selection/useMultipleSelection'
+import { Callout, FormGroup, ItemList, ToolbarContainer } from '@/libraries/ui'
+import { RoleTag } from '@/components/eventVolunteers/RoleTag'
+import { useT } from '@/i18n'
+
+import { WorkshopLink } from '@/routes/events/$eventId.{-$eventVersionId}/-components/WorkshopLink'
 
 import RegistrationStatusLegend from './RegistrationStatusLegend'
 import RegistrationStatusSelector from './RegistrationStatusSelector'

@@ -1,16 +1,17 @@
 import { useState } from 'react'
-import { WorkshopLink } from 'routes/events/$eventId.{-$eventVersionId}/-components/WorkshopLink'
 
-import { Event, EventVolunteerAssignment, Workshop } from 'types'
-import { NewValue } from 'libraries/forms/types'
+import { Event, EventVolunteerAssignment, Workshop } from '@/types'
+import { NewValue } from '@/libraries/forms/types'
 
-import { useCreateEventVolunteerAssignment } from 'services/eventVolunteerAssignments'
+import { useCreateEventVolunteerAssignment } from '@/services/eventVolunteerAssignments'
 
-import { formFor, SubmitButton, Validate } from 'libraries/forms'
-import { Card, DialogCloseButton, FormGroup, H2, ItemList } from 'libraries/ui'
-import { Trash } from 'libraries/ui/icons'
-import { RoleTag } from 'components/eventVolunteers/RoleTag'
-import { useT, useTranslation } from 'i18n'
+import { formFor, SubmitButton, Validate } from '@/libraries/forms'
+import { Card, DialogCloseButton, FormGroup, H2, ItemList } from '@/libraries/ui'
+import { Trash } from '@/libraries/ui/icons'
+import { RoleTag } from '@/components/eventVolunteers/RoleTag'
+import { useT, useTranslation } from '@/i18n'
+
+import { WorkshopLink } from '@/routes/events/$eventId.{-$eventVersionId}/-components/WorkshopLink'
 
 import { AddAssignmentTargetSelector, AssignmentTarget } from './AddAssignmentTargetSelector'
 import { AddAssignmentWorkshopSelector } from './AddAssignmentWorkshopSelector'

@@ -1,8 +1,8 @@
-import type { FetchRequestProgress, FileOwner, FileOwningId } from 'types/files'
+import type { FetchRequestProgress, FileOwner, FileOwningId } from '@/types/files'
 
-import { doUpload, UploadedFile } from 'services/files'
+import { doUpload, UploadedFile } from '@/services/files'
 
-import { useQueue } from 'libraries/common/useQueue'
+import { useQueue } from '@/libraries/common/useQueue'
 
 import { useGetUploadErrorMessage } from './useGetUploadErrorMessage'
 

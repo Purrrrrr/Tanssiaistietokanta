@@ -2,19 +2,19 @@ import { useMatches } from '@tanstack/react-router'
 import { lazy, useEffect, useState } from 'react'
 import classNames from 'classnames'
 
-import { SyncState } from 'libraries/forms'
-import { Button } from 'libraries/ui'
-import { Breadcrumb, BreadcrumbsContainer } from 'libraries/ui/Breadcrumbs'
-import { Menu as MenuHamburger } from 'libraries/ui/icons'
-import { useT, useTranslation } from 'i18n'
-import { navigationHidden } from 'utils/routeUtils'
+import { SyncState } from '@/libraries/forms'
+import { Button } from '@/libraries/ui'
+import { Breadcrumb, BreadcrumbsContainer } from '@/libraries/ui/Breadcrumbs'
+import { Menu as MenuHamburger } from '@/libraries/ui/icons'
+import { useT, useTranslation } from '@/i18n'
+import { navigationHidden } from '@/utils/routeUtils'
 
 import { Menu } from './Menu'
 
 import './Page.css'
 
 const SyncStatus = lazy(
-  () => import('libraries/forms/SyncStatus')
+  () => import('@/libraries/forms/SyncStatus')
     .then(m => ({ default: m.SyncStatus })),
 )
 

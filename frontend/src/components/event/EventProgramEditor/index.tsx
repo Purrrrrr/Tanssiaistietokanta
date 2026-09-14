@@ -1,14 +1,14 @@
-import { ListEditorContext } from 'libraries/forms'
-import { H2 } from 'libraries/ui'
+import { ListEditorContext } from '@/libraries/forms'
+import { H2 } from '@/libraries/ui'
 import {
   DanceSet,
   Field,
   ListField,
   T,
   useValueAt,
-} from 'components/event/EventProgramForm'
-import { DurationField } from 'components/widgets/DurationField'
-import { useT, useTranslation } from 'i18n'
+} from '@/components/event/EventProgramForm'
+import { DurationField } from '@/components/widgets/DurationField'
+import { useT, useTranslation } from '@/i18n'
 
 import { getProgramName } from '../utils'
 import {

@@ -1,7 +1,7 @@
 import type { AnyType, FieldPath } from '../types'
 
-import { Button } from 'libraries/ui'
-import { Cross } from 'libraries/ui/icons'
+import { Button } from '@/libraries/ui'
+import { Cross } from '@/libraries/ui/icons'
 
 import { type ConnectedFieldProps, ConnectedInput } from './ConnectedInput'
 import { type ListItem } from './dnd'

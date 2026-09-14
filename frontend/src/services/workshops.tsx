@@ -1,6 +1,6 @@
-import { Workshop } from 'types'
+import { Workshop } from '@/types'
 
-import { entityCreateHook, entityDeleteHook, entityUpdateHook, graphql, setupServiceUpdateFragment } from '../backend'
+import { entityCreateHook, entityDeleteHook, entityUpdateHook, graphql, setupServiceUpdateFragment } from '@/backend'
 
 setupServiceUpdateFragment(
   'workshops',

@@ -3,7 +3,7 @@ import classNames from 'classnames'
 
 import { Color } from './types'
 
-import { Error, InfoSign, Tick, WarningSign } from 'libraries/ui/icons'
+import { Error, InfoSign, Tick, WarningSign } from '@/libraries/ui/icons'
 
 import { ColorClass } from './classes'
 

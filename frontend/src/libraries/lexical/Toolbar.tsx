@@ -21,11 +21,11 @@ import {
   UNDO_COMMAND,
 } from 'lexical'
 
-import RegularSelect from 'libraries/formsV2/components/inputs/selectors/RegularSelect'
+import RegularSelect from '@/libraries/formsV2/components/inputs/selectors/RegularSelect'
 import {
   AlignCenter, AlignJustify, AlignLeft, AlignRight,
   LayoutTwoColumns, Redo, Undo,
-} from 'libraries/ui/icons'
+} from '@/libraries/ui/icons'
 
 import { useEditorT } from './i18n'
 import { INSERT_LAYOUT_COMMAND } from './plugins/LayoutPlugin'

@@ -1,8 +1,8 @@
-import { AnyType, TypedPath } from 'libraries/common/paths'
+import { AnyType, TypedPath } from '@/libraries/common/paths'
 
 import type { ListItem } from '../components/dnd'
 
-export type { AnyType } from 'libraries/common/paths'
+export type { AnyType } from '@/libraries/common/paths'
 
 export type { ListItem }
 export type GenericPath = string | number

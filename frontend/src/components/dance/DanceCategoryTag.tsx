@@ -1,5 +1,5 @@
-import { Tag, TagProps } from 'libraries/ui'
-import { lightRainbow } from 'libraries/ui/tagColorSchemes'
+import { Tag, TagProps } from '@/libraries/ui'
+import { lightRainbow } from '@/libraries/ui/tagColorSchemes'
 
 const categoryColors = lightRainbow(16)
 

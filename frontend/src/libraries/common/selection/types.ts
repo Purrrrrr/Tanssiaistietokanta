@@ -1,4 +1,4 @@
-import { SelectionBoxProps } from 'libraries/ui/ItemList/SelectionBox'
+import { SelectionBoxProps } from '@/libraries/ui/ItemList/SelectionBox'
 
 export interface SelectionApi<T> {
   selected: T[]

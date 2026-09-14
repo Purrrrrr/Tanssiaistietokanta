@@ -1,5 +1,5 @@
-import type { AnyNode, Transformation } from 'libraries/common/minificationUtils'
-import { applyReverseTransformations, applyTransformations, defaultValues, forTypes, keyMapper, mapKey } from 'libraries/common/minificationUtils'
+import type { AnyNode, Transformation } from '@/libraries/common/minificationUtils'
+import { applyReverseTransformations, applyTransformations, defaultValues, forTypes, keyMapper, mapKey } from '@/libraries/common/minificationUtils'
 
 import { FABRIC_KEY_MAPPING } from './constants'
 

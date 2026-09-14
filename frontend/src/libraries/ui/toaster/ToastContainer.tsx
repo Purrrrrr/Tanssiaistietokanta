@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 
-import { ColorClass } from 'libraries/ui/classes'
+import { ColorClass } from '@/libraries/ui/classes'
 
 import { Popover } from '../overlays/unstyled/Popover'
 import { type ToastData, useToastStore } from './context'

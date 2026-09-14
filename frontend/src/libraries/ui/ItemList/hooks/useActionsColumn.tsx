@@ -1,6 +1,6 @@
 import type { ActionsColumnOptions, ActionsColumnProps } from '../types'
 
-import { ChevronDown, ChevronUp } from 'libraries/ui/icons'
+import { ChevronDown, ChevronUp } from '@/libraries/ui/icons'
 
 import { Button } from '../../Button'
 import { Column, columnDefaults } from '../column'

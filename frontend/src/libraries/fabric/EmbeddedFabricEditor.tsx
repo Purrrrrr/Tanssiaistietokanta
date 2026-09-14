@@ -4,8 +4,8 @@ import { Canvas, FabricObject } from 'fabric'
 
 import { FabricDiagramData } from './types'
 
-import { useResizeObserver } from 'libraries/common/useResizeObserver'
-import { FloatingToolbar } from 'libraries/ui'
+import { useResizeObserver } from '@/libraries/common/useResizeObserver'
+import { FloatingToolbar } from '@/libraries/ui'
 
 import { saveCanvasToJson } from './canvas/util'
 import { CanvasResizeButton } from './components/CanvasResizeButton'

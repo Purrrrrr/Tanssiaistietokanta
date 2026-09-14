@@ -1,10 +1,10 @@
-import { Event, EventRegistrationSystem, ID } from 'types'
+import { Event, EventRegistrationSystem, ID } from '@/types'
 
-import { useEventVolunteerAssignments } from 'services/eventVolunteerAssignments'
-import { useEventVolunteers } from 'services/eventVolunteers'
+import { useEventVolunteerAssignments } from '@/services/eventVolunteerAssignments'
+import { useEventVolunteers } from '@/services/eventVolunteers'
 
-import { Callout, CounterTag } from 'libraries/ui'
-import { useT } from 'i18n'
+import { Callout, CounterTag } from '@/libraries/ui'
+import { useT } from '@/i18n'
 
 export function AssignmentWarningsCounterTag({ event }: { event: Pick<Event, '_id' | 'eventRegistrationSystem'> }) {
   const t = useT('components.assignmentsWarnings')

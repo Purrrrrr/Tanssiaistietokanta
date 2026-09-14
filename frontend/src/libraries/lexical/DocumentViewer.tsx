@@ -10,8 +10,8 @@ import type { SerializedTableCellNode, SerializedTableNode, SerializedTableRowNo
 import classNames from 'classnames'
 import type { SerializedElementNode, SerializedParagraphNode, SerializedTextNode } from 'lexical'
 
-import FabricImageViewer from 'libraries/fabric/FabricImageViewer'
-import { RegularLink } from 'libraries/ui'
+import FabricImageViewer from '@/libraries/fabric/FabricImageViewer'
+import { RegularLink } from '@/libraries/ui'
 
 import { useEditorTranslation } from './i18n'
 import { QRCode } from './plugins/components/QRCode'

@@ -1,6 +1,6 @@
 import { booleanProp, showcase } from '../types'
 
-import { Callout } from 'libraries/ui'
+import { Callout } from '@/libraries/ui'
 
 import { colors } from '../utils'
 import { titleCase } from '../utils/titleCase'

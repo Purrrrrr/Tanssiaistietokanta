@@ -1,14 +1,14 @@
-import { Event, EventInput } from 'types'
+import { Event, EventInput } from '@/types'
 
-import { useCurrentUser, useUsers } from 'services/users'
+import { useCurrentUser, useUsers } from '@/services/users'
 
-import { useRight } from 'libraries/access-control'
-import { formFor } from 'libraries/forms'
-import { Fieldset } from 'libraries/formsV2/components/containers/Fieldset'
-import { H2, ItemList } from 'libraries/ui'
-import { DeleteButton } from 'components/widgets/DeleteButton'
-import { useT } from 'i18n'
-import randomId from 'utils/randomId'
+import { useRight } from '@/libraries/access-control'
+import { formFor } from '@/libraries/forms'
+import { Fieldset } from '@/libraries/formsV2/components/containers/Fieldset'
+import { H2, ItemList } from '@/libraries/ui'
+import { DeleteButton } from '@/components/widgets/DeleteButton'
+import { useT } from '@/i18n'
+import randomId from '@/utils/randomId'
 
 import { EventRoleSelector } from './EventRoleSelector'
 import { UserSelector } from './UserSelector'

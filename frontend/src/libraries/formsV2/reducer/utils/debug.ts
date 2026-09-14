@@ -1,4 +1,4 @@
-import createDebug from 'utils/debug'
+import createDebug from '@/utils/debug'
 
 const debug = createDebug('formReducer')
 

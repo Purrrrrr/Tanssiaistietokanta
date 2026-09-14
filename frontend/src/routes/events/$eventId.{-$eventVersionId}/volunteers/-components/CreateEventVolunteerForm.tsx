@@ -1,12 +1,12 @@
 import { useState } from 'react'
 
-import { Event, EventVolunteer } from 'types'
+import { Event, EventVolunteer } from '@/types'
 
-import { addGlobalLoadingAnimation } from 'backend'
-import { useCreateEventVolunteer } from 'services/eventVolunteers'
+import { addGlobalLoadingAnimation } from '@/backend'
+import { useCreateEventVolunteer } from '@/services/eventVolunteers'
 
-import { Card, DialogCloseButton, H2 } from 'libraries/ui'
-import { useT, useTranslation } from 'i18n'
+import { Card, DialogCloseButton, H2 } from '@/libraries/ui'
+import { useT, useTranslation } from '@/i18n'
 
 import { emptyEventVolunteerForm, EventVolunteerForm, EventVolunteerFormValues } from './EventVolunteerForm'
 

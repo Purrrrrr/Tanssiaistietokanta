@@ -1,13 +1,13 @@
 import { useNavigate } from '@tanstack/react-router'
 
-import { DanceInput } from 'types'
+import { DanceInput } from '@/types'
 
-import { addGlobalLoadingAnimation } from 'backend'
-import { useCreateDance } from 'services/dances'
+import { addGlobalLoadingAnimation } from '@/backend'
+import { useCreateDance } from '@/services/dances'
 
-import { Button } from 'libraries/ui'
-import { showToast } from 'libraries/ui/hooks'
-import { useT, useTranslation } from 'i18n'
+import { Button } from '@/libraries/ui'
+import { showToast } from '@/libraries/ui/hooks'
+import { useT, useTranslation } from '@/i18n'
 
 import { uploadDanceFile } from './uploadDanceFile'
 

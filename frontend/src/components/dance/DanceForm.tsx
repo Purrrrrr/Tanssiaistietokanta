@@ -1,11 +1,11 @@
 import { useCallback } from 'react'
 
-import { Dance, EditableDance } from 'types'
+import { Dance, EditableDance } from '@/types'
 
-import { usePatchDance } from 'services/dances'
+import { usePatchDance } from '@/services/dances'
 
-import { useRight } from 'libraries/access-control'
-import { formFor, patchStrategy, useAutosavingState } from 'libraries/forms'
+import { useRight } from '@/libraries/access-control'
+import { formFor, patchStrategy, useAutosavingState } from '@/libraries/forms'
 
 const {
   Form,

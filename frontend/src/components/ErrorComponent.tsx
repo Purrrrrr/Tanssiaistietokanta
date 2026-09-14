@@ -1,11 +1,11 @@
 import { ErrorComponent as DefaultErrorComponent, ErrorComponentProps } from '@tanstack/react-router'
 
-import { Button } from 'libraries/ui'
-import NavigationLayout from 'components/NavigationLayout'
-import { Page } from 'components/Page'
-import LoginForm from 'components/rights/LoginForm'
-import { useT } from 'i18n'
-import { AccessDeniedError } from 'utils/routeUtils'
+import { Button } from '@/libraries/ui'
+import NavigationLayout from '@/components/NavigationLayout'
+import { Page } from '@/components/Page'
+import LoginForm from '@/components/rights/LoginForm'
+import { useT } from '@/i18n'
+import { AccessDeniedError } from '@/utils/routeUtils'
 
 export default function ErrorComponent(props: ErrorComponentProps) {
   const { error, reset } = props

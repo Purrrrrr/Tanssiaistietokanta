@@ -1,14 +1,14 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-import { filterDances, useDances } from 'services/dances'
+import { filterDances, useDances } from '@/services/dances'
 
-import { RequirePermissions } from 'libraries/access-control'
-import { FormGroup, SearchBar } from 'libraries/ui'
-import { CreateDanceButtons } from 'components/dance/CreateDanceButtons'
-import { AnyCategory, anyCategory, DanceViewCategorySelector } from 'components/dance/DanceCategorySelector'
-import { LoadingState } from 'components/LoadingState'
-import { Page, Toolbar } from 'components/Page'
-import { useT, useTranslation } from 'i18n'
+import { RequirePermissions } from '@/libraries/access-control'
+import { FormGroup, SearchBar } from '@/libraries/ui'
+import { CreateDanceButtons } from '@/components/dance/CreateDanceButtons'
+import { AnyCategory, anyCategory, DanceViewCategorySelector } from '@/components/dance/DanceCategorySelector'
+import { LoadingState } from '@/components/LoadingState'
+import { Page, Toolbar } from '@/components/Page'
+import { useT, useTranslation } from '@/i18n'
 
 import { DanceList } from './-components/DanceList'
 

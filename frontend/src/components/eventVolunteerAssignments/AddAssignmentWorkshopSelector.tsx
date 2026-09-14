@@ -1,10 +1,10 @@
-import { Event, Workshop } from 'types'
+import { Event, Workshop } from '@/types'
 
-import { FieldComponentProps } from 'libraries/forms'
-import { AutocompleteInput } from 'libraries/formsV2/components/inputs/selectors'
-import { ClearButton } from 'libraries/ui'
-import { Build } from 'libraries/ui/icons'
-import { useT } from 'i18n'
+import { FieldComponentProps } from '@/libraries/forms'
+import { AutocompleteInput } from '@/libraries/formsV2/components/inputs/selectors'
+import { ClearButton } from '@/libraries/ui'
+import { Build } from '@/libraries/ui/icons'
+import { useT } from '@/i18n'
 
 interface AddAssignmentWorkshopSelectorProps extends FieldComponentProps<Workshop | null> {
   workshops: Event['workshops']

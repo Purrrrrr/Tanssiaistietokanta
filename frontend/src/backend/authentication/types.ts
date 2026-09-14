@@ -1,4 +1,4 @@
-import { GetUserQuery } from 'types/gql/graphql'
+import { GetUserQuery } from '@/types/gql/graphql'
 
 export interface AuthResponse {
   accessToken: string

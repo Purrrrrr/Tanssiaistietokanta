@@ -1,13 +1,13 @@
 import { useSyncExternalStore } from 'react'
 
-import { RightQuery } from 'libraries/access-control/types'
+import { RightQuery } from '@/libraries/access-control/types'
 
-import { getCurrentUser, subscribeToAuthChanges } from 'backend/authentication'
+import { backendQueryHook, entityListQueryHook, graphql, setupServiceUpdateFragment } from '@/backend'
+import { getCurrentUser, subscribeToAuthChanges } from '@/backend/authentication'
 
-import { backendQueryHook, entityListQueryHook, graphql, setupServiceUpdateFragment } from '../backend'
 import { clearAccessCache, hasAccess, hasCachedAccess } from './access'
 
-export { login, logout } from 'backend/authentication'
+export { login, logout } from '@/backend/authentication'
 
 export function useCurrentUser() {
   return useSyncExternalStore(subscribeToAuthChanges, getCurrentUser)

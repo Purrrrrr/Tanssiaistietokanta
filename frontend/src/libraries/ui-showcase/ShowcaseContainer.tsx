@@ -2,9 +2,9 @@ import { useId, useState } from 'react'
 
 import { PropDef, Showcase } from './types'
 
-import { Switch, TextInput } from 'libraries/formsV2/components/inputs'
-import { Card, H2 } from 'libraries/ui'
-import { CssClass } from 'libraries/ui/classes'
+import { Switch, TextInput } from '@/libraries/formsV2/components/inputs'
+import { Card, H2 } from '@/libraries/ui'
+import { CssClass } from '@/libraries/ui/classes'
 
 export function ShowcaseContainer<P extends Record<string, unknown>>({ title, props, render }: Showcase<P>) {
   const [propsValue, setPropsValue] = useShowcaseState(props)

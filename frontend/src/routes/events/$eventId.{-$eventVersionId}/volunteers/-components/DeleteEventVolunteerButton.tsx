@@ -1,10 +1,10 @@
-import { EventVolunteer } from 'types'
+import { EventVolunteer } from '@/types'
 
-import { addGlobalLoadingAnimation } from 'backend'
-import { useDeleteEventVolunteer } from 'services/eventVolunteers'
+import { addGlobalLoadingAnimation } from '@/backend'
+import { useDeleteEventVolunteer } from '@/services/eventVolunteers'
 
-import { DeleteButton } from 'components/widgets/DeleteButton'
-import { useT } from 'i18n'
+import { DeleteButton } from '@/components/widgets/DeleteButton'
+import { useT } from '@/i18n'
 
 interface DeleteEventVolunteerButtonProps {
   minimal?: boolean

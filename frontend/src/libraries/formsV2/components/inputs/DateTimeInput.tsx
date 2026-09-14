@@ -4,7 +4,7 @@ import 'react-clock/dist/Clock.css'
 import { useRef, useState } from 'react'
 import DateTimePicker, { DateTimePickerProps } from 'react-datetime-picker'
 
-import { Dropdown, DropdownContainer } from 'libraries/ui'
+import { Dropdown, DropdownContainer } from '@/libraries/ui'
 
 export interface DateTimeInputProps extends DateTimePickerProps {
   readOnly?: boolean

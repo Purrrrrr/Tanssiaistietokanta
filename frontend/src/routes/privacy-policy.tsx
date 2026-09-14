@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-import { H2 } from 'libraries/ui'
-import { Page } from 'components/Page'
+import { H2 } from '@/libraries/ui'
+import { Page } from '@/components/Page'
 
 export const Route = createFileRoute('/privacy-policy')({
   component: RouteComponent,

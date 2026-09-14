@@ -1,7 +1,7 @@
-import { FileOwner, FileOwningId } from 'types/files'
+import { FileOwner, FileOwningId } from '@/types/files'
 
-import { restRequestWithProgress, RestRequestWithProgressOptions } from 'backend'
-import { apolloClient } from 'backend/apollo'
+import { restRequestWithProgress, RestRequestWithProgressOptions } from '@/backend'
+import { apolloClient } from '@/backend/apollo'
 
 export const MAX_UPLOAD_SIZE = 50 * 1024 ** 2
 

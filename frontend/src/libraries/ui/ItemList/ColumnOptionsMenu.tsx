@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 
-import { Menu, Sort as SortIcon } from 'libraries/ui/icons'
+import { Menu, Sort as SortIcon } from '@/libraries/ui/icons'
 
 import { Button } from '../Button'
 import { buttonClass } from '../buttonClass'

@@ -1,6 +1,6 @@
 import { createEditor, type EditorState, type SerializedEditorState } from 'lexical'
 
-import { nodes } from 'libraries/lexical/nodes'
+import { nodes } from '@/libraries/lexical/nodes'
 
 import { expand, minifyLiveState } from './minify'
 

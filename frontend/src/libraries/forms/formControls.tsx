@@ -2,7 +2,7 @@ import React from 'react'
 
 import { StringPathToList } from './types'
 
-import { Button } from 'libraries/ui'
+import { Button } from '@/libraries/ui'
 
 import { useFormMetadata } from './formContext'
 import { useRemoveFromList } from './hooks'

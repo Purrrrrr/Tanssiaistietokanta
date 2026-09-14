@@ -10,9 +10,9 @@ import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin'
 import { HEADING, ORDERED_LIST, TEXT_FORMAT_TRANSFORMERS, UNORDERED_LIST } from '@lexical/markdown'
 import classNames from 'classnames'
 
-import { FieldComponentDisplayProps } from 'libraries/forms/types'
+import { FieldComponentDisplayProps } from '@/libraries/forms/types'
 
-import { CssClass } from 'libraries/ui/classes'
+import { CssClass } from '@/libraries/ui/classes'
 
 import { nodes } from './nodes'
 import { AutoLinkPlugin, MATCHERS } from './plugins/AutoLinkPlugin'

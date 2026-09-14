@@ -1,6 +1,6 @@
-import { CreateEventMutationVariables, GetEventQuery } from 'types/gql/graphql'
+import { CreateEventMutationVariables, GetEventQuery } from '@/types/gql/graphql'
 
-export type { EventRegistrationSystem } from 'types/gql/graphql'
+export type { EventRegistrationSystem } from '@/types/gql/graphql'
 
 export type EventInput = CreateEventMutationVariables['event']
 export type Event = NonNullable<GetEventQuery['event']>

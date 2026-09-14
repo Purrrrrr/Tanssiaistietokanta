@@ -1,11 +1,11 @@
-import { Event, EventRole, EventVolunteerAssignment, ID, Workshop } from 'types'
+import { Event, EventRole, EventVolunteerAssignment, ID, Workshop } from '@/types'
 
-import { useShowGlobalLoadingAnimation } from 'backend'
-import { useEventRoles } from 'services/eventRoles'
+import { useShowGlobalLoadingAnimation } from '@/backend'
+import { useEventRoles } from '@/services/eventRoles'
 
-import { AutocompleteInput } from 'libraries/formsV2/components/inputs/selectors'
-import { Hat } from 'libraries/ui/icons'
-import { useT } from 'i18n'
+import { AutocompleteInput } from '@/libraries/formsV2/components/inputs/selectors'
+import { Hat } from '@/libraries/ui/icons'
+import { useT } from '@/i18n'
 
 interface VolunteerRoleSelectProps {
   id: string

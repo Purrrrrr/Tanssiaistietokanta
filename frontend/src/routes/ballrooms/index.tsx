@@ -1,14 +1,14 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 
-import { addGlobalLoadingAnimation } from 'backend'
-import { useBallrooms, useCreateBallroom } from 'services/ballrooms'
+import { addGlobalLoadingAnimation } from '@/backend'
+import { useBallrooms, useCreateBallroom } from '@/services/ballrooms'
 
-import { searchList } from 'libraries/common/listSearch'
-import { Button, Card, Collapse, DialogCloseButton, H2, SearchBar } from 'libraries/ui'
-import { LoadingState } from 'components/LoadingState'
-import { Page, Toolbar } from 'components/Page'
-import { useT, useTranslation } from 'i18n'
+import { searchList } from '@/libraries/common/listSearch'
+import { Button, Card, Collapse, DialogCloseButton, H2, SearchBar } from '@/libraries/ui'
+import { LoadingState } from '@/components/LoadingState'
+import { Page, Toolbar } from '@/components/Page'
+import { useT, useTranslation } from '@/i18n'
 
 import { BallroomForm } from './-components/BallroomForm'
 import { BallroomFormValues, emptyBallroomForm } from './-components/ballroomFormValues'

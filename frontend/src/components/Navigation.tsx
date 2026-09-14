@@ -1,12 +1,12 @@
 import { createLink } from '@tanstack/react-router'
 
-import { logout } from 'backend/authentication'
-import { useCurrentUser } from 'services/users'
+import { logout } from '@/backend/authentication'
+import { useCurrentUser } from '@/services/users'
 
-import { AnchorButton, Button, MenuButton } from 'libraries/ui'
-import { Person as User } from 'libraries/ui/icons'
-import { useT } from 'i18n'
-import { useDimensionCssVariables } from 'utils/useDimensionCssVariables'
+import { AnchorButton, Button, MenuButton } from '@/libraries/ui'
+import { Person as User } from '@/libraries/ui/icons'
+import { useT } from '@/i18n'
+import { useDimensionCssVariables } from '@/utils/useDimensionCssVariables'
 
 import { NavigateButton } from './widgets/NavigateButton'
 

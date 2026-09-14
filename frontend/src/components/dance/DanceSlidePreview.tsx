@@ -1,7 +1,7 @@
-import { Dance } from 'types'
+import { Dance } from '@/types'
 
-import { DocumentViewer } from 'libraries/lexical/DocumentViewer'
-import { Slide, SlideContainer } from 'components/Slide'
+import { DocumentViewer } from '@/libraries/lexical/DocumentViewer'
+import { Slide, SlideContainer } from '@/components/Slide'
 
 const fakeDances = [
   'La Petite Catastrophe',

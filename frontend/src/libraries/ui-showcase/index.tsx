@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import { type Showcase } from './types'
 
-import { MenuLink, MenuSection, Page } from 'components/Page'
+import { MenuLink, MenuSection, Page } from '@/components/Page'
 
 import { ShowcaseContainer } from './ShowcaseContainer'
 import { anchorButtonShowcase } from './showcases/AnchorButtonShowcase'

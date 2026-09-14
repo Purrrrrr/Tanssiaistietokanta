@@ -2,10 +2,10 @@ import { Fragment } from 'react'
 
 import type { VersionCalendar, VersionSidebarProps } from './types'
 
-import { useFormatDate, useFormatTime } from 'libraries/i18n/dateTime'
-import { H2, Link } from 'libraries/ui'
-import SideBar from 'components/SideBar'
-import { useT, useTranslation } from 'i18n'
+import { useFormatDate, useFormatTime } from '@/libraries/i18n/dateTime'
+import { H2, Link } from '@/libraries/ui'
+import SideBar from '@/components/SideBar'
+import { useT, useTranslation } from '@/i18n'
 
 import './VersionChooser.scss'
 

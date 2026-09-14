@@ -1,6 +1,6 @@
-import { EventVolunteerAssignment, ID } from 'types'
+import { EventVolunteerAssignment, ID } from '@/types'
 
-import { useCreateEventVolunteerAssignment } from 'services/eventVolunteerAssignments'
+import { useCreateEventVolunteerAssignment } from '@/services/eventVolunteerAssignments'
 
 import { VolunteerSelect } from './VolunteerSelect'
 

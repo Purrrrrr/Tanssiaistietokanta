@@ -1,4 +1,4 @@
-import type { MetadataKey, MetadataObject } from 'types'
+import type { MetadataKey, MetadataObject } from '@/types'
 
 export { updateEntityFragment } from './apolloCache'
 export type { FetchRequestProgress, RestRequestWithProgressOptions } from './connection'
@@ -13,7 +13,7 @@ export {
   makeMutationHook,
 } from './hooks'
 export { setupServiceUpdateFragment, useServiceEvents } from './serviceEvents'
-export { graphql } from 'types/gql'
+export { graphql } from '@/types/gql'
 
 export function cleanMetadataValues<T extends MetadataObject>(value: MetadataObject): Omit<T, MetadataKey> {
   const { _id, _versionId, _versionNumber, _updatedAt, ...rest } = value

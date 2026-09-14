@@ -2,7 +2,7 @@ import { ComponentProps } from 'react'
 
 import type { Color } from './types'
 
-import { omitPermissionCheckingProps, PermissionCheckedProps, withPermissionChecking } from 'libraries/access-control'
+import { omitPermissionCheckingProps, PermissionCheckedProps, withPermissionChecking } from '@/libraries/access-control'
 
 import { buttonClass } from './buttonClass'
 

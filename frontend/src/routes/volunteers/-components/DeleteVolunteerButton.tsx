@@ -1,10 +1,10 @@
-import { Volunteer } from 'types'
+import { Volunteer } from '@/types'
 
-import { addGlobalLoadingAnimation } from 'backend'
-import { useDeleteVolunteer } from 'services/volunteers'
+import { addGlobalLoadingAnimation } from '@/backend'
+import { useDeleteVolunteer } from '@/services/volunteers'
 
-import { DeleteButton } from 'components/widgets/DeleteButton'
-import { useT } from 'i18n'
+import { DeleteButton } from '@/components/widgets/DeleteButton'
+import { useT } from '@/i18n'
 
 interface DeleteVolunteerButtonProps {
   minimal?: boolean

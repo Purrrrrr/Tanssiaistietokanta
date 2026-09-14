@@ -1,7 +1,7 @@
 import { booleanProp, showcase } from '../types'
 
-import { useMultipleSelection } from 'libraries/common/selection/useMultipleSelection'
-import { Button, ItemList } from 'libraries/ui'
+import { useMultipleSelection } from '@/libraries/common/selection/useMultipleSelection'
+import { Button, ItemList } from '@/libraries/ui'
 
 export function ItemListShowcase({ isTable, empty }: { isTable: boolean, empty: boolean }) {
   const items = Array(20).fill(0).map((_, i) => ({

@@ -1,15 +1,15 @@
-import { EventRole, VolunteerListItem } from 'types'
-import { FieldComponentProps } from 'libraries/forms/types'
-import { SyncItems } from 'libraries/formsV2/components/inputs/selectors/types'
+import { EventRole, VolunteerListItem } from '@/types'
+import { FieldComponentProps } from '@/libraries/forms/types'
+import { SyncItems } from '@/libraries/formsV2/components/inputs/selectors/types'
 
-import { useEventRoles } from 'services/eventRoles'
-import { useEventVolunteers } from 'services/eventVolunteers'
+import { useEventRoles } from '@/services/eventRoles'
+import { useEventVolunteers } from '@/services/eventVolunteers'
 
-import { searchList } from 'libraries/common/listSearch'
-import { AutocompleteInput } from 'libraries/formsV2/components/inputs/selectors'
-import { ClearButton } from 'libraries/ui'
-import { Hat, Person } from 'libraries/ui/icons'
-import { useT, useTranslation } from 'i18n'
+import { searchList } from '@/libraries/common/listSearch'
+import { AutocompleteInput } from '@/libraries/formsV2/components/inputs/selectors'
+import { ClearButton } from '@/libraries/ui'
+import { Hat, Person } from '@/libraries/ui/icons'
+import { useT, useTranslation } from '@/i18n'
 
 export type AssignmentTarget = Required<EventRole | VolunteerListItem>
 

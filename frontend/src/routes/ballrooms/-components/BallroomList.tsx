@@ -1,11 +1,11 @@
-import { Ballroom } from 'types'
+import { Ballroom } from '@/types'
 
-import { usePatchBallroom } from 'services/ballrooms'
+import { usePatchBallroom } from '@/services/ballrooms'
 
-import { patchStrategy, useAutosavingState } from 'libraries/forms'
-import { ItemList } from 'libraries/ui'
-import { Edit } from 'libraries/ui/icons'
-import { useT, useTranslation } from 'i18n'
+import { patchStrategy, useAutosavingState } from '@/libraries/forms'
+import { ItemList } from '@/libraries/ui'
+import { Edit } from '@/libraries/ui/icons'
+import { useT, useTranslation } from '@/i18n'
 
 import { BallroomForm } from './BallroomForm'
 import { BallroomFormValues } from './ballroomFormValues'

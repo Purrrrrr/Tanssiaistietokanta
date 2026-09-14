@@ -1,16 +1,16 @@
 import { getRouteApi, useNavigate } from '@tanstack/react-router'
 
-import { DocumentListItem as Document, DocumentOwner } from 'types'
+import { DocumentListItem as Document, DocumentOwner } from '@/types'
 
-import { useDocuments } from 'services/documents'
+import { useDocuments } from '@/services/documents'
 
-import { DocumentViewer } from 'libraries/lexical'
-import { ButtonProps, ItemList, Link, PageSection } from 'libraries/ui'
-import { Edit } from 'libraries/ui/icons'
-import { useDisplayTimestamp } from 'libraries/ui/useDisplayTimestamp'
-import { DeleteDocumentButton } from 'components/document/DeleteDocumentButton'
-import { NavigateButton } from 'components/widgets/NavigateButton'
-import { useT } from 'i18n'
+import { DocumentViewer } from '@/libraries/lexical'
+import { ButtonProps, ItemList, Link, PageSection } from '@/libraries/ui'
+import { Edit } from '@/libraries/ui/icons'
+import { useDisplayTimestamp } from '@/libraries/ui/useDisplayTimestamp'
+import { DeleteDocumentButton } from '@/components/document/DeleteDocumentButton'
+import { NavigateButton } from '@/components/widgets/NavigateButton'
+import { useT } from '@/i18n'
 
 import { CreateDocumentButton } from './CreateDocumentButton'
 import { documentListRoute, documentViewRoute } from './linkUtils'

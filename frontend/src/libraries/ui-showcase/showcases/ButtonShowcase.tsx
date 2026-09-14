@@ -1,7 +1,7 @@
 import { booleanProp, showcase } from '../types'
 
-import { Button } from 'libraries/ui'
-import { Trash } from 'libraries/ui/icons'
+import { Button } from '@/libraries/ui'
+import { Trash } from '@/libraries/ui/icons'
 
 import { colors } from '../utils'
 import { titleCase } from '../utils/titleCase'

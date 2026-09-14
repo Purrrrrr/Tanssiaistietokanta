@@ -1,10 +1,10 @@
-import { ID } from 'types'
-import { FormationDiagram } from 'types/formationDiagrams'
+import { ID } from '@/types'
+import { FormationDiagram } from '@/types/formationDiagrams'
 
-import { useFormationDiagrams } from 'services/formationDiagrams'
+import { useFormationDiagrams } from '@/services/formationDiagrams'
 
-import { FieldComponentProps } from 'libraries/forms'
-import { Select } from 'libraries/formsV2/components/inputs'
+import { FieldComponentProps } from '@/libraries/forms'
+import { Select } from '@/libraries/formsV2/components/inputs'
 
 interface CreateValue {
   _id: 'create'

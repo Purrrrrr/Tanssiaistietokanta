@@ -1,10 +1,10 @@
-import { EventRole } from 'types'
+import { EventRole } from '@/types'
 
-import { useEventRoles } from 'services/eventRoles'
+import { useEventRoles } from '@/services/eventRoles'
 
-import { FieldComponentProps } from 'libraries/forms'
-import { Select } from 'libraries/formsV2/components/inputs'
-import { useTranslation } from 'i18n'
+import { FieldComponentProps } from '@/libraries/forms'
+import { Select } from '@/libraries/formsV2/components/inputs'
+import { useTranslation } from '@/i18n'
 
 export type EventRoleSelectorProps = FieldComponentProps<string | undefined>
 

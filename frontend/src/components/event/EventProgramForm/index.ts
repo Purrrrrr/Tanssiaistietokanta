@@ -2,9 +2,9 @@ import { set } from 'partial.lenses'
 
 import { EventProgramSettings } from './types'
 
-import { usePatchEventProgram } from 'services/events'
+import { usePatchEventProgram } from '@/services/events'
 
-import { formFor, useAutosavingState, UseAutosavingStateReturn } from 'libraries/forms'
+import { formFor, useAutosavingState, UseAutosavingStateReturn } from '@/libraries/forms'
 
 import { JSONPatch, patch } from './patchStrategy'
 

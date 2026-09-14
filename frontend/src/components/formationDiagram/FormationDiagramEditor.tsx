@@ -1,10 +1,10 @@
 import { useCallback } from 'react'
 
-import { EditableFormationDiagram, FormationDiagram } from 'types/formationDiagrams'
+import { EditableFormationDiagram, FormationDiagram } from '@/types/formationDiagrams'
 
-import { usePatchFormationDiagram } from 'services/formationDiagrams'
+import { usePatchFormationDiagram } from '@/services/formationDiagrams'
 
-import { patchStrategy, useAutosavingState } from 'libraries/forms'
+import { patchStrategy, useAutosavingState } from '@/libraries/forms'
 
 import { FormationDiagramForm } from './FormationDiagramForm'
 

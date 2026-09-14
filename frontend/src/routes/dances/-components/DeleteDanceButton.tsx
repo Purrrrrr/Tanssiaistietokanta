@@ -1,10 +1,10 @@
-import { DanceWithEvents } from 'types'
+import { DanceWithEvents } from '@/types'
 
-import { addGlobalLoadingAnimation } from 'backend'
-import { useDeleteDance } from 'services/dances'
+import { addGlobalLoadingAnimation } from '@/backend'
+import { useDeleteDance } from '@/services/dances'
 
-import { DeleteButton } from 'components/widgets/DeleteButton'
-import { useT } from 'i18n'
+import { DeleteButton } from '@/components/widgets/DeleteButton'
+import { useT } from '@/i18n'
 
 interface DeleteDanceButtonProps {
   minimal?: boolean

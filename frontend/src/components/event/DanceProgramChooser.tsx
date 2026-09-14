@@ -1,10 +1,10 @@
 import React from 'react'
 
-import { Dance, Workshop } from 'types'
+import { Dance, Workshop } from '@/types'
 
-import { FieldComponentProps } from 'libraries/forms'
-import { DanceChooser, type DanceChooserItem } from 'components/widgets/DanceChooser'
-import { useT } from 'i18n'
+import { FieldComponentProps } from '@/libraries/forms'
+import { DanceChooser, type DanceChooserItem } from '@/components/widgets/DanceChooser'
+import { useT } from '@/i18n'
 
 import { EventProgramRow, IntervalMusic } from './EventProgramForm'
 import { useChosenDanceIds, useWorkshops } from './EventProgramForm/eventMetadata'

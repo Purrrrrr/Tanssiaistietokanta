@@ -1,8 +1,8 @@
-import { UploadedFile, useDeleteFile } from 'services/files'
+import { UploadedFile, useDeleteFile } from '@/services/files'
 
-import { showToast } from 'libraries/ui/hooks'
-import { DeleteButton } from 'components/widgets/DeleteButton'
-import { useT } from 'i18n'
+import { showToast } from '@/libraries/ui/hooks'
+import { DeleteButton } from '@/components/widgets/DeleteButton'
+import { useT } from '@/i18n'
 
 export function DeleteFileButton({ file }: {
   file: UploadedFile

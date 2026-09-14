@@ -1,6 +1,6 @@
 import { showcase } from '../types'
 
-import { Breadcrumb, BreadcrumbsContainer } from 'libraries/ui'
+import { Breadcrumb, BreadcrumbsContainer } from '@/libraries/ui'
 
 function BreadcrumbsShowcase() {
   return <BreadcrumbsContainer label="Example breadcrumbs">

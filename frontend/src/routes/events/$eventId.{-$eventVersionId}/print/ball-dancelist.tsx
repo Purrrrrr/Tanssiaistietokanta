@@ -1,15 +1,15 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 
-import { backendQueryHook, graphql } from 'backend'
-import { useCallbackOnEventChanges } from 'services/events'
+import { backendQueryHook, graphql } from '@/backend'
+import { useCallbackOnEventChanges } from '@/services/events'
 
-import { RadioGroup, Switch } from 'libraries/forms'
-import { AutosizedSection, Button } from 'libraries/ui'
-import { LinkToDanceWiki } from 'components/dance/DanceWikiPreview'
-import { LoadingState } from 'components/LoadingState'
-import { A4Page, PrintPageContainer, PrintViewToolbar } from 'components/print'
-import { useT } from 'i18n'
+import { RadioGroup, Switch } from '@/libraries/forms'
+import { AutosizedSection, Button } from '@/libraries/ui'
+import { LinkToDanceWiki } from '@/components/dance/DanceWikiPreview'
+import { LoadingState } from '@/components/LoadingState'
+import { A4Page, PrintPageContainer, PrintViewToolbar } from '@/components/print'
+import { useT } from '@/i18n'
 
 import './ball-danceList.sass'
 

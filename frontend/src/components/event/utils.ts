@@ -1,7 +1,7 @@
 import { DanceSet, EventProgramRow, IntervalMusic, T } from './EventProgramForm/types'
 
-import { emptyDocument } from 'libraries/lexical'
-import randomId from 'utils/randomId'
+import { emptyDocument } from '@/libraries/lexical'
+import randomId from '@/utils/randomId'
 
 export const DEFAULT_INTERVAL_MUSIC_DURATION = 15 * 60
 export const DEFAULT_INTERVAL_MUSIC = {

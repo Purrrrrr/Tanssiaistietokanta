@@ -1,10 +1,10 @@
-import { Ballroom } from 'types'
+import { Ballroom } from '@/types'
 
-import { addGlobalLoadingAnimation } from 'backend'
-import { useDeleteBallroom } from 'services/ballrooms'
+import { addGlobalLoadingAnimation } from '@/backend'
+import { useDeleteBallroom } from '@/services/ballrooms'
 
-import { DeleteButton } from 'components/widgets/DeleteButton'
-import { useT } from 'i18n'
+import { DeleteButton } from '@/components/widgets/DeleteButton'
+import { useT } from '@/i18n'
 
 interface DeleteBallroomButtonProps {
   minimal?: boolean

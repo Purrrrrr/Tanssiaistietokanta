@@ -1,12 +1,12 @@
-import { EventVolunteerAssignment, ID } from 'types'
+import { EventVolunteerAssignment, ID } from '@/types'
 
-import { useShowGlobalLoadingAnimation } from 'backend'
-import { useEventVolunteers } from 'services/eventVolunteers'
+import { useShowGlobalLoadingAnimation } from '@/backend'
+import { useEventVolunteers } from '@/services/eventVolunteers'
 
-import { AutocompleteInput } from 'libraries/formsV2/components/inputs/selectors'
-import { Person } from 'libraries/ui/icons'
-import { useT } from 'i18n'
-import { sortedBy } from 'utils/sorted'
+import { AutocompleteInput } from '@/libraries/formsV2/components/inputs/selectors'
+import { Person } from '@/libraries/ui/icons'
+import { useT } from '@/i18n'
+import { sortedBy } from '@/utils/sorted'
 
 interface VolunteerSelectorProps {
   className?: string

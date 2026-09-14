@@ -1,10 +1,10 @@
-import { EventVolunteerAssignment } from 'types'
+import { EventVolunteerAssignment } from '@/types'
 
-import { useDeleteEventVolunteerAssignment } from 'services/eventVolunteerAssignments'
+import { useDeleteEventVolunteerAssignment } from '@/services/eventVolunteerAssignments'
 
-import { ButtonProps } from 'libraries/ui'
-import { DeleteButton } from 'components/widgets/DeleteButton'
-import { useT } from 'i18n'
+import { ButtonProps } from '@/libraries/ui'
+import { DeleteButton } from '@/components/widgets/DeleteButton'
+import { useT } from '@/i18n'
 
 export function RemoveAssignmentsButton({ assignments, ...rest }: Omit<ButtonProps, 'text'> & {
   iconOnly?: boolean

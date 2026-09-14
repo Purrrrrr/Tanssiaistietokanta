@@ -1,11 +1,9 @@
-// import { Teacher } from 'types'
+import { useCreateVolunteer, useVolunteers } from '@/services/volunteers'
 
-import { useCreateVolunteer, useVolunteers } from 'services/volunteers'
-
-import { canCreateUniqueItemFromQuery, searchList } from 'libraries/common/listSearch'
-import { FieldComponentProps } from 'libraries/forms'
-import { AutocompleteMultipleInput } from 'libraries/formsV2/components/inputs/selectors'
-import { useT } from 'i18n'
+import { canCreateUniqueItemFromQuery, searchList } from '@/libraries/common/listSearch'
+import { FieldComponentProps } from '@/libraries/forms'
+import { AutocompleteMultipleInput } from '@/libraries/formsV2/components/inputs/selectors'
+import { useT } from '@/i18n'
 
 interface Volunteer { _id: string, name: string } // Omit<Teacher, '__typename'>
 type SelectableValue = (Volunteer & { __typename?: 'Volunteer' })

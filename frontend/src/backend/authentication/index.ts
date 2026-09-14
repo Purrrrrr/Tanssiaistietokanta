@@ -1,6 +1,6 @@
 import { AuthResponse } from './types'
 
-import { restRequest, setAccessToken, waitForSocketConnection } from 'backend/connection'
+import { restRequest, setAccessToken, waitForSocketConnection } from '@/backend/connection'
 
 import { AuthState } from './state'
 import { debug, RefreshScheduler } from './utils'

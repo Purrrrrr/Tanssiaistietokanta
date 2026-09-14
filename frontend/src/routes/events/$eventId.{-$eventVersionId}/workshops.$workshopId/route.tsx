@@ -1,6 +1,6 @@
 import { createFileRoute, getRouteApi } from '@tanstack/react-router'
 
-import { Breadcrumb } from 'libraries/ui'
+import { Breadcrumb } from '@/libraries/ui'
 
 export const Route = createFileRoute(
   '/events/$eventId/{-$eventVersionId}/workshops/$workshopId',

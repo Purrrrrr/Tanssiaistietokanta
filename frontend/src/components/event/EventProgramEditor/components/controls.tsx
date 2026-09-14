@@ -1,10 +1,10 @@
-import { ActionButton as Button } from 'libraries/forms'
+import { ActionButton as Button } from '@/libraries/forms'
 import {
   DanceSet, EventProgramRow, IntervalMusic, ProgramSectionPath, switchFor, useAppendToList,
-} from 'components/event/EventProgramForm'
-import { ProgramTypeIcon } from 'components/event/ProgramTypeIcon'
-import { DEFAULT_INTERVAL_MUSIC, newDanceSet, newEventProgramEventProgramRow, newRequestedDanceEventProgramRow } from 'components/event/utils'
-import { useT, useTranslation } from 'i18n'
+} from '@/components/event/EventProgramForm'
+import { ProgramTypeIcon } from '@/components/event/ProgramTypeIcon'
+import { DEFAULT_INTERVAL_MUSIC, newDanceSet, newEventProgramEventProgramRow, newRequestedDanceEventProgramRow } from '@/components/event/utils'
+import { useT, useTranslation } from '@/i18n'
 
 export function AddIntroductionButton() {
   const addIntroduction = useAppendToList('introductions.program')

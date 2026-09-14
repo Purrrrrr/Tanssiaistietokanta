@@ -1,8 +1,8 @@
-import { Volunteer } from 'types'
+import { Volunteer } from '@/types'
 
-import { Tag } from 'libraries/ui'
-import { rainbow } from 'libraries/ui/tagColorSchemes'
-import { sortedBy } from 'utils/sorted'
+import { Tag } from '@/libraries/ui'
+import { rainbow } from '@/libraries/ui/tagColorSchemes'
+import { sortedBy } from '@/utils/sorted'
 
 const scheme = rainbow(20)
 export interface VolunteeredInProps {

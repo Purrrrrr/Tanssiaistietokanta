@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react'
 
 import { booleanProp, showcase } from '../types'
 
-import { defaultDiagram, type FabricDiagramData, FabricEditor } from 'libraries/fabric/FabricEditor'
-import FabricImageViewer from 'libraries/fabric/FabricImageViewer'
-import { H2 } from 'libraries/ui'
+import { defaultDiagram, type FabricDiagramData, FabricEditor } from '@/libraries/fabric/FabricEditor'
+import FabricImageViewer from '@/libraries/fabric/FabricImageViewer'
+import { H2 } from '@/libraries/ui'
 
 const defaultData: FabricDiagramData = defaultDiagram
 

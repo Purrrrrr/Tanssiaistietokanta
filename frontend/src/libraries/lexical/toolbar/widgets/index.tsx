@@ -1,9 +1,9 @@
 import { useId } from 'react'
 
-import { FormGroup } from 'libraries/ui'
-import { CssClass } from 'libraries/ui/classes'
+import { FormGroup } from '@/libraries/ui'
+import { CssClass } from '@/libraries/ui/classes'
 
-export { FloatingToolbar, ToolbarButton, ToolbarRow } from 'libraries/ui'
+export { FloatingToolbar, ToolbarButton, ToolbarRow } from '@/libraries/ui'
 
 interface ToolbarInputProps extends Omit<React.ComponentProps<'input'>, 'value' | 'onChange'> {
   value: string | number

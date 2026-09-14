@@ -1,12 +1,12 @@
 import { useId } from 'react'
 import classNames from 'classnames'
 
-import { SlideStyle, useEventSlideStyles } from 'services/events'
+import { SlideStyle, useEventSlideStyles } from '@/services/events'
 
-import { Select } from 'libraries/formsV2/components/inputs'
-import { Button } from 'libraries/ui'
-import { DoubleCaretVertical, Style } from 'libraries/ui/icons'
-import { useT } from 'i18n'
+import { Select } from '@/libraries/formsV2/components/inputs'
+import { Button } from '@/libraries/ui'
+import { DoubleCaretVertical, Style } from '@/libraries/ui/icons'
+import { useT } from '@/i18n'
 
 interface SlideStyleSelectorProps {
   value: string | null | undefined

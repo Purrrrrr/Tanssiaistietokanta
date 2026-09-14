@@ -2,21 +2,21 @@ import { getRouteApi, useNavigate } from '@tanstack/react-router'
 import React, { UIEvent, useDeferredValue, useEffect, useRef, useState } from 'react'
 import classNames from 'classnames'
 
-import { Card, H2, Link } from 'libraries/ui'
-import { ChevronLeft, ChevronRight } from 'libraries/ui/icons'
-import { EventProgramSettings, Field, useValueAt } from 'components/event/EventProgramForm'
-import { EventSlide, EventSlidePreview, EventSlideProps, startSlideId, useEventSlides } from 'components/event/EventSlide'
-import { EventSlideEditor } from 'components/event/EventSlideEditor'
-import { SlideContainer } from 'components/Slide'
-import { useSlideshowNavigation } from 'components/Slide/useSlideshowNavigation'
-import { NavigateButton } from 'components/widgets/NavigateButton'
-import { SlideStyleSelector } from 'components/widgets/SlideStyleSelector'
-import { useT, useTranslation } from 'i18n'
+import { Card, H2, Link } from '@/libraries/ui'
+import { ChevronLeft, ChevronRight } from '@/libraries/ui/icons'
+import { EventProgramSettings, Field, useValueAt } from '@/components/event/EventProgramForm'
+import { EventSlide, EventSlidePreview, EventSlideProps, startSlideId, useEventSlides } from '@/components/event/EventSlide'
+import { EventSlideEditor } from '@/components/event/EventSlideEditor'
+import { SlideContainer } from '@/components/Slide'
+import { useSlideshowNavigation } from '@/components/Slide/useSlideshowNavigation'
+import { NavigateButton } from '@/components/widgets/NavigateButton'
+import { SlideStyleSelector } from '@/components/widgets/SlideStyleSelector'
+import { useT, useTranslation } from '@/i18n'
 
 import { MissingDanceInstructionsWarning } from './components'
 import { SlideChooser } from './components/SlideChooser'
 
-import 'components/Slide/slideStyles.scss'
+import '@/components/Slide/slideStyles.scss'
 
 export function SlideshowEditor() {
   const program = useValueAt('')

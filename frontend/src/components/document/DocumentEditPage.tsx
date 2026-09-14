@@ -1,18 +1,18 @@
 import { getRouteApi } from '@tanstack/react-router'
 import { useCallback } from 'react'
 
-import { Document } from 'types'
+import { Document } from '@/types'
 
-import { cleanMetadataValues } from 'backend'
-import { useDocument, usePatchDocument } from 'services/documents'
+import { cleanMetadataValues } from '@/backend'
+import { useDocument, usePatchDocument } from '@/services/documents'
 
-import { formFor, patchStrategy, useAutosavingState } from 'libraries/forms'
-import { DocumentContentEditor } from 'libraries/lexical'
-import { PageSection } from 'libraries/ui'
-import { EyeOpen } from 'libraries/ui/icons'
-import { DeleteDocumentButton } from 'components/document/DeleteDocumentButton'
-import { NavigateButton } from 'components/widgets/NavigateButton'
-import { useT } from 'i18n'
+import { formFor, patchStrategy, useAutosavingState } from '@/libraries/forms'
+import { DocumentContentEditor } from '@/libraries/lexical'
+import { PageSection } from '@/libraries/ui'
+import { EyeOpen } from '@/libraries/ui/icons'
+import { DeleteDocumentButton } from '@/components/document/DeleteDocumentButton'
+import { NavigateButton } from '@/components/widgets/NavigateButton'
+import { useT } from '@/i18n'
 
 import { documentViewRoute } from './linkUtils'
 

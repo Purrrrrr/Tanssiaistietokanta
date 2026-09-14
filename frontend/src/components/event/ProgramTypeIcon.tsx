@@ -1,8 +1,8 @@
 import classNames from 'classnames'
 
-import { InfoSign, Music, Time } from 'libraries/ui/icons'
-import { EventProgramRow } from 'components/event/EventProgramForm'
-import { useT } from 'i18n'
+import { InfoSign, Music, Time } from '@/libraries/ui/icons'
+import { EventProgramRow } from '@/components/event/EventProgramForm'
+import { useT } from '@/i18n'
 
 type ProgramType = EventProgramRow['type'] | 'IntervalMusic'
 

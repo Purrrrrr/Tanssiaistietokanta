@@ -1,9 +1,9 @@
-import { EditableFormationDiagram } from 'types/formationDiagrams'
+import { EditableFormationDiagram } from '@/types/formationDiagrams'
 
-import { FabricEditor } from 'libraries/fabric/FabricEditor'
-import { formFor, FormProps, SubmitButton, SyncState, SyncStatus } from 'libraries/forms'
-import { BallroomSelect } from 'components/ballroom/BallroomSelect'
-import { useT } from 'i18n'
+import { FabricEditor } from '@/libraries/fabric/FabricEditor'
+import { formFor, FormProps, SubmitButton, SyncState, SyncStatus } from '@/libraries/forms'
+import { BallroomSelect } from '@/components/ballroom/BallroomSelect'
+import { useT } from '@/i18n'
 
 const {
   Form,

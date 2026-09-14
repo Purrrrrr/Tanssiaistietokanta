@@ -1,11 +1,11 @@
 import { useRef, useState } from 'react'
 import { $getNodeByKey, $isNodeSelection, LexicalEditor, NodeKey } from 'lexical'
 
-import type { FileOwner, FileOwningId } from 'types/files'
+import type { FileOwner, FileOwningId } from '@/types/files'
 import { ToolbarHookReturn } from './types'
 import { NodeAlignment } from '../plugins/nodes/types'
 
-import { doUpload } from 'services/files'
+import { doUpload } from '@/services/files'
 
 import { useEditorT } from '../i18n'
 import { INSERT_IMAGE_COMMAND } from '../plugins/ImagePlugin'

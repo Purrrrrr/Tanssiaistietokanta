@@ -2,7 +2,7 @@ import React from 'react'
 
 import { LabelStyle, LabelTexts, Version } from './types'
 
-import { FormGroup } from 'libraries/ui'
+import { FormGroup } from '@/libraries/ui'
 
 import { ConflictHandler } from './ConflictHandler'
 import type { Error } from './validation'

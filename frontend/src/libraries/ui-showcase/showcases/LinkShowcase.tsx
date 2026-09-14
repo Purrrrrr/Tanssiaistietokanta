@@ -1,6 +1,6 @@
 import { showcase } from '../types'
 
-import { RegularLink } from 'libraries/ui'
+import { RegularLink } from '@/libraries/ui'
 
 export function LinkShowcase() {
   return <RegularLink href="#">Link</RegularLink>

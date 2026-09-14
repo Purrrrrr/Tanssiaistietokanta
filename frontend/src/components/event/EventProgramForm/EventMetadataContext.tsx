@@ -1,6 +1,6 @@
 import { ReactNode, useRef, useSyncExternalStore } from 'react'
 
-import { Workshop } from 'types'
+import { Workshop } from '@/types'
 import { EventProgramSettings } from './types'
 
 import { ChosenDancesContext, WorkshopsContext } from './eventMetadata'

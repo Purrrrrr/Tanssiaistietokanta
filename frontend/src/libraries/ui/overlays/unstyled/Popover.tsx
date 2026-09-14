@@ -1,7 +1,7 @@
 import { type ComponentProps, Ref, type RefObject, useEffect, useEffectEvent, useLayoutEffect, useRef, useState } from 'react'
 import classNames from 'classnames'
 
-import { useShouldRender } from 'libraries/common/useShouldRender'
+import { useShouldRender } from '@/libraries/common/useShouldRender'
 
 interface PopoverProps extends Omit<ComponentProps<'div'>, 'onToggle'> {
   type: 'manual' | 'auto'

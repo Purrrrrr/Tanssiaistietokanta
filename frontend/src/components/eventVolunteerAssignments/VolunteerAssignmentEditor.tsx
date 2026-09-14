@@ -1,13 +1,13 @@
 import { useState } from 'react'
 
-import { Event } from 'types'
+import { Event } from '@/types'
 
-import { useShowGlobalLoadingAnimation } from 'backend'
-import { useEventVolunteerAssignments } from 'services/eventVolunteerAssignments'
+import { useShowGlobalLoadingAnimation } from '@/backend'
+import { useEventVolunteerAssignments } from '@/services/eventVolunteerAssignments'
 
-import { Collapse, PageSection } from 'libraries/ui'
-import { AddButton } from 'components/widgets/AddButton'
-import { useTranslation } from 'i18n'
+import { Collapse, PageSection } from '@/libraries/ui'
+import { AddButton } from '@/components/widgets/AddButton'
+import { useTranslation } from '@/i18n'
 
 import { AddVolunteerAssignmentForm } from './AddVolunteerAssignmentForm'
 import { AssignmentWarnings } from './AssignmentWarnings'

@@ -1,8 +1,8 @@
 import React, { useEffect, useLayoutEffect, useRef } from 'react'
 import classNames from 'classnames'
 
-import { getFocusableElements } from 'libraries/common/getFocusableElements'
-import { useShouldRender } from 'libraries/common/useShouldRender'
+import { getFocusableElements } from '@/libraries/common/getFocusableElements'
+import { useShouldRender } from '@/libraries/common/useShouldRender'
 
 import { Button, ButtonProps } from '../Button'
 import { Cross } from '../icons'

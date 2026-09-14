@@ -4,8 +4,8 @@ import { useCombobox, type UseComboboxGetInputPropsOptions } from 'downshift'
 import type { SelectorProps } from './types'
 import type { FieldInputComponent } from '../types'
 
-import { Dropdown, DropdownContainer } from 'libraries/ui'
-import { CssClass } from 'libraries/ui/classes'
+import { Dropdown, DropdownContainer } from '@/libraries/ui'
+import { CssClass } from '@/libraries/ui/classes'
 
 import { useFilteredItems } from './itemUtils'
 import { Menu, MenuItem, renderMenuItems, toMenuItemProps } from './Menu'

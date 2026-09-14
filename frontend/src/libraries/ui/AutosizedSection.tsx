@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 
-import { useDelayedValue } from 'libraries/common/useDelayedValue'
-import { useResizeObserver } from 'libraries/common/useResizeObserver'
+import { useDelayedValue } from '@/libraries/common/useDelayedValue'
+import { useResizeObserver } from '@/libraries/common/useResizeObserver'
 
 export function AutosizedSection({ children, className = '', ...props }) {
   const container = useRef<HTMLElement>(null)

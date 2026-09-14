@@ -1,4 +1,4 @@
-import { CreateDocumentMutationVariables, GetDocumentQuery, GetDocumentsQuery } from 'types/gql/graphql'
+import { CreateDocumentMutationVariables, GetDocumentQuery, GetDocumentsQuery } from '@/types/gql/graphql'
 
 export type DocumentInput = CreateDocumentMutationVariables
 export type DocumentListItem = NonNullable<GetDocumentsQuery['documents']>[number]

@@ -1,6 +1,6 @@
 import { lazy } from 'react'
 
-import { useRight } from 'libraries/access-control'
+import { useRight } from '@/libraries/access-control'
 
 import type { FileListProps } from './FileListImpl'
 

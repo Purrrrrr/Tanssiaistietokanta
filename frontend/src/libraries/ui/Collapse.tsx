@@ -1,7 +1,7 @@
 import { Suspense } from 'react'
 import classNames from 'classnames'
 
-import { useShouldRender } from 'libraries/common/useShouldRender'
+import { useShouldRender } from '@/libraries/common/useShouldRender'
 
 import { LoadingSpinner } from './LoadingSpinner'
 

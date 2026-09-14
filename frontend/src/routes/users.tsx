@@ -1,11 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-import { useUsers } from 'services/users'
+import { useUsers } from '@/services/users'
 
-import { ItemList } from 'libraries/ui'
-import { LoadingState } from 'components/LoadingState'
-import { Page } from 'components/Page'
-import { useT } from 'i18n'
+import { ItemList } from '@/libraries/ui'
+import { LoadingState } from '@/components/LoadingState'
+import { Page } from '@/components/Page'
+import { useT } from '@/i18n'
 
 export const Route = createFileRoute('/users')({
   component: UsersPage,

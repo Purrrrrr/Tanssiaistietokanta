@@ -1,9 +1,9 @@
 import classNames from 'classnames'
 
-import { Link, RegularLink } from 'libraries/ui'
-import { ColorClass } from 'libraries/ui/classes'
-import { T, useTranslation } from 'i18n'
-import { navigationHidden } from 'utils/routeUtils'
+import { Link, RegularLink } from '@/libraries/ui'
+import { ColorClass } from '@/libraries/ui/classes'
+import { T, useTranslation } from '@/i18n'
+import { navigationHidden } from '@/utils/routeUtils'
 
 import DebugManager from './DebugManager'
 import Navigation from './Navigation'
@@ -14,10 +14,10 @@ import './SkipToMainContent.css'
 
 if (process.env.NODE_ENV === 'development') {
   import('./dev.css')
-  import('utils/devBadge').then(({ addFaviconDevBadge }) => addFaviconDevBadge())
+  import('@/utils/devBadge').then(({ addFaviconDevBadge }) => addFaviconDevBadge())
 }
 if (window.location.hostname.match(/\bbeta\b/)) {
-  import('utils/devBadge').then(({ addFaviconDevBadge }) => addFaviconDevBadge('beta'))
+  import('@/utils/devBadge').then(({ addFaviconDevBadge }) => addFaviconDevBadge('beta'))
 }
 
 function NavigationLayout({ children }) {

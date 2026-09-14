@@ -1,4 +1,4 @@
-import { SelectionApi } from 'libraries/common/selection/types'
+import { SelectionApi } from '@/libraries/common/selection/types'
 
 import { Column, columnDefaults } from '../column'
 import { SelectionBox } from '../SelectionBox'

@@ -1,8 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-import { VolunteerAssignmentEditor } from 'components/eventVolunteerAssignments/VolunteerAssignmentEditor'
-import { AssignmentSearchTerm, parseSearch } from 'components/eventVolunteerAssignments/VolunteerAssignmentSearch'
-import { useT } from 'i18n'
+import { VolunteerAssignmentEditor } from '@/components/eventVolunteerAssignments/VolunteerAssignmentEditor'
+import { AssignmentSearchTerm, parseSearch } from '@/components/eventVolunteerAssignments/VolunteerAssignmentSearch'
+import { useT } from '@/i18n'
 
 import { useCurrentEvent } from '../-context'
 

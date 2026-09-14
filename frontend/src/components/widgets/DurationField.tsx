@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from 'react'
 import classNames from 'classnames'
 
-import { FieldComponentProps, Input, InputProps } from 'libraries/forms'
-import { durationToString, parseDuration, toMinSec, toSeconds } from 'utils/duration'
-import { useDelayedEffect } from 'utils/useDelayedEffect'
+import { FieldComponentProps, Input, InputProps } from '@/libraries/forms'
+import { durationToString, parseDuration, toMinSec, toSeconds } from '@/utils/duration'
+import { useDelayedEffect } from '@/utils/useDelayedEffect'
 
 import './DurationField.css'
 

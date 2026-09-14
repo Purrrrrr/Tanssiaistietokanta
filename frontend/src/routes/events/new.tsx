@@ -1,18 +1,18 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 
-import { EventInput } from 'types'
+import { EventInput } from '@/types'
 
-import { addGlobalLoadingAnimation } from 'backend'
-import { useCreateEvent } from 'services/events'
-import { useCurrentUser } from 'services/users'
+import { addGlobalLoadingAnimation } from '@/backend'
+import { useCreateEvent } from '@/services/events'
+import { useCurrentUser } from '@/services/users'
 
-import { DateRangeField, formFor, SubmitButton } from 'libraries/forms'
-import { EventRegistrationSystemSelector } from 'components/event/EventRegistrationSystemSelector'
-import { Page } from 'components/Page'
-import { EventGrantsEditor } from 'components/rights/EventGrantsEditor'
-import { useT } from 'i18n'
-import randomId from 'utils/randomId'
+import { DateRangeField, formFor, SubmitButton } from '@/libraries/forms'
+import { EventRegistrationSystemSelector } from '@/components/event/EventRegistrationSystemSelector'
+import { Page } from '@/components/Page'
+import { EventGrantsEditor } from '@/components/rights/EventGrantsEditor'
+import { useT } from '@/i18n'
+import randomId from '@/utils/randomId'
 
 const {
   Form,

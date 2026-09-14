@@ -1,11 +1,11 @@
 import EventEmitter from 'events'
 
-import { type Access, type AccessAllowed, type AccessQuery, type ServiceName } from 'types/gql/base-types'
+import { type Access, type AccessAllowed, type AccessQuery, type ServiceName } from '@/types/gql/base-types'
 
-import { socketRequest } from 'backend'
-import { socket } from 'backend/connection'
+import { socketRequest } from '@/backend'
+import { socket } from '@/backend/connection'
 
-import createDebug from 'utils/debug'
+import createDebug from '@/utils/debug'
 
 const debug = createDebug('access')
 

@@ -1,9 +1,9 @@
 import { useState } from 'react'
 
-import { ActionButton as Button } from 'libraries/forms'
-import { Cross, Edit } from 'libraries/ui/icons'
-import { Input, useValueAt } from 'components/event/EventProgramForm'
-import { useTranslation } from 'i18n'
+import { ActionButton as Button } from '@/libraries/forms'
+import { Cross, Edit } from '@/libraries/ui/icons'
+import { Input, useValueAt } from '@/components/event/EventProgramForm'
+import { useTranslation } from '@/i18n'
 
 export function DanceSetNameEditor({ itemIndex }: { itemIndex: number }) {
   const label = useTranslation('components.eventProgramEditor.fields.danceSetName')

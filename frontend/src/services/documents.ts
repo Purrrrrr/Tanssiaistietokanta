@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 
-import { backendQueryHook, entityCreateHook, entityDeleteHook, entityListQueryHook, entityUpdateHook, graphql, setupServiceUpdateFragment, useServiceEvents } from 'backend'
+import { backendQueryHook, entityCreateHook, entityDeleteHook, entityListQueryHook, entityUpdateHook, graphql, setupServiceUpdateFragment, useServiceEvents } from '@/backend'
 
 setupServiceUpdateFragment(
   'documents',

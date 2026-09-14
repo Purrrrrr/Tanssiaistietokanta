@@ -1,16 +1,16 @@
 import { useState } from 'react'
 
-import { Event, WorkshopInput } from 'types'
+import { Event, WorkshopInput } from '@/types'
 
-import { addGlobalLoadingAnimation } from 'backend'
-import { useCreateWorkshop } from 'services/workshops'
+import { addGlobalLoadingAnimation } from '@/backend'
+import { useCreateWorkshop } from '@/services/workshops'
 
-import { useRight } from 'libraries/access-control'
-import { TextInput } from 'libraries/formsV2/components/inputs'
-import { Button, ButtonProps, FormGroup, MenuButton } from 'libraries/ui'
-import { AddButton } from 'components/widgets/AddButton'
-import { newInstance } from 'components/workshops/WorkshopEditor'
-import { useT, useTranslation } from 'i18n'
+import { useRight } from '@/libraries/access-control'
+import { TextInput } from '@/libraries/formsV2/components/inputs'
+import { Button, ButtonProps, FormGroup, MenuButton } from '@/libraries/ui'
+import { AddButton } from '@/components/widgets/AddButton'
+import { newInstance } from '@/components/workshops/WorkshopEditor'
+import { useT, useTranslation } from '@/i18n'
 
 export function AddWorkshopButton({ event, ...rest }: { event: Event } & ButtonProps) {
   const canCreate = useRight('workshops:create', { context: 'events', contextId: event._id })

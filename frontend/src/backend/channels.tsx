@@ -1,5 +1,5 @@
-import createDebug from 'utils/debug'
-import { getOrComputeDefault } from 'utils/map'
+import createDebug from '@/utils/debug'
+import { getOrComputeDefault } from '@/utils/map'
 
 import { socket, socketRequest } from './connection'
 

@@ -1,16 +1,16 @@
 import { createFileRoute, notFound } from '@tanstack/react-router'
 
-import { Event } from 'types'
+import { Event } from '@/types'
 
-import { useDocumentsCount } from 'services/documents'
-import { useFilesCount } from 'services/files'
+import { useDocumentsCount } from '@/services/documents'
+import { useFilesCount } from '@/services/files'
 
-import { CounterTag, H2, Tab, Tabs } from 'libraries/ui'
-import { DocumentList } from 'components/document/DocumentList'
-import { FileList } from 'components/files/FileList'
-import { DeleteWorkshopButton } from 'components/workshops/DeleteWorkshopButton'
-import { WorkshopEditor, WorkshopVolunteers } from 'components/workshops/WorkshopEditor'
-import { useT } from 'i18n'
+import { CounterTag, H2, Tab, Tabs } from '@/libraries/ui'
+import { DocumentList } from '@/components/document/DocumentList'
+import { FileList } from '@/components/files/FileList'
+import { DeleteWorkshopButton } from '@/components/workshops/DeleteWorkshopButton'
+import { WorkshopEditor, WorkshopVolunteers } from '@/components/workshops/WorkshopEditor'
+import { useT } from '@/i18n'
 
 import { useCurrentEvent } from '../-context'
 

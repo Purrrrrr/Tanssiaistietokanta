@@ -1,7 +1,7 @@
 import classNames from 'classnames'
 
-import { quickNumberHash } from 'libraries/common/hashString'
-import { useContrastCheck } from 'libraries/common/useContrastRatio'
+import { quickNumberHash } from '@/libraries/common/hashString'
+import { useContrastCheck } from '@/libraries/common/useContrastRatio'
 
 import { type ColorScheme, defaultScheme } from './tagColorSchemes'
 

@@ -1,14 +1,14 @@
 import { useState } from 'react'
 
-import { Dance } from 'types'
+import { Dance } from '@/types'
 
-import { useFetchDanceFromWiki } from 'services/dancewiki'
+import { useFetchDanceFromWiki } from '@/services/dancewiki'
 
-import { useFormatDateTime } from 'libraries/i18n/dateTime'
-import { DocumentViewer, isEmptyDocument, LinkNode, NodeRendererProps } from 'libraries/lexical'
-import { Button, Collapse, RegularLink } from 'libraries/ui'
-import { ChevronDown, ChevronUp, Link as LinkIcon } from 'libraries/ui/icons'
-import { useT } from 'i18n'
+import { useFormatDateTime } from '@/libraries/i18n/dateTime'
+import { DocumentViewer, isEmptyDocument, LinkNode, NodeRendererProps } from '@/libraries/lexical'
+import { Button, Collapse, RegularLink } from '@/libraries/ui'
+import { ChevronDown, ChevronUp, Link as LinkIcon } from '@/libraries/ui/icons'
+import { useT } from '@/i18n'
 
 interface DanceWikiPreviewProps {
   dance: Dance

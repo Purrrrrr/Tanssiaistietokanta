@@ -1,7 +1,7 @@
-import { EventRole } from 'types'
+import { EventRole } from '@/types'
 
-import { Tag, TagProps } from 'libraries/ui'
-import { tailwindLight } from 'libraries/ui/tagColorSchemes'
+import { Tag, TagProps } from '@/libraries/ui'
+import { tailwindLight } from '@/libraries/ui/tagColorSchemes'
 
 export interface RoleTagProps extends Omit<TagProps, 'hashSource' | 'title' | 'role'> {
   role: Pick<EventRole, '_id' | 'name' | 'order'>

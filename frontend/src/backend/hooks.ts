@@ -1,10 +1,10 @@
 import { useEffectEvent, useMemo } from 'react'
 import { MutationHookOptions, OperationVariables, QueryHookOptions, QueryResult, TypedDocumentNode } from '@apollo/client'
 
-import { Entity, ServiceName } from 'types'
+import { Entity, ServiceName } from '@/types'
 
-import { showErrorToast } from 'libraries/ui/hooks'
-import { useTranslation } from 'i18n'
+import { showErrorToast } from '@/libraries/ui/hooks'
+import { useTranslation } from '@/i18n'
 
 import { FetchResult, MutationResult, useMutation, useQuery } from './apollo'
 import { appendToListQuery, filterRemovedFromListQuery } from './apolloCache'

@@ -1,7 +1,7 @@
-import { UploadedFile } from 'services/files'
+import { UploadedFile } from '@/services/files'
 
-import { AnchorButton } from 'libraries/ui'
-import { useTranslation } from 'i18n'
+import { AnchorButton } from '@/libraries/ui'
+import { useTranslation } from '@/i18n'
 
 export function DownloadSelectionButton({ files }: {
   files: UploadedFile[]

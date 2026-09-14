@@ -1,6 +1,6 @@
-import { Dance, ID } from 'types'
+import { Dance, ID } from '@/types'
 
-import { Link } from 'libraries/ui'
+import { Link } from '@/libraries/ui'
 
 type DanceLinkProps = {
   children?: React.ReactNode

@@ -1,4 +1,4 @@
-import type { ID } from 'types'
+import type { ID } from '@/types'
 
 export type { ID }
 

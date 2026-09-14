@@ -3,8 +3,8 @@ import { $getRoot, $isElementNode } from 'lexical'
 
 import type { AnyNode, MinifiedDocumentContent, MinifiedNode } from './types'
 
-import { applyMinifyKey } from 'libraries/common/minificationUtils'
-import randomId from 'utils/randomId'
+import { applyMinifyKey } from '@/libraries/common/minificationUtils'
+import randomId from '@/utils/randomId'
 
 import { FORMAT_VERSION, LEXICAL_KEY_MAPPING } from './constants'
 import { runExpandTransformations, runMinifyTransformations } from './minifyNodeJson'

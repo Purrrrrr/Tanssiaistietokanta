@@ -1,8 +1,8 @@
 import { createLink } from '@tanstack/react-router'
 import { MouseEvent, ReactNode, Suspense, useEffect, useId, useRef, useState } from 'react'
 
-import { omitPermissionCheckingProps, withPermissionChecking } from 'libraries/access-control'
-import { getFocusableElements } from 'libraries/common/getFocusableElements'
+import { omitPermissionCheckingProps, withPermissionChecking } from '@/libraries/access-control'
+import { getFocusableElements } from '@/libraries/common/getFocusableElements'
 
 import { Button, type ButtonProps } from './Button'
 import { DoubleCaretVertical } from './icons'

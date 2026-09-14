@@ -3,7 +3,7 @@ import classNames from 'classnames'
 
 import { SortState } from './types'
 
-import { CaretDown } from 'libraries/ui/icons'
+import { CaretDown } from '@/libraries/ui/icons'
 
 import { Button } from '../Button'
 

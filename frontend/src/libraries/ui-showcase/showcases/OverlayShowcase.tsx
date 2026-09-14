@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import { showcase } from '../types'
 
-import { Alert, Button, Dialog } from 'libraries/ui'
+import { Alert, Button, Dialog } from '@/libraries/ui'
 
 function OverlayShowcase() {
   const [modal, setModal] = useState<'alert' | 'dialog' | null>(null)

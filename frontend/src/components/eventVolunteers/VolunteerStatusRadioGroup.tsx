@@ -1,7 +1,7 @@
-import { EventVolunteerStatus } from 'types'
+import { EventVolunteerStatus } from '@/types'
 
-import { FieldComponentProps, RadioGroup } from 'libraries/forms'
-import { useT } from 'i18n'
+import { FieldComponentProps, RadioGroup } from '@/libraries/forms'
+import { useT } from '@/i18n'
 
 import { statusIcons } from './VolunteerStatusSelector'
 

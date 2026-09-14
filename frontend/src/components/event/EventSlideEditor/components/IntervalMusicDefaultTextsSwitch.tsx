@@ -1,6 +1,6 @@
-import { emptyDocument } from 'libraries/lexical'
-import { IntervalMusic, switchFor } from 'components/event/EventProgramForm'
-import { DEFAULT_INTERVAL_MUSIC } from 'components/event/utils'
+import { emptyDocument } from '@/libraries/lexical'
+import { IntervalMusic, switchFor } from '@/components/event/EventProgramForm'
+import { DEFAULT_INTERVAL_MUSIC } from '@/components/event/utils'
 
 export const IntervalMusicDefaultTextsSwitch = switchFor<IntervalMusic>({
   isChecked: intervalMusic => (intervalMusic?.name ?? null) === null,

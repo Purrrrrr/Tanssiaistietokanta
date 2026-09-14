@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import { SelectionApi } from './types'
 
-import { uniq } from 'utils/uniq'
+import { uniq } from '@/utils/uniq'
 
 type ID = string | number
 

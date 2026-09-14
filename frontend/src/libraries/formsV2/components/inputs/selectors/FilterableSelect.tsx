@@ -3,8 +3,8 @@ import { useCombobox, UseComboboxState, UseComboboxStateChangeOptions } from 'do
 
 import { SelectorProps } from './types'
 
-import { Dropdown, DropdownContainer } from 'libraries/ui'
-import { CssClass } from 'libraries/ui/classes'
+import { Dropdown, DropdownContainer } from '@/libraries/ui'
+import { CssClass } from '@/libraries/ui/classes'
 
 import { DropdownButton } from './DropdownButton'
 import { useFilteredItems } from './itemUtils'

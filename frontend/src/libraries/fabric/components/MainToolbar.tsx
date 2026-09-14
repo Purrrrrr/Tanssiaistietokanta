@@ -3,8 +3,8 @@ import { Canvas, Circle, Ellipse, FabricObject, PencilBrush, Polygon, Polyline, 
 
 import { FabricDiagramData } from '../types'
 
-import { useUndoHistory } from 'libraries/common/useUndoHistory'
-import { ColorPickerButton as ToolbarColorPicker, MenuButton, ToolbarButton, ToolbarRow } from 'libraries/ui'
+import { useUndoHistory } from '@/libraries/common/useUndoHistory'
+import { ColorPickerButton as ToolbarColorPicker, MenuButton, ToolbarButton, ToolbarRow } from '@/libraries/ui'
 
 import { Arrowline } from '../canvas/Arrowline'
 import { copySelectionToClipboard, pasteFromClipboard } from '../canvas/clipboard'

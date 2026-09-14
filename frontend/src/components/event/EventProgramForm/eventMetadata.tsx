@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react'
 
-import { Workshop } from 'types'
+import { Workshop } from '@/types'
 
 const emptySet = new Set<string>()
 

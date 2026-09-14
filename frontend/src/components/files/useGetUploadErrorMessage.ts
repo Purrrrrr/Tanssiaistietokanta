@@ -1,8 +1,8 @@
 import { useCallback } from 'react'
 
-import { getUploadError, MAX_UPLOAD_SIZE } from 'services/files'
+import { getUploadError, MAX_UPLOAD_SIZE } from '@/services/files'
 
-import { useT } from 'i18n'
+import { useT } from '@/i18n'
 
 import useFilesize from './useFilesize'
 

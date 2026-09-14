@@ -1,4 +1,4 @@
-import { DateLike, useFormatCompactDateTime, useFormatDateTime } from 'libraries/i18n/dateTime'
+import { DateLike, useFormatCompactDateTime, useFormatDateTime } from '@/libraries/i18n/dateTime'
 
 import { TooltipContainer } from './Button'
 

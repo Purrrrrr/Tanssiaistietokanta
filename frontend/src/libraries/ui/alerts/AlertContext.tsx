@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 
 import type { AlertAction, AlertProps, ShowAlertProps } from './types'
 
-import { useQueue } from 'libraries/common/useQueue'
+import { useQueue } from '@/libraries/common/useQueue'
 
 import { Alert } from './Alert'
 import { AlertContextInner } from './context'

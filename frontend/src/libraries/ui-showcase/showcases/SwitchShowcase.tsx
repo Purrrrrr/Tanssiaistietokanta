@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import { showcase } from '../types'
 
-import { Switch } from 'libraries/forms'
+import { Switch } from '@/libraries/forms'
 
 function SwitchShowcase() {
   const [on, setOn] = useState(false)

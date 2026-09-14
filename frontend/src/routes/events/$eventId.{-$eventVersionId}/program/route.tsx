@@ -1,15 +1,15 @@
 import { createFileRoute, Outlet } from '@tanstack/react-router'
 
-import { SyncStatus } from 'libraries/forms'
+import { SyncStatus } from '@/libraries/forms'
 import {
   Form,
   useEventProgramEditorForm,
-} from 'components/event/EventProgramForm'
-import EventMetadataContext from 'components/event/EventProgramForm/EventMetadataContext'
+} from '@/components/event/EventProgramForm'
+import EventMetadataContext from '@/components/event/EventProgramForm/EventMetadataContext'
 
 import { useCurrentEvent } from '../-context'
 
-import 'components/event/EventProgramEditor/EventProgramEditor.sass'
+import '@/components/event/EventProgramEditor/EventProgramEditor.sass'
 
 export const Route = createFileRoute(
   '/events/$eventId/{-$eventVersionId}/program',

@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import { useSwipeable } from 'react-swipeable'
 
-import { useOnKeydown } from 'utils/useOnKeydown'
+import { useOnKeydown } from '@/utils/useOnKeydown'
 
 interface Slide {
   id: string

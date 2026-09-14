@@ -1,11 +1,11 @@
-import { DocumentOwner } from 'types'
+import { DocumentOwner } from '@/types'
 
-import { addGlobalLoadingAnimation } from 'backend'
-import { useCreateDocument } from 'services/documents'
+import { addGlobalLoadingAnimation } from '@/backend'
+import { useCreateDocument } from '@/services/documents'
 
-import { ButtonProps } from 'libraries/ui'
-import { AddButton } from 'components/widgets/AddButton'
-import { useT } from 'i18n'
+import { ButtonProps } from '@/libraries/ui'
+import { AddButton } from '@/components/widgets/AddButton'
+import { useT } from '@/i18n'
 
 interface CreateDocumentButtonProps extends ButtonProps {
   owner: DocumentOwner

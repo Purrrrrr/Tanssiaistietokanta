@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 
 import type { FabricDiagramData } from './types'
 
-import { socketRequest } from 'backend'
+import { socketRequest } from '@/backend'
 
 import { expandFabricObject } from './minify'
 

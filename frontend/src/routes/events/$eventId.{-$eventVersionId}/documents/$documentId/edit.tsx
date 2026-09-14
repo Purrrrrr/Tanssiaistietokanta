@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-import { DocumentEditPage } from 'components/document/DocumentEditPage'
+import { DocumentEditPage } from '@/components/document/DocumentEditPage'
 
 export const Route = createFileRoute(
   '/events/$eventId/{-$eventVersionId}/documents/$documentId/edit',

@@ -1,9 +1,9 @@
-import { ID } from 'types'
+import { ID } from '@/types'
 
-import { workshopInstanceName } from 'services/workshops'
+import { workshopInstanceName } from '@/services/workshops'
 
-import { ModeButton, ModeSelector } from 'libraries/ui'
-import { useT } from 'i18n'
+import { ModeButton, ModeSelector } from '@/libraries/ui'
+import { useT } from '@/i18n'
 
 export function WorkshopInstanceSelector({ workshopInstances, readOnly, value, onChange, className }: {
   workshopInstances: {

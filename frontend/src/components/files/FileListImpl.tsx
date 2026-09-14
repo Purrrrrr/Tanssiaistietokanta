@@ -1,16 +1,16 @@
 import { useRef } from 'react'
 
-import { FileOwner, FileOwningId } from 'types/files'
+import { FileOwner, FileOwningId } from '@/types/files'
 
-import { useFiles } from 'services/files'
+import { useFiles } from '@/services/files'
 
-import { useRights } from 'libraries/access-control'
-import { useMultipleSelection } from 'libraries/common/selection/useMultipleSelection'
-import { ItemList, PageSection, RegularLink } from 'libraries/ui'
-import { useShowAlert } from 'libraries/ui/hooks'
-import { useDisplayTimestamp } from 'libraries/ui/useDisplayTimestamp'
-import { AddButton } from 'components/widgets/AddButton'
-import { useT } from 'i18n'
+import { useRights } from '@/libraries/access-control'
+import { useMultipleSelection } from '@/libraries/common/selection/useMultipleSelection'
+import { ItemList, PageSection, RegularLink } from '@/libraries/ui'
+import { useShowAlert } from '@/libraries/ui/hooks'
+import { useDisplayTimestamp } from '@/libraries/ui/useDisplayTimestamp'
+import { AddButton } from '@/components/widgets/AddButton'
+import { useT } from '@/i18n'
 
 import { DeleteFileButton } from './DeleteFileButton'
 import { DeleteSelectionButton } from './DeleteSelectionButton'

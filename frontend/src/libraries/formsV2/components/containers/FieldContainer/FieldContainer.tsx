@@ -1,6 +1,6 @@
 import { FieldContainerProps } from './types'
 
-import { FormGroup } from 'libraries/ui'
+import { FormGroup } from '@/libraries/ui'
 
 import { useFieldStyle } from '../context'
 import { HiddenLabel } from './HiddenLabel'

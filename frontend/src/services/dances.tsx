@@ -1,11 +1,11 @@
 import { useMemo } from 'react'
 
-import { Dance, DanceWithEvents } from 'types'
+import { Dance, DanceWithEvents } from '@/types'
 
-import { searchList } from 'libraries/common/listSearch'
-import { compareBy, sorted } from 'utils/sorted'
+import { backendQueryHook, entityCreateHook, entityDeleteHook, entityListQueryHook, entityUpdateHook, graphql, setupServiceUpdateFragment, useServiceEvents } from '@/backend'
 
-import { backendQueryHook, entityCreateHook, entityDeleteHook, entityListQueryHook, entityUpdateHook, graphql, setupServiceUpdateFragment, useServiceEvents } from '../backend'
+import { searchList } from '@/libraries/common/listSearch'
+import { compareBy, sorted } from '@/utils/sorted'
 
 setupServiceUpdateFragment(
   'dances',

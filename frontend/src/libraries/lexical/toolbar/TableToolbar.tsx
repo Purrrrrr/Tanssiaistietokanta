@@ -10,8 +10,8 @@ import { $isRangeSelection, LexicalEditor } from 'lexical'
 
 import { ToolbarHookReturn } from './types'
 
-import { Button } from 'libraries/ui'
-import { AddColumnRight, AddRowBottom, RemoveColumn, RemoveRowBottom } from 'libraries/ui/icons'
+import { Button } from '@/libraries/ui'
+import { AddColumnRight, AddRowBottom, RemoveColumn, RemoveRowBottom } from '@/libraries/ui/icons'
 
 import { useEditorT } from '../i18n'
 import { useSetAnchorElement } from '../utils/useSetAnchorElement'

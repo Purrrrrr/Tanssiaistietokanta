@@ -1,4 +1,4 @@
-import { EditableBallroom } from 'types'
+import { EditableBallroom } from '@/types'
 
 export type BallroomFormValues = Pick<EditableBallroom, 'venueName' | 'roomName' | 'map'>
 

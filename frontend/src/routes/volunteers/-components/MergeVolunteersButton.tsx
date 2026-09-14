@@ -1,12 +1,12 @@
 import { useState } from 'react'
 
-import { Volunteer } from 'types'
+import { Volunteer } from '@/types'
 
-import { usePatchVolunteer } from 'services/volunteers'
+import { usePatchVolunteer } from '@/services/volunteers'
 
-import { Button, Dialog, FormGroup, ItemList } from 'libraries/ui'
-import { ManyToOne } from 'libraries/ui/icons'
-import { useT, useTranslation } from 'i18n'
+import { Button, Dialog, FormGroup, ItemList } from '@/libraries/ui'
+import { ManyToOne } from '@/libraries/ui/icons'
+import { useT, useTranslation } from '@/i18n'
 
 export interface MergeVolunteersButtonProps {
   selectedVolunteers: Volunteer[]

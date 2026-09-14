@@ -1,9 +1,9 @@
 import classNames from 'classnames'
 
-import { AutocompleteInput } from 'libraries/formsV2/components/inputs'
-import { FormGroup } from 'libraries/ui'
-import { EventSlideProps } from 'components/event/EventSlide'
-import { useTranslation } from 'i18n'
+import { AutocompleteInput } from '@/libraries/formsV2/components/inputs'
+import { FormGroup } from '@/libraries/ui'
+import { EventSlideProps } from '@/components/event/EventSlide'
+import { useTranslation } from '@/i18n'
 
 interface SlideChooserProps {
   slides: EventSlideProps[]

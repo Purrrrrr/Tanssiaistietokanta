@@ -2,8 +2,8 @@ import classNames from 'classnames'
 
 import { ConflictData } from './types'
 
-import { Button, MenuButton } from 'libraries/ui'
-import { CaretDown } from 'libraries/ui/icons'
+import { Button, MenuButton } from '@/libraries/ui'
+import { CaretDown } from '@/libraries/ui/icons'
 
 import { useFormStrings } from './formContext'
 

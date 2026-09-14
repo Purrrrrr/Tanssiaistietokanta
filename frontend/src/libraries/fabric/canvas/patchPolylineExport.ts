@@ -1,6 +1,6 @@
 import { Polyline } from 'fabric'
 
-import randomId from 'utils/randomId'
+import randomId from '@/utils/randomId'
 
 import { round } from './util'
 

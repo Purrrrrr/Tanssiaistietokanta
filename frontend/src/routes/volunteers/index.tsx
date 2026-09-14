@@ -1,14 +1,14 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 
-import { addGlobalLoadingAnimation } from 'backend'
-import { useCreateVolunteer, useVolunteers } from 'services/volunteers'
+import { addGlobalLoadingAnimation } from '@/backend'
+import { useCreateVolunteer, useVolunteers } from '@/services/volunteers'
 
-import { searchList } from 'libraries/common/listSearch'
-import { Button, Card, Collapse, DialogCloseButton, H2, SearchBar } from 'libraries/ui'
-import { LoadingState } from 'components/LoadingState'
-import { Page, Toolbar } from 'components/Page'
-import { useT, useTranslation } from 'i18n'
+import { searchList } from '@/libraries/common/listSearch'
+import { Button, Card, Collapse, DialogCloseButton, H2, SearchBar } from '@/libraries/ui'
+import { LoadingState } from '@/components/LoadingState'
+import { Page, Toolbar } from '@/components/Page'
+import { useT, useTranslation } from '@/i18n'
 
 import { emptyVolunteerForm, VolunteerForm, VolunteerFormValues } from './-components/VolunteerForm'
 import { VolunteerList } from './-components/VolunteerList'

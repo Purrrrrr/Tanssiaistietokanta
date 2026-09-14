@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import classNames from 'classnames'
 
-import { DoubleChevronUp, Settings } from 'libraries/ui/icons'
+import { DoubleChevronUp, Settings } from '@/libraries/ui/icons'
 
 interface PrintViewToolbarProps {
   children: React.ReactNode

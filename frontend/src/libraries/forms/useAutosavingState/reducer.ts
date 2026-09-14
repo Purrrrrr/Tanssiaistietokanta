@@ -4,7 +4,7 @@ import * as L from 'partial.lenses'
 import { MergeableObject, MergeData, MergeResult, toFinalMergeResult } from './types'
 import { StringPath, Version } from '../types'
 
-import createDebug from 'utils/debug'
+import createDebug from '@/utils/debug'
 
 import mergeValues from './merge'
 

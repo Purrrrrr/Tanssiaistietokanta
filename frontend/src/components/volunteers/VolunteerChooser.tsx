@@ -1,11 +1,11 @@
-import { VolunteerListItem } from 'types'
+import { VolunteerListItem } from '@/types'
 
-import { useCreateVolunteer, useVolunteerNames } from 'services/volunteers'
+import { useCreateVolunteer, useVolunteerNames } from '@/services/volunteers'
 
-import { canCreateUniqueItemFromQuery, searchList } from 'libraries/common/listSearch'
-import { FieldComponentProps } from 'libraries/forms'
-import { AutocompleteInput } from 'libraries/formsV2/components/inputs'
-import { useT } from 'i18n'
+import { canCreateUniqueItemFromQuery, searchList } from '@/libraries/common/listSearch'
+import { FieldComponentProps } from '@/libraries/forms'
+import { AutocompleteInput } from '@/libraries/formsV2/components/inputs'
+import { useT } from '@/i18n'
 
 type VolunteerOption = VolunteerListItem | { __typename: 'createVolunteer', name: string }
 

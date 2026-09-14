@@ -1,16 +1,16 @@
 import { useState } from 'react'
 
-import { DanceListItem, ID } from 'types'
+import { DanceListItem, ID } from '@/types'
 
-import { useDance } from 'services/dances'
+import { useDance } from '@/services/dances'
 
-import { ItemList, TooltipContainer } from 'libraries/ui'
-import { buttonClass } from 'libraries/ui/buttonClass'
-import { ColorClass } from 'libraries/ui/classes'
-import { DocumentOpen, Edit } from 'libraries/ui/icons'
-import { DanceCategoryTag } from 'components/dance/DanceCategoryTag'
-import { DanceEditor } from 'components/dance/DanceEditor'
-import { useT, useTranslation } from 'i18n'
+import { ItemList, TooltipContainer } from '@/libraries/ui'
+import { buttonClass } from '@/libraries/ui/buttonClass'
+import { ColorClass } from '@/libraries/ui/classes'
+import { DocumentOpen, Edit } from '@/libraries/ui/icons'
+import { DanceCategoryTag } from '@/components/dance/DanceCategoryTag'
+import { DanceEditor } from '@/components/dance/DanceEditor'
+import { useT, useTranslation } from '@/i18n'
 
 import { DanceIsUsedIn } from './DanceIsUsedIn'
 import { DeleteDanceButton } from './DeleteDanceButton'

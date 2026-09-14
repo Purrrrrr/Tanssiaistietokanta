@@ -1,6 +1,6 @@
 import { booleanProp, showcase } from '../types'
 
-import { GlobalSpinner } from 'libraries/ui'
+import { GlobalSpinner } from '@/libraries/ui'
 
 export const globalSpinnerShowcase = showcase({
   title: 'Global loading indicator',

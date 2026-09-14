@@ -1,7 +1,7 @@
 import { ApolloClient, ApolloLink, FetchResult, InMemoryCache, Observable } from '@apollo/client'
 import { print } from 'graphql'
 
-import createDebug from 'utils/debug'
+import createDebug from '@/utils/debug'
 
 import { socketRequest } from './connection'
 

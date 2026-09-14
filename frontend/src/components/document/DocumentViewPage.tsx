@@ -1,15 +1,15 @@
 import { getRouteApi } from '@tanstack/react-router'
 
-import { Document } from 'types'
+import { Document } from '@/types'
 
-import { useDocument } from 'services/documents'
+import { useDocument } from '@/services/documents'
 
-import { DocumentViewer } from 'libraries/lexical'
-import { PageSection } from 'libraries/ui'
-import { Edit } from 'libraries/ui/icons'
-import { DeleteDocumentButton } from 'components/document/DeleteDocumentButton'
-import { NavigateButton } from 'components/widgets/NavigateButton'
-import { useT } from 'i18n'
+import { DocumentViewer } from '@/libraries/lexical'
+import { PageSection } from '@/libraries/ui'
+import { Edit } from '@/libraries/ui/icons'
+import { DeleteDocumentButton } from '@/components/document/DeleteDocumentButton'
+import { NavigateButton } from '@/components/widgets/NavigateButton'
+import { useT } from '@/i18n'
 
 import { documentViewRoute } from './linkUtils'
 

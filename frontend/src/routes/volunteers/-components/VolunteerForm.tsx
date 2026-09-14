@@ -1,7 +1,7 @@
-import { Volunteer, WithoutMetadata } from 'types'
+import { Volunteer, WithoutMetadata } from '@/types'
 
-import { formFor, type FormProps, SubmitButton, type SyncState, SyncStatus } from 'libraries/forms'
-import { useT } from 'i18n'
+import { formFor, type FormProps, SubmitButton, type SyncState, SyncStatus } from '@/libraries/forms'
+import { useT } from '@/i18n'
 
 export type VolunteerFormValues = WithoutMetadata<Pick<Volunteer, 'name'>>
 

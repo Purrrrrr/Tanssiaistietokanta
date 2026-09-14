@@ -23,7 +23,7 @@ import {
 
 import { NodeAlignment } from './types'
 
-import { alignClassname } from 'libraries/lexical/utils/alignClassname'
+import { alignClassname } from '@/libraries/lexical/utils/alignClassname'
 
 export type SerializedImageNode = Spread<
   {

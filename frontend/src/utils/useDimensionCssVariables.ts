@@ -1,6 +1,6 @@
 import { useCallback, useRef } from 'react'
 
-import { useResizeObserver } from 'libraries/common/useResizeObserver'
+import { useResizeObserver } from '@/libraries/common/useResizeObserver'
 
 export function useDimensionCssVariables(cssDimensionVariablePrefix?: string) {
   const ref = useRef<HTMLDivElement>(null)

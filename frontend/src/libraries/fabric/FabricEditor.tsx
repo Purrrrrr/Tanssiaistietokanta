@@ -2,9 +2,9 @@ import { useMemo, useState } from 'react'
 import { Canvas, FabricObject } from 'fabric'
 
 import { FabricDiagramData } from './types'
-import { FieldComponentDisplayProps } from 'libraries/forms/types'
+import { FieldComponentDisplayProps } from '@/libraries/forms/types'
 
-import { CssClass } from 'libraries/ui/classes'
+import { CssClass } from '@/libraries/ui/classes'
 
 import { saveCanvasToJson } from './canvas/util'
 import { CanvasResizeButton } from './components/CanvasResizeButton'

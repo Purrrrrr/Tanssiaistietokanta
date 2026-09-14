@@ -1,6 +1,6 @@
-import { Event } from 'types'
+import { Event } from '@/types'
 
-import { Translator } from 'i18n'
+import { Translator } from '@/i18n'
 
 export type T = Translator<'components.eventProgramEditor'>
 

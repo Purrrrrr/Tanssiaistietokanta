@@ -1,10 +1,10 @@
-import { Ballroom } from 'types'
+import { Ballroom } from '@/types'
 
-import { formatBallroom, useBallrooms } from 'services/ballrooms'
+import { formatBallroom, useBallrooms } from '@/services/ballrooms'
 
-import { FieldComponentProps } from 'libraries/forms'
-import { Select } from 'libraries/formsV2/components/inputs'
-import { useTranslation } from 'i18n'
+import { FieldComponentProps } from '@/libraries/forms'
+import { Select } from '@/libraries/formsV2/components/inputs'
+import { useTranslation } from '@/i18n'
 
 export function BallroomSelect({ value, readOnly, ...props }: FieldComponentProps<Ballroom | null>) {
   const [ballrooms] = useBallrooms()

@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import type { InternalItemData, ItemCategory, Items, ItemToString, SelectorProps, SyncItems } from './types'
 
-import { searchList } from 'libraries/common/listSearch'
+import { searchList } from '@/libraries/common/listSearch'
 
 const emptyResult: InternalItemData<unknown> = {
   showCategories: false,

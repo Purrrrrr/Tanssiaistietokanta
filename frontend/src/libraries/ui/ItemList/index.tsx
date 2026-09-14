@@ -4,8 +4,8 @@ import classNames from 'classnames'
 
 import type { ItemListProps, ReflowOptions, RowProps, SortState } from './types'
 
-import { InfoSign } from 'libraries/ui/icons'
-import { isInputTag } from 'utils/useOnKeydown'
+import { InfoSign } from '@/libraries/ui/icons'
+import { isInputTag } from '@/utils/useOnKeydown'
 
 import Collapse from '../Collapse'
 import { Link } from '../Link'

@@ -1,4 +1,4 @@
-import { makeTranslator } from 'libraries/i18n'
+import { makeTranslator } from '@/libraries/i18n'
 
 const translations = {
   fi: {

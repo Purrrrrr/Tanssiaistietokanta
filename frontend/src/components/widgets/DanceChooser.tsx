@@ -1,16 +1,16 @@
 import { useId } from 'react'
 
-import { DanceListItem, Workshop } from 'types'
+import { DanceListItem, Workshop } from '@/types'
 
-import { filterDances, useCreateDance, useDances } from 'services/dances'
+import { filterDances, useCreateDance, useDances } from '@/services/dances'
 
-import { canCreateUniqueItemFromQuery } from 'libraries/common/listSearch'
-import { AutocompleteInput } from 'libraries/formsV2/components/inputs'
-import { CssClass } from 'libraries/ui/classes'
-import { DanceCategoryTag } from 'components/dance/DanceCategoryTag'
-import { DanceIdSet } from 'components/event/EventProgramForm/eventMetadata'
-import { WorkshopTag } from 'components/workshops/WorkshopTag'
-import { useT } from 'i18n'
+import { canCreateUniqueItemFromQuery } from '@/libraries/common/listSearch'
+import { AutocompleteInput } from '@/libraries/formsV2/components/inputs'
+import { CssClass } from '@/libraries/ui/classes'
+import { DanceCategoryTag } from '@/components/dance/DanceCategoryTag'
+import { DanceIdSet } from '@/components/event/EventProgramForm/eventMetadata'
+import { WorkshopTag } from '@/components/workshops/WorkshopTag'
+import { useT } from '@/i18n'
 
 export type DanceChooserItem = Omit<DanceListItem, 'events'>
 

@@ -1,10 +1,10 @@
 import React, { useCallback, useMemo, useRef } from 'react'
 
-import { ActionButton as Button, DragHandle } from 'libraries/forms'
-import { Card, H2 } from 'libraries/ui'
-import { ColorClass } from 'libraries/ui/classes'
-import { Cross } from 'libraries/ui/icons'
-import { DanceProgramChooser } from 'components/event/DanceProgramChooser'
+import { ActionButton as Button, DragHandle } from '@/libraries/forms'
+import { Card, H2 } from '@/libraries/ui'
+import { ColorClass } from '@/libraries/ui/classes'
+import { Cross } from '@/libraries/ui/icons'
+import { DanceProgramChooser } from '@/components/event/DanceProgramChooser'
 import {
   DanceSet,
   DanceSetPath,
@@ -16,12 +16,12 @@ import {
   RemoveItemButton,
   useOnChangeFor,
   useValueAt,
-} from 'components/event/EventProgramForm'
-import { ProgramTypeIcon } from 'components/event/ProgramTypeIcon'
-import { getProgramDuration, getProgramName, SimpleEventProgramRow } from 'components/event/utils'
-import { Duration } from 'components/widgets/Duration'
-import { DurationField } from 'components/widgets/DurationField'
-import { useT, useTranslation } from 'i18n'
+} from '@/components/event/EventProgramForm'
+import { ProgramTypeIcon } from '@/components/event/ProgramTypeIcon'
+import { getProgramDuration, getProgramName, SimpleEventProgramRow } from '@/components/event/utils'
+import { Duration } from '@/components/widgets/Duration'
+import { DurationField } from '@/components/widgets/DurationField'
+import { useT, useTranslation } from '@/i18n'
 
 import { AddIntroductionButton, DanceSetItemButtons, IntervalMusicSwitch } from './controls'
 import { DanceSetNameEditor } from './DanceSetNameEditor'

@@ -1,8 +1,8 @@
 import React from 'react'
 import classnames from 'classnames'
 
-import { AutosizedSection, Link } from 'libraries/ui'
-import { useT } from 'i18n'
+import { AutosizedSection, Link } from '@/libraries/ui'
+import { useT } from '@/i18n'
 
 import './Slide.css'
 import './slideStyles.scss'

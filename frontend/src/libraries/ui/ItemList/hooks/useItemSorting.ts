@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { type Sort, type SortDirection, sortedBy } from 'utils/sorted'
+import { type Sort, type SortDirection, sortedBy } from '@/utils/sorted'
 
 import { type Column } from '../column'
 

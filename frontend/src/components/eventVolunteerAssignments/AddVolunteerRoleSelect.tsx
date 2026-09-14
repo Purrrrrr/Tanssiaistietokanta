@@ -1,6 +1,6 @@
-import { Event, EventVolunteerAssignment, ID } from 'types'
+import { Event, EventVolunteerAssignment, ID } from '@/types'
 
-import { useCreateEventVolunteerAssignment } from 'services/eventVolunteerAssignments'
+import { useCreateEventVolunteerAssignment } from '@/services/eventVolunteerAssignments'
 
 import { type RoleOption, VolunteerRoleSelect } from './VolunteerRoleSelect'
 

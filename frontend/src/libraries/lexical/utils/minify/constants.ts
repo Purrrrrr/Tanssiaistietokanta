@@ -1,4 +1,4 @@
-import { createKeyMapping, type KeyMapping } from 'libraries/common/minificationUtils'
+import { createKeyMapping, type KeyMapping } from '@/libraries/common/minificationUtils'
 
 export const FORMAT_VERSION = 1
 

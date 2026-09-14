@@ -2,10 +2,10 @@ import * as L from 'partial.lenses'
 
 import { EventProgramRow, EventProgramSettings } from './types'
 
-import { cleanMetadataValues } from 'backend'
+import { cleanMetadataValues } from '@/backend'
 
-import { PatchStrategy, patchStrategy } from 'libraries/forms'
-import { removeTypenames } from 'utils/removeTypenames'
+import { PatchStrategy, patchStrategy } from '@/libraries/forms'
+import { removeTypenames } from '@/utils/removeTypenames'
 
 export type JSONPatch = unknown[]
 

@@ -1,4 +1,4 @@
-import { DanceInput } from 'types'
+import { DanceInput } from '@/types'
 
 export async function uploadDanceFile(): Promise<DanceInput | undefined> {
   const file = await requestUserFile()
