@@ -35,7 +35,7 @@ WORKDIR /app
 COPY --from=builder /app .
 
 # Add pandoc
-COPY --from=pandoc/minimal:latest /pandoc /bin/pandoc
+COPY --from=pandoc/minimal:latest /usr/local/bin/pandoc /bin/pandoc
 
 # Copy the application code to the working directory
 COPY config config
