@@ -675,18 +675,20 @@
 * Is infinite loader necessary in dances any more. It prevents sorting working properly
   * Fix loading
   * Implement infinite loader in ItemList 2.0
-  Fix read-only dance form dance instructions overflowing
-  Make changing existing event to public work
-  Add volunteers, users, ballrooms to breadcrumb submenu
-  Add gap between workshop cards in event frontpage
-  Open newly created document when create button pushed
-  Document date column
+* Fix read-only dance form dance instructions overflowing
+* Make changing existing event to public work
+* Add gap between workshop cards in event frontpage
+* Add volunteers, users, ballrooms to breadcrumb submenu
+* Fix tooltips to be invisible when a menu is open
+* Open newly created document when create button pushed
+* Rename file dialog should not be focusable when closed
+* Document date column
 
   File list
   * Sortable columns
+  * Do we need to show file dates at all?
+  * Shorter file date formatting
     Better small screen layout
-    Do we need to show file dates at all?
-    Shorter file date formatting
     Actions inside sub-menu
       Component for action menus that folds when screen is small?
   Separate tag color schemes for stuff defined inside the components using them?
