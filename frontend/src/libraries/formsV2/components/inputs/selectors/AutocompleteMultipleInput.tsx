@@ -1,6 +1,5 @@
 import { Button } from '@/libraries/ui'
 import { CssClass } from '@/libraries/ui/classes'
-import { Cross } from '@/libraries/ui/icons'
 
 import AutocompleteInput, { AutocompleteInputProps } from './AutocompleteInput'
 
@@ -60,5 +59,5 @@ export default function AutocompleteMultipleInput<T>({
 }
 
 function defaultRemoveRenderer<T>(_item: T, onRemove: () => void) {
-  return <Button minimal color="danger" onClick={onRemove} icon={<Cross />} />
+  return <Button minimal color="danger" onClick={onRemove} icon="cross" />
 }

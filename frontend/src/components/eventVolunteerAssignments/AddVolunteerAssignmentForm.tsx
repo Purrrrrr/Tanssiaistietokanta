@@ -7,7 +7,6 @@ import { useCreateEventVolunteerAssignment } from '@/services/eventVolunteerAssi
 
 import { formFor, SubmitButton, Validate } from '@/libraries/forms'
 import { Card, DialogCloseButton, FormGroup, H2, ItemList } from '@/libraries/ui'
-import { Trash } from '@/libraries/ui/icons'
 import { RoleTag } from '@/components/eventVolunteers/RoleTag'
 import { useT, useTranslation } from '@/i18n'
 
@@ -152,7 +151,7 @@ function AssignmentList({ formData, currentAssignments, event }: {
           enabled: hasWorkshops,
         },
       ]}
-      actions={(_, index) => <RemoveItemButton minimal icon={<Trash />} path="assignments" index={index} tooltip={t('deleteAssignment')} />}
+      actions={(_, index) => <RemoveItemButton minimal icon="trash" path="assignments" index={index} tooltip={t('deleteAssignment')} />}
     />
     <Validate value={assignments} type="list" required />
     {target.__typename === 'Volunteer' && (

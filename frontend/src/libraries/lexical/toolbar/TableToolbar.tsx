@@ -11,7 +11,6 @@ import { $isRangeSelection, LexicalEditor } from 'lexical'
 import { ToolbarHookReturn } from './types'
 
 import { Button } from '@/libraries/ui'
-import { AddColumnRight, AddRowBottom, RemoveColumn, RemoveRowBottom } from '@/libraries/ui/icons'
 
 import { useEditorT } from '../i18n'
 import { useSetAnchorElement } from '../utils/useSetAnchorElement'
@@ -96,12 +95,12 @@ export function useTableToolbar(editor: LexicalEditor): ToolbarHookReturn {
     ),
     otherElements: isInTable && <>
       <FloatingToolbar anchorName={rowAnchorName} side="right">
-        <ToolbarButton onClick={insertRow} tooltip={t('insertRow')} icon={<AddRowBottom />} />
-        <ToolbarButton onClick={deleteRow} tooltip={t('deleteRow')} color="danger" icon={<RemoveRowBottom />} />
+        <ToolbarButton onClick={insertRow} tooltip={t('insertRow')} icon="addRowBottom" />
+        <ToolbarButton onClick={deleteRow} tooltip={t('deleteRow')} color="danger" icon="removeRowBottom" />
       </FloatingToolbar>
       <FloatingToolbar anchorName={colAnchorName} side="top span-right">
-        <ToolbarButton onClick={insertColumn} tooltip={t('insertColumn')} icon={<AddColumnRight />} />
-        <ToolbarButton onClick={deleteColumn} tooltip={t('deleteColumn')} color="danger" icon={<RemoveColumn />} />
+        <ToolbarButton onClick={insertColumn} tooltip={t('insertColumn')} icon="addColumnRight" />
+        <ToolbarButton onClick={deleteColumn} tooltip={t('deleteColumn')} color="danger" icon="removeColumn" />
       </FloatingToolbar>
       <FloatingToolbar anchorName={tableAnchorName} side="bottom right">
         <Button minimal color="danger" onClick={removeTable} text={t('deleteTable')} />

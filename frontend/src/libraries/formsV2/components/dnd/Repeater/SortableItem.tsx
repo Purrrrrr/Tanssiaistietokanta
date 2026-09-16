@@ -3,7 +3,6 @@ import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 
 import { Button } from '@/libraries/ui'
-import { Move } from '@/libraries/ui/icons'
 
 import { useFormTranslation } from '../../../localization'
 
@@ -58,5 +57,5 @@ export function SortableItem<Data extends Record<string, unknown>>({ id, data, d
 
 function DragHandle({ buttonRef, listeners }) {
   const moveLabel = useFormTranslation('moveItem')
-  return <Button aria-label={moveLabel} className="touch-none" icon={<Move />} ref={buttonRef} {...listeners} />
+  return <Button aria-label={moveLabel} className="touch-none" icon="move" ref={buttonRef} {...listeners} />
 }

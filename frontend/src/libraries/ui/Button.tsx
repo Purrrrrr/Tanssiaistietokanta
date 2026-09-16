@@ -5,11 +5,12 @@ import type { Color } from './types'
 import { omitPermissionCheckingProps, PermissionCheckedProps, withPermissionChecking } from '@/libraries/access-control'
 
 import { buttonClass } from './buttonClass'
+import { Icon, type IconContent } from './Icon'
 
 export interface ButtonProps extends PermissionCheckedProps, Omit<ComponentProps<'button'>, 'children'> {
   text?: React.ReactNode
-  icon?: React.ReactNode
-  rightIcon?: React.ReactNode
+  icon?: IconContent | null | false
+  rightIcon?: IconContent | null | false
   color?: Color
   minimal?: boolean
   active?: boolean
@@ -33,9 +34,9 @@ export const Button = withPermissionChecking(function Button(props: ButtonProps)
   } = omitPermissionCheckingProps(props)
   return <TooltipContainer tooltip={tooltip}>
     <button type={type} className={buttonClass(color, { active, className, minimal, paddingClass })} {...rest}>
-      {icon}
+      {icon && <Icon icon={icon} />}
       {text}
-      {rightIcon}
+      {rightIcon && <Icon icon={rightIcon} />}
       {!text && tooltip && <span className="sr-only">{tooltip}</span>}
     </button>
   </TooltipContainer>
@@ -43,8 +44,8 @@ export const Button = withPermissionChecking(function Button(props: ButtonProps)
 
 export interface AnchorButtonProps extends PermissionCheckedProps, ComponentProps<'a'> {
   text?: React.ReactNode
-  icon?: React.ReactElement
-  rightIcon?: React.ReactElement
+  icon?: IconContent | null | false
+  rightIcon?: IconContent | null | false
   color?: Color
   minimal?: boolean
   active?: boolean

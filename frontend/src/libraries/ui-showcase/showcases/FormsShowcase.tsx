@@ -6,7 +6,6 @@ import { ConflictHandler } from '@/libraries/forms/ConflictHandler'
 import { formFor, withDefaults } from '@/libraries/formsV2'
 import { AutocompleteInput, SegmentedInput, Select, TextInput } from '@/libraries/formsV2/components/inputs'
 import { Button } from '@/libraries/ui'
-import { Cross, Edit } from '@/libraries/ui/icons'
 
 interface Data {
   a: string
@@ -119,11 +118,11 @@ function ShowcaseContents() {
         <div className="flex">
           <Field.Text label="Value" inline labelStyle="beside" path={`${path}.${index}.value`} />
           {dragHandle}
-          <Button color="danger" icon={<Cross />} tooltip="Remove" onClick={onRemove} />
+          <Button color="danger" icon="cross" tooltip="Remove" onClick={onRemove} />
         </div>
       }
     </RepeatingSection>
-    <Button color="primary" icon={<Edit />} tooltip="Edit" onClick={() => addItem('l', { _id: id(), value: '' })} />
+    <Button color="primary" icon="edit" tooltip="Edit" onClick={() => addItem('l', { _id: id(), value: '' })} />
     <Select
       aria-label="jotakin"
       items={choices}
@@ -139,11 +138,11 @@ function ShowcaseContents() {
         <div className="flex">
           <Field.Text label="Value" inline labelStyle="beside" path={`${path}.${index}.value`} />
           {dragHandle}
-          <Button color="danger" tooltip="Remove" icon={<Cross />} onClick={onRemove} />
+          <Button color="danger" tooltip="Remove" icon="cross" onClick={onRemove} />
         </div>
       }
     </RepeatingSection>
-    <Button color="primary" icon={<Edit />} onClick={() => addItem('l2', { _id: id(), value: '' })} />
+    <Button color="primary" icon="edit" onClick={() => addItem('l2', { _id: id(), value: '' })} />
   </>
 }
 

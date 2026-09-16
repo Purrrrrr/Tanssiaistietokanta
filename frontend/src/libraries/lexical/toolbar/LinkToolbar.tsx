@@ -10,8 +10,6 @@ import {
 
 import { ToolbarHookReturn } from './types'
 
-import { Link } from '@/libraries/ui/icons'
-
 import { useEditorT } from '../i18n'
 import { ToolbarButton, ToolbarInput, ToolbarRow } from './widgets'
 
@@ -48,7 +46,7 @@ export function useLinkToolbar(editor: LexicalEditor): ToolbarHookReturn {
         onClick={openLinkEditor}
         active={isLink}
         tooltip={t('insertLink')}
-        icon={<Link />}
+        icon="link"
       />
     ),
     floatingEditor: <LinkEditor editor={editor} url={url} />,

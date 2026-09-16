@@ -13,7 +13,6 @@ import { isEmptyDocument } from '@/libraries/lexical'
 import { DocumentViewer } from '@/libraries/lexical/DocumentViewer'
 import { Button, H2 } from '@/libraries/ui'
 import { showToast } from '@/libraries/ui/hooks'
-import { Edit } from '@/libraries/ui/icons'
 import { InstructionEditor } from '@/components/dance/DanceEditor'
 import { WikipageSelector } from '@/components/dance/WikipageSelector'
 import { LoadingState } from '@/components/LoadingState'
@@ -171,8 +170,8 @@ function InstructionsForDance({ dance, showShortInstructions }: { dance: Pick<Da
         entityId={dance._id}
         color="primary"
         minimal
-        icon={<Edit />}
-        aria-label={useTranslation(editorOpen ? 'common.closeEditor' : 'common.edit')}
+        icon="edit"
+        tooltip={useTranslation(editorOpen ? 'common.closeEditor' : 'common.edit')}
         onClick={() => setEditorOpen(!editorOpen)}
       />
     </H2>

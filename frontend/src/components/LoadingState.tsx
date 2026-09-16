@@ -2,9 +2,8 @@ import { ApolloError, ApolloQueryResult } from '@apollo/client'
 
 import { useShowGlobalLoadingAnimation } from '@/backend'
 
-import { Button, H2 } from '@/libraries/ui'
+import { Button, H2, Icon } from '@/libraries/ui'
 import { ColorClass } from '@/libraries/ui/classes'
-import { Error } from '@/libraries/ui/icons'
 import { useT } from '@/i18n'
 
 interface LoadingStateProps<Variables> {
@@ -18,7 +17,7 @@ export function LoadingState<Variables>({ loading, error, refetch }: LoadingStat
   useShowGlobalLoadingAnimation(loading)
   if (error) {
     return <div className={`flex flex-col gap-3 justify-center items-center h-full ${ColorClass.textMuted}`}>
-      <Error className="text-gray-400" size={48} />
+      <Icon icon="error" className="text-gray-400" size={48} />
       <H2>{t('errorMessage')}</H2>
       <p>{error.message}</p>
       {refetch &&

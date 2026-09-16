@@ -9,7 +9,6 @@ import { useDocument, usePatchDocument } from '@/services/documents'
 import { formFor, patchStrategy, useAutosavingState } from '@/libraries/forms'
 import { DocumentContentEditor } from '@/libraries/lexical'
 import { PageSection } from '@/libraries/ui'
-import { EyeOpen } from '@/libraries/ui/icons'
 import { DeleteDocumentButton } from '@/components/document/DeleteDocumentButton'
 import { NavigateButton } from '@/components/widgets/NavigateButton'
 import { useT } from '@/i18n'
@@ -49,7 +48,7 @@ function DocumentEditorInner({ document }: { document: Document }) {
           minimal
           to={viewRoute}
           params={params}
-          icon={<EyeOpen />}
+          icon="eyeOpen"
           text={t('viewDocument')}
         />
         <DeleteDocumentButton minimal document={document} />

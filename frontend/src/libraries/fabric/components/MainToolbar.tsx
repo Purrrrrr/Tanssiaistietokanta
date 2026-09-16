@@ -210,7 +210,7 @@ export function FabricMainToolbar({ canvas, visible, undoState, onRemoveNode: re
         )}
       </div>
     </MenuButton>
-    <ToolbarButton onMouseDown={addText} tooltip={t('addText')} icon="T" />
+    <ToolbarButton onMouseDown={addText} tooltip={t('addText')} text="T" />
     <ToolbarButton onMouseDown={toggleDrawingMode} active={canvas.isDrawingMode} tooltip={t('freeDraw')} icon={<DrawIcon />} />
     {additionalButtons}
     {removeNode && <ToolbarButton color="danger" onMouseDown={removeNode} text={t('removeDiagram')} />}

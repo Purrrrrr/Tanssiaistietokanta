@@ -4,10 +4,9 @@ import { DanceListItem, ID } from '@/types'
 
 import { useDance } from '@/services/dances'
 
-import { ItemList, TooltipContainer } from '@/libraries/ui'
+import { Icon, ItemList, TooltipContainer } from '@/libraries/ui'
 import { buttonClass } from '@/libraries/ui/buttonClass'
 import { ColorClass } from '@/libraries/ui/classes'
-import { DocumentOpen, Edit } from '@/libraries/ui/icons'
 import { DanceCategoryTag } from '@/components/dance/DanceCategoryTag'
 import { DanceEditor } from '@/components/dance/DanceEditor'
 import { useT, useTranslation } from '@/i18n'
@@ -76,7 +75,7 @@ export function DanceList({ dances }: DanceListProps) {
       }}
       expandableContent={dance => <DanceListRowEditor danceId={dance._id} />}
       expandButtonProps={dance => ({
-        icon: <Edit />,
+        icon: 'edit',
         color: 'primary',
         requireRight: 'dances:modify',
         entityId: dance._id,
@@ -99,7 +98,7 @@ function DancewikiLink({ wikipageName }: { wikipageName?: string | null }) {
       target="_blank"
       rel="noopener noreferrer"
     >
-      <DocumentOpen size={15} />
+      <Icon icon="documentOpen" size={15} />
       <span className="reflowed:sr-only">{wikipageName}</span>
     </a>
   </TooltipContainer>

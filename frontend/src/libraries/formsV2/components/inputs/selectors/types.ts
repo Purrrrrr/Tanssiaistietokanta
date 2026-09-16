@@ -3,6 +3,8 @@ import type { UseComboboxGetToggleButtonPropsReturnValue } from 'downshift'
 
 import { FieldInputComponentProps } from '../types'
 
+import { IconContent } from '@/libraries/ui/Icon'
+
 export interface SelectorProps<T> extends FieldInputComponentProps<T, T> {
   items: Items<T>
   filterPlaceholder?: string
@@ -15,7 +17,7 @@ export interface SelectorProps<T> extends FieldInputComponentProps<T, T> {
   itemCategory?: (item: T) => string
   categoryTitleRenderer?: (category: string) => ReactNode
   itemRenderer?: (item: T) => ReactNode
-  itemIcon?: (item: T) => ReactNode
+  itemIcon?: (item: T) => IconContent | null
   containerClassname?: string
   itemClassName?: string
   hilightedItemClassName?: string

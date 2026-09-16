@@ -4,7 +4,7 @@ import { useShowGlobalLoadingAnimation } from '@/backend'
 import { useEventRoles } from '@/services/eventRoles'
 
 import { AutocompleteInput } from '@/libraries/formsV2/components/inputs/selectors'
-import { Hat } from '@/libraries/ui/icons'
+import { Icon } from '@/libraries/ui'
 import { useT } from '@/i18n'
 
 interface VolunteerRoleSelectProps {
@@ -44,7 +44,7 @@ export function VolunteerRoleSelect({ id, onChange, currentAssignments, workshop
       onChange={onChange}
       items={roleOptions}
       itemToString={v => v.displayName ?? v.name}
-      itemIcon={() => <Hat className="text-lime-600" />}
+      itemIcon={() => <Icon icon="hat" className="text-lime-600" />}
       placeholder={t('addRole')}
       noResultsText={t('noRoles')}
     />

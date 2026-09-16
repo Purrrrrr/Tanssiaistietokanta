@@ -7,7 +7,6 @@ import { formatBallroom } from '@/services/ballrooms'
 import { SyncStatus } from '@/libraries/forms'
 import { DocumentContentEditor, DocumentContentEditorProps, emptyDocument, isEmptyDocument } from '@/libraries/lexical'
 import { Button, Collapse, ItemList, PageSection } from '@/libraries/ui'
-import { Cross, Edit } from '@/libraries/ui/icons'
 import { AddFormationDiagramForm } from '@/components/formationDiagram/AddFormationDiagramForm'
 import { FormationDiagramChooser } from '@/components/formationDiagram/FormationDiagramChooser'
 import { FormationDiagramEditor } from '@/components/formationDiagram/FormationDiagramEditor'
@@ -170,7 +169,7 @@ export function FormationDiagramsSection({ dance, onModifyFormationDiagrams, cla
       items={dance.formationDiagrams}
       emptyText={t('noFormationDiagrams')}
       expandableContent={diagram => <FormationDiagramEditor formationDiagram={diagram} />}
-      expandButtonProps={{ tooltip: commonT('edit'), icon: <Edit /> }}
+      expandButtonProps={{ tooltip: commonT('edit'), icon: 'edit' }}
       labelTranslator={itemLabel}
       columns={[
         {
@@ -185,7 +184,7 @@ export function FormationDiagramsSection({ dance, onModifyFormationDiagrams, cla
       actions={formationDiagram =>
         <Button
           minimal
-          icon={<Cross />}
+          icon="cross"
           tooltip={commonT('delete')}
           color="danger"
           onClick={() => onModifyFormationDiagrams(dance.formationDiagrams.filter(fd => fd._id !== formationDiagram._id))}

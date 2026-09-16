@@ -1,7 +1,5 @@
 import type { ActionsColumnOptions, ActionsColumnProps } from '../types'
 
-import { ChevronDown, ChevronUp } from '@/libraries/ui/icons'
-
 import { Button } from '../../Button'
 import { Column, columnDefaults } from '../column'
 import { ColumnOptionsMenu } from '../ColumnOptionsMenu'
@@ -31,7 +29,7 @@ export function useActionsColumn<T extends { _id: string | number }>(
       {hasExpandableContent && <Button
         {...(typeof expandButtonProps === 'function' ? expandButtonProps(item, rowState) : expandButtonProps)}
         minimal
-        rightIcon={rowState.expanded ? <ChevronUp /> : <ChevronDown />}
+        rightIcon={rowState.expanded ? 'chevronUp' : 'chevronDown'}
         onClick={() => rowState.setExpanded(!rowState.expanded)}
       />}
     </>,

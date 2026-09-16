@@ -3,7 +3,6 @@ import React, { useCallback, useMemo, useRef } from 'react'
 import { ActionButton as Button, DragHandle } from '@/libraries/forms'
 import { Card, H2 } from '@/libraries/ui'
 import { ColorClass } from '@/libraries/ui/classes'
-import { Cross } from '@/libraries/ui/icons'
 import { DanceProgramChooser } from '@/components/event/DanceProgramChooser'
 import {
   DanceSet,
@@ -171,7 +170,7 @@ const ProgramItemEditor = React.memo(function ProgramItemEditor({ dragHandle, pa
     </div>
     <div className="text-right whitespace-nowrap">
       {dragHandle}
-      <RemoveItemButton path={path} index={itemIndex} title={t('buttons.remove')} icon={<Cross />} className="deleteItem" />
+      <RemoveItemButton path={path} index={itemIndex} title={t('buttons.remove')} icon="cross" className="deleteItem" />
     </div>
   </React.Fragment>
 })
@@ -223,7 +222,7 @@ function IntervalMusicEditor({ danceSetPath }: { danceSetPath: DanceSetPath }) {
     </div>
     <Field label={t('fields.intervalMusicDuration')} inline labelStyle="hidden" path={durationPath} component={DurationField} />
     <div className="text-right">
-      <Button title={t('buttons.remove')} color="danger" icon={<Cross />} onClick={() => onSetIntervalMusic(null)} className="delete" />
+      <Button title={t('buttons.remove')} color="danger" icon="cross" onClick={() => onSetIntervalMusic(null)} className="delete" />
     </div>
   </div>
 }

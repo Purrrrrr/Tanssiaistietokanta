@@ -5,8 +5,7 @@ import { RightsQuery } from '@/libraries/access-control/types'
 
 import { useEvents } from '@/services/events'
 
-import { Breadcrumb, Link } from '@/libraries/ui'
-import { Home } from '@/libraries/ui/icons'
+import { Breadcrumb, Icon, Link } from '@/libraries/ui'
 import ErrorComponent from '@/components/ErrorComponent'
 import NavigationLayout from '@/components/NavigationLayout'
 import { MenuLink, MenuSection, Page } from '@/components/Page'
@@ -52,7 +51,8 @@ export const Route = createRootRouteWithContext<DanceOrganizerRootRouteContext>(
   staticData: {
     breadcrumb: () => (
       <Breadcrumb to="/" menu={<Menu />}>
-        <Home /><span className="sr-only"><T msg="app.title" /></span>
+        <Icon icon="home" />
+        <span className="sr-only"><T msg="app.title" /></span>
       </Breadcrumb>
     ),
     usesRights: ['dances:list'],

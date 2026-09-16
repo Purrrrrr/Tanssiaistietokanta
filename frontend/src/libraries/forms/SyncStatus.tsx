@@ -2,7 +2,7 @@ import React from 'react'
 import classNames from 'classnames'
 
 import { useDelayedValue } from '@/libraries/common/useDelayedValue'
-import { Error, Outdated, Refresh, Saved } from '@/libraries/ui/icons'
+import { Icon } from '@/libraries/ui'
 
 import { useFormStrings } from './formContext'
 import { SyncState } from './useAutosavingState'
@@ -10,10 +10,10 @@ import { SyncState } from './useAutosavingState'
 import './SyncStatus.sass'
 
 const icons: Record<SyncState, React.ReactNode> = {
-  IN_SYNC: <Saved className="text-lime-700" />,
-  MODIFIED_LOCALLY: <Refresh className="text-sky-600" />,
-  CONFLICT: <Outdated className="text-yellow-700" />,
-  INVALID: <Error className="text-red-700" />,
+  IN_SYNC: <Icon icon="saved" className="text-lime-700" />,
+  MODIFIED_LOCALLY: <Icon icon="refresh" className="text-sky-600" />,
+  CONFLICT: <Icon icon="outdated" className="text-yellow-700" />,
+  INVALID: <Icon icon="error" className="text-red-700" />,
 }
 const autoHideText: Record<SyncState, boolean> = {
   IN_SYNC: true,

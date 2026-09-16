@@ -3,8 +3,7 @@ import { useId } from 'react'
 import { DanceWithEvents } from '@/types'
 
 import { Select } from '@/libraries/formsV2/components/inputs'
-import { Button, Link } from '@/libraries/ui'
-import { CaretDown, Link as LinkIcon, TimelineEvents } from '@/libraries/ui/icons'
+import { Button, Icon, Link } from '@/libraries/ui'
 import { useT } from '@/i18n'
 
 export function DanceIsUsedIn({ events, minimal }: Pick<DanceWithEvents, 'events'> & { minimal?: boolean }) {
@@ -30,11 +29,11 @@ export function DanceIsUsedIn({ events, minimal }: Pick<DanceWithEvents, 'events
         active={props['aria-expanded']}
         minimal
         tooltip={minimal ? buttonText : undefined}
-        rightIcon={<CaretDown />}
+        rightIcon="caretDown"
         text={minimal
           ? (
             <span className={events.length === 0 ? 'text-gray-400' : ''}>
-              <TimelineEvents /> {events.length}
+              <Icon icon="timelineEvents" /> {events.length}
             </span>
           )
           : buttonText}
@@ -43,7 +42,7 @@ export function DanceIsUsedIn({ events, minimal }: Pick<DanceWithEvents, 'events
       />
     }
     itemRenderer={({ eventId, text }) => {
-      const children = <><LinkIcon /><span className="whitespace-nowrap">{text}</span></>
+      const children = <><Icon icon="link" /><span className="whitespace-nowrap">{text}</span></>
       const className = 'flex gap-2 py-1.5 px-2 hover:no-underline'
       return <Link to="/events/$eventId/{-$eventVersionId}" params={{ eventId }} className={className}>{children}</Link>
     }}

@@ -22,10 +22,6 @@ import {
 } from 'lexical'
 
 import RegularSelect from '@/libraries/formsV2/components/inputs/selectors/RegularSelect'
-import {
-  AlignCenter, AlignJustify, AlignLeft, AlignRight,
-  LayoutTwoColumns, Redo, Undo,
-} from '@/libraries/ui/icons'
 
 import { useEditorT } from './i18n'
 import { INSERT_LAYOUT_COMMAND } from './plugins/LayoutPlugin'
@@ -162,13 +158,13 @@ export default function ToolbarPlugin({ children, imageUpload }: ToolbarPluginPr
           disabled={!canUndo}
           onClick={() => editor.dispatchCommand(UNDO_COMMAND, undefined)}
           tooltip={t('undo')}
-          icon={<Undo />}
+          icon="undo"
         />
         <ToolbarButton
           disabled={!canRedo}
           onClick={() => editor.dispatchCommand(REDO_COMMAND, undefined)}
           tooltip={t('redo')}
-          icon={<Redo />}
+          icon="redo"
         />
         <Divider />
         <BlockTypeSelector blockType={blockType} />
@@ -220,28 +216,28 @@ export default function ToolbarPlugin({ children, imageUpload }: ToolbarPluginPr
         <ToolbarButton
           onClick={() => editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'left')}
           tooltip={t('leftAlign')}
-          icon={<AlignLeft />}
+          icon="alignLeft"
         />
         <ToolbarButton
           onClick={() => editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'center')}
           tooltip={t('centerAlign')}
-          icon={<AlignCenter />}
+          icon="alignCenter"
         />
         <ToolbarButton
           onClick={() => editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'right')}
           tooltip={t('rightAlign')}
-          icon={<AlignRight />}
+          icon="alignRight"
         />
         <ToolbarButton
           onClick={() => editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'justify')}
           tooltip={t('justifyAlign')}
-          icon={<AlignJustify />}
+          icon="alignJustify"
         />
         <ToolbarButton
           onClick={() => editor.dispatchCommand(INSERT_LAYOUT_COMMAND, '1fr 1fr')}
           active={isItalic}
           tooltip={t('insertTwoColumnLayout')}
-          icon={<LayoutTwoColumns />}
+          icon="layoutTwoColumns"
         />
         <Divider />
         {tools.map(tool => tool.button)}

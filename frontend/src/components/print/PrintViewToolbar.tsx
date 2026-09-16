@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import classNames from 'classnames'
 
-import { DoubleChevronUp, Settings } from '@/libraries/ui/icons'
+import { Icon } from '@/libraries/ui'
 
 interface PrintViewToolbarProps {
   children: React.ReactNode
@@ -25,7 +25,7 @@ export default function PrintViewToolbar({ children, maxHeight }: PrintViewToolb
       )}
       onFocus={() => setOpen(true)}
     >
-      <Settings size={20} />
+      <Icon icon="settings" size={20} />
     </button>
     <div
       className={classNames(
@@ -43,7 +43,7 @@ export default function PrintViewToolbar({ children, maxHeight }: PrintViewToolb
       )}
       onClick={() => setOpen(false)}
     >
-      <DoubleChevronUp size={20} />
+      <Icon icon="doubleChevronUp" size={20} />
     </button>
   </div>
 }

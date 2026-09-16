@@ -4,8 +4,7 @@ import classNames from 'classnames'
 import { SlideStyle, useEventSlideStyles } from '@/services/events'
 
 import { Select } from '@/libraries/formsV2/components/inputs'
-import { Button } from '@/libraries/ui'
-import { DoubleCaretVertical, Style } from '@/libraries/ui/icons'
+import { Button, Icon } from '@/libraries/ui'
 import { useT } from '@/i18n'
 
 interface SlideStyleSelectorProps {
@@ -41,7 +40,7 @@ export function SlideStyleSelector({
       <Button
         {...props}
         icon={<SlideStyleBox value={style} />}
-        rightIcon={<DoubleCaretVertical />}
+        rightIcon="doubleCaretVertical"
         text={text}
       />
     }
@@ -53,7 +52,7 @@ function SlideStyleBox({ value: { styleName }, size = 20, aspectRatio = 1, class
     style={{ height: size, width: size * aspectRatio, lineHeight: `${size - 4}px` }}
     className={classNames(className, 'border border-black inline-block [container:slide/size]')}>
     <div className={`slide-style-${styleName} text-center`}>
-      <Style size={12} color="currentColor" />
+      <Icon icon="style" size={12} color="currentColor" />
     </div>
   </span>
 }

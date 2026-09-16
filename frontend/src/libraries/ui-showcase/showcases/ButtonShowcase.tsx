@@ -1,7 +1,6 @@
 import { booleanProp, showcase } from '../types'
 
 import { Button } from '@/libraries/ui'
-import { Trash } from '@/libraries/ui/icons'
 
 import { colors } from '../utils'
 import { titleCase } from '../utils/titleCase'
@@ -21,7 +20,7 @@ export const buttonShowcase = showcase({
           key={color}
           color={color}
           minimal={minimal}
-          icon={icon ? <Trash /> : undefined}
+          icon={icon ? "trash" : undefined}
           tooltip={tooltip ? 'A long tooltip' : undefined}
           disabled={disabled}
           text={titleCase(color)}

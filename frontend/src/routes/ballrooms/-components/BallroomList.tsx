@@ -4,7 +4,6 @@ import { usePatchBallroom } from '@/services/ballrooms'
 
 import { patchStrategy, useAutosavingState } from '@/libraries/forms'
 import { ItemList } from '@/libraries/ui'
-import { Edit } from '@/libraries/ui/icons'
 import { useT, useTranslation } from '@/i18n'
 
 import { BallroomForm } from './BallroomForm'
@@ -34,7 +33,7 @@ export function BallroomList({ ballrooms }: BallroomListProps) {
         entityId: ballroom._id,
         'aria-label': editStr,
         tooltip: editStr,
-        icon: <Edit />,
+        icon: 'edit',
         color: 'primary',
       })}
       labelTranslator={useT('domain.ballroom')}

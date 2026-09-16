@@ -4,8 +4,7 @@ import { Event } from '@/types'
 
 import { RequirePermissions } from '@/libraries/access-control'
 import { DocumentViewer } from '@/libraries/lexical/DocumentViewer'
-import { Card, H2, Link, PageSection } from '@/libraries/ui'
-import { Edit } from '@/libraries/ui/icons'
+import { Card, H2, Icon, Link, PageSection } from '@/libraries/ui'
 import { DocumentList } from '@/components/document/DocumentList'
 import { DanceSet, EventProgramRow } from '@/components/event/EventProgramForm'
 import { FileList } from '@/components/files/FileList'
@@ -145,7 +144,7 @@ function WorkshopCard({ workshop }: { workshop: Workshop }) {
           <> ({abbreviation})</>
         }
       </h2>
-      <NavigateButton className="-mt-2 -mr-4" paddingClass="p-3" minimal color="primary" icon={<Edit size={20} />} to="/events/$eventId/{-$eventVersionId}/workshops/$workshopId" params={{ ...params, workshopId: workshop._id }} />
+      <NavigateButton className="-mt-2 -mr-4" paddingClass="p-3" minimal color="primary" icon={<Icon icon="edit" size={20} />} to="/events/$eventId/{-$eventVersionId}/workshops/$workshopId" params={{ ...params, workshopId: workshop._id }} />
       <div className="text-lg">{teachers.map(teacher => teacher.name).join(', ')}</div>
     </div>
     <DocumentViewer className="px-6 mb-4" document={description} skipRenderOnEmpty />

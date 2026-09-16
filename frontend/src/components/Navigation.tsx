@@ -3,8 +3,7 @@ import { createLink } from '@tanstack/react-router'
 import { logout } from '@/backend/authentication'
 import { useCurrentUser } from '@/services/users'
 
-import { AnchorButton, Button, MenuButton } from '@/libraries/ui'
-import { Person as User } from '@/libraries/ui/icons'
+import { AnchorButton, Button, Icon, MenuButton } from '@/libraries/ui'
 import { useT } from '@/i18n'
 import { useDimensionCssVariables } from '@/utils/useDimensionCssVariables'
 
@@ -45,7 +44,7 @@ function LoginStatus() {
         buttonRenderer={props =>
           <Button
             minimal
-            icon={<User className="mr-0.5 text-amber-600 mt-px" />}
+            icon={<Icon icon="person" className="mr-0.5 text-amber-600 mt-px" />}
             tooltip={user.name}
             {...props}
           />
@@ -62,7 +61,7 @@ function LoginStatus() {
   return <NavigateButton
     minimal
     to="/login"
-    icon={<User className="text-stone-500 mt-px" />}
+    icon={<Icon icon="person" className="text-stone-500 mt-px" />}
     text={<span className="max-[450px]:sr-only">{t('login')}</span>}
   />
 }

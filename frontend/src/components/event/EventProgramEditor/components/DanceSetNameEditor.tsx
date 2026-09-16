@@ -1,7 +1,6 @@
 import { useState } from 'react'
 
 import { ActionButton as Button } from '@/libraries/forms'
-import { Cross, Edit } from '@/libraries/ui/icons'
 import { Input, useValueAt } from '@/components/event/EventProgramForm'
 import { useTranslation } from '@/i18n'
 
@@ -20,7 +19,7 @@ export function DanceSetNameEditor({ itemIndex }: { itemIndex: number }) {
     <Button
       color="primary"
       minimal
-      icon={editingName ? <Cross /> : <Edit />}
+      icon={editingName ? 'cross' : 'edit'}
       tooltip={buttonTitle}
       aria-label={buttonTitle}
       onClick={() => setEditingName(!editingName)}

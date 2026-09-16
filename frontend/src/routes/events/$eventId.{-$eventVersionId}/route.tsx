@@ -7,7 +7,6 @@ import { useEvent } from '@/services/events'
 import { RequirePermissions, useRight } from '@/libraries/access-control'
 import { useFormatDate } from '@/libraries/i18n/dateTime'
 import { Breadcrumb, CounterTag } from '@/libraries/ui'
-import { Cog, Presentation } from '@/libraries/ui/icons'
 import { MissingDanceInstructionsCounterTag } from '@/components/event/EventProgramEditor/components'
 import EventMetadataContext from '@/components/event/EventProgramForm/EventMetadataContext'
 import { AssignmentWarningsCounterTag } from '@/components/eventVolunteerAssignments/AssignmentWarnings'
@@ -86,7 +85,7 @@ function RouteComponent() {
                 params={params}
                 target="_blank"
                 text={t('ball.openSlideShow')}
-                icon={<Presentation />}
+                icon="presentation"
               />
               <VersionSidebarToggle entityType="event" entityId={event._id} versionId={event._versionId ?? undefined} toVersionLink={eventVersionLink} />
             </Toolbar>
@@ -109,7 +108,7 @@ function EventsMenu({ event, showPopups }: { event: Event, showPopups?: boolean 
   return <>
     <MenuSection title={t('title')}>
       <MenuLink to="/events/$eventId/{-$eventVersionId}" params={params} activeOptions={{ exact: true }} text={t('basicInfo')} />
-      <MenuLink to="/events/$eventId/{-$eventVersionId}/edit" params={params} text={t('editBasicInfo')} icon={<Cog />} />
+      <MenuLink to="/events/$eventId/{-$eventVersionId}/edit" params={params} text={t('editBasicInfo')} icon="cog" />
     </MenuSection>
     <MenuSection title={t('volunteers')}>
       <MenuLink

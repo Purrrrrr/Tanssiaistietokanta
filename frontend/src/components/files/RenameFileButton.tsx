@@ -5,7 +5,6 @@ import { UploadedFile, useRenameFile } from '@/services/files'
 import { TextInput } from '@/libraries/formsV2/components/inputs'
 import { Button, Dialog } from '@/libraries/ui'
 import { showToast, useShowAlert } from '@/libraries/ui/hooks'
-import { Edit } from '@/libraries/ui/icons'
 import { Translator, useT } from '@/i18n'
 
 export function RenameFileButton({ file }: {
@@ -34,7 +33,7 @@ export function RenameFileButton({ file }: {
   return <>
     <Button
       minimal
-      icon={<Edit />}
+      icon="edit"
       color="primary"
       text={t('components.files.RenameFileButton.text')}
       onClick={() => setName(file.name)}

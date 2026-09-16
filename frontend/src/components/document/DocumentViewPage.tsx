@@ -6,7 +6,6 @@ import { useDocument } from '@/services/documents'
 
 import { DocumentViewer } from '@/libraries/lexical'
 import { PageSection } from '@/libraries/ui'
-import { Edit } from '@/libraries/ui/icons'
 import { DeleteDocumentButton } from '@/components/document/DeleteDocumentButton'
 import { NavigateButton } from '@/components/widgets/NavigateButton'
 import { useT } from '@/i18n'
@@ -34,7 +33,7 @@ function DocumentViewPageInner({ document }: { document: Document }) {
           color="primary"
           to={`${route}/edit`}
           params={params}
-          icon={<Edit />}
+          icon="edit"
           text={t('editDocument')}
         />
         <DeleteDocumentButton minimal document={document} />

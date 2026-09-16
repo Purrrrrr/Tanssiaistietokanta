@@ -4,7 +4,6 @@ import classNames from 'classnames'
 
 import { RequirePermissions, useRight } from '@/libraries/access-control'
 import { Button } from '@/libraries/ui'
-import { Cross, Edit } from '@/libraries/ui/icons'
 import { EventSlide, EventSlideProps, startSlideId, useEventSlides } from '@/components/event/EventSlide'
 import { LoadingState } from '@/components/LoadingState'
 import { SlideContainer } from '@/components/Slide'
@@ -53,7 +52,7 @@ function RouteComponent() {
     />
     <RequirePermissions requireRight="events:modify" entityId={eventId}>
       <div className="editor">
-        <Button className="close" minimal icon={<Cross />} onClick={() => setEditing(false)} />
+        <Button className="close" minimal icon="cross" onClick={() => setEditing(false)} />
         <SlideEditor slide={slide} eventId={eventId} eventVersionId={eventVersionId} eventProgram={event?.program} />
       </div>
     </RequirePermissions>
@@ -94,7 +93,7 @@ export function BallProgramSlideView(
     <div className="controls">
       <ProgramTitleSelector value={slide.parentId ?? slide.id} onChange={id => goToSlide(id)}
         program={event.program} />
-      <Button requireRight="events:modify" entityId={event._id} minimal icon={<Edit />} onClick={onToggleEditing} />
+      <Button requireRight="events:modify" entityId={event._id} minimal icon="edit" onClick={onToggleEditing} />
     </div>
     <EventSlide {...slide} key={slide.id} eventProgram={event.program} />
     {nextSlide && <EventSlide {...nextSlide} key={nextSlide.id} eventProgram={event.program} invisible />}

@@ -3,7 +3,6 @@ import React, { UIEvent, useDeferredValue, useEffect, useRef, useState } from 'r
 import classNames from 'classnames'
 
 import { Card, H2, Link } from '@/libraries/ui'
-import { ChevronLeft, ChevronRight } from '@/libraries/ui/icons'
 import { EventProgramSettings, Field, useValueAt } from '@/components/event/EventProgramForm'
 import { EventSlide, EventSlidePreview, EventSlideProps, startSlideId, useEventSlides } from '@/components/event/EventSlide'
 import { EventSlideEditor } from '@/components/event/EventSlideEditor'
@@ -61,7 +60,7 @@ function SlideNavigation(props: SlideNavigationProps) {
   return <nav className="slideNavigation">
     {slideIndex > 0 &&
       <NavigateButton
-        icon={<ChevronLeft />}
+        icon="chevronLeft"
         to="."
         params={{ slideId: slides[slideIndex - 1].id }}
         className="previous-slide-link"
@@ -70,7 +69,7 @@ function SlideNavigation(props: SlideNavigationProps) {
     <SlidePreviews {...props} />
     {slideIndex < slides.length - 1 &&
       <NavigateButton
-        icon={<ChevronRight />}
+        icon="chevronRight"
         to="."
         params={{ slideId: slides[slideIndex + 1].id }}
         className="next-slide-link"

@@ -7,8 +7,7 @@ import { useEventVolunteers } from '@/services/eventVolunteers'
 
 import { searchList } from '@/libraries/common/listSearch'
 import { AutocompleteInput } from '@/libraries/formsV2/components/inputs/selectors'
-import { ClearButton } from '@/libraries/ui'
-import { Hat, Person } from '@/libraries/ui/icons'
+import { ClearButton, Icon } from '@/libraries/ui'
 import { useT, useTranslation } from '@/i18n'
 
 export type AssignmentTarget = Required<EventRole | VolunteerListItem>
@@ -44,9 +43,9 @@ export function AddAssignmentTargetSelector({ value, onChange, eventId, eventVer
   const itemIcon = (item: AssignmentTarget) => {
     switch (item.__typename) {
       case 'EventRole':
-        return <Hat className="text-lime-600" />
+        return <Icon icon="hat" className="text-lime-600" />
       case 'Volunteer':
-        return <Person className="text-blue-300" />
+        return <Icon icon="person" className="text-blue-300" />
     }
   }
 

@@ -13,7 +13,6 @@ import { Entity, ListEditorDroppableData, ListEditorItemData, ListItemComponent 
 import { FieldComponentProps, OnChangeHandler, TypedStringPath } from '../types'
 
 import { Button } from '@/libraries/ui'
-import { Move } from '@/libraries/ui/icons'
 
 import { useFormStrings } from '../formContext'
 import ListEditorContext, { ListEditorMoveContext } from './ListEditorContext'
@@ -162,7 +161,7 @@ export function SortableItem<T, V>({ itemType, acceptsTypes, id, path, onChangeP
   }
 
   const dragHandle = useMemo(
-    () => <Button aria-label={moveItem} className="touch-none" icon={<Move />} ref={setActivatorNodeRef} {...listeners} />,
+    () => <Button aria-label={moveItem} className="touch-none" icon="move" ref={setActivatorNodeRef} {...listeners} />,
     [listeners, setActivatorNodeRef, moveItem],
   )
 

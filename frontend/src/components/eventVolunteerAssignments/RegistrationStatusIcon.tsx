@@ -1,13 +1,13 @@
 import { EventVolunteerRegistrationStatus } from '@/types'
 
-import { Cross, Envelope, NewPerson, TickCircle } from '@/libraries/ui/icons'
+import { Icon } from '@/libraries/ui'
 
 const statusIcons: Record<EventVolunteerRegistrationStatus, React.ReactNode> = {
-  None: <NewPerson className="text-gray-400" />,
-  RegisteredToEventSystem: <Envelope className="text-yellow-500" />,
-  AcceptedRegistration: <TickCircle className="text-green-600" />,
-  InformedToOrganizers: <TickCircle className="text-blue-500" />,
-  RegistrationCancelled: <Cross className="text-red-800" />,
+  None: <Icon icon="newPerson" className="text-gray-400" />,
+  RegisteredToEventSystem: <Icon icon="envelope" className="text-yellow-500" />,
+  AcceptedRegistration: <Icon icon="tickCircle" className="text-green-600" />,
+  InformedToOrganizers: <Icon icon="tickCircle" className="text-blue-500" />,
+  RegistrationCancelled: <Icon icon="cross" className="text-red-800" />,
 }
 
 export default function RegistrationStatusIcon({ status }: { status?: EventVolunteerRegistrationStatus | null }) {

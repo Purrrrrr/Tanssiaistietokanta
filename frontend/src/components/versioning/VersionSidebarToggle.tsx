@@ -3,7 +3,6 @@ import { useContext, useEffect } from 'react'
 import { VersionSidebarProps } from './types'
 
 import { Button } from '@/libraries/ui'
-import { History } from '@/libraries/ui/icons'
 import { useTranslation } from '@/i18n'
 
 import { VersionSidebarToggleContext } from './VersionableContentContainer'
@@ -26,7 +25,7 @@ export function VersionSidebarToggle({ id, versionId, entityId, entityType, toVe
   )
 
   return <Button
-    icon={<History />}
+    icon="history"
     minimal
     className="float-right"
     onClick={() => toggleSidebar({ buttonId, entityId, versionId, entityType, toVersionLink })}

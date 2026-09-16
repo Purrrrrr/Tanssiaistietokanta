@@ -3,7 +3,7 @@ import { EventVolunteer, EventVolunteerStatus } from '@/types'
 import { usePatchEventVolunteer } from '@/services/eventVolunteers'
 
 import { Select } from '@/libraries/formsV2/components/inputs'
-import { BlockedPerson, Cross, Envelope, Pin, Search } from '@/libraries/ui/icons'
+import { Icon, type IconContent } from '@/libraries/ui'
 import { useT, useTranslation } from '@/i18n'
 
 interface VolunteerStatusSelectorProps {
@@ -12,12 +12,12 @@ interface VolunteerStatusSelectorProps {
   iconOnly?: boolean
 }
 
-export const statusIcons: Record<EventVolunteerStatus, React.ReactNode> = {
-  Interested: <Search className="text-blue-500" />,
-  Accepted: <Pin className="text-green-600" />,
-  CanWorkAsBackup: <Envelope className="text-stone-500" />,
-  Rejected: <BlockedPerson className="text-red-800" />,
-  Cancelled: <Cross className="text-yellow-600" />,
+export const statusIcons: Record<EventVolunteerStatus, IconContent> = {
+  Interested: <Icon icon="search" className="text-blue-500" />,
+  Accepted: <Icon icon="pin" className="text-green-600" />,
+  CanWorkAsBackup: <Icon icon="envelope" className="text-stone-500" />,
+  Rejected: <Icon icon="blockedPerson" className="text-red-800" />,
+  Cancelled: <Icon icon="cross" className="text-yellow-600" />,
 }
 
 const items: EventVolunteerStatus[] = [

@@ -6,7 +6,6 @@ import { useCurrentUser } from '@/services/users'
 import { RequirePermissions } from '@/libraries/access-control'
 import { useFormatDateRange } from '@/libraries/i18n/dateTime'
 import { ItemList, Link } from '@/libraries/ui'
-import { Add } from '@/libraries/ui/icons'
 import { PageSection } from '@/libraries/ui/PageSection'
 import { LoadingState } from '@/components/LoadingState'
 import { Page } from '@/components/Page'
@@ -49,7 +48,7 @@ function EventList() {
       className="max-w-200"
       introText={t('weHaveXEvents', { count: events.length })}
       toolbar={
-        <NavigateButton requireRight="events:create" to="/events/new" icon={<Add />} text={t('createEvent')} />
+        <NavigateButton requireRight="events:create" to="/events/new" icon="add" text={t('createEvent')} />
       }
     >
       <LoadingState {...requestState} />

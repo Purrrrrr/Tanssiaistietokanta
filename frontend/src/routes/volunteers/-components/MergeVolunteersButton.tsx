@@ -5,7 +5,6 @@ import { Volunteer } from '@/types'
 import { usePatchVolunteer } from '@/services/volunteers'
 
 import { Button, Dialog, FormGroup, ItemList } from '@/libraries/ui'
-import { ManyToOne } from '@/libraries/ui/icons'
 import { useT, useTranslation } from '@/i18n'
 
 export interface MergeVolunteersButtonProps {
@@ -22,7 +21,7 @@ export function MergeVolunteersButton({ selectedVolunteers, onMerge }: MergeVolu
   return <>
     <Button
       minimal
-      icon={<ManyToOne />}
+      icon="manyToOne"
       text={t('mergeVolunteers', { count: selectedVolunteers.length })}
       onClick={() => setDialogOpen(true)}
     />

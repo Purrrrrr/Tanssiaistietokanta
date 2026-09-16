@@ -6,7 +6,6 @@ import { usePatchVolunteer } from '@/services/volunteers'
 import { useMultipleSelection } from '@/libraries/common/selection/useMultipleSelection'
 import { patchStrategy, useAutosavingState } from '@/libraries/forms'
 import { ItemList } from '@/libraries/ui'
-import { Edit } from '@/libraries/ui/icons'
 import { VolunteeredIn } from '@/components/volunteers/VolunteeredIn'
 import { useT } from '@/i18n'
 import { sortedBy } from '@/utils/sorted'
@@ -61,7 +60,7 @@ export function VolunteerList({ volunteers = [] }: VolunteerListProps) {
       expandButtonProps={volunteer => ({
         requireRight: 'volunteers:modify',
         entityId: volunteer._id,
-        icon: <Edit />,
+        icon: 'edit',
         ariaLabel: t('common.edit'),
         tooltip: t('common.edit'),
         color: 'primary',

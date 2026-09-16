@@ -3,7 +3,7 @@ import { ComponentProps } from 'react'
 import classNames from 'classnames'
 
 import { omitPermissionCheckingProps, withPermissionChecking } from '@/libraries/access-control'
-import { Share } from '@/libraries/ui/icons'
+import { Icon, IconContent } from '@/libraries/ui'
 import { useDimensionCssVariables } from '@/utils/useDimensionCssVariables'
 
 interface MenuProps {
@@ -45,7 +45,7 @@ export function MenuSection({ children, title, titleButton, smallTitle }: MenuSe
 
 interface MenuLinkProps extends ComponentProps<'a'> {
   text?: React.ReactNode
-  icon?: React.ReactNode
+  icon?: IconContent
 }
 
 export const MenuLink = createLink(withPermissionChecking(({ children, href, text, icon, ...props }: MenuLinkProps) => {
@@ -59,7 +59,7 @@ export const MenuLink = createLink(withPermissionChecking(({ children, href, tex
     >
       {text}
       {children}
-      {icon ?? (openNewTab && <Share />)}
+      {icon ? <Icon icon={icon} /> : (openNewTab && <Icon icon="share" />)}
     </a>
   </MenuItem>
 }))

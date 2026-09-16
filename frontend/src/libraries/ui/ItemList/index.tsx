@@ -4,10 +4,10 @@ import classNames from 'classnames'
 
 import type { ItemListProps, ReflowOptions, RowProps, SortState } from './types'
 
-import { InfoSign } from '@/libraries/ui/icons'
 import { isInputTag } from '@/utils/useOnKeydown'
 
 import Collapse from '../Collapse'
+import { Icon } from '../Icon'
 import { Link } from '../Link'
 import type { Column, LinkGetter, RowState } from './column'
 import type { Selector } from './hooks/useSelectionColumn'
@@ -103,7 +103,7 @@ const wrap = (Elem: null | 'tbody' | 'thead', children: React.ReactNode) => Elem
 
 function EmptyList({ text }: { text: React.ReactNode }) {
   return <div className="p-4 text-base text-center border-gray-200 text-muted border">
-    <InfoSign size={20} className="mr-2" />
+    <Icon icon="infoSign" size={20} className="mr-2" />
     {text}
   </div>
 }

@@ -1,7 +1,5 @@
 import classNames from 'classnames'
 
-import { Menu, Sort as SortIcon } from '@/libraries/ui/icons'
-
 import { Button } from '../Button'
 import { buttonClass } from '../buttonClass'
 import { MenuButton } from '../MenuButton'
@@ -24,7 +22,7 @@ export function ColumnOptionsMenu<T>({ sortableColumns, sort, setSort, hasAction
       buttonProps={{
         className: classNames('w-full justify-end pe-4', (hasActions || showToggleActions) || 'not-reflowed:hidden'),
         minimal: true,
-        rightIcon: <Menu />,
+        rightIcon: 'menu',
       }}
     >
       {showSortActions && <>
@@ -35,7 +33,7 @@ export function ColumnOptionsMenu<T>({ sortableColumns, sort, setSort, hasAction
           return <Button
             key={id}
             minimal
-            icon={selected ? <SortIcon /> : <span className="w-4" />}
+            icon={selected ? 'sort' : <span className="w-4" />}
             onClick={() => setSort({ key: id, direction: selected && sort?.direction === 'asc' ? 'desc' : 'asc' })}
             text={label}
           />

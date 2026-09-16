@@ -4,8 +4,7 @@ import { usePatchEventVolunteer } from '@/services/eventVolunteers'
 
 import { useMultipleSelection } from '@/libraries/common/selection/useMultipleSelection'
 import { patchStrategy, useAutosavingState } from '@/libraries/forms'
-import { FormGroup, ItemList } from '@/libraries/ui'
-import { Edit, Pin, Search } from '@/libraries/ui/icons'
+import { FormGroup, Icon, ItemList } from '@/libraries/ui'
 import { RoleTag } from '@/components/eventVolunteers/RoleTag'
 import { VolunteerStatusSelector } from '@/components/eventVolunteers/VolunteerStatusSelector'
 import { useT, useTranslation } from '@/i18n'
@@ -55,7 +54,7 @@ export function EventVolunteerList({ eventVolunteers, readOnly, currentRole, onS
       expandButtonProps={ev => ({
         requireRight: 'eventVolunteers:modify',
         entityId: ev._id,
-        icon: readOnly ? undefined : <Edit />,
+        icon: readOnly ? undefined : 'edit',
         ariaLabel: editStr,
         tooltip: editStr,
         color: 'primary',
@@ -98,8 +97,8 @@ export function EventVolunteerList({ eventVolunteers, readOnly, currentRole, onS
   </>
 }
 
-const AssignedRoleIcon = ({ label }: { label?: string }) => <Pin title={label} aria-label={label} className="align-text-top" size={14} />
-const InterestedRoleIcon = ({ label }: { label?: string }) => <Search title={label} aria-label={label} className="align-text-top" size={12} />
+const AssignedRoleIcon = ({ label }: { label?: string }) => <Icon icon="pin" title={label} aria-label={label} className="align-text-top" size={14} />
+const InterestedRoleIcon = ({ label }: { label?: string }) => <Icon icon="search" title={label} aria-label={label} className="align-text-top" size={12} />
 
 interface TaskRole extends Pick<EventRole, '_id' | 'name' | 'order'> {
   assigned: boolean

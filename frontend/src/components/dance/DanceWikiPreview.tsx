@@ -6,8 +6,7 @@ import { useFetchDanceFromWiki } from '@/services/dancewiki'
 
 import { useFormatDateTime } from '@/libraries/i18n/dateTime'
 import { DocumentViewer, isEmptyDocument, LinkNode, NodeRendererProps } from '@/libraries/lexical'
-import { Button, Collapse, RegularLink } from '@/libraries/ui'
-import { ChevronDown, ChevronUp, Link as LinkIcon } from '@/libraries/ui/icons'
+import { Button, Collapse, Icon, RegularLink } from '@/libraries/ui'
 import { useT } from '@/i18n'
 
 interface DanceWikiPreviewProps {
@@ -38,7 +37,7 @@ export default function DanceWikiPreview({ dance }: DanceWikiPreviewProps) {
           color="primary"
           text={t('openInstructions')}
           onClick={() => setOpen(!open)}
-          rightIcon={open ? <ChevronUp /> : <ChevronDown />}
+          rightIcon={open ? 'chevronUp' : 'chevronDown'}
         />}
       </div>
 
@@ -77,7 +76,7 @@ export function LinkToDanceWiki({ className, page, children }: {
     target="_blank"
     href={`${danceWikiUrl}${page.replaceAll(' ', '_')}`}
   >
-    {children ?? <><LinkIcon /> {page}</>}
+    {children ?? <><Icon icon="link" /> {page}</>}
   </RegularLink>
 }
 

@@ -6,8 +6,7 @@ import { useDance } from '@/services/dances'
 
 import { DragHandle, SyncState, SyncStatus } from '@/libraries/forms'
 import { DocumentContentEditor } from '@/libraries/lexical'
-import { Callout, H2, Link } from '@/libraries/ui'
-import { ArrowLeft, Cross, Link as LinkIcon } from '@/libraries/ui/icons'
+import { Callout, H2, Icon, Link } from '@/libraries/ui'
 import { FormationDiagramsSection, InstructionEditor } from '@/components/dance/DanceEditor'
 import { Field as DanceField, Form as DanceForm, Input as DanceInput, useDanceEditorState } from '@/components/dance/DanceForm'
 import { LinkToDanceWiki } from '@/components/dance/DanceWikiPreview'
@@ -92,7 +91,7 @@ function ParentLink(props: WithEventProgram<EventSlideProps>) {
     }
   }
   return <LinkToSlide unstyled className="block mb-2 cursor-pointer hover:underline" id={props.parentId}>
-    <ArrowLeft size={10} className="pb-0.5" /> {title}
+    <Icon icon="arrowLeft" size={10} className="pb-0.5" /> {title}
   </LinkToSlide>
 }
 
@@ -179,7 +178,7 @@ const ProgramItem = React.memo(function ProgramEditor({ dragHandle, path, itemIn
     <div><Duration value={getProgramDuration(row)} /></div>
     <div className="buttons">
       {dragHandle}
-      <RemoveItemButton path={path} index={itemIndex} title={t('buttons.remove')} icon={<Cross />} className="deleteItem" />
+      <RemoveItemButton path={path} index={itemIndex} title={t('buttons.remove')} icon="trash" className="deleteItem" />
     </div>
   </div>
 })
@@ -267,11 +266,11 @@ function DanceEditor({ id, initialDance }: { id: string, initialDance?: Pick<Dan
       <p className="flex gap-3.5">
         {dance.wikipageName &&
         <LinkToDanceWiki page={dance.wikipageName}>
-          <LinkIcon size={12} />{t('danceInDanceWiki')}
+          <Icon icon="link" size={12} />{t('danceInDanceWiki')}
         </LinkToDanceWiki>
         }
         <Link target="_blank" to="/dances/$danceId" params={{ danceId: dance._id }}>
-          <LinkIcon size={12} /> {useTranslation('components.eventSlideEditor.linkToCompleteDance')}
+          <Icon icon="link" size={12} /> {useTranslation('components.eventSlideEditor.linkToCompleteDance')}
         </Link>
       </p>
     </DanceForm>

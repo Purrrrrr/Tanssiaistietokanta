@@ -5,7 +5,6 @@ import { getFocusableElements } from '@/libraries/common/getFocusableElements'
 import { useShouldRender } from '@/libraries/common/useShouldRender'
 
 import { Button, ButtonProps } from '../Button'
-import { Cross } from '../icons'
 
 export type DialogProps = {
   isOpen: boolean
@@ -75,7 +74,7 @@ export function Dialog({ isOpen, onClose, children, title, className, showCloseB
 }
 
 export function DialogCloseButton(props: Omit<ButtonProps, 'children' | 'text' | 'minimal'> & { 'aria-label': string }) {
-  return <Button {...props} minimal icon={<Cross />} />
+  return <Button {...props} minimal icon="cross" />
 }
 
 Dialog.Body = function DialogBody({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {

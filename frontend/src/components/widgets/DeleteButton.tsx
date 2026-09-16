@@ -1,6 +1,5 @@
 import { Button, ButtonProps } from '@/libraries/ui'
 import { useShowAlert } from '@/libraries/ui/hooks'
-import { Trash } from '@/libraries/ui/icons'
 import { useT } from '@/i18n'
 
 interface DeleteButtonProps extends ButtonProps {
@@ -19,7 +18,7 @@ export function DeleteButton({ onDelete, iconOnly, text, confirmTitle, confirmTe
 
   return <Button
     {...props}
-    icon={<Trash />}
+    icon="trash"
     text={iconOnly ? undefined : text}
     aria-label={text}
     color="danger"

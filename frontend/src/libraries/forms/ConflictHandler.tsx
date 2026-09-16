@@ -2,8 +2,7 @@ import classNames from 'classnames'
 
 import { ConflictData } from './types'
 
-import { Button, MenuButton } from '@/libraries/ui'
-import { CaretDown } from '@/libraries/ui/icons'
+import { Button, Icon, MenuButton } from '@/libraries/ui'
 
 import { useFormStrings } from './formContext'
 
@@ -17,7 +16,7 @@ export function ConflictHandler({ localValue, serverValue, onResolve }: Conflict
       buttonRenderer={({ active, children, ...props }) =>
         <button type="button" className={classNames(className, { active })} {...props}>
           {children}
-          <CaretDown />
+          <Icon icon="caretDown" />
         </button>
       }
     >

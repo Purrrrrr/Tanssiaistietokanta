@@ -6,7 +6,6 @@ import { useDocuments } from '@/services/documents'
 
 import { DocumentViewer } from '@/libraries/lexical'
 import { ButtonProps, ItemList, Link, PageSection } from '@/libraries/ui'
-import { Edit } from '@/libraries/ui/icons'
 import { useDisplayTimestamp } from '@/libraries/ui/useDisplayTimestamp'
 import { DeleteDocumentButton } from '@/components/document/DeleteDocumentButton'
 import { NavigateButton } from '@/components/widgets/NavigateButton'
@@ -74,7 +73,7 @@ export function DocumentList({ title, owner, owningId }: DocumentListProps) {
           requireRight="documents:modify"
           entityId={document._id}
           minimal
-          icon={<Edit />}
+          icon="edit"
           to={editRoute}
           params={{ ...params, documentId: document._id }}
           aria-label={t('editDocument')}

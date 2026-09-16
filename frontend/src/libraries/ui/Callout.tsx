@@ -3,9 +3,8 @@ import classNames from 'classnames'
 
 import { Color } from './types'
 
-import { Error, InfoSign, Tick, WarningSign } from '@/libraries/ui/icons'
-
 import { ColorClass } from './classes'
+import { Icon } from './Icon'
 
 export interface CalloutProps extends ComponentPropsWithoutRef<'div'> {
   children?: React.ReactNode
@@ -16,10 +15,10 @@ export interface CalloutProps extends ComponentPropsWithoutRef<'div'> {
 
 const defaultIcons = {
   none: undefined,
-  primary: <InfoSign />,
-  success: <Tick />,
-  danger: <Error className="text-red-700" />,
-  warning: <WarningSign />,
+  primary: <Icon icon="infoSign" />,
+  success: <Icon icon="tick" />,
+  danger: <Icon icon="error" className="text-red-700" />,
+  warning: <Icon icon="warningSign" />,
 } satisfies Record<Color, React.ReactElement | undefined>
 
 export function Callout({ children, icon, title, color, className, ...rest }: CalloutProps) {

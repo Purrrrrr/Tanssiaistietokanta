@@ -7,8 +7,7 @@ import { workshopInstanceName } from '@/services/workshops'
 
 import { searchList } from '@/libraries/common/listSearch'
 import { AutocompleteMultipleInput } from '@/libraries/formsV2/components/inputs/selectors'
-import { Button } from '@/libraries/ui'
-import { Build, Cross, Hat, Person, Search } from '@/libraries/ui/icons'
+import { Button, Icon } from '@/libraries/ui'
 import { useT, useTranslation } from '@/i18n'
 
 import RegistrationStatusIcon from './RegistrationStatusIcon'
@@ -144,11 +143,11 @@ export function VolunteerAssignmentSearch({ id, value, onChange, eventId, eventV
   const itemIcon = (item: AssignmentSearchTerm) => {
     switch (item.type) {
       case 'role':
-        return <Hat className="text-lime-600" />
+        return <Icon icon="hat" className="text-lime-600" />
       case 'name':
-        return <Person className="text-blue-300" />
+        return <Icon icon="person" className="text-blue-300" />
       case 'workshop':
-        return <Build className="text-red-700" />
+        return <Icon icon="build" className="text-red-700" />
       case 'registrationStatus':
         return <RegistrationStatusIcon status={item.query as EventVolunteerRegistrationStatus} />
     }
@@ -158,12 +157,12 @@ export function VolunteerAssignmentSearch({ id, value, onChange, eventId, eventV
     id={id}
     value={value}
     onChange={onChange}
-    icon={<Search className="text-gray-600 ms-2" />}
+    icon={<Icon icon="search" className="text-gray-600 ms-2" />}
     rightIcon={
       <Button
         minimal
         tooltip={useTranslation('common.emptySearch')}
-        icon={<Cross className="text-gray-600" />}
+        icon={<Icon icon="cross" className="text-gray-600" />}
         onClick={() => onChange([])}
       />
     }

@@ -1,7 +1,6 @@
 import type { AnyType, FieldPath } from '../types'
 
 import { Button } from '@/libraries/ui'
-import { Cross } from '@/libraries/ui/icons'
 
 import { type ConnectedFieldProps, ConnectedInput } from './ConnectedInput'
 import { type ListItem } from './dnd'
@@ -24,7 +23,7 @@ export function RepeatingField<Output extends Input & ListItem, Extra, Input, Da
           component={component}
           {...extra as Extra & Omit<ConnectedFieldProps<Output, Extra, Input, Data>, 'path' | 'component'>} />
         {dragHandle}
-        <Button color="danger" icon={<Cross />} onClick={onRemove} />
+        <Button color="danger" icon="cross" onClick={onRemove} />
       </div>
     }
   </RepeatingSection>

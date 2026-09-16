@@ -5,7 +5,6 @@ import { omitPermissionCheckingProps, withPermissionChecking } from '@/libraries
 import { getFocusableElements } from '@/libraries/common/getFocusableElements'
 
 import { Button, type ButtonProps } from './Button'
-import { DoubleCaretVertical } from './icons'
 import { Dropdown, DropdownContainer } from './overlays/Dropdown'
 
 interface MenuButtonProps {
@@ -43,7 +42,7 @@ export function MenuButton({ children, buttonRenderer, text, buttonProps, contai
       : (
         <Button
           active={open}
-          rightIcon={<DoubleCaretVertical />}
+          rightIcon="doubleCaretVertical"
           text={text}
           popoverTarget={dropdownId}
           {...buttonProps}

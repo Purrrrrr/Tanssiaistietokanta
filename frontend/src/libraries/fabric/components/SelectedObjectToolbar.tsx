@@ -129,7 +129,7 @@ export function SelectedObjectToolbar({ canvas, activeObjects, alwaysVisible }: 
           <ToolbarButton
             onMouseDown={() => duplidateActiveObjects(canvas)}
             tooltip={t('duplicate')}
-            icon="⎘"
+            icon={<span>⎘</span>}
           />
           <ToolbarButton
             onMouseDown={centerVertically}

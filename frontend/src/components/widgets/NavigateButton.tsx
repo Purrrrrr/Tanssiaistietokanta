@@ -4,11 +4,12 @@ import React from 'react'
 import { omitPermissionCheckingProps, PermissionCheckedProps, withPermissionChecking } from '@/libraries/access-control'
 import { type Color, Link } from '@/libraries/ui'
 import { buttonClass } from '@/libraries/ui/buttonClass'
+import { Icon, type IconContent } from '@/libraries/ui/Icon'
 
 interface NavigateButtonProps extends React.ComponentProps<typeof Link>, PermissionCheckedProps {
   text?: string | React.ReactElement | React.ReactElement[]
   children?: string | React.ReactElement | React.ReactElement[]
-  icon?: React.ReactElement
+  icon?: IconContent | false
   disabled?: boolean
   minimal?: boolean
   color?: Color
@@ -20,7 +21,7 @@ const _NavigateButton = withPermissionChecking((props: NavigateButtonProps) => {
   const classes = buttonClass(color ?? 'none', { className, disabled, minimal, paddingClass })
 
   return <Link {...rest} unstyled className={classes} role="button" tabIndex={0} activeProps={{}}>
-    {icon}
+    {icon && <Icon icon={icon} />}
     {text}
     {children}
   </Link>

@@ -2,10 +2,7 @@ import { NodeAlignment } from '../../plugins/nodes/types'
 
 import { useEditorT } from '@/libraries/lexical/i18n'
 import { ToolbarButton } from '@/libraries/lexical/toolbar/widgets/ToolbarButton'
-import { MenuButton } from '@/libraries/ui'
-import {
-  AlignCenter, AlignJustify, AlignLeft, AlignRight,
-} from '@/libraries/ui/icons'
+import { Icon, MenuButton } from '@/libraries/ui'
 
 import { ImageFloatLeftIcon, ImageFloatRightIcon } from '../icons'
 
@@ -37,13 +34,13 @@ export function AlignSelector({ align, onChange }: { align: NodeAlignment, onCha
 function AlignIcon({ align }: { align: NodeAlignment }) {
   switch (align) {
     case 'left':
-      return <AlignLeft />
+      return <Icon icon="alignLeft" />
     case 'center':
-      return <AlignCenter />
+      return <Icon icon="alignCenter" />
     case 'right':
-      return <AlignRight />
+      return <Icon icon="alignRight" />
     case 'fullWidth':
-      return <AlignJustify />
+      return <Icon icon="alignJustify" />
     case 'floatLeft':
       return <ImageFloatLeftIcon />
     case 'floatRight':

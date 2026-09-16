@@ -2,7 +2,6 @@ import { EventVolunteerRegistrationStatus } from '@/types'
 
 import { Select } from '@/libraries/formsV2/components/inputs/selectors'
 import { Button } from '@/libraries/ui'
-import { CaretDown } from '@/libraries/ui/icons'
 import { useT, useTranslation } from '@/i18n'
 
 import RegistrationStatusIcon from './RegistrationStatusIcon'
@@ -47,7 +46,7 @@ export default function RegistrationStatusSelector({ id, className, value, onCha
       <Button
         minimal
         icon={<RegistrationStatusIcon status={selectedItem} />}
-        rightIcon={<CaretDown />}
+        rightIcon="caretDown"
         text={showText ? (text ?? choose) : undefined}
         tooltip={showText ? undefined : text}
         {...props}

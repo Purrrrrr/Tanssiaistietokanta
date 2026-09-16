@@ -3,7 +3,6 @@ import { type ReactNode } from 'react'
 import { DropdownButtonDownshiftProps, SelectorProps } from './types'
 
 import { Button } from '@/libraries/ui'
-import { CaretDown } from '@/libraries/ui/icons'
 
 import { useFormTranslation } from '../../../localization'
 
@@ -34,7 +33,7 @@ export function DropdownButton<T>(
     aria-label={ariaLabel}
     disabled={readOnly}
     icon={itemIcon?.(value)}
-    rightIcon={<CaretDown />}
+    rightIcon="caretDown"
     text={selectedItemRenderer(value) ?? placeholder}
   />
 }

@@ -3,9 +3,8 @@ import classNames from 'classnames'
 
 import { SortState } from './types'
 
-import { CaretDown } from '@/libraries/ui/icons'
-
 import { Button } from '../Button'
+import { Icon } from '../Icon'
 
 interface SortButtonProps {
   sortKey: string | number
@@ -30,6 +29,6 @@ export function SortButton({ sortKey, currentSort, onSort, className, children, 
     className={classNames(className, 'flex gap-1 items-center w-full')}
     tooltip={tooltip}
     text={children}
-    rightIcon={isCurrent && <CaretDown className={classNames('transition-transform', isAscending && 'rotate-180')} />}
+    rightIcon={isCurrent && <Icon icon="caretDown" className={classNames('transition-transform', isAscending && 'rotate-180')} />}
   />
 }
