@@ -1,3 +1,5 @@
+import { commonTranslations } from '@/libraries/ui/commonTranslations'
+
 export const fi = {
   app: {
     title: 'Tanssiaistietokanta',
@@ -830,20 +832,5 @@ export const fi = {
     next: 'Seuraava',
     previous: 'Edellinen',
   },
-  common: {
-    emptySearch: 'Tyhjennä haku',
-    actions: 'Toiminnot',
-    search: 'Hae...',
-    delete: 'Poista',
-    edit: 'Muokkaa',
-    close: 'Sulje',
-    closeEditor: 'Sulje muokkaus',
-    cancel: 'Peruuta',
-    choose: 'Valitse',
-    save: 'Tallenna',
-    move: 'Siirrä',
-    operationFailed: 'Tietojen tallennus epäonnistui :(',
-    loadingEditor: 'Ladataan lomaketta...',
-    version: 'versio __version__',
-  },
+  common: commonTranslations.fi,
 }

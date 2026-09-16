@@ -178,7 +178,7 @@ const ProgramItem = React.memo(function ProgramEditor({ dragHandle, path, itemIn
     <div><Duration value={getProgramDuration(row)} /></div>
     <div className="buttons">
       {dragHandle}
-      <RemoveItemButton path={path} index={itemIndex} title={t('buttons.remove')} icon="trash" className="deleteItem" />
+      <RemoveItemButton path={path} index={itemIndex} text={t('buttons.remove')} iconOnly icon="trash" className="deleteItem" />
     </div>
   </div>
 })

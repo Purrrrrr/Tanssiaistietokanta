@@ -171,7 +171,8 @@ function InstructionsForDance({ dance, showShortInstructions }: { dance: Pick<Da
         color="primary"
         minimal
         icon="edit"
-        tooltip={useTranslation(editorOpen ? 'common.closeEditor' : 'common.edit')}
+        text={useTranslation(editorOpen ? 'common.closeEditor' : 'common.edit')}
+        iconOnly
         onClick={() => setEditorOpen(!editorOpen)}
       />
     </H2>

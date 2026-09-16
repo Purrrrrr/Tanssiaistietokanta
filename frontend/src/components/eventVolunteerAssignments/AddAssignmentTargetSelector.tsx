@@ -57,7 +57,7 @@ export function AddAssignmentTargetSelector({ value, onChange, eventId, eventVer
     itemToString={itemToString}
     itemIcon={itemIcon}
     rightIcon={
-      value && <ClearButton aria-label={t('empty')} onClick={() => onChange(null)} />
+      value && <ClearButton text={t('empty')} onClick={() => onChange(null)} />
     }
     items={items}
   />

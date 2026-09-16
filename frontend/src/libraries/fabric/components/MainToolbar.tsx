@@ -10,7 +10,7 @@ import { Arrowline } from '../canvas/Arrowline'
 import { copySelectionToClipboard, pasteFromClipboard } from '../canvas/clipboard'
 import { randomId } from '../canvas/util'
 import { useFabricT as useEditorT } from '../i18n'
-import { ArrowIcon, CircleIcon, CopyIcon, DrawIcon, EllipseIcon, HexagonIcon, LineIcon, PasteIcon, PentagonIcon, RectangleIcon, Redo, StarIcon, TriangleIcon, Undo } from './icons'
+import { ArrowIcon, CircleIcon, CopyIcon, DrawIcon, EllipseIcon, HexagonIcon, LineIcon, PasteIcon, PentagonIcon, RectangleIcon, StarIcon, TriangleIcon } from './icons'
 import { StrokeWidthInput } from './StrokeWidthInput'
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -210,7 +210,7 @@ export function FabricMainToolbar({ canvas, visible, undoState, onRemoveNode: re
         )}
       </div>
     </MenuButton>
-    <ToolbarButton onMouseDown={addText} tooltip={t('addText')} text="T" />
+    <ToolbarButton onMouseDown={addText} tooltip={t('addText')} icon={<span>T</span>} />
     <ToolbarButton onMouseDown={toggleDrawingMode} active={canvas.isDrawingMode} tooltip={t('freeDraw')} icon={<DrawIcon />} />
     {additionalButtons}
     {removeNode && <ToolbarButton color="danger" onMouseDown={removeNode} text={t('removeDiagram')} />}
@@ -227,7 +227,7 @@ function UndoButtons({ data, onChange }: UndoState) {
   const { undo, redo, canUndo, canRedo } = useUndoHistory(data, onChange)
 
   return <>
-    <ToolbarButton onMouseDown={undo} disabled={!canUndo} tooltip={t('undo')} icon={<Undo />} />
-    <ToolbarButton onMouseDown={redo} disabled={!canRedo} tooltip={t('redo')} icon={<Redo />} />
+    <ToolbarButton onMouseDown={undo} disabled={!canUndo} tooltip={t('undo')} icon="undo" />
+    <ToolbarButton onMouseDown={redo} disabled={!canRedo} tooltip={t('redo')} icon="redo" />
   </>
 }

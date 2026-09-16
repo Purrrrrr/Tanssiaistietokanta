@@ -8,6 +8,7 @@ import { EventSlide, EventSlideProps, startSlideId, useEventSlides } from '@/com
 import { LoadingState } from '@/components/LoadingState'
 import { SlideContainer } from '@/components/Slide'
 import { useSlideshowNavigation } from '@/components/Slide/useSlideshowNavigation'
+import { useT } from '@/i18n'
 import { useOnKeydown } from '@/utils/useOnKeydown'
 
 import { ProgramTitleSelector } from './-components/ProgramTitleSelector'
@@ -25,6 +26,7 @@ export const Route = createFileRoute(
 function RouteComponent() {
   const { eventId, eventVersionId } = Route.useParams()
   const { event, slides, refetch, loadingState } = useBallProgram(eventId, eventVersionId)
+  const t = useT('common')
 
   const [isEditing, setEditing] = useState(false)
   const onToggleEditing = () => setEditing(e => !e && canEdit)
@@ -52,7 +54,7 @@ function RouteComponent() {
     />
     <RequirePermissions requireRight="events:modify" entityId={eventId}>
       <div className="editor">
-        <Button className="close" minimal icon="cross" onClick={() => setEditing(false)} />
+        <Button className="close" minimal text={t('closeEditor')} iconOnly icon="cross" onClick={() => setEditing(false)} />
         <SlideEditor slide={slide} eventId={eventId} eventVersionId={eventVersionId} eventProgram={event?.program} />
       </div>
     </RequirePermissions>
@@ -88,12 +90,13 @@ export function BallProgramSlideView(
     slides, currentSlideId: slide.id, onChangeSlide: slide => goToSlide(slide.id),
   })
   const canEdit = useRight('events:modify', { entityId: event._id })
+  const t = useT('common')
 
   return <SlideContainer fullscreen={!isEditing || !canEdit} {...swipeHandlers}>
     <div className="controls">
       <ProgramTitleSelector value={slide.parentId ?? slide.id} onChange={id => goToSlide(id)}
         program={event.program} />
-      <Button requireRight="events:modify" entityId={event._id} minimal icon="edit" onClick={onToggleEditing} />
+      <Button requireRight="events:modify" entityId={event._id} minimal text={t(isEditing ? 'closeEditor' : 'edit')} iconOnly icon="edit" onClick={onToggleEditing} />
     </div>
     <EventSlide {...slide} key={slide.id} eventProgram={event.program} />
     {nextSlide && <EventSlide {...nextSlide} key={nextSlide.id} eventProgram={event.program} invisible />}

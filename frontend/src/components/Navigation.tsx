@@ -45,7 +45,8 @@ function LoginStatus() {
           <Button
             minimal
             icon={<Icon icon="person" className="mr-0.5 text-amber-600 mt-px" />}
-            tooltip={user.name}
+            text={user.name}
+            iconOnly
             {...props}
           />
         }

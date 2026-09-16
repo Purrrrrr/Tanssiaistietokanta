@@ -151,7 +151,7 @@ function AssignmentList({ formData, currentAssignments, event }: {
           enabled: hasWorkshops,
         },
       ]}
-      actions={(_, index) => <RemoveItemButton minimal icon="trash" path="assignments" index={index} tooltip={t('deleteAssignment')} />}
+      actions={(_, index) => <RemoveItemButton minimal icon="trash" path="assignments" index={index} text={t('deleteAssignment')} iconOnly />}
     />
     <Validate value={assignments} type="list" required />
     {target.__typename === 'Volunteer' && (

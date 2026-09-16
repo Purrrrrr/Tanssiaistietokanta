@@ -161,7 +161,7 @@ export function SortableItem<T, V>({ itemType, acceptsTypes, id, path, onChangeP
   }
 
   const dragHandle = useMemo(
-    () => <Button aria-label={moveItem} className="touch-none" icon="move" ref={setActivatorNodeRef} {...listeners} />,
+    () => <Button text={moveItem} iconOnly className="touch-none" icon="move" ref={setActivatorNodeRef} {...listeners} />,
     [listeners, setActivatorNodeRef, moveItem],
   )
 

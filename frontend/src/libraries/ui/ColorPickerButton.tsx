@@ -39,7 +39,8 @@ export function ColorPickerButton({ value, onChange, label, type }: ToolbarColor
         minimal
         {...props}
         paddingClass="p-2 -mx-1"
-        tooltip={label}
+        text={label}
+        iconOnly
         icon={<span className="size-4 rounded-sm border border-stone-400" style={colorStyle(value, type === 'stroke')} />}
       />
     }>

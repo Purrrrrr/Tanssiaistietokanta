@@ -94,8 +94,9 @@ function MenuToggle({ onClick }: { onClick: () => void }) {
     <Button
       minimal
       icon="menu"
+      text={useTranslation('navigation.menu')}
+      iconOnly
       onClick={onClick}
-      tooltip={useTranslation('navigation.menu')}
     />
   </div>
 }

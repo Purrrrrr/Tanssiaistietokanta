@@ -1,5 +1,6 @@
 import { Button } from '@/libraries/ui'
 import { CssClass } from '@/libraries/ui/classes'
+import { useCommonTranslation } from '@/libraries/ui/commonTranslations'
 
 import AutocompleteInput, { AutocompleteInputProps } from './AutocompleteInput'
 
@@ -59,5 +60,9 @@ export default function AutocompleteMultipleInput<T>({
 }
 
 function defaultRemoveRenderer<T>(_item: T, onRemove: () => void) {
-  return <Button minimal color="danger" onClick={onRemove} icon="cross" />
+  return <DefaultRemoveRenderer onRemove={onRemove} />
+}
+
+function DefaultRemoveRenderer({ onRemove }: { onRemove: () => void }) {
+  return <Button minimal color="danger" onClick={onRemove} text={useCommonTranslation('remove')} iconOnly icon="cross" />
 }

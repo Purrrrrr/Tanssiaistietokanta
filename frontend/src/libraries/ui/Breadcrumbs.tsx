@@ -3,6 +3,7 @@ import classNames from 'classnames'
 
 import { Button } from './Button'
 import { ColorClass } from './classes'
+import { useCommonT } from './commonTranslations'
 import { MenuButton } from './MenuButton'
 
 export function BreadcrumbsContainer({ label, children }: { label: string, children: React.ReactNode }) {
@@ -20,6 +21,7 @@ interface BreadcrumbLinkProps extends React.ComponentProps<typeof Link> {
 function BreadcrumbLink_({ text, children, menu, ...props }: BreadcrumbLinkProps) {
   const liClass = classNames('group flex items-center h-7.5 @max-sm:not-last:not-nth-last-2:hidden')
   const linkClass = 'flex items-center hover:text-link'
+  const t = useCommonT('')
   return <li className={liClass}>
     <Link
       inactiveProps={{ className: classNames(linkClass, ColorClass.textMuted) }}
@@ -35,7 +37,13 @@ function BreadcrumbLink_({ text, children, menu, ...props }: BreadcrumbLinkProps
         <MenuButton
           containerClassname="p-1"
           buttonRenderer={
-            props => <Button {...props} minimal paddingClass="p-1" icon={<img src="/breadcrumb-arrow.svg" alt="" className="size-4" />} />
+            props => <Button
+              {...props}
+              minimal
+              paddingClass="p-1"
+              text={t('subPages')}
+              iconOnly
+              icon={<img src="/breadcrumb-arrow.svg"alt="" className="size-4" />} />
           }
         >
           {menu}

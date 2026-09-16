@@ -24,7 +24,8 @@ export function SearchBar({ id, onChange, value, placeholder, emptySearchText }:
     />
     <Button
       className="absolute top-0 right-0 px-2 m-1 h-6"
-      tooltip={emptySearchText}
+      text={emptySearchText}
+      iconOnly
       minimal
       icon={<Icon icon="cross" className="text-gray-600" />}
       onClick={(e: MouseEvent<HTMLElement>) => {

@@ -174,7 +174,7 @@ export function FormationDiagramsSection({ dance, onModifyFormationDiagrams, cla
       items={dance.formationDiagrams}
       emptyText={t('noFormationDiagrams')}
       expandableContent={diagram => <FormationDiagramEditor formationDiagram={diagram} />}
-      expandButtonProps={{ tooltip: commonT('edit'), icon: 'edit' }}
+      expandButtonProps={{ text: commonT('edit'), icon: 'edit' }}
       labelTranslator={itemLabel}
       columns={[
         {
@@ -190,7 +190,8 @@ export function FormationDiagramsSection({ dance, onModifyFormationDiagrams, cla
         <Button
           minimal
           icon="cross"
-          tooltip={commonT('delete')}
+          text={commonT('delete')}
+          iconOnly
           color="danger"
           onClick={() => onModifyFormationDiagrams(dance.formationDiagrams.filter(fd => fd._id !== formationDiagram._id))}
         />

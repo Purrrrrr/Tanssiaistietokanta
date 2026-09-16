@@ -11,7 +11,7 @@ import { useT } from '@/i18n'
 
 import { documentListRoute } from './linkUtils'
 
-interface DeleteDocumentButtonProps extends ButtonProps {
+interface DeleteDocumentButtonProps extends Omit<ButtonProps, 'text'> {
   document: Pick<Document, '_id' | 'owner'>
   text?: string
   iconOnly?: boolean

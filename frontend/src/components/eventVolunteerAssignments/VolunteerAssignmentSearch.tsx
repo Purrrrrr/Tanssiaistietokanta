@@ -161,7 +161,8 @@ export function VolunteerAssignmentSearch({ id, value, onChange, eventId, eventV
     rightIcon={
       <Button
         minimal
-        tooltip={useTranslation('common.emptySearch')}
+        text={useTranslation('common.emptySearch')}
+        iconOnly
         icon={<Icon icon="cross" className="text-gray-600" />}
         onClick={() => onChange([])}
       />

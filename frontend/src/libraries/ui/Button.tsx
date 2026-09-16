@@ -8,8 +8,9 @@ import { buttonClass } from './buttonClass'
 import { Icon, type IconContent } from './Icon'
 
 export interface ButtonProps extends PermissionCheckedProps, Omit<ComponentProps<'button'>, 'children'> {
-  text?: React.ReactNode
+  text: React.ReactNode
   icon?: IconContent | null | false
+  iconOnly?: boolean // Is this a icon button without text? If so, we need to add a sr-only span for accessibility.
   rightIcon?: IconContent | null | false
   color?: Color
   minimal?: boolean
@@ -22,6 +23,7 @@ export const Button = withPermissionChecking(function Button(props: ButtonProps)
   const {
     type = 'button',
     text,
+    iconOnly,
     color = 'none',
     active,
     icon,
@@ -32,12 +34,15 @@ export const Button = withPermissionChecking(function Button(props: ButtonProps)
     tooltip,
     ...rest
   } = omitPermissionCheckingProps(props)
-  return <TooltipContainer tooltip={tooltip}>
+
+  return <TooltipContainer tooltip={tooltip ?? (iconOnly ? text : undefined)}>
     <button type={type} className={buttonClass(color, { active, className, minimal, paddingClass })} {...rest}>
       {icon && <Icon icon={icon} />}
-      {text}
+      {iconOnly
+        ? <span className="sr-only">{text}</span>
+        : text
+      }
       {rightIcon && <Icon icon={rightIcon} />}
-      {!text && tooltip && <span className="sr-only">{tooltip}</span>}
     </button>
   </TooltipContainer>
 })

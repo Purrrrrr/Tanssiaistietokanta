@@ -170,7 +170,7 @@ const ProgramItemEditor = React.memo(function ProgramItemEditor({ dragHandle, pa
     </div>
     <div className="text-right whitespace-nowrap">
       {dragHandle}
-      <RemoveItemButton path={path} index={itemIndex} title={t('buttons.remove')} icon="cross" className="deleteItem" />
+      <RemoveItemButton path={path} index={itemIndex} text={t('buttons.remove')} iconOnly icon="cross" className="deleteItem" />
     </div>
   </React.Fragment>
 })
@@ -222,7 +222,7 @@ function IntervalMusicEditor({ danceSetPath }: { danceSetPath: DanceSetPath }) {
     </div>
     <Field label={t('fields.intervalMusicDuration')} inline labelStyle="hidden" path={durationPath} component={DurationField} />
     <div className="text-right">
-      <Button title={t('buttons.remove')} color="danger" icon="cross" onClick={() => onSetIntervalMusic(null)} className="delete" />
+      <Button text={t('buttons.remove')} iconOnly color="danger" icon="cross" onClick={() => onSetIntervalMusic(null)} className="delete" />
     </div>
   </div>
 }

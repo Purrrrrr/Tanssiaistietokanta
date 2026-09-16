@@ -20,7 +20,7 @@ export function AddAssignmentWorkshopSelector({ workshops, value, onChange, ...p
     itemToString={v => v.name}
     placeholder={t('chooseWorkshop')}
     itemIcon={() => <Icon icon="build" className="text-red-700" />}
-    rightIcon={value && <ClearButton onClick={() => onChange(null)} aria-label={t('empty')} />}
+    rightIcon={value && <ClearButton onClick={() => onChange(null)} text={t('empty')} />}
     noResultsText={t('noResults')}
   />
 }

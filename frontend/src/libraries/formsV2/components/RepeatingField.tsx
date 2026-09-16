@@ -1,6 +1,7 @@
 import type { AnyType, FieldPath } from '../types'
 
 import { Button } from '@/libraries/ui'
+import { useCommonTranslation } from '@/libraries/ui/commonTranslations'
 
 import { type ConnectedFieldProps, ConnectedInput } from './ConnectedInput'
 import { type ListItem } from './dnd'
@@ -13,6 +14,7 @@ export type RepeatingFieldProps<Output extends Input & ListItem, Extra, Input, D
 export function RepeatingField<Output extends Input & ListItem, Extra, Input, Data = AnyType, AcceptedTypeDefs = null>(
   { label, path, component, accepts, itemType, ...extra }: RepeatingFieldProps<Output, Extra, Input, Data, AcceptedTypeDefs>,
 ) {
+  const removeStr = useCommonTranslation('remove')
   // TODO: flex as itemElement
   return <RepeatingSection label={label} path={path} accepts={accepts} itemType={itemType}>
     {({ dragHandle, id, path: itemPath, index, onRemove }) =>
@@ -23,7 +25,7 @@ export function RepeatingField<Output extends Input & ListItem, Extra, Input, Da
           component={component}
           {...extra as Extra & Omit<ConnectedFieldProps<Output, Extra, Input, Data>, 'path' | 'component'>} />
         {dragHandle}
-        <Button color="danger" icon="cross" onClick={onRemove} />
+        <Button color="danger" icon="cross" onClick={onRemove} text={removeStr} iconOnly />
       </div>
     }
   </RepeatingSection>

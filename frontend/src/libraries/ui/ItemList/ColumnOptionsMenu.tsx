@@ -20,6 +20,8 @@ export function ColumnOptionsMenu<T>({ sortableColumns, sort, setSort, hasAction
     <MenuButton
       containerClassname="font-normal"
       buttonProps={{
+        text: t('columnOptionsTitle'),
+        iconOnly: true,
         className: classNames('w-full justify-end pe-4', (hasActions || showToggleActions) || 'not-reflowed:hidden'),
         minimal: true,
         rightIcon: 'menu',

@@ -140,7 +140,7 @@ function EventsMenu({ event, showPopups }: { event: Event, showPopups?: boolean 
     <RequirePermissions requireRight="workshops:modify" context="events" contextId={event._id}>
       <MenuSection
         title={t('workshops')}
-        titleButton={showPopups && <AddWorkshopButton minimal event={event} tooltip={t('addWorkshop')} />}
+        titleButton={showPopups && <AddWorkshopButton minimal event={event} text={t('addWorkshop')} iconOnly />}
       >
         {event.workshops.map(workshop =>
           <MenuLink

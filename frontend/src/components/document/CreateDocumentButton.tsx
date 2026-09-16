@@ -7,7 +7,7 @@ import { ButtonProps } from '@/libraries/ui'
 import { AddButton } from '@/components/widgets/AddButton'
 import { useT } from '@/i18n'
 
-interface CreateDocumentButtonProps extends ButtonProps {
+interface CreateDocumentButtonProps extends Omit<ButtonProps, 'text'> {
   owner: DocumentOwner
   owningId: string
   onCreate?: (documentId: string) => void

@@ -23,7 +23,7 @@ export interface ItemListProps<T, Key = never> extends RowProps<T>, SelectorColu
 
 export interface ActionsColumnProps<T> {
   actions?: false | ActionsColumnOptions<T>['content'] | ActionsColumnOptions<T>
-  expandButtonProps?: ButtonProps | ((item: T, state: RowState) => ButtonProps)
+  expandButtonProps?: Partial<ButtonProps> | ((item: T, state: RowState) => Partial<ButtonProps>)
 }
 
 export interface ActionsColumnOptions<T> {

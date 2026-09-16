@@ -3,6 +3,7 @@ import type { ActionsColumnOptions, ActionsColumnProps } from '../types'
 import { Button } from '../../Button'
 import { Column, columnDefaults } from '../column'
 import { ColumnOptionsMenu } from '../ColumnOptionsMenu'
+import { useT } from '../i18n'
 import { ColumnVisibilityApi } from './useColumnVisibility'
 import { ItemListSortState } from './useItemSorting'
 
@@ -11,6 +12,7 @@ export function useActionsColumn<T extends { _id: string | number }>(
   visibilityApi: ColumnVisibilityApi<T>,
   { expandButtonProps, expandableContent, actions }: ActionsColumnProps<T> & { expandableContent?: unknown },
 ): Column<T> | null {
+  const t = useT('')
   const hasExpandableContent = expandableContent != null
   const hasActionsColumn = !!actions || sortApi.sortableColumns.length > 1 || hasExpandableContent
 
@@ -27,6 +29,8 @@ export function useActionsColumn<T extends { _id: string | number }>(
     content: (item, rowState) => <>
       {content?.(item, rowState.index)}
       {hasExpandableContent && <Button
+        iconOnly
+        text={t(rowState.expanded ? 'openDetails' : 'closeDetails')}
         {...(typeof expandButtonProps === 'function' ? expandButtonProps(item, rowState) : expandButtonProps)}
         minimal
         rightIcon={rowState.expanded ? 'chevronUp' : 'chevronDown'}

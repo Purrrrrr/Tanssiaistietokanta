@@ -118,11 +118,11 @@ function ShowcaseContents() {
         <div className="flex">
           <Field.Text label="Value" inline labelStyle="beside" path={`${path}.${index}.value`} />
           {dragHandle}
-          <Button color="danger" icon="cross" tooltip="Remove" onClick={onRemove} />
+          <Button color="danger" icon="cross" text="Remove" iconOnly onClick={onRemove} />
         </div>
       }
     </RepeatingSection>
-    <Button color="primary" icon="edit" tooltip="Edit" onClick={() => addItem('l', { _id: id(), value: '' })} />
+    <Button color="primary" icon="edit" text="Edit" iconOnly onClick={() => addItem('l', { _id: id(), value: '' })} />
     <Select
       aria-label="jotakin"
       items={choices}
@@ -138,11 +138,11 @@ function ShowcaseContents() {
         <div className="flex">
           <Field.Text label="Value" inline labelStyle="beside" path={`${path}.${index}.value`} />
           {dragHandle}
-          <Button color="danger" tooltip="Remove" icon="cross" onClick={onRemove} />
+          <Button color="danger" text="Remove" iconOnly icon="cross" onClick={onRemove} />
         </div>
       }
     </RepeatingSection>
-    <Button color="primary" icon="edit" onClick={() => addItem('l2', { _id: id(), value: '' })} />
+    <Button color="primary" icon="edit" text="Edit" iconOnly onClick={() => addItem('l2', { _id: id(), value: '' })} />
   </>
 }
 
