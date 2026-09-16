@@ -12,7 +12,7 @@ export function Card({ className, noPadding = false, marginClass, ...props }: Ca
   return <div
     {...props}
     className={classNames(
-      'bg-white border-1 border-gray-200 shadow-gray-300 shadow-xs',
+      'bg-white border border-gray-200 shadow-gray-300 shadow-xs',
       noPadding || 'p-6',
       marginClass ?? 'mb-4',
       className,

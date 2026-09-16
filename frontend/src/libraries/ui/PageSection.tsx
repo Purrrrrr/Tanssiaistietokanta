@@ -23,7 +23,7 @@ export function PageSection({ title, syncStatus, introText, toolbar, children, c
   return <section className={classNames('mb-10', className)}>
     <ToolbarContainer>
       <H2 className="">{title}</H2>
-      {syncStatus && <SyncStatus state={syncStatus} className="mt-[6px]" />}
+      {syncStatus && <SyncStatus state={syncStatus} className="mt-1.5" />}
       {introText && <>
         <div className="w-full" />
         <div>{introText}</div>

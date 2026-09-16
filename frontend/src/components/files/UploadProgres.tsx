@@ -27,7 +27,7 @@ export function UploadProgress({ file, state, progress: _progress, abort, error 
   const T = useT('components.files')
 
   return <>
-    <span title={file.name} className="overflow-hidden overflow-ellipsis">{file.name}</span>
+    <span title={file.name} className="overflow-hidden text-ellipsis">{file.name}</span>
     {state === 'pending' && <div className="col-span-2 font-semibold text-red-800">{T('pending')}</div>}
     {state === 'in-progress' && <ProgressBar progress={progress} />}
     {error && <div className="col-span-2 font-semibold text-red-800">{error}</div>}
@@ -47,7 +47,7 @@ function ProgressBar({ progress }: { progress: FetchRequestProgress }) {
   const ETA = (progress.total - progress.uploaded) / speed
 
   return <>
-    <div className="relative w-40 h-5 bg-white border-gray-400 inset-shadow-sm shadow-black border-1">
+    <div className="relative w-40 h-5 bg-white border-gray-400 inset-shadow-sm shadow-black border">
       <div style={{ width: percentage }} className="absolute top-0 left-0 h-full  bg-linear-to-r from-lime-400 to-amber-200 from-70%"></div>
       <span className="absolute inset-0 text-center">{filesize(progress.uploaded)}/{filesize(progress.total)}</span>
     </div>

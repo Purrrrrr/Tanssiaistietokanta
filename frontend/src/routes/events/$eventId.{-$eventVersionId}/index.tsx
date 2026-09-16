@@ -149,7 +149,7 @@ function WorkshopCard({ workshop }: { workshop: Workshop }) {
       <div className="text-lg">{teachers.map(teacher => teacher.name).join(', ')}</div>
     </div>
     <DocumentViewer className="px-6 mb-4" document={description} skipRenderOnEmpty />
-    <div className="flex flex-wrap items-stretch bg-gray-200 grow justify-stretch gap-[1px] pt-[1px]">
+    <div className="flex flex-wrap items-stretch bg-gray-200 grow justify-stretch gap-px pt-px">
       {instanceSpecificDances
         ? instances.map(instance =>
           <>

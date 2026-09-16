@@ -11,7 +11,7 @@ export default function DebugManager() {
 
   return <>
     <Button minimal className="p-2" onClick={() => setVisible(!visible)}>⚙</Button>
-    <div className={`fixed bottom-7.5 right-1.5  text-left bg-white border-stone-500 border-1 shadow-sm shadow-stone-600/50 p-2 transition-opacity ${visible ? '' : 'opacity-0 pointer-events-none'} p-2`}>
+    <div className={`fixed bottom-7.5 right-1.5  text-left bg-white border-stone-500 border shadow-sm shadow-stone-600/50 p-2 transition-opacity ${visible ? '' : 'opacity-0 pointer-events-none'} p-2`}>
       <Button minimal className="float-end p-2" onClick={() => setVisible(false)}>x</Button>
       <label>
         <input

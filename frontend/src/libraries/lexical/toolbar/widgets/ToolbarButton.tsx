@@ -14,7 +14,7 @@ export function ToolbarButton({ tooltip, text, ...props }: ToolbarButtonProps) {
     text={text}
     className={text
       ? ''
-      : 'grid justify-center items-center align-sub size-[30px] [font-size:18px]'
+      : 'grid justify-center items-center align-sub size-7.5 text-[18px]'
     }
   />
 }

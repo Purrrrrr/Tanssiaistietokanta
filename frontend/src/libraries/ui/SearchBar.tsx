@@ -15,7 +15,7 @@ interface SearchInputProps {
 
 export function SearchBar({ id, onChange, value, placeholder, emptySearchText }: SearchInputProps) {
   return <div id={id} className="relative">
-    <Search className="absolute top-0 left-0 text-gray-600 m-[7px] z-1" />
+    <Search className="absolute top-0 left-0 text-gray-600 m-1.75 z-1" />
     <input
       type="text"
       className={CssClass.input + ' px-7.5! w-full'}

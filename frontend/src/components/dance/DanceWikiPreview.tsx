@@ -44,7 +44,7 @@ export default function DanceWikiPreview({ dance }: DanceWikiPreviewProps) {
 
     </div>
     {hasInstructions && <Collapse isOpen={open}>
-      <div className="overflow-auto p-2 mt-2 bg-white border-gray-300 border-1 max-h-120">
+      <div className="overflow-auto p-2 mt-2 bg-white border-gray-300 border max-h-120">
         <DocumentViewer document={wikipage.content} customRenderers={{ link: WikiLink }} />
       </div>
     </Collapse>

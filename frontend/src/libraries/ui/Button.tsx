@@ -87,7 +87,7 @@ export function TooltipContainer({ children, tooltip }: TooltipContainerProps) {
 
   return <div className="tooltip-container inline">
     {children}
-    <div aria-hidden className="tooltip w-max bg-gray-50 border-gray-500 shadow-md p-[3px] border shadow-black/10">
+    <div aria-hidden className="tooltip w-max bg-gray-50 border-gray-500 shadow-md p-0.75 border shadow-black/10">
       {tooltip}
     </div>
   </div>

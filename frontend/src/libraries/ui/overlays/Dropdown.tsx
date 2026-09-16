@@ -47,7 +47,7 @@ export const Dropdown = ({ id, anchorElement, auto, arrow, children, open, onTog
     closedClassname="scale-y-0 scale-x-0 opacity-0"
     alwaysRenderChildren={alwaysRenderChildren}
   >
-    <div className="flex overflow-auto flex-col p-0.5 bg-white shadow-md border-1 border-gray-400/50 shadow-black/40 grow" tabIndex={tabIndex}>
+    <div className="flex overflow-auto flex-col p-0.5 bg-white shadow-md border border-gray-400/50 shadow-black/40 grow" tabIndex={tabIndex}>
       {children}
     </div>
     {arrow &&

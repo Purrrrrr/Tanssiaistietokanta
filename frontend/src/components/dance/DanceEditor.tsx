@@ -88,8 +88,8 @@ export function FullDanceEditorFields({ dance }: { dance: DanceWithEvents }) {
 function SlideWrapper({ dance, children }: { dance: Dance, children: React.ReactNode }) {
   return <div className="lg:grid grid-cols-2 grid-flow-col gap-3.5 items-stretch">
     <div className="flex flex-col">{children}</div>
-    <div className="min-h-100 mb-[15px]">
-      <div className="mb-[5px]">{useTranslation('domain.dance.descriptionPreview')}</div>
+    <div className="min-h-100 mb-4">
+      <div className="mb-1.25">{useTranslation('domain.dance.descriptionPreview')}</div>
       <DanceSlidePreview dance={dance} />
     </div>
   </div>

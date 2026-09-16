@@ -20,8 +20,8 @@ export default function PrintViewToolbar({ children, maxHeight }: PrintViewToolb
   >
     <button
       className={classNames(
-        'absolute top-3 right-3 p-2 rounded-full transition-[background,_opacity] hover:bg-white/50',
-        isOpen ? 'opacity-0' : 'opacity-80 delay-[0ms,_400ms]',
+        'absolute top-3 right-3 p-2 rounded-full transition-[background,opacity] hover:bg-white/50',
+        isOpen ? 'opacity-0' : 'opacity-80 delay-[0ms,400ms]',
       )}
       onFocus={() => setOpen(true)}
     >
@@ -29,7 +29,7 @@ export default function PrintViewToolbar({ children, maxHeight }: PrintViewToolb
     </button>
     <div
       className={classNames(
-        'overflow-y-auto p-2 max-h-20 transition max-w-[1200px]',
+        'overflow-y-auto p-2 max-h-20 transition max-w-300',
         isOpen || 'opacity-0 -translate-y-full',
       )}
       style={maxHeight ? { maxHeight } : undefined}

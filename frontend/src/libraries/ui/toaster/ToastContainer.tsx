@@ -17,7 +17,7 @@ export function ToastContainer() {
 
 function Toast({ onClose, closing, toast }: Omit<ToastData, 'id'>) {
   return <div className={classNames(
-    'flex items-start gap-2 shadow-lg shadow-stone-500/40 starting:opacity-0 transition-opacity border-1 border-black/50 rounded-sm',
+    'flex items-start gap-2 shadow-lg shadow-stone-500/40 starting:opacity-0 transition-opacity border border-black/50 rounded-sm',
     ColorClass.boxColors[toast.color ?? 'none'],
     closing && 'opacity-0',
   )}>

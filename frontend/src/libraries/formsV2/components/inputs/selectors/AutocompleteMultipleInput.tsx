@@ -35,7 +35,7 @@ export default function AutocompleteMultipleInput<T>({
         {icon}
         {value.map((item, index) =>
           <li
-            className="inline-flex items-center rounded-sm bg-neutral border-1 border-stone-300 ps-2 overflow-clip"
+            className="inline-flex items-center rounded-sm bg-neutral border border-stone-300 ps-2 overflow-clip"
             key={`${itemToString(item)}${index}}`}
           >
             {renderItem(item)}

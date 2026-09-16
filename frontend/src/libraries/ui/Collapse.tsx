@@ -19,7 +19,7 @@ export default function Collapse({ children, className, isOpen = false, keepChil
   return <div className={classNames(
     className,
     'grid transition-[grid-template-rows] duration-300',
-    isOpen ? '[grid-template-rows:1fr]' : '[grid-template-rows:0fr]',
+    isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]',
   )}>
     <div className={classNames('overflow-hidden', shouldrender && 'p-px')}>
       <Suspense fallback={<LoadingSpinner loadingMessage={loadingMessage} />}>

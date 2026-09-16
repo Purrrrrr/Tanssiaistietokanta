@@ -157,7 +157,7 @@ export default function ToolbarPlugin({ children, imageUpload }: ToolbarPluginPr
   return (
     <>
       {/* eslint-disable-next-line react/no-unknown-property */}
-      <div focusgroup="toolbar" className="flex flex-wrap gap-2 items-center p-1 border-b-1 border-stone-400">
+      <div focusgroup="toolbar" className="flex flex-wrap gap-2 items-center p-1 border-b border-stone-400">
         <ToolbarButton
           disabled={!canUndo}
           onClick={() => editor.dispatchCommand(UNDO_COMMAND, undefined)}
@@ -214,7 +214,7 @@ export default function ToolbarPlugin({ children, imageUpload }: ToolbarPluginPr
           onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'strikethrough')}
           active={isStrikethrough}
           tooltip={t('strikethrough')}>
-          <span className="relative after:block after:h-[3px] after:absolute after:top-[10px] after:-left-0.5 after:w-3.5 after:bg-black">S</span>
+          <span className="relative after:block after:h-0.75 after:absolute after:top-2.5 after:-left-0.5 after:w-3.5 after:bg-black">S</span>
         </ToolbarButton>
         <Divider />
         <ToolbarButton
@@ -282,10 +282,10 @@ function BlockTypeSelector({ blockType }: { blockType: BlockType }) {
 
   return <>
     <ToolbarButton active={blockType === 'h1'} onClick={() => applyHeading('h1')} tooltip={t('h1')}>
-      <span className="relative -left-1 text-xl size-4 leading-[16px]">H1</span>
+      <span className="relative -left-1 text-xl size-4 leading-4">H1</span>
     </ToolbarButton>
     <ToolbarButton active={blockType === 'h2'} onClick={() => applyHeading('h2')} tooltip={t('h2')}>
-      <span className="relative -left-1 text-base size-4 leading-[16px]">H2</span>
+      <span className="relative -left-1 text-base size-4 leading-4">H2</span>
     </ToolbarButton>
     <RegularSelect<BlockType>
       id="heading-select"

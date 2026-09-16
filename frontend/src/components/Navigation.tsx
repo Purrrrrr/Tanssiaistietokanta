@@ -27,7 +27,7 @@ function Navigation() {
         text={<span className="max-[450px]:sr-only">{T('navigation.dances')}</span>}
         tooltip={T('navigation.dances')}
       />
-      <div className="self-stretch mx-1 w-[1px] bg-stone-300" />
+      <div className="self-stretch mx-1 w-px bg-stone-300" />
       <LoginStatus />
     </div>
   </nav>

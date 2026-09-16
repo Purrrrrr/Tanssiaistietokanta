@@ -89,7 +89,7 @@ function ProgramListEditor({ path }: { path: ProgramSectionPath }) {
 
   return <>
     <div ref={accessibilityContainer} />
-    <div ref={tableRef} className="grid grid-cols-[min-content_1fr_min-content_min-content] *:even:not-last:bg-gray-100/80 *:border-t *:border-gray-200 *:grid *:grid-cols-subgrid *:col-span-full *:*:not-first:border-s-1 *:*:border-gray-200">
+    <div ref={tableRef} className="grid grid-cols-[min-content_1fr_min-content_min-content] *:even:not-last:bg-gray-100/80 *:border-t *:border-gray-200 *:grid *:grid-cols-subgrid *:col-span-full *:*:not-first:border-s *:*:border-gray-200">
       {(program.length + intervalMusicDuration) > 0 ?
         <div className="font-bold *:p-1.5">
           <div className="col-start-2 border-s">{t('columnTitles.name')}</div><div className="col-span-2">{t('columnTitles.duration')}</div>
