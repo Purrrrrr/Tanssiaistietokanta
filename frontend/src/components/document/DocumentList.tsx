@@ -76,7 +76,8 @@ export function DocumentList({ title, owner, owningId }: DocumentListProps) {
           icon="edit"
           to={editRoute}
           params={{ ...params, documentId: document._id }}
-          aria-label={t('editDocument')}
+          text={t('editDocument')}
+          iconOnly
           color="primary"
         />
       </>}

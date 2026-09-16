@@ -56,11 +56,14 @@ interface SlideNavigationProps { slideIndex: number, currentSlide: EventSlidePro
 
 function SlideNavigation(props: SlideNavigationProps) {
   const { slides, slideIndex } = props
+  const t = useT('components.eventSlideEditor')
 
   return <nav className="slideNavigation">
     {slideIndex > 0 &&
       <NavigateButton
         icon="chevronLeft"
+        text={t('previousSlide')}
+        iconOnly
         to="."
         params={{ slideId: slides[slideIndex - 1].id }}
         className="previous-slide-link"
@@ -70,6 +73,8 @@ function SlideNavigation(props: SlideNavigationProps) {
     {slideIndex < slides.length - 1 &&
       <NavigateButton
         icon="chevronRight"
+        text={t('nextSlide')}
+        iconOnly
         to="."
         params={{ slideId: slides[slideIndex + 1].id }}
         className="next-slide-link"

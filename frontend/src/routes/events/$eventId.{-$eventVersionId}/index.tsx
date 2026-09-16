@@ -131,6 +131,7 @@ function WorkshopCard({ workshop }: { workshop: Workshop }) {
   const params = Route.useParams()
   const formatDateTime = useFormatDateTime()
   const { abbreviation, name, instanceSpecificDances, instances, description, volunteerAssignments } = workshop
+  const t = useT('routes.events.event.index')
 
   const teachers = volunteerAssignments
     .filter(a => a.role.type === 'TEACHER')
@@ -144,7 +145,17 @@ function WorkshopCard({ workshop }: { workshop: Workshop }) {
           <> ({abbreviation})</>
         }
       </h2>
-      <NavigateButton className="-mt-2 -mr-4" paddingClass="p-3" minimal color="primary" icon={<Icon icon="edit" size={20} />} to="/events/$eventId/{-$eventVersionId}/workshops/$workshopId" params={{ ...params, workshopId: workshop._id }} />
+      <NavigateButton
+        className="-mt-2 -mr-4"
+        paddingClass="p-3"
+        minimal
+        color="primary"
+        icon={<Icon icon="edit" size={20} />}
+        iconOnly
+        text={t('editWorkshop')}
+        to="/events/$eventId/{-$eventVersionId}/workshops/$workshopId"
+        params={{ ...params, workshopId: workshop._id }}
+      />
       <div className="text-lg">{teachers.map(teacher => teacher.name).join(', ')}</div>
     </div>
     <DocumentViewer className="px-6 mb-4" document={description} skipRenderOnEmpty />

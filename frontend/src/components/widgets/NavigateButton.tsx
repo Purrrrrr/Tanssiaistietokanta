@@ -1,5 +1,4 @@
 import { LinkComponent } from '@tanstack/react-router'
-import React from 'react'
 
 import { omitPermissionCheckingProps, PermissionCheckedProps, withPermissionChecking } from '@/libraries/access-control'
 import { type Color, Link } from '@/libraries/ui'
@@ -7,8 +6,8 @@ import { buttonClass } from '@/libraries/ui/buttonClass'
 import { Icon, type IconContent } from '@/libraries/ui/Icon'
 
 interface NavigateButtonProps extends React.ComponentProps<typeof Link>, PermissionCheckedProps {
-  text?: string | React.ReactElement | React.ReactElement[]
-  children?: string | React.ReactElement | React.ReactElement[]
+  text: React.ReactNode
+  iconOnly?: boolean
   icon?: IconContent | false
   disabled?: boolean
   minimal?: boolean
@@ -17,13 +16,15 @@ interface NavigateButtonProps extends React.ComponentProps<typeof Link>, Permiss
 }
 
 const _NavigateButton = withPermissionChecking((props: NavigateButtonProps) => {
-  const { text, children, icon, disabled, minimal, color, className, paddingClass, ...rest } = omitPermissionCheckingProps(props)
+  const { text, icon, iconOnly, disabled, minimal, color, className, paddingClass, ...rest } = omitPermissionCheckingProps(props)
   const classes = buttonClass(color ?? 'none', { className, disabled, minimal, paddingClass })
 
   return <Link {...rest} unstyled className={classes} role="button" tabIndex={0} activeProps={{}}>
     {icon && <Icon icon={icon} />}
-    {text}
-    {children}
+    {iconOnly
+      ? <span className="sr-only">{text}</span>
+      : text
+    }
   </Link>
 })
 

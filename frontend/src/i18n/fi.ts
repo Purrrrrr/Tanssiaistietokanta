@@ -483,6 +483,8 @@ export const fi = {
       linkToCompleteDance: 'Tanssi tanssitietokannassa',
       currentItemAlwaysShownInLists: 'Huomaathan, että ollessaan tämänhetkinen dia näkyy tämä ohjelma settilistassa riippumatta näkyvyysasetuksesta.',
       danceTitle: 'Tanssin tiedot',
+      nextSlide: 'Seuraava dia',
+      previousSlide: 'Edellinen dia',
     },
     supportedBrowserWarning: {
       unsupportedBrowser: 'Selaimesi ei ole tuettu',
@@ -666,6 +668,7 @@ export const fi = {
           editProgram: 'Muokkaa tanssiaisohjelmaa',
           and: 'ja',
           editSlideShow: 'Muokkaa diashowta',
+          editWorkshop: 'Muokkaa työpajaa',
           noProgram: 'Ei ohjelmaa',
           requestedDance: {
             one: 'Toivetanssi',
