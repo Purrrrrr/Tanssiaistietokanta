@@ -16,7 +16,16 @@ export const anchorButtonShowcase = showcase({
   render: ({ disabled, icon, minimal, active }) =>
     <div className="flex flex-wrap gap-2">
       {colors.map(color =>
-        <AnchorButton key={color} href="#" color={color} minimal={minimal} icon={icon ? 'trash' : undefined} active={active} aria-disabled={disabled}>{titleCase(color)}</AnchorButton>,
+        <AnchorButton
+          key={color}
+          href="#"
+          color={color}
+          minimal={minimal}
+          icon={icon ? 'trash' : undefined}
+          active={active}
+          aria-disabled={disabled}
+          text={titleCase(color)}
+        />,
       )}
     </div>,
 })

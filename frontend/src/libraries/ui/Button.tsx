@@ -47,8 +47,9 @@ export const Button = withPermissionChecking(function Button(props: ButtonProps)
   </TooltipContainer>
 })
 
-export interface AnchorButtonProps extends PermissionCheckedProps, ComponentProps<'a'> {
-  text?: React.ReactNode
+export interface AnchorButtonProps extends PermissionCheckedProps, Omit<ComponentProps<'a'>, 'children'> {
+  text: React.ReactNode
+  iconOnly?: boolean // Same logic as in Button
   icon?: IconContent | null | false
   rightIcon?: IconContent | null | false
   color?: Color
@@ -59,8 +60,8 @@ export interface AnchorButtonProps extends PermissionCheckedProps, ComponentProp
 
 export const AnchorButton = withPermissionChecking(function Button(props: AnchorButtonProps) {
   const {
-    children,
     text,
+    iconOnly,
     color = 'none',
     active,
     icon,
@@ -72,10 +73,12 @@ export const AnchorButton = withPermissionChecking(function Button(props: Anchor
   } = omitPermissionCheckingProps(props)
   return <TooltipContainer tooltip={tooltip}>
     <a className={buttonClass(color, { active, className, minimal })} {...rest}>
-      {icon}
-      {text}
-      {children}
-      {rightIcon}
+      {icon && <Icon icon={icon} />}
+      {iconOnly
+        ? <span className="sr-only">{text}</span>
+        : text
+      }
+      {rightIcon && <Icon icon={rightIcon} />}
     </a>
   </TooltipContainer>
 })
