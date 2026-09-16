@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import classNames from 'classnames'
 
 import { Dance, DanceWithEvents, ID } from '@/types'
 
@@ -86,7 +87,7 @@ export function FullDanceEditorFields({ dance }: { dance: DanceWithEvents }) {
 
 function SlideWrapper({ dance, children }: { dance: Dance, children: React.ReactNode }) {
   return <div className="lg:grid grid-cols-2 grid-flow-col gap-3.5 items-stretch">
-    <div className="flex flex-col">{children}</div>
+    {children}
     <div className="min-h-100 mb-4">
       <div className="mb-1.25">{useTranslation('domain.dance.descriptionPreview')}</div>
       <DanceSlidePreview dance={dance} />
@@ -99,15 +100,19 @@ export interface InstructionEditorProps extends DocumentContentEditorProps {
   wikipage?: Pick<NonNullable<Dance['wikipage']>, 'content'> | null
 }
 
-export function InstructionEditor({ danceId, wikipage, ...props }: InstructionEditorProps) {
+export function InstructionEditor({ danceId, className, wikipage, ...props }: InstructionEditorProps) {
   const t = useT('components.danceEditor')
   const isMissingvalue = isEmptyDocument(props.value)
   const canCopyFromWiki = isMissingvalue && wikipage && !props.readOnly
   const copyInstructionsFromWiki = () => props.onChange(wikipage?.content ?? emptyDocument())
-  return <>
-    <DocumentContentEditor {...props} imageUpload={{ owner: 'dances', owningId: danceId, path: 'instructions' }} />
-    {canCopyFromWiki && <p className="pt-2"><Button color="primary" text={t('copyFromDancewiki')} onClick={copyInstructionsFromWiki} /></p>}
-  </>
+  return <div className={classNames(className, 'flex flex-col gap-2')}>
+    <DocumentContentEditor
+      {...props}
+      imageUpload={{ owner: 'dances', owningId: danceId, path: 'instructions' }}
+      className="grow"
+    />
+    {canCopyFromWiki && <Button color="primary" text={t('copyFromDancewiki')} onClick={copyInstructionsFromWiki} />}
+  </div>
 }
 
 function Suggestions(

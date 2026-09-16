@@ -34,9 +34,9 @@ import { IntervalMusicDefaultTextsSwitch } from './components/IntervalMusicDefau
 
 import './EventSlideEditor.scss'
 
-const docEditorProps = (eventId: string) => ({
+const docEditorProps = (eventId?: string) => ({
   className: 'min-h-[max(30dvh,300px)]',
-  imageUpload: { owner: 'events', owningId: eventId } as const,
+  imageUpload: eventId ? { owner: 'events', owningId: eventId } as const : undefined,
 })
 
 type EventSlideEditorProps = WithEventProgram<EventSlideProps>
@@ -261,7 +261,7 @@ function DanceEditor({ id, initialDance }: { id: string, initialDance?: Pick<Dan
         <SyncStatus className="top-0.75 grow" state={state} />
       </div>
       <DanceInput label={label('name')} path="name" />
-      <DanceField label={label('description')} path="description" component={InstructionEditor} componentProps={{ danceId: dance._id, wikipage: dance.wikipage, ...docEditorProps }} />
+      <DanceField label={label('description')} path="description" component={InstructionEditor} componentProps={{ danceId: dance._id, wikipage: dance.wikipage, ...docEditorProps() }} />
 
       <p className="flex gap-3.5">
         {dance.wikipageName &&
