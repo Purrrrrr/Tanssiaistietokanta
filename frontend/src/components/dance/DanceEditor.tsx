@@ -111,7 +111,7 @@ export function InstructionEditor({ danceId, className, wikipage, ...props }: In
       imageUpload={{ owner: 'dances', owningId: danceId, path: 'instructions' }}
       className="grow"
     />
-    {canCopyFromWiki && <Button color="primary" text={t('copyFromDancewiki')} onClick={copyInstructionsFromWiki} />}
+    {canCopyFromWiki && <Button className="self-start" color="primary" text={t('copyFromDancewiki')} onClick={copyInstructionsFromWiki} />}
   </div>
 }
 
