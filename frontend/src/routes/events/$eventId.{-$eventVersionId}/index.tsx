@@ -162,12 +162,10 @@ function WorkshopCard({ workshop }: { workshop: Workshop }) {
     <div className="flex flex-wrap items-stretch bg-gray-200 grow justify-stretch gap-px pt-px">
       {instanceSpecificDances
         ? instances.map(instance =>
-          <>
-            <div key={instance._id} className="p-6 bg-white grow">
-              <h3 className="mb-3 text-base font-bold">{formatDateTime(new Date(instance.dateTime))}</h3>
-              <DanceList dances={instance.dances ?? []} />
-            </div>
-          </>,
+          <div key={instance._id} className="p-6 bg-white grow">
+            <h3 className="mb-3 text-base font-bold">{formatDateTime(new Date(instance.dateTime))}</h3>
+            <DanceList dances={instance.dances ?? []} />
+          </div>,
         )
         : <div className="p-6 bg-white grow">
           <h3 className="mb-3 text-base font-bold">{instances.map(instance => formatDateTime(new Date(instance.dateTime))).join(', ')}</h3>
