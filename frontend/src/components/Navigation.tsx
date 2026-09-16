@@ -43,9 +43,12 @@ function LoginStatus() {
     return <span>
       <MenuButton
         buttonRenderer={props =>
-          <Button minimal icon={<User className="mr-0.5 text-amber-600 mt-px" />} tooltip={user.name} {...props}>
-            <span className="max-[450px]:sr-only">{user.name}</span>
-          </Button>
+          <Button
+            minimal
+            icon={<User className="mr-0.5 text-amber-600 mt-px" />}
+            tooltip={user.name}
+            {...props}
+          />
         }
       >
         <MenuButton.ItemLink to="/users" text={t('userSettings')} />

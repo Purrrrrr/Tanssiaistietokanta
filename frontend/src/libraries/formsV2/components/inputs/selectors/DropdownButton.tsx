@@ -33,11 +33,10 @@ export function DropdownButton<T>(
     active={buttonProps['aria-expanded']}
     aria-label={ariaLabel}
     disabled={readOnly}
+    icon={itemIcon?.(value)}
     rightIcon={<CaretDown />}
-  >
-    {itemIcon?.(value)}
-    {selectedItemRenderer(value) ?? placeholder}
-  </Button>
+    text={selectedItemRenderer(value) ?? placeholder}
+  />
 }
 
 function useDropdownButtonLabel(chosenValue: string, ariaLabel?: string) {

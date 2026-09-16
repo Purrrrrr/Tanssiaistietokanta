@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { Button } from '@/libraries/ui'
+import { Button, DialogCloseButton } from '@/libraries/ui'
 import { enableNamespaces, getKnownNamespaces } from '@/utils/debug'
 
 export default function DebugManager() {
@@ -10,9 +10,15 @@ export default function DebugManager() {
   const [visible, setVisible] = useState(false)
 
   return <>
-    <Button minimal className="p-2" onClick={() => setVisible(!visible)}>⚙</Button>
+    <Button
+      minimal
+      className="p-2"
+      onClick={() => setVisible(!visible)}
+      text="⚙"
+      tooltip="Debug manager"
+    />
     <div className={`fixed bottom-7.5 right-1.5  text-left bg-white border-stone-500 border shadow-sm shadow-stone-600/50 p-2 transition-opacity ${visible ? '' : 'opacity-0 pointer-events-none'} p-2`}>
-      <Button minimal className="float-end p-2" onClick={() => setVisible(false)}>x</Button>
+      <DialogCloseButton aria-label="Close debug manager" className="float-end" onClick={() => setVisible(false)} />
       <label>
         <input
           id="debug_styles"

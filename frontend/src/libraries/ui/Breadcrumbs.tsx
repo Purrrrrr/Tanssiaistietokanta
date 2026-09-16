@@ -35,7 +35,7 @@ function BreadcrumbLink_({ text, children, menu, ...props }: BreadcrumbLinkProps
         <MenuButton
           containerClassname="p-1"
           buttonRenderer={
-            props => <Button {...props} minimal paddingClass="p-1"><img src="/breadcrumb-arrow.svg" alt="" className="size-4" /></Button>
+            props => <Button {...props} minimal paddingClass="p-1" icon={<img src="/breadcrumb-arrow.svg" alt="" className="size-4" />} />
           }
         >
           {menu}

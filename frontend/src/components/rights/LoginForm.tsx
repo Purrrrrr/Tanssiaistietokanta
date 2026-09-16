@@ -38,7 +38,7 @@ export function LoginForm({ redirectTo, defaultRedirectTo, onSuccess }: { redire
       <Input path="username" label={t('username')} required />
       <Input path="password" label={t('password')} required componentProps={{ type: 'password' }} />
     </div>
-    <Button color="primary" type="submit">{t('login')}</Button>
+    <Button color="primary" type="submit" text={t('login')} />
   </Form>
 }
 

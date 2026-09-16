@@ -29,7 +29,7 @@ export function VersionSidebarToggle({ id, versionId, entityId, entityType, toVe
     icon={<History />}
     minimal
     className="float-right"
-    onClick={() => toggleSidebar({ buttonId, entityId, versionId, entityType, toVersionLink })}>
-    {useTranslation('versioning.versionHistory')}
-  </Button>
+    onClick={() => toggleSidebar({ buttonId, entityId, versionId, entityType, toVersionLink })}
+    text={useTranslation('versioning.versionHistory')}
+  />
 }

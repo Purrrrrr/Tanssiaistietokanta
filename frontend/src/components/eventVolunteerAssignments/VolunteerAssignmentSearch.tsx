@@ -162,7 +162,7 @@ export function VolunteerAssignmentSearch({ id, value, onChange, eventId, eventV
     rightIcon={
       <Button
         minimal
-        aria-label={useTranslation('common.emptySearch')}
+        tooltip={useTranslation('common.emptySearch')}
         icon={<Cross className="text-gray-600" />}
         onClick={() => onChange([])}
       />

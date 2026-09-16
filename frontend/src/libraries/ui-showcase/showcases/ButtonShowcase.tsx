@@ -23,9 +23,9 @@ export const buttonShowcase = showcase({
           minimal={minimal}
           icon={icon ? <Trash /> : undefined}
           tooltip={tooltip ? 'A long tooltip' : undefined}
-          disabled={disabled}>
-          {titleCase(color)}
-        </Button>,
+          disabled={disabled}
+          text={titleCase(color)}
+        />,
       )}
     </div>,
 })

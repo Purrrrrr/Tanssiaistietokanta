@@ -90,9 +90,9 @@ export function useTableToolbar(editor: LexicalEditor): ToolbarHookReturn {
         key="insertTable"
         onClick={() => { setIsTableInsertMode(true) }}
         active={isTableInsertMode}
-        tooltip={t('insertTable')}>
-        <TableIcon />
-      </ToolbarButton>
+        tooltip={t('insertTable')}
+        icon={<TableIcon />}
+      />
     ),
     otherElements: isInTable && <>
       <FloatingToolbar anchorName={rowAnchorName} side="right">
@@ -104,7 +104,7 @@ export function useTableToolbar(editor: LexicalEditor): ToolbarHookReturn {
         <ToolbarButton onClick={deleteColumn} tooltip={t('deleteColumn')} color="danger" icon={<RemoveColumn />} />
       </FloatingToolbar>
       <FloatingToolbar anchorName={tableAnchorName} side="bottom right">
-        <Button minimal color="danger" onClick={removeTable}>{t('deleteTable')}</Button>
+        <Button minimal color="danger" onClick={removeTable} text={t('deleteTable')} />
       </FloatingToolbar>
     </>,
     floatingEditor: <>

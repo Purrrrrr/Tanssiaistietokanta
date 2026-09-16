@@ -60,5 +60,5 @@ export default function AutocompleteMultipleInput<T>({
 }
 
 function defaultRemoveRenderer<T>(_item: T, onRemove: () => void) {
-  return <Button minimal color="danger" onClick={onRemove}><Cross /></Button>
+  return <Button minimal color="danger" onClick={onRemove} icon={<Cross />} />
 }

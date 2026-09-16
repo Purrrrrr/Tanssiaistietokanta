@@ -42,9 +42,8 @@ export function SlideStyleSelector({
         {...props}
         icon={<SlideStyleBox value={style} />}
         rightIcon={<DoubleCaretVertical />}
-      >
-        {text}
-      </Button>
+        text={text}
+      />
     }
   />
 }

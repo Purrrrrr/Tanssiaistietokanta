@@ -10,7 +10,12 @@ export const toastsShowcase = showcase({
   props: {},
   render: () => <div className="flex gap-2">
     {colors.map(color =>
-      <Button key={color} color={color} onClick={() => showToast({ message: 'This is toast', color })}>Show toast</Button>,
+      <Button
+        key={color}
+        color={color}
+        onClick={() => showToast({ message: 'This is toast', color })}
+        text="Show toast"
+      />,
     )}
   </div>,
 })

@@ -15,7 +15,11 @@ export function StrokeWidthInput({ value, onChange, label }: { value: number, on
       <label htmlFor={id}>
         <StrokeWidthIcon />
       </label>
-      <Button minimal onClick={() => { onChange(Math.max(0, value - 1)); inputRef.current?.focus() }}>-</Button>
+      <Button
+        minimal
+        onClick={() => { onChange(Math.max(0, value - 1)); inputRef.current?.focus() }}
+        text="-"
+      />
       <input
         ref={inputRef}
         id={id}
@@ -29,9 +33,11 @@ export function StrokeWidthInput({ value, onChange, label }: { value: number, on
         }}
         className={classNames(CssClass.inputAppearance, 'text-center p-1 field-sizing-content align-baseline hide-arrows')}
       />
-      <Button minimal onClick={() => { onChange(value + 1); inputRef.current?.focus() }}>
-              +
-      </Button>
+      <Button
+        minimal
+        onClick={() => { onChange(value + 1); inputRef.current?.focus() }}
+        text="+"
+      />
     </div>
   </TooltipContainer>
 }

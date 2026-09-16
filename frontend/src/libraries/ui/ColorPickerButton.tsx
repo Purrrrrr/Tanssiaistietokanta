@@ -40,9 +40,8 @@ export function ColorPickerButton({ value, onChange, label, type }: ToolbarColor
         {...props}
         paddingClass="p-2 -mx-1"
         tooltip={label}
-      >
-        <span className="size-4 rounded-sm border border-stone-400" style={colorStyle(value, type === 'stroke')} />
-      </Button>
+        icon={<span className="size-4 rounded-sm border border-stone-400" style={colorStyle(value, type === 'stroke')} />}
+      />
     }>
       <div className="grid sm:grid-cols-7 grid-cols-3 gap-1 p-1">
         <ColorButton

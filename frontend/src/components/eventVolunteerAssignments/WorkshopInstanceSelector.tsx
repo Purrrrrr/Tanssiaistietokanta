@@ -21,9 +21,8 @@ export function WorkshopInstanceSelector({ workshopInstances, readOnly, value, o
       disabled={readOnly}
       selected={value == null}
       onClick={() => onChange(null)}
-    >
-      {t('allInstances')}
-    </ModeButton>
+      text={t('allInstances')}
+    />
     {workshopInstances.map((instance, index) => {
       const selected = value?.includes(instance._id) ?? false
       return (
@@ -36,9 +35,9 @@ export function WorkshopInstanceSelector({ workshopInstances, readOnly, value, o
               ? value?.filter(id => id !== instance._id) ?? null
               : [...(value ?? []), instance._id],
           )}
-        >
-          {workshopInstanceName(index, instance)}
-        </ModeButton>
+          text={workshopInstanceName(index, instance)}
+
+        />
       )
     })}
   </ModeSelector>

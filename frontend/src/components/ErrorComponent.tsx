@@ -19,6 +19,6 @@ export default function ErrorComponent(props: ErrorComponentProps) {
   }
   return <NavigationLayout>
     <DefaultErrorComponent {...props} />
-    <Button onClick={reset}>Try again</Button>
+    <Button onClick={reset} text={t('components.loadingState.tryAgain')} />
   </NavigationLayout>
 }

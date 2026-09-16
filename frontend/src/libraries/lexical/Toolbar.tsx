@@ -161,88 +161,88 @@ export default function ToolbarPlugin({ children, imageUpload }: ToolbarPluginPr
         <ToolbarButton
           disabled={!canUndo}
           onClick={() => editor.dispatchCommand(UNDO_COMMAND, undefined)}
-          tooltip={t('undo')}>
-          <Undo />
-        </ToolbarButton>
+          tooltip={t('undo')}
+          icon={<Undo />}
+        />
         <ToolbarButton
           disabled={!canRedo}
           onClick={() => editor.dispatchCommand(REDO_COMMAND, undefined)}
-          tooltip={t('redo')}>
-          <Redo />
-        </ToolbarButton>
+          tooltip={t('redo')}
+          icon={<Redo />}
+        />
         <Divider />
         <BlockTypeSelector blockType={blockType} />
         <Divider />
         <ToolbarButton
           onClick={() => toggleList('bullet')}
           active={blockType === 'bullet'}
-          tooltip={t('bulletList')}>
-          <UnorderedListIcon />
-        </ToolbarButton>
+          tooltip={t('bulletList')}
+          icon={<UnorderedListIcon />}
+        />
         <ToolbarButton
           onClick={() => toggleList('number')}
           active={blockType === 'number'}
-          tooltip={t('numberedList')}>
-          <OrderedListIcon />
-        </ToolbarButton>
+          tooltip={t('numberedList')}
+          icon={<OrderedListIcon />}
+        />
         <ToolbarButton
           onClick={() => toggleList('check')}
           active={blockType === 'check'}
-          tooltip={t('checkboxList')}>
-          <CheckListIcon />
-        </ToolbarButton>
+          tooltip={t('checkboxList')}
+          icon={<CheckListIcon />}
+        />
         <Divider />
         <ToolbarButton
           onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'bold')}
           active={isBold}
-          tooltip={t('bold')}>
-          <span className="font-bold">B</span>
-        </ToolbarButton>
+          tooltip={t('bold')}
+          icon={<span className="font-bold">B</span>}
+        />
         <ToolbarButton
           onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'italic')}
           active={isItalic}
-          tooltip={t('italic')}>
-          <span className="italic -skew-6">i</span>
-        </ToolbarButton>
+          tooltip={t('italic')}
+          icon={<span className="italic -skew-6">i</span>}
+        />
         <ToolbarButton
           onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'underline')}
           active={isUnderline}
-          tooltip={t('underline')}>
-          <span className="underline decoration-2">U</span>
-        </ToolbarButton>
+          tooltip={t('underline')}
+          icon={<span className="underline decoration-2">U</span>}
+        />
         <ToolbarButton
           onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'strikethrough')}
           active={isStrikethrough}
-          tooltip={t('strikethrough')}>
-          <span className="relative after:block after:h-0.75 after:absolute after:top-2.5 after:-left-0.5 after:w-3.5 after:bg-black">S</span>
-        </ToolbarButton>
+          tooltip={t('strikethrough')}
+          icon={<span className="relative after:block after:h-0.75 after:absolute after:top-2.5 after:-left-0.5 after:w-3.5 after:bg-black">S</span>}
+        />
         <Divider />
         <ToolbarButton
           onClick={() => editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'left')}
-          tooltip={t('leftAlign')}>
-          <AlignLeft />
-        </ToolbarButton>
+          tooltip={t('leftAlign')}
+          icon={<AlignLeft />}
+        />
         <ToolbarButton
           onClick={() => editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'center')}
-          tooltip={t('centerAlign')}>
-          <AlignCenter />
-        </ToolbarButton>
+          tooltip={t('centerAlign')}
+          icon={<AlignCenter />}
+        />
         <ToolbarButton
           onClick={() => editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'right')}
-          tooltip={t('rightAlign')}>
-          <AlignRight />
-        </ToolbarButton>
+          tooltip={t('rightAlign')}
+          icon={<AlignRight />}
+        />
         <ToolbarButton
           onClick={() => editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'justify')}
-          tooltip={t('justifyAlign')}>
-          <AlignJustify />
-        </ToolbarButton>
+          tooltip={t('justifyAlign')}
+          icon={<AlignJustify />}
+        />
         <ToolbarButton
           onClick={() => editor.dispatchCommand(INSERT_LAYOUT_COMMAND, '1fr 1fr')}
           active={isItalic}
-          tooltip={t('insertTwoColumnLayout')}>
-          <LayoutTwoColumns />
-        </ToolbarButton>
+          tooltip={t('insertTwoColumnLayout')}
+          icon={<LayoutTwoColumns />}
+        />
         <Divider />
         {tools.map(tool => tool.button)}
       </div>
@@ -281,12 +281,16 @@ function BlockTypeSelector({ blockType }: { blockType: BlockType }) {
   }
 
   return <>
-    <ToolbarButton active={blockType === 'h1'} onClick={() => applyHeading('h1')} tooltip={t('h1')}>
-      <span className="relative -left-1 text-xl size-4 leading-4">H1</span>
-    </ToolbarButton>
-    <ToolbarButton active={blockType === 'h2'} onClick={() => applyHeading('h2')} tooltip={t('h2')}>
-      <span className="relative -left-1 text-base size-4 leading-4">H2</span>
-    </ToolbarButton>
+    <ToolbarButton
+      active={blockType === 'h1'}
+      onClick={() => applyHeading('h1')} tooltip={t('h1')}
+      icon={<span className="relative -left-1 text-xl size-4 leading-4">H1</span>}
+    />
+    <ToolbarButton
+      active={blockType === 'h2'}
+      onClick={() => applyHeading('h2')} tooltip={t('h2')}
+      icon={<span className="relative -left-1 text-base size-4 leading-4">H2</span>}
+    />
     <RegularSelect<BlockType>
       id="heading-select"
       minimal

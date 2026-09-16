@@ -6,7 +6,7 @@ import { omitPermissionCheckingProps, PermissionCheckedProps, withPermissionChec
 
 import { buttonClass } from './buttonClass'
 
-export interface ButtonProps extends PermissionCheckedProps, ComponentProps<'button'> {
+export interface ButtonProps extends PermissionCheckedProps, Omit<ComponentProps<'button'>, 'children'> {
   text?: React.ReactNode
   icon?: React.ReactNode
   rightIcon?: React.ReactNode
@@ -20,7 +20,6 @@ export interface ButtonProps extends PermissionCheckedProps, ComponentProps<'but
 export const Button = withPermissionChecking(function Button(props: ButtonProps) {
   const {
     type = 'button',
-    children,
     text,
     color = 'none',
     active,
@@ -36,8 +35,8 @@ export const Button = withPermissionChecking(function Button(props: ButtonProps)
     <button type={type} className={buttonClass(color, { active, className, minimal, paddingClass })} {...rest}>
       {icon}
       {text}
-      {children}
       {rightIcon}
+      {!text && tooltip && <span className="sr-only">{tooltip}</span>}
     </button>
   </TooltipContainer>
 })

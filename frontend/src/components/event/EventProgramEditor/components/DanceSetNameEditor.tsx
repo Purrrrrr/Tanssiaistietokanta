@@ -21,7 +21,7 @@ export function DanceSetNameEditor({ itemIndex }: { itemIndex: number }) {
       color="primary"
       minimal
       icon={editingName ? <Cross /> : <Edit />}
-      title={buttonTitle}
+      tooltip={buttonTitle}
       aria-label={buttonTitle}
       onClick={() => setEditingName(!editingName)}
     />

@@ -29,8 +29,7 @@ export function SortButton({ sortKey, currentSort, onSort, className, children, 
     minimal
     className={classNames(className, 'flex gap-1 items-center w-full')}
     tooltip={tooltip}
-  >
-    {children}
-    {isCurrent && <CaretDown className={classNames('transition-transform', isAscending && 'rotate-180')} />}
-  </Button>
+    text={children}
+    rightIcon={isCurrent && <CaretDown className={classNames('transition-transform', isAscending && 'rotate-180')} />}
+  />
 }

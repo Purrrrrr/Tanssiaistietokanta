@@ -92,9 +92,12 @@ const renderComponent = (Crumb: () => React.ReactNode, key: string) => <Crumb ke
 
 function MenuToggle({ onClick }: { onClick: () => void }) {
   return <div className="flex flex-col justify-end p-2">
-    <Button minimal icon={<MenuHamburger />} onClick={onClick}>
-      <span className="sr-only">{useTranslation('navigation.menu')}</span>
-    </Button>
+    <Button
+      minimal
+      icon={<MenuHamburger />}
+      onClick={onClick}
+      tooltip={useTranslation('navigation.menu')}
+    />
   </div>
 }
 
