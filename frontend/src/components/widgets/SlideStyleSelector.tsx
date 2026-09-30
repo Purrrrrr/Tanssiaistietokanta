@@ -40,7 +40,7 @@ export function SlideStyleSelector({
       <Button
         {...props}
         icon={<SlideStyleBox value={style} />}
-        rightIcon="doubleCaretVertical"
+        rightIcon="caretDown"
         text={text}
       />
     }

@@ -20,7 +20,6 @@ const iconComponents = {
   cog: lazy(() => import('@blueprintjs/icons/lib/esm/generated/components/cog')),
   cross: lazy(() => import('@blueprintjs/icons/lib/esm/generated/components/cross')),
   documentOpen: lazy(() => import('@blueprintjs/icons/lib/esm/generated/components/document-open')),
-  doubleCaretVertical: lazy(() => import('@blueprintjs/icons/lib/esm/generated/components/double-caret-vertical')),
   doubleChevronUp: lazy(() => import('@blueprintjs/icons/lib/esm/generated/components/double-chevron-up')),
   edit: lazy(() => import('@blueprintjs/icons/lib/esm/generated/components/edit')),
   envelope: lazy(() => import('@blueprintjs/icons/lib/esm/generated/components/envelope')),
@@ -62,10 +61,21 @@ const iconComponents = {
 }
 
 export type IconName = keyof typeof iconComponents
-export type IconContent = IconName | Exclude<Extract<React.ReactNode, object>, Iterable<React.ReactNode>>
+export type IconContent = undefined | null | IconName | Exclude<Extract<React.ReactNode, object>, Iterable<React.ReactNode>> | {
+  icon: IconName
+} & SVGIconProps
 
 export function Icon({ icon, ...props }: { icon: IconContent } & SVGIconProps) {
+  if (icon == null) return null
   if (typeof icon !== 'string') {
+    if ('icon' in icon) {
+      return props.className
+        ? <span className={props.className}><Icon {...icon} /></span>
+        : Icon(icon)
+    }
+    if (props.className) {
+      return <span className={props.className}>{icon}</span>
+    }
     return icon
   }
   const IconComponent = iconComponents[icon]

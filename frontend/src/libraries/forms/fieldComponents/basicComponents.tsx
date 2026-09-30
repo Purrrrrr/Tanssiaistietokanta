@@ -4,6 +4,7 @@ import classNames from 'classnames'
 import { ExtendedFieldComponentProps, FieldComponentProps, FieldPropsWithoutComponent } from '../types'
 
 import { Switch, TextInput } from '@/libraries/formsV2/components/inputs'
+import { Icon, IconContent } from '@/libraries/ui'
 import { CssClass } from '@/libraries/ui/classes'
 
 import { Field, useFieldData } from '../Field'
@@ -74,14 +75,15 @@ export function TextArea({ value, onChange, inline: _ignored, className, ...prop
 
 interface RadioGroupProps<E extends string | null> extends FieldComponentProps<E> {
   options: readonly E[]
-  optionIcon?: (option: E) => React.ReactNode
+  optionIcon?: (option: E) => IconContent | null
   optionToString: (option: E) => string
   vertical?: boolean
 }
 
 export function RadioGroup<E extends string>({ vertical, options, optionToString, optionIcon, readOnly, id, value, onChange, ...rest }: RadioGroupProps<E>) {
-  return options.map(optionValue =>
-    <label key={optionValue} className={classNames(vertical ? 'flex' : 'inline-flex', 'h-7.5 items-center mx-2 hover:bg-gray-100 cursor-pointer')}>
+  return options.map(optionValue => {
+    const icon = optionIcon?.(optionValue)
+    return <label key={optionValue} className={classNames(vertical ? 'flex' : 'inline-flex', 'h-7.5 items-center mx-2 hover:bg-gray-100 cursor-pointer')}>
       <input
         className="me-1"
         type="radio"
@@ -93,10 +95,11 @@ export function RadioGroup<E extends string>({ vertical, options, optionToString
         disabled={readOnly}
         {...rest}
       />
-      {optionIcon
-        ? <span className="ms-1.5 me-1">{optionIcon(optionValue)}</span>
+      {icon
+        ? <span className="ms-1.5 me-1"><Icon icon={icon} /></span>
         : null}
       {optionToString(optionValue)}
-    </label>,
+    </label>
+  },
   )
 }

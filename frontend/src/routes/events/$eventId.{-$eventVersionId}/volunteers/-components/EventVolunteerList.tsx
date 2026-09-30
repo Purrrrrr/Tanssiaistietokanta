@@ -75,7 +75,9 @@ export function EventVolunteerList({ eventVolunteers, readOnly, currentRole, onS
             {(getTasksRoles(ev)).map(role => (
               <RoleTag
                 key={role._id}
-                icon={role.assigned ? <AssignedRoleIcon label={label('assigned')} /> : <InterestedRoleIcon label={label('interested')} />}
+                icon={role.assigned
+                  ? <AssignedRoleIcon label={label('assigned')} />
+                  : <InterestedRoleIcon label={label('interested')} />}
                 role={role}
                 selected={currentRole ? currentRole === role._id : undefined}
                 onSetRole={onSetRole}

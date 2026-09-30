@@ -2,6 +2,8 @@ import { createLink } from '@tanstack/react-router'
 import { Children, cloneElement, KeyboardEventHandler, useRef, useState } from 'react'
 import classNames from 'classnames'
 
+import { Icon, IconContent } from './Icon'
+
 export interface TabsProps {
   className?: string
   children?: React.ReactNode
@@ -109,7 +111,7 @@ export interface TabProps {
   title?: React.ReactNode
   href?: string
   /** An icon element to render before the children. */
-  icon?: React.ReactElement
+  icon?: IconContent
   onClick?: () => void
   panel?: React.ReactNode
 }
@@ -127,13 +129,13 @@ export function Tab({ title, href, icon, disabled, selected = false, panelId, pa
 
   if (href && !disabled) {
     return <a href={href} {...commonProps}>
-      {icon}
+      <Icon icon={icon} />
       {title}
     </a>
   }
 
   return <button {...commonProps} disabled={disabled}>
-    {icon}
+    <Icon icon={icon} />
     {title}
   </button>
 }

@@ -17,7 +17,7 @@ export interface SelectorProps<T> extends FieldInputComponentProps<T, T> {
   itemCategory?: (item: T) => string
   categoryTitleRenderer?: (category: string) => ReactNode
   itemRenderer?: (item: T) => ReactNode
-  itemIcon?: (item: T) => IconContent | null
+  itemIcon?: (item: T) => IconContent
   containerClassname?: string
   itemClassName?: string
   hilightedItemClassName?: string

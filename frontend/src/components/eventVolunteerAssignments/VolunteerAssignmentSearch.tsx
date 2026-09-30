@@ -157,13 +157,13 @@ export function VolunteerAssignmentSearch({ id, value, onChange, eventId, eventV
     id={id}
     value={value}
     onChange={onChange}
-    icon={<Icon icon="search" className="text-gray-600 ms-2" />}
+    icon={{ icon: 'search', className: 'text-gray-600 ms-2' }}
     rightIcon={
       <Button
         minimal
         text={useTranslation('common.emptySearch')}
         iconOnly
-        icon={<Icon icon="cross" className="text-gray-600" />}
+        icon={{ icon: 'cross', className: 'text-gray-600' }}
         onClick={() => onChange([])}
       />
     }

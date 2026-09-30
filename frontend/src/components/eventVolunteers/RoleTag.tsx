@@ -1,11 +1,11 @@
 import { EventRole } from '@/types'
 
-import { Tag, TagProps } from '@/libraries/ui'
+import { Icon, IconContent, Tag, TagProps } from '@/libraries/ui'
 import { tailwindLight } from '@/libraries/ui/tagColorSchemes'
 
 export interface RoleTagProps extends Omit<TagProps, 'hashSource' | 'title' | 'role'> {
   role: Pick<EventRole, '_id' | 'name' | 'order'>
-  icon?: React.ReactNode
+  icon?: IconContent | null
   title?: string
   onSetRole?: (roleId: string | undefined) => void
 }
@@ -22,6 +22,6 @@ export function RoleTag({ role, icon, title, onSetRole, ...props }: RoleTagProps
     }
   >
     {title ?? role.name}
-    {icon && <span className="ms-1 opacity-70">{icon}</span>}
+    <Icon icon={icon} className="ms-1 opacity-70" />
   </Tag>
 }

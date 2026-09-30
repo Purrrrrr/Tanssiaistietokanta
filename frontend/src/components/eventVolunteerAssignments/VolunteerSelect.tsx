@@ -4,7 +4,6 @@ import { useShowGlobalLoadingAnimation } from '@/backend'
 import { useEventVolunteers } from '@/services/eventVolunteers'
 
 import { AutocompleteInput } from '@/libraries/formsV2/components/inputs/selectors'
-import { Icon } from '@/libraries/ui'
 import { useT } from '@/i18n'
 import { sortedBy } from '@/utils/sorted'
 
@@ -45,7 +44,7 @@ export function VolunteerSelect({ id, currentAssignments, eventId, roleId, works
       onChange={onChange}
       items={sortedBy(eventVolunteerOptions, 'name')}
       itemToString={v => v.name}
-      itemIcon={() => <Icon icon="person" className="text-blue-300" />}
+      itemIcon={() => ({ icon: 'person', className: 'text-blue-300' })}
       placeholder={t('addVolunteer')}
       noResultsText={t('noVolunteers')}
     />

@@ -1,4 +1,4 @@
-import { Button } from '@/libraries/ui'
+import { Button, Icon, IconContent } from '@/libraries/ui'
 import { CssClass } from '@/libraries/ui/classes'
 import { useCommonTranslation } from '@/libraries/ui/commonTranslations'
 
@@ -11,8 +11,8 @@ interface AutocompleteMultipleInputProps<T> extends Omit<AutocompleteInputProps<
   // selectedItemClassname?: (item: T) => string | undefined
   selectedItemRenderer?: (item: T) => React.ReactNode
   removeRenderer?: (item: T, onRemove: () => void) => React.ReactNode
-  icon?: React.ReactNode
-  rightIcon?: React.ReactNode
+  icon?: IconContent | null
+  rightIcon?: IconContent
 }
 
 export default function AutocompleteMultipleInput<T>({
@@ -32,7 +32,7 @@ export default function AutocompleteMultipleInput<T>({
     }}
     inputRenderer={({ onKeyDown, ...inputProps }) =>
       <ul className={'flex flex-wrap items-center gap-x-1 p-1 rounded-sm ' + CssClass.inputBox}>
-        {icon}
+        <Icon icon={icon} />
         {value.map((item, index) =>
           <li
             className="inline-flex items-center rounded-sm bg-neutral border border-stone-300 ps-2 overflow-clip"
@@ -52,7 +52,7 @@ export default function AutocompleteMultipleInput<T>({
           }}
           {...inputProps}
         />
-        {rightIcon}
+        <Icon icon={rightIcon} />
       </ul>
     }
     {...props}

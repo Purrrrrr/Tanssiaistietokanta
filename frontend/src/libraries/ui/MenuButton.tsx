@@ -5,6 +5,7 @@ import { omitPermissionCheckingProps, withPermissionChecking } from '@/libraries
 import { getFocusableElements } from '@/libraries/common/getFocusableElements'
 
 import { Button, type ButtonProps } from './Button'
+import { Icon, IconContent } from './Icon'
 import { Dropdown, DropdownContainer } from './overlays/Dropdown'
 
 interface MenuButtonProps {
@@ -42,7 +43,7 @@ export function MenuButton({ children, buttonRenderer, text, buttonProps, contai
       : (
         <Button
           active={open}
-          rightIcon="doubleCaretVertical"
+          rightIcon="caretDown"
           text={text}
           popoverTarget={dropdownId}
           {...buttonProps}
@@ -61,12 +62,12 @@ const menuItemClass = 'flex gap-2 items-center px-2 min-h-7.5 transition-colors 
 
 interface MenuItemLinkProps extends React.ComponentProps<'a'> {
   text?: React.ReactNode
-  icon?: React.ReactNode
+  icon?: IconContent
 }
 
 const MenuItemLink = createLink(withPermissionChecking(({ children, href, text, icon, ...props }: MenuItemLinkProps) => {
   return <a {...omitPermissionCheckingProps(props)} className={menuItemClass} href={href}>
-    {icon}
+    <Icon icon={icon} />
     {text}
     {children}
   </a>
@@ -74,12 +75,12 @@ const MenuItemLink = createLink(withPermissionChecking(({ children, href, text, 
 
 interface MenuItemButtonProps extends Omit<React.ComponentProps<'button'>, 'text'> {
   text?: React.ReactNode
-  icon?: React.ReactNode
+  icon?: IconContent
 }
 
 const MenuItemButton = withPermissionChecking(({ children, text, icon, ...props }: MenuItemButtonProps) => {
   return <button {...omitPermissionCheckingProps(props)} className={menuItemClass}>
-    {icon}
+    <Icon icon={icon} />
     {text}
     {children}
   </button>

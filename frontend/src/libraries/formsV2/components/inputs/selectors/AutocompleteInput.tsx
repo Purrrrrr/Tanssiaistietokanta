@@ -4,7 +4,7 @@ import { useCombobox, type UseComboboxGetInputPropsOptions } from 'downshift'
 import type { SelectorProps } from './types'
 import type { FieldInputComponent } from '../types'
 
-import { Dropdown, DropdownContainer } from '@/libraries/ui'
+import { Dropdown, DropdownContainer, Icon, IconContent } from '@/libraries/ui'
 import { CssClass } from '@/libraries/ui/classes'
 
 import { useFilteredItems } from './itemUtils'
@@ -16,7 +16,7 @@ export interface AutocompleteInputProps<T> extends Omit<SelectorProps<T>, 'butto
   placeholder?: string
   inputRenderer?: (props: InputProps) => ReactNode
   emptyInputByDefault?: boolean
-  rightIcon?: React.ReactNode
+  rightIcon?: IconContent
 }
 
 interface InputProps extends Omit<UseComboboxGetInputPropsOptions, 'onChange'> {
@@ -129,9 +129,9 @@ function InteractiveAutocompleteInput<T>(props: AutocompleteInputProps<T>) {
     {inputRenderer
       ? inputRenderer(inputProps)
       : <div className={'flex items-center gap-1 ' + CssClass.inputBox}>
-        {value && props.itemIcon?.(value)}
+        {value && <Icon icon={props.itemIcon?.(value)} />}
         <input className={CssClass.inputElement + ' w-full'} {...inputProps} />
-        {rightIcon}
+        <Icon icon={rightIcon} />
       </div>
     }
     <Dropdown open={isOpen} tabIndex={-1}>
