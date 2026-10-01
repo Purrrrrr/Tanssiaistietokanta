@@ -33,6 +33,7 @@ const iconComponents = {
   link: lazy(() => import('@blueprintjs/icons/lib/esm/generated/components/link')),
   manyToOne: lazy(() => import('@blueprintjs/icons/lib/esm/generated/components/many-to-one')),
   menu: lazy(() => import('@blueprintjs/icons/lib/esm/generated/components/menu')),
+  more: lazy(() => import('@blueprintjs/icons/lib/esm/generated/components/more')),
   move: lazy(() => import('@blueprintjs/icons/lib/esm/generated/components/move')),
   music: lazy(() => import('@blueprintjs/icons/lib/esm/generated/components/music')),
   newPerson: lazy(() => import('@blueprintjs/icons/lib/esm/generated/components/new-person')),

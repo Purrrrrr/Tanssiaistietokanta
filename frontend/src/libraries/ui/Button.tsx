@@ -39,7 +39,7 @@ export const Button = withPermissionChecking(function Button(props: ButtonProps)
     <button type={type} className={buttonClass(color, { active, className, minimal, paddingClass })} {...rest}>
       {icon && <Icon icon={icon} />}
       {iconOnly
-        ? <span className="sr-only">{text}</span>
+        ? <span className="outside-overflow-menu:sr-only">{text}</span>
         : text
       }
       {rightIcon && <Icon icon={rightIcon} />}
@@ -75,7 +75,7 @@ export const AnchorButton = withPermissionChecking(function Button(props: Anchor
     <a className={buttonClass(color, { active, className, minimal })} {...rest}>
       {icon && <Icon icon={icon} />}
       {iconOnly
-        ? <span className="sr-only">{text}</span>
+        ? <span className="outside-overflow-menu:sr-only">{text}</span>
         : text
       }
       {rightIcon && <Icon icon={rightIcon} />}

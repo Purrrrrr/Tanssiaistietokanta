@@ -63,6 +63,12 @@
   }
 }
 
+@custom-variant outside-overflow-menu {
+  @scope (body) to (.overflow-menu) {
+    @slot;
+  }
+}
+
 @utility bg-color-mix {
   background: oklch(from var(--bg-mix-base) calc(l * var(--bg-mix-lightness, 100) / 100) calc(c * var(--bg-mix-chroma, 100) / 100) h / calc(alpha * var(--bg-mix-alpha, 100) / 100));
 }
@@ -167,7 +173,7 @@ body {
 
   .interactive-control-minimal {
     color: oklch(from var(--bg-mix-base) min(l, 0.75) c h);
-   @apply bg-mix-alpha-0 hover:bg-mix-alpha-10 active:bg-mix-alpha-20 disabled:saturate-55 disabled:opacity-55;
+    @apply bg-mix-alpha-0 hover:bg-mix-alpha-10 active:bg-mix-alpha-20 disabled:saturate-55 disabled:opacity-55;
   }
 
   .switch {

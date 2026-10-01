@@ -8,6 +8,10 @@ export const commonTranslations = {
     remove: 'Poista',
     delete: 'Poista',
     edit: 'Muokkaa',
+    more: {
+      one: 'Yksi lisää',
+      many: '__count__ lisää',
+    },
     close: 'Sulje',
     closeEditor: 'Sulje muokkaus',
     cancel: 'Peruuta',

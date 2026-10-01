@@ -24,7 +24,7 @@ const _NavigateButton = withPermissionChecking((props: NavigateButtonProps) => {
     <Link {...rest} unstyled className={classes} role="button" tabIndex={0} activeProps={{}}>
       {icon && <Icon icon={icon} />}
       {iconOnly
-        ? <span className="sr-only">{text}</span>
+        ? <span className="outside-overflow-menu:sr-only">{text}</span>
         : text
       }
     </Link>
