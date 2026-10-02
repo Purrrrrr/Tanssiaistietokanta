@@ -1,11 +1,9 @@
 import type { CSSProperties } from 'react'
-import QRCode_import from 'react-qr-code'
+import QRImage from 'react-qr-code'
 import classNames from 'classnames'
 import type { NodeKey } from 'lexical'
 
 import type { QRCodePayload } from '../nodes/QRCodeNode'
-
-const QRImage = (QRCode_import as unknown as { default: typeof QRCode_import }).default
 
 interface QRCodeProps extends QRCodePayload {
   nodeKey?: NodeKey
