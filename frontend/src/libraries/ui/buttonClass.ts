@@ -12,7 +12,7 @@ export const buttonClass = (
     paddingClass?: string
   },
 ) => classNames(
-  'interactive-control text-center inline-flex gap-1.5 items-center peer',
+  'interactive-control text-center text-nowrap inline-flex gap-1.5 items-center peer',
   minimal
     ? 'interactive-control-minimal'
     : 'interactive-control-filled rounded-xs shadow-xs hover:shadow-xs active:shadow-md shadow-stone-800/30 border-stone-400/40 border-1',
