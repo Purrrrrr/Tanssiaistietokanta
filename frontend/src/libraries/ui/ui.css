@@ -496,6 +496,10 @@ body {
         }
       }
     }
+    .itemlist-cell.actions {
+      @apply text-right;
+
+    }
     @container style(--itemlist-reflowed: 1) and style(--itemlist-reflow-areas) {
       .itemlist-cell {
         grid-area: var(--itemlist-reflow-area);

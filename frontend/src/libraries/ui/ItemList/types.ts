@@ -1,5 +1,5 @@
-import { ButtonProps } from '../Button'
-import type { ColumnInput, RowState } from './column'
+import type { ColumnInput } from './column'
+import { ActionsColumnProps } from './hooks/useActionsColumn'
 import { ItemListSortingProps } from './hooks/useItemSorting'
 import { SelectorColumnProps } from './hooks/useSelectionColumn'
 
@@ -19,17 +19,6 @@ export interface ItemListProps<T, Key = never> extends RowProps<T>, SelectorColu
   defaultColumnWidth?: string
   emptyText: React.ReactNode
   onLoadMore?: (itemsToLoad: number) => void
-}
-
-export interface ActionsColumnProps<T> {
-  actions?: false | ActionsColumnOptions<T>['content'] | ActionsColumnOptions<T>
-  expandButtonProps?: Partial<ButtonProps> | ((item: T, state: RowState) => Partial<ButtonProps>)
-}
-
-export interface ActionsColumnOptions<T> {
-  content: ((item: T, index: number) => React.ReactNode) | null
-  reflowArea?: string
-  className?: string
 }
 
 export type ReflowProps = {

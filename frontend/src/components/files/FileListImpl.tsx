@@ -124,19 +124,24 @@ export default function FileList({ title, owner, owningId, path }: FileListProps
             </RegularLink>,
           }, {
             key: '_updatedAt',
-            width: 'minmax(200px, auto)',
+            width: 'minmax(min-content, min(200px, 5%))',
+            className: 'text-nowrap',
             visibility: 'shown',
             content: file => timestamp(file._updatedAt),
           }, {
             key: 'size',
-            width: 'minmax(100px, auto)',
+            width: 'minmax(min-content, min(200px, 5%))',
+            className: 'text-nowrap',
             content: file => filesize(file.size),
           },
         ]}
-        actions={file => <>
-          {canModify && <RenameFileButton file={file} />}
-          {canDelete && <DeleteFileButton file={file} />}
-        </>}
+        actions={{
+          content: file => [
+            canModify && <RenameFileButton file={file} />,
+            canDelete && <DeleteFileButton file={file} />,
+          ],
+          useOverflowMenu: true,
+        }}
       />
       <input
         className="hidden"
