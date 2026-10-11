@@ -24,6 +24,25 @@
     .slide-backdrop {
       flex: 1;
       background-color: #000;
+
+      // Show projection margins in dark gray while editing them
+      &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-color: #333;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity var(--background-speed) ease;
+      }
+
+      &:has(.projection-settings-button[aria-expanded='true'])::before {
+        opacity: 1;
+      }
+
+      .slide-viewport {
+        background-color: #000;
+      }
     }
 
   }
@@ -71,16 +90,20 @@
     position: absolute;
     right: 0.5cqw;
     top: 0.5cqw;
-    height: 4cqh;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    z-index: 1;
+    font-size: 14px;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
     font-weight: normal;
     color: black;
     & > * {
       vertical-align: top;
     }
-    select {
+    & > select {
       height: 100%;
-      font-size: 2cqh;
+      font-size: inherit;
       padding: 0.3cqh;
       border: 1px solid transparent;
       text-align: right;
@@ -91,7 +114,7 @@
         background: rgba(255,255,255,0.4);
       }
     }
-    button {
+    & > button, & > .tooltip-container > button {
       padding: 0 10px;
       height: 100%;
       min-height: 0;
