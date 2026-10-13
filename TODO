@@ -683,6 +683,29 @@
 * Open newly created document when create button pushed
 * Rename file dialog should not be focusable when closed
 * Document date column
+* Fix lexical full-h extending into the space of the copy dance instructions button in DanceEditor
+* Overflow menu work
+  * Make sure all buttons have text
+  * Mandatory text for NavigateButtons
+  * Overflow menu component
+  * Overflown menu button styles
+    * Always show text
+  * Overflow menu to files
+  Warning for dances in event without a link to dance wiki
+  Add ending times of workshops to print and editor
+  Workshop not in kompassi warning
+  Check lists/pages layout on mobile
+    Assignments list
+    Volunteers list
+    Workshop page?
+  * Show sorting columns as one dropdown on mobile?
+  * Separate support for selectable rows
+
+  Toolbar based on OverflowMenu
+    Items that are always in the menu
+    Customizable menu button
+
+  Tooltips that are closable with esc?
 
   File list
   * Sortable columns
@@ -694,6 +717,7 @@
   Separate tag color schemes for stuff defined inside the components using them?
   ItemList actions overflow menu?
   ItemList column wrapStyle?
+  Upgrade to tailwind 4.3.4? (once it releases)
 
   Formation slide part two
     Show diagram list in ballrooms
@@ -713,9 +737,7 @@
     Field for setting dance's tags
     Showing of dance tags
 
-  Add ending times of workshops to print and editor
   Allow adding custom content to dance set footer? Or just a QR code?
-  Warning for dances in event without a link to dance wiki
 
   QR code login maybe?
   Look for ways to implement better spam filter
@@ -789,7 +811,6 @@
   Document templates
     Templates for event/interval music slides?
 
-  Workshop not in kompassi warning
 
   Volunteer rework
     Add volunteer assignments form nice-to-haves
@@ -819,12 +840,6 @@
   Is fabric/image/whatever document content pasteable/copyable from Google Docs or Word?
 
   Page to list all files and documents of event?
-  Check lists/pages layout on mobile
-    Assignments list
-    Volunteers list
-    Workshop page?
-    Show sorting columns as one dropdown on mobile?
-    Separate support for selectable rows
   
   Workshop planning work
     Teaching duration for dance
