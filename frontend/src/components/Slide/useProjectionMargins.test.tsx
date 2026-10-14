@@ -8,7 +8,7 @@ import {
 import { useProjectionMargins } from './useProjectionMargins'
 
 describe('projection margins', () => {
-  it('offers 10% increments that preserve at least 20% on both axes', () => {
+  it('offers 5% increments that preserve at least 20% on both axes', () => {
     for (let top = 0; top <= 80; top += 10) {
       for (let left = 0; left <= 80; left += 10) {
         const margins = { top, bottom: 80 - top, left, right: 80 - left }
@@ -21,7 +21,7 @@ describe('projection margins', () => {
             expect(changed.top + changed.bottom).toBeLessThanOrEqual(80)
             expect(changed.left + changed.right).toBeLessThanOrEqual(80)
             expect(changed[side]).toBe(value)
-            expect(value % 10).toBe(0)
+            expect(value % 5).toBe(0)
           }
         }
       }
@@ -36,7 +36,7 @@ describe('projection margins', () => {
 
   it('sanitizes stored values and excessive opposing margins', () => {
     expect(normalizeProjectionMargins({ top: 35, bottom: 80, left: 90, right: 40 }))
-      .toEqual({ top: 30, bottom: 50, left: 80, right: 0 })
+      .toEqual({ top: 35, bottom: 45, left: 80, right: 0 })
     expect(normalizeProjectionMargins({ top: '30', bottom: -10, left: Infinity, right: NaN }))
       .toEqual(defaultProjectionMargins)
     expect(normalizeProjectionMargins(null)).toEqual(defaultProjectionMargins)
