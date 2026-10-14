@@ -62,7 +62,7 @@ export function newEventProgramRow(program: Pick<EventProgramRow, 'type'> & Part
     eventProgram: null,
     dance: null,
     danceId: null,
-    formationDiagramId: null,
+    formationDiagramId: program.type === 'Dance' ? null : undefined,
     ...program,
   }
 }
