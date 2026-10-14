@@ -1,7 +1,7 @@
 import { Suspense, useEffect, useId, useState } from 'react'
 
 import { Select } from '@/libraries/formsV2/components/inputs'
-import { Button, Dropdown, DropdownContainer, FormGroup } from '@/libraries/ui'
+import { Button, Dropdown, DropdownContainer, FormGroup, H2 } from '@/libraries/ui'
 import { useT } from '@/i18n'
 
 import { getProjectionMarginOptions, ProjectionMargins, ProjectionMarginSide, projectionMarginSides } from './projectionMargins'
@@ -17,9 +17,9 @@ export function ProjectionSettingsButton(props: ProjectionSettingsButtonProps) {
   const [open, setOpen] = useState(false)
   const t = useT('components.projectionSettings')
 
-  return <DropdownContainer className="inline-block text-sm">
+  return <DropdownContainer className="inline-block">
     <Button
-      minimal iconOnly icon="cog" text={t('title')} className="projection-settings-button h-7"
+      minimal iconOnly icon="cog" text={t('title')} className="projection-settings-button"
       active={open} popoverTarget={id} aria-expanded={open} aria-controls={id}
     />
     <Dropdown id={id} auto arrow alignment="end" open={open} onToggle={setOpen}>
@@ -37,8 +37,8 @@ function ProjectionSettingsPanel({ margins, onChange, onReset, id, open }: Proje
     if (open) document.getElementById(`${id}-top`)?.focus()
   }, [id, open])
 
-  return <div className="w-64 max-w-full p-3 text-sm font-normal text-stone-700" role="group" aria-labelledby={`${id}-title`}>
-    <h2 id={`${id}-title`} className="mb-3 font-semibold">{t('title')}</h2>
+  return <div className="w-64 max-w-full p-3 text-sm text-stone-700" role="group" aria-labelledby={`${id}-title`}>
+    <H2 id={`${id}-title`}>{t('title')}</H2>
     {projectionMarginSides.map(side => <FormGroup key={side} label={t(side)} labelFor={`${id}-${side}`} labelStyle="beside">
       <Select<number>
         id={`${id}-${side}`}
