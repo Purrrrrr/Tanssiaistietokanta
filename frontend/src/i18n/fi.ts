@@ -173,6 +173,16 @@ export const fi = {
       afterThis: 'Tämän jälkeen',
       teachedInSet: 'Opetettu setissä',
     },
+    projectionSettings: {
+      title: 'Projisoinnin marginaalit',
+      top: 'Yläreuna',
+      bottom: 'Alareuna',
+      left: 'Vasen reuna',
+      right: 'Oikea reuna',
+      remembered: '',
+      help: 'Marginaalit varaavat mustaa tilaa reunoille. Asetukset muistetaan tässä selaimessa.',
+      reset: 'Nollaa marginaalit',
+    },
     loginForm: {
       login: 'Kirjaudu sisään',
       username: 'Käyttäjätunnus',

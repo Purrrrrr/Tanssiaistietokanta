@@ -7,6 +7,8 @@ import { Button } from '@/libraries/ui'
 import { EventSlide, EventSlideProps, startSlideId, useEventSlides } from '@/components/event/EventSlide'
 import { LoadingState } from '@/components/LoadingState'
 import { SlideContainer } from '@/components/Slide'
+import { ProjectionSettingsButton } from '@/components/Slide/ProjectionSettingsButton'
+import { useProjectionMargins } from '@/components/Slide/useProjectionMargins'
 import { useSlideshowNavigation } from '@/components/Slide/useSlideshowNavigation'
 import { useT } from '@/i18n'
 import { useOnKeydown } from '@/utils/useOnKeydown'
@@ -92,10 +94,14 @@ export function BallProgramSlideView(
   const canEdit = useRight('events:modify', { entityId: event._id })
   const t = useT('common')
 
-  return <SlideContainer fullscreen={!isEditing || !canEdit} {...swipeHandlers}>
+  const { margins, setMargin, resetMargins } = useProjectionMargins()
+  const fullscreen = !isEditing || !canEdit
+
+  return <SlideContainer fullscreen={fullscreen} projectionMargins={margins} {...swipeHandlers}>
     <div className="controls">
       <ProgramTitleSelector value={slide.parentId ?? slide.id} onChange={id => goToSlide(id)}
         program={event.program} />
+      {fullscreen && <ProjectionSettingsButton margins={margins} onChange={setMargin} onReset={resetMargins} />}
       <Button requireRight="events:modify" entityId={event._id} minimal text={t(isEditing ? 'closeEditor' : 'edit')} iconOnly icon="edit" onClick={onToggleEditing} />
     </div>
     <EventSlide {...slide} key={slide.id} eventProgram={event.program} />

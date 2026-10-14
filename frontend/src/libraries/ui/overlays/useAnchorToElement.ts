@@ -9,13 +9,17 @@ export interface AnchoringCallbackProps {
   elementW: number
   transparentPadding: number
   pointDown: boolean
+  anchorCenterX: number
 }
+
+export type HorizontalAlignment = 'start' | 'center' | 'end'
 
 export function useAnchorToElement<TargetElement extends HTMLElement>(
   anchorElementParam?: string | HTMLElement,
   spacing?: number,
   callback?: (props: AnchoringCallbackProps) => void,
   enabled = true,
+  alignment: HorizontalAlignment = 'center',
 ) {
   const elementRef = useRef<TargetElement>(null)
 
@@ -24,8 +28,8 @@ export function useAnchorToElement<TargetElement extends HTMLElement>(
       ?? elementRef.current?.closest('[data-dropdown-container]')
 
     if (!elementRef.current || !anchorElement || !enabled) return
-    updateElementPosition(elementRef.current, anchorElement, spacing ?? 0, callback)
-  }, [anchorElementParam, spacing, callback, enabled])
+    updateElementPosition(elementRef.current, anchorElement, spacing ?? 0, alignment, callback)
+  }, [anchorElementParam, spacing, callback, enabled, alignment])
 
   useLayoutEffect(updateDirection, [updateDirection])
   useResizeObserver(elementRef, updateDirection)
@@ -41,6 +45,7 @@ function updateElementPosition(
   element: HTMLElement,
   anchorElement: Element,
   spacing: number,
+  alignment: HorizontalAlignment,
   callback?: (props: AnchoringCallbackProps) => void,
 ) {
   const anchor = anchorElement.getBoundingClientRect()
@@ -69,12 +74,17 @@ function updateElementPosition(
     ? anchor.top + anchor.height + spacing - transparentPadding
     : anchor.top - elementH - transparentPadding
 
-  const centeredLeft = anchor.left + (anchor.width - elementW) / 2 - transparentPadding
+  const alignedLeft = alignment === 'start'
+    ? anchor.left - transparentPadding
+    : alignment === 'end'
+      ? anchor.right - elementW - transparentPadding
+      : anchor.left + (anchor.width - elementW) / 2 - transparentPadding
   const left = clamp({
     min: margin,
-    max: winW - elementW - margin,
-    value: centeredLeft,
+    max: winW - elementWWithPadding - margin,
+    value: alignedLeft,
   })
+  const anchorCenterX = anchor.left + anchor.width / 2 - left
   const maxH = clamp({
     min: 200,
     value: (pointDown ? winH - anchor.bottom : anchor.top) - margin,
@@ -84,10 +94,9 @@ function updateElementPosition(
   element.style.maxHeight = toPx(maxH)
   element.style.top = toPx(top + window.scrollY)
   element.style.left = toPx(left + window.scrollX)
-  element.style.transformOrigin = pointDown
-    ? 'top' : 'bottom'
+  element.style.transformOrigin = `${toPx(anchorCenterX)} ${pointDown ? 'top' : 'bottom'}`
 
-  callback?.({ element, elementW, elementH, transparentPadding, pointDown })
+  callback?.({ element, elementW, elementH, transparentPadding, pointDown, anchorCenterX })
 }
 
 export const toPx = (value: number) => `${value}px`

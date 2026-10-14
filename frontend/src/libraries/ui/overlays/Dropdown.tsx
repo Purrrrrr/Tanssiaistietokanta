@@ -1,7 +1,7 @@
 import { MouseEventHandler, type ReactNode, Ref, useRef } from 'react'
 
 import { Popover } from './unstyled/Popover'
-import { AnchoringCallbackProps, toPx, useAnchorToElement } from './useAnchorToElement'
+import { AnchoringCallbackProps, HorizontalAlignment, toPx, useAnchorToElement } from './useAnchorToElement'
 
 interface DropdownContainerProps {
   className?: string
@@ -22,16 +22,17 @@ interface DropdrownProps {
   auto?: boolean
   children: ReactNode
   arrow?: boolean
+  alignment?: HorizontalAlignment
   onClick?: MouseEventHandler
   tabIndex?: number
   alwaysRenderChildren?: boolean
   focusgroup?: true | string
 }
 
-export const Dropdown = ({ id, anchorElement, auto, arrow, children, open, onToggle, onClick, tabIndex, alwaysRenderChildren, focusgroup }: DropdrownProps) => {
+export const Dropdown = ({ id, anchorElement, auto, arrow, alignment, children, open, onToggle, onClick, tabIndex, alwaysRenderChildren, focusgroup }: DropdrownProps) => {
   const arrowTriangle = useRef<SVGSVGElement>(null)
   const element = useAnchorToElement<HTMLDivElement>(
-    anchorElement, arrow ? 10 : 0, arrow ? updateTriangle : undefined, open,
+    anchorElement, arrow ? 10 : 0, arrow ? updateTriangle : undefined, open, alignment,
   )
 
   return <Popover
@@ -58,13 +59,16 @@ export const Dropdown = ({ id, anchorElement, auto, arrow, children, open, onTog
   </Popover>
 }
 
-function updateTriangle({ element, elementH, transparentPadding, elementW, pointDown }: AnchoringCallbackProps) {
+function updateTriangle({ element, elementH, transparentPadding, elementW, pointDown, anchorCenterX }: AnchoringCallbackProps) {
   const arrowElement = element.childNodes[1] as HTMLDivElement
   if (!arrowElement) return
   const triangleW = 20
   arrowElement.style.top = toPx(
     pointDown ? 1 : elementH - 1,
   )
-  arrowElement.style.left = toPx((elementW + transparentPadding * 2 - triangleW) / 2)
+  arrowElement.style.left = toPx(Math.min(
+    elementW + transparentPadding - triangleW,
+    Math.max(transparentPadding, anchorCenterX - triangleW / 2),
+  ))
   arrowElement.style.rotate = pointDown ? '' : '180deg'
 }
