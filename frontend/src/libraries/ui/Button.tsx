@@ -1,12 +1,14 @@
-import { ComponentProps, useState } from 'react'
+import { ComponentProps, useId, useState } from 'react'
 
 import type { Color } from './types'
 
 import { omitPermissionCheckingProps, PermissionCheckedProps, withPermissionChecking } from '@/libraries/access-control'
 
 import { buttonClass } from './buttonClass'
+import { AnchorProps } from './hooks/useTooltip'
 import { Icon, type IconContent } from './Icon'
 import { ControlledPopover } from './overlays/unstyled/Popover'
+import { TooltipContainer } from './TooltipContainer'
 
 export interface ButtonProps extends PermissionCheckedProps, Omit<ComponentProps<'button'>, 'children'> {
   text: React.ReactNode
@@ -37,7 +39,7 @@ export const Button = withPermissionChecking(function Button(props: ButtonProps)
   } = omitPermissionCheckingProps(props)
 
   return withTooltip(tooltip ?? (iconOnly ? text : undefined),
-    <button type={type} className={buttonClass(color, { active, className, minimal, paddingClass })} {...rest}>
+    tooltipProps => <button type={type} className={buttonClass(color, { active, className, minimal, paddingClass })} {...rest} {...tooltipProps}>
       {icon && <Icon icon={icon} />}
       {iconOnly
         ? <span className="outside-overflow-menu:sr-only">{text}</span>
@@ -73,7 +75,7 @@ export const AnchorButton = withPermissionChecking(function Button(props: Anchor
     ...rest
   } = omitPermissionCheckingProps(props)
   return withTooltip(tooltip,
-    <a className={buttonClass(color, { active, className, minimal })} {...rest}>
+    tooltipProps => <a className={buttonClass(color, { active, className, minimal })} {...rest} {...tooltipProps}>
       {icon && <Icon icon={icon} />}
       {iconOnly
         ? <span className="outside-overflow-menu:sr-only">{text}</span>
@@ -84,44 +86,12 @@ export const AnchorButton = withPermissionChecking(function Button(props: Anchor
   )
 })
 
-function withTooltip(tooltip: React.ReactNode, children: React.ReactNode) {
+function withTooltip(tooltip: React.ReactNode, children: (props: AnchorProps | null) => React.ReactNode) {
   if (!tooltip) {
-    return children
+    return children(null)
   }
 
   return <TooltipContainer tooltip={tooltip}>
-    {children}
+    {props => children(props)}
   </TooltipContainer>
-}
-
-interface TooltipContainerProps {
-  children: React.ReactNode
-  tooltip: React.ReactNode
-}
-
-export function TooltipContainer({ children, tooltip }: TooltipContainerProps) {
-  const [open, setOpen] = useState(false)
-
-  /* eslint-disable jsx-a11y/no-static-element-interactions */
-  return <div
-    className="tooltip-container inline"
-    onMouseEnter={() => setOpen(true)}
-    onMouseLeave={() => setOpen(false)}
-    onFocus={() => setOpen(true)}
-    onBlur={() => setOpen(false)}
-    onKeyDown={e => e.key === 'Escape' && setOpen(false)}
-  >
-    {/* eslint-enable jsx-a11y/no-static-element-interactions */}
-    {children}
-    <ControlledPopover
-      type="manual"
-      open={open}
-      onToggle={setOpen}
-      aria-hidden
-      openClassname="tooltip-open"
-      className="tooltip w-max bg-gray-50 border-gray-500 shadow-md p-0.75 border shadow-black/10"
-    >
-      {tooltip}
-    </ControlledPopover>
-  </div>
 }

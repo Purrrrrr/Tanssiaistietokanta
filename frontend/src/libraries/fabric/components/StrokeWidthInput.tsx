@@ -1,17 +1,19 @@
 import { useId, useRef } from 'react'
 import classNames from 'classnames'
 
-import { Button, TooltipContainer } from '@/libraries/ui'
+import { Button } from '@/libraries/ui'
 import { CssClass } from '@/libraries/ui/classes'
+import { useTooltip } from '@/libraries/ui/hooks/useTooltip'
 
 import { StrokeWidthIcon } from './icons'
 
 export function StrokeWidthInput({ value, onChange, label }: { value: number, onChange: (value: number) => void, label: string }) {
   const inputRef = useRef<HTMLInputElement>(null)
   const id = useId()
+  const [tooltipProps, tooltipElement] = useTooltip(label)
 
-  return <TooltipContainer tooltip={label}>
-    <div className={CssClass.inputBoxAppearance + ' rounded-full overflow-hidden flex items-center ps-2'}>
+  return <>
+    <div {...tooltipProps} className={CssClass.inputBoxAppearance + ' rounded-full overflow-hidden flex items-center ps-2'}>
       <label htmlFor={id}>
         <StrokeWidthIcon />
       </label>
@@ -39,5 +41,6 @@ export function StrokeWidthInput({ value, onChange, label }: { value: number, on
         text="+"
       />
     </div>
-  </TooltipContainer>
+    {tooltipElement}
+  </>
 }

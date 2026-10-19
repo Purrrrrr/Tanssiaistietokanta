@@ -58,7 +58,7 @@ export function Editor({ inline, readOnly, imageUpload, onChange, value, classNa
           inline ? 'inline-flex' : 'flex',
           className,
           CssClass.inputBox,
-          'flex-col bg-stone-100 p-0.5 [anchor-scope:all]',
+          'flex-col bg-stone-100 p-0.5',
         )}
       >
         <ToolbarPlugin imageUpload={imageUpload}>
@@ -66,7 +66,7 @@ export function Editor({ inline, readOnly, imageUpload, onChange, value, classNa
             contentEditable={
               <ContentEditable
                 {...rest}
-                className="grow overflow-auto bg-white p-2 focus:outline-none! lexical-content editable-lexical-content"
+                className="grow overflow-auto bg-white p-2 focus:outline-none! lexical-content editable-lexical-content [anchor-scope:--lexical-toolbar-anchor]"
               />
             }
             ErrorBoundary={LexicalErrorBoundary}

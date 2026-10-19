@@ -147,22 +147,16 @@ body {
 }
 
 @layer components {
-  .tooltip-container {
-    anchor-name: --tooltip-container;
-    anchor-scope: --tooltip-container;
+  .tooltip {
+    position: fixed;
+    position-area: bottom;
+    margin-block: 5px;
+    margin-inline: 10px;
+  }
 
-    & > .tooltip {
-      position: fixed;
-      position-anchor: --tooltip-container;
-      position-area: bottom;
-      margin-block: 5px;
-      margin-inline: 10px;
-    }
-
-    & > .tooltip-open {
-      opacity: 0;
-      animation: fadeIn 0.2s ease-in-out 0.5s forwards;
-    }
+  .tooltip-open {
+    opacity: 0;
+    animation: fadeIn 0.2s ease-in-out 0.5s forwards;
   }
 
   .interactive-control-filled {

@@ -92,15 +92,18 @@ function DancewikiLink({ wikipageName }: { wikipageName?: string | null }) {
 
   const className = buttonClass('none', { minimal: true, paddingClass: 'px-2 py-1.5 -me-2' })
   return <TooltipContainer tooltip={wikipageName}>
-    <a
-      href={`https://tanssi.dy.fi/${wikipageName.replaceAll(' ', '_')}`}
-      className={className}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      <Icon icon="documentOpen" size={15} />
-      <span className="reflowed:sr-only">{wikipageName}</span>
-    </a>
+    {tooltipProps =>
+      <a
+        href={`https://tanssi.dy.fi/${wikipageName.replaceAll(' ', '_')}`}
+        className={className}
+        target="_blank"
+        rel="noopener noreferrer"
+        {...tooltipProps}
+      >
+        <Icon icon="documentOpen" size={15} />
+        <span className="reflowed:sr-only">{wikipageName}</span>
+      </a>
+    }
   </TooltipContainer>
 }
 

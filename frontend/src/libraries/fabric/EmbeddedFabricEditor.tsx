@@ -62,7 +62,7 @@ export function EmbeddedFabricEditor({
   return (
     <div
       ref={container}
-      className="[anchor-name:--fabric-editor] [anchor-scope:all] my-2"
+      className="[anchor-name:--fabric-editor] [anchor-scope:--fabric-editor] my-2"
       data-fabric-node-key={nodeKey}>
       {canvas && editable && (
         <FabricToolbar

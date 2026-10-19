@@ -49,14 +49,14 @@ export function FabricEditor({ readOnly, value, baseDiagram, onChange, inline, .
   }
 
   return (
-    <div className={`${CssClass.inputBoxAppearance} ${inline ? 'inline-block' : ''} [anchor-scope:all] flex flex-col my-2 bg-stone-100`}>
+    <div className={`${CssClass.inputBoxAppearance} ${inline ? 'inline-block' : ''} flex flex-col my-2 bg-stone-100`}>
       {canvas && editable &&
         <FabricMainToolbar
           canvas={canvas}
           undoState={{ data: { width, height, data, hash }, onChange }}
           visible />
       }
-      <div className="bg-stone-300 p-2 mx-px">
+      <div className="bg-stone-300 p-2 mx-px [anchor-scope:all]">
         <div className="bg-white relative w-max border-2 border-blue-500">
           <FabricCanvas
             {...rest}
