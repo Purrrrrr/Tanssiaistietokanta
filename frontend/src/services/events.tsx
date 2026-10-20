@@ -44,6 +44,7 @@ setupServiceUpdateFragment(
           _id
           slideStyleId
           type
+          notes
           eventProgram {
             name
             description
@@ -59,6 +60,7 @@ setupServiceUpdateFragment(
         program {
           _id
           type
+          notes
           eventProgram {
             name
             description
@@ -175,6 +177,7 @@ query getEvent($id: ID!, $versionId: ID) {
           _id
           slideStyleId
           type
+          notes
           eventProgram {
             name
             description
@@ -190,6 +193,7 @@ query getEvent($id: ID!, $versionId: ID) {
         program {
           _id
           type
+          notes
           eventProgram {
             name
             description

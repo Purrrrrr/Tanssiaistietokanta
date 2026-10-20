@@ -32,6 +32,7 @@ query BallProgram($eventId: ID!, $eventVersionId: ID) {
           _id
           slideStyleId
           type
+          notes
           eventProgram {
             name
             description
@@ -104,6 +105,7 @@ query BallProgram($eventId: ID!, $eventVersionId: ID) {
         program {
           _id
           type
+          notes
           slideStyleId
           eventProgram {
             name

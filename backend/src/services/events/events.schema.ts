@@ -1,6 +1,7 @@
 // // For more information about this file see https://dove.feathersjs.com/guides/cli/service.schemas.html
 import { resolve } from '@feathersjs/schema'
 import * as L from 'partial.lenses'
+import * as R from 'ramda'
 import { Type, getValidator, querySyntax } from '@feathersjs/typebox'
 import type { Static, TObject, TProperties } from '@feathersjs/typebox'
 
@@ -80,6 +81,7 @@ function Introductions() {
       _id: Type.String(),
       slideStyleId: SlideStyleId(),
       type: Type.Literal('EventProgram'),
+      notes: Type.Optional(Nullable(Type.String())),
       eventProgram: EventProgram(),
       danceId: Type.Optional(Type.Null()),
     })),
@@ -109,6 +111,7 @@ function EventProgramRow() {
       _id: Type.String(),
       slideStyleId: SlideStyleId(),
       type: Type.Literal('Dance'),
+      notes: Type.Optional(Nullable(Type.String())),
       danceId: Id(),
       formationDiagramId: Type.Optional(Id()),
       eventProgram: Type.Null(),
@@ -117,6 +120,7 @@ function EventProgramRow() {
       _id: Type.String(),
       slideStyleId: SlideStyleId(),
       type: Type.Literal('RequestedDance'),
+      notes: Type.Optional(Nullable(Type.String())),
       danceId: Type.Optional(Type.Null()),
       eventProgram: Type.Null(),
     }),
@@ -124,6 +128,7 @@ function EventProgramRow() {
       _id: Type.String(),
       slideStyleId: SlideStyleId(),
       type: Type.Literal('EventProgram'),
+      notes: Type.Optional(Nullable(Type.String())),
       danceId: Type.Optional(Type.Null()),
       eventProgram: EventProgram(),
     }),
@@ -184,7 +189,9 @@ export async function addDataToProgram(event: Events, app: Application): Promise
     }
   }
 
-  return L.modifyAsync(
+  const addNotes = L.set([L.seq(['introductions', 'program'], ['danceSets', L.elems, 'program']), L.elems, 'notes', L.when(R.isNil)], null)
+
+  const addDances = L.modifyAsync(
     ['danceSets', L.elems],
     async (danceSet: any) => {
       return {
@@ -193,8 +200,9 @@ export async function addDataToProgram(event: Events, app: Application): Promise
         program: await L.modifyAsync(L.elems, fetchDance, danceSet.program),
       }
     },
-    event.program,
   )
+
+  return addDances(addNotes(event.program))
 }
 
 export const eventsExternalResolver = resolve<Events, HookContext>({})

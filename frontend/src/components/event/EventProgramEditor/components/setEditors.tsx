@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useRef } from 'react'
 
 import { ActionButton as Button, DragHandle } from '@/libraries/forms'
-import { Card, H2 } from '@/libraries/ui'
+import { Card, H2, Icon, MenuButton, TooltipContainer } from '@/libraries/ui'
 import { ColorClass } from '@/libraries/ui/classes'
 import { DanceProgramChooser } from '@/components/event/DanceProgramChooser'
 import {
@@ -85,13 +85,23 @@ function ProgramListEditor({ path }: { path: ProgramSectionPath }) {
   const intervalMusicDuration = isIntroductionsSection
     ? 0
     : (programRow as DanceSet).intervalMusic?.duration ?? 0
+  const hasNotes = program.some(row => !!row.notes?.trim())
 
   return <>
     <div ref={accessibilityContainer} />
-    <div ref={tableRef} className="grid grid-cols-[min-content_1fr_min-content_min-content] *:even:not-last:bg-gray-100/80 *:border-t *:border-gray-200 *:grid *:grid-cols-subgrid *:col-span-full *:*:not-first:border-s *:*:border-gray-200">
+    <div ref={tableRef} className="grid grid-cols-[min-content_1fr_auto_min-content_min-content] *:even:not-last:bg-gray-100/80 *:border-t *:border-gray-200 *:grid *:grid-cols-subgrid *:col-span-full *:*:not-first:border-s *:*:border-gray-200">
       {(program.length + intervalMusicDuration) > 0 ?
         <div className="font-bold *:p-1.5">
-          <div className="col-start-2 border-s">{t('columnTitles.name')}</div><div className="col-span-2">{t('columnTitles.duration')}</div>
+          <div className="col-start-2 border-s">{t('columnTitles.name')}</div>
+          <div className="col-start-3 border-s">
+            {hasNotes
+              ? t('columnTitles.notes')
+              : <TooltipContainer tooltip={t('columnTitles.notes')}>
+                {props => <Icon aria-label={t('columnTitles.notes')} icon="annotation" {...props} />}
+              </TooltipContainer>
+            }
+          </div>
+          <div className="col-span-2">{t('columnTitles.duration')}</div>
         </div>
         : <div className={`${ColorClass.textMuted} p-0 col-span-full`}>{t('programListIsEmpty')}</div>
       }
@@ -108,7 +118,7 @@ function ProgramListEditor({ path }: { path: ProgramSectionPath }) {
       />
       {intervalMusicDuration > 0 && <IntervalMusicEditor danceSetPath={path as DanceSetPath} />}
       <div>
-        <div className="col-span-2 p-1.5">
+        <div className="col-span-3 p-1.5">
           <ProgramItemCounters program={programRow.program} />
           {isIntroductionsSection
             ? <AddIntroductionButton />
@@ -162,6 +172,7 @@ const ProgramItemEditor = React.memo(function ProgramItemEditor({ dragHandle, pa
   return <React.Fragment>
     <ProgramTypeIcon type={type} className="size-7" />
     <ProgramDetailsEditor path={itemPath} />
+    <NotesEditor path={itemPath} />
     <div className={editableDuration ? '' : 'p-1.5'}>
       {editableDuration
         ? <Field label={t('fields.eventProgram.duration')} inline labelStyle="hidden" path={`${itemPath}.eventProgram.duration`} component={DurationField} />
@@ -174,6 +185,32 @@ const ProgramItemEditor = React.memo(function ProgramItemEditor({ dragHandle, pa
     </div>
   </React.Fragment>
 })
+
+function NotesEditor({ path }: { path: ProgramItemPath }) {
+  const t = useT('components.eventProgramEditor')
+  const notesPath = `${path}.notes` as const
+  const notes = useValueAt(notesPath)
+  const setNotes = useOnChangeFor(notesPath)
+  const hasNote = !!notes?.trim()
+
+  return <div className="flex items-center">
+    {hasNote && // Additional click area for notes, so that the user can click anywhere on the note to edit it
+      /* eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events */
+      <span
+        className="grow px-2"
+        onClick={e => (e.target as HTMLSpanElement).parentNode?.querySelector('button')?.click()}
+      >
+        {notes}
+      </span>
+    }
+    <MenuButton buttonProps={{ text: t('buttons.editNote'), minimal: true, iconOnly: true, rightIcon: 'annotation' }}>
+      <div className="flex flex-col p-2">
+        <Input label={t('fields.eventProgram.notes')} path={notesPath} />
+        {hasNote && <Button text={t('buttons.removeNote')} minimal color="danger" icon="trash" onClick={() => setNotes(null)} />}
+      </div>
+    </MenuButton>
+  </div>
+}
 
 function ProgramDetailsEditor({ path }: { path: ProgramItemPath }) {
   const t = useT('components.eventProgramEditor')
@@ -210,7 +247,7 @@ function IntervalMusicEditor({ danceSetPath }: { danceSetPath: DanceSetPath }) {
 
   return <div>
     <ProgramTypeIcon type="IntervalMusic" className="size-7" />
-    <div className="flex gap-2 items-center ps-2.5">
+    <div className="flex gap-2 items-center ps-2.5 col-span-2">
       {t('programTypes.IntervalMusic')}
       <Field
         label={t('dance')}

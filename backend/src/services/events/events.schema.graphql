@@ -84,6 +84,7 @@ type EventProgramRow {
   _id: ID!
   slideStyleId: ID
   type: EventProgramRowType!
+  notes: String
   danceId: ID
   dance: Dance
   formationDiagramId: ID

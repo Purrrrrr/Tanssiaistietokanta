@@ -9,6 +9,7 @@ const iconComponents = {
   alignJustify: lazy(() => import('@blueprintjs/icons/lib/esm/generated/components/align-justify')),
   alignLeft: lazy(() => import('@blueprintjs/icons/lib/esm/generated/components/align-left')),
   alignRight: lazy(() => import('@blueprintjs/icons/lib/esm/generated/components/align-right')),
+  annotation: lazy(() => import('@blueprintjs/icons/lib/esm/generated/components/annotation')),
   arrowLeft: lazy(() => import('@blueprintjs/icons/lib/esm/generated/components/arrow-left')),
   blockedPerson: lazy(() => import('@blueprintjs/icons/lib/esm/generated/components/blocked-person')),
   build: lazy(() => import('@blueprintjs/icons/lib/esm/generated/components/build')),

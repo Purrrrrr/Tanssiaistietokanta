@@ -383,6 +383,7 @@ export const fi = {
         eventProgram: {
           name: 'Ohjelman nimi',
           description: 'Ohjelman kuvaus',
+          notes: 'Muistiinpanot',
           duration: 'Ohjelman kesto',
           showInLists: 'Näytä ohjelma tanssilistoissa',
         },
@@ -424,12 +425,15 @@ export const fi = {
         addInfo: 'Lisää muuta ohjelmaa',
         addIntroductoryInfo: 'Lisää alkutiedote',
         editDanceSetName: 'Muokkaa tanssisetin nimeä',
+        removeNote: 'Poista muistiinpano',
+        editNote: 'Muokkaa muistiinpanoja',
         cancel: 'Peruuta',
         removeDanceSet: 'Poista setti',
         remove: 'Poista',
       },
       columnTitles: {
         name: 'Nimi',
+        notes: 'Muistiinpanot',
         duration: 'Kesto',
       },
       titles: {
