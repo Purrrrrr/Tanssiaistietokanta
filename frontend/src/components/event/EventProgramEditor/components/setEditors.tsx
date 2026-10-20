@@ -192,18 +192,24 @@ function NotesEditor({ path }: { path: ProgramItemPath }) {
   const notes = useValueAt(notesPath)
   const setNotes = useOnChangeFor(notesPath)
   const hasNote = !!notes?.trim()
+  const button = useRef<HTMLButtonElement>(null)
 
-  return <div className="flex items-center">
-    {hasNote && // Additional click area for notes, so that the user can click anywhere on the note to edit it
-      /* eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events */
-      <span
-        className="grow px-2"
-        onClick={e => (e.target as HTMLSpanElement).parentNode?.querySelector('button')?.click()}
-      >
-        {notes}
-      </span>
-    }
-    <MenuButton buttonProps={{ text: t('buttons.editNote'), minimal: true, iconOnly: true, rightIcon: 'annotation' }}>
+  // Additional click area for notes, so that the user can click anywhere on the note to edit it
+  /* eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events */
+  return <div
+    className="flex items-center justify-end"
+    onClick={(e) => {
+      if (
+        !(e.target as HTMLElement).closest('button') // Not clicking on the button itself
+        && !button.current?.classList.contains('active') // Not clicking on the button when it's already active
+        && (document.getSelection()?.isCollapsed ?? true) // Not selecting text
+      ) {
+        button.current?.click()
+      }
+    }}
+  >
+    <span className="grow px-2 h-full leading-7.5">{notes}</span>
+    <MenuButton buttonProps={{ text: t('buttons.editNote'), minimal: true, iconOnly: true, rightIcon: 'annotation', ref: button }}>
       <div className="flex flex-col p-2">
         <Input label={t('fields.eventProgram.notes')} path={notesPath} />
         {hasNote && <Button text={t('buttons.removeNote')} minimal color="danger" icon="trash" onClick={() => setNotes(null)} />}
