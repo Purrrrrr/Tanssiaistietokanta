@@ -11,17 +11,14 @@ import { Entity, ListField, UntypedListFieldProps } from './ListEditor'
 
 export {
   Input,
-  InputField,
   type InputFieldProps,
   type InputProps,
   type NumberInputProps,
   RadioGroup,
-  SwitchField,
   type SwitchFieldForValueProps,
   type SwitchFieldProps,
-  switchFor,
   type SwitchForProps,
-  TextArea,
+  // TextArea, unused
 } from './fieldComponents/basicComponents'
 export {
   DateField,
@@ -32,16 +29,16 @@ export {
   type DateRangeFieldProps,
 } from './fieldComponents/dateTime'
 export { type FormProps } from './Form'
-export { ActionButton, asFormControl, FormControl, SubmitButton } from './formControls'
+export { ActionButton, SubmitButton } from './formControls'
 export type { DragHandle } from './ListEditor'
 export { ListEditorContext } from './ListEditor'
 export { SyncStatus } from './SyncStatus'
 export type { FieldComponentProps, OnChangeHandler, TypedStringPath } from './types'
-export { toArrayPath } from './types'
 export type * from './useAutosavingState'
-export { patchStrategy, USE_BACKEND_VALUE, USE_LOCAL_VALUE, useAutosavingState } from './useAutosavingState'
+export { patchStrategy, useAutosavingState } from './useAutosavingState'
 export { Validate } from './validation'
-export { NumberInput, Switch } from '@/libraries/formsV2/components/inputs'
+export { default as NumberInput } from '@/libraries/ui/form/inputs/NumberInput'
+export { default as Switch } from '@/libraries/ui/form/inputs/SwitchInput'
 
 interface FormFor<T> extends FormHooksFor<T> {
   Form: React.JSXElementConstructor<FormProps<T>>

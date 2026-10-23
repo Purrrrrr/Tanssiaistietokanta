@@ -2,7 +2,7 @@ import classNames from 'classnames'
 
 import { FieldInputComponent, FieldInputComponentProps } from './types'
 
-export interface SwitchProps extends FieldInputComponentProps<boolean> {
+export interface SwitchInputProps extends FieldInputComponentProps<boolean> {
   label: string
 }
 
@@ -11,7 +11,7 @@ const Classes = {
   CONTROL_INDICATOR: 'switch-indicator',
 }
 
-export const Switch: FieldInputComponent<boolean, SwitchProps> = function Switch({ value, onChange, inline, readOnly: disabled, label, ...rest }: SwitchProps) {
+const SwitchInput: FieldInputComponent<boolean, SwitchInputProps> = function Switch({ value, onChange, inline, readOnly: disabled, label, ...rest }: SwitchInputProps) {
   return <label
     className={classNames(
       Classes.SWITCH,
@@ -30,3 +30,5 @@ export const Switch: FieldInputComponent<boolean, SwitchProps> = function Switch
     {label}
   </label>
 }
+
+export default SwitchInput

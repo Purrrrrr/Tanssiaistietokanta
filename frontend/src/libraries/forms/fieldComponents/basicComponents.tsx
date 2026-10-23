@@ -3,9 +3,10 @@ import classNames from 'classnames'
 
 import { ExtendedFieldComponentProps, FieldComponentProps, FieldPropsWithoutComponent } from '../types'
 
-import { Switch, TextInput } from '@/libraries/formsV2/components/inputs'
 import { Icon, IconContent } from '@/libraries/ui'
 import { CssClass } from '@/libraries/ui/classes'
+import Switch from '@/libraries/ui/form/inputs/SwitchInput'
+import TextInput from '@/libraries/ui/form/inputs/TextInput'
 
 import { Field, useFieldData } from '../Field'
 import { FieldContainer } from '../FieldContainer'

@@ -4,7 +4,7 @@ import { useRef, useState } from 'react'
 
 import { FieldInputComponentProps } from './types'
 
-import { Dropdown, DropdownContainer } from '@/libraries/ui'
+import { Dropdown, DropdownContainer } from '../../overlays/Dropdown'
 
 export interface DateRangeInputProps extends FieldInputComponentProps<[Date | null, Date | null]> {
   minDate?: Date

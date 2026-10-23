@@ -36,12 +36,9 @@ export function RemoveItemButton<T>({ path, index, onClick, ...props }: RemoveIt
 export function ActionButton(props: ButtonProps) {
   return <FormControl><Button {...props} /></FormControl>
 }
-export function FormControl({ children }) {
+function FormControl({ children }) {
   const { readOnly } = useFormMetadata()
   if (readOnly) return null
 
   return children
-}
-export function asFormControl<T extends React.Attributes>(Component: React.ComponentType<T>) {
-  return (props: T) => <FormControl><Component {...props} /></FormControl>
 }

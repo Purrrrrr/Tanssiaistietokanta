@@ -1,29 +1,28 @@
-import 'react-datetime-picker/dist/DateTimePicker.css'
+import 'react-date-picker/dist/DatePicker.css'
 import 'react-calendar/dist/Calendar.css'
-import 'react-clock/dist/Clock.css'
 import { useRef, useState } from 'react'
-import DateTimePicker, { DateTimePickerProps } from 'react-datetime-picker'
+import DatePicker, { DatePickerProps } from 'react-date-picker'
 
-import { Dropdown, DropdownContainer } from '@/libraries/ui'
+import { Dropdown, DropdownContainer } from '../../overlays/Dropdown'
 
-export interface DateTimeInputProps extends DateTimePickerProps {
+export interface DateInputProps extends Omit<DatePickerProps, 'onChange'> {
   readOnly?: boolean
+  onChange: (value: Date | null) => void
 }
 
-export const DateTimeInput = ({ readOnly, ...props }: DateTimeInputProps) => {
+export const DateInput = ({ readOnly, onChange, ...props }: DateInputProps) => {
   const [open, setOpen] = useState(false)
   const dropdown = useRef<HTMLDivElement>(null)
 
   return <DropdownContainer className="flex w-full">
-    <DateTimePicker
+    <DatePicker
       className="grow"
       locale="fi-FI"
       {...props}
+      onChange={val => Array.isArray(val) ? onChange(val[1]) : onChange(val)}
       disabled={readOnly}
       onCalendarOpen={() => setOpen(true)}
       onCalendarClose={() => setOpen(false)}
-      onClockOpen={() => setOpen(true)}
-      onClockClose={() => setOpen(false)}
       // This is a horrible hack. When we manage to replace this with another date range picker, we should remove the dropdown ref.
       /* eslint-disable-next-line react-hooks/refs */
       portalContainer={dropdown.current}
@@ -34,4 +33,4 @@ export const DateTimeInput = ({ readOnly, ...props }: DateTimeInputProps) => {
   </DropdownContainer>
 }
 
-export default DateTimeInput
+export default DateInput

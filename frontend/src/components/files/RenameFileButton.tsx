@@ -2,8 +2,8 @@ import { useState } from 'react'
 
 import { UploadedFile, useRenameFile } from '@/services/files'
 
-import { TextInput } from '@/libraries/formsV2/components/inputs'
 import { Button, Dialog } from '@/libraries/ui'
+import TextInput from '@/libraries/ui/form/inputs/TextInput'
 import { showToast, useShowAlert } from '@/libraries/ui/hooks'
 import { Translator, useT } from '@/i18n'
 
