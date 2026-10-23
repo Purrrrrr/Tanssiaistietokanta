@@ -24,7 +24,7 @@ export function MenuButton({ children, buttonRenderer, text, buttonProps, contai
   const containerRef = useRef<HTMLDivElement>(null)
   const onClick = (e: MouseEvent) => {
     // Refine this to actually work with other stuff
-    if ((e.target as HTMLElement).closest('button, a[href]')) {
+    if ((e.target as HTMLElement).closest('button:not([popovertarget]), a[href]')) {
       setOpen(false)
     }
   }
