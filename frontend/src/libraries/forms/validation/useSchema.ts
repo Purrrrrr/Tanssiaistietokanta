@@ -26,6 +26,9 @@ export function useSchema(schemaDef: ValidationProps) {
             : messages.required,
           ).min(1, messages.requiredList)
         }
+        if (!type) {
+          return mixed().required(messages.required).notOneOf([''], messages.required)
+        }
         return baseValidator(type).required(messages.required)
       }
       return baseValidator(type).nullable()
