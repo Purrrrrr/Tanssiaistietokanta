@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useState } from 'react'
 import classNames from 'classnames'
 
-import { FieldComponentProps, Input, InputProps } from '@/libraries/forms'
+import type { FieldInputComponentProps } from '@/libraries/ui/form/inputs/types'
+
+import Input, { type TextInputProps as InputProps } from '@/libraries/ui/form/inputs/TextInput'
 import { durationToString, parseDuration, toMinSec, toSeconds } from '@/utils/duration'
 import { useDelayedEffect } from '@/utils/useDelayedEffect'
 
@@ -13,7 +15,7 @@ interface DurationState {
   fromEvent?: boolean
 }
 
-interface DurationFieldProps extends FieldComponentProps<number>, Omit<InputProps, 'ref' | 'onChange' | 'value'> { }
+interface DurationFieldProps extends FieldInputComponentProps<number>, Omit<InputProps, 'ref' | 'onChange' | 'value'> { }
 
 export function DurationField({ value: maybeValue, onChange, readOnly, className, ...props }: DurationFieldProps) {
   const value = maybeValue ?? 0

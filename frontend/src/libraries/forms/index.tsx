@@ -10,7 +10,7 @@ import { FormHooksFor, formHooksFor } from './hooks'
 import { Entity, ListField, UntypedListFieldProps } from './ListEditor'
 
 export {
-  Input,
+  // Input,
   type InputFieldProps,
   type InputProps,
   type NumberInputProps,

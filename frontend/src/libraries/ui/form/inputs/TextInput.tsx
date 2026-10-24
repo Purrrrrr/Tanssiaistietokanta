@@ -1,11 +1,12 @@
 import { ComponentProps } from 'react'
 import classNames from 'classnames'
 
-import type { FieldInputComponent } from './types'
+import type { FieldInputComponent, FieldInputComponentProps } from './types'
 
 import { CssClass } from '../../classes'
 
 export type TextInputExtraProps = ComponentProps<'input'>
+export type TextInputProps = FieldInputComponentProps<string> & Omit<TextInputExtraProps, 'value' | 'onChange'>
 
 const TextInput: FieldInputComponent<string, TextInputExtraProps> = ({ value, onChange, className, inline = false, ...rest }) =>
   <input
