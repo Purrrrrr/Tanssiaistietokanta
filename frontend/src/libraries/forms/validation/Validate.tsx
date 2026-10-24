@@ -1,5 +1,6 @@
+import { ErrorMessage } from '@/libraries/ui/form/ErrorMessage'
+
 import { useFormMetadata } from '../formContext'
-import { ErrorMessage } from './ErrorMessage'
 import { useError } from './useError'
 import { ValidationProps } from './useSchema'
 
@@ -10,5 +11,5 @@ interface ValidateProps extends ValidationProps {
 export const Validate = function Validate({ value, ...schemaDef }: ValidateProps) {
   const error = useError(value, schemaDef)
   const { showErrors } = useFormMetadata()
-  return <ErrorMessage error={showErrors ? error : null} />
+  return <ErrorMessage errors={showErrors ? error?.errors : null} />
 }

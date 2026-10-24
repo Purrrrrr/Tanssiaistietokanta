@@ -3,10 +3,9 @@ import React from 'react'
 import { LabelStyle, LabelTexts, Version } from './types'
 
 import { FormGroup } from '@/libraries/ui'
+import { ErrorMessage, type Errors } from '@/libraries/ui/form/ErrorMessage'
 
 import { ConflictHandler } from './ConflictHandler'
-import type { Error } from './validation'
-import { ErrorMessage } from './validation'
 
 export interface FieldContainerProps extends LabelTexts, InternalFieldContainerProps {
   className?: string
@@ -24,7 +23,7 @@ interface ConflictData {
 
 interface InternalFieldContainerProps {
   id: string
-  error: Error | null
+  error: { errors: Errors } | null
   errorId: string
 }
 
@@ -32,7 +31,7 @@ export function FieldContainer(props: FieldContainerProps) {
   const { id, className, error, errorId, label, labelStyle, inline, labelInfo, helperText, children, conflictData } = props
   const formGroupId = `${id}--formgroup`
 
-  const errorMsg = <ErrorMessage id={errorId} error={error} />
+  const errorMsg = <ErrorMessage id={errorId} errors={error?.errors} />
   const conflictComponent = conflictData ? <ConflictHandler {...conflictData} /> : null
 
   if (labelStyle === 'hidden-nowrapper') {

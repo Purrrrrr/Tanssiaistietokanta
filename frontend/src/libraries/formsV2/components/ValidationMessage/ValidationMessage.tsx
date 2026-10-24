@@ -3,9 +3,10 @@ import equal from 'fast-deep-equal'
 
 import { AnyType, GenericPath } from '../../types'
 
+import { ErrorMessage } from '@/libraries/ui/form/ErrorMessage'
+
 import { useFormContext } from '../../context'
 import { setValidationResult } from '../../reducer'
-import { ErrorMessage } from './ErrorMessage'
 import { validate, type ValidationProps } from './validate'
 
 interface ValidationMessageProps<T> extends ValidationProps<T> {
@@ -16,7 +17,7 @@ interface ValidationMessageProps<T> extends ValidationProps<T> {
 
 export function ValidationMessage<T>(props: ValidationMessageProps<T>) {
   const error = useRunValidation(props)
-  return <ErrorMessage id={props.id} error={error} />
+  return <ErrorMessage id={props.id} errors={error} />
 }
 
 function useRunValidation<T>(props: ValidationMessageProps<T>) {

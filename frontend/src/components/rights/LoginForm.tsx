@@ -4,8 +4,8 @@ import { useState } from 'react'
 import { login } from '@/services/users'
 
 import { formFor } from '@/libraries/forms'
-import { ErrorMessage } from '@/libraries/forms/validation'
 import { Button } from '@/libraries/ui'
+import { ErrorMessage } from '@/libraries/ui/form/ErrorMessage'
 import { useT } from '@/i18n'
 
 export interface LoginFields {
@@ -33,7 +33,7 @@ export function LoginForm({ redirectTo, defaultRedirectTo, onSuccess }: { redire
   }
 
   return <Form value={value} onChange={setValue} onSubmit={onSubmit} errorDisplay="onSubmit">
-    {error && <ErrorMessage error={{ errors: [error] }} />}
+    {error && <ErrorMessage errors={[error]} />}
     <div className="flex gap-3">
       <Input path="username" label={t('username')} required />
       <Input path="password" label={t('password')} required componentProps={{ type: 'password' }} />

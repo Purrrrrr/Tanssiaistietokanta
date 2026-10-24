@@ -5,7 +5,7 @@ import { useSchema, ValidationProps } from './useSchema'
 
 export function useError(value: unknown, schemaDef: ValidationProps) {
   const schema = useSchema(schemaDef)
-  const [error, setError] = useState(null)
+  const [error, setError] = useState<null | { errors: string[] }>(null)
   useEffect(
     () => {
       if (!schema) {
