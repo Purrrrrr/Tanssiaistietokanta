@@ -1,5 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { ArrayPath, Idx, PropertyAtPath, TypedArrayPath } from './types'
+import { ValueAtPath } from './accessor'
+import { TypedArrayPath } from './paths'
+
+type ArrayPath<O> = TypedArrayPath<unknown, never, O>
 
 interface O {
   boolProp: boolean
@@ -23,8 +26,8 @@ interface O {
 }
 
 type OPath = ArrayPath<O>
-type BooleanOPath = TypedArrayPath<boolean, O>
-type StringOPath = TypedArrayPath<string, O>
+type BooleanOPath = TypedArrayPath<boolean, boolean, O>
+type StringOPath = TypedArrayPath<string | null | undefined, string, O>
 
 const typedExtendsGeneric: BooleanOPath extends OPath ? 1 : 0 = 1
 
@@ -90,11 +93,11 @@ notBoolPath = ['stringProp']
 notBoolPath = ['objArray', 0, 's']
 
 // @ts-expect-error Nothing should be assignable to non existing path
-const notPossible: PropertyAtPath<O, 'c.1'> = ''
+const notPossible: ValueAtPath<O, 'c.1'> = ''
 
-const string1: PropertyAtPath<O, 'stringProp'> = 's'
-const string2: PropertyAtPath<O, 'objArray.1.s'> = 's'
-const bool1: PropertyAtPath<O, 'objArray.1.b'> = true
-const boolArr: PropertyAtPath<O, 'boolArray'> = [true]
-const objArray: PropertyAtPath<O, 'objArray'> = [{ s: '', b: true }]
-const missingString: PropertyAtPath<O, 'missingObj.s'> = 's'
+const string1: ValueAtPath<O, 'stringProp'> = 's'
+const string2: ValueAtPath<O, 'objArray.1.s'> = 's'
+const bool1: ValueAtPath<O, 'objArray.1.b'> = true
+const boolArr: ValueAtPath<O, 'boolArray'> = [true]
+const objArray: ValueAtPath<O, 'objArray'> = [{ s: '', b: true }]
+const missingString: ValueAtPath<O, 'missingObj.s'> = 's'

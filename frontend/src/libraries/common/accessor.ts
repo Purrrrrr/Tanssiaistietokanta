@@ -11,27 +11,27 @@ export function toAccessorFn<T, D>(accessor: Accessor<T, D>): FnAccessor<T, D> {
   return ((item: T) => valueAtPath<T, any, any>(item, accessor)) as FnAccessor<T, D>
 }
 
-export function valueAtPath<T, P extends PathAccessor<T, D>, D>(item: T, path: P): ValueAthPath<T, P> {
+export function valueAtPath<T, P extends PathAccessor<T, D>, D>(item: T, path: P): ValueAtPath<T, P> {
   if (path === '') {
-    return item as ValueAthPath<T, P>
+    return item as ValueAtPath<T, P>
   }
   const parts = String(path).split('.')
   let current: unknown = item
   for (const part of parts) {
     if (current == null) {
-      return undefined as ValueAthPath<T, P>
+      return undefined as ValueAtPath<T, P>
     }
     current = current[part]
   }
-  return current as ValueAthPath<T, P>
+  return current as ValueAtPath<T, P>
 }
 // valueAtPath({ a: [{ b: { c: 42 } }] }, 'a.0.b.c') // returns 42
 
-export type ValueAthPath<T, P extends string | number> =
+export type ValueAtPath<T, P extends string | number> =
   P extends ''
     ? T
     : P extends `${infer K}.${infer Rest}`
-      ? ValueAthPath<ValueAtKey<T, K>, Rest>
+      ? ValueAtPath<ValueAtKey<T, K>, Rest>
       : ValueAtKey<T, P>
 
 type ValueAtKey<T, K> = K extends keyof T

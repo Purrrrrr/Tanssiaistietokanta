@@ -13,7 +13,7 @@ export type GenericPath = string | number
 
 const _someUnusedSymbol = Symbol()
 
-type TypedArrayPath<SupertypeBound, SubtypeBound, Data, Depth extends number = 8> =
+export type TypedArrayPath<SupertypeBound, SubtypeBound, Data, Depth extends number = 8> =
   Depth extends never ? never
   : (
     (IsAssignable<SupertypeBound, SubtypeBound, Data> extends true ? [] : never)

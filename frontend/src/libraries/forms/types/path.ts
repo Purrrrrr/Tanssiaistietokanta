@@ -60,7 +60,7 @@ type Decrement = [never, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
     11, 12, 13, 14, 15, 16, 17, 18, 19, 20, ...0[]]
 
 // TODO: implement string path support
-export type JoinedPath<A> = Joined<ArrayPath<A>>
+type JoinedPath<A> = Joined<ArrayPath<A>>
 type Joined<Path extends readonly unknown[]> =
   // Base recursive case, no more paths to traverse
   Path extends []
