@@ -34,13 +34,18 @@ export type ValueAtPath<T, P extends string | number> =
       ? ValueAtPath<ValueAtKey<T, K>, Rest>
       : ValueAtKey<T, P>
 
-type ValueAtKey<T, K> = K extends keyof T
-  ? T[K]
-  : K extends `${number}`
-    ? T extends (infer U)[]
-      ? U
-      : never
-    : never
+type ValueAtKey<T, K> =
+  null extends T
+    ? ValueAtKey<Exclude<T, null>, K> | undefined
+    : undefined extends T
+      ? ValueAtKey<Exclude<T, undefined>, K> | undefined
+      : K extends keyof T
+        ? T[K]
+        : K extends `${number}`
+          ? T extends (infer U)[]
+            ? U
+            : never
+          : never
 
 // export function toAccessorFn<T, P extends PathAccessor<T, D>>(accessor: P): FnAccessor<T, D> {
 //   return (item: T) => getValueAtPath(item, accessor)
