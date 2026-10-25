@@ -2,9 +2,10 @@ import React from 'react'
 
 import { LabelStyle, LabelTexts, Version } from './types'
 
-import { FormGroup } from '@/libraries/ui'
-import { ErrorMessage, type Errors } from '@/libraries/ui/form/ErrorMessage'
+import { FormGroup } from '@/libraries/ui/form/containers/FormGroup'
+import { type Errors } from '@/libraries/ui/form/ErrorMessage'
 
+import { ErrorStateContainer } from '../ui/form/containers/ErrorStateContainer'
 import { ConflictHandler } from './ConflictHandler'
 
 export interface FieldContainerProps extends LabelTexts, InternalFieldContainerProps {
@@ -28,48 +29,25 @@ interface InternalFieldContainerProps {
 }
 
 export function FieldContainer(props: FieldContainerProps) {
-  const { id, className, error, errorId, label, labelStyle, inline, labelInfo, helperText, children, conflictData } = props
+  const { id, error, children, labelStyle, conflictData, ...rest } = props
   const formGroupId = `${id}--formgroup`
 
-  const errorMsg = <ErrorMessage id={errorId} errors={error?.errors} />
   const conflictComponent = conflictData ? <ConflictHandler {...conflictData} /> : null
 
   if (labelStyle === 'hidden-nowrapper') {
-    return <React.Fragment>
-      {conflictComponent}
+    return <ErrorStateContainer errors={error?.errors} errorId={rest.errorId} conflictElement={conflictComponent}>
       {children}
-      {errorMsg}
-    </React.Fragment>
+    </ErrorStateContainer>
   }
-  if (labelStyle === 'hidden') {
-    return inline
-      ? <span className={className} id={formGroupId}>
-        {conflictComponent}
-        {children}
-        {errorMsg}
-        {helperText}
-      </span>
-      : <div className={className} id={formGroupId}>
-        {conflictComponent}
-        {children}
-        {errorMsg}
-        {helperText}
-      </div>
-  }
-  const helperTextId = `${id}--helperText`
 
   return <FormGroup
-    className={className}
     id={formGroupId}
-    labelStyle={labelStyle}
-    inline={inline}
     labelFor={id}
-    labelInfo={labelInfo}
-    helperText={<span id={helperTextId}>{helperText}</span>}
-    label={label}
-    subLabel={conflictComponent}
+    errors={error?.errors}
+    conflictElement={conflictComponent}
+    labelStyle={labelStyle}
+    {...rest}
   >
     {children}
-    {errorMsg}
   </FormGroup>
 }

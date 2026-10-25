@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react'
 
 import { ConflictMap, OnFormChangeHandler } from './types'
 
+import { FieldStyleContext } from '@/libraries/ui/form/containers/FieldStyleContext'
+
 import { FormMetadataContext, FormMetadataContextType, FormValidityContext, useCreateFormMetadataContext } from './formContext'
 import { FormStrings } from './strings'
 import { useValidationResult } from './validation'
@@ -60,10 +62,12 @@ export function Form<T>({
   const metadataContext = useCreateFormMetadataContext({ value, onChange, labelStyle, inline, readOnly, conflicts, strings, onResolveConflict, showErrors })
 
   return <FormMetadataContext.Provider value={metadataContext as FormMetadataContextType<unknown>}>
-    <FormValidityContext.Provider value={!hasErrors}>
-      <ValidationContainer>
-        <form {...rest} onSubmit={submitHandler} ref={form}>{children}</form>
-      </ValidationContainer>
-    </FormValidityContext.Provider>
+    <FieldStyleContext inline={inline} labelStyle={labelStyle === 'hidden-nowrapper' ? 'hidden' : labelStyle}>
+      <FormValidityContext.Provider value={!hasErrors}>
+        <ValidationContainer>
+          <form {...rest} onSubmit={submitHandler} ref={form}>{children}</form>
+        </ValidationContainer>
+      </FormValidityContext.Provider>
+    </FieldStyleContext>
   </FormMetadataContext.Provider>
 }

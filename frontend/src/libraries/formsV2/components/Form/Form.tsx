@@ -3,9 +3,11 @@ import { useEffect, useRef } from 'react'
 import { ErrorDisplay } from '../../types'
 import { type FieldStyleContextProps } from '../containers/types'
 
+import { FieldStyleContext } from '@/libraries/ui/form/containers/FieldStyleContext'
+
 import { FormContext, type FormStateContext, useFormContextValue } from '../../context'
 import { useFormReducer } from '../../reducer'
-import { FieldStyleContext } from '../containers/context'
+import { FieldStyleContext as FieldStyleContextLegacy } from '../containers/context'
 import { DndContext } from '../dnd/context'
 
 export interface FormProps<T> extends
@@ -36,13 +38,15 @@ export function Form<T>(props: FormProps<T>) {
   }
 
   return <form {...formProps} onSubmit={submitHandler} ref={form}>
-    <FieldStyleContext inline={inline} labelStyle={labelStyle}>
-      <FormContext.Provider value={context as FormStateContext<unknown>}>
-        <DndContext>
-          {children}
-        </DndContext>
-      </FormContext.Provider>
-    </FieldStyleContext>
+    <FieldStyleContextLegacy inline={inline} labelStyle={labelStyle}>
+      <FieldStyleContext inline={inline} labelStyle={labelStyle}>
+        <FormContext.Provider value={context as FormStateContext<unknown>}>
+          <DndContext>
+            {children}
+          </DndContext>
+        </FormContext.Provider>
+      </FieldStyleContext>
+    </FieldStyleContextLegacy>
   </form>
 }
 
