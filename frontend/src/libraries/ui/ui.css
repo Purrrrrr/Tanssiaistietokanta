@@ -150,6 +150,7 @@ body {
   .tooltip {
     position: fixed;
     position-area: bottom;
+    position-try: normal flip-block;
     margin-block: 5px;
     margin-inline: 10px;
   }

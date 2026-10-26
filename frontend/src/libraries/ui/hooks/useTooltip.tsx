@@ -1,5 +1,7 @@
 import { useId, useState } from 'react'
 
+import { useShouldRender } from '@/libraries/common/useShouldRender'
+
 import { Tooltip } from '../overlays/Tooltip'
 
 export interface AnchorProps {
@@ -12,7 +14,11 @@ export interface AnchorProps {
 }
 
 export function useTooltip(tooltip: React.ReactNode) {
-  const [open, setOpen] = useState(false)
+  const [hovered, setHovered] = useState(false)
+  const [focused, setFocused] = useState(false)
+  const [tooltipHovered, setTooltipHovered] = useState(false)
+  const [escapePressed, setEscapePressed] = useState(false)
+  const open = useShouldRender((hovered || focused || tooltipHovered) && !escapePressed, 300)
   const id = `--tooltip_${useId().replace(/[^a-zA-Z0-9]/g, '')}`
 
   if (!tooltip) {
@@ -21,17 +27,23 @@ export function useTooltip(tooltip: React.ReactNode) {
 
   const props: AnchorProps = {
     style: { anchorName: id },
-    onMouseEnter: () => setOpen(true),
-    onMouseLeave: () => setOpen(false),
-    onFocus: () => setOpen(true),
-    onBlur: () => setOpen(false),
-    onKeyDown: e => e.key === 'Escape' && setOpen(false),
+    onMouseEnter: () => { setHovered(true); setEscapePressed(false) },
+    onMouseLeave: () => { setHovered(false); setEscapePressed(false) },
+    onFocus: () => { setFocused(true); setEscapePressed(false) },
+    onBlur: () => { setFocused(false); setEscapePressed(false) },
+    onKeyDown: e => e.key === 'Escape' && setEscapePressed(true),
   }
-  const tooltipElement = <Tooltip
-    tooltip={tooltip}
-    open={open}
-    onToggle={setOpen}
-    positionAnchor={id} />
+  const tooltipElement = open
+    ? (
+      <Tooltip
+        tooltip={tooltip + (tooltipHovered ? ' (hovered)' : '')}
+        open={open}
+        onToggle={() => {}}
+        onMouseEnter={() => { setTooltipHovered(true); setEscapePressed(false) }}
+        onMouseLeave={() => { setTooltipHovered(false); setEscapePressed(false) }}
+        positionAnchor={id} />
+    )
+    : null
 
   return [props, tooltipElement] as const
 }
