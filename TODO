@@ -691,7 +691,34 @@
   * Overflown menu button styles
     * Always show text
   * Overflow menu to files
+* Notes for dance program items
+* Make conflict resolution dropdown work in dropdowns
+* Fix tooltip for dance set row buttons: allow escaping containers
+  * Popovers
+  * Escape key closes popover
+  * Put popover in a portal
+  * A version without a container element. Using ref or such
+  * Flip fallback
+  * Keep tooltip visible when hovered
+  * Only render active tooltip elements?
+
+  Form version unification work
+    Move inputs to ui
+    Field wrapper components
+    * Minimal wrapper (just error and conflict)
+    * Fieldset
+    * Style context
+    * FormGroup
+    * Remove old style context
+    Path unification
+    * Use new Path type
+      Make old forms use both input and output types
+      Check if we can remove AnyType from paths.ts
+    Separate versions for inputs (labeled) and controls (just the input)
+  Fix autosave syncing logic
+
   Warning for dances in event without a link to dance wiki
+    Think about moving warning code to backend
   Add ending times of workshops to print and editor
   Workshop not in kompassi warning
   Check lists/pages layout on mobile
@@ -704,8 +731,6 @@
   Toolbar based on OverflowMenu
     Items that are always in the menu
     Customizable menu button
-
-  Tooltips that are closable with esc?
 
   File list
   * Sortable columns
