@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { arrayMoveImmutable } from 'array-move'
+import { useCallback, useEffect, useState } from 'react'
 import * as L from 'partial.lenses'
 
 import { AnyList, FieldDataProps, NewValue, PropertyAtPath, StringPath, StringPathToList, TypedStringPath } from './types'
@@ -11,11 +10,6 @@ export interface FormHooksFor<T> {
   useOnChangeFor: <P extends StringPath<T>>(path: P) => (v: NewValue<PropertyAtPath<T, P>>) => unknown
   useAppendToList: <P extends StringPathToList<T>, SubT extends PropertyAtPath<T, P> & unknown[]>(path: P) => (v: SubT[number] | ((v: SubT) => SubT[number])) => unknown
   useRemoveFromList: (path: StringPathToList<T>, index: number) => () => unknown
-  useMoveItemInList: (path: StringPathToList<T>, index: number) => {
-    moveTo: (newIndex: number) => unknown
-    moveUp: () => unknown
-    moveDown: () => unknown
-  }
 }
 
 export function formHooksFor<T>(): FormHooksFor<T> {
@@ -35,14 +29,6 @@ export function formHooksFor<T>(): FormHooksFor<T> {
       }, [onChange])
     },
     useRemoveFromList,
-    useMoveItemInList: (path: StringPathToList<T>, index: number) => {
-      const onChange = useOnChangeFor<T, AnyList>(path)
-      return useMemo(() => ({
-        moveTo: (newIndex: number) => onChange(list => arrayMoveImmutable(list as unknown[], index, newIndex) as AnyList),
-        moveUp: () => { if (index > 0) onChange(list => arrayMoveImmutable(list as unknown[], index, index - 1) as AnyList) },
-        moveDown: () => onChange(list => arrayMoveImmutable(list as unknown[], index, index + 1) as AnyList),
-      }), [onChange, index])
-    },
   } as FormHooksFor<T>
 }
 

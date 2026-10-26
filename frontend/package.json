@@ -22,7 +22,6 @@
     "@n8tb1t/use-scroll-position": "^4.0.0",
     "@tanstack/react-router": "^1.170.32",
     "@wojtekmaj/react-daterange-picker": "^7.1.0",
-    "array-move": "4.0.0",
     "classnames": "^2.5.1",
     "debug": "4.4.3",
     "downshift": "^9.0.9",
