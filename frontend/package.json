@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@apollo/client": "^3.12.7",
+    "@apollo/client": "3.14",
     "@blueprintjs/icons": "^6.13.0",
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",
@@ -92,9 +92,9 @@
     "@types/node": "^26.4.0",
     "@types/react": "19.2.18",
     "@types/react-dom": "19.2.5",
-    "@vitejs/devtools": "^0.5.2",
+    "@vitejs/devtools": "^0.8.0",
     "@vitejs/plugin-react": "^6.1.1",
-    "@vitest/coverage-v8": "^4.1.11",
+    "@vitest/coverage-v8": "^5.0.5",
     "eslint": "^9.38.0",
     "eslint-import-resolver-typescript": "^4.4.5",
     "eslint-plugin-import": "^2.32.0",
@@ -115,9 +115,9 @@
     "typescript": "npm:@typescript/typescript6@^6.0.2",
     "typescript-7": "npm:typescript@^7.0.2",
     "typescript-eslint": "^8.69.0",
-    "vite": "^8.2.2",
+    "vite": "^8.3.5",
     "vite-bundle-analyzer": "^0.21.0",
     "vite-plugin-checker": "^0.6.4",
-    "vitest": "^4.1.11"
+    "vitest": "^5.0.5"
   }
 }
