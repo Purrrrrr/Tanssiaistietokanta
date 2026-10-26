@@ -1,8 +1,7 @@
 import { type ErrorStateContainerProps, LabelProps } from './types'
 
-import { useFieldStyle } from '@/libraries/formsV2/components/containers/context'
-
 import { FormGroup as FormGroupImpl } from '../../FormGroup'
+import { useFieldStyleContext } from './context'
 import { ErrorStateContainer } from './ErrorStateContainer'
 
 export interface FormGroupProps extends ErrorStateContainerProps, LabelProps, React.ComponentProps<'div'> {
@@ -11,7 +10,7 @@ export interface FormGroupProps extends ErrorStateContainerProps, LabelProps, Re
 }
 
 export function FormGroup({ errors, errorId, conflictElement, inline: i, labelStyle: ls, labelFor, label, labelInfo, helperText, children, ...rest }: FormGroupProps) {
-  const { inline, labelStyle } = useFieldStyle({ inline: i, labelStyle: ls })
+  const { inline, labelStyle } = useFieldStyleContext({ inline: i, labelStyle: ls })
 
   if (labelStyle === 'hidden') {
     const Container = inline ? 'span' : 'div'

@@ -2,8 +2,7 @@ import classNames from 'classnames'
 
 import { type ErrorStateContainerProps, LabelProps } from './types'
 
-import { useFieldStyle } from '@/libraries/formsV2/components/containers/context'
-
+import { useFieldStyleContext } from './context'
 import { ErrorStateContainer } from './ErrorStateContainer'
 
 import './Fieldset.css'
@@ -12,7 +11,7 @@ export interface FieldsetProps extends ErrorStateContainerProps, LabelProps, Rea
 }
 
 export function Fieldset({ errors, errorId, conflictElement, inline, labelStyle, label, labelInfo, className, children, ...rest }: FieldsetProps) {
-  const fieldStyle = useFieldStyle({ inline, labelStyle })
+  const fieldStyle = useFieldStyleContext({ inline, labelStyle })
   const labelVisible = fieldStyle.labelStyle !== 'hidden'
   const classes = classNames(
     className,
