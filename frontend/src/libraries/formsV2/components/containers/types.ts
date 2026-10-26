@@ -1,9 +1,9 @@
+import type { LabelStyle } from '@/libraries/ui/form/containers/types'
+
 export interface FieldStyleContextProps {
   inline: boolean
   labelStyle: LabelStyle
 }
-
-export type LabelStyle = 'beside' | 'above' | 'hidden'
 
 export interface CommonContainerProps extends Partial<FieldStyleContextProps>, LabelProps { }
 

@@ -61,11 +61,9 @@ interface FieldData {
 export function useFieldData<Value>(
   path: string | number,
   value: Value,
-  { label, labelInfo, helperText, inline: maybeInline, labelStyle: maybeLabelStyle, containerClassName, readOnly = false, ...rest }: FieldDataHookProps,
+  { label, labelInfo, helperText, inline, labelStyle, containerClassName, readOnly = false, ...rest }: FieldDataHookProps,
 ): FieldData {
   const ctx = useFormMetadata<unknown>()
-  const inline = maybeInline ?? ctx.inline
-  const labelStyle = maybeLabelStyle ?? ctx.labelStyle
 
   const id = String(path).replace(/\./g, '--')
   const errorId = `${id}--error`

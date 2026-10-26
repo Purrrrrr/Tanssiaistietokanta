@@ -52,7 +52,6 @@ function CreateEventForm() {
 
   return <Page title={t('newEvent')}>
     <Form
-      labelStyle="above"
       value={event}
       onChange={setEvent}
       onSubmit={() => addGlobalLoadingAnimation(createEvent({ event }))}

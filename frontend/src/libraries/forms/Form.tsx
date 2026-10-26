@@ -2,17 +2,16 @@ import React, { useEffect, useRef, useState } from 'react'
 
 import { ConflictMap, OnFormChangeHandler } from './types'
 
-import { FieldStyleContext } from '@/libraries/ui/form/containers/FieldStyleContext'
+import { FieldStyleContext, type FieldStyleContextProps } from '@/libraries/ui/form/containers/FieldStyleContext'
 
 import { FormMetadataContext, FormMetadataContextType, FormValidityContext, useCreateFormMetadataContext } from './formContext'
 import { FormStrings } from './strings'
 import { useValidationResult } from './validation'
 
-const defaultLabelStyle = 'above'
-
 export interface FormProps<T> extends
   Omit<React.ComponentPropsWithoutRef<'form'>, 'onSubmit' | 'onChange'>,
-  Pick<Partial<FormMetadataContextType<T>>, 'readOnly' | 'inline' | 'labelStyle' | 'onResolveConflict'> {
+  Partial<FieldStyleContextProps>,
+  Pick<Partial<FormMetadataContextType<T>>, 'readOnly' | 'onResolveConflict'> {
   value: T
   onChange: OnFormChangeHandler<T>
   conflicts?: ConflictMap<T>
@@ -33,8 +32,8 @@ export function Form<T>({
   onSubmit,
   onValidityChange,
   readOnly = false,
-  labelStyle = defaultLabelStyle,
-  inline = false,
+  labelStyle,
+  inline,
   strings,
   errorDisplay = 'always',
   ...rest
@@ -59,10 +58,10 @@ export function Form<T>({
   }
   const showErrors = errorDisplay === 'always' || hasSubmitted
 
-  const metadataContext = useCreateFormMetadataContext({ value, onChange, labelStyle, inline, readOnly, conflicts, strings, onResolveConflict, showErrors })
+  const metadataContext = useCreateFormMetadataContext({ value, onChange, readOnly, conflicts, strings, onResolveConflict, showErrors })
 
   return <FormMetadataContext.Provider value={metadataContext as FormMetadataContextType<unknown>}>
-    <FieldStyleContext inline={inline} labelStyle={labelStyle === 'hidden-nowrapper' ? 'hidden' : labelStyle}>
+    <FieldStyleContext inline={inline} labelStyle={labelStyle}>
       <FormValidityContext.Provider value={!hasErrors}>
         <ValidationContainer>
           <form {...rest} onSubmit={submitHandler} ref={form}>{children}</form>

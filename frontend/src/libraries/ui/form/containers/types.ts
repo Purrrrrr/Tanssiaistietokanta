@@ -17,4 +17,4 @@ export interface LabelProps extends Partial<FieldStyleContextProps> {
   labelInfo?: string
 }
 
-type LabelStyle = 'beside' | 'above' | 'hidden'
+export type LabelStyle = 'beside' | 'above' | 'hidden'

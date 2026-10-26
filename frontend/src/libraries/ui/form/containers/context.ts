@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react'
 
-import { FieldStyleContextProps } from './types'
+import type { FieldStyleContextProps } from './types'
 
 export const fieldStyleDefaults: FieldStyleContextProps = {
   inline: false,
@@ -11,5 +11,8 @@ export const FieldStyleContext = createContext<FieldStyleContextProps>(fieldStyl
 
 export function useFieldStyleContext(props: Partial<FieldStyleContextProps>) {
   const ctx = useContext(FieldStyleContext)
-  return { ...ctx, ...props }
+  return {
+    labelStyle: props.labelStyle ?? ctx.labelStyle,
+    inline: props.inline ?? ctx.inline,
+  }
 }

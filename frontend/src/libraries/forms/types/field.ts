@@ -1,5 +1,7 @@
 import { ReactNode } from 'react'
 
+import type { LabelStyle } from '@/libraries/ui/form/containers/types'
+
 import { ValidationProps } from '../validation'
 import { TypedStringPath } from './path'
 
@@ -11,7 +13,7 @@ export interface UserGivenFieldContainerProps extends LabelTexts {
   readOnly?: boolean
   containerClassName?: string
   inline?: boolean
-  labelStyle?: LabelStyle
+  labelStyle?: LabelStyle | 'hidden-nowrapper'
 }
 
 export interface LabelTexts {
@@ -19,5 +21,3 @@ export interface LabelTexts {
   helperText?: ReactNode
   labelInfo?: string
 }
-
-export type LabelStyle = 'beside' | 'above' | 'hidden' | 'hidden-nowrapper'

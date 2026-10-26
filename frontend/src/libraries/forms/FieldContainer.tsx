@@ -1,6 +1,7 @@
 import React from 'react'
 
-import { LabelStyle, LabelTexts, Version } from './types'
+import { LabelTexts, Version } from './types'
+import type { LabelStyle } from '@/libraries/ui/form/containers/types'
 
 import { FormGroup } from '@/libraries/ui/form/containers/FormGroup'
 import { type Errors } from '@/libraries/ui/form/ErrorMessage'
@@ -10,8 +11,8 @@ import { ConflictHandler } from './ConflictHandler'
 
 export interface FieldContainerProps extends LabelTexts, InternalFieldContainerProps {
   className?: string
-  inline: boolean
-  labelStyle: LabelStyle
+  inline?: boolean
+  labelStyle?: LabelStyle | 'hidden-nowrapper'
   children?: React.ReactNode
   conflictData?: ConflictData
 }
