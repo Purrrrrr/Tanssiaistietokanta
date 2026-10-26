@@ -24,7 +24,7 @@ export type SwitchFieldForValueProps<T, V> = Omit<FieldPropsWithoutComponent<T, 
 export function switchFor<T, V>({ isChecked, toValue }: SwitchForProps<V>) {
   return function SwitchFieldForValue({ path, ...rest }: SwitchFieldForValueProps<T, V>) {
     const { value, onChange, ...dataProps } = useFieldValueProps<T, V>(path)
-    const { fieldProps, containerProps } = useFieldData(path, value, rest)
+    const { fieldProps, containerProps } = useFieldData(value, rest)
 
     const onChangeMapped = (bool: boolean) => onChange(toValue(bool, value))
 

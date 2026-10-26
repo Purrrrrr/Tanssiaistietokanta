@@ -68,9 +68,8 @@ export function DateRangeField<T>(
 ) {
   const beginDataProps = useFieldValueProps<T, string>(beginPath)
   const endDataProps = useFieldValueProps<T, string>(endPath)
-  // const { containerProps } = useFieldData(id, null, styleProps)
-  const { fieldProps: beginFieldProps, containerProps: beginContainerProps } = useFieldData(beginPath, beginDataProps.value, styleProps)
-  const { fieldProps: endFieldProps, containerProps: endContainerProps } = useFieldData(endPath, endDataProps.value, styleProps)
+  const { fieldProps: beginFieldProps, containerProps: beginContainerProps } = useFieldData(beginDataProps.value, styleProps)
+  const { fieldProps: endFieldProps, containerProps: endContainerProps } = useFieldData(endDataProps.value, styleProps)
   const errors = [
     ...(beginContainerProps.error?.errors ?? []),
     ...(endContainerProps.error?.errors ?? []),

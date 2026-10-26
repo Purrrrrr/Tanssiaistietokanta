@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useId } from 'react'
 import classNames from 'classnames'
 
 import { Conflict, ConflictData, Deleted, FieldComponentDisplayProps, FieldComponentProps, NoRequiredProperties, PartialWhen, TypedStringPath, UserGivenFieldContainerProps } from './types'
@@ -29,7 +29,7 @@ export function Field<T, V, P extends FieldComponentProps<V>>(
   { path, component: Component, componentProps, renderConflictItem, ...rest }: FieldProps<T, V, P>,
 ) {
   const dataProps = useFieldValueProps<T, V>(path)
-  const { fieldProps, containerProps } = useFieldData(path, dataProps.value, rest)
+  const { fieldProps, containerProps } = useFieldData(dataProps.value, rest)
   const allProps = {
     ...componentProps, ...fieldProps, ...dataProps,
   } as P
@@ -59,13 +59,12 @@ interface FieldData {
 }
 
 export function useFieldData<Value>(
-  path: string | number,
   value: Value,
   { label, labelInfo, helperText, inline, labelStyle, containerClassName, readOnly = false, ...rest }: FieldDataHookProps,
 ): FieldData {
   const ctx = useFormMetadata<unknown>()
 
-  const id = String(path).replace(/\./g, '--')
+  const id = useId()
   const errorId = `${id}--error`
   const error = useError(value, rest)
 
