@@ -1,10 +1,9 @@
-import React, { ComponentProps } from 'react'
+import { ComponentProps } from 'react'
 import classNames from 'classnames'
 
 import { ExtendedFieldComponentProps, FieldComponentProps, FieldPropsWithoutComponent } from '../types'
 
 import { Icon, IconContent } from '@/libraries/ui'
-import { CssClass } from '@/libraries/ui/classes'
 import Switch from '@/libraries/ui/form/inputs/SwitchInput'
 import TextInput from '@/libraries/ui/form/inputs/TextInput'
 
@@ -56,22 +55,6 @@ export function InputField<T>(props: InputFieldProps<T>) {
 
 interface SwitchProps extends FieldComponentProps<boolean> {
   label: string
-}
-
-type TextAreaProps = FieldComponentProps<string> & React.ComponentProps<'textarea'>
-
-export function TextArea({ value, onChange, inline: _ignored, className, ...props }: TextAreaProps) {
-  return <textarea
-    value={value ?? ''}
-    onKeyDown={e => (e.key === 'Escape') && (e.target as HTMLTextAreaElement).blur()}
-    onChange={e => onChange?.(e.target.value)}
-    {...props}
-    className={classNames(
-      className,
-      'w-full min-h-24 p-2.5 resize-y',
-      CssClass.inputBox,
-    )}
-  />
 }
 
 interface RadioGroupProps<E extends string | null> extends FieldComponentProps<E> {

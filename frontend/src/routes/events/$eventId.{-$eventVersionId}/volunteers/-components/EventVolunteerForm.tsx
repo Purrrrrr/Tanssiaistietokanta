@@ -1,7 +1,7 @@
 import { Event, EventRole, EventVolunteerInput, VolunteerListItem } from '@/types'
 
 import { formFor, type FormProps, SubmitButton, type SyncState, SyncStatus } from '@/libraries/forms'
-import { TextArea } from '@/libraries/forms/fieldComponents/basicComponents'
+import TextArea from '@/libraries/ui/form/inputs/TextAreaInput'
 import { VolunteerRoleAssignmentEditor } from '@/components/eventVolunteerAssignments/VolunteerRoleAssignmentEditor'
 import { VolunteerStatusRadioGroup } from '@/components/eventVolunteers/VolunteerStatusRadioGroup'
 import { VolunteerChooser } from '@/components/volunteers/VolunteerChooser'
