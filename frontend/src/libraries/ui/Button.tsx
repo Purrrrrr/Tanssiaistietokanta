@@ -1,4 +1,4 @@
-import { ComponentProps, useId, useState } from 'react'
+import { ComponentProps } from 'react'
 
 import type { Color } from './types'
 
@@ -7,7 +7,6 @@ import { omitPermissionCheckingProps, PermissionCheckedProps, withPermissionChec
 import { buttonClass } from './buttonClass'
 import { AnchorProps } from './hooks/useTooltip'
 import { Icon, type IconContent } from './Icon'
-import { ControlledPopover } from './overlays/unstyled/Popover'
 import { TooltipContainer } from './TooltipContainer'
 
 export interface ButtonProps extends PermissionCheckedProps, Omit<ComponentProps<'button'>, 'children'> {
