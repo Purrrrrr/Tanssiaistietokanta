@@ -2,11 +2,24 @@ import React, { useId } from 'react'
 import classNames from 'classnames'
 
 import { Conflict, ConflictData, Deleted, FieldComponentDisplayProps, FieldComponentProps, NoRequiredProperties, PartialWhen, TypedStringPath, UserGivenFieldContainerProps } from './types'
+import { FieldInputComponent, OmitInputProps } from '@/libraries/ui/form/inputs/types'
 
 import { FieldContainer, FieldContainerProps } from './FieldContainer'
 import { useFormMetadata } from './formContext'
 import { useFieldValueProps } from './hooks'
 import { useError, ValidationProps } from './validation'
+
+export type FieldProps2<Value extends InputValue, Extra, InputValue, Data> =
+  Partial<OmitInputProps<Extra>> & ValidationProps & UserGivenFieldContainerProps & {
+  path: TypedStringPath<Value, Data, InputValue>
+  component: FieldInputComponent<Value, Extra, InputValue>
+  renderConflictItem?: Value extends (infer I)[] ? (item: I) => (string | React.ReactNode) : never
+  componentProps?: OmitInputProps<Extra>
+  // With th following props, you can pass the actual value and onchange to see how they compare to the inferred types.
+  // This is useful for debugging the generic types
+  // debugInput?: InputValue
+  // debugOutput?: (value: Value) => unknown
+}
 
 export type UntypedFieldProps<ValuePath, Value, Component extends React.ElementType, AdditionalProps> =
   {

@@ -1,11 +1,11 @@
 import type { ComponentType } from 'react'
 
-export type FieldInputComponent<Output extends Input, Extra = unknown, Input = Nullable<Output>> = ComponentType<FieldInputComponentProps<Output, Input> & Omit<Extra, 'value' | 'onChange'>>
+export type FieldInputComponent<Output extends Input, Extra = unknown, Input = Nullable<Output>> = ComponentType<FieldInputComponentProps<Output, Input> & Extra>
 
 export interface FieldInputComponentProps<Output extends Input, Input = Nullable<Output>> {
   inline?: boolean
   readOnly?: boolean
-  id: string
+  id?: string
   'aria-describedby'?: string
   'aria-label'?: string
   value: Input

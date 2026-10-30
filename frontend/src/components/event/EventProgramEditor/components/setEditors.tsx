@@ -18,6 +18,7 @@ import {
 } from '@/components/event/EventProgramForm'
 import { ProgramTypeIcon } from '@/components/event/ProgramTypeIcon'
 import { getProgramDuration, getProgramName, SimpleEventProgramRow } from '@/components/event/utils'
+import { DanceChooser } from '@/components/widgets/DanceChooser'
 import { Duration } from '@/components/widgets/Duration'
 import { DurationField } from '@/components/widgets/DurationField'
 import { useT, useTranslation } from '@/i18n'
@@ -259,8 +260,8 @@ function IntervalMusicEditor({ danceSetPath }: { danceSetPath: DanceSetPath }) {
         label={t('dance')}
         labelStyle="hidden"
         containerClassName="grow"
-        path={`${danceSetPath}.intervalMusic`}
-        component={DanceProgramChooser}
+        path={`${danceSetPath}.intervalMusic.dance`}
+        component={DanceChooser}
       />
     </div>
     <Field label={t('fields.intervalMusicDuration')} inline labelStyle="hidden" path={durationPath} component={DurationField} />

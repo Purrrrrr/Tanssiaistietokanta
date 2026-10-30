@@ -5,7 +5,7 @@ import type { FieldInputComponent } from './types'
 
 import { CssClass } from '../../classes'
 
-export type NumberInputExtraProps = Omit<ComponentProps<'input'>, 'type'>
+export type NumberInputExtraProps = Omit<ComponentProps<'input'>, 'type' | 'value' | 'onChange'>
 
 export const NumberInput: FieldInputComponent<number, NumberInputExtraProps> = ({ value, onChange, className, inline = false, ...rest }) =>
   <input

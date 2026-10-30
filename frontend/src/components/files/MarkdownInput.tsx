@@ -2,10 +2,9 @@ import { useEffect, useRef } from 'react'
 
 import { ID } from '@/types'
 import { FileOwner, FileOwningId } from '@/types/files'
+import { FieldInputComponentProps } from '@/libraries/ui/form/inputs/types'
 
 import { useMarkFileUsage } from '@/services/files'
-
-import { FieldInputComponentProps } from '@/libraries/formsV2'
 
 import { UploadProgressList } from './UploadProgres'
 import { useUploadQueue } from './useUploadQueue'

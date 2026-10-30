@@ -1,11 +1,11 @@
 import { EventRole } from '@/types'
+import { FieldInputComponentProps } from '@/libraries/ui/form/inputs/types'
 
 import { useEventRoles } from '@/services/eventRoles'
 
-import { FieldComponentProps } from '@/libraries/forms'
 import { useT } from '@/i18n'
 
-export type EventRoleSelectorProps = FieldComponentProps<EventRole[]> & {
+export type EventRoleSelectorProps = FieldInputComponentProps<Pick<EventRole, '_id'>[]> & {
   noWorkshopRoles?: boolean
 }
 

@@ -1,16 +1,12 @@
-import { useId } from 'react'
-
 import { DanceWikiSearchResult } from '@/types'
+import { FieldInputComponentProps } from '@/libraries/ui/form/inputs/types'
 
 import { useSearchWikiTitles } from '@/services/dancewiki'
 
 import { AutocompleteInput } from '@/libraries/formsV2/components/inputs'
 import { useT } from '@/i18n'
 
-interface WikipageSelectorProps {
-  value: string | null
-  onChange: (value: string | null) => unknown
-  readOnly?: boolean
+interface WikipageSelectorProps extends FieldInputComponentProps<string | null> {
   emptyText?: string
   placeholder?: string
   possibleName?: string
@@ -20,9 +16,8 @@ const commonWords = [
   'the', 'a', 'an', 'of',
 ]
 
-export function WikipageSelector({ value, onChange, readOnly, placeholder, possibleName }: WikipageSelectorProps) {
+export function WikipageSelector({ value, onChange, readOnly, placeholder, possibleName, ...rest }: WikipageSelectorProps) {
   const t = useT('components.wikipageSelector')
-  const id = useId()
   const [search] = useSearchWikiTitles()
 
   const getItems = async (searchStr: string) => {
@@ -71,11 +66,11 @@ export function WikipageSelector({ value, onChange, readOnly, placeholder, possi
 
   return <AutocompleteInput<Pick<DanceWikiSearchResult, 'name' | 'spamScore'> | null>
     placeholder={placeholder ?? t('searchPage')}
-    id={id}
     items={getItems}
     value={value ? { name: value, spamScore: 0 } : null}
     onChange={item => onChange(item?.name ?? null)}
     readOnly={readOnly}
     itemToString={page => page?.name ?? ''}
+    {...rest}
   />
 }

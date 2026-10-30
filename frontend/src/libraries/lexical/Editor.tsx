@@ -10,7 +10,7 @@ import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin'
 import { HEADING, ORDERED_LIST, TEXT_FORMAT_TRANSFORMERS, UNORDERED_LIST } from '@lexical/markdown'
 import classNames from 'classnames'
 
-import { FieldComponentDisplayProps } from '@/libraries/forms/types'
+import { FieldInputComponentProps } from '@/libraries/ui/form/inputs/types'
 
 import { CssClass } from '@/libraries/ui/classes'
 
@@ -28,17 +28,12 @@ import ToolbarPlugin, { type ImageUploadConfig } from './Toolbar'
 import type { MinifiedDocumentContent } from './utils/minify'
 import { expand } from './utils/minify'
 
-export interface EditorProps extends Partial<FieldComponentDisplayProps> {
+export interface EditorProps extends FieldInputComponentProps<MinifiedDocumentContent | null | undefined> {
   imageUpload?: ImageUploadConfig
-  onChange?: (state: MinifiedDocumentContent) => unknown
-  /** Latest minified editor state from the server.
-   *  On first render this becomes the initial content.
-   *  When the reference changes, the editor state is replaced (server wins). */
-  value?: MinifiedDocumentContent | null
   className?: string
 }
 
-export function Editor({ inline, readOnly, imageUpload, onChange, value, className, ...rest }: EditorProps = {}) {
+export function Editor({ inline, readOnly, imageUpload, onChange, value, className, ...rest }: EditorProps) {
   const initialConfig = {
     namespace: 'editor',
     theme,

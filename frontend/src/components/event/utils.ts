@@ -11,7 +11,6 @@ export const DEFAULT_INTERVAL_MUSIC = {
   duration: DEFAULT_INTERVAL_MUSIC_DURATION,
   slideStyleId: null,
   showInLists: false,
-  danceId: null,
   dance: null,
 } satisfies IntervalMusic
 
@@ -54,14 +53,13 @@ export function newEventProgramEventProgramRow(program: Partial<EventProgramRow[
   })
 }
 
-export function newEventProgramRow(program: Pick<EventProgramRow, 'type'> & Partial<Pick<EventProgramRow, 'dance' | 'danceId' | 'eventProgram'>>): EventProgramRow {
+export function newEventProgramRow(program: Pick<EventProgramRow, 'type'> & Partial<Pick<EventProgramRow, 'dance' | 'eventProgram'>>): EventProgramRow {
   return {
     __typename: 'EventProgramRow',
     _id: randomId(),
     slideStyleId: null,
     eventProgram: null,
     dance: null,
-    danceId: null,
     formationDiagramId: program.type === 'Dance' ? null : undefined,
     ...program,
   }

@@ -3,7 +3,7 @@ import { type ComponentType, lazy, type ReactElement } from 'react'
 import { type ListItem } from './components/dnd'
 import { asFormField, Field, type FieldComponent, type FieldProps } from './components/Field'
 import { Form, type FormProps } from './components/Form'
-import type { AutocompleteInputProps, DateInputProps, DateRangeInputProps, FieldInputComponent, FieldInputComponentProps, SelectProps, SwitchProps, TextInputExtraProps } from './components/inputs'
+import type { AutocompleteInputProps, DateInputProps, DateRangeInputProps, FieldInputComponent, SelectProps, SwitchProps, TextInputExtraProps } from './components/inputs'
 import { AutocompleteInput, DateInput, DateRangeInput, Select, Switch, TextInput } from './components/inputs'
 import { asRangeField, type Range, RangeField, type RangeFieldComponent, type RangeFieldProps } from './components/RangeField'
 import { type RepeatingSectionProps } from './components/RepeatingSection'
@@ -11,7 +11,6 @@ import { asSelfLabeledFormField, type SelfLabeledFieldComponent } from './compon
 import hookApi, { type HooksFor } from './hooks/externalHookApi'
 
 export { withDefaults } from './utils/withDefaults'
-export type { FieldInputComponentProps }
 
 interface FormFor<Data, AcceptedDroppableTypes = null> extends HooksFor<Data> {
   Form: ComponentType<FormProps<Data>>

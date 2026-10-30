@@ -10,7 +10,7 @@ import { useT } from '@/i18n'
 import { EventVolunteerRolePicker } from './EventVolunteerRolePicker'
 
 export type EventVolunteerFormValues = Pick<EventVolunteerInput, 'status' | 'wishes' | 'notes'> & {
-  volunteer?: Pick<VolunteerListItem, '_id' | 'name' | '__typename'>
+  volunteer?: Pick<VolunteerListItem, '_id' | 'name' | '__typename'> | null
   interestedIn: Pick<EventRole, '_id'>[]
   acceptedRoles?: Pick<EventRole, '_id'>[]
 }

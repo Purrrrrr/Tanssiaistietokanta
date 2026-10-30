@@ -1,15 +1,15 @@
 import { useId } from 'react'
 import classNames from 'classnames'
 
+import { FieldInputComponentProps } from '@/libraries/ui/form/inputs/types'
+
 import { SlideStyle, useEventSlideStyles } from '@/services/events'
 
 import { Select } from '@/libraries/formsV2/components/inputs'
 import { Button, Icon } from '@/libraries/ui'
 import { useT } from '@/i18n'
 
-interface SlideStyleSelectorProps {
-  value: string | null | undefined
-  onChange: (style: string | null) => unknown
+interface SlideStyleSelectorProps extends FieldInputComponentProps<string | null> {
   text: string
   inheritsStyles?: boolean
   inheritedStyleId?: string | null

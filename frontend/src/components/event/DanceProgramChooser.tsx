@@ -1,15 +1,15 @@
 import React from 'react'
 
 import { Dance, Workshop } from '@/types'
+import { FieldInputComponentProps } from '@/libraries/ui/form/inputs/types'
 
-import { FieldComponentProps } from '@/libraries/forms'
 import { DanceChooser, type DanceChooserItem } from '@/components/widgets/DanceChooser'
 import { useT } from '@/i18n'
 
-import { EventProgramRow, IntervalMusic } from './EventProgramForm'
+import { EventProgramRow } from './EventProgramForm'
 import { useChosenDanceIds, useWorkshops } from './EventProgramForm/eventMetadata'
 
-type DanceProgramChooserProps = FieldComponentProps<EventProgramRow | IntervalMusic>
+type DanceProgramChooserProps = FieldInputComponentProps<EventProgramRow>
 
 export const DanceProgramChooser = React.memo(function DanceProgramChooser({ value, onChange, ...props }: DanceProgramChooserProps) {
   const t = useT('components.eventProgramEditor')
@@ -30,28 +30,18 @@ export const DanceProgramChooser = React.memo(function DanceProgramChooser({ val
 })
 
 function getValue(
-  originalValue: EventProgramRow | IntervalMusic | null,
+  originalValue: EventProgramRow | null | undefined,
   dance: DanceChooserItem | null,
   workshops: Workshop[],
-): EventProgramRow | IntervalMusic {
-  const danceId = dance?._id ?? null
-
+): EventProgramRow {
   if (!originalValue) {
     throw new Error('Original value is null. This should not happen.')
   }
-  if ('type' in originalValue) {
-    return {
-      ...originalValue,
-      type: dance ? 'Dance' : 'RequestedDance',
-      eventProgram: null,
-      dance: addWorkshops(dance, workshops),
-      danceId,
-    }
-  }
   return {
     ...originalValue,
-    dance: dance as EventProgramRow['dance'], // TODO: fix types
-    danceId,
+    type: dance ? 'Dance' : 'RequestedDance',
+    eventProgram: null,
+    dance: addWorkshops(dance, workshops),
   }
 }
 

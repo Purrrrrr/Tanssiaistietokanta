@@ -8,7 +8,7 @@ export {
   type SelectorProps,
   type SelectProps,
 } from './selectors'
-export type { FieldInputComponent, FieldInputComponentProps, Nullable, OmitInputProps } from './types'
+export type { FieldInputComponent, Nullable, OmitInputProps } from './types'
 export { type DateInputProps } from '@/libraries/ui/form/inputs/DateInput'
 export { type DateRangeInputProps } from '@/libraries/ui/form/inputs/DateRangeInput'
 export { type DateTimeInputProps } from '@/libraries/ui/form/inputs/DateTimeInput'

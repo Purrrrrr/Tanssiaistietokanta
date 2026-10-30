@@ -1,25 +1,30 @@
 import { useId } from 'react'
 
 import { DanceListItem, Workshop } from '@/types'
+import { FieldInputComponent, FieldInputComponentProps, Nullable } from '@/libraries/ui/form/inputs/types'
 
 import { filterDances, useCreateDance, useDances } from '@/services/dances'
 
 import { canCreateUniqueItemFromQuery } from '@/libraries/common/listSearch'
 import { AutocompleteInput } from '@/libraries/formsV2/components/inputs'
 import { CssClass } from '@/libraries/ui/classes'
+import { asNonNullableInput } from '@/libraries/ui/form/inputs/asNonNullableInput'
 import { DanceCategoryTag } from '@/components/dance/DanceCategoryTag'
 import { DanceIdSet } from '@/components/event/EventProgramForm/eventMetadata'
 import { WorkshopTag } from '@/components/workshops/WorkshopTag'
 import { useT } from '@/i18n'
 
 export type DanceChooserItem = Omit<DanceListItem, 'events'>
+type DanceChooserInput = Nullable<Pick<DanceChooserItem, '_id'>>
+type DanceChooserOutput =
+  (
+    DanceChooserItem & {
+      formationDiagrams: [] // Add fake data to satisfy the type of some fields that expect it
+    }
+  ) | null
 
-interface DanceChooserProps {
-  value: Pick<DanceChooserItem, '_id'> | null
+export interface DanceChooserProps extends FieldInputComponentProps<DanceChooserOutput, DanceChooserInput> {
   excludeFromSearch?: Pick<DanceChooserItem, '_id'>[]
-  onChange: (dance: DanceChooserItem | null) => unknown
-  readOnly?: boolean
-  hasConflict?: boolean
   emptyText?: string
   allowEmpty?: boolean
   placeholder?: string
@@ -27,7 +32,7 @@ interface DanceChooserProps {
   chosenDancesIds?: DanceIdSet
 }
 
-export function DanceChooser({
+export const DanceChooser: FieldInputComponent<DanceChooserOutput, DanceChooserProps, DanceChooserInput> = function ({
   value, onChange, readOnly, allowEmpty, emptyText, excludeFromSearch, placeholder, workshops = [], chosenDancesIds = new Set(),
 }: DanceChooserProps) {
   const t = useT('components.danceChooser')
@@ -63,16 +68,16 @@ export function DanceChooser({
     return { categories }
   }
 
-  const chooseOrCreateDance = (created: DanceChooserOption) => {
-    if (created?.__typename === 'createDance') {
-      createDance({ dance: { name: created.name } }).then(response => {
+  const chooseOrCreateDance = (chosen: DanceChooserOption) => {
+    if (chosen?.__typename === 'createDance') {
+      createDance({ dance: { name: chosen.name } }).then(response => {
         if (!response?.data) {
           return
         }
-        onChange(response.data.createDance as DanceChooserItem)
+        onChange(addFakeData(response.data.createDance as DanceChooserItem))
       })
-    } else if ((allowEmpty && created === null) || created?.__typename === 'Dance') {
-      onChange(created)
+    } else if ((allowEmpty && chosen === null) || chosen?.__typename === 'Dance') {
+      onChange(chosen ? addFakeData(chosen) : null)
     }
   }
 
@@ -110,6 +115,8 @@ export function DanceChooser({
   />
 }
 
+export const NonEmptyDanceChooser = asNonNullableInput(DanceChooser)
+
 function getCategory(dance: DanceChooserItem) {
   if (dance.category?.trim()) {
     return {
@@ -125,6 +132,14 @@ function getCategory(dance: DanceChooserItem) {
     }
   }
   return null
+}
+
+function addFakeData(dance: DanceChooserItem): DanceChooserOutput {
+  if (!dance) return null
+  return {
+    ...dance,
+    formationDiagrams: [],
+  }
 }
 
 type DanceChooserOption = DanceChooserItem | CreateDance | null

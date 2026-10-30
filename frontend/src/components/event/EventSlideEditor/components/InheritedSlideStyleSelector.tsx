@@ -6,7 +6,7 @@ import { useT } from '@/i18n'
 export function InheritedSlideStyleSelector(
   { path, text }:
   {
-    path: TypedStringPath<string, EventProgramSettings>
+    path: TypedStringPath<string | null, EventProgramSettings>
     text: string
   },
 ) {

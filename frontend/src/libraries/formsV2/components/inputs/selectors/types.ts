@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
 import type { UseComboboxGetToggleButtonPropsReturnValue } from 'downshift'
 
-import { FieldInputComponentProps } from '../types'
+import { FieldInputComponentProps } from '@/libraries/ui/form/inputs/types'
 
 import { IconContent } from '@/libraries/ui/Icon'
 

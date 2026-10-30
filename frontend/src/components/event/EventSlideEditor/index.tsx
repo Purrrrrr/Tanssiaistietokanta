@@ -220,10 +220,10 @@ function ProgramItemEditor({ path, eventId }: { path: ProgramItemPath, eventId: 
   const t = useT('components.eventProgramEditor')
   const row = useValueAt(path)
 
-  if ('danceId' in row && row.type === 'Dance') {
-    const { danceId, dance } = row
-    if (!danceId) return null
-    return <DanceEditor id={danceId} initialDance={dance as Dance} />
+  if ('dance' in row && row.type === 'Dance') {
+    const { dance } = row
+    if (!dance) return null
+    return <DanceEditor id={dance._id} initialDance={dance as Dance} />
   }
   switch (row.type) {
     case 'RequestedDance':

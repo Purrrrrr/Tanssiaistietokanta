@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
 
 import { booleanProp, showcase } from '../types'
+import { Nullable } from '@/libraries/ui/form/inputs/types'
 
 import { DocumentViewer, Editor, type MinifiedDocumentContent } from '@/libraries/lexical'
 import { H2 } from '@/libraries/ui'
 
 export function EditorShowcase({ twoEditors, showMinified, showViewer }: { twoEditors: boolean, showMinified: boolean, showViewer: boolean }) {
-  const [state, setState] = useState<MinifiedDocumentContent | null>(() => {
+  const [state, setState] = useState<Nullable<MinifiedDocumentContent>>(() => {
     const saved = window.localStorage.getItem('editorShowcaseState')
     return saved ? JSON.parse(saved) : null
   })

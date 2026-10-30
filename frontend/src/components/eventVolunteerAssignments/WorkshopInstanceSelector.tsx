@@ -1,22 +1,21 @@
 import { ID } from '@/types'
+import { FieldInputComponentProps } from '@/libraries/ui/form/inputs/types'
 
 import { workshopInstanceName } from '@/services/workshops'
 
 import { ModeButton, ModeSelector } from '@/libraries/ui'
 import { useT } from '@/i18n'
 
-export function WorkshopInstanceSelector({ workshopInstances, readOnly, value, onChange, className }: {
+interface WorkshopInstanceSelectorProps extends FieldInputComponentProps<ID[] | null> {
   workshopInstances: {
     _id: ID
     abbreviation?: string | null
   }[]
-  readOnly?: boolean
-  value: ID[] | null | undefined
-  onChange: (instanceIds: ID[] | null) => void
-  className?: string
-}) {
+}
+
+export function WorkshopInstanceSelector({ workshopInstances, readOnly, value, onChange, ...rest }: WorkshopInstanceSelectorProps) {
   const t = useT('components.volunteerAssignmentEditor')
-  return workshopInstances && workshopInstances.length > 1 && <ModeSelector className={className}>
+  return workshopInstances && workshopInstances.length > 1 && <ModeSelector {...rest}>
     <ModeButton
       disabled={readOnly}
       selected={value == null}

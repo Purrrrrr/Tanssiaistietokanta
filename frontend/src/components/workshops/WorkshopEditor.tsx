@@ -13,7 +13,7 @@ import { FormGroup, PageSection } from '@/libraries/ui'
 import { ColorClass } from '@/libraries/ui/classes'
 import { WorkshopVolunteerAssignmentEditor } from '@/components/eventVolunteerAssignments/WorkshopVolunteerAssignmentEditor'
 import { AddButton } from '@/components/widgets/AddButton'
-import { DanceChooser } from '@/components/widgets/DanceChooser'
+import { NonEmptyDanceChooser as DanceChooser } from '@/components/widgets/DanceChooser'
 import { useT, useTranslation } from '@/i18n'
 import randomId from '@/utils/randomId'
 
@@ -232,8 +232,15 @@ function DanceListItem(
 ) {
   const t = useT('components.workshopEditor')
   const excludeFromSearch = useValueAt(path) ?? []
+
   return <div className="flex">
-    <Field containerClassName="grow" label={t('dances')} labelStyle="hidden" path={`${path}.${itemIndex}`} component={DanceChooser} componentProps={{ excludeFromSearch }} />
+    <Field
+      containerClassName="grow"
+      label={t('dances')}
+      labelStyle="hidden"
+      path={`${path}.${itemIndex}`}
+      component={DanceChooser}
+      componentProps={{ excludeFromSearch }} />
     {dragHandle}
     <RemoveItemButton path={path} index={itemIndex} text="X" />
   </div>
@@ -245,6 +252,10 @@ function AddDanceChooser({ instance }: { instance: number }) {
   const onAddDance = useAppendToList(`instances.${instance}.dances`)
 
   return <FormGroup label={t('addDance')} labelStyle="beside" className="mt-1.5">
-    <DanceChooser excludeFromSearch={dances} value={null} onChange={dance => dance && onAddDance(dance)} key={dances.length} />
+    <DanceChooser
+      excludeFromSearch={dances}
+      value={null}
+      onChange={dance => dance && onAddDance(dance)}
+      key={dances.length} />
   </FormGroup>
 }

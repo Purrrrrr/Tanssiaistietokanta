@@ -67,7 +67,6 @@ setupServiceUpdateFragment(
             duration
             showInLists
           }
-          danceId
           dance {
             _id
             _versionId
@@ -103,7 +102,6 @@ setupServiceUpdateFragment(
           description
           duration
           slideStyleId
-          danceId
           dance {
             _id, _versionId, name
             formationDiagrams {
@@ -200,7 +198,6 @@ query getEvent($id: ID!, $versionId: ID) {
             duration
             showInLists
           }
-          danceId
           dance {
             _id
             _versionId
@@ -236,7 +233,6 @@ query getEvent($id: ID!, $versionId: ID) {
           description
           duration
           slideStyleId
-          danceId
           dance {
             _id, _versionId, name
             formationDiagrams {
@@ -395,7 +391,6 @@ mutation patchEventProgram($id: ID!, $program: JSONPatch!) {
             duration
             showInLists
           }
-          danceId
           dance {
             _id
             _versionId
@@ -431,7 +426,6 @@ mutation patchEventProgram($id: ID!, $program: JSONPatch!) {
           description
           duration
           slideStyleId
-          danceId
           dance {
             _id, _versionId, name
             formationDiagrams {

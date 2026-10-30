@@ -39,7 +39,6 @@ query BallProgram($eventId: ID!, $eventVersionId: ID) {
             duration
             showInLists
           }
-          danceId
           dance {
             _id
             _versionId
@@ -113,7 +112,6 @@ query BallProgram($eventId: ID!, $eventVersionId: ID) {
             duration
             showInLists
           }
-          danceId
           formationDiagramId
           dance {
             _id
